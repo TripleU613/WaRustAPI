@@ -5,6 +5,10 @@
 //! * `proto-check` — regenerate into a temporary directory and fail on any diff.
 //! * `dependency-audit` — inspect the resolved graph and write a report.
 //! * `reference-manifest <apk>` — extract pinned-reference facts from an APK.
+//! * `apk-strings <apk>` — dump all dex string constants (with optional filter).
+//! * `apk-tokens <apk>` — recover the binary-node token dictionary from bytecode.
+//! * `apk-xref <apk> --anchor <s>…` — find classes/methods referencing string constants.
+//! * `apk-smali <apk> --class <filter>` — dump Dalvik instructions for matching classes.
 
 // A command-line tool talks to its operator through stdout/stderr.
 #![allow(clippy::print_stdout, clippy::print_stderr)]
@@ -14,6 +18,7 @@ mod deps;
 mod dex;
 mod manifest;
 mod proto;
+mod xref;
 
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -55,6 +60,33 @@ enum Cmd {
         #[arg(long)]
         check: Option<PathBuf>,
     },
+    /// Find which classes and methods reference each anchor string constant.
+    ///
+    /// Output: for each anchor, the class descriptor, method name, proto shorty,
+    /// and byte offset of the const-string instruction in the dex blob.
+    /// Use this to select targets for `apk-smali` without a Java decompiler.
+    ApkXref {
+        /// Path to the APK (kept outside the repository).
+        apk: PathBuf,
+        /// String(s) to search for (exact match against const-string literals).
+        #[arg(long = "anchor", required = true)]
+        anchors: Vec<String>,
+    },
+    /// Dump the Dalvik instruction stream for classes whose name contains `--class`.
+    ///
+    /// Resolves string, type, method, and field references symbolically.
+    /// Combine with `apk-xref` output: run xref first to find the class name,
+    /// then run smali to read its methods.
+    ApkSmali {
+        /// Path to the APK (kept outside the repository).
+        apk: PathBuf,
+        /// Substring to match against class descriptors (e.g. `RegistrationManager`).
+        #[arg(long = "class")]
+        class_filter: String,
+        /// Optional additional substring filter on method names.
+        #[arg(long = "method")]
+        method_filter: Option<String>,
+    },
     /// Extract reference facts (hashes, manifest fields, signing certificate) from an APK.
     ReferenceManifest {
         /// Path to the APK (kept outside the repository).
@@ -83,6 +115,12 @@ fn main() -> ExitCode {
         Cmd::ReferenceManifest { apk, check } => manifest::run(&apk, check.as_deref()),
         Cmd::ApkStrings { apk, contains } => dex::run(&apk, &contains),
         Cmd::ApkTokens { apk, check } => dex::run_tokens(&apk, check.as_deref()),
+        Cmd::ApkXref { apk, anchors } => xref::run_xref(&apk, &anchors),
+        Cmd::ApkSmali {
+            apk,
+            class_filter,
+            method_filter,
+        } => xref::run_smali(&apk, &class_filter, method_filter.as_deref()),
     };
     match result {
         Ok(()) => ExitCode::SUCCESS,

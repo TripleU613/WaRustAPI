@@ -1,15 +1,14 @@
-//! Dalvik executable (dex) string-table extraction for static APK analysis.
+//! Dalvik executable (dex) string-table extraction and structural parsing for
+//! static APK analysis.
 //!
-//! Only the string table is parsed: header fields `string_ids_size/off`,
-//! `string_id_item` offsets and MUTF-8 `string_data_item`s. This is enough to
-//! enumerate every string constant in the client, including protocol pattern
-//! names, hostnames and URL fragments. Bytecode is not interpreted.
+//! The public helpers (`uleb128`, `mutf8`, `dex_string`) are re-used by
+//! `xref.rs` which performs full structural analysis of class/method/code items.
 
 use std::collections::BTreeSet;
 use std::io::Read;
 use std::path::Path;
 
-const DEX_MAGIC: &[u8] = b"dex\n";
+pub const DEX_MAGIC: &[u8] = b"dex\n";
 
 fn u32le(d: &[u8], o: usize) -> Result<u32, String> {
     d.get(o..o + 4)
@@ -17,7 +16,7 @@ fn u32le(d: &[u8], o: usize) -> Result<u32, String> {
         .ok_or_else(|| "dex: truncated header".to_string())
 }
 
-fn uleb128(d: &[u8], mut o: usize) -> Result<(u32, usize), String> {
+pub fn uleb128(d: &[u8], mut o: usize) -> Result<(u32, usize), String> {
     let mut result = 0u32;
     let mut shift = 0;
     loop {
@@ -35,7 +34,7 @@ fn uleb128(d: &[u8], mut o: usize) -> Result<(u32, usize), String> {
 }
 
 /// Decode MUTF-8 (no embedded NUL; surrogate pairs encoded separately).
-fn mutf8(bytes: &[u8]) -> String {
+pub fn mutf8(bytes: &[u8]) -> String {
     let mut units: Vec<u16> = Vec::with_capacity(bytes.len());
     let mut i = 0;
     while i < bytes.len() {
