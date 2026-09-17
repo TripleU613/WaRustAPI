@@ -155,7 +155,10 @@ impl Jid {
         if user.len() > MAX_USER_LEN {
             return Err(Error::invalid("jid.user", "user too long"));
         }
-        if user.bytes().any(|b| matches!(b, b'@' | b':' | b'/') || b.is_ascii_control()) {
+        if user
+            .bytes()
+            .any(|b| matches!(b, b'@' | b':' | b'/') || b.is_ascii_control())
+        {
             return Err(Error::invalid("jid.user", "invalid characters"));
         }
         Ok(())

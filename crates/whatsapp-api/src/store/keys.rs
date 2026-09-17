@@ -48,14 +48,20 @@ impl MasterKey {
     /// Generate a fresh key from the OS CSPRNG.
     pub fn generate() -> Result<Self> {
         let mut b = [0u8; MASTER_KEY_LEN];
-        getrandom::fill(&mut b).map_err(|e| {
-            Error::Io(std::io::Error::other(format!("entropy source failed: {e}")))
-        })?;
+        getrandom::fill(&mut b)
+            .map_err(|e| Error::Io(std::io::Error::other(format!("entropy source failed: {e}"))))?;
         Ok(Self(b))
     }
 
     pub(crate) fn as_bytes(&self) -> &[u8; MASTER_KEY_LEN] {
         &self.0
+    }
+
+    /// Hex encoding of the key as raw bytes, for an operator tool that must
+    /// hand a freshly generated key to a secret store. Callers must keep the
+    /// result in a zeroizing container.
+    pub fn to_hex_bytes(&self) -> Vec<u8> {
+        hex::encode(self.0).into_bytes()
     }
 }
 

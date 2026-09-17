@@ -85,7 +85,10 @@ fn find_certificate(d: &[u8], o: usize, end: usize, depth: usize) -> Option<&[u8
             && let Some((t2, _, _)) = tlv(d, content + h1)
             && t2 == 0xA0
             && content + h1 + c1 <= next
-            && let Some((t3, _, _)) = tlv(d, content + h1 + tlv(d, content + h1)?.1 + tlv(d, content + h1)?.2)
+            && let Some((t3, _, _)) = tlv(
+                d,
+                content + h1 + tlv(d, content + h1)?.1 + tlv(d, content + h1)?.2,
+            )
             && t3 == 0x02
         {
             return Some(&d[p..next]);
@@ -176,7 +179,8 @@ pub fn run(apk: &Path, check: Option<&Path>) -> Result<(), String> {
         serde_json::to_string_pretty(&e).map_err(|err| err.to_string())?
     );
     if let Some(path) = check {
-        let text = std::fs::read_to_string(path).map_err(|err| format!("{}: {err}", path.display()))?;
+        let text =
+            std::fs::read_to_string(path).map_err(|err| format!("{}: {err}", path.display()))?;
         let c: Committed = serde_json::from_str(&text).map_err(|err| err.to_string())?;
         let mut mismatches = Vec::new();
         if e.package.as_deref() != Some(c.reference_client.package.as_str()) {
@@ -191,7 +195,9 @@ pub fn run(apk: &Path, check: Option<&Path>) -> Result<(), String> {
         if e.apk_sha256 != c.reference_client.apk_sha256 {
             mismatches.push("apk_sha256");
         }
-        if e.signing_certificate_sha256.as_deref() != Some(c.reference_client.signing_certificate.sha256.as_str()) {
+        if e.signing_certificate_sha256.as_deref()
+            != Some(c.reference_client.signing_certificate.sha256.as_str())
+        {
             mismatches.push("signing_certificate.sha256");
         }
         if !mismatches.is_empty() {

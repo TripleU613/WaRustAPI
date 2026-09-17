@@ -77,7 +77,11 @@ impl Sealer {
     }
 
     /// Encrypt `plaintext` under `aad` with a fresh random nonce.
-    pub(crate) fn seal(&self, aad: &RecordAad<'_>, plaintext: &[u8]) -> Result<Vec<u8>, StoreError> {
+    pub(crate) fn seal(
+        &self,
+        aad: &RecordAad<'_>,
+        plaintext: &[u8],
+    ) -> Result<Vec<u8>, StoreError> {
         if aad.key.len() > u16::MAX as usize || aad.table.len() > u16::MAX as usize {
             return Err(StoreError::RecordTooLarge);
         }
@@ -242,7 +246,10 @@ mod tests {
         ));
         let last = env.len() - 1;
         env[last] ^= 1;
-        assert!(matches!(s.open(&aad, &env), Err(StoreError::AuthenticationFailed)));
+        assert!(matches!(
+            s.open(&aad, &env),
+            Err(StoreError::AuthenticationFailed)
+        ));
         env[0] = 9;
         assert!(matches!(
             s.open(&aad, &env),

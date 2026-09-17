@@ -1,0 +1,48 @@
+# Status — 2026-09-17
+
+**Gate position:** G0 complete (repository, dependency decisions, baseline).
+G1 partially complete offline (codec, framing, Noise adapter, certificate
+binding, schemas, reference manifest). **G2 not attempted**: the Android
+registration protocol, transport endpoint and login payload are `Unknown`
+(see `docs/protocol/unknowns.md`). No live server contact has been made and
+no OTP has been requested.
+
+## Verified in this repository (offline)
+
+| Area | Evidence |
+| --- | --- |
+| Toolchain and dependency contract | `rust-toolchain.toml` 1.94.1; `cargo run -p xtask -- dependency-audit`: no denied crates in `whatsapp-api`, `whatsapp-api +experimental-noise`, `whatsapp-cli` (report: `docs/protocol/dependency-report.md`) |
+| Reference APK pinned | `com.whatsapp` 2.26.36.75 / 263607533, sha256 `ce7468…922e9`, signing cert `39:87:D0:…:5D:44`; reproduced by `xtask reference-manifest --check` |
+| Store | 10 tests: encryption at rest, AAD row binding, wrong key typed, second owner rejected, generation fencing, atomic rollback, journal replay/ack/trim |
+| Codec | 9 tests: independent hand-written fixture, JID kinds, packed strings, bounds, duplicate attributes, zlib bomb |
+| Transport | framing fragmentation/cancellation tests; Noise XX handshake + records against a snow responder; cert chain binding incl. "valid-looking chain that does not bind to the remote key" |
+| Registration | state table enforced; handles bound to attempt/generation/step; secrets never persisted (byte scan of the database) |
+| Outbox | idempotent enqueue, conflict, limits, cancel rules, uncertain delivery representation |
+| Client | durable enqueue → status → events → ack → restart over the same store |
+| CLI | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect` (typed exit 4), `registration begin` (blocked with missing ledger refs), wrong key (exit 5) |
+
+Test count: 64 (`cargo test --workspace --all-features`), clippy clean with
+`-D warnings`, `cargo fmt --check` clean.
+
+## Blocked / not started
+
+- Registration driver, transport connect, login: need Android-profile
+  evidence (`docs/protocol/evidence-ledger.md` rows marked `Unknown`).
+- Signal backend: licence gate (ADR 0005).
+- TLS provider for HTTPS: gate (ADR 0003).
+- Inbox, devices, groups, media, message operations, bridge adapter: gates
+  G3–G6; modules intentionally not created yet.
+- Key rotation, backup/restore, crash-matrix harness with injected failures.
+- `crates/tzibbur-api` and `crates/bridge` are not in this repository; the
+  adapter contract could not be inspected.
+
+## Commands
+
+```sh
+cargo fmt --all -- --check
+cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+cargo test --locked --workspace --all-features
+cargo run --locked -p xtask -- proto-check
+cargo run --locked -p xtask -- dependency-audit
+cargo package --locked -p whatsapp-api --allow-dirty
+```

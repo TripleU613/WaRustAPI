@@ -432,7 +432,9 @@ impl ProtocolStore {
         match key_check_exists {
             Some(existing) => match sealer.open(&key_check_aad, &existing) {
                 Ok(pt) if pt == KEY_CHECK_PLAINTEXT => {}
-                Ok(_) | Err(StoreError::AuthenticationFailed) | Err(StoreError::KeyIdMismatch { .. }) => {
+                Ok(_)
+                | Err(StoreError::AuthenticationFailed)
+                | Err(StoreError::KeyIdMismatch { .. }) => {
                     return Err(StoreError::WrongKey.into());
                 }
                 Err(e) => return Err(e.into()),
@@ -640,7 +642,7 @@ impl fmt::Debug for WriteTx<'_> {
     }
 }
 
-fn open_record<'a>(
+fn open_record(
     store: &ProtocolStore,
     generation: AccountGeneration,
     table: Table,
@@ -709,10 +711,7 @@ fn consumer_cursor_in<T: ReadableTable<&'static str, &'static [u8]>>(
     consumers: &T,
     consumer: &ConsumerId,
 ) -> Result<EventCursor> {
-    let Some(v) = consumers
-        .get(consumer.as_str())
-        .map_err(StoreError::from)?
-    else {
+    let Some(v) = consumers.get(consumer.as_str()).map_err(StoreError::from)? else {
         return Ok(EventCursor::START);
     };
     let aad = RecordAad {
@@ -726,7 +725,9 @@ fn consumer_cursor_in<T: ReadableTable<&'static str, &'static [u8]>>(
     Ok(rec.acked)
 }
 
-fn journal_floor_in<T: ReadableTable<&'static str, &'static [u8]>>(meta: &T) -> Result<EventCursor> {
+fn journal_floor_in<T: ReadableTable<&'static str, &'static [u8]>>(
+    meta: &T,
+) -> Result<EventCursor> {
     Ok(meta
         .get(META_JOURNAL_FLOOR)
         .map_err(StoreError::from)?
@@ -877,7 +878,13 @@ impl WriteTx<'_> {
     }
 
     /// Seal and store a record.
-    pub fn put(&mut self, table: Table, key: &[u8], record_version: u16, plaintext: &[u8]) -> Result<()> {
+    pub fn put(
+        &mut self,
+        table: Table,
+        key: &[u8],
+        record_version: u16,
+        plaintext: &[u8],
+    ) -> Result<()> {
         if key.len() > 4096 {
             return Err(StoreError::RecordTooLarge.into());
         }
@@ -1132,7 +1139,10 @@ mod tests {
         let raw = std::fs::read(s.path()).unwrap();
         assert!(!raw.windows(10).any(|w| w == b"top secret"));
         assert!(!raw.windows(5).any(|w| w == b"dev-1"));
-        assert!(raw.windows(7).any(|w| w == b"account"), "non-blinded key visible");
+        assert!(
+            raw.windows(7).any(|w| w == b"account"),
+            "non-blinded key visible"
+        );
     }
 
     #[test]
@@ -1168,7 +1178,9 @@ mod tests {
         })
         .unwrap();
         assert_eq!(
-            s.read(|tx| tx.get(Table::Account, b"x", 1)).unwrap().unwrap(),
+            s.read(|tx| tx.get(Table::Account, b"x", 1))
+                .unwrap()
+                .unwrap(),
             b"y"
         );
     }
@@ -1262,7 +1274,9 @@ mod tests {
         let err = s.read_events(&slow, EventCursor::START, 10).err().unwrap();
         assert!(matches!(
             err,
-            Error::Storage(StoreError::CursorExpired { floor: EventCursor(2) })
+            Error::Storage(StoreError::CursorExpired {
+                floor: EventCursor(2)
+            })
         ));
         let ok = s.read_events(&slow, EventCursor(2), 10).unwrap();
         assert_eq!(ok.events.len(), 4);
@@ -1284,7 +1298,8 @@ mod tests {
     #[test]
     fn generation_bump_fences_old_records() {
         let (_d, s) = temp_store(MasterKey::from_bytes([6u8; 32]));
-        s.write(|tx| tx.put(Table::Account, b"k", 1, b"gen1")).unwrap();
+        s.write(|tx| tx.put(Table::Account, b"k", 1, b"gen1"))
+            .unwrap();
         let g = s.write(|tx| tx.bump_generation()).unwrap();
         assert_eq!(g, AccountGeneration(2));
         assert_eq!(s.generation(), AccountGeneration(2));

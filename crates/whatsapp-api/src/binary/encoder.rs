@@ -1,8 +1,8 @@
 //! Node encoder.
 
+use super::CodecError;
 use super::node::{AttributeValue, Node, NodeContent};
 use super::tokens::{TokenDictionary, tags};
-use super::CodecError;
 use crate::model::jid::{Jid, JidKind, Server};
 
 /// Encodes nodes into the binary form. Output starts with a zero flag byte
@@ -205,13 +205,15 @@ impl<'a> Encoder<'a> {
 fn is_nibble(s: &str) -> bool {
     !s.is_empty()
         && s.len() <= tags::PACKED_MAX
-        && s.bytes().all(|b| b.is_ascii_digit() || b == b'-' || b == b'.')
+        && s.bytes()
+            .all(|b| b.is_ascii_digit() || b == b'-' || b == b'.')
 }
 
 fn is_hex(s: &str) -> bool {
     !s.is_empty()
         && s.len() <= tags::PACKED_MAX
-        && s.bytes().all(|b| b.is_ascii_digit() || (b'A'..=b'F').contains(&b))
+        && s.bytes()
+            .all(|b| b.is_ascii_digit() || (b'A'..=b'F').contains(&b))
 }
 
 #[cfg(test)]
@@ -277,11 +279,15 @@ mod tests {
         let encoded = Encoder::new(dict()).encode(&expected).unwrap();
         assert_eq!(
             encoded,
-            [0x00, 0xF8, 0x08, 25, 8, 85, 4, 41, 22, 87, 0xF8, 0x01, 0xF8, 0x01, 86]
+            [
+                0x00, 0xF8, 0x08, 25, 8, 85, 4, 41, 22, 87, 0xF8, 0x01, 0xF8, 0x01, 86
+            ]
         );
         assert_eq!(node, expected);
         let payload2 = unpack_frame_payload(&encoded, &limits).unwrap();
-        let node2 = Decoder::new(&payload2, dict(), &limits).decode_node().unwrap();
+        let node2 = Decoder::new(&payload2, dict(), &limits)
+            .decode_node()
+            .unwrap();
         assert_eq!(node2, node);
     }
 
@@ -289,7 +295,10 @@ mod tests {
     fn roundtrips_jids_bytes_and_packed_strings() {
         let node = Node::new("message")
             .attr("to", Jid::parse("15551234567@s.whatsapp.net").unwrap())
-            .attr("participant", Jid::parse("15551234567:3@s.whatsapp.net").unwrap())
+            .attr(
+                "participant",
+                Jid::parse("15551234567:3@s.whatsapp.net").unwrap(),
+            )
             .attr("lid", Jid::parse("123456789012345:1@lid").unwrap())
             .attr("server", Jid::parse("g.us").unwrap())
             .attr("hex", "DEADBEEF")
@@ -307,7 +316,10 @@ mod tests {
         // wire and decodes as bytes; nothing is lossily converted.
         let raw = Node::new("text").text("some text");
         let back = roundtrip(&raw);
-        assert_eq!(back.content, NodeContent::Bytes(Bytes::from_static(b"some text")));
+        assert_eq!(
+            back.content,
+            NodeContent::Bytes(Bytes::from_static(b"some text"))
+        );
     }
 
     #[test]
@@ -315,7 +327,10 @@ mod tests {
         let node = Node::new("x").attr("a", "").attr("b", "v");
         let back = roundtrip(&node);
         assert_eq!(back.attributes.len(), 1);
-        let raw = Node::new("x").attr("bin", AttributeValue::Bytes(Bytes::from_static(&[0xFF, 0xFE])));
+        let raw = Node::new("x").attr(
+            "bin",
+            AttributeValue::Bytes(Bytes::from_static(&[0xFF, 0xFE])),
+        );
         let back = roundtrip(&raw);
         assert_eq!(
             back.get_attr("bin"),
@@ -327,12 +342,16 @@ mod tests {
     fn long_binary_uses_20_and_32_bit_lengths() {
         let mid = Node::new("iq").bytes(vec![7u8; 300]);
         let big = Node::new("iq").bytes(vec![7u8; 1 << 20]);
-        let mut limits = Limits::default();
-        limits.max_string_len = 2 << 20;
+        let limits = Limits {
+            max_string_len: 2 << 20,
+            ..Limits::default()
+        };
         for n in [&mid, &big] {
             let bytes = Encoder::new(dict()).encode(n).unwrap();
             let payload = unpack_frame_payload(&bytes, &limits).unwrap();
-            let back = Decoder::new(&payload, dict(), &limits).decode_node().unwrap();
+            let back = Decoder::new(&payload, dict(), &limits)
+                .decode_node()
+                .unwrap();
             assert_eq!(&back, n);
         }
         // [flag][LIST_8][2]["iq" token][content tag]
@@ -375,19 +394,29 @@ mod tests {
         let unknown_token = [0xF8, 0x01, 0x02];
         assert!(matches!(
             Decoder::new(&unknown_token, &small, &limits).decode_node(),
-            Err(CodecError::UnknownToken { dictionary: 0, index: 2, .. })
+            Err(CodecError::UnknownToken {
+                dictionary: 0,
+                index: 2,
+                ..
+            })
         ));
         let unknown_double = [0xF8, 0x01, 0xEC, 0x05];
         assert!(matches!(
             Decoder::new(&unknown_double, &small, &limits).decode_node(),
-            Err(CodecError::UnknownToken { dictionary: 1, index: 5, .. })
+            Err(CodecError::UnknownToken {
+                dictionary: 1,
+                index: 5,
+                ..
+            })
         ));
     }
 
     #[test]
     fn enforces_length_depth_and_children_bounds() {
-        let mut limits = Limits::default();
-        limits.max_string_len = 4;
+        let limits = Limits {
+            max_string_len: 4,
+            ..Limits::default()
+        };
         let long = [0xF8, 0x01, 0xFC, 0x05, b'a', b'b', b'c', b'd', b'e'];
         assert!(matches!(
             Decoder::new(&long, dict(), &limits).decode_node(),
@@ -399,8 +428,10 @@ mod tests {
             Decoder::new(&huge, dict(), &Limits::default()).decode_node(),
             Err(CodecError::LengthLimit { .. })
         ));
-        let mut limits = Limits::default();
-        limits.max_node_depth = 2;
+        let limits = Limits {
+            max_node_depth: 2,
+            ..Limits::default()
+        };
         let deep = {
             let mut n = Node::new("a");
             for _ in 0..5 {
@@ -413,13 +444,18 @@ mod tests {
             Decoder::new(&bytes[1..], dict(), &limits).decode_node(),
             Err(CodecError::DepthLimit { limit: 2 })
         ));
-        let mut limits = Limits::default();
-        limits.max_children = 1;
+        let limits = Limits {
+            max_children: 1,
+            ..Limits::default()
+        };
         let wide = Node::new("a").children(vec![Node::new("b"), Node::new("c")]);
         let bytes = Encoder::new(dict()).encode(&wide).unwrap();
         assert!(matches!(
             Decoder::new(&bytes[1..], dict(), &limits).decode_node(),
-            Err(CodecError::LengthLimit { what: "children", .. })
+            Err(CodecError::LengthLimit {
+                what: "children",
+                ..
+            })
         ));
     }
 
@@ -445,7 +481,9 @@ mod tests {
         payload.extend_from_slice(&compressed);
         let inflated = unpack_frame_payload(&payload, &limits).unwrap();
         assert_eq!(
-            Decoder::new(&inflated, dict(), &limits).decode_node().unwrap(),
+            Decoder::new(&inflated, dict(), &limits)
+                .decode_node()
+                .unwrap(),
             node
         );
         assert!(matches!(

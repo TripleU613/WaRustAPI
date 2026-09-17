@@ -248,7 +248,10 @@ mod tests {
         // before any body byte is buffered.
         assert!(matches!(
             r.feed(&[0x00]),
-            Err(TransportError::FrameTooLarge { len: 4096, limit: 1024 })
+            Err(TransportError::FrameTooLarge {
+                len: 4096,
+                limit: 1024
+            })
         ));
         assert_eq!(r.buffered(), 2);
         let mut r = FrameReader::new(c);

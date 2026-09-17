@@ -23,17 +23,7 @@ pub struct Command {
 }
 /// Nested message and enum types in `Command`.
 pub mod command {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum CommandType {
         Everyone = 1,
@@ -79,17 +69,7 @@ pub struct Mention {
 }
 /// Nested message and enum types in `Mention`.
 pub mod mention {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum MentionType {
         Profile = 0,
@@ -144,17 +124,7 @@ pub struct LimitSharing {
 }
 /// Nested message and enum types in `LimitSharing`.
 pub mod limit_sharing {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Trigger {
         Unknown = 0,

@@ -77,7 +77,9 @@ fn generate_into(root: &Path, out: &Path) -> Result<(), String> {
     }
     let mut mod_rs = String::new();
     mod_rs.push_str("//! Generated protobuf types. **Do not edit by hand.**\n//!\n");
-    mod_rs.push_str("//! Regenerate with `cargo run -p xtask -- proto-gen`; CI runs `proto-check`.\n//!\n");
+    mod_rs.push_str(
+        "//! Regenerate with `cargo run -p xtask -- proto-gen`; CI runs `proto-check`.\n//!\n",
+    );
     mod_rs.push_str(&format!(
         "//! Source schemas: tulir/whatsmeow `proto/` @ {revision} (MPL-2.0), evidence `ReferenceOnly`\n//! for the Android primary profile (ledger `schemas.*`).\n//!\n"
     ));
@@ -87,6 +89,22 @@ fn generate_into(root: &Path, out: &Path) -> Result<(), String> {
         mod_rs.push_str(&format!("pub mod {name};\n"));
     }
     fs::write(out.join("mod.rs"), mod_rs).map_err(|e| e.to_string())?;
+
+    // Format with the pinned toolchain's rustfmt so `cargo fmt --check` and
+    // `proto-check` agree byte for byte. rustfmt is a toolchain component,
+    // not an external dependency.
+    let mut files: Vec<PathBuf> = modules.into_values().collect();
+    files.push(out.join("mod.rs"));
+    let status = std::process::Command::new("rustfmt")
+        .args(["--edition", "2024", "--config", "style_edition=2024"])
+        .args(&files)
+        .status()
+        .map_err(|e| {
+            format!("rustfmt not available ({e}); install the toolchain's rustfmt component")
+        })?;
+    if !status.success() {
+        return Err("rustfmt failed on generated code".into());
+    }
     Ok(())
 }
 

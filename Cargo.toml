@@ -17,7 +17,7 @@ thiserror = "2"
 tracing = { version = "0.1", default-features = false, features = ["std", "attributes"] }
 serde = { version = "1", default-features = false, features = ["std", "derive"] }
 serde_json = { version = "1", default-features = false, features = ["std"] }
-zeroize = { version = "1", default-features = false, features = ["alloc", "derive"] }
+zeroize = { version = "1", default-features = false, features = ["alloc", "derive", "serde"] }
 hex = { version = "0.4", default-features = false, features = ["std"] }
 # Transactional store: pure-Rust ACID embedded database (ADR 0002).
 redb = "4"
@@ -35,7 +35,7 @@ snow = { version = "0.10", default-features = false, features = ["default-resolv
 prost = { version = "0.14", default-features = false, features = ["std", "derive"] }
 # Bounded zlib inflation for compressed binary-node frames (pure Rust).
 miniz_oxide = { version = "0.9", default-features = false, features = ["std", "with-alloc"] }
-clap = { version = "4", features = ["derive"] }
+clap = { version = "4", features = ["derive", "env"] }
 proptest = { version = "1", default-features = false, features = ["std"] }
 tempfile = "3"
 

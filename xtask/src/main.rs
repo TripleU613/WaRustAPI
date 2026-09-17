@@ -6,6 +6,9 @@
 //! * `dependency-audit` — inspect the resolved graph and write a report.
 //! * `reference-manifest <apk>` — extract pinned-reference facts from an APK.
 
+// A command-line tool talks to its operator through stdout/stderr.
+#![allow(clippy::print_stdout, clippy::print_stderr)]
+
 mod axml;
 mod deps;
 mod manifest;

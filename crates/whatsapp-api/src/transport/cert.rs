@@ -84,11 +84,14 @@ pub fn verify_chain(
     policy: &ChainPolicy,
     verifier: &dyn SignatureVerifier,
 ) -> Result<VerifiedChain, TransportError> {
-    let chain = CertChain::decode(chain_bytes).map_err(|e| reject(format!("cert chain decode: {e}")))?;
+    let chain =
+        CertChain::decode(chain_bytes).map_err(|e| reject(format!("cert chain decode: {e}")))?;
     let intermediate = chain
         .intermediate
         .ok_or_else(|| reject("missing intermediate certificate"))?;
-    let leaf = chain.leaf.ok_or_else(|| reject("missing leaf certificate"))?;
+    let leaf = chain
+        .leaf
+        .ok_or_else(|| reject("missing leaf certificate"))?;
     let (int_details_raw, int_sig) = match (intermediate.details, intermediate.signature) {
         (Some(d), Some(s)) => (d, s),
         _ => return Err(reject("intermediate certificate incomplete")),
@@ -101,7 +104,9 @@ pub fn verify_chain(
     let leaf_sig = sig64(&leaf_sig, "leaf")?;
 
     if !verifier.verify(&policy.trust_root, &int_details_raw, &int_sig) {
-        return Err(reject("intermediate signature does not verify against trust root"));
+        return Err(reject(
+            "intermediate signature does not verify against trust root",
+        ));
     }
     let int_details = Details::decode(&int_details_raw[..])
         .map_err(|e| reject(format!("intermediate details decode: {e}")))?;
@@ -109,20 +114,30 @@ pub fn verify_chain(
         return Err(reject("unexpected intermediate issuer serial"));
     }
     let int_key = key32(
-        int_details.key.as_deref().ok_or_else(|| reject("intermediate key missing"))?,
+        int_details
+            .key
+            .as_deref()
+            .ok_or_else(|| reject("intermediate key missing"))?,
         "intermediate",
     )?;
     if !verifier.verify(&int_key, &leaf_details_raw, &leaf_sig) {
-        return Err(reject("leaf signature does not verify against intermediate"));
+        return Err(reject(
+            "leaf signature does not verify against intermediate",
+        ));
     }
     check_validity(&int_details, now, "intermediate")?;
     let leaf_details = Details::decode(&leaf_details_raw[..])
         .map_err(|e| reject(format!("leaf details decode: {e}")))?;
     if leaf_details.issuer_serial.is_none() || leaf_details.issuer_serial != int_details.serial {
-        return Err(reject("leaf issuer serial does not match intermediate serial"));
+        return Err(reject(
+            "leaf issuer serial does not match intermediate serial",
+        ));
     }
     let leaf_key = key32(
-        leaf_details.key.as_deref().ok_or_else(|| reject("leaf key missing"))?,
+        leaf_details
+            .key
+            .as_deref()
+            .ok_or_else(|| reject("leaf key missing"))?,
         "leaf",
     )?;
     if !constant_time_eq(&leaf_key, remote_static) {
@@ -184,7 +199,12 @@ mod tests {
         .encode_to_vec()
     }
 
-    fn chain(int_details: Vec<u8>, int_signer: &[u8; 32], leaf_details: Vec<u8>, leaf_signer: &[u8; 32]) -> Vec<u8> {
+    fn chain(
+        int_details: Vec<u8>,
+        int_signer: &[u8; 32],
+        leaf_details: Vec<u8>,
+        leaf_signer: &[u8; 32],
+    ) -> Vec<u8> {
         CertChain {
             intermediate: Some(NoiseCertificate {
                 signature: Some(Bytes::from(fake_sign(int_signer, &int_details))),

@@ -10,7 +10,13 @@
 //!   proto/whatsmeow/waCommon/WACommon.proto sha256=7fb72b241eb4a8dacd474eb17d58e496b473254383541ca90ce3943b1f0d5504
 //!   proto/whatsmeow/waWa6/WAWebProtobufsWa6.proto sha256=5a07f9919f478f81ff2cd7377052d02e8068979605458e89a94dd5ec60a66fc2
 
-#![allow(missing_docs, dead_code, clippy::all, unused_qualifications, missing_debug_implementations)]
+#![allow(
+    missing_docs,
+    dead_code,
+    clippy::all,
+    unused_qualifications,
+    missing_debug_implementations
+)]
 
 pub mod wa_adv;
 pub mod wa_cert;

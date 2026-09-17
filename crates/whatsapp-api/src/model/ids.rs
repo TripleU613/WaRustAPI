@@ -20,7 +20,10 @@ fn validate_id(field: &'static str, s: &str) -> Result<()> {
         return Err(Error::invalid(field, "must not be empty"));
     }
     if s.len() > MAX_ID_LEN {
-        return Err(Error::invalid(field, format!("longer than {MAX_ID_LEN} bytes")));
+        return Err(Error::invalid(
+            field,
+            format!("longer than {MAX_ID_LEN} bytes"),
+        ));
     }
     if !s
         .bytes()
@@ -33,6 +36,46 @@ fn validate_id(field: &'static str, s: &str) -> Result<()> {
     }
     Ok(())
 }
+
+/// Serde as a 32-character hex string for 16-byte identifiers.
+macro_rules! hex16_serde {
+    ($name:ident) => {
+        impl Serialize for $name {
+            fn serialize<S: serde::Serializer>(
+                &self,
+                s: S,
+            ) -> std::result::Result<S::Ok, S::Error> {
+                s.serialize_str(&hex::encode(self.0))
+            }
+        }
+
+        impl<'de> Deserialize<'de> for $name {
+            fn deserialize<D: serde::Deserializer<'de>>(
+                d: D,
+            ) -> std::result::Result<Self, D::Error> {
+                let s = <std::borrow::Cow<'de, str>>::deserialize(d)?;
+                let v = hex::decode(s.as_ref()).map_err(serde::de::Error::custom)?;
+                let arr: [u8; 16] = v
+                    .try_into()
+                    .map_err(|_| serde::de::Error::custom("expected 16 bytes"))?;
+                Ok(Self(arr))
+            }
+        }
+
+        impl std::str::FromStr for $name {
+            type Err = Error;
+            fn from_str(s: &str) -> Result<Self> {
+                let v = hex::decode(s).map_err(|_| Error::invalid(stringify!($name), "not hex"))?;
+                let arr: [u8; 16] = v
+                    .try_into()
+                    .map_err(|_| Error::invalid(stringify!($name), "expected 16 bytes"))?;
+                Ok(Self(arr))
+            }
+        }
+    };
+}
+
+pub(crate) use hex16_serde;
 
 macro_rules! string_id {
     ($(#[$meta:meta])* $name:ident, $field:literal) => {
@@ -103,16 +146,18 @@ impl AccountGeneration {
 }
 
 /// Local, library-generated identifier of a queued message (16 random bytes).
-#[derive(Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
+/// Serialized as 32 hex characters.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct LocalMessageId(pub [u8; 16]);
+
+hex16_serde!(LocalMessageId);
 
 impl LocalMessageId {
     /// Generate a fresh random identifier from the OS CSPRNG.
     pub fn generate() -> Result<Self> {
         let mut b = [0u8; 16];
-        getrandom::fill(&mut b).map_err(|e| {
-            Error::Io(std::io::Error::other(format!("entropy source failed: {e}")))
-        })?;
+        getrandom::fill(&mut b)
+            .map_err(|e| Error::Io(std::io::Error::other(format!("entropy source failed: {e}"))))?;
         Ok(Self(b))
     }
 }
@@ -130,16 +175,18 @@ impl fmt::Display for LocalMessageId {
 }
 
 /// Stable identifier of a durable domain event (16 random bytes).
-#[derive(Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
+/// Serialized as 32 hex characters.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct EventId(pub [u8; 16]);
+
+hex16_serde!(EventId);
 
 impl EventId {
     /// Generate a fresh random identifier from the OS CSPRNG.
     pub fn generate() -> Result<Self> {
         let mut b = [0u8; 16];
-        getrandom::fill(&mut b).map_err(|e| {
-            Error::Io(std::io::Error::other(format!("entropy source failed: {e}")))
-        })?;
+        getrandom::fill(&mut b)
+            .map_err(|e| Error::Io(std::io::Error::other(format!("entropy source failed: {e}"))))?;
         Ok(Self(b))
     }
 }
@@ -277,10 +324,16 @@ mod tests {
     }
 
     #[test]
-    fn local_ids_are_unique() {
+    fn local_ids_are_unique_and_hex_serialized() {
         let a = LocalMessageId::generate().unwrap();
         let b = LocalMessageId::generate().unwrap();
         assert_ne!(a, b);
         assert_eq!(a.to_string().len(), 32);
+        let json = serde_json::to_string(&a).unwrap();
+        assert_eq!(json, format!("\"{a}\""));
+        let back: LocalMessageId = serde_json::from_str(&json).unwrap();
+        assert_eq!(back, a);
+        assert_eq!(a.to_string().parse::<LocalMessageId>().unwrap(), a);
+        assert!("zz".parse::<LocalMessageId>().is_err());
     }
 }

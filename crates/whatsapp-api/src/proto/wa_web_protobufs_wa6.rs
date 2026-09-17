@@ -61,17 +61,7 @@ pub mod handshake_message {
         #[prost(bytes = "bytes", optional, tag = "10")]
         pub extended_ephemeral: ::core::option::Option<::prost::bytes::Bytes>,
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum HandshakePqMode {
         Unknown = 0,
@@ -151,9 +141,7 @@ pub struct ClientPayload {
     #[prost(uint32, optional, tag = "18")]
     pub device: ::core::option::Option<u32>,
     #[prost(message, optional, tag = "19")]
-    pub device_pairing_data: ::core::option::Option<
-        client_payload::DevicePairingRegistrationData,
-    >,
+    pub device_pairing_data: ::core::option::Option<client_payload::DevicePairingRegistrationData>,
     #[prost(enumeration = "client_payload::Product", optional, tag = "20")]
     pub product: ::core::option::Option<i32>,
     #[prost(bytes = "bytes", optional, tag = "21")]
@@ -180,7 +168,11 @@ pub struct ClientPayload {
     pub mem_class: ::core::option::Option<i32>,
     #[prost(message, optional, tag = "38")]
     pub interop_data: ::core::option::Option<client_payload::InteropData>,
-    #[prost(enumeration = "client_payload::TrafficAnonymization", optional, tag = "40")]
+    #[prost(
+        enumeration = "client_payload::TrafficAnonymization",
+        optional,
+        tag = "40"
+    )]
     pub traffic_anonymization: ::core::option::Option<i32>,
     #[prost(bool, optional, tag = "41")]
     pub lid_db_migrated: ::core::option::Option<bool>,
@@ -211,15 +203,7 @@ pub mod client_payload {
     /// Nested message and enum types in `DNSSource`.
     pub mod dns_source {
         #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
+            Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration,
         )]
         #[repr(i32)]
         pub enum DnsResolutionMethod {
@@ -308,15 +292,7 @@ pub mod client_payload {
             pub features: ::core::option::Option<::prost::bytes::Bytes>,
         }
         #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
+            Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration,
         )]
         #[repr(i32)]
         pub enum WebSubPlatform {
@@ -379,13 +355,9 @@ pub mod client_payload {
         #[prost(enumeration = "user_agent::ReleaseChannel", optional, tag = "10")]
         pub release_channel: ::core::option::Option<i32>,
         #[prost(string, optional, tag = "11")]
-        pub locale_language_iso6391: ::core::option::Option<
-            ::prost::alloc::string::String,
-        >,
+        pub locale_language_iso6391: ::core::option::Option<::prost::alloc::string::String>,
         #[prost(string, optional, tag = "12")]
-        pub locale_country_iso31661_alpha2: ::core::option::Option<
-            ::prost::alloc::string::String,
-        >,
+        pub locale_country_iso31661_alpha2: ::core::option::Option<::prost::alloc::string::String>,
         #[prost(string, optional, tag = "13")]
         pub device_board: ::core::option::Option<::prost::alloc::string::String>,
         #[prost(string, optional, tag = "14")]
@@ -413,15 +385,7 @@ pub mod client_payload {
             pub quinary: ::core::option::Option<u32>,
         }
         #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
+            Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration,
         )]
         #[repr(i32)]
         pub enum DeviceType {
@@ -458,15 +422,7 @@ pub mod client_payload {
             }
         }
         #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
+            Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration,
         )]
         #[repr(i32)]
         pub enum DistributionChannel {
@@ -500,15 +456,7 @@ pub mod client_payload {
             }
         }
         #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
+            Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration,
         )]
         #[repr(i32)]
         pub enum ReleaseChannel {
@@ -542,15 +490,7 @@ pub mod client_payload {
             }
         }
         #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
+            Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration,
         )]
         #[repr(i32)]
         pub enum Platform {
@@ -723,17 +663,7 @@ pub mod client_payload {
         #[prost(bytes = "bytes", optional, tag = "8")]
         pub device_props: ::core::option::Option<::prost::bytes::Bytes>,
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum TrafficAnonymization {
         Off = 0,
@@ -759,17 +689,7 @@ pub mod client_payload {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum AccountType {
         Default = 0,
@@ -795,17 +715,7 @@ pub mod client_payload {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Product {
         Whatsapp = 0,
@@ -840,17 +750,7 @@ pub mod client_payload {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum ConnectType {
         CellularUnknown = 0,
@@ -915,17 +815,7 @@ pub mod client_payload {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum ConnectReason {
         Push = 0,
@@ -966,17 +856,7 @@ pub mod client_payload {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum IosAppExtension {
         ShareExtension = 0,

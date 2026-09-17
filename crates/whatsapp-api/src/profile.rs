@@ -241,7 +241,11 @@ impl ProtocolProfile {
             }
         }
         check(&mut missing, &self.endpoints.chat, "transport.endpoint");
-        check(&mut missing, &self.framing.length_prefix_bytes, "framing.length_prefix");
+        check(
+            &mut missing,
+            &self.framing.length_prefix_bytes,
+            "framing.length_prefix",
+        );
         check(&mut missing, &self.noise.pattern, "noise.pattern");
         check(&mut missing, &self.noise.prologue, "noise.prologue");
         check(&mut missing, &self.noise.trust_root, "noise.trust_root");

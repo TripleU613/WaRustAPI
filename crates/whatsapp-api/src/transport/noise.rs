@@ -146,7 +146,9 @@ impl Handshake {
 
     /// The remote static key, once the handshake has revealed it.
     pub fn remote_static(&self) -> Option<[u8; 32]> {
-        self.state.get_remote_static().and_then(|s| s.try_into().ok())
+        self.state
+            .get_remote_static()
+            .and_then(|s| s.try_into().ok())
     }
 
     /// Whether the handshake is complete.
@@ -296,7 +298,10 @@ mod tests {
         assert_eq!(ct.decrypt(&buf[..n]).unwrap(), b"pong");
 
         // A corrupted record closes the transport permanently.
-        let mut bad = st.write_message(b"x", &mut buf).map(|n| buf[..n].to_vec()).unwrap();
+        let mut bad = st
+            .write_message(b"x", &mut buf)
+            .map(|n| buf[..n].to_vec())
+            .unwrap();
         bad[0] ^= 0xFF;
         assert!(ct.decrypt(&bad).is_err());
         assert!(!ct.is_open());

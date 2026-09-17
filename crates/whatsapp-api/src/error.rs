@@ -125,6 +125,11 @@ pub enum Error {
     #[error("runtime not connected")]
     NotConnected,
 
+    /// No completed registration exists in this store; connecting is
+    /// impossible and is never repaired by automatic re-registration.
+    #[error("account is not registered")]
+    NotRegistered,
+
     /// I/O failure outside the store.
     #[error("i/o error: {0}")]
     Io(#[from] std::io::Error),

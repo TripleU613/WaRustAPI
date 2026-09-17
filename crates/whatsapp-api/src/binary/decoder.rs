@@ -2,9 +2,9 @@
 
 use bytes::Bytes;
 
+use super::CodecError;
 use super::node::{Attribute, AttributeValue, Node, NodeContent};
 use super::tokens::{TokenDictionary, tags};
-use super::CodecError;
 use crate::model::jid::{Jid, JidKind, Server};
 use crate::profile::Limits;
 
@@ -25,14 +25,15 @@ pub fn unpack_frame_payload(payload: &[u8], limits: &Limits) -> Result<Bytes, Co
         return Ok(Bytes::copy_from_slice(rest));
     }
     let max = limits.max_decompressed_len as usize;
-    let out = miniz_oxide::inflate::decompress_to_vec_zlib_with_limit(rest, max).map_err(|e| {
-        match e.status {
+    let out =
+        miniz_oxide::inflate::decompress_to_vec_zlib_with_limit(rest, max).map_err(|e| match e
+            .status
+        {
             miniz_oxide::inflate::TINFLStatus::HasMoreOutput => {
                 CodecError::Compression("decompressed output exceeds limit")
             }
             _ => CodecError::Compression("invalid zlib stream"),
-        }
-    })?;
+        })?;
     Ok(Bytes::from(out))
 }
 
@@ -356,13 +357,13 @@ impl<'a> Decoder<'a> {
                 reason: "empty node list",
             });
         }
-        let description = self
-            .read_string_value()?
-            .filter(|d| !d.is_empty())
-            .ok_or(CodecError::InvalidNode {
-                offset,
-                reason: "missing description",
-            })?;
+        let description =
+            self.read_string_value()?
+                .filter(|d| !d.is_empty())
+                .ok_or(CodecError::InvalidNode {
+                    offset,
+                    reason: "missing description",
+                })?;
         let attr_count = (list_size - 1) / 2;
         let attr_limit = self.limits.max_attributes as usize;
         if attr_count > attr_limit {

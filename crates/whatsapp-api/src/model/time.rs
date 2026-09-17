@@ -39,6 +39,9 @@ impl Timestamp {
 
     /// Saturating addition of a duration.
     pub fn saturating_add(self, d: Duration) -> Self {
-        Self(self.0.saturating_add(i64::try_from(d.as_millis()).unwrap_or(i64::MAX)))
+        Self(
+            self.0
+                .saturating_add(i64::try_from(d.as_millis()).unwrap_or(i64::MAX)),
+        )
     }
 }
