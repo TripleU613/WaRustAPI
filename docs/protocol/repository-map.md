@@ -25,8 +25,9 @@
 | `src/inbox.rs`, `src/reconcile.rs`, `src/devices.rs`, `src/groups.rs`, `src/media.rs` | Planned in README 5 | **not created** (no real behaviour yet; README 5 forbids empty modules) |
 | `crates/whatsapp-api/fixtures/` | Reference manifest, token dictionary | committed with provenance |
 | `crates/whatsapp-cli/` | Operator tool / proof harness | done for offline commands |
-| `xtask/` | proto-gen/check, dependency-audit, reference-manifest | done |
+| `xtask/` | proto-gen/check, dependency-audit, reference-manifest, apk-strings, apk-tokens | done |
 | `proto/whatsmeow/` | Vendored schemas + LICENSE + REVISION | committed |
 | `docs/adr/` | Decisions 0001–0006 | written |
-| `docs/protocol/` | Evidence ledger, unknowns, component evaluation, dependency report | written / generated |
+| `docs/protocol/` | Evidence ledger, unknowns, component evaluation, APK analysis procedure, dependency report | written / generated |
+| `crates/whatsapp-api/tests/` | `crash_matrix.rs` (README 19.2 rows provable today), `codec_props.rs` (property tests) | done |
 | `.github/workflows/ci.yml` | fmt, clippy, tests, audit, proto-check, package | written (not yet run on GitHub) |

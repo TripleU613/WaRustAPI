@@ -45,6 +45,20 @@ Test count: 77 (`cargo test --workspace --all-features`), clippy clean with
 - `crates/tzibbur-api` and `crates/bridge` are not in this repository; the
   adapter contract could not be inspected.
 
+## Suggested next steps (in gate order)
+
+1. Static: recover the dictionary version byte / `WA` header and the
+   registration URL assembly from bytecode (`docs/protocol/apk-analysis.md`).
+2. Decide the Signal licence question (ADR 0005); it also gates real XEdDSA
+   certificate verification, for which no independent vectors are available
+   offline yet.
+3. With a controlled test number and operator consent: capture one
+   registration and one handshake to move `registration.*`, `transport.*`
+   and `noise.*` rows to `Observed`; only then implement the registration
+   driver and `connect`.
+4. Resolve whether the server requires the ML-KEM512 hybrid handshake
+   before investing further in the `snow` adapter.
+
 ## Commands
 
 ```sh
