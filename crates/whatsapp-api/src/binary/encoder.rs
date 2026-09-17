@@ -103,6 +103,8 @@ impl<'a> Encoder<'a> {
                 },
                 _ => match c {
                     b'0'..=b'9' => c - b'0',
+                    // Odd-length padding (mirrors the reference encoders).
+                    0 => 15,
                     _ => c - b'A' + 10,
                 },
             }
@@ -320,6 +322,14 @@ mod tests {
             back.content,
             NodeContent::Bytes(Bytes::from_static(b"some text"))
         );
+    }
+
+    #[test]
+    fn odd_length_packed_strings_roundtrip() {
+        for v in ["A", "ABC", "DEADBEE", "1", "123", "1.2-3"] {
+            let node = Node::new("iq").attr("v", v);
+            assert_eq!(roundtrip(&node), node, "{v}");
+        }
     }
 
     #[test]

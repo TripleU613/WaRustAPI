@@ -1,0 +1,8 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 83184f4480d1b22da8d36baa310836e41cb5400190013e5eebd380fbe2b48e54 # shrinks to node = Node { description: "A00A000A00A000AA0A00AAA0AA000000A0AA0", attributes: [], content: Children([]) }
+cc f6e624c58f6db81634eaf109699924bae476247956e829889a0a1711988f7ac1 # shrinks to node = Node { description: "xmlstreamstart", attributes: [], content: Children([]) }

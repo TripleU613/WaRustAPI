@@ -22,14 +22,14 @@ If the server requires a hybrid handshake for primary devices, the current
 | Token dictionary | `xtask apk-tokens --check`: ordered dictionary recovered from `classes2.dex` bytecode is identical to the committed fixture → `binary.tokens` is client-observed; version byte still ReferenceOnly |
 | Store | encryption at rest, AAD row binding, wrapped data keys with wrong-key detection, master-key rotation, second owner rejected, generation fencing, atomic rollback, journal replay/ack/trim |
 | Crash matrix (README 19.2) | `tests/crash_matrix.rs`: rows 1, 2, 3, 9, 10 (rotation) and the second-process ownership test pass; rows 4–8 and 11 need a transmission path / Signal backend / I/O fault injection |
-| Codec | 9 tests: independent hand-written fixture, JID kinds, packed strings, bounds, duplicate attributes, zlib bomb |
+| Codec | independent hand-written fixture, JID kinds, packed strings, bounds, duplicate attributes, zlib bomb; `tests/codec_props.rs` property round trips (found and fixed an odd-length hex padding overflow), decoder never panics on arbitrary bytes, framing under arbitrary fragmentation |
 | Transport | framing fragmentation/cancellation tests; Noise XX handshake + records against a snow responder; cert chain binding incl. "valid-looking chain that does not bind to the remote key" |
 | Registration | state table enforced; handles bound to attempt/generation/step; secrets never persisted (byte scan of the database) |
 | Outbox | idempotent enqueue, conflict, limits, cancel rules, uncertain delivery representation |
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect` (typed exit 4), `registration begin` (blocked with missing ledger refs), wrong key (exit 5) |
 
-Test count: 72 (`cargo test --workspace --all-features`), clippy clean with
+Test count: 77 (`cargo test --workspace --all-features`), clippy clean with
 `-D warnings`, `cargo fmt --check` clean, CI green on GitHub.
 
 ## Blocked / not started
