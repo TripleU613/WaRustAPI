@@ -15,7 +15,7 @@
 | `src/binary/` | Node codec, token dictionary | done, `Experimental` |
 | `src/transport/` | framing, cert binding, `noise` (feature) | done, `Experimental` |
 | `src/proto/` | Generated protobuf (do not edit) | generated |
-| `src/registration/` | State machine, service, `UnsupportedFlow`, version-scoped registration wire builder | request construction done for 2.26.37.70 comparison; HTTPS/verification driver blocked |
+| `src/registration/` | State machine, service, `UnsupportedFlow`, version-scoped registration wire request/response types and transport seam | offline wire handling done for 2.26.37.70 comparison; HTTPS/verification driver blocked |
 | `src/session.rs` | Account record, key material types | done |
 | `src/signal/` | Backend boundary, overlay, `NoBackend` | boundary only |
 | `src/outbox.rs` | Durable send intents, tickets, facts | done; no transmission |

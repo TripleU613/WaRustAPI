@@ -65,9 +65,11 @@ APK was unavailable. Structural bytecode analysis observed `WA 06 03`, the
 POST bodies, construction of the `authkey`/`e_*` key bundle, the same
 `WhatsAppLongTerm1` root and issuer serial used by the reference code, and
 chat connection candidates on ports 443/5222 (with a port-80 fallback). Its
-token dictionary differs from the pinned fixture. These are version-scoped
-comparative observations only: the pinned-profile labels above remain
-unchanged. Full details and hashes are in
+token dictionary differs from the pinned fixture. Its registration bridge
+also parses the JSON response status/reason and cooldown vocabulary recorded
+in the comparison fixture. These are version-scoped comparative observations
+only: the pinned-profile labels above remain unchanged. Full details and
+hashes are in
 `fixtures/comparisons/whatsapp-2.26.37.70.json` and `decompilation-log.md`.
 
 ## Dated server observations

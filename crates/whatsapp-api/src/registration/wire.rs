@@ -6,6 +6,9 @@
 //! no I/O and cannot request an OTP.
 
 use std::fmt;
+use std::future::Future;
+use std::pin::Pin;
+use std::time::Duration;
 
 use serde::{Deserialize, Serialize};
 use zeroize::Zeroizing;
@@ -20,6 +23,10 @@ pub const MAX_FIELD_NAME_BYTES: usize = 128;
 pub const MAX_FIELD_VALUE_BYTES: usize = 1 << 20;
 /// Maximum encoded registration body size.
 pub const MAX_FORM_BODY_BYTES: usize = 2 << 20;
+/// Maximum JSON response body accepted from a registration transport.
+pub const MAX_RESPONSE_BODY_BYTES: usize = 1 << 20;
+/// Maximum bytes accepted in a secret-bearing response string.
+pub const MAX_RESPONSE_SECRET_BYTES: usize = 256 << 10;
 
 /// Registration endpoints present in signed Android build 2.26.37.70.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -318,6 +325,517 @@ impl EncodedRegistrationRequest {
     }
 }
 
+/// Future returned by a registration HTTP transport.
+pub type RegistrationTransportFuture<'a> =
+    Pin<Box<dyn Future<Output = Result<RegistrationHttpResponse>> + Send + 'a>>;
+
+/// Narrow HTTPS boundary used by a future profile-specific registration
+/// driver. Implementations are responsible for certificate validation,
+/// deadlines and redirect policy. They must not log request or response
+/// bodies.
+pub trait RegistrationTransport: Send + Sync + fmt::Debug {
+    /// Send exactly one constructed request.
+    fn send<'a>(&'a self, request: EncodedRegistrationRequest) -> RegistrationTransportFuture<'a>;
+}
+
+/// Bounded, secret-bearing HTTP response returned by a registration
+/// transport.
+pub struct RegistrationHttpResponse {
+    status_code: u16,
+    body: Zeroizing<Vec<u8>>,
+}
+
+impl fmt::Debug for RegistrationHttpResponse {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("RegistrationHttpResponse")
+            .field("status_code", &self.status_code)
+            .field("body_length", &self.body.len())
+            .field("body", &"<redacted>")
+            .finish()
+    }
+}
+
+impl RegistrationHttpResponse {
+    /// Construct a response while enforcing the local body-size limit.
+    pub fn new(status_code: u16, body: Zeroizing<Vec<u8>>) -> Result<Self> {
+        if !(100..=599).contains(&status_code) {
+            return Err(Error::invalid(
+                "registration_http_status",
+                "must be a three-digit HTTP status",
+            ));
+        }
+        if body.len() > MAX_RESPONSE_BODY_BYTES {
+            return Err(Error::ResourceExhausted {
+                resource: "registration response body bytes",
+                limit: MAX_RESPONSE_BODY_BYTES as u64,
+            });
+        }
+        Ok(Self { status_code, body })
+    }
+
+    /// HTTP status code returned by the server.
+    pub const fn status_code(&self) -> u16 {
+        self.status_code
+    }
+
+    /// Parse the JSON object observed in the comparison client. This consumes
+    /// and zeroizes the original body buffer.
+    pub fn parse_json(self) -> Result<RegistrationResponse> {
+        RegistrationResponse::parse(self.body)
+    }
+}
+
+/// Status strings handled by the comparison client's registration bridge.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
+pub enum RegistrationResponseStatus {
+    /// Request completed.
+    Ok,
+    /// A verification request was sent.
+    Sent,
+    /// Request failed with a reason token.
+    Fail,
+    /// A code or account was attached.
+    Attached,
+    /// A status added after the inspected build.
+    Other,
+}
+
+impl RegistrationResponseStatus {
+    /// Statuses explicitly handled by the comparison build.
+    pub const OBSERVED: [Self; 4] = [Self::Ok, Self::Sent, Self::Fail, Self::Attached];
+
+    /// Wire spelling for a status known to the comparison build.
+    pub const fn wire_value(self) -> Option<&'static str> {
+        match self {
+            Self::Ok => Some("ok"),
+            Self::Sent => Some("sent"),
+            Self::Fail => Some("fail"),
+            Self::Attached => Some("attached"),
+            Self::Other => None,
+        }
+    }
+
+    fn parse(value: &str) -> Self {
+        match value {
+            "ok" => Self::Ok,
+            "sent" => Self::Sent,
+            "fail" => Self::Fail,
+            "attached" => Self::Attached,
+            _ => Self::Other,
+        }
+    }
+}
+
+/// Reason strings explicitly handled by the comparison client's registration
+/// bridge. Meaning and state transitions still require live validation.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
+pub enum RegistrationResponseReason {
+    /// Verification guesses were submitted too quickly.
+    GuessedTooFast,
+    /// The operation is not allowed.
+    NotAllowed,
+    /// A reset was requested too soon.
+    ResetTooSoon,
+    /// Device confirmation or a second code is required.
+    DeviceConfirmOrSecondCode,
+    /// A challenge step is required.
+    Challenge,
+    /// Required state or input is missing.
+    Missing,
+    /// A consent step is required.
+    Consent,
+    /// A second verification code is required.
+    SecondCode,
+    /// The submitted state is stale.
+    Stale,
+    /// The operation or account is blocked.
+    Blocked,
+    /// Too many verification guesses were submitted.
+    TooManyGuesses,
+    /// An account security code is required.
+    SecurityCode,
+    /// The operation is unavailable for this release cohort.
+    LimitedRelease,
+    /// Submitted state does not match server state.
+    Mismatch,
+    /// The operation is temporarily unavailable.
+    TemporarilyUnavailable,
+    /// A submitted value is incorrect.
+    Incorrect,
+    /// The parent-linking consent target is already registered.
+    ConsentParentLinkingAlreadyRegistered,
+    /// A submitted value has the wrong format.
+    FormatWrong,
+    /// SMS verification is required.
+    SmsRequired,
+    /// A supplied token is invalid.
+    BadToken,
+    /// A supplied parameter is invalid.
+    BadParam,
+    /// The operation was attempted too recently.
+    TooRecent,
+    /// The server requires another delivery method.
+    NextMethod,
+    /// The caller should request SMS delivery.
+    SendSms,
+    /// The client version is too old.
+    OldVersion,
+    /// No delivery route is available.
+    NoRoutes,
+    /// The signed pre-key is invalid.
+    InvalidSkey,
+    /// Too many attempts were made across all methods.
+    TooManyAllMethods,
+    /// A generic attempt limit was reached.
+    TooMany,
+    /// The server is waiting for SMS verification.
+    WaitingForSms,
+    /// Flash-call verification is disabled.
+    FlashDisabled,
+    /// A required parameter is absent.
+    MissingParam,
+    /// The selected provider cannot route the request.
+    ProviderUnroutable,
+    /// The selected provider timed out.
+    ProviderTimeout,
+    /// A submitted value is too short.
+    LengthShort,
+    /// A submitted value is too long.
+    LengthLong,
+    /// Business registration is not allowed.
+    BizNotAllowed,
+    /// A reason added after the inspected build.
+    Other,
+}
+
+impl RegistrationResponseReason {
+    /// Reason tokens explicitly handled by the comparison build.
+    pub const OBSERVED: [Self; 37] = [
+        Self::GuessedTooFast,
+        Self::NotAllowed,
+        Self::ResetTooSoon,
+        Self::DeviceConfirmOrSecondCode,
+        Self::Challenge,
+        Self::Missing,
+        Self::Consent,
+        Self::SecondCode,
+        Self::Stale,
+        Self::Blocked,
+        Self::TooManyGuesses,
+        Self::SecurityCode,
+        Self::LimitedRelease,
+        Self::Mismatch,
+        Self::TemporarilyUnavailable,
+        Self::Incorrect,
+        Self::ConsentParentLinkingAlreadyRegistered,
+        Self::FormatWrong,
+        Self::SmsRequired,
+        Self::BadToken,
+        Self::BadParam,
+        Self::TooRecent,
+        Self::NextMethod,
+        Self::SendSms,
+        Self::OldVersion,
+        Self::NoRoutes,
+        Self::InvalidSkey,
+        Self::TooManyAllMethods,
+        Self::TooMany,
+        Self::WaitingForSms,
+        Self::FlashDisabled,
+        Self::MissingParam,
+        Self::ProviderUnroutable,
+        Self::ProviderTimeout,
+        Self::LengthShort,
+        Self::LengthLong,
+        Self::BizNotAllowed,
+    ];
+
+    /// Wire spelling for a reason known to the comparison build.
+    pub const fn wire_value(self) -> Option<&'static str> {
+        Some(match self {
+            Self::GuessedTooFast => "guessed_too_fast",
+            Self::NotAllowed => "not_allowed",
+            Self::ResetTooSoon => "reset_too_soon",
+            Self::DeviceConfirmOrSecondCode => "device_confirm_or_second_code",
+            Self::Challenge => "challenge",
+            Self::Missing => "missing",
+            Self::Consent => "consent",
+            Self::SecondCode => "second_code",
+            Self::Stale => "stale",
+            Self::Blocked => "blocked",
+            Self::TooManyGuesses => "too_many_guesses",
+            Self::SecurityCode => "security_code",
+            Self::LimitedRelease => "limited_release",
+            Self::Mismatch => "mismatch",
+            Self::TemporarilyUnavailable => "temporarily_unavailable",
+            Self::Incorrect => "incorrect",
+            Self::ConsentParentLinkingAlreadyRegistered => {
+                "consent_parent_linking_already_registered"
+            }
+            Self::FormatWrong => "format_wrong",
+            Self::SmsRequired => "sms_required",
+            Self::BadToken => "bad_token",
+            Self::BadParam => "bad_param",
+            Self::TooRecent => "too_recent",
+            Self::NextMethod => "next_method",
+            Self::SendSms => "send_sms",
+            Self::OldVersion => "old_version",
+            Self::NoRoutes => "no_routes",
+            Self::InvalidSkey => "invalid_skey",
+            Self::TooManyAllMethods => "too_many_all_methods",
+            Self::TooMany => "too_many",
+            Self::WaitingForSms => "waiting_for_sms",
+            Self::FlashDisabled => "flash_disabled",
+            Self::MissingParam => "missing_param",
+            Self::ProviderUnroutable => "provider_unroutable",
+            Self::ProviderTimeout => "provider_timeout",
+            Self::LengthShort => "length_short",
+            Self::LengthLong => "length_long",
+            Self::BizNotAllowed => "biz_not_allowed",
+            Self::Other => return None,
+        })
+    }
+
+    fn parse(value: &str) -> Self {
+        Self::OBSERVED
+            .into_iter()
+            .find(|reason| reason.wire_value() == Some(value))
+            .unwrap_or(Self::Other)
+    }
+}
+
+/// Secret fields extracted from a registration response. Debug output reports
+/// presence only, and every value is zeroized on drop.
+#[derive(Default)]
+pub struct RegistrationResponseSecrets {
+    login: Option<Zeroizing<String>>,
+    code: Option<Zeroizing<String>>,
+    wipe_token: Option<Zeroizing<String>>,
+    passkey_credential: Option<Zeroizing<String>>,
+    appeal_token: Option<Zeroizing<String>>,
+    edge_routing_info: Option<Zeroizing<String>>,
+}
+
+impl fmt::Debug for RegistrationResponseSecrets {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("RegistrationResponseSecrets")
+            .field("has_login", &self.login.is_some())
+            .field("has_code", &self.code.is_some())
+            .field("has_wipe_token", &self.wipe_token.is_some())
+            .field("has_passkey_credential", &self.passkey_credential.is_some())
+            .field("has_appeal_token", &self.appeal_token.is_some())
+            .field("has_edge_routing_info", &self.edge_routing_info.is_some())
+            .finish()
+    }
+}
+
+impl RegistrationResponseSecrets {
+    /// Remove and return the login credential, if present.
+    pub fn take_login(&mut self) -> Option<Zeroizing<String>> {
+        self.login.take()
+    }
+
+    /// Remove and return the server-provided code, if present.
+    pub fn take_code(&mut self) -> Option<Zeroizing<String>> {
+        self.code.take()
+    }
+
+    /// Remove and return the wipe token, if present.
+    pub fn take_wipe_token(&mut self) -> Option<Zeroizing<String>> {
+        self.wipe_token.take()
+    }
+
+    /// Remove and return the passkey credential, if present.
+    pub fn take_passkey_credential(&mut self) -> Option<Zeroizing<String>> {
+        self.passkey_credential.take()
+    }
+
+    /// Remove and return the appeal token, if present.
+    pub fn take_appeal_token(&mut self) -> Option<Zeroizing<String>> {
+        self.appeal_token.take()
+    }
+
+    /// Remove and return edge-routing information, if present.
+    pub fn take_edge_routing_info(&mut self) -> Option<Zeroizing<String>> {
+        self.edge_routing_info.take()
+    }
+}
+
+/// Sanitized control fields parsed from a comparison-build registration JSON
+/// response.
+pub struct RegistrationResponse {
+    /// Parsed response status.
+    pub status: RegistrationResponseStatus,
+    /// Parsed reason, when the server included one.
+    pub reason: Option<RegistrationResponseReason>,
+    /// General retry delay.
+    pub retry_after: Option<Duration>,
+    /// SMS retry delay.
+    pub sms_wait: Option<Duration>,
+    /// Voice-call retry delay.
+    pub voice_wait: Option<Duration>,
+    /// Flash-call retry delay.
+    pub flash_wait: Option<Duration>,
+    /// Account-wipe retry delay.
+    pub wipe_wait: Option<Duration>,
+    /// Generic verification-code length.
+    pub code_length: Option<u32>,
+    /// SMS verification-code length.
+    pub sms_length: Option<u32>,
+    /// Voice verification-code length.
+    pub voice_length: Option<u32>,
+    /// Whether an account security code is configured.
+    pub security_code_set: bool,
+    /// Whether the secure verifier flow is enabled.
+    pub secure_verifier: bool,
+    secrets: RegistrationResponseSecrets,
+}
+
+impl fmt::Debug for RegistrationResponse {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("RegistrationResponse")
+            .field("status", &self.status)
+            .field("reason", &self.reason)
+            .field("retry_after", &self.retry_after)
+            .field("sms_wait", &self.sms_wait)
+            .field("voice_wait", &self.voice_wait)
+            .field("flash_wait", &self.flash_wait)
+            .field("wipe_wait", &self.wipe_wait)
+            .field("code_length", &self.code_length)
+            .field("sms_length", &self.sms_length)
+            .field("voice_length", &self.voice_length)
+            .field("security_code_set", &self.security_code_set)
+            .field("secure_verifier", &self.secure_verifier)
+            .field("secrets", &self.secrets)
+            .finish()
+    }
+}
+
+impl RegistrationResponse {
+    fn parse(body: Zeroizing<Vec<u8>>) -> Result<Self> {
+        let raw: RawRegistrationResponse = serde_json::from_slice(&body).map_err(|_| {
+            Error::invalid(
+                "registration_response",
+                "expected a bounded JSON object with supported field types",
+            )
+        })?;
+        let status = raw
+            .status
+            .ok_or_else(|| Error::invalid("registration_response", "missing non-empty status"))?;
+        validate_response_token("status", &status)?;
+        if let Some(reason) = raw.reason.as_deref() {
+            validate_response_token("reason", reason)?;
+        }
+        for secret in [
+            raw.login.as_ref(),
+            raw.code.as_ref(),
+            raw.wipe_token.as_ref(),
+            raw.passkey_credential.as_ref(),
+            raw.appeal_token.as_ref(),
+            raw.edge_routing_info.as_ref(),
+        ]
+        .into_iter()
+        .flatten()
+        {
+            if secret.len() > MAX_RESPONSE_SECRET_BYTES {
+                return Err(Error::ResourceExhausted {
+                    resource: "registration response secret bytes",
+                    limit: MAX_RESPONSE_SECRET_BYTES as u64,
+                });
+            }
+        }
+
+        Ok(Self {
+            status: RegistrationResponseStatus::parse(&status),
+            reason: raw.reason.as_deref().map(RegistrationResponseReason::parse),
+            retry_after: parse_seconds("retry_after", raw.retry_after)?,
+            sms_wait: parse_seconds("sms_wait", raw.sms_wait)?,
+            voice_wait: parse_seconds("voice_wait", raw.voice_wait)?,
+            flash_wait: parse_seconds("flash_wait", raw.flash_wait)?,
+            wipe_wait: parse_seconds("wipe_wait", raw.wipe_wait)?,
+            code_length: raw.length,
+            sms_length: raw.sms_length,
+            voice_length: raw.voice_length,
+            security_code_set: raw.security_code_set,
+            secure_verifier: raw.secure_verifier,
+            secrets: RegistrationResponseSecrets {
+                login: raw.login,
+                code: raw.code,
+                wipe_token: raw.wipe_token,
+                passkey_credential: raw.passkey_credential,
+                appeal_token: raw.appeal_token,
+                edge_routing_info: raw.edge_routing_info,
+            },
+        })
+    }
+
+    /// Move secret-bearing fields into a separately redacted container.
+    pub fn take_secrets(&mut self) -> RegistrationResponseSecrets {
+        std::mem::take(&mut self.secrets)
+    }
+}
+
+#[derive(Deserialize)]
+struct RawRegistrationResponse {
+    status: Option<String>,
+    reason: Option<String>,
+    retry_after: Option<SecondsValue>,
+    sms_wait: Option<SecondsValue>,
+    voice_wait: Option<SecondsValue>,
+    flash_wait: Option<SecondsValue>,
+    wipe_wait: Option<SecondsValue>,
+    length: Option<u32>,
+    sms_length: Option<u32>,
+    voice_length: Option<u32>,
+    #[serde(default)]
+    security_code_set: bool,
+    #[serde(default)]
+    secure_verifier: bool,
+    login: Option<Zeroizing<String>>,
+    code: Option<Zeroizing<String>>,
+    wipe_token: Option<Zeroizing<String>>,
+    passkey_credential: Option<Zeroizing<String>>,
+    appeal_token: Option<Zeroizing<String>>,
+    edge_routing_info: Option<Zeroizing<String>>,
+}
+
+#[derive(Deserialize)]
+#[serde(untagged)]
+enum SecondsValue {
+    Number(u64),
+    String(String),
+}
+
+fn parse_seconds(field: &'static str, value: Option<SecondsValue>) -> Result<Option<Duration>> {
+    let Some(value) = value else {
+        return Ok(None);
+    };
+    let seconds = match value {
+        SecondsValue::Number(value) => value,
+        SecondsValue::String(value) => value.parse::<u64>().map_err(|_| {
+            Error::invalid("registration_response", format!("invalid {field} value"))
+        })?,
+    };
+    Ok(Some(Duration::from_secs(seconds)))
+}
+
+fn validate_response_token(field: &'static str, value: &str) -> Result<()> {
+    if value.is_empty()
+        || value.len() > 64
+        || !value
+            .bytes()
+            .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'_')
+    {
+        return Err(Error::invalid(
+            "registration_response",
+            format!("invalid {field} token"),
+        ));
+    }
+    Ok(())
+}
+
 fn encode_component(input: &[u8], output: &mut Vec<u8>) {
     const HEX: &[u8; 16] = b"0123456789ABCDEF";
     for &byte in input {
@@ -388,6 +906,22 @@ mod tests {
             evidence["observations"]["registration"]["paths"],
             serde_json::json!(paths)
         );
+        let statuses: Vec<_> = RegistrationResponseStatus::OBSERVED
+            .iter()
+            .map(|status| status.wire_value().unwrap())
+            .collect();
+        assert_eq!(
+            evidence["observations"]["registration"]["response"]["statuses"],
+            serde_json::json!(statuses)
+        );
+        let reasons: Vec<_> = RegistrationResponseReason::OBSERVED
+            .iter()
+            .map(|reason| reason.wire_value().unwrap())
+            .collect();
+        assert_eq!(
+            evidence["observations"]["registration"]["response"]["reason_values"],
+            serde_json::json!(reasons)
+        );
     }
 
     #[test]
@@ -445,5 +979,142 @@ mod tests {
             form.push(format!("f{index}"), "x").unwrap();
         }
         assert!(form.push("one_too_many", "x").is_err());
+    }
+
+    #[test]
+    fn parses_control_fields_and_redacts_secrets() {
+        let body = Zeroizing::new(
+            br#"{
+                "status":"sent",
+                "reason":"waiting_for_sms",
+                "retry_after":"30",
+                "sms_wait":5,
+                "voice_wait":"60",
+                "flash_wait":0,
+                "wipe_wait":"120",
+                "length":6,
+                "sms_length":6,
+                "voice_length":6,
+                "security_code_set":true,
+                "secure_verifier":true,
+                "login":"login-secret",
+                "code":"123456",
+                "wipe_token":"wipe-secret",
+                "passkey_credential":"passkey-secret",
+                "appeal_token":"appeal-secret",
+                "edge_routing_info":"routing-secret"
+            }"#
+            .to_vec(),
+        );
+        let mut response = RegistrationHttpResponse::new(200, body)
+            .unwrap()
+            .parse_json()
+            .unwrap();
+        assert_eq!(response.status, RegistrationResponseStatus::Sent);
+        assert_eq!(
+            response.reason,
+            Some(RegistrationResponseReason::WaitingForSms)
+        );
+        assert_eq!(response.retry_after, Some(Duration::from_secs(30)));
+        assert_eq!(response.sms_wait, Some(Duration::from_secs(5)));
+        assert_eq!(response.voice_wait, Some(Duration::from_secs(60)));
+        assert_eq!(response.wipe_wait, Some(Duration::from_secs(120)));
+        assert_eq!(response.code_length, Some(6));
+        let debug = format!("{response:?}");
+        for secret in [
+            "login-secret",
+            "123456",
+            "wipe-secret",
+            "passkey-secret",
+            "appeal-secret",
+            "routing-secret",
+        ] {
+            assert!(!debug.contains(secret));
+        }
+
+        let mut secrets = response.take_secrets();
+        assert_eq!(secrets.take_login().unwrap().as_str(), "login-secret");
+        assert_eq!(secrets.take_code().unwrap().as_str(), "123456");
+        assert_eq!(secrets.take_wipe_token().unwrap().as_str(), "wipe-secret");
+        assert_eq!(
+            secrets.take_passkey_credential().unwrap().as_str(),
+            "passkey-secret"
+        );
+        assert_eq!(
+            secrets.take_appeal_token().unwrap().as_str(),
+            "appeal-secret"
+        );
+        assert_eq!(
+            secrets.take_edge_routing_info().unwrap().as_str(),
+            "routing-secret"
+        );
+    }
+
+    #[test]
+    fn response_parser_is_bounded_and_forward_compatible() {
+        let response = RegistrationHttpResponse::new(
+            429,
+            Zeroizing::new(br#"{"status":"new_status","reason":"new_reason"}"#.to_vec()),
+        )
+        .unwrap()
+        .parse_json()
+        .unwrap();
+        assert_eq!(response.status, RegistrationResponseStatus::Other);
+        assert_eq!(response.reason, Some(RegistrationResponseReason::Other));
+
+        assert!(RegistrationHttpResponse::new(99, Zeroizing::new(Vec::new())).is_err());
+        assert!(
+            RegistrationHttpResponse::new(
+                200,
+                Zeroizing::new(vec![b'x'; MAX_RESPONSE_BODY_BYTES + 1])
+            )
+            .is_err()
+        );
+        assert!(
+            RegistrationHttpResponse::new(
+                200,
+                Zeroizing::new(br#"{"status":"ok","retry_after":"not-a-number"}"#.to_vec())
+            )
+            .unwrap()
+            .parse_json()
+            .is_err()
+        );
+        assert!(
+            RegistrationHttpResponse::new(200, Zeroizing::new(br#"{"reason":"blocked"}"#.to_vec()))
+                .unwrap()
+                .parse_json()
+                .is_err()
+        );
+    }
+
+    #[derive(Debug)]
+    struct MockTransport;
+
+    impl RegistrationTransport for MockTransport {
+        fn send<'a>(
+            &'a self,
+            request: EncodedRegistrationRequest,
+        ) -> RegistrationTransportFuture<'a> {
+            Box::pin(async move {
+                assert_eq!(request.url(), "https://v.whatsapp.net/v2/code");
+                RegistrationHttpResponse::new(
+                    200,
+                    Zeroizing::new(br#"{"status":"sent","retry_after":"20"}"#.to_vec()),
+                )
+            })
+        }
+    }
+
+    #[tokio::test]
+    async fn transport_boundary_owns_secret_request_and_response_buffers() {
+        let request = WHATSAPP_2_26_37_70
+            .request(RegistrationEndpoint::Code, &RegistrationForm::new())
+            .unwrap();
+        let response = MockTransport.send(request).await.unwrap();
+        assert_eq!(response.status_code(), 200);
+        assert_eq!(
+            response.parse_json().unwrap().retry_after,
+            Some(Duration::from_secs(20))
+        );
     }
 }

@@ -183,6 +183,23 @@ The Rust-native parser was corrected before analysis:
   `e_skey_sig`. Static analysis establishes the bundle construction, not the
   exact first request on which every field is mandatory.
 
+### T2 — registration response envelope
+
+- `KotlinRegistrationBridge` reads an HTTP result's `JSONObject` and handles
+  the response statuses `ok`, `sent`, `fail`, and `attached` across its code
+  request and phone-registration parsers.
+- It branches on the reason tokens recorded in the comparison fixture,
+  including `challenge`, `security_code`, `second_code`, cooldown/provider
+  failures, and malformed-key/input cases. This establishes vocabulary, not
+  the state transition appropriate for an unobserved server response.
+- Cooldown and verification controls include `retry_after`, `sms_wait`,
+  `voice_wait`, `flash_wait`, `wipe_wait`, `length`, `sms_length`, and
+  `voice_length`. Credential/routing values such as `login`, `code`,
+  `wipe_token`, `passkey_credential`, `appeal_token`, and
+  `edge_routing_info` are treated as secret-bearing by the Rust boundary.
+- No response was obtained from a server. The parser is comparison-scoped and
+  cannot promote `registration.verification_steps` for the active profile.
+
 ### T3 — connection header and token dictionary
 
 - `LX/1N7;->A04(L)` returns `57 41 05 03` for protocol version 5 and

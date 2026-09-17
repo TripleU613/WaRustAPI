@@ -8,11 +8,11 @@ Ordered by what blocks the first decisive result (README section 0).
    *Progress 2026-09-17:* host `v.whatsapp.net`, path fragments and the
    parameter vocabulary are client-observed (ledger `registration.host`,
    `registration.vocabulary`). A separately pinned newer build (2.26.37.70)
-   statically confirms the full base/path assembly and URL-encoded form body,
-   but the exact 2.26.36.75 artifact and a live capture are still needed
-   before changing the active profile. `RegistrationService::begin` still
-   returns `Blocked(ProfileIncomplete)` because the complete flow is
-   unobserved.
+   statically confirms the full base/path assembly, URL-encoded form body and
+   JSON response vocabulary, but the exact 2.26.36.75 artifact and a live
+   capture are still needed before changing the active profile.
+   `RegistrationService::begin` still returns `Blocked(ProfileIncomplete)`
+   because response meanings and the complete flow are unobserved.
 2. **Transport endpoint and layer** (`transport.endpoint`): port, TCP vs
    WebSocket, whether TLS wraps Noise on Android. *Progress:* hosts
    `g.whatsapp.net`, `g-fallback`, `e1`–`e16.whatsapp.net` are client-observed.

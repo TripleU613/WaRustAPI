@@ -14,7 +14,10 @@ use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::Semaphore;
 use tokio::time::timeout;
 use whatsapp_api::capabilities::CapabilityMatrix;
-use whatsapp_api::registration::wire::{RegistrationEndpoint, WHATSAPP_2_26_37_70};
+use whatsapp_api::registration::wire::{
+    MAX_RESPONSE_BODY_BYTES, RegistrationEndpoint, RegistrationResponseReason,
+    RegistrationResponseStatus, WHATSAPP_2_26_37_70,
+};
 use whatsapp_api::{Error, ProtocolProfile};
 
 const MAX_HEADER_BYTES: usize = 16 * 1024;
@@ -270,7 +273,19 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
                         "path": endpoint.path(),
                         "url": WHATSAPP_2_26_37_70.endpoint_url(*endpoint)
                     }))
-                    .collect::<Vec<_>>()
+                    .collect::<Vec<_>>(),
+                "response_schema": {
+                    "encoding": "json",
+                    "max_body_bytes": MAX_RESPONSE_BODY_BYTES,
+                    "statuses": RegistrationResponseStatus::OBSERVED
+                        .iter()
+                        .filter_map(|status| status.wire_value())
+                        .collect::<Vec<_>>(),
+                    "reasons": RegistrationResponseReason::OBSERVED
+                        .iter()
+                        .filter_map(|reason| reason.wire_value())
+                        .collect::<Vec<_>>()
+                }
             }),
         ),
         ("POST", "/v1/connect") => Response::json(
@@ -365,6 +380,12 @@ mod tests {
         assert_eq!(response.status, 200);
         assert_eq!(body["wire_profile"]["version_name"], "2.26.37.70");
         assert_eq!(body["endpoints"].as_array().unwrap().len(), 17);
+        assert_eq!(body["response_schema"]["encoding"], "json");
+        assert_eq!(body["response_schema"]["statuses"][1], "sent");
+        assert_eq!(
+            body["response_schema"]["reasons"].as_array().unwrap().len(),
+            37
+        );
         assert_eq!(
             body["endpoints"][2]["url"],
             "https://v.whatsapp.net/v2/code"
