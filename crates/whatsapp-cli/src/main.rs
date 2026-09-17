@@ -312,6 +312,17 @@ async fn run(cli: Cli) -> Result<(), Error> {
                 c.shutdown().await;
                 Ok(())
             }
+            StoreCmd::RotateKey { new_key_env } => {
+                let c = open_client(&cli, false).await?;
+                let store = c.store().clone();
+                let source = EnvKeySource::new(new_key_env.clone());
+                store
+                    .run_blocking(move |s| s.rotate_master_key(&source))
+                    .await?;
+                println!("master key rotated; the previous key no longer opens this store");
+                c.shutdown().await;
+                Ok(())
+            }
         },
         Cmd::Registration { cmd } => {
             let c = open_client(&cli, true).await?;
