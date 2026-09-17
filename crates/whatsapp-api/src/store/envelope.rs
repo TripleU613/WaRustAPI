@@ -60,6 +60,7 @@ impl RecordAad<'_> {
 pub(crate) struct Sealer {
     cipher: XChaCha20Poly1305,
     key_id: u32,
+    data_key: zeroize::Zeroizing<[u8; 32]>,
 }
 
 impl std::fmt::Debug for Sealer {
@@ -73,7 +74,13 @@ impl Sealer {
         Self {
             cipher: XChaCha20Poly1305::new(data_key.into()),
             key_id,
+            data_key: zeroize::Zeroizing::new(*data_key),
         }
+    }
+
+    /// The raw data key (for re-wrapping during master-key rotation only).
+    pub(crate) fn data_key(&self) -> [u8; 32] {
+        *self.data_key
     }
 
     /// Encrypt `plaintext` under `aad` with a fresh random nonce.

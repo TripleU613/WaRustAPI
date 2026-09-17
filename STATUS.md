@@ -20,7 +20,8 @@ If the server requires a hybrid handshake for primary devices, the current
 | Reference APK pinned | `com.whatsapp` 2.26.36.75 / 263607533, sha256 `ce7468…922e9`, signing cert `39:87:D0:…:5D:44`; reproduced by `xtask reference-manifest --check` |
 | APK static observations | `xtask apk-strings`: 449,216 dex strings; hosts (`g.whatsapp.net`, `e1`–`e16`, `v.whatsapp.net`, `mmg.whatsapp.net`), 12 Noise pattern names, registration parameter vocabulary, ClientPayload field constants |
 | Token dictionary | `xtask apk-tokens --check`: ordered dictionary recovered from `classes2.dex` bytecode is identical to the committed fixture → `binary.tokens` is client-observed; version byte still ReferenceOnly |
-| Store | 10 tests: encryption at rest, AAD row binding, wrong key typed, second owner rejected, generation fencing, atomic rollback, journal replay/ack/trim |
+| Store | encryption at rest, AAD row binding, wrapped data keys with wrong-key detection, master-key rotation, second owner rejected, generation fencing, atomic rollback, journal replay/ack/trim |
+| Crash matrix (README 19.2) | `tests/crash_matrix.rs`: rows 1, 2, 3, 9, 10 (rotation) and the second-process ownership test pass; rows 4–8 and 11 need a transmission path / Signal backend / I/O fault injection |
 | Codec | 9 tests: independent hand-written fixture, JID kinds, packed strings, bounds, duplicate attributes, zlib bomb |
 | Transport | framing fragmentation/cancellation tests; Noise XX handshake + records against a snow responder; cert chain binding incl. "valid-looking chain that does not bind to the remote key" |
 | Registration | state table enforced; handles bound to attempt/generation/step; secrets never persisted (byte scan of the database) |
@@ -28,8 +29,8 @@ If the server requires a hybrid handshake for primary devices, the current
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect` (typed exit 4), `registration begin` (blocked with missing ledger refs), wrong key (exit 5) |
 
-Test count: 64 (`cargo test --workspace --all-features`), clippy clean with
-`-D warnings`, `cargo fmt --check` clean.
+Test count: 72 (`cargo test --workspace --all-features`), clippy clean with
+`-D warnings`, `cargo fmt --check` clean, CI green on GitHub.
 
 ## Blocked / not started
 
@@ -39,7 +40,8 @@ Test count: 64 (`cargo test --workspace --all-features`), clippy clean with
 - TLS provider for HTTPS: gate (ADR 0003).
 - Inbox, devices, groups, media, message operations, bridge adapter: gates
   G3–G6; modules intentionally not created yet.
-- Key rotation, backup/restore, crash-matrix harness with injected failures.
+- Data-key re-encryption, backup/restore, and I/O-fault injection for the
+  remaining crash-matrix rows.
 - `crates/tzibbur-api` and `crates/bridge` are not in this repository; the
   adapter contract could not be inspected.
 

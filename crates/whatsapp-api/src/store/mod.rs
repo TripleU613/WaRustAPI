@@ -24,13 +24,14 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
 use self::envelope::{RecordAad, Sealer};
-use self::keys::{DerivedKeys, KeySource};
+pub use self::keys::MasterKey;
+use self::keys::{DataKeys, Kek, KeySource};
 use crate::error::{Error, Result};
 use crate::model::ids::{AccountGeneration, AccountId, EventCursor, EventId};
 use crate::model::time::Timestamp;
 use crate::sync::{EventBatch, EventEnvelope, SyncEvent};
 
-pub use self::keys::{EnvKeySource, MasterKey, StaticKeySource};
+pub use self::keys::{EnvKeySource, StaticKeySource};
 
 /// Current on-disk schema version.
 pub const SCHEMA_VERSION: u32 = 1;
@@ -270,9 +271,8 @@ const META_SCHEMA: &str = "schema_version";
 const META_SALT: &str = "salt";
 const META_ACCOUNT: &str = "account_id";
 const META_GENERATION: &str = "generation";
-const META_KEY_CHECK: &str = "key_check";
+const META_WRAPPED_KEYS: &str = "wrapped_keys";
 const META_JOURNAL_FLOOR: &str = "journal_floor";
-const KEY_CHECK_PLAINTEXT: &[u8] = b"whatsapp-api store key check v1";
 
 /// Options for opening or creating a store.
 #[derive(Debug)]
@@ -345,10 +345,10 @@ impl ProtocolStore {
             .create(&opts.path)
             .map_err(StoreError::from)?;
 
-        // Bootstrap or validate meta.
-        let (salt, generation, key_check_exists) = {
+        // Bootstrap or validate meta, then unwrap (or create) the data keys.
+        let (data_keys, generation) = {
             let tx = db.begin_write().map_err(StoreError::from)?;
-            let (salt, generation, key_check) = {
+            let result = {
                 let mut meta = tx.open_table(META).map_err(StoreError::from)?;
                 let schema = meta
                     .get(META_SCHEMA)
@@ -359,9 +359,13 @@ impl ProtocolStore {
                         let mut salt = [0u8; 32];
                         getrandom::fill(&mut salt)
                             .map_err(|e| StoreError::Entropy(e.to_string()))?;
+                        let keys = DataKeys::generate()?;
+                        let wrapped = wrap_keys(&master, &salt, &keys)?;
                         meta.insert(META_SCHEMA, SCHEMA_VERSION.to_be_bytes().as_slice())
                             .map_err(StoreError::from)?;
                         meta.insert(META_SALT, salt.as_slice())
+                            .map_err(StoreError::from)?;
+                        meta.insert(META_WRAPPED_KEYS, wrapped.as_slice())
                             .map_err(StoreError::from)?;
                         meta.insert(META_ACCOUNT, opts.account_id.as_str().as_bytes())
                             .map_err(StoreError::from)?;
@@ -369,19 +373,10 @@ impl ProtocolStore {
                             .map_err(StoreError::from)?;
                         meta.insert(META_JOURNAL_FLOOR, 0u64.to_be_bytes().as_slice())
                             .map_err(StoreError::from)?;
-                        (salt, AccountGeneration(1), None)
+                        (keys, AccountGeneration(1))
                     }
                     Some(v) if v == SCHEMA_VERSION => {
-                        let salt_v = meta
-                            .get(META_SALT)
-                            .map_err(StoreError::from)?
-                            .map(|g| g.value().to_vec())
-                            .ok_or(StoreError::MalformedEnvelope("meta.salt missing"))?;
-                        let mut salt = [0u8; 32];
-                        if salt_v.len() != 32 {
-                            return Err(StoreError::MalformedEnvelope("meta.salt length").into());
-                        }
-                        salt.copy_from_slice(&salt_v);
+                        let salt = read_salt(&meta)?;
                         let acct = meta
                             .get(META_ACCOUNT)
                             .map_err(StoreError::from)?
@@ -395,11 +390,12 @@ impl ProtocolStore {
                             .map_err(StoreError::from)?
                             .map(|g| AccountGeneration(bytes_to_u32(g.value())))
                             .unwrap_or(AccountGeneration(1));
-                        let key_check = meta
-                            .get(META_KEY_CHECK)
+                        let wrapped = meta
+                            .get(META_WRAPPED_KEYS)
                             .map_err(StoreError::from)?
-                            .map(|g| g.value().to_vec());
-                        (salt, generation, key_check)
+                            .map(|g| g.value().to_vec())
+                            .ok_or(StoreError::MalformedEnvelope("meta.wrapped_keys missing"))?;
+                        (unwrap_keys(&master, &salt, &wrapped)?, generation)
                     }
                     Some(found) => {
                         return Err(StoreError::SchemaVersion {
@@ -418,38 +414,11 @@ impl ProtocolStore {
             tx.open_table(EVENTS).map_err(StoreError::from)?;
             tx.open_table(CONSUMERS).map_err(StoreError::from)?;
             tx.commit().map_err(StoreError::from)?;
-            (salt, generation, key_check)
+            result
         };
 
-        let derived = DerivedKeys::derive(&master, &salt);
-        let sealer = Sealer::new(&derived.data_key, derived.key_id);
-        let key_check_aad = RecordAad {
-            generation: 0,
-            table: "meta",
-            key: META_KEY_CHECK.as_bytes(),
-            record_version: RECORD_V1,
-        };
-        match key_check_exists {
-            Some(existing) => match sealer.open(&key_check_aad, &existing) {
-                Ok(pt) if pt == KEY_CHECK_PLAINTEXT => {}
-                Ok(_)
-                | Err(StoreError::AuthenticationFailed)
-                | Err(StoreError::KeyIdMismatch { .. }) => {
-                    return Err(StoreError::WrongKey.into());
-                }
-                Err(e) => return Err(e.into()),
-            },
-            None => {
-                let sealed = sealer.seal(&key_check_aad, KEY_CHECK_PLAINTEXT)?;
-                let tx = db.begin_write().map_err(StoreError::from)?;
-                {
-                    let mut meta = tx.open_table(META).map_err(StoreError::from)?;
-                    meta.insert(META_KEY_CHECK, sealed.as_slice())
-                        .map_err(StoreError::from)?;
-                }
-                tx.commit().map_err(StoreError::from)?;
-            }
-        }
+        let sealer = Sealer::new(&data_keys.data_key, data_keys.key_id());
+        let index_key = data_keys.index_key;
 
         Ok(Self {
             db,
@@ -457,9 +426,38 @@ impl ProtocolStore {
             path: opts.path,
             account_id: opts.account_id,
             sealer,
-            index_key: derived.index_key,
+            index_key,
             generation: RwLock::new(generation),
         })
+    }
+
+    /// Rotate the master key: re-wrap the data keys under a KEK derived from
+    /// `new_source` and a fresh salt, in one durable transaction. Records are
+    /// untouched (the data key does not change), so the operation is O(1) and
+    /// trivially restartable; after commit the old master key no longer opens
+    /// the store. Re-encrypting records under a new *data* key is a separate,
+    /// not yet implemented migration.
+    pub fn rotate_master_key(&self, new_source: &dyn KeySource) -> Result<()> {
+        let new_master = new_source.master_key()?;
+        let mut salt = [0u8; 32];
+        getrandom::fill(&mut salt).map_err(|e| StoreError::Entropy(e.to_string()))?;
+        let keys = DataKeys {
+            data_key: self.sealer.data_key(),
+            index_key: self.index_key,
+        };
+        let wrapped = wrap_keys(&new_master, &salt, &keys)?;
+        let mut tx = self.db.begin_write().map_err(StoreError::from)?;
+        tx.set_durability(Durability::Immediate)
+            .map_err(StoreError::from)?;
+        {
+            let mut meta = tx.open_table(META).map_err(StoreError::from)?;
+            meta.insert(META_SALT, salt.as_slice())
+                .map_err(StoreError::from)?;
+            meta.insert(META_WRAPPED_KEYS, wrapped.as_slice())
+                .map_err(StoreError::from)?;
+        }
+        tx.commit().map_err(StoreError::from)?;
+        Ok(())
     }
 
     /// Database path.
@@ -567,6 +565,50 @@ impl ProtocolStore {
     pub fn journal_head(&self) -> Result<EventCursor> {
         self.read(|tx| tx.journal_head())
     }
+}
+
+const WRAPPED_KEYS_AAD: RecordAad<'static> = RecordAad {
+    generation: 0,
+    table: "meta",
+    key: META_WRAPPED_KEYS.as_bytes(),
+    record_version: RECORD_V1,
+};
+
+fn wrap_keys(master: &MasterKey, salt: &[u8; 32], keys: &DataKeys) -> Result<Vec<u8>> {
+    let kek = Kek::derive(master, salt);
+    // The KEK wraps only this one record; its key id is fixed.
+    let sealer = Sealer::new(&kek.0, 0);
+    Ok(sealer.seal(&WRAPPED_KEYS_AAD, &*keys.to_bytes())?)
+}
+
+fn unwrap_keys(master: &MasterKey, salt: &[u8; 32], wrapped: &[u8]) -> Result<DataKeys> {
+    let kek = Kek::derive(master, salt);
+    let sealer = Sealer::new(&kek.0, 0);
+    match sealer.open(&WRAPPED_KEYS_AAD, wrapped) {
+        Ok(pt) => {
+            let pt = zeroize::Zeroizing::new(pt);
+            DataKeys::from_bytes(&pt)
+                .ok_or_else(|| StoreError::MalformedEnvelope("wrapped keys length").into())
+        }
+        Err(StoreError::AuthenticationFailed) | Err(StoreError::KeyIdMismatch { .. }) => {
+            Err(StoreError::WrongKey.into())
+        }
+        Err(e) => Err(e.into()),
+    }
+}
+
+fn read_salt<T: ReadableTable<&'static str, &'static [u8]>>(meta: &T) -> Result<[u8; 32]> {
+    let salt_v = meta
+        .get(META_SALT)
+        .map_err(StoreError::from)?
+        .map(|g| g.value().to_vec())
+        .ok_or(StoreError::MalformedEnvelope("meta.salt missing"))?;
+    let mut salt = [0u8; 32];
+    if salt_v.len() != 32 {
+        return Err(StoreError::MalformedEnvelope("meta.salt length").into());
+    }
+    salt.copy_from_slice(&salt_v);
+    Ok(salt)
 }
 
 fn take_owner_lock(db_path: &Path) -> Result<File> {
@@ -1310,6 +1352,61 @@ mod tests {
             err,
             Error::Storage(StoreError::AuthenticationFailed)
         ));
+    }
+
+    #[test]
+    fn master_key_rotation_rewraps_without_touching_records() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("p.redb");
+        let acct = AccountId::new("a").unwrap();
+        let old = MasterKey::from_bytes([1u8; 32]);
+        let new = MasterKey::from_bytes([2u8; 32]);
+        let (raw_before, head) = {
+            let s = ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: acct.clone(),
+                key_source: Arc::new(StaticKeySource::new(old.clone())),
+                create: true,
+            })
+            .unwrap();
+            s.write(|tx| tx.put(Table::SignalSessions, b"dev", 1, b"ratchet"))
+                .unwrap();
+            s.append_event(sample_event(1)).unwrap();
+            let raw_before = s
+                .read(|tx| tx.get(Table::SignalSessions, b"dev", 1))
+                .unwrap();
+            s.rotate_master_key(&StaticKeySource::new(new.clone()))
+                .unwrap();
+            // Still usable in-process after rotation.
+            assert_eq!(
+                s.read(|tx| tx.get(Table::SignalSessions, b"dev", 1))
+                    .unwrap(),
+                raw_before
+            );
+            (raw_before, s.journal_head().unwrap())
+        };
+        let err = ProtocolStore::open(OpenOptions {
+            path: path.clone(),
+            account_id: acct.clone(),
+            key_source: Arc::new(StaticKeySource::new(old)),
+            create: false,
+        })
+        .err()
+        .unwrap();
+        assert!(matches!(err, Error::WrongStorageKey));
+        let s = ProtocolStore::open(OpenOptions {
+            path,
+            account_id: acct,
+            key_source: Arc::new(StaticKeySource::new(new)),
+            create: false,
+        })
+        .unwrap();
+        assert_eq!(
+            s.read(|tx| tx.get(Table::SignalSessions, b"dev", 1))
+                .unwrap(),
+            raw_before
+        );
+        assert_eq!(s.journal_head().unwrap(), head);
     }
 
     #[tokio::test]

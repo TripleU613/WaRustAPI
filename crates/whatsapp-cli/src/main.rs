@@ -121,6 +121,13 @@ enum StoreCmd {
     Init,
     /// Print table counts, journal head, generation and registration status.
     Inspect,
+    /// Rotate the master key: re-wrap the data keys under the key found in
+    /// the given environment variable. The old key stops working immediately.
+    RotateKey {
+        /// Environment variable holding the new hex master key.
+        #[arg(long)]
+        new_key_env: String,
+    },
 }
 
 #[derive(Subcommand)]
