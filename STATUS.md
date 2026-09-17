@@ -2,10 +2,15 @@
 
 **Gate position:** G0 complete (repository, dependency decisions, baseline).
 G1 partially complete offline (codec, framing, Noise adapter, certificate
-binding, schemas, reference manifest). **G2 not attempted**: the Android
-registration protocol, transport endpoint and login payload are `Unknown`
-(see `docs/protocol/unknowns.md`). No live server contact has been made and
-no OTP has been requested.
+binding, schemas, reference manifest, **static APK observations**). **G2 not
+attempted**: the Android registration payload encoding, transport port/layer
+and login payload values are `Unknown` (see `docs/protocol/unknowns.md`). No
+live server contact has been made and no OTP has been requested.
+
+**Key static finding (2026-09-17):** the pinned client contains classic
+`Noise_XX`/`Noise_IK` patterns **and nine ML-KEM512 hybrid Noise patterns**.
+If the server requires a hybrid handshake for primary devices, the current
+`snow`-based adapter cannot be used (ADR 0004 addendum).
 
 ## Verified in this repository (offline)
 
@@ -13,6 +18,7 @@ no OTP has been requested.
 | --- | --- |
 | Toolchain and dependency contract | `rust-toolchain.toml` 1.94.1; `cargo run -p xtask -- dependency-audit`: no denied crates in `whatsapp-api`, `whatsapp-api +experimental-noise`, `whatsapp-cli` (report: `docs/protocol/dependency-report.md`) |
 | Reference APK pinned | `com.whatsapp` 2.26.36.75 / 263607533, sha256 `ce7468…922e9`, signing cert `39:87:D0:…:5D:44`; reproduced by `xtask reference-manifest --check` |
+| APK static observations | `xtask apk-strings`: 449,216 dex strings; hosts (`g.whatsapp.net`, `e1`–`e16`, `v.whatsapp.net`, `mmg.whatsapp.net`), 12 Noise pattern names, registration parameter vocabulary, ClientPayload field constants, all 1,259 web v3 tokens present (order unproven) |
 | Store | 10 tests: encryption at rest, AAD row binding, wrong key typed, second owner rejected, generation fencing, atomic rollback, journal replay/ack/trim |
 | Codec | 9 tests: independent hand-written fixture, JID kinds, packed strings, bounds, duplicate attributes, zlib bomb |
 | Transport | framing fragmentation/cancellation tests; Noise XX handshake + records against a snow responder; cert chain binding incl. "valid-looking chain that does not bind to the remote key" |

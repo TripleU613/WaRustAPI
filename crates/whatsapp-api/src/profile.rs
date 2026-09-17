@@ -95,6 +95,9 @@ pub struct NoiseProfile {
     pub trust_root: Evidenced<Option<[u8; 32]>>,
     /// Expected issuer serial of the intermediate certificate.
     pub issuer_serial: Evidenced<Option<u32>>,
+    /// Pattern names compiled into the reference client (static observation).
+    /// Which one the server negotiates is a separate, unknown fact.
+    pub client_patterns: Evidenced<Vec<String>>,
 }
 
 /// Token dictionary reference.
@@ -115,6 +118,11 @@ pub struct Endpoints {
     pub chat: Evidenced<Option<String>>,
     /// Registration HTTPS base URL.
     pub registration_base: Evidenced<Option<String>>,
+    /// Chat gateway hostnames present in the reference client. Port, socket
+    /// framing and any TLS layer remain part of `chat`.
+    pub chat_hosts: Evidenced<Vec<String>>,
+    /// Registration hostname present in the reference client.
+    pub registration_host: Evidenced<Option<String>>,
 }
 
 /// Wire message-ID format.
@@ -153,6 +161,8 @@ pub struct ProtocolProfile {
 struct ManifestFile {
     reference_client: ManifestClient,
     token_dictionary: ManifestTokens,
+    #[serde(default)]
+    client_observations: ManifestClientObservations,
 }
 
 #[derive(Deserialize)]
@@ -173,6 +183,24 @@ struct ManifestCert {
 struct ManifestTokens {
     version: u8,
     source_sha256: String,
+}
+
+#[derive(Deserialize, Default)]
+struct ManifestClientObservations {
+    #[serde(default)]
+    noise_patterns_present: Vec<String>,
+    #[serde(default)]
+    hosts_present: ManifestHosts,
+}
+
+#[derive(Deserialize, Default)]
+struct ManifestHosts {
+    #[serde(default)]
+    chat_gateway: Vec<String>,
+    #[serde(default)]
+    chat_edges: Vec<String>,
+    #[serde(default)]
+    registration: Vec<String>,
 }
 
 impl ProtocolProfile {
@@ -212,6 +240,11 @@ impl ProtocolProfile {
                 ),
                 trust_root: Evidenced::reference_only(Some(WEB_MD_TRUST_ROOT), "noise.trust_root"),
                 issuer_serial: Evidenced::reference_only(Some(0), "noise.issuer_serial"),
+                client_patterns: Evidenced::new(
+                    m.client_observations.noise_patterns_present.clone(),
+                    EvidenceLabel::Observed,
+                    "noise.client_patterns",
+                ),
             },
             tokens: TokenDictionaryRef {
                 version: m.token_dictionary.version,
@@ -224,6 +257,26 @@ impl ProtocolProfile {
                     None,
                     EvidenceLabel::Unknown,
                     "registration.endpoints",
+                ),
+                chat_hosts: Evidenced::new(
+                    m.client_observations
+                        .hosts_present
+                        .chat_gateway
+                        .iter()
+                        .chain(m.client_observations.hosts_present.chat_edges.iter())
+                        .cloned()
+                        .collect(),
+                    EvidenceLabel::Observed,
+                    "transport.hosts",
+                ),
+                registration_host: Evidenced::new(
+                    m.client_observations
+                        .hosts_present
+                        .registration
+                        .first()
+                        .cloned(),
+                    EvidenceLabel::Observed,
+                    "registration.host",
                 ),
             },
             message_id_format: Evidenced::new(None, EvidenceLabel::Unknown, "messaging.id_format"),
@@ -318,5 +371,25 @@ mod tests {
             other => panic!("unexpected {other:?}"),
         }
         assert!(!p.missing_for_registration().is_empty());
+        // Client-side static observations are loaded but do not unblock connect.
+        assert!(
+            p.noise
+                .client_patterns
+                .value
+                .iter()
+                .any(|n| n.contains("MLKEM512"))
+        );
+        assert!(
+            p.endpoints
+                .chat_hosts
+                .value
+                .iter()
+                .any(|h| h == "g.whatsapp.net")
+        );
+        assert_eq!(
+            p.endpoints.registration_host.value.as_deref(),
+            Some("v.whatsapp.net")
+        );
+        assert!(p.endpoints.chat.value.is_none());
     }
 }

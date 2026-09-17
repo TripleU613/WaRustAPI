@@ -2,13 +2,21 @@
 
 Ordered by what blocks the first decisive result (README section 0).
 
-1. **Android registration protocol** (`registration.*`): endpoints, payload
-   encoding, required prerequisites and their generation timing, verification
-   steps, cooldown semantics, returned credential material. Without this the
-   library cannot reach `Registered`; `RegistrationService::begin` returns
-   `Blocked(ProfileIncomplete)`.
-2. **Transport endpoint and layer** (`transport.endpoint`): host, port, TCP
-   vs WebSocket, whether TLS wraps Noise on Android.
+1. **Android registration protocol** (`registration.*`): payload encoding,
+   URL assembly, required prerequisites and their generation timing,
+   verification steps, cooldown semantics, returned credential material.
+   *Progress 2026-09-17:* host `v.whatsapp.net`, path fragments and the
+   parameter vocabulary are client-observed (ledger `registration.host`,
+   `registration.vocabulary`). `RegistrationService::begin` still returns
+   `Blocked(ProfileIncomplete)` because encoding and flow are unobserved.
+2. **Transport endpoint and layer** (`transport.endpoint`): port, TCP vs
+   WebSocket, whether TLS wraps Noise on Android. *Progress:* hosts
+   `g.whatsapp.net`, `g-fallback`, `e1`–`e16.whatsapp.net` are client-observed.
+2b. **Handshake pattern negotiation** (`noise.client_patterns`): the client
+   contains classic XX/IK **and nine ML-KEM512 hybrid** Noise patterns. If the
+   server requires a hybrid pattern for new primary registrations, `snow`
+   cannot be the backend (no such patterns) and a pure-Rust ML-KEM512
+   implementation would need review. Must be observed on the wire.
 3. **Login payload** (`login.client_payload`): primary-device markers,
    version fields, startup requests, resume behaviour.
 4. **Noise record sizes** (`noise.record_limit`) to accept or reject `snow`.

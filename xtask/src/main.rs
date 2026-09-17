@@ -11,6 +11,7 @@
 
 mod axml;
 mod deps;
+mod dex;
 mod manifest;
 mod proto;
 
@@ -38,6 +39,14 @@ enum Cmd {
         #[arg(long, default_value_t = true)]
         strict: bool,
     },
+    /// Dump the dex string tables of an APK (static protocol reconnaissance).
+    ApkStrings {
+        /// Path to the APK (kept outside the repository).
+        apk: PathBuf,
+        /// Only print strings containing any of these substrings.
+        #[arg(long = "contains")]
+        contains: Vec<String>,
+    },
     /// Extract reference facts (hashes, manifest fields, signing certificate) from an APK.
     ReferenceManifest {
         /// Path to the APK (kept outside the repository).
@@ -64,6 +73,7 @@ fn main() -> ExitCode {
         Cmd::ProtoCheck => proto::check(&root),
         Cmd::DependencyAudit { strict } => deps::audit(&root, strict),
         Cmd::ReferenceManifest { apk, check } => manifest::run(&apk, check.as_deref()),
+        Cmd::ApkStrings { apk, contains } => dex::run(&apk, &contains),
     };
     match result {
         Ok(()) => ExitCode::SUCCESS,

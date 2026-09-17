@@ -22,7 +22,20 @@
       "v1_signature_block": "META-INF/IMPORTED.DSA",
       "v1_signature_block_sha256": "3b76ac9fd4abae4edc10aa0e61b55267f7650824b9c373afc15e0e1e53fa5bb4"
     },
-    "native_libraries": ["lib/arm64-v8a/libs.so", "lib/arm64-v8a/libsuperpack.so", "lib/arm64-v8a/libunwindstack_binary.so", "lib/armeabi-v7a/libs.so", "lib/armeabi-v7a/libsuperpack.so", "lib/armeabi-v7a/libunwindstack_binary.so", "lib/x86/libs.so", "lib/x86/libsuperpack.so", "lib/x86/libunwindstack_binary.so", "lib/x86_64/libs.so", "lib/x86_64/libsuperpack.so", "lib/x86_64/libunwindstack_binary.so"],
+    "native_libraries": [
+      "lib/arm64-v8a/libs.so",
+      "lib/arm64-v8a/libsuperpack.so",
+      "lib/arm64-v8a/libunwindstack_binary.so",
+      "lib/armeabi-v7a/libs.so",
+      "lib/armeabi-v7a/libsuperpack.so",
+      "lib/armeabi-v7a/libunwindstack_binary.so",
+      "lib/x86/libs.so",
+      "lib/x86/libsuperpack.so",
+      "lib/x86/libunwindstack_binary.so",
+      "lib/x86_64/libs.so",
+      "lib/x86_64/libsuperpack.so",
+      "lib/x86_64/libunwindstack_binary.so"
+    ],
     "notes": [
       "The APK is a research artifact kept outside the repository (section 6.3). Only hashes and metadata are committed.",
       "A pinned APK is authoritative for that client's behavior; it is not proof that the server accepts it (section 6.1)."
@@ -44,7 +57,13 @@
       "revision": "2375e1751bbd7243b7d4bbb3f410f1acf34f3382",
       "license": "MPL-2.0",
       "profile": "WhatsApp Web multi-device (linked device)",
-      "used_for": ["token dictionary cross-check", "framing constants", "Noise pattern/prologue", "certificate chain verification structure", "protobuf schemas"]
+      "used_for": [
+        "token dictionary cross-check",
+        "framing constants",
+        "Noise pattern/prologue",
+        "certificate chain verification structure",
+        "protobuf schemas"
+      ]
     },
     {
       "name": "oxidezap/whatsapp-rust",
@@ -52,7 +71,10 @@
       "revision": "4a0721b9aa944822807b95926e2770da4e670b2f",
       "license": "MIT (headline); wacore/libsignal contains files marked `Copyright Signal Messenger, LLC` / `AGPL-3.0-only`",
       "profile": "WhatsApp Web multi-device (linked device)",
-      "used_for": ["token dictionary (tokens.json, MIT)", "component boundary evaluation"]
+      "used_for": [
+        "token dictionary (tokens.json, MIT)",
+        "component boundary evaluation"
+      ]
     }
   ],
   "token_dictionary": {
@@ -67,7 +89,164 @@
   },
   "schemas": {
     "source": "tulir/whatsmeow proto/ @ 2375e17 (MPL-2.0)",
-    "files": ["proto/waCert/WACert.proto", "proto/waWa6/WAWebProtobufsWa6.proto", "proto/waCommon/WACommon.proto", "proto/waAdv/WAAdv.proto"],
+    "files": [
+      "proto/waCert/WACert.proto",
+      "proto/waWa6/WAWebProtobufsWa6.proto",
+      "proto/waCommon/WACommon.proto",
+      "proto/waAdv/WAAdv.proto"
+    ],
     "evidence": "ReferenceOnly"
+  },
+  "client_observations": {
+    "date": "2026-09-17",
+    "method": "static string-table extraction from classes*.dex with `cargo run -p xtask -- apk-strings`; no bytecode interpreted, no device, no network",
+    "evidence": "Observed (client-side, static). Presence of a string proves the client contains it, not how or whether it is used on the wire.",
+    "noise_patterns_present": [
+      "Noise_XX_25519_AESGCM_SHA256",
+      "Noise_IK_25519_AESGCM_SHA256",
+      "Noise_XXfallback_25519_AESGCM_SHA256",
+      "Noise_XXkem_25519_MLKEM512_AESGCM_SHA256",
+      "Noise_XXkem-FS_25519_MLKEM512_AESGCM_SHA256",
+      "Noise_XXkemEph_25519_MLKEM512_AESGCM_SHA256",
+      "Noise_XXkemfallback_25519_MLKEM512_AESGCM_SHA256",
+      "Noise_XXkem-FSfallback_25519_MLKEM512_AESGCM_SHA256",
+      "Noise_XXkemEphfallback_25519_MLKEM512_AESGCM_SHA256",
+      "Noise_IKkem+X25519+MLKEM512+AESGCM256+SHA256",
+      "Noise_IKkem-FS+X25519+MLKEM512+AESGCM256+SHA256",
+      "Noise_IKkem2+X25519+MLKEM512+AESGCM256+SHA256"
+    ],
+    "hosts_present": {
+      "chat_gateway": [
+        "g.whatsapp.net",
+        "g-fallback.whatsapp.net"
+      ],
+      "chat_edges": [
+        "e1.whatsapp.net",
+        "e2.whatsapp.net",
+        "e3.whatsapp.net",
+        "e4.whatsapp.net",
+        "e5.whatsapp.net",
+        "e6.whatsapp.net",
+        "e7.whatsapp.net",
+        "e8.whatsapp.net",
+        "e9.whatsapp.net",
+        "e10.whatsapp.net",
+        "e11.whatsapp.net",
+        "e12.whatsapp.net",
+        "e13.whatsapp.net",
+        "e14.whatsapp.net",
+        "e15.whatsapp.net",
+        "e16.whatsapp.net"
+      ],
+      "registration": [
+        "v.whatsapp.net"
+      ],
+      "media": [
+        "mmg.whatsapp.net",
+        "mmg-fallback.whatsapp.net"
+      ],
+      "other": [
+        "static.whatsapp.net",
+        "api.whatsapp.net",
+        "graph.whatsapp.net",
+        "crashlogs.whatsapp.net",
+        "flows.whatsapp.net",
+        "pps.whatsapp.net",
+        "c.whatsapp.net"
+      ]
+    },
+    "registration_vocabulary_present": {
+      "path_fragments": [
+        "v2",
+        "code",
+        "exist",
+        "register",
+        "security",
+        "verify",
+        "/v1/"
+      ],
+      "parameters": [
+        "cc",
+        "in",
+        "lg",
+        "lc",
+        "mcc",
+        "mnc",
+        "sim_mcc",
+        "sim_mnc",
+        "method",
+        "token",
+        "id",
+        "e_regid",
+        "e_keytype",
+        "e_ident",
+        "e_skey_id",
+        "e_skey_val",
+        "e_skey_sig",
+        "fdid",
+        "expid",
+        "backup_token",
+        "authkey",
+        "rc",
+        "reason",
+        "hasav",
+        "offline_ab",
+        "client_metrics",
+        "network_radio_type",
+        "simnum",
+        "vname",
+        "retry_after",
+        "flash_type",
+        "pid",
+        "wipe_token",
+        "entered",
+        "push_code"
+      ],
+      "note": "Full URLs are assembled at runtime; the assembled scheme (e.g. https://v.whatsapp.net/v2/code) is a hypothesis, not observed."
+    },
+    "handshake_protobuf_constants_present": [
+      "CLIENT_HELLO_FIELD_NUMBER",
+      "CLIENT_FINISH_FIELD_NUMBER",
+      "HANDSHAKE_MATERIAL_FIELD_NUMBER",
+      "CLIENT_HELLO_HANDSHAKE_MATERIAL_FIELD_NUMBER",
+      "HN_EPOCH1_EPH_PUB_FIELD_NUMBER",
+      "EPOCH1_TRANSCRIPT_HASH_FIELD_NUMBER",
+      "CONNECT_TYPE_FIELD_NUMBER",
+      "CONNECT_REASON_FIELD_NUMBER",
+      "DEVICE_PAIRING_DATA_FIELD_NUMBER",
+      "DEVICE_PROPS_FIELD_NUMBER",
+      "DNS_SOURCE_FIELD_NUMBER",
+      "FB_CAT_FIELD_NUMBER",
+      "FB_USER_AGENT_FIELD_NUMBER",
+      "IOS_APP_EXTENSION_FIELD_NUMBER",
+      "INTEROP_DATA_FIELD_NUMBER",
+      "LC_FIELD_NUMBER",
+      "LID_DB_MIGRATED_FIELD_NUMBER",
+      "ACCOUNT_TYPE_FIELD_NUMBER"
+    ],
+    "client_payload_enum_values_present": [
+      "ANDROID",
+      "SMB_ANDROID",
+      "IOS",
+      "WEB",
+      "KAIOS",
+      "WEAROS",
+      "SMBI",
+      "RELEASE",
+      "BETA",
+      "ALPHA",
+      "DEBUG",
+      "PUSH",
+      "USER_ACTIVATED",
+      "SCHEDULED",
+      "ERROR_RECONNECT",
+      "NETWORK_SWITCH",
+      "PING_RECONNECT"
+    ],
+    "token_dictionary": "all 235 single-byte and 1024 double-byte web v3 tokens are present as string constants; ordering and dictionary version byte not established",
+    "native_library": "lib/*/libs.so contains no protocol strings (superpack-compressed); protocol code is in dex",
+    "user_agent_literals": [
+      "WhatsApp/2.23.20.0"
+    ]
   }
 }
