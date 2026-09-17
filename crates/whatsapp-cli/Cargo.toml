@@ -1,0 +1,27 @@
+[package]
+name = "whatsapp-cli"
+version = "0.0.1"
+description = "Operator tool and standalone proof client for whatsapp-api"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[[bin]]
+name = "whatsapp-cli"
+path = "src/main.rs"
+
+[dependencies]
+whatsapp-api = { path = "../whatsapp-api" }
+clap.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "sync", "time", "signal"] }
+serde_json.workspace = true
+hex.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+tracing-subscriber = { version = "0.3", default-features = false, features = ["fmt", "env-filter", "ansi"] }
+zeroize.workspace = true
+
+[lints]
+workspace = true

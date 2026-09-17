@@ -1,0 +1,81 @@
+//! Transport: byte-stream framing, Noise adapter and certificate binding
+//! (README sections 8.3 and 8.4).
+//!
+//! Only framing is compiled by default. The Noise adapter lives behind the
+//! `experimental-noise` feature because the handshake pattern, prologue and
+//! trust root are `ReferenceOnly` for the Android primary profile.
+
+pub mod cert;
+pub mod framing;
+#[cfg(feature = "experimental-noise")]
+pub mod noise;
+
+use serde::{Deserialize, Serialize};
+
+pub use framing::{FrameCodec, FrameReader};
+
+/// Transport-level failures.
+#[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
+#[non_exhaustive]
+pub enum TransportError {
+    /// A declared frame length exceeded the configured bound.
+    #[error("frame length {len} exceeds limit {limit}")]
+    FrameTooLarge {
+        /// Declared length.
+        len: usize,
+        /// Configured bound.
+        limit: usize,
+    },
+    /// Buffered bytes exceeded the bound without completing a frame.
+    #[error("receive buffer exceeded {limit} bytes")]
+    BufferOverflow {
+        /// Configured bound.
+        limit: usize,
+    },
+    /// The stream ended mid-frame.
+    #[error("stream closed with {buffered} partial bytes buffered")]
+    UnexpectedEof {
+        /// Bytes that were buffered when the stream closed.
+        buffered: usize,
+    },
+    /// The Noise record exceeded the backend's maximum record size.
+    #[error("noise record of {len} bytes exceeds backend maximum {max}")]
+    RecordTooLarge {
+        /// Record length.
+        len: usize,
+        /// Backend maximum.
+        max: usize,
+    },
+    /// A Noise operation failed. The connection must be closed.
+    #[error("noise failure: {0}")]
+    Noise(String),
+    /// The handshake payload or certificate chain was invalid.
+    #[error("handshake rejected: {0}")]
+    Handshake(String),
+    /// Invalid framing configuration.
+    #[error("invalid framing configuration: {0}")]
+    Config(&'static str),
+    /// The connection epoch no longer matches (a stale completion).
+    #[error("stale connection epoch {stale:?}; current is {current:?}")]
+    StaleEpoch {
+        /// The epoch of the completion.
+        stale: ConnectionEpoch,
+        /// The current epoch.
+        current: ConnectionEpoch,
+    },
+}
+
+/// Local epoch of one connection attempt. Every reconnect gets a new one so a
+/// delayed completion from an old socket cannot complete a new request.
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize, Default,
+)]
+#[serde(transparent)]
+pub struct ConnectionEpoch(pub u64);
+
+impl ConnectionEpoch {
+    /// The next epoch.
+    pub const fn next(self) -> Self {
+        Self(self.0.saturating_add(1))
+    }
+}
