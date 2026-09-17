@@ -918,6 +918,141 @@ pub fn run_xref(apk: &Path, anchors: &[String]) -> Result<(), String> {
     Ok(())
 }
 
+fn invoked_method_index(instruction: &[u8]) -> Option<u32> {
+    let opcode = *instruction.first()?;
+    if !matches!(opcode, 0x6e..=0x72 | 0x74..=0x78 | 0xfa..=0xfb) {
+        return None;
+    }
+    Some(u32::from(u16::from_le_bytes([
+        *instruction.get(2)?,
+        *instruction.get(3)?,
+    ])))
+}
+
+fn callers_one(
+    dex_name: &str,
+    d: &[u8],
+    target_class: &str,
+    target_method: &str,
+    out: &mut Vec<XRef>,
+) -> Result<(), String> {
+    let dex = DexFile::parse(d)?;
+    let targets: std::collections::HashSet<u32> = (0..dex.method_count)
+        .filter(|&index| {
+            dex.method_info(index)
+                .is_ok_and(|(class, method, _)| class == target_class && method == target_method)
+        })
+        .collect();
+    if targets.is_empty() {
+        return Ok(());
+    }
+
+    for class_index in 0..dex.class_count {
+        let definition_offset = dex.class_off as usize + 32 * class_index as usize;
+        let class_type = u32le(d, definition_offset)?;
+        let class_name = dex.type_name(class_type).unwrap_or_default();
+        let class_data_offset = u32le(d, definition_offset + 24)?;
+        if class_data_offset == 0 {
+            continue;
+        }
+        let mut position = class_data_offset as usize;
+        let (static_fields, next) = uleb128(d, position)?;
+        position = next;
+        let (instance_fields, next) = uleb128(d, position)?;
+        position = next;
+        let (direct_methods, next) = uleb128(d, position)?;
+        position = next;
+        let (virtual_methods, next) = uleb128(d, position)?;
+        position = next;
+        for _ in 0..static_fields.saturating_add(instance_fields) {
+            let (_, next) = uleb128(d, position)?;
+            let (_, next) = uleb128(d, next)?;
+            position = next;
+        }
+
+        for (caller_index, _, code_offset) in
+            encoded_methods(d, &mut position, direct_methods, virtual_methods)?
+        {
+            if code_offset == 0 {
+                continue;
+            }
+            let (_, caller_name, caller_proto) = dex.method_info(caller_index).unwrap_or_default();
+            let code_item_offset = code_offset as usize;
+            let instruction_count = u32le(d, code_item_offset + 12)? as usize;
+            let instruction_start = code_item_offset + 16;
+            let instruction_end = instruction_start.saturating_add(instruction_count * 2);
+            let Some(instructions) = d.get(instruction_start..instruction_end) else {
+                continue;
+            };
+            let mut offset = 0usize;
+            while offset + 1 < instructions.len() {
+                let opcode = instructions[offset];
+                let width = payload_at(instructions, offset)
+                    .map_or_else(|| insn_width(opcode), |(width, _, _)| width);
+                if let Some(callee) = invoked_method_index(&instructions[offset..])
+                    && targets.contains(&callee)
+                {
+                    out.push(XRef {
+                        dex_file: dex_name.to_owned(),
+                        class_name: class_name.clone(),
+                        method_name: caller_name.clone(),
+                        method_proto: caller_proto.clone(),
+                        dex_byte_off: instruction_start + offset,
+                    });
+                }
+                offset = offset.saturating_add(width.max(1) * 2);
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Find every invoke instruction targeting an exact class and method name.
+pub fn apk_callers(
+    apk: &Path,
+    target_class: &str,
+    target_method: &str,
+) -> Result<Vec<XRef>, String> {
+    let file = std::fs::File::open(apk).map_err(|error| format!("{}: {error}", apk.display()))?;
+    let mut archive = zip::ZipArchive::new(file).map_err(|error| format!("zip: {error}"))?;
+    let names: Vec<String> = archive
+        .file_names()
+        .filter(|name| name.starts_with("classes") && name.ends_with(".dex"))
+        .map(str::to_owned)
+        .collect();
+    let mut callers = Vec::new();
+    for name in &names {
+        let mut bytes = Vec::new();
+        archive
+            .by_name(name)
+            .map_err(|error| error.to_string())?
+            .read_to_end(&mut bytes)
+            .map_err(|error| error.to_string())?;
+        if let Err(error) = callers_one(name, &bytes, target_class, target_method, &mut callers) {
+            eprintln!("warning: {name}: {error}");
+        }
+    }
+    Ok(callers)
+}
+
+pub fn run_callers(apk: &Path, target_class: &str, target_method: &str) -> Result<(), String> {
+    let callers = apk_callers(apk, target_class, target_method)?;
+    for caller in &callers {
+        println!(
+            "{}  {}->{}({})",
+            caller.dex_file, caller.class_name, caller.method_name, caller.method_proto
+        );
+        println!("  invoke dex byte offset: 0x{:x}", caller.dex_byte_off);
+    }
+    eprintln!(
+        "{} caller(s) of {}->{}",
+        callers.len(),
+        target_class,
+        target_method
+    );
+    Ok(())
+}
+
 // ── smali dump ────────────────────────────────────────────────────────────────
 
 /// One decoded method from a single class.
@@ -1142,6 +1277,24 @@ mod tests {
         assert_eq!(insn_width(0x18), 5, "const-wide");
         assert_eq!(insn_width(0xfa), 4, "invoke-polymorphic");
         assert_eq!(insn_width(0x0e), 1, "return-void");
+    }
+
+    #[test]
+    fn invoke_method_index_covers_normal_range_and_polymorphic_forms() {
+        assert_eq!(
+            invoked_method_index(&[0x6e, 0x10, 0x34, 0x12]),
+            Some(0x1234)
+        );
+        assert_eq!(
+            invoked_method_index(&[0x74, 0x01, 0xcd, 0xab]),
+            Some(0xabcd)
+        );
+        assert_eq!(
+            invoked_method_index(&[0xfa, 0x10, 0x78, 0x56]),
+            Some(0x5678)
+        );
+        assert_eq!(invoked_method_index(&[0x0e, 0x00, 0x34, 0x12]), None);
+        assert_eq!(invoked_method_index(&[0x71, 0x00, 0x34]), None);
     }
 
     #[test]

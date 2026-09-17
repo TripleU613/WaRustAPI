@@ -515,6 +515,20 @@ impl RegistrationCodeParams {
         })
     }
 
+    /// Derive the comparison-build token from exact APK material and create
+    /// the required portion of a generate-auth-code request.
+    ///
+    /// This is scoped to [`WHATSAPP_2_26_37_70`]; callers must not reuse the
+    /// derivation with another APK version without fresh static evidence.
+    pub fn from_comparison_token_material(
+        phone: &PhoneNumber,
+        material: super::token::ComparisonTokenMaterial<'_>,
+        method: impl Into<String>,
+    ) -> Result<Self> {
+        let token = super::token::derive_comparison_registration_token(phone, material)?;
+        Self::new(token.as_str(), method)
+    }
+
     /// Set the optional request context.
     pub fn with_context(mut self, context: impl Into<String>) -> Result<Self> {
         let context = context.into();
@@ -2073,6 +2087,27 @@ mod tests {
         assert!(code.append_to_form(&mut form).is_err());
         assert_eq!(form.len(), 1, "failed batch append must not add fields");
         assert_eq!(form.encode().unwrap().as_slice(), b"method=existing");
+    }
+
+    #[test]
+    fn code_params_can_derive_comparison_token_from_apk_material() {
+        let params = RegistrationCodeParams::from_comparison_token_material(
+            &PhoneNumber::new(44, "7700900123").unwrap(),
+            super::super::token::ComparisonTokenMaterial {
+                package_name: "com.whatsapp",
+                about_logo: b"logo fixture",
+                signing_certificate_der: b"certificate fixture",
+                classes_dex: b"dex fixture",
+            },
+            "sms",
+        )
+        .unwrap();
+        let mut form = RegistrationForm::new();
+        params.append_to_form(&mut form).unwrap();
+        assert_eq!(
+            form.encode().unwrap().as_slice(),
+            b"token=v%2BhtmECA4%2F1N%2F634IV7jmkIgWzc%3D&method=sms"
+        );
     }
 
     #[test]

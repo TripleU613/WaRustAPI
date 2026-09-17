@@ -23,6 +23,14 @@ cargo run -p xtask -- apk-tokens lab/WhatsApp.apk \
 cargo run -p xtask -- apk-xref lab/WhatsApp.apk \
     --anchor v.whatsapp.net --anchor authkey --anchor e_skey_sig
 cargo run -p xtask -- apk-smali lab/WhatsApp.apk --class 'LX/HpO;'
+cargo run -p xtask -- apk-callers lab/WhatsApp.apk \
+    --class 'Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;' \
+    --method A09
+
+# 5. For a controlled test number only, reproduce the inspected comparison
+#    build's /v2/code token. This prints a phone-bound credential to stdout.
+cargo run -p xtask -- apk-registration-token lab/WhatsApp.apk \
+    --country-code 1 --national-number 5551234567
 ```
 
 If step 1 reports a manifest mismatch, do not replace the pinned manifest or
@@ -38,7 +46,9 @@ to 2.26.37.70; that comparison is documented in `decompilation-log.md`.
 | `apk-strings` | A literal is compiled into the client | How, when or whether it is sent on the wire |
 | `apk-tokens` | The ordered dictionary initialised by the client | The dictionary *version byte* sent in the header/prologue |
 | `apk-xref` | Which Dalvik class and method loads an exact string | The runtime branch taken or values assembled without string literals |
+| `apk-callers` | Which Dalvik methods invoke an exact class/method pair | Whether the invoke is reached at runtime |
 | `apk-smali` | Bounds-checked structural bytecode and referenced symbols for selected methods | Server acceptance or the runtime path without control-flow analysis/capture |
+| `apk-registration-token` | The exact comparison-build token derivation over APK-owned inputs and a controlled number | Server acceptance or compatibility with any other APK version |
 
 ## How `apk-tokens` works
 

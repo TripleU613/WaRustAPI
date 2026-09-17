@@ -298,6 +298,15 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
                 "code_request": {
                     "path": RegistrationEndpoint::Code.path(),
                     "required_fields": ["token", "method"],
+                    "token_derivation": {
+                        "scope": "whatsapp-2.26.37.70-comparison-only",
+                        "kdf": "PBKDF2-HMAC-SHA1-128x-512bit",
+                        "mac_inputs": [
+                            "signing-certificate-der", "md5-classes.dex",
+                            "national-number"
+                        ],
+                        "output": "standard-base64-padded-no-wrap"
+                    },
                     "optional_fields": [
                         "context", "clicked_education_link", "manage_call_permission",
                         "call_log_permission", "client_start_message", "advertising_id",
@@ -434,6 +443,10 @@ mod tests {
         assert_eq!(body["key_bundle"]["fields"].as_array().unwrap().len(), 7);
         assert_eq!(body["common_fields"]["groups"][0][0], "cc");
         assert_eq!(body["common_fields"]["groups"][2][2], "backup_token");
+        assert_eq!(
+            body["code_request"]["token_derivation"]["scope"],
+            "whatsapp-2.26.37.70-comparison-only"
+        );
         assert_eq!(body["code_request"]["path"], "/v2/code");
         assert_eq!(body["code_request"]["required_fields"][1], "method");
         assert_eq!(body["register_request"]["path"], "/v2/register");

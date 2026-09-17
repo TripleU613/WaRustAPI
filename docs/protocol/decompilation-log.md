@@ -157,6 +157,9 @@ The Rust-native parser was corrected before analysis:
 - `filled-new-array` widths and packed/sparse/array-data payload widths are
   decoded, so payload bytes cannot be mistaken for instructions.
 - array operations, unary conversions, and `*-/lit8` operands are annotated.
+- `apk-callers` now finds invoke sites for an exact class/method pair. It
+  traced `KotlinRegistrationBridge->A09` through its blocking coroutine to
+  `RequestCodeRepository->A00` without relying on identifier guesses.
 
 ### T1 — registration URL and request body
 
@@ -210,6 +213,18 @@ The Rust-native parser was corrected before analysis:
   registration enum `type`. Finally it attempts `A0W`, the public key-bundle
   helper; if keys are unavailable it logs that fact and still sends the
   request.
+- The required `token` is produced before that coroutine by
+  `LX/HQO;->A00:LX/Hre;` calling `LX/Hre;->A01(Context, phoneNumber)`. The
+  argument is the national number (`in`) without `cc`. The helper derives a
+  64-byte key with `PBKDF2WithHmacSHA1And8BIT`, 128 iterations, the exact
+  `package-name || selected hdpi about_logo.png` bytes as password, and the
+  90-byte salt held by `LX/HQP;->A00`. It then computes HMAC-SHA1 over the
+  first Android signing-certificate DER, MD5 of uncompressed `classes.dex`,
+  and the UTF-8 national number, returning standard padded Base64 with
+  Android's `NO_WRAP` flag. `registration::token` reproduces this bounded,
+  version-scoped algorithm; `xtask apk-registration-token` extracts its APK
+  inputs. This remains a comparison-build observation, not a cross-version
+  invariant.
 - `KotlinRegistrationBridge->A08` constructs the phone-number completion
   request at `LX/HSP;->A0A` (`/v2/register`). After common fields it appends
   required `code`, optional binary `auth_response` using unpadded URL-safe

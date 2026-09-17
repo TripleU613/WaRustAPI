@@ -6,13 +6,14 @@ Scope: normal dependency edges only (no dev/build dependencies), Linux x86_64 ap
 
 ## `whatsapp-api`
 
-Resolved normal-edge packages: 59
+Resolved normal-edge packages: 67
 
 | Crate | Version | Enabled features | Build script | `links` | Flags |
 |---|---|---|---|---|---|
 | adler2 | 2.0.1 | - | no | - | - |
 | aead | 0.6.1 | `alloc` | no | - | - |
 | anyhow | 1.0.104 | `default, std` | yes | - | - |
+| block-buffer | 0.10.4 | - | no | - | - |
 | block-buffer | 0.12.1 | - | no | - | - |
 | bytes | 1.12.1 | `default, serde, std` | no | - | - |
 | cfg-if | 1.0.5 | - | no | - | - |
@@ -21,14 +22,18 @@ Resolved normal-edge packages: 59
 | cipher | 0.5.2 | `block-buffer, stream-wrapper` | no | - | - |
 | cmov | 0.5.4 | - | no | - | - |
 | cpufeatures | 0.3.1 | - | no | - | - |
+| crypto-common | 0.1.7 | - | no | - | - |
 | crypto-common | 0.2.2 | - | no | - | - |
 | ctutils | 0.4.2 | - | no | - | - |
+| digest | 0.10.7 | `block-buffer, core-api, default, mac, subtle` | no | - | - |
 | digest | 0.11.3 | `block-api, default, mac` | no | - | - |
 | either | 1.18.0 | `std, use_std` | no | - | - |
 | errno | 0.3.14 | `default, std` | no | - | - |
+| generic-array | 0.14.7 | `more_lengths` | yes | - | - |
 | getrandom | 0.4.3 | `std` | yes | - | - |
 | hex | 0.4.3 | `alloc, std` | no | - | - |
 | hkdf | 0.13.0 | - | no | - | - |
+| hmac | 0.12.1 | - | no | - | - |
 | hmac | 0.13.0 | - | no | - | - |
 | hybrid-array | 0.4.15 | - | no | - | - |
 | inout | 0.2.2 | - | no | - | - |
@@ -39,6 +44,7 @@ Resolved normal-edge packages: 59
 | miniz_oxide | 0.9.1 | `std, with-alloc` | no | - | - |
 | mio | 1.2.3 | `net, os-ext, os-poll` | no | - | - |
 | once_cell | 1.21.4 | `alloc, default, race, std` | no | - | - |
+| pbkdf2 | 0.12.2 | `hmac` | no | - | - |
 | pin-project-lite | 0.2.17 | - | no | - | - |
 | poly1305 | 0.9.1 | - | no | - | - |
 | proc-macro2 | 1.0.107 | `default, proc-macro` | yes | - | - |
@@ -51,8 +57,10 @@ Resolved normal-edge packages: 59
 | serde_core | 1.0.229 | `alloc, default, result, std` | yes | - | - |
 | serde_derive | 1.0.229 | `default` | no | - | - |
 | serde_json | 1.0.151 | `default, std, unbounded_depth` | yes | - | - |
+| sha1 | 0.10.7 | - | no | - | - |
 | sha2 | 0.11.0 | - | no | - | - |
 | signal-hook-registry | 1.4.8 | - | no | - | - |
+| subtle | 2.6.1 | - | no | - | - |
 | syn | 2.0.119 | `clone-impls, default, derive, extra-traits, full, parsing, printing, proc-macro, visit, visit-mut` | no | - | - |
 | syn | 3.0.6 | `clone-impls, default, derive, full, parsing, printing, proc-macro` | no | - | - |
 | thiserror | 2.0.20 | `default, std` | yes | - | - |
@@ -72,7 +80,7 @@ Resolved normal-edge packages: 59
 
 ## `whatsapp-api +experimental-noise`
 
-Resolved normal-edge packages: 86
+Resolved normal-edge packages: 89
 
 | Crate | Version | Enabled features | Build script | `links` | Flags |
 |---|---|---|---|---|---|
@@ -113,6 +121,7 @@ Resolved normal-edge packages: 86
 | ghash | 0.5.1 | - | no | - | - |
 | hex | 0.4.3 | `alloc, std` | no | - | - |
 | hkdf | 0.13.0 | - | no | - | - |
+| hmac | 0.12.1 | - | no | - | - |
 | hmac | 0.13.0 | - | no | - | - |
 | hybrid-array | 0.4.15 | - | no | - | - |
 | inout | 0.1.4 | - | no | - | - |
@@ -125,6 +134,7 @@ Resolved normal-edge packages: 86
 | mio | 1.2.3 | `net, os-ext, os-poll` | no | - | - |
 | once_cell | 1.21.4 | `alloc, default, race, std` | no | - | - |
 | opaque-debug | 0.3.1 | - | no | - | - |
+| pbkdf2 | 0.12.2 | `hmac` | no | - | - |
 | pin-project-lite | 0.2.17 | - | no | - | - |
 | poly1305 | 0.8.0 | - | no | - | - |
 | poly1305 | 0.9.1 | - | no | - | - |
@@ -140,6 +150,7 @@ Resolved normal-edge packages: 86
 | serde_core | 1.0.229 | `alloc, default, result, std` | yes | - | - |
 | serde_derive | 1.0.229 | `default` | no | - | - |
 | serde_json | 1.0.151 | `default, std, unbounded_depth` | yes | - | - |
+| sha1 | 0.10.7 | - | no | - | - |
 | sha2 | 0.10.9 | - | no | - | - |
 | sha2 | 0.11.0 | - | no | - | - |
 | signal-hook-registry | 1.4.8 | - | no | - | - |
@@ -165,7 +176,7 @@ Resolved normal-edge packages: 86
 
 ## `whatsapp-api +experimental-registration-https`
 
-Resolved normal-edge packages: 187
+Resolved normal-edge packages: 189
 
 | Crate | Version | Enabled features | Build script | `links` | Flags |
 |---|---|---|---|---|---|
@@ -267,6 +278,7 @@ Resolved normal-edge packages: 187
 | p256 | 0.13.2 | `arithmetic, digest, ecdh, ecdsa, ecdsa-core, pem, pkcs8, sha2, sha256` | no | - | - |
 | p384 | 0.13.1 | `arithmetic, digest, ecdh, ecdsa, ecdsa-core, pem, pkcs8, sha2, sha384` | no | - | - |
 | paste | 1.0.15 | - | yes | - | - |
+| pbkdf2 | 0.12.2 | `hmac` | no | - | - |
 | pem-rfc7468 | 0.7.0 | `alloc` | no | - | - |
 | percent-encoding | 2.3.2 | `alloc, default, std` | no | - | - |
 | pin-project-lite | 0.2.17 | - | no | - | - |
@@ -303,6 +315,7 @@ Resolved normal-edge packages: 187
 | serde_derive | 1.0.229 | `default` | no | - | - |
 | serde_json | 1.0.151 | `default, std, unbounded_depth` | yes | - | - |
 | serde_urlencoded | 0.7.1 | - | no | - | - |
+| sha1 | 0.10.7 | - | no | - | - |
 | sha2 | 0.10.9 | `oid, std` | no | - | - |
 | sha2 | 0.11.0 | - | no | - | - |
 | signal-hook-registry | 1.4.8 | - | no | - | - |
@@ -359,7 +372,7 @@ Resolved normal-edge packages: 187
 
 ## `whatsapp-cli`
 
-Resolved normal-edge packages: 82
+Resolved normal-edge packages: 90
 
 | Crate | Version | Enabled features | Build script | `links` | Flags |
 |---|---|---|---|---|---|
@@ -371,6 +384,7 @@ Resolved normal-edge packages: 82
 | anstyle-parse | 1.0.0 | `default, utf8` | no | - | - |
 | anstyle-query | 1.1.5 | - | no | - | - |
 | anyhow | 1.0.104 | `default, std` | yes | - | - |
+| block-buffer | 0.10.4 | - | no | - | - |
 | block-buffer | 0.12.1 | - | no | - | - |
 | bytes | 1.12.1 | `default, serde, std` | no | - | - |
 | cfg-if | 1.0.5 | - | no | - | - |
@@ -384,15 +398,19 @@ Resolved normal-edge packages: 82
 | cmov | 0.5.4 | - | no | - | - |
 | colorchoice | 1.0.5 | - | no | - | - |
 | cpufeatures | 0.3.1 | - | no | - | - |
+| crypto-common | 0.1.7 | - | no | - | - |
 | crypto-common | 0.2.2 | - | no | - | - |
 | ctutils | 0.4.2 | - | no | - | - |
+| digest | 0.10.7 | `block-buffer, core-api, default, mac, subtle` | no | - | - |
 | digest | 0.11.3 | `block-api, default, mac` | no | - | - |
 | either | 1.18.0 | `std, use_std` | no | - | - |
 | errno | 0.3.14 | `default, std` | no | - | - |
+| generic-array | 0.14.7 | `more_lengths` | yes | - | - |
 | getrandom | 0.4.3 | `std` | yes | - | - |
 | heck | 0.5.0 | - | no | - | - |
 | hex | 0.4.3 | `alloc, std` | no | - | - |
 | hkdf | 0.13.0 | - | no | - | - |
+| hmac | 0.12.1 | - | no | - | - |
 | hmac | 0.13.0 | - | no | - | - |
 | hybrid-array | 0.4.15 | - | no | - | - |
 | inout | 0.2.2 | - | no | - | - |
@@ -407,6 +425,7 @@ Resolved normal-edge packages: 82
 | mio | 1.2.3 | `net, os-ext, os-poll` | no | - | - |
 | nu-ansi-term | 0.50.3 | `default, std` | no | - | - |
 | once_cell | 1.21.4 | `alloc, default, race, std` | no | - | - |
+| pbkdf2 | 0.12.2 | `hmac` | no | - | - |
 | pin-project-lite | 0.2.17 | - | no | - | - |
 | poly1305 | 0.9.1 | - | no | - | - |
 | proc-macro2 | 1.0.107 | `default, proc-macro` | yes | - | - |
@@ -421,10 +440,12 @@ Resolved normal-edge packages: 82
 | serde_core | 1.0.229 | `alloc, default, result, std` | yes | - | - |
 | serde_derive | 1.0.229 | `default` | no | - | - |
 | serde_json | 1.0.151 | `default, std, unbounded_depth` | yes | - | - |
+| sha1 | 0.10.7 | - | no | - | - |
 | sha2 | 0.11.0 | - | no | - | - |
 | sharded-slab | 0.1.7 | - | no | - | - |
 | signal-hook-registry | 1.4.8 | - | no | - | - |
 | strsim | 0.11.1 | - | no | - | - |
+| subtle | 2.6.1 | - | no | - | - |
 | syn | 2.0.119 | `clone-impls, default, derive, extra-traits, full, parsing, printing, proc-macro, visit, visit-mut` | no | - | - |
 | syn | 3.0.6 | `clone-impls, default, derive, full, parsing, printing, proc-macro` | no | - | - |
 | thiserror | 2.0.20 | `default, std` | yes | - | - |

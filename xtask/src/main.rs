@@ -8,7 +8,9 @@
 //! * `apk-strings <apk>` — dump all dex string constants (with optional filter).
 //! * `apk-tokens <apk>` — recover the binary-node token dictionary from bytecode.
 //! * `apk-xref <apk> --anchor <s>…` — find classes/methods referencing string constants.
+//! * `apk-callers <apk> --class <c> --method <m>` — find callers of a method.
 //! * `apk-smali <apk> --class <filter>` — dump Dalvik instructions for matching classes.
+//! * `apk-registration-token <apk> …` — derive the comparison build's code-request token.
 
 // A command-line tool talks to its operator through stdout/stderr.
 #![allow(clippy::print_stdout, clippy::print_stderr)]
@@ -18,6 +20,7 @@ mod deps;
 mod dex;
 mod manifest;
 mod proto;
+mod registration_token;
 mod xref;
 
 use std::path::PathBuf;
@@ -72,6 +75,17 @@ enum Cmd {
         #[arg(long = "anchor", required = true)]
         anchors: Vec<String>,
     },
+    /// Find methods that invoke a target class/method pair.
+    ApkCallers {
+        /// Path to the APK (kept outside the repository).
+        apk: PathBuf,
+        /// Exact target class descriptor (for example `LX/Foo;`).
+        #[arg(long = "class")]
+        class_name: String,
+        /// Exact target method name.
+        #[arg(long = "method")]
+        method_name: String,
+    },
     /// Dump the Dalvik instruction stream for classes whose name contains `--class`.
     ///
     /// Resolves string, type, method, and field references symbolically.
@@ -86,6 +100,17 @@ enum Cmd {
         /// Optional additional substring filter on method names.
         #[arg(long = "method")]
         method_filter: Option<String>,
+    },
+    /// Derive the comparison APK's `/v2/code` token for a phone number.
+    ApkRegistrationToken {
+        /// Path to the exact APK whose resources and signature are inputs.
+        apk: PathBuf,
+        /// Explicit E.164 country calling code (the token itself excludes it).
+        #[arg(long)]
+        country_code: u16,
+        /// National significant number, digits only and without a trunk zero.
+        #[arg(long)]
+        national_number: String,
     },
     /// Extract reference facts (hashes, manifest fields, signing certificate) from an APK.
     ReferenceManifest {
@@ -116,11 +141,21 @@ fn main() -> ExitCode {
         Cmd::ApkStrings { apk, contains } => dex::run(&apk, &contains),
         Cmd::ApkTokens { apk, check } => dex::run_tokens(&apk, check.as_deref()),
         Cmd::ApkXref { apk, anchors } => xref::run_xref(&apk, &anchors),
+        Cmd::ApkCallers {
+            apk,
+            class_name,
+            method_name,
+        } => xref::run_callers(&apk, &class_name, &method_name),
         Cmd::ApkSmali {
             apk,
             class_filter,
             method_filter,
         } => xref::run_smali(&apk, &class_filter, method_filter.as_deref()),
+        Cmd::ApkRegistrationToken {
+            apk,
+            country_code,
+            national_number,
+        } => registration_token::run(&apk, country_code, &national_number),
     };
     match result {
         Ok(()) => ExitCode::SUCCESS,

@@ -26,6 +26,11 @@ chacha20poly1305 = { version = "0.11", default-features = false, features = ["al
 # Key wrapping / domain separation for the at-rest key hierarchy (section 11.3).
 hkdf = { version = "0.13", default-features = false }
 sha2 = { version = "0.11", default-features = false }
+# Comparison-build registration-token derivation observed in the Android APK.
+hmac = { version = "0.12", default-features = false }
+sha1 = { version = "0.10", default-features = false }
+pbkdf2 = { version = "0.12", default-features = false, features = ["hmac"] }
+md-5 = { version = "0.10", default-features = false }
 # OS-backed CSPRNG (section 18).
 getrandom = { version = "0.4", default-features = false, features = ["std"] }
 # Noise backend candidate with the Rust crypto resolver; `std` is deliberately

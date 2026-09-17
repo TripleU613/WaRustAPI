@@ -23,6 +23,7 @@ cargo_metadata = "0.23"
 # APK inspection for the reference manifest; bzip2/zstd/aes backends are
 # deliberately off so no C library enters the graph.
 zip = { version = "8", default-features = false, features = ["deflate"] }
+whatsapp-api = { path = "../crates/whatsapp-api" }
 
 [lints]
 workspace = true

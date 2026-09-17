@@ -69,7 +69,10 @@ token dictionary differs from the pinned fixture. Its registration bridge
 also parses the JSON response status/reason and cooldown vocabulary recorded
 in the comparison fixture. The key bundle uses the client Noise public key,
 key type `05`, big-endian 4-byte/3-byte identifiers, and unpadded URL-safe
-Base64. These are version-scoped comparative observations only: the
+Base64. The `/v2/code` token is derived locally with PBKDF2-HMAC-SHA1 over the
+package/logo material and HMAC-SHA1 over the signing certificate, primary-DEX
+MD5, and national number; the exact recipe is in the comparison fixture.
+These are version-scoped comparative observations only: the
 pinned-profile labels above remain unchanged. Full details and hashes are in
 `fixtures/comparisons/whatsapp-2.26.37.70.json` and `decompilation-log.md`.
 

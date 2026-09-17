@@ -137,6 +137,14 @@
       "code_request_encoding": {
         "path": "/v2/code",
         "required_fields": ["token", "method"],
+        "token_derivation": {
+          "caller": "RequestCodeRepository->A00 calls LX/HQO;->A00:LX/Hre;->A01(Context, phoneNumber)",
+          "phone_input": "national number (`in`) only, UTF-8",
+          "password": "UTF-8 package name concatenated with the selected hdpi about_logo.png bytes",
+          "kdf": "PBKDF2WithHmacSHA1And8BIT, 128 iterations, 512-bit output, LX/HQP;->A00 salt",
+          "mac": "HMAC-SHA1(signing certificate DER || MD5(uncompressed classes.dex) || national number)",
+          "output": "standard Base64, NO_WRAP, with padding"
+        },
         "optional_field_order": [
           "context",
           "clicked_education_link",

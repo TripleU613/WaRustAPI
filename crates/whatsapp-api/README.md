@@ -25,7 +25,9 @@ facts. What does work, and is tested offline:
   atomic successful credential commit;
 - a conservative, injectable comparison-build HTTP registration flow that
   covers the observed `/v2/code` → `/v2/register` happy path in offline tests
-  without enabling it for the incomplete active profile.
+  without enabling it for the incomplete active profile;
+- bounded reproduction of the signed comparison APK's phone-bound `/v2/code`
+  token derivation, plus APK extraction through `xtask`.
 
 ## Usage sketch
 

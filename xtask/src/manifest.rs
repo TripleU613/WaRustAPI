@@ -66,7 +66,7 @@ fn tlv(d: &[u8], o: usize) -> Option<(u8, usize, usize)> {
 
 /// Depth-first search for the first X.509 v3 Certificate:
 /// `SEQUENCE { SEQUENCE { [0] EXPLICIT version, INTEGER serial, ... }, ... }`.
-fn find_certificate(d: &[u8], o: usize, end: usize, depth: usize) -> Option<&[u8]> {
+pub(crate) fn find_certificate(d: &[u8], o: usize, end: usize, depth: usize) -> Option<&[u8]> {
     if depth > 16 {
         return None;
     }
