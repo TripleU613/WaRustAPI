@@ -14,6 +14,7 @@ use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::Semaphore;
 use tokio::time::timeout;
 use whatsapp_api::capabilities::CapabilityMatrix;
+use whatsapp_api::registration::wire::{RegistrationEndpoint, WHATSAPP_2_26_37_70};
 use whatsapp_api::{Error, ProtocolProfile};
 
 const MAX_HEADER_BYTES: usize = 16 * 1024;
@@ -209,9 +210,10 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
     let is_read = matches!(method, "GET" | "HEAD");
 
     match (method, path) {
-        (_, "/" | "/healthz" | "/v1/profile" | "/v1/capabilities") if !is_read => {
-            Response::method_not_allowed("GET, HEAD")
-        }
+        (
+            _,
+            "/" | "/healthz" | "/v1/profile" | "/v1/capabilities" | "/v1/registration/wire-profile",
+        ) if !is_read => Response::method_not_allowed("GET, HEAD"),
         (_, "/v1/connect" | "/v1/registration") if method != "POST" => {
             Response::method_not_allowed("POST")
         }
@@ -225,6 +227,7 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
                     "GET /healthz",
                     "GET /v1/profile",
                     "GET /v1/capabilities",
+                    "GET /v1/registration/wire-profile",
                     "POST /v1/connect",
                     "POST /v1/registration"
                 ]
@@ -254,6 +257,22 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
         ("GET" | "HEAD", "/v1/capabilities") => {
             Response::json(200, "OK", json!(state.capabilities))
         }
+        ("GET" | "HEAD", "/v1/registration/wire-profile") => Response::json(
+            200,
+            "OK",
+            json!({
+                "evidence_scope": "signed newer-build comparison; not active profile",
+                "wire_profile": WHATSAPP_2_26_37_70,
+                "endpoints": RegistrationEndpoint::ALL
+                    .iter()
+                    .map(|endpoint| json!({
+                        "name": endpoint,
+                        "path": endpoint.path(),
+                        "url": WHATSAPP_2_26_37_70.endpoint_url(*endpoint)
+                    }))
+                    .collect::<Vec<_>>()
+            }),
+        ),
         ("POST", "/v1/connect") => Response::json(
             501,
             "Not Implemented",
@@ -337,6 +356,19 @@ mod tests {
         assert_eq!(connect.status, 501);
         assert_eq!(registration.status, 501);
         assert_eq!(body(&connect)["error"]["code"], "profile_incomplete");
+    }
+
+    #[test]
+    fn exposes_version_scoped_registration_wire_evidence() {
+        let response = route("GET", "/v1/registration/wire-profile", &state());
+        let body = body(&response);
+        assert_eq!(response.status, 200);
+        assert_eq!(body["wire_profile"]["version_name"], "2.26.37.70");
+        assert_eq!(body["endpoints"].as_array().unwrap().len(), 17);
+        assert_eq!(
+            body["endpoints"][2]["url"],
+            "https://v.whatsapp.net/v2/code"
+        );
     }
 
     #[test]

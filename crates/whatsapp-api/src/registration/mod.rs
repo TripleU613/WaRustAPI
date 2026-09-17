@@ -1,14 +1,19 @@
 //! Primary registration as a durable, branching state machine (README section 7).
 //!
-//! The Android registration protocol (endpoints, payload encoding,
-//! prerequisites, verification steps) is `Unknown` for this profile. The
-//! state machine, persistence, challenge binding and typed steps are
-//! implemented and tested; the profile-specific driver is a
+//! The Android registration protocol remains incomplete for the active
+//! profile. A version-scoped request-construction layer for a newer signed
+//! comparison build lives in [`wire`], but verification steps and a reviewed
+//! HTTPS backend are still missing. The state machine, persistence, challenge
+//! binding and typed steps are implemented and tested; the profile-specific driver is a
 //! [`RegistrationFlow`] whose only current implementation reports
 //! [`BlockedReason::ProfileIncomplete`]. No request is ever sent and no
 //! OTP is ever requested by this code.
 
+pub mod wire;
+
 use std::fmt;
+use std::future::Future;
+use std::pin::Pin;
 use std::sync::Arc;
 
 use serde::{Deserialize, Serialize};
@@ -226,7 +231,10 @@ impl RegistrationState {
             (S::Unregistered, S::Preparing)
                 | (
                     S::Preparing,
-                    S::ChallengePending { .. } | S::Blocked { .. } | S::CoolingDown { .. }
+                    S::ChallengePending { .. }
+                        | S::RegistrationOutcomeUnknown { .. }
+                        | S::Blocked { .. }
+                        | S::CoolingDown { .. }
                 )
                 | (
                     S::ChallengePending { .. },
@@ -336,20 +344,26 @@ impl RegistrationAttempt {
     }
 }
 
-/// Profile-specific registration driver. Implementations perform network
-/// requests; they must never persist or log answers.
+/// Future returned by a profile-specific registration driver.
+pub type RegistrationFuture<'a> =
+    Pin<Box<dyn Future<Output = Result<RegistrationState>> + Send + 'a>>;
+
+/// Profile-specific registration driver. Implementations may perform network
+/// requests; they must never persist or log answers. The service invokes these
+/// futures only after its durable pre-request transition has committed and the
+/// store transaction has been released.
 pub trait RegistrationFlow: Send + Sync + fmt::Debug {
     /// Prepare prerequisites and request the first challenge. Returns the
     /// next state (typically `ChallengePending`, `CoolingDown` or `Blocked`).
-    fn begin(&self, attempt: &RegistrationAttempt) -> Result<RegistrationState>;
+    fn begin<'a>(&'a self, attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a>;
 
     /// Submit an answer for the bound handle. Returns the next state.
-    fn submit(
-        &self,
-        attempt: &RegistrationAttempt,
-        handle: &ChallengeHandle,
-        answer: &Answer,
-    ) -> Result<RegistrationState>;
+    fn submit<'a>(
+        &'a self,
+        attempt: &'a RegistrationAttempt,
+        handle: &'a ChallengeHandle,
+        answer: &'a Answer,
+    ) -> RegistrationFuture<'a>;
 }
 
 /// The only flow available while the Android registration protocol is
@@ -373,26 +387,35 @@ impl UnsupportedFlow {
 }
 
 impl RegistrationFlow for UnsupportedFlow {
-    fn begin(&self, _attempt: &RegistrationAttempt) -> Result<RegistrationState> {
-        Ok(RegistrationState::Blocked {
-            reason: BlockedReason::ProfileIncomplete {
-                missing: self.missing.clone(),
-            },
+    fn begin<'a>(&'a self, _attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
+        Box::pin(async move {
+            Ok(RegistrationState::Blocked {
+                reason: BlockedReason::ProfileIncomplete {
+                    missing: self.missing.clone(),
+                },
+            })
         })
     }
 
-    fn submit(
-        &self,
-        _attempt: &RegistrationAttempt,
-        _handle: &ChallengeHandle,
-        _answer: &Answer,
-    ) -> Result<RegistrationState> {
-        Ok(RegistrationState::Blocked {
-            reason: BlockedReason::ProfileIncomplete {
-                missing: self.missing.clone(),
-            },
+    fn submit<'a>(
+        &'a self,
+        _attempt: &'a RegistrationAttempt,
+        _handle: &'a ChallengeHandle,
+        _answer: &'a Answer,
+    ) -> RegistrationFuture<'a> {
+        Box::pin(async move {
+            Ok(RegistrationState::Blocked {
+                reason: BlockedReason::ProfileIncomplete {
+                    missing: self.missing.clone(),
+                },
+            })
         })
     }
+}
+
+enum BeginPlan {
+    Existing(RegistrationStep),
+    Start(RegistrationAttempt),
 }
 
 /// Durable registration service over the protocol store.
@@ -449,6 +472,37 @@ impl RegistrationService {
         tx.put_json(Table::RegistrationAttempts, CURRENT_KEY, RECORD_V1, attempt)
     }
 
+    async fn finish_transition(
+        &self,
+        attempt_id: AttemptId,
+        generation: AccountGeneration,
+        expected_state: &'static str,
+        next: RegistrationState,
+    ) -> Result<RegistrationStep> {
+        self.store
+            .run_blocking(move |s| {
+                s.write(|tx| {
+                    let mut attempt = Self::load_current(tx)?.ok_or_else(|| {
+                        Error::invalid("registration_state", "attempt disappeared during request")
+                    })?;
+                    if attempt.id != attempt_id
+                        || attempt.generation != generation
+                        || attempt.generation != tx.generation()
+                        || attempt.state.name() != expected_state
+                    {
+                        return Err(Error::invalid(
+                            "registration_state",
+                            "attempt changed while request was in flight",
+                        ));
+                    }
+                    attempt.transition(next, Timestamp::now())?;
+                    Self::save_current(tx, &attempt)?;
+                    Ok(step_for(&attempt.state))
+                })
+            })
+            .await
+    }
+
     /// The current attempt, if any.
     pub async fn current(&self) -> Result<Option<RegistrationAttempt>> {
         self.store
@@ -468,9 +522,9 @@ impl RegistrationService {
         phone: PhoneNumber,
         method: ChallengeMethod,
     ) -> Result<RegistrationStep> {
-        let flow = self.flow.clone();
         let profile_id = self.profile_id.clone();
-        self.store
+        let plan = self
+            .store
             .run_blocking(move |s| {
                 s.write(|tx| {
                     let now = Timestamp::now();
@@ -481,7 +535,7 @@ impl RegistrationService {
                             && (existing.state.is_terminal()
                                 || !matches!(existing.state, RegistrationState::Blocked { .. }))
                         {
-                            return Ok(step_for(&existing.state));
+                            return Ok(BeginPlan::Existing(step_for(&existing.state)));
                         }
                         if matches!(existing.state, RegistrationState::Registered) {
                             return Err(Error::invalid(
@@ -504,13 +558,32 @@ impl RegistrationService {
                     attempt.transition(RegistrationState::Preparing, now)?;
                     // Persist before any request could be sent (section 7).
                     Self::save_current(tx, &attempt)?;
-                    let next = flow.begin(&attempt)?;
-                    attempt.transition(next, Timestamp::now())?;
-                    Self::save_current(tx, &attempt)?;
-                    Ok(step_for(&attempt.state))
+                    Ok(BeginPlan::Start(attempt))
                 })
             })
-            .await
+            .await?;
+
+        let attempt = match plan {
+            BeginPlan::Existing(step) => return Ok(step),
+            BeginPlan::Start(attempt) => attempt,
+        };
+        let result = self.flow.begin(&attempt).await;
+        match result {
+            Ok(next) => {
+                self.finish_transition(attempt.id, attempt.generation, "preparing", next)
+                    .await
+            }
+            Err(error) => {
+                self.finish_transition(
+                    attempt.id,
+                    attempt.generation,
+                    "preparing",
+                    RegistrationState::RegistrationOutcomeUnknown { step: 0 },
+                )
+                .await?;
+                Err(error)
+            }
+        }
     }
 
     /// Submit a typed answer for a specific challenge step.
@@ -519,8 +592,8 @@ impl RegistrationService {
         handle: ChallengeHandle,
         answer: Answer,
     ) -> Result<RegistrationStep> {
-        let flow = self.flow.clone();
-        self.store
+        let (attempt, bound) = self
+            .store
             .run_blocking(move |s| {
                 s.write(|tx| {
                     let mut attempt = Self::load_current(tx)?.ok_or_else(|| {
@@ -560,13 +633,28 @@ impl RegistrationService {
                     let now = Timestamp::now();
                     attempt.transition(RegistrationState::Verifying { step: bound.step }, now)?;
                     Self::save_current(tx, &attempt)?;
-                    let next = flow.submit(&attempt, &bound, &answer)?;
-                    attempt.transition(next, Timestamp::now())?;
-                    Self::save_current(tx, &attempt)?;
-                    Ok(step_for(&attempt.state))
+                    Ok((attempt, bound))
                 })
             })
-            .await
+            .await?;
+
+        let result = self.flow.submit(&attempt, &bound, &answer).await;
+        match result {
+            Ok(next) => {
+                self.finish_transition(attempt.id, attempt.generation, "verifying", next)
+                    .await
+            }
+            Err(error) => {
+                self.finish_transition(
+                    attempt.id,
+                    attempt.generation,
+                    "verifying",
+                    RegistrationState::RegistrationOutcomeUnknown { step: bound.step },
+                )
+                .await?;
+                Err(error)
+            }
+        }
     }
 
     /// Explicitly discard a blocked or completed attempt. This is a local
@@ -628,6 +716,7 @@ mod tests {
         assert!(S::Unregistered.can_transition(&S::Preparing));
         assert!(!S::Unregistered.can_transition(&S::Registered));
         assert!(S::Preparing.can_transition(&S::ChallengePending { handle: h.clone() }));
+        assert!(S::Preparing.can_transition(&S::RegistrationOutcomeUnknown { step: 0 }));
         assert!(
             S::ChallengePending { handle: h.clone() }.can_transition(&S::Verifying { step: 1 })
         );
@@ -703,46 +792,156 @@ mod tests {
     struct ScriptedFlow;
 
     impl RegistrationFlow for ScriptedFlow {
-        fn begin(&self, attempt: &RegistrationAttempt) -> Result<RegistrationState> {
-            Ok(RegistrationState::ChallengePending {
-                handle: ChallengeHandle {
-                    attempt: attempt.id,
-                    generation: attempt.generation,
-                    step: 1,
-                    method: attempt.method.clone(),
-                    expires_at: None,
-                    retry_after: None,
-                },
+        fn begin<'a>(&'a self, attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
+            Box::pin(async move {
+                Ok(RegistrationState::ChallengePending {
+                    handle: ChallengeHandle {
+                        attempt: attempt.id,
+                        generation: attempt.generation,
+                        step: 1,
+                        method: attempt.method.clone(),
+                        expires_at: None,
+                        retry_after: None,
+                    },
+                })
             })
         }
 
-        fn submit(
-            &self,
-            attempt: &RegistrationAttempt,
-            handle: &ChallengeHandle,
-            answer: &Answer,
-        ) -> Result<RegistrationState> {
-            match answer {
-                Answer::Code(c) if c.as_str() == "928374" && handle.step == 1 => {
-                    Ok(RegistrationState::NeedsUserAction {
-                        handle: ChallengeHandle {
-                            attempt: attempt.id,
-                            generation: attempt.generation,
-                            step: 2,
-                            method: ChallengeMethod::Other("pin".into()),
-                            expires_at: None,
-                            retry_after: None,
-                        },
-                    })
+        fn submit<'a>(
+            &'a self,
+            attempt: &'a RegistrationAttempt,
+            handle: &'a ChallengeHandle,
+            answer: &'a Answer,
+        ) -> RegistrationFuture<'a> {
+            Box::pin(async move {
+                match answer {
+                    Answer::Code(c) if c.as_str() == "928374" && handle.step == 1 => {
+                        Ok(RegistrationState::NeedsUserAction {
+                            handle: ChallengeHandle {
+                                attempt: attempt.id,
+                                generation: attempt.generation,
+                                step: 2,
+                                method: ChallengeMethod::Other("pin".into()),
+                                expires_at: None,
+                                retry_after: None,
+                            },
+                        })
+                    }
+                    Answer::Pin(p) if p.as_str() == "6157" && handle.step == 2 => {
+                        Ok(RegistrationState::Registered)
+                    }
+                    _ => Ok(RegistrationState::Blocked {
+                        reason: BlockedReason::ServerRefused { code: Some(403) },
+                    }),
                 }
-                Answer::Pin(p) if p.as_str() == "6157" && handle.step == 2 => {
-                    Ok(RegistrationState::Registered)
-                }
-                _ => Ok(RegistrationState::Blocked {
-                    reason: BlockedReason::ServerRefused { code: Some(403) },
-                }),
-            }
+            })
         }
+    }
+
+    #[derive(Debug)]
+    struct PausingFlow {
+        entered: Arc<tokio::sync::Notify>,
+        release: Arc<tokio::sync::Notify>,
+    }
+
+    impl RegistrationFlow for PausingFlow {
+        fn begin<'a>(&'a self, _attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
+            Box::pin(async move {
+                self.entered.notify_one();
+                self.release.notified().await;
+                Ok(RegistrationState::Blocked {
+                    reason: BlockedReason::UnsupportedStep {
+                        description: "paused test flow".into(),
+                    },
+                })
+            })
+        }
+
+        fn submit<'a>(
+            &'a self,
+            _attempt: &'a RegistrationAttempt,
+            _handle: &'a ChallengeHandle,
+            _answer: &'a Answer,
+        ) -> RegistrationFuture<'a> {
+            Box::pin(async {
+                Ok(RegistrationState::Blocked {
+                    reason: BlockedReason::UnsupportedStep {
+                        description: "submit unused in paused test flow".into(),
+                    },
+                })
+            })
+        }
+    }
+
+    #[tokio::test]
+    async fn driver_wait_does_not_hold_the_store_transaction() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let entered = Arc::new(tokio::sync::Notify::new());
+        let release = Arc::new(tokio::sync::Notify::new());
+        let svc = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(PausingFlow {
+                entered: entered.clone(),
+                release: release.clone(),
+            }),
+        );
+
+        let begin = tokio::spawn({
+            let svc = svc.clone();
+            async move { svc.begin(phone(), ChallengeMethod::Sms).await }
+        });
+        entered.notified().await;
+
+        let current = svc.current().await.unwrap().unwrap();
+        assert_eq!(current.state, RegistrationState::Preparing);
+        tokio::time::timeout(
+            std::time::Duration::from_secs(1),
+            s.run_blocking(|store| store.write(|_| Ok(()))),
+        )
+        .await
+        .expect("registration driver held the write transaction")
+        .unwrap();
+
+        release.notify_one();
+        assert!(matches!(
+            begin.await.unwrap().unwrap(),
+            RegistrationStep::Blocked(BlockedReason::UnsupportedStep { .. })
+        ));
+    }
+
+    #[derive(Debug)]
+    struct FailingFlow;
+
+    impl RegistrationFlow for FailingFlow {
+        fn begin<'a>(&'a self, _attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
+            Box::pin(async { Err(Error::Io(std::io::Error::other("synthetic failure"))) })
+        }
+
+        fn submit<'a>(
+            &'a self,
+            _attempt: &'a RegistrationAttempt,
+            _handle: &'a ChallengeHandle,
+            _answer: &'a Answer,
+        ) -> RegistrationFuture<'a> {
+            Box::pin(async { Err(Error::Io(std::io::Error::other("synthetic failure"))) })
+        }
+    }
+
+    #[tokio::test]
+    async fn driver_error_is_persisted_as_outcome_unknown() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let svc = RegistrationService::new(s, &profile, Arc::new(FailingFlow));
+
+        assert!(svc.begin(phone(), ChallengeMethod::Sms).await.is_err());
+        let current = svc.current().await.unwrap().unwrap();
+        assert_eq!(
+            current.state,
+            RegistrationState::RegistrationOutcomeUnknown { step: 0 }
+        );
+        assert_eq!(current.history_len(), 2);
     }
 
     #[tokio::test]
