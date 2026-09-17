@@ -45,12 +45,12 @@ Conventions: one dated entry per session; each entry lists **target**,
 
 | # | Target | Anchor strings | Ledger rows | Status |
 | --- | --- | --- | --- | --- |
-| T1 | Registration URL assembly and request encoding | `v.whatsapp.net`, `v2`, `code`, `register`, `exist`, `e_skey_sig`, `authkey` | `registration.endpoints`, `registration.payload_encoding`, `registration.prerequisites` | open |
+| T1 | Registration URL assembly and request encoding | `v.whatsapp.net`, `v2`, `code`, `register`, `exist`, `e_skey_sig`, `authkey` | `registration.endpoints`, `registration.payload_encoding`, `registration.prerequisites` | newer-build comparison complete; pinned build open |
 | T2 | Verification flow and cooldown handling | `retry_after`, `wipe_token`, `push_code`, `flash_type`, `reason` | `registration.verification_steps` | open |
-| T3 | Handshake pattern selection and prologue | `Noise_XX_25519_AESGCM_SHA256`, `Noise_XXkem_…`, `WA` header bytes, `xmlstreamstart` class neighbour | `noise.pattern`, `noise.prologue`, `binary.tokens_version`, `noise.record_limit` | open |
-| T4 | Certificate chain trust root and issuer serial | `CertChain`, `intermediate`, `leaf` protobuf names, 32-byte constant | `noise.trust_root`, `noise.issuer_serial` | open |
-| T5 | Chat socket endpoint, port, framing | `g.whatsapp.net`, `e1.whatsapp.net`, port ints, 3-byte length prefix | `transport.endpoint`, `framing.*` | open |
-| T6 | Primary `ClientPayload` construction | `CONNECT_TYPE_FIELD_NUMBER`, `ANDROID`, `USER_ACTIVATED`,
+| T3 | Handshake pattern selection and prologue | `Noise_XX_25519_AESGCM_SHA256`, `Noise_XXkem_…`, `WA` header bytes, `xmlstreamstart` class neighbour | `noise.pattern`, `noise.prologue`, `binary.tokens_version`, `noise.record_limit` | header and selector map resolved in newer build; active config and pinned build open |
+| T4 | Certificate chain trust root and issuer serial | `CertChain`, `intermediate`, `leaf` protobuf names, 32-byte constant | `noise.trust_root`, `noise.issuer_serial` | newer-build comparison complete; pinned build open |
+| T5 | Chat socket endpoint, port, framing | `g.whatsapp.net`, `e1.whatsapp.net`, port ints, 3-byte length prefix | `transport.endpoint`, `framing.*` | ports resolved in newer build; layer/framing and pinned build open |
+| T6 | Primary `ClientPayload` construction | `CONNECT_TYPE_FIELD_NUMBER`, `ANDROID`, `USER_ACTIVATED` | `login.client_payload` | open |
 
 ## 2026-09-17 — Rust-native dex structural parser (session 3)
 
@@ -108,11 +108,11 @@ cargo run -p xtask -- apk-smali WhatsApp.apk --class HandshakeManager --method s
   name, and type descriptor.
 - All parsing is bounds-checked; truncated or malformed dex files emit warnings
   and continue.
-- 5 unit tests pass (`insn_width_covers_all_opcodes`, `insn_width_key_opcodes`,
-  `decode_insns_const_string_annotation`, `decode_insns_never_panics_on_truncated`,
-  `xref_scan_finds_string_in_crafted_dex` using a hand-assembled dex blob).
+- 8 unit tests pass, including a hand-assembled dex xref test and regression
+  tests for direct/virtual method-index deltas, array-data payloads, and
+  literal/conversion operands.
 
-### What is still needed (requires APK)
+### What is still needed (requires the pinned APK)
 
 The APK (`com.whatsapp` 2.26.36.75) is not present in this container. Once
 available, run xref first, then smali on the identified classes. Expected
@@ -141,3 +141,88 @@ descriptors, method names, and ledger rows updated.
 - `noise.prologue`: "WA" prefix + dictionary version byte — Unknown, needs T3.
 - `noise.trust_root`: 32-byte constant — Unknown, needs T4.
 - `noise.issuer_serial`: u32 — Unknown, needs T4.
+
+## 2026-09-17 — signed newer-build comparison (session 4)
+
+The mutable official download URL no longer serves the pinned 2.26.36.75
+artifact. It served `com.whatsapp` 2.26.37.70 (code 263707033), sha256
+`b2090b0207e9b97449a5b48e98eb4d1649ae8e5e738e9b7431d6242717fee732`,
+146380260 bytes. Its signing-certificate sha256 is the same as the pinned
+client. This build was used only as a dated comparison: none of the findings
+below silently changes a ledger row for 2.26.36.75.
+
+The Rust-native parser was corrected before analysis:
+
+- DEX method-index deltas now reset between direct and virtual method lists.
+- `filled-new-array` widths and packed/sparse/array-data payload widths are
+  decoded, so payload bytes cannot be mistaken for instructions.
+- array operations, unary conversions, and `*-/lit8` operands are annotated.
+
+### T1 — registration URL and request body
+
+- `LX/HpO;-><clinit>` stores XOR-0x12-obfuscated paths and
+  `LX/HpO;->A00(LL)` decodes every character. The decoded paths are:
+  `/v2/reg_onboard_abprop`, `/v2/exist`, `/v2/code`,
+  `/v2/acverify_request`, `/v2/acverify`, `/v2/register`, `/v2/security`,
+  `/v2/autoconf`, `/v2/autoconf_verifier`, `/v2/device_logout_send`,
+  `/v2/device_logout_fetch`, `/v2/client_log`, `/v2/pre_pn_client_log`,
+  `/v2/consent`, `/v2/challenge`, `/v2/passkey_auth`, and `/v2/wfs`.
+- `LX/0k8;-><clinit>` decodes the base URL
+  `https://v.whatsapp.net`. `LX/1y7;->A0T(LLL)` concatenates the base and
+  path, giving URLs such as `https://v.whatsapp.net/v2/register`.
+- `RetryingHttpClient` joins map entries with `&`. The case-20 lambda in
+  `LX/Ifj;` URL-encodes names and, except for an explicitly pre-encoded set,
+  values with UTF-8, producing `name=value` pairs. It POSTs the resulting
+  bytes with `Content-Type: application/x-www-form-urlencoded` and an exact
+  `Content-Length`.
+- The same request builder can replace the clear form with an encrypted
+  envelope. It uses an ephemeral key agreement plus AES-GCM and prefixes the
+  encoded result with `ENC=`; encryption failure falls back to the clear form.
+- `LX/Cdl;->A00(ZL)` adds the pre-registration key bundle `authkey`,
+  `e_ident`, `e_keytype`, `e_regid`, `e_skey_id`, `e_skey_val`, and
+  `e_skey_sig`. Static analysis establishes the bundle construction, not the
+  exact first request on which every field is mandatory.
+
+### T3 — connection header and token dictionary
+
+- `LX/1N7;->A04(L)` returns `57 41 05 03` for protocol version 5 and
+  constructs `57 41 06 03` for version 6. The constructor selects version 6
+  and writes this four-byte header before the Noise handshake (after any
+  optional routing header), statically observing dictionary version byte 3
+  in this comparison build.
+- `apk-tokens` recovered 235 single-byte entries plus four 256-entry
+  double-byte pages from `classes.dex @ 0x3b8d06`. The dictionary differs
+  from the pinned web-v3 fixture at double-byte page 0 index 1, so it was not
+  substituted for the pinned profile.
+- `LX/1NZ;` maps every static field to its pattern string. In
+  `LX/1N7;-><init>`, PQ mode `NONE` selects classic XX for a full handshake,
+  classic IK for resume, and classic XXfallback after a failed resume. With
+  PQ enabled/enforced, the protocol variant selects `XXkem`/`IKkem`,
+  `XXkem-FS`/`IKkem-FS`, or `XXkemEph`/`IKkem2`, with the corresponding
+  hybrid fallback pattern. `LX/19p;->A05()` reads the variant with `IKKEM` as
+  its local default. The effective remotely configured PQ mode/variant still
+  requires a runtime observation, so no single active pattern is claimed.
+
+### T4 — certificate trust root
+
+- `LX/Aw1;-><clinit>(V)` initialises the 32-byte `WhatsAppLongTerm1` root as
+  `14 23 75 57 4d 0a 58 71 66 aa e7 1e be 51 64 37 c4 a2 8b 73 e3 69 5c 6c e1 f7 f9 54 5d a8 ee 6b`.
+- `LX/1N7;->A03(LLLLL)` parses intermediate and leaf certificate details,
+  requires the intermediate issuer serial to be zero, checks the serial link,
+  binds the leaf key to the Noise server static key, verifies the leaf with
+  the intermediate key, and verifies the intermediate with
+  `WhatsAppLongTerm1`. This matches the reference-only root and issuer serial
+  already used by the library, for this newer comparison build.
+
+### T5 — chat endpoint ports
+
+- `LX/1BH;->A00(I)` selects port 443 or 5222 at random unless a valid prior
+  connection supplies another non-80 port. Other connection-sequence states
+  explicitly try `g.whatsapp.net`, `g-fallback.whatsapp.net`, or an `e1`–`e16`
+  edge on 443/5222; the fallback sequence also contains port 80.
+- This identifies candidate socket ports in the newer build. It does not yet
+  establish the active profile's TCP/WebSocket/TLS layering or the framing
+  used on every connection-sequence branch.
+
+Machine-readable metadata and findings are recorded in
+`crates/whatsapp-api/fixtures/comparisons/whatsapp-2.26.37.70.json`.

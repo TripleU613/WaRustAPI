@@ -197,6 +197,8 @@ fn insn_width(op: u8) -> usize {
         | 0x14       // const (31i)
         | 0x17       // const-wide/32
         | 0x1b       // const-string/jumbo ← key
+        | 0x24       // filled-new-array (35c)
+        | 0x25       // filled-new-array/range (3rc)
         | 0x26       // fill-array-data (31t)
         | 0x2a       // goto/32
         | 0x2b..=0x2c// packed/sparse-switch
@@ -212,8 +214,6 @@ fn insn_width(op: u8) -> usize {
         // 5-unit: const-wide (51l)
         0x18 => 5,
 
-        // Anything not listed: conservatively advance 1 unit.
-        _ => 1,
     }
 }
 
@@ -287,8 +287,17 @@ fn opcode_name(op: u8) -> &'static str {
         0x44 => "aget",
         0x45 => "aget-wide",
         0x46 => "aget-object",
+        0x47 => "aget-boolean",
+        0x48 => "aget-byte",
+        0x49 => "aget-char",
+        0x4a => "aget-short",
         0x4b => "aput",
+        0x4c => "aput-wide",
         0x4d => "aput-object",
+        0x4e => "aput-boolean",
+        0x4f => "aput-byte",
+        0x50 => "aput-char",
+        0x51 => "aput-short",
         0x52 => "iget",
         0x54 => "iget-object",
         0x59 => "iput",
@@ -307,6 +316,27 @@ fn opcode_name(op: u8) -> &'static str {
         0x76 => "invoke-direct/range",
         0x77 => "invoke-static/range",
         0x78 => "invoke-interface/range",
+        0x7b => "neg-int",
+        0x7c => "not-int",
+        0x7d => "neg-long",
+        0x7e => "not-long",
+        0x7f => "neg-float",
+        0x80 => "neg-double",
+        0x81 => "int-to-long",
+        0x82 => "int-to-float",
+        0x83 => "int-to-double",
+        0x84 => "long-to-int",
+        0x85 => "long-to-float",
+        0x86 => "long-to-double",
+        0x87 => "float-to-int",
+        0x88 => "float-to-long",
+        0x89 => "float-to-double",
+        0x8a => "double-to-int",
+        0x8b => "double-to-long",
+        0x8c => "double-to-float",
+        0x8d => "int-to-byte",
+        0x8e => "int-to-char",
+        0x8f => "int-to-short",
         0x90 => "add-int",
         0x91 => "sub-int",
         0x92 => "mul-int",
@@ -324,6 +354,14 @@ fn opcode_name(op: u8) -> &'static str {
         0xd8 => "add-int/lit8",
         0xd9 => "rsub-int/lit8",
         0xda => "mul-int/lit8",
+        0xdb => "div-int/lit8",
+        0xdc => "rem-int/lit8",
+        0xdd => "and-int/lit8",
+        0xde => "or-int/lit8",
+        0xdf => "xor-int/lit8",
+        0xe0 => "shl-int/lit8",
+        0xe1 => "shr-int/lit8",
+        0xe2 => "ushr-int/lit8",
         0xfe => "const-method-handle",
         0xff => "const-method-type",
         _ => "??",
@@ -339,6 +377,8 @@ pub struct Insn {
     pub op: u8,
     /// Width in 16-bit code units (byte width = width * 2).
     pub width: usize,
+    /// Human-readable opcode or payload name.
+    pub mnemonic: &'static str,
     /// Decoded annotation (empty for instructions without interesting operands).
     pub annotation: String,
 }
@@ -351,7 +391,11 @@ fn decode_insns(insns: &[u8], dex: &DexFile<'_>) -> Vec<Insn> {
     while pos + 1 < insns.len() {
         let op = insns[pos];
         let reg = insns[pos + 1]; // high byte of first code unit (register / other)
-        let width = insn_width(op);
+        let payload = payload_at(insns, pos);
+        let (width, mnemonic, payload_annotation) = match payload {
+            Some(payload) => payload,
+            None => (insn_width(op), opcode_name(op), String::new()),
+        };
         let byte_width = width * 2;
 
         let annotation = if pos + byte_width > insns.len() {
@@ -360,9 +404,14 @@ fn decode_insns(insns: &[u8], dex: &DexFile<'_>) -> Vec<Insn> {
                 byte_off: pos,
                 op,
                 width,
+                mnemonic,
                 annotation: "# truncated".into(),
             });
             break;
+        } else if !payload_annotation.is_empty() {
+            payload_annotation
+        } else if op == 0x26 {
+            decode_fill_array_reference(insns, pos, reg)
         } else {
             decode_annotation(op, reg, &insns[pos..pos + byte_width], dex)
         };
@@ -371,11 +420,83 @@ fn decode_insns(insns: &[u8], dex: &DexFile<'_>) -> Vec<Insn> {
             byte_off: pos,
             op,
             width,
+            mnemonic,
             annotation,
         });
         pos += byte_width;
     }
     out
+}
+
+/// Return the dynamic width and description of a Dalvik payload pseudo-
+/// instruction. Payloads use opcode byte zero and an identifying high byte.
+fn payload_at(insns: &[u8], pos: usize) -> Option<(usize, &'static str, String)> {
+    let ident = u16::from_le_bytes([*insns.get(pos)?, *insns.get(pos + 1)?]);
+    let size = u16::from_le_bytes([*insns.get(pos + 2)?, *insns.get(pos + 3)?]) as usize;
+    match ident {
+        0x0100 => Some((
+            4 + size.saturating_mul(2),
+            "packed-switch-payload",
+            format!("size={size}"),
+        )),
+        0x0200 => Some((
+            2 + size.saturating_mul(4),
+            "sparse-switch-payload",
+            format!("size={size}"),
+        )),
+        0x0300 => {
+            let element_width = size;
+            let count = u32::from_le_bytes([
+                *insns.get(pos + 4)?,
+                *insns.get(pos + 5)?,
+                *insns.get(pos + 6)?,
+                *insns.get(pos + 7)?,
+            ]) as usize;
+            let byte_count = element_width.checked_mul(count)?;
+            let width = 4usize.checked_add(byte_count.div_ceil(2))?;
+            let data_start = pos + 8;
+            let data_end = data_start.checked_add(byte_count)?;
+            let data = insns.get(data_start..data_end)?;
+            Some((
+                width,
+                "fill-array-data-payload",
+                format!(
+                    "element_width={element_width}, size={count}, data={}",
+                    format_bytes(data)
+                ),
+            ))
+        }
+        _ => None,
+    }
+}
+
+fn format_bytes(data: &[u8]) -> String {
+    const DISPLAY_LIMIT: usize = 64;
+    let shown = &data[..data.len().min(DISPLAY_LIMIT)];
+    let mut text = shown
+        .iter()
+        .map(|b| format!("{b:02x}"))
+        .collect::<Vec<_>>()
+        .join(" ");
+    if data.len() > DISPLAY_LIMIT {
+        text.push_str(" …");
+    }
+    format!("[{text}]")
+}
+
+fn decode_fill_array_reference(insns: &[u8], pos: usize, reg: u8) -> String {
+    let Some(raw) = insns.get(pos + 2..pos + 6) else {
+        return format!("v{reg}, # truncated");
+    };
+    let offset = i32::from_le_bytes([raw[0], raw[1], raw[2], raw[3]]);
+    let target = (pos as i64).checked_add(i64::from(offset) * 2);
+    let target_text = target.map_or_else(|| "overflow".into(), |v| format!("0x{v:x}"));
+    let detail = target
+        .and_then(|v| usize::try_from(v).ok())
+        .and_then(|target_pos| payload_at(insns, target_pos))
+        .map(|(_, _, annotation)| format!(", {annotation}"))
+        .unwrap_or_default();
+    format!("v{reg}, payload@{target_text}{detail}")
 }
 
 fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> String {
@@ -419,14 +540,43 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
             let d = (d4 >> 4) & 0xf;
             let e = d5 & 0xf;
             let f = (d5 >> 4) & 0xf;
-            let args: Vec<String> = (0..arg_count as usize)
-                .map(|i| format!("v{}", [c, d, e, f, g_reg][i]))
-                .collect();
+            let registers = [c, d, e, f, g_reg];
+            let count = usize::from(arg_count).min(registers.len());
+            let args: Vec<String> = registers[..count].iter().map(|r| format!("v{r}")).collect();
             let meth = dex
                 .method_info(meth_idx)
                 .map(|(cls, name, shorty)| format!("{cls}->{name}({shorty})"))
                 .unwrap_or_else(|_| format!("?{meth_idx}"));
-            format!("{{{}}}, {meth}", args.join(", "))
+            let invalid = if arg_count > 5 {
+                format!(", # invalid register count {arg_count}")
+            } else {
+                String::new()
+            };
+            format!("{{{}}}, {meth}{invalid}", args.join(", "))
+        }
+        // filled-new-array {vC,..vG}, type@BBBB (format 35c)
+        0x24 if insn_bytes.len() >= 6 => {
+            let type_idx = u16::from_le_bytes([insn_bytes[2], insn_bytes[3]]) as u32;
+            let arg_count = (reg >> 4) & 0xf;
+            let g_reg = reg & 0xf;
+            let d4 = insn_bytes[4];
+            let d5 = insn_bytes[5];
+            let registers = [d4 & 0xf, d4 >> 4, d5 & 0xf, d5 >> 4, g_reg];
+            let count = usize::from(arg_count).min(registers.len());
+            let args = registers[..count]
+                .iter()
+                .map(|r| format!("v{r}"))
+                .collect::<Vec<_>>()
+                .join(", ");
+            let ty = dex
+                .type_name(type_idx)
+                .unwrap_or_else(|_| format!("?{type_idx}"));
+            let invalid = if arg_count > 5 {
+                format!(", # invalid register count {arg_count}")
+            } else {
+                String::new()
+            };
+            format!("{{{args}}}, {ty}{invalid}")
         }
         // invoke-*/range {vCCCC..vNNNN}, meth@BBBB
         // Format 3rc: [AA|op] [BBBB] [CCCC]
@@ -437,7 +587,18 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
                 .method_info(meth_idx)
                 .map(|(cls, name, shorty)| format!("{cls}->{name}({shorty})"))
                 .unwrap_or_else(|_| format!("?{meth_idx}"));
-            format!("{{v{first}..v{}}}, {meth}", first + reg as u16)
+            let last = first.saturating_add(u16::from(reg).saturating_sub(1));
+            format!("{{v{first}..v{last}}}, {meth}")
+        }
+        // filled-new-array/range {vCCCC..vNNNN}, type@BBBB (format 3rc)
+        0x25 if insn_bytes.len() >= 6 => {
+            let type_idx = u16::from_le_bytes([insn_bytes[2], insn_bytes[3]]) as u32;
+            let first = u16::from_le_bytes([insn_bytes[4], insn_bytes[5]]);
+            let last = first.saturating_add(u16::from(reg).saturating_sub(1));
+            let ty = dex
+                .type_name(type_idx)
+                .unwrap_or_else(|_| format!("?{type_idx}"));
+            format!("{{v{first}..v{last}}}, {ty}")
         }
         // iget/iput variants: field@CCCC, format 22c: [B|A|op] [CCCC]
         0x52..=0x5f if insn_bytes.len() >= 4 => {
@@ -459,10 +620,11 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
                 .unwrap_or_else(|_| format!("?{field_idx}"));
             format!("v{reg}, {field}")
         }
-        // const/4 vA, #+B — 11n: high nibble of reg byte = register, low nibble of that = value
+        // const/4 vA, #+B — 11n: low nibble is register, high nibble is a
+        // signed four-bit literal.
         0x12 => {
-            let v = (reg >> 4) & 0xf;
-            let lit = (reg & 0xf) as i8;
+            let v = reg & 0xf;
+            let lit = (reg as i8) >> 4;
             format!("v{v}, #{lit:#x}")
         }
         // const/16 vAA, #+BBBB — 21s
@@ -497,6 +659,21 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
         0x38..=0x3d if insn_bytes.len() >= 4 => {
             let offset = i16::from_le_bytes([insn_bytes[2], insn_bytes[3]]);
             format!("v{reg}, +{offset:#x}")
+        }
+        // aget/aput vAA, vBB, vCC — format 23x.
+        0x44..=0x51 if insn_bytes.len() >= 4 => {
+            format!("v{reg}, v{}, v{}", insn_bytes[2], insn_bytes[3])
+        }
+        // Unary/conversion operations vA, vB — format 12x.
+        0x7b..=0x8f => {
+            let va = reg & 0xf;
+            let vb = (reg >> 4) & 0xf;
+            format!("v{va}, v{vb}")
+        }
+        // Binary operation with signed 8-bit literal — format 22b.
+        0xd8..=0xe2 if insn_bytes.len() >= 4 => {
+            let lit = insn_bytes[3] as i8;
+            format!("v{reg}, v{}, #{lit:#x}", insn_bytes[2])
         }
         // new-array vA, vB, type@CCCC — 22c
         0x23 if insn_bytes.len() >= 4 => {
@@ -537,6 +714,36 @@ pub struct XRef {
     pub method_proto: String,
     /// Byte offset of the const-string instruction from the start of the dex blob.
     pub dex_byte_off: usize,
+}
+
+/// Decode both encoded-method lists in a class. DEX delta-encodes direct and
+/// virtual method indices independently, so each list starts at index zero.
+fn encoded_methods(
+    d: &[u8],
+    pos: &mut usize,
+    direct_count: u32,
+    virtual_count: u32,
+) -> Result<Vec<(u32, u32, u32)>, String> {
+    let capacity = direct_count
+        .checked_add(virtual_count)
+        .ok_or("dex: method count overflow")? as usize;
+    let mut methods = Vec::with_capacity(capacity);
+    for count in [direct_count, virtual_count] {
+        let mut method_idx = 0u32;
+        for _ in 0..count {
+            let (method_idx_diff, next) = uleb128(d, *pos)?;
+            *pos = next;
+            let (access_flags, next) = uleb128(d, *pos)?;
+            *pos = next;
+            let (code_off, next) = uleb128(d, *pos)?;
+            *pos = next;
+            method_idx = method_idx
+                .checked_add(method_idx_diff)
+                .ok_or("dex: method index overflow")?;
+            methods.push((method_idx, access_flags, code_off));
+        }
+    }
+    Ok(methods)
 }
 
 // ── per-dex xref scan ─────────────────────────────────────────────────────────
@@ -588,7 +795,6 @@ fn xref_one(
         let (vm, p) = uleb128(d, pos).unwrap_or((0, pos + 1));
         pos = p;
         let field_count = sf + inf;
-        let method_count = dm + vm;
 
         // Skip encoded_field entries: each is two ULEBs.
         for _ in 0..field_count {
@@ -597,23 +803,14 @@ fn xref_one(
             pos = p2;
         }
 
-        // Walk encoded_method entries.
-        let mut method_idx_acc: u32 = 0;
-        for _ in 0..method_count {
-            let (moff, p) = uleb128(d, pos).unwrap_or((0, pos + 1));
-            pos = p;
-            let (_, p) = uleb128(d, pos).unwrap_or((0, pos + 1)); // access_flags
-            pos = p;
-            let (code_off, p) = uleb128(d, pos).unwrap_or((0, pos + 1));
-            pos = p;
-
-            method_idx_acc += moff;
+        // Walk encoded_method entries with independent direct/virtual deltas.
+        for (method_idx, _, code_off) in encoded_methods(d, &mut pos, dm, vm)? {
             if code_off == 0 {
                 continue;
             }
 
             let (method_class, method_name, method_proto) =
-                dex.method_info(method_idx_acc).unwrap_or_default();
+                dex.method_info(method_idx).unwrap_or_default();
             let _ = method_class; // same as class_name
 
             // Parse code_item header (16 bytes).
@@ -633,7 +830,8 @@ fn xref_one(
             let mut i = 0usize;
             while i + 1 < insns.len() {
                 let op = insns[i];
-                let width = insn_width(op);
+                let width =
+                    payload_at(insns, i).map_or_else(|| insn_width(op), |(width, _, _)| width);
                 let byte_width = width * 2;
 
                 let str_idx: Option<u32> = match op {
@@ -770,18 +968,8 @@ fn smali_one(
             pos = p2;
         }
 
-        let mut method_idx_acc: u32 = 0;
-        for _ in 0..(dm + vm) {
-            let (moff, p) = uleb128(d, pos).unwrap_or((0, pos + 1));
-            pos = p;
-            let (access_flags, p) = uleb128(d, pos).unwrap_or((0, pos + 1));
-            pos = p;
-            let (code_off, p) = uleb128(d, pos).unwrap_or((0, pos + 1));
-            pos = p;
-            method_idx_acc += moff;
-
-            let (_, method_name, method_proto) =
-                dex.method_info(method_idx_acc).unwrap_or_default();
+        for (method_idx, access_flags, code_off) in encoded_methods(d, &mut pos, dm, vm)? {
+            let (_, method_name, method_proto) = dex.method_info(method_idx).unwrap_or_default();
 
             if let Some(mf) = method_filter
                 && !method_name.contains(mf)
@@ -874,7 +1062,11 @@ pub fn run_smali(
             println!("    # (abstract / native)");
         }
         for insn in &m.insns {
-            let name = opcode_name(insn.op);
+            let name = if insn.mnemonic == "??" {
+                format!("??(0x{:02x})", insn.op)
+            } else {
+                insn.mnemonic.to_owned()
+            };
             let end = insn.byte_off + insn.width * 2;
             if insn.annotation.is_empty() {
                 println!("    {:04x}..{:04x}  {name}", insn.byte_off, end);
@@ -932,7 +1124,7 @@ mod tests {
         for op in 0u8..=255 {
             let w = insn_width(op);
             assert!(
-                w >= 1 && w <= 5,
+                (1..=5).contains(&w),
                 "opcode 0x{op:02x} width {w} out of expected range"
             );
         }
@@ -942,6 +1134,8 @@ mod tests {
     fn insn_width_key_opcodes() {
         assert_eq!(insn_width(0x1a), 2, "const-string");
         assert_eq!(insn_width(0x1b), 3, "const-string/jumbo");
+        assert_eq!(insn_width(0x24), 3, "filled-new-array");
+        assert_eq!(insn_width(0x25), 3, "filled-new-array/range");
         assert_eq!(insn_width(0x6e), 3, "invoke-virtual");
         assert_eq!(insn_width(0x71), 3, "invoke-static");
         assert_eq!(insn_width(0x22), 2, "new-instance");
@@ -993,6 +1187,55 @@ mod tests {
         let decoded = decode_insns(insns, &dex);
         // Should produce at most one entry with a truncation note.
         assert!(decoded.len() <= 1);
+
+        // A corrupt 35c register count greater than the format's five slots
+        // is annotated rather than indexing past the decoded register array.
+        let malformed = &[0x71, 0xf0, 0, 0, 0, 0];
+        let decoded = decode_insns(malformed, &dex);
+        assert!(decoded[0].annotation.contains("invalid register count 15"));
+    }
+
+    #[test]
+    fn decodes_const_nibbles_and_fill_array_payload() {
+        let d = minimal_dex_header();
+        let dex = DexFile::parse(&d).unwrap();
+        let insns = [
+            0x12, 0x41, // const/4 v1, #4
+            0x26, 0x00, 0x03, 0x00, 0x00, 0x00, // payload is 3 code units ahead
+            0x00, 0x03, 0x01, 0x00, 0x04, 0x00, 0x00, 0x00, // payload header
+            0x57, 0x41, 0x06, 0x03, // payload bytes
+        ];
+        let decoded = decode_insns(&insns, &dex);
+        assert_eq!(decoded[0].annotation, "v1, #0x4");
+        assert!(decoded[1].annotation.contains("data=[57 41 06 03]"));
+        assert_eq!(decoded[2].mnemonic, "fill-array-data-payload");
+        assert_eq!(decoded[2].width, 6);
+    }
+
+    #[test]
+    fn decodes_xor_literal_and_conversion_operands() {
+        let d = minimal_dex_header();
+        let dex = DexFile::parse(&d).unwrap();
+        let insns = [
+            0xdf, 0x03, 0x04, 0x12, // xor-int/lit8 v3, v4, #0x12
+            0x8e, 0x53, // int-to-char v3, v5
+        ];
+        let decoded = decode_insns(&insns, &dex);
+        assert_eq!(decoded[0].mnemonic, "xor-int/lit8");
+        assert_eq!(decoded[0].annotation, "v3, v4, #0x12");
+        assert_eq!(decoded[1].mnemonic, "int-to-char");
+        assert_eq!(decoded[1].annotation, "v3, v5");
+    }
+
+    #[test]
+    fn direct_and_virtual_method_deltas_reset() {
+        // direct: index 5, virtual: index 2. Each entry is
+        // method_idx_diff, access_flags, code_off.
+        let data = [5, 1, 9, 2, 1, 7];
+        let mut pos = 0;
+        let methods = encoded_methods(&data, &mut pos, 1, 1).unwrap();
+        assert_eq!(methods, vec![(5, 1, 9), (2, 1, 7)]);
+        assert_eq!(pos, data.len());
     }
 
     #[test]

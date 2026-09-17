@@ -57,6 +57,19 @@ under `client_observations`. Presence proves the client contains a constant,
 not how it is used; nothing here changes a wire fact from hypothesis to fact
 without a capture. Native `libs.so` carries no protocol strings.
 
+2026-09-17 — a separately hashed, WhatsApp-signed newer build
+(`com.whatsapp` 2.26.37.70, code 263707033, sha256 `b2090b…ee732`) was used as
+a comparison because the official `/current/` URL had advanced and the pinned
+APK was unavailable. Structural bytecode analysis observed `WA 06 03`, the
+`https://v.whatsapp.net` base plus 17 `/v2/*` paths, UTF-8 URL-encoded form
+POST bodies, construction of the `authkey`/`e_*` key bundle, the same
+`WhatsAppLongTerm1` root and issuer serial used by the reference code, and
+chat connection candidates on ports 443/5222 (with a port-80 fallback). Its
+token dictionary differs from the pinned fixture. These are version-scoped
+comparative observations only: the pinned-profile labels above remain
+unchanged. Full details and hashes are in
+`fixtures/comparisons/whatsapp-2.26.37.70.json` and `decompilation-log.md`.
+
 ## Dated server observations
 
 None. `server_observation` in the reference manifest is `null`.

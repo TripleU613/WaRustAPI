@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "observation_date": "2026-09-17",
+  "relationship": "WhatsApp-signed newer comparison; not the active 2.26.36.75 protocol profile",
+  "reference_client": {
+    "package": "com.whatsapp",
+    "version_name": "2.26.37.70",
+    "version_code": 263707033,
+    "min_sdk": 23,
+    "target_sdk": 36,
+    "compile_sdk": 37,
+    "source_url": "https://www.whatsapp.com/android/current/WhatsApp.apk",
+    "apk_sha256": "b2090b0207e9b97449a5b48e98eb4d1649ae8e5e738e9b7431d6242717fee732",
+    "apk_size_bytes": 146380260,
+    "signing_certificate_sha256": "39:87:D0:43:D1:0A:EF:AF:5A:87:10:B3:67:14:18:FE:57:E0:E1:9B:65:3C:9D:F8:25:58:FE:B5:FF:CE:5D:44"
+  },
+  "method": {
+    "primary": "Rust-native xtask apk-xref/apk-smali structural DEX analysis",
+    "cross_check": "targeted JADX 1.5.6 decompilation retained only in ignored lab output",
+    "network_contact": false,
+    "device_or_emulator": false
+  },
+  "observations": {
+    "connection_headers": {
+      "protocol_5": "57 41 05 03",
+      "protocol_6": "57 41 06 03",
+      "selected_protocol_in_constructor": 6,
+      "dictionary_version_byte": 3,
+      "dex_method": "LX/1N7;->A04(L)"
+    },
+    "noise_pattern_selector": {
+      "pq_none": {
+        "full": "Noise_XX_25519_AESGCM_SHA256",
+        "resume": "Noise_IK_25519_AESGCM_SHA256",
+        "resume_fallback": "Noise_XXfallback_25519_AESGCM_SHA256"
+      },
+      "pq_enabled_or_enforced": {
+        "IKKEM": {
+          "full": "Noise_XXkem_25519_MLKEM512_AESGCM_SHA256",
+          "resume": "Noise_IKkem+X25519+MLKEM512+AESGCM256+SHA256",
+          "resume_fallback": "Noise_XXkemfallback_25519_MLKEM512_AESGCM_SHA256"
+        },
+        "IKKEM_FS": {
+          "full": "Noise_XXkem-FS_25519_MLKEM512_AESGCM_SHA256",
+          "resume": "Noise_IKkem-FS+X25519+MLKEM512+AESGCM256+SHA256",
+          "resume_fallback": "Noise_XXkem-FSfallback_25519_MLKEM512_AESGCM_SHA256"
+        },
+        "XXKEM_EPH_IKKEM2": {
+          "full": "Noise_XXkemEph_25519_MLKEM512_AESGCM_SHA256",
+          "resume": "Noise_IKkem2+X25519+MLKEM512+AESGCM256+SHA256",
+          "resume_fallback": "Noise_XXkemEphfallback_25519_MLKEM512_AESGCM_SHA256"
+        },
+        "XXKEM_EPH_ONLY": {
+          "full": "Noise_XXkemEph_25519_MLKEM512_AESGCM_SHA256",
+          "resume": "Noise_IKkem+X25519+MLKEM512+AESGCM256+SHA256",
+          "resume_fallback": "Noise_XXkemfallback_25519_MLKEM512_AESGCM_SHA256"
+        }
+      },
+      "local_variant_default": "IKKEM",
+      "active_runtime_configuration": null,
+      "selector_method": "LX/1N7;-><init>",
+      "pattern_initializer": "LX/1NZ;-><clinit>(V)"
+    },
+    "certificate_chain": {
+      "trust_root_name": "WhatsAppLongTerm1",
+      "trust_root_hex": "142375574d0a587166aae71ebe516437c4a28b73e3695c6ce1f7f9545da8ee6b",
+      "intermediate_issuer_serial": 0,
+      "checks": [
+        "intermediate serial equals leaf issuer serial",
+        "intermediate issuer serial equals zero",
+        "leaf key equals the Noise server static key",
+        "leaf signature verifies with the intermediate key",
+        "intermediate signature verifies with WhatsAppLongTerm1"
+      ],
+      "root_initializer_method": "LX/Aw1;-><clinit>(V)",
+      "verification_method": "LX/1N7;->A03(LLLLL)"
+    },
+    "chat_endpoints": {
+      "hosts": [
+        "g.whatsapp.net",
+        "g-fallback.whatsapp.net",
+        "e1.whatsapp.net through e16.whatsapp.net"
+      ],
+      "primary_candidate_ports": [
+        443,
+        5222
+      ],
+      "fallback_port": 80,
+      "connection_sequence_method": "LX/1BH;->A02(LLZZ)",
+      "default_port_method": "LX/1BH;->A00(I)",
+      "unresolved": "TCP vs WebSocket, TLS layering, and framing by branch"
+    },
+    "registration": {
+      "base_url": "https://v.whatsapp.net",
+      "paths": [
+        "/v2/reg_onboard_abprop",
+        "/v2/exist",
+        "/v2/code",
+        "/v2/acverify_request",
+        "/v2/acverify",
+        "/v2/register",
+        "/v2/security",
+        "/v2/autoconf",
+        "/v2/autoconf_verifier",
+        "/v2/device_logout_send",
+        "/v2/device_logout_fetch",
+        "/v2/client_log",
+        "/v2/pre_pn_client_log",
+        "/v2/consent",
+        "/v2/challenge",
+        "/v2/passkey_auth",
+        "/v2/wfs"
+      ],
+      "http_method": "POST",
+      "content_type": "application/x-www-form-urlencoded",
+      "form_encoding": "UTF-8 URL-encoded name=value pairs joined with ampersands; selected values may be marked pre-encoded",
+      "encrypted_envelope_prefix": "ENC=",
+      "key_bundle_parameters": [
+        "authkey",
+        "e_ident",
+        "e_keytype",
+        "e_regid",
+        "e_skey_id",
+        "e_skey_val",
+        "e_skey_sig"
+      ],
+      "path_decoder_method": "LX/HpO;->A00(LL)",
+      "key_bundle_method": "LX/Cdl;->A00(ZL)"
+    },
+    "token_dictionary": {
+      "recovered_from": "classes.dex @ 0x3b8d06",
+      "single_byte_entries": 235,
+      "double_byte_pages": 4,
+      "double_byte_page_size": 256,
+      "matches_active_profile_fixture": false,
+      "first_difference": "double-byte page 0 index 1"
+    }
+  },
+  "limitations": [
+    "The mutable source URL no longer served the active profile's pinned 2.26.36.75 artifact.",
+    "No request was sent and no server behavior was observed.",
+    "The selector map is known, but the effective runtime PQ mode and variant remain unresolved.",
+    "These observations must not silently update the active profile."
+  ]
+}
