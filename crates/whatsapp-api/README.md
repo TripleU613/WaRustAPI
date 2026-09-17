@@ -20,7 +20,8 @@ facts. What does work, and is tested offline:
 - bounded binary-node codec driven by a `ReferenceOnly` token dictionary;
 - cancellation-safe frame reader, experimental Noise XX adapter (feature
   `experimental-noise`), certificate-chain binding over an injected verifier;
-- durable registration state machine with bound challenge handles.
+- durable registration state machine with bound challenge handles, atomic
+  prerequisite preparation, cooldown resumption and outcome reconciliation.
 
 ## Usage sketch
 
@@ -45,6 +46,10 @@ println!("{:?}", client.capabilities());
 
 - `experimental-noise`: compiles the `snow`-based Noise adapter. `snow` is
   used without its `std` feature because that feature pulls in `ring`.
+- `experimental-registration-https`: compiles the constrained, lab-only
+  reqwest/rustls registration transport with the alpha pure-Rust
+  `rustls-rustcrypto` provider. Normal certificate/hostname validation stays
+  enabled; this is not production grade.
 
 ## Licence
 

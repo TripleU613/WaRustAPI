@@ -370,6 +370,17 @@ pub trait RegistrationFlow: Send + Sync + fmt::Debug {
         handle: &'a ChallengeHandle,
         answer: &'a Answer,
     ) -> RegistrationFuture<'a>;
+
+    /// Reconcile a request whose response was lost. Implementations must use
+    /// an observed read-safe flow and must not blindly repeat the mutation.
+    fn reconcile<'a>(&'a self, _attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
+        Box::pin(async {
+            Err(Error::invalid(
+                "registration_reconciliation",
+                "this registration flow has no observed reconciliation procedure",
+            ))
+        })
+    }
 }
 
 /// The only flow available while the Android registration protocol is
@@ -539,13 +550,18 @@ impl RegistrationService {
             .run_blocking(move |s| {
                 s.write(|tx| {
                     let now = Timestamp::now();
-                    if let Some(existing) = Self::load_current(tx)? {
+                    if let Some(mut existing) = Self::load_current(tx)? {
                         if existing.generation == tx.generation()
                             && *existing.phone() == phone
                             && existing.profile_id == profile_id
-                            && (existing.state.is_terminal()
-                                || !matches!(existing.state, RegistrationState::Blocked { .. }))
                         {
+                            if let RegistrationState::CoolingDown { until } = &existing.state
+                                && now >= *until
+                            {
+                                existing.transition(RegistrationState::Preparing, now)?;
+                                Self::save_current(tx, &existing)?;
+                                return Ok(BeginPlan::Start(existing));
+                            }
                             return Ok(BeginPlan::Existing(step_for(&existing.state)));
                         }
                         if matches!(existing.state, RegistrationState::Registered) {
@@ -668,6 +684,34 @@ impl RegistrationService {
                 Err(error)
             }
         }
+    }
+
+    /// Reconcile an attempt after a request result was lost.
+    ///
+    /// The profile flow performs its observed read-safe reconciliation with
+    /// no store transaction held. Failure leaves the attempt in
+    /// `RegistrationOutcomeUnknown`; success commits the returned state only
+    /// if the same attempt and generation are still current.
+    pub async fn reconcile(&self) -> Result<RegistrationStep> {
+        let attempt = self
+            .current()
+            .await?
+            .ok_or_else(|| Error::invalid("registration_state", "no registration attempt"))?;
+        if !matches!(
+            attempt.state,
+            RegistrationState::RegistrationOutcomeUnknown { .. }
+        ) {
+            return Err(Error::invalid(
+                "registration_state",
+                format!(
+                    "attempt is not awaiting reconciliation (state {})",
+                    attempt.state.name()
+                ),
+            ));
+        }
+        let next = self.flow.reconcile(&attempt).await?;
+        self.finish_transition(attempt.id, attempt.generation, "outcome_unknown", next)
+            .await
     }
 
     /// Explicitly discard a blocked or completed attempt. This is a local
@@ -798,6 +842,80 @@ mod tests {
         // Reset is explicit and only for terminal attempts.
         svc.reset().await.unwrap();
         assert!(svc.current().await.unwrap().is_none());
+    }
+
+    #[derive(Debug, Default)]
+    struct CooldownFlow {
+        prepare_calls: std::sync::atomic::AtomicUsize,
+        begin_calls: std::sync::atomic::AtomicUsize,
+    }
+
+    impl RegistrationFlow for CooldownFlow {
+        fn prepare(&self, _tx: &mut WriteTx<'_>, _attempt: &RegistrationAttempt) -> Result<()> {
+            self.prepare_calls
+                .fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+            Ok(())
+        }
+
+        fn begin<'a>(&'a self, attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
+            Box::pin(async move {
+                if self
+                    .begin_calls
+                    .fetch_add(1, std::sync::atomic::Ordering::SeqCst)
+                    == 0
+                {
+                    return Ok(RegistrationState::CoolingDown {
+                        until: Timestamp::default(),
+                    });
+                }
+                Ok(RegistrationState::ChallengePending {
+                    handle: ChallengeHandle {
+                        attempt: attempt.id,
+                        generation: attempt.generation,
+                        step: 1,
+                        method: attempt.method.clone(),
+                        expires_at: None,
+                        retry_after: None,
+                    },
+                })
+            })
+        }
+
+        fn submit<'a>(
+            &'a self,
+            _attempt: &'a RegistrationAttempt,
+            _handle: &'a ChallengeHandle,
+            _answer: &'a Answer,
+        ) -> RegistrationFuture<'a> {
+            Box::pin(async { Err(Error::invalid("test", "submit is unused")) })
+        }
+    }
+
+    #[tokio::test]
+    async fn elapsed_cooldown_resumes_without_regenerating_prerequisites() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let flow = Arc::new(CooldownFlow::default());
+        let svc = RegistrationService::new(s, &profile, flow.clone());
+
+        let first = svc.begin(phone(), ChallengeMethod::Sms).await.unwrap();
+        assert!(matches!(
+            first,
+            RegistrationStep::Action(RequiredAction::WaitForCooldown { .. })
+        ));
+        let second = svc.begin(phone(), ChallengeMethod::Sms).await.unwrap();
+        assert!(matches!(
+            second,
+            RegistrationStep::Action(RequiredAction::EnterCode(_))
+        ));
+        assert_eq!(
+            flow.prepare_calls.load(std::sync::atomic::Ordering::SeqCst),
+            1
+        );
+        assert_eq!(
+            flow.begin_calls.load(std::sync::atomic::Ordering::SeqCst),
+            2
+        );
     }
 
     /// A test flow that hands out a challenge and accepts one specific code,
@@ -976,6 +1094,66 @@ mod tests {
             RegistrationState::RegistrationOutcomeUnknown { step: 0 }
         );
         assert_eq!(current.history_len(), 2);
+    }
+
+    #[derive(Debug)]
+    struct ReconcilingFlow;
+
+    impl RegistrationFlow for ReconcilingFlow {
+        fn prepare(&self, _tx: &mut WriteTx<'_>, _attempt: &RegistrationAttempt) -> Result<()> {
+            Ok(())
+        }
+
+        fn begin<'a>(&'a self, _attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
+            Box::pin(async { Err(Error::Io(std::io::Error::other("lost response"))) })
+        }
+
+        fn submit<'a>(
+            &'a self,
+            _attempt: &'a RegistrationAttempt,
+            _handle: &'a ChallengeHandle,
+            _answer: &'a Answer,
+        ) -> RegistrationFuture<'a> {
+            Box::pin(async { Err(Error::invalid("test", "submit is unused")) })
+        }
+
+        fn reconcile<'a>(&'a self, attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
+            Box::pin(async move {
+                Ok(RegistrationState::ChallengePending {
+                    handle: ChallengeHandle {
+                        attempt: attempt.id,
+                        generation: attempt.generation,
+                        step: 1,
+                        method: attempt.method.clone(),
+                        expires_at: None,
+                        retry_after: None,
+                    },
+                })
+            })
+        }
+    }
+
+    #[tokio::test]
+    async fn outcome_unknown_can_be_reconciled_without_repeating_mutation() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let svc = RegistrationService::new(s, &profile, Arc::new(ReconcilingFlow));
+
+        assert!(svc.begin(phone(), ChallengeMethod::Sms).await.is_err());
+        assert!(matches!(
+            svc.current().await.unwrap().unwrap().state,
+            RegistrationState::RegistrationOutcomeUnknown { step: 0 }
+        ));
+        let step = svc.reconcile().await.unwrap();
+        assert!(matches!(
+            step,
+            RegistrationStep::Action(RequiredAction::EnterCode(_))
+        ));
+        assert!(matches!(
+            svc.current().await.unwrap().unwrap().state,
+            RegistrationState::ChallengePending { .. }
+        ));
+        assert!(svc.reconcile().await.is_err());
     }
 
     #[derive(Debug)]

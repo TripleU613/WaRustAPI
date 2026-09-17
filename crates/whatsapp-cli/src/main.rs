@@ -159,6 +159,8 @@ enum RegCmd {
     },
     /// Show the current attempt.
     Status,
+    /// Reconcile an attempt whose request outcome was lost.
+    Reconcile,
     /// Discard a completed or blocked attempt (local only).
     Reset,
 }
@@ -371,6 +373,11 @@ async fn run(cli: Cli) -> Result<(), Error> {
                         Some(a) => println!("{a:?}"),
                         None => println!("no registration attempt"),
                     }
+                    Ok(())
+                }
+                RegCmd::Reconcile => {
+                    let step = c.registration().reconcile().await?;
+                    print_step(&step, cli.json);
                     Ok(())
                 }
                 RegCmd::Reset => c.registration().reset().await,

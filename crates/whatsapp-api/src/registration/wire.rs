@@ -943,6 +943,138 @@ pub trait RegistrationTransport: Send + Sync + fmt::Debug {
     fn send<'a>(&'a self, request: EncodedRegistrationRequest) -> RegistrationTransportFuture<'a>;
 }
 
+/// Lab-only HTTPS transport selected by ADR 0003.
+///
+/// This is feature-gated because its pure-Rust TLS provider is still an alpha
+/// release. It uses normal WebPKI certificate and hostname validation, a
+/// compiled Mozilla root set, HTTPS-only URLs, no redirects, no proxies, no
+/// transparent decompression, no automatic retries, and a whole-request
+/// deadline. It never logs request or response bodies.
+#[cfg(feature = "experimental-registration-https")]
+#[derive(Clone)]
+pub struct ExperimentalHttpsTransport {
+    client: reqwest::Client,
+    timeout: Duration,
+}
+
+#[cfg(feature = "experimental-registration-https")]
+impl fmt::Debug for ExperimentalHttpsTransport {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ExperimentalHttpsTransport")
+            .field("timeout", &self.timeout)
+            .field("redirects", &"disabled")
+            .field("automatic_retries", &"disabled")
+            .finish()
+    }
+}
+
+#[cfg(feature = "experimental-registration-https")]
+impl ExperimentalHttpsTransport {
+    /// Maximum configurable whole-request timeout.
+    pub const MAX_TIMEOUT: Duration = Duration::from_secs(5 * 60);
+
+    /// Build the constrained lab transport with an explicit RustCrypto
+    /// provider. No process-global TLS provider is installed.
+    pub fn new(timeout: Duration) -> Result<Self> {
+        if timeout.is_zero() || timeout > Self::MAX_TIMEOUT {
+            return Err(Error::invalid(
+                "registration_https_timeout",
+                "must be greater than zero and at most five minutes",
+            ));
+        }
+        let roots =
+            rustls::RootCertStore::from_iter(webpki_roots::TLS_SERVER_ROOTS.iter().cloned());
+        let tls = rustls::ClientConfig::builder_with_provider(std::sync::Arc::new(
+            rustls_rustcrypto::provider(),
+        ))
+        .with_safe_default_protocol_versions()
+        .map_err(|_| {
+            Error::invalid(
+                "registration_https_tls",
+                "RustCrypto provider has no safe protocol-version configuration",
+            )
+        })?
+        .with_root_certificates(roots)
+        .with_no_client_auth();
+        let client = reqwest::Client::builder()
+            .use_preconfigured_tls(tls)
+            .https_only(true)
+            .redirect(reqwest::redirect::Policy::none())
+            .no_proxy()
+            .referer(false)
+            .no_gzip()
+            .no_brotli()
+            .no_deflate()
+            .no_zstd()
+            .timeout(timeout)
+            .connect_timeout(timeout.min(Duration::from_secs(30)))
+            .pool_max_idle_per_host(1)
+            .build()
+            .map_err(|_| {
+                Error::invalid(
+                    "registration_https_tls",
+                    "failed to construct constrained HTTPS client",
+                )
+            })?;
+        Ok(Self { client, timeout })
+    }
+}
+
+#[cfg(feature = "experimental-registration-https")]
+impl RegistrationTransport for ExperimentalHttpsTransport {
+    fn send<'a>(&'a self, request: EncodedRegistrationRequest) -> RegistrationTransportFuture<'a> {
+        Box::pin(async move {
+            if !request.url().starts_with("https://v.whatsapp.net/") {
+                return Err(Error::invalid(
+                    "registration_url",
+                    "experimental transport accepts only the comparison registration origin",
+                ));
+            }
+            let mut response = self
+                .client
+                .post(request.url())
+                .header(reqwest::header::CONTENT_TYPE, request.content_type())
+                .header(reqwest::header::CONTENT_LENGTH, request.content_length())
+                .body(request.body().to_vec())
+                .send()
+                .await
+                .map_err(|_| {
+                    Error::Io(std::io::Error::other("registration HTTPS request failed"))
+                })?;
+            if response
+                .content_length()
+                .is_some_and(|length| length > MAX_RESPONSE_BODY_BYTES as u64)
+            {
+                return Err(Error::ResourceExhausted {
+                    resource: "registration response body bytes",
+                    limit: MAX_RESPONSE_BODY_BYTES as u64,
+                });
+            }
+            let mut body = Zeroizing::new(Vec::with_capacity(
+                response
+                    .content_length()
+                    .and_then(|length| usize::try_from(length).ok())
+                    .unwrap_or(0)
+                    .min(MAX_RESPONSE_BODY_BYTES),
+            ));
+            while let Some(chunk) = response.chunk().await.map_err(|_| {
+                Error::Io(std::io::Error::other(
+                    "registration HTTPS response body failed",
+                ))
+            })? {
+                if body.len().saturating_add(chunk.len()) > MAX_RESPONSE_BODY_BYTES {
+                    return Err(Error::ResourceExhausted {
+                        resource: "registration response body bytes",
+                        limit: MAX_RESPONSE_BODY_BYTES as u64,
+                    });
+                }
+                body.extend_from_slice(&chunk);
+            }
+            RegistrationHttpResponse::new(response.status().as_u16(), body)
+        })
+    }
+}
+
 /// Bounded, secret-bearing HTTP response returned by a registration
 /// transport.
 pub struct RegistrationHttpResponse {
@@ -2064,5 +2196,16 @@ mod tests {
             response.parse_json().unwrap().retry_after,
             Some(Duration::from_secs(20))
         );
+    }
+
+    #[cfg(feature = "experimental-registration-https")]
+    #[test]
+    fn experimental_https_transport_has_bounded_configuration() {
+        assert!(ExperimentalHttpsTransport::new(Duration::ZERO).is_err());
+        assert!(ExperimentalHttpsTransport::new(Duration::from_secs(301)).is_err());
+        let transport = ExperimentalHttpsTransport::new(Duration::from_secs(30)).unwrap();
+        let debug = format!("{transport:?}");
+        assert!(debug.contains("disabled"));
+        assert!(!debug.contains("root"));
     }
 }

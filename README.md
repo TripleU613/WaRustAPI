@@ -519,6 +519,7 @@ Keep a cloneable `WhatsAppClient` handle and a separate `SyncEngine`. Exact Rust
 | `WhatsAppClient::builder()` | Accept validated profile, account store, key source, HTTP backend, limits and policies; no implicit registration |
 | `registration().begin(...)` | Start/resume a durable primary-registration attempt and return its current step |
 | `registration().submit(...)` | Submit a typed answer for a specific step; return next step or completed registration |
+| `registration().reconcile()` | Resolve an ambiguous request through the profile's observed read-safe flow without blindly repeating the mutation |
 | `connect()` | Idempotently start one runtime and wait for authenticated readiness, with timeout/cancellation |
 | `connection_state()` | Watch current status, reason and connection epoch; no durable-message guarantee implied |
 | `disconnect()` | Stop reconnecting, shut down owned tasks and preserve resumable state; no account logout |
