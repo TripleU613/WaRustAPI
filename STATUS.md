@@ -30,10 +30,11 @@ the active 2.26.36.75 profile.
 | Registration | state table enforced; handles bound to attempt/generation/step; secrets never persisted (byte scan of the database) |
 | Outbox | idempotent enqueue, conflict, limits, cancel rules, uncertain delivery representation |
 | Client | durable enqueue → status → events → ack → restart over the same store |
-| CLI | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect` (typed exit 4), `registration begin` (blocked with missing ledger refs), wrong key (exit 5) |
+| CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability endpoints and structured gated-operation errors |
 
-Test count: 85 (`cargo test --workspace --all-features`), clippy clean with
-`-D warnings`, `cargo fmt --check` clean, CI green on GitHub.
+Test count: 91 (`cargo test --workspace --all-features`), clippy clean with
+`-D warnings`, `cargo fmt --check` clean, and package/protobuf checks pass
+locally.
 
 ## Blocked / not started
 

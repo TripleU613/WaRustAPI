@@ -1,7 +1,7 @@
 [package]
 name = "whatsapp-cli"
 version = "0.0.1"
-description = "Operator tool and standalone proof client for whatsapp-api"
+description = "Operator CLI and local HTTP control plane for whatsapp-api"
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
@@ -15,7 +15,7 @@ path = "src/main.rs"
 [dependencies]
 whatsapp-api = { path = "../whatsapp-api" }
 clap.workspace = true
-tokio = { workspace = true, features = ["rt-multi-thread", "macros", "sync", "time", "signal"] }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "sync", "time", "signal", "net", "io-util"] }
 serde_json.workspace = true
 hex.workspace = true
 thiserror.workspace = true

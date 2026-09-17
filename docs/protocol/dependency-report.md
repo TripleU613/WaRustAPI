@@ -57,7 +57,7 @@ Resolved normal-edge packages: 59
 | syn | 3.0.6 | `clone-impls, default, derive, full, parsing, printing, proc-macro` | no | - | - |
 | thiserror | 2.0.20 | `default, std` | yes | - | - |
 | thiserror-impl | 2.0.20 | - | no | - | - |
-| tokio | 1.53.1 | `bytes, io-util, libc, macros, mio, rt, rt-multi-thread, signal, signal-hook-registry, sync, test-util, time, tokio-macros, windows-sys` | no | - | - |
+| tokio | 1.53.1 | `bytes, io-util, libc, macros, mio, net, rt, rt-multi-thread, signal, signal-hook-registry, socket2, sync, test-util, time, tokio-macros, windows-sys` | no | - | - |
 | tokio-macros | 2.7.2 | - | no | - | - |
 | tracing | 0.1.44 | `attributes, std, tracing-attributes` | no | - | - |
 | tracing-attributes | 0.1.31 | - | no | - | - |
@@ -149,7 +149,7 @@ Resolved normal-edge packages: 86
 | syn | 3.0.6 | `clone-impls, default, derive, full, parsing, printing, proc-macro` | no | - | - |
 | thiserror | 2.0.20 | `default, std` | yes | - | - |
 | thiserror-impl | 2.0.20 | - | no | - | - |
-| tokio | 1.53.1 | `bytes, io-util, libc, macros, mio, rt, rt-multi-thread, signal, signal-hook-registry, sync, test-util, time, tokio-macros, windows-sys` | no | - | - |
+| tokio | 1.53.1 | `bytes, io-util, libc, macros, mio, net, rt, rt-multi-thread, signal, signal-hook-registry, socket2, sync, test-util, time, tokio-macros, windows-sys` | no | - | - |
 | tokio-macros | 2.7.2 | - | no | - | - |
 | tracing | 0.1.44 | `attributes, std, tracing-attributes` | no | - | - |
 | tracing-attributes | 0.1.31 | - | no | - | - |
@@ -236,7 +236,7 @@ Resolved normal-edge packages: 82
 | thiserror | 2.0.20 | `default, std` | yes | - | - |
 | thiserror-impl | 2.0.20 | - | no | - | - |
 | thread_local | 1.1.10 | - | no | - | - |
-| tokio | 1.53.1 | `bytes, io-util, libc, macros, mio, rt, rt-multi-thread, signal, signal-hook-registry, sync, test-util, time, tokio-macros, windows-sys` | no | - | - |
+| tokio | 1.53.1 | `bytes, io-util, libc, macros, mio, net, rt, rt-multi-thread, signal, signal-hook-registry, socket2, sync, test-util, time, tokio-macros, windows-sys` | no | - | - |
 | tokio-macros | 2.7.2 | - | no | - | - |
 | tracing | 0.1.44 | `attributes, std, tracing-attributes` | no | - | - |
 | tracing-attributes | 0.1.31 | - | no | - | - |
