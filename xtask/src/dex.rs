@@ -141,7 +141,17 @@ pub fn run(apk: &Path, contains: &[String]) -> Result<(), String> {
 /// empty token) and each following block of 256 is a double-byte page. This
 /// heuristic decodes no other bytecode; it is validated by `--check` against a
 /// committed fixture.
-pub fn apk_tokens(apk: &Path) -> Result<(Vec<String>, Vec<Vec<String>>, String), String> {
+/// A dictionary recovered from bytecode.
+pub struct RecoveredDictionary {
+    /// Single-byte page (index 0 is the empty token).
+    pub single: Vec<String>,
+    /// Double-byte pages of 256 entries each.
+    pub double: Vec<Vec<String>>,
+    /// Where the run was found (`<dex file> @ <offset>`).
+    pub location: String,
+}
+
+pub fn apk_tokens(apk: &Path) -> Result<RecoveredDictionary, String> {
     let f = std::fs::File::open(apk).map_err(|e| format!("{}: {e}", apk.display()))?;
     let mut zip = zip::ZipArchive::new(f).map_err(|e| format!("zip: {e}"))?;
     let names: Vec<String> = zip
@@ -229,7 +239,11 @@ pub fn apk_tokens(apk: &Path) -> Result<(Vec<String>, Vec<Vec<String>>, String),
         double.push(rest[..256].to_vec());
         rest = &rest[256..];
     }
-    Ok((single, double, best_where))
+    Ok(RecoveredDictionary {
+        single,
+        double,
+        location: best_where,
+    })
 }
 
 #[derive(serde::Deserialize)]
@@ -241,7 +255,11 @@ struct TokenFixture {
 /// `apk-tokens`: print the recovered dictionary as JSON; with `--check`,
 /// compare against a committed fixture and fail on any difference.
 pub fn run_tokens(apk: &Path, check: Option<&Path>) -> Result<(), String> {
-    let (single, double, location) = apk_tokens(apk)?;
+    let RecoveredDictionary {
+        single,
+        double,
+        location,
+    } = apk_tokens(apk)?;
     eprintln!(
         "recovered {} single-byte and {}x256 double-byte tokens from {location}",
         single.len() - 1,
