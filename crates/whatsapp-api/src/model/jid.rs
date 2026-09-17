@@ -37,6 +37,12 @@ pub enum Server {
     LegacyUser,
     /// Hosted business identities (`hosted`).
     Hosted,
+    /// Hosted logical identities (`hosted.lid`).
+    HostedLid,
+    /// Messenger interop identities (`msgr`).
+    Messenger,
+    /// Third-party interop identities (`interop`).
+    Interop,
     /// Any other server, preserved verbatim.
     Other(String),
 }
@@ -52,6 +58,9 @@ impl Server {
             Self::Newsletter => "newsletter",
             Self::LegacyUser => "c.us",
             Self::Hosted => "hosted",
+            Self::HostedLid => "hosted.lid",
+            Self::Messenger => "msgr",
+            Self::Interop => "interop",
             Self::Other(s) => s,
         }
     }
@@ -78,6 +87,9 @@ impl Server {
             "newsletter" => Self::Newsletter,
             "c.us" => Self::LegacyUser,
             "hosted" => Self::Hosted,
+            "hosted.lid" => Self::HostedLid,
+            "msgr" => Self::Messenger,
+            "interop" => Self::Interop,
             other => Self::Other(other.to_owned()),
         })
     }
@@ -153,7 +165,7 @@ impl Jid {
     pub fn is_user_like(&self) -> bool {
         matches!(
             self.server,
-            Server::User | Server::Lid | Server::LegacyUser | Server::Hosted
+            Server::User | Server::Lid | Server::LegacyUser | Server::Hosted | Server::HostedLid
         ) && !self.user.is_empty()
     }
 

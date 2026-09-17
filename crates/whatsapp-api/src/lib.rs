@@ -43,6 +43,8 @@ pub mod evidence;
 pub mod model;
 pub mod outbox;
 pub mod profile;
+#[doc(hidden)]
+pub mod proto;
 pub mod registration;
 pub mod runtime;
 pub mod session;

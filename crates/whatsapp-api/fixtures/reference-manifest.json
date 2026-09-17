@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generated_on": "2026-09-17",
-  "generator": "manual lab inspection (curl, unzip, keytool, sha256sum, AXML parse); to be reproduced by `cargo run -p xtask -- reference-manifest <apk>`",
+  "generator": "cargo run -p xtask -- reference-manifest <apk> --check crates/whatsapp-api/fixtures/reference-manifest.json (cross-checked manually with keytool -printcert -jarfile and sha256sum on 2026-09-17)",
   "reference_client": {
     "package": "com.whatsapp",
     "version_name": "2.26.36.75",
@@ -22,7 +22,7 @@
       "v1_signature_block": "META-INF/IMPORTED.DSA",
       "v1_signature_block_sha256": "3b76ac9fd4abae4edc10aa0e61b55267f7650824b9c373afc15e0e1e53fa5bb4"
     },
-    "native_libraries": ["lib/arm64-v8a/libs.so", "lib/armeabi-v7a/libs.so", "lib/x86/libs.so", "lib/x86_64/libs.so"],
+    "native_libraries": ["lib/arm64-v8a/libs.so", "lib/arm64-v8a/libsuperpack.so", "lib/arm64-v8a/libunwindstack_binary.so", "lib/armeabi-v7a/libs.so", "lib/armeabi-v7a/libsuperpack.so", "lib/armeabi-v7a/libunwindstack_binary.so", "lib/x86/libs.so", "lib/x86/libsuperpack.so", "lib/x86/libunwindstack_binary.so", "lib/x86_64/libs.so", "lib/x86_64/libsuperpack.so", "lib/x86_64/libunwindstack_binary.so"],
     "notes": [
       "The APK is a research artifact kept outside the repository (section 6.3). Only hashes and metadata are committed.",
       "A pinned APK is authoritative for that client's behavior; it is not proof that the server accepts it (section 6.1)."
