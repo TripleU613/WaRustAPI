@@ -27,6 +27,10 @@ pub const MAX_FORM_BODY_BYTES: usize = 2 << 20;
 pub const MAX_RESPONSE_BODY_BYTES: usize = 1 << 20;
 /// Maximum bytes accepted in a secret-bearing response string.
 pub const MAX_RESPONSE_SECRET_BYTES: usize = 256 << 10;
+/// Maximum bytes accepted in one public registration key component.
+pub const MAX_KEY_COMPONENT_BYTES: usize = 4 << 10;
+/// Key-type byte emitted by the inspected comparison build.
+pub const COMPARISON_SIGNAL_KEY_TYPE: u8 = 0x05;
 
 /// Registration endpoints present in signed Android build 2.26.37.70.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -247,6 +251,41 @@ impl RegistrationForm {
         Ok(self)
     }
 
+    fn push_batch(&mut self, fields: Vec<(&'static str, String)>) -> Result<&mut Self> {
+        if self.fields.len().saturating_add(fields.len()) > MAX_FORM_FIELDS {
+            return Err(Error::ResourceExhausted {
+                resource: "registration form fields",
+                limit: MAX_FORM_FIELDS as u64,
+            });
+        }
+        for (index, (name, value)) in fields.iter().enumerate() {
+            if name.is_empty() || name.len() > MAX_FIELD_NAME_BYTES {
+                return Err(Error::invalid(
+                    "registration_field_name",
+                    format!("must contain 1..={MAX_FIELD_NAME_BYTES} UTF-8 bytes"),
+                ));
+            }
+            if value.len() > MAX_FIELD_VALUE_BYTES {
+                return Err(Error::ResourceExhausted {
+                    resource: "registration field value bytes",
+                    limit: MAX_FIELD_VALUE_BYTES as u64,
+                });
+            }
+            if self.fields.iter().any(|field| field.name == *name)
+                || fields[..index].iter().any(|(previous, _)| previous == name)
+            {
+                return Err(Error::invalid("registration_field_name", "duplicate field"));
+            }
+        }
+        self.fields
+            .extend(fields.into_iter().map(|(name, value)| Field {
+                name: name.to_owned(),
+                value: Zeroizing::new(value),
+                encoding: ValueEncoding::Encode,
+            }));
+        Ok(self)
+    }
+
     /// Number of fields in insertion order.
     pub fn len(&self) -> usize {
         self.fields.len()
@@ -278,6 +317,108 @@ impl RegistrationForm {
             }
         }
         Ok(body)
+    }
+}
+
+/// Public half of the pre-registration Noise/Signal key bundle observed in
+/// the comparison client.
+///
+/// This type does not generate or sign keys. A reviewed Signal backend must
+/// create and durably persist the corresponding private material before this
+/// public bundle is constructed.
+pub struct RegistrationKeyBundle {
+    auth_key: Zeroizing<Vec<u8>>,
+    identity_key: Zeroizing<Vec<u8>>,
+    registration_id: u32,
+    signed_pre_key_id: u32,
+    signed_pre_key_value: Zeroizing<Vec<u8>>,
+    signed_pre_key_signature: Zeroizing<Vec<u8>>,
+}
+
+impl fmt::Debug for RegistrationKeyBundle {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("RegistrationKeyBundle")
+            .field("auth_key_length", &self.auth_key.len())
+            .field("identity_key_length", &self.identity_key.len())
+            .field("registration_id", &self.registration_id)
+            .field("signed_pre_key_id", &self.signed_pre_key_id)
+            .field("signed_pre_key_length", &self.signed_pre_key_value.len())
+            .field(
+                "signed_pre_key_signature_length",
+                &self.signed_pre_key_signature.len(),
+            )
+            .finish()
+    }
+}
+
+impl RegistrationKeyBundle {
+    /// Validate already-generated public registration material.
+    pub fn new(
+        auth_key: [u8; 32],
+        identity_key: Vec<u8>,
+        registration_id: u32,
+        signed_pre_key_id: u32,
+        signed_pre_key_value: Vec<u8>,
+        signed_pre_key_signature: Vec<u8>,
+    ) -> Result<Self> {
+        if signed_pre_key_id > 0x00ff_ffff {
+            return Err(Error::invalid(
+                "signed_pre_key_id",
+                "must fit the observed three-byte encoding",
+            ));
+        }
+        for (field, value) in [
+            ("identity_key", identity_key.as_slice()),
+            ("signed_pre_key_value", signed_pre_key_value.as_slice()),
+            (
+                "signed_pre_key_signature",
+                signed_pre_key_signature.as_slice(),
+            ),
+        ] {
+            if value.is_empty() || value.len() > MAX_KEY_COMPONENT_BYTES {
+                return Err(Error::invalid(
+                    field,
+                    format!("must contain 1..={MAX_KEY_COMPONENT_BYTES} bytes"),
+                ));
+            }
+        }
+        Ok(Self {
+            auth_key: Zeroizing::new(auth_key.to_vec()),
+            identity_key: Zeroizing::new(identity_key),
+            registration_id,
+            signed_pre_key_id,
+            signed_pre_key_value: Zeroizing::new(signed_pre_key_value),
+            signed_pre_key_signature: Zeroizing::new(signed_pre_key_signature),
+        })
+    }
+
+    /// Append the seven comparison-build form parameters atomically and in
+    /// the order used by the inspected client.
+    pub fn append_to_form<'a>(
+        &self,
+        form: &'a mut RegistrationForm,
+    ) -> Result<&'a mut RegistrationForm> {
+        let registration_id = self.registration_id.to_be_bytes();
+        let signed_pre_key_id = [
+            (self.signed_pre_key_id >> 16) as u8,
+            (self.signed_pre_key_id >> 8) as u8,
+            self.signed_pre_key_id as u8,
+        ];
+        form.push_batch(vec![
+            ("authkey", base64_url_no_pad(&self.auth_key)),
+            ("e_ident", base64_url_no_pad(&self.identity_key)),
+            (
+                "e_keytype",
+                base64_url_no_pad(&[COMPARISON_SIGNAL_KEY_TYPE]),
+            ),
+            ("e_regid", base64_url_no_pad(&registration_id)),
+            ("e_skey_id", base64_url_no_pad(&signed_pre_key_id)),
+            ("e_skey_val", base64_url_no_pad(&self.signed_pre_key_value)),
+            (
+                "e_skey_sig",
+                base64_url_no_pad(&self.signed_pre_key_signature),
+            ),
+        ])
     }
 }
 
@@ -853,6 +994,32 @@ fn encode_component(input: &[u8], output: &mut Vec<u8>) {
     }
 }
 
+fn base64_url_no_pad(input: &[u8]) -> String {
+    const TABLE: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+    let mut output = String::with_capacity(input.len().div_ceil(3) * 4);
+    let mut chunks = input.chunks_exact(3);
+    for chunk in &mut chunks {
+        output.push(TABLE[usize::from(chunk[0] >> 2)] as char);
+        output.push(TABLE[usize::from(((chunk[0] & 0x03) << 4) | (chunk[1] >> 4))] as char);
+        output.push(TABLE[usize::from(((chunk[1] & 0x0f) << 2) | (chunk[2] >> 6))] as char);
+        output.push(TABLE[usize::from(chunk[2] & 0x3f)] as char);
+    }
+    match chunks.remainder() {
+        [first] => {
+            output.push(TABLE[usize::from(first >> 2)] as char);
+            output.push(TABLE[usize::from((first & 0x03) << 4)] as char);
+        }
+        [first, second] => {
+            output.push(TABLE[usize::from(first >> 2)] as char);
+            output.push(TABLE[usize::from(((first & 0x03) << 4) | (second >> 4))] as char);
+            output.push(TABLE[usize::from((second & 0x0f) << 2)] as char);
+        }
+        [] => {}
+        _ => unreachable!("chunks_exact(3) remainder is at most two bytes"),
+    }
+    output
+}
+
 fn validate_pre_encoded(value: &str) -> Result<()> {
     let bytes = value.as_bytes();
     let mut index = 0;
@@ -922,6 +1089,20 @@ mod tests {
             evidence["observations"]["registration"]["response"]["reason_values"],
             serde_json::json!(reasons)
         );
+        let key_encoding = &evidence["observations"]["registration"]["key_bundle_encoding"];
+        assert_eq!(key_encoding["key_type_hex"], "05");
+        assert_eq!(
+            key_encoding["parameter_order"],
+            serde_json::json!([
+                "authkey",
+                "e_ident",
+                "e_keytype",
+                "e_regid",
+                "e_skey_id",
+                "e_skey_val",
+                "e_skey_sig"
+            ])
+        );
     }
 
     #[test]
@@ -979,6 +1160,52 @@ mod tests {
             form.push(format!("f{index}"), "x").unwrap();
         }
         assert!(form.push("one_too_many", "x").is_err());
+    }
+
+    #[test]
+    fn key_bundle_uses_observed_base64url_and_integer_encodings() {
+        assert_eq!(base64_url_no_pad(b""), "");
+        assert_eq!(base64_url_no_pad(b"f"), "Zg");
+        assert_eq!(base64_url_no_pad(b"fo"), "Zm8");
+        assert_eq!(base64_url_no_pad(b"foo"), "Zm9v");
+        assert_eq!(base64_url_no_pad(&[0xfb, 0xff, 0xef]), "-__v");
+
+        let bundle = RegistrationKeyBundle::new(
+            [0; 32],
+            vec![0xfb, 0xff, 0xef],
+            0x0102_0304,
+            0x010203,
+            b"foo".to_vec(),
+            vec![0xff],
+        )
+        .unwrap();
+        let mut form = RegistrationForm::new();
+        bundle.append_to_form(&mut form).unwrap();
+        let body = String::from_utf8(form.encode().unwrap().to_vec()).unwrap();
+        assert_eq!(
+            body,
+            format!(
+                "authkey={}&e_ident=-__v&e_keytype=BQ&e_regid=AQIDBA&e_skey_id=AQID&e_skey_val=Zm9v&e_skey_sig=_w",
+                "A".repeat(43)
+            )
+        );
+        let debug = format!("{bundle:?}");
+        assert!(!debug.contains("-__v") && !debug.contains("Zm9v"));
+    }
+
+    #[test]
+    fn key_bundle_validation_and_append_are_atomic() {
+        assert!(RegistrationKeyBundle::new([0; 32], Vec::new(), 1, 1, vec![1], vec![2]).is_err());
+        assert!(
+            RegistrationKeyBundle::new([0; 32], vec![1], 1, 0x0100_0000, vec![1], vec![2]).is_err()
+        );
+
+        let bundle = RegistrationKeyBundle::new([0; 32], vec![1], 1, 1, vec![1], vec![2]).unwrap();
+        let mut form = RegistrationForm::new();
+        form.push("e_ident", "existing").unwrap();
+        assert!(bundle.append_to_form(&mut form).is_err());
+        assert_eq!(form.len(), 1, "failed batch append must not add fields");
+        assert_eq!(form.encode().unwrap().as_slice(), b"e_ident=existing");
     }
 
     #[test]

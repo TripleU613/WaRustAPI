@@ -182,6 +182,14 @@ The Rust-native parser was corrected before analysis:
   `e_ident`, `e_keytype`, `e_regid`, `e_skey_id`, `e_skey_val`, and
   `e_skey_sig`. Static analysis establishes the bundle construction, not the
   exact first request on which every field is mandatory.
+- The bundle helper sources `authkey` from the 32-byte client Noise static
+  public key. `LX/CcG;` fixes `e_keytype` to byte `05`; `LX/1Lz;` encodes the
+  registration ID as four-byte big-endian and signed-prekey IDs as three-byte
+  big-endian. `LX/Hvq;->A04` encodes each byte string with Android Base64 flag
+  value 11 (`URL_SAFE | NO_WRAP | NO_PADDING`) before form serialization.
+- This proves public-bundle serialization for the comparison build. It does
+  not establish accepted registration-ID ranges, signed-prekey generation or
+  signature semantics; those remain behind the Signal backend gate.
 
 ### T2 — registration response envelope
 

@@ -15,8 +15,8 @@ use tokio::sync::Semaphore;
 use tokio::time::timeout;
 use whatsapp_api::capabilities::CapabilityMatrix;
 use whatsapp_api::registration::wire::{
-    MAX_RESPONSE_BODY_BYTES, RegistrationEndpoint, RegistrationResponseReason,
-    RegistrationResponseStatus, WHATSAPP_2_26_37_70,
+    COMPARISON_SIGNAL_KEY_TYPE, MAX_RESPONSE_BODY_BYTES, RegistrationEndpoint,
+    RegistrationResponseReason, RegistrationResponseStatus, WHATSAPP_2_26_37_70,
 };
 use whatsapp_api::{Error, ProtocolProfile};
 
@@ -285,6 +285,16 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
                         .iter()
                         .filter_map(|reason| reason.wire_value())
                         .collect::<Vec<_>>()
+                },
+                "key_bundle": {
+                    "encoding": "base64url-no-padding",
+                    "key_type_hex": format!("{COMPARISON_SIGNAL_KEY_TYPE:02x}"),
+                    "registration_id": "u32-big-endian",
+                    "signed_pre_key_id": "u24-big-endian",
+                    "fields": [
+                        "authkey", "e_ident", "e_keytype", "e_regid",
+                        "e_skey_id", "e_skey_val", "e_skey_sig"
+                    ]
                 }
             }),
         ),
@@ -386,6 +396,8 @@ mod tests {
             body["response_schema"]["reasons"].as_array().unwrap().len(),
             37
         );
+        assert_eq!(body["key_bundle"]["key_type_hex"], "05");
+        assert_eq!(body["key_bundle"]["fields"].as_array().unwrap().len(), 7);
         assert_eq!(
             body["endpoints"][2]["url"],
             "https://v.whatsapp.net/v2/code"

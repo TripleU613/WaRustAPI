@@ -124,6 +124,22 @@
         "e_skey_val",
         "e_skey_sig"
       ],
+      "key_bundle_encoding": {
+        "authkey_source": "32-byte client Noise static public key",
+        "key_type_hex": "05",
+        "registration_id": "four-byte big-endian",
+        "signed_pre_key_id": "three-byte big-endian",
+        "value_encoding": "Android Base64 flags 11: URL_SAFE | NO_WRAP | NO_PADDING",
+        "parameter_order": [
+          "authkey",
+          "e_ident",
+          "e_keytype",
+          "e_regid",
+          "e_skey_id",
+          "e_skey_val",
+          "e_skey_sig"
+        ]
+      },
       "response": {
         "encoding": "JSON object",
         "statuses": ["ok", "sent", "fail", "attached"],

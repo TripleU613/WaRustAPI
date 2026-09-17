@@ -67,9 +67,10 @@ POST bodies, construction of the `authkey`/`e_*` key bundle, the same
 chat connection candidates on ports 443/5222 (with a port-80 fallback). Its
 token dictionary differs from the pinned fixture. Its registration bridge
 also parses the JSON response status/reason and cooldown vocabulary recorded
-in the comparison fixture. These are version-scoped comparative observations
-only: the pinned-profile labels above remain unchanged. Full details and
-hashes are in
+in the comparison fixture. The key bundle uses the client Noise public key,
+key type `05`, big-endian 4-byte/3-byte identifiers, and unpadded URL-safe
+Base64. These are version-scoped comparative observations only: the
+pinned-profile labels above remain unchanged. Full details and hashes are in
 `fixtures/comparisons/whatsapp-2.26.37.70.json` and `decompilation-log.md`.
 
 ## Dated server observations
