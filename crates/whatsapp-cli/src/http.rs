@@ -286,6 +286,35 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
                         .filter_map(|reason| reason.wire_value())
                         .collect::<Vec<_>>()
                 },
+                "common_fields": {
+                    "groups": [
+                        ["cc", "in"],
+                        ["lg", "lc", "fdid", "expid"],
+                        ["access_session_id", "id", "backup_token"]
+                    ],
+                    "uuid_encoding": "base64url-no-padding",
+                    "binary_encoding": "rfc3986-percent-encoded-pre-encoded-value"
+                },
+                "code_request": {
+                    "path": RegistrationEndpoint::Code.path(),
+                    "required_fields": ["token", "method"],
+                    "optional_fields": [
+                        "context", "clicked_education_link", "manage_call_permission",
+                        "call_log_permission", "client_start_message", "advertising_id",
+                        "login", "type"
+                    ],
+                    "boolean_encoding": "true-false-or-omitted",
+                    "client_start_message_encoding": "base64url-no-padding"
+                },
+                "register_request": {
+                    "path": RegistrationEndpoint::Register.path(),
+                    "required_fields": ["code"],
+                    "optional_fields": [
+                        "auth_response", "context", "method", "advertising_id",
+                        "login", "type"
+                    ],
+                    "auth_response_encoding": "base64url-no-padding"
+                },
                 "key_bundle": {
                     "encoding": "base64url-no-padding",
                     "key_type_hex": format!("{COMPARISON_SIGNAL_KEY_TYPE:02x}"),
@@ -398,6 +427,12 @@ mod tests {
         );
         assert_eq!(body["key_bundle"]["key_type_hex"], "05");
         assert_eq!(body["key_bundle"]["fields"].as_array().unwrap().len(), 7);
+        assert_eq!(body["common_fields"]["groups"][0][0], "cc");
+        assert_eq!(body["common_fields"]["groups"][2][2], "backup_token");
+        assert_eq!(body["code_request"]["path"], "/v2/code");
+        assert_eq!(body["code_request"]["required_fields"][1], "method");
+        assert_eq!(body["register_request"]["path"], "/v2/register");
+        assert_eq!(body["register_request"]["required_fields"][0], "code");
         assert_eq!(
             body["endpoints"][2]["url"],
             "https://v.whatsapp.net/v2/code"

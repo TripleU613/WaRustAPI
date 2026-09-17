@@ -13,9 +13,10 @@ Ordered by what blocks the first decisive result (README section 0).
    capture are still needed before changing the active profile.
    `RegistrationService::begin` still returns `Blocked(ProfileIncomplete)`
    because response meanings and the complete flow are unobserved.
-   The comparison build's public key-bundle byte encodings are now mapped and
-   implemented offline; key generation/signing and the request on which each
-   field first becomes mandatory remain blocked by the Signal/evidence gates.
+   The comparison build's common identifier fields and public key-bundle byte
+   encodings are now mapped and implemented offline; key generation/signing
+   and the request on which each field first becomes mandatory remain blocked
+   by the Signal/evidence gates.
 2. **Transport endpoint and layer** (`transport.endpoint`): port, TCP vs
    WebSocket, whether TLS wraps Noise on Android. *Progress:* hosts
    `g.whatsapp.net`, `g-fallback`, `e1`–`e16.whatsapp.net` are client-observed.

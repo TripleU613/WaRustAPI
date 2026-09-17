@@ -124,6 +124,47 @@
         "e_skey_val",
         "e_skey_sig"
       ],
+      "common_parameter_encoding": {
+        "helper_groups": {
+          "A0T": ["cc", "in"],
+          "A0U": ["lg", "lc", "fdid", "expid"],
+          "A0V": ["access_session_id", "id", "backup_token"]
+        },
+        "expid": "UUID canonical 16 bytes, Base64 URL_SAFE | NO_WRAP | NO_PADDING",
+        "access_session_id": "optional UUID canonical 16 bytes, Base64 URL_SAFE | NO_WRAP | NO_PADDING",
+        "id_and_backup_token": "raw bytes, RFC 3986 unreserved bytes retained and every other byte percent-encoded as uppercase %HH, then marked pre-encoded"
+      },
+      "code_request_encoding": {
+        "path": "/v2/code",
+        "required_fields": ["token", "method"],
+        "optional_field_order": [
+          "context",
+          "clicked_education_link",
+          "manage_call_permission",
+          "call_log_permission",
+          "client_start_message",
+          "advertising_id",
+          "login",
+          "type"
+        ],
+        "boolean_encoding": "true or false; third internal integer state omits the field",
+        "client_start_message": "Base64 URL_SAFE | NO_WRAP | NO_PADDING",
+        "type": "decimal value of the client's registration-type enum"
+      },
+      "register_request_encoding": {
+        "path": "/v2/register",
+        "required_fields": ["code"],
+        "optional_field_order": [
+          "auth_response",
+          "context",
+          "method",
+          "advertising_id",
+          "login",
+          "type"
+        ],
+        "auth_response": "Base64 URL_SAFE | NO_WRAP | NO_PADDING",
+        "type": "decimal value of the client's registration-type enum"
+      },
       "key_bundle_encoding": {
         "authkey_source": "32-byte client Noise static public key",
         "key_type_hex": "05",

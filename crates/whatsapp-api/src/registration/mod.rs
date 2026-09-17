@@ -353,6 +353,12 @@ pub type RegistrationFuture<'a> =
 /// futures only after its durable pre-request transition has committed and the
 /// store transaction has been released.
 pub trait RegistrationFlow: Send + Sync + fmt::Debug {
+    /// Generate and persist profile prerequisites inside the same transaction
+    /// as the `Preparing` transition. This method must be bounded and perform
+    /// no network I/O. If it fails, neither the attempt nor its prerequisites
+    /// are committed.
+    fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()>;
+
     /// Prepare prerequisites and request the first challenge. Returns the
     /// next state (typically `ChallengePending`, `CoolingDown` or `Blocked`).
     fn begin<'a>(&'a self, attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a>;
@@ -387,6 +393,10 @@ impl UnsupportedFlow {
 }
 
 impl RegistrationFlow for UnsupportedFlow {
+    fn prepare(&self, _tx: &mut WriteTx<'_>, _attempt: &RegistrationAttempt) -> Result<()> {
+        Ok(())
+    }
+
     fn begin<'a>(&'a self, _attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
         Box::pin(async move {
             Ok(RegistrationState::Blocked {
@@ -523,6 +533,7 @@ impl RegistrationService {
         method: ChallengeMethod,
     ) -> Result<RegistrationStep> {
         let profile_id = self.profile_id.clone();
+        let flow = self.flow.clone();
         let plan = self
             .store
             .run_blocking(move |s| {
@@ -556,7 +567,9 @@ impl RegistrationService {
                         history: Vec::new(),
                     };
                     attempt.transition(RegistrationState::Preparing, now)?;
-                    // Persist before any request could be sent (section 7).
+                    // Prerequisites and Preparing commit atomically before
+                    // any request can be sent (README section 7).
+                    flow.prepare(tx, &attempt)?;
                     Self::save_current(tx, &attempt)?;
                     Ok(BeginPlan::Start(attempt))
                 })
@@ -684,6 +697,7 @@ impl RegistrationService {
 mod tests {
     use super::*;
     use crate::model::ids::AccountId;
+    use crate::session::AccountRecord;
     use crate::store::{MasterKey, OpenOptions, StaticKeySource};
 
     fn store() -> (tempfile::TempDir, Arc<ProtocolStore>) {
@@ -792,6 +806,10 @@ mod tests {
     struct ScriptedFlow;
 
     impl RegistrationFlow for ScriptedFlow {
+        fn prepare(&self, _tx: &mut WriteTx<'_>, _attempt: &RegistrationAttempt) -> Result<()> {
+            Ok(())
+        }
+
         fn begin<'a>(&'a self, attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
             Box::pin(async move {
                 Ok(RegistrationState::ChallengePending {
@@ -845,6 +863,15 @@ mod tests {
     }
 
     impl RegistrationFlow for PausingFlow {
+        fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()> {
+            AccountRecord {
+                generation: attempt.generation,
+                phone: Some(attempt.phone.clone()),
+                ..AccountRecord::default()
+            }
+            .save(tx)
+        }
+
         fn begin<'a>(&'a self, _attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
             Box::pin(async move {
                 self.entered.notify_one();
@@ -896,6 +923,9 @@ mod tests {
 
         let current = svc.current().await.unwrap().unwrap();
         assert_eq!(current.state, RegistrationState::Preparing);
+        let prepared = s.read(AccountRecord::load).unwrap().unwrap();
+        assert_eq!(prepared.generation, current.generation);
+        assert_eq!(prepared.phone, Some(phone()));
         tokio::time::timeout(
             std::time::Duration::from_secs(1),
             s.run_blocking(|store| store.write(|_| Ok(()))),
@@ -915,6 +945,10 @@ mod tests {
     struct FailingFlow;
 
     impl RegistrationFlow for FailingFlow {
+        fn prepare(&self, _tx: &mut WriteTx<'_>, _attempt: &RegistrationAttempt) -> Result<()> {
+            Ok(())
+        }
+
         fn begin<'a>(&'a self, _attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
             Box::pin(async { Err(Error::Io(std::io::Error::other("synthetic failure"))) })
         }
@@ -942,6 +976,59 @@ mod tests {
             RegistrationState::RegistrationOutcomeUnknown { step: 0 }
         );
         assert_eq!(current.history_len(), 2);
+    }
+
+    #[derive(Debug)]
+    struct FailingPreparationFlow;
+
+    impl RegistrationFlow for FailingPreparationFlow {
+        fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()> {
+            AccountRecord {
+                generation: attempt.generation,
+                phone: Some(attempt.phone.clone()),
+                ..AccountRecord::default()
+            }
+            .save(tx)?;
+            Err(Error::Io(std::io::Error::other(
+                "synthetic preparation failure",
+            )))
+        }
+
+        fn begin<'a>(&'a self, _attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
+            Box::pin(async {
+                Ok(RegistrationState::Blocked {
+                    reason: BlockedReason::UnsupportedStep {
+                        description: "unreachable after failed preparation".into(),
+                    },
+                })
+            })
+        }
+
+        fn submit<'a>(
+            &'a self,
+            _attempt: &'a RegistrationAttempt,
+            _handle: &'a ChallengeHandle,
+            _answer: &'a Answer,
+        ) -> RegistrationFuture<'a> {
+            Box::pin(async {
+                Ok(RegistrationState::Blocked {
+                    reason: BlockedReason::UnsupportedStep {
+                        description: "submit unused after failed preparation".into(),
+                    },
+                })
+            })
+        }
+    }
+
+    #[tokio::test]
+    async fn preparation_failure_rolls_back_attempt_and_prerequisites() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let svc = RegistrationService::new(s.clone(), &profile, Arc::new(FailingPreparationFlow));
+
+        assert!(svc.begin(phone(), ChallengeMethod::Sms).await.is_err());
+        assert!(svc.current().await.unwrap().is_none());
+        assert!(s.read(AccountRecord::load).unwrap().is_none());
     }
 
     #[tokio::test]

@@ -13,6 +13,7 @@ use std::time::Duration;
 use serde::{Deserialize, Serialize};
 use zeroize::Zeroizing;
 
+use crate::model::phone::PhoneNumber;
 use crate::{Error, Result};
 
 /// Maximum fields accepted in one locally constructed registration form.
@@ -29,6 +30,8 @@ pub const MAX_RESPONSE_BODY_BYTES: usize = 1 << 20;
 pub const MAX_RESPONSE_SECRET_BYTES: usize = 256 << 10;
 /// Maximum bytes accepted in one public registration key component.
 pub const MAX_KEY_COMPONENT_BYTES: usize = 4 << 10;
+/// Maximum raw bytes accepted in a binary registration parameter.
+pub const MAX_BINARY_PARAMETER_BYTES: usize = 64 << 10;
 /// Key-type byte emitted by the inspected comparison build.
 pub const COMPARISON_SIGNAL_KEY_TYPE: u8 = 0x05;
 
@@ -204,8 +207,8 @@ impl RegistrationForm {
     /// Add a value already encoded for a form component.
     ///
     /// The name is still encoded. The value is accepted only if it consists
-    /// of Java-`URLEncoder` safe bytes, `+`, or complete `%HH` escapes; raw
-    /// `&` and `=` can therefore never inject another field.
+    /// of unreserved form bytes, `+`, or complete `%HH` escapes; raw `&` and
+    /// `=` can therefore never inject another field.
     pub fn push_pre_encoded(
         &mut self,
         name: impl Into<String>,
@@ -251,14 +254,17 @@ impl RegistrationForm {
         Ok(self)
     }
 
-    fn push_batch(&mut self, fields: Vec<(&'static str, String)>) -> Result<&mut Self> {
+    fn push_batch(
+        &mut self,
+        fields: Vec<(&'static str, String, ValueEncoding)>,
+    ) -> Result<&mut Self> {
         if self.fields.len().saturating_add(fields.len()) > MAX_FORM_FIELDS {
             return Err(Error::ResourceExhausted {
                 resource: "registration form fields",
                 limit: MAX_FORM_FIELDS as u64,
             });
         }
-        for (index, (name, value)) in fields.iter().enumerate() {
+        for (index, (name, value, encoding)) in fields.iter().enumerate() {
             if name.is_empty() || name.len() > MAX_FIELD_NAME_BYTES {
                 return Err(Error::invalid(
                     "registration_field_name",
@@ -271,17 +277,22 @@ impl RegistrationForm {
                     limit: MAX_FIELD_VALUE_BYTES as u64,
                 });
             }
+            if matches!(encoding, ValueEncoding::AlreadyEncoded) {
+                validate_pre_encoded(value)?;
+            }
             if self.fields.iter().any(|field| field.name == *name)
-                || fields[..index].iter().any(|(previous, _)| previous == name)
+                || fields[..index]
+                    .iter()
+                    .any(|(previous, _, _)| previous == name)
             {
                 return Err(Error::invalid("registration_field_name", "duplicate field"));
             }
         }
         self.fields
-            .extend(fields.into_iter().map(|(name, value)| Field {
+            .extend(fields.into_iter().map(|(name, value, encoding)| Field {
                 name: name.to_owned(),
                 value: Zeroizing::new(value),
-                encoding: ValueEncoding::Encode,
+                encoding,
             }));
         Ok(self)
     }
@@ -318,6 +329,437 @@ impl RegistrationForm {
         }
         Ok(body)
     }
+}
+
+/// Common request parameters assembled by the comparison client's
+/// registration bridge before endpoint-specific fields are added.
+pub struct RegistrationCommonParams {
+    phone: PhoneNumber,
+    language: String,
+    locale: String,
+    fdid: Zeroizing<String>,
+    experiment_id: [u8; 16],
+    access_session_id: Option<[u8; 16]>,
+    device_id: Zeroizing<Vec<u8>>,
+    backup_token: Zeroizing<Vec<u8>>,
+}
+
+impl fmt::Debug for RegistrationCommonParams {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("RegistrationCommonParams")
+            .field("phone", &self.phone)
+            .field("language", &self.language)
+            .field("locale", &self.locale)
+            .field("has_fdid", &!self.fdid.is_empty())
+            .field("has_access_session_id", &self.access_session_id.is_some())
+            .field("device_id_length", &self.device_id.len())
+            .field("backup_token_length", &self.backup_token.len())
+            .finish()
+    }
+}
+
+impl RegistrationCommonParams {
+    /// Validate common comparison-build parameters. UUIDs are accepted as
+    /// their canonical 16-byte representation so string parsing cannot alter
+    /// their byte order.
+    #[allow(clippy::too_many_arguments)]
+    pub fn new(
+        phone: PhoneNumber,
+        language: impl Into<String>,
+        locale: impl Into<String>,
+        fdid: impl Into<String>,
+        experiment_id: [u8; 16],
+        access_session_id: Option<[u8; 16]>,
+        device_id: Vec<u8>,
+        backup_token: Vec<u8>,
+    ) -> Result<Self> {
+        let language = language.into();
+        let locale = locale.into();
+        let fdid = fdid.into();
+        for (field, value) in [
+            ("language", language.as_str()),
+            ("locale", locale.as_str()),
+            ("fdid", fdid.as_str()),
+        ] {
+            if value.is_empty() || value.len() > MAX_FIELD_VALUE_BYTES {
+                return Err(Error::invalid(
+                    field,
+                    format!("must contain 1..={MAX_FIELD_VALUE_BYTES} UTF-8 bytes"),
+                ));
+            }
+        }
+        for (field, value) in [
+            ("device_id", device_id.as_slice()),
+            ("backup_token", backup_token.as_slice()),
+        ] {
+            if value.is_empty() || value.len() > MAX_BINARY_PARAMETER_BYTES {
+                return Err(Error::invalid(
+                    field,
+                    format!("must contain 1..={MAX_BINARY_PARAMETER_BYTES} bytes"),
+                ));
+            }
+        }
+        Ok(Self {
+            phone,
+            language,
+            locale,
+            fdid: Zeroizing::new(fdid),
+            experiment_id,
+            access_session_id,
+            device_id: Zeroizing::new(device_id),
+            backup_token: Zeroizing::new(backup_token),
+        })
+    }
+
+    /// Append common fields atomically in the order used by the comparison
+    /// client's `A0T`, `A0U`, and `A0V` helpers.
+    pub fn append_to_form<'a>(
+        &self,
+        form: &'a mut RegistrationForm,
+    ) -> Result<&'a mut RegistrationForm> {
+        let mut fields = vec![
+            (
+                "cc",
+                self.phone.country_code().to_string(),
+                ValueEncoding::Encode,
+            ),
+            (
+                "in",
+                self.phone.national_number().to_owned(),
+                ValueEncoding::Encode,
+            ),
+            ("lg", self.language.clone(), ValueEncoding::Encode),
+            ("lc", self.locale.clone(), ValueEncoding::Encode),
+            ("fdid", self.fdid.to_string(), ValueEncoding::Encode),
+            (
+                "expid",
+                base64_url_no_pad(&self.experiment_id),
+                ValueEncoding::Encode,
+            ),
+        ];
+        if let Some(access_session_id) = self.access_session_id {
+            fields.push((
+                "access_session_id",
+                base64_url_no_pad(&access_session_id),
+                ValueEncoding::Encode,
+            ));
+        }
+        fields.extend([
+            (
+                "id",
+                percent_encode_binary(&self.device_id),
+                ValueEncoding::AlreadyEncoded,
+            ),
+            (
+                "backup_token",
+                percent_encode_binary(&self.backup_token),
+                ValueEncoding::AlreadyEncoded,
+            ),
+        ]);
+        form.push_batch(fields)
+    }
+}
+
+/// Endpoint-specific parameters observed in the comparison client's
+/// generate-auth-code request (`/v2/code`).
+pub struct RegistrationCodeParams {
+    token: Zeroizing<String>,
+    method: String,
+    context: Option<Zeroizing<String>>,
+    clicked_education_link: Option<bool>,
+    manage_call_permission: Option<bool>,
+    call_log_permission: Option<bool>,
+    client_start_message: Option<Zeroizing<Vec<u8>>>,
+    advertising_id: Option<Zeroizing<String>>,
+    login: Option<Zeroizing<String>>,
+    registration_type: Option<i32>,
+}
+
+impl fmt::Debug for RegistrationCodeParams {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("RegistrationCodeParams")
+            .field("method", &self.method)
+            .field("has_context", &self.context.is_some())
+            .field("clicked_education_link", &self.clicked_education_link)
+            .field("manage_call_permission", &self.manage_call_permission)
+            .field("call_log_permission", &self.call_log_permission)
+            .field(
+                "client_start_message_length",
+                &self.client_start_message.as_ref().map(|value| value.len()),
+            )
+            .field("has_advertising_id", &self.advertising_id.is_some())
+            .field("has_login", &self.login.is_some())
+            .field("registration_type", &self.registration_type)
+            .finish()
+    }
+}
+
+impl RegistrationCodeParams {
+    /// Create the required portion of a generate-auth-code request.
+    pub fn new(token: impl Into<String>, method: impl Into<String>) -> Result<Self> {
+        let token = token.into();
+        let method = method.into();
+        validate_parameter_text("token", &token, false)?;
+        validate_parameter_text("method", &method, false)?;
+        Ok(Self {
+            token: Zeroizing::new(token),
+            method,
+            context: None,
+            clicked_education_link: None,
+            manage_call_permission: None,
+            call_log_permission: None,
+            client_start_message: None,
+            advertising_id: None,
+            login: None,
+            registration_type: None,
+        })
+    }
+
+    /// Set the optional request context.
+    pub fn with_context(mut self, context: impl Into<String>) -> Result<Self> {
+        let context = context.into();
+        validate_parameter_text("context", &context, true)?;
+        self.context = Some(Zeroizing::new(context));
+        Ok(self)
+    }
+
+    /// Set the three optional boolean fields. `None` means omit the field,
+    /// matching the comparison helper's third integer state.
+    pub fn with_permissions(
+        mut self,
+        clicked_education_link: Option<bool>,
+        manage_call_permission: Option<bool>,
+        call_log_permission: Option<bool>,
+    ) -> Self {
+        self.clicked_education_link = clicked_education_link;
+        self.manage_call_permission = manage_call_permission;
+        self.call_log_permission = call_log_permission;
+        self
+    }
+
+    /// Set the optional binary client-start message.
+    pub fn with_client_start_message(mut self, value: Vec<u8>) -> Result<Self> {
+        validate_binary_parameter("client_start_message", &value, true)?;
+        self.client_start_message = Some(Zeroizing::new(value));
+        Ok(self)
+    }
+
+    /// Set the optional advertising identifier.
+    pub fn with_advertising_id(mut self, value: impl Into<String>) -> Result<Self> {
+        let value = value.into();
+        validate_parameter_text("advertising_id", &value, true)?;
+        self.advertising_id = Some(Zeroizing::new(value));
+        Ok(self)
+    }
+
+    /// Set the optional prior login value.
+    pub fn with_login(mut self, value: impl Into<String>) -> Result<Self> {
+        let value = value.into();
+        validate_parameter_text("login", &value, true)?;
+        self.login = Some(Zeroizing::new(value));
+        Ok(self)
+    }
+
+    /// Set the numeric registration-type value carried by the comparison
+    /// client's internal enum.
+    pub const fn with_registration_type(mut self, value: i32) -> Self {
+        self.registration_type = Some(value);
+        self
+    }
+
+    /// Append endpoint-specific fields atomically in observed request order.
+    pub fn append_to_form<'a>(
+        &self,
+        form: &'a mut RegistrationForm,
+    ) -> Result<&'a mut RegistrationForm> {
+        let mut fields = vec![
+            ("token", self.token.to_string(), ValueEncoding::Encode),
+            ("method", self.method.clone(), ValueEncoding::Encode),
+        ];
+        if let Some(context) = &self.context {
+            fields.push(("context", context.to_string(), ValueEncoding::Encode));
+        }
+        for (name, value) in [
+            ("clicked_education_link", self.clicked_education_link),
+            ("manage_call_permission", self.manage_call_permission),
+            ("call_log_permission", self.call_log_permission),
+        ] {
+            if let Some(value) = value {
+                fields.push((name, value.to_string(), ValueEncoding::Encode));
+            }
+        }
+        if let Some(value) = &self.client_start_message {
+            fields.push((
+                "client_start_message",
+                base64_url_no_pad(value),
+                ValueEncoding::Encode,
+            ));
+        }
+        if let Some(value) = &self.advertising_id {
+            fields.push(("advertising_id", value.to_string(), ValueEncoding::Encode));
+        }
+        if let Some(value) = &self.login {
+            fields.push(("login", value.to_string(), ValueEncoding::Encode));
+        }
+        if let Some(value) = self.registration_type {
+            fields.push(("type", value.to_string(), ValueEncoding::Encode));
+        }
+        form.push_batch(fields)
+    }
+}
+
+/// Assemble the observed clear-form generate-auth-code request without
+/// sending it. The public key bundle is optional because the comparison
+/// client logs missing E2E keys and still issues this request.
+pub fn assemble_code_request(
+    common: &RegistrationCommonParams,
+    code: &RegistrationCodeParams,
+    key_bundle: Option<&RegistrationKeyBundle>,
+) -> Result<EncodedRegistrationRequest> {
+    let mut form = RegistrationForm::new();
+    common.append_to_form(&mut form)?;
+    code.append_to_form(&mut form)?;
+    if let Some(key_bundle) = key_bundle {
+        key_bundle.append_to_form(&mut form)?;
+    }
+    WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Code, &form)
+}
+
+/// Endpoint-specific parameters observed in the comparison client's
+/// phone-number completion request (`/v2/register`).
+pub struct RegistrationCompleteParams {
+    code: Zeroizing<String>,
+    auth_response: Option<Zeroizing<Vec<u8>>>,
+    context: Option<Zeroizing<String>>,
+    method: Option<String>,
+    advertising_id: Option<Zeroizing<String>>,
+    login: Option<Zeroizing<String>>,
+    registration_type: Option<i32>,
+}
+
+impl fmt::Debug for RegistrationCompleteParams {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("RegistrationCompleteParams")
+            .field(
+                "auth_response_length",
+                &self.auth_response.as_ref().map(|value| value.len()),
+            )
+            .field("has_context", &self.context.is_some())
+            .field("method", &self.method)
+            .field("has_advertising_id", &self.advertising_id.is_some())
+            .field("has_login", &self.login.is_some())
+            .field("registration_type", &self.registration_type)
+            .finish()
+    }
+}
+
+impl RegistrationCompleteParams {
+    /// Create a completion request with its required verification code.
+    pub fn new(code: impl Into<String>) -> Result<Self> {
+        let code = code.into();
+        validate_parameter_text("code", &code, false)?;
+        Ok(Self {
+            code: Zeroizing::new(code),
+            auth_response: None,
+            context: None,
+            method: None,
+            advertising_id: None,
+            login: None,
+            registration_type: None,
+        })
+    }
+
+    /// Set the optional binary authentication response.
+    pub fn with_auth_response(mut self, value: Vec<u8>) -> Result<Self> {
+        validate_binary_parameter("auth_response", &value, true)?;
+        self.auth_response = Some(Zeroizing::new(value));
+        Ok(self)
+    }
+
+    /// Set the optional request context.
+    pub fn with_context(mut self, value: impl Into<String>) -> Result<Self> {
+        let value = value.into();
+        validate_parameter_text("context", &value, true)?;
+        self.context = Some(Zeroizing::new(value));
+        Ok(self)
+    }
+
+    /// Set the optional verification method.
+    pub fn with_method(mut self, value: impl Into<String>) -> Result<Self> {
+        let value = value.into();
+        validate_parameter_text("method", &value, true)?;
+        self.method = Some(value);
+        Ok(self)
+    }
+
+    /// Set the optional advertising identifier.
+    pub fn with_advertising_id(mut self, value: impl Into<String>) -> Result<Self> {
+        let value = value.into();
+        validate_parameter_text("advertising_id", &value, true)?;
+        self.advertising_id = Some(Zeroizing::new(value));
+        Ok(self)
+    }
+
+    /// Set the optional prior login value.
+    pub fn with_login(mut self, value: impl Into<String>) -> Result<Self> {
+        let value = value.into();
+        validate_parameter_text("login", &value, true)?;
+        self.login = Some(Zeroizing::new(value));
+        Ok(self)
+    }
+
+    /// Set the numeric registration-type enum value.
+    pub const fn with_registration_type(mut self, value: i32) -> Self {
+        self.registration_type = Some(value);
+        self
+    }
+
+    /// Append endpoint-specific fields atomically in observed request order.
+    pub fn append_to_form<'a>(
+        &self,
+        form: &'a mut RegistrationForm,
+    ) -> Result<&'a mut RegistrationForm> {
+        let mut fields = vec![("code", self.code.to_string(), ValueEncoding::Encode)];
+        if let Some(value) = &self.auth_response {
+            fields.push((
+                "auth_response",
+                base64_url_no_pad(value),
+                ValueEncoding::Encode,
+            ));
+        }
+        if let Some(value) = &self.context {
+            fields.push(("context", value.to_string(), ValueEncoding::Encode));
+        }
+        if let Some(value) = &self.method {
+            fields.push(("method", value.clone(), ValueEncoding::Encode));
+        }
+        if let Some(value) = &self.advertising_id {
+            fields.push(("advertising_id", value.to_string(), ValueEncoding::Encode));
+        }
+        if let Some(value) = &self.login {
+            fields.push(("login", value.to_string(), ValueEncoding::Encode));
+        }
+        if let Some(value) = self.registration_type {
+            fields.push(("type", value.to_string(), ValueEncoding::Encode));
+        }
+        form.push_batch(fields)
+    }
+}
+
+/// Assemble the observed clear-form phone-number completion request without
+/// sending it.
+pub fn assemble_complete_request(
+    common: &RegistrationCommonParams,
+    complete: &RegistrationCompleteParams,
+    key_bundle: Option<&RegistrationKeyBundle>,
+) -> Result<EncodedRegistrationRequest> {
+    let mut form = RegistrationForm::new();
+    common.append_to_form(&mut form)?;
+    complete.append_to_form(&mut form)?;
+    if let Some(key_bundle) = key_bundle {
+        key_bundle.append_to_form(&mut form)?;
+    }
+    WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Register, &form)
 }
 
 /// Public half of the pre-registration Noise/Signal key bundle observed in
@@ -405,18 +847,40 @@ impl RegistrationKeyBundle {
             self.signed_pre_key_id as u8,
         ];
         form.push_batch(vec![
-            ("authkey", base64_url_no_pad(&self.auth_key)),
-            ("e_ident", base64_url_no_pad(&self.identity_key)),
+            (
+                "authkey",
+                base64_url_no_pad(&self.auth_key),
+                ValueEncoding::Encode,
+            ),
+            (
+                "e_ident",
+                base64_url_no_pad(&self.identity_key),
+                ValueEncoding::Encode,
+            ),
             (
                 "e_keytype",
                 base64_url_no_pad(&[COMPARISON_SIGNAL_KEY_TYPE]),
+                ValueEncoding::Encode,
             ),
-            ("e_regid", base64_url_no_pad(&registration_id)),
-            ("e_skey_id", base64_url_no_pad(&signed_pre_key_id)),
-            ("e_skey_val", base64_url_no_pad(&self.signed_pre_key_value)),
+            (
+                "e_regid",
+                base64_url_no_pad(&registration_id),
+                ValueEncoding::Encode,
+            ),
+            (
+                "e_skey_id",
+                base64_url_no_pad(&signed_pre_key_id),
+                ValueEncoding::Encode,
+            ),
+            (
+                "e_skey_val",
+                base64_url_no_pad(&self.signed_pre_key_value),
+                ValueEncoding::Encode,
+            ),
             (
                 "e_skey_sig",
                 base64_url_no_pad(&self.signed_pre_key_signature),
+                ValueEncoding::Encode,
             ),
         ])
     }
@@ -994,6 +1458,28 @@ fn encode_component(input: &[u8], output: &mut Vec<u8>) {
     }
 }
 
+fn validate_parameter_text(field: &'static str, value: &str, allow_empty: bool) -> Result<()> {
+    if (!allow_empty && value.is_empty()) || value.len() > MAX_FIELD_VALUE_BYTES {
+        let minimum = usize::from(!allow_empty);
+        return Err(Error::invalid(
+            field,
+            format!("must contain {minimum}..={MAX_FIELD_VALUE_BYTES} UTF-8 bytes"),
+        ));
+    }
+    Ok(())
+}
+
+fn validate_binary_parameter(field: &'static str, value: &[u8], allow_empty: bool) -> Result<()> {
+    if (!allow_empty && value.is_empty()) || value.len() > MAX_BINARY_PARAMETER_BYTES {
+        let minimum = usize::from(!allow_empty);
+        return Err(Error::invalid(
+            field,
+            format!("must contain {minimum}..={MAX_BINARY_PARAMETER_BYTES} bytes"),
+        ));
+    }
+    Ok(())
+}
+
 fn base64_url_no_pad(input: &[u8]) -> String {
     const TABLE: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     let mut output = String::with_capacity(input.len().div_ceil(3) * 4);
@@ -1020,12 +1506,29 @@ fn base64_url_no_pad(input: &[u8]) -> String {
     output
 }
 
+fn percent_encode_binary(input: &[u8]) -> String {
+    const HEX: &[u8; 16] = b"0123456789ABCDEF";
+    let mut output = String::with_capacity(input.len().saturating_mul(3));
+    for &byte in input {
+        if byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'.' | b'_' | b'~') {
+            output.push(char::from(byte));
+        } else {
+            output.push('%');
+            output.push(char::from(HEX[usize::from(byte >> 4)]));
+            output.push(char::from(HEX[usize::from(byte & 0x0f)]));
+        }
+    }
+    output
+}
+
 fn validate_pre_encoded(value: &str) -> Result<()> {
     let bytes = value.as_bytes();
     let mut index = 0;
     while index < bytes.len() {
         let valid = match bytes[index] {
-            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'.' | b'-' | b'*' | b'_' | b'+' => true,
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'.' | b'-' | b'*' | b'_' | b'~' | b'+' => {
+                true
+            }
             b'%' if index + 2 < bytes.len()
                 && bytes[index + 1].is_ascii_hexdigit()
                 && bytes[index + 2].is_ascii_hexdigit() =>
@@ -1103,6 +1606,36 @@ mod tests {
                 "e_skey_sig"
             ])
         );
+        let common_encoding =
+            &evidence["observations"]["registration"]["common_parameter_encoding"];
+        assert_eq!(
+            common_encoding["helper_groups"]["A0T"],
+            serde_json::json!(["cc", "in"])
+        );
+        assert_eq!(
+            common_encoding["helper_groups"]["A0U"],
+            serde_json::json!(["lg", "lc", "fdid", "expid"])
+        );
+        assert_eq!(
+            common_encoding["helper_groups"]["A0V"],
+            serde_json::json!(["access_session_id", "id", "backup_token"])
+        );
+        let code_encoding = &evidence["observations"]["registration"]["code_request_encoding"];
+        assert_eq!(code_encoding["path"], RegistrationEndpoint::Code.path());
+        assert_eq!(
+            code_encoding["required_fields"],
+            serde_json::json!(["token", "method"])
+        );
+        let register_encoding =
+            &evidence["observations"]["registration"]["register_request_encoding"];
+        assert_eq!(
+            register_encoding["path"],
+            RegistrationEndpoint::Register.path()
+        );
+        assert_eq!(
+            register_encoding["required_fields"],
+            serde_json::json!(["code"])
+        );
     }
 
     #[test]
@@ -1160,6 +1693,194 @@ mod tests {
             form.push(format!("f{index}"), "x").unwrap();
         }
         assert!(form.push("one_too_many", "x").is_err());
+    }
+
+    #[test]
+    fn common_parameters_match_observed_group_order_and_encodings() {
+        let common = RegistrationCommonParams::new(
+            PhoneNumber::new(1, "5551234567").unwrap(),
+            "en",
+            "US",
+            "fd id",
+            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+            Some([
+                16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+            ]),
+            b"A ~*".to_vec(),
+            vec![0xff, b'.', b'_'],
+        )
+        .unwrap();
+        let mut form = RegistrationForm::new();
+        common.append_to_form(&mut form).unwrap();
+        assert_eq!(
+            form.encode().unwrap().as_slice(),
+            b"cc=1&in=5551234567&lg=en&lc=US&fdid=fd+id&expid=AAECAwQFBgcICQoLDA0ODw&access_session_id=EBESExQVFhcYGRobHB0eHw&id=A%20~%2A&backup_token=%FF._"
+        );
+        let debug = format!("{common:?}");
+        assert!(!debug.contains("5551234567"));
+        assert!(!debug.contains("fd id"));
+        assert!(!debug.contains("A ~*"));
+    }
+
+    #[test]
+    fn common_parameter_validation_and_append_are_atomic() {
+        let phone = PhoneNumber::new(1, "5551234567").unwrap();
+        assert!(
+            RegistrationCommonParams::new(
+                phone.clone(),
+                "en",
+                "US",
+                "fdid",
+                [0; 16],
+                None,
+                Vec::new(),
+                vec![1],
+            )
+            .is_err()
+        );
+        assert!(
+            RegistrationCommonParams::new(
+                phone.clone(),
+                "en",
+                "US",
+                "fdid",
+                [0; 16],
+                None,
+                vec![1],
+                Vec::new(),
+            )
+            .is_err()
+        );
+
+        let common = RegistrationCommonParams::new(
+            phone,
+            "en",
+            "US",
+            "fdid",
+            [0; 16],
+            None,
+            vec![1],
+            vec![2],
+        )
+        .unwrap();
+        let mut form = RegistrationForm::new();
+        form.push("lc", "existing").unwrap();
+        assert!(common.append_to_form(&mut form).is_err());
+        assert_eq!(form.len(), 1, "failed batch append must not add fields");
+        assert_eq!(form.encode().unwrap().as_slice(), b"lc=existing");
+    }
+
+    #[test]
+    fn code_request_uses_observed_field_order_and_encodings() {
+        let common = RegistrationCommonParams::new(
+            PhoneNumber::new(1, "5551234567").unwrap(),
+            "en",
+            "US",
+            "fdid",
+            [0; 16],
+            None,
+            vec![1],
+            vec![2],
+        )
+        .unwrap();
+        let code = RegistrationCodeParams::new("t+&", "sms")
+            .unwrap()
+            .with_context("ctx x")
+            .unwrap()
+            .with_permissions(Some(true), Some(false), None)
+            .with_client_start_message(b"foo".to_vec())
+            .unwrap()
+            .with_advertising_id("ad id")
+            .unwrap()
+            .with_login("log+")
+            .unwrap()
+            .with_registration_type(-1);
+        let request = assemble_code_request(&common, &code, None).unwrap();
+        assert_eq!(request.url(), "https://v.whatsapp.net/v2/code");
+        assert_eq!(
+            request.body(),
+            b"cc=1&in=5551234567&lg=en&lc=US&fdid=fdid&expid=AAAAAAAAAAAAAAAAAAAAAA&id=%01&backup_token=%02&token=t%2B%26&method=sms&context=ctx+x&clicked_education_link=true&manage_call_permission=false&client_start_message=Zm9v&advertising_id=ad+id&login=log%2B&type=-1"
+        );
+        let debug = format!("{code:?}");
+        assert!(!debug.contains("t+&"));
+        assert!(!debug.contains("ctx x"));
+        assert!(!debug.contains("ad id"));
+        assert!(!debug.contains("log+"));
+    }
+
+    #[test]
+    fn code_parameter_validation_and_append_are_atomic() {
+        assert!(RegistrationCodeParams::new("", "sms").is_err());
+        assert!(RegistrationCodeParams::new("token", "").is_err());
+        assert!(
+            RegistrationCodeParams::new("token", "sms")
+                .unwrap()
+                .with_client_start_message(vec![0; MAX_BINARY_PARAMETER_BYTES + 1])
+                .is_err()
+        );
+
+        let code = RegistrationCodeParams::new("token", "sms").unwrap();
+        let mut form = RegistrationForm::new();
+        form.push("method", "existing").unwrap();
+        assert!(code.append_to_form(&mut form).is_err());
+        assert_eq!(form.len(), 1, "failed batch append must not add fields");
+        assert_eq!(form.encode().unwrap().as_slice(), b"method=existing");
+    }
+
+    #[test]
+    fn completion_request_uses_observed_field_order_and_encodings() {
+        let common = RegistrationCommonParams::new(
+            PhoneNumber::new(44, "7700900123").unwrap(),
+            "en",
+            "GB",
+            "fdid",
+            [0; 16],
+            None,
+            vec![1],
+            vec![2],
+        )
+        .unwrap();
+        let complete = RegistrationCompleteParams::new("123456")
+            .unwrap()
+            .with_auth_response(vec![0xfb, 0xff, 0xef])
+            .unwrap()
+            .with_context("ctx")
+            .unwrap()
+            .with_method("sms")
+            .unwrap()
+            .with_advertising_id("ad id")
+            .unwrap()
+            .with_login("login-secret")
+            .unwrap()
+            .with_registration_type(2);
+        let request = assemble_complete_request(&common, &complete, None).unwrap();
+        assert_eq!(request.url(), "https://v.whatsapp.net/v2/register");
+        assert_eq!(
+            request.body(),
+            b"cc=44&in=7700900123&lg=en&lc=GB&fdid=fdid&expid=AAAAAAAAAAAAAAAAAAAAAA&id=%01&backup_token=%02&code=123456&auth_response=-__v&context=ctx&method=sms&advertising_id=ad+id&login=login-secret&type=2"
+        );
+        let debug = format!("{complete:?}");
+        assert!(!debug.contains("123456"));
+        assert!(!debug.contains("login-secret"));
+        assert!(!debug.contains("ad id"));
+    }
+
+    #[test]
+    fn completion_parameter_validation_and_append_are_atomic() {
+        assert!(RegistrationCompleteParams::new("").is_err());
+        assert!(
+            RegistrationCompleteParams::new("123456")
+                .unwrap()
+                .with_auth_response(vec![0; MAX_BINARY_PARAMETER_BYTES + 1])
+                .is_err()
+        );
+
+        let complete = RegistrationCompleteParams::new("123456").unwrap();
+        let mut form = RegistrationForm::new();
+        form.push("code", "existing").unwrap();
+        assert!(complete.append_to_form(&mut form).is_err());
+        assert_eq!(form.len(), 1, "failed batch append must not add fields");
+        assert_eq!(form.encode().unwrap().as_slice(), b"code=existing");
     }
 
     #[test]

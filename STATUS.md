@@ -27,12 +27,12 @@ does not replace evidence for the active 2.26.36.75 profile.
 | Crash matrix (README 19.2) | `tests/crash_matrix.rs`: rows 1, 2, 3, 9, 10 (rotation) and the second-process ownership test pass; rows 4–8 and 11 need a transmission path / Signal backend / I/O fault injection |
 | Codec | independent hand-written fixture, JID kinds, packed strings, bounds, duplicate attributes, zlib bomb; `tests/codec_props.rs` property round trips (found and fixed an odd-length hex padding overflow), decoder never panics on arbitrary bytes, framing under arbitrary fragmentation |
 | Transport | framing fragmentation/cancellation tests; Noise XX handshake + records against a snow responder; cert chain binding incl. "valid-looking chain that does not bind to the remote key" |
-| Registration | state table enforced; handles bound to attempt/generation/step; secrets never persisted; version-scoped 2.26.37.70 endpoint catalog, bounded URL-form requests, deterministic public key-bundle encoding, JSON response controls and mockable HTTPS seam (no network driver yet) |
+| Registration | state table enforced; handles bound to attempt/generation/step; secrets never persisted; prerequisite persistence is atomic with the pre-request state; version-scoped 2.26.37.70 endpoint catalog, bounded URL-form requests, deterministic common-field, `/v2/code`, `/v2/register`, and public key-bundle encoding, JSON response controls and mockable HTTPS seam (no network driver yet) |
 | Outbox | idempotent enqueue, conflict, limits, cancel rules, uncertain delivery representation |
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability endpoints and structured gated-operation errors |
 
-Test count: 104 (`cargo test --workspace --all-features`), clippy clean with
+Test count: 111 (`cargo test --workspace --all-features`), clippy clean with
 `-D warnings`, `cargo fmt --check` clean, and package/protobuf checks pass
 locally.
 

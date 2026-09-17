@@ -190,6 +190,31 @@ The Rust-native parser was corrected before analysis:
 - This proves public-bundle serialization for the comparison build. It does
   not establish accepted registration-ID ranges, signed-prekey generation or
   signature semantics; those remain behind the Signal backend gate.
+- `KotlinRegistrationBridge` splits common request fields across three
+  helpers. `A0T` appends `cc` and `in`; `A0U` appends `lg`, `lc`, `fdid`, and
+  `expid`; `A0V` optionally appends `access_session_id`, then `id` and
+  `backup_token`. Both UUID-backed fields serialize the UUID's canonical 16
+  bytes with unpadded URL-safe Base64. `LX/Hvq;->A05` passes the raw device-ID
+  and backup-token bytes through `LX/HNM;->A00`, which preserves RFC 3986
+  unreserved bytes (`A-Z`, `a-z`, `0-9`, `-`, `.`, `_`, `~`), percent-encodes
+  all other bytes as uppercase `%HH`, and marks the result pre-encoded before
+  the surrounding form serializer runs.
+- `KotlinRegistrationBridge->A09` constructs the generate-auth-code request
+  at the path held by `LX/HSP;->A06` (`/v2/code`). After the three common
+  helpers it appends required `token` and `method`, optional `context`, then
+  tri-state `clicked_education_link`, `manage_call_permission`, and
+  `call_log_permission`. `LX/Hvq;->A00` maps internal integer 0 to `false`, 1
+  to `true`, and omits other values. The method next adds an optional
+  `client_start_message` with unpadded URL-safe Base64, optional
+  `advertising_id`, then `A0S` adds optional `login` and the decimal value of
+  registration enum `type`. Finally it attempts `A0W`, the public key-bundle
+  helper; if keys are unavailable it logs that fact and still sends the
+  request.
+- `KotlinRegistrationBridge->A08` constructs the phone-number completion
+  request at `LX/HSP;->A0A` (`/v2/register`). After common fields it appends
+  required `code`, optional binary `auth_response` using unpadded URL-safe
+  Base64, then optional `context`, `method`, `advertising_id`, `login`, and
+  decimal enum `type`, followed by the same optional public key bundle.
 
 ### T2 — registration response envelope
 
