@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "generated_on": "2026-09-17",
+  "generator": "manual lab inspection (curl, unzip, keytool, sha256sum, AXML parse); to be reproduced by `cargo run -p xtask -- reference-manifest <apk>`",
+  "reference_client": {
+    "package": "com.whatsapp",
+    "version_name": "2.26.36.75",
+    "version_code": 263607533,
+    "min_sdk": 23,
+    "target_sdk": 36,
+    "compile_sdk": 37,
+    "release_source": "https://www.whatsapp.com/android/current/WhatsApp.apk",
+    "release_last_modified": "Wed, 16 Sep 2026 19:59:02 GMT",
+    "apk_sha256": "ce746890aad54d0e24a8bcb24538c8910ab07355087829b44d7072d6c69922e9",
+    "apk_size_bytes": 145478902,
+    "signing_certificate": {
+      "subject": "CN=Brian Acton, OU=Engineering, O=WhatsApp Inc., L=Santa Clara, ST=California, C=US",
+      "serial": "4c2536a4",
+      "sha1": "38:A0:F7:D5:05:FE:18:FE:C6:4F:BF:34:3E:CA:AA:F3:10:DB:D7:99",
+      "sha256": "39:87:D0:43:D1:0A:EF:AF:5A:87:10:B3:67:14:18:FE:57:E0:E1:9B:65:3C:9D:F8:25:58:FE:B5:FF:CE:5D:44",
+      "signature_algorithm": "SHA1withDSA",
+      "v1_signature_block": "META-INF/IMPORTED.DSA",
+      "v1_signature_block_sha256": "3b76ac9fd4abae4edc10aa0e61b55267f7650824b9c373afc15e0e1e53fa5bb4"
+    },
+    "native_libraries": ["lib/arm64-v8a/libs.so", "lib/armeabi-v7a/libs.so", "lib/x86/libs.so", "lib/x86_64/libs.so"],
+    "notes": [
+      "The APK is a research artifact kept outside the repository (section 6.3). Only hashes and metadata are committed.",
+      "A pinned APK is authoritative for that client's behavior; it is not proof that the server accepts it (section 6.1)."
+    ]
+  },
+  "research_device": {
+    "os": "none (static inspection only; no emulator or device was used)",
+    "architecture": "n/a"
+  },
+  "server_observation": {
+    "date": null,
+    "reference_client_accepted": null,
+    "note": "No live-server observation has been performed."
+  },
+  "reference_implementations": [
+    {
+      "name": "tulir/whatsmeow",
+      "url": "https://github.com/tulir/whatsmeow",
+      "revision": "2375e1751bbd7243b7d4bbb3f410f1acf34f3382",
+      "license": "MPL-2.0",
+      "profile": "WhatsApp Web multi-device (linked device)",
+      "used_for": ["token dictionary cross-check", "framing constants", "Noise pattern/prologue", "certificate chain verification structure", "protobuf schemas"]
+    },
+    {
+      "name": "oxidezap/whatsapp-rust",
+      "url": "https://github.com/oxidezap/whatsapp-rust",
+      "revision": "4a0721b9aa944822807b95926e2770da4e670b2f",
+      "license": "MIT (headline); wacore/libsignal contains files marked `Copyright Signal Messenger, LLC` / `AGPL-3.0-only`",
+      "profile": "WhatsApp Web multi-device (linked device)",
+      "used_for": ["token dictionary (tokens.json, MIT)", "component boundary evaluation"]
+    }
+  ],
+  "token_dictionary": {
+    "version": 3,
+    "single_byte_count": 236,
+    "double_byte_pages": 4,
+    "double_byte_page_size": 256,
+    "source": "oxidezap/whatsapp-rust wacore/binary/src/tokens.json @ 4a0721b (MIT); byte-identical to tulir/whatsmeow binary/token/token.go @ 2375e17",
+    "source_sha256": "a6b522b42e42f8ff01daad75c22b1bd5bac2ba21dacf8c93ebfcc39587f72a29",
+    "fixture": "crates/whatsapp-api/fixtures/tokens/web-md-v3.json",
+    "evidence": "ReferenceOnly"
+  },
+  "schemas": {
+    "source": "tulir/whatsmeow proto/ @ 2375e17 (MPL-2.0)",
+    "files": ["proto/waCert/WACert.proto", "proto/waWa6/WAWebProtobufsWa6.proto", "proto/waCommon/WACommon.proto", "proto/waAdv/WAAdv.proto"],
+    "evidence": "ReferenceOnly"
+  }
+}

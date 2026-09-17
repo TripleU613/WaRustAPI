@@ -1,0 +1,45 @@
+[package]
+name = "whatsapp-api"
+version = "0.0.1"
+description = "Standalone async Rust library for operating a WhatsApp primary device (experimental, offline gates only)"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+keywords = ["whatsapp", "messaging", "protocol"]
+categories = ["network-programming"]
+publish = false
+include = ["src/**", "README.md", "Cargo.toml", "fixtures/**"]
+
+[features]
+default = []
+# Experimental Noise transport adapter over `snow`. Kept behind a feature until
+# the profile's handshake pattern is Observed rather than ReferenceOnly.
+experimental-noise = ["dep:snow"]
+
+[dependencies]
+tokio = { workspace = true, features = ["rt", "sync", "time", "macros", "io-util"] }
+bytes.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+zeroize.workspace = true
+hex.workspace = true
+redb.workspace = true
+chacha20poly1305.workspace = true
+hkdf.workspace = true
+sha2.workspace = true
+getrandom.workspace = true
+prost.workspace = true
+miniz_oxide.workspace = true
+snow = { workspace = true, optional = true }
+
+[dev-dependencies]
+proptest.workspace = true
+tempfile.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "test-util"] }
+
+[lints]
+workspace = true
