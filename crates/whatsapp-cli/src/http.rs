@@ -315,6 +315,11 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
                     ],
                     "auth_response_encoding": "base64url-no-padding"
                 },
+                "security_request": {
+                    "path": RegistrationEndpoint::Security.path(),
+                    "optional_fields": ["code", "reset", "wipe_token", "advertising_id"],
+                    "wipe_token_encoding": "rfc3986-percent-encoded-pre-encoded-value"
+                },
                 "key_bundle": {
                     "encoding": "base64url-no-padding",
                     "key_type_hex": format!("{COMPARISON_SIGNAL_KEY_TYPE:02x}"),
@@ -433,6 +438,8 @@ mod tests {
         assert_eq!(body["code_request"]["required_fields"][1], "method");
         assert_eq!(body["register_request"]["path"], "/v2/register");
         assert_eq!(body["register_request"]["required_fields"][0], "code");
+        assert_eq!(body["security_request"]["path"], "/v2/security");
+        assert_eq!(body["security_request"]["optional_fields"][2], "wipe_token");
         assert_eq!(
             body["endpoints"][2]["url"],
             "https://v.whatsapp.net/v2/code"

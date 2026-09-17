@@ -27,12 +27,12 @@ does not replace evidence for the active 2.26.36.75 profile.
 | Crash matrix (README 19.2) | `tests/crash_matrix.rs`: rows 1, 2, 3, 9, 10 (rotation) and the second-process ownership test pass; rows 4–8 and 11 need a transmission path / Signal backend / I/O fault injection |
 | Codec | independent hand-written fixture, JID kinds, packed strings, bounds, duplicate attributes, zlib bomb; `tests/codec_props.rs` property round trips (found and fixed an odd-length hex padding overflow), decoder never panics on arbitrary bytes, framing under arbitrary fragmentation |
 | Transport | framing fragmentation/cancellation tests; Noise XX handshake + records against a snow responder; cert chain binding incl. "valid-looking chain that does not bind to the remote key"; feature-gated lab HTTPS registration transport with pure-Rust alpha provider, validation on, no redirects/retries/proxies, deadlines and bounded streaming responses |
-| Registration | state table enforced; handles bound to attempt/generation/step; answers never persisted; prerequisite persistence is atomic with the pre-request state; elapsed cooldowns resume without regenerating keys; ambiguous outcomes have a non-repeating reconciliation seam; successful account credentials commit atomically with `Registered`; version-scoped 2.26.37.70 endpoint catalog, deterministic common-field, `/v2/code`, `/v2/register`, and public key-bundle encoding; conservative comparison HTTP flow tested end-to-end with a mock transport (not installed for the active profile) |
+| Registration | state table enforced; handles bound to attempt/generation/step; answers never persisted; prerequisite persistence is atomic with the pre-request state; elapsed cooldowns resume without regenerating keys; ambiguous outcomes have a non-repeating reconciliation seam; successful account credentials commit atomically with `Registered`; version-scoped 2.26.37.70 endpoint catalog, deterministic common-field, `/v2/code`, `/v2/register`, `/v2/security`, and public key-bundle encoding; conservative comparison HTTP flow including the account-PIN branch is tested end-to-end with a mock transport (not installed for the active profile) |
 | Outbox | idempotent enqueue, conflict, limits, cancel rules, uncertain delivery representation |
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability endpoints and structured gated-operation errors |
 
-Test count: 115 (`cargo test --workspace --all-features`), clippy clean with
+Test count: 117 (`cargo test --workspace --all-features`), clippy clean with
 `-D warnings`, `cargo fmt --check` clean, and package/protobuf checks pass
 locally.
 

@@ -165,6 +165,12 @@
         "auth_response": "Base64 URL_SAFE | NO_WRAP | NO_PADDING",
         "type": "decimal value of the client's registration-type enum"
       },
+      "security_request_encoding": {
+        "path": "/v2/security",
+        "optional_field_order": ["code", "reset", "wipe_token", "advertising_id"],
+        "request_rule": "code is optional; reset is appended only when non-empty; wipe_token is conditional",
+        "wipe_token": "raw bytes, RFC 3986 unreserved bytes retained and every other byte percent-encoded as uppercase %HH, then marked pre-encoded"
+      },
       "key_bundle_encoding": {
         "authkey_source": "32-byte client Noise static public key",
         "key_type_hex": "05",

@@ -215,6 +215,14 @@ The Rust-native parser was corrected before analysis:
   required `code`, optional binary `auth_response` using unpadded URL-safe
   Base64, then optional `context`, `method`, `advertising_id`, `login`, and
   decimal enum `type`, followed by the same optional public key bundle.
+- `KotlinRegistrationBridge->A0D` constructs account security-code requests
+  at `LX/HSP;->A0F` (`/v2/security`). After common fields it conditionally
+  appends `code`, adds `reset` only when its string is non-empty,
+  conditionally passes raw `wipe_token` bytes through the same uppercase
+  RFC-3986 percent encoder/pre-encoded path, then adds optional
+  `advertising_id` and the public key bundle. Its response parser treats
+  `ok` as success and reads `login`; handled failures include `stale`,
+  `blocked`, `too_many_guesses`, `temporarily_unavailable`, and `incorrect`.
 
 ### T2 — registration response envelope
 

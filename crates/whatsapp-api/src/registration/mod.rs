@@ -560,6 +560,13 @@ pub trait ComparisonRequestFactory: Send + Sync + fmt::Debug {
         attempt: &RegistrationAttempt,
         code: &Zeroizing<String>,
     ) -> Result<wire::EncodedRegistrationRequest>;
+
+    /// Build the `/v2/security` mutation for an account PIN.
+    fn security_request(
+        &self,
+        attempt: &RegistrationAttempt,
+        pin: &Zeroizing<String>,
+    ) -> Result<wire::EncodedRegistrationRequest>;
 }
 
 /// Conservative happy-path driver for the signed 2.26.37.70 comparison
@@ -694,21 +701,14 @@ impl RegistrationFlow for ComparisonHttpFlow {
     fn submit<'a>(
         &'a self,
         attempt: &'a RegistrationAttempt,
-        _handle: &'a ChallengeHandle,
+        handle: &'a ChallengeHandle,
         answer: &'a Answer,
     ) -> RegistrationFuture<'a> {
         Box::pin(async move {
-            let Answer::Code(code) = answer else {
-                return Ok(RegistrationState::Blocked {
-                    reason: BlockedReason::UnsupportedStep {
-                        description:
-                            "comparison HTTP flow does not yet implement account-PIN submission"
-                                .into(),
-                    },
-                }
-                .into());
+            let request = match answer {
+                Answer::Code(code) => self.requests.complete_request(attempt, code)?,
+                Answer::Pin(pin) => self.requests.security_request(attempt, pin)?,
             };
-            let request = self.requests.complete_request(attempt, code)?;
             let (status_code, mut response) = self.send(request).await?;
             if (200..300).contains(&status_code)
                 && response.status == wire::RegistrationResponseStatus::Ok
@@ -716,6 +716,23 @@ impl RegistrationFlow for ComparisonHttpFlow {
                 return Ok(RegistrationFlowOutput::registered(Self::completion_from(
                     &mut response,
                 )?));
+            }
+            if matches!(answer, Answer::Code(_))
+                && response.reason == Some(wire::RegistrationResponseReason::SecurityCode)
+            {
+                return Ok(RegistrationState::NeedsUserAction {
+                    handle: ChallengeHandle {
+                        attempt: attempt.id,
+                        generation: attempt.generation,
+                        step: handle.step.saturating_add(1),
+                        method: ChallengeMethod::Other("pin".into()),
+                        expires_at: None,
+                        retry_after: response
+                            .retry_after
+                            .map(|wait| Timestamp::now().saturating_add(wait)),
+                    },
+                }
+                .into());
             }
             Ok(Self::blocked_response(status_code, &response))
         })
@@ -1290,6 +1307,16 @@ mod tests {
             form.push("code", code.as_str())?;
             wire::WHATSAPP_2_26_37_70.request(wire::RegistrationEndpoint::Register, &form)
         }
+
+        fn security_request(
+            &self,
+            _attempt: &RegistrationAttempt,
+            pin: &Zeroizing<String>,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            let mut form = wire::RegistrationForm::new();
+            form.push("code", pin.as_str())?;
+            wire::WHATSAPP_2_26_37_70.request(wire::RegistrationEndpoint::Security, &form)
+        }
     }
 
     #[derive(Debug)]
@@ -1324,6 +1351,11 @@ mod tests {
                     ),
                     (
                         "/v2/register",
+                        br#"{"status":"fail","reason":"security_code","security_code_set":true}"#
+                            .as_slice(),
+                    ),
+                    (
+                        "/v2/security",
                         br#"{"status":"ok","login":"login-secret"}"#.as_slice(),
                     ),
                 ])),
@@ -1336,8 +1368,15 @@ mod tests {
             panic!("expected code challenge, got {step:?}");
         };
         assert!(handle.retry_after.is_some());
-        let done = svc
+        let pin_step = svc
             .submit(handle, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap();
+        let RegistrationStep::Action(RequiredAction::EnterPin(pin_handle)) = pin_step else {
+            panic!("expected account PIN challenge, got {pin_step:?}");
+        };
+        let done = svc
+            .submit(pin_handle, Answer::Pin(Zeroizing::new("6157".into())))
             .await
             .unwrap();
         assert_eq!(done, RegistrationStep::Completed);

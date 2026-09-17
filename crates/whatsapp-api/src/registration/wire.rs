@@ -762,6 +762,112 @@ pub fn assemble_complete_request(
     WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Register, &form)
 }
 
+/// Endpoint-specific parameters observed in the comparison client's account
+/// security-code request (`/v2/security`).
+pub struct RegistrationSecurityParams {
+    code: Option<Zeroizing<String>>,
+    reset: Option<Zeroizing<String>>,
+    wipe_token: Option<Zeroizing<Vec<u8>>>,
+    advertising_id: Option<Zeroizing<String>>,
+}
+
+impl fmt::Debug for RegistrationSecurityParams {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("RegistrationSecurityParams")
+            .field("has_code", &self.code.is_some())
+            .field("has_reset", &self.reset.is_some())
+            .field(
+                "wipe_token_length",
+                &self.wipe_token.as_ref().map(|value| value.len()),
+            )
+            .field("has_advertising_id", &self.advertising_id.is_some())
+            .finish()
+    }
+}
+
+impl RegistrationSecurityParams {
+    /// Build a security-code verification request.
+    pub fn verify(code: impl Into<String>) -> Result<Self> {
+        let code = code.into();
+        validate_parameter_text("code", &code, false)?;
+        Ok(Self {
+            code: Some(Zeroizing::new(code)),
+            reset: None,
+            wipe_token: None,
+            advertising_id: None,
+        })
+    }
+
+    /// Build a security-code reset request.
+    pub fn reset(reset: impl Into<String>) -> Result<Self> {
+        let reset = reset.into();
+        validate_parameter_text("reset", &reset, false)?;
+        Ok(Self {
+            code: None,
+            reset: Some(Zeroizing::new(reset)),
+            wipe_token: None,
+            advertising_id: None,
+        })
+    }
+
+    /// Set the optional raw wipe token. The comparison helper percent-encodes
+    /// its bytes and marks the value pre-encoded.
+    pub fn with_wipe_token(mut self, value: Vec<u8>) -> Result<Self> {
+        validate_binary_parameter("wipe_token", &value, false)?;
+        self.wipe_token = Some(Zeroizing::new(value));
+        Ok(self)
+    }
+
+    /// Set the optional advertising identifier.
+    pub fn with_advertising_id(mut self, value: impl Into<String>) -> Result<Self> {
+        let value = value.into();
+        validate_parameter_text("advertising_id", &value, true)?;
+        self.advertising_id = Some(Zeroizing::new(value));
+        Ok(self)
+    }
+
+    /// Append endpoint-specific fields atomically in observed request order.
+    pub fn append_to_form<'a>(
+        &self,
+        form: &'a mut RegistrationForm,
+    ) -> Result<&'a mut RegistrationForm> {
+        let mut fields = Vec::with_capacity(4);
+        if let Some(value) = &self.code {
+            fields.push(("code", value.to_string(), ValueEncoding::Encode));
+        }
+        if let Some(value) = &self.reset {
+            fields.push(("reset", value.to_string(), ValueEncoding::Encode));
+        }
+        if let Some(value) = &self.wipe_token {
+            fields.push((
+                "wipe_token",
+                percent_encode_binary(value),
+                ValueEncoding::AlreadyEncoded,
+            ));
+        }
+        if let Some(value) = &self.advertising_id {
+            fields.push(("advertising_id", value.to_string(), ValueEncoding::Encode));
+        }
+        form.push_batch(fields)
+    }
+}
+
+/// Assemble the observed clear-form account security-code request without
+/// sending it.
+pub fn assemble_security_request(
+    common: &RegistrationCommonParams,
+    security: &RegistrationSecurityParams,
+    key_bundle: Option<&RegistrationKeyBundle>,
+) -> Result<EncodedRegistrationRequest> {
+    let mut form = RegistrationForm::new();
+    common.append_to_form(&mut form)?;
+    security.append_to_form(&mut form)?;
+    if let Some(key_bundle) = key_bundle {
+        key_bundle.append_to_form(&mut form)?;
+    }
+    WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Security, &form)
+}
+
 /// Public half of the pre-registration Noise/Signal key bundle observed in
 /// the comparison client.
 ///
@@ -1768,6 +1874,16 @@ mod tests {
             register_encoding["required_fields"],
             serde_json::json!(["code"])
         );
+        let security_encoding =
+            &evidence["observations"]["registration"]["security_request_encoding"];
+        assert_eq!(
+            security_encoding["path"],
+            RegistrationEndpoint::Security.path()
+        );
+        assert_eq!(
+            security_encoding["optional_field_order"],
+            serde_json::json!(["code", "reset", "wipe_token", "advertising_id"])
+        );
     }
 
     #[test]
@@ -2013,6 +2129,56 @@ mod tests {
         assert!(complete.append_to_form(&mut form).is_err());
         assert_eq!(form.len(), 1, "failed batch append must not add fields");
         assert_eq!(form.encode().unwrap().as_slice(), b"code=existing");
+    }
+
+    #[test]
+    fn security_request_uses_observed_field_order_and_encodings() {
+        let common = RegistrationCommonParams::new(
+            PhoneNumber::new(1, "5551234567").unwrap(),
+            "en",
+            "US",
+            "fdid",
+            [0; 16],
+            None,
+            vec![1],
+            vec![2],
+        )
+        .unwrap();
+        let security = RegistrationSecurityParams::verify("6157")
+            .unwrap()
+            .with_wipe_token(b"A ~*".to_vec())
+            .unwrap()
+            .with_advertising_id("ad id")
+            .unwrap();
+        let request = assemble_security_request(&common, &security, None).unwrap();
+        assert_eq!(request.url(), "https://v.whatsapp.net/v2/security");
+        assert_eq!(
+            request.body(),
+            b"cc=1&in=5551234567&lg=en&lc=US&fdid=fdid&expid=AAAAAAAAAAAAAAAAAAAAAA&id=%01&backup_token=%02&code=6157&wipe_token=A%20~%2A&advertising_id=ad+id"
+        );
+        let debug = format!("{security:?}");
+        assert!(!debug.contains("6157"));
+        assert!(!debug.contains("A ~*"));
+        assert!(!debug.contains("ad id"));
+    }
+
+    #[test]
+    fn security_reset_and_atomic_validation_are_bounded() {
+        assert!(RegistrationSecurityParams::verify("").is_err());
+        assert!(RegistrationSecurityParams::reset("").is_err());
+        assert!(
+            RegistrationSecurityParams::verify("6157")
+                .unwrap()
+                .with_wipe_token(Vec::new())
+                .is_err()
+        );
+
+        let security = RegistrationSecurityParams::reset("reset-token").unwrap();
+        let mut form = RegistrationForm::new();
+        form.push("reset", "existing").unwrap();
+        assert!(security.append_to_form(&mut form).is_err());
+        assert_eq!(form.len(), 1, "failed batch append must not add fields");
+        assert_eq!(form.encode().unwrap().as_slice(), b"reset=existing");
     }
 
     #[test]
