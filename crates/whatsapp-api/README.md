@@ -21,7 +21,11 @@ facts. What does work, and is tested offline:
 - cancellation-safe frame reader, experimental Noise XX adapter (feature
   `experimental-noise`), certificate-chain binding over an injected verifier;
 - durable registration state machine with bound challenge handles, atomic
-  prerequisite preparation, cooldown resumption and outcome reconciliation.
+  prerequisite preparation, cooldown resumption, outcome reconciliation and
+  atomic successful credential commit;
+- a conservative, injectable comparison-build HTTP registration flow that
+  covers the observed `/v2/code` → `/v2/register` happy path in offline tests
+  without enabling it for the incomplete active profile.
 
 ## Usage sketch
 
