@@ -1,12 +1,13 @@
 {
  "provenance": {
-  "evidence": "ReferenceOnly",
-  "profile": "WhatsApp Web multi-device (linked device); NOT verified for the Android primary profile",
+  "evidence": "Observed",
+  "evidence_note": "Observed (client, static): the identical ordered dictionary (235 single-byte + 4x256 double-byte tokens) was recovered from the const-string initialiser in classes2.dex of com.whatsapp 2.26.36.75 on 2026-09-17 with `cargo run -p xtask -- apk-tokens <apk> --check <this file>`. The dictionary *version byte* sent on the wire is not established by this and stays ReferenceOnly (ledger `framing.connection_header`).",
+  "profile": "WhatsApp Web multi-device references AND com.whatsapp 2.26.36.75 (Android) agree on this dictionary",
   "source": "oxidezap/whatsapp-rust wacore/binary/src/tokens.json",
   "source_revision": "4a0721b9aa944822807b95926e2770da4e670b2f",
   "source_license": "MIT",
   "source_sha256": "a6b522b42e42f8ff01daad75c22b1bd5bac2ba21dacf8c93ebfcc39587f72a29",
-  "cross_check": "byte-identical token lists in tulir/whatsmeow binary/token/token.go @ 2375e1751bbd7243b7d4bbb3f410f1acf34f3382 (MPL-2.0)",
+  "cross_check": "byte-identical token lists in tulir/whatsmeow binary/token/token.go @ 2375e1751bbd7243b7d4bbb3f410f1acf34f3382 (MPL-2.0); reproduced from APK 2.26.36.75 bytecode by xtask apk-tokens",
   "ledger_ref": "binary.tokens"
  },
  "dictionary_version": 3,

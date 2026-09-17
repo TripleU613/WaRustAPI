@@ -20,10 +20,11 @@ Ordered by what blocks the first decisive result (README section 0).
 3. **Login payload** (`login.client_payload`): primary-device markers,
    version fields, startup requests, resume behaviour.
 4. **Noise record sizes** (`noise.record_limit`) to accept or reject `snow`.
-5. **Android token dictionary**: the vendored dictionary is the web v3 list.
-   The APK must be inspected (lab, offline) to extract the Android dictionary
-   and version byte; `xtask` should gain an extractor once the location in
-   the APK is established.
+5. ~~**Android token dictionary**~~ *Resolved 2026-09-17 for content and
+   order*: `xtask apk-tokens` recovers the ordered dictionary from the APK
+   bytecode and it is identical to the web v3 list. Still open: the
+   dictionary **version byte** (`binary.tokens_version`) and the structural
+   tag bytes remain `ReferenceOnly`.
 6. **Signal backend** (ADR 0005): licence decision or clean-room plan.
 7. **TLS provider** (ADR 0003) for registration/media HTTPS.
 8. **Wire message-ID format** (`messaging.id_format`).

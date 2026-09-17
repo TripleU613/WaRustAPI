@@ -18,7 +18,8 @@ If the server requires a hybrid handshake for primary devices, the current
 | --- | --- |
 | Toolchain and dependency contract | `rust-toolchain.toml` 1.94.1; `cargo run -p xtask -- dependency-audit`: no denied crates in `whatsapp-api`, `whatsapp-api +experimental-noise`, `whatsapp-cli` (report: `docs/protocol/dependency-report.md`) |
 | Reference APK pinned | `com.whatsapp` 2.26.36.75 / 263607533, sha256 `ce7468…922e9`, signing cert `39:87:D0:…:5D:44`; reproduced by `xtask reference-manifest --check` |
-| APK static observations | `xtask apk-strings`: 449,216 dex strings; hosts (`g.whatsapp.net`, `e1`–`e16`, `v.whatsapp.net`, `mmg.whatsapp.net`), 12 Noise pattern names, registration parameter vocabulary, ClientPayload field constants, all 1,259 web v3 tokens present (order unproven) |
+| APK static observations | `xtask apk-strings`: 449,216 dex strings; hosts (`g.whatsapp.net`, `e1`–`e16`, `v.whatsapp.net`, `mmg.whatsapp.net`), 12 Noise pattern names, registration parameter vocabulary, ClientPayload field constants |
+| Token dictionary | `xtask apk-tokens --check`: ordered dictionary recovered from `classes2.dex` bytecode is identical to the committed fixture → `binary.tokens` is client-observed; version byte still ReferenceOnly |
 | Store | 10 tests: encryption at rest, AAD row binding, wrong key typed, second owner rejected, generation fencing, atomic rollback, journal replay/ack/trim |
 | Codec | 9 tests: independent hand-written fixture, JID kinds, packed strings, bounds, duplicate attributes, zlib bomb |
 | Transport | framing fragmentation/cancellation tests; Noise XX handshake + records against a snow responder; cert chain binding incl. "valid-looking chain that does not bind to the remote key" |

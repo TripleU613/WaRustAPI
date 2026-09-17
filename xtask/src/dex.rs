@@ -128,3 +128,163 @@ pub fn run(apk: &Path, contains: &[String]) -> Result<(), String> {
     eprintln!("{n} strings ({} total)", all.len());
     Ok(())
 }
+
+/// Recover the binary-node token dictionary from the client.
+///
+/// The dictionary is initialised by a long, uninterrupted run of
+/// `const-string` instructions (opcode `0x1a`, format `1a AA BBBB`, or the
+/// jumbo form `0x1b`) in one static initialiser. We scan every dex file for
+/// runs of plausible tokens, anchor on the stream-control token
+/// `xmlstreamstart` (the only place such a literal appears in a const-string
+/// run), and stop at the first repeated string, because a dictionary has no
+/// duplicates. The first 235 strings are the single-byte page (index 0 is the
+/// empty token) and each following block of 256 is a double-byte page. This
+/// heuristic decodes no other bytecode; it is validated by `--check` against a
+/// committed fixture.
+pub fn apk_tokens(apk: &Path) -> Result<(Vec<String>, Vec<Vec<String>>, String), String> {
+    let f = std::fs::File::open(apk).map_err(|e| format!("{}: {e}", apk.display()))?;
+    let mut zip = zip::ZipArchive::new(f).map_err(|e| format!("zip: {e}"))?;
+    let names: Vec<String> = zip
+        .file_names()
+        .filter(|n| n.starts_with("classes") && n.ends_with(".dex"))
+        .map(str::to_owned)
+        .collect();
+    let mut best: Vec<String> = Vec::new();
+    let mut best_where = String::new();
+    for name in names {
+        let mut d = Vec::new();
+        zip.by_name(&name)
+            .map_err(|e| e.to_string())?
+            .read_to_end(&mut d)
+            .map_err(|e| e.to_string())?;
+        let strs = strings(&d)?;
+        let mut run: Vec<(usize, u32)> = Vec::new();
+        let mut i = 0usize;
+        let mut last = 0usize;
+        let flush =
+            |run: &mut Vec<(usize, u32)>, best: &mut Vec<String>, best_where: &mut String| {
+                let names: Vec<&str> = run
+                    .iter()
+                    .map(|&(_, s)| strs[s as usize].as_str())
+                    .collect();
+                if let Some(start) = names.iter().position(|s| *s == "xmlstreamstart") {
+                    let mut seen = std::collections::HashSet::new();
+                    let mut candidate: Vec<String> = Vec::new();
+                    for s in &names[start..] {
+                        if !seen.insert(*s) {
+                            break;
+                        }
+                        candidate.push((*s).to_owned());
+                    }
+                    if candidate.len() > best.len() {
+                        *best = candidate;
+                        *best_where = format!("{name} @ 0x{:x}", run[start].0);
+                    }
+                }
+                run.clear();
+            };
+        while i + 3 < d.len() {
+            let (sidx, width) = match d[i] {
+                0x1a => (u32::from(u16::from_le_bytes([d[i + 2], d[i + 3]])), 4usize),
+                0x1b if i + 5 < d.len() => (
+                    u32::from_le_bytes([d[i + 2], d[i + 3], d[i + 4], d[i + 5]]),
+                    6usize,
+                ),
+                _ => {
+                    i += 1;
+                    continue;
+                }
+            };
+            let Some(s) = strs.get(sidx as usize) else {
+                i += 1;
+                continue;
+            };
+            // Dictionary tokens are short printable ASCII without whitespace.
+            let plausible =
+                !s.is_empty() && s.len() <= 64 && s.bytes().all(|b| (0x21..0x7f).contains(&b));
+            if !plausible {
+                i += 1;
+                continue;
+            }
+            if !run.is_empty() && i - last > 64 {
+                flush(&mut run, &mut best, &mut best_where);
+            }
+            run.push((i, sidx));
+            last = i;
+            i += width;
+        }
+        flush(&mut run, &mut best, &mut best_where);
+    }
+    if best.len() < 235 {
+        return Err(format!(
+            "no plausible token run found (longest {} strings)",
+            best.len()
+        ));
+    }
+    let mut single = vec![String::new()];
+    single.extend(best[..235].iter().cloned());
+    let mut double = Vec::new();
+    let mut rest = &best[235..];
+    while rest.len() >= 256 {
+        double.push(rest[..256].to_vec());
+        rest = &rest[256..];
+    }
+    Ok((single, double, best_where))
+}
+
+#[derive(serde::Deserialize)]
+struct TokenFixture {
+    single_byte: Vec<String>,
+    double_byte: Vec<Vec<String>>,
+}
+
+/// `apk-tokens`: print the recovered dictionary as JSON; with `--check`,
+/// compare against a committed fixture and fail on any difference.
+pub fn run_tokens(apk: &Path, check: Option<&Path>) -> Result<(), String> {
+    let (single, double, location) = apk_tokens(apk)?;
+    eprintln!(
+        "recovered {} single-byte and {}x256 double-byte tokens from {location}",
+        single.len() - 1,
+        double.len()
+    );
+    if let Some(path) = check {
+        let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
+        let fx: TokenFixture = serde_json::from_str(&text).map_err(|e| e.to_string())?;
+        if fx.single_byte != single {
+            let first = fx
+                .single_byte
+                .iter()
+                .zip(&single)
+                .position(|(a, b)| a != b)
+                .map_or_else(|| "length".to_string(), |i| i.to_string());
+            return Err(format!(
+                "single-byte page differs (first difference at {first})"
+            ));
+        }
+        if fx.double_byte.len() != double.len() {
+            return Err(format!(
+                "double-byte page count differs: fixture {} vs APK {}",
+                fx.double_byte.len(),
+                double.len()
+            ));
+        }
+        for (p, (a, b)) in fx.double_byte.iter().zip(&double).enumerate() {
+            if a != b {
+                let first = a.iter().zip(b).position(|(x, y)| x != y).unwrap_or(0);
+                return Err(format!("double-byte page {p} differs at index {first}"));
+            }
+        }
+        eprintln!("apk-tokens: dictionary matches {}", path.display());
+        return Ok(());
+    }
+    let out = serde_json::json!({
+        "single_byte": single,
+        "double_byte": double,
+        "recovered_from": location,
+    });
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&out).map_err(|e| e.to_string())?
+    );
+    Ok(())
+}

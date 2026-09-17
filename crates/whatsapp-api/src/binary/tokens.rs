@@ -121,7 +121,8 @@ impl TokenDictionary {
         })
     }
 
-    /// The embedded `ReferenceOnly` web multi-device v3 dictionary.
+    /// The embedded v3 dictionary (content recovered from the pinned Android
+    /// APK and identical to the web multi-device references).
     pub fn web_md_v3() -> &'static TokenDictionary {
         static DICT: OnceLock<TokenDictionary> = OnceLock::new();
         DICT.get_or_init(|| {
@@ -191,7 +192,7 @@ mod tests {
     fn embedded_dictionary_matches_reference_counts() {
         let d = TokenDictionary::web_md_v3();
         assert_eq!(d.version(), 3);
-        assert_eq!(d.label(), EvidenceLabel::ReferenceOnly);
+        assert_eq!(d.label(), EvidenceLabel::Observed);
         assert_eq!(d.single_len(), 236);
         assert_eq!(d.single(3), Some("s.whatsapp.net"));
         assert_eq!(d.single(0), None);

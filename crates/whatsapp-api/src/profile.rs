@@ -249,7 +249,9 @@ impl ProtocolProfile {
             tokens: TokenDictionaryRef {
                 version: m.token_dictionary.version,
                 sha256: m.token_dictionary.source_sha256,
-                label: EvidenceLabel::ReferenceOnly,
+                // Dictionary content recovered from the pinned APK's bytecode
+                // (ledger `binary.tokens`); the version byte is separate.
+                label: EvidenceLabel::Observed,
             },
             endpoints: Endpoints {
                 chat: Evidenced::new(None, EvidenceLabel::Unknown, "transport.endpoint"),
@@ -340,6 +342,7 @@ impl ProtocolProfile {
             && self.noise.trust_root.label.is_production_grade()
             && self.endpoints.chat.label.is_production_grade()
             && self.tokens.label.is_production_grade()
+            && self.framing.connection_header.label.is_production_grade()
     }
 }
 

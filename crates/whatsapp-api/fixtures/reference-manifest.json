@@ -85,7 +85,8 @@
     "source": "oxidezap/whatsapp-rust wacore/binary/src/tokens.json @ 4a0721b (MIT); byte-identical to tulir/whatsmeow binary/token/token.go @ 2375e17",
     "source_sha256": "a6b522b42e42f8ff01daad75c22b1bd5bac2ba21dacf8c93ebfcc39587f72a29",
     "fixture": "crates/whatsapp-api/fixtures/tokens/web-md-v3.json",
-    "evidence": "ReferenceOnly"
+    "evidence": "Observed (client, static): ordered dictionary recovered from classes2.dex @ 0x126a96 with xtask apk-tokens on 2026-09-17; identical to the web v3 list. Version byte not established.",
+    "recovered_from": "classes2.dex @ 0x126a96 (const-string run anchored at xmlstreamstart)"
   },
   "schemas": {
     "source": "tulir/whatsmeow proto/ @ 2375e17 (MPL-2.0)",
@@ -243,7 +244,7 @@
       "NETWORK_SWITCH",
       "PING_RECONNECT"
     ],
-    "token_dictionary": "all 235 single-byte and 1024 double-byte web v3 tokens are present as string constants; ordering and dictionary version byte not established",
+    "token_dictionary": "ordered dictionary recovered from classes2.dex @ 0x126a96 with `xtask apk-tokens --check`: identical to web v3 (235 + 4x256). Version byte not established.",
     "native_library": "lib/*/libs.so contains no protocol strings (superpack-compressed); protocol code is in dex",
     "user_agent_literals": [
       "WhatsApp/2.23.20.0"

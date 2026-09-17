@@ -47,6 +47,14 @@ enum Cmd {
         #[arg(long = "contains")]
         contains: Vec<String>,
     },
+    /// Recover the binary-node token dictionary from an APK's dex bytecode.
+    ApkTokens {
+        /// Path to the APK (kept outside the repository).
+        apk: PathBuf,
+        /// Compare against a committed token fixture and fail on mismatch.
+        #[arg(long)]
+        check: Option<PathBuf>,
+    },
     /// Extract reference facts (hashes, manifest fields, signing certificate) from an APK.
     ReferenceManifest {
         /// Path to the APK (kept outside the repository).
@@ -74,6 +82,7 @@ fn main() -> ExitCode {
         Cmd::DependencyAudit { strict } => deps::audit(&root, strict),
         Cmd::ReferenceManifest { apk, check } => manifest::run(&apk, check.as_deref()),
         Cmd::ApkStrings { apk, contains } => dex::run(&apk, &contains),
+        Cmd::ApkTokens { apk, check } => dex::run_tokens(&apk, check.as_deref()),
     };
     match result {
         Ok(()) => ExitCode::SUCCESS,
