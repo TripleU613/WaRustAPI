@@ -27,7 +27,9 @@ facts. What does work, and is tested offline:
   covers the observed `/v2/code` → `/v2/register` happy path in offline tests
   without enabling it for the incomplete active profile;
 - bounded reproduction of the signed comparison APK's phone-bound `/v2/code`
-  token derivation, plus APK extraction through `xtask`.
+  token derivation, plus APK extraction through `xtask`;
+- serializable/redacted generation of the comparison build's fresh UUIDv4,
+  20-byte recovery-token, and 20-byte backup-token prerequisites.
 
 ## Usage sketch
 

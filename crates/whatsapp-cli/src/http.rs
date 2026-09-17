@@ -293,7 +293,14 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
                         ["access_session_id", "id", "backup_token"]
                     ],
                     "uuid_encoding": "base64url-no-padding",
-                    "binary_encoding": "rfc3986-percent-encoded-pre-encoded-value"
+                    "binary_encoding": "rfc3986-percent-encoded-pre-encoded-value",
+                    "fresh_fallbacks": {
+                        "fdid": "persisted-uuid-v4-string",
+                        "expid": "persisted-uuid-v4-bytes",
+                        "access_session_id": "persisted-uuid-v4-bytes",
+                        "id_bytes": 20,
+                        "backup_token_bytes": 20
+                    }
                 },
                 "code_request": {
                     "path": RegistrationEndpoint::Code.path(),
@@ -443,6 +450,7 @@ mod tests {
         assert_eq!(body["key_bundle"]["fields"].as_array().unwrap().len(), 7);
         assert_eq!(body["common_fields"]["groups"][0][0], "cc");
         assert_eq!(body["common_fields"]["groups"][2][2], "backup_token");
+        assert_eq!(body["common_fields"]["fresh_fallbacks"]["id_bytes"], 20);
         assert_eq!(
             body["code_request"]["token_derivation"]["scope"],
             "whatsapp-2.26.37.70-comparison-only"

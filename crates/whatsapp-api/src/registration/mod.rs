@@ -10,6 +10,7 @@
 //! flow exists for controlled lab use, but it is never selected implicitly;
 //! the default client sends no request and requests no OTP.
 
+pub mod prerequisites;
 pub mod token;
 pub mod wire;
 

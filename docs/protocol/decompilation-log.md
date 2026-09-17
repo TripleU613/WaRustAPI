@@ -225,6 +225,18 @@ The Rust-native parser was corrected before analysis:
   version-scoped algorithm; `xtask apk-registration-token` extracts its APK
   inputs. This remains a comparison-build observation, not a cross-version
   invariant.
+- The same caller obtains `fdid` from `LX/1GO;->AuB()`: on first use this is
+  `UUID.randomUUID().toString()` persisted as `phoneid_id`. It obtains `expid`
+  from `LX/1GR;->A03()`: absent an Android-derived source, this also falls back
+  to a persisted random UUID. `LX/0wl;` generates and persists
+  `access_session_id` with `UUID.randomUUID()`.
+- `LX/I4D;->A0v(cc, in)` loads a phone-bound recovery token or generates one
+  with `LX/00L;->A0G()`. `A0u` does the same for the shared backup token when
+  preferences are empty. `A0G()` uses an AES key generator initialized to 160
+  bits with the client's secure RNG, so both fresh fallback values are 20
+  random bytes. `ComparisonRegistrationPrerequisites` now generates these
+  UUIDv4 and 20-byte fallback values as one serializable, redacted unit for
+  encrypted pre-request persistence.
 - `KotlinRegistrationBridge->A08` constructs the phone-number completion
   request at `LX/HSP;->A0A` (`/v2/register`). After common fields it appends
   required `code`, optional binary `auth_response` using unpadded URL-safe
