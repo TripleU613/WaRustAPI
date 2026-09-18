@@ -5,6 +5,8 @@ relicense third-party inputs or dependencies.
 
 | Input | Provenance and license |
 | --- | --- |
+| Optional `wacore-libsignal` 0.7.0 | Exact registry version/checksum in Cargo.lock; published source revision `f8165f282008935732e0b26d6f5cca5038ecd222`. Contains Signal Messenger AGPL-3.0-only source headers despite MIT Cargo metadata. Owner approved evaluation/integration; upstream licenses still apply. |
+| Optional rustls `ring` provider | `ring` 0.17.14, Cargo.lock; native crypto under its upstream licenses, explicitly approved for HTTPS in ADR 0003 |
 | Vendored protobuf schemas | `proto/whatsmeow/`, from tulir/whatsmeow; [revision](proto/whatsmeow/REVISION) and [MPL-2.0 license](proto/whatsmeow/LICENSE) |
 | Generated protobuf Rust | `crates/whatsapp-api/src/proto/`, generated from those schemas; retain upstream provenance |
 | Binary token fixture | `crates/whatsapp-api/fixtures/tokens/web-md-v3.json`; source revision, MIT designation, and hash are embedded in the fixture |

@@ -199,6 +199,7 @@ jobs:
       - name: Optional features independently
         run: |
           cargo test --locked -p whatsapp-api --features experimental-noise
+          cargo test --locked -p whatsapp-api --features experimental-signal-crypto
           cargo test --locked -p whatsapp-api --features experimental-registration-https
       - name: Release-mode property stress and crash recovery
         run: cargo test --locked -p whatsapp-api --all-features --release --tests

@@ -53,12 +53,16 @@ println!("{:?}", client.capabilities());
 
 ## Features
 
+- `experimental-signal-crypto`: XEdDSA certificate-signature verifier backed by
+  pinned `wacore-libsignal` 0.7.0 (contains AGPL-marked sources). Does not enable
+  login or ratchet messaging, or select a trust root.
 - `experimental-noise`: compiles the `snow`-based Noise adapter. `snow` is
   used without its `std` feature because that feature pulls in `ring`.
 - `experimental-registration-https`: compiles the constrained, lab-only
-  reqwest/rustls registration transport with the alpha pure-Rust
-  `rustls-rustcrypto` provider. Normal certificate/hostname validation stays
-  enabled; this is not production grade.
+  reqwest/rustls registration transport with the explicit `ring` provider.
+  This owner-approved native-crypto exception needs a C build toolchain.
+  Normal certificate/hostname validation stays enabled; the registration
+  protocol remains experimental and has not passed live interoperability.
 
 ## Licence
 

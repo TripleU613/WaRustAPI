@@ -17,6 +17,9 @@ use crate::error::{Error, Result};
 use crate::model::ids::{DeviceAddress, GroupId};
 use crate::store::{Table, WriteTx};
 
+#[cfg(feature = "experimental-signal-crypto")]
+pub mod crypto;
+
 const RECORD_V1: u16 = 1;
 
 /// Which record a Signal store operation touches.

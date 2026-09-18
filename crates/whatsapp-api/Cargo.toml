@@ -17,12 +17,12 @@ default = []
 # Experimental Noise transport adapter over `snow`. Kept behind a feature until
 # the profile's handshake pattern is Observed rather than ReferenceOnly.
 experimental-noise = ["dep:snow"]
-# Lab-only HTTPS transport selected by ADR 0003. The provider remains alpha,
-# so this feature must not be treated as production grade.
+# Crypto adapter only; does not enable messaging or an unverified login flow.
+experimental-signal-crypto = ["dep:wacore-libsignal"]
+# Lab-only registration transport; maintained TLS provider, unverified protocol.
 experimental-registration-https = [
     "dep:reqwest",
     "dep:rustls",
-    "dep:rustls-rustcrypto",
     "dep:webpki-roots",
 ]
 
@@ -49,11 +49,12 @@ miniz_oxide.workspace = true
 snow = { workspace = true, optional = true }
 reqwest = { workspace = true, optional = true }
 rustls = { workspace = true, optional = true }
-rustls-rustcrypto = { workspace = true, optional = true }
 webpki-roots = { workspace = true, optional = true }
+wacore-libsignal = { workspace = true, optional = true }
 
 [dev-dependencies]
 proptest.workspace = true
+rand.workspace = true
 tempfile.workspace = true
 tokio = { workspace = true, features = ["rt-multi-thread", "test-util"] }
 

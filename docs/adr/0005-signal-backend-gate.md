@@ -2,6 +2,30 @@
 
 Status: accepted (gate open) · 2026-09-17
 
+## Owner approval — 2026-09-17
+
+The owner approved evaluating and integrating AGPL-bearing Signal dependencies
+to advance standalone onboarding. This clears the permission gate, not the
+interoperability or release gates. Preserve upstream notices and disclose the
+dependency license rather than treating a crate's MIT headline as authoritative.
+The first-party license declarations are unchanged; publication remains disabled.
+
+Current candidate inspected: `oxidezap/whatsapp-rust` revision
+`ae3cefd86065872a577bbd0ad5ee21b60c86c616`, `wacore-libsignal` 0.7.0.
+Its `src/core/curve.rs` still carries Signal's AGPL-3.0-only header.
+Only the crypto/protocol component is a candidate, not the upstream Web client
+or QR-linking flow. Android registration and live interoperability still need
+independent evidence.
+
+Initial integration uses the exact published registry version 0.7.0, whose
+packaged VCS revision is `f8165f282008935732e0b26d6f5cca5038ecd222` (not the
+later inspected main revision above). `experimental-signal-crypto` provides
+`SignalSignatureVerifier` for the existing certificate-chain boundary.
+The source header was checked in the actual registry package. No upstream
+code is copied or relicensed. The adapter test checks signatures and tampering;
+it is not an independent Android vector. `NoBackend` remains the messaging
+backend until session/prekey/ratchet integration and interoperability pass.
+
 ## Candidates examined
 
 | Candidate | Finding |

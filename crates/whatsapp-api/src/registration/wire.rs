@@ -1065,8 +1065,8 @@ pub trait RegistrationTransport: Send + Sync + fmt::Debug {
 
 /// Lab-only HTTPS transport selected by ADR 0003.
 ///
-/// This is feature-gated because its pure-Rust TLS provider is still an alpha
-/// release. It uses normal WebPKI certificate and hostname validation, a
+/// This is feature-gated because the registration protocol remains experimental;
+/// it uses normal WebPKI certificate and hostname validation, a
 /// compiled Mozilla root set, HTTPS-only URLs, no redirects, no proxies, no
 /// transparent decompression, no automatic retries, and a whole-request
 /// deadline. It never logs request or response bodies.
@@ -1093,7 +1093,7 @@ impl ExperimentalHttpsTransport {
     /// Maximum configurable whole-request timeout.
     pub const MAX_TIMEOUT: Duration = Duration::from_secs(5 * 60);
 
-    /// Build the constrained lab transport with an explicit RustCrypto
+    /// Build the constrained lab transport with an explicit ring
     /// provider. No process-global TLS provider is installed.
     pub fn new(timeout: Duration) -> Result<Self> {
         if timeout.is_zero() || timeout > Self::MAX_TIMEOUT {
@@ -1105,13 +1105,13 @@ impl ExperimentalHttpsTransport {
         let roots =
             rustls::RootCertStore::from_iter(webpki_roots::TLS_SERVER_ROOTS.iter().cloned());
         let tls = rustls::ClientConfig::builder_with_provider(std::sync::Arc::new(
-            rustls_rustcrypto::provider(),
+            rustls::crypto::ring::default_provider(),
         ))
         .with_safe_default_protocol_versions()
         .map_err(|_| {
             Error::invalid(
                 "registration_https_tls",
-                "RustCrypto provider has no safe protocol-version configuration",
+                "ring provider has no safe protocol-version configuration",
             )
         })?
         .with_root_certificates(roots)

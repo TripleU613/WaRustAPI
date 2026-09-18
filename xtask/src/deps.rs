@@ -82,12 +82,20 @@ const REVIEWED_BUILD_SCRIPTS: &[&str] = &[
     "num-bigint-dig",
     "paste",
     "rustls",
+    // waproto 0.7.0 reads its shipped, hash-checked descriptor and generates
+    // Rust through buffa-build's descriptor_set path: no protoc or downloads.
+    "waproto",
 ];
 
 struct Target {
     package: &'static str,
     features: Vec<&'static str>,
     no_default: bool,
+}
+
+// Owner-approved TLS-only exception; unrelated native dependencies stay denied.
+fn tls_exception(name: &str, features: &[&str]) -> bool {
+    name == "ring" && features.contains(&"experimental-registration-https")
 }
 
 fn dependency_is_enabled(
@@ -169,6 +177,11 @@ pub fn audit(root: &Path, strict: bool) -> Result<(), String> {
         Target {
             package: "whatsapp-api",
             features: vec!["experimental-registration-https"],
+            no_default: false,
+        },
+        Target {
+            package: "whatsapp-api",
+            features: vec!["experimental-signal-crypto"],
             no_default: false,
         },
         Target {
@@ -261,7 +274,9 @@ pub fn audit(root: &Path, strict: bool) -> Result<(), String> {
                 .any(|t| t.kind.iter().any(|k| k.to_string() == "custom-build"));
             let name = p.name.as_str();
             let mut flags = Vec::new();
-            if DENIED.contains(&name) {
+            if tls_exception(name, &t.features) {
+                flags.push("approved TLS native exception (ADR 0003)");
+            } else if DENIED.contains(&name) {
                 flags.push("**DENIED**");
                 violations.push(format!("{label}: {name} {}", p.version));
             }
@@ -303,13 +318,13 @@ pub fn audit(root: &Path, strict: bool) -> Result<(), String> {
         }
         report.push('\n');
     }
-    report.push_str("## Denied crate list\n\n");
+    report.push_str("## Denied crate list\n\n`ring` is excepted only in the experimental registration HTTPS graph (owner-approved ADR 0003); its native build/link remains visible above.\n\n");
     for d in DENIED {
         report.push_str(&format!("- `{d}`\n"));
     }
     report.push_str("\n## Result\n\n");
     if violations.is_empty() {
-        report.push_str("No denied crates in any audited graph.\n");
+        report.push_str("No unapproved denied crates in any audited graph.\n");
     } else {
         report.push_str("Violations:\n\n");
         for v in &violations {
@@ -324,4 +339,19 @@ pub fn audit(root: &Path, strict: bool) -> Result<(), String> {
         return Err(format!("denied crates present: {}", violations.join(", ")));
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::tls_exception;
+
+    #[test]
+    fn native_exception_is_limited_to_ring_and_https() {
+        assert!(tls_exception("ring", &["experimental-registration-https"]));
+        assert!(!tls_exception("ring", &[]));
+        assert!(!tls_exception("ring", &["experimental-noise"]));
+        for name in ["openssl", "openssl-sys", "aws-lc-sys", "libsqlite3-sys"] {
+            assert!(!tls_exception(name, &["experimental-registration-https"]));
+        }
+    }
 }

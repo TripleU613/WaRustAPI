@@ -34,9 +34,10 @@ Enqueueing a message currently stores an intent; it does not send it.
 | whatsapp-cli | Operator CLI and local HTTP inspection |
 | xtask | Rust-only schema, dependency, and APK analysis tools |
 
-Both optional library features, `experimental-noise` and
-`experimental-registration-https`, are lab features. The HTTPS provider is
-experimental and has not been approved for production.
+Optional `experimental-noise`, `experimental-registration-https`, and
+`experimental-signal-crypto` are lab features, not verified live flows.
+HTTPS uses owner-approved native `ring` crypto; the Signal adapter includes
+AGPL-marked dependencies. See [third-party notices](THIRD_PARTY_NOTICES.md).
 
 ## Development
 

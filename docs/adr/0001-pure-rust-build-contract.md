@@ -2,6 +2,10 @@
 
 Status: accepted · 2026-09-17
 
+Amendment: the owner approved the narrowly scoped native `ring` TLS exception
+in [ADR 0003](0003-tls-provider-gate.md). First-party Rust, no runtime
+subprocesses, and the remaining native dependency restrictions still apply.
+
 ## Context
 
 docs/design/README.md section 2 requires every first-party component to be Rust and forbids

@@ -80,8 +80,12 @@ The first [live RustSec run](https://github.com/TripleU613/TeleWhatsApp/actions/
 reports existing advisories for `rsa` and the experimental HTTPS provider's
 older `rustls-webpki` line, plus an unmaintained `paste` warning. No advisories
 are suppressed by this CI change. A red advisory scan requires dependency
-remediation; offline tests do not establish that the experimental provider is
-suitable for production.
+remediation; offline tests do not establish live protocol compatibility.
+The subsequent owner-approved TLS change replaces the alpha provider with
+rustls/ring and removes its RSA/older-WebPKI dependency chain. The scan remains
+unsuppressed and must verify the resulting lockfile.
+Local cargo-audit 0.22.2 subsequently passed against the updated lockfile,
+including the optional Signal crypto dependency, with no reported advisories.
 
 ## Local checks
 

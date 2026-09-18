@@ -43,12 +43,13 @@ miniz_oxide = { version = "0.9", default-features = false, features = ["std", "w
 clap = { version = "4", features = ["derive", "env"] }
 proptest = { version = "1", default-features = false, features = ["std"] }
 tempfile = "3"
-# Experimental registration HTTPS path (ADR 0003): no native TLS and an
-# explicitly supplied pure-Rust crypto provider/root set.
+# Registration HTTPS: explicitly selected rustls/ring provider (ADR 0003).
 reqwest = { version = "0.12.24", default-features = false, features = ["rustls-tls-manual-roots-no-provider"] }
-rustls = { version = "0.23", default-features = false, features = ["std", "tls12"] }
-rustls-rustcrypto = { version = "0.0.2-alpha", default-features = false, features = ["std", "tls12", "zeroize"] }
+rustls = { version = "0.23.45", default-features = false, features = ["std", "tls12", "ring"] }
 webpki-roots = "1"
+# Contains AGPL-marked Signal sources despite MIT package metadata (ADR 0005).
+wacore-libsignal = { version = "=0.7.0", default-features = false }
+rand = "0.10"
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

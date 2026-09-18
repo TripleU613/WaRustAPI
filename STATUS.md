@@ -7,6 +7,13 @@ attempted**: the Android registration payload encoding, transport port/layer
 and login payload values are `Unknown` (see `docs/protocol/unknowns.md`). No
 live server contact has been made and no OTP has been requested.
 
+**Owner-approved integration update:** registration HTTPS now selects
+rustls/ring instead of the alpha RustCrypto provider. The optional
+`experimental-signal-crypto` feature supplies an upstream-backed XEdDSA
+certificate-signature verifier. This is not a complete Signal messaging
+backend; trust-root evidence, key provisioning, sessions and live interop
+remain unfinished. The historical offline inventory below predates this update.
+
 **Key static findings (2026-09-17):** the pinned client contains classic
 `Noise_XX`/`Noise_IK` patterns **and nine ML-KEM512 hybrid Noise patterns**.
 If the server requires a hybrid handshake for primary devices, the current
@@ -31,13 +38,13 @@ the active 2.26.36.75 profile.
 | Store | encryption at rest, AAD row binding, wrapped data keys with wrong-key detection, master-key rotation, second owner rejected, generation fencing, atomic rollback, journal replay/ack/trim |
 | Crash matrix (docs/design/README.md 19.2) | `tests/crash_matrix.rs`: rows 1, 2, 3, 9, 10 (rotation) and the second-process ownership test pass; rows 4–8 and 11 need a transmission path / Signal backend / I/O fault injection |
 | Codec | independent hand-written fixture, JID kinds, packed strings, bounds, duplicate attributes, zlib bomb; `tests/codec_props.rs` property round trips (found and fixed an odd-length hex padding overflow), decoder never panics on arbitrary bytes, framing under arbitrary fragmentation |
-| Transport | framing fragmentation/cancellation tests; Noise XX handshake + records against a snow responder; complete version-scoped classic/ML-KEM selector map with tested classic compiled defaults; typed comparison-only `WA 06 03` header and built-in gateway/edge raw-TCP/TLS map; cert chain binding incl. "valid-looking chain that does not bind to the remote key"; feature-gated lab HTTPS registration transport with pure-Rust alpha provider, validation on, no redirects/retries/proxies, deadlines and bounded streaming responses |
+| Transport | framing fragmentation/cancellation tests; Noise XX handshake + records against a snow responder; complete version-scoped classic/ML-KEM selector map with tested classic compiled defaults; typed comparison-only `WA 06 03` header and built-in gateway/edge raw-TCP/TLS map; cert chain binding incl. "valid-looking chain that does not bind to the remote key"; opt-in upstream Signal signature verifier; feature-gated HTTPS with explicit rustls/ring provider, validation on, no redirects/retries/proxies, deadlines and bounded streaming responses |
 | Registration | state table enforced; handles bound to attempt/generation/step; answers never persisted; prerequisite persistence is atomic with the pre-request state; elapsed cooldowns resume without regenerating keys; ambiguous outcomes have a non-repeating reconciliation seam; successful account credentials commit atomically with `Registered`; version-scoped 2.26.37.70 endpoint catalog, deterministic common-field, `/v2/code`, `/v2/register`, `/v2/security`, public key-bundle encoding, APK-backed `/v2/code` token derivation, and fresh-install UUID/token prerequisite generation; conservative comparison HTTP flow including the account-PIN branch is tested end-to-end with a mock transport (not installed for the active profile) |
 | Outbox | idempotent enqueue, conflict, limits, cancel rules, uncertain delivery representation |
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability and comparison transport/registration wire-profile endpoints plus structured gated-operation errors |
 
-Test count: 137 (`cargo test --locked --workspace --all-features`). Formatting,
+Test count: 139 (`cargo test --locked --workspace --all-features`). Formatting,
 all-feature/all-target Clippy with `-D warnings`, strict rustdoc, package
 verification, and protobuf regeneration checks pass on the continuation
 machine (Rust 1.98.1). The repository and CI
@@ -49,9 +56,11 @@ encoding behavior.
 
 - Registration driver, transport connect, login: need Android-profile
   evidence (`docs/protocol/evidence-ledger.md` rows marked `Unknown`).
-- Signal backend: licence gate (ADR 0005).
-- Production TLS provider for HTTPS: still gated; the ADR 0003 alpha-provider
-  implementation is lab-only behind `experimental-registration-https`.
+- Signal backend: owner approved AGPL-component evaluation (ADR 0005);
+  implementation and interoperability gates remain open.
+- HTTPS now uses an explicit rustls/ring provider under the owner-approved
+  native TLS exception (ADR 0003). Registration remains experimental behind
+  `experimental-registration-https`; no live success is claimed.
 - Inbox, devices, groups, media, message operations, bridge adapter: gates
   G3–G6; modules intentionally not created yet.
 - Data-key re-encryption, backup/restore, and I/O-fault injection for the
@@ -78,7 +87,7 @@ test covering this bound and signed bit patterns. No extra tools were needed.
    build's dictionary-version / `WA` header and registration findings; then
    continue into handshake selection and the trust root
    (`docs/protocol/apk-analysis.md`).
-2. Decide the Signal licence question (ADR 0005); it also gates real XEdDSA
+2. Integrate and validate the approved Signal candidate (ADR 0005); it also gates real XEdDSA
    certificate verification, for which no independent vectors are available
    offline yet.
 3. With a controlled test number and operator consent: capture one

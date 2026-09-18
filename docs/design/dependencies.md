@@ -10,6 +10,12 @@ Original section numbers are retained for source and evidence references.
 
 ### 2.1 Required contract
 
+Owner-approved exception (2026-09-17): the experimental registration HTTPS
+feature may use rustls's `ring` provider, including its native build, under
+[ADR 0003](../adr/0003-tls-provider-gate.md). The strict historical TLS gate
+below is superseded by that decision. AGPL Signal-component evaluation is
+approved under [ADR 0005](../adr/0005-signal-backend-gate.md).
+
 All new first-party library code, CLI code, replay tools, fixture generators, and project-specific automation are Rust. TOML, JSON, protobuf schemas, Markdown, and CI YAML are data/configuration, not additional application languages.
 
 The shipped library and CLI must not depend on a Node, Python, Go, Java, browser, emulator, or official WhatsApp process. They must not wrap Baileys, whatsmeow, WhatsApp Web, or a hosted service as their implementation.

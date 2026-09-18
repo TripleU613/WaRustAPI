@@ -1,6 +1,27 @@
-# ADR 0003: Production HTTPS is blocked; no TLS provider selected
+# ADR 0003: Explicit rustls/ring provider for registration HTTPS
 
-Status: accepted (blocked) · 2026-09-17
+Status: owner-approved TLS exception · 2026-09-17
+
+## Current decision (supersedes the historical provider gate below)
+
+The owner approved relaxing the pure-Rust dependency requirement to advance
+onboarding. Registration HTTPS now uses rustls 0.23.45 or newer with its
+explicit `ring` provider, pinned by Cargo.lock. This replaces
+`rustls-rustcrypto` and removes its older WebPKI/RSA dependency chain.
+`ring` includes native C/assembly and needs a C build toolchain; this feature
+must no longer be described as entirely pure Rust. The dependency auditor
+allows `ring` only for the registration HTTPS feature, while retaining other
+native dependency restrictions. No OpenSSL/system TLS is introduced.
+
+Certificate and hostname validation, explicit Mozilla roots, HTTPS-only
+origin restrictions, no automatic retries/redirects/proxies, deadlines and
+response bounds remain unchanged. No process-global provider is installed.
+The registration feature remains experimental because protocol interoperability
+is not established. Provider selection alone does not certify production use.
+
+Reference: [rustls ring provider](https://docs.rs/rustls/0.23.45/rustls/crypto/ring/index.html).
+
+## Historical decision
 
 ## Findings
 
