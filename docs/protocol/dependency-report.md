@@ -6,7 +6,7 @@ Scope: normal dependency edges only (no dev/build dependencies), Linux x86_64 ap
 
 ## `whatsapp-api`
 
-Resolved normal-edge packages: 68
+Resolved normal-edge packages: 67
 
 | Crate | Version | Enabled features | Build script | `links` | Flags |
 |---|---|---|---|---|---|
@@ -17,7 +17,7 @@ Resolved normal-edge packages: 68
 | block-buffer | 0.12.1 | - | no | - | - |
 | bytes | 1.12.1 | `default, serde, std` | no | - | - |
 | cfg-if | 1.0.5 | - | no | - | - |
-| chacha20 | 0.10.2 | `cipher, rng, xchacha` | no | - | - |
+| chacha20 | 0.10.2 | `cipher, xchacha` | no | - | - |
 | chacha20poly1305 | 0.11.0 | `alloc` | no | - | - |
 | cipher | 0.5.2 | `block-buffer, stream-wrapper` | no | - | - |
 | cmov | 0.5.4 | - | no | - | - |
@@ -30,7 +30,7 @@ Resolved normal-edge packages: 68
 | either | 1.18.0 | `std, use_std` | no | - | - |
 | errno | 0.3.14 | `default, std` | no | - | - |
 | generic-array | 0.14.7 | `more_lengths` | yes | - | - |
-| getrandom | 0.4.3 | `std, sys_rng` | yes | - | - |
+| getrandom | 0.4.3 | `std` | yes | - | - |
 | hex | 0.4.3 | `alloc, std` | no | - | - |
 | hkdf | 0.13.0 | - | no | - | - |
 | hmac | 0.12.1 | - | no | - | - |
@@ -52,7 +52,6 @@ Resolved normal-edge packages: 68
 | prost-derive | 0.14.4 | - | no | - | - |
 | quote | 1.0.47 | `default, proc-macro` | yes | - | - |
 | r-efi | 6.0.0 | - | no | - | - |
-| rand_core | 0.10.1 | - | no | - | - |
 | redb | 4.3.0 | `default, std` | yes | - | - |
 | serde | 1.0.229 | `alloc, default, derive, serde_derive, std` | yes | - | - |
 | serde_core | 1.0.229 | `alloc, default, result, std` | yes | - | - |
@@ -81,7 +80,7 @@ Resolved normal-edge packages: 68
 
 ## `whatsapp-api +experimental-noise`
 
-Resolved normal-edge packages: 90
+Resolved normal-edge packages: 89
 
 | Crate | Version | Enabled features | Build script | `links` | Flags |
 |---|---|---|---|---|---|
@@ -97,7 +96,7 @@ Resolved normal-edge packages: 90
 | bytes | 1.12.1 | `default, serde, std` | no | - | - |
 | cfg-if | 1.0.5 | - | no | - | - |
 | chacha20 | 0.9.1 | `zeroize` | no | - | - |
-| chacha20 | 0.10.2 | `cipher, rng, xchacha` | no | - | - |
+| chacha20 | 0.10.2 | `cipher, xchacha` | no | - | - |
 | chacha20poly1305 | 0.10.1 | - | no | - | - |
 | chacha20poly1305 | 0.11.0 | `alloc` | no | - | - |
 | cipher | 0.4.4 | `zeroize` | no | - | - |
@@ -118,7 +117,7 @@ Resolved normal-edge packages: 90
 | fiat-crypto | 0.2.9 | - | no | - | - |
 | generic-array | 0.14.7 | `more_lengths` | yes | - | - |
 | getrandom | 0.3.4 | `std` | yes | - | - |
-| getrandom | 0.4.3 | `std, sys_rng` | yes | - | - |
+| getrandom | 0.4.3 | `std` | yes | - | - |
 | ghash | 0.5.1 | - | no | - | - |
 | hex | 0.4.3 | `alloc, std` | no | - | - |
 | hkdf | 0.13.0 | - | no | - | - |
@@ -146,7 +145,6 @@ Resolved normal-edge packages: 90
 | quote | 1.0.47 | `default, proc-macro` | yes | - | - |
 | r-efi | 5.3.0 | - | no | - | - |
 | r-efi | 6.0.0 | - | no | - | - |
-| rand_core | 0.10.1 | - | no | - | - |
 | redb | 4.3.0 | `default, std` | yes | - | - |
 | serde | 1.0.229 | `alloc, default, derive, serde_derive, std` | yes | - | - |
 | serde_core | 1.0.229 | `alloc, default, result, std` | yes | - | - |
@@ -178,7 +176,7 @@ Resolved normal-edge packages: 90
 
 ## `whatsapp-api +experimental-registration-https`
 
-Resolved normal-edge packages: 132
+Resolved normal-edge packages: 131
 
 | Crate | Version | Enabled features | Build script | `links` | Flags |
 |---|---|---|---|---|---|
@@ -192,7 +190,7 @@ Resolved normal-edge packages: 132
 | block-buffer | 0.12.1 | - | no | - | - |
 | bytes | 1.12.1 | `default, serde, std` | no | - | - |
 | cfg-if | 1.0.5 | - | no | - | - |
-| chacha20 | 0.10.2 | `cipher, rng, xchacha` | no | - | - |
+| chacha20 | 0.10.2 | `cipher, xchacha` | no | - | - |
 | chacha20poly1305 | 0.11.0 | `alloc` | no | - | - |
 | cipher | 0.5.2 | `block-buffer, stream-wrapper` | no | - | - |
 | cmov | 0.5.4 | - | no | - | - |
@@ -212,7 +210,7 @@ Resolved normal-edge packages: 132
 | futures-util | 0.3.34 | `alloc, slab, std` | no | - | - |
 | generic-array | 0.14.7 | `more_lengths` | yes | - | - |
 | getrandom | 0.2.17 | - | no | - | - |
-| getrandom | 0.4.3 | `std, sys_rng` | yes | - | - |
+| getrandom | 0.4.3 | `std` | yes | - | - |
 | hex | 0.4.3 | `alloc, std` | no | - | - |
 | hkdf | 0.13.0 | - | no | - | - |
 | hmac | 0.12.1 | - | no | - | - |
@@ -255,7 +253,6 @@ Resolved normal-edge packages: 132
 | prost-derive | 0.14.4 | - | no | - | - |
 | quote | 1.0.47 | `default, proc-macro` | yes | - | - |
 | r-efi | 6.0.0 | - | no | - | - |
-| rand_core | 0.10.1 | - | no | - | - |
 | redb | 4.3.0 | `default, std` | yes | - | - |
 | reqwest | 0.12.28 | `__rustls, __tls, rustls-tls-manual-roots-no-provider` | no | - | - |
 | ring | 0.17.14 | `alloc, default, dev_urandom_fallback` | yes | ring_core_0_17_14_ | approved TLS native exception (ADR 0003); native link |
@@ -423,7 +420,7 @@ Resolved normal-edge packages: 99
 
 ## `whatsapp-cli`
 
-Resolved normal-edge packages: 91
+Resolved normal-edge packages: 90
 
 | Crate | Version | Enabled features | Build script | `links` | Flags |
 |---|---|---|---|---|---|
@@ -439,7 +436,7 @@ Resolved normal-edge packages: 91
 | block-buffer | 0.12.1 | - | no | - | - |
 | bytes | 1.12.1 | `default, serde, std` | no | - | - |
 | cfg-if | 1.0.5 | - | no | - | - |
-| chacha20 | 0.10.2 | `cipher, rng, xchacha` | no | - | - |
+| chacha20 | 0.10.2 | `cipher, xchacha` | no | - | - |
 | chacha20poly1305 | 0.11.0 | `alloc` | no | - | - |
 | cipher | 0.5.2 | `block-buffer, stream-wrapper` | no | - | - |
 | clap | 4.6.7 | `color, default, derive, env, error-context, help, std, suggestions, usage` | no | - | - |
@@ -457,7 +454,7 @@ Resolved normal-edge packages: 91
 | either | 1.18.0 | `std, use_std` | no | - | - |
 | errno | 0.3.14 | `default, std` | no | - | - |
 | generic-array | 0.14.7 | `more_lengths` | yes | - | - |
-| getrandom | 0.4.3 | `std, sys_rng` | yes | - | - |
+| getrandom | 0.4.3 | `std` | yes | - | - |
 | heck | 0.5.0 | - | no | - | - |
 | hex | 0.4.3 | `alloc, std` | no | - | - |
 | hkdf | 0.13.0 | - | no | - | - |
@@ -484,7 +481,6 @@ Resolved normal-edge packages: 91
 | prost-derive | 0.14.4 | - | no | - | - |
 | quote | 1.0.47 | `default, proc-macro` | yes | - | - |
 | r-efi | 6.0.0 | - | no | - | - |
-| rand_core | 0.10.1 | - | no | - | - |
 | redb | 4.3.0 | `default, std` | yes | - | - |
 | regex-automata | 0.4.18 | `alloc, default, dfa, dfa-build, dfa-onepass, dfa-search, hybrid, meta, nfa, nfa-backtrack, nfa-pikevm, nfa-thompson, perf, perf-inline, perf-literal, perf-literal-multisubstring, perf-literal-substring, std, syntax, unicode, unicode-age, unicode-bool, unicode-case, unicode-gencat, unicode-perl, unicode-script, unicode-segment, unicode-word-boundary` | no | - | - |
 | regex-syntax | 0.8.11 | `default, std, unicode, unicode-age, unicode-bool, unicode-case, unicode-gencat, unicode-perl, unicode-script, unicode-segment` | no | - | - |

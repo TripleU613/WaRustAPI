@@ -26,6 +26,11 @@ code is copied or relicensed. The adapter test checks signatures and tampering;
 it is not an independent Android vector. `NoBackend` remains the messaging
 backend until session/prekey/ratchet integration and interoperability pass.
 
+The same feature now also provides the persisted registration lab factory:
+distinct Noise/Signal identities, signed prekeys using the upstream signing
+convention, and encrypted transactional persistence. Android acceptance of
+that convention is still unobserved; see [lab boundary](../protocol/registration-lab.md).
+
 ## Candidates examined
 
 | Candidate | Finding |

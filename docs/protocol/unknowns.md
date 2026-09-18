@@ -14,9 +14,11 @@ Ordered by what blocks the first decisive result (docs/design/README.md section 
    `RegistrationService::begin` still returns `Blocked(ProfileIncomplete)`
    because response meanings and the complete flow are unobserved.
    The comparison build's common identifier fields and public key-bundle byte
-   encodings are now mapped and implemented offline; key generation/signing
-   and the request on which each field first becomes mandatory remain blocked
-   by the Signal/evidence gates.
+   encodings are now mapped and implemented offline. The opt-in
+   [persisted lab factory](registration-lab.md) generates keys and signs using
+   the upstream Signal convention; accepted ID ranges, Android signing
+   semantics and mandatory-field timing remain unobserved. Default registration
+   is still blocked; mock success is not evidence of server acceptance.
 2. **Transport endpoint and layer** (`transport.endpoint`): port, TCP vs
    WebSocket, whether TLS wraps Noise on Android. *Progress:* hosts
    `g.whatsapp.net`, `g-fallback`, `e1`–`e16.whatsapp.net` are client-observed.

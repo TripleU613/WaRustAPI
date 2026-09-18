@@ -17,8 +17,8 @@ default = []
 # Experimental Noise transport adapter over `snow`. Kept behind a feature until
 # the profile's handshake pattern is Observed rather than ReferenceOnly.
 experimental-noise = ["dep:snow"]
-# Crypto adapter only; does not enable messaging or an unverified login flow.
-experimental-signal-crypto = ["dep:wacore-libsignal"]
+# Crypto and persisted lab registration; does not enable messaging or login.
+experimental-signal-crypto = ["dep:wacore-libsignal", "dep:rand"]
 # Lab-only registration transport; maintained TLS provider, unverified protocol.
 experimental-registration-https = [
     "dep:reqwest",
@@ -51,10 +51,10 @@ reqwest = { workspace = true, optional = true }
 rustls = { workspace = true, optional = true }
 webpki-roots = { workspace = true, optional = true }
 wacore-libsignal = { workspace = true, optional = true }
+rand = { workspace = true, optional = true }
 
 [dev-dependencies]
 proptest.workspace = true
-rand.workspace = true
 tempfile.workspace = true
 tokio = { workspace = true, features = ["rt-multi-thread", "test-util"] }
 

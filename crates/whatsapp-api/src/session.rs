@@ -119,6 +119,11 @@ impl fmt::Debug for AccountRecord {
 }
 
 impl AccountRecord {
+    /// Load within an existing write transaction, without opening another transaction.
+    pub fn load_in_write(tx: &WriteTx<'_>) -> Result<Option<Self>> {
+        tx.get_json(Table::Account, ACCOUNT_KEY, RECORD_V1)
+    }
+
     /// Load the account record, if any.
     pub fn load(tx: &ReadTx<'_>) -> Result<Option<Self>> {
         tx.get_json(Table::Account, ACCOUNT_KEY, RECORD_V1)

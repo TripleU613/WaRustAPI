@@ -2,14 +2,16 @@
 //!
 //! The Android registration protocol remains incomplete for the active
 //! profile. A version-scoped request-construction layer for a newer signed
-//! comparison build lives in [`wire`], but verification steps and a reviewed
-//! HTTPS backend are still missing. The state machine, persistence, challenge
+//! comparison build lives in [`wire`], but complete verification steps and
+//! live interoperability are still missing. The state machine, persistence, challenge
 //! binding and typed steps are implemented and tested. The default
 //! profile-specific [`RegistrationFlow`] reports
 //! [`BlockedReason::ProfileIncomplete`]. A comparison-scoped injectable HTTP
 //! flow exists for controlled lab use, but it is never selected implicitly;
 //! the default client sends no request and requests no OTP.
 
+#[cfg(feature = "experimental-signal-crypto")]
+pub mod factory;
 pub mod prerequisites;
 pub mod token;
 pub mod wire;

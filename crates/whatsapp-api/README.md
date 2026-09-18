@@ -53,8 +53,9 @@ println!("{:?}", client.capabilities());
 
 ## Features
 
-- `experimental-signal-crypto`: XEdDSA certificate-signature verifier backed by
-  pinned `wacore-libsignal` 0.7.0 (contains AGPL-marked sources). Does not enable
+- `experimental-signal-crypto`: XEdDSA certificate verification and persisted
+  lab registration keys/requests, backed by pinned `wacore-libsignal` 0.7.0
+  (contains AGPL-marked sources). Does not enable
   login or ratchet messaging, or select a trust root.
 - `experimental-noise`: compiles the `snow`-based Noise adapter. `snow` is
   used without its `std` feature because that feature pulls in `ring`.

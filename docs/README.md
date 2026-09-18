@@ -15,6 +15,7 @@ and [STATUS.md](../STATUS.md) for verified behavior and blockers.
 
 - [Evidence ledger](protocol/evidence-ledger.md)
 - [Unknowns and blockers](protocol/unknowns.md)
+- [Persisted registration lab](protocol/registration-lab.md)
 - [APK analysis procedure](protocol/apk-analysis.md)
 - [Compact media-free APK code snapshot](protocol/apk/README.md)
 - [Decompilation log](protocol/decompilation-log.md)
