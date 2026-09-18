@@ -76,10 +76,12 @@ the application or create issues. Its status is separate from `CI required`;
 do not make a path-filtered status universally required for docs-only PRs.
 The project's native-dependency audit and RustSec check answer different questions.
 
-The experimental HTTPS provider currently brings an older rustls-webpki line
-with open GitHub dependency alerts. No advisories are suppressed by this CI
-change. A red advisory scan requires dependency remediation; offline tests do
-not establish that the experimental provider is suitable for production.
+The first [live RustSec run](https://github.com/TripleU613/TeleWhatsApp/actions/runs/35302844049)
+reports existing advisories for `rsa` and the experimental HTTPS provider's
+older `rustls-webpki` line, plus an unmaintained `paste` warning. No advisories
+are suppressed by this CI change. A red advisory scan requires dependency
+remediation; offline tests do not establish that the experimental provider is
+suitable for production.
 
 ## Local checks
 
