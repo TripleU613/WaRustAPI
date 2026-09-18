@@ -49,7 +49,7 @@ Conventions: one dated entry per session; each entry lists **target**,
 | T2 | Verification flow and cooldown handling | `retry_after`, `wipe_token`, `push_code`, `flash_type`, `reason` | `registration.verification_steps` | open |
 | T3 | Handshake pattern selection and prologue | `Noise_XX_25519_AESGCM_SHA256`, `Noise_XXkem_…`, `WA` header bytes, `xmlstreamstart` class neighbour | `noise.pattern`, `noise.prologue`, `binary.tokens_version`, `noise.record_limit` | header and selector map resolved in newer build; active config and pinned build open |
 | T4 | Certificate chain trust root and issuer serial | `CertChain`, `intermediate`, `leaf` protobuf names, 32-byte constant | `noise.trust_root`, `noise.issuer_serial` | newer-build comparison complete; pinned build open |
-| T5 | Chat socket endpoint, port, framing | `g.whatsapp.net`, `e1.whatsapp.net`, port ints, 3-byte length prefix | `transport.endpoint`, `framing.*` | ports resolved in newer build; layer/framing and pinned build open |
+| T5 | Chat socket endpoint, port, framing | `g.whatsapp.net`, `e1.whatsapp.net`, port ints, 3-byte length prefix | `transport.endpoint`, `framing.*` | built-in socket layer resolved in newer build; port-80 semantics and pinned build open |
 | T6 | Primary `ClientPayload` construction | `CONNECT_TYPE_FIELD_NUMBER`, `ANDROID`, `USER_ACTIVATED` | `login.client_payload` | open |
 
 ## 2026-09-17 — Rust-native dex structural parser (session 3)
@@ -306,15 +306,23 @@ The Rust-native parser was corrected before analysis:
   `WhatsAppLongTerm1`. This matches the reference-only root and issuer serial
   already used by the library, for this newer comparison build.
 
-### T5 — chat endpoint ports
+### T5 — chat endpoint ports and socket layers
 
 - `LX/1BH;->A00(I)` selects port 443 or 5222 at random unless a valid prior
   connection supplies another non-80 port. Other connection-sequence states
   explicitly try `g.whatsapp.net`, `g-fallback.whatsapp.net`, or an `e1`–`e16`
   edge on 443/5222; the fallback sequence also contains port 80.
-- This identifies candidate socket ports in the newer build. It does not yet
-  establish the active profile's TCP/WebSocket/TLS layering or the framing
-  used on every connection-sequence branch.
+- `LX/1BH;->A02(LLZZ)` and `A03(LLIIZZ)` set `LX/1BI;->A07`, the secure-socket
+  flag consumed by `LX/1AM;->A01(LLL)`. That factory passes a Java
+  `SSLSocketFactory` only when the flag is true; otherwise it creates a direct
+  socket. Built-in primary and fallback gateway states pass false on both 443
+  and 5222. The numbered-edge state passes true exactly on 443 and false on
+  5222. Dedicated port-80 states pass false and mark a separate socket-config
+  branch.
+- No WebSocket construction occurs in this built-in Java socket path. The
+  exact extra stream behavior selected by the port-80 marker remains open,
+  as do remote-configured/user-proxy branches and equivalence with the pinned
+  build. `transport::comparison` encodes only the deterministic built-in map.
 
 Machine-readable metadata and findings are recorded in
 `crates/whatsapp-api/fixtures/comparisons/whatsapp-2.26.37.70.json`.

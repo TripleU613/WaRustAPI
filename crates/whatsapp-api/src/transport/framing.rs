@@ -176,6 +176,7 @@ impl FrameReader {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::transport::comparison::COMPARISON_CONNECTION_HEADER;
 
     fn codec() -> FrameCodec {
         FrameCodec::new(3, 1 << 20).unwrap()
@@ -195,7 +196,9 @@ mod tests {
     #[test]
     fn encode_with_header_and_prefix() {
         let c = codec();
-        let f = c.encode(b"abc", Some(b"WA\x06\x03")).unwrap();
+        let f = c
+            .encode(b"abc", Some(&COMPARISON_CONNECTION_HEADER))
+            .unwrap();
         assert_eq!(f, b"WA\x06\x03\x00\x00\x03abc");
         let f = c.encode(&[1u8; 300], None).unwrap();
         assert_eq!(&f[..3], &[0x00, 0x01, 0x2C]);

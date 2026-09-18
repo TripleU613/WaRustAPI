@@ -95,9 +95,27 @@
         5222
       ],
       "fallback_port": 80,
+      "built_in_socket_layers": {
+        "g.whatsapp.net": {
+          "443": "raw_tcp",
+          "5222": "raw_tcp",
+          "80": "raw_tcp_port80_fallback"
+        },
+        "g-fallback.whatsapp.net": {
+          "443": "raw_tcp",
+          "5222": "raw_tcp",
+          "80": "raw_tcp_port80_fallback"
+        },
+        "e1-e16.whatsapp.net": {
+          "443": "tls_via_java_sslsocketfactory",
+          "5222": "raw_tcp",
+          "80": "raw_tcp_port80_fallback"
+        }
+      },
       "connection_sequence_method": "LX/1BH;->A02(LLZZ)",
       "default_port_method": "LX/1BH;->A00(I)",
-      "unresolved": "TCP vs WebSocket, TLS layering, and framing by branch"
+      "socket_factory_method": "LX/1AM;->A01(LLL)",
+      "unresolved": "active remote configuration, exact port-80 stream semantics, and pinned-profile equivalence"
     },
     "registration": {
       "base_url": "https://v.whatsapp.net",

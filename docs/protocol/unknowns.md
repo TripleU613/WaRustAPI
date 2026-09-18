@@ -21,7 +21,10 @@ Ordered by what blocks the first decisive result (README section 0).
    WebSocket, whether TLS wraps Noise on Android. *Progress:* hosts
    `g.whatsapp.net`, `g-fallback`, `e1`–`e16.whatsapp.net` are client-observed.
    The 2.26.37.70 comparison statically selects 443/5222 with a port-80
-   fallback, but the active profile and transport layering remain open.
+   fallback. Its built-in Java path is not WebSocket: primary/fallback
+   gateways use raw TCP on 443/5222, while numbered edges use TLS on 443 and
+   raw TCP on 5222. The port-80 marker's extra stream behavior, active remote
+   configuration, and pinned-profile equivalence remain open.
 2b. **Handshake pattern negotiation** (`noise.client_patterns`): the client
    contains classic XX/IK **and nine ML-KEM512 hybrid** Noise patterns. If the
    server requires a hybrid pattern for new primary registrations, `snow`
