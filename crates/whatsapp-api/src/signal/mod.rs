@@ -19,6 +19,8 @@ use crate::store::{Table, WriteTx};
 
 #[cfg(feature = "experimental-signal-crypto")]
 pub mod crypto;
+#[cfg(feature = "experimental-signal-crypto")]
+pub mod direct;
 
 const RECORD_V1: u16 = 1;
 

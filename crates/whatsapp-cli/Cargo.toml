@@ -11,6 +11,7 @@ publish = false
 [features]
 default = []
 experimental-signup = ["whatsapp-api/experimental-signal-crypto", "whatsapp-api/experimental-registration-https"]
+experimental-transport = ["experimental-signup", "whatsapp-api/experimental-transport", "whatsapp-api/experimental-noise"]
 
 [[bin]]
 name = "whatsapp-cli"

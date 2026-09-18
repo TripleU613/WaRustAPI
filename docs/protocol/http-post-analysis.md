@@ -8,6 +8,90 @@ requires a field, accepts a fingerprint, or receives every possible request.
 
 ## Initial inventory
 
+### Post-OTP consent context (comparison 2.26.37.70)
+
+A live `/v2/register` submission returned HTTP 200 / `fail` / `consent`.
+It did not report `incorrect`, but it did not establish completed registration.
+The old parser discarded any additional consent context; raw response bodies
+were not retained. Their presence or values in that historical response cannot
+be reconstructed from its size or reason. Do not replay the OTP to recover them.
+
+Static instruction offsets below are relative to their respective methods:
+
+- `KotlinRegistrationBridge.A08`, the register-phone response parser, reads
+  `parent_consent_url` at 0x05ba, `consent_id` at 0x05ca and `consent_version`
+  at 0x05de into `HrN.A0R`, `A01` and `A02`. `A0D` also reads these fields at
+  0x03f6, 0x0406 and 0x041a. IDs and versions use `JSONObject.optInt` with
+  the response object's defaults; absence is not a user choice.
+- `KotlinRegistrationBridge.A0A` (`sendConsentResult`) builds common fields,
+  `context` (0x0092), decimal `consent_id` (0x00a0), `consent_result`
+  (0x00b6), `consent_version` (0x00cc), optional `security_code` and
+  `advertising_id`, additional fields and available E2E keys. It selects
+  `HSP.A04` at 0x012c. The blocking wrapper is
+  `KotlinRegistrationBridge$sendConsentResultBlocking$1.invokeSuspend`.
+- `HSP.<clinit>` 0x0068–0x0070 copies `HpO.A04`. `HpO.<clinit>`
+  0x00d0–0x00e0 decodes `=d =q}|aw|f` through the existing XOR-0x12 helper:
+  `/v2/consent`.
+- A separate age path exists: `5rY.A02` calls `I4D.A0j` with context `dob`
+  and the supplied DOB, refusing blank input. That method's blocking wrapper
+  calls bridge `A07`, which adds nonblank `dob` (0x00a4), `context` (0x00ca)
+  and conditional `supports_paa=1`, then selects the same endpoint at 0x0118.
+  `6BG.invokeSuspend` also calls `A0j` with `parent_verification` context at
+  0x06e4–0x06f2. These are distinct flows, not interchangeable fixes.
+
+Confirmed: the endpoint and separate request shapes exist; consent metadata was
+missing from our response model. Still unknown: which selector applies to the
+saved attempt, the UI/user-choice mapping of `consent_result`, and the supported
+same-attempt recovery of discarded context. No arbitrary result, DOB, revision
+or URL is supplied. No live request was made for this investigation.
+
+The parser now retains optional signed integer selectors and a bounded,
+zeroizing URL. A successful-HTTP `fail/consent` becomes `ConsentRequired` with
+all supplied generic/SMS/voice deadlines, persisted in the encrypted store.
+Diagnostics expose selectors and URL presence only. The blocked state cannot
+automatically restart as a code request after its wait. Historical generic
+refusals remain readable and are not rewritten with guessed metadata.
+
+#### Continuation and pending-selector trace
+
+- `Hg8.A01` logs `StatedAgeCollectionHandler/onConsentPending` and stores the
+  intermediate login through `WaConsentRepository.A07` (0x0040–0x004a).
+  `HrN.A0T` is the parsed `pending` field. Null, `dob`, or `app_store_age`
+  select registration state 25 (age collection). `parent_verification` selects
+  26 and a parent URL; `youth_consent` selects 30. Unknown values log an error.
+  `Hg8.A00` handles the corresponding `Haa` response shape.
+- `WaConsentRepository$verifyDob$2.invokeSuspend` formats the supplied
+  year/month/day with `15d.A00`, then calls `5rY.A02` at 0x00d4.
+  `15d.A00` 0x002a uses `yyyy-MM-dd` with Locale.US. The lab supports complete
+  valid dates only, not the APK's year-only fallback for incomplete dates.
+- `Ird.invokeSuspend`, branch 22, obtains the saved youth-consent ID/revision
+  at 0x0fd4–0x0ff4 and sets result **5** at 0x0ffa. The Kotlin wrapper receives
+  ID/result/version at 0x134a–0x1368 and uses `context=consent`. This confirms
+  the value on that callback, not blanket consent for every selector or account.
+- Bridge `A0S` appends nullable `login`; nullable enum `type` is separate.
+  `WaConsentRepository.A00` also falls back to saved registration login when a
+  successful consent response omits it. The lab preserves that intermediate
+  credential encrypted; it does not invent a login or a type value.
+
+A first live inspection of the saved consent refusal returned HTTP 200 /
+`fail/consent` with no ID, version or parent URL. That rules out blaming lost
+historical selectors alone. The first inspection parser still omitted `pending`;
+the v2 inspection adds that field and encrypted intermediate login. A local
+capture marker distinguishes genuinely absent `pending` from older records that
+never parsed it. The submission path is gated by the captured selector and an
+explicit private decision; it never invents DOB or consent acceptance.
+
+Live v2 inspection: HTTP 200 / `fail` / `consent`, **`pending=dob`**, with an
+intermediate login and no selector IDs, parent URL or wait fields. This confirms
+the age-collection branch for the active attempt. Its context and login are now
+retained encrypted. No DOB was available, so no consent submission was sent.
+
+Subsequently the operator supplied a DOB in private decision JSON. One
+same-identity `/v2/consent` request (878-byte ENC/H envelope) returned HTTP 200 /
+`ok`, a 411-byte response, no pending branch and no waits. The saved attempt
+transitioned to Registered. This is live registration success, not messaging
+success. Personal input and credential values remain outside tracked research.
+
 ### New-account flow audit: missing existence/method-selection stage
 
 The laboratory has not completed registration of either a new or existing

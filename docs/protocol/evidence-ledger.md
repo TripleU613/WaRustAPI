@@ -94,6 +94,23 @@ Noise record limit. See the continuation entry in `decompilation-log.md`.
 
 The active pinned reference manifest still has `server_observation: null`.
 
+2026-09-18 UTC, comparison messaging lab: the standard snow XX message adapter
+received a server hello but failed decryption. APK sequencing showed an extra
+empty-payload transcript hash in the adapter, absent from `LX/1NZ.A06`. After
+correcting that sequencing over existing cryptographic primitives, the client
+verified the WhatsApp root/intermediate/leaf chain and its binding to the Noise
+remote static (intermediate serial 3, leaf serial 361). A 34-byte minimal primary
+login using saved registration credentials returned encrypted `success`.
+
+One recipient-key query returned identity, signed and one-time keys. The client
+verified the signed key, established Signal encryption, atomically committed
+session/send intent and transmitted one direct text. An encrypted matching
+`ack`, `class=message`, without `error` established server acceptance. A local
+repeat of the same request read the persisted acknowledgement and sent nothing.
+Handset delivery/read is unconfirmed. No phone, plaintext, key or private stanza
+is recorded here. These observations apply to the comparison lab only, not the
+pinned default profile. [Implementation and static sources](messaging-transport.md).
+
 2026-09-18 UTC, comparison lab only: one operator-authorized diagnostic
 `POST https://v.whatsapp.net/v2/code` reused an existing legacy attempt's
 configuration and keys. The server returned HTTP 200 and parsed JSON

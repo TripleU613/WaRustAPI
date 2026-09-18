@@ -36,6 +36,13 @@ pub(super) enum Action {
     RetryCorrectedRequest,
     /// Recheck a saved preflight stopped by the old missing-recommendation guard.
     ResumePreflight,
+    /// Inspect consent selectors once using saved identity; no OTP or SMS.
+    InspectConsent,
+    /// Submit one reviewed decision from private JSON matching saved selectors.
+    SubmitConsent {
+        #[arg(long)]
+        decision: std::path::PathBuf,
+    },
     /// One authorized resend of a legacy refusal whose diagnostics were lost.
     /// Known refusals/cooldowns are excluded; a durable latch prevents repeats.
     DiagnoseLegacyRefusal,
@@ -91,7 +98,7 @@ fn authorize(action: &Action, allow_live: bool) -> Result<(), Error> {
     Ok(())
 }
 
-fn config(path: &Path) -> Result<LabRegistrationConfig, Error> {
+pub(super) fn config(path: &Path) -> Result<LabRegistrationConfig, Error> {
     let file = File::open(path)?;
     let metadata = file.metadata()?;
     if !metadata.is_file() || metadata.len() > MAX_CONFIG_BYTES {
@@ -368,6 +375,44 @@ pub(super) async fn run(
         Action::RetryCorrectedToken => service.retry_corrected_token_once(phone).await?,
         Action::RetryCorrectedRequest => service.diagnose_legacy_refusal_once(phone).await?,
         Action::ResumePreflight => service.resume_preflight_once(phone).await?,
+        Action::InspectConsent => {
+            let attempt = service
+                .current()
+                .await?
+                .ok_or_else(|| invalid("no saved attempt"))?;
+            factory.consent_request(&attempt, None)?;
+            service.continue_consent(phone, None).await?
+        }
+        Action::SubmitConsent { decision } => {
+            let file = File::open(decision)?;
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+                if file.metadata()?.permissions().mode() & 0o077 != 0 {
+                    return Err(invalid(
+                        "consent decision requires private file permissions",
+                    ));
+                }
+            }
+            if !file.metadata()?.is_file() || file.metadata()?.len() > MAX_CONFIG_BYTES {
+                return Err(invalid("consent decision must be a bounded regular file"));
+            }
+            let mut data = Zeroizing::new(Vec::new());
+            file.take(MAX_CONFIG_BYTES + 1).read_to_end(&mut data)?;
+            if data.len() as u64 > MAX_CONFIG_BYTES {
+                return Err(invalid("consent decision too large"));
+            }
+            let decision: whatsapp_api::registration::consent::ConsentDecision =
+                serde_json::from_slice(&data)
+                    .map_err(|_| invalid("invalid consent decision JSON"))?;
+            decision.validate()?;
+            let attempt = service
+                .current()
+                .await?
+                .ok_or_else(|| invalid("no saved attempt"))?;
+            factory.consent_request(&attempt, Some(&decision))?;
+            service.continue_consent(phone, Some(decision)).await?
+        }
         Action::DiagnoseBadParameter => service.diagnose_bad_parameter_once(phone).await?,
         Action::DiagnoseUnsignedEnvelope => service.diagnose_unsigned_envelope_once(phone).await?,
         Action::DiagnoseAdditionalFields { .. } => {
@@ -425,6 +470,10 @@ mod tests {
             Action::RetryCorrectedToken,
             Action::RetryCorrectedRequest,
             Action::ResumePreflight,
+            Action::InspectConsent,
+            Action::SubmitConsent {
+                decision: "unused.json".into(),
+            },
             Action::DiagnoseLegacyRefusal,
             Action::DiagnoseBadParameter,
             Action::DiagnoseEncryptedParameter,

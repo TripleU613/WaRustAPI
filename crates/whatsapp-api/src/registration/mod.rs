@@ -28,6 +28,8 @@ use std::sync::Arc;
 use serde::{Deserialize, Serialize};
 use zeroize::Zeroizing;
 
+pub mod consent;
+
 use crate::error::{Error, Result};
 use crate::model::ids::AccountGeneration;
 use crate::model::jid::Jid;
@@ -110,6 +112,18 @@ impl ChallengeHandle {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum BlockedReason {
+    /// Consent requires an explicit, supported user-interaction flow. Keeping
+    /// context does not accept it or authorize following its URL.
+    ConsentRequired {
+        /// Server-provided branch fields; Debug redacts the continuation URL.
+        details: wire::RegistrationConsent,
+        /// Earliest generic retry time, if supplied.
+        retry_after: Option<Timestamp>,
+        /// SMS delivery deadline, if supplied.
+        sms_retry_after: Option<Timestamp>,
+        /// Voice delivery deadline, if supplied.
+        voice_retry_after: Option<Timestamp>,
+    },
     /// The protocol profile lacks required facts (ledger references listed).
     ProfileIncomplete {
         /// Missing ledger entries.
@@ -341,6 +355,19 @@ impl RegistrationState {
     /// explicit reset to `Unregistered`.
     pub fn can_transition(&self, to: &RegistrationState) -> bool {
         use RegistrationState as S;
+        if matches!(
+            self,
+            S::Blocked {
+                reason: BlockedReason::ConsentRequired { .. }
+                    | BlockedReason::ServerRefused {
+                        reason: Some(wire::RegistrationResponseReason::Consent),
+                        ..
+                    }
+            }
+        ) && matches!(to, S::Verifying { .. })
+        {
+            return true;
+        }
         matches!(
             (self, to),
             (S::Unregistered, S::Preparing)
@@ -480,6 +507,14 @@ pub type RegistrationFuture<'a> =
 /// futures only after its durable pre-request transition has committed and the
 /// store transaction has been released.
 pub trait RegistrationFlow: Send + Sync + fmt::Debug {
+    /// Inspect consent context or submit an explicitly supplied decision.
+    fn consent<'a>(
+        &'a self,
+        _attempt: &'a RegistrationAttempt,
+        _decision: Option<&'a consent::ConsentDecision>,
+    ) -> RegistrationFuture<'a> {
+        Box::pin(async { Err(Error::invalid("consent", "flow does not implement consent")) })
+    }
     /// Generate and persist profile prerequisites inside the same transaction
     /// as the `Preparing` transition. This method must be bounded and perform
     /// no network I/O. If it fails, neither the attempt nor its prerequisites
@@ -572,6 +607,17 @@ impl RegistrationFlow for UnsupportedFlow {
 /// callers source device identifiers and key material from their durable
 /// store without exposing them through the high-level service.
 pub trait ComparisonRequestFactory: Send + Sync + fmt::Debug {
+    /// Same-identity consent request; None inspects existence metadata only.
+    fn consent_request(
+        &self,
+        _attempt: &RegistrationAttempt,
+        _decision: Option<&consent::ConsentDecision>,
+    ) -> Result<wire::EncodedRegistrationRequest> {
+        Err(Error::invalid(
+            "consent",
+            "factory does not implement consent",
+        ))
+    }
     /// Optional same-identity `/v2/exist` request before selecting SMS/voice.
     fn preflight_request(
         &self,
@@ -649,6 +695,21 @@ impl ComparisonHttpFlow {
         status_code: u16,
         response: &wire::RegistrationResponse,
     ) -> RegistrationFlowOutput {
+        if (200..300).contains(&status_code)
+            && response.status == wire::RegistrationResponseStatus::Fail
+            && response.reason == Some(wire::RegistrationResponseReason::Consent)
+        {
+            let now = Timestamp::now();
+            return RegistrationState::Blocked {
+                reason: BlockedReason::ConsentRequired {
+                    details: response.consent.clone(),
+                    retry_after: response.retry_after.map(|wait| now.saturating_add(wait)),
+                    sms_retry_after: response.sms_wait.map(|wait| now.saturating_add(wait)),
+                    voice_retry_after: response.voice_wait.map(|wait| now.saturating_add(wait)),
+                },
+            }
+            .into();
+        }
         if let Some(wait) = response.retry_after {
             return RegistrationState::CoolingDown {
                 until: Timestamp::now().saturating_add(wait),
@@ -678,6 +739,7 @@ impl ComparisonHttpFlow {
 
     fn completion_from(
         response: &mut wire::RegistrationResponse,
+        source_step: &str,
     ) -> Result<RegistrationCompletion> {
         let mut completion = RegistrationCompletion::new();
         let mut secrets = response.take_secrets();
@@ -693,7 +755,7 @@ impl ComparisonHttpFlow {
                     name: name.to_owned(),
                     value: Zeroizing::new(value.as_bytes().to_vec()),
                     observed_at: Timestamp::now(),
-                    source_step: Some("/v2/register".into()),
+                    source_step: Some(source_step.into()),
                 })?;
             }
         }
@@ -753,6 +815,69 @@ fn preflight_decision(
 }
 
 impl RegistrationFlow for ComparisonHttpFlow {
+    fn consent<'a>(
+        &'a self,
+        attempt: &'a RegistrationAttempt,
+        decision: Option<&'a consent::ConsentDecision>,
+    ) -> RegistrationFuture<'a> {
+        Box::pin(async move {
+            let request = self.requests.consent_request(attempt, decision)?;
+            let (http, mut response) = self.send(request).await?;
+            if response.consent.login.is_none()
+                && let RegistrationState::Blocked {
+                    reason: BlockedReason::ConsentRequired { details, .. },
+                } = &attempt.state
+            {
+                response.consent.login = details.login.clone();
+            }
+            if decision.is_some()
+                && (200..300).contains(&http)
+                && response.status == wire::RegistrationResponseStatus::Ok
+                && (response
+                    .consent
+                    .pending
+                    .as_ref()
+                    .is_some_and(|v| !v.is_empty())
+                    || response
+                        .consent
+                        .parent_consent_url
+                        .as_ref()
+                        .is_some_and(|v| !v.is_empty()))
+            {
+                // `ok` can still carry a pending consent/parent step.
+                response.status = wire::RegistrationResponseStatus::Fail;
+                response.reason = Some(wire::RegistrationResponseReason::Consent);
+                return Ok(Self::blocked_response(http, &response));
+            }
+            if decision.is_some()
+                && (200..300).contains(&http)
+                && response.status == wire::RegistrationResponseStatus::Ok
+            {
+                let mut completion = Self::completion_from(&mut response, "/v2/consent")?;
+                if !completion.credentials.iter().any(|v| v.name == "login")
+                    && let Some(login) = &response.consent.login
+                {
+                    completion = completion.with_credential(ObservedCredential {
+                        name: "login".into(),
+                        value: Zeroizing::new(login.as_bytes().to_vec()),
+                        observed_at: Timestamp::now(),
+                        source_step: Some("saved-consent-context".into()),
+                    })?;
+                }
+                return Ok(RegistrationFlowOutput::registered(completion));
+            }
+            if decision.is_none()
+                && (200..300).contains(&http)
+                && response.consent.consent_id.is_some()
+                && response.consent.consent_version.is_some()
+            {
+                // Inspection is not registration and cannot accept consent.
+                response.status = wire::RegistrationResponseStatus::Fail;
+                response.reason = Some(wire::RegistrationResponseReason::Consent);
+            }
+            Ok(Self::blocked_response(http, &response))
+        })
+    }
     fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()> {
         self.requests.prepare(tx, attempt)
     }
@@ -808,9 +933,16 @@ impl RegistrationFlow for ComparisonHttpFlow {
             {
                 return Ok(RegistrationFlowOutput::registered(Self::completion_from(
                     &mut response,
+                    if matches!(answer, Answer::Code(_)) {
+                        "/v2/register"
+                    } else {
+                        "/v2/security"
+                    },
                 )?));
             }
-            if matches!(answer, Answer::Code(_))
+            if (200..300).contains(&status_code)
+                && response.status == wire::RegistrationResponseStatus::Fail
+                && matches!(answer, Answer::Code(_))
                 && response.reason == Some(wire::RegistrationResponseReason::SecurityCode)
             {
                 return Ok(RegistrationState::NeedsUserAction {
@@ -1295,6 +1427,14 @@ impl RegistrationService {
         handle: ChallengeHandle,
         answer: Answer,
     ) -> Result<RegistrationStep> {
+        let is_pin = matches!(answer, Answer::Pin(_));
+        let (Answer::Code(value) | Answer::Pin(value)) = &answer;
+        if value.is_empty() || value.len() > 16 || !value.bytes().all(|v| v.is_ascii_digit()) {
+            return Err(Error::invalid(
+                "challenge",
+                "answer must contain 1..=16 ASCII digits",
+            ));
+        }
         let (attempt, bound) = self
             .store
             .run_blocking(move |s| {
@@ -1315,6 +1455,13 @@ impl RegistrationService {
                             ));
                         }
                     };
+                    if is_pin != matches!(attempt.state, RegistrationState::NeedsUserAction { .. })
+                    {
+                        return Err(Error::invalid(
+                            "challenge",
+                            "answer type does not match the current challenge",
+                        ));
+                    }
                     if bound.attempt != handle.attempt
                         || bound.generation != handle.generation
                         || bound.step != handle.step
@@ -1334,6 +1481,19 @@ impl RegistrationService {
                         });
                     }
                     let now = Timestamp::now();
+                    // OTP retry_after records delivery wait, not an answer wait.
+                    // The PIN challenge instead carries /register's generic wait.
+                    if is_pin
+                        && let Some(until) = bound.retry_after
+                        && now < until
+                    {
+                        return Err(Error::RateLimited {
+                            retry_after: Some(std::time::Duration::from_millis(
+                                until.as_millis().saturating_sub(now.as_millis()) as u64,
+                            )),
+                            code: None,
+                        });
+                    }
                     attempt.transition(RegistrationState::Verifying { step: bound.step }, now)?;
                     Self::save_current(tx, &attempt)?;
                     Ok((attempt, bound))
@@ -1747,6 +1907,200 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn consent_context_survives_restart_without_acceptance_or_url_leaks() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", br#"{"status":"sent"}"#.as_slice()),
+                ("/v2/register", br#"{"status":"fail","reason":"consent","consent_id":3,"consent_version":2,"parent_consent_url":"https://example.invalid/private-consent-token","retry_after":30,"sms_wait":60,"voice_wait":90}"#.as_slice()),
+            ])),
+        });
+        let flow = Arc::new(ComparisonHttpFlow::new(
+            Arc::new(ComparisonRequests),
+            transport.clone(),
+        ));
+        let svc = RegistrationService::new(s.clone(), &profile, flow.clone());
+        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+            svc.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        let result = svc
+            .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap();
+        let RegistrationStep::Blocked(BlockedReason::ConsentRequired {
+            details,
+            retry_after,
+            sms_retry_after,
+            voice_retry_after,
+        }) = &result
+        else {
+            panic!("expected consent")
+        };
+        assert_eq!(details.consent_id, Some(3));
+        assert_eq!(details.consent_version, Some(2));
+        assert!(details.parent_consent_url.is_some());
+        assert!(retry_after < sms_retry_after && sms_retry_after < voice_retry_after);
+        assert!(!format!("{result:?}").contains("private-consent-token"));
+        let restarted = RegistrationService::new(s.clone(), &profile, flow);
+        assert_eq!(
+            restarted
+                .begin(phone(), ChallengeMethod::Sms)
+                .await
+                .unwrap(),
+            result
+        );
+        assert!(transport.responses.lock().unwrap().is_empty());
+        let raw = std::fs::read(s.path()).unwrap();
+        assert!(
+            !raw.windows(b"private-consent-token".len())
+                .any(|v| v == b"private-consent-token")
+        );
+    }
+
+    #[tokio::test]
+    async fn post_otp_refusals_and_unknown_results_never_replay_answers() {
+        for body in [
+            br#"{"status":"fail","reason":"incorrect"}"#.as_slice(),
+            br#"{"status":"fail","reason":"stale"}"#,
+            br#"{"status":"fail","reason":"device_confirm_or_second_code","sms_wait":1500,"voice_wait":1500}"#,
+            br#"{"status":"fail","reason":"second_code"}"#,
+            br#"{"status":"fail","reason":"challenge"}"#,
+            br#"{"status":"fail","reason":"consent"}"#,
+            br#"{"status":"fail","reason":"too_many_guesses"}"#,
+            br#"{"status":"fail","reason":"guessed_too_fast","retry_after":60}"#,
+            br#"{"status":"fail","reason":"blocked"}"#,
+            br#"{"status":"fail","reason":"future_reason"}"#,
+            b"invalid JSON",
+        ] {
+            let (_d, s) = store();
+            let profile = ProtocolProfile::android_reference().unwrap();
+            let transport = Arc::new(ComparisonTransport {
+                responses: std::sync::Mutex::new(std::collections::VecDeque::from([
+                    ("/v2/code", br#"{"status":"sent"}"#.as_slice()),
+                    ("/v2/register", body),
+                ])),
+            });
+            let svc = RegistrationService::new(s.clone(), &profile, Arc::new(
+                ComparisonHttpFlow::new(Arc::new(ComparisonRequests), transport.clone())));
+            let RegistrationStep::Action(RequiredAction::EnterCode(handle)) = svc.begin(phone(), ChallengeMethod::Sms).await.unwrap() else { panic!("expected code") };
+            let result = svc.submit(handle.clone(), Answer::Code(Zeroizing::new("123456".into()))).await;
+            if body == b"invalid JSON" {
+                assert!(result.is_err());
+                assert!(matches!(svc.current().await.unwrap().unwrap().state, RegistrationState::RegistrationOutcomeUnknown { .. }));
+            } else {
+                assert!(matches!(result.unwrap(), RegistrationStep::Blocked(_) | RegistrationStep::Action(RequiredAction::WaitForCooldown { .. })));
+            }
+            assert!(svc.submit(handle, Answer::Code(Zeroizing::new("123456".into()))).await.is_err());
+            let reopened = RegistrationService::new(s.clone(), &profile, Arc::new(
+                ComparisonHttpFlow::new(Arc::new(ComparisonRequests), transport.clone())));
+            assert_ne!(reopened.begin(phone(), ChallengeMethod::Sms).await.unwrap(), RegistrationStep::Completed);
+            assert!(transport.responses.lock().unwrap().is_empty());
+            assert_ne!(s.read(AccountRecord::load).unwrap().unwrap().registration, RegistrationStatus::Registered);
+        }
+    }
+
+    #[tokio::test]
+    async fn security_code_requires_successful_http_and_fail_status() {
+        #[derive(Debug)]
+        struct Response(u16, &'static [u8]);
+        impl wire::RegistrationTransport for Response {
+            fn send<'a>(
+                &'a self,
+                _: wire::EncodedRegistrationRequest,
+            ) -> wire::RegistrationTransportFuture<'a> {
+                Box::pin(async move {
+                    wire::RegistrationHttpResponse::new(self.0, Zeroizing::new(self.1.to_vec()))
+                })
+            }
+        }
+        for (status, body) in [
+            (
+                403,
+                br#"{"status":"fail","reason":"security_code"}"#.as_slice(),
+            ),
+            (
+                500,
+                br#"{"status":"fail","reason":"security_code"}"#.as_slice(),
+            ),
+            (
+                200,
+                br#"{"status":"unknown","reason":"security_code"}"#.as_slice(),
+            ),
+        ] {
+            let (_d, s) = store();
+            let profile = ProtocolProfile::android_reference().unwrap();
+            let initial = RegistrationService::new(s.clone(), &profile, Arc::new(ScriptedFlow));
+            let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+                initial.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+            else {
+                panic!("expected code")
+            };
+            let svc = RegistrationService::new(
+                s,
+                &profile,
+                Arc::new(ComparisonHttpFlow::new(
+                    Arc::new(ComparisonRequests),
+                    Arc::new(Response(status, body)),
+                )),
+            );
+            assert!(matches!(
+                svc.submit(h, Answer::Code(Zeroizing::new("123456".into())))
+                    .await
+                    .unwrap(),
+                RegistrationStep::Blocked(_)
+            ));
+        }
+    }
+
+    #[tokio::test]
+    async fn pin_wait_is_enforced_without_consuming_challenge() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", br#"{"status":"sent","sms_wait":60}"#.as_slice()),
+                (
+                    "/v2/register",
+                    br#"{"status":"fail","reason":"security_code","retry_after":60}"#.as_slice(),
+                ),
+            ])),
+        });
+        let svc = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+            svc.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        let RegistrationStep::Action(RequiredAction::EnterPin(h)) = svc
+            .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap()
+        else {
+            panic!("expected PIN")
+        };
+        assert!(matches!(
+            svc.submit(h, Answer::Pin(Zeroizing::new("6157".into())))
+                .await,
+            Err(Error::RateLimited { .. })
+        ));
+        assert!(matches!(
+            svc.current().await.unwrap().unwrap().state,
+            RegistrationState::NeedsUserAction { .. }
+        ));
+        assert!(transport.responses.lock().unwrap().is_empty());
+    }
+
+    #[tokio::test]
     async fn comparison_http_flow_drives_happy_path_and_commits_credentials() {
         let (_d, s) = store();
         let profile = ProtocolProfile::android_reference().unwrap();
@@ -1793,6 +2147,10 @@ mod tests {
         assert_eq!(account.registration, RegistrationStatus::Registered);
         assert_eq!(account.credentials.len(), 1);
         assert_eq!(account.credentials[0].name, "login");
+        assert_eq!(
+            account.credentials[0].source_step.as_deref(),
+            Some("/v2/security")
+        );
         assert_eq!(account.credentials[0].value.as_slice(), b"login-secret");
         let raw = std::fs::read(s.path()).unwrap();
         assert!(
@@ -2122,6 +2480,16 @@ mod tests {
             panic!("expected code challenge, got {step:?}");
         };
         // A handle for a different attempt is rejected without consuming the step.
+        for invalid in [
+            Answer::Pin(Zeroizing::new("6157".into())),
+            Answer::Code(Zeroizing::new("bad-code".into())),
+        ] {
+            assert!(svc.submit(h1.clone(), invalid).await.is_err());
+            assert!(matches!(
+                svc.current().await.unwrap().unwrap().state,
+                RegistrationState::ChallengePending { .. }
+            ));
+        }
         let foreign = ChallengeHandle {
             attempt: AttemptId([9; 16]),
             ..h1.clone()
@@ -2139,6 +2507,11 @@ mod tests {
             panic!("expected pin step, got {step2:?}");
         };
         assert_eq!(h2.step, 2);
+        assert!(
+            svc.submit(h2.clone(), Answer::Code(Zeroizing::new("928374".into())))
+                .await
+                .is_err()
+        );
         // The old step-1 handle can no longer be answered.
         assert!(
             svc.submit(h1, Answer::Code(Zeroizing::new("928374".into())))

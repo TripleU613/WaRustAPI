@@ -84,6 +84,18 @@ pub struct TokenDictionary {
 }
 
 impl TokenDictionary {
+    /// Version-scoped dictionary recovered from comparison APK 2.26.37.70.
+    /// Never substitutes for the pinned Android profile's dictionary.
+    pub fn comparison_2_26_37_70() -> &'static TokenDictionary {
+        static DICTIONARY: OnceLock<TokenDictionary> = OnceLock::new();
+        DICTIONARY.get_or_init(|| {
+            Self::from_fixture_json(include_str!(
+                "../../fixtures/tokens/comparison-2.26.37.70.json"
+            ))
+            .expect("checked comparison dictionary fixture")
+        })
+    }
+
     /// Parse a fixture JSON document.
     pub fn from_fixture_json(json: &str) -> Result<Self, String> {
         let f: FixtureFile = serde_json::from_str(json).map_err(|e| e.to_string())?;

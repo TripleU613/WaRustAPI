@@ -211,6 +211,59 @@ impl StoredComparisonRequestFactory {
 }
 
 impl ComparisonRequestFactory for StoredComparisonRequestFactory {
+    fn consent_request(
+        &self,
+        attempt: &RegistrationAttempt,
+        decision: Option<&super::consent::ConsentDecision>,
+    ) -> Result<EncodedRegistrationRequest> {
+        let record = self.load(attempt)?;
+        let mut form = RegistrationForm::new();
+        record.common()?.append_to_form(&mut form)?;
+        let endpoint = if let Some(value) = decision {
+            value.validate()?;
+            if let super::RegistrationState::Blocked {
+                reason: super::BlockedReason::ConsentRequired { details, .. },
+            } = &attempt.state
+                && let Some(login) = &details.login
+            {
+                form.push("login", login.as_str())?;
+            }
+            if let Some(dob) = &value.dob {
+                form.push("context", "dob")?;
+                form.push("dob", dob.as_str())?;
+            } else {
+                form.push("context", "consent")?;
+                form.push(
+                    "consent_id",
+                    value
+                        .consent_id
+                        .ok_or_else(|| invalid("missing consent ID"))?
+                        .to_string(),
+                )?;
+                form.push(
+                    "consent_version",
+                    value
+                        .consent_version
+                        .ok_or_else(|| invalid("missing consent version"))?
+                        .to_string(),
+                )?;
+                form.push(
+                    "consent_result",
+                    value
+                        .consent_result
+                        .ok_or_else(|| invalid("missing consent result"))?
+                        .to_string(),
+                )?;
+            }
+            RegistrationEndpoint::Consent
+        } else {
+            form.push("token", record.config.token.as_str())?;
+            // A dedicated inspection does not reuse code/preflight telemetry.
+            RegistrationEndpoint::Exist
+        };
+        record.bundle()?.append_to_form(&mut form)?;
+        WHATSAPP_2_26_37_70.request(endpoint, &form)
+    }
     fn preflight_request(
         &self,
         attempt: &RegistrationAttempt,
@@ -801,6 +854,247 @@ mod tests {
                 RegistrationHttpResponse::new(200, Zeroizing::new(body.as_bytes().to_vec()))
             })
         }
+    }
+
+    #[tokio::test]
+    async fn dob_consent_reuses_login_and_does_not_complete_pending_parent_flow() {
+        use crate::registration::{BlockedReason, consent::ConsentDecision};
+        #[derive(Debug)]
+        struct DobTransport;
+        impl RegistrationTransport for DobTransport {
+            fn send<'a>(
+                &'a self,
+                request: EncodedRegistrationRequest,
+            ) -> RegistrationTransportFuture<'a> {
+                Box::pin(async move {
+                    assert!(request.url().ends_with("/v2/consent"));
+                    let body = std::str::from_utf8(request.body()).unwrap();
+                    for field in [
+                        "context=dob",
+                        "dob=2000-02-29",
+                        "login=intermediate-login",
+                        "e_ident=",
+                    ] {
+                        assert!(body.contains(field));
+                    }
+                    assert!(!body.contains("consent_result="));
+                    RegistrationHttpResponse::new(200, Zeroizing::new(br#"{"status":"ok","pending":"parent_verification","parent_consent_url":"https://example.invalid/private"}"#.to_vec()))
+                })
+            }
+        }
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let factory =
+            Arc::new(StoredComparisonRequestFactory::new(store.clone(), config()).unwrap());
+        let mut a = attempt(&store);
+        store.write(|tx| factory.prepare(tx, &a)).unwrap();
+        let details = RegistrationHttpResponse::new(200, Zeroizing::new(br#"{"status":"fail","reason":"consent","pending":"dob","login":"intermediate-login"}"#.to_vec())).unwrap().parse_json().unwrap().consent;
+        a.transition(
+            RegistrationState::Blocked {
+                reason: BlockedReason::ConsentRequired {
+                    details,
+                    retry_after: None,
+                    sms_retry_after: None,
+                    voice_retry_after: None,
+                },
+            },
+            Timestamp::now(),
+        )
+        .unwrap();
+        store
+            .write(|tx| RegistrationService::save_current(tx, &a))
+            .unwrap();
+        let mut profile = crate::ProtocolProfile::android_reference().unwrap();
+        profile.id = LAB_PROFILE_ID.into();
+        let service = RegistrationService::new(
+            store.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(factory, Arc::new(DobTransport))),
+        );
+        let decision: ConsentDecision =
+            serde_json::from_str(r#"{"dob":"2000-02-29","confirmed":true}"#).unwrap();
+        let result = service
+            .continue_consent(config().phone, Some(decision))
+            .await
+            .unwrap();
+        assert!(matches!(
+            result,
+            RegistrationStep::Blocked(BlockedReason::ConsentRequired { .. })
+        ));
+        assert_ne!(
+            store
+                .read(AccountRecord::load)
+                .unwrap()
+                .unwrap()
+                .registration,
+            crate::session::RegistrationStatus::Registered
+        );
+        assert!(!format!("{result:?}").contains("https://"));
+    }
+
+    #[tokio::test]
+    async fn consent_inspection_and_submission_are_bound_and_once_only() {
+        use crate::registration::{BlockedReason, consent::ConsentDecision};
+        #[derive(Debug, Default)]
+        struct ConsentTransport(std::sync::Mutex<Vec<String>>);
+        impl RegistrationTransport for ConsentTransport {
+            fn send<'a>(
+                &'a self,
+                request: EncodedRegistrationRequest,
+            ) -> RegistrationTransportFuture<'a> {
+                Box::pin(async move {
+                    self.0.lock().unwrap().push(request.url().into());
+                    let body = if request.url().ends_with("/v2/exist") {
+                        r#"{"status":"fail","reason":"consent","consent_id":3,"consent_version":2,"pending":"youth_consent"}"#
+                    } else {
+                        assert!(request.url().ends_with("/v2/consent"));
+                        let body = std::str::from_utf8(request.body()).unwrap();
+                        for field in [
+                            "context=consent",
+                            "consent_id=3",
+                            "consent_version=2",
+                            "consent_result=5",
+                        ] {
+                            assert!(body.split('&').any(|v| v == field));
+                        }
+                        assert!(!body.contains("code="));
+                        r#"{"status":"ok","login":"consent-test-login"}"#
+                    };
+                    RegistrationHttpResponse::new(200, Zeroizing::new(body.as_bytes().to_vec()))
+                })
+            }
+        }
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let factory =
+            Arc::new(StoredComparisonRequestFactory::new(store.clone(), config()).unwrap());
+        let mut a = attempt(&store);
+        store.write(|tx| factory.prepare(tx, &a)).unwrap();
+        let original = factory.code_request(&a).unwrap().body().to_vec();
+        a.transition(
+            RegistrationState::Blocked {
+                reason: BlockedReason::ServerRefused {
+                    code: None,
+                    http_status: Some(200),
+                    reason: Some(RegistrationResponseReason::Consent),
+                },
+            },
+            Timestamp::now(),
+        )
+        .unwrap();
+        store
+            .write(|tx| RegistrationService::save_current(tx, &a))
+            .unwrap();
+        let mut profile = crate::ProtocolProfile::android_reference().unwrap();
+        profile.id = LAB_PROFILE_ID.into();
+        let transport = Arc::new(ConsentTransport::default());
+        let service = RegistrationService::new(
+            store.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(factory.clone(), transport.clone())),
+        );
+        let decision = ConsentDecision {
+            consent_id: Some(3),
+            consent_version: Some(2),
+            consent_result: Some(5),
+            dob: None,
+            confirmed: true,
+        };
+        assert!(
+            service
+                .continue_consent(config().phone, Some(decision.clone()))
+                .await
+                .is_err()
+        );
+        assert!(
+            service
+                .continue_consent(PhoneNumber::new(1, "5557654321").unwrap(), None)
+                .await
+                .is_err()
+        );
+        let (first, second) = tokio::join!(
+            service.continue_consent(config().phone, None),
+            service.continue_consent(config().phone, None)
+        );
+        assert_eq!(usize::from(first.is_ok()) + usize::from(second.is_ok()), 1);
+        let saved = service.current().await.unwrap().unwrap();
+        assert_eq!(saved.id, a.id);
+        assert_eq!(saved.generation, a.generation);
+        assert_eq!(original, factory.code_request(&saved).unwrap().body());
+        assert!(
+            service
+                .continue_consent(
+                    config().phone,
+                    Some(ConsentDecision {
+                        consent_version: Some(9),
+                        ..decision.clone()
+                    })
+                )
+                .await
+                .is_err()
+        );
+        assert!(
+            service
+                .continue_consent(
+                    config().phone,
+                    Some(ConsentDecision {
+                        confirmed: false,
+                        ..decision.clone()
+                    })
+                )
+                .await
+                .is_err()
+        );
+        let mut waiting = saved.clone();
+        if let RegistrationState::Blocked {
+            reason: BlockedReason::ConsentRequired { retry_after, .. },
+        } = &mut waiting.state
+        {
+            *retry_after =
+                Some(Timestamp::now().saturating_add(std::time::Duration::from_secs(3600)));
+        } else {
+            panic!("expected saved consent context");
+        }
+        store
+            .write(|tx| RegistrationService::save_current(tx, &waiting))
+            .unwrap();
+        assert!(
+            service
+                .continue_consent(config().phone, Some(decision.clone()))
+                .await
+                .is_err()
+        );
+        store
+            .write(|tx| RegistrationService::save_current(tx, &saved))
+            .unwrap();
+        assert_eq!(
+            service
+                .continue_consent(config().phone, Some(decision.clone()))
+                .await
+                .unwrap(),
+            RegistrationStep::Completed
+        );
+        assert!(
+            service
+                .continue_consent(config().phone, Some(decision.clone()))
+                .await
+                .is_err()
+        );
+        store
+            .write(|tx| RegistrationService::save_current(tx, &saved))
+            .unwrap();
+        assert!(
+            service
+                .continue_consent(config().phone, Some(decision))
+                .await
+                .is_err()
+        );
+        assert_eq!(transport.0.lock().unwrap().len(), 2);
+        let account = store.read(AccountRecord::load).unwrap().unwrap();
+        assert_eq!(
+            account.credentials[0].source_step.as_deref(),
+            Some("/v2/consent")
+        );
     }
 
     #[tokio::test]

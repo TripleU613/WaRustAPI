@@ -4,10 +4,10 @@ Experimental Rust workspace for a standalone WhatsApp **primary-device** client.
 The goal is phone-number registration and messaging without a paired phone or
 another running WhatsApp client.
 
-**Live registration and messaging are not working yet.** The encrypted store,
-durable outbox/events, bounded codec, registration state machine, and comparison
-APK tooling are tested offline. See [STATUS.md](STATUS.md) for the current
-milestone and [protocol blockers](docs/protocol/unknowns.md) for what remains.
+**First live message acknowledged by WhatsApp.** The experimental comparison
+flow completed registration, authenticated login and one encrypted text send.
+The recipient confirmed receipt; inbound replies and general messaging remain incomplete. See
+[STATUS.md](STATUS.md) and [transport usage](docs/protocol/messaging-transport.md).
 
 ## Get started
 
@@ -34,8 +34,8 @@ Enqueueing a message currently stores an intent; it does not send it.
 | whatsapp-cli | Operator CLI and local HTTP inspection |
 | xtask | Rust-only schema, dependency, and APK analysis tools |
 
-Optional `experimental-noise`, `experimental-registration-https`, and
-`experimental-signal-crypto` are lab features, not verified live flows.
+Optional `experimental-noise`, `experimental-registration-https`,
+`experimental-signal-crypto`, and `experimental-transport` remain lab features.
 HTTPS uses owner-approved native `ring` crypto; the Signal adapter includes
 AGPL-marked dependencies. See [third-party notices](THIRD_PARTY_NOTICES.md).
 

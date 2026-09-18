@@ -156,10 +156,13 @@ impl FrameReader {
                 return Ok(Some(f));
             }
             let mut chunk = [0u8; 8192];
+            // A read may coalesce multiple frames. Limit it to remaining
+            // capacity rather than rejecting valid adjacent frames as overflow.
+            let available = chunk.len().min(self.bound() - self.buf.len());
             let n = io
-                .read(&mut chunk)
+                .read(&mut chunk[..available])
                 .await
-                .map_err(|e| TransportError::Noise(format!("read failed: {e}")))?;
+                .map_err(|e| TransportError::Io(e.kind()))?;
             if n == 0 {
                 if self.buf.is_empty() {
                     return Ok(None);

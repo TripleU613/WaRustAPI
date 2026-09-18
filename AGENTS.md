@@ -175,6 +175,19 @@ request—not adding Rust code, another command or a number-specific script.**
 
 ## Known lessons and handoff
 
+- Comparison messaging now has a live verified certificate, primary login
+  `success`, and one encrypted text with a matching server message acknowledgement.
+  This is the explicit `lab-transport` path, not the default outbox runtime.
+  The operator confirmed handset receipt and reported replying. Inbound reply
+  processing and protocol delivery/read receipts remain incomplete.
+  Consult `docs/protocol/messaging-transport.md`.
+  Reuse the private message JSON's request ID: acknowledged sends return locally,
+  uncertain/refused sends remain blocked. Never change the ID merely to resend.
+- The APK hashes only the first Noise ephemeral, not a trailing empty payload.
+  Standard snow XX message handling adds that payload hash and failed live
+  decryption. The comparison classic adapter corrects sequencing over existing
+  primitives; certificate verification must remain enabled.
+
 - Read `STATUS.md`, `docs/protocol/registration-lab.md`,
   `docs/protocol/http-post-analysis.md` and `docs/protocol/evidence-ledger.md`
   as relevant, plus current Git status, before choosing the next experiment.

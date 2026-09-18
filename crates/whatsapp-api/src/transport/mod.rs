@@ -6,11 +6,21 @@
 //! trust root are `ReferenceOnly` for the Android primary profile.
 
 pub mod cert;
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+mod classic;
 pub mod comparison;
 pub mod framing;
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+pub mod handshake;
+#[cfg(feature = "experimental-transport")]
+pub mod login;
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+pub mod messaging;
 #[cfg(feature = "experimental-noise")]
 pub mod noise;
 pub mod selector;
+#[cfg(feature = "experimental-transport")]
+pub mod socket;
 
 use serde::{Deserialize, Serialize};
 
@@ -20,6 +30,15 @@ pub use framing::{FrameCodec, FrameReader};
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
 #[non_exhaustive]
 pub enum TransportError {
+    /// Socket I/O failed; raw OS messages are not included in diagnostics.
+    #[error("socket I/O failed: {0:?}")]
+    Io(std::io::ErrorKind),
+    /// A bounded operation exceeded its deadline.
+    #[error("transport deadline exceeded during {0}")]
+    Deadline(&'static str),
+    /// An earlier failure or cancellation consumed the connection.
+    #[error("transport connection is closed")]
+    Closed,
     /// A declared frame length exceeded the configured bound.
     #[error("frame length {len} exceeds limit {limit}")]
     FrameTooLarge {

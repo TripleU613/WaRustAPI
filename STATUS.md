@@ -1,5 +1,42 @@
 # Status — 2026-09-18
 
+**First live encrypted text message server-acknowledged:** the comparison lab
+verified the server certificate (intermediate serial 3 / leaf serial 361),
+received authenticated login `success`, fetched the selected recipient's key
+bundle, verified its signature, committed Signal session/send intent atomically,
+and sent one encrypted text. A matching `ack` / `class=message` with no error
+was persisted. Repeating the same private message request returned the saved
+acknowledgement without connecting or sending again. The operator subsequently
+confirmed handset receipt and reported replying. That reply has not been read by
+this client; protocol delivery/read receipts remain unverified. This explicit lab
+flow is not the default CLI/outbox runtime.
+See [transport progress and usage](docs/protocol/messaging-transport.md).
+
+**Live registration completed:** the operator supplied the requested DOB locally
+and one `/v2/consent` submission returned HTTP 200 / `ok`, with no pending branch
+or wait. The same saved attempt transitioned to Registered; returned credentials
+were committed in encrypted storage. Messaging authentication and server-side
+message acceptance are now verified above. No DOB, phone or credential values
+are recorded here.
+
+**Consent follow-up:** an OTP submission returned HTTP 200 / `fail` / `consent`.
+Static comparison-APK analysis found separate consent-result and age-verification
+request shapes. The client now supports one-shot context inspection and explicit
+private-JSON DOB/youth-consent submissions using saved keys and intermediate login.
+Pending parent/app-store/unknown branches remain blocked. No choice is invented.
+Live context refresh confirmed `pending=dob`, an intermediate login, no consent
+ID/version, and no waits. The subsequent explicit DOB submission completed
+registration as described above.
+See the [consent trace](docs/protocol/http-post-analysis.md).
+
+**Post-OTP hardening:** library-side answer validation preserves challenges on
+local errors; PIN transitions require successful HTTP and the expected status;
+PIN waits are enforced; credential provenance distinguishes register/security.
+Offline response tests cover refusal families and unknown outcomes without
+answer replay. [Branch coverage and remaining work](docs/protocol/after-otp.md).
+Device-confirmation/second-code continuation remains missing; the later live
+messaging result is recorded above.
+
 **New onboarding patch (live dispatch verified):** new JSON templates enable an
 existence preflight before code requests. The builder reuses saved identity;
 typed recommendations and waits gate the selected method. Unknown/recovery
@@ -96,7 +133,7 @@ the active 2.26.36.75 profile.
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability and comparison transport/registration wire-profile endpoints plus structured gated-operation errors |
 
-Test count: 181 (`cargo test --locked --workspace --all-features`). Formatting,
+Test count: 204 (`cargo test --locked --workspace --all-features`). Formatting,
 all-feature/all-target Clippy with `-D warnings`, strict rustdoc, package
 verification, and protobuf regeneration checks pass on the continuation
 machine (Rust 1.98.1). The repository and CI

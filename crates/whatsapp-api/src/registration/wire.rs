@@ -1390,6 +1390,21 @@ impl RegistrationHttpResponse {
                 summary["recommended_method"] = serde_json::json!(parsed.recommended_method);
                 summary["fallback_methods"] = serde_json::json!(parsed.fallback_methods);
                 summary["verify_pn_device"] = serde_json::json!(parsed.verify_pn_device);
+                summary["consent_id"] = serde_json::json!(parsed.consent.consent_id);
+                summary["consent_version"] = serde_json::json!(parsed.consent.consent_version);
+                summary["pending"] = serde_json::json!(parsed.consent.pending.as_ref().map(|v| {
+                    [
+                        "dob",
+                        "app_store_age",
+                        "parent_verification",
+                        "youth_consent",
+                    ]
+                    .into_iter()
+                    .find(|name| v.eq_ignore_ascii_case(name))
+                    .unwrap_or("other")
+                }));
+                summary["has_parent_consent_url"] =
+                    serde_json::json!(parsed.consent.parent_consent_url.is_some());
                 if parsed.reason == Some(RegistrationResponseReason::FormatWrong) {
                     // Comparison APK: VerifyPhoneNumber.A19, dialog 53,
                     // string resource 0x7f123741. This is client interpretation,
@@ -1722,7 +1737,44 @@ impl RegistrationResponseSecrets {
 
 /// Sanitized control fields parsed from a comparison-build registration JSON
 /// response.
+#[derive(Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct RegistrationConsent {
+    /// Intermediate login returned alongside consent; not completed registration.
+    #[serde(default, rename = "registration_login")]
+    pub login: Option<Zeroizing<String>>,
+    /// Local schema marker: old saved context did not parse `pending`.
+    #[serde(default)]
+    pub context_captured: bool,
+    /// Opaque pending-flow selector; retained encrypted and never guessed.
+    pub pending: Option<Zeroizing<String>>,
+    /// Server-provided selector; absence is not a default consent choice.
+    pub consent_id: Option<i32>,
+    /// Server-provided consent revision.
+    pub consent_version: Option<i32>,
+    /// Sensitive continuation URL. Persist only in encrypted storage; never
+    /// follow automatically or include in diagnostics.
+    pub parent_consent_url: Option<Zeroizing<String>>,
+}
+
+impl fmt::Debug for RegistrationConsent {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("RegistrationConsent")
+            .field("has_login", &self.login.is_some())
+            .field(
+                "has_pending",
+                &self.pending.as_ref().is_some_and(|v| !v.is_empty()),
+            )
+            .field("consent_id", &self.consent_id)
+            .field("consent_version", &self.consent_version)
+            .field("has_parent_consent_url", &self.parent_consent_url.is_some())
+            .finish()
+    }
+}
+
+/// Parsed registration response, with secret-bearing consent data redacted.
 pub struct RegistrationResponse {
+    /// Consent branch context observed in the comparison APK.
+    pub consent: RegistrationConsent,
     /// Server-recommended methods; unknown values are redacted enum variants.
     pub recommended_method: Option<Vec<VerificationMethod>>,
     /// Fallback methods; never permission to switch methods automatically.
@@ -1762,6 +1814,7 @@ pub struct RegistrationResponse {
 impl fmt::Debug for RegistrationResponse {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("RegistrationResponse")
+            .field("consent", &self.consent)
             .field("status", &self.status)
             .field("reason", &self.reason)
             .field("invalid_parameter", &self.invalid_parameter)
@@ -1782,12 +1835,15 @@ impl fmt::Debug for RegistrationResponse {
 
 impl RegistrationResponse {
     fn parse(body: Zeroizing<Vec<u8>>) -> Result<Self> {
-        let raw: RawRegistrationResponse = serde_json::from_slice(&body).map_err(|_| {
+        let mut raw: RawRegistrationResponse = serde_json::from_slice(&body).map_err(|_| {
             Error::invalid(
                 "registration_response",
                 "expected a bounded JSON object with supported field types",
             )
         })?;
+        // This marker is local provenance, never trusted from server input.
+        raw.consent.context_captured = true;
+        raw.consent.login = raw.login.clone();
         let status = raw
             .status
             .ok_or_else(|| Error::invalid("registration_response", "missing non-empty status"))?;
@@ -1802,6 +1858,8 @@ impl RegistrationResponse {
             raw.passkey_credential.as_ref(),
             raw.appeal_token.as_ref(),
             raw.edge_routing_info.as_ref(),
+            raw.consent.parent_consent_url.as_ref(),
+            raw.consent.pending.as_ref(),
         ]
         .into_iter()
         .flatten()
@@ -1815,6 +1873,7 @@ impl RegistrationResponse {
         }
 
         Ok(Self {
+            consent: raw.consent,
             status: RegistrationResponseStatus::parse(&status),
             recommended_method: raw.recommended_method,
             fallback_methods: raw.fallback_methods,
@@ -1856,6 +1915,8 @@ impl RegistrationResponse {
 
 #[derive(Deserialize)]
 struct RawRegistrationResponse {
+    #[serde(flatten)]
+    consent: RegistrationConsent,
     #[serde(default, deserialize_with = "bounded_methods")]
     recommended_method: Option<Vec<VerificationMethod>>,
     #[serde(default, deserialize_with = "bounded_methods")]
@@ -2115,6 +2176,39 @@ fn validate_pre_encoded(value: &str) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn consent_metadata_is_optional_bounded_and_redacted() {
+        let body = br#"{"status":"fail","reason":"consent","consent_id":3,"consent_version":2,"parent_consent_url":"https://example.invalid/private-consent-token"}"#;
+        let response = RegistrationHttpResponse::new(200, Zeroizing::new(body.to_vec())).unwrap();
+        let summary = response.diagnostic_summary().to_string();
+        assert!(!summary.contains("private-consent-token"));
+        let parsed = response.parse_json().unwrap();
+        assert_eq!(parsed.consent.consent_id, Some(3));
+        assert_eq!(parsed.consent.consent_version, Some(2));
+        assert!(!format!("{parsed:?}").contains("private-consent-token"));
+        let missing = RegistrationHttpResponse::new(
+            200,
+            Zeroizing::new(br#"{"status":"fail","reason":"consent"}"#.to_vec()),
+        )
+        .unwrap()
+        .parse_json()
+        .unwrap();
+        assert!(missing.consent.context_captured);
+        assert!(missing.consent.pending.is_none());
+        assert!(missing.consent.consent_id.is_none());
+        for body in [
+            serde_json::json!({"status":"fail","consent_id":"not-an-integer"}),
+            serde_json::json!({"status":"fail","parent_consent_url":"x".repeat(MAX_RESPONSE_SECRET_BYTES + 1)}),
+        ] {
+            let response = RegistrationHttpResponse::new(
+                200,
+                Zeroizing::new(serde_json::to_vec(&body).unwrap()),
+            )
+            .unwrap();
+            assert!(response.parse_json().is_err());
+        }
+    }
+
     #[test]
     fn diagnostic_field_patch_is_additive_and_code_only() {
         let mut form = RegistrationForm::new();

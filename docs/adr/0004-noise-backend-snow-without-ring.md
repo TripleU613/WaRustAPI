@@ -46,3 +46,17 @@ clear the backend gate.
 Compile the adapter only behind `experimental-noise`. Every connection epoch
 performs a fresh handshake; transport state is never persisted; any failure
 closes the transport permanently.
+
+## Addendum 2026-09-18: comparison transcript compatibility
+
+The standard `snow::HandshakeState` XX initiator failed to decrypt a live server
+hello. APK `LX/1NZ.A06` hashes the initial ephemeral without a trailing empty
+payload operation, whereas snow hashes that empty payload. The comparison-only
+`transport/classic.rs` now implements this sequencing over snow's existing
+X25519/AES-GCM resolver primitives and the existing SHA-256/HKDF dependencies.
+It is not a new cryptographic primitive or an accept-all verification path.
+
+Live certificate verification, primary login and a message acknowledgement then
+succeeded. The generic snow adapter remains separately tested; hybrid selection,
+IK resume and larger record interoperability remain unresolved. See
+[messaging transport](../protocol/messaging-transport.md).

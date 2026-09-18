@@ -144,6 +144,37 @@ TLS validation, origin and version binding are not configurable bypass switches.
 
 ### Edit requests without changing Rust
 
+For OTP submission, account PINs and follow-up branches, see
+[After the OTP](after-otp.md).
+
+### Consent continuation
+
+`inspect-consent` performs one explicit `/v2/exist` request on a saved consent
+refusal, preserving account keys. It does not send an OTP, SMS or consent choice.
+The v2 reservation captures `pending` and intermediate login; the old inspection
+reservation is retained. This bounded parser-correction inspection is not a
+general retry or cooldown reset.
+
+`submit-consent --decision <private.json>` sends one `/v2/consent` request.
+The decision file is separate from the frozen identity profile, like an answer;
+it must have private permissions. For the APK's `pending=dob` (or captured null)
+branch, supply your real DOB as `YYYY-MM-DD` in `dob` and explicitly set
+`confirmed: true`. Do not supply consent ID/version/result fields in that branch.
+Malformed dates, future dates and unconfirmed decisions fail before sending.
+
+For `pending=youth_consent`, a reviewed decision instead contains
+`consent_id`, `consent_version`, `consent_result: 5`, and `confirmed: true`.
+Selectors must match the saved server response. Result 5 is observed in the APK's
+navigation callback; this low-level lab interface does not itself display the
+consent wording and must not be treated as automatic authorization to accept it.
+Parent-verification, app-store age signals and unknown branches remain blocked.
+
+Both operations require `--allow-live-request`. Reservations commit before I/O,
+concurrent calls cannot double-send, and ambiguous results cannot be replayed.
+Generic/SMS/voice waits are respected. The DOB/decision is not copied to the
+attempt store or logs. An intermediate login stays encrypted and is reused;
+an `ok` with a pending follow-up is not treated as completed registration.
+
 New exported templates enable `preflight: true`. This runs `/v2/exist` with
 the same saved keys/identifiers before `/v2/code`. Existing JSON that omits the
 switch defaults to false, preserving its frozen configuration and historical

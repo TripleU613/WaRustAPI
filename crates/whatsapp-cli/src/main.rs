@@ -29,6 +29,10 @@ use zeroize::Zeroizing;
 mod http;
 #[cfg(feature = "experimental-signup")]
 mod signup;
+#[cfg(feature = "experimental-transport")]
+mod transport;
+#[cfg(feature = "experimental-transport")]
+mod transport_send;
 
 #[derive(Parser)]
 #[command(
@@ -65,6 +69,22 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Cmd {
+    /// One comparison-server connection; optional bounded primary login.
+    #[cfg(feature = "experimental-transport")]
+    LabTransport {
+        /// Existing private registration JSON, used to bind the saved account.
+        #[arg(long)]
+        config: PathBuf,
+        /// Authorize a single connection; there are no automatic retries.
+        #[arg(long)]
+        allow_live_request: bool,
+        /// Send one primary login after certificate verification.
+        #[arg(long)]
+        login: bool,
+        /// Private JSON containing to, text, and request_id for one message.
+        #[arg(long, requires = "login")]
+        message: Option<PathBuf>,
+    },
     /// Explicit comparison-build signup experiment; may affect an existing account.
     #[cfg(feature = "experimental-signup")]
     LabSignup {
@@ -227,6 +247,22 @@ fn print_step(step: &RegistrationStep, json: bool) {
 
 async fn run(cli: Cli) -> Result<(), Error> {
     match &cli.cmd {
+        #[cfg(feature = "experimental-transport")]
+        Cmd::LabTransport {
+            config,
+            allow_live_request,
+            login,
+            message,
+        } => {
+            transport::run(
+                &cli,
+                config,
+                *allow_live_request,
+                *login,
+                message.as_deref(),
+            )
+            .await
+        }
         #[cfg(feature = "experimental-signup")]
         Cmd::LabSignup {
             config,
