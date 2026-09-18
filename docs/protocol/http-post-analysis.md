@@ -82,6 +82,31 @@ Reproduce the added trace with `xtask apk-smali <apk> --class 'LX/I4D;'`
 and `--method A0H`, `A0K`, or `A0r`; inspect `LX/Hvq;` methods A00/A01/A02/A06
 and `LX/HBS;` separately. All names refer only to comparison build 2.26.37.70.
 
+### Additional-parameter producers (comparison build)
+
+`LX/1GF;->A00` parses the complete operator string using the class initializer's
+`(\d{3})(\d{2,3})` regex. It preserves the three-digit MCC and formats the MNC
+as three decimal digits with `Locale.US`. Null/nonmatching input takes the
+`("000", "000")` fallback at 0x00b2–0x00bc. Thus a two-digit MNC is padded;
+the fallback is an observed no-operator representation, not a carrier to guess
+from a phone number. `RequestCodeRepository.A00` obtains network/SIM operator
+inputs from telephony APIs before `I4D.A0K` emits their byte-valued fields.
+
+`LX/HcR;->A01` emits a JSON `attempts` property from its constructor-supplied
+integer, plus `app_campaign_download_source` only when the supplied string is
+nonnull. The class does not establish a default attempt count. One caller,
+`LX/GyW;->A0Z`, increments the persisted `reg_attempts_check_exist` counter
+before construction (0x0018–0x0038); this is an existence-check path, **not**
+evidence for the `/v2/code` counter. `LX/H2s;->A00` forwards its caller's integer
+and a source string obtained through `08l.A0L -> 0gI.A04`. Trace that caller
+before choosing any signup metrics value. Neither telemetry value was added
+to a live profile.
+
+Nearby calls are not metrics producers: `I4D.A0u` reads or generates a persisted
+backup token; `I4D.A0v` reads or generates a persisted identifier through `00L`.
+Their proximity to additional-map assembly is not evidence to substitute them
+for `reason` or `client_metrics`. No live request was sent for these findings.
+
 ### Registration transport continuation
 
 Following the actual bridge resolves the shared transport chain:

@@ -160,11 +160,40 @@ pub struct EndpointFields {
     /// Extra `/v2/security` fields; no PIN reset/wipe operation is exposed.
     pub security: BTreeMap<String, Zeroizing<String>>,
     /// Raw additional-parameter bytes for `/v2/code` (`Hvq.A06` encoding).
+    /// JSON accepts UTF-8 strings or arrays of byte integers, never pre-encoding.
+    #[serde(deserialize_with = "deserialize_byte_fields")]
     pub code_bytes: BTreeMap<String, Zeroizing<Vec<u8>>>,
     /// Raw additional-parameter bytes for `/v2/register`.
+    #[serde(deserialize_with = "deserialize_byte_fields")]
     pub register_bytes: BTreeMap<String, Zeroizing<Vec<u8>>>,
     /// Raw additional-parameter bytes for `/v2/security`.
+    #[serde(deserialize_with = "deserialize_byte_fields")]
     pub security_bytes: BTreeMap<String, Zeroizing<Vec<u8>>>,
+}
+
+fn deserialize_byte_fields<'de, D>(
+    deserializer: D,
+) -> std::result::Result<BTreeMap<String, Zeroizing<Vec<u8>>>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum Input {
+        Text(Zeroizing<String>),
+        Bytes(Zeroizing<Vec<u8>>),
+    }
+    let fields = BTreeMap::<String, Input>::deserialize(deserializer)?;
+    Ok(fields
+        .into_iter()
+        .map(|(name, value)| {
+            let bytes = match value {
+                Input::Text(text) => Zeroizing::new(text.as_bytes().to_vec()),
+                Input::Bytes(bytes) => bytes,
+            };
+            (name, bytes)
+        })
+        .collect())
 }
 
 const RESERVED: &[&str] = &[
@@ -372,6 +401,49 @@ redacted_debug!(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn byte_field_strings_match_arrays_and_keep_wire_encoding() {
+        for endpoint in ["code_bytes", "register_bytes", "security_bytes"] {
+            let mut json = serde_json::to_value(config()).unwrap();
+            json["fields"][endpoint] = serde_json::json!({"example": " ~*é%20"});
+            let text: LabRegistrationConfig = serde_json::from_value(json.clone()).unwrap();
+            json["fields"][endpoint]["example"] = serde_json::json!(b" ~*\xc3\xa9%20".to_vec());
+            let bytes: LabRegistrationConfig = serde_json::from_value(json).unwrap();
+            assert_eq!(text, bytes);
+            text.validate().unwrap();
+            let serialized = serde_json::to_value(&text).unwrap();
+            assert!(serialized["fields"][endpoint]["example"].is_array());
+            assert_eq!(
+                serde_json::from_value::<LabRegistrationConfig>(serialized).unwrap(),
+                text
+            );
+        }
+        let fields: EndpointFields =
+            serde_json::from_str(r#"{"code_bytes":{"example":" ~*é%20"}}"#).unwrap();
+        let mut form = RegistrationForm::new();
+        append_byte_fields(&mut form, &fields.code_bytes).unwrap();
+        assert_eq!(
+            form.encode().unwrap().as_slice(),
+            b"example=%20~%2A%C3%A9%2520"
+        );
+    }
+
+    #[test]
+    fn byte_fields_reject_non_string_non_byte_inputs() {
+        for invalid in [
+            serde_json::json!(null),
+            serde_json::json!(true),
+            serde_json::json!(256),
+            serde_json::json!([256]),
+            serde_json::json!([-1]),
+            serde_json::json!([1.5]),
+            serde_json::json!({"secret": "value"}),
+        ] {
+            let json = serde_json::json!({"code_bytes": {"example": invalid}});
+            assert!(serde_json::from_value::<EndpointFields>(json).is_err());
+        }
+    }
 
     fn config() -> LabRegistrationConfig {
         let mut value: LabRegistrationConfig =

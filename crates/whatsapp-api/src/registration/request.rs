@@ -15,7 +15,8 @@
 //! Binary client_start_message/auth_response values use unpadded URL-safe Base64.
 //!
 //! Caller-provided additional parameters (`I4D.A0H/A0K`, `Hvq.A06`) belong in
-//! code_bytes as raw byte arrays: reason, client_metrics, mcc/mnc, sim_mcc/sim_mnc,
+//! code_bytes as UTF-8 strings or raw byte arrays: reason, client_metrics,
+//! mcc/mnc, sim_mcc/sim_mnc,
 //! education_screen_displayed, prefer_sms_over_flash, feo2_query_status, etc.
 //! Supply observed/real inputs, not invented telemetry or challenge tokens.
 

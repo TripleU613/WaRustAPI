@@ -72,9 +72,12 @@ requirements. Add fields only with version-scoped APK evidence and real inputs;
 this is not a proven working Android fingerprint or an attestation generator.
 
 The APK's additional-parameter map has a different encoding path. Use
-`fields.code_bytes`, `register_bytes`, or `security_bytes` for raw byte arrays
-(JSON integers 0–255), not pre-encoded strings. For example a **synthetic
-encoding test only**, `"code_bytes": {"client_metrics": [32, 126, 42]}` emits
+`fields.code_bytes`, `register_bytes`, or `security_bytes` for UTF-8 strings
+or raw byte arrays (JSON integers 0–255), never pre-encoded values. Strings
+normalize to bytes, so changing only this spelling preserves saved-profile
+equality; adding or changing values still does not. Persisted serialization
+continues to use arrays. For example a **synthetic encoding test only**,
+`"code_bytes": {"client_metrics": " ~*"}` (equivalently `[32, 126, 42]`) emits
 `client_metrics=%20~%2A`. This is not a valid metrics payload. The string maps
 remain ordinary form text. Duplicate names across the two maps and protected
 identity/OTP/PIN fields are rejected. Known text flags require `true`/`false`,
