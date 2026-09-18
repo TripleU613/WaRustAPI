@@ -27,6 +27,8 @@ use whatsapp_api::{Error, ProtocolProfile, WhatsAppClient};
 use zeroize::Zeroizing;
 
 mod http;
+#[cfg(feature = "experimental-signup")]
+mod signup;
 
 #[derive(Parser)]
 #[command(
@@ -63,6 +65,18 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Cmd {
+    /// Explicit comparison-build signup experiment; may affect an existing account.
+    #[cfg(feature = "experimental-signup")]
+    LabSignup {
+        /// Private JSON LabRegistrationConfig file; keep under ignored lab/.
+        #[arg(long)]
+        config: PathBuf,
+        /// Authorize this single invocation to contact WhatsApp.
+        #[arg(long)]
+        allow_live_request: bool,
+        #[command(subcommand)]
+        action: signup::Action,
+    },
     /// Print a freshly generated master key (hex) to stdout. Store it in a
     /// secret manager and export it through the key environment variable.
     Keygen,
@@ -213,6 +227,12 @@ fn print_step(step: &RegistrationStep, json: bool) {
 
 async fn run(cli: Cli) -> Result<(), Error> {
     match &cli.cmd {
+        #[cfg(feature = "experimental-signup")]
+        Cmd::LabSignup {
+            config,
+            allow_live_request,
+            action,
+        } => signup::run(&cli, config, *allow_live_request, action).await,
         Cmd::Keygen => {
             let key = MasterKey::generate()?;
             if std::io::stdout().is_terminal() {

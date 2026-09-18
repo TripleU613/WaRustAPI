@@ -41,10 +41,41 @@ mandatory field timing and server acceptance still need independent evidence.
 No evidence ledger entry is promoted by these mock tests.
 
 The factory performs no network I/O and is never installed by the default
-client or CLI. Pairing it with `ComparisonHttpFlow` and a real HTTPS transport
-would be a separate, deliberate live action. Resetting only the registration
+client or ordinary registration CLI. The explicit experimental CLI below pairs
+it with `ComparisonHttpFlow` and real HTTPS only when requested. Resetting only the registration
 state does not rotate its keys: a different attempt requires a fresh store or
 account generation. Never delete an existing account to retry a transient error.
+
+## Experimental signup CLI
+
+Build with `cargo build --locked -p whatsapp-cli --features experimental-signup`.
+`lab-signup` is absent from the default build. It performs one operator-selected
+action per invocation and never automatically submits an OTP or resets a PIN.
+Mutations require `--allow-live-request`; status is local-only.
+
+Keep the JSON `LabRegistrationConfig` in `lab/signup.json` with mode 0600,
+outside Git. Its keys are `phone` (object with `country_code` and
+`national_number`), `language`, `locale`, `token`, `registration_id`, and
+`signed_pre_key_id`. Derive the phone-bound token from the exact comparison
+APK with `xtask apk-registration-token`; do not paste it into issues or chat.
+The config must stay unchanged when resuming. Supply the encrypted store's
+master key through `WHATSAPP_API_MASTER_KEY`, not command-line arguments.
+
+After independently checking the inputs and authorizing use of the test number:
+
+```sh
+target/debug/whatsapp-cli --store lab/signup.redb lab-signup \
+  --config lab/signup.json --allow-live-request begin --method sms
+target/debug/whatsapp-cli --store lab/signup.redb lab-signup \
+  --config lab/signup.json status
+```
+
+For `verify-code` or `verify-pin`, the answer must arrive on redirected stdin;
+terminal input is rejected to avoid echoing secrets. Use a local hidden-input
+prompt and pipe the result, not a literal secret in shell history. Inspect the
+reported state before any further action. Cooldown, blocked, and unknown-outcome
+states must not be worked around by resetting stores or repeatedly requesting codes.
+No live signup has been performed or shown to work by adding this command.
 
 ## Still needed for the first real message
 

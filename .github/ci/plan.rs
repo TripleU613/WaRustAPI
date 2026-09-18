@@ -96,7 +96,7 @@ impl Plan {
             r#"{"include":[{"profile":"default","args":"--workspace"},{"profile":"all-features","args":"--workspace --all-features"}]}"#.into()
         } else {
             format!(
-                r#"{{"include":[{{"profile":"affected-crates","args":"{}"}}]}}"#,
+                r#"{{"include":[{{"profile":"affected-crates","args":"{} --all-features"}}]}}"#,
                 self.args()
             )
         }
@@ -254,6 +254,7 @@ mod tests {
     fn cli_is_scoped() {
         let p = route(&["crates/whatsapp-cli/src/http.rs"]);
         assert_eq!(p.args(), "-p whatsapp-cli");
+        assert!(p.matrix().contains("-p whatsapp-cli --all-features"));
         assert!(!p.package && !p.dependencies && !p.proto);
     }
     #[test]

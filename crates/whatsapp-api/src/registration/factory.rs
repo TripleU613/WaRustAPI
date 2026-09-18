@@ -174,6 +174,11 @@ impl fmt::Debug for StoredComparisonRequestFactory {
 impl StoredComparisonRequestFactory {
     /// Validate configuration without generating keys or contacting the server.
     pub fn new(store: Arc<ProtocolStore>, config: LabRegistrationConfig) -> Result<Self> {
+        let validated_phone =
+            PhoneNumber::new(config.phone.country_code(), config.phone.national_number())?;
+        if validated_phone != config.phone {
+            return Err(invalid("phone must use canonical digits"));
+        }
         if config.signed_pre_key_id > 0x00ff_ffff {
             return Err(invalid("signed-prekey ID must fit 24 bits"));
         }
@@ -439,6 +444,10 @@ mod tests {
     fn invalid_ids_and_existing_accounts_are_not_overwritten() {
         let dir = tempfile::tempdir().unwrap();
         let store = open(dir.path());
+        let mut malformed = serde_json::to_value(config()).unwrap();
+        malformed["phone"]["country_code"] = serde_json::json!(0);
+        let malformed = serde_json::from_value(malformed).unwrap();
+        assert!(StoredComparisonRequestFactory::new(store.clone(), malformed).is_err());
         let mut bad = config();
         bad.signed_pre_key_id = 0x0100_0000;
         assert!(StoredComparisonRequestFactory::new(store.clone(), bad).is_err());

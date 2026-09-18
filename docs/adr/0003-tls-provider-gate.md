@@ -13,6 +13,10 @@ must no longer be described as entirely pure Rust. The dependency auditor
 allows `ring` only for the registration HTTPS feature, while retaining other
 native dependency restrictions. No OpenSSL/system TLS is introduced.
 
+The CLI's explicit `experimental-signup` feature composes the approved library
+HTTPS feature and receives the same narrow `ring` exception. Its complete
+normal dependency graph is audited separately; default CLI builds stay unchanged.
+
 Certificate and hostname validation, explicit Mozilla roots, HTTPS-only
 origin restrictions, no automatic retries/redirects/proxies, deadlines and
 response bounds remain unchanged. No process-global provider is installed.

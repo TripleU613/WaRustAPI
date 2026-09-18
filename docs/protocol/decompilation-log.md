@@ -1,5 +1,18 @@
 # Decompilation log — registration and handshake classes
 
+## Signup continuation — 2026-09-17
+
+Additional comparison-only traces from the same `b2090b…732` APK:
+`LX/13c;->A0L` reaches `LX/0jc;->A0d`, which loads the latest stored signed
+prekey through `A0a` and exports its ID, raw public bytes and stored signature
+through `A04`. `LX/0jc;->A0g` calls `LX/B2D;->A00` before signing with
+`LX/B2G;->A0B`; `B2D.A00` prepends its type byte to the raw key bytes.
+This supports the lab's type-prefixed signing hypothesis, but the current
+structural disassembler does not decode all move/range operands, and this
+trace is not an independent signature vector or proof of server acceptance.
+`LX/0kc;->A06` reads registration_id from stored identity rows; it does not
+establish the generator's accepted range. No live signup was performed.
+
 Purpose: a running, append-only record of every static-analysis step against
 the pinned APK (`com.whatsapp` 2.26.36.75, sha256 `ce7468…922e9`), so no step
 is repeated and every ledger row can be traced to the class and method that

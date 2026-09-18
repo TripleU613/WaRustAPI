@@ -95,7 +95,9 @@ struct Target {
 
 // Owner-approved TLS-only exception; unrelated native dependencies stay denied.
 fn tls_exception(name: &str, features: &[&str]) -> bool {
-    name == "ring" && features.contains(&"experimental-registration-https")
+    name == "ring"
+        && (features.contains(&"experimental-registration-https")
+            || features.contains(&"experimental-signup"))
 }
 
 fn dependency_is_enabled(
@@ -164,6 +166,11 @@ fn linux_x86_64(cfg: Option<&str>) -> bool {
 
 pub fn audit(root: &Path, strict: bool) -> Result<(), String> {
     let targets = [
+        Target {
+            package: "whatsapp-cli",
+            features: vec!["experimental-signup"],
+            no_default: false,
+        },
         Target {
             package: "whatsapp-api",
             features: vec![],
@@ -318,7 +325,7 @@ pub fn audit(root: &Path, strict: bool) -> Result<(), String> {
         }
         report.push('\n');
     }
-    report.push_str("## Denied crate list\n\n`ring` is excepted only in the experimental registration HTTPS graph (owner-approved ADR 0003); its native build/link remains visible above.\n\n");
+    report.push_str("## Denied crate list\n\n`ring` is excepted only in the experimental registration HTTPS and CLI signup graphs (owner-approved ADR 0003); its native build/link remains visible above.\n\n");
     for d in DENIED {
         report.push_str(&format!("- `{d}`\n"));
     }
@@ -348,6 +355,7 @@ mod tests {
     #[test]
     fn native_exception_is_limited_to_ring_and_https() {
         assert!(tls_exception("ring", &["experimental-registration-https"]));
+        assert!(tls_exception("ring", &["experimental-signup"]));
         assert!(!tls_exception("ring", &[]));
         assert!(!tls_exception("ring", &["experimental-noise"]));
         for name in ["openssl", "openssl-sys", "aws-lc-sys", "libsqlite3-sys"] {
