@@ -1,11 +1,17 @@
-# Status — 2026-09-17
+# Status — 2026-09-18
 
-**Gate position:** G0 complete (repository, dependency decisions, baseline).
+**Latest comparison-lab result:** one APK-derived unknown-build-properties
+User-Agent experiment changed the response from HTTP 200 / `bad_param` to
+HTTP 200 / `format_wrong` (64-byte response). The saved attempt and account
+keys are unchanged. This is a different refusal, not accepted signup or OTP
+delivery. See the [experiment sequence](docs/protocol/http-post-analysis.md).
+
+**Historical offline baseline:** G0 complete (repository, dependency decisions, baseline).
 G1 partially complete offline (codec, framing, Noise adapter, certificate
 binding, schemas, reference manifest, **static APK observations**). **G2 not
 attempted**: the Android registration payload encoding, transport port/layer
 and login payload values are `Unknown` (see `docs/protocol/unknowns.md`). No
-live server contact has been made and no OTP has been requested.
+live server contact had been made and no OTP had been requested at that baseline.
 
 **Owner-approved integration update:** registration HTTPS now selects
 rustls/ring instead of the alpha RustCrypto provider. The optional
@@ -62,7 +68,7 @@ the active 2.26.36.75 profile.
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability and comparison transport/registration wire-profile endpoints plus structured gated-operation errors |
 
-Test count: 168 (`cargo test --locked --workspace --all-features`). Formatting,
+Test count: 170 (`cargo test --locked --workspace --all-features`). Formatting,
 all-feature/all-target Clippy with `-D warnings`, strict rustdoc, package
 verification, and protobuf regeneration checks pass on the continuation
 machine (Rust 1.98.1). The repository and CI

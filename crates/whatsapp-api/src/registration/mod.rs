@@ -457,6 +457,18 @@ impl RegistrationAttempt {
     pub fn history_len(&self) -> usize {
         self.history.len()
     }
+
+    /// Code-request preparations retained in complete local history. This is
+    /// not a delivery count; a crash may occur after reservation and before I/O.
+    /// Returns None if bounded history could have discarded earlier entries.
+    pub fn code_preparation_count(&self) -> Option<usize> {
+        (self.history.len() < MAX_HISTORY).then(|| {
+            self.history
+                .iter()
+                .filter(|entry| entry.to == "preparing")
+                .count()
+        })
+    }
 }
 
 /// Future returned by a profile-specific registration driver.
@@ -1021,6 +1033,44 @@ impl RegistrationService {
         phone: PhoneNumber,
     ) -> Result<RegistrationStep> {
         self.diagnose_refusal_with_latch(phone, true, b"encrypted-parameter-diagnostic-used")
+            .await
+    }
+
+    /// One authorized experiment with the observed empty-H envelope fallback.
+    /// Requires the caller's matching transport; does not clear prior reservations.
+    #[cfg(feature = "experimental-registration-https")]
+    pub async fn diagnose_unsigned_envelope_once(
+        &self,
+        phone: PhoneNumber,
+    ) -> Result<RegistrationStep> {
+        self.diagnose_refusal_with_latch(phone, true, b"unsigned-envelope-diagnostic-used")
+            .await
+    }
+
+    /// One authorized additive-field experiment, preserving account identity.
+    #[cfg(feature = "experimental-registration-https")]
+    pub async fn diagnose_additional_fields_once(
+        &self,
+        phone: PhoneNumber,
+    ) -> Result<RegistrationStep> {
+        self.diagnose_refusal_with_latch(phone, true, b"additional-fields-diagnostic-used")
+            .await
+    }
+
+    /// One post-failure flow-state experiment with explicit additive fields.
+    #[cfg(feature = "experimental-registration-https")]
+    pub async fn diagnose_flow_fields_once(&self, phone: PhoneNumber) -> Result<RegistrationStep> {
+        self.diagnose_refusal_with_latch(phone, true, b"flow-fields-diagnostic-used")
+            .await
+    }
+
+    /// One explicit experiment with the APK's unknown-build-properties header.
+    #[cfg(feature = "experimental-registration-https")]
+    pub async fn diagnose_unknown_agent_once(
+        &self,
+        phone: PhoneNumber,
+    ) -> Result<RegistrationStep> {
+        self.diagnose_refusal_with_latch(phone, true, b"unknown-agent-diagnostic-used")
             .await
     }
 

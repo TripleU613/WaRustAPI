@@ -524,6 +524,10 @@ mod tests {
             (false, b"legacy-refusal-diagnostic-used".as_slice()),
             (true, b"bad-parameter-diagnostic-used".as_slice()),
             (true, b"encrypted-parameter-diagnostic-used".as_slice()),
+            (true, b"unsigned-envelope-diagnostic-used".as_slice()),
+            (true, b"additional-fields-diagnostic-used".as_slice()),
+            (true, b"flow-fields-diagnostic-used".as_slice()),
+            (true, b"unknown-agent-diagnostic-used".as_slice()),
         ] {
             use crate::registration::BlockedReason;
             let dir = tempfile::tempdir().unwrap();
@@ -577,6 +581,12 @@ mod tests {
             assert_eq!(saved.id, a.id);
             assert_eq!(saved.generation, a.generation);
             assert!(saved.history_len() > a.history_len());
+            assert_eq!(saved.code_preparation_count(), Some(1));
+            let mut truncated = saved.clone();
+            truncated
+                .history
+                .resize(super::super::MAX_HISTORY, truncated.history[0].clone());
+            assert_eq!(truncated.code_preparation_count(), None);
             assert_eq!(original, factory.code_request(&saved).unwrap().body());
             assert!(
                 service
@@ -655,6 +665,30 @@ mod tests {
             assert!(
                 service
                     .diagnose_encrypted_parameter_once(config().phone)
+                    .await
+                    .is_err()
+            );
+            assert!(
+                service
+                    .diagnose_unsigned_envelope_once(config().phone)
+                    .await
+                    .is_err()
+            );
+            assert!(
+                service
+                    .diagnose_additional_fields_once(config().phone)
+                    .await
+                    .is_err()
+            );
+            assert!(
+                service
+                    .diagnose_flow_fields_once(config().phone)
+                    .await
+                    .is_err()
+            );
+            assert!(
+                service
+                    .diagnose_unknown_agent_once(config().phone)
                     .await
                     .is_err()
             );

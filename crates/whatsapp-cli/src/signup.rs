@@ -4,7 +4,8 @@ use std::{fs::File, io::Read, path::Path, sync::Arc, time::Instant};
 
 use clap::Subcommand;
 use whatsapp_api::registration::{
-    Answer, ChallengeMethod, ComparisonHttpFlow, RegistrationService, RegistrationState,
+    Answer, ChallengeMethod, ComparisonHttpFlow, ComparisonRequestFactory, RegistrationService,
+    RegistrationState,
     factory::StoredComparisonRequestFactory,
     request::{DeliveryMethod, LabRegistrationConfig, MAX_CONFIG_BYTES},
     wire::{
@@ -37,6 +38,24 @@ pub(super) enum Action {
     /// One encrypted-envelope experiment after HTTP 200 / bad_param.
     /// Same inner fields and identity; no attestation, no automatic repeats.
     DiagnoseEncryptedParameter,
+    /// One ENC plus empty-H experiment; does not fabricate attestation.
+    DiagnoseUnsignedEnvelope,
+    /// One additive-code-field experiment from a private EndpointFields JSON file.
+    /// Uses ENC plus empty H; rejects replacement of saved fields.
+    DiagnoseAdditionalFields {
+        #[arg(long)]
+        fields: std::path::PathBuf,
+    },
+    /// One explicit post-failure reason/metrics experiment, using ENC plus empty H.
+    DiagnoseFlowFields {
+        #[arg(long)]
+        fields: std::path::PathBuf,
+    },
+    /// One APK unknown-build-properties User-Agent experiment with additive fields.
+    DiagnoseUnknownAgent {
+        #[arg(long)]
+        fields: std::path::PathBuf,
+    },
     /// Request a code or resume an existing attempt; no automatic retries.
     Begin {
         #[arg(long, value_enum)]
@@ -100,12 +119,21 @@ struct DiagnosticTransport {
     inner: ExperimentalHttpsTransport,
     enabled: bool,
     encrypt: bool,
+    empty_signature: bool,
+    extra: Option<whatsapp_api::registration::request::EndpointFields>,
 }
 
 impl RegistrationTransport for DiagnosticTransport {
     fn send<'a>(&'a self, request: EncodedRegistrationRequest) -> RegistrationTransportFuture<'a> {
         Box::pin(async move {
-            let request = if self.encrypt {
+            let request = if let Some(fields) = &self.extra {
+                request.with_additional_code_fields(fields)?
+            } else {
+                request
+            };
+            let request = if self.empty_signature {
+                request.encrypt_comparison_without_signature()?
+            } else if self.encrypt {
                 request.encrypt_comparison()?
             } else {
                 request
@@ -176,12 +204,55 @@ pub(super) async fn run(
     }
     let phone = config.phone.clone();
     let configured_method = config.method;
+    let extra = if let Action::DiagnoseAdditionalFields { fields }
+    | Action::DiagnoseFlowFields { fields }
+    | Action::DiagnoseUnknownAgent { fields } = action
+    {
+        let file = File::open(fields)?;
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            if file.metadata()?.permissions().mode() & 0o077 != 0 {
+                return Err(invalid(
+                    "field patch must have private permissions (chmod 600)",
+                ));
+            }
+        }
+        if !file.metadata()?.is_file() || file.metadata()?.len() > MAX_CONFIG_BYTES {
+            return Err(invalid(
+                "field patch must be a regular file within config budget",
+            ));
+        }
+        let mut data = Zeroizing::new(Vec::new());
+        file.take(MAX_CONFIG_BYTES + 1).read_to_end(&mut data)?;
+        if data.len() as u64 > MAX_CONFIG_BYTES {
+            return Err(invalid("field patch too large"));
+        }
+        Some(serde_json::from_slice(&data).map_err(|_| invalid("invalid field patch JSON"))?)
+    } else {
+        None
+    };
     let mut profile = ProtocolProfile::android_reference()?;
     profile.id = config.client.profile_id.clone();
+    let mut transport_client = config.client.clone();
+    if matches!(action, Action::DiagnoseUnknownAgent { .. }) {
+        transport_client.user_agent = Some(Zeroizing::new(
+            whatsapp_api::registration::request::UNKNOWN_DEVICE_USER_AGENT.into(),
+        ));
+        eprintln!("signup experiment: APK unknown-build-properties User-Agent fallback");
+    }
     let transport = Arc::new(DiagnosticTransport {
-        inner: ExperimentalHttpsTransport::with_settings(&config.transport, &config.client)?,
+        inner: ExperimentalHttpsTransport::with_settings(&config.transport, &transport_client)?,
         enabled: config.diagnostics,
         encrypt: matches!(action, Action::DiagnoseEncryptedParameter),
+        empty_signature: matches!(
+            action,
+            Action::DiagnoseUnsignedEnvelope
+                | Action::DiagnoseAdditionalFields { .. }
+                | Action::DiagnoseFlowFields { .. }
+                | Action::DiagnoseUnknownAgent { .. }
+        ),
+        extra,
     });
     let store = Arc::new(ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
@@ -193,8 +264,41 @@ pub(super) async fn run(
     let service = RegistrationService::new(
         store,
         &profile,
-        Arc::new(ComparisonHttpFlow::new(factory, transport)),
+        Arc::new(ComparisonHttpFlow::new(factory.clone(), transport.clone())),
     );
+    if let Some(extra) = &transport.extra {
+        let attempt = service
+            .current()
+            .await?
+            .ok_or_else(|| invalid("no saved attempt for field patch"))?;
+        // Validate collisions and complete request size before reserving any send.
+        factory
+            .code_request(&attempt)?
+            .with_additional_code_fields(extra)?
+            .encrypt_comparison_without_signature()?;
+        if matches!(
+            action,
+            Action::DiagnoseFlowFields { .. } | Action::DiagnoseUnknownAgent { .. }
+        ) {
+            let next_count = attempt.code_preparation_count().ok_or_else(|| {
+                invalid("attempt history incomplete; cannot infer metrics counter")
+            })? + 1;
+            let metrics = extra
+                .code_bytes
+                .get("client_metrics")
+                .ok_or_else(|| invalid("flow experiment requires client_metrics"))?;
+            let metrics: serde_json::Value =
+                serde_json::from_slice(metrics).map_err(|_| invalid("metrics must be JSON"))?;
+            if metrics.get("attempts").and_then(|value| value.as_u64()) != Some(next_count as u64) {
+                return Err(invalid(
+                    "metrics attempts must match saved preparations plus this attempt",
+                ));
+            }
+            eprintln!(
+                "signup flow experiment: preparation count {next_count}; preserves account identity"
+            );
+        }
+    }
     let step = match action {
         Action::Template | Action::Preview { .. } => {
             return Err(invalid("preview must not open the store"));
@@ -219,6 +323,12 @@ pub(super) async fn run(
         }
         Action::DiagnoseLegacyRefusal => service.diagnose_legacy_refusal_once(phone).await?,
         Action::DiagnoseBadParameter => service.diagnose_bad_parameter_once(phone).await?,
+        Action::DiagnoseUnsignedEnvelope => service.diagnose_unsigned_envelope_once(phone).await?,
+        Action::DiagnoseAdditionalFields { .. } => {
+            service.diagnose_additional_fields_once(phone).await?
+        }
+        Action::DiagnoseFlowFields { .. } => service.diagnose_flow_fields_once(phone).await?,
+        Action::DiagnoseUnknownAgent { .. } => service.diagnose_unknown_agent_once(phone).await?,
         Action::DiagnoseEncryptedParameter => {
             service.diagnose_encrypted_parameter_once(phone).await?
         }
@@ -269,6 +379,16 @@ mod tests {
             Action::DiagnoseLegacyRefusal,
             Action::DiagnoseBadParameter,
             Action::DiagnoseEncryptedParameter,
+            Action::DiagnoseUnsignedEnvelope,
+            Action::DiagnoseAdditionalFields {
+                fields: "unused.json".into(),
+            },
+            Action::DiagnoseFlowFields {
+                fields: "unused.json".into(),
+            },
+            Action::DiagnoseUnknownAgent {
+                fields: "unused.json".into(),
+            },
             Action::Begin {
                 method: Some(super::super::Method::Sms),
             },

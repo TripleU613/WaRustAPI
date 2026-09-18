@@ -107,6 +107,28 @@ outcomes remain ineligible. This is not a full attested Android request.
 The first authorized encrypted experiment returned HTTP 200 / fail / bad_param:
 884-byte outer request, 58-byte response, no recognized parameter hint or wait.
 Encryption alone did not improve the observed result. No automatic retry followed.
+
+Additional explicit, separately reserved experiments are available after a
+saved HTTP 200 / bad_param only:
+
+- `diagnose-unsigned-envelope`: `ENC` plus the APK's empty-signature `H=` fallback.
+- `diagnose-additional-fields --fields <private.json>`: additive EndpointFields
+  JSON on that envelope. Existing/protected fields cannot be replaced.
+- `diagnose-flow-fields --fields <private.json>`: additionally requires a
+  `client_metrics.attempts` value matching complete saved preparation history
+  plus this request. Truncated history fails closed; this counts preparations,
+  not confirmed deliveries.
+- `diagnose-unknown-agent --fields <private.json>`: the same checks with the
+  exact APK `0re.A00` unknown-build-property header fallback. It is an explicit
+  compatibility experiment, not a claim of a real Android device.
+
+Each command still requires `--allow-live-request`, reserves its one-shot
+marker before I/O, and preserves earlier markers. Field patches are private,
+size-bounded and preflighted before reservation; they do not rewrite the frozen
+saved profile. No command retries `format_wrong`, cooldowns or unknown outcomes.
+The unknown-agent test changed the retained refusal to `format_wrong`; no code
+delivery or account registration was established.
+
 Phone and secret values are redacted; `preview --show-phone` explicitly reveals
 only the phone. Unknown settings fail fast. Live diagnostics show field names,
 HTTP status, recognized server reason and wait times, never body values or

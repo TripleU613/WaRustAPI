@@ -112,3 +112,13 @@ hint (`invalid_parameter: null`). This does not prove that no unknown hint was
 present. No new optional fields were populated and no successful signup or OTP
 delivery was established. The dedicated bad-parameter diagnostic latch is used;
 no automatic retry or identity rotation occurred.
+
+2026-09-18 UTC, APK-only controlled continuation: empty-H, seven fallback
+fields, and post-failure reason/metrics experiments each still returned
+HTTP 200 / fail / bad_param. The next experiment used the APK's
+unknown-build-properties User-Agent and advanced the checked preparation count
+to 7. The 1167-byte ENC/H request returned HTTP 200 / fail / format_wrong
+(64-byte response, 189 ms). The new refusal is persisted on the same attempt
+and account keys. This is changed behavior, not successful registration.
+No recognized offending-field hint or wait was supplied. Detailed inputs and
+static offsets are recorded in [the HTTP analysis](http-post-analysis.md).

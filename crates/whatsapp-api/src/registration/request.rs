@@ -27,6 +27,11 @@ pub use super::request_config::{
 #[cfg(feature = "experimental-signal-crypto")]
 pub(crate) use super::request_config::{append_byte_fields, append_fields};
 
+/// APK `0re.A00` exception fallback for unavailable build properties.
+/// Explicit experiment only; not a claim that this client runs on Android.
+pub const UNKNOWN_DEVICE_USER_AGENT: &str =
+    "WhatsApp/2.26.37.70 Android/unknown Device/unknown-unknown";
+
 /// Starter profile. Placeholder credentials deliberately fail live validation.
 /// Locale is a locale, not GPS; no invented model, carrier or attestation values.
 pub const TEMPLATE_JSON: &str = r#"{

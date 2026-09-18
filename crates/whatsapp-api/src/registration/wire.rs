@@ -1031,6 +1031,83 @@ impl fmt::Debug for EncodedRegistrationRequest {
 }
 
 impl EncodedRegistrationRequest {
+    /// Append explicitly selected code fields without replacing saved inputs.
+    /// This is an offline diagnostic transform, not a persisted profile change.
+    pub fn with_additional_code_fields(
+        mut self,
+        fields: &super::request::EndpointFields,
+    ) -> Result<Self> {
+        if self.url != WHATSAPP_2_26_37_70.endpoint_url(RegistrationEndpoint::Code)
+            || self.body.starts_with(b"ENC=")
+            || !fields.register.is_empty()
+            || !fields.register_bytes.is_empty()
+            || !fields.security.is_empty()
+            || !fields.security_bytes.is_empty()
+        {
+            return Err(Error::invalid(
+                "registration_patch",
+                "requires clear comparison code request and code-only fields",
+            ));
+        }
+        let mut extra = RegistrationForm::new();
+        super::request_config::append_fields(&mut extra, &fields.code)?;
+        super::request_config::append_byte_fields(&mut extra, &fields.code_bytes)?;
+        let encoded = extra.encode()?;
+        if encoded.is_empty() {
+            return Err(Error::invalid("registration_patch", "empty field patch"));
+        }
+        let existing_count = if self.body.is_empty() {
+            0
+        } else {
+            self.body.split(|b| *b == b'&').count()
+        };
+        if existing_count.saturating_add(extra.fields.len()) > MAX_FORM_FIELDS {
+            return Err(Error::ResourceExhausted {
+                resource: "registration form fields",
+                limit: MAX_FORM_FIELDS as u64,
+            });
+        }
+        if self
+            .body
+            .len()
+            .saturating_add(encoded.len())
+            .saturating_add(usize::from(!self.body.is_empty()))
+            > MAX_FORM_BODY_BYTES
+        {
+            return Err(Error::ResourceExhausted {
+                resource: "registration form body",
+                limit: MAX_FORM_BODY_BYTES as u64,
+            });
+        }
+        for field in encoded.split(|b| *b == b'&') {
+            let name = field.split(|b| *b == b'=').next().unwrap_or_default();
+            if self
+                .body
+                .split(|b| *b == b'&')
+                .any(|existing| existing.split(|b| *b == b'=').next() == Some(name))
+            {
+                return Err(Error::invalid(
+                    "registration_patch",
+                    "field already exists in saved request",
+                ));
+            }
+        }
+        if !self.body.is_empty() {
+            self.body.push(b'&');
+        }
+        self.body.extend_from_slice(&encoded);
+        Ok(self)
+    }
+
+    /// Observed body-builder fallback when no attestation signature is available.
+    /// Sends an explicitly empty H, not a forged signature or Authorization header.
+    #[cfg(feature = "experimental-signal-crypto")]
+    pub fn encrypt_comparison_without_signature(self) -> Result<Self> {
+        let mut request = self.encrypt_comparison()?;
+        request.body.extend_from_slice(b"&H=");
+        Ok(request)
+    }
+
     /// Wrap a comparison request in the APK's `ENC` envelope, using a fresh
     /// ephemeral encryption key. Does not provide `H` or Authorization
     /// attestation, change account identity, or contact the server.
@@ -1790,6 +1867,10 @@ enum RawDiagnosticParameter {
 }
 
 const KNOWN_REQUEST_PARAMETERS: &[&str] = &[
+    // Server alias explicitly handled by VerifyPhoneNumber.A2B in the APK.
+    "number",
+    "ENC",
+    "H",
     "reason",
     "mistyped",
     "hasav",
@@ -1982,6 +2063,65 @@ fn validate_pre_encoded(value: &str) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn diagnostic_field_patch_is_additive_and_code_only() {
+        let mut form = RegistrationForm::new();
+        form.push("reason", "").unwrap();
+        let request = || {
+            WHATSAPP_2_26_37_70
+                .request(RegistrationEndpoint::Code, &form)
+                .unwrap()
+        };
+        let fields = serde_json::from_str(r#"{"code_bytes":{"mcc":"000"}}"#).unwrap();
+        assert_eq!(
+            request()
+                .with_additional_code_fields(&fields)
+                .unwrap()
+                .body(),
+            b"reason=&mcc=000"
+        );
+        for json in [
+            r#"{}"#,
+            r#"{"code_bytes":{"reason":""}}"#,
+            r#"{"code_bytes":{"token":"x"}}"#,
+            r#"{"register":{"mcc":"000"}}"#,
+        ] {
+            assert!(
+                request()
+                    .with_additional_code_fields(&serde_json::from_str(json).unwrap())
+                    .is_err()
+            );
+        }
+        let mut full = RegistrationForm::new();
+        for index in 0..MAX_FORM_FIELDS {
+            full.push(format!("x{index}"), "v").unwrap();
+        }
+        assert!(
+            WHATSAPP_2_26_37_70
+                .request(RegistrationEndpoint::Code, &full)
+                .unwrap()
+                .with_additional_code_fields(&fields)
+                .is_err()
+        );
+    }
+
+    #[cfg(feature = "experimental-signal-crypto")]
+    #[test]
+    fn unsigned_envelope_preserves_empty_signature_field() {
+        let request = WHATSAPP_2_26_37_70
+            .request(RegistrationEndpoint::Code, &RegistrationForm::new())
+            .unwrap()
+            .encrypt_comparison_without_signature()
+            .unwrap();
+        assert!(request.body().starts_with(b"ENC="));
+        assert!(request.body().ends_with(b"&H="));
+        assert_eq!(
+            request.diagnostic_summary()["fields"],
+            serde_json::json!(["ENC", "H"])
+        );
+        assert!(request.encrypt_comparison_without_signature().is_err());
+    }
+
     #[cfg(feature = "experimental-signal-crypto")]
     #[test]
     fn comparison_envelope_is_explicit_redacted_and_not_double_wrapped() {
@@ -2012,6 +2152,7 @@ mod tests {
     #[test]
     fn bad_parameter_hints_are_allowlisted_and_never_echo_arbitrary_values() {
         for (hint, expected) in [
+            (serde_json::json!("number"), Some("number")),
             (serde_json::json!("type"), Some("type")),
             (serde_json::json!("mcc"), Some("mcc")),
             (serde_json::json!("e_skey_sig"), Some("e_skey_sig")),

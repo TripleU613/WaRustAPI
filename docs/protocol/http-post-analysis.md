@@ -199,6 +199,45 @@ The result and a dedicated one-shot reservation are persisted; no second send
 occurred. The new CLI diagnostic is separate from ordinary begin and from the
 earlier unchanged-payload diagnostic, whose reservation remains intact.
 
+### Follow-up experiments and first changed refusal — 2026-09-18 UTC
+
+APK-only findings justified four further explicit tests on the same saved
+attempt and keys. No proxy, identity rotation, reset, fake certificate or
+fabricated attestation signature was used. All responses were HTTP 200/fail;
+none included a recognized parameter hint or retry/SMS/voice wait.
+
+| Change | Outer body bytes | Response | Response bytes / elapsed |
+| --- | ---: | --- | --- |
+| Append observed missing-signature fallback `H=` to ENC | 887 | `bad_param` | 58 / 222 ms |
+| Add four `000` carrier fields, two false preference defaults and `feo2_query_status=did_not_query` | 1065 | `bad_param` | 58 / 100 ms |
+| Also add post-failure reason and metrics with preparation count 6 | 1167 | `bad_param` | 58 / 111 ms |
+| Also set APK unknown-build-properties User-Agent; preparation count advances to 7 | 1167 | `format_wrong` | 64 / 189 ms |
+
+The reason is `server-send-request-bad-param`: `VerifyPhoneNumber.A5P`
+0x0f6a–0x0f74 passes it to A2B, which persists it via I4A.A0R at
+0x003c–0x0042. Metrics count the actual local preparations; the CLI checks the
+value before reserving the next request. Counts were not reset to fresh-install
+values. Field values live in private JSON patches, not sender hardcoding.
+
+`13h.A07` returns null when disabled or signing fails/missing key; A03 can
+return null when disabled/retrieval fails. Body builder A00 then uses an empty
+H and omits Authorization. This reproduces absence, not successful attestation.
+
+`0re.A00` catches unavailable build-property reads and substitutes `unknown`
+for release/manufacturer/model (0x00d0–0x0124). Its final assembly gives
+`WhatsApp/2.26.37.70 Android/unknown Device/unknown-unknown`. This is the explicit
+header tested, not an invented model. The changed response coincided with this
+header and the next metrics count; it does not isolate causality or prove
+successful decryption, genuine Android execution, number validity or signup.
+
+The bridge explicitly recognizes `format_wrong` at A09 0x04c4–0x04d8.
+Its deeper server meaning remains unverified. Current saved state retains that
+reason, and bad-param-only diagnostic commands no longer accept this state.
+
+Diagnostics also now recognize the APK's `param="number"` alias (A2B compares
+it at 0x0042–0x0050), plus ENC/H field names. Earlier logs could suppress an
+unrecognized hint; the new flow-state and header tests still reported none.
+
 ### Refusal information loss fixed
 
 Previously `ComparisonHttpFlow::blocked_response` dropped the parsed protocol
