@@ -1385,6 +1385,14 @@ impl RegistrationHttpResponse {
                 summary["status"] = serde_json::json!(format!("{:?}", parsed.status));
                 summary["reason"] = serde_json::json!(parsed.reason.map(|v| format!("{v:?}")));
                 summary["invalid_parameter"] = serde_json::json!(parsed.invalid_parameter);
+                if parsed.reason == Some(RegistrationResponseReason::FormatWrong) {
+                    // Comparison APK: VerifyPhoneNumber.A19, dialog 53,
+                    // string resource 0x7f123741. This is client interpretation,
+                    // not independent proof of number assignment or eligibility.
+                    summary["operator_hint"] = serde_json::json!(
+                        "APK 2.26.37.70 presents this as an invalid mobile number for the country. Check the country code and national number before another attempt; this does not identify a missing protocol field."
+                    );
+                }
                 summary["retry_after_seconds"] =
                     serde_json::json!(parsed.retry_after.map(|v| v.as_secs()));
                 summary["sms_wait_seconds"] =
@@ -2205,6 +2213,32 @@ mod tests {
             assert_eq!(diagnostic["http_status"], 403);
             assert!(!diagnostic.to_string().contains("secret-token"));
             assert!(!diagnostic.to_string().contains("private-server-text"));
+        }
+    }
+
+    #[test]
+    fn format_wrong_hint_is_static_and_reason_specific() {
+        for reason in ["format_wrong", "bad_param", "unknown-private-reason"] {
+            let body = serde_json::to_vec(&serde_json::json!({
+                "status": "fail", "reason": reason, "number": "private-number"
+            }))
+            .unwrap();
+            let response = RegistrationHttpResponse::new(200, Zeroizing::new(body)).unwrap();
+            let summary = response.diagnostic_summary();
+            assert_eq!(
+                summary.get("operator_hint").is_some(),
+                reason == "format_wrong"
+            );
+            if reason == "format_wrong" {
+                assert!(
+                    summary["operator_hint"]
+                        .as_str()
+                        .unwrap()
+                        .contains("invalid mobile number")
+                );
+            }
+            assert!(!summary.to_string().contains("private-number"));
+            assert!(!summary.to_string().contains("unknown-private-reason"));
         }
     }
 

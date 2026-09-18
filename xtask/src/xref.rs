@@ -425,7 +425,11 @@ fn decode_insns(insns: &[u8], dex: &DexFile<'_>) -> Vec<Insn> {
             width,
             mnemonic,
             annotation,
-            flow_annotation: decode_register_flow(&insns[pos..pos + byte_width]),
+            flow_annotation: if matches!(op, 0x2b | 0x2c) {
+                decode_switch_reference(insns, pos)
+            } else {
+                decode_register_flow(&insns[pos..pos + byte_width])
+            },
         });
         pos += byte_width;
     }
@@ -501,6 +505,66 @@ fn decode_fill_array_reference(insns: &[u8], pos: usize, reg: u8) -> String {
         .map(|(_, _, annotation)| format!(", {annotation}"))
         .unwrap_or_default();
     format!("v{reg}, payload@{target_text}{detail}")
+}
+
+fn decode_switch_reference(bytes: &[u8], pos: usize) -> String {
+    let read_i32 = |offset: usize| -> Option<i32> {
+        Some(i32::from_le_bytes(
+            bytes.get(offset..offset.checked_add(4)?)?.try_into().ok()?,
+        ))
+    };
+    let Some(offset) = read_i32(pos.saturating_add(2)) else {
+        return "# truncated switch".into();
+    };
+    let target = pos as i128 + i128::from(offset) * 2;
+    let Ok(payload) = usize::try_from(target) else {
+        return "# invalid switch payload".into();
+    };
+    let Some(header) = bytes.get(payload..payload.saturating_add(4)) else {
+        return "# invalid switch payload".into();
+    };
+    let size = usize::from(u16::from_le_bytes([header[2], header[3]]));
+    let packed = matches!(bytes.get(pos), Some(0x2b));
+    if header[..2] != [0, if packed { 1 } else { 2 }] {
+        return "# wrong switch payload kind".into();
+    }
+    let first = if packed {
+        read_i32(payload.saturating_add(4))
+    } else {
+        Some(0)
+    };
+    let Some(first) = first else {
+        return "# truncated switch payload".into();
+    };
+    let mut cases = Vec::new();
+    for index in 0..size.min(64) {
+        let key = if packed {
+            first.checked_add(index as i32)
+        } else {
+            read_i32(payload.saturating_add(4 + index * 4))
+        };
+        let start = if packed { 8 } else { 4 + size * 4 };
+        let jump = read_i32(payload.saturating_add(start + index * 4));
+        let (Some(key), Some(jump)) = (key, jump) else {
+            return "# truncated/invalid switch cases".into();
+        };
+        let destination = pos as i128 + i128::from(jump) * 2;
+        let destination = if destination < 0 {
+            format!("-{:#x}", -destination)
+        } else {
+            format!("{destination:#x}")
+        };
+        cases.push(format!("{key}:@{destination}"));
+    }
+    if size > 64 {
+        cases.push("...".into());
+    }
+    format!(
+        "v{}, payload@{payload:#x}, cases=[{}], default@{:#x}",
+        bytes[pos + 1],
+        cases.join(", "),
+        pos + 6
+    )
 }
 
 fn decode_register_flow(bytes: &[u8]) -> String {
@@ -1271,6 +1335,27 @@ fn access_flags_str(flags: u32) -> &'static str {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn switch_references_resolve_signed_targets_and_reject_truncation() {
+        let packed = [
+            0x2b, 3, 4, 0, 0, 0, 0, 0, 0, 1, 2, 0, 29, 0, 0, 0, 3, 0, 0, 0, 0xff, 0xff, 0xff, 0xff,
+        ];
+        assert_eq!(
+            decode_switch_reference(&packed, 0),
+            "v3, payload@0x8, cases=[29:@0x6, 30:@-0x2], default@0x6"
+        );
+        let sparse = [
+            0x2c, 1, 4, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0xff, 0xff, 0xff, 0xff, 3, 0, 0, 0,
+        ];
+        assert_eq!(
+            decode_switch_reference(&sparse, 0),
+            "v1, payload@0x8, cases=[-1:@0x6], default@0x6"
+        );
+        for end in 0..packed.len() {
+            assert!(decode_switch_reference(&packed[..end], 0).starts_with('#'));
+        }
+    }
+
     #[test]
     fn register_flow_formats_and_truncation() {
         for op in [0x01, 0x04, 0x07, 0x21] {

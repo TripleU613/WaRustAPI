@@ -5,6 +5,10 @@ User-Agent experiment changed the response from HTTP 200 / `bad_param` to
 HTTP 200 / `format_wrong` (64-byte response). The saved attempt and account
 keys are unchanged. This is a different refusal, not accepted signup or OTP
 delivery. See the [experiment sequence](docs/protocol/http-post-analysis.md).
+APK-only follow-up traced this refusal to the official client's invalid-mobile-
+number-for-country dialog (resource `0x7f123741`). The request already separates
+country code and national number correctly. No further live request was sent;
+a justified input correction remains necessary before another test.
 
 **Historical offline baseline:** G0 complete (repository, dependency decisions, baseline).
 G1 partially complete offline (codec, framing, Noise adapter, certificate
@@ -68,7 +72,7 @@ the active 2.26.36.75 profile.
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability and comparison transport/registration wire-profile endpoints plus structured gated-operation errors |
 
-Test count: 170 (`cargo test --locked --workspace --all-features`). Formatting,
+Test count: 172 (`cargo test --locked --workspace --all-features`). Formatting,
 all-feature/all-target Clippy with `-D warnings`, strict rustdoc, package
 verification, and protobuf regeneration checks pass on the continuation
 machine (Rust 1.98.1). The repository and CI

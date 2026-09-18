@@ -122,3 +122,9 @@ to 7. The 1167-byte ENC/H request returned HTTP 200 / fail / format_wrong
 and account keys. This is changed behavior, not successful registration.
 No recognized offending-field hint or wait was supplied. Detailed inputs and
 static offsets are recorded in [the HTTP analysis](http-post-analysis.md).
+
+Subsequent APK-only analysis resolved `format_wrong` through response enum 29,
+`VerifyPhoneNumber.A19`, and dialog 53 to resource `0x7f123741`: the official
+client says the mobile number is invalid for the country. This identifies the
+client's interpretation, not the server's internal rule. No additional live
+attempt, identity change, or successful signup occurred during this analysis.

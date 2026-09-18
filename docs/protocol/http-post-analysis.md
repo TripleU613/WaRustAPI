@@ -230,9 +230,27 @@ header tested, not an invented model. The changed response coincided with this
 header and the next metrics count; it does not isolate causality or prove
 successful decryption, genuine Android execution, number validity or signup.
 
-The bridge explicitly recognizes `format_wrong` at A09 0x04c4–0x04d8.
-Its deeper server meaning remains unverified. Current saved state retains that
-reason, and bad-param-only diagnostic commands no longer accept this state.
+The APK's interpretation of `format_wrong` is now traced end-to-end:
+
+- `KotlinRegistrationBridge.A09` 0x04c4–0x04d8 maps it to `02S.A0M`;
+  `02S.<clinit>` assigns that constant integer 29 (0x023c–0x0248).
+- `VerifyPhoneNumber.A5P` dispatches case 29 to `A19` in both the voice/flash
+  switch (0x0152 → 0x0196) and general request switch (0x0d8e → 0x0dce).
+- `A19` logs `VerifyPhoneNumber/onFormatWrongError`, persists the next reason
+  `format-wrong` through `I4A.A0R`, and requests dialog 53 through `HmE.A01`.
+- `onCreateDialog` case 53 (0x0062 → 0x0318) formats the phone and country,
+  loading string resource `0x7f123741` at 0x0372. The default string recovered
+  directly from this APK's `resources.arsc` is:
+  `%1$s\nis not a valid mobile number for the country %2$s.`
+
+This establishes the official client's user-facing interpretation, not the
+server's internal validation rule or independent proof that a number is
+unassigned. The bridge's separate country-code/national-number fields agree
+with the current request assembly; no supported digit or country correction
+was found. Current saved state retains the refusal, and bad-param-only
+diagnostic commands no longer accept this state. No new live request was sent
+during this analysis. Repeating unchanged input or inventing a different
+country would not test a demonstrated protocol correction.
 
 Diagnostics also now recognize the APK's `param="number"` alias (A2B compares
 it at 0x0042–0x0050), plus ENC/H field names. Earlier logs could suppress an
