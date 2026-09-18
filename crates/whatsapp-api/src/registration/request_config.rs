@@ -159,6 +159,12 @@ pub struct EndpointFields {
     pub register: BTreeMap<String, Zeroizing<String>>,
     /// Extra `/v2/security` fields; no PIN reset/wipe operation is exposed.
     pub security: BTreeMap<String, Zeroizing<String>>,
+    /// Raw additional-parameter bytes for `/v2/code` (`Hvq.A06` encoding).
+    pub code_bytes: BTreeMap<String, Zeroizing<Vec<u8>>>,
+    /// Raw additional-parameter bytes for `/v2/register`.
+    pub register_bytes: BTreeMap<String, Zeroizing<Vec<u8>>>,
+    /// Raw additional-parameter bytes for `/v2/security`.
+    pub security_bytes: BTreeMap<String, Zeroizing<Vec<u8>>>,
 }
 
 const RESERVED: &[&str] = &[
@@ -198,7 +204,53 @@ pub(crate) fn append_fields(
                 "extra field collides with a protected input",
             ));
         }
+        match name.as_str() {
+            "clicked_education_link" | "manage_call_permission" | "call_log_permission"
+                if !matches!(value.as_str(), "true" | "false") =>
+            {
+                return Err(Error::invalid(
+                    "fields",
+                    "permission/education flags must be true or false strings; omit to leave unset",
+                ));
+            }
+            "type" if !matches!(value.as_str(), "0" | "1") => {
+                return Err(Error::invalid(
+                    "fields",
+                    "comparison registration type must be 0 (PHONE) or 1 (WA_TWO_FA_CONTACT_POINT)",
+                ));
+            }
+            "client_start_message" | "auth_response" => {
+                let bytes = value.as_bytes();
+                if bytes.len() % 4 == 1
+                    || !bytes
+                        .iter()
+                        .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_'))
+                {
+                    return Err(Error::invalid(
+                        "fields",
+                        "binary form values must use unpadded URL-safe Base64, not raw or percent-encoded bytes",
+                    ));
+                }
+            }
+            _ => {}
+        }
         form.push(name, value.as_str())?;
+    }
+    Ok(())
+}
+
+pub(crate) fn append_byte_fields(
+    form: &mut RegistrationForm,
+    fields: &BTreeMap<String, Zeroizing<Vec<u8>>>,
+) -> Result<()> {
+    for (name, value) in fields {
+        if RESERVED.contains(&name.as_str()) {
+            return Err(Error::invalid(
+                "fields",
+                "additional bytes collide with a protected input",
+            ));
+        }
+        form.push_bytes(name, value)?;
     }
     Ok(())
 }
@@ -268,12 +320,14 @@ impl LabRegistrationConfig {
                 .map(|v| v.to_vec())
                 .unwrap_or(vec![0; 20]),
         )?;
-        for fields in [
-            &self.fields.code,
-            &self.fields.register,
-            &self.fields.security,
+        for (fields, bytes) in [
+            (&self.fields.code, &self.fields.code_bytes),
+            (&self.fields.register, &self.fields.register_bytes),
+            (&self.fields.security, &self.fields.security_bytes),
         ] {
-            append_fields(&mut RegistrationForm::new(), fields)?;
+            let mut form = RegistrationForm::new();
+            append_fields(&mut form, fields)?;
+            append_byte_fields(&mut form, bytes)?;
         }
         Ok(())
     }
@@ -287,6 +341,7 @@ impl LabRegistrationConfig {
                 "apk_sha256": WHATSAPP_2_26_37_70.apk_sha256, "user_agent": if self.client.user_agent.is_some() { "<configured, redacted>" } else { "absent" }},
             "transport": self.transport, "origin": WHATSAPP_2_26_37_70.base_url,
             "extra_fields": {"code": self.fields.code.keys().collect::<Vec<_>>(), "register": self.fields.register.keys().collect::<Vec<_>>(), "security": self.fields.security.keys().collect::<Vec<_>>()},
+            "additional_byte_fields": {"code": self.fields.code_bytes.keys().collect::<Vec<_>>(), "register": self.fields.register_bytes.keys().collect::<Vec<_>>(), "security": self.fields.security_bytes.keys().collect::<Vec<_>>()},
             "device_overrides": {"facebook_device_id": self.device.facebook_device_id.is_some(), "experiment_id": self.device.experiment_id.is_some(),
                 "access_session_id": self.device.access_session_id.is_some(), "recovery_token": self.device.recovery_token.is_some(), "backup_token": self.device.backup_token.is_some()},
             "diagnostics": self.diagnostics, "token": "<redacted>", "key_ids": "<redacted>",
@@ -420,5 +475,61 @@ mod tests {
             form.encode().unwrap().as_slice(),
             b"context=a%2Bb+%26c%2520"
         );
+    }
+
+    #[test]
+    fn observed_extra_field_encodings_fail_fast() {
+        for (name, value) in [
+            ("manage_call_permission", "1"),
+            ("clicked_education_link", "False"),
+            ("call_log_permission", ""),
+            ("type", "PHONE"),
+            ("type", "2"),
+            ("client_start_message", "YQ=="),
+            ("auth_response", "a+b/"),
+            ("client_start_message", "x"),
+        ] {
+            let mut cfg = config();
+            cfg.fields
+                .code
+                .insert(name.into(), Zeroizing::new(value.into()));
+            assert!(cfg.validate().is_err(), "{name}");
+        }
+        let mut cfg = config();
+        for (name, value) in [
+            ("manage_call_permission", "false"),
+            ("type", "0"),
+            ("client_start_message", "YQ"),
+        ] {
+            cfg.fields
+                .code
+                .insert(name.into(), Zeroizing::new(value.into()));
+        }
+        cfg.validate().unwrap();
+    }
+
+    #[test]
+    fn additional_bytes_reject_collisions_and_preview_only_names() {
+        let mut cfg = config();
+        cfg.fields.code_bytes.insert(
+            "client_metrics".into(),
+            Zeroizing::new(b"private-metrics".to_vec()),
+        );
+        cfg.validate().unwrap();
+        let preview = cfg.preview(false).to_string();
+        assert!(preview.contains("client_metrics"));
+        assert!(!preview.contains("private-metrics"));
+        cfg.fields
+            .code
+            .insert("client_metrics".into(), Zeroizing::new("duplicate".into()));
+        assert!(cfg.validate().is_err());
+        cfg.fields.code.clear();
+        for name in RESERVED {
+            let mut cfg = config();
+            cfg.fields
+                .code_bytes
+                .insert((*name).into(), Zeroizing::new(b"override".to_vec()));
+            assert!(cfg.validate().is_err());
+        }
     }
 }

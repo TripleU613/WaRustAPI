@@ -32,6 +32,56 @@ destinations, purpose, mandatory ordering or server requirements.
 
 ## Profile update rule
 
+### `bad_param` investigation: an untraced additional-parameter path
+
+`bad_param` establishes rejection of request parameters, not whether a field
+was missing, malformed or incompatible with the selected branch. No raw bodies
+from the two retained `bad_param` responses are available, so a possible
+offending-field hint cannot be recovered retrospectively.
+
+The next static trace found a concrete gap in our coverage:
+`RequestCodeRepository.A00` at 0x0bec calls `I4D.A0H`, applies more map
+augmenters through 0x0c3a, adds `feo2_query_status` at 0x0c74, and passes
+additional parameters through `generateAuthCodeBlocking$1`. The bridge calls
+`Hvq.A06`, whose byte-array map values are encoded by `HNM.A00` and entered
+in a pre-encoded set. Our plain-text extension fields alone did not implement
+this path's exact binary encoding.
+
+| Producer | Added fields | Evidence / unresolved inputs |
+| --- | --- | --- |
+| `I4D.A0H`, 0x0014–0x006c | `mistyped`, `reason`, `hasav`, `client_metrics` | `mistyped`/`hasav` conditional; reason and serialized metrics inserted on this helper path. Their caller/runtime values are not inferred. |
+| `I4D.A0K`, 0x0012–0x007c | `mcc`, `mnc`, `sim_mcc`, `sim_mnc` | Strings from two carrier-info objects, converted to bytes; repository reads network and SIM operators. No carrier is inferred from a phone number. |
+| `I4D.A0H`, 0x0082–0x00e0 | `education_screen_displayed`, `prefer_sms_over_flash` | Stored booleans, default false in these preference reads. Existence is not evidence of server-requiredness. |
+| `I4D.A0H`, 0x00fc–0x016a | `push_code`, `new_acc_uuid` | Added only for non-empty stored values. Do not fabricate them. |
+| `RequestCodeRepository.A00`, 0x0c50–0x0c7e | `feo2_query_status` | Stored string with fallback `did_not_query`, encoded to bytes. |
+| `I4D.A0r`, 0x010c–0x0116 | `recaptcha` | Conditional challenge-related data from another component. Not implemented or fabricated. |
+
+`Hvq.A01` inserts a non-null text value; `A02` omits only null, not empty
+strings. `A00` encodes internal integer 0 as `false`, 1 as `true`, and omits
+other states. `HBS` defines PHONE=0 and WA_TWO_FA_CONTACT_POINT=1; bridge
+`A0S` only adds `type` when its enum argument is non-null. No universal
+`type=0` default or fabricated permission claim has been added.
+
+Implemented offline: `RegistrationForm::push_bytes` and private profile
+`fields.code_bytes/register_bytes/security_bytes`, using RFC 3986 encoding
+exactly once. Text and byte maps cannot collide or replace protected fields.
+Space is `%20`, tilde stays `~`, and star becomes `%2A` on the byte path;
+ordinary Java-style form text instead uses `+`, `%7E`, and `*` respectively.
+Raw binary vectors, duplicate/protected fields, and factory wiring have tests.
+The existing sent requests had empty extra maps: their body bytes have not
+been retroactively changed, and this is not a demonstrated live fix.
+
+Future response diagnostics recognize a string `param` hint only when its
+value matches a known request-field name. Unknown strings and unexpected types
+are ignored without losing the main status/reason. This is defensive support
+for a possible diagnostic extension, **not** a claim that either captured
+response included such a hint. The hint is diagnostic output, not a newly
+persisted registration-state field. No new live request was sent in this work.
+
+Reproduce the added trace with `xtask apk-smali <apk> --class 'LX/I4D;'`
+and `--method A0H`, `A0K`, or `A0r`; inspect `LX/Hvq;` methods A00/A01/A02/A06
+and `LX/HBS;` separately. All names refer only to comparison build 2.26.37.70.
+
 ### Registration transport continuation
 
 Following the actual bridge resolves the shared transport chain:

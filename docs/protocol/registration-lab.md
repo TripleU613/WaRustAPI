@@ -71,6 +71,16 @@ cannot be overridden there. Empty maps intentionally claim no additional
 requirements. Add fields only with version-scoped APK evidence and real inputs;
 this is not a proven working Android fingerprint or an attestation generator.
 
+The APK's additional-parameter map has a different encoding path. Use
+`fields.code_bytes`, `register_bytes`, or `security_bytes` for raw byte arrays
+(JSON integers 0–255), not pre-encoded strings. For example a **synthetic
+encoding test only**, `"code_bytes": {"client_metrics": [32, 126, 42]}` emits
+`client_metrics=%20~%2A`. This is not a valid metrics payload. The string maps
+remain ordinary form text. Duplicate names across the two maps and protected
+identity/OTP/PIN fields are rejected. Known text flags require `true`/`false`,
+`type` requires `0`/`1`, and binary-message strings require unpadded URL-safe
+Base64. None of this supplies missing genuine device or challenge data.
+
 ```sh
 target/debug/whatsapp-cli lab-signup --config lab/requests.json preview
 ```

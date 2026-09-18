@@ -222,6 +222,7 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
         RegistrationCodeParams::new(record.config.token.as_str(), method)?
             .append_to_form(&mut form)?;
         super::request::append_fields(&mut form, &record.config.fields.code)?;
+        super::request::append_byte_fields(&mut form, &record.config.fields.code_bytes)?;
         record.bundle()?.append_to_form(&mut form)?;
         WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Code, &form)
     }
@@ -236,6 +237,7 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
         record.common()?.append_to_form(&mut form)?;
         RegistrationCompleteParams::new(code.as_str())?.append_to_form(&mut form)?;
         super::request::append_fields(&mut form, &record.config.fields.register)?;
+        super::request::append_byte_fields(&mut form, &record.config.fields.register_bytes)?;
         record.bundle()?.append_to_form(&mut form)?;
         WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Register, &form)
     }
@@ -250,6 +252,7 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
         record.common()?.append_to_form(&mut form)?;
         RegistrationSecurityParams::verify(pin.as_str())?.append_to_form(&mut form)?;
         super::request::append_fields(&mut form, &record.config.fields.security)?;
+        super::request::append_byte_fields(&mut form, &record.config.fields.security_bytes)?;
         record.bundle()?.append_to_form(&mut form)?;
         WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Security, &form)
     }
@@ -317,6 +320,9 @@ mod tests {
         let fdid = "12345678-1234-4234-8234-123456789abc";
         cfg.device.facebook_device_id = Some(Zeroizing::new(fdid.into()));
         cfg.fields
+            .code_bytes
+            .insert("client_metrics".into(), Zeroizing::new(b"test ~*".to_vec()));
+        cfg.fields
             .code
             .insert("context".into(), Zeroizing::new("code only+".into()));
         cfg.fields
@@ -332,6 +338,7 @@ mod tests {
         let body = std::str::from_utf8(code.body()).unwrap();
         assert!(body.contains(&format!("fdid={fdid}")));
         assert!(body.contains("context=code+only%2B"));
+        assert!(body.contains("client_metrics=test%20~%2A"));
         assert!(!code.diagnostic_summary().to_string().contains(fdid));
         let complete = factory
             .complete_request(&a, &Zeroizing::new("654321".into()))

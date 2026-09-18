@@ -10,12 +10,20 @@
 //! clicked_education_link, manage_call_permission, call_log_permission,
 //! client_start_message, type. Leave absent until their real producers and
 //! branch conditions are understood; existence does not prove requiredness.
+//! `type` is "0" for PHONE or "1" for WA_TWO_FA_CONTACT_POINT (HBS enum).
+//! Permission flags are "true"/"false" strings, not "0"/"1"; absent means unset.
+//! Binary client_start_message/auth_response values use unpadded URL-safe Base64.
+//!
+//! Caller-provided additional parameters (`I4D.A0H/A0K`, `Hvq.A06`) belong in
+//! code_bytes as raw byte arrays: reason, client_metrics, mcc/mnc, sim_mcc/sim_mnc,
+//! education_screen_displayed, prefer_sms_over_flash, feo2_query_status, etc.
+//! Supply observed/real inputs, not invented telemetry or challenge tokens.
 
-pub(crate) use super::request_config::append_fields;
 pub use super::request_config::{
     ClientSettings, DeliveryMethod, DeviceSettings, EndpointFields, LAB_PROFILE_ID,
     LabRegistrationConfig, MAX_CONFIG_BYTES, TransportSettings,
 };
+pub(crate) use super::request_config::{append_byte_fields, append_fields};
 
 /// Starter profile. Placeholder credentials deliberately fail live validation.
 /// Locale is a locale, not GPS; no invented model, carrier or attestation values.
@@ -38,7 +46,10 @@ pub const TEMPLATE_JSON: &str = r#"{
     "recovery_token": null,
     "backup_token": null
   },
-  "fields": { "code": {}, "register": {}, "security": {} },
+  "fields": {
+    "code": {}, "register": {}, "security": {},
+    "code_bytes": {}, "register_bytes": {}, "security_bytes": {}
+  },
   "transport": {
     "timeout_ms": 45000,
     "connect_timeout_ms": 30000,

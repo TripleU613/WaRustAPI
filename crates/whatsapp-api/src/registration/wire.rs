@@ -204,6 +204,13 @@ impl RegistrationForm {
         self.push_inner(name.into(), value.into(), ValueEncoding::Encode)
     }
 
+    /// Add raw additional-parameter bytes using the comparison APK's `Hvq.A06`
+    /// path: RFC 3986 percent encoding, then exempt from a second encoding pass.
+    pub fn push_bytes(&mut self, name: impl Into<String>, value: &[u8]) -> Result<&mut Self> {
+        validate_binary_parameter("additional_parameter", value, true)?;
+        self.push_pre_encoded(name, percent_encode_binary(value))
+    }
+
     /// Add a value already encoded for a form component.
     ///
     /// The name is still encoded. The value is accepted only if it consists
@@ -1276,6 +1283,7 @@ impl RegistrationHttpResponse {
             Ok(parsed) => {
                 summary["status"] = serde_json::json!(format!("{:?}", parsed.status));
                 summary["reason"] = serde_json::json!(parsed.reason.map(|v| format!("{v:?}")));
+                summary["invalid_parameter"] = serde_json::json!(parsed.invalid_parameter);
                 summary["retry_after_seconds"] =
                     serde_json::json!(parsed.retry_after.map(|v| v.as_secs()));
                 summary["sms_wait_seconds"] =
@@ -1605,6 +1613,9 @@ pub struct RegistrationResponse {
     pub status: RegistrationResponseStatus,
     /// Parsed reason, when the server included one.
     pub reason: Option<RegistrationResponseReason>,
+    /// Allowlisted request-field name from an optional `param` diagnostic hint.
+    /// Not proof that the field is missing; arbitrary server strings are withheld.
+    pub invalid_parameter: Option<&'static str>,
     /// General retry delay.
     pub retry_after: Option<Duration>,
     /// SMS retry delay.
@@ -1633,6 +1644,7 @@ impl fmt::Debug for RegistrationResponse {
         f.debug_struct("RegistrationResponse")
             .field("status", &self.status)
             .field("reason", &self.reason)
+            .field("invalid_parameter", &self.invalid_parameter)
             .field("retry_after", &self.retry_after)
             .field("sms_wait", &self.sms_wait)
             .field("voice_wait", &self.voice_wait)
@@ -1685,6 +1697,13 @@ impl RegistrationResponse {
         Ok(Self {
             status: RegistrationResponseStatus::parse(&status),
             reason: raw.reason.as_deref().map(RegistrationResponseReason::parse),
+            invalid_parameter: match raw.param {
+                Some(RawDiagnosticParameter::Text(value)) => KNOWN_REQUEST_PARAMETERS
+                    .iter()
+                    .copied()
+                    .find(|name| *name == value.as_str()),
+                _ => None,
+            },
             retry_after: parse_seconds("retry_after", raw.retry_after)?,
             sms_wait: parse_seconds("sms_wait", raw.sms_wait)?,
             voice_wait: parse_seconds("voice_wait", raw.voice_wait)?,
@@ -1716,6 +1735,7 @@ impl RegistrationResponse {
 struct RawRegistrationResponse {
     status: Option<String>,
     reason: Option<String>,
+    param: Option<RawDiagnosticParameter>,
     retry_after: Option<SecondsValue>,
     sms_wait: Option<SecondsValue>,
     voice_wait: Option<SecondsValue>,
@@ -1735,6 +1755,63 @@ struct RawRegistrationResponse {
     appeal_token: Option<Zeroizing<String>>,
     edge_routing_info: Option<Zeroizing<String>>,
 }
+
+// A diagnostic extension, not a claim that captured responses included `param`.
+// Ignore unexpected types without losing the primary status/reason.
+#[derive(Deserialize)]
+#[serde(untagged)]
+enum RawDiagnosticParameter {
+    Text(Zeroizing<String>),
+    Other(serde::de::IgnoredAny),
+}
+
+const KNOWN_REQUEST_PARAMETERS: &[&str] = &[
+    "reason",
+    "mistyped",
+    "hasav",
+    "client_metrics",
+    "mcc",
+    "mnc",
+    "sim_mcc",
+    "sim_mnc",
+    "education_screen_displayed",
+    "prefer_sms_over_flash",
+    "feo2_query_status",
+    "recaptcha",
+    "push_code",
+    "new_acc_uuid",
+    "cc",
+    "in",
+    "lg",
+    "lc",
+    "fdid",
+    "expid",
+    "access_session_id",
+    "id",
+    "backup_token",
+    "token",
+    "method",
+    "context",
+    "clicked_education_link",
+    "manage_call_permission",
+    "call_log_permission",
+    "client_start_message",
+    "advertising_id",
+    "login",
+    "type",
+    "authkey",
+    "e_ident",
+    "e_keytype",
+    "e_regid",
+    "e_skey_id",
+    "e_skey_val",
+    "e_skey_sig",
+    "code",
+    "auth_response",
+    "reset",
+    "wipe_token",
+    "ENC",
+];
 
 #[derive(Deserialize)]
 #[serde(untagged)]
@@ -1883,6 +1960,48 @@ fn validate_pre_encoded(value: &str) -> Result<()> {
 mod tests {
     use super::*;
     use serde_json::Value;
+
+    #[test]
+    fn bad_parameter_hints_are_allowlisted_and_never_echo_arbitrary_values() {
+        for (hint, expected) in [
+            (serde_json::json!("type"), Some("type")),
+            (serde_json::json!("mcc"), Some("mcc")),
+            (serde_json::json!("e_skey_sig"), Some("e_skey_sig")),
+            (serde_json::json!("secret-phone-or-token"), None),
+            (serde_json::json!({"secret": "secret-phone-or-token"}), None),
+            (serde_json::json!(["secret-phone-or-token"]), None),
+            (serde_json::json!(42), None),
+            (Value::Null, None),
+        ] {
+            let body = serde_json::to_vec(&serde_json::json!({
+                "status": "fail", "reason": "bad_param", "param": hint
+            }))
+            .unwrap();
+            let response = RegistrationHttpResponse::new(200, Zeroizing::new(body)).unwrap();
+            let summary = response.diagnostic_summary();
+            assert_eq!(summary["reason"], "BadParam");
+            assert_eq!(summary["invalid_parameter"], serde_json::json!(expected));
+            assert!(!summary.to_string().contains("secret-phone-or-token"));
+            assert_eq!(response.parse_json().unwrap().invalid_parameter, expected);
+        }
+    }
+
+    #[test]
+    fn additional_bytes_use_rfc3986_without_double_encoding() {
+        let mut form = RegistrationForm::new();
+        form.push("text", "a ~*+%&").unwrap();
+        form.push_bytes("bytes", b"a ~*+%&\0\xff").unwrap();
+        assert_eq!(
+            form.encode().unwrap().as_slice(),
+            b"text=a+%7E*%2B%25%26&bytes=a%20~%2A%2B%25%26%00%FF"
+        );
+        assert!(form.push_bytes("bytes", b"duplicate").is_err());
+        assert!(
+            RegistrationForm::new()
+                .push_bytes("x", &vec![0; MAX_BINARY_PARAMETER_BYTES + 1])
+                .is_err()
+        );
+    }
 
     #[test]
     fn diagnostics_withhold_response_secrets_and_malformed_bodies() {
