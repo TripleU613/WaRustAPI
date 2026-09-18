@@ -341,8 +341,17 @@ facts reach normal `message_status` and the durable event journal.
 all-or-nothing, idempotent); the next active connection sends each once and
 settles it by matching server acknowledgement. Unknown, unauthenticated, group
 or device-addressed messages are refused before any write, and nothing is sent
-without an explicit request (`ReceiptPolicy::ExplicitOnly`). No live read
-receipt has been exercised yet. This outbox
+without an explicit request (`ReceiptPolicy::ExplicitOnly`). The CLI wrapper is
+`mark-read --config <json> --chat <jid> --id <msgid>...` (offline queueing; the
+next `listen` session transmits). No live read receipt has been exercised yet.
+
+Server clock: each authenticated incoming `message`/`receipt` stanza with a
+plausible whole-second `t` refreshes one saved (server, local) sample; older
+server times never regress it. `client.resolve_chat_mute(&chat, mentions)`
+converts a saved mute deadline with the APK's `server + local_now - server_now`
+rule against that sample and returns `None` without a mute or a sample. The
+APK's offset *source* was not traced; sampling stanza `t` is our documented
+local inference, not a claim about the official client. This outbox
 adapter now has one live direct-text server acknowledgement through the public
 client/runtime; handset receipt remains unconfirmed.
 

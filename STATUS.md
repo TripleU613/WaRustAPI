@@ -12,7 +12,9 @@ no live read receipt sent yet). `listen --send-outbox` is the first combined
 receive-and-send CLI session; `outbox-pending` and `cancel` inspect and withdraw
 queued intents offline before it runs. No live combined session yet. The session
 loop now runs over an injectable node link, with socket cut-point tests at
-activation, receipt, delivery-ack, key-query and keepalive boundaries.
+activation, receipt, delivery-ack, key-query and keepalive boundaries. `mark-read`
+queues read receipts from the CLI, and saved mute timers can now be resolved
+locally against a server clock sample taken from authenticated stanzas.
 
 **Public ordinary-media download integrated (offline verified):** comparison
 clients can list sealed incoming references with `received_media()` and explicitly

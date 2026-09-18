@@ -527,6 +527,47 @@ impl WhatsAppClient {
             .await
     }
 
+    /// Resolve the saved mute projection for `chat` against the newest server
+    /// clock sample, following the APK's server-to-local deadline conversion.
+    /// Returns `None` when no mute action or no clock sample has been saved;
+    /// nothing is guessed. The everyone-mention policy must be supplied by the
+    /// caller. This reads local state only and opens no connection.
+    #[cfg(feature = "comparison-client")]
+    pub async fn resolve_chat_mute(
+        &self,
+        chat: &crate::model::ids::ChatId,
+        everyone_mentions_enabled: bool,
+    ) -> Result<Option<crate::signal::app_state_collection::storage::actions::ResolvedChatMute>>
+    {
+        if self.inner.media_config.is_none() {
+            return Err(Error::unsupported(
+                Capability::ProfileAndPresence,
+                "comparison sync settings require explicit configuration",
+            ));
+        }
+        let jid = chat.jid().clone();
+        self.inner
+            .store
+            .run_blocking(move |store| {
+                use crate::signal::app_state_collection::storage::actions::chat_mute;
+                store.read(|tx| {
+                    let (Some(mute), Some(sample)) =
+                        (chat_mute(tx, &jid)?, crate::transport::clock::sample(tx)?)
+                    else {
+                        return Ok(None);
+                    };
+                    let local_now = crate::model::time::Timestamp::now().as_millis();
+                    mute.resolve(
+                        local_now,
+                        sample.server_now(local_now),
+                        everyone_mentions_enabled,
+                    )
+                    .map(Some)
+                })
+            })
+            .await
+    }
+
     /// Verified ordinary-media download into a new private sink file. This is
     /// an explicit plaintext export; existing files and symlinks are not replaced.
     /// View-once and outgoing references are refused. No automatic GET retries.
@@ -669,6 +710,71 @@ mod tests {
                 ..
             })
         ));
+        assert!(matches!(
+            c.connection_state().borrow().state,
+            ConnectionState::Stopped
+        ));
+        c.shutdown().await;
+    }
+
+    #[cfg(feature = "comparison-client")]
+    #[tokio::test]
+    async fn mute_resolution_needs_a_saved_action_and_a_clock_sample() {
+        use crate::signal::app_state_collection::storage::actions::{ChatMute, MuteDeadline};
+        let dir = tempfile::tempdir().unwrap();
+        let chat = ChatId::from_jid(&Jid::parse("15550000000@s.whatsapp.net").unwrap()).unwrap();
+        let mut config: crate::registration::request::LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        config.token = zeroize::Zeroizing::new("offline-fixture".into());
+        let c = WhatsAppClient::builder()
+            .store_path(dir.path().join("protocol.redb"))
+            .account_id(AccountId::new("acct").unwrap())
+            .key_source(Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                [5u8; 32],
+            ))))
+            .comparison_transport(config)
+            .build()
+            .await
+            .unwrap();
+        assert_eq!(c.resolve_chat_mute(&chat, true).await.unwrap(), None);
+        // A saved mute alone is not enough: no clock sample means no estimate.
+        let server_now = crate::model::time::Timestamp::now().as_unix_seconds();
+        c.store()
+            .write(|tx| {
+                crate::signal::app_state_collection::storage::actions::save_mute_for_test(
+                    tx,
+                    chat.jid(),
+                    ChatMute {
+                        muted: true,
+                        end_timestamp: (server_now + 3_600) * 1000,
+                        everyone_end_timestamp: None,
+                        auto_muted: None,
+                        timestamp: 1,
+                    },
+                )
+            })
+            .unwrap();
+        assert_eq!(c.resolve_chat_mute(&chat, true).await.unwrap(), None);
+        assert!(
+            crate::transport::clock::observe(
+                c.store(),
+                &crate::binary::Node::new("message").attr("t", server_now.to_string()),
+            )
+            .unwrap()
+        );
+        let resolved = c.resolve_chat_mute(&chat, true).await.unwrap().unwrap();
+        let MuteDeadline::Until(local_end) = resolved.chat else {
+            panic!("{resolved:?}");
+        };
+        let expected = crate::model::time::Timestamp::now().as_millis() + 3_600_000;
+        assert!(
+            (local_end - expected).abs() < 5_000,
+            "{local_end} vs {expected}"
+        );
+        assert_eq!(
+            resolved.everyone_mentions, None,
+            "muted action without mention timer"
+        );
         assert!(matches!(
             c.connection_state().borrow().state,
             ConnectionState::Stopped

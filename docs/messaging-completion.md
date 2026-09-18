@@ -30,6 +30,15 @@ from offline tests alone. Existing received captures can be processed locally.
 
 ### Implemented and verified locally
 
+- `mark-read` exposes the explicit read-receipt queue from the CLI. A server clock
+  sample is now saved from authenticated incoming `message`/`receipt` `t` values
+  (never regressing, never invented), and `resolve_chat_mute` converts saved mute
+  deadlines locally with the traced `08B.A06` rule and a caller-supplied
+  everyone-mention policy, returning `None` without a mute or a sample. The
+  sample source is a documented inference; the offset producer in the APK is
+  still untraced. Tests cover implausible/regressing samples, saturation, and
+  client-level resolution needing both inputs. All 319 workspace/all-feature
+  tests, strict Clippy, rustdoc, formatting and hygiene passed.
 - The connection worker is now split into the real encrypted socket adapter and a
   node-level session loop (`drive`) that takes an injected link, so tests cut the
   link at exact points without a server or Noise peer. Six cut-point tests cover:

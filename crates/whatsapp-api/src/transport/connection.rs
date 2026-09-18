@@ -300,6 +300,7 @@ pub(crate) async fn drive(
             incoming = link.incoming.recv() => {
                 let node = incoming.ok_or_else(|| Error::invalid("connection", "reader ended"))??;
                 let capture = super::inbox::preserve(&store, &node)?;
+                super::clock::observe(&store, &node)?;
                 if matches!(node.description.as_str(), "failure" | "stream:error") {
                     return Err(Error::invalid("connection", "server ended session; reason preserved encrypted; no reconnect"));
                 }

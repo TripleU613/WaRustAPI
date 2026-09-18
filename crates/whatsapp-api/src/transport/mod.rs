@@ -8,12 +8,13 @@
 pub mod cert;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 mod classic;
-pub mod comparison;
 #[cfg(all(
     feature = "experimental-signal-crypto",
     feature = "experimental-noise",
     feature = "experimental-transport"
 ))]
+pub mod clock;
+pub mod comparison;
 pub mod connection;
 pub mod framing;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]

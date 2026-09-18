@@ -116,6 +116,19 @@ enum Cmd {
     /// List queued outbox intents that `listen --send-outbox` would transmit (offline).
     #[cfg(feature = "experimental-transport")]
     OutboxPending,
+    /// Queue explicit read receipts for authenticated incoming messages (offline;
+    /// the next `listen` session sends them once).
+    #[cfg(feature = "experimental-transport")]
+    MarkRead {
+        #[arg(long)]
+        config: PathBuf,
+        /// Sender JID, e.g. 15551234567@s.whatsapp.net.
+        #[arg(long)]
+        chat: String,
+        /// One or more incoming message ids as shown by `events`.
+        #[arg(long = "id", required = true)]
+        ids: Vec<String>,
+    },
     /// Display one downloaded view-once picture locally for 30 seconds, consuming it.
     #[cfg(feature = "experimental-transport")]
     LabOpenViewOnce,
@@ -353,6 +366,10 @@ async fn run(cli: Cli) -> Result<(), Error> {
         }
         #[cfg(feature = "experimental-transport")]
         Cmd::OutboxPending => transport_receive::outbox_pending(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::MarkRead { config, chat, ids } => {
+            transport_receive::mark_read(&cli, config, chat, ids).await
+        }
         #[cfg(feature = "experimental-transport")]
         Cmd::LabOpenViewOnce => transport_receive::open_view_once(&cli),
         #[cfg(feature = "experimental-transport")]

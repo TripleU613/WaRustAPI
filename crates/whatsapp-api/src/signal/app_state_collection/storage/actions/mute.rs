@@ -114,6 +114,12 @@ fn key(chat: &str) -> Vec<u8> {
     .into_bytes()
 }
 
+/// Test-only: store a mute projection directly, bypassing batch application.
+#[cfg(test)]
+pub(crate) fn save_for_test(tx: &mut WriteTx<'_>, chat: &Jid, mute: ChatMute) -> Result<()> {
+    tx.put_json(Table::Checkpoints, &key(&chat.to_string()), 1, &mute)
+}
+
 /// Read encrypted local mute projection without activating notification policy.
 pub fn chat_mute(tx: &ReadTx<'_>, chat: &Jid) -> Result<Option<ChatMute>> {
     ChatId::from_jid(chat)?;

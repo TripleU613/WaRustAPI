@@ -134,6 +134,50 @@ fn pending_line(entry: &whatsapp_api::outbox::OutboxEntry) -> String {
     )
 }
 
+/// Queue explicit read receipts through the public client. Offline: the next
+/// authenticated session transmits each once and settles it by server ACK.
+pub(super) async fn mark_read(
+    cli: &super::Cli,
+    path: &std::path::Path,
+    chat: &str,
+    ids: &[String],
+) -> Result<(), Error> {
+    use whatsapp_api::model::{
+        ids::MessageId,
+        receipt::{Receipt, ReceiptKind},
+    };
+    let config = super::signup::config(path)?;
+    let receipt = Receipt {
+        chat: whatsapp_api::model::ids::ChatId::from_jid(&whatsapp_api::model::jid::Jid::parse(
+            chat,
+        )?)?,
+        message_ids: ids
+            .iter()
+            .map(|id| MessageId::new(id.clone()))
+            .collect::<Result<Vec<_>, _>>()?,
+        from: None,
+        kind: ReceiptKind::Read,
+        server_timestamp: None,
+        code: None,
+    };
+    let client = whatsapp_api::WhatsAppClient::builder()
+        .store_path(cli.store.clone())
+        .account_id(AccountId::new(cli.account.clone())?)
+        .key_source(Arc::new(EnvKeySource::new(cli.key_env.clone())))
+        .create_store(false)
+        .comparison_transport(config)
+        .build()
+        .await?;
+    let result = client.send_receipt(receipt).await;
+    client.shutdown().await;
+    result?;
+    println!(
+        "mark-read: {} read receipt(s) queued durably; the next listen session sends each once (repeat ids are ignored)",
+        ids.len()
+    );
+    Ok(())
+}
+
 /// Offline listing of the queued intents an outbox-enabled session would send.
 pub(super) fn outbox_pending(cli: &super::Cli) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
