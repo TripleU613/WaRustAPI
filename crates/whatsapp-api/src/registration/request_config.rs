@@ -363,6 +363,29 @@ impl LabRegistrationConfig {
 
     /// Safe local overview. Showing the phone is an explicit operator choice.
     pub fn preview(&self, show_phone: bool) -> serde_json::Value {
+        let observed_code_fields = [
+            "reason",
+            "client_metrics",
+            "mcc",
+            "mnc",
+            "sim_mcc",
+            "sim_mnc",
+            "education_screen_displayed",
+            "prefer_sms_over_flash",
+            "feo2_query_status",
+        ]
+        .into_iter()
+        .map(|name| {
+            let status = if self.fields.code_bytes.contains_key(name) {
+                "configured on observed byte path; value not verified"
+            } else if self.fields.code.contains_key(name) {
+                "configured on text path; APK uses byte encoding"
+            } else {
+                "absent"
+            };
+            (name, status)
+        })
+        .collect::<BTreeMap<_, _>>();
         serde_json::json!({
             "mode": "preview: no network, no store writes", "method": self.method, "phone": if show_phone { self.phone.e164() } else { "<redacted>".into() },
             "location": {"country_code": self.phone.country_code(), "language": self.language, "locale": self.locale},
@@ -375,6 +398,8 @@ impl LabRegistrationConfig {
                 "access_session_id": self.device.access_session_id.is_some(), "recovery_token": self.device.recovery_token.is_some(), "backup_token": self.device.backup_token.is_some()},
             "diagnostics": self.diagnostics, "token": "<redacted>", "key_ids": "<redacted>",
             "compatibility": {
+                "observed_code_additional_fields": observed_code_fields,
+                "field_coverage_note": "Observed on the inspected APK branch, not proven server requirements; do not invent values",
                 "user_agent_matches_observed_presence": self.client.user_agent.is_some(),
                 "body_mode": "clear form only; APK also has a conditional encrypted envelope",
                 "attestation": "not implemented; no fabricated attestation",
@@ -401,6 +426,32 @@ redacted_debug!(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn preview_distinguishes_absent_text_and_byte_evidence_without_values() {
+        let mut cfg = config();
+        cfg.fields
+            .code
+            .insert("reason".into(), Zeroizing::new("private-reason".into()));
+        cfg.fields.code_bytes.insert(
+            "client_metrics".into(),
+            Zeroizing::new(b"private-metrics".to_vec()),
+        );
+        let preview = cfg.preview(false);
+        let fields = &preview["compatibility"]["observed_code_additional_fields"];
+        assert_eq!(fields["mcc"], "absent");
+        assert_eq!(
+            fields["reason"],
+            "configured on text path; APK uses byte encoding"
+        );
+        assert_eq!(
+            fields["client_metrics"],
+            "configured on observed byte path; value not verified"
+        );
+        let text = preview.to_string();
+        assert!(!text.contains("private-reason"));
+        assert!(!text.contains("private-metrics"));
+    }
 
     #[test]
     fn byte_field_strings_match_arrays_and_keep_wire_encoding() {

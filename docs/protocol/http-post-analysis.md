@@ -107,6 +107,28 @@ backup token; `I4D.A0v` reads or generates a persisted identifier through `00L`.
 Their proximity to additional-map assembly is not evidence to substitute them
 for `reason` or `client_metrics`. No live request was sent for these findings.
 
+Further tracing identifies the code-specific producer: `I4A.A0E` reads
+`reg_attempts_generate_code` with default zero (0x0010–0x001c), increments and
+persists it (0x001e–0x0028), then constructs `H2r` using the inherited `HcR`
+constructor (0x0038–0x0042). A fresh counter therefore supplies 1, not 0.
+This is not permission to reset a previously used attempt counter.
+`H2r.A01` additionally emits nullable `is_sim_number`, `is_sim_absent`,
+`is_permission_granted`, and `isUserChoosingToMigrateFromConsumerAppDirectly`.
+These are conditional runtime inputs, not constant claims to add to the profile.
+
+The interactive APK reader now shows move/result register operands (compact
+snapshot output is unchanged). This resolves `reason`: the normal code branch
+loads `I4A.A00` at repository A00 offset 0x0a4c, passes it as v25 at 0x0be0,
+and `I4D.A0H` consumes it as v8 at 0x0022. `I4A.A0R` writes this static value
+and persists it via `0DL.A0Z`. `RegisterPhone.A5j` resets it to the empty string
+at 0x001c–0x0026; later UI/error paths change it. Thus `reason` is stored
+flow state, not the `enter_number` screen label in repository A02. The empty
+initial value is distinct from omission, but is not proven correct for the
+already-refused lab attempt. No device state or counter was reset.
+
+The local profile preview lists these observed additional fields as absent,
+text-path, or byte-path, without exposing values or claiming server requirements.
+
 ### Registration transport continuation
 
 Following the actual bridge resolves the shared transport chain:

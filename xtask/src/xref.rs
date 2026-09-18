@@ -381,6 +381,8 @@ pub struct Insn {
     pub mnemonic: &'static str,
     /// Decoded annotation (empty for instructions without interesting operands).
     pub annotation: String,
+    /// Register-flow detail for interactive inspection; compact snapshots stay stable.
+    pub flow_annotation: String,
 }
 
 /// Decode all instructions in `insns` (a slice of raw code-unit bytes,
@@ -406,6 +408,7 @@ fn decode_insns(insns: &[u8], dex: &DexFile<'_>) -> Vec<Insn> {
                 width,
                 mnemonic,
                 annotation: "# truncated".into(),
+                flow_annotation: String::new(),
             });
             break;
         } else if !payload_annotation.is_empty() {
@@ -422,6 +425,7 @@ fn decode_insns(insns: &[u8], dex: &DexFile<'_>) -> Vec<Insn> {
             width,
             mnemonic,
             annotation,
+            flow_annotation: decode_register_flow(&insns[pos..pos + byte_width]),
         });
         pos += byte_width;
     }
@@ -497,6 +501,26 @@ fn decode_fill_array_reference(insns: &[u8], pos: usize, reg: u8) -> String {
         .map(|(_, _, annotation)| format!(", {annotation}"))
         .unwrap_or_default();
     format!("v{reg}, payload@{target_text}{detail}")
+}
+
+fn decode_register_flow(bytes: &[u8]) -> String {
+    if bytes.len() < 2 {
+        return String::new();
+    }
+    let reg = bytes[1];
+    match bytes[0] {
+        0x01 | 0x04 | 0x07 | 0x21 => format!("v{}, v{}", reg & 15, reg >> 4),
+        0x02 | 0x05 | 0x08 if bytes.len() >= 4 => {
+            format!("v{reg}, v{}", u16::from_le_bytes([bytes[2], bytes[3]]))
+        }
+        0x03 | 0x06 | 0x09 if bytes.len() >= 6 => format!(
+            "v{}, v{}",
+            u16::from_le_bytes([bytes[2], bytes[3]]),
+            u16::from_le_bytes([bytes[4], bytes[5]])
+        ),
+        0x0a..=0x0d => format!("v{reg}"),
+        _ => String::new(),
+    }
 }
 
 fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> String {
@@ -1208,12 +1232,17 @@ pub fn run_smali(
                 insn.mnemonic.to_owned()
             };
             let end = insn.byte_off + insn.width * 2;
-            if insn.annotation.is_empty() {
+            let annotation = if insn.annotation.is_empty() {
+                &insn.flow_annotation
+            } else {
+                &insn.annotation
+            };
+            if annotation.is_empty() {
                 println!("    {:04x}..{:04x}  {name}", insn.byte_off, end);
             } else {
                 println!(
                     "    {:04x}..{:04x}  {name}  {}",
-                    insn.byte_off, end, insn.annotation
+                    insn.byte_off, end, annotation
                 );
             }
         }
@@ -1242,6 +1271,27 @@ fn access_flags_str(flags: u32) -> &'static str {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn register_flow_formats_and_truncation() {
+        for op in [0x01, 0x04, 0x07, 0x21] {
+            assert_eq!(decode_register_flow(&[op, 0xa3]), "v3, v10");
+        }
+        for op in [0x02, 0x05, 0x08] {
+            assert_eq!(decode_register_flow(&[op, 3, 0x01, 0x02]), "v3, v513");
+            assert!(decode_register_flow(&[op, 3]).is_empty());
+        }
+        for op in [0x03, 0x06, 0x09] {
+            assert_eq!(decode_register_flow(&[op, 0, 1, 2, 3, 4]), "v513, v1027");
+            assert!(decode_register_flow(&[op, 0, 1, 2]).is_empty());
+        }
+        for op in 0x0a..=0x0d {
+            assert_eq!(decode_register_flow(&[op, 255]), "v255");
+        }
+        assert!(decode_register_flow(&[]).is_empty());
+        assert!(decode_register_flow(&[0]).is_empty());
+        assert!(decode_register_flow(&[0x0e, 0]).is_empty());
+    }
+
     use super::*;
 
     /// Minimal valid dex header scaffold for tests.

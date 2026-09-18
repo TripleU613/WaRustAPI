@@ -24,6 +24,7 @@ pub use super::request_config::{
     ClientSettings, DeliveryMethod, DeviceSettings, EndpointFields, LAB_PROFILE_ID,
     LabRegistrationConfig, MAX_CONFIG_BYTES, TransportSettings,
 };
+#[cfg(feature = "experimental-signal-crypto")]
 pub(crate) use super::request_config::{append_byte_fields, append_fields};
 
 /// Starter profile. Placeholder credentials deliberately fail live validation.
