@@ -108,7 +108,14 @@ enum Cmd {
         /// Stop after this many seconds; zero waits for Ctrl-C.
         #[arg(long, default_value_t = 0)]
         seconds: u64,
+        /// Also transmit every eligible queued outbox intent, from any
+        /// namespace, during this session. Inspect `outbox-pending` first.
+        #[arg(long)]
+        send_outbox: bool,
     },
+    /// List queued outbox intents that `listen --send-outbox` would transmit (offline).
+    #[cfg(feature = "experimental-transport")]
+    OutboxPending,
     /// Display one downloaded view-once picture locally for 30 seconds, consuming it.
     #[cfg(feature = "experimental-transport")]
     LabOpenViewOnce,
@@ -208,6 +215,12 @@ enum Cmd {
     },
     /// Show the status of a queued message.
     Status {
+        /// Local message id (32 hex chars) from the ticket.
+        #[arg(long)]
+        local_id: String,
+    },
+    /// Cancel a queued message before transmission (offline; never a revocation).
+    Cancel {
         /// Local message id (32 hex chars) from the ticket.
         #[arg(long)]
         local_id: String,
@@ -333,7 +346,13 @@ async fn run(cli: Cli) -> Result<(), Error> {
             config,
             allow_live_request,
             seconds,
-        } => transport_receive::listen(&cli, config, *allow_live_request, *seconds).await,
+            send_outbox,
+        } => {
+            transport_receive::listen(&cli, config, *allow_live_request, *seconds, *send_outbox)
+                .await
+        }
+        #[cfg(feature = "experimental-transport")]
+        Cmd::OutboxPending => transport_receive::outbox_pending(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::LabOpenViewOnce => transport_receive::open_view_once(&cli),
         #[cfg(feature = "experimental-transport")]
@@ -572,7 +591,9 @@ async fn run(cli: Cli) -> Result<(), Error> {
                 serde_json::to_string_pretty(&ticket)
                     .map_err(|e| Error::invalid("ticket", e.to_string()))?
             );
-            eprintln!("note: durably queued; no transmission path exists for this profile yet");
+            eprintln!(
+                "note: durably queued; an outbox-enabled comparison session (`listen --send-outbox`) transmits it"
+            );
             c.shutdown().await;
             Ok(())
         }
@@ -592,6 +613,18 @@ async fn run(cli: Cli) -> Result<(), Error> {
             );
             c.shutdown().await;
             Ok(())
+        }
+        Cmd::Cancel { local_id } => {
+            let c = open_client(&cli, false).await?;
+            let id = local_id.parse::<LocalMessageId>()?;
+            let result = c.cancel_send(id).await;
+            c.shutdown().await;
+            if result? {
+                println!("cancelled: {id} (queued intent will not be transmitted)");
+                Ok(())
+            } else {
+                Err(Error::invalid("local_id", "unknown local message id"))
+            }
         }
         Cmd::Events {
             summary,

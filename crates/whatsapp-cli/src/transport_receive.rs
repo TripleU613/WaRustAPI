@@ -25,6 +25,7 @@ pub(super) async fn listen(
     path: &std::path::Path,
     allow_live: bool,
     seconds: u64,
+    send_outbox: bool,
 ) -> Result<(), Error> {
     if !allow_live {
         return Err(Error::invalid("listen", "requires --allow-live-request"));
@@ -37,20 +38,37 @@ pub(super) async fn listen(
         .key_source(Arc::new(EnvKeySource::new(cli.key_env.clone())))
         .create_store(false)
         .comparison_transport(config)
+        .comparison_outbox(send_outbox)
         .build()
         .await?;
+    if send_outbox {
+        // Show exactly what this session may transmit before any connection.
+        let pending = whatsapp_api::transport::outgoing::eligible(client.store(), 256)?;
+        println!(
+            "listen: outbox transmission enabled for {} eligible queued intent(s); unsupported content fails locally",
+            pending.len()
+        );
+        for entry in &pending {
+            println!("  {}", pending_line(entry));
+        }
+    }
     if let Err(error) = client.connect(std::time::Duration::from_secs(120)).await {
         client.shutdown().await;
         return Err(error);
     }
     let mut status = client.connection_state();
+    let sends = if send_outbox {
+        "queued outbox sends enabled"
+    } else {
+        "no chat sends"
+    };
     if reconnect.max_attempts == 0 {
         println!(
-            "listen: authenticated and active; immediate incoming decryption/receipts enabled; no automatic reconnect or chat sends"
+            "listen: authenticated and active; immediate incoming decryption/receipts enabled; no automatic reconnect; {sends}"
         );
     } else {
         println!(
-            "listen: authenticated and active; immediate incoming decryption/receipts enabled; bounded reconnect after recoverable loss (up to {} attempts); no chat sends",
+            "listen: authenticated and active; immediate incoming decryption/receipts enabled; bounded reconnect after recoverable loss (up to {} attempts); {sends}",
             reconnect.max_attempts
         );
     }
@@ -84,6 +102,63 @@ pub(super) async fn listen(
         ));
     }
     println!("listen: stopped cleanly; account and sessions preserved");
+    Ok(())
+}
+
+/// One redacted line per queued intent: identifiers, recipient, content kind
+/// and accept time. Message text and media bytes are never printed.
+fn pending_summary(entry: &whatsapp_api::outbox::OutboxEntry) -> serde_json::Value {
+    let kind = match &entry.intent.content {
+        whatsapp_api::model::message::MessageContent::Text { .. } => "text",
+        whatsapp_api::model::message::MessageContent::Media { .. } => "media",
+        _ => "unsupported",
+    };
+    serde_json::json!({
+        "local_id": entry.local_id.to_string(),
+        "client_request_id": entry.client_request_id.as_str(),
+        "chat": entry.intent.chat.jid().to_string(),
+        "kind": kind,
+        "progress": format!("{:?}", entry.progress),
+        "accepted_at_unix": entry.accepted_at.as_unix_seconds(),
+    })
+}
+fn pending_line(entry: &whatsapp_api::outbox::OutboxEntry) -> String {
+    let v = pending_summary(entry);
+    format!(
+        "local_id={} request_id={} chat={} kind={} accepted_at_unix={}",
+        v["local_id"].as_str().unwrap_or(""),
+        v["client_request_id"].as_str().unwrap_or(""),
+        v["chat"].as_str().unwrap_or(""),
+        v["kind"].as_str().unwrap_or(""),
+        v["accepted_at_unix"]
+    )
+}
+
+/// Offline listing of the queued intents an outbox-enabled session would send.
+pub(super) fn outbox_pending(cli: &super::Cli) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let pending = whatsapp_api::transport::outgoing::eligible(&store, 256)?;
+    if cli.json {
+        let rows: Vec<serde_json::Value> = pending.iter().map(pending_summary).collect();
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&rows)
+                .map_err(|e| Error::invalid("outbox", e.to_string()))?
+        );
+        return Ok(());
+    }
+    println!(
+        "outbox-pending: {} eligible queued intent(s); `listen --send-outbox` would transmit these, `cancel --local-id` removes one",
+        pending.len()
+    );
+    for entry in &pending {
+        println!("  {}", pending_line(entry));
+    }
     Ok(())
 }
 
@@ -450,6 +525,50 @@ mod tests {
             Some(phone)
         );
         assert!(session_sender(&Node::new("message").attr("from", "12345@g.us")).is_none());
+    }
+
+    #[test]
+    fn pending_summary_redacts_content_and_reports_kind() {
+        use whatsapp_api::{
+            model::{
+                ids::{ChatId, ClientRequestId, LocalMessageId},
+                message::MessageContent,
+                send::{AttemptProgress, SendRequest},
+                time::Timestamp,
+            },
+            outbox::OutboxEntry,
+        };
+        let entry = OutboxEntry {
+            local_id: LocalMessageId([7u8; 16]),
+            client_request_id: ClientRequestId::new("req-1").unwrap(),
+            intent: SendRequest {
+                client_request_id: ClientRequestId::new("req-1").unwrap(),
+                chat: ChatId::from_jid(&Jid::parse("15555550100@s.whatsapp.net").unwrap()).unwrap(),
+                content: MessageContent::Text {
+                    body: "private body text".into(),
+                    quoted: None,
+                },
+            },
+            semantic_hash: [0; 32],
+            wire_id: None,
+            progress: AttemptProgress::Queued,
+            attempts: Vec::new(),
+            facts: Vec::new(),
+            accepted_at: Timestamp::now(),
+            updated_at: Timestamp::now(),
+        };
+        let line = pending_line(&entry);
+        assert!(line.contains("kind=text"), "{line}");
+        assert!(line.contains("request_id=req-1"), "{line}");
+        assert!(line.contains("chat=15555550100@s.whatsapp.net"), "{line}");
+        assert!(!line.contains("private body"), "{line}");
+        let json = pending_summary(&entry);
+        assert_eq!(json["progress"], "Queued");
+        assert!(
+            !serde_json::to_string(&json)
+                .unwrap()
+                .contains("private body")
+        );
     }
 
     #[test]

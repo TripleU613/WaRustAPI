@@ -44,6 +44,23 @@ impl std::fmt::Debug for Pending {
 pub fn begin(store: &ProtocolStore) -> Result<Option<(Pending, Node)>> {
     begin_selected(store, None)
 }
+fn unreserved_queued(tx: &crate::store::ReadTx<'_>, entry: &OutboxEntry) -> Result<bool> {
+    Ok(entry.progress == AttemptProgress::Queued
+        && tx
+            .get_json::<serde_json::Value>(
+                Table::Checkpoints,
+                query_key(entry.local_id).as_bytes(),
+                1,
+            )?
+            .is_none())
+}
+/// Queued intents an outbox-enabled comparison session would attempt next, in
+/// accept order across every idempotency namespace: `Queued` progress and no
+/// durable key-query reservation. Read-only; `begin_selected` applies the same
+/// filter before claiming, then fails unsupported content locally.
+pub fn eligible(store: &ProtocolStore, limit: usize) -> Result<Vec<OutboxEntry>> {
+    store.read(|tx| outbox().pending_where(tx, limit, |entry| unreserved_queued(tx, entry)))
+}
 /// Restrict transmission to one explicitly selected durable intent when set.
 pub fn begin_selected(
     store: &ProtocolStore,
@@ -52,18 +69,7 @@ pub fn begin_selected(
     let entries = if let Some(id) = ticket {
         store.read(|tx| outbox().get(tx, id))?.into_iter().collect()
     } else {
-        store.read(|tx| {
-            outbox().pending_where(tx, 256, |entry| {
-                Ok(entry.progress == AttemptProgress::Queued
-                    && tx
-                        .get_json::<serde_json::Value>(
-                            Table::Checkpoints,
-                            query_key(entry.local_id).as_bytes(),
-                            1,
-                        )?
-                        .is_none())
-            })
-        })?
+        eligible(store, 256)?
     };
     for entry in entries {
         if entry.progress != AttemptProgress::Queued {
@@ -424,6 +430,57 @@ mod tests {
                     .local_id)
             })
             .unwrap()
+    }
+    #[test]
+    fn eligible_spans_namespaces_and_excludes_reserved_or_cancelled_intents() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("eligible.redb"));
+        let first = enqueue(&store);
+        let request = |id: &str| SendRequest {
+            client_request_id: ClientRequestId::new(id).unwrap(),
+            chat: ChatId::from_jid(&Jid::parse("15555550100@s.whatsapp.net").unwrap()).unwrap(),
+            content: MessageContent::Text {
+                body: "offline fixture".into(),
+                quoted: None,
+            },
+        };
+        let other_namespace = Outbox::new("default", Limits::default());
+        let second = store
+            .write(|tx| {
+                Ok(other_namespace
+                    .enqueue(tx, &request("public-client"))?
+                    .0
+                    .local_id)
+            })
+            .unwrap();
+        let cancelled = store
+            .write(|tx| {
+                let id = other_namespace
+                    .enqueue(tx, &request("cancelled"))?
+                    .0
+                    .local_id;
+                other_namespace.cancel(tx, id)?;
+                Ok(id)
+            })
+            .unwrap();
+        let ids =
+            |entries: Vec<OutboxEntry>| entries.into_iter().map(|e| e.local_id).collect::<Vec<_>>();
+        assert_eq!(ids(eligible(&store, 10).unwrap()), vec![first, second]);
+        assert_eq!(ids(eligible(&store, 1).unwrap()), vec![first]);
+        assert!(eligible(&store, 0).unwrap().is_empty());
+        // Reserving the first key query removes it without touching the other.
+        assert!(begin_selected(&store, Some(first)).unwrap().is_some());
+        assert_eq!(ids(eligible(&store, 10).unwrap()), vec![second]);
+        assert!(!ids(eligible(&store, 10).unwrap()).contains(&cancelled));
+        assert_eq!(
+            store
+                .read(|tx| outbox().get(tx, second))
+                .unwrap()
+                .unwrap()
+                .progress,
+            AttemptProgress::Queued,
+            "listing is read-only"
+        );
     }
     #[tokio::test]
     async fn oversized_text_fails_before_query_and_uploaded_media_uses_one_reservation() {

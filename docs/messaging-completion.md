@@ -14,7 +14,8 @@ Comparison APK evidence is 2.26.37.70, not the pinned 2.26.36.75 profile.
 - [ ] Notification handling and cross-device synchronization ([evidence and gaps](protocol/cross-device-sync.md)).
 - [x] Crash/reconnect coverage for receiving, consumption and uncertain sends;
   socket-level cut points, ACK-commit I/O failure and disk-full remain uncovered.
-- [ ] Integration with the normal account runtime/outbox.
+- [ ] Integration with the normal account runtime/outbox (CLI session now
+  receives and drains; live combined-session check and handset confirmation pending).
 
 ## Verification and operator handoff
 
@@ -29,6 +30,16 @@ from offline tests alone. Existing received captures can be processed locally.
 
 ### Implemented and verified locally
 
+- The CLI now has one normal-runtime session: `listen --send-outbox` receives,
+  acknowledges and transmits every eligible queued outbox intent from any
+  idempotency namespace (including `send`), printing each candidate before it
+  connects. `outbox-pending` lists the same candidates offline and `cancel
+  --local-id` withdraws one before transmission; neither touches the network and
+  message bodies are never printed. Eligibility is the exact read-only filter the
+  outbox adapter applies before claiming, shared through one function and tested
+  across namespaces, reservations and cancellation. No live combined session has
+  run yet. All 311 workspace/all-feature tests, strict Clippy, formatting and
+  hygiene passed.
 - `send_receipt` is no longer a stub: with explicit comparison configuration it
   durably queues `read` receipts for authenticated incoming direct messages (one
   to sixteen IDs, all-or-nothing, idempotent per message) through the existing

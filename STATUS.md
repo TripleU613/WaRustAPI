@@ -8,7 +8,9 @@ uncertain logins never retry, and reserved sends/receipts are never replayed.
 `listen` survives transient loss. Live reconnect behavior is not yet observed.
 The public `send_receipt` now queues explicit `read` receipts for authenticated
 incoming direct messages through the durable receipt outbox (offline verified;
-no live read receipt sent yet).
+no live read receipt sent yet). `listen --send-outbox` is the first combined
+receive-and-send CLI session; `outbox-pending` and `cancel` inspect and withdraw
+queued intents offline before it runs. No live combined session yet.
 
 **Public ordinary-media download integrated (offline verified):** comparison
 clients can list sealed incoming references with `received_media()` and explicitly

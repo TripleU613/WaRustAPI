@@ -311,7 +311,13 @@ uncertain saved login outcome never reconnect automatically. Reconnecting never
 replays a reserved send or receipt: durable reservations survive every epoch,
 and a genuine server redelivery is handled as a duplicate. `listen` keeps
 running through `Connecting`/`Backoff` and ends only on a terminal state.
-It does not drain chat sends. Receipt facts and supported trusted-contact tokens
+It does not drain chat sends unless `--send-outbox` is given. That flag turns
+the listener into the normal account runtime: every eligible queued intent from
+any idempotency namespace (for example one enqueued with `send`) is transmitted
+through the normal outbox, unsupported content fails locally, and receipts flow
+back into `status`. Before connecting it prints each intent it may send.
+Inspect the same list offline with `outbox-pending` and remove anything
+unwanted with `cancel --local-id <id>` first; both never touch the network. Receipt facts and supported trusted-contact tokens
 are persisted; unknown notifications remain captured, not falsely applied.
 
 `media-list` is offline and shows opaque selectors, kinds and lengths, not

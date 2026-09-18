@@ -178,8 +178,10 @@ request—not adding Rust code, another command or a number-specific script.**
 - Current ten-item work and live-check boundaries are tracked in
   `docs/messaging-completion.md`; consult it before relying on the older lab
   milestones below. `listen` uses the explicit comparison public-client actor,
-  without draining sends. Normal outbox transmission requires the separate
-  `comparison_outbox(true)` opt-in. Incoming supported text now reaches the
+  without draining sends unless `--send-outbox` is given; that flag transmits
+  every eligible queued intent from any namespace, so run `outbox-pending`
+  first and `cancel` anything unwanted. The library opt-in is
+  `comparison_outbox(true)`. Incoming supported text now reaches the
   durable event journal atomically; `events --summary` is the redacted inspection
   path. Historical projection uses original authenticated captures and skips
   consumed view-once content. Do not delete event markers to repeat projection.
