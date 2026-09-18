@@ -158,6 +158,16 @@ storage; do not copy another number's token or failure counters. These are
 private data changes, not per-number source changes. Once prepared, a saved
 attempt's JSON is frozen. Never delete its store or cooldown to repeat a test.
 
+The sole token-correction exception is `retry-corrected-token`: supply a private
+JSON differing **only** in `token`, then explicitly authorize the command with
+`--allow-live-request`. It requires a saved HTTP 200 / `bad_token` refusal,
+rejects unchanged tokens and unrelated edits, and commits the corrected token
+and one-use reservation atomically before sending. It preserves the attempt,
+keys, other fields and history. No reset or automatic retry is performed.
+Use the corrected JSON for subsequent status/verification commands; keep the
+original privately for comparison. This path was added for the confirmed
+comparison-token salt transcription error, not token guessing.
+
 See the [outbound request analysis](http-post-analysis.md) for evidence and gaps.
 
 Build with `cargo build --locked -p whatsapp-cli --features experimental-signup`.

@@ -2542,7 +2542,7 @@ mod tests {
         params.append_to_form(&mut form).unwrap();
         assert_eq!(
             form.encode().unwrap().as_slice(),
-            b"token=v%2BhtmECA4%2F1N%2F634IV7jmkIgWzc%3D&method=sms"
+            b"token=qVj97PKhWFvdbTpFsH7gSeiqQTk%3D&method=sms"
         );
     }
 

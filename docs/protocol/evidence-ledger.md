@@ -139,3 +139,14 @@ with no recognized parameter hint or wait. This is a different refusal, not
 accepted registration, proven protocol progress, or confirmed OTP delivery.
 No retry followed. Because number, fresh identity, and request context differ,
 this is not a controlled single-variable comparison with the previous attempt.
+
+Token audit subsequently found a single-byte transcription error in the
+PBKDF2 salt: offset 62 was `0xfc`, not the APK's `0xf8`. After correcting it,
+the private profile changed only its token. One explicitly authorized retry
+preserved the same attempt/account material and all other inner fields
+(including the previous metrics value for this token-only comparison).
+The fresh encrypted envelope was 1123 bytes. The server returned HTTP 200 /
+sent (347 bytes, 3219 ms), retry/SMS wait 125 seconds and voice wait 65 seconds.
+The saved state is now an SMS challenge. This is server-reported dispatch;
+receipt, OTP verification, completed registration and messaging are not yet
+confirmed. No further request or OTP submission followed.

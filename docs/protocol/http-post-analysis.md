@@ -256,6 +256,28 @@ Diagnostics also now recognize the APK's `param="number"` alias (A2B compares
 it at 0x0042–0x0050), plus ENC/H field names. Earlier logs could suppress an
 unrecognized hint; the new flow-state and header tests still reported none.
 
+### Registration-token salt correction
+
+The later JSON-configured test on another supplied number returned `bad_token`.
+Rechecking `HQP.<clinit>` against our token derivation found a transcription
+error at zero-based salt byte 62: the code used `0xfc`, while Base64-decoding
+the APK's constant gives `0xf8`. The other 89 bytes match. This changes the
+PBKDF2 key and every resulting HMAC token, regardless of phone number.
+
+The implementation now matches the APK constant. A regression test compares
+the salt's Base64 representation to the APK text, and the synthetic derivation
+fixture was independently recalculated with Python `hashlib`/`hmac`. The APK's
+`AvQ.A0v` still confirms ordinary padded Base64 with Android flag 2 (`NO_WRAP`);
+no output-encoding change was justified. This fixes a verified local bug but
+does not by itself prove server acceptance.
+
+Live verification on the existing `bad_token` attempt changed only the token
+in the inner request, preserving account keys and previous fields. The server
+returned HTTP 200 / `sent` (347-byte response, 3219 ms) to the 1123-byte ENC/H
+request, with retry/SMS wait 125 seconds and voice wait 65 seconds. The state
+now awaits the SMS code. No code has been submitted and handset receipt is
+unverified; this is not yet completed signup or messaging.
+
 ### Refusal information loss fixed
 
 Previously `ComparisonHttpFlow::blocked_response` dropped the parsed protocol

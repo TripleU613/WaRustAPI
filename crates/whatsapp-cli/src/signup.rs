@@ -29,6 +29,8 @@ pub(super) enum Action {
     },
     /// Local status only: sends no request.
     Status,
+    /// One retry after bad_token; JSON may change only the token, never identity.
+    RetryCorrectedToken,
     /// One authorized resend of a legacy refusal whose diagnostics were lost.
     /// Known refusals/cooldowns are excluded; a durable latch prevents repeats.
     DiagnoseLegacyRefusal,
@@ -261,7 +263,11 @@ pub(super) async fn run(
         key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
         create: matches!(action, Action::Begin { .. }),
     })?);
-    let factory = Arc::new(StoredComparisonRequestFactory::new(store.clone(), config)?);
+    let factory = Arc::new(if matches!(action, Action::RetryCorrectedToken) {
+        StoredComparisonRequestFactory::new_for_token_correction(store.clone(), config)?
+    } else {
+        StoredComparisonRequestFactory::new(store.clone(), config)?
+    });
     let service = RegistrationService::new(
         store,
         &profile,
@@ -323,6 +329,7 @@ pub(super) async fn run(
             service.begin(phone, method).await?
         }
         Action::DiagnoseLegacyRefusal => service.diagnose_legacy_refusal_once(phone).await?,
+        Action::RetryCorrectedToken => service.retry_corrected_token_once(phone).await?,
         Action::DiagnoseBadParameter => service.diagnose_bad_parameter_once(phone).await?,
         Action::DiagnoseUnsignedEnvelope => service.diagnose_unsigned_envelope_once(phone).await?,
         Action::DiagnoseAdditionalFields { .. } => {
@@ -377,6 +384,7 @@ mod tests {
         assert!(authorize(&Action::Template, false).is_ok());
         assert!(authorize(&Action::Preview { show_phone: false }, false).is_ok());
         for action in [
+            Action::RetryCorrectedToken,
             Action::DiagnoseLegacyRefusal,
             Action::DiagnoseBadParameter,
             Action::DiagnoseEncryptedParameter,

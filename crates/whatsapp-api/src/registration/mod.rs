@@ -1081,6 +1081,34 @@ impl RegistrationService {
         bad_parameter: bool,
         latch: &'static [u8],
     ) -> Result<RegistrationStep> {
+        self.retry_refusal_with_latch(
+            phone,
+            bad_parameter.then_some(wire::RegistrationResponseReason::BadParam),
+            latch,
+        )
+        .await
+    }
+
+    /// One explicit retry after HTTP 200 / bad_token with a corrected-token
+    /// factory. Its preparation must reject all unrelated configuration changes.
+    /// The reservation, token correction and attempt update commit atomically.
+    #[cfg(feature = "experimental-registration-https")]
+    pub async fn retry_corrected_token_once(&self, phone: PhoneNumber) -> Result<RegistrationStep> {
+        self.retry_refusal_with_latch(
+            phone,
+            Some(wire::RegistrationResponseReason::BadToken),
+            b"corrected-token-retry-used",
+        )
+        .await
+    }
+
+    #[cfg(feature = "experimental-registration-https")]
+    async fn retry_refusal_with_latch(
+        &self,
+        phone: PhoneNumber,
+        expected_reason: Option<wire::RegistrationResponseReason>,
+        latch: &'static [u8],
+    ) -> Result<RegistrationStep> {
         if self.profile_id != request::LAB_PROFILE_ID {
             return Err(Error::invalid(
                 "registration_diagnostic",
@@ -1096,16 +1124,16 @@ impl RegistrationService {
                     let mut attempt = Self::load_current(tx)?.ok_or_else(|| {
                         Error::invalid("registration_diagnostic", "no saved attempt")
                     })?;
-                    let eligible = if bad_parameter {
+                    let eligible = if let Some(expected_reason) = expected_reason {
                         matches!(
                             attempt.state,
                             RegistrationState::Blocked {
                                 reason: BlockedReason::ServerRefused {
                                     code: None,
                                     http_status: Some(200),
-                                    reason: Some(wire::RegistrationResponseReason::BadParam)
+                                    reason: Some(reason)
                                 }
-                            }
+                            } if reason == expected_reason
                         )
                     } else {
                         matches!(

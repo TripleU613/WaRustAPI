@@ -136,6 +136,7 @@ impl Material {
 pub struct StoredComparisonRequestFactory {
     store: Arc<ProtocolStore>,
     config: LabRegistrationConfig,
+    correct_token: bool,
 }
 
 impl fmt::Debug for StoredComparisonRequestFactory {
@@ -149,7 +150,22 @@ impl StoredComparisonRequestFactory {
     /// Validate configuration without generating keys or contacting the server.
     pub fn new(store: Arc<ProtocolStore>, config: LabRegistrationConfig) -> Result<Self> {
         config.validate()?;
-        Ok(Self { store, config })
+        Ok(Self {
+            store,
+            config,
+            correct_token: false,
+        })
+    }
+
+    /// Explicit token-only correction for `retry_corrected_token_once`.
+    /// Preparation rejects an unchanged token or any other profile change.
+    pub fn new_for_token_correction(
+        store: Arc<ProtocolStore>,
+        config: LabRegistrationConfig,
+    ) -> Result<Self> {
+        let mut factory = Self::new(store, config)?;
+        factory.correct_token = true;
+        Ok(factory)
     }
 
     fn check_attempt(&self, attempt: &RegistrationAttempt) -> Result<()> {
@@ -186,11 +202,23 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
         if tx.generation() != attempt.generation {
             return Err(invalid("stale account generation"));
         }
-        if let Some(record) =
+        if let Some(mut record) =
             tx.get_json::<Material>(Table::Account, MATERIAL_KEY, RECORD_VERSION)?
         {
+            if self.correct_token {
+                if record.config.token == self.config.token {
+                    return Err(invalid("corrected token must differ from the saved token"));
+                }
+                record.config.token = self.config.token.clone();
+                record.check(attempt, &self.config)?;
+                record.check_account(AccountRecord::load_in_write(tx)?)?;
+                return tx.put_json(Table::Account, MATERIAL_KEY, RECORD_VERSION, &record);
+            }
             record.check(attempt, &self.config)?;
             return record.check_account(AccountRecord::load_in_write(tx)?);
+        }
+        if self.correct_token {
+            return Err(invalid("token correction requires existing material"));
         }
         if AccountRecord::load_in_write(tx)?.is_some() {
             return Err(invalid("refusing to replace existing account material"));
@@ -519,6 +547,102 @@ mod tests {
 
     #[tokio::test]
     #[cfg(feature = "experimental-registration-https")]
+    async fn token_correction_is_atomic_token_only_and_once_per_account() {
+        use crate::registration::BlockedReason;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let original_factory =
+            StoredComparisonRequestFactory::new(store.clone(), config()).unwrap();
+        let mut a = attempt(&store);
+        store.write(|tx| original_factory.prepare(tx, &a)).unwrap();
+        let original = original_factory.code_request(&a).unwrap().body().to_vec();
+        a.transition(
+            RegistrationState::Blocked {
+                reason: BlockedReason::ServerRefused {
+                    code: None,
+                    http_status: Some(200),
+                    reason: Some(RegistrationResponseReason::BadToken),
+                },
+            },
+            Timestamp::now(),
+        )
+        .unwrap();
+        store
+            .write(|tx| RegistrationService::save_current(tx, &a))
+            .unwrap();
+        let mut profile = crate::ProtocolProfile::android_reference().unwrap();
+        profile.id = LAB_PROFILE_ID.into();
+        let transport = Arc::new(MockTransport::default());
+        for unrelated_change in [false, true] {
+            let mut cfg = config();
+            if unrelated_change {
+                cfg.token = Zeroizing::new("corrected-token".into());
+                cfg.locale = "CA".into();
+            }
+            let factory = Arc::new(
+                StoredComparisonRequestFactory::new_for_token_correction(store.clone(), cfg)
+                    .unwrap(),
+            );
+            let service = RegistrationService::new(
+                store.clone(),
+                &profile,
+                Arc::new(ComparisonHttpFlow::new(factory, transport.clone())),
+            );
+            assert!(
+                service
+                    .retry_corrected_token_once(config().phone)
+                    .await
+                    .is_err()
+            );
+            assert_eq!(original_factory.code_request(&a).unwrap().body(), original);
+            assert!(transport.0.lock().unwrap().is_empty());
+        }
+        let mut cfg = config();
+        cfg.token = Zeroizing::new("corrected-token".into());
+        let factory = Arc::new(
+            StoredComparisonRequestFactory::new_for_token_correction(store.clone(), cfg).unwrap(),
+        );
+        let service = RegistrationService::new(
+            store.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(factory.clone(), transport.clone())),
+        );
+        assert!(
+            service
+                .retry_corrected_token_once(PhoneNumber::new(1, "5557654321").unwrap())
+                .await
+                .is_err()
+        );
+        service
+            .retry_corrected_token_once(config().phone)
+            .await
+            .unwrap();
+        let saved = service.current().await.unwrap().unwrap();
+        assert_eq!(saved.id, a.id);
+        assert_eq!(saved.generation, a.generation);
+        assert!(saved.history_len() > a.history_len());
+        let updated = factory.code_request(&saved).unwrap();
+        assert_eq!(
+            String::from_utf8(original)
+                .unwrap()
+                .replace("token=offline-test-token-only", "token=corrected-token"),
+            std::str::from_utf8(updated.body()).unwrap()
+        );
+        assert_eq!(transport.0.lock().unwrap().len(), 1);
+        store
+            .write(|tx| RegistrationService::save_current(tx, &a))
+            .unwrap();
+        assert!(
+            service
+                .retry_corrected_token_once(config().phone)
+                .await
+                .is_err()
+        );
+        assert_eq!(transport.0.lock().unwrap().len(), 1);
+    }
+
+    #[tokio::test]
+    #[cfg(feature = "experimental-registration-https")]
     async fn diagnostics_are_once_only_and_preserve_identity_and_body() {
         for (bad_parameter, latch) in [
             (false, b"legacy-refusal-diagnostic-used".as_slice()),
@@ -636,6 +760,13 @@ mod tests {
                 reason: BlockedReason::ServerRefused {
                     code: None,
                     http_status: Some(200),
+                    reason: Some(RegistrationResponseReason::FormatWrong),
+                },
+            },
+            RegistrationState::Blocked {
+                reason: BlockedReason::ServerRefused {
+                    code: None,
+                    http_status: Some(200),
                     reason: Some(RegistrationResponseReason::Blocked),
                 },
             },
@@ -656,6 +787,12 @@ mod tests {
             store
                 .write(|tx| RegistrationService::save_current(tx, &a))
                 .unwrap();
+            assert!(
+                service
+                    .retry_corrected_token_once(config().phone)
+                    .await
+                    .is_err()
+            );
             assert!(
                 service
                     .diagnose_bad_parameter_once(config().phone)

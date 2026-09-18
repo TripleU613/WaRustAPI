@@ -1,10 +1,11 @@
 # Status — 2026-09-18
 
-**Latest comparison-lab result:** one user-requested test on a different number,
-configured entirely through private JSON, returned HTTP 200 / `bad_token`
-(61-byte response). One 1126-byte ENC/empty-H request was sent, with no automatic
-retry or confirmed OTP. The token was derived from the comparison APK for the
-new national number; server rejection remains unresolved.
+**Latest comparison-lab result:** correcting one miscopied byte in the APK-derived
+token salt changed HTTP 200 / `bad_token` to HTTP 200 / `sent` on the same
+attempt. The 1123-byte ENC/empty-H request returned 347 bytes in 3219 ms,
+with SMS wait 125 seconds and voice wait 65 seconds. Registration now awaits
+the SMS code. This confirms server-reported dispatch, not handset receipt,
+completed signup, or messaging. Only the token changed; keys/history are intact.
 
 **Previous number:** one APK-derived unknown-build-properties
 User-Agent experiment changed the response from HTTP 200 / `bad_param` to
@@ -78,7 +79,7 @@ the active 2.26.36.75 profile.
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability and comparison transport/registration wire-profile endpoints plus structured gated-operation errors |
 
-Test count: 174 (`cargo test --locked --workspace --all-features`). Formatting,
+Test count: 176 (`cargo test --locked --workspace --all-features`). Formatting,
 all-feature/all-target Clippy with `-D warnings`, strict rustdoc, package
 verification, and protobuf regeneration checks pass on the continuation
 machine (Rust 1.98.1). The repository and CI
