@@ -121,6 +121,9 @@ pub struct TransportSettings {
     pub connect_timeout_ms: u64,
     /// Response byte budget, at most the library's hard safety ceiling.
     pub max_response_bytes: usize,
+    /// Bounded automatic reconnect of the messaging session after a classified
+    /// recoverable connection loss. Never applies to registration requests.
+    pub reconnect: ReconnectSettings,
 }
 impl Default for TransportSettings {
     fn default() -> Self {
@@ -129,7 +132,69 @@ impl Default for TransportSettings {
             timeout_ms: 45_000,
             connect_timeout_ms: 30_000,
             max_response_bytes: MAX_RESPONSE_BODY_BYTES,
+            reconnect: ReconnectSettings::default(),
         }
+    }
+}
+
+/// Messaging-session reconnect bounds (docs/design/messaging.md, section 14).
+/// Only classified recoverable failures (socket loss, keepalive timeout, I/O)
+/// are retried, with capped jittered exponential backoff and a fresh epoch and
+/// handshake each time. Refusals, revocation, missing registration, certificate
+/// failures and uncertain login outcomes never reconnect automatically.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(default, deny_unknown_fields)]
+pub struct ReconnectSettings {
+    /// Consecutive automatic attempts without reaching an active session
+    /// before the runtime stops with the last error. `0` disables reconnect.
+    pub max_attempts: u32,
+    /// First delay in milliseconds; each further attempt doubles it.
+    pub base_delay_ms: u64,
+    /// Delay ceiling in milliseconds after doubling and jitter.
+    pub max_delay_ms: u64,
+}
+impl Default for ReconnectSettings {
+    fn default() -> Self {
+        Self {
+            max_attempts: 5,
+            base_delay_ms: 2_000,
+            max_delay_ms: 60_000,
+        }
+    }
+}
+impl ReconnectSettings {
+    /// Hard ceiling on consecutive automatic attempts.
+    pub const MAX_ATTEMPTS: u32 = 100;
+    /// Hard ceiling on any single delay.
+    pub const MAX_DELAY_MS: u64 = 300_000;
+
+    /// Reject unbounded or inverted retry settings.
+    pub fn validate(&self) -> Result<()> {
+        if self.max_attempts > Self::MAX_ATTEMPTS
+            || self.base_delay_ms == 0
+            || self.base_delay_ms > self.max_delay_ms
+            || self.max_delay_ms > Self::MAX_DELAY_MS
+        {
+            return Err(Error::invalid(
+                "transport.reconnect",
+                "invalid attempt/delay bounds",
+            ));
+        }
+        Ok(())
+    }
+
+    /// Delay before automatic attempt number `attempt` (1-based): doubling from
+    /// the base, capped, then reduced by up to 25% using `jitter` in `0..=255`.
+    /// Deterministic given the jitter byte so tests can check the bounds.
+    pub fn delay(&self, attempt: u32, jitter: u8) -> std::time::Duration {
+        let exponent = attempt.saturating_sub(1).min(32);
+        let scaled = self
+            .base_delay_ms
+            .saturating_mul(1u64 << exponent)
+            .min(self.max_delay_ms);
+        // jitter reduces the delay by 0..25%; never below one quarter of the base.
+        let reduction = scaled / 4 * u64::from(jitter) / 255;
+        std::time::Duration::from_millis(scaled - reduction)
     }
 }
 impl TransportSettings {
@@ -147,7 +212,7 @@ impl TransportSettings {
                 "invalid timeout/connect-timeout/response-size bounds",
             ));
         }
-        Ok(())
+        self.reconnect.validate()
     }
 }
 
@@ -572,6 +637,41 @@ mod tests {
     }
 
     #[test]
+    fn reconnect_settings_default_bound_and_reject_unknown_fields() {
+        let mut json = serde_json::to_value(config()).unwrap();
+        json["transport"]
+            .as_object_mut()
+            .unwrap()
+            .remove("reconnect");
+        let old: LabRegistrationConfig = serde_json::from_value(json.clone()).unwrap();
+        assert_eq!(old.transport.reconnect, ReconnectSettings::default());
+        assert_eq!(old.transport.reconnect.max_attempts, 5);
+        json["transport"]["reconnect"] = serde_json::json!({"max_attempts": 0});
+        let disabled: LabRegistrationConfig = serde_json::from_value(json.clone()).unwrap();
+        assert_eq!(disabled.transport.reconnect.max_attempts, 0);
+        assert_eq!(disabled.transport.reconnect.base_delay_ms, 2_000);
+        disabled.validate().unwrap();
+        json["transport"]["reconnect"] = serde_json::json!({"retries": 3});
+        assert!(serde_json::from_value::<LabRegistrationConfig>(json).is_err());
+
+        let policy = ReconnectSettings {
+            max_attempts: 5,
+            base_delay_ms: 1_000,
+            max_delay_ms: 5_000,
+        };
+        assert_eq!(policy.delay(1, 0).as_millis(), 1_000);
+        assert_eq!(policy.delay(2, 0).as_millis(), 2_000);
+        assert_eq!(policy.delay(3, 0).as_millis(), 4_000);
+        assert_eq!(policy.delay(4, 0).as_millis(), 5_000, "capped");
+        assert_eq!(policy.delay(40, 0).as_millis(), 5_000, "no overflow");
+        assert_eq!(policy.delay(1, 255).as_millis(), 750, "full jitter is -25%");
+        for jitter in [0u8, 1, 127, 254, 255] {
+            let d = policy.delay(4, jitter).as_millis();
+            assert!((3_750..=5_000).contains(&d), "{jitter}: {d}");
+        }
+    }
+
+    #[test]
     fn legacy_config_defaults_and_typos_fail_fast() {
         let mut json = serde_json::to_value(config()).unwrap();
         for key in [
@@ -611,6 +711,18 @@ mod tests {
         assert!(value.validate().is_err());
         let mut value = config();
         value.transport.max_response_bytes = MAX_RESPONSE_BODY_BYTES + 1;
+        assert!(value.validate().is_err());
+        let mut value = config();
+        value.transport.reconnect.base_delay_ms = 0;
+        assert!(value.validate().is_err());
+        let mut value = config();
+        value.transport.reconnect.max_delay_ms = value.transport.reconnect.base_delay_ms - 1;
+        assert!(value.validate().is_err());
+        let mut value = config();
+        value.transport.reconnect.max_attempts = ReconnectSettings::MAX_ATTEMPTS + 1;
+        assert!(value.validate().is_err());
+        let mut value = config();
+        value.transport.reconnect.max_delay_ms = ReconnectSettings::MAX_DELAY_MS + 1;
         assert!(value.validate().is_err());
         let mut value = config();
         value.device.facebook_device_id = Some(Zeroizing::new("invalid".into()));

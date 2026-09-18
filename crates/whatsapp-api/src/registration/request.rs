@@ -22,7 +22,7 @@
 
 pub use super::request_config::{
     ClientSettings, DeliveryMethod, DeviceSettings, EndpointFields, LAB_PROFILE_ID,
-    LabRegistrationConfig, MAX_CONFIG_BYTES, RequestBodyMode, TransportSettings,
+    LabRegistrationConfig, MAX_CONFIG_BYTES, ReconnectSettings, RequestBodyMode, TransportSettings,
 };
 #[cfg(feature = "experimental-signal-crypto")]
 pub(crate) use super::request_config::{append_byte_fields, append_fields};
@@ -62,7 +62,8 @@ pub const TEMPLATE_JSON: &str = r#"{
     "body_mode": "clear_form",
     "timeout_ms": 45000,
     "connect_timeout_ms": 30000,
-    "max_response_bytes": 1048576
+    "max_response_bytes": 1048576,
+    "reconnect": { "max_attempts": 5, "base_delay_ms": 2000, "max_delay_ms": 60000 }
   },
   "diagnostics": true,
   "preflight": true

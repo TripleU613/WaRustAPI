@@ -1,5 +1,12 @@
 # Status — 2026-09-18
 
+**Bounded reconnect added (offline verified):** the account runtime now retries
+after recoverable connection loss with capped jittered backoff and a fresh
+handshake, configurable via `transport.reconnect` in the private JSON (default
+five attempts; `0` disables). Refusals, revocation, missing registration and
+uncertain logins never retry, and reserved sends/receipts are never replayed.
+`listen` survives transient loss. Live reconnect behavior is not yet observed.
+
 **Public ordinary-media download integrated (offline verified):** comparison
 clients can list sealed incoming references with `received_media()` and explicitly
 export authenticated ordinary images/voice notes with `download_media()` to new

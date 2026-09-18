@@ -258,5 +258,9 @@ request—not adding Rust code, another command or a number-specific script.**
   for which action is now valid; do not rely on elapsed time guessed from chat.
 - Real numbers, tokens, keys and attempt files are in ignored `lab/` storage.
   Never copy their values into this file, tests, docs, commits or status reports.
+- The messaging runtime reconnects only after classified recoverable loss, bounded
+  by private JSON `transport.reconnect` (default five attempts; `0` disables).
+  Refusals, revocation, uncertain logins and worker panics never retry. Do not
+  widen recoverability to make a refusal disappear; reservations are never replayed.
 - Most important lesson: **listen first, change data for data requests, explain
   genuine obstacles upfront, and deliver the requested result without detours.**

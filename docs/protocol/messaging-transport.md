@@ -300,7 +300,17 @@ whatsapp-cli --store <saved.redb> --account <account> media-open \
 `listen` without `--seconds` runs until Ctrl-C or connection failure. It verifies
 the certificate, authenticates, activates, sends bounded keepalives, captures
 incoming frames, decrypts supported direct messages and commits ratchet/inbox
-state before delivery confirmation. A failed session does not auto-reconnect.
+state before delivery confirmation. After a classified recoverable loss (peer
+close at a frame boundary, unanswered keepalive, socket I/O or deadline) the
+runtime waits with capped jittered backoff and reconnects with a fresh epoch and
+full handshake, bounded by the private JSON `transport.reconnect` settings
+(`max_attempts`, default 5; `base_delay_ms`, default 2000; `max_delay_ms`,
+default 60000; `max_attempts: 0` disables). Refusals, `stream:error`/`failure`,
+revocation, missing registration, certificate failures, worker panics and an
+uncertain saved login outcome never reconnect automatically. Reconnecting never
+replays a reserved send or receipt: durable reservations survive every epoch,
+and a genuine server redelivery is handled as a duplicate. `listen` keeps
+running through `Connecting`/`Backoff` and ends only on a terminal state.
 It does not drain chat sends. Receipt facts and supported trusted-contact tokens
 are persisted; unknown notifications remain captured, not falsely applied.
 

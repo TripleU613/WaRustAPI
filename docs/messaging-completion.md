@@ -12,13 +12,14 @@ Comparison APK evidence is 2.26.37.70, not the pinned 2.26.36.75 profile.
 - [x] Incoming voice-note retrieval/playback; live incoming sample pending.
 - [x] Incoming prekey messages from new senders; live new-sender sample pending.
 - [ ] Notification handling and cross-device synchronization ([evidence and gaps](protocol/cross-device-sync.md)).
-- [ ] Crash/reconnect coverage for receiving, consumption and uncertain sends.
+- [x] Crash/reconnect coverage for receiving, consumption and uncertain sends;
+  socket-level cut points, ACK-commit I/O failure and disk-full remain uncovered.
 - [ ] Integration with the normal account runtime/outbox.
 
 ## Verification and operator handoff
 
-Work remains on broad notification/cross-device synchronization, extended crash
-coverage and full outbox integration. Preserve the existing encrypted account, identities, send IDs
+Work remains on broad notification/cross-device synchronization, socket-level
+cut-point crash coverage and full outbox integration. Preserve the existing encrypted account, identities, send IDs
 and uncertain outcomes. No unsolicited chats, identity replacement, registration
 retries, or reopening of consumed media are part of this work.
 
@@ -28,6 +29,23 @@ from offline tests alone. Existing received captures can be processed locally.
 
 ### Implemented and verified locally
 
+- The comparison account actor now reconnects after classified recoverable
+  connection loss with capped jittered exponential backoff, a fresh epoch and a
+  full handshake per attempt, bounded by `transport.reconnect` in the private
+  JSON (default five attempts, 2 s base, 60 s cap; `max_attempts: 0` disables).
+  Peer close and unanswered keepalives are now typed as recoverable; refusals,
+  `stream:error`, revocation, missing registration, worker panics, uncertain
+  saved logins and explicit disconnects never retry. The attempt budget resets
+  only on server activation or an explicit `connect`; `nudge` retries at once
+  within the budget; `disconnect`/shutdown cancel the wait and its waiters.
+  Injected-worker tests cover fresh epochs, bounded exhaustion with the last
+  error preserved, attempt reset after readiness, waiters spanning backoff,
+  nudge/connect/disconnect control, disabled policy, and the outbox key-query
+  reservation surviving every epoch and a store reopen byte-for-byte. `listen`
+  continues through `Backoff` and reports the attempt number. No live reconnect
+  was exercised; socket cut points and ACK-commit I/O failure remain unsimulated.
+  All 307 workspace/all-feature tests, strict Clippy, formatting and hygiene
+  passed; the actor tests passed ten consecutive runs.
 - Mute timer resolution now follows the APK's local/server-clock conversion,
   with distinct unmuted/indefinite/deadline states and explicit everyone-mention
   policy. Tests cover skew, expiry, missing fields, independent mention settings

@@ -30,6 +30,7 @@ pub(super) async fn listen(
         return Err(Error::invalid("listen", "requires --allow-live-request"));
     }
     let config = super::signup::config(path)?;
+    let reconnect = config.transport.reconnect;
     let client = whatsapp_api::WhatsAppClient::builder()
         .store_path(cli.store.clone())
         .account_id(AccountId::new(cli.account.clone())?)
@@ -43,13 +44,29 @@ pub(super) async fn listen(
         return Err(error);
     }
     let mut status = client.connection_state();
-    println!(
-        "listen: authenticated and active; immediate incoming decryption/receipts enabled; no automatic reconnect or chat sends"
-    );
+    if reconnect.max_attempts == 0 {
+        println!(
+            "listen: authenticated and active; immediate incoming decryption/receipts enabled; no automatic reconnect or chat sends"
+        );
+    } else {
+        println!(
+            "listen: authenticated and active; immediate incoming decryption/receipts enabled; bounded reconnect after recoverable loss (up to {} attempts); no chat sends",
+            reconnect.max_attempts
+        );
+    }
     let ended = tokio::select! {
         _ = async {
             loop {
-                if !matches!(status.borrow_and_update().state, whatsapp_api::runtime::ConnectionState::Ready{..}) {break;}
+                // Connecting/Backoff are transient reconnect states; only a
+                // terminal state ends the listener.
+                match &status.borrow_and_update().state {
+                    whatsapp_api::runtime::ConnectionState::Ready{..}
+                    | whatsapp_api::runtime::ConnectionState::Connecting{..} => {}
+                    whatsapp_api::runtime::ConnectionState::Backoff{attempt,..} => {
+                        println!("listen: connection lost; reconnect attempt {attempt} scheduled; saved state preserved");
+                    }
+                    _ => break,
+                }
                 if status.changed().await.is_err() {break;}
             }
         } => true,
@@ -63,7 +80,7 @@ pub(super) async fn listen(
     if ended {
         return Err(Error::invalid(
             "listen",
-            "connection ended; saved state preserved; no automatic reconnect",
+            "connection ended; saved state preserved; reconnect bounds exhausted or failure not recoverable",
         ));
     }
     println!("listen: stopped cleanly; account and sessions preserved");

@@ -148,7 +148,8 @@ pub async fn run(
                                 .map_err(Error::from)
                         })
                 }
-                Ok(None) => Err(Error::invalid("connection", "server closed connection")),
+                // Classified as recoverable: the actor may reconnect within its bounds.
+                Ok(None) => Err(Error::Transport(super::TransportError::PeerClosed)),
                 Err(e) => Err(e.into()),
             };
             let failed = next.is_err();
@@ -195,7 +196,8 @@ pub async fn run(
             }
             _ = heartbeat.tick(), if ready.is_none() => {
                 for receipt in super::receipts::reserve_pending(&store)? { write(&mut writer, &receipt).await?; }
-                if pending_ping.is_some() { return Err(Error::invalid("connection", "keepalive unconfirmed; closing without retry")); }
+                // Unanswered keepalive: classified recoverable; the actor decides on reconnect.
+                if pending_ping.is_some() { return Err(Error::Timeout(ping_period)); }
                 let id = super::messaging::new_message_id()?;
                 // Comparison LX/EIY.<init>(VLI), branch 15, 0x006a..009e.
                 let ping = Node::new("iq").attr("id", id.as_str()).attr("type", "get")

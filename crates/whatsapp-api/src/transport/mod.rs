@@ -121,6 +121,10 @@ pub enum TransportError {
         /// Configured bound.
         limit: usize,
     },
+    /// The peer closed the stream cleanly at a frame boundary. A reconnect
+    /// with a fresh handshake may recover; nothing uncertain is replayed.
+    #[error("peer closed the connection")]
+    PeerClosed,
     /// The stream ended mid-frame.
     #[error("stream closed with {buffered} partial bytes buffered")]
     UnexpectedEof {
