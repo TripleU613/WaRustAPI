@@ -1,91 +1,246 @@
-name: ci
+name: CI
 
 on:
   push:
-    branches: ["main"]
+    branches: [main]
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  merge_group:
+  schedule:
+    - cron: '23 5 * * 1'
   workflow_dispatch:
+    inputs:
+      full:
+        description: Run all checks including coverage, stress, and stable Rust
+        type: boolean
+        default: true
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.event.pull_request.number || github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 env:
   CARGO_TERM_COLOR: always
-  CARGO_INCREMENTAL: "0"
+  CARGO_INCREMENTAL: '0'
+  CARGO_NET_RETRY: '3'
 
 jobs:
-  # Job 1 (docs/design/README.md 19.4): formatting, Clippy and compilation for the supported
-  # target/feature combinations. Linux x86_64 is the only proof target.
-  lint:
-    name: fmt + clippy
+  plan:
+    name: Select checks
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      rust: ${{ steps.select.outputs.rust }}
+      api: ${{ steps.select.outputs.api }}
+      dependencies: ${{ steps.select.outputs.dependencies }}
+      proto: ${{ steps.select.outputs.proto }}
+      package: ${{ steps.select.outputs.package }}
+      workflow: ${{ steps.select.outputs.workflow }}
+      args: ${{ steps.select.outputs.args }}
+      matrix: ${{ steps.select.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Test routing and select affected checks
+        id: select
+        env:
+          CI_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
+          CI_EVENT: ${{ github.event_name }}
+          CI_DRAFT: ${{ github.event.pull_request.draft || false }}
+          CI_FULL: ${{ inputs.full || false }}
+        run: |
+          rustup run stable rustc --edition=2024 --test .github/ci/plan.rs -o /tmp/ci-plan-tests
+          /tmp/ci-plan-tests
+          rustup run stable rustc --edition=2024 .github/ci/plan.rs -o /tmp/ci-plan
+          /tmp/ci-plan
+
+  hygiene:
+    name: Repository hygiene
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Local links, licenses, file budgets, and APK checksums
+        run: |
+          rustup run stable rustc --edition=2024 .github/ci/hygiene.rs -o /tmp/ci-hygiene
+          /tmp/ci-hygiene
+      - uses: taiki-e/install-action@76c2e6406e52637deed7160d77bded76bd83e06e # v2
+        if: needs.plan.outputs.workflow == 'true'
+        with:
+          tool: actionlint@1.7.12
+      - name: Validate GitHub Actions
+        if: needs.plan.outputs.workflow == 'true'
+        run: actionlint
+
+  lint:
+    name: Rust lint
+    needs: plan
+    if: needs.plan.outputs.rust == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable action
         with:
           toolchain: 1.94.1
           components: rustfmt, clippy
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c # v2
+        with:
+          shared-key: lint
+          save-if: ${{ github.ref == 'refs/heads/main' }}
       - run: cargo fmt --all -- --check
-      - run: cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+      - name: Format dependency-free CI tools
+        run: rustfmt --edition 2024 --check .github/ci/plan.rs .github/ci/hygiene.rs
+      - run: cargo clippy --locked ${{ needs.plan.outputs.args }} --all-targets --all-features -- -D warnings
 
-  # Job 2: unit, fixture, property and crash/replay tests, offline once
-  # dependencies are fetched. Live interoperability is a separate job that is
-  # never triggered by pull requests (docs/design/README.md 19.3).
   test:
-    name: test (${{ matrix.profile }})
+    name: Test (${{ matrix.profile }})
+    needs: [plan, lint]
+    if: needs.plan.outputs.rust == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - profile: default
-            args: --workspace
-          - profile: noise
-            args: -p whatsapp-api --features experimental-noise
-          - profile: registration-https
-            args: -p whatsapp-api --features experimental-registration-https
-          - profile: all-features
-            args: --workspace --all-features
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable action
         with:
           toolchain: 1.94.1
-      - uses: Swatinem/rust-cache@v2
-      - run: cargo test --locked ${{ matrix.args }}
+      - uses: Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c # v2
+        with:
+          shared-key: test-${{ matrix.profile }}
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - name: Unit, integration, property, crash-recovery, and doc tests
+        run: cargo test --locked ${{ matrix.args }}
+        env:
+          PROPTEST_CASES: '256'
+          RUST_BACKTRACE: '1'
 
-  # Job 3 + 4: dependency/native-build audit and Rust-only protobuf
-  # regeneration with a clean generated-code diff.
   audit:
-    name: dependency audit + proto check
+    name: Generated code and dependency contract
+    needs: plan
+    if: needs.plan.outputs.dependencies == 'true' || needs.plan.outputs.proto == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable action
         with:
           toolchain: 1.94.1
-      - uses: Swatinem/rust-cache@v2
-      - run: cargo run --locked -p xtask -- proto-check
-      - run: cargo run --locked -p xtask -- dependency-audit
-      - name: dependency report is committed and current
-        run: git diff --exit-code -- docs/protocol/dependency-report.md
+      - uses: Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c # v2
+        with:
+          shared-key: audit
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - if: needs.plan.outputs.proto == 'true'
+        run: cargo run --locked -p xtask -- proto-check
+      - if: needs.plan.outputs.dependencies == 'true'
+        run: |
+          cargo run --locked -p xtask -- dependency-audit
+          git diff --exit-code -- docs/protocol/dependency-report.md
 
-  # Job 5: package verification outside the workspace context.
   package:
-    name: package
+    name: Package and API documentation
+    needs: [plan, lint]
+    if: needs.plan.outputs.package == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable action
         with:
           toolchain: 1.94.1
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c # v2
+        with:
+          shared-key: package
+          save-if: ${{ github.ref == 'refs/heads/main' }}
       - run: cargo package --locked -p whatsapp-api --allow-dirty
       - run: cargo doc --locked --workspace --all-features --no-deps
         env:
           RUSTDOCFLAGS: -D warnings
+
+  extended:
+    name: Extended coverage and compatibility
+    needs: [plan, test]
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.full)
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable action
+        with:
+          toolchain: 1.94.1
+          components: llvm-tools-preview
+      - uses: Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c # v2
+        with:
+          shared-key: extended
+      - uses: taiki-e/install-action@76c2e6406e52637deed7160d77bded76bd83e06e # v2
+        with:
+          tool: cargo-llvm-cov
+      - name: Optional features independently
+        run: |
+          cargo test --locked -p whatsapp-api --features experimental-noise
+          cargo test --locked -p whatsapp-api --features experimental-registration-https
+      - name: Release-mode property stress and crash recovery
+        run: cargo test --locked -p whatsapp-api --all-features --release --tests
+        env:
+          PROPTEST_CASES: '4096'
+      - name: Coverage report
+        run: cargo llvm-cov --locked --workspace --all-features --lcov --output-path coverage.lcov
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: coverage-${{ github.sha }}
+          path: coverage.lcov
+          retention-days: 14
+          if-no-files-found: error
+      - name: Current stable Rust compatibility
+        run: |
+          rustup toolchain install stable --profile minimal
+          cargo +stable test --locked --workspace --all-features
+
+  required:
+    name: CI required
+    if: always()
+    needs: [plan, hygiene, lint, test, audit, package, extended]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Verify selected jobs completed successfully
+        env:
+          RESULT_PLAN: ${{ needs.plan.result }}
+          RESULT_HYGIENE: ${{ needs.hygiene.result }}
+          RESULT_LINT: ${{ needs.lint.result }}
+          RESULT_TEST: ${{ needs.test.result }}
+          RESULT_AUDIT: ${{ needs.audit.result }}
+          RESULT_PACKAGE: ${{ needs.package.result }}
+          RESULT_EXTENDED: ${{ needs.extended.result }}
+          NEED_LINT: ${{ needs.plan.outputs.rust }}
+          NEED_TEST: ${{ needs.plan.outputs.rust }}
+          NEED_AUDIT: ${{ needs.plan.outputs.dependencies == 'true' || needs.plan.outputs.proto == 'true' }}
+          NEED_PACKAGE: ${{ needs.plan.outputs.package }}
+          NEED_EXTENDED: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.full) }}
+        run: |
+          rustup run stable rustc --edition=2024 .github/ci/plan.rs -o /tmp/ci-plan
+          /tmp/ci-plan gate

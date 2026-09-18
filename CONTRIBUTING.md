@@ -29,8 +29,11 @@ cargo package --locked -p whatsapp-api --allow-dirty
 git diff --check
 ```
 
-The current optional features are compatible; CI checks each independently
-and together. If new backends are mutually exclusive, update the matrix.
+The current optional features are compatible. Normal CI tests default and
+combined features for library changes; weekly/manual extended checks also test
+each feature independently. CLI and tooling edits use scoped tests, and docs
+edits skip Cargo builds. See [CI routing and checks](docs/ci.md).
+If new backends are mutually exclusive, update the matrix.
 Dependency audit checks the project's build contract, not vulnerability
 advisories. Review its generated report before committing it.
 
