@@ -120,6 +120,19 @@ reported state before any further action. Cooldown, blocked, and unknown-outcome
 states must not be worked around by resetting stores or repeatedly requesting codes.
 No live signup has been performed or shown to work by adding this command.
 
+### One-shot legacy diagnostic recovery
+
+`lab-signup --allow-live-request diagnose-legacy-refusal` is an explicit lab-only
+action for historical `ServerRefused` records with no saved HTTP status, code
+or reason. It is not called by `begin`. Use only for an operator-authorized
+number after deciding to send one more request; it may trigger SMS delivery.
+It retains the same attempt, keys, configuration and transition history.
+A durable account-local latch and preparation state commit before sending.
+Known refusals, cooldowns, unknown outcomes and repeated diagnostics are rejected.
+No existing store or latch should be deleted to repeat it. On transport failure,
+the outcome remains unknown; do not resend. Reqwest protocol-level retries are
+also explicitly disabled, in addition to application-level automatic retries.
+
 ## Still needed for the first real message
 
 Validate the exact APK/profile and remaining registration assumptions, wire an

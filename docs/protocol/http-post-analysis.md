@@ -70,6 +70,17 @@ Tests cover HTTP 200 plus `fail/bad_token`, HTTP 403 plus an unknown reason,
 serialization compatibility, secret exclusion, and no resend after resuming.
 These are synthetic tests, not improved live server responses.
 
+### First retained live refusal — 2026-09-18 UTC
+
+Following operator confirmation of number ownership, one explicit legacy
+diagnostic used the same saved profile, attempt and keys. `/v2/code` returned
+HTTP 200 with `status=fail` and `reason=bad_param` (58-byte response). The
+recognized fields contained no retry/SMS/voice wait. This is a concrete
+parameter-level refusal, not proof of a banned number or successful signup.
+The available diagnostics do not identify which field failed. The current
+User-Agent and body-mode gaps are still hypotheses, not established causes.
+The result is now durably recorded. No further request was made.
+
 For each proposed field, record endpoint, APK class/method/offset, producer,
 encoding, conditionality, and whether an authorized runtime observation exists.
 Keep unknown values absent rather than manufacturing a device model, carrier,

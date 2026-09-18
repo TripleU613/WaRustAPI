@@ -28,6 +28,9 @@ pub(super) enum Action {
     },
     /// Local status only: sends no request.
     Status,
+    /// One authorized resend of a legacy refusal whose diagnostics were lost.
+    /// Known refusals/cooldowns are excluded; a durable latch prevents repeats.
+    DiagnoseLegacyRefusal,
     /// Request a code or resume an existing attempt; no automatic retries.
     Begin {
         #[arg(long, value_enum)]
@@ -201,6 +204,7 @@ pub(super) async fn run(
             };
             service.begin(phone, method).await?
         }
+        Action::DiagnoseLegacyRefusal => service.diagnose_legacy_refusal_once(phone).await?,
         Action::VerifyCode | Action::VerifyPin => {
             let attempt = service
                 .current()
@@ -245,6 +249,7 @@ mod tests {
         assert!(authorize(&Action::Template, false).is_ok());
         assert!(authorize(&Action::Preview { show_phone: false }, false).is_ok());
         for action in [
+            Action::DiagnoseLegacyRefusal,
             Action::Begin {
                 method: Some(super::super::Method::Sms),
             },

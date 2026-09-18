@@ -966,6 +966,79 @@ impl RegistrationService {
             BeginPlan::Existing(step) => return Ok(step),
             BeginPlan::Start(attempt) => attempt,
         };
+        self.execute_begin(attempt).await
+    }
+
+    /// Explicit one-shot diagnostic recovery for the lab's old, opaque refusals.
+    ///
+    /// Only legacy records that lost both HTTP status and protocol reason are
+    /// eligible. This is never invoked by `begin`. A durable account-local latch
+    /// commits before network I/O, so crashes, repeated calls and subsequent
+    /// refusals cannot cause another diagnostic resend. Keys and history stay
+    /// bound to the same attempt; known refusals and cooldowns are ineligible.
+    #[cfg(feature = "experimental-registration-https")]
+    pub async fn diagnose_legacy_refusal_once(
+        &self,
+        phone: PhoneNumber,
+    ) -> Result<RegistrationStep> {
+        const LATCH: &[u8] = b"legacy-refusal-diagnostic-used";
+        if self.profile_id != request::LAB_PROFILE_ID {
+            return Err(Error::invalid(
+                "registration_diagnostic",
+                "requires explicit lab profile",
+            ));
+        }
+        let profile_id = self.profile_id.clone();
+        let flow = self.flow.clone();
+        let attempt = self
+            .store
+            .run_blocking(move |s| {
+                s.write(|tx| {
+                    let mut attempt = Self::load_current(tx)?.ok_or_else(|| {
+                        Error::invalid("registration_diagnostic", "no saved attempt")
+                    })?;
+                    if attempt.generation != tx.generation()
+                        || attempt.profile_id != profile_id
+                        || *attempt.phone() != phone
+                        || !matches!(
+                            attempt.state,
+                            RegistrationState::Blocked {
+                                reason: BlockedReason::ServerRefused {
+                                    code: None,
+                                    http_status: None,
+                                    reason: None
+                                }
+                            }
+                        )
+                    {
+                        return Err(Error::invalid(
+                            "registration_diagnostic",
+                            "only a matching legacy opaque refusal is eligible",
+                        ));
+                    }
+                    if tx
+                        .get(Table::RegistrationAttempts, LATCH, RECORD_V1)?
+                        .is_some()
+                    {
+                        return Err(Error::invalid(
+                            "registration_diagnostic",
+                            "one-shot diagnostic already reserved; no resend",
+                        ));
+                    }
+                    let now = Timestamp::now();
+                    attempt.transition(RegistrationState::Unregistered, now)?;
+                    attempt.transition(RegistrationState::Preparing, now)?;
+                    flow.prepare(tx, &attempt)?;
+                    tx.put_json(Table::RegistrationAttempts, LATCH, RECORD_V1, &attempt.id)?;
+                    Self::save_current(tx, &attempt)?;
+                    Ok(attempt)
+                })
+            })
+            .await?;
+        self.execute_begin(attempt).await
+    }
+
+    async fn execute_begin(&self, attempt: RegistrationAttempt) -> Result<RegistrationStep> {
         let result = self.flow.begin(&attempt).await;
         match result {
             Ok(next) => {

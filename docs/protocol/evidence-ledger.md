@@ -92,4 +92,14 @@ Noise record limit. See the continuation entry in `decompilation-log.md`.
 
 ## Dated server observations
 
-None. `server_observation` in the reference manifest is `null`.
+The active pinned reference manifest still has `server_observation: null`.
+
+2026-09-18 UTC, comparison lab only: one operator-authorized diagnostic
+`POST https://v.whatsapp.net/v2/code` reused an existing legacy attempt's
+configuration and keys. The server returned HTTP 200 and parsed JSON
+`status=fail`, `reason=bad_param`; the bounded response body was 58 bytes.
+Parsed retry/SMS/voice waits were absent. No successful code delivery,
+registration, or specific offending parameter was established. The new
+HTTP status and recognized reason were verified in the encrypted saved state.
+No further request followed, and the durable one-shot diagnostic latch remains.
+Phone, tokens, keys and raw request/response bodies are intentionally not published.

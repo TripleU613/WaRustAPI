@@ -1161,6 +1161,7 @@ impl ExperimentalHttpsTransport {
             .use_preconfigured_tls(tls)
             .https_only(true)
             .redirect(reqwest::redirect::Policy::none())
+            .retry(reqwest::retry::never())
             .no_proxy()
             .referer(false)
             .no_gzip()
