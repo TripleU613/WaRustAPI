@@ -12,8 +12,8 @@ Comparison APK evidence is 2.26.37.70, not the pinned 2.26.36.75 profile.
 - [x] Incoming voice-note retrieval/playback; live incoming sample pending.
 - [x] Incoming prekey messages from new senders; live new-sender sample pending.
 - [ ] Notification handling and cross-device synchronization ([evidence and gaps](protocol/cross-device-sync.md)).
-- [x] Crash/reconnect coverage for receiving, consumption and uncertain sends;
-  socket-level cut points, ACK-commit I/O failure and disk-full remain uncovered.
+- [x] Crash/reconnect coverage for receiving, consumption and uncertain sends,
+  including socket cut points on the real session loop; disk-full remains uncovered.
 - [ ] Integration with the normal account runtime/outbox (CLI session now
   receives and drains; live combined-session check and handset confirmation pending).
 
@@ -30,6 +30,18 @@ from offline tests alone. Existing received captures can be processed locally.
 
 ### Implemented and verified locally
 
+- The connection worker is now split into the real encrypted socket adapter and a
+  node-level session loop (`drive`) that takes an injected link, so tests cut the
+  link at exact points without a server or Noise peer. Six cut-point tests cover:
+  write failure and peer close before activation (recoverable, never ready) and
+  activation refusal (terminal); `stream:error` captured encrypted and terminal;
+  an explicit receipt reserved before its write, the write cut, no replay next
+  epoch, and a late server ACK settling it; a delivery-ack write cut followed by
+  server redelivery confirming again with no new fact rows; a key-query write cut
+  leaving the reservation byte-identical and never reselected; and an unanswered
+  keepalive ending the epoch with a typed recoverable timeout. Live wire behavior
+  is unchanged. All 317 workspace/all-feature tests, strict Clippy, rustdoc with
+  warnings denied, formatting and hygiene passed; the six tests passed five runs.
 - The CLI now has one normal-runtime session: `listen --send-outbox` receives,
   acknowledges and transmits every eligible queued outbox intent from any
   idempotency namespace (including `send`), printing each candidate before it

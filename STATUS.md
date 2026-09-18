@@ -10,7 +10,9 @@ The public `send_receipt` now queues explicit `read` receipts for authenticated
 incoming direct messages through the durable receipt outbox (offline verified;
 no live read receipt sent yet). `listen --send-outbox` is the first combined
 receive-and-send CLI session; `outbox-pending` and `cancel` inspect and withdraw
-queued intents offline before it runs. No live combined session yet.
+queued intents offline before it runs. No live combined session yet. The session
+loop now runs over an injectable node link, with socket cut-point tests at
+activation, receipt, delivery-ack, key-query and keepalive boundaries.
 
 **Public ordinary-media download integrated (offline verified):** comparison
 clients can list sealed incoming references with `received_media()` and explicitly
