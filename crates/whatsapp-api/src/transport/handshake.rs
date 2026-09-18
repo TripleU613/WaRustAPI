@@ -18,7 +18,7 @@ use crate::proto::wa_web_protobufs_wa6::{
     handshake_message::{ClientFinish, ClientHello},
 };
 
-/// Comparison LX/Aw1.<clinit>, WhatsAppLongTerm1; LX/1N7.A03 requires issuer 0.
+/// Comparison `LX/Aw1.<clinit>`, WhatsAppLongTerm1; `LX/1N7.A03` requires issuer 0.
 pub const COMPARISON_CHAIN_POLICY: ChainPolicy = ChainPolicy {
     trust_root: [
         0x14, 0x23, 0x75, 0x57, 0x4d, 0x0a, 0x58, 0x71, 0x66, 0xaa, 0xe7, 0x1e, 0xbe, 0x51, 0x64,
