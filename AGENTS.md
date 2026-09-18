@@ -29,6 +29,11 @@ credentials, real phone numbers, OTPs and account PINs must not be copied here.
   imposed by WhatsApp. Never present our design choices as server requirements.
 - Explain a material obstacle or scope change **before** spending time on it.
   Say what is blocked, what proves it, and what correction is necessary.
+- When a requested test exposes a fixable bug in our own guard or plumbing,
+  do not end the turn merely reporting it. Explain briefly, fix the reusable
+  behavior, add tests, and resume the authorized test on the saved attempt when
+  safe. Do not make the owner say “fix it” again. This does not authorize
+  ignoring server waits, confirmation requirements, or genuine external blockers.
 - Do not repeatedly ask for facts already supplied, including the APK location,
   lack of an Android device, the selected number, or an ownership confirmation
   already given. Reuse relevant context without assuming it covers unrelated

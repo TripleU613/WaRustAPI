@@ -223,7 +223,23 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
         record.common()?.append_to_form(&mut form)?;
         form.push("token", record.config.token.as_str())?;
         super::request::append_fields(&mut form, &record.config.fields.exist)?;
-        super::request::append_byte_fields(&mut form, &record.config.fields.exist_bytes)?;
+        let mut fields = record.config.fields.exist_bytes.clone();
+        if let Some(metrics) = fields.get_mut("client_metrics") {
+            let count = attempt
+                .code_preparation_count()
+                .ok_or_else(|| invalid("incomplete preflight preparation history"))?;
+            let mut value: serde_json::Value = serde_json::from_slice(metrics)
+                .map_err(|_| invalid("invalid preflight metrics JSON"))?;
+            let object = value
+                .as_object_mut()
+                .ok_or_else(|| invalid("preflight metrics must be an object"))?;
+            object.insert("attempts".into(), serde_json::json!(count));
+            *metrics = Zeroizing::new(
+                serde_json::to_vec(&value)
+                    .map_err(|_| invalid("cannot encode preflight metrics"))?,
+            );
+        }
+        super::request::append_byte_fields(&mut form, &fields)?;
         record.bundle()?.append_to_form(&mut form)?;
         Ok(Some(
             WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Exist, &form)?,
@@ -797,6 +813,26 @@ mod tests {
             (r#"{"status":"ok","recommended_method":["sms"]}"#, false),
             (r#"{"status":"fail","reason":"incorrect"}"#, false),
             (
+                r#"{"status":"fail","reason":"incorrect","fallback_methods":["sms","voice"],"sms_wait":0}"#,
+                true,
+            ),
+            (
+                r#"{"status":"fail","reason":"incorrect","fallback_methods":["voice"]}"#,
+                false,
+            ),
+            (
+                r#"{"status":"fail","reason":"incorrect","recommended_method":[],"fallback_methods":["sms"]}"#,
+                false,
+            ),
+            (
+                r#"{"status":"fail","reason":"incorrect","fallback_methods":["sms"],"sms_wait":600}"#,
+                false,
+            ),
+            (
+                r#"{"status":"fail","reason":"incorrect","fallback_methods":["sms"],"verify_pn_device":1}"#,
+                false,
+            ),
+            (
                 r#"{"status":"fail","reason":"incorrect","recommended_method":["voice"],"fallback_methods":["sms"]}"#,
                 false,
             ),
@@ -852,6 +888,59 @@ mod tests {
             let _ = service.begin(config().phone, ChallengeMethod::Sms).await;
             assert_eq!(transport.paths.lock().unwrap().len(), expected);
         }
+    }
+
+    #[tokio::test]
+    #[cfg(feature = "experimental-registration-https")]
+    async fn preflight_resume_preserves_identity_and_is_once_only() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let mut cfg = config();
+        cfg.preflight = true;
+        let factory = Arc::new(StoredComparisonRequestFactory::new(store.clone(), cfg).unwrap());
+        let mut a = attempt(&store);
+        store.write(|tx| factory.prepare(tx, &a)).unwrap();
+        let original = factory.code_request(&a).unwrap().body().to_vec();
+        a.transition(RegistrationState::Blocked {
+            reason: crate::registration::BlockedReason::UnsupportedStep {
+                description: "preflight requires explicit handling; HTTP=200, status=Fail, reason=Some(Incorrect), recommended=None, fallback=Some([Sms]), device_branch=None; no code request sent".into(),
+            },
+        }, Timestamp::now()).unwrap();
+        store
+            .write(|tx| RegistrationService::save_current(tx, &a))
+            .unwrap();
+        let transport = Arc::new(PreflightTransport {
+            response: r#"{"status":"fail","reason":"incorrect","fallback_methods":["sms"],"sms_wait":0}"#,
+            paths: Default::default(),
+        });
+        let mut profile = crate::ProtocolProfile::android_reference().unwrap();
+        profile.id = LAB_PROFILE_ID.into();
+        let service = RegistrationService::new(
+            store.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(factory.clone(), transport.clone())),
+        );
+        assert!(
+            service
+                .resume_preflight_once(PhoneNumber::new(1, "5557654321").unwrap())
+                .await
+                .is_err()
+        );
+        assert!(transport.paths.lock().unwrap().is_empty());
+        assert!(matches!(
+            service.resume_preflight_once(config().phone).await.unwrap(),
+            RegistrationStep::Action(RequiredAction::EnterCode(_))
+        ));
+        let saved = service.current().await.unwrap().unwrap();
+        assert_eq!(saved.id, a.id);
+        assert_eq!(saved.generation, a.generation);
+        assert_eq!(original, factory.code_request(&saved).unwrap().body());
+        assert!(service.resume_preflight_once(config().phone).await.is_err());
+        store
+            .write(|tx| RegistrationService::save_current(tx, &a))
+            .unwrap();
+        assert!(service.resume_preflight_once(config().phone).await.is_err());
+        assert_eq!(transport.paths.lock().unwrap().len(), 2);
     }
 
     #[tokio::test]
@@ -1000,6 +1089,7 @@ mod tests {
             store
                 .write(|tx| RegistrationService::save_current(tx, &a))
                 .unwrap();
+            assert!(service.resume_preflight_once(config().phone).await.is_err());
             assert!(
                 service
                     .retry_corrected_token_once(config().phone)

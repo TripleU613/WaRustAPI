@@ -740,6 +740,7 @@ fn preflight_decision(
         && response
             .recommended_method
             .as_ref()
+            .or(response.fallback_methods.as_ref())
             .is_some_and(|v| v.contains(&selected))
     {
         return None;
@@ -1172,6 +1173,26 @@ impl RegistrationService {
         expected_reason: Option<wire::RegistrationResponseReason>,
         latch: &'static [u8],
     ) -> Result<RegistrationStep> {
+        self.retry_guarded(phone, expected_reason, latch, false)
+            .await
+    }
+
+    /// One retry of our historical missing-recommendation guard, not a server
+    /// refusal. Rechecks preflight before any code request; preserves identity.
+    #[cfg(feature = "experimental-registration-https")]
+    pub async fn resume_preflight_once(&self, phone: PhoneNumber) -> Result<RegistrationStep> {
+        self.retry_guarded(phone, None, b"resume-preflight-used", true)
+            .await
+    }
+
+    #[cfg(feature = "experimental-registration-https")]
+    async fn retry_guarded(
+        &self,
+        phone: PhoneNumber,
+        expected_reason: Option<wire::RegistrationResponseReason>,
+        latch: &'static [u8],
+        resume_preflight: bool,
+    ) -> Result<RegistrationStep> {
         if self.profile_id != request::LAB_PROFILE_ID {
             return Err(Error::invalid(
                 "registration_diagnostic",
@@ -1187,7 +1208,13 @@ impl RegistrationService {
                     let mut attempt = Self::load_current(tx)?.ok_or_else(|| {
                         Error::invalid("registration_diagnostic", "no saved attempt")
                     })?;
-                    let eligible = if let Some(expected_reason) = expected_reason {
+                    let eligible = if resume_preflight {
+                        matches!(&attempt.state,
+                            RegistrationState::Blocked { reason: BlockedReason::UnsupportedStep { description } }
+                            if description.starts_with("preflight requires explicit handling; HTTP=200, status=Fail, reason=Some(Incorrect), recommended=None, fallback=Some(")
+                                && description.ends_with("device_branch=None; no code request sent")
+                        )
+                    } else if let Some(expected_reason) = expected_reason {
                         matches!(
                             attempt.state,
                             RegistrationState::Blocked {

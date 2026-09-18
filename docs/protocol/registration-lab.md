@@ -153,17 +153,28 @@ Configure existence-only inputs in `fields.exist` / `fields.exist_bytes`.
 Do not copy code-request failure reasons or counters into them: the APK uses
 a separate existence-check counter. These fields have the same size, encoding,
 redaction and protected-field validation as the other endpoint maps.
+When existence `client_metrics` is configured, its `attempts` value is derived
+from saved preparation history, not copied from another attempt. Reservations
+are counted even if transport subsequently fails; this is not a delivery count.
 
 The initial implementation deliberately uses a conservative **lab policy**,
 not a claim of full APK UI equivalence: it continues only for HTTP success,
-`status: fail`, `reason: incorrect`, an explicit recommendation containing the
-operator-selected SMS/voice method, no positive generic/selected-method wait,
+`status: fail`, `reason: incorrect`, a recommendation containing the
+operator-selected SMS/voice method (or a fallback list containing it when the
+recommendation is absent), no positive generic/selected-method wait,
 and no indicated device/PIN/secure-verifier branch. A same-device `ok` response
 is not treated as permission to request another code or as completed signup.
-Fallback methods are parsed but never selected automatically. Unknown methods
+The configured method is never switched automatically. Unknown methods
 are redacted to `other`; lists are bounded. Other responses stop with typed
 diagnostics or a cooldown. Method recommendations alone do not prove that an
-account is new, and none of this has yet been verified against a live preflight.
+account is new. A live fallback-only response with zero waits now passed this
+gate; the subsequent code request returned HTTP 200 / `sent`. This establishes
+server-reported dispatch, not handset receipt or completed registration.
+
+`resume-preflight` is a one-shot migration for the old local guard's saved
+missing-recommendation stop. It requires the same preflight-enabled JSON,
+preserves keys and attempt identity, and repeats preflight before considering
+a code request. It cannot reset a server refusal, cooldown or uncertain outcome.
 
 Both requests run under the saved Preparing state; ambiguous transport or parse
 failures enter outcome-unknown instead of automatically replaying either request.

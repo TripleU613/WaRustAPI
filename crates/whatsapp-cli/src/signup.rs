@@ -34,6 +34,8 @@ pub(super) enum Action {
     /// Migrate an opaque legacy refusal using JSON corrections; one send only.
     /// Preserves identity; shares the legacy diagnostic's durable reservation.
     RetryCorrectedRequest,
+    /// Recheck a saved preflight stopped by the old missing-recommendation guard.
+    ResumePreflight,
     /// One authorized resend of a legacy refusal whose diagnostics were lost.
     /// Known refusals/cooldowns are excluded; a durable latch prevents repeats.
     DiagnoseLegacyRefusal,
@@ -218,6 +220,11 @@ pub(super) async fn run(
         return Ok(());
     }
     let phone = config.phone.clone();
+    if matches!(action, Action::ResumePreflight) && !config.preflight {
+        return Err(invalid(
+            "resume-preflight requires the saved preflight-enabled profile",
+        ));
+    }
     let configured_method = config.method;
     let migration_metrics = if matches!(action, Action::RetryCorrectedRequest) {
         config.fields.code_bytes.get("client_metrics").cloned()
@@ -360,6 +367,7 @@ pub(super) async fn run(
         Action::DiagnoseLegacyRefusal => service.diagnose_legacy_refusal_once(phone).await?,
         Action::RetryCorrectedToken => service.retry_corrected_token_once(phone).await?,
         Action::RetryCorrectedRequest => service.diagnose_legacy_refusal_once(phone).await?,
+        Action::ResumePreflight => service.resume_preflight_once(phone).await?,
         Action::DiagnoseBadParameter => service.diagnose_bad_parameter_once(phone).await?,
         Action::DiagnoseUnsignedEnvelope => service.diagnose_unsigned_envelope_once(phone).await?,
         Action::DiagnoseAdditionalFields { .. } => {
@@ -416,6 +424,7 @@ mod tests {
         for action in [
             Action::RetryCorrectedToken,
             Action::RetryCorrectedRequest,
+            Action::ResumePreflight,
             Action::DiagnoseLegacyRefusal,
             Action::DiagnoseBadParameter,
             Action::DiagnoseEncryptedParameter,
