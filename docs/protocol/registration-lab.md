@@ -168,6 +168,16 @@ Use the corrected JSON for subsequent status/verification commands; keep the
 original privately for comparison. This path was added for the confirmed
 comparison-token salt transcription error, not token guessing.
 
+For historical refusals with no recorded HTTP status or reason,
+`retry-corrected-request` uses that same private-JSON workflow to migrate the
+token, User-Agent, body encoding and additional endpoint fields together.
+It shares the legacy diagnostic's one-use reservation, so using either action
+prevents another. All other settings and account identity remain frozen;
+known refusals, cooldowns and unknown outcomes are excluded. If metrics are
+provided, their preparation count must match the saved history plus this send.
+This migration is not needed for new numbers configured through JSON from the
+start. Keep the previous JSON privately and use the corrected file afterward.
+
 See the [outbound request analysis](http-post-analysis.md) for evidence and gaps.
 
 Build with `cargo build --locked -p whatsapp-cli --features experimental-signup`.

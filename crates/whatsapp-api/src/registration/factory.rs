@@ -137,6 +137,7 @@ pub struct StoredComparisonRequestFactory {
     store: Arc<ProtocolStore>,
     config: LabRegistrationConfig,
     correct_token: bool,
+    correct_legacy_request: bool,
 }
 
 impl fmt::Debug for StoredComparisonRequestFactory {
@@ -154,6 +155,7 @@ impl StoredComparisonRequestFactory {
             store,
             config,
             correct_token: false,
+            correct_legacy_request: false,
         })
     }
 
@@ -165,6 +167,18 @@ impl StoredComparisonRequestFactory {
     ) -> Result<Self> {
         let mut factory = Self::new(store, config)?;
         factory.correct_token = true;
+        Ok(factory)
+    }
+
+    /// Explicit legacy request migration, paired with the service's one-shot
+    /// legacy-refusal action. Only token, User-Agent, body encoding and extra
+    /// endpoint fields may change; identity and all other settings stay frozen.
+    pub fn new_for_legacy_request_correction(
+        store: Arc<ProtocolStore>,
+        config: LabRegistrationConfig,
+    ) -> Result<Self> {
+        let mut factory = Self::new_for_token_correction(store, config)?;
+        factory.correct_legacy_request = true;
         Ok(factory)
     }
 
@@ -210,6 +224,11 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
                     return Err(invalid("corrected token must differ from the saved token"));
                 }
                 record.config.token = self.config.token.clone();
+                if self.correct_legacy_request {
+                    record.config.client.user_agent = self.config.client.user_agent.clone();
+                    record.config.transport.body_mode = self.config.transport.body_mode;
+                    record.config.fields = self.config.fields.clone();
+                }
                 record.check(attempt, &self.config)?;
                 record.check_account(AccountRecord::load_in_write(tx)?)?;
                 return tx.put_json(Table::Account, MATERIAL_KEY, RECORD_VERSION, &record);
@@ -639,6 +658,50 @@ mod tests {
                 .is_err()
         );
         assert_eq!(transport.0.lock().unwrap().len(), 1);
+    }
+
+    #[test]
+    fn legacy_request_correction_preserves_identity_and_rejects_unrelated_edits() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let a = attempt(&store);
+        let original = StoredComparisonRequestFactory::new(store.clone(), config()).unwrap();
+        store.write(|tx| original.prepare(tx, &a)).unwrap();
+        let before = original.code_request(&a).unwrap().body().to_vec();
+        let mut cfg = config();
+        cfg.token = Zeroizing::new("corrected-token".into());
+        cfg.client.user_agent = Some(Zeroizing::new("test-agent".into()));
+        cfg.transport.body_mode = super::super::request::RequestBodyMode::EncEmptyH;
+        cfg.fields
+            .code_bytes
+            .insert("mcc".into(), Zeroizing::new(b"000".to_vec()));
+        for field in ["registration_id", "signed_pre_key_id", "locale", "timeout"] {
+            let mut invalid = cfg.clone();
+            match field {
+                "registration_id" => invalid.registration_id += 1,
+                "signed_pre_key_id" => invalid.signed_pre_key_id += 1,
+                "locale" => invalid.locale = "CA".into(),
+                _ => invalid.transport.timeout_ms += 1,
+            }
+            let factory = StoredComparisonRequestFactory::new_for_legacy_request_correction(
+                store.clone(),
+                invalid,
+            )
+            .unwrap();
+            assert!(store.write(|tx| factory.prepare(tx, &a)).is_err());
+            assert_eq!(original.code_request(&a).unwrap().body(), before);
+        }
+        let factory =
+            StoredComparisonRequestFactory::new_for_legacy_request_correction(store.clone(), cfg)
+                .unwrap();
+        store.write(|tx| factory.prepare(tx, &a)).unwrap();
+        let after = factory.code_request(&a).unwrap();
+        let expected = String::from_utf8(before)
+            .unwrap()
+            .replace("token=offline-test-token-only", "token=corrected-token")
+            .replace("&method=sms", "&method=sms&mcc=000");
+        assert_eq!(std::str::from_utf8(after.body()).unwrap(), expected);
+        assert!(store.write(|tx| factory.prepare(tx, &a)).is_err());
     }
 
     #[tokio::test]

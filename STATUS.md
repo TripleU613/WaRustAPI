@@ -1,6 +1,11 @@
 # Status — 2026-09-18
 
-**Latest comparison-lab result:** correcting one miscopied byte in the APK-derived
+**Latest comparison-lab result:** the operator-selected historical number was
+retried once using the corrected JSON while preserving its saved keys/attempt.
+HTTP 200 / `too_many_all_methods` imposed a 32417-second retry/SMS/voice wait.
+The cooldown is persisted and no further send was made.
+
+**Previous number's result:** correcting one miscopied byte in the APK-derived
 token salt changed HTTP 200 / `bad_token` to HTTP 200 / `sent` on the same
 attempt. The 1123-byte ENC/empty-H request returned 347 bytes in 3219 ms,
 with SMS wait 125 seconds and voice wait 65 seconds. Registration now awaits
@@ -79,7 +84,7 @@ the active 2.26.36.75 profile.
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability and comparison transport/registration wire-profile endpoints plus structured gated-operation errors |
 
-Test count: 176 (`cargo test --locked --workspace --all-features`). Formatting,
+Test count: 177 (`cargo test --locked --workspace --all-features`). Formatting,
 all-feature/all-target Clippy with `-D warnings`, strict rustdoc, package
 verification, and protobuf regeneration checks pass on the continuation
 machine (Rust 1.98.1). The repository and CI

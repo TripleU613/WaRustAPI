@@ -31,6 +31,9 @@ pub(super) enum Action {
     Status,
     /// One retry after bad_token; JSON may change only the token, never identity.
     RetryCorrectedToken,
+    /// Migrate an opaque legacy refusal using JSON corrections; one send only.
+    /// Preserves identity; shares the legacy diagnostic's durable reservation.
+    RetryCorrectedRequest,
     /// One authorized resend of a legacy refusal whose diagnostics were lost.
     /// Known refusals/cooldowns are excluded; a durable latch prevents repeats.
     DiagnoseLegacyRefusal,
@@ -214,6 +217,11 @@ pub(super) async fn run(
     }
     let phone = config.phone.clone();
     let configured_method = config.method;
+    let migration_metrics = if matches!(action, Action::RetryCorrectedRequest) {
+        config.fields.code_bytes.get("client_metrics").cloned()
+    } else {
+        None
+    };
     let extra = if let Action::DiagnoseAdditionalFields { fields }
     | Action::DiagnoseFlowFields { fields }
     | Action::DiagnoseUnknownAgent { fields } = action
@@ -265,6 +273,8 @@ pub(super) async fn run(
     })?);
     let factory = Arc::new(if matches!(action, Action::RetryCorrectedToken) {
         StoredComparisonRequestFactory::new_for_token_correction(store.clone(), config)?
+    } else if matches!(action, Action::RetryCorrectedRequest) {
+        StoredComparisonRequestFactory::new_for_legacy_request_correction(store.clone(), config)?
     } else {
         StoredComparisonRequestFactory::new(store.clone(), config)?
     });
@@ -273,6 +283,23 @@ pub(super) async fn run(
         &profile,
         Arc::new(ComparisonHttpFlow::new(factory.clone(), transport.clone())),
     );
+    if let Some(metrics) = migration_metrics {
+        let attempt = service
+            .current()
+            .await?
+            .ok_or_else(|| invalid("no saved attempt"))?;
+        let next_count = attempt
+            .code_preparation_count()
+            .ok_or_else(|| invalid("incomplete preparation history"))?
+            + 1;
+        let metrics: serde_json::Value =
+            serde_json::from_slice(&metrics).map_err(|_| invalid("metrics must be JSON"))?;
+        if metrics.get("attempts").and_then(|value| value.as_u64()) != Some(next_count as u64) {
+            return Err(invalid(
+                "metrics attempts must match saved preparations plus this attempt",
+            ));
+        }
+    }
     if let Some(extra) = &transport.extra {
         let attempt = service
             .current()
@@ -330,6 +357,7 @@ pub(super) async fn run(
         }
         Action::DiagnoseLegacyRefusal => service.diagnose_legacy_refusal_once(phone).await?,
         Action::RetryCorrectedToken => service.retry_corrected_token_once(phone).await?,
+        Action::RetryCorrectedRequest => service.diagnose_legacy_refusal_once(phone).await?,
         Action::DiagnoseBadParameter => service.diagnose_bad_parameter_once(phone).await?,
         Action::DiagnoseUnsignedEnvelope => service.diagnose_unsigned_envelope_once(phone).await?,
         Action::DiagnoseAdditionalFields { .. } => {
@@ -385,6 +413,7 @@ mod tests {
         assert!(authorize(&Action::Preview { show_phone: false }, false).is_ok());
         for action in [
             Action::RetryCorrectedToken,
+            Action::RetryCorrectedRequest,
             Action::DiagnoseLegacyRefusal,
             Action::DiagnoseBadParameter,
             Action::DiagnoseEncryptedParameter,

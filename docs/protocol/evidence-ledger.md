@@ -150,3 +150,13 @@ sent (347 bytes, 3219 ms), retry/SMS wait 125 seconds and voice wait 65 seconds.
 The saved state is now an SMS challenge. This is server-reported dispatch;
 receipt, OTP verification, completed registration and messaging are not yet
 confirmed. No further request or OTP submission followed.
+
+The operator then selected the original historical number again. Its saved
+opaque refusal was migrated once through corrected JSON: fixed phone-bound
+token, APK unknown-build-properties header, ENC/empty-H encoding, documented
+fallback fields and history-checked preparation count 2. Original account keys,
+attempt, country/locale and registration IDs were retained. The 1126-byte POST
+returned HTTP 200 / fail / too_many_all_methods (329 bytes, 1017 ms), with
+32417 seconds for retry, SMS and voice. The service persisted a cooldown;
+no further request or delivery-method switch followed. No SMS dispatch or
+successful registration was established for this number.
