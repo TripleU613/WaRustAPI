@@ -285,8 +285,15 @@ The Rust-native parser was corrected before analysis:
   PQ enabled/enforced, the protocol variant selects `XXkem`/`IKkem`,
   `XXkem-FS`/`IKkem-FS`, or `XXkemEph`/`IKkem2`, with the corresponding
   hybrid fallback pattern. `LX/19p;->A05()` reads the variant with `IKKEM` as
-  its local default. The effective remotely configured PQ mode/variant still
-  requires a runtime observation, so no single active pattern is claimed.
+  its local default. Tracing the sole constructor caller through
+  `LX/0iS;->A1g`, `LX/1N6;->run`, and `LX/1AM;->A0A` establishes that PQ mode
+  comes from `LX/19p;->A04()`. Its remote-config integer key is `0x4ec1` and
+  its compiled raw default is zero, which maps to `NOISE_PQ_MODE_NONE`; the
+  variant key `0x86e8` defaults to `IKKEM`, and the adjacent selector boolean
+  key `0x83d7` defaults false. Thus an installation with no remote override
+  selects classic XX/IK, while the effective remotely configured values still
+  require a runtime observation. `transport::selector` encodes the complete
+  comparison map but is not installed into the active profile.
 
 ### T4 — certificate trust root
 

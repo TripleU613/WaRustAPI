@@ -57,6 +57,15 @@
         }
       },
       "local_variant_default": "IKKEM",
+      "local_pq_mode_default": "NONE",
+      "remote_config": {
+        "pq_mode_key": 20161,
+        "pq_mode_raw_default": 0,
+        "variant_key": 34536,
+        "variant_default": "IKKEM",
+        "auxiliary_boolean_key": 33751,
+        "auxiliary_boolean_default": false
+      },
       "active_runtime_configuration": null,
       "selector_method": "LX/1N7;-><init>",
       "pattern_initializer": "LX/1NZ;-><clinit>(V)"

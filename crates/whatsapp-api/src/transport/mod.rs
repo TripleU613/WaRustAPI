@@ -9,6 +9,7 @@ pub mod cert;
 pub mod framing;
 #[cfg(feature = "experimental-noise")]
 pub mod noise;
+pub mod selector;
 
 use serde::{Deserialize, Serialize};
 

@@ -27,8 +27,9 @@ Ordered by what blocks the first decisive result (README section 0).
    server requires a hybrid pattern for new primary registrations, `snow`
    cannot be the backend (no such patterns) and a pure-Rust ML-KEM512
    implementation would need review. The newer comparison's selector map is
-   known, but its remotely configured PQ mode/variant must be observed at
-   runtime.
+   known and its compiled defaults select classic mode (`NONE`, variant
+   `IKKEM`), but its remotely configured effective mode/variant must be
+   observed at runtime.
 3. **Login payload** (`login.client_payload`): primary-device markers,
    version fields, startup requests, resume behaviour.
 4. **Noise record sizes** (`noise.record_limit`) to accept or reject `snow`.
