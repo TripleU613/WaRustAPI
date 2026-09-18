@@ -211,6 +211,25 @@ impl StoredComparisonRequestFactory {
 }
 
 impl ComparisonRequestFactory for StoredComparisonRequestFactory {
+    fn preflight_request(
+        &self,
+        attempt: &RegistrationAttempt,
+    ) -> Result<Option<EncodedRegistrationRequest>> {
+        if !self.config.preflight {
+            return Ok(None);
+        }
+        let record = self.load(attempt)?;
+        let mut form = RegistrationForm::new();
+        record.common()?.append_to_form(&mut form)?;
+        form.push("token", record.config.token.as_str())?;
+        super::request::append_fields(&mut form, &record.config.fields.exist)?;
+        super::request::append_byte_fields(&mut form, &record.config.fields.exist_bytes)?;
+        record.bundle()?.append_to_form(&mut form)?;
+        Ok(Some(
+            WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Exist, &form)?,
+        ))
+    }
+
     fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()> {
         self.check_attempt(attempt)?;
         if tx.generation() != attempt.generation {
@@ -342,6 +361,7 @@ mod tests {
             device: Default::default(),
             fields: Default::default(),
             diagnostics: true,
+            preflight: false,
         }
     }
 
@@ -702,6 +722,136 @@ mod tests {
             .replace("&method=sms", "&method=sms&mcc=000");
         assert_eq!(std::str::from_utf8(after.body()).unwrap(), expected);
         assert!(store.write(|tx| factory.prepare(tx, &a)).is_err());
+    }
+
+    #[test]
+    fn preflight_uses_saved_identity_and_separate_json_fields() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let a = attempt(&store);
+        let mut cfg = config();
+        cfg.preflight = true;
+        cfg.fields.exist_bytes.insert(
+            "client_metrics".into(),
+            Zeroizing::new(br#"{"attempts":1}"#.to_vec()),
+        );
+        cfg.fields
+            .code_bytes
+            .insert("reason".into(), Zeroizing::new(Vec::new()));
+        let factory = StoredComparisonRequestFactory::new(store.clone(), cfg).unwrap();
+        store.write(|tx| factory.prepare(tx, &a)).unwrap();
+        let exist = factory.preflight_request(&a).unwrap().unwrap();
+        let code = factory.code_request(&a).unwrap();
+        assert!(exist.url().ends_with("/v2/exist"));
+        let exist_body = std::str::from_utf8(exist.body()).unwrap();
+        let code_body = std::str::from_utf8(code.body()).unwrap();
+        assert!(!exist_body.contains("method="));
+        assert!(!exist_body.contains("reason="));
+        assert!(exist_body.contains("client_metrics="));
+        assert!(!code_body.contains("client_metrics="));
+        for key in [
+            "cc=",
+            "in=",
+            "token=",
+            "fdid=",
+            "authkey=",
+            "e_ident=",
+            "e_skey_sig=",
+        ] {
+            assert_eq!(
+                exist_body.split('&').find(|v| v.starts_with(key)),
+                code_body.split('&').find(|v| v.starts_with(key))
+            );
+        }
+    }
+
+    #[derive(Debug)]
+    struct PreflightTransport {
+        response: &'static str,
+        paths: std::sync::Mutex<Vec<String>>,
+    }
+    impl RegistrationTransport for PreflightTransport {
+        fn send<'a>(
+            &'a self,
+            request: EncodedRegistrationRequest,
+        ) -> RegistrationTransportFuture<'a> {
+            Box::pin(async move {
+                self.paths.lock().unwrap().push(request.url().to_owned());
+                let body = if request.url().ends_with("/v2/exist") {
+                    self.response
+                } else {
+                    r#"{"status":"sent"}"#
+                };
+                RegistrationHttpResponse::new(200, Zeroizing::new(body.as_bytes().to_vec()))
+            })
+        }
+    }
+
+    #[tokio::test]
+    async fn preflight_only_sends_code_after_explicit_compatible_response() {
+        for (response, sends_code) in [
+            (
+                r#"{"status":"fail","reason":"incorrect","recommended_method":["sms"],"sms_wait":0}"#,
+                true,
+            ),
+            (r#"{"status":"ok","recommended_method":["sms"]}"#, false),
+            (r#"{"status":"fail","reason":"incorrect"}"#, false),
+            (
+                r#"{"status":"fail","reason":"incorrect","recommended_method":["voice"],"fallback_methods":["sms"]}"#,
+                false,
+            ),
+            (
+                r#"{"status":"fail","reason":"incorrect","recommended_method":["sms"],"sms_wait":600}"#,
+                false,
+            ),
+            (
+                r#"{"status":"fail","reason":"incorrect","recommended_method":["sms"],"retry_after":600,"sms_wait":0}"#,
+                false,
+            ),
+            (
+                r#"{"status":"fail","reason":"incorrect","recommended_method":["sms"],"verify_pn_device":1}"#,
+                false,
+            ),
+            (
+                r#"{"status":"fail","reason":"device_confirm_or_second_code","recommended_method":["sms"]}"#,
+                false,
+            ),
+            (
+                r#"{"status":"fail","reason":"incorrect","recommended_method":["sms"],"security_code_set":true}"#,
+                false,
+            ),
+            ("malformed", false),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(dir.path());
+            let mut cfg = config();
+            cfg.preflight = true;
+            let factory =
+                Arc::new(StoredComparisonRequestFactory::new(store.clone(), cfg).unwrap());
+            let transport = Arc::new(PreflightTransport {
+                response,
+                paths: Default::default(),
+            });
+            let mut profile = crate::ProtocolProfile::android_reference().unwrap();
+            profile.id = LAB_PROFILE_ID.into();
+            let service = RegistrationService::new(
+                store.clone(),
+                &profile,
+                Arc::new(ComparisonHttpFlow::new(factory, transport.clone())),
+            );
+            let result = service.begin(config().phone, ChallengeMethod::Sms).await;
+            if sends_code {
+                assert!(matches!(
+                    result.unwrap(),
+                    RegistrationStep::Action(RequiredAction::EnterCode(_))
+                ));
+            }
+            let expected = if sends_code { 2 } else { 1 };
+            assert_eq!(transport.paths.lock().unwrap().len(), expected);
+            assert!(transport.paths.lock().unwrap()[0].ends_with("/v2/exist"));
+            let _ = service.begin(config().phone, ChallengeMethod::Sms).await;
+            assert_eq!(transport.paths.lock().unwrap().len(), expected);
+        }
     }
 
     #[tokio::test]

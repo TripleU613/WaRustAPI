@@ -572,6 +572,13 @@ impl RegistrationFlow for UnsupportedFlow {
 /// callers source device identifiers and key material from their durable
 /// store without exposing them through the high-level service.
 pub trait ComparisonRequestFactory: Send + Sync + fmt::Debug {
+    /// Optional same-identity `/v2/exist` request before selecting SMS/voice.
+    fn preflight_request(
+        &self,
+        _attempt: &RegistrationAttempt,
+    ) -> Result<Option<wire::EncodedRegistrationRequest>> {
+        Ok(None)
+    }
     /// Persist keys and identifiers needed by later request construction.
     fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()>;
 
@@ -694,6 +701,56 @@ impl ComparisonHttpFlow {
     }
 }
 
+// Conservative lab policy, not a complete reconstruction of APK UI decisions.
+fn preflight_decision(
+    status: u16,
+    response: &wire::RegistrationResponse,
+    method: &ChallengeMethod,
+) -> Option<RegistrationFlowOutput> {
+    use wire::{
+        RegistrationResponseReason as Reason, RegistrationResponseStatus as Status,
+        VerificationMethod as Method,
+    };
+    let (selected, method_wait) = match method {
+        ChallengeMethod::Sms => (Method::Sms, response.sms_wait),
+        ChallengeMethod::Voice => (Method::Voice, response.voice_wait),
+        ChallengeMethod::Other(_) => (Method::Other, None),
+    };
+    if let Some(wait) = response
+        .retry_after
+        .into_iter()
+        .chain(method_wait)
+        .filter(|v| !v.is_zero())
+        .max()
+    {
+        return Some(
+            RegistrationState::CoolingDown {
+                until: Timestamp::now().saturating_add(wait),
+            }
+            .into(),
+        );
+    }
+    if (200..300).contains(&status)
+        && response.status == Status::Fail
+        && response.reason == Some(Reason::Incorrect)
+        && !response.security_code_set
+        && !response.secure_verifier
+        && response.verify_pn_device.unwrap_or(0) == 0
+        && selected != Method::Other
+        && response
+            .recommended_method
+            .as_ref()
+            .is_some_and(|v| v.contains(&selected))
+    {
+        return None;
+    }
+    Some(RegistrationState::Blocked {
+        reason: BlockedReason::UnsupportedStep {
+            description: format!("preflight requires explicit handling; HTTP={status}, status={:?}, reason={:?}, recommended={:?}, fallback={:?}, device_branch={:?}; no code request sent", response.status, response.reason, response.recommended_method, response.fallback_methods, response.verify_pn_device),
+        },
+    }.into())
+}
+
 impl RegistrationFlow for ComparisonHttpFlow {
     fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()> {
         self.requests.prepare(tx, attempt)
@@ -701,6 +758,12 @@ impl RegistrationFlow for ComparisonHttpFlow {
 
     fn begin<'a>(&'a self, attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
         Box::pin(async move {
+            if let Some(request) = self.requests.preflight_request(attempt)? {
+                let (status, response) = self.send(request).await?;
+                if let Some(output) = preflight_decision(status, &response, &attempt.method) {
+                    return Ok(output);
+                }
+            }
             let request = self.requests.code_request(attempt)?;
             let (status_code, response) = self.send(request).await?;
             if (200..300).contains(&status_code)

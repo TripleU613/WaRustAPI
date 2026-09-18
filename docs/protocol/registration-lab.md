@@ -144,6 +144,31 @@ TLS validation, origin and version binding are not configurable bypass switches.
 
 ### Edit requests without changing Rust
 
+New exported templates enable `preflight: true`. This runs `/v2/exist` with
+the same saved keys/identifiers before `/v2/code`. Existing JSON that omits the
+switch defaults to false, preserving its frozen configuration and historical
+experiments. This does not silently upgrade existing accounts or clear waits.
+
+Configure existence-only inputs in `fields.exist` / `fields.exist_bytes`.
+Do not copy code-request failure reasons or counters into them: the APK uses
+a separate existence-check counter. These fields have the same size, encoding,
+redaction and protected-field validation as the other endpoint maps.
+
+The initial implementation deliberately uses a conservative **lab policy**,
+not a claim of full APK UI equivalence: it continues only for HTTP success,
+`status: fail`, `reason: incorrect`, an explicit recommendation containing the
+operator-selected SMS/voice method, no positive generic/selected-method wait,
+and no indicated device/PIN/secure-verifier branch. A same-device `ok` response
+is not treated as permission to request another code or as completed signup.
+Fallback methods are parsed but never selected automatically. Unknown methods
+are redacted to `other`; lists are bounded. Other responses stop with typed
+diagnostics or a cooldown. Method recommendations alone do not prove that an
+account is new, and none of this has yet been verified against a live preflight.
+
+Both requests run under the saved Preparing state; ambiguous transport or parse
+failures enter outcome-unknown instead of automatically replaying either request.
+An ordinary repeated begin does not resend a pending/blocked/unknown attempt.
+
 Use a private `request.json` (the filename is arbitrary) with `--config`.
 Change `phone.country_code` / `phone.national_number`, `language`, `locale`,
 `client.user_agent`, and `fields.code` / `fields.code_bytes` there.

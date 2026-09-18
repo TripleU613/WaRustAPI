@@ -65,6 +65,10 @@ pub struct LabRegistrationConfig {
     /// Print sanitized request/response metadata, never bodies or secrets.
     #[serde(default = "enabled")]
     pub diagnostics: bool,
+    /// Opt in to the comparison existence/method-selection preflight.
+    /// False preserves previously frozen lab profiles.
+    #[serde(default)]
+    pub preflight: bool,
 }
 
 fn enabled() -> bool {
@@ -169,6 +173,11 @@ pub struct DeviceSettings {
 #[derive(Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(default, deny_unknown_fields)]
 pub struct EndpointFields {
+    /// Extra `/v2/exist` fields, separate from code-request telemetry.
+    pub exist: BTreeMap<String, Zeroizing<String>>,
+    /// Raw byte-valued `/v2/exist` fields.
+    #[serde(deserialize_with = "deserialize_byte_fields")]
+    pub exist_bytes: BTreeMap<String, Zeroizing<Vec<u8>>>,
     /// Extra `/v2/code` fields (e.g. context or type).
     pub code: BTreeMap<String, Zeroizing<String>>,
     /// Extra `/v2/register` fields.
@@ -366,6 +375,7 @@ impl LabRegistrationConfig {
                 .unwrap_or(vec![0; 20]),
         )?;
         for (fields, bytes) in [
+            (&self.fields.exist, &self.fields.exist_bytes),
             (&self.fields.code, &self.fields.code_bytes),
             (&self.fields.register, &self.fields.register_bytes),
             (&self.fields.security, &self.fields.security_bytes),
@@ -412,7 +422,10 @@ impl LabRegistrationConfig {
             "additional_byte_fields": {"code": self.fields.code_bytes.keys().collect::<Vec<_>>(), "register": self.fields.register_bytes.keys().collect::<Vec<_>>(), "security": self.fields.security_bytes.keys().collect::<Vec<_>>()},
             "device_overrides": {"facebook_device_id": self.device.facebook_device_id.is_some(), "experiment_id": self.device.experiment_id.is_some(),
                 "access_session_id": self.device.access_session_id.is_some(), "recovery_token": self.device.recovery_token.is_some(), "backup_token": self.device.backup_token.is_some()},
-            "diagnostics": self.diagnostics, "token": "<redacted>", "key_ids": "<redacted>",
+            "diagnostics": self.diagnostics, "preflight": self.preflight,
+            "exist_fields": self.fields.exist.keys().collect::<Vec<_>>(),
+            "exist_byte_fields": self.fields.exist_bytes.keys().collect::<Vec<_>>(),
+            "token": "<redacted>", "key_ids": "<redacted>",
             "compatibility": {
                 "observed_code_additional_fields": observed_code_fields,
                 "field_coverage_note": "Observed on the inspected APK branch, not proven server requirements; do not invent values",
@@ -516,6 +529,8 @@ mod tests {
         let mut value: LabRegistrationConfig =
             serde_json::from_str(super::super::request::TEMPLATE_JSON).unwrap();
         value.token = Zeroizing::new("test-secret-token".into());
+        // Existing fixtures intentionally exercise backward-compatible profiles.
+        value.preflight = false;
         value
     }
 

@@ -8,6 +8,78 @@ requires a field, accepts a fingerprint, or receives every possible request.
 
 ## Initial inventory
 
+### New-account flow audit: missing existence/method-selection stage
+
+The laboratory has not completed registration of either a new or existing
+account. A code submission returned `device_confirm_or_second_code`, with
+1500-second SMS/voice waits. This is a follow-up branch, not an authenticated
+session. Its cause and the number's prior account history are not established
+by the response alone. No new request was sent during this static audit.
+
+The phone-entry path includes a stage absent from our current driver:
+
+- `RegisterPhone.A1D` 0x00b8 invokes `GId.A0t`; `RegisterPhone.A1P` is another
+  caller. `GId.A0t` logs `ExistViewModel/startExistRequest`, constructs `Gyd`
+  at 0x0112–0x0134 and schedules it.
+- `Gyd.A0Z` increments the separate `reg_attempts_check_exist` counter,
+  derives the phone-bound token through `Hre.A01` at 0x011e, and calls
+  `I4D.A0k`. Do not reuse the generate-code counter for this operation.
+- `I4D.A0k` assembles a check-if-exists request, including token, metrics and
+  conditional context/device inputs. Its Kotlin branch constructs
+  `performSameDeviceCheckBlocking$1`, whose `invokeSuspend` calls bridge `A0B`.
+- `A0B` 0x05b0–0x064a assembles common identifiers, optional
+  `foa_backup_token`, optional Base64 `client_capabilities`, advertising ID,
+  login/type and the additional byte-valued map. It dispatches using `HSP.A0C`
+  (assigned from `HpO.A0E`) at 0x064e–0x06ba.
+- Its response contains considerably more than existence: `is_device_trusted`,
+  method-specific waits/lengths, `wa_old_eligible`, `send_sms_eligible`,
+  `fallback_methods` (0x052c), `verify_pn_device` (0x057a) and
+  `recommended_method` (0x058a). `Gyd.A0b` delivers that response through
+  `ExistRepository/onExistCheckResponse` to its observer.
+
+At audit time, our endpoint catalog included `/v2/exist`, but the factory/flow
+never invoked it. `ComparisonHttpFlow.begin` directly sent `/v2/code`, and the
+typed response did not retain these method-selection fields.
+This is a confirmed client-flow gap, **not proof that it causes no_routes**
+or that existence checks are mandatory for every server branch. The exact
+observer decisions and client-capabilities producer still require tracing
+before claiming complete APK-equivalent method selection. Do not invent a
+`new_account` flag from this finding.
+
+An opt-in preflight builder and conservative method gate are now implemented
+and covered by offline tests. Newly exported templates enable it; saved legacy
+profiles do not change. See the [lab policy](registration-lab.md). This patch
+does not implement the device-confirmation/second-code branch, prove that the
+existence check fixes `no_routes`, or establish successful new-account signup.
+
+Separately, the observed bridge `A0S` appends optional `login` and enum `type`.
+These are not evidence for a Boolean existing/new-account selector. Establish
+the caller's enum and nullable branch before changing the JSON.
+
+### Real-SIM no-routes follow-up
+
+A later operator-described real-SIM test returned HTTP 200 / `no_routes`,
+with `retry_after=3600` and zero SMS/voice wait fields. No delivery is confirmed.
+The following static follow-up sent no additional request.
+
+`VerifyPhoneNumber.A5P` 0x0e74–0x0eb0 selects the SMS no-route handler, then
+`A2D` 0x0026–0x0034 stores `server-send-request-no-routes` through `I4A.A0R`.
+`A2D` also consumes the retry-after duration; zero per-method waits do not
+establish permission to ignore the general wait. Default resource 0x7f12377e
+reads: "We couldn't send an SMS to your number. Please check your number and
+try again in %s." Resource 0x7f12377f is its untimed variant. Neither diagnoses
+the SIM as virtual or reveals the server's routing decision.
+
+The current private request omitted `reason`. `I4D.A0H` 0x0022–0x0034 includes
+it on the observed code path. A private **proposal**, not an applied profile,
+adds the above post-refusal reason and advances `client_metrics.attempts` to 2.
+Its offline preview passes. This is a client-conformance correction candidate,
+not a proven fix for SMS delivery. Existing keys, token and saved cooldown
+remain untouched. Before a live test, the saved deadline must pass and the
+profile change must be applied through a checked same-attempt update; ordinary
+begin rejects edits to frozen material, and legacy migration does not apply
+to this known cooldown. Do not reset the store to install the proposal.
+
 The [reproducible cross-reference inventory](http-post-xrefs.txt) contains
 39 literal `POST` references, 24 `User-Agent` references and two literal
 `v.whatsapp.net` references. Counts are instruction references, not distinct

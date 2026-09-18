@@ -54,6 +54,7 @@ pub const TEMPLATE_JSON: &str = r#"{
     "backup_token": null
   },
   "fields": {
+    "exist": {}, "exist_bytes": {},
     "code": {}, "register": {}, "security": {},
     "code_bytes": {}, "register_bytes": {}, "security_bytes": {}
   },
@@ -63,5 +64,6 @@ pub const TEMPLATE_JSON: &str = r#"{
     "connect_timeout_ms": 30000,
     "max_response_bytes": 1048576
   },
-  "diagnostics": true
+  "diagnostics": true,
+  "preflight": true
 }"#;

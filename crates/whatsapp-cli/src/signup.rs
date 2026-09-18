@@ -130,7 +130,9 @@ struct DiagnosticTransport {
 impl RegistrationTransport for DiagnosticTransport {
     fn send<'a>(&'a self, request: EncodedRegistrationRequest) -> RegistrationTransportFuture<'a> {
         Box::pin(async move {
-            let request = if let Some(fields) = &self.extra {
+            let request = if let Some(fields) = &self.extra
+                && request.url().ends_with("/v2/code")
+            {
                 request.with_additional_code_fields(fields)?
             } else {
                 request

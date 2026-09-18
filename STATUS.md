@@ -1,5 +1,13 @@
 # Status — 2026-09-18
 
+**New onboarding patch (offline verified):** new JSON templates enable an
+existence preflight before code requests. The builder reuses saved identity;
+typed recommendations and waits gate the selected method. Unknown/recovery
+branches stop explicitly, and tests verify that they do not trigger SMS.
+Live preflight interoperability and fresh-account signup remain unverified.
+One later code submission reached `device_confirm_or_second_code`, not a
+registered session. No OTP or account PIN is retained in these docs.
+
 **Latest comparison-lab result:** the operator-selected historical number was
 retried once using the corrected JSON while preserving its saved keys/attempt.
 HTTP 200 / `too_many_all_methods` imposed a 32417-second retry/SMS/voice wait.
@@ -84,7 +92,7 @@ the active 2.26.36.75 profile.
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability and comparison transport/registration wire-profile endpoints plus structured gated-operation errors |
 
-Test count: 177 (`cargo test --locked --workspace --all-features`). Formatting,
+Test count: 180 (`cargo test --locked --workspace --all-features`). Formatting,
 all-feature/all-target Clippy with `-D warnings`, strict rustdoc, package
 verification, and protobuf regeneration checks pass on the continuation
 machine (Rust 1.98.1). The repository and CI

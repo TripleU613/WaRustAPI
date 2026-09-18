@@ -1043,6 +1043,8 @@ impl EncodedRegistrationRequest {
             || !fields.register_bytes.is_empty()
             || !fields.security.is_empty()
             || !fields.security_bytes.is_empty()
+            || !fields.exist.is_empty()
+            || !fields.exist_bytes.is_empty()
         {
             return Err(Error::invalid(
                 "registration_patch",
@@ -1385,6 +1387,9 @@ impl RegistrationHttpResponse {
                 summary["status"] = serde_json::json!(format!("{:?}", parsed.status));
                 summary["reason"] = serde_json::json!(parsed.reason.map(|v| format!("{v:?}")));
                 summary["invalid_parameter"] = serde_json::json!(parsed.invalid_parameter);
+                summary["recommended_method"] = serde_json::json!(parsed.recommended_method);
+                summary["fallback_methods"] = serde_json::json!(parsed.fallback_methods);
+                summary["verify_pn_device"] = serde_json::json!(parsed.verify_pn_device);
                 if parsed.reason == Some(RegistrationResponseReason::FormatWrong) {
                     // Comparison APK: VerifyPhoneNumber.A19, dialog 53,
                     // string resource 0x7f123741. This is client interpretation,
@@ -1718,6 +1723,12 @@ impl RegistrationResponseSecrets {
 /// Sanitized control fields parsed from a comparison-build registration JSON
 /// response.
 pub struct RegistrationResponse {
+    /// Server-recommended methods; unknown values are redacted enum variants.
+    pub recommended_method: Option<Vec<VerificationMethod>>,
+    /// Fallback methods; never permission to switch methods automatically.
+    pub fallback_methods: Option<Vec<VerificationMethod>>,
+    /// Nonzero device-verification branches require explicit support.
+    pub verify_pn_device: Option<u32>,
     /// Parsed response status.
     pub status: RegistrationResponseStatus,
     /// Parsed reason, when the server included one.
@@ -1805,6 +1816,9 @@ impl RegistrationResponse {
 
         Ok(Self {
             status: RegistrationResponseStatus::parse(&status),
+            recommended_method: raw.recommended_method,
+            fallback_methods: raw.fallback_methods,
+            verify_pn_device: raw.verify_pn_device,
             reason: raw.reason.as_deref().map(RegistrationResponseReason::parse),
             invalid_parameter: match raw.param {
                 Some(RawDiagnosticParameter::Text(value)) => KNOWN_REQUEST_PARAMETERS
@@ -1842,6 +1856,11 @@ impl RegistrationResponse {
 
 #[derive(Deserialize)]
 struct RawRegistrationResponse {
+    #[serde(default, deserialize_with = "bounded_methods")]
+    recommended_method: Option<Vec<VerificationMethod>>,
+    #[serde(default, deserialize_with = "bounded_methods")]
+    fallback_methods: Option<Vec<VerificationMethod>>,
+    verify_pn_device: Option<u32>,
     status: Option<String>,
     reason: Option<String>,
     param: Option<RawDiagnosticParameter>,
@@ -1863,6 +1882,31 @@ struct RawRegistrationResponse {
     passkey_credential: Option<Zeroizing<String>>,
     appeal_token: Option<Zeroizing<String>>,
     edge_routing_info: Option<Zeroizing<String>>,
+}
+
+/// Known verification methods; unsupported values never retain arbitrary text.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Deserialize, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum VerificationMethod {
+    /// SMS code.
+    Sms,
+    /// Voice call.
+    Voice,
+    /// Existing-device verification.
+    WaOld,
+    /// Unsupported method.
+    #[serde(other)]
+    Other,
+}
+
+fn bounded_methods<'de, D: serde::Deserializer<'de>>(
+    d: D,
+) -> std::result::Result<Option<Vec<VerificationMethod>>, D::Error> {
+    let methods = Option::<Vec<VerificationMethod>>::deserialize(d)?;
+    if methods.as_ref().is_some_and(|v| v.len() > 16) {
+        return Err(serde::de::Error::custom("too many verification methods"));
+    }
+    Ok(methods)
 }
 
 // A diagnostic extension, not a claim that captured responses included `param`.
@@ -2240,6 +2284,31 @@ mod tests {
             assert!(!summary.to_string().contains("private-number"));
             assert!(!summary.to_string().contains("unknown-private-reason"));
         }
+    }
+
+    #[test]
+    fn preflight_method_lists_are_bounded_and_unknown_values_redacted() {
+        let response = RegistrationHttpResponse::new(200, Zeroizing::new(br#"{"status":"fail","reason":"incorrect","recommended_method":["sms","private-value"],"fallback_methods":["voice","wa_old"],"verify_pn_device":0}"#.to_vec())).unwrap();
+        let summary = response.diagnostic_summary();
+        assert_eq!(
+            summary["recommended_method"],
+            serde_json::json!(["sms", "other"])
+        );
+        assert_eq!(
+            summary["fallback_methods"],
+            serde_json::json!(["voice", "wa_old"])
+        );
+        assert!(!summary.to_string().contains("private-value"));
+        let oversized = serde_json::json!({"status":"fail","recommended_method":vec!["sms";17]});
+        assert!(
+            RegistrationHttpResponse::new(
+                200,
+                Zeroizing::new(serde_json::to_vec(&oversized).unwrap())
+            )
+            .unwrap()
+            .parse_json()
+            .is_err()
+        );
     }
 
     #[test]
