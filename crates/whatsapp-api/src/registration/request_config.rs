@@ -92,10 +92,25 @@ impl Default for ClientSettings {
     }
 }
 
+/// Explicit comparison-lab request encoding; never supplies attestation.
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum RequestBodyMode {
+    /// Historical lab behavior; no envelope.
+    #[default]
+    ClearForm,
+    /// Comparison APK encrypted envelope, without an H field.
+    Enc,
+    /// Comparison APK encrypted envelope with an empty H; no attestation.
+    EncEmptyH,
+}
+
 /// Bounded transport configuration. TLS validation cannot be disabled.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(default, deny_unknown_fields)]
 pub struct TransportSettings {
+    /// Explicit experimental wire format, also shown in the offline preview.
+    pub body_mode: RequestBodyMode,
     /// Whole-request deadline in milliseconds, including response streaming.
     pub timeout_ms: u64,
     /// Connection deadline in milliseconds, no longer than the whole request.
@@ -106,6 +121,7 @@ pub struct TransportSettings {
 impl Default for TransportSettings {
     fn default() -> Self {
         Self {
+            body_mode: RequestBodyMode::default(),
             timeout_ms: 45_000,
             connect_timeout_ms: 30_000,
             max_response_bytes: MAX_RESPONSE_BODY_BYTES,
@@ -401,7 +417,7 @@ impl LabRegistrationConfig {
                 "observed_code_additional_fields": observed_code_fields,
                 "field_coverage_note": "Observed on the inspected APK branch, not proven server requirements; do not invent values",
                 "user_agent_matches_observed_presence": self.client.user_agent.is_some(),
-                "body_mode": "clear form only; APK also has a conditional encrypted envelope",
+                "body_mode": self.transport.body_mode,
                 "attestation": "not implemented; no fabricated attestation",
                 "server_acceptance": "unverified",
                 "note": "Configured values do not prove genuine device provenance or server acceptance"
@@ -509,6 +525,35 @@ mod tests {
             serde_json::from_str(super::super::request::TEMPLATE_JSON).unwrap();
         assert!(template.validate().is_err());
         config().validate().unwrap();
+    }
+
+    #[test]
+    fn request_body_mode_roundtrips_previews_and_rejects_typos() {
+        for (name, mode) in [
+            ("clear_form", RequestBodyMode::ClearForm),
+            ("enc", RequestBodyMode::Enc),
+            ("enc_empty_h", RequestBodyMode::EncEmptyH),
+        ] {
+            let mut json = serde_json::to_value(config()).unwrap();
+            json["transport"]["body_mode"] = serde_json::json!(name);
+            let cfg: LabRegistrationConfig = serde_json::from_value(json).unwrap();
+            assert_eq!(cfg.transport.body_mode, mode);
+            cfg.validate().unwrap();
+            assert_eq!(cfg.preview(false)["compatibility"]["body_mode"], name);
+            assert_eq!(
+                serde_json::to_value(&cfg).unwrap()["transport"]["body_mode"],
+                name
+            );
+        }
+        let mut json = serde_json::to_value(config()).unwrap();
+        json["transport"]
+            .as_object_mut()
+            .unwrap()
+            .remove("body_mode");
+        let old: LabRegistrationConfig = serde_json::from_value(json.clone()).unwrap();
+        assert_eq!(old.transport.body_mode, RequestBodyMode::ClearForm);
+        json["transport"]["body_mode"] = serde_json::json!("enc_typo");
+        assert!(serde_json::from_value::<LabRegistrationConfig>(json).is_err());
     }
 
     #[test]

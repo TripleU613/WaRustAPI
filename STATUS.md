@@ -1,6 +1,12 @@
 # Status — 2026-09-18
 
-**Latest comparison-lab result:** one APK-derived unknown-build-properties
+**Latest comparison-lab result:** one user-requested test on a different number,
+configured entirely through private JSON, returned HTTP 200 / `bad_token`
+(61-byte response). One 1126-byte ENC/empty-H request was sent, with no automatic
+retry or confirmed OTP. The token was derived from the comparison APK for the
+new national number; server rejection remains unresolved.
+
+**Previous number:** one APK-derived unknown-build-properties
 User-Agent experiment changed the response from HTTP 200 / `bad_param` to
 HTTP 200 / `format_wrong` (64-byte response). The saved attempt and account
 keys are unchanged. This is a different refusal, not accepted signup or OTP
@@ -72,7 +78,7 @@ the active 2.26.36.75 profile.
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability and comparison transport/registration wire-profile endpoints plus structured gated-operation errors |
 
-Test count: 172 (`cargo test --locked --workspace --all-features`). Formatting,
+Test count: 174 (`cargo test --locked --workspace --all-features`). Formatting,
 all-feature/all-target Clippy with `-D warnings`, strict rustdoc, package
 verification, and protobuf regeneration checks pass on the continuation
 machine (Rust 1.98.1). The repository and CI

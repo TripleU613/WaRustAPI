@@ -134,13 +134,29 @@ only the phone. Unknown settings fail fast. Live diagnostics show field names,
 HTTP status, recognized server reason and wait times, never body values or
 arbitrary server text. Refused states now retain HTTP status and recognized
 reason after restart; historical records cannot recover details already lost.
-Preview also highlights missing User-Agent and unimplemented conditional body
-encryption/attestation; these are compatibility gaps, not proven refusal causes.
+Preview also shows missing User-Agent, the selected body encoding, and missing
+attestation; these are compatibility gaps, not proven refusal causes.
 Older configs remain readable through defaults.
 All config inputs are frozen once an attempt is prepared: editing a saved
 attempt's profile fails a consistency check instead of changing its identity.
 Store path, account and master-key environment-variable name remain CLI options.
 TLS validation, origin and version binding are not configurable bypass switches.
+
+### Edit requests without changing Rust
+
+Use a private `request.json` (the filename is arbitrary) with `--config`.
+Change `phone.country_code` / `phone.national_number`, `language`, `locale`,
+`client.user_agent`, and `fields.code` / `fields.code_bytes` there.
+`transport.body_mode` selects `clear_form` (backward-compatible default),
+`enc`, or `enc_empty_h`. Normal begin/verification actions use that setting;
+the historical named diagnostic commands retain their explicit encoding.
+`enc_empty_h` does not fabricate an Android attestation signature.
+Run `lab-signup --config <private-request.json> preview` before sending.
+
+A different phone requires its own APK-derived `token` and separate attempt
+storage; do not copy another number's token or failure counters. These are
+private data changes, not per-number source changes. Once prepared, a saved
+attempt's JSON is frozen. Never delete its store or cooldown to repeat a test.
 
 See the [outbound request analysis](http-post-analysis.md) for evidence and gaps.
 

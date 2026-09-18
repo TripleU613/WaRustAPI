@@ -128,3 +128,14 @@ Subsequent APK-only analysis resolved `format_wrong` through response enum 29,
 client says the mobile number is invalid for the country. This identifies the
 client's interpretation, not the server's internal rule. No additional live
 attempt, identity change, or successful signup occurred during this analysis.
+
+Next operator-requested test used a different supplied number and its own
+private JSON/store, leaving the previous attempt untouched. The JSON selected
+`enc_empty_h`, the APK unknown-build-properties User-Agent, the seven documented
+fallback fields, and `client_metrics` preparation count 1; no prior-failure
+reason was copied. A phone-bound token was derived from the same comparison
+APK. One 1126-byte POST returned HTTP 200 / fail / bad_token (61 bytes, 559 ms),
+with no recognized parameter hint or wait. This is a different refusal, not
+accepted registration, proven protocol progress, or confirmed OTP delivery.
+No retry followed. Because number, fresh identity, and request context differ,
+this is not a controlled single-variable comparison with the previous attempt.

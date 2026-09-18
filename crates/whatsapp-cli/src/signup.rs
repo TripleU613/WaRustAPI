@@ -7,7 +7,7 @@ use whatsapp_api::registration::{
     Answer, ChallengeMethod, ComparisonHttpFlow, ComparisonRequestFactory, RegistrationService,
     RegistrationState,
     factory::StoredComparisonRequestFactory,
-    request::{DeliveryMethod, LabRegistrationConfig, MAX_CONFIG_BYTES},
+    request::{DeliveryMethod, LabRegistrationConfig, MAX_CONFIG_BYTES, RequestBodyMode},
     wire::{
         EncodedRegistrationRequest, ExperimentalHttpsTransport, RegistrationTransport,
         RegistrationTransportFuture,
@@ -118,8 +118,7 @@ fn config(path: &Path) -> Result<LabRegistrationConfig, Error> {
 struct DiagnosticTransport {
     inner: ExperimentalHttpsTransport,
     enabled: bool,
-    encrypt: bool,
-    empty_signature: bool,
+    body_mode: RequestBodyMode,
     extra: Option<whatsapp_api::registration::request::EndpointFields>,
 }
 
@@ -131,12 +130,10 @@ impl RegistrationTransport for DiagnosticTransport {
             } else {
                 request
             };
-            let request = if self.empty_signature {
-                request.encrypt_comparison_without_signature()?
-            } else if self.encrypt {
-                request.encrypt_comparison()?
-            } else {
-                request
+            let request = match self.body_mode {
+                RequestBodyMode::EncEmptyH => request.encrypt_comparison_without_signature()?,
+                RequestBodyMode::Enc => request.encrypt_comparison()?,
+                RequestBodyMode::ClearForm => request,
             };
             if self.enabled {
                 eprintln!("signup request: {}", request.diagnostic_summary());
@@ -158,6 +155,17 @@ impl RegistrationTransport for DiagnosticTransport {
             }
             result
         })
+    }
+}
+
+fn request_body_mode(configured: RequestBodyMode, action: &Action) -> RequestBodyMode {
+    match action {
+        Action::DiagnoseEncryptedParameter => RequestBodyMode::Enc,
+        Action::DiagnoseUnsignedEnvelope
+        | Action::DiagnoseAdditionalFields { .. }
+        | Action::DiagnoseFlowFields { .. }
+        | Action::DiagnoseUnknownAgent { .. } => RequestBodyMode::EncEmptyH,
+        _ => configured,
     }
 }
 
@@ -244,14 +252,7 @@ pub(super) async fn run(
     let transport = Arc::new(DiagnosticTransport {
         inner: ExperimentalHttpsTransport::with_settings(&config.transport, &transport_client)?,
         enabled: config.diagnostics,
-        encrypt: matches!(action, Action::DiagnoseEncryptedParameter),
-        empty_signature: matches!(
-            action,
-            Action::DiagnoseUnsignedEnvelope
-                | Action::DiagnoseAdditionalFields { .. }
-                | Action::DiagnoseFlowFields { .. }
-                | Action::DiagnoseUnknownAgent { .. }
-        ),
+        body_mode: request_body_mode(config.transport.body_mode, action),
         extra,
     });
     let store = Arc::new(ProtocolStore::open(OpenOptions {
@@ -412,5 +413,29 @@ mod tests {
         ] {
             assert!(answer(input.as_bytes()).is_err());
         }
+    }
+}
+#[test]
+fn ordinary_actions_use_json_body_mode_and_diagnostics_keep_explicit_modes() {
+    for mode in [
+        RequestBodyMode::ClearForm,
+        RequestBodyMode::Enc,
+        RequestBodyMode::EncEmptyH,
+    ] {
+        for action in [
+            Action::Begin { method: None },
+            Action::VerifyCode,
+            Action::VerifyPin,
+        ] {
+            assert_eq!(request_body_mode(mode, &action), mode);
+        }
+        assert_eq!(
+            request_body_mode(mode, &Action::DiagnoseEncryptedParameter),
+            RequestBodyMode::Enc
+        );
+        assert_eq!(
+            request_body_mode(mode, &Action::DiagnoseUnsignedEnvelope),
+            RequestBodyMode::EncEmptyH
+        );
     }
 }
