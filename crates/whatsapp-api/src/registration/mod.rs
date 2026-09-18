@@ -1008,6 +1008,29 @@ impl RegistrationService {
         } else {
             b"legacy-refusal-diagnostic-used"
         };
+        self.diagnose_refusal_with_latch(phone, bad_parameter, latch)
+            .await
+    }
+
+    /// One explicitly authorized comparison-envelope experiment after bad_param.
+    /// The caller must install the encrypted transport; account identity and
+    /// previous diagnostic reservations remain unchanged. Never called by begin.
+    #[cfg(feature = "experimental-registration-https")]
+    pub async fn diagnose_encrypted_parameter_once(
+        &self,
+        phone: PhoneNumber,
+    ) -> Result<RegistrationStep> {
+        self.diagnose_refusal_with_latch(phone, true, b"encrypted-parameter-diagnostic-used")
+            .await
+    }
+
+    #[cfg(feature = "experimental-registration-https")]
+    async fn diagnose_refusal_with_latch(
+        &self,
+        phone: PhoneNumber,
+        bad_parameter: bool,
+        latch: &'static [u8],
+    ) -> Result<RegistrationStep> {
         if self.profile_id != request::LAB_PROFILE_ID {
             return Err(Error::invalid(
                 "registration_diagnostic",

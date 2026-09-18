@@ -520,7 +520,11 @@ mod tests {
     #[tokio::test]
     #[cfg(feature = "experimental-registration-https")]
     async fn diagnostics_are_once_only_and_preserve_identity_and_body() {
-        for bad_parameter in [false, true] {
+        for (bad_parameter, latch) in [
+            (false, b"legacy-refusal-diagnostic-used".as_slice()),
+            (true, b"bad-parameter-diagnostic-used".as_slice()),
+            (true, b"encrypted-parameter-diagnostic-used".as_slice()),
+        ] {
             use crate::registration::BlockedReason;
             let dir = tempfile::tempdir().unwrap();
             let store = open(dir.path());
@@ -553,9 +557,10 @@ mod tests {
             );
             assert!(
                 service
-                    .diagnose_refusal_once(
+                    .diagnose_refusal_with_latch(
                         PhoneNumber::new(1, "5557654321").unwrap(),
-                        bad_parameter
+                        bad_parameter,
+                        latch
                     )
                     .await
                     .is_err()
@@ -563,7 +568,7 @@ mod tests {
             assert!(transport.0.lock().unwrap().is_empty());
             assert!(matches!(
                 service
-                    .diagnose_refusal_once(config().phone, bad_parameter)
+                    .diagnose_refusal_with_latch(config().phone, bad_parameter, latch)
                     .await
                     .unwrap(),
                 RegistrationStep::Action(RequiredAction::EnterCode(_))
@@ -575,7 +580,7 @@ mod tests {
             assert_eq!(original, factory.code_request(&saved).unwrap().body());
             assert!(
                 service
-                    .diagnose_refusal_once(config().phone, bad_parameter)
+                    .diagnose_refusal_with_latch(config().phone, bad_parameter, latch)
                     .await
                     .is_err()
             );
@@ -590,7 +595,7 @@ mod tests {
             );
             assert!(
                 resumed
-                    .diagnose_refusal_once(config().phone, bad_parameter)
+                    .diagnose_refusal_with_latch(config().phone, bad_parameter, latch)
                     .await
                     .is_err()
             );
@@ -644,6 +649,12 @@ mod tests {
             assert!(
                 service
                     .diagnose_bad_parameter_once(config().phone)
+                    .await
+                    .is_err()
+            );
+            assert!(
+                service
+                    .diagnose_encrypted_parameter_once(config().phone)
                     .await
                     .is_err()
             );

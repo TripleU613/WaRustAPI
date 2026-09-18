@@ -34,6 +34,9 @@ pub(super) enum Action {
     /// One authorized repeat of HTTP 200 / bad_param to collect field hints.
     /// Same saved payload and keys; a durable latch prevents another repeat.
     DiagnoseBadParameter,
+    /// One encrypted-envelope experiment after HTTP 200 / bad_param.
+    /// Same inner fields and identity; no attestation, no automatic repeats.
+    DiagnoseEncryptedParameter,
     /// Request a code or resume an existing attempt; no automatic retries.
     Begin {
         #[arg(long, value_enum)]
@@ -96,11 +99,17 @@ fn config(path: &Path) -> Result<LabRegistrationConfig, Error> {
 struct DiagnosticTransport {
     inner: ExperimentalHttpsTransport,
     enabled: bool,
+    encrypt: bool,
 }
 
 impl RegistrationTransport for DiagnosticTransport {
     fn send<'a>(&'a self, request: EncodedRegistrationRequest) -> RegistrationTransportFuture<'a> {
         Box::pin(async move {
+            let request = if self.encrypt {
+                request.encrypt_comparison()?
+            } else {
+                request
+            };
             if self.enabled {
                 eprintln!("signup request: {}", request.diagnostic_summary());
             }
@@ -172,6 +181,7 @@ pub(super) async fn run(
     let transport = Arc::new(DiagnosticTransport {
         inner: ExperimentalHttpsTransport::with_settings(&config.transport, &config.client)?,
         enabled: config.diagnostics,
+        encrypt: matches!(action, Action::DiagnoseEncryptedParameter),
     });
     let store = Arc::new(ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
@@ -209,6 +219,9 @@ pub(super) async fn run(
         }
         Action::DiagnoseLegacyRefusal => service.diagnose_legacy_refusal_once(phone).await?,
         Action::DiagnoseBadParameter => service.diagnose_bad_parameter_once(phone).await?,
+        Action::DiagnoseEncryptedParameter => {
+            service.diagnose_encrypted_parameter_once(phone).await?
+        }
         Action::VerifyCode | Action::VerifyPin => {
             let attempt = service
                 .current()
@@ -255,6 +268,7 @@ mod tests {
         for action in [
             Action::DiagnoseLegacyRefusal,
             Action::DiagnoseBadParameter,
+            Action::DiagnoseEncryptedParameter,
             Action::Begin {
                 method: Some(super::super::Method::Sms),
             },

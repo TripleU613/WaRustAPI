@@ -188,6 +188,17 @@ Failure paths can leave an empty H and omit Authorization; their existence is
 not proof that the server accepts that fallback. No H or attestation token is
 manufactured, and no live request was sent in this implementation.
 
+### Subsequent authorized ENC-only experiment
+
+One explicit request reused the latest saved account identity and unchanged
+612-byte inner form, wrapped in an 884-byte `ENC` body. The response remained
+HTTP 200 / fail / bad_param (58 bytes, 186 ms), with no recognized `param` hint
+or retry/SMS/voice wait. This does not identify the offending parameter or
+prove the server decrypted the envelope. No H/Authorization data was supplied.
+The result and a dedicated one-shot reservation are persisted; no second send
+occurred. The new CLI diagnostic is separate from ordinary begin and from the
+earlier unchanged-payload diagnostic, whose reservation remains intact.
+
 ### Refusal information loss fixed
 
 Previously `ComparisonHttpFlow::blocked_response` dropped the parsed protocol

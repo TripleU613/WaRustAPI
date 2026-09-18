@@ -93,9 +93,20 @@ Preview validates locally without opening a store or contacting WhatsApp.
 The feature-gated library also exposes `EncodedRegistrationRequest::encrypt_comparison`
 for offline assembly of the APK's Curve25519/AES-GCM `ENC` envelope. It generates
 a fresh ephemeral encryption key, independently of persisted account keys.
-It is not yet selected by the CLI or saved factory, and does not supply the
+It is not selected by ordinary begin or the saved factory, and does not supply the
 separate `H`/Authorization attestation path. See the
 [APK transport trace](http-post-analysis.md) for evidence and limits.
+
+`lab-signup --allow-live-request diagnose-encrypted-parameter` explicitly
+performs one ENC-only experiment after saved HTTP 200 / bad_param. It preserves
+the inner profile, attempt and account keys. A separate durable reservation
+commits before I/O and prevents repetition, including after restart; previous
+diagnostic reservations are not cleared. Other refusals, cooldowns and unknown
+outcomes remain ineligible. This is not a full attested Android request.
+
+The first authorized encrypted experiment returned HTTP 200 / fail / bad_param:
+884-byte outer request, 58-byte response, no recognized parameter hint or wait.
+Encryption alone did not improve the observed result. No automatic retry followed.
 Phone and secret values are redacted; `preview --show-phone` explicitly reveals
 only the phone. Unknown settings fail fast. Live diagnostics show field names,
 HTTP status, recognized server reason and wait times, never body values or
