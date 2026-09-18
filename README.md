@@ -158,7 +158,7 @@ Keep one primary library crate. Split internal modules as they acquire real beha
 | `src/sync.rs`, `src/reconcile.rs` | Durable events, local projections, observed catch-up behavior |
 | `src/devices.rs`, `src/groups.rs`, `src/media.rs` | Feature-specific protocol operations |
 | `tests/fixtures/`, `tests/` | Sanitized fixtures, negative cases, crash/replay/integration tests |
-| `crates/whatsapp-cli/` | Rust operator tool and minimal standalone proof client |
+| `crates/whatsapp-cli/` | Rust operator tool, standalone proof client, and local HTTP control plane |
 | `xtask/` | Rust schema generation, replay, dependency inspection and stress tools |
 | `docs/protocol/`, `docs/adr/` | Evidence, unknowns, backend decisions and compatibility matrix |
 
@@ -519,6 +519,7 @@ Keep a cloneable `WhatsAppClient` handle and a separate `SyncEngine`. Exact Rust
 | `WhatsAppClient::builder()` | Accept validated profile, account store, key source, HTTP backend, limits and policies; no implicit registration |
 | `registration().begin(...)` | Start/resume a durable primary-registration attempt and return its current step |
 | `registration().submit(...)` | Submit a typed answer for a specific step; return next step or completed registration |
+| `registration().reconcile()` | Resolve an ambiguous request through the profile's observed read-safe flow without blindly repeating the mutation |
 | `connect()` | Idempotently start one runtime and wait for authenticated readiness, with timeout/cancellation |
 | `connection_state()` | Watch current status, reason and connection epoch; no durable-message guarantee implied |
 | `disconnect()` | Stop reconnecting, shut down owned tasks and preserve resumable state; no account logout |
@@ -707,6 +708,25 @@ Expose structured, secret-safe observations: connection state/reason, queue dept
 Provide configurable limits for frame sizes, decoder work, message size, media bytes, outbox count/bytes, inbox retention, journal retention, skipped-message state, pending requests and task concurrency. Defaults are local product limits, clearly distinguished from observed wire limits.
 
 Ship a Rust CLI with commands for registration steps, connection/status, a direct-text proof, event consumption, profile inspection and consistent backup/restore. Prefer typed Rust protocol/replay output over shelling out to helper runtimes. Protect secret inputs from command-line history.
+
+The CLI also exposes a bounded local HTTP control plane for operational
+inspection. It listens on loopback by default and requires an explicit opt-in
+for non-loopback addresses because HTTP authentication is not implemented.
+Start it with:
+
+```sh
+cargo run --locked -p whatsapp-cli -- serve --bind 127.0.0.1:8787
+curl http://127.0.0.1:8787/healthz
+curl http://127.0.0.1:8787/v1/profile
+curl http://127.0.0.1:8787/v1/capabilities
+curl http://127.0.0.1:8787/v1/transport/wire-profile
+curl http://127.0.0.1:8787/v1/registration/wire-profile
+```
+
+`POST /v1/connect` and `POST /v1/registration` return structured `501`
+responses while their evidence-gated protocol implementations are incomplete.
+They must not report success without opening the corresponding authenticated
+path.
 
 Before release:
 

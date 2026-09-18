@@ -8,6 +8,7 @@
 #![allow(clippy::print_stdout, clippy::print_stderr)]
 
 use std::io::{IsTerminal, Read};
+use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::process::ExitCode;
 use std::sync::Arc;
@@ -24,6 +25,8 @@ use whatsapp_api::session::AccountRecord;
 use whatsapp_api::store::{ConsumerId, EnvKeySource, MasterKey, Table};
 use whatsapp_api::{Error, ProtocolProfile, WhatsAppClient};
 use zeroize::Zeroizing;
+
+mod http;
 
 #[derive(Parser)]
 #[command(
@@ -67,6 +70,16 @@ enum Cmd {
     Profile,
     /// Print the capability matrix.
     Capabilities,
+    /// Serve the local HTTP control plane.
+    Serve {
+        /// Address to listen on. Non-loopback addresses require an explicit
+        /// opt-in because the control plane does not implement authentication.
+        #[arg(long, default_value = "127.0.0.1:8787", env = "WHATSAPP_API_BIND")]
+        bind: SocketAddr,
+        /// Permit listening on a non-loopback address.
+        #[arg(long)]
+        allow_non_loopback: bool,
+    },
     /// Store operations.
     Store {
         #[command(subcommand)]
@@ -146,6 +159,8 @@ enum RegCmd {
     },
     /// Show the current attempt.
     Status,
+    /// Reconcile an attempt whose request outcome was lost.
+    Reconcile,
     /// Discard a completed or blocked attempt (local only).
     Reset,
 }
@@ -272,6 +287,10 @@ async fn run(cli: Cli) -> Result<(), Error> {
             }
             Ok(())
         }
+        Cmd::Serve {
+            bind,
+            allow_non_loopback,
+        } => http::serve(*bind, *allow_non_loopback).await,
         Cmd::Store { cmd } => match cmd {
             StoreCmd::Init => {
                 let c = open_client(&cli, true).await?;
@@ -354,6 +373,11 @@ async fn run(cli: Cli) -> Result<(), Error> {
                         Some(a) => println!("{a:?}"),
                         None => println!("no registration attempt"),
                     }
+                    Ok(())
+                }
+                RegCmd::Reconcile => {
+                    let step = c.registration().reconcile().await?;
+                    print_step(&step, cli.json);
                     Ok(())
                 }
                 RegCmd::Reset => c.registration().reset().await,

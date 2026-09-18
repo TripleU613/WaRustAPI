@@ -20,7 +20,16 @@ facts. What does work, and is tested offline:
 - bounded binary-node codec driven by a `ReferenceOnly` token dictionary;
 - cancellation-safe frame reader, experimental Noise XX adapter (feature
   `experimental-noise`), certificate-chain binding over an injected verifier;
-- durable registration state machine with bound challenge handles.
+- durable registration state machine with bound challenge handles, atomic
+  prerequisite preparation, cooldown resumption, outcome reconciliation and
+  atomic successful credential commit;
+- a conservative, injectable comparison-build HTTP registration flow that
+  covers the observed `/v2/code` → `/v2/register` happy path in offline tests
+  without enabling it for the incomplete active profile;
+- bounded reproduction of the signed comparison APK's phone-bound `/v2/code`
+  token derivation, plus APK extraction through `xtask`;
+- serializable/redacted generation of the comparison build's fresh UUIDv4,
+  20-byte recovery-token, and 20-byte backup-token prerequisites.
 
 ## Usage sketch
 
@@ -45,6 +54,10 @@ println!("{:?}", client.capabilities());
 
 - `experimental-noise`: compiles the `snow`-based Noise adapter. `snow` is
   used without its `std` feature because that feature pulls in `ring`.
+- `experimental-registration-https`: compiles the constrained, lab-only
+  reqwest/rustls registration transport with the alpha pure-Rust
+  `rustls-rustcrypto` provider. Normal certificate/hostname validation stays
+  enabled; this is not production grade.
 
 ## Licence
 

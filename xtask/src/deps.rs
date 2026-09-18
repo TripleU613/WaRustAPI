@@ -73,12 +73,53 @@ const REVIEWED_BUILD_SCRIPTS: &[&str] = &[
     "ahash",
     "memchr",
     "bitflags",
+    // Reviewed 2026-09-17 for the experimental-registration-https graph:
+    // cfg/env emission and rustc version probing only; no downloads or native
+    // compilation.
+    "icu_normalizer_data",
+    "icu_properties_data",
+    "libm",
+    "num-bigint-dig",
+    "paste",
+    "rustls",
 ];
 
 struct Target {
     package: &'static str,
     features: Vec<&'static str>,
     no_default: bool,
+}
+
+fn dependency_is_enabled(
+    package: &cargo_metadata::Package,
+    node: &cargo_metadata::Node,
+    edge_name: &str,
+    package_name: &str,
+) -> bool {
+    package.dependencies.iter().any(|dependency| {
+        let name = dependency.rename.as_deref().unwrap_or(&dependency.name);
+        if name.replace('-', "_") != edge_name || dependency.name != package_name {
+            return false;
+        }
+        if !dependency.optional {
+            return true;
+        }
+        if node.features.iter().any(|feature| feature.as_str() == name) {
+            return true;
+        }
+        node.features.iter().any(|feature| {
+            package
+                .features
+                .get(feature.as_str())
+                .is_some_and(|members| {
+                    members.iter().any(|member| {
+                        member == &format!("dep:{name}")
+                            || (member.starts_with(&format!("{name}/"))
+                                && !member.starts_with(&format!("{name}?/")))
+                    })
+                })
+        })
+    })
 }
 
 fn linux_x86_64(cfg: Option<&str>) -> bool {
@@ -126,6 +167,11 @@ pub fn audit(root: &Path, strict: bool) -> Result<(), String> {
             no_default: false,
         },
         Target {
+            package: "whatsapp-api",
+            features: vec!["experimental-registration-https"],
+            no_default: false,
+        },
+        Target {
             package: "whatsapp-cli",
             features: vec![],
             no_default: false,
@@ -169,12 +215,21 @@ pub fn audit(root: &Path, strict: bool) -> Result<(), String> {
         seen.insert(&start.id);
         while let Some(id) = queue.pop_front() {
             let Some(node) = nodes.get(id) else { continue };
+            let Some(package) = by_id.get(id) else {
+                continue;
+            };
             for dep in &node.deps {
+                let Some(dependency_package) = by_id.get(&dep.pkg) else {
+                    continue;
+                };
                 let normal = dep.dep_kinds.iter().any(|k| {
                     k.kind == DependencyKind::Normal
                         && linux_x86_64(k.target.as_ref().map(|p| p.to_string()).as_deref())
                 });
-                if normal && seen.insert(&dep.pkg) {
+                if normal
+                    && dependency_is_enabled(package, node, &dep.name, &dependency_package.name)
+                    && seen.insert(&dep.pkg)
+                {
                     queue.push_back(&dep.pkg);
                 }
             }

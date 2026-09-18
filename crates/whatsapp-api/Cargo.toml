@@ -17,6 +17,14 @@ default = []
 # Experimental Noise transport adapter over `snow`. Kept behind a feature until
 # the profile's handshake pattern is Observed rather than ReferenceOnly.
 experimental-noise = ["dep:snow"]
+# Lab-only HTTPS transport selected by ADR 0003. The provider remains alpha,
+# so this feature must not be treated as production grade.
+experimental-registration-https = [
+    "dep:reqwest",
+    "dep:rustls",
+    "dep:rustls-rustcrypto",
+    "dep:webpki-roots",
+]
 
 [dependencies]
 tokio = { workspace = true, features = ["rt", "sync", "time", "macros", "io-util"] }
@@ -31,10 +39,18 @@ redb.workspace = true
 chacha20poly1305.workspace = true
 hkdf.workspace = true
 sha2.workspace = true
+hmac.workspace = true
+sha1.workspace = true
+pbkdf2.workspace = true
+md-5.workspace = true
 getrandom.workspace = true
 prost.workspace = true
 miniz_oxide.workspace = true
 snow = { workspace = true, optional = true }
+reqwest = { workspace = true, optional = true }
+rustls = { workspace = true, optional = true }
+rustls-rustcrypto = { workspace = true, optional = true }
+webpki-roots = { workspace = true, optional = true }
 
 [dev-dependencies]
 proptest.workspace = true

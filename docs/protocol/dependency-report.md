@@ -6,13 +6,14 @@ Scope: normal dependency edges only (no dev/build dependencies), Linux x86_64 ap
 
 ## `whatsapp-api`
 
-Resolved normal-edge packages: 59
+Resolved normal-edge packages: 67
 
 | Crate | Version | Enabled features | Build script | `links` | Flags |
 |---|---|---|---|---|---|
 | adler2 | 2.0.1 | - | no | - | - |
 | aead | 0.6.1 | `alloc` | no | - | - |
 | anyhow | 1.0.104 | `default, std` | yes | - | - |
+| block-buffer | 0.10.4 | - | no | - | - |
 | block-buffer | 0.12.1 | - | no | - | - |
 | bytes | 1.12.1 | `default, serde, std` | no | - | - |
 | cfg-if | 1.0.5 | - | no | - | - |
@@ -21,14 +22,18 @@ Resolved normal-edge packages: 59
 | cipher | 0.5.2 | `block-buffer, stream-wrapper` | no | - | - |
 | cmov | 0.5.4 | - | no | - | - |
 | cpufeatures | 0.3.1 | - | no | - | - |
+| crypto-common | 0.1.7 | - | no | - | - |
 | crypto-common | 0.2.2 | - | no | - | - |
 | ctutils | 0.4.2 | - | no | - | - |
+| digest | 0.10.7 | `block-buffer, core-api, default, mac, subtle` | no | - | - |
 | digest | 0.11.3 | `block-api, default, mac` | no | - | - |
 | either | 1.18.0 | `std, use_std` | no | - | - |
 | errno | 0.3.14 | `default, std` | no | - | - |
+| generic-array | 0.14.7 | `more_lengths` | yes | - | - |
 | getrandom | 0.4.3 | `std` | yes | - | - |
 | hex | 0.4.3 | `alloc, std` | no | - | - |
 | hkdf | 0.13.0 | - | no | - | - |
+| hmac | 0.12.1 | - | no | - | - |
 | hmac | 0.13.0 | - | no | - | - |
 | hybrid-array | 0.4.15 | - | no | - | - |
 | inout | 0.2.2 | - | no | - | - |
@@ -39,6 +44,7 @@ Resolved normal-edge packages: 59
 | miniz_oxide | 0.9.1 | `std, with-alloc` | no | - | - |
 | mio | 1.2.3 | `net, os-ext, os-poll` | no | - | - |
 | once_cell | 1.21.4 | `alloc, default, race, std` | no | - | - |
+| pbkdf2 | 0.12.2 | `hmac` | no | - | - |
 | pin-project-lite | 0.2.17 | - | no | - | - |
 | poly1305 | 0.9.1 | - | no | - | - |
 | proc-macro2 | 1.0.107 | `default, proc-macro` | yes | - | - |
@@ -51,13 +57,15 @@ Resolved normal-edge packages: 59
 | serde_core | 1.0.229 | `alloc, default, result, std` | yes | - | - |
 | serde_derive | 1.0.229 | `default` | no | - | - |
 | serde_json | 1.0.151 | `default, std, unbounded_depth` | yes | - | - |
+| sha1 | 0.10.7 | - | no | - | - |
 | sha2 | 0.11.0 | - | no | - | - |
 | signal-hook-registry | 1.4.8 | - | no | - | - |
+| subtle | 2.6.1 | - | no | - | - |
 | syn | 2.0.119 | `clone-impls, default, derive, extra-traits, full, parsing, printing, proc-macro, visit, visit-mut` | no | - | - |
 | syn | 3.0.6 | `clone-impls, default, derive, full, parsing, printing, proc-macro` | no | - | - |
 | thiserror | 2.0.20 | `default, std` | yes | - | - |
 | thiserror-impl | 2.0.20 | - | no | - | - |
-| tokio | 1.53.1 | `bytes, io-util, libc, macros, mio, rt, rt-multi-thread, signal, signal-hook-registry, sync, test-util, time, tokio-macros, windows-sys` | no | - | - |
+| tokio | 1.53.1 | `bytes, io-util, libc, macros, mio, net, rt, rt-multi-thread, signal, signal-hook-registry, socket2, sync, test-util, time, tokio-macros, windows-sys` | no | - | - |
 | tokio-macros | 2.7.2 | - | no | - | - |
 | tracing | 0.1.44 | `attributes, std, tracing-attributes` | no | - | - |
 | tracing-attributes | 0.1.31 | - | no | - | - |
@@ -72,7 +80,7 @@ Resolved normal-edge packages: 59
 
 ## `whatsapp-api +experimental-noise`
 
-Resolved normal-edge packages: 86
+Resolved normal-edge packages: 89
 
 | Crate | Version | Enabled features | Build script | `links` | Flags |
 |---|---|---|---|---|---|
@@ -113,6 +121,7 @@ Resolved normal-edge packages: 86
 | ghash | 0.5.1 | - | no | - | - |
 | hex | 0.4.3 | `alloc, std` | no | - | - |
 | hkdf | 0.13.0 | - | no | - | - |
+| hmac | 0.12.1 | - | no | - | - |
 | hmac | 0.13.0 | - | no | - | - |
 | hybrid-array | 0.4.15 | - | no | - | - |
 | inout | 0.1.4 | - | no | - | - |
@@ -125,6 +134,7 @@ Resolved normal-edge packages: 86
 | mio | 1.2.3 | `net, os-ext, os-poll` | no | - | - |
 | once_cell | 1.21.4 | `alloc, default, race, std` | no | - | - |
 | opaque-debug | 0.3.1 | - | no | - | - |
+| pbkdf2 | 0.12.2 | `hmac` | no | - | - |
 | pin-project-lite | 0.2.17 | - | no | - | - |
 | poly1305 | 0.8.0 | - | no | - | - |
 | poly1305 | 0.9.1 | - | no | - | - |
@@ -140,6 +150,7 @@ Resolved normal-edge packages: 86
 | serde_core | 1.0.229 | `alloc, default, result, std` | yes | - | - |
 | serde_derive | 1.0.229 | `default` | no | - | - |
 | serde_json | 1.0.151 | `default, std, unbounded_depth` | yes | - | - |
+| sha1 | 0.10.7 | - | no | - | - |
 | sha2 | 0.10.9 | - | no | - | - |
 | sha2 | 0.11.0 | - | no | - | - |
 | signal-hook-registry | 1.4.8 | - | no | - | - |
@@ -149,7 +160,7 @@ Resolved normal-edge packages: 86
 | syn | 3.0.6 | `clone-impls, default, derive, full, parsing, printing, proc-macro` | no | - | - |
 | thiserror | 2.0.20 | `default, std` | yes | - | - |
 | thiserror-impl | 2.0.20 | - | no | - | - |
-| tokio | 1.53.1 | `bytes, io-util, libc, macros, mio, rt, rt-multi-thread, signal, signal-hook-registry, sync, test-util, time, tokio-macros, windows-sys` | no | - | - |
+| tokio | 1.53.1 | `bytes, io-util, libc, macros, mio, net, rt, rt-multi-thread, signal, signal-hook-registry, socket2, sync, test-util, time, tokio-macros, windows-sys` | no | - | - |
 | tokio-macros | 2.7.2 | - | no | - | - |
 | tracing | 0.1.44 | `attributes, std, tracing-attributes` | no | - | - |
 | tracing-attributes | 0.1.31 | - | no | - | - |
@@ -163,9 +174,205 @@ Resolved normal-edge packages: 86
 | zeroize_derive | 1.5.0 | - | no | - | - |
 | zmij | 1.0.23 | - | yes | - | - |
 
+## `whatsapp-api +experimental-registration-https`
+
+Resolved normal-edge packages: 189
+
+| Crate | Version | Enabled features | Build script | `links` | Flags |
+|---|---|---|---|---|---|
+| adler2 | 2.0.1 | - | no | - | - |
+| aead | 0.5.2 | `alloc` | no | - | - |
+| aead | 0.6.1 | `alloc` | no | - | - |
+| aes | 0.8.4 | - | no | - | - |
+| aes-gcm | 0.10.3 | `aes, alloc` | no | - | - |
+| anyhow | 1.0.104 | `default, std` | yes | - | - |
+| atomic-waker | 1.1.2 | - | no | - | - |
+| base16ct | 0.2.0 | `alloc` | no | - | - |
+| base64 | 0.22.1 | `alloc, default, std` | no | - | - |
+| base64ct | 1.8.3 | `alloc` | no | - | - |
+| bitflags | 2.13.2 | `std` | no | - | - |
+| block-buffer | 0.10.4 | - | no | - | - |
+| block-buffer | 0.12.1 | - | no | - | - |
+| bytes | 1.12.1 | `default, serde, std` | no | - | - |
+| cfg-if | 1.0.5 | - | no | - | - |
+| chacha20 | 0.9.1 | `zeroize` | no | - | - |
+| chacha20 | 0.10.2 | `cipher, xchacha` | no | - | - |
+| chacha20poly1305 | 0.10.1 | - | no | - | - |
+| chacha20poly1305 | 0.11.0 | `alloc` | no | - | - |
+| cipher | 0.4.4 | `zeroize` | no | - | - |
+| cipher | 0.5.2 | `block-buffer, stream-wrapper` | no | - | - |
+| cmov | 0.5.4 | - | no | - | - |
+| const-oid | 0.9.6 | - | no | - | - |
+| cpufeatures | 0.2.17 | - | no | - | - |
+| cpufeatures | 0.3.1 | - | no | - | - |
+| crypto-bigint | 0.5.5 | `generic-array, rand_core, zeroize` | no | - | - |
+| crypto-common | 0.1.7 | `std` | no | - | - |
+| crypto-common | 0.2.2 | - | no | - | - |
+| ctr | 0.9.2 | - | no | - | - |
+| ctutils | 0.4.2 | - | no | - | - |
+| curve25519-dalek | 4.1.3 | `alloc, digest, zeroize` | yes | - | - |
+| curve25519-dalek-derive | 0.1.1 | - | no | - | - |
+| der | 0.7.10 | `alloc, oid, pem, std, zeroize` | no | - | - |
+| digest | 0.10.7 | `alloc, block-buffer, const-oid, core-api, default, mac, oid, std, subtle` | no | - | - |
+| digest | 0.11.3 | `block-api, default, mac` | no | - | - |
+| displaydoc | 0.2.7 | - | no | - | - |
+| ecdsa | 0.16.9 | `alloc, arithmetic, der, digest, hazmat, pem, pkcs8, rfc6979, signing, spki, verifying` | no | - | - |
+| ed25519 | 2.2.3 | `alloc, pkcs8, std` | no | - | - |
+| ed25519-dalek | 2.2.0 | `alloc, pkcs8, std, zeroize` | no | - | - |
+| either | 1.18.0 | `std, use_std` | no | - | - |
+| elliptic-curve | 0.13.8 | `alloc, arithmetic, digest, ecdh, ff, group, hazmat, pem, pkcs8, sec1` | no | - | - |
+| errno | 0.3.14 | `default, std` | no | - | - |
+| ff | 0.13.1 | `alloc` | no | - | - |
+| fiat-crypto | 0.2.9 | - | no | - | - |
+| form_urlencoded | 1.2.2 | `alloc, default, std` | no | - | - |
+| futures-channel | 0.3.34 | `alloc, default, std` | no | - | - |
+| futures-core | 0.3.34 | `alloc, default, std` | no | - | - |
+| futures-task | 0.3.34 | `alloc, std` | no | - | - |
+| futures-util | 0.3.34 | `alloc, slab, std` | no | - | - |
+| generic-array | 0.14.7 | `more_lengths, zeroize` | yes | - | - |
+| getrandom | 0.2.17 | `std` | no | - | - |
+| getrandom | 0.4.3 | `std` | yes | - | - |
+| ghash | 0.5.1 | - | no | - | - |
+| group | 0.13.0 | `alloc` | no | - | - |
+| hex | 0.4.3 | `alloc, std` | no | - | - |
+| hkdf | 0.12.4 | - | no | - | - |
+| hkdf | 0.13.0 | - | no | - | - |
+| hmac | 0.12.1 | `reset` | no | - | - |
+| hmac | 0.13.0 | - | no | - | - |
+| http | 1.5.0 | `default, std` | no | - | - |
+| http-body | 1.1.0 | - | no | - | - |
+| http-body-util | 0.1.5 | `default` | no | - | - |
+| httparse | 1.10.1 | `default, std` | yes | - | - |
+| hybrid-array | 0.4.15 | - | no | - | - |
+| hyper | 1.11.1 | `client, default, http1` | no | - | - |
+| hyper-rustls | 0.27.9 | `http1, tls12` | no | - | - |
+| hyper-util | 0.1.20 | `client, client-legacy, client-proxy, default, http1, tokio` | no | - | - |
+| icu_collections | 2.3.0 | - | no | - | - |
+| icu_locale_core | 2.3.0 | `zerovec` | no | - | - |
+| icu_normalizer | 2.3.0 | `compiled_data` | no | - | - |
+| icu_normalizer_data | 2.3.0 | - | yes | - | - |
+| icu_properties | 2.3.0 | `compiled_data` | no | - | - |
+| icu_properties_data | 2.3.0 | - | yes | - | - |
+| icu_provider | 2.3.1 | `baked` | no | - | - |
+| idna | 1.1.0 | `alloc, compiled_data, std` | no | - | - |
+| idna_adapter | 1.2.2 | `compiled_data` | no | - | - |
+| inout | 0.1.4 | - | no | - | - |
+| inout | 0.2.2 | - | no | - | - |
+| ipnet | 2.12.2 | `default, std` | no | - | - |
+| itertools | 0.14.0 | `default, use_alloc, use_std` | no | - | - |
+| itoa | 1.0.18 | - | no | - | - |
+| lazy_static | 1.5.0 | `spin, spin_no_std` | no | - | - |
+| libc | 0.2.189 | `default, std` | yes | - | - |
+| libm | 0.2.16 | `arch, default` | yes | - | - |
+| litemap | 0.8.3 | - | no | - | - |
+| log | 0.4.34 | - | no | - | - |
+| memchr | 2.8.3 | `alloc, default, std` | no | - | - |
+| miniz_oxide | 0.9.1 | `std, with-alloc` | no | - | - |
+| mio | 1.2.3 | `net, os-ext, os-poll` | no | - | - |
+| num-bigint-dig | 0.8.6 | `i128, prime, rand, zeroize` | yes | - | - |
+| num-integer | 0.1.47 | `i128` | no | - | - |
+| num-iter | 0.1.46 | - | no | - | - |
+| num-traits | 0.2.19 | `i128, libm, std` | yes | - | - |
+| once_cell | 1.21.4 | `alloc, default, race, std` | no | - | - |
+| opaque-debug | 0.3.1 | - | no | - | - |
+| p256 | 0.13.2 | `arithmetic, digest, ecdh, ecdsa, ecdsa-core, pem, pkcs8, sha2, sha256` | no | - | - |
+| p384 | 0.13.1 | `arithmetic, digest, ecdh, ecdsa, ecdsa-core, pem, pkcs8, sha2, sha384` | no | - | - |
+| paste | 1.0.15 | - | yes | - | - |
+| pbkdf2 | 0.12.2 | `hmac` | no | - | - |
+| pem-rfc7468 | 0.7.0 | `alloc` | no | - | - |
+| percent-encoding | 2.3.2 | `alloc, default, std` | no | - | - |
+| pin-project-lite | 0.2.17 | - | no | - | - |
+| pkcs1 | 0.7.5 | `alloc, pkcs8, zeroize` | no | - | - |
+| pkcs5 | 0.7.1 | - | no | - | - |
+| pkcs8 | 0.10.2 | `alloc, pem, pkcs5, std` | no | - | - |
+| poly1305 | 0.8.0 | - | no | - | - |
+| poly1305 | 0.9.1 | - | no | - | - |
+| polyval | 0.6.2 | - | no | - | - |
+| potential_utf | 0.1.6 | `zerovec` | no | - | - |
+| ppv-lite86 | 0.2.21 | `simd, std` | no | - | - |
+| primeorder | 0.13.6 | - | no | - | - |
+| proc-macro2 | 1.0.107 | `default, proc-macro` | yes | - | - |
+| prost | 0.14.4 | `default, derive, std` | no | - | - |
+| prost-derive | 0.14.4 | - | no | - | - |
+| quote | 1.0.47 | `default, proc-macro` | yes | - | - |
+| r-efi | 6.0.0 | - | no | - | - |
+| rand | 0.8.8 | `rand_chacha, std_rng` | no | - | - |
+| rand_chacha | 0.3.1 | - | no | - | - |
+| rand_core | 0.6.4 | `alloc, getrandom, std` | no | - | - |
+| redb | 4.3.0 | `default, std` | yes | - | - |
+| reqwest | 0.12.28 | `__rustls, __tls, rustls-tls-manual-roots-no-provider` | no | - | - |
+| rfc6979 | 0.4.0 | - | no | - | - |
+| rsa | 0.9.10 | `sha2` | no | - | - |
+| rustls | 0.23.45 | `std, tls12` | yes | - | - |
+| rustls-pki-types | 1.15.1 | `alloc, default, std` | no | - | - |
+| rustls-rustcrypto | 0.0.2-alpha | `alloc, std, tls12, zeroize` | no | - | - |
+| rustls-webpki | 0.102.8 | `alloc, std` | no | - | - |
+| rustls-webpki | 0.103.15 | `alloc, std` | no | - | - |
+| ryu | 1.0.23 | - | no | - | - |
+| sec1 | 0.7.3 | `alloc, default, der, pem, pkcs8, point, subtle, zeroize` | no | - | - |
+| serde | 1.0.229 | `alloc, default, derive, serde_derive, std` | yes | - | - |
+| serde_core | 1.0.229 | `alloc, default, result, std` | yes | - | - |
+| serde_derive | 1.0.229 | `default` | no | - | - |
+| serde_json | 1.0.151 | `default, std, unbounded_depth` | yes | - | - |
+| serde_urlencoded | 0.7.1 | - | no | - | - |
+| sha1 | 0.10.7 | - | no | - | - |
+| sha2 | 0.10.9 | `oid, std` | no | - | - |
+| sha2 | 0.11.0 | - | no | - | - |
+| signal-hook-registry | 1.4.8 | - | no | - | - |
+| signature | 2.2.0 | `alloc, digest, rand_core, std` | no | - | - |
+| slab | 0.4.12 | `std` | no | - | - |
+| smallvec | 1.16.1 | `const_generics, const_new` | no | - | - |
+| socket2 | 0.6.5 | `all` | no | - | - |
+| spin | 0.9.9 | `once` | no | - | - |
+| spki | 0.7.3 | `alloc, pem, std` | no | - | - |
+| stable_deref_trait | 1.2.1 | - | no | - | - |
+| subtle | 2.6.1 | `i128` | no | - | - |
+| syn | 2.0.119 | `clone-impls, default, derive, extra-traits, full, parsing, printing, proc-macro, visit, visit-mut` | no | - | - |
+| syn | 3.0.6 | `clone-impls, default, derive, extra-traits, fold, full, parsing, printing, proc-macro, visit, visit-mut` | no | - | - |
+| sync_wrapper | 1.0.2 | `futures, futures-core` | no | - | - |
+| synstructure | 0.14.0 | `default, proc-macro` | no | - | - |
+| thiserror | 2.0.20 | `default, std` | yes | - | - |
+| thiserror-impl | 2.0.20 | - | no | - | - |
+| tinystr | 0.8.4 | `zerovec` | no | - | - |
+| tokio | 1.53.1 | `bytes, default, io-util, libc, macros, mio, net, rt, rt-multi-thread, signal, signal-hook-registry, socket2, sync, test-util, time, tokio-macros, windows-sys` | no | - | - |
+| tokio-macros | 2.7.2 | - | no | - | - |
+| tokio-rustls | 0.26.5 | `tls12` | no | - | - |
+| tower | 0.5.3 | `futures-core, futures-util, pin-project-lite, retry, sync_wrapper, timeout, tokio, util` | no | - | - |
+| tower-http | 0.6.11 | `follow-redirect, futures-util, tower` | no | - | - |
+| tower-layer | 0.3.3 | - | no | - | - |
+| tower-service | 0.3.3 | - | no | - | - |
+| tracing | 0.1.44 | `attributes, std, tracing-attributes` | no | - | - |
+| tracing-attributes | 0.1.31 | - | no | - | - |
+| tracing-core | 0.1.36 | `once_cell, std` | no | - | - |
+| try-lock | 0.2.5 | - | no | - | - |
+| typenum | 1.20.1 | `const-generics` | no | - | - |
+| unicode-ident | 1.0.26 | - | no | - | - |
+| universal-hash | 0.5.1 | - | no | - | - |
+| universal-hash | 0.6.1 | - | no | - | - |
+| untrusted | 0.9.0 | - | no | - | - |
+| url | 2.5.8 | `default, std` | no | - | - |
+| utf8_iter | 1.0.4 | - | no | - | - |
+| want | 0.3.1 | - | no | - | - |
+| webpki-roots | 1.0.9 | - | no | - | - |
+| whatsapp-api | 0.0.1 | `default, experimental-registration-https` | no | - | - |
+| writeable | 0.6.4 | - | no | - | - |
+| x25519-dalek | 2.0.1 | `zeroize` | no | - | - |
+| yoke | 0.8.3 | `derive, zerofrom` | no | - | - |
+| yoke-derive | 0.8.3 | - | no | - | - |
+| zerocopy | 0.8.57 | `simd` | yes | - | - |
+| zerocopy-derive | 0.8.57 | - | no | - | - |
+| zerofrom | 0.1.8 | `derive` | no | - | - |
+| zerofrom-derive | 0.1.8 | - | no | - | - |
+| zeroize | 1.9.0 | `alloc, default, derive, serde, zeroize_derive` | no | - | - |
+| zeroize_derive | 1.5.0 | - | no | - | - |
+| zerotrie | 0.2.5 | `yoke, zerofrom` | no | - | - |
+| zerovec | 0.11.8 | `derive, yoke` | no | - | - |
+| zerovec-derive | 0.11.6 | - | no | - | - |
+| zmij | 1.0.23 | - | yes | - | - |
+
 ## `whatsapp-cli`
 
-Resolved normal-edge packages: 82
+Resolved normal-edge packages: 90
 
 | Crate | Version | Enabled features | Build script | `links` | Flags |
 |---|---|---|---|---|---|
@@ -177,6 +384,7 @@ Resolved normal-edge packages: 82
 | anstyle-parse | 1.0.0 | `default, utf8` | no | - | - |
 | anstyle-query | 1.1.5 | - | no | - | - |
 | anyhow | 1.0.104 | `default, std` | yes | - | - |
+| block-buffer | 0.10.4 | - | no | - | - |
 | block-buffer | 0.12.1 | - | no | - | - |
 | bytes | 1.12.1 | `default, serde, std` | no | - | - |
 | cfg-if | 1.0.5 | - | no | - | - |
@@ -190,15 +398,19 @@ Resolved normal-edge packages: 82
 | cmov | 0.5.4 | - | no | - | - |
 | colorchoice | 1.0.5 | - | no | - | - |
 | cpufeatures | 0.3.1 | - | no | - | - |
+| crypto-common | 0.1.7 | - | no | - | - |
 | crypto-common | 0.2.2 | - | no | - | - |
 | ctutils | 0.4.2 | - | no | - | - |
+| digest | 0.10.7 | `block-buffer, core-api, default, mac, subtle` | no | - | - |
 | digest | 0.11.3 | `block-api, default, mac` | no | - | - |
 | either | 1.18.0 | `std, use_std` | no | - | - |
 | errno | 0.3.14 | `default, std` | no | - | - |
+| generic-array | 0.14.7 | `more_lengths` | yes | - | - |
 | getrandom | 0.4.3 | `std` | yes | - | - |
 | heck | 0.5.0 | - | no | - | - |
 | hex | 0.4.3 | `alloc, std` | no | - | - |
 | hkdf | 0.13.0 | - | no | - | - |
+| hmac | 0.12.1 | - | no | - | - |
 | hmac | 0.13.0 | - | no | - | - |
 | hybrid-array | 0.4.15 | - | no | - | - |
 | inout | 0.2.2 | - | no | - | - |
@@ -213,6 +425,7 @@ Resolved normal-edge packages: 82
 | mio | 1.2.3 | `net, os-ext, os-poll` | no | - | - |
 | nu-ansi-term | 0.50.3 | `default, std` | no | - | - |
 | once_cell | 1.21.4 | `alloc, default, race, std` | no | - | - |
+| pbkdf2 | 0.12.2 | `hmac` | no | - | - |
 | pin-project-lite | 0.2.17 | - | no | - | - |
 | poly1305 | 0.9.1 | - | no | - | - |
 | proc-macro2 | 1.0.107 | `default, proc-macro` | yes | - | - |
@@ -227,16 +440,18 @@ Resolved normal-edge packages: 82
 | serde_core | 1.0.229 | `alloc, default, result, std` | yes | - | - |
 | serde_derive | 1.0.229 | `default` | no | - | - |
 | serde_json | 1.0.151 | `default, std, unbounded_depth` | yes | - | - |
+| sha1 | 0.10.7 | - | no | - | - |
 | sha2 | 0.11.0 | - | no | - | - |
 | sharded-slab | 0.1.7 | - | no | - | - |
 | signal-hook-registry | 1.4.8 | - | no | - | - |
 | strsim | 0.11.1 | - | no | - | - |
+| subtle | 2.6.1 | - | no | - | - |
 | syn | 2.0.119 | `clone-impls, default, derive, extra-traits, full, parsing, printing, proc-macro, visit, visit-mut` | no | - | - |
 | syn | 3.0.6 | `clone-impls, default, derive, full, parsing, printing, proc-macro` | no | - | - |
 | thiserror | 2.0.20 | `default, std` | yes | - | - |
 | thiserror-impl | 2.0.20 | - | no | - | - |
 | thread_local | 1.1.10 | - | no | - | - |
-| tokio | 1.53.1 | `bytes, io-util, libc, macros, mio, rt, rt-multi-thread, signal, signal-hook-registry, sync, test-util, time, tokio-macros, windows-sys` | no | - | - |
+| tokio | 1.53.1 | `bytes, io-util, libc, macros, mio, net, rt, rt-multi-thread, signal, signal-hook-registry, socket2, sync, test-util, time, tokio-macros, windows-sys` | no | - | - |
 | tokio-macros | 2.7.2 | - | no | - | - |
 | tracing | 0.1.44 | `attributes, std, tracing-attributes` | no | - | - |
 | tracing-attributes | 0.1.31 | - | no | - | - |

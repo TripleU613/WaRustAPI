@@ -131,7 +131,7 @@ impl CapabilityMatrix {
                     C::Registration,
                     S::Unsupported,
                     E::Unknown,
-                    "Android registration endpoints/payloads not observed (ledger: registration.*)",
+                    "active Android profile lacks a confirmed flow; a newer comparison build only supports offline request construction",
                 ),
                 row(
                     C::Connect,

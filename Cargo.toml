@@ -26,6 +26,11 @@ chacha20poly1305 = { version = "0.11", default-features = false, features = ["al
 # Key wrapping / domain separation for the at-rest key hierarchy (section 11.3).
 hkdf = { version = "0.13", default-features = false }
 sha2 = { version = "0.11", default-features = false }
+# Comparison-build registration-token derivation observed in the Android APK.
+hmac = { version = "0.12", default-features = false }
+sha1 = { version = "0.10", default-features = false }
+pbkdf2 = { version = "0.12", default-features = false, features = ["hmac"] }
+md-5 = { version = "0.10", default-features = false }
 # OS-backed CSPRNG (section 18).
 getrandom = { version = "0.4", default-features = false, features = ["std"] }
 # Noise backend candidate with the Rust crypto resolver; `std` is deliberately
@@ -38,6 +43,12 @@ miniz_oxide = { version = "0.9", default-features = false, features = ["std", "w
 clap = { version = "4", features = ["derive", "env"] }
 proptest = { version = "1", default-features = false, features = ["std"] }
 tempfile = "3"
+# Experimental registration HTTPS path (ADR 0003): no native TLS and an
+# explicitly supplied pure-Rust crypto provider/root set.
+reqwest = { version = "0.12.24", default-features = false, features = ["rustls-tls-manual-roots-no-provider"] }
+rustls = { version = "0.23", default-features = false, features = ["std", "tls12"] }
+rustls-rustcrypto = { version = "0.0.2-alpha", default-features = false, features = ["std", "tls12", "zeroize"] }
+webpki-roots = "1"
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

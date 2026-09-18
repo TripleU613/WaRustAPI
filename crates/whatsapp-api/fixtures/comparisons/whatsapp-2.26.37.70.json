@@ -1,0 +1,326 @@
+{
+  "schema_version": 1,
+  "observation_date": "2026-09-17",
+  "relationship": "WhatsApp-signed newer comparison; not the active 2.26.36.75 protocol profile",
+  "reference_client": {
+    "package": "com.whatsapp",
+    "version_name": "2.26.37.70",
+    "version_code": 263707033,
+    "min_sdk": 23,
+    "target_sdk": 36,
+    "compile_sdk": 37,
+    "source_url": "https://www.whatsapp.com/android/current/WhatsApp.apk",
+    "apk_sha256": "b2090b0207e9b97449a5b48e98eb4d1649ae8e5e738e9b7431d6242717fee732",
+    "apk_size_bytes": 146380260,
+    "signing_certificate_sha256": "39:87:D0:43:D1:0A:EF:AF:5A:87:10:B3:67:14:18:FE:57:E0:E1:9B:65:3C:9D:F8:25:58:FE:B5:FF:CE:5D:44"
+  },
+  "method": {
+    "primary": "Rust-native xtask apk-xref/apk-smali structural DEX analysis",
+    "cross_check": "targeted JADX 1.5.6 decompilation retained only in ignored lab output",
+    "network_contact": false,
+    "device_or_emulator": false
+  },
+  "observations": {
+    "connection_headers": {
+      "protocol_5": "57 41 05 03",
+      "protocol_6": "57 41 06 03",
+      "selected_protocol_in_constructor": 6,
+      "dictionary_version_byte": 3,
+      "dex_method": "LX/1N7;->A04(L)"
+    },
+    "noise_pattern_selector": {
+      "pq_none": {
+        "full": "Noise_XX_25519_AESGCM_SHA256",
+        "resume": "Noise_IK_25519_AESGCM_SHA256",
+        "resume_fallback": "Noise_XXfallback_25519_AESGCM_SHA256"
+      },
+      "pq_enabled_or_enforced": {
+        "IKKEM": {
+          "full": "Noise_XXkem_25519_MLKEM512_AESGCM_SHA256",
+          "resume": "Noise_IKkem+X25519+MLKEM512+AESGCM256+SHA256",
+          "resume_fallback": "Noise_XXkemfallback_25519_MLKEM512_AESGCM_SHA256"
+        },
+        "IKKEM_FS": {
+          "full": "Noise_XXkem-FS_25519_MLKEM512_AESGCM_SHA256",
+          "resume": "Noise_IKkem-FS+X25519+MLKEM512+AESGCM256+SHA256",
+          "resume_fallback": "Noise_XXkem-FSfallback_25519_MLKEM512_AESGCM_SHA256"
+        },
+        "XXKEM_EPH_IKKEM2": {
+          "full": "Noise_XXkemEph_25519_MLKEM512_AESGCM_SHA256",
+          "resume": "Noise_IKkem2+X25519+MLKEM512+AESGCM256+SHA256",
+          "resume_fallback": "Noise_XXkemEphfallback_25519_MLKEM512_AESGCM_SHA256"
+        },
+        "XXKEM_EPH_ONLY": {
+          "full": "Noise_XXkemEph_25519_MLKEM512_AESGCM_SHA256",
+          "resume": "Noise_IKkem+X25519+MLKEM512+AESGCM256+SHA256",
+          "resume_fallback": "Noise_XXkemfallback_25519_MLKEM512_AESGCM_SHA256"
+        }
+      },
+      "local_variant_default": "IKKEM",
+      "local_pq_mode_default": "NONE",
+      "remote_config": {
+        "pq_mode_key": 20161,
+        "pq_mode_raw_default": 0,
+        "variant_key": 34536,
+        "variant_default": "IKKEM",
+        "auxiliary_boolean_key": 33751,
+        "auxiliary_boolean_default": false
+      },
+      "active_runtime_configuration": null,
+      "selector_method": "LX/1N7;-><init>",
+      "pattern_initializer": "LX/1NZ;-><clinit>(V)"
+    },
+    "certificate_chain": {
+      "trust_root_name": "WhatsAppLongTerm1",
+      "trust_root_hex": "142375574d0a587166aae71ebe516437c4a28b73e3695c6ce1f7f9545da8ee6b",
+      "intermediate_issuer_serial": 0,
+      "checks": [
+        "intermediate serial equals leaf issuer serial",
+        "intermediate issuer serial equals zero",
+        "leaf key equals the Noise server static key",
+        "leaf signature verifies with the intermediate key",
+        "intermediate signature verifies with WhatsAppLongTerm1"
+      ],
+      "root_initializer_method": "LX/Aw1;-><clinit>(V)",
+      "verification_method": "LX/1N7;->A03(LLLLL)"
+    },
+    "chat_endpoints": {
+      "hosts": [
+        "g.whatsapp.net",
+        "g-fallback.whatsapp.net",
+        "e1.whatsapp.net through e16.whatsapp.net"
+      ],
+      "primary_candidate_ports": [
+        443,
+        5222
+      ],
+      "fallback_port": 80,
+      "built_in_socket_layers": {
+        "g.whatsapp.net": {
+          "443": "raw_tcp",
+          "5222": "raw_tcp",
+          "80": "raw_tcp_with_pseudo_http_chunked_stream"
+        },
+        "g-fallback.whatsapp.net": {
+          "443": "raw_tcp",
+          "5222": "raw_tcp",
+          "80": "raw_tcp_with_pseudo_http_chunked_stream"
+        },
+        "e1-e16.whatsapp.net": {
+          "443": "tls_via_java_sslsocketfactory",
+          "5222": "raw_tcp",
+          "80": "raw_tcp_with_pseudo_http_chunked_stream"
+        }
+      },
+      "port80_pseudo_http": {
+        "request_line": "POST /chat HTTP/1.1",
+        "host_header": "c.whatsapp.net",
+        "user_agent": "Mozilla/5.0 (compatible; WAChat/1.2; +http://www.whatsapp.com/contact)",
+        "transfer_encoding": "chunked",
+        "output_chunk_buffer_bytes": 8192,
+        "input_header_or_chunk_line_limit_bytes": 1024,
+        "output_wrapper_class": "LX/H9X;",
+        "input_wrapper_class": "LX/H9U;"
+      },
+      "connection_sequence_method": "LX/1BH;->A02(LLZZ)",
+      "default_port_method": "LX/1BH;->A00(I)",
+      "socket_factory_method": "LX/1AM;->A01(LLL)",
+      "unresolved": "active remote configuration and pinned-profile equivalence"
+    },
+    "registration": {
+      "base_url": "https://v.whatsapp.net",
+      "paths": [
+        "/v2/reg_onboard_abprop",
+        "/v2/exist",
+        "/v2/code",
+        "/v2/acverify_request",
+        "/v2/acverify",
+        "/v2/register",
+        "/v2/security",
+        "/v2/autoconf",
+        "/v2/autoconf_verifier",
+        "/v2/device_logout_send",
+        "/v2/device_logout_fetch",
+        "/v2/client_log",
+        "/v2/pre_pn_client_log",
+        "/v2/consent",
+        "/v2/challenge",
+        "/v2/passkey_auth",
+        "/v2/wfs"
+      ],
+      "http_method": "POST",
+      "content_type": "application/x-www-form-urlencoded",
+      "form_encoding": "UTF-8 URL-encoded name=value pairs joined with ampersands; selected values may be marked pre-encoded",
+      "encrypted_envelope_prefix": "ENC=",
+      "key_bundle_parameters": [
+        "authkey",
+        "e_ident",
+        "e_keytype",
+        "e_regid",
+        "e_skey_id",
+        "e_skey_val",
+        "e_skey_sig"
+      ],
+      "common_parameter_encoding": {
+        "helper_groups": {
+          "A0T": ["cc", "in"],
+          "A0U": ["lg", "lc", "fdid", "expid"],
+          "A0V": ["access_session_id", "id", "backup_token"]
+        },
+        "expid": "UUID canonical 16 bytes, Base64 URL_SAFE | NO_WRAP | NO_PADDING",
+        "access_session_id": "optional UUID canonical 16 bytes, Base64 URL_SAFE | NO_WRAP | NO_PADDING",
+        "id_and_backup_token": "raw bytes, RFC 3986 unreserved bytes retained and every other byte percent-encoded as uppercase %HH, then marked pre-encoded",
+        "fresh_fallback_generation": {
+          "fdid": "persisted UUID.randomUUID string (`phoneid_id`)",
+          "expid": "persisted UUID; random UUID fallback when no Android-derived identifier is available",
+          "access_session_id": "persisted UUID.randomUUID",
+          "id": "phone-bound 20 random bytes from AES-160 KeyGenerator helper when absent",
+          "backup_token": "20 random bytes from AES-160 KeyGenerator helper when absent"
+        }
+      },
+      "code_request_encoding": {
+        "path": "/v2/code",
+        "required_fields": ["token", "method"],
+        "token_derivation": {
+          "caller": "RequestCodeRepository->A00 calls LX/HQO;->A00:LX/Hre;->A01(Context, phoneNumber)",
+          "phone_input": "national number (`in`) only, UTF-8",
+          "password": "UTF-8 package name concatenated with the selected hdpi about_logo.png bytes",
+          "kdf": "PBKDF2WithHmacSHA1And8BIT, 128 iterations, 512-bit output, LX/HQP;->A00 salt",
+          "mac": "HMAC-SHA1(signing certificate DER || MD5(uncompressed classes.dex) || national number)",
+          "output": "standard Base64, NO_WRAP, with padding"
+        },
+        "optional_field_order": [
+          "context",
+          "clicked_education_link",
+          "manage_call_permission",
+          "call_log_permission",
+          "client_start_message",
+          "advertising_id",
+          "login",
+          "type"
+        ],
+        "boolean_encoding": "true or false; third internal integer state omits the field",
+        "client_start_message": "Base64 URL_SAFE | NO_WRAP | NO_PADDING",
+        "type": "decimal value of the client's registration-type enum"
+      },
+      "register_request_encoding": {
+        "path": "/v2/register",
+        "required_fields": ["code"],
+        "optional_field_order": [
+          "auth_response",
+          "context",
+          "method",
+          "advertising_id",
+          "login",
+          "type"
+        ],
+        "auth_response": "Base64 URL_SAFE | NO_WRAP | NO_PADDING",
+        "type": "decimal value of the client's registration-type enum"
+      },
+      "security_request_encoding": {
+        "path": "/v2/security",
+        "optional_field_order": ["code", "reset", "wipe_token", "advertising_id"],
+        "request_rule": "code is optional; reset is appended only when non-empty; wipe_token is conditional",
+        "wipe_token": "raw bytes, RFC 3986 unreserved bytes retained and every other byte percent-encoded as uppercase %HH, then marked pre-encoded"
+      },
+      "key_bundle_encoding": {
+        "authkey_source": "32-byte client Noise static public key",
+        "key_type_hex": "05",
+        "registration_id": "four-byte big-endian",
+        "signed_pre_key_id": "three-byte big-endian",
+        "value_encoding": "Android Base64 flags 11: URL_SAFE | NO_WRAP | NO_PADDING",
+        "parameter_order": [
+          "authkey",
+          "e_ident",
+          "e_keytype",
+          "e_regid",
+          "e_skey_id",
+          "e_skey_val",
+          "e_skey_sig"
+        ]
+      },
+      "response": {
+        "encoding": "JSON object",
+        "statuses": ["ok", "sent", "fail", "attached"],
+        "reason_values": [
+          "guessed_too_fast",
+          "not_allowed",
+          "reset_too_soon",
+          "device_confirm_or_second_code",
+          "challenge",
+          "missing",
+          "consent",
+          "second_code",
+          "stale",
+          "blocked",
+          "too_many_guesses",
+          "security_code",
+          "limited_release",
+          "mismatch",
+          "temporarily_unavailable",
+          "incorrect",
+          "consent_parent_linking_already_registered",
+          "format_wrong",
+          "sms_required",
+          "bad_token",
+          "bad_param",
+          "too_recent",
+          "next_method",
+          "send_sms",
+          "old_version",
+          "no_routes",
+          "invalid_skey",
+          "too_many_all_methods",
+          "too_many",
+          "waiting_for_sms",
+          "flash_disabled",
+          "missing_param",
+          "provider_unroutable",
+          "provider_timeout",
+          "length_short",
+          "length_long",
+          "biz_not_allowed"
+        ],
+        "control_fields": [
+          "status",
+          "reason",
+          "retry_after",
+          "sms_wait",
+          "voice_wait",
+          "flash_wait",
+          "wipe_wait",
+          "length",
+          "sms_length",
+          "voice_length",
+          "security_code_set",
+          "secure_verifier"
+        ],
+        "secret_fields": [
+          "login",
+          "code",
+          "wipe_token",
+          "passkey_credential",
+          "appeal_token",
+          "edge_routing_info"
+        ],
+        "parser_class": "Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;"
+      },
+      "path_decoder_method": "LX/HpO;->A00(LL)",
+      "key_bundle_method": "LX/Cdl;->A00(ZL)"
+    },
+    "token_dictionary": {
+      "recovered_from": "classes.dex @ 0x3b8d06",
+      "single_byte_entries": 235,
+      "double_byte_pages": 4,
+      "double_byte_page_size": 256,
+      "matches_active_profile_fixture": false,
+      "first_difference": "double-byte page 0 index 1"
+    }
+  },
+  "limitations": [
+    "The mutable source URL no longer served the active profile's pinned 2.26.36.75 artifact.",
+    "No request was sent and no server behavior was observed.",
+    "The selector map is known, but the effective runtime PQ mode and variant remain unresolved.",
+    "These observations must not silently update the active profile."
+  ]
+}
