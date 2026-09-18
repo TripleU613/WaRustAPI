@@ -425,8 +425,24 @@ impl WhatsAppClient {
             .await
     }
 
-    /// Queue an explicit receipt under the configured privacy policy.
-    pub async fn send_receipt(&self, _receipt: Receipt) -> Result<()> {
+    /// Durably queue an explicit `read` receipt for authenticated incoming
+    /// direct messages; the next active connection sends it once and settles
+    /// it by server acknowledgement. Nothing is sent automatically under
+    /// `ReceiptPolicy::ExplicitOnly`. Requires explicit comparison-client
+    /// configuration; other profiles report the unsupported capability.
+    pub async fn send_receipt(&self, receipt: Receipt) -> Result<()> {
+        #[cfg(feature = "comparison-client")]
+        if self.inner.media_config.is_some() {
+            self.inner
+                .store
+                .run_blocking(move |store| {
+                    crate::transport::receipts::queue_read(store, &receipt).map(drop)
+                })
+                .await?;
+            self.inner.runtime.nudge();
+            return Ok(());
+        }
+        let _ = receipt;
         self.inner.capabilities.require(Capability::Receipts)
     }
 
@@ -598,6 +614,58 @@ mod tests {
             c.synced_chat_settings(&chat).await,
             Err(Error::Unsupported {
                 capability: Capability::ProfileAndPresence,
+                ..
+            })
+        ));
+        assert!(matches!(
+            c.connection_state().borrow().state,
+            ConnectionState::Stopped
+        ));
+        c.shutdown().await;
+    }
+
+    #[cfg(feature = "comparison-client")]
+    #[tokio::test]
+    async fn explicit_read_receipts_require_comparison_config_and_known_messages() {
+        use crate::model::receipt::{Receipt, ReceiptKind};
+        let dir = tempfile::tempdir().unwrap();
+        let receipt = Receipt {
+            chat: ChatId::from_jid(&Jid::parse("15550000000@s.whatsapp.net").unwrap()).unwrap(),
+            message_ids: vec![crate::model::ids::MessageId::new("unknown").unwrap()],
+            from: None,
+            kind: ReceiptKind::Read,
+            server_timestamp: None,
+            code: None,
+        };
+        let c = client(&dir).await;
+        assert!(matches!(
+            c.send_receipt(receipt.clone()).await,
+            Err(Error::Unsupported {
+                capability: Capability::Receipts,
+                ..
+            })
+        ));
+        c.shutdown().await;
+        drop(c);
+        let mut config: crate::registration::request::LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        config.token = zeroize::Zeroizing::new("offline-fixture".into());
+        let c = WhatsAppClient::builder()
+            .store_path(dir.path().join("protocol.redb"))
+            .account_id(AccountId::new("acct").unwrap())
+            .key_source(Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                [5u8; 32],
+            ))))
+            .create_store(false)
+            .comparison_transport(config)
+            .build()
+            .await
+            .unwrap();
+        // Unknown messages are refused before any queue write; no connection opens.
+        assert!(matches!(
+            c.send_receipt(receipt).await,
+            Err(Error::InvalidInput {
+                field: "receipt",
                 ..
             })
         ));

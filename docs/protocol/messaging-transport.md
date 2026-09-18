@@ -329,7 +329,14 @@ texts and uploaded image/voice-note references, including previously queued elig
 intents. Leave it off for a receive-only session. Groups, quotes, captions and
 unsupported media fail locally. Queries and sends are reserved
 durably before network writes, without automatic retries. Delivery/read/played
-facts reach normal `message_status` and the durable event journal. This outbox
+facts reach normal `message_status` and the durable event journal.
+`client.send_receipt(receipt)` with `ReceiptKind::Read` durably queues one
+`read` receipt per authenticated incoming direct message (up to sixteen IDs,
+all-or-nothing, idempotent); the next active connection sends each once and
+settles it by matching server acknowledgement. Unknown, unauthenticated, group
+or device-addressed messages are refused before any write, and nothing is sent
+without an explicit request (`ReceiptPolicy::ExplicitOnly`). No live read
+receipt has been exercised yet. This outbox
 adapter now has one live direct-text server acknowledgement through the public
 client/runtime; handset receipt remains unconfirmed.
 
@@ -397,6 +404,13 @@ All references below concern **2.26.37.70**, APK SHA-256
   Its direct receipt contains to/id/type and optional participant, no timestamp.
   `LX/15A.A07` accepts played status for PTT or view-once. The client queues only
   explicitly requested successful viewing, not background downloads.
+- `LX/Cns.A09`, `0000..0044`: client receipt builder with `to`, `id`, `type`
+  and optional `participant`/`category`, no timestamp or children. `LX/CcH.<clinit>`
+  `0000..0036` lists `read`, `read-self`, `played`, `played-self` as the client
+  status-receipt vocabulary; `LX/ClU.A00` `004e..0062` maps `read` to its own
+  status code. Our explicit read receipt uses that builder with `type=read`.
+  This is an inference from the vocabulary: the read-receipt job itself and
+  any multi-ID `list` children were not traced, so one ID per receipt is sent.
 - `LX/11P.A09`, `001a..00ee`: notification `tokens/token`, `trusted_contact`,
   from/sender_lid, token bytes and timestamp (token `t` defaults to envelope `t`).
   `LX/0q2.A0P`, `00b2..012a`: update only for a strictly newer timestamp.

@@ -49,16 +49,7 @@ pub fn queue_opened(store: &ProtocolStore, ticket: &str) -> Result<()> {
                 "image not awaiting viewer completion",
             ));
         }
-        let wire: Vec<u8> = if !saved["route"].is_null() {
-            serde_json::from_value(saved["route"].clone())
-                .map_err(|_| Error::invalid("receipt", "invalid saved route"))?
-        } else {
-            let capture: Vec<u8> = serde_json::from_value(saved["capture"].clone())
-                .map_err(|_| Error::invalid("receipt", "missing saved route"))?;
-            tx.get_json(Table::Checkpoints, &capture, 1)?
-                .ok_or_else(|| Error::invalid("receipt", "capture unavailable"))?
-        };
-        let incoming = decode(&wire)?;
+        let incoming = decode(&saved_route(tx, &saved)?)?;
         let receipt = super::messaging::received_confirmation(&incoming)
             .filter(|n| n.description == "receipt")
             .ok_or_else(|| Error::invalid("receipt", "unsupported opened receipt routing"))?
@@ -81,6 +72,113 @@ pub fn queue_opened(store: &ProtocolStore, ticket: &str) -> Result<()> {
         )?;
         saved["opened_receipt"] = serde_json::json!("queued");
         tx.put_json(Table::Checkpoints, &key, 1, &saved)
+    })
+}
+
+/// The original incoming wire node for a saved inbox row: the route copy when
+/// present, otherwise the preserved raw capture.
+fn saved_route(tx: &crate::store::WriteTx<'_>, saved: &serde_json::Value) -> Result<Vec<u8>> {
+    if !saved["route"].is_null() {
+        return serde_json::from_value(saved["route"].clone())
+            .map_err(|_| Error::invalid("receipt", "invalid saved route"));
+    }
+    let capture: Vec<u8> = serde_json::from_value(saved["capture"].clone())
+        .map_err(|_| Error::invalid("receipt", "missing saved route"))?;
+    tx.get_json(Table::Checkpoints, &capture, 1)?
+        .ok_or_else(|| Error::invalid("receipt", "capture unavailable"))
+}
+
+/// Durably queue explicit `read` receipts for authenticated incoming direct
+/// messages, one receipt per message ID, all-or-nothing and idempotent.
+///
+/// Comparison `LX/Cns.A09` builds client receipts as `to`/`id`/`type` with
+/// optional `participant`/`category` and no timestamp; `LX/CcH.<clinit>` lists
+/// `read`, `read-self`, `played` and `played-self` as the client status-receipt
+/// vocabulary, and `LX/ClU.A00` maps `read` to its own status code. Using that
+/// builder with `type=read` is an inference from this vocabulary: the read
+/// receipt job itself was not traced, so multi-ID `list` children are not
+/// emitted. Nothing here sends automatically (`ReceiptPolicy::ExplicitOnly`).
+pub fn queue_read(
+    store: &ProtocolStore,
+    receipt: &crate::model::receipt::Receipt,
+) -> Result<usize> {
+    use crate::model::receipt::ReceiptKind;
+    if receipt.kind != ReceiptKind::Read {
+        return Err(Error::invalid(
+            "receipt",
+            "only explicit read receipts can be queued",
+        ));
+    }
+    if receipt.code.is_some() {
+        return Err(Error::invalid(
+            "receipt",
+            "read receipts carry no error code",
+        ));
+    }
+    let chat = receipt.chat.jid();
+    if chat.server != Server::User || chat.device != 0 {
+        return Err(Error::invalid(
+            "receipt",
+            "only primary direct chats are supported",
+        ));
+    }
+    let mut ids: Vec<&str> = receipt.message_ids.iter().map(|id| id.as_str()).collect();
+    ids.sort_unstable();
+    ids.dedup();
+    if ids.is_empty() || ids.len() > 16 {
+        return Err(Error::invalid(
+            "receipt",
+            "between one and sixteen message ids per receipt",
+        ));
+    }
+    store.write(|tx| {
+        let mut queued = 0;
+        for id in &ids {
+            let key = format!("received:{chat}:{id}");
+            let Some(mut saved) =
+                tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1)?
+            else {
+                return Err(Error::invalid(
+                    "receipt",
+                    "unknown incoming message for this chat",
+                ));
+            };
+            if !matches!(saved["status"].as_str(), Some("decrypted" | "consumed")) {
+                return Err(Error::invalid(
+                    "receipt",
+                    "incoming message is not authenticated locally",
+                ));
+            }
+            let receipt_key = format!(
+                "receipt-outbox:{}:read",
+                hex::encode(Sha256::digest(key.as_bytes()))
+            );
+            if tx
+                .get_json::<serde_json::Value>(Table::Checkpoints, receipt_key.as_bytes(), 1)?
+                .is_some()
+            {
+                continue;
+            }
+            let incoming = decode(&saved_route(tx, &saved)?)?;
+            let node = super::messaging::received_confirmation(&incoming)
+                .filter(|n| n.description == "receipt")
+                .ok_or_else(|| Error::invalid("receipt", "unsupported read receipt routing"))?
+                .attr("type", "read");
+            let wire = crate::binary::Encoder::new(
+                crate::binary::TokenDictionary::comparison_2_26_37_70(),
+            )
+            .encode(&node)?;
+            tx.put_json(
+                Table::Checkpoints,
+                receipt_key.as_bytes(),
+                1,
+                &serde_json::json!({"status":"pending","wire":wire}),
+            )?;
+            saved["read_receipt"] = serde_json::json!("queued");
+            tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved)?;
+            queued += 1;
+        }
+        Ok(queued)
     })
 }
 
@@ -480,6 +578,197 @@ mod tests {
             .unwrap();
         assert_eq!(saved["status"], "server_acknowledged");
     }
+    #[test]
+    fn explicit_read_receipts_queue_once_reserve_and_settle_by_type() {
+        use crate::model::{
+            ids::{ChatId, MessageId},
+            receipt::{Receipt, ReceiptKind},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("read-receipts.redb");
+        let store = open(&path, true);
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let encoder =
+            || crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70());
+        let route = |id: &str| {
+            encoder()
+                .encode(
+                    &Node::new("message")
+                        .attr("id", id)
+                        .attr("from", peer.clone()),
+                )
+                .unwrap()
+        };
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"received:15555550100@s.whatsapp.net:first",
+                    1,
+                    &serde_json::json!({"status":"decrypted", "route":route("first")}),
+                )?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"received:15555550100@s.whatsapp.net:second",
+                    1,
+                    &serde_json::json!({"status":"consumed", "route":route("second")}),
+                )?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"received:15555550100@s.whatsapp.net:captured",
+                    1,
+                    &serde_json::json!({"status":"captured", "route":route("captured")}),
+                )
+            })
+            .unwrap();
+        let receipt = |ids: &[&str], kind: ReceiptKind| Receipt {
+            chat: ChatId::from_jid(&peer).unwrap(),
+            message_ids: ids.iter().map(|id| MessageId::new(*id).unwrap()).collect(),
+            from: None,
+            kind,
+            server_timestamp: None,
+            code: None,
+        };
+        let rows = |store: &ProtocolStore| {
+            store
+                .read(|tx| {
+                    Ok(tx
+                        .scan_after(Table::Checkpoints, 1, None, 1024)?
+                        .into_iter()
+                        .filter(|(key, _)| key.starts_with(b"receipt-outbox:"))
+                        .count())
+                })
+                .unwrap()
+        };
+
+        // Refusals leave nothing queued: wrong kind, error code, group/device
+        // chats, empty/oversized batches, unknown or unauthenticated messages.
+        assert!(queue_read(&store, &receipt(&["first"], ReceiptKind::Delivered)).is_err());
+        assert!(queue_read(&store, &receipt(&["first"], ReceiptKind::Played)).is_err());
+        let mut coded = receipt(&["first"], ReceiptKind::Read);
+        coded.code = Some(1);
+        assert!(queue_read(&store, &coded).is_err());
+        let mut other_chat = receipt(&["first"], ReceiptKind::Read);
+        other_chat.chat =
+            ChatId::from_jid(&Jid::parse("15555550101@s.whatsapp.net").unwrap()).unwrap();
+        assert!(queue_read(&store, &other_chat).is_err());
+        assert!(queue_read(&store, &receipt(&[], ReceiptKind::Read)).is_err());
+        let many: Vec<String> = (0..17).map(|i| format!("id{i}")).collect();
+        let many: Vec<&str> = many.iter().map(String::as_str).collect();
+        assert!(queue_read(&store, &receipt(&many, ReceiptKind::Read)).is_err());
+        assert!(queue_read(&store, &receipt(&["missing"], ReceiptKind::Read)).is_err());
+        // Atomic: an unauthenticated member refuses the whole batch.
+        assert!(queue_read(&store, &receipt(&["first", "captured"], ReceiptKind::Read)).is_err());
+        assert_eq!(rows(&store), 0);
+
+        // Queue once, then repeats and overlapping batches are idempotent.
+        assert_eq!(
+            queue_read(&store, &receipt(&["first", "first"], ReceiptKind::Read)).unwrap(),
+            1
+        );
+        assert_eq!(
+            queue_read(&store, &receipt(&["first"], ReceiptKind::Read)).unwrap(),
+            0
+        );
+        assert_eq!(
+            queue_read(&store, &receipt(&["second", "first"], ReceiptKind::Read)).unwrap(),
+            1
+        );
+        assert_eq!(rows(&store), 2);
+        let saved: serde_json::Value = store
+            .read(|tx| {
+                tx.get_json(
+                    Table::Checkpoints,
+                    b"received:15555550100@s.whatsapp.net:first",
+                    1,
+                )
+            })
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            saved["status"], "decrypted",
+            "authenticated content is untouched"
+        );
+        assert_eq!(saved["read_receipt"], "queued");
+
+        // Restart, then reserve: the wire is to/id/type only, no timestamp.
+        drop(store);
+        let store = open(&path, false);
+        let pending = reserve_pending(&store).unwrap();
+        assert_eq!(pending.len(), 2);
+        for node in &pending {
+            assert_eq!(node.description, "receipt");
+            assert_eq!(jid(node, "to"), Some(peer.clone()));
+            assert_eq!(
+                node.get_attr("type").and_then(|v| v.as_text()),
+                Some("read")
+            );
+            assert!(node.get_attr("t").is_none());
+            assert!(node.get_attr("participant").is_none());
+            assert!(
+                !matches!(node.content, crate::binary::NodeContent::Children(_)),
+                "no list children without evidence"
+            );
+        }
+        let mut ids: Vec<&str> = pending
+            .iter()
+            .filter_map(|n| n.get_attr("id").and_then(|v| v.as_text()))
+            .collect();
+        ids.sort_unstable();
+        assert_eq!(ids, ["first", "second"]);
+        drop(store);
+        let store = open(&path, false);
+        assert!(
+            reserve_pending(&store).unwrap().is_empty(),
+            "uncertain writes never replay"
+        );
+        assert_eq!(
+            queue_read(&store, &receipt(&["first"], ReceiptKind::Read)).unwrap(),
+            0
+        );
+
+        // Acknowledgements settle by peer, id and exact type.
+        let ack = |id: &str, kind: &str, from: &str| {
+            Node::new("ack")
+                .attr("id", id)
+                .attr("class", "receipt")
+                .attr("type", kind)
+                .attr("from", from)
+        };
+        assert!(
+            !record_ack(
+                &store,
+                &ack("first", "played", "15555550100@s.whatsapp.net")
+            )
+            .unwrap()
+        );
+        assert!(!record_ack(&store, &ack("first", "read", "15555550101@s.whatsapp.net")).unwrap());
+        assert!(record_ack(&store, &ack("first", "read", "15555550100@s.whatsapp.net")).unwrap());
+        assert!(!record_ack(&store, &ack("first", "read", "15555550100@s.whatsapp.net")).unwrap());
+        assert!(
+            record_ack(
+                &store,
+                &ack("second", "read", "15555550100@s.whatsapp.net").attr("error", "479")
+            )
+            .unwrap()
+        );
+        let status = |id: &str| -> serde_json::Value {
+            let key = format!(
+                "receipt-outbox:{}:read",
+                hex::encode(Sha256::digest(
+                    format!("received:15555550100@s.whatsapp.net:{id}").as_bytes()
+                ))
+            );
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .unwrap()["status"]
+                .clone()
+        };
+        assert_eq!(status("first"), "server_acknowledged");
+        assert_eq!(status("second"), "refused");
+    }
+
     #[test]
     fn opened_receipts_page_history_and_keep_reservations_atomic() {
         let dir = tempfile::tempdir().unwrap();

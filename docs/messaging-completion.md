@@ -29,6 +29,18 @@ from offline tests alone. Existing received captures can be processed locally.
 
 ### Implemented and verified locally
 
+- `send_receipt` is no longer a stub: with explicit comparison configuration it
+  durably queues `read` receipts for authenticated incoming direct messages (one
+  to sixteen IDs, all-or-nothing, idempotent per message) through the existing
+  receipt outbox, so the next active connection sends each once and settles it by
+  peer/ID/type-matched server acknowledgement. Unknown, unauthenticated, group or
+  device chats, wrong kinds and error codes are refused before any write; other
+  profiles still report the unsupported capability. The stanza follows the traced
+  `LX/Cns.A09` builder; `type=read` is an inference from the APK's receipt
+  vocabulary, documented as such, with no `list` children. Tests cover refusals,
+  atomic batches, idempotence, restart without replay and ACK settlement by type.
+  No live read receipt has been sent. All 309 workspace/all-feature tests, strict
+  Clippy, formatting, the transport-only build and hygiene passed.
 - The comparison account actor now reconnects after classified recoverable
   connection loss with capped jittered exponential backoff, a fresh epoch and a
   full handshake per attempt, bounded by `transport.reconnect` in the private

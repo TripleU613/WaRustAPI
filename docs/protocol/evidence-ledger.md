@@ -8,8 +8,9 @@ primary ConnectionThread `LX/0iS.A0e` 0x0014–004a generates the ID and
 calls that true branch. `LX/Cns.A00` 0x007c–0108 constructs delivery
 receipts with optional type/participant/recipient; `A05` 0x0000–0074
 constructs receipt acknowledgements, omitting type for delivery. Our bounded
-implementation supports primary direct routes only and never emits read/opened
-receipts. Messages must already be authenticated and committed before delivery
+implementation supports primary direct routes only; read/opened receipts are
+emitted only on explicit request (viewer completion or `send_receipt`), never
+automatically. Messages must already be authenticated and committed before delivery
 confirmation; all incoming frames are encrypted at rest before acknowledgement.
 
 Observed on our comparison lab client: activation result accepted. Activation
