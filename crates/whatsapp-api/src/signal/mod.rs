@@ -18,9 +18,13 @@ use crate::model::ids::{DeviceAddress, GroupId};
 use crate::store::{Table, WriteTx};
 
 #[cfg(feature = "experimental-signal-crypto")]
+pub mod adv;
+#[cfg(feature = "experimental-signal-crypto")]
 pub mod crypto;
 #[cfg(feature = "experimental-signal-crypto")]
 pub mod direct;
+#[cfg(feature = "experimental-signal-crypto")]
+pub mod image;
 
 const RECORD_V1: u16 = 1;
 
@@ -340,3 +344,11 @@ mod tests {
         ));
     }
 }
+#[cfg(feature = "experimental-signal-crypto")]
+pub mod app_state;
+#[cfg(feature = "experimental-signal-crypto")]
+pub mod app_state_collection;
+#[cfg(feature = "experimental-signal-crypto")]
+pub mod app_state_crypto;
+#[cfg(feature = "experimental-signal-crypto")]
+pub mod app_state_hash;

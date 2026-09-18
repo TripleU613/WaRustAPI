@@ -1,0 +1,339 @@
+# Messaging completion checklist
+
+Requested scope: implement the following ten improvements. A checked item needs
+implementation and relevant tests; live verification is recorded separately.
+Comparison APK evidence is 2.26.37.70, not the pinned 2.26.36.75 profile.
+
+- [x] Opened-receipt queue after successful view-once viewing; live ACK pending.
+- [x] Continuous incoming-message processing with bounded keepalives.
+- [x] Immediate authenticated decryption and durable-before-ACK delivery confirmation.
+- [x] Outgoing delivery/read/played tracking, including normal outbox events.
+- [x] Ordinary image download/display without plaintext files.
+- [x] Incoming voice-note retrieval/playback; live incoming sample pending.
+- [x] Incoming prekey messages from new senders; live new-sender sample pending.
+- [ ] Notification handling and cross-device synchronization ([evidence and gaps](protocol/cross-device-sync.md)).
+- [ ] Crash/reconnect coverage for receiving, consumption and uncertain sends.
+- [ ] Integration with the normal account runtime/outbox.
+
+## Verification and operator handoff
+
+Work remains on broad notification/cross-device synchronization, extended crash
+coverage and full outbox integration. Preserve the existing encrypted account, identities, send IDs
+and uncertain outcomes. No unsolicited chats, identity replacement, registration
+retries, or reopening of consumed media are part of this work.
+
+Any scenario that needs a new incoming test message, another linked device, or
+handset confirmation belongs here; it must not be described as live verified
+from offline tests alone. Existing received captures can be processed locally.
+
+### Implemented and verified locally
+
+- Mute timer resolution now follows the APK's local/server-clock conversion,
+  with distinct unmuted/indefinite/deadline states and explicit everyone-mention
+  policy. Tests cover skew, expiry, missing fields, independent mention settings
+  and overflow. It neither changes stored sync data nor guesses a runtime clock
+  estimate; clock observation/policy provisioning and suppression remain unwired.
+  All 302 workspace/all-feature tests, strict Clippy, formatting and repository
+  hygiene passed.
+- The sync action applier now supports APK-derived schema-2 mute/unmute alongside
+  pin/unpin, retaining finite/indefinite mute timers and optional mention metadata
+  in encrypted chat state. Literal-wire and mixed-batch tests cover field presence,
+  rollback in both directions, restart and idempotence. This does not yet suppress
+  notifications: runtime clock/policy integration and live sync remain incomplete.
+  All 301 workspace/all-feature tests, strict Clippy, formatting and repository
+  hygiene checks passed after this addition.
+- Incoming real-Signal crash coverage now exits a child process after durable
+  capture and after authenticated session/inbox/event commit, before any receipt
+  write. Reopening after capture preserves the original session and no event;
+  reopening after commit preserves decrypted content and exactly one normal
+  event. Redelivery returns duplicate without advancing the ratchet and still
+  constructs the correct direct delivery receipt. This uses a generated peer
+  and encrypted temporary store, not the live account. Socket write/ACK loss,
+  server redelivery and power loss are not simulated by this test.
+  The real-crypto parent test passed ten consecutive runs. The full workspace
+  passed 300 tests (including the no-op child harness), strict Clippy, formatting,
+  whitespace and repository hygiene checks.
+- Opened-receipt queueing, reservation and ACK processing now use bounded pages
+  inside the write transaction, removing the shared-checkpoint 10,000-row cutoff.
+  A large-history fixture covers completed-history starvation, the 16-receipt
+  reservation cap, restart/no replay, ACK deduplication and late-error rollback.
+  APK-derived ACK routing checks also refuse participant/recipient/edit fields
+  that cannot match this direct-only queue. No live opened receipt was sent.
+  Verification: all 299 workspace/all-feature tests, strict all-target/all-feature
+  Clippy, formatting, diff whitespace and repository hygiene passed.
+- Key selection now pages through checkpoint history in the same transaction;
+  unrelated history no longer causes the old 10,000-row refusal. A 10,600-row
+  fixture covers cross-page ordering, uncommitted imports, restart and no expired
+  candidate fallback; store tests cover physical cursors and rollback. All 298
+  workspace/all-feature tests, strict Clippy, formatting and hygiene checks pass.
+  Static follow-up also identifies the APK's outgoing share-acknowledgement gate:
+  queueing a generated key for companions is not immediate activation. That
+  lifecycle and live synchronization remain unfinished.
+- App-state active-key selection now follows APK candidate ordering (signed epoch
+  descending, device ID ascending), then age/fingerprint checks. It requires an
+  explicit authorized-device context and age policy; missing eligibility never
+  falls back to older keys. Restart/no-write/tie/high-bit/expiry tests cover the
+  primitive. Live activation is still unwired pending trusted pairing state and
+  policy resolution; no account keys were generated or activated.
+- Primary linking research now distinguishes assigned-device response, pending
+  login, matching device-list confirmation, saved pairing identity persistence,
+  and primary critical-data bootstrap. Exact comparison APK call paths/offsets
+  are in the [sync evidence](protocol/cross-device-sync.md#primary-pairing-completion-and-identity-provenance).
+  This resolves the identity's provenance: it comes from saved pairing material,
+  not an incoming notification/key share. Linking and bootstrap remain unfinished;
+  no live pairing or key activation was performed during this static trace.
+- Verified collection staging now retains encrypted current action records as
+  well as integrity state and the pending application queue. Snapshot replacement
+  and SET/REMOVE updates are transactional. An authenticated identical snapshot
+  can rebuild a missing legacy record cache without replaying applied actions;
+  tampering, rollback and restart tests cover that path. APK-complete pin/snapshot
+  reconciliation and live sync authorization remain unfinished.
+- ADV key-index verification now follows the APK's signed-list schema and
+  `06 02` signature prefix, using an independently trusted account key. Tests
+  reject changed keys, signature tampering, wrong/stale timestamps and malformed
+  signed lists. Companion membership reconciliation and key activation remain
+  separate; this does not yet enable live cross-device synchronization.
+- Device-map reconciliation now follows APK `11T.A08`: filters unsupported
+  incoming indexes, preserves newer local allocations and valid same-device
+  indexes, and returns a candidate without changing inputs. Tests cover those
+  branches, account substitution and index collisions. Authenticated ingestion,
+  identity/device-hash validation, persistence and key activation remain incomplete.
+- The APK identity-key hash now has an unsigned-byte-sort SHA-256 implementation
+  and independent vector. Missing pinned identities fail; the runtime truncation
+  length and notification hash binding remain unverified, so it does not activate
+  keys or establish a new trusted device.
+- First sync action handler: APK-derived `pin_v1` SET projects pin/unpin state
+  into encrypted chat metadata. Projection, pending-batch consumption and applied
+  cursor commit atomically; ordering, late rollback and restart/idempotence tests
+  pass. Other actions and snapshot reconciliation remain pending; this is not yet
+  wired to live sync or the normal client's chat UI.
+- Collection sync now has transactional staging: verified integrity state and
+  encrypted pending actions commit together against the saved baseline. Tests
+  cover restart, rollback, stale patches and repeated snapshots. This does not
+  apply actions or complete device authorization/live synchronization.
+- Opened receipts require successful viewer completion, not download. The queue
+  reserves before write, survives store reopen, never replays uncertain writes,
+  and matches ACK recipient/ID/type. The earlier consumed image cannot be reopened
+  and is not retroactively marked as server-opened.
+- Split Noise reader/writer share serialized cipher state. Tests cover concurrent
+  reads/writes, read cancellation and EOF poisoning the other half.
+- New-sender prekey decryption uses the registered identity/signed prekey, consumes
+  only the returned one-time-prekey ID in the inbox transaction, and refuses
+  changed pinned identities. Generated independent-peer roundtrip tests pass.
+- Image/audio key domains remain separate; hash, MAC, size and plaintext hash
+  are verified. Ordinary media rejects view-once flags/wrappers. Voice notes are
+  Ogg/Opus validated and played from a pipe. No plaintext media files are created.
+- Receipt events are peer-scoped, independently accumulated and deduplicated in
+  normal outbox status. Self receipts do not establish recipient delivery.
+- Trusted-contact notifications use APK-derived timestamp handling; older or
+  duplicate tokens cannot overwrite newer ones. Fully supported notifications
+  are acknowledged after persistence. Unknown notifications remain captured.
+- Cross-device work now includes an APK-derived key-share decoder, fingerprint
+  validator and pinned-session-only own-device peer receive gate. These are
+  tested foundations, not full sync. Key import is now atomic with the pinned
+  own-device inbox/ratchet and leaves existing IDs untouched. Normal-contact shares
+  never import. Authenticated device-state establishment, key activation, peer
+  acknowledgements and patch application remain unfinished.
+- APK-derived mutation-key derivation and index/value/snapshot/patch integrity
+  checks now have independent synthetic vectors and input-tampering tests.
+  They do not yet activate stored keys or apply synchronized state. Peer receipt
+  subtype tracing also shows that `peer_msg` is not a blanket peer-message ACK.
+- Mutation decryption now verifies the value MAC before CBC decryption and the
+  exact index MAC before returning a redacted, zeroizing object. APK-derived
+  envelope checks and independent encrypted SET/REMOVE fixtures pass; action
+  handlers and ordered patch application remain unfinished.
+- Rolling state-hash arithmetic now follows comparison `C6C.A00` with independent
+  expansion/add/subtract/wraparound vectors. It calculates an immutable candidate;
+  collection/index tracking and snapshot verification must precede state commit.
+- The collection candidate verifier now composes patch/mutation authentication,
+  per-index old-MAC tracking, replacement/removal, rolling hash and snapshot MAC.
+  Independent sequence fixtures pass; failures leave source state unchanged.
+  Verification remains side-effect-free; transactional staging is available above.
+  Authorized key resolution, action application and live sync transport remain
+  incomplete. Inline patch protobuf decoding now feeds this verifier directly,
+  with explicit refusal of unsupported external-mutation/exit-code branches.
+- Snapshot decoding/bootstrap verification now uses APK-derived protobuf fields,
+  authenticates every record and final snapshot MAC, and rejects duplicate indexes,
+  rollback and conflicting same-version state. Literal-wire fixtures pass. Actual
+  snapshot retrieval/freshness and action application remain pending; transactional
+  durable staging is covered above.
+- Public client actor opt-in: `comparison_transport(config)`. Store opening stays
+  offline; connect/disconnect/shutdown are actor-owned. Tests cover typed
+  unregistered errors, successive epochs and releasing the store at shutdown.
+- Incoming session/inbox commits now append normal public events atomically.
+  Plain and extended text retain disappearing-message expiry metadata; already
+  expired history is not exposed as new text. Quotes and unsupported media stay
+  explicit unsupported events with an opaque selector, never raw attachment keys.
+  Consumers must honor the expiry metadata; automatic journal expiry is not yet
+  implemented. The old authenticated captures can be projected without another
+  decryption. Historical LID mappings come only from original authenticated
+  captures, never untrusted replacement redelivery attributes.
+- A generated-peer real-crypto test forces a late inbox transaction failure and
+  verifies that the ratchet rolls back, then commits and reopens the store to
+  verify redelivery produces neither another ratchet advance nor another event.
+- Subprocess crash tests exit without store destructors before/after a transaction
+  commit. Reopening verifies intent, idempotency, journal and reservation state
+  commit together; these are not power-loss or disk-full tests. A send-reservation
+  reopen test preserves uncertainty until the matching ACK and never retransmits.
+- Pending outbox lookup now scans a consistent snapshot in bounded pages and
+  filters reservations before limiting results. Tests cover completed history,
+  299 reserved requests ahead of eligible work, restart and deterministic ordering.
+  This fixes queue starvation without resetting or retrying reserved requests.
+- `comparison_outbox(true)` separately enables queued primary direct text and
+  successfully uploaded PNG/Ogg-Opus references. It is **off by default**, including
+  `listen`. Groups, quotes, captions and other media remain unsupported. Query/send
+  reservations precede writes; unknown outcomes are not retried. Media references
+  are sealed to the account generation/request/recipient and reused byte-for-byte
+  across restart. Tests reject missing/uncertain uploads, changed bindings and
+  tampered envelopes. Oversized text now fails before reserving a key query.
+- `comparison_outbox_ticket(id)` restricts sending to one durable intent;
+  `outbox-send --config … --message … --allow-live-request` exposes it through
+  private JSON. Other queued messages remain untouched. Existing lab-send IDs
+  are rejected to prevent cross-path duplication. CLI tests cover required paths
+  and refusal before file/store access without explicit live opt-in.
+  Media JSON now reuses bounded uploads then goes through that selected outbox;
+  public upload/download convenience APIs remain incomplete. Existing saved
+  lab-send IDs cannot cross over to this path.
+- Shared durable path ownership now also prevents the reverse crossover:
+  lab commands cannot resend an ID already owned by the normal outbox. Historical
+  outbox entries are checked across namespaces in bounded pages. Same-path claims
+  preserve each implementation's existing uncertainty/retry guards; ownership
+  never resets an outcome. Tests cover historical records and store restart.
+
+Recent offline corrections: normal-outbox JSON now checks the saved intent before
+media preparation, so reusing a text ID for an image/voice note fails before file
+access or upload. Restart regression tests also cover changed text/recipient and
+read-only namespace-scoped lookup. Notification device-list hashing is now traced
+separately from identity-key hashing, with explicit APK v2/v3 calculations and
+independent vectors; authenticated ingestion/persistence is still pending.
+Verification for these corrections: workspace/all-feature tests (283), strict
+all-target/all-feature Clippy, formatting and repository hygiene passed. Rebuilt
+CLI replay of the saved normal-outbox image JSON returned its saved server ACK
+and delivery fact locally, without upload or connection.
+
+Public ordinary-media integration is now implemented behind comparison opt-in:
+`received_media()` lists account-bound references offline; `download_media()`
+authenticates/decrypts through the existing bounded downloader and explicitly
+exports to a new mode-0600 file. It never overwrites files/symlinks or exposes
+view-once media. Tests cover cross-account and metadata tampering, view-once
+exclusion, private/no-clobber export, and a cached public-client download with the
+connection remaining stopped. This is an offline fixture result, not a new live
+download. Public ordinary PNG/Ogg-Opus upload now uses the same one-shot uploader
+with separate content/kind checkpoints and stable account-bound references. A
+fixture-backed public-client test covers reuse/restart, normal-outbox acceptance,
+one key-query reservation and uncertainty refusal without any network connection.
+A fresh public-API network upload remains a separate unverified live check.
+The upload integration passed 288 workspace/all-feature tests, strict workspace
+Clippy and the transport-feature build without the public-client feature. The
+rebuilt CLI returned the existing image ACK/delivery facts locally after uploader
+refactoring; no upload or chat was repeated. Public upload-reference tests also
+reject another account and altered saved protobufs.
+
+Actor fault coverage now uses an injected connection worker with the real actor,
+store and outbox reservation logic. Explicit disconnect and worker panic preserve
+the query reservation byte-for-byte across a new connection epoch and store
+restart; neither automatically reconnects nor selects the reserved send again.
+A separate cancellation test proves late readiness from an aborted epoch cannot
+complete the next connection, and shutdown releases the store. These are actor
+fault tests, not simulated WhatsApp server acceptance or power-loss tests.
+All three actor tests also passed ten consecutive runs; the workspace/all-feature
+suite now passes 290 tests, with strict Clippy, formatting and hygiene checks.
+
+Subsequent authenticated-record retention/recovery changes passed all 292
+workspace/all-feature tests, strict all-target/all-feature Clippy, formatting,
+diff whitespace and repository hygiene checks. These are offline storage/protocol
+results; they do not establish live device linking or snapshot projection.
+
+View-once crash coverage now exits a subprocess without store destructors after
+real consumption, successful-viewer receipt queueing, and receipt reservation.
+The parent reopens the encrypted synthetic store and verifies inaccessible media
+body/protobuf, no reopening, no automatic receipt for an unknown viewer outcome,
+and no replay of a reserved receipt. A queued/unreserved receipt remains eligible
+exactly once; a matching synthetic ACK settles the reservation across another
+restart. These are actual process-exit tests, not live viewer/socket tests or
+power-loss/disk-full simulations.
+The crash matrix passed ten consecutive runs; after adding explicit saved-status
+assertions, the full workspace/all-feature suite passed 293 tests. Strict Clippy,
+formatting, whitespace and repository hygiene also passed. The default-feature
+crash matrix still passes its eight applicable tests.
+
+Normal incoming media event integration now projects unwrapped ordinary images
+and PTT audio as `NewMessage`/`Media`, with an account-bound sealed selector accepted
+by the existing downloader. Image captions are retained (comparison `BWp` field 3).
+`BWp`/`BWZ` context field 17 is not discarded: messages carrying context remain
+unsupported until quote/expiry projection is implemented. Mixed payloads and
+view-once flags/wrappers never enter this event path. A synthetic test covers
+atomic rollback, restart/deduplication, caption/kind metadata and reference
+resolution; it does not prove a new live media delivery or download.
+Verification passed 294 workspace/all-feature tests, strict workspace Clippy,
+the transport/Signal build without HTTPS/public-client features, formatting and
+repository hygiene. The rebuilt CLI processed the existing account captures
+offline: zero newly decrypted payloads and no requests; the redacted journal
+still had one `new_message`, not a newly supported media event. Existing media
+captures therefore do not establish live verification of this projection branch.
+
+Media context follow-up: empty/non-quoted context and BWx expiration field 25 now
+project into normal media events with the original timer. Quoted media remains
+unsupported. Expired media, or timed media without a usable authenticated route
+timestamp, is excluded from listing/reference resolution/retrieval. Availability
+is rechecked after decrypt/download and before public file export; existing sealed
+references do not bypass expiry. Tests cover fresh/expired/missing timestamps and
+revalidation of an existing reference. This is access enforcement, not secure
+erasure of historical database pages, existing exports, or immutable journal data.
+All 294 workspace/all-feature tests, strict Clippy, formatting and hygiene passed.
+Rebuilt CLI offline backfill upgraded two historical payloads to normal events:
+the journal grew from 30 to 32 entries (three total `new_message` events). A second
+pass stayed at 32 with zero new decryptions and no network requests. This verifies
+historical projection/idempotence on the saved account, not new incoming delivery.
+
+### Live checks completed
+
+- After the worker-test seam refactor, the rebuilt public-client listener
+  authenticated and activated, ran for a bounded 35 seconds, then shut down
+  cleanly. Outbox transmission stayed disabled. This validates normal live
+  startup/shutdown, not a live injected socket failure or new-message delivery.
+
+- One new PNG image to the existing test contact received a matching server ACK
+  through the normal outbox. An expired route initially stopped before upload;
+  one explicit route refresh allowed the same saved request to proceed. Repeating
+  its JSON returned the saved ACK locally, without another upload or connection.
+  A separate 35-second listener saved `delivered=true`, `read=false`, `played=false`.
+  Handset display is not yet confirmed.
+- One new two-second synthetic Ogg/Opus beep received a matching server ACK through
+  the normal outbox voice-note path. Repeating its saved JSON returned locally
+  without uploading or connecting. A 35-second receive-only session then saved
+  `delivered=true`, `read=false`, `played=false`. This is not proof of audible
+  playback. Both media listener sessions shut down cleanly.
+- Persistent connection authenticated, activated and ran for 75 seconds, then
+  shut down cleanly. Repeated successfully through the public client actor.
+- One ordinary incoming image downloaded, authenticated and displayed via mpv;
+  player exited successfully. Encrypted cache can be reused.
+- One new direct text to the existing test contact received a matching server
+  acknowledgement through the public normal-outbox adapter. This establishes
+  server acceptance, not handset receipt or read. Earlier image/voice sends are
+  still lab-path results, not proof of normal-outbox media support.
+- Repeating that exact private JSON returned the saved acknowledgement without
+  network access. A separate 35-second receive-only public-client session ended
+  cleanly; saved status then showed `delivered=true`, `read=false`, `played=false`.
+  Recipient delivery is protocol-reported; human handset confirmation is pending.
+- Saved-account crossover regression: the normal-outbox test returned its saved
+  ACK/delivery status locally, while passing that same JSON to `lab-transport`
+  failed at the shared ownership guard before connecting. Neither check sent a
+  message or changed its request ID. The path-ownership checkpoint was adopted.
+- Saved-account offline projection exposed the earlier text reply through normal
+  public events (`new_message`), without new decryption or network requests.
+  `events --summary` verifies kinds without logging contents/identifiers. Earlier
+  unsupported placeholders remain immutable journal history, not extra replies.
+
+### Operator-assisted checks to leave aside
+
+1. Fresh incoming view-once picture: verify one-use display and the new receipt's
+   matching server ACK/handset opened indicator. Do not reuse the consumed image.
+2. Incoming ordinary voice note: verify retrieval, decoding and audible playback.
+3. Message from a second controlled sender: verify new-session/prekey receiving.
+4. Linked-device/cross-device scenarios need actual authorized device state and
+   keys, plus further protocol implementation; no keys or sync results invented.
+5. Handset confirmation for the normal-outbox integration test; its server
+   acknowledgement is already saved. Do not change its ID or resend it.
+6. Handset image display and voice-note playback for the normal-outbox media tests;
+   both already have matching server ACKs. Keep their IDs and do not resend.

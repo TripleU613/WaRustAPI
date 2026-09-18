@@ -8,6 +8,7 @@ use crate::{
 };
 use async_trait::async_trait;
 use prost::Message;
+use rand::SeedableRng;
 use wacore_libsignal::protocol as signal;
 use wacore_libsignal::protocol::{
     CiphertextMessageType, DeviceId, Direction, IdentityChange, IdentityKey, IdentityKeyPair,
@@ -15,9 +16,141 @@ use wacore_libsignal::protocol::{
     SessionStore, SignalProtocolError, UsePQRatchet, message_encrypt, process_prekey_bundle,
 };
 use zeroize::Zeroizing;
+mod incoming;
+pub use incoming::{ReceivedPrekey, incoming_prekey_id, receive_prekey};
 
 fn invalid(reason: &'static str) -> Error {
     Error::invalid("direct_message", reason)
+}
+fn task_rng() -> rand::rngs::StdRng {
+    rand::rngs::StdRng::from_rng(&mut rand::rng())
+}
+
+/// Read protobuf field numbers without exposing any message values.
+pub fn payload_fields(mut bytes: &[u8]) -> Result<Vec<u32>> {
+    use prost::encoding::{DecodeContext, decode_key, skip_field};
+    if bytes.len() > 65536 {
+        return Err(invalid("payload exceeds inspection limit"));
+    }
+    let mut fields = Vec::new();
+    while !bytes.is_empty() {
+        let (tag, wire) =
+            decode_key(&mut bytes).map_err(|_| invalid("invalid message protobuf"))?;
+        skip_field(wire, tag, &mut bytes, DecodeContext::default())
+            .map_err(|_| invalid("invalid message protobuf"))?;
+        fields.push(tag);
+    }
+    Ok(fields)
+}
+
+/// Redacted inspection of the comparison Message envelope. Unknown fields stay
+/// visible as field numbers; this is not a complete message renderer.
+pub fn payload_summary(bytes: &[u8]) -> Result<String> {
+    payload_summary_depth(bytes, 0)
+}
+fn payload_summary_depth(bytes: &[u8], depth: usize) -> Result<String> {
+    if depth > 4 {
+        return Err(invalid("message wrapper nesting exceeds inspection bound"));
+    }
+    #[derive(prost::Message)]
+    struct Envelope {
+        #[prost(message, optional, tag = "37")]
+        view_once: Option<Wrapper>,
+        #[prost(message, optional, tag = "55")]
+        view_once_v2: Option<Wrapper>,
+        #[prost(message, optional, tag = "59")]
+        view_once_extension: Option<Wrapper>,
+        #[prost(message, optional, tag = "91")]
+        associated_child: Option<Wrapper>,
+        #[prost(bytes = "vec", optional, tag = "3")]
+        image: Option<Vec<u8>>,
+        #[prost(bytes = "vec", optional, tag = "6")]
+        extended: Option<Vec<u8>>,
+        #[prost(message, optional, tag = "12")]
+        protocol: Option<Protocol>,
+    }
+    #[derive(prost::Message)]
+    struct Wrapper {
+        #[prost(bytes = "vec", tag = "1")]
+        message: Vec<u8>,
+    }
+    #[derive(prost::Message)]
+    struct ImageFlags {
+        #[prost(bool, tag = "25")]
+        view_once: bool,
+    }
+    #[derive(prost::Message)]
+    struct Protocol {
+        #[prost(int32, optional, tag = "2")]
+        kind: Option<i32>,
+        #[prost(bytes = "vec", optional, tag = "7")]
+        key_share: Option<Vec<u8>>,
+    }
+    let fields = payload_fields(bytes)?;
+    let envelope = Envelope::decode(bytes).map_err(|_| invalid("invalid message envelope"))?;
+    let mut summary = format!("protobuf fields={fields:?}");
+    for (label, wrapper) in [
+        ("view-once", envelope.view_once),
+        ("view-once-v2", envelope.view_once_v2),
+        ("view-once-extension", envelope.view_once_extension),
+        ("associated-child", envelope.associated_child),
+    ] {
+        if let Some(wrapper) = wrapper {
+            let message = Zeroizing::new(wrapper.message);
+            summary.push_str(&format!(
+                "; {label} [{}]; attachment not opened",
+                payload_summary_depth(&message, depth + 1)?
+            ));
+        }
+    }
+    if let Some(image) = envelope.image {
+        let image = Zeroizing::new(image);
+        summary.push_str(&format!("; image fields={:?}", payload_fields(&image)?));
+        let flags =
+            ImageFlags::decode(image.as_slice()).map_err(|_| invalid("invalid image flags"))?;
+        if flags.view_once {
+            summary.push_str("; image view_once=true; attachment not opened");
+        }
+    }
+    if let Some(extended) = envelope.extended {
+        let extended = Zeroizing::new(extended);
+        summary.push_str(&format!(
+            "; extended-text fields={:?}",
+            payload_fields(&extended)?
+        ));
+        #[derive(prost::Message)]
+        struct ExtendedContext {
+            #[prost(bytes = "vec", optional, tag = "17")]
+            context: Option<Vec<u8>>,
+        }
+        if let Some(context) = ExtendedContext::decode(extended.as_slice())
+            .map_err(|_| invalid("invalid extended text"))?
+            .context
+        {
+            let context = Zeroizing::new(context);
+            summary.push_str(&format!("; context fields={:?}", payload_fields(&context)?));
+        }
+    }
+    if let Some(protocol) = envelope.protocol {
+        summary.push_str(&format!("; protocol type={:?}", protocol.kind));
+        if protocol.kind == Some(4) {
+            // Comparison LX/C1B.<clinit> 0x0028..003c.
+            summary.push_str(" (EPHEMERAL_SYNC_RESPONSE)");
+        }
+        if protocol.kind == Some(6) {
+            let bytes = Zeroizing::new(
+                protocol
+                    .key_share
+                    .ok_or_else(|| invalid("key-share body missing"))?,
+            );
+            let share = super::app_state::KeyShare::decode(&bytes)?;
+            summary.push_str(&format!(
+                " (APP_STATE_SYNC_KEY_SHARE); {} structurally valid keys; inspection does not import or check saved import status",
+                share.len()
+            ));
+        }
+    }
+    Ok(summary)
 }
 fn crypto(_: SignalProtocolError) -> Error {
     invalid("Signal key/session operation failed")
@@ -214,6 +347,41 @@ pub async fn prepare(
     if text.is_empty() || text.len() > 4096 || !account.is_registered() {
         return Err(invalid("invalid message/account"));
     }
+    #[derive(prost::Message)]
+    struct TextMessage {
+        #[prost(string, tag = "1")]
+        conversation: String,
+    }
+    let plain = Zeroizing::new(
+        TextMessage {
+            conversation: text.into(),
+        }
+        .encode_to_vec(),
+    );
+    prepare_payload(
+        account,
+        recipient,
+        bundle,
+        previous_session,
+        previous_identity,
+        &plain,
+    )
+    .await
+}
+
+/// Encrypt a bounded, already encoded Message protobuf with the saved session.
+/// Used for non-text payloads; retains the same identity and transaction rules.
+pub async fn prepare_payload(
+    account: &AccountRecord,
+    recipient: &Jid,
+    bundle: &PreKeyBundle,
+    previous_session: Option<&[u8]>,
+    previous_identity: Option<&[u8]>,
+    payload: &[u8],
+) -> Result<PreparedDirect> {
+    if payload.is_empty() || payload.len() > 32768 || !account.is_registered() {
+        return Err(invalid("invalid payload/account"));
+    }
     let key = account
         .signal_identity
         .as_ref()
@@ -248,23 +416,13 @@ pub async fn prepare(
             &mut sessions,
             &mut identities,
             bundle,
-            &mut rand::rng(),
+            &mut task_rng(),
             UsePQRatchet::No,
         )
         .await
         .map_err(crypto)?;
     }
-    #[derive(prost::Message)]
-    struct TextMessage {
-        #[prost(string, tag = "1")]
-        conversation: String,
-    }
-    let mut plain = Zeroizing::new(
-        TextMessage {
-            conversation: text.into(),
-        }
-        .encode_to_vec(),
-    );
+    let mut plain = Zeroizing::new(payload.to_vec());
     // LX/Cb1.A00: random count 1..16, repeated count byte appended.
     let mut random = [0; 1];
     getrandom::fill(&mut random).map_err(|_| invalid("padding entropy unavailable"))?;
@@ -297,9 +455,160 @@ pub async fn prepare(
     })
 }
 
+/// Decrypted padded protobuf plus the advanced session. Commit both atomically.
+pub struct ReceivedDirect {
+    /// Authenticated message protobuf, with APK padding removed.
+    pub plaintext: Zeroizing<Vec<u8>>,
+    /// Updated receiving ratchet; never discard after committing plaintext.
+    pub session: Zeroizing<Vec<u8>>,
+}
+impl std::fmt::Debug for ReceivedDirect {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("ReceivedDirect(<redacted>)")
+    }
+}
+
+/// Decrypt a `msg` reply using an existing pinned primary-device session.
+/// No prekey fallback, identity replacement, or durable mutation is performed.
+pub async fn receive(
+    account: &AccountRecord,
+    sender: &Jid,
+    previous_session: &[u8],
+    previous_identity: &[u8],
+    ciphertext: &[u8],
+) -> Result<ReceivedDirect> {
+    if !account.is_registered() || ciphertext.len() > 65536 {
+        return Err(invalid("invalid receive account or size"));
+    }
+    let key = account
+        .signal_identity
+        .as_ref()
+        .ok_or_else(|| invalid("missing saved Signal identity"))?;
+    let public = PublicKey::from_djb_public_key_bytes(&key.0.public)
+        .map_err(|_| invalid("invalid local public key"))?;
+    let private = PrivateKey::deserialize(&key.0.private)
+        .map_err(|_| invalid("invalid local private key"))?;
+    let address = ProtocolAddress::new(&sender.user, DeviceId::new(sender.device.into()));
+    let mut identities = Identities {
+        local: IdentityKeyPair::new(IdentityKey::new(public), private),
+        registration: account
+            .signal_registration_id
+            .ok_or_else(|| invalid("missing registration id"))?,
+        peer: Some(IdentityKey::decode(previous_identity).map_err(crypto)?),
+        address: address.clone(),
+    };
+    let mut sessions = Sessions {
+        record: Some(SessionRecord::deserialize(previous_session).map_err(crypto)?),
+        address: address.clone(),
+    };
+    let message = signal::SignalMessage::try_from(ciphertext).map_err(crypto)?;
+    let decrypted = signal::message_decrypt_signal(
+        &message,
+        &address,
+        &mut sessions,
+        &mut identities,
+        &mut task_rng(),
+    )
+    .await
+    .map_err(crypto)?;
+    let mut plaintext = Zeroizing::new(decrypted.plaintext);
+    let padding = plaintext.last().copied().unwrap_or(0) as usize;
+    if !(1..=16).contains(&padding)
+        || padding > plaintext.len()
+        || !plaintext[plaintext.len() - padding..]
+            .iter()
+            .all(|v| *v as usize == padding)
+    {
+        return Err(invalid("invalid authenticated message padding"));
+    }
+    let unpadded_len = plaintext.len() - padding;
+    plaintext.truncate(unpadded_len);
+    Ok(ReceivedDirect {
+        plaintext,
+        session: Zeroizing::new(
+            sessions
+                .record
+                .ok_or_else(|| invalid("missing receiving session"))?
+                .serialize()
+                .map_err(crypto)?,
+        ),
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+    #[tokio::test]
+    async fn receive_process_exit_fixture() {
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table},
+            transport::inbox::{self, IncomingResult},
+        };
+        let Some(path) = std::env::var_os("TELEWHATSAPP_RECEIVE_CRASH_FIXTURE") else {
+            return;
+        };
+        let store = ProtocolStore::open(OpenOptions {
+            path: path.into(),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([2; 32]))),
+            create: false,
+        })
+        .unwrap();
+        let account: AccountRecord = store
+            .read(|tx| tx.get_json(Table::Account, b"crash-fixture-account", 1))
+            .unwrap()
+            .unwrap();
+        let capture: Vec<u8> = store
+            .read(|tx| tx.get_json(Table::Checkpoints, b"crash-fixture-capture", 1))
+            .unwrap()
+            .unwrap();
+        let wire: Vec<u8> = store
+            .read(|tx| tx.get_json(Table::Checkpoints, &capture, 1))
+            .unwrap()
+            .unwrap();
+        let limits = crate::profile::Limits::default();
+        let raw = crate::binary::unpack_frame_payload(&wire, &limits).unwrap();
+        let node = crate::binary::Decoder::new(
+            &raw,
+            crate::binary::TokenDictionary::comparison_2_26_37_70(),
+            &limits,
+        )
+        .decode_node()
+        .unwrap();
+        let stage = std::env::var("TELEWHATSAPP_RECEIVE_CRASH_STAGE").unwrap();
+        if stage == "captured" {
+            std::process::exit(80);
+        }
+        assert_eq!(stage, "committed");
+        assert_eq!(
+            inbox::process(&store, &account, &node, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        // No socket/receipt is written; destructors do not run.
+        std::process::exit(81);
+    }
+    #[test]
+    fn payload_inspection_distinguishes_text_and_control_without_values() {
+        // Comparison BXF: extendedTextMessage=6, protocolMessage=12;
+        // BXE: type=2. Hand-written protobuf fixtures, no live message data.
+        let text = b"\x32\x08\x0a\x06secret";
+        let summary = payload_summary(text).unwrap();
+        assert!(summary.contains("extended-text fields=[1]"));
+        assert!(!summary.contains("secret"));
+        let image = payload_summary(b"\x1a\x08\x0a\x06secret").unwrap();
+        assert!(image.contains("image fields=[1]"));
+        assert!(!image.contains("secret"));
+        let control = payload_summary(b"\x62\x02\x10\x04").unwrap();
+        assert!(control.contains("protocol type=Some(4)"));
+        assert!(!control.contains("extended-text"));
+        assert!(payload_summary(b"\x62\x05\x10").is_err());
+        assert!(payload_fields(&vec![0; 65537]).is_err());
+        assert_eq!(payload_fields(b"\x98\x06\x01").unwrap(), vec![99]);
+    }
     use crate::session::{KeyMaterial, RegistrationStatus, SignalIdentityKey};
     use signal::{
         GenericSignedPreKey, KeyPair, PreKeyId, PreKeyRecord, PreKeySignalMessage, PreKeyStore,
@@ -423,6 +732,89 @@ mod tests {
             signed: signed_record,
         };
         let message = PreKeySignalMessage::try_from(encrypted.ciphertext.as_slice()).unwrap();
+        let bob_account = AccountRecord {
+            registration: RegistrationStatus::Registered,
+            signal_registration_id: Some(42),
+            signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                public: identities
+                    .local
+                    .public_key()
+                    .public_key_bytes()
+                    .try_into()
+                    .unwrap(),
+                private: *identities.local.private_key().serialize(),
+            })),
+            ..Default::default()
+        };
+        let sender = Jid::parse("15557654321@s.whatsapp.net").unwrap();
+        let signed_bytes = signed_keys.signed.serialize().unwrap();
+        let one_bytes = keys.one.serialize().unwrap();
+        let incoming = receive_prekey(
+            &bob_account,
+            &sender,
+            (None, None),
+            &signed_bytes,
+            Some(&one_bytes),
+            &encrypted.ciphertext,
+        )
+        .await
+        .unwrap();
+        assert_eq!(incoming.consumed_prekey, Some(8));
+        assert_eq!(&*incoming.received.plaintext, b"\x0a\x04test");
+        // Registration can publish a signed prekey without a one-time prekey.
+        // This path must work without inventing or consuming a missing OPK.
+        let signed_only = PreKeyBundle::new(
+            42,
+            DeviceId::new(0),
+            None,
+            7.into(),
+            signed.public_key,
+            signature.to_vec(),
+            *identities.local.identity_key(),
+        )
+        .unwrap();
+        let signed_only_message = prepare(&account, &recipient, &signed_only, None, None, "test")
+            .await
+            .unwrap();
+        let signed_only_incoming = receive_prekey(
+            &bob_account,
+            &sender,
+            (None, None),
+            &signed_bytes,
+            None,
+            &signed_only_message.ciphertext,
+        )
+        .await
+        .unwrap();
+        assert_eq!(signed_only_incoming.consumed_prekey, None);
+        assert_eq!(&*signed_only_incoming.received.plaintext, b"\x0a\x04test");
+        assert!(
+            receive_prekey(
+                &bob_account,
+                &sender,
+                (None, None),
+                &signed_bytes,
+                None,
+                &encrypted.ciphertext
+            )
+            .await
+            .is_err()
+        );
+        let changed = IdentityKeyPair::generate(&mut rng)
+            .identity_key()
+            .serialize();
+        assert!(
+            receive_prekey(
+                &bob_account,
+                &sender,
+                (None, Some(&changed)),
+                &signed_bytes,
+                Some(&one_bytes),
+                &encrypted.ciphertext
+            )
+            .await
+            .is_err()
+        );
         let decrypted = message_decrypt_prekey(
             &message,
             &address,
@@ -464,5 +856,358 @@ mod tests {
         .unwrap();
         assert_ne!(encrypted.ciphertext, resumed.ciphertext);
         assert_ne!(*encrypted.session, *resumed.session);
+        let reply = message_encrypt(
+            b"\x0a\x05reply\x01",
+            &address,
+            &mut sessions,
+            &mut identities,
+        )
+        .await
+        .unwrap();
+        assert_eq!(reply.message_type(), CiphertextMessageType::Whisper);
+        #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+        {
+            use crate::{
+                binary::Node,
+                model::ids::{AccountId, EventCursor},
+                store::{
+                    ConsumerId, MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table,
+                },
+                transport::inbox::{self, IncomingResult},
+            };
+            let dir = tempfile::tempdir().unwrap();
+            let options = || OpenOptions {
+                path: dir.path().join("ratchet.redb"),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [2; 32],
+                ))),
+                create: true,
+            };
+            let store = ProtocolStore::open(options()).unwrap();
+            let peer_key = format!("comparison-direct:{recipient}");
+            let inbox_key = format!("received:{recipient}:reply-fixture");
+            let mapping = b"authenticated-lid:12345@lid";
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::SignalSessions,
+                        peer_key.as_bytes(),
+                        1,
+                        &*resumed.session,
+                    )?;
+                    tx.put_json(
+                        Table::PeerIdentities,
+                        peer_key.as_bytes(),
+                        1,
+                        &encrypted.identity,
+                    )?;
+                    tx.put_json(
+                        Table::Checkpoints,
+                        mapping,
+                        1,
+                        &Jid::parse("15555550101@s.whatsapp.net")?,
+                    )
+                })
+                .unwrap();
+            let node = Node::new("message")
+                .attr("id", "reply-fixture")
+                .attr("from", Jid::parse("12345@lid").unwrap())
+                .attr("sender_pn", recipient.clone())
+                .children(vec![
+                    Node::new("enc")
+                        .attr("v", "2")
+                        .attr("type", "msg")
+                        .bytes(reply.serialize().to_vec()),
+                ]);
+            let capture = inbox::preserve(&store, &node).unwrap();
+            // A late transactional failure after successful decryption must
+            // roll back both the advanced session and all inbox/event writes.
+            assert!(
+                inbox::process(&store, &account, &node, &capture)
+                    .await
+                    .is_err()
+            );
+            let unchanged: Vec<u8> = store
+                .read(|tx| tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(unchanged, *resumed.session);
+            let absent: Option<serde_json::Value> = store
+                .read(|tx| tx.get_json(Table::Checkpoints, inbox_key.as_bytes(), 1))
+                .unwrap();
+            assert!(absent.is_none());
+            store
+                .write(|tx| tx.delete(Table::Checkpoints, mapping).map(|_| ()))
+                .unwrap();
+            store
+                .write(|tx| {
+                    tx.put_json(Table::Account, b"crash-fixture-account", 1, &account)?;
+                    tx.put_json(Table::Checkpoints, b"crash-fixture-capture", 1, &capture)
+                })
+                .unwrap();
+            drop(store);
+            let crash = |stage: &str, code| {
+                let output = std::process::Command::new(std::env::current_exe().unwrap())
+                    .args([
+                        "--exact",
+                        "signal::direct::tests::receive_process_exit_fixture",
+                        "--test-threads=1",
+                    ])
+                    .env(
+                        "TELEWHATSAPP_RECEIVE_CRASH_FIXTURE",
+                        dir.path().join("ratchet.redb"),
+                    )
+                    .env("TELEWHATSAPP_RECEIVE_CRASH_STAGE", stage)
+                    .output()
+                    .unwrap();
+                assert_eq!(
+                    output.status.code(),
+                    Some(code),
+                    "receive crash fixture failed"
+                );
+            };
+            crash("captured", 80);
+            let store = ProtocolStore::open(options()).unwrap();
+            let unadvanced: Vec<u8> = store
+                .read(|tx| tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(unadvanced, *resumed.session);
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, inbox_key.as_bytes(), 1))
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(
+                store.read(|tx| tx.journal_head()).unwrap(),
+                EventCursor::START
+            );
+            drop(store);
+            crash("committed", 81);
+            let store = ProtocolStore::open(options()).unwrap();
+            let committed: Vec<u8> = store
+                .read(|tx| tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_ne!(committed, *resumed.session);
+            let saved: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Checkpoints, inbox_key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(saved["status"], "decrypted");
+            assert_eq!(
+                saved["protobuf"],
+                serde_json::json!(b"\x0a\x05reply".to_vec())
+            );
+            drop(store);
+            let store = ProtocolStore::open(options()).unwrap();
+            assert_eq!(
+                inbox::process(&store, &account, &node, &capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Duplicate
+            );
+            let restored: Vec<u8> = store
+                .read(|tx| tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(restored, committed);
+            let confirmation = crate::transport::messaging::received_confirmation(&node).unwrap();
+            assert_eq!(confirmation.description, "receipt");
+            assert_eq!(
+                confirmation.get_attr("id").and_then(|v| v.as_text()),
+                Some("reply-fixture")
+            );
+            assert!(confirmation.get_attr("type").is_none());
+            assert_eq!(
+                confirmation.get_attr("to").and_then(|v| v.as_jid()),
+                Some(&Jid::parse("12345@lid").unwrap())
+            );
+            let events = store
+                .read_events(&ConsumerId::new("test").unwrap(), EventCursor::START, 10)
+                .unwrap();
+            assert_eq!(events.events.len(), 1);
+            assert!(matches!(
+                events.events[0].event,
+                crate::sync::SyncEvent::NewMessage(_)
+            ));
+
+            // Independent key-share wire fixture encrypted by the generated
+            // remote peer. A regular contact's protocol message must never
+            // import keys; only the pinned own-device route may do so.
+            let mut share_wire = b"\x62\x24\x10\x06\x3a\x20\x0a\x1e\x0a\x08\x0a\x06\x00\x01\x00\x00\x00\x02\x12\x12\x0a\x04test\x12\x08\x08\x07\x10\x02\x1a\x02\x01\x02\x18\x09".to_vec();
+            share_wire.push(1); // WhatsApp padding
+            let share_cipher =
+                message_encrypt(&share_wire, &address, &mut sessions, &mut identities)
+                    .await
+                    .unwrap();
+            let contact_node = Node::new("message")
+                .attr("id", "contact-key-share")
+                .attr("from", recipient.clone())
+                .children(vec![
+                    Node::new("enc")
+                        .attr("v", "2")
+                        .attr("type", "msg")
+                        .bytes(share_cipher.serialize().to_vec()),
+                ]);
+            let capture = inbox::preserve(&store, &contact_node).unwrap();
+            assert_eq!(
+                inbox::process(&store, &account, &contact_node, &capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Decrypted
+            );
+            let key_name = b"app-state-key:000100000002";
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, key_name, 1))
+                    .unwrap()
+                    .is_none()
+            );
+
+            let mut peer = recipient.clone();
+            peer.device = 1;
+            let mut own_account = account.clone();
+            own_account.own_jid = Some(recipient.clone());
+            let own_session_key = format!("comparison-direct:{peer}");
+            store
+                .write(|tx| {
+                    // Seed an explicitly pinned fixture session, not production
+                    // device bootstrapping or a TOFU route.
+                    tx.put_json(
+                        Table::SignalSessions,
+                        own_session_key.as_bytes(),
+                        1,
+                        &committed,
+                    )?;
+                    tx.put_json(
+                        Table::PeerIdentities,
+                        own_session_key.as_bytes(),
+                        1,
+                        &encrypted.identity,
+                    )?;
+                    account.save(tx) // absent own JID exercises commit-time guard
+                })
+                .unwrap();
+            let peer_node = Node::new("message")
+                .attr("id", "own-key-share")
+                .attr("category", "peer")
+                .attr("from", peer)
+                .children(vec![
+                    Node::new("enc")
+                        .attr("v", "2")
+                        .attr("type", "msg")
+                        .bytes(share_cipher.serialize().to_vec()),
+                ]);
+            let capture = inbox::preserve(&store, &peer_node).unwrap();
+            assert!(
+                inbox::process(&store, &own_account, &peer_node, &capture)
+                    .await
+                    .is_err()
+            );
+            let unchanged: Vec<u8> = store
+                .read(|tx| tx.get_json(Table::SignalSessions, own_session_key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(unchanged, committed);
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, key_name, 1))
+                    .unwrap()
+                    .is_none()
+            );
+            store.write(|tx| own_account.save(tx)).unwrap();
+            assert_eq!(
+                inbox::process(&store, &own_account, &peer_node, &capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Decrypted
+            );
+            let imported = store
+                .read(|tx| tx.get(Table::Checkpoints, key_name, 1))
+                .unwrap()
+                .unwrap();
+            drop(store);
+            let store = ProtocolStore::open(options()).unwrap();
+            assert_eq!(
+                inbox::process(&store, &own_account, &peer_node, &capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Duplicate
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, key_name, 1))
+                    .unwrap()
+                    .unwrap(),
+                imported
+            );
+        }
+        let received = receive(
+            &account,
+            &recipient,
+            &resumed.session,
+            &encrypted.identity,
+            reply.serialize(),
+        )
+        .await
+        .unwrap();
+        assert_eq!(&*received.plaintext, b"\x0a\x05reply");
+        assert!(
+            receive(
+                &account,
+                &recipient,
+                &received.session,
+                &encrypted.identity,
+                reply.serialize()
+            )
+            .await
+            .is_err()
+        );
+        assert!(
+            receive(
+                &account,
+                &recipient,
+                &resumed.session,
+                &wrong,
+                reply.serialize()
+            )
+            .await
+            .is_err()
+        );
+        let mut tampered = reply.serialize().to_vec();
+        *tampered.last_mut().unwrap() ^= 1;
+        assert!(
+            receive(
+                &account,
+                &recipient,
+                &resumed.session,
+                &encrypted.identity,
+                &tampered
+            )
+            .await
+            .is_err()
+        );
+        let malformed = message_encrypt(
+            b"\x0a\x05reply\x00",
+            &address,
+            &mut sessions,
+            &mut identities,
+        )
+        .await
+        .unwrap();
+        assert!(
+            receive(
+                &account,
+                &recipient,
+                &received.session,
+                &encrypted.identity,
+                malformed.serialize()
+            )
+            .await
+            .is_err()
+        );
     }
 }

@@ -1,0 +1,466 @@
+//! Offline processing of encrypted captures. Never sends receipts or chats.
+use std::sync::Arc;
+use whatsapp_api::{
+    Error,
+    binary::{Decoder, TokenDictionary, unpack_frame_payload},
+    model::ids::AccountId,
+    profile::Limits,
+    session::AccountRecord,
+    store::{EnvKeySource, OpenOptions, ProtocolStore, Table},
+};
+
+fn is_capture(key: &[u8]) -> bool {
+    if key.starts_with(b"inbound:") {
+        return true;
+    }
+    let Ok(key) = std::str::from_utf8(key) else {
+        return false;
+    };
+    let parts: Vec<_> = key.split(':').collect();
+    matches!(parts.as_slice(), ["message", _, "pending" | "send-response", index] if !index.is_empty() && index.bytes().all(|b| b.is_ascii_digit()))
+}
+
+pub(super) async fn listen(
+    cli: &super::Cli,
+    path: &std::path::Path,
+    allow_live: bool,
+    seconds: u64,
+) -> Result<(), Error> {
+    if !allow_live {
+        return Err(Error::invalid("listen", "requires --allow-live-request"));
+    }
+    let config = super::signup::config(path)?;
+    let client = whatsapp_api::WhatsAppClient::builder()
+        .store_path(cli.store.clone())
+        .account_id(AccountId::new(cli.account.clone())?)
+        .key_source(Arc::new(EnvKeySource::new(cli.key_env.clone())))
+        .create_store(false)
+        .comparison_transport(config)
+        .build()
+        .await?;
+    if let Err(error) = client.connect(std::time::Duration::from_secs(120)).await {
+        client.shutdown().await;
+        return Err(error);
+    }
+    let mut status = client.connection_state();
+    println!(
+        "listen: authenticated and active; immediate incoming decryption/receipts enabled; no automatic reconnect or chat sends"
+    );
+    let ended = tokio::select! {
+        _ = async {
+            loop {
+                if !matches!(status.borrow_and_update().state, whatsapp_api::runtime::ConnectionState::Ready{..}) {break;}
+                if status.changed().await.is_err() {break;}
+            }
+        } => true,
+        _ = tokio::signal::ctrl_c() => false,
+        _ = async {
+            if seconds == 0 { std::future::pending::<()>().await; }
+            tokio::time::sleep(std::time::Duration::from_secs(seconds)).await;
+        } => false,
+    };
+    client.shutdown().await;
+    if ended {
+        return Err(Error::invalid(
+            "listen",
+            "connection ended; saved state preserved; no automatic reconnect",
+        ));
+    }
+    println!("listen: stopped cleanly; account and sessions preserved");
+    Ok(())
+}
+
+pub(super) fn open_view_once(cli: &super::Cli) -> Result<(), Error> {
+    use std::{
+        io::Write,
+        process::{Command, Stdio},
+        time::{Duration, Instant},
+    };
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    // Spawn first so a missing viewer cannot consume the attachment. No custom
+    // config, scripts, screenshot bindings, history, plaintext path or master key.
+    let mut child = Command::new("mpv")
+        .args([
+            "--no-config",
+            "--load-scripts=no",
+            "--input-default-bindings=no",
+            "--input-conf=/dev/null",
+            "--osc=no",
+            "--no-audio",
+            "--terminal=no",
+            "--save-position-on-quit=no",
+            "--resume-playback=no",
+            "--keep-open=no",
+            "--image-display-duration=30",
+            "--title=View once — closes after 30 seconds",
+            "-",
+        ])
+        .env_remove(&cli.key_env)
+        .env_remove("WHATSAPP_API_MASTER_KEY")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()
+        .map_err(|_| {
+            Error::invalid(
+                "viewer",
+                "cannot start local mpv viewer; image not consumed",
+            )
+        })?;
+    let outcome = (|| {
+        let (ticket, plaintext) =
+            whatsapp_api::transport::image_download::consume_view_once_with_ticket(&store)?;
+        let mut input = child
+            .stdin
+            .take()
+            .ok_or_else(|| Error::invalid("viewer", "viewer input unavailable; image consumed"))?;
+        input.write_all(&plaintext).map_err(|_| {
+            Error::invalid("viewer", "viewer input failed; image consumed; no reopen")
+        })?;
+        drop(input);
+        drop(plaintext);
+        println!(
+            "image: consumed locally; sent to one-use desktop viewer; closes after 30 seconds; no server opened receipt"
+        );
+        let deadline = Instant::now() + Duration::from_secs(40);
+        loop {
+            if let Some(status) = child
+                .try_wait()
+                .map_err(|_| Error::invalid("viewer", "viewer status unavailable; consumed"))?
+            {
+                return if status.success() {
+                    whatsapp_api::transport::receipts::queue_opened(&store, &ticket)?;
+                    println!(
+                        "image: viewer completed; opened receipt queued for the next authenticated connection"
+                    );
+                    Ok(())
+                } else {
+                    Err(Error::invalid(
+                        "viewer",
+                        "viewer failed; image remains consumed",
+                    ))
+                };
+            }
+            if Instant::now() >= deadline {
+                return Err(Error::invalid(
+                    "viewer",
+                    "viewer exceeded deadline; closed; image consumed",
+                ));
+            }
+            std::thread::sleep(Duration::from_millis(100));
+        }
+    })();
+    let _ = child.kill();
+    let _ = child.wait();
+    outcome
+}
+
+pub(super) async fn download_view_once(
+    cli: &super::Cli,
+    path: &std::path::Path,
+    allow_live: bool,
+) -> Result<(), Error> {
+    if !allow_live {
+        return Err(Error::invalid(
+            "image_download",
+            "requires --allow-live-request",
+        ));
+    }
+    let config = super::signup::config(path)?;
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let account = store
+        .read(AccountRecord::load)?
+        .ok_or_else(|| Error::invalid("image_download", "missing account"))?;
+    if !account.is_registered() || account.phone.as_ref() != Some(&config.phone) {
+        return Err(Error::invalid(
+            "image_download",
+            "requires matching registered account",
+        ));
+    }
+    let size = whatsapp_api::transport::image_download::download_view_once(&store, &config).await?;
+    println!(
+        "image: {size} encrypted bytes downloaded and authenticated; privately stored unopened; no plaintext export or opened receipt"
+    );
+    Ok(())
+}
+
+#[cfg(test)]
+fn session_sender(node: &whatsapp_api::binary::Node) -> Option<whatsapp_api::model::jid::Jid> {
+    use whatsapp_api::model::jid::{Jid, Server};
+    let parse = |name| {
+        let value = node.get_attr(name)?;
+        value
+            .as_jid()
+            .cloned()
+            .or_else(|| Jid::parse(value.as_text()?).ok())
+    };
+    if node.get_attr("participant").is_some() {
+        return None;
+    }
+    let sender = parse("from")?;
+    match sender.server {
+        Server::User => Some(sender),
+        // Comparison LX/CmF.A01 0x0096..00c6 reads sender_pn as PhoneUserJid.
+        // Only use an explicit mapping to an existing pinned primary session.
+        Server::Lid if sender.device == 0 => {
+            let phone = parse("sender_pn")?;
+            (phone.server == Server::User && phone.device == 0).then_some(phone)
+        }
+        _ => None,
+    }
+}
+
+/// Only previously authenticated, atomically committed messages qualify for
+/// delivery confirmation. Raw capture alone is not proof of successful delivery.
+#[cfg(test)]
+pub(super) fn is_saved_message(
+    store: &ProtocolStore,
+    node: &whatsapp_api::binary::Node,
+) -> Result<bool, Error> {
+    let Some(sender) = session_sender(node) else {
+        return Ok(false);
+    };
+    let Some(id) = node
+        .get_attr("id")
+        .and_then(|v| v.as_text())
+        .filter(|v| !v.is_empty() && v.len() <= 128)
+    else {
+        return Ok(false);
+    };
+    let key = format!("received:{sender}:{id}");
+    let saved: Option<serde_json::Value> =
+        store.read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))?;
+    Ok(matches!(
+        saved
+            .as_ref()
+            .and_then(|v| v.get("status"))
+            .and_then(|v| v.as_str()),
+        Some("decrypted" | "consumed")
+    ))
+}
+
+pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let account = store
+        .read(AccountRecord::load)?
+        .ok_or_else(|| Error::invalid("inbox", "missing account"))?;
+    let captures = store.read(|tx| tx.scan(Table::Checkpoints, 1, 10000))?;
+    if captures.len() == 10000 {
+        return Err(Error::invalid(
+            "inbox",
+            "checkpoint scan limit reached; pagination required",
+        ));
+    }
+    let limits = Limits::default();
+    let mut count = 0;
+    let mut capture_shapes = std::collections::BTreeSet::new();
+    for (key, value) in captures {
+        if inspect {
+            if is_capture(&key) {
+                let wire: Vec<u8> = serde_json::from_slice(&value)
+                    .map_err(|_| Error::invalid("inbox", "invalid capture"))?;
+                let raw = unpack_frame_payload(&wire, &limits)?;
+                let node = Decoder::new(&raw, TokenDictionary::comparison_2_26_37_70(), &limits)
+                    .decode_node()?;
+                let safe = |value: &str| {
+                    value.len() <= 32
+                        && value
+                            .bytes()
+                            .all(|b| b.is_ascii_alphabetic() || matches!(b, b'_' | b'-' | b':'))
+                };
+                if safe(&node.description) {
+                    let children: std::collections::BTreeSet<_> = node
+                        .child_nodes()
+                        .iter()
+                        .filter(|n| safe(&n.description))
+                        .map(|n| n.description.as_str())
+                        .collect();
+                    let kind = node
+                        .get_attr("type")
+                        .and_then(|v| v.as_text())
+                        .filter(|v| safe(v))
+                        .unwrap_or("none");
+                    let offline = node
+                        .child("offline")
+                        .and_then(|n| n.get_attr("count"))
+                        .and_then(|v| v.as_text())
+                        .and_then(|v| v.parse::<u32>().ok());
+                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, children={children:?}, offline_count={offline:?}",node.description));
+                }
+            }
+            if key.starts_with(b"received:") {
+                let mut saved: serde_json::Value = serde_json::from_slice(&value)
+                    .map_err(|_| Error::invalid("inbox", "invalid saved payload"))?;
+                if saved["status"] == "consumed" {
+                    println!("inbox: view-once attachment consumed; content unavailable");
+                    continue;
+                }
+                let protobuf: zeroize::Zeroizing<Vec<u8>> =
+                    serde_json::from_value(saved["protobuf"].take())
+                        .map_err(|_| Error::invalid("inbox", "invalid saved protobuf"))?;
+                let summary = whatsapp_api::signal::direct::payload_summary(&protobuf)?;
+                println!(
+                    "inbox: saved payload bytes={}, {summary}; values redacted",
+                    protobuf.len()
+                );
+            }
+            continue;
+        }
+        if !is_capture(&key) {
+            continue;
+        }
+        let bytes: Vec<u8> = serde_json::from_slice(&value)
+            .map_err(|_| Error::invalid("inbox", "invalid capture"))?;
+        let unpacked = unpack_frame_payload(&bytes, &limits)?;
+        let node = Decoder::new(&unpacked, TokenDictionary::comparison_2_26_37_70(), &limits)
+            .decode_node()?;
+        match whatsapp_api::transport::inbox::process(&store, &account, &node, &key).await? {
+            whatsapp_api::transport::inbox::IncomingResult::Decrypted => {
+                count += 1;
+                println!("inbox: authenticated payload committed; content redacted");
+            }
+            whatsapp_api::transport::inbox::IncomingResult::Duplicate => {}
+            whatsapp_api::transport::inbox::IncomingResult::Unsupported => {}
+        }
+    }
+    for shape in capture_shapes {
+        println!("{shape}");
+    }
+    println!("inbox: {count} newly decrypted payloads; no network requests");
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use whatsapp_api::binary::Node;
+    use whatsapp_api::model::jid::Jid;
+
+    #[test]
+    fn delivery_requires_committed_decrypted_message() {
+        use whatsapp_api::store::{MasterKey, StaticKeySource};
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("inbox.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let node = Node::new("message")
+            .attr("from", Jid::parse("15551234567@s.whatsapp.net").unwrap())
+            .attr("id", "offline-test");
+        assert!(!is_saved_message(&store, &node).unwrap());
+        let key = b"received:15551234567@s.whatsapp.net:offline-test";
+        for (status, expected) in [("captured", false), ("decrypted", true), ("consumed", true)] {
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        key,
+                        1,
+                        &serde_json::json!({"status":status}),
+                    )
+                })
+                .unwrap();
+            assert_eq!(is_saved_message(&store, &node).unwrap(), expected);
+        }
+        assert!(!is_saved_message(&store, &node.attr("id", "other")).unwrap());
+    }
+
+    #[test]
+    fn captures_include_frames_received_while_sending_but_not_intents() {
+        for key in [
+            "inbound:abc:0",
+            "message:test:pending:2",
+            "message:test:send-response:1",
+        ] {
+            assert!(is_capture(key.as_bytes()));
+        }
+        for key in [
+            "received:sender:id",
+            "message:test:send",
+            "message:test:upload",
+            "message:test:keys",
+            "message:test:pending:",
+            "message:test:pending:bad",
+        ] {
+            assert!(!is_capture(key.as_bytes()));
+        }
+    }
+
+    #[test]
+    fn lid_requires_explicit_primary_phone_mapping() {
+        let phone = Jid::parse("15551234567@s.whatsapp.net").unwrap();
+        let lid = Node::new("message").attr("from", Jid::parse("12345@lid").unwrap());
+        assert!(session_sender(&lid).is_none());
+        assert_eq!(
+            session_sender(&lid.clone().attr("sender_pn", phone.clone())),
+            Some(phone.clone())
+        );
+        assert!(session_sender(&lid.clone().attr("sender_pn", "12345@lid")).is_none());
+        assert!(
+            session_sender(
+                &lid.clone()
+                    .attr("sender_pn", "15551234567:1@s.whatsapp.net")
+            )
+            .is_none()
+        );
+        assert!(
+            session_sender(
+                &lid.attr("sender_pn", phone.clone())
+                    .attr("participant", phone.clone())
+            )
+            .is_none()
+        );
+        assert_eq!(
+            session_sender(&Node::new("message").attr("from", phone.clone())),
+            Some(phone)
+        );
+        assert!(session_sender(&Node::new("message").attr("from", "12345@g.us")).is_none());
+    }
+
+    #[test]
+    fn receive_cannot_send_and_requires_login() {
+        use clap::Parser;
+        assert!(
+            super::super::Cli::try_parse_from([
+                "cli",
+                "lab-transport",
+                "--config",
+                "fixture.json",
+                "--receive"
+            ])
+            .is_err()
+        );
+        assert!(
+            super::super::Cli::try_parse_from([
+                "cli",
+                "lab-transport",
+                "--config",
+                "fixture.json",
+                "--login",
+                "--receive",
+                "--message",
+                "message.json"
+            ])
+            .is_err()
+        );
+        assert!(super::super::Cli::try_parse_from(["cli", "lab-inbox"]).is_ok());
+    }
+}

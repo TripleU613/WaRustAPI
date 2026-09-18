@@ -11,7 +11,7 @@ publish = false
 [features]
 default = []
 experimental-signup = ["whatsapp-api/experimental-signal-crypto", "whatsapp-api/experimental-registration-https"]
-experimental-transport = ["experimental-signup", "whatsapp-api/experimental-transport", "whatsapp-api/experimental-noise"]
+experimental-transport = ["experimental-signup", "whatsapp-api/comparison-client"]
 
 [[bin]]
 name = "whatsapp-cli"
@@ -20,13 +20,16 @@ path = "src/main.rs"
 [dependencies]
 whatsapp-api = { path = "../whatsapp-api" }
 clap.workspace = true
-tokio = { workspace = true, features = ["rt-multi-thread", "macros", "sync", "time", "signal", "net", "io-util"] }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "sync", "time", "signal", "net", "io-util", "process"] }
 serde_json.workspace = true
 hex.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 tracing-subscriber = { version = "0.3", default-features = false, features = ["fmt", "env-filter", "ansi"] }
 zeroize.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
 
 [lints]
 workspace = true

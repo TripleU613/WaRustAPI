@@ -3,10 +3,15 @@
 //! The actor receives commands over a bounded channel, publishes connection
 //! state through a watch channel, and tags every connection attempt with a
 //! fresh [`ConnectionEpoch`]. Request correlation is bounded and epoch-tagged.
-//! For the current profile no socket is opened: `connect` fails with a typed
+//! For the default pinned profile no socket is opened: `connect` fails with a typed
 //! error before any network activity because the required facts are absent.
+//! An explicit `comparison-client` actor provides the comparison transport.
 
+#[cfg(feature = "comparison-client")]
+mod comparison;
 pub mod correlation;
+#[cfg(feature = "comparison-client")]
+pub use comparison::spawn_comparison;
 
 use std::sync::Arc;
 use std::time::Duration;

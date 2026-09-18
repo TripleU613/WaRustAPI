@@ -27,10 +27,16 @@ use whatsapp_api::{Error, ProtocolProfile, WhatsAppClient};
 use zeroize::Zeroizing;
 
 mod http;
+#[cfg(feature = "experimental-transport")]
+mod media;
+#[cfg(feature = "experimental-transport")]
+mod outbox_send;
 #[cfg(feature = "experimental-signup")]
 mod signup;
 #[cfg(feature = "experimental-transport")]
 mod transport;
+#[cfg(feature = "experimental-transport")]
+mod transport_receive;
 #[cfg(feature = "experimental-transport")]
 mod transport_send;
 
@@ -69,6 +75,58 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Cmd {
+    /// Send one private-JSON text, image or voice note through the comparison outbox.
+    #[cfg(feature = "experimental-transport")]
+    OutboxSend {
+        #[arg(long)]
+        config: PathBuf,
+        #[arg(long)]
+        message: PathBuf,
+        #[arg(long)]
+        allow_live_request: bool,
+    },
+    /// List ordinary incoming attachments by opaque selector, with content redacted.
+    #[cfg(feature = "experimental-transport")]
+    MediaList,
+    /// Download/authenticate an ordinary image or voice note and open it locally.
+    #[cfg(feature = "experimental-transport")]
+    MediaOpen {
+        #[arg(long)]
+        config: PathBuf,
+        #[arg(long)]
+        id: String,
+        #[arg(long)]
+        allow_live_request: bool,
+    },
+    /// Maintain an authenticated comparison connection and process incoming messages.
+    #[cfg(feature = "experimental-transport")]
+    Listen {
+        #[arg(long)]
+        config: PathBuf,
+        #[arg(long)]
+        allow_live_request: bool,
+        /// Stop after this many seconds; zero waits for Ctrl-C.
+        #[arg(long, default_value_t = 0)]
+        seconds: u64,
+    },
+    /// Display one downloaded view-once picture locally for 30 seconds, consuming it.
+    #[cfg(feature = "experimental-transport")]
+    LabOpenViewOnce,
+    /// Download one authenticated view-once image as private ciphertext; do not open it.
+    #[cfg(feature = "experimental-transport")]
+    LabDownloadViewOnce {
+        #[arg(long)]
+        config: PathBuf,
+        #[arg(long)]
+        allow_live_request: bool,
+    },
+    /// Decrypt captured direct replies locally, without network I/O.
+    #[cfg(feature = "experimental-transport")]
+    LabInbox {
+        /// Inspect saved plaintext protobuf structure without advancing sessions.
+        #[arg(long)]
+        inspect: bool,
+    },
     /// One comparison-server connection; optional bounded primary login.
     #[cfg(feature = "experimental-transport")]
     LabTransport {
@@ -81,9 +139,15 @@ enum Cmd {
         /// Send one primary login after certificate verification.
         #[arg(long)]
         login: bool,
-        /// Private JSON containing to, text, and request_id for one message.
+        /// Private JSON: to, request_id, and text, image (PNG), or voice_note (Ogg/Opus).
         #[arg(long, requires = "login")]
         message: Option<PathBuf>,
+        /// Preserve incoming stanzas for up to 30 seconds without sending a chat.
+        #[arg(long, requires = "login", conflicts_with = "message")]
+        receive: bool,
+        /// Obtain and privately preserve one current media-upload route response.
+        #[arg(long, requires = "login", conflicts_with_all = ["message", "receive"])]
+        media_route: bool,
     },
     /// Explicit comparison-build signup experiment; may affect an existing account.
     #[cfg(feature = "experimental-signup")]
@@ -150,6 +214,9 @@ enum Cmd {
     },
     /// Read durable events for a consumer.
     Events {
+        /// Print event kinds only, without message content or identifiers.
+        #[arg(long)]
+        summary: bool,
         /// Consumer name.
         #[arg(long, default_value = "cli")]
         consumer: String,
@@ -248,11 +315,42 @@ fn print_step(step: &RegistrationStep, json: bool) {
 async fn run(cli: Cli) -> Result<(), Error> {
     match &cli.cmd {
         #[cfg(feature = "experimental-transport")]
+        Cmd::OutboxSend {
+            config,
+            message,
+            allow_live_request,
+        } => outbox_send::run(&cli, config, message, *allow_live_request).await,
+        #[cfg(feature = "experimental-transport")]
+        Cmd::MediaList => media::list(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::MediaOpen {
+            config,
+            id,
+            allow_live_request,
+        } => media::open(&cli, config, id, *allow_live_request).await,
+        #[cfg(feature = "experimental-transport")]
+        Cmd::Listen {
+            config,
+            allow_live_request,
+            seconds,
+        } => transport_receive::listen(&cli, config, *allow_live_request, *seconds).await,
+        #[cfg(feature = "experimental-transport")]
+        Cmd::LabOpenViewOnce => transport_receive::open_view_once(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::LabDownloadViewOnce {
+            config,
+            allow_live_request,
+        } => transport_receive::download_view_once(&cli, config, *allow_live_request).await,
+        #[cfg(feature = "experimental-transport")]
+        Cmd::LabInbox { inspect } => transport_receive::run(&cli, *inspect).await,
+        #[cfg(feature = "experimental-transport")]
         Cmd::LabTransport {
             config,
             allow_live_request,
             login,
             message,
+            receive,
+            media_route,
         } => {
             transport::run(
                 &cli,
@@ -260,6 +358,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
                 *allow_live_request,
                 *login,
                 message.as_deref(),
+                *receive,
+                *media_route,
             )
             .await
         }
@@ -494,6 +594,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
             Ok(())
         }
         Cmd::Events {
+            summary,
             consumer,
             limit,
             ack,
@@ -503,6 +604,10 @@ async fn run(cli: Cli) -> Result<(), Error> {
             let after: EventCursor = engine.acknowledged_cursor().await?;
             let batch = engine.next_batch(after, *limit).await?;
             for e in &batch.events {
+                if *summary {
+                    println!("event: {}", e.event.kind());
+                    continue;
+                }
                 println!(
                     "{}",
                     serde_json::to_string(e)

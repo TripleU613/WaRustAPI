@@ -351,6 +351,16 @@ fn opcode_name(op: u8) -> &'static str {
         0xb5 => "and-int/2addr",
         0xb6 => "or-int/2addr",
         0xb7 => "xor-int/2addr",
+        0xbb => "add-long/2addr",
+        0xbc => "sub-long/2addr",
+        0xd0 => "add-int/lit16",
+        0xd1 => "rsub-int",
+        0xd2 => "mul-int/lit16",
+        0xd3 => "div-int/lit16",
+        0xd4 => "rem-int/lit16",
+        0xd5 => "and-int/lit16",
+        0xd6 => "or-int/lit16",
+        0xd7 => "xor-int/lit16",
         0xd8 => "add-int/lit8",
         0xd9 => "rsub-int/lit8",
         0xda => "mul-int/lit8",
@@ -716,12 +726,12 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
             format!("v{v}, #{lit:#x}")
         }
         // const/16 vAA, #+BBBB — 21s
-        0x13 if insn_bytes.len() >= 4 => {
+        0x13 | 0x16 if insn_bytes.len() >= 4 => {
             let lit = i16::from_le_bytes([insn_bytes[2], insn_bytes[3]]);
             format!("v{reg}, #{lit:#x}")
         }
         // const vAA, #+BBBBBBBB — 31i
-        0x14 if insn_bytes.len() >= 6 => {
+        0x14 | 0x17 if insn_bytes.len() >= 6 => {
             let lit =
                 i32::from_le_bytes([insn_bytes[2], insn_bytes[3], insn_bytes[4], insn_bytes[5]]);
             format!("v{reg}, #{lit:#x}")
@@ -753,15 +763,22 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
             let offset = i16::from_le_bytes([insn_bytes[2], insn_bytes[3]]);
             format!("v{reg}, +{offset:#x}")
         }
-        // aget/aput vAA, vBB, vCC — format 23x.
-        0x44..=0x51 if insn_bytes.len() >= 4 => {
+        // cmp and aget/aput vAA, vBB, vCC — format 23x.
+        0x2d..=0x31 | 0x44..=0x51 if insn_bytes.len() >= 4 => {
             format!("v{reg}, v{}, v{}", insn_bytes[2], insn_bytes[3])
         }
-        // Unary/conversion operations vA, vB — format 12x.
-        0x7b..=0x8f => {
+        // Unary/conversion and binary /2addr operations vA, vB — format 12x.
+        0x7b..=0x8f | 0xb0..=0xcf => {
             let va = reg & 0xf;
             let vb = (reg >> 4) & 0xf;
             format!("v{va}, v{vb}")
+        }
+        // Binary operation with signed 16-bit literal — format 22s.
+        0xd0..=0xd7 if insn_bytes.len() >= 4 => {
+            let va = reg & 0xf;
+            let vb = reg >> 4;
+            let lit = i16::from_le_bytes([insn_bytes[2], insn_bytes[3]]);
+            format!("v{va}, v{vb}, #{lit:#x}")
         }
         // Binary operation with signed 8-bit literal — format 22b.
         0xd8..=0xe2 if insn_bytes.len() >= 4 => {
@@ -1539,6 +1556,56 @@ mod tests {
         assert_eq!(decoded[0].annotation, "v3, v4, #0x12");
         assert_eq!(decoded[1].mnemonic, "int-to-char");
         assert_eq!(decoded[1].annotation, "v3, v5");
+    }
+
+    #[test]
+    fn decodes_wide_timestamp_constant_and_comparison_order() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        let bytes = [0x16, 0x00, 0xff, 0xff, 0x31, 0x00, 0x04, 0x01];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded[0].mnemonic, "const-wide/16");
+        assert_eq!(decoded[0].annotation, "v0, #0xffff");
+        assert_eq!(decoded[1].mnemonic, "cmp-long");
+        assert_eq!(decoded[1].annotation, "v0, v4, v1");
+        for end in 0..bytes.len() {
+            let _ = decode_insns(&bytes[..end], &dex);
+        }
+    }
+
+    #[test]
+    fn decodes_wide_age_subtraction_and_bootstrap_timeout() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        let bytes = [
+            0x17, 0x04, 0xe0, 0x93, 0x04, 0x00, // const-wide/32 v4, 300000
+            0xbc, 0x03, // sub-long/2addr v3, v0 (age = now - stored)
+            0xbb, 0x28, // add-long/2addr v8, v2
+        ];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded[0].mnemonic, "const-wide/32");
+        assert_eq!(decoded[0].annotation, "v4, #0x493e0");
+        assert_eq!(decoded[1].mnemonic, "sub-long/2addr");
+        assert_eq!(decoded[1].annotation, "v3, v0");
+        assert_eq!(decoded[2].mnemonic, "add-long/2addr");
+        assert_eq!(decoded[2].annotation, "v8, v2");
+        for end in 0..bytes.len() {
+            let _ = decode_insns(&bytes[..end], &dex);
+        }
+    }
+
+    #[test]
+    fn decodes_unsigned_byte_mask_and_signed_lit16() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        let bytes = [0xd5, 0x01, 0xff, 0x00, 0xd0, 0x43, 0xff, 0xff];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded[0].mnemonic, "and-int/lit16");
+        assert_eq!(decoded[0].annotation, "v1, v0, #0xff");
+        assert_eq!(decoded[1].annotation, "v3, v4, #0xffff");
+        for end in 0..bytes.len() {
+            let _ = decode_insns(&bytes[..end], &dex);
+        }
     }
 
     #[test]

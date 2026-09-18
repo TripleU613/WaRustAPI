@@ -3,8 +3,10 @@
 The opt-in `experimental-transport` CLI feature now supports a comparison-build
 connection, primary login and one durable direct text send. A live test received
 server acknowledgement and operator-confirmed handset receipt. The operator
-reported replying, but this client has not read that reply; protocol delivery/read
-receipts remain unverified. Default
+reported replying; two inbound messages have now been authenticated/decrypted.
+Offline classification identified one extended-text reply and one protocol
+`EPHEMERAL_SYNC_RESPONSE`, not two user replies.
+Protocol delivery/read receipt handling remains unverified. Default
 CLI `connect`/`send` and the ordinary outbox actor remain unconnected to this lab path.
 
 ## Implemented
@@ -88,7 +90,7 @@ opaque identifier whose acceptance was observed, not a recovered APK ID recipe.
 ## Remaining work
 
 The initial path targets the specified recipient's primary phone JID only.
-Companion-device discovery/fanout, LID routing, continuous inbound processing,
+Companion-device discovery/fanout, general LID routing, continuous inbound processing,
 delivery/read receipts, prekey replenishment, robust session reconciliation and
 integration with the ordinary outbox/runtime remain incomplete. The classic
 branch worked in this experiment; this does not prove hybrid modes unnecessary.
@@ -96,3 +98,344 @@ branch worked in this experiment; this does not prove hybrid modes unnecessary.
 The low-level frame API is for encoded handshake/encrypted records, not plaintext
 chat or raw credentials. It serializes operations through one mutable connection;
 a long-lived concurrent reader/writer actor remains future integration work.
+
+## Bounded inbound capture and offline decryption
+
+Using the same saved account/store/key environment:
+
+```sh
+whatsapp-cli --store <saved.redb> --account <account> lab-transport \
+  --config <private-registration.json> --allow-live-request --login --receive
+whatsapp-cli --store <saved.redb> --account <account> lab-inbox
+```
+
+Receive mode conflicts with sending a message. After login it sends one
+`iq/set xmlns=passive` with an `active` child (comparison `LX/Avw.A00`,
+called with true by primary ConnectionThread `LX/0iS.A0e`). It correlates the
+result while persisting every incoming frame, including frames before the result
+and on timeout. It captures at most 64 stanzas within a 30-second window.
+Primary direct messages already authenticated and committed by `lab-inbox`
+receive delivery receipts on redelivery. Supported incoming delivery/read
+receipts receive `ack/class=receipt` (comparison `LX/Cns.A00/A05`). These are
+not our read/opened receipts. Raw captures alone never qualify for message
+delivery receipts; unsupported routing and notification handling stay untouched.
+Each confirmation is reserved before writing, with no automatic retry. A written
+confirmation is not proof the server processed it. The client then disconnects.
+`lab-inbox` makes no network requests. It decrypts `enc/v=2/type=msg` only with an
+existing pinned session; unsupported envelopes remain captured without guessing.
+The two live messages arrived from primary LID senders with explicit `sender_pn`
+attributes. Comparison `LX/CmF.A01` at 0x0096–00c6 parses this attribute as a
+`PhoneUserJid`. We use that mapping only to select an existing pinned PN session;
+successful Signal authentication is still required. No global LID map is inferred.
+
+Decrypted protobuf and updated ratchet are committed in one transaction, with a
+session comparison guard and sender/message-ID deduplication. Plaintext is not
+printed. Live processing decrypted two messages (47 and 73 protobuf bytes), and
+a second offline invocation skipped both. Tests cover reply authentication,
+tampering, changed identity, duplicate ciphertext, invalid padding, routing and
+mutually exclusive CLI modes. Inbox text rendering, new inbound prekey sessions,
+general multi-device/LID routing and immediate delivery after decryption remain
+future work. The bounded receive path can now confirm previously committed
+primary direct messages as described above.
+
+### Saved-payload inspection
+
+`lab-inbox --inspect` inspects already decrypted checkpoints locally without
+advancing ratchets or printing text/identifiers. The observed 73-byte payload has
+Message fields 6 and 35; nested extended-text fields are 1, 10, 17 and 29. The
+47-byte payload has Message field 12 and ProtocolMessage type 4. Comparison
+`LX/BXF.dynamicMethod` 0x0578 supplies the Message schema (extended text=6,
+protocol=12); `LX/BXE.dynamicMethod` 0x01c4 supplies the protocol schema (type=2).
+`LX/C1B.<clinit>` 0x0028–003c maps 4 to `EPHEMERAL_SYNC_RESPONSE`. Inspection
+reports unknown fields numerically rather than inventing their meaning. The
+protocol payload is not a second user-authored reply.
+
+## Image sending (comparison lab)
+
+### View-once image extension
+
+Set `view_once: true` alongside `image` in the private message JSON. Text and
+voice-note combinations are currently rejected. The flag is bound into the
+saved intent fingerprint, so toggling it cannot repurpose an existing send ID.
+Comparison `LX/BWp.dynamicMethod` maps `viewOnce` to image field 25;
+`LX/D7s.AD8` 0x007a–00d8 sets it and constructs the V2 wrapper in its wrapped
+branch. `LX/BXF` maps that wrapper to field 55 and `LX/BM5` embeds Message at
+field 1. Tests include an independent byte fixture and flag/intent separation.
+
+One live test image with these markers received a matching server acknowledgement.
+The operator subsequently confirmed viewing it once and being blocked on a
+second opening. The two receive
+windows for the operator's reported view-once image contained only previously
+captured messages. Redacted inspection recognizes wrappers 37/55/59 and image
+flag 25 with a nesting bound, without downloading or opening attachments.
+There is now a bounded local viewer (below), but no server opened receipt;
+do not treat descriptor decryption or inspection as a successful first/second open.
+
+`lab-download-view-once --config <private-registration.json> --allow-live-request`
+uses the same global store/account/key settings. It requires exactly one saved
+authenticated view-once image; ordinary images and ambiguous selections are
+rejected. It makes one bounded HTTPS GET without redirects/retries, verifies
+encrypted length, SHA-256 and truncated HMAC, and keeps only ciphertext in
+encrypted `downloaded_unopened` storage. There is no plaintext export or opened
+receipt. Repeat calls reuse that state; uncertain/refused/consumed states block.
+This is prefetch, not an implementation of viewing or expiry. Live invocation
+found no qualifying descriptor and made no GET. After the receive activation and
+confirmation correction above, four additional authenticated payloads arrived.
+One direct ImageMessage carried flag 25. A single live GET downloaded 91,562
+encrypted bytes with valid size/SHA-256/MAC, saved as `downloaded_unopened`.
+No attachment plaintext was exported or viewed, and no opened receipt was sent.
+
+`lab-open-view-once` subsequently adds local one-use display of the single
+downloaded image. It verifies encrypted and plaintext hashes, MAC, padding and
+length, then atomically replaces the downloaded ciphertext and key-bearing
+inbox protobuf with consumed markers **before** returning plaintext. The CLI
+pipes it to mpv, without a plaintext file, for 30 seconds. mpv configuration,
+scripts, default keybindings and playback history are disabled. This is not OS
+screenshot prevention. Closing/failing after consumption never restores the
+image; database-page secure erasure and cross-device consumption sync are not
+claimed. No server opened receipt is currently sent. Offline tests verify the
+consumed transition, removal of accessible content and rejection of reopening.
+`Message.associatedChildMessage` (91, `LX/BXF`) embeds `LX/BM5.message` (1);
+inspection now identifies the formerly unclassified payload as an ordinary-image
+child, with no view-once flag.
+
+### Voice-note extension
+
+Private message JSON also accepts `voice_note` with an absolute mono Ogg/Opus
+file path instead of `text` or `image`; exactly one is allowed. It uses the same
+`--message` command, saved upload reservation and atomic Signal send. The file
+hash is media-type-bound, preventing a request ID from changing image to audio.
+Duration is derived from the final Ogg granule minus Opus pre-skip, rounded up
+to whole seconds. The local parser checks bounded page layout, one stream,
+sequence, mono Opus header and EOS; it is not a decoder or CRC validator. Local
+limits are 8 MiB and ten minutes. Waveform and streaming sidecar are omitted.
+
+Comparison APK `LX/1qB.<clinit>` 0x000e–0028 establishes `WhatsApp Audio Keys`;
+0x01d8–01f2 maps PTT to `ptt` and that key domain. `LX/BWZ.dynamicMethod`
+0x00b6 defines AudioMessage: URL=1, MIME=2, SHA256=3, length=4, seconds=5,
+PTT=6, media key=7, encrypted SHA256=8, direct path=9, key timestamp=10.
+`LX/BXF` selects audio at Message field 8. Upload uses `/mms/ptt/`; the encrypted
+stanza uses `type=media` and `enc/mediatype=ptt`. This is comparison-only evidence.
+
+Live test: a generated two-second beep (mono Ogg/Opus, 8,721 bytes) uploaded and
+received a matching server message acknowledgement. Repeating the same private
+request returned locally without networking. The operator subsequently confirmed
+handset receipt; playback was not separately confirmed.
+
+Incoming-image follow-up: inbox processing also includes `message:*:pending:*`
+and `message:*:send-response:*` captures, with the same sender/message-ID
+deduplication. `--inspect` labels Message field 3 as an image and lists nested
+field numbers without exposing keys, URLs or content. After the operator corrected
+the destination, a new bounded receive and offline decryption identified one
+ImageMessage (Message fields 3/35, 1,227 protobuf bytes). A second new payload has
+fields 35/91 (1,296 bytes), not yet classified; it is not counted as another image.
+The image descriptor includes URL, MIME, hashes, length, dimensions, media key,
+direct path and thumbnail fields. Media downloading remains unimplemented, so
+this verifies the authenticated image message, not attachment decryption/display.
+
+`signal::image` implements bounded file encryption using existing crypto
+primitives, without uploading or exposing the key in diagnostics. Comparison
+`LX/1qB.<clinit>` 0x0028–003e supplies `WhatsApp Image Keys`;
+`LX/LG2.AKp` 0x0010–0028 derives 80 bytes; `LX/Kr5.A01` splits them into
+16-byte IV, 32-byte AES key and 32-byte MAC key. `LX/Kr5.A02/A03` and
+`LX/Jq3.read(ILII)` implement CBC/PKCS padding, MAC over IV plus ciphertext,
+and a ten-byte MAC suffix. Tests verify a local roundtrip, MAC coverage,
+redaction, fresh per-file keys and local size limits; this is not live media
+interoperability evidence. The 8 MiB limit is local, not a server limit.
+
+Upload construction: `LX/0ip.A07` builds `iq/set`, namespace `w:m`, with a
+`media_conn` child. `LX/1q4.C8h` reads auth and route lifetimes from its response.
+`LX/BWp.dynamicMethod` 0x0186 describes the image protobuf; Message field 3
+selects it. `LX/IS4.A01` builds the HTTPS `/mms/image/<encrypted-hash>` URL;
+`LX/Gzi.A00` hashes the persisted 32-byte upload seed concatenated with the
+encrypted file hash for its token. `LX/AvM.A14/A12` and `StringUtils.A0B` establish
+SHA-256 and padded URL-safe Base64 (padding is retained). `LX/I1K.A03/A05`
+adds server auth to the URL; `A06` has a single-file MMS4 raw-body branch.
+`LX/GzU.A04` sets the User-Agent, identity encoding and length. `LX/9QH`
+includes `enc/mediatype=image`; the outer stanza uses `type=media`.
+
+Keep a private JSON with `to`, a stable `request_id`, and `image` containing an
+absolute PNG path instead of `text`. Use the same `--message` command as text.
+If there is no current route, fetch one first:
+
+```sh
+whatsapp-cli --store <saved.redb> --account <account> lab-transport \
+  --config <private-registration.json> --allow-live-request --login --media-route
+whatsapp-cli --store <saved.redb> --account <account> lab-transport \
+  --config <private-registration.json> --allow-live-request --login \
+  --message <private-image-message.json>
+```
+
+The uploader checks route expiry, uses one authenticated HTTPS host, verifies
+TLS, disables redirects/retries/proxies, bounds the response, and stores its
+reservation/key/body before POST. Success is reused; refused/ambiguous uploads
+are not replayed. Exact source hash and recipient bind the request ID. Signal
+ratchet and send intent commit atomically with a session-change guard before
+the message write. The local PNG header/dimension checks are not a full decoder.
+Only PNG is currently supported; thumbnail generation, other media types,
+automatic route refresh and general outbox integration remain future work.
+
+Live result (2026-09-18): a 1024×576 PNG (195,430 original bytes, 195,450 encrypted
+bytes) uploaded with HTTP 200 and returned validated media URL/direct path.
+One encrypted image received a matching `ack/class=message` without error.
+An identical invocation returned the saved acknowledgement without networking.
+The operator subsequently confirmed receiving the image on the handset, verifying
+this image-send path end to end. The handset confirmation is operator-reported;
+receipt fact handling added later is described below.
+
+## Persistent receiving and ordinary incoming media
+
+Build the CLI with `--all-features`. Reuse the encrypted account and private
+registration JSON; supply its master key through the existing local environment.
+Never put keys, real phone numbers or OTPs in tracked files.
+
+```sh
+whatsapp-cli --store <saved.redb> --account <account> listen \
+  --config <private-registration.json> --allow-live-request --seconds 75
+whatsapp-cli --store <saved.redb> --account <account> media-list
+whatsapp-cli --store <saved.redb> --account <account> media-open \
+  --config <private-registration.json> --id <opaque-media-id> --allow-live-request
+```
+
+`listen` without `--seconds` runs until Ctrl-C or connection failure. It verifies
+the certificate, authenticates, activates, sends bounded keepalives, captures
+incoming frames, decrypts supported direct messages and commits ratchet/inbox
+state before delivery confirmation. A failed session does not auto-reconnect.
+It does not drain chat sends. Receipt facts and supported trusted-contact tokens
+are persisted; unknown notifications remain captured, not falsely applied.
+
+`media-list` is offline and shows opaque selectors, kinds and lengths, not
+message content. `media-open` authenticates one ordinary attachment and pipes it
+to mpv. Verified ciphertext is cached encrypted at rest. No plaintext file is
+created. Ordinary access rejects view-once content; use the explicit one-use
+viewer for that. Voice notes require Ogg/Opus; incoming playback still needs a
+live sample. Successful one-use viewing queues `played` for the next connection;
+download alone does not. Uncertain receipt writes are not replayed.
+
+The public API uses `.comparison_transport(config)` on `WhatsAppClient::builder()`
+with the `comparison-client` feature. Building is offline; `connect` opens the
+connection. `.comparison_outbox(true)` additionally enables queued primary direct
+texts and uploaded image/voice-note references, including previously queued eligible
+intents. Leave it off for a receive-only session. Groups, quotes, captions and
+unsupported media fail locally. Queries and sends are reserved
+durably before network writes, without automatic retries. Delivery/read/played
+facts reach normal `message_status` and the durable event journal. This outbox
+adapter now has one live direct-text server acknowledgement through the public
+client/runtime; handset receipt remains unconfirmed.
+
+To send only one private-JSON intent, without draining unrelated queued work:
+
+```sh
+whatsapp-cli --store <saved.redb> --account <account> outbox-send \
+  --config <private-request.json> --message <private-message.json> \
+  --allow-live-request
+```
+
+This uses `.comparison_outbox_ticket(id)`. Keep the JSON `request_id` stable:
+acknowledged repeats return the saved result without connecting, and reserved or
+uncertain outcomes refuse replay. A request ID previously used by a lab send is
+rejected, not retransmitted through a different path. It accepts direct text,
+PNG images (including the existing view-once wrapper), and Ogg/Opus voice notes.
+For media it reuses the one-shot upload module and requires an unexpired saved
+media route; no hidden route refresh or uncertain upload retry is added. Successful
+uploads become stable sealed references bound to this account generation, request
+ID and recipient. The normal outbox resolves them only against the matching saved
+upload, then uses the existing Signal reservation/ACK path. Public `upload_media`
+and `download_media` convenience methods remain unsupported; this integration is
+the private-JSON command and already-uploaded reference path. A normal-outbox PNG
+test now has its own matching live server ACK. The initial local attempt stopped
+at an expired media route before upload; one explicit route refresh enabled the
+same saved test intent. Repeating its JSON returned locally with no upload or
+connection. A bounded receive-only session subsequently saved recipient delivery
+for the image (no read/played). A new two-second synthetic Ogg/Opus voice note also
+received a matching ACK through this outbox; repeating its JSON returned locally.
+A second 35-second receive-only session saved voice-note delivery (no read/played).
+Handset display/playback remains unverified; earlier lab ACKs are not counted as
+this adapter's results.
+
+Send-path ownership is now symmetric and durable: the lab command also rejects
+normal-outbox IDs, including historical entries from other outbox namespaces.
+Claims happen before upload/connect/query work and do not authorize retries.
+The saved normal-text test was checked through both commands: the original path
+returned its ACK locally; the lab path failed before connection. No retransmission
+occurred. Do not change IDs to get around this protection.
+
+The pinned default profile and its capability matrix have not been promoted by
+these comparison-only experiments. See the [completion checklist](../messaging-completion.md)
+for the exact live checks and remaining cross-device work.
+
+Incoming direct text is now projected into the normal durable event journal in
+the same transaction as its ratchet/inbox commit. `lab-inbox` also projects
+historical authenticated records from their original captures, without repeating
+decryption. Consumed view-once records are excluded. `events --summary` prints
+only event kinds; omit `--ack` to inspect without moving the consumer cursor.
+Unsupported/media payloads produce opaque references, not key-bearing journal
+copies. Extended-text context follows comparison `LX/BWx.dynamicMethod`:
+stanza ID field 1, quoted message field 3, expiry field 25. Quotes stay unsupported;
+text expiry is preserved and already-expired history is not exposed as fresh text.
+Event consumers must honor expiry; automatic journal expiry is not implemented.
+
+### Additional comparison APK evidence
+
+All references below concern **2.26.37.70**, APK SHA-256
+`b2090b0207e9b97449a5b48e98eb4d1649ae8e5e738e9b7431d6242717fee732`.
+
+- `LX/EIY.<init>(VLI)` branch 15, `006a..009e`: keepalive `iq/get`,
+  `xmlns=w:p`, server JID and ID; there is no `ping` child.
+- `SendPlayedReceiptJobV2.A0G`, `0042..006e` and `019a`: policy chooses
+  `played` versus `played-self`; `LX/0y0` `0c1e..0c9e` invokes `LX/Cns.A09`.
+  Its direct receipt contains to/id/type and optional participant, no timestamp.
+  `LX/15A.A07` accepts played status for PTT or view-once. The client queues only
+  explicitly requested successful viewing, not background downloads.
+- `LX/11P.A09`, `001a..00ee`: notification `tokens/token`, `trusted_contact`,
+  from/sender_lid, token bytes and timestamp (token `t` defaults to envelope `t`).
+  `LX/0q2.A0P`, `00b2..012a`: update only for a strictly newer timestamp.
+  `LX/0yO.A01` processes before acknowledgement; `LX/Cns.A05` serializes ACK
+  id/to/class/type. This is narrow trusted-contact handling, not app-state sync.
+- `LX/BWZ.dynamicMethod`: AudioMessage field 21 is view-once; audio uses its
+  separate `WhatsApp Audio Keys` HKDF domain. Ordinary access rejects this flag.
+
+### Public ordinary-media download
+
+With the `comparison-client` feature and explicit `comparison_transport(config)`
+builder configuration, `client.received_media().await?` returns sealed references
+for authenticated ordinary images and voice notes already in the encrypted inbox.
+Listing is offline. Pass a selected reference to
+`client.download_media(&reference, destination).await?` for a bounded, verified
+download and **explicit plaintext export**. This does not require opening the
+messaging socket. It reuses verified cached ciphertext and does not retry unknown
+GET outcomes. No read or played receipt is sent by downloading.
+
+The destination must be a new file; existing files and symlinks are refused.
+On Unix, creation requests mode 0600. After an export I/O failure the owned file
+descriptor is truncated on a best-effort basis; a private file can remain and
+should be inspected rather than overwritten by a retry. Export is an explicit
+opt-in alternative to the existing CLI's memory-only player, not its new default.
+References are account-generation-bound; modified metadata, outgoing references
+and view-once content are rejected by the download API.
+
+### Public ordinary-media upload
+
+`client.upload_media(source).await?` now accepts bounded PNG images or Ogg/Opus
+voice notes for an explicitly configured, registered comparison client. It reuses
+the existing TLS-verified one-shot uploader and requires a saved unexpired media
+route. Route refresh remains explicit. Uploading does not enqueue a chat or
+connect the messaging socket.
+
+The returned account-bound `MediaReference` can be placed in
+`MessageContent::Media { reference, caption: None, file_name: None }` and passed
+to `send_message` with the caller's stable message request ID. Actual transmission
+still requires the separate normal-outbox opt-in. Public upload references are
+recipient-independent; message intent/idempotency and Signal encryption remain
+recipient-bound at send time. Incoming/download references cannot be sent.
+
+Public upload checkpoints use content plus image/PTT kind, in a namespace separate
+from private-JSON lab uploads. Repeating the same encoded file returns the same
+sealed reference across restart; moving the file does not create another upload.
+Uncertain/refused outcomes are retained and never retried automatically. Editing
+the bytes creates different content, not a reset of the old checkpoint. References
+bind the exact uploaded protobuf and reject changed metadata or saved payloads.
+This API does not expose view-once uploads; the existing explicit JSON view-once
+path remains separate. Offline tests verify confirmed reuse, restart, uncertainty
+and entry into the normal outbox; a new public-API network upload is not yet a
+verified live result.

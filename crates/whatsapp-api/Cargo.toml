@@ -14,6 +14,7 @@ include = ["src/**", "README.md", "Cargo.toml", "fixtures/**", "LICENSE-*", "THI
 
 [features]
 default = []
+comparison-client = ["experimental-noise", "experimental-transport", "experimental-signal-crypto", "experimental-registration-https"]
 # Experimental Noise transport adapter over `snow`. Kept behind a feature until
 # the profile's handshake pattern is Observed rather than ReferenceOnly.
 experimental-noise = ["dep:snow"]

@@ -2,8 +2,9 @@
 //!
 //! `enqueue` commits an immutable intent and returns a [`SendTicket`]. It
 //! claims nothing about server acceptance or delivery. Attempt progress and
-//! delivery facts are recorded as separate, append-only facts. Transmission
-//! is not implemented for this profile; entries stay `Queued`.
+//! delivery facts are recorded as separate, append-only facts. Enqueue itself
+//! never transmits. The default profile stays offline; the explicit comparison
+//! runtime can reserve and transmit supported intents from this same outbox.
 
 use std::sync::Arc;
 
@@ -216,6 +217,35 @@ impl Outbox {
         tx.get_json(Table::Outbox, &local_id.0, RECORD_V1)
     }
 
+    /// Look up an immutable intent by its namespace-scoped request ID before
+    /// performing preparation with external side effects. This is read-only;
+    /// callers must still use `enqueue` for the final atomic conflict check.
+    pub fn get_by_request_id(
+        &self,
+        tx: &ReadTx<'_>,
+        id: &ClientRequestId,
+    ) -> Result<Option<OutboxEntry>> {
+        let Some(record) = tx.get_json::<IdempotencyRecord>(
+            Table::Idempotency,
+            &idempotency_key(&self.namespace, id),
+            RECORD_V1,
+        )?
+        else {
+            return Ok(None);
+        };
+        let entry = self.get(tx, record.local_id)?.ok_or_else(|| {
+            Error::Storage(crate::store::StoreError::Serialization(
+                "idempotency record without outbox entry".into(),
+            ))
+        })?;
+        if entry.client_request_id != *id || entry.semantic_hash != record.semantic_hash {
+            return Err(Error::Storage(crate::store::StoreError::Serialization(
+                "inconsistent idempotency record".into(),
+            )));
+        }
+        Ok(Some(entry))
+    }
+
     /// Load an entry inside a write transaction.
     pub fn get_mut(
         &self,
@@ -232,22 +262,47 @@ impl Outbox {
 
     /// All entries that still need work, in accept order (bounded).
     pub fn pending(&self, tx: &ReadTx<'_>, limit: usize) -> Result<Vec<OutboxEntry>> {
-        let mut out: Vec<OutboxEntry> = tx
-            .scan(Table::Outbox, RECORD_V1, limit.saturating_mul(4).max(limit))?
-            .into_iter()
-            .map(|(_, v)| serde_json::from_slice::<OutboxEntry>(&v))
-            .collect::<std::result::Result<_, _>>()
-            .map_err(|e| Error::Storage(crate::store::StoreError::Serialization(e.to_string())))?;
-        out.retain(|e| {
-            matches!(
-                e.progress,
-                AttemptProgress::Queued
-                    | AttemptProgress::Prepared
-                    | AttemptProgress::RetryScheduled
-            )
-        });
-        out.sort_by_key(|e| e.accepted_at);
-        out.truncate(limit);
+        self.pending_where(tx, limit, |_| Ok(true))
+    }
+
+    /// Filter before truncating, so durable reservations cannot hide eligible
+    /// work. Scan one consistent snapshot in pages, retaining only `limit`
+    /// candidates plus one page rather than the entire message history.
+    pub(crate) fn pending_where(
+        &self,
+        tx: &ReadTx<'_>,
+        limit: usize,
+        mut eligible: impl FnMut(&OutboxEntry) -> Result<bool>,
+    ) -> Result<Vec<OutboxEntry>> {
+        let mut out = Vec::new();
+        if limit == 0 {
+            return Ok(out);
+        }
+        let mut cursor = None;
+        loop {
+            let page = tx.scan_after(Table::Outbox, RECORD_V1, cursor.as_deref(), 256)?;
+            let done = page.len() < 256;
+            cursor = page.last().map(|(key, _)| key.clone());
+            for (_, bytes) in page {
+                let entry: OutboxEntry = serde_json::from_slice(&bytes).map_err(|e| {
+                    Error::Storage(crate::store::StoreError::Serialization(e.to_string()))
+                })?;
+                if matches!(
+                    entry.progress,
+                    AttemptProgress::Queued
+                        | AttemptProgress::Prepared
+                        | AttemptProgress::RetryScheduled
+                ) && eligible(&entry)?
+                {
+                    out.push(entry);
+                }
+            }
+            out.sort_by_key(|e| (e.accepted_at, e.local_id.0));
+            out.truncate(limit);
+            if done {
+                break;
+            }
+        }
         Ok(out)
     }
 
@@ -354,6 +409,40 @@ mod tests {
     }
 
     #[test]
+    fn request_lookup_is_scoped_read_only_and_detects_missing_entries() {
+        let (_d, s) = store();
+        let ob = Outbox::new("test", Limits::default());
+        let other = Outbox::new("other", Limits::default());
+        let request = req("lookup", "original");
+        assert!(
+            s.read(|tx| ob.get_by_request_id(tx, &request.client_request_id))
+                .unwrap()
+                .is_none()
+        );
+        let (ticket, _) = s.write(|tx| ob.enqueue(tx, &request)).unwrap();
+        let head = s.journal_head().unwrap();
+        assert_eq!(
+            s.read(|tx| ob.get_by_request_id(tx, &request.client_request_id))
+                .unwrap()
+                .unwrap()
+                .intent,
+            request
+        );
+        assert!(
+            s.read(|tx| other.get_by_request_id(tx, &request.client_request_id))
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(s.journal_head().unwrap(), head);
+        s.write(|tx| tx.delete(Table::Outbox, &ticket.local_id.0))
+            .unwrap();
+        assert!(
+            s.read(|tx| ob.get_by_request_id(tx, &request.client_request_id))
+                .is_err()
+        );
+    }
+
+    #[test]
     fn enqueue_is_idempotent_and_detects_conflicts() {
         let (_d, s) = store();
         let ob = Outbox::new("test", Limits::default());
@@ -445,6 +534,59 @@ mod tests {
         assert!(
             !s.write(|tx| ob.cancel(tx, LocalMessageId([0; 16])))
                 .unwrap()
+        );
+    }
+
+    #[test]
+    fn pending_reaches_work_beyond_completed_history_and_filters_before_limit() {
+        let (_d, s) = store();
+        let ob = Outbox::new("test", Limits::default());
+        let (ticket, _) = s
+            .write(|tx| ob.enqueue(tx, &req("template", "fixture")))
+            .unwrap();
+        let template = s.read(|tx| ob.get(tx, ticket.local_id)).unwrap().unwrap();
+        let last = LocalMessageId(299_u128.to_be_bytes());
+        s.write(|tx| {
+            tx.delete(Table::Outbox, &ticket.local_id.0)?;
+            for index in 0..300_u128 {
+                let mut entry = template.clone();
+                entry.local_id = LocalMessageId(index.to_be_bytes());
+                entry.progress = if entry.local_id == last {
+                    AttemptProgress::Queued
+                } else {
+                    AttemptProgress::Cancelled
+                };
+                tx.put_json(Table::Outbox, &entry.local_id.0, RECORD_V1, &entry)?;
+            }
+            Ok(())
+        })
+        .unwrap();
+        let pending = s.read(|tx| ob.pending(tx, 1)).unwrap();
+        assert_eq!(pending.len(), 1);
+        assert_eq!(pending[0].local_id, last);
+        assert!(s.read(|tx| ob.pending(tx, 0)).unwrap().is_empty());
+        s.write(|tx| {
+            for index in 0..299_u128 {
+                let id = LocalMessageId(index.to_be_bytes());
+                let mut entry = ob.get_mut(tx, id)?.unwrap();
+                ob.set_progress(tx, &mut entry, AttemptProgress::Queued)?;
+            }
+            Ok(())
+        })
+        .unwrap();
+        let eligible = s
+            .read(|tx| ob.pending_where(tx, 1, |entry| Ok(entry.local_id == last)))
+            .unwrap();
+        assert_eq!(eligible.len(), 1);
+        assert_eq!(eligible[0].local_id, last);
+        // Same-time entries use stable physical identity order across pages.
+        let pending = s.read(|tx| ob.pending(tx, 2)).unwrap();
+        assert_eq!(
+            pending
+                .iter()
+                .map(|entry| entry.local_id.0)
+                .collect::<Vec<_>>(),
+            vec![0_u128.to_be_bytes(), 1_u128.to_be_bytes()]
         );
     }
 }

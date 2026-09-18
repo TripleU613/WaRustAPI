@@ -110,6 +110,20 @@ impl<S> fmt::Debug for FramedConnection<S> {
 }
 
 impl<S: AsyncRead + AsyncWrite + Unpin> FramedConnection<S> {
+    pub(crate) fn into_split(mut self) -> Result<SplitSocket<S>, TransportError> {
+        if self.first_write {
+            return Err(TransportError::Config("cannot split before handshake"));
+        }
+        let stream = self.stream.take().ok_or(TransportError::Closed)?;
+        let (read, write) = tokio::io::split(stream);
+        Ok(SplitSocket {
+            read,
+            write,
+            reader: self.reader,
+            codec: self.codec,
+            io_timeout: self.io_timeout,
+        })
+    }
     /// Wrap an established byte stream. Does not perform I/O or authentication.
     pub fn new(
         stream: S,
@@ -191,6 +205,14 @@ impl<S: AsyncRead + AsyncWrite + Unpin> FramedConnection<S> {
         }
         Ok(result)
     }
+}
+
+pub(crate) struct SplitSocket<S> {
+    pub read: tokio::io::ReadHalf<S>,
+    pub write: tokio::io::WriteHalf<S>,
+    pub reader: FrameReader,
+    pub codec: FrameCodec,
+    pub io_timeout: Duration,
 }
 
 #[cfg(test)]

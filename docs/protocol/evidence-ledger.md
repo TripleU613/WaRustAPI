@@ -1,5 +1,54 @@
 # Evidence ledger
 
+### Comparison receive activation and view-once prefetch — 2026-09-18
+
+Derived from 2.26.37.70: `LX/Avw.A00` 0x0008–0068 builds
+`iq/id/xmlns=passive/type=set/to=server` with `active` for true;
+primary ConnectionThread `LX/0iS.A0e` 0x0014–004a generates the ID and
+calls that true branch. `LX/Cns.A00` 0x007c–0108 constructs delivery
+receipts with optional type/participant/recipient; `A05` 0x0000–0074
+constructs receipt acknowledgements, omitting type for delivery. Our bounded
+implementation supports primary direct routes only and never emits read/opened
+receipts. Messages must already be authenticated and committed before delivery
+confirmation; all incoming frames are encrypted at rest before acknowledgement.
+
+Observed on our comparison lab client: activation result accepted. Activation
+alone yielded the five old messages. Adding delivery/receipt confirmations was
+followed by four additional authenticated payloads; one had direct ImageMessage
+flag 25. A single HTTPS prefetch downloaded 91,562 ciphertext bytes and passed
+size/hash/MAC verification. Encrypted state is `downloaded_unopened`, with no
+plaintext export or opened receipt. Queue progress followed the confirmations;
+the exact internal server queue policy remains unknown. This is not a capture
+from an official Android device or evidence for the pinned build.
+
+### Comparison image upload/send — 2026-09-18
+
+Comparison 2.26.37.70: media route query returned nine hosts and auth. The first
+route expired before use and was explicitly refreshed; no upload used expired
+auth. One encrypted PNG POST returned HTTP 200 with URL/direct_path, followed
+by authenticated login and a matching encrypted-image message acknowledgement.
+Reusing the private request returned locally without uploading or sending again.
+The operator subsequently confirmed receiving the image. APK mappings, limits and commands are in
+[messaging transport](messaging-transport.md#image-sending-comparison-lab).
+No route credentials, media keys, phone numbers or returned private URLs are
+included here. This observation is comparison-only, not the pinned APK profile.
+
+### Comparison inbound messages — 2026-09-18
+
+One bounded authenticated connection captured two `enc/v=2/type=msg` messages.
+Both used a primary LID `from` and explicit `sender_pn`; comparison APK
+`LX/CmF.A01` 0x0096–00c6 reads `sender_pn` as `PhoneUserJid`. Selecting the saved
+pinned PN session allowed authenticated offline Signal decryption of both.
+Plaintext/session were committed atomically and a repeated offline run skipped
+both. This verifies this mapped established-session case, not general LID or
+prekey receiving. No message content, sender values or credentials are recorded.
+
+Subsequent offline protobuf inspection established one extended-text payload
+(Message fields 6/35) and one protocol payload (field 12, type 4), not two user
+replies. Comparison `LX/BXF.dynamicMethod` 0x0578 and `LX/BXE.dynamicMethod`
+0x01c4 supply the field schemas; `LX/C1B.<clinit>` 0x0028–003c labels type 4
+`EPHEMERAL_SYNC_RESPONSE`. No new connection or Signal ratchet mutation was needed.
+
 Labels (docs/design/README.md 6.1): `Observed` · `Derived` · `ReferenceOnly` · `Unknown`.
 Every important wire constant used by the code points here through a
 `ledger_ref` string. **No `Observed` transport fact exists yet**: nothing has

@@ -150,6 +150,33 @@ pub struct EncryptedConnection<S> {
 }
 
 impl<S: AsyncRead + AsyncWrite + Unpin> EncryptedConnection<S> {
+    /// Split after handshake/login so a read can remain pending while the owner
+    /// sends acknowledgements or keepalives. Any failed/cancelled I/O poisons both
+    /// halves; cipher state is never reused across connections.
+    pub fn into_split(
+        mut self,
+    ) -> Result<(EncryptedReader<S>, EncryptedWriter<S>), TransportError> {
+        let (socket, noise) = self.inner.take().ok_or(TransportError::Closed)?;
+        let parts = socket.into_split()?;
+        let shared = std::sync::Arc::new(SplitState {
+            noise: std::sync::Mutex::new(noise),
+            failed: std::sync::atomic::AtomicBool::new(false),
+        });
+        Ok((
+            EncryptedReader {
+                stream: parts.read,
+                reader: parts.reader,
+                shared: shared.clone(),
+                timeout: parts.io_timeout,
+            },
+            EncryptedWriter {
+                stream: parts.write,
+                codec: parts.codec,
+                shared,
+                timeout: parts.io_timeout,
+            },
+        ))
+    }
     /// Send one encrypted binary record. An error permanently consumes the channel.
     pub async fn write(&mut self, plaintext: &[u8]) -> Result<(), TransportError> {
         let (mut socket, mut noise) = self.inner.take().ok_or(TransportError::Closed)?;
@@ -168,6 +195,116 @@ impl<S: AsyncRead + AsyncWrite + Unpin> EncryptedConnection<S> {
         let plaintext = noise.decrypt(&record)?;
         self.inner = Some((socket, noise));
         Ok(Some(plaintext))
+    }
+}
+
+struct SplitState {
+    noise: std::sync::Mutex<ClassicTransport>,
+    failed: std::sync::atomic::AtomicBool,
+}
+struct InFlight {
+    shared: std::sync::Arc<SplitState>,
+    complete: bool,
+}
+impl InFlight {
+    fn new(shared: &std::sync::Arc<SplitState>) -> Result<Self, TransportError> {
+        if shared.failed.load(std::sync::atomic::Ordering::Acquire) {
+            return Err(TransportError::Closed);
+        }
+        Ok(Self {
+            shared: shared.clone(),
+            complete: false,
+        })
+    }
+}
+impl Drop for InFlight {
+    fn drop(&mut self) {
+        if !self.complete {
+            self.shared
+                .failed
+                .store(true, std::sync::atomic::Ordering::Release);
+        }
+    }
+}
+/// Sole owned reader for one authenticated transport epoch.
+pub struct EncryptedReader<S> {
+    stream: tokio::io::ReadHalf<S>,
+    reader: super::FrameReader,
+    shared: std::sync::Arc<SplitState>,
+    timeout: std::time::Duration,
+}
+/// Sole owned writer for the same epoch; no cloned sender cipher counters.
+pub struct EncryptedWriter<S> {
+    stream: tokio::io::WriteHalf<S>,
+    codec: super::FrameCodec,
+    shared: std::sync::Arc<SplitState>,
+    timeout: std::time::Duration,
+}
+impl<S> std::fmt::Debug for EncryptedReader<S> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("EncryptedReader(<redacted>)")
+    }
+}
+impl<S> std::fmt::Debug for EncryptedWriter<S> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("EncryptedWriter(<redacted>)")
+    }
+}
+impl<S: AsyncRead + AsyncWrite + Unpin> EncryptedReader<S> {
+    /// Read one record. Cancellation closes the epoch, including its writer.
+    pub async fn read(&mut self) -> Result<Option<Zeroizing<Vec<u8>>>, TransportError> {
+        let mut guard = InFlight::new(&self.shared)?;
+        let frame = tokio::time::timeout(self.timeout, self.reader.read_frame(&mut self.stream))
+            .await
+            .map_err(|_| TransportError::Deadline("read"))??;
+        let Some(frame) = frame else {
+            return Ok(None);
+        };
+        let plain = self
+            .shared
+            .noise
+            .lock()
+            .map_err(|_| TransportError::Closed)?
+            .decrypt(&frame)?;
+        if self
+            .shared
+            .failed
+            .load(std::sync::atomic::Ordering::Acquire)
+        {
+            return Err(TransportError::Closed);
+        }
+        guard.complete = true;
+        Ok(Some(plain))
+    }
+}
+impl<S: AsyncRead + AsyncWrite + Unpin> EncryptedWriter<S> {
+    /// Write one record; no retry after uncertain or cancelled writes.
+    pub async fn write(&mut self, plaintext: &[u8]) -> Result<(), TransportError> {
+        use tokio::io::AsyncWriteExt;
+        let mut guard = InFlight::new(&self.shared)?;
+        let record = self
+            .shared
+            .noise
+            .lock()
+            .map_err(|_| TransportError::Closed)?
+            .encrypt(plaintext)?;
+        let frame = self.codec.encode(&record, None)?;
+        tokio::time::timeout(self.timeout, async {
+            self.stream.write_all(&frame).await?;
+            self.stream.flush().await
+        })
+        .await
+        .map_err(|_| TransportError::Deadline("write"))?
+        .map_err(|e| TransportError::Io(e.kind()))?;
+        if self
+            .shared
+            .failed
+            .load(std::sync::atomic::Ordering::Acquire)
+        {
+            return Err(TransportError::Closed);
+        }
+        guard.complete = true;
+        Ok(())
     }
 }
 
@@ -217,7 +354,7 @@ mod tests {
         }
     }
 
-    async fn exchange(wrong_root: bool) {
+    async fn exchange(wrong_root: bool, split: bool, cancel: bool) {
         let cfg = comparison_noise_config();
         let client_key = StaticKeypair::generate(&cfg).unwrap();
         let server_key = StaticKeypair::generate(&cfg).unwrap();
@@ -288,6 +425,10 @@ mod tests {
             .concat();
             let (login, mut transport) = noise.finish(&record);
             assert_eq!(login.as_slice(), b"local login fixture");
+            if cancel {
+                assert!(reader.read_frame(&mut server).await.unwrap().is_none());
+                return;
+            }
             let incoming = reader.read_frame(&mut server).await.unwrap().unwrap();
             let plain = transport.decrypt(&incoming).unwrap();
             assert_eq!(plain.as_slice(), b"local record fixture");
@@ -314,25 +455,55 @@ mod tests {
             let verified = result.ok().unwrap();
             assert_eq!(verified.chain().leaf_serial, 9);
             let mut channel = verified.finish(b"local login fixture").await.unwrap();
-            channel.write(b"local record fixture").await.unwrap();
-            assert_eq!(channel.read().await.unwrap().unwrap().as_slice(), b"reply");
-            assert!(channel.read().await.unwrap().is_none());
-            assert!(matches!(
-                channel.write(b"closed").await,
-                Err(TransportError::Closed)
-            ));
+            if split {
+                let (mut reader, mut writer) = channel.into_split().unwrap();
+                if cancel {
+                    assert!(
+                        tokio::time::timeout(std::time::Duration::from_millis(10), reader.read())
+                            .await
+                            .is_err()
+                    );
+                } else {
+                    let (reply, sent) =
+                        tokio::join!(reader.read(), writer.write(b"local record fixture"));
+                    sent.unwrap();
+                    assert_eq!(reply.unwrap().unwrap().as_slice(), b"reply");
+                    assert!(reader.read().await.unwrap().is_none());
+                }
+                assert!(matches!(
+                    writer.write(b"closed").await,
+                    Err(TransportError::Closed)
+                ));
+            } else {
+                channel.write(b"local record fixture").await.unwrap();
+                assert_eq!(channel.read().await.unwrap().unwrap().as_slice(), b"reply");
+                assert!(channel.read().await.unwrap().is_none());
+                assert!(matches!(
+                    channel.write(b"closed").await,
+                    Err(TransportError::Closed)
+                ));
+            }
         }
         peer.await.unwrap();
     }
 
     #[tokio::test]
     async fn verified_handshake_and_encrypted_records() {
-        exchange(false).await;
+        exchange(false, false, false).await;
     }
 
     #[tokio::test]
     async fn untrusted_server_never_receives_login() {
-        exchange(true).await;
+        exchange(true, false, false).await;
+    }
+
+    #[tokio::test]
+    async fn split_reader_does_not_block_writer_and_eof_closes_both() {
+        exchange(false, true, false).await;
+    }
+    #[tokio::test]
+    async fn cancelled_split_read_poisons_writer_without_replay() {
+        exchange(false, true, true).await;
     }
 
     #[test]

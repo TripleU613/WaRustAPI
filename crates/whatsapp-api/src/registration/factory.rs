@@ -23,6 +23,41 @@ pub use super::request::{LAB_PROFILE_ID, LabRegistrationConfig};
 const MATERIAL_KEY: &[u8] = b"registration-lab-material";
 const RECORD_VERSION: u16 = 1;
 
+/// Load the signed prekey actually registered for this account. Never generates
+/// or rotates identity; serialized key material must remain encrypted at rest.
+pub fn registered_signed_prekey(store: &ProtocolStore) -> Result<Zeroizing<Vec<u8>>> {
+    use wacore_libsignal::protocol::{
+        GenericSignedPreKey, PrivateKey, SignedPreKeyRecord, Timestamp,
+    };
+    store.read(|tx| {
+        let record: Material = tx
+            .get_json(Table::Account, MATERIAL_KEY, RECORD_VERSION)?
+            .ok_or_else(|| invalid("registered signed prekey unavailable"))?;
+        record.check_account(AccountRecord::load(tx)?)?;
+        let public = PublicKey::from_djb_public_key_bytes(&record.signed_pre_key.public)
+            .map_err(|_| invalid("invalid signed prekey"))?;
+        let identity = PublicKey::from_djb_public_key_bytes(&record.identity.public)
+            .map_err(|_| invalid("invalid identity"))?;
+        if !identity.verify_signature(&public.serialize(), &record.signature) {
+            return Err(invalid("signed prekey signature invalid"));
+        }
+        let pair = KeyPair {
+            public_key: public,
+            private_key: PrivateKey::deserialize(&record.signed_pre_key.private)
+                .map_err(|_| invalid("invalid signed private key"))?,
+        };
+        let signed = SignedPreKeyRecord::new(
+            record.config.signed_pre_key_id.into(),
+            Timestamp::from_epoch_millis(0),
+            &pair,
+            &record.signature,
+        );
+        Ok(Zeroizing::new(signed.serialize().map_err(|_| {
+            invalid("cannot serialize saved signed prekey")
+        })?))
+    })
+}
+
 #[derive(Serialize, Deserialize)]
 struct Material {
     attempt_id: AttemptId,

@@ -1,5 +1,115 @@
 # Status — 2026-09-18
 
+**Public ordinary-media download integrated (offline verified):** comparison
+clients can list sealed incoming references with `received_media()` and explicitly
+export authenticated ordinary images/voice notes with `download_media()` to new
+private files. View-once content, foreign references, metadata changes and
+file/symlink overwrite are refused. A cached-download client test stays offline.
+Public ordinary upload now also returns stable reusable references for the normal
+outbox, with offline reuse/restart/uncertainty tests. A fresh public-API network
+upload and full cross-device synchronization remain unverified/incomplete.
+
+**Normal-outbox image and voice note server-acknowledged:** private JSON image
+and voice-note intents now reuse the bounded upload module and enter the public
+outbox through stable account-bound sealed references. Text and media share Signal
+reservation and ACK tracking. One new image test to the existing test contact
+received a matching server ACK through the public outbox after an explicit expired
+media-route refresh; a receive-only session then saved recipient delivery. A new
+two-second synthetic voice-note test also received a matching normal-outbox ACK
+and subsequent recipient delivery (no read/played receipt for either media test).
+Repeating either private JSON returned its saved ACK without uploading or
+connecting again. Handset display/playback confirmation and public upload/download
+convenience APIs remain incomplete.
+
+**Ten-item messaging work in progress:** the persistent listener now runs through
+the public account actor (explicit comparison opt-in). A 75-second authenticated
+live check completed cleanly; ordinary incoming image download/display also
+passed live. Incoming primary prekey support, receipt fact tracking, a durable
+post-view opened-receipt queue and ordinary voice-note playback are implemented
+with offline tests. Opened-receipt, incoming voice and new-sender live checks
+remain pending. Trusted-contact token notification handling and atomic key-share
+storage from an already pinned own-device session are implemented and tested;
+device linking, key activation and general cross-device synchronization are not.
+Normal direct-text outbox sending
+has a separate explicit opt-in: one selected private-JSON text received a matching
+server acknowledgement through the public client/runtime. A subsequent receive
+session persisted a recipient delivery receipt (no read/played receipt). Repeating
+the same JSON returns locally without sending again. Human handset confirmation,
+broader media/outbox and cross-device work remain incomplete. See the
+[ten-item checklist and handoff](docs/messaging-completion.md).
+
+The entries below are the historical experiment sequence; newer results above
+and in the checklist supersede their then-current limitations.
+
+**Local view-once viewer added:** `lab-open-view-once` authenticates/decrypts the
+downloaded image and atomically consumes it before passing plaintext through a
+pipe to a 30-second desktop viewer. No plaintext file is created. Reopening is
+blocked, including after a viewer failure; accessible media body/key-bearing
+protobuf records are replaced with consumed markers. Secure erasure of old
+database pages is not claimed. Server opened receipts remain unimplemented.
+The requested image was passed to the desktop viewer, which exited successfully
+after its bounded display. It is now locally consumed, not available to reopen.
+
+**Incoming view-once prefetch verified:** adding the APK's post-login active IQ
+received a matching result, but alone produced only old messages. Delivery
+receipts for previously authenticated/stored messages plus acknowledgements of
+incoming receipts were then written; four additional payloads arrived and
+authenticated offline. One contains ImageMessage flag 25 (`view_once=true`).
+One HTTPS GET downloaded 91,562 encrypted bytes; size, hash and MAC passed.
+The ciphertext is stored encrypted at rest as `downloaded_unopened`; no plaintext
+export, viewing or opened receipt occurred. This sequence supports the missing
+receive confirmations as the queue-progress issue, without proving a particular
+server-side policy. No chats were resent or account identities changed.
+
+**View-once sending confirmed:** the operator confirmed opening the outgoing test
+picture once and being unable to reopen it. Incoming view-once download now has
+an explicit ciphertext-only command, with HTTPS bounds, hash/MAC verification
+and encrypted unopened storage. The initial invocation found no authenticated
+descriptor; the receive correction above subsequently enabled a verified GET.
+Local viewing/consumption is now available above; server opened receipts remain
+unimplemented.
+
+**First voice note server-acknowledged:** a locally generated two-second mono
+Ogg/Opus beep was encrypted/uploaded and sent as `ptt` through the saved Signal
+session. A matching server message acknowledgement was persisted. Repeating its
+private JSON returned locally without another send. The operator confirmed
+handset receipt; playback was not separately confirmed. Voice-note input is data
+(`voice_note` path), not recipient-specific code.
+
+**Incoming image message received:** after the operator corrected the recipient,
+one bounded receive captured two new authenticated payloads. Offline decryption
+identified one ImageMessage (Message fields 3/35, 1,227 protobuf bytes); the other
+has fields 35/91: an associated-child wrapper containing another ordinary-image
+descriptor, now classified from the APK. The attachment itself has not been
+downloaded or decrypted. The inbox
+now also scans pending/send-response captures from outgoing-message operations;
+it previously scanned only dedicated receive captures. Image protobufs are now
+explicitly labelled by redacted inspection. Inbound media download is not yet
+implemented for ordinary images; the view-once prefetch above has not had a live
+download to verify. Outbound success does not establish inbound media support.
+
+**First image server-acknowledged:** the requested PNG was encrypted and uploaded
+once (HTTP 200), then sent through the existing pinned Signal session. A matching
+message acknowledgement was saved. Repeating the same private JSON returned
+locally without another upload or connection. The operator confirmed receiving
+the image on the handset. This is the explicit comparison lab path, not the default media
+API. See [image usage](docs/protocol/messaging-transport.md#image-sending-comparison-lab).
+
+**Inbound decryption verified:** one bounded authenticated receive connection
+captured two encrypted `msg` stanzas. Offline processing used the explicit
+`sender_pn` mapping on their LID envelopes and the existing pinned Signal session
+to authenticate/decrypt both. Plaintext protobufs and advanced sessions were
+committed atomically in encrypted storage. A second offline run skipped both
+without changing the ratchet or contacting the server. No chats or receipts were
+sent. Continuous receiving, inbox display and receipt handling remain incomplete.
+
+**Payload classification correction:** those two encrypted payloads are one
+extended-text message (fields 6/35) and one protocol message (field 12), type 4
+`EPHEMERAL_SYNC_RESPONSE`. They are not two user replies. Offline `lab-inbox
+--inspect` reads the saved plaintext structure without advancing sessions or
+printing message content. Comparison APK `LX/BXF`, `LX/BXE` and `LX/C1B` establish
+these field/type mappings.
+
 **First live encrypted text message server-acknowledged:** the comparison lab
 verified the server certificate (intermediate serial 3 / leaf serial 361),
 received authenticated login `success`, fetched the selected recipient's key
@@ -7,8 +117,8 @@ bundle, verified its signature, committed Signal session/send intent atomically,
 and sent one encrypted text. A matching `ack` / `class=message` with no error
 was persisted. Repeating the same private message request returned the saved
 acknowledgement without connecting or sending again. The operator subsequently
-confirmed handset receipt and reported replying. That reply has not been read by
-this client; protocol delivery/read receipts remain unverified. This explicit lab
+confirmed handset receipt and reported replying. Inbound decryption is now
+verified above; protocol delivery/read receipt handling remains unverified. This explicit lab
 flow is not the default CLI/outbox runtime.
 See [transport progress and usage](docs/protocol/messaging-transport.md).
 
@@ -133,7 +243,7 @@ the active 2.26.36.75 profile.
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability and comparison transport/registration wire-profile endpoints plus structured gated-operation errors |
 
-Test count: 204 (`cargo test --locked --workspace --all-features`). Formatting,
+Test count: 227 (`cargo test --locked --workspace --all-features`). Formatting,
 all-feature/all-target Clippy with `-D warnings`, strict rustdoc, package
 verification, and protobuf regeneration checks pass on the continuation
 machine (Rust 1.98.1). The repository and CI

@@ -175,11 +175,64 @@ request—not adding Rust code, another command or a number-specific script.**
 
 ## Known lessons and handoff
 
+- Current ten-item work and live-check boundaries are tracked in
+  `docs/messaging-completion.md`; consult it before relying on the older lab
+  milestones below. `listen` uses the explicit comparison public-client actor,
+  without draining sends. Normal outbox transmission requires the separate
+  `comparison_outbox(true)` opt-in. Incoming supported text now reaches the
+  durable event journal atomically; `events --summary` is the redacted inspection
+  path. Historical projection uses original authenticated captures and skips
+  consumed view-once content. Do not delete event markers to repeat projection.
+  `outbox-send` now sends only its selected private-JSON text intent through the
+  public actor. One live test has saved server acceptance and recipient delivery;
+  no read/played receipt or human handset confirmation yet. Reusing that JSON
+  returns locally without another transmission. Never give it a new ID to resend.
+  A separate normal-outbox PNG test now also has a matching server ACK; its
+  private JSON is `lab/signup-json-PbDdYU/message-outbox-image-test.json`.
+  Repeating that JSON returns locally. Never rename its ID to repeat the image.
+  The image subsequently received a delivery receipt. A normal-outbox synthetic
+  voice note also received a matching ACK and delivery receipt; its JSON is
+  `lab/signup-json-PbDdYU/message-outbox-voice-test.json`. Repeats return locally.
+  Handset image display and audible voice-note playback remain unconfirmed.
+
+- View-once image sends support private JSON `image` plus `view_once: true`, with
+  the APK-derived image flag and V2 wrapper. One send was server-acknowledged;
+  the operator confirmed one opening and refusal to reopen. Inspection is not opening.
+  `lab-open-view-once` consumes a downloaded picture atomically before piping
+  plaintext to a 30-second local mpv viewer. It removes accessible body/protobuf
+  records and refuses reopening, with no plaintext file. A crash after consumption
+  does not restore it. Server opened receipts remain unimplemented; this is a
+  local single-use viewer, not full cross-device view-once synchronization.
+  `lab-download-view-once` can prefetch and authenticate ciphertext into private
+  unopened storage. A live receive correction subsequently yielded a qualifying
+  descriptor and downloaded/authenticated 91,562 encrypted bytes, unopened.
+  It does not export plaintext. Receive now sends the APK active IQ and delivery
+  confirmations only for already authenticated/stored direct messages; supported
+  incoming receipts receive acknowledgements. No read/opened receipt is sent.
+
+- A two-second synthetic Ogg/Opus beep was sent as a voice note with a matching
+  server acknowledgement. Use private JSON `voice_note` instead of `text`/`image`;
+  keep its request ID stable. The operator confirmed handset receipt; playback
+  was not separately confirmed.
+
+- The comparison lab now uploaded one encrypted PNG (HTTP 200) and received a
+  matching image-message acknowledgement; the operator confirmed handset receipt.
+  Private message JSON accepts `image` (PNG path) instead of `text`. Keep the
+  image request ID stable: repeat returns locally, uncertain uploads/sends block.
+  Media routes expire and can be explicitly refreshed with `--login --media-route`.
+  Keys, uploaded bytes, response and send intent remain in encrypted storage.
+
 - Comparison messaging now has a live verified certificate, primary login
   `success`, and one encrypted text with a matching server message acknowledgement.
   This is the explicit `lab-transport` path, not the default outbox runtime.
-  The operator confirmed handset receipt and reported replying. Inbound reply
-  processing and protocol delivery/read receipts remain incomplete.
+  The operator confirmed handset receipt and reported replying. Two inbound
+  payloads were subsequently decrypted offline with the existing pinned session:
+  one extended-text reply and one `EPHEMERAL_SYNC_RESPONSE`, not two user replies.
+  `lab-inbox --inspect` classifies saved payloads locally without printing content
+  or advancing sessions. Never count encrypted envelopes as user replies.
+  `lab-transport --login --receive` captures a bounded window; `lab-inbox`
+  decrypts captures locally and skips previously committed messages. Plaintext
+  stays encrypted at rest. Continuous receiving and receipt handling are incomplete.
   Consult `docs/protocol/messaging-transport.md`.
   Reuse the private message JSON's request ID: acknowledged sends return locally,
   uncertain/refused sends remain blocked. Never change the ID merely to resend.

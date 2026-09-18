@@ -3,7 +3,7 @@ use whatsapp_api::{
     Error,
     binary::{Encoder, Node, TokenDictionary},
     session::AccountRecord,
-    signal::direct::{prekey_bundle, prepare},
+    signal::direct::{prekey_bundle, prepare, prepare_payload},
     store::{ProtocolStore, Table},
     transport::{
         handshake::EncryptedConnection,
@@ -17,6 +17,7 @@ pub(super) async fn send(
     channel: &mut EncryptedConnection<tokio::net::TcpStream>,
     message: &MessageRequest,
     reply: &Node,
+    image_payload: Option<&[u8]>,
 ) -> Result<(), Error> {
     let recipient = message.recipient()?;
     let bundle = prekey_bundle(reply, &recipient)?;
@@ -37,24 +38,80 @@ pub(super) async fn send(
         ))
     })?;
     let session = session.map(zeroize::Zeroizing::new);
-    let prepared = prepare(
-        account,
-        &recipient,
-        &bundle,
-        session.as_deref().map(|v| v.as_slice()),
-        identity.as_deref(),
-        &message.text,
-    )
-    .await?;
+    let prepared = if let Some(payload) = image_payload {
+        prepare_payload(
+            account,
+            &recipient,
+            &bundle,
+            session.as_deref().map(|v| v.as_slice()),
+            identity.as_deref(),
+            payload,
+        )
+        .await?
+    } else {
+        prepare(
+            account,
+            &recipient,
+            &bundle,
+            session.as_deref().map(|v| v.as_slice()),
+            identity.as_deref(),
+            &message.text,
+        )
+        .await?
+    };
     let wire_id = whatsapp_api::transport::messaging::new_message_id()?;
-    let node = direct_message(&recipient, &wire_id, prepared.kind, prepared.ciphertext)?;
+    let node = if image_payload.is_some() {
+        whatsapp_api::transport::messaging::direct_media(
+            &recipient,
+            &wire_id,
+            prepared.kind,
+            prepared.ciphertext,
+            if message.voice_note.is_some() {
+                "ptt"
+            } else {
+                "image"
+            },
+        )?
+    } else {
+        direct_message(&recipient, &wire_id, prepared.kind, prepared.ciphertext)?
+    };
     let wire = Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(&node)?;
-    let intent = serde_json::json!({"status":"outcome_unknown","wire_id":wire_id,"to":message.to.as_str(),"text":message.text.as_str(),"wire":wire,"at":whatsapp_api::model::time::Timestamp::now()});
+    let image_hash = whatsapp_api::transport::image_upload::fingerprint(message)?;
+    let intent = serde_json::json!({"status":"outcome_unknown","wire_id":wire_id,"to":message.to.as_str(),"text":message.text.as_str(),"image_hash":image_hash,"wire":wire,"at":whatsapp_api::model::time::Timestamp::now()});
     store.write(|tx| {
         let previous: Option<serde_json::Value> =
             tx.get_json(Table::Checkpoints, intent_key.as_bytes(), 1)?;
         if previous.is_some() {
             return Err(Error::invalid("message", "send intent already reserved"));
+        }
+        if image_payload.is_some() {
+            let upload: Option<serde_json::Value> = tx.get_json(
+                Table::Checkpoints,
+                format!("message:{}:upload", message.request_id).as_bytes(),
+                1,
+            )?;
+            if !upload.is_some_and(|v| {
+                v["status"] == "uploaded"
+                    && v["hash"] == image_hash
+                    && v["to"] == message.to.as_str()
+            }) {
+                return Err(Error::invalid(
+                    "image",
+                    "source changed after upload; send not reserved",
+                ));
+            }
+        }
+        let current_session: Option<Vec<u8>> =
+            tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1)?;
+        let current_identity: Option<Vec<u8>> =
+            tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?;
+        if current_session.as_deref() != session.as_deref().map(|v| v.as_slice())
+            || current_identity != identity
+        {
+            return Err(Error::invalid(
+                "message",
+                "peer session changed before commit",
+            ));
         }
         tx.put_json(
             Table::SignalSessions,
@@ -70,7 +127,18 @@ pub(super) async fn send(
         )?;
         tx.put_json(Table::Checkpoints, intent_key.as_bytes(), 1, &intent)
     })?;
-    eprintln!("transport: session and send intent committed; sending one encrypted text message");
+    eprintln!(
+        "transport: session and send intent committed; sending one encrypted {} message",
+        if image_payload.is_some() {
+            if message.voice_note.is_some() {
+                "voice-note"
+            } else {
+                "image"
+            }
+        } else {
+            "text"
+        }
+    );
     write_node(channel, &node).await?;
     let (ack, pending) = wait_for(channel, "ack", &wire_id).await?;
     let accepted = ack.get_attr("class").and_then(|v| v.as_text()) == Some("message")

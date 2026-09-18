@@ -9,18 +9,86 @@ pub mod cert;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 mod classic;
 pub mod comparison;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod connection;
 pub mod framing;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod handshake;
+#[cfg(all(
+    feature = "experimental-registration-https",
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod image_download;
+#[cfg(all(
+    feature = "experimental-registration-https",
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod image_upload;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod inbox;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+mod inbox_events;
 #[cfg(feature = "experimental-transport")]
 pub mod login;
+#[cfg(all(
+    feature = "experimental-registration-https",
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod media;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod messaging;
 #[cfg(feature = "experimental-noise")]
 pub mod noise;
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+pub mod notifications;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod outgoing;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod outgoing_media;
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+pub mod receipts;
 pub mod selector;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod send_path;
 #[cfg(feature = "experimental-transport")]
 pub mod socket;
+#[cfg(all(
+    feature = "experimental-registration-https",
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+mod voice_note;
 
 use serde::{Deserialize, Serialize};
 

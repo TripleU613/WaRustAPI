@@ -475,6 +475,40 @@ impl ProtocolStore {
         *self.generation.read().unwrap_or_else(|p| p.into_inner())
     }
 
+    /// Seal an opaque media reference for this account generation and binding.
+    /// The caller must persist the returned envelope for stable idempotency.
+    pub fn seal_media_reference(&self, binding: &[u8], payload: &[u8]) -> Result<Vec<u8>> {
+        if payload.len() > 65536 || binding.len() > 4096 {
+            return Err(StoreError::RecordTooLarge.into());
+        }
+        let aad = RecordAad {
+            generation: self.generation().0,
+            table: "media-reference",
+            key: binding,
+            record_version: 1,
+        };
+        Ok(self.sealer.seal(&aad, payload)?)
+    }
+
+    /// Open an account/generation/binding-scoped media reference, never a raw
+    /// Message protobuf supplied in place of a sealed envelope.
+    pub fn open_media_reference(
+        &self,
+        binding: &[u8],
+        sealed: &[u8],
+    ) -> Result<zeroize::Zeroizing<Vec<u8>>> {
+        if sealed.len() > 66000 || binding.len() > 4096 {
+            return Err(StoreError::RecordTooLarge.into());
+        }
+        let aad = RecordAad {
+            generation: self.generation().0,
+            table: "media-reference",
+            key: binding,
+            record_version: 1,
+        };
+        Ok(zeroize::Zeroizing::new(self.sealer.open(&aad, sealed)?))
+    }
+
     /// Run a blocking store operation on a blocking thread.
     pub async fn run_blocking<T, F>(self: &Arc<Self>, f: F) -> Result<T>
     where
@@ -829,9 +863,27 @@ impl ReadTx<'_> {
         record_version: u16,
         limit: usize,
     ) -> Result<Vec<(Vec<u8>, Vec<u8>)>> {
+        self.scan_after(table, record_version, None, limit)
+    }
+
+    /// Read a bounded page after an exclusive physical-key cursor. Keep pages
+    /// within this read transaction for a consistent snapshot. Blinded-table
+    /// cursors are opaque physical keys, not logical lookup keys.
+    pub fn scan_after(
+        &self,
+        table: Table,
+        record_version: u16,
+        after: Option<&[u8]>,
+        limit: usize,
+    ) -> Result<Vec<(Vec<u8>, Vec<u8>)>> {
+        use std::ops::Bound::{Excluded, Unbounded};
         let t = self.tx.open_table(table.def()).map_err(StoreError::from)?;
         let mut out = Vec::new();
-        for item in t.iter().map_err(StoreError::from)? {
+        let lower = after.map_or(Unbounded, Excluded);
+        for item in t
+            .range::<&[u8]>((lower, Unbounded))
+            .map_err(StoreError::from)?
+        {
             if out.len() >= limit {
                 break;
             }
@@ -883,6 +935,63 @@ impl ReadTx<'_> {
 }
 
 impl WriteTx<'_> {
+    /// Read a bounded page after an exclusive physical-key cursor within this
+    /// write transaction. Includes this transaction's uncommitted changes.
+    /// Blinded-table cursors are physical keys, not logical lookup keys.
+    pub fn scan_after(
+        &self,
+        table: Table,
+        record_version: u16,
+        after: Option<&[u8]>,
+        limit: usize,
+    ) -> Result<Vec<(Vec<u8>, Vec<u8>)>> {
+        use std::ops::Bound::{Excluded, Unbounded};
+        let t = self.tx.open_table(table.def()).map_err(StoreError::from)?;
+        let mut out = Vec::new();
+        let lower = after.map_or(Unbounded, Excluded);
+        for item in t
+            .range::<&[u8]>((lower, Unbounded))
+            .map_err(StoreError::from)?
+        {
+            if out.len() >= limit {
+                break;
+            }
+            let (k, v) = item.map_err(StoreError::from)?;
+            let key = k.value().to_vec();
+            let pt = open_record(
+                self.store,
+                self.generation,
+                table,
+                &key,
+                record_version,
+                v.value(),
+            )?;
+            out.push((key, pt));
+        }
+        Ok(out)
+    }
+
+    /// Seal a reference using this transaction's account generation, so an
+    /// atomic inbox/event projection does not need a nested store transaction.
+    #[cfg(all(
+        feature = "experimental-registration-https",
+        feature = "experimental-signal-crypto",
+        feature = "experimental-noise",
+        feature = "experimental-transport"
+    ))]
+    pub(crate) fn seal_media_reference(&self, binding: &[u8], payload: &[u8]) -> Result<Vec<u8>> {
+        if payload.len() > 65536 || binding.len() > 4096 {
+            return Err(StoreError::RecordTooLarge.into());
+        }
+        let aad = RecordAad {
+            generation: self.generation.0,
+            table: "media-reference",
+            key: binding,
+            record_version: 1,
+        };
+        Ok(self.store.sealer.seal(&aad, payload)?)
+    }
+
     /// Account generation the transaction writes under.
     pub fn generation(&self) -> AccountGeneration {
         self.generation
@@ -972,25 +1081,7 @@ impl WriteTx<'_> {
         record_version: u16,
         limit: usize,
     ) -> Result<Vec<(Vec<u8>, Vec<u8>)>> {
-        let t = self.tx.open_table(table.def()).map_err(StoreError::from)?;
-        let mut out = Vec::new();
-        for item in t.iter().map_err(StoreError::from)? {
-            if out.len() >= limit {
-                break;
-            }
-            let (k, v) = item.map_err(StoreError::from)?;
-            let key = k.value().to_vec();
-            let pt = open_record(
-                self.store,
-                self.generation,
-                table,
-                &key,
-                record_version,
-                v.value(),
-            )?;
-            out.push((key, pt));
-        }
-        Ok(out)
+        self.scan_after(table, record_version, None, limit)
     }
 
     /// Number of records in a table.
@@ -1185,6 +1276,69 @@ mod tests {
             raw.windows(7).any(|w| w == b"account"),
             "non-blinded key visible"
         );
+    }
+
+    #[test]
+    fn paged_scan_uses_exclusive_physical_keys_including_blinded_tables() {
+        let (_d, s) = temp_store(MasterKey::from_bytes([1u8; 32]));
+        for table in [Table::Checkpoints, Table::SignalSessions] {
+            s.write(|tx| {
+                for i in 0..5_u8 {
+                    tx.put(table, &[i], 1, &[i])?;
+                }
+                Ok(())
+            })
+            .unwrap();
+            s.read(|tx| {
+                let all = tx.scan(table, 1, 10)?;
+                let mut paged = Vec::new();
+                let mut cursor = None;
+                loop {
+                    let page = tx.scan_after(table, 1, cursor.as_deref(), 2)?;
+                    if page.is_empty() {
+                        break;
+                    }
+                    cursor = page.last().map(|(key, _)| key.clone());
+                    paged.extend(page);
+                }
+                assert_eq!(paged, all);
+                assert_eq!(paged.len(), 5);
+                assert!(tx.scan_after(table, 1, None, 0)?.is_empty());
+                assert!(tx.scan_after(table, 1, Some(&[255; 64]), 2)?.is_empty());
+                Ok(())
+            })
+            .unwrap();
+        }
+    }
+
+    #[test]
+    fn write_paged_scan_sees_uncommitted_rows_without_committing_them() {
+        let (_d, s) = temp_store(MasterKey::from_bytes([1u8; 32]));
+        for table in [Table::Checkpoints, Table::SignalSessions] {
+            let rolled_back: Result<()> = s.write(|tx| {
+                for i in 0..5_u8 {
+                    tx.put(table, &[i], 1, &[i])?;
+                }
+                let all = tx.scan(table, 1, 10)?;
+                let mut paged = Vec::new();
+                let mut cursor = None;
+                loop {
+                    let page = tx.scan_after(table, 1, cursor.as_deref(), 2)?;
+                    if page.is_empty() {
+                        break;
+                    }
+                    cursor = page.last().map(|(key, _)| key.clone());
+                    paged.extend(page);
+                }
+                assert_eq!(paged, all);
+                assert_eq!(paged.len(), 5);
+                assert!(tx.scan_after(table, 1, None, 0)?.is_empty());
+                assert!(tx.scan_after(table, 1, Some(&[255; 64]), 2)?.is_empty());
+                Err(Error::Cancelled)
+            });
+            assert!(matches!(rolled_back, Err(Error::Cancelled)));
+            assert_eq!(s.read(|tx| tx.count(table)).unwrap(), 0);
+        }
     }
 
     #[test]

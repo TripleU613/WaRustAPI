@@ -2545,6 +2545,7 @@ dependencies = [
  "clap",
  "hex",
  "serde_json",
+ "tempfile",
  "thiserror",
  "tokio",
  "tracing",

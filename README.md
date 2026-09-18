@@ -6,7 +6,7 @@ another running WhatsApp client.
 
 **First live message acknowledged by WhatsApp.** The experimental comparison
 flow completed registration, authenticated login and one encrypted text send.
-The recipient confirmed receipt; inbound replies and general messaging remain incomplete. See
+The recipient confirmed receipt; one text reply and one protocol sync payload were decrypted. General messaging remains incomplete. See
 [STATUS.md](STATUS.md) and [transport usage](docs/protocol/messaging-transport.md).
 
 ## Get started

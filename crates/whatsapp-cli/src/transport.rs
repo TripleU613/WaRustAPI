@@ -22,6 +22,8 @@ pub(super) async fn run(
     allow_live: bool,
     login: bool,
     message: Option<&Path>,
+    receive: bool,
+    media_route: bool,
 ) -> Result<(), Error> {
     if !allow_live {
         return Err(Error::invalid("transport", "requires --allow-live-request"));
@@ -40,6 +42,11 @@ pub(super) async fn run(
         .read(AccountRecord::load)?
         .ok_or_else(|| Error::invalid("transport", "missing account"))?;
     if let Some(message) = &message {
+        whatsapp_api::transport::send_path::claim(
+            &store,
+            &whatsapp_api::model::ids::ClientRequestId::new(message.request_id.clone())?,
+            whatsapp_api::transport::send_path::SendPath::Lab,
+        )?;
         let previous: Option<serde_json::Value> = store.read(|tx| {
             tx.get_json(
                 whatsapp_api::store::Table::Checkpoints,
@@ -48,7 +55,11 @@ pub(super) async fn run(
             )
         })?;
         if let Some(previous) = previous {
-            if previous["to"] != message.to.as_str() || previous["text"] != message.text.as_str() {
+            if previous["to"] != message.to.as_str()
+                || previous["text"] != message.text.as_str()
+                || previous["image_hash"]
+                    != whatsapp_api::transport::image_upload::fingerprint(message)?
+            {
                 return Err(Error::invalid(
                     "message",
                     "request_id already belongs to a different message",
@@ -84,6 +95,11 @@ pub(super) async fn run(
             ));
         }
     }
+    let image_payload = if let Some(message) = &message {
+        whatsapp_api::transport::image_upload::prepare(&store, message, &config).await?
+    } else {
+        None
+    };
     let key = account
         .noise_static
         .as_ref()
@@ -183,6 +199,190 @@ pub(super) async fn run(
                 "login not accepted; saved result must be inspected before retrying",
             ));
         }
+        if media_route {
+            use whatsapp_api::transport::messaging::{
+                media_route_request, new_message_id, wait_for, write_node,
+            };
+            let id = new_message_id()?;
+            let checkpoint = format!("media-route:{id}");
+            store.write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    checkpoint.as_bytes(),
+                    1,
+                    &serde_json::json!({"status":"outcome_unknown", "at":Timestamp::now()}),
+                )
+            })?;
+            write_node(&mut channel, &media_route_request(&id)).await?;
+            let (reply, pending) = wait_for(&mut channel, "iq", &id).await?;
+            let success = reply.get_attr("type").and_then(|v| v.as_text()) == Some("result")
+                && reply.child("media_conn").is_some();
+            let dict = TokenDictionary::comparison_2_26_37_70();
+            let wire = whatsapp_api::binary::Encoder::new(dict).encode(&reply)?;
+            store.write(|tx| {
+                tx.put_json(Table::Checkpoints, checkpoint.as_bytes(), 1,
+                    &serde_json::json!({"status": if success {"result"} else {"refused"}, "wire":wire, "at":Timestamp::now()}))?;
+                for (index, node) in pending.iter().enumerate() {
+                    let bytes = whatsapp_api::binary::Encoder::new(dict).encode(node)?;
+                    tx.put_json(Table::Checkpoints, format!("inbound:{id}:{index:04}").as_bytes(), 1, &bytes)?;
+                }
+                Ok(())
+            })?;
+            if !success {
+                return Err(Error::invalid(
+                    "media_route",
+                    "server did not return media routes; response saved encrypted",
+                ));
+            }
+            let route = reply.child("media_conn").expect("checked");
+            let hosts = route
+                .child_nodes()
+                .iter()
+                .filter(|n| n.description == "host")
+                .count();
+            println!(
+                "transport: media route result; hosts={hosts}, auth_present={}; saved encrypted; no image uploaded",
+                route.get_attr("auth").is_some()
+            );
+        }
+        if receive {
+            let capture = whatsapp_api::transport::messaging::new_message_id()?;
+            let activation_key = format!("connection-active:{capture}");
+            store.write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    activation_key.as_bytes(),
+                    1,
+                    &serde_json::json!({"status":"outcome_unknown", "at":Timestamp::now()}),
+                )
+            })?;
+            whatsapp_api::transport::messaging::write_node(
+                &mut channel,
+                &whatsapp_api::transport::messaging::active_request(&capture),
+            )
+            .await?;
+            let mut activated = false;
+            let deadline = tokio::time::Instant::now() + Duration::from_secs(30);
+            for index in 0..64 {
+                let next = tokio::time::timeout_at(
+                    deadline,
+                    whatsapp_api::transport::messaging::read_node(&mut channel),
+                )
+                .await;
+                let node = match next {
+                    Err(_) => {
+                        println!("transport: bounded receive window complete");
+                        break;
+                    }
+                    Ok(Err(error)) => {
+                        eprintln!("transport: receive ended: {error}");
+                        break;
+                    }
+                    Ok(Ok(node)) => node,
+                };
+                let bytes =
+                    whatsapp_api::binary::Encoder::new(TokenDictionary::comparison_2_26_37_70())
+                        .encode(&node)?;
+                store.write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        format!("inbound:{capture}:{index}").as_bytes(),
+                        1,
+                        &bytes,
+                    )
+                })?;
+                // Persist every frame before correlating, including messages arriving
+                // before the IQ result. Timeout must not discard these frames.
+                if node.description == "iq"
+                    && node.get_attr("id").and_then(|v| v.as_text()) == Some(capture.as_str())
+                {
+                    activated = node.get_attr("type").and_then(|v| v.as_text()) == Some("result");
+                    store.write(|tx| tx.put_json(Table::Checkpoints, activation_key.as_bytes(), 1,
+                        &serde_json::json!({"status":if activated {"result"} else {"refused"}, "at":Timestamp::now()})))?;
+                    println!(
+                        "transport: connection activation={}",
+                        if activated { "accepted" } else { "refused" }
+                    );
+                    if !activated {
+                        return Err(Error::invalid(
+                            "transport",
+                            "connection activation refused; response saved encrypted",
+                        ));
+                    }
+                    continue;
+                }
+                let tag = match node.description.as_str() {
+                    "message" => "message",
+                    "receipt" => "receipt",
+                    "notification" => "notification",
+                    "iq" => "iq",
+                    "ib" => "ib",
+                    "stream:error" => "stream:error",
+                    _ => "other",
+                };
+                let kind = node
+                    .child("enc")
+                    .and_then(|n| n.get_attr("type"))
+                    .and_then(|v| v.as_text())
+                    .filter(|v| matches!(*v, "msg" | "pkmsg" | "skmsg"))
+                    .unwrap_or("none/other");
+                let incoming = whatsapp_api::transport::inbox::process(
+                    &store,
+                    &account,
+                    &node,
+                    format!("inbound:{capture}:{index}").as_bytes(),
+                )
+                .await?;
+                let tracked = whatsapp_api::transport::receipts::record(&store, &node)?;
+                if tracked > 0 {
+                    println!("transport: updated {tracked} outgoing receipt records");
+                }
+                let confirmation = if tag == "receipt"
+                    || matches!(
+                        incoming,
+                        whatsapp_api::transport::inbox::IncomingResult::Decrypted
+                            | whatsapp_api::transport::inbox::IncomingResult::Duplicate
+                    ) {
+                    whatsapp_api::transport::messaging::received_confirmation(&node)
+                } else {
+                    None
+                };
+                let confirmed = confirmation.is_some();
+                if let Some(confirmation) = confirmation {
+                    let checkpoint = format!("receive-confirmation:{capture}:{index}");
+                    store.write(|tx| {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            checkpoint.as_bytes(),
+                            1,
+                            &serde_json::json!({"status":"outcome_unknown", "at":Timestamp::now()}),
+                        )
+                    })?;
+                    whatsapp_api::transport::messaging::write_node(&mut channel, &confirmation)
+                        .await?;
+                    store.write(|tx| {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            checkpoint.as_bytes(),
+                            1,
+                            &serde_json::json!({"status":"written", "at":Timestamp::now()}),
+                        )
+                    })?;
+                }
+                println!(
+                    "transport: incoming {tag}, encryption={kind}; saved encrypted; delivery/receipt confirmation={confirmed}; no opened receipt"
+                );
+                if tag == "stream:error" {
+                    break;
+                }
+            }
+            if !activated {
+                return Err(Error::invalid(
+                    "transport",
+                    "connection activation unconfirmed; received frames preserved; no retry",
+                ));
+            }
+        }
         if status == "success"
             && let Some(message) = &message
         {
@@ -257,7 +457,15 @@ pub(super) async fn run(
                 user.is_some_and(|v| v.child("skey").is_some()),
                 user.is_some_and(|v| v.child("key").is_some())
             );
-            super::transport_send::send(&store, &account, &mut channel, message, &reply).await?;
+            super::transport_send::send(
+                &store,
+                &account,
+                &mut channel,
+                message,
+                &reply,
+                image_payload.as_deref().map(|v| v.as_slice()),
+            )
+            .await?;
         }
     } else {
         println!(

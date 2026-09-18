@@ -116,7 +116,7 @@ fn validate_material(material: ComparisonTokenMaterial<'_>) -> Result<()> {
     Ok(())
 }
 
-fn standard_base64_padded(input: &[u8]) -> String {
+pub(crate) fn standard_base64_padded(input: &[u8]) -> String {
     const TABLE: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     let mut output = String::with_capacity(input.len().div_ceil(3) * 4);
     for chunk in input.chunks(3) {

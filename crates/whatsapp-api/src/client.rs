@@ -3,7 +3,8 @@
 //! `WhatsAppClient` is a cloneable handle over one account actor and one
 //! encrypted protocol store. Every operation either works offline against
 //! durable state or returns a typed error naming the missing capability or
-//! profile fact. Nothing here contacts a server for the current profile.
+//! profile fact. The default pinned profile stays offline. The explicit
+//! `comparison-client` driver can connect; outbox transmission is a separate opt-in.
 
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -46,6 +47,18 @@ pub struct Page<T> {
     pub continuation: Option<String>,
 }
 
+/// Last locally applied comparison sync settings. Missing fields mean no
+/// supported action has been applied, not "unpinned" or "unmuted". This is
+/// neither a remote refresh nor evidence that all collections are synchronized.
+#[cfg(feature = "comparison-client")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SyncedChatSettings {
+    /// Last authenticated pin/unpin projection, if available.
+    pub pin: Option<crate::signal::app_state_collection::storage::actions::ChatPin>,
+    /// Last authenticated mute/unmute projection, with server-domain timers.
+    pub mute: Option<crate::signal::app_state_collection::storage::actions::ChatMute>,
+}
+
 /// Group creation request.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CreateGroupRequest {
@@ -67,6 +80,12 @@ pub enum ReceiptPolicy {
 
 /// Builder for [`WhatsAppClient`].
 pub struct ClientBuilder {
+    #[cfg(feature = "comparison-client")]
+    comparison_outbox: bool,
+    #[cfg(feature = "comparison-client")]
+    comparison_ticket: Option<LocalMessageId>,
+    #[cfg(feature = "comparison-client")]
+    comparison: Option<crate::registration::request::LabRegistrationConfig>,
     profile: Option<ProtocolProfile>,
     store_path: Option<PathBuf>,
     account_id: Option<AccountId>,
@@ -93,6 +112,12 @@ impl std::fmt::Debug for ClientBuilder {
 impl ClientBuilder {
     fn new() -> Self {
         Self {
+            #[cfg(feature = "comparison-client")]
+            comparison_outbox: false,
+            #[cfg(feature = "comparison-client")]
+            comparison_ticket: None,
+            #[cfg(feature = "comparison-client")]
+            comparison: None,
             profile: None,
             store_path: None,
             account_id: None,
@@ -103,6 +128,39 @@ impl ClientBuilder {
             registration_flow: None,
             create_store: true,
         }
+    }
+
+    /// Opt into the APK-derived comparison live driver on this account actor.
+    /// Building remains offline; `connect` authorizes the actual connection.
+    /// This does not change the evidence or support of the pinned profile.
+    #[cfg(feature = "comparison-client")]
+    #[must_use]
+    pub fn comparison_transport(
+        mut self,
+        config: crate::registration::request::LabRegistrationConfig,
+    ) -> Self {
+        self.comparison = Some(config);
+        self
+    }
+
+    /// Enable transmission of queued primary direct plain texts when using the
+    /// comparison driver. Default false: receiving never drains old intents.
+    /// Quotes, groups and media are not yet supported by this outbox adapter.
+    #[cfg(feature = "comparison-client")]
+    #[must_use]
+    pub fn comparison_outbox(mut self, enabled: bool) -> Self {
+        self.comparison_outbox = enabled;
+        self.comparison_ticket = None;
+        self
+    }
+
+    /// Enable only one already-enqueued ticket, leaving every other intent alone.
+    #[cfg(feature = "comparison-client")]
+    #[must_use]
+    pub fn comparison_outbox_ticket(mut self, id: LocalMessageId) -> Self {
+        self.comparison_outbox = true;
+        self.comparison_ticket = Some(id);
+        self
     }
 
     /// Protocol profile (defaults to the Android reference profile).
@@ -204,9 +262,27 @@ impl ClientBuilder {
             .registration_flow
             .unwrap_or_else(|| Arc::new(UnsupportedFlow::for_profile(&profile)));
         let registration = RegistrationService::new(store.clone(), &profile, flow);
+        #[cfg(feature = "comparison-client")]
+        let media_config = self.comparison.clone();
+        #[cfg(feature = "comparison-client")]
+        let runtime = if let Some(config) = self.comparison {
+            config.validate()?;
+            crate::runtime::spawn_comparison(
+                store.clone(),
+                profile.clone(),
+                config,
+                self.comparison_outbox,
+                self.comparison_ticket,
+            )
+        } else {
+            crate::runtime::spawn(store.clone(), profile.clone())
+        };
+        #[cfg(not(feature = "comparison-client"))]
         let runtime = crate::runtime::spawn(store.clone(), profile.clone());
         Ok(WhatsAppClient {
             inner: Arc::new(Inner {
+                #[cfg(feature = "comparison-client")]
+                media_config,
                 capabilities: CapabilityMatrix::current(profile.id.clone()),
                 outbox: Outbox::new(self.namespace, profile.limits),
                 store,
@@ -220,6 +296,8 @@ impl ClientBuilder {
 }
 
 struct Inner {
+    #[cfg(feature = "comparison-client")]
+    media_config: Option<crate::registration::request::LabRegistrationConfig>,
     store: Arc<ProtocolStore>,
     profile: Arc<ProtocolProfile>,
     registration: RegistrationService,
@@ -364,21 +442,103 @@ impl WhatsAppClient {
         Err(Error::unsupported(Capability::Groups, "unreachable"))
     }
 
-    /// Bounded staged upload of caller-provided encoded content.
+    /// Bounded staged ordinary PNG/Ogg-Opus upload. Comparison clients reuse
+    /// confirmed content/kind uploads; refused/uncertain outcomes never replay.
+    /// Uploading alone does not enqueue or send a chat message.
     pub async fn upload_media(
         &self,
-        _source: PathBuf,
+        source: PathBuf,
     ) -> Result<crate::model::message::MediaReference> {
+        #[cfg(feature = "comparison-client")]
+        if let Some(config) = &self.inner.media_config {
+            return crate::transport::image_upload::upload_source(
+                &self.inner.store,
+                config,
+                &source,
+            )
+            .await;
+        }
+        let _ = source;
         self.inner.capabilities.require(Capability::Media)?;
         Err(Error::unsupported(Capability::Media, "unreachable"))
     }
 
-    /// Verified download into a sink path.
+    /// List account-bound ordinary image/voice-note references without network
+    /// access. Requires explicit comparison-client configuration. View-once
+    /// attachments never enter this replayable/exportable API.
+    #[cfg(feature = "comparison-client")]
+    pub async fn received_media(&self) -> Result<Vec<crate::model::message::MediaReference>> {
+        if self.inner.media_config.is_none() {
+            return Err(Error::unsupported(
+                Capability::Media,
+                "comparison media requires explicit configuration",
+            ));
+        }
+        self.inner
+            .store
+            .run_blocking(crate::transport::media::references)
+            .await
+    }
+
+    /// Read the last applied pin/mute settings in one consistent store snapshot.
+    /// Offline and read-only; requires explicit comparison configuration. Does
+    /// not activate imported keys, apply pending batches, or connect to a server.
+    /// Mute timers remain in the server clock domain; resolve them only with
+    /// independently supplied clock samples and the applicable mention policy.
+    #[cfg(feature = "comparison-client")]
+    pub async fn synced_chat_settings(
+        &self,
+        chat: &crate::model::ids::ChatId,
+    ) -> Result<SyncedChatSettings> {
+        if self.inner.media_config.is_none() {
+            return Err(Error::unsupported(
+                Capability::ProfileAndPresence,
+                "comparison sync settings require explicit configuration",
+            ));
+        }
+        let jid = chat.jid().clone();
+        self.inner
+            .store
+            .run_blocking(move |store| {
+                use crate::signal::app_state_collection::storage::actions::{chat_mute, chat_pin};
+                store.read(|tx| {
+                    Ok(SyncedChatSettings {
+                        pin: chat_pin(tx, &jid)?,
+                        mute: chat_mute(tx, &jid)?,
+                    })
+                })
+            })
+            .await
+    }
+
+    /// Verified ordinary-media download into a new private sink file. This is
+    /// an explicit plaintext export; existing files and symlinks are not replaced.
+    /// View-once and outgoing references are refused. No automatic GET retries.
     pub async fn download_media(
         &self,
-        _reference: &crate::model::message::MediaReference,
-        _sink: PathBuf,
+        reference: &crate::model::message::MediaReference,
+        sink: PathBuf,
     ) -> Result<u64> {
+        #[cfg(feature = "comparison-client")]
+        if let Some(config) = &self.inner.media_config {
+            let reference = reference.clone();
+            let id = self
+                .inner
+                .store
+                .run_blocking(move |store| {
+                    crate::transport::media::reference_selector(store, &reference)
+                })
+                .await?;
+            let (_, plain) = crate::transport::media::open(&self.inner.store, config, &id).await?;
+            let store = self.inner.store.clone();
+            return tokio::task::spawn_blocking(move || {
+                crate::transport::media::ensure_available(&store, &id)?;
+                crate::transport::media::export_new(&sink, &plain)
+            })
+            .await
+            .map_err(|_| Error::Cancelled)?;
+        }
+        let _ = (reference, sink);
         self.inner.capabilities.require(Capability::Media)?;
         Err(Error::unsupported(Capability::Media, "unreachable"))
     }
@@ -426,6 +586,26 @@ mod tests {
                 quoted: None,
             },
         }
+    }
+
+    #[cfg(feature = "comparison-client")]
+    #[tokio::test]
+    async fn sync_settings_require_explicit_comparison_opt_in() {
+        let dir = tempfile::tempdir().unwrap();
+        let c = client(&dir).await;
+        let chat = ChatId::from_jid(&Jid::parse("15550000000@s.whatsapp.net").unwrap()).unwrap();
+        assert!(matches!(
+            c.synced_chat_settings(&chat).await,
+            Err(Error::Unsupported {
+                capability: Capability::ProfileAndPresence,
+                ..
+            })
+        ));
+        assert!(matches!(
+            c.connection_state().borrow().state,
+            ConnectionState::Stopped
+        ));
+        c.shutdown().await;
     }
 
     #[tokio::test]
