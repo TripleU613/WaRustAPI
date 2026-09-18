@@ -89,6 +89,13 @@ target/debug/whatsapp-cli lab-signup --config lab/requests.json preview
 ```
 
 Preview validates locally without opening a store or contacting WhatsApp.
+
+The feature-gated library also exposes `EncodedRegistrationRequest::encrypt_comparison`
+for offline assembly of the APK's Curve25519/AES-GCM `ENC` envelope. It generates
+a fresh ephemeral encryption key, independently of persisted account keys.
+It is not yet selected by the CLI or saved factory, and does not supply the
+separate `H`/Authorization attestation path. See the
+[APK transport trace](http-post-analysis.md) for evidence and limits.
 Phone and secret values are redacted; `preview --show-phone` explicitly reveals
 only the phone. Unknown settings fail fast. Live diagnostics show field names,
 HTTP status, recognized server reason and wait times, never body values or

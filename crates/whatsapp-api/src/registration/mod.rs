@@ -11,6 +11,8 @@
 //! the default client sends no request and requests no OTP.
 
 #[cfg(feature = "experimental-signal-crypto")]
+mod envelope;
+#[cfg(feature = "experimental-signal-crypto")]
 pub mod factory;
 pub mod prerequisites;
 pub mod request;

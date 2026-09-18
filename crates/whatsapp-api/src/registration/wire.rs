@@ -1031,6 +1031,30 @@ impl fmt::Debug for EncodedRegistrationRequest {
 }
 
 impl EncodedRegistrationRequest {
+    /// Wrap a comparison request in the APK's `ENC` envelope, using a fresh
+    /// ephemeral encryption key. Does not provide `H` or Authorization
+    /// attestation, change account identity, or contact the server.
+    /// Explicit opt-in: existing saved requests keep their original wire bytes.
+    #[cfg(feature = "experimental-signal-crypto")]
+    pub fn encrypt_comparison(mut self) -> Result<Self> {
+        if !self
+            .url
+            .starts_with(&format!("{}/", WHATSAPP_2_26_37_70.base_url))
+            || self.body.starts_with(b"ENC=")
+        {
+            return Err(Error::invalid(
+                "registration_envelope",
+                "requires an unwrapped comparison request",
+            ));
+        }
+        let sealed = super::envelope::seal(&self.body)?;
+        let encoded = Zeroizing::new(base64_url_no_pad(&sealed));
+        let mut form = RegistrationForm::new();
+        form.push("ENC", encoded.as_str())?;
+        self.body = form.encode()?;
+        Ok(self)
+    }
+
     /// Metadata-only troubleshooting view. Field values never appear.
     pub fn diagnostic_summary(&self) -> serde_json::Value {
         let fields: Vec<_> = self
@@ -1958,6 +1982,30 @@ fn validate_pre_encoded(value: &str) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
+    #[cfg(feature = "experimental-signal-crypto")]
+    #[test]
+    fn comparison_envelope_is_explicit_redacted_and_not_double_wrapped() {
+        let mut form = RegistrationForm::new();
+        form.push("reason", "private-example").unwrap();
+        let clear = WHATSAPP_2_26_37_70
+            .request(RegistrationEndpoint::Code, &form)
+            .unwrap();
+        assert_eq!(clear.body(), b"reason=private-example");
+        let encrypted = clear.encrypt_comparison().unwrap();
+        assert!(encrypted.body().starts_with(b"ENC="));
+        assert!(
+            encrypted.body()[4..]
+                .iter()
+                .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_'))
+        );
+        assert_eq!(
+            encrypted.diagnostic_summary()["fields"],
+            serde_json::json!(["ENC"])
+        );
+        assert!(!format!("{encrypted:?}").contains("private-example"));
+        assert!(encrypted.encrypt_comparison().is_err());
+    }
+
     use super::*;
     use serde_json::Value;
 

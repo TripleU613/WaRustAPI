@@ -153,6 +153,41 @@ Our sender implements only the clear form. Runtime selection, authentic
 attestation inputs and server requirements are unresolved. No integrity
 claims, proxy/domain-fronting strategy or retry behavior was reproduced.
 
+### Encryption selector resolved for the Kotlin code-request path
+
+Further APK-only inspection narrows the earlier uncertainty: bridge A09 calls
+`RetryingHttpClient.A01`, which sets v7 to **true** at 0x0000 and passes it as
+the `isEncrypted` argument to A00 at 0x0034. This particular path requests
+encryption, not an unknown runtime flag. `HRT.<clinit>` maps `HSP.A06` (code)
+to `HgX(true)` at 0x004e–0x0062; A01 reads that value for `sendAttestation`.
+This does not prove which of the repository's alternate transports is selected.
+
+The envelope itself is statically reproducible:
+
+- A00 0x0398–0x03e2 generates a fresh Curve25519 pair (`B2G.A01`) and agrees
+  with the 32-byte public key in `HQQ.<clinit>`; `B2G.A0A -> 1NH.A02` returns
+  the agreement bytes directly, with no intervening KDF.
+- 0x03ea–0x0432 uses AES/GCM/NoPadding, a newly zero-filled 12-byte nonce,
+  a 128-bit authentication tag and no AAD. The key pair must be fresh for
+  every seal; the persisted account keys are not encryption nonce substitutes.
+- 0x0438–0x0452 removes the public-key type byte, prefixes the raw 32-byte
+  ephemeral public key to ciphertext plus tag, and encodes using Android
+  Base64 flags 11 (URL-safe, no wrap, no padding).
+- `HpO.A00` XORs characters with 0x12: the strings backing `HRz.A02/A03`
+  decode to `ENC` and `H`. Encryption-only wrapping is `ENC=<base64url>`.
+
+Implemented `EncodedRegistrationRequest::encrypt_comparison` as explicit
+offline opt-in behind experimental Signal crypto. Existing CLI/factory requests
+are **not** silently changed. Tests cover peer decryption, tag tampering,
+fresh ephemeral keys, noncontributory peers, outer encoding and redaction.
+They are local compatibility tests, not evidence of server acceptance.
+
+Attestation is separate: A00 0x0488 onward signs the encoded payload via
+`13h.A07`, adds `H`, and may obtain an Authorization payload via `13h.A03`.
+Failure paths can leave an empty H and omit Authorization; their existence is
+not proof that the server accepts that fallback. No H or attestation token is
+manufactured, and no live request was sent in this implementation.
+
 ### Refusal information loss fixed
 
 Previously `ComparisonHttpFlow::blocked_response` dropped the parsed protocol
