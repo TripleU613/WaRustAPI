@@ -9,6 +9,7 @@ relicense third-party inputs or dependencies.
 | Generated protobuf Rust | `crates/whatsapp-api/src/proto/`, generated from those schemas; retain upstream provenance |
 | Binary token fixture | `crates/whatsapp-api/fixtures/tokens/web-md-v3.json`; source revision, MIT designation, and hash are embedded in the fixture |
 | Reference and comparison observations | [Reference manifest](crates/whatsapp-api/fixtures/reference-manifest.json) and [research log](docs/protocol/decompilation-log.md); APKs are not distributed |
+| Selected APK bytecode annotations and comparison tokens | [Research snapshot](docs/protocol/apk/README.md); derived from the exact WhatsApp APK identified in its manifest, not first-party Rust code; the workspace license does not relicense these inputs |
 
 See the [component review](docs/protocol/reusable-components.md),
 [dependency report](docs/protocol/dependency-report.md), and

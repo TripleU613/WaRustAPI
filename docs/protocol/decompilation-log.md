@@ -3,8 +3,10 @@
 Purpose: a running, append-only record of every static-analysis step against
 the pinned APK (`com.whatsapp` 2.26.36.75, sha256 `ce7468…922e9`), so no step
 is repeated and every ledger row can be traced to the class and method that
-justifies it. Decompiled output stays in the lab directory (never committed);
-only findings, class names, offsets and derived facts are recorded here.
+justifies it. Full decompilation and binaries stay in the ignored lab directory.
+At the operator's request, a bounded selection of annotated protocol bytecode
+is now committed under `docs/protocol/apk/`; its provenance and limitations are
+documented there. Findings, class names, offsets and derived facts remain here.
 
 Conventions: one dated entry per session; each entry lists **target**,
 **method**, **result**, **ledger rows touched**, **dead ends**.
@@ -360,3 +362,23 @@ Machine-readable metadata and findings are recorded in
 - Ledger impact: comparison fixture and ADR 0004 updated; active-profile
   `framing.*` and `noise.record_limit` labels remain unchanged. Next: trace
   the receive-record path and primary login payload construction (T6).
+
+## 2026-09-17 — compact, media-free research export
+
+- Operator supplied the exact comparison APK and requested protocol code
+  without media. Unpacked DEX, manifest, resource table and signature locally
+  under ignored `lab/whatsapp-2.26.37.70/`; no raw binary is committed.
+- Added `xtask apk-research-bundle`, pinned to the comparison SHA-256. It
+  exports 21 previously mapped classes / 149 methods as partial annotated
+  bytecode, the recovered comparison dictionary, source and DEX hashes,
+  archive category totals, and per-file checksums.
+- Snapshot: 26 files / 564,315 bytes; export fails above 2 MiB. Reproduction
+  has no timestamps or machine-specific paths, and `--check` compares exact
+  contents and rejects unexpected files. Existing output is never overwritten
+  by the export command.
+- Selection, reproduction commands, and decoding limitations are recorded in
+  [the bundle guide](apk/README.md). Full-app decompilation, media, DEX/native
+  payloads and resource binaries remain excluded from the repo.
+- No new server observations or active-profile promotions. These are
+  navigable source artifacts for further analysis, not newly validated wire
+  behavior.

@@ -1,0 +1,365 @@
+# APK-derived structural disassembly: LX/1NZ;
+# APK SHA-256: b2090b0207e9b97449a5b48e98eb4d1649ae8e5e738e9b7431d6242717fee732
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=3
+  0000..0004 op=1a const-string v1, "Noise_XX_25519_AESGCM_SHA256"
+  0004..0008 op=62 sget-object v0, Ljava/nio/charset/StandardCharsets;->UTF_8:Ljava/nio/charset/Charset;
+  0008..000e op=6e invoke-virtual {v1, v0}, Ljava/lang/String;->getBytes(LL)
+  000e..0010 op=0c move-result-object
+  0010..0014 op=13 const/16 v2, #0x20
+  0014..001a op=71 invoke-static {v0, v2}, Ljava/util/Arrays;->copyOf(LLI)
+  001a..001c op=0c move-result-object
+  001c..0020 op=69 sput-object v0, LX/1NZ;->A07:[B
+  0020..0024 op=1a const-string v0, "Noise_IK_25519_AESGCM_SHA256"
+  0024..0028 op=62 sget-object v1, Ljava/nio/charset/StandardCharsets;->UTF_8:Ljava/nio/charset/Charset;
+  0028..002e op=6e invoke-virtual {v0, v1}, Ljava/lang/String;->getBytes(LL)
+  002e..0030 op=0c move-result-object
+  0030..0036 op=71 invoke-static {v0, v2}, Ljava/util/Arrays;->copyOf(LLI)
+  0036..0038 op=0c move-result-object
+  0038..003c op=69 sput-object v0, LX/1NZ;->A0H:[B
+  003c..0040 op=1a const-string v0, "Noise_XXfallback_25519_AESGCM_SHA256"
+  0040..0046 op=6e invoke-virtual {v0, v1}, Ljava/lang/String;->getBytes(LL)
+  0046..0048 op=0c move-result-object
+  0048..004c op=69 sput-object v0, LX/1NZ;->A06:[B
+  004c..0050 op=1a const-string v0, "Noise_XXkem_25519_MLKEM512_AESGCM_SHA256"
+  0050..0056 op=6e invoke-virtual {v0, v1}, Ljava/lang/String;->getBytes(LL)
+  0056..0058 op=0c move-result-object
+  0058..005c op=69 sput-object v0, LX/1NZ;->A0E:[B
+  005c..0060 op=1a const-string v0, "Noise_XXkem-FS_25519_MLKEM512_AESGCM_SHA256"
+  0060..0066 op=6e invoke-virtual {v0, v1}, Ljava/lang/String;->getBytes(LL)
+  0066..0068 op=0c move-result-object
+  0068..006c op=69 sput-object v0, LX/1NZ;->A0C:[B
+  006c..0070 op=1a const-string v0, "Noise_XXkemEph_25519_MLKEM512_AESGCM_SHA256"
+  0070..0076 op=6e invoke-virtual {v0, v1}, Ljava/lang/String;->getBytes(LL)
+  0076..0078 op=0c move-result-object
+  0078..007c op=69 sput-object v0, LX/1NZ;->A08:[B
+  007c..0080 op=1a const-string v0, "Noise_IKkem+X25519+MLKEM512+AESGCM256+SHA256"
+  0080..0086 op=6e invoke-virtual {v0, v1}, Ljava/lang/String;->getBytes(LL)
+  0086..0088 op=0c move-result-object
+  0088..008c op=69 sput-object v0, LX/1NZ;->A0F:[B
+  008c..0090 op=1a const-string v0, "Noise_IKkem-FS+X25519+MLKEM512+AESGCM256+SHA256"
+  0090..0096 op=6e invoke-virtual {v0, v1}, Ljava/lang/String;->getBytes(LL)
+  0096..0098 op=0c move-result-object
+  0098..009c op=69 sput-object v0, LX/1NZ;->A0D:[B
+  009c..00a0 op=1a const-string v0, "Noise_IKkem2+X25519+MLKEM512+AESGCM256+SHA256"
+  00a0..00a6 op=6e invoke-virtual {v0, v1}, Ljava/lang/String;->getBytes(LL)
+  00a6..00a8 op=0c move-result-object
+  00a8..00ac op=69 sput-object v0, LX/1NZ;->A0G:[B
+  00ac..00b0 op=1a const-string v0, "Noise_XXkemfallback_25519_MLKEM512_AESGCM_SHA256"
+  00b0..00b6 op=6e invoke-virtual {v0, v1}, Ljava/lang/String;->getBytes(LL)
+  00b6..00b8 op=0c move-result-object
+  00b8..00bc op=69 sput-object v0, LX/1NZ;->A09:[B
+  00bc..00c0 op=1a const-string v0, "Noise_XXkem-FSfallback_25519_MLKEM512_AESGCM_SHA256"
+  00c0..00c6 op=6e invoke-virtual {v0, v1}, Ljava/lang/String;->getBytes(LL)
+  00c6..00c8 op=0c move-result-object
+  00c8..00cc op=69 sput-object v0, LX/1NZ;->A0B:[B
+  00cc..00d0 op=1a const-string v0, "Noise_XXkemEphfallback_25519_MLKEM512_AESGCM_SHA256"
+  00d0..00d6 op=6e invoke-virtual {v0, v1}, Ljava/lang/String;->getBytes(LL)
+  00d6..00d8 op=0c move-result-object
+  00d8..00dc op=69 sput-object v0, LX/1NZ;->A0A:[B
+  00dc..00de op=12 const/4 v0, #0x2
+  00de..00e2 op=23 new-array v0, v0, [B
+  00e2..00e8 op=26 fill-array-data v0, payload@0xf0, element_width=1, size=2, data=[11 00]
+  00e8..00ec op=69 sput-object v0, LX/1NZ;->A05:[B
+  00ec..00ee op=0e return-void
+  00ee..00f0 op=00 nop
+  00f0..00fa op=00 fill-array-data-payload element_width=1, size=2, data=[11 00]
+.end method
+
+.method <init>(VLLL) flags=0x10001 registers=7
+  0000..0006 op=70 invoke-direct {v3}, Ljava/lang/Object;-><init>(V)
+  0006..000a op=5b iput-object v4, v3, LX/1NZ;->A03:LX/1NG;
+  000a..000e op=62 sget-object v0, LX/1NZ;->A07:[B
+  000e..0012 op=32 if-eq v5, v0, +0x39
+  0012..0016 op=62 sget-object v0, LX/1NZ;->A0E:[B
+  0016..001a op=32 if-eq v5, v0, +0x35
+  001a..001e op=62 sget-object v0, LX/1NZ;->A0C:[B
+  001e..0022 op=32 if-eq v5, v0, +0x31
+  0022..0026 op=62 sget-object v0, LX/1NZ;->A08:[B
+  0026..002a op=32 if-eq v5, v0, +0x2d
+  002a..002e op=62 sget-object v0, LX/1NZ;->A0H:[B
+  002e..0032 op=32 if-eq v5, v0, +0x2c
+  0032..0036 op=62 sget-object v0, LX/1NZ;->A0F:[B
+  0036..003a op=32 if-eq v5, v0, +0x28
+  003a..003e op=62 sget-object v0, LX/1NZ;->A0D:[B
+  003e..0042 op=32 if-eq v5, v0, +0x24
+  0042..0046 op=62 sget-object v0, LX/1NZ;->A0G:[B
+  0046..004a op=32 if-eq v5, v0, +0x20
+  004a..004e op=62 sget-object v0, LX/1NZ;->A06:[B
+  004e..0052 op=32 if-eq v5, v0, +0x16
+  0052..0056 op=62 sget-object v0, LX/1NZ;->A09:[B
+  0056..005a op=32 if-eq v5, v0, +0x12
+  005a..005e op=62 sget-object v0, LX/1NZ;->A0B:[B
+  005e..0062 op=32 if-eq v5, v0, +0xe
+  0062..0066 op=62 sget-object v0, LX/1NZ;->A0A:[B
+  0066..006a op=32 if-eq v5, v0, +0xa
+  006a..006e op=1a const-string v1, "Unknown handshake name"
+  006e..0072 op=22 new-instance v0, Ljava/lang/IllegalArgumentException;
+  0072..0078 op=70 invoke-direct {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(VL)
+  0078..007a op=27 throw v0
+  007a..007e op=62 sget-object v1, LX/02S;->A0A:Ljava/lang/Integer;
+  007e..0080 op=28 goto +0x6
+  0080..0084 op=62 sget-object v1, LX/02S;->A0B:Ljava/lang/Integer;
+  0084..0086 op=28 goto +0x3
+  0086..008a op=62 sget-object v1, LX/02S;->A0D:Ljava/lang/Integer;
+  008a..008c op=12 const/4 v0, #0x0
+  008c..0092 op=71 invoke-static {v1, v4}, LX/1NG;->A00(VLL)
+  0092..0098 op=71 invoke-static {v5, v0}, LX/00h;->A0A(VLI)
+  0098..009c op=22 new-instance v2, LX/1Na;
+  009c..00a2 op=70 invoke-direct {v2}, Ljava/lang/Object;-><init>(V)
+  00a2..00a4 op=21 array-length
+  00a4..00a8 op=13 const/16 v0, #0x20
+  00a8..00ac op=37 if-le v1, v0, +0xf
+  00ac..00b0 op=1a const-string v0, "SHA-256"
+  00b0..00b6 op=71 invoke-static {v0}, Ljava/security/MessageDigest;->getInstance(LL)
+  00b6..00b8 op=0c move-result-object
+  00b8..00be op=6e invoke-virtual {v0, v5}, Ljava/security/MessageDigest;->digest(LL)
+  00be..00c0 op=0c move-result-object
+  00c0..00c6 op=71 invoke-static {v5}, LX/00h;->A06(VL)
+  00c6..00ca op=5b iput-object v5, v2, LX/1Na;->A00:[B
+  00ca..00d0 op=6e invoke-virtual {v2, v6}, LX/1Na;->A00(VL)
+  00d0..00d4 op=22 new-instance v1, Landroid/util/Pair;
+  00d4..00da op=70 invoke-direct {v1, v2, v5}, Landroid/util/Pair;-><init>(VLL)
+  00da..00e0 op=71 invoke-static {v4}, LX/1NG;->A01(VL)
+  00e0..00e4 op=54 iget-object v0, v1, Landroid/util/Pair;->first:Ljava/lang/Object;
+  00e4..00e8 op=1f check-cast v0, LX/1Na;
+  00e8..00ec op=5b iput-object v0, v3, LX/1NZ;->A04:LX/1Na;
+  00ec..00f0 op=54 iget-object v0, v1, Landroid/util/Pair;->second:Ljava/lang/Object;
+  00f0..00f4 op=1f check-cast v0, [B
+  00f4..00f8 op=5b iput-object v0, v3, LX/1NZ;->A02:[B
+  00f8..00fa op=0e return-void
+  00fa..00fc op=0d move-exception
+  00fc..0100 op=22 new-instance v0, Ljava/lang/AssertionError;
+  0100..0106 op=70 invoke-direct {v0, v1}, Ljava/lang/AssertionError;-><init>(VL)
+  0106..0108 op=27 throw v0
+  0108..010a op=0d move-exception
+  010a..0110 op=6e invoke-virtual {v4, v0}, LX/1NG;->A05(VL)
+  0110..0112 op=27 throw v0
+  0112..0114 op=0d move-exception
+  0114..011a op=71 invoke-static {v4}, LX/1NG;->A01(VL)
+  011a..011c op=27 throw v0
+.end method
+
+.method A00(VLL) flags=0x9 registers=5
+  0000..0004 op=54 iget-object v2, v3, LX/1NZ;->A02:[B
+  0004..0006 op=12 const/4 v1, #0x0
+  0006..000a op=13 const/16 v0, #0x40
+  000a..0010 op=71 invoke-static {v4, v2, v1, v0}, LX/1Ng;->A02(LLLLI)
+  0010..0012 op=0c move-result-object
+  0012..0016 op=13 const/16 v0, #0x20
+  0016..001c op=71 invoke-static {v1, v0, v0}, LX/1Lz;->A06(LLII)
+  001c..001e op=0c move-result-object
+  001e..0020 op=12 const/4 v0, #0x0
+  0020..0024 op=46 aget-object v0, v1, v0
+  0024..0028 op=5b iput-object v0, v3, LX/1NZ;->A02:[B
+  0028..002a op=12 const/4 v0, #0x1
+  002a..002e op=46 aget-object v1, v1, v0
+  002e..0032 op=22 new-instance v0, LX/1Nj;
+  0032..0038 op=70 invoke-direct {v0, v1}, LX/1Nj;-><init>(VL)
+  0038..003c op=5b iput-object v0, v3, LX/1NZ;->A01:LX/1Nj;
+  003c..0040 op=16 const-wide/16
+  0040..0044 op=5a ?? v0, v3, LX/1NZ;->A00:J
+  0044..0046 op=0e return-void
+.end method
+
+.method A01(LLL) flags=0x1 registers=9
+  0000..0004 op=54 iget-object v3, v6, LX/1NZ;->A03:LX/1NG;
+  0004..0008 op=62 sget-object v0, LX/02S;->A00:Ljava/lang/Integer;
+  0008..000e op=71 invoke-static {v0, v3}, LX/1NG;->A00(VLL)
+  000e..0010 op=12 const/4 v5, #0x0
+  0010..0014 op=23 new-array v4, v5, [B
+  0014..0018 op=54 iget-object v2, v6, LX/1NZ;->A02:[B
+  0018..001a op=12 const/4 v1, #0x0
+  001a..001e op=13 const/16 v0, #0x40
+  001e..0024 op=71 invoke-static {v4, v2, v1, v0}, LX/1Ng;->A02(LLLLI)
+  0024..0026 op=0c move-result-object
+  0026..002a op=13 const/16 v0, #0x20
+  002a..0030 op=71 invoke-static {v1, v0, v0}, LX/1Lz;->A06(LLII)
+  0030..0032 op=0c move-result-object
+  0032..0034 op=12 const/4 v0, #0x1
+  0034..0038 op=46 aget-object v2, v1, v5
+  0038..003c op=46 aget-object v1, v1, v0
+  003c..0040 op=22 new-instance v0, LX/1QR;
+  0040..0046 op=70 invoke-direct {v0, v7, v8, v2, v1}, LX/1QR;-><init>(VLLLL)
+  0046..004c op=71 invoke-static {v3}, LX/1NG;->A01(VL)
+  004c..004e op=11 return-object v0
+  004e..0050 op=0d move-exception
+  0050..0056 op=6e invoke-virtual {v3, v0}, LX/1NG;->A05(VL)
+  0056..0058 op=27 throw v0
+  0058..005a op=0d move-exception
+  005a..0060 op=71 invoke-static {v3}, LX/1NG;->A01(VL)
+  0060..0062 op=27 throw v0
+.end method
+
+.method A02(LL) flags=0x1 registers=4
+  0000..0004 op=54 iget-object v1, v2, LX/1NZ;->A03:LX/1NG;
+  0004..0008 op=62 sget-object v0, LX/02S;->A08:Ljava/lang/Integer;
+  0008..000e op=71 invoke-static {v0, v1}, LX/1NG;->A00(VLL)
+  000e..0012 op=54 iget-object v0, v2, LX/1NZ;->A04:LX/1Na;
+  0012..0018 op=6e invoke-virtual {v0, v3}, LX/1Na;->A00(VL)
+  0018..001c op=22 new-instance v0, LX/1Lk;
+  001c..0022 op=70 invoke-direct {v0, v3}, LX/1Lk;-><init>(VL)
+  0022..0028 op=71 invoke-static {v1}, LX/1NG;->A01(VL)
+  0028..002a op=11 return-object v0
+  002a..002c op=0d move-exception
+  002c..0032 op=6e invoke-virtual {v1, v0}, LX/1NG;->A05(VL)
+  0032..0034 op=27 throw v0
+  0034..0036 op=0d move-exception
+  0036..003c op=71 invoke-static {v1}, LX/1NG;->A01(VL)
+  003c..003e op=27 throw v0
+.end method
+
+.method A03(VLLL) flags=0x1 registers=9
+  0000..0004 op=54 iget-object v4, v5, LX/1NZ;->A03:LX/1NG;
+  0004..000a op=71 invoke-static {v6, v4}, LX/1NG;->A00(VLL)
+  000a..000e op=54 iget-object v3, v7, LX/1Ly;->A01:LX/1M0;
+  000e..0014 op=71 invoke-static {v3}, LX/00h;->A05(VL)
+  0014..0018 op=1a const-string v0, "best"
+  0018..001e op=71 invoke-static {v0}, LX/1NH;->A00(LL)
+  001e..0020 op=0c move-result-object
+  0020..0024 op=54 iget-object v1, v8, LX/1Lk;->A01:[B
+  0024..0028 op=54 iget-object v0, v3, LX/1M0;->A01:[B
+  0028..002e op=6e invoke-virtual {v2, v1, v0}, LX/1NH;->A02(LLL)
+  002e..0030 op=0c move-result-object
+  0030..0036 op=71 invoke-static {v0}, LX/00h;->A06(VL)
+  0036..003c op=71 invoke-static {v5, v0}, LX/1NZ;->A00(VLL)
+  003c..0042 op=71 invoke-static {v4}, LX/1NG;->A01(VL)
+  0042..0044 op=0e return-void
+  0044..0046 op=0d move-exception
+  0046..004a op=22 new-instance v0, LX/HFL;
+  004a..0050 op=70 invoke-direct {v0, v1}, LX/HFL;-><init>(VL)
+  0050..0052 op=27 throw v0
+  0052..0054 op=0d move-exception
+  0054..005a op=6e invoke-virtual {v4, v0}, LX/1NG;->A05(VL)
+  005a..005c op=27 throw v0
+  005c..005e op=0d move-exception
+  005e..0064 op=71 invoke-static {v4}, LX/1NG;->A01(VL)
+  0064..0066 op=27 throw v0
+.end method
+
+.method A04(LLL) flags=0x1 registers=10
+  0000..0004 op=54 iget-object v0, v7, LX/1NZ;->A01:LX/1Nj;
+  0004..0008 op=38 if-eqz v0, +0x1c
+  0008..000c op=54 iget-object v3, v7, LX/1NZ;->A03:LX/1NG;
+  000c..0012 op=71 invoke-static {v8, v3}, LX/1NG;->A00(VLL)
+  0012..0016 op=54 iget-object v6, v7, LX/1NZ;->A01:LX/1Nj;
+  0016..001a op=53 ?? v1, v7, LX/1NZ;->A00:J
+  001a..001e op=16 const-wide/16
+  001e..0020 op=bb ??
+  0020..0024 op=5a ?? v4, v7, LX/1NZ;->A00:J
+  0024..0028 op=54 iget-object v0, v7, LX/1NZ;->A04:LX/1Na;
+  0028..002c op=54 iget-object v0, v0, LX/1Na;->A00:[B
+  002c..0032 op=6e invoke-virtual {v6, v0, v1, v2, v9}, LX/1Nj;->A00(LLJL)
+  0032..0034 op=0c move-result-object
+  0034..003a op=71 invoke-static {v3}, LX/1NG;->A01(VL)
+  003a..003c op=28 goto +0x2
+  003c..003e op=07 move-object
+  003e..0042 op=54 iget-object v3, v7, LX/1NZ;->A03:LX/1NG;
+  0042..0046 op=62 sget-object v0, LX/02S;->A0C:Ljava/lang/Integer;
+  0046..004a op=33 if-ne v8, v0, +0x11
+  004a..004e op=62 sget-object v0, LX/02S;->A09:Ljava/lang/Integer;
+  004e..0052 op=39 if-nez v0, +0x16
+  0052..0056 op=1a const-string v0, "NoiseSocket/report/operation is null, skipping report"
+  0056..005c op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(VL)
+  005c..0060 op=54 iget-object v0, v7, LX/1NZ;->A04:LX/1Na;
+  0060..0066 op=6e invoke-virtual {v0, v9}, LX/1Na;->A00(VL)
+  0066..0068 op=11 return-object v1
+  0068..006c op=62 sget-object v0, LX/02S;->A0N:Ljava/lang/Integer;
+  006c..0070 op=33 if-ne v8, v0, +0x5
+  0070..0074 op=62 sget-object v0, LX/02S;->A07:Ljava/lang/Integer;
+  0074..0076 op=28 goto +0xed
+  0076..0078 op=12 const/4 v0, #0x0
+  0078..007a op=28 goto +0xeb
+  007a..0080 op=71 invoke-static {v0, v3}, LX/1NG;->A00(VLL)
+  0080..0084 op=54 iget-object v0, v7, LX/1NZ;->A04:LX/1Na;
+  0084..008a op=6e invoke-virtual {v0, v9}, LX/1Na;->A00(VL)
+  008a..0090 op=71 invoke-static {v3}, LX/1NG;->A01(VL)
+  0090..0092 op=11 return-object v1
+  0092..0094 op=0d move-exception
+  0094..009a op=6e invoke-virtual {v3, v0}, LX/1NG;->A05(VL)
+  009a..009c op=27 throw v0
+  009c..009e op=0d move-exception
+  009e..00a4 op=71 invoke-static {v3}, LX/1NG;->A01(VL)
+  00a4..00a6 op=27 throw v0
+.end method
+
+.method A05(LLL) flags=0x1 registers=12
+  0000..0002 op=07 move-object
+  0002..0006 op=54 iget-object v2, v9, LX/1NZ;->A03:LX/1NG;
+  0006..000c op=71 invoke-static {v10, v2}, LX/1NG;->A00(VLL)
+  000c..0010 op=54 iget-object v3, v9, LX/1NZ;->A01:LX/1Nj;
+  0010..0014 op=38 if-eqz v3, +0x12
+  0014..0018 op=53 ?? v7, v9, LX/1NZ;->A00:J
+  0018..001c op=16 const-wide/16
+  001c..001e op=bb ??
+  001e..0022 op=5a ?? v0, v9, LX/1NZ;->A00:J
+  0022..0026 op=54 iget-object v0, v9, LX/1NZ;->A04:LX/1Na;
+  0026..002a op=54 iget-object v4, v0, LX/1Na;->A00:[B
+  002a..002c op=21 array-length
+  002c..0032 op=74 invoke-virtual/range {v3..v8}, LX/1Nj;->A01(LLLIJ)
+  0032..0034 op=0c move-result-object
+  0034..0038 op=54 iget-object v0, v9, LX/1NZ;->A04:LX/1Na;
+  0038..003e op=6e invoke-virtual {v0, v5}, LX/1Na;->A00(VL)
+  003e..0044 op=71 invoke-static {v2}, LX/1NG;->A01(VL)
+  0044..0046 op=11 return-object v5
+  0046..0048 op=0d move-exception
+  0048..004e op=6e invoke-virtual {v2, v0}, LX/1NG;->A05(VL)
+  004e..0050 op=27 throw v0
+  0050..0052 op=0d move-exception
+  0052..0058 op=71 invoke-static {v2}, LX/1NG;->A01(VL)
+  0058..005a op=27 throw v0
+.end method
+
+.method A06(LL) flags=0x1 registers=5
+  0000..0004 op=54 iget-object v2, v3, LX/1NZ;->A03:LX/1NG;
+  0004..0008 op=62 sget-object v0, LX/02S;->A06:Ljava/lang/Integer;
+  0008..000e op=71 invoke-static {v0, v2}, LX/1NG;->A00(VLL)
+  000e..0012 op=54 iget-object v1, v4, LX/1Lk;->A01:[B
+  0012..0016 op=54 iget-object v0, v3, LX/1NZ;->A04:LX/1Na;
+  0016..001c op=6e invoke-virtual {v0, v1}, LX/1Na;->A00(VL)
+  001c..0022 op=71 invoke-static {v2}, LX/1NG;->A01(VL)
+  0022..0024 op=11 return-object v1
+  0024..0026 op=0d move-exception
+  0026..002c op=6e invoke-virtual {v2, v0}, LX/1NG;->A05(VL)
+  002c..002e op=27 throw v0
+  002e..0030 op=0d move-exception
+  0030..0036 op=71 invoke-static {v2}, LX/1NG;->A01(VL)
+  0036..0038 op=27 throw v0
+.end method
+
+.method A07(LL) flags=0x1 registers=6
+  0000..0004 op=54 iget-object v3, v4, LX/1NZ;->A03:LX/1NG;
+  0004..0008 op=62 sget-object v0, LX/02S;->A1R:Ljava/lang/Integer;
+  0008..000e op=71 invoke-static {v0, v3}, LX/1NG;->A00(VLL)
+  000e..0014 op=6e invoke-virtual {v5}, Lorg/whispersystems/libsignal/kem/KEMPublicKey;->A00(L)
+  0014..0016 op=0c move-result-object
+  0016..001c op=71 invoke-static {v3}, LX/1NG;->A01(VL)
+  001c..0020 op=62 sget-object v0, LX/02S;->A05:Ljava/lang/Integer;
+  0020..0026 op=71 invoke-static {v0, v3}, LX/1NG;->A00(VLL)
+  0026..002a op=54 iget-object v1, v4, LX/1NZ;->A04:LX/1Na;
+  002a..002e op=54 iget-object v0, v2, Lorg/whispersystems/libsignal/kem/KEMPublicKey$Encapsulated;->ciphertext:[B
+  002e..0034 op=6e invoke-virtual {v1, v0}, LX/1Na;->A00(VL)
+  0034..0038 op=54 iget-object v0, v2, Lorg/whispersystems/libsignal/kem/KEMPublicKey$Encapsulated;->sharedSecret:[B
+  0038..003e op=71 invoke-static {v4, v0}, LX/1NZ;->A00(VLL)
+  003e..0044 op=71 invoke-static {v3}, LX/1NG;->A01(VL)
+  0044..0048 op=54 iget-object v0, v2, Lorg/whispersystems/libsignal/kem/KEMPublicKey$Encapsulated;->ciphertext:[B
+  0048..004a op=11 return-object v0
+  004a..004c op=0d move-exception
+  004c..0052 op=6e invoke-virtual {v3, v0}, LX/1NG;->A05(VL)
+  0052..0054 op=27 throw v0
+  0054..0056 op=0d move-exception
+  0056..005c op=71 invoke-static {v3}, LX/1NG;->A01(VL)
+  005c..005e op=27 throw v0
+  005e..0060 op=0d move-exception
+  0060..0066 op=6e invoke-virtual {v3, v0}, LX/1NG;->A05(VL)
+  0066..0068 op=27 throw v0
+  0068..006a op=0d move-exception
+  006a..0070 op=71 invoke-static {v3}, LX/1NG;->A01(VL)
+  0070..0072 op=27 throw v0
+  0072..0074 op=0d move-exception
+  0074..0078 op=22 new-instance v0, LX/HFL;
+  0078..007e op=70 invoke-direct {v0, v1}, LX/HFL;-><init>(VL)
+  007e..0080 op=27 throw v0
+.end method

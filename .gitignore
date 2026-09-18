@@ -3,6 +3,9 @@
 # Local lab evidence never enters the repository (section 6.3).
 /lab/
 *.apk
+*.dex
+*.odex
+*.vdex
 *.redb
 *.redb.lock
 .env

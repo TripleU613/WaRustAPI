@@ -6,3 +6,4 @@
 *.json text
 *.png binary
 *.apk binary
+docs/protocol/apk/2.26.37.70/** linguist-generated=true

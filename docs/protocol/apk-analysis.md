@@ -40,6 +40,12 @@ to 2.26.37.70; that comparison is documented in `decompilation-log.md`.
 
 ## What each result proves
 
+For the exact 2.26.37.70 comparison, `xtask apk-research-bundle` exports a
+reproducible, media-free selection of protocol code and metadata under a
+2 MiB total limit. See the [bundle guide](apk/README.md) for regeneration,
+verification, and decoder limitations. This snapshot is separate from the
+active profile's fixtures.
+
 | Tool | Proves | Does not prove |
 | --- | --- | --- |
 | `reference-manifest` | Package, version name/code, SDK levels, APK hash, v1 signing certificate fingerprint | That the server accepts this build today |

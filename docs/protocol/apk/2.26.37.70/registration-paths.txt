@@ -1,0 +1,103 @@
+# APK-derived structural disassembly: LX/HpO;
+# APK SHA-256: b2090b0207e9b97449a5b48e98eb4d1649ae8e5e738e9b7431d6242717fee732
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=1
+  0000..0004 op=1a const-string v0, "=d =`wuM}|p}s`vMspb`}b"
+  0004..000a op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  000a..000c op=0c move-result-object
+  000c..0010 op=69 sput-object v0, LX/HpO;->A0D:Ljava/lang/String;
+  0010..0014 op=1a const-string v0, "=d =wj{af"
+  0014..001a op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  001a..001c op=0c move-result-object
+  001c..0020 op=69 sput-object v0, LX/HpO;->A0E:Ljava/lang/String;
+  0020..0024 op=1a const-string v0, "=d =q}vw"
+  0024..002a op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  002a..002c op=0c move-result-object
+  002c..0030 op=69 sput-object v0, LX/HpO;->A07:Ljava/lang/String;
+  0030..0034 op=1a const-string v0, "=d =sqdw`{tkM`wcgwaf"
+  0034..003a op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  003a..003c op=0c move-result-object
+  003c..0040 op=69 sput-object v0, LX/HpO;->A08:Ljava/lang/String;
+  0040..0044 op=1a const-string v0, "=d =sqdw`{tk"
+  0044..004a op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  004a..004c op=0c move-result-object
+  004c..0050 op=69 sput-object v0, LX/HpO;->A0G:Ljava/lang/String;
+  0050..0054 op=1a const-string v0, "=d =`wu{afw`"
+  0054..005a op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  005a..005c op=0c move-result-object
+  005c..0060 op=69 sput-object v0, LX/HpO;->A0C:Ljava/lang/String;
+  0060..0064 op=1a const-string v0, "=d =awqg`{fk"
+  0064..006a op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  006a..006c op=0c move-result-object
+  006c..0070 op=69 sput-object v0, LX/HpO;->A0H:Ljava/lang/String;
+  0070..0074 op=1a const-string v0, "=d =sgf}q}|t"
+  0074..007a op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  007a..007c op=0c move-result-object
+  007c..0080 op=69 sput-object v0, LX/HpO;->A00:Ljava/lang/String;
+  0080..0084 op=1a const-string v0, "=d =sgf}q}|tMdw`{t{w`"
+  0084..008a op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  008a..008c op=0c move-result-object
+  008c..0090 op=69 sput-object v0, LX/HpO;->A01:Ljava/lang/String;
+  0090..0094 op=1a const-string v0, "=d =vwd{qwM~}u}gfMaw|v"
+  0094..009a op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  009a..009c op=0c move-result-object
+  009c..00a0 op=69 sput-object v0, LX/HpO;->A0F:Ljava/lang/String;
+  00a0..00a4 op=1a const-string v0, "=d =vwd{qwM~}u}gfMtwfqz"
+  00a4..00aa op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  00aa..00ac op=0c move-result-object
+  00ac..00b0 op=69 sput-object v0, LX/HpO;->A06:Ljava/lang/String;
+  00b0..00b4 op=1a const-string v0, "=d =q~{w|fM~}u"
+  00b4..00ba op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  00ba..00bc op=0c move-result-object
+  00bc..00c0 op=69 sput-object v0, LX/HpO;->A03:Ljava/lang/String;
+  00c0..00c4 op=1a const-string v0, "=d =b`wMb|Mq~{w|fM~}u"
+  00c4..00ca op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  00ca..00cc op=0c move-result-object
+  00cc..00d0 op=69 sput-object v0, LX/HpO;->A0B:Ljava/lang/String;
+  00d0..00d4 op=1a const-string v0, "=d =q}|aw|f"
+  00d4..00da op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  00da..00dc op=0c move-result-object
+  00dc..00e0 op=69 sput-object v0, LX/HpO;->A04:Ljava/lang/String;
+  00e0..00e4 op=1a const-string v0, "=d =qzs~~w|uw"
+  00e4..00ea op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  00ea..00ec op=0c move-result-object
+  00ec..00f0 op=69 sput-object v0, LX/HpO;->A02:Ljava/lang/String;
+  00f0..00f4 op=1a const-string v0, "=d =bsaaywkMsgfz"
+  00f4..00fa op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  00fa..00fc op=0c move-result-object
+  00fc..0100 op=69 sput-object v0, LX/HpO;->A0A:Ljava/lang/String;
+  0100..0104 op=1a const-string v0, "=d =eta"
+  0104..010a op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  010a..010c op=0c move-result-object
+  010c..0110 op=69 sput-object v0, LX/HpO;->A0I:Ljava/lang/String;
+  0110..0114 op=1a const-string v0, "W\\Q"
+  0114..011a op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  011a..011c op=0c move-result-object
+  011c..0120 op=69 sput-object v0, LX/HpO;->A05:Ljava/lang/String;
+  0120..0124 op=1a const-string v0, "Z"
+  0124..012a op=71 invoke-static {v0}, LX/HpO;->A00(LL)
+  012a..012c op=0c move-result-object
+  012c..0130 op=69 sput-object v0, LX/HpO;->A09:Ljava/lang/String;
+  0130..0132 op=0e return-void
+.end method
+
+.method A00(LL) flags=0x19 registers=5
+  0000..0006 op=71 invoke-static {}, LX/1xx;->A1C(L)
+  0006..0008 op=0c move-result-object
+  0008..000e op=6e invoke-virtual {v4}, Ljava/lang/String;->length(I)
+  000e..0010 op=0a move-result
+  0010..0012 op=12 const/4 v1, #0x0
+  0012..0016 op=35 if-ge v1, v2, +0xf
+  0016..001c op=6e invoke-virtual {v4, v1}, Ljava/lang/String;->charAt(CI)
+  001c..001e op=0a move-result
+  001e..0022 op=df xor-int/lit8 v0, v0, #0x12
+  0022..0024 op=8e int-to-char v0, v0
+  0024..002a op=6e invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(LC)
+  002a..002e op=d8 add-int/lit8 v1, v1, #0x1
+  002e..0030 op=28 goto +0xf2
+  0030..0036 op=71 invoke-static {v3}, LX/1xy;->A1P(LL)
+  0036..0038 op=0c move-result-object
+  0038..003a op=11 return-object v0
+.end method

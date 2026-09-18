@@ -1,0 +1,107 @@
+{
+  "certificate-root": {
+    "class": "LX/Aw1;",
+    "file": "certificate-root.txt",
+    "methods": 1
+  },
+  "frame-reader": {
+    "class": "LX/1NV;",
+    "file": "frame-reader.txt",
+    "methods": 3
+  },
+  "frame-writer": {
+    "class": "LX/1NX;",
+    "file": "frame-writer.txt",
+    "methods": 3
+  },
+  "http-chunk-reader": {
+    "class": "LX/H9U;",
+    "file": "http-chunk-reader.txt",
+    "methods": 8
+  },
+  "http-chunk-writer": {
+    "class": "LX/H9X;",
+    "file": "http-chunk-writer.txt",
+    "methods": 5
+  },
+  "integer-encoding": {
+    "class": "LX/1Lz;",
+    "file": "integer-encoding.txt",
+    "methods": 8
+  },
+  "node-writer": {
+    "class": "LX/1Qe;",
+    "file": "node-writer.txt",
+    "methods": 10
+  },
+  "noise-cipher": {
+    "class": "LX/1Nj;",
+    "file": "noise-cipher.txt",
+    "methods": 3
+  },
+  "noise-config": {
+    "class": "LX/19p;",
+    "file": "noise-config.txt",
+    "methods": 13
+  },
+  "noise-handshake": {
+    "class": "LX/1N7;",
+    "file": "noise-handshake.txt",
+    "methods": 11
+  },
+  "noise-patterns": {
+    "class": "LX/1NZ;",
+    "file": "noise-patterns.txt",
+    "methods": 10
+  },
+  "noise-record-state": {
+    "class": "LX/1QR;",
+    "file": "noise-record-state.txt",
+    "methods": 1
+  },
+  "record-writer": {
+    "class": "LX/1Qc;",
+    "file": "record-writer.txt",
+    "methods": 1
+  },
+  "registration-key-bundle": {
+    "class": "LX/Cdl;",
+    "file": "registration-key-bundle.txt",
+    "methods": 3
+  },
+  "registration-paths": {
+    "class": "LX/HpO;",
+    "file": "registration-paths.txt",
+    "methods": 2
+  },
+  "registration-requests": {
+    "class": "LX/HSP;",
+    "file": "registration-requests.txt",
+    "methods": 1
+  },
+  "registration-response-bridge": {
+    "class": "Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;",
+    "file": "registration-response-bridge.txt",
+    "methods": 35
+  },
+  "registration-token": {
+    "class": "LX/Hre;",
+    "file": "registration-token.txt",
+    "methods": 3
+  },
+  "registration-token-salt": {
+    "class": "LX/HQP;",
+    "file": "registration-token-salt.txt",
+    "methods": 1
+  },
+  "socket-factory": {
+    "class": "LX/1AM;",
+    "file": "socket-factory.txt",
+    "methods": 18
+  },
+  "socket-sequence": {
+    "class": "LX/1BH;",
+    "file": "socket-sequence.txt",
+    "methods": 9
+  }
+}

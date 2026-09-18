@@ -1,0 +1,39 @@
+# APK-derived structural disassembly: LX/1NV;
+# APK SHA-256: b2090b0207e9b97449a5b48e98eb4d1649ae8e5e738e9b7431d6242717fee732
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=1
+  0000..0002 op=12 const/4 v0, #0x3
+  0002..0006 op=23 new-array v0, v0, [B
+  0006..000c op=26 fill-array-data v0, payload@0x14, element_width=1, size=3, data=[47 4f 41]
+  000c..0010 op=69 sput-object v0, LX/1NV;->A01:[B
+  0010..0012 op=0e return-void
+  0012..0014 op=00 nop
+  0014..0020 op=00 fill-array-data-payload element_width=1, size=3, data=[47 4f 41]
+.end method
+
+.method <init>(VL) flags=0x10001 registers=2
+  0000..0006 op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>(V)
+  0006..000a op=5b iput-object v1, v0, LX/1NV;->A00:Ljava/io/InputStream;
+  000a..000c op=0e return-void
+.end method
+
+.method A00(VLL) flags=0x9 registers=6
+  0000..0002 op=21 array-length
+  0002..0004 op=12 const/4 v2, #0x0
+  0004..0008 op=3d if-lez v3, +0x16
+  0008..000c op=54 iget-object v0, v4, LX/1NV;->A00:Ljava/io/InputStream;
+  000c..0012 op=6e invoke-virtual {v0, v5, v2, v3}, Ljava/io/InputStream;->read(ILII)
+  0012..0014 op=0a move-result
+  0014..0016 op=12 const/4 v0, #0xff
+  0016..001a op=32 if-eq v1, v0, +0x5
+  001a..001c op=b0 add-int/2addr
+  001c..001e op=b1 sub-int/2addr
+  001e..0020 op=28 goto +0xf3
+  0020..0024 op=1a const-string v1, "Closed before read completed!"
+  0024..0028 op=22 new-instance v0, Ljava/io/IOException;
+  0028..002e op=70 invoke-direct {v0, v1}, Ljava/io/IOException;-><init>(VL)
+  002e..0030 op=27 throw v0
+  0030..0032 op=0e return-void
+.end method

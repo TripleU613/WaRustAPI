@@ -37,7 +37,7 @@ the active 2.26.36.75 profile.
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability and comparison transport/registration wire-profile endpoints plus structured gated-operation errors |
 
-Test count: 135 (`cargo test --locked --workspace --all-features`). Formatting,
+Test count: 137 (`cargo test --locked --workspace --all-features`). Formatting,
 all-feature/all-target Clippy with `-D warnings`, strict rustdoc, package
 verification, and protobuf regeneration checks pass on the continuation
 machine (Rust 1.98.1). The repository and CI
@@ -60,6 +60,13 @@ encoding behavior.
   adapter contract could not be inspected.
 
 ## Suggested next steps (in gate order)
+
+The [compact APK research snapshot](docs/protocol/apk/README.md) now preserves
+21 mapped protocol classes (149 methods), the comparison token dictionary,
+and provenance/checksums in 564,315 bytes. The media-free export is bounded
+to 2 MiB and can be regenerated or verified with `xtask apk-research-bundle`.
+It is comparison-only structural disassembly, not a complete decompilation
+or proof of live protocol behavior.
 
 Continuation (2026-09-17): the supplied local APK was verified as the exact
 2.26.37.70 comparison hash. Its frame writer uses a three-byte big-endian

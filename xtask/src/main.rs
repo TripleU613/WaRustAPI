@@ -11,11 +11,13 @@
 //! * `apk-callers <apk> --class <c> --method <m>` — find callers of a method.
 //! * `apk-smali <apk> --class <filter>` — dump Dalvik instructions for matching classes.
 //! * `apk-registration-token <apk> …` — derive the comparison build's code-request token.
+//! * `apk-research-bundle <apk> --output <dir> [--check]` — compact media-free code snapshot.
 
 // A command-line tool talks to its operator through stdout/stderr.
 #![allow(clippy::print_stdout, clippy::print_stderr)]
 
 mod axml;
+mod bundle;
 mod deps;
 mod dex;
 mod manifest;
@@ -37,6 +39,16 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Cmd {
+    /// Export a bounded, media-free research snapshot of the pinned comparison APK.
+    ApkResearchBundle {
+        apk: PathBuf,
+        /// New directory for the bundle, or existing directory with --check.
+        #[arg(long)]
+        output: PathBuf,
+        /// Recompute and compare without changing any files.
+        #[arg(long)]
+        check: bool,
+    },
     /// Regenerate protobuf Rust code into crates/whatsapp-api/src/proto.
     ProtoGen,
     /// Verify committed protobuf Rust code is up to date.
@@ -134,6 +146,7 @@ fn main() -> ExitCode {
     let cli = Cli::parse();
     let root = workspace_root();
     let result = match cli.cmd {
+        Cmd::ApkResearchBundle { apk, output, check } => bundle::run(&apk, &output, check),
         Cmd::ProtoGen => proto::generate(&root),
         Cmd::ProtoCheck => proto::check(&root),
         Cmd::DependencyAudit { strict } => deps::audit(&root, strict),
