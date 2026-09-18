@@ -85,6 +85,11 @@ suitable for production.
 
 ## Local checks
 
+The initial [normal-validation run](https://github.com/TripleU613/TeleWhatsApp/actions/runs/35302927716)
+passed routing tests, hygiene, lint, both test configurations, generation and
+dependency-contract checks, packaging, strict rustdoc, and the aggregate gate.
+Extended scheduled/manual checks were intentionally not selected in that run.
+
 ```sh
 rustc --edition=2024 --test .github/ci/plan.rs -o /tmp/telewhatsapp-ci-tests
 /tmp/telewhatsapp-ci-tests
