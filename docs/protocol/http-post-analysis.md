@@ -32,6 +32,44 @@ destinations, purpose, mandatory ordering or server requirements.
 
 ## Profile update rule
 
+### Registration transport continuation
+
+Following the actual bridge resolves the shared transport chain:
+`KotlinRegistrationBridge.A09 -> RetryingHttpClient.A01/A00 -> HsU.A01 ->
+128.A07 -> 128.A0E` (virtual dispatch). `HsU.A01` at 0x0068–0x0088
+sets form content type and encoded byte length; our sender already does this.
+The earlier zero exact-call result for `129.A0E` was a superclass-dispatch
+limitation, not evidence that registration bypasses the shared HTTP helper.
+
+`HsU.A01` calls `G6W.A0v`, which reads `128.A02` and calls `0re.A02`.
+That method uses the literal comparison version and delegates to `0re.A00`.
+The producer reads Android OS release, manufacturer and model and sanitizes
+them before constructing the User-Agent. This establishes an observed header
+presence mismatch: our private test configs did not specify a User-Agent.
+It does **not** establish the reason for refusal. No device properties were
+invented or populated to disguise the Rust client as a real Android device.
+
+The alternate body-builder branch of `RetryingHttpClient.A00` logs separate
+`isEncrypted` and `sendAttestation` flags, can add `Authorization` at 0x05a2,
+and sets form headers at 0x05be–0x05de before `128.A07` at 0x0642.
+Our sender implements only the clear form. Runtime selection, authentic
+attestation inputs and server requirements are unresolved. No integrity
+claims, proxy/domain-fronting strategy or retry behavior was reproduced.
+
+### Refusal information loss fixed
+
+Previously `ComparisonHttpFlow::blocked_response` dropped the parsed protocol
+reason and stored HTTP status only for statuses >=400. Therefore old
+`ServerRefused { code: None }` records cannot identify why signup was refused.
+`Blocked` is our local terminal state, not proof that Meta banned the number;
+the original protocol reason was discarded, so those are distinct claims.
+New records preserve actual HTTP status and the recognized reason enum;
+unknown server text becomes `Other`. Old records still deserialize, and an
+already blocked attempt remains blocked without another network request.
+Tests cover HTTP 200 plus `fail/bad_token`, HTTP 403 plus an unknown reason,
+serialization compatibility, secret exclusion, and no resend after resuming.
+These are synthetic tests, not improved live server responses.
+
 For each proposed field, record endpoint, APK class/method/offset, producer,
 encoding, conditionality, and whether an authorized runtime observation exists.
 Keep unknown values absent rather than manufacturing a device model, carrier,

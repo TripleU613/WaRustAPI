@@ -1362,7 +1362,8 @@ impl RegistrationResponseStatus {
 
 /// Reason strings explicitly handled by the comparison client's registration
 /// bridge. Meaning and state transitions still require live validation.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 #[non_exhaustive]
 pub enum RegistrationResponseReason {
     /// Verification guesses were submitted too quickly.

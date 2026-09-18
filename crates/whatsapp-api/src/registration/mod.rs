@@ -117,6 +117,13 @@ pub enum BlockedReason {
     ServerRefused {
         /// Sanitized code.
         code: Option<u32>,
+        /// Actual HTTP status, including a successful HTTP response carrying a refusal.
+        /// Absent in records written before refusal diagnostics were persisted.
+        #[serde(default)]
+        http_status: Option<u16>,
+        /// Recognized protocol reason only; arbitrary server text is never persisted.
+        #[serde(default)]
+        reason: Option<wire::RegistrationResponseReason>,
     },
     /// The server requires a step this implementation does not support.
     UnsupportedStep {
@@ -631,6 +638,8 @@ impl ComparisonHttpFlow {
             return RegistrationState::Blocked {
                 reason: BlockedReason::ServerRefused {
                     code: (status_code >= 400).then_some(u32::from(status_code)),
+                    http_status: Some(status_code),
+                    reason: response.reason,
                 },
             }
             .into();
@@ -1150,7 +1159,11 @@ mod tests {
         assert!(S::Registered.can_transition(&S::Unregistered));
         assert!(
             !S::Blocked {
-                reason: BlockedReason::ServerRefused { code: None }
+                reason: BlockedReason::ServerRefused {
+                    code: None,
+                    http_status: None,
+                    reason: None
+                }
             }
             .can_transition(&S::ChallengePending { handle: h })
         );
@@ -1344,6 +1357,92 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn refusal_details_persist_and_begin_does_not_retry() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([(
+                "/v2/code",
+                br#"{"status":"fail","reason":"bad_token"}"#.as_slice(),
+            )])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let first = service.begin(phone(), ChallengeMethod::Sms).await.unwrap();
+        let saved = service.current().await.unwrap().unwrap();
+        assert!(matches!(
+            saved.state,
+            RegistrationState::Blocked {
+                reason: BlockedReason::ServerRefused {
+                    code: None,
+                    http_status: Some(200),
+                    reason: Some(wire::RegistrationResponseReason::BadToken)
+                }
+            }
+        ));
+        let decoded: RegistrationAttempt =
+            serde_json::from_slice(&serde_json::to_vec(&saved).unwrap()).unwrap();
+        assert_eq!(decoded.state, saved.state);
+        let resumed = RegistrationService::new(
+            s,
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        assert_eq!(
+            resumed.begin(phone(), ChallengeMethod::Sms).await.unwrap(),
+            first
+        );
+        assert!(transport.responses.lock().unwrap().is_empty());
+    }
+
+    #[test]
+    fn old_refusals_decode_and_unknown_server_text_is_not_persisted() {
+        let old: BlockedReason =
+            serde_json::from_str(r#"{"ServerRefused":{"code":null}}"#).unwrap();
+        assert!(matches!(
+            old,
+            BlockedReason::ServerRefused {
+                code: None,
+                http_status: None,
+                reason: None
+            }
+        ));
+        let response = wire::RegistrationHttpResponse::new(
+            403,
+            Zeroizing::new(
+                br#"{"status":"fail","reason":"private_server_text","login":"secret-login"}"#
+                    .to_vec(),
+            ),
+        )
+        .unwrap()
+        .parse_json()
+        .unwrap();
+        let output = ComparisonHttpFlow::blocked_response(403, &response);
+        let encoded = serde_json::to_string(&output.state).unwrap();
+        assert!(!encoded.contains("private_server_text"));
+        assert!(!encoded.contains("secret-login"));
+        assert!(matches!(
+            output.state,
+            RegistrationState::Blocked {
+                reason: BlockedReason::ServerRefused {
+                    code: Some(403),
+                    http_status: Some(403),
+                    reason: Some(wire::RegistrationResponseReason::Other)
+                }
+            }
+        ));
+    }
+
+    #[tokio::test]
     async fn comparison_http_flow_drives_happy_path_and_commits_credentials() {
         let (_d, s) = store();
         let profile = ProtocolProfile::android_reference().unwrap();
@@ -1457,7 +1556,11 @@ mod tests {
                         Ok(RegistrationFlowOutput::registered(completion))
                     }
                     _ => Ok(RegistrationState::Blocked {
-                        reason: BlockedReason::ServerRefused { code: Some(403) },
+                        reason: BlockedReason::ServerRefused {
+                            code: Some(403),
+                            http_status: Some(403),
+                            reason: None,
+                        },
                     }
                     .into()),
                 }

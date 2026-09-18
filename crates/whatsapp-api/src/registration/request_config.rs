@@ -290,6 +290,13 @@ impl LabRegistrationConfig {
             "device_overrides": {"facebook_device_id": self.device.facebook_device_id.is_some(), "experiment_id": self.device.experiment_id.is_some(),
                 "access_session_id": self.device.access_session_id.is_some(), "recovery_token": self.device.recovery_token.is_some(), "backup_token": self.device.backup_token.is_some()},
             "diagnostics": self.diagnostics, "token": "<redacted>", "key_ids": "<redacted>",
+            "compatibility": {
+                "user_agent_matches_observed_presence": self.client.user_agent.is_some(),
+                "body_mode": "clear form only; APK also has a conditional encrypted envelope",
+                "attestation": "not implemented; no fabricated attestation",
+                "server_acceptance": "unverified",
+                "note": "Configured values do not prove genuine device provenance or server acceptance"
+            },
             "invariants": ["TLS verification on", "fixed comparison origin", "no redirects/proxies/automatic retries", "no reset/wipe", "live actions require explicit authorization"]
         })
     }

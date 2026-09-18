@@ -79,7 +79,11 @@ Preview validates locally without opening a store or contacting WhatsApp.
 Phone and secret values are redacted; `preview --show-phone` explicitly reveals
 only the phone. Unknown settings fail fast. Live diagnostics show field names,
 HTTP status, recognized server reason and wait times, never body values or
-arbitrary server text. Older configs remain readable through defaults.
+arbitrary server text. Refused states now retain HTTP status and recognized
+reason after restart; historical records cannot recover details already lost.
+Preview also highlights missing User-Agent and unimplemented conditional body
+encryption/attestation; these are compatibility gaps, not proven refusal causes.
+Older configs remain readable through defaults.
 All config inputs are frozen once an attempt is prepared: editing a saved
 attempt's profile fails a consistency check instead of changing its identity.
 Store path, account and master-key environment-variable name remain CLI options.
