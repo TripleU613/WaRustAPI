@@ -62,6 +62,27 @@ impl ComparisonRegistrationPrerequisites {
         })
     }
 
+    /// Generate once, applying explicitly supplied lab overrides before persistence.
+    pub fn generate_with(settings: &super::request::DeviceSettings) -> Result<Self> {
+        let mut value = Self::generate()?;
+        if let Some(v) = &settings.facebook_device_id {
+            value.facebook_device_id = v.to_string();
+        }
+        if let Some(v) = settings.experiment_id {
+            value.experiment_id = v;
+        }
+        if let Some(v) = settings.access_session_id {
+            value.access_session_id = v;
+        }
+        if let Some(v) = &settings.recovery_token {
+            value.recovery_token = v.clone();
+        }
+        if let Some(v) = &settings.backup_token {
+            value.backup_token = v.clone();
+        }
+        Ok(value)
+    }
+
     /// Construct the reusable common request parameters from persisted
     /// prerequisites and caller-controlled locale information.
     pub fn common_params(

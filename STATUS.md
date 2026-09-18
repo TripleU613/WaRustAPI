@@ -19,7 +19,12 @@ key generation/signing, encrypted persistence and comparison request assembly.
 It is explicitly lab-profile-only; default registration and messaging remain blocked.
 The opt-in CLI feature `experimental-signup` now exposes `lab-signup` for
 single-action operator-authorized HTTPS attempts. Ordinary commands remain
-blocked. No actual number has been submitted and server acceptance is unverified.
+blocked. Two prior operator-authorized attempts returned `ServerRefused` without
+a recorded HTTP reason; neither established signup or OTP delivery. The editable
+[request profile](crates/whatsapp-api/src/registration/request.rs) now exports to
+private JSON, with offline preview and redacted HTTP diagnostics for future
+explicit actions. [Outbound POST analysis](docs/protocol/http-post-analysis.md)
+has started; it is not a complete traffic audit. Server acceptance is unverified.
 
 **Key static findings (2026-09-17):** the pinned client contains classic
 `Noise_XX`/`Noise_IK` patterns **and nine ML-KEM512 hybrid Noise patterns**.
@@ -51,7 +56,7 @@ the active 2.26.36.75 profile.
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability and comparison transport/registration wire-profile endpoints plus structured gated-operation errors |
 
-Test count: 146 (`cargo test --locked --workspace --all-features`). Formatting,
+Test count: 153 (`cargo test --locked --workspace --all-features`). Formatting,
 all-feature/all-target Clippy with `-D warnings`, strict rustdoc, package
 verification, and protobuf regeneration checks pass on the continuation
 machine (Rust 1.98.1). The repository and CI

@@ -14,40 +14,14 @@ use zeroize::Zeroizing;
 use super::prerequisites::ComparisonRegistrationPrerequisites;
 use super::wire::*;
 use super::{AttemptId, ChallengeMethod, ComparisonRequestFactory, RegistrationAttempt};
-use crate::model::{ids::AccountGeneration, phone::PhoneNumber};
+use crate::model::ids::AccountGeneration;
 use crate::session::{AccountRecord, KeyMaterial, NoiseStaticKey, SignalIdentityKey};
 use crate::store::{ProtocolStore, Table, WriteTx};
 use crate::{Error, Result};
 
-/// Explicit opt-in profile ID, not the active Android reference profile.
-pub const LAB_PROFILE_ID: &str = "android-2.26.37.70-registration-lab";
+pub use super::request::{LAB_PROFILE_ID, LabRegistrationConfig};
 const MATERIAL_KEY: &[u8] = b"registration-lab-material";
 const RECORD_VERSION: u16 = 1;
-
-/// Caller-supplied lab inputs. Serialize only inside encrypted storage.
-/// IDs are not guessed: accepted Android ranges remain unobserved.
-#[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub struct LabRegistrationConfig {
-    /// Test number associated with the APK-derived token.
-    pub phone: PhoneNumber,
-    /// Language passed to the comparison request assembler.
-    pub language: String,
-    /// Locale passed to the comparison request assembler.
-    pub locale: String,
-    /// Pre-derived comparison token; never an OTP or account PIN.
-    pub token: Zeroizing<String>,
-    /// Caller-selected Signal registration ID (no claimed server range).
-    pub registration_id: u32,
-    /// Caller-selected signed-prekey ID, at most 24 bits.
-    pub signed_pre_key_id: u32,
-}
-
-impl fmt::Debug for LabRegistrationConfig {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("LabRegistrationConfig")
-            .finish_non_exhaustive()
-    }
-}
 
 #[derive(Serialize, Deserialize)]
 struct Material {
@@ -89,7 +63,7 @@ impl Material {
             method: attempt.method.clone(),
             generation: attempt.generation,
             config: config.clone(),
-            prerequisites: ComparisonRegistrationPrerequisites::generate()?,
+            prerequisites: ComparisonRegistrationPrerequisites::generate_with(&config.device)?,
             noise: material(&noise),
             identity: material(&identity),
             signed_pre_key: material(&signed),
@@ -174,26 +148,7 @@ impl fmt::Debug for StoredComparisonRequestFactory {
 impl StoredComparisonRequestFactory {
     /// Validate configuration without generating keys or contacting the server.
     pub fn new(store: Arc<ProtocolStore>, config: LabRegistrationConfig) -> Result<Self> {
-        let validated_phone =
-            PhoneNumber::new(config.phone.country_code(), config.phone.national_number())?;
-        if validated_phone != config.phone {
-            return Err(invalid("phone must use canonical digits"));
-        }
-        if config.signed_pre_key_id > 0x00ff_ffff {
-            return Err(invalid("signed-prekey ID must fit 24 bits"));
-        }
-        RegistrationCodeParams::new(config.token.as_str(), "sms")?;
-        // Validate locale using the same assembler before generating real material.
-        RegistrationCommonParams::new(
-            config.phone.clone(),
-            config.language.clone(),
-            config.locale.clone(),
-            "00000000-0000-4000-8000-000000000000",
-            [0; 16],
-            Some([0; 16]),
-            vec![0; 20],
-            vec![0; 20],
-        )?;
+        config.validate()?;
         Ok(Self { store, config })
     }
 
@@ -262,11 +217,13 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
             ChallengeMethod::Voice => "voice",
             _ => return Err(invalid("unsupported challenge method")),
         };
-        assemble_code_request(
-            &record.common()?,
-            &RegistrationCodeParams::new(record.config.token.as_str(), method)?,
-            Some(&record.bundle()?),
-        )
+        let mut form = RegistrationForm::new();
+        record.common()?.append_to_form(&mut form)?;
+        RegistrationCodeParams::new(record.config.token.as_str(), method)?
+            .append_to_form(&mut form)?;
+        super::request::append_fields(&mut form, &record.config.fields.code)?;
+        record.bundle()?.append_to_form(&mut form)?;
+        WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Code, &form)
     }
 
     fn complete_request(
@@ -275,11 +232,12 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
         code: &Zeroizing<String>,
     ) -> Result<EncodedRegistrationRequest> {
         let record = self.load(attempt)?;
-        assemble_complete_request(
-            &record.common()?,
-            &RegistrationCompleteParams::new(code.as_str())?,
-            Some(&record.bundle()?),
-        )
+        let mut form = RegistrationForm::new();
+        record.common()?.append_to_form(&mut form)?;
+        RegistrationCompleteParams::new(code.as_str())?.append_to_form(&mut form)?;
+        super::request::append_fields(&mut form, &record.config.fields.register)?;
+        record.bundle()?.append_to_form(&mut form)?;
+        WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Register, &form)
     }
 
     fn security_request(
@@ -288,17 +246,19 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
         pin: &Zeroizing<String>,
     ) -> Result<EncodedRegistrationRequest> {
         let record = self.load(attempt)?;
-        assemble_security_request(
-            &record.common()?,
-            &RegistrationSecurityParams::verify(pin.as_str())?,
-            Some(&record.bundle()?),
-        )
+        let mut form = RegistrationForm::new();
+        record.common()?.append_to_form(&mut form)?;
+        RegistrationSecurityParams::verify(pin.as_str())?.append_to_form(&mut form)?;
+        super::request::append_fields(&mut form, &record.config.fields.security)?;
+        record.bundle()?.append_to_form(&mut form)?;
+        WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Security, &form)
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::model::phone::PhoneNumber;
     use crate::model::{ids::AccountId, time::Timestamp};
     use crate::registration::{
         Answer, ComparisonHttpFlow, RegistrationService, RegistrationState, RegistrationStep,
@@ -326,6 +286,12 @@ mod tests {
             token: Zeroizing::new("offline-test-token-only".into()),
             registration_id: 17,
             signed_pre_key_id: 1,
+            method: Default::default(),
+            client: Default::default(),
+            transport: Default::default(),
+            device: Default::default(),
+            fields: Default::default(),
+            diagnostics: true,
         }
     }
 
@@ -341,6 +307,48 @@ mod tests {
             updated_at: Timestamp::now(),
             history: Vec::new(),
         }
+    }
+
+    #[test]
+    fn profile_device_and_endpoint_overrides_reach_only_their_forms() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(dir.path());
+        let mut cfg = config();
+        let fdid = "12345678-1234-4234-8234-123456789abc";
+        cfg.device.facebook_device_id = Some(Zeroizing::new(fdid.into()));
+        cfg.fields
+            .code
+            .insert("context".into(), Zeroizing::new("code only+".into()));
+        cfg.fields
+            .register
+            .insert("context".into(), Zeroizing::new("register only".into()));
+        cfg.fields
+            .security
+            .insert("context".into(), Zeroizing::new("security only".into()));
+        let factory = StoredComparisonRequestFactory::new(store.clone(), cfg).unwrap();
+        let a = attempt(&store);
+        store.write(|tx| factory.prepare(tx, &a)).unwrap();
+        let code = factory.code_request(&a).unwrap();
+        let body = std::str::from_utf8(code.body()).unwrap();
+        assert!(body.contains(&format!("fdid={fdid}")));
+        assert!(body.contains("context=code+only%2B"));
+        assert!(!code.diagnostic_summary().to_string().contains(fdid));
+        let complete = factory
+            .complete_request(&a, &Zeroizing::new("654321".into()))
+            .unwrap();
+        let security = factory
+            .security_request(&a, &Zeroizing::new("789012".into()))
+            .unwrap();
+        assert!(
+            std::str::from_utf8(complete.body())
+                .unwrap()
+                .contains("context=register+only")
+        );
+        assert!(
+            std::str::from_utf8(security.body())
+                .unwrap()
+                .contains("context=security+only")
+        );
     }
 
     #[test]

@@ -1,0 +1,48 @@
+//! Editable request profile — values here, plumbing in `request_config.rs`.
+//!
+//! Export with `lab-signup template`, then edit the private JSON without rebuilding.
+//! This is a research template, NOT a known-working Android fingerprint.
+//! Add APK-observed optional fields to the endpoint maps as evidence improves.
+//! Keep real numbers/tokens out of this tracked file. Null device values mean
+//! generate once and persist; they do not mean rotate on every request.
+//!
+//! Observed optional `/v2/code` fields (bridge A09): context, advertising_id,
+//! clicked_education_link, manage_call_permission, call_log_permission,
+//! client_start_message, type. Leave absent until their real producers and
+//! branch conditions are understood; existence does not prove requiredness.
+
+pub(crate) use super::request_config::append_fields;
+pub use super::request_config::{
+    ClientSettings, DeliveryMethod, DeviceSettings, EndpointFields, LAB_PROFILE_ID,
+    LabRegistrationConfig, MAX_CONFIG_BYTES, TransportSettings,
+};
+
+/// Starter profile. Placeholder credentials deliberately fail live validation.
+/// Locale is a locale, not GPS; no invented model, carrier or attestation values.
+pub const TEMPLATE_JSON: &str = r#"{
+  "phone": { "country_code": 1, "national_number": "2025550100" },
+  "language": "en",
+  "locale": "US",
+  "token": "",
+  "registration_id": 0,
+  "signed_pre_key_id": 0,
+  "method": "sms",
+  "client": {
+    "profile_id": "android-2.26.37.70-registration-lab",
+    "user_agent": null
+  },
+  "device": {
+    "facebook_device_id": null,
+    "experiment_id": null,
+    "access_session_id": null,
+    "recovery_token": null,
+    "backup_token": null
+  },
+  "fields": { "code": {}, "register": {}, "security": {} },
+  "transport": {
+    "timeout_ms": 45000,
+    "connect_timeout_ms": 30000,
+    "max_response_bytes": 1048576
+  },
+  "diagnostics": true
+}"#;

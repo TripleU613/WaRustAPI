@@ -1,0 +1,137 @@
+# Comparison APK 2.26.37.70; SHA-256 b2090b0207e9b97449a5b48e98eb4d1649ae8e5e738e9b7431d6242717fee732
+# Static literal references, not proof of runtime requests or required signup fields.
+# Command: xtask apk-xref <apk> --anchor POST --anchor User-Agent --anchor v.whatsapp.net
+["POST"]  (39 reference(s))
+  classes.dex  LX/129;->A0E(LLLLLLLLLLLIZZZZ)
+    dex byte offset: 0x7ae454
+  classes.dex  Lcom/whatsapp/infra/tee/connection/TeeTigonHttpClient;->A01(LLLLLLLI)
+    dex byte offset: 0x82f1e2
+  classes.dex  Lcom/whatsapp/infra/tee/connection/TeeTigonHttpClient;->A03(LLLLLLLI)
+    dex byte offset: 0x82f4e2
+  classes.dex  Lcom/whatsapp/infra/tee/connection/TeeTigonHttpClient;->A04(LLLLLLLIZ)
+    dex byte offset: 0x82f69c
+  classes10.dex  LX/JXs;->A05(VLL)
+    dex byte offset: 0x3ccd88
+  classes10.dex  LX/JXt;->A05(VLL)
+    dex byte offset: 0x3cd1e6
+  classes10.dex  LX/Jbj;->A0J(LLLLL)
+    dex byte offset: 0x3e0cba
+  classes10.dex  LX/Jbk;->A0J(LLLLL)
+    dex byte offset: 0x3e10a0
+  classes10.dex  LX/JqP;-><clinit>(V)
+    dex byte offset: 0x2f317c
+  classes10.dex  LX/L5D;->CQR(VLLLLLLL)
+    dex byte offset: 0x5f02ba
+  classes11.dex  LX/M8A;->handleMessage(VL)
+    dex byte offset: 0x3b360a
+  classes11.dex  LX/MGk;->CE3(JL)
+    dex byte offset: 0x43d1f2
+  classes11.dex  LX/NZu;->A00(ZLLI)
+    dex byte offset: 0x59b5ca
+  classes11.dex  LX/Nga;->toString(L)
+    dex byte offset: 0x5d1ba6
+  classes11.dex  LX/OLn;->run(V)
+    dex byte offset: 0x7b7534
+  classes12.dex  LX/Pd5;->A00(LLLLLLL)
+    dex byte offset: 0x29a886
+  classes12.dex  LX/QCn;-><init>(VLLLL)
+    dex byte offset: 0x364798
+  classes12.dex  LX/QCq;->A0B(LLL)
+    dex byte offset: 0x364e48
+  classes12.dex  LX/QCs;->A09(LL)
+    dex byte offset: 0x365792
+  classes4.dex  LX/4Lo;-><clinit>(V)
+    dex byte offset: 0x309d98
+  classes7.dex  Lcom/whatsapp/federatedanalytics/impl/FaTeeConnection;->A01(LLL)
+    dex byte offset: 0x5ffef0
+  classes7.dex  LX/DUT;->invokeSuspend(LL)
+    dex byte offset: 0x82fe1e
+  classes7.dex  LX/DUe;->invokeSuspend(LL)
+    dex byte offset: 0x83a2be
+  classes9.dex  Lcom/whatsapp/infra/tigon/WAHucClient;->setupConnection(LLLLL)
+    dex byte offset: 0x41a596
+  classes9.dex  LX/GzV;->A04(ILLI)
+    dex byte offset: 0x49ef40
+  classes9.dex  LX/GzX;->A0E(LLLLLLLLLLLIZZZZ)
+    dex byte offset: 0x49f9b8
+  classes9.dex  LX/Hyn;->A02(VLLLLLLLI)
+    dex byte offset: 0x5e9a98
+  classes9.dex  LX/ILf;->ClX(LLLL)
+    dex byte offset: 0x6d1a2c
+  classes9.dex  LX/IN5;->ACJ(LLIJ)
+    dex byte offset: 0x6e07c0
+  classes9.dex  LX/IN5;->AGA(ZLLLL)
+    dex byte offset: 0x6e0a3c
+  classes9.dex  LX/IN5;->AHt(LL)
+    dex byte offset: 0x6e0d72
+  classes9.dex  LX/IN5;->AKT(ZLL)
+    dex byte offset: 0x6e10ce
+  classes9.dex  LX/IN5;->CLy(LLL)
+    dex byte offset: 0x6e21d8
+  classes9.dex  LX/Icv;->run(V)
+    dex byte offset: 0x7646d8
+  classes9.dex  LX/Id1;->run(V)
+    dex byte offset: 0x76e91c
+  classes9.dex  LX/Id1;->run(V)
+    dex byte offset: 0x76edc6
+  classes9.dex  LX/Iq8;->invokeSuspend(LL)
+    dex byte offset: 0x7d09a4
+  classes9.dex  LX/Iq8;->invokeSuspend(LL)
+    dex byte offset: 0x7d0ce0
+  classes9.dex  LX/IrX;->invokeSuspend(LL)
+    dex byte offset: 0x7f19e4
+["User-Agent"]  (24 reference(s))
+  classes.dex  LX/0rd;->A01(LLLLJJ)
+    dex byte offset: 0x6f9322
+  classes.dex  LX/129;->A0C(LLLLLL)
+    dex byte offset: 0x7ae1c8
+  classes.dex  LX/129;->A0E(LLLLLLLLLLLIZZZZ)
+    dex byte offset: 0x7ae4ea
+  classes10.dex  LX/KzS;->onDownloadStart(VLLLLJ)
+    dex byte offset: 0x5c2eb6
+  classes10.dex  LX/LiC;->invoke(LLL)
+    dex byte offset: 0x74f390
+  classes11.dex  LX/MGk;->CE3(JL)
+    dex byte offset: 0x43d1a8
+  classes11.dex  LX/NZu;->A00(ZLLI)
+    dex byte offset: 0x59b5d4
+  classes11.dex  LX/OLn;->run(V)
+    dex byte offset: 0x7b7556
+  classes12.dex  LX/QCs;->A0X(V)
+    dex byte offset: 0x365d70
+  classes5.dex  LX/6xG;->A01(LLL)
+    dex byte offset: 0x32084a
+  classes5.dex  LX/76Q;->A00(LLLL)
+    dex byte offset: 0x3591be
+  classes8.dex  LX/EEG;->A00(IL)
+    dex byte offset: 0x3d3dcc
+  classes9.dex  LX/GzU;->A04(ILLI)
+    dex byte offset: 0x49e800
+  classes9.dex  LX/GzX;->A0C(LLLLLL)
+    dex byte offset: 0x49f806
+  classes9.dex  LX/GzX;->A0D(LLLLLL)
+    dex byte offset: 0x49f884
+  classes9.dex  LX/GzX;->A0E(LLLLLLLLLLLIZZZZ)
+    dex byte offset: 0x49f93e
+  classes9.dex  LX/HkG;->A01(LLLLLZ)
+    dex byte offset: 0x587ac0
+  classes9.dex  LX/HrF;->A00(ZLLI)
+    dex byte offset: 0x5aa52a
+  classes9.dex  LX/Hyn;->A02(VLLLLLLLI)
+    dex byte offset: 0x5e9b9e
+  classes9.dex  LX/IRP;->A05(LLL)
+    dex byte offset: 0x70b3ce
+  classes9.dex  LX/IRz;->COI(LL)
+    dex byte offset: 0x7124b2
+  classes9.dex  LX/Ick;->run(V)
+    dex byte offset: 0x75b324
+  classes9.dex  LX/Icz;->run(V)
+    dex byte offset: 0x769934
+  classes9.dex  LX/Icz;->run(V)
+    dex byte offset: 0x769cb6
+["v.whatsapp.net"]  (2 reference(s))
+  classes11.dex  LX/Nef;-><clinit>(V)
+    dex byte offset: 0x33dcc4
+65 total reference(s) across 3 anchor(s)
+  classes11.dex  LX/OFI;->COJ(L)
+    dex byte offset: 0x7871d2

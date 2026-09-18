@@ -48,6 +48,45 @@ account generation. Never delete an existing account to retry a transient error.
 
 ## Experimental signup CLI
 
+### Editable request profile
+
+The small [`request.rs`](../../crates/whatsapp-api/src/registration/request.rs)
+contains the JSON starter profile, not the validation machinery. Export it once:
+
+```sh
+cargo run --locked -p whatsapp-cli --features experimental-signup -- lab-signup template
+```
+
+Save the output privately as `lab/requests.json` (mode 0600); edit that JSON
+without rebuilding. The template's empty token intentionally fails validation.
+Replace the example phone and key IDs with controlled experiment inputs, and
+derive the token for that number. Never commit the filled-in profile.
+
+The control panel covers phone/country, language/locale, SMS/voice, client
+User-Agent, device identifiers, per-endpoint extra form fields, timeouts,
+response budget and diagnostics. Null identifiers are generated once and
+persisted. `fields.code`, `fields.register` and `fields.security` accept plain
+string values (not pre-encoded values); core identity/key/OTP/PIN/reset inputs
+cannot be overridden there. Empty maps intentionally claim no additional
+requirements. Add fields only with version-scoped APK evidence and real inputs;
+this is not a proven working Android fingerprint or an attestation generator.
+
+```sh
+target/debug/whatsapp-cli lab-signup --config lab/requests.json preview
+```
+
+Preview validates locally without opening a store or contacting WhatsApp.
+Phone and secret values are redacted; `preview --show-phone` explicitly reveals
+only the phone. Unknown settings fail fast. Live diagnostics show field names,
+HTTP status, recognized server reason and wait times, never body values or
+arbitrary server text. Older configs remain readable through defaults.
+All config inputs are frozen once an attempt is prepared: editing a saved
+attempt's profile fails a consistency check instead of changing its identity.
+Store path, account and master-key environment-variable name remain CLI options.
+TLS validation, origin and version binding are not configurable bypass switches.
+
+See the [outbound request analysis](http-post-analysis.md) for evidence and gaps.
+
 Build with `cargo build --locked -p whatsapp-cli --features experimental-signup`.
 `lab-signup` is absent from the default build. It performs one operator-selected
 action per invocation and never automatically submits an OTP or resets a PIN.

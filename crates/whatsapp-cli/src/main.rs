@@ -69,7 +69,7 @@ enum Cmd {
     #[cfg(feature = "experimental-signup")]
     LabSignup {
         /// Private JSON LabRegistrationConfig file; keep under ignored lab/.
-        #[arg(long)]
+        #[arg(long, default_value = "lab/requests.json")]
         config: PathBuf,
         /// Authorize this single invocation to contact WhatsApp.
         #[arg(long)]

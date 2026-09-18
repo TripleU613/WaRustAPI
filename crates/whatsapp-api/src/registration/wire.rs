@@ -1024,6 +1024,18 @@ impl fmt::Debug for EncodedRegistrationRequest {
 }
 
 impl EncodedRegistrationRequest {
+    /// Metadata-only troubleshooting view. Field values never appear.
+    pub fn diagnostic_summary(&self) -> serde_json::Value {
+        let fields: Vec<_> = self
+            .body
+            .split(|b| *b == b'&')
+            .filter_map(|field| {
+                let key = field.split(|b| *b == b'=').next()?;
+                std::str::from_utf8(key).ok()
+            })
+            .collect();
+        serde_json::json!({"method": self.method(), "url": self.url(), "content_type": self.content_type(), "body_bytes": self.content_length(), "fields": fields})
+    }
     /// HTTP method observed for registration requests.
     pub const fn method(&self) -> &'static str {
         "POST"
@@ -1075,6 +1087,7 @@ pub trait RegistrationTransport: Send + Sync + fmt::Debug {
 pub struct ExperimentalHttpsTransport {
     client: reqwest::Client,
     timeout: Duration,
+    max_response_bytes: usize,
 }
 
 #[cfg(feature = "experimental-registration-https")]
@@ -1096,6 +1109,34 @@ impl ExperimentalHttpsTransport {
     /// Build the constrained lab transport with an explicit ring
     /// provider. No process-global TLS provider is installed.
     pub fn new(timeout: Duration) -> Result<Self> {
+        Self::build(
+            timeout,
+            timeout.min(Duration::from_secs(30)),
+            MAX_RESPONSE_BODY_BYTES,
+            None,
+        )
+    }
+
+    /// Build using the central request settings, without a process-global provider.
+    pub fn with_settings(
+        settings: &super::request::TransportSettings,
+        client: &super::request::ClientSettings,
+    ) -> Result<Self> {
+        settings.validate()?;
+        Self::build(
+            Duration::from_millis(settings.timeout_ms),
+            Duration::from_millis(settings.connect_timeout_ms),
+            settings.max_response_bytes,
+            client.user_agent.as_ref().map(|value| value.as_str()),
+        )
+    }
+
+    fn build(
+        timeout: Duration,
+        connect_timeout: Duration,
+        max_response_bytes: usize,
+        user_agent: Option<&str>,
+    ) -> Result<Self> {
         if timeout.is_zero() || timeout > Self::MAX_TIMEOUT {
             return Err(Error::invalid(
                 "registration_https_timeout",
@@ -1116,7 +1157,7 @@ impl ExperimentalHttpsTransport {
         })?
         .with_root_certificates(roots)
         .with_no_client_auth();
-        let client = reqwest::Client::builder()
+        let mut builder = reqwest::Client::builder()
             .use_preconfigured_tls(tls)
             .https_only(true)
             .redirect(reqwest::redirect::Policy::none())
@@ -1127,16 +1168,28 @@ impl ExperimentalHttpsTransport {
             .no_deflate()
             .no_zstd()
             .timeout(timeout)
-            .connect_timeout(timeout.min(Duration::from_secs(30)))
-            .pool_max_idle_per_host(1)
-            .build()
-            .map_err(|_| {
-                Error::invalid(
-                    "registration_https_tls",
-                    "failed to construct constrained HTTPS client",
-                )
-            })?;
-        Ok(Self { client, timeout })
+            .connect_timeout(connect_timeout)
+            .pool_max_idle_per_host(1);
+        if let Some(value) = user_agent {
+            if value.is_empty()
+                || value.len() > 512
+                || !value.bytes().all(|b| (32..=126).contains(&b))
+            {
+                return Err(Error::invalid("client.user_agent", "invalid header value"));
+            }
+            builder = builder.user_agent(value);
+        }
+        let client = builder.build().map_err(|_| {
+            Error::invalid(
+                "registration_https_tls",
+                "failed to construct constrained HTTPS client",
+            )
+        })?;
+        Ok(Self {
+            client,
+            timeout,
+            max_response_bytes,
+        })
     }
 }
 
@@ -1163,11 +1216,11 @@ impl RegistrationTransport for ExperimentalHttpsTransport {
                 })?;
             if response
                 .content_length()
-                .is_some_and(|length| length > MAX_RESPONSE_BODY_BYTES as u64)
+                .is_some_and(|length| length > self.max_response_bytes as u64)
             {
                 return Err(Error::ResourceExhausted {
                     resource: "registration response body bytes",
-                    limit: MAX_RESPONSE_BODY_BYTES as u64,
+                    limit: self.max_response_bytes as u64,
                 });
             }
             let mut body = Zeroizing::new(Vec::with_capacity(
@@ -1175,17 +1228,17 @@ impl RegistrationTransport for ExperimentalHttpsTransport {
                     .content_length()
                     .and_then(|length| usize::try_from(length).ok())
                     .unwrap_or(0)
-                    .min(MAX_RESPONSE_BODY_BYTES),
+                    .min(self.max_response_bytes),
             ));
             while let Some(chunk) = response.chunk().await.map_err(|_| {
                 Error::Io(std::io::Error::other(
                     "registration HTTPS response body failed",
                 ))
             })? {
-                if body.len().saturating_add(chunk.len()) > MAX_RESPONSE_BODY_BYTES {
+                if body.len().saturating_add(chunk.len()) > self.max_response_bytes {
                     return Err(Error::ResourceExhausted {
                         resource: "registration response body bytes",
-                        limit: MAX_RESPONSE_BODY_BYTES as u64,
+                        limit: self.max_response_bytes as u64,
                     });
                 }
                 body.extend_from_slice(&chunk);
@@ -1213,6 +1266,29 @@ impl fmt::Debug for RegistrationHttpResponse {
 }
 
 impl RegistrationHttpResponse {
+    /// Safe HTTP and parsed control metadata, excluding arbitrary server text.
+    /// Unknown reasons remain `Other`; raw response bodies are never logged.
+    pub fn diagnostic_summary(&self) -> serde_json::Value {
+        let mut summary =
+            serde_json::json!({"http_status": self.status_code, "body_bytes": self.body.len()});
+        match RegistrationResponse::parse(Zeroizing::new(self.body.to_vec())) {
+            Ok(parsed) => {
+                summary["status"] = serde_json::json!(format!("{:?}", parsed.status));
+                summary["reason"] = serde_json::json!(parsed.reason.map(|v| format!("{v:?}")));
+                summary["retry_after_seconds"] =
+                    serde_json::json!(parsed.retry_after.map(|v| v.as_secs()));
+                summary["sms_wait_seconds"] =
+                    serde_json::json!(parsed.sms_wait.map(|v| v.as_secs()));
+                summary["voice_wait_seconds"] =
+                    serde_json::json!(parsed.voice_wait.map(|v| v.as_secs()));
+            }
+            Err(_) => {
+                summary["parse_error"] =
+                    serde_json::json!("unrecognized or invalid bounded response; body withheld");
+            }
+        }
+        summary
+    }
     /// Construct a response while enforcing the local body-size limit.
     pub fn new(status_code: u16, body: Zeroizing<Vec<u8>>) -> Result<Self> {
         if !(100..=599).contains(&status_code) {
@@ -1805,6 +1881,22 @@ fn validate_pre_encoded(value: &str) -> Result<()> {
 mod tests {
     use super::*;
     use serde_json::Value;
+
+    #[test]
+    fn diagnostics_withhold_response_secrets_and_malformed_bodies() {
+        for body in [
+            r#"{"status":"fail","reason":"private-server-text","token":"secret-token"}"#,
+            "malformed secret-token",
+        ] {
+            let response =
+                RegistrationHttpResponse::new(403, Zeroizing::new(body.as_bytes().to_vec()))
+                    .unwrap();
+            let diagnostic = response.diagnostic_summary();
+            assert_eq!(diagnostic["http_status"], 403);
+            assert!(!diagnostic.to_string().contains("secret-token"));
+            assert!(!diagnostic.to_string().contains("private-server-text"));
+        }
+    }
 
     #[test]
     fn catalog_matches_committed_comparison_evidence() {

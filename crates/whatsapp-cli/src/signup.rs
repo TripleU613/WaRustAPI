@@ -1,12 +1,16 @@
 //! Explicit, single-action lab signup; never selected by the ordinary CLI.
 
-use std::{fs::File, io::Read, path::Path, sync::Arc, time::Duration};
+use std::{fs::File, io::Read, path::Path, sync::Arc, time::Instant};
 
 use clap::Subcommand;
 use whatsapp_api::registration::{
     Answer, ChallengeMethod, ComparisonHttpFlow, RegistrationService, RegistrationState,
-    factory::{LAB_PROFILE_ID, LabRegistrationConfig, StoredComparisonRequestFactory},
-    wire::ExperimentalHttpsTransport,
+    factory::StoredComparisonRequestFactory,
+    request::{DeliveryMethod, LabRegistrationConfig, MAX_CONFIG_BYTES},
+    wire::{
+        EncodedRegistrationRequest, ExperimentalHttpsTransport, RegistrationTransport,
+        RegistrationTransportFuture,
+    },
 };
 use whatsapp_api::store::{EnvKeySource, OpenOptions, ProtocolStore};
 use whatsapp_api::{Error, ProtocolProfile};
@@ -14,12 +18,20 @@ use zeroize::Zeroizing;
 
 #[derive(Subcommand)]
 pub(super) enum Action {
+    /// Print the editable profile template; no file, store or network access.
+    Template,
+    /// Validate and show a redacted request plan; no network or store access.
+    Preview {
+        /// Explicitly show the configured phone in local output.
+        #[arg(long)]
+        show_phone: bool,
+    },
     /// Local status only: sends no request.
     Status,
     /// Request a code or resume an existing attempt; no automatic retries.
     Begin {
-        #[arg(long, value_enum, default_value_t = super::Method::Sms)]
-        method: super::Method,
+        #[arg(long, value_enum)]
+        method: Option<super::Method>,
     },
     /// Submit one OTP from redirected stdin (never a command-line argument).
     VerifyCode,
@@ -32,7 +44,11 @@ fn invalid(message: &'static str) -> Error {
 }
 
 fn authorize(action: &Action, allow_live: bool) -> Result<(), Error> {
-    if !matches!(action, Action::Status) && !allow_live {
+    if !matches!(
+        action,
+        Action::Template | Action::Status | Action::Preview { .. }
+    ) && !allow_live
+    {
         return Err(invalid(
             "requires --allow-live-request; experimental signup can affect an existing account",
         ));
@@ -43,9 +59,9 @@ fn authorize(action: &Action, allow_live: bool) -> Result<(), Error> {
 fn config(path: &Path) -> Result<LabRegistrationConfig, Error> {
     let file = File::open(path)?;
     let metadata = file.metadata()?;
-    if !metadata.is_file() || metadata.len() > 16 * 1024 {
+    if !metadata.is_file() || metadata.len() > MAX_CONFIG_BYTES {
         return Err(invalid(
-            "config must be a regular file no larger than 16 KiB",
+            "config must be a regular file no larger than 64 KiB",
         ));
     }
     #[cfg(unix)]
@@ -58,12 +74,48 @@ fn config(path: &Path) -> Result<LabRegistrationConfig, Error> {
         }
     }
     let mut data = Zeroizing::new(Vec::new());
-    file.take(16 * 1024 + 1).read_to_end(&mut data)?;
-    if data.len() > 16 * 1024 {
-        return Err(invalid("config exceeds 16 KiB"));
+    file.take(MAX_CONFIG_BYTES + 1).read_to_end(&mut data)?;
+    if data.len() as u64 > MAX_CONFIG_BYTES {
+        return Err(invalid("config exceeds 64 KiB"));
     }
     // Do not expose serde's offending value in an operator error.
-    serde_json::from_slice(&data).map_err(|_| invalid("invalid lab config JSON"))
+    let config: LabRegistrationConfig = serde_json::from_slice(&data).map_err(|_| {
+        invalid("invalid lab config JSON (unknown fields are rejected; see request.rs)")
+    })?;
+    config.validate()?;
+    Ok(config)
+}
+
+#[derive(Debug)]
+struct DiagnosticTransport {
+    inner: ExperimentalHttpsTransport,
+    enabled: bool,
+}
+
+impl RegistrationTransport for DiagnosticTransport {
+    fn send<'a>(&'a self, request: EncodedRegistrationRequest) -> RegistrationTransportFuture<'a> {
+        Box::pin(async move {
+            if self.enabled {
+                eprintln!("signup request: {}", request.diagnostic_summary());
+            }
+            let started = Instant::now();
+            let result = self.inner.send(request).await;
+            if self.enabled {
+                match &result {
+                    Ok(response) => eprintln!(
+                        "signup response ({} ms): {}",
+                        started.elapsed().as_millis(),
+                        response.diagnostic_summary()
+                    ),
+                    Err(_) => eprintln!(
+                        "signup transport failed ({} ms); no usable response; no retry",
+                        started.elapsed().as_millis()
+                    ),
+                }
+            }
+            result
+        })
+    }
 }
 
 fn answer(mut input: impl Read) -> Result<Zeroizing<String>, Error> {
@@ -91,8 +143,30 @@ pub(super) async fn run(
 ) -> Result<(), Error> {
     use std::io::IsTerminal;
     authorize(action, allow_live)?;
+    if matches!(action, Action::Template) {
+        println!("{}", whatsapp_api::registration::request::TEMPLATE_JSON);
+        return Ok(());
+    }
     let config = config(path)?;
+    if let Action::Preview { show_phone } = action {
+        let mut preview = config.preview(*show_phone);
+        preview["store"] = serde_json::json!(cli.store);
+        preview["master_key_environment_variable"] = serde_json::json!(cli.key_env);
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&preview)
+                .map_err(|_| invalid("preview serialization failed"))?
+        );
+        return Ok(());
+    }
     let phone = config.phone.clone();
+    let configured_method = config.method;
+    let mut profile = ProtocolProfile::android_reference()?;
+    profile.id = config.client.profile_id.clone();
+    let transport = Arc::new(DiagnosticTransport {
+        inner: ExperimentalHttpsTransport::with_settings(&config.transport, &config.client)?,
+        enabled: config.diagnostics,
+    });
     let store = Arc::new(ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
         account_id: whatsapp_api::model::ids::AccountId::new(cli.account.clone())?,
@@ -100,16 +174,15 @@ pub(super) async fn run(
         create: matches!(action, Action::Begin { .. }),
     })?);
     let factory = Arc::new(StoredComparisonRequestFactory::new(store.clone(), config)?);
-    let transport = Arc::new(ExperimentalHttpsTransport::new(Duration::from_secs(45))?);
-    let mut profile = ProtocolProfile::android_reference()?;
-    // A lab label, not a promotion of any reference evidence to Observed.
-    profile.id = LAB_PROFILE_ID.into();
     let service = RegistrationService::new(
         store,
         &profile,
         Arc::new(ComparisonHttpFlow::new(factory, transport)),
     );
     let step = match action {
+        Action::Template | Action::Preview { .. } => {
+            return Err(invalid("preview must not open the store"));
+        }
         Action::Status => {
             match service.current().await? {
                 Some(attempt) => println!("{attempt:?}"),
@@ -119,8 +192,12 @@ pub(super) async fn run(
         }
         Action::Begin { method } => {
             let method = match method {
-                super::Method::Sms => ChallengeMethod::Sms,
-                super::Method::Voice => ChallengeMethod::Voice,
+                Some(super::Method::Sms) => ChallengeMethod::Sms,
+                Some(super::Method::Voice) => ChallengeMethod::Voice,
+                None => match configured_method {
+                    DeliveryMethod::Sms => ChallengeMethod::Sms,
+                    DeliveryMethod::Voice => ChallengeMethod::Voice,
+                },
             };
             service.begin(phone, method).await?
         }
@@ -165,9 +242,11 @@ mod tests {
     #[test]
     fn mutations_require_explicit_authorization() {
         assert!(authorize(&Action::Status, false).is_ok());
+        assert!(authorize(&Action::Template, false).is_ok());
+        assert!(authorize(&Action::Preview { show_phone: false }, false).is_ok());
         for action in [
             Action::Begin {
-                method: super::super::Method::Sms,
+                method: Some(super::super::Method::Sms),
             },
             Action::VerifyCode,
             Action::VerifyPin,
