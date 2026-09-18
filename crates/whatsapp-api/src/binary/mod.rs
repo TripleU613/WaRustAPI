@@ -1,4 +1,4 @@
-//! Binary node codec (README section 8.4).
+//! Binary node codec (docs/design/README.md section 8.4).
 //!
 //! WhatsApp stanzas are trees of nodes encoded with a token dictionary. This
 //! module provides the in-memory [`Node`] shape, a bounded decoder and an

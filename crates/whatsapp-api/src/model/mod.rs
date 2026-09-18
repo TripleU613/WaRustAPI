@@ -1,6 +1,6 @@
 //! Domain model: identifiers, addresses, messages, receipts and send types.
 //!
-//! Identifiers are newtypes (README section 9). A contact identifier is not a
+//! Identifiers are newtypes (docs/design/README.md section 9). A contact identifier is not a
 //! phone number, and a cryptographic session belongs to a [`ids::DeviceAddress`],
 //! never to a human-readable contact.
 

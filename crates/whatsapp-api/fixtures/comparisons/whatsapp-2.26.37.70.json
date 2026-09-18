@@ -127,6 +127,15 @@
       "socket_factory_method": "LX/1AM;->A01(LLL)",
       "unresolved": "active remote configuration and pinned-profile equivalence"
     },
+    "frame_writer": {
+      "length_prefix_bytes": 3,
+      "byte_order": "big_endian",
+      "rejected_length_at_or_above": 16777216,
+      "maximum_encoded_body_bytes": 16777215,
+      "writer_method": "LX/1NX;->write(VLII)",
+      "length_encoder_method": "LX/1Lz;->A04(LI)",
+      "limitation": "Static frame-writer bound only; server record sizes and active pinned-profile equivalence remain unobserved."
+    },
     "registration": {
       "base_url": "https://v.whatsapp.net",
       "paths": [

@@ -1,4 +1,4 @@
-//! Durable outbox (README section 12).
+//! Durable outbox (docs/design/README.md section 12).
 //!
 //! `enqueue` commits an immutable intent and returns a [`SendTicket`]. It
 //! claims nothing about server acceptance or delivery. Attempt progress and

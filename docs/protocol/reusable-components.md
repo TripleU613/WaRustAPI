@@ -1,4 +1,4 @@
-# Reusable Rust component evaluation (README section 3)
+# Reusable Rust component evaluation (docs/design/README.md section 3)
 
 Pinned revision: `oxidezap/whatsapp-rust` @ `4a0721b9aa944822807b95926e2770da4e670b2f`
 (headline MIT; Cargo package `whatsapp-rust` 0.7.0, "Rust client for WhatsApp Web").

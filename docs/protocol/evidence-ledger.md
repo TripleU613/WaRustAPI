@@ -1,6 +1,6 @@
 # Evidence ledger
 
-Labels (README 6.1): `Observed` · `Derived` · `ReferenceOnly` · `Unknown`.
+Labels (docs/design/README.md 6.1): `Observed` · `Derived` · `ReferenceOnly` · `Unknown`.
 Every important wire constant used by the code points here through a
 `ledger_ref` string. **No `Observed` transport fact exists yet**: nothing has
 been captured from the pinned Android client or a live server.
@@ -24,7 +24,7 @@ headline; see ADR 0005 for AGPL files).
 | `binary.tokens_version` | Dictionary version byte sent in header/prologue | 3 | ReferenceOnly | Not established from the APK (an integer constant, not a string). |
 | `jid.servers` | Server names | `s.whatsapp.net`, `g.us`, `lid`, `broadcast`, `newsletter`, `c.us`, `hosted`, `hosted.lid`, `msgr`, `interop` | ReferenceOnly | whatsmeow `types/jid.go`. |
 | `jid.ad_domain_types` | AD_JID first byte → server | 0→user, 1→lid, 128→hosted, 129→hosted.lid, else agent | ReferenceOnly | whatsmeow `NewADJID`. |
-| `noise.pattern` | Handshake pattern | `Noise_XX_25519_AESGCM_SHA256` (IK resume also used by web) | ReferenceOnly | whatsmeow `NoiseStartPattern`; whatsapp-rust `consts.rs`. README 8.3: hypothesis until confirmed. **APK 2.26.36.75 also contains twelve pattern names including ML-KEM512 hybrids** (`noise.client_patterns`). |
+| `noise.pattern` | Handshake pattern | `Noise_XX_25519_AESGCM_SHA256` (IK resume also used by web) | ReferenceOnly | whatsmeow `NoiseStartPattern`; whatsapp-rust `consts.rs`. docs/design/README.md 8.3: hypothesis until confirmed. **APK 2.26.36.75 also contains twelve pattern names including ML-KEM512 hybrids** (`noise.client_patterns`). |
 | `noise.client_patterns` | Pattern names compiled into the client | 12 names: XX, IK, XXfallback and nine `*kem*MLKEM512*` hybrids | Observed (client, static) | `xtask apk-strings`, 2026-09-17. Which one the server negotiates/accepts is `Unknown`. `snow` has no MLKEM512 hybrid patterns (ADR 0004). |
 | `noise.prologue` | Prologue | `WA 0x06 <dict_version>` | ReferenceOnly | Same bytes as the connection header in the references. |
 | `noise.trust_root` | Root public key for cert chain | `1423 7557 4d0a … a8ee 6b` | ReferenceOnly | whatsmeow `handshake.go` `WACertPubKey`; whatsapp-rust `WA_CERT_PUB_KEY`. Signature scheme XEdDSA. |
@@ -83,6 +83,12 @@ and 1,024-byte response/chunk-line bounds.
 These are version-scoped comparative observations only: the
 pinned-profile labels above remain unchanged. Full details and hashes are in
 `fixtures/comparisons/whatsapp-2.26.37.70.json` and `decompilation-log.md`.
+
+Additional comparison framing observation (2026-09-17): `LX/1NX;->write(VLII)`
+rejects lengths at or above `0x1000000`; `LX/1Lz;->A04(LI)` encodes the
+accepted length as three big-endian bytes. This establishes a static writer
+bound of 16,777,215 body bytes for 2.26.37.70 only, not an observed server
+Noise record limit. See the continuation entry in `decompilation-log.md`.
 
 ## Dated server observations
 

@@ -1,4 +1,4 @@
-//! Typed errors for the public API (README section 14).
+//! Typed errors for the public API (docs/design/README.md section 14).
 //!
 //! The variants deliberately distinguish invalid input, unsupported
 //! capability/profile, required registration action, rate limits with a
@@ -152,7 +152,7 @@ impl Error {
         }
     }
 
-    /// Whether a reconnect could plausibly resolve this error (README section 14).
+    /// Whether a reconnect could plausibly resolve this error (docs/design/README.md section 14).
     pub fn is_recoverable_by_reconnect(&self) -> bool {
         matches!(
             self,

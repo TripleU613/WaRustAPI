@@ -1,4 +1,4 @@
-//! Durable domain events and the `SyncEngine` (README sections 13 and 14).
+//! Durable domain events and the `SyncEngine` (docs/design/README.md sections 13 and 14).
 //!
 //! `SyncEngine` consumes the protocol journal. It does not run a connection
 //! reader and does not promise history that the profile has not been observed
@@ -111,7 +111,7 @@ pub struct SendStatusUpdate {
     pub fact: Option<DeliveryFact>,
 }
 
-/// Domain events (README section 14).
+/// Domain events (docs/design/README.md section 14).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum SyncEvent {

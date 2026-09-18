@@ -1,5 +1,5 @@
 //! Messages as a tagged domain enum with an explicit `Unsupported` form
-//! (README section 9).
+//! (docs/design/README.md section 9).
 
 use bytes::Bytes;
 use serde::{Deserialize, Serialize};
@@ -37,7 +37,7 @@ pub struct MessageRef {
     pub key: MessageKey,
 }
 
-/// Media kind for already-encoded content (README section 16).
+/// Media kind for already-encoded content (docs/design/README.md section 16).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum MediaKind {
     /// Still image.

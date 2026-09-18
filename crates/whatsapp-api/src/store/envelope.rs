@@ -1,4 +1,4 @@
-//! At-rest record encryption (README section 11.3).
+//! At-rest record encryption (docs/design/README.md section 11.3).
 //!
 //! Format (all integers big-endian):
 //!

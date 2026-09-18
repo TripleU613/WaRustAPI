@@ -1,5 +1,5 @@
 //! Transport: byte-stream framing, Noise adapter and certificate binding
-//! (README sections 8.3 and 8.4).
+//! (docs/design/README.md sections 8.3 and 8.4).
 //!
 //! Only framing is compiled by default. The Noise adapter lives behind the
 //! `experimental-noise` feature because the handshake pattern, prologue and

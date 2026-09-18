@@ -1,4 +1,4 @@
-//! Operator tool and standalone proof harness for `whatsapp-api` (README
+//! Operator tool and standalone proof harness for `whatsapp-api` (docs/design/README.md
 //! section 20).
 //!
 //! Secrets never travel on the command line: the master key is read from an
@@ -150,7 +150,7 @@ enum RegCmd {
         /// Country calling code (explicit; never guessed).
         #[arg(long)]
         country: u16,
-        /// Phone number in E.164 form (+<cc><national>).
+        /// Phone number in E.164 form (`+<cc><national>`).
         #[arg(long)]
         phone: String,
         /// Challenge method.

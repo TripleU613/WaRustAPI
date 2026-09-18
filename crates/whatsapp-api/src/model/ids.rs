@@ -1,4 +1,4 @@
-//! Identifier newtypes (README section 9).
+//! Identifier newtypes (docs/design/README.md section 9).
 //!
 //! None of these convert implicitly into another. Where the protocol requires
 //! a composite key, a dedicated struct (for example

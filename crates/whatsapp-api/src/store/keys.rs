@@ -1,4 +1,4 @@
-//! Master key injection and the at-rest key hierarchy (README section 11.3).
+//! Master key injection and the at-rest key hierarchy (docs/design/README.md section 11.3).
 //!
 //! The master key lives outside the database. A [`KeySource`] hands it to the
 //! store; the store derives a per-database data key and an index key with

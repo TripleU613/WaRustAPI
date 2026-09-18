@@ -1,4 +1,4 @@
-//! Primary registration as a durable, branching state machine (README section 7).
+//! Primary registration as a durable, branching state machine (docs/design/README.md section 7).
 //!
 //! The Android registration protocol remains incomplete for the active
 //! profile. A version-scoped request-construction layer for a newer signed
@@ -265,7 +265,7 @@ impl fmt::Debug for Answer {
     }
 }
 
-/// Durable registration state (README section 7 table).
+/// Durable registration state (docs/design/README.md section 7 table).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum RegistrationState {
@@ -894,7 +894,7 @@ impl RegistrationService {
     ///
     /// Resumes an existing non-terminal attempt for the same number. A
     /// terminal `Registered` attempt is returned as `Completed` and is never
-    /// restarted implicitly (README section 7).
+    /// restarted implicitly (docs/design/README.md section 7).
     pub async fn begin(
         &self,
         phone: PhoneNumber,
@@ -941,7 +941,7 @@ impl RegistrationService {
                     };
                     attempt.transition(RegistrationState::Preparing, now)?;
                     // Prerequisites and Preparing commit atomically before
-                    // any request can be sent (README section 7).
+                    // any request can be sent (docs/design/README.md section 7).
                     flow.prepare(tx, &attempt)?;
                     Self::save_current(tx, &attempt)?;
                     Ok(BeginPlan::Start(attempt))

@@ -1,4 +1,4 @@
-//! Receipts and acknowledgements (README section 13).
+//! Receipts and acknowledgements (docs/design/README.md section 13).
 //!
 //! Transport ACK, delivery receipt, read receipt and played receipt are
 //! separate kinds. None of them are emitted automatically as "read".

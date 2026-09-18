@@ -1,6 +1,6 @@
 //! Evidence labels attached to protocol constants and profile decisions.
 //!
-//! The plan (README section 6.1) requires every important wire constant to
+//! The plan (docs/design/README.md section 6.1) requires every important wire constant to
 //! point at evidence. These labels are carried in the protocol profile and in
 //! the capability matrix so that a consumer can distinguish tested behavior
 //! from reference-derived hypotheses.

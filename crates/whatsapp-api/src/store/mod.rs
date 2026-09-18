@@ -1,4 +1,4 @@
-//! Encrypted transactional protocol store on `redb` (README section 11).
+//! Encrypted transactional protocol store on `redb` (docs/design/README.md section 11).
 //!
 //! One database per account holds everything whose consistency affects future
 //! communication. Every secret-bearing record is sealed in an authenticated
@@ -169,7 +169,7 @@ impl fmt::Debug for ConsumerId {
     }
 }
 
-/// Logical tables (README section 11.2).
+/// Logical tables (docs/design/README.md section 11.2).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[non_exhaustive]
 pub enum Table {

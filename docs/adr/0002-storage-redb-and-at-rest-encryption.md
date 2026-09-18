@@ -5,7 +5,7 @@ Status: accepted · 2026-09-17
 ## Decision
 
 - One `protocol.redb` per account (redb 4.3.0, pure Rust, ACID). All logical
-  tables from README 11.2 exist as `&[u8] -> &[u8]` tables plus `meta`,
+  tables from docs/design/README.md 11.2 exist as `&[u8] -> &[u8]` tables plus `meta`,
   `events` (`u64 -> &[u8]`) and `consumers`.
 - Every record except `meta` is sealed with XChaCha20-Poly1305
   (`chacha20poly1305` 0.11) under a **random per-database data key**. The data

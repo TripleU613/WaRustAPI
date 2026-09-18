@@ -1,4 +1,4 @@
-//! Validated protocol profile (README sections 5 and 6).
+//! Validated protocol profile (docs/design/README.md sections 5 and 6).
 //!
 //! A profile bundles every protocol-dependent fact the library needs, each
 //! carrying an [`EvidenceLabel`]. Operations that need a fact whose label is

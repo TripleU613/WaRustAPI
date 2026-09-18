@@ -1,4 +1,4 @@
-//! Crash-matrix scenarios from README 19.2 that are provable today, using the
+//! Crash-matrix scenarios from docs/design/README.md 19.2 that are provable today, using the
 //! public API only. Rows that need a transmission path or a Signal backend
 //! are listed at the bottom as not yet coverable.
 //!

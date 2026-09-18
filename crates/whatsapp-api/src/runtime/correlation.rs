@@ -1,4 +1,4 @@
-//! Bounded, epoch-tagged request correlation (README section 8.1).
+//! Bounded, epoch-tagged request correlation (docs/design/README.md section 8.1).
 
 use std::collections::HashMap;
 

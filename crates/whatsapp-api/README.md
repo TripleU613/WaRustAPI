@@ -1,8 +1,8 @@
 # whatsapp-api
 
 Standalone async Rust library intended to register and operate as a WhatsApp
-**primary device**. See the repository `README.md` for the implementation plan
-and `../../STATUS.md` for what is actually working.
+**primary device**. See the [design plan](../../docs/design/README.md)
+and [current status](../../STATUS.md) for what is actually working.
 
 ## Status: experimental, offline gates only
 
@@ -17,7 +17,8 @@ facts. What does work, and is tested offline:
   authenticated record identity, single-writer ownership, generation fencing);
 - durable event journal with consumer cursors and at-least-once replay;
 - durable outbox with idempotent enqueue and honest send tickets;
-- bounded binary-node codec driven by a `ReferenceOnly` token dictionary;
+- bounded binary-node codec with a statically verified token dictionary
+  (the active profile's dictionary version byte remains `ReferenceOnly`);
 - cancellation-safe frame reader, experimental Noise XX adapter (feature
   `experimental-noise`), certificate-chain binding over an injected verifier;
 - durable registration state machine with bound challenge handles, atomic

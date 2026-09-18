@@ -10,7 +10,7 @@ readme = "README.md"
 keywords = ["whatsapp", "messaging", "protocol"]
 categories = ["network-programming"]
 publish = false
-include = ["src/**", "README.md", "Cargo.toml", "fixtures/**"]
+include = ["src/**", "README.md", "Cargo.toml", "fixtures/**", "LICENSE-*", "THIRD_PARTY_NOTICES.md"]
 
 [features]
 default = []

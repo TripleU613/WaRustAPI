@@ -1,4 +1,4 @@
-//! Send requests, tickets, attempt progress and delivery facts (README section 12).
+//! Send requests, tickets, attempt progress and delivery facts (docs/design/README.md section 12).
 
 use serde::{Deserialize, Serialize};
 

@@ -1,4 +1,4 @@
-//! Server certificate chain binding for the Noise handshake (README 8.3).
+//! Server certificate chain binding for the Noise handshake (docs/design/README.md 8.3).
 //!
 //! The chain structure (`CertChain { intermediate, leaf }`, each with
 //! protobuf `details` + 64-byte signature) and the verification order are

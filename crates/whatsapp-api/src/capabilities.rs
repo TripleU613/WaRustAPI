@@ -1,4 +1,4 @@
-//! Capability matrix (README section 1).
+//! Capability matrix (docs/design/README.md section 1).
 //!
 //! Every operation maps to a [`Capability`] with a [`SupportLevel`]. An
 //! `Unsupported` operation returns [`crate::Error::Unsupported`]; it never

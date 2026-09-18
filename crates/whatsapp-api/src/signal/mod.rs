@@ -1,4 +1,4 @@
-//! Signal backend boundary (README section 10).
+//! Signal backend boundary (docs/design/README.md section 10).
 //!
 //! No backend has passed the interoperability gate (ADR 0005). This module
 //! defines the adapter boundary and the transactional overlay the account
@@ -86,7 +86,7 @@ pub struct Versioned {
     pub revision: u64,
 }
 
-/// In-memory transaction overlay over Signal records (README 11.4).
+/// In-memory transaction overlay over Signal records (docs/design/README.md 11.4).
 ///
 /// The backend reads and writes the overlay only. The account actor commits
 /// the mutations atomically with the message/event records, checking that no

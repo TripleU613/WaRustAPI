@@ -4,7 +4,7 @@ Status: accepted · 2026-09-17
 
 ## Context
 
-README section 2 requires every first-party component to be Rust and forbids
+docs/design/README.md section 2 requires every first-party component to be Rust and forbids
 bundled or linked C/C++ application, storage or cryptography code in the
 production graph. No prior workspace existed: the repository contained only
 the plan. `crates/tzibbur-api` and `crates/bridge`, referenced by the plan as
@@ -30,7 +30,7 @@ could not be inspected and no compatibility requirement could be recorded.
 
 ## Consequences
 
-- The bridge adapter (README section 17) cannot be written until the bridge
+- The bridge adapter (docs/design/README.md section 17) cannot be written until the bridge
   crate is available; the library keeps `SyncEvent`/`SyncEngine` separate so
   an adapter can be added without touching protocol code.
 - `cargo metadata` unifies dev-dependency features into the report (e.g.

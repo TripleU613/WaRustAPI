@@ -2,7 +2,7 @@
 //!
 //! The wire representation is `user[.agent][:device]@server`. Distinct
 //! representations (phone-number JIDs, logical IDs, device suffixes, groups)
-//! are preserved; nothing here merges identities (README section 9).
+//! are preserved; nothing here merges identities (docs/design/README.md section 9).
 //!
 //! Server names are `ReferenceOnly` for the Android primary profile: they are
 //! taken from public multi-device implementations and recorded in

@@ -1,4 +1,4 @@
-//! Property tests (README 19.1): encode/decode round trips for arbitrary
+//! Property tests (docs/design/README.md 19.1): encode/decode round trips for arbitrary
 //! nodes, framing under arbitrary fragmentation, and decoder robustness on
 //! arbitrary bytes (never panics, never exceeds bounds).
 

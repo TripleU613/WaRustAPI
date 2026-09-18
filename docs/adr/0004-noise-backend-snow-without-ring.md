@@ -35,6 +35,14 @@ ML-KEM implementation plus a custom Noise state machine become necessary.
 
 ## Decision
 
+Additional comparison evidence (2026-09-17): in APK 2.26.37.70
+(`b2090b…ee732`), `LX/1NX;->write(VLII)` rejects body lengths greater than
+or equal to `0x1000000`, then writes a three-byte big-endian length from
+`LX/1Lz;->A04(LI)` followed by the body. The static frame-writer bound thus
+does not constrain records to `snow`'s 65,535-byte limit. Server record sizes
+and equivalence with the pinned profile remain unresolved; this does not
+clear the backend gate.
+
 Compile the adapter only behind `experimental-noise`. Every connection epoch
 performs a fresh handshake; transport state is never persisted; any failure
 closes the transport permanently.

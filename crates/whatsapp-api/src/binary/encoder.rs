@@ -272,7 +272,7 @@ mod tests {
         // "1" has two valid encodings: the packed nibble above and the
         // single-byte token 85. The encoder prefers the token; both decode to
         // the same node, and byte equality is not required where the profile
-        // does not canonicalize (README section 6.3).
+        // does not canonicalize (docs/design/README.md section 6.3).
         let expected = Node::new("iq")
             .attr("id", "1")
             .attr("type", "get")

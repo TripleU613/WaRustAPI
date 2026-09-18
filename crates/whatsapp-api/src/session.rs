@@ -1,4 +1,4 @@
-//! Credential lifecycle and the key-source boundary (README section 7 and 11).
+//! Credential lifecycle and the key-source boundary (docs/design/README.md section 7 and 11).
 //!
 //! The account record holds our identities and *observed* credentials only.
 //! Noise static keys and Signal identity keys are distinct typed values.

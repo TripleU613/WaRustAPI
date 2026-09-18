@@ -1,7 +1,7 @@
 //! Byte-stream framing with a bounded big-endian length prefix.
 //!
 //! The reader owns its buffer, so cancelling an in-flight read keeps partial
-//! bytes (README section 8.4). Multiple frames per read and fragmented
+//! bytes (docs/design/README.md section 8.4). Multiple frames per read and fragmented
 //! headers/bodies are handled.
 
 use bytes::{Bytes, BytesMut};

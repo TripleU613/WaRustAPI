@@ -638,6 +638,11 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
                 i32::from_le_bytes([insn_bytes[2], insn_bytes[3], insn_bytes[4], insn_bytes[5]]);
             format!("v{reg}, #{lit:#x}")
         }
+        // const/high16 vAA, #+BBBB0000 — 21h (32-bit value).
+        0x15 if insn_bytes.len() >= 4 => {
+            let lit = (u16::from_le_bytes([insn_bytes[2], insn_bytes[3]]) as u32) << 16;
+            format!("v{reg}, #{lit:#x}")
+        }
         // return / goto / comparisons — just show register
         0x0f | 0x10 | 0x11 | 0x27 => format!("v{reg}"),
         0x28 => {
@@ -1363,6 +1368,27 @@ mod tests {
         assert!(decoded[1].annotation.contains("data=[57 41 06 03]"));
         assert_eq!(decoded[2].mnemonic, "fill-array-data-payload");
         assert_eq!(decoded[2].width, 6);
+    }
+
+    #[test]
+    fn decodes_high16_frame_bounds_and_signed_bit_patterns() {
+        let d = minimal_dex_header();
+        let dex = DexFile::parse(&d).unwrap();
+        let insns = [
+            0x15, 0x00, 0x00, 0x01, // v0 = 1 << 24, APK frame rejection bound
+            0x15, 0xff, 0x00, 0x80, // v255 = i32::MIN bit pattern
+            0x15, 0x01, 0xff, 0xff, // v1 = -65536 bit pattern
+            0x15, 0x02, 0x00, 0x00, // v2 = 0
+        ];
+        let decoded = decode_insns(&insns, &dex);
+        assert_eq!(decoded[0].annotation, "v0, #0x1000000");
+        assert_eq!(decoded[1].annotation, "v255, #0x80000000");
+        assert_eq!(decoded[2].annotation, "v1, #0xffff0000");
+        assert_eq!(decoded[3].annotation, "v2, #0x0");
+        assert_eq!(decoded[0].width, 2);
+        for end in 0..4 {
+            let _ = decode_insns(&insns[..end], &dex);
+        }
     }
 
     #[test]

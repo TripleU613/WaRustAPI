@@ -29,7 +29,7 @@ the active 2.26.36.75 profile.
 | APK static observations | `xtask apk-strings`: 449,216 dex strings in pinned 2.26.36.75; hosts, 12 Noise pattern names, registration vocabulary, ClientPayload field constants. `apk-xref`/`apk-callers`/`apk-smali`: structural method and caller analysis, validated on separately hashed 2.26.37.70. |
 | Token dictionary | `xtask apk-tokens --check`: ordered dictionary recovered from `classes2.dex` bytecode is identical to the committed fixture → `binary.tokens` is client-observed; version byte still ReferenceOnly |
 | Store | encryption at rest, AAD row binding, wrapped data keys with wrong-key detection, master-key rotation, second owner rejected, generation fencing, atomic rollback, journal replay/ack/trim |
-| Crash matrix (README 19.2) | `tests/crash_matrix.rs`: rows 1, 2, 3, 9, 10 (rotation) and the second-process ownership test pass; rows 4–8 and 11 need a transmission path / Signal backend / I/O fault injection |
+| Crash matrix (docs/design/README.md 19.2) | `tests/crash_matrix.rs`: rows 1, 2, 3, 9, 10 (rotation) and the second-process ownership test pass; rows 4–8 and 11 need a transmission path / Signal backend / I/O fault injection |
 | Codec | independent hand-written fixture, JID kinds, packed strings, bounds, duplicate attributes, zlib bomb; `tests/codec_props.rs` property round trips (found and fixed an odd-length hex padding overflow), decoder never panics on arbitrary bytes, framing under arbitrary fragmentation |
 | Transport | framing fragmentation/cancellation tests; Noise XX handshake + records against a snow responder; complete version-scoped classic/ML-KEM selector map with tested classic compiled defaults; typed comparison-only `WA 06 03` header and built-in gateway/edge raw-TCP/TLS map; cert chain binding incl. "valid-looking chain that does not bind to the remote key"; feature-gated lab HTTPS registration transport with pure-Rust alpha provider, validation on, no redirects/retries/proxies, deadlines and bounded streaming responses |
 | Registration | state table enforced; handles bound to attempt/generation/step; answers never persisted; prerequisite persistence is atomic with the pre-request state; elapsed cooldowns resume without regenerating keys; ambiguous outcomes have a non-repeating reconciliation seam; successful account credentials commit atomically with `Registered`; version-scoped 2.26.37.70 endpoint catalog, deterministic common-field, `/v2/code`, `/v2/register`, `/v2/security`, public key-bundle encoding, APK-backed `/v2/code` token derivation, and fresh-install UUID/token prerequisite generation; conservative comparison HTTP flow including the account-PIN branch is tested end-to-end with a mock transport (not installed for the active profile) |
@@ -37,9 +37,13 @@ the active 2.26.36.75 profile.
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability and comparison transport/registration wire-profile endpoints plus structured gated-operation errors |
 
-Test count: 134 (`cargo test --workspace --all-features`), clippy clean with
-`-D warnings`, `cargo fmt --check` clean, and package/protobuf checks pass
-locally.
+Test count: 135 (`cargo test --locked --workspace --all-features`). Formatting,
+all-feature/all-target Clippy with `-D warnings`, strict rustdoc, package
+verification, and protobuf regeneration checks pass on the continuation
+machine (Rust 1.98.1). The repository and CI
+remain pinned to Rust 1.94.1; that version was not rerun on this machine.
+The newer-toolchain chunk-iterator warnings were resolved without changing
+encoding behavior.
 
 ## Blocked / not started
 
@@ -56,6 +60,12 @@ locally.
   adapter contract could not be inspected.
 
 ## Suggested next steps (in gate order)
+
+Continuation (2026-09-17): the supplied local APK was verified as the exact
+2.26.37.70 comparison hash. Its frame writer uses a three-byte big-endian
+length and rejects bodies at 16 MiB; server Noise record sizes remain open.
+The Rust bytecode tool now displays `const/high16` values, with a regression
+test covering this bound and signed bit patterns. No extra tools were needed.
 
 1. Static: obtain exact pinned 2.26.36.75 and reproduce the comparison
    build's dictionary-version / `WA` header and registration findings; then

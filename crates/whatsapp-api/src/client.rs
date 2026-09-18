@@ -1,4 +1,4 @@
-//! Public facade (README section 14).
+//! Public facade (docs/design/README.md section 14).
 //!
 //! `WhatsAppClient` is a cloneable handle over one account actor and one
 //! encrypted protocol store. Every operation either works offline against
@@ -57,7 +57,7 @@ pub struct CreateGroupRequest {
     pub participants: Vec<ContactId>,
 }
 
-/// Explicit read/played receipt policy (README section 13.1).
+/// Explicit read/played receipt policy (docs/design/README.md section 13.1).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ReceiptPolicy {
     /// Only send receipts the application explicitly requests.

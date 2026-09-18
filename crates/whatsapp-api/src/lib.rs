@@ -4,7 +4,7 @@
 //! # Status
 //!
 //! This crate is at gate **G0/G1** of the implementation plan in the repository
-//! `README.md`. Everything that works today is offline and local:
+//! `docs/design/README.md`. Everything that works today is offline and local:
 //!
 //! * a typed domain model and public API contract (`client`, `model`, `sync`),
 //! * an encrypted transactional protocol store on `redb` with a durable event

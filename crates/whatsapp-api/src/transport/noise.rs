@@ -4,7 +4,7 @@
 //! crypto resolver and **without** its `std` feature, because that feature
 //! activates the optional `ring` dependency (ADR 0004).
 //!
-//! Rules enforced here (README section 8.3):
+//! Rules enforced here (docs/design/README.md section 8.3):
 //!
 //! * a handshake produces a transport bound to one [`ConnectionEpoch`];
 //! * transport keys/counters are never persisted or reused on a new socket;

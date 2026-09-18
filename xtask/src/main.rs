@@ -1,4 +1,4 @@
-//! Repository automation in Rust only (README sections 2.2, 2.4, 6.1).
+//! Repository automation in Rust only (docs/design/README.md sections 2.2, 2.4, 6.1).
 //!
 //! Commands:
 //! * `proto-gen`   — regenerate committed protobuf Rust code with protox + prost-build.

@@ -1,6 +1,6 @@
 # Unknowns and blockers (G1/G2)
 
-Ordered by what blocks the first decisive result (README section 0).
+Ordered by what blocks the first decisive result (docs/design/README.md section 0).
 
 1. **Android registration protocol** (`registration.*`): payload encoding,
    URL assembly, required prerequisites and their generation timing,
@@ -37,6 +37,10 @@ Ordered by what blocks the first decisive result (README section 0).
 3. **Login payload** (`login.client_payload`): primary-device markers,
    version fields, startup requests, resume behaviour.
 4. **Noise record sizes** (`noise.record_limit`) to accept or reject `snow`.
+   The 2.26.37.70 comparison frame writer uses a three-byte big-endian
+   length and rejects bodies at or above 16,777,216 bytes. This framing
+   bound is much larger than `snow`'s 65,535-byte limit; it does not establish
+   the largest record emitted or accepted by the server.
 5. ~~**Android token dictionary**~~ *Resolved 2026-09-17 for content and
    order*: `xtask apk-tokens` recovers the ordered dictionary from the APK
    bytecode and it is identical to the web v3 list. Still open: the

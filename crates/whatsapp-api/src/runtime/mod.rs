@@ -1,4 +1,4 @@
-//! Account runtime: one actor owns mutable protocol state (README section 8.1).
+//! Account runtime: one actor owns mutable protocol state (docs/design/README.md section 8.1).
 //!
 //! The actor receives commands over a bounded channel, publishes connection
 //! state through a watch channel, and tags every connection attempt with a
@@ -22,7 +22,7 @@ use crate::store::ProtocolStore;
 use crate::sync::RevocationReason;
 use crate::transport::ConnectionEpoch;
 
-/// Live connection state (README section 14).
+/// Live connection state (docs/design/README.md section 14).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum ConnectionState {

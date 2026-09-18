@@ -331,3 +331,32 @@ The Rust-native parser was corrected before analysis:
 
 Machine-readable metadata and findings are recorded in
 `crates/whatsapp-api/fixtures/comparisons/whatsapp-2.26.37.70.json`.
+
+## 2026-09-17 — resumed comparison framing analysis
+
+- Input: operator-supplied APK; `xtask reference-manifest` reproduced the
+  comparison's exact version 2.26.37.70, code 263707033, SHA-256
+  `b2090b0207e9b97449a5b48e98eb4d1649ae8e5e738e9b7431d6242717fee732`
+  and recorded certificate fingerprint. The pinned 2.26.36.75 is still absent.
+- Tooling: added missing `const/high16` operand annotations to `apk-smali`,
+  following the [AOSP Dalvik opcode specification](https://source.android.com/docs/core/runtime/dalvik-bytecode).
+  Regression vectors cover the frame bound, negative-value bit patterns,
+  zero, register 255 and truncated input. No external tools installed.
+- `LX/1NX;->write(VLII)` at method-relative byte offset `0x0008` loads
+  `0x1000000` and rejects `length >= bound` at `0x000c`. Otherwise it writes
+  the length from `LX/1Lz;->A04(LI)`, the complete body, and flushes. The
+  length encoder emits shifts 16, 8, 0 as a three-byte big-endian prefix.
+  Maximum encodable body length is therefore 16,777,215 bytes.
+- `LX/1N7;->A00(L)` reads a three-byte handshake prefix, checks the `GOA`
+  sentinel, decodes the length through `LX/1Lz;->A00(IL)`, reads that body,
+  and parses the handshake protobuf. This is static receive-path evidence,
+  not a server observation.
+- `LX/1Qe;->CkD(VLI)` constructs the optionally compressed node payload,
+  increments the send counter, calls `LX/1Nj;->A01(LLLIJ)` once and writes
+  its result. `LX/1N7;->A06(L)` supplies the `LX/1NX;` frame writer through
+  `LX/1Qc;`, connecting this path to the bound above.
+  Full backend compatibility still needs record-size evidence;
+  the outer framing bound alone cannot establish server record sizes.
+- Ledger impact: comparison fixture and ADR 0004 updated; active-profile
+  `framing.*` and `noise.record_limit` labels remain unchanged. Next: trace
+  the receive-record path and primary login payload construction (T6).

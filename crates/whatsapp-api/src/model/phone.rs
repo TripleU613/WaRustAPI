@@ -1,4 +1,4 @@
-//! Phone-number validation with explicit country information (README section 7).
+//! Phone-number validation with explicit country information (docs/design/README.md section 7).
 //!
 //! This module does not embed a country-code table and does not guess how to
 //! split an E.164 number: the caller states the country calling code. The

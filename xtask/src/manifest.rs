@@ -1,4 +1,4 @@
-//! Reference-manifest extraction from an APK (README section 6.1).
+//! Reference-manifest extraction from an APK (docs/design/README.md section 6.1).
 //!
 //! Computes the APK hash, reads `AndroidManifest.xml`, and fingerprints the
 //! first X.509 certificate in the v1 signature block. Output is JSON on

@@ -1,4 +1,4 @@
-//! Dependency graph audit (README section 2.4).
+//! Dependency graph audit (docs/design/README.md section 2.4).
 //!
 //! Walks the *normal* dependency edges of the release crates for the Linux
 //! x86_64 target (approximated from `cfg` strings) and reports packages with

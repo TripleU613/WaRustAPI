@@ -1735,14 +1735,14 @@ fn validate_binary_parameter(field: &'static str, value: &[u8], allow_empty: boo
 fn base64_url_no_pad(input: &[u8]) -> String {
     const TABLE: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     let mut output = String::with_capacity(input.len().div_ceil(3) * 4);
-    let mut chunks = input.chunks_exact(3);
-    for chunk in &mut chunks {
+    let (chunks, remainder) = input.as_chunks::<3>();
+    for chunk in chunks {
         output.push(TABLE[usize::from(chunk[0] >> 2)] as char);
         output.push(TABLE[usize::from(((chunk[0] & 0x03) << 4) | (chunk[1] >> 4))] as char);
         output.push(TABLE[usize::from(((chunk[1] & 0x0f) << 2) | (chunk[2] >> 6))] as char);
         output.push(TABLE[usize::from(chunk[2] & 0x3f)] as char);
     }
-    match chunks.remainder() {
+    match remainder {
         [first] => {
             output.push(TABLE[usize::from(first >> 2)] as char);
             output.push(TABLE[usize::from((first & 0x03) << 4)] as char);
@@ -1753,7 +1753,7 @@ fn base64_url_no_pad(input: &[u8]) -> String {
             output.push(TABLE[usize::from((second & 0x0f) << 2)] as char);
         }
         [] => {}
-        _ => unreachable!("chunks_exact(3) remainder is at most two bytes"),
+        _ => unreachable!("as_chunks::<3>() remainder is at most two bytes"),
     }
     output
 }
