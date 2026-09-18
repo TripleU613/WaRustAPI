@@ -99,23 +99,33 @@
         "g.whatsapp.net": {
           "443": "raw_tcp",
           "5222": "raw_tcp",
-          "80": "raw_tcp_port80_fallback"
+          "80": "raw_tcp_with_pseudo_http_chunked_stream"
         },
         "g-fallback.whatsapp.net": {
           "443": "raw_tcp",
           "5222": "raw_tcp",
-          "80": "raw_tcp_port80_fallback"
+          "80": "raw_tcp_with_pseudo_http_chunked_stream"
         },
         "e1-e16.whatsapp.net": {
           "443": "tls_via_java_sslsocketfactory",
           "5222": "raw_tcp",
-          "80": "raw_tcp_port80_fallback"
+          "80": "raw_tcp_with_pseudo_http_chunked_stream"
         }
+      },
+      "port80_pseudo_http": {
+        "request_line": "POST /chat HTTP/1.1",
+        "host_header": "c.whatsapp.net",
+        "user_agent": "Mozilla/5.0 (compatible; WAChat/1.2; +http://www.whatsapp.com/contact)",
+        "transfer_encoding": "chunked",
+        "output_chunk_buffer_bytes": 8192,
+        "input_header_or_chunk_line_limit_bytes": 1024,
+        "output_wrapper_class": "LX/H9X;",
+        "input_wrapper_class": "LX/H9U;"
       },
       "connection_sequence_method": "LX/1BH;->A02(LLZZ)",
       "default_port_method": "LX/1BH;->A00(I)",
       "socket_factory_method": "LX/1AM;->A01(LLL)",
-      "unresolved": "active remote configuration, exact port-80 stream semantics, and pinned-profile equivalence"
+      "unresolved": "active remote configuration and pinned-profile equivalence"
     },
     "registration": {
       "base_url": "https://v.whatsapp.net",

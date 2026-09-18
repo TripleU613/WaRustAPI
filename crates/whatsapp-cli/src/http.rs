@@ -20,7 +20,8 @@ use whatsapp_api::registration::wire::{
 };
 use whatsapp_api::transport::comparison::{
     COMPARISON_CONNECTION_HEADER, COMPARISON_DICTIONARY_VERSION, COMPARISON_FALLBACK_PORT,
-    COMPARISON_PRIMARY_PORTS, COMPARISON_PROTOCOL_VERSION, ComparisonEndpoint,
+    COMPARISON_PRIMARY_PORTS, COMPARISON_PROTOCOL_VERSION, COMPARISON_PSEUDO_HTTP_CHUNK_BYTES,
+    COMPARISON_PSEUDO_HTTP_LINE_BYTES, COMPARISON_PSEUDO_HTTP_REQUEST_HEAD, ComparisonEndpoint,
     ComparisonEndpointMode, ComparisonGateway, ComparisonSocketLayer,
 };
 use whatsapp_api::transport::selector::{
@@ -328,6 +329,14 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
                         "e1-e16.whatsapp.net"
                     )
                 ],
+                "port80_pseudo_http": {
+                    "request_head": String::from_utf8_lossy(
+                        COMPARISON_PSEUDO_HTTP_REQUEST_HEAD
+                    ),
+                    "output_chunk_bytes": COMPARISON_PSEUDO_HTTP_CHUNK_BYTES,
+                    "input_line_limit_bytes": COMPARISON_PSEUDO_HTTP_LINE_BYTES,
+                    "response_transfer_encoding": "chunked"
+                },
                 "noise_selector": {
                     "compiled_pq_mode": COMPARISON_DEFAULT_PQ_MODE,
                     "compiled_variant": COMPARISON_DEFAULT_PQ_VARIANT,
@@ -352,7 +361,6 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
                 },
                 "unresolved": [
                     "active remote configuration",
-                    "exact port-80 stream semantics",
                     "pinned-profile equivalence",
                     "primary-device login payload"
                 ]
@@ -495,7 +503,7 @@ fn comparison_endpoint_json(gateway: ComparisonGateway, port: u16, host: &str) -
         },
         "mode": match endpoint.mode {
             ComparisonEndpointMode::Direct => "direct",
-            ComparisonEndpointMode::Port80Fallback => "port80_fallback",
+            ComparisonEndpointMode::PseudoHttpChunked => "pseudo_http_chunked",
         }
     })
 }
@@ -592,6 +600,17 @@ mod tests {
         assert_eq!(body["ports"]["primary_candidates"][1], 5222);
         assert_eq!(body["built_in_socket_layers"][0]["layer"], "raw_tcp");
         assert_eq!(body["built_in_socket_layers"][6]["layer"], "tls");
+        assert_eq!(
+            body["built_in_socket_layers"][8]["mode"],
+            "pseudo_http_chunked"
+        );
+        assert_eq!(body["port80_pseudo_http"]["output_chunk_bytes"], 8192);
+        assert!(
+            body["port80_pseudo_http"]["request_head"]
+                .as_str()
+                .unwrap()
+                .starts_with("POST /chat HTTP/1.1\r\n")
+        );
         assert_eq!(body["noise_selector"]["compiled_pq_mode"], "none");
         assert_eq!(
             body["noise_selector"]["compiled_default_patterns"]["full"],

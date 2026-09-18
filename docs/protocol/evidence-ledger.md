@@ -32,7 +32,7 @@ headline; see ADR 0005 for AGPL files).
 | `noise.cert_chain` | Chain structure and check order | `CertChain{intermediate,leaf}`; details/signature(64) | ReferenceOnly | whatsmeow `verifyServerCert`; schema `WACert.proto`. |
 | `noise.record_limit` | Max Noise record size on the wire | — | Unknown | Needed to accept `snow` (65,535-byte limit); ADR 0004. |
 | `schemas.*` | Protobuf schemas | `WACert`, `WAWebProtobufsWa6`, `WACommon`, `WAAdv` | ReferenceOnly | `proto/whatsmeow/` @ 2375e175. |
-| `transport.endpoint` | Chat endpoint (port, TCP vs WebSocket, TLS layer) | — | Unknown | Active pinned profile remains unresolved. Comparison APK 2.26.37.70 uses Java sockets: built-in primary/fallback gateway branches are raw TCP on 443/5222; numbered edges use TLS on 443 and raw TCP on 5222; port 80 is a separate raw-socket fallback branch with unresolved stream semantics. |
+| `transport.endpoint` | Chat endpoint (port, TCP vs WebSocket, TLS layer) | — | Unknown | Active pinned profile remains unresolved. Comparison APK 2.26.37.70 uses Java sockets: built-in primary/fallback gateway branches are raw TCP on 443/5222; numbered edges use TLS on 443 and raw TCP on 5222; port 80 uses raw TCP wrapped in bounded HTTP/1.1 chunked streams (`POST /chat`, host `c.whatsapp.net`). |
 | `transport.hosts` | Chat gateway hostnames in the client | `g.whatsapp.net`, `g-fallback.whatsapp.net`, `e1`–`e16.whatsapp.net` | Observed (client, static) | `xtask apk-strings`, 2026-09-17. |
 | `registration.host` | Registration hostname in the client | `v.whatsapp.net` | Observed (client, static) | `xtask apk-strings`, 2026-09-17. |
 | `registration.vocabulary` | Path fragments and parameter names in the client | `v2`, `code`, `exist`, `register`, `security`, `verify`; params `cc`, `in`, `lg`, `lc`, `mcc`, `mnc`, `method`, `token`, `id`, `e_regid`, `e_keytype`, `e_ident`, `e_skey_id`, `e_skey_val`, `e_skey_sig`, `fdid`, `expid`, `backup_token`, `authkey`, … | Observed (client, static) | Presence only; assembly, encoding, order and required subset are `Unknown` (`registration.payload_encoding`). |
@@ -77,8 +77,9 @@ the recovery and backup tokens; the exact recipes are in the comparison fixture.
 The built-in socket path does not construct a WebSocket: it supplies a Java
 `SSLSocketFactory` for numbered-edge port 443, but uses raw TCP for primary or
 fallback gateways even on port 443 and for all built-in port-5222 branches.
-Dedicated port-80 states are raw sockets carrying an additional unresolved
-branch marker.
+Dedicated port-80 states wrap those raw sockets in a pseudo-HTTP/1.1 chunked
+stream: `POST /chat`, host `c.whatsapp.net`, an 8,192-byte output chunk buffer,
+and 1,024-byte response/chunk-line bounds.
 These are version-scoped comparative observations only: the
 pinned-profile labels above remain unchanged. Full details and hashes are in
 `fixtures/comparisons/whatsapp-2.26.37.70.json` and `decompilation-log.md`.

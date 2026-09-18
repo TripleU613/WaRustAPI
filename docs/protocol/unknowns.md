@@ -23,8 +23,9 @@ Ordered by what blocks the first decisive result (README section 0).
    The 2.26.37.70 comparison statically selects 443/5222 with a port-80
    fallback. Its built-in Java path is not WebSocket: primary/fallback
    gateways use raw TCP on 443/5222, while numbered edges use TLS on 443 and
-   raw TCP on 5222. The port-80 marker's extra stream behavior, active remote
-   configuration, and pinned-profile equivalence remain open.
+   raw TCP on 5222. Port 80 wraps raw TCP with bounded HTTP/1.1 chunked streams
+   using `POST /chat` and host `c.whatsapp.net`. Active remote configuration
+   and pinned-profile equivalence remain open.
 2b. **Handshake pattern negotiation** (`noise.client_patterns`): the client
    contains classic XX/IK **and nine ML-KEM512 hybrid** Noise patterns. If the
    server requires a hybrid pattern for new primary registrations, `snow`

@@ -16,8 +16,9 @@ registration URL/form-body construction and JSON response vocabulary. Its
 compiled Noise selector defaults to classic mode, though remote configuration
 can select ML-KEM and remains unobserved. Its built-in socket path uses raw
 TCP for primary/fallback gateways on 443/5222, and TLS only for numbered-edge
-port 443. These comparison findings do not replace evidence for the active
-2.26.36.75 profile.
+port 443; the port-80 fallback is raw TCP with a bounded HTTP/1.1 chunked
+`POST /chat` wrapper. These comparison findings do not replace evidence for
+the active 2.26.36.75 profile.
 
 ## Verified in this repository (offline)
 
@@ -36,7 +37,7 @@ port 443. These comparison findings do not replace evidence for the active
 | Client | durable enqueue → status → events → ack → restart over the same store |
 | CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability and comparison transport/registration wire-profile endpoints plus structured gated-operation errors |
 
-Test count: 133 (`cargo test --workspace --all-features`), clippy clean with
+Test count: 134 (`cargo test --workspace --all-features`), clippy clean with
 `-D warnings`, `cargo fmt --check` clean, and package/protobuf checks pass
 locally.
 

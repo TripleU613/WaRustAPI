@@ -21,6 +21,17 @@ pub const COMPARISON_CONNECTION_HEADER: [u8; 4] = [
 pub const COMPARISON_PRIMARY_PORTS: [u16; 2] = [443, 5222];
 /// Last-resort port used by dedicated fallback states.
 pub const COMPARISON_FALLBACK_PORT: u16 = 80;
+/// HTTP request head emitted before the first port-80 payload chunk.
+pub const COMPARISON_PSEUDO_HTTP_REQUEST_HEAD: &[u8] = b"POST /chat HTTP/1.1\r\n\
+Host: c.whatsapp.net\r\n\
+User-Agent: Mozilla/5.0 (compatible; WAChat/1.2; +http://www.whatsapp.com/contact)\r\n\
+Transfer-Encoding: chunked\r\n\r\n";
+/// Port-80 output buffer size; full buffers are emitted as HTTP chunks.
+pub const COMPARISON_PSEUDO_HTTP_CHUNK_BYTES: usize = 8192;
+/// Maximum response-header or chunk-length line buffered by the client.
+pub const COMPARISON_PSEUDO_HTTP_LINE_BYTES: usize = 1024;
+/// Final chunk emitted when the port-80 stream closes.
+pub const COMPARISON_PSEUDO_HTTP_FINAL_CHUNK: &[u8] = b"0\r\n\r\n";
 
 /// Built-in gateway families in the comparison client.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -64,8 +75,8 @@ pub enum ComparisonSocketLayer {
 pub enum ComparisonEndpointMode {
     /// Normal 443/5222 gateway or edge branch.
     Direct,
-    /// Dedicated last-resort port-80 branch.
-    Port80Fallback,
+    /// Dedicated last-resort port-80 branch using HTTP/1.1 chunked transfer.
+    PseudoHttpChunked,
 }
 
 /// Deterministic socket metadata for a built-in comparison-client branch.
@@ -86,7 +97,8 @@ impl ComparisonEndpoint {
     ///
     /// Primary and fallback gateway branches remain raw TCP on port 443. Edge
     /// branches wrap port 443 with TLS. All built-in port-5222 and port-80
-    /// branches use raw TCP; port 80 is marked as a distinct fallback mode.
+    /// branches use raw TCP; port 80 applies the comparison client's
+    /// pseudo-HTTP chunked stream wrappers.
     pub fn built_in(
         gateway: ComparisonGateway,
         port: u16,
@@ -109,7 +121,7 @@ impl ComparisonEndpoint {
             ),
             80 => (
                 ComparisonSocketLayer::RawTcp,
-                ComparisonEndpointMode::Port80Fallback,
+                ComparisonEndpointMode::PseudoHttpChunked,
             ),
             unsupported => return Err(ComparisonEndpointError::UnsupportedPort(unsupported)),
         };
@@ -187,7 +199,18 @@ mod tests {
 
         let fallback = ComparisonEndpoint::built_in(ComparisonGateway::Edge(1), 80).unwrap();
         assert_eq!(fallback.layer, ComparisonSocketLayer::RawTcp);
-        assert_eq!(fallback.mode, ComparisonEndpointMode::Port80Fallback);
+        assert_eq!(fallback.mode, ComparisonEndpointMode::PseudoHttpChunked);
+    }
+
+    #[test]
+    fn pseudo_http_constants_match_the_stream_wrappers() {
+        assert_eq!(COMPARISON_PSEUDO_HTTP_CHUNK_BYTES, 8192);
+        assert_eq!(COMPARISON_PSEUDO_HTTP_LINE_BYTES, 1024);
+        assert_eq!(COMPARISON_PSEUDO_HTTP_FINAL_CHUNK, b"0\r\n\r\n");
+        assert_eq!(
+            COMPARISON_PSEUDO_HTTP_REQUEST_HEAD,
+            b"POST /chat HTTP/1.1\r\nHost: c.whatsapp.net\r\nUser-Agent: Mozilla/5.0 (compatible; WAChat/1.2; +http://www.whatsapp.com/contact)\r\nTransfer-Encoding: chunked\r\n\r\n"
+        );
     }
 
     #[test]
