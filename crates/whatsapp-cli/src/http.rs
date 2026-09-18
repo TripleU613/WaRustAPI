@@ -18,6 +18,15 @@ use whatsapp_api::registration::wire::{
     COMPARISON_SIGNAL_KEY_TYPE, MAX_RESPONSE_BODY_BYTES, RegistrationEndpoint,
     RegistrationResponseReason, RegistrationResponseStatus, WHATSAPP_2_26_37_70,
 };
+use whatsapp_api::transport::comparison::{
+    COMPARISON_CONNECTION_HEADER, COMPARISON_DICTIONARY_VERSION, COMPARISON_FALLBACK_PORT,
+    COMPARISON_PRIMARY_PORTS, COMPARISON_PROTOCOL_VERSION, ComparisonEndpoint,
+    ComparisonEndpointMode, ComparisonGateway, ComparisonSocketLayer,
+};
+use whatsapp_api::transport::selector::{
+    COMPARISON_DEFAULT_PQ_MODE, COMPARISON_DEFAULT_PQ_VARIANT, ComparisonHandshakeKind,
+    comparison_noise_pattern,
+};
 use whatsapp_api::{Error, ProtocolProfile};
 
 const MAX_HEADER_BYTES: usize = 16 * 1024;
@@ -215,7 +224,12 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
     match (method, path) {
         (
             _,
-            "/" | "/healthz" | "/v1/profile" | "/v1/capabilities" | "/v1/registration/wire-profile",
+            "/"
+            | "/healthz"
+            | "/v1/profile"
+            | "/v1/capabilities"
+            | "/v1/transport/wire-profile"
+            | "/v1/registration/wire-profile",
         ) if !is_read => Response::method_not_allowed("GET, HEAD"),
         (_, "/v1/connect" | "/v1/registration") if method != "POST" => {
             Response::method_not_allowed("POST")
@@ -230,6 +244,7 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
                     "GET /healthz",
                     "GET /v1/profile",
                     "GET /v1/capabilities",
+                    "GET /v1/transport/wire-profile",
                     "GET /v1/registration/wire-profile",
                     "POST /v1/connect",
                     "POST /v1/registration"
@@ -260,6 +275,89 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
         ("GET" | "HEAD", "/v1/capabilities") => {
             Response::json(200, "OK", json!(state.capabilities))
         }
+        ("GET" | "HEAD", "/v1/transport/wire-profile") => Response::json(
+            200,
+            "OK",
+            json!({
+                "evidence_scope": "signed newer-build comparison; not active profile",
+                "version_name": "2.26.37.70",
+                "connection_header": {
+                    "hex": COMPARISON_CONNECTION_HEADER
+                        .iter()
+                        .map(|byte| format!("{byte:02x}"))
+                        .collect::<String>(),
+                    "protocol_version": COMPARISON_PROTOCOL_VERSION,
+                    "dictionary_version": COMPARISON_DICTIONARY_VERSION
+                },
+                "ports": {
+                    "primary_candidates": COMPARISON_PRIMARY_PORTS,
+                    "fallback": COMPARISON_FALLBACK_PORT
+                },
+                "built_in_socket_layers": [
+                    comparison_endpoint_json(ComparisonGateway::Primary, 443, "g.whatsapp.net"),
+                    comparison_endpoint_json(ComparisonGateway::Primary, 5222, "g.whatsapp.net"),
+                    comparison_endpoint_json(ComparisonGateway::Primary, 80, "g.whatsapp.net"),
+                    comparison_endpoint_json(
+                        ComparisonGateway::Fallback,
+                        443,
+                        "g-fallback.whatsapp.net"
+                    ),
+                    comparison_endpoint_json(
+                        ComparisonGateway::Fallback,
+                        5222,
+                        "g-fallback.whatsapp.net"
+                    ),
+                    comparison_endpoint_json(
+                        ComparisonGateway::Fallback,
+                        80,
+                        "g-fallback.whatsapp.net"
+                    ),
+                    comparison_endpoint_json(
+                        ComparisonGateway::Edge(1),
+                        443,
+                        "e1-e16.whatsapp.net"
+                    ),
+                    comparison_endpoint_json(
+                        ComparisonGateway::Edge(1),
+                        5222,
+                        "e1-e16.whatsapp.net"
+                    ),
+                    comparison_endpoint_json(
+                        ComparisonGateway::Edge(1),
+                        80,
+                        "e1-e16.whatsapp.net"
+                    )
+                ],
+                "noise_selector": {
+                    "compiled_pq_mode": COMPARISON_DEFAULT_PQ_MODE,
+                    "compiled_variant": COMPARISON_DEFAULT_PQ_VARIANT,
+                    "active_remote_configuration": null,
+                    "compiled_default_patterns": {
+                        "full": comparison_noise_pattern(
+                            COMPARISON_DEFAULT_PQ_MODE,
+                            COMPARISON_DEFAULT_PQ_VARIANT,
+                            ComparisonHandshakeKind::Full
+                        ),
+                        "resume": comparison_noise_pattern(
+                            COMPARISON_DEFAULT_PQ_MODE,
+                            COMPARISON_DEFAULT_PQ_VARIANT,
+                            ComparisonHandshakeKind::Resume
+                        ),
+                        "resume_fallback": comparison_noise_pattern(
+                            COMPARISON_DEFAULT_PQ_MODE,
+                            COMPARISON_DEFAULT_PQ_VARIANT,
+                            ComparisonHandshakeKind::ResumeFallback
+                        )
+                    }
+                },
+                "unresolved": [
+                    "active remote configuration",
+                    "exact port-80 stream semantics",
+                    "pinned-profile equivalence",
+                    "primary-device login payload"
+                ]
+            }),
+        ),
         ("GET" | "HEAD", "/v1/registration/wire-profile") => Response::json(
             200,
             "OK",
@@ -385,6 +483,23 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
     }
 }
 
+fn comparison_endpoint_json(gateway: ComparisonGateway, port: u16, host: &str) -> Value {
+    let endpoint = ComparisonEndpoint::built_in(gateway, port)
+        .expect("hard-coded comparison endpoint must be valid");
+    json!({
+        "host": host,
+        "port": endpoint.port,
+        "layer": match endpoint.layer {
+            ComparisonSocketLayer::RawTcp => "raw_tcp",
+            ComparisonSocketLayer::Tls => "tls",
+        },
+        "mode": match endpoint.mode {
+            ComparisonEndpointMode::Direct => "direct",
+            ComparisonEndpointMode::Port80Fallback => "port80_fallback",
+        }
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -465,6 +580,24 @@ mod tests {
             body["endpoints"][2]["url"],
             "https://v.whatsapp.net/v2/code"
         );
+    }
+
+    #[test]
+    fn exposes_version_scoped_transport_wire_evidence() {
+        let response = route("GET", "/v1/transport/wire-profile", &state());
+        let body = body(&response);
+        assert_eq!(response.status, 200);
+        assert_eq!(body["version_name"], "2.26.37.70");
+        assert_eq!(body["connection_header"]["hex"], "57410603");
+        assert_eq!(body["ports"]["primary_candidates"][1], 5222);
+        assert_eq!(body["built_in_socket_layers"][0]["layer"], "raw_tcp");
+        assert_eq!(body["built_in_socket_layers"][6]["layer"], "tls");
+        assert_eq!(body["noise_selector"]["compiled_pq_mode"], "none");
+        assert_eq!(
+            body["noise_selector"]["compiled_default_patterns"]["full"],
+            "Noise_XX_25519_AESGCM_SHA256"
+        );
+        assert!(body["noise_selector"]["active_remote_configuration"].is_null());
     }
 
     #[test]

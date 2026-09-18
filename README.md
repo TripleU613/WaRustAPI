@@ -719,6 +719,7 @@ cargo run --locked -p whatsapp-cli -- serve --bind 127.0.0.1:8787
 curl http://127.0.0.1:8787/healthz
 curl http://127.0.0.1:8787/v1/profile
 curl http://127.0.0.1:8787/v1/capabilities
+curl http://127.0.0.1:8787/v1/transport/wire-profile
 curl http://127.0.0.1:8787/v1/registration/wire-profile
 ```
 

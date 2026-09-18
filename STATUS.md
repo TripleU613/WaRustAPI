@@ -34,9 +34,9 @@ port 443. These comparison findings do not replace evidence for the active
 | Registration | state table enforced; handles bound to attempt/generation/step; answers never persisted; prerequisite persistence is atomic with the pre-request state; elapsed cooldowns resume without regenerating keys; ambiguous outcomes have a non-repeating reconciliation seam; successful account credentials commit atomically with `Registered`; version-scoped 2.26.37.70 endpoint catalog, deterministic common-field, `/v2/code`, `/v2/register`, `/v2/security`, public key-bundle encoding, APK-backed `/v2/code` token derivation, and fresh-install UUID/token prerequisite generation; conservative comparison HTTP flow including the account-PIN branch is tested end-to-end with a mock transport (not installed for the active profile) |
 | Outbox | idempotent enqueue, conflict, limits, cancel rules, uncertain delivery representation |
 | Client | durable enqueue → status → events → ack → restart over the same store |
-| CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability endpoints and structured gated-operation errors |
+| CLI / HTTP control plane | `keygen`, `store init/inspect`, `send`, `status`, `events --ack`, `connect`; loopback `serve` with health/profile/capability and comparison transport/registration wire-profile endpoints plus structured gated-operation errors |
 
-Test count: 132 (`cargo test --workspace --all-features`), clippy clean with
+Test count: 133 (`cargo test --workspace --all-features`), clippy clean with
 `-D warnings`, `cargo fmt --check` clean, and package/protobuf checks pass
 locally.
 
