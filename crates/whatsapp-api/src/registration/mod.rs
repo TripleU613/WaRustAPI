@@ -981,7 +981,31 @@ impl RegistrationService {
         &self,
         phone: PhoneNumber,
     ) -> Result<RegistrationStep> {
-        const LATCH: &[u8] = b"legacy-refusal-diagnostic-used";
+        self.diagnose_refusal_once(phone, false).await
+    }
+
+    /// Explicit one-shot repeat of HTTP 200 / bad_param to collect improved
+    /// diagnostics. Preserves identity and payload; never retries other known
+    /// refusals, cooldowns or unknown outcomes. Not called by ordinary begin.
+    #[cfg(feature = "experimental-registration-https")]
+    pub async fn diagnose_bad_parameter_once(
+        &self,
+        phone: PhoneNumber,
+    ) -> Result<RegistrationStep> {
+        self.diagnose_refusal_once(phone, true).await
+    }
+
+    #[cfg(feature = "experimental-registration-https")]
+    async fn diagnose_refusal_once(
+        &self,
+        phone: PhoneNumber,
+        bad_parameter: bool,
+    ) -> Result<RegistrationStep> {
+        let latch: &'static [u8] = if bad_parameter {
+            b"bad-parameter-diagnostic-used"
+        } else {
+            b"legacy-refusal-diagnostic-used"
+        };
         if self.profile_id != request::LAB_PROFILE_ID {
             return Err(Error::invalid(
                 "registration_diagnostic",
@@ -997,10 +1021,19 @@ impl RegistrationService {
                     let mut attempt = Self::load_current(tx)?.ok_or_else(|| {
                         Error::invalid("registration_diagnostic", "no saved attempt")
                     })?;
-                    if attempt.generation != tx.generation()
-                        || attempt.profile_id != profile_id
-                        || *attempt.phone() != phone
-                        || !matches!(
+                    let eligible = if bad_parameter {
+                        matches!(
+                            attempt.state,
+                            RegistrationState::Blocked {
+                                reason: BlockedReason::ServerRefused {
+                                    code: None,
+                                    http_status: Some(200),
+                                    reason: Some(wire::RegistrationResponseReason::BadParam)
+                                }
+                            }
+                        )
+                    } else {
+                        matches!(
                             attempt.state,
                             RegistrationState::Blocked {
                                 reason: BlockedReason::ServerRefused {
@@ -1010,14 +1043,19 @@ impl RegistrationService {
                                 }
                             }
                         )
+                    };
+                    if attempt.generation != tx.generation()
+                        || attempt.profile_id != profile_id
+                        || *attempt.phone() != phone
+                        || !eligible
                     {
                         return Err(Error::invalid(
                             "registration_diagnostic",
-                            "only a matching legacy opaque refusal is eligible",
+                            "saved refusal is not eligible for this diagnostic action",
                         ));
                     }
                     if tx
-                        .get(Table::RegistrationAttempts, LATCH, RECORD_V1)?
+                        .get(Table::RegistrationAttempts, latch, RECORD_V1)?
                         .is_some()
                     {
                         return Err(Error::invalid(
@@ -1029,7 +1067,7 @@ impl RegistrationService {
                     attempt.transition(RegistrationState::Unregistered, now)?;
                     attempt.transition(RegistrationState::Preparing, now)?;
                     flow.prepare(tx, &attempt)?;
-                    tx.put_json(Table::RegistrationAttempts, LATCH, RECORD_V1, &attempt.id)?;
+                    tx.put_json(Table::RegistrationAttempts, latch, RECORD_V1, &attempt.id)?;
                     Self::save_current(tx, &attempt)?;
                     Ok(attempt)
                 })

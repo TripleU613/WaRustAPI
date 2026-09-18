@@ -103,3 +103,12 @@ registration, or specific offending parameter was established. The new
 HTTP status and recognized reason were verified in the encrypted saved state.
 No further request followed, and the durable one-shot diagnostic latch remains.
 Phone, tokens, keys and raw request/response bodies are intentionally not published.
+
+2026-09-18 UTC, follow-up comparison: an explicitly authorized diagnostic
+repeat on the separately supplied comparison number reused its saved keys and
+unchanged 612-byte form. HTTP 200 / `fail` / `bad_param` was unchanged; the
+response was again 58 bytes. The updated parser retained no recognized `param`
+hint (`invalid_parameter: null`). This does not prove that no unknown hint was
+present. No new optional fields were populated and no successful signup or OTP
+delivery was established. The dedicated bad-parameter diagnostic latch is used;
+no automatic retry or identity rotation occurred.

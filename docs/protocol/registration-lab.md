@@ -143,6 +143,14 @@ No existing store or latch should be deleted to repeat it. On transport failure,
 the outcome remains unknown; do not resend. Reqwest protocol-level retries are
 also explicitly disabled, in addition to application-level automatic retries.
 
+`lab-signup --allow-live-request diagnose-bad-parameter` is a separate,
+one-shot operator action restricted to an existing HTTP 200 / `bad_param`
+refusal. It repeats the unchanged saved payload and keys to collect improved
+diagnostics (including a recognized `param` hint if present), not to test a
+claimed payload fix. A separate durable latch prevents a second use. Other
+known refusals, cooldowns and unknown outcomes are ineligible. It is never
+called by ordinary `begin`; do not delete its latch or store to repeat it.
+
 ## Still needed for the first real message
 
 Validate the exact APK/profile and remaining registration assumptions, wire an

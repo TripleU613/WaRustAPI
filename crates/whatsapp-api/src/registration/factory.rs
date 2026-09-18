@@ -519,78 +519,83 @@ mod tests {
 
     #[tokio::test]
     #[cfg(feature = "experimental-registration-https")]
-    async fn legacy_diagnostic_is_once_only_and_preserves_identity_and_body() {
-        use crate::registration::BlockedReason;
-        let dir = tempfile::tempdir().unwrap();
-        let store = open(dir.path());
-        let factory =
-            Arc::new(StoredComparisonRequestFactory::new(store.clone(), config()).unwrap());
-        let mut a = attempt(&store);
-        store.write(|tx| factory.prepare(tx, &a)).unwrap();
-        let original = factory.code_request(&a).unwrap().body().to_vec();
-        a.transition(
-            RegistrationState::Blocked {
-                reason: BlockedReason::ServerRefused {
-                    code: None,
-                    http_status: None,
-                    reason: None,
+    async fn diagnostics_are_once_only_and_preserve_identity_and_body() {
+        for bad_parameter in [false, true] {
+            use crate::registration::BlockedReason;
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(dir.path());
+            let factory =
+                Arc::new(StoredComparisonRequestFactory::new(store.clone(), config()).unwrap());
+            let mut a = attempt(&store);
+            store.write(|tx| factory.prepare(tx, &a)).unwrap();
+            let original = factory.code_request(&a).unwrap().body().to_vec();
+            a.transition(
+                RegistrationState::Blocked {
+                    reason: BlockedReason::ServerRefused {
+                        code: None,
+                        http_status: bad_parameter.then_some(200),
+                        reason: bad_parameter.then_some(RegistrationResponseReason::BadParam),
+                    },
                 },
-            },
-            Timestamp::now(),
-        )
-        .unwrap();
-        store
-            .write(|tx| RegistrationService::save_current(tx, &a))
+                Timestamp::now(),
+            )
             .unwrap();
-        let transport = Arc::new(MockTransport::default());
-        let mut profile = crate::ProtocolProfile::android_reference().unwrap();
-        profile.id = LAB_PROFILE_ID.into();
-        let service = RegistrationService::new(
-            store.clone(),
-            &profile,
-            Arc::new(ComparisonHttpFlow::new(factory.clone(), transport.clone())),
-        );
-        assert!(
-            service
-                .diagnose_legacy_refusal_once(PhoneNumber::new(1, "5557654321").unwrap())
-                .await
-                .is_err()
-        );
-        assert!(transport.0.lock().unwrap().is_empty());
-        assert!(matches!(
-            service
-                .diagnose_legacy_refusal_once(config().phone)
-                .await
-                .unwrap(),
-            RegistrationStep::Action(RequiredAction::EnterCode(_))
-        ));
-        let saved = service.current().await.unwrap().unwrap();
-        assert_eq!(saved.id, a.id);
-        assert_eq!(saved.generation, a.generation);
-        assert!(saved.history_len() > a.history_len());
-        assert_eq!(original, factory.code_request(&saved).unwrap().body());
-        assert!(
-            service
-                .diagnose_legacy_refusal_once(config().phone)
-                .await
-                .is_err()
-        );
-        // Even restoring an old eligible state cannot defeat the committed latch.
-        store
-            .write(|tx| RegistrationService::save_current(tx, &a))
-            .unwrap();
-        let resumed = RegistrationService::new(
-            store,
-            &profile,
-            Arc::new(ComparisonHttpFlow::new(factory, transport.clone())),
-        );
-        assert!(
-            resumed
-                .diagnose_legacy_refusal_once(config().phone)
-                .await
-                .is_err()
-        );
-        assert_eq!(transport.0.lock().unwrap().len(), 1);
+            store
+                .write(|tx| RegistrationService::save_current(tx, &a))
+                .unwrap();
+            let transport = Arc::new(MockTransport::default());
+            let mut profile = crate::ProtocolProfile::android_reference().unwrap();
+            profile.id = LAB_PROFILE_ID.into();
+            let service = RegistrationService::new(
+                store.clone(),
+                &profile,
+                Arc::new(ComparisonHttpFlow::new(factory.clone(), transport.clone())),
+            );
+            assert!(
+                service
+                    .diagnose_refusal_once(
+                        PhoneNumber::new(1, "5557654321").unwrap(),
+                        bad_parameter
+                    )
+                    .await
+                    .is_err()
+            );
+            assert!(transport.0.lock().unwrap().is_empty());
+            assert!(matches!(
+                service
+                    .diagnose_refusal_once(config().phone, bad_parameter)
+                    .await
+                    .unwrap(),
+                RegistrationStep::Action(RequiredAction::EnterCode(_))
+            ));
+            let saved = service.current().await.unwrap().unwrap();
+            assert_eq!(saved.id, a.id);
+            assert_eq!(saved.generation, a.generation);
+            assert!(saved.history_len() > a.history_len());
+            assert_eq!(original, factory.code_request(&saved).unwrap().body());
+            assert!(
+                service
+                    .diagnose_refusal_once(config().phone, bad_parameter)
+                    .await
+                    .is_err()
+            );
+            // Even restoring an old eligible state cannot defeat the committed latch.
+            store
+                .write(|tx| RegistrationService::save_current(tx, &a))
+                .unwrap();
+            let resumed = RegistrationService::new(
+                store,
+                &profile,
+                Arc::new(ComparisonHttpFlow::new(factory, transport.clone())),
+            );
+            assert!(
+                resumed
+                    .diagnose_refusal_once(config().phone, bad_parameter)
+                    .await
+                    .is_err()
+            );
+            assert_eq!(transport.0.lock().unwrap().len(), 1);
+        }
     }
 
     #[tokio::test]
@@ -636,6 +641,12 @@ mod tests {
             store
                 .write(|tx| RegistrationService::save_current(tx, &a))
                 .unwrap();
+            assert!(
+                service
+                    .diagnose_bad_parameter_once(config().phone)
+                    .await
+                    .is_err()
+            );
             assert!(
                 service
                     .diagnose_legacy_refusal_once(config().phone)
