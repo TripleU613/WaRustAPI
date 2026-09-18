@@ -75,6 +75,42 @@ fn invalid(message: &'static str) -> Error {
     Error::invalid("registration_lab", message)
 }
 
+/// Test-only: persist generated registration material and a matching
+/// registered account so transport tests can load the signed prekey.
+#[cfg(test)]
+pub(crate) fn install_test_material(
+    store: &ProtocolStore,
+    config: &LabRegistrationConfig,
+) -> Result<()> {
+    use crate::model::time::Timestamp;
+    let attempt = RegistrationAttempt {
+        id: AttemptId([3; 16]),
+        generation: store.generation(),
+        profile_id: LAB_PROFILE_ID.into(),
+        phone: config.phone.clone(),
+        method: ChallengeMethod::Sms,
+        state: super::RegistrationState::Preparing,
+        created_at: Timestamp::now(),
+        updated_at: Timestamp::now(),
+        history: Vec::new(),
+    };
+    let record = Material::generate(&attempt, config)?;
+    store.write(|tx| {
+        tx.put_json(Table::Account, MATERIAL_KEY, RECORD_VERSION, &record)?;
+        AccountRecord {
+            generation: attempt.generation,
+            phone: Some(config.phone.clone()),
+            own_jid: Some(crate::model::jid::Jid::parse("15555550100@s.whatsapp.net")?),
+            noise_static: Some(NoiseStaticKey(record.noise.clone())),
+            signal_identity: Some(SignalIdentityKey(record.identity.clone())),
+            signal_registration_id: Some(config.registration_id),
+            registration: crate::session::RegistrationStatus::Registered,
+            ..AccountRecord::default()
+        }
+        .save(tx)
+    })
+}
+
 fn material(pair: &KeyPair) -> KeyMaterial {
     let mut public = [0; 32];
     public.copy_from_slice(pair.public_key.public_key_bytes());

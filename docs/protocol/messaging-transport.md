@@ -90,9 +90,10 @@ opaque identifier whose acceptance was observed, not a recovered APK ID recipe.
 ## Remaining work
 
 The initial path targets the specified recipient's primary phone JID only.
-Companion-device discovery/fanout, general LID routing, continuous inbound processing,
-delivery/read receipts, prekey replenishment, robust session reconciliation and
-integration with the ordinary outbox/runtime remain incomplete. The classic
+Companion-device discovery/fanout, general LID routing, robust session
+reconciliation and post-quantum (Kyber) prekeys remain incomplete; continuous
+inbound processing, delivery/read receipts, legacy prekey replenishment and the
+ordinary outbox/runtime integration are implemented and documented below. The classic
 branch worked in this experiment; this does not prove hybrid modes unnecessary.
 
 The low-level frame API is for encoded handshake/encrypted records, not plaintext
@@ -433,6 +434,46 @@ All references below concern **2.26.37.70**, APK SHA-256
   id/to/class/type. This is narrow trusted-contact handling, not app-state sync.
 - `LX/BWZ.dynamicMethod`: AudioMessage field 21 is view-once; audio uses its
   separate `WhatsApp Audio Keys` HKDF domain. Ordinary access rejects this flag.
+
+### Prekey replenishment (comparison 2.26.37.71)
+
+Traced from a second comparison build, **2.26.37.71**, APK SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`, same
+signing certificate as 2.26.37.70. Its obfuscated class names differ from the
+2.26.37.70 references elsewhere in this document; do not mix them.
+
+- `LX/0ko.A06` `0008..0056`: with fewer than 812 (`0x32c`) unsent keys,
+  generate `min(812 - unsent, 50)` (`0x32`) new ones; ids are
+  `((next_prekey_id + i) % 0xFFFFFE) + 1` (`00c0..00da`).
+- `LX/0kf.A01`: unsent batch query `sent_to_server = 0 AND direct_distribution
+  = 0 LIMIT 812` (`LX/0jc.A1D` passes `0x32c`).
+- `LX/0y0.A00` case 85 (`12d0..1690`): `iq id/xmlns=encrypt/type=set/to=server`
+  with `identity` (raw 32 bytes), `registration` (4-byte big endian,
+  `LX/1Lz.A03`), `type` (`[0x05]`), `list` of `key{id,value}` where `id` is a
+  3-byte big-endian id (`LX/1Lz.A04`) and `value` the raw public key without
+  its type byte (`LX/0km.A02` `0070..0082`), then `skey{id,value,signature}`.
+  `pq_list`/`pq_last_resort_key` follow only when Kyber material exists;
+  `LX/13c.A03` `00d6..00e4` logs "skipping kyber prekeys upload" otherwise. A
+  conditional `op` element (`13f0..1474`, flag `0x5bf2`, coexistence reason and
+  token) is not reproduced. This client sends neither.
+- `LX/14z.A09` `001a..008a`: `notification type=encrypt` with `count/@value`
+  (optional `pq_count`) is acknowledged; `LX/14z.A02` `0154..01d4` generates
+  when nothing is unsent and uploads legacy keys (`LX/13c.A0U`); a
+  `pq_count`-only notification takes no action (`01a0`).
+- `LX/DNq.run` `011a..0160`: at start, existing unsent keys are uploaded and a
+  store without any generates. `LX/Bor.A03`: the result's `list/@count_low`
+  ("true") schedules another upload (`LX/1Dz.A0c`, `needsMoreLegacyPrekeys`);
+  errors enter `LX/13c.A02` backoff.
+
+Implementation (`transport::prekeys`): keys and per-key upload state live in
+the encrypted store; a batch is reserved durably before its socket write and
+keys in an uncertain batch are never re-sent. `iq type=result` marks the batch
+acknowledged and keys uploaded; `count_low` triggers a bounded follow-up (20 per
+session); an `iq type=error` records the sanitized code and returns the keys to
+unsent without automatic retry. Local deviations, stated: a fresh store
+generates and uploads in the same session (the APK does these on separate
+runs), and no backoff/retry is implemented. `whatsapp-cli prekeys` prints
+redacted counts offline. No live upload has been performed yet.
 
 ### Public ordinary-media download
 

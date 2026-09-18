@@ -100,9 +100,13 @@ request—not adding Rust code, another command or a number-specific script.**
 
 ## Research from the APK, not a device
 
-- Available comparison APK: `~/Downloads/WhatsApp.apk`.
-- Pinned reference version: **2.26.36.75**. Comparison version: **2.26.37.70**.
-  Keep their evidence separate and identify which build supports each claim.
+- Available comparison APK: `~/Downloads/WhatsApp.apk`. As of
+  2026-09-18 that file is build **2.26.37.71** (SHA-256 `1755111a…7d5c`), not
+  the 2.26.37.70 build most recorded evidence cites; its obfuscated class names
+  differ, so re-anchor by string constants and attribute new claims to 37.71.
+- Pinned reference version: **2.26.36.75**. Comparison versions: **2.26.37.70**
+  and **2.26.37.71**. Keep their evidence separate and identify which build
+  supports each claim.
 - No test Android device is available. The owner explicitly wants static APK
   analysis, not traffic capture. Do not keep proposing a device or capture as
   the required next step.

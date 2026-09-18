@@ -30,6 +30,20 @@ from offline tests alone. Existing received captures can be processed locally.
 
 ### Implemented and verified locally
 
+- Legacy one-time prekey replenishment is implemented from comparison 2.26.37.71
+  evidence (the restored APK is that build; its class names differ from the
+  2.26.37.70 references and are kept separate): generation of up to 50 keys while
+  fewer than 812 are unsent, the `iq/encrypt/set` upload with identity,
+  registration, type, key list and signed prekey, acknowledgement of the
+  `encrypt` low-count notification, upload of unsent keys at session start and
+  bounded `count_low` follow-ups. Batches are reserved before the write, uncertain
+  batches are never re-sent, refusals record the code without retry, and
+  post-quantum children are omitted (optional in the APK). `whatsapp-cli prekeys`
+  shows redacted counts. Tests cover counts, id wrap-around without overwrite, the
+  exact IQ layout and byte encodings, settlement by result/error/count_low,
+  notification recognition, and a session-level flow with a socket cut mid-upload.
+  Until now this client had never uploaded one-time prekeys; the first live
+  upload is pending.
 - `mark-read` exposes the explicit read-receipt queue from the CLI. A server clock
   sample is now saved from authenticated incoming `message`/`receipt` `t` values
   (never regressing, never invented), and `resolve_chat_mute` converts saved mute

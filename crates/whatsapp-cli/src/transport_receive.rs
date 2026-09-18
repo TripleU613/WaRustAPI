@@ -178,6 +178,37 @@ pub(super) async fn mark_read(
     Ok(())
 }
 
+/// Offline one-time prekey summary: counts by upload state and batch outcomes.
+/// No key material is read or printed.
+pub(super) fn prekeys_status(cli: &super::Cli) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let summary = whatsapp_api::transport::prekeys::summary(&store)?;
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&summary)
+                .map_err(|e| Error::invalid("prekeys", e.to_string()))?
+        );
+        return Ok(());
+    }
+    println!(
+        "prekeys: unsent={} uncertain={} uploaded={} (uncertain batches are never re-sent)",
+        summary.unsent, summary.uncertain, summary.uploaded
+    );
+    for (status, count) in &summary.batches {
+        println!("  batches {status}: {count}");
+    }
+    println!(
+        "prekeys: an authenticated session uploads unsent keys at start and after a server low-count notification"
+    );
+    Ok(())
+}
+
 /// Offline listing of the queued intents an outbox-enabled session would send.
 pub(super) fn outbox_pending(cli: &super::Cli) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {

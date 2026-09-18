@@ -1,5 +1,11 @@
 # Status — 2026-09-18
 
+**Prekey replenishment implemented (offline verified):** from the restored
+comparison APK, which is build 2.26.37.71, the client now generates one-time
+prekeys, uploads unsent ones at session start and after the server's low-count
+notification, and follows `count_low` with bounded extra batches. Post-quantum
+keys are not sent. The first live upload has not run yet.
+
 **Bounded reconnect added (offline verified):** the account runtime now retries
 after recoverable connection loss with capped jittered backoff and a fresh
 handshake, configurable via `transport.reconnect` in the private JSON (default

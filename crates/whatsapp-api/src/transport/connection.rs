@@ -267,6 +267,8 @@ pub(crate) async fn drive(
     heartbeat.tick().await;
     let mut pending_ping: Option<String> = None;
     let mut outgoing: Option<super::outgoing::Pending> = None;
+    let mut upload: Option<super::prekeys::PendingUpload> = None;
+    let mut upload_rounds: u32 = 0;
     let mut outbox_tick = tokio::time::interval(Duration::from_secs(1));
     outbox_tick.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
     loop {
@@ -288,6 +290,11 @@ pub(crate) async fn drive(
                 return Err(Error::invalid("connection", "activation outcome unknown; frames preserved"));
             }
             _ = heartbeat.tick(), if ready.is_none() => {
+                if upload.as_ref().is_some_and(|u| tokio::time::Instant::now() >= u.deadline) {
+                    // The batch stays reserved as outcome_unknown; its keys are never re-sent.
+                    tracing::warn!("prekey upload outcome unknown; reservation kept, no retry");
+                    upload = None;
+                }
                 for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
                 // Unanswered keepalive: classified recoverable; the actor decides on reconnect.
                 if pending_ping.is_some() { return Err(Error::Timeout(ping_period)); }
@@ -318,6 +325,18 @@ pub(crate) async fn drive(
                         }
                         for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
                         if let Some(ready) = ready.take() { let _ = ready.send(()); }
+                        // LX/DNq.run: unsent prekeys (or a store that never generated any) upload at start.
+                        if super::prekeys::wants_upload(&store)? {
+                            maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds).await?;
+                        }
+                        continue;
+                    }
+                    if upload.as_ref().is_some_and(|u| u.matches(&node)) {
+                        let outcome = upload.take().expect("matched pending upload").settle(&store, &node)?;
+                        // LX/Bor.A03: list/@count_low=true schedules another legacy upload.
+                        if outcome.accepted && outcome.count_low {
+                            maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds).await?;
+                        }
                         continue;
                     }
                     if id == pending_ping.as_deref() && pending_ping.is_some() {
@@ -329,6 +348,14 @@ pub(crate) async fn drive(
                 super::receipts::record(&store, &node)?;
                 super::receipts::record_ack(&store, &node)?;
                 if let Some(ack)=super::notifications::handle(&store, &node)? {link.send(&ack).await?;}
+                if let Some(low) = super::prekeys::low_count(&node) {
+                    // LX/14z.A09: acknowledge after the durable capture above, then LX/14z.A02:
+                    // legacy count triggers generate-if-empty and upload; pq-only takes no action.
+                    link.send(&super::prekeys::low_count_ack(&node)?).await?;
+                    if low.legacy.is_some() {
+                        maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds).await?;
+                    }
+                }
                 super::outgoing::acknowledge(&store, &node)?;
                 if (node.description == "receipt" || matches!(received, super::inbox::IncomingResult::Decrypted | super::inbox::IncomingResult::Duplicate))
                     && let Some(confirmation) = super::messaging::received_confirmation(&node) {
@@ -339,6 +366,41 @@ pub(crate) async fn drive(
             }
         }
     }
+}
+
+/// One bounded prekey upload for this session: generate when nothing is
+/// unsent (`LX/14z.A02` `0174..0190`), reserve a batch, write it. Accounts
+/// without Signal material or a registered signed prekey cannot upload and are
+/// skipped; the follow-up count is capped per session.
+async fn maybe_upload(
+    store: &Arc<ProtocolStore>,
+    account: &AccountRecord,
+    link: &NodeLink,
+    upload: &mut Option<super::prekeys::PendingUpload>,
+    rounds: &mut u32,
+) -> Result<()> {
+    if upload.is_some() || *rounds >= super::prekeys::MAX_ROUNDS_PER_SESSION {
+        return Ok(());
+    }
+    if account.signal_identity.is_none() || account.signal_registration_id.is_none() {
+        return Ok(());
+    }
+    let signed = match crate::registration::factory::registered_signed_prekey(store) {
+        Ok(signed) => signed,
+        Err(_) => {
+            tracing::warn!("prekey upload skipped: registered signed prekey unavailable");
+            return Ok(());
+        }
+    };
+    if super::prekeys::unsent_ids(store)?.is_empty() {
+        super::prekeys::generate(store)?;
+    }
+    if let Some((pending, node)) = super::prekeys::begin_upload(store, account, &signed)? {
+        *rounds += 1;
+        *upload = Some(pending);
+        link.send(&node).await?;
+    }
+    Ok(())
 }
 
 #[cfg(test)]
@@ -747,6 +809,140 @@ mod tests {
                 .unwrap(),
             reserved
         );
+        fake.stop_cleanly().await;
+    }
+
+    fn registered_store(path: &std::path::Path) -> Arc<ProtocolStore> {
+        let store = ProtocolStore::open(OpenOptions {
+            path: path.to_owned(),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([4; 32]))),
+            create: true,
+        })
+        .unwrap();
+        crate::registration::factory::install_test_material(&store, &config()).unwrap();
+        Arc::new(store)
+    }
+    fn assert_upload(iq: &Node) -> Vec<Vec<u8>> {
+        assert_eq!(iq.description, "iq");
+        assert_eq!(
+            iq.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("encrypt")
+        );
+        assert_eq!(iq.get_attr("type").and_then(|v| v.as_text()), Some("set"));
+        iq.child_nodes()
+            .iter()
+            .find(|c| c.description == "list")
+            .unwrap()
+            .child_nodes()
+            .iter()
+            .map(|k| {
+                super::super::prekeys::child_bytes(k, "id")
+                    .unwrap()
+                    .to_vec()
+            })
+            .collect()
+    }
+    fn result_for(iq: &Node, count_low: bool) -> Node {
+        let id = iq
+            .get_attr("id")
+            .and_then(|v| v.as_text())
+            .unwrap()
+            .to_owned();
+        let mut list = Node::new("list");
+        if count_low {
+            list = list.attr("count_low", "true");
+        }
+        Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result")
+            .children(vec![list])
+    }
+    fn count_notification(id: &str, child: &str, value: &str) -> Node {
+        Node::new("notification")
+            .attr("type", "encrypt")
+            .attr("id", id)
+            .attr("from", Jid::parse("s.whatsapp.net").unwrap())
+            .children(vec![Node::new(child).attr("value", value)])
+    }
+
+    #[tokio::test]
+    async fn prekeys_upload_at_start_follow_count_low_and_notifications_without_replaying_uncertain_batches()
+     {
+        use super::super::prekeys::{summary, unsent_ids};
+        let dir = tempfile::tempdir().unwrap();
+        let store = registered_store(&dir.path().join("prekeys.redb"));
+        // Fresh store: activation generates 50 keys and uploads them once.
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (iq, reply) = fake.written().await;
+        let first_ids = assert_upload(&iq);
+        assert_eq!(first_ids.len(), 50);
+        assert_eq!(
+            summary(&store).unwrap().uncertain,
+            50,
+            "reserved before the write"
+        );
+        reply.send(Ok(())).unwrap();
+        // count_low on the result schedules one more batch of freshly generated keys.
+        fake.deliver(result_for(&iq, true)).await;
+        let (second, reply) = fake.written().await;
+        let second_ids = assert_upload(&second);
+        assert_eq!(second_ids.len(), 50);
+        assert!(first_ids.iter().all(|id| !second_ids.contains(id)));
+        reply.send(Ok(())).unwrap();
+        fake.deliver(result_for(&second, false)).await;
+        fake.nothing_written(Duration::from_millis(300)).await;
+        let s = summary(&store).unwrap();
+        assert_eq!((s.unsent, s.uncertain, s.uploaded), (0, 0, 100));
+        // pq-only notification: acknowledged, nothing uploaded.
+        fake.deliver(count_notification("PQ1", "pq_count", "2"))
+            .await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(
+            ack.get_attr("type").and_then(|v| v.as_text()),
+            Some("encrypt")
+        );
+        reply.send(Ok(())).unwrap();
+        fake.nothing_written(Duration::from_millis(300)).await;
+        // Legacy count notification: ack, generate, upload; the socket cuts on the upload write.
+        fake.deliver(count_notification("N1", "count", "7")).await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.get_attr("id").and_then(|v| v.as_text()), Some("N1"));
+        reply.send(Ok(())).unwrap();
+        let (third, reply) = fake.written().await;
+        let third_ids = assert_upload(&third);
+        reply
+            .send(Err(Error::Transport(TransportError::PeerClosed)))
+            .unwrap();
+        assert!(fake.finished().await.is_err());
+        let s = summary(&store).unwrap();
+        assert_eq!((s.unsent, s.uncertain, s.uploaded), (0, 50, 100));
+
+        // Next epoch: nothing unsent and keys exist, so no startup upload.
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.nothing_written(Duration::from_millis(300)).await;
+        // Another notification generates new keys; the uncertain batch is never re-sent.
+        fake.deliver(count_notification("N2", "count", "3")).await;
+        let (_ack, reply) = fake.written().await;
+        reply.send(Ok(())).unwrap();
+        let (fourth, reply) = fake.written().await;
+        let fourth_ids = assert_upload(&fourth);
+        assert_eq!(fourth_ids.len(), 50);
+        assert!(third_ids.iter().all(|id| !fourth_ids.contains(id)));
+        reply.send(Ok(())).unwrap();
+        fake.deliver(result_for(&fourth, false)).await;
+        tokio::time::timeout(Duration::from_secs(5), async {
+            while summary(&store).unwrap().uploaded != 150 {
+                tokio::time::sleep(Duration::from_millis(20)).await;
+            }
+        })
+        .await
+        .unwrap();
+        assert!(unsent_ids(&store).unwrap().is_empty());
+        assert_eq!(summary(&store).unwrap().uncertain, 50);
         fake.stop_cleanly().await;
     }
 

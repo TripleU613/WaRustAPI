@@ -1,5 +1,19 @@
 # Evidence ledger
 
+### Comparison 2.26.37.71 prekey replenishment — 2026-09-18
+
+A second comparison build, 2.26.37.71 (APK SHA-256 `1755111a…7d5c`, same
+signing certificate as 2.26.37.70, different obfuscated class names), provides
+the one-time prekey path: generation of `min(812 - unsent, 50)` keys with ids
+`((next + i) % 0xFFFFFE) + 1` (`LX/0ko.A06`), the 812-key unsent batch
+(`LX/0kf.A01`), the `iq/encrypt/set` upload layout with 3-byte key ids and a
+4-byte registration id (`LX/0y0.A00` case 85, `LX/1Lz.A03/A04`), the
+`notification type=encrypt count/@value` trigger and its acknowledgement
+(`LX/14z.A09/A02`), startup upload of unsent keys (`LX/DNq.run`) and the
+`count_low` follow-up in the result (`LX/Bor.A03`). Kyber (`pq_*`) children are
+optional in the APK and are not sent. Offline tests reproduce the layout; no
+live upload has run. Details: docs/protocol/messaging-transport.md.
+
 ### Comparison receive activation and view-once prefetch — 2026-09-18
 
 Derived from 2.26.37.70: `LX/Avw.A00` 0x0008–0068 builds

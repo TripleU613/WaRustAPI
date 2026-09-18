@@ -116,6 +116,9 @@ enum Cmd {
     /// List queued outbox intents that `listen --send-outbox` would transmit (offline).
     #[cfg(feature = "experimental-transport")]
     OutboxPending,
+    /// Show one-time prekey counts and upload batches (offline, redacted).
+    #[cfg(feature = "experimental-transport")]
+    Prekeys,
     /// Queue explicit read receipts for authenticated incoming messages (offline;
     /// the next `listen` session sends them once).
     #[cfg(feature = "experimental-transport")]
@@ -366,6 +369,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         }
         #[cfg(feature = "experimental-transport")]
         Cmd::OutboxPending => transport_receive::outbox_pending(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::Prekeys => transport_receive::prekeys_status(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::MarkRead { config, chat, ids } => {
             transport_receive::mark_read(&cli, config, chat, ids).await
