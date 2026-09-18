@@ -130,6 +130,10 @@ impl VerifiedIndexList {
             indexes,
         })
     }
+    /// Account raw id the signed list belongs to.
+    pub fn raw_id(&self) -> u32 {
+        self.raw_id
+    }
     /// Original authenticated list timestamp, for replay/ordering checks.
     pub fn timestamp(&self) -> u64 {
         self.timestamp
@@ -140,6 +144,40 @@ impl VerifiedIndexList {
     pub fn matches_fingerprint(&self, fingerprint: &Fingerprint) -> bool {
         fingerprint.matches_registered_devices(self.raw_id, self.current_index, &self.indexes)
     }
+}
+
+/// Test-only: a signed E2EE key-index list for the given account private key.
+/// Returns the encoded `BRD` bytes and the account public key.
+#[cfg(test)]
+pub(crate) fn test_signed_list(
+    raw_id: u32,
+    timestamp: u64,
+    current_index: u32,
+    indexes: &[u32],
+    private: &[u8; 32],
+) -> (Vec<u8>, [u8; 32]) {
+    use wacore_libsignal::core::curve::PrivateKey;
+    let details = IndexList {
+        raw_id: Some(raw_id),
+        timestamp: Some(timestamp),
+        current_index: Some(current_index),
+        indexes: indexes.to_vec(),
+        account_type: Some(0),
+    }
+    .encode_to_vec();
+    let private = PrivateKey::deserialize(private).unwrap();
+    let public = private.public_key().unwrap();
+    let key: [u8; 32] = public.public_key_bytes().try_into().unwrap();
+    let signature = private
+        .calculate_signature(&[&[6u8, 2u8][..], &details].concat(), &mut rand::rng())
+        .unwrap();
+    let signed = SignedList {
+        details: Some(details),
+        signature: Some(signature.to_vec()),
+        account_key: Some(key.to_vec()),
+    }
+    .encode_to_vec();
+    (signed, key)
 }
 
 #[cfg(test)]

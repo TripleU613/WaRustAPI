@@ -119,6 +119,16 @@ enum Cmd {
     /// Show one-time prekey counts and upload batches (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Prekeys,
+    /// Show a contact's saved device list, or queue a device sync for the next session.
+    #[cfg(feature = "experimental-transport")]
+    Devices {
+        /// Contact JID, e.g. 15551234567@s.whatsapp.net.
+        #[arg(long)]
+        chat: String,
+        /// Record the contact for the next `usync devices` query (offline).
+        #[arg(long)]
+        request: bool,
+    },
     /// Queue explicit read receipts for authenticated incoming messages (offline;
     /// the next `listen` session sends them once).
     #[cfg(feature = "experimental-transport")]
@@ -371,6 +381,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::OutboxPending => transport_receive::outbox_pending(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Prekeys => transport_receive::prekeys_status(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::Devices { chat, request } => transport_receive::devices(&cli, chat, *request),
         #[cfg(feature = "experimental-transport")]
         Cmd::MarkRead { config, chat, ids } => {
             transport_receive::mark_read(&cli, config, chat, ids).await

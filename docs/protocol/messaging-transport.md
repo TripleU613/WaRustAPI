@@ -475,6 +475,45 @@ generates and uploads in the same session (the APK does these on separate
 runs), and no backoff/retry is implemented. `whatsapp-cli prekeys` prints
 redacted counts offline. No live upload has been performed yet.
 
+### Contact device-list synchronization (comparison 2.26.37.71)
+
+Same build and hash as the prekey section. The cross-device class names
+(`LX/11Q`, `LX/11T`, `LX/17V`, `LX/0bN`, `LX/101`) match the 2.26.37.70
+references in docs/protocol/cross-device-sync.md; `LX/0u7` and `LX/0xX`/`0xY`/
+`0xb` are cited from 2.26.37.71.
+
+- Query `LX/0u7.A06` `0e52..0fd4`: `iq xmlns=usync/id/type=get` (no `to`) with a
+  `usync` child carrying `sid`, `index`, `last`, `mode` (`LX/0xb`: full, delta,
+  query, download), `context` (`LX/0xY`: interactive, background, notification,
+  message, …) and optional `allow_mutation`; children `query` (`devices
+  version="2"`, `0d8c..0db2`), `list` of `user jid=…`, optional `side_list`.
+  `SyncDevicesJob.A0G` picks `LX/0xX` presets; the default is
+  `INTERACTIVE_MULTI_PROTOCOL_QUERY` (mode `query`, context `interactive`) and
+  notification-driven syncs use `NOTIFICATION_MULTI_PROTOCOL_QUERY`.
+- Result `LX/0u7.C8f` `0a54..0bb8`: `usync/list/user[jid]/devices/device-list/
+  device[id,key-index,is_hosted]` and `devices/key-index-list[ts,expected_ts]`
+  whose bytes are the signed ADV key-index list; `devices/error[code]` marks a
+  per-user failure. `LX/0bN.A0H` refuses hosted devices for E2EE.
+- Verification `LX/11T.A07`: the contact's pinned primary identity ("local")
+  verifies the list; the ADV-provided-key branch ("adv") is not implemented, so
+  contacts without a pinned identity keep only their primary device. Companion
+  filtering is `LX/11T.A08` (`VerifiedIndexList::reconcile_devices`).
+- Notification `LX/11Q.A09`: `notification type=devices` with `add`/`remove`
+  (`device[jid,key-index,lid]`, `device_hash`, `device_lid_hash`,
+  `key-index-list[ts]`) records the user for a sync (`LX/101.A02`). Own-account
+  changes go through `LX/17V.A09`/`LX/1Tc.A01` account sync, not implemented:
+  captured and acknowledged only.
+
+Implementation (`transport::devices`): pending users are recorded durably; a
+session queries up to 64 of them interactively at start and immediately after a
+notification; replies are verified, reconciled and stored per user in one
+transaction, clearing that user's pending marker. A raw-ID change or stale
+timestamp keeps the saved list; refusals record the code; unanswered queries
+leave users pending for a later session (queries are reads and safe to repeat).
+`client.device_list(&chat)` / `request_device_sync(&chat)` and `whatsapp-cli
+devices --chat <jid> [--request]` are offline. Device lists are not yet used
+for send fan-out. `sid` is client-chosen. No live query has run.
+
 ### Public ordinary-media download
 
 With the `comparison-client` feature and explicit `comparison_transport(config)`

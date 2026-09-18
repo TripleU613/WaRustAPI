@@ -4,7 +4,10 @@
 comparison APK, which is build 2.26.37.71, the client now generates one-time
 prekeys, uploads unsent ones at session start and after the server's low-count
 notification, and follows `count_low` with bounded extra batches. Post-quantum
-keys are not sent. The first live upload has not run yet.
+keys are not sent. The first live upload has not run yet. Contact device lists
+are now fetched with `usync devices`, verified against pinned identities and
+stored; `devices` and `encrypt` notifications are acknowledged. Fan-out to
+companion devices and own-account device sync remain open.
 
 **Bounded reconnect added (offline verified):** the account runtime now retries
 after recoverable connection loss with capped jittered backoff and a fresh

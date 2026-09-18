@@ -16,6 +16,12 @@ pub mod comparison;
     feature = "experimental-transport"
 ))]
 pub mod connection;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod devices;
 pub mod framing;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod handshake;

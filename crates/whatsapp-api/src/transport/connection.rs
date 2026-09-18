@@ -269,6 +269,7 @@ pub(crate) async fn drive(
     let mut outgoing: Option<super::outgoing::Pending> = None;
     let mut upload: Option<super::prekeys::PendingUpload> = None;
     let mut upload_rounds: u32 = 0;
+    let mut device_query: Option<super::devices::DeviceQuery> = None;
     let mut outbox_tick = tokio::time::interval(Duration::from_secs(1));
     outbox_tick.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
     loop {
@@ -294,6 +295,11 @@ pub(crate) async fn drive(
                     // The batch stays reserved as outcome_unknown; its keys are never re-sent.
                     tracing::warn!("prekey upload outcome unknown; reservation kept, no retry");
                     upload = None;
+                }
+                if device_query.as_ref().is_some_and(|q| tokio::time::Instant::now() >= q.deadline) {
+                    // Queries are reads: pending users stay pending for a later session.
+                    tracing::warn!("device query unanswered; users remain pending");
+                    device_query = None;
                 }
                 for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
                 // Unanswered keepalive: classified recoverable; the actor decides on reconnect.
@@ -329,6 +335,16 @@ pub(crate) async fn drive(
                         if super::prekeys::wants_upload(&store)? {
                             maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds).await?;
                         }
+                        // SyncDevicesJob default preset: pending users are queried interactively.
+                        if let Some((query, node)) = super::devices::begin_query(&store, super::devices::SyncContext::Interactive)? {
+                            device_query = Some(query);
+                            link.send(&node).await?;
+                        }
+                        continue;
+                    }
+                    if device_query.as_ref().is_some_and(|q| q.matches(&node)) {
+                        let summary = device_query.take().expect("matched device query").ingest(&store, &node)?;
+                        tracing::info!(ingested = summary.ingested, partial_errors = summary.partial_errors, "device lists updated");
                         continue;
                     }
                     if upload.as_ref().is_some_and(|u| u.matches(&node)) {
@@ -348,6 +364,22 @@ pub(crate) async fn drive(
                 super::receipts::record(&store, &node)?;
                 super::receipts::record_ack(&store, &node)?;
                 if let Some(ack)=super::notifications::handle(&store, &node)? {link.send(&ack).await?;}
+                if let Some(change) = super::devices::notification(&node) {
+                    // LX/11Q.A09: acknowledge after capture, then record the contact for a
+                    // device sync (LX/101.A02). Own-account changes use account sync, which is
+                    // not implemented: captured and acknowledged only.
+                    link.send(&super::devices::notification_ack(&node)?).await?;
+                    let own = account.own_jid.as_ref().map(|j| j.to_non_ad());
+                    if own.as_ref() != Some(&change.owner) {
+                        super::devices::request_sync(&store, own.as_ref(), &change.owner, change.device_hash.as_deref(), "notification")?;
+                        if device_query.is_none()
+                            && let Some((query, sync)) = super::devices::begin_query(&store, super::devices::SyncContext::Notification)?
+                        {
+                            device_query = Some(query);
+                            link.send(&sync).await?;
+                        }
+                    }
+                }
                 if let Some(low) = super::prekeys::low_count(&node) {
                     // LX/14z.A09: acknowledge after the durable capture above, then LX/14z.A02:
                     // legacy count triggers generate-if-empty and upload; pq-only takes no action.
@@ -943,6 +975,138 @@ mod tests {
         .unwrap();
         assert!(unsent_ids(&store).unwrap().is_empty());
         assert_eq!(summary(&store).unwrap().uncertain, 50);
+        fake.stop_cleanly().await;
+    }
+
+    #[tokio::test]
+    async fn devices_notifications_are_acknowledged_queried_ingested_and_requeried_after_a_cut() {
+        use super::super::devices::{DeviceEntry, device_list, pending_users};
+        let dir = tempfile::tempdir().unwrap();
+        let store = registered_store(&dir.path().join("devices.redb"));
+        let contact = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let private = [13u8; 32];
+        let (signed, key) =
+            crate::signal::adv::test_signed_list(7, 1_700_000_000, 2, &[1, 2], &private);
+        let mut pinned = vec![0x05];
+        pinned.extend_from_slice(&key);
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::PeerIdentities,
+                    format!("comparison-direct:{contact}").as_bytes(),
+                    1,
+                    &pinned,
+                )
+            })
+            .unwrap();
+        let notification = |id: &str| {
+            Node::new("notification")
+                .attr("type", "devices")
+                .attr("id", id)
+                .attr("from", contact.clone())
+                .children(vec![Node::new("add").attr("device_hash", "2:x").children(
+                    vec![
+                    Node::new("device")
+                        .attr("jid", contact.with_device(3))
+                        .attr("key-index", "1"),
+                ],
+                )])
+        };
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        // The first upload of prekeys happens at activation for this registered store.
+        let (upload, reply) = fake.written().await;
+        assert_eq!(
+            upload.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("encrypt")
+        );
+        reply.send(Ok(())).unwrap();
+        fake.deliver(notification("D1")).await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(
+            ack.get_attr("type").and_then(|v| v.as_text()),
+            Some("devices")
+        );
+        reply.send(Ok(())).unwrap();
+        let (query, reply) = fake.written().await;
+        assert_eq!(
+            query.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("usync")
+        );
+        let usync = &query.child_nodes()[0];
+        assert_eq!(
+            usync.get_attr("context").and_then(|v| v.as_text()),
+            Some("notification")
+        );
+        // The socket cuts on the query write: the user stays pending.
+        reply
+            .send(Err(Error::Transport(TransportError::PeerClosed)))
+            .unwrap();
+        assert!(fake.finished().await.is_err());
+        assert_eq!(pending_users(&store).unwrap(), vec![contact.clone()]);
+        assert!(device_list(&store, &contact).unwrap().is_none());
+
+        // Next epoch: activation re-queries interactively; the reply is ingested.
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (query, reply) = fake.written().await;
+        assert_eq!(
+            query.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("usync")
+        );
+        assert_eq!(
+            query.child_nodes()[0]
+                .get_attr("context")
+                .and_then(|v| v.as_text()),
+            Some("interactive")
+        );
+        reply.send(Ok(())).unwrap();
+        let result = Node::new("iq")
+            .attr(
+                "id",
+                query.get_attr("id").and_then(|v| v.as_text()).unwrap(),
+            )
+            .attr("type", "result")
+            .children(vec![Node::new("usync").children(vec![
+                Node::new("result"),
+                Node::new("list").children(
+                    vec![Node::new("user").attr("jid", contact.clone()).children(vec![
+                    Node::new("devices").children(vec![
+                        Node::new("device-list").children(vec![
+                            Node::new("device").attr("id", "0"),
+                            Node::new("device").attr("id", "3").attr("key-index", "1"),
+                        ]),
+                        Node::new("key-index-list").attr("ts", "1700000000").bytes(signed),
+                    ]),
+                ])],
+                ),
+            ])]);
+        fake.deliver(result).await;
+        tokio::time::timeout(Duration::from_secs(5), async {
+            while device_list(&store, &contact).unwrap().is_none() {
+                tokio::time::sleep(Duration::from_millis(20)).await;
+            }
+        })
+        .await
+        .unwrap();
+        let list = device_list(&store, &contact).unwrap().unwrap();
+        assert!(list.companions_verified);
+        assert_eq!(
+            list.devices,
+            vec![
+                DeviceEntry {
+                    jid: contact.clone(),
+                    key_index: 0
+                },
+                DeviceEntry {
+                    jid: contact.with_device(3),
+                    key_index: 1
+                }
+            ]
+        );
+        assert!(pending_users(&store).unwrap().is_empty());
+        fake.nothing_written(Duration::from_millis(300)).await;
         fake.stop_cleanly().await;
     }
 

@@ -568,6 +568,52 @@ impl WhatsAppClient {
             .await
     }
 
+    /// Saved device list for a contact, from the last verified `usync devices`
+    /// reply. `None` until a reply was ingested. Companions are present only when
+    /// the contact's primary identity was pinned and its signed list verified.
+    /// Offline; requires explicit comparison configuration.
+    #[cfg(feature = "comparison-client")]
+    pub async fn device_list(
+        &self,
+        chat: &crate::model::ids::ChatId,
+    ) -> Result<Option<crate::transport::devices::DeviceList>> {
+        if self.inner.media_config.is_none() {
+            return Err(Error::unsupported(
+                Capability::DeviceFanout,
+                "comparison device lists require explicit configuration",
+            ));
+        }
+        let jid = chat.jid().clone();
+        self.inner
+            .store
+            .run_blocking(move |store| crate::transport::devices::device_list(store, &jid))
+            .await
+    }
+
+    /// Record a contact for the next `usync devices` query, which the next
+    /// active session sends. Offline; never queries the account's own devices.
+    #[cfg(feature = "comparison-client")]
+    pub async fn request_device_sync(&self, chat: &crate::model::ids::ChatId) -> Result<()> {
+        if self.inner.media_config.is_none() {
+            return Err(Error::unsupported(
+                Capability::DeviceFanout,
+                "comparison device lists require explicit configuration",
+            ));
+        }
+        let jid = chat.jid().clone();
+        self.inner
+            .store
+            .run_blocking(move |store| {
+                let own = store
+                    .read(crate::session::AccountRecord::load)?
+                    .and_then(|a| a.own_jid);
+                crate::transport::devices::request_sync(store, own.as_ref(), &jid, None, "api")
+            })
+            .await?;
+        self.inner.runtime.nudge();
+        Ok(())
+    }
+
     /// Verified ordinary-media download into a new private sink file. This is
     /// an explicit plaintext export; existing files and symlinks are not replaced.
     /// View-once and outgoing references are refused. No automatic GET retries.

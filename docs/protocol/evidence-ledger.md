@@ -1,5 +1,16 @@
 # Evidence ledger
 
+### Comparison 2.26.37.71 contact device-list sync — 2026-09-18
+
+Same build. `LX/0u7.A06` builds the `usync` query (`sid`, `index`, `last`,
+`mode`, `context`, `query/devices version=2`, `list/user`), `LX/0u7.C8f` parses
+`device-list/device[id,key-index,is_hosted]` and `key-index-list[ts,
+expected_ts]`, `LX/11T.A07` verifies the signed list with the pinned primary
+identity (or an ADV-provided key, not implemented), `LX/11Q.A09` parses
+`notification type=devices` and `LX/101.A02` records the user for a sync.
+Implemented for contacts with tests; own-account sync and send fan-out remain
+open. No live query has run.
+
 ### Comparison 2.26.37.71 prekey replenishment — 2026-09-18
 
 A second comparison build, 2.26.37.71 (APK SHA-256 `1755111a…7d5c`, same

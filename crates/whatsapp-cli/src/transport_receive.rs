@@ -178,6 +178,56 @@ pub(super) async fn mark_read(
     Ok(())
 }
 
+/// Offline contact device list, optionally recording a sync for the next session.
+pub(super) fn devices(cli: &super::Cli, chat: &str, request: bool) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let jid = whatsapp_api::model::jid::Jid::parse(chat)?;
+    if request {
+        let own = store.read(AccountRecord::load)?.and_then(|a| a.own_jid);
+        whatsapp_api::transport::devices::request_sync(&store, own.as_ref(), &jid, None, "cli")?;
+        println!("devices: sync recorded; the next listen session queries this contact");
+    }
+    let list = whatsapp_api::transport::devices::device_list(&store, &jid)?;
+    let pending = whatsapp_api::transport::devices::pending_users(&store)?;
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&serde_json::json!({
+                "list": list,
+                "pending_users": pending.iter().map(|j| j.to_string()).collect::<Vec<_>>(),
+            }))
+            .map_err(|e| Error::invalid("devices", e.to_string()))?
+        );
+        return Ok(());
+    }
+    match list {
+        None => println!("devices: no saved list for this contact"),
+        Some(list) => {
+            println!(
+                "devices: {} device(s); companions_verified={} raw_id={:?} list_ts={:?} hash_matches={:?}",
+                list.devices.len(),
+                list.companions_verified,
+                list.raw_id,
+                list.list_timestamp,
+                list.hash_matches
+            );
+            for d in &list.devices {
+                println!("  device={} key_index={}", d.jid.device, d.key_index);
+            }
+            if let Some(reason) = &list.unverified_reason {
+                println!("  companions not verified: {reason}");
+            }
+        }
+    }
+    println!("devices: {} contact(s) pending a query", pending.len());
+    Ok(())
+}
+
 /// Offline one-time prekey summary: counts by upload state and batch outcomes.
 /// No key material is read or printed.
 pub(super) fn prekeys_status(cli: &super::Cli) -> Result<(), Error> {

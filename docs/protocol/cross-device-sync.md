@@ -639,6 +639,13 @@ authorized sync ingestion remain unfinished; no live account was changed here.
 
 ### Further integration
 
+Update 2026-09-18: contact device-list ingestion is implemented in
+`transport::devices` from 2.26.37.71 evidence (see messaging-transport.md):
+`devices` notifications, the `usync devices version=2` query, signed-list
+verification with the pinned primary identity and `11T.A08` reconciliation.
+Items 1–5 below still describe own-device authorization, linked-device sessions
+and key activation, which remain open.
+
 1. Wire own-device sender authorization from the observed incoming path; decoding
    a key-share is not authorization to replace keys.
 2. Implement linked-device sessions and validated device-list changes without

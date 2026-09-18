@@ -27,6 +27,21 @@ impl std::fmt::Debug for ReconciledDevices {
     }
 }
 impl ReconciledDevices {
+    /// The primary device alone: the conservative result when a contact's
+    /// companions cannot be verified against a pinned identity.
+    pub fn primary_only(owner: &Jid) -> Result<Self> {
+        if owner.device != 0
+            || owner.agent != 0
+            || owner.user.is_empty()
+            || !matches!(owner.server, Server::User | Server::Lid)
+        {
+            return Err(bad());
+        }
+        Ok(Self {
+            devices: BTreeMap::from([(owner.clone(), 0)]),
+        })
+    }
+
     /// Retained advertised devices and their ADV indexes. This does not contain
     /// or authorize identity keys; never equate an ADV index with JID.device.
     pub fn devices(&self) -> &BTreeMap<Jid, u32> {

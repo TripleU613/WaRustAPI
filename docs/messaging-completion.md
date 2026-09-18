@@ -11,7 +11,9 @@ Comparison APK evidence is 2.26.37.70, not the pinned 2.26.36.75 profile.
 - [x] Ordinary image download/display without plaintext files.
 - [x] Incoming voice-note retrieval/playback; live incoming sample pending.
 - [x] Incoming prekey messages from new senders; live new-sender sample pending.
-- [ ] Notification handling and cross-device synchronization ([evidence and gaps](protocol/cross-device-sync.md)).
+- [ ] Notification handling and cross-device synchronization ([evidence and gaps](protocol/cross-device-sync.md));
+  `encrypt` and `devices` notifications are now handled and contact device lists
+  are verified and stored; own-account sync, app-state snapshots and fan-out remain.
 - [x] Crash/reconnect coverage for receiving, consumption and uncertain sends,
   including socket cut points on the real session loop; disk-full remains uncovered.
 - [ ] Integration with the normal account runtime/outbox (CLI session now
@@ -30,6 +32,18 @@ from offline tests alone. Existing received captures can be processed locally.
 
 ### Implemented and verified locally
 
+- Contact device-list synchronization from 2.26.37.71 evidence: `devices`
+  notifications are acknowledged and record the contact; sessions send the
+  `usync devices version=2` query for pending contacts at start and after a
+  notification; replies are verified against the contact's pinned primary
+  identity with the existing ADV verifier and `11T.A08` reconciliation, then
+  stored per contact atomically with hash agreement, hosted-device skips and
+  unverified reasons. Unpinned contacts keep only their primary. `device_list`/
+  `request_device_sync` on the client and `whatsapp-cli devices` are offline.
+  Tests cover the query layout, notification parsing, verified/unverified/
+  errored users, raw-id and timestamp refusals, restart, and a session flow with
+  a cut on the query write followed by an interactive re-query. Device lists are
+  not yet used for fan-out; own-account device sync is untraced beyond capture.
 - Legacy one-time prekey replenishment is implemented from comparison 2.26.37.71
   evidence (the restored APK is that build; its class names differ from the
   2.26.37.70 references and are kept separate): generation of up to 50 keys while
