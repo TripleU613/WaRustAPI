@@ -1216,7 +1216,20 @@ pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
                         .and_then(|v| v.as_text())
                         .map(|v| v.chars().take(8).collect::<String>())
                         .unwrap_or_default();
-                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
+                    let codes = if matches!(node.description.as_str(), "stream:error" | "failure") {
+                        // Server-side error codes carry no personal data.
+                        let values: Vec<String> = node
+                            .attributes
+                            .iter()
+                            .map(|a| {
+                                format!("{}={}", a.name, a.value.as_text().unwrap_or("<non-text>"))
+                            })
+                            .collect();
+                        format!(", values={values:?}")
+                    } else {
+                        String::new()
+                    };
+                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
                 }
             }
             if key.starts_with(b"received:") {
