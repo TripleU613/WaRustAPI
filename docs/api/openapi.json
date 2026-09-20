@@ -3,7 +3,7 @@
   "info": {
     "title": "TeleWhatsApp control API",
     "version": "0.0.1",
-    "description": "This document describes every operation of the whatsapp-api library and whatsapp-cli. The x-transport field indicates whether an operation is served by whatsapp-cli serve over HTTP today or invoked through the CLI. The x-cli field gives the exact command. The x-live field marks operations that contact WhatsApp servers and require explicit authorization via --allow-live-request. The HTTP control plane has no authentication and binds to loopback only.",
+    "description": "This document describes every operation of the whatsapp-api library and whatsapp-cli. The x-transport field indicates whether an operation is served by whatsapp-cli serve over HTTP today or invoked through the CLI. The x-cli field gives the exact command. The x-library field names the Rust entry points behind each operation (crate path form); the whatsapp-cli test `openapi_library_symbols_exist` verifies they exist. The x-live field marks operations that contact WhatsApp servers and require explicit authorization via --allow-live-request. The HTTP control plane has no authentication and binds to loopback only.",
     "license": {
       "name": "MIT OR Apache-2.0"
     }
@@ -1846,7 +1846,10 @@
               }
             }
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_cli::http::serve"
+        ]
       },
       "head": {
         "tags": [
@@ -2031,7 +2034,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::ban_appeal::submit_ban_appeal"
+        ]
       }
     },
     "/v1/accounts": {
@@ -2078,7 +2084,10 @@
               }
             }
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_cli::profiles::list"
+        ]
       },
       "post": {
         "tags": [
@@ -2152,7 +2161,10 @@
           "409": {
             "$ref": "#/components/responses/Conflict"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_cli::profiles::save"
+        ]
       }
     },
     "/v1/accounts/{name}": {
@@ -2208,7 +2220,10 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_cli::profiles::load"
+        ]
       }
     },
     "/v1/actions": {
@@ -2266,7 +2281,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::actions::outcomes"
+        ]
       }
     },
     "/v1/blocklist": {
@@ -2329,7 +2347,11 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::blocklist::ingest",
+          "whatsapp_api::transport::blocklist::blocked"
+        ]
       }
     },
     "/v1/capabilities": {
@@ -2373,7 +2395,10 @@
               }
             }
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::capabilities::CapabilityMatrix::current"
+        ]
       },
       "head": {
         "tags": [
@@ -2468,7 +2493,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::blocklist::queue_block"
+        ]
       }
     },
     "/v1/chats/{chat}/devices": {
@@ -2534,7 +2562,11 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::devices::request_sync",
+          "whatsapp_api::transport::devices::device_list"
+        ]
       }
     },
     "/v1/chats/{chat}/disappearing": {
@@ -2621,7 +2653,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::send_message"
+        ]
       }
     },
     "/v1/chats/{chat}/messages": {
@@ -2679,7 +2714,10 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::chat_clear::clear_chat"
+        ]
       }
     },
     "/v1/chats/{chat}/privacy": {
@@ -2766,7 +2804,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::send_message"
+        ]
       }
     },
     "/v1/chats/{chat}/report": {
@@ -2850,7 +2891,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::report::queue_report"
+        ]
       }
     },
     "/v1/chats/{chat}/unblock": {
@@ -2911,7 +2955,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::blocklist::queue_unblock"
+        ]
       }
     },
     "/v1/connect": {
@@ -2968,7 +3015,10 @@
           "501": {
             "$ref": "#/components/responses/NotImplemented"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::connect"
+        ]
       }
     },
     "/v1/contacts": {
@@ -3018,7 +3068,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::contacts::list"
+        ]
       },
       "post": {
         "tags": [
@@ -3097,7 +3150,10 @@
           "409": {
             "$ref": "#/components/responses/Conflict"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::contacts::add"
+        ]
       }
     },
     "/v1/contacts/{phone}": {
@@ -3181,7 +3237,10 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::contacts::edit"
+        ]
       },
       "delete": {
         "tags": [
@@ -3237,7 +3296,10 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::contacts::remove"
+        ]
       }
     },
     "/v1/contacts/{phone}/check": {
@@ -3295,7 +3357,10 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::contacts::queue_check"
+        ]
       }
     },
     "/v1/events": {
@@ -3374,7 +3439,10 @@
               }
             }
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::events"
+        ]
       }
     },
     "/v1/events/reproject": {
@@ -3428,7 +3496,10 @@
               }
             }
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::inbox::reproject"
+        ]
       }
     },
     "/v1/groups": {
@@ -3508,7 +3579,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::groups::queue_create"
+        ]
       },
       "get": {
         "tags": [
@@ -3556,7 +3630,11 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::groups::ingest",
+          "whatsapp_api::transport::groups::list"
+        ]
       }
     },
     "/v1/groups/{chat}/admins": {
@@ -3639,7 +3717,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::groups::queue_promote"
+        ]
       },
       "delete": {
         "tags": [
@@ -3720,7 +3801,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::groups::queue_demote"
+        ]
       }
     },
     "/v1/groups/{chat}/description": {
@@ -3804,7 +3888,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::groups::queue_description"
+        ]
       }
     },
     "/v1/groups/{chat}/info": {
@@ -3865,7 +3952,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::groups::queue_info"
+        ]
       }
     },
     "/v1/groups/{chat}/invite": {
@@ -3941,7 +4031,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::groups::queue_invite"
+        ]
       }
     },
     "/v1/groups/{chat}/leave": {
@@ -4002,7 +4095,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::groups::queue_leave"
+        ]
       }
     },
     "/v1/groups/{chat}/participants": {
@@ -4085,7 +4181,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::groups::queue_add"
+        ]
       },
       "delete": {
         "tags": [
@@ -4166,7 +4265,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::groups::queue_remove"
+        ]
       }
     },
     "/v1/groups/{chat}/subject": {
@@ -4246,7 +4348,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::groups::queue_subject"
+        ]
       }
     },
     "/v1/inbox/decrypt": {
@@ -4306,7 +4411,10 @@
               }
             }
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::inbox::reproject"
+        ]
       }
     },
     "/v1/keys/master": {
@@ -4351,7 +4459,10 @@
               }
             }
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::store::keys::MasterKey"
+        ]
       }
     },
     "/v1/lab/pair": {
@@ -4436,7 +4547,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::connect"
+        ]
       }
     },
     "/v1/media": {
@@ -4486,7 +4600,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::media::list"
+        ]
       }
     },
     "/v1/media/view-once/download": {
@@ -4536,7 +4653,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::image_download::download_view_once"
+        ]
       }
     },
     "/v1/media/view-once/open": {
@@ -4586,7 +4706,10 @@
           "409": {
             "$ref": "#/components/responses/Conflict"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::image_download::consume_view_once_with_ticket"
+        ]
       }
     },
     "/v1/media/{id}/open": {
@@ -4647,7 +4770,10 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::media::open"
+        ]
       }
     },
     "/v1/messages": {
@@ -4722,7 +4848,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::send_message"
+        ]
       }
     },
     "/v1/messages/keep": {
@@ -4806,7 +4935,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::send_message"
+        ]
       }
     },
     "/v1/messages/polls": {
@@ -4897,7 +5029,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::send_message"
+        ]
       }
     },
     "/v1/messages/reactions": {
@@ -4988,7 +5123,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::send_message"
+        ]
       }
     },
     "/v1/messages/reply": {
@@ -5072,7 +5210,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::send_message"
+        ]
       }
     },
     "/v1/messages/votes": {
@@ -5159,7 +5300,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::send_message"
+        ]
       }
     },
     "/v1/messages/{local_id}": {
@@ -5212,7 +5356,10 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::message_status"
+        ]
       },
       "delete": {
         "tags": [
@@ -5266,7 +5413,10 @@
           "409": {
             "$ref": "#/components/responses/Conflict"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::cancel_send"
+        ]
       }
     },
     "/v1/outbox": {
@@ -5313,7 +5463,10 @@
               }
             }
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::outgoing::eligible"
+        ]
       }
     },
     "/v1/outbox/send": {
@@ -5376,7 +5529,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_cli::outbox_send::run"
+        ]
       }
     },
     "/v1/prekeys": {
@@ -5420,7 +5576,10 @@
               }
             }
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::prekeys::summary"
+        ]
       }
     },
     "/v1/profile": {
@@ -5464,7 +5623,10 @@
               }
             }
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::ProtocolProfile::android_reference"
+        ]
       },
       "head": {
         "tags": [
@@ -5545,7 +5707,10 @@
               }
             }
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::receipts::outcomes"
+        ]
       }
     },
     "/v1/receipts/read": {
@@ -5622,7 +5787,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::send_receipt"
+        ]
       }
     },
     "/v1/registration": {
@@ -5705,7 +5873,10 @@
           "501": {
             "$ref": "#/components/responses/NotImplemented"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::begin"
+        ]
       },
       "get": {
         "tags": [
@@ -5750,7 +5921,10 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::current"
+        ]
       },
       "delete": {
         "tags": [
@@ -5795,7 +5969,10 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::reset"
+        ]
       }
     },
     "/v1/registration/reconcile": {
@@ -5845,7 +6022,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::reconcile"
+        ]
       }
     },
     "/v1/registration/wire-profile": {
@@ -5950,7 +6130,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::connect"
+        ]
       }
     },
     "/v1/session/listen": {
@@ -6023,7 +6206,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::connect"
+        ]
       }
     },
     "/v1/settings/disappearing-default": {
@@ -6089,7 +6275,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::chat_settings::queue_default_timer"
+        ]
       }
     },
     "/v1/signup/begin": {
@@ -6161,7 +6350,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::begin"
+        ]
       }
     },
     "/v1/signup/consent/inspect": {
@@ -6214,7 +6406,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::consent::continue_consent"
+        ]
       }
     },
     "/v1/signup/consent/submit": {
@@ -6277,7 +6472,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::consent::continue_consent"
+        ]
       }
     },
     "/v1/signup/diagnostics/additional-fields": {
@@ -6351,7 +6549,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::diagnose_additional_fields_once"
+        ]
       }
     },
     "/v1/signup/diagnostics/bad-parameter": {
@@ -6407,7 +6608,10 @@
           "409": {
             "$ref": "#/components/responses/Conflict"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::diagnose_bad_parameter_once"
+        ]
       }
     },
     "/v1/signup/diagnostics/encrypted-parameter": {
@@ -6463,7 +6667,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::diagnose_encrypted_parameter_once"
+        ]
       }
     },
     "/v1/signup/diagnostics/flow-fields": {
@@ -6537,7 +6744,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::diagnose_flow_fields_once"
+        ]
       }
     },
     "/v1/signup/diagnostics/legacy-refusal": {
@@ -6593,7 +6803,10 @@
           "409": {
             "$ref": "#/components/responses/Conflict"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::diagnose_legacy_refusal_once"
+        ]
       }
     },
     "/v1/signup/diagnostics/unknown-agent": {
@@ -6667,7 +6880,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::diagnose_unknown_agent_once"
+        ]
       }
     },
     "/v1/signup/diagnostics/unsigned-envelope": {
@@ -6723,7 +6939,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::diagnose_unsigned_envelope_once"
+        ]
       }
     },
     "/v1/signup/email/request-code": {
@@ -6794,7 +7013,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::request_email_code"
+        ]
       }
     },
     "/v1/signup/email/resume-challenge": {
@@ -6844,7 +7066,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::resume_email_challenge"
+        ]
       }
     },
     "/v1/signup/email/verify-code": {
@@ -6917,7 +7142,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::submit"
+        ]
       }
     },
     "/v1/signup/exist": {
@@ -6970,7 +7198,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::ComparisonHttpFlow::exist_probe"
+        ]
       }
     },
     "/v1/signup/preview": {
@@ -7035,7 +7266,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::request_config::LabRegistrationConfig"
+        ]
       }
     },
     "/v1/signup/resume-preflight": {
@@ -7091,7 +7325,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::resume_preflight_once"
+        ]
       }
     },
     "/v1/signup/retry-corrected-request": {
@@ -7147,7 +7384,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::diagnose_legacy_refusal_once"
+        ]
       }
     },
     "/v1/signup/retry-corrected-token": {
@@ -7203,7 +7443,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::retry_corrected_token_once"
+        ]
       }
     },
     "/v1/signup/status": {
@@ -7253,7 +7496,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::current"
+        ]
       }
     },
     "/v1/signup/template": {
@@ -7300,7 +7546,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::request::TEMPLATE_JSON"
+        ]
       }
     },
     "/v1/signup/verify-code": {
@@ -7373,7 +7622,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::submit"
+        ]
       }
     },
     "/v1/signup/verify-pin": {
@@ -7446,7 +7698,10 @@
           "423": {
             "$ref": "#/components/responses/Blocked"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::submit"
+        ]
       }
     },
     "/v1/store": {
@@ -7493,7 +7748,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient"
+        ]
       }
     },
     "/v1/store/init": {
@@ -7540,7 +7798,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::WhatsAppClient::builder"
+        ]
       }
     },
     "/v1/store/rotate-key": {
@@ -7606,7 +7867,10 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::store::ProtocolStore::rotate_master_key"
+        ]
       }
     },
     "/v1/transport/wire-profile": {
@@ -7713,7 +7977,11 @@
           "409": {
             "$ref": "#/components/responses/Conflict"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::token_material::TokenMaterial::derive",
+          "whatsapp_cli::profiles::save"
+        ]
       }
     },
     "/v1/accounts/status": {
@@ -7757,7 +8025,10 @@
               }
             }
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_cli::profiles::list"
+        ]
       }
     },
     "/v1/token/derive": {
@@ -7817,7 +8088,11 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::token_material::TokenMaterial::derive",
+          "whatsapp_cli::token::run"
+        ]
       }
     },
     "/v1/token/verify": {
@@ -7871,7 +8146,11 @@
           "400": {
             "$ref": "#/components/responses/InvalidInput"
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::registration::token_material::TokenMaterial::derive",
+          "whatsapp_cli::token::run"
+        ]
       }
     }
   }

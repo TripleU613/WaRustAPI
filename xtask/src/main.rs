@@ -11,6 +11,7 @@
 //! * `apk-callers <apk> --class <c> --method <m>` — find callers of a method.
 //! * `apk-smali <apk> --class <filter>` — dump Dalvik instructions for matching classes.
 //! * `apk-registration-token <apk> …` — derive the comparison build's code-request token.
+//! * `apk-token-material --from-dir <dir> --logo-from <apk> --out <zip> [--verify-config <json>]` — assemble token material archive.
 //! * `apk-research-bundle <apk> --output <dir> [--check]` — compact media-free code snapshot.
 
 // A command-line tool talks to its operator through stdout/stderr.
@@ -23,6 +24,7 @@ mod dex;
 mod manifest;
 mod proto;
 mod registration_token;
+mod token_material_archive;
 mod xref;
 
 use std::path::PathBuf;
@@ -124,6 +126,21 @@ enum Cmd {
         #[arg(long)]
         national_number: String,
     },
+    /// Assemble a token material archive from unpacked APK tree and logo source.
+    ApkTokenMaterial {
+        /// Directory containing unpacked APK: AndroidManifest.xml, classes.dex, META-INF, optional resources.arsc.
+        #[arg(long)]
+        from_dir: PathBuf,
+        /// APK or ZIP to extract logo from.
+        #[arg(long)]
+        logo_from: PathBuf,
+        /// Output ZIP file (mode 0600, refuses to overwrite).
+        #[arg(long)]
+        out: PathBuf,
+        /// Optional request config JSON to verify derived token against.
+        #[arg(long)]
+        verify_config: Option<PathBuf>,
+    },
     /// Extract reference facts (hashes, manifest fields, signing certificate) from an APK.
     ReferenceManifest {
         /// Path to the APK (kept outside the repository).
@@ -169,6 +186,12 @@ fn main() -> ExitCode {
             country_code,
             national_number,
         } => registration_token::run(&apk, country_code, &national_number),
+        Cmd::ApkTokenMaterial {
+            from_dir,
+            logo_from,
+            out,
+            verify_config,
+        } => token_material_archive::run(&from_dir, &logo_from, &out, verify_config.as_deref()),
     };
     match result {
         Ok(()) => ExitCode::SUCCESS,

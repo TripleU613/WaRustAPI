@@ -8,7 +8,7 @@ use whatsapp_api::model::phone::PhoneNumber;
 use whatsapp_api::registration::request::LabRegistrationConfig;
 use whatsapp_api::registration::token_material::TokenMaterial;
 
-#[derive(Subcommand)]
+#[derive(Debug, Subcommand)]
 pub enum TokenCmd {
     /// Derive the registration token from APK material.
     Derive {

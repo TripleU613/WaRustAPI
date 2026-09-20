@@ -26,6 +26,9 @@ These inspection commands need no account or APK. For local storage and the
 HTTP control plane, see [Getting started](docs/getting-started.md).
 Enqueueing a message currently stores an intent; it does not send it.
 
+Onboarding a phone number is two commands (`accounts new`, then `lab-signup begin`); see [docs/accounts.md](docs/accounts.md).
+Every command is listed in [docs/cli.md](docs/cli.md) and described in [docs/api/openapi.json](docs/api/openapi.json).
+
 ## Workspace
 
 | Package | Purpose |
@@ -53,6 +56,8 @@ and the full validation workflow. First-party code and automation are Rust.
 ## Documentation
 
 - [API reference (OpenAPI)](docs/api/README.md) — every CLI command and HTTP route, machine-readable
+- [CLI reference](docs/cli.md) — generated command tree
+- [Configuration reference](docs/configuration.md) — request.json fields and profiles
 - [Documentation index](docs/README.md)
 - [Running more than one account](docs/accounts.md) — profiles, onboarding a second number, the two-account pair check
 - [Current status](STATUS.md)

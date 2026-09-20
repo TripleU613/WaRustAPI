@@ -72,6 +72,20 @@ the run is in `classes2.dex @ 0x126a96` and is identical to the web v3 list.
 See `client_observations` in `crates/whatsapp-api/fixtures/reference-manifest.json`
 and the `Observed (client, static)` rows of `evidence-ledger.md`.
 
+## Token material archive
+
+When reconstructing token material from an unpacked APK tree and resources from another archive:
+
+```sh
+cargo run -p xtask -- apk-token-material \
+    --from-dir <unpacked-2.26.37.70-tree> \
+    --logo-from ~/Downloads/WhatsApp.apk \
+    --out lab/whatsapp-2.26.37.70-token-material.zip \
+    [--verify-config <request.json>]
+```
+
+Copies `AndroidManifest.xml`, `classes.dex`, `resources.arsc` (if present), every `META-INF/*.DSA|*.RSA|*.EC`, and the first available logo candidate from `--logo-from` into a stored (uncompressed) ZIP. The output file is created with mode 0600 and refuses to overwrite existing files. With `--verify-config`, reads a `LabRegistrationConfig` JSON, derives the token from the output archive, and verifies it matches the config's token field.
+
 ## Next static targets for the pinned profile
 
 - Re-run the newer-build `WA 06 03` and registration URL/body findings

@@ -14,6 +14,7 @@ creates the account config, master key and profile automatically. Then
 `lab-signup begin` and `verify-code` complete registration. Reference: [configuration](docs/configuration.md),
 [working recipe and token material](docs/protocol/registration-lab.md#working-recipe),
 [accounts](docs/accounts.md).
+The CLI reference (`docs/cli.md`), the OpenAPI document (`docs/api/openapi.json`, with `x-cli` and `x-library` per operation) and the configuration reference (`docs/configuration.md`) are kept current by tests.
 
 
 **Chat actions landed (2026-09-20):** block/unblock/block-list fetch, spam

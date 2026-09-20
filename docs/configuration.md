@@ -77,7 +77,7 @@ The 2.26.37.70 APK is no longer on disk; `~/Downloads/WhatsApp.apk` is 2.26.37.7
 lab/whatsapp-2.26.37.70-token-material.zip
 ```
 
-The ZIP contains `classes.dex`, `META-INF/IMPORTED.DSA`, `AndroidManifest.xml`, `resources.arsc`, and `res/drawable-hdpi-v4/about_logo.png`.
+The ZIP contains `classes.dex`, `META-INF/IMPORTED.DSA`, `AndroidManifest.xml`, `resources.arsc`, and `res/drawable-hdpi-v4/about_logo.png`. Build or rebuild the archive with `cargo run -p xtask -- apk-token-material --from-dir <unpacked 2.26.37.70 tree> --logo-from ~/Downloads/WhatsApp.apk --out lab/whatsapp-2.26.37.70-token-material.zip --verify-config <a known-good request.json>`.
 
 Set `WHATSAPP_API_TOKEN_MATERIAL` to point at it, or pass `--material` explicitly to token commands:
 

@@ -28,6 +28,7 @@ use zeroize::Zeroizing;
 
 use std::os::unix::fs::PermissionsExt;
 
+mod cli_reference;
 mod http;
 #[cfg(feature = "experimental-transport")]
 mod media;
@@ -794,7 +795,7 @@ enum StoreCmd {
     },
 }
 
-#[derive(Subcommand)]
+#[derive(Debug, Subcommand)]
 enum RegCmd {
     /// Start or resume a registration attempt.
     Begin {
@@ -816,7 +817,7 @@ enum RegCmd {
     Reset,
 }
 
-#[derive(Clone, Copy, ValueEnum)]
+#[derive(Clone, Copy, Debug, ValueEnum)]
 enum Method {
     Sms,
     Voice,

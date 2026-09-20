@@ -26,5 +26,8 @@ cargo_metadata = "0.23"
 zip.workspace = true
 whatsapp-api = { path = "../crates/whatsapp-api", features = ["token-material"] }
 
+[dev-dependencies]
+tempfile.workspace = true
+
 [lints]
 workspace = true

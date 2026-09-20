@@ -60,6 +60,38 @@ The wire-profile routes describe the comparison APK, not a working connection.
 Network mutation endpoints return structured errors while their gates remain
 unresolved.
 
+## Onboard a number
+
+Use `accounts new` to prepare a new account with automatic token derivation from
+the 2.26.37.70 material:
+
+```sh
+whatsapp-cli accounts new --name a --country-code 44 --national-number 7700900123 \
+  --material lab/whatsapp-2.26.37.70-token-material.zip [--method voice]
+
+export WHATSAPP_API_MASTER_KEY_A=$(cat lab/accounts/a/master.key)
+```
+
+This creates `lab/accounts/a/master.key`, `lab/accounts/a/request.json` (with
+the working recipe), and `lab/profiles/a.json`. Then run registration with
+the profile:
+
+```sh
+whatsapp-cli --profile a lab-signup --allow-live-request begin --method sms
+
+read -rs CODE; printf '%s\n' "$CODE" | whatsapp-cli --profile a lab-signup --allow-live-request verify-code
+```
+
+Check the account with `accounts status` or a short live listen:
+
+```sh
+whatsapp-cli accounts status --name a
+
+whatsapp-cli --profile a listen --allow-live-request --seconds 20
+```
+
+See [configuration reference](configuration.md) for all fields.
+
 ## Next steps
 
 See [contributor checks](../CONTRIBUTING.md), the

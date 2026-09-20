@@ -28,6 +28,8 @@ npx @redocly/cli preview-docs docs/api/openapi.json
 
 Or visit [redoc.ly](https://redoc.ly) in your browser and paste the URL.
 
+For a human-readable CLI reference generated from this document, see [docs/cli.md](../cli.md).
+
 ## Fields
 
 Each operation includes:
@@ -44,6 +46,10 @@ Each operation includes:
   (OTP, phone, credential, token, key); the CLI redacts it and never logs it.
 - **`x-long-running`** — boolean, true if the operation may block (e.g., a receive
   loop or a server wait).
+- **`x-library`** — array of Rust module paths naming the library and CLI functions
+  that implement this operation (e.g., `["whatsapp_api::accounts::*",
+  "whatsapp_cli::accounts"]`). Checked by the test `openapi_library_symbols_exist`
+  to ensure every documented operation has a corresponding implementation.
 
 ## Tags
 
@@ -55,6 +61,7 @@ Operations are organized by tag. The full list:
 - Registration
 - Registration Lab
 - Session
+- Token
 - Messages
 - Outbox
 - Receipts
@@ -70,11 +77,13 @@ Operations are organized by tag. The full list:
 
 **Every new or changed CLI command, flag, library capability, HTTP route,
 request/response field or server-response code is documented in
-`docs/api/openapi.json` in the same change.** The CLI coverage test
+`docs/api/openapi.json` in the same change, with `x-cli`, `x-transport`,
+`x-live` and `x-library` set honestly.** The CLI coverage test
 (`whatsapp-cli`) enforces that every command named there exists and every
-command in the CLI is named there. The document is the single source of truth
-for the API surface and is edited directly (it is JSON, so the CLI can embed
-and serve it without extra dependencies).
+command in the CLI is named there. The test `openapi_library_symbols_exist`
+enforces that `x-library` names the Rust entry point. The document is the
+single source of truth for the API surface and is edited directly (it is JSON,
+so the CLI can embed and serve it without extra dependencies).
 
 ## Adding an operation
 
