@@ -543,6 +543,11 @@ mod tests {
         cfg.fields
             .code
             .insert("reason".into(), Zeroizing::new("private-reason".into()));
+        cfg.fields.code_bytes.insert(
+            "client_metrics".into(),
+            Zeroizing::new(b"private-metrics".to_vec()),
+        );
+        cfg.fields.code_bytes.remove("mcc");
         let preview = cfg.preview(false);
         let fields = &preview["compatibility"]["observed_code_additional_fields"];
         assert_eq!(
@@ -553,8 +558,10 @@ mod tests {
             fields["client_metrics"],
             "configured on observed byte path; value not verified"
         );
+        assert_eq!(fields["mcc"], "absent");
         let text = preview.to_string();
         assert!(!text.contains("private-reason"));
+        assert!(!text.contains("private-metrics"));
     }
 
     #[test]
@@ -699,15 +706,28 @@ mod tests {
     fn legacy_config_defaults_and_typos_fail_fast() {
         let mut json = serde_json::to_value(config()).unwrap();
         for key in [
+            "client",
             "transport",
             "device",
+            "fields",
             "method",
             "diagnostics",
         ] {
             json.as_object_mut().unwrap().remove(key);
         }
         let old: LabRegistrationConfig = serde_json::from_value(json.clone()).unwrap();
-        assert_eq!(old, config());
+        assert_eq!(old.phone, config().phone);
+        assert_eq!(old.language, config().language);
+        assert_eq!(old.locale, config().locale);
+        assert_eq!(old.token, config().token);
+        assert_eq!(old.client, ClientSettings::default());
+        assert!(old.client.user_agent.is_none());
+        assert_eq!(old.transport, TransportSettings::default());
+        assert_eq!(old.transport.body_mode, RequestBodyMode::ClearForm);
+        assert_eq!(old.device, DeviceSettings::default());
+        assert_eq!(old.fields, EndpointFields::default());
+        assert_eq!(old.method, DeliveryMethod::default());
+        assert!(old.diagnostics);
         json["langauge"] = serde_json::json!("en");
         assert!(serde_json::from_value::<LabRegistrationConfig>(json).is_err());
         let mut json = serde_json::to_value(config()).unwrap();
