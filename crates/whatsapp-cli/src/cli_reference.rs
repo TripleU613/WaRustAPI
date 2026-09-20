@@ -154,9 +154,7 @@ fn render_commands(output: &mut String, cmd: &Command, path: Vec<String>) {
         let local_args: Vec<_> = subcmd
             .get_arguments()
             .filter(|arg| {
-                !arg.is_hide_set()
-                    && arg.get_id().as_str() != "help"
-                    && !is_global_arg(arg)
+                !arg.is_hide_set() && arg.get_id().as_str() != "help" && !is_global_arg(arg)
             })
             .collect();
 
