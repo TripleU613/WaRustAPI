@@ -306,6 +306,7 @@ mod tests {
             panic!("wrong command");
         };
         assert!(!allow_live_request);
+        let config = config.as_deref().expect("config given");
         let error = run(&cli, config, message, *allow_live_request)
             .await
             .unwrap_err();
@@ -313,13 +314,21 @@ mod tests {
     }
 
     #[test]
-    fn selected_send_requires_both_private_json_paths() {
+    fn selected_send_requires_the_message_path_and_a_config_source() {
         for args in [
             vec!["whatsapp-cli", "outbox-send"],
             vec!["whatsapp-cli", "outbox-send", "--config", "config.json"],
-            vec!["whatsapp-cli", "outbox-send", "--message", "message.json"],
         ] {
             assert!(Cli::try_parse_from(args).is_err());
         }
+        // `--config` may come from a profile; without one the command must fail
+        // before touching anything.
+        let cli = Cli::try_parse_from(["whatsapp-cli", "outbox-send", "--message", "message.json"])
+            .unwrap();
+        let Cmd::OutboxSend { config, .. } = &cli.cmd else {
+            panic!("wrong command");
+        };
+        assert!(config.is_none());
+        assert!(cli.config_path(None, None).is_err());
     }
 }

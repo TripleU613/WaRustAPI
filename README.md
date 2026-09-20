@@ -53,6 +53,7 @@ and the full validation workflow. First-party code and automation are Rust.
 ## Documentation
 
 - [Documentation index](docs/README.md)
+- [Running more than one account](docs/accounts.md) — profiles, onboarding a second number, the two-account pair check
 - [Current status](STATUS.md)
 - [Design plan and numbered section index](docs/design/README.md)
 - [Protocol evidence](docs/protocol/evidence-ledger.md) and [APK research](docs/protocol/apk-analysis.md)

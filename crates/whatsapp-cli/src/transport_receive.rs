@@ -1261,6 +1261,166 @@ pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
     Ok(())
 }
 
+/// Two-account lab check: `from` queues one text to `to`'s own number, both
+/// sessions run at once, then the sender's delivery facts and the receiver's
+/// journal are inspected. Profiles must not share a store or a key variable.
+pub(super) async fn lab_pair(
+    cli: &super::Cli,
+    from: &str,
+    to: &str,
+    text: &str,
+    seconds: u64,
+    allow_live: bool,
+) -> Result<(), Error> {
+    use sha2::Digest;
+    use whatsapp_api::model::{
+        ids::{ChatId, ClientRequestId, EventCursor},
+        jid::Jid,
+        message::MessageContent,
+        send::SendRequest,
+    };
+    use whatsapp_api::store::ConsumerId;
+    use whatsapp_api::sync::SyncEvent;
+    if !allow_live {
+        return Err(Error::invalid("lab-pair", "requires --allow-live-request"));
+    }
+    if from == to {
+        return Err(Error::invalid("lab-pair", "from and to must differ"));
+    }
+    let a = cli.for_profile(from)?;
+    let b = cli.for_profile(to)?;
+    if a.store == b.store {
+        return Err(Error::invalid("lab-pair", "profiles share a store"));
+    }
+    if a.key_env == b.key_env {
+        return Err(Error::invalid("lab-pair", "profiles share a key variable"));
+    }
+    let cfg_a = a.config_path(None, None)?;
+    let cfg_b = b.config_path(None, None)?;
+    let open = |c: &super::Cli| {
+        whatsapp_api::WhatsAppClient::builder()
+            .store_path(c.store.clone())
+            .account_id(AccountId::new(c.account.clone()).expect("validated account id"))
+            .key_source(Arc::new(EnvKeySource::new(c.key_env.clone())))
+            .create_store(false)
+            .build()
+    };
+    let own = |client: &whatsapp_api::WhatsAppClient, name: &str| -> Result<Jid, Error> {
+        client
+            .store()
+            .read(AccountRecord::load)?
+            .and_then(|r| r.own_jid)
+            .map(|j| j.to_non_ad())
+            .ok_or_else(|| {
+                Error::invalid(
+                    "lab-pair",
+                    format!("profile {name} has no registered own jid"),
+                )
+            })
+    };
+    // Receiver: note the journal position before the run.
+    let client_b = open(&b).await?;
+    let own_b = own(&client_b, to)?;
+    let consumer = ConsumerId::new("lab-pair")?;
+    let engine = client_b.events(consumer.clone());
+    let mut before = engine.acknowledged_cursor().await?;
+    loop {
+        let batch = engine.next_batch(before, 4096).await?;
+        if batch.events.is_empty() {
+            break;
+        }
+        before = batch.ack_cursor;
+        if !batch.has_more {
+            break;
+        }
+    }
+    drop(engine);
+    client_b.shutdown().await;
+    // Sender: queue the text to the receiver's own number.
+    let client_a = open(&a).await?;
+    let own_a = own(&client_a, from)?;
+    let digest = sha2::Sha256::digest(format!(
+        "{text}\n{}",
+        whatsapp_api::model::time::Timestamp::now().0
+    ));
+    let ticket = client_a
+        .send_message(SendRequest {
+            client_request_id: ClientRequestId::new(format!("pair-{}", hex::encode(&digest[..8])))?,
+            chat: ChatId::from_jid(&own_b)?,
+            content: MessageContent::Text {
+                body: text.to_owned(),
+                quoted: None,
+            },
+        })
+        .await?;
+    client_a.shutdown().await;
+    println!(
+        "lab-pair: queued text from profile {from} to profile {to} (local id {}); running both sessions for {seconds}s",
+        ticket.local_id
+    );
+    let (ra, rb) = tokio::join!(
+        listen(&a, &cfg_a, true, seconds, true),
+        listen(&b, &cfg_b, true, seconds, false)
+    );
+    if let Err(e) = &ra {
+        println!("lab-pair: sender session ended with error: {e}");
+    }
+    if let Err(e) = &rb {
+        println!("lab-pair: receiver session ended with error: {e}");
+    }
+    // Sender facts.
+    let client_a = open(&a).await?;
+    let status = client_a.message_status(&ticket).await?;
+    client_a.shutdown().await;
+    let facts: Vec<String> = status
+        .facts
+        .iter()
+        .map(|f| format!("{:?}", f.kind))
+        .collect();
+    println!(
+        "lab-pair: sender progress={:?} facts={facts:?}",
+        status.progress
+    );
+    // Receiver journal.
+    let client_b = open(&b).await?;
+    let engine = client_b.events(consumer);
+    let mut cursor: EventCursor = before;
+    let mut received = false;
+    let mut new_events = 0usize;
+    loop {
+        let batch = engine.next_batch(cursor, 4096).await?;
+        if batch.events.is_empty() {
+            break;
+        }
+        for e in &batch.events {
+            new_events += 1;
+            if let SyncEvent::NewMessage(m) = &e.event
+                && let MessageContent::Text { body, .. } = &m.content
+                && body == text
+                && m.key.chat.jid().to_non_ad().user == own_a.user
+            {
+                received = true;
+            }
+        }
+        cursor = batch.ack_cursor;
+        if !batch.has_more {
+            break;
+        }
+    }
+    drop(engine);
+    client_b.shutdown().await;
+    println!(
+        "lab-pair: receiver saw {new_events} new event(s); text from the sender received={received}"
+    );
+    if !received {
+        return Err(Error::invalid(
+            "lab-pair",
+            "the receiver did not project the sender's text; inspect both accounts' events",
+        ));
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

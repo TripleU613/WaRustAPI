@@ -31,6 +31,7 @@ mod http;
 mod media;
 #[cfg(feature = "experimental-transport")]
 mod outbox_send;
+mod profiles;
 #[cfg(feature = "experimental-signup")]
 mod signup;
 #[cfg(feature = "experimental-transport")]
@@ -66,11 +67,88 @@ struct Cli {
     /// Name of the environment variable holding the hex master key.
     #[arg(long, global = true, default_value = "WHATSAPP_API_MASTER_KEY")]
     key_env: String,
+    /// Named account profile (`<profiles-dir>/<NAME>.json`) supplying the
+    /// store, account, key variable and config defaults; explicit flags win.
+    #[arg(long, global = true, env = "WHATSAPP_API_PROFILE")]
+    profile: Option<String>,
+    /// Directory holding account profiles.
+    #[arg(
+        long,
+        global = true,
+        default_value = "lab/profiles",
+        env = "WHATSAPP_API_PROFILES_DIR"
+    )]
+    profiles_dir: PathBuf,
     /// Machine-readable JSON output where available.
     #[arg(long, global = true)]
     json: bool,
     #[command(subcommand)]
     cmd: Cmd,
+    #[arg(skip)]
+    loaded_profile: Option<profiles::Profile>,
+}
+
+impl Cli {
+    /// Apply `--profile`: fill every global the operator left at its default.
+    fn apply_profile(&mut self, matches: &clap::ArgMatches) -> Result<(), Error> {
+        let Some(name) = self.profile.clone() else {
+            return Ok(());
+        };
+        let profile = profiles::load(&self.profiles_dir, &name)?;
+        let defaulted =
+            |arg: &str| matches.value_source(arg) != Some(clap::parser::ValueSource::CommandLine);
+        if defaulted("store") {
+            self.store = profile.store.clone();
+        }
+        if defaulted("account") {
+            self.account = profile.account.clone();
+        }
+        if defaulted("key_env") {
+            self.key_env = profile.key_env.clone();
+        }
+        self.loaded_profile = Some(profile);
+        Ok(())
+    }
+
+    /// The private config for a command: the explicit `--config`, else the
+    /// profile's, else `fallback` when one exists for that command.
+    #[cfg_attr(not(feature = "experimental-transport"), allow(dead_code))]
+    fn config_path(
+        &self,
+        given: Option<&PathBuf>,
+        fallback: Option<&str>,
+    ) -> Result<PathBuf, Error> {
+        if let Some(path) = given {
+            return Ok(path.clone());
+        }
+        if let Some(path) = self.loaded_profile.as_ref().and_then(|p| p.config.clone()) {
+            return Ok(path);
+        }
+        match fallback {
+            Some(path) => Ok(PathBuf::from(path)),
+            None => Err(Error::invalid(
+                "config",
+                "pass --config or select a --profile that names one",
+            )),
+        }
+    }
+
+    /// A copy of these globals bound to another named profile (for commands
+    /// that drive two accounts at once).
+    #[cfg_attr(not(feature = "experimental-transport"), allow(dead_code))]
+    fn for_profile(&self, name: &str) -> Result<Cli, Error> {
+        let profile = profiles::load(&self.profiles_dir, name)?;
+        Ok(Cli {
+            store: profile.store.clone(),
+            account: profile.account.clone(),
+            key_env: profile.key_env.clone(),
+            profile: Some(name.to_owned()),
+            profiles_dir: self.profiles_dir.clone(),
+            json: self.json,
+            cmd: Cmd::Capabilities,
+            loaded_profile: Some(profile),
+        })
+    }
 }
 
 #[derive(Subcommand)]
@@ -78,8 +156,9 @@ enum Cmd {
     /// Send one private-JSON text, image or voice note through the comparison outbox.
     #[cfg(feature = "experimental-transport")]
     OutboxSend {
+        /// Private request configuration; defaults to the profile's.
         #[arg(long)]
-        config: PathBuf,
+        config: Option<PathBuf>,
         #[arg(long)]
         message: PathBuf,
         #[arg(long)]
@@ -101,8 +180,9 @@ enum Cmd {
     /// Maintain an authenticated comparison connection and process incoming messages.
     #[cfg(feature = "experimental-transport")]
     Listen {
+        /// Private request configuration; defaults to the profile's.
         #[arg(long)]
-        config: PathBuf,
+        config: Option<PathBuf>,
         #[arg(long)]
         allow_live_request: bool,
         /// Stop after this many seconds; zero waits for Ctrl-C.
@@ -128,6 +208,30 @@ enum Cmd {
         /// Print the request and reply stanzas of one action (numbers masked).
         #[arg(long)]
         show: Option<String>,
+    },
+    /// Manage named account profiles (offline): list, add, show.
+    Accounts {
+        #[command(subcommand)]
+        cmd: AccountsCmd,
+    },
+    /// Two-account lab check: send a text from one profile and confirm the
+    /// other profile receives it, running both sessions at once.
+    #[cfg(feature = "experimental-transport")]
+    LabPair {
+        /// Sending profile name.
+        #[arg(long)]
+        from: String,
+        /// Receiving profile name.
+        #[arg(long)]
+        to: String,
+        /// Text to send.
+        #[arg(long, default_value = "pair check")]
+        text: String,
+        /// Session length for both accounts.
+        #[arg(long, default_value_t = 45)]
+        seconds: u64,
+        #[arg(long)]
+        allow_live_request: bool,
     },
     /// Durably queue a block of a contact (offline; `listen --send-outbox` transmits it).
     #[cfg(feature = "experimental-transport")]
@@ -331,8 +435,9 @@ enum Cmd {
     /// the next `listen` session sends them once).
     #[cfg(feature = "experimental-transport")]
     MarkRead {
+        /// Private request configuration; defaults to the profile's.
         #[arg(long)]
-        config: PathBuf,
+        config: Option<PathBuf>,
         /// Sender JID, e.g. 15551234567@s.whatsapp.net.
         #[arg(long)]
         chat: String,
@@ -346,8 +451,9 @@ enum Cmd {
     /// Download one authenticated view-once image as private ciphertext; do not open it.
     #[cfg(feature = "experimental-transport")]
     LabDownloadViewOnce {
+        /// Private request configuration; defaults to the profile's.
         #[arg(long)]
-        config: PathBuf,
+        config: Option<PathBuf>,
         #[arg(long)]
         allow_live_request: bool,
     },
@@ -362,8 +468,9 @@ enum Cmd {
     #[cfg(feature = "experimental-transport")]
     LabTransport {
         /// Existing private registration JSON, used to bind the saved account.
+        /// Private request configuration; defaults to the profile's.
         #[arg(long)]
-        config: PathBuf,
+        config: Option<PathBuf>,
         /// Authorize a single connection; there are no automatic retries.
         #[arg(long)]
         allow_live_request: bool,
@@ -384,8 +491,9 @@ enum Cmd {
     #[cfg(feature = "experimental-signup")]
     LabSignup {
         /// Private JSON LabRegistrationConfig file; keep under ignored lab/.
-        #[arg(long, default_value = "lab/requests.json")]
-        config: PathBuf,
+        /// Defaults to the profile's config, else lab/requests.json.
+        #[arg(long)]
+        config: Option<PathBuf>,
         /// Authorize this single invocation to contact WhatsApp.
         #[arg(long)]
         allow_live_request: bool,
@@ -507,6 +615,34 @@ enum ContactsCmd {
 }
 
 #[derive(Subcommand)]
+enum AccountsCmd {
+    /// List the profiles in the profiles directory.
+    List,
+    /// Add a profile (refuses to overwrite).
+    Add {
+        #[arg(long)]
+        name: String,
+        /// Protocol database path for this account.
+        #[arg(long)]
+        store: PathBuf,
+        /// Local account id inside that store.
+        #[arg(long)]
+        account: String,
+        /// Private request configuration path.
+        #[arg(long)]
+        config: Option<PathBuf>,
+        /// Environment variable holding this account's master key.
+        #[arg(long)]
+        key_env: String,
+    },
+    /// Show one profile.
+    Show {
+        #[arg(long)]
+        name: String,
+    },
+}
+
+#[derive(Subcommand)]
 enum StoreCmd {
     /// Create the store (idempotent) and verify the master key opens it.
     Init,
@@ -559,6 +695,77 @@ async fn open_client(cli: &Cli, create: bool) -> Result<WhatsAppClient, Error> {
         .await
 }
 
+fn accounts(cli: &Cli, cmd: &AccountsCmd) -> Result<(), Error> {
+    let describe = |name: &str, p: &profiles::Profile| {
+        format!(
+            "{name}: store={} account={} key_env={} config={} store_exists={}",
+            p.store.display(),
+            p.account,
+            p.key_env,
+            p.config
+                .as_ref()
+                .map(|c| c.display().to_string())
+                .unwrap_or_else(|| "-".into()),
+            p.store.exists()
+        )
+    };
+    match cmd {
+        AccountsCmd::List => {
+            let all = profiles::list(&cli.profiles_dir)?;
+            if cli.json {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&all)
+                        .map_err(|e| Error::invalid("accounts", e.to_string()))?
+                );
+                return Ok(());
+            }
+            println!(
+                "accounts: {} profile(s) in {}",
+                all.len(),
+                cli.profiles_dir.display()
+            );
+            for (name, p) in &all {
+                println!("  {}", describe(name, p));
+            }
+            Ok(())
+        }
+        AccountsCmd::Add {
+            name,
+            store,
+            account,
+            config,
+            key_env,
+        } => {
+            let path = profiles::save(
+                &cli.profiles_dir,
+                name,
+                &profiles::Profile {
+                    store: store.clone(),
+                    account: account.clone(),
+                    config: config.clone(),
+                    key_env: key_env.clone(),
+                },
+            )?;
+            println!("accounts: wrote {}", path.display());
+            Ok(())
+        }
+        AccountsCmd::Show { name } => {
+            let p = profiles::load(&cli.profiles_dir, name)?;
+            if cli.json {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&p)
+                        .map_err(|e| Error::invalid("accounts", e.to_string()))?
+                );
+            } else {
+                println!("{}", describe(name, &p));
+            }
+            Ok(())
+        }
+    }
+}
+
 fn print_step(step: &RegistrationStep, json: bool) {
     if json {
         println!("{}", serde_json::json!({ "step": format!("{step:?}") }));
@@ -596,7 +803,10 @@ async fn run(cli: Cli) -> Result<(), Error> {
             config,
             message,
             allow_live_request,
-        } => outbox_send::run(&cli, config, message, *allow_live_request).await,
+        } => {
+            let config = cli.config_path(config.as_ref(), None)?;
+            outbox_send::run(&cli, &config, message, *allow_live_request).await
+        }
         #[cfg(feature = "experimental-transport")]
         Cmd::MediaList => media::list(&cli),
         #[cfg(feature = "experimental-transport")]
@@ -612,7 +822,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
             seconds,
             send_outbox,
         } => {
-            transport_receive::listen(&cli, config, *allow_live_request, *seconds, *send_outbox)
+            let config = cli.config_path(config.as_ref(), None)?;
+            transport_receive::listen(&cli, &config, *allow_live_request, *seconds, *send_outbox)
                 .await
         }
         #[cfg(feature = "experimental-transport")]
@@ -623,6 +834,15 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::Receipts => transport_receive::receipts_status(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Actions { show } => transport_receive::actions_status(&cli, show.as_deref()),
+        Cmd::Accounts { cmd } => accounts(&cli, cmd),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::LabPair {
+            from,
+            to,
+            text,
+            seconds,
+            allow_live_request,
+        } => transport_receive::lab_pair(&cli, from, to, text, *seconds, *allow_live_request).await,
         #[cfg(feature = "experimental-transport")]
         Cmd::Block { chat } => transport_receive::block(&cli, chat),
         #[cfg(feature = "experimental-transport")]
@@ -645,7 +865,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::ClearChat { chat } => transport_receive::clear_chat(&cli, chat),
         #[cfg(feature = "experimental-transport")]
         Cmd::MarkRead { config, chat, ids } => {
-            transport_receive::mark_read(&cli, config, chat, ids).await
+            let config = cli.config_path(config.as_ref(), None)?;
+            transport_receive::mark_read(&cli, &config, chat, ids).await
         }
         #[cfg(feature = "experimental-transport")]
         Cmd::LabOpenViewOnce => transport_receive::open_view_once(&cli),
@@ -653,7 +874,10 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::LabDownloadViewOnce {
             config,
             allow_live_request,
-        } => transport_receive::download_view_once(&cli, config, *allow_live_request).await,
+        } => {
+            let config = cli.config_path(config.as_ref(), None)?;
+            transport_receive::download_view_once(&cli, &config, *allow_live_request).await
+        }
         #[cfg(feature = "experimental-transport")]
         Cmd::LabInbox { inspect } => transport_receive::run(&cli, *inspect).await,
         #[cfg(feature = "experimental-transport")]
@@ -665,9 +889,10 @@ async fn run(cli: Cli) -> Result<(), Error> {
             receive,
             media_route,
         } => {
+            let config = cli.config_path(config.as_ref(), None)?;
             transport::run(
                 &cli,
-                config,
+                &config,
                 *allow_live_request,
                 *login,
                 message.as_deref(),
@@ -681,7 +906,10 @@ async fn run(cli: Cli) -> Result<(), Error> {
             config,
             allow_live_request,
             action,
-        } => signup::run(&cli, config, *allow_live_request, action).await,
+        } => {
+            let config = cli.config_path(config.as_ref(), Some("lab/requests.json"))?;
+            signup::run(&cli, &config, *allow_live_request, action).await
+        }
         Cmd::Keygen => {
             let key = MasterKey::generate()?;
             if std::io::stdout().is_terminal() {
@@ -1340,7 +1568,15 @@ fn master_key_bytes(key: &MasterKey) -> Zeroizing<Vec<u8>> {
 
 #[tokio::main]
 async fn main() -> ExitCode {
-    let cli = Cli::parse();
+    let matches = <Cli as clap::CommandFactory>::command().get_matches();
+    let mut cli = match <Cli as clap::FromArgMatches>::from_arg_matches(&matches) {
+        Ok(cli) => cli,
+        Err(e) => e.exit(),
+    };
+    if let Err(e) = cli.apply_profile(&matches) {
+        eprintln!("error: {e}");
+        return ExitCode::from(2);
+    }
     tracing_subscriber::fmt()
         .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
         .with_writer(std::io::stderr)
