@@ -783,6 +783,87 @@ pub fn assemble_complete_request(
     WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Register, &form)
 }
 
+/// Parameters of the comparison client's `/v2/challenge` request
+/// (2.26.37.71 `ChallengeRepository.A00` / `KotlinRegistrationBridge.A0I`):
+/// `challenge_type` selects the step (`email_enter` asks the server to send a
+/// code to the account's email, optionally naming the address; `email_verify`
+/// submits that code), with optional `email`, `code` and `oauth_token`. The
+/// OAuth path is not implemented.
+pub struct RegistrationChallengeParams {
+    challenge_type: &'static str,
+    email: Option<Zeroizing<String>>,
+    code: Option<Zeroizing<String>>,
+}
+
+impl fmt::Debug for RegistrationChallengeParams {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("RegistrationChallengeParams")
+            .field("challenge_type", &self.challenge_type)
+            .field("has_email", &self.email.is_some())
+            .field("has_code", &self.code.is_some())
+            .finish()
+    }
+}
+
+impl RegistrationChallengeParams {
+    /// Ask the server to send the email one-time code (`email_enter`).
+    pub fn email_enter(email: Option<&str>) -> Result<Self> {
+        let email = match email {
+            Some(value) => {
+                validate_parameter_text("email", value, false)?;
+                if !value.contains('@') || value.len() > 254 {
+                    return Err(Error::invalid("email", "not an email address"));
+                }
+                Some(Zeroizing::new(value.to_owned()))
+            }
+            None => None,
+        };
+        Ok(Self {
+            challenge_type: "email_enter",
+            email,
+            code: None,
+        })
+    }
+
+    /// Submit the email one-time code (`email_verify`).
+    pub fn email_verify(code: &str) -> Result<Self> {
+        validate_parameter_text("code", code, false)?;
+        if !code.bytes().all(|b| b.is_ascii_digit()) || code.len() > 16 {
+            return Err(Error::invalid("code", "email codes are 1..=16 digits"));
+        }
+        Ok(Self {
+            challenge_type: "email_verify",
+            email: None,
+            code: Some(Zeroizing::new(code.to_owned())),
+        })
+    }
+
+    /// The selected `challenge_type`.
+    pub fn challenge_type(&self) -> &'static str {
+        self.challenge_type
+    }
+
+    /// Append the challenge fields in the observed order.
+    pub fn append_to_form<'a>(
+        &self,
+        form: &'a mut RegistrationForm,
+    ) -> Result<&'a mut RegistrationForm> {
+        let mut fields = Vec::with_capacity(3);
+        fields.push((
+            "challenge_type",
+            self.challenge_type.to_owned(),
+            ValueEncoding::Encode,
+        ));
+        if let Some(value) = &self.email {
+            fields.push(("email", value.to_string(), ValueEncoding::Encode));
+        }
+        if let Some(value) = &self.code {
+            fields.push(("code", value.to_string(), ValueEncoding::Encode));
+        }
+        form.push_batch(fields)
+    }
+}
+
 /// Endpoint-specific parameters observed in the comparison client's account
 /// security-code request (`/v2/security`).
 pub struct RegistrationSecurityParams {
@@ -1688,6 +1769,7 @@ pub struct RegistrationResponseSecrets {
     passkey_credential: Option<Zeroizing<String>>,
     appeal_token: Option<Zeroizing<String>>,
     edge_routing_info: Option<Zeroizing<String>>,
+    email: Option<Zeroizing<String>>,
 }
 
 impl fmt::Debug for RegistrationResponseSecrets {
@@ -1699,6 +1781,7 @@ impl fmt::Debug for RegistrationResponseSecrets {
             .field("has_passkey_credential", &self.passkey_credential.is_some())
             .field("has_appeal_token", &self.appeal_token.is_some())
             .field("has_edge_routing_info", &self.edge_routing_info.is_some())
+            .field("has_email", &self.email.is_some())
             .finish()
     }
 }
@@ -1732,6 +1815,10 @@ impl RegistrationResponseSecrets {
     /// Remove and return edge-routing information, if present.
     pub fn take_edge_routing_info(&mut self) -> Option<Zeroizing<String>> {
         self.edge_routing_info.take()
+    }
+    /// The (possibly masked) email address the server named for a challenge.
+    pub fn take_email(&mut self) -> Option<Zeroizing<String>> {
+        self.email.take()
     }
 }
 
@@ -1808,6 +1895,14 @@ pub struct RegistrationResponse {
     pub security_code_set: bool,
     /// Whether the secure verifier flow is enabled.
     pub secure_verifier: bool,
+    /// Second-factor methods offered with a `challenge` refusal.
+    pub second_factor_methods: Option<Vec<SecondFactorMethod>>,
+    /// Whether the server considers this device trusted (challenge branch).
+    pub is_device_trusted: Option<bool>,
+    /// Email one-time-code retry delay.
+    pub email_otp_wait: Option<Duration>,
+    /// Email one-time-code length.
+    pub email_otp_length: Option<u32>,
     secrets: RegistrationResponseSecrets,
 }
 
@@ -1828,6 +1923,10 @@ impl fmt::Debug for RegistrationResponse {
             .field("voice_length", &self.voice_length)
             .field("security_code_set", &self.security_code_set)
             .field("secure_verifier", &self.secure_verifier)
+            .field("second_factor_methods", &self.second_factor_methods)
+            .field("is_device_trusted", &self.is_device_trusted)
+            .field("email_otp_wait", &self.email_otp_wait)
+            .field("email_otp_length", &self.email_otp_length)
             .field("secrets", &self.secrets)
             .finish()
     }
@@ -1858,6 +1957,7 @@ impl RegistrationResponse {
             raw.passkey_credential.as_ref(),
             raw.appeal_token.as_ref(),
             raw.edge_routing_info.as_ref(),
+            raw.email.as_ref(),
             raw.consent.parent_consent_url.as_ref(),
             raw.consent.pending.as_ref(),
         ]
@@ -1896,6 +1996,10 @@ impl RegistrationResponse {
             voice_length: raw.voice_length,
             security_code_set: raw.security_code_set,
             secure_verifier: raw.secure_verifier,
+            second_factor_methods: raw.second_factor_methods,
+            is_device_trusted: raw.is_device_trusted,
+            email_otp_wait: parse_seconds("email_otp_wait", raw.email_otp_wait)?,
+            email_otp_length: raw.email_otp_length,
             secrets: RegistrationResponseSecrets {
                 login: raw.login,
                 code: raw.code,
@@ -1903,6 +2007,7 @@ impl RegistrationResponse {
                 passkey_credential: raw.passkey_credential,
                 appeal_token: raw.appeal_token,
                 edge_routing_info: raw.edge_routing_info,
+                email: raw.email,
             },
         })
     }
@@ -1937,12 +2042,42 @@ struct RawRegistrationResponse {
     security_code_set: bool,
     #[serde(default)]
     secure_verifier: bool,
+    #[serde(default, deserialize_with = "bounded_second_factors")]
+    second_factor_methods: Option<Vec<SecondFactorMethod>>,
+    is_device_trusted: Option<bool>,
+    email_otp_wait: Option<SecondsValue>,
+    email_otp_length: Option<u32>,
     login: Option<Zeroizing<String>>,
     code: Option<Zeroizing<String>>,
     wipe_token: Option<Zeroizing<String>>,
     passkey_credential: Option<Zeroizing<String>>,
     appeal_token: Option<Zeroizing<String>>,
     edge_routing_info: Option<Zeroizing<String>>,
+    email: Option<Zeroizing<String>>,
+}
+
+/// Second-factor methods the comparison client reads from a `challenge`
+/// register refusal (`second_factor_methods`, `KotlinRegistrationBridge.A08`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Deserialize, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SecondFactorMethod {
+    /// One-time code sent to the account's email.
+    EmailOtp,
+    /// Confirmation on the previously registered device.
+    WaOld,
+    /// Unsupported method.
+    #[serde(other)]
+    Other,
+}
+
+fn bounded_second_factors<'de, D: serde::Deserializer<'de>>(
+    d: D,
+) -> std::result::Result<Option<Vec<SecondFactorMethod>>, D::Error> {
+    let methods = Option::<Vec<SecondFactorMethod>>::deserialize(d)?;
+    if methods.as_ref().is_some_and(|v| v.len() > 16) {
+        return Err(serde::de::Error::custom("too many second-factor methods"));
+    }
+    Ok(methods)
 }
 
 /// Known verification methods; unsupported values never retain arbitrary text.
@@ -3007,5 +3142,54 @@ mod tests {
         let debug = format!("{transport:?}");
         assert!(debug.contains("disabled"));
         assert!(!debug.contains("root"));
+    }
+
+    #[test]
+    fn challenge_response_fields_and_request_params() {
+        let body = br#"{"status":"fail","reason":"challenge","second_factor_methods":["email_otp","wa_old","future"],"is_device_trusted":false,"email_otp_wait":"30","email_otp_length":6,"email":"a***@example.com"}"#;
+        let mut response = RegistrationResponse::parse(Zeroizing::new(body.to_vec())).unwrap();
+        assert_eq!(response.status, RegistrationResponseStatus::Fail);
+        assert_eq!(response.reason, Some(RegistrationResponseReason::Challenge));
+        assert_eq!(
+            response.second_factor_methods,
+            Some(vec![
+                SecondFactorMethod::EmailOtp,
+                SecondFactorMethod::WaOld,
+                SecondFactorMethod::Other
+            ])
+        );
+        assert_eq!(response.is_device_trusted, Some(false));
+        assert_eq!(response.email_otp_wait, Some(Duration::from_secs(30)));
+        assert_eq!(response.email_otp_length, Some(6));
+        let mut secrets = response.take_secrets();
+        assert_eq!(
+            secrets.take_email().as_deref().map(String::as_str),
+            Some("a***@example.com")
+        );
+        let debug = format!("{response:?}");
+        assert!(!debug.contains("example.com"), "email hint is a secret");
+
+        let mut form = RegistrationForm::new();
+        RegistrationChallengeParams::email_enter(Some("user@example.com"))
+            .unwrap()
+            .append_to_form(&mut form)
+            .unwrap();
+        let encoded = WHATSAPP_2_26_37_70
+            .request(RegistrationEndpoint::Challenge, &form)
+            .unwrap();
+        assert!(encoded.url().ends_with("/v2/challenge"));
+        let mut verify = RegistrationForm::new();
+        RegistrationChallengeParams::email_verify("123456")
+            .unwrap()
+            .append_to_form(&mut verify)
+            .unwrap();
+        assert_eq!(
+            RegistrationChallengeParams::email_verify("123456")
+                .unwrap()
+                .challenge_type(),
+            "email_verify"
+        );
+        assert!(RegistrationChallengeParams::email_enter(Some("not-an-address")).is_err());
+        assert!(RegistrationChallengeParams::email_verify("12a4").is_err());
     }
 }

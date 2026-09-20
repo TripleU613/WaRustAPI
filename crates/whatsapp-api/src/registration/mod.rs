@@ -156,6 +156,11 @@ pub enum RequiredAction {
     EnterCode(ChallengeHandle),
     /// Enter the account PIN (two-step verification).
     EnterPin(ChallengeHandle),
+    /// Ask the server to send the email one-time code (`/v2/challenge`
+    /// `email_enter`); the server named email verification as the second factor.
+    RequestEmailCode(ChallengeHandle),
+    /// Enter the one-time code delivered to the account's email.
+    EnterEmailCode(ChallengeHandle),
     /// Wait until the given time before retrying.
     WaitForCooldown {
         /// Earliest retry time.
@@ -281,6 +286,8 @@ pub enum Answer {
     Code(Zeroizing<String>),
     /// Account PIN.
     Pin(Zeroizing<String>),
+    /// One-time code delivered to the account's email (`/v2/challenge`).
+    EmailCode(Zeroizing<String>),
 }
 
 impl fmt::Debug for Answer {
@@ -288,6 +295,7 @@ impl fmt::Debug for Answer {
         match self {
             Self::Code(_) => f.write_str("Answer::Code(<redacted>)"),
             Self::Pin(_) => f.write_str("Answer::Pin(<redacted>)"),
+            Self::EmailCode(_) => f.write_str("Answer::EmailCode(<redacted>)"),
         }
     }
 }
@@ -307,6 +315,18 @@ pub enum RegistrationState {
     },
     /// A supported additional step is required.
     NeedsUserAction {
+        /// Bound handle.
+        handle: ChallengeHandle,
+    },
+    /// `/v2/register` answered `challenge`: the account's email second factor
+    /// must be satisfied before registration completes. Next: request the
+    /// email code.
+    EmailChallengeRequired {
+        /// Bound handle.
+        handle: ChallengeHandle,
+    },
+    /// The email one-time code was requested; awaiting its entry.
+    EmailCodePending {
         /// Bound handle.
         handle: ChallengeHandle,
     },
@@ -342,6 +362,8 @@ impl RegistrationState {
             Self::Preparing => "preparing",
             Self::ChallengePending { .. } => "challenge_pending",
             Self::NeedsUserAction { .. } => "needs_user_action",
+            Self::EmailChallengeRequired { .. } => "email_challenge_required",
+            Self::EmailCodePending { .. } => "email_code_pending",
             Self::Verifying { .. } => "verifying",
             Self::RegistrationOutcomeUnknown { .. } => "outcome_unknown",
             Self::Registered => "registered",
@@ -387,9 +409,24 @@ impl RegistrationState {
                     S::Verifying { .. } | S::Blocked { .. }
                 )
                 | (
+                    S::EmailChallengeRequired { .. } | S::EmailCodePending { .. },
+                    S::Verifying { .. } | S::CoolingDown { .. } | S::Blocked { .. }
+                )
+                | (
+                    S::Blocked {
+                        reason: BlockedReason::ServerRefused {
+                            reason: Some(wire::RegistrationResponseReason::Challenge),
+                            ..
+                        }
+                    },
+                    S::EmailChallengeRequired { .. }
+                )
+                | (
                     S::Verifying { .. },
                     S::Registered
                         | S::NeedsUserAction { .. }
+                        | S::EmailChallengeRequired { .. }
+                        | S::EmailCodePending { .. }
                         | S::ChallengePending { .. }
                         | S::RegistrationOutcomeUnknown { .. }
                         | S::CoolingDown { .. }
@@ -535,6 +572,22 @@ pub trait RegistrationFlow: Send + Sync + fmt::Debug {
         answer: &'a Answer,
     ) -> RegistrationFuture<'a>;
 
+    /// Ask the server to send the email second-factor code (`/v2/challenge`
+    /// `email_enter`). Returns the next state; never persists the address.
+    fn request_email_code<'a>(
+        &'a self,
+        _attempt: &'a RegistrationAttempt,
+        _handle: &'a ChallengeHandle,
+        _email: Option<&'a str>,
+    ) -> RegistrationFuture<'a> {
+        Box::pin(async {
+            Err(Error::invalid(
+                "challenge",
+                "flow does not implement the email challenge",
+            ))
+        })
+    }
+
     /// Reconcile a request whose response was lost. Implementations must use
     /// an observed read-safe flow and must not blindly repeat the mutation.
     fn reconcile<'a>(&'a self, _attempt: &'a RegistrationAttempt) -> RegistrationFuture<'a> {
@@ -627,6 +680,18 @@ pub trait ComparisonRequestFactory: Send + Sync + fmt::Debug {
     }
     /// Persist keys and identifiers needed by later request construction.
     fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()>;
+
+    /// Build a `/v2/challenge` request (email second factor).
+    fn challenge_request(
+        &self,
+        _attempt: &RegistrationAttempt,
+        _params: &wire::RegistrationChallengeParams,
+    ) -> Result<wire::EncodedRegistrationRequest> {
+        Err(Error::invalid(
+            "challenge",
+            "factory does not implement the email challenge",
+        ))
+    }
 
     /// Build the first `/v2/code` mutation.
     fn code_request(
@@ -916,6 +981,41 @@ impl RegistrationFlow for ComparisonHttpFlow {
         })
     }
 
+    fn request_email_code<'a>(
+        &'a self,
+        attempt: &'a RegistrationAttempt,
+        handle: &'a ChallengeHandle,
+        email: Option<&'a str>,
+    ) -> RegistrationFuture<'a> {
+        Box::pin(async move {
+            let request = self.requests.challenge_request(
+                attempt,
+                &wire::RegistrationChallengeParams::email_enter(email)?,
+            )?;
+            let (status_code, response) = self.send(request).await?;
+            if (200..300).contains(&status_code)
+                && matches!(
+                    response.status,
+                    wire::RegistrationResponseStatus::Sent | wire::RegistrationResponseStatus::Ok
+                )
+            {
+                let wait = response.email_otp_wait.or(response.retry_after);
+                return Ok(RegistrationState::EmailCodePending {
+                    handle: ChallengeHandle {
+                        attempt: attempt.id,
+                        generation: attempt.generation,
+                        step: handle.step.saturating_add(1),
+                        method: ChallengeMethod::Other("email_otp".into()),
+                        expires_at: None,
+                        retry_after: wait.map(|wait| Timestamp::now().saturating_add(wait)),
+                    },
+                }
+                .into());
+            }
+            Ok(Self::blocked_response(status_code, &response))
+        })
+    }
+
     fn submit<'a>(
         &'a self,
         attempt: &'a RegistrationAttempt,
@@ -926,6 +1026,10 @@ impl RegistrationFlow for ComparisonHttpFlow {
             let request = match answer {
                 Answer::Code(code) => self.requests.complete_request(attempt, code)?,
                 Answer::Pin(pin) => self.requests.security_request(attempt, pin)?,
+                Answer::EmailCode(code) => self.requests.challenge_request(
+                    attempt,
+                    &wire::RegistrationChallengeParams::email_verify(code.as_str())?,
+                )?,
             };
             let (status_code, mut response) = self.send(request).await?;
             if (200..300).contains(&status_code)
@@ -933,12 +1037,38 @@ impl RegistrationFlow for ComparisonHttpFlow {
             {
                 return Ok(RegistrationFlowOutput::registered(Self::completion_from(
                     &mut response,
-                    if matches!(answer, Answer::Code(_)) {
-                        "/v2/register"
-                    } else {
-                        "/v2/security"
+                    match answer {
+                        Answer::Code(_) => "/v2/register",
+                        Answer::Pin(_) => "/v2/security",
+                        Answer::EmailCode(_) => "/v2/challenge",
                     },
                 )?));
+            }
+            // 2.26.37.71 `VerifyPhoneNumber.A5P` launchEmailChallengeFlow: a
+            // `challenge` refusal of /v2/register moves to the email second
+            // factor. Only email_otp is implemented; wa_old/passkey stay blocked.
+            if (200..300).contains(&status_code)
+                && response.status == wire::RegistrationResponseStatus::Fail
+                && matches!(answer, Answer::Code(_))
+                && response.reason == Some(wire::RegistrationResponseReason::Challenge)
+                && response
+                    .second_factor_methods
+                    .as_ref()
+                    .is_none_or(|m| m.contains(&wire::SecondFactorMethod::EmailOtp))
+            {
+                return Ok(RegistrationState::EmailChallengeRequired {
+                    handle: ChallengeHandle {
+                        attempt: attempt.id,
+                        generation: attempt.generation,
+                        step: handle.step.saturating_add(1),
+                        method: ChallengeMethod::Other("email_otp".into()),
+                        expires_at: None,
+                        retry_after: response
+                            .retry_after
+                            .map(|wait| Timestamp::now().saturating_add(wait)),
+                    },
+                }
+                .into());
             }
             if (200..300).contains(&status_code)
                 && response.status == wire::RegistrationResponseStatus::Fail
@@ -985,6 +1115,12 @@ fn step_for(state: &RegistrationState) -> RegistrationStep {
         }
         RegistrationState::NeedsUserAction { handle } => {
             RegistrationStep::Action(RequiredAction::EnterPin(handle.clone()))
+        }
+        RegistrationState::EmailChallengeRequired { handle } => {
+            RegistrationStep::Action(RequiredAction::RequestEmailCode(handle.clone()))
+        }
+        RegistrationState::EmailCodePending { handle } => {
+            RegistrationStep::Action(RequiredAction::EnterEmailCode(handle.clone()))
         }
         RegistrationState::CoolingDown { until } => {
             RegistrationStep::Action(RequiredAction::WaitForCooldown { until: *until })
@@ -1428,7 +1564,8 @@ impl RegistrationService {
         answer: Answer,
     ) -> Result<RegistrationStep> {
         let is_pin = matches!(answer, Answer::Pin(_));
-        let (Answer::Code(value) | Answer::Pin(value)) = &answer;
+        let is_email = matches!(answer, Answer::EmailCode(_));
+        let (Answer::Code(value) | Answer::Pin(value) | Answer::EmailCode(value)) = &answer;
         if value.is_empty() || value.len() > 16 || !value.bytes().all(|v| v.is_ascii_digit()) {
             return Err(Error::invalid(
                 "challenge",
@@ -1444,7 +1581,8 @@ impl RegistrationService {
                     })?;
                     let bound = match &attempt.state {
                         RegistrationState::ChallengePending { handle: h }
-                        | RegistrationState::NeedsUserAction { handle: h } => h.clone(),
+                        | RegistrationState::NeedsUserAction { handle: h }
+                        | RegistrationState::EmailCodePending { handle: h } => h.clone(),
                         other => {
                             return Err(Error::invalid(
                                 "challenge",
@@ -1456,6 +1594,8 @@ impl RegistrationService {
                         }
                     };
                     if is_pin != matches!(attempt.state, RegistrationState::NeedsUserAction { .. })
+                        || is_email
+                            != matches!(attempt.state, RegistrationState::EmailCodePending { .. })
                     {
                         return Err(Error::invalid(
                             "challenge",
@@ -1518,6 +1658,131 @@ impl RegistrationService {
                 Err(error)
             }
         }
+    }
+
+    /// Ask the server to send the email second-factor code. Requires the
+    /// `EmailChallengeRequired` state; the address, when given, is used for
+    /// this request only and never persisted.
+    pub async fn request_email_code(
+        &self,
+        handle: ChallengeHandle,
+        email: Option<String>,
+    ) -> Result<RegistrationStep> {
+        let (attempt, bound) = self
+            .store
+            .run_blocking(move |s| {
+                s.write(|tx| {
+                    let mut attempt = Self::load_current(tx)?.ok_or_else(|| {
+                        Error::invalid("challenge", "no registration attempt in progress")
+                    })?;
+                    let RegistrationState::EmailChallengeRequired { handle: bound } =
+                        &attempt.state
+                    else {
+                        return Err(Error::invalid(
+                            "challenge",
+                            format!(
+                                "attempt is not awaiting an email code request (state {})",
+                                attempt.state.name()
+                            ),
+                        ));
+                    };
+                    let bound = bound.clone();
+                    if bound.attempt != handle.attempt
+                        || bound.generation != handle.generation
+                        || bound.step != handle.step
+                        || bound.generation != tx.generation()
+                    {
+                        return Err(Error::invalid(
+                            "challenge",
+                            "handle is not bound to the current step",
+                        ));
+                    }
+                    let now = Timestamp::now();
+                    if let Some(until) = bound.retry_after
+                        && now < until
+                    {
+                        return Err(Error::RateLimited {
+                            retry_after: Some(std::time::Duration::from_millis(
+                                until.as_millis().saturating_sub(now.as_millis()) as u64,
+                            )),
+                            code: None,
+                        });
+                    }
+                    attempt.transition(RegistrationState::Verifying { step: bound.step }, now)?;
+                    Self::save_current(tx, &attempt)?;
+                    Ok((attempt, bound))
+                })
+            })
+            .await?;
+        let result = self
+            .flow
+            .request_email_code(&attempt, &bound, email.as_deref())
+            .await;
+        match result {
+            Ok(next) => {
+                self.finish_transition(attempt.id, attempt.generation, "verifying", next)
+                    .await
+            }
+            Err(error) => {
+                self.finish_transition(
+                    attempt.id,
+                    attempt.generation,
+                    "verifying",
+                    RegistrationState::RegistrationOutcomeUnknown { step: bound.step }.into(),
+                )
+                .await?;
+                Err(error)
+            }
+        }
+    }
+
+    /// Operator recovery, no network: an attempt refused with `challenge`
+    /// before this branch existed moves to `EmailChallengeRequired` so the
+    /// email second factor can be requested. Only that exact refusal qualifies.
+    pub async fn resume_email_challenge(&self) -> Result<RegistrationStep> {
+        self.store
+            .run_blocking(move |s| {
+                s.write(|tx| {
+                    let mut attempt = Self::load_current(tx)?.ok_or_else(|| {
+                        Error::invalid("challenge", "no registration attempt in progress")
+                    })?;
+                    if !matches!(
+                        attempt.state,
+                        RegistrationState::Blocked {
+                            reason: BlockedReason::ServerRefused {
+                                reason: Some(wire::RegistrationResponseReason::Challenge),
+                                ..
+                            }
+                        }
+                    ) {
+                        return Err(Error::invalid(
+                            "challenge",
+                            format!(
+                                "only a `challenge` refusal can resume (state {})",
+                                attempt.state.name()
+                            ),
+                        ));
+                    }
+                    let step = u32::try_from(attempt.history_len()).unwrap_or(u32::MAX);
+                    let now = Timestamp::now();
+                    attempt.transition(
+                        RegistrationState::EmailChallengeRequired {
+                            handle: ChallengeHandle {
+                                attempt: attempt.id,
+                                generation: attempt.generation,
+                                step,
+                                method: ChallengeMethod::Other("email_otp".into()),
+                                expires_at: None,
+                                retry_after: None,
+                            },
+                        },
+                        now,
+                    )?;
+                    Self::save_current(tx, &attempt)?;
+                    Ok(step_for(&attempt.state))
+                })
+            })
+            .await
     }
 
     /// Reconcile an attempt after a request result was lost.
@@ -1621,6 +1886,40 @@ mod tests {
             "no implicit re-registration"
         );
         assert!(S::Registered.can_transition(&S::Unregistered));
+        assert!(
+            S::Verifying { step: 2 }
+                .can_transition(&S::EmailChallengeRequired { handle: h.clone() })
+        );
+        assert!(
+            S::EmailChallengeRequired { handle: h.clone() }
+                .can_transition(&S::Verifying { step: 2 })
+        );
+        assert!(
+            S::Verifying { step: 2 }.can_transition(&S::EmailCodePending { handle: h.clone() })
+        );
+        assert!(
+            S::EmailCodePending { handle: h.clone() }.can_transition(&S::Verifying { step: 3 })
+        );
+        assert!(
+            S::Blocked {
+                reason: BlockedReason::ServerRefused {
+                    code: None,
+                    http_status: Some(200),
+                    reason: Some(wire::RegistrationResponseReason::Challenge)
+                }
+            }
+            .can_transition(&S::EmailChallengeRequired { handle: h.clone() })
+        );
+        assert!(
+            !S::Blocked {
+                reason: BlockedReason::ServerRefused {
+                    code: None,
+                    http_status: Some(200),
+                    reason: Some(wire::RegistrationResponseReason::SecurityCode)
+                }
+            }
+            .can_transition(&S::EmailChallengeRequired { handle: h.clone() })
+        );
         assert!(
             !S::Blocked {
                 reason: BlockedReason::ServerRefused {
@@ -1799,6 +2098,16 @@ mod tests {
             let mut form = wire::RegistrationForm::new();
             form.push("code", pin.as_str())?;
             wire::WHATSAPP_2_26_37_70.request(wire::RegistrationEndpoint::Security, &form)
+        }
+
+        fn challenge_request(
+            &self,
+            _attempt: &RegistrationAttempt,
+            params: &wire::RegistrationChallengeParams,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            let mut form = wire::RegistrationForm::new();
+            params.append_to_form(&mut form)?;
+            wire::WHATSAPP_2_26_37_70.request(wire::RegistrationEndpoint::Challenge, &form)
         }
     }
 
@@ -1990,6 +2299,9 @@ mod tests {
             if body == b"invalid JSON" {
                 assert!(result.is_err());
                 assert!(matches!(svc.current().await.unwrap().unwrap().state, RegistrationState::RegistrationOutcomeUnknown { .. }));
+            } else if body.starts_with(br#"{"status":"fail","reason":"challenge""#) {
+                // The email second factor is a supported next step, not a replay.
+                assert!(matches!(result.unwrap(), RegistrationStep::Action(RequiredAction::RequestEmailCode(_))));
             } else {
                 assert!(matches!(result.unwrap(), RegistrationStep::Blocked(_) | RegistrationStep::Action(RequiredAction::WaitForCooldown { .. })));
             }
@@ -2000,6 +2312,146 @@ mod tests {
             assert!(transport.responses.lock().unwrap().is_empty());
             assert_ne!(s.read(AccountRecord::load).unwrap().unwrap().registration, RegistrationStatus::Registered);
         }
+    }
+
+    #[tokio::test]
+    async fn register_challenge_runs_the_email_second_factor_to_completion() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", br#"{"status":"sent","sms_wait":10}"#.as_slice()),
+                (
+                    "/v2/register",
+                    br#"{"status":"fail","reason":"challenge","second_factor_methods":["email_otp","wa_old"],"is_device_trusted":false}"#.as_slice(),
+                ),
+                (
+                    "/v2/challenge",
+                    br#"{"status":"sent","email_otp_wait":5,"email_otp_length":6,"email":"a***@example.com"}"#.as_slice(),
+                ),
+                (
+                    "/v2/challenge",
+                    br#"{"status":"ok","login":"15551234567","edge_routing_info":"AQ=="}"#.as_slice(),
+                ),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        let RegistrationStep::Action(RequiredAction::RequestEmailCode(h2)) = service
+            .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap()
+        else {
+            panic!("expected the email challenge")
+        };
+        assert!(matches!(
+            service.current().await.unwrap().unwrap().state,
+            RegistrationState::EmailChallengeRequired { .. }
+        ));
+        // A wrong answer kind is rejected without consuming anything.
+        assert!(
+            service
+                .submit(h2.clone(), Answer::EmailCode(Zeroizing::new("1".into())))
+                .await
+                .is_err()
+        );
+        let RegistrationStep::Action(RequiredAction::EnterEmailCode(h3)) =
+            service.request_email_code(h2, None).await.unwrap()
+        else {
+            panic!("expected email code entry")
+        };
+        // The email wait applies to re-requesting, not to entering the code.
+        assert!(h3.retry_after.is_some());
+        assert!(
+            service
+                .submit(h3.clone(), Answer::Pin(Zeroizing::new("1234".into())))
+                .await
+                .is_err(),
+            "a PIN is not an email code"
+        );
+        assert_eq!(
+            service
+                .submit(h3, Answer::EmailCode(Zeroizing::new("654321".into())))
+                .await
+                .unwrap(),
+            RegistrationStep::Completed
+        );
+        assert!(transport.responses.lock().unwrap().is_empty());
+        let saved = service.current().await.unwrap().unwrap();
+        assert!(matches!(saved.state, RegistrationState::Registered));
+    }
+
+    #[tokio::test]
+    async fn saved_challenge_refusal_resumes_into_the_email_step_once() {
+        let (_d, s) = store();
+        let profile = ProtocolProfile::android_reference().unwrap();
+        let transport = Arc::new(ComparisonTransport {
+            responses: std::sync::Mutex::new(std::collections::VecDeque::from([
+                ("/v2/code", br#"{"status":"sent"}"#.as_slice()),
+                // A response written before this branch existed: no methods listed
+                // and, for this test, a refusal we then treat as `challenge` blocked.
+                (
+                    "/v2/register",
+                    br#"{"status":"fail","reason":"challenge","second_factor_methods":["wa_old"]}"#
+                        .as_slice(),
+                ),
+                (
+                    "/v2/challenge",
+                    br#"{"status":"fail","reason":"too_many_guesses","retry_after":60}"#.as_slice(),
+                ),
+            ])),
+        });
+        let service = RegistrationService::new(
+            s.clone(),
+            &profile,
+            Arc::new(ComparisonHttpFlow::new(
+                Arc::new(ComparisonRequests),
+                transport.clone(),
+            )),
+        );
+        let RegistrationStep::Action(RequiredAction::EnterCode(h)) =
+            service.begin(phone(), ChallengeMethod::Sms).await.unwrap()
+        else {
+            panic!("expected code")
+        };
+        // Only wa_old offered: stays blocked with the challenge refusal.
+        let RegistrationStep::Blocked(BlockedReason::ServerRefused {
+            reason: Some(wire::RegistrationResponseReason::Challenge),
+            ..
+        }) = service
+            .submit(h, Answer::Code(Zeroizing::new("123456".into())))
+            .await
+            .unwrap()
+        else {
+            panic!("expected a challenge refusal")
+        };
+        // Operator recovery moves it to the email step without any request.
+        let RegistrationStep::Action(RequiredAction::RequestEmailCode(h2)) =
+            service.resume_email_challenge().await.unwrap()
+        else {
+            panic!("expected the email challenge")
+        };
+        assert!(service.resume_email_challenge().await.is_err(), "not twice");
+        // A refused email request cools down and keeps the attempt.
+        assert!(matches!(
+            service
+                .request_email_code(h2, Some("a@example.com".into()))
+                .await
+                .unwrap(),
+            RegistrationStep::Action(RequiredAction::WaitForCooldown { .. })
+        ));
+        assert!(transport.responses.lock().unwrap().is_empty());
     }
 
     #[tokio::test]

@@ -79,6 +79,18 @@ pub(super) enum Action {
     VerifyCode,
     /// Submit one account PIN from redirected stdin; never resets the account PIN.
     VerifyPin,
+    /// Local only: move a `challenge` refusal of /v2/register to the email
+    /// second-factor step (2.26.37.71 launchEmailChallengeFlow). No request.
+    ResumeEmailChallenge,
+    /// Ask the server to send the email one-time code (`/v2/challenge`
+    /// `email_enter`); pass the account's email only when the server needs it.
+    RequestEmailCode {
+        /// Email address to name in the request (not persisted).
+        #[arg(long)]
+        email: Option<String>,
+    },
+    /// Submit the email one-time code from redirected stdin (`email_verify`).
+    VerifyEmailCode,
 }
 
 fn invalid(message: &'static str) -> Error {
@@ -88,7 +100,7 @@ fn invalid(message: &'static str) -> Error {
 fn authorize(action: &Action, allow_live: bool) -> Result<(), Error> {
     if !matches!(
         action,
-        Action::Template | Action::Status | Action::Preview { .. }
+        Action::Template | Action::Status | Action::Preview { .. } | Action::ResumeEmailChallenge
     ) && !allow_live
     {
         return Err(invalid(
@@ -423,14 +435,30 @@ pub(super) async fn run(
         Action::DiagnoseEncryptedParameter => {
             service.diagnose_encrypted_parameter_once(phone).await?
         }
-        Action::VerifyCode | Action::VerifyPin => {
+        Action::ResumeEmailChallenge => service.resume_email_challenge().await?,
+        Action::RequestEmailCode { email } => {
+            let attempt = service
+                .current()
+                .await?
+                .ok_or_else(|| invalid("no registration attempt"))?;
+            let RegistrationState::EmailChallengeRequired { handle } = &attempt.state else {
+                return Err(invalid(
+                    "current state does not permit an email code request; inspect status",
+                ));
+            };
+            service
+                .request_email_code(handle.clone(), email.clone())
+                .await?
+        }
+        Action::VerifyCode | Action::VerifyPin | Action::VerifyEmailCode => {
             let attempt = service
                 .current()
                 .await?
                 .ok_or_else(|| invalid("no registration attempt"))?;
             let handle = match (&attempt.state, action) {
                 (RegistrationState::ChallengePending { handle }, Action::VerifyCode)
-                | (RegistrationState::NeedsUserAction { handle }, Action::VerifyPin) => {
+                | (RegistrationState::NeedsUserAction { handle }, Action::VerifyPin)
+                | (RegistrationState::EmailCodePending { handle }, Action::VerifyEmailCode) => {
                     handle.clone()
                 }
                 _ => {
@@ -445,10 +473,10 @@ pub(super) async fn run(
                 ));
             }
             let value = answer(std::io::stdin().lock())?;
-            let value = if matches!(action, Action::VerifyCode) {
-                Answer::Code(value)
-            } else {
-                Answer::Pin(value)
+            let value = match action {
+                Action::VerifyCode => Answer::Code(value),
+                Action::VerifyEmailCode => Answer::EmailCode(value),
+                _ => Answer::Pin(value),
             };
             service.submit(handle, value).await?
         }

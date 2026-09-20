@@ -462,6 +462,24 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
         record.bundle()?.append_to_form(&mut form)?;
         WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Security, &form)
     }
+
+    /// `/v2/challenge` (2.26.37.71 `KotlinRegistrationBridge.A0I`): the shared
+    /// identity parameters, the challenge fields, configured extras and the
+    /// same key bundle the register request carries ("e2e keys not available"
+    /// aborts the client's request).
+    fn challenge_request(
+        &self,
+        attempt: &RegistrationAttempt,
+        params: &RegistrationChallengeParams,
+    ) -> Result<EncodedRegistrationRequest> {
+        let record = self.load(attempt)?;
+        let mut form = RegistrationForm::new();
+        record.common()?.append_to_form(&mut form)?;
+        params.append_to_form(&mut form)?;
+        super::request::append_fields(&mut form, &record.config.fields.challenge)?;
+        record.bundle()?.append_to_form(&mut form)?;
+        WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Challenge, &form)
+    }
 }
 
 #[cfg(test)]

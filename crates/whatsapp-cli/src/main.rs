@@ -782,6 +782,16 @@ fn print_step(step: &RegistrationStep, json: bool) {
         RegistrationStep::Action(RequiredAction::EnterPin(_)) => {
             println!("registration: enter the account PIN")
         }
+        RegistrationStep::Action(RequiredAction::RequestEmailCode(_)) => {
+            println!(
+                "registration: the server requires the account's email second factor; run `lab-signup --allow-live-request request-email-code [--email <address>]`"
+            )
+        }
+        RegistrationStep::Action(RequiredAction::EnterEmailCode(_)) => {
+            println!(
+                "registration: enter the code delivered to the account's email (`verify-email-code` on redirected stdin)"
+            )
+        }
         RegistrationStep::Action(RequiredAction::WaitForCooldown { until }) => {
             println!(
                 "registration: cooling down until unix {}",

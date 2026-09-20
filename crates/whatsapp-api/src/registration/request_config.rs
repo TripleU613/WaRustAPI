@@ -249,6 +249,9 @@ pub struct EndpointFields {
     pub register: BTreeMap<String, Zeroizing<String>>,
     /// Extra `/v2/security` fields; no PIN reset/wipe operation is exposed.
     pub security: BTreeMap<String, Zeroizing<String>>,
+    /// Extra `/v2/challenge` fields (email second factor).
+    #[serde(default)]
+    pub challenge: BTreeMap<String, Zeroizing<String>>,
     /// Raw additional-parameter bytes for `/v2/code` (`Hvq.A06` encoding).
     /// JSON accepts UTF-8 strings or arrays of byte integers, never pre-encoding.
     #[serde(deserialize_with = "deserialize_byte_fields")]

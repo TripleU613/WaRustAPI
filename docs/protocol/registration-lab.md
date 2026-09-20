@@ -276,6 +276,29 @@ reported state before any further action. Cooldown, blocked, and unknown-outcome
 states must not be worked around by resetting stores or repeatedly requesting codes.
 No live signup has been performed or shown to work by adding this command.
 
+### Email second factor after the OTP
+
+When `/v2/register` answers `status=fail reason=challenge`, the comparison
+client (2.26.37.71 `VerifyPhoneNumber.A5P` launchEmailChallengeFlow) runs the
+email second factor: `ChallengeRepository.A00` posts `/v2/challenge` with
+`challenge_type=email_enter` (optionally `email`) to have a code sent to the
+account's email, then `challenge_type=email_verify` with `code`; the
+`KotlinRegistrationBridge.A0I` parser reads `status` (`sent`/`ok`/`fail`),
+`login`, `reason` and `retry_after`, and a success starts the main app. The
+register refusal itself carries `second_factor_methods` and
+`is_device_trusted`. Here:
+
+```sh
+target/debug/whatsapp-cli --profile b lab-signup status
+target/debug/whatsapp-cli --profile b lab-signup resume-email-challenge        # only for a saved `challenge` refusal
+target/debug/whatsapp-cli --profile b lab-signup --allow-live-request request-email-code [--email <address>]
+printf '%s' "$code" | target/debug/whatsapp-cli --profile b lab-signup --allow-live-request verify-email-code
+```
+
+The address is used for that one request and never persisted. Extra
+`/v2/challenge` fields go in the private JSON `fields.challenge` map. `wa_old`
+and passkey second factors are not implemented and leave the attempt blocked.
+
 ### One-shot legacy diagnostic recovery
 
 `lab-signup --allow-live-request diagnose-legacy-refusal` is an explicit lab-only
