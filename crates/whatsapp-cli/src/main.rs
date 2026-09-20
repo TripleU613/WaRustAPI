@@ -119,6 +119,9 @@ enum Cmd {
     /// Show one-time prekey counts and upload batches (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Prekeys,
+    /// Show queued explicit receipts and their server outcomes (offline, redacted).
+    #[cfg(feature = "experimental-transport")]
+    Receipts,
     /// Show a contact's saved device list, or queue a device sync for the next session.
     #[cfg(feature = "experimental-transport")]
     Devices {
@@ -381,6 +384,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::OutboxPending => transport_receive::outbox_pending(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Prekeys => transport_receive::prekeys_status(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::Receipts => transport_receive::receipts_status(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Devices { chat, request } => transport_receive::devices(&cli, chat, *request),
         #[cfg(feature = "experimental-transport")]

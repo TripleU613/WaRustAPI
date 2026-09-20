@@ -182,6 +182,66 @@ pub fn queue_read(
     })
 }
 
+/// One queued explicit receipt's outcome, redacted for operators.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct ReceiptOutcome {
+    /// `played` or `read`.
+    pub kind: String,
+    /// `pending`, `outcome_unknown`, `server_acknowledged` or `refused`.
+    pub status: String,
+    /// Wire message id the receipt refers to.
+    pub message_id: String,
+}
+/// Every explicit receipt ever queued, in key order. No recipient is printed.
+pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ReceiptOutcome>> {
+    store.read(|tx| {
+        let mut out = Vec::new();
+        let mut cursor = None;
+        loop {
+            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+            let done = rows.len() < 256;
+            cursor = rows.last().map(|(key, _)| key.clone());
+            for (key, _) in rows {
+                let Ok(name) = std::str::from_utf8(&key) else {
+                    continue;
+                };
+                let Some(rest) = name.strip_prefix("receipt-outbox:") else {
+                    continue;
+                };
+                let Some(row): Option<serde_json::Value> =
+                    tx.get_json(Table::Checkpoints, &key, 1)?
+                else {
+                    continue;
+                };
+                let kind = rest.rsplit(':').next().unwrap_or("").to_owned();
+                let message_id = row["wire"]
+                    .as_array()
+                    .and_then(|bytes| {
+                        let wire: Vec<u8> = bytes
+                            .iter()
+                            .filter_map(|b| b.as_u64().map(|b| b as u8))
+                            .collect();
+                        decode(&wire).ok()
+                    })
+                    .and_then(|node| {
+                        node.get_attr("id")
+                            .and_then(|v| v.as_text())
+                            .map(str::to_owned)
+                    })
+                    .unwrap_or_default();
+                out.push(ReceiptOutcome {
+                    kind,
+                    status: row["status"].as_str().unwrap_or("").to_owned(),
+                    message_id,
+                });
+            }
+            if done {
+                return Ok(out);
+            }
+        }
+    })
+}
+
 /// Reserve at most sixteen pending explicit receipts before any socket write.
 /// Unknown outcomes are excluded, including after a crash/reconnect.
 pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {

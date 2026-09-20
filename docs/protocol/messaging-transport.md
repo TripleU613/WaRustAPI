@@ -473,7 +473,7 @@ session); an `iq type=error` records the sanitized code and returns the keys to
 unsent without automatic retry. Local deviations, stated: a fresh store
 generates and uploads in the same session (the APK does these on separate
 runs), and no backoff/retry is implemented. `whatsapp-cli prekeys` prints
-redacted counts offline. No live upload has been performed yet.
+redacted counts offline. The first live upload (50 keys) was server-acknowledged on 2026-09-19.
 
 ### Contact device-list synchronization (comparison 2.26.37.71)
 
@@ -512,7 +512,7 @@ timestamp keeps the saved list; refusals record the code; unanswered queries
 leave users pending for a later session (queries are reads and safe to repeat).
 `client.device_list(&chat)` / `request_device_sync(&chat)` and `whatsapp-cli
 devices --chat <jid> [--request]` are offline. Device lists are not yet used
-for send fan-out. `sid` is client-chosen. No live query has run.
+for send fan-out. `sid` is client-chosen. The first live query (2026-09-19) returned one primary device and no signed list for a single-device contact.
 
 ### Public ordinary-media download
 

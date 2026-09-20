@@ -16,8 +16,9 @@ Comparison APK evidence is 2.26.37.70, not the pinned 2.26.36.75 profile.
   are verified and stored; own-account sync, app-state snapshots and fan-out remain.
 - [x] Crash/reconnect coverage for receiving, consumption and uncertain sends,
   including socket cut points on the real session loop; disk-full remains uncovered.
-- [ ] Integration with the normal account runtime/outbox (CLI session now
-  receives and drains; live combined-session check and handset confirmation pending).
+- [x] Integration with the normal account runtime/outbox (one live combined
+  session sent a queued text with delivery and read receipts; handset display
+  unconfirmed).
 
 ## Verification and operator handoff
 
@@ -377,6 +378,18 @@ pass stayed at 32 with zero new decryptions and no network requests. This verifi
 historical projection/idempotence on the saved account, not new incoming delivery.
 
 ### Live checks completed
+
+- 2026-09-19 (agent-run, saved account, comparison 2.26.37.71 evidence): one
+  120-second `listen --send-outbox` session uploaded the first batch of 50
+  one-time prekeys (server acknowledged) and transmitted one fresh queued text to
+  the existing test contact, which received server acceptance, a recipient
+  delivery receipt and a read receipt within the session. A second session sent
+  the first `usync devices version=2` query for that contact; the reply listed a
+  single primary device and no signed key-index list, stored as primary-only. A
+  third session transmitted the first explicit `read` receipt for the newest
+  incoming message and received its matching server acknowledgement
+  (`whatsapp-cli receipts`). No identities, IDs or saved outcomes were changed;
+  handset-side display of the read state is not confirmed by these runs.
 
 - After the worker-test seam refactor, the rebuilt public-client listener
   authenticated and activated, ran for a bounded 35 seconds, then shut down

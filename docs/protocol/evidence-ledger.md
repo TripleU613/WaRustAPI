@@ -1,5 +1,14 @@
 # Evidence ledger
 
+### Live confirmation of 2.26.37.71-derived requests — 2026-09-19
+
+On the saved comparison account: the `iq/encrypt/set` prekey upload built from
+2.26.37.71 evidence was accepted (`iq type=result`, 50 keys, no `count_low`); the
+`usync devices version=2` query was answered with a `device-list` of one primary
+device and no `key-index-list`, consistent with a single-device contact; an
+explicit `receipt type=read` received a matching `ack class=receipt type=read`.
+These are server-reported outcomes, not handset observations.
+
 ### Comparison 2.26.37.71 contact device-list sync — 2026-09-18
 
 Same build. `LX/0u7.A06` builds the `usync` query (`sid`, `index`, `last`,

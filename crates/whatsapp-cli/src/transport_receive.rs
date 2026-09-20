@@ -228,6 +228,36 @@ pub(super) fn devices(cli: &super::Cli, chat: &str, request: bool) -> Result<(),
     Ok(())
 }
 
+/// Offline list of explicit receipts (read/played) and their outcomes.
+pub(super) fn receipts_status(cli: &super::Cli) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let outcomes = whatsapp_api::transport::receipts::outcomes(&store)?;
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&outcomes)
+                .map_err(|e| Error::invalid("receipts", e.to_string()))?
+        );
+        return Ok(());
+    }
+    println!(
+        "receipts: {} explicit receipt(s) queued so far",
+        outcomes.len()
+    );
+    for r in &outcomes {
+        println!(
+            "  kind={} status={} message_id={}",
+            r.kind, r.status, r.message_id
+        );
+    }
+    Ok(())
+}
+
 /// Offline one-time prekey summary: counts by upload state and batch outcomes.
 /// No key material is read or printed.
 pub(super) fn prekeys_status(cli: &super::Cli) -> Result<(), Error> {
