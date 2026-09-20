@@ -1,0 +1,494 @@
+//! Disappearing-message timer, keep-in-chat and advanced chat privacy ("limit
+//! sharing"), traced from comparison APK **2.26.37.71** protobuf-lite
+//! descriptors (`docs/protocol/chat-actions.md` §3, §4, §5). All three are
+//! ordinary E2E `message type=text` payloads, like reactions and polls, never
+//! a second ratchet.
+//!
+//! * `ProtocolMessage` (`Message.protocolMessage`, field 12; `LX/BZb`
+//!   descriptor, confirmed): `key`=1 (reuses `super::reactions::Key`),
+//!   `type`=2, `ephemeralExpiration`=4 (uint32 seconds), `ephemeralSettingTimestamp`=5,
+//!   `disappearingMode`=11 (`initiator`=1, `trigger`=2, `initiatedByMe`=3 —
+//!   **inferred** field numbers, consistent with the public schema; not
+//!   independently confirmed against the descriptor dump), `limitSharing`=24
+//!   (`sharingLimited`=1 bool, `trigger`=2 enum, `limitSharingSettingTimestamp`=3
+//!   int64, `initiatedByMe`=4 bool — confirmed, `LX/BWR`), `afterReadDuration`=29,
+//!   `acp2Setting`=35 (`enabled`=1 bool, `trigger`=2 enum, `settingTimestamp`=3
+//!   int64, `initiatedByMe`=4 bool — confirmed, `LX/BWQ`). Type constants
+//!   (confirmed, `LX/C4F.<clinit>`): `EPHEMERAL_SETTING`=3,
+//!   `EPHEMERAL_SYNC_RESPONSE`=4, `LIMIT_SHARING`=27, `ACP2_SETTING`=39.
+//!   Trigger `CHAT_SETTING`=1 (`LX/C3L`/`LX/C3j`, confirmed).
+//! * `KeepInChatMessage` (`Message.keepInChatMessage`, field 51; `LX/BZc`
+//!   descriptor, confirmed): `key`=1, `keepType`=2 (`UNKNOWN`=0,
+//!   `KEEP_FOR_ALL`=1, `UNDO_KEEP_FOR_ALL`=2, `LX/C2L`), `timestampMs`=3.
+//!
+//! Neither `disappearing_payload` nor `limit_sharing_payload` sets `key`: both
+//! settings apply to the whole chat, not to one target message (chat-actions.md
+//! §3, §5). `keep_payload` follows the reaction/poll key convention: `remoteJid`
+//! is the identity supplied by the caller (the contact's LID when their
+//! messages arrive LID-addressed), `fromMe` is relative to the sender of this
+//! keep action, matching the reaction/poll key semantics confirmed live.
+use crate::{
+    Error, Result,
+    model::{
+        ids::MessageId,
+        jid::Jid,
+        message::{Direction, MessageRef},
+    },
+};
+use prost::Message as _;
+
+/// `ProtocolMessage.type` EPHEMERAL_SETTING (per-chat disappearing timer).
+pub const TYPE_EPHEMERAL_SETTING: i32 = 3;
+/// `ProtocolMessage.type` EPHEMERAL_SYNC_RESPONSE (peer echoing its setting).
+pub const TYPE_EPHEMERAL_SYNC_RESPONSE: i32 = 4;
+/// `ProtocolMessage.type` LIMIT_SHARING (advanced chat privacy, v1).
+pub const TYPE_LIMIT_SHARING: i32 = 27;
+/// `ProtocolMessage.type` ACP2_SETTING (advanced chat privacy, v2).
+pub const TYPE_ACP2_SETTING: i32 = 39;
+/// Trigger value used for a user-initiated chat-setting change.
+pub const TRIGGER_CHAT_SETTING: i32 = 1;
+/// `KeepInChatMessage.keepType` KEEP_FOR_ALL.
+pub const KEEP_FOR_ALL: i32 = 1;
+/// `KeepInChatMessage.keepType` UNDO_KEEP_FOR_ALL.
+pub const UNDO_KEEP_FOR_ALL: i32 = 2;
+
+/// Disappearing timer values the official UI offers, plus `0` (off). Any
+/// `u32` is accepted by [`disappearing_payload`]/decoding: the protocol field
+/// itself carries whatever value is sent (chat-actions.md §3, "inferred from
+/// the observed 7776000 on live traffic").
+pub const UI_TIMER_VALUES: [u32; 4] = [0, 86_400, 604_800, 7_776_000];
+
+fn invalid(reason: &'static str) -> Error {
+    Error::invalid("chat_settings", reason)
+}
+
+#[derive(prost::Message)]
+pub(crate) struct Envelope {
+    #[prost(message, optional, tag = "12")]
+    pub(crate) protocol: Option<ProtocolMessage>,
+    #[prost(message, optional, tag = "51")]
+    pub(crate) keep_in_chat: Option<KeepInChatMessage>,
+}
+#[derive(prost::Message)]
+pub(crate) struct ProtocolMessage {
+    #[prost(message, optional, tag = "1")]
+    pub(crate) key: Option<super::reactions::Key>,
+    #[prost(int32, optional, tag = "2")]
+    pub(crate) type_: Option<i32>,
+    #[prost(uint32, optional, tag = "4")]
+    pub(crate) ephemeral_expiration: Option<u32>,
+    #[prost(int64, optional, tag = "5")]
+    pub(crate) ephemeral_setting_timestamp: Option<i64>,
+    #[prost(message, optional, tag = "11")]
+    pub(crate) disappearing_mode: Option<DisappearingMode>,
+    #[prost(message, optional, tag = "24")]
+    pub(crate) limit_sharing: Option<LimitSharing>,
+    #[prost(uint32, optional, tag = "29")]
+    pub(crate) after_read_duration: Option<u32>,
+    #[prost(message, optional, tag = "35")]
+    pub(crate) acp2_setting: Option<Acp2Setting>,
+}
+/// `LX/BW7`; field numbers are inferred (public-schema alignment), not
+/// individually confirmed against the descriptor dump.
+#[derive(prost::Message)]
+pub(crate) struct DisappearingMode {
+    #[prost(int32, optional, tag = "1")]
+    pub(crate) initiator: Option<i32>,
+    #[prost(int32, optional, tag = "2")]
+    pub(crate) trigger: Option<i32>,
+    #[prost(bool, optional, tag = "3")]
+    pub(crate) initiated_by_me: Option<bool>,
+}
+/// `LX/BWR` (confirmed).
+#[derive(prost::Message)]
+pub(crate) struct LimitSharing {
+    #[prost(bool, optional, tag = "1")]
+    pub(crate) sharing_limited: Option<bool>,
+    #[prost(int32, optional, tag = "2")]
+    pub(crate) trigger: Option<i32>,
+    #[prost(int64, optional, tag = "3")]
+    pub(crate) limit_sharing_setting_timestamp: Option<i64>,
+    #[prost(bool, optional, tag = "4")]
+    pub(crate) initiated_by_me: Option<bool>,
+}
+/// `LX/BWQ` (confirmed).
+#[derive(prost::Message)]
+pub(crate) struct Acp2Setting {
+    #[prost(bool, optional, tag = "1")]
+    pub(crate) enabled: Option<bool>,
+    #[prost(int32, optional, tag = "2")]
+    pub(crate) trigger: Option<i32>,
+    #[prost(int64, optional, tag = "3")]
+    pub(crate) setting_timestamp: Option<i64>,
+    #[prost(bool, optional, tag = "4")]
+    pub(crate) initiated_by_me: Option<bool>,
+}
+#[derive(prost::Message)]
+pub(crate) struct KeepInChatMessage {
+    #[prost(message, optional, tag = "1")]
+    pub(crate) key: Option<super::reactions::Key>,
+    #[prost(int32, optional, tag = "2")]
+    pub(crate) keep_type: Option<i32>,
+    #[prost(int64, optional, tag = "3")]
+    pub(crate) timestamp_ms: Option<i64>,
+}
+
+/// A recognised chat-setting `protocolMessage`, decoded from field 12.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Setting {
+    /// Per-chat disappearing-message timer (type `EPHEMERAL_SETTING`).
+    DisappearingTimer {
+        /// New timer in seconds; `0` means off.
+        seconds: u32,
+    },
+    /// The peer echoing its own ephemeral setting (type
+    /// `EPHEMERAL_SYNC_RESPONSE`). This carries the same `ephemeralExpiration`
+    /// field as `EPHEMERAL_SETTING` per the `LX/BZb` descriptor, so callers
+    /// that only care about the effective timer can treat the two the same
+    /// way (see `docs/protocol/chat-actions.md` §3 "Implementation").
+    EphemeralSyncResponse {
+        /// Echoed timer in seconds.
+        seconds: u32,
+    },
+    /// Advanced chat privacy v1 (type `LIMIT_SHARING`).
+    LimitSharing {
+        /// Whether sharing/forwarding out of the chat is limited.
+        enabled: bool,
+    },
+    /// Advanced chat privacy v2 (type `ACP2_SETTING`).
+    Acp2 {
+        /// Whether sharing/forwarding out of the chat is limited.
+        enabled: bool,
+    },
+}
+
+/// Decode a chat-setting `protocolMessage` (field 12). Returns `None` for
+/// malformed content or a `type` this module does not recognise.
+pub fn decode_protocol(payload: &[u8]) -> Option<Setting> {
+    let protocol = Envelope::decode(payload).ok()?.protocol?;
+    match protocol.type_ {
+        Some(TYPE_EPHEMERAL_SETTING) => Some(Setting::DisappearingTimer {
+            seconds: protocol.ephemeral_expiration.unwrap_or(0),
+        }),
+        Some(TYPE_EPHEMERAL_SYNC_RESPONSE) => Some(Setting::EphemeralSyncResponse {
+            seconds: protocol.ephemeral_expiration.unwrap_or(0),
+        }),
+        Some(TYPE_LIMIT_SHARING) => Some(Setting::LimitSharing {
+            enabled: protocol.limit_sharing?.sharing_limited.unwrap_or(false),
+        }),
+        Some(TYPE_ACP2_SETTING) => Some(Setting::Acp2 {
+            enabled: protocol.acp2_setting?.enabled.unwrap_or(false),
+        }),
+        _ => None,
+    }
+}
+
+/// A decoded incoming keep-in-chat action, before mapping into the event model.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IncomingKeep {
+    /// Wire id of the kept/un-kept message.
+    pub target_id: MessageId,
+    /// Whether the target message was sent by the acting party.
+    pub target_from_sender: bool,
+    /// `true` keeps the message for everyone; `false` undoes a previous keep.
+    pub keep: bool,
+}
+
+/// Decode a `keepInChatMessage` payload (field 51). Returns `None` for
+/// malformed content or an unrecognised `keepType`.
+pub fn decode_keep(payload: &[u8]) -> Option<IncomingKeep> {
+    let keep_in_chat = Envelope::decode(payload).ok()?.keep_in_chat?;
+    let key = keep_in_chat.key?;
+    let target_id = MessageId::new(key.id?).ok()?;
+    let keep = match keep_in_chat.keep_type {
+        Some(KEEP_FOR_ALL) => true,
+        Some(UNDO_KEEP_FOR_ALL) => false,
+        _ => return None,
+    };
+    Some(IncomingKeep {
+        target_id,
+        target_from_sender: key.from_me.unwrap_or(false),
+        keep,
+    })
+}
+
+/// Validate a keep-in-chat intent: the target message must belong to `chat`.
+pub fn validate_keep(chat: &Jid, target: &MessageRef) -> Result<()> {
+    if target.key.chat.jid().to_non_ad() != chat.to_non_ad() {
+        return Err(invalid("keep target message belongs to another chat"));
+    }
+    Ok(())
+}
+
+/// Encode a per-chat disappearing-timer `protocolMessage`
+/// (`type=EPHEMERAL_SETTING`). No target key: the setting applies to the
+/// whole chat (chat-actions.md §3).
+pub fn disappearing_payload(seconds: u32) -> Vec<u8> {
+    Envelope {
+        protocol: Some(ProtocolMessage {
+            key: None,
+            type_: Some(TYPE_EPHEMERAL_SETTING),
+            ephemeral_expiration: Some(seconds),
+            ephemeral_setting_timestamp: Some(
+                crate::model::time::Timestamp::now().as_unix_seconds(),
+            ),
+            disappearing_mode: None,
+            limit_sharing: None,
+            after_read_duration: None,
+            acp2_setting: None,
+        }),
+        keep_in_chat: None,
+    }
+    .encode_to_vec()
+}
+
+/// Encode an advanced-chat-privacy `protocolMessage` (v1, `type=LIMIT_SHARING`,
+/// trigger `CHAT_SETTING`, `initiatedByMe=true`). No target key: the setting
+/// applies to the whole chat (chat-actions.md §5). `now_ms` is stored directly
+/// in `limitSharingSettingTimestamp`; the field's unit was not independently
+/// confirmed, so this follows the millisecond convention used by the other
+/// sender-timestamp fields in this codebase (reactions, polls).
+pub fn limit_sharing_payload(enabled: bool, now_ms: i64) -> Vec<u8> {
+    Envelope {
+        protocol: Some(ProtocolMessage {
+            key: None,
+            type_: Some(TYPE_LIMIT_SHARING),
+            ephemeral_expiration: None,
+            ephemeral_setting_timestamp: None,
+            disappearing_mode: None,
+            limit_sharing: Some(LimitSharing {
+                sharing_limited: Some(enabled),
+                trigger: Some(TRIGGER_CHAT_SETTING),
+                limit_sharing_setting_timestamp: Some(now_ms),
+                initiated_by_me: Some(true),
+            }),
+            after_read_duration: None,
+            acp2_setting: None,
+        }),
+        keep_in_chat: None,
+    }
+    .encode_to_vec()
+}
+
+/// Encode a `keepInChatMessage` payload (field 51). `remote` is the identity
+/// to place in `key.remoteJid`, following the same rule as reactions and
+/// polls (the contact's LID when their messages arrive LID-addressed).
+pub fn keep_payload(remote: &Jid, target: &MessageRef, keep: bool, now_ms: i64) -> Vec<u8> {
+    Envelope {
+        protocol: None,
+        keep_in_chat: Some(KeepInChatMessage {
+            key: Some(super::reactions::Key {
+                remote_jid: Some(remote.to_non_ad().to_string()),
+                from_me: Some(target.key.direction == Direction::Outgoing),
+                id: Some(target.key.id.as_str().to_owned()),
+                participant: None,
+            }),
+            keep_type: Some(if keep {
+                KEEP_FOR_ALL
+            } else {
+                UNDO_KEEP_FOR_ALL
+            }),
+            timestamp_ms: Some(now_ms),
+        }),
+    }
+    .encode_to_vec()
+}
+
+/// Durably queue the account-wide default disappearing timer for new chats
+/// (`xmlns=disappearing_mode`, confirmed `ChangeDMSettingActivity.A0Z`,
+/// chat-actions.md §3). A live session transmits it and settles the reply
+/// through the shared action outbox ([`super::actions`]).
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub fn queue_default_timer(store: &crate::store::ProtocolStore, seconds: u32) -> Result<String> {
+    super::actions::queue(store, "disappearing-default", "default timer", |id| {
+        Ok(crate::binary::Node::new("iq")
+            .attr("id", id)
+            .attr("type", "set")
+            .attr("xmlns", "disappearing_mode")
+            .attr("to", Jid::parse("s.whatsapp.net")?)
+            .children(vec![
+                crate::binary::Node::new("disappearing_mode").attr("duration", seconds.to_string()),
+            ]))
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::model::{
+        ids::{ChatId, DeviceAddress, MessageId},
+        message::MessageKey,
+    };
+
+    fn target(direction: Direction) -> MessageRef {
+        let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        MessageRef {
+            key: MessageKey {
+                chat: ChatId::from_jid(&peer).unwrap(),
+                sender: (direction == Direction::Incoming)
+                    .then(|| DeviceAddress::from_jid(&peer).unwrap()),
+                direction,
+                id: MessageId::new("ABCDEF0123456789ABCDEF0123456789").unwrap(),
+            },
+        }
+    }
+
+    #[test]
+    fn disappearing_payload_roundtrips_with_apk_field_numbers() {
+        let bytes = disappearing_payload(604_800);
+        // Field 12, wire type 2: (12 << 3) | 2 = 98 = 0x62.
+        assert_eq!(bytes[0], 0x62);
+        let setting = decode_protocol(&bytes).unwrap();
+        assert_eq!(setting, Setting::DisappearingTimer { seconds: 604_800 });
+        let off = decode_protocol(&disappearing_payload(0)).unwrap();
+        assert_eq!(off, Setting::DisappearingTimer { seconds: 0 });
+        for seconds in UI_TIMER_VALUES {
+            assert_eq!(
+                decode_protocol(&disappearing_payload(seconds)),
+                Some(Setting::DisappearingTimer { seconds })
+            );
+        }
+    }
+    #[test]
+    fn ephemeral_sync_response_decodes_as_its_own_variant() {
+        // ProtocolMessage{type=4 (EPHEMERAL_SYNC_RESPONSE), ephemeralExpiration=86400}.
+        #[derive(prost::Message)]
+        struct Fixture {
+            #[prost(int32, optional, tag = "2")]
+            type_: Option<i32>,
+            #[prost(uint32, optional, tag = "4")]
+            ephemeral_expiration: Option<u32>,
+        }
+        let inner = Fixture {
+            type_: Some(TYPE_EPHEMERAL_SYNC_RESPONSE),
+            ephemeral_expiration: Some(86_400),
+        }
+        .encode_to_vec();
+        #[derive(prost::Message)]
+        struct Outer {
+            #[prost(bytes = "vec", optional, tag = "12")]
+            protocol: Option<Vec<u8>>,
+        }
+        let bytes = Outer {
+            protocol: Some(inner),
+        }
+        .encode_to_vec();
+        assert_eq!(
+            decode_protocol(&bytes),
+            Some(Setting::EphemeralSyncResponse { seconds: 86_400 })
+        );
+    }
+    #[test]
+    fn limit_sharing_payload_roundtrips_v1_and_decodes_v2() {
+        let bytes = limit_sharing_payload(true, 1_700_000_000_000);
+        assert_eq!(bytes[0], 0x62);
+        assert_eq!(
+            decode_protocol(&bytes),
+            Some(Setting::LimitSharing { enabled: true })
+        );
+        let off = limit_sharing_payload(false, 1);
+        assert_eq!(
+            decode_protocol(&off),
+            Some(Setting::LimitSharing { enabled: false })
+        );
+        // v2 (ACP2_SETTING) decodes too, even though this module only sends v1.
+        #[derive(prost::Message)]
+        struct Acp2Fixture {
+            #[prost(bool, optional, tag = "1")]
+            enabled: Option<bool>,
+        }
+        #[derive(prost::Message)]
+        struct ProtocolFixture {
+            #[prost(int32, optional, tag = "2")]
+            type_: Option<i32>,
+            #[prost(message, optional, tag = "35")]
+            acp2_setting: Option<Acp2Fixture>,
+        }
+        #[derive(prost::Message)]
+        struct Outer {
+            #[prost(message, optional, tag = "12")]
+            protocol: Option<ProtocolFixture>,
+        }
+        let bytes = Outer {
+            protocol: Some(ProtocolFixture {
+                type_: Some(TYPE_ACP2_SETTING),
+                acp2_setting: Some(Acp2Fixture {
+                    enabled: Some(true),
+                }),
+            }),
+        }
+        .encode_to_vec();
+        assert_eq!(
+            decode_protocol(&bytes),
+            Some(Setting::Acp2 { enabled: true })
+        );
+    }
+    #[test]
+    fn keep_payload_roundtrips_with_apk_field_numbers_and_sender_relative_from_me() {
+        let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let bytes = keep_payload(&peer, &target(Direction::Incoming), true, 1_700_000_000_000);
+        // Field 51, wire type 2: (51 << 3) | 2 = 410 = varint 9A 03.
+        assert_eq!(&bytes[..2], &[0x9A, 0x03]);
+        let decoded = decode_keep(&bytes).unwrap();
+        assert_eq!(
+            decoded,
+            IncomingKeep {
+                target_id: MessageId::new("ABCDEF0123456789ABCDEF0123456789").unwrap(),
+                target_from_sender: false,
+                keep: true,
+            }
+        );
+        let undo = keep_payload(&peer, &target(Direction::Outgoing), false, 1);
+        let decoded = decode_keep(&undo).unwrap();
+        assert!(!decoded.keep);
+        assert!(decoded.target_from_sender);
+        assert!(decode_keep(&[0x08, 0x01]).is_none());
+    }
+    #[test]
+    fn validation_rejects_other_chats() {
+        let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let other = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+        assert!(validate_keep(&peer, &target(Direction::Incoming)).is_ok());
+        assert!(validate_keep(&other, &target(Direction::Incoming)).is_err());
+    }
+    #[cfg(all(
+        feature = "experimental-signal-crypto",
+        feature = "experimental-noise",
+        feature = "experimental-transport"
+    ))]
+    #[test]
+    fn default_timer_iq_shape() {
+        use crate::store::{MasterKey, OpenOptions, StaticKeySource};
+        let dir = tempfile::tempdir().unwrap();
+        let store = crate::store::ProtocolStore::open(OpenOptions {
+            path: dir.path().join("p.redb"),
+            account_id: crate::model::ids::AccountId::new("a").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([1; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let id = queue_default_timer(&store, 604_800).unwrap();
+        let pending = super::super::actions::reserve_pending(&store).unwrap();
+        assert_eq!(pending.len(), 1);
+        let node = &pending[0];
+        assert_eq!(node.description, "iq");
+        assert_eq!(
+            node.get_attr("id").and_then(|v| v.as_text()),
+            Some(id.as_str())
+        );
+        assert_eq!(node.get_attr("type").and_then(|v| v.as_text()), Some("set"));
+        assert_eq!(
+            node.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("disappearing_mode")
+        );
+        let mode = node.child("disappearing_mode").unwrap();
+        assert_eq!(
+            mode.get_attr("duration").and_then(|v| v.as_text()),
+            Some("604800")
+        );
+    }
+}

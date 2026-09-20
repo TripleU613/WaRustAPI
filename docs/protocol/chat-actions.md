@@ -139,6 +139,22 @@ only as a database column). Timer values offered by the UI: 86400, 604800,
 Incoming: type 3 updates the chat's timer; type 4 (`EPHEMERAL_SYNC_RESPONSE`)
 is the peer echoing its setting (already decoded in `signal/direct.rs`).
 
+**Implementation**: `crates/whatsapp-api/src/transport/chat_settings.rs` encodes
+and decodes `ProtocolMessage` field 12 (`disappearing_payload`,
+`decode_protocol` returning `Setting::DisappearingTimer` /
+`Setting::EphemeralSyncResponse`). `model::message::MessageContent::DisappearingTimer`
+is the outgoing intent; `outbox::validate` and `transport::outgoing` accept it
+and send it as a plain `message type=text` payload via `prepare_payload`, per
+the "falls through to text" note above. `transport::inbox_events::project`
+recognises field 12 and projects both type 3 and type 4 as
+`MessageContent::DisappearingTimer` (the two carry the same
+`ephemeralExpiration` field, so a sync echo of the peer's own setting is
+treated the same as a direct change; see the type-4 note above). The CLI
+command is `disappearing --chat <jid> --seconds <n>`; `disappearing-default
+--seconds <n>` durably queues the `xmlns=disappearing_mode` IQ described below
+via `chat_settings::queue_default_timer` and the shared action outbox
+(`transport::actions`). Nothing here is live-verified yet.
+
 ### Default timer for new chats: `xmlns=disappearing_mode`
 
 `ChangeDMSettingActivity.A0Z`, **confirmed**:
@@ -161,6 +177,19 @@ LID-addressed; fromMe from the sender's perspective): inferred from the
 reaction/poll behaviour confirmed live. Incoming keep messages should project
 as a change on the target message.
 
+**Implementation**: `crates/whatsapp-api/src/transport/chat_settings.rs`
+encodes/decodes `KeepInChatMessage` field 51 (`keep_payload`, `decode_keep`,
+reusing `reactions::Key`). `model::message::MessageContent::KeepInChat` (send
+intent) and `MessageChange::KeepInChat` (incoming update) carry the target
+message and a `keep` flag. `outbox::validate` checks the target is in the same
+chat (`chat_settings::validate_keep`); `transport::outgoing` sends it as a
+plain `message type=text` payload, choosing the remote identity the same way
+as reactions (`inbox::lid_for`). `transport::inbox_events::project` recognises
+field 51 and projects it as `SyncEvent::MessageUpdated` with the same
+`target_from_sender`/direction attribution as reactions. The CLI command is
+`keep --chat <jid> --id <wire-id> [--ours] [--undo]`. Nothing here is
+live-verified yet.
+
 ## 5. Advanced chat privacy ("limit sharing")
 
 Two generations exist in 37.71 (`Acp2*` classes, `UPGRADE_TO_ACP_V2`):
@@ -180,6 +209,17 @@ Two generations exist in 37.71 (`Acp2*` classes, `UPGRADE_TO_ACP_V2`):
 
 Implement v1 for sending (trigger CHAT_SETTING, initiatedByMe=true, timestamp
 now) and decode both on receive. Sent as `message type=text`.
+
+**Implementation**: `crates/whatsapp-api/src/transport/chat_settings.rs`
+encodes v1 (`limit_sharing_payload`, `ProtocolMessage` field 12/`limitSharing`
+field 24) and decodes both v1 and v2 (`decode_protocol` returning
+`Setting::LimitSharing` / `Setting::Acp2`). `model::message::MessageContent::ChatPrivacy`
+is the outgoing/incoming domain content (`limited: bool`, collapsing both
+generations); `outbox::validate` and `transport::outgoing` accept it and send
+it as a plain `message type=text` payload. `transport::inbox_events::project`
+recognises field 12 and projects either generation as
+`MessageContent::ChatPrivacy`. The CLI command is `chat-privacy --chat <jid>
+(--on|--off)`. Nothing here is live-verified yet.
 
 ## 6. Clear chat and app-state sync
 

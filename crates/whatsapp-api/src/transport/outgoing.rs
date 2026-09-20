@@ -106,6 +106,12 @@ pub fn begin_selected(
                 MessageContent::PollVote { target, .. } => {
                     target.key.chat.jid().to_non_ad() == peer.to_non_ad()
                 }
+                MessageContent::DisappearingTimer { .. } | MessageContent::ChatPrivacy { .. } => {
+                    true
+                }
+                MessageContent::KeepInChat { target, .. } => {
+                    super::chat_settings::validate_keep(peer, target).is_ok()
+                }
                 _ => false,
             };
         let reserved = store
@@ -333,6 +339,35 @@ fn reply_payload_for(
     ))
 }
 
+/// Encode a disappearing-timer, advanced-chat-privacy or keep-in-chat E2E
+/// payload for `content`; `None` for any other content kind. `KeepInChat`
+/// follows the same LID/phone-number rule as reactions for its target key.
+fn chat_setting_payload_for(
+    store: &ProtocolStore,
+    peer: &crate::model::jid::Jid,
+    content: &MessageContent,
+) -> Result<Option<Vec<u8>>> {
+    Ok(match content {
+        MessageContent::DisappearingTimer { seconds } => {
+            Some(super::chat_settings::disappearing_payload(*seconds))
+        }
+        MessageContent::ChatPrivacy { limited } => Some(
+            super::chat_settings::limit_sharing_payload(*limited, Timestamp::now().as_millis()),
+        ),
+        MessageContent::KeepInChat { target, keep } => {
+            super::chat_settings::validate_keep(peer, target)?;
+            let remote = super::inbox::lid_for(store, peer)?.unwrap_or_else(|| peer.clone());
+            Some(super::chat_settings::keep_payload(
+                &remote,
+                target,
+                *keep,
+                Timestamp::now().as_millis(),
+            ))
+        }
+        _ => None,
+    })
+}
+
 impl Pending {
     /// Only the exact query response can produce a prepared send.
     pub fn matches(&self, node: &Node) -> bool {
@@ -397,7 +432,10 @@ impl Pending {
             MessageContent::Text { .. }
             | MessageContent::Reaction { .. }
             | MessageContent::Poll { .. }
-            | MessageContent::PollVote { .. } => None,
+            | MessageContent::PollVote { .. }
+            | MessageContent::DisappearingTimer { .. }
+            | MessageContent::ChatPrivacy { .. }
+            | MessageContent::KeepInChat { .. } => None,
             _ => return Err(Error::invalid("outbox", "unsupported content")),
         };
         // Poll creation keeps its fresh message secret for decrypting votes.
@@ -444,6 +482,7 @@ impl Pending {
             }
             _ => None,
         };
+        let chat_setting = chat_setting_payload_for(store, peer, &entry.intent.content)?;
         let prepared = if let Some((payload, _)) = &poll_payload {
             crate::signal::direct::prepare_payload(
                 account,
@@ -454,7 +493,11 @@ impl Pending {
                 payload,
             )
             .await?
-        } else if let Some(payload) = reply.as_deref().or(reaction.as_deref()) {
+        } else if let Some(payload) = reply
+            .as_deref()
+            .or(reaction.as_deref())
+            .or(chat_setting.as_deref())
+        {
             crate::signal::direct::prepare_payload(
                 account,
                 peer,
