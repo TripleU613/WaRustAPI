@@ -69,6 +69,22 @@ for `SetChatPsaBlockingStatusHelper` (blocking the WhatsApp PSA chat) and
 (`LX/1ep.A0M`, confirmed). `LX/EJx`/`LX/EJy` build the `w:interop` (third-party
 chat) block list. Do not use either for a user block.
 
+**Implementation**: `crates/whatsapp-api/src/transport/blocklist.rs` builds the
+set/get requests above exactly as described (LID-vs-phone `jid`/`pn_jid`
+selection via `super::inbox::lid_for`, saved-`dhash` inclusion, the
+block-only `entry_point source="chat"`) and durably queues them through
+`transport::actions::queue`, gated behind
+`experimental-signal-crypto + experimental-noise + experimental-transport`.
+`ingest` applies settled fetch/block/unblock action replies into a local
+`blocked:<jid>` table (idempotent per action id) and `blocked` reads it back.
+CLI commands `block`, `unblock` and `blocklist [--refresh]`
+(`crates/whatsapp-cli/src/main.rs`, handlers in
+`crates/whatsapp-cli/src/transport_receive.rs`) queue and inspect these
+actions offline; `blocklist` masks contact numbers before printing. None of
+this has been exercised against a live session: the request shape is
+APK-derived (confirmed except where marked above), and the reply-side `dhash`
+placement for a set reply is inferred, not traced.
+
 ## 2. Report (`xmlns=spam`)
 
 `IndividualSpamReportRpc.A00` → `SpamRPCManager.A01` → `LX/9QZ.<init>(VLLLLLLLL)`
@@ -104,6 +120,18 @@ chat) block list. Do not use either for a user block.
 
 Never send a report against the lab contact during testing. This request is
 implemented from the shape above and must be labelled "not live-verified".
+
+**Implementation**: `crates/whatsapp-api/src/transport/report.rs` builds the
+`iq xmlns=spam` request above with zero reported-message children (their
+attribute shape is unknown, per above) and durably queues it through
+`transport::actions::queue`, gated the same as `blocklist.rs`. `spam_flow` is
+validated against the entry-point vocabulary named in this section and §1
+(`chat`, `overflow_menu_report`, `account_info_report`, `message_menu`,
+`1_1_spam_banner_report`, `chat_list_swipe_delete_report_upsell`,
+`block_dialog`), defaulting to `chat` when empty. The CLI `report` command
+(`crates/whatsapp-cli/src/main.rs` / `transport_receive.rs`) queues it
+offline. Nothing here has been sent against a live session; the shape is
+APK-derived only, and the server's exact accept/refuse response is unknown.
 
 ## 3. Disappearing messages
 
