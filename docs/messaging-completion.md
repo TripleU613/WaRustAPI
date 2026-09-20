@@ -33,6 +33,15 @@ from offline tests alone. Existing received captures can be processed locally.
 
 ### Implemented and verified locally
 
+- Polls: creation (`pollCreationMessageV3`, field 64, with `messageContextInfo`
+  secret) and votes (`pollUpdateMessage`, field 50, AES-256-GCM over an
+  HKDF-derived key; the APK performs the derivation natively, so the recipe is
+  the documented one with the APK's inputs) are decoded, projected and sendable
+  through the normal outbox with `poll`/`vote` CLI commands. Our own poll secrets
+  are persisted so incoming votes decrypt; undecryptable votes stay opaque. The
+  login reply's `pn`/`lid` are saved for message keys and vote identities. Live:
+  the contact's poll decoded, our vote was server-accepted and our own poll was
+  delivered; handset display of the vote awaits confirmation.
 - Reactions: incoming `reactionMessage` payloads (field 46) now project into
   `MessageUpdated` events with the reacting device and emoji on the target key;
   `reproject` upgrades earlier opaque placeholders offline. Outgoing

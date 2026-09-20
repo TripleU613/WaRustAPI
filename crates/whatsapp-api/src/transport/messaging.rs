@@ -271,6 +271,36 @@ pub fn direct_typed(
         .children(children))
 }
 
+/// Poll envelope: `message type=poll` with `meta polltype=<kind>` (observed
+/// live for `creation`; the APK's `polltype` values are creation, vote,
+/// add_option, result_snapshot and quiz_creation).
+pub fn poll_envelope(
+    recipient: &Jid,
+    id: &str,
+    kind: &str,
+    ciphertext: Vec<u8>,
+    polltype: &str,
+) -> Result<Node, TransportError> {
+    if !matches!(kind, "pkmsg" | "msg")
+        || !matches!(polltype, "creation" | "vote")
+        || ciphertext.is_empty()
+        || id.is_empty()
+    {
+        return Err(error("invalid poll envelope"));
+    }
+    Ok(Node::new("message")
+        .attr("to", recipient.clone())
+        .attr("id", id)
+        .attr("type", "poll")
+        .children(vec![
+            Node::new("enc")
+                .attr("v", "2")
+                .attr("type", kind)
+                .bytes(ciphertext),
+            Node::new("meta").attr("polltype", polltype),
+        ]))
+}
+
 /// Comparison image envelope: media message, encrypted image payload.
 pub fn direct_image(
     recipient: &Jid,

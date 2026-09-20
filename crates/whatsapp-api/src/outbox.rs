@@ -131,6 +131,20 @@ fn validate(req: &SendRequest, limits: &Limits) -> Result<()> {
         MessageContent::Reaction { target, emoji } => {
             crate::transport::reactions::validate(req.chat.jid(), target, emoji.as_deref())
         }
+        MessageContent::Poll {
+            name,
+            options,
+            selectable_count,
+        } => crate::transport::polls::validate_poll(name, options, *selectable_count),
+        MessageContent::PollVote { target, selected } => {
+            if target.key.chat.jid().to_non_ad() != req.chat.jid().to_non_ad() {
+                return Err(Error::invalid("content", "vote targets another chat"));
+            }
+            if selected.len() > crate::transport::polls::MAX_OPTIONS {
+                return Err(Error::invalid("content", "too many selected options"));
+            }
+            Ok(())
+        }
         MessageContent::Unsupported(_) => Err(Error::invalid(
             "content",
             "cannot send an Unsupported message form",

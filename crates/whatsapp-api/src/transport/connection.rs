@@ -100,6 +100,25 @@ pub async fn connect(
         if status == "success" {
             let mut current = AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
             current.last_authenticated_at = Some(Timestamp::now());
+            // Observed live: `success` carries our `pn` and `lid`. Keep them for
+            // message keys and vote encryption; never invent either.
+            let pn = super::receipts::jid(&reply, "pn").map(|j| j.to_non_ad());
+            let lid = super::receipts::jid(&reply, "lid").map(|j| j.to_non_ad());
+            if current.own_jid.is_none() {
+                current.own_jid = pn.clone();
+            }
+            if pn.is_some() || lid.is_some() {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"login-identity",
+                    1,
+                    &serde_json::json!({
+                        "pn": pn.as_ref().map(|j| j.to_string()),
+                        "lid": lid.as_ref().map(|j| j.to_string()),
+                        "at": Timestamp::now(),
+                    }),
+                )?;
+            }
             current.save(tx)?;
         }
         Ok(())

@@ -105,6 +105,22 @@ pub enum MessageContent {
         /// Remote filename, treated strictly as a label.
         file_name: Option<String>,
     },
+    /// A poll (comparison `pollCreationMessageV3`).
+    Poll {
+        /// Poll question.
+        name: String,
+        /// Option names in wire order.
+        options: Vec<String>,
+        /// How many options a voter may select; `0` means no limit.
+        selectable_count: u32,
+    },
+    /// This account's vote on a poll; `selected` holds option names.
+    PollVote {
+        /// The poll being voted on.
+        target: MessageRef,
+        /// Selected option names (empty retracts the vote).
+        selected: Vec<String>,
+    },
     /// Content the library cannot interpret for this profile.
     Unsupported(UnsupportedMessage),
 }
@@ -168,6 +184,16 @@ pub enum MessageChange {
         by: DeviceAddress,
         /// Emoji, or `None` for removal.
         emoji: Option<String>,
+    },
+    /// A vote on a poll, decrypted with the poll's message secret.
+    PollVote {
+        /// Voting device.
+        by: DeviceAddress,
+        /// Selected option names resolved from the poll; unknown hashes are
+        /// reported in `unresolved` as lowercase hex.
+        selected: Vec<String>,
+        /// Selected option hashes that matched no known option.
+        unresolved: Vec<String>,
     },
     /// Revoked by the acting device.
     Revoked {

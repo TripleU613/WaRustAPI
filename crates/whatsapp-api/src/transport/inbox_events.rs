@@ -42,8 +42,167 @@ struct Context {
     expiration: Option<u32>,
 }
 
+#[cfg(test)]
 fn event(key: &[u8], node: &Node, payload: &[u8]) -> SyncEvent {
-    event_with_content(key, node, payload, None)
+    project(key, node, payload, None, None)
+}
+
+fn poll_content(poll: super::polls::Poll) -> Option<MessageContent> {
+    if poll.options.len() > super::polls::MAX_OPTIONS
+        || poll
+            .options
+            .iter()
+            .chain(std::iter::once(&poll.name))
+            .any(|t| t.len() > super::polls::MAX_TEXT_BYTES || t.chars().any(char::is_control))
+    {
+        return None;
+    }
+    Some(MessageContent::Poll {
+        name: poll.name,
+        options: poll.options,
+        selectable_count: poll.selectable_count,
+    })
+}
+
+/// What the projection needs to decrypt a vote on one poll.
+#[derive(Clone, Debug)]
+pub(super) struct PollContext {
+    pub(super) poll_id: String,
+    pub(super) secret: [u8; 32],
+    pub(super) options: Vec<String>,
+    /// Candidate creator identities (phone-number and LID forms).
+    pub(super) creators: Vec<crate::model::jid::Jid>,
+}
+/// Poll secret and options for the poll a vote refers to, from this store:
+/// a poll we created (`poll-secret:<id>`) or one received from the sender.
+pub(super) fn poll_context(
+    tx: &WriteTx<'_>,
+    node: &Node,
+    payload: &[u8],
+) -> Result<Option<PollContext>> {
+    let Some(vote) = super::polls::decode_vote(payload) else {
+        return Ok(None);
+    };
+    let Some(sender) = super::inbox::session_sender(node) else {
+        return Ok(None);
+    };
+    let poll_id = vote.poll_id.as_str().to_owned();
+    if vote.poll_from_sender {
+        // The sender's own poll: its authenticated plaintext holds the secret.
+        let key = format!("received:{sender}:{poll_id}");
+        let Some(saved) =
+            tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1)?
+        else {
+            return Ok(None);
+        };
+        let Ok(plain) = serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()) else {
+            return Ok(None);
+        };
+        let Some(poll) = super::polls::decode_poll(&plain) else {
+            return Ok(None);
+        };
+        let Some(secret) = poll.secret else {
+            return Ok(None);
+        };
+        let mut creators = vec![sender.to_non_ad()];
+        if let Some(lid) = super::receipts::jid(node, "from")
+            .filter(|j| j.server == crate::model::jid::Server::Lid)
+        {
+            creators.push(lid.to_non_ad());
+        }
+        if let Some(lid) = super::inbox::lid_for_in(tx, &sender)?
+            && !creators.contains(&lid)
+        {
+            creators.push(lid);
+        }
+        return Ok(Some(PollContext {
+            poll_id,
+            secret,
+            options: poll.options,
+            creators,
+        }));
+    }
+    // Our poll: the secret was persisted when the creation was reserved.
+    let Some(own): Option<serde_json::Value> = tx.get_json(
+        Table::Checkpoints,
+        format!("poll-secret:{poll_id}").as_bytes(),
+        1,
+    )?
+    else {
+        return Ok(None);
+    };
+    let Ok(secret) = serde_json::from_value::<Vec<u8>>(own["secret"].clone()) else {
+        return Ok(None);
+    };
+    let Ok(secret) = <[u8; 32]>::try_from(secret) else {
+        return Ok(None);
+    };
+    let options: Vec<String> = serde_json::from_value(own["options"].clone()).unwrap_or_default();
+    let mut creators = Vec::new();
+    for field in ["creator_pn", "creator_lid"] {
+        if let Some(j) = own[field].as_str()
+            && let Ok(j) = crate::model::jid::Jid::parse(j)
+        {
+            creators.push(j.to_non_ad());
+        }
+    }
+    Ok(Some(PollContext {
+        poll_id,
+        secret,
+        options,
+        creators,
+    }))
+}
+fn poll_vote_event(node: &Node, payload: &[u8], context: &PollContext) -> Option<SyncEvent> {
+    let vote = super::polls::decode_vote(payload)?;
+    let sender = super::inbox::session_sender(node)?;
+    let (chat, by) = (
+        ChatId::from_jid(&sender).ok()?,
+        DeviceAddress::from_jid(&sender).ok()?,
+    );
+    // The voter is the sender, addressed by phone number or LID; try each
+    // creator/voter pairing until the authenticated decryption succeeds.
+    let mut voters = vec![sender.to_non_ad()];
+    if let Some(lid) =
+        super::receipts::jid(node, "from").filter(|j| j.server == crate::model::jid::Server::Lid)
+    {
+        voters.push(lid.to_non_ad());
+    }
+    let hashes = context.creators.iter().find_map(|creator| {
+        voters.iter().find_map(|voter| {
+            super::polls::decrypt_vote(&context.secret, &context.poll_id, creator, voter, &vote)
+                .ok()
+        })
+    })?;
+    let (selected, unresolved) = super::polls::resolve_options(&hashes, &context.options);
+    let server_timestamp = node
+        .get_attr("t")
+        .and_then(|v| v.as_text())
+        .and_then(|v| v.parse::<i64>().ok())
+        .filter(|v| *v >= 0)
+        .and_then(|v| v.checked_mul(1000))
+        .map(Timestamp);
+    let (direction, target_sender) = if vote.poll_from_sender {
+        (Direction::Incoming, Some(by.clone()))
+    } else {
+        (Direction::Outgoing, None)
+    };
+    Some(SyncEvent::MessageUpdated(
+        crate::model::message::MessageUpdate {
+            key: MessageKey {
+                chat,
+                sender: target_sender,
+                direction,
+                id: vote.poll_id,
+            },
+            change: crate::model::message::MessageChange::PollVote {
+                by,
+                selected,
+                unresolved,
+            },
+            server_timestamp,
+        },
+    ))
 }
 
 fn event_with_content(
@@ -51,6 +210,16 @@ fn event_with_content(
     node: &Node,
     payload: &[u8],
     content: Option<(MessageContent, Option<u32>)>,
+) -> SyncEvent {
+    project(key, node, payload, content, None)
+}
+
+fn project(
+    key: &[u8],
+    node: &Node,
+    payload: &[u8],
+    content: Option<(MessageContent, Option<u32>)>,
+    poll: Option<&PollContext>,
 ) -> SyncEvent {
     let unsupported = || {
         SyncEvent::UnsupportedMessage(UnsupportedMessage {
@@ -108,6 +277,26 @@ fn event_with_content(
                 },
                 server_timestamp,
             });
+        }
+        // Poll creation (2.26.37.71 `pollCreationMessageV3` 64 with `messageContextInfo` 35).
+        if fields.contains(&64) {
+            if fields.iter().any(|v| !matches!(v, 64 | 35)) {
+                return unsupported();
+            }
+            let Some(poll) = super::polls::decode_poll(payload) else {
+                return unsupported();
+            };
+            let Some(content) = poll_content(poll) else {
+                return unsupported();
+            };
+            return event_with_content(key, node, payload, Some((content, None)));
+        }
+        // Poll vote (`pollUpdateMessage` 50): a change to the poll, decrypted with
+        // the poll's message secret when this store holds it.
+        if fields.contains(&50) {
+            return poll
+                .and_then(|context| poll_vote_event(node, payload, context))
+                .unwrap_or_else(unsupported);
         }
         // Only known top-level text and metadata fields. Wrappers, protocol messages
         // and mixed media must never become an ordinary text event accidentally.
@@ -203,7 +392,8 @@ pub(super) fn publish(
     node: &Node,
     payload: &[u8],
 ) -> Result<bool> {
-    let projected = event(key, node, payload);
+    let poll = poll_context(tx, node, payload)?;
+    let projected = project(key, node, payload, None, poll.as_ref());
     #[cfg(feature = "experimental-registration-https")]
     let projected = if matches!(projected, SyncEvent::UnsupportedMessage(_)) {
         match super::media::event_content(tx, key, payload) {
@@ -444,6 +634,138 @@ mod tests {
         mixed.extend_from_slice(b"\x0a\x04test");
         assert!(matches!(
             event(b"fixture", &node(), &mixed),
+            SyncEvent::UnsupportedMessage(_)
+        ));
+    }
+    #[test]
+    fn polls_project_as_new_messages_and_votes_decrypt_with_the_saved_secret() {
+        use crate::model::{jid::Jid, message::MessageChange};
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("polls.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([3; 32]))),
+            create: true,
+        })
+        .unwrap();
+        // Their poll creation projects as a new message with poll content.
+        let options = vec!["Yes".to_owned(), "No".to_owned()];
+        let creation =
+            super::super::polls::creation_payload("Lunch?", &options, 0, [5; 32]).unwrap();
+        let SyncEvent::NewMessage(message) = event(b"fixture", &node(), &creation) else {
+            panic!("poll did not project");
+        };
+        assert_eq!(
+            message.content,
+            MessageContent::Poll {
+                name: "Lunch?".into(),
+                options: options.clone(),
+                selectable_count: 0
+            }
+        );
+        // A vote on our own poll decrypts with the persisted secret and creator ids.
+        let our_pn = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let voter = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let secret_bytes = vec![9u8; 32];
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"poll-secret:OURPOLL",
+                    1,
+                    &serde_json::json!({
+                        "secret": secret_bytes,
+                        "options": options,
+                        "name": "Lunch?",
+                        "creator_pn": our_pn.to_string(),
+                    }),
+                )
+            })
+            .unwrap();
+        let enc = super::super::polls::encrypt_vote(
+            &[9; 32],
+            "OURPOLL",
+            &our_pn,
+            &voter,
+            &options[1..],
+            [1; 12],
+        )
+        .unwrap();
+        let target = crate::model::message::MessageRef {
+            key: MessageKey {
+                chat: ChatId::from_jid(&voter).unwrap(),
+                sender: None,
+                direction: Direction::Incoming,
+                id: MessageId::new("OURPOLL").unwrap(),
+            },
+        };
+        // From the voter's perspective our poll is not theirs: fromMe=false.
+        let payload = super::super::polls::vote_payload(&our_pn, &target, enc, 7);
+        let vote_node = Node::new("message")
+            .attr("from", voter.clone())
+            .attr("id", "VOTE1")
+            .attr("t", "123");
+        assert!(
+            store
+                .write(|tx| publish(
+                    tx,
+                    b"received:15555550101@s.whatsapp.net:VOTE1",
+                    &vote_node,
+                    &payload
+                ))
+                .unwrap()
+        );
+        let consumer = ConsumerId::new("polls").unwrap();
+        let events = store
+            .read_events(&consumer, EventCursor::START, 10)
+            .unwrap()
+            .events;
+        let SyncEvent::MessageUpdated(update) = &events.last().unwrap().event else {
+            panic!(
+                "vote did not project: {:?}",
+                events.last().map(|e| e.event.kind())
+            );
+        };
+        assert_eq!(update.key.id.as_str(), "OURPOLL");
+        assert_eq!(update.key.direction, Direction::Outgoing);
+        assert_eq!(
+            update.change,
+            MessageChange::PollVote {
+                by: DeviceAddress::from_jid(&voter).unwrap(),
+                selected: vec!["No".into()],
+                unresolved: vec![]
+            }
+        );
+        // A vote we cannot decrypt stays opaque rather than guessing.
+        let enc = super::super::polls::encrypt_vote(
+            &[8; 32],
+            "OURPOLL",
+            &our_pn,
+            &voter,
+            &options[..1],
+            [2; 12],
+        )
+        .unwrap();
+        let payload = super::super::polls::vote_payload(&our_pn, &target, enc, 8);
+        let node2 = Node::new("message")
+            .attr("from", voter.clone())
+            .attr("id", "VOTE2");
+        store
+            .write(|tx| {
+                publish(
+                    tx,
+                    b"received:15555550101@s.whatsapp.net:VOTE2",
+                    &node2,
+                    &payload,
+                )
+            })
+            .unwrap();
+        let events = store
+            .read_events(&consumer, EventCursor::START, 10)
+            .unwrap()
+            .events;
+        assert!(matches!(
+            events.last().unwrap().event,
             SyncEvent::UnsupportedMessage(_)
         ));
     }

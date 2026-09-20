@@ -146,6 +146,42 @@ enum Cmd {
         #[arg(long)]
         dry_run: bool,
     },
+    /// Durably enqueue a poll; `listen --send-outbox` transmits it.
+    Poll {
+        /// Chat JID.
+        #[arg(long)]
+        chat: String,
+        /// Poll question.
+        #[arg(long)]
+        name: String,
+        /// Options, two to twelve.
+        #[arg(long = "option", required = true)]
+        options: Vec<String>,
+        /// Options a voter may select; 0 (default) means any number.
+        #[arg(long, default_value_t = 0)]
+        selectable: u32,
+        /// Caller idempotency key; defaults to a content digest.
+        #[arg(long)]
+        request_id: Option<String>,
+    },
+    /// Durably enqueue a vote on a poll; `listen --send-outbox` transmits it.
+    Vote {
+        /// Chat JID.
+        #[arg(long)]
+        chat: String,
+        /// Wire id of the poll message.
+        #[arg(long)]
+        id: String,
+        /// Selected option names; none retracts the vote.
+        #[arg(long = "option")]
+        options: Vec<String>,
+        /// The poll was created by this account (default: by the contact).
+        #[arg(long)]
+        ours: bool,
+        /// Caller idempotency key; defaults to a content digest.
+        #[arg(long)]
+        request_id: Option<String>,
+    },
     /// Re-project authenticated incoming records into events with current parsers (offline).
     #[cfg(feature = "experimental-transport")]
     Reproject,
@@ -752,6 +788,94 @@ async fn run(cli: Cli) -> Result<(), Error> {
                 );
             }
             eprintln!("note: reaction durably queued; `listen --send-outbox` transmits it");
+            c.shutdown().await;
+            Ok(())
+        }
+        Cmd::Poll {
+            chat,
+            name,
+            options,
+            selectable,
+            request_id,
+        } => {
+            use sha2::Digest;
+            let peer = Jid::parse(chat)?;
+            let digest = sha2::Sha256::digest(format!("{name}\n{}", options.join("\n")).as_bytes());
+            let request_id = request_id
+                .clone()
+                .unwrap_or_else(|| format!("poll-{}", hex::encode(&digest[..8])));
+            let c = open_client(&cli, false).await?;
+            let ticket = c
+                .send_message(SendRequest {
+                    client_request_id: ClientRequestId::new(request_id)?,
+                    chat: ChatId::from_jid(&peer)?,
+                    content: MessageContent::Poll {
+                        name: name.clone(),
+                        options: options.clone(),
+                        selectable_count: *selectable,
+                    },
+                })
+                .await?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&ticket)
+                    .map_err(|e| Error::invalid("ticket", e.to_string()))?
+            );
+            eprintln!("note: poll durably queued; `listen --send-outbox` transmits it");
+            c.shutdown().await;
+            Ok(())
+        }
+        Cmd::Vote {
+            chat,
+            id,
+            options,
+            ours,
+            request_id,
+        } => {
+            use sha2::Digest;
+            use whatsapp_api::model::{
+                ids::{DeviceAddress, MessageId},
+                message::{Direction, MessageKey, MessageRef},
+            };
+            let peer = Jid::parse(chat)?;
+            let chat_id = ChatId::from_jid(&peer)?;
+            let digest = sha2::Sha256::digest(options.join("\n").as_bytes());
+            let request_id = request_id
+                .clone()
+                .unwrap_or_else(|| format!("vote-{id}-{}", hex::encode(&digest[..8])));
+            let target = MessageRef {
+                key: MessageKey {
+                    chat: chat_id.clone(),
+                    sender: if *ours {
+                        None
+                    } else {
+                        Some(DeviceAddress::from_jid(&peer)?)
+                    },
+                    direction: if *ours {
+                        Direction::Outgoing
+                    } else {
+                        Direction::Incoming
+                    },
+                    id: MessageId::new(id.clone())?,
+                },
+            };
+            let c = open_client(&cli, false).await?;
+            let ticket = c
+                .send_message(SendRequest {
+                    client_request_id: ClientRequestId::new(request_id)?,
+                    chat: chat_id,
+                    content: MessageContent::PollVote {
+                        target,
+                        selected: options.clone(),
+                    },
+                })
+                .await?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&ticket)
+                    .map_err(|e| Error::invalid("ticket", e.to_string()))?
+            );
+            eprintln!("note: vote durably queued; `listen --send-outbox` transmits it");
             c.shutdown().await;
             Ok(())
         }

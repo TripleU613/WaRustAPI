@@ -112,6 +112,8 @@ fn pending_summary(entry: &whatsapp_api::outbox::OutboxEntry) -> serde_json::Val
         whatsapp_api::model::message::MessageContent::Text { .. } => "text",
         whatsapp_api::model::message::MessageContent::Media { .. } => "media",
         whatsapp_api::model::message::MessageContent::Reaction { .. } => "reaction",
+        whatsapp_api::model::message::MessageContent::Poll { .. } => "poll",
+        whatsapp_api::model::message::MessageContent::PollVote { .. } => "vote",
         _ => "unsupported",
     };
     serde_json::json!({
@@ -544,6 +546,33 @@ pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
             let Ok(plain) = serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()) else {
                 continue;
             };
+            {
+                let fields =
+                    whatsapp_api::signal::direct::payload_fields(&plain).unwrap_or_default();
+                let id = std::str::from_utf8(key)
+                    .ok()
+                    .and_then(|k| k.rsplit_once(':'))
+                    .map(|(_, id)| id.to_owned())
+                    .unwrap_or_default();
+                println!(
+                    "inbox: payload id={id} fields={fields:?} len={}",
+                    plain.len()
+                );
+            }
+            if let Some(poll) = whatsapp_api::transport::polls::decode_poll(&plain) {
+                let id = std::str::from_utf8(key)
+                    .ok()
+                    .and_then(|k| k.rsplit_once(':'))
+                    .map(|(_, id)| id.to_owned())
+                    .unwrap_or_default();
+                println!(
+                    "inbox: poll id={id} name={:?} options={:?} selectable_count={} secret_present={}",
+                    poll.name,
+                    poll.options,
+                    poll.selectable_count,
+                    poll.secret.is_some()
+                );
+            }
             if let Some(reaction) = whatsapp_api::transport::reactions::decode(&plain)
                 && let Some(key_fields) = whatsapp_api::transport::reactions::key_fields(&plain)
             {

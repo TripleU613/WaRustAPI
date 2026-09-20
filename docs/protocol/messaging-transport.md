@@ -508,6 +508,41 @@ it (`--remove` clears). Live on 2026-09-19: a contact's 👍 on our test text wa
 decrypted and projected, and our 👍 on their message was server-accepted.
 Group and companion-addressed reactions are not implemented.
 
+### Polls (comparison 2.26.37.71)
+
+Descriptors: `LX/BYa` (PollCreationMessage: encKey=1, name=2, options=3 of
+`LX/BSo` optionName=1/optionHash=2, selectableOptionsCount=4, contextInfo=5,
+pollContentType=6, pollType=7, correctAnswer=8), `LX/BWH` (PollUpdateMessage:
+pollCreationMessageKey=1, vote=2 PollEncValue encPayload=1/encIv=2, metadata=3,
+senderTimestampMs=4), `LX/BOq` (PollVoteMessage: selectedOptions=1 repeated
+bytes), `LX/BQ2` (messageContextInfo.messageSecret=3). A live poll arrived as
+`message type=poll` with `meta polltype=creation`, payload fields 35 and 64
+(`pollCreationMessageV3`); `Message.pollUpdateMessage` is 50 (public WA6
+numbering, consistent with the observed 46 and 64). `polltype` values in the
+APK: creation, vote, add_option, result_snapshot, quiz_creation.
+
+Vote encryption: `LX/0ZG.A01` requires a 32-byte secret and 12-byte IV, builds
+the AAD `pollId || 0x00 || voterJid`, and passes secret, ciphertext, IV, poll
+id, creator JID, voter JID and the label "Poll Vote" through `LX/C9s.A00` →
+`LX/CmM.A02` into the native `JniBridge`. The derivation is therefore not
+visible in DEX; the implementation uses the publicly documented recipe with the
+same inputs (`HKDF-SHA256(secret, info = pollId || creatorJid || voterJid ||
+"Poll Vote")`, AES-256-GCM, option hashes = SHA-256 of option names) and is
+confirmed or refuted live. Identities follow the chat's addressing: the
+contact's LID and our LID from the login `success` reply (`pn`/`lid`, now saved
+as `login-identity`) when known, else phone-number JIDs.
+
+Implementation (`transport::polls`): incoming creations project as
+`MessageContent::Poll`; incoming votes project as `MessageChange::PollVote`
+when the store holds the poll secret (our own polls keep it in
+`poll-secret:<id>`; a sender's own poll carries it in the authenticated
+plaintext), otherwise they stay opaque. `whatsapp-cli poll` and `vote` enqueue
+creations and votes through the normal outbox in `message type=poll` envelopes
+with `meta polltype=creation|vote`. Live on 2026-09-20: the contact's poll
+(two options, unlimited selection) decoded; our vote for both options was
+server-accepted and our own poll was delivered. Handset display of the vote is
+pending confirmation.
+
 ### Contact device-list synchronization (comparison 2.26.37.71)
 
 Same build and hash as the prekey section. The cross-device class names

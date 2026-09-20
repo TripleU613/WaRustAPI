@@ -1,4 +1,5 @@
 //! Shared durable incoming-message processing. No network side effects here.
+use crate::store::WriteTx;
 use crate::{
     Error, Result,
     binary::{Node, NodeContent},
@@ -60,6 +61,92 @@ fn own_peer_sender(account: &AccountRecord, node: &Node) -> Option<Jid> {
         && own.server == Server::User
         && from.to_non_ad() == own.to_non_ad())
     .then_some(from)
+}
+
+/// Our own identities as the server reported them in the latest saved login
+/// `success` reply (`pn` and `lid` attributes, observed live). `None` until a
+/// login capture exists.
+pub fn own_identity(store: &ProtocolStore) -> Result<(Option<Jid>, Option<Jid>)> {
+    let limits = crate::profile::Limits::default();
+    store.read(|tx| {
+        let mut cursor = None;
+        let mut found: Option<(Option<Jid>, Option<Jid>)> = None;
+        loop {
+            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+            let done = rows.len() < 256;
+            cursor = rows.last().map(|(key, _)| key.clone());
+            for (key, _) in rows {
+                if !key.starts_with(b"inbound:sha256:") {
+                    continue;
+                }
+                let Some(wire): Option<Vec<u8>> = tx.get_json(Table::Checkpoints, &key, 1)? else {
+                    continue;
+                };
+                let Ok(raw) = crate::binary::unpack_frame_payload(&wire, &limits) else {
+                    continue;
+                };
+                let Ok(node) = crate::binary::Decoder::new(
+                    &raw,
+                    crate::binary::TokenDictionary::comparison_2_26_37_70(),
+                    &limits,
+                )
+                .decode_node() else {
+                    continue;
+                };
+                if node.description != "success" {
+                    continue;
+                }
+                let pn = super::receipts::jid(&node, "pn").map(|j| j.to_non_ad());
+                let lid = super::receipts::jid(&node, "lid").map(|j| j.to_non_ad());
+                if pn.is_some() || lid.is_some() {
+                    found = Some((pn, lid));
+                }
+            }
+            if done {
+                return Ok(found.unwrap_or((None, None)));
+            }
+        }
+    })
+}
+
+/// Transaction-scoped variant of [`lid_for`].
+pub(crate) fn lid_for_in(tx: &WriteTx<'_>, phone: &Jid) -> Result<Option<Jid>> {
+    let phone = phone.to_non_ad();
+    let mut cursor = None;
+    loop {
+        let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+        let done = rows.len() < 256;
+        cursor = rows.last().map(|(key, _)| key.clone());
+        for (key, _) in rows {
+            let Ok(name) = std::str::from_utf8(&key) else {
+                continue;
+            };
+            let Some(lid) = name.strip_prefix("authenticated-lid:") else {
+                continue;
+            };
+            let mapped: Option<Jid> = tx.get_json(Table::Checkpoints, &key, 1)?;
+            if mapped.is_some_and(|m| m.to_non_ad() == phone)
+                && let Ok(lid) = Jid::parse(lid)
+            {
+                return Ok(Some(lid.to_non_ad()));
+            }
+        }
+        if done {
+            return Ok(None);
+        }
+    }
+}
+
+/// Our own phone-number and LID identities: the `login-identity` checkpoint
+/// written at login, else the latest login `success` capture.
+pub fn own_identities(store: &ProtocolStore) -> Result<(Option<Jid>, Option<Jid>)> {
+    let saved: Option<serde_json::Value> =
+        store.read(|tx| tx.get_json(Table::Checkpoints, b"login-identity", 1))?;
+    if let Some(saved) = saved {
+        let parse = |field: &str| saved[field].as_str().and_then(|v| Jid::parse(v).ok());
+        return Ok((parse("pn"), parse("lid")));
+    }
+    own_identity(store)
 }
 
 /// The authenticated LID last seen for a phone-number contact, from incoming

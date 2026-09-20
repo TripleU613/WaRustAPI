@@ -2508,6 +2508,7 @@ dependencies = [
 name = "whatsapp-api"
 version = "0.0.1"
 dependencies = [
+ "aes-gcm",
  "async-trait",
  "bytes",
  "chacha20poly1305 0.11.0",
@@ -2545,6 +2546,7 @@ dependencies = [
  "clap",
  "hex",
  "serde_json",
+ "sha2 0.11.0",
  "tempfile",
  "thiserror",
  "tokio",

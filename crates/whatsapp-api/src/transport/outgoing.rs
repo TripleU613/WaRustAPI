@@ -94,6 +94,14 @@ pub fn begin_selected(
                 MessageContent::Reaction { target, emoji } => {
                     super::reactions::validate(peer, target, emoji.as_deref()).is_ok()
                 }
+                MessageContent::Poll {
+                    name,
+                    options,
+                    selectable_count,
+                } => super::polls::validate_poll(name, options, *selectable_count).is_ok(),
+                MessageContent::PollVote { target, .. } => {
+                    target.key.chat.jid().to_non_ad() == peer.to_non_ad()
+                }
                 _ => false,
             };
         let reserved = store
@@ -165,6 +173,111 @@ pub fn begin_selected(
     Ok(None)
 }
 
+/// Our identities for poll-vote crypto: the saved login identity, else the
+/// account's own JID.
+fn login_identity(
+    tx: &crate::store::WriteTx<'_>,
+    account: &AccountRecord,
+) -> Result<(
+    Option<crate::model::jid::Jid>,
+    Option<crate::model::jid::Jid>,
+)> {
+    let saved: Option<serde_json::Value> = tx.get_json(Table::Checkpoints, b"login-identity", 1)?;
+    let parse = |field: &str| {
+        saved
+            .as_ref()
+            .and_then(|s| s[field].as_str())
+            .and_then(|v| crate::model::jid::Jid::parse(v).ok())
+            .map(|j| j.to_non_ad())
+    };
+    let pn = parse("pn").or_else(|| account.own_jid.as_ref().map(|j| j.to_non_ad()));
+    Ok((pn, parse("lid")))
+}
+
+/// Encrypt this account's vote on `target`. The poll secret comes from the
+/// received poll's plaintext (their poll) or from `poll-secret:<id>` (ours).
+/// Identities follow the chat's addressing: the contact's LID when known,
+/// our LID from the login reply when known, else phone-number JIDs.
+fn vote_payload_for(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    peer: &crate::model::jid::Jid,
+    target: &crate::model::message::MessageRef,
+    selected: &[String],
+) -> Result<Vec<u8>> {
+    use crate::model::message::Direction;
+    if target.key.chat.jid().to_non_ad() != peer.to_non_ad() {
+        return Err(Error::invalid("poll", "vote targets another chat"));
+    }
+    let poll_id = target.key.id.as_str().to_owned();
+    let (own_pn, own_lid) = store.write(|tx| login_identity(tx, account))?;
+    let peer_lid = super::inbox::lid_for(store, peer)?;
+    let (secret, options, selectable, creator) = if target.key.direction == Direction::Incoming {
+        let key = format!("received:{}:{poll_id}", peer.to_non_ad());
+        let saved: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))?
+            .ok_or_else(|| Error::invalid("poll", "unknown incoming poll for this chat"))?;
+        let plain: Vec<u8> = serde_json::from_value(saved["protobuf"].clone())
+            .map_err(|_| Error::invalid("poll", "poll record has no authenticated payload"))?;
+        let poll = super::polls::decode_poll(&plain)
+            .ok_or_else(|| Error::invalid("poll", "target message is not a poll"))?;
+        let secret = poll
+            .secret
+            .ok_or_else(|| Error::invalid("poll", "poll carries no message secret"))?;
+        (
+            secret,
+            poll.options,
+            poll.selectable_count,
+            peer_lid.clone().unwrap_or_else(|| peer.to_non_ad()),
+        )
+    } else {
+        let own: serde_json::Value = store
+            .read(|tx| {
+                tx.get_json(
+                    Table::Checkpoints,
+                    format!("poll-secret:{poll_id}").as_bytes(),
+                    1,
+                )
+            })?
+            .ok_or_else(|| Error::invalid("poll", "unknown own poll"))?;
+        let secret: Vec<u8> = serde_json::from_value(own["secret"].clone())
+            .map_err(|_| Error::invalid("poll", "invalid saved poll secret"))?;
+        let secret = <[u8; 32]>::try_from(secret)
+            .map_err(|_| Error::invalid("poll", "invalid saved poll secret"))?;
+        let options: Vec<String> =
+            serde_json::from_value(own["options"].clone()).unwrap_or_default();
+        let creator = own_lid
+            .clone()
+            .or_else(|| own_pn.clone())
+            .ok_or_else(|| Error::invalid("poll", "own identity unknown"))?;
+        (secret, options, 0, creator)
+    };
+    for name in selected {
+        if !options.contains(name) {
+            return Err(Error::invalid(
+                "poll",
+                "selected option is not part of the poll",
+            ));
+        }
+    }
+    if selectable != 0 && selected.len() > selectable as usize {
+        return Err(Error::invalid("poll", "too many options selected"));
+    }
+    let voter = own_lid
+        .or(own_pn)
+        .ok_or_else(|| Error::invalid("poll", "own identity unknown"))?;
+    let mut iv = [0u8; 12];
+    getrandom::fill(&mut iv).map_err(|_| Error::invalid("poll", "vote entropy unavailable"))?;
+    let enc = super::polls::encrypt_vote(&secret, &poll_id, &creator, &voter, selected, iv)?;
+    let remote = peer_lid.unwrap_or_else(|| peer.to_non_ad());
+    Ok(super::polls::vote_payload(
+        &remote,
+        target,
+        enc,
+        Timestamp::now().as_millis(),
+    ))
+}
+
 impl Pending {
     /// Only the exact query response can produce a prepared send.
     pub fn matches(&self, node: &Node) -> bool {
@@ -226,8 +339,34 @@ impl Pending {
                 peer,
                 reference,
             )?),
-            MessageContent::Text { quoted: None, .. } | MessageContent::Reaction { .. } => None,
+            MessageContent::Text { quoted: None, .. }
+            | MessageContent::Reaction { .. }
+            | MessageContent::Poll { .. }
+            | MessageContent::PollVote { .. } => None,
             _ => return Err(Error::invalid("outbox", "unsupported content")),
+        };
+        // Poll creation keeps its fresh message secret for decrypting votes.
+        let mut poll_secret: Option<(Vec<u8>, Vec<String>, String)> = None;
+        let poll_payload = match &entry.intent.content {
+            MessageContent::Poll {
+                name,
+                options,
+                selectable_count,
+            } => {
+                let mut secret = [0u8; 32];
+                getrandom::fill(&mut secret)
+                    .map_err(|_| Error::invalid("poll", "message secret entropy unavailable"))?;
+                poll_secret = Some((secret.to_vec(), options.clone(), name.clone()));
+                Some((
+                    super::polls::creation_payload(name, options, *selectable_count, secret)?,
+                    "creation",
+                ))
+            }
+            MessageContent::PollVote { target, selected } => Some((
+                vote_payload_for(store, account, peer, target, selected)?,
+                "vote",
+            )),
+            _ => None,
         };
         let reaction = match &entry.intent.content {
             MessageContent::Reaction { target, emoji } => {
@@ -243,7 +382,17 @@ impl Pending {
             }
             _ => None,
         };
-        let prepared = if let Some(payload) = &reaction {
+        let prepared = if let Some((payload, _)) = &poll_payload {
+            crate::signal::direct::prepare_payload(
+                account,
+                peer,
+                &bundle,
+                session.as_deref().map(|v| v.as_slice()),
+                identity.as_deref(),
+                payload,
+            )
+            .await?
+        } else if let Some(payload) = &reaction {
             crate::signal::direct::prepare_payload(
                 account,
                 peer,
@@ -286,6 +435,14 @@ impl Pending {
                 prepared.ciphertext,
                 kind,
             )?
+        } else if let Some((_, polltype)) = &poll_payload {
+            super::messaging::poll_envelope(
+                peer,
+                &wire_id,
+                prepared.kind,
+                prepared.ciphertext,
+                polltype,
+            )?
         } else if reaction.is_some() {
             super::messaging::direct_typed(
                 peer,
@@ -314,6 +471,22 @@ impl Pending {
                     "outbox",
                     "intent or peer session changed before reservation",
                 ));
+            }
+            if let Some((secret, options, name)) = &poll_secret {
+                let (own_pn, own_lid) = login_identity(tx, account)?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("poll-secret:{wire_id}").as_bytes(),
+                    1,
+                    &serde_json::json!({
+                        "secret": secret,
+                        "options": options,
+                        "name": name,
+                        "chat": peer.to_non_ad().to_string(),
+                        "creator_pn": own_pn.map(|j| j.to_string()),
+                        "creator_lid": own_lid.map(|j| j.to_string()),
+                    }),
+                )?;
             }
             current.wire_id = Some(MessageId::new(wire_id)?);
             current.attempts.push(AttemptRecord {
@@ -587,6 +760,48 @@ mod tests {
         assert!(
             super::super::messaging::direct_typed(&peer, "ID1", "msg", vec![1], "sticker").is_err()
         );
+        // Polls and votes are eligible for their own chat; the envelope names the kind.
+        let poll = SendRequest {
+            client_request_id: ClientRequestId::new("poll").unwrap(),
+            chat: ChatId::from_jid(&peer).unwrap(),
+            content: MessageContent::Poll {
+                name: "Q".into(),
+                options: vec!["a".into(), "b".into()],
+                selectable_count: 1,
+            },
+        };
+        let poll_id = store
+            .write(|tx| Ok(outbox().enqueue(tx, &poll)?.0.local_id))
+            .unwrap();
+        assert!(begin_selected(&store, Some(poll_id)).unwrap().is_some());
+        let envelope =
+            super::super::messaging::poll_envelope(&peer, "ID2", "msg", vec![1], "vote").unwrap();
+        assert_eq!(
+            envelope.get_attr("type").and_then(|v| v.as_text()),
+            Some("poll")
+        );
+        let meta = envelope
+            .child_nodes()
+            .iter()
+            .find(|c| c.description == "meta")
+            .unwrap();
+        assert_eq!(
+            meta.get_attr("polltype").and_then(|v| v.as_text()),
+            Some("vote")
+        );
+        assert!(
+            super::super::messaging::poll_envelope(&peer, "ID2", "msg", vec![1], "quiz").is_err()
+        );
+        let bad_poll = SendRequest {
+            client_request_id: ClientRequestId::new("bad-poll").unwrap(),
+            chat: ChatId::from_jid(&peer).unwrap(),
+            content: MessageContent::Poll {
+                name: "Q".into(),
+                options: vec!["a".into()],
+                selectable_count: 0,
+            },
+        };
+        assert!(store.write(|tx| outbox().enqueue(tx, &bad_poll)).is_err());
     }
     #[tokio::test]
     async fn oversized_text_fails_before_query_and_uploaded_media_uses_one_reservation() {

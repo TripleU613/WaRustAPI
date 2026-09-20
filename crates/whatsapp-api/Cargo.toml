@@ -40,6 +40,7 @@ zeroize.workspace = true
 hex.workspace = true
 redb.workspace = true
 chacha20poly1305.workspace = true
+aes-gcm.workspace = true
 hkdf.workspace = true
 sha2.workspace = true
 hmac.workspace = true

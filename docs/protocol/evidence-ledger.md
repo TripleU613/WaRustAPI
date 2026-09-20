@@ -1,5 +1,14 @@
 # Evidence ledger
 
+### Polls — 2026-09-20
+
+`LX/BYa`, `LX/BWH`, `LX/BOq`, `LX/BQ2`, `LX/BSo` descriptors give the poll
+protobufs; a live poll used top-level fields 35 and 64 with `meta
+polltype=creation`. `LX/0ZG.A01` shows the vote AAD (`pollId || 0 || voterJid`)
+and the inputs handed to native code for key derivation; the derivation itself
+is not in DEX. Our vote and our poll were server-accepted; the poll was
+delivered. Vote display is pending handset confirmation.
+
 ### Reactions — 2026-09-19
 
 `LX/BWI`/`LX/BZa` descriptors give ReactionMessage (key=1, text=2,
