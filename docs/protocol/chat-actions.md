@@ -287,6 +287,18 @@ HKDF info `"WhatsApp Patch Integrity"` from `LX/0rN`), so the public recipe
 applies. Writing patches is a separate work item; until then "clear chat" is
 local-only and documented as such.
 
+**Implementation.** `crates/whatsapp-api/src/transport/chat_clear.rs`
+(`clear_chat`) and the CLI's `clear-chat --chat <jid>` implement only the local
+half described above: for a direct chat it walks `received:<sender>:<id>`
+checkpoint rows (`transport/inbox.rs`), strips the authenticated `protobuf`
+plaintext and marks each row `status: "cleared"` (kept, not deleted, so
+redeliveries and receipt correlation still dedupe by id), deletes any
+`poll-secret:<id>` rows whose recorded `chat` field (`transport/outgoing.rs`)
+matches, and appends `sync::SyncEvent::ChatCleared`. Writing the
+`clearChatAction` app-state patch so companion devices see the clear is
+**deferred and not implemented**; nothing here has been live-verified against
+a WhatsApp server.
+
 ## 7. Contacts
 
 The primary keeps contacts in the device address book and syncs them with
@@ -308,3 +320,19 @@ values inferred from the public protocol; `in`/`out` are tokens).
 Companion sync of a saved contact is the `contactAction` mutation above
 (`regular_high`? collection **unknown**; public clients use `regular_high` for
 contacts, `regular` for chat actions).
+
+**Implementation.** `crates/whatsapp-api/src/transport/contacts.rs` and the
+CLI's `contacts list|add|edit|remove|check` implement two independent things.
+A purely local address book (`contact:<digits>` rows) with no protocol traffic
+at all: syncing a saved contact to companion devices via the `contactAction`
+mutation above is **not implemented**. And a `usync` existence check: `contacts
+check` queues the request shape described above (`<contact/>`, `<lid/>` and
+`<disappearing_mode/>` in `query`; `<user><contact>+E.164</contact></user>` in
+`list`) through the durable one-shot queue in `transport/actions.rs` (kind
+`contact-check`); `contacts::ingest` parses a settled reply's `usync/list/user`
+nodes into a `contact-status:<digits>` row (`on_whatsapp`, `jid`, an optional
+`lid` parsed defensively since its shape is **unknown**) or, for a top-level
+`iq type=error`, records the refusal against the checked number via an
+internal `contact-check-req:<action id>` mapping (since action labels must
+never carry a phone number). Nothing here has sent a live request to a
+WhatsApp server; the node shape is offline-tested only.

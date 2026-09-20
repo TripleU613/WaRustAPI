@@ -306,6 +306,20 @@ enum Cmd {
         #[arg(long)]
         request: bool,
     },
+    /// Manage the local address book and its WhatsApp-existence checks (offline).
+    #[cfg(feature = "experimental-transport")]
+    Contacts {
+        #[command(subcommand)]
+        action: ContactsCmd,
+    },
+    /// Clear a direct chat's locally decrypted message bodies (offline, local-only:
+    /// see docs/protocol/chat-actions.md section 6 for the deferred companion sync).
+    #[cfg(feature = "experimental-transport")]
+    ClearChat {
+        /// Chat JID, e.g. 15551234567@s.whatsapp.net.
+        #[arg(long)]
+        chat: String,
+    },
     /// Queue explicit read receipts for authenticated incoming messages (offline;
     /// the next `listen` session sends them once).
     #[cfg(feature = "experimental-transport")]
@@ -445,6 +459,46 @@ enum Cmd {
     },
 }
 
+/// Local address book actions (offline; `Check` also queues a `usync` action).
+#[derive(Subcommand)]
+#[cfg(feature = "experimental-transport")]
+enum ContactsCmd {
+    /// List saved contacts.
+    List,
+    /// Add a new contact.
+    Add {
+        /// Phone number, `+E.164` or bare digits, 6-15 digits.
+        #[arg(long)]
+        phone: String,
+        /// Display name.
+        #[arg(long)]
+        name: String,
+        /// Optional given name.
+        #[arg(long)]
+        first_name: Option<String>,
+    },
+    /// Edit an existing contact's name.
+    Edit {
+        #[arg(long)]
+        phone: String,
+        #[arg(long)]
+        name: String,
+        #[arg(long)]
+        first_name: Option<String>,
+    },
+    /// Remove a saved contact.
+    Remove {
+        #[arg(long)]
+        phone: String,
+    },
+    /// Queue a `usync` WhatsApp-existence check for a number and show any
+    /// already-saved status; a session transmits the queued action.
+    Check {
+        #[arg(long)]
+        phone: String,
+    },
+}
+
 #[derive(Subcommand)]
 enum StoreCmd {
     /// Create the store (idempotent) and verify the master key opens it.
@@ -576,6 +630,10 @@ async fn run(cli: Cli) -> Result<(), Error> {
         } => transport_receive::report(&cli, chat, flow.as_deref(), *known_chat),
         #[cfg(feature = "experimental-transport")]
         Cmd::Devices { chat, request } => transport_receive::devices(&cli, chat, *request),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::Contacts { action } => transport_receive::contacts(&cli, action),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::ClearChat { chat } => transport_receive::clear_chat(&cli, chat),
         #[cfg(feature = "experimental-transport")]
         Cmd::MarkRead { config, chat, ids } => {
             transport_receive::mark_read(&cli, config, chat, ids).await

@@ -137,6 +137,16 @@ pub enum SyncEvent {
     UnsupportedMessage(UnsupportedMessage),
     /// The session was revoked.
     SessionRevoked(RevocationReason),
+    /// A chat was cleared locally (`transport::chat_clear::clear_chat`). The
+    /// `clearChatAction` app-state mutation that would sync this to companion
+    /// devices (docs/protocol/chat-actions.md section 6) is not implemented;
+    /// this event only reflects the local-only clear.
+    ChatCleared {
+        /// The cleared chat.
+        chat: crate::model::ids::ChatId,
+        /// When the clear was committed.
+        cleared_at: Timestamp,
+    },
 }
 
 impl SyncEvent {
@@ -154,6 +164,7 @@ impl SyncEvent {
             Self::HistoryGap(_) => "history_gap",
             Self::UnsupportedMessage(_) => "unsupported_message",
             Self::SessionRevoked(_) => "session_revoked",
+            Self::ChatCleared { .. } => "chat_cleared",
         }
     }
 }
