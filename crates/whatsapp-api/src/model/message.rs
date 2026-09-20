@@ -121,6 +121,27 @@ pub enum MessageContent {
         /// Selected option names (empty retracts the vote).
         selected: Vec<String>,
     },
+    /// A change to this chat's disappearing-message timer (comparison
+    /// `protocolMessage` type `EPHEMERAL_SETTING`; docs/protocol/chat-actions.md §3).
+    DisappearingTimer {
+        /// New timer in seconds; `0` means off.
+        seconds: u32,
+    },
+    /// A change to this chat's advanced privacy ("limit sharing") setting
+    /// (comparison `protocolMessage` type `LIMIT_SHARING`/`ACP2_SETTING`;
+    /// docs/protocol/chat-actions.md §5).
+    ChatPrivacy {
+        /// Whether sharing/forwarding out of the chat is limited.
+        limited: bool,
+    },
+    /// Keep (or un-keep) a message in the chat despite its disappearing timer
+    /// (comparison `keepInChatMessage`; docs/protocol/chat-actions.md §4).
+    KeepInChat {
+        /// The kept/un-kept message.
+        target: MessageRef,
+        /// `true` keeps the message for everyone; `false` undoes a keep.
+        keep: bool,
+    },
     /// Content the library cannot interpret for this profile.
     Unsupported(UnsupportedMessage),
 }
@@ -199,6 +220,15 @@ pub enum MessageChange {
     Revoked {
         /// Revoking device.
         by: DeviceAddress,
+    },
+    /// Kept (or un-kept) in chat by a device, despite the chat's disappearing
+    /// timer (docs/protocol/chat-actions.md §4).
+    KeepInChat {
+        /// Acting device.
+        by: DeviceAddress,
+        /// `true` if the message was kept for everyone; `false` if the keep
+        /// was undone.
+        kept: bool,
     },
     /// The referenced original has not arrived; a tombstone is pending.
     PendingReference,

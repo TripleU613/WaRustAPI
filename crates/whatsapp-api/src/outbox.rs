@@ -154,6 +154,11 @@ fn validate(req: &SendRequest, limits: &Limits) -> Result<()> {
             }
             Ok(())
         }
+        MessageContent::DisappearingTimer { .. } => Ok(()),
+        MessageContent::ChatPrivacy { .. } => Ok(()),
+        MessageContent::KeepInChat { target, .. } => {
+            crate::transport::chat_settings::validate_keep(req.chat.jid(), target)
+        }
         MessageContent::Unsupported(_) => Err(Error::invalid(
             "content",
             "cannot send an Unsupported message form",

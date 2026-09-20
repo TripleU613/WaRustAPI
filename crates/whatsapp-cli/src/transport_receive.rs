@@ -114,6 +114,9 @@ fn pending_summary(entry: &whatsapp_api::outbox::OutboxEntry) -> serde_json::Val
         whatsapp_api::model::message::MessageContent::Reaction { .. } => "reaction",
         whatsapp_api::model::message::MessageContent::Poll { .. } => "poll",
         whatsapp_api::model::message::MessageContent::PollVote { .. } => "vote",
+        whatsapp_api::model::message::MessageContent::DisappearingTimer { .. } => "disappearing",
+        whatsapp_api::model::message::MessageContent::ChatPrivacy { .. } => "chat_privacy",
+        whatsapp_api::model::message::MessageContent::KeepInChat { .. } => "keep",
         _ => "unsupported",
     };
     serde_json::json!({

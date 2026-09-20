@@ -212,6 +212,34 @@ fn project(
         let Ok(fields) = crate::signal::direct::payload_fields(payload) else {
             return unsupported();
         };
+        // Chat-setting protocol message (comparison 2.26.37.71
+        // `Message.protocolMessage` field 12; docs/protocol/chat-actions.md §3,
+        // §5): a disappearing-timer change, its peer echo, or advanced chat
+        // privacy. Never a reply/media wrapper, so this must be the only field
+        // besides the optional `messageContextInfo`.
+        if fields.contains(&12) {
+            if fields.iter().any(|v| !matches!(v, 12 | 35)) {
+                return unsupported();
+            }
+            let Some(setting) = super::chat_settings::decode_protocol(payload) else {
+                return unsupported();
+            };
+            // `EPHEMERAL_SETTING` and `EPHEMERAL_SYNC_RESPONSE` both carry the
+            // `ephemeralExpiration` field per the `LX/BZb` descriptor, so both
+            // project as the same disappearing-timer content (chat-actions.md
+            // §3 "Implementation").
+            let content = match setting {
+                super::chat_settings::Setting::DisappearingTimer { seconds }
+                | super::chat_settings::Setting::EphemeralSyncResponse { seconds } => {
+                    MessageContent::DisappearingTimer { seconds }
+                }
+                super::chat_settings::Setting::LimitSharing { enabled }
+                | super::chat_settings::Setting::Acp2 { enabled } => {
+                    MessageContent::ChatPrivacy { limited: enabled }
+                }
+            };
+            return event_with_content(key, node, payload, Some((content, None)), own);
+        }
         // Reaction (comparison 2.26.37.71 `Message.reactionMessage` 46): a change
         // to an existing message, never a new message event.
         if fields.contains(&46) {
@@ -275,6 +303,52 @@ fn project(
             return poll
                 .and_then(|context| poll_vote_event(node, payload, context))
                 .unwrap_or_else(unsupported);
+        }
+        // Keep in chat (comparison `Message.keepInChatMessage` field 51;
+        // docs/protocol/chat-actions.md §4): a change to an existing message,
+        // never a new message event.
+        if fields.contains(&51) {
+            if fields.iter().any(|v| !matches!(v, 51 | 35)) {
+                return unsupported();
+            }
+            let Some(keep) = super::chat_settings::decode_keep(payload) else {
+                return unsupported();
+            };
+            let Some(sender) = super::inbox::session_sender(node) else {
+                return unsupported();
+            };
+            let (Ok(chat), Ok(by)) = (ChatId::from_jid(&sender), DeviceAddress::from_jid(&sender))
+            else {
+                return unsupported();
+            };
+            let server_timestamp = node
+                .get_attr("t")
+                .and_then(|v| v.as_text())
+                .and_then(|v| v.parse::<i64>().ok())
+                .filter(|v| *v >= 0)
+                .and_then(|v| v.checked_mul(1000))
+                .map(Timestamp);
+            // `fromMe` is the keeping sender's perspective, same as reactions:
+            // true means the target was their own (incoming to us), false
+            // means the target was ours.
+            let (direction, target_sender) = if keep.target_from_sender {
+                (Direction::Incoming, Some(by.clone()))
+            } else {
+                (Direction::Outgoing, None)
+            };
+            return SyncEvent::MessageUpdated(crate::model::message::MessageUpdate {
+                key: MessageKey {
+                    chat,
+                    sender: target_sender,
+                    direction,
+                    id: keep.target_id,
+                },
+                change: crate::model::message::MessageChange::KeepInChat {
+                    by,
+                    kept: keep.keep,
+                },
+                server_timestamp,
+            });
         }
         // Only known top-level text and metadata fields. Wrappers, protocol messages
         // and mixed media must never become an ordinary text event accidentally.
@@ -555,10 +629,9 @@ mod tests {
             ),
             SyncEvent::UnsupportedMessage(_)
         ));
-        // Message.image (3), protocol (12), viewOnce wrapper (37), mixed text.
+        // Message.image (3), viewOnce wrapper (37), mixed text.
         for payload in [
             b"\x1a\x04keys".as_slice(),
-            b"\x62\x02\x10\x04",
             b"\xaa\x02\x04keys",
             b"\x0a\x04test\x1a\x04keys",
         ] {
@@ -569,6 +642,18 @@ mod tests {
             assert!(value.raw.is_empty());
             assert!(!value.type_hint.contains("keys"));
         }
+        // protocolMessage{type=4 (EPHEMERAL_SYNC_RESPONSE)} carries the same
+        // `ephemeralExpiration` field as type=3, so it now projects as a
+        // disappearing-timer update instead of staying opaque (chat-actions.md
+        // §3 "Implementation").
+        let SyncEvent::NewMessage(message) = super::event(b"fixture", &node(), b"\x62\x02\x10\x04")
+        else {
+            panic!("ephemeral sync response did not project");
+        };
+        assert_eq!(
+            message.content,
+            MessageContent::DisappearingTimer { seconds: 0 }
+        );
     }
     #[test]
     fn reactions_project_as_message_updates_relative_to_the_reacting_sender() {
@@ -631,6 +716,97 @@ mod tests {
             MessageChange::Reaction { emoji: None, .. }
         ));
         // A reaction mixed with text stays opaque.
+        let mut mixed = theirs_on_ours.clone();
+        mixed.extend_from_slice(b"\x0a\x04test");
+        assert!(matches!(
+            event(b"fixture", &node(), &mixed),
+            SyncEvent::UnsupportedMessage(_)
+        ));
+    }
+    #[test]
+    fn disappearing_timer_and_chat_privacy_protocol_messages_project_as_new_messages() {
+        let disappearing = super::super::chat_settings::disappearing_payload(604_800);
+        let SyncEvent::NewMessage(message) = event(b"fixture", &node(), &disappearing) else {
+            panic!("disappearing timer did not project");
+        };
+        assert_eq!(
+            message.content,
+            MessageContent::DisappearingTimer { seconds: 604_800 }
+        );
+        assert_eq!(message.server_timestamp, Some(Timestamp(123000)));
+        let limit_on = super::super::chat_settings::limit_sharing_payload(true, 1_700_000_000_000);
+        let SyncEvent::NewMessage(message) = event(b"fixture", &node(), &limit_on) else {
+            panic!("limit sharing did not project");
+        };
+        assert_eq!(
+            message.content,
+            MessageContent::ChatPrivacy { limited: true }
+        );
+        // A chat-setting protocol message mixed with text stays opaque.
+        let mut mixed = disappearing.clone();
+        mixed.extend_from_slice(b"\x0a\x04test");
+        assert!(matches!(
+            event(b"fixture", &node(), &mixed),
+            SyncEvent::UnsupportedMessage(_)
+        ));
+    }
+    #[test]
+    fn keep_in_chat_projects_as_message_updates_relative_to_the_acting_sender() {
+        use crate::model::{
+            ids::{ChatId, DeviceAddress, MessageId},
+            jid::Jid,
+            message::{Direction, MessageChange, MessageKey, MessageRef},
+        };
+        let sender = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let target = |direction| MessageRef {
+            key: MessageKey {
+                chat: ChatId::from_jid(&sender).unwrap(),
+                sender: None,
+                direction,
+                id: MessageId::new("71C7E1A34E0332A8821B812F2E028952").unwrap(),
+            },
+        };
+        // The sender keeps a message that was ours (their fromMe=false).
+        let theirs_on_ours = super::super::chat_settings::keep_payload(
+            &sender,
+            &target(Direction::Incoming),
+            true,
+            5,
+        );
+        let SyncEvent::MessageUpdated(update) = event(b"fixture", &node(), &theirs_on_ours) else {
+            panic!("keep did not project");
+        };
+        assert_eq!(update.key.direction, Direction::Outgoing);
+        assert_eq!(update.key.sender, None);
+        assert_eq!(update.key.id.as_str(), "71C7E1A34E0332A8821B812F2E028952");
+        assert_eq!(update.server_timestamp, Some(Timestamp(123000)));
+        assert_eq!(
+            update.change,
+            MessageChange::KeepInChat {
+                by: DeviceAddress::from_jid(&sender).unwrap(),
+                kept: true,
+            }
+        );
+        // Undoing a keep on their own message (their fromMe=true).
+        let undo = super::super::chat_settings::keep_payload(
+            &sender,
+            &target(Direction::Outgoing),
+            false,
+            5,
+        );
+        let SyncEvent::MessageUpdated(update) = event(b"fixture", &node(), &undo) else {
+            panic!("undo did not project");
+        };
+        assert_eq!(update.key.direction, Direction::Incoming);
+        assert_eq!(
+            update.key.sender,
+            Some(DeviceAddress::from_jid(&sender).unwrap())
+        );
+        assert!(matches!(
+            update.change,
+            MessageChange::KeepInChat { kept: false, .. }
+        ));
+        // A keep-in-chat message mixed with text stays opaque.
         let mut mixed = theirs_on_ours.clone();
         mixed.extend_from_slice(b"\x0a\x04test");
         assert!(matches!(
@@ -815,7 +991,9 @@ mod tests {
         );
         store
             .write(|tx| {
-                publish(tx, b"upgrade", &node(), b"\x62\x02\x10\x04")?;
+                // Message.image (3) raw bytes: an opaque placeholder, used only
+                // to exercise the marker-upgrade path below.
+                publish(tx, b"upgrade", &node(), b"\x1a\x04keys")?;
                 let mut marker: serde_json::Value =
                     tx.get_json(Table::Inbox, b"upgrade", 1)?.unwrap();
                 marker.as_object_mut().unwrap().remove("kind");

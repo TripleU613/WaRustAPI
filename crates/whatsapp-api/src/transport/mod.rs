@@ -18,6 +18,7 @@ pub mod actions;
 ))]
 pub mod blocklist;
 pub mod cert;
+pub mod chat_settings;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 mod classic;
 pub mod clock;

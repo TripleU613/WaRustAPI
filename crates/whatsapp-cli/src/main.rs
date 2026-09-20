@@ -219,6 +219,62 @@ enum Cmd {
         #[arg(long)]
         request_id: Option<String>,
     },
+    /// Durably enqueue a per-chat disappearing-message timer change (E2E
+    /// protocolMessage); `listen --send-outbox` transmits it.
+    Disappearing {
+        /// Chat JID.
+        #[arg(long)]
+        chat: String,
+        /// New timer in seconds (0 = off; the UI offers 0, 86400, 604800, 7776000).
+        #[arg(long)]
+        seconds: u32,
+        /// Caller idempotency key; defaults to a chat/timer digest (no phone number).
+        #[arg(long)]
+        request_id: Option<String>,
+    },
+    /// Durably enqueue keeping, or un-keeping, a message despite the chat's
+    /// disappearing timer; `listen --send-outbox` transmits it.
+    Keep {
+        /// Chat JID.
+        #[arg(long)]
+        chat: String,
+        /// Wire id of the message to keep/un-keep.
+        #[arg(long)]
+        id: String,
+        /// The target message was sent by this account (default: by the contact).
+        #[arg(long)]
+        ours: bool,
+        /// Undo a previous keep instead of setting one.
+        #[arg(long)]
+        undo: bool,
+        /// Caller idempotency key; defaults to a content digest.
+        #[arg(long)]
+        request_id: Option<String>,
+    },
+    /// Durably enqueue an advanced chat privacy ("limit sharing") change;
+    /// `listen --send-outbox` transmits it.
+    ChatPrivacy {
+        /// Chat JID.
+        #[arg(long)]
+        chat: String,
+        /// Turn limit sharing on.
+        #[arg(long)]
+        on: bool,
+        /// Turn limit sharing off.
+        #[arg(long)]
+        off: bool,
+        /// Caller idempotency key; defaults to a chat/state digest (no phone number).
+        #[arg(long)]
+        request_id: Option<String>,
+    },
+    /// Queue the account-wide default disappearing timer for new chats
+    /// (`xmlns=disappearing_mode` IQ); a live session transmits it.
+    #[cfg(feature = "experimental-transport")]
+    DisappearingDefault {
+        /// New default timer in seconds.
+        #[arg(long)]
+        seconds: u32,
+    },
     /// Queue a quoted reply to a message in a direct chat.
     Reply {
         /// Chat JID.
@@ -1001,6 +1057,143 @@ async fn run(cli: Cli) -> Result<(), Error> {
                     .map_err(|e| Error::invalid("ticket", e.to_string()))?
             );
             eprintln!("note: vote durably queued; `listen --send-outbox` transmits it");
+            c.shutdown().await;
+            Ok(())
+        }
+        Cmd::Disappearing {
+            chat,
+            seconds,
+            request_id,
+        } => {
+            use sha2::Digest;
+            let peer = Jid::parse(chat)?;
+            let chat_id = ChatId::from_jid(&peer)?;
+            let digest = sha2::Sha256::digest(peer.to_non_ad().to_string().as_bytes());
+            let request_id = request_id
+                .clone()
+                .unwrap_or_else(|| format!("disappearing-{}-{seconds}", hex::encode(&digest[..8])));
+            let c = open_client(&cli, false).await?;
+            let ticket = c
+                .send_message(SendRequest {
+                    client_request_id: ClientRequestId::new(request_id)?,
+                    chat: chat_id,
+                    content: MessageContent::DisappearingTimer { seconds: *seconds },
+                })
+                .await?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&ticket)
+                    .map_err(|e| Error::invalid("ticket", e.to_string()))?
+            );
+            eprintln!(
+                "note: disappearing-timer change durably queued; `listen --send-outbox` transmits it"
+            );
+            c.shutdown().await;
+            Ok(())
+        }
+        Cmd::Keep {
+            chat,
+            id,
+            ours,
+            undo,
+            request_id,
+        } => {
+            use sha2::Digest;
+            use whatsapp_api::model::{
+                ids::{DeviceAddress, MessageId},
+                message::{Direction, MessageKey, MessageRef},
+            };
+            let peer = Jid::parse(chat)?;
+            let chat_id = ChatId::from_jid(&peer)?;
+            let target = MessageRef {
+                key: MessageKey {
+                    chat: chat_id.clone(),
+                    sender: if *ours {
+                        None
+                    } else {
+                        Some(DeviceAddress::from_jid(&peer)?)
+                    },
+                    direction: if *ours {
+                        Direction::Outgoing
+                    } else {
+                        Direction::Incoming
+                    },
+                    id: MessageId::new(id.clone())?,
+                },
+            };
+            let digest = sha2::Sha256::digest(format!("{id}\n{undo}").as_bytes());
+            let request_id = request_id
+                .clone()
+                .unwrap_or_else(|| format!("keep-{id}-{}", hex::encode(&digest[..8])));
+            let c = open_client(&cli, false).await?;
+            let ticket = c
+                .send_message(SendRequest {
+                    client_request_id: ClientRequestId::new(request_id)?,
+                    chat: chat_id,
+                    content: MessageContent::KeepInChat {
+                        target,
+                        keep: !*undo,
+                    },
+                })
+                .await?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&ticket)
+                    .map_err(|e| Error::invalid("ticket", e.to_string()))?
+            );
+            eprintln!(
+                "note: keep-in-chat change durably queued; `listen --send-outbox` transmits it"
+            );
+            c.shutdown().await;
+            Ok(())
+        }
+        Cmd::ChatPrivacy {
+            chat,
+            on,
+            off,
+            request_id,
+        } => {
+            use sha2::Digest;
+            if *on == *off {
+                return Err(Error::invalid(
+                    "chat-privacy",
+                    "pass exactly one of --on or --off",
+                ));
+            }
+            let peer = Jid::parse(chat)?;
+            let chat_id = ChatId::from_jid(&peer)?;
+            let limited = *on;
+            let digest =
+                sha2::Sha256::digest(format!("{}\n{limited}", peer.to_non_ad()).as_bytes());
+            let request_id = request_id
+                .clone()
+                .unwrap_or_else(|| format!("chat-privacy-{}", hex::encode(&digest[..8])));
+            let c = open_client(&cli, false).await?;
+            let ticket = c
+                .send_message(SendRequest {
+                    client_request_id: ClientRequestId::new(request_id)?,
+                    chat: chat_id,
+                    content: MessageContent::ChatPrivacy { limited },
+                })
+                .await?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&ticket)
+                    .map_err(|e| Error::invalid("ticket", e.to_string()))?
+            );
+            eprintln!(
+                "note: advanced chat privacy change durably queued; `listen --send-outbox` transmits it"
+            );
+            c.shutdown().await;
+            Ok(())
+        }
+        #[cfg(feature = "experimental-transport")]
+        Cmd::DisappearingDefault { seconds } => {
+            let c = open_client(&cli, false).await?;
+            let id =
+                whatsapp_api::transport::chat_settings::queue_default_timer(c.store(), *seconds)?;
+            println!("{id}");
+            eprintln!("note: queued; a session transmits it; inspect with `actions`");
             c.shutdown().await;
             Ok(())
         }
