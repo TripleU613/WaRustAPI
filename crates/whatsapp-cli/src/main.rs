@@ -139,7 +139,7 @@ enum Cmd {
         /// The target message was sent by this account (default: by the contact).
         #[arg(long)]
         ours: bool,
-        /// Caller idempotency key; defaults to react-<id>-<emoji or remove>.
+        /// Caller idempotency key; defaults to `react-<id>-<emoji-hex or remove>`.
         #[arg(long)]
         request_id: Option<String>,
     },

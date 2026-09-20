@@ -528,8 +528,7 @@ mod tests {
                         chat: ChatId::from_jid(target_chat).unwrap(),
                         sender: None,
                         direction: Direction::Outgoing,
-                        id: crate::model::ids::MessageId::new("ABCDEF0123456789ABCDEF0123456789")
-                            .unwrap(),
+                        id: MessageId::new("ABCDEF0123456789ABCDEF0123456789").unwrap(),
                     },
                 },
                 emoji: Some("👍".into()),

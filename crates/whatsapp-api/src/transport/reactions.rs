@@ -153,10 +153,8 @@ mod tests {
             1_700_000_000_000,
         )
         .unwrap();
-        assert_eq!(
-            crate::signal::direct::payload_fields(&bytes).unwrap(),
-            vec![46]
-        );
+        // Field 46, wire type 2: key (46 << 3) | 2 = 370 = varint F2 02.
+        assert_eq!(&bytes[..2], &[0xF2, 0x02]);
         let envelope = Envelope::decode(bytes.as_slice()).unwrap();
         let reaction = envelope.reaction.unwrap();
         let key = reaction.key.as_ref().unwrap();

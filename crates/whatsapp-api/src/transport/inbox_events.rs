@@ -67,7 +67,7 @@ fn event_with_content(
         };
         // Reaction (comparison 2.26.37.71 `Message.reactionMessage` 46): a change
         // to an existing message, never a new message event.
-        if fields.iter().any(|v| *v == 46) {
+        if fields.contains(&46) {
             if fields.iter().any(|v| !matches!(v, 46 | 35)) {
                 return unsupported();
             }
