@@ -39,3 +39,12 @@ All of these names are dictionary tokens.
 Group messages themselves (`enc type="skmsg"` with sender keys, and
 `senderKeyDistributionMessage` delivery) are a separate slice; today an
 incoming stanza with a `participant` attribute is preserved but not decrypted.
+
+## Live record
+
+2026-09-20 ~02:19 EDT: the first `create` (subject and one participant, as in
+the table) was written after activation; the server answered
+`stream:error code=503` and closed the stream, so the action stays `sent`
+with no reply. The next login was refused with `failure reason=403` and an
+appeal token (see `STATUS.md`). Whether the group request itself played a
+part is unknown; nothing else here is live-verified.

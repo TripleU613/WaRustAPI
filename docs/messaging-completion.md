@@ -42,6 +42,12 @@ from offline tests alone. Existing received captures can be processed locally.
   login reply's `pn`/`lid` are saved for message keys and vote identities. Live:
   the contact's poll decoded, our vote was server-accepted and our own poll was
   delivered; incoming votes on both polls decrypted live, confirming the recipe.
+- Groups (2026-09-20, `docs/protocol/groups.md`): management requests
+  (create, info, subject, description, add/remove/promote/demote, leave,
+  invite link) on the action queue with snapshot ingestion and group events;
+  not live-verified — the first create was followed by a stream error and the
+  account was then refused at login (`STATUS.md`). Group messages (sender
+  keys) are not implemented.
 - Chat actions (2026-09-20, `docs/protocol/chat-actions.md`): a durable
   one-shot IQ action queue carries block/unblock/block-list fetch, spam report,
   the default disappearing-timer IQ and `usync` contact checks; E2E protocol
