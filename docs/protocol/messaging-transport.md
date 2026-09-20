@@ -344,7 +344,7 @@ settles it by matching server acknowledgement. Unknown, unauthenticated, group
 or device-addressed messages are refused before any write, and nothing is sent
 without an explicit request (`ReceiptPolicy::ExplicitOnly`). The CLI wrapper is
 `mark-read --config <json> --chat <jid> --id <msgid>...` (offline queueing; the
-next `listen` session transmits). No live read receipt has been exercised yet.
+next `listen` session transmits; `receipts` lists outcomes). The first live read receipt was server-acknowledged on 2026-09-19.
 
 Server clock: each authenticated incoming `message`/`receipt` stanza with a
 plausible whole-second `t` refreshes one saved (server, local) sample; older
