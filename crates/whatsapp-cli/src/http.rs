@@ -33,6 +33,7 @@ use whatsapp_api::{Error, ProtocolProfile};
 const MAX_HEADER_BYTES: usize = 16 * 1024;
 const MAX_CONNECTIONS: usize = 64;
 const REQUEST_TIMEOUT: Duration = Duration::from_secs(5);
+const OPENAPI_JSON: &str = include_str!("../../../docs/api/openapi.json");
 
 struct ApiState {
     profile: ProtocolProfile,
@@ -227,6 +228,7 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
             _,
             "/"
             | "/healthz"
+            | "/openapi.json"
             | "/v1/profile"
             | "/v1/capabilities"
             | "/v1/transport/wire-profile"
@@ -243,6 +245,7 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
                 "version": env!("CARGO_PKG_VERSION"),
                 "routes": [
                     "GET /healthz",
+                    "GET /openapi.json",
                     "GET /v1/profile",
                     "GET /v1/capabilities",
                     "GET /v1/transport/wire-profile",
@@ -262,6 +265,11 @@ fn route(method: &str, raw_path: &str, state: &ApiState) -> Response {
                 "profile_id": state.profile.id,
                 "production_grade": state.profile.is_production_grade()
             }),
+        ),
+        ("GET" | "HEAD", "/openapi.json") => Response::json(
+            200,
+            "OK",
+            serde_json::from_str(OPENAPI_JSON).expect("docs/api/openapi.json is valid JSON"),
         ),
         ("GET" | "HEAD", "/v1/profile") => Response::json(
             200,
@@ -647,5 +655,80 @@ mod tests {
         assert!(validate_bind(public, false).is_err());
         assert!(validate_bind(public, true).is_ok());
         assert!(validate_bind("127.0.0.1:8787".parse().unwrap(), false).is_ok());
+    }
+
+    #[test]
+    fn openapi_document_is_served() {
+        let response = route("GET", "/openapi.json", &state());
+        assert_eq!(response.status, 200);
+        let body = body(&response);
+        assert_eq!(body["openapi"], "3.1.0");
+        assert!(body["paths"].is_object());
+        assert!(!body["paths"].as_object().unwrap().is_empty());
+    }
+
+    #[test]
+    fn served_routes_are_declared_http_in_openapi() {
+        let doc: Value =
+            serde_json::from_str(OPENAPI_JSON).expect("docs/api/openapi.json is valid JSON");
+        let declared_http_paths = doc["paths"]
+            .as_object()
+            .unwrap()
+            .iter()
+            .flat_map(|(path, path_item)| {
+                path_item
+                    .as_object()
+                    .unwrap()
+                    .iter()
+                    .filter_map(move |(method, op)| {
+                        let x_transport_check = op
+                            .get("x-transport")
+                            .and_then(|t| t.as_array())
+                            .map(|arr| arr.iter().any(|t| t == "http"))
+                            .unwrap_or_default();
+                        if x_transport_check {
+                            Some((method.to_uppercase(), path.clone()))
+                        } else {
+                            None
+                        }
+                    })
+            })
+            .collect::<Vec<_>>();
+
+        let routes = [
+            ("GET", "/"),
+            ("HEAD", "/"),
+            ("GET", "/healthz"),
+            ("HEAD", "/healthz"),
+            ("GET", "/openapi.json"),
+            ("GET", "/v1/profile"),
+            ("HEAD", "/v1/profile"),
+            ("GET", "/v1/capabilities"),
+            ("HEAD", "/v1/capabilities"),
+            ("GET", "/v1/transport/wire-profile"),
+            ("GET", "/v1/registration/wire-profile"),
+            ("POST", "/v1/connect"),
+            ("POST", "/v1/registration"),
+        ];
+
+        for (method, path) in &routes {
+            let found = declared_http_paths
+                .iter()
+                .any(|(m, p)| m == *method && p == *path);
+            assert!(
+                found,
+                "route {method} {path} not declared with x-transport [\"http\"]"
+            );
+        }
+
+        for (method, path) in &declared_http_paths {
+            let found = routes
+                .iter()
+                .any(|(m, p)| *m == method.as_str() && p == path);
+            assert!(
+                found,
+                "OpenAPI declares {method} {path} with x-transport [\"http\"] but route is not served"
+            );
+        }
     }
 }

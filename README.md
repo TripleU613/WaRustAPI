@@ -52,6 +52,7 @@ and the full validation workflow. First-party code and automation are Rust.
 
 ## Documentation
 
+- [API reference (OpenAPI)](docs/api/README.md) — every CLI command and HTTP route, machine-readable
 - [Documentation index](docs/README.md)
 - [Running more than one account](docs/accounts.md) — profiles, onboarding a second number, the two-account pair check
 - [Current status](STATUS.md)

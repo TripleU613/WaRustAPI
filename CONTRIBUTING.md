@@ -45,6 +45,11 @@ coverage for behavioral changes. Update the relevant docs and status when
 capabilities change. Do not claim mocked or offline tests prove live service
 interoperability.
 
+Any change to a CLI command, flag, HTTP route, library capability or observed
+server response code updates `docs/api/openapi.json` in the same change (see
+[docs/api/README.md](docs/api/README.md)). `cargo test -p whatsapp-cli` fails
+when a command is missing from the document.
+
 First-party automation belongs in the Rust `xtask` crate. Avoid unrelated
 dependency upgrades, new runtimes, or empty modules for planned features.
 Use `cargo run --locked -p xtask -- proto-gen` to regenerate protobuf code;

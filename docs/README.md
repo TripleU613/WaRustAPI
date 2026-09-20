@@ -3,6 +3,11 @@
 Start with [Getting started](getting-started.md) for commands that work today
 and [STATUS.md](../STATUS.md) for verified behavior and blockers.
 
+## API reference
+
+- [API reference](api/README.md)
+- [OpenAPI document](api/openapi.json)
+
 ## Development and design
 
 - [Contributing](../CONTRIBUTING.md): toolchain, checks, and review expectations.

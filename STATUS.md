@@ -1,5 +1,14 @@
 # Status — 2026-09-20
 
+**API reference added:** an OpenAPI 3.1 document now describes every CLI command,
+HTTP route, library capability, request/response field and recognized server
+response. It is served at `/openapi.json` from the control plane and can be viewed
+at `docs/api/openapi.json` in the repository. Most operations today are
+`x-transport: cli`; the HTTP routes beyond the inspection routes (health, profile,
+capabilities, wire-profile) are contracts for future implementation, not served yet.
+See `docs/api/README.md` for usage and `docs/api/openapi.json` for the full spec.
+
+
 **Chat actions landed (2026-09-20):** block/unblock/block-list fetch, spam
 report (not sent live), disappearing timer, keep in chat, advanced chat privacy
 (limit sharing), default disappearing timer IQ, local contacts with a `usync`

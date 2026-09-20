@@ -50,7 +50,10 @@ curl http://127.0.0.1:8787/v1/profile
 curl http://127.0.0.1:8787/v1/capabilities
 curl http://127.0.0.1:8787/v1/transport/wire-profile
 curl http://127.0.0.1:8787/v1/registration/wire-profile
+curl http://127.0.0.1:8787/openapi.json
 ```
+
+The document describes every operation, including the ones only the CLI performs today; see [docs/api/README.md](api/README.md).
 
 The HTTP interface has no authentication. Keep the default loopback binding.
 The wire-profile routes describe the comparison APK, not a working connection.

@@ -154,6 +154,12 @@ request—not adding Rust code, another command or a number-specific script.**
 - Keep the README short: purpose, honest status, quick start and links.
   Put detailed design, research, troubleshooting and usage in `docs/` rather
   than allowing the README to become a long manual again.
+- **Everything goes in the OpenAPI document.** Any new or changed command, flag,
+  capability, route, field or recognized server response is documented in
+  `docs/api/openapi.json` in the same change, with `x-cli`, `x-transport` and
+  `x-live` set honestly. `docs/api/README.md` has the checklist; the CLI coverage
+  test enforces command coverage. Do not describe a capability as served over HTTP
+  until the route exists.
 - Maintain normal repository essentials: useful docs, tests, licensing,
   contribution/security guidance, formatting, linting and predictable commands.
 - CI should be selective and purposeful, not expensive full builds on every
@@ -246,6 +252,12 @@ request—not adding Rust code, another command or a number-specific script.**
   Standard snow XX message handling adds that payload hash and failed live
   decryption. The comparison classic adapter corrects sequencing over existing
   primitives; certificate verification must remain enabled.
+
+- New numbers: never start from `lab-signup template` defaults. Copy the working
+  recipe (body_mode `enc_empty_h`, the 2.26.37.70 User-Agent, the eight observed
+  `code_bytes` fields) and derive the token from the 2.26.37.70 material; the
+  2.26.37.71 APK on disk yields wrong tokens for that recipe. The
+  `LabRegistrationConfig` schema in `docs/api/openapi.json` records the recipe.
 
 - Read `STATUS.md`, `docs/protocol/registration-lab.md`,
   `docs/protocol/http-post-analysis.md` and `docs/protocol/evidence-ledger.md`

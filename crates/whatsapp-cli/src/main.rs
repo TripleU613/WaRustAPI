@@ -1023,7 +1023,9 @@ async fn run(cli: Cli) -> Result<(), Error> {
             message,
             appeal_token,
         } => {
-            use whatsapp_api::transport::ban_appeal::{BanAppealInput, read_stored_appeal_token, submit_ban_appeal};
+            use whatsapp_api::transport::ban_appeal::{
+                BanAppealInput, read_stored_appeal_token, submit_ban_appeal,
+            };
             use zeroize::Zeroizing;
             if !allow_live_request {
                 return Err(Error::invalid(
@@ -1753,6 +1755,114 @@ async fn main() -> ExitCode {
                 Error::WrongStorageKey => ExitCode::from(5),
                 _ => ExitCode::FAILURE,
             }
+        }
+    }
+}
+
+#[cfg(test)]
+mod openapi_coverage {
+    use clap::CommandFactory;
+    use serde_json::Value;
+    use std::collections::HashSet;
+
+    use super::Cli;
+
+    fn collect_cli_commands(cmd: &clap::Command, prefix: Vec<String>) -> Vec<String> {
+        let mut commands = Vec::new();
+        let subcommands: Vec<_> = cmd.get_subcommands().collect();
+
+        if subcommands.is_empty() {
+            let mut path = vec!["whatsapp-cli".to_string()];
+            path.extend(prefix);
+            commands.push(path.join(" "));
+        } else {
+            for subcmd in subcommands {
+                if subcmd.get_name() != "help" {
+                    let mut new_prefix = prefix.clone();
+                    new_prefix.push(subcmd.get_name().to_string());
+                    commands.extend(collect_cli_commands(subcmd, new_prefix));
+                }
+            }
+        }
+
+        commands
+    }
+
+    #[test]
+    fn every_cli_command_is_documented_in_openapi() {
+        let cmd = Cli::command();
+        let cli_commands = collect_cli_commands(&cmd, vec![]);
+        let cli_set: HashSet<_> = cli_commands.iter().cloned().collect();
+
+        let doc: Value = serde_json::from_str(include_str!("../../../docs/api/openapi.json"))
+            .expect("docs/api/openapi.json is valid JSON");
+
+        let mut documented = HashSet::new();
+        if let Some(paths) = doc["paths"].as_object() {
+            for path_item in paths.values() {
+                if let Some(path_obj) = path_item.as_object() {
+                    for op in path_obj.values() {
+                        if let Some(x_cli) = op.get("x-cli").and_then(|v| v.as_str()) {
+                            documented.insert(x_cli.to_string());
+                        }
+                    }
+                }
+            }
+        }
+
+        let mut missing: Vec<_> = cli_set
+            .iter()
+            .filter(|cmd| !documented.contains(*cmd))
+            .collect();
+        missing.sort();
+
+        if !missing.is_empty() {
+            let mut msg = String::from("undocumented CLI commands:\n");
+            for cmd in missing {
+                msg.push_str(&format!("  {cmd}\n"));
+            }
+            msg.push_str("add the operation to docs/api/openapi.json (see docs/api/README.md)");
+            panic!("{}", msg);
+        }
+    }
+
+    #[test]
+    #[cfg(feature = "experimental-transport")]
+    fn every_documented_command_exists() {
+        let cmd = Cli::command();
+        let cli_commands = collect_cli_commands(&cmd, vec![]);
+        let cli_set: HashSet<_> = cli_commands.iter().cloned().collect();
+
+        assert!(!cli_set.is_empty(), "leaf command count must be > 0");
+
+        let doc: Value = serde_json::from_str(include_str!("../../../docs/api/openapi.json"))
+            .expect("docs/api/openapi.json is valid JSON");
+
+        let mut documented = HashSet::new();
+        if let Some(paths) = doc["paths"].as_object() {
+            for path_item in paths.values() {
+                if let Some(path_obj) = path_item.as_object() {
+                    for op in path_obj.values() {
+                        if let Some(x_cli) = op.get("x-cli").and_then(|v| v.as_str()) {
+                            documented.insert(x_cli.to_string());
+                        }
+                    }
+                }
+            }
+        }
+
+        let mut undeclared: Vec<_> = documented
+            .iter()
+            .filter(|cmd| !cli_set.contains(*cmd))
+            .collect();
+        undeclared.sort();
+
+        if !undeclared.is_empty() {
+            let mut msg = String::from("documented commands that do not exist:\n");
+            for cmd in undeclared {
+                msg.push_str(&format!("  {cmd}\n"));
+            }
+            panic!("{}", msg);
         }
     }
 }

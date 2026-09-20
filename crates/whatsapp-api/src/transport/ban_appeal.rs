@@ -1,9 +1,7 @@
 //! Ban-appeal submission: POST to ACS GraphQL with the saved appeal token.
 //! Requires `experimental-registration-https` for the constrained reqwest client.
 use crate::{
-    Error, Result,
-    registration::request::LabRegistrationConfig,
-    session::AccountRecord,
+    Error, Result, registration::request::LabRegistrationConfig, session::AccountRecord,
     store::ProtocolStore,
 };
 use std::{sync::Arc, time::Duration};
@@ -136,16 +134,19 @@ pub async fn submit_ban_appeal(
         req = req.header(reqwest::header::AUTHORIZATION, bearer);
     }
 
-    let response = req.send().await.map_err(|_| {
-        Error::Io(std::io::Error::other("ban appeal HTTPS request failed"))
-    })?;
+    let response = req
+        .send()
+        .await
+        .map_err(|_| Error::Io(std::io::Error::other("ban appeal HTTPS request failed")))?;
 
     let http_status = response.status().as_u16();
     let mut raw = Zeroizing::new(Vec::<u8>::new());
     let mut stream = response;
-    while let Some(chunk) = stream.chunk().await.map_err(|_| {
-        Error::Io(std::io::Error::other("ban appeal response body failed"))
-    })? {
+    while let Some(chunk) = stream
+        .chunk()
+        .await
+        .map_err(|_| Error::Io(std::io::Error::other("ban appeal response body failed")))?
+    {
         if raw.len().saturating_add(chunk.len()) > MAX_RESPONSE_BYTES {
             return Err(Error::ResourceExhausted {
                 resource: "ban appeal response bytes",
@@ -156,7 +157,10 @@ pub async fn submit_ban_appeal(
     }
 
     let summary = summarize(http_status, &raw);
-    Ok(BanAppealResult { http_status, summary })
+    Ok(BanAppealResult {
+        http_status,
+        summary,
+    })
 }
 
 fn build_client(config: &LabRegistrationConfig) -> Result<reqwest::Client> {
@@ -165,7 +169,12 @@ fn build_client(config: &LabRegistrationConfig) -> Result<reqwest::Client> {
         rustls::crypto::ring::default_provider(),
     ))
     .with_safe_default_protocol_versions()
-    .map_err(|_| Error::invalid("ban_appeal_tls", "ring provider has no safe protocol versions"))?
+    .map_err(|_| {
+        Error::invalid(
+            "ban_appeal_tls",
+            "ring provider has no safe protocol versions",
+        )
+    })?
     .with_root_certificates(roots)
     .with_no_client_auth();
     let mut builder = reqwest::Client::builder()
@@ -200,11 +209,17 @@ fn summarize(http_status: u16, body: &[u8]) -> serde_json::Value {
             .unwrap_or_default();
         s["top_level_keys"] = serde_json::json!(keys);
         // Preserve known non-secret structural fields.
-        for field in ["status", "error", "error_code", "error_message", "error_type"] {
-            if let Some(v) = parsed.get(field) {
-                if v.is_string() || v.is_number() || v.as_bool().is_some() {
-                    s[field] = v.clone();
-                }
+        for field in [
+            "status",
+            "error",
+            "error_code",
+            "error_message",
+            "error_type",
+        ] {
+            if let Some(v) = parsed.get(field)
+                && (v.is_string() || v.is_number() || v.as_bool().is_some())
+            {
+                s[field] = v.clone();
             }
         }
         // errors array: keep code + type, mask message text.
@@ -214,10 +229,10 @@ fn summarize(http_status: u16, body: &[u8]) -> serde_json::Value {
                 .map(|e| {
                     let mut item = serde_json::json!({});
                     for field in ["code", "type", "error_type"] {
-                        if let Some(v) = e.get(field) {
-                            if v.is_number() || v.is_string() {
-                                item[field] = v.clone();
-                            }
+                        if let Some(v) = e.get(field)
+                            && (v.is_number() || v.is_string())
+                        {
+                            item[field] = v.clone();
                         }
                     }
                     item
