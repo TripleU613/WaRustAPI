@@ -1903,6 +1903,11 @@ pub struct RegistrationResponse {
     pub email_otp_wait: Option<Duration>,
     /// Email one-time-code length.
     pub email_otp_length: Option<u32>,
+    /// `/v2/exist` and `challenge` replies: whether the email one-time code is
+    /// offered for this number (`KotlinRegistrationBridge.A0B`, 2.26.37.71).
+    pub email_otp_eligible: Option<bool>,
+    /// Whether confirmation on the previously registered device is offered.
+    pub wa_old_eligible: Option<bool>,
     secrets: RegistrationResponseSecrets,
 }
 
@@ -1927,6 +1932,8 @@ impl fmt::Debug for RegistrationResponse {
             .field("is_device_trusted", &self.is_device_trusted)
             .field("email_otp_wait", &self.email_otp_wait)
             .field("email_otp_length", &self.email_otp_length)
+            .field("email_otp_eligible", &self.email_otp_eligible)
+            .field("wa_old_eligible", &self.wa_old_eligible)
             .field("secrets", &self.secrets)
             .finish()
     }
@@ -2000,6 +2007,8 @@ impl RegistrationResponse {
             is_device_trusted: raw.is_device_trusted,
             email_otp_wait: parse_seconds("email_otp_wait", raw.email_otp_wait)?,
             email_otp_length: raw.email_otp_length,
+            email_otp_eligible: raw.email_otp_eligible,
+            wa_old_eligible: raw.wa_old_eligible,
             secrets: RegistrationResponseSecrets {
                 login: raw.login,
                 code: raw.code,
@@ -2047,6 +2056,8 @@ struct RawRegistrationResponse {
     is_device_trusted: Option<bool>,
     email_otp_wait: Option<SecondsValue>,
     email_otp_length: Option<u32>,
+    email_otp_eligible: Option<bool>,
+    wa_old_eligible: Option<bool>,
     login: Option<Zeroizing<String>>,
     code: Option<Zeroizing<String>>,
     wipe_token: Option<Zeroizing<String>>,
@@ -2090,6 +2101,9 @@ pub enum VerificationMethod {
     Voice,
     /// Existing-device verification.
     WaOld,
+    /// One-time code sent to the account's email (`/v2/code` `method=email_otp`,
+    /// 2.26.37.71 `LX/0GB.A01`).
+    EmailOtp,
     /// Unsupported method.
     #[serde(other)]
     Other,

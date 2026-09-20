@@ -82,15 +82,31 @@ pub(super) enum Action {
     /// Local only: move a `challenge` refusal of /v2/register to the email
     /// second-factor step (2.26.37.71 launchEmailChallengeFlow). No request.
     ResumeEmailChallenge,
-    /// Ask the server to send the email one-time code (`/v2/challenge`
-    /// `email_enter`); pass the account's email only when the server needs it.
+    /// Ask the server to email the one-time code to the address on file
+    /// (`/v2/code` with `method=email_otp`, 2.26.37.71 `LX/0GB.A01`).
     RequestEmailCode {
-        /// Email address to name in the request (not persisted).
+        /// Not sent by the comparison client; rejected when given.
         #[arg(long)]
         email: Option<String>,
     },
-    /// Submit the email one-time code from redirected stdin (`email_verify`).
+    /// One read-safe `/v2/exist` probe of method eligibility for the saved
+    /// attempt (email one-time code, old-device confirmation, waits). Prints
+    /// the server's answer and changes no state.
+    Exist,
+    /// Submit the emailed one-time code from redirected stdin (`/v2/register`).
     VerifyEmailCode,
+}
+
+/// Keep only the first character of the local part and the domain of an
+/// address the server already masked (`a***@example.com`).
+fn mask_email(value: &str) -> String {
+    match value.split_once('@') {
+        Some((local, domain)) => {
+            let first: String = local.chars().take(1).collect();
+            format!("{first}***@{domain}")
+        }
+        None => "***".into(),
+    }
 }
 
 fn invalid(message: &'static str) -> Error {
@@ -306,11 +322,8 @@ pub(super) async fn run(
     } else {
         StoredComparisonRequestFactory::new(store.clone(), config)?
     });
-    let service = RegistrationService::new(
-        store,
-        &profile,
-        Arc::new(ComparisonHttpFlow::new(factory.clone(), transport.clone())),
-    );
+    let flow = Arc::new(ComparisonHttpFlow::new(factory.clone(), transport.clone()));
+    let service = RegistrationService::new(store, &profile, flow.clone());
     if let Some(metrics) = migration_metrics {
         let attempt = service
             .current()
@@ -452,6 +465,35 @@ pub(super) async fn run(
         Action::DiagnoseUnknownAgent { .. } => service.diagnose_unknown_agent_once(phone).await?,
         Action::DiagnoseEncryptedParameter => {
             service.diagnose_encrypted_parameter_once(phone).await?
+        }
+        Action::Exist => {
+            let attempt = service
+                .current()
+                .await?
+                .ok_or_else(|| invalid("no registration attempt"))?;
+            let (status_code, mut response) = flow.exist_probe(&attempt).await?;
+            let email = response.take_secrets().take_email();
+            let summary = serde_json::json!({
+                "http_status": status_code,
+                "status": format!("{:?}", response.status),
+                "reason": response.reason.as_ref().map(|r| format!("{r:?}")),
+                "email_otp_eligible": response.email_otp_eligible,
+                "wa_old_eligible": response.wa_old_eligible,
+                "email_on_file": email.as_deref().map(|e| mask_email(e.as_str())),
+                "fallback_methods": response.fallback_methods.as_ref().map(|m| format!("{m:?}")),
+                "recommended_method": response.recommended_method.as_ref().map(|m| format!("{m:?}")),
+                "retry_after_seconds": response.retry_after.map(|d| d.as_secs()),
+                "sms_wait_seconds": response.sms_wait.map(|d| d.as_secs()),
+                "voice_wait_seconds": response.voice_wait.map(|d| d.as_secs()),
+                "email_otp_wait_seconds": response.email_otp_wait.map(|d| d.as_secs()),
+                "is_device_trusted": response.is_device_trusted,
+            });
+            println!(
+                "exist: {}",
+                serde_json::to_string_pretty(&summary)
+                    .map_err(|e| Error::invalid("lab_signup", e.to_string()))?
+            );
+            return Ok(());
         }
         Action::ResumeEmailChallenge => service.resume_email_challenge().await?,
         Action::RequestEmailCode { email } => {

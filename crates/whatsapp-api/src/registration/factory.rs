@@ -279,6 +279,22 @@ impl StoredComparisonRequestFactory {
             Ok(record)
         })
     }
+
+    fn code_request_with_method(
+        &self,
+        attempt: &RegistrationAttempt,
+        method: &str,
+    ) -> Result<EncodedRegistrationRequest> {
+        let record = self.load(attempt)?;
+        let mut form = RegistrationForm::new();
+        record.common()?.append_to_form(&mut form)?;
+        RegistrationCodeParams::new(record.config.token.as_str(), method)?
+            .append_to_form(&mut form)?;
+        super::request::append_fields(&mut form, &record.config.fields.code)?;
+        super::request::append_byte_fields(&mut form, &record.config.fields.code_bytes)?;
+        record.bundle()?.append_to_form(&mut form)?;
+        WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Code, &form)
+    }
 }
 
 impl ComparisonRequestFactory for StoredComparisonRequestFactory {
@@ -342,6 +358,12 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
         if !self.config.preflight {
             return Ok(None);
         }
+        self.exist_request(attempt).map(Some)
+    }
+
+    /// The same-identity `/v2/exist` request, independent of the preflight
+    /// opt-in (2.26.37.71 `KotlinRegistrationBridge.A0B` performSameDeviceCheck).
+    fn exist_request(&self, attempt: &RegistrationAttempt) -> Result<EncodedRegistrationRequest> {
         let record = self.load(attempt)?;
         let mut form = RegistrationForm::new();
         record.common()?.append_to_form(&mut form)?;
@@ -365,9 +387,7 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
         }
         super::request::append_byte_fields(&mut form, &fields)?;
         record.bundle()?.append_to_form(&mut form)?;
-        Ok(Some(
-            WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Exist, &form)?,
-        ))
+        WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Exist, &form)
     }
 
     fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()> {
@@ -417,22 +437,23 @@ impl ComparisonRequestFactory for StoredComparisonRequestFactory {
     }
 
     fn code_request(&self, attempt: &RegistrationAttempt) -> Result<EncodedRegistrationRequest> {
-        let record = self.load(attempt)?;
         let method = match attempt.method {
             ChallengeMethod::Sms => "sms",
             ChallengeMethod::Voice => "voice",
             _ => return Err(invalid("unsupported challenge method")),
         };
-        let mut form = RegistrationForm::new();
-        record.common()?.append_to_form(&mut form)?;
-        RegistrationCodeParams::new(record.config.token.as_str(), method)?
-            .append_to_form(&mut form)?;
-        super::request::append_fields(&mut form, &record.config.fields.code)?;
-        super::request::append_byte_fields(&mut form, &record.config.fields.code_bytes)?;
-        record.bundle()?.append_to_form(&mut form)?;
-        WHATSAPP_2_26_37_70.request(RegistrationEndpoint::Code, &form)
+        self.code_request_with_method(attempt, method)
     }
 
+    /// `/v2/code` with `method=email_otp` (2.26.37.71 `LX/0GB.A01` maps the
+    /// email second factor to that delivery method; the reply carries
+    /// `email_otp_wait`/`email_otp_length`).
+    fn email_code_request(
+        &self,
+        attempt: &RegistrationAttempt,
+    ) -> Result<EncodedRegistrationRequest> {
+        self.code_request_with_method(attempt, "email_otp")
+    }
     fn complete_request(
         &self,
         attempt: &RegistrationAttempt,

@@ -156,8 +156,8 @@ pub enum RequiredAction {
     EnterCode(ChallengeHandle),
     /// Enter the account PIN (two-step verification).
     EnterPin(ChallengeHandle),
-    /// Ask the server to send the email one-time code (`/v2/challenge`
-    /// `email_enter`); the server named email verification as the second factor.
+    /// Ask the server to email the one-time code (`/v2/code` with
+    /// `method=email_otp`); the server named email verification as the second factor.
     RequestEmailCode(ChallengeHandle),
     /// Enter the one-time code delivered to the account's email.
     EnterEmailCode(ChallengeHandle),
@@ -286,7 +286,7 @@ pub enum Answer {
     Code(Zeroizing<String>),
     /// Account PIN.
     Pin(Zeroizing<String>),
-    /// One-time code delivered to the account's email (`/v2/challenge`).
+    /// One-time code delivered to the account's email (`/v2/code` `method=email_otp`).
     EmailCode(Zeroizing<String>),
 }
 
@@ -575,8 +575,8 @@ pub trait RegistrationFlow: Send + Sync + fmt::Debug {
         answer: &'a Answer,
     ) -> RegistrationFuture<'a>;
 
-    /// Ask the server to send the email second-factor code (`/v2/challenge`
-    /// `email_enter`). Returns the next state; never persists the address.
+    /// Ask the server to email the second-factor code (`/v2/code` with
+    /// `method=email_otp`). Returns the next state; no address is sent.
     fn request_email_code<'a>(
         &'a self,
         _attempt: &'a RegistrationAttempt,
@@ -681,6 +681,28 @@ pub trait ComparisonRequestFactory: Send + Sync + fmt::Debug {
     ) -> Result<Option<wire::EncodedRegistrationRequest>> {
         Ok(None)
     }
+    /// The same-identity `/v2/exist` request regardless of the preflight opt-in
+    /// (a read-safe probe of method eligibility).
+    fn exist_request(
+        &self,
+        _attempt: &RegistrationAttempt,
+    ) -> Result<wire::EncodedRegistrationRequest> {
+        Err(Error::invalid(
+            "exist",
+            "factory does not implement the existence probe",
+        ))
+    }
+    /// `/v2/code` with `method=email_otp`: asks the server to email the
+    /// one-time code to the address on file (2.26.37.71 `LX/0GB.A01`).
+    fn email_code_request(
+        &self,
+        _attempt: &RegistrationAttempt,
+    ) -> Result<wire::EncodedRegistrationRequest> {
+        Err(Error::invalid(
+            "email_otp",
+            "factory does not implement the email one-time code request",
+        ))
+    }
     /// Persist keys and identifiers needed by later request construction.
     fn prepare(&self, tx: &mut WriteTx<'_>, attempt: &RegistrationAttempt) -> Result<()>;
 
@@ -757,6 +779,17 @@ impl ComparisonHttpFlow {
         let response = self.transport.send(request).await?;
         let status_code = response.status_code();
         Ok((status_code, response.parse_json()?))
+    }
+
+    /// Read-safe probe: the same-identity `/v2/exist` request the client sends
+    /// before choosing a delivery method. Changes no state; the caller reports
+    /// eligibility (`email_otp_eligible`, `wa_old_eligible`, masked email).
+    pub async fn exist_probe(
+        &self,
+        attempt: &RegistrationAttempt,
+    ) -> Result<(u16, wire::RegistrationResponse)> {
+        let request = self.requests.exist_request(attempt)?;
+        self.send(request).await
     }
 
     fn blocked_response(
@@ -991,10 +1024,17 @@ impl RegistrationFlow for ComparisonHttpFlow {
         email: Option<&'a str>,
     ) -> RegistrationFuture<'a> {
         Box::pin(async move {
-            let request = self.requests.challenge_request(
-                attempt,
-                &wire::RegistrationChallengeParams::email_enter(email)?,
-            )?;
+            // 2.26.37.71: the email second factor is a `/v2/code` delivery method
+            // (`method=email_otp`); the server emails the address it has on file,
+            // so no address travels in the request. Live 2026-09-20: the earlier
+            // `/v2/challenge email_enter` guess was answered with HTTP 404.
+            if email.is_some() {
+                return Err(Error::invalid(
+                    "email",
+                    "the comparison client sends no address; the server uses the one on file",
+                ));
+            }
+            let request = self.requests.email_code_request(attempt)?;
             let (status_code, response) = self.send(request).await?;
             if (200..300).contains(&status_code)
                 && matches!(
@@ -1029,10 +1069,9 @@ impl RegistrationFlow for ComparisonHttpFlow {
             let request = match answer {
                 Answer::Code(code) => self.requests.complete_request(attempt, code)?,
                 Answer::Pin(pin) => self.requests.security_request(attempt, pin)?,
-                Answer::EmailCode(code) => self.requests.challenge_request(
-                    attempt,
-                    &wire::RegistrationChallengeParams::email_verify(code.as_str())?,
-                )?,
+                // The emailed code is verified by the same `/v2/register` call as
+                // an SMS or voice code (2.26.37.71 `KotlinRegistrationBridge.A0D`).
+                Answer::EmailCode(code) => self.requests.complete_request(attempt, code)?,
             };
             let (status_code, mut response) = self.send(request).await?;
             if (200..300).contains(&status_code)
@@ -1041,9 +1080,8 @@ impl RegistrationFlow for ComparisonHttpFlow {
                 return Ok(RegistrationFlowOutput::registered(Self::completion_from(
                     &mut response,
                     match answer {
-                        Answer::Code(_) => "/v2/register",
+                        Answer::Code(_) | Answer::EmailCode(_) => "/v2/register",
                         Answer::Pin(_) => "/v2/security",
-                        Answer::EmailCode(_) => "/v2/challenge",
                     },
                 )?));
             }
@@ -1671,6 +1709,14 @@ impl RegistrationService {
         handle: ChallengeHandle,
         email: Option<String>,
     ) -> Result<RegistrationStep> {
+        // Rejected before any transition: the comparison client sends no
+        // address, the server emails the one it has on file.
+        if email.is_some() {
+            return Err(Error::invalid(
+                "email",
+                "the comparison client sends no address; the server uses the one on file",
+            ));
+        }
         let (attempt, bound) = self
             .store
             .run_blocking(move |s| {
@@ -2125,6 +2171,15 @@ mod tests {
             params.append_to_form(&mut form)?;
             wire::WHATSAPP_2_26_37_70.request(wire::RegistrationEndpoint::Challenge, &form)
         }
+
+        fn email_code_request(
+            &self,
+            _attempt: &RegistrationAttempt,
+        ) -> Result<wire::EncodedRegistrationRequest> {
+            let mut form = wire::RegistrationForm::new();
+            form.push("method", "email_otp")?;
+            wire::WHATSAPP_2_26_37_70.request(wire::RegistrationEndpoint::Code, &form)
+        }
     }
 
     #[derive(Debug)]
@@ -2342,11 +2397,11 @@ mod tests {
                     br#"{"status":"fail","reason":"challenge","second_factor_methods":["email_otp","wa_old"],"is_device_trusted":false}"#.as_slice(),
                 ),
                 (
-                    "/v2/challenge",
+                    "/v2/code",
                     br#"{"status":"sent","email_otp_wait":5,"email_otp_length":6,"email":"a***@example.com"}"#.as_slice(),
                 ),
                 (
-                    "/v2/challenge",
+                    "/v2/register",
                     br#"{"status":"ok","login":"15551234567","edge_routing_info":"AQ=="}"#.as_slice(),
                 ),
             ])),
@@ -2423,7 +2478,7 @@ mod tests {
                         .as_slice(),
                 ),
                 (
-                    "/v2/challenge",
+                    "/v2/code",
                     br#"{"status":"fail","reason":"too_many_guesses","retry_after":60}"#.as_slice(),
                 ),
             ])),
@@ -2459,12 +2514,16 @@ mod tests {
             panic!("expected the email challenge")
         };
         assert!(service.resume_email_challenge().await.is_err(), "not twice");
+        // An address is never sent: the server emails the one on file.
+        assert!(
+            service
+                .request_email_code(h2.clone(), Some("a@example.com".into()))
+                .await
+                .is_err()
+        );
         // A refused email request cools down and keeps the attempt.
         assert!(matches!(
-            service
-                .request_email_code(h2, Some("a@example.com".into()))
-                .await
-                .unwrap(),
+            service.request_email_code(h2, None).await.unwrap(),
             RegistrationStep::Action(RequiredAction::WaitForCooldown { .. })
         ));
         assert!(transport.responses.lock().unwrap().is_empty());

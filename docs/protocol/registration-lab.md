@@ -278,26 +278,37 @@ No live signup has been performed or shown to work by adding this command.
 
 ### Email second factor after the OTP
 
-When `/v2/register` answers `status=fail reason=challenge`, the comparison
-client (2.26.37.71 `VerifyPhoneNumber.A5P` launchEmailChallengeFlow) runs the
-email second factor: `ChallengeRepository.A00` posts `/v2/challenge` with
-`challenge_type=email_enter` (optionally `email`) to have a code sent to the
-account's email, then `challenge_type=email_verify` with `code`; the
-`KotlinRegistrationBridge.A0I` parser reads `status` (`sent`/`ok`/`fail`),
-`login`, `reason` and `retry_after`, and a success starts the main app. The
-register refusal itself carries `second_factor_methods` and
-`is_device_trusted`. Here:
+When `/v2/register` answers `status=fail reason=challenge`, the number needs a
+second factor. The refusal carries `second_factor_methods`,
+`is_device_trusted`, `email_otp_wait`, `email_otp_length` and the masked
+`email` on file. In 2.26.37.71 the email one-time code is a delivery
+*method* of the ordinary code request: `LX/0GB.A01` maps the method enum to
+`sms`, `email_otp`, `flash`, `voice`; the dynamic method sheet lists
+`sms`/`voice`/`flash`/`email_otp`/`wa_old`; `KotlinRegistrationBridge.A09`
+(`/v2/code`) reads `email_otp_wait` back; and the emailed code is verified by
+the same `/v2/register` request as an SMS code (`KotlinRegistrationBridge.A0D`,
+reasons `mismatch`/`incorrect`/`guess_wait`). `KotlinRegistrationBridge.A0B`
+(`/v2/exist`, performSameDeviceCheck) reports `email_otp_eligible`,
+`wa_old_eligible` and the masked `email`, which is how the client decides.
+
+An earlier implementation posted `/v2/challenge` with
+`challenge_type=email_enter`; live on 2026-09-20 the server answered HTTP 404
+(twice from the operator's session, once with diagnostics). That endpoint and
+`challenge_type` belong to `ChallengeRepository.A00` (`email`, `oauth_token`,
+`code`: the Gmail-OAuth email capture flow), not to the registration second
+factor. Here:
 
 ```sh
 target/debug/whatsapp-cli --profile b lab-signup status
+target/debug/whatsapp-cli --profile b lab-signup --allow-live-request exist   # read-safe eligibility probe
 target/debug/whatsapp-cli --profile b lab-signup resume-email-challenge        # only for a saved `challenge` refusal
-target/debug/whatsapp-cli --profile b lab-signup --allow-live-request request-email-code [--email <address>]
+target/debug/whatsapp-cli --profile b lab-signup --allow-live-request request-email-code
 printf '%s' "$code" | target/debug/whatsapp-cli --profile b lab-signup --allow-live-request verify-email-code
 ```
 
-The address is used for that one request and never persisted. Extra
-`/v2/challenge` fields go in the private JSON `fields.challenge` map. `wa_old`
-and passkey second factors are not implemented and leave the attempt blocked.
+No email address travels in the request: the server emails the address on
+file, so the code only helps when that mailbox is reachable. `wa_old` and
+passkey second factors are not implemented and leave the attempt blocked.
 
 ### One-shot legacy diagnostic recovery
 
