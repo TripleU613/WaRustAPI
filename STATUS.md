@@ -1,4 +1,13 @@
-# Status — 2026-09-19
+# Status — 2026-09-20
+
+**Chat actions landed (2026-09-20):** block/unblock/block-list fetch, spam
+report (not sent live), disappearing timer, keep in chat, advanced chat privacy
+(limit sharing), default disappearing timer IQ, local contacts with a `usync`
+existence check, and local clear-chat, all on a new durable one-shot IQ action
+queue (`whatsapp-cli actions`). Live on the lab account: block and unblock
+answered, the contact check answered, and the three E2E setting messages were
+delivered (two also read). Evidence and open points: `docs/protocol/chat-actions.md`.
+
 
 **Live checks passed on the saved account:** a combined `listen --send-outbox`
 session uploaded the first 50 one-time prekeys (server acknowledged) and sent one

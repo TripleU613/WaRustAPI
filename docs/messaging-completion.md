@@ -42,6 +42,14 @@ from offline tests alone. Existing received captures can be processed locally.
   login reply's `pn`/`lid` are saved for message keys and vote identities. Live:
   the contact's poll decoded, our vote was server-accepted and our own poll was
   delivered; incoming votes on both polls decrypted live, confirming the recipe.
+- Chat actions (2026-09-20, `docs/protocol/chat-actions.md`): a durable
+  one-shot IQ action queue carries block/unblock/block-list fetch, spam report,
+  the default disappearing-timer IQ and `usync` contact checks; E2E protocol
+  messages carry the per-chat disappearing timer, keep-in-chat and limit
+  sharing. Live: block, unblock (after dropping `pn_jid` from unblock items),
+  contact check and all three setting messages were server-accepted; the
+  settings were delivered to the handset. Clear chat is local-only and contact
+  sync to companions waits on app-state patch writing.
 - Quoted replies: incoming text with `contextInfo.stanzaId` projects as
   `Text { quoted: Some(..) }`, attributing the quoted message to us when
   `participant` is one of our login identities (the handset sent our LID) and to

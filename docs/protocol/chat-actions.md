@@ -1,7 +1,15 @@
 # Chat actions: block, report, disappearing messages, keep in chat, advanced chat privacy, clear chat, contacts
 
 Static evidence from the comparison APK build **2.26.37.71** (disassembly of
-`~/Downloads/WhatsApp.apk`, 2026-09-20). Class names are for that
+`~/Downloads/WhatsApp.apk`, 2026-09-20). Live results on the saved
+lab account, 2026-09-20: block (`list dhash matched=true` reply, contact listed
+by LID on a full fetch), unblock (answered once `pn_jid` was dropped, full
+fetch then empty), contact existence check (`usync` reply, on WhatsApp), and
+the three E2E chat-setting messages (disappearing timer 86400 s, keep in chat,
+limit sharing on) all server-accepted and delivered; the timer and privacy
+messages also received read receipts. Handset display of the three settings
+awaits operator confirmation. While the contact was blocked every send to them
+was refused with ack error 403. Class names are for that
 build only. Each claim is marked **confirmed** (read from the builder or
 descriptor), **inferred** (consistent reading of adjacent code or the public
 schema where the APK numbering agrees) or **unknown**. Nothing below was
@@ -120,6 +128,13 @@ placement for a set reply is inferred, not traced.
 - Reply: `IndividualReportResponseSuccess` carries a report id
   (`LX/9V2` `SuccessWithData(reportId=…)`), element name **unknown**; treat any
   `type=result` as accepted.
+
+Observed 2026-09-20: a full block-list fetch reply item carried `jid` (LID),
+`pn_jid` and one attribute our decoder rendered as `B3b=true`; the comparison
+token dictionary maps double-byte page 0 index 1 to `B3b` where the
+web-md-v3 fixture has `active`, so this is most likely the APK parser's
+`active` attribute and a dictionary-recovery defect to re-check (tracked in
+`docs/protocol/unknowns.md`).
 
 Never send a report against the lab contact during testing. This request is
 implemented from the shape above and must be labelled "not live-verified".

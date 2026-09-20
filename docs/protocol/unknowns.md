@@ -59,3 +59,13 @@ Evidence must come from the pinned APK (static analysis in the lab) and from
 dated captures with a controlled test number. Do not copy web-profile
 constants into `Observed` rows. Record each observation with date, APK
 version, and whether the server accepted the reference client that day.
+
+## Comparison token dictionary: double-byte page 0 index 1
+
+Observed 2026-09-20 on a block-list fetch reply: an `item` attribute name
+decoded as `B3b` where the official parser (`LX/8nc.A02`, 2.26.37.71) reads
+`active`, and the web-md-v3 fixture places `active` at double-byte page 0
+index 1. The comparison dictionary (`TokenDictionary::comparison_2_26_37_70`)
+therefore has at least one wrong double-byte entry; encoding still works
+because unknown names fall back to raw strings. Re-derive the double-byte
+pages from the APK and add a decode/encode round-trip test for every entry.
