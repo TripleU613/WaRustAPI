@@ -230,12 +230,17 @@ impl Pending {
             _ => return Err(Error::invalid("outbox", "unsupported content")),
         };
         let reaction = match &entry.intent.content {
-            MessageContent::Reaction { target, emoji } => Some(super::reactions::payload(
-                peer,
-                target,
-                emoji.as_deref(),
-                Timestamp::now().as_millis(),
-            )?),
+            MessageContent::Reaction { target, emoji } => {
+                // Contacts who address us by LID keep their chat keyed by LID.
+                let remote = super::inbox::lid_for(store, peer)?.unwrap_or_else(|| peer.clone());
+                Some(super::reactions::payload(
+                    peer,
+                    &remote,
+                    target,
+                    emoji.as_deref(),
+                    Timestamp::now().as_millis(),
+                )?)
+            }
             _ => None,
         };
         let prepared = if let Some(payload) = &reaction {

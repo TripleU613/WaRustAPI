@@ -71,9 +71,13 @@ pub fn validate(chat: &Jid, target: &MessageRef, emoji: Option<&str>) -> Result<
     Ok(())
 }
 
-/// Encode the E2E payload for reacting to `target` in `chat`.
+/// Encode the E2E payload for reacting to `target` in `chat`. `remote` is the
+/// identity to place in `key.remoteJid`: the contact's LID when their messages
+/// arrive LID-addressed (observed: the official client's reaction key used a
+/// `@lid` remoteJid), otherwise the phone-number chat JID.
 pub fn payload(
     chat: &Jid,
+    remote: &Jid,
     target: &MessageRef,
     emoji: Option<&str>,
     sender_timestamp_ms: i64,
@@ -82,7 +86,7 @@ pub fn payload(
     let envelope = Envelope {
         reaction: Some(ReactionMessage {
             key: Some(Key {
-                remote_jid: Some(chat.to_non_ad().to_string()),
+                remote_jid: Some(remote.to_non_ad().to_string()),
                 from_me: Some(target.key.direction == Direction::Outgoing),
                 id: Some(target.key.id.as_str().to_owned()),
                 participant: None,
@@ -154,6 +158,7 @@ mod tests {
         let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
         let bytes = payload(
             &peer,
+            &peer,
             &target(Direction::Incoming),
             Some("👍"),
             1_700_000_000_000,
@@ -172,7 +177,19 @@ mod tests {
         assert_eq!(key.id.as_deref(), Some("ABCDEF0123456789ABCDEF0123456789"));
         assert_eq!(reaction.text.as_deref(), Some("👍"));
         assert_eq!(reaction.sender_timestamp_ms, Some(1_700_000_000_000));
-        let ours = payload(&peer, &target(Direction::Outgoing), None, 1).unwrap();
+        let lid = Jid::parse("123456789012345@lid").unwrap();
+        let ours = payload(&peer, &lid, &target(Direction::Outgoing), None, 1).unwrap();
+        assert_eq!(
+            Envelope::decode(ours.as_slice())
+                .unwrap()
+                .reaction
+                .unwrap()
+                .key
+                .unwrap()
+                .remote_jid
+                .as_deref(),
+            Some("123456789012345@lid")
+        );
         let reaction = Envelope::decode(ours.as_slice()).unwrap().reaction.unwrap();
         assert_eq!(
             reaction.key.unwrap().from_me,

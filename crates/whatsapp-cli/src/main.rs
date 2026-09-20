@@ -719,6 +719,18 @@ async fn run(cli: Cli) -> Result<(), Error> {
                 serde_json::to_string_pretty(&ticket)
                     .map_err(|e| Error::invalid("ticket", e.to_string()))?
             );
+            #[cfg(feature = "experimental-transport")]
+            {
+                let lid = whatsapp_api::transport::inbox::lid_for(c.store(), &peer)?;
+                eprintln!(
+                    "note: reaction key remoteJid will use the contact's {}",
+                    if lid.is_some() {
+                        "LID (seen on their incoming messages)"
+                    } else {
+                        "phone-number JID (no LID seen)"
+                    }
+                );
+            }
             eprintln!("note: reaction durably queued; `listen --send-outbox` transmits it");
             c.shutdown().await;
             Ok(())

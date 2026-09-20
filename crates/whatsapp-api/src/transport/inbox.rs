@@ -62,6 +62,38 @@ fn own_peer_sender(account: &AccountRecord, node: &Node) -> Option<Jid> {
     .then_some(from)
 }
 
+/// The authenticated LID last seen for a phone-number contact, from incoming
+/// messages that carried `from=<lid>` with `sender_pn=<phone>`. `None` when the
+/// contact has only ever addressed us by phone number.
+pub fn lid_for(store: &ProtocolStore, phone: &Jid) -> Result<Option<Jid>> {
+    let phone = phone.to_non_ad();
+    store.read(|tx| {
+        let mut cursor = None;
+        loop {
+            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+            let done = rows.len() < 256;
+            cursor = rows.last().map(|(key, _)| key.clone());
+            for (key, _) in rows {
+                let Ok(name) = std::str::from_utf8(&key) else {
+                    continue;
+                };
+                let Some(lid) = name.strip_prefix("authenticated-lid:") else {
+                    continue;
+                };
+                let mapped: Option<Jid> = tx.get_json(Table::Checkpoints, &key, 1)?;
+                if mapped.is_some_and(|m| m.to_non_ad() == phone)
+                    && let Ok(lid) = Jid::parse(lid)
+                {
+                    return Ok(Some(lid.to_non_ad()));
+                }
+            }
+            if done {
+                return Ok(None);
+            }
+        }
+    })
+}
+
 /// Re-run event projection over every authenticated incoming record from its
 /// original capture, upgrading opaque placeholders that newer parsers now
 /// understand (for example reactions). Returns how many events were published.

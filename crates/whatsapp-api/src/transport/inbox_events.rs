@@ -396,9 +396,14 @@ mod tests {
             },
         };
         // The sender reacts to a message that was ours (their fromMe=false).
-        let theirs_on_ours =
-            super::super::reactions::payload(&sender, &target(Direction::Incoming), Some("👍"), 5)
-                .unwrap();
+        let theirs_on_ours = super::super::reactions::payload(
+            &sender,
+            &sender,
+            &target(Direction::Incoming),
+            Some("👍"),
+            5,
+        )
+        .unwrap();
         let SyncEvent::MessageUpdated(update) = event(b"fixture", &node(), &theirs_on_ours) else {
             panic!("reaction did not project");
         };
@@ -414,9 +419,14 @@ mod tests {
             }
         );
         // Removing a reaction on their own message (their fromMe=true).
-        let removal =
-            super::super::reactions::payload(&sender, &target(Direction::Outgoing), None, 5)
-                .unwrap();
+        let removal = super::super::reactions::payload(
+            &sender,
+            &sender,
+            &target(Direction::Outgoing),
+            None,
+            5,
+        )
+        .unwrap();
         let SyncEvent::MessageUpdated(update) = event(b"fixture", &node(), &removal) else {
             panic!("removal did not project");
         };

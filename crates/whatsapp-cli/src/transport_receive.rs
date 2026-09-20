@@ -547,11 +547,27 @@ pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
             if let Some(reaction) = whatsapp_api::transport::reactions::decode(&plain)
                 && let Some(key_fields) = whatsapp_api::transport::reactions::key_fields(&plain)
             {
+                let sender = std::str::from_utf8(key)
+                    .ok()
+                    .and_then(|k| k.strip_prefix("received:"))
+                    .and_then(|rest| rest.rsplit_once(':'))
+                    .map(|(sender, _)| sender.to_owned());
+                let fields =
+                    whatsapp_api::signal::direct::payload_fields(&plain).unwrap_or_default();
                 println!(
-                    "inbox: reaction payload target_id={} from_me={} remote_jid_is_own_account={:?} participant_present={} emoji_len={}",
+                    "inbox: reaction payload fields={:?} target_id={} from_me={} remote_jid_is_sender={:?} remote_jid_is_own_account={:?} remote_jid_server={:?} participant_present={} emoji_len={}",
+                    fields,
                     reaction.target_id.as_str(),
                     reaction.target_from_sender,
+                    sender
+                        .as_deref()
+                        .map(|s| key_fields.0.as_deref() == Some(s)),
                     own.as_deref().map(|o| key_fields.0.as_deref() == Some(o)),
+                    key_fields
+                        .0
+                        .as_deref()
+                        .and_then(|v| v.rsplit_once('@'))
+                        .map(|(_, s)| s.to_owned()),
                     key_fields.1,
                     reaction.emoji.as_deref().map_or(0, str::len)
                 );
