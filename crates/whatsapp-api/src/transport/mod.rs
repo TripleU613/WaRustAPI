@@ -11,6 +11,8 @@
     feature = "experimental-transport"
 ))]
 pub mod actions;
+#[cfg(feature = "experimental-registration-https")]
+pub mod ban_appeal;
 #[cfg(all(
     feature = "experimental-signal-crypto",
     feature = "experimental-noise",
@@ -70,8 +72,6 @@ pub mod image_download;
     feature = "experimental-transport"
 ))]
 pub mod image_upload;
-#[cfg(feature = "experimental-registration-https")]
-pub mod ban_appeal;
 #[cfg(all(
     feature = "experimental-signal-crypto",
     feature = "experimental-noise",
