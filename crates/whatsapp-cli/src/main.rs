@@ -209,6 +209,12 @@ enum Cmd {
         #[arg(long)]
         show: Option<String>,
     },
+    /// Group management over the durable action queue (offline; a session transmits).
+    #[cfg(feature = "experimental-transport")]
+    Group {
+        #[command(subcommand)]
+        cmd: GroupCmd,
+    },
     /// Manage named account profiles (offline): list, add, show.
     Accounts {
         #[command(subcommand)]
@@ -615,6 +621,83 @@ enum ContactsCmd {
 }
 
 #[derive(Subcommand)]
+#[cfg(feature = "experimental-transport")]
+enum GroupCmd {
+    /// Queue a group creation with the given subject and participants.
+    Create {
+        #[arg(long)]
+        subject: String,
+        /// Participant JIDs (phone-number or LID form).
+        #[arg(long = "participant", required = true)]
+        participants: Vec<String>,
+    },
+    /// Queue an interactive group info query.
+    Info {
+        #[arg(long)]
+        chat: String,
+    },
+    /// Queue a subject change.
+    Subject {
+        #[arg(long)]
+        chat: String,
+        #[arg(long)]
+        text: String,
+    },
+    /// Queue a description change (empty text deletes).
+    Description {
+        #[arg(long)]
+        chat: String,
+        #[arg(long, default_value = "")]
+        text: String,
+        /// The current description id when replacing one.
+        #[arg(long)]
+        prev: Option<String>,
+    },
+    /// Queue adding participants.
+    Add {
+        #[arg(long)]
+        chat: String,
+        #[arg(long = "participant", required = true)]
+        participants: Vec<String>,
+    },
+    /// Queue removing participants.
+    Remove {
+        #[arg(long)]
+        chat: String,
+        #[arg(long = "participant", required = true)]
+        participants: Vec<String>,
+    },
+    /// Queue promoting participants to admin.
+    Promote {
+        #[arg(long)]
+        chat: String,
+        #[arg(long = "participant", required = true)]
+        participants: Vec<String>,
+    },
+    /// Queue demoting admins.
+    Demote {
+        #[arg(long)]
+        chat: String,
+        #[arg(long = "participant", required = true)]
+        participants: Vec<String>,
+    },
+    /// Queue leaving a group.
+    Leave {
+        #[arg(long)]
+        chat: String,
+    },
+    /// Queue fetching (or, with --revoke, resetting) the invite link.
+    Invite {
+        #[arg(long)]
+        chat: String,
+        #[arg(long)]
+        revoke: bool,
+    },
+    /// Apply settled replies and list the stored group snapshots (numbers masked).
+    List,
+}
+
+#[derive(Subcommand)]
 enum AccountsCmd {
     /// List the profiles in the profiles directory.
     List,
@@ -844,6 +927,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::Receipts => transport_receive::receipts_status(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Actions { show } => transport_receive::actions_status(&cli, show.as_deref()),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::Group { cmd } => transport_receive::group(&cli, cmd),
         Cmd::Accounts { cmd } => accounts(&cli, cmd),
         #[cfg(feature = "experimental-transport")]
         Cmd::LabPair {

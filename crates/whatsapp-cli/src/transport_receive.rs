@@ -1261,6 +1261,133 @@ pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
     Ok(())
 }
 
+fn mask_number_in(text: &str) -> String {
+    // Keep only the last three digits of any long digit run (phone numbers).
+    let mut out = String::new();
+    let mut run = String::new();
+    let flush = |run: &mut String, out: &mut String| {
+        if run.len() >= 7 {
+            out.push_str(&"*".repeat(run.len() - 3));
+            out.push_str(&run[run.len() - 3..]);
+        } else {
+            out.push_str(run);
+        }
+        run.clear();
+    };
+    for ch in text.chars() {
+        if ch.is_ascii_digit() {
+            run.push(ch);
+        } else {
+            flush(&mut run, &mut out);
+            out.push(ch);
+        }
+    }
+    flush(&mut run, &mut out);
+    out
+}
+
+/// Group management: every subcommand queues one action (a session
+/// transmits it) except `list`, which ingests replies and prints snapshots.
+pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error> {
+    use whatsapp_api::model::jid::Jid;
+    use whatsapp_api::transport::groups;
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let jids = |list: &[String]| -> Result<Vec<Jid>, Error> {
+        list.iter().map(|j| Jid::parse(j)).collect()
+    };
+    let queued = |id: String| {
+        println!(
+            "group: action {id} queued; a session transmits it; `group list` applies the reply"
+        );
+        Ok(())
+    };
+    match cmd {
+        super::GroupCmd::Create {
+            subject,
+            participants,
+        } => queued(groups::queue_create(&store, subject, &jids(participants)?)?),
+        super::GroupCmd::Info { chat } => queued(groups::queue_info(&store, &Jid::parse(chat)?)?),
+        super::GroupCmd::Subject { chat, text } => {
+            queued(groups::queue_subject(&store, &Jid::parse(chat)?, text)?)
+        }
+        super::GroupCmd::Description { chat, text, prev } => queued(groups::queue_description(
+            &store,
+            &Jid::parse(chat)?,
+            text,
+            prev.as_deref(),
+        )?),
+        super::GroupCmd::Add { chat, participants } => queued(groups::queue_add(
+            &store,
+            &Jid::parse(chat)?,
+            &jids(participants)?,
+        )?),
+        super::GroupCmd::Remove { chat, participants } => queued(groups::queue_remove(
+            &store,
+            &Jid::parse(chat)?,
+            &jids(participants)?,
+        )?),
+        super::GroupCmd::Promote { chat, participants } => queued(groups::queue_promote(
+            &store,
+            &Jid::parse(chat)?,
+            &jids(participants)?,
+        )?),
+        super::GroupCmd::Demote { chat, participants } => queued(groups::queue_demote(
+            &store,
+            &Jid::parse(chat)?,
+            &jids(participants)?,
+        )?),
+        super::GroupCmd::Leave { chat } => queued(groups::queue_leave(&store, &Jid::parse(chat)?)?),
+        super::GroupCmd::Invite { chat, revoke } => {
+            queued(groups::queue_invite(&store, &Jid::parse(chat)?, *revoke)?)
+        }
+        super::GroupCmd::List => {
+            let applied = groups::ingest(&store)?;
+            let all = groups::list(&store)?;
+            if cli.json {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&all)
+                        .map_err(|e| Error::invalid("group", e.to_string()))?
+                );
+                return Ok(());
+            }
+            println!(
+                "groups: {applied} settled action(s) applied; {} group(s) known",
+                all.len()
+            );
+            for g in &all {
+                println!(
+                    "  {} subject={:?} members={} creator={} invite={}",
+                    mask_number_in(&g.jid),
+                    g.subject,
+                    g.members.len(),
+                    g.creator
+                        .as_deref()
+                        .map(mask_number_in)
+                        .unwrap_or_else(|| "-".into()),
+                    g.invite_code
+                        .as_deref()
+                        .map(|c| format!("https://chat.whatsapp.com/{c}"))
+                        .unwrap_or_else(|| "-".into())
+                );
+                for m in &g.members {
+                    println!(
+                        "    {} {}",
+                        mask_number_in(&m.jid),
+                        m.role.as_deref().unwrap_or("member")
+                    );
+                }
+            }
+            Ok(())
+        }
+    }
+}
+
 /// Two-account lab check: `from` queues one text to `to`'s own number, both
 /// sessions run at once, then the sender's delivery facts and the receiver's
 /// journal are inspected. Profiles must not share a store or a key variable.
