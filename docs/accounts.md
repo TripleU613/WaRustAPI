@@ -40,10 +40,10 @@ Use `accounts new` to prepare a new account with automatic token derivation from
 the 2.26.37.70 material:
 
 ```sh
-export WHATSAPP_API_MASTER_KEY_B=$(cat lab/accounts/b/master.key)
-
 whatsapp-cli accounts new --name b --country-code 44 --national-number 7700900123 \
   --material lab/whatsapp-2.26.37.70-token-material.zip [--method voice]
+
+export WHATSAPP_API_MASTER_KEY_B=$(cat lab/accounts/b/master.key)
 ```
 
 This creates `lab/accounts/b/master.key`, `lab/accounts/b/request.json` (with
@@ -53,13 +53,13 @@ the profile:
 ```sh
 whatsapp-cli --profile b lab-signup --allow-live-request begin --method sms
 
-echo $code | whatsapp-cli --profile b lab-signup --allow-live-request verify-code
+read -rs CODE; printf '%s\n' "$CODE" | whatsapp-cli --profile b lab-signup --allow-live-request verify-code
 ```
 
 Check the account with `accounts status` or a short live listen:
 
 ```sh
-whatsapp-cli --profile b accounts status
+whatsapp-cli accounts status --name b
 
 whatsapp-cli --profile b listen --allow-live-request --seconds 20
 ```
@@ -77,20 +77,17 @@ Without `--name`, prints status for all profiles. With `--name`, prints only tha
 profile. Output shows, per account:
 
 - **Locked**: master key environment variable is not set (key_env name will show)
-- **Registration state**: Preparing, Prepared, Awaiting, Registered, etc.
+- **Registration state**: `unregistered`, `preparing`, `challenge_pending`, `needs_user_action`, `email_challenge_required`, `email_code_pending`, `verifying`, `outcome_unknown`, `registered`, `cooling_down`, `blocked`, or `none` when no attempt exists
 - **Last authentication**: timestamp of successful login (if any)
-- **Login checkpoint**: `recovery`, `challenge`, etc. (if a checkpoint is active)
+- **Login checkpoint**: `success`, `refused`, `outcome_unknown`, or `none`
 - **Appeal token saved**: present/absent (indicator for appeal eligibility)
 - **Pending outbox**: number of queued message intents
 - **Queued actions**: number of pending IQ operations
 
 Example output:
 ```
-Profile a:
-  Status: Registered
-  Last auth: 2026-09-20T02:00:00Z
-  Pending: 0 messages, 3 actions
-  Appeal: saved
+a: locked (WHATSAPP_API_MASTER_KEY_A not set)
+b: store=lab/accounts/b/signup.redb phone=*******123 registration_state=registered registered=true last_authenticated_at=<timestamp> login_checkpoint=success appeal_token_saved=no outbox_pending=0 actions_queued=0
 ```
 
 ## Two-account check

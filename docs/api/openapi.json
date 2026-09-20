@@ -503,17 +503,17 @@
             "enum": [
               "unregistered",
               "preparing",
-              "code_requested",
-              "enter_code",
-              "enter_pin",
-              "email_challenge",
-              "consent_required",
-              "cooling_down",
+              "challenge_pending",
+              "needs_user_action",
+              "email_challenge_required",
+              "email_code_pending",
+              "verifying",
+              "outcome_unknown",
               "registered",
-              "blocked",
-              "uncertain"
+              "cooling_down",
+              "blocked"
             ],
-            "description": "Current registration state"
+            "description": "Saved attempt state name exactly as RegistrationState::name() prints it"
           },
           "action": {
             "type": [
@@ -1747,7 +1747,7 @@
               "string",
               "null"
             ],
-            "description": "Current registration state (e.g., none, pending, registered)"
+            "description": "Saved registration attempt state (unregistered, preparing, challenge_pending, needs_user_action, email_challenge_required, email_code_pending, verifying, outcome_unknown, registered, cooling_down, blocked) or none when no attempt exists"
           },
           "registered": {
             "type": "boolean",
@@ -1765,7 +1765,7 @@
               "string",
               "null"
             ],
-            "description": "Current login checkpoint or challenge state"
+            "description": "Last primary-login checkpoint: success, refused, outcome_unknown, or none"
           },
           "appeal_token_saved": {
             "type": "boolean",
@@ -1945,7 +1945,7 @@
           "Account Safety"
         ],
         "summary": "Submit a ban appeal for the active account via ACS GraphQL",
-        "description": "Submits a ban appeal for the active account through ACS GraphQL. Optional appeal reason text and overridden appeal token can be provided. Contacts ACS servers.",
+        "description": "Submits a ban appeal for the active account through ACS GraphQL. Optional appeal reason text and overridden appeal token can be provided. Contacts ACS servers. The appeal token is read from the account's saved credentials, recovered from preserved failure captures if needed, or overridden with --appeal-token.",
         "operationId": "submitBanAppeal",
         "x-cli": "whatsapp-cli ban-appeal",
         "x-transport": [
@@ -2019,7 +2019,14 @@
             "$ref": "#/components/responses/InvalidInput"
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "No appeal token saved and none recoverable from preserved captures",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "423": {
             "$ref": "#/components/responses/Blocked"

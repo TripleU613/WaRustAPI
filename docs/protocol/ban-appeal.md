@@ -10,16 +10,21 @@ The `appeal_token` is automatically extracted and persisted as the `noise_appeal
 credential the moment a `failure` node arrives during login. Future restarts can still
 send it without making another login attempt.
 
+When no credential exists, `ban-appeal` recovers the token from the preserved `failure`
+capture (encoded in the Checkpoints table as `inbound:sha256:<hash>`) and persists it
+with `source_step: failure-capture`. The `--appeal-token` flag remains available as a
+manual override for any token value.
+
 ## The request
 
 ```
 POST https://acs.whatsapp.com/graphql
-Authorization: Bearer <noise_login credential>
+Authorization: Bearer <saved `login` credential>
 ```
 
 Sends JSON (one of two forms):
 
-**Named operation** (preferred):
+**Named operation** (default when `--doc-id` is not given; server acceptance unverified):
 ```json
 {
   "operationName": "SubmitAnAppealForIP",

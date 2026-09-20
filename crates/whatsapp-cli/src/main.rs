@@ -1107,9 +1107,11 @@ fn accounts_status(cli: &Cli, name: Option<&str>) -> Result<(), Error> {
                 let appeal = entry["appeal_token_saved"].as_str().unwrap_or("no");
                 let outbox = entry["outbox_pending"].as_u64().unwrap_or(0);
                 let actions = entry["actions_queued"].as_u64().unwrap_or(0);
+                let registration_state = entry["registration_state"].as_str().unwrap_or("?");
+                let login_checkpoint = entry["login_checkpoint"].as_str().unwrap_or("?");
 
                 println!(
-                    "{name}: store={store} phone={phone} registered={registered} last_authenticated_at={last_auth} appeal_token_saved={appeal} outbox_pending={outbox} actions_queued={actions}"
+                    "{name}: store={store} phone={phone} registered={registered} registration_state={registration_state} last_authenticated_at={last_auth} login_checkpoint={login_checkpoint} appeal_token_saved={appeal} outbox_pending={outbox} actions_queued={actions}"
                 );
             }
         }

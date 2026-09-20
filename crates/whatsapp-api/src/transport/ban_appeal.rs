@@ -1,8 +1,10 @@
 //! Ban-appeal submission: POST to ACS GraphQL with the saved appeal token.
 //! Requires `experimental-registration-https` for the constrained reqwest client.
 use crate::{
-    Error, Result, registration::request::LabRegistrationConfig, session::AccountRecord,
-    store::ProtocolStore,
+    Error, Result,
+    registration::request::LabRegistrationConfig,
+    session::AccountRecord,
+    store::{ProtocolStore, Table},
 };
 use std::{sync::Arc, time::Duration};
 use zeroize::Zeroizing;
@@ -49,11 +51,95 @@ impl std::fmt::Debug for BanAppealResult {
     }
 }
 
+fn persist_appeal_token(
+    store: &ProtocolStore,
+    token: Zeroizing<Vec<u8>>,
+    source_step: &str,
+) -> Result<()> {
+    use crate::{model::time::Timestamp, session::ObservedCredential};
+
+    let now = Timestamp::now();
+    store.write(|tx| {
+        let mut account = AccountRecord::load_in_write(tx)?.unwrap_or_default();
+        if account.credentials.len() < 64
+            && !account
+                .credentials
+                .iter()
+                .any(|c| c.name == "noise_appeal_token")
+        {
+            account.credentials.push(ObservedCredential {
+                name: "noise_appeal_token".into(),
+                value: token.clone(),
+                observed_at: now,
+                source_step: Some(source_step.into()),
+            });
+            AccountRecord::save(&account, tx)?;
+        }
+        Ok(())
+    })
+}
+
+/// Recover the `noise_appeal_token` from preserved failure-node captures if not already saved.
+pub fn recover_appeal_token_from_captures(
+    store: &ProtocolStore,
+) -> Result<Option<Zeroizing<String>>> {
+    use crate::binary::unpack_frame_payload;
+
+    let found = store.read(|tx| {
+        let captures = tx.scan(Table::Checkpoints, 1, 256)?;
+        let limits = crate::profile::Limits::default();
+
+        for (key, value) in captures {
+            if !key.starts_with(b"inbound:sha256:") {
+                continue;
+            }
+
+            let wire = match serde_json::from_slice::<Vec<u8>>(&value) {
+                Ok(w) => w,
+                Err(_) => continue,
+            };
+
+            let payload = match unpack_frame_payload(&wire, &limits) {
+                Ok(p) => p,
+                Err(_) => continue,
+            };
+
+            let node = match crate::binary::Decoder::new(
+                &payload,
+                crate::binary::TokenDictionary::comparison_2_26_37_70(),
+                &limits,
+            )
+            .decode_node()
+            {
+                Ok(n) => n,
+                Err(_) => continue,
+            };
+
+            if node.description == "failure"
+                && let Some(token) = node.get_attr("appeal_token").and_then(|v| v.as_text())
+            {
+                return Ok(Some(Zeroizing::new(token.as_bytes().to_vec())));
+            }
+        }
+        Ok(None)
+    })?;
+
+    if let Some(token_bytes) = found {
+        persist_appeal_token(store, token_bytes.clone(), "failure-capture")?;
+        Ok(Some(Zeroizing::new(
+            String::from_utf8_lossy(&token_bytes).into_owned(),
+        )))
+    } else {
+        Ok(None)
+    }
+}
+
 /// Read the `noise_appeal_token` credential from the account store, if present.
+/// Falls back to recovery from preserved failure captures if no credential exists.
 pub async fn read_stored_appeal_token(
     store: &Arc<ProtocolStore>,
 ) -> Result<Option<Zeroizing<String>>> {
-    store
+    let token = store
         .run_blocking(|s| {
             s.read(|tx| {
                 let Some(account) = AccountRecord::load(tx)? else {
@@ -68,7 +154,13 @@ pub async fn read_stored_appeal_token(
                 Ok(token)
             })
         })
-        .await
+        .await?;
+
+    if token.is_some() {
+        return Ok(token);
+    }
+
+    recover_appeal_token_from_captures(store)
 }
 
 /// Submit a ban appeal to `acs.whatsapp.com/graphql`.
@@ -242,4 +334,72 @@ fn summarize(http_status: u16, body: &[u8]) -> serde_json::Value {
         }
     }
     s
+}
+
+#[cfg(all(test, feature = "experimental-transport"))]
+mod tests {
+    use super::*;
+    use crate::{
+        binary::Node,
+        model::AccountId,
+        session::AccountRecord,
+        store::{MasterKey, OpenOptions, StaticKeySource},
+    };
+
+    #[test]
+    fn recover_appeal_token_from_preserved_failure_capture() {
+        let temp = tempfile::TempDir::new().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: temp.path().join("test.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9u8; 32]))),
+            create: true,
+        })
+        .unwrap();
+
+        let failure_node = Node::new("failure")
+            .attr("reason", "403")
+            .attr("location", "cco")
+            .attr("appeal_token", "test-appeal-token");
+
+        crate::transport::inbox::preserve(&store, &failure_node).unwrap();
+
+        let token = recover_appeal_token_from_captures(&store).unwrap();
+        assert_eq!(
+            token.as_ref().map(|t| t.as_str()),
+            Some("test-appeal-token")
+        );
+
+        let saved_token = store
+            .read(|tx| {
+                let account = AccountRecord::load(tx)?;
+                Ok(account.and_then(|a| {
+                    a.credentials
+                        .iter()
+                        .find(|c| c.name == "noise_appeal_token")
+                        .cloned()
+                }))
+            })
+            .unwrap();
+
+        assert!(saved_token.is_some());
+        let cred = saved_token.unwrap();
+        assert_eq!(String::from_utf8_lossy(&cred.value), "test-appeal-token");
+        assert_eq!(cred.source_step, Some("failure-capture".into()));
+    }
+
+    #[test]
+    fn recover_appeal_token_returns_none_for_empty_store() {
+        let temp = tempfile::TempDir::new().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: temp.path().join("test.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9u8; 32]))),
+            create: true,
+        })
+        .unwrap();
+
+        let token = recover_appeal_token_from_captures(&store).unwrap();
+        assert_eq!(token, None);
+    }
 }

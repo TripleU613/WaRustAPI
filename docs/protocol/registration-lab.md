@@ -297,14 +297,14 @@ The first prints the token (secret); the second prints only match/mismatch.
 With a working token and material archive in place:
 
 ```sh
-export WHATSAPP_API_MASTER_KEY_A=$(cat lab/accounts/a/master.key)
-
 whatsapp-cli accounts new --name a --country-code 1 --national-number 5551234567 \
   --material lab/whatsapp-2.26.37.70-token-material.zip
 
+export WHATSAPP_API_MASTER_KEY_A=$(cat lab/accounts/a/master.key)
+
 whatsapp-cli --profile a lab-signup --allow-live-request begin --method sms
 
-echo $code | whatsapp-cli --profile a lab-signup --allow-live-request verify-code
+read -rs CODE; printf '%s\n' "$CODE" | whatsapp-cli --profile a lab-signup --allow-live-request verify-code
 ```
 
 `accounts new` creates:
