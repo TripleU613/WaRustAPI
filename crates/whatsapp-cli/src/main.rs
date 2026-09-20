@@ -764,7 +764,7 @@ enum AccountsCmd {
         /// Path to APK or material archive.
         #[arg(long, env = "WHATSAPP_API_TOKEN_MATERIAL")]
         material: PathBuf,
-        /// Account directory (defaults to lab/accounts/<NAME>).
+        /// Account directory (defaults to `lab/accounts/<NAME>`).
         #[arg(long)]
         dir: Option<PathBuf>,
         /// Verification delivery method.
