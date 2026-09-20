@@ -122,6 +122,30 @@ enum Cmd {
     /// Show queued explicit receipts and their server outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Receipts,
+    /// Durably enqueue a reaction to a message; `listen --send-outbox` transmits it.
+    React {
+        /// Chat JID, e.g. 15551234567@s.whatsapp.net.
+        #[arg(long)]
+        chat: String,
+        /// Wire id of the message being reacted to (as shown by `events`).
+        #[arg(long)]
+        id: String,
+        /// Reaction text (an emoji). Omit with --remove to clear a reaction.
+        #[arg(long)]
+        emoji: Option<String>,
+        /// Remove this account's reaction instead of setting one.
+        #[arg(long)]
+        remove: bool,
+        /// The target message was sent by this account (default: by the contact).
+        #[arg(long)]
+        ours: bool,
+        /// Caller idempotency key; defaults to react-<id>-<emoji or remove>.
+        #[arg(long)]
+        request_id: Option<String>,
+    },
+    /// Re-project authenticated incoming records into events with current parsers (offline).
+    #[cfg(feature = "experimental-transport")]
+    Reproject,
     /// Show a contact's saved device list, or queue a device sync for the next session.
     #[cfg(feature = "experimental-transport")]
     Devices {
@@ -636,6 +660,71 @@ async fn run(cli: Cli) -> Result<(), Error> {
             c.shutdown().await;
             Ok(())
         }
+        Cmd::React {
+            chat,
+            id,
+            emoji,
+            remove,
+            ours,
+            request_id,
+        } => {
+            use whatsapp_api::model::{
+                ids::{DeviceAddress, MessageId},
+                message::{Direction, MessageKey, MessageRef},
+            };
+            if emoji.is_none() == !*remove {
+                return Err(Error::invalid("emoji", "pass --emoji <text> or --remove"));
+            }
+            let peer = Jid::parse(chat)?;
+            let chat_id = ChatId::from_jid(&peer)?;
+            let target = MessageRef {
+                key: MessageKey {
+                    chat: chat_id.clone(),
+                    sender: if *ours {
+                        None
+                    } else {
+                        Some(DeviceAddress::from_jid(&peer)?)
+                    },
+                    direction: if *ours {
+                        Direction::Outgoing
+                    } else {
+                        Direction::Incoming
+                    },
+                    id: MessageId::new(id.clone())?,
+                },
+            };
+            let request_id = request_id.clone().unwrap_or_else(|| {
+                format!(
+                    "react-{}-{}",
+                    id,
+                    emoji
+                        .as_deref()
+                        .map(|e| hex::encode(e.as_bytes()))
+                        .unwrap_or_else(|| "remove".into())
+                )
+            });
+            let c = open_client(&cli, false).await?;
+            let ticket = c
+                .send_message(SendRequest {
+                    client_request_id: ClientRequestId::new(request_id)?,
+                    chat: chat_id,
+                    content: MessageContent::Reaction {
+                        target,
+                        emoji: emoji.clone(),
+                    },
+                })
+                .await?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&ticket)
+                    .map_err(|e| Error::invalid("ticket", e.to_string()))?
+            );
+            eprintln!("note: reaction durably queued; `listen --send-outbox` transmits it");
+            c.shutdown().await;
+            Ok(())
+        }
+        #[cfg(feature = "experimental-transport")]
+        Cmd::Reproject => transport_receive::reproject(&cli),
         Cmd::Status { local_id } => {
             let c = open_client(&cli, false).await?;
             let ticket = whatsapp_api::model::send::SendTicket {

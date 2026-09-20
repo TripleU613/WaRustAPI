@@ -33,6 +33,12 @@ from offline tests alone. Existing received captures can be processed locally.
 
 ### Implemented and verified locally
 
+- Reactions: incoming `reactionMessage` payloads (field 46) now project into
+  `MessageUpdated` events with the reacting device and emoji on the target key;
+  `reproject` upgrades earlier opaque placeholders offline. Outgoing
+  `MessageContent::Reaction` is validated, encrypted like other payloads and sent
+  as `message type=reaction`; `react` enqueues it. Live: a contact's 👍 on our
+  test text was decrypted and projected, and our 👍 reply was server-accepted.
 - Contact device-list synchronization from 2.26.37.71 evidence: `devices`
   notifications are acknowledged and record the contact; sessions send the
   `usync devices version=2` query for pending contacts at start and after a

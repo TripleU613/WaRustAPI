@@ -111,6 +111,7 @@ fn pending_summary(entry: &whatsapp_api::outbox::OutboxEntry) -> serde_json::Val
     let kind = match &entry.intent.content {
         whatsapp_api::model::message::MessageContent::Text { .. } => "text",
         whatsapp_api::model::message::MessageContent::Media { .. } => "media",
+        whatsapp_api::model::message::MessageContent::Reaction { .. } => "reaction",
         _ => "unsupported",
     };
     serde_json::json!({
@@ -225,6 +226,21 @@ pub(super) fn devices(cli: &super::Cli, chat: &str, request: bool) -> Result<(),
         }
     }
     println!("devices: {} contact(s) pending a query", pending.len());
+    Ok(())
+}
+
+/// Offline re-projection of authenticated incoming records with current parsers.
+pub(super) fn reproject(cli: &super::Cli) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let published = whatsapp_api::transport::inbox::reproject(&store)?;
+    println!(
+        "reproject: {published} event(s) upgraded from saved authenticated captures; no network requests"
+    );
     Ok(())
 }
 

@@ -65,6 +65,50 @@ fn event_with_content(
         let Ok(fields) = crate::signal::direct::payload_fields(payload) else {
             return unsupported();
         };
+        // Reaction (comparison 2.26.37.71 `Message.reactionMessage` 46): a change
+        // to an existing message, never a new message event.
+        if fields.iter().any(|v| *v == 46) {
+            if fields.iter().any(|v| !matches!(v, 46 | 35)) {
+                return unsupported();
+            }
+            let Some(reaction) = super::reactions::decode(payload) else {
+                return unsupported();
+            };
+            let Some(sender) = super::inbox::session_sender(node) else {
+                return unsupported();
+            };
+            let (Ok(chat), Ok(by)) = (ChatId::from_jid(&sender), DeviceAddress::from_jid(&sender))
+            else {
+                return unsupported();
+            };
+            let server_timestamp = node
+                .get_attr("t")
+                .and_then(|v| v.as_text())
+                .and_then(|v| v.parse::<i64>().ok())
+                .filter(|v| *v >= 0)
+                .and_then(|v| v.checked_mul(1000))
+                .map(Timestamp);
+            // `fromMe` is the reacting sender's perspective: true means the target
+            // was their own (incoming to us), false means the target was ours.
+            let (direction, target_sender) = if reaction.target_from_sender {
+                (Direction::Incoming, Some(by.clone()))
+            } else {
+                (Direction::Outgoing, None)
+            };
+            return SyncEvent::MessageUpdated(crate::model::message::MessageUpdate {
+                key: MessageKey {
+                    chat,
+                    sender: target_sender,
+                    direction,
+                    id: reaction.target_id,
+                },
+                change: crate::model::message::MessageChange::Reaction {
+                    by,
+                    emoji: reaction.emoji,
+                },
+                server_timestamp,
+            });
+        }
         // Only known top-level text and metadata fields. Wrappers, protocol messages
         // and mixed media must never become an ordinary text event accidentally.
         if fields.iter().any(|v| !matches!(v, 1 | 6 | 35))
@@ -173,7 +217,10 @@ pub(super) fn publish(
         projected
     };
     if let Some(marker) = tx.get_json::<serde_json::Value>(Table::Inbox, key, 1)? {
-        if !matches!(projected, SyncEvent::NewMessage(_)) {
+        if !matches!(
+            projected,
+            SyncEvent::NewMessage(_) | SyncEvent::MessageUpdated(_)
+        ) {
             return Ok(false);
         }
         let was_unsupported = if let Some(kind) = marker["kind"].as_str() {
@@ -331,6 +378,64 @@ mod tests {
             assert!(value.raw.is_empty());
             assert!(!value.type_hint.contains("keys"));
         }
+    }
+    #[test]
+    fn reactions_project_as_message_updates_relative_to_the_reacting_sender() {
+        use crate::model::{
+            ids::{ChatId, DeviceAddress, MessageId},
+            jid::Jid,
+            message::{Direction, MessageChange, MessageKey, MessageRef},
+        };
+        let sender = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let target = |direction| MessageRef {
+            key: MessageKey {
+                chat: ChatId::from_jid(&sender).unwrap(),
+                sender: None,
+                direction,
+                id: MessageId::new("71C7E1A34E0332A8821B812F2E028952").unwrap(),
+            },
+        };
+        // The sender reacts to a message that was ours (their fromMe=false).
+        let theirs_on_ours =
+            super::super::reactions::payload(&sender, &target(Direction::Incoming), Some("👍"), 5)
+                .unwrap();
+        let SyncEvent::MessageUpdated(update) = event(b"fixture", &node(), &theirs_on_ours) else {
+            panic!("reaction did not project");
+        };
+        assert_eq!(update.key.direction, Direction::Outgoing);
+        assert_eq!(update.key.sender, None);
+        assert_eq!(update.key.id.as_str(), "71C7E1A34E0332A8821B812F2E028952");
+        assert_eq!(update.server_timestamp, Some(Timestamp(123000)));
+        assert_eq!(
+            update.change,
+            MessageChange::Reaction {
+                by: DeviceAddress::from_jid(&sender).unwrap(),
+                emoji: Some("👍".into())
+            }
+        );
+        // Removing a reaction on their own message (their fromMe=true).
+        let removal =
+            super::super::reactions::payload(&sender, &target(Direction::Outgoing), None, 5)
+                .unwrap();
+        let SyncEvent::MessageUpdated(update) = event(b"fixture", &node(), &removal) else {
+            panic!("removal did not project");
+        };
+        assert_eq!(update.key.direction, Direction::Incoming);
+        assert_eq!(
+            update.key.sender,
+            Some(DeviceAddress::from_jid(&sender).unwrap())
+        );
+        assert!(matches!(
+            update.change,
+            MessageChange::Reaction { emoji: None, .. }
+        ));
+        // A reaction mixed with text stays opaque.
+        let mut mixed = theirs_on_ours.clone();
+        mixed.extend_from_slice(b"\x0a\x04test");
+        assert!(matches!(
+            event(b"fixture", &node(), &mixed),
+            SyncEvent::UnsupportedMessage(_)
+        ));
     }
     #[test]
     fn event_and_marker_rollback_together_and_survive_restart_once() {

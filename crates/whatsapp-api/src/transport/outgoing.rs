@@ -91,6 +91,9 @@ pub fn begin_selected(
                     super::outgoing_media::resolve(store, &entry.client_request_id, peer, reference)
                         .is_ok()
                 }
+                MessageContent::Reaction { target, emoji } => {
+                    super::reactions::validate(peer, target, emoji.as_deref()).is_ok()
+                }
                 _ => false,
             };
         let reserved = store
@@ -223,10 +226,29 @@ impl Pending {
                 peer,
                 reference,
             )?),
-            MessageContent::Text { quoted: None, .. } => None,
+            MessageContent::Text { quoted: None, .. } | MessageContent::Reaction { .. } => None,
             _ => return Err(Error::invalid("outbox", "unsupported content")),
         };
-        let prepared = if let Some((payload, _)) = &media {
+        let reaction = match &entry.intent.content {
+            MessageContent::Reaction { target, emoji } => Some(super::reactions::payload(
+                peer,
+                target,
+                emoji.as_deref(),
+                Timestamp::now().as_millis(),
+            )?),
+            _ => None,
+        };
+        let prepared = if let Some(payload) = &reaction {
+            crate::signal::direct::prepare_payload(
+                account,
+                peer,
+                &bundle,
+                session.as_deref().map(|v| v.as_slice()),
+                identity.as_deref(),
+                payload,
+            )
+            .await?
+        } else if let Some((payload, _)) = &media {
             crate::signal::direct::prepare_payload(
                 account,
                 peer,
@@ -258,6 +280,14 @@ impl Pending {
                 prepared.kind,
                 prepared.ciphertext,
                 kind,
+            )?
+        } else if reaction.is_some() {
+            super::messaging::direct_typed(
+                peer,
+                &wire_id,
+                prepared.kind,
+                prepared.ciphertext,
+                "reaction",
             )?
         } else {
             super::messaging::direct_message(peer, &wire_id, prepared.kind, prepared.ciphertext)?
@@ -480,6 +510,66 @@ mod tests {
                 .progress,
             AttemptProgress::Queued,
             "listing is read-only"
+        );
+    }
+    #[test]
+    fn reactions_are_eligible_for_their_own_chat_only() {
+        use crate::model::message::{Direction, MessageKey, MessageRef};
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("reaction-outbox.redb"));
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let other = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let reaction = |chat: &Jid, target_chat: &Jid, request: &str| SendRequest {
+            client_request_id: ClientRequestId::new(request).unwrap(),
+            chat: ChatId::from_jid(chat).unwrap(),
+            content: MessageContent::Reaction {
+                target: MessageRef {
+                    key: MessageKey {
+                        chat: ChatId::from_jid(target_chat).unwrap(),
+                        sender: None,
+                        direction: Direction::Outgoing,
+                        id: crate::model::ids::MessageId::new("ABCDEF0123456789ABCDEF0123456789")
+                            .unwrap(),
+                    },
+                },
+                emoji: Some("👍".into()),
+            },
+        };
+        // The outbox refuses a cross-chat target before anything is queued.
+        assert!(
+            store
+                .write(|tx| outbox().enqueue(tx, &reaction(&peer, &other, "bad")))
+                .is_err()
+        );
+        let id = store
+            .write(|tx| {
+                Ok(outbox()
+                    .enqueue(tx, &reaction(&peer, &peer, "good"))?
+                    .0
+                    .local_id)
+            })
+            .unwrap();
+        let (pending, query) = begin_selected(&store, Some(id)).unwrap().unwrap();
+        assert_eq!(
+            query.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("encrypt")
+        );
+        assert!(pending.matches(&Node::new("iq").attr("id", pending.query_id.as_str())));
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, query_key(id).as_bytes(), 1))
+                .unwrap()
+                .is_some(),
+            "key query reserved for the reaction"
+        );
+        let typed = super::super::messaging::direct_typed(&peer, "ID1", "msg", vec![1], "reaction")
+            .unwrap();
+        assert_eq!(
+            typed.get_attr("type").and_then(|v| v.as_text()),
+            Some("reaction")
+        );
+        assert!(
+            super::super::messaging::direct_typed(&peer, "ID1", "msg", vec![1], "sticker").is_err()
         );
     }
     #[tokio::test]

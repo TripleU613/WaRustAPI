@@ -230,13 +230,30 @@ pub fn direct_message(
     kind: &str,
     ciphertext: Vec<u8>,
 ) -> Result<Node, TransportError> {
-    if !matches!(kind, "pkmsg" | "msg") || ciphertext.is_empty() || id.is_empty() {
+    direct_typed(recipient, id, kind, ciphertext, "text")
+}
+
+/// Direct envelope with an explicit stanza `type`. `text` is the ordinary
+/// message; `reaction` is the comparison kind for reaction payloads
+/// (`LX/0zO.A01` kind table, observed live on incoming reactions).
+pub fn direct_typed(
+    recipient: &Jid,
+    id: &str,
+    kind: &str,
+    ciphertext: Vec<u8>,
+    stanza_type: &str,
+) -> Result<Node, TransportError> {
+    if !matches!(kind, "pkmsg" | "msg")
+        || !matches!(stanza_type, "text" | "reaction")
+        || ciphertext.is_empty()
+        || id.is_empty()
+    {
         return Err(error("invalid direct-message envelope"));
     }
     Ok(Node::new("message")
         .attr("to", recipient.clone())
         .attr("id", id)
-        .attr("type", "text")
+        .attr("type", stanza_type)
         .children(vec![
             Node::new("enc")
                 .attr("v", "2")

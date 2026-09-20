@@ -475,6 +475,29 @@ generates and uploads in the same session (the APK does these on separate
 runs), and no backoff/retry is implemented. `whatsapp-cli prekeys` prints
 redacted counts offline. The first live upload (50 keys) was server-acknowledged on 2026-09-19.
 
+### Reactions (comparison 2.26.37.71)
+
+Protobuf-lite descriptors: `LX/BWI.dynamicMethod` (ReactionMessage: `key`=1
+message, `text`=2 string, `groupingKey`=3 string, `senderTimestampMs`=4 int64)
+and `LX/BZa.dynamicMethod` (MessageKey: `remoteJid`=1, `fromMe`=2 bool, `id`=3,
+`participant`=4). The stanza kind `reaction` is in the message-kind table of
+`LX/0zO.A01` (`2bec`) and was observed live: an incoming reaction arrived as
+`message type=reaction` with `enc` and `meta` children, and its authenticated
+payload carried only `Message.reactionMessage` (field 46). `fromMe` is relative
+to the reacting sender, so an incoming `fromMe=false` targets one of our
+messages and `fromMe=true` one of theirs; an empty `text` removes a reaction.
+
+Implementation (`transport::reactions`): incoming reactions project into
+`SyncEvent::MessageUpdated` with `MessageChange::Reaction { by, emoji }` on the
+target key (never a new message); `whatsapp-cli reproject` re-runs projection
+over saved authenticated captures so earlier opaque placeholders upgrade.
+Outgoing `MessageContent::Reaction` goes through the normal outbox as an
+encrypted `reactionMessage` payload in a `message type=reaction` envelope;
+`whatsapp-cli react --chat <jid> --id <msgid> --emoji <text> [--ours]` enqueues
+it (`--remove` clears). Live on 2026-09-19: a contact's 👍 on our test text was
+decrypted and projected, and our 👍 on their message was server-accepted.
+Group and companion-addressed reactions are not implemented.
+
 ### Contact device-list synchronization (comparison 2.26.37.71)
 
 Same build and hash as the prekey section. The cross-device class names

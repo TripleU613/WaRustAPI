@@ -128,6 +128,9 @@ fn validate(req: &SendRequest, limits: &Limits) -> Result<()> {
             }
             Ok(())
         }
+        MessageContent::Reaction { target, emoji } => {
+            crate::transport::reactions::validate(req.chat.jid(), target, emoji.as_deref())
+        }
         MessageContent::Unsupported(_) => Err(Error::invalid(
             "content",
             "cannot send an Unsupported message form",

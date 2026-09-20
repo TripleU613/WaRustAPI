@@ -62,6 +62,36 @@ fn own_peer_sender(account: &AccountRecord, node: &Node) -> Option<Jid> {
     .then_some(from)
 }
 
+/// Re-run event projection over every authenticated incoming record from its
+/// original capture, upgrading opaque placeholders that newer parsers now
+/// understand (for example reactions). Returns how many events were published.
+/// Offline; never touches sessions, receipts or the network.
+pub fn reproject(store: &ProtocolStore) -> Result<usize> {
+    let mut published = 0;
+    let mut cursor = None;
+    loop {
+        let rows = store.read(|tx| tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256))?;
+        let done = rows.len() < 256;
+        cursor = rows.last().map(|(key, _)| key.clone());
+        for (key, _) in rows {
+            if !key.starts_with(b"received:") {
+                continue;
+            }
+            let Some(saved) =
+                store.read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, &key, 1))?
+            else {
+                continue;
+            };
+            if super::inbox_events::restore(store, &key, &saved)? {
+                published += 1;
+            }
+        }
+        if done {
+            return Ok(published);
+        }
+    }
+}
+
 /// Persist a raw frame before processing or replying. Deterministic capture keys
 /// bound repeated identical redeliveries without losing the original wire data.
 pub fn preserve(store: &ProtocolStore, node: &Node) -> Result<Vec<u8>> {

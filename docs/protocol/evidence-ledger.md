@@ -1,5 +1,13 @@
 # Evidence ledger
 
+### Reactions — 2026-09-19
+
+`LX/BWI`/`LX/BZa` descriptors give ReactionMessage (key=1, text=2,
+groupingKey=3, senderTimestampMs=4) and MessageKey (remoteJid=1, fromMe=2,
+id=3, participant=4); `LX/0zO.A01` lists the `reaction` stanza kind. A live
+incoming reaction (`message type=reaction`, payload field 46) decrypted and
+projected as a message update; a reaction sent back was server-accepted.
+
 ### Live confirmation of 2.26.37.71-derived requests — 2026-09-19
 
 On the saved comparison account: the `iq/encrypt/set` prekey upload built from

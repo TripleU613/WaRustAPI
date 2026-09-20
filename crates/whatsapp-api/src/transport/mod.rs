@@ -84,6 +84,7 @@ pub mod outgoing_media;
     feature = "experimental-transport"
 ))]
 pub mod prekeys;
+pub mod reactions;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod receipts;
 pub mod selector;
