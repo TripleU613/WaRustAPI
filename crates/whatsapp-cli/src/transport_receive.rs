@@ -231,6 +231,157 @@ pub(super) fn devices(cli: &super::Cli, chat: &str, request: bool) -> Result<(),
     Ok(())
 }
 
+/// Mask a phone number for terminal output: only the last three digits show.
+fn mask_phone(phone: &str) -> String {
+    let digits: String = phone.chars().filter(char::is_ascii_digit).collect();
+    if digits.len() <= 3 {
+        return "*".repeat(digits.len());
+    }
+    format!(
+        "{}{}",
+        "*".repeat(digits.len() - 3),
+        &digits[digits.len() - 3..]
+    )
+}
+
+fn contacts_store(cli: &super::Cli) -> Result<ProtocolStore, Error> {
+    ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })
+}
+
+fn print_contact(cli: &super::Cli, contact: &whatsapp_api::transport::contacts::Contact) {
+    if cli.json {
+        if let Ok(s) = serde_json::to_string_pretty(contact) {
+            println!("{s}");
+        }
+        return;
+    }
+    println!(
+        "contact: phone={} name={:?} first_name={:?}",
+        mask_phone(&contact.phone),
+        contact.full_name,
+        contact.first_name
+    );
+}
+
+/// Offline local address book: list/add/edit/remove, and queue/inspect a
+/// `usync` WhatsApp-existence check (docs/protocol/chat-actions.md section 7).
+pub(super) fn contacts(cli: &super::Cli, action: &super::ContactsCmd) -> Result<(), Error> {
+    use whatsapp_api::transport::contacts;
+    let store = contacts_store(cli)?;
+    match action {
+        super::ContactsCmd::List => {
+            let all = contacts::list(&store)?;
+            if cli.json {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&all)
+                        .map_err(|e| Error::invalid("contacts", e.to_string()))?
+                );
+                return Ok(());
+            }
+            println!("contacts: {} saved", all.len());
+            for c in &all {
+                print_contact(cli, c);
+            }
+            Ok(())
+        }
+        super::ContactsCmd::Add {
+            phone,
+            name,
+            first_name,
+        } => {
+            let contact = contacts::add(&store, phone, name, first_name.as_deref())?;
+            print_contact(cli, &contact);
+            Ok(())
+        }
+        super::ContactsCmd::Edit {
+            phone,
+            name,
+            first_name,
+        } => {
+            let contact = contacts::edit(&store, phone, name, first_name.as_deref())?;
+            print_contact(cli, &contact);
+            Ok(())
+        }
+        super::ContactsCmd::Remove { phone } => {
+            let removed = contacts::remove(&store, phone)?;
+            if cli.json {
+                println!("{}", serde_json::json!({ "removed": removed }));
+            } else {
+                println!(
+                    "contacts: {}",
+                    if removed {
+                        "removed"
+                    } else {
+                        "no contact saved for this number"
+                    }
+                );
+            }
+            Ok(())
+        }
+        super::ContactsCmd::Check { phone } => {
+            let id = contacts::queue_check(&store, phone)?;
+            let ingested = contacts::ingest(&store)?;
+            let status = contacts::status(&store, phone)?;
+            if cli.json {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&serde_json::json!({
+                        "action_id": id,
+                        "newly_ingested": ingested,
+                        "status": status,
+                    }))
+                    .map_err(|e| Error::invalid("contacts", e.to_string()))?
+                );
+                return Ok(());
+            }
+            println!(
+                "contacts: check queued; a session transmits it; inspect with `actions` (action id {id})"
+            );
+            match status {
+                None => println!("contacts: no saved status yet for {}", mask_phone(phone)),
+                Some(status) => println!(
+                    "contacts: saved status for {} on_whatsapp={} checked_at={:?} error={:?}",
+                    mask_phone(phone),
+                    status.on_whatsapp,
+                    status.checked_at,
+                    status.error
+                ),
+            }
+            Ok(())
+        }
+    }
+}
+
+/// Offline "clear chat": drop locally decrypted message bodies for a direct
+/// chat (docs/protocol/chat-actions.md section 6). Local-only; see the
+/// `chat_clear` module for what the companion-sync mutation still needs.
+pub(super) fn clear_chat(cli: &super::Cli, chat: &str) -> Result<(), Error> {
+    let store = contacts_store(cli)?;
+    let jid = whatsapp_api::model::jid::Jid::parse(chat)?;
+    let summary = whatsapp_api::transport::chat_clear::clear_chat(&store, &jid)?;
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::json!({
+                "cleared_messages": summary.cleared_messages,
+                "cleared_poll_secrets": summary.cleared_poll_secrets,
+            })
+        );
+        return Ok(());
+    }
+    println!(
+        "clear-chat: {} message(s) cleared locally, {} poll secret(s) removed; local-only, companion sync not implemented",
+        summary.cleared_messages, summary.cleared_poll_secrets
+    );
+    Ok(())
+}
+
 /// Offline re-projection of authenticated incoming records with current parsers.
 pub(super) fn reproject(cli: &super::Cli) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {

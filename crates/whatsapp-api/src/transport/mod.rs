@@ -12,6 +12,12 @@
 ))]
 pub mod actions;
 pub mod cert;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod chat_clear;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 mod classic;
 pub mod clock;
@@ -22,6 +28,12 @@ pub mod comparison;
     feature = "experimental-transport"
 ))]
 pub mod connection;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod contacts;
 #[cfg(all(
     feature = "experimental-signal-crypto",
     feature = "experimental-noise",
