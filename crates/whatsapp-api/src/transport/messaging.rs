@@ -250,12 +250,13 @@ pub fn direct_typed(
     {
         return Err(error("invalid direct-message envelope"));
     }
-    let mut children = vec![
-        Node::new("enc")
-            .attr("v", "2")
-            .attr("type", kind)
-            .bytes(ciphertext),
-    ];
+    let mut enc = Node::new("enc").attr("v", "2").attr("type", kind);
+    if stanza_type == "reaction" {
+        // LX/BpS case 1 (2.26.37.71) builds the reaction `enc` with
+        // `decrypt-fail="hide"`, also seen on the live incoming reaction.
+        enc = enc.attr("decrypt-fail", "hide");
+    }
+    let mut children = vec![enc.bytes(ciphertext)];
     if stanza_type == "reaction" {
         // Observed on a live incoming reaction from the official client
         // (2.26.37.71): `meta content_type="add_on"` marks add-on messages; the

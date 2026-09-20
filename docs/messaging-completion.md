@@ -40,7 +40,8 @@ from offline tests alone. Existing received captures can be processed locally.
   as `message type=reaction` with `meta content_type=add_on`; `react` enqueues it.
   Live: a contact's 👍 on our test text was decrypted and projected; our first 👍
   reply (sent without the meta child) was server-accepted but not displayed, a ❤️
-  with the child was server-accepted and awaits handset confirmation.
+  with the child but a phone-number `remoteJid` was also not shown; keying the
+  reaction by the contact's LID made the handset display it (confirmed 2026-09-20).
 - Contact device-list synchronization from 2.26.37.71 evidence: `devices`
   notifications are acknowledged and record the contact; sessions send the
   `usync devices version=2` query for pending contacts at start and after a

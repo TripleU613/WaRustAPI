@@ -502,7 +502,7 @@ but not shown on the handset; a second with the child but a phone-number
 (`from=<lid>` with `sender_pn`), our reaction key now uses that LID
 (`inbox::lid_for`); the receiving client stores reactions as add-ons under a
 parent message and drops them when the parent is not found
-(`reaction_no_parent`). Handset confirmation of the LID-keyed reaction is pending;
+(`reaction_no_parent`). The LID-keyed 👍 was displayed on the handset on 2026-09-20, confirming the cause;
 `whatsapp-cli react --chat <jid> --id <msgid> --emoji <text> [--ours]` enqueues
 it (`--remove` clears). Live on 2026-09-19: a contact's 👍 on our test text was
 decrypted and projected, and our 👍 on their message was server-accepted.

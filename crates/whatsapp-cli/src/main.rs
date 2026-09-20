@@ -142,6 +142,9 @@ enum Cmd {
         /// Caller idempotency key; defaults to `react-<id>-<emoji-hex or remove>`.
         #[arg(long)]
         request_id: Option<String>,
+        /// Only report which identity the reaction key would use; enqueue nothing.
+        #[arg(long)]
+        dry_run: bool,
     },
     /// Re-project authenticated incoming records into events with current parsers (offline).
     #[cfg(feature = "experimental-transport")]
@@ -667,6 +670,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
             remove,
             ours,
             request_id,
+            dry_run,
         } => {
             use whatsapp_api::model::{
                 ids::{DeviceAddress, MessageId},
@@ -704,6 +708,22 @@ async fn run(cli: Cli) -> Result<(), Error> {
                 )
             });
             let c = open_client(&cli, false).await?;
+            #[cfg(feature = "experimental-transport")]
+            if *dry_run {
+                let lid = whatsapp_api::transport::inbox::lid_for(c.store(), &peer)?;
+                println!(
+                    "react: dry run; key remoteJid would use the contact's {}",
+                    if lid.is_some() {
+                        "LID (seen on their incoming messages)"
+                    } else {
+                        "phone-number JID (no LID seen)"
+                    }
+                );
+                c.shutdown().await;
+                return Ok(());
+            }
+            #[cfg(not(feature = "experimental-transport"))]
+            let _ = dry_run;
             let ticket = c
                 .send_message(SendRequest {
                     client_request_id: ClientRequestId::new(request_id)?,
