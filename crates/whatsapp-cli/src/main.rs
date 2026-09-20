@@ -182,6 +182,24 @@ enum Cmd {
         #[arg(long)]
         request_id: Option<String>,
     },
+    /// Queue a quoted reply to a message in a direct chat.
+    Reply {
+        /// Chat JID.
+        #[arg(long)]
+        chat: String,
+        /// Wire id of the message being replied to (as shown by `events`).
+        #[arg(long)]
+        id: String,
+        /// Reply text.
+        #[arg(long)]
+        text: String,
+        /// The quoted message was sent by this account (default: by the contact).
+        #[arg(long)]
+        ours: bool,
+        /// Caller idempotency key; defaults to a content digest.
+        #[arg(long)]
+        request_id: Option<String>,
+    },
     /// Re-project authenticated incoming records into events with current parsers (offline).
     #[cfg(feature = "experimental-transport")]
     Reproject,
@@ -822,6 +840,62 @@ async fn run(cli: Cli) -> Result<(), Error> {
                     .map_err(|e| Error::invalid("ticket", e.to_string()))?
             );
             eprintln!("note: poll durably queued; `listen --send-outbox` transmits it");
+            c.shutdown().await;
+            Ok(())
+        }
+        Cmd::Reply {
+            chat,
+            id,
+            text,
+            ours,
+            request_id,
+        } => {
+            use sha2::Digest;
+            use whatsapp_api::model::{
+                ids::{DeviceAddress, MessageId},
+                message::{Direction, MessageKey, MessageRef},
+            };
+            let peer = Jid::parse(chat)?;
+            let chat_id = ChatId::from_jid(&peer)?;
+            let digest = sha2::Sha256::digest(text.as_bytes());
+            let request_id = request_id
+                .clone()
+                .unwrap_or_else(|| format!("reply-{id}-{}", hex::encode(&digest[..8])));
+            let quoted = MessageRef {
+                key: MessageKey {
+                    chat: chat_id.clone(),
+                    sender: if *ours {
+                        None
+                    } else {
+                        Some(DeviceAddress::from_jid(&peer)?)
+                    },
+                    direction: if *ours {
+                        Direction::Outgoing
+                    } else {
+                        Direction::Incoming
+                    },
+                    id: MessageId::new(id.clone())?,
+                },
+            };
+            let c = open_client(&cli, false).await?;
+            let ticket = c
+                .send_message(SendRequest {
+                    client_request_id: ClientRequestId::new(request_id)?,
+                    chat: chat_id,
+                    content: MessageContent::Text {
+                        body: text.clone(),
+                        quoted: Some(quoted),
+                    },
+                })
+                .await?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&ticket)
+                    .map_err(|e| Error::invalid("ticket", e.to_string()))?
+            );
+            eprintln!(
+                "note: durably queued; an outbox-enabled comparison session (`listen --send-outbox`) transmits it"
+            );
             c.shutdown().await;
             Ok(())
         }

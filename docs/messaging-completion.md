@@ -42,6 +42,14 @@ from offline tests alone. Existing received captures can be processed locally.
   login reply's `pn`/`lid` are saved for message keys and vote identities. Live:
   the contact's poll decoded, our vote was server-accepted and our own poll was
   delivered; incoming votes on both polls decrypted live, confirming the recipe.
+- Quoted replies: incoming text with `contextInfo.stanzaId` projects as
+  `Text { quoted: Some(..) }`, attributing the quoted message to us when
+  `participant` is one of our login identities (the handset sent our LID) and to
+  the sender otherwise. Outgoing `Text { quoted }` encodes
+  `extendedTextMessage` with `stanzaId`, `participant` and the referenced
+  `quotedMessage` (secret-stripped) and goes out in the plain text envelope;
+  `reply` enqueues it. Live: the handset's reply to our image was projected with
+  the quote and our quoted reply back was delivered and read (2026-09-20).
 - Reactions: incoming `reactionMessage` payloads (field 46) now project into
   `MessageUpdated` events with the reacting device and emoji on the target key;
   `reproject` upgrades earlier opaque placeholders offline. Outgoing
@@ -382,8 +390,8 @@ still had one `new_message`, not a newly supported media event. Existing media
 captures therefore do not establish live verification of this projection branch.
 
 Media context follow-up: empty/non-quoted context and BWx expiration field 25 now
-project into normal media events with the original timer. Quoted media remains
-unsupported. Expired media, or timed media without a usable authenticated route
+project into normal media events with the original timer. Quoted media (a media
+message carrying a quote) remains unsupported; quoted text replies project. Expired media, or timed media without a usable authenticated route
 timestamp, is excluded from listing/reference resolution/retrieval. Availability
 is rechecked after decrypt/download and before public file export; existing sealed
 references do not bypass expiry. Tests cover fresh/expired/missing timestamps and

@@ -116,9 +116,18 @@ fn idempotency_key(namespace: &str, id: &ClientRequestId) -> Vec<u8> {
 
 fn validate(req: &SendRequest, limits: &Limits) -> Result<()> {
     match &req.content {
-        MessageContent::Text { body, .. } => {
+        MessageContent::Text { body, quoted } => {
             if body.is_empty() {
                 return Err(Error::invalid("content.body", "must not be empty"));
+            }
+            if quoted
+                .as_ref()
+                .is_some_and(|q| q.key.chat.jid().to_non_ad() != req.chat.jid().to_non_ad())
+            {
+                return Err(Error::invalid(
+                    "content.quoted",
+                    "quoted message belongs to another chat",
+                ));
             }
             if body.len() > limits.max_text_len as usize {
                 return Err(Error::ResourceExhausted {
@@ -232,6 +241,28 @@ impl Outbox {
     /// Load an entry.
     pub fn get(&self, tx: &ReadTx<'_>, local_id: LocalMessageId) -> Result<Option<OutboxEntry>> {
         tx.get_json(Table::Outbox, &local_id.0, RECORD_V1)
+    }
+
+    /// Find the entry that was transmitted with `wire_id` (a linear scan; used
+    /// to quote our own messages).
+    pub fn by_wire_id(&self, tx: &ReadTx<'_>, wire_id: &MessageId) -> Result<Option<OutboxEntry>> {
+        let mut cursor = None;
+        loop {
+            let page = tx.scan_after(Table::Outbox, RECORD_V1, cursor.as_deref(), 256)?;
+            let done = page.len() < 256;
+            cursor = page.last().map(|(key, _)| key.clone());
+            for (_, bytes) in page {
+                let entry: OutboxEntry = serde_json::from_slice(&bytes).map_err(|e| {
+                    Error::Storage(crate::store::StoreError::Serialization(e.to_string()))
+                })?;
+                if entry.wire_id.as_ref() == Some(wire_id) {
+                    return Ok(Some(entry));
+                }
+            }
+            if done {
+                return Ok(None);
+            }
+        }
     }
 
     /// Look up an immutable intent by its namespace-scoped request ID before

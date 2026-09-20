@@ -559,6 +559,50 @@ pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
                     plain.len()
                 );
             }
+            {
+                let fields =
+                    whatsapp_api::signal::direct::payload_fields(&plain).unwrap_or_default();
+                if fields.iter().all(|v| matches!(v, 1 | 6 | 35))
+                    && let Some(text) = whatsapp_api::transport::quotes::decode(&plain)
+                    && text.is_reply()
+                {
+                    let id = std::str::from_utf8(key)
+                        .ok()
+                        .and_then(|k| k.rsplit_once(':'))
+                        .map(|(_, id)| id.to_owned())
+                        .unwrap_or_default();
+                    let participant = text
+                        .participant
+                        .as_deref()
+                        .and_then(|p| whatsapp_api::model::jid::Jid::parse(p).ok());
+                    let sender = std::str::from_utf8(key)
+                        .ok()
+                        .and_then(|k| k.strip_prefix("received:"))
+                        .and_then(|k| k.rsplit_once(':'))
+                        .and_then(|(sender, _)| whatsapp_api::model::jid::Jid::parse(sender).ok());
+                    let from_lid = sender
+                        .as_ref()
+                        .and_then(|s| whatsapp_api::transport::inbox::lid_for(&store, s).ok())
+                        .flatten();
+                    let (own_pn, own_lid) = whatsapp_api::transport::inbox::own_identities(&store)
+                        .unwrap_or((None, None));
+                    let same = |a: &Option<whatsapp_api::model::jid::Jid>| matches!((participant.as_ref(), a), (Some(p), Some(a)) if p.to_non_ad() == a.to_non_ad());
+                    println!(
+                        "inbox: reply id={id} text_len={} stanza_id={:?} participant_server={:?} participant_is_sender_pn={} participant_is_sender_lid={} participant_is_own_pn={} participant_is_own_lid={} quoted_fields={:?}",
+                        text.text.len(),
+                        text.stanza_id,
+                        participant.as_ref().map(|p| format!("{:?}", p.server)),
+                        same(&sender),
+                        same(&from_lid),
+                        same(&own_pn),
+                        same(&own_lid),
+                        text.quoted
+                            .as_deref()
+                            .map(|q| whatsapp_api::signal::direct::payload_fields(q)
+                                .unwrap_or_default()),
+                    );
+                }
+            }
             if let Some(poll) = whatsapp_api::transport::polls::decode_poll(&plain) {
                 let id = std::str::from_utf8(key)
                     .ok()
@@ -571,6 +615,123 @@ pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
                     poll.options,
                     poll.selectable_count,
                     poll.secret.is_some()
+                );
+            }
+            if let Some(vote) = whatsapp_api::transport::polls::decode_vote(&plain) {
+                let id = std::str::from_utf8(key)
+                    .ok()
+                    .and_then(|k| k.rsplit_once(':'))
+                    .map(|(_, id)| id.to_owned())
+                    .unwrap_or_default();
+                let sender_pn = std::str::from_utf8(key)
+                    .ok()
+                    .and_then(|k| k.strip_prefix("received:"))
+                    .and_then(|r| r.rsplit_once(':'))
+                    .map(|(s, _)| s.to_owned())
+                    .unwrap_or_default();
+                let fields = whatsapp_api::transport::polls::vote_key_fields(&plain);
+                let (remote, from_me, metadata, ts) = fields
+                    .map(|f| {
+                        (
+                            f.remote_jid,
+                            f.from_me,
+                            f.metadata_present,
+                            f.sender_timestamp_ms,
+                        )
+                    })
+                    .unwrap_or((None, None, false, None));
+                let remote_server = remote
+                    .as_deref()
+                    .and_then(|v| v.rsplit_once('@'))
+                    .map(|(_, s)| s.to_owned());
+                let remote_is_sender_pn = remote.as_deref() == Some(sender_pn.as_str());
+                // Which identity pair decrypts: creator in {pn, lid}, voter in {pn, lid}.
+                let sender_jid = whatsapp_api::model::jid::Jid::parse(&sender_pn).ok();
+                let sender_lid = sender_jid.as_ref().and_then(|j| {
+                    whatsapp_api::transport::inbox::lid_for(&store, j)
+                        .ok()
+                        .flatten()
+                });
+                let (own_pn, own_lid) =
+                    whatsapp_api::transport::inbox::own_identities(&store).unwrap_or((None, None));
+                let poll_key_theirs = format!("received:{sender_pn}:{}", vote.poll_id.as_str());
+                let (secret, options): (Option<[u8; 32]>, Vec<String>) = if vote.poll_from_sender {
+                    store
+                        .read(|tx| {
+                            tx.get_json::<serde_json::Value>(
+                                Table::Checkpoints,
+                                poll_key_theirs.as_bytes(),
+                                1,
+                            )
+                        })
+                        .ok()
+                        .flatten()
+                        .and_then(|saved| {
+                            serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()).ok()
+                        })
+                        .and_then(|p| whatsapp_api::transport::polls::decode_poll(&p))
+                        .map(|p| (p.secret, p.options))
+                        .unwrap_or((None, vec![]))
+                } else {
+                    store
+                        .read(|tx| {
+                            tx.get_json::<serde_json::Value>(
+                                Table::Checkpoints,
+                                format!("poll-secret:{}", vote.poll_id.as_str()).as_bytes(),
+                                1,
+                            )
+                        })
+                        .ok()
+                        .flatten()
+                        .map(|own| {
+                            (
+                                serde_json::from_value::<Vec<u8>>(own["secret"].clone())
+                                    .ok()
+                                    .and_then(|s| <[u8; 32]>::try_from(s).ok()),
+                                serde_json::from_value(own["options"].clone()).unwrap_or_default(),
+                            )
+                        })
+                        .unwrap_or((None, vec![]))
+                };
+                let mut worked = Vec::new();
+                if let Some(secret) = secret {
+                    let creators: Vec<(&str, Option<whatsapp_api::model::jid::Jid>)> =
+                        if vote.poll_from_sender {
+                            vec![
+                                ("sender_pn", sender_jid.clone()),
+                                ("sender_lid", sender_lid.clone()),
+                            ]
+                        } else {
+                            vec![("own_pn", own_pn.clone()), ("own_lid", own_lid.clone())]
+                        };
+                    let voters = [
+                        ("sender_pn", sender_jid.clone()),
+                        ("sender_lid", sender_lid.clone()),
+                    ];
+                    for (cl, c) in &creators {
+                        for (vl, v) in &voters {
+                            if let (Some(c), Some(v)) = (c, v)
+                                && whatsapp_api::transport::polls::decrypt_vote(
+                                    &secret,
+                                    vote.poll_id.as_str(),
+                                    c,
+                                    v,
+                                    &vote,
+                                )
+                                .is_ok()
+                            {
+                                worked.push(format!("creator={cl} voter={vl}"));
+                            }
+                        }
+                    }
+                }
+                let _ = options;
+                println!(
+                    "inbox: vote id={id} poll={} poll_from_sender={} remote_server={remote_server:?} remote_is_sender_pn={remote_is_sender_pn} key_from_me={from_me:?} metadata_present={metadata} sender_ts_present={} iv_len={} decrypts_with={worked:?}",
+                    vote.poll_id.as_str(),
+                    vote.poll_from_sender,
+                    ts.is_some(),
+                    vote.enc_iv.len()
                 );
             }
             if let Some(reaction) = whatsapp_api::transport::reactions::decode(&plain)

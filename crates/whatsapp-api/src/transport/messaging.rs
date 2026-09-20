@@ -288,17 +288,20 @@ pub fn poll_envelope(
     {
         return Err(error("invalid poll envelope"));
     }
+    // Observed live from the official client: a poll creation carries
+    // `meta polltype=creation`; a vote carries `meta polltype=vote
+    // content_type=add_on` and `enc decrypt-fail=hide` like other add-ons.
+    let mut enc = Node::new("enc").attr("v", "2").attr("type", kind);
+    let mut meta = Node::new("meta").attr("polltype", polltype);
+    if polltype == "vote" {
+        enc = enc.attr("decrypt-fail", "hide");
+        meta = meta.attr("content_type", "add_on");
+    }
     Ok(Node::new("message")
         .attr("to", recipient.clone())
         .attr("id", id)
         .attr("type", "poll")
-        .children(vec![
-            Node::new("enc")
-                .attr("v", "2")
-                .attr("type", kind)
-                .bytes(ciphertext),
-            Node::new("meta").attr("polltype", polltype),
-        ]))
+        .children(vec![enc.bytes(ciphertext), meta]))
 }
 
 /// Comparison image envelope: media message, encrypted image payload.

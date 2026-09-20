@@ -6,7 +6,9 @@ queued text that was accepted, delivered and read; a device query for the test
 contact returned its single primary device; an explicit read receipt was sent
 and acknowledged; reactions now round-trip (a contact's 👍 was decrypted and
 projected, ours displayed once keyed by the contact's LID). Polls decode and
-send: our vote was server-accepted and our own poll delivered. Checklist item
+send: our vote was server-accepted and our own poll delivered; incoming votes
+decrypt. Quoted text replies project with the quoted reference and our quoted
+reply was delivered and read. Checklist item
 10 is now live-verified; item 8 keeps only
 own-account sync, snapshot projection and companion fan-out open.
 

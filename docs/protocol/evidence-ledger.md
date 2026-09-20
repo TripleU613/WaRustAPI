@@ -9,6 +9,16 @@ and the inputs handed to native code for key derivation; the derivation itself
 is not in DEX. Our vote and our poll were server-accepted; the poll was
 delivered; incoming votes decrypted with the documented recipe.
 
+### Quoted replies — 2026-09-20
+
+Comparison 2.26.37.71 descriptors `LX/BVL` (Message: conversation=1,
+extendedTextMessage=6, messageContextInfo=35), `LX/BVK` (stanzaId=1,
+participant=2, quotedMessage=3) and `LX/BWx` (ContextInfo expiration=25). A live
+handset reply to our image arrived as `type=text`, payload fields 6+35, with
+`contextInfo.participant` = our LID and `quotedMessage` fields `[3]`. Our quoted
+reply (same shape, participant = the contact's LID, quoted = the stored
+authenticated payload) was server-accepted, delivered and read.
+
 ### Reactions — 2026-09-19
 
 `LX/BWI`/`LX/BZa` descriptors give ReactionMessage (key=1, text=2,

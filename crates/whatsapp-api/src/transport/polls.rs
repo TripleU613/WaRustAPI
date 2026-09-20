@@ -81,8 +81,15 @@ pub(crate) struct PollUpdate {
     pub(crate) poll_creation_message_key: Option<super::reactions::Key>,
     #[prost(message, optional, tag = "2")]
     pub(crate) vote: Option<EncValue>,
+    #[prost(bytes = "vec", optional, tag = "3")]
+    pub(crate) metadata: Option<Vec<u8>>,
     #[prost(int64, optional, tag = "4")]
     pub(crate) sender_timestamp_ms: Option<i64>,
+}
+impl PollUpdate {
+    fn metadata_present_value(&self) -> bool {
+        self.metadata.is_some()
+    }
 }
 /// `PollEncValue`: AES-256-GCM ciphertext and its 12-byte nonce.
 #[derive(prost::Message, Clone, PartialEq, Eq)]
@@ -275,6 +282,33 @@ pub fn decrypt_vote(
         .map_err(|_| invalid("vote plaintext is not a PollVoteMessage"))?
         .selected_options)
 }
+/// Diagnostic view of a vote payload's key and metadata fields.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct VoteKeyFields {
+    /// `key.remoteJid` as sent.
+    pub remote_jid: Option<String>,
+    /// `key.fromMe` as sent.
+    pub from_me: Option<bool>,
+    /// Whether the (empty) `metadata` field was present.
+    pub metadata_present: bool,
+    /// `senderTimestampMs` as sent.
+    pub sender_timestamp_ms: Option<i64>,
+}
+
+/// Diagnostic: raw key fields and metadata presence of a vote payload.
+pub fn vote_key_fields(payload: &[u8]) -> Option<VoteKeyFields> {
+    let update = Envelope::decode(payload).ok()?.update?;
+    let metadata_present = update.metadata_present_value();
+    let sender_timestamp_ms = update.sender_timestamp_ms;
+    let key = update.poll_creation_message_key?;
+    Some(VoteKeyFields {
+        remote_jid: key.remote_jid,
+        from_me: key.from_me,
+        metadata_present,
+        sender_timestamp_ms,
+    })
+}
+
 /// Map selected hashes back to option names; unknown hashes come back as hex.
 pub fn resolve_options(hashes: &[Vec<u8>], options: &[String]) -> (Vec<String>, Vec<String>) {
     let mut selected = Vec::new();
@@ -335,6 +369,8 @@ pub fn vote_payload(
                 participant: None,
             }),
             vote: Some(vote),
+            // The official client sends an empty PollUpdateMessageMetadata (observed live).
+            metadata: Some(Vec::new()),
             sender_timestamp_ms: Some(sender_timestamp_ms),
         }),
         creation_v3: None,

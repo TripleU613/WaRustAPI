@@ -538,11 +538,45 @@ when the store holds the poll secret (our own polls keep it in
 `poll-secret:<id>`; a sender's own poll carries it in the authenticated
 plaintext), otherwise they stay opaque. `whatsapp-cli poll` and `vote` enqueue
 creations and votes through the normal outbox in `message type=poll` envelopes
-with `meta polltype=creation|vote`. Live on 2026-09-20: the contact's poll
+with `meta polltype=creation` for polls and `meta polltype=vote content_type=add_on`
+plus `enc decrypt-fail=hide` for votes, which also carry an empty
+`PollUpdateMessageMetadata` (all observed on the official client's live vote
+stanzas; a vote sent without them was server-accepted but never delivered).
+Live on 2026-09-20: the contact's poll
 (two options, unlimited selection) decoded; our vote for both options was
 server-accepted and our own poll was delivered; the contact's vote on their own
 poll and three vote updates on ours decrypted and projected, confirming the
 derivation and identity choice on the receive side.
+
+### Quoted replies (comparison 2.26.37.71)
+
+Descriptors: `LX/BVL` (Message: conversation=1, extendedTextMessage=6,
+messageContextInfo=35), `LX/BVK` (stanzaId=1, participant=2, quotedMessage=3)
+and `LX/BWx` (ContextInfo: stanzaId=1, quotedMessage=3, expiration=25);
+`ExtendedTextMessage.contextInfo` is 17 as already used for disappearing-timer
+context. A live reply from the handset to one of our messages arrived as an
+ordinary `message type=text` whose payload had fields 6 and 35: text plus a
+`contextInfo` with `stanzaId` = our message's wire id, `participant` = our LID
+(not our phone number) and `quotedMessage` = the referenced message (fields
+`[3]`, the quoted image). The chat's disappearing timer (field 25) was carried
+as before.
+
+Implementation (`transport::quotes`): incoming `conversation` and
+`extendedTextMessage` payloads decode through one parser; a `stanzaId` projects
+`MessageContent::Text { quoted: Some(MessageRef) }` whose direction is
+`Outgoing` when `participant` is one of our identities (`login-identity`
+phone-number or LID) and `Incoming` from the sender otherwise; a quote without a
+`stanzaId` stays opaque. `reproject` upgraded the earlier opaque placeholder.
+Outgoing `Text { quoted: Some(..) }` is validated (same chat), encoded as
+`extendedTextMessage{text, contextInfo{stanzaId, participant, quotedMessage}}`
+with `participant` = the contact's LID (or phone number when no LID was seen)
+for their messages and our LID for ours, and `quotedMessage` = the referenced
+message when the store holds it (the authenticated incoming payload with
+`messageContextInfo` stripped so a quoted poll never re-sends its secret, or our
+own text intent found by wire id), else an empty `conversation`. It travels in
+the plain text envelope. `whatsapp-cli reply --chat --id --text [--ours]`
+enqueues one. Live on 2026-09-20: our quoted reply to the handset's reply was
+server-accepted, delivered and read.
 
 ### Contact device-list synchronization (comparison 2.26.37.71)
 

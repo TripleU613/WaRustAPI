@@ -80,8 +80,12 @@ pub fn begin_selected(
             && peer.device == 0
             && !peer.user.is_empty()
             && match &entry.intent.content {
-                MessageContent::Text { body, quoted: None } => {
-                    !body.is_empty() && body.len() <= 4096
+                MessageContent::Text { body, quoted } => {
+                    !body.is_empty()
+                        && body.len() <= 4096
+                        && quoted
+                            .as_ref()
+                            .is_none_or(|q| q.key.chat.jid().to_non_ad() == peer.to_non_ad())
                 }
                 MessageContent::Media {
                     reference,
@@ -278,6 +282,57 @@ fn vote_payload_for(
     ))
 }
 
+/// Encode a quoted reply to `target` in the chat with `peer`. `participant` is
+/// the quoted message's sender in the chat's addressing (the contact's LID when
+/// known, our LID from the login reply for our own messages), matching what the
+/// comparison handset sent when it quoted our message (participant = our LID).
+/// `quotedMessage` is the referenced message when this store still holds it
+/// (an authenticated incoming payload with `messageContextInfo` stripped, or
+/// our own text intent), else an empty `conversation`.
+fn reply_payload_for(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    peer: &crate::model::jid::Jid,
+    target: &crate::model::message::MessageRef,
+    body: &str,
+) -> Result<Vec<u8>> {
+    use crate::model::message::Direction;
+    if target.key.chat.jid().to_non_ad() != peer.to_non_ad() {
+        return Err(Error::invalid("reply", "quoted message is in another chat"));
+    }
+    let id = target.key.id.as_str();
+    let (own_pn, own_lid) = store.write(|tx| login_identity(tx, account))?;
+    let peer_lid = super::inbox::lid_for(store, peer)?;
+    let (participant, quoted) = if target.key.direction == Direction::Incoming {
+        let key = format!("received:{}:{id}", peer.to_non_ad());
+        let saved: Option<serde_json::Value> =
+            store.read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))?;
+        let quoted = saved
+            .and_then(|s| serde_json::from_value::<Vec<u8>>(s["protobuf"].clone()).ok())
+            .map(|plain| super::quotes::strip_message_context(&plain))
+            .unwrap_or_else(|| super::quotes::conversation(""));
+        (peer_lid.unwrap_or_else(|| peer.to_non_ad()), quoted)
+    } else {
+        let quoted = store
+            .read(|tx| outbox().by_wire_id(tx, &target.key.id))?
+            .and_then(|entry| match entry.intent.content {
+                MessageContent::Text { body, .. } => Some(super::quotes::conversation(&body)),
+                _ => None,
+            })
+            .unwrap_or_else(|| super::quotes::conversation(""));
+        let own = own_lid
+            .or(own_pn)
+            .ok_or_else(|| Error::invalid("reply", "own identity unknown"))?;
+        (own, quoted)
+    };
+    Ok(super::quotes::reply_payload(
+        body,
+        id,
+        &participant.to_string(),
+        quoted,
+    ))
+}
+
 impl Pending {
     /// Only the exact query response can produce a prepared send.
     pub fn matches(&self, node: &Node) -> bool {
@@ -339,7 +394,7 @@ impl Pending {
                 peer,
                 reference,
             )?),
-            MessageContent::Text { quoted: None, .. }
+            MessageContent::Text { .. }
             | MessageContent::Reaction { .. }
             | MessageContent::Poll { .. }
             | MessageContent::PollVote { .. } => None,
@@ -368,6 +423,13 @@ impl Pending {
             )),
             _ => None,
         };
+        let reply = match &entry.intent.content {
+            MessageContent::Text {
+                body,
+                quoted: Some(target),
+            } => Some(reply_payload_for(store, account, peer, target, body)?),
+            _ => None,
+        };
         let reaction = match &entry.intent.content {
             MessageContent::Reaction { target, emoji } => {
                 // Contacts who address us by LID keep their chat keyed by LID.
@@ -392,7 +454,7 @@ impl Pending {
                 payload,
             )
             .await?
-        } else if let Some(payload) = &reaction {
+        } else if let Some(payload) = reply.as_deref().or(reaction.as_deref()) {
             crate::signal::direct::prepare_payload(
                 account,
                 peer,

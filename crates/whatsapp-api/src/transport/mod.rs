@@ -85,6 +85,7 @@ pub mod polls;
     feature = "experimental-transport"
 ))]
 pub mod prekeys;
+pub mod quotes;
 pub mod reactions;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod receipts;

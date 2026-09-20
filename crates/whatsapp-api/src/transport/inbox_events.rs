@@ -14,37 +14,11 @@ use crate::{
     store::{Table, WriteTx},
     sync::SyncEvent,
 };
-use prost::Message as _;
 use sha2::{Digest, Sha256};
-
-#[derive(prost::Message)]
-struct Envelope {
-    #[prost(string, optional, tag = "1")]
-    conversation: Option<String>,
-    #[prost(message, optional, tag = "6")]
-    extended: Option<Extended>,
-}
-#[derive(prost::Message)]
-struct Extended {
-    #[prost(string, optional, tag = "1")]
-    text: Option<String>,
-    #[prost(bytes = "vec", optional, tag = "17")]
-    context: Option<Vec<u8>>,
-}
-// Comparison LX/BWx.dynamicMethod: stanzaId=1, quotedMessage=3, expiration=25.
-#[derive(prost::Message)]
-struct Context {
-    #[prost(string, optional, tag = "1")]
-    stanza_id: Option<String>,
-    #[prost(bytes = "vec", optional, tag = "3")]
-    quoted: Option<Vec<u8>>,
-    #[prost(uint32, optional, tag = "25")]
-    expiration: Option<u32>,
-}
 
 #[cfg(test)]
 fn event(key: &[u8], node: &Node, payload: &[u8]) -> SyncEvent {
-    project(key, node, payload, None, None)
+    project(key, node, payload, None, None, &[])
 }
 
 fn poll_content(poll: super::polls::Poll) -> Option<MessageContent> {
@@ -210,16 +184,20 @@ fn event_with_content(
     node: &Node,
     payload: &[u8],
     content: Option<(MessageContent, Option<u32>)>,
+    own: &[crate::model::jid::Jid],
 ) -> SyncEvent {
-    project(key, node, payload, content, None)
+    project(key, node, payload, content, None, own)
 }
 
+/// `own` lists this account's identities (phone-number and LID) so a quoted
+/// reply's `contextInfo.participant` can be attributed to us or to the sender.
 fn project(
     key: &[u8],
     node: &Node,
     payload: &[u8],
     content: Option<(MessageContent, Option<u32>)>,
     poll: Option<&PollContext>,
+    own: &[crate::model::jid::Jid],
 ) -> SyncEvent {
     let unsupported = || {
         SyncEvent::UnsupportedMessage(UnsupportedMessage {
@@ -289,7 +267,7 @@ fn project(
             let Some(content) = poll_content(poll) else {
                 return unsupported();
             };
-            return event_with_content(key, node, payload, Some((content, None)));
+            return event_with_content(key, node, payload, Some((content, None)), own);
         }
         // Poll vote (`pollUpdateMessage` 50): a change to the poll, decrypted with
         // the poll's message secret when this store holds it.
@@ -305,35 +283,57 @@ fn project(
         {
             return unsupported();
         }
-        let Ok(envelope) = Envelope::decode(payload) else {
+        let Some(text) = super::quotes::decode(payload) else {
             return unsupported();
         };
-        let (body, expiration_seconds) = match (envelope.conversation, envelope.extended) {
-            (Some(text), None) => (text, None),
-            (
-                None,
-                Some(Extended {
-                    text: Some(text),
-                    context,
-                }),
-            ) => {
-                let mut expiration = None;
-                if let Some(context) = context {
-                    let Ok(context) = Context::decode(context.as_slice()) else {
-                        return unsupported();
-                    };
-                    if context.stanza_id.is_some() || context.quoted.is_some() {
-                        return unsupported();
-                    }
-                    expiration = context.expiration.filter(|v| *v != 0);
-                }
-                (text, expiration)
+        // A quoted reply (comparison 2.26.37.71 `contextInfo` stanzaId=1,
+        // participant=2, quotedMessage=3, observed live). `participant` names the
+        // quoted message's sender: one of our identities means it was ours,
+        // anything else in a direct chat means it was the sender's own.
+        let quoted = match (&text.stanza_id, &text.quoted) {
+            (None, None) => None,
+            (Some(stanza_id), _) => {
+                let Ok(id) = MessageId::new(stanza_id.clone()) else {
+                    return unsupported();
+                };
+                let Some(sender) = super::inbox::session_sender(node) else {
+                    return unsupported();
+                };
+                let (Ok(chat), Ok(by)) =
+                    (ChatId::from_jid(&sender), DeviceAddress::from_jid(&sender))
+                else {
+                    return unsupported();
+                };
+                let participant = text
+                    .participant
+                    .as_deref()
+                    .and_then(|p| crate::model::jid::Jid::parse(p).ok())
+                    .map(|p| p.to_non_ad());
+                let ours = participant
+                    .as_ref()
+                    .is_some_and(|p| own.iter().any(|o| o.to_non_ad() == *p));
+                let (direction, sender) = if ours {
+                    (Direction::Outgoing, None)
+                } else {
+                    (Direction::Incoming, Some(by))
+                };
+                Some(crate::model::message::MessageRef {
+                    key: MessageKey {
+                        chat,
+                        sender,
+                        direction,
+                        id,
+                    },
+                })
             }
-            _ => return unsupported(),
+            (None, Some(_)) => return unsupported(),
         };
         (
-            MessageContent::Text { body, quoted: None },
-            expiration_seconds,
+            MessageContent::Text {
+                body: text.text,
+                quoted,
+            },
+            text.expiration,
         )
     };
     let Some(sender) = super::inbox::session_sender(node) else {
@@ -393,11 +393,12 @@ pub(super) fn publish(
     payload: &[u8],
 ) -> Result<bool> {
     let poll = poll_context(tx, node, payload)?;
-    let projected = project(key, node, payload, None, poll.as_ref());
+    let own = super::inbox::own_identities_in(tx)?;
+    let projected = project(key, node, payload, None, poll.as_ref(), &own);
     #[cfg(feature = "experimental-registration-https")]
     let projected = if matches!(projected, SyncEvent::UnsupportedMessage(_)) {
         match super::media::event_content(tx, key, payload) {
-            Ok(Some(content)) => event_with_content(key, node, payload, Some(content)),
+            Ok(Some(content)) => event_with_content(key, node, payload, Some(content), &own),
             // Invalid/unsupported media stays an opaque event; it must not block
             // durable storage and acknowledgement of an authenticated message.
             Ok(None) | Err(crate::Error::InvalidInput { .. }) => projected,
@@ -881,5 +882,75 @@ mod tests {
                 .len(),
             1
         );
+    }
+
+    #[test]
+    fn quoted_reply_projects_text_with_the_quoted_reference() {
+        use crate::model::{
+            ids::{ChatId, DeviceAddress},
+            message::Direction,
+        };
+        let own = crate::model::jid::Jid::parse("77700000001@lid").unwrap();
+        let sender = crate::model::jid::Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let reply = |participant: &str| {
+            super::super::quotes::reply_payload(
+                "ok",
+                "ABCDEF",
+                participant,
+                super::super::quotes::conversation("hi"),
+            )
+        };
+        // Their reply to our message: participant is our LID.
+        let SyncEvent::NewMessage(message) = project(
+            b"fixture",
+            &node(),
+            &reply("77700000001@lid"),
+            None,
+            None,
+            std::slice::from_ref(&own),
+        ) else {
+            panic!("expected message")
+        };
+        let MessageContent::Text { body, quoted } = message.content else {
+            panic!("expected text")
+        };
+        assert_eq!(body, "ok");
+        let quoted = quoted.expect("quoted reference");
+        assert_eq!(quoted.key.direction, Direction::Outgoing);
+        assert_eq!(quoted.key.sender, None);
+        assert_eq!(quoted.key.id.as_str(), "ABCDEF");
+        assert_eq!(quoted.key.chat, ChatId::from_jid(&sender).unwrap());
+        // Their reply to their own message: participant is the sender.
+        let SyncEvent::NewMessage(message) = project(
+            b"fixture",
+            &node(),
+            &reply("15555550100@s.whatsapp.net"),
+            None,
+            None,
+            &[own],
+        ) else {
+            panic!("expected message")
+        };
+        let MessageContent::Text { quoted, .. } = message.content else {
+            panic!("expected text")
+        };
+        let quoted = quoted.expect("quoted reference");
+        assert_eq!(quoted.key.direction, Direction::Incoming);
+        assert_eq!(
+            quoted.key.sender,
+            Some(DeviceAddress::from_jid(&sender).unwrap())
+        );
+        // Plain text keeps no quote.
+        let SyncEvent::NewMessage(message) = event(
+            b"fixture",
+            &node(),
+            &super::super::quotes::conversation("plain"),
+        ) else {
+            panic!("expected message")
+        };
+        assert!(matches!(
+            message.content,
+            MessageContent::Text { quoted: None, .. }
+        ));
     }
 }

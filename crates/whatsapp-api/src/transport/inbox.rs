@@ -149,6 +149,21 @@ pub fn own_identities(store: &ProtocolStore) -> Result<(Option<Jid>, Option<Jid>
     own_identity(store)
 }
 
+/// Transaction-scoped own identities from the `login-identity` checkpoint
+/// (phone-number and LID, non-AD), for attributing quoted-reply participants.
+pub(crate) fn own_identities_in(tx: &WriteTx<'_>) -> Result<Vec<Jid>> {
+    let saved: Option<serde_json::Value> = tx.get_json(Table::Checkpoints, b"login-identity", 1)?;
+    let mut out = Vec::new();
+    if let Some(saved) = saved {
+        for field in ["pn", "lid"] {
+            if let Some(jid) = saved[field].as_str().and_then(|v| Jid::parse(v).ok()) {
+                out.push(jid.to_non_ad());
+            }
+        }
+    }
+    Ok(out)
+}
+
 /// The authenticated LID last seen for a phone-number contact, from incoming
 /// messages that carried `from=<lid>` with `sender_pn=<phone>`. `None` when the
 /// contact has only ever addressed us by phone number.
