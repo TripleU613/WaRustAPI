@@ -233,6 +233,13 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ActionOutcome>> {
     })
 }
 
+/// The queued request of an action, decoded (for diagnostics).
+pub fn request(store: &ProtocolStore, id: &str) -> Result<Option<Node>> {
+    let row: Option<Row> =
+        store.read(|tx| tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1))?;
+    row.map(|r| decode(&r.wire)).transpose()
+}
+
 /// The saved reply of a settled action, decoded, for feature-specific parsing.
 pub fn reply(store: &ProtocolStore, id: &str) -> Result<Option<Node>> {
     let row: Option<Row> =

@@ -124,7 +124,11 @@ enum Cmd {
     Receipts,
     /// Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
-    Actions,
+    Actions {
+        /// Print the request and reply stanzas of one action (numbers masked).
+        #[arg(long)]
+        show: Option<String>,
+    },
     /// Durably queue a block of a contact (offline; `listen --send-outbox` transmits it).
     #[cfg(feature = "experimental-transport")]
     Block {
@@ -145,6 +149,9 @@ enum Cmd {
         /// Also durably queue a blocklist fetch (`listen --send-outbox` transmits it).
         #[arg(long)]
         refresh: bool,
+        /// Forget the saved list hash first so the fetch returns the full list.
+        #[arg(long)]
+        full: bool,
     },
     /// Durably queue a spam report against a contact (offline; not live-verified).
     #[cfg(feature = "experimental-transport")]
@@ -615,13 +622,15 @@ async fn run(cli: Cli) -> Result<(), Error> {
         #[cfg(feature = "experimental-transport")]
         Cmd::Receipts => transport_receive::receipts_status(&cli),
         #[cfg(feature = "experimental-transport")]
-        Cmd::Actions => transport_receive::actions_status(&cli),
+        Cmd::Actions { show } => transport_receive::actions_status(&cli, show.as_deref()),
         #[cfg(feature = "experimental-transport")]
         Cmd::Block { chat } => transport_receive::block(&cli, chat),
         #[cfg(feature = "experimental-transport")]
         Cmd::Unblock { chat } => transport_receive::unblock(&cli, chat),
         #[cfg(feature = "experimental-transport")]
-        Cmd::Blocklist { refresh } => transport_receive::blocklist_status(&cli, *refresh),
+        Cmd::Blocklist { refresh, full } => {
+            transport_receive::blocklist_status(&cli, *refresh, *full)
+        }
         #[cfg(feature = "experimental-transport")]
         Cmd::Report {
             chat,

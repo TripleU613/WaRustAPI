@@ -51,6 +51,15 @@ fn ingested_key(id: &str) -> String {
     format!("{INGESTED_PREFIX}{id}")
 }
 
+/// Drop the saved `dhash` so the next fetch or set request omits it and the
+/// server answers with the full list.
+pub fn forget_dhash(store: &ProtocolStore) -> Result<()> {
+    store.write(|tx| {
+        tx.delete(Table::Checkpoints, DHASH_KEY.as_bytes())?;
+        Ok(())
+    })
+}
+
 fn saved_dhash(store: &ProtocolStore) -> Result<Option<String>> {
     store.read(|tx| tx.get_json(Table::Checkpoints, DHASH_KEY.as_bytes(), 1))
 }
@@ -113,7 +122,11 @@ fn queue_set(
     let mut item = Node::new("item")
         .attr("action", action)
         .attr("jid", wire_jid.clone());
-    if lid.is_some() {
+    // `LX/1ep.A05` 0x049c..0x0516: the `pn_jid`/`username` attributes are added
+    // only on the block branch; an unblock item carries `action`, `jid` and the
+    // optional `dhash`. Live 2026-09-20: an unblock sent with `pn_jid` was never
+    // answered by the server.
+    if lid.is_some() && action == "block" {
         item = item.attr("pn_jid", phone.clone());
     }
     if let Some(dhash) = dhash {
@@ -176,6 +189,12 @@ fn extract_dhash(node: &Node) -> Option<String> {
 
 fn apply_fetch(store: &ProtocolStore, reply: &Node) -> Result<()> {
     let list = reply.child("list");
+    // Live 2026-09-20: a fetch that carried the saved `dhash` was answered with
+    // an empty `iq type=result` (no `list` child) — "unchanged", not "empty".
+    // Only a reply that carries a `list` replaces the saved list.
+    if list.is_none() {
+        return Ok(());
+    }
     let mut current = BTreeSet::new();
     let mut new_rows: Vec<(String, BlockedRow)> = Vec::new();
     let mut dhash = None;
@@ -538,5 +557,37 @@ mod tests {
         assert_eq!(ingest(&s).unwrap(), 0);
         assert!(blocked(&s).unwrap().is_empty());
         assert_eq!(ingest(&s).unwrap(), 0, "already seen");
+    }
+
+    #[test]
+    fn fetch_reply_without_list_leaves_the_saved_list_alone() {
+        let (_d, s) = store();
+        let a = Jid::parse("15550000001@s.whatsapp.net").unwrap();
+        let id = queue_fetch(&s).unwrap();
+        let _ = super::super::actions::reserve_pending(&s).unwrap();
+        assert!(
+            super::super::actions::record_reply(
+                &s,
+                &fetch_reply(&id, "h1", vec![Node::new("item").attr("jid", a.clone())])
+            )
+            .unwrap()
+        );
+        assert_eq!(ingest(&s).unwrap(), 1);
+        assert_eq!(blocked(&s).unwrap().len(), 1);
+        // Second fetch carries the dhash; the server answers "unchanged".
+        let id2 = queue_fetch(&s).unwrap();
+        let _ = super::super::actions::reserve_pending(&s).unwrap();
+        let unchanged = Node::new("iq")
+            .attr("id", id2.as_str())
+            .attr("type", "result");
+        assert!(super::super::actions::record_reply(&s, &unchanged).unwrap());
+        assert_eq!(ingest(&s).unwrap(), 1);
+        assert_eq!(
+            blocked(&s).unwrap().len(),
+            1,
+            "unchanged reply keeps the list"
+        );
+        forget_dhash(&s).unwrap();
+        assert!(saved_dhash(&s).unwrap().is_none());
     }
 }

@@ -34,7 +34,10 @@ offsets `0x03ea..0x0652`), **confirmed**:
 
 - `jid` is the chat JID (the contact's LID when the chat is LID-addressed,
   otherwise the phone-number JID); `pn_jid` carries the phone-number JID when
-  `jid` is a LID (`0x04c4`, inferred from the branch on the JID kind).
+  `jid` is a LID (`0x04c4`) **on the block branch only** (`0x04a0` jumps past
+  `pn_jid`/`username` for unblock). Live 2026-09-20: an unblock item that
+  carried `pn_jid` was silently dropped by the server (no reply at all); the
+  block with `pn_jid` was answered with `list dhash=… matched=true`.
 - `dhash` is the client's saved `block_list_v2_dhash` when non-empty
   (`0x0516..0x053e`, confirmed). Omit when no list has been fetched.
 - `entry_point source` values are the 97 strings in `LX/9QF.<init>(VLI)` case

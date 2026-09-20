@@ -431,13 +431,50 @@ pub(super) fn receipts_status(cli: &super::Cli) -> Result<(), Error> {
 }
 
 /// Offline list of queued one-shot actions and their server outcomes.
-pub(super) fn actions_status(cli: &super::Cli) -> Result<(), Error> {
+pub(super) fn actions_status(cli: &super::Cli, show: Option<&str>) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
         account_id: AccountId::new(cli.account.clone())?,
         key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
         create: false,
     })?;
+    if let Some(id) = show {
+        let mask = |text: String| {
+            let mut out = String::new();
+            let mut run = 0usize;
+            let mut pending = String::new();
+            for ch in text.chars() {
+                if ch.is_ascii_digit() {
+                    run += 1;
+                    pending.push(ch);
+                } else {
+                    if run >= 7 {
+                        out.push_str(&"*".repeat(run));
+                    } else {
+                        out.push_str(&pending);
+                    }
+                    pending.clear();
+                    run = 0;
+                    out.push(ch);
+                }
+            }
+            if run >= 7 {
+                out.push_str(&"*".repeat(run));
+            } else {
+                out.push_str(&pending);
+            }
+            out
+        };
+        match whatsapp_api::transport::actions::request(&store, id)? {
+            Some(node) => println!("request: {}", mask(format!("{node:?}"))),
+            None => println!("request: unknown action id"),
+        }
+        match whatsapp_api::transport::actions::reply(&store, id)? {
+            Some(node) => println!("reply: {}", mask(format!("{node:?}"))),
+            None => println!("reply: none saved"),
+        }
+        return Ok(());
+    }
     let outcomes = whatsapp_api::transport::actions::outcomes(&store)?;
     if cli.json {
         println!(
@@ -527,7 +564,7 @@ pub(super) fn unblock(cli: &super::Cli, chat: &str) -> Result<(), Error> {
 
 /// Apply settled block/unblock/fetch actions and show the saved block list,
 /// numbers masked. `refresh` additionally queues a blocklist fetch (offline).
-pub(super) fn blocklist_status(cli: &super::Cli, refresh: bool) -> Result<(), Error> {
+pub(super) fn blocklist_status(cli: &super::Cli, refresh: bool, full: bool) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
         account_id: AccountId::new(cli.account.clone())?,
@@ -535,6 +572,9 @@ pub(super) fn blocklist_status(cli: &super::Cli, refresh: bool) -> Result<(), Er
         create: false,
     })?;
     let applied = whatsapp_api::transport::blocklist::ingest(&store)?;
+    if full {
+        whatsapp_api::transport::blocklist::forget_dhash(&store)?;
+    }
     let fetch_id = if refresh {
         Some(whatsapp_api::transport::blocklist::queue_fetch(&store)?)
     } else {
@@ -1171,7 +1211,12 @@ pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
                             shown
                         })
                         .collect();
-                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, attrs={attr_names:?}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
+                    let id8 = node
+                        .get_attr("id")
+                        .and_then(|v| v.as_text())
+                        .map(|v| v.chars().take(8).collect::<String>())
+                        .unwrap_or_default();
+                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
                 }
             }
             if key.starts_with(b"received:") {
