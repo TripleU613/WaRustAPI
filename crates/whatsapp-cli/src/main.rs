@@ -672,7 +672,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
                 ids::{DeviceAddress, MessageId},
                 message::{Direction, MessageKey, MessageRef},
             };
-            if emoji.is_none() == !*remove {
+            if emoji.is_some() == *remove {
                 return Err(Error::invalid("emoji", "pass --emoji <text> or --remove"));
             }
             let peer = Jid::parse(chat)?;
