@@ -493,6 +493,25 @@ enum Cmd {
         #[arg(long, requires = "login", conflicts_with_all = ["message", "receive"])]
         media_route: bool,
     },
+    /// Submit a ban appeal for the active account via ACS GraphQL.
+    #[cfg(feature = "experimental-signup")]
+    BanAppeal {
+        /// Private request configuration; defaults to the profile's.
+        #[arg(long)]
+        config: Option<PathBuf>,
+        /// Authorize this single invocation to contact acs.whatsapp.com.
+        #[arg(long)]
+        allow_live_request: bool,
+        /// Persistent query doc_id for SubmitAnAppealForIP (APK-derived candidate).
+        #[arg(long)]
+        doc_id: Option<u64>,
+        /// Optional appeal reason text included in the request.
+        #[arg(long)]
+        message: Option<String>,
+        /// Use this appeal token instead of the one saved from the failure node.
+        #[arg(long)]
+        appeal_token: Option<String>,
+    },
     /// Explicit comparison-build signup experiment; may affect an existing account.
     #[cfg(feature = "experimental-signup")]
     LabSignup {
@@ -995,6 +1014,54 @@ async fn run(cli: Cli) -> Result<(), Error> {
                 *media_route,
             )
             .await
+        }
+        #[cfg(feature = "experimental-signup")]
+        Cmd::BanAppeal {
+            config,
+            allow_live_request,
+            doc_id,
+            message,
+            appeal_token,
+        } => {
+            use whatsapp_api::transport::ban_appeal::{BanAppealInput, read_stored_appeal_token, submit_ban_appeal};
+            use zeroize::Zeroizing;
+            if !allow_live_request {
+                return Err(Error::invalid(
+                    "ban_appeal",
+                    "pass --allow-live-request to contact acs.whatsapp.com",
+                ));
+            }
+            let config_path = cli.config_path(config.as_ref(), Some("lab/requests.json"))?;
+            let lab_config = signup::config(&config_path)?;
+            let c = open_client(&cli, false).await?;
+            let store = c.store().clone();
+            let token = if let Some(t) = appeal_token {
+                Zeroizing::new(t.clone())
+            } else {
+                match read_stored_appeal_token(&store).await? {
+                    Some(t) => t,
+                    None => {
+                        c.shutdown().await;
+                        return Err(Error::invalid(
+                            "ban_appeal",
+                            "no appeal_token in account credentials; provide --appeal-token or run `listen` to capture the failure node",
+                        ));
+                    }
+                }
+            };
+            let input = BanAppealInput {
+                appeal_token: token,
+                message: message.clone(),
+                doc_id: *doc_id,
+            };
+            let result = submit_ban_appeal(&store, &lab_config, input).await?;
+            c.shutdown().await;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&result.summary)
+                    .map_err(|e| Error::invalid("ban_appeal", e.to_string()))?
+            );
+            Ok(())
         }
         #[cfg(feature = "experimental-signup")]
         Cmd::LabSignup {

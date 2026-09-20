@@ -14,7 +14,7 @@ use crate::{
     model::time::Timestamp,
     profile::Limits,
     registration::request::LabRegistrationConfig,
-    session::AccountRecord,
+    session::{AccountRecord, ObservedCredential},
     store::{ProtocolStore, Table},
 };
 use std::{sync::Arc, time::Duration};
@@ -335,6 +335,27 @@ pub(crate) async fn drive(
                 let capture = super::inbox::preserve(&store, &node)?;
                 super::clock::observe(&store, &node)?;
                 if matches!(node.description.as_str(), "failure" | "stream:error") {
+                    if node.description == "failure" {
+                        if let Some(token) = node.get_attr("appeal_token").and_then(|v| v.as_text()) {
+                            let token_bytes = zeroize::Zeroizing::new(token.as_bytes().to_vec());
+                            let now = Timestamp::now();
+                            let _ = store.write(|tx| {
+                                let mut account = AccountRecord::load_in_write(tx)?.unwrap_or_default();
+                                if account.credentials.len() < 64
+                                    && !account.credentials.iter().any(|c| c.name == "noise_appeal_token")
+                                {
+                                    account.credentials.push(ObservedCredential {
+                                        name: "noise_appeal_token".into(),
+                                        value: token_bytes,
+                                        observed_at: now,
+                                        source_step: Some("failure".into()),
+                                    });
+                                    AccountRecord::save(&account, tx)?;
+                                }
+                                Ok(())
+                            });
+                        }
+                    }
                     return Err(Error::invalid("connection", "server ended session; reason preserved encrypted; no reconnect"));
                 }
                 if node.description == "iq" {
