@@ -250,16 +250,24 @@ pub fn direct_typed(
     {
         return Err(error("invalid direct-message envelope"));
     }
+    let mut children = vec![
+        Node::new("enc")
+            .attr("v", "2")
+            .attr("type", kind)
+            .bytes(ciphertext),
+    ];
+    if stanza_type == "reaction" {
+        // Observed on a live incoming reaction from the official client
+        // (2.26.37.71): `meta content_type="add_on"` marks add-on messages; the
+        // names are binary tokens (LX/1Rl) built by LX/Civ.A02. Without it the
+        // recipient did not display our reaction.
+        children.push(Node::new("meta").attr("content_type", "add_on"));
+    }
     Ok(Node::new("message")
         .attr("to", recipient.clone())
         .attr("id", id)
         .attr("type", stanza_type)
-        .children(vec![
-            Node::new("enc")
-                .attr("v", "2")
-                .attr("type", kind)
-                .bytes(ciphertext),
-        ]))
+        .children(children))
 }
 
 /// Comparison image envelope: media message, encrypted image payload.

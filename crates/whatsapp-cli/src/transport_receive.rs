@@ -532,6 +532,32 @@ pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
     let limits = Limits::default();
     let mut count = 0;
     let mut capture_shapes = std::collections::BTreeSet::new();
+    if inspect {
+        let own = account.own_jid.as_ref().map(|j| j.to_non_ad().to_string());
+        for (key, value) in &captures {
+            if !key.starts_with(b"received:") {
+                continue;
+            }
+            let Ok(saved) = serde_json::from_slice::<serde_json::Value>(value) else {
+                continue;
+            };
+            let Ok(plain) = serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()) else {
+                continue;
+            };
+            if let Some(reaction) = whatsapp_api::transport::reactions::decode(&plain)
+                && let Some(key_fields) = whatsapp_api::transport::reactions::key_fields(&plain)
+            {
+                println!(
+                    "inbox: reaction payload target_id={} from_me={} remote_jid_is_own_account={:?} participant_present={} emoji_len={}",
+                    reaction.target_id.as_str(),
+                    reaction.target_from_sender,
+                    own.as_deref().map(|o| key_fields.0.as_deref() == Some(o)),
+                    key_fields.1,
+                    reaction.emoji.as_deref().map_or(0, str::len)
+                );
+            }
+        }
+    }
     for (key, value) in captures {
         if inspect {
             if is_capture(&key) {
@@ -563,7 +589,44 @@ pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
                         .and_then(|n| n.get_attr("count"))
                         .and_then(|v| v.as_text())
                         .and_then(|v| v.parse::<u32>().ok());
-                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, children={children:?}, offline_count={offline:?}",node.description));
+                    let attr_names: Vec<&str> = node
+                        .attributes
+                        .iter()
+                        .map(|a| a.name.as_str())
+                        .filter(|n| safe(n))
+                        .collect();
+                    let child_attrs: Vec<String> = node
+                        .child_nodes()
+                        .iter()
+                        .filter(|n| safe(&n.description))
+                        .map(|n| {
+                            let names: Vec<&str> = n
+                                .attributes
+                                .iter()
+                                .map(|a| a.name.as_str())
+                                .filter(|v| safe(v))
+                                .collect();
+                            let mut shown = format!("{}{names:?}", n.description);
+                            if n.description == "meta" {
+                                let values: Vec<String> = n
+                                    .attributes
+                                    .iter()
+                                    .filter(|a| safe(&a.name))
+                                    .map(|a| {
+                                        let v = a.value.as_text().unwrap_or("<non-text>");
+                                        format!(
+                                            "{}={}",
+                                            a.name,
+                                            if safe(v) { v } else { "<unsafe>" }
+                                        )
+                                    })
+                                    .collect();
+                                shown = format!("meta{values:?}");
+                            }
+                            shown
+                        })
+                        .collect();
+                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, attrs={attr_names:?}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
                 }
             }
             if key.starts_with(b"received:") {

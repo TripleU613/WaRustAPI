@@ -492,7 +492,11 @@ Implementation (`transport::reactions`): incoming reactions project into
 target key (never a new message); `whatsapp-cli reproject` re-runs projection
 over saved authenticated captures so earlier opaque placeholders upgrade.
 Outgoing `MessageContent::Reaction` goes through the normal outbox as an
-encrypted `reactionMessage` payload in a `message type=reaction` envelope;
+encrypted `reactionMessage` payload in a `message type=reaction` envelope with
+a `meta content_type="add_on"` child (observed on the official client's live
+reaction; `LX/9QF.<init>(VLI)` carries the `add_on` constant for add-on
+message kinds). A first reaction sent without that child was server-accepted
+but not shown on the handset;
 `whatsapp-cli react --chat <jid> --id <msgid> --emoji <text> [--ours]` enqueues
 it (`--remove` clears). Live on 2026-09-19: a contact's 👍 on our test text was
 decrypted and projected, and our 👍 on their message was server-accepted.

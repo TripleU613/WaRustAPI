@@ -106,6 +106,12 @@ pub struct Incoming {
     pub emoji: Option<String>,
 }
 
+/// Diagnostic: the key's `remoteJid` string and whether `participant` is set.
+pub fn key_fields(payload: &[u8]) -> Option<(Option<String>, bool)> {
+    let key = Envelope::decode(payload).ok()?.reaction?.key?;
+    Some((key.remote_jid, key.participant.is_some()))
+}
+
 /// Decode a reaction payload whose top-level fields are already known to be
 /// `46` (plus optional metadata `35`). Returns `None` for malformed content.
 pub fn decode(payload: &[u8]) -> Option<Incoming> {

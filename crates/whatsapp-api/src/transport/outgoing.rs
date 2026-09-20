@@ -567,6 +567,18 @@ mod tests {
             typed.get_attr("type").and_then(|v| v.as_text()),
             Some("reaction")
         );
+        let meta = typed
+            .child_nodes()
+            .iter()
+            .find(|c| c.description == "meta")
+            .unwrap();
+        assert_eq!(
+            meta.get_attr("content_type").and_then(|v| v.as_text()),
+            Some("add_on")
+        );
+        let plain =
+            super::super::messaging::direct_typed(&peer, "ID1", "msg", vec![1], "text").unwrap();
+        assert!(plain.child_nodes().iter().all(|c| c.description != "meta"));
         assert!(
             super::super::messaging::direct_typed(&peer, "ID1", "msg", vec![1], "sticker").is_err()
         );
