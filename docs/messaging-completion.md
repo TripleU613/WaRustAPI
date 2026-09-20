@@ -41,7 +41,7 @@ from offline tests alone. Existing received captures can be processed locally.
   are persisted so incoming votes decrypt; undecryptable votes stay opaque. The
   login reply's `pn`/`lid` are saved for message keys and vote identities. Live:
   the contact's poll decoded, our vote was server-accepted and our own poll was
-  delivered; handset display of the vote awaits confirmation.
+  delivered; incoming votes on both polls decrypted live, confirming the recipe.
 - Reactions: incoming `reactionMessage` payloads (field 46) now project into
   `MessageUpdated` events with the reacting device and emoji on the target key;
   `reproject` upgrades earlier opaque placeholders offline. Outgoing

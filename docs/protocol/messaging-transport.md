@@ -540,8 +540,9 @@ plaintext), otherwise they stay opaque. `whatsapp-cli poll` and `vote` enqueue
 creations and votes through the normal outbox in `message type=poll` envelopes
 with `meta polltype=creation|vote`. Live on 2026-09-20: the contact's poll
 (two options, unlimited selection) decoded; our vote for both options was
-server-accepted and our own poll was delivered. Handset display of the vote is
-pending confirmation.
+server-accepted and our own poll was delivered; the contact's vote on their own
+poll and three vote updates on ours decrypted and projected, confirming the
+derivation and identity choice on the receive side.
 
 ### Contact device-list synchronization (comparison 2.26.37.71)
 
