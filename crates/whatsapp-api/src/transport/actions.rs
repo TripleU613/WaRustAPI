@@ -120,7 +120,7 @@ fn key(id: &str) -> String {
     format!("{PREFIX}{id}")
 }
 
-/// Reserve at most [`BATCH`] queued actions for one socket write, marking them
+/// Reserve at most sixteen queued actions for one socket write, marking them
 /// `sent` before the write so a crash never resends them.
 pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
     store.write(|tx| {
