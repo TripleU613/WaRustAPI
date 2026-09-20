@@ -125,6 +125,40 @@ enum Cmd {
     /// Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Actions,
+    /// Durably queue a block of a contact (offline; `listen --send-outbox` transmits it).
+    #[cfg(feature = "experimental-transport")]
+    Block {
+        /// Contact JID, e.g. 15551234567@s.whatsapp.net.
+        #[arg(long)]
+        chat: String,
+    },
+    /// Durably queue an unblock of a contact (offline; `listen --send-outbox` transmits it).
+    #[cfg(feature = "experimental-transport")]
+    Unblock {
+        /// Contact JID, e.g. 15551234567@s.whatsapp.net.
+        #[arg(long)]
+        chat: String,
+    },
+    /// Show the saved block list (offline, numbers masked), optionally queuing a fetch.
+    #[cfg(feature = "experimental-transport")]
+    Blocklist {
+        /// Also durably queue a blocklist fetch (`listen --send-outbox` transmits it).
+        #[arg(long)]
+        refresh: bool,
+    },
+    /// Durably queue a spam report against a contact (offline; not live-verified).
+    #[cfg(feature = "experimental-transport")]
+    Report {
+        /// Contact JID, e.g. 15551234567@s.whatsapp.net.
+        #[arg(long)]
+        chat: String,
+        /// Entry-point vocabulary string; defaults to "chat".
+        #[arg(long)]
+        flow: Option<String>,
+        /// Whether this was a known chat before reporting.
+        #[arg(long)]
+        known_chat: Option<bool>,
+    },
     /// Durably enqueue a reaction to a message; `listen --send-outbox` transmits it.
     React {
         /// Chat JID, e.g. 15551234567@s.whatsapp.net.
@@ -472,6 +506,18 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::Receipts => transport_receive::receipts_status(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Actions => transport_receive::actions_status(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::Block { chat } => transport_receive::block(&cli, chat),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::Unblock { chat } => transport_receive::unblock(&cli, chat),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::Blocklist { refresh } => transport_receive::blocklist_status(&cli, *refresh),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::Report {
+            chat,
+            flow,
+            known_chat,
+        } => transport_receive::report(&cli, chat, flow.as_deref(), *known_chat),
         #[cfg(feature = "experimental-transport")]
         Cmd::Devices { chat, request } => transport_receive::devices(&cli, chat, *request),
         #[cfg(feature = "experimental-transport")]

@@ -310,6 +310,157 @@ pub(super) fn actions_status(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
+/// Mask a JID's user part for display, keeping only its first two characters
+/// (e.g. a phone number's country-code digits) visible; the server part
+/// (`s.whatsapp.net`, `lid`, …) is not identifying and stays visible.
+fn mask_jid(jid: &str) -> String {
+    let (user, server) = jid.split_once('@').unwrap_or((jid, ""));
+    let visible: String = user.chars().take(2).collect();
+    let hidden = "*".repeat(user.chars().count().saturating_sub(2));
+    if server.is_empty() {
+        format!("{visible}{hidden}")
+    } else {
+        format!("{visible}{hidden}@{server}")
+    }
+}
+
+const QUEUED_NOTE: &str =
+    "queued; `listen --send-outbox` (or any session) transmits it; inspect with `actions`";
+
+/// Durably queue a block of `chat`. Offline: only queues; a session transmits it.
+pub(super) fn block(cli: &super::Cli, chat: &str) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let jid = whatsapp_api::model::jid::Jid::parse(chat)?;
+    let id = whatsapp_api::transport::blocklist::queue_block(&store, &jid)?;
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&serde_json::json!({"id": id, "note": QUEUED_NOTE}))
+                .map_err(|e| Error::invalid("block", e.to_string()))?
+        );
+    } else {
+        println!("block: id={id}; {QUEUED_NOTE}");
+    }
+    Ok(())
+}
+
+/// Durably queue an unblock of `chat`. Offline: only queues; a session transmits it.
+pub(super) fn unblock(cli: &super::Cli, chat: &str) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let jid = whatsapp_api::model::jid::Jid::parse(chat)?;
+    let id = whatsapp_api::transport::blocklist::queue_unblock(&store, &jid)?;
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&serde_json::json!({"id": id, "note": QUEUED_NOTE}))
+                .map_err(|e| Error::invalid("unblock", e.to_string()))?
+        );
+    } else {
+        println!("unblock: id={id}; {QUEUED_NOTE}");
+    }
+    Ok(())
+}
+
+/// Apply settled block/unblock/fetch actions and show the saved block list,
+/// numbers masked. `refresh` additionally queues a blocklist fetch (offline).
+pub(super) fn blocklist_status(cli: &super::Cli, refresh: bool) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let applied = whatsapp_api::transport::blocklist::ingest(&store)?;
+    let fetch_id = if refresh {
+        Some(whatsapp_api::transport::blocklist::queue_fetch(&store)?)
+    } else {
+        None
+    };
+    let contacts = whatsapp_api::transport::blocklist::blocked(&store)?;
+    let masked: Vec<serde_json::Value> = contacts
+        .iter()
+        .map(|c| {
+            serde_json::json!({
+                "jid": mask_jid(&c.jid),
+                "display_name": c.display_name,
+                "username": c.username,
+            })
+        })
+        .collect();
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&serde_json::json!({
+                "ingested": applied,
+                "fetch_queued_id": fetch_id,
+                "fetch_note": fetch_id.as_ref().map(|_| QUEUED_NOTE),
+                "blocked": masked,
+            }))
+            .map_err(|e| Error::invalid("blocklist", e.to_string()))?
+        );
+        return Ok(());
+    }
+    println!(
+        "blocklist: {applied} settled action(s) applied; {} blocked contact(s)",
+        contacts.len()
+    );
+    if let Some(id) = &fetch_id {
+        println!("blocklist: fetch id={id}; {QUEUED_NOTE}");
+    }
+    for c in &masked {
+        println!(
+            "  jid={} display_name={} username={}",
+            c["jid"].as_str().unwrap_or(""),
+            c["display_name"].as_str().unwrap_or(""),
+            c["username"].as_str().unwrap_or(""),
+        );
+    }
+    Ok(())
+}
+
+/// Durably queue a spam report against `chat`. Offline: only queues; a session
+/// transmits it. Not live-verified (see `docs/protocol/chat-actions.md` §2).
+pub(super) fn report(
+    cli: &super::Cli,
+    chat: &str,
+    flow: Option<&str>,
+    known_chat: Option<bool>,
+) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let jid = whatsapp_api::model::jid::Jid::parse(chat)?;
+    let id = whatsapp_api::transport::report::queue_report(
+        &store,
+        &jid,
+        flow.unwrap_or(""),
+        known_chat,
+    )?;
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&serde_json::json!({"id": id, "note": QUEUED_NOTE}))
+                .map_err(|e| Error::invalid("report", e.to_string()))?
+        );
+    } else {
+        println!("report: id={id}; {QUEUED_NOTE}");
+    }
+    Ok(())
+}
+
 /// Offline one-time prekey summary: counts by upload state and batch outcomes.
 /// No key material is read or printed.
 pub(super) fn prekeys_status(cli: &super::Cli) -> Result<(), Error> {

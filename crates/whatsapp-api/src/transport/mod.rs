@@ -11,6 +11,12 @@
     feature = "experimental-transport"
 ))]
 pub mod actions;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod blocklist;
 pub mod cert;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 mod classic;
@@ -95,6 +101,12 @@ pub mod quotes;
 pub mod reactions;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod receipts;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod report;
 pub mod selector;
 #[cfg(all(
     feature = "experimental-signal-crypto",
