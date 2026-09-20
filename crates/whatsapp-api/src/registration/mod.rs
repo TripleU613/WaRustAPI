@@ -434,7 +434,10 @@ impl RegistrationState {
                 )
                 | (
                     S::RegistrationOutcomeUnknown { .. },
-                    S::Registered | S::ChallengePending { .. } | S::Blocked { .. }
+                    S::Registered
+                        | S::ChallengePending { .. }
+                        | S::EmailChallengeRequired { .. }
+                        | S::Blocked { .. }
                 )
                 | (
                     S::CoolingDown { .. },
@@ -1746,7 +1749,7 @@ impl RegistrationService {
                     let mut attempt = Self::load_current(tx)?.ok_or_else(|| {
                         Error::invalid("challenge", "no registration attempt in progress")
                     })?;
-                    if !matches!(
+                    let refused_with_challenge = matches!(
                         attempt.state,
                         RegistrationState::Blocked {
                             reason: BlockedReason::ServerRefused {
@@ -1754,11 +1757,24 @@ impl RegistrationService {
                                 ..
                             }
                         }
-                    ) {
+                    );
+                    // A lost outcome of the email-code request itself (for
+                    // example an HTTP 404 with a non-JSON body) may also come
+                    // back to the request step: the history must show it.
+                    let lost_email_request = matches!(
+                        attempt.state,
+                        RegistrationState::RegistrationOutcomeUnknown { .. }
+                    ) && attempt
+                        .history
+                        .iter()
+                        .rev()
+                        .nth(1)
+                        .is_some_and(|t| t.from == "email_challenge_required");
+                    if !refused_with_challenge && !lost_email_request {
                         return Err(Error::invalid(
                             "challenge",
                             format!(
-                                "only a `challenge` refusal can resume (state {})",
+                                "only a `challenge` refusal or a lost email-code request can resume (state {})",
                                 attempt.state.name()
                             ),
                         ));

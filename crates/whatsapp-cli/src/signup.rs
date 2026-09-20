@@ -367,6 +367,24 @@ pub(super) async fn run(
         }
         Action::Status => {
             match service.current().await? {
+                Some(attempt) if cli.json => {
+                    // Full record including the transition history; the phone
+                    // number is redacted before printing.
+                    let mut value = serde_json::to_value(&attempt).map_err(|e| {
+                        Error::invalid("lab_signup", format!("attempt is not serialisable: {e}"))
+                    })?;
+                    if let Some(map) = value.as_object_mut() {
+                        map.insert(
+                            "phone".into(),
+                            serde_json::Value::String("<redacted>".into()),
+                        );
+                    }
+                    println!(
+                        "{}",
+                        serde_json::to_string_pretty(&value)
+                            .map_err(|e| Error::invalid("lab_signup", e.to_string()))?
+                    );
+                }
                 Some(attempt) => println!("{attempt:?}"),
                 None => println!("no lab registration attempt"),
             }
