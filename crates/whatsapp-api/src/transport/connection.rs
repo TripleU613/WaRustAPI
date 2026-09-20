@@ -321,6 +321,7 @@ pub(crate) async fn drive(
                     device_query = None;
                 }
                 for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
+                for action in super::actions::reserve_pending(&store)? { link.send(&action).await?; }
                 // Unanswered keepalive: classified recoverable; the actor decides on reconnect.
                 if pending_ping.is_some() { return Err(Error::Timeout(ping_period)); }
                 let id = super::messaging::new_message_id()?;
@@ -349,6 +350,7 @@ pub(crate) async fn drive(
                             return Err(Error::invalid("connection", "activation refused"));
                         }
                         for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
+                        for action in super::actions::reserve_pending(&store)? { link.send(&action).await?; }
                         if let Some(ready) = ready.take() { let _ = ready.send(()); }
                         // LX/DNq.run: unsent prekeys (or a store that never generated any) upload at start.
                         if super::prekeys::wants_upload(&store)? {
@@ -361,6 +363,8 @@ pub(crate) async fn drive(
                         }
                         continue;
                     }
+                    // Queued one-shot actions (block list, reports, lookups) settle by iq id.
+                    if super::actions::record_reply(&store, &node)? { continue; }
                     if device_query.as_ref().is_some_and(|q| q.matches(&node)) {
                         let summary = device_query.take().expect("matched device query").ingest(&store, &node)?;
                         tracing::info!(ingested = summary.ingested, partial_errors = summary.partial_errors, "device lists updated");

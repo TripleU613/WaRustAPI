@@ -5,6 +5,12 @@
 //! `experimental-noise` feature because the handshake pattern, prologue and
 //! trust root are `ReferenceOnly` for the Android primary profile.
 
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod actions;
 pub mod cert;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 mod classic;

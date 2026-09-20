@@ -122,6 +122,9 @@ enum Cmd {
     /// Show queued explicit receipts and their server outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Receipts,
+    /// Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted).
+    #[cfg(feature = "experimental-transport")]
+    Actions,
     /// Durably enqueue a reaction to a message; `listen --send-outbox` transmits it.
     React {
         /// Chat JID, e.g. 15551234567@s.whatsapp.net.
@@ -467,6 +470,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::Prekeys => transport_receive::prekeys_status(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Receipts => transport_receive::receipts_status(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::Actions => transport_receive::actions_status(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Devices { chat, request } => transport_receive::devices(&cli, chat, *request),
         #[cfg(feature = "experimental-transport")]

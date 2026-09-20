@@ -276,6 +276,40 @@ pub(super) fn receipts_status(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
+/// Offline list of queued one-shot actions and their server outcomes.
+pub(super) fn actions_status(cli: &super::Cli) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let outcomes = whatsapp_api::transport::actions::outcomes(&store)?;
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&outcomes)
+                .map_err(|e| Error::invalid("actions", e.to_string()))?
+        );
+        return Ok(());
+    }
+    println!("actions: {} queued so far", outcomes.len());
+    for a in &outcomes {
+        println!(
+            "  id={} kind={} label={} status={:?}{}",
+            a.id,
+            a.kind,
+            a.label,
+            a.status,
+            match (a.error_code, a.error_text.as_deref()) {
+                (None, None) => String::new(),
+                (code, text) => format!(" error={:?}/{}", code, text.unwrap_or("")),
+            }
+        );
+    }
+    Ok(())
+}
+
 /// Offline one-time prekey summary: counts by upload state and batch outcomes.
 /// No key material is read or printed.
 pub(super) fn prekeys_status(cli: &super::Cli) -> Result<(), Error> {
