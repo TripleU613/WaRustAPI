@@ -321,7 +321,16 @@ pub(crate) async fn drive(
                     device_query = None;
                 }
                 for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
-                for action in super::actions::reserve_pending(&store)? { link.send(&action).await?; }
+                {
+                    let delay_ms = config.transport.action_delay_ms;
+                    let actions = super::actions::reserve_pending(&store)?;
+                    for (i, action) in actions.into_iter().enumerate() {
+                        if i > 0 && delay_ms > 0 {
+                            tokio::time::sleep(Duration::from_millis(delay_ms)).await;
+                        }
+                        link.send(&action).await?;
+                    }
+                }
                 // Unanswered keepalive: classified recoverable; the actor decides on reconnect.
                 if pending_ping.is_some() { return Err(Error::Timeout(ping_period)); }
                 let id = super::messaging::new_message_id()?;
@@ -371,7 +380,16 @@ pub(crate) async fn drive(
                             return Err(Error::invalid("connection", "activation refused"));
                         }
                         for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
-                        for action in super::actions::reserve_pending(&store)? { link.send(&action).await?; }
+                        {
+                            let delay_ms = config.transport.action_delay_ms;
+                            let actions = super::actions::reserve_pending(&store)?;
+                            for (i, action) in actions.into_iter().enumerate() {
+                                if i > 0 && delay_ms > 0 {
+                                    tokio::time::sleep(Duration::from_millis(delay_ms)).await;
+                                }
+                                link.send(&action).await?;
+                            }
+                        }
                         if let Some(ready) = ready.take() { let _ = ready.send(()); }
                         // LX/DNq.run: unsent prekeys (or a store that never generated any) upload at start.
                         if super::prekeys::wants_upload(&store)? {

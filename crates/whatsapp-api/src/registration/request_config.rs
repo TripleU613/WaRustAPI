@@ -124,6 +124,11 @@ pub struct TransportSettings {
     /// Bounded automatic reconnect of the messaging session after a classified
     /// recoverable connection loss. Never applies to registration requests.
     pub reconnect: ReconnectSettings,
+    /// Minimum pause between consecutive action-queue sends in one heartbeat
+    /// batch (milliseconds). `0` disables the delay (default). Set to a
+    /// human-scale value (e.g. 5000–15000) to space out block/unblock/report/
+    /// group actions rather than flushing them all at once.
+    pub action_delay_ms: u64,
 }
 impl Default for TransportSettings {
     fn default() -> Self {
@@ -133,6 +138,7 @@ impl Default for TransportSettings {
             connect_timeout_ms: 30_000,
             max_response_bytes: MAX_RESPONSE_BODY_BYTES,
             reconnect: ReconnectSettings::default(),
+            action_delay_ms: 0,
         }
     }
 }
@@ -210,6 +216,12 @@ impl TransportSettings {
             return Err(Error::invalid(
                 "transport",
                 "invalid timeout/connect-timeout/response-size bounds",
+            ));
+        }
+        if self.action_delay_ms > 300_000 {
+            return Err(Error::invalid(
+                "transport",
+                "action_delay_ms exceeds 300000 ms (5 minutes)",
             ));
         }
         self.reconnect.validate()
@@ -499,6 +511,7 @@ impl LabRegistrationConfig {
                 "field_coverage_note": "Observed on the inspected APK branch, not proven server requirements; do not invent values",
                 "user_agent_matches_observed_presence": self.client.user_agent.is_some(),
                 "body_mode": self.transport.body_mode,
+                "action_delay_ms": self.transport.action_delay_ms,
                 "attestation": "not implemented; no fabricated attestation",
                 "server_acceptance": "unverified",
                 "note": "Configured values do not prove genuine device provenance or server acceptance"
@@ -726,6 +739,9 @@ mod tests {
         assert!(value.validate().is_err());
         let mut value = config();
         value.transport.reconnect.max_delay_ms = ReconnectSettings::MAX_DELAY_MS + 1;
+        assert!(value.validate().is_err());
+        let mut value = config();
+        value.transport.action_delay_ms = 300_001;
         assert!(value.validate().is_err());
         let mut value = config();
         value.device.facebook_device_id = Some(Zeroizing::new("invalid".into()));
