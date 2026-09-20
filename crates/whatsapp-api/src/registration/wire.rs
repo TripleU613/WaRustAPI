@@ -1504,6 +1504,28 @@ impl RegistrationHttpResponse {
             Err(_) => {
                 summary["parse_error"] =
                     serde_json::json!("unrecognized or invalid bounded response; body withheld");
+                // Field names and JSON value types only: no values leave this
+                // function, so a strict-parser mismatch can be located.
+                if let Ok(serde_json::Value::Object(map)) =
+                    serde_json::from_slice::<serde_json::Value>(&self.body)
+                {
+                    let shape: serde_json::Map<String, serde_json::Value> = map
+                        .iter()
+                        .take(64)
+                        .map(|(key, value)| {
+                            let kind = match value {
+                                serde_json::Value::Null => "null",
+                                serde_json::Value::Bool(_) => "bool",
+                                serde_json::Value::Number(_) => "number",
+                                serde_json::Value::String(_) => "string",
+                                serde_json::Value::Array(_) => "array",
+                                serde_json::Value::Object(_) => "object",
+                            };
+                            (key.clone(), serde_json::json!(kind))
+                        })
+                        .collect();
+                    summary["body_shape"] = serde_json::Value::Object(shape);
+                }
             }
         }
         summary
@@ -2056,7 +2078,9 @@ struct RawRegistrationResponse {
     is_device_trusted: Option<bool>,
     email_otp_wait: Option<SecondsValue>,
     email_otp_length: Option<u32>,
+    #[serde(default, deserialize_with = "flex_bool")]
     email_otp_eligible: Option<bool>,
+    #[serde(default, deserialize_with = "flex_bool")]
     wa_old_eligible: Option<bool>,
     login: Option<Zeroizing<String>>,
     code: Option<Zeroizing<String>>,
@@ -2179,6 +2203,25 @@ const KNOWN_REQUEST_PARAMETERS: &[&str] = &[
     "wipe_token",
     "ENC",
 ];
+
+/// Servers spell flags as `true`, `1` or `"true"`; accept all three.
+fn flex_bool<'de, D: serde::Deserializer<'de>>(
+    d: D,
+) -> std::result::Result<Option<bool>, D::Error> {
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum Flex {
+        Bool(bool),
+        Number(i64),
+        Text(String),
+    }
+    Ok(match Option::<Flex>::deserialize(d)? {
+        None => None,
+        Some(Flex::Bool(b)) => Some(b),
+        Some(Flex::Number(n)) => Some(n != 0),
+        Some(Flex::Text(t)) => Some(matches!(t.as_str(), "true" | "1" | "TRUE" | "True")),
+    })
+}
 
 #[derive(Deserialize)]
 #[serde(untagged)]

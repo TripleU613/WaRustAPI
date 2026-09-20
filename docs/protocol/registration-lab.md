@@ -307,7 +307,17 @@ printf '%s' "$code" | target/debug/whatsapp-cli --profile b lab-signup --allow-l
 ```
 
 No email address travels in the request: the server emails the address on
-file, so the code only helps when that mailbox is reachable. `wa_old` and
+file, so the code only helps when that mailbox is reachable. Live on
+2026-09-20 the second lab number's `exist` probe answered
+`status=fail reason=incorrect` with `email_otp_eligible=false`,
+`wa_old_eligible=false`, no email on file and
+`fallback_methods=[other, wa_old, email_otp, other, sms, voice]`; the two
+`other` entries are methods this client does not name. With neither second
+factor eligible, that number cannot complete registration from this client
+until the server offers one, or a different number is used. The eligibility
+flags arrive as non-boolean JSON, so the parser accepts `true`/`1`/`"true"`,
+and a parse failure now reports the reply's field names and value types
+(never values). `wa_old` and
 passkey second factors are not implemented and leave the attempt blocked.
 
 ### One-shot legacy diagnostic recovery
