@@ -1,7 +1,10 @@
 //! Editable request profile — values here, plumbing in `request_config.rs`.
 //!
 //! Export with `lab-signup template`, then edit the private JSON without rebuilding.
-//! This is a research template, NOT a known-working Android fingerprint.
+//! This template carries the request recipe that reached server-reported SMS dispatch with
+//! the 2.26.37.70 profile (enc_empty_h body, unknown-device User-Agent, eight observed code fields).
+//! The token must be derived per number from 2.26.37.70 material (`whatsapp-cli token derive`);
+//! it is still not a claim of genuine device provenance.
 //! Add APK-observed optional fields to the endpoint maps as evidence improves.
 //! Keep real numbers/tokens out of this tracked file. Null device values mean
 //! generate once and persist; they do not mean rotate on every request.
@@ -44,7 +47,7 @@ pub const TEMPLATE_JSON: &str = r#"{
   "method": "sms",
   "client": {
     "profile_id": "android-2.26.37.70-registration-lab",
-    "user_agent": null
+    "user_agent": "WhatsApp/2.26.37.70 Android/unknown Device/unknown-unknown"
   },
   "device": {
     "facebook_device_id": null,
@@ -56,15 +59,26 @@ pub const TEMPLATE_JSON: &str = r#"{
   "fields": {
     "exist": {}, "exist_bytes": {},
     "code": {}, "register": {}, "security": {},
-    "code_bytes": {}, "register_bytes": {}, "security_bytes": {}
+    "code_bytes": {
+      "mcc": "000",
+      "mnc": "000",
+      "sim_mcc": "000",
+      "sim_mnc": "000",
+      "education_screen_displayed": "false",
+      "prefer_sms_over_flash": "false",
+      "feo2_query_status": "did_not_query",
+      "client_metrics": "{\"attempts\":1}"
+    },
+    "register_bytes": {}, "security_bytes": {}
   },
   "transport": {
-    "body_mode": "clear_form",
+    "body_mode": "enc_empty_h",
     "timeout_ms": 45000,
     "connect_timeout_ms": 30000,
     "max_response_bytes": 1048576,
+    "action_delay_ms": 0,
     "reconnect": { "max_attempts": 5, "base_delay_ms": 2000, "max_delay_ms": 60000 }
   },
   "diagnostics": true,
-  "preflight": true
+  "preflight": false
 }"#;

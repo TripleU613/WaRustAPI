@@ -256,6 +256,20 @@ pub async fn run(
     .await
 }
 
+/// Read the login checkpoint status string, if any checkpoint is saved.
+pub fn last_login_status(store: &ProtocolStore) -> Result<Option<String>> {
+    store.read(|tx| {
+        tx.get_json::<serde_json::Value>(Table::Checkpoints, LOGIN_KEY, 1)?
+            .map(|v| {
+                v["status"]
+                    .as_str()
+                    .map(|s| s.to_owned())
+                    .ok_or_else(|| Error::invalid("checkpoint", "status field is not a string"))
+            })
+            .transpose()
+    })
+}
+
 /// The authenticated session loop over a node link. Every durable effect
 /// (capture, session/inbox commit, reservation) precedes the socket write it
 /// leads to, so a cut at any await leaves state a later epoch can continue from.

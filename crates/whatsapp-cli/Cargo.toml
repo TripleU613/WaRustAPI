@@ -18,7 +18,7 @@ name = "whatsapp-cli"
 path = "src/main.rs"
 
 [dependencies]
-whatsapp-api = { path = "../whatsapp-api" }
+whatsapp-api = { path = "../whatsapp-api", features = ["token-material"] }
 clap.workspace = true
 tokio = { workspace = true, features = ["rt-multi-thread", "macros", "sync", "time", "signal", "net", "io-util", "process"] }
 serde.workspace = true
@@ -29,6 +29,7 @@ thiserror.workspace = true
 tracing.workspace = true
 tracing-subscriber = { version = "0.3", default-features = false, features = ["fmt", "env-filter", "ansi"] }
 zeroize.workspace = true
+getrandom.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

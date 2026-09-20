@@ -247,6 +247,91 @@ start. Keep the previous JSON privately and use the corrected file afterward.
 
 See the [outbound request analysis](http-post-analysis.md) for evidence and gaps.
 
+## Working recipe
+
+The successful registration path uses:
+- **body_mode**: `enc_empty_h`
+- **user_agent**: `"WhatsApp/2.26.37.70 Android/unknown Device/unknown-unknown"`
+- **code_bytes**:
+  - `mcc`: `"000"`
+  - `mnc`: `"000"`
+  - `sim_mcc`: `"000"`
+  - `sim_mnc`: `"000"`
+  - `education_screen_displayed`: `"false"`
+  - `prefer_sms_over_flash`: `"false"`
+  - `feo2_query_status`: `"did_not_query"`
+  - `client_metrics`: `{"attempts":1}`
+- **preflight**: `false`
+- **token**: derived from 2.26.37.70 material
+
+`lab-signup template` ships this recipe with an empty token. Replace the phone,
+token (using the 2.26.37.70 material), and optional registration/prekey IDs
+before first use.
+
+## Token material (2.26.37.70)
+
+The phone-bound token is derived from the 2.26.37.70 APK using PBKDF2-HMAC-SHA1
+over the package name and `about_logo.png`, then HMAC-SHA1 over the signing
+certificate DER, MD5 of `classes.dex`, and the national number.
+
+The 2.26.37.70 APK is no longer on disk; `~/Downloads/WhatsApp.apk`
+is 2.26.37.71 and produces tokens that do not match the saved working token
+(verified 2026-09-20 by deriving for the working account's number and comparing).
+A private archive built from the unpacked 2.26.37.70 tree reproduces the working
+token exactly. Keep it as `lab/whatsapp-2.26.37.70-token-material.zip`.
+
+Commands:
+
+```sh
+whatsapp-cli token derive --country-code <cc> --national-number <digits> \
+  --material lab/whatsapp-2.26.37.70-token-material.zip
+
+whatsapp-cli token verify --config lab/accounts/<name>/request.json \
+  --material lab/whatsapp-2.26.37.70-token-material.zip
+```
+
+The first prints the token (secret); the second prints only match/mismatch.
+
+## Onboarding a number in two commands
+
+With a working token and material archive in place:
+
+```sh
+export WHATSAPP_API_MASTER_KEY_A=$(cat lab/accounts/a/master.key)
+
+whatsapp-cli accounts new --name a --country-code 1 --national-number 5551234567 \
+  --material lab/whatsapp-2.26.37.70-token-material.zip
+
+whatsapp-cli --profile a lab-signup --allow-live-request begin --method sms
+
+echo $code | whatsapp-cli --profile a lab-signup --allow-live-request verify-code
+```
+
+`accounts new` creates:
+- `lab/accounts/<name>/master.key` (mode 0600): encryption key
+- `lab/accounts/<name>/request.json` (mode 0600): working recipe + derived token
+- `lab/profiles/<name>.json`: profile linking them together
+
+The profile sets `key_env` to `WHATSAPP_API_MASTER_KEY_<NAME>` (in uppercase).
+
+For a second number, use a different name; never share a store or key variable
+between accounts.
+
+## Live record (2026-09-20)
+
+Two new US numbers were prepared from the old template defaults (`clear_form`,
+missing User-Agent, missing code fields) with tokens derived from 2.26.37.71.
+
+**Result**: HTTP 200 `status=fail reason=bad_param invalid_parameter=null` on
+both `/v2/exist` (preflight) and `/v2/code`.
+
+**Root cause**: wrong-build token and missing recipe — our inputs, not an
+established requirement about the numbers. Both attempts are frozen as
+`ServerRefused/bad_param`; no correction command accepts `bad_param` with a
+changed token. A new attempt for those numbers needs a fresh store and explicit
+operator authorization. Also: an `UnsupportedStep` preflight block on `bad_param`
+has no resume path.
+
 Build with `cargo build --locked -p whatsapp-cli --features experimental-signup`.
 `lab-signup` is absent from the default build. It performs one operator-selected
 action per invocation and never automatically submits an OTP or resets a PIN.

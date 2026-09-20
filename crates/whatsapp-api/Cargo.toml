@@ -28,6 +28,8 @@ experimental-registration-https = [
     "dep:rustls",
     "dep:webpki-roots",
 ]
+# Token material extraction from APK archives for registration-token derivation.
+token-material = ["dep:zip"]
 
 [dependencies]
 tokio = { workspace = true, features = ["rt", "sync", "time", "macros", "io-util"] }
@@ -57,6 +59,7 @@ webpki-roots = { workspace = true, optional = true }
 wacore-libsignal = { workspace = true, optional = true }
 rand = { workspace = true, optional = true }
 async-trait = { version = "0.1.92", optional = true }
+zip = { workspace = true, optional = true }
 
 [dev-dependencies]
 proptest.workspace = true

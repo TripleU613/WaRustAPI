@@ -18,6 +18,8 @@ pub mod prerequisites;
 pub mod request;
 mod request_config;
 pub mod token;
+#[cfg(feature = "token-material")]
+pub mod token_material;
 pub mod wire;
 
 use std::fmt;

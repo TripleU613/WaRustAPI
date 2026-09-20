@@ -27,6 +27,10 @@
       "description": "Protocol state database initialization, inspection and cryptographic key rotation"
     },
     {
+      "name": "Token",
+      "description": "Registration-token derivation from pinned 2.26.37.70 APK material"
+    },
+    {
       "name": "Registration",
       "description": "Primary WhatsApp registration with SMS/voice code and PIN verification"
     },
@@ -655,7 +659,8 @@
                   "string",
                   "null"
                 ],
-                "description": "User-Agent header value for compatibility"
+                "description": "User-Agent header value for compatibility",
+                "default": "WhatsApp/2.26.37.70 Android/unknown Device/unknown-unknown"
               }
             },
             "description": "Client identity and version"
@@ -721,7 +726,8 @@
                   "enc",
                   "enc_empty_h"
                 ],
-                "description": "HTTP body encoding mode: clear_form (plaintext form), enc (encrypted), or enc_empty_h (encrypted with empty hash)"
+                "description": "HTTP body encoding mode: clear_form (plaintext form), enc (encrypted), or enc_empty_h (encrypted with empty hash)",
+                "default": "enc_empty_h"
               },
               "timeout_ms": {
                 "type": "integer",
@@ -785,7 +791,7 @@
             "description": "Perform preflight validation without sending"
           }
         },
-        "description": "Lab registration configuration template. The recipe that reached server-reported SMS dispatch used body_mode enc_empty_h, client.user_agent 'WhatsApp/2.26.37.70 Android/unknown Device/unknown-unknown', and fields.code_bytes {mcc:'000', mnc:'000', sim_mcc:'000', sim_mnc:'000', education_screen_displayed:'false', prefer_sms_over_flash:'false', feo2_query_status:'did_not_query', client_metrics:'{\"attempts\":1}'}. The token must be derived from 2.26.37.70 APK material; see docs/protocol/registration-lab.md for details."
+        "description": "Lab registration configuration template. The default recipe (body_mode enc_empty_h, client.user_agent 'WhatsApp/2.26.37.70 Android/unknown Device/unknown-unknown', and recommended code fields) is now provided by lab-signup template (GET /v1/signup/template). The token must be derived from 2.26.37.70 APK material; see docs/protocol/registration-lab.md for details."
       },
       "RegistrationReply": {
         "type": "object",
@@ -1661,6 +1667,156 @@
           }
         },
         "description": "Acknowledgment that an operation has been durably queued for transmission by a session"
+      },
+      "AccountCreated": {
+        "type": "object",
+        "required": [
+          "profile_path",
+          "store",
+          "config",
+          "master_key_path",
+          "key_env",
+          "next_steps"
+        ],
+        "properties": {
+          "profile_path": {
+            "type": "string",
+            "description": "Path to the created account profile file"
+          },
+          "store": {
+            "type": "string",
+            "description": "Path to the protocol database file"
+          },
+          "config": {
+            "type": "string",
+            "description": "Path to the private request configuration file"
+          },
+          "master_key_path": {
+            "type": "string",
+            "description": "Path to the saved master key (file mode 0600)"
+          },
+          "key_env": {
+            "type": "string",
+            "description": "Environment variable name to set with the master key"
+          },
+          "next_steps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Recommended next operations to complete onboarding"
+          }
+        },
+        "description": "Result of successful account onboarding. Token, key and phone are never printed; files are created with permissions 0600 (profile, config) and 0700 (directories)."
+      },
+      "AccountStatus": {
+        "type": "object",
+        "required": [
+          "name",
+          "store",
+          "locked",
+          "key_env",
+          "registration_state",
+          "registered",
+          "outbox_pending",
+          "actions_queued"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Account profile name"
+          },
+          "store": {
+            "type": "string",
+            "description": "Path to the protocol database file"
+          },
+          "locked": {
+            "type": "boolean",
+            "description": "True if the master key environment variable is not set"
+          },
+          "key_env": {
+            "type": "string",
+            "description": "Environment variable name holding the master key"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number in masked format (e.g., +1 (555) ***-1234)"
+          },
+          "registration_state": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Current registration state (e.g., none, pending, registered)"
+          },
+          "registered": {
+            "type": "boolean",
+            "description": "True if the account is registered with WhatsApp"
+          },
+          "last_authenticated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "ISO 8601 timestamp of last successful authentication"
+          },
+          "login_checkpoint": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Current login checkpoint or challenge state"
+          },
+          "appeal_token_saved": {
+            "type": "boolean",
+            "description": "True if a ban appeal token is persisted"
+          },
+          "outbox_pending": {
+            "type": "integer",
+            "description": "Number of messages queued for sending"
+          },
+          "actions_queued": {
+            "type": "integer",
+            "description": "Number of chat actions queued (blocks, reports, privacy settings)"
+          }
+        },
+        "description": "Status summary of a registered account"
+      },
+      "DerivedToken": {
+        "type": "object",
+        "required": [
+          "token",
+          "logo_entry",
+          "signature_entry"
+        ],
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Base64-encoded phone-bound registration token (secret; redacted in logs)"
+          },
+          "logo_entry": {
+            "type": "string",
+            "description": "Internal APK material entry identifier for logo (debug only)"
+          },
+          "signature_entry": {
+            "type": "string",
+            "description": "Internal APK material entry identifier for signature (debug only)"
+          }
+        },
+        "description": "Derived registration token from APK material. Token is base64-encoded and phone-bound; store it securely."
+      },
+      "TokenVerification": {
+        "type": "object",
+        "required": [
+          "matches"
+        ],
+        "properties": {
+          "matches": {
+            "type": "boolean",
+            "description": "True if the token in the config matches the derived token; false otherwise"
+          }
+        },
+        "description": "Verification result comparing a saved token to freshly derived material. Token value is never printed; only the match status is reported."
       }
     }
   },
@@ -7469,6 +7625,244 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/v1/accounts/new": {
+      "post": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Onboard a phone number: derive its token, write the private request configuration with the working recipe, generate its master key and profile",
+        "description": "Derives a registration token for the given phone number, generates the master cryptographic key, creates the account profile, and writes a private request configuration with the APK-derived recipe. The token, key and phone are never printed. Files are created with restrictive permissions: 0600 for profile and config files, 0700 for directories. Next step: lab-signup --allow-live-request begin.",
+        "operationId": "createAccount",
+        "x-cli": "whatsapp-cli accounts new",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "country_code",
+                  "national_number",
+                  "material"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Account profile name"
+                  },
+                  "country_code": {
+                    "type": "integer",
+                    "description": "E.164 country code"
+                  },
+                  "national_number": {
+                    "type": "string",
+                    "description": "Country-specific phone number digits"
+                  },
+                  "material": {
+                    "type": "string",
+                    "description": "Path to the 2.26.37.70 token-material archive (env WHATSAPP_API_TOKEN_MATERIAL)"
+                  },
+                  "dir": {
+                    "type": "string",
+                    "description": "Base directory for account files (default: lab/accounts/<name>)"
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "sms",
+                      "voice"
+                    ],
+                    "default": "sms",
+                    "description": "Code delivery method"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Account created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountCreated"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/v1/accounts/status": {
+      "get": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Get status of registered accounts",
+        "description": "Returns status summary of all registered accounts or a specific account if name is provided. Shows registration state, key availability, pending messages and queued actions.",
+        "operationId": "getAccountsStatus",
+        "x-cli": "whatsapp-cli accounts status",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional account name to filter results (returns only that account if provided)"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account status summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AccountStatus"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/token/derive": {
+      "post": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Derive a registration token for a phone number",
+        "description": "Stateless token derivation from APK-pinned material. Derives a phone-bound registration token using the 2.26.37.70 APK material. No state is read or modified. Token is base64-encoded and must be stored securely.",
+        "operationId": "deriveToken",
+        "x-cli": "whatsapp-cli token derive",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "x-secret-input": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "country_code",
+                  "national_number",
+                  "material"
+                ],
+                "properties": {
+                  "country_code": {
+                    "type": "integer",
+                    "description": "E.164 country code"
+                  },
+                  "national_number": {
+                    "type": "string",
+                    "description": "Country-specific phone number digits"
+                  },
+                  "material": {
+                    "type": "string",
+                    "description": "Path to the 2.26.37.70 token-material archive"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token derived successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DerivedToken"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          }
+        }
+      }
+    },
+    "/v1/token/verify": {
+      "post": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Verify that a saved token matches freshly derived material",
+        "description": "Compares the token in a saved request configuration against freshly derived material for the same phone number. Reports match status only; never prints the token or phone. Useful to verify a saved configuration is still valid before sending a request.",
+        "operationId": "verifyToken",
+        "x-cli": "whatsapp-cli token verify",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "config",
+                  "material"
+                ],
+                "properties": {
+                  "config": {
+                    "type": "string",
+                    "description": "Path to the saved request configuration file"
+                  },
+                  "material": {
+                    "type": "string",
+                    "description": "Path to the 2.26.37.70 token-material archive"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token verification completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenVerification"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
           }
         }
       }

@@ -8,6 +8,12 @@ and [STATUS.md](../STATUS.md) for verified behavior and blockers.
 - [API reference](api/README.md)
 - [OpenAPI document](api/openapi.json)
 
+## Reference
+
+- [Configuration](configuration.md): full request.json fields, profiles, environment variables
+- [Accounts and onboarding](accounts.md): multiple accounts, checking state, onboarding
+- [Getting started](getting-started.md): basic commands and first steps
+
 ## Development and design
 
 - [Contributing](../CONTRIBUTING.md): toolchain, checks, and review expectations.
@@ -21,6 +27,7 @@ and [STATUS.md](../STATUS.md) for verified behavior and blockers.
 - [Evidence ledger](protocol/evidence-ledger.md)
 - [Unknowns and blockers](protocol/unknowns.md)
 - [Persisted registration lab](protocol/registration-lab.md)
+- [Ban appeal](protocol/ban-appeal.md)
 - [APK analysis procedure](protocol/apk-analysis.md)
 - [Compact media-free APK code snapshot](protocol/apk/README.md)
 - [Decompilation log](protocol/decompilation-log.md)

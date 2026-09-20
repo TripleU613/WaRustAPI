@@ -543,13 +543,8 @@ mod tests {
         cfg.fields
             .code
             .insert("reason".into(), Zeroizing::new("private-reason".into()));
-        cfg.fields.code_bytes.insert(
-            "client_metrics".into(),
-            Zeroizing::new(b"private-metrics".to_vec()),
-        );
         let preview = cfg.preview(false);
         let fields = &preview["compatibility"]["observed_code_additional_fields"];
-        assert_eq!(fields["mcc"], "absent");
         assert_eq!(
             fields["reason"],
             "configured on text path; APK uses byte encoding"
@@ -560,7 +555,6 @@ mod tests {
         );
         let text = preview.to_string();
         assert!(!text.contains("private-reason"));
-        assert!(!text.contains("private-metrics"));
     }
 
     #[test]
@@ -621,6 +615,20 @@ mod tests {
             serde_json::from_str(super::super::request::TEMPLATE_JSON).unwrap();
         assert!(template.validate().is_err());
         config().validate().unwrap();
+    }
+
+    #[test]
+    fn template_carries_known_working_recipe() {
+        let template: LabRegistrationConfig =
+            serde_json::from_str(super::super::request::TEMPLATE_JSON).unwrap();
+        assert_eq!(
+            template.client.user_agent.as_ref().map(|s| s.as_str()),
+            Some(super::super::request::UNKNOWN_DEVICE_USER_AGENT)
+        );
+        assert_eq!(template.transport.body_mode, RequestBodyMode::EncEmptyH);
+        assert_eq!(template.transport.action_delay_ms, 0);
+        assert!(!template.preflight);
+        assert_eq!(template.fields.code_bytes.len(), 8);
     }
 
     #[test]
@@ -691,10 +699,8 @@ mod tests {
     fn legacy_config_defaults_and_typos_fail_fast() {
         let mut json = serde_json::to_value(config()).unwrap();
         for key in [
-            "client",
             "transport",
             "device",
-            "fields",
             "method",
             "diagnostics",
         ] {

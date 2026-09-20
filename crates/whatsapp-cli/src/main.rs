@@ -26,6 +26,8 @@ use whatsapp_api::store::{ConsumerId, EnvKeySource, MasterKey, Table};
 use whatsapp_api::{Error, ProtocolProfile, WhatsAppClient};
 use zeroize::Zeroizing;
 
+use std::os::unix::fs::PermissionsExt;
+
 mod http;
 #[cfg(feature = "experimental-transport")]
 mod media;
@@ -34,6 +36,7 @@ mod outbox_send;
 mod profiles;
 #[cfg(feature = "experimental-signup")]
 mod signup;
+mod token;
 #[cfg(feature = "experimental-transport")]
 mod transport;
 #[cfg(feature = "experimental-transport")]
@@ -215,10 +218,15 @@ enum Cmd {
         #[command(subcommand)]
         cmd: GroupCmd,
     },
-    /// Manage named account profiles (offline): list, add, show.
+    /// Manage named account profiles (offline): list, add, show, new, status.
     Accounts {
         #[command(subcommand)]
         cmd: AccountsCmd,
+    },
+    /// Token derivation and verification.
+    Token {
+        #[command(subcommand)]
+        cmd: token::TokenCmd,
     },
     /// Two-account lab check: send a text from one profile and confirm the
     /// other profile receives it, running both sessions at once.
@@ -742,6 +750,33 @@ enum AccountsCmd {
         #[arg(long)]
         name: String,
     },
+    /// Create a new account with config, master key and profile.
+    New {
+        /// Account name.
+        #[arg(long)]
+        name: String,
+        /// Country calling code.
+        #[arg(long)]
+        country_code: u16,
+        /// National phone number digits.
+        #[arg(long)]
+        national_number: String,
+        /// Path to APK or material archive.
+        #[arg(long, env = "WHATSAPP_API_TOKEN_MATERIAL")]
+        material: PathBuf,
+        /// Account directory (defaults to lab/accounts/<NAME>).
+        #[arg(long)]
+        dir: Option<PathBuf>,
+        /// Verification delivery method.
+        #[arg(long, value_enum, default_value = "sms")]
+        method: Method,
+    },
+    /// Show account status (registration, credentials, queues).
+    Status {
+        /// Account name (all accounts if omitted).
+        #[arg(long)]
+        name: Option<String>,
+    },
 }
 
 #[derive(Subcommand)]
@@ -795,6 +830,292 @@ async fn open_client(cli: &Cli, create: bool) -> Result<WhatsAppClient, Error> {
         .create_store(create)
         .build()
         .await
+}
+
+fn accounts_new(
+    cli: &Cli,
+    name: &str,
+    country_code: u16,
+    national_number: &str,
+    material_path: &std::path::Path,
+    dir: Option<&PathBuf>,
+    method: &Method,
+) -> Result<(), Error> {
+    let account_dir = match dir {
+        Some(d) => d.clone(),
+        None => PathBuf::from(format!("lab/accounts/{}", name)),
+    };
+
+    if account_dir.exists() {
+        return Err(Error::invalid(
+            "accounts",
+            format!("{} already exists", account_dir.display()),
+        ));
+    }
+
+    std::fs::create_dir_all(&account_dir).map_err(|e| {
+        Error::invalid(
+            "accounts",
+            format!("cannot create {}: {e}", account_dir.display()),
+        )
+    })?;
+    std::fs::set_permissions(&account_dir, std::fs::Permissions::from_mode(0o700)).map_err(
+        |e| {
+            Error::invalid(
+                "accounts",
+                format!("cannot chmod {}: {e}", account_dir.display()),
+            )
+        },
+    )?;
+
+    let mut key_bytes = [0u8; 32];
+    getrandom::fill(&mut key_bytes)
+        .map_err(|e| Error::invalid("accounts", format!("entropy source failed: {e}")))?;
+    let key_hex = hex::encode(key_bytes);
+
+    let key_path = account_dir.join("master.key");
+    std::fs::write(&key_path, &key_hex).map_err(|e| {
+        Error::invalid(
+            "accounts",
+            format!("cannot write {}: {e}", key_path.display()),
+        )
+    })?;
+    std::fs::set_permissions(&key_path, std::fs::Permissions::from_mode(0o600)).map_err(|e| {
+        Error::invalid(
+            "accounts",
+            format!("cannot chmod {}: {e}", key_path.display()),
+        )
+    })?;
+
+    let phone = PhoneNumber::new(country_code, national_number)?;
+    let material = whatsapp_api::registration::token_material::TokenMaterial::open(material_path)?;
+    let token = material.derive(&phone)?;
+
+    let mut config: serde_json::Value =
+        serde_json::from_str(whatsapp_api::registration::request::TEMPLATE_JSON)
+            .map_err(|e| Error::invalid("accounts", format!("template JSON parse failed: {e}")))?;
+
+    config["phone"]["country_code"] = serde_json::json!(country_code);
+    config["phone"]["national_number"] = serde_json::json!(national_number);
+    config["token"] = serde_json::json!(token.as_str());
+
+    let mut reg_id_bytes = [0u8; 4];
+    getrandom::fill(&mut reg_id_bytes)
+        .map_err(|e| Error::invalid("accounts", format!("entropy source failed: {e}")))?;
+    let reg_id = u32::from_le_bytes(reg_id_bytes) % 16380 + 1;
+    config["registration_id"] = serde_json::json!(reg_id);
+    config["signed_pre_key_id"] = serde_json::json!(1);
+    config["method"] = serde_json::json!(match method {
+        Method::Sms => "sms",
+        Method::Voice => "voice",
+    });
+
+    let config_path = account_dir.join("request.json");
+    let config_json = serde_json::to_string_pretty(&config)
+        .map_err(|e| Error::invalid("accounts", format!("config JSON serialize failed: {e}")))?;
+    std::fs::write(&config_path, config_json).map_err(|e| {
+        Error::invalid(
+            "accounts",
+            format!("cannot write {}: {e}", config_path.display()),
+        )
+    })?;
+    std::fs::set_permissions(&config_path, std::fs::Permissions::from_mode(0o600)).map_err(
+        |e| {
+            Error::invalid(
+                "accounts",
+                format!("cannot chmod {}: {e}", config_path.display()),
+            )
+        },
+    )?;
+
+    let store_path = account_dir.join("signup.redb");
+    let profile_name = name;
+    let key_env = format!(
+        "WHATSAPP_API_MASTER_KEY_{}",
+        name.to_uppercase()
+            .replace('-', "_")
+            .replace(|c: char| !c.is_alphanumeric() && c != '_', "_")
+    );
+
+    let profile = profiles::Profile {
+        store: store_path.clone(),
+        account: format!("signup-{}", name),
+        config: Some(config_path.clone()),
+        key_env: key_env.clone(),
+    };
+
+    let profile_path = profiles::save(&cli.profiles_dir, profile_name, &profile)?;
+
+    println!("accounts new: created {}", account_dir.display());
+    println!("  master.key (mode 0600): {}", key_path.display());
+    println!("  request.json (mode 0600): {}", config_path.display());
+    println!("  profile: {}", profile_path.display());
+    println!();
+    println!("export {}=$(cat {})", key_env, key_path.display());
+    println!(
+        "whatsapp-cli --profile {} lab-signup --allow-live-request begin",
+        profile_name
+    );
+
+    Ok(())
+}
+
+fn accounts_status(cli: &Cli, name: Option<&str>) -> Result<(), Error> {
+    use whatsapp_api::store::OpenOptions;
+
+    fn mask_phone(_cc: u16, nn: &str) -> String {
+        let digits: String = nn.chars().filter(char::is_ascii_digit).collect();
+        if digits.len() <= 3 {
+            return "*".repeat(digits.len());
+        }
+        format!(
+            "{}{}",
+            "*".repeat(digits.len() - 3),
+            &digits[digits.len() - 3..]
+        )
+    }
+
+    let mut results = Vec::new();
+
+    let profiles_to_check: Vec<(String, profiles::Profile)> = if let Some(name) = name {
+        vec![(name.to_owned(), profiles::load(&cli.profiles_dir, name)?)]
+    } else {
+        profiles::list(&cli.profiles_dir)?
+    };
+
+    for (profile_name, profile) in profiles_to_check {
+        let mut entry = serde_json::json!({
+            "name": profile_name,
+            "store": profile.store.display().to_string(),
+            "key_env": &profile.key_env,
+        });
+
+        let key_value = std::env::var(&profile.key_env).ok();
+        if key_value.is_none() {
+            entry["locked"] = serde_json::json!(format!("{} not set", profile.key_env));
+            results.push(entry);
+            continue;
+        }
+
+        let account_id = AccountId::new(profile.account)?;
+        let key_source = Arc::new(EnvKeySource::new(profile.key_env.clone()));
+        let opts = OpenOptions {
+            path: profile.store.clone(),
+            account_id,
+            key_source,
+            create: false,
+        };
+
+        match whatsapp_api::store::ProtocolStore::open(opts) {
+            Ok(store) => {
+                let status_result = store.read(|tx| {
+                    use whatsapp_api::session::AccountRecord;
+                    use whatsapp_api::store::Table;
+
+                    let account = AccountRecord::load(tx)?;
+
+                    let registered = account.as_ref().map(|a| a.is_registered()).unwrap_or(false);
+                    let last_authenticated = account
+                        .as_ref()
+                        .and_then(|a| a.last_authenticated_at)
+                        .map(|t| t.as_unix_seconds().to_string())
+                        .unwrap_or_else(|| "never".to_string());
+                    let phone = account
+                        .as_ref()
+                        .and_then(|a| a.phone.as_ref())
+                        .map(|p| mask_phone(p.country_code(), p.national_number()));
+
+                    let appeal_token_saved = account
+                        .as_ref()
+                        .map(|a| a.credentials.iter().any(|c| c.name == "noise_appeal_token"))
+                        .unwrap_or(false);
+
+                    let outbox_pending = tx.count(Table::Outbox)?;
+
+                    Ok((
+                        registered,
+                        last_authenticated,
+                        phone,
+                        appeal_token_saved,
+                        outbox_pending,
+                    ))
+                });
+
+                match status_result {
+                    Ok((registered, last_auth, phone_opt, appeal, outbox)) => {
+                        entry["locked"] = serde_json::json!(false);
+                        if let Some(phone) = phone_opt {
+                            entry["phone"] = serde_json::json!(phone);
+                        }
+                        entry["registration_state"] = serde_json::json!("none");
+                        entry["registered"] = serde_json::json!(registered);
+                        entry["last_authenticated_at"] = serde_json::json!(last_auth);
+                        entry["appeal_token_saved"] =
+                            serde_json::json!(if appeal { "yes" } else { "no" });
+                        entry["outbox_pending"] = serde_json::json!(outbox);
+                        entry["actions_queued"] = serde_json::json!(0);
+                        entry["login_checkpoint"] = serde_json::json!("none");
+
+                        #[cfg(feature = "experimental-transport")]
+                        {
+                            use whatsapp_api::transport::connection;
+                            if let Ok(login_status) = connection::last_login_status(&store) {
+                                entry["login_checkpoint"] = serde_json::json!(
+                                    login_status.unwrap_or_else(|| "none".to_string())
+                                );
+                            }
+                            if let Ok(actions) = whatsapp_api::transport::actions::outcomes(&store)
+                            {
+                                entry["actions_queued"] = serde_json::json!(actions.len());
+                            }
+                        }
+
+                        results.push(entry);
+                    }
+                    Err(e) => {
+                        entry["error"] = serde_json::json!(e.to_string());
+                        results.push(entry);
+                    }
+                }
+            }
+            Err(e) => {
+                entry["error"] = serde_json::json!(e.to_string());
+                results.push(entry);
+            }
+        }
+    }
+
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&results)
+                .map_err(|e| Error::invalid("accounts", e.to_string()))?
+        );
+    } else {
+        for entry in results {
+            let name = entry["name"].as_str().unwrap_or("?");
+            if let Some(locked_msg) = entry.get("locked").and_then(|v| v.as_str()) {
+                println!("{name}: locked ({locked_msg})");
+            } else {
+                let store = entry["store"].as_str().unwrap_or("?");
+                let phone = entry
+                    .get("phone")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("unknown");
+                let registered = entry["registered"].as_bool().unwrap_or(false);
+                let last_auth = entry["last_authenticated_at"].as_str().unwrap_or("?");
+                let appeal = entry["appeal_token_saved"].as_str().unwrap_or("no");
+                let outbox = entry["outbox_pending"].as_u64().unwrap_or(0);
+                let actions = entry["actions_queued"].as_u64().unwrap_or(0);
+
+                println!(
+                    "{name}: store={store} phone={phone} registered={registered} last_authenticated_at={last_auth} appeal_token_saved={appeal} outbox_pending={outbox} actions_queued={actions}"
+                );
+            }
+        }
+    }
+
+    Ok(())
 }
 
 fn accounts(cli: &Cli, cmd: &AccountsCmd) -> Result<(), Error> {
@@ -865,6 +1186,23 @@ fn accounts(cli: &Cli, cmd: &AccountsCmd) -> Result<(), Error> {
             }
             Ok(())
         }
+        AccountsCmd::New {
+            name,
+            country_code,
+            national_number,
+            material,
+            dir,
+            method,
+        } => accounts_new(
+            cli,
+            name,
+            *country_code,
+            national_number,
+            material,
+            dir.as_ref(),
+            method,
+        ),
+        AccountsCmd::Status { name } => accounts_status(cli, name.as_deref()),
     }
 }
 
@@ -949,6 +1287,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
         #[cfg(feature = "experimental-transport")]
         Cmd::Group { cmd } => transport_receive::group(&cli, cmd),
         Cmd::Accounts { cmd } => accounts(&cli, cmd),
+        Cmd::Token { cmd } => token::run(cmd),
         #[cfg(feature = "experimental-transport")]
         Cmd::LabPair {
             from,
@@ -1756,6 +2095,89 @@ async fn main() -> ExitCode {
                 _ => ExitCode::FAILURE,
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod accounts_tests {
+    use super::*;
+
+    #[test]
+    fn accounts_new_creates_files_and_refuses_twice() {
+        let temp_dir = tempfile::TempDir::new().unwrap();
+        let account_dir = temp_dir.path().join("test_account");
+        let profiles_dir = temp_dir.path().join("profiles");
+        std::fs::create_dir_all(&profiles_dir).unwrap();
+
+        let cli = Cli {
+            store: temp_dir.path().join("test.redb"),
+            account: "test".into(),
+            key_env: "TEST_KEY".into(),
+            profile: None,
+            profiles_dir: profiles_dir.clone(),
+            json: false,
+            cmd: Cmd::Accounts {
+                cmd: AccountsCmd::List,
+            },
+            loaded_profile: None,
+        };
+
+        let material_path = temp_dir.path().join("fake.zip");
+        std::fs::write(&material_path, b"fake zip").unwrap();
+
+        let result1 = accounts_new(
+            &cli,
+            "test_profile",
+            1,
+            "5551234567",
+            &material_path,
+            Some(&account_dir),
+            &Method::Sms,
+        );
+        assert!(result1.is_err());
+
+        let result2 = accounts_new(
+            &cli,
+            "test_profile",
+            1,
+            "5551234567",
+            &material_path,
+            None,
+            &Method::Sms,
+        );
+        assert!(result2.is_err());
+    }
+
+    #[test]
+    fn accounts_status_shows_locked_for_unset_env() {
+        let temp_dir = tempfile::TempDir::new().unwrap();
+        let profiles_dir = temp_dir.path().join("profiles");
+        std::fs::create_dir_all(&profiles_dir).unwrap();
+
+        let profile_path = profiles_dir.join("test.json");
+        let profile = profiles::Profile {
+            store: temp_dir.path().join("test.redb"),
+            account: "test".into(),
+            config: None,
+            key_env: "UNDEFINED_ENV_VAR_12345".into(),
+        };
+        std::fs::write(&profile_path, serde_json::to_string(&profile).unwrap()).unwrap();
+
+        let cli = Cli {
+            store: temp_dir.path().join("test.redb"),
+            account: "test".into(),
+            key_env: "TEST_KEY".into(),
+            profile: None,
+            profiles_dir: profiles_dir.clone(),
+            json: false,
+            cmd: Cmd::Accounts {
+                cmd: AccountsCmd::Status { name: None },
+            },
+            loaded_profile: None,
+        };
+
+        let result = accounts_status(&cli, Some("test"));
+        assert!(result.is_ok());
     }
 }
 

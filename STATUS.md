@@ -9,6 +9,13 @@ capabilities, wire-profile) are contracts for future implementation, not served 
 See `docs/api/README.md` for usage and `docs/api/openapi.json` for the full spec.
 
 
+**Onboarding is two commands:** `accounts new` with the 2.26.37.70 token material
+creates the account config, master key and profile automatically. Then
+`lab-signup begin` and `verify-code` complete registration. Reference: [configuration](docs/configuration.md),
+[working recipe and token material](docs/protocol/registration-lab.md#working-recipe),
+[accounts](docs/accounts.md).
+
+
 **Chat actions landed (2026-09-20):** block/unblock/block-list fetch, spam
 report (not sent live), disappearing timer, keep in chat, advanced chat privacy
 (limit sharing), default disappearing timer IQ, local contacts with a `usync`
