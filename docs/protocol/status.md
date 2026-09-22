@@ -66,8 +66,55 @@ inbox dedupes them by `received:status@broadcast:<id>`.
   groups, so it is empty at least there.
 - Sending a status is not implemented.
 
+## A recipient subscribes to nothing (confirmed)
+
+Traced 2026-09-22 after a live attempt delivered no status at all. A recipient
+does **not** send anything to start receiving status updates; holding an
+authenticated connection is the whole of it.
+
+- `w:status` — **0 references**; there is no status IQ namespace.
+- `StatusManager`, `StatusesViewModel`, `status_sync`, `statusSync`,
+  `StatusSync`, `status_fetch` — **0 references** each.
+- The only protocol `subscribe` is `LX/12s->A03`
+  (`LocationSubscriptionSendMethods/subscribe`, building
+  `<iq xmlns="location" type="get"><subscribe participants="true"…>`) — live
+  location, not status. Other `subscribe`/`skmsg` hits are the token dictionary
+  in `LX/1Rl.<clinit>`, i.e. vocabulary, not call sites.
+- No status-specific offline drain: `offline_preview`/`offline_batch` are the
+  generic offline-queue counters.
+
+Recipient selection happens on the **poster's** device: `status_distribution`
+(14 references, all through the local preferences accessor `LX/0YK`) holds the
+privacy setting, and `statusRecipients` appears only in a local data class
+(`LX/6ya->toString`). So the fan-out list is built client-side by whoever posts
+(**confirmed** for where the setting lives; **inferred** that the send path
+consumes it — the fan-out send itself was not traced).
+
+The privacy token (`GeneratePrivacyTokenJob->A0G`,
+`<iq xmlns="privacy" type="set"><tokens><token jid=… type="trusted_contact" t=…/>`)
+is consulted from `SendE2EMessageJob->A06` on the **sending** path, so it is
+generated about a contact by the party who has them saved — not something a
+recipient sends to begin receiving (**inferred**).
+
+**Consequence:** when a status does not arrive, nothing is missing on this
+client. Either it was posted before the recipient was saved on the poster's
+handset (a status is fanned out at post time and is not re-sent to someone who
+becomes eligible later), or the handset's Status privacy list excludes them.
+Whether the server additionally filters by the recipient's own server-side
+address book is **unknown**, but recipient selection being client-side makes it
+unlikely to matter. Our contact store is local-only regardless, so it cannot
+influence delivery.
+
 ## Live record
 
-None. Status receive has not been exercised against a live account. The
-routing, projection and `ChatId::Broadcast` representation are covered by
-offline tests only.
+2026-09-22: the owner posted a status while the lab account held a 90-second
+authenticated connection. Group and direct messages sent in the same window
+arrived and decrypted; **no stanza with a broadcast `from` arrived at all**, and
+no sender key was attempted for `status@broadcast`. This is a delivery absence,
+not a decryption failure. A `usync` contact check for the poster settled `Ok` in
+the same session, so the connection and action queue were healthy. Per the trace
+above the cause is on the posting handset, so no code change was made.
+
+Status receive therefore remains **unexercised**: the routing, projection and
+`ChatId::Broadcast` representation are covered by offline tests only, and the
+`enc` composition and payload form of a real status stanza are still unknown.
