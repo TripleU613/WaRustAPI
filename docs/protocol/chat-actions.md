@@ -307,7 +307,10 @@ local-only and documented as such.
 
 **Implementation.** `crates/whatsapp-api/src/transport/chat_clear.rs`
 (`clear_chat`) and the CLI's `clear-chat --chat <jid>` implement only the local
-half described above: for a direct chat it walks `received:<sender>:<id>`
+half described above. It accepts a direct chat or a group (2026-09-22: groups
+became clearable once group messages could be received; both key their
+`received:` rows by the chat JID, so the same prefix scan serves either).
+For a direct chat it walks `received:<sender>:<id>`
 checkpoint rows (`transport/inbox.rs`), strips the authenticated `protobuf`
 plaintext and marks each row `status: "cleared"` (kept, not deleted, so
 redeliveries and receipt correlation still dedupe by id), deletes any

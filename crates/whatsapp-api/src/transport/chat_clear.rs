@@ -42,13 +42,18 @@ pub struct ClearSummary {
     pub cleared_poll_secrets: usize,
 }
 
-/// Clear a direct chat's locally decrypted message bodies. Local-only: see
-/// the module doc for what still needs the (unimplemented) `clearChatAction`
-/// app-state mutation to reach companion devices.
+/// Clear a chat's locally decrypted message bodies. Local-only: see the module
+/// doc for what still needs the (unimplemented) `clearChatAction` app-state
+/// mutation to reach companion devices.
+///
+/// Accepts a direct chat (the contact's phone-number JID) or a group. Both key
+/// their `received:` rows by the chat JID — a direct message by the sender's
+/// phone-number JID, a group message by the group JID (`inbox::process_group`)
+/// — so the prefix scan below is the same for either.
 pub fn clear_chat(store: &ProtocolStore, chat: &Jid) -> Result<ClearSummary> {
-    if chat.server != Server::User {
+    if !matches!(chat.server, Server::User | Server::Group) {
         return Err(invalid(
-            "clear_chat supports direct chats only; received: rows are keyed by the sender's phone-number JID",
+            "clear_chat supports direct chats and groups; received: rows are keyed by the chat JID",
         ));
     }
     let chat = chat.to_non_ad();
@@ -123,6 +128,51 @@ mod tests {
         (dir, s)
     }
 
+    #[test]
+    fn clears_a_group_chat_and_leaves_other_chats_alone() {
+        let (_d, s) = store();
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let other = Jid::parse("15551234567@s.whatsapp.net").unwrap();
+        s.write(|tx| {
+            for (key, body) in [
+                (format!("received:{group}:G1"), "group one"),
+                (format!("received:{group}:G2"), "group two"),
+                (format!("received:{other}:D1"), "direct one"),
+            ] {
+                tx.put_json(
+                    Table::Checkpoints,
+                    key.as_bytes(),
+                    1,
+                    &serde_json::json!({"status":"decrypted","protobuf":body.as_bytes()}),
+                )?;
+            }
+            Ok(())
+        })
+        .unwrap();
+        let summary = clear_chat(&s, &group).unwrap();
+        assert_eq!(summary.cleared_messages, 2);
+        let row = |key: String| {
+            s.read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .unwrap()
+        };
+        // Group rows keep their key (so redeliveries still dedupe) but lose the
+        // plaintext.
+        for id in ["G1", "G2"] {
+            let saved = row(format!("received:{group}:{id}"));
+            assert_eq!(saved["status"], "cleared");
+            assert!(saved.get("protobuf").is_none());
+        }
+        // The unrelated direct chat is untouched.
+        let saved = row(format!("received:{other}:D1"));
+        assert_eq!(saved["status"], "decrypted");
+        assert!(saved.get("protobuf").is_some());
+    }
+    #[test]
+    fn clear_chat_refuses_a_non_chat_jid() {
+        let (_d, s) = store();
+        assert!(clear_chat(&s, &Jid::parse("s.whatsapp.net").unwrap()).is_err());
+    }
     #[test]
     fn clears_only_the_target_chats_messages_and_matching_poll_secrets() {
         let (_d, s) = store();
@@ -237,10 +287,19 @@ mod tests {
         assert_eq!(second.cleared_messages, 0);
     }
 
+    /// Groups became clearable once group messages could be received; anything
+    /// that is not a direct chat or a group still has no `received:` rows keyed
+    /// by it and must be refused rather than silently clearing nothing.
     #[test]
-    fn rejects_non_phone_jids() {
+    fn accepts_chats_and_groups_but_refuses_other_jids() {
         let (_d, s) = store();
-        let group = Jid::parse("12345-6789@g.us").unwrap();
-        assert!(clear_chat(&s, &group).is_err());
+        assert!(clear_chat(&s, &Jid::parse("12345-6789@g.us").unwrap()).is_ok());
+        assert!(clear_chat(&s, &Jid::parse("15551234567@s.whatsapp.net").unwrap()).is_ok());
+        for refused in ["s.whatsapp.net", "status@broadcast", "12345@lid"] {
+            assert!(
+                clear_chat(&s, &Jid::parse(refused).unwrap()).is_err(),
+                "{refused} should not be clearable"
+            );
+        }
     }
 }
