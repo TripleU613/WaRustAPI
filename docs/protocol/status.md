@@ -50,6 +50,41 @@ a wrong receipt on a live account is worse than sending none, so this waits on
 a confirmed trace. Consequence: the server may redeliver status updates; the
 inbox dedupes them by `received:status@broadcast:<id>`.
 
+## Refuted: privacy tokens do not gate status delivery
+
+Traced 2026-09-22 after the owner shared a status with **only** the lab number
+and it still never arrived, which eliminated the privacy-list explanation. The
+hypothesis was that a poster's client skips a recipient it holds no
+`trusted_contact` privacy token for, and that the lab account was missing an
+outbound token because only the receive side was implemented. **Refuted on
+three independent grounds, all confirmed:**
+
+- `SendE2EMessageJob->A06`'s `privacyTokenManager` reference is a Kotlin
+  `lateinit` field check (`if-nez` then `LX/00h->A0I` /
+  `throwUninitializedPropertyAccess`), sitting in a run of byte-identical checks
+  for `protobufTracer`, `protobufListener`, `pqMigrationChecker`, `message` and
+  `e2eEncryptionRetryCounts`. The manager is then passed as one argument into
+  the `LX/DEe` bundle. There is no per-recipient lookup, branch or skip in A06.
+  Whether something inside `DEe` consults it is **unknown**.
+- Nothing ties tokens to status. All 14 `status_distribution` references are UI
+  and preferences (`TextStatusComposerFragment`, `VoiceStatusComposerFragment`,
+  `ContactPickerFragment`, `LX/6c8`, `LX/7iF`, the `LX/0YK` accessor) with no
+  privacy-token code near any of them. The APK has essentially no privacy-token
+  logging: one `PrivacyToken` string, in `LX/IVf->getTag`.
+- `GeneratePrivacyTokenJob->A0G` **cannot initiate** a relationship. It calls
+  `LX/0q2->A0O(jid)` for a stored token, returns on null, and returns again if
+  the stored `t` is older than `LX/0q3->A01()`. It only echoes or refreshes a
+  token it already holds, so a recipient could not send one first even if we
+  implemented it.
+
+For the record, the token's shape is confirmed —
+`<iq xmlns="privacy" type="set"><tokens><token jid=<UserJid> type="trusted_contact" t=<long>/></tokens></iq>`,
+`t` from `LX/HYS.A00:J`, no other attributes — and received and sent tokens are
+tracked in separate tables (`wa_trusted_contacts` with
+`incoming_tc_token`/`incoming_tc_token_timestamp`, `wa_trusted_contacts_send`
+with `sent_tc_token_timestamp`/`real_issue_timestamp`). **Implementing an
+outbound token would not make status arrive**, so it was not implemented.
+
 ## Clearing
 
 `clear_chat` accepts `status@broadcast` (and broadcast lists), because a status
@@ -104,10 +139,15 @@ is consulted from `SendE2EMessageJob->A06` on the **sending** path, so it is
 generated about a contact by the party who has them saved — not something a
 recipient sends to begin receiving (**inferred**).
 
-**Consequence:** when a status does not arrive, nothing is missing on this
-client. Either it was posted before the recipient was saved on the poster's
-handset (a status is fanned out at post time and is not re-sent to someone who
-becomes eligible later), or the handset's Status privacy list excludes them.
+**Consequence:** when a status does not arrive, no *subscribe* step is missing
+on this client. The leading explanations are that it was posted before the
+recipient was saved on the poster's handset (fan-out happens at post time and is
+not replayed), or that the handset's Status privacy list excludes them.
+
+Both of those were subsequently eliminated on 2026-09-22: the owner shared a
+status with an explicit "Only share with" list naming only the lab number, and
+it still did not arrive. See the refutation section below and the Live record
+for where that leaves the investigation.
 Whether the server additionally filters by the recipient's own server-side
 address book is **unknown**, but recipient selection being client-side makes it
 unlikely to matter. Our contact store is local-only regardless, so it cannot
