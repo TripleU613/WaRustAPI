@@ -1314,6 +1314,13 @@ pub(super) async fn run(
                     println!("inbox: view-once attachment consumed; content unavailable");
                     continue;
                 }
+                if saved["status"] == "cleared" {
+                    // `clear_chat` strips `protobuf` and keeps the row so
+                    // redeliveries still dedupe. Skip it rather than failing the
+                    // whole inspection on a row that intentionally has no body.
+                    println!("inbox: chat cleared; content unavailable");
+                    continue;
+                }
                 let protobuf: zeroize::Zeroizing<Vec<u8>> =
                     serde_json::from_value(saved["protobuf"].take())
                         .map_err(|_| Error::invalid("inbox", "invalid saved protobuf"))?;
