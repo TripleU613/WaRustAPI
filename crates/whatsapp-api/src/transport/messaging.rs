@@ -174,11 +174,15 @@ pub fn active_request(id: &str) -> Node {
 /// `id` always; `participant` exactly when it is non-null and differs from `to`
 /// (so a direct chat, where the two coincide, never carries it); `type` omitted
 /// for a plain delivery receipt; `recipient` and `sts` only when their inputs are
-/// set, which they are not here. The APK derives its participant value through
-/// `LX/CmC->A06` and the JID form that produces was **not** traced, so this
-/// echoes the incoming stanza's own `participant` rather than normalizing it —
-/// no JID form is invented (**inferred** that echoing matches; the sibling ack
-/// builder `LX/Cp2->A05` does echo `participant` straight through).
+/// set, which they are not here.
+///
+/// The participant keeps the incoming stanza's own device-addressed form
+/// (**confirmed**): `LX/Cp2->A06` passes `Ayl.A0V(CjN.A04())` — the message's
+/// sender JID through `DeviceJid.Companion.A00` — as the value `LX/CmC->A06`
+/// returns as the pair's second element. That helper returns an existing
+/// `DeviceJid` unchanged and only coerces a bare `UserJid` to its primary
+/// device, which renders identically. So there is no device stripping and no
+/// PN/LID conversion on this path, and echoing the attribute verbatim matches.
 pub fn received_confirmation(incoming: &Node) -> Option<Node> {
     if !matches!(incoming.description.as_str(), "message" | "receipt")
         || incoming.get_attr("recipient").is_some()
@@ -464,6 +468,25 @@ mod tests {
             received_confirmation(&Node::new("message").attr("id", "d1").attr("from", sender))
                 .unwrap();
         assert!(direct.get_attr("participant").is_none());
+    }
+    /// `LX/Cp2->A06` passes the sender through `DeviceJid.Companion.A00`, which
+    /// returns an existing device-addressed JID unchanged. So a device suffix on
+    /// the incoming `participant` must survive into the receipt, rather than
+    /// being stripped the way the sender-key storage key strips it.
+    #[test]
+    fn group_receipt_preserves_the_participant_device_suffix() {
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let device_addressed = Jid::parse("15551234567:3@s.whatsapp.net").unwrap();
+        let receipt = received_confirmation(
+            &Node::new("message")
+                .attr("id", "grp2")
+                .attr("from", group)
+                .attr("participant", device_addressed.clone()),
+        )
+        .unwrap();
+        let echoed = receipt.get_attr("participant").unwrap().as_jid().unwrap();
+        assert_eq!(echoed, &device_addressed);
+        assert_eq!(echoed.device, 3);
     }
     #[test]
     fn primary_connection_activation_matches_apk() {

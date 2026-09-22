@@ -9,9 +9,9 @@ inbox row commit together, and the result projects as a `NewMessage` keyed by
 `ChatId::Group`. An unreadable stanza degrades to Unsupported rather than
 dropping the connection. A delivery receipt
 (`<receipt to=<group> id=<id> participant=<sender>/>`) is sent for a decrypted
-group message; its attribute set is confirmed from `LX/Cp2->A00`, while the
-participant JID form is echoed from the incoming stanza rather than derived
-(inferred, since the APK's own derivation was not traced). Verified offline
+group message; both its attribute set and the device-addressed participant form
+are confirmed from `LX/Cp2->A00`/`A06`, which echoes the sender JID without
+stripping the device or converting between phone JID and LID. Verified offline
 including a full SKDM→skmsg round trip; **no group message has been received
 live** — that needs the operator to create a group on their handset and add the
 lab number (do not `group create` from the lab account). Group *sending*

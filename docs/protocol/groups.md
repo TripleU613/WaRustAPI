@@ -88,14 +88,22 @@ delivery receipt, `recipient`/`sts` omitted, and `participant` emitted exactly
 when it is non-null and differs from `to`. That last rule is why the direct path
 never carries the attribute and the group path does.
 
-The JID **form** of the APK's participant value is **unknown** — it comes from
-`LX/CmC->A06`'s third argument and the call sites were not traced. Rather than
-normalize and risk inventing a form, the implementation echoes the incoming
-stanza's own `participant` value back unchanged; that it matches the APK is
-**inferred**, supported by the sibling ack builder `LX/Cp2->A05` echoing
-`participant` straight through. The receipt is gated on `Decrypted`/`Duplicate`,
-so an Unsupported stanza is never confirmed and the server may redeliver it; the
-inbox dedupes redeliveries by `received:<group>:<id>`.
+The participant keeps the incoming stanza's own **device-addressed** form
+(**confirmed**): `LX/Cp2->A06` — the receipt builder for an incoming message —
+passes `Ayl.A0V(CjN.A04())`, the message's sender JID through
+`DeviceJid.Companion.A00` (`LX/0DK->A00`), as the value `LX/CmC->A06` returns as
+its pair's second element. That helper returns an existing `DeviceJid` unchanged
+and only coerces a bare `UserJid` to its primary device, which renders
+identically. There is no device stripping and no PN/LID conversion on this path,
+so the implementation echoes the attribute verbatim — note this differs from the
+sender-key storage key, which deliberately *does* strip the device. A test pins
+the suffix surviving. Not examined: `LX/Cp2->A04` also reaches `A00` through a
+different pair helper (`LX/CmC->A05`); whether that path normalizes differently
+is **unknown**, but it is not the incoming-message receipt path.
+
+The receipt is gated on `Decrypted`/`Duplicate`, so an Unsupported stanza is
+never confirmed and the server may redeliver it; the inbox dedupes redeliveries
+by `received:<group>:<id>`.
 
 **Event projection**: decrypted group messages project as typed `NewMessage`
 events with `ChatId::Group(from)` as the chat and the `participant` JID as the

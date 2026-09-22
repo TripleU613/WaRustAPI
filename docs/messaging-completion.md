@@ -57,8 +57,7 @@ from offline tests alone. Existing received captures can be processed locally.
   sender key and the inbox row commit in one transaction. Undecryptable stanzas
   degrade to Unsupported without failing the session, and a decrypted one is
   confirmed with `<receipt to=<group> id=<id> participant=<sender>/>` (attribute
-  set confirmed from `LX/Cp2->A00`; the participant JID form is echoed from the
-  incoming stanza rather than derived, which is inferred). Verified offline only,
+  set and device-addressed participant form both confirmed from `LX/Cp2->A00`/`A06`). Verified offline only,
   including a full SKDM→skmsg round trip; **no group message has been received
   live**. Group message **sending** (per-device SKDM fan-out) is not implemented.
 - Chat actions (2026-09-20, `docs/protocol/chat-actions.md`): a durable
