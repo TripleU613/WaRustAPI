@@ -601,11 +601,19 @@ pub struct FanoutTarget {
 /// ```
 ///
 /// * `<participants>` wraps an already-built child list (`LX/BpZ.<init>(VL)`,
-///   bounded to [1, 0x987356]).
+///   which holds the literal — **confirmed**; the string has 31 references, so
+///   an earlier note that binary-token node names cannot be found by string
+///   search was wrong). `SendLiveLocationKeyJob->A0G` builds the same container
+///   without obfuscation, which is the easiest place to re-read this shape.
 /// * Each child is `<to>` with a `jid` attribute, carrying the enc elements as
 ///   children — `LX/Cp3->A08` builds that list with element name `"to"` at all
 ///   three construction sites, and `LX/Cp3->A0A(jid, encList)` sets `jid` then
 ///   appends each enc.
+/// * An outgoing `<enc>` carries `v` and `type` always, and `count`,
+///   `mediatype`, `native_flow_name`, `duration`, `decrypt-fail="hide"`,
+///   `state="false"` and `session_type="pq"` only under their own conditions
+///   (`LX/Cp3->A09`, **confirmed**). None applies to a plain first send, so
+///   `v` and `type` alone is the correct minimal case, not an omission.
 /// * The enc `type` strings come from `LX/Cp3->A06`, the outgoing mapper:
 ///   `0=msg, 1=pkmsg, 2=skmsg, 3=frskmsg, 4=msmsg` — the exact inverse of the
 ///   `LX/C9c->A00` reader the receive path already matches.

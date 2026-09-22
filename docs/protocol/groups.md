@@ -490,8 +490,47 @@ Desktop, a second phone) would therefore have received no SKDM at all and would
 show exactly "waiting for this message". That would also explain a version-2
 participant hash computed over a device set we cannot reproduce.
 
-The discriminating question is whether the placeholder is on the primary handset
-or on a linked device; it has been put to the operator rather than guessed at.
+**The operator answered: the placeholder is on the phone itself.** That kills the
+companion-device explanation — the primary is precisely the device we addressed.
+
+### What the structure check then eliminated
+
+With the recipient known to be a device we addressed, the stanza itself was
+re-checked against the APK, and every remaining structural doubt was closed:
+
+* **`<participants>` is confirmed, not inferred.** `LX/BpZ;-><init>(VL)` holds
+  the literal. An earlier note claimed the name could not be found by string
+  search because it is a binary token; that claim was wrong — the string has 31
+  references.
+* **`<to jid=…>` carrying per-participant encs is confirmed from an
+  unobfuscated job.** `SendLiveLocationKeyJob->A0G` builds exactly this shape to
+  distribute live-location sender keys: one attribute `jid` per child, element
+  name `"to"`, children from `LX/Cp3->A03`, all wrapped in a node named
+  `"participants"`. It is a `<notification type="location">` rather than a
+  `<message>`, but the fan-out container is the same and it is readable without
+  deobfuscation.
+* **The outgoing `<enc>` attribute set is confirmed.** `LX/Cp3->A09` emits `v`
+  and `type` always, then `count`, `mediatype`, `native_flow_name`, `duration`,
+  `decrypt-fail="hide"`, `state="false"` and `session_type="pq"` only under
+  their own conditions — none of which apply to a plain first send. Ours emits
+  `v="2"` and `type` and nothing else, which is the correct minimal case.
+* **The SKDM `groupId` string matches.** The receive-side guard's own comment
+  records that a real incoming SKDM's group id parses to the same user and
+  server as the stanza's group, differing only in the wire-encoding `kind` —
+  i.e. their string is the plain `…@g.us` we also send.
+* **Our sender-key chain is self-consistent across a republish**, covered by
+  `a_republished_sender_key_still_decrypts_later_messages`.
+
+So the stanza shape, the enc attributes, the distribution-message bytes and the
+chain arithmetic are all accounted for. **What is left is `phash`.** The ack
+handed us the server's own value for this group, which is the one input we have
+that we are not using, and the APK emits the attribute whenever its
+caller-computed hash is non-null.
+
+**Not yet attempted, and it needs the operator's call:** a second send is not a
+clean single-variable experiment, because the sessions established by the first
+send mean the distribution encs would go out as `msg` rather than `pkmsg`
+whatever else changes.
 
 **Still unknown:** the version-2 `phash` construction, whether our own companion
 devices belong in the fan-out, what sets `includeSenderKeysInMessage` in
