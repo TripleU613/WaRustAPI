@@ -478,6 +478,12 @@ enum Cmd {
         /// Inspect saved plaintext protobuf structure without advancing sessions.
         #[arg(long)]
         inspect: bool,
+        /// Re-run preserved incoming message captures through the normal receive
+        /// path, offline. The server delivers a queued stanza once, so a stanza
+        /// refused by a since-fixed guard is only recoverable from its capture.
+        /// Already-committed messages dedupe; nothing is sent and no receipt goes out.
+        #[arg(long)]
+        replay_captures: bool,
     },
     /// One comparison-server connection; optional bounded primary login.
     #[cfg(feature = "experimental-transport")]
@@ -1335,7 +1341,10 @@ async fn run(cli: Cli) -> Result<(), Error> {
             transport_receive::download_view_once(&cli, &config, *allow_live_request).await
         }
         #[cfg(feature = "experimental-transport")]
-        Cmd::LabInbox { inspect } => transport_receive::run(&cli, *inspect).await,
+        Cmd::LabInbox {
+            inspect,
+            replay_captures,
+        } => transport_receive::run(&cli, *inspect, *replay_captures).await,
         #[cfg(feature = "experimental-transport")]
         Cmd::LabTransport {
             config,

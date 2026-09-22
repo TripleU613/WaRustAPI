@@ -48,7 +48,7 @@ from offline tests alone. Existing received captures can be processed locally.
   not live-verified — the first create was followed by a stream error and the
   account was then refused at login (`STATUS.md`).
 - Group message **receive** (2026-09-22, `docs/protocol/groups.md`): sender-key
-  decryption is implemented. An SKDM (`Message` field 18) arriving in a member's
+  decryption is implemented. An SKDM (`Message` field 2) arriving in a member's
   direct `pkmsg`/`msg` — whether standalone or as a second `enc` child of the
   group stanza itself — installs the sender key; the stanza's `skmsg` child then
   decrypts with it, strips the APK plaintext padding and projects as a
@@ -57,9 +57,16 @@ from offline tests alone. Existing received captures can be processed locally.
   sender key and the inbox row commit in one transaction. Undecryptable stanzas
   degrade to Unsupported without failing the session, and a decrypted one is
   confirmed with `<receipt to=<group> id=<id> participant=<sender>/>` (attribute
-  set and device-addressed participant form both confirmed from `LX/Cp2->A00`/`A06`). Verified offline only,
-  including a full SKDM→skmsg round trip; **no group message has been received
-  live**. Group message **sending** (per-device SKDM fan-out) is not implemented.
+  set and device-addressed participant form both confirmed from `LX/Cp2->A00`/`A06`). **Live-verified 2026-09-22**: a
+  handset-created group with the lab number as a member delivered two stanzas
+  and both decrypted, installing the sender key and projecting as group
+  `NewMessage` events. The live stanza exposed two defects an offline round-trip
+  test could not: the distribution is at field 2 (not 18), and one stanza really
+  does carry `msg` + `skmsg` together. Both messages were recovered from their
+  preserved captures with `lab-inbox --replay-captures`, since the server does
+  not redeliver a queued stanza. Group message **sending** (per-device SKDM
+  fan-out) is not implemented and is blocked on unknown evidence: a participant
+  hash is required on every group send and its algorithm is untraced.
 - Chat actions (2026-09-20, `docs/protocol/chat-actions.md`): a durable
   one-shot IQ action queue carries block/unblock/block-list fetch, spam report,
   the default disappearing-timer IQ and `usync` contact checks; E2E protocol

@@ -691,6 +691,7 @@ Usage: whatsapp-cli lab-inbox [OPTIONS]...
 | Flag | Value | Required | Default | Env | Values | Help |
 |------|-------|----------|---------|-----|--------|------|
 | --inspect | INSPECT | no |  |  | `true`, `false` | Inspect saved plaintext protobuf structure without advancing sessions |
+| --replay-captures | REPLAY_CAPTURES | no |  |  | `true`, `false` | Re-run preserved incoming message captures through the normal receive path, offline. The server delivers a queued stanza once, so a stanza refused by a since-fixed guard is only recoverable from its capture. Already-committed messages dedupe; nothing is sent and no receipt goes out |
 
 ## whatsapp-cli lab-transport
 

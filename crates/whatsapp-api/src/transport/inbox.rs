@@ -383,7 +383,7 @@ pub async fn process(
     } else {
         None
     };
-    // If the direct message carries a SenderKeyDistributionMessage (field 18), process
+    // If the direct message carries a SenderKeyDistributionMessage (field 2), process
     // it now so group messages from this sender can decrypt after this commit.
     #[cfg(feature = "experimental-signal-crypto")]
     let skdm_update = {
@@ -578,7 +578,7 @@ async fn process_group(
 }
 
 /// A group stanza carries one or two `enc` children: a `pkmsg`/`msg` child whose
-/// plaintext holds the sender-key distribution message (field 18), and/or an
+/// plaintext holds the sender-key distribution message (field 2), and/or an
 /// `skmsg` child holding the actual group message. A member's first message
 /// carries both, so the SKDM must be applied before that stanza's `skmsg` is
 /// decrypted. Both updates commit in one write transaction.
@@ -679,12 +679,31 @@ async fn process_group_inner(
         } else {
             // A `msg` child with no established session cannot be read; the
             // skmsg below may still decrypt from a previously stored key.
+            tracing::warn!(
+                have_session = session.is_some(),
+                have_identity = identity.is_some(),
+                "group stanza: no session for the member, so its key distribution was skipped"
+            );
             None
         };
         if let Some((received, pinned)) = decrypted {
-            if let Some((skdm_group, axolotl)) =
-                crate::signal::group::extract_skdm_from_payload(&received.plaintext)
-                && Jid::parse(&skdm_group).is_ok_and(|g| g == group_jid)
+            // Compare the SKDM's group id by identity (user and server), not with
+            // `Jid` equality: that derives over the wire-encoding `kind` and the
+            // agent/device fields too, so a group parsed from the SKDM's string
+            // never equals the same group decoded from the stanza in AD form, and
+            // the distribution would be silently discarded.
+            let same_group = |g: &Jid| g.user == group_jid.user && g.server == group_jid.server;
+            let skdm = crate::signal::group::extract_skdm_from_payload(&received.plaintext);
+            if skdm.is_none() {
+                // Field numbers only; this never exposes message content.
+                tracing::warn!(
+                    fields = ?crate::signal::direct::payload_fields(&received.plaintext)
+                        .unwrap_or_default(),
+                    "group stanza: member payload decrypted but carried no key distribution"
+                );
+            }
+            if let Some((skdm_group, axolotl)) = skdm
+                && Jid::parse(&skdm_group).is_ok_and(|g| same_group(&g))
             {
                 let applied = crate::signal::group::process_skdm(
                     &group_jid,
@@ -726,8 +745,17 @@ async fn process_group_inner(
         group_plaintext = Some(received.plaintext);
     }
     // Nothing usable: no sender key yet and no SKDM in this stanza. Preserve the
-    // capture without acknowledging it.
+    // capture without acknowledging it. Say which inputs were missing — a silent
+    // refusal here is indistinguishable from the stanza never arriving.
     let Some(final_key) = final_key else {
+        tracing::warn!(
+            had_direct_child = direct_enc.is_some(),
+            direct_child_decrypted = direct_commit.is_some(),
+            skdm_installed = key_after_skdm.is_some(),
+            had_skmsg_child = sk_enc.is_some(),
+            had_stored_sender_key = previous_bytes.is_some(),
+            "group stanza not processed: no sender key available and none distributed in it"
+        );
         return Ok(IncomingResult::Unsupported);
     };
     let route =

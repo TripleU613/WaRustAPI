@@ -39,21 +39,37 @@ All of these names are dictionary tokens.
 Group messages (`from`=group JID, `participant`=sender device JID) are now
 decrypted using the Signal sender-key protocol.
 
-**Stanza shape.** The node model permits several `enc` children of one stanza
-(`LX/0hs->A0N(name)` returns a List of all children with that tag,
-**confirmed**), and one `enc` node is one-of `EncTypeIndividual` (`msg`/`pkmsg`)
-or `EncTypeSenderKey` (`skmsg`) — never both (`LX/ADy->A0T` schema union,
-**confirmed**). `LX/ADy->A0O` selects an enc child by matching type `"skmsg"`
-rather than assuming a single child (**confirmed**). Whether one incoming group
-stanza carries a `pkmsg` (SKDM) *and* an `skmsg` together is **inferred**, not
-confirmed: the decrypt-side loop over enc children was not located, and
-`LX/ClL->A02` (QueuedStanzaFactory) reads only the first enc child. The
-implementation therefore handles both shapes — it selects each child by type
-and applies an SKDM found in the same stanza before decrypting that stanza's
-`skmsg` — which is correct whichever shape the server actually sends.
+**Stanza shape — now observed live (2026-09-22).** Two real incoming group
+stanzas were captured on the lab account:
 
-**SKDM receive** (`senderKeyDistributionMessage` field 18): after a `pkmsg`/`msg`
-child decrypts, its plaintext is scanned for field 18; if present and its
+```
+message type=text from=<group>(Group) participant=<sender>(Lid) participant_pn=… addressing_mode=… expiration=… sts offline notify t
+  enc v=2 type=msg        <- sender key distribution (first message from that member only)
+  reporting
+  enc v=2 type=skmsg      <- the group message itself
+```
+
+and a later one carrying **only** `enc v=2 type=skmsg`. So a single stanza does
+carry both a member's `msg` and its `skmsg` together, which the APK evidence had
+only made **inferred**; it is now **observed**. Supporting APK evidence: the node
+model permits several `enc` children (`LX/0hs->A0N(name)` returns a List of all
+children with that tag, **confirmed**), one `enc` node is one-of
+`EncTypeIndividual` (`msg`/`pkmsg`) or `EncTypeSenderKey` (`skmsg`) — never both
+(`LX/ADy->A0T` schema union, **confirmed**) — and `LX/ADy->A0O` selects an enc
+child by matching type `"skmsg"` rather than assuming a single child
+(**confirmed**). The implementation selects each child by type and applies an
+SKDM found in the same stanza before decrypting that stanza's `skmsg`.
+
+Requiring exactly one `enc` child, as a first implementation did, drops the
+combined stanza permanently: the sender key is never installed, so every later
+`skmsg` from that member is undecryptable too.
+
+**SKDM receive** (`senderKeyDistributionMessage` = **field 2**, observed live
+2026-09-22: the `msg` child of a real group stanza decrypted to a payload whose
+only field number was 2). An earlier implementation used field 18, which is
+`liveLocationMessage`; it matched nothing, so the sender key was never installed
+and no group message could decrypt. After a `pkmsg`/`msg`
+child decrypts, its plaintext is scanned for field 2; if present and its
 `groupId` matches the stanza's group, the raw
 `axolotlSenderKeyDistributionMessage` bytes go to
 `process_sender_key_distribution_message` (wacore-libsignal 0.7.0), storing the
@@ -61,7 +77,7 @@ updated `SenderKeyRecord` at `sk:{group_jid}:{sender_non_ad_jid}` in
 `Table::SenderKeys`. The SKDM-bearing child advances that member's ordinary
 direct Signal session (`comparison-direct:<phone>`), so the session, pinned
 identity, any consumed one-time prekey and the sender key all commit together.
-A direct (non-group) message carrying field 18 is handled the same way.
+A direct (non-group) message carrying field 2 is handled the same way.
 
 **Participant identity**: `participant_pn` carries the member's phone JID when
 `participant` is a LID (`LX/ADw->A02` reads it as a `UserJid`, **confirmed**;
@@ -119,13 +135,24 @@ direct chat the two agree, so this did not change direct behavior.
 receive, padding strip, commit helpers); `crates/whatsapp-api/src/transport/inbox.rs`
 (`group_sender` routing, `participant_session_jid`, `process_group`, SKDM
 extraction in the direct path); `crates/whatsapp-api/src/transport/inbox_events.rs`
-(`chat_and_sender`). Tests cover the DB key format, SKDM extraction (field 18
+(`chat_and_sender`). Tests cover the DB key format, SKDM extraction (field 2
 present, absent, empty), the no-sender-key Unsupported path, bad padding, group
 text projection, malformed group stanzas, and a full offline SKDM→skmsg round
 trip (`create_sender_key_distribution_message` + `group_encrypt` on a synthetic
 sender side, through `process_skdm` → `receive_group` → unpad → field scan).
 
-**Not live-verified**: no group message has been received on a lab account.
+**Live-verified (2026-09-22).** The operator created a group on their handset,
+added the lab number and sent to it. Two group stanzas were received and, after
+the field-2 correction, both decrypted: the sender key was installed from the
+combined stanza's `msg` child and both messages projected as `NewMessage` events
+keyed by `ChatId::Group`. Store after: `SenderKeys` 1, `Inbox` 3 -> 5.
+
+The two stanzas were first refused by the then-current code and the server does
+not redeliver a queued stanza, so they were recovered offline from their
+preserved captures with `lab-inbox --replay-captures`, which re-runs preserved
+message captures through the normal `inbox::process` path (dedupe, atomic
+commit, no network, no receipts). Sending a group message is still not
+implemented.
 Storage note: sender keys use the `sk:{group}:{sender_non_ad}` schema in
 `Table::SenderKeys`, keyed by group and member only — a `SenderKeyRecord` holds
 multiple chains internally, so the rotation/distribution id is not part of the

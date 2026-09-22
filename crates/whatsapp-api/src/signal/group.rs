@@ -260,8 +260,15 @@ pub fn commit_skdm(tx: &mut WriteTx<'_>, skdm: &ReceivedSkdm) -> Result<bool> {
     Ok(true)
 }
 
-/// Extract SKDM fields from a decrypted WhatsApp Message protobuf payload.
-/// Returns `(group_id_string, axolotl_skdm_bytes)` if field 18 is set.
+/// Extract the sender key distribution from a decrypted WhatsApp `Message`
+/// protobuf. Returns `(group_id_string, axolotl_skdm_bytes)` when present.
+///
+/// `Message.senderKeyDistributionMessage` is **field 2**, confirmed live on
+/// 2026-09-22: the `msg` child of a real incoming group stanza decrypted to a
+/// payload whose only field number was 2. (An earlier implementation used 18,
+/// which is `liveLocationMessage`; it silently matched nothing, so every group
+/// message stayed undecryptable.) The inner message is `groupId` = 1 and
+/// `axolotlSenderKeyDistributionMessage` = 2.
 pub fn extract_skdm_from_payload(payload: &[u8]) -> Option<(String, Vec<u8>)> {
     use prost::Message as _;
     #[derive(prost::Message)]
@@ -273,7 +280,7 @@ pub fn extract_skdm_from_payload(payload: &[u8]) -> Option<(String, Vec<u8>)> {
     }
     #[derive(prost::Message)]
     struct MessageWithSkdm {
-        #[prost(message, optional, tag = "18")]
+        #[prost(message, optional, tag = "2")]
         skdm: Option<SkdmMessage>,
     }
     let envelope = MessageWithSkdm::decode(payload).ok()?;
@@ -413,9 +420,9 @@ mod tests {
     }
 
     #[test]
-    fn extract_skdm_parses_field_18() {
+    fn extract_skdm_parses_field_2() {
         use prost::Message as _;
-        // Build a minimal Message proto with field 18 = SenderKeyDistributionMessage.
+        // Build a minimal Message proto with field 2 = senderKeyDistributionMessage.
         #[derive(prost::Message)]
         struct SkdmMsg {
             #[prost(string, optional, tag = "1")]
@@ -425,7 +432,7 @@ mod tests {
         }
         #[derive(prost::Message)]
         struct MsgWithSkdm {
-            #[prost(message, optional, tag = "18")]
+            #[prost(message, optional, tag = "2")]
             skdm: Option<SkdmMsg>,
         }
         let payload = MsgWithSkdm {
@@ -454,7 +461,7 @@ mod tests {
         }
         #[derive(prost::Message)]
         struct MsgWithSkdm {
-            #[prost(message, optional, tag = "18")]
+            #[prost(message, optional, tag = "2")]
             skdm: Option<SkdmMsg>,
         }
         // Empty group_id → None.

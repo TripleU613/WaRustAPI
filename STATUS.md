@@ -1,6 +1,6 @@
 # Status — 2026-09-22
 
-**Group message receive implemented (2026-09-22, offline only).** Incoming
+**Group message receive LIVE-VERIFIED (2026-09-22).** Incoming
 group stanzas (`from`=group, `participant`=sender) now decrypt through the
 Signal sender-key protocol. A sender-key distribution message (`Message` field
 18) installs the member's key, and that stanza's `skmsg` child decrypts with it;
@@ -11,11 +11,20 @@ dropping the connection. A delivery receipt
 (`<receipt to=<group> id=<id> participant=<sender>/>`) is sent for a decrypted
 group message; both its attribute set and the device-addressed participant form
 are confirmed from `LX/Cp2->A00`/`A06`, which echoes the sender JID without
-stripping the device or converting between phone JID and LID. Verified offline
-including a full SKDM→skmsg round trip; **no group message has been received
-live** — that needs the operator to create a group on their handset and add the
-lab number (do not `group create` from the lab account). Group *sending*
-(per-device SKDM fan-out) is not implemented.
+stripping the device or converting between phone JID and LID. Live: the operator created a group on their handset, added
+the lab number and sent to it; two group stanzas arrived and both decrypted,
+installing the sender key and projecting as group `NewMessage` events.
+
+Two defects only the live stanza exposed: `senderKeyDistributionMessage` is
+**field 2**, not field 18 (18 is `liveLocationMessage`) — the wrong tag matched
+nothing, so no sender key was ever installed; and the combined stanza really does
+carry a member's `msg` and its `skmsg` together, which APK evidence had left
+inferred. Because the server does not redeliver a queued stanza, both messages
+were recovered from their preserved captures with the new
+`lab-inbox --replay-captures`, which re-runs preserved captures through the
+normal receive path offline. Group *sending* (per-device SKDM fan-out) is not
+implemented and is blocked on unknown APK evidence: a participant hash is
+required on every group send and its algorithm has not been traced.
 Details: [groups](docs/protocol/groups.md).
 
 **API reference added:** an OpenAPI 3.1 document now describes every CLI command,

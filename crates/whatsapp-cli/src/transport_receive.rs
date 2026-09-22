@@ -893,7 +893,11 @@ pub(super) fn is_saved_message(
     ))
 }
 
-pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
+pub(super) async fn run(
+    cli: &super::Cli,
+    inspect: bool,
+    replay_captures: bool,
+) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
         account_id: AccountId::new(cli.account.clone())?,
@@ -1143,6 +1147,39 @@ pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
             }
         }
     }
+    let mut replayed = (0usize, 0usize, 0usize);
+    if replay_captures {
+        for (key, value) in &captures {
+            if !is_capture(key) {
+                continue;
+            }
+            let Ok(wire) = serde_json::from_slice::<Vec<u8>>(value) else {
+                continue;
+            };
+            let Ok(raw) = unpack_frame_payload(&wire, &limits) else {
+                continue;
+            };
+            let Ok(node) =
+                Decoder::new(&raw, TokenDictionary::comparison_2_26_37_70(), &limits).decode_node()
+            else {
+                continue;
+            };
+            if node.description != "message" {
+                continue;
+            }
+            // The same durable path a live session uses: dedupe, atomic commit,
+            // no network. A stanza already committed returns Duplicate untouched.
+            match whatsapp_api::transport::inbox::process(&store, &account, &node, &wire).await? {
+                whatsapp_api::transport::inbox::IncomingResult::Decrypted => replayed.0 += 1,
+                whatsapp_api::transport::inbox::IncomingResult::Duplicate => replayed.1 += 1,
+                whatsapp_api::transport::inbox::IncomingResult::Unsupported => replayed.2 += 1,
+            }
+        }
+        println!(
+            "inbox: replayed preserved captures: {} newly decrypted, {} already committed, {} still unsupported (no network, no receipts sent)",
+            replayed.0, replayed.1, replayed.2
+        );
+    }
     for (key, value) in captures {
         if inspect {
             if is_capture(&key) {
@@ -1192,7 +1229,23 @@ pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
                                 .filter(|v| safe(v))
                                 .collect();
                             let mut shown = format!("{}{names:?}", n.description);
-                            if n.description == "meta" {
+                            // `meta` flags and an `enc` child's version/type are
+                            // protocol routing metadata, not message content, and
+                            // knowing which envelope a stanza used is the first
+                            // thing needed when one is refused as unsupported.
+                            if matches!(n.description.as_str(), "meta" | "enc") {
+                                // These carry protocol flags and versions only
+                                // (`v`, `type`, `content_type`, `decrypt-fail`),
+                                // never identities, so a short numeric value such
+                                // as the envelope version `v=2` is shown. `safe`
+                                // rejects digits, which would redact exactly the
+                                // version needed to diagnose a refused envelope.
+                                let safe_flag = |value: &str| {
+                                    value.len() <= 32
+                                        && value.bytes().all(|b| {
+                                            b.is_ascii_alphanumeric() || matches!(b, b'_' | b'-')
+                                        })
+                                };
                                 let values: Vec<String> = n
                                     .attributes
                                     .iter()
@@ -1202,11 +1255,11 @@ pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
                                         format!(
                                             "{}={}",
                                             a.name,
-                                            if safe(v) { v } else { "<unsafe>" }
+                                            if safe_flag(v) { v } else { "<unsafe>" }
                                         )
                                     })
                                     .collect();
-                                shown = format!("meta{values:?}");
+                                shown = format!("{}{values:?}", n.description);
                             }
                             shown
                         })
@@ -1229,7 +1282,29 @@ pub(super) async fn run(cli: &super::Cli, inspect: bool) -> Result<(), Error> {
                     } else {
                         String::new()
                     };
-                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
+                    // How the receive path would route this stanza. Server kinds
+                    // and a yes/no are not identifying, and without them a stanza
+                    // refused as unsupported gives no clue which guard rejected it.
+                    let routing = if node.description == "message" {
+                        let server_of = |name: &str| {
+                            node.get_attr(name)
+                                .and_then(|v| {
+                                    v.as_jid().cloned().or_else(|| {
+                                        whatsapp_api::model::jid::Jid::parse(v.as_text()?).ok()
+                                    })
+                                })
+                                .map(|j| format!("{:?}/device={}", j.server, j.device))
+                        };
+                        format!(
+                            ", from_server={:?}, participant_server={:?}, routes_as_group={}",
+                            server_of("from"),
+                            server_of("participant"),
+                            whatsapp_api::transport::inbox::group_sender(&node).is_some()
+                        )
+                    } else {
+                        String::new()
+                    };
+                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{routing}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
                 }
             }
             if key.starts_with(b"received:") {
