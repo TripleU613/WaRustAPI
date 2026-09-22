@@ -259,8 +259,192 @@ pub fn extract_skdm_from_payload(payload: &[u8]) -> Option<(String, Vec<u8>)> {
     Some((group_id, axolotl))
 }
 
+/// Our own sender key for a chat, plus the distribution message that lets a
+/// recipient decrypt what we encrypt with it.
+pub struct OwnSenderKey {
+    /// `SyncActionValue`-free `Message` protobuf carrying
+    /// `senderKeyDistributionMessage` (**field 2**), ready to encrypt 1:1 to
+    /// each recipient device. Field 2 is the number confirmed live on the
+    /// receive side; an earlier implementation used 18 and matched nothing.
+    pub distribution_message: Zeroizing<Vec<u8>>,
+    /// Updated sender key record. Persist this **only** after the send is
+    /// accepted: a distributed-but-unsent key leaves recipients holding a chain
+    /// we never use, and a used-but-unpersisted key cannot decrypt our own later
+    /// messages.
+    pub updated_key: Zeroizing<Vec<u8>>,
+}
+impl std::fmt::Debug for OwnSenderKey {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("OwnSenderKey(<redacted>)")
+    }
+}
+
+/// Create (or reuse) this device's sender key for `chat` and build the
+/// distribution message for it.
+///
+/// `chat` is the group or `status@broadcast` JID; the sender-key name is built
+/// from its raw string, matching `LX/Cnr` (**confirmed**), so group and status
+/// keys occupy separate namespaces.
+///
+/// The returned record must be persisted **only** after the send is accepted:
+/// a distributed-but-unsent key leaves recipients holding a chain we never use,
+/// and a used-but-unpersisted key cannot decrypt our own later messages.
+pub async fn prepare_own_sender_key(
+    chat: &Jid,
+    own: &Jid,
+    previous_bytes: Option<&[u8]>,
+) -> Result<OwnSenderKey> {
+    use prost::Message as _;
+    let mut store = SenderKeys::new(previous_bytes)?;
+    let name = SenderKeyName::from_parts(&chat.to_string(), &own.to_non_ad().to_string());
+    let skdm = signal::create_sender_key_distribution_message(&name, &mut store, &mut rand::rng())
+        .await
+        .map_err(crypto)?;
+
+    #[derive(prost::Message)]
+    struct SkdmMessage {
+        #[prost(string, optional, tag = "1")]
+        group_id: Option<String>,
+        #[prost(bytes = "vec", optional, tag = "2")]
+        axolotl: Option<Vec<u8>>,
+    }
+    #[derive(prost::Message)]
+    struct MessageWithSkdm {
+        #[prost(message, optional, tag = "2")]
+        skdm: Option<SkdmMessage>,
+    }
+    let distribution_message = Zeroizing::new(
+        MessageWithSkdm {
+            skdm: Some(SkdmMessage {
+                group_id: Some(chat.to_string()),
+                axolotl: Some(skdm.serialized().to_vec()),
+            }),
+        }
+        .encode_to_vec(),
+    );
+    let updated_key = Zeroizing::new(
+        store
+            .record
+            .ok_or_else(|| invalid("no sender key record was produced"))?
+            .serialize()
+            .map_err(|_| invalid("serialize own sender key"))?,
+    );
+    Ok(OwnSenderKey {
+        distribution_message,
+        updated_key,
+    })
+}
+
+/// Encrypt one outgoing payload with our sender key for `chat`, producing the
+/// `skmsg` ciphertext.
+///
+/// `plaintext` must already carry the APK's E2E padding; [`pad`] applies it.
+/// Returns the ciphertext and the advanced record, which again must only be
+/// persisted once the send is accepted.
+pub async fn encrypt_group_payload(
+    chat: &Jid,
+    own: &Jid,
+    key_bytes: &[u8],
+    plaintext: &[u8],
+) -> Result<(Zeroizing<Vec<u8>>, Zeroizing<Vec<u8>>)> {
+    if plaintext.is_empty() || plaintext.len() > 1_048_576 {
+        return Err(invalid("invalid group payload size"));
+    }
+    let mut store = SenderKeys::new(Some(key_bytes))?;
+    let name = SenderKeyName::from_parts(&chat.to_string(), &own.to_non_ad().to_string());
+    let message = signal::group_encrypt(&mut store, &name, plaintext, &mut rand::rng())
+        .await
+        .map_err(crypto)?;
+    let updated = Zeroizing::new(
+        store
+            .record
+            .ok_or_else(|| invalid("group_encrypt produced no record"))?
+            .serialize()
+            .map_err(|_| invalid("serialize advanced sender key"))?,
+    );
+    Ok((Zeroizing::new(message.serialized().to_vec()), updated))
+}
+
+/// Apply the APK's E2E plaintext padding: 1..=16 bytes, each equal to the pad
+/// length. The exact inverse of [`unpad`], and identical to what the direct
+/// path applies before encrypting.
+pub fn pad(plaintext: &[u8]) -> Result<Zeroizing<Vec<u8>>> {
+    let mut random = [0; 1];
+    getrandom::fill(&mut random).map_err(|_| invalid("padding entropy unavailable"))?;
+    let padding = (random[0] & 15) + 1;
+    let mut padded = Zeroizing::new(plaintext.to_vec());
+    padded.resize(plaintext.len() + padding as usize, padding);
+    Ok(padded)
+}
+
 #[cfg(test)]
 mod tests {
+    /// Our own send path must produce something our own receive path accepts:
+    /// mint a sender key, publish its distribution message, install that on a
+    /// notional recipient, then encrypt and decrypt a padded payload. This
+    /// exercises prepare_own_sender_key, pad, encrypt_group_payload and
+    /// receive_group together.
+    #[tokio::test]
+    async fn own_sender_key_round_trips_through_the_receive_path() {
+        use prost::Message as _;
+        let chat = group_jid();
+        let own = sender_jid();
+
+        // 1. Create our sender key and its distribution message.
+        let mine = prepare_own_sender_key(&chat, &own, None).await.unwrap();
+        // The distribution message is a Message carrying field 2, which is what
+        // the receive side extracts.
+        let (group_id, axolotl) =
+            extract_skdm_from_payload(&mine.distribution_message).expect("field 2 must be present");
+        assert_eq!(group_id, chat.to_string());
+
+        // 2. A recipient installs it.
+        let db_key = sender_key_db_key(&chat, &own);
+        let installed = process_skdm(&chat, &own, db_key, None, &axolotl)
+            .await
+            .unwrap();
+
+        // 3. We encrypt a padded payload with our key.
+        #[derive(prost::Message)]
+        struct TextMessage {
+            #[prost(string, tag = "1")]
+            conversation: String,
+        }
+        let body = TextMessage {
+            conversation: "fan-out".into(),
+        }
+        .encode_to_vec();
+        let padded = pad(&body).unwrap();
+        assert!(padded.len() > body.len(), "padding must be applied");
+        let (ciphertext, advanced) = encrypt_group_payload(&chat, &own, &mine.updated_key, &padded)
+            .await
+            .unwrap();
+        assert_ne!(&*advanced, &*mine.updated_key, "our chain must advance");
+
+        // 4. The recipient decrypts it, and the padding strips cleanly.
+        let received = receive_group(&chat, &own, Some(&installed.updated_key), &ciphertext)
+            .await
+            .unwrap()
+            .expect("the installed key must decrypt our message");
+        assert_eq!(&*received.plaintext, body.as_slice());
+        assert_eq!(
+            TextMessage::decode(&**received.plaintext)
+                .unwrap()
+                .conversation,
+            "fan-out"
+        );
+    }
+
+    #[test]
+    fn padding_is_one_to_sixteen_bytes_and_strips_back_to_the_original() {
+        for _ in 0..64 {
+            let padded = pad(b"payload").unwrap();
+            let added = padded.len() - b"payload".len();
+            assert!((1..=16).contains(&added), "pad added {added} bytes");
+            assert_eq!(&*unpad(padded.to_vec()).unwrap(), b"payload");
+        }
+    }
+
     use super::*;
 
     fn group_jid() -> Jid {

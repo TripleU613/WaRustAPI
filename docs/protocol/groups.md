@@ -161,7 +161,55 @@ multiple chains internally, so the rotation/distribution id is not part of the
 key. The unused `RecordKey::SenderKey` variant in `signal/mod.rs` describes a
 different (`k:…:{distribution_id}`) layout and is not what this path writes.
 
-## Sending a group message — not implemented, blocked on unknowns
+## Sending: the crypto half is built and round-trip verified
+
+`signal::group` now has the sender side of the sender-key protocol, which group
+sending and every outbound status operation both need:
+
+* **`prepare_own_sender_key(chat, own, previous)`** creates (or advances) this
+  device's own sender key for a chat and returns the distribution message to
+  encrypt 1:1 to each recipient device. The distribution message is a `Message`
+  carrying `senderKeyDistributionMessage` at **field 2** — the number confirmed
+  live on the receive side, where an earlier implementation used 18 and matched
+  nothing. The chat's raw JID string keys the sender-key name (`LX/Cnr`), so a
+  group key and a `status@broadcast` key never collide.
+* **`encrypt_group_payload(chat, own, key, plaintext)`** produces the `skmsg`
+  ciphertext and the advanced record.
+* **`pad(plaintext)`** applies the APK's E2E padding (1..=16 bytes, each equal
+  to the pad length) — the exact inverse of the `unpad` the receive path uses.
+
+Both return the updated record separately from the ciphertext, and the doc
+comments state the rule the caller must honour: **persist only after the send is
+accepted**. A distributed-but-unsent key leaves recipients holding a chain we
+never use; a used-but-unpersisted key cannot decrypt our own later messages.
+
+The round-trip test runs our send path into our receive path: mint a key,
+publish its distribution message, install it via `process_skdm`, encrypt a
+padded payload, then `receive_group` it and assert the plaintext is byte-identical
+to the original. Encrypting per-recipient uses the existing
+`direct::prepare_payload`, already live-verified for ordinary messages.
+
+## Sending: what still blocks an actual send
+
+The crypto is done; the **envelope** is not. Still **unknown**:
+
+1. the per-recipient child element inside `<participants>` — `LX/BpZ.<init>(VL)`
+   appends an already-built list, so the element name comes from whoever builds
+   that list, which was not located;
+2. where the top-level `<enc type="skmsg">` sits relative to `<participants>`;
+3. the `message` node's own attribute set for a group or status send;
+4. how the recipient set becomes a device-level list, and whether our own other
+   devices are included;
+5. what sets `includeSenderKeysInMessage` — every send, or only on rotation;
+6. whether `phash` is required for a status (a JID-type-5 exemption exists; see
+   `status.md`).
+
+`participant_hash` is implemented and independently vectored, so (6) is a
+routing question rather than a cryptographic one.
+
+## Sending a group message — the earlier envelope trace
+
+### Earlier envelope findings
 
 Researched 2026-09-22 against 2.26.37.71. Recorded here so the dead ends are
 not re-walked; **nothing below is implemented** and one required input has no
