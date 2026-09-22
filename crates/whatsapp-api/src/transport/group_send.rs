@@ -41,6 +41,13 @@
 //! guessing — addressing a member in the wrong form would encrypt to an
 //! identity the recipient does not treat as the sender.
 //!
+//! ## The participant hash
+//!
+//! Settled on 2026-09-22 against the `phash` the server returned in the `ack`
+//! for our first fan-out: it covers **every member including the sender**, in
+//! the AD JID form, under SHA-256. See
+//! [`super::groups::participant_hash_v2`].
+//!
 //! ## Still unknown
 //!
 //! Whether our own other devices belong in the fan-out. This account is a
@@ -118,6 +125,10 @@ pub struct FanoutPlan {
     /// Always true: whether our own companion devices belong in the fan-out was
     /// not established, and this account has none to observe it with.
     pub own_devices_unknown: bool,
+    /// The version 2 participant hash over the whole membership, us included.
+    /// See [`super::groups::participant_hash_v2`] for how its construction was
+    /// established against a value the server itself returned.
+    pub participant_hash: String,
 }
 
 /// Build the fan-out plan for `chat` from the saved group snapshot and the
@@ -163,6 +174,9 @@ pub fn plan(store: &ProtocolStore, chat: &Jid, own: &Jid) -> Result<FanoutPlan> 
     if !members.contains(&own) {
         return Err(invalid("we are not a member of this group"));
     }
+    // The hash covers every member, the sender included, before we drop
+    // ourselves from the recipient list.
+    let participant_hash = super::groups::participant_hash_v2(&members);
     let mut recipients: Vec<Jid> = members.into_iter().filter(|j| *j != own).collect();
     recipients.sort_by_key(Jid::to_string);
     recipients.dedup();
@@ -196,6 +210,7 @@ pub fn plan(store: &ProtocolStore, chat: &Jid, own: &Jid) -> Result<FanoutPlan> 
         devices,
         without_device_list,
         own_devices_unknown: true,
+        participant_hash,
     })
 }
 
@@ -297,6 +312,20 @@ mod tests {
         );
         assert!(plan.without_device_list.is_empty());
         assert!(plan.own_devices_unknown);
+        // The hash covers the whole membership, us included — that is the part
+        // the server's own value settled, and dropping ourselves would silently
+        // produce a different one.
+        assert_eq!(
+            plan.participant_hash,
+            super::super::groups::participant_hash_v2(&[
+                jid("111111111111111@lid"),
+                jid("222222222222222@lid"),
+            ])
+        );
+        assert_ne!(
+            plan.participant_hash,
+            super::super::groups::participant_hash_v2(&[jid("222222222222222@lid")])
+        );
         // We never address ourselves.
         assert!(!plan.devices.iter().any(|d| d.to_non_ad() == own));
     }

@@ -550,6 +550,56 @@ pub fn participant_hash(jids: &[String]) -> String {
     out
 }
 
+/// The **version 2** participant hash, solved against a value the server itself
+/// supplied and reproduced exactly.
+///
+/// On 2026-09-22 the `ack` for our first group fan-out carried
+/// `phash="2:…"`. Searching locally for a construction that reproduces those six
+/// bytes — every subset of the known membership, four JID renderings, four
+/// orderings, five separators, four digests, with and without a group or count
+/// prefix — produced exactly one match, and it answers all three questions
+/// [`participant_hash`] had left open:
+///
+/// * the set is **every member of the group, including the sender**;
+/// * the JID form is the **AD form** `user.agent:device@server`, with `.0` and
+///   `:0` written out — not the display form, which omits them;
+/// * the digest is **SHA-256**, not the SHA-1 of the version 1 form.
+///
+/// The rest matches version 1: sort the rendered strings, concatenate with no
+/// separator, take the first six digest bytes, Base64 them, and prefix the
+/// version and a colon.
+///
+/// This is a local search against one known-correct target, not probing the
+/// server. The committed vectors are computed independently and use synthetic
+/// identities; the real value that anchored it stays in private lab state.
+pub fn participant_hash_v2(jids: &[Jid]) -> String {
+    use sha2::{Digest, Sha256};
+    let mut rendered: Vec<String> = jids.iter().map(ad_form).collect();
+    rendered.sort_unstable();
+    rendered.dedup();
+    let mut hasher = Sha256::new();
+    for jid in &rendered {
+        hasher.update(jid.as_bytes());
+    }
+    let digest = hasher.finalize();
+    let mut out = String::from("2:");
+    out.push_str(&base64_no_wrap(&digest[..6]));
+    out
+}
+
+/// `user.agent:device@server`, always writing the agent and device even when
+/// they are zero. `Display` omits them, which is the right wire form for an
+/// attribute but the wrong input for [`participant_hash_v2`].
+fn ad_form(jid: &Jid) -> String {
+    format!(
+        "{}.{}:{}@{}",
+        jid.user,
+        jid.agent,
+        jid.device,
+        jid.server.as_str()
+    )
+}
+
 /// Standard-alphabet Base64 without padding-free wrapping, matching Android's
 /// `Base64.encodeToString(bytes, NO_WRAP)`. Six input bytes divide evenly into
 /// four-character groups, so no padding is produced for this caller.
@@ -635,17 +685,16 @@ pub struct FanoutTarget {
 /// `participant`, so that group is LID-addressed and an outgoing stanza must
 /// match it. `None` omits the attribute.
 ///
-/// **Not emitted, because their conditions are unread:** `phash`,
-/// `device_fanout`, `category`, `t`, `expiration`,
-/// `recipient`/`recipient_pn`, and the per-`<to>` `peer_recipient_lid` and
-/// `eph_setting` (`LX/Cp3->A07` gates the former on `DeviceJid.isPrimary()` and
-/// an `LX/0DO` device resolved through an inverse LID map). `phash` is
-/// `groupParticipantHash` verbatim (`A06` `1300`), emitted only when that job
-/// field is non-null; it is the client's claim about the membership set it
-/// encrypted for, and we cannot compute it honestly until the membership set
-/// question in [`participant_hash`] is settled, so it is left off rather than
-/// asserted wrongly. Omitting it forfeits the server's stale-list correction;
-/// it does not fabricate one.
+/// `phash` is `groupParticipantHash` verbatim (`A06` `1300`), emitted only when
+/// that job field is non-null. It is now computed rather than omitted — see
+/// [`participant_hash_v2`], whose construction was solved against a value the
+/// server itself returned — and `None` still omits the attribute.
+///
+/// **Not emitted, because their conditions are unread:** `device_fanout`,
+/// `category`, `t`, `expiration`, `recipient`/`recipient_pn`, and the
+/// per-`<to>` `peer_recipient_lid` and `eph_setting` (`LX/Cp3->A07` gates the
+/// former on `DeviceJid.isPrimary()` and an `LX/0DO` device resolved through an
+/// inverse LID map).
 ///
 /// Nothing in this function sends.
 pub fn sender_key_stanza(
@@ -653,6 +702,7 @@ pub fn sender_key_stanza(
     id: &str,
     message_type: &str,
     addressing_mode: Option<&str>,
+    phash: Option<&str>,
     targets: &[FanoutTarget],
     skmsg: &[u8],
 ) -> Result<Node> {
@@ -697,6 +747,18 @@ pub fn sender_key_stanza(
         .attr("to", chat.clone())
         .attr("id", id)
         .attr("type", message_type);
+    if let Some(phash) = phash {
+        if phash.len() > 32
+            || !phash.starts_with(['1', '2'])
+            || phash.as_bytes().get(1) != Some(&b':')
+        {
+            return Err(Error::invalid(
+                "group_send",
+                "phash is a versioned `<n>:<base64>` value",
+            ));
+        }
+        node = node.attr("phash", phash);
+    }
     if let Some(mode) = addressing_mode {
         if !matches!(mode, "pn" | "lid") {
             return Err(Error::invalid("group_send", "addressing_mode is pn or lid"));
@@ -733,7 +795,16 @@ mod tests {
                 ciphertext: vec![4, 5, 6],
             },
         ];
-        let node = sender_key_stanza(&chat, "M1", "text", Some("lid"), &targets, &[9; 32]).unwrap();
+        let node = sender_key_stanza(
+            &chat,
+            "M1",
+            "text",
+            Some("lid"),
+            Some("2:79jEAyGD"),
+            &targets,
+            &[9; 32],
+        )
+        .unwrap();
         assert_eq!(node.description, "message");
         assert_eq!(node.get_attr("to").unwrap().as_jid(), Some(&chat));
         assert_eq!(node.get_attr("id").unwrap().as_text(), Some("M1"));
@@ -771,7 +842,7 @@ mod tests {
             Some("lid")
         );
         // Nothing we could not read is emitted.
-        for absent in ["phash", "device_fanout", "category", "t", "expiration"] {
+        for absent in ["device_fanout", "category", "t", "expiration"] {
             assert!(
                 node.get_attr(absent).is_none(),
                 "{absent} must not be guessed"
@@ -779,12 +850,14 @@ mod tests {
         }
         // Omitting it is a choice the caller makes, not a default.
         assert!(
-            sender_key_stanza(&chat, "M1", "text", None, &targets, &[9; 32])
+            sender_key_stanza(&chat, "M1", "text", None, None, &targets, &[9; 32])
                 .unwrap()
                 .get_attr("addressing_mode")
                 .is_none()
         );
-        assert!(sender_key_stanza(&chat, "M1", "text", Some("web"), &targets, &[9; 32]).is_err());
+        assert!(
+            sender_key_stanza(&chat, "M1", "text", Some("web"), None, &targets, &[9; 32]).is_err()
+        );
 
         let dict = crate::binary::TokenDictionary::comparison_2_26_37_70();
         let encoded = crate::binary::Encoder::new(dict).encode(&node).unwrap();
@@ -804,13 +877,14 @@ mod tests {
             ciphertext: vec![1],
         };
         // No recipients, empty skmsg, empty id.
-        assert!(sender_key_stanza(&chat, "M", "text", Some("lid"), &[], &[1]).is_err());
+        assert!(sender_key_stanza(&chat, "M", "text", Some("lid"), None, &[], &[1]).is_err());
         assert!(
             sender_key_stanza(
                 &chat,
                 "M",
                 "text",
                 Some("lid"),
+                None,
                 std::slice::from_ref(&ok),
                 &[]
             )
@@ -822,6 +896,7 @@ mod tests {
                 "",
                 "text",
                 Some("lid"),
+                None,
                 std::slice::from_ref(&ok),
                 &[1]
             )
@@ -832,13 +907,64 @@ mod tests {
             kind: "skmsg",
             ..ok.clone()
         };
-        assert!(sender_key_stanza(&chat, "M", "text", Some("lid"), &[wrong], &[1]).is_err());
+        assert!(sender_key_stanza(&chat, "M", "text", Some("lid"), None, &[wrong], &[1]).is_err());
         // Empty per-device ciphertext.
         let empty = FanoutTarget {
             ciphertext: Vec::new(),
             ..ok
         };
-        assert!(sender_key_stanza(&chat, "M", "text", Some("lid"), &[empty], &[1]).is_err());
+        assert!(sender_key_stanza(&chat, "M", "text", Some("lid"), None, &[empty], &[1]).is_err());
+    }
+
+    /// Vectors computed independently with Python's hashlib and base64 before
+    /// this function existed: AD-form JIDs (`user.agent:device@server`, with the
+    /// zeros written out), sorted as strings, concatenated with no separator,
+    /// SHA-256, first six digest bytes, standard Base64, `"2:"` prefix.
+    ///
+    /// The construction was solved against a `phash` the server returned in an
+    /// `ack`; that real value and the identities behind it stay in private lab
+    /// state, so these vectors use synthetic ones.
+    #[test]
+    fn participant_hash_v2_matches_independent_vectors() {
+        let jids = |v: &[&str]| v.iter().map(|s| Jid::parse(s).unwrap()).collect::<Vec<_>>();
+        assert_eq!(
+            participant_hash_v2(&jids(&["111111111111111@lid", "222222222222222@lid"])),
+            "2:79jEAyGD"
+        );
+        assert_eq!(
+            participant_hash_v2(&jids(&[
+                "100000000000001@lid",
+                "200000000000002@lid",
+                "300000000000003@lid",
+            ])),
+            "2:/EhFlOmO"
+        );
+        assert_eq!(
+            participant_hash_v2(&jids(&["999999999999999@lid"])),
+            "2:VByC+b12"
+        );
+        // Order and duplicates must not change it; the set does.
+        assert_eq!(
+            participant_hash_v2(&jids(&[
+                "222222222222222@lid",
+                "111111111111111@lid",
+                "111111111111111@lid",
+            ])),
+            "2:79jEAyGD"
+        );
+        assert_ne!(
+            participant_hash_v2(&jids(&["111111111111111@lid"])),
+            "2:79jEAyGD",
+            "dropping a member must change the hash"
+        );
+        // The AD rendering is the point: the display form omits `.0:0`, and
+        // hashing that instead silently produces a different, wrong value.
+        assert_ne!(
+            participant_hash_v2(&jids(&["999999999999999@lid"])),
+            participant_hash(&["999999999999999@lid".to_owned()])
+        );
+        // Version 1 and version 2 are different constructions, not a rename.
+        assert!(participant_hash_v2(&jids(&["999999999999999@lid"])).starts_with("2:"));
     }
 
     /// Vectors computed independently with Python's hashlib and base64, not by

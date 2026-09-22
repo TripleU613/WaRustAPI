@@ -157,8 +157,9 @@ pub(super) async fn send(
     fetch_devices(store, channel, &own, &members).await?;
     let plan = group_send::plan(store, chat, &own)?;
     println!(
-        "group-send: chat addressing_mode={}, recipients={}, devices={}, without_device_list={}",
+        "group-send: chat addressing_mode={}, phash={}, recipients={}, devices={}, without_device_list={}",
         plan.addressing_mode,
+        plan.participant_hash,
         plan.recipients.len(),
         plan.devices.len(),
         plan.without_device_list.len()
@@ -251,6 +252,7 @@ pub(super) async fn send(
         &wire_id,
         "text",
         Some(plan.addressing_mode),
+        Some(&plan.participant_hash),
         &fanout,
         &skmsg,
     )?;
@@ -262,6 +264,7 @@ pub(super) async fn send(
         "chat": chat.to_string(),
         "devices": fanout.len(),
         "addressing_mode": plan.addressing_mode,
+        "phash": plan.participant_hash,
         "wire": wire,
         "at": Timestamp::now(),
     });

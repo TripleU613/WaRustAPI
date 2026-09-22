@@ -522,15 +522,36 @@ re-checked against the APK, and every remaining structural doubt was closed:
   `a_republished_sender_key_still_decrypts_later_messages`.
 
 So the stanza shape, the enc attributes, the distribution-message bytes and the
-chain arithmetic are all accounted for. **What is left is `phash`.** The ack
-handed us the server's own value for this group, which is the one input we have
-that we are not using, and the APK emits the attribute whenever its
-caller-computed hash is non-null.
+chain arithmetic are all accounted for. **What was left is `phash`** — and the
+ack had handed us the server's own value for this group.
 
-**Not yet attempted, and it needs the operator's call:** a second send is not a
-clean single-variable experiment, because the sessions established by the first
-send mean the distribution encs would go out as `msg` rather than `pkmsg`
-whatever else changes.
+### The version 2 participant hash, solved
+
+Searching locally for a construction that reproduces the server's six bytes —
+every subset of the known membership, four JID renderings, four orderings, five
+separators, four digests, with and without a group or count prefix — produced
+exactly **one** match, and it answers all three questions this document had left
+open since `participant_hash` was written:
+
+| Question | Answer |
+| --- | --- |
+| Which membership set? | **Every member, the sender included.** |
+| Which JID form? | The **AD form** `user.agent:device@server`, with `.0` and `:0` written out — not the display form, which omits them. |
+| Which digest? | **SHA-256** for version `2:`, where version `1:` is SHA-1. |
+
+The rest matches version 1: sort the rendered strings, concatenate with no
+separator, take the first six digest bytes, Base64, prefix `"2:"`.
+
+This was a local search against one known-correct target, not probing the
+server. `transport::groups::participant_hash_v2` implements it, with vectors
+computed independently over synthetic identities — the real value and the
+identities behind it stay in private lab state.
+
+`transport::group_send::plan` now computes it over the whole membership and the
+fan-out sends it, which makes the next send differ in exactly one named way.
+(One caveat for reading that result: the sessions established by the first send
+mean the distribution encs will go out as `msg` rather than `pkmsg`, so it is
+not a perfectly clean single variable.)
 
 **Still unknown:** the version-2 `phash` construction, whether our own companion
 devices belong in the fan-out, what sets `includeSenderKeysInMessage` in
