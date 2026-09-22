@@ -189,6 +189,49 @@ padded payload, then `receive_group` it and assert the plaintext is byte-identic
 to the original. Encrypting per-recipient uses the existing
 `direct::prepare_payload`, already live-verified for ordinary messages.
 
+## Sending: the stanza structure (traced, built, never sent)
+
+`transport::groups::sender_key_stanza` assembles:
+
+```
+<message to=<chat> id=<id> type=<type>>
+  <participants>
+    <to jid=<device>><enc v="2" type="pkmsg"|"msg">…</enc></to>   x N
+  </participants>
+  <enc v="2" type="skmsg">…</enc>
+</message>
+```
+
+**Confirmed** (2.26.37.71):
+
+* `<participants>` wraps an already-built child list (`LX/BpZ.<init>(VL)`,
+  bounded to [1, 0x987356]).
+* Each child is **`<to>`** carrying a **`jid`** attribute: `LX/Cp3->A08` builds
+  and returns that list with element name `"to"` at all three of its
+  construction sites, and `LX/Cp3->A0A(jid, encList)` sets `jid` then appends
+  each enc as a child.
+* Enc type strings come from `LX/Cp3->A06`, the outgoing mapper:
+  `0=msg, 1=pkmsg, 2=skmsg, 3=frskmsg, 4=msmsg` — the exact inverse of the
+  `LX/C9c->A00` reader the receive path already matches.
+
+**Inferred:** that the top-level `skmsg` is a *sibling* of `<participants>`
+rather than nested within it. `LX/Cp3->A08` returns only the `<to>` list and its
+caller places the other enc; `LX/Cp3->A02` — invoked with an *empty* recipient
+list, consistent with a non-per-recipient enc — is the candidate but was not
+read.
+
+**Deliberately not emitted**, because their conditions were not established:
+`phash`, `addressing_mode`, `device_fanout`, `category`, `t`, `expiration`,
+`recipient`/`recipient_pn`, and the per-`<to>` `peer_recipient_lid` and
+`eph_setting` (`LX/Cp3->A07` gates the former on `DeviceJid.isPrimary()` plus an
+`LX/0DO` device resolved through an inverse LID map). Those strings all appear
+in `SendE2EMessageJob->A06`, but which apply to a plain group or status send is
+unknown, and a test asserts none of them is emitted so a later guess cannot slip
+in silently.
+
+The builder is covered by a structural test and a wire-codec round trip.
+**It has never been transmitted.**
+
 ## Sending: what still blocks an actual send
 
 The crypto is done; the **envelope** is not. Still **unknown**:

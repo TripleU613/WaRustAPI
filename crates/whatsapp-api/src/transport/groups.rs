@@ -551,8 +551,210 @@ fn base64_no_wrap(bytes: &[u8]) -> String {
     out
 }
 
+/// One recipient device and the sender-key distribution ciphertext addressed
+/// to it.
+#[derive(Debug, Clone)]
+pub struct FanoutTarget {
+    /// The device this `<to>` addresses.
+    pub device: Jid,
+    /// `pkmsg` for a new session, `msg` for an established one, exactly as the
+    /// direct path reports it.
+    pub kind: &'static str,
+    /// The encrypted sender-key distribution message for this device.
+    pub ciphertext: Vec<u8>,
+}
+
+/// Build the outgoing sender-key stanza for a group or broadcast chat.
+///
+/// Structure, **confirmed** from comparison 2.26.37.71:
+///
+/// ```text
+/// <message to=<chat> id=<id> type=<type>>
+///   <participants>
+///     <to jid=<device>><enc v="2" type="pkmsg"|"msg">…</enc></to>   × N
+///   </participants>
+///   <enc v="2" type="skmsg">…</enc>
+/// </message>
+/// ```
+///
+/// * `<participants>` wraps an already-built child list (`LX/BpZ.<init>(VL)`,
+///   bounded to [1, 0x987356]).
+/// * Each child is `<to>` with a `jid` attribute, carrying the enc elements as
+///   children — `LX/Cp3->A08` builds that list with element name `"to"` at all
+///   three construction sites, and `LX/Cp3->A0A(jid, encList)` sets `jid` then
+///   appends each enc.
+/// * The enc `type` strings come from `LX/Cp3->A06`, the outgoing mapper:
+///   `0=msg, 1=pkmsg, 2=skmsg, 3=frskmsg, 4=msmsg` — the exact inverse of the
+///   `LX/C9c->A00` reader the receive path already matches.
+///
+/// **Inferred, not confirmed:** that the top-level `skmsg` is a sibling of
+/// `<participants>` rather than nested inside it. `LX/Cp3->A08` returns only the
+/// `<to>` list, and its caller places the other enc; a candidate is
+/// `LX/Cp3->A02`, invoked with an *empty* recipient list — consistent with a
+/// non-per-recipient enc — but it was not read.
+///
+/// **Not emitted, because their conditions are unread:** `phash`,
+/// `addressing_mode`, `device_fanout`, `category`, `t`, `expiration`,
+/// `recipient`/`recipient_pn`, and the per-`<to>` `peer_recipient_lid` and
+/// `eph_setting` (`LX/Cp3->A07` gates the former on `DeviceJid.isPrimary()` and
+/// an `LX/0DO` device resolved through an inverse LID map). Those strings are
+/// present in `SendE2EMessageJob->A06`, but which apply to a plain group or
+/// status send was not established, so none is guessed at here.
+///
+/// Nothing in this function sends. It has never been transmitted.
+pub fn sender_key_stanza(
+    chat: &Jid,
+    id: &str,
+    message_type: &str,
+    targets: &[FanoutTarget],
+    skmsg: &[u8],
+) -> Result<Node> {
+    if id.is_empty() || id.len() > 128 {
+        return Err(Error::invalid("group_send", "invalid stanza id"));
+    }
+    if targets.is_empty() {
+        return Err(Error::invalid(
+            "group_send",
+            "a sender-key send needs at least one recipient device",
+        ));
+    }
+    if skmsg.is_empty() || skmsg.len() > 1_048_576 {
+        return Err(Error::invalid("group_send", "invalid skmsg size"));
+    }
+    let mut participants = Vec::with_capacity(targets.len());
+    for target in targets {
+        if !matches!(target.kind, "pkmsg" | "msg") {
+            return Err(Error::invalid(
+                "group_send",
+                "a distribution child is pkmsg or msg",
+            ));
+        }
+        if target.ciphertext.is_empty() {
+            return Err(Error::invalid(
+                "group_send",
+                "empty distribution ciphertext",
+            ));
+        }
+        participants.push(
+            Node::new("to")
+                .attr("jid", target.device.clone())
+                .children(vec![
+                    Node::new("enc")
+                        .attr("v", "2")
+                        .attr("type", target.kind)
+                        .bytes(target.ciphertext.clone()),
+                ]),
+        );
+    }
+    Ok(Node::new("message")
+        .attr("to", chat.clone())
+        .attr("id", id)
+        .attr("type", message_type)
+        .children(vec![
+            Node::new("participants").children(participants),
+            Node::new("enc")
+                .attr("v", "2")
+                .attr("type", "skmsg")
+                .bytes(skmsg.to_vec()),
+        ]))
+}
+
 #[cfg(test)]
 mod tests {
+    /// The stanza structure confirmed from LX/Cp3: a `<participants>` wrapper
+    /// of `<to jid=…>` children each carrying its own `enc`, beside a top-level
+    /// `skmsg`. Also checks it survives the wire codec, since it is the shape
+    /// that would go out on a live account.
+    #[test]
+    fn sender_key_stanza_matches_the_traced_structure() {
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let targets = vec![
+            FanoutTarget {
+                device: Jid::parse("15551234567:1@s.whatsapp.net").unwrap(),
+                kind: "pkmsg",
+                ciphertext: vec![1, 2, 3],
+            },
+            FanoutTarget {
+                device: Jid::parse("15559876543@s.whatsapp.net").unwrap(),
+                kind: "msg",
+                ciphertext: vec![4, 5, 6],
+            },
+        ];
+        let node = sender_key_stanza(&chat, "M1", "text", &targets, &[9; 32]).unwrap();
+        assert_eq!(node.description, "message");
+        assert_eq!(node.get_attr("to").unwrap().as_jid(), Some(&chat));
+        assert_eq!(node.get_attr("id").unwrap().as_text(), Some("M1"));
+
+        let children = node.child_nodes();
+        assert_eq!(children.len(), 2, "participants and the skmsg are siblings");
+        let participants = &children[0];
+        assert_eq!(participants.description, "participants");
+        assert_eq!(participants.child_nodes().len(), 2);
+        for (child, expected) in participants.child_nodes().iter().zip(["pkmsg", "msg"]) {
+            assert_eq!(child.description, "to");
+            assert!(child.get_attr("jid").is_some());
+            let enc = &child.child_nodes()[0];
+            assert_eq!(enc.description, "enc");
+            assert_eq!(enc.get_attr("v").unwrap().as_text(), Some("2"));
+            assert_eq!(enc.get_attr("type").unwrap().as_text(), Some(expected));
+        }
+        // The device suffix on a target must survive into its `<to jid=…>`.
+        assert_eq!(
+            participants.child_nodes()[0]
+                .get_attr("jid")
+                .unwrap()
+                .as_jid()
+                .unwrap()
+                .device,
+            1
+        );
+        let skmsg = &children[1];
+        assert_eq!(skmsg.description, "enc");
+        assert_eq!(skmsg.get_attr("type").unwrap().as_text(), Some("skmsg"));
+
+        // Nothing we could not read is emitted.
+        for absent in ["phash", "addressing_mode", "device_fanout", "category"] {
+            assert!(
+                node.get_attr(absent).is_none(),
+                "{absent} must not be guessed"
+            );
+        }
+
+        let dict = crate::binary::TokenDictionary::comparison_2_26_37_70();
+        let encoded = crate::binary::Encoder::new(dict).encode(&node).unwrap();
+        let decoded =
+            crate::binary::Decoder::new(&encoded[1..], dict, &crate::profile::Limits::default())
+                .decode_node()
+                .unwrap();
+        assert_eq!(decoded, node, "the send stanza must survive the wire codec");
+    }
+
+    #[test]
+    fn sender_key_stanza_refuses_malformed_input() {
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let ok = FanoutTarget {
+            device: Jid::parse("15551234567@s.whatsapp.net").unwrap(),
+            kind: "pkmsg",
+            ciphertext: vec![1],
+        };
+        // No recipients, empty skmsg, empty id.
+        assert!(sender_key_stanza(&chat, "M", "text", &[], &[1]).is_err());
+        assert!(sender_key_stanza(&chat, "M", "text", std::slice::from_ref(&ok), &[]).is_err());
+        assert!(sender_key_stanza(&chat, "", "text", std::slice::from_ref(&ok), &[1]).is_err());
+        // A distribution child is never an skmsg.
+        let wrong = FanoutTarget {
+            kind: "skmsg",
+            ..ok.clone()
+        };
+        assert!(sender_key_stanza(&chat, "M", "text", &[wrong], &[1]).is_err());
+        // Empty per-device ciphertext.
+        let empty = FanoutTarget {
+            ciphertext: Vec::new(),
+            ..ok
+        };
+        assert!(sender_key_stanza(&chat, "M", "text", &[empty], &[1]).is_err());
+    }
+
     /// Vectors computed independently with Python's hashlib and base64, not by
     /// running this implementation: sorted raw JID strings concatenated with no
     /// separator, SHA-1, first six digest bytes, standard Base64, "1:" prefix.
