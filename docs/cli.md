@@ -633,6 +633,14 @@ Usage: whatsapp-cli contacts check [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 | --phone | PHONE | yes |  |  |  |  |
 
+## whatsapp-cli contacts sync
+
+Queue a full `usync` sync of every saved contact, registering this account's address book with the server (offline; a session transmits it). Unlike `check`, which is a one-number existence query, this uses the APK's `full`/`interactive` mode pair
+
+```
+Usage: whatsapp-cli contacts sync [OPTIONS]...
+```
+
 ## whatsapp-cli clear-chat
 
 Clear a direct chat's locally decrypted message bodies (offline, local-only: see docs/protocol/chat-actions.md section 6 for the deferred companion sync)

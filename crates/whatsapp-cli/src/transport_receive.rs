@@ -327,6 +327,24 @@ pub(super) fn contacts(cli: &super::Cli, action: &super::ContactsCmd) -> Result<
             }
             Ok(())
         }
+        super::ContactsCmd::Sync => {
+            let (id, count) = contacts::queue_full_sync(&store)?;
+            if cli.json {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&serde_json::json!({
+                        "action_id": id,
+                        "contacts": count,
+                    }))
+                    .map_err(|e| Error::invalid("contacts", e.to_string()))?
+                );
+                return Ok(());
+            }
+            println!(
+                "contacts: full sync of {count} contact(s) queued; a session transmits it (action id {id})"
+            );
+            Ok(())
+        }
         super::ContactsCmd::Check { phone } => {
             let id = contacts::queue_check(&store, phone)?;
             let ingested = contacts::ingest(&store)?;

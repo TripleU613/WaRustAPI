@@ -189,6 +189,40 @@ address book is **unknown**, but recipient selection being client-side makes it
 unlikely to matter. Our contact store is local-only regardless, so it cannot
 influence delivery.
 
+## Contact registration: the one remaining lever
+
+This account had only ever sent `usync mode="query" context="interactive"` for a
+single number — discovery ("is this number on WhatsApp"), not address-book
+registration. WhatsApp's documented user-facing behaviour is that you see
+someone's status only if you also have them saved, and the server can only know
+this account's contacts from a sync it has actually received.
+
+`transport::contacts::queue_full_sync` / `whatsapp-cli contacts sync` now sends
+the full form. Envelope confirmed from `LX/0u7->A06`: identical
+`iq xmlns="usync" type="get"` / `<usync sid index last mode context>` /
+`<query>` / per-`<user><contact>+E.164</contact></user>` structure, differing
+from the existence check only in mode and context. Vocabularies confirmed
+(`LX/0xb`: `full`, `delta`, `query`, `download`; `LX/0xY`: `metadata`,
+`registration`, `interactive`, `background`, `notification`, `message`, `add`,
+`voip`, `snapshot`, `wamo`), paired by `LX/0xX`: `INTERACTIVE_FULL` is
+`full`/`interactive`, and `INTERACTIVE_QUERY` is the `query`/`interactive` pair
+this client already sent — which is what validates the reading.
+
+`allow_mutation="true"` is **not** emitted: the attribute exists in the builder
+but what enables it is **unknown** (the six-argument constructor hardcodes it
+false).
+
+**Live 2026-09-22:** the sync was transmitted and the server answered; the
+durable action settled `Ok`.
+
+**This is a hypothesis test, not an evidence-backed fix.** No APK evidence links
+contact sync to status delivery — searched and not found, so it is recorded as
+**unknown** rather than dressed up. What makes it worth doing is that it is a
+normal client operation this account had never performed, and the server's own
+`offline_preview` proves the gap is upstream of us. The measurement that settles
+it is whether a status posted *after* this sync appears as a nonzero `status`
+count in a later `offline_preview`.
+
 ## Live record
 
 2026-09-22: the owner posted a status while the lab account held a 90-second

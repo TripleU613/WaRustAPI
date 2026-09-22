@@ -8211,6 +8211,65 @@
           "whatsapp_cli::token::run"
         ]
       }
+    },
+    "/v1/contacts/sync": {
+      "post": {
+        "summary": "Queue a full usync sync of every saved contact (offline; a session transmits it)",
+        "description": "Register this account's address book with the server using the APK's full/interactive usync mode pair (LX/0u7->A06 envelope, LX/0xX mode-context pairing, both confirmed). This differs from contacts check only in mode and context: check sends query/interactive for a single number, which is discovery rather than address-book registration. allow_mutation is deliberately not emitted because what enables it is unknown. Offline: the request is queued on the durable action queue and a later session transmits it. Whether registering contacts affects Status delivery is unknown and untested; see docs/protocol/status.md.",
+        "operationId": "syncContacts",
+        "x-cli": "whatsapp-cli contacts sync",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          },
+          {
+            "name": "phone",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PhoneNumber"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The sync was queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "action_id": {
+                      "type": "string",
+                      "description": "Durable action id; inspect with `actions`."
+                    },
+                    "contacts": {
+                      "type": "integer",
+                      "description": "How many saved contacts the sync includes."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

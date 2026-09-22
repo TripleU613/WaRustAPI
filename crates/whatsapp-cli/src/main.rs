@@ -652,6 +652,11 @@ enum ContactsCmd {
         #[arg(long)]
         phone: String,
     },
+    /// Queue a full `usync` sync of every saved contact, registering this
+    /// account's address book with the server (offline; a session transmits it).
+    /// Unlike `check`, which is a one-number existence query, this uses the
+    /// APK's `full`/`interactive` mode pair.
+    Sync,
 }
 
 #[derive(Subcommand)]

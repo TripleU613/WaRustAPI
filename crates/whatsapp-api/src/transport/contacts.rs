@@ -29,6 +29,7 @@ use crate::{
 use serde::{Deserialize, Serialize};
 
 const CONTACT_PREFIX: &str = "contact:";
+const SYNC_ACTION_KIND: &str = "contact-sync";
 const STATUS_PREFIX: &str = "contact-status:";
 const CHECK_REQUEST_PREFIX: &str = "contact-check-req:";
 const INGESTED_PREFIX: &str = "contacts-ingested:";
@@ -185,6 +186,80 @@ pub fn list(store: &ProtocolStore) -> Result<Vec<Contact>> {
             }
         }
     })
+}
+
+/// Queue a **full** `usync` address-book sync through the durable one-shot
+/// action queue. Returns the action id and the number of contacts included;
+/// nothing is sent until a session drains queued actions.
+///
+/// Envelope confirmed from comparison 2.26.37.71 `LX/0u7->A06`: the same
+/// `iq xmlns="usync" type="get"` / `<usync sid index last mode context>` /
+/// `<query>` / per-`<user><contact>+E.164</contact></user>` structure the
+/// existence check already uses — a sync differs from a query only in
+/// `mode`/`context`, not in per-user encoding. The mode and context vocabularies
+/// are confirmed (`LX/0xb`: `full`, `delta`, `query`, `download`; `LX/0xY`:
+/// `metadata`, `registration`, `interactive`, `background`, `notification`,
+/// `message`, `add`, `voip`, `snapshot`, `wamo`), and `LX/0xX` pairs them:
+/// `INTERACTIVE_FULL` is `full`/`interactive`, while `INTERACTIVE_QUERY` is the
+/// `query`/`interactive` pair this module already sends — which is what
+/// validates the reading.
+///
+/// `allow_mutation="true"` is **not** emitted. The attribute exists in the
+/// builder, but what enables it is **unknown** (the six-argument constructor
+/// hardcodes it false), and guessing it is not worth the risk.
+///
+/// **Why this exists:** the account had only ever sent one-number
+/// `query`/`interactive` existence checks, which are discovery, not
+/// address-book registration. Whether registering contacts affects Status
+/// delivery is **unknown** — no APK evidence links contact sync to status — so
+/// this is a hypothesis test, not an evidence-backed fix. See
+/// `docs/protocol/status.md`.
+#[cfg(any(
+    test,
+    all(
+        feature = "experimental-signal-crypto",
+        feature = "experimental-noise",
+        feature = "experimental-transport"
+    )
+))]
+pub fn queue_full_sync(store: &ProtocolStore) -> Result<(String, usize)> {
+    let contacts = list(store)?;
+    if contacts.is_empty() {
+        return Err(invalid("no saved contacts to sync"));
+    }
+    if contacts.len() > 1024 {
+        return Err(invalid("local bound on contacts per sync"));
+    }
+    let canonical: Vec<String> = contacts.iter().map(|c| c.phone.clone()).collect();
+    let count = canonical.len();
+    let id = super::actions::queue(store, SYNC_ACTION_KIND, "contact sync", |id| {
+        let sid = super::messaging::new_message_id()?;
+        let users: Vec<Node> = canonical
+            .iter()
+            .map(|phone| Node::new("user").children(vec![Node::new("contact").text(phone.clone())]))
+            .collect();
+        Ok(Node::new("iq")
+            .attr("xmlns", "usync")
+            .attr("id", id)
+            .attr("type", "get")
+            .children(vec![
+                Node::new("usync")
+                    .attr("sid", sid.as_str())
+                    .attr("index", "0")
+                    .attr("last", "true")
+                    .attr("mode", "full")
+                    .attr("context", "interactive")
+                    .children(vec![
+                        Node::new("query").children(vec![
+                            Node::new("contact"),
+                            Node::new("lid"),
+                            Node::new("disappearing_mode"),
+                        ]),
+                        Node::new("list").children(users),
+                    ]),
+            ]))
+    })?;
+    Ok((id, count))
 }
 
 /// The saved WhatsApp-existence status for one number, if a check ever settled.
@@ -431,6 +506,54 @@ mod tests {
             n = n.attr("jid", Jid::parse(jid).unwrap());
         }
         n
+    }
+
+    /// A full sync must differ from the existence query only in mode/context,
+    /// per `LX/0u7->A06`: same iq/usync/query/user structure, same per-user
+    /// encoding. `allow_mutation` must not appear, since what enables it is
+    /// unknown.
+    #[test]
+    fn full_sync_matches_the_query_envelope_but_for_mode_and_context() {
+        let (_d, store) = store();
+        // No contacts: refused rather than sending an empty address book.
+        assert!(queue_full_sync(&store).is_err());
+
+        add(&store, "+15551234567", "A", None).unwrap();
+        add(&store, "+15557654321", "B", None).unwrap();
+        let (id, count) = queue_full_sync(&store).unwrap();
+        assert_eq!(count, 2);
+
+        let sent = super::super::actions::reserve_pending(&store).unwrap();
+        assert_eq!(sent.len(), 1);
+        let node = &sent[0];
+        assert_eq!(attr_text(node, "xmlns"), Some("usync"));
+        assert_eq!(attr_text(node, "type"), Some("get"));
+        assert_eq!(attr_text(node, "id"), Some(id.as_str()));
+        let usync = node.child("usync").unwrap();
+        assert_eq!(attr_text(usync, "mode"), Some("full"));
+        assert_eq!(attr_text(usync, "context"), Some("interactive"));
+        assert_eq!(attr_text(usync, "index"), Some("0"));
+        assert_eq!(attr_text(usync, "last"), Some("true"));
+        assert!(attr_text(usync, "sid").is_some_and(|s| !s.is_empty()));
+        // allow_mutation is deliberately absent.
+        assert!(usync.get_attr("allow_mutation").is_none());
+        // Every saved contact appears once, in the same per-user shape.
+        let users = usync.child("list").unwrap().child_nodes();
+        assert_eq!(users.len(), 2);
+        for user in users {
+            assert_eq!(user.description, "user");
+            let contact = user.child("contact").unwrap();
+            // The queue round-trips a text child back as raw bytes; the
+            // live-verified existence query uses the identical per-user
+            // encoding, so this is the established representation.
+            let bytes = match &contact.content {
+                NodeContent::Bytes(b) => b.to_vec(),
+                NodeContent::Text(t) => t.clone().into_bytes(),
+                other => panic!("contact carried {other:?}"),
+            };
+            let text = String::from_utf8(bytes).unwrap();
+            assert!(text.starts_with('+'), "expected +E.164, got {text}");
+        }
     }
 
     #[test]
