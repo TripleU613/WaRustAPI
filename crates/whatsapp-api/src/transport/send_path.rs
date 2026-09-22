@@ -118,6 +118,7 @@ mod tests {
                         content: MessageContent::Text {
                             body: "synthetic".into(),
                             quoted: None,
+                            style: Default::default(),
                         },
                     },
                 )?;

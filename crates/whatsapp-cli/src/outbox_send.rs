@@ -30,7 +30,7 @@ fn preflight(store: &ProtocolStore, message: &MessageRequest) -> Result<(), Erro
         return Err(Error::IdempotencyConflict(id));
     }
     let matches = match &saved.intent.content {
-        MessageContent::Text { body, quoted } => {
+        MessageContent::Text { body, quoted, .. } => {
             message.image.is_none()
                 && message.voice_note.is_none()
                 && quoted.is_none()
@@ -118,6 +118,7 @@ pub(super) async fn run(
             MessageContent::Text {
                 body: message.text.to_string(),
                 quoted: None,
+                style: Default::default(),
             }
         }
     };
@@ -241,6 +242,7 @@ mod tests {
             content: MessageContent::Text {
                 body: "original".into(),
                 quoted: None,
+                style: Default::default(),
             },
         };
         store.write(|tx| outbox.enqueue(tx, &request)).unwrap();

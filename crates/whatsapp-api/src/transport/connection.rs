@@ -894,6 +894,7 @@ mod tests {
                             content: MessageContent::Text {
                                 body: "fixture".into(),
                                 quoted: None,
+                                style: Default::default(),
                             },
                         },
                     )?

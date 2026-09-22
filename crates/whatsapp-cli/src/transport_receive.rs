@@ -1634,6 +1634,7 @@ pub(super) async fn lab_pair(
             content: MessageContent::Text {
                 body: text.to_owned(),
                 quoted: None,
+                style: Default::default(),
             },
         })
         .await?;
@@ -1815,6 +1816,7 @@ mod tests {
                 content: MessageContent::Text {
                     body: "private body text".into(),
                     quoted: None,
+                    style: Default::default(),
                 },
             },
             semantic_hash: [0; 32],

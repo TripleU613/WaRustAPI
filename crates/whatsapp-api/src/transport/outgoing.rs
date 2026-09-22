@@ -80,7 +80,7 @@ pub fn begin_selected(
             && peer.device == 0
             && !peer.user.is_empty()
             && match &entry.intent.content {
-                MessageContent::Text { body, quoted } => {
+                MessageContent::Text { body, quoted, .. } => {
                     !body.is_empty()
                         && body.len() <= 4096
                         && quoted
@@ -465,6 +465,9 @@ impl Pending {
             MessageContent::Text {
                 body,
                 quoted: Some(target),
+                // Outgoing styling is only meaningful on a status post, which
+                // this path does not send.
+                style: _,
             } => Some(reply_payload_for(store, account, peer, target, body)?),
             _ => None,
         };
@@ -736,6 +739,7 @@ mod tests {
                             content: MessageContent::Text {
                                 body: "offline fixture".into(),
                                 quoted: None,
+                                style: Default::default(),
                             },
                         },
                     )?
@@ -755,6 +759,7 @@ mod tests {
             content: MessageContent::Text {
                 body: "offline fixture".into(),
                 quoted: None,
+                style: Default::default(),
             },
         };
         let other_namespace = Outbox::new("default", Limits::default());
@@ -919,6 +924,7 @@ mod tests {
                 entry.intent.content = MessageContent::Text {
                     body: "x".repeat(4097),
                     quoted: None,
+                    style: Default::default(),
                 };
                 tx.put_json(Table::Outbox, &id.0, 1, &entry)
             })
@@ -1006,6 +1012,7 @@ mod tests {
                             content: MessageContent::Text {
                                 body: "second fixture".into(),
                                 quoted: None,
+                                style: Default::default(),
                             },
                         },
                     )?

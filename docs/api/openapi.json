@@ -1872,6 +1872,37 @@
           "version",
           "patch"
         ]
+      },
+      "TextStyle": {
+        "type": "object",
+        "description": "Colour and font of a styled full-screen text status, decoded from extendedTextMessage (LX/BZF descriptor, confirmed). All fields absent for an ordinary chat message. Carried on MessageContent::Text in the event journal.",
+        "properties": {
+          "background_argb": {
+            "type": "integer",
+            "format": "int64",
+            "description": "backgroundArgb, field 8, FIXED32 on the wire (unsigned, 4 bytes little-endian — NOT a varint int32). ARGB with alpha most significant."
+          },
+          "text_argb": {
+            "type": "integer",
+            "format": "int64",
+            "description": "textArgb, field 7, FIXED32 on the wire. ARGB with alpha most significant."
+          },
+          "font": {
+            "type": "string",
+            "enum": [
+              "SansSerif",
+              "Serif",
+              "FacebookScriptRegular",
+              "BebasNeueRegular",
+              "SystemBold",
+              "MorningBreezeRegular",
+              "CalistogaRegular",
+              "Exo2ExtraBold",
+              "CourierPrimeBold"
+            ],
+            "description": "font, field 9. Enum LX/C44 covers exactly wire values 0..=8; anything else is dropped rather than mapped."
+          }
+        }
       }
     }
   },

@@ -423,6 +423,8 @@ fn project(
             MessageContent::Text {
                 body: text.text,
                 quoted,
+                // Colour and font of a styled status; all-None for ordinary text.
+                style: text.style,
             },
             text.expiration,
         )
@@ -630,7 +632,8 @@ mod tests {
             message.content,
             MessageContent::Text {
                 body: "test".into(),
-                quoted: None
+                quoted: None,
+                style: Default::default(),
             }
         );
         // The chat is the group, not the sender.
@@ -701,7 +704,8 @@ mod tests {
             message.content,
             MessageContent::Text {
                 body: "test".into(),
-                quoted: None
+                quoted: None,
+                style: Default::default(),
             }
         );
         assert_eq!(message.server_timestamp, Some(Timestamp(123000)));
@@ -1181,7 +1185,7 @@ mod tests {
         ) else {
             panic!("expected a group message")
         };
-        let MessageContent::Text { body, quoted } = message.content else {
+        let MessageContent::Text { body, quoted, .. } = message.content else {
             panic!("expected text")
         };
         assert_eq!(body, "agreed");
@@ -1231,7 +1235,7 @@ mod tests {
         ) else {
             panic!("expected message")
         };
-        let MessageContent::Text { body, quoted } = message.content else {
+        let MessageContent::Text { body, quoted, .. } = message.content else {
             panic!("expected text")
         };
         assert_eq!(body, "ok");

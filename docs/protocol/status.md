@@ -266,6 +266,152 @@ The status remaining visible on the poster's own device is its local retention,
 not a server-side queue that can be re-targeted. Testing any eligibility change
 therefore requires a **new** post after the change.
 
+## Styled text statuses (implemented, receive side)
+
+A coloured full-screen text status is an ordinary `extendedTextMessage` with
+three extra fields. Numbers and wire types read from the `LX/BZF` descriptor
+(**confirmed**), not from the public schema:
+
+| field | # | wire type |
+|---|---|---|
+| `text` | 1 | string |
+| `matchedText` | 2 | string |
+| `description` | 5 | string |
+| `title` | 6 | string |
+| **`textArgb`** | **7** | **FIXED32** |
+| **`backgroundArgb`** | **8** | **FIXED32** |
+| **`font`** | **9** | enum |
+| `previewType` | 10 | enum |
+| `jpegThumbnail` | 16 | bytes |
+| `contextInfo` | 17 | message |
+
+**The colours are `FIXED32`, not `int32`.** The descriptor's type character is
+`U+1006`, and `& 0xFF` = 6 = `FIXED32`: unsigned, wire type 5, four bytes
+little-endian. Decoding them as a varint `int32` does not merely confuse the
+sign of the alpha byte — it misreads the wire entirely. `canonicalUrl` (4) is
+absent in this build.
+
+Font enum `LX/C44` (**confirmed**, `forNumber`'s packed switch covers exactly
+0..=8): `0` SANS_SERIF, `1` SERIF, `2` FACEBOOKSCRIPT_WA_REGULAR,
+`3` BEBASNEUE_REGULAR, `4` SYSTEM_BOLD, `5` MORNINGBREEZE_REGULAR,
+`6` CALISTOGA_REGULAR, `7` EXO2_EXTRABOLD, `8` COURIERPRIME_BOLD. A value
+outside that range is dropped rather than mapped to an invented font.
+
+**Implementation**: `transport::quotes` decodes the three fields into
+`TextStyle { background_argb, text_argb, font }`, carried on
+`MessageContent::Text`. A plain `conversation` and an ordinary chat message both
+yield the default (all `None`), so nothing changes for non-status text. Tested
+against a payload assembled by hand from the descriptor — FIXED32 colours
+included — rather than by running the encoder.
+
+## Media statuses (researched, not implemented)
+
+* **Video HD is a quality-tagged variant list**: `videoMessage` (`LX/BZE`)
+  carries `processedVideos` = field **27**, repeated `LX/BY7`
+  (`directPath`=1, `fileSha256`=2, `height`=3, `width`=4, `fileLength`=5,
+  `bitrate`=6, `quality`=7, `capabilities`=8). Quality enum `LX/C0H`:
+  `UNDEFINED=0, LD=1, SD=2, HD=3, FHD=4` (**confirmed**).
+* **Image HD has no quality enum**: `imageMessage` (`LX/BZD`) instead carries
+  `midQualityFileSha256`=23 and `midQualityFileEncSha256`=24 beside the primary
+  `url`/`fileSha256`. So HD-versus-standard for an image is *which bytes are
+  uploaded as primary*, with midQuality\* as the reduced fallback
+  (**inferred** — the sender's choice was not traced).
+* **The HD switch is a dual upload**: `LX/9QF` case 14 holds
+  `av1_video_dual_upload`, `hd_image_dual_upload`, `hd_video_dual_upload`,
+  `hevc_video_dual_upload` (**confirmed** strings), so the client uploads a
+  second higher-quality rendition alongside the standard one. The pairing was
+  not traced.
+* **Audio on a status is an ordinary `audioMessage`** (`LX/BZ0`), with no
+  status-specific wrapper. It carries **`backgroundArgb` = field 20, FIXED32** —
+  the same colour field and encoding as a text status, which is what makes a
+  music/voice status coloured (**confirmed**). Other fields: `url`=1,
+  `mimetype`=2, `fileSha256`=3, `fileLength`=4, `seconds`=5, `ptt`=6,
+  `mediaKey`=7, `fileEncSha256`=8, `directPath`=9, `mediaKeyTimestamp`=10,
+  `contextInfo`=17, `streamingSidecar`=18, `waveform`=19, `viewOnce`=21,
+  `accessibilityLabel`=22. A sibling class `LX/BYn` also carries `ptt` and
+  `backgroundArgb` and was not disambiguated.
+
+All of the above is send-side and therefore blocked behind the fan-out below.
+
+## Posting, liking and resharing (researched 2026-09-22, none implemented)
+
+All outbound status operations go through one job,
+`com/whatsapp/productinfra/status/sendflow/SendE2eStatusJob`, whose kind is an
+`LX/C03` enum (**confirmed**, `<clinit>`): `STATUS`=0, `STATUS_ADD_ON`=1,
+`STATUS_NOTIFY`=2. `A0G` emits an envelope fragment per kind:
+
+* `STATUS` (a plain post) carries **no** extra fragment.
+* `STATUS_ADD_ON` (a like / reaction) and `STATUS_NOTIFY` carry
+  `<status><meta content_type="add_on"|"status_notify"/></status>`, built by
+  `LX/9QF` case 13, whose permitted `content_type` set is exactly those two
+  strings (**confirmed**).
+
+A separate `<meta session_scope="status"/>` fragment also exists (`LX/BpS`
+case 3, **confirmed**).
+
+**`status@broadcast` is a group-or-broadcast JID for send purposes**
+(**confirmed**): `SendE2EMessageJob->A02` gates `participant`,
+`groupParticipantHash` and `includeSenderKeysInMessage` on `instance-of LX/0c3`,
+one type covering groups and broadcasts, so all three are permitted on a status
+send. That the fan-out therefore takes the group shape — a `<participants>`
+wrapper of per-device `enc` plus one top-level `skmsg` — is **inferred**; the
+assembler was not located.
+
+**A `phash` exemption exists but its applicability is unresolved.**
+`SendE2EMessageJob->A02` throws *"cannot send e2e message to a group without a
+participant hash"* unless `LX/1Yx->A04(jid, messageType)` holds, which is
+`jid.getType() == 5` **and** the message type being one of
+`{0x38,0x43,0x44,0x4f,0x56,0x5d,0x79,0x7d}` (**confirmed**). Whether
+`status@broadcast` is type 5 is **unknown**: it is parsed by the generic
+`LX/0D1->A00` dispatcher, and the JID classes constructed around its
+`broadcast`/`status` branch return type 3 (`LX/9Ln`), 10 (`LX/Blh`), 1
+(`LX/1bn`), 2 (`LX/9Lo`), 0x13 (`LX/0e1`) and 0x19 (`LX/Bli`) — none of them 5 —
+but the string-to-class mapping in that hash switch is not positional, so this
+neither confirms nor refutes the exemption.
+
+### Why none of it is implemented
+
+Posting and liking share the same prerequisite: creating our own sender key for
+`status@broadcast`, fanning the SKDM out 1:1 to **every device of every
+recipient**, then `group_encrypt`-ing the content into one stanza carrying both.
+Three inputs for that are **unknown**:
+
+1. the fan-out assembler that places the per-recipient children and the `skmsg`;
+2. how `status_distribution` becomes a device-level recipient list;
+3. whether a `phash` is required, and over which JID set.
+
+The liking payload is additionally **unknown**: the `STATUS_ADD_ON` kind is
+confirmed, but the protobuf it carries was not reached, so it is *not*
+established that a status like is a `reactionMessage` (field 46) like a chat
+reaction, nor what its `MessageKey` holds for a status target.
+
+Building a multi-recipient sender-key stanza from inference would mean sending
+an unverified fan-out from an account with suspension history. Not done.
+
+### Resharing does not exist in this build (confirmed negative)
+
+`repost` and `Repost` have **zero references** anywhere in the APK, as do
+`forwardingScore` and `originalStatusId`. `isForwarded` appears twice, both in
+`toString` of unrelated local data classes. Class and UI names are not stripped
+in this build, so their total absence is strong evidence the feature is not
+present — there is nothing to implement.
+
+The nearest thing is a status *question* interaction:
+`LX/BpS.<init>(VJL)` builds
+`<meta interaction_type="question_reshare" [parent_server_id=<long>] [response_server_id=<string>]/>`,
+with `interaction_type="question"` as the non-reshare variant (consumers
+`LX/AZJ->AAK`, `LX/AZL->AAK`). That is the interactive-question feature, not a
+general status repost.
+
+### HD media
+
+`LX/9QF` case 14 is the dual-upload flag set: `av1_video_dual_upload`,
+`hd_image_dual_upload`, `hd_video_dual_upload`, `hevc_video_dual_upload`
+(**confirmed** strings). "HD" is therefore a *dual upload* — the client uploads
+a second, higher-quality rendition alongside the standard one — rather than a
+single flag on the message. The upload pairing itself was not traced, and it is
+blocked behind posting regardless.
+
 ## Live record
 
 **2026-09-22: a status update was received, decrypted and projected.** The first

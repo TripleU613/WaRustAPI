@@ -687,6 +687,7 @@ mod tests {
             content: MessageContent::Text {
                 body: "hello".into(),
                 quoted: None,
+                style: Default::default(),
             },
         }
     }

@@ -1660,6 +1660,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
                 content: MessageContent::Text {
                     body: text.clone(),
                     quoted: None,
+                    style: Default::default(),
                 },
             };
             let ticket = c.send_message(req).await?;
@@ -1842,6 +1843,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
                     content: MessageContent::Text {
                         body: text.clone(),
                         quoted: Some(quoted),
+                        style: Default::default(),
                     },
                 })
                 .await?;

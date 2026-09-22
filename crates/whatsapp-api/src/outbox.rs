@@ -116,7 +116,7 @@ fn idempotency_key(namespace: &str, id: &ClientRequestId) -> Vec<u8> {
 
 fn validate(req: &SendRequest, limits: &Limits) -> Result<()> {
     match &req.content {
-        MessageContent::Text { body, quoted } => {
+        MessageContent::Text { body, quoted, .. } => {
             if body.is_empty() {
                 return Err(Error::invalid("content.body", "must not be empty"));
             }
@@ -457,6 +457,7 @@ mod tests {
             content: MessageContent::Text {
                 body: body.into(),
                 quoted: None,
+                style: Default::default(),
             },
         }
     }

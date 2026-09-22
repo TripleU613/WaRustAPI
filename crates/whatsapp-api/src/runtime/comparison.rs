@@ -358,6 +358,7 @@ mod tests {
                 content: MessageContent::Text {
                     body: "fixture".into(),
                     quoted: None,
+                    style: Default::default(),
                 },
             };
             let ticket = store.write(|tx| outbox.enqueue(tx, &request)).unwrap().0;
@@ -636,6 +637,7 @@ mod tests {
             content: MessageContent::Text {
                 body: "fixture".into(),
                 quoted: None,
+                style: Default::default(),
             },
         };
         let ticket = store.write(|tx| outbox.enqueue(tx, &request)).unwrap().0;

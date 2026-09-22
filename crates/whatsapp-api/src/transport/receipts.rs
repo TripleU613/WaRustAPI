@@ -967,6 +967,7 @@ mod tests {
             content: MessageContent::Text {
                 body: "offline fixture".into(),
                 quoted: None,
+                style: Default::default(),
             },
         };
         let ticket = store

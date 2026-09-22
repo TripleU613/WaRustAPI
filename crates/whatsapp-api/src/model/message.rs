@@ -76,6 +76,10 @@ pub enum MessageContent {
         body: String,
         /// Reply target, if any.
         quoted: Option<MessageRef>,
+        /// Colour and font of a styled full-screen text status. Default (all
+        /// `None`) for an ordinary chat message, which carries no styling.
+        #[serde(default)]
+        style: crate::transport::quotes::TextStyle,
     },
     /// Reaction to another message. `emoji == None` removes a reaction.
     Reaction {

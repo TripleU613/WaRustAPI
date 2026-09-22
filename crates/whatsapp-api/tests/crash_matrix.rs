@@ -45,6 +45,7 @@ fn req(id: &str) -> SendRequest {
         content: MessageContent::Text {
             body: "hello".into(),
             quoted: None,
+            style: Default::default(),
         },
     }
 }
