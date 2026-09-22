@@ -5,6 +5,47 @@ Read this file before working here. Apply it throughout the repository, subject
 to higher-priority instructions. This is a working agreement, not a transcript:
 credentials, real phone numbers, OTPs and account PINs must not be copied here.
 
+## Nothing learned may be lost (read this first)
+
+Every finding lands in the repository in the same change that produced it.
+Research that exists only in a chat reply, a terminal scrollback or a subagent
+transcript is lost work: it will be paid for again, and the second answer may
+silently contradict the first. If it was worth discovering, it is worth writing
+down.
+
+For anything explored, changed or discovered:
+
+- **`docs/`** — the finding itself, in the protocol/design document it belongs
+  to (`docs/protocol/<area>.md`). Carry the evidence with it: the APK build, the
+  class and method it was read from, and an explicit **confirmed** /
+  **inferred** / **observed** (seen live) / **unknown** label. State the
+  reasoning, not just the conclusion, so the next reader can re-check it without
+  redoing the trace.
+- **`docs/api/openapi.json`** — every new or changed command, flag, capability,
+  route, field and recognized server response, with `x-cli`, `x-transport` and
+  `x-live` set honestly. Never describe something as served over HTTP before the
+  route exists. `docs/api/README.md` has the checklist.
+- **CLI** — expose what a human or another agent will need to inspect or
+  reproduce the result, then regenerate the reference:
+  `UPDATE_CLI_DOCS=1 cargo test -p whatsapp-cli --features experimental-transport cli_reference`.
+  A capability nobody can invoke is not finished.
+- **Code** — put the evidence where the value is used. A magic field number,
+  attribute name or byte offset carries a comment naming its source. Explain the
+  non-obvious *why*; do not narrate what the code plainly does.
+- **`STATUS.md`** and the relevant checklist — what is now true, and honestly
+  what is still unverified.
+
+**Record negative results and unknowns too.** "This does not exist", "this
+attribute is absent in this build", "this path was traced only to here" and
+"this was refuted" are the most expensive things to rediscover and the easiest
+to lose. Write down what was searched and what was *not* established, so nobody
+repeats a dead end or mistakes an untraced assumption for a confirmed fact.
+
+**Diagnosability is part of the work.** When something fails silently, fix the
+silence as well as the failure: a refusal should say which input was missing,
+and an inspection command should be able to show it. A guess that looks like a
+fact costs more than an unknown that is labelled.
+
 ## What the owner is building
 
 - Build toward full WhatsApp onboarding and sending the first message.

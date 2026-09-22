@@ -4374,7 +4374,7 @@
           "Events"
         ],
         "summary": "Decrypt captured direct replies locally, without network I/O",
-        "description": "Decrypt authenticated incoming records locally. The operation is offline. With `inspect: true`, display the plaintext protobuf structure without advancing sessions.",
+        "description": "Decrypt authenticated incoming records locally. The operation is offline. With `inspect: true`, display the plaintext protobuf structure without advancing sessions. With replay_captures, preserved message captures are re-run through inbox::process offline to recover stanzas that an earlier defect refused; this is how the first live group messages were recovered after the sender-key distribution field number was corrected.",
         "operationId": "labInbox",
         "x-cli": "whatsapp-cli lab-inbox",
         "x-transport": [
@@ -4407,7 +4407,11 @@
                 "properties": {
                   "inspect": {
                     "type": "boolean",
-                    "description": "Inspect saved plaintext protobuf structure without advancing sessions"
+                    "description": "Inspect saved plaintext protobuf structure without advancing sessions. Also prints, per preserved capture, the stanza tag/type, attribute names, enc child v/type values, and how the receive path would route it (from/participant server kinds and whether it routes as a group). Cleared and consumed rows are skipped rather than failing the run."
+                  },
+                  "replay_captures": {
+                    "type": "boolean",
+                    "description": "Re-run preserved incoming message captures through the normal receive path, offline. The server delivers a queued stanza once, so a stanza refused by a since-fixed guard is only recoverable from its capture. Already-committed messages dedupe; nothing is transmitted and no receipt is sent."
                   }
                 }
               }

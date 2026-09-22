@@ -159,6 +159,66 @@ multiple chains internally, so the rotation/distribution id is not part of the
 key. The unused `RecordKey::SenderKey` variant in `signal/mod.rs` describes a
 different (`k:…:{distribution_id}`) layout and is not what this path writes.
 
+## Sending a group message — not implemented, blocked on unknowns
+
+Researched 2026-09-22 against 2.26.37.71. Recorded here so the dead ends are
+not re-walked; **nothing below is implemented** and one required input has no
+known algorithm.
+
+**`<participants>` wrapper — confirmed.** `LX/BpZ;-><init>(VL)`:
+`A0m("participants")` builds the child, `LX/0hp->A07` bounds the list to
+[1, 0x987356], the list is iterated and each element appended verbatim via
+`LX/8kZ->A1A`, then merged as a `smax:any` fragment by `LX/8kY->A0Z`. Because it
+appends an already-built `List` of nodes, **the per-recipient child element name
+is not in this class and is unknown** — the caller supplies it, and the caller
+was not located.
+
+**`enc` builders — confirmed but separate.** `LX/BpT;-><init>(VI)` builds
+`<enc v="2">`; `LX/BpZ;-><init>(VLLLL)` builds a second `enc` whose three
+attributes are set inside `LX/9QF->A00`, `LX/Ayo->A1B` and `LX/Ayo->A1C`, none
+of which were read. Each `Bp*` class emits an isolated `smax:any` fragment
+(root `LX/Bph->A01()`) that something else merges, and **the assembler that
+places the per-recipient children and the top-level `skmsg` together was not
+found**. The obvious shape — one top-level `skmsg` beside a `<participants>`
+wrapper of per-device `pkmsg`/`msg` — is therefore **inferred**, not confirmed.
+
+**Participant hash is required — confirmed.** `SendE2EMessageJob` validation
+strings: `"cannot send e2e message to a group without a participant hash"`,
+`"groupParticipantHash cannot be set to an empty string"`,
+`"groupParticipantHash cannot be set if participant is set"` (so `phash` and a
+targeted single-`participant` send are mutually exclusive), and
+`"groupParticipantHash cannot be set if the primary jid is not a group or
+broadcast list"`. Emission is `LX/BpS;-><init>(VLI)`:
+`A1Q(frag, "phash", value)` gated on `LX/0hp->A06(value, 0, 10, …)`, a bounds
+check capping it at **10 characters** (confirmed).
+
+**The `phash` algorithm is unknown.** The method deriving it from the
+member/device list was not found. This is the hard blocker: a group send cannot
+be attempted without it, and inventing a value would be manufacturing protocol
+data rather than implementing observed behaviour.
+
+**Sender-key re-send policy — flags confirmed, trigger unknown.**
+`SendE2EMessageJob` strings: `"cannot use group encryption without including
+sender key in message"` (an `skmsg` send requires sender keys in that same
+send), `"includeSenderKeysInMessage cannot be set if the primary jid is not a
+group or broadcast list"` (an explicit per-send flag), `"forced sender key
+distribution can only be used with target devices "`, and `"missing sender key
+distribution message "`. **What triggers a rotation, and whether the SKDM goes
+to every device on every send or only on change, is unknown.**
+
+**Node attributes — names confirmed, mapping inferred.** `LX/1Dz->A0H` lists,
+in order: `lid`, `msgid`, `remote_chat_jid`, `participant`, `remoteJid`,
+`phash`, `count`, `timestamp`, `smid`, `edit`, `counter_abuse_token`,
+`addressing_mode`, `refresh_lid`. That method looks like a key/value record
+rather than the XMPP node builder, so treating these as node attribute names is
+**inferred**. `addressing_mode` is confirmed present in `SendE2EMessageJob->A06`
+adjacent to `phash`; a `device_fanout="false"` fragment (`LX/BpS`) and a
+`multicast` fragment (`LX/BpT`) also exist.
+
+Sending would additionally need per-device fan-out, which is the open piece of
+checklist item 8 — contact device lists are already fetched and verified
+(`transport/devices.rs`) but are not yet used to address a send.
+
 ## Live record
 
 2026-09-20 ~02:19 EDT: the first `create` (subject and one participant, as in

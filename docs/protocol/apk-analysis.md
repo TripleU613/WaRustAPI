@@ -52,9 +52,32 @@ active profile's fixtures.
 | `apk-strings` | A literal is compiled into the client | How, when or whether it is sent on the wire |
 | `apk-tokens` | The ordered dictionary initialised by the client | The dictionary *version byte* sent in the header/prologue |
 | `apk-xref` | Which Dalvik class and method loads an exact string | The runtime branch taken or values assembled without string literals |
-| `apk-callers` | Which Dalvik methods invoke an exact class/method pair | Whether the invoke is reached at runtime |
+| `apk-callers` | Which Dalvik methods invoke an exact class/method pair | Whether the invoke is reached at runtime, **and whether any caller exists at all** — see the warning below |
 | `apk-smali` | Bounds-checked structural bytecode and referenced symbols for selected methods | Server acceptance or the runtime path without control-flow analysis/capture |
 | `apk-registration-token` | The exact comparison-build token derivation over APK-owned inputs and a controlled number | Server acceptance or compatibility with any other APK version |
+
+## Two traps that produce silent empty output
+
+Both of these look exactly like "the symbol is not in this APK". Neither is.
+
+**The APK path is a positional argument, not a default.** Omitting it returns
+nothing at all rather than an error:
+
+```sh
+cargo run --locked -p xtask -- apk-xref  <apk> --anchor skmsg
+cargo run --locked -p xtask -- apk-smali <apk> --class 'LX/ADy' --method A0O
+```
+
+On 2026-09-22 this made `skmsg`, `SenderKeyDistribution` and `enc type` all look
+absent from the comparison APK; with the path they return 6, several and 73
+references. Before concluding a string is missing, check the invocation.
+
+**`apk-callers` does not resolve virtual dispatch or constructors.** It reported
+`0 caller(s)` for `LX/C9c->A00`, `LX/0hs->A0N` and `LX/BpZ-><init>`, all of which
+are certainly called. **A zero result is not evidence of no callers**, and must
+never be written into a document or the evidence ledger as one. To find callers
+of an interface, virtual method or constructor, `apk-xref` a string constant used
+near the call site instead.
 
 ## How `apk-tokens` works
 
