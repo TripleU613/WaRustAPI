@@ -7,12 +7,16 @@ Signal sender-key protocol. A sender-key distribution message (`Message` field
 the member's direct session, pinned identity, consumed prekey, sender key and
 inbox row commit together, and the result projects as a `NewMessage` keyed by
 `ChatId::Group`. An unreadable stanza degrades to Unsupported rather than
-dropping the connection. Verified offline including a full SKDM→skmsg round
-trip; **no group message has been received live** — that needs the operator to
-create a group on their handset and add the lab number (do not `group create`
-from the lab account). Group delivery receipts are not sent: the group receipt
-attribute set is still unknown, and group *sending* (per-device SKDM fan-out)
-is not implemented. Details: [groups](docs/protocol/groups.md).
+dropping the connection. A delivery receipt
+(`<receipt to=<group> id=<id> participant=<sender>/>`) is sent for a decrypted
+group message; its attribute set is confirmed from `LX/Cp2->A00`, while the
+participant JID form is echoed from the incoming stanza rather than derived
+(inferred, since the APK's own derivation was not traced). Verified offline
+including a full SKDM→skmsg round trip; **no group message has been received
+live** — that needs the operator to create a group on their handset and add the
+lab number (do not `group create` from the lab account). Group *sending*
+(per-device SKDM fan-out) is not implemented.
+Details: [groups](docs/protocol/groups.md).
 
 **API reference added:** an OpenAPI 3.1 document now describes every CLI command,
 HTTP route, library capability, request/response field and recognized server

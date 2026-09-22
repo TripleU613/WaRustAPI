@@ -55,10 +55,12 @@ from offline tests alone. Existing received captures can be processed locally.
   `NewMessage` keyed by `ChatId::Group` with the `participant` as sender. The
   member's direct session, pinned identity, any consumed one-time prekey, the
   sender key and the inbox row commit in one transaction. Undecryptable stanzas
-  degrade to Unsupported without failing the session. Verified offline only,
+  degrade to Unsupported without failing the session, and a decrypted one is
+  confirmed with `<receipt to=<group> id=<id> participant=<sender>/>` (attribute
+  set confirmed from `LX/Cp2->A00`; the participant JID form is echoed from the
+  incoming stanza rather than derived, which is inferred). Verified offline only,
   including a full SKDM→skmsg round trip; **no group message has been received
-  live**. Group delivery receipts are deliberately not sent (shape unknown) and
-  group message **sending** (per-device SKDM fan-out) is not implemented.
+  live**. Group message **sending** (per-device SKDM fan-out) is not implemented.
 - Chat actions (2026-09-20, `docs/protocol/chat-actions.md`): a durable
   one-shot IQ action queue carries block/unblock/block-list fetch, spam report,
   the default disappearing-timer IQ and `usync` contact checks; E2E protocol
