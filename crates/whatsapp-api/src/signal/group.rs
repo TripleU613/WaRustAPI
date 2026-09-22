@@ -30,31 +30,22 @@ pub fn sender_key_db_key(group: &Jid, sender: &Jid) -> Vec<u8> {
     format!("sk:{}:{}", group, sender.to_non_ad()).into_bytes()
 }
 
-/// Minimal in-memory SenderKeyStore backed by a pre-loaded record.
-/// `group_decrypt` or `process_sender_key_distribution_message` updates the
-/// record in memory; `into_commit` extracts the serialized bytes for the caller
-/// to write in the same atomic write transaction as the inbox row.
-#[allow(dead_code)]
+/// Minimal in-memory SenderKeyStore over one pre-loaded record. libsignal
+/// mutates the record here only; the caller serializes the result and writes it
+/// with [`commit_sender_key`], which carries the DB key and the pre-decryption
+/// value for its own OCC check.
 struct SenderKeys {
-    db_key: Vec<u8>,
-    /// The bytes originally read from DB (used for OCC conflict detection).
-    original: Option<Zeroizing<Vec<u8>>>,
-    /// The record (updated in-place by libsignal).
+    /// The record, updated in place by libsignal.
     record: Option<SenderKeyRecord>,
 }
 
 impl SenderKeys {
-    fn new(db_key: Vec<u8>, original: Option<Vec<u8>>) -> Result<Self> {
+    fn new(original: Option<&[u8]>) -> Result<Self> {
         let record = original
-            .as_deref()
             .map(SenderKeyRecord::deserialize)
             .transpose()
             .map_err(|_| invalid("corrupt sender key record"))?;
-        Ok(Self {
-            db_key,
-            original: original.map(Zeroizing::new),
-            record,
-        })
+        Ok(Self { record })
     }
 }
 
@@ -78,15 +69,15 @@ impl SenderKeyStore for SenderKeys {
 }
 
 /// Result of `receive_group`: plaintext + serialized updated key for atomic commit.
+///
+/// The caller passes the DB key and the pre-decryption value to
+/// [`commit_sender_key`] itself, because one stanza's SKDM and `skmsg` produce
+/// two in-memory updates that are written once under a single OCC check.
 pub struct ReceivedGroup {
     /// Authenticated group message plaintext (the WhatsApp Message proto bytes).
     pub plaintext: Zeroizing<Vec<u8>>,
     /// Updated sender key bytes, to write in the atomic inbox commit.
     pub(crate) updated_key: Zeroizing<Vec<u8>>,
-    /// Original bytes for OCC conflict detection in the commit.
-    pub(crate) original_key: Option<Zeroizing<Vec<u8>>>,
-    /// DB key where the sender key lives.
-    pub(crate) db_key: Vec<u8>,
 }
 
 impl std::fmt::Debug for ReceivedGroup {
@@ -127,8 +118,7 @@ pub fn load_sender_key_bytes(
 pub async fn receive_group(
     group: &Jid,
     sender: &Jid,
-    db_key: Vec<u8>,
-    previous_bytes: Option<Vec<u8>>,
+    previous_bytes: Option<&[u8]>,
     ciphertext: &[u8],
 ) -> Result<Option<ReceivedGroup>> {
     if ciphertext.len() > 65536 {
@@ -138,7 +128,7 @@ pub async fn receive_group(
         // No SKDM received yet — caller keeps the stanza as Unsupported.
         return Ok(None);
     }
-    let mut store = SenderKeys::new(db_key.clone(), previous_bytes.clone())?;
+    let mut store = SenderKeys::new(previous_bytes)?;
     let name = SenderKeyName::from_parts(&group.to_string(), &sender.to_non_ad().to_string());
     let plaintext = signal::group_decrypt(ciphertext, &mut store, &name)
         .await
@@ -155,8 +145,6 @@ pub async fn receive_group(
     Ok(Some(ReceivedGroup {
         plaintext,
         updated_key,
-        original_key: previous_bytes.map(Zeroizing::new),
-        db_key,
     }))
 }
 
@@ -187,7 +175,7 @@ pub async fn process_skdm(
     previous_bytes: Option<Vec<u8>>,
     skdm_bytes: &[u8],
 ) -> Result<ReceivedSkdm> {
-    let mut store = SenderKeys::new(db_key.clone(), previous_bytes.clone())?;
+    let mut store = SenderKeys::new(previous_bytes.as_deref())?;
     let name = SenderKeyName::from_parts(&group.to_string(), &sender.to_non_ad().to_string());
     let skdm = SenderKeyDistributionMessage::try_from(skdm_bytes).map_err(crypto)?;
     signal::process_sender_key_distribution_message(&name, &skdm, &mut store)
@@ -205,25 +193,6 @@ pub async fn process_skdm(
         original_key: previous_bytes.map(Zeroizing::new),
         db_key,
     })
-}
-
-/// Commit a received group message's sender key update, with OCC conflict detection.
-/// Must be called inside the same write transaction as the inbox row write.
-pub fn commit_group(tx: &mut WriteTx<'_>, received: &ReceivedGroup) -> Result<()> {
-    let current: Option<Vec<u8>> = tx.get_json(Table::SenderKeys, &received.db_key, 1)?;
-    if current.as_deref() != received.original_key.as_deref().map(|v| v.as_slice()) {
-        return Err(Error::invalid(
-            "inbox",
-            "sender key changed concurrently; skmsg not committed",
-        ));
-    }
-    tx.put_json(
-        Table::SenderKeys,
-        &received.db_key,
-        1,
-        &*received.updated_key,
-    )?;
-    Ok(())
 }
 
 /// Commit the final sender key for one group stanza. A group stanza can carry
@@ -334,7 +303,7 @@ mod tests {
         let mut rng = rand::rng();
 
         // Sender side: fresh record + SKDM.
-        let mut sender_store = SenderKeys::new(b"sender-side".to_vec(), None).unwrap();
+        let mut sender_store = SenderKeys::new(None).unwrap();
         let skdm = create_sender_key_distribution_message(&name, &mut sender_store, &mut rng)
             .await
             .unwrap();
@@ -361,7 +330,7 @@ mod tests {
         // Receiver side: no key yet, so the skmsg alone must not decrypt.
         let db_key = sender_key_db_key(&group, &sender);
         assert!(
-            receive_group(&group, &sender, db_key.clone(), None, &ciphertext)
+            receive_group(&group, &sender, None, &ciphertext)
                 .await
                 .unwrap()
                 .is_none()
@@ -371,16 +340,10 @@ mod tests {
         let after_skdm = process_skdm(&group, &sender, db_key.clone(), None, &skdm_bytes)
             .await
             .unwrap();
-        let received = receive_group(
-            &group,
-            &sender,
-            db_key,
-            Some(after_skdm.updated_key.to_vec()),
-            &ciphertext,
-        )
-        .await
-        .unwrap()
-        .expect("sender key present, so the skmsg must decrypt");
+        let received = receive_group(&group, &sender, Some(&after_skdm.updated_key), &ciphertext)
+            .await
+            .unwrap()
+            .expect("sender key present, so the skmsg must decrypt");
 
         // Padding stripped, and the plaintext is the original protobuf.
         assert_eq!(received.plaintext.len(), unpadded_len);
@@ -489,10 +452,7 @@ mod tests {
         // When no SKDM has been received, receive_group returns None (not an error).
         let g = group_jid();
         let s = sender_jid();
-        let db_key = sender_key_db_key(&g, &s);
-        let result = receive_group(&g, &s, db_key, None, &[1, 2, 3, 4])
-            .await
-            .unwrap();
+        let result = receive_group(&g, &s, None, &[1, 2, 3, 4]).await.unwrap();
         assert!(result.is_none());
     }
 }

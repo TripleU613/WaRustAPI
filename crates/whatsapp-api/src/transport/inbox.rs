@@ -496,10 +496,15 @@ pub async fn process(
         }
         // Commit the SKDM sender key update atomically with the direct message. A
         // concurrent writer's newer key wins without failing this message; storage
-        // errors still propagate.
+        // errors still propagate. Say so when the update is dropped, so a later
+        // group message that cannot decrypt has a recorded reason.
         #[cfg(feature = "experimental-signal-crypto")]
-        if let Some(ref skdm) = skdm_update {
-            crate::signal::group::commit_skdm(tx, skdm)?;
+        if let Some(ref skdm) = skdm_update
+            && !crate::signal::group::commit_skdm(tx, skdm)?
+        {
+            tracing::warn!(
+                "sender key distribution not stored: another writer changed the key first"
+            );
         }
         #[cfg(not(feature = "experimental-signal-crypto"))]
         let _ = &skdm_update;
@@ -749,8 +754,7 @@ async fn process_group_inner(
         && let Some(received) = crate::signal::group::receive_group(
             &group_jid,
             &sender_jid,
-            db_key.clone(),
-            effective_key,
+            effective_key.as_deref(),
             ciphertext,
         )
         .await?

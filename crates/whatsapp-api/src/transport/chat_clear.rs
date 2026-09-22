@@ -46,14 +46,20 @@ pub struct ClearSummary {
 /// doc for what still needs the (unimplemented) `clearChatAction` app-state
 /// mutation to reach companion devices.
 ///
-/// Accepts a direct chat (the contact's phone-number JID) or a group. Both key
-/// their `received:` rows by the chat JID — a direct message by the sender's
-/// phone-number JID, a group message by the group JID (`inbox::process_group`)
-/// — so the prefix scan below is the same for either.
+/// Accepts a direct chat (the contact's phone-number JID), a group, or a
+/// broadcast (`status@broadcast` and broadcast lists). All three key their
+/// `received:` rows by the chat JID — a direct message by the sender's
+/// phone-number JID, a group or broadcast message by the chat JID that
+/// `inbox::sender_key_chat` returns — so the prefix scan below serves all of
+/// them. Anything else has no rows keyed by it and is refused rather than
+/// silently clearing nothing.
 pub fn clear_chat(store: &ProtocolStore, chat: &Jid) -> Result<ClearSummary> {
-    if !matches!(chat.server, Server::User | Server::Group) {
+    if !matches!(
+        chat.server,
+        Server::User | Server::Group | Server::Broadcast
+    ) {
         return Err(invalid(
-            "clear_chat supports direct chats and groups; received: rows are keyed by the chat JID",
+            "clear_chat supports direct chats, groups and broadcasts; received: rows are keyed by the chat JID",
         ));
     }
     let chat = chat.to_non_ad();
@@ -287,19 +293,62 @@ mod tests {
         assert_eq!(second.cleared_messages, 0);
     }
 
-    /// Groups became clearable once group messages could be received; anything
-    /// that is not a direct chat or a group still has no `received:` rows keyed
-    /// by it and must be refused rather than silently clearing nothing.
+    /// A chat becomes clearable exactly when its messages become receivable,
+    /// because both use the same `received:<chat>:<id>` keying. Groups became
+    /// clearable with group receive, and broadcasts (status) with
+    /// `inbox::sender_key_chat` routing — an earlier version of this test
+    /// asserted `status@broadcast` must be refused, which silently became wrong
+    /// two commits later and left status updates receivable but unclearable.
     #[test]
-    fn accepts_chats_and_groups_but_refuses_other_jids() {
+    fn accepts_every_chat_kind_that_can_receive_and_refuses_the_rest() {
         let (_d, s) = store();
-        assert!(clear_chat(&s, &Jid::parse("12345-6789@g.us").unwrap()).is_ok());
-        assert!(clear_chat(&s, &Jid::parse("15551234567@s.whatsapp.net").unwrap()).is_ok());
-        for refused in ["s.whatsapp.net", "status@broadcast", "12345@lid"] {
+        for clearable in [
+            "12345-6789@g.us",            // group
+            "15551234567@s.whatsapp.net", // direct
+            "status@broadcast",           // status updates
+            "12345@broadcast",            // broadcast list
+        ] {
+            assert!(
+                clear_chat(&s, &Jid::parse(clearable).unwrap()).is_ok(),
+                "{clearable} is receivable, so it must be clearable"
+            );
+        }
+        // Nothing keys `received:` rows by these.
+        for refused in ["s.whatsapp.net", "12345@lid"] {
             assert!(
                 clear_chat(&s, &Jid::parse(refused).unwrap()).is_err(),
                 "{refused} should not be clearable"
             );
         }
+    }
+
+    /// The rows a status update actually creates must be the rows clear_chat
+    /// scans. This pins the two key schemes together so they cannot drift again.
+    #[test]
+    fn clears_status_rows_written_under_the_broadcast_chat_jid() {
+        let (_d, s) = store();
+        let status = Jid::parse("status@broadcast").unwrap();
+        s.write(|tx| {
+            tx.put_json(
+                Table::Checkpoints,
+                format!("received:{status}:S1").as_bytes(),
+                1,
+                &serde_json::json!({"status":"decrypted","protobuf":b"posted".as_slice()}),
+            )
+        })
+        .unwrap();
+        assert_eq!(clear_chat(&s, &status).unwrap().cleared_messages, 1);
+        let saved = s
+            .read(|tx| {
+                tx.get_json::<serde_json::Value>(
+                    Table::Checkpoints,
+                    format!("received:{status}:S1").as_bytes(),
+                    1,
+                )
+            })
+            .unwrap()
+            .unwrap();
+        assert_eq!(saved["status"], "cleared");
+        assert!(saved.get("protobuf").is_none());
     }
 }

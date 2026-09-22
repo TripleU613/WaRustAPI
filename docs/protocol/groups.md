@@ -4,9 +4,11 @@ Evidence from the comparison APK build **2.26.37.71** (`GroupXmppMethods`
 `LX/0Xm`, `CreateGroupApiHandler` `LX/AWf.A00`, `LX/9Ms.A0Z`,
 `GetGroupInfoProtocolHelper.A00`), gathered 2026-09-20. Claims are
 **confirmed** when read from the node builder, **inferred** when they follow
-the public protocol and the APK only shows the surrounding vocabulary, and
-**unknown** otherwise. Nothing here is live-verified until
-`messaging-transport.md` says so.
+the public protocol and the APK only shows the surrounding vocabulary,
+**observed** when seen on the wire live, and **unknown** otherwise. Live
+results for group *messages* are recorded in this file (see "Stanza shape" and
+"Live record"); the group *management* requests in the table below remain
+un-live-verified except where the Live record says otherwise.
 
 All requests are `iq` stanzas with `xmlns="w:g2"` and a fresh `id`. Requests
 about an existing group are addressed `to=<group>@g.us`; group creation and
@@ -224,6 +226,5 @@ checklist item 8 — contact device lists are already fetched and verified
 2026-09-20 ~02:19 EDT: the first `create` (subject and one participant, as in
 the table) was written after activation; the server answered
 `stream:error code=503` and closed the stream, so the action stays `sent`
-with no reply. The next login was refused with `failure reason=403` and an
-appeal token (see `STATUS.md`). Whether the group request itself played a
-part is unknown; nothing else here is live-verified.
+with no reply. Nothing else in the management table above is live-verified;
+group *message* receive since has been — see the 2026-09-22 entry below.

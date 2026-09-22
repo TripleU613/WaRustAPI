@@ -50,6 +50,14 @@ a wrong receipt on a live account is worse than sending none, so this waits on
 a confirmed trace. Consequence: the server may redeliver status updates; the
 inbox dedupes them by `received:status@broadcast:<id>`.
 
+## Clearing
+
+`clear_chat` accepts `status@broadcast` (and broadcast lists), because a status
+update writes a `received:status@broadcast:<id>` row exactly as a group message
+writes one under the group JID. A chat is clearable precisely when its messages
+are receivable; the two key schemes are pinned together by a test so they cannot
+drift apart again. Still local-only, like every other clear.
+
 ## Unknown
 
 - Which `enc` types appear on a status stanza. Assumed `skmsg` plus an
