@@ -6156,7 +6156,7 @@
           "Session"
         ],
         "summary": "Maintain an authenticated comparison connection and process incoming messages",
-        "description": "Establish an authenticated session to the messaging server (x-live). Hold the connection for the requested duration, receive incoming messages, and optionally transmit all eligible queued intents.",
+        "description": "Establish an authenticated session to the messaging server (x-live). Hold the connection for the requested duration, receive incoming messages, and optionally transmit all eligible queued intents. Group messages (enc type=skmsg) are decrypted when a SenderKeyDistributionMessage for the (group, sender) pair has been received in a prior or current direct message; messages without a stored sender key are preserved as Unsupported without acknowledgement. SKDM distribution arrives embedded in direct pkmsg/msg payloads (WhatsApp Message field 18) and is committed atomically with the direct inbox row.",
         "operationId": "listen",
         "x-cli": "whatsapp-cli listen",
         "x-transport": [

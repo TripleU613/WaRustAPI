@@ -36,9 +36,31 @@ owner), `creator`, `creation`, and `participant` children carrying `jid` and
 an optional `type` of `admin` or `superadmin`; `invite` replies carry `code`.
 All of these names are dictionary tokens.
 
-Group messages themselves (`enc type="skmsg"` with sender keys, and
-`senderKeyDistributionMessage` delivery) are a separate slice; today an
-incoming stanza with a `participant` attribute is preserved but not decrypted.
+Group messages (`enc type="skmsg"`, `from`=group JID, `participant`=sender device
+JID) are now decrypted using the Signal sender-key protocol:
+
+**SKDM receive** (`senderKeyDistributionMessage` field 18 in a direct
+`pkmsg`/`msg` payload): the decrypted payload is scanned for field 18 after
+successful direct-message decryption; if present, `groupId` and the raw
+`axolotlSenderKeyDistributionMessage` bytes are extracted and
+`process_sender_key_distribution_message` (wacore-libsignal 0.7.0) is called,
+storing the updated `SenderKeyRecord` at `sk:{group_jid}:{sender_non_ad_jid}` in
+`Table::SenderKeys`, committed atomically with the direct inbox row.
+
+**skmsg receive**: `signal::group::receive_group` calls `group_decrypt` with the
+pre-loaded record; if no record exists (SKDM not yet received) the stanza is
+preserved as Unsupported without acknowledgement. The updated ratchet and inbox
+row commit together (OCC on the sender key).
+
+**Event projection**: decrypted group messages are currently saved and published
+as `UnsupportedMessage` events (the raw protobuf is preserved). Typed
+`NewMessage` projection for group chats is the next step.
+
+**Implementation**: `crates/whatsapp-api/src/signal/group.rs` (SKDM parsing,
+receive, commit helpers); `crates/whatsapp-api/src/transport/inbox.rs`
+(`process_group` function + SKDM extraction in the direct-message path). Tests
+in `signal/group.rs` cover the DB key format, SKDM extraction (field 18 present,
+absent, empty), and the no-sender-key Unsupported path. Not live-verified.
 
 ## Live record
 

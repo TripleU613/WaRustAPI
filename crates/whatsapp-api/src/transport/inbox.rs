@@ -248,6 +248,12 @@ pub async fn process(
     if node.description != "message" {
         return Ok(IncomingResult::Unsupported);
     }
+    // Group messages carry a `participant` attribute (the sender device JID);
+    // `from` is the group JID. Route them to the sender-key path.
+    #[cfg(feature = "experimental-signal-crypto")]
+    if node.get_attr("participant").is_some() {
+        return process_group(store, node, capture).await;
+    }
     let peer_category = node.get_attr("category").and_then(|v| v.as_text()) == Some("peer");
     let sender = if peer_category {
         own_peer_sender(account, node)
@@ -358,6 +364,31 @@ pub async fn process(
     } else {
         None
     };
+    // If the direct message carries a SenderKeyDistributionMessage (field 18), process
+    // it now so group messages from this sender can decrypt after this commit.
+    #[cfg(feature = "experimental-signal-crypto")]
+    let skdm_update = {
+        use crate::signal::group as g;
+        if let Some((group_id, axolotl)) = g::extract_skdm_from_payload(&received.plaintext) {
+            if let Ok(group_jid) = Jid::parse(&group_id) {
+                if group_jid.is_group() {
+                    let skdm_keys = store.read(|tx| g::load_sender_key_bytes(tx, &group_jid, &sender));
+                    match skdm_keys {
+                        Ok((db_key, prev)) => g::process_skdm(&group_jid, &sender, db_key, prev, &axolotl).await.ok(),
+                        Err(_) => None,
+                    }
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    };
+    #[cfg(not(feature = "experimental-signal-crypto"))]
+    let skdm_update: Option<()> = None;
     store.write(|tx| {
         if peer_category {
             let current_account = AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
@@ -425,6 +456,14 @@ pub async fn process(
             }
             tx.put_json(Table::Checkpoints, map_key.as_bytes(), 1, &sender)?;
         }
+        // Commit SKDM sender key update atomically with the direct message (best-effort:
+        // a concurrent SKDM write for the same key does not fail this direct message).
+        #[cfg(feature = "experimental-signal-crypto")]
+        if let Some(ref skdm) = skdm_update {
+            let _ = crate::signal::group::commit_skdm(tx, skdm);
+        }
+        #[cfg(not(feature = "experimental-signal-crypto"))]
+        let _ = &skdm_update;
         tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &serde_json::json!({
             "status":"decrypted", "protobuf":&*received.plaintext, "capture":capture, "route":route,
             "received_at":crate::model::time::Timestamp::now()
@@ -436,6 +475,104 @@ pub async fn process(
         Ok(())
     })?;
     Ok(IncomingResult::Decrypted)
+}
+
+/// Handle incoming group message stanzas (`enc type="skmsg"`, `participant` present).
+#[cfg(feature = "experimental-signal-crypto")]
+async fn process_group(
+    store: &ProtocolStore,
+    node: &Node,
+    capture: &[u8],
+) -> Result<IncomingResult> {
+    let parse_jid = |name: &str| {
+        node.get_attr(name).and_then(|v| {
+            v.as_jid()
+                .cloned()
+                .or_else(|| Jid::parse(v.as_text()?).ok())
+        })
+    };
+    let (Some(group_jid), Some(sender_jid)) = (parse_jid("from"), parse_jid("participant")) else {
+        return Ok(IncomingResult::Unsupported);
+    };
+    if !group_jid.is_group() {
+        return Ok(IncomingResult::Unsupported);
+    }
+    let Some(id) = node
+        .get_attr("id")
+        .and_then(|v| v.as_text())
+        .filter(|v| !v.is_empty() && v.len() <= 128)
+    else {
+        return Ok(IncomingResult::Unsupported);
+    };
+    let encs: Vec<_> = node
+        .child_nodes()
+        .iter()
+        .filter(|n| n.description == "enc")
+        .collect();
+    if encs.len() != 1
+        || encs[0].get_attr("type").and_then(|v| v.as_text()) != Some("skmsg")
+        || encs[0].get_attr("v").and_then(|v| v.as_text()) != Some("2")
+    {
+        return Ok(IncomingResult::Unsupported);
+    }
+    let NodeContent::Bytes(ciphertext) = &encs[0].content else {
+        return Ok(IncomingResult::Unsupported);
+    };
+    // Inbox key: use group JID + message id (participant is the authenticated sender,
+    // but the group+id pair uniquely identifies the stanza server-side).
+    let key = format!("received:{}:{id}", group_jid);
+    if let Some(saved) =
+        store.read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))?
+    {
+        super::inbox_events::restore(store, key.as_bytes(), &saved)?;
+        return Ok(
+            if matches!(saved["status"].as_str(), Some("decrypted")) {
+                IncomingResult::Duplicate
+            } else {
+                IncomingResult::Unsupported
+            },
+        );
+    }
+    let (db_key, previous_bytes) = store
+        .read(|tx| crate::signal::group::load_sender_key_bytes(tx, &group_jid, &sender_jid))?;
+    let Some(received) = crate::signal::group::receive_group(
+        &group_jid,
+        &sender_jid,
+        db_key,
+        previous_bytes,
+        ciphertext,
+    )
+    .await?
+    else {
+        // No sender key for this sender yet; SKDM has not arrived.
+        return Ok(IncomingResult::Unsupported);
+    };
+    let route =
+        crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+            .encode(node)?;
+    store.write(|tx| {
+        if tx
+            .get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1)?
+            .is_some()
+        {
+            return Ok(IncomingResult::Duplicate);
+        }
+        crate::signal::group::commit_group(tx, &received)?;
+        tx.put_json(
+            Table::Checkpoints,
+            key.as_bytes(),
+            1,
+            &serde_json::json!({
+                "status": "decrypted",
+                "protobuf": &*received.plaintext,
+                "capture": capture,
+                "route": route,
+                "received_at": crate::model::time::Timestamp::now(),
+            }),
+        )?;
+        super::inbox_events::publish(tx, key.as_bytes(), node, &received.plaintext)?;
+        Ok(IncomingResult::Decrypted)
+    })
 }
 
 #[cfg(test)]
