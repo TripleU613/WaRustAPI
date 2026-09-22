@@ -13,8 +13,17 @@ for any collection, and no amount of correct patch bytes can supply one.
 Details: [chat actions](docs/protocol/chat-actions.md).
 
 
-**Group sending is LIVE-VERIFIED (2026-09-22).** One sender-key fan-out was
-transmitted and the server acknowledged it: `addressing_mode=lid`, two
+**Group sending reaches the server but not yet the reader (2026-09-22).** One
+sender-key fan-out was transmitted and the server acknowledged it, but the
+operator reports **"waiting for this message"** — a device stored the stanza and
+could not decrypt it. The `ack` carried `phash="2:KKWRrT6Z"` and `count="2"`:
+the count matched what we addressed, and the participant hash is a **version 2**
+form that no subset of the known member LIDs reproduces under any construction
+tried offline. Every member's saved device list holds only the primary
+(`companions_verified: false`, "no signed index list"), so a member reading on a
+linked device would have received no distribution message at all. That is the
+leading explanation and it is not confirmed. Original result: the fan-out was
+transmitted and acknowledged: `addressing_mode=lid`, two
 recipients, two devices, both device lists fetched in the same connection, both
 sessions established from the same batched `encrypt` key query. Handset display
 is not yet confirmed by the operator. The blocker was never the crypto — it was not knowing who to

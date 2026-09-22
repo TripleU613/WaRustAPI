@@ -1331,6 +1331,28 @@ pub(super) async fn run(
                         .and_then(|v| v.as_text())
                         .map(|v| v.chars().take(8).collect::<String>())
                         .unwrap_or_default();
+                    // An `ack` for a fan-out answers with the participant hash
+                    // the server expects and how many devices it counted. Both
+                    // are the server's own bookkeeping, not identifying, and
+                    // without them a send that is acknowledged but undecryptable
+                    // on the handset gives no clue which list was wrong.
+                    let ack = if node.description == "ack" {
+                        let show = |name: &str| {
+                            node.get_attr(name)
+                                .and_then(|v| v.as_text())
+                                .filter(|v| v.len() <= 32)
+                                .map(str::to_owned)
+                        };
+                        format!(
+                            ", class={:?}, phash={:?}, count={:?}, error={:?}",
+                            show("class"),
+                            show("phash"),
+                            show("count"),
+                            show("error")
+                        )
+                    } else {
+                        String::new()
+                    };
                     let codes = if matches!(node.description.as_str(), "stream:error" | "failure") {
                         // Server-side error codes carry no personal data.
                         let values: Vec<String> = node
@@ -1372,7 +1394,7 @@ pub(super) async fn run(
                     } else {
                         String::new()
                     };
-                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{routing}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
+                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{ack}{routing}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
                 }
             }
             if key.starts_with(b"received:") {
