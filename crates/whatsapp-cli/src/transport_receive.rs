@@ -1233,7 +1233,14 @@ pub(super) async fn run(
                             // protocol routing metadata, not message content, and
                             // knowing which envelope a stanza used is the first
                             // thing needed when one is refused as unsupported.
-                            if matches!(n.description.as_str(), "meta" | "enc") {
+                            // `offline`/`offline_preview` carry only per-class
+                            // queue counts, which are decisive when diagnosing
+                            // whether the server ever queued a class of stanza
+                            // for this account at all.
+                            if matches!(
+                                n.description.as_str(),
+                                "meta" | "enc" | "offline" | "offline_preview"
+                            ) {
                                 // These carry protocol flags and versions only
                                 // (`v`, `type`, `content_type`, `decrypt-fail`),
                                 // never identities, so a short numeric value such

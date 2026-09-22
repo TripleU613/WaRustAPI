@@ -50,6 +50,42 @@ a wrong receipt on a live account is worse than sending none, so this waits on
 a confirmed trace. Consequence: the server may redeliver status updates; the
 inbox dedupes them by `received:status@broadcast:<id>`.
 
+## The server never queues a status for this account (observed)
+
+The decisive measurement, 2026-09-22. The server opens a session with an
+`<ib><offline_preview .../></ib>` stanza carrying per-class counts of what it is
+about to deliver. `LX/1R0->A02` reads exactly these keys from it — `message`,
+`receipt`, `status`, `notification`, `call` (**confirmed**) — so status is a
+first-class offline-queue class and a queued status *would* be announced here.
+
+Every `offline_preview` this account has ever received reports **`status=0`**:
+
+```
+count=11  message=1  receipt=0  notification=9   appdata=0  call=0  status=0
+count=12  message=2  receipt=0  notification=9   appdata=0  call=0  status=0
+count=13  message=2  receipt=0  notification=10  appdata=0  call=0  status=0
+count=29  message=3  receipt=0  notification=25  appdata=0  call=0  status=0
+count=29  message=5  receipt=0  notification=23  appdata=0  call=0  status=0
+count=37  message=5  receipt=0  notification=31  appdata=0  call=0  status=0
+count=41  message=5  receipt=0  notification=35  appdata=0  call=0  status=0
+count=4   message=0  receipt=0  notification=4   appdata=0  call=0  status=0
+```
+
+The `message` and `notification` counts move as real traffic arrives, so the
+preview is live and the zero is meaningful rather than a field we never
+populate. **The server never had a status to give this account**, including
+across the sessions following a post the owner shared with an explicit
+"Only share with" list naming only this number.
+
+This closes the receive side conclusively: the absence is upstream of our
+socket, so no decryption, routing, drain or receipt work on this client can
+affect it. Combined with recipient selection being client-side on the poster's
+device (`status_distribution`), the remaining explanation is that the poster's
+client does not treat this account as an eligible recipient.
+
+Note also `appdata=0`: app-state data is its own offline-queue class, which is
+how a companion would learn of patches this client writes.
+
 ## Refuted: privacy tokens do not gate status delivery
 
 Traced 2026-09-22 after the owner shared a status with **only** the lab number

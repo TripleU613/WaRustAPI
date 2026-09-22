@@ -4448,7 +4448,7 @@
                 "properties": {
                   "inspect": {
                     "type": "boolean",
-                    "description": "Inspect saved plaintext protobuf structure without advancing sessions. Also prints, per preserved capture, the stanza tag/type, attribute names, enc child v/type values, and how the receive path would route it (from/participant server kinds and whether it routes as a group). Cleared and consumed rows are skipped rather than failing the run."
+                    "description": "Inspect saved plaintext protobuf structure without advancing sessions. Also prints, per preserved capture, the stanza tag/type, attribute names, enc child v/type values, and how the receive path would route it (from/participant server kinds and whether it routes as a group). Cleared and consumed rows are skipped rather than failing the run. Also prints the per-class counts on offline/offline_preview stanzas (message, receipt, status, notification, appdata, call), which is how to tell whether the server ever queued a given class of stanza for this account at all."
                   },
                   "replay_captures": {
                     "type": "boolean",
