@@ -93,9 +93,10 @@ events with `ChatId::Group(from)` as the chat and the `participant` JID as the
 sender (`inbox_events::chat_and_sender`). The same resolver serves the text,
 quoted-reply and reaction paths, so all three work in groups. A stanza with a
 group `from` but no `participant`, or a `participant` with a non-group `from`,
-stays opaque. Known limitation: a group quoted reply attributes the quoted
-message to the stanza sender rather than to `contextInfo.participant`, so a
-quote of a third member's message carries the wrong `MessageKey.sender`.
+stays opaque. A quoted reply is attributed to `contextInfo.participant` — the
+quoted message's author, who in a group is often a third member rather than the
+replier — falling back to the stanza sender when that field is absent. In a
+direct chat the two agree, so this did not change direct behavior.
 
 **Implementation**: `crates/whatsapp-api/src/signal/group.rs` (SKDM parsing,
 receive, padding strip, commit helpers); `crates/whatsapp-api/src/transport/inbox.rs`

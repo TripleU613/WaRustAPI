@@ -397,7 +397,16 @@ fn project(
                 let (direction, sender) = if ours {
                     (Direction::Outgoing, None)
                 } else {
-                    (Direction::Incoming, Some(by))
+                    // `contextInfo.participant` names the quoted message's author,
+                    // who in a group is often a third member rather than the
+                    // sender of this reply. Prefer it; fall back to the stanza
+                    // sender when it is absent or unparseable (a direct chat's
+                    // participant is the other party, so the two agree there).
+                    let author = participant
+                        .as_ref()
+                        .and_then(|p| DeviceAddress::from_jid(p).ok())
+                        .unwrap_or(by);
+                    (Direction::Incoming, Some(author))
                 };
                 Some(crate::model::message::MessageRef {
                     key: MessageKey {
@@ -1121,6 +1130,56 @@ mod tests {
         );
     }
 
+    #[test]
+    fn group_quoted_reply_attributes_the_quote_to_its_author_not_the_replier() {
+        use crate::model::{
+            ids::{ChatId, DeviceAddress},
+            jid::Jid,
+            message::Direction,
+        };
+        // In a group, member A replies quoting member B. The quote must be keyed
+        // to B (contextInfo.participant), not to A (the stanza sender).
+        let own = Jid::parse("77700000001@lid").unwrap();
+        let author = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+        let payload = super::super::quotes::reply_payload(
+            "agreed",
+            "ABCDEF",
+            "15555550102@s.whatsapp.net",
+            super::super::quotes::conversation("original"),
+        );
+        let SyncEvent::NewMessage(message) = project(
+            b"fixture",
+            &group_node(),
+            &payload,
+            None,
+            None,
+            std::slice::from_ref(&own),
+        ) else {
+            panic!("expected a group message")
+        };
+        let MessageContent::Text { body, quoted } = message.content else {
+            panic!("expected text")
+        };
+        assert_eq!(body, "agreed");
+        // The reply itself is from the stanza participant.
+        assert_eq!(
+            message.key.sender,
+            Some(
+                DeviceAddress::from_jid(&Jid::parse("15555550100@s.whatsapp.net").unwrap())
+                    .unwrap()
+            )
+        );
+        let quoted = quoted.expect("quoted reference");
+        assert_eq!(quoted.key.direction, Direction::Incoming);
+        // The quoted message belongs to its author, a third member.
+        assert_eq!(
+            quoted.key.sender,
+            Some(DeviceAddress::from_jid(&author).unwrap())
+        );
+        // Both live in the group chat.
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        assert_eq!(quoted.key.chat, ChatId::from_jid(&group).unwrap());
+    }
     #[test]
     fn quoted_reply_projects_text_with_the_quoted_reference() {
         use crate::model::{
