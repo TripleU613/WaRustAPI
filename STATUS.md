@@ -1,4 +1,18 @@
-# Status — 2026-09-20
+# Status — 2026-09-22
+
+**Group message receive implemented (2026-09-22, offline only).** Incoming
+group stanzas (`from`=group, `participant`=sender) now decrypt through the
+Signal sender-key protocol. A sender-key distribution message (`Message` field
+18) installs the member's key, and that stanza's `skmsg` child decrypts with it;
+the member's direct session, pinned identity, consumed prekey, sender key and
+inbox row commit together, and the result projects as a `NewMessage` keyed by
+`ChatId::Group`. An unreadable stanza degrades to Unsupported rather than
+dropping the connection. Verified offline including a full SKDM→skmsg round
+trip; **no group message has been received live** — that needs the operator to
+create a group on their handset and add the lab number (do not `group create`
+from the lab account). Group delivery receipts are not sent: the group receipt
+attribute set is still unknown, and group *sending* (per-device SKDM fan-out)
+is not implemented. Details: [groups](docs/protocol/groups.md).
 
 **API reference added:** an OpenAPI 3.1 document now describes every CLI command,
 HTTP route, library capability, request/response field and recognized server

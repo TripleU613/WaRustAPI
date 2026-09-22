@@ -46,8 +46,19 @@ from offline tests alone. Existing received captures can be processed locally.
   (create, info, subject, description, add/remove/promote/demote, leave,
   invite link) on the action queue with snapshot ingestion and group events;
   not live-verified — the first create was followed by a stream error and the
-  account was then refused at login (`STATUS.md`). Group messages (sender
-  keys) are not implemented.
+  account was then refused at login (`STATUS.md`).
+- Group message **receive** (2026-09-22, `docs/protocol/groups.md`): sender-key
+  decryption is implemented. An SKDM (`Message` field 18) arriving in a member's
+  direct `pkmsg`/`msg` — whether standalone or as a second `enc` child of the
+  group stanza itself — installs the sender key; the stanza's `skmsg` child then
+  decrypts with it, strips the APK plaintext padding and projects as a
+  `NewMessage` keyed by `ChatId::Group` with the `participant` as sender. The
+  member's direct session, pinned identity, any consumed one-time prekey, the
+  sender key and the inbox row commit in one transaction. Undecryptable stanzas
+  degrade to Unsupported without failing the session. Verified offline only,
+  including a full SKDM→skmsg round trip; **no group message has been received
+  live**. Group delivery receipts are deliberately not sent (shape unknown) and
+  group message **sending** (per-device SKDM fan-out) is not implemented.
 - Chat actions (2026-09-20, `docs/protocol/chat-actions.md`): a durable
   one-shot IQ action queue carries block/unblock/block-list fetch, spam report,
   the default disappearing-timer IQ and `usync` contact checks; E2E protocol
