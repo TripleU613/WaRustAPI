@@ -10,7 +10,7 @@ use whatsapp_api::{
     transport::{
         ConnectionEpoch,
         comparison::{ComparisonEndpoint, ComparisonGateway},
-        handshake::{COMPARISON_CHAIN_POLICY, VerifiedHandshake},
+        handshake::{COMPARISON_CHAIN_POLICY, EncryptedConnection, VerifiedHandshake},
         noise::StaticKeypair,
         socket::{SocketLimits, connect_comparison},
     },
@@ -27,8 +27,8 @@ use whatsapp_api::{
 /// during the window: it does not acknowledge, decrypt or advance anything, it
 /// only preserves frames for offline inspection.
 async fn after_send_window(
-    store: &whatsapp_api::store::ProtocolStore,
-    channel: &mut whatsapp_api::transport::handshake::EncryptedConnection<tokio::net::TcpStream>,
+    store: &ProtocolStore,
+    channel: &mut EncryptedConnection<tokio::net::TcpStream>,
     request_id: &str,
 ) -> Result<(), Error> {
     use whatsapp_api::{
