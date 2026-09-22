@@ -32,8 +32,13 @@ exactly one, and it settles three questions carried as unknown since the hash
 was first implemented: the set is **every member including the sender**, the JID
 form is the **AD form** with `.0:0` written out, and version `2:` is **SHA-256**
 where version `1:` is SHA-1. `participant_hash_v2` implements it against
-independently computed synthetic vectors, and the fan-out now sends it. Whether
-that is what the recipient was missing is not yet established. Original result: the fan-out was
+independently computed synthetic vectors, and the fan-out now sends it.
+
+**The server validated that derivation.** A second fan-out carried our own
+computed hash and was acknowledged with `count="2"` and **no `phash`** — the
+correction present on the first ack is gone, which is the server agreeing our
+claimed membership matches its own. Whether the recipient can now read the
+message is not yet established. Original result: the fan-out was
 transmitted and acknowledged: `addressing_mode=lid`, two
 recipients, two devices, both device lists fetched in the same connection, both
 sessions established from the same batched `encrypt` key query. Handset display

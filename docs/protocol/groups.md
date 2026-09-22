@@ -547,10 +547,18 @@ computed independently over synthetic identities — the real value and the
 identities behind it stay in private lab state.
 
 `transport::group_send::plan` now computes it over the whole membership and the
-fan-out sends it, which makes the next send differ in exactly one named way.
-(One caveat for reading that result: the sessions established by the first send
-mean the distribution encs will go out as `msg` rather than `pkmsg`, so it is
-not a perfectly clean single variable.)
+fan-out sends it.
+
+**The server confirmed the derivation independently.** A second send carried our
+computed hash, and its `ack` came back with `count="2"` and **no `phash`** — the
+correction the first ack had contained is gone, which is the server saying our
+claimed membership matches its own. The derivation is therefore not just a
+reproduction of one observed value; the server has now validated a hash we
+computed ourselves.
+
+That second send also differed in one unavoidable way: the sessions established
+by the first send meant its distribution encs went out as `msg` rather than
+`pkmsg`, and no key query was needed.
 
 **Still unknown:** the version-2 `phash` construction, whether our own companion
 devices belong in the fan-out, what sets `includeSenderKeysInMessage` in
