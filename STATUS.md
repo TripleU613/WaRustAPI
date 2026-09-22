@@ -1,5 +1,18 @@
 # Status — 2026-09-22
 
+**App-state patch: third refusal, one cause eliminated (2026-09-22).** Reading
+`LX/CRA->A00`, the site that actually assembles an outgoing `SyncdPatch`, showed
+it sets `mutations`, `keyId`, `snapshotMac`, `patchMac`, `deviceIndex` and
+`clientDebugData` — and **never** `version`. All nine references to
+`LX/BYK->version_` in the APK are reads. We had been sending it. Removing it
+(and asserting its absence on the encoded bytes) did not change the answer: the
+third live attempt was refused with the same `400 bad-request`. So the version
+field is eliminated as the cause, and live attempts stop again. The leading
+remaining candidate is the snapshot precondition — this account has no snapshot
+for any collection, and no amount of correct patch bytes can supply one.
+Details: [chat actions](docs/protocol/chat-actions.md).
+
+
 **Group sending is LIVE-VERIFIED (2026-09-22).** One sender-key fan-out was
 transmitted and the server acknowledged it: `addressing_mode=lid`, two
 recipients, two devices, both device lists fetched in the same connection, both

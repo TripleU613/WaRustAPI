@@ -440,9 +440,66 @@ Still undistinguished, and none of them worth guessing:
   was never located);
 * some other required `SyncdPatch` field may be absent.
 
-Resolving this needs the `SyncdPatch` (`LX/BYK`) construction site read for
-every field a real client populates, and the first-patch/snapshot precondition
-established.
+### The construction site, read (2026-09-22, 2.26.37.71)
+
+`LX/CRA->A00` is where a real client assembles the outgoing `SyncdPatch`. It
+sets, in order: `mutations`, `keyId` (a `LX/BQ5` blob), `snapshotMac`,
+`patchMac`, `deviceIndex`, `clientDebugData`, and — conditionally —
+`externalMutations`.
+
+**It never sets `version`.** `LX/BYK->version_` has exactly nine references in
+the whole APK and every one is an `iget-object`; nothing writes it. A
+server-sent patch carries a version, which is why our incoming parser requires
+one, but an outgoing patch does not. **We were sending it on both refused
+attempts.** The claimed version still feeds both MACs and the local state; it is
+simply not on the wire. `build_patch` now omits it, and
+`an_outgoing_patch_carries_no_version_field` asserts that on the encoded bytes.
+
+Field numbers for `SyncdPatch`, from `LX/BYK`'s `newMessageInfo` descriptor
+(**confirmed**), matching what we already decode: 1 `version`, 2 `mutations`,
+3 `externalMutations`, 4 `snapshotMac`, 5 `patchMac`, 6 `keyId`, 7 `exitCode`,
+8 `deviceIndex`, 9 `clientDebugData`.
+
+`clientDebugData` is **traced but not implemented.** `CRA->A00` builds it only
+when it holds all three of a current LT hash (`A0G`), a version (`A08`) and a
+new LT hash (`A0M`); otherwise the whole block is skipped, so an absent field is
+a shape the client itself produces. It is a nested `LX/BYb` whose field numbers,
+from its own descriptor, are: 1 `currentLthash` (bytes), 2 `newLthash` (bytes),
+3 `patchVersion` (eight-byte big-endian of the version), 4 `collectionName`
+(UTF-8), 5 `firstFourBytesFromAHashOfSnapshotMacKey` (never set at this site),
+6 `newLthashSubtract` (bytes, optional), 7 `numberAdd`, 8 `numberRemove`,
+9 `numberOverride`, 10 `senderPlatform` (Android at this site), 11
+`isSenderPrimary`. **Unknown:** whether `newLthash` and `newLthashSubtract` are
+the post-patch hash plus a delta or the addition and subtraction terms —
+`CRA`'s constructor leaves `currentLthash` null and later setters fill it, and
+those were not read. Putting wrong integrity data in a field the server may
+check is worse than leaving it out.
+
+### Third live attempt: the refusal survives the correction
+
+The `version`-free patch was sent once, live, 2026-09-22. The server answered
+the **same `code=400 text=bad-request`**. Three attempts now, two
+evidence-backed corrections, all refused.
+
+That is a useful negative result rather than a wasted send: emitting
+`SyncdPatch.version` was a confirmed deviation from the APK and is now
+eliminated as *the* cause. The correction stays — it makes our patch match the
+builder — but it is not what the server objects to.
+
+**Live patch attempts stop here again.** What remains is what was already
+listed, minus the version question:
+
+* the **first-patch/snapshot precondition** — this account's `return_snapshot`
+  fetch returned an empty `<sync/>`, so it has no snapshot for any collection,
+  and whether a first patch is legal without one is still **unknown**. This is
+  now the leading candidate, because it is the one condition that no amount of
+  getting the patch bytes right can satisfy;
+* **`clientDebugData`** — traced above, deliberately not implemented, because
+  its two LT-hash fields would have to be guessed;
+* the **index JID form** — `LX/BXZ` carries both `lidJid` and `pnJid`, and this
+  account is now known to be LID-addressed in at least its group traffic, which
+  makes the question sharper than it was; the enqueue site that chooses has
+  still not been located.
 
 **Implementation.** `crates/whatsapp-api/src/transport/chat_clear.rs`
 (`clear_chat`) and the CLI's `clear-chat --chat <jid>` implement only the local

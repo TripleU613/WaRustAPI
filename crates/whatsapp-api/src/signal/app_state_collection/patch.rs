@@ -339,9 +339,17 @@ impl CollectionState {
         let patch_mac = keys.patch_mac(&snapshot_mac, &wire_macs, version, &self.collection)?;
         next.version = version;
         let wire = WirePatch {
-            version: Some(Version {
-                value: Some(version),
-            }),
+            // `version` (field 1) is deliberately absent. **Confirmed**
+            // (2.26.37.71): `LX/BYK->version_` has nine references in the whole
+            // APK and every one is an `iget-object` — nothing ever writes it.
+            // The outgoing patch is assembled by `LX/CRA->A00`, which sets
+            // `mutations`, `keyId`, `snapshotMac`, `patchMac`, `deviceIndex`,
+            // `clientDebugData` and (conditionally) `externalMutations`, and
+            // never touches `version`. The version the patch claims still feeds
+            // both MACs and the local state; it is simply not on the wire.
+            //
+            // Sending it is what our two refused live attempts did.
+            version: None,
             mutations: wire_mutations,
             snapshot_mac: Some(snapshot_mac.to_vec()),
             patch_mac: Some(patch_mac.to_vec()),
@@ -349,6 +357,24 @@ impl CollectionState {
                 value: Some(key_id.to_vec()),
             }),
             device_index: Some(device_index),
+            // `clientDebugData` (field 9) is traced but **not implemented**.
+            // `LX/CRA->A00` builds it only when it holds all three of a current
+            // LT hash, a version and a new LT hash, and it is a nested `LX/BYb`
+            // whose field numbers are, from its `newMessageInfo` descriptor:
+            // 1 `currentLthash` (bytes), 2 `newLthash` (bytes),
+            // 3 `patchVersion` (8-byte big-endian of the version),
+            // 4 `collectionName` (UTF-8 bytes),
+            // 5 `firstFourBytesFromAHashOfSnapshotMacKey` (never set there),
+            // 6 `newLthashSubtract` (bytes, optional), 7 `numberAdd`,
+            // 8 `numberRemove`, 9 `numberOverride`, 10 `senderPlatform`
+            // (Android), 11 `isSenderPrimary`.
+            //
+            // **Unknown:** whether `newLthash`/`newLthashSubtract` are the full
+            // post-patch hash and a delta, or the addition and subtraction
+            // terms — `LX/CRA`'s constructor leaves `currentLthash` null and
+            // later setters fill it, and those were not read. Guessing would
+            // put wrong integrity data in a field the server may check, so it
+            // stays absent until that is traced.
             client_debug_data: None,
         };
         Ok(BuiltPatch {
@@ -362,6 +388,56 @@ impl CollectionState {
 #[cfg(test)]
 mod build_tests {
     use super::*;
+
+    /// The APK never writes `SyncdPatch.version`: all nine references to
+    /// `LX/BYK->version_` are reads. Sending it is what our two refused live
+    /// attempts did, so its absence is asserted on the wire rather than left to
+    /// a comment.
+    #[test]
+    fn an_outgoing_patch_carries_no_version_field() {
+        use prost::encoding::{DecodeContext, decode_key, skip_field};
+        let keys = MutationKeys::derive(&[9u8; 32]).unwrap();
+        let built = CollectionState::empty("regular_high")
+            .unwrap()
+            .build_patch(
+                &keys,
+                [0, 1, 0, 0, 0, 2],
+                0,
+                &[set(r#"["contact","a@s.whatsapp.net"]"#)],
+            )
+            .unwrap();
+        let mut bytes = built.bytes.as_slice();
+        let mut tags = Vec::new();
+        while !bytes.is_empty() {
+            let (tag, wire) = decode_key(&mut bytes).unwrap();
+            tags.push(tag);
+            skip_field(wire, tag, &mut bytes, DecodeContext::default()).unwrap();
+        }
+        assert!(!tags.contains(&1), "field 1 (version) must not be emitted");
+        // The fields LX/CRA->A00 does set are all present.
+        for tag in [2, 4, 5, 6, 8] {
+            assert!(tags.contains(&tag), "field {tag} must be emitted");
+        }
+        // The version still reaches the MACs and the local state.
+        assert_eq!(built.version, 1);
+        assert_eq!(built.state.version, 1);
+    }
+
+    /// Our own outgoing patch deliberately omits `version` (field 1), because
+    /// the APK's builder never writes it. The incoming parser still requires it,
+    /// since a server-sent patch always carries one — so to verify our output
+    /// with that same parser the tests put the version back on the wire, which
+    /// is exactly what the server would be doing on its side.
+    fn with_version(bytes: &[u8], version: u64) -> Vec<u8> {
+        let mut inner = Vec::new();
+        prost::encoding::uint64::encode(1, &version, &mut inner);
+        let mut out = Vec::new();
+        prost::encoding::encode_key(1, prost::encoding::WireType::LengthDelimited, &mut out);
+        prost::encoding::encode_varint(inner.len() as u64, &mut out);
+        out.extend_from_slice(&inner);
+        out.extend_from_slice(bytes);
+        out
+    }
 
     fn action(ts: i64) -> Vec<u8> {
         #[derive(Message)]
@@ -404,7 +480,7 @@ mod build_tests {
             .unwrap();
         assert_eq!(built.version, 1);
 
-        let decoded = CollectionPatch::decode(&built.bytes).unwrap();
+        let decoded = CollectionPatch::decode(&with_version(&built.bytes, built.version)).unwrap();
         assert_eq!(decoded.version, 1);
         assert_eq!(decoded.key_id, key_id);
         let verified = state
@@ -432,7 +508,8 @@ mod build_tests {
         let key_id = [0, 1, 0, 0, 0, 3];
         let empty = CollectionState::empty("regular").unwrap();
         let verify = |state: &CollectionState, built: &BuiltPatch| {
-            let decoded = CollectionPatch::decode(&built.bytes).unwrap();
+            let decoded =
+                CollectionPatch::decode(&with_version(&built.bytes, built.version)).unwrap();
             let verified = state.verify_patch(&decoded, |_| Ok(&keys)).unwrap();
             assert_eq!(verified.state, built.state);
             verified.state
@@ -538,7 +615,7 @@ mod build_tests {
             .unwrap()
             .build_patch(&keys, key_id, 0, &[set(r#"["c","a"]"#)])
             .unwrap();
-        let decoded = CollectionPatch::decode(&built.bytes).unwrap();
+        let decoded = CollectionPatch::decode(&with_version(&built.bytes, built.version)).unwrap();
         let other = CollectionState::empty("regular_high").unwrap();
         assert!(other.verify_patch(&decoded, |_| Ok(&keys)).is_err());
     }
