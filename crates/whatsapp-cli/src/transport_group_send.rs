@@ -259,6 +259,17 @@ pub(super) async fn send(
         ));
     }
 
+    // Out-of-band distribution: deliver each device its sender key as an
+    // ordinary direct message first, on the 1:1 path that is live-verified, and
+    // leave `<participants>` off the group stanza entirely.
+    let out_of_band = message.skdm_out_of_band()?;
+    if out_of_band {
+        println!(
+            "group-send: distributing the sender key out of band to {} device(s) before the group stanza",
+            fanout.len()
+        );
+    }
+
     let plaintext = pad(&group_send::text_payload(&message.text)?)?;
     let (skmsg, advanced_key) =
         encrypt_group_payload(chat, &own, &minted.updated_key, &plaintext).await?;
@@ -270,7 +281,7 @@ pub(super) async fn send(
         "text",
         Some(plan.addressing_mode),
         Some(&plan.participant_hash),
-        &fanout,
+        if out_of_band { &[] } else { &fanout },
         &skmsg,
     )?;
     let dict = TokenDictionary::comparison_2_26_37_70();
@@ -317,6 +328,39 @@ pub(super) async fn send(
         "group-send: sessions, own sender key and send intent committed; sending one fan-out to {} device(s)",
         fanout.len()
     );
+
+    if out_of_band {
+        for target in &fanout {
+            let id = new_message_id()?;
+            let distribution = whatsapp_api::transport::messaging::direct_message(
+                &target.device,
+                &id,
+                target.kind,
+                target.ciphertext.clone(),
+            )?;
+            write_node(channel, &distribution).await?;
+            let (ack, _) = wait_for(channel, "ack", &id).await?;
+            let accepted = ack.get_attr("error").is_none();
+            store.write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("message:{}:skdm:{}", message.request_id, target.device).as_bytes(),
+                    1,
+                    &serde_json::json!({
+                        "status": if accepted { "server_acknowledged" } else { "server_refused" },
+                        "wire_id": id,
+                        "at": Timestamp::now(),
+                    }),
+                )
+            })?;
+            if !accepted {
+                return Err(invalid(
+                    "a sender-key distribution message was refused; the group stanza was not sent",
+                ));
+            }
+        }
+        println!("group-send: all distribution messages acknowledged");
+    }
 
     write_node(channel, &node).await?;
     let (ack, pending) = wait_for(channel, "ack", &wire_id).await?;

@@ -380,6 +380,7 @@ pub(crate) async fn upload_source(
         view_once: false,
         group: None,
         fresh_sessions: false,
+        skdm_delivery: None,
         request_id: String::new(),
     };
     let (bytes, width, height) = input(&message)?.ok_or_else(|| invalid("media source missing"))?;

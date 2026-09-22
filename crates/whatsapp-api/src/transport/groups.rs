@@ -709,12 +709,9 @@ pub fn sender_key_stanza(
     if id.is_empty() || id.len() > 128 {
         return Err(Error::invalid("group_send", "invalid stanza id"));
     }
-    if targets.is_empty() {
-        return Err(Error::invalid(
-            "group_send",
-            "a sender-key send needs at least one recipient device",
-        ));
-    }
+    // An empty fan-out is legitimate only when the distribution went out of
+    // band: `includeSenderKeysInMessage` is a per-send flag, so a real client
+    // does not always carry sender keys in the message.
     if skmsg.is_empty() || skmsg.len() > 1_048_576 {
         return Err(Error::invalid("group_send", "invalid skmsg size"));
     }
@@ -775,13 +772,17 @@ pub fn sender_key_stanza(
         }
         node = node.attr("addressing_mode", mode);
     }
-    Ok(node.children(vec![
-        Node::new("participants").children(participants),
+    let mut children = Vec::new();
+    if !participants.is_empty() {
+        children.push(Node::new("participants").children(participants));
+    }
+    children.push(
         Node::new("enc")
             .attr("v", "2")
             .attr("type", "skmsg")
             .bytes(skmsg.to_vec()),
-    ]))
+    );
+    Ok(node.children(children))
 }
 
 #[cfg(test)]
@@ -888,8 +889,11 @@ mod tests {
             kind: "pkmsg",
             ciphertext: vec![1],
         };
-        // No recipients, empty skmsg, empty id.
-        assert!(sender_key_stanza(&chat, "M", "text", Some("lid"), None, &[], &[1]).is_err());
+        // An empty fan-out is allowed (out-of-band distribution) and simply
+        // omits `<participants>`; an empty skmsg and an empty id are not.
+        let bare = sender_key_stanza(&chat, "M", "text", Some("lid"), None, &[], &[1]).unwrap();
+        assert!(bare.child("participants").is_none());
+        assert_eq!(bare.child_nodes().len(), 1);
         assert!(
             sender_key_stanza(
                 &chat,

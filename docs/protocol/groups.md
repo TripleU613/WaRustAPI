@@ -632,6 +632,43 @@ only the addressing form changes. If it decrypts, LID sessions work and the bug
 is elsewhere in the fan-out. If it does not, the bug is found without touching
 groups. `MessageRequest::recipient` now accepts a LID for exactly this.
 
+### LID sessions work — the fan-out's own delivery is the remaining suspect
+
+**Live, 2026-09-22:** a direct message addressed to the recipient's **LID**,
+through the 1:1 path already verified for their phone number, with a fresh
+`pkmsg` session — the operator confirmed it arrived readable.
+
+So LID-addressed Signal sessions decrypt on that handset. Our prekey fetch by
+LID, our session establishment against a LID address, our `pkmsg` and our
+padding are all correct for this recipient. The first of the two remaining
+hypotheses is therefore **eliminated**, and it eliminates a great deal with it:
+the only thing the fan-out does that a working direct message does not is put
+the distribution `<enc>` inside `<participants>` rather than sending it as its
+own message.
+
+### Out-of-band distribution
+
+The APK supports not carrying sender keys in the message at all:
+`includeSenderKeysInMessage` is a per-send constructor flag, and
+`SendLiveLocationKeyJob` distributes its keys entirely out of band. So the
+private message JSON now takes `skdm_delivery`:
+
+* `participants` (default) — one `<enc>` per device inside the group stanza's
+  `<participants>`, the form built so far;
+* `direct` — one ordinary direct message per device carrying the distribution,
+  each acknowledged before the group stanza is sent, with `<participants>`
+  omitted entirely.
+
+`sender_key_stanza` therefore accepts an empty fan-out and omits
+`<participants>` rather than refusing, which is the shape a send with
+`includeSenderKeysInMessage` false produces.
+
+The point of `direct` is that it replaces the one unverified step with a step
+that is now live-verified end to end. If the group message decrypts under it,
+the bug is in how the server treats our `<participants>` block; if it still does
+not, the distribution is arriving and the recipient is rejecting its *contents*,
+which is a different search entirely.
+
 Noted and deliberately not chased yet: the group has disappearing messages on
 (inbound stanzas carry `expiration`, and `notification type=disappearing_mode`
 was captured). That will not stop decryption, but a non-ephemeral payload in an

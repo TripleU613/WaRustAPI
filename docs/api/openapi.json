@@ -365,6 +365,14 @@
             "type": "boolean",
             "description": "Discard the saved Signal session with each recipient device and establish a new one from a fresh prekey bundle, keeping the pinned peer identity (a changed identity is still refused). Applies to both the direct and the group fan-out path. Only legitimate with positive evidence that the peer never received what was encrypted under the old session."
           },
+          "skdm_delivery": {
+            "type": "string",
+            "enum": [
+              "participants",
+              "direct"
+            ],
+            "description": "Group send only: how the sender key is distributed. `participants` (default) puts one `<enc>` per device inside the group stanza's `<participants>`; `direct` sends one ordinary direct message per device carrying the distribution, before the group stanza, and omits `<participants>` entirely. Both are real — `includeSenderKeysInMessage` is a per-send flag in SendE2EMessageJob and SendLiveLocationKeyJob distributes keys entirely out of band."
+          },
           "request_id": {
             "$ref": "#/components/schemas/RequestId"
           },

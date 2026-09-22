@@ -44,6 +44,17 @@ pub struct MessageRequest {
     /// still refused.
     #[serde(default)]
     pub fresh_sessions: bool,
+    /// How a group send distributes its sender key: `participants` (the
+    /// default — one `<enc>` per device inside the group stanza's
+    /// `<participants>`) or `direct` (one ordinary direct message per device,
+    /// carrying the distribution, sent before the group stanza).
+    ///
+    /// Both are real: `includeSenderKeysInMessage` is a per-send flag in
+    /// `SendE2EMessageJob`, so the client does not always put sender keys in the
+    /// message, and `SendLiveLocationKeyJob` distributes its keys entirely out
+    /// of band. `direct` reuses the 1:1 path, which is live-verified.
+    #[serde(default)]
+    pub skdm_delivery: Option<String>,
     /// Stable local idempotency key; reuse it after uncertain outcomes.
     pub request_id: String,
 }
@@ -120,6 +131,19 @@ impl MessageRequest {
         }
         Ok(value)
     }
+    /// Whether a group send puts its distribution message in `<participants>`
+    /// or delivers it as separate direct messages.
+    pub fn skdm_out_of_band(&self) -> crate::Result<bool> {
+        match self.skdm_delivery.as_deref() {
+            None | Some("") | Some("participants") => Ok(false),
+            Some("direct") => Ok(true),
+            Some(_) => Err(crate::Error::invalid(
+                "message",
+                "skdm_delivery is `participants` or `direct`",
+            )),
+        }
+    }
+
     /// The group chat this message targets, when it is a group send.
     ///
     /// Validated the same way a group management request is: a `g.us` JID with
@@ -862,6 +886,7 @@ mod tests {
             view_once: false,
             group: None,
             fresh_sessions: false,
+            skdm_delivery: None,
             request_id: "r1".into(),
         };
         assert_eq!(
@@ -903,6 +928,7 @@ mod tests {
             view_once: false,
             group: group.map(str::to_owned),
             fresh_sessions: false,
+            skdm_delivery: None,
             request_id: "r1".into(),
         };
         assert_eq!(
