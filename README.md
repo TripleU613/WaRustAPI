@@ -12,7 +12,7 @@ The recipient confirmed receipt; one text reply and one protocol sync payload we
 ## Get started
 
 Linux x86_64 is the initial proof target. Install Rust through
-[rustup](https://rustup.rs/); this repository pins Rust 1.94.1 in
+[rustup](https://rustup.rs/); this repository pins Rust 1.98.1 in
 [rust-toolchain.toml](rust-toolchain.toml).
 
 ```sh

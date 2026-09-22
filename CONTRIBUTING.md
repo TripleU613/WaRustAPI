@@ -6,7 +6,7 @@ before changing a protocol boundary.
 
 ## Setup
 
-Use rustup and the checked-in Rust 1.94.1 toolchain. Linux x86_64 is the proof
+Use rustup and the checked-in Rust 1.98.1 toolchain. Linux x86_64 is the proof
 target. Run `rustc --version` to confirm the selected compiler; system Cargo
 installations may ignore `rust-toolchain.toml`. Build with
 `cargo build --locked --workspace`. No APK, account, Java, or protoc is needed

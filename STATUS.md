@@ -320,7 +320,7 @@ the active 2.26.36.75 profile.
 
 | Area | Evidence |
 | --- | --- |
-| Toolchain and dependency contract | `rust-toolchain.toml` 1.94.1; `cargo run -p xtask -- dependency-audit`: no denied crates in `whatsapp-api`, `whatsapp-api +experimental-noise`, `whatsapp-cli` (report: `docs/protocol/dependency-report.md`) |
+| Toolchain and dependency contract | `rust-toolchain.toml` 1.98.1; `cargo run -p xtask -- dependency-audit`: no denied crates in `whatsapp-api`, `whatsapp-api +experimental-noise`, `whatsapp-cli` (report: `docs/protocol/dependency-report.md`) |
 | Reference APK pinned | `com.whatsapp` 2.26.36.75 / 263607533, sha256 `ce7468…922e9`, signing cert `39:87:D0:…:5D:44`; reproduced by `xtask reference-manifest --check` |
 | APK static observations | `xtask apk-strings`: 449,216 dex strings in pinned 2.26.36.75; hosts, 12 Noise pattern names, registration vocabulary, ClientPayload field constants. `apk-xref`/`apk-callers`/`apk-smali`: structural method and caller analysis, validated on separately hashed 2.26.37.70. |
 | Token dictionary | `xtask apk-tokens --check`: ordered dictionary recovered from `classes2.dex` bytecode is identical to the committed fixture → `binary.tokens` is client-observed; version byte still ReferenceOnly |
@@ -336,8 +336,10 @@ the active 2.26.36.75 profile.
 Test count: 227 (`cargo test --locked --workspace --all-features`). Formatting,
 all-feature/all-target Clippy with `-D warnings`, strict rustdoc, package
 verification, and protobuf regeneration checks pass on the continuation
-machine (Rust 1.98.1). The repository and CI
-remain pinned to Rust 1.94.1; that version was not rerun on this machine.
+machine (Rust 1.98.1). The repository and CI pin Rust
+1.98.1 as of 2026-09-22, raised from 1.94.1 so that the pinned toolchain and the
+development machine are the same version and local verification speaks for CI
+(ADR 0001 addendum).
 The newer-toolchain chunk-iterator warnings were resolved without changing
 encoding behavior.
 

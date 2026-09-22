@@ -21,6 +21,16 @@ could not be inspected and no compatibility requirement could be recorded.
   (operator/proof tool) and `xtask` (automation), edition 2024, toolchain
   pinned to 1.94.1 in `rust-toolchain.toml`, MSRV 1.94.
 - `unsafe_code = "forbid"` workspace-wide; `todo!`/`unimplemented!`/`dbg!` denied.
+
+  **Addendum 2026-09-22:** the pin and MSRV were raised to **1.98.1** /
+  `rust-version = "1.98"`. The original 1.94.1 pin is kept in this record as the
+  decision made at the time. Reason for the raise: the development machine runs
+  1.98.1 and CI pinned 1.94.1, so local verification could not speak for the
+  pinned toolchain and every local green result carried an unverifiable caveat.
+  Raising the pin to match makes local and CI the same toolchain again, which is
+  the property the pin exists to provide. The pin itself is kept rather than
+  tracking `stable`, because this repository runs `clippy -D warnings` and a
+  floating toolchain turns any new upstream lint into an unrelated CI failure.
 - The dependency graph is audited by `cargo run -p xtask -- dependency-audit`,
   which walks normal edges for Linux x86_64, flags `-sys` names, build
   scripts, `links` keys and a denied list (`ring`, `aws-lc-*`, `openssl*`,

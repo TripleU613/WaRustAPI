@@ -6,7 +6,7 @@
 | `docs/design/` | Implementation plan with stable section numbers | — |
 | `docs/README.md`, `CONTRIBUTING.md` | Documentation index and contributor workflow | — |
 | `STATUS.md` | What works, what is blocked, gate status | — |
-| `Cargo.toml`, `rust-toolchain.toml`, `Cargo.lock` | Workspace, pinned toolchain 1.94.1, lockfile | committed |
+| `Cargo.toml`, `rust-toolchain.toml`, `Cargo.lock` | Workspace, pinned toolchain 1.98.1, lockfile | committed |
 | `crates/whatsapp-api/src/lib.rs` | Public facade re-exports | done |
 | `src/error.rs` | Typed errors | done |
 | `src/evidence.rs` | Evidence labels | done |

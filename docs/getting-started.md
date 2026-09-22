@@ -3,7 +3,7 @@
 [Documentation index](README.md)
 
 The supported proof environment is Linux x86_64. Use rustup so
-[rust-toolchain.toml](../rust-toolchain.toml) selects Rust 1.94.1; a distribution
+[rust-toolchain.toml](../rust-toolchain.toml) selects Rust 1.98.1; a distribution
 Cargo binary may ignore that file. Verify with `rustc --version`.
 The lockfile is committed. Initial builds need access to the crate registry.
 

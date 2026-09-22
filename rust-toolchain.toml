@@ -1,6 +1,6 @@
 [toolchain]
 # Pinned proof toolchain (section 19.4). Raise deliberately together with
 # `workspace.package.rust-version`.
-channel = "1.94.1"
+channel = "1.98.1"
 components = ["rustfmt", "clippy"]
 profile = "minimal"

@@ -61,7 +61,7 @@ Monday's scheduled run, or a manual run with `full: true`, additionally runs:
 - each optional feature independently;
 - release-mode integration/property/crash tests with 4,096 property cases;
 - workspace coverage using cargo-llvm-cov;
-- the full test suite on current stable Rust, in addition to pinned 1.94.1.
+- the full test suite on current stable Rust, in addition to pinned 1.98.1.
 
 LCOV reports are retained as workflow artifacts for 14 days. Coverage is
 reported without an invented percentage threshold. The extended job is part
