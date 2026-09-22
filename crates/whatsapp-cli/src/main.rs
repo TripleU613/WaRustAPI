@@ -1525,12 +1525,39 @@ async fn run(cli: Cli) -> Result<(), Error> {
                                 counts.insert(format!("{t:?}"), serde_json::json!(tx.count(t)?));
                             }
                             let account = AccountRecord::load(tx)?;
+                            // Checkpoints holds many unrelated record kinds under
+                            // one table, so a bare row count cannot answer "is
+                            // there an app-state key / a login identity / any
+                            // captures". Report the leading key segment only: the
+                            // kind is structural, while the rest of a key is a
+                            // JID or digest and stays unprinted.
+                            let mut kinds: std::collections::BTreeMap<String, usize> =
+                                std::collections::BTreeMap::new();
+                            let mut cursor = None;
+                            loop {
+                                let rows =
+                                    tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 512)?;
+                                let done = rows.len() < 512;
+                                cursor = rows.last().map(|(key, _)| key.clone());
+                                for (key, _) in rows {
+                                    let name = String::from_utf8_lossy(&key).into_owned();
+                                    let kind = name
+                                        .split_once(':')
+                                        .map_or(name.as_str(), |(head, _)| head)
+                                        .to_owned();
+                                    *kinds.entry(kind).or_default() += 1;
+                                }
+                                if done {
+                                    break;
+                                }
+                            }
                             Ok(serde_json::json!({
                                 "account_id": s.account_id().as_str(),
                                 "generation": s.generation().0,
                                 "journal_head": tx.journal_head()?.0,
                                 "registration": account.as_ref().map(|a| format!("{:?}", a.registration)).unwrap_or_else(|| "no account record".into()),
                                 "tables": counts,
+                                "checkpoint_kinds": kinds,
                             }))
                         })
                     })

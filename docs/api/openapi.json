@@ -7728,7 +7728,7 @@
           "Store"
         ],
         "summary": "Print table counts, journal head, generation and registration status",
-        "description": "Returns inspection data for the protocol store including table row counts, journal state and current registration status.",
+        "description": "Returns inspection data for the protocol store including table row counts, journal state and current registration status. Also reports checkpoint_kinds: a count of Checkpoints rows per leading key segment (for example inbound, received, app-state-key, login-identity). Checkpoints holds many unrelated record kinds under one table, so a bare row count cannot answer whether a given kind is present; only the structural prefix is shown, never the JID or digest that follows it.",
         "operationId": "inspectStore",
         "x-cli": "whatsapp-cli store inspect",
         "x-transport": [
