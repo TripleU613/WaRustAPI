@@ -226,6 +226,159 @@ impl MutationKeys {
         mac.update(collection.as_bytes());
         mac.verify_slice(expected).map_err(|_| invalid())
     }
+
+    // ---- Write side. Each function below is the exact inverse of the verify
+    // function above it, so the round-trip test authenticates new output with
+    // the pre-existing verifiers rather than with itself.
+
+    /// Inverse of [`Self::verify_index`].
+    pub fn index_mac(&self, index: &[u8]) -> Result<[u8; 32]> {
+        let mut mac = Hmac::<Sha256>::new_from_slice(&self.0[..32]).map_err(|_| invalid())?;
+        mac.update(index);
+        Ok(mac.finalize().into_bytes().into())
+    }
+
+    /// Inverse of [`Self::verify_snapshot`].
+    pub fn snapshot_mac(
+        &self,
+        state_hash: &[u8; 128],
+        version: u64,
+        collection: &str,
+    ) -> Result<[u8; 32]> {
+        let mut mac = Hmac::<Sha256>::new_from_slice(&self.0[96..128]).map_err(|_| invalid())?;
+        mac.update(state_hash);
+        mac.update(&version.to_be_bytes());
+        mac.update(collection.as_bytes());
+        Ok(mac.finalize().into_bytes().into())
+    }
+
+    /// Inverse of [`Self::verify_patch`].
+    pub fn patch_mac(
+        &self,
+        snapshot_mac: &[u8; 32],
+        value_macs: &[[u8; 32]],
+        version: u64,
+        collection: &str,
+    ) -> Result<[u8; 32]> {
+        let mut mac = Hmac::<Sha256>::new_from_slice(&self.0[128..160]).map_err(|_| invalid())?;
+        mac.update(snapshot_mac);
+        for value_mac in value_macs {
+            mac.update(value_mac);
+        }
+        mac.update(&version.to_be_bytes());
+        mac.update(collection.as_bytes());
+        Ok(mac.finalize().into_bytes().into())
+    }
+
+    /// Inverse of [`Self::verify_value`]: the value MAC covers the operation
+    /// byte, the six-byte key ID, IV+ciphertext and the eight-byte big-endian
+    /// length of operation+key ID, truncated left to 32 bytes.
+    fn value_mac(
+        &self,
+        operation: MutationOperation,
+        key_id: &[u8; 6],
+        iv_ciphertext: &[u8],
+    ) -> Result<[u8; 32]> {
+        let op = match operation {
+            MutationOperation::Set => 1,
+            MutationOperation::Remove => 2,
+        };
+        let mut mac = Hmac::<Sha512>::new_from_slice(&self.0[64..96]).map_err(|_| invalid())?;
+        mac.update(&[op]);
+        mac.update(key_id);
+        mac.update(iv_ciphertext);
+        mac.update(&7_u64.to_be_bytes());
+        let full = mac.finalize().into_bytes();
+        let mut out = [0; 32];
+        out.copy_from_slice(&full[..32]);
+        Ok(out)
+    }
+}
+
+/// One mutation ready to place in a patch, with the MACs a patch is built from.
+pub struct EncryptedMutation {
+    /// IV || ciphertext || 32-byte value MAC, the `SyncdRecord.value.blob` form
+    /// `decrypt_mutation` expects.
+    pub body: Zeroizing<Vec<u8>>,
+    /// MAC over the exact index bytes; also this mutation's identity in the
+    /// collection's value map and in the LT-hash.
+    pub index_mac: [u8; 32],
+    /// The trailing 32 bytes of `body`, ordered into the patch MAC and summed
+    /// into the LT-hash.
+    pub value_mac: [u8; 32],
+}
+impl std::fmt::Debug for EncryptedMutation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("EncryptedMutation(<redacted>)")
+    }
+}
+
+impl MutationKeys {
+    /// Build one encrypted mutation. `index` is the exact JSON array bytes that
+    /// will be MAC'd — never a reserialization, since the MAC covers the
+    /// original UTF-8. `action` is the `SyncActionValue` protobuf, which for a
+    /// SET must already carry its timestamp (field 1); `decrypt_mutation`
+    /// refuses a SET without one.
+    ///
+    /// `padding` fills `MutationData.padding` (field 3). The APK's own padding
+    /// content is **unknown**, so this writes none; the field is length-
+    /// delimited and an empty value is well-formed.
+    pub fn encrypt_mutation(
+        &self,
+        operation: MutationOperation,
+        key_id: &[u8; 6],
+        index: &[u8],
+        action: Option<&[u8]>,
+        version: i32,
+        iv: [u8; 16],
+    ) -> Result<EncryptedMutation> {
+        if index.is_empty() || index.len() > 65536 {
+            return Err(invalid());
+        }
+        // Mirror the reader's acceptance rules so we never emit a mutation our
+        // own verifier would reject.
+        let parts: Zeroizing<Vec<String>> =
+            Zeroizing::new(serde_json::from_slice(index).map_err(|_| invalid())?);
+        if parts.is_empty() || parts.iter().any(String::is_empty) {
+            return Err(invalid());
+        }
+        if matches!(operation, MutationOperation::Set) {
+            let raw = action.ok_or_else(invalid)?;
+            if ActionHeader::decode(raw)
+                .map_err(|_| invalid())?
+                .timestamp
+                .is_none()
+            {
+                return Err(invalid());
+            }
+        }
+        let plaintext = Zeroizing::new(
+            MutationData {
+                index: Some(index.to_vec()),
+                value: action.map(<[u8]>::to_vec),
+                padding: Vec::new(),
+                version: Some(version),
+            }
+            .encode_to_vec(),
+        );
+        let mut body = Zeroizing::new(iv.to_vec());
+        let mut ciphertext = Zeroizing::new(Vec::new());
+        wacore_libsignal::crypto::aes_256_cbc_encrypt_into(
+            &plaintext,
+            &self.0[32..64],
+            &iv,
+            &mut ciphertext,
+        )
+        .map_err(|_| invalid())?;
+        body.extend_from_slice(&ciphertext);
+        let value_mac = self.value_mac(operation, key_id, &body)?;
+        body.extend_from_slice(&value_mac);
+        Ok(EncryptedMutation {
+            body,
+            index_mac: self.index_mac(index)?,
+            value_mac,
+        })
+    }
 }
 
 #[cfg(test)]
@@ -233,6 +386,112 @@ mod tests {
     use super::*;
     fn bytes(hex: &str) -> Vec<u8> {
         hex::decode(hex).unwrap()
+    }
+
+    /// The write side is only trustworthy if the *pre-existing* verifiers accept
+    /// it — those carry independent OpenSSL/Python vectors, so this is real
+    /// cross-checking rather than the encoder agreeing with itself.
+    #[test]
+    fn encrypted_mutations_authenticate_under_the_independent_verifiers() {
+        let keys = MutationKeys::derive(&(0..32).collect::<Vec<u8>>()).unwrap();
+        let key_id = [0, 1, 0, 0, 0, 2];
+        let index = br#"["contact","15555550100@s.whatsapp.net"]"#;
+        // A SyncActionValue carrying only its required timestamp (field 1).
+        let action = ActionHeader {
+            timestamp: Some(1_700_000_000_000),
+        }
+        .encode_to_vec();
+        let iv = [7u8; 16];
+
+        let m = keys
+            .encrypt_mutation(MutationOperation::Set, &key_id, index, Some(&action), 7, iv)
+            .unwrap();
+
+        // Value MAC, index MAC and the full envelope all verify.
+        let (encrypted, tag) = m.body.split_at(m.body.len() - 32);
+        keys.verify_value(MutationOperation::Set, &key_id, encrypted, tag)
+            .unwrap();
+        assert_eq!(tag, m.value_mac);
+        keys.verify_index(index, &m.index_mac).unwrap();
+        let decrypted = keys
+            .decrypt_mutation(MutationOperation::Set, &key_id, &m.body, &m.index_mac)
+            .unwrap();
+        assert_eq!(decrypted.index(), index);
+        assert_eq!(decrypted.value(), Some(action.as_slice()));
+        assert_eq!(decrypted.version(), 7);
+
+        // A REMOVE needs no action, and round-trips under its own operation byte.
+        let r = keys
+            .encrypt_mutation(MutationOperation::Remove, &key_id, index, None, 7, iv)
+            .unwrap();
+        keys.decrypt_mutation(MutationOperation::Remove, &key_id, &r.body, &r.index_mac)
+            .unwrap();
+        // The operation is bound by the MAC: reading it as the other op fails.
+        assert!(
+            keys.decrypt_mutation(MutationOperation::Set, &key_id, &r.body, &r.index_mac)
+                .is_err()
+        );
+        // So is the key id.
+        assert!(
+            keys.decrypt_mutation(MutationOperation::Set, &[9; 6], &m.body, &m.index_mac)
+                .is_err()
+        );
+    }
+
+    #[test]
+    fn snapshot_and_patch_macs_match_their_verifiers_and_reject_drift() {
+        let keys = MutationKeys::derive(&[3u8; 32]).unwrap();
+        let state = [5u8; 128];
+        let snapshot = keys.snapshot_mac(&state, 4, "regular_high").unwrap();
+        keys.verify_snapshot(&state, 4, "regular_high", &snapshot)
+            .unwrap();
+        // Version and collection are both bound.
+        assert!(
+            keys.verify_snapshot(&state, 5, "regular_high", &snapshot)
+                .is_err()
+        );
+        assert!(
+            keys.verify_snapshot(&state, 4, "regular", &snapshot)
+                .is_err()
+        );
+
+        let value_macs = [[1u8; 32], [2u8; 32]];
+        let patch = keys
+            .patch_mac(&snapshot, &value_macs, 4, "regular_high")
+            .unwrap();
+        keys.verify_patch(&snapshot, &value_macs, 4, "regular_high", &patch)
+            .unwrap();
+        // Mutation order is part of the MAC.
+        let swapped = [value_macs[1], value_macs[0]];
+        assert!(
+            keys.verify_patch(&snapshot, &swapped, 4, "regular_high", &patch)
+                .is_err()
+        );
+    }
+
+    #[test]
+    fn encrypt_refuses_inputs_its_own_reader_would_reject() {
+        let keys = MutationKeys::derive(&[1u8; 32]).unwrap();
+        let key_id = [0; 6];
+        let iv = [0u8; 16];
+        let ok_index = br#"["contact","x"]"#;
+        // A SET with no action, and with an action lacking a timestamp.
+        assert!(
+            keys.encrypt_mutation(MutationOperation::Set, &key_id, ok_index, None, 1, iv)
+                .is_err()
+        );
+        assert!(
+            keys.encrypt_mutation(MutationOperation::Set, &key_id, ok_index, Some(&[]), 1, iv)
+                .is_err()
+        );
+        // Index must be a nonempty JSON array of nonempty strings.
+        for bad in [b"[]".as_slice(), br#"["a",""]"#, b"not json", b"{}"] {
+            assert!(
+                keys.encrypt_mutation(MutationOperation::Remove, &key_id, bad, None, 1, iv)
+                    .is_err(),
+                "index {bad:?} should be refused"
+            );
+        }
     }
     #[test]
     fn independent_openssl_mutations_decrypt_only_after_authentication() {

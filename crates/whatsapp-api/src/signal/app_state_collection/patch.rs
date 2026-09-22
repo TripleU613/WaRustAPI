@@ -215,3 +215,331 @@ mod tests {
         assert!(state.verify_patch(&patch, |_| Ok(&keys)).is_ok());
     }
 }
+
+/// One mutation to place in an outgoing patch.
+pub struct OutgoingMutation {
+    /// SET replaces the value at this index; REMOVE deletes it and requires the
+    /// index to be present in the current state.
+    pub operation: MutationOperation,
+    /// Exact index JSON array bytes. These are MAC'd verbatim, so the caller
+    /// must pass the same bytes it wants authenticated, never a reserialization.
+    pub index: Vec<u8>,
+    /// `SyncActionValue` protobuf. Required for SET, which must carry its
+    /// timestamp (field 1); optional for REMOVE.
+    pub action: Option<Vec<u8>>,
+    /// Action schema version, distinct from the collection's ordering counter.
+    pub version: i32,
+}
+impl std::fmt::Debug for OutgoingMutation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("OutgoingMutation(<redacted>)")
+    }
+}
+
+/// A patch ready to send, plus the state to persist **only** once the server
+/// has accepted it. Applying the new state before acceptance would desynchronize
+/// the collection version from the server's.
+pub struct BuiltPatch {
+    /// `SyncdPatch` wire bytes for the `<patch>` child.
+    pub bytes: Vec<u8>,
+    /// Candidate state at `version`; the source state is unchanged.
+    pub state: CollectionState,
+    /// The version this patch claims, always the current version plus one.
+    pub version: u64,
+}
+impl std::fmt::Debug for BuiltPatch {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("BuiltPatch(<redacted>)")
+    }
+}
+
+impl CollectionState {
+    /// Build the next patch for this collection. This is the exact inverse of
+    /// [`CollectionState::verify_patch`]: same version rule, same duplicate and
+    /// missing-REMOVE refusals, same LT-hash accounting and the same MAC inputs,
+    /// so a built patch re-verifies against the state it was built from.
+    ///
+    /// Nothing is persisted or sent here, and the returned state must not be
+    /// saved until the server accepts the patch.
+    pub fn build_patch(
+        &self,
+        keys: &MutationKeys,
+        key_id: [u8; 6],
+        device_index: u32,
+        mutations: &[OutgoingMutation],
+    ) -> Result<BuiltPatch> {
+        if mutations.is_empty() {
+            return Err(invalid("a patch needs at least one mutation"));
+        }
+        if mutations.len() > 4096 {
+            return Err(invalid("patch exceeds local mutation bound"));
+        }
+        let version = self
+            .version
+            .checked_add(1)
+            .ok_or_else(|| invalid("collection version overflow"))?;
+        let mut next = self.clone();
+        let mut wire_macs: Vec<[u8; 32]> = Vec::new();
+        let mut wire_mutations = Vec::new();
+        let mut removed = Vec::new();
+        let mut added = Vec::new();
+        let mut indexes = BTreeSet::new();
+        for mutation in mutations {
+            let mut iv = [0; 16];
+            getrandom::fill(&mut iv).map_err(|_| invalid("mutation IV entropy unavailable"))?;
+            let encrypted = keys.encrypt_mutation(
+                mutation.operation,
+                &key_id,
+                &mutation.index,
+                mutation.action.as_deref(),
+                mutation.version,
+                iv,
+            )?;
+            if !indexes.insert(encrypted.index_mac) {
+                return Err(invalid("duplicate mutation index"));
+            }
+            match mutation.operation {
+                MutationOperation::Set => {
+                    if let Some(previous) =
+                        next.values.insert(encrypted.index_mac, encrypted.value_mac)
+                    {
+                        removed.push(previous);
+                    }
+                    added.push(encrypted.value_mac);
+                }
+                MutationOperation::Remove => {
+                    let previous = next
+                        .values
+                        .remove(&encrypted.index_mac)
+                        .ok_or_else(|| invalid("REMOVE has no saved index in this collection"))?;
+                    removed.push(previous);
+                }
+            }
+            wire_macs.push(encrypted.value_mac);
+            wire_mutations.push(WireMutation {
+                operation: Some(match mutation.operation {
+                    MutationOperation::Set => 0,
+                    MutationOperation::Remove => 1,
+                }),
+                record: Some(Record {
+                    index: Some(Blob {
+                        value: Some(encrypted.index_mac.to_vec()),
+                    }),
+                    value: Some(Blob {
+                        value: Some(encrypted.body.to_vec()),
+                    }),
+                    key_id: Some(Blob {
+                        value: Some(key_id.to_vec()),
+                    }),
+                }),
+            });
+        }
+        next.hash = self.hash.updated(&removed, &added)?;
+        let snapshot_mac = keys.snapshot_mac(next.hash.as_bytes(), version, &self.collection)?;
+        let patch_mac = keys.patch_mac(&snapshot_mac, &wire_macs, version, &self.collection)?;
+        next.version = version;
+        let wire = WirePatch {
+            version: Some(Version {
+                value: Some(version),
+            }),
+            mutations: wire_mutations,
+            snapshot_mac: Some(snapshot_mac.to_vec()),
+            patch_mac: Some(patch_mac.to_vec()),
+            key_id: Some(Blob {
+                value: Some(key_id.to_vec()),
+            }),
+            device_index: Some(device_index),
+            client_debug_data: None,
+        };
+        Ok(BuiltPatch {
+            bytes: wire.encode_to_vec(),
+            state: next,
+            version,
+        })
+    }
+}
+
+#[cfg(test)]
+mod build_tests {
+    use super::*;
+
+    fn action(ts: i64) -> Vec<u8> {
+        #[derive(Message)]
+        struct Header {
+            #[prost(int64, optional, tag = "1")]
+            timestamp: Option<i64>,
+        }
+        Header {
+            timestamp: Some(ts),
+        }
+        .encode_to_vec()
+    }
+
+    fn set(index: &str) -> OutgoingMutation {
+        OutgoingMutation {
+            operation: MutationOperation::Set,
+            index: index.as_bytes().to_vec(),
+            action: Some(action(1_700_000_000_000)),
+            version: 7,
+        }
+    }
+
+    /// A built patch must satisfy the verifier it was modelled on, including the
+    /// LT-hash-derived snapshot MAC and the ordered patch MAC. `verify_patch`
+    /// was written and vectored before any of the write path existed, so this is
+    /// a real cross-check rather than the builder agreeing with itself.
+    #[test]
+    fn a_built_patch_verifies_against_the_state_it_was_built_from() {
+        let keys = MutationKeys::derive(&[9u8; 32]).unwrap();
+        let key_id = [0, 1, 0, 0, 0, 2];
+        let state = CollectionState::empty("regular_high").unwrap();
+
+        let built = state
+            .build_patch(
+                &keys,
+                key_id,
+                0,
+                &[set(r#"["contact","a@s.whatsapp.net"]"#)],
+            )
+            .unwrap();
+        assert_eq!(built.version, 1);
+
+        let decoded = CollectionPatch::decode(&built.bytes).unwrap();
+        assert_eq!(decoded.version, 1);
+        assert_eq!(decoded.key_id, key_id);
+        let verified = state
+            .verify_patch(&decoded, |id| {
+                assert_eq!(id, &key_id);
+                Ok(&keys)
+            })
+            .unwrap();
+        // The verifier's resulting state matches what the builder predicted.
+        assert_eq!(verified.state, built.state);
+        assert_eq!(verified.state.version(), 1);
+        assert_eq!(verified.state.len(), 1);
+        assert_eq!(verified.mutations.len(), 1);
+        assert_eq!(
+            verified.mutations[0].index(),
+            br#"["contact","a@s.whatsapp.net"]"#
+        );
+    }
+
+    /// Several mutations in one patch, then a REMOVE in a following patch, so
+    /// the replace-and-remove LT-hash accounting is exercised end to end.
+    #[test]
+    fn sequential_patches_replace_and_remove_consistently() {
+        let keys = MutationKeys::derive(&[4u8; 32]).unwrap();
+        let key_id = [0, 1, 0, 0, 0, 3];
+        let empty = CollectionState::empty("regular").unwrap();
+        let verify = |state: &CollectionState, built: &BuiltPatch| {
+            let decoded = CollectionPatch::decode(&built.bytes).unwrap();
+            let verified = state.verify_patch(&decoded, |_| Ok(&keys)).unwrap();
+            assert_eq!(verified.state, built.state);
+            verified.state
+        };
+
+        let first = empty
+            .build_patch(
+                &keys,
+                key_id,
+                0,
+                &[set(r#"["c","a"]"#), set(r#"["c","b"]"#)],
+            )
+            .unwrap();
+        let after_first = verify(&empty, &first);
+        assert_eq!(after_first.len(), 2);
+
+        // Replacing an existing index keeps the count and still verifies: the
+        // old value MAC must be subtracted from the hash.
+        let second = after_first
+            .build_patch(&keys, key_id, 0, &[set(r#"["c","a"]"#)])
+            .unwrap();
+        let after_second = verify(&after_first, &second);
+        assert_eq!(after_second.len(), 2);
+        assert_eq!(after_second.version(), 2);
+
+        let third = after_second
+            .build_patch(
+                &keys,
+                key_id,
+                0,
+                &[OutgoingMutation {
+                    operation: MutationOperation::Remove,
+                    index: br#"["c","b"]"#.to_vec(),
+                    action: None,
+                    version: 7,
+                }],
+            )
+            .unwrap();
+        let after_third = verify(&after_second, &third);
+        assert_eq!(after_third.len(), 1);
+        assert_eq!(after_third.version(), 3);
+    }
+
+    #[test]
+    fn the_builder_refuses_what_the_verifier_would_reject() {
+        let keys = MutationKeys::derive(&[2u8; 32]).unwrap();
+        let key_id = [0; 6];
+        let state = CollectionState::empty("regular").unwrap();
+        // Empty patch.
+        assert!(state.build_patch(&keys, key_id, 0, &[]).is_err());
+        // Duplicate index within one patch.
+        assert!(
+            state
+                .build_patch(
+                    &keys,
+                    key_id,
+                    0,
+                    &[set(r#"["c","a"]"#), set(r#"["c","a"]"#)]
+                )
+                .is_err()
+        );
+        // REMOVE of an index this collection does not hold.
+        assert!(
+            state
+                .build_patch(
+                    &keys,
+                    key_id,
+                    0,
+                    &[OutgoingMutation {
+                        operation: MutationOperation::Remove,
+                        index: br#"["c","missing"]"#.to_vec(),
+                        action: None,
+                        version: 7,
+                    }]
+                )
+                .is_err()
+        );
+        // A SET without an action.
+        assert!(
+            state
+                .build_patch(
+                    &keys,
+                    key_id,
+                    0,
+                    &[OutgoingMutation {
+                        operation: MutationOperation::Set,
+                        index: br#"["c","a"]"#.to_vec(),
+                        action: None,
+                        version: 7,
+                    }]
+                )
+                .is_err()
+        );
+    }
+
+    /// A patch is bound to its collection: the same bytes must not verify as
+    /// another collection's patch, since the name is inside both MACs.
+    #[test]
+    fn a_patch_does_not_verify_under_another_collection() {
+        let keys = MutationKeys::derive(&[6u8; 32]).unwrap();
+        let key_id = [0; 6];
+        let built = CollectionState::empty("regular")
+            .unwrap()
+            .build_patch(&keys, key_id, 0, &[set(r#"["c","a"]"#)])
+            .unwrap();
+        let decoded = CollectionPatch::decode(&built.bytes).unwrap();
+        let other = CollectionState::empty("regular_high").unwrap();
+        assert!(other.verify_patch(&decoded, |_| Ok(&keys)).is_err());
+    }
+}

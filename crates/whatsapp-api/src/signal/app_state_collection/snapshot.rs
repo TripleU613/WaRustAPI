@@ -21,7 +21,7 @@ pub(super) struct Version {
 #[derive(Message)]
 pub(super) struct Blob {
     #[prost(bytes = "vec", optional, tag = "1")]
-    value: Option<Vec<u8>>,
+    pub(super) value: Option<Vec<u8>>,
 }
 #[derive(Message)]
 pub(super) struct Record {
