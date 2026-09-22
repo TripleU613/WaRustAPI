@@ -1486,6 +1486,9 @@ impl RegistrationHttpResponse {
                 }));
                 summary["has_parent_consent_url"] =
                     serde_json::json!(parsed.consent.parent_consent_url.is_some());
+                if let Some(ref cbs) = parsed.custom_block_screen_shape {
+                    summary["custom_block_screen_shape"] = serde_json::Value::Object(cbs.clone());
+                }
                 if parsed.reason == Some(RegistrationResponseReason::FormatWrong) {
                     // Comparison APK: VerifyPhoneNumber.A19, dialog 53,
                     // string resource 0x7f123741. This is client interpretation,
@@ -1953,6 +1956,9 @@ pub struct RegistrationResponse {
     pub email_otp_eligible: Option<bool>,
     /// Whether confirmation on the previously registered device is offered.
     pub wa_old_eligible: Option<bool>,
+    /// Field names and JSON value types from `custom_block_screen`, if present.
+    /// No values; the APK stores this as a generic Map (A0O). Capped at 32 keys.
+    pub custom_block_screen_shape: Option<serde_json::Map<String, serde_json::Value>>,
     secrets: RegistrationResponseSecrets,
 }
 
@@ -1979,6 +1985,13 @@ impl fmt::Debug for RegistrationResponse {
             .field("email_otp_length", &self.email_otp_length)
             .field("email_otp_eligible", &self.email_otp_eligible)
             .field("wa_old_eligible", &self.wa_old_eligible)
+            .field(
+                "custom_block_screen_fields",
+                &self
+                    .custom_block_screen_shape
+                    .as_ref()
+                    .map(|m| m.keys().cloned().collect::<Vec<_>>()),
+            )
             .field("secrets", &self.secrets)
             .finish()
     }
@@ -2054,6 +2067,22 @@ impl RegistrationResponse {
             email_otp_length: raw.email_otp_length,
             email_otp_eligible: raw.email_otp_eligible,
             wa_old_eligible: raw.wa_old_eligible,
+            custom_block_screen_shape: raw.custom_block_screen.map(|cbs| {
+                cbs.into_iter()
+                    .take(32)
+                    .map(|(key, value)| {
+                        let kind = match &value {
+                            serde_json::Value::Null => "null",
+                            serde_json::Value::Bool(_) => "bool",
+                            serde_json::Value::Number(_) => "number",
+                            serde_json::Value::String(_) => "string",
+                            serde_json::Value::Array(_) => "array",
+                            serde_json::Value::Object(_) => "object",
+                        };
+                        (key, serde_json::json!(kind))
+                    })
+                    .collect()
+            }),
             secrets: RegistrationResponseSecrets {
                 login: raw.login,
                 code: raw.code,
@@ -2112,6 +2141,10 @@ struct RawRegistrationResponse {
     appeal_token: Option<Zeroizing<String>>,
     edge_routing_info: Option<Zeroizing<String>>,
     email: Option<Zeroizing<String>>,
+    /// APK `KotlinRegistrationBridge.A0O` copies all keys from this object into a
+    /// generic Map without typed fields. Captured here; values are never emitted.
+    #[serde(default)]
+    custom_block_screen: Option<serde_json::Map<String, serde_json::Value>>,
 }
 
 /// Second-factor methods the comparison client reads from a `challenge`

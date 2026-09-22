@@ -886,6 +886,13 @@
               "type": "string"
             },
             "description": "Top-level JSON field names and value types (null/bool/number/string/array/object) from the raw response body; no values. Present on all parsed responses so unknown or extra server fields are visible in diagnostics."
+          },
+          "custom_block_screen_shape": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Field names and JSON value types from the custom_block_screen object, when present (Blocked responses). No values. APK KotlinRegistrationBridge.A0O stores this as a generic Map; fields are server-defined. Capped at 32 entries."
           }
         },
         "description": "Redacted server reply for registration requests"
