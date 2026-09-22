@@ -190,10 +190,10 @@ fn event_with_content(
 }
 
 /// Chat and authenticated sender for a projection. A direct message's `from` is
-/// both the chat and the sender; a group message's `from` is the chat and its
-/// `participant` is the sender.
+/// both the chat and the sender; a group or broadcast (status) message's `from`
+/// is the chat and its `participant` is the sender.
 fn chat_and_sender(node: &Node) -> Option<(ChatId, DeviceAddress)> {
-    let (chat_jid, sender_jid) = match super::inbox::group_sender(node) {
+    let (chat_jid, sender_jid) = match super::inbox::sender_key_chat(node) {
         Some(pair) => pair,
         None => {
             let sender = super::inbox::session_sender(node)?;
@@ -642,6 +642,30 @@ mod tests {
         assert_eq!(
             message.key.sender,
             Some(DeviceAddress::from_jid(&sender).unwrap())
+        );
+    }
+    #[test]
+    fn status_update_projects_into_the_broadcast_chat_with_the_poster_as_sender() {
+        use crate::model::{ids::ChatId, jid::Jid};
+        let status = Node::new("message")
+            .attr("from", "status@broadcast")
+            .attr("participant", "15555550100@s.whatsapp.net")
+            .attr("id", "fixture")
+            .attr("t", "123");
+        let SyncEvent::NewMessage(message) = event(b"fixture", &status, b"\x0a\x04test") else {
+            panic!("status did not project as a new message");
+        };
+        let broadcast = Jid::parse("status@broadcast").unwrap();
+        assert_eq!(message.key.chat, ChatId::from_jid(&broadcast).unwrap());
+        let ChatId::Broadcast(ref b) = message.key.chat else {
+            panic!("status must project into the broadcast chat");
+        };
+        assert!(b.is_status());
+        // The poster is the participant, carried in `sender` as for a group.
+        let poster = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        assert_eq!(
+            message.key.sender,
+            Some(DeviceAddress::from_jid(&poster).unwrap())
         );
     }
     #[test]

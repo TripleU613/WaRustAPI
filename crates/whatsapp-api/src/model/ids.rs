@@ -259,13 +259,41 @@ impl GroupId {
     }
 }
 
-/// A chat: a direct conversation with a contact or a group.
+/// A broadcast destination: status updates (`status@broadcast`) or a
+/// user-created broadcast list (`<id>@broadcast`).
+#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct BroadcastId(Jid);
+
+impl BroadcastId {
+    /// Build from a broadcast JID.
+    pub fn from_jid(jid: &Jid) -> Result<Self> {
+        if jid.server != crate::model::jid::Server::Broadcast {
+            return Err(Error::invalid("broadcast_id", "JID is not a broadcast"));
+        }
+        Ok(Self(jid.to_non_ad()))
+    }
+
+    /// The underlying broadcast JID.
+    pub fn jid(&self) -> &Jid {
+        &self.0
+    }
+
+    /// Whether this is the status broadcast rather than a broadcast list.
+    pub fn is_status(&self) -> bool {
+        self.0.user == "status"
+    }
+}
+
+/// A chat: a direct conversation, a group, or a broadcast (status).
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum ChatId {
     /// Direct conversation.
     Direct(ContactId),
     /// Group conversation.
     Group(GroupId),
+    /// Status updates or a broadcast list. The poster is carried separately in
+    /// `MessageKey::sender`, exactly as a group message's sender is.
+    Broadcast(BroadcastId),
 }
 
 impl ChatId {
@@ -273,6 +301,8 @@ impl ChatId {
     pub fn from_jid(jid: &Jid) -> Result<Self> {
         if jid.is_group() {
             Ok(Self::Group(GroupId::from_jid(jid)?))
+        } else if jid.server == crate::model::jid::Server::Broadcast {
+            Ok(Self::Broadcast(BroadcastId::from_jid(jid)?))
         } else {
             Ok(Self::Direct(ContactId::from_jid(jid)?))
         }
@@ -283,6 +313,7 @@ impl ChatId {
         match self {
             Self::Direct(c) => c.jid(),
             Self::Group(g) => g.jid(),
+            Self::Broadcast(b) => b.jid(),
         }
     }
 }

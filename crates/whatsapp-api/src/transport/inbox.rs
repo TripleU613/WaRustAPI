@@ -44,10 +44,14 @@ pub fn session_sender(node: &Node) -> Option<Jid> {
     }
 }
 
-/// Group routing: `from` is the group JID and `participant` is the authenticated
-/// sender device. Returns `(group, sender)` only for a well-formed group stanza;
-/// direct messages and malformed group stanzas yield `None`.
-pub fn group_sender(node: &Node) -> Option<(Jid, Jid)> {
+/// Sender-key routing: `from` is the chat and `participant` is the authenticated
+/// sender device. Groups (`@g.us`) and broadcasts (`status@broadcast` and
+/// broadcast lists) both address messages this way and both encrypt them with
+/// the Signal sender-key protocol, keyed by the chat JID — comparison
+/// 2.26.37.71 `LX/Cnr` builds its sender-key name from the chat JID's raw
+/// string, so the two namespaces cannot collide. Returns `None` for direct
+/// messages and malformed stanzas.
+pub fn sender_key_chat(node: &Node) -> Option<(Jid, Jid)> {
     let parse = |name| {
         let value = node.get_attr(name)?;
         value
@@ -55,12 +59,22 @@ pub fn group_sender(node: &Node) -> Option<(Jid, Jid)> {
             .cloned()
             .or_else(|| Jid::parse(value.as_text()?).ok())
     };
-    let group = parse("from")?;
-    if !group.is_group() {
+    let chat = parse("from")?;
+    if !matches!(chat.server, Server::Group | Server::Broadcast) {
         return None;
     }
     let participant = parse("participant")?;
-    matches!(participant.server, Server::User | Server::Lid).then_some((group, participant))
+    matches!(participant.server, Server::User | Server::Lid).then_some((chat, participant))
+}
+
+/// Groups only. Separate from [`sender_key_chat`] because the delivery-receipt
+/// shape is known for a group but not for a status broadcast, which needs
+/// `class="status"` and `type="sender"` (2.26.37.71 `LX/Cp2->A06`) plus an
+/// unresolved `sts`. Widening this would silently send a group-shaped receipt
+/// for a status update.
+pub fn group_sender(node: &Node) -> Option<(Jid, Jid)> {
+    let (chat, participant) = sender_key_chat(node)?;
+    chat.is_group().then_some((chat, participant))
 }
 
 /// Comparison 1gz.A00 015a..01ba: peer category, DeviceJid and own UserJid.
@@ -589,7 +603,7 @@ async fn process_group_inner(
     node: &Node,
     capture: &[u8],
 ) -> Result<IncomingResult> {
-    let Some((group_jid, sender_jid)) = group_sender(node) else {
+    let Some((group_jid, sender_jid)) = sender_key_chat(node) else {
         return Ok(IncomingResult::Unsupported);
     };
     let Some(id) = node
@@ -826,6 +840,41 @@ async fn process_group_inner(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A status update is addressed `from=status@broadcast participant=<poster>`
+    /// and is sender-key encrypted exactly like a group message, so it must
+    /// route through the same decryption path — but it must NOT be treated as a
+    /// group by the receipt builder, whose status shape (`class="status"`,
+    /// `type="sender"`) is not implemented yet.
+    #[test]
+    fn status_routes_for_decryption_but_not_as_a_group() {
+        let status = Node::new("message")
+            .attr("from", "status@broadcast")
+            .attr("participant", "15555550100@s.whatsapp.net")
+            .attr("id", "s1");
+        let (chat, sender) = sender_key_chat(&status).expect("status must route for decryption");
+        assert_eq!(chat.server, Server::Broadcast);
+        assert_eq!(chat.user, "status");
+        assert_eq!(sender.user, "15555550100");
+        // Not a group: no group-shaped receipt may be built for it.
+        assert!(group_sender(&status).is_none());
+        assert!(super::super::messaging::received_confirmation(&status).is_none());
+        // A broadcast list routes the same way as status.
+        let list = Node::new("message")
+            .attr("from", "12345@broadcast")
+            .attr("participant", "15555550100@s.whatsapp.net")
+            .attr("id", "b1");
+        assert!(sender_key_chat(&list).is_some());
+        assert!(group_sender(&list).is_none());
+        // A group still routes as a group and still gets its receipt.
+        let group = Node::new("message")
+            .attr("from", "120363000000000001@g.us")
+            .attr("participant", "15555550100@s.whatsapp.net")
+            .attr("id", "g1");
+        assert!(sender_key_chat(&group).is_some());
+        assert!(group_sender(&group).is_some());
+        assert!(super::super::messaging::received_confirmation(&group).is_some());
+    }
 
     #[test]
     fn group_sender_accepts_group_stanzas_and_refuses_everything_else() {
