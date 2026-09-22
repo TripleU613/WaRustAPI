@@ -879,6 +879,13 @@
           "body_bytes": {
             "type": "integer",
             "description": "Response body size in bytes"
+          },
+          "body_shape": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Top-level JSON field names and value types (null/bool/number/string/array/object) from the raw response body; no values. Present on all parsed responses so unknown or extra server fields are visible in diagnostics."
           }
         },
         "description": "Redacted server reply for registration requests"

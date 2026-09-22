@@ -1500,6 +1500,29 @@ impl RegistrationHttpResponse {
                     serde_json::json!(parsed.sms_wait.map(|v| v.as_secs()));
                 summary["voice_wait_seconds"] =
                     serde_json::json!(parsed.voice_wait.map(|v| v.as_secs()));
+                // Field names + value types only; no values. Surfaces unknown
+                // fields the parser accepted and silently dropped (e.g., extra
+                // fields in a blocked or refused response).
+                if let Ok(serde_json::Value::Object(map)) =
+                    serde_json::from_slice::<serde_json::Value>(&self.body)
+                {
+                    let shape: serde_json::Map<String, serde_json::Value> = map
+                        .iter()
+                        .take(64)
+                        .map(|(key, value)| {
+                            let kind = match value {
+                                serde_json::Value::Null => "null",
+                                serde_json::Value::Bool(_) => "bool",
+                                serde_json::Value::Number(_) => "number",
+                                serde_json::Value::String(_) => "string",
+                                serde_json::Value::Array(_) => "array",
+                                serde_json::Value::Object(_) => "object",
+                            };
+                            (key.clone(), serde_json::json!(kind))
+                        })
+                        .collect();
+                    summary["body_shape"] = serde_json::Value::Object(shape);
+                }
             }
             Err(_) => {
                 summary["parse_error"] =

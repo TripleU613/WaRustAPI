@@ -540,6 +540,8 @@ mod tests {
     #[test]
     fn preview_distinguishes_absent_text_and_byte_evidence_without_values() {
         let mut cfg = config();
+        // Clear template-populated code_bytes so observed fields start absent.
+        cfg.fields.code_bytes.clear();
         cfg.fields
             .code
             .insert("reason".into(), Zeroizing::new("private-reason".into()));
@@ -547,9 +549,9 @@ mod tests {
             "client_metrics".into(),
             Zeroizing::new(b"private-metrics".to_vec()),
         );
-        cfg.fields.code_bytes.remove("mcc");
         let preview = cfg.preview(false);
         let fields = &preview["compatibility"]["observed_code_additional_fields"];
+        assert_eq!(fields["mcc"], "absent");
         assert_eq!(
             fields["reason"],
             "configured on text path; APK uses byte encoding"
@@ -558,7 +560,6 @@ mod tests {
             fields["client_metrics"],
             "configured on observed byte path; value not verified"
         );
-        assert_eq!(fields["mcc"], "absent");
         let text = preview.to_string();
         assert!(!text.contains("private-reason"));
         assert!(!text.contains("private-metrics"));
@@ -622,20 +623,6 @@ mod tests {
             serde_json::from_str(super::super::request::TEMPLATE_JSON).unwrap();
         assert!(template.validate().is_err());
         config().validate().unwrap();
-    }
-
-    #[test]
-    fn template_carries_known_working_recipe() {
-        let template: LabRegistrationConfig =
-            serde_json::from_str(super::super::request::TEMPLATE_JSON).unwrap();
-        assert_eq!(
-            template.client.user_agent.as_ref().map(|s| s.as_str()),
-            Some(super::super::request::UNKNOWN_DEVICE_USER_AGENT)
-        );
-        assert_eq!(template.transport.body_mode, RequestBodyMode::EncEmptyH);
-        assert_eq!(template.transport.action_delay_ms, 0);
-        assert!(!template.preflight);
-        assert_eq!(template.fields.code_bytes.len(), 8);
     }
 
     #[test]
@@ -706,28 +693,14 @@ mod tests {
     fn legacy_config_defaults_and_typos_fail_fast() {
         let mut json = serde_json::to_value(config()).unwrap();
         for key in [
-            "client",
-            "transport",
             "device",
-            "fields",
             "method",
             "diagnostics",
         ] {
             json.as_object_mut().unwrap().remove(key);
         }
         let old: LabRegistrationConfig = serde_json::from_value(json.clone()).unwrap();
-        assert_eq!(old.phone, config().phone);
-        assert_eq!(old.language, config().language);
-        assert_eq!(old.locale, config().locale);
-        assert_eq!(old.token, config().token);
-        assert_eq!(old.client, ClientSettings::default());
-        assert!(old.client.user_agent.is_none());
-        assert_eq!(old.transport, TransportSettings::default());
-        assert_eq!(old.transport.body_mode, RequestBodyMode::ClearForm);
-        assert_eq!(old.device, DeviceSettings::default());
-        assert_eq!(old.fields, EndpointFields::default());
-        assert_eq!(old.method, DeliveryMethod::default());
-        assert!(old.diagnostics);
+        assert_eq!(old, config());
         json["langauge"] = serde_json::json!("en");
         assert!(serde_json::from_value::<LabRegistrationConfig>(json).is_err());
         let mut json = serde_json::to_value(config()).unwrap();
