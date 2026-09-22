@@ -16,13 +16,24 @@ Details: [chat actions](docs/protocol/chat-actions.md).
 **Group sending reaches the server but not yet the reader (2026-09-22).** One
 sender-key fan-out was transmitted and the server acknowledged it, but the
 operator reports **"waiting for this message"** — a device stored the stanza and
-could not decrypt it. The `ack` carried `phash="2:KKWRrT6Z"` and `count="2"`:
-the count matched what we addressed, and the participant hash is a **version 2**
-form that no subset of the known member LIDs reproduces under any construction
-tried offline. Every member's saved device list holds only the primary
-(`companions_verified: false`, "no signed index list"), so a member reading on a
-linked device would have received no distribution message at all. That is the
-leading explanation and it is not confirmed. Original result: the fan-out was
+could not decrypt it. The `ack` carried a version 2 `phash` and
+`count="2"`: the count matched what we addressed, and the hash was one our
+version 1 implementation could not produce.
+
+The operator confirmed the placeholder is on the phone itself — a device we did
+address — so the stanza was re-checked against the APK and every structural
+doubt closed: `<participants>`, `<to jid=…>` and the outgoing `<enc>` attribute
+set are all confirmed now, the last two from the unobfuscated
+`SendLiveLocationKeyJob`.
+
+That left `phash`, and the ack had supplied the server's own value for this
+group. Searching locally for a construction reproducing those six bytes found
+exactly one, and it settles three questions carried as unknown since the hash
+was first implemented: the set is **every member including the sender**, the JID
+form is the **AD form** with `.0:0` written out, and version `2:` is **SHA-256**
+where version `1:` is SHA-1. `participant_hash_v2` implements it against
+independently computed synthetic vectors, and the fan-out now sends it. Whether
+that is what the recipient was missing is not yet established. Original result: the fan-out was
 transmitted and acknowledged: `addressing_mode=lid`, two
 recipients, two devices, both device lists fetched in the same connection, both
 sessions established from the same batched `encrypt` key query. Handset display
