@@ -16,6 +16,66 @@ use whatsapp_api::{
     },
 };
 
+/// Hold an acknowledged connection open briefly and preserve whatever the
+/// server sends next.
+///
+/// A recipient that cannot decrypt a message answers with a `receipt
+/// type="retry"`, which names the failing device and its count — the single most
+/// informative artifact available when a send is acknowledged but unreadable.
+/// Closing the moment the `ack` arrives throws that away, and a later session
+/// only sees it after the server has queued it, if at all. Nothing is sent
+/// during the window: it does not acknowledge, decrypt or advance anything, it
+/// only preserves frames for offline inspection.
+async fn after_send_window(
+    store: &whatsapp_api::store::ProtocolStore,
+    channel: &mut whatsapp_api::transport::handshake::EncryptedConnection<tokio::net::TcpStream>,
+    request_id: &str,
+) -> Result<(), Error> {
+    use whatsapp_api::{
+        binary::{Encoder, tokens::TokenDictionary},
+        store::Table,
+    };
+    const WINDOW: Duration = Duration::from_secs(45);
+    eprintln!(
+        "transport: holding the connection for {}s to preserve anything the recipients send back",
+        WINDOW.as_secs()
+    );
+    let deadline = tokio::time::Instant::now() + WINDOW;
+    let mut seen = 0usize;
+    for index in 0..64 {
+        let next = tokio::time::timeout_at(
+            deadline,
+            whatsapp_api::transport::messaging::read_node(channel),
+        )
+        .await;
+        let node = match next {
+            Err(_) => break,
+            Ok(Err(error)) => {
+                eprintln!("transport: post-send window ended: {error}");
+                break;
+            }
+            Ok(Ok(node)) => node,
+        };
+        let bytes = Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(&node)?;
+        store.write(|tx| {
+            tx.put_json(
+                Table::Checkpoints,
+                format!("inbound:after-send-{request_id}:{index}").as_bytes(),
+                1,
+                &bytes,
+            )
+        })?;
+        seen += 1;
+        println!(
+            "transport: post-send {} type={:?}; saved encrypted",
+            node.description,
+            node.get_attr("type").and_then(|v| v.as_text())
+        );
+    }
+    println!("transport: post-send window complete; {seen} frame(s) preserved");
+    Ok(())
+}
+
 pub(super) async fn run(
     cli: &super::Cli,
     path: &Path,
@@ -188,8 +248,23 @@ pub(super) async fn run(
                 .or_else(|| whatsapp_api::model::jid::Jid::parse(v.as_text()?).ok())
         });
         let result = serde_json::json!({"status":status,"reason":reason,"at":Timestamp::now(),"message_sent":false});
+        // Preserve the raw login result. A `<failure>` can carry an appeal
+        // token, and saving only the status code throws that away at exactly
+        // the moment it matters; a refusal cannot be replayed to fetch it again.
+        let login_wire =
+            whatsapp_api::binary::Encoder::new(TokenDictionary::comparison_2_26_37_70())
+                .encode(&node)
+                .ok();
         store.write(|tx| {
             tx.put_json(Table::Checkpoints, LOGIN_KEY, 1, &result)?;
+            if let Some(wire) = &login_wire {
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("login-result:{}", Timestamp::now().0).as_bytes(),
+                    1,
+                    wire,
+                )?;
+            }
             if status == "success" {
                 let mut account = AccountRecord::load_in_write(tx)?
                     .ok_or_else(|| Error::invalid("transport", "account disappeared"))?;
@@ -409,6 +484,7 @@ pub(super) async fn run(
         {
             super::transport_group_send::send(&store, &account, &mut channel, message, &chat)
                 .await?;
+            after_send_window(&store, &mut channel, &message.request_id).await?;
         } else if status == "success"
             && let Some(message) = &message
         {
@@ -492,6 +568,7 @@ pub(super) async fn run(
                 image_payload.as_deref().map(|v| v.as_slice()),
             )
             .await?;
+            after_send_window(&store, &mut channel, &message.request_id).await?;
         }
     } else {
         println!(
