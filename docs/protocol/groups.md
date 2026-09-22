@@ -36,21 +36,57 @@ owner), `creator`, `creation`, and `participant` children carrying `jid` and
 an optional `type` of `admin` or `superadmin`; `invite` replies carry `code`.
 All of these names are dictionary tokens.
 
-Group messages (`enc type="skmsg"`, `from`=group JID, `participant`=sender device
-JID) are now decrypted using the Signal sender-key protocol:
+Group messages (`from`=group JID, `participant`=sender device JID) are now
+decrypted using the Signal sender-key protocol.
 
-**SKDM receive** (`senderKeyDistributionMessage` field 18 in a direct
-`pkmsg`/`msg` payload): the decrypted payload is scanned for field 18 after
-successful direct-message decryption; if present, `groupId` and the raw
-`axolotlSenderKeyDistributionMessage` bytes are extracted and
-`process_sender_key_distribution_message` (wacore-libsignal 0.7.0) is called,
-storing the updated `SenderKeyRecord` at `sk:{group_jid}:{sender_non_ad_jid}` in
-`Table::SenderKeys`, committed atomically with the direct inbox row.
+**Stanza shape.** The node model permits several `enc` children of one stanza
+(`LX/0hs->A0N(name)` returns a List of all children with that tag,
+**confirmed**), and one `enc` node is one-of `EncTypeIndividual` (`msg`/`pkmsg`)
+or `EncTypeSenderKey` (`skmsg`) — never both (`LX/ADy->A0T` schema union,
+**confirmed**). `LX/ADy->A0O` selects an enc child by matching type `"skmsg"`
+rather than assuming a single child (**confirmed**). Whether one incoming group
+stanza carries a `pkmsg` (SKDM) *and* an `skmsg` together is **inferred**, not
+confirmed: the decrypt-side loop over enc children was not located, and
+`LX/ClL->A02` (QueuedStanzaFactory) reads only the first enc child. The
+implementation therefore handles both shapes — it selects each child by type
+and applies an SKDM found in the same stanza before decrypting that stanza's
+`skmsg` — which is correct whichever shape the server actually sends.
+
+**SKDM receive** (`senderKeyDistributionMessage` field 18): after a `pkmsg`/`msg`
+child decrypts, its plaintext is scanned for field 18; if present and its
+`groupId` matches the stanza's group, the raw
+`axolotlSenderKeyDistributionMessage` bytes go to
+`process_sender_key_distribution_message` (wacore-libsignal 0.7.0), storing the
+updated `SenderKeyRecord` at `sk:{group_jid}:{sender_non_ad_jid}` in
+`Table::SenderKeys`. The SKDM-bearing child advances that member's ordinary
+direct Signal session (`comparison-direct:<phone>`), so the session, pinned
+identity, any consumed one-time prekey and the sender key all commit together.
+A direct (non-group) message carrying field 18 is handled the same way.
+
+**Participant identity**: `participant_pn` carries the member's phone JID when
+`participant` is a LID (`LX/ADw->A02` reads it as a `UserJid`, **confirmed**;
+it is the group analogue of `sender_pn`). `participant_lid`, `sender_lid` and
+`peer_recipient_pn` also exist in this build. When the attribute is absent, a
+LID participant is mapped through the `authenticated-lid:` checkpoint the direct
+path writes; an unmapped LID has no addressable session, so its SKDM child is
+skipped and only a previously stored sender key can decrypt the `skmsg`.
 
 **skmsg receive**: `signal::group::receive_group` calls `group_decrypt` with the
-pre-loaded record; if no record exists (SKDM not yet received) the stanza is
-preserved as Unsupported without acknowledgement. The updated ratchet and inbox
-row commit together (OCC on the sender key).
+key in effect (the one an SKDM in the same stanza just installed, else the
+stored one), then strips the APK's E2E plaintext padding exactly as the direct
+path does (1..=16 bytes, each equal to the pad length). Without padding removal
+the trailing bytes corrupt the protobuf field scan. If no key is available the
+stanza is preserved as Unsupported without acknowledgement. One OCC check
+against the pre-decryption value guards the single final sender-key write.
+
+**Delivery receipts are not sent for group messages.** `received_confirmation`
+refuses any stanza carrying `participant`, so nothing malformed goes out, but
+the group receipt shape is **unknown**: the path reaches
+`LX/0zH->A0R` (`ReadReceipts/sendDeliveryReceiptIfNotRetry`, **confirmed** by
+log string) into `LX/1q7->A08`, where the attribute set is assembled deeper than
+was traced. Whether a group receipt carries `participant` must be established
+before one is sent. Until then the server may redeliver group messages; the
+inbox dedupes them by `received:<group>:<id>`.
 
 **Event projection**: decrypted group messages project as typed `NewMessage`
 events with `ChatId::Group(from)` as the chat and the `participant` JID as the
@@ -62,12 +98,21 @@ message to the stanza sender rather than to `contextInfo.participant`, so a
 quote of a third member's message carries the wrong `MessageKey.sender`.
 
 **Implementation**: `crates/whatsapp-api/src/signal/group.rs` (SKDM parsing,
-receive, commit helpers); `crates/whatsapp-api/src/transport/inbox.rs`
-(`group_sender` routing, `process_group`, SKDM extraction in the direct path);
-`crates/whatsapp-api/src/transport/inbox_events.rs` (`chat_and_sender`). Tests
-cover the DB key format, SKDM extraction (field 18 present, absent, empty), the
-no-sender-key Unsupported path, group text projection and malformed group
-stanzas. Not live-verified: no group message has been received on a lab account.
+receive, padding strip, commit helpers); `crates/whatsapp-api/src/transport/inbox.rs`
+(`group_sender` routing, `participant_session_jid`, `process_group`, SKDM
+extraction in the direct path); `crates/whatsapp-api/src/transport/inbox_events.rs`
+(`chat_and_sender`). Tests cover the DB key format, SKDM extraction (field 18
+present, absent, empty), the no-sender-key Unsupported path, bad padding, group
+text projection, malformed group stanzas, and a full offline SKDM→skmsg round
+trip (`create_sender_key_distribution_message` + `group_encrypt` on a synthetic
+sender side, through `process_skdm` → `receive_group` → unpad → field scan).
+
+**Not live-verified**: no group message has been received on a lab account.
+Storage note: sender keys use the `sk:{group}:{sender_non_ad}` schema in
+`Table::SenderKeys`, keyed by group and member only — a `SenderKeyRecord` holds
+multiple chains internally, so the rotation/distribution id is not part of the
+key. The unused `RecordKey::SenderKey` variant in `signal/mod.rs` describes a
+different (`k:…:{distribution_id}`) layout and is not what this path writes.
 
 ## Live record
 

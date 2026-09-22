@@ -425,6 +425,11 @@ All references below concern **2.26.37.70**, APK SHA-256
   `0000..0036` lists `read`, `read-self`, `played`, `played-self` as the client
   status-receipt vocabulary; `LX/ClU.A00` `004e..0062` maps `read` to its own
   status code. Our explicit read receipt uses that builder with `type=read`.
+  **Build attribution:** the `LX/CcH` claim above holds for 2.26.37.70 only. In
+  the 2.26.37.71 APK now on disk, `LX/CcH` is a media-database cursor mapper
+  (`_id`, `local_path`, `encryption_iv` → `LX/CLd`), not a receipt vocabulary
+  class (re-checked 2026-09-22). Re-anchor by string constant before reusing
+  any class name in this section against 37.71.
   This is an inference from the vocabulary: the read-receipt job itself and
   any multi-ID `list` children were not traced, so one ID per receipt is sent.
 - `LX/11P.A09`, `001a..00ee`: notification `tokens/token`, `trusted_contact`,

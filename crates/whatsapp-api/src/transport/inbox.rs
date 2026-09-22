@@ -271,7 +271,7 @@ pub async fn process(
     // `from` is the group JID. Route them to the sender-key path.
     #[cfg(feature = "experimental-signal-crypto")]
     if node.get_attr("participant").is_some() {
-        return process_group(store, node, capture).await;
+        return process_group(store, account, node, capture).await;
     }
     let peer_category = node.get_attr("category").and_then(|v| v.as_text()) == Some("peer");
     let sender = if peer_category {
@@ -480,11 +480,12 @@ pub async fn process(
             }
             tx.put_json(Table::Checkpoints, map_key.as_bytes(), 1, &sender)?;
         }
-        // Commit SKDM sender key update atomically with the direct message (best-effort:
-        // a concurrent SKDM write for the same key does not fail this direct message).
+        // Commit the SKDM sender key update atomically with the direct message. A
+        // concurrent writer's newer key wins without failing this message; storage
+        // errors still propagate.
         #[cfg(feature = "experimental-signal-crypto")]
         if let Some(ref skdm) = skdm_update {
-            let _ = crate::signal::group::commit_skdm(tx, skdm);
+            crate::signal::group::commit_skdm(tx, skdm)?;
         }
         #[cfg(not(feature = "experimental-signal-crypto"))]
         let _ = &skdm_update;
@@ -501,26 +502,70 @@ pub async fn process(
     Ok(IncomingResult::Decrypted)
 }
 
-/// Handle incoming group message stanzas (`enc type="skmsg"`, `participant` present).
+/// The participant's direct-session identity. The sender-key distribution for a
+/// group arrives inside an ordinary Signal session with that member, keyed the
+/// same way as a direct chat (`comparison-direct:<phone>`). A LID participant is
+/// mapped through the `authenticated-lid:` checkpoint the direct path writes; an
+/// unmapped LID has no pinned session, so its SKDM child is skipped.
 #[cfg(feature = "experimental-signal-crypto")]
-async fn process_group(
+fn participant_session_jid(
     store: &ProtocolStore,
     node: &Node,
-    capture: &[u8],
-) -> Result<IncomingResult> {
-    let parse_jid = |name: &str| {
-        node.get_attr(name).and_then(|v| {
+    participant: &Jid,
+) -> Result<Option<Jid>> {
+    // An explicit phone mapping on the stanza wins when the server supplies one.
+    for attr in ["participant_pn", "sender_pn"] {
+        if let Some(phone) = node.get_attr(attr).and_then(|v| {
             v.as_jid()
                 .cloned()
                 .or_else(|| Jid::parse(v.as_text()?).ok())
-        })
-    };
-    let (Some(group_jid), Some(sender_jid)) = (parse_jid("from"), parse_jid("participant")) else {
-        return Ok(IncomingResult::Unsupported);
-    };
-    if !group_jid.is_group() {
-        return Ok(IncomingResult::Unsupported);
+        }) && phone.server == Server::User
+        {
+            return Ok(Some(phone.to_non_ad()));
+        }
     }
+    match participant.server {
+        Server::User => Ok(Some(participant.to_non_ad())),
+        Server::Lid => {
+            let map_key = format!("authenticated-lid:{}", participant.to_non_ad());
+            store.read(|tx| tx.get_json::<Jid>(Table::Checkpoints, map_key.as_bytes(), 1))
+        }
+        _ => Ok(None),
+    }
+}
+
+/// A group member's direct Signal session advance, staged for the atomic commit.
+/// The SKDM that lets us read a member's group messages arrives inside their
+/// ordinary direct session, so reading it moves that session forward.
+#[cfg(feature = "experimental-signal-crypto")]
+struct MemberSession {
+    /// `comparison-direct:<phone>` storage key.
+    peer_key: String,
+    /// Session and identity as read before decryption, for the OCC check.
+    previous_session: Option<Vec<u8>>,
+    previous_identity: Option<Vec<u8>>,
+    /// Advanced session and the identity to pin.
+    session: Zeroizing<Vec<u8>>,
+    identity: Vec<u8>,
+}
+
+/// Handle incoming group message stanzas (`participant` present, `from` a group).
+///
+/// A group stanza carries one or two `enc` children: a `pkmsg`/`msg` child whose
+/// plaintext holds the sender-key distribution message (field 18), and/or an
+/// `skmsg` child holding the actual group message. The first message from a
+/// member carries both, so the SKDM must be applied before the `skmsg` in the
+/// same stanza is decrypted. Both updates commit in one write transaction.
+#[cfg(feature = "experimental-signal-crypto")]
+async fn process_group(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    node: &Node,
+    capture: &[u8],
+) -> Result<IncomingResult> {
+    let Some((group_jid, sender_jid)) = group_sender(node) else {
+        return Ok(IncomingResult::Unsupported);
+    };
     let Some(id) = node
         .get_attr("id")
         .and_then(|v| v.as_text())
@@ -528,23 +573,23 @@ async fn process_group(
     else {
         return Ok(IncomingResult::Unsupported);
     };
-    let encs: Vec<_> = node
-        .child_nodes()
-        .iter()
-        .filter(|n| n.description == "enc")
-        .collect();
-    if encs.len() != 1
-        || encs[0].get_attr("type").and_then(|v| v.as_text()) != Some("skmsg")
-        || encs[0].get_attr("v").and_then(|v| v.as_text()) != Some("2")
-    {
+    // Select the enc children by type; a stanza may legitimately carry both.
+    let enc_of = |want: &[&str]| {
+        node.child_nodes().iter().find(|n| {
+            n.description == "enc"
+                && n.get_attr("v").and_then(|v| v.as_text()) == Some("2")
+                && n.get_attr("type")
+                    .and_then(|v| v.as_text())
+                    .is_some_and(|t| want.contains(&t))
+        })
+    };
+    let direct_enc = enc_of(&["pkmsg", "msg"]);
+    let sk_enc = enc_of(&["skmsg"]);
+    if direct_enc.is_none() && sk_enc.is_none() {
         return Ok(IncomingResult::Unsupported);
     }
-    let NodeContent::Bytes(ciphertext) = &encs[0].content else {
-        return Ok(IncomingResult::Unsupported);
-    };
-    // Inbox key: use group JID + message id (participant is the authenticated sender,
-    // but the group+id pair uniquely identifies the stanza server-side).
-    let key = format!("received:{}:{id}", group_jid);
+    // Inbox key: the group and the server-assigned id identify the stanza.
+    let key = format!("received:{group_jid}:{id}");
     if let Some(saved) =
         store.read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))?
     {
@@ -557,16 +602,106 @@ async fn process_group(
     }
     let (db_key, previous_bytes) = store
         .read(|tx| crate::signal::group::load_sender_key_bytes(tx, &group_jid, &sender_jid))?;
-    let Some(received) = crate::signal::group::receive_group(
-        &group_jid,
-        &sender_jid,
-        db_key,
-        previous_bytes,
-        ciphertext,
-    )
-    .await?
-    else {
-        // No sender key for this sender yet; SKDM has not arrived.
+
+    // Step 1: the SKDM-bearing direct child, when present and we can address a
+    // session for this member. Advances that member's direct Signal session.
+    let mut direct_commit: Option<MemberSession> = None;
+    let mut used_prekey = None;
+    let mut original_prekey: Option<Zeroizing<Vec<u8>>> = None;
+    let mut key_after_skdm: Option<Vec<u8>> = None;
+    if let Some(enc) = direct_enc
+        && let NodeContent::Bytes(ciphertext) = &enc.content
+        && let Some(peer) = participant_session_jid(store, node, &sender_jid)?
+    {
+        let peer_key = format!("comparison-direct:{peer}");
+        let (session, identity): (Option<Vec<u8>>, Option<Vec<u8>>) = store.read(|tx| {
+            Ok((
+                tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1)?,
+                tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?,
+            ))
+        })?;
+        let is_prekey = enc.get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg");
+        let decrypted = if is_prekey {
+            let signed = crate::registration::factory::registered_signed_prekey(store)?;
+            if let Some(pid) = crate::signal::direct::incoming_prekey_id(ciphertext)? {
+                original_prekey = store
+                    .read(|tx| {
+                        tx.get_json::<Vec<u8>>(
+                            Table::Prekeys,
+                            format!("comparison-prekey:{pid}").as_bytes(),
+                            1,
+                        )
+                    })?
+                    .map(Zeroizing::new);
+            }
+            let incoming = crate::signal::direct::receive_prekey(
+                account,
+                &peer,
+                (session.as_deref(), identity.as_deref()),
+                &signed,
+                original_prekey.as_deref().map(|v| v.as_slice()),
+                ciphertext,
+            )
+            .await?;
+            used_prekey = incoming.consumed_prekey;
+            Some((incoming.received, incoming.identity))
+        } else if let (Some(s), Some(i)) = (&session, &identity) {
+            Some((
+                crate::signal::direct::receive(account, &peer, s, i, ciphertext).await?,
+                i.clone(),
+            ))
+        } else {
+            // A `msg` child with no established session cannot be read; the
+            // skmsg below may still decrypt from a previously stored key.
+            None
+        };
+        if let Some((received, pinned)) = decrypted {
+            if let Some((skdm_group, axolotl)) =
+                crate::signal::group::extract_skdm_from_payload(&received.plaintext)
+                && Jid::parse(&skdm_group).is_ok_and(|g| g == group_jid)
+            {
+                let applied = crate::signal::group::process_skdm(
+                    &group_jid,
+                    &sender_jid,
+                    db_key.clone(),
+                    previous_bytes.clone(),
+                    &axolotl,
+                )
+                .await?;
+                key_after_skdm = Some(applied.updated_key.to_vec());
+            }
+            direct_commit = Some(MemberSession {
+                peer_key,
+                previous_session: session,
+                previous_identity: identity,
+                session: received.session.clone(),
+                identity: pinned,
+            });
+        }
+    }
+
+    // Step 2: the group message itself, using the key the SKDM above installed
+    // when this is the member's first message.
+    let effective_key = key_after_skdm.clone().or_else(|| previous_bytes.clone());
+    let mut group_plaintext = None;
+    let mut final_key = key_after_skdm.clone();
+    if let Some(enc) = sk_enc
+        && let NodeContent::Bytes(ciphertext) = &enc.content
+        && let Some(received) = crate::signal::group::receive_group(
+            &group_jid,
+            &sender_jid,
+            db_key.clone(),
+            effective_key,
+            ciphertext,
+        )
+        .await?
+    {
+        final_key = Some(received.updated_key.to_vec());
+        group_plaintext = Some(received.plaintext);
+    }
+    // Nothing usable: no sender key yet and no SKDM in this stanza. Preserve the
+    // capture without acknowledging it.
+    let Some(final_key) = final_key else {
         return Ok(IncomingResult::Unsupported);
     };
     let route =
@@ -579,20 +714,57 @@ async fn process_group(
         {
             return Ok(IncomingResult::Duplicate);
         }
-        crate::signal::group::commit_group(tx, &received)?;
-        tx.put_json(
-            Table::Checkpoints,
-            key.as_bytes(),
-            1,
-            &serde_json::json!({
-                "status": "decrypted",
-                "protobuf": &*received.plaintext,
-                "capture": capture,
-                "route": route,
-                "received_at": crate::model::time::Timestamp::now(),
-            }),
+        crate::signal::group::commit_sender_key(
+            tx,
+            &db_key,
+            previous_bytes.as_deref(),
+            &final_key,
         )?;
-        super::inbox_events::publish(tx, key.as_bytes(), node, &received.plaintext)?;
+        if let Some(member) = &direct_commit {
+            let peer_key = member.peer_key.as_bytes();
+            let current: Option<Vec<u8>> = tx.get_json(Table::SignalSessions, peer_key, 1)?;
+            let current_identity: Option<Vec<u8>> =
+                tx.get_json(Table::PeerIdentities, peer_key, 1)?;
+            if current.as_deref() != member.previous_session.as_deref()
+                || current_identity != member.previous_identity
+            {
+                return Err(Error::invalid(
+                    "inbox",
+                    "member session changed; group stanza not committed",
+                ));
+            }
+            tx.put_json(Table::SignalSessions, peer_key, 1, &*member.session)?;
+            tx.put_json(Table::PeerIdentities, peer_key, 1, &member.identity)?;
+            if let Some(pid) = used_prekey {
+                let prekey_key = format!("comparison-prekey:{pid}");
+                let current: Option<Vec<u8>> =
+                    tx.get_json(Table::Prekeys, prekey_key.as_bytes(), 1)?;
+                if current.as_deref() != original_prekey.as_deref().map(|v| v.as_slice()) {
+                    return Err(Error::invalid(
+                        "inbox",
+                        "one-time prekey changed before commit",
+                    ));
+                }
+                tx.delete(Table::Prekeys, prekey_key.as_bytes())?;
+            }
+        }
+        // Only the skmsg plaintext is user content; an SKDM-only stanza records
+        // the key exchange without publishing a message event.
+        if let Some(plaintext) = &group_plaintext {
+            tx.put_json(
+                Table::Checkpoints,
+                key.as_bytes(),
+                1,
+                &serde_json::json!({
+                    "status": "decrypted",
+                    "protobuf": &**plaintext,
+                    "capture": capture,
+                    "route": route,
+                    "received_at": crate::model::time::Timestamp::now(),
+                }),
+            )?;
+            super::inbox_events::publish(tx, key.as_bytes(), node, plaintext)?;
+        }
         Ok(IncomingResult::Decrypted)
     })
 }

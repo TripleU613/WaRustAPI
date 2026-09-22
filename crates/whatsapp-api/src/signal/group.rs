@@ -143,6 +143,7 @@ pub async fn receive_group(
     let plaintext = signal::group_decrypt(ciphertext, &mut store, &name)
         .await
         .map_err(crypto)?;
+    let plaintext = unpad(plaintext)?;
     let updated_key = Zeroizing::new(
         store
             .record
@@ -152,11 +153,30 @@ pub async fn receive_group(
             .map_err(|_| invalid("serialize updated sender key"))?,
     );
     Ok(Some(ReceivedGroup {
-        plaintext: Zeroizing::new(plaintext),
+        plaintext,
         updated_key,
         original_key: previous_bytes.map(Zeroizing::new),
         db_key,
     }))
+}
+
+/// Strip the APK's E2E plaintext padding (1..=16 bytes, each equal to the pad
+/// length). Identical to the direct-message path in `direct::receive`; group
+/// plaintexts are padded the same way before sender-key encryption.
+fn unpad(plaintext: Vec<u8>) -> Result<Zeroizing<Vec<u8>>> {
+    let mut plaintext = Zeroizing::new(plaintext);
+    let padding = plaintext.last().copied().unwrap_or(0) as usize;
+    if !(1..=16).contains(&padding)
+        || padding > plaintext.len()
+        || !plaintext[plaintext.len() - padding..]
+            .iter()
+            .all(|v| *v as usize == padding)
+    {
+        return Err(invalid("invalid authenticated group message padding"));
+    }
+    let unpadded_len = plaintext.len() - padding;
+    plaintext.truncate(unpadded_len);
+    Ok(plaintext)
 }
 
 /// Process a sender key distribution message received inside a direct message.
@@ -206,17 +226,38 @@ pub fn commit_group(tx: &mut WriteTx<'_>, received: &ReceivedGroup) -> Result<()
     Ok(())
 }
 
-/// Commit an SKDM sender key update atomically.
-pub fn commit_skdm(tx: &mut WriteTx<'_>, skdm: &ReceivedSkdm) -> Result<()> {
-    let current: Option<Vec<u8>> = tx.get_json(Table::SenderKeys, &skdm.db_key, 1)?;
-    if current.as_deref() != skdm.original_key.as_deref().map(|v| v.as_slice()) {
+/// Commit the final sender key for one group stanza. A group stanza can carry
+/// both an SKDM (in a `pkmsg`/`msg` child) and an `skmsg` encrypted with the key
+/// that SKDM installs, so the two updates are applied in memory and written once
+/// here: a single OCC check against the value read before decryption, then one
+/// write of the final state.
+pub fn commit_sender_key(
+    tx: &mut WriteTx<'_>,
+    db_key: &[u8],
+    original: Option<&[u8]>,
+    final_key: &[u8],
+) -> Result<()> {
+    let current: Option<Vec<u8>> = tx.get_json(Table::SenderKeys, db_key, 1)?;
+    if current.as_deref() != original {
         return Err(Error::invalid(
             "inbox",
-            "sender key changed concurrently; SKDM not committed",
+            "sender key changed concurrently; group stanza not committed",
         ));
     }
-    tx.put_json(Table::SenderKeys, &skdm.db_key, 1, &*skdm.updated_key)?;
+    tx.put_json(Table::SenderKeys, db_key, 1, &final_key.to_vec())?;
     Ok(())
+}
+
+/// Commit an SKDM sender key update. Returns `false` when another writer changed
+/// the record first: the newer state wins and the caller's message is unaffected.
+/// Storage failures are propagated, never swallowed.
+pub fn commit_skdm(tx: &mut WriteTx<'_>, skdm: &ReceivedSkdm) -> Result<bool> {
+    let current: Option<Vec<u8>> = tx.get_json(Table::SenderKeys, &skdm.db_key, 1)?;
+    if current.as_deref() != skdm.original_key.as_deref().map(|v| v.as_slice()) {
+        return Ok(false);
+    }
+    tx.put_json(Table::SenderKeys, &skdm.db_key, 1, &*skdm.updated_key)?;
+    Ok(true)
 }
 
 /// Extract SKDM fields from a decrypted WhatsApp Message protobuf payload.
@@ -267,6 +308,92 @@ mod tests {
             key.windows(g.to_string().len())
                 .any(|w| w == g.to_string().as_bytes())
         );
+    }
+
+    /// Full offline round trip: a "sender" side creates an SKDM and encrypts a
+    /// padded text Message; the receiver processes the SKDM through
+    /// `process_skdm`, decrypts through `receive_group`, and the unpadded
+    /// plaintext parses as the original protobuf. This exercises the libsignal
+    /// plumbing, the sender-key serialization and the padding strip together.
+    #[tokio::test]
+    async fn skdm_then_skmsg_round_trips_with_padding() {
+        use prost::Message as _;
+        use wacore_libsignal::protocol::{
+            SenderKeyName, create_sender_key_distribution_message, group_encrypt,
+        };
+        let group = group_jid();
+        let sender = sender_jid();
+        let name = SenderKeyName::from_parts(&group.to_string(), &sender.to_non_ad().to_string());
+        let mut rng = rand::rng();
+
+        // Sender side: fresh record + SKDM.
+        let mut sender_store = SenderKeys::new(b"sender-side".to_vec(), None).unwrap();
+        let skdm = create_sender_key_distribution_message(&name, &mut sender_store, &mut rng)
+            .await
+            .unwrap();
+        let skdm_bytes = skdm.serialized().to_vec();
+
+        // Sender side: pad a text Message exactly as the APK does, then encrypt.
+        #[derive(prost::Message)]
+        struct TextMessage {
+            #[prost(string, tag = "1")]
+            conversation: String,
+        }
+        let mut plain = TextMessage {
+            conversation: "group hello".into(),
+        }
+        .encode_to_vec();
+        let unpadded_len = plain.len();
+        let pad = 7u8;
+        plain.resize(unpadded_len + pad as usize, pad);
+        let skmsg = group_encrypt(&mut sender_store, &name, &plain, &mut rng)
+            .await
+            .unwrap();
+        let ciphertext = skmsg.serialized().to_vec();
+
+        // Receiver side: no key yet, so the skmsg alone must not decrypt.
+        let db_key = sender_key_db_key(&group, &sender);
+        assert!(
+            receive_group(&group, &sender, db_key.clone(), None, &ciphertext)
+                .await
+                .unwrap()
+                .is_none()
+        );
+
+        // Receiver side: process the SKDM, then decrypt with the resulting key.
+        let after_skdm = process_skdm(&group, &sender, db_key.clone(), None, &skdm_bytes)
+            .await
+            .unwrap();
+        let received = receive_group(
+            &group,
+            &sender,
+            db_key,
+            Some(after_skdm.updated_key.to_vec()),
+            &ciphertext,
+        )
+        .await
+        .unwrap()
+        .expect("sender key present, so the skmsg must decrypt");
+
+        // Padding stripped, and the plaintext is the original protobuf.
+        assert_eq!(received.plaintext.len(), unpadded_len);
+        let decoded = TextMessage::decode(&**received.plaintext).unwrap();
+        assert_eq!(decoded.conversation, "group hello");
+        // And it survives the field scan the projection uses.
+        assert_eq!(
+            crate::signal::direct::payload_fields(&received.plaintext).unwrap(),
+            vec![1]
+        );
+    }
+
+    #[tokio::test]
+    async fn group_plaintext_with_bad_padding_is_refused() {
+        // A plaintext whose trailing bytes are not a valid pad must not be
+        // silently accepted as message content.
+        assert!(unpad(vec![1, 2, 3, 99]).is_err());
+        assert!(unpad(vec![]).is_err());
+        // Valid pad of 3.
+        assert_eq!(&*unpad(vec![1, 2, 3, 3, 3]).unwrap(), &[1, 2][..]);
     }
 
     #[test]
