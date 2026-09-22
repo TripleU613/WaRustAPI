@@ -1831,6 +1831,47 @@
           }
         },
         "description": "Verification result comparing a saved token to freshly derived material. Token value is never printed; only the match status is reported."
+      },
+      "AppStatePatchRequest": {
+        "type": "object",
+        "description": "Outgoing w:sync:app:state patch request (comparison 2.26.37.71 CSe.A00/CSe.A01). Library-level only: built and offline-verified, not yet queued by any command and never sent. x-transport is deliberately empty until a CLI or route exposes it.",
+        "x-transport": [],
+        "x-live": false,
+        "properties": {
+          "collection": {
+            "type": "string",
+            "enum": [
+              "regular",
+              "regular_low",
+              "regular_high",
+              "critical_block",
+              "critical_unblock_low"
+            ],
+            "description": "Collection name (LX/0oP.A03, confirmed). Which collection a given action belongs to is NOT decided here and is currently unknown; the caller supplies it."
+          },
+          "order": {
+            "type": "integer",
+            "description": "1 for critical_unblock_low, 0 otherwise (inferred from the CSe.A01 branch; the attribute's meaning was not traced)."
+          },
+          "version": {
+            "type": "integer",
+            "description": "The version this patch claims: the collection's current version plus one. Both our verifier and the server require patches to be strictly sequential."
+          },
+          "return_snapshot": {
+            "type": "boolean",
+            "description": "Emitted only when true. When the server sets it is untraced."
+          },
+          "patch": {
+            "type": "string",
+            "format": "byte",
+            "description": "SyncdPatch wire bytes from CollectionState::build_patch: version, mutations, snapshotMac, patchMac and a nested Blob keyId."
+          }
+        },
+        "required": [
+          "collection",
+          "version",
+          "patch"
+        ]
       }
     }
   },

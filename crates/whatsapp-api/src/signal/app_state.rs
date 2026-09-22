@@ -418,12 +418,200 @@ impl KeyShare {
     }
 }
 
+/// Mint this device's own app-state sync key.
+///
+/// Comparison 2.26.37.71 `LX/0oK->A05` (`SyncdKeyManager/generateAndShareNewKey`)
+/// branches on the device collection: when it is **empty** — a primary with no
+/// companions — it takes the path that stores the new key locally and returns
+/// it, rather than the path that shares it to each companion. So a single-device
+/// primary does mint its own key (**confirmed**), and minting is purely local:
+/// `A09` is an `INSERT OR IGNORE INTO crypto_info`, with no stanza anywhere in
+/// the mint path (**confirmed**). The server only ever stores opaque patches.
+///
+/// Key material is 32 random bytes (`LX/00L->A0H(0x20)`, **confirmed**). The
+/// six-byte identifier is `LX/Cj0(deviceIndex, epoch)` — big-endian `u16`
+/// device index then `u32` epoch (**confirmed**; it decodes this repository's
+/// pre-existing `app-state-key:000100000002` share fixture as device 1, epoch
+/// 2). The epoch is `max(previous, 0) + 1`, and when there is no previous key a
+/// `SecureRandom().nextInt(0x10000)` seeds the base, so a first epoch lands in
+/// `1..=65536` (**confirmed**).
+///
+/// The caller supplies the fingerprint inputs from authenticated account and
+/// device state, exactly as [`select_active_key`] requires them, because what a
+/// companion-less primary puts in `rawId`/`currentIndex`/`deviceIndexes` is
+/// **unknown** — `LX/08l->A02`/`A03` and `0oK->A01` were not read. Those fields
+/// only matter when sharing a key to a companion, which is not implemented; for
+/// our own patches they are local bookkeeping that must merely stay
+/// self-consistent with what `select_active_key` is later given.
+///
+/// Refuses to mint when this device already holds a key, so a second call can
+/// never orphan patches written under the first.
+#[cfg(any(
+    test,
+    all(feature = "experimental-noise", feature = "experimental-transport")
+))]
+pub fn mint_key(
+    tx: &mut crate::store::WriteTx<'_>,
+    device_index: u16,
+    raw_id: u32,
+    registered: &BTreeSet<u32>,
+    now_ms: i64,
+) -> Result<[u8; 6]> {
+    use crate::store::Table;
+    if registered.is_empty() || registered.len() > MAX_DEVICES || now_ms < 0 {
+        return Err(invalid("invalid device state for minting"));
+    }
+    // Highest existing epoch for any device, so a mint never reuses one.
+    let mut highest: Option<i32> = None;
+    let mut cursor = None;
+    loop {
+        let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+        if rows.is_empty() {
+            break;
+        }
+        cursor = rows.last().map(|(name, _)| name.clone());
+        for (name, _) in rows {
+            let Some(encoded) = name.strip_prefix(b"app-state-key:") else {
+                continue;
+            };
+            let mut id = [0; 6];
+            hex::decode_to_slice(encoded, &mut id)
+                .map_err(|_| invalid("invalid stored key identifier"))?;
+            if u16::from_be_bytes([id[0], id[1]]) == device_index {
+                return Err(invalid(
+                    "this device already holds an app-state key; minting again would orphan patches written under it",
+                ));
+            }
+            let epoch = i32::from_be_bytes([id[2], id[3], id[4], id[5]]);
+            highest = Some(highest.map_or(epoch, |old: i32| old.max(epoch)));
+        }
+    }
+    let epoch: u32 = match highest {
+        // A first key seeds its base randomly, so epochs from different devices
+        // are unlikely to collide before any sharing has happened.
+        None => {
+            let mut seed = [0; 2];
+            getrandom::fill(&mut seed).map_err(|_| invalid("key epoch entropy unavailable"))?;
+            u32::from(u16::from_be_bytes(seed)) + 1
+        }
+        Some(previous) => u32::try_from(previous)
+            .map_err(|_| invalid("invalid stored epoch"))?
+            .checked_add(1)
+            .ok_or_else(|| invalid("app-state key epoch exhausted"))?,
+    };
+    let mut id = [0; 6];
+    id[..2].copy_from_slice(&device_index.to_be_bytes());
+    id[2..].copy_from_slice(&epoch.to_be_bytes());
+    let mut data = Zeroizing::new(vec![0; 32]);
+    getrandom::fill(&mut data).map_err(|_| invalid("app-state key entropy unavailable"))?;
+    let saved = StoredKey {
+        data: data.to_vec(),
+        fingerprint: Fingerprint {
+            raw_id,
+            current_index: registered.iter().copied().max().unwrap_or(0),
+            device_indexes: registered.clone(),
+        },
+        timestamp: now_ms,
+    };
+    let name = format!("app-state-key:{}", hex::encode(id));
+    if tx
+        .get_json::<StoredKey>(Table::Checkpoints, name.as_bytes(), 1)?
+        .is_some()
+    {
+        return Err(invalid("app-state key identifier already present"));
+    }
+    tx.put_json(Table::Checkpoints, name.as_bytes(), 1, &saved)?;
+    Ok(id)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     // Independently written protobuf: keys[0] id=00:01:00:00:00:02,
     // keyData="test", fingerprint raw=7/current=2/devices=[1,2], timestamp=9.
     const FIXTURE:&[u8]=b"\x0a\x1e\x0a\x08\x0a\x06\x00\x01\x00\x00\x00\x02\x12\x12\x0a\x04test\x12\x08\x08\x07\x10\x02\x1a\x02\x01\x02\x18\x09";
+    fn mint_store() -> (tempfile::TempDir, crate::store::ProtocolStore) {
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("mint.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([8; 32]))),
+            create: true,
+        })
+        .unwrap();
+        (dir, store)
+    }
+
+    /// A minted key must be selectable by the reader that existed before
+    /// minting did, under the same device state it was minted with.
+    #[test]
+    fn a_minted_key_is_immediately_selectable_by_the_existing_reader() {
+        let (_d, store) = mint_store();
+        let registered: BTreeSet<u32> = [0].into_iter().collect();
+        let id = store
+            .write(|tx| mint_key(tx, 0, 7, &registered, 1_000))
+            .unwrap();
+        // Device index 0 occupies the first two bytes; the epoch is nonzero and
+        // within the first-key seed range.
+        assert_eq!(u16::from_be_bytes([id[0], id[1]]), 0);
+        let epoch = u32::from_be_bytes([id[2], id[3], id[4], id[5]]);
+        assert!(
+            (1..=65536).contains(&epoch),
+            "unexpected first epoch {epoch}"
+        );
+
+        let selected = store
+            .write(|tx| select_active_key(tx, 7, 0, &registered, 1_000, 10_000))
+            .unwrap()
+            .expect("the key just minted must be selectable");
+        assert_eq!(selected.id, id);
+        // Mismatched device state still refuses it, so minting does not weaken
+        // the reader's fingerprint policy.
+        assert!(
+            store
+                .write(|tx| select_active_key(tx, 9, 0, &registered, 1_000, 10_000))
+                .unwrap()
+                .is_none()
+        );
+    }
+
+    /// Minting twice for one device would orphan every patch already written
+    /// under the first key, so the second attempt must fail rather than shadow it.
+    #[test]
+    fn minting_refuses_a_second_key_for_the_same_device() {
+        let (_d, store) = mint_store();
+        let registered: BTreeSet<u32> = [0].into_iter().collect();
+        let first = store
+            .write(|tx| mint_key(tx, 0, 7, &registered, 1_000))
+            .unwrap();
+        assert!(
+            store
+                .write(|tx| mint_key(tx, 0, 7, &registered, 1_000))
+                .is_err()
+        );
+        // A different device index mints, and takes the next epoch rather than
+        // reusing or colliding with the first.
+        let second = store
+            .write(|tx| mint_key(tx, 1, 7, &registered, 1_000))
+            .unwrap();
+        let epoch = |id: &[u8; 6]| u32::from_be_bytes([id[2], id[3], id[4], id[5]]);
+        assert_eq!(epoch(&second), epoch(&first) + 1);
+        assert_ne!(first, second);
+    }
+
+    #[test]
+    fn minting_refuses_invalid_device_state() {
+        let (_d, store) = mint_store();
+        let empty: BTreeSet<u32> = BTreeSet::new();
+        assert!(store.write(|tx| mint_key(tx, 0, 7, &empty, 1_000)).is_err());
+        let ok: BTreeSet<u32> = [0].into_iter().collect();
+        assert!(store.write(|tx| mint_key(tx, 0, 7, &ok, -1)).is_err());
+    }
+
     #[test]
     fn selection_pages_past_unrelated_history_and_considers_every_key() {
         use crate::{

@@ -281,9 +281,25 @@ fullName=1, firstName=2, lidJid=3, saveOnPrimaryAddressbook=4, pnJid=5,
 username=6. `SyncActionData` (`LX/BWk`): index=1 bytes (JSON array),
 value=2, padding=3, version=4.
 
-Patch write, `CSe.A01` (**confirmed**):
-`<iq to=… type="set" xmlns="w:sync:app:state" id=…><sync><collection name=<collection> order=<n> [version=<v>] [return_snapshot="true"]><patch>{SyncdPatch bytes}</patch></collection></sync></iq>`
-(the `sync` wrapper and `data_namespace` attribute come from `CSe.A00`).
+Patch write, `CSe.A00`/`CSe.A01` (**confirmed**, re-read 2026-09-22):
+`<iq to="s.whatsapp.net" type="set" xmlns="w:sync:app:state" id=…><sync data_namespace=3><collection name=<collection> order=<n> [version=<v>] [return_snapshot="true"]><patch>{SyncdPatch bytes}</patch></collection></sync></iq>`
+
+- `data_namespace` is a numeric attribute with the literal value **3**
+  (`CSe.A00`). `CSe.A00` can also append `<bot><coex mode="sync"/></bot>` when
+  one of its fields is set; that branch is not used here.
+- **`order` is 1 for every collection except `critical_unblock_low`, which
+  emits 0.** `CSe.A01` computes it as `"critical_unblock_low".equals(name)`
+  followed by `xor-int/lit8 v3, v0, #0x1`, i.e. `!isCriticalUnblockLow`. An
+  earlier revision of this document stated the opposite ("0 for most
+  collections, 1 for `critical_unblock_low`"); that was wrong, and the
+  implementation follows the corrected direction with a test pinning it.
+- `version` is a numeric attribute emitted only when the version argument is
+  non-null.
+- `return_snapshot="true"` is emitted only when its boolean argument is true
+  **and** the version argument is null or zero — so a patch send, which always
+  claims a nonzero version, never carries it. It belongs to a fetch.
+- `<patch>` is a raw-bytes child, added only when the patch argument is
+  non-null.
 Collections (`LX/0oP.A03`): regular=1, regular_low=2, regular_high=3,
 critical_block=4, critical_unblock_low=5. Wire protobufs (descriptors
 confirmed): SyncdPatch `LX/BYK` version=1, mutations=2, externalMutations=3,
@@ -304,6 +320,55 @@ inferred). LT-hash is implemented in DEX (`KmpLtHash16.A00`, 128-byte state,
 HKDF info `"WhatsApp Patch Integrity"` from `LX/0rN`), so the public recipe
 applies. Writing patches is a separate work item; until then "clear chat" is
 local-only and documented as such.
+
+### App-state patch writing: built, and what still blocks using it
+
+Implemented and offline-verified 2026-09-22 (`signal/app_state_crypto.rs`,
+`signal/app_state_collection/patch.rs`, `signal/app_state.rs`,
+`transport/app_state_sync.rs`):
+
+- **Encrypt primitives** mirroring each existing verifier input for input:
+  `index_mac`, `snapshot_mac`, `patch_mac`, the truncated HMAC-SHA512
+  `value_mac`, and `encrypt_mutation` producing the `IV || ciphertext ||
+  value-MAC` body `decrypt_mutation` reads. `MutationData.padding` is written
+  empty: the APK's padding content is **unknown**.
+- **`CollectionState::build_patch`**, the inverse of `verify_patch` — same
+  version rule, duplicate-index and missing-REMOVE refusals, and the same
+  LT-hash accounting where a replaced index subtracts its old value MAC.
+- **`app_state::mint_key`**, since a primary with no companions does mint its
+  own key (`LX/0oK->A05`, the empty-device-collection branch stores and returns
+  it) and minting is purely local with no stanza (**confirmed**). Key id is
+  big-endian `u16` device index then `u32` epoch (**confirmed**; it decodes the
+  repository's existing `app-state-key:000100000002` share fixture).
+- **`transport::app_state_sync::patch_request`**, the IQ above.
+
+Tests cross-check rather than self-check: a built patch decodes through
+`CollectionPatch::decode`, verifies through `CollectionState::verify_patch`,
+and the verifier's resulting state is asserted equal to the builder's
+prediction; a minted key is selectable by the pre-existing `select_active_key`.
+
+**Nothing is wired to an action and nothing has been sent**, because three
+inputs a correct mutation needs are still **unknown** and inventing them would
+produce a patch a server might accept while companions cannot interpret it:
+
+1. **Which collection each action belongs to.** `LX/Azq` is an
+   action→index-key enum with no collection field, and `LX/Azr` is the
+   collection enum; the mutation record `LX/Azp` binds a collection at enqueue
+   time (field `A06`), but the enqueue call site for `contactAction` or
+   `clearChatAction` was not located. `LX/0rO->A00` is only
+   `SyncdAntiTamperingLoggingHelper/getShiftBit` and is **not** a routing map.
+2. **The full index JSON array.** Element 0 is **confirmed** from
+   `LX/Azq.<clinit>`: `"contact"` for ContactAction and `"clearChat"` for
+   ClearChatAction (the same table gives `deleteChat`, `markChatAsRead`,
+   `star`, `mute`, `pin_v1`, `archive`, `deleteMessageForMe`, and `sentinel`
+   for KeyExpiration). The remaining elements, their count and the JID form
+   are **unknown** — the JSONArray construction site was not found.
+3. **`SyncActionData.version`** (field 4, required by our reader) for either
+   action: **unknown**.
+
+Also unknown: what a client populates in `clearChatAction.messageRange`, though
+the field is confirmed *optional* (`LX/BQG`/`LX/BQM` descriptor marks a
+singular optional message field).
 
 **Implementation.** `crates/whatsapp-api/src/transport/chat_clear.rs`
 (`clear_chat`) and the CLI's `clear-chat --chat <jid>` implement only the local

@@ -11,6 +11,12 @@
     feature = "experimental-transport"
 ))]
 pub mod actions;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod app_state_sync;
 #[cfg(feature = "experimental-registration-https")]
 pub mod ban_appeal;
 #[cfg(all(
