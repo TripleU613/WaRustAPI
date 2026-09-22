@@ -215,13 +215,26 @@ false).
 **Live 2026-09-22:** the sync was transmitted and the server answered; the
 durable action settled `Ok`.
 
-**This is a hypothesis test, not an evidence-backed fix.** No APK evidence links
-contact sync to status delivery — searched and not found, so it is recorded as
-**unknown** rather than dressed up. What makes it worth doing is that it is a
-normal client operation this account had never performed, and the server's own
-`offline_preview` proves the gap is upstream of us. The measurement that settles
-it is whether a status posted *after* this sync appears as a nonzero `status`
-count in a later `offline_preview`.
+**Refuted by measurement.** This was a hypothesis test, not an evidence-backed
+fix — no APK evidence links contact sync to status delivery. After the sync was
+accepted, the next session's `offline_preview` still reported `status=0`
+(`count=51 message=5 receipt=0 notification=45 appdata=0 call=0 status=0`). So
+registering the address book did **not** make an already-posted status
+deliverable to this account.
+
+The sync itself remains implemented and live-verified as a capability; it is
+simply not the status gate.
+
+**Why an already-live status cannot be retrieved.** A status is delivered as a
+message fan-out: the poster's client computes its recipient list at post time
+(`status_distribution`, client-side) and sends to those recipients. There is no
+fetch or catch-up path — `w:status` has zero references and no status-specific
+offline drain exists. So a recipient who becomes eligible later does not
+retroactively receive a status that is still within its 24-hour lifetime, for
+the same reason a group message sent before you joined is not replayed to you.
+The status remaining visible on the poster's own device is its local retention,
+not a server-side queue that can be re-targeted. Testing any eligibility change
+therefore requires a **new** post after the change.
 
 ## Live record
 
