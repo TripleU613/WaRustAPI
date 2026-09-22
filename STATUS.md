@@ -50,9 +50,25 @@ server's own tally rather than an echo of our list. `sender_key_stanza` now
 renders every `<to>` in AD form.
 
 Because the earlier sends created our half of sessions the peer never created,
-the private message JSON also takes `fresh_fanout_sessions`, which replaces the
-saved ratchet for each target from a fresh prekey bundle while keeping — and
-still enforcing — the pinned peer identity. Untested live at the time of writing. Original result: the fan-out was
+the private message JSON also takes `fresh_sessions`, which replaces the saved
+ratchet from a fresh prekey bundle while keeping — and still enforcing — the
+pinned peer identity.
+
+**That did not fix it either.** Three fan-outs, three clean acks, three
+placeholders. `addressing_mode`, the version 2 `phash` and the AD-form `<to>`
+are all corrections worth keeping — the stanza is closer to what the APK builds
+than it was — but **each is now eliminated as the cause**. Constant throughout:
+a clean `ack` with `count="2"`, and **no retry receipt across five receive
+windows**, which a phone that cannot decrypt should be sending.
+
+Two hypotheses remain. LID Signal sessions have never been proven with this
+recipient — the one live-verified direct message to them was PN-addressed, and
+`LX/CPQ->A00` confirms a LID-addressed chat encrypts under a LID address, but
+"correct" and "working" are different claims. And the retry-receipt silence
+probably has the same mechanical cause. The discriminating experiment avoids
+groups entirely: a **direct** message to their **LID** over the path already
+verified for their PN, changing only the addressing form.
+`MessageRequest::recipient` now accepts a LID for exactly that. Original result: the fan-out was
 transmitted and acknowledged: `addressing_mode=lid`, two
 recipients, two devices, both device lists fetched in the same connection, both
 sessions established from the same batched `encrypt` key query. Handset display

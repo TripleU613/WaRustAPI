@@ -33,8 +33,8 @@ pub struct MessageRequest {
     /// addressed to one phone number.
     #[serde(default)]
     pub group: Option<String>,
-    /// Discard our saved *session* with each fan-out target and establish a new
-    /// one from a fresh prekey bundle, keeping the pinned peer identity.
+    /// Discard our saved *session* with each recipient device and establish a
+    /// new one from a fresh prekey bundle, keeping the pinned peer identity.
     ///
     /// Only legitimate with positive evidence that the peer never received the
     /// distribution we encrypted under the old session — a session we created
@@ -43,7 +43,7 @@ pub struct MessageRequest {
     /// resets no identity and no sender key, and a changed peer identity is
     /// still refused.
     #[serde(default)]
-    pub fresh_fanout_sessions: bool,
+    pub fresh_sessions: bool,
     /// Stable local idempotency key; reuse it after uncertain outcomes.
     pub request_id: String,
 }
@@ -139,8 +139,29 @@ impl MessageRequest {
         Ok(Some(jid))
     }
 
-    /// Only direct phone recipients are currently supported.
+    /// The direct recipient: E.164 digits, or a full `…@s.whatsapp.net` /
+    /// `…@lid` JID.
+    ///
+    /// The LID form exists because a LID-addressed chat encrypts under a LID
+    /// Signal address (`LX/CPQ->A00`, **confirmed**: `useLidForEncryption` is
+    /// true exactly when `groupParticipantsManager.A0k(chat)` holds), and that
+    /// addressing form needs to be testable on its own rather than only inside
+    /// a group fan-out.
     pub fn recipient(&self) -> crate::Result<Jid> {
+        if self.to.contains('@') {
+            let jid = Jid::parse(&self.to)?;
+            if !matches!(
+                jid.server,
+                crate::model::jid::Server::User | crate::model::jid::Server::Lid
+            ) || jid.device != 0
+            {
+                return Err(crate::Error::invalid(
+                    "message",
+                    "a direct recipient is a phone or LID identity with no device suffix",
+                ));
+            }
+            return Ok(jid);
+        }
         let digits = self.to.strip_prefix('+').unwrap_or(&self.to);
         if !(5..=15).contains(&digits.len())
             || digits.starts_with('0')
@@ -148,7 +169,7 @@ impl MessageRequest {
         {
             return Err(crate::Error::invalid(
                 "message",
-                "recipient must be E.164 digits",
+                "recipient must be E.164 digits or a phone/LID JID",
             ));
         }
         Jid::parse(&format!("{digits}@s.whatsapp.net"))
@@ -827,6 +848,50 @@ mod tests {
         assert!(key_request_many(&vec![devices[0].clone(); 33], "Q1").is_err());
     }
 
+    /// A LID-addressed chat encrypts under a LID Signal address, so the LID
+    /// form has to be expressible on its own — otherwise it can only ever be
+    /// exercised inside a group fan-out, where a failure has several possible
+    /// causes.
+    #[test]
+    fn a_direct_recipient_may_be_digits_a_phone_jid_or_a_lid() {
+        let to = |v: &str| MessageRequest {
+            to: zeroize::Zeroizing::new(v.into()),
+            text: zeroize::Zeroizing::new("hi".into()),
+            image: None,
+            voice_note: None,
+            view_once: false,
+            group: None,
+            fresh_sessions: false,
+            request_id: "r1".into(),
+        };
+        assert_eq!(
+            to("15551234567").recipient().unwrap(),
+            Jid::parse("15551234567@s.whatsapp.net").unwrap()
+        );
+        assert_eq!(
+            to("+15551234567").recipient().unwrap(),
+            Jid::parse("15551234567@s.whatsapp.net").unwrap()
+        );
+        assert_eq!(
+            to("15551234567@s.whatsapp.net").recipient().unwrap(),
+            Jid::parse("15551234567@s.whatsapp.net").unwrap()
+        );
+        assert_eq!(
+            to("111111111111111@lid").recipient().unwrap(),
+            Jid::parse("111111111111111@lid").unwrap()
+        );
+        // A chat, a group, a device and a broadcast are not direct recipients.
+        for bad in [
+            "120363000000000001@g.us",
+            "status@broadcast",
+            "111111111111111:3@lid",
+            "notdigits",
+            "",
+        ] {
+            assert!(to(bad).recipient().is_err(), "{bad} must be refused");
+        }
+    }
+
     /// A group target is a JID in the private JSON, not another command.
     #[test]
     fn message_request_group_target_is_validated() {
@@ -837,7 +902,7 @@ mod tests {
             voice_note: None,
             view_once: false,
             group: group.map(str::to_owned),
-            fresh_fanout_sessions: false,
+            fresh_sessions: false,
             request_id: "r1".into(),
         };
         assert_eq!(

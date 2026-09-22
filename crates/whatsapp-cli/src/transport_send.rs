@@ -37,7 +37,16 @@ pub(super) async fn send(
             tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?,
         ))
     })?;
-    let session = session.map(zeroize::Zeroizing::new);
+    // A deliberately fresh session drops only the ratchet; the pinned peer
+    // identity below is still loaded and still enforced.
+    let session = session
+        .filter(|_| !message.fresh_sessions)
+        .map(zeroize::Zeroizing::new);
+    if message.fresh_sessions {
+        eprintln!(
+            "transport: establishing a fresh session with this recipient; the pinned identity is kept and still enforced"
+        );
+    }
     let prepared = if let Some(payload) = image_payload {
         prepare_payload(
             account,
@@ -105,9 +114,9 @@ pub(super) async fn send(
             tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1)?;
         let current_identity: Option<Vec<u8>> =
             tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?;
-        if current_session.as_deref() != session.as_deref().map(|v| v.as_slice())
-            || current_identity != identity
-        {
+        let session_unchanged = message.fresh_sessions
+            || current_session.as_deref() == session.as_deref().map(|v| v.as_slice());
+        if !session_unchanged || current_identity != identity {
             return Err(Error::invalid(
                 "message",
                 "peer session changed before commit",

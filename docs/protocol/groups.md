@@ -587,6 +587,56 @@ than an echo of our list.
 `sender_key_stanza` now renders every `<to jid=…>` in AD form regardless of
 device, asserted on the decoded stanza after a wire round trip.
 
+**It did not fix it either.** A third fan-out, with AD-form `<to>` JIDs and
+fresh `pkmsg` sessions, was acknowledged with the same clean `count="2"` and the
+handset still shows the placeholder.
+
+### Where this stands: three corrections, three eliminations
+
+Each of the three changes below was evidence-backed and is worth keeping — the
+stanza is closer to what the APK builds than it was — but **none of them was the
+cause**, and the doc should not read as though any of them were:
+
+| Change | Evidence | Result |
+| --- | --- | --- |
+| `addressing_mode="lid"` | confirmed in `A06`, observed on every inbound stanza | still undecryptable |
+| `phash` (version 2) | solved against the server's own value, and the server stopped correcting us | still undecryptable |
+| `<to jid=…>` in AD form | observed: the server stamps `participant` as an AD-JID | still undecryptable |
+
+Constant across all three: the `ack` is clean (`class="message"`, no `error`,
+`count="2"`), and **no retry receipt has ever arrived** across five receive
+windows. That silence is unexplained and is itself evidence — a phone that
+cannot decrypt should be asking us to re-send.
+
+Two hypotheses remain, and they are the only unexplored ones:
+
+1. **LID sessions have never been proven with this recipient at all.** The one
+   live-verified direct message to this person was PN-addressed. `LX/CPQ->A00`
+   (**confirmed**) sets `useLidForEncryption` true exactly when
+   `groupParticipantsManager.A0k(chat)` holds — the same predicate that makes
+   `addressing_mode` `"lid"` — so encrypting under a LID address is right for
+   this group, but right and *working* are different claims. The phone already
+   held a PN-keyed session with us before any of this; what it does when a known
+   identity opens a second session under a different addressing form is exactly
+   what `AxolotlDifferentAliceBaseKeyRequirement` exists for, and we have not
+   checked it.
+2. **The retry-receipt silence has a mechanical cause**, possibly the same one:
+   a retry receipt is addressed to the sender, and if the phone identifies us by
+   PN from that earlier session while the group stanza says LID, the receipt may
+   be going somewhere we are not looking.
+
+The discriminating experiment avoids the fan-out entirely: send a **direct**
+message to the recipient's **LID** through the path that is already
+live-verified for their PN. Same `prepare_payload`, same `pkmsg`, same person;
+only the addressing form changes. If it decrypts, LID sessions work and the bug
+is elsewhere in the fan-out. If it does not, the bug is found without touching
+groups. `MessageRequest::recipient` now accepts a LID for exactly this.
+
+Noted and deliberately not chased yet: the group has disappearing messages on
+(inbound stanzas carry `expiration`, and `notification type=disappearing_mode`
+was captured). That will not stop decryption, but a non-ephemeral payload in an
+ephemeral chat is the next thing to get right once something does decrypt.
+
 ### Phantom sessions
 
 There is a consequence to fixing this late. Each earlier send created our half of
@@ -595,7 +645,7 @@ delivered the peer created nothing. We would keep emitting `msg` against a
 ratchet they never established, which can never decrypt however correct the rest
 becomes.
 
-The private message JSON therefore takes `fresh_fanout_sessions`, which drops the
+The private message JSON therefore takes `fresh_sessions`, which drops the
 saved *session* for each fan-out target and establishes a new one from a fresh
 prekey bundle. It keeps the pinned peer identity and still refuses a changed one,
 so it resets a ratchet and nothing else. It is deliberately explicit rather than

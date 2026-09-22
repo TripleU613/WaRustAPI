@@ -181,8 +181,8 @@ pub(super) async fn send(
         ));
     }
 
-    let mut targets = load_targets(store, &plan, message.fresh_fanout_sessions)?;
-    if message.fresh_fanout_sessions {
+    let mut targets = load_targets(store, &plan, message.fresh_sessions)?;
+    if message.fresh_sessions {
         println!(
             "group-send: establishing fresh sessions for all {} target device(s); pinned identities are kept and still enforced",
             targets.len()
@@ -302,7 +302,7 @@ pub(super) async fn send(
             // With a deliberate fresh session the stored ratchet is the one we
             // chose to replace, so only the identity is checked; otherwise both
             // must be exactly what we encrypted against.
-            let session_unchanged = message.fresh_fanout_sessions
+            let session_unchanged = message.fresh_sessions
                 || current.as_deref() == session.as_deref().map(|v| v.as_slice());
             if !session_unchanged || &current_identity != identity {
                 return Err(invalid("a peer session changed before commit"));
