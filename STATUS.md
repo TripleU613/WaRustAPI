@@ -1,9 +1,32 @@
 # Status — 2026-09-22
 
+**A WhatsApp Status update was received and decrypted (2026-09-22).** The first
+one this client has ever seen: it projected as `ChatId::Broadcast` with the
+poster in `MessageKey::sender`, after the poster's SKDM installed a sender key
+under `sk:status@broadcast:<poster>` and the `skmsg` decrypted through the same
+sender-key path group messages use.
+
+Getting there ruled out four hypotheses with evidence rather than guesswork — a
+recipient performs no subscribe step (`w:status` has zero references), privacy
+tokens do not gate delivery, the poster's privacy list was not the cause, and
+nothing was dropped on our receive side. The decisive instrument was the
+server's own `<ib><offline_preview/></ib>`, whose per-class counts reported
+`status=0` in every session and proved the gap was upstream of our socket.
+
+What changed is that the account stopped looking unlike a normal client: it now
+registers its address book (`usync mode=full context=interactive`), announces
+`<presence type="available"/>` after connecting — which it had never done — and
+performs a read-only app-state fetch. A status posted after those landed
+arrived. **Which of the three was operative is not established**; they were
+introduced together. Details and the honest boundaries:
+[status](docs/protocol/status.md).
+
+
+
 **Group message receive LIVE-VERIFIED (2026-09-22).** Incoming
 group stanzas (`from`=group, `participant`=sender) now decrypt through the
 Signal sender-key protocol. A sender-key distribution message (`Message` field
-18) installs the member's key, and that stanza's `skmsg` child decrypts with it;
+2) installs the member's key, and that stanza's `skmsg` child decrypts with it;
 the member's direct session, pinned identity, consumed prekey, sender key and
 inbox row commit together, and the result projects as a `NewMessage` keyed by
 `ChatId::Group`. An unreadable stanza degrades to Unsupported rather than
@@ -23,8 +46,10 @@ inferred. Because the server does not redeliver a queued stanza, both messages
 were recovered from their preserved captures with the new
 `lab-inbox --replay-captures`, which re-runs preserved captures through the
 normal receive path offline. Group *sending* (per-device SKDM fan-out) is not
-implemented and is blocked on unknown APK evidence: a participant hash is
-required on every group send and its algorithm has not been traced.
+implemented. The participant hash it requires is now traced and implemented
+(`transport::groups::participant_hash`: sorted raw JIDs, SHA-1, first six bytes,
+Base64, `"1:"` prefix — tested against independently computed vectors), but
+which membership set feeds it remains unknown.
 Details: [groups](docs/protocol/groups.md).
 
 **API reference added:** an OpenAPI 3.1 document now describes every CLI command,

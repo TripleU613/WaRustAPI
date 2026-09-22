@@ -34,21 +34,51 @@ broadcast list (`<id>@broadcast`), which is addressed the same way.
 `ChatId` gained a `Broadcast` variant. This is additive: previously serialized
 `Direct`/`Group` events still deserialize.
 
-## What is deliberately NOT implemented
+## Delivery receipt (implemented)
 
-**No delivery receipt is sent for a status update.** `group_sender` is kept
-groups-only precisely so `received_confirmation` cannot emit a group-shaped
-receipt for a status stanza. A status receipt is a different shape
-(`LX/Cp2->A06`, **confirmed**): it adds `type="sender"` and `class="status"`
-where the ordinary branch leaves `type` null, with `participant` from the same
-`Ayl.A0V(CjN.A04())` DeviceJid path and `to`=`status@broadcast`. It is not sent
-because one input is unresolved — `A06` passes `0xffff` as the long argument
-that `Cp2->A00` uses for `sts`, which would mean `sts=65535` on every status
-receipt; the parameter mapping was not re-read and the tool's decoded signature
-for `A00` does not reconcile with its 11-register `invoke-static/range`. Sending
-a wrong receipt on a live account is worse than sending none, so this waits on
-a confirmed trace. Consequence: the server may redeliver status updates; the
-inbox dedupes them by `received:status@broadcast:<id>`.
+`received_confirmation` emits, for a decrypted status:
+
+```
+<receipt to="status@broadcast" id=<id> type="sender" participant=<poster DeviceJid> sts="65535" class="status"/>
+```
+
+Resolved 2026-09-22 by mapping `LX/Cp2->A00`'s parameters to its emitted
+attributes (**confirmed**). `A00` takes nine objects, an int and a long; with
+`.registers 13` leaving one local, the parameters occupy `v1..v12`, and the
+caller's `invoke-static/range` aligns as `A00 v_k = caller v_{k-1}`. Both
+candidate alignments yield the same *relative* mapping, so the attribute sources
+hold regardless of the one-register discrepancy in the tool's decoded signature.
+
+| attribute | source | gate |
+|---|---|---|
+| `to` | `pair.first` from `CmC->A06` | always |
+| `id` | `v6` | always |
+| `type` | `v7` | non-null |
+| `participant` | `pair.second` | non-null and `!= to` |
+| `recipient` | `v5` | non-null |
+| `sts` | the long `v11:v12` | `> 0` |
+| `<meta mode>` | the int `v10` | `!= 0` **and** type in `LX/CBs->A00` |
+
+`LX/Cp2->A06`'s status branch passes `type="sender"`, the extra attribute
+`class="status"`, a null recipient, a **zero** mode int and the long `0xffff`.
+So:
+
+- **`sts="65535"` is emitted**, because `65535 > 0`. It is a hardcoded constant,
+  not a timestamp, and is written as the literal string.
+- **No `<meta>` child is emitted**: the gate tests the mode int first, and it is
+  zero, so the `LX/CBs->A00` membership check is never reached. Whether
+  `"sender"` belongs to that set is moot on this path.
+
+Attribute order follows `A00`'s append order: `to, id, type, participant,
+recipient, sts`, then the extra `class`.
+
+The receipt stays gated on `Decrypted`/`Duplicate`, so an Unsupported stanza is
+never confirmed. **Never exercised live**, because no status has ever been
+delivered to this account.
+
+**Unknown:** what sets `LX/Bp1->A05`, the boolean selecting the status branch —
+it is a constructor-supplied field on the incoming-message model, and the
+constructor's call sites were not reachable.
 
 ## The server never queues a status for this account (observed)
 
@@ -237,6 +267,46 @@ not a server-side queue that can be re-targeted. Testing any eligibility change
 therefore requires a **new** post after the change.
 
 ## Live record
+
+**2026-09-22: a status update was received, decrypted and projected.** The first
+one this client has ever seen.
+
+```
+Broadcast  chat=status  sender=<poster LID>  content=Text  posted 13:31:47 UTC
+```
+
+`SenderKeys` went 1 → 2 as the poster's SKDM installed a key under
+`sk:status@broadcast:<poster>`, the `skmsg` decrypted through `group_decrypt`,
+the APK plaintext padding stripped cleanly, and the projection produced
+`ChatId::Broadcast` with the poster in `MessageKey::sender` — the representation
+built for exactly this. Every layer worked on first contact with a real status.
+
+**What made the difference, and what did not.** The earlier finding stands: a
+recipient performs no subscribe step, and there is no fetch path for a status
+already in flight. Repeated `offline_preview` counts of `status=0` were accurate
+— the server genuinely had nothing queued, because the poster's client computes
+its recipient list at post time and this account was not on it. What changed is
+that the account stopped looking unlike a normal client:
+
+* `usync mode=full context=interactive` registered its address book
+  (server-accepted), where before it had only ever sent one-number
+  `query`/`interactive` existence checks;
+* `<presence type="available"/>` is now announced after connecting, which this
+  client had never sent at all;
+* a read-only app-state fetch was performed (the server returned an empty
+  `<sync/>`).
+
+A status posted *after* those landed reached the account. Which of them was the
+operative one is **not** established — they were introduced together, and
+attributing the change to any single one would be a guess. What is established
+is that the eligibility decision happens on the poster's device before anything
+reaches the network, so it was never fixable on the receive path alone.
+
+Note the arriving status did **not** appear in an `offline_preview` count: it
+was delivered live during an open session rather than from the offline queue, so
+a `status=0` preview does not mean no status can arrive in that session.
+
+
 
 2026-09-22: the owner posted a status while the lab account held a 90-second
 authenticated connection. Group and direct messages sent in the same window

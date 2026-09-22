@@ -641,6 +641,22 @@ Queue a full `usync` sync of every saved contact, registering this account's add
 Usage: whatsapp-cli contacts sync [OPTIONS]...
 ```
 
+## whatsapp-cli contacts fetch-app-state
+
+Queue a read-only app-state fetch for every collection at version 0 (offline; a session transmits it). Carries no patch and mutates nothing; the reply gives the server's authoritative collection versions
+
+```
+Usage: whatsapp-cli contacts fetch-app-state [OPTIONS]...
+```
+
+## whatsapp-cli contacts publish-app-state
+
+Queue an app-state `contactAction` patch publishing every saved contact, so companion devices receive this address book (offline; a session transmits it). Mints this device's app-state key if it has none
+
+```
+Usage: whatsapp-cli contacts publish-app-state [OPTIONS]...
+```
+
 ## whatsapp-cli clear-chat
 
 Clear a direct chat's locally decrypted message bodies (offline, local-only: see docs/protocol/chat-actions.md section 6 for the deferred companion sync)

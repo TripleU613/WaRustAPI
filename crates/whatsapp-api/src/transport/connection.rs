@@ -393,6 +393,12 @@ pub(crate) async fn drive(
                         if node.get_attr("type").and_then(|v| v.as_text()) != Some("result") {
                             return Err(Error::invalid("connection", "activation refused"));
                         }
+                        // Announce availability, as every real client does
+                        // (LX/1Rd->A01). Sent only once activation is confirmed:
+                        // writing it alongside the activation request would block
+                        // on a peer that has already gone away, since nothing
+                        // reads a reply for a fire-and-forget presence stanza.
+                        link.send(&super::messaging::available_presence()).await?;
                         for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
                         {
                             let delay_ms = config.transport.action_delay_ms;
@@ -628,6 +634,16 @@ mod tests {
                     .attr("type", "result"),
             )
             .await;
+            // Availability is announced once activation is confirmed, so every
+            // test that reasons about the next written stanza must account for
+            // it here rather than each re-deriving the session's opening.
+            let (presence, presence_reply) = self.written().await;
+            assert_eq!(presence.description, "presence");
+            assert_eq!(
+                presence.get_attr("type").and_then(|v| v.as_text()),
+                Some("available")
+            );
+            presence_reply.send(Ok(())).unwrap();
             id
         }
         async fn deliver(&self, node: Node) {

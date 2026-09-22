@@ -6,7 +6,7 @@ use super::{
 };
 use crate::{Error, Result};
 use std::collections::{BTreeMap, BTreeSet};
-mod patch;
+pub mod patch;
 mod snapshot;
 pub mod storage;
 pub use snapshot::{CollectionSnapshot, VerifiedCollectionSnapshot};

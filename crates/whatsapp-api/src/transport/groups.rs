@@ -490,8 +490,106 @@ pub fn get(store: &ProtocolStore, group: &Jid) -> Result<Option<GroupSnapshot>> 
     store.read(|tx| tx.get_json(Table::Checkpoints, key(&group).as_bytes(), 1))
 }
 
+/// Participant hash (`phash`) for a group send.
+///
+/// Comparison 2.26.37.71 `LX/1jL->A02(Collection<Jid>) -> String`
+/// (**confirmed**): take each JID's raw string, sort the strings with natural
+/// ordering, feed them to **SHA-1** concatenated with **no separator**, take the
+/// **first 6 bytes** of the 20-byte digest, Base64-encode them with the standard
+/// alphabet and `NO_WRAP`, and prefix `"1:"`.
+///
+/// Self-consistency check: six bytes encode to exactly eight Base64 characters
+/// with no padding, which with the two-character prefix is exactly the ten
+/// characters `LX/0hp->A06(value, 0, 10, …)` bounds `phash` to in the emitter
+/// `LX/BpS`. The width matching the emitter's own bound is independent
+/// corroboration that this is the right derivation.
+///
+/// **The membership set is the caller's problem and is currently unknown.**
+/// `A02` does not normalize: it hashes whatever `getRawString()` yields, so the
+/// JID form is decided by the caller. The APK has two lazily cached hashes
+/// (`A0J` over `A0A.keySet()`, `A0L` over `A0B.keySet()`), matching
+/// `SendE2EMessageJob`'s `groupParticipantHash` / `groupParticipantUserHash`
+/// pair and its `useParticipantUserHash` flag — but which map is device-keyed
+/// versus user-keyed, and whether the sender itself is a member, were **not**
+/// established. A wrong membership set produces a wrong six-byte prefix and a
+/// refused send, so nothing here picks a set.
+pub fn participant_hash(jids: &[String]) -> String {
+    use sha1::{Digest, Sha1};
+    let mut sorted: Vec<&str> = jids.iter().map(String::as_str).collect();
+    sorted.sort_unstable();
+    let mut hasher = Sha1::new();
+    for jid in &sorted {
+        hasher.update(jid.as_bytes());
+    }
+    let digest = hasher.finalize();
+    let mut out = String::from("1:");
+    out.push_str(&base64_no_wrap(&digest[..6]));
+    out
+}
+
+/// Standard-alphabet Base64 without padding-free wrapping, matching Android's
+/// `Base64.encodeToString(bytes, NO_WRAP)`. Six input bytes divide evenly into
+/// four-character groups, so no padding is produced for this caller.
+fn base64_no_wrap(bytes: &[u8]) -> String {
+    const ALPHABET: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    let mut out = String::new();
+    for chunk in bytes.chunks(3) {
+        let b = [
+            chunk[0],
+            chunk.get(1).copied().unwrap_or(0),
+            chunk.get(2).copied().unwrap_or(0),
+        ];
+        let n = (u32::from(b[0]) << 16) | (u32::from(b[1]) << 8) | u32::from(b[2]);
+        let take = chunk.len() + 1;
+        for i in 0..take {
+            out.push(ALPHABET[((n >> (18 - 6 * i)) & 0x3f) as usize] as char);
+        }
+        for _ in take..4 {
+            out.push('=');
+        }
+    }
+    out
+}
+
 #[cfg(test)]
 mod tests {
+    /// Vectors computed independently with Python's hashlib and base64, not by
+    /// running this implementation: sorted raw JID strings concatenated with no
+    /// separator, SHA-1, first six digest bytes, standard Base64, "1:" prefix.
+    #[test]
+    fn participant_hash_matches_independent_vectors() {
+        let jids = |v: &[&str]| v.iter().map(|s| (*s).to_owned()).collect::<Vec<_>>();
+        assert_eq!(
+            participant_hash(&jids(&["15551234567@s.whatsapp.net"])),
+            "1:XS9Zi8u/"
+        );
+        let three = jids(&[
+            "15551234567@s.whatsapp.net",
+            "15559876543@s.whatsapp.net",
+            "120363000000000001@g.us",
+        ]);
+        assert_eq!(participant_hash(&three), "1:Lz4D7Wb2");
+        // Sorting is part of the derivation: input order must not matter.
+        let shuffled = jids(&[
+            "120363000000000001@g.us",
+            "15559876543@s.whatsapp.net",
+            "15551234567@s.whatsapp.net",
+        ]);
+        assert_eq!(participant_hash(&shuffled), participant_hash(&three));
+        // The emitter bounds phash to ten characters; six digest bytes encode to
+        // eight Base64 characters, so the prefixed value is exactly ten.
+        assert_eq!(participant_hash(&three).len(), 10);
+        assert_eq!(participant_hash(&jids(&[])).len(), 10);
+        // Membership changes the hash, which is the point of it.
+        assert_ne!(
+            participant_hash(&three),
+            participant_hash(&jids(&[
+                "15551234567@s.whatsapp.net",
+                "15559876543@s.whatsapp.net",
+            ]))
+        );
+    }
+
     use super::*;
     use crate::{
         model::ids::AccountId,

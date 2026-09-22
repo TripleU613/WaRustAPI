@@ -347,28 +347,102 @@ Tests cross-check rather than self-check: a built patch decodes through
 and the verifier's resulting state is asserted equal to the builder's
 prediction; a minted key is selectable by the pre-existing `select_active_key`.
 
-**Nothing is wired to an action and nothing has been sent**, because three
-inputs a correct mutation needs are still **unknown** and inventing them would
-produce a patch a server might accept while companions cannot interpret it:
+### Per-action routing and index (traced 2026-09-22)
 
-1. **Which collection each action belongs to.** `LX/Azq` is an
-   action→index-key enum with no collection field, and `LX/Azr` is the
-   collection enum; the mutation record `LX/Azp` binds a collection at enqueue
-   time (field `A06`), but the enqueue call site for `contactAction` or
-   `clearChatAction` was not located. `LX/0rO->A00` is only
-   `SyncdAntiTamperingLoggingHelper/getShiftBit` and is **not** a routing map.
-2. **The full index JSON array.** Element 0 is **confirmed** from
-   `LX/Azq.<clinit>`: `"contact"` for ContactAction and `"clearChat"` for
-   ClearChatAction (the same table gives `deleteChat`, `markChatAsRead`,
-   `star`, `mute`, `pin_v1`, `archive`, `deleteMessageForMe`, and `sentinel`
-   for KeyExpiration). The remaining elements, their count and the JID form
-   are **unknown** — the JSONArray construction site was not found.
-3. **`SyncActionData.version`** (field 4, required by our reader) for either
-   action: **unknown**.
+The index is **not** built with `JSONArray` at the call site, which is why an
+earlier search for one missed it: each value class assembles a Java `String[]`
+in its constructor, `LX/Azp->A0B` returns it, and `LX/C8y->A00` renders it with
+`JSONArray(String[]).toString()` — compact, no spaces. `LX/B6M` is the
+ContactAction value class and `LX/B5H` the ClearChatAction one.
 
-Also unknown: what a client populates in `clearChatAction.messageRange`, though
-the field is confirmed *optional* (`LX/BQG`/`LX/BQM` descriptor marks a
-singular optional message field).
+**Collections (confirmed).** `LX/Azs->A00(Azq)` is a packed switch on the action
+ordinal into `LX/Azr` (`A06`=regular, `A08`=regular_low, `A07`=regular_high,
+`A04`=critical_block, `A05`=critical_unblock_low):
+
+| action | collection |
+|---|---|
+| **contactAction** (ordinal 1) | **`critical_unblock_low`** |
+| **clearChatAction** (ordinal 16) | **`regular_high`** |
+| star, mute, deleteMessageForMe, deleteChat | `regular_high` |
+| pin_v1, archive, sentinel, markChatAsRead | `regular_low` |
+| securityNotification, pushName | `critical_block` |
+
+A contact landing in `critical_unblock_low` is counter-intuitive and is exactly
+the kind of value that must be read rather than assumed.
+
+**Index arrays.**
+* **contactAction — confirmed, two elements**: `["contact", <Jid.getRawString()>]`
+  (`LX/B6M.<init>` `007a..0098` reads `Azq.A0O.value` = `"contact"` and
+  `Jid.getRawString()` into a two-element `String[]`). The field is typed
+  `UserJid`, so it is user-level rather than device-addressed. **Whether the
+  caller passes the phone JID or the LID is unknown** — `LX/BXZ` carries both
+  `lidJid` and `pnJid`, and the enqueue site was not located.
+* **clearChatAction — confirmed, four elements**:
+  `["clearChat", <Jid.getRawString()>, "0"|"1", "0"|"1"]` (`LX/B5H.<init>`
+  `003c..0068` via `LX/1xk->A1J`). The two booleans are constructor parameters
+  stored as `B5H.A02` (first) and `B5H.A01` (second); **their semantics are
+  unknown**, so clearChatAction is deliberately not implemented.
+
+**`SyncActionData.version`**: **2** for contactAction (`LX/B6M.<init>`
+`const/4 v9, #0x2`), **6** for clearChatAction (`LX/B5H.<init>`
+`const/4 v13, #0x6`, forwarded through `LX/BeL` → `LX/BlG` → `Azp`). That
+`Azp.A03` is the `SyncActionData` version is **strongly inferred**: `Azp`
+exposes exactly the `SyncActionData` trio (`A07()` index string,
+`A0A()` value bytes, `A03` version) and prints it as `version=` in its
+`toString`; the method assembling the protobuf itself was not found.
+
+Also: `LX/B5H.A05` sets `BQG.messageRange_` unconditionally, so a real
+clear-chat **does** populate `messageRange` (**confirmed**), even though the
+field is optional in the descriptor.
+
+### Live result: the server refused the first patch
+
+`whatsapp-cli contacts publish-app-state` builds a `contactAction` SET for every
+saved contact into `critical_unblock_low` and sends it. Live 2026-09-22 the
+server answered **`iq type=error` with `code=400 text=bad-request`** — a generic
+refusal naming no field.
+
+**One evidence-backed correction was then made and retried once.** Reading
+`CSe.A01`'s call sites settled the version semantics (**confirmed**, both sites
+independently):
+
+* the `<collection version=…>` attribute is **the version the client currently
+  holds**, not the version the patch claims. `LX/D44` looks it up by name in the
+  `CollectionVersionsTable` (`LX/0rP->A02`, `SELECT … WHERE collection_name = ?`,
+  returning the stored `version` column); `LX/DUo` likewise reads stored state.
+  Neither derives it from the patch.
+* `LX/0rP->A02` returns **null** when no row matches, and `CSe.A01`'s `if-eqz`
+  on that argument then **omits the `version` attribute entirely**. So a
+  never-synced collection sends no `version` at all — not `0`, and certainly not
+  the patch's claimed `1`.
+* The patch's own version lives inside the `SyncdPatch` protobuf and is a
+  separate value from the attribute.
+
+The implementation was corrected (`patch_request` takes `Option<u64>` and omits
+the attribute when `None`) and **one** further live attempt was made. The server
+refused it again with the same `code=400 text=bad-request`.
+
+**Live patch attempts stopped there: two sends, one correction, both refused.**
+Permuting the remaining candidates until one is accepted is the brute-forcing
+this project forbids, and a patch accepted for the wrong reason is worse than a
+refusal. What the refusals establish is that the server validates a patch rather
+than storing it opaquely, and that the version attribute was not the only cause.
+
+Still undistinguished, and none of them worth guessing:
+
+* a collection may need an existing **snapshot** before it accepts a patch —
+  this account's `return_snapshot` fetch returned an empty `<sync/>`, so it has
+  none, and whether a first patch is even legal without one is **unknown**;
+* **`SyncdPatch.deviceIndex`** is set where the `BYK` protobuf is constructed,
+  which was not traced; we send this device's index;
+* the **index JID form** may have to be the LID rather than the phone JID
+  (`LX/BXZ` carries both `lidJid` and `pnJid`, and the enqueue site that chooses
+  was never located);
+* some other required `SyncdPatch` field may be absent.
+
+Resolving this needs the `SyncdPatch` (`LX/BYK`) construction site read for
+every field a real client populates, and the first-patch/snapshot precondition
+established.
 
 **Implementation.** `crates/whatsapp-api/src/transport/chat_clear.rs`
 (`clear_chat`) and the CLI's `clear-chat --chat <jid>` implement only the local

@@ -166,6 +166,18 @@ pub fn active_request(id: &str) -> Node {
         .children(vec![Node::new("active")])
 }
 
+/// Comparison 2.26.37.71 `LX/1Rd->A01` (**confirmed**): announce this client as
+/// available. One `presence` element carrying only `type`, whose value is
+/// validated against the set `{available, unavailable}`; no `to` and no
+/// children.
+///
+/// Every real client announces availability after connecting and this one never
+/// did, which made it the last normal post-login behaviour we lacked. It is a
+/// fire-and-forget stanza, not an `iq`, so there is no reply to correlate.
+pub fn available_presence() -> Node {
+    Node::new("presence").attr("type", "available")
+}
+
 /// Primary delivery receipt for a direct or group message, or a receipt
 /// acknowledgement. Never a read/played/opened receipt. Caller must durably
 /// store the incoming frame and authenticate messages before acknowledging them.
@@ -188,6 +200,36 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
         || incoming.get_attr("recipient").is_some()
     {
         return None;
+    }
+    // Status / broadcast: a different receipt shape from an ordinary message.
+    // Comparison 2.26.37.71 `LX/Cp2->A06` true branch (**confirmed**): it passes
+    // `type="sender"`, an extra `class="status"` attribute, a null recipient, a
+    // zero `<meta mode>` int and the long `0xffff`. `A00` emits `sts` whenever
+    // that long is > 0, so a status receipt carries the literal `sts="65535"` —
+    // a hardcoded constant, not a timestamp. The `<meta mode>` child is *not*
+    // emitted: its gate tests the mode int first, which is zero, so the type-set
+    // membership check is never reached. Attribute order follows `A00`'s append
+    // order: to, id, type, participant, recipient, sts, then the extra class.
+    if incoming.description == "message"
+        && let Some((chat, participant)) = super::inbox::sender_key_chat(incoming)
+        && chat.server == crate::model::jid::Server::Broadcast
+    {
+        if incoming.get_attr("edit").is_some() {
+            return None;
+        }
+        let id = incoming.get_attr("id")?.as_text()?;
+        if id.is_empty() || id.len() > 128 {
+            return None;
+        }
+        return Some(
+            Node::new("receipt")
+                .attr("to", chat)
+                .attr("id", id)
+                .attr("type", "sender")
+                .attr("participant", participant)
+                .attr("sts", "65535")
+                .attr("class", "status"),
+        );
     }
     // Group message: the chat is the group and `participant` names the sender.
     if incoming.description == "message"
@@ -433,6 +475,26 @@ mod tests {
                 .is_none()
         );
     }
+    /// `LX/1Rd->A01` builds exactly one `presence` element with only a `type`
+    /// attribute. No `to`, no children — a stray attribute here goes out on a
+    /// live account on every connect.
+    #[test]
+    fn available_presence_matches_the_traced_shape() {
+        let node = available_presence();
+        assert_eq!(node.description, "presence");
+        assert_eq!(node.get_attr("type").unwrap().as_text(), Some("available"));
+        assert_eq!(node.attributes.len(), 1, "presence carries only `type`");
+        assert!(node.child_nodes().is_empty());
+        assert!(node.get_attr("to").is_none());
+        // It must survive the wire codec, since it is sent on every session.
+        let dict = TokenDictionary::comparison_2_26_37_70();
+        let encoded = Encoder::new(dict).encode(&node).unwrap();
+        let decoded = Decoder::new(&encoded[1..], dict, &Limits::default())
+            .decode_node()
+            .unwrap();
+        assert_eq!(decoded, node);
+    }
+
     /// The exact shape that goes out on a live account for a group message,
     /// per comparison 2.26.37.71 `LX/Cp2->A00`: `to`=group, `id`, and
     /// `participant` (emitted only because it differs from `to`), with no
@@ -469,6 +531,63 @@ mod tests {
                 .unwrap();
         assert!(direct.get_attr("participant").is_none());
     }
+    /// The exact status receipt, per `LX/Cp2->A06`'s true branch: `type="sender"`,
+    /// `class="status"`, the literal `sts="65535"` (a hardcoded constant, not a
+    /// timestamp), no `recipient`, and no `<meta>` child because the mode int is
+    /// zero and short-circuits its gate.
+    #[test]
+    fn status_receipt_carries_sender_type_status_class_and_the_literal_sts() {
+        let status = Jid::parse("status@broadcast").unwrap();
+        let poster = Jid::parse("15551234567:3@s.whatsapp.net").unwrap();
+        let receipt = received_confirmation(
+            &Node::new("message")
+                .attr("id", "S1")
+                .attr("from", status.clone())
+                .attr("participant", poster.clone()),
+        )
+        .unwrap();
+        assert_eq!(receipt.description, "receipt");
+        assert_eq!(receipt.get_attr("to").unwrap().as_jid(), Some(&status));
+        assert_eq!(receipt.get_attr("id").unwrap().as_text(), Some("S1"));
+        assert_eq!(receipt.get_attr("type").unwrap().as_text(), Some("sender"));
+        assert_eq!(receipt.get_attr("class").unwrap().as_text(), Some("status"));
+        assert_eq!(receipt.get_attr("sts").unwrap().as_text(), Some("65535"));
+        // The poster keeps its device-addressed form, as on the group path.
+        assert_eq!(
+            receipt.get_attr("participant").unwrap().as_jid(),
+            Some(&poster)
+        );
+        assert!(receipt.get_attr("recipient").is_none());
+        assert!(receipt.child_nodes().is_empty(), "no <meta> child");
+
+        // A group receipt is still the group shape, not this one.
+        let group = received_confirmation(
+            &Node::new("message")
+                .attr("id", "G1")
+                .attr("from", Jid::parse("120363000000000001@g.us").unwrap())
+                .attr("participant", poster),
+        )
+        .unwrap();
+        assert!(group.get_attr("type").is_none());
+        assert!(group.get_attr("class").is_none());
+        assert!(group.get_attr("sts").is_none());
+
+        // An edited status is refused, as an edited message is.
+        assert!(
+            received_confirmation(
+                &Node::new("message")
+                    .attr("id", "S2")
+                    .attr("from", status)
+                    .attr(
+                        "participant",
+                        Jid::parse("15551234567@s.whatsapp.net").unwrap()
+                    )
+                    .attr("edit", "7")
+            )
+            .is_none()
+        );
+    }
+
     /// `LX/Cp2->A06` passes the sender through `DeviceJid.Companion.A00`, which
     /// returns an existing device-addressed JID unchanged. So a device suffix on
     /// the incoming `participant` must survive into the receipt, rather than

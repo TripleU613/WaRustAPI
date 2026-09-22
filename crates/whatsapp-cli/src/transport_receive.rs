@@ -327,6 +327,39 @@ pub(super) fn contacts(cli: &super::Cli, action: &super::ContactsCmd) -> Result<
             }
             Ok(())
         }
+        super::ContactsCmd::PublishAppState => {
+            let own = whatsapp_api::transport::inbox::own_identities(&store)?;
+            let device_index = own.0.as_ref().map_or(0, |j| j.device);
+            let registered: std::collections::BTreeSet<u32> =
+                [u32::from(device_index)].into_iter().collect();
+            let now = whatsapp_api::model::time::Timestamp::now().0;
+            let (id, count) = whatsapp_api::transport::app_state_sync::queue_contact_patch(
+                &store,
+                device_index,
+                0,
+                &registered,
+                now,
+            )?;
+            println!(
+                "app-state: contactAction patch for {count} contact(s) queued in critical_unblock_low; a session transmits it (action id {id})"
+            );
+            Ok(())
+        }
+        super::ContactsCmd::FetchAppState => {
+            let id = whatsapp_api::transport::app_state_sync::queue_fetch(&store)?;
+            if cli.json {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&serde_json::json!({"action_id": id}))
+                        .map_err(|e| Error::invalid("app-state", e.to_string()))?
+                );
+                return Ok(());
+            }
+            println!(
+                "app-state: read-only fetch of all collections queued; a session transmits it (action id {id})"
+            );
+            Ok(())
+        }
         super::ContactsCmd::Sync => {
             let (id, count) = contacts::queue_full_sync(&store)?;
             if cli.json {
@@ -1255,9 +1288,12 @@ pub(super) async fn run(
                             // queue counts, which are decisive when diagnosing
                             // whether the server ever queued a class of stanza
                             // for this account at all.
+                            // An `error` child's code and text are the server's
+                            // own refusal reason and carry no identifiers; they
+                            // are the whole point of inspecting a refusal.
                             if matches!(
                                 n.description.as_str(),
-                                "meta" | "enc" | "offline" | "offline_preview"
+                                "meta" | "enc" | "offline" | "offline_preview" | "error"
                             ) {
                                 // These carry protocol flags and versions only
                                 // (`v`, `type`, `content_type`, `decrypt-fail`),
@@ -1266,9 +1302,10 @@ pub(super) async fn run(
                                 // rejects digits, which would redact exactly the
                                 // version needed to diagnose a refused envelope.
                                 let safe_flag = |value: &str| {
-                                    value.len() <= 32
+                                    value.len() <= 64
                                         && value.bytes().all(|b| {
-                                            b.is_ascii_alphanumeric() || matches!(b, b'_' | b'-')
+                                            b.is_ascii_alphanumeric()
+                                                || matches!(b, b'_' | b'-' | b' ' | b'.' | b':')
                                         })
                                 };
                                 let values: Vec<String> = n

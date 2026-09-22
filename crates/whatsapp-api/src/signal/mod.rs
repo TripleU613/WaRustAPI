@@ -349,6 +349,8 @@ mod tests {
 #[cfg(feature = "experimental-signal-crypto")]
 pub mod app_state;
 #[cfg(feature = "experimental-signal-crypto")]
+pub mod app_state_actions;
+#[cfg(feature = "experimental-signal-crypto")]
 pub mod app_state_collection;
 #[cfg(feature = "experimental-signal-crypto")]
 pub mod app_state_crypto;

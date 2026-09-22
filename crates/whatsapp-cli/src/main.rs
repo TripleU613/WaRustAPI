@@ -657,6 +657,14 @@ enum ContactsCmd {
     /// Unlike `check`, which is a one-number existence query, this uses the
     /// APK's `full`/`interactive` mode pair.
     Sync,
+    /// Queue a read-only app-state fetch for every collection at version 0
+    /// (offline; a session transmits it). Carries no patch and mutates nothing;
+    /// the reply gives the server's authoritative collection versions.
+    FetchAppState,
+    /// Queue an app-state `contactAction` patch publishing every saved contact,
+    /// so companion devices receive this address book (offline; a session
+    /// transmits it). Mints this device's app-state key if it has none.
+    PublishAppState,
 }
 
 #[derive(Subcommand)]

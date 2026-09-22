@@ -8268,7 +8268,128 @@
               }
             }
           }
-        }
+        },
+        "x-library": [
+          "whatsapp_api::transport::contacts::queue_full_sync"
+        ]
+      }
+    },
+    "/v1/app-state/fetch": {
+      "post": {
+        "summary": "Queue a read-only app-state fetch for every collection (offline; a session transmits it)",
+        "description": "Ask the server for each app-state collection's snapshot at version 0 (CSe.A00/CSe.A01: <sync data_namespace=3><collection name order version=0 return_snapshot=\"true\"/>). Read-only: no <patch> child is emitted, since CSe.A01 adds it only when a patch argument is present. The reply carries the server's authoritative version per collection, which patch writing needs because patches must be strictly sequential. Live 2026-09-22: accepted, and the reply was an empty <sync/>, confirming this account holds no app state.",
+        "operationId": "fetchAppState",
+        "x-cli": "whatsapp-cli contacts fetch-app-state",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          },
+          {
+            "name": "phone",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PhoneNumber"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The fetch was queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "action_id": {
+                      "type": "string",
+                      "description": "Durable action id; inspect with `actions`."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::app_state_sync::queue_fetch"
+        ]
+      }
+    },
+    "/v1/app-state/publish-contacts": {
+      "post": {
+        "summary": "Queue an app-state contactAction patch publishing every saved contact (offline; a session transmits it)",
+        "description": "Build and queue a SyncdPatch of contactAction SET mutations, one per saved contact, into the critical_unblock_low collection (LX/Azs->A00 routes contactAction there, confirmed — not a 'regular' collection). Index is [\"contact\", <jid>] and SyncActionData.version is 2, both confirmed from LX/B6M. Mints this device's app-state key if it has none. The <collection version> attribute is the version the client currently holds and is omitted for a never-synced collection (confirmed, CSe.A01 call sites). LIVE STATUS: refused. Two attempts, both answered iq type=error code=400 text=bad-request; the second carried the corrected version semantics. Not iterated further. See docs/protocol/chat-actions.md for the undistinguished candidates.",
+        "operationId": "publishContactAppState",
+        "x-cli": "whatsapp-cli contacts publish-app-state",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          },
+          {
+            "name": "phone",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PhoneNumber"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The patch was queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "action_id": {
+                      "type": "string"
+                    },
+                    "contacts": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::app_state_sync::queue_contact_patch"
+        ]
       }
     }
   }

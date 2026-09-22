@@ -67,11 +67,11 @@ pub fn sender_key_chat(node: &Node) -> Option<(Jid, Jid)> {
     matches!(participant.server, Server::User | Server::Lid).then_some((chat, participant))
 }
 
-/// Groups only. Separate from [`sender_key_chat`] because the delivery-receipt
-/// shape is known for a group but not for a status broadcast, which needs
-/// `class="status"` and `type="sender"` (2.26.37.71 `LX/Cp2->A06`) plus an
-/// unresolved `sts`. Widening this would silently send a group-shaped receipt
-/// for a status update.
+/// Groups only. Separate from [`sender_key_chat`] because a group and a
+/// broadcast take *different* receipt shapes: a group's carries neither `type`
+/// nor `class`, while a status broadcast carries `type="sender"`,
+/// `class="status"` and `sts="65535"` (2.26.37.71 `LX/Cp2->A06`). Widening this
+/// would send a group-shaped receipt for a status update.
 pub fn group_sender(node: &Node) -> Option<(Jid, Jid)> {
     let (chat, participant) = sender_key_chat(node)?;
     chat.is_group().then_some((chat, participant))
@@ -860,9 +860,13 @@ mod tests {
         assert_eq!(chat.server, Server::Broadcast);
         assert_eq!(chat.user, "status");
         assert_eq!(sender.user, "15555550100");
-        // Not a group: no group-shaped receipt may be built for it.
+        // Not a group: it must never get a *group-shaped* receipt. It does get
+        // a receipt, but the status one — `type="sender"`, `class="status"`.
         assert!(group_sender(&status).is_none());
-        assert!(super::super::messaging::received_confirmation(&status).is_none());
+        let receipt = super::super::messaging::received_confirmation(&status)
+            .expect("a decrypted status is confirmed, with the status shape");
+        assert_eq!(receipt.get_attr("type").unwrap().as_text(), Some("sender"));
+        assert_eq!(receipt.get_attr("class").unwrap().as_text(), Some("status"));
         // A broadcast list routes the same way as status.
         let list = Node::new("message")
             .attr("from", "12345@broadcast")
@@ -870,6 +874,15 @@ mod tests {
             .attr("id", "b1");
         assert!(sender_key_chat(&list).is_some());
         assert!(group_sender(&list).is_none());
+        // A broadcast list takes the same status-shaped receipt.
+        assert_eq!(
+            super::super::messaging::received_confirmation(&list)
+                .unwrap()
+                .get_attr("class")
+                .unwrap()
+                .as_text(),
+            Some("status")
+        );
         // A group still routes as a group and still gets its receipt.
         let group = Node::new("message")
             .attr("from", "120363000000000001@g.us")

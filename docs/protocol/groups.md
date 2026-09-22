@@ -194,10 +194,36 @@ broadcast list"`. Emission is `LX/BpS;-><init>(VLI)`:
 `A1Q(frag, "phash", value)` gated on `LX/0hp->A06(value, 0, 10, …)`, a bounds
 check capping it at **10 characters** (confirmed).
 
-**The `phash` algorithm is unknown.** The method deriving it from the
-member/device list was not found. This is the hard blocker: a group send cannot
-be attempted without it, and inventing a value would be manufacturing protocol
-data rather than implementing observed behaviour.
+**The `phash` algorithm is confirmed** (`LX/1jL->A02(Collection<Jid>)`, traced
+2026-09-22) and implemented as `transport::groups::participant_hash`:
+
+```
+sorted   = sort([jid.getRawString() for jid in collection])   // natural String order
+digest   = SHA1(concat(sorted))                               // no separator between entries
+phash    = "1:" + Base64(digest[0..6], NO_WRAP)               // standard alphabet
+```
+
+SHA-1, not SHA-256. The six-byte truncation encodes to exactly eight Base64
+characters with no padding, which with the two-character `"1:"` prefix is
+exactly the ten characters `LX/0hp->A06(value, 0, 10, …)` bounds `phash` to in
+the emitter — the width matching the emitter's own bound is independent
+corroboration of the derivation. The implementation is tested against vectors
+computed separately with Python's `hashlib`/`base64`, not by running the
+implementation.
+
+The hash is lazily cached per participant set in the APK (`A0J` caching field
+`A01`, `A0L` caching `A02`), recomputed only when cleared — so it is per
+member-list, not per send.
+
+**What still blocks a group send: the membership set.** `A02` does not
+normalize; it hashes whatever `getRawString()` yields, so the caller chooses the
+JID form. The APK keeps two hashes over two different maps (`A0A.keySet()` and
+`A0B.keySet()`), matching `SendE2EMessageJob`'s `groupParticipantHash` /
+`groupParticipantUserHash` pair and its `useParticipantUserHash` flag — but
+**which map is device-keyed versus user-keyed, and whether the sender itself is
+included, are unknown**. A wrong membership set yields a wrong six-byte prefix
+and a refused send, so `participant_hash` takes the set from its caller and
+nothing here picks one.
 
 **Sender-key re-send policy — flags confirmed, trigger unknown.**
 `SendE2EMessageJob` strings: `"cannot use group encryption without including
