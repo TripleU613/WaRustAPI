@@ -692,11 +692,7 @@ mod tests {
     #[test]
     fn legacy_config_defaults_and_typos_fail_fast() {
         let mut json = serde_json::to_value(config()).unwrap();
-        for key in [
-            "device",
-            "method",
-            "diagnostics",
-        ] {
+        for key in ["device", "method", "diagnostics"] {
             json.as_object_mut().unwrap().remove(key);
         }
         let old: LabRegistrationConfig = serde_json::from_value(json.clone()).unwrap();

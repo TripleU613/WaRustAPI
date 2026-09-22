@@ -52,15 +52,22 @@ pre-loaded record; if no record exists (SKDM not yet received) the stanza is
 preserved as Unsupported without acknowledgement. The updated ratchet and inbox
 row commit together (OCC on the sender key).
 
-**Event projection**: decrypted group messages are currently saved and published
-as `UnsupportedMessage` events (the raw protobuf is preserved). Typed
-`NewMessage` projection for group chats is the next step.
+**Event projection**: decrypted group messages project as typed `NewMessage`
+events with `ChatId::Group(from)` as the chat and the `participant` JID as the
+sender (`inbox_events::chat_and_sender`). The same resolver serves the text,
+quoted-reply and reaction paths, so all three work in groups. A stanza with a
+group `from` but no `participant`, or a `participant` with a non-group `from`,
+stays opaque. Known limitation: a group quoted reply attributes the quoted
+message to the stanza sender rather than to `contextInfo.participant`, so a
+quote of a third member's message carries the wrong `MessageKey.sender`.
 
 **Implementation**: `crates/whatsapp-api/src/signal/group.rs` (SKDM parsing,
 receive, commit helpers); `crates/whatsapp-api/src/transport/inbox.rs`
-(`process_group` function + SKDM extraction in the direct-message path). Tests
-in `signal/group.rs` cover the DB key format, SKDM extraction (field 18 present,
-absent, empty), and the no-sender-key Unsupported path. Not live-verified.
+(`group_sender` routing, `process_group`, SKDM extraction in the direct path);
+`crates/whatsapp-api/src/transport/inbox_events.rs` (`chat_and_sender`). Tests
+cover the DB key format, SKDM extraction (field 18 present, absent, empty), the
+no-sender-key Unsupported path, group text projection and malformed group
+stanzas. Not live-verified: no group message has been received on a lab account.
 
 ## Live record
 

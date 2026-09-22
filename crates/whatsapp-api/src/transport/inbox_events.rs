@@ -189,6 +189,23 @@ fn event_with_content(
     project(key, node, payload, content, None, own)
 }
 
+/// Chat and authenticated sender for a projection. A direct message's `from` is
+/// both the chat and the sender; a group message's `from` is the chat and its
+/// `participant` is the sender.
+fn chat_and_sender(node: &Node) -> Option<(ChatId, DeviceAddress)> {
+    let (chat_jid, sender_jid) = match super::inbox::group_sender(node) {
+        Some(pair) => pair,
+        None => {
+            let sender = super::inbox::session_sender(node)?;
+            (sender.clone(), sender)
+        }
+    };
+    Some((
+        ChatId::from_jid(&chat_jid).ok()?,
+        DeviceAddress::from_jid(&sender_jid).ok()?,
+    ))
+}
+
 /// `own` lists this account's identities (phone-number and LID) so a quoted
 /// reply's `contextInfo.participant` can be attributed to us or to the sender.
 fn project(
@@ -249,11 +266,7 @@ fn project(
             let Some(reaction) = super::reactions::decode(payload) else {
                 return unsupported();
             };
-            let Some(sender) = super::inbox::session_sender(node) else {
-                return unsupported();
-            };
-            let (Ok(chat), Ok(by)) = (ChatId::from_jid(&sender), DeviceAddress::from_jid(&sender))
-            else {
+            let Some((chat, by)) = chat_and_sender(node) else {
                 return unsupported();
             };
             let server_timestamp = node
@@ -370,12 +383,7 @@ fn project(
                 let Ok(id) = MessageId::new(stanza_id.clone()) else {
                     return unsupported();
                 };
-                let Some(sender) = super::inbox::session_sender(node) else {
-                    return unsupported();
-                };
-                let (Ok(chat), Ok(by)) =
-                    (ChatId::from_jid(&sender), DeviceAddress::from_jid(&sender))
-                else {
+                let Some((chat, by)) = chat_and_sender(node) else {
                     return unsupported();
                 };
                 let participant = text
@@ -410,17 +418,13 @@ fn project(
             text.expiration,
         )
     };
-    let Some(sender) = super::inbox::session_sender(node) else {
+    let Some((chat, sender)) = chat_and_sender(node) else {
         return unsupported();
     };
     let Some(id) = node
         .get_attr("id")
         .and_then(|v| v.as_text())
         .and_then(|v| MessageId::new(v).ok())
-    else {
-        return unsupported();
-    };
-    let (Ok(chat), Ok(sender)) = (ChatId::from_jid(&sender), DeviceAddress::from_jid(&sender))
     else {
         return unsupported();
     };
@@ -598,6 +602,61 @@ mod tests {
             .attr("from", "15555550100@s.whatsapp.net")
             .attr("id", "fixture")
             .attr("t", "123")
+    }
+    fn group_node() -> Node {
+        Node::new("message")
+            .attr("from", "120363000000000001@g.us")
+            .attr("participant", "15555550100@s.whatsapp.net")
+            .attr("id", "fixture")
+            .attr("t", "123")
+    }
+    #[test]
+    fn group_text_projects_with_group_chat_and_participant_sender() {
+        use crate::model::{ids::ChatId, jid::Jid};
+        let SyncEvent::NewMessage(message) = event(b"fixture", &group_node(), b"\x0a\x04test")
+        else {
+            panic!("group text did not project as a new message");
+        };
+        assert_eq!(
+            message.content,
+            MessageContent::Text {
+                body: "test".into(),
+                quoted: None
+            }
+        );
+        // The chat is the group, not the sender.
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        assert_eq!(message.key.chat, ChatId::from_jid(&group).unwrap());
+        assert!(matches!(message.key.chat, ChatId::Group(_)));
+        // The sender is the participant, not the group.
+        let sender = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        assert_eq!(
+            message.key.sender,
+            Some(DeviceAddress::from_jid(&sender).unwrap())
+        );
+    }
+    #[test]
+    fn group_stanza_without_participant_or_with_non_group_from_stays_opaque() {
+        // `from` is a group but no `participant`: not a well-formed group stanza.
+        let no_participant = Node::new("message")
+            .attr("from", "120363000000000001@g.us")
+            .attr("id", "fixture")
+            .attr("t", "123");
+        assert!(matches!(
+            event(b"fixture", &no_participant, b"\x0a\x04test"),
+            SyncEvent::UnsupportedMessage(_)
+        ));
+        // `participant` present but `from` is not a group: direct routing refuses
+        // it (session_sender returns None when participant is set).
+        let not_a_group = Node::new("message")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("participant", "15555550101@s.whatsapp.net")
+            .attr("id", "fixture")
+            .attr("t", "123");
+        assert!(matches!(
+            event(b"fixture", &not_a_group, b"\x0a\x04test"),
+            SyncEvent::UnsupportedMessage(_)
+        ));
     }
     #[test]
     fn text_projection_and_media_never_leak_raw_payloads() {

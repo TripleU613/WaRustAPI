@@ -247,23 +247,26 @@ mod tests {
     use super::*;
 
     fn group_jid() -> Jid {
-        crate::model::jid::Jid::parse("120363000000000001@g.us").unwrap()
+        Jid::parse("120363000000000001@g.us").unwrap()
     }
 
     fn sender_jid() -> Jid {
-        crate::model::jid::Jid::parse("14155550100@s.whatsapp.net").unwrap()
+        Jid::parse("14155550100@s.whatsapp.net").unwrap()
     }
 
     #[test]
     fn sender_key_db_key_strips_device() {
         let g = group_jid();
-        let s = crate::model::jid::Jid::parse("14155550100:3@s.whatsapp.net").unwrap();
+        let s = Jid::parse("14155550100:3@s.whatsapp.net").unwrap();
         let s_non_ad = sender_jid();
         // Device :3 variant and non-AD variant should produce the same key.
         assert_eq!(sender_key_db_key(&g, &s), sender_key_db_key(&g, &s_non_ad));
         let key = sender_key_db_key(&g, &s);
         assert!(key.starts_with(b"sk:"));
-        assert!(key.windows(g.to_string().len()).any(|w| w == g.to_string().as_bytes()));
+        assert!(
+            key.windows(g.to_string().len())
+                .any(|w| w == g.to_string().as_bytes())
+        );
     }
 
     #[test]
@@ -329,13 +332,19 @@ mod tests {
         }
         // Empty group_id → None.
         let no_group = MsgWithSkdm {
-            skdm: Some(SkdmMsg { group_id: Some(String::new()), axolotl: Some(vec![1]) }),
+            skdm: Some(SkdmMsg {
+                group_id: Some(String::new()),
+                axolotl: Some(vec![1]),
+            }),
         }
         .encode_to_vec();
         assert!(extract_skdm_from_payload(&no_group).is_none());
         // Empty axolotl → None.
         let no_axolotl = MsgWithSkdm {
-            skdm: Some(SkdmMsg { group_id: Some("123@g.us".into()), axolotl: Some(vec![]) }),
+            skdm: Some(SkdmMsg {
+                group_id: Some("123@g.us".into()),
+                axolotl: Some(vec![]),
+            }),
         }
         .encode_to_vec();
         assert!(extract_skdm_from_payload(&no_axolotl).is_none());
@@ -347,7 +356,9 @@ mod tests {
         let g = group_jid();
         let s = sender_jid();
         let db_key = sender_key_db_key(&g, &s);
-        let result = receive_group(&g, &s, db_key, None, &[1, 2, 3, 4]).await.unwrap();
+        let result = receive_group(&g, &s, db_key, None, &[1, 2, 3, 4])
+            .await
+            .unwrap();
         assert!(result.is_none());
     }
 }

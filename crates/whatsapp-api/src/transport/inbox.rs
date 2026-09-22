@@ -44,6 +44,25 @@ pub fn session_sender(node: &Node) -> Option<Jid> {
     }
 }
 
+/// Group routing: `from` is the group JID and `participant` is the authenticated
+/// sender device. Returns `(group, sender)` only for a well-formed group stanza;
+/// direct messages and malformed group stanzas yield `None`.
+pub fn group_sender(node: &Node) -> Option<(Jid, Jid)> {
+    let parse = |name| {
+        let value = node.get_attr(name)?;
+        value
+            .as_jid()
+            .cloned()
+            .or_else(|| Jid::parse(value.as_text()?).ok())
+    };
+    let group = parse("from")?;
+    if !group.is_group() {
+        return None;
+    }
+    let participant = parse("participant")?;
+    matches!(participant.server, Server::User | Server::Lid).then_some((group, participant))
+}
+
 /// Comparison 1gz.A00 015a..01ba: peer category, DeviceJid and own UserJid.
 /// This selects a route only. `process` additionally requires a previously
 /// pinned device identity AND session; it never bootstraps a linked device.
@@ -372,9 +391,14 @@ pub async fn process(
         if let Some((group_id, axolotl)) = g::extract_skdm_from_payload(&received.plaintext) {
             if let Ok(group_jid) = Jid::parse(&group_id) {
                 if group_jid.is_group() {
-                    let skdm_keys = store.read(|tx| g::load_sender_key_bytes(tx, &group_jid, &sender));
+                    let skdm_keys =
+                        store.read(|tx| g::load_sender_key_bytes(tx, &group_jid, &sender));
                     match skdm_keys {
-                        Ok((db_key, prev)) => g::process_skdm(&group_jid, &sender, db_key, prev, &axolotl).await.ok(),
+                        Ok((db_key, prev)) => {
+                            g::process_skdm(&group_jid, &sender, db_key, prev, &axolotl)
+                                .await
+                                .ok()
+                        }
                         Err(_) => None,
                     }
                 } else {
@@ -525,13 +549,11 @@ async fn process_group(
         store.read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))?
     {
         super::inbox_events::restore(store, key.as_bytes(), &saved)?;
-        return Ok(
-            if matches!(saved["status"].as_str(), Some("decrypted")) {
-                IncomingResult::Duplicate
-            } else {
-                IncomingResult::Unsupported
-            },
-        );
+        return Ok(if matches!(saved["status"].as_str(), Some("decrypted")) {
+            IncomingResult::Duplicate
+        } else {
+            IncomingResult::Unsupported
+        });
     }
     let (db_key, previous_bytes) = store
         .read(|tx| crate::signal::group::load_sender_key_bytes(tx, &group_jid, &sender_jid))?;
