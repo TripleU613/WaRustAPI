@@ -79,14 +79,23 @@ the trailing bytes corrupt the protobuf field scan. If no key is available the
 stanza is preserved as Unsupported without acknowledgement. One OCC check
 against the pre-decryption value guards the single final sender-key write.
 
-**Delivery receipts are not sent for group messages.** `received_confirmation`
-refuses any stanza carrying `participant`, so nothing malformed goes out, but
-the group receipt shape is **unknown**: the path reaches
-`LX/0zH->A0R` (`ReadReceipts/sendDeliveryReceiptIfNotRetry`, **confirmed** by
-log string) into `LX/1q7->A08`, where the attribute set is assembled deeper than
-was traced. Whether a group receipt carries `participant` must be established
-before one is sent. Until then the server may redeliver group messages; the
-inbox dedupes them by `received:<group>:<id>`.
+**Delivery receipt.** `received_confirmation` builds
+`<receipt to=<group> id=<id> participant=<sender>/>` for a decrypted group
+message. Shape from `LX/Cp2->A00` (**confirmed**; the earlier `LX/1q7->A08` lead
+was a dead end — that method is `XmppSendMessage/validateStanzaKeyForAckOrReceipt`,
+a validator that only logs): `to` and `id` always, `type` omitted for a plain
+delivery receipt, `recipient`/`sts` omitted, and `participant` emitted exactly
+when it is non-null and differs from `to`. That last rule is why the direct path
+never carries the attribute and the group path does.
+
+The JID **form** of the APK's participant value is **unknown** — it comes from
+`LX/CmC->A06`'s third argument and the call sites were not traced. Rather than
+normalize and risk inventing a form, the implementation echoes the incoming
+stanza's own `participant` value back unchanged; that it matches the APK is
+**inferred**, supported by the sibling ack builder `LX/Cp2->A05` echoing
+`participant` straight through. The receipt is gated on `Decrypted`/`Duplicate`,
+so an Unsupported stanza is never confirmed and the server may redeliver it; the
+inbox dedupes redeliveries by `received:<group>:<id>`.
 
 **Event projection**: decrypted group messages project as typed `NewMessage`
 events with `ChatId::Group(from)` as the chat and the `participant` JID as the

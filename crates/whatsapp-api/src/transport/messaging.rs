@@ -166,14 +166,44 @@ pub fn active_request(id: &str) -> Node {
         .children(vec![Node::new("active")])
 }
 
-/// Comparison LX/Cns.A00/A05: primary direct delivery receipt, or receipt
+/// Primary delivery receipt for a direct or group message, or a receipt
 /// acknowledgement. Never a read/played/opened receipt. Caller must durably
 /// store the incoming frame and authenticate messages before acknowledging them.
+///
+/// Group form from comparison 2.26.37.71 `LX/Cp2->A00` (**confirmed**): `to` and
+/// `id` always; `participant` exactly when it is non-null and differs from `to`
+/// (so a direct chat, where the two coincide, never carries it); `type` omitted
+/// for a plain delivery receipt; `recipient` and `sts` only when their inputs are
+/// set, which they are not here. The APK derives its participant value through
+/// `LX/CmC->A06` and the JID form that produces was **not** traced, so this
+/// echoes the incoming stanza's own `participant` rather than normalizing it —
+/// no JID form is invented (**inferred** that echoing matches; the sibling ack
+/// builder `LX/Cp2->A05` does echo `participant` straight through).
 pub fn received_confirmation(incoming: &Node) -> Option<Node> {
     if !matches!(incoming.description.as_str(), "message" | "receipt")
-        || incoming.get_attr("participant").is_some()
         || incoming.get_attr("recipient").is_some()
     {
+        return None;
+    }
+    // Group message: the chat is the group and `participant` names the sender.
+    if incoming.description == "message"
+        && let Some((group, participant)) = super::inbox::group_sender(incoming)
+    {
+        if incoming.get_attr("edit").is_some() {
+            return None;
+        }
+        let id = incoming.get_attr("id")?.as_text()?;
+        if id.is_empty() || id.len() > 128 {
+            return None;
+        }
+        return Some(
+            Node::new("receipt")
+                .attr("to", group)
+                .attr("id", id)
+                .attr("participant", participant),
+        );
+    }
+    if incoming.get_attr("participant").is_some() {
         return None;
     }
     let from = incoming.get_attr("from")?;
@@ -398,6 +428,42 @@ mod tests {
                 .get_attr("type")
                 .is_none()
         );
+    }
+    /// The exact shape that goes out on a live account for a group message,
+    /// per comparison 2.26.37.71 `LX/Cp2->A00`: `to`=group, `id`, and
+    /// `participant` (emitted only because it differs from `to`), with no
+    /// `type` on a plain delivery receipt and no children.
+    #[test]
+    fn group_delivery_receipt_carries_the_participant_and_addresses_the_group() {
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let sender = Jid::parse("15551234567@s.whatsapp.net").unwrap();
+        let message = Node::new("message")
+            .attr("id", "grp1")
+            .attr("from", group.clone())
+            .attr("participant", sender.clone());
+        let receipt = received_confirmation(&message).unwrap();
+        assert_eq!(receipt.description, "receipt");
+        assert_eq!(receipt.get_attr("to").unwrap().as_jid(), Some(&group));
+        assert_eq!(receipt.get_attr("id").unwrap().as_text(), Some("grp1"));
+        assert_eq!(
+            receipt.get_attr("participant").unwrap().as_jid(),
+            Some(&sender)
+        );
+        assert!(receipt.get_attr("type").is_none());
+        assert!(receipt.get_attr("recipient").is_none());
+        assert!(receipt.child_nodes().is_empty());
+        // An edited group message is still refused.
+        assert!(received_confirmation(&message.clone().attr("edit", "7")).is_none());
+        // A group stanza with no participant is not a group message we can confirm.
+        assert!(
+            received_confirmation(&Node::new("message").attr("id", "x").attr("from", group))
+                .is_none()
+        );
+        // A direct message never carries `participant`, so its receipt has none.
+        let direct =
+            received_confirmation(&Node::new("message").attr("id", "d1").attr("from", sender))
+                .unwrap();
+        assert!(direct.get_attr("participant").is_none());
     }
     #[test]
     fn primary_connection_activation_matches_apk() {
