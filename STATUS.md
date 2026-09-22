@@ -68,7 +68,23 @@ recipient — the one live-verified direct message to them was PN-addressed, and
 probably has the same mechanical cause. The discriminating experiment avoids
 groups entirely: a **direct** message to their **LID** over the path already
 verified for their PN, changing only the addressing form.
-`MessageRequest::recipient` now accepts a LID for exactly that. Original result: the fan-out was
+`MessageRequest::recipient` now accepts a LID for exactly that.
+
+**LID sessions work; out-of-band distribution did not help.** A direct message to
+the recipient's LID arrived readable, which proves our prekey fetch, session
+establishment, `pkmsg` and padding are all correct for that handset. Delivering
+the sender key as separate acknowledged direct messages — a real shape, since
+`includeSenderKeysInMessage` is a per-send flag — still left the group message
+unreadable.
+
+Reading the receive side (`LX/Cm3->A05`) eliminated the distribution message
+itself: `LX/DRv` accepts version `3` exactly with all four fields, which is
+precisely what we emit and what WhatsApp's own serializer writes. What remains is
+whether the `<participants>` enc reaches the device at all, and whether
+`LX/COU->A00` can resolve a sender address from a non-group stanza — if it
+cannot, the out-of-band test was a no-op rather than a refutation. Both need
+visibility on **both** ends of a group, which no spare lab account can currently
+provide. Original result: the fan-out was
 transmitted and acknowledged: `addressing_mode=lid`, two
 recipients, two devices, both device lists fetched in the same connection, both
 sessions established from the same batched `encrypt` key query. Handset display

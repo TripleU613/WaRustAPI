@@ -669,6 +669,54 @@ the bug is in how the server treats our `<participants>` block; if it still does
 not, the distribution is arriving and the recipient is rejecting its *contents*,
 which is a different search entirely.
 
+### The receive side, read (2026-09-22, 2.26.37.71)
+
+Out-of-band distribution did **not** work either: both distribution messages were
+acknowledged individually on the verified 1:1 path, the group stanza followed,
+and the handset still shows the placeholder. So the reading of `LX/Cm3->A05`
+(`StanzaHandlerUtil/processSenderKeyDistributionMessage`) matters — it is the
+code that has to accept what we send:
+
+* The sender address comes from `LX/COU->A00`. If it yields null the handler
+  logs `could not extract sender address` and **drops the distribution
+  silently**. This is a live candidate for why the out-of-band attempt did
+  nothing: a direct stanza has no `participant`, and whether `COU.A00` can
+  resolve a sender from one was not established.
+* Both SKDM fields are required (`bitField0_ & 1` and `& 2`, i.e. `groupId` and
+  `axolotlSenderKeyDistributionMessage`).
+* The `groupId` is compared against the stanza's chat **only when that chat is a
+  group** (`LX/0DE->A0m`); for a non-group stanza the check is skipped and
+  processing continues. A mismatch logs
+  `group id on message and group id in ciphertext do not match`.
+* The sender key is filed under `LX/Cnr(senderAddress, groupId, "")` — the
+  group id taken from **the SKDM protobuf**, not the stanza, and an empty
+  **bucket**. (Buckets are real: `LX/Cp3->A03` adds a `bucket` attribute to the
+  enc when `senderKeyBucketingConfig` supplies one. We send none, so `""` on
+  both sides.)
+* Outcomes are logged as `StanzaHandlerUtil/processSenderKeyDistributionMessage/
+  status/<n>`: 0 success, `0xfc11` incomplete, `0xfc13` legacy, `0xfc18` other.
+
+**Our distribution message is not what is being rejected.** `LX/DRv`'s parsing
+constructor accepts version `3` exactly — below it throws `Legacy message:`,
+above it `Unknown version:` — and requires all four of `id`, `iteration`,
+`chainKey` and `signingKey`. WhatsApp's own serializing constructor writes the
+same `0x33` version byte. Ours is `0x33`, 77 bytes, with all four fields. So the
+format is **eliminated**: a delivered SKDM of ours would parse.
+
+That leaves two live candidates, and neither is guesswork any more:
+
+1. **The `<participants>` enc is not delivered to the device.** Everything about
+   our stanza that can be checked against the APK now matches, and the ack's
+   `count` is the server's own participant tally rather than an echo of our
+   list, so it cannot confirm delivery either way.
+2. **`LX/COU->A00` cannot resolve a sender address from a non-group stanza**,
+   which would make the out-of-band attempt a no-op rather than a refutation.
+
+Both are answerable with full visibility on **both** ends — a second instrumented
+account in a group with the first — which is the next thing to set up. None of
+this account's spare lab numbers is registered, so that needs a decision rather
+than another send.
+
 Noted and deliberately not chased yet: the group has disappearing messages on
 (inbound stanzas carry `expiration`, and `notification type=disappearing_mode`
 was captured). That will not stop decryption, but a non-ephemeral payload in an
