@@ -12,7 +12,9 @@ use tokio::io::{AsyncRead, AsyncWrite};
 #[derive(serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct MessageRequest {
-    /// Recipient E.164 digits (optional leading plus).
+    /// Recipient E.164 digits (optional leading plus). Absent for a group
+    /// send, which names its chat in `group` instead.
+    #[serde(default)]
     pub to: zeroize::Zeroizing<String>,
     /// Plaintext, never printed or stored outside encrypted state.
     #[serde(default)]
@@ -846,5 +848,51 @@ mod tests {
                 .is_err()
         );
         assert!(request(Some("status@broadcast"), "").group_chat().is_err());
+    }
+
+    /// A group JSON carries no `to`; a direct one must still have digits.
+    #[test]
+    fn private_json_accepts_a_group_without_a_direct_recipient() {
+        let dir = tempfile::tempdir().unwrap();
+        let write = |name: &str, body: &str| {
+            let path = dir.path().join(name);
+            std::fs::write(&path, body).unwrap();
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+                std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o600)).unwrap();
+            }
+            path
+        };
+        let group = MessageRequest::read(&write(
+            "g.json",
+            r#"{"group":"120363000000000001@g.us","text":"hi","request_id":"r1"}"#,
+        ))
+        .unwrap();
+        assert!(group.to.is_empty());
+        assert_eq!(
+            group.group_chat().unwrap(),
+            Some(Jid::parse("120363000000000001@g.us").unwrap())
+        );
+        // Both targets at once is ambiguous, and a group send is text only.
+        assert!(
+            MessageRequest::read(&write(
+                "both.json",
+                r#"{"to":"15551234567","group":"120363000000000001@g.us","text":"hi","request_id":"r2"}"#,
+            ))
+            .is_err()
+        );
+        assert!(
+            MessageRequest::read(&write(
+                "novoice.json",
+                r#"{"group":"120363000000000001@g.us","voice_note":"/dev/null","request_id":"r3"}"#,
+            ))
+            .is_err()
+        );
+        // A direct send still needs digits.
+        assert!(
+            MessageRequest::read(&write("none.json", r#"{"text":"hi","request_id":"r4"}"#))
+                .is_err()
+        );
     }
 }

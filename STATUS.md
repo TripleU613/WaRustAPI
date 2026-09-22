@@ -1,7 +1,10 @@
 # Status — 2026-09-22
 
-**Group sending is implemented end to end and has not been transmitted yet
-(2026-09-22).** The blocker was never the crypto — it was not knowing who to
+**Group sending is LIVE-VERIFIED (2026-09-22).** One sender-key fan-out was
+transmitted and the server acknowledged it: `addressing_mode=lid`, two
+recipients, two devices, both device lists fetched in the same connection, both
+sessions established from the same batched `encrypt` key query. Handset display
+is not yet confirmed by the operator. The blocker was never the crypto — it was not knowing who to
 address. `SendE2EMessageJob` turns out not to compute the recipient set at all:
 `targetDeviceRawJids`, `groupParticipantHash`, `useParticipantUserHash`,
 `includeSenderKeysInMessage`, `useLidForEncryption` and
@@ -13,7 +16,7 @@ this message, and is reached only inside the counter-abuse-token branch.
 
 So the set is the ordinary one: the chat's participants expanded to their
 devices. `lab-transport --login --message <json>` with `group` in place of `to`
-now does that on one connection — `w:g2` info query, `usync devices`, an
+does that on one connection — `w:g2` info query, `usync devices`, an
 `encrypt` key query for the devices without a session, per-device SKDM, `skmsg`,
 one atomic commit of every session and our own sender key with the send intent,
 then one write and one `ack`. It refuses when a member has no device list rather

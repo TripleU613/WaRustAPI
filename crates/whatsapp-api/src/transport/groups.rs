@@ -610,11 +610,11 @@ pub struct FanoutTarget {
 ///   `0=msg, 1=pkmsg, 2=skmsg, 3=frskmsg, 4=msmsg` — the exact inverse of the
 ///   `LX/C9c->A00` reader the receive path already matches.
 ///
-/// **Inferred, not confirmed:** that the top-level `skmsg` is a sibling of
-/// `<participants>` rather than nested inside it. `LX/Cp3->A08` returns only the
-/// `<to>` list, and its caller places the other enc; a candidate is
-/// `LX/Cp3->A02`, invoked with an *empty* recipient list — consistent with a
-/// non-per-recipient enc — but it was not read.
+/// The top-level `skmsg` being a **sibling** of `<participants>` rather than
+/// nested inside it was inferred from `LX/Cp3->A08` returning only the `<to>`
+/// list; it is now **observed**: one stanza in exactly this shape was
+/// transmitted on 2026-09-22 and server-acknowledged. The same run establishes
+/// that a send **without** `phash` is accepted.
 ///
 /// `addressing_mode` is **confirmed** from `SendE2EMessageJob->A06`
 /// (2.26.37.71) at `12d0..1322`: the value is `"lid"` when

@@ -433,6 +433,24 @@ together with the send intent; then one write and one `ack`. It refuses when a
 member has no device list rather than sending a message that would reach only
 part of the group.
 
+### Live record
+
+2026-09-22: one fan-out was transmitted and **server-acknowledged**. The
+connection reported `own LID recorded by the login result`, then
+`device lists ingested=2, partial_errors=0, accepted=true`,
+`addressing_mode=lid, recipients=2, devices=2, without_device_list=0`,
+`key query for 2 device(s) type=result`, and finally
+`fan-out server_acknowledged`. That establishes server acceptance of the stanza
+shape — `<participants>` of `<to jid=…>` each carrying its own `enc`, beside a
+sibling `skmsg`, with `addressing_mode="lid"` and **no** `phash` — and of the
+per-device SKDM. It does **not** establish that a recipient handset displayed
+the message; the operator has not confirmed that.
+
+Two things the live run settled that static analysis had left open: the
+`<participants>`-sibling placement of the `skmsg` (previously *inferred* from
+`LX/Cp3->A08` returning only the `<to>` list), and that a send **without**
+`phash` is accepted — the server does not require the client's membership claim.
+
 **Still unknown:** whether our own companion devices belong in the fan-out (this
 account is a primary with none), what actually sets `includeSenderKeysInMessage`
 in `LX/Ceo`, and the membership set behind `phash`.
