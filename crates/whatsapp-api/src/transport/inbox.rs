@@ -551,13 +551,39 @@ struct MemberSession {
 
 /// Handle incoming group message stanzas (`participant` present, `from` a group).
 ///
-/// A group stanza carries one or two `enc` children: a `pkmsg`/`msg` child whose
-/// plaintext holds the sender-key distribution message (field 18), and/or an
-/// `skmsg` child holding the actual group message. The first message from a
-/// member carries both, so the SKDM must be applied before the `skmsg` in the
-/// same stanza is decrypted. Both updates commit in one write transaction.
+/// A malformed or undecryptable group stanza degrades to `Unsupported` rather
+/// than failing the session: the caller propagates errors from `process`, and
+/// dropping a live connection over one unreadable stanza would lose the whole
+/// receive window. The raw capture is already preserved for offline diagnosis
+/// and the stanza stays unacknowledged, so the server may redeliver it.
+/// Storage failures still propagate.
 #[cfg(feature = "experimental-signal-crypto")]
 async fn process_group(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    node: &Node,
+    capture: &[u8],
+) -> Result<IncomingResult> {
+    match process_group_inner(store, account, node, capture).await {
+        Err(Error::InvalidInput { field, reason }) => {
+            tracing::warn!(
+                field,
+                reason,
+                "group stanza preserved but not processed; not acknowledged"
+            );
+            Ok(IncomingResult::Unsupported)
+        }
+        other => other,
+    }
+}
+
+/// A group stanza carries one or two `enc` children: a `pkmsg`/`msg` child whose
+/// plaintext holds the sender-key distribution message (field 18), and/or an
+/// `skmsg` child holding the actual group message. A member's first message
+/// carries both, so the SKDM must be applied before that stanza's `skmsg` is
+/// decrypted. Both updates commit in one write transaction.
+#[cfg(feature = "experimental-signal-crypto")]
+async fn process_group_inner(
     store: &ProtocolStore,
     account: &AccountRecord,
     node: &Node,
@@ -772,6 +798,93 @@ async fn process_group(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn group_sender_accepts_group_stanzas_and_refuses_everything_else() {
+        let group = |from: &str, participant: Option<&str>| {
+            let mut n = Node::new("message").attr("from", from).attr("id", "x");
+            if let Some(p) = participant {
+                n = n.attr("participant", p);
+            }
+            group_sender(&n)
+        };
+        // Well-formed: group `from` plus a user participant.
+        let ok = group(
+            "120363000000000001@g.us",
+            Some("15555550100@s.whatsapp.net"),
+        );
+        let (g, s) = ok.expect("well-formed group stanza");
+        assert!(g.is_group());
+        assert_eq!(s.user, "15555550100");
+        // A LID participant is accepted (its phone is resolved separately).
+        assert!(group("120363000000000001@g.us", Some("12345@lid")).is_some());
+        // No participant, non-group from, and a group participant are all refused.
+        assert!(group("120363000000000001@g.us", None).is_none());
+        assert!(
+            group(
+                "15555550100@s.whatsapp.net",
+                Some("15555550101@s.whatsapp.net")
+            )
+            .is_none()
+        );
+        assert!(group("120363000000000001@g.us", Some("120363000000000002@g.us")).is_none());
+    }
+
+    /// A group stanza we cannot read must not fail the receive session: the
+    /// listen loop propagates errors from `process`, so an undecryptable stanza
+    /// would otherwise drop a live connection and lose the whole window.
+    #[tokio::test]
+    async fn undecryptable_group_stanza_is_unsupported_and_does_not_fail_the_session() {
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("group.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15555550199@s.whatsapp.net").unwrap()),
+            registration: crate::session::RegistrationStatus::Registered,
+            ..Default::default()
+        };
+        // An skmsg with no stored sender key and garbage ciphertext: nothing to
+        // decrypt with, and nothing may be written.
+        let node = Node::new("message")
+            .attr("from", "120363000000000001@g.us")
+            .attr("participant", "15555550100@s.whatsapp.net")
+            .attr("id", "grp1")
+            .attr("t", "123")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", "skmsg")
+                    .attr("v", "2")
+                    .bytes(vec![9, 9, 9, 9]),
+            ]);
+        let capture = preserve(&store, &node).unwrap();
+        assert_eq!(
+            process(&store, &account, &node, &capture).await.unwrap(),
+            IncomingResult::Unsupported
+        );
+        // No sender key, session or inbox row was created.
+        assert!(
+            store
+                .read(|tx| tx.scan(Table::SenderKeys, 1, 10))
+                .unwrap()
+                .is_empty()
+        );
+        assert!(
+            store
+                .read(|tx| tx.scan(Table::SignalSessions, 1, 10))
+                .unwrap()
+                .is_empty()
+        );
+    }
+
     #[tokio::test]
     async fn own_device_route_never_bootstraps_unpinned_sessions() {
         use crate::{
