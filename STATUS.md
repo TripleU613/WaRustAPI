@@ -42,7 +42,8 @@ stanza carries this account's own LID (**confirmed** `LX/0iS->A12`), which a
 LID-addressed group names us by and which we now record. `phash` is still
 omitted: it is `groupParticipantHash` verbatim and the membership set behind it
 is still unknown, so an absent attribute is honest where a wrong six-byte prefix
-would not be. Details: [groups](docs/protocol/groups.md).
+would not be. One send without it was accepted, for a group whose membership had
+just been fetched — that is not evidence that it is generally optional. Details: [groups](docs/protocol/groups.md).
 
 
 **A WhatsApp Status update was received and decrypted (2026-09-22).** The first

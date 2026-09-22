@@ -446,10 +446,14 @@ sibling `skmsg`, with `addressing_mode="lid"` and **no** `phash` — and of the
 per-device SKDM. It does **not** establish that a recipient handset displayed
 the message; the operator has not confirmed that.
 
-Two things the live run settled that static analysis had left open: the
-`<participants>`-sibling placement of the `skmsg` (previously *inferred* from
-`LX/Cp3->A08` returning only the `<to>` list), and that a send **without**
-`phash` is accepted — the server does not require the client's membership claim.
+The live run settled the `<participants>`-sibling placement of the `skmsg`,
+previously *inferred* from `LX/Cp3->A08` returning only the `<to>` list.
+
+It also shows that a send **without** `phash` was accepted **once**, for a
+three-member group whose membership we had fetched seconds earlier in the same
+connection. That is not evidence that `phash` is generally optional: the server
+may simply have found the `<to>` set consistent with what it knew. Treat it as
+"accepted once, membership freshly fetched", not as a rule.
 
 **Still unknown:** whether our own companion devices belong in the fan-out (this
 account is a primary with none), what actually sets `includeSenderKeysInMessage`

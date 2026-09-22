@@ -435,6 +435,68 @@ mod tests {
         );
     }
 
+    /// A device that joins the group later, or whose first stanza was lost,
+    /// only ever sees the **second** distribution message. If re-publishing our
+    /// key from its advanced record emitted iteration 0, that device would
+    /// install a chain behind ours and silently fail to decrypt everything —
+    /// a failure that shows up only on the recipient's handset. So: advance the
+    /// chain, re-publish from the advanced record, install that on a receiver
+    /// that has never seen the first one, and decrypt.
+    #[tokio::test]
+    async fn a_republished_sender_key_still_decrypts_later_messages() {
+        let chat = group_jid();
+        let own = sender_jid();
+
+        let first = prepare_own_sender_key(&chat, &own, None).await.unwrap();
+        let (_, first_axolotl) =
+            extract_skdm_from_payload(&first.distribution_message).expect("field 2");
+        let (_, advanced) =
+            encrypt_group_payload(&chat, &own, &first.updated_key, &pad(b"one").unwrap())
+                .await
+                .unwrap();
+
+        // Re-publish from the advanced record, exactly as a second send does.
+        let second = prepare_own_sender_key(&chat, &own, Some(&advanced))
+            .await
+            .unwrap();
+        let (_, second_axolotl) =
+            extract_skdm_from_payload(&second.distribution_message).expect("field 2");
+        let (ciphertext, _) =
+            encrypt_group_payload(&chat, &own, &second.updated_key, &pad(b"two").unwrap())
+                .await
+                .unwrap();
+
+        // A receiver that only ever saw the second distribution message.
+        let db_key = sender_key_db_key(&chat, &own);
+        let late = process_skdm(&chat, &own, db_key.clone(), None, &second_axolotl)
+            .await
+            .unwrap();
+        let received = receive_group(&chat, &own, Some(&late.updated_key), &ciphertext)
+            .await
+            .unwrap()
+            .expect("a late joiner must decrypt the message that followed its SKDM");
+        assert_eq!(&**received.plaintext, b"two");
+
+        // And a receiver that saw both still works, which is the ordinary case.
+        let early = process_skdm(&chat, &own, db_key.clone(), None, &first_axolotl)
+            .await
+            .unwrap();
+        let both = process_skdm(
+            &chat,
+            &own,
+            db_key,
+            Some(early.updated_key.to_vec()),
+            &second_axolotl,
+        )
+        .await
+        .unwrap();
+        let received = receive_group(&chat, &own, Some(&both.updated_key), &ciphertext)
+            .await
+            .unwrap()
+            .expect("a member that saw both distributions must still decrypt");
+        assert_eq!(&**received.plaintext, b"two");
+    }
+
     #[test]
     fn padding_is_one_to_sixteen_bytes_and_strips_back_to_the_original() {
         for _ in 0..64 {

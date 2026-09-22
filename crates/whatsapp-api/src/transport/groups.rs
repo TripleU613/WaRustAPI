@@ -613,8 +613,9 @@ pub struct FanoutTarget {
 /// The top-level `skmsg` being a **sibling** of `<participants>` rather than
 /// nested inside it was inferred from `LX/Cp3->A08` returning only the `<to>`
 /// list; it is now **observed**: one stanza in exactly this shape was
-/// transmitted on 2026-09-22 and server-acknowledged. The same run establishes
-/// that a send **without** `phash` is accepted.
+/// transmitted on 2026-09-22 and server-acknowledged. That run also had no
+/// `phash`, for a group whose membership had just been fetched — accepted once,
+/// which is not the same as generally optional.
 ///
 /// `addressing_mode` is **confirmed** from `SendE2EMessageJob->A06`
 /// (2.26.37.71) at `12d0..1322`: the value is `"lid"` when
