@@ -1377,7 +1377,11 @@ pub(super) async fn run(
                                         whatsapp_api::model::jid::Jid::parse(v.as_text()?).ok()
                                     })
                                 })
-                                .map(|j| format!("{:?}/device={}", j.server, j.device))
+                                // `kind` records which wire form the JID arrived
+                                // in: `AgentDevice` means an AD-JID (an explicit
+                                // *device* address), `Plain` a JID pair (a user).
+                                // An outgoing fan-out has to match that choice.
+                                .map(|j| format!("{:?}/device={}/{:?}", j.server, j.device, j.kind))
                         };
                         // `addressing_mode` is a closed enum ("pn"/"lid"), not a
                         // value derived from the account, and it decides which JID

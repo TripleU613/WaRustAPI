@@ -33,6 +33,17 @@ pub struct MessageRequest {
     /// addressed to one phone number.
     #[serde(default)]
     pub group: Option<String>,
+    /// Discard our saved *session* with each fan-out target and establish a new
+    /// one from a fresh prekey bundle, keeping the pinned peer identity.
+    ///
+    /// Only legitimate with positive evidence that the peer never received the
+    /// distribution we encrypted under the old session — a session we created
+    /// but whose ciphertext never reached the peer leaves us emitting `msg`
+    /// against a ratchet they never established, which can never decrypt. It
+    /// resets no identity and no sender key, and a changed peer identity is
+    /// still refused.
+    #[serde(default)]
+    pub fresh_fanout_sessions: bool,
     /// Stable local idempotency key; reuse it after uncertain outcomes.
     pub request_id: String,
 }
@@ -826,6 +837,7 @@ mod tests {
             voice_note: None,
             view_once: false,
             group: group.map(str::to_owned),
+            fresh_fanout_sessions: false,
             request_id: "r1".into(),
         };
         assert_eq!(

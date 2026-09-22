@@ -560,6 +560,48 @@ That second send also differed in one unavoidable way: the sessions established
 by the first send meant its distribution encs went out as `msg` rather than
 `pkmsg`, and no key query was needed.
 
+**It was also still "waiting for this message" on the handset.** So the phash was
+not it either, and with the structure, the enc attributes, the SKDM bytes and the
+hash all accounted for, the remaining difference had to be in how the `<to>` JID
+itself goes on the wire.
+
+### A `<to>` names a device, and a device is an AD-JID
+
+**Observed** 2026-09-22, decisive: on every incoming group stanza the server
+stamps, `participant` decodes as an **AD-JID** — the form carrying explicit agent
+and device bytes — with `device=0`, while the group `from` beside it decodes as a
+plain JID pair. `lab-inbox --inspect` now prints that distinction, so it is
+re-checkable.
+
+Our `Jid` only reaches for the AD encoding when the agent or device is non-zero
+(`is_ad`), so a member's **primary** device — agent 0, device 0 — was being
+encoded as a plain *user* JID. `<to jid=…>` in `A08` is built from a
+`DeviceJid`, and the version 2 participant hash is likewise computed over the AD
+rendering with the zeros written out, both pointing the same way: a device
+address is AD-shaped everywhere. A server that cannot resolve a `<to>` to a
+device has nowhere to deliver that distribution enc, which is exactly the
+observed symptom — the `skmsg` arrives, the sender key never does, and the ack
+is unaffected because its `count` is the server's own participant count rather
+than an echo of our list.
+
+`sender_key_stanza` now renders every `<to jid=…>` in AD form regardless of
+device, asserted on the decoded stanza after a wire round trip.
+
+### Phantom sessions
+
+There is a consequence to fixing this late. Each earlier send created our half of
+a Signal session with those devices, but if the distribution encs were never
+delivered the peer created nothing. We would keep emitting `msg` against a
+ratchet they never established, which can never decrypt however correct the rest
+becomes.
+
+The private message JSON therefore takes `fresh_fanout_sessions`, which drops the
+saved *session* for each fan-out target and establishes a new one from a fresh
+prekey bundle. It keeps the pinned peer identity and still refuses a changed one,
+so it resets a ratchet and nothing else. It is deliberately explicit rather than
+automatic: it is only legitimate with positive evidence that the peer never
+received what was encrypted under the old session.
+
 **Still unknown:** the version-2 `phash` construction, whether our own companion
 devices belong in the fan-out, what sets `includeSenderKeysInMessage` in
 `LX/Ceo`, and the membership set behind `phash`.

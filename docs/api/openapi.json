@@ -361,6 +361,10 @@
             "type": "string",
             "description": "Group chat JID (`…@g.us`) for a sender-key fan-out send. Mutually exclusive with `to`; text only so far. lab-transport resolves the membership with a `w:g2` info query, the members' devices with `usync devices`, then addresses every device individually."
           },
+          "fresh_fanout_sessions": {
+            "type": "boolean",
+            "description": "Group send only: discard the saved Signal session with each fan-out target and establish a new one from a fresh prekey bundle, keeping the pinned peer identity (a changed identity is still refused). Only legitimate with positive evidence that the peer never received what was encrypted under the old session."
+          },
           "request_id": {
             "$ref": "#/components/schemas/RequestId"
           },

@@ -379,6 +379,7 @@ pub(crate) async fn upload_source(
         voice_note: voice.then(|| source.to_owned()),
         view_once: false,
         group: None,
+        fresh_fanout_sessions: false,
         request_id: String::new(),
     };
     let (bytes, width, height) = input(&message)?.ok_or_else(|| invalid("media source missing"))?;

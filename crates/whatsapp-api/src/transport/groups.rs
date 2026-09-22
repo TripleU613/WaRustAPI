@@ -732,16 +732,26 @@ pub fn sender_key_stanza(
                 "empty distribution ciphertext",
             ));
         }
-        participants.push(
-            Node::new("to")
-                .attr("jid", target.device.clone())
-                .children(vec![
-                    Node::new("enc")
-                        .attr("v", "2")
-                        .attr("type", target.kind)
-                        .bytes(target.ciphertext.clone()),
-                ]),
-        );
+        // A `<to>` names a *device*, and a device address goes on the wire as
+        // an AD-JID — the form that carries an explicit agent and device byte —
+        // even when both are zero. **Observed** 2026-09-22: every `participant`
+        // the server stamps on an incoming group stanza decodes as `AgentDevice`
+        // with `device=0`, while the group `from` beside it decodes as `Plain`.
+        // Our `Jid` only reaches for the AD encoding when the agent or device is
+        // non-zero, so a primary device would otherwise be encoded as a plain
+        // user JID and the server has no device to deliver that enc to.
+        let device = Jid::new_ad(
+            target.device.user.clone(),
+            target.device.agent,
+            target.device.device,
+            target.device.server.clone(),
+        )?;
+        participants.push(Node::new("to").attr("jid", device).children(vec![
+                Node::new("enc")
+                    .attr("v", "2")
+                    .attr("type", target.kind)
+                    .bytes(target.ciphertext.clone()),
+            ]));
     }
     let mut node = Node::new("message")
         .attr("to", chat.clone())
@@ -822,16 +832,18 @@ mod tests {
             assert_eq!(enc.get_attr("v").unwrap().as_text(), Some("2"));
             assert_eq!(enc.get_attr("type").unwrap().as_text(), Some(expected));
         }
-        // The device suffix on a target must survive into its `<to jid=…>`.
-        assert_eq!(
-            participants.child_nodes()[0]
-                .get_attr("jid")
-                .unwrap()
-                .as_jid()
-                .unwrap()
-                .device,
-            1
-        );
+        // The device suffix on a target must survive into its `<to jid=…>`,
+        // and every `<to>` must name a device in the AD form the server uses,
+        // including the primary whose agent and device are both zero.
+        for (child, device) in participants.child_nodes().iter().zip([1, 0]) {
+            let jid = child.get_attr("jid").unwrap().as_jid().unwrap();
+            assert_eq!(jid.device, device);
+            assert_eq!(
+                jid.kind,
+                crate::model::jid::JidKind::AgentDevice,
+                "a <to> names a device, so it encodes as an AD-JID"
+            );
+        }
         let skmsg = &children[1];
         assert_eq!(skmsg.description, "enc");
         assert_eq!(skmsg.get_attr("type").unwrap().as_text(), Some("skmsg"));

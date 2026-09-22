@@ -94,17 +94,28 @@ struct Target {
     identity: Option<Vec<u8>>,
 }
 
-fn load_targets(store: &ProtocolStore, plan: &FanoutPlan) -> Result<Vec<Target>, Error> {
+fn load_targets(
+    store: &ProtocolStore,
+    plan: &FanoutPlan,
+    fresh_sessions: bool,
+) -> Result<Vec<Target>, Error> {
     store.read(|tx| {
         plan.devices
             .iter()
             .map(|device| {
                 let key = session_key(device);
+                let session = if fresh_sessions {
+                    // Drop only the ratchet. The pinned peer identity below is
+                    // still loaded and still enforced, so this cannot be used to
+                    // accept a changed identity.
+                    None
+                } else {
+                    tx.get_json::<Vec<u8>>(Table::SignalSessions, key.as_bytes(), 1)?
+                        .map(zeroize::Zeroizing::new)
+                };
                 Ok(Target {
                     device: device.clone(),
-                    session: tx
-                        .get_json::<Vec<u8>>(Table::SignalSessions, key.as_bytes(), 1)?
-                        .map(zeroize::Zeroizing::new),
+                    session,
                     identity: tx.get_json(Table::PeerIdentities, key.as_bytes(), 1)?,
                 })
             })
@@ -170,7 +181,13 @@ pub(super) async fn send(
         ));
     }
 
-    let mut targets = load_targets(store, &plan)?;
+    let mut targets = load_targets(store, &plan, message.fresh_fanout_sessions)?;
+    if message.fresh_fanout_sessions {
+        println!(
+            "group-send: establishing fresh sessions for all {} target device(s); pinned identities are kept and still enforced",
+            targets.len()
+        );
+    }
     let needed: Vec<Jid> = targets
         .iter()
         .filter(|t| t.session.is_none())
@@ -282,9 +299,12 @@ pub(super) async fn send(
             let current: Option<Vec<u8>> = tx.get_json(Table::SignalSessions, key.as_bytes(), 1)?;
             let current_identity: Option<Vec<u8>> =
                 tx.get_json(Table::PeerIdentities, key.as_bytes(), 1)?;
-            if current.as_deref() != session.as_deref().map(|v| v.as_slice())
-                || &current_identity != identity
-            {
+            // With a deliberate fresh session the stored ratchet is the one we
+            // chose to replace, so only the identity is checked; otherwise both
+            // must be exactly what we encrypted against.
+            let session_unchanged = message.fresh_fanout_sessions
+                || current.as_deref() == session.as_deref().map(|v| v.as_slice());
+            if !session_unchanged || &current_identity != identity {
                 return Err(invalid("a peer session changed before commit"));
             }
             tx.put_json(Table::SignalSessions, key.as_bytes(), 1, &**next_session)?;

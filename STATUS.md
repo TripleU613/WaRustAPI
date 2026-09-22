@@ -37,8 +37,22 @@ independently computed synthetic vectors, and the fan-out now sends it.
 **The server validated that derivation.** A second fan-out carried our own
 computed hash and was acknowledged with `count="2"` and **no `phash`** — the
 correction present on the first ack is gone, which is the server agreeing our
-claimed membership matches its own. Whether the recipient can now read the
-message is not yet established. Original result: the fan-out was
+claimed membership matches its own.
+
+**It still would not decrypt, and the cause looks like the `<to>` JID encoding.**
+Every `participant` the server stamps on an incoming group stanza decodes as an
+**AD-JID** with `device=0`, while the group `from` beside it is a plain JID pair.
+Our `Jid` only uses the AD encoding when the agent or device is non-zero, so a
+member's primary device was going out as a plain *user* JID — nothing for the
+server to resolve to a device, so nowhere to deliver that distribution enc, while
+the `skmsg` still arrived and the ack stayed clean because its `count` is the
+server's own tally rather than an echo of our list. `sender_key_stanza` now
+renders every `<to>` in AD form.
+
+Because the earlier sends created our half of sessions the peer never created,
+the private message JSON also takes `fresh_fanout_sessions`, which replaces the
+saved ratchet for each target from a fresh prekey bundle while keeping — and
+still enforcing — the pinned peer identity. Untested live at the time of writing. Original result: the fan-out was
 transmitted and acknowledged: `addressing_mode=lid`, two
 recipients, two devices, both device lists fetched in the same connection, both
 sessions established from the same batched `encrypt` key query. Handset display
