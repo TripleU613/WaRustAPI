@@ -97,13 +97,21 @@ pub fn queue_create(store: &ProtocolStore, subject: &str, members: &[Jid]) -> Re
 pub fn queue_info(store: &ProtocolStore, group: &Jid) -> Result<String> {
     let group = require_group(group)?;
     queue(store, "group-info", "group info", move |id| {
-        Ok(iq(
-            id,
-            "get",
-            group,
-            vec![Node::new("query").attr("request", "interactive")],
-        ))
+        info_request(&group, id)
     })
+}
+
+/// The same group-info query as a plain node, for a caller holding its own
+/// connection rather than draining the durable action queue. A fan-out has to
+/// know the membership before it can address anything, and it needs the answer
+/// inside the one bounded connection it is allowed.
+pub fn info_request(group: &Jid, id: &str) -> Result<Node> {
+    Ok(iq(
+        id,
+        "get",
+        require_group(group)?,
+        vec![Node::new("query").attr("request", "interactive")],
+    ))
 }
 
 /// `<subject>text</subject>` (`LX/0Xm.A0E`).
@@ -304,6 +312,21 @@ pub fn parse_group(node: &Node) -> Option<GroupSnapshot> {
         invite_code: None,
         updated_at: Timestamp::now(),
     })
+}
+
+/// Save the snapshot from a `w:g2` info reply obtained outside the durable
+/// action queue, emitting the same `GroupCreated`/`GroupUpdated` events the
+/// queued path does. Returns false when the reply carries no `group` element.
+///
+/// A fan-out needs the membership inside the one connection it is allowed, so
+/// it issues [`info_request`] itself; the result must still land in the same
+/// snapshot the rest of the client reads.
+pub fn record_info_reply(store: &ProtocolStore, reply: &Node) -> Result<bool> {
+    let Some(group) = reply.child("group").and_then(parse_group) else {
+        return Ok(false);
+    };
+    save_snapshot(store, group)?;
+    Ok(true)
 }
 
 fn to_model(snapshot: &GroupSnapshot) -> Option<Group> {
@@ -593,19 +616,34 @@ pub struct FanoutTarget {
 /// `LX/Cp3->A02`, invoked with an *empty* recipient list — consistent with a
 /// non-per-recipient enc — but it was not read.
 ///
+/// `addressing_mode` is **confirmed** from `SendE2EMessageJob->A06`
+/// (2.26.37.71) at `12d0..1322`: the value is `"lid"` when
+/// `groupParticipantsManager.A0k(chat)` or `LX/0DE->A0W(chat)` holds and `"pn"`
+/// otherwise, and `13d8..13fc` emits it whenever it is non-null *and* the chat
+/// JID is not itself the LID form. A `g.us` chat is never that form, so a group
+/// send always carries it. **Observed** live on 2026-09-22: every incoming
+/// stanza from the operator's group carried `addressing_mode="lid"` with a LID
+/// `participant`, so that group is LID-addressed and an outgoing stanza must
+/// match it. `None` omits the attribute.
+///
 /// **Not emitted, because their conditions are unread:** `phash`,
-/// `addressing_mode`, `device_fanout`, `category`, `t`, `expiration`,
+/// `device_fanout`, `category`, `t`, `expiration`,
 /// `recipient`/`recipient_pn`, and the per-`<to>` `peer_recipient_lid` and
 /// `eph_setting` (`LX/Cp3->A07` gates the former on `DeviceJid.isPrimary()` and
-/// an `LX/0DO` device resolved through an inverse LID map). Those strings are
-/// present in `SendE2EMessageJob->A06`, but which apply to a plain group or
-/// status send was not established, so none is guessed at here.
+/// an `LX/0DO` device resolved through an inverse LID map). `phash` is
+/// `groupParticipantHash` verbatim (`A06` `1300`), emitted only when that job
+/// field is non-null; it is the client's claim about the membership set it
+/// encrypted for, and we cannot compute it honestly until the membership set
+/// question in [`participant_hash`] is settled, so it is left off rather than
+/// asserted wrongly. Omitting it forfeits the server's stale-list correction;
+/// it does not fabricate one.
 ///
-/// Nothing in this function sends. It has never been transmitted.
+/// Nothing in this function sends.
 pub fn sender_key_stanza(
     chat: &Jid,
     id: &str,
     message_type: &str,
+    addressing_mode: Option<&str>,
     targets: &[FanoutTarget],
     skmsg: &[u8],
 ) -> Result<Node> {
@@ -646,17 +684,23 @@ pub fn sender_key_stanza(
                 ]),
         );
     }
-    Ok(Node::new("message")
+    let mut node = Node::new("message")
         .attr("to", chat.clone())
         .attr("id", id)
-        .attr("type", message_type)
-        .children(vec![
-            Node::new("participants").children(participants),
-            Node::new("enc")
-                .attr("v", "2")
-                .attr("type", "skmsg")
-                .bytes(skmsg.to_vec()),
-        ]))
+        .attr("type", message_type);
+    if let Some(mode) = addressing_mode {
+        if !matches!(mode, "pn" | "lid") {
+            return Err(Error::invalid("group_send", "addressing_mode is pn or lid"));
+        }
+        node = node.attr("addressing_mode", mode);
+    }
+    Ok(node.children(vec![
+        Node::new("participants").children(participants),
+        Node::new("enc")
+            .attr("v", "2")
+            .attr("type", "skmsg")
+            .bytes(skmsg.to_vec()),
+    ]))
 }
 
 #[cfg(test)]
@@ -680,7 +724,7 @@ mod tests {
                 ciphertext: vec![4, 5, 6],
             },
         ];
-        let node = sender_key_stanza(&chat, "M1", "text", &targets, &[9; 32]).unwrap();
+        let node = sender_key_stanza(&chat, "M1", "text", Some("lid"), &targets, &[9; 32]).unwrap();
         assert_eq!(node.description, "message");
         assert_eq!(node.get_attr("to").unwrap().as_jid(), Some(&chat));
         assert_eq!(node.get_attr("id").unwrap().as_text(), Some("M1"));
@@ -712,13 +756,26 @@ mod tests {
         assert_eq!(skmsg.description, "enc");
         assert_eq!(skmsg.get_attr("type").unwrap().as_text(), Some("skmsg"));
 
+        // Confirmed from A06 and observed live on this group.
+        assert_eq!(
+            node.get_attr("addressing_mode").unwrap().as_text(),
+            Some("lid")
+        );
         // Nothing we could not read is emitted.
-        for absent in ["phash", "addressing_mode", "device_fanout", "category"] {
+        for absent in ["phash", "device_fanout", "category", "t", "expiration"] {
             assert!(
                 node.get_attr(absent).is_none(),
                 "{absent} must not be guessed"
             );
         }
+        // Omitting it is a choice the caller makes, not a default.
+        assert!(
+            sender_key_stanza(&chat, "M1", "text", None, &targets, &[9; 32])
+                .unwrap()
+                .get_attr("addressing_mode")
+                .is_none()
+        );
+        assert!(sender_key_stanza(&chat, "M1", "text", Some("web"), &targets, &[9; 32]).is_err());
 
         let dict = crate::binary::TokenDictionary::comparison_2_26_37_70();
         let encoded = crate::binary::Encoder::new(dict).encode(&node).unwrap();
@@ -738,21 +795,41 @@ mod tests {
             ciphertext: vec![1],
         };
         // No recipients, empty skmsg, empty id.
-        assert!(sender_key_stanza(&chat, "M", "text", &[], &[1]).is_err());
-        assert!(sender_key_stanza(&chat, "M", "text", std::slice::from_ref(&ok), &[]).is_err());
-        assert!(sender_key_stanza(&chat, "", "text", std::slice::from_ref(&ok), &[1]).is_err());
+        assert!(sender_key_stanza(&chat, "M", "text", Some("lid"), &[], &[1]).is_err());
+        assert!(
+            sender_key_stanza(
+                &chat,
+                "M",
+                "text",
+                Some("lid"),
+                std::slice::from_ref(&ok),
+                &[]
+            )
+            .is_err()
+        );
+        assert!(
+            sender_key_stanza(
+                &chat,
+                "",
+                "text",
+                Some("lid"),
+                std::slice::from_ref(&ok),
+                &[1]
+            )
+            .is_err()
+        );
         // A distribution child is never an skmsg.
         let wrong = FanoutTarget {
             kind: "skmsg",
             ..ok.clone()
         };
-        assert!(sender_key_stanza(&chat, "M", "text", &[wrong], &[1]).is_err());
+        assert!(sender_key_stanza(&chat, "M", "text", Some("lid"), &[wrong], &[1]).is_err());
         // Empty per-device ciphertext.
         let empty = FanoutTarget {
             ciphertext: Vec::new(),
             ..ok
         };
-        assert!(sender_key_stanza(&chat, "M", "text", &[empty], &[1]).is_err());
+        assert!(sender_key_stanza(&chat, "M", "text", Some("lid"), &[empty], &[1]).is_err());
     }
 
     /// Vectors computed independently with Python's hashlib and base64, not by

@@ -191,23 +191,40 @@ fn public(node: &Node) -> Result<PublicKey> {
 
 /// Validate identity/registration/signed-key fields for the exact requested JID.
 pub fn prekey_bundle(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> {
+    prekey_bundle_for(reply, recipient)
+}
+
+/// Select and parse one recipient's bundle from a key reply that may cover
+/// several devices, as a group fan-out's batched query does.
+///
+/// A reply listing other devices is not an error for this recipient; only the
+/// absence of *this* device, or a per-user `<error>` on it, is. The JID match
+/// compares the non-AD identity and the device index, so a reply that echoes
+/// the phone JID where we asked with a LID (or the reverse) is refused rather
+/// than silently paired with the wrong identity key.
+pub fn prekey_bundle_for(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> {
     if reply.description != "iq"
         || reply.get_attr("type").and_then(|v| v.as_text()) != Some("result")
     {
         return Err(invalid("key query was not successful"));
     }
     let list = child(reply, "list")?;
-    let user = child(list, "user")?;
-    let jid = user
-        .get_attr("jid")
-        .ok_or_else(|| invalid("missing bundle JID"))?;
-    let matches = jid
-        .as_jid()
-        .is_some_and(|v| v.to_non_ad() == recipient.to_non_ad() && v.device == recipient.device)
-        || jid.as_text().is_some_and(|v| v == recipient.to_string());
-    if !matches {
-        return Err(invalid("key bundle is for another recipient"));
-    }
+    let matches = |user: &&&Node| {
+        user.get_attr("jid").is_some_and(|jid| {
+            jid.as_jid().is_some_and(|v| {
+                v.to_non_ad() == recipient.to_non_ad() && v.device == recipient.device
+            }) || jid.as_text().is_some_and(|v| v == recipient.to_string())
+        })
+    };
+    let users: Vec<&Node> = list
+        .child_nodes()
+        .iter()
+        .filter(|n| n.description == "user")
+        .collect();
+    let user = *users
+        .iter()
+        .find(matches)
+        .ok_or_else(|| invalid("key reply carries no bundle for this device"))?;
     if user.child("error").is_some() {
         return Err(invalid("server refused recipient key lookup"));
     }
@@ -361,7 +378,7 @@ pub async fn prepare(
     prepare_payload(
         account,
         recipient,
-        bundle,
+        Some(bundle),
         previous_session,
         previous_identity,
         &plain,
@@ -374,7 +391,7 @@ pub async fn prepare(
 pub async fn prepare_payload(
     account: &AccountRecord,
     recipient: &Jid,
-    bundle: &PreKeyBundle,
+    bundle: Option<&PreKeyBundle>,
     previous_session: Option<&[u8]>,
     previous_identity: Option<&[u8]>,
     payload: &[u8],
@@ -411,6 +428,10 @@ pub async fn prepare_payload(
         address: address.clone(),
     };
     if sessions.record.is_none() {
+        // A bundle is needed only to establish a session. A fan-out asks for
+        // bundles for the devices it has no session with, so requiring one for
+        // every device would force a pointless query per established device.
+        let bundle = bundle.ok_or_else(|| invalid("no session and no prekey bundle"))?;
         process_prekey_bundle(
             &address,
             &mut sessions,
@@ -654,6 +675,62 @@ mod tests {
             self.signed = record.clone();
             Ok(())
         }
+    }
+
+    /// A fan-out asks for several devices in one query, so the reply carries
+    /// several `<user>` elements and the parser has to pick the right one.
+    /// Picking the first would pair a device with another device's identity
+    /// key, which encrypts to the wrong peer without failing.
+    #[test]
+    fn prekey_bundle_for_selects_the_requested_device_among_many() {
+        use wacore_libsignal::protocol::KeyPair;
+        let mut rng = rand::rng();
+        let user = |jid: &str, identity: &IdentityKeyPair, errored: bool| {
+            let signed = KeyPair::generate(&mut rand::rng());
+            let signature = identity
+                .private_key()
+                .calculate_signature(&signed.public_key.serialize(), &mut rand::rng())
+                .unwrap();
+            let mut children = vec![
+                Node::new("registration").bytes(vec![0, 0, 0, 9]),
+                Node::new("type").bytes(vec![5]),
+                Node::new("identity").bytes(identity.public_key().public_key_bytes().to_vec()),
+                Node::new("skey").children(vec![
+                    Node::new("id").bytes(vec![0, 0, 7]),
+                    Node::new("value").bytes(signed.public_key.public_key_bytes().to_vec()),
+                    Node::new("signature").bytes(signature.to_vec()),
+                ]),
+            ];
+            if errored {
+                children.push(Node::new("error").attr("code", "480"));
+            }
+            Node::new("user")
+                .attr("jid", Jid::parse(jid).unwrap())
+                .children(children)
+        };
+        let first = IdentityKeyPair::generate(&mut rng);
+        let second = IdentityKeyPair::generate(&mut rng);
+        let reply =
+            Node::new("iq")
+                .attr("type", "result")
+                .children(vec![Node::new("list").children(vec![
+                    user("222222222222222@lid", &first, false),
+                    user("222222222222222:3@lid", &second, false),
+                ])]);
+        let primary =
+            prekey_bundle_for(&reply, &Jid::parse("222222222222222@lid").unwrap()).unwrap();
+        let companion =
+            prekey_bundle_for(&reply, &Jid::parse("222222222222222:3@lid").unwrap()).unwrap();
+        assert_eq!(primary.identity_key().unwrap(), first.identity_key());
+        assert_eq!(companion.identity_key().unwrap(), second.identity_key());
+        assert_ne!(primary.identity_key().unwrap(), second.identity_key());
+        // A device the reply does not cover, and a per-user refusal, are both
+        // failures rather than a silently wrong bundle.
+        assert!(prekey_bundle_for(&reply, &Jid::parse("222222222222222:9@lid").unwrap()).is_err());
+        let refused = Node::new("iq").attr("type", "result").children(vec![
+            Node::new("list").children(vec![user("222222222222222@lid", &first, true)]),
+        ]);
+        assert!(prekey_bundle_for(&refused, &Jid::parse("222222222222222@lid").unwrap()).is_err());
     }
 
     #[tokio::test]

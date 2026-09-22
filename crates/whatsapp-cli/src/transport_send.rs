@@ -42,7 +42,7 @@ pub(super) async fn send(
         prepare_payload(
             account,
             &recipient,
-            &bundle,
+            Some(&bundle),
             session.as_deref().map(|v| v.as_slice()),
             identity.as_deref(),
             payload,

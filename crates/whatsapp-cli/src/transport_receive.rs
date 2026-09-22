@@ -1357,10 +1357,16 @@ pub(super) async fn run(
                                 })
                                 .map(|j| format!("{:?}/device={}", j.server, j.device))
                         };
+                        // `addressing_mode` is a closed enum ("pn"/"lid"), not a
+                        // value derived from the account, and it decides which JID
+                        // form an outgoing sender-key fan-out has to address.
                         format!(
-                            ", from_server={:?}, participant_server={:?}, routes_as_group={}",
+                            ", from_server={:?}, participant_server={:?}, addressing_mode={:?}, routes_as_group={}",
                             server_of("from"),
                             server_of("participant"),
+                            node.get_attr("addressing_mode")
+                                .and_then(|v| v.as_text())
+                                .filter(|v| matches!(*v, "pn" | "lid")),
                             whatsapp_api::transport::inbox::group_sender(&node).is_some()
                         )
                     } else {

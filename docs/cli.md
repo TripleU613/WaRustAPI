@@ -730,7 +730,7 @@ Usage: whatsapp-cli lab-transport [OPTIONS]...
 | --config | CONFIG | no |  |  |  | Existing private registration JSON, used to bind the saved account. Private request configuration; defaults to the profile's |
 | --allow-live-request | ALLOW_LIVE_REQUEST | no |  |  | `true`, `false` | Authorize a single connection; there are no automatic retries |
 | --login | LOGIN | no |  |  | `true`, `false` | Send one primary login after certificate verification |
-| --message | MESSAGE | no |  |  |  | Private JSON: to, request_id, and text, image (PNG), or voice_note (Ogg/Opus) |
+| --message | MESSAGE | no |  |  |  | Private JSON: request_id, either `to` (direct) or `group` (`…@g.us` sender-key fan-out, text only), and text, image (PNG) or voice_note |
 | --receive | RECEIVE | no |  |  | `true`, `false` | Preserve incoming stanzas for up to 30 seconds without sending a chat |
 | --media-route | MEDIA_ROUTE | no |  |  | `true`, `false` | Obtain and privately preserve one current media-upload route response |
 

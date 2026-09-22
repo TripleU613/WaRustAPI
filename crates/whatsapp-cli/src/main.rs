@@ -41,6 +41,8 @@ mod token;
 #[cfg(feature = "experimental-transport")]
 mod transport;
 #[cfg(feature = "experimental-transport")]
+mod transport_group_send;
+#[cfg(feature = "experimental-transport")]
 mod transport_receive;
 #[cfg(feature = "experimental-transport")]
 mod transport_send;
@@ -498,7 +500,8 @@ enum Cmd {
         /// Send one primary login after certificate verification.
         #[arg(long)]
         login: bool,
-        /// Private JSON: to, request_id, and text, image (PNG), or voice_note (Ogg/Opus).
+        /// Private JSON: request_id, either `to` (direct) or `group` (`…@g.us`
+        /// sender-key fan-out, text only), and text, image (PNG) or voice_note.
         #[arg(long, requires = "login")]
         message: Option<PathBuf>,
         /// Preserve incoming stanzas for up to 30 seconds without sending a chat.

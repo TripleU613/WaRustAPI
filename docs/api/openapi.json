@@ -350,12 +350,16 @@
       "MessageRequest": {
         "type": "object",
         "required": [
-          "to",
           "request_id"
         ],
         "properties": {
           "to": {
-            "$ref": "#/components/schemas/Jid"
+            "$ref": "#/components/schemas/Jid",
+            "description": "Direct recipient. Omit when `group` is set."
+          },
+          "group": {
+            "type": "string",
+            "description": "Group chat JID (`…@g.us`) for a sender-key fan-out send. Mutually exclusive with `to`; text only so far. lab-transport resolves the membership with a `w:g2` info query, the members' devices with `usync devices`, then addresses every device individually."
           },
           "request_id": {
             "$ref": "#/components/schemas/RequestId"
@@ -377,7 +381,7 @@
             "description": "If true, image is sent as view-once (disappears after one viewing)"
           }
         },
-        "description": "Private JSON message request for outbox-send or lab-transport --message. Exactly one of text, image, or voice_note must be specified. Repeating the same request_id returns the saved outcome locally and never resends."
+        "description": "Private JSON message request for outbox-send or lab-transport --message. Exactly one of text, image, or voice_note must be specified, and exactly one of `to` or `group`. Repeating the same request_id returns the saved outcome locally and never resends."
       },
       "OutboxEntry": {
         "type": "object",
@@ -6151,7 +6155,7 @@
           "Lab"
         ],
         "summary": "One comparison-server connection; optional bounded primary login",
-        "description": "Establish a single connection to the comparison server (x-live) with optional bounded primary login, message transmission, or receive mode.",
+        "description": "Establish a single connection to the comparison server (x-live) with optional bounded primary login, message transmission, or receive mode. A successful login records this account's own LID from the `<success>` stanza, which a LID-addressed group names us by. When the message JSON carries `group` instead of `to`, the send is a sender-key fan-out: a `w:g2` info query resolves the membership, a `usync devices` query resolves each member's devices, `encrypt` supplies bundles for devices without a session, and one `<message>` carries a per-device `<enc>` distribution inside `<participants>` beside the group `skmsg`. It refuses rather than sending when a member has no device list.",
         "operationId": "labTransport",
         "x-cli": "whatsapp-cli lab-transport",
         "x-transport": [
@@ -6199,7 +6203,7 @@
                   },
                   "message": {
                     "$ref": "#/components/schemas/MessageRequest",
-                    "description": "Private JSON: to, request_id, and text, image (PNG), or voice_note (Ogg/Opus)"
+                    "description": "Private JSON: request_id, either to (direct) or group (`…@g.us` fan-out), and text, image (PNG) or voice_note (Ogg/Opus); a group send is text only so far"
                   }
                 }
               }
@@ -6222,7 +6226,10 @@
           }
         },
         "x-library": [
-          "whatsapp_api::WhatsAppClient::connect"
+          "whatsapp_api::WhatsAppClient::connect",
+          "whatsapp_api::transport::group_send::plan",
+          "whatsapp_api::transport::groups::sender_key_stanza",
+          "whatsapp_api::transport::messaging::key_request_many"
         ]
       }
     },

@@ -26,6 +26,11 @@ pub struct MessageRequest {
     /// Send an image with WhatsApp's view-once marker and V2 wrapper.
     #[serde(default)]
     pub view_once: bool,
+    /// Group chat JID (`…@g.us`) for a sender-key send. Mutually exclusive
+    /// with `to`: a group message is fanned out to the members' devices, not
+    /// addressed to one phone number.
+    #[serde(default)]
+    pub group: Option<String>,
     /// Stable local idempotency key; reuse it after uncertain outcomes.
     pub request_id: String,
 }
@@ -63,7 +68,25 @@ impl MessageRequest {
         }
         let value: Self = serde_json::from_slice(&bytes)
             .map_err(|_| crate::Error::invalid("message", "invalid message JSON"))?;
-        value.recipient()?;
+        match value.group_chat()? {
+            Some(_) if !value.to.is_empty() => {
+                return Err(crate::Error::invalid(
+                    "message",
+                    "set either to or group, not both",
+                ));
+            }
+            Some(_) => {
+                if value.image.is_some() || value.voice_note.is_some() || value.view_once {
+                    return Err(crate::Error::invalid(
+                        "message",
+                        "a group send carries text only so far",
+                    ));
+                }
+            }
+            None => {
+                value.recipient()?;
+            }
+        }
         if (usize::from(!value.text.is_empty())
             + usize::from(value.image.is_some())
             + usize::from(value.voice_note.is_some())
@@ -84,6 +107,25 @@ impl MessageRequest {
         }
         Ok(value)
     }
+    /// The group chat this message targets, when it is a group send.
+    ///
+    /// Validated the same way a group management request is: a `g.us` JID with
+    /// no device suffix. A status post would be `status@broadcast`, which this
+    /// deliberately does not yet accept — posting is a separate slice.
+    pub fn group_chat(&self) -> crate::Result<Option<Jid>> {
+        let Some(raw) = self.group.as_deref().filter(|v| !v.is_empty()) else {
+            return Ok(None);
+        };
+        let jid = Jid::parse(raw)?;
+        if jid.server != crate::model::jid::Server::Group || jid.device != 0 {
+            return Err(crate::Error::invalid(
+                "message",
+                "group must be a `…@g.us` JID",
+            ));
+        }
+        Ok(Some(jid))
+    }
+
     /// Only direct phone recipients are currently supported.
     pub fn recipient(&self) -> crate::Result<Jid> {
         let digits = self.to.strip_prefix('+').unwrap_or(&self.to);
@@ -142,7 +184,28 @@ pub async fn write_node<S: AsyncRead + AsyncWrite + Unpin>(
 
 /// Comparison LX/0y0.A00 0x1786..0x193a: iq/get/encrypt -> key -> user/jid.
 pub fn key_request(recipient: &Jid, id: &str) -> Node {
-    Node::new("iq")
+    key_request_many(std::slice::from_ref(recipient), id).expect("one recipient is always in range")
+}
+
+/// The same `encrypt` key query for several recipient devices at once.
+///
+/// The `<key>` element holds one `<user jid=…>` per recipient; a group fan-out
+/// needs a bundle for every device it has no session with, and one query per
+/// device would be several round trips inside a single bounded connection.
+/// The reply's `<list>` carries one `<user>` per requested JID, which
+/// [`crate::signal::direct::prekey_bundle_for`] selects from.
+///
+/// The bound is local: the APK batches these but the exact server limit is
+/// **unknown**, so this refuses an unreasonably wide query rather than
+/// discovering the limit against a live account.
+pub fn key_request_many(recipients: &[Jid], id: &str) -> crate::Result<Node> {
+    if recipients.is_empty() || recipients.len() > 32 {
+        return Err(crate::Error::invalid(
+            "key_request",
+            "a key query covers 1..=32 recipient devices",
+        ));
+    }
+    Ok(Node::new("iq")
         .attr("id", id)
         .attr("xmlns", "encrypt")
         .attr("type", "get")
@@ -151,8 +214,13 @@ pub fn key_request(recipient: &Jid, id: &str) -> Node {
             Jid::parse("s.whatsapp.net").expect("constant server JID"),
         )
         .children(vec![
-            Node::new("key").children(vec![Node::new("user").attr("jid", recipient.clone())]),
-        ])
+            Node::new("key").children(
+                recipients
+                    .iter()
+                    .map(|jid| Node::new("user").attr("jid", jid.clone()))
+                    .collect(),
+            ),
+        ]))
 }
 
 /// Comparison LX/Avw.A00, called with true by primary ConnectionThread
@@ -719,5 +787,64 @@ mod tests {
                 .as_jid(),
             Some(&recipient)
         );
+    }
+
+    /// A fan-out asks about every device it lacks a session with in one query.
+    #[test]
+    fn key_request_covers_several_devices_in_one_query() {
+        let devices: Vec<Jid> = ["222222222222222@lid", "222222222222222:3@lid"]
+            .iter()
+            .map(|j| Jid::parse(j).unwrap())
+            .collect();
+        let node = key_request_many(&devices, "Q1").unwrap();
+        assert_eq!(node.get_attr("xmlns").unwrap().as_text(), Some("encrypt"));
+        assert_eq!(node.get_attr("type").unwrap().as_text(), Some("get"));
+        let users = node.child("key").unwrap().child_nodes();
+        assert_eq!(users.len(), 2);
+        for (user, expected) in users.iter().zip(&devices) {
+            assert_eq!(user.description, "user");
+            assert_eq!(user.get_attr("jid").unwrap().as_jid(), Some(expected));
+        }
+        // The single-recipient form is the same query.
+        assert_eq!(
+            key_request(&devices[0], "Q1"),
+            key_request_many(&devices[..1], "Q1").unwrap()
+        );
+        assert!(key_request_many(&[], "Q1").is_err());
+        assert!(key_request_many(&vec![devices[0].clone(); 33], "Q1").is_err());
+    }
+
+    /// A group target is a JID in the private JSON, not another command.
+    #[test]
+    fn message_request_group_target_is_validated() {
+        let request = |group: Option<&str>, to: &str| MessageRequest {
+            to: zeroize::Zeroizing::new(to.into()),
+            text: zeroize::Zeroizing::new("hi".into()),
+            image: None,
+            voice_note: None,
+            view_once: false,
+            group: group.map(str::to_owned),
+            request_id: "r1".into(),
+        };
+        assert_eq!(
+            request(Some("120363000000000001@g.us"), "")
+                .group_chat()
+                .unwrap(),
+            Some(Jid::parse("120363000000000001@g.us").unwrap())
+        );
+        assert_eq!(request(None, "15551234567").group_chat().unwrap(), None);
+        assert_eq!(request(Some(""), "15551234567").group_chat().unwrap(), None);
+        // A direct JID, a device-suffixed group and status are all refused here.
+        assert!(
+            request(Some("15551234567@s.whatsapp.net"), "")
+                .group_chat()
+                .is_err()
+        );
+        assert!(
+            request(Some("120363000000000001:2@g.us"), "")
+                .group_chat()
+                .is_err()
+        );
+        assert!(request(Some("status@broadcast"), "").group_chat().is_err());
     }
 }

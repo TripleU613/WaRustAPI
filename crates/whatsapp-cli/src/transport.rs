@@ -178,6 +178,15 @@ pub(super) async fn run(
             .get_attr("reason")
             .and_then(|v| v.as_text())
             .filter(|v| v.len() <= 5 && v.bytes().all(|b| b.is_ascii_digit()));
+        // `<success>` carries this account's own LID (LX/0iS->A12 reads the
+        // `lid` attribute and reports `reg-lid-chatd-lid-expected-but-null`
+        // when it is missing). A LID-addressed group names us by it, so a
+        // sender-key fan-out cannot be built without recording it here.
+        let own_lid = node.get_attr("lid").and_then(|v| {
+            v.as_jid()
+                .cloned()
+                .or_else(|| whatsapp_api::model::jid::Jid::parse(v.as_text()?).ok())
+        });
         let result = serde_json::json!({"status":status,"reason":reason,"at":Timestamp::now(),"message_sent":false});
         store.write(|tx| {
             tx.put_json(Table::Checkpoints, LOGIN_KEY, 1, &result)?;
@@ -186,9 +195,20 @@ pub(super) async fn run(
                     .ok_or_else(|| Error::invalid("transport", "account disappeared"))?;
                 account.last_authenticated_at = Some(Timestamp::now());
                 account.save(tx)?;
+                if let Some(lid) = &own_lid {
+                    whatsapp_api::transport::group_send::record_own_lid(tx, lid)?;
+                }
             }
             Ok(())
         })?;
+        println!(
+            "transport: own LID {} by the login result",
+            if own_lid.is_some() {
+                "recorded"
+            } else {
+                "not provided"
+            }
+        );
         println!(
             "transport: login status={status}, reason={}; message not sent",
             reason.unwrap_or("none")
@@ -384,6 +404,12 @@ pub(super) async fn run(
             }
         }
         if status == "success"
+            && let Some(message) = &message
+            && let Some(chat) = message.group_chat()?
+        {
+            super::transport_group_send::send(&store, &account, &mut channel, message, &chat)
+                .await?;
+        } else if status == "success"
             && let Some(message) = &message
         {
             let recipient = message.recipient()?;

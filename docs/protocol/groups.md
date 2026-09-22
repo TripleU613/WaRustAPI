@@ -345,3 +345,94 @@ the table) was written after activation; the server answered
 `stream:error code=503` and closed the stream, so the action stays `sent`
 with no reply. Nothing else in the management table above is live-verified;
 group *message* receive since has been — see the 2026-09-22 entry below.
+
+## Outbound fan-out — where the recipient set comes from (2026-09-22, 2.26.37.71)
+
+`SendE2EMessageJob` **does not compute the recipient set**. Its constructor
+signature `(VLLLLLLLLLLLLLLLLLLIIIJJJJJZZZZZZZZZZ)` takes it, along with every
+policy flag, as a parameter: reading the constructor's `iput` sequence gives the
+field for each argument, and the caller `LX/DNu->run` supplies them all. The
+useful names survived obfuscation:
+
+| Field | Source at the `LX/DNu` call site |
+| --- | --- |
+| `targetDeviceRawJids: HashSet` | caller-supplied device set (empty on a normal first send) |
+| `groupParticipantHash` / `groupParticipantUserHash` | caller-computed, both passed |
+| `useParticipantUserHash` | `(chat instanceof LX/0c3) && targetDeviceRawJids.isEmpty()` — true for a normal group send |
+| `includeSenderKeysInMessage` | `Ceo.A0d \|\| <caller boolean>`; **not** computed in the job |
+| `useLidForEncryption` | `Ceo.A0h` |
+| `useOneOneEncryptionOnPHashMismatch` | `LX/0DE->A0m(chat) \|\| LX/0DE->A0Q(chat)` |
+| `forceSenderKeyDistribution` | caller boolean |
+| `multiDeviceFanOut` | caller boolean |
+
+Mapping method: the invoke passes `{v23..v64}`, so call-site `v55..v64` are the
+ten booleans and ctor `v61..v70` receive them in the same order; the ctor
+prologue moves `v63→v9`, `v65→v10`, `v66→v24`, `v68→v8`, `v69→v1` before the
+`iput`s that name the fields. **Confirmed** by reading both methods.
+
+Inside `A06` the flags are used as
+`A01 = includeSenderKeysInMessage ? (v17 ? 1 : v16 ? 2 : 0) : 0` (`0b70..0b88`),
+a three-way sender-key mode whose two upper inputs are still unnamed, and a
+separate large-recipient branch logging `SendE2EMessageJob/one-time-sender-key`
+when the recipient count reaches the `LX/AzZ->A0a` threshold and an AB gate is
+on.
+
+### Negative result: `messageRecipientDevicesProvider` is not the resolver
+
+`LX/CQl->A00` reads `LX/0Z4->A04(key)` → `LX/0Z5`/`LX/0Z6`/`LX/0ZE`, whose own
+string constants name them: tables `receipt_device` and
+`message_add_on_receipt_device`, cache `MESSAGE_DEVICE_RECEIPTS_CACHE`, columns
+`receipt_device_jid_row_id` / `primary_device_version`. It returns the devices
+that already hold a **receipt row for this message** — prior send targets, for
+retries and add-ons — and `A06` reaches it only inside the
+`counterAbuseTokenGate.A01(message)` branch. **Do not re-trace it.** Its one
+relevant branch is `instanceof LX/BuQ` → `E2eStatusJobParams.A02()`, which is
+where a *status* post's recipient list comes from; that is the thread to pull
+for posting, not for groups.
+
+So the fresh recipient set is the ordinary one — the chat's participants
+expanded to their devices — which is what
+`transport::group_send::plan` builds from the saved `w:g2` snapshot and the
+saved `usync devices` lists.
+
+### Addressing mode — confirmed and observed
+
+`A06` `12d0..1322`: `addressing_mode` is `"lid"` when
+`groupParticipantsManager.A0k(chat)` or `LX/0DE->A0W(chat)` holds, `"pn"`
+otherwise, and `13d8..13fc` emits it when it is non-null and the chat JID is not
+itself the LID form — so a `g.us` chat always carries it.
+
+**Observed** 2026-09-22: every stanza from the operator's group carried
+`addressing_mode="lid"` with a LID `participant` and a `participant_pn`
+alongside. `lab-inbox --inspect` now prints the value, so this is re-checkable
+without decrypting anything.
+
+`phash` is `groupParticipantHash` verbatim (`A06` `1300`) and is emitted only
+when that caller-computed field is non-null. We omit it: the membership-set
+question above is still open, and a wrong six-byte prefix is worse than an
+absent one. Omitting it forfeits the server's stale-list correction; it does not
+fabricate one.
+
+### Own LID
+
+**Confirmed** `LX/0iS->A12`: the `<success>` login stanza carries a `lid`
+attribute, read through `DeviceJid`/`getUserJid`, whose absence the client
+reports as `reg-lid-chatd-lid-expected-but-null`. A LID-addressed group names us
+by it, so `lab-transport --login` now records it
+(`transport::group_send::record_own_lid`); without it no fan-out can name its
+own sender key correctly.
+
+### What is implemented
+
+`lab-transport --login --message <json>` with `group` instead of `to` in the
+private JSON performs, on one connection: `w:g2` info query → snapshot;
+`usync devices` for every other member; `encrypt` key query for the devices
+without a session; per-device SKDM encryption; `skmsg` encryption of the padded
+text; a single atomic commit of every session, identity and our own sender key
+together with the send intent; then one write and one `ack`. It refuses when a
+member has no device list rather than sending a message that would reach only
+part of the group.
+
+**Still unknown:** whether our own companion devices belong in the fan-out (this
+account is a primary with none), what actually sets `includeSenderKeysInMessage`
+in `LX/Ceo`, and the membership set behind `phash`.

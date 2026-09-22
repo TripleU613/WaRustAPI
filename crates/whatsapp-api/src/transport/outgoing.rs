@@ -490,7 +490,7 @@ impl Pending {
             crate::signal::direct::prepare_payload(
                 account,
                 peer,
-                &bundle,
+                Some(&bundle),
                 session.as_deref().map(|v| v.as_slice()),
                 identity.as_deref(),
                 payload,
@@ -504,7 +504,7 @@ impl Pending {
             crate::signal::direct::prepare_payload(
                 account,
                 peer,
-                &bundle,
+                Some(&bundle),
                 session.as_deref().map(|v| v.as_slice()),
                 identity.as_deref(),
                 payload,
@@ -514,7 +514,7 @@ impl Pending {
             crate::signal::direct::prepare_payload(
                 account,
                 peer,
-                &bundle,
+                Some(&bundle),
                 session.as_deref().map(|v| v.as_slice()),
                 identity.as_deref(),
                 payload,

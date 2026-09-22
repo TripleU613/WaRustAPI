@@ -1,5 +1,34 @@
 # Status — 2026-09-22
 
+**Group sending is implemented end to end and has not been transmitted yet
+(2026-09-22).** The blocker was never the crypto — it was not knowing who to
+address. `SendE2EMessageJob` turns out not to compute the recipient set at all:
+`targetDeviceRawJids`, `groupParticipantHash`, `useParticipantUserHash`,
+`includeSenderKeysInMessage`, `useLidForEncryption` and
+`forceSenderKeyDistribution` are all constructor parameters supplied by
+`LX/DNu->run`. A **negative result worth keeping**:
+`messageRecipientDevicesProvider` (`LX/CQl`) is *not* the resolver — it reads
+the `receipt_device` tables, i.e. devices that already hold a receipt row for
+this message, and is reached only inside the counter-abuse-token branch.
+
+So the set is the ordinary one: the chat's participants expanded to their
+devices. `lab-transport --login --message <json>` with `group` in place of `to`
+now does that on one connection — `w:g2` info query, `usync devices`, an
+`encrypt` key query for the devices without a session, per-device SKDM, `skmsg`,
+one atomic commit of every session and our own sender key with the send intent,
+then one write and one `ack`. It refuses when a member has no device list rather
+than reaching only part of the group.
+
+Two things that had been guesses are now settled: `addressing_mode` is
+**confirmed** in `A06` and **observed** as `"lid"` on every stanza from the
+operator's group (`lab-inbox --inspect` prints it), and the `<success>` login
+stanza carries this account's own LID (**confirmed** `LX/0iS->A12`), which a
+LID-addressed group names us by and which we now record. `phash` is still
+omitted: it is `groupParticipantHash` verbatim and the membership set behind it
+is still unknown, so an absent attribute is honest where a wrong six-byte prefix
+would not be. Details: [groups](docs/protocol/groups.md).
+
+
 **A WhatsApp Status update was received and decrypted (2026-09-22).** The first
 one this client has ever seen: it projected as `ChatId::Broadcast` with the
 poster in `MessageKey::sender`, after the poster's SKDM installed a sender key

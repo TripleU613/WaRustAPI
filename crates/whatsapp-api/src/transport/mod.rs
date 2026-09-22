@@ -61,6 +61,7 @@ pub mod framing;
     feature = "experimental-noise",
     feature = "experimental-transport"
 ))]
+pub mod group_send;
 pub mod groups;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod handshake;
