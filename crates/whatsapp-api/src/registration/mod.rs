@@ -404,7 +404,13 @@ impl RegistrationState {
                 )
                 | (
                     S::ChallengePending { .. },
-                    S::Verifying { .. } | S::CoolingDown { .. } | S::Blocked { .. }
+                    // `Preparing` is the resend path: ask the server for a new
+                    // code on the *same* attempt, keeping its identity, keys and
+                    // history, exactly as the official client's "resend" does.
+                    // Only `resend_code` takes it, and only once the handle's
+                    // `retry_after` has elapsed; `begin` still short-circuits on
+                    // a pending challenge rather than re-requesting implicitly.
+                    S::Verifying { .. } | S::CoolingDown { .. } | S::Blocked { .. } | S::Preparing
                 )
                 | (
                     S::NeedsUserAction { .. },
@@ -1358,6 +1364,69 @@ impl RegistrationService {
         self.execute_begin(attempt).await
     }
 
+    /// Ask the server for a **new** code on the attempt already in progress.
+    ///
+    /// A delivered code expires long before the attempt does, so resuming a
+    /// saved `ChallengePending` eventually leaves an account that can only be
+    /// finished with a code nobody has any more. This is the official client's
+    /// "resend" and nothing more: the attempt id, its identity, its keys and its
+    /// history are all preserved, no new attempt is created, and the phone must
+    /// match the saved one.
+    ///
+    /// It refuses unless the challenge handle's `retry_after` has elapsed, so a
+    /// server-directed wait is honoured rather than talked over, and it refuses
+    /// any state other than `ChallengePending` — a cooldown, a block or an
+    /// unknown outcome each have their own path and none of them is a resend.
+    pub async fn resend_code(
+        &self,
+        phone: PhoneNumber,
+        method: ChallengeMethod,
+    ) -> Result<RegistrationStep> {
+        let profile_id = self.profile_id.clone();
+        let attempt = self
+            .store
+            .run_blocking(move |s| {
+                s.write(|tx| {
+                    let now = Timestamp::now();
+                    let mut existing = Self::load_current(tx)?.ok_or_else(|| {
+                        Error::invalid("registration", "no attempt to resend a code for")
+                    })?;
+                    if existing.generation != tx.generation()
+                        || *existing.phone() != phone
+                        || existing.profile_id != profile_id
+                    {
+                        return Err(Error::invalid(
+                            "registration",
+                            "saved attempt belongs to another phone, profile or generation",
+                        ));
+                    }
+                    let RegistrationState::ChallengePending { handle } = &existing.state else {
+                        return Err(Error::invalid(
+                            "registration",
+                            format!(
+                                "a resend needs a pending challenge, not {}",
+                                existing.state.name()
+                            ),
+                        ));
+                    };
+                    if let Some(retry_after) = handle.retry_after
+                        && now < retry_after
+                    {
+                        return Err(Error::invalid(
+                            "registration",
+                            "the server asked us to wait before requesting another code",
+                        ));
+                    }
+                    existing.method = method;
+                    existing.transition(RegistrationState::Preparing, now)?;
+                    Self::save_current(tx, &existing)?;
+                    Ok(existing)
+                })
+            })
+            .await?;
+        self.execute_begin(attempt).await
+    }
+
     /// Explicit one-shot diagnostic recovery for the lab's old, opaque refusals.
     ///
     /// Only legacy records that lost both HTTP status and protocol reason are
@@ -1921,6 +1990,55 @@ mod tests {
 
     fn phone() -> PhoneNumber {
         PhoneNumber::new(1, "5551234567").unwrap()
+    }
+
+    /// A resend is the one path from a pending challenge back to `Preparing`,
+    /// and it must stay narrow: `begin` still refuses to re-request implicitly,
+    /// and no other state reaches `Preparing` that way.
+    #[test]
+    fn only_a_pending_challenge_may_reopen_for_a_resend() {
+        use RegistrationState as S;
+        let handle = ChallengeHandle {
+            attempt: AttemptId([0; 16]),
+            generation: AccountGeneration(1),
+            step: 1,
+            method: ChallengeMethod::Sms,
+            expires_at: None,
+            retry_after: None,
+        };
+        assert!(
+            S::ChallengePending {
+                handle: handle.clone()
+            }
+            .can_transition(&S::Preparing),
+            "a pending challenge reopens for a resend"
+        );
+        // `Unregistered` and an elapsed `CoolingDown` already reached
+        // `Preparing` before this existed — those are the ordinary start and
+        // the cooldown resume. The states below never should: a finished
+        // registration, a block, and the two that are waiting on the operator
+        // rather than on the server.
+        for state in [
+            S::Preparing,
+            S::Registered,
+            S::NeedsUserAction {
+                handle: handle.clone(),
+            },
+            S::EmailChallengeRequired {
+                handle: handle.clone(),
+            },
+            S::Blocked {
+                reason: BlockedReason::UnsupportedStep {
+                    description: "x".into(),
+                },
+            },
+        ] {
+            assert!(
+                !state.can_transition(&S::Preparing),
+                "{} must not reopen for a resend",
+                state.name()
+            );
+        }
     }
 
     #[test]

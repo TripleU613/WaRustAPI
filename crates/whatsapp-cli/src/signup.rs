@@ -75,6 +75,14 @@ pub(super) enum Action {
         #[arg(long, value_enum)]
         method: Option<super::Method>,
     },
+    /// Ask for a *new* code on the attempt already in progress, because a
+    /// delivered code expires long before the attempt does. Keeps the attempt,
+    /// its identity, its keys and its history; honours the server's
+    /// `retry_after`; refuses any state but a pending challenge.
+    ResendCode {
+        #[arg(long, value_enum)]
+        method: Option<super::Method>,
+    },
     /// Submit one OTP from redirected stdin (never a command-line argument).
     VerifyCode,
     /// Submit one account PIN from redirected stdin; never resets the account PIN.
@@ -313,7 +321,7 @@ pub(super) async fn run(
         path: cli.store.clone(),
         account_id: whatsapp_api::model::ids::AccountId::new(cli.account.clone())?,
         key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
-        create: matches!(action, Action::Begin { .. }),
+        create: matches!(action, Action::Begin { .. } | Action::ResendCode { .. }),
     })?);
     let factory = Arc::new(if matches!(action, Action::RetryCorrectedToken) {
         StoredComparisonRequestFactory::new_for_token_correction(store.clone(), config)?
@@ -413,6 +421,17 @@ pub(super) async fn run(
                 },
             };
             service.begin(phone, method).await?
+        }
+        Action::ResendCode { method } => {
+            let method = match method {
+                Some(super::Method::Sms) => ChallengeMethod::Sms,
+                Some(super::Method::Voice) => ChallengeMethod::Voice,
+                None => match configured_method {
+                    DeliveryMethod::Sms => ChallengeMethod::Sms,
+                    DeliveryMethod::Voice => ChallengeMethod::Voice,
+                },
+            };
+            service.resend_code(phone, method).await?
         }
         Action::DiagnoseLegacyRefusal => service.diagnose_legacy_refusal_once(phone).await?,
         Action::RetryCorrectedToken => service.retry_corrected_token_once(phone).await?,

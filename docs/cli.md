@@ -917,6 +917,18 @@ Usage: whatsapp-cli lab-signup begin [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 | --method | METHOD | no |  |  | `sms`, `voice` |  |
 
+## whatsapp-cli lab-signup resend-code
+
+Ask for a *new* code on the attempt already in progress, because a delivered code expires long before the attempt does. Keeps the attempt, its identity, its keys and its history; honours the server's `retry_after`; refuses any state but a pending challenge
+
+```
+Usage: whatsapp-cli lab-signup resend-code [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --method | METHOD | no |  |  | `sms`, `voice` |  |
+
 ## whatsapp-cli lab-signup verify-code
 
 Submit one OTP from redirected stdin (never a command-line argument)

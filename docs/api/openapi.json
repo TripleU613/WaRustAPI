@@ -8449,6 +8449,81 @@
           "whatsapp_api::transport::app_state_sync::queue_contact_patch"
         ]
       }
+    },
+    "/v1/signup/resend-code": {
+      "post": {
+        "tags": [
+          "Registration Lab"
+        ],
+        "summary": "Ask for a new code on the attempt already in progress",
+        "description": "Re-request the verification code for a registration attempt that is already in a pending challenge, because a delivered code expires long before the attempt does. Keeps the attempt id, its identity, its keys and its history; creates no new attempt; honours the challenge handle's retry_after; and refuses any state other than a pending challenge. This is the official client's resend, not a restart.",
+        "operationId": "labSignupResendCode",
+        "x-cli": "whatsapp-cli lab-signup resend-code",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": true,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          },
+          {
+            "$ref": "#/components/parameters/Config"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "sms",
+                      "voice"
+                    ],
+                    "description": "Verification method (optional)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registration attempt initiated or resumed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationStep"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "423": {
+            "$ref": "#/components/responses/Blocked"
+          }
+        },
+        "x-library": [
+          "whatsapp_api::registration::RegistrationService::resend_code"
+        ]
+      }
     }
   }
 }
