@@ -76,15 +76,33 @@ async fn after_send_window(
     Ok(())
 }
 
-pub(super) async fn run(
-    cli: &super::Cli,
-    path: &Path,
-    allow_live: bool,
-    login: bool,
-    message: Option<&Path>,
-    receive: bool,
-    media_route: bool,
-) -> Result<(), Error> {
+/// What a single lab-transport session is authorized to do. Grouped because the
+/// switches are a set the caller chooses together, not independent arguments.
+pub(super) struct Session<'a> {
+    /// Authorize the one live connection.
+    pub allow_live: bool,
+    /// Send one primary login after certificate verification.
+    pub login: bool,
+    /// Permit one further login after a saved `failure`, to tell a temporary
+    /// limit from a permanent refusal.
+    pub recheck_refusal: bool,
+    /// Private message JSON to send.
+    pub message: Option<&'a Path>,
+    /// Hold a bounded receive window instead of sending.
+    pub receive: bool,
+    /// Fetch one media-upload route.
+    pub media_route: bool,
+}
+
+pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> Result<(), Error> {
+    let Session {
+        allow_live,
+        login,
+        recheck_refusal,
+        message,
+        receive,
+        media_route,
+    } = session;
     if !allow_live {
         return Err(Error::invalid("transport", "requires --allow-live-request"));
     }
@@ -149,10 +167,52 @@ pub(super) async fn run(
         let previous: Option<serde_json::Value> =
             store.read(|tx| tx.get_json(whatsapp_api::store::Table::Checkpoints, LOGIN_KEY, 1))?;
         if previous.as_ref().is_some_and(|v| v["status"] != "success") {
-            return Err(Error::invalid(
-                "transport",
-                "previous login experiment exists; inspect saved result before another attempt",
-            ));
+            // A saved `failure` is a definite server answer, and a refusal that
+            // is really a temporary limit cannot be told from a permanent one
+            // without asking again later. `--recheck-refusal` authorizes exactly
+            // one more login for that question and nothing else: it requires a
+            // saved `failure`, never an `outcome_unknown` (an ambiguous outcome
+            // must not be resolved by guessing), it refuses to carry a message,
+            // and the earlier refusal is preserved under its own key rather than
+            // overwritten.
+            let recheckable = recheck_refusal
+                && previous.as_ref().is_some_and(|v| v["status"] == "failure")
+                && message.is_none();
+            if !recheckable {
+                return Err(Error::invalid(
+                    "transport",
+                    if recheck_refusal {
+                        "--recheck-refusal needs a saved `failure` and no --message"
+                    } else {
+                        "previous login experiment exists; inspect saved result before another attempt"
+                    },
+                ));
+            }
+            use whatsapp_api::store::Table;
+            let history = format!(
+                "login-refusal-history:{}",
+                previous
+                    .as_ref()
+                    .and_then(|v| v["at"].as_i64())
+                    .unwrap_or(0)
+            );
+            let kept = previous.clone();
+            store.write(|tx| {
+                let existing: Option<serde_json::Value> =
+                    tx.get_json(Table::Checkpoints, history.as_bytes(), 1)?;
+                if existing.is_none() {
+                    tx.put_json(Table::Checkpoints, history.as_bytes(), 1, &kept)?;
+                }
+                tx.delete(Table::Checkpoints, LOGIN_KEY)?;
+                Ok(())
+            })?;
+            eprintln!(
+                "transport: rechecking a saved login refusal ({}); the earlier result is preserved as {history}",
+                previous
+                    .as_ref()
+                    .and_then(|v| v["reason"].as_str())
+                    .unwrap_or("no reason")
+            );
         }
     }
     let image_payload = if let Some(message) = &message {

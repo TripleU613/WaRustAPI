@@ -86,11 +86,22 @@ pub fn recover_appeal_token_from_captures(
     use crate::binary::unpack_frame_payload;
 
     let found = store.read(|tx| {
-        let captures = tx.scan(Table::Checkpoints, 1, 256)?;
+        // 256 rows was a bound set when the only source was a handful of
+        // registration captures; a live account accumulates thousands, and the
+        // one row holding the token is not necessarily among the first few.
+        let captures = tx.scan(Table::Checkpoints, 1, 20_000)?;
         let limits = crate::profile::Limits::default();
 
         for (key, value) in captures {
-            if !key.starts_with(b"inbound:sha256:") {
+            // `inbound:sha256:` is the registration-era capture prefix.
+            // `login-result:` is the preserved primary-login result, which is
+            // where a transport refusal's `<failure>` — and its appeal token —
+            // is kept. A refusal cannot be replayed to fetch the token again, so
+            // both sources have to be searched.
+            if !key.starts_with(b"inbound:sha256:")
+                && !key.starts_with(b"login-result:")
+                && !key.starts_with(b"inbound:")
+            {
                 continue;
             }
 

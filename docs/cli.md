@@ -730,6 +730,7 @@ Usage: whatsapp-cli lab-transport [OPTIONS]...
 | --config | CONFIG | no |  |  |  | Existing private registration JSON, used to bind the saved account. Private request configuration; defaults to the profile's |
 | --allow-live-request | ALLOW_LIVE_REQUEST | no |  |  | `true`, `false` | Authorize a single connection; there are no automatic retries |
 | --login | LOGIN | no |  |  | `true`, `false` | Send one primary login after certificate verification |
+| --recheck-refusal | RECHECK_REFUSAL | no |  |  | `true`, `false` | Authorize exactly one further login after a saved `failure`, to tell a temporary limit from a permanent refusal. Refuses an ambiguous saved outcome, refuses to carry a message, and preserves the earlier refusal rather than overwriting it |
 | --message | MESSAGE | no |  |  |  | Private JSON: request_id, either `to` (direct) or `group` (`…@g.us` sender-key fan-out, text only), and text, image (PNG) or voice_note |
 | --receive | RECEIVE | no |  |  | `true`, `false` | Preserve incoming stanzas for up to 30 seconds without sending a chat |
 | --media-route | MEDIA_ROUTE | no |  |  | `true`, `false` | Obtain and privately preserve one current media-upload route response |
@@ -749,6 +750,7 @@ Usage: whatsapp-cli ban-appeal [OPTIONS]...
 | --doc-id | DOC_ID | no |  |  |  | Persistent query doc_id for SubmitAnAppealForIP (APK-derived candidate) |
 | --message | MESSAGE | no |  |  |  | Optional appeal reason text included in the request |
 | --appeal-token | APPEAL_TOKEN | no |  |  |  | Use this appeal token instead of the one saved from the failure node |
+| --recover-token | RECOVER_TOKEN | no |  |  | `true`, `false` | Offline: recover the appeal token from preserved failure captures and save it, without contacting anything or submitting an appeal |
 
 ## whatsapp-cli lab-signup
 

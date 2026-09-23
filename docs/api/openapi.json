@@ -2103,6 +2103,10 @@
                       "null"
                     ],
                     "description": "Use this appeal token instead of the one saved from the failure node"
+                  },
+                  "recover_token": {
+                    "type": "boolean",
+                    "description": "Offline: recover the appeal token from a preserved `<failure>` capture and save it. Contacts nothing and submits no appeal."
                   }
                 }
               }
@@ -6167,7 +6171,7 @@
           "Lab"
         ],
         "summary": "One comparison-server connection; optional bounded primary login",
-        "description": "Establish a single connection to the comparison server (x-live) with optional bounded primary login, message transmission, or receive mode. A successful login records this account's own LID from the `<success>` stanza, which a LID-addressed group names us by. When the message JSON carries `group` instead of `to`, the send is a sender-key fan-out: a `w:g2` info query resolves the membership, a `usync devices` query resolves each member's devices, `encrypt` supplies bundles for devices without a session, and one `<message>` carries a per-device `<enc>` distribution inside `<participants>` beside the group `skmsg`. It refuses rather than sending when a member has no device list.",
+        "description": "Establish a single connection to the comparison server (x-live) with optional bounded primary login, message transmission, or receive mode. A successful login records this account's own LID from the `<success>` stanza, which a LID-addressed group names us by. When the message JSON carries `group` instead of `to`, the send is a sender-key fan-out: a `w:g2` info query resolves the membership, a `usync devices` query resolves each member's devices, `encrypt` supplies bundles for devices without a session, and one `<message>` carries a per-device `<enc>` distribution inside `<participants>` beside the group `skmsg`. It refuses rather than sending when a member has no device list. After any send the connection is held briefly and whatever the server sends next is preserved, because a recipient that cannot decrypt answers with a `receipt type=\"retry\"` naming the failing device. A `<success>` or `<failure>` login result is preserved too: a `<failure>` carries an `appeal_token` and a refusal cannot be replayed to fetch one again.",
         "operationId": "labTransport",
         "x-cli": "whatsapp-cli lab-transport",
         "x-transport": [
@@ -6216,6 +6220,10 @@
                   "message": {
                     "$ref": "#/components/schemas/MessageRequest",
                     "description": "Private JSON: request_id, either to (direct) or group (`…@g.us` fan-out), and text, image (PNG) or voice_note (Ogg/Opus); a group send is text only so far"
+                  },
+                  "recheck_refusal": {
+                    "type": "boolean",
+                    "description": "Authorize exactly one further login after a saved `failure`, to tell a temporary limit from a permanent refusal. Requires a saved `failure` (never an ambiguous `outcome_unknown`), refuses to carry a message, and preserves the earlier refusal under its own key instead of overwriting it."
                   }
                 }
               }

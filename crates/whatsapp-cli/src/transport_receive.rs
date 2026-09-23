@@ -13,6 +13,12 @@ fn is_capture(key: &[u8]) -> bool {
     if key.starts_with(b"inbound:") {
         return true;
     }
+    // A preserved login result. A `<failure>` can carry an appeal token, and a
+    // refusal cannot be replayed to fetch one again, so it has to be readable
+    // from saved state rather than only from the session that saw it.
+    if key.starts_with(b"login-result:") {
+        return true;
+    }
     let Ok(key) = std::str::from_utf8(key) else {
         return false;
     };
@@ -1353,13 +1359,32 @@ pub(super) async fn run(
                     } else {
                         String::new()
                     };
-                    let codes = if matches!(node.description.as_str(), "stream:error" | "failure") {
-                        // Server-side error codes carry no personal data.
+                    let codes = if matches!(
+                        node.description.as_str(),
+                        "stream:error" | "failure" | "success"
+                    ) {
+                        // Server codes carry no personal data, but a `<failure>`
+                        // also carries an `appeal_token`, which is an account
+                        // credential, and `<success>` carries our own LID and
+                        // phone number. Report presence and length, never the
+                        // value, and bound everything else rather than trusting
+                        // the server not to put a secret in a new attribute.
+                        const SECRET: [&str; 5] =
+                            ["appeal_token", "token", "challenge", "lid", "pn"];
                         let values: Vec<String> = node
                             .attributes
                             .iter()
                             .map(|a| {
-                                format!("{}={}", a.name, a.value.as_text().unwrap_or("<non-text>"))
+                                if SECRET.contains(&a.name.as_str()) {
+                                    return format!("{}=<present, redacted>", a.name);
+                                }
+                                match a.value.as_text() {
+                                    Some(v) if v.len() <= 24 => format!("{}={v}", a.name),
+                                    Some(v) => {
+                                        format!("{}=<{} chars, redacted>", a.name, v.len())
+                                    }
+                                    None => format!("{}=<non-text>", a.name),
+                                }
                             })
                             .collect();
                         format!(", values={values:?}")

@@ -500,6 +500,12 @@ enum Cmd {
         /// Send one primary login after certificate verification.
         #[arg(long)]
         login: bool,
+        /// Authorize exactly one further login after a saved `failure`, to tell
+        /// a temporary limit from a permanent refusal. Refuses an ambiguous
+        /// saved outcome, refuses to carry a message, and preserves the earlier
+        /// refusal rather than overwriting it.
+        #[arg(long, requires = "login", conflicts_with = "message")]
+        recheck_refusal: bool,
         /// Private JSON: request_id, either `to` (direct) or `group` (`…@g.us`
         /// sender-key fan-out, text only), and text, image (PNG) or voice_note.
         #[arg(long, requires = "login")]
@@ -529,6 +535,10 @@ enum Cmd {
         /// Use this appeal token instead of the one saved from the failure node.
         #[arg(long)]
         appeal_token: Option<String>,
+        /// Offline: recover the appeal token from preserved failure captures and
+        /// save it, without contacting anything or submitting an appeal.
+        #[arg(long, conflicts_with = "allow_live_request")]
+        recover_token: bool,
     },
     /// Explicit comparison-build signup experiment; may affect an existing account.
     #[cfg(feature = "experimental-signup")]
@@ -1366,6 +1376,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
             config,
             allow_live_request,
             login,
+            recheck_refusal,
             message,
             receive,
             media_route,
@@ -1374,11 +1385,14 @@ async fn run(cli: Cli) -> Result<(), Error> {
             transport::run(
                 &cli,
                 &config,
-                *allow_live_request,
-                *login,
-                message.as_deref(),
-                *receive,
-                *media_route,
+                transport::Session {
+                    allow_live: *allow_live_request,
+                    login: *login,
+                    recheck_refusal: *recheck_refusal,
+                    message: message.as_deref(),
+                    receive: *receive,
+                    media_route: *media_route,
+                },
             )
             .await
         }
@@ -1389,11 +1403,29 @@ async fn run(cli: Cli) -> Result<(), Error> {
             doc_id,
             message,
             appeal_token,
+            recover_token,
         } => {
             use whatsapp_api::transport::ban_appeal::{
-                BanAppealInput, read_stored_appeal_token, submit_ban_appeal,
+                BanAppealInput, read_stored_appeal_token, recover_appeal_token_from_captures,
+                submit_ban_appeal,
             };
             use zeroize::Zeroizing;
+            if *recover_token {
+                // A refusal cannot be replayed to fetch its token again, so
+                // recovering one from saved state must not require authorizing
+                // a live request. Nothing is sent and no appeal is submitted.
+                let c = open_client(&cli, false).await?;
+                let found = recover_appeal_token_from_captures(c.store())?;
+                println!(
+                    "ban-appeal: appeal token {}; no request was sent",
+                    if found.is_some() {
+                        "recovered from a preserved failure and saved"
+                    } else {
+                        "not found in preserved captures"
+                    }
+                );
+                return Ok(());
+            }
             if !allow_live_request {
                 return Err(Error::invalid(
                     "ban_appeal",
