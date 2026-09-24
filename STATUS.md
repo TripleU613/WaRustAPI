@@ -14,8 +14,11 @@ A second patch then returned `409 conflict` at the **collection** level inside a
 bug: `actions::record_reply` read only the outer type and recorded the conflict
 as `Ok` — an error reported as success. It now reads collection-level errors.
 `CollectionState` is persisted between patches and promoted only when the server
-accepts and reports the version we claimed. Consuming the returned `<patches>`
-to catch up is the remaining piece.
+accepts and reports the version we claimed. The catch-up is implemented and the
+whole loop is verified live: accepted at version 1, conflicted, caught up from
+the returned patches, then accepted again at version 2. `app_state::keys_for`
+verifies a server-sent patch by the key it names, which is a different question
+from "which key should I write with" and must not inherit that policy.
 
 
 **STATUS POSTING IS LIVE-VERIFIED (2026-09-24).** A styled text status — font,
