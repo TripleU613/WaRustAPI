@@ -1342,6 +1342,64 @@ pub(super) async fn run(
                     // are the server's own bookkeeping, not identifying, and
                     // without them a send that is acknowledged but undecryptable
                     // on the handset gives no clue which list was wrong.
+                    // A `receipt type="retry"` is the recipient telling us it
+                    // could not decrypt: `count` is which attempt this is, `v`
+                    // the retry protocol version, and `<registration>` carries
+                    // their current registration id, which is how a stale
+                    // session is detected. The counts and version are not
+                    // identifying; the registration id is reported by length.
+                    let retry = if node.description == "receipt"
+                        && node.get_attr("type").and_then(|v| v.as_text()) == Some("retry")
+                    {
+                        let child = node.child("retry");
+                        let attr = |name: &str| {
+                            child
+                                .and_then(|c| c.get_attr(name))
+                                .and_then(|v| v.as_text())
+                                .filter(|v| v.len() <= 8)
+                                .map(str::to_owned)
+                        };
+                        let registration = node.child("registration").map(|c| match &c.content {
+                            whatsapp_api::binary::NodeContent::Bytes(b) => b.len(),
+                            _ => 0,
+                        });
+                        // Which member failed matters: a fan-out that gets one
+                        // retry out of three addressed devices is a per-device
+                        // problem, not a broken stanza. The tail is the same
+                        // masking `group list` uses, so the two can be compared
+                        // without either printing a full identity.
+                        let participant_tail = node
+                            .get_attr("participant")
+                            .and_then(|v| {
+                                v.as_jid().cloned().or_else(|| {
+                                    whatsapp_api::model::jid::Jid::parse(v.as_text()?).ok()
+                                })
+                            })
+                            .map(|j| {
+                                format!(
+                                    "…{}@{:?}/device={}",
+                                    j.user
+                                        .chars()
+                                        .rev()
+                                        .take(3)
+                                        .collect::<String>()
+                                        .chars()
+                                        .rev()
+                                        .collect::<String>(),
+                                    j.server,
+                                    j.device
+                                )
+                            });
+                        format!(
+                            ", retry_count={:?}, retry_v={:?}, registration_bytes={:?}, participant={:?}",
+                            attr("count"),
+                            attr("v"),
+                            registration,
+                            participant_tail
+                        )
+                    } else {
+                        String::new()
+                    };
                     let ack = if node.description == "ack" {
                         let show = |name: &str| {
                             node.get_attr(name)
@@ -1423,7 +1481,7 @@ pub(super) async fn run(
                     } else {
                         String::new()
                     };
-                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{ack}{routing}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
+                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{ack}{retry}{routing}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
                 }
             }
             if key.starts_with(b"received:") {

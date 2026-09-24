@@ -740,3 +740,45 @@ received what was encrypted under the old session.
 **Still unknown:** the version-2 `phash` construction, whether our own companion
 devices belong in the fan-out, what sets `includeSenderKeysInMessage` in
 `LX/Ceo`, and the membership set behind `phash`.
+
+
+## The fan-out works; one device asks for a retry (2026-09-24)
+
+The post-send window caught what five earlier attempts never did. From a fresh
+account (profile `l`) into the operator's four-member group, the send reported
+`addressing_mode=lid`, a computed `phash`, `recipients=3, devices=3`, a key query
+for all three, and `fan-out server_acknowledged`. Holding the connection open for
+45 seconds then preserved **one** frame:
+
+```
+receipt type=retry  participant=…650@lid/device=0
+  retry count=1 v=1   <registration> 4 bytes
+```
+
+**Two of the three addressed devices sent nothing back, and only the operator's
+handset asked for a retry.** A recipient that cannot decrypt sends a retry
+receipt; the two silent ones therefore decrypted the message. So the stanza, the
+sender key, the `skmsg` and the per-device distribution are all working — what
+five sends from the previous account looked like ("nobody can read it") was one
+device's problem seen through a single reporter.
+
+This also explains the silence before it: we were closing the connection the
+moment the `ack` arrived, so every retry receipt was sent to a socket we had
+already dropped.
+
+### What the receipt asks for, and what we do about it
+
+`retry count=1 v=1` with the recipient's current registration id is WhatsApp's
+standard "I could not decrypt that, send it again" and the sender is expected to
+answer — re-encrypting to that device, and for a group re-sending the sender-key
+distribution with it (`forceSenderKeyDistribution` in `SendE2EMessageJob` is the
+flag for exactly this). The registration id lets the sender notice that the
+peer's identity changed and fetch a fresh bundle rather than reusing a dead
+session.
+
+**We have never answered one.** That is both why this particular message stayed
+unreadable and, plausibly, part of why earlier accounts looked abnormal: a client
+that is asked to re-send and never does is not behaving like a client.
+
+Implementing the response is the next step and it is ordinary protocol
+behaviour, not an extra live experiment.

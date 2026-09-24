@@ -1,5 +1,20 @@
 # Status — 2026-09-24
 
+**The group fan-out works.** From the new account into the operator's group, two
+of the three addressed devices decrypted the message and said nothing; only the
+operator's handset returned `receipt type="retry" count=1 v=1`. A device that
+cannot decrypt sends a retry, so silence from the other two is success. The
+stanza, the participant hash, the per-device distribution and the `skmsg` are all
+sound — five sends from the previous account looked like total failure only
+because the operator's phone was the single reporter we had.
+
+The retry receipt was caught by the post-send window added yesterday. Every
+earlier attempt closed the connection on the `ack`, so the receipts were being
+sent to a socket we had already dropped. **We have never answered a retry**,
+which is what keeps that one device unable to read the message — and is itself
+un-clientlike behaviour worth fixing before it is read as something worse.
+
+
 **App-state patch: third refusal, one cause eliminated (2026-09-22).** Reading
 `LX/CRA->A00`, the site that actually assembles an outgoing `SyncdPatch`, showed
 it sets `mutations`, `keyId`, `snapshotMac`, `patchMac`, `deviceIndex` and
