@@ -1,5 +1,23 @@
 # Status — 2026-09-24
 
+**APP-STATE WRITES WORK (2026-09-24).** A `contactAction` patch was accepted:
+`iq type=result` with `<collection name="critical_unblock_low" version="1"/>`.
+
+`SyncdPatch.version` **was** the cause of the original `400 bad-request` after
+all. The third attempt that supposedly cleared it had run a **stale release
+binary** built before the fix — the saved request's patch bytes begin
+`0a 02 08 01`, so the correction was never on the wire. A live result only tests
+the code that was actually running.
+
+A second patch then returned `409 conflict` at the **collection** level inside an
+`iq type=result`, with the `<patches>` we are behind on. That exposed a second
+bug: `actions::record_reply` read only the outer type and recorded the conflict
+as `Ok` — an error reported as success. It now reads collection-level errors.
+`CollectionState` is persisted between patches and promoted only when the server
+accepts and reports the version we claimed. Consuming the returned `<patches>`
+to catch up is the remaining piece.
+
+
 **STATUS POSTING IS LIVE-VERIFIED (2026-09-24).** A styled text status — font,
 background and text colour — was posted from this client and appeared on the
 operator's handset. It uses exactly the sender-key fan-out a group message uses,

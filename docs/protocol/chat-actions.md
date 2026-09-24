@@ -475,6 +475,52 @@ the post-patch hash plus a delta or the addition and subtraction terms —
 those were not read. Putting wrong integrity data in a field the server may
 check is worse than leaving it out.
 
+### Resolved: `SyncdPatch.version` was the cause after all (2026-09-24)
+
+**An app-state patch has been accepted.** `iq type=result` with
+`<sync><collection name="critical_unblock_low" version="1"/></sync>` — the server
+now holds version 1 for that collection.
+
+**The section below is wrong and is kept only because the mistake is worth
+seeing.** It records the third attempt as proving the `version` correction was
+not the cause. It proved nothing: that attempt ran a **stale release binary**
+built before the fix. The saved request settles it — its patch bytes begin
+`0a 02 08 01`, field 1, `version { 1 }`. The correction had never been on the
+wire.
+
+The lesson is narrow and expensive: *a live result only tests the code that was
+actually running.* Rebuild before attributing a live outcome to a change, or the
+experiment silently tests the previous build and its conclusion poisons
+everything after it.
+
+### The conflict protocol, observed
+
+A **second** patch, still claiming no held version, came back as `iq
+type=result` whose `<collection>` carried `type="error"` and
+`<error code="409" text="conflict"/>`, followed by `<patches><patch>…` — the
+patches we are behind on, so a client can catch up. Two things fall out:
+
+* The server's own patch bytes begin `0a 02 08 01`, i.e. they **do** carry
+  `version`. That is the direct confirmation that `SyncdPatch.version` is
+  server→client only, which the APK trace had inferred from `LX/BYK->version_`
+  having only reads.
+* App-state answers **per collection**, so an `iq type=result` can carry a
+  refusal. `actions::record_reply` was reading only the outer type and recorded
+  that conflict as `Ok` — an error reported as success, which is worse than an
+  error. It now looks for a collection-level `type="error"` and takes its code
+  and text.
+
+`CollectionState` is now persisted between patches (`to_saved`/`from_saved`),
+stashed against the action that carried it and promoted only once the server
+accepts *and* reports the version we claimed, so a refused patch cannot advance
+the version we believe we hold. `queue_contact_patch` promotes first, then
+builds on the held state and sends `version` when it holds one.
+
+**Remaining:** consuming the `<patches>` a 409 returns, to catch up instead of
+conflicting again. The first account's patch was queued before the state was
+persisted, so there is nothing to promote for it and the next patch will
+conflict until the catch-up path exists.
+
 ### Third live attempt: the refusal survives the correction
 
 The `version`-free patch was sent once, live, 2026-09-22. The server answered

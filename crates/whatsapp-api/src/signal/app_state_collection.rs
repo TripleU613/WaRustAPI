@@ -51,6 +51,19 @@ impl std::fmt::Debug for CollectionPatch {
     }
 }
 
+/// [`CollectionState`] in a form the store can hold between sessions.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct SavedCollectionState {
+    /// Collection name.
+    pub collection: String,
+    /// Version we hold after the server accepted our last patch.
+    pub version: u64,
+    /// 128-byte LT hash.
+    pub hash: Vec<u8>,
+    /// index MAC → value MAC.
+    pub values: Vec<(Vec<u8>, Vec<u8>)>,
+}
+
 /// Verified collection integrity state, not yet persisted or applied to UI data.
 #[derive(Clone, PartialEq, Eq)]
 pub struct CollectionState {
@@ -93,6 +106,54 @@ impl CollectionState {
     pub fn version(&self) -> u64 {
         self.version
     }
+    /// Serialize for durable storage between patches: collection name, version,
+    /// state hash and the index→value MAC map.
+    ///
+    /// A second patch has to build on the first, and the server tells us which
+    /// version it now holds. Starting from `empty` every time would claim
+    /// version 1 for ever and recompute a hash over nothing, which the server
+    /// would be right to refuse.
+    pub fn to_saved(&self) -> SavedCollectionState {
+        SavedCollectionState {
+            collection: self.collection.clone(),
+            version: self.version,
+            hash: self.hash.as_bytes().to_vec(),
+            values: self
+                .values
+                .iter()
+                .map(|(index, value)| (index.to_vec(), value.to_vec()))
+                .collect(),
+        }
+    }
+
+    /// The inverse of [`Self::to_saved`], refusing anything mis-sized rather
+    /// than silently starting from a wrong hash.
+    pub fn from_saved(saved: &SavedCollectionState) -> Result<Self> {
+        let hash: [u8; 128] = saved
+            .hash
+            .as_slice()
+            .try_into()
+            .map_err(|_| invalid("saved state hash is not 128 bytes"))?;
+        let mut values = BTreeMap::new();
+        for (index, value) in &saved.values {
+            let index: [u8; 32] = index
+                .as_slice()
+                .try_into()
+                .map_err(|_| invalid("saved index MAC is not 32 bytes"))?;
+            let value: [u8; 32] = value
+                .as_slice()
+                .try_into()
+                .map_err(|_| invalid("saved value MAC is not 32 bytes"))?;
+            values.insert(index, value);
+        }
+        Ok(Self {
+            collection: saved.collection.clone(),
+            version: saved.version,
+            hash: StateHash::from_bytes(hash),
+            values,
+        })
+    }
+
     /// Current verified rolling hash.
     pub fn hash(&self) -> &StateHash {
         &self.hash

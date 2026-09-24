@@ -175,12 +175,24 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
         if row.status != ActionStatus::Sent {
             return Ok(false);
         }
+        // An `iq type=result` can still carry a refusal further in. App-state
+        // answers per collection: `<sync><collection type="error"><error
+        // code="409" text="conflict"/>`, observed live 2026-09-24. Reading only
+        // the outer type recorded that as success, which is worse than an error
+        // — it is an error the caller is told is fine.
+        let inner_error = node
+            .child_nodes()
+            .iter()
+            .flat_map(|child| child.child_nodes())
+            .find(|child| child.get_attr("type").and_then(|v| v.as_text()) == Some("error"))
+            .and_then(|child| child.child("error"))
+            .or_else(|| node.child("error"));
         let kind = node.get_attr("type").and_then(|v| v.as_text());
-        if kind == Some("result") {
+        if kind == Some("result") && inner_error.is_none() {
             row.status = ActionStatus::Ok;
         } else {
             row.status = ActionStatus::Error;
-            if let Some(error) = node.child("error") {
+            if let Some(error) = inner_error {
                 row.error_code = error
                     .get_attr("code")
                     .and_then(|v| v.as_text())
@@ -262,6 +274,87 @@ pub fn settled(store: &ProtocolStore, kind: &str) -> Result<Vec<(ActionOutcome, 
     }
     out.reverse();
     Ok(out)
+}
+
+#[cfg(test)]
+mod inner_error_tests {
+    use super::*;
+    use crate::{
+        model::ids::AccountId,
+        store::{MasterKey, OpenOptions, StaticKeySource},
+    };
+
+    fn store() -> (tempfile::TempDir, ProtocolStore) {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("p.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            create: true,
+        })
+        .unwrap();
+        (dir, store)
+    }
+
+    /// App-state answers per collection, so an `iq type=result` can still carry
+    /// a refusal. Recording that as success is worse than recording an error,
+    /// because the caller is told the write landed when it did not.
+    #[test]
+    fn a_collection_level_error_is_not_a_success() {
+        let (_d, store) = store();
+        let id = queue(&store, "app-state-patch", "patch", |id| {
+            Ok(Node::new("iq").attr("id", id))
+        })
+        .unwrap();
+        reserve_pending(&store).unwrap();
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result")
+            .children(vec![Node::new("sync").children(vec![
+                Node::new("collection")
+                    .attr("type", "error")
+                    .attr("name", "critical_unblock_low")
+                    .children(vec![
+                        Node::new("error").attr("code", "409").attr("text", "conflict"),
+                    ]),
+            ])]);
+        assert!(record_reply(&store, &reply).unwrap());
+        let outcome = outcomes(&store)
+            .unwrap()
+            .into_iter()
+            .find(|o| o.id == id)
+            .unwrap();
+        assert_eq!(outcome.status, ActionStatus::Error);
+        assert_eq!(outcome.error_code, Some(409));
+        assert_eq!(outcome.error_text.as_deref(), Some("conflict"));
+    }
+
+    /// A plain successful reply must still be a success, including one whose
+    /// children carry no `type` at all.
+    #[test]
+    fn a_clean_result_is_still_ok() {
+        let (_d, store) = store();
+        let id = queue(&store, "app-state-patch", "patch", |id| {
+            Ok(Node::new("iq").attr("id", id))
+        })
+        .unwrap();
+        reserve_pending(&store).unwrap();
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result")
+            .children(vec![Node::new("sync").children(vec![
+                Node::new("collection")
+                    .attr("name", "critical_unblock_low")
+                    .attr("version", "1"),
+            ])]);
+        assert!(record_reply(&store, &reply).unwrap());
+        let outcome = outcomes(&store)
+            .unwrap()
+            .into_iter()
+            .find(|o| o.id == id)
+            .unwrap();
+        assert_eq!(outcome.status, ActionStatus::Ok);
+    }
 }
 
 #[cfg(test)]

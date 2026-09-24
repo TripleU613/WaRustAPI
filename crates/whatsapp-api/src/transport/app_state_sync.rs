@@ -234,9 +234,12 @@ pub fn queue_contact_patch(
     registered: &std::collections::BTreeSet<u32>,
     now_ms: i64,
 ) -> Result<(String, usize)> {
-    use crate::signal::{app_state, app_state_actions, app_state_collection::CollectionState};
+    use crate::signal::{app_state, app_state_actions};
     use crate::transport::contacts;
 
+    // Promote anything the server accepted since the last call, so this patch
+    // builds on it rather than re-claiming a version the server has moved past.
+    ingest(store)?;
     let saved = contacts::list(store)?;
     if saved.is_empty() {
         return Err(crate::Error::invalid(
@@ -291,27 +294,158 @@ pub fn queue_contact_patch(
         )?
         .ok_or_else(|| crate::Error::invalid("app_state_sync", "minted key is not selectable"))
     })?;
-    // This account has never synced, so its collections start at version 0; the
-    // server's empty <sync/> reply to a fetch confirmed that.
-    let state = CollectionState::empty(Collection::CriticalUnblockLow.name())?;
+    // Build on whatever the server last accepted. Starting from `empty` every
+    // time would claim version 1 for ever and hash over nothing.
+    let collection = Collection::CriticalUnblockLow;
+    let state = held_state(store, collection)?;
+    let held = state.version();
     let built = state.build_patch(keys.keys(), key_id, device_index.into(), &mutations)?;
+    let saved = built.state.to_saved();
     let id = super::actions::queue(store, PATCH_ACTION_KIND, "contact app-state patch", |id| {
-        // Never synced, so no held version exists and the attribute is omitted.
+        // The attribute is the version we *hold*, omitted when we hold none
+        // (confirmed, both `CSe.A01` call sites). The patch's own claimed
+        // version is never on the wire — `SyncdPatch.version` is read-only in
+        // the APK and sending it is what three refusals had in common.
         patch_request(
             id,
-            Collection::CriticalUnblockLow,
-            None,
+            collection,
+            (held > 0).then_some(held),
             &built.bytes,
             false,
         )
     })?;
+    // Stashed against the action, promoted only once the server accepts it: a
+    // refused patch must not advance the version we claim to hold.
+    store.write(|tx| {
+        tx.put_json(
+            crate::store::Table::Checkpoints,
+            pending_key(&id).as_bytes(),
+            1,
+            &saved,
+        )
+    })?;
     Ok((id, count))
+}
+
+const HELD_PREFIX: &str = "app-state-collection:";
+const PENDING_PREFIX: &str = "app-state-pending:";
+
+fn held_key(collection: Collection) -> String {
+    format!("{HELD_PREFIX}{}", collection.name())
+}
+fn pending_key(action_id: &str) -> String {
+    format!("{PENDING_PREFIX}{action_id}")
+}
+
+/// The state the server last accepted for a collection, or an empty one.
+fn held_state(
+    store: &crate::store::ProtocolStore,
+    collection: Collection,
+) -> Result<crate::signal::app_state_collection::CollectionState> {
+    use crate::signal::app_state_collection::{CollectionState, SavedCollectionState};
+    let saved: Option<SavedCollectionState> = store.read(|tx| {
+        tx.get_json(
+            crate::store::Table::Checkpoints,
+            held_key(collection).as_bytes(),
+            1,
+        )
+    })?;
+    match saved {
+        Some(saved) => CollectionState::from_saved(&saved),
+        None => CollectionState::empty(collection.name()),
+    }
+}
+
+/// Promote the stashed state of every accepted patch, so the next one builds on
+/// it. Returns how many were applied.
+///
+/// The server's `result` names the version it now holds
+/// (`<collection name=… version=…/>`); that is compared with what our patch
+/// claimed, and a mismatch leaves the state unpromoted rather than recording a
+/// version the server does not agree with.
+pub fn ingest(store: &crate::store::ProtocolStore) -> Result<usize> {
+    use crate::signal::app_state_collection::SavedCollectionState;
+    use crate::store::Table;
+    let mut applied = 0;
+    for (outcome, reply) in super::actions::settled(store, PATCH_ACTION_KIND)? {
+        let pending = pending_key(&outcome.id);
+        let Some(saved): Option<SavedCollectionState> =
+            store.read(|tx| tx.get_json(Table::Checkpoints, pending.as_bytes(), 1))?
+        else {
+            continue;
+        };
+        let accepted = outcome.status == super::actions::ActionStatus::Ok;
+        let server_version = reply
+            .as_ref()
+            .and_then(|r| r.child("sync"))
+            .and_then(|s| s.child("collection"))
+            .and_then(|c| c.get_attr("version"))
+            .and_then(|v| v.as_text())
+            .and_then(|v| v.parse::<u64>().ok());
+        if accepted && server_version == Some(saved.version) {
+            store.write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    held_key(Collection::CriticalUnblockLow).as_bytes(),
+                    1,
+                    &saved,
+                )?;
+                tx.delete(Table::Checkpoints, pending.as_bytes())
+            })?;
+            applied += 1;
+        } else {
+            // Refused, or accepted at a version we did not claim. Either way the
+            // stash is dropped rather than promoted; the next patch rebuilds
+            // from the last state the server and we agreed on.
+            store.write(|tx| tx.delete(Table::Checkpoints, pending.as_bytes()))?;
+        }
+    }
+    Ok(applied)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::binary::NodeContent;
+
+    /// A second patch has to continue the first. Round-tripping the state is
+    /// what makes that possible, and a mis-sized hash or MAC must be refused
+    /// rather than silently restarting from a wrong baseline.
+    #[test]
+    fn collection_state_round_trips_and_refuses_corruption() {
+        use crate::signal::app_state_collection::{CollectionState, SavedCollectionState};
+        let state = CollectionState::empty("critical_unblock_low").unwrap();
+        let saved = state.to_saved();
+        assert_eq!(saved.version, 0);
+        assert_eq!(saved.hash.len(), 128);
+        let back = CollectionState::from_saved(&saved).unwrap();
+        assert_eq!(back, state);
+
+        let short = SavedCollectionState {
+            hash: vec![0; 127],
+            ..saved.clone()
+        };
+        assert!(CollectionState::from_saved(&short).is_err());
+        let bad_mac = SavedCollectionState {
+            values: vec![(vec![0; 31], vec![0; 32])],
+            ..saved
+        };
+        assert!(CollectionState::from_saved(&bad_mac).is_err());
+    }
+
+    /// The `version` attribute is the version we hold, so it is absent before
+    /// the first accepted patch and present after — the distinction that three
+    /// live refusals turned on.
+    #[test]
+    fn the_held_version_attribute_appears_only_once_we_hold_one() {
+        let first = patch_request("A", Collection::CriticalUnblockLow, None, &[1], false).unwrap();
+        let collection = &first.child_nodes()[0].child_nodes()[0];
+        assert!(collection.get_attr("version").is_none());
+        let second =
+            patch_request("B", Collection::CriticalUnblockLow, Some(1), &[1], false).unwrap();
+        let collection = &second.child_nodes()[0].child_nodes()[0];
+        assert_eq!(collection.get_attr("version").unwrap().as_text(), Some("1"));
+    }
 
     #[test]
     fn patch_request_matches_the_traced_shape() {
