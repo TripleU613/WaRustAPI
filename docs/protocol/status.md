@@ -465,3 +465,43 @@ above the cause is on the posting handset, so no code change was made.
 Status receive therefore remains **unexercised**: the routing, projection and
 `ChatId::Broadcast` representation are covered by offline tests only, and the
 `enc` composition and payload form of a real status stanza are still unknown.
+
+## Posting a status (live-verified 2026-09-24)
+
+**A styled text status was posted from this client and appeared on the
+operator's handset.** It goes out through exactly the sender-key fan-out a group
+message uses, aimed at `status@broadcast`.
+
+**The audience is named by the caller, not inferred.** A status has no
+membership list to read, and `E2eStatusJobParams.A02()` does not supply one
+either: it returns an explicit target set if there is one, else the devices
+holding a receipt row for *this* status, else the parent status's devices for a
+repost — all of which are the retry list, the same shape as the group case in
+`LX/CQl`. The real audience is the account's status privacy list, which this
+client does not sync, so the private JSON names it. That is WhatsApp's "share
+with only…", and it keeps the client from inferring who is entitled to see
+something.
+
+The stanza carries **no `addressing_mode` and no `phash`** — neither appears on
+any incoming status we have captured, and the server has not asked for one. The
+own identity is included in the participant-hash membership exactly as for a
+group, but never addressed.
+
+The payload is `Message.extendedTextMessage` (**field 6**, not a bare
+`conversation` — that is what distinguishes a status from a chat line), with
+`text` 1, `textArgb` 7 and `backgroundArgb` 8 as **fixed32**, and `font` 9.
+Those numbers come from the `LX/BZF` descriptor and were already being decoded
+by the receive path, which is what `a_styled_status_round_trips_through_the_
+receive_path` checks the encoder against — the decoder was written and
+live-verified against a real status from the operator months before the encoder
+existed, so it is an independent check rather than the encoder agreeing with
+itself.
+
+`E2eStatusJobParams` also settles a question this project carried as unknown:
+its fields are named `participantUsersHash` and `participantDevicesHash`, which
+identifies `SendE2EMessageJob`'s `groupParticipantUserHash` as the **users**
+hash and `groupParticipantHash` as the **devices** hash.
+
+**Not implemented:** HD images, audio, liking, and reposting (which
+[does not exist in this build](#) — `repost`, `Repost`, `forwardingScore` and
+`originalStatusId` all have zero references).

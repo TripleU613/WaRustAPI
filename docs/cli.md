@@ -731,7 +731,7 @@ Usage: whatsapp-cli lab-transport [OPTIONS]...
 | --allow-live-request | ALLOW_LIVE_REQUEST | no |  |  | `true`, `false` | Authorize a single connection; there are no automatic retries |
 | --login | LOGIN | no |  |  | `true`, `false` | Send one primary login after certificate verification |
 | --recheck-refusal | RECHECK_REFUSAL | no |  |  | `true`, `false` | Authorize exactly one further login after a saved `failure`, to tell a temporary limit from a permanent refusal. Refuses an ambiguous saved outcome, refuses to carry a message, and preserves the earlier refusal rather than overwriting it |
-| --message | MESSAGE | no |  |  |  | Private JSON: request_id, either `to` (direct) or `group` (`…@g.us` sender-key fan-out, text only), and text, image (PNG) or voice_note |
+| --message | MESSAGE | no |  |  |  | Private JSON: request_id plus exactly one target — `to` (direct), `group` (`…@g.us` sender-key fan-out) or `status` (a status post with its own audience, font and colours) |
 | --receive | RECEIVE | no |  |  | `true`, `false` | Preserve incoming stanzas for up to 30 seconds without sending a chat |
 | --media-route | MEDIA_ROUTE | no |  |  | `true`, `false` | Obtain and privately preserve one current media-upload route response |
 

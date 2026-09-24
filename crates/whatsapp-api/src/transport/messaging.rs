@@ -55,9 +55,92 @@ pub struct MessageRequest {
     /// of band. `direct` reuses the 1:1 path, which is live-verified.
     #[serde(default)]
     pub skdm_delivery: Option<String>,
+    /// Post a status instead of sending to a chat. Mutually exclusive with
+    /// `to` and `group`.
+    #[serde(default)]
+    pub status: Option<StatusPost>,
     /// Stable local idempotency key; reuse it after uncertain outcomes.
     pub request_id: String,
 }
+/// A status post: the text, who may see it, and how it is drawn.
+///
+/// The audience is explicit because a status has no membership list to read and
+/// this client does not sync the account's status privacy list. Naming it is
+/// WhatsApp's "share with only…", and it keeps the client from inferring who is
+/// entitled to see something.
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
+pub struct StatusPost {
+    /// Status text.
+    pub text: zeroize::Zeroizing<String>,
+    /// Identities allowed to see it (phone-number or LID form).
+    pub audience: Vec<String>,
+    /// Font, `0..=8` (`LX/C44`); absent leaves the default.
+    #[serde(default)]
+    pub font: Option<u8>,
+    /// Background colour as ARGB hex, with or without a leading `#`.
+    #[serde(default)]
+    pub background: Option<String>,
+    /// Text colour as ARGB hex, with or without a leading `#`.
+    #[serde(default)]
+    pub text_color: Option<String>,
+}
+
+impl std::fmt::Debug for StatusPost {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("StatusPost(<redacted>)")
+    }
+}
+
+impl StatusPost {
+    /// The audience as parsed identities.
+    pub fn recipients(&self) -> crate::Result<Vec<Jid>> {
+        if self.audience.is_empty() {
+            return Err(crate::Error::invalid(
+                "status",
+                "a status needs at least one audience identity",
+            ));
+        }
+        self.audience
+            .iter()
+            .map(|raw| {
+                let jid = Jid::parse(raw)?;
+                if !jid.is_user_like() || jid.device != 0 {
+                    return Err(crate::Error::invalid(
+                        "status",
+                        "an audience entry is a phone-number or LID identity",
+                    ));
+                }
+                Ok(jid.to_non_ad())
+            })
+            .collect()
+    }
+
+    /// Colour and font, refusing anything this build does not enumerate rather
+    /// than drawing a status some other way than asked.
+    pub fn style(&self) -> crate::Result<crate::transport::quotes::TextStyle> {
+        let argb = |value: &Option<String>| -> crate::Result<Option<u32>> {
+            let Some(raw) = value.as_deref() else {
+                return Ok(None);
+            };
+            let hex = raw.strip_prefix('#').unwrap_or(raw);
+            u32::from_str_radix(hex, 16)
+                .map(Some)
+                .map_err(|_| crate::Error::invalid("status", "a colour is ARGB hex"))
+        };
+        Ok(crate::transport::quotes::TextStyle {
+            background_argb: argb(&self.background)?,
+            text_argb: argb(&self.text_color)?,
+            font: self
+                .font
+                .map(|f| {
+                    crate::transport::quotes::StatusFont::from_wire(i32::from(f))
+                        .ok_or_else(|| crate::Error::invalid("status", "font is 0..=8"))
+                })
+                .transpose()?,
+        })
+    }
+}
+
 impl std::fmt::Debug for MessageRequest {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str("MessageRequest(<redacted>)")
@@ -92,6 +175,32 @@ impl MessageRequest {
         }
         let value: Self = serde_json::from_slice(&bytes)
             .map_err(|_| crate::Error::invalid("message", "invalid message JSON"))?;
+        if let Some(status) = &value.status {
+            if !value.to.is_empty() || value.group.is_some() {
+                return Err(crate::Error::invalid(
+                    "message",
+                    "a status post names no `to` and no `group`",
+                ));
+            }
+            if value.image.is_some() || value.voice_note.is_some() || value.view_once {
+                return Err(crate::Error::invalid(
+                    "message",
+                    "a status post carries text only so far",
+                ));
+            }
+            status.recipients()?;
+            status.style()?;
+            if status.text.is_empty() || status.text.len() > 4096 {
+                return Err(crate::Error::invalid(
+                    "message",
+                    "a status text is 1..=4096 bytes",
+                ));
+            }
+            if value.request_id.is_empty() || value.request_id.len() > 64 {
+                return Err(crate::Error::invalid("message", "invalid request_id"));
+            }
+            return Ok(value);
+        }
         match value.group_chat()? {
             Some(_) if !value.to.is_empty() => {
                 return Err(crate::Error::invalid(
@@ -887,6 +996,7 @@ mod tests {
             group: None,
             fresh_sessions: false,
             skdm_delivery: None,
+            status: None,
             request_id: "r1".into(),
         };
         assert_eq!(
@@ -929,6 +1039,7 @@ mod tests {
             group: group.map(str::to_owned),
             fresh_sessions: false,
             skdm_delivery: None,
+            status: None,
             request_id: "r1".into(),
         };
         assert_eq!(

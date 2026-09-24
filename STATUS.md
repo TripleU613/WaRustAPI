@@ -1,5 +1,23 @@
 # Status — 2026-09-24
 
+**STATUS POSTING IS LIVE-VERIFIED (2026-09-24).** A styled text status — font,
+background and text colour — was posted from this client and appeared on the
+operator's handset. It uses exactly the sender-key fan-out a group message uses,
+aimed at `status@broadcast`, with no `addressing_mode` and no `phash` (neither
+appears on any incoming status we hold).
+
+The audience is named in the private JSON rather than inferred: a status has no
+membership list, and the APK's `E2eStatusJobParams.A02()` is the retry list, not
+the audience. The payload is `Message.extendedTextMessage` (field **6**) with
+`textArgb`/`backgroundArgb` as fixed32 and `font` 9, checked against the receive
+path that was live-verified against a real status long before this encoder
+existed.
+
+`E2eStatusJobParams` also settles an old unknown: `participantUsersHash` and
+`participantDevicesHash` identify `groupParticipantUserHash` as the users hash
+and `groupParticipantHash` as the devices hash.
+
+
 **GROUP SENDING IS LIVE-VERIFIED (2026-09-24).** The operator confirmed a
 sender-key fan-out from profile `l` reads correctly on their handset. The
 stanza, the participant hash, the per-device distribution, the `skmsg` and the

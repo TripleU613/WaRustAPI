@@ -506,8 +506,9 @@ enum Cmd {
         /// refusal rather than overwriting it.
         #[arg(long, requires = "login", conflicts_with = "message")]
         recheck_refusal: bool,
-        /// Private JSON: request_id, either `to` (direct) or `group` (`…@g.us`
-        /// sender-key fan-out, text only), and text, image (PNG) or voice_note.
+        /// Private JSON: request_id plus exactly one target — `to` (direct),
+        /// `group` (`…@g.us` sender-key fan-out) or `status` (a status post
+        /// with its own audience, font and colours).
         #[arg(long, requires = "login")]
         message: Option<PathBuf>,
         /// Preserve incoming stanzas for up to 30 seconds without sending a chat.

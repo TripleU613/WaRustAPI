@@ -86,6 +86,52 @@ pub fn own_lid(store: &ProtocolStore) -> Result<Option<Jid>> {
     store.read(|tx| tx.get_json(Table::Checkpoints, OWN_LID_KEY, 1))
 }
 
+/// A `Message` protobuf carrying one styled text status: `extendedTextMessage`
+/// with the colour and font fields a full-screen text status uses.
+///
+/// Field numbers are the ones the receive side already decodes from the
+/// `LX/BZF` descriptor (**confirmed**, 2.26.37.71): `text` 1, `textArgb` 7 and
+/// `backgroundArgb` 8 as **fixed32** — not varint — and `font` 9. Emitting the
+/// two colours as varints would put the wrong wire type on the field rather
+/// than merely mis-sign the alpha channel.
+///
+/// With no styling this is still an `extendedTextMessage` rather than a bare
+/// `conversation`, which is what a status post is.
+pub fn status_text_payload(text: &str, style: &super::quotes::TextStyle) -> Result<Vec<u8>> {
+    use prost::Message as _;
+    if text.is_empty() || text.len() > 4096 {
+        return Err(invalid("a status text is 1..=4096 bytes"));
+    }
+    #[derive(prost::Message)]
+    struct Extended {
+        #[prost(string, optional, tag = "1")]
+        text: Option<String>,
+        #[prost(fixed32, optional, tag = "7")]
+        text_argb: Option<u32>,
+        #[prost(fixed32, optional, tag = "8")]
+        background_argb: Option<u32>,
+        #[prost(int32, optional, tag = "9")]
+        font: Option<i32>,
+    }
+    #[derive(prost::Message)]
+    struct WithExtended {
+        // `Message.extendedTextMessage` is **6** (`LX/BVL`), which is what the
+        // receive side already decodes. Encoding it anywhere else would repeat
+        // the field-18 mistake: self-consistent here, unreadable everywhere else.
+        #[prost(message, optional, tag = "6")]
+        extended: Option<Extended>,
+    }
+    Ok(WithExtended {
+        extended: Some(Extended {
+            text: Some(text.into()),
+            text_argb: style.text_argb,
+            background_argb: style.background_argb,
+            font: style.font.map(|f| f as i32),
+        }),
+    }
+    .encode_to_vec())
+}
+
 /// A `Message` protobuf carrying one plain text body, the payload both the
 /// direct path and a sender-key send encrypt. Kept here so a group send does
 /// not have to reach into the direct path's private encoder.
@@ -139,8 +185,8 @@ pub struct FanoutPlan {
 /// when no member has a device list — each of those would produce a stanza
 /// addressed to the wrong identities.
 pub fn plan(store: &ProtocolStore, chat: &Jid, own: &Jid) -> Result<FanoutPlan> {
-    if !matches!(chat.server, Server::Group | Server::Broadcast) {
-        return Err(invalid("a sender-key send targets a group or broadcast"));
+    if chat.server != Server::Group {
+        return Err(invalid("this plan reads a group snapshot"));
     }
     let snapshot = super::groups::get(store, chat)?
         .ok_or_else(|| invalid("no saved group snapshot; fetch group info first"))?;
@@ -152,8 +198,51 @@ pub fn plan(store: &ProtocolStore, chat: &Jid, own: &Jid) -> Result<FanoutPlan> 
         }
         members.push(jid.to_non_ad());
     }
+    plan_over(store, chat, own, members)
+}
+
+/// Plan a status post: the same sender-key fan-out, aimed at `status@broadcast`
+/// with an **explicit** audience rather than a group's membership.
+///
+/// A status has no membership list to read. The APK's own
+/// `E2eStatusJobParams.A02()` is the *retry* list — an explicit target set, else
+/// the devices holding a receipt row for this status, else the parent status's
+/// for a repost — so it does not answer "who should see a new one" either. That
+/// audience is the account's status privacy list, which this client does not
+/// sync, so the caller names it. Naming it is also the honest thing for a lab
+/// account: it is WhatsApp's "share with only…" and nothing is inferred about
+/// who else might be entitled to see it.
+///
+/// `own` is included in the participant hash, exactly as it is for a group, but
+/// never addressed.
+pub fn plan_status(store: &ProtocolStore, own: &Jid, audience: &[Jid]) -> Result<FanoutPlan> {
+    let chat = Jid::parse("status@broadcast")?;
+    if audience.is_empty() || audience.len() > 256 {
+        return Err(invalid("a status audience is 1..=256 identities"));
+    }
+    let mut members = vec![own.to_non_ad()];
+    for jid in audience {
+        if !jid.is_user_like() {
+            return Err(invalid(
+                "a status recipient is a phone-number or LID identity",
+            ));
+        }
+        members.push(jid.to_non_ad());
+    }
+    plan_over(store, &chat, own, members)
+}
+
+fn plan_over(
+    store: &ProtocolStore,
+    chat: &Jid,
+    own: &Jid,
+    members: Vec<Jid>,
+) -> Result<FanoutPlan> {
+    if !matches!(chat.server, Server::Group | Server::Broadcast) {
+        return Err(invalid("a sender-key send targets a group or broadcast"));
+    }
     if members.is_empty() {
-        return Err(invalid("saved group snapshot has no members"));
+        return Err(invalid("no members to address"));
     }
     let lid = members.iter().filter(|j| j.server == Server::Lid).count();
     let addressing_mode = if lid == members.len() {
@@ -420,6 +509,32 @@ mod tests {
                 .write(|tx| record_own_lid(tx, &jid("15550000001@s.whatsapp.net")))
                 .is_err()
         );
+    }
+
+    /// A styled status must come back out of the receive path exactly as it
+    /// went in — same text, same colours, same font. That path was written and
+    /// live-verified against a real status from the operator's handset long
+    /// before this encoder existed, so it is an independent check rather than
+    /// this function agreeing with itself.
+    #[test]
+    fn a_styled_status_round_trips_through_the_receive_path() {
+        use super::super::quotes::{StatusFont, TextStyle, decode};
+        let style = TextStyle {
+            background_argb: Some(0xFF26_2626),
+            text_argb: Some(0xFFFF_FFFF),
+            font: Some(StatusFont::BebasNeueRegular),
+        };
+        let bytes = status_text_payload("hello status", &style).unwrap();
+        let decoded = decode(&bytes).expect("the receive path must read it");
+        assert_eq!(decoded.text, "hello status");
+        assert_eq!(decoded.style, style);
+        // An unstyled status is still an extendedTextMessage, not a bare
+        // `conversation`: that is what distinguishes a status from a chat line.
+        let plain = status_text_payload("bare", &TextStyle::default()).unwrap();
+        assert_eq!(plain[0], 0x32, "field 6, length-delimited");
+        assert_eq!(decode(&plain).unwrap().text, "bare");
+        assert!(!decode(&plain).unwrap().style.is_styled());
+        assert!(status_text_payload("", &style).is_err());
     }
 
     /// Field 1 `conversation`, the same shape the receive path decodes.

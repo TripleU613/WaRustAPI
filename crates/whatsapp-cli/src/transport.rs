@@ -94,6 +94,11 @@ pub(super) struct Session<'a> {
     pub media_route: bool,
 }
 
+/// The one chat a status post is addressed to.
+fn status_broadcast() -> whatsapp_api::model::jid::Jid {
+    whatsapp_api::model::jid::Jid::parse("status@broadcast").expect("constant JID")
+}
+
 pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> Result<(), Error> {
     let Session {
         allow_live,
@@ -540,7 +545,9 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
         }
         if status == "success"
             && let Some(message) = &message
-            && let Some(chat) = message.group_chat()?
+            && let Some(chat) = message
+                .group_chat()?
+                .or_else(|| message.status.is_some().then(status_broadcast))
         {
             // The group path holds its own post-send window, because answering
             // a retry needs the sender key and the skmsg that only it has.

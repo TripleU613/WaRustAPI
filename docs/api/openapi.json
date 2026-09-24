@@ -391,9 +391,13 @@
           "view_once": {
             "type": "boolean",
             "description": "If true, image is sent as view-once (disappears after one viewing)"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StatusPost",
+            "description": "Post a status instead of sending to a chat; mutually exclusive with `to` and `group`"
           }
         },
-        "description": "Private JSON message request for outbox-send or lab-transport --message. Exactly one of text, image, or voice_note must be specified, and exactly one of `to` or `group`. Repeating the same request_id returns the saved outcome locally and never resends."
+        "description": "Private JSON message request for outbox-send or lab-transport --message. Exactly one target: `to` (direct), `group` (sender-key fan-out) or `status` (a status post). Repeating the same request_id returns the saved outcome locally and never resends."
       },
       "OutboxEntry": {
         "type": "object",
@@ -1919,6 +1923,41 @@
             "description": "font, field 9. Enum LX/C44 covers exactly wire values 0..=8; anything else is dropped rather than mapped."
           }
         }
+      },
+      "StatusPost": {
+        "type": "object",
+        "required": [
+          "text",
+          "audience"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Status text, 1..=4096 bytes"
+          },
+          "audience": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Identities allowed to see it (phone-number or LID form). Explicit because a status has no membership list and this client does not sync the account's status privacy list — this is WhatsApp's \"share with only…\"."
+          },
+          "font": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 8,
+            "description": "Font 0..=8 (LX/C44); absent leaves the default"
+          },
+          "background": {
+            "type": "string",
+            "description": "Background colour as ARGB hex, with or without a leading #"
+          },
+          "text_color": {
+            "type": "string",
+            "description": "Text colour as ARGB hex, with or without a leading #"
+          }
+        },
+        "description": "A styled text status. Posted through the same sender-key fan-out as a group message, addressed to status@broadcast, with no addressing_mode and no phash (neither is observed on an incoming status)."
       }
     }
   },

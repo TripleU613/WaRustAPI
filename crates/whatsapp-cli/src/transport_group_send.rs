@@ -144,6 +144,33 @@ pub(super) async fn send(
         invalid("no own LID recorded; log in once more so `<success>` can provide it")
     })?;
 
+    // A status has no membership to fetch: its audience is named in the JSON.
+    let status = message.status.clone();
+    if let Some(status) = &status {
+        let audience = status.recipients()?;
+        fetch_devices(store, channel, &own, &audience).await?;
+        let plan = group_send::plan_status(store, &own, &audience)?;
+        println!(
+            "status-post: recipients={}, devices={}, without_device_list={}",
+            plan.recipients.len(),
+            plan.devices.len(),
+            plan.without_device_list.len()
+        );
+        if !plan.without_device_list.is_empty() {
+            return Err(invalid(
+                "some of the audience have no device list; they would silently not see this status",
+            ));
+        }
+        let payload = group_send::status_text_payload(&status.text, &status.style()?)?;
+        return transmit(
+            store, account, channel, message, chat, &plan, &payload, &own,
+            // Observed on every incoming status: no `addressing_mode`, and the
+            // server has never asked us for a status `phash`.
+            None, None,
+        )
+        .await;
+    }
+
     fetch_membership(store, channel, chat).await?;
     // Plan once to learn the membership, fetch the devices it names, then plan
     // again over what actually arrived.
@@ -181,10 +208,43 @@ pub(super) async fn send(
         ));
     }
 
-    let mut targets = load_targets(store, &plan, message.fresh_sessions)?;
+    let payload = group_send::text_payload(&message.text)?;
+    transmit(
+        store,
+        account,
+        channel,
+        message,
+        chat,
+        &plan,
+        &payload,
+        &own,
+        Some(plan.addressing_mode),
+        Some(&plan.participant_hash),
+    )
+    .await
+}
+
+/// Encrypt one payload with our sender key, address it to every planned device
+/// and send it. Shared by a group message and a status post, which differ only
+/// in how their audience was chosen and in which stanza attributes apply.
+#[allow(clippy::too_many_arguments)]
+async fn transmit(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    channel: &mut Channel,
+    message: &whatsapp_api::transport::messaging::MessageRequest,
+    chat: &Jid,
+    plan: &FanoutPlan,
+    payload: &[u8],
+    own: &Jid,
+    addressing_mode: Option<&str>,
+    phash: Option<&str>,
+) -> Result<(), Error> {
+    let intent_key = format!("message:{}:send", message.request_id);
+    let mut targets = load_targets(store, plan, message.fresh_sessions)?;
     if message.fresh_sessions {
         println!(
-            "group-send: establishing fresh sessions for all {} target device(s); pinned identities are kept and still enforced",
+            "send: establishing fresh sessions for all {} target device(s); pinned identities are kept and still enforced",
             targets.len()
         );
     }
@@ -210,7 +270,7 @@ pub(super) async fn send(
             )
         })?;
         println!(
-            "group-send: key query for {} device(s) type={}",
+            "send: key query for {} device(s) type={}",
             needed.len(),
             reply
                 .get_attr("type")
@@ -222,10 +282,10 @@ pub(super) async fn send(
 
     // Our own sender key for this chat. Loaded, advanced in memory, and written
     // once with everything else.
-    let own_key_db = sender_key_db_key(chat, &own);
+    let own_key_db = sender_key_db_key(chat, own);
     let previous_key: Option<Vec<u8>> =
         store.read(|tx| tx.get_json(Table::SenderKeys, &own_key_db, 1))?;
-    let minted = prepare_own_sender_key(chat, &own, previous_key.as_deref()).await?;
+    let minted = prepare_own_sender_key(chat, own, previous_key.as_deref()).await?;
     // Not padded here: `prepare_payload` applies the E2E padding itself. Doing
     // it twice leaves junk bytes on the recipient's protobuf after their single
     // strip, which is what made this fail intermittently for weeks.
@@ -268,22 +328,21 @@ pub(super) async fn send(
     let out_of_band = message.skdm_out_of_band()?;
     if out_of_band {
         println!(
-            "group-send: distributing the sender key out of band to {} device(s) before the group stanza",
+            "send: distributing the sender key out of band to {} device(s) before the group stanza",
             fanout.len()
         );
     }
 
-    let plaintext = group_send::text_payload(&message.text)?;
     let (skmsg, advanced_key) =
-        encrypt_group_payload(chat, &own, &minted.updated_key, &plaintext).await?;
+        encrypt_group_payload(chat, own, &minted.updated_key, payload).await?;
 
     let wire_id = new_message_id()?;
     let node = groups::sender_key_stanza(
         chat,
         &wire_id,
         "text",
-        Some(plan.addressing_mode),
-        Some(&plan.participant_hash),
+        addressing_mode,
+        phash,
         if out_of_band { &[] } else { &fanout },
         &skmsg,
     )?;
@@ -328,7 +387,7 @@ pub(super) async fn send(
         tx.put_json(Table::Checkpoints, intent_key.as_bytes(), 1, &intent)
     })?;
     eprintln!(
-        "group-send: sessions, own sender key and send intent committed; sending one fan-out to {} device(s)",
+        "send: sessions, own sender key and send intent committed; sending one fan-out to {} device(s)",
         fanout.len()
     );
 
@@ -362,7 +421,7 @@ pub(super) async fn send(
                 ));
             }
         }
-        println!("group-send: all distribution messages acknowledged");
+        println!("send: all distribution messages acknowledged");
     }
 
     write_node(channel, &node).await?;
@@ -394,14 +453,14 @@ pub(super) async fn send(
         Ok(())
     })?;
     if accepted {
-        println!("group-send: fan-out server_acknowledged; handset delivery/read not yet verified");
+        println!("send: fan-out server_acknowledged; handset delivery/read not yet verified");
         answer_retries(
             store,
             account,
             channel,
             message,
             chat,
-            &plan,
+            plan,
             &wire_id,
             &minted.distribution_message,
             &skmsg,
