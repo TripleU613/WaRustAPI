@@ -377,7 +377,12 @@ pub async fn encrypt_group_payload(
 /// Apply the APK's E2E plaintext padding: 1..=16 bytes, each equal to the pad
 /// length. The exact inverse of [`unpad`], and identical to what the direct
 /// path applies before encrypting.
-pub fn pad(plaintext: &[u8]) -> Result<Zeroizing<Vec<u8>>> {
+///
+/// Deliberately **not public**. Both encrypting paths apply it themselves, and a
+/// caller that padded as well left junk on the recipient's protobuf after their
+/// single strip — an intermittent failure that cost two lab accounts to find.
+/// Keeping it crate-private makes that impossible rather than merely documented.
+pub(crate) fn pad(plaintext: &[u8]) -> Result<Zeroizing<Vec<u8>>> {
     let mut random = [0; 1];
     getrandom::fill(&mut random).map_err(|_| invalid("padding entropy unavailable"))?;
     let padding = (random[0] & 15) + 1;
