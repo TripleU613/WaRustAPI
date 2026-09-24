@@ -678,3 +678,24 @@ This API does not expose view-once uploads; the existing explicit JSON view-once
 path remains separate. Offline tests verify confirmed reuse, restart, uncertainty
 and entry into the normal outbox; a new public-API network upload is not yet a
 verified live result.
+
+
+## Asking for a resend (2026-09-24)
+
+When we cannot decrypt an incoming message we now send a `receipt type="retry"`,
+which is the mirror of the ones we answer. Not sending them is why several of
+the operator's messages simply vanished: the stanza was preserved, nothing was
+acknowledged, and the sender was never told to try again.
+
+`IncomingResult` gained `Undecryptable`, separate from `Unsupported`, because
+the two want opposite answers — content this client does not render has arrived
+and should be acknowledged, while a message we could not open should make us ask
+for it again. Conflating them silently drops the second kind.
+
+The receipt's shape is mirrored from the handset's own
+(`<receipt to id [participant] type="retry"><retry count id t v/><registration/>`).
+The `<registration>` child carries our registration id, which is what lets the
+sender choose between reusing their session and fetching a fresh bundle.
+
+Offline replay counts an undecryptable capture rather than answering it: a
+replay sends nothing.

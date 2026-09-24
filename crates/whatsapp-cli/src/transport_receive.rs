@@ -1229,7 +1229,10 @@ pub(super) async fn run(
             match whatsapp_api::transport::inbox::process(&store, &account, &node, &wire).await? {
                 whatsapp_api::transport::inbox::IncomingResult::Decrypted => replayed.0 += 1,
                 whatsapp_api::transport::inbox::IncomingResult::Duplicate => replayed.1 += 1,
-                whatsapp_api::transport::inbox::IncomingResult::Unsupported => replayed.2 += 1,
+                // Offline replay sends nothing, so an undecryptable capture is
+                // counted with the unsupported rather than answered.
+                whatsapp_api::transport::inbox::IncomingResult::Unsupported
+                | whatsapp_api::transport::inbox::IncomingResult::Undecryptable => replayed.2 += 1,
             }
         }
         println!(
@@ -1524,6 +1527,9 @@ pub(super) async fn run(
             }
             whatsapp_api::transport::inbox::IncomingResult::Duplicate => {}
             whatsapp_api::transport::inbox::IncomingResult::Unsupported => {}
+            whatsapp_api::transport::inbox::IncomingResult::Undecryptable => {
+                println!("inbox: a saved payload could not be decrypted; no receipt sent offline");
+            }
         }
     }
     for shape in capture_shapes {

@@ -19,6 +19,15 @@ pub enum IncomingResult {
     Duplicate,
     /// Preserved but unsupported; do not confirm delivery.
     Unsupported,
+    /// Preserved, and it could not be decrypted at all — a broken or missing
+    /// session, not merely content this client does not render.
+    ///
+    /// Distinguished from [`Self::Unsupported`] because the two want opposite
+    /// answers: unsupported content has arrived and should be acknowledged,
+    /// while an undecryptable one should make us ask the sender to send it
+    /// again. Conflating them is why several of the operator's messages simply
+    /// vanished with no request to resend.
+    Undecryptable,
 }
 
 /// Use explicit primary PN routing or the APK's explicit sender_pn LID mapping.
@@ -382,7 +391,9 @@ pub async fn process(
         (incoming.received, incoming.identity)
     } else {
         let (Some(session), Some(identity)) = (&session, &identity) else {
-            return Ok(IncomingResult::Unsupported);
+            // A `msg` with no session: the sender is encrypting against a
+            // ratchet we do not have, which only a resend can fix.
+            return Ok(IncomingResult::Undecryptable);
         };
         (
             crate::signal::direct::receive(account, &sender, session, identity, ciphertext).await?,
@@ -585,12 +596,21 @@ async fn process_group(
 ) -> Result<IncomingResult> {
     match process_group_inner(store, account, node, capture).await {
         Err(Error::InvalidInput { field, reason }) => {
+            // A group stanza that fails in the crypto is undecryptable; one
+            // that fails elsewhere is merely unsupported. Only the first is
+            // worth asking the sender to repeat.
+            let undecryptable = matches!(field, "group_crypto" | "group_message");
             tracing::warn!(
                 field,
                 reason,
+                undecryptable,
                 "group stanza preserved but not processed; not acknowledged"
             );
-            Ok(IncomingResult::Unsupported)
+            Ok(if undecryptable {
+                IncomingResult::Undecryptable
+            } else {
+                IncomingResult::Unsupported
+            })
         }
         other => other,
     }

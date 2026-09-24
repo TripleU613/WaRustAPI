@@ -471,6 +471,59 @@ pub fn key_request_many(recipients: &[Jid], id: &str) -> crate::Result<Node> {
         ]))
 }
 
+/// Ask a sender to send a message again, because we could not decrypt it.
+///
+/// This is the mirror of the retry receipts we answer. Its shape is taken from
+/// the ones the operator's handset sends us (**observed** 2026-09-24):
+///
+/// ```text
+/// <receipt to=<chat> id=<message id> [participant=<sender device>] type="retry">
+///   <retry count="1" id=<message id> t=<seconds> v="1"/>
+///   <registration>…</registration>
+/// </receipt>
+/// ```
+///
+/// `count` is which attempt this is, starting at 1. `<registration>` carries our
+/// own registration id so the sender can tell whether their saved session for us
+/// is still current — that is the field that lets them decide between reusing a
+/// session and fetching a fresh bundle.
+///
+/// Sending one asks for a repeat of a message we already hold; it acknowledges
+/// nothing and confirms no delivery.
+pub fn retry_receipt(
+    chat: &Jid,
+    participant: Option<&Jid>,
+    message_id: &str,
+    count: u32,
+    registration_id: u32,
+    now_seconds: i64,
+) -> crate::Result<Node> {
+    if message_id.is_empty() || message_id.len() > 128 {
+        return Err(crate::Error::invalid("receipt", "invalid message id"));
+    }
+    if count == 0 || count > 16 {
+        return Err(crate::Error::invalid(
+            "receipt",
+            "a retry count starts at 1 and stays bounded",
+        ));
+    }
+    let mut node = Node::new("receipt")
+        .attr("to", chat.clone())
+        .attr("id", message_id)
+        .attr("type", "retry");
+    if let Some(participant) = participant {
+        node = node.attr("participant", participant.clone());
+    }
+    Ok(node.children(vec![
+        Node::new("retry")
+            .attr("count", count.to_string().as_str())
+            .attr("id", message_id)
+            .attr("t", now_seconds.to_string().as_str())
+            .attr("v", "1"),
+        Node::new("registration").bytes(registration_id.to_be_bytes().to_vec()),
+    ]))
+}
+
 /// Comparison LX/Avw.A00, called with true by primary ConnectionThread
 /// LX/0iS.A0e: activate this authenticated connection, not a read receipt.
 pub fn active_request(id: &str) -> Node {
@@ -758,6 +811,49 @@ pub async fn wait_for<S: AsyncRead + AsyncWrite + Unpin>(
     })
     .await
     .map_err(|_| TransportError::Deadline("correlated stanza"))?
+}
+
+#[cfg(test)]
+mod retry_send_tests {
+    use super::*;
+
+    /// The shape is mirrored from the receipts the operator's handset sends us,
+    /// and the registration id is the field that lets the sender decide between
+    /// reusing their session and fetching a fresh bundle.
+    #[test]
+    fn a_retry_receipt_mirrors_the_observed_shape() {
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let participant = Jid::parse("222222222222222@lid").unwrap();
+        let node = retry_receipt(&chat, Some(&participant), "M1", 1, 0x0102_0304, 99).unwrap();
+        assert_eq!(node.description, "receipt");
+        assert_eq!(node.get_attr("type").unwrap().as_text(), Some("retry"));
+        assert_eq!(node.get_attr("id").unwrap().as_text(), Some("M1"));
+        assert_eq!(node.get_attr("to").unwrap().as_jid(), Some(&chat));
+        assert_eq!(
+            node.get_attr("participant").unwrap().as_jid(),
+            Some(&participant)
+        );
+        let retry = node.child("retry").unwrap();
+        assert_eq!(retry.get_attr("count").unwrap().as_text(), Some("1"));
+        assert_eq!(retry.get_attr("v").unwrap().as_text(), Some("1"));
+        let registration = node.child("registration").unwrap();
+        assert!(matches!(
+            &registration.content,
+            crate::binary::NodeContent::Bytes(b) if b.as_ref() == [1, 2, 3, 4]
+        ));
+        // A direct retry names no participant.
+        let direct = Jid::parse("15551234567@s.whatsapp.net").unwrap();
+        assert!(
+            retry_receipt(&direct, None, "M1", 1, 7, 99)
+                .unwrap()
+                .get_attr("participant")
+                .is_none()
+        );
+        // It must not be sent for a nonsense message or an unbounded count.
+        assert!(retry_receipt(&chat, None, "", 1, 7, 99).is_err());
+        assert!(retry_receipt(&chat, None, "M1", 0, 7, 99).is_err());
+        assert!(retry_receipt(&chat, None, "M1", 99, 7, 99).is_err());
+    }
 }
 
 #[cfg(test)]
