@@ -1,5 +1,25 @@
 # Status — 2026-09-24
 
+**GROUP SENDING IS LIVE-VERIFIED (2026-09-24).** The operator confirmed a
+sender-key fan-out from profile `l` reads correctly on their handset. The
+stanza, the participant hash, the per-device distribution, the `skmsg` and the
+sender-key chain all work.
+
+The cause of every earlier failure was ours: `direct::prepare_payload` has always
+applied the E2E padding itself and the group send padded the distribution
+**again**, leaving 1..=16 junk bytes on the recipient's protobuf after their
+single strip. Protobuf tolerates or rejects those depending on what the random
+bytes spell, which is why it presented as intermittent and device-specific:
+"waiting for this message" when the leftovers hit the SKDM, "your version doesn't
+support it" when they hit the payload, and two-of-three devices succeeding on the
+same send. `addressing_mode`, the version 2 `phash` and the AD-form `<to>` were
+all real corrections and none of them was the cause — the envelope was being
+fixed while the contents were corrupt.
+
+Padding is now the encrypting layer's job on both paths, with a round-trip test
+that fails if a second layer returns.
+
+
 **The group fan-out works.** From the new account into the operator's group, two
 of the three addressed devices decrypted the message and said nothing; only the
 operator's handset returned `receipt type="retry" count=1 v=1`. A device that

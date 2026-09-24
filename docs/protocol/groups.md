@@ -782,3 +782,37 @@ that is asked to re-send and never does is not behaving like a client.
 
 Implementing the response is the next step and it is ordinary protocol
 behaviour, not an extra live experiment.
+
+
+## Resolved: the payload was padded twice (2026-09-24)
+
+**Group sending is live-verified.** The operator confirmed a fan-out from
+profile `l` reads correctly on their handset. Send, sender key, distribution and
+`skmsg` all work.
+
+The cause was ours, in our code, the whole time.
+`direct::prepare_payload` has always applied the APK's E2E padding itself
+(`LX/Cb1.A00`: 1..=16 bytes, each equal to the count). The group send padded the
+sender-key distribution **again** before handing it over. The recipient strips
+one layer and is left with 1..=16 junk bytes on the end of the `Message`
+protobuf.
+
+That one bug accounts for every confusing observation in this document:
+
+| Observation | What it actually was |
+| --- | --- |
+| "Waiting for this message" | the leftover bytes corrupted the SKDM, so no sender key installed |
+| "Your version of WhatsApp doesn't support it" | the sender key worked; the leftovers corrupted the *message* payload |
+| Two of three devices decrypted one send | protobuf ignores trailing bytes that happen to spell a valid unknown field, and rejects ones that do not — the padding is **random**, so each device each send was a coin flip |
+| One send worked, the next did not | same coin flip |
+| Every structural correction changed nothing | `addressing_mode`, the version 2 `phash` and the AD-form `<to>` are all genuinely correct and none of them was the cause; the envelope was being fixed while the contents were corrupt |
+
+Padding is now the encrypting layer's job on both paths:
+`encrypt_group_payload` applies it exactly as `prepare_payload` does, and no
+caller pads. `the_group_path_pads_exactly_once` drives a bare protobuf through
+the group path and requires it back byte for byte, so a second layer cannot
+return unnoticed.
+
+**The lesson worth keeping:** an intermittent, device-specific,
+"sometimes it decrypts" failure in a protobuf payload is a padding or framing
+bug, not a protocol one. Two accounts were spent looking at the envelope.
