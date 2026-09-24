@@ -16,7 +16,7 @@ use crate::{
     Result,
     binary::Node,
     model::{jid::Jid, time::Timestamp},
-    store::{ProtocolStore, Table},
+    store::{ProtocolStore, Table, WriteTx},
 };
 use serde::{Deserialize, Serialize};
 
@@ -235,5 +235,167 @@ mod tests {
             StatusReceiptKind::Played
         );
         assert!(list(&store, Some("OTHER")).unwrap().is_empty());
+    }
+}
+
+const LIKE_PREFIX: &str = "status-like:";
+
+/// Somebody's reaction to a status we posted — a "like".
+///
+/// A status reaction is an ordinary `Message.reactionMessage` (field 46) whose
+/// key names `status@broadcast` as the `remoteJid`; that is what distinguishes
+/// it from a reaction in a chat. In the APK it lands in `status_add_on` with
+/// `type = 1`, which a trigger counts into `status_interactions.reaction_count`.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct StatusLike {
+    /// The status reacted to, by wire id.
+    pub status_id: String,
+    /// Who reacted.
+    pub by: Jid,
+    /// The emoji; `None` is a reaction being *removed*, which is why an empty
+    /// text is kept as a record rather than dropped.
+    pub emoji: Option<String>,
+    /// When we recorded it.
+    pub at: Timestamp,
+}
+
+/// Recognize a status like in a decrypted payload. Returns `None` for a chat
+/// reaction or anything else — a reaction in a chat is not a status like and
+/// counting it as one would attribute it to the wrong thing entirely.
+pub fn like_from_payload(payload: &[u8], node: &Node) -> Option<StatusLike> {
+    let (remote_jid, _) = super::reactions::key_fields(payload)?;
+    let remote = remote_jid?;
+    if Jid::parse(&remote).ok()?.server != crate::model::jid::Server::Broadcast {
+        return None;
+    }
+    let reaction = super::reactions::decode(payload)?;
+    let by = node
+        .get_attr("participant")
+        .or_else(|| node.get_attr("from"))
+        .and_then(|v| {
+            v.as_jid()
+                .cloned()
+                .or_else(|| Jid::parse(v.as_text()?).ok())
+        })?;
+    if !by.is_user_like() {
+        return None;
+    }
+    Some(StatusLike {
+        status_id: reaction.target_id.as_str().to_owned(),
+        by: by.to_non_ad(),
+        emoji: reaction.emoji,
+        at: Timestamp::now(),
+    })
+}
+
+/// Record a like inside an existing transaction, so it commits with the message
+/// that carried it and cannot survive a rolled-back stanza.
+pub fn record_like_in(tx: &mut WriteTx<'_>, like: &StatusLike) -> Result<()> {
+    let key = format!("{LIKE_PREFIX}{}:{}", like.status_id, like.by);
+    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, like)
+}
+
+/// Every recorded like, for one status or all of them.
+pub fn list_likes(store: &ProtocolStore, status_id: Option<&str>) -> Result<Vec<StatusLike>> {
+    let wanted = status_id.map(|id| format!("{LIKE_PREFIX}{id}:"));
+    store.read(|tx| {
+        let mut out = Vec::new();
+        let mut cursor = None;
+        loop {
+            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 512)?;
+            let done = rows.len() < 512;
+            cursor = rows.last().map(|(key, _)| key.clone());
+            for (key, value) in rows {
+                let Ok(name) = std::str::from_utf8(&key) else {
+                    continue;
+                };
+                if !name.starts_with(LIKE_PREFIX) {
+                    continue;
+                }
+                if let Some(wanted) = &wanted
+                    && !name.starts_with(wanted.as_str())
+                {
+                    continue;
+                }
+                if let Ok(like) = serde_json::from_slice::<StatusLike>(&value) {
+                    out.push(like);
+                }
+            }
+            if done {
+                out.sort_by(|a, b| {
+                    a.status_id
+                        .cmp(&b.status_id)
+                        .then_with(|| a.by.to_string().cmp(&b.by.to_string()))
+                });
+                return Ok(out);
+            }
+        }
+    })
+}
+
+#[cfg(test)]
+mod like_tests {
+    use super::*;
+
+    fn payload(remote: &str, emoji: &str) -> Vec<u8> {
+        use prost::Message as _;
+        #[derive(prost::Message)]
+        struct Key {
+            #[prost(string, optional, tag = "1")]
+            remote_jid: Option<String>,
+            #[prost(string, optional, tag = "3")]
+            id: Option<String>,
+        }
+        #[derive(prost::Message)]
+        struct Reaction {
+            #[prost(message, optional, tag = "1")]
+            key: Option<Key>,
+            #[prost(string, optional, tag = "2")]
+            text: Option<String>,
+        }
+        #[derive(prost::Message)]
+        struct Envelope {
+            #[prost(message, optional, tag = "46")]
+            reaction: Option<Reaction>,
+        }
+        Envelope {
+            reaction: Some(Reaction {
+                key: Some(Key {
+                    remote_jid: Some(remote.into()),
+                    id: Some("STATUS1".into()),
+                }),
+                text: Some(emoji.into()),
+            }),
+        }
+        .encode_to_vec()
+    }
+
+    fn node() -> Node {
+        Node::new("message")
+            .attr("from", Jid::parse("status@broadcast").unwrap())
+            .attr("participant", Jid::parse("222222222222222@lid").unwrap())
+    }
+
+    /// The key's `remoteJid` is what makes a reaction a status like. A chat
+    /// reaction carries the chat there and must not be counted.
+    #[test]
+    fn only_a_reaction_keyed_to_status_broadcast_is_a_like() {
+        let like = like_from_payload(&payload("status@broadcast", "👍"), &node()).unwrap();
+        assert_eq!(like.status_id, "STATUS1");
+        assert_eq!(like.by, Jid::parse("222222222222222@lid").unwrap());
+        assert_eq!(like.emoji.as_deref(), Some("👍"));
+        assert!(
+            like_from_payload(&payload("15551234567@s.whatsapp.net", "👍"), &node()).is_none(),
+            "a chat reaction is not a status like"
+        );
+        assert!(like_from_payload(b"not a protobuf at all", &node()).is_none());
+    }
+
+    /// Removing a reaction sends an empty text; that is a record, not nothing,
+    /// or the like would appear to persist forever.
+    #[test]
+    fn a_removed_reaction_is_recorded_with_no_emoji() {
+        let like = like_from_payload(&payload("status@broadcast", ""), &node()).unwrap();
+        assert!(like.emoji.is_none());
     }
 }

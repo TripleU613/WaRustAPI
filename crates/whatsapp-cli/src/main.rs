@@ -2128,25 +2128,43 @@ async fn run(cli: Cli) -> Result<(), Error> {
             let c = open_client(&cli, false).await?;
             let rows =
                 whatsapp_api::transport::status_receipts::list(c.store(), status.as_deref())?;
+            let likes =
+                whatsapp_api::transport::status_receipts::list_likes(c.store(), status.as_deref())?;
+            // Last nine characters, the same masking `group list` uses.
+            fn tail(jid: &Jid) -> String {
+                jid.to_string()
+                    .chars()
+                    .rev()
+                    .take(9)
+                    .collect::<String>()
+                    .chars()
+                    .rev()
+                    .collect()
+            }
             if cli.json {
                 println!(
                     "{}",
-                    serde_json::to_string_pretty(&rows)
-                        .map_err(|_| Error::invalid("status_viewers", "cannot render JSON"))?
+                    serde_json::to_string_pretty(
+                        &serde_json::json!({ "receipts": rows, "likes": likes })
+                    )
+                    .map_err(|_| Error::invalid("status_viewers", "cannot render JSON"))?
                 );
             } else {
-                println!("status viewers: {} record(s)", rows.len());
+                println!(
+                    "status viewers: {} receipt(s), {} like(s)",
+                    rows.len(),
+                    likes.len()
+                );
                 for row in &rows {
-                    let viewer = row.viewer.to_string();
-                    let tail: String = viewer
-                        .chars()
-                        .rev()
-                        .take(9)
-                        .collect::<String>()
-                        .chars()
-                        .rev()
-                        .collect();
-                    println!("  {} …{tail} {:?}", row.status_id, row.kind);
+                    println!("  {} …{} {:?}", row.status_id, tail(&row.viewer), row.kind);
+                }
+                for like in &likes {
+                    println!(
+                        "  {} …{} liked {}",
+                        like.status_id,
+                        tail(&like.by),
+                        like.emoji.as_deref().unwrap_or("(removed)")
+                    );
                 }
             }
             Ok(())

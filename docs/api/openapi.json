@@ -1990,6 +1990,32 @@
           }
         },
         "description": "One viewer's report about one of our statuses. Observed shape: `<receipt from=<viewer> [type]><participants message_id=<status id>/></receipt>` — the status is named by the participants child, not the receipt's own id. Recorded only; this client sends no read receipts of its own."
+      },
+      "StatusLike": {
+        "type": "object",
+        "required": [
+          "status_id",
+          "by",
+          "at"
+        ],
+        "properties": {
+          "status_id": {
+            "type": "string",
+            "description": "The status reacted to, by wire id"
+          },
+          "by": {
+            "$ref": "#/components/schemas/Jid"
+          },
+          "emoji": {
+            "type": "string",
+            "nullable": true,
+            "description": "The emoji; null is a reaction being removed, recorded rather than dropped so a like does not appear to persist forever"
+          },
+          "at": {
+            "type": "integer"
+          }
+        },
+        "description": "A like on one of our statuses. A status reaction is an ordinary Message.reactionMessage (field 46) whose key names status@broadcast as the remoteJid — that is what distinguishes it from a chat reaction. In the APK it lands in status_add_on with type = 1, which a trigger counts into status_interactions.reaction_count."
       }
     }
   },
@@ -8601,8 +8627,8 @@
         "tags": [
           "Messaging"
         ],
-        "summary": "List who has received, viewed or played our statuses",
-        "description": "Offline. Lists the recorded status receipts: who reported, for which status, and how far they got (delivered, read, played). Records are kept at the furthest state a viewer reached, so a delivery replayed from an offline queue cannot demote a view. Reading this sends nothing and emits no read receipt of our own.",
+        "summary": "List who has received, viewed, played or liked our statuses",
+        "description": "Offline. Lists the recorded status receipts and likes: who reported, for which status, and how far they got (delivered, read, played), plus any reactions. Receipts are kept at the furthest state a viewer reached, so a delivery replayed from an offline queue cannot demote a view. Reading this sends nothing and emits no read receipt.",
         "operationId": "statusViewers",
         "x-cli": "whatsapp-cli status-viewers",
         "x-transport": [
@@ -8622,13 +8648,24 @@
         ],
         "responses": {
           "200": {
-            "description": "Recorded status receipts",
+            "description": "Recorded status receipts and likes",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/StatusReceipt"
+                  "type": "object",
+                  "properties": {
+                    "receipts": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/StatusReceipt"
+                      }
+                    },
+                    "likes": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/StatusLike"
+                      }
+                    }
                   }
                 }
               }
@@ -8636,7 +8673,8 @@
           }
         },
         "x-library": [
-          "whatsapp_api::transport::status_receipts::list"
+          "whatsapp_api::transport::status_receipts::list",
+          "whatsapp_api::transport::status_receipts::list_likes"
         ]
       }
     }

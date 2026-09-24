@@ -562,4 +562,25 @@ readable from them. Until that is traced, this client does not send a privacy
 request: the status audience is named per post in the private JSON instead,
 which needs no server setting at all.
 
-**Not implemented:** HD images, audio, and liking.
+## Likes: status reactions (implemented on receive)
+
+A status like is an ordinary `Message.reactionMessage` (field 46) whose key
+names **`status@broadcast`** as the `remoteJid` — that, not a separate message
+type, is what distinguishes it from a reaction in a chat. In the APK it lands in
+the `status_add_on` table with **`type = 1`**, which an `AFTER INSERT` trigger
+counts into `status_interactions.reaction_count`; `type = 0` is a different
+add-on kind that was not identified.
+
+`status_receipts::like_from_payload` recognizes one and records it in the same
+transaction as the message that carried it, so a like cannot survive a
+rolled-back stanza. A reaction being *removed* arrives with empty text and is
+recorded with no emoji rather than dropped, or the like would appear to persist
+for ever. `whatsapp-cli status-viewers` lists receipts and likes together.
+
+Note this already flowed through as a `MessageUpdated` event before any of this
+existed, because the reaction path is generic over the chat; what was missing
+was a place to *ask* who liked a status rather than replaying the journal.
+
+**Not implemented:** sending a like (the target a reaction is addressed to for a
+status — the poster directly, or `status@broadcast` — was not established), HD
+images, and audio.

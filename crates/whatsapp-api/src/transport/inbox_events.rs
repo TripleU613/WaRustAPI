@@ -482,6 +482,12 @@ pub(super) fn publish(
     payload: &[u8],
 ) -> Result<bool> {
     let poll = poll_context(tx, node, payload)?;
+    // A reaction whose key names `status@broadcast` is a like on a status,
+    // which belongs with the viewer records rather than only in the event
+    // journal. Recording it writes nothing outward.
+    if let Some(like) = super::status_receipts::like_from_payload(payload, node) {
+        super::status_receipts::record_like_in(tx, &like)?;
+    }
     let own = super::inbox::own_identities_in(tx)?;
     let projected = project(key, node, payload, None, poll.as_ref(), &own);
     #[cfg(feature = "experimental-registration-https")]
