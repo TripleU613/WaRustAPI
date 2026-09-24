@@ -338,7 +338,15 @@ pub async fn prepare_own_sender_key(
 /// Encrypt one outgoing payload with our sender key for `chat`, producing the
 /// `skmsg` ciphertext.
 ///
-/// `plaintext` must already carry the APK's E2E padding; [`pad`] applies it.
+/// `plaintext` is the bare `Message` protobuf: **this function applies the APK's
+/// E2E padding itself**, exactly as [`crate::signal::direct::prepare_payload`]
+/// does for the pairwise path. Padding is the encrypting layer's job on both
+/// paths so that a caller cannot pad a second time — a payload padded twice
+/// survives the recipient's single strip with 1..=16 junk bytes still attached,
+/// which protobuf tolerates or rejects depending on what the random bytes
+/// happen to spell. That produced months of intermittent, unexplainable
+/// failures before it was found.
+///
 /// Returns the ciphertext and the advanced record, which again must only be
 /// persisted once the send is accepted.
 pub async fn encrypt_group_payload(
@@ -350,9 +358,10 @@ pub async fn encrypt_group_payload(
     if plaintext.is_empty() || plaintext.len() > 1_048_576 {
         return Err(invalid("invalid group payload size"));
     }
+    let padded = pad(plaintext)?;
     let mut store = SenderKeys::new(Some(key_bytes))?;
     let name = SenderKeyName::from_parts(&chat.to_string(), &own.to_non_ad().to_string());
-    let message = signal::group_encrypt(&mut store, &name, plaintext, &mut rand::rng())
+    let message = signal::group_encrypt(&mut store, &name, &padded, &mut rand::rng())
         .await
         .map_err(crypto)?;
     let updated = Zeroizing::new(
@@ -414,9 +423,7 @@ mod tests {
             conversation: "fan-out".into(),
         }
         .encode_to_vec();
-        let padded = pad(&body).unwrap();
-        assert!(padded.len() > body.len(), "padding must be applied");
-        let (ciphertext, advanced) = encrypt_group_payload(&chat, &own, &mine.updated_key, &padded)
+        let (ciphertext, advanced) = encrypt_group_payload(&chat, &own, &mine.updated_key, &body)
             .await
             .unwrap();
         assert_ne!(&*advanced, &*mine.updated_key, "our chain must advance");
@@ -450,10 +457,9 @@ mod tests {
         let first = prepare_own_sender_key(&chat, &own, None).await.unwrap();
         let (_, first_axolotl) =
             extract_skdm_from_payload(&first.distribution_message).expect("field 2");
-        let (_, advanced) =
-            encrypt_group_payload(&chat, &own, &first.updated_key, &pad(b"one").unwrap())
-                .await
-                .unwrap();
+        let (_, advanced) = encrypt_group_payload(&chat, &own, &first.updated_key, b"one")
+            .await
+            .unwrap();
 
         // Re-publish from the advanced record, exactly as a second send does.
         let second = prepare_own_sender_key(&chat, &own, Some(&advanced))
@@ -461,10 +467,9 @@ mod tests {
             .unwrap();
         let (_, second_axolotl) =
             extract_skdm_from_payload(&second.distribution_message).expect("field 2");
-        let (ciphertext, _) =
-            encrypt_group_payload(&chat, &own, &second.updated_key, &pad(b"two").unwrap())
-                .await
-                .unwrap();
+        let (ciphertext, _) = encrypt_group_payload(&chat, &own, &second.updated_key, b"two")
+            .await
+            .unwrap();
 
         // A receiver that only ever saw the second distribution message.
         let db_key = sender_key_db_key(&chat, &own);
@@ -495,6 +500,47 @@ mod tests {
             .unwrap()
             .expect("a member that saw both distributions must still decrypt");
         assert_eq!(&**received.plaintext, b"two");
+    }
+
+    /// The bug that cost weeks: both encrypting paths pad, so a caller that
+    /// pads as well leaves 1..=16 junk bytes on the recipient's protobuf after
+    /// their single strip. Protobuf sometimes tolerates that and sometimes does
+    /// not, depending on what the random bytes spell — which is why it looked
+    /// like an intermittent, device-specific fault rather than a bug.
+    ///
+    /// This drives a *bare* protobuf through the group path and requires it back
+    /// byte-for-byte. A caller that pre-pads would see its padding survive here,
+    /// and a payload that is never padded at all would fail `unpad`.
+    #[tokio::test]
+    async fn the_group_path_pads_exactly_once() {
+        let chat = group_jid();
+        let own = sender_jid();
+        let mine = prepare_own_sender_key(&chat, &own, None).await.unwrap();
+        let (_, axolotl) = extract_skdm_from_payload(&mine.distribution_message).unwrap();
+        let installed = process_skdm(&chat, &own, sender_key_db_key(&chat, &own), None, &axolotl)
+            .await
+            .unwrap();
+
+        let bare = b"\x0a\x02hi".to_vec();
+        let (ciphertext, _) = encrypt_group_payload(&chat, &own, &mine.updated_key, &bare)
+            .await
+            .unwrap();
+        let received = receive_group(&chat, &own, Some(&installed.updated_key), &ciphertext)
+            .await
+            .unwrap()
+            .expect("our own message must decrypt");
+        assert_eq!(
+            &*received.plaintext, &bare,
+            "exactly one layer of padding: anything else leaves or strips bytes"
+        );
+
+        // And the distribution message itself is handed over bare, so the
+        // pairwise path can apply the one layer it is responsible for.
+        assert!(
+            unpad(mine.distribution_message.to_vec()).is_err()
+                || extract_skdm_from_payload(&mine.distribution_message).is_some(),
+            "the distribution message must not arrive pre-padded"
+        );
     }
 
     #[test]

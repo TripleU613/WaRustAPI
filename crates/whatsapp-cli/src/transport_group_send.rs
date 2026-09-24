@@ -13,7 +13,7 @@ use whatsapp_api::{
     session::AccountRecord,
     signal::{
         direct::prekey_bundle_for,
-        group::{encrypt_group_payload, pad, prepare_own_sender_key, sender_key_db_key},
+        group::{encrypt_group_payload, prepare_own_sender_key, sender_key_db_key},
     },
     store::{ProtocolStore, Table},
     transport::{
@@ -226,7 +226,10 @@ pub(super) async fn send(
     let previous_key: Option<Vec<u8>> =
         store.read(|tx| tx.get_json(Table::SenderKeys, &own_key_db, 1))?;
     let minted = prepare_own_sender_key(chat, &own, previous_key.as_deref()).await?;
-    let skdm_payload = pad(&minted.distribution_message)?;
+    // Not padded here: `prepare_payload` applies the E2E padding itself. Doing
+    // it twice leaves junk bytes on the recipient's protobuf after their single
+    // strip, which is what made this fail intermittently for weeks.
+    let skdm_payload = minted.distribution_message.clone();
 
     let mut fanout = Vec::new();
     let mut updates = Vec::new();
@@ -270,7 +273,7 @@ pub(super) async fn send(
         );
     }
 
-    let plaintext = pad(&group_send::text_payload(&message.text)?)?;
+    let plaintext = group_send::text_payload(&message.text)?;
     let (skmsg, advanced_key) =
         encrypt_group_payload(chat, &own, &minted.updated_key, &plaintext).await?;
 
@@ -514,7 +517,7 @@ async fn answer_retries(
             Some(&bundle),
             None,
             identity.as_deref(),
-            &pad(distribution)?,
+            distribution,
         )
         .await?;
         let resend = groups::sender_key_stanza(
