@@ -502,6 +502,64 @@ its fields are named `participantUsersHash` and `participantDevicesHash`, which
 identifies `SendE2EMessageJob`'s `groupParticipantUserHash` as the **users**
 hash and `groupParticipantHash` as the **devices** hash.
 
-**Not implemented:** HD images, audio, liking, and reposting (which
-[does not exist in this build](#) — `repost`, `Repost`, `forwardingScore` and
-`originalStatusId` all have zero references).
+## Correction: resharing exists, under a different name
+
+An earlier entry in this document recorded "resharing/reposting does not exist in
+this build" as a confirmed negative, on the strength of `repost`, `Repost`,
+`forwardingScore` and `originalStatusId` all having zero references. **That
+conclusion was wrong**: the feature is called **reshare**, and the build is full
+of it — `can_be_reshared` and `audience_type` columns on `status_message_info`,
+a `status_question_reshare_pointer` table, `StatusReshares(reshares=…)`,
+`total_reshares_per_day` in `status_ranking`, and
+`StatusPlaybackReshareHandler/reshareFailure`.
+
+The lesson is the one the working agreement already states and this document
+broke: a negative result is only as good as the names searched. "Not found" needs
+the search terms recorded beside it so the next reader can see what was *not*
+looked for.
+
+## Views: status receipts (observed 2026-09-24)
+
+After this client's first status post, the server delivered receipts of a shape
+the chat path does not produce:
+
+```
+<receipt from=<viewer> id=<receipt id> [type] t=…>
+  <participants message_id=<status id>/>
+</receipt>
+```
+
+The status is named by `participants/@message_id`, **not** by the receipt's own
+`id`. No `type` is a delivery, `read` is a view and `played` is a video watched
+or a voice status heard — the same convention the chat receipts use.
+
+`transport::status_receipts` parses and records these, keeping the furthest
+state a viewer reached so that a delivery replayed from an offline queue cannot
+demote a view. `whatsapp-cli status-viewers` lists them offline. Recording is
+one-directional: this client still sends no read receipt of its own, so learning
+that somebody viewed our status does not tell anybody that we viewed theirs.
+
+## Status privacy: the surface, traced but not wired
+
+`LX/I4X` maps the privacy settings this build knows. Categories:
+`status`, `statusview`, `last`, `online`, `profile`, `cover_photo`, `messages`,
+`pix`, `channelcreation`, `channelview`. Values: `all`, `contacts`, `none`,
+`known`, `contact_blacklist` (everyone except a list), `contact_allowlist` (only
+a list), `match_last_seen`, `off`, `on_standard`, `with_pin`.
+
+`LX/FCM->A00(name, dhash, allowlist)` builds a `<category>`'s attributes —
+`name`, `value` (`contact_allowlist` or `contact_blacklist`) and an optional
+`dhash` over the list. The audience lists themselves live in
+`status_privacy_custom_list` (`list_id`, `name`, `emoji`, `is_selected`,
+`member_jids`, `source_group_jids`, `allow_list_selected`).
+
+**Unknown, and deliberately not guessed:** the IQ that carries this. Setting now
+goes through `MexSetPrivacySettingsHandler` (a MEX/GraphQL path), and whether a
+classic `<iq xmlns="privacy">` still reads it was not established — the two
+call sites of `FCM->A00` are inside classes whose other strings show they are
+Facebook's bundled multi-`run()` shells, so the enclosing stanza was not
+readable from them. Until that is traced, this client does not send a privacy
+request: the status audience is named per post in the private JSON instead,
+which needs no server setting at all.
+
+**Not implemented:** HD images, audio, and liking.

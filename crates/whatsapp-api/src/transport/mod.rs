@@ -144,6 +144,7 @@ pub mod selector;
 pub mod send_path;
 #[cfg(feature = "experimental-transport")]
 pub mod socket;
+pub mod status_receipts;
 #[cfg(all(
     feature = "experimental-registration-https",
     feature = "experimental-signal-crypto",

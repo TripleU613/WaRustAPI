@@ -445,6 +445,12 @@ pub(crate) async fn drive(
                 let received = super::inbox::process(&store, &account, &node, &capture).await?;
                 super::receipts::record(&store, &node)?;
                 super::receipts::record_ack(&store, &node)?;
+                // Who has received or viewed a status we posted. Recording it
+                // sends nothing: this is their report about our status, not a
+                // read receipt we emit for theirs.
+                if let Some(receipt) = super::status_receipts::parse(&node) {
+                    super::status_receipts::record(&store, &receipt)?;
+                }
                 if let Some(ack)=super::notifications::handle(&store, &node)? {link.send(&ack).await?;}
                 if let Some(change) = super::devices::notification(&node) {
                     // LX/11Q.A09: acknowledge after capture, then record the contact for a

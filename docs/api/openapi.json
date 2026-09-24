@@ -1958,6 +1958,38 @@
           }
         },
         "description": "A styled text status. Posted through the same sender-key fan-out as a group message, addressed to status@broadcast, with no addressing_mode and no phash (neither is observed on an incoming status)."
+      },
+      "StatusReceipt": {
+        "type": "object",
+        "required": [
+          "status_id",
+          "viewer",
+          "kind",
+          "at"
+        ],
+        "properties": {
+          "status_id": {
+            "type": "string",
+            "description": "The status we posted, by wire id"
+          },
+          "viewer": {
+            "$ref": "#/components/schemas/Jid"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "Delivered",
+              "Read",
+              "Played"
+            ],
+            "description": "Delivered (receipt with no type), Read (viewed), Played (video watched or voice heard)"
+          },
+          "at": {
+            "type": "integer",
+            "description": "When we recorded it"
+          }
+        },
+        "description": "One viewer's report about one of our statuses. Observed shape: `<receipt from=<viewer> [type]><participants message_id=<status id>/></receipt>` — the status is named by the participants child, not the receipt's own id. Recorded only; this client sends no read receipts of its own."
       }
     }
   },
@@ -8561,6 +8593,50 @@
         },
         "x-library": [
           "whatsapp_api::registration::RegistrationService::resend_code"
+        ]
+      }
+    },
+    "/v1/status/viewers": {
+      "get": {
+        "tags": [
+          "Messaging"
+        ],
+        "summary": "List who has received, viewed or played our statuses",
+        "description": "Offline. Lists the recorded status receipts: who reported, for which status, and how far they got (delivered, read, played). Records are kept at the furthest state a viewer reached, so a delivery replayed from an offline queue cannot demote a view. Reading this sends nothing and emits no read receipt of our own.",
+        "operationId": "statusViewers",
+        "x-cli": "whatsapp-cli status-viewers",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Only this status, by wire id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recorded status receipts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StatusReceipt"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::status_receipts::list"
         ]
       }
     }

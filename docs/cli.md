@@ -1150,6 +1150,18 @@ Usage: whatsapp-cli cancel [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 | --local-id | LOCAL_ID | yes |  |  |  | Local message id (32 hex chars) from the ticket |
 
+## whatsapp-cli status-viewers
+
+List who has received, viewed or played the statuses we posted (offline)
+
+```
+Usage: whatsapp-cli status-viewers [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --status | STATUS | no |  |  |  | Only this status, by its wire id |
+
 ## whatsapp-cli events
 
 Read durable events for a consumer

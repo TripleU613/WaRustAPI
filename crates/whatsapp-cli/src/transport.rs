@@ -493,6 +493,11 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                     format!("inbound:{capture}:{index}").as_bytes(),
                 )
                 .await?;
+                if let Some(receipt) = whatsapp_api::transport::status_receipts::parse(&node)
+                    && whatsapp_api::transport::status_receipts::record(&store, &receipt)?
+                {
+                    println!("transport: recorded a status receipt from one viewer");
+                }
                 let tracked = whatsapp_api::transport::receipts::record(&store, &node)?;
                 if tracked > 0 {
                     println!("transport: updated {tracked} outgoing receipt records");

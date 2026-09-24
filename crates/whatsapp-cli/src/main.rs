@@ -611,6 +611,13 @@ enum Cmd {
         #[arg(long)]
         local_id: String,
     },
+    /// List who has received, viewed or played the statuses we posted (offline).
+    #[cfg(feature = "experimental-transport")]
+    StatusViewers {
+        /// Only this status, by its wire id.
+        #[arg(long)]
+        status: Option<String>,
+    },
     /// Read durable events for a consumer.
     Events {
         /// Print event kinds only, without message content or identifiers.
@@ -2115,6 +2122,34 @@ async fn run(cli: Cli) -> Result<(), Error> {
             } else {
                 Err(Error::invalid("local_id", "unknown local message id"))
             }
+        }
+        #[cfg(feature = "experimental-transport")]
+        Cmd::StatusViewers { status } => {
+            let c = open_client(&cli, false).await?;
+            let rows =
+                whatsapp_api::transport::status_receipts::list(c.store(), status.as_deref())?;
+            if cli.json {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&rows)
+                        .map_err(|_| Error::invalid("status_viewers", "cannot render JSON"))?
+                );
+            } else {
+                println!("status viewers: {} record(s)", rows.len());
+                for row in &rows {
+                    let viewer = row.viewer.to_string();
+                    let tail: String = viewer
+                        .chars()
+                        .rev()
+                        .take(9)
+                        .collect::<String>()
+                        .chars()
+                        .rev()
+                        .collect();
+                    println!("  {} …{tail} {:?}", row.status_id, row.kind);
+                }
+            }
+            Ok(())
         }
         Cmd::Events {
             summary,
