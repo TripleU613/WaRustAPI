@@ -1150,9 +1150,23 @@ Usage: whatsapp-cli cancel [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 | --local-id | LOCAL_ID | yes |  |  |  | Local message id (32 hex chars) from the ticket |
 
+## whatsapp-cli two-factor
+
+Set, change or turn off two-step verification (offline; a session transmits it). The PIN is read from redirected stdin, never an argument
+
+```
+Usage: whatsapp-cli two-factor [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --set-pin | SET_PIN | no |  |  | `true`, `false` | Read a six-digit PIN from stdin and set it |
+| --disable | DISABLE | no |  |  | `true`, `false` | Turn two-step verification off. Sends an empty code |
+| --email | EMAIL | no |  |  |  | Recovery email address to store alongside the PIN |
+
 ## whatsapp-cli status-viewers
 
-List who has received, viewed or played the statuses we posted (offline)
+List who has received, viewed, played or liked the statuses we posted (offline)
 
 ```
 Usage: whatsapp-cli status-viewers [OPTIONS]...

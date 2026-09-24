@@ -611,7 +611,22 @@ enum Cmd {
         #[arg(long)]
         local_id: String,
     },
-    /// List who has received, viewed or played the statuses we posted (offline).
+    /// Set, change or turn off two-step verification (offline; a session
+    /// transmits it). The PIN is read from redirected stdin, never an argument.
+    #[cfg(feature = "experimental-transport")]
+    TwoFactor {
+        /// Read a six-digit PIN from stdin and set it.
+        #[arg(long)]
+        set_pin: bool,
+        /// Turn two-step verification off. Sends an empty code.
+        #[arg(long, conflicts_with = "set_pin")]
+        disable: bool,
+        /// Recovery email address to store alongside the PIN.
+        #[arg(long)]
+        email: Option<String>,
+    },
+    /// List who has received, viewed, played or liked the statuses we posted
+    /// (offline).
     #[cfg(feature = "experimental-transport")]
     StatusViewers {
         /// Only this status, by its wire id.
@@ -2122,6 +2137,54 @@ async fn run(cli: Cli) -> Result<(), Error> {
             } else {
                 Err(Error::invalid("local_id", "unknown local message id"))
             }
+        }
+        #[cfg(feature = "experimental-transport")]
+        Cmd::TwoFactor {
+            set_pin,
+            disable,
+            email,
+        } => {
+            use whatsapp_api::transport::two_factor::{TwoFactorChange, queue_set};
+            let c = open_client(&cli, false).await?;
+            // Read the PIN the way the registration path reads an OTP: from
+            // redirected stdin, never a command-line argument, never echoed.
+            let pin = if *set_pin {
+                use std::io::Read;
+                let mut typed = Zeroizing::new(String::new());
+                std::io::stdin()
+                    .take(64)
+                    .read_to_string(&mut typed)
+                    .map_err(|_| Error::invalid("two_factor", "cannot read the PIN from stdin"))?;
+                Some(Zeroizing::new(typed.trim().to_owned()))
+            } else if *disable {
+                Some(Zeroizing::new(String::new()))
+            } else {
+                None
+            };
+            if pin.is_none() && email.is_none() {
+                return Err(Error::invalid(
+                    "two_factor",
+                    "pass --set-pin, --disable or --email",
+                ));
+            }
+            let id = queue_set(
+                c.store(),
+                &TwoFactorChange {
+                    code: pin.as_deref().map(|p| p.as_str()),
+                    email: email.as_deref(),
+                },
+            )?;
+            println!(
+                "two-factor: {} queued (action {id}); a session transmits it",
+                if *disable {
+                    "removal"
+                } else if *set_pin {
+                    "new PIN"
+                } else {
+                    "recovery address"
+                }
+            );
+            Ok(())
         }
         #[cfg(feature = "experimental-transport")]
         Cmd::StatusViewers { status } => {

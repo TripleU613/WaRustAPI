@@ -8707,6 +8707,54 @@
           "whatsapp_api::transport::status_receipts::list_likes"
         ]
       }
+    },
+    "/v1/account/two-factor": {
+      "post": {
+        "tags": [
+          "Lab"
+        ],
+        "summary": "Set, change or turn off two-step verification",
+        "description": "Queues an `iq xmlns=\"urn:xmpp:whatsapp:account\" type=\"set\"` carrying `<2fa>` with a `<code>` and/or `<email>` child (confirmed from LX/0lo->A06, TwoFactorXmppMethods/sendSetTwoFactorAuth). Each child is included only when supplied, so setting a PIN cannot clear the recovery address as a side effect, and an empty code turns two-step verification off. The PIN is read from redirected stdin, never a command-line argument, and is never echoed or logged. Distinct from `lab-signup verify-pin`, which answers a PIN challenge rather than changing the PIN. Offline: a session transmits the queued action.",
+        "operationId": "setTwoFactor",
+        "x-cli": "whatsapp-cli two-factor",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "set_pin": {
+                    "type": "boolean",
+                    "description": "Read a six-digit PIN from stdin and set it"
+                  },
+                  "disable": {
+                    "type": "boolean",
+                    "description": "Turn two-step verification off (sends an empty code)"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Recovery email address"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Queued action id"
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::two_factor::queue_set",
+          "whatsapp_api::transport::two_factor::set_request"
+        ]
+      }
     }
   }
 }
