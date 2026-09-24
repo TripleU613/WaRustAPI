@@ -7,13 +7,24 @@ xmlns="urn:xmpp:whatsapp:account" type="set"><2fa><code/><email/></2fa>`, each
 child present only when supplied — so setting a PIN cannot clear the recovery
 address as a side effect, and an empty code turns 2FA off.
 
-A PIN was generated and queued for the working account. It was **transmitted**,
-but the reply was lost: an undecryptable incoming message was ending the whole
-session (see below), so the action is recorded as `Sent` with no outcome. It has
-**not** been resent — a one-shot action with an unknown result stays unknown.
-There is no server-side read to check against: WhatsApp keeps the code in local
-preferences (`two_factor_auth_code`), not on the server. The PIN itself is in
-private lab storage, mode 0600, outside Git.
+**A PIN is set on the working account**, confirmed by `iq type=result`. The PIN
+itself is in private lab storage, mode 0600, outside Git.
+
+Getting to that confirmation is the interesting part. The first attempt was
+transmitted and its reply was lost — an undecryptable incoming message was ending
+the whole session (see below), and IQ replies are not redelivered, so the outcome
+was genuinely unrecoverable: the id does not appear among any of the 46 preserved
+`iq` frames. There is no server-side read to check against either, since WhatsApp
+keeps the code in local preferences (`two_factor_auth_code`) rather than on the
+server.
+
+What resolved it was **idempotence**, not a replay. Setting the same PIN to the
+same value leaves the same state whether or not the first attempt landed, so
+issuing it again could not produce a second effect — which is the actual reason
+the no-replay rule exists. A fresh action was queued with the identical value
+over the now-stable connection and answered `result`. The first attempt stays
+recorded as `Sent`/unknown rather than being rewritten, because that is what it
+was.
 
 **A single undecryptable message was ending the connection.** `inbox::process`
 propagated the Signal failure instead of degrading, so every stanza queued behind

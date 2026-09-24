@@ -432,3 +432,32 @@ Validate the exact APK/profile and remaining registration assumptions, wire an
 operator-controlled onboarding command, then test one authorized registration.
 Authenticated login, Signal session/prekey integration, and a transmission path
 remain necessary after registration. `NoBackend` still handles messaging.
+
+## Two-step verification, and resolving an unknown outcome (2026-09-24)
+
+Setting the PIN is `LX/0lo->A06` (`TwoFactorXmppMethods/sendSetTwoFactorAuth`),
+**confirmed**: `<iq xmlns="urn:xmpp:whatsapp:account" type="set"><2fa>` with
+`<code>` and/or `<email>` children, each present only when supplied. A code alone
+changes the PIN, an address alone changes the recovery email, and an **empty
+code turns two-step verification off**. Emitting an unwanted empty `<email/>`
+alongside a PIN would clear the operator's recovery address as a side effect, so
+the builder never does.
+
+There is **no server-side read**. `LX/0lo`'s other methods show the code kept in
+local preferences (`two_factor_auth_code`, `two_factor_auth_using_encryption`),
+so a client cannot ask the server what the current PIN is — only set it.
+
+**On resolving an unknown outcome.** The first set was transmitted and its reply
+never arrived, because a decryption failure was ending the session and IQ replies
+are not redelivered. The rule this project follows — an uncertain outcome is not
+re-sent — exists to stop a second *effect*, and the thing it guards against is
+duplication. Setting the same PIN to the same value has no second effect: the end
+state is identical whether the first attempt landed or not. So the resolution was
+to issue the identical change again, which is idempotence rather than a replay,
+and it answered `result`.
+
+That distinction matters and is worth keeping: *re-sending is unsafe when the
+operation is not idempotent*. A message, a group create, a payment — those must
+never be repeated on an unknown outcome. A set-to-a-known-value may be. The
+original uncertain action is left recorded as `Sent` rather than rewritten,
+because that is what happened to it.
