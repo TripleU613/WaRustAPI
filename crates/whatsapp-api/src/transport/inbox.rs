@@ -287,6 +287,35 @@ pub async fn process(
     node: &Node,
     capture: &[u8],
 ) -> Result<IncomingResult> {
+    // One message we cannot open must not end the session. The group path has
+    // degraded like this since the first live group stanza; the direct path
+    // still propagated, so a single undecryptable `pkmsg` tore down the whole
+    // connection and every stanza queued behind it went unprocessed.
+    //
+    // Only the Signal layer's own failures are degraded, by their `field`. A
+    // transactional failure *after* a successful decryption also surfaces as
+    // `InvalidInput`, and that one must keep propagating: it means the advanced
+    // session and the inbox write rolled back together, which the caller has to
+    // see rather than have reported as an ordinary undecryptable message.
+    match process_direct(store, account, node, capture).await {
+        Err(Error::InvalidInput { field, reason }) if field == "direct_message" => {
+            tracing::warn!(
+                field,
+                reason,
+                "message preserved but not decrypted; session continues"
+            );
+            Ok(IncomingResult::Undecryptable)
+        }
+        other => other,
+    }
+}
+
+async fn process_direct(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    node: &Node,
+    capture: &[u8],
+) -> Result<IncomingResult> {
     if node.description != "message" {
         return Ok(IncomingResult::Unsupported);
     }
@@ -859,6 +888,49 @@ async fn process_group_inner(
         }
         Ok(IncomingResult::Decrypted)
     })
+}
+
+#[cfg(test)]
+mod resilience_tests {
+    use super::*;
+    use crate::{
+        model::ids::AccountId,
+        store::{MasterKey, OpenOptions, StaticKeySource},
+    };
+
+    /// A message we cannot open must not end the session. Before this, a single
+    /// undecryptable `pkmsg` propagated out of `process` and tore down the whole
+    /// connection, so every stanza queued behind it went unprocessed — which
+    /// looked like the server hanging up on us.
+    #[tokio::test]
+    async fn an_undecryptable_message_does_not_end_the_session() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("p.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([3; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let account = AccountRecord::default();
+        // A direct `msg` from a peer we hold no session for: unopenable.
+        let node = Node::new("message")
+            .attr("from", Jid::parse("15551234567@s.whatsapp.net").unwrap())
+            .attr("id", "M1")
+            .attr("type", "text")
+            .children(vec![
+                Node::new("enc")
+                    .attr("v", "2")
+                    .attr("type", "msg")
+                    .bytes(vec![9; 48]),
+            ]);
+        let result = process(&store, &account, &node, b"capture:1").await;
+        assert!(
+            result.is_ok(),
+            "an unopenable message must not propagate an error out of process"
+        );
+        assert_eq!(result.unwrap(), IncomingResult::Undecryptable);
+    }
 }
 
 #[cfg(test)]

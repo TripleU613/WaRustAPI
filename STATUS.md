@@ -1,5 +1,28 @@
 # Status — 2026-09-24
 
+**Two-step verification can be set, and one attempt has an uncertain outcome.**
+The request shape is confirmed from `LX/0lo->A06`
+(`TwoFactorXmppMethods/sendSetTwoFactorAuth`): `<iq
+xmlns="urn:xmpp:whatsapp:account" type="set"><2fa><code/><email/></2fa>`, each
+child present only when supplied — so setting a PIN cannot clear the recovery
+address as a side effect, and an empty code turns 2FA off.
+
+A PIN was generated and queued for the working account. It was **transmitted**,
+but the reply was lost: an undecryptable incoming message was ending the whole
+session (see below), so the action is recorded as `Sent` with no outcome. It has
+**not** been resent — a one-shot action with an unknown result stays unknown.
+There is no server-side read to check against: WhatsApp keeps the code in local
+preferences (`two_factor_auth_code`), not on the server. The PIN itself is in
+private lab storage, mode 0600, outside Git.
+
+**A single undecryptable message was ending the connection.** `inbox::process`
+propagated the Signal failure instead of degrading, so every stanza queued behind
+it went unprocessed and `listen` reported the server hanging up — our own error
+doing it. Now degraded to `Undecryptable`, but only for the Signal layer's own
+failures; a post-decryption transactional rollback still propagates, which an
+existing test caught when the first version of the fix swallowed it.
+
+
 **APP-STATE WRITES WORK (2026-09-24).** A `contactAction` patch was accepted:
 `iq type=result` with `<collection name="critical_unblock_low" version="1"/>`.
 

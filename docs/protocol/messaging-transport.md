@@ -699,3 +699,20 @@ sender choose between reusing their session and fetching a fresh bundle.
 
 Offline replay counts an undecryptable capture rather than answering it: a
 replay sends nothing.
+
+## One bad message must not end the session (2026-09-24)
+
+`inbox::process` propagated a decryption failure straight out, so a single
+undecryptable `pkmsg` tore down the whole connection and every stanza queued
+behind it went unprocessed. From the outside this looked like the server hanging
+up on us — `listen` reported "connection ended; reconnect bounds exhausted",
+repeatedly, and it was our own error doing it.
+
+The group path had degraded like this since the first live group stanza. The
+direct path now does too, but **only for the Signal layer's own failures**,
+matched by `field == "direct_message"`. A transactional failure *after* a
+successful decryption also surfaces as `InvalidInput`, and that one keeps
+propagating: it means the advanced session and the inbox write rolled back
+together, which the caller must see rather than have reported as an ordinary
+undecryptable message. An existing rollback test caught exactly that distinction
+when the first, broader version of this change swallowed it.
