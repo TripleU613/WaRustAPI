@@ -1,4 +1,4 @@
-# Status — 2026-09-23
+# Status — 2026-09-24
 
 **App-state patch: third refusal, one cause eliminated (2026-09-22).** Reading
 `LX/CRA->A00`, the site that actually assembles an outgoing `SyncdPatch`, showed
