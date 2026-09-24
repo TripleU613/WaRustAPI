@@ -816,3 +816,29 @@ return unnoticed.
 **The lesson worth keeping:** an intermittent, device-specific,
 "sometimes it decrypts" failure in a protobuf payload is a padding or framing
 bug, not a protocol one. Two accounts were spent looking at the envelope.
+
+
+## Replies and reactions in a group (2026-09-24)
+
+Both are the same fan-out carrying a different payload, so nothing about the
+stanza changes — only the `Message` inside it.
+
+A **reply** is `extendedTextMessage` with a `contextInfo` naming the quoted
+message (`stanzaId`, `participant`, `quotedMessage`), which the receive path has
+decoded since the direct-chat work.
+
+A **reaction** needed a new builder. `reactions::payload` deliberately leaves
+`key.participant` unset, because in a direct chat the chat and message id
+identify the message on their own. In a group they do not: the same id from two
+members is two different messages, and `participant` is exactly the field the
+receive path reads to attribute one. `reactions::group_payload` sets it, and
+refuses a direct chat so the two cannot be confused.
+
+The private JSON expresses both through one `quote` object, distinguished by
+whether it carries an `emoji`. A reaction is also the one message with no body
+of its own, so the "exactly one of text/image/voice_note" rule now expects zero
+for it — a reaction with a body, or a reply without one, is rendered as
+something else entirely by the recipient.
+
+Both were transmitted live and acknowledged on 2026-09-24; handset rendering was
+not separately confirmed.

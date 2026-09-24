@@ -208,7 +208,26 @@ pub(super) async fn send(
         ));
     }
 
-    let payload = group_send::text_payload(&message.text)?;
+    // A reply or a reaction is the same fan-out carrying a different payload.
+    let payload = match &message.quote {
+        Some(quote) if quote.is_reaction() => whatsapp_api::transport::reactions::group_payload(
+            chat,
+            &quote.sender()?,
+            &quote.message_id,
+            false,
+            quote.emoji.as_deref().filter(|e| !e.is_empty()),
+            Timestamp::now().0,
+        )?,
+        Some(quote) => whatsapp_api::transport::quotes::reply_payload(
+            &message.text,
+            &quote.message_id,
+            &quote.sender()?.to_string(),
+            whatsapp_api::transport::quotes::conversation(
+                quote.quoted_text.as_deref().map_or("", |t| t.as_str()),
+            ),
+        ),
+        None => group_send::text_payload(&message.text)?,
+    };
     transmit(
         store,
         account,

@@ -99,6 +99,56 @@ pub fn payload(
     Ok(envelope.encode_to_vec())
 }
 
+/// Encode a reaction to a message in a **group or status**, where the key must
+/// name the original sender.
+///
+/// A direct reaction's key identifies the message by chat and id alone, because
+/// there is only one other party. In a group the same id is ambiguous without
+/// `participant`, which is exactly the field the receive path reads to attribute
+/// a reaction — and the one the direct builder deliberately leaves unset.
+///
+/// `from_me` is the *reacting* side's view of the target: true when we are
+/// reacting to our own message.
+pub fn group_payload(
+    chat: &Jid,
+    participant: &Jid,
+    target_id: &str,
+    from_me: bool,
+    emoji: Option<&str>,
+    sender_timestamp_ms: i64,
+) -> Result<Vec<u8>> {
+    if !matches!(
+        chat.server,
+        crate::model::jid::Server::Group | crate::model::jid::Server::Broadcast
+    ) {
+        return Err(invalid("a group reaction targets a group or broadcast"));
+    }
+    if target_id.is_empty() || target_id.len() > 128 {
+        return Err(invalid("invalid target message id"));
+    }
+    if let Some(text) = emoji
+        && (text.is_empty() || text.len() > MAX_TEXT_BYTES || text.chars().any(char::is_control))
+    {
+        return Err(invalid(
+            "reaction text must be 1..=64 bytes without control characters",
+        ));
+    }
+    Ok(Envelope {
+        reaction: Some(ReactionMessage {
+            key: Some(Key {
+                remote_jid: Some(chat.to_non_ad().to_string()),
+                from_me: Some(from_me),
+                id: Some(target_id.to_owned()),
+                participant: Some(participant.to_non_ad().to_string()),
+            }),
+            text: Some(emoji.unwrap_or("").to_owned()),
+            grouping_key: None,
+            sender_timestamp_ms: Some(sender_timestamp_ms),
+        }),
+    }
+    .encode_to_vec())
+}
+
 /// A decoded incoming reaction, before mapping into the event model.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Incoming {
@@ -132,6 +182,49 @@ pub fn decode(payload: &[u8]) -> Option<Incoming> {
         target_from_sender: key.from_me.unwrap_or(false),
         emoji: (!text.is_empty()).then_some(text),
     })
+}
+
+#[cfg(test)]
+mod group_tests {
+    use super::*;
+
+    /// The participant is what makes a group reaction attributable: the same
+    /// message id in a group means nothing without knowing whose message it was,
+    /// and the direct builder deliberately leaves that field unset.
+    #[test]
+    fn a_group_reaction_names_the_original_sender() {
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let participant = Jid::parse("222222222222222@lid").unwrap();
+        let bytes =
+            group_payload(&chat, &participant, "TARGET1", false, Some("\u{1f44d}"), 42).unwrap();
+        let (remote, has_participant) = key_fields(&bytes).unwrap();
+        assert_eq!(remote.as_deref(), Some("120363000000000001@g.us"));
+        assert!(has_participant, "a group reaction must carry participant");
+        let decoded = decode(&bytes).unwrap();
+        assert_eq!(decoded.target_id.as_str(), "TARGET1");
+        assert_eq!(decoded.emoji.as_deref(), Some("\u{1f44d}"));
+        assert!(!decoded.target_from_sender);
+
+        // Removing a reaction is an empty text, which decodes to no emoji.
+        let cleared = group_payload(&chat, &participant, "TARGET1", false, None, 42).unwrap();
+        assert!(decode(&cleared).unwrap().emoji.is_none());
+    }
+
+    /// A direct chat is not a group: the key shape differs and using the group
+    /// builder there would put a participant where none belongs.
+    #[test]
+    fn group_payload_refuses_a_direct_chat_and_bad_input() {
+        let direct = Jid::parse("15551234567@s.whatsapp.net").unwrap();
+        let participant = Jid::parse("222222222222222@lid").unwrap();
+        assert!(group_payload(&direct, &participant, "T", false, None, 1).is_err());
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        assert!(group_payload(&chat, &participant, "", false, None, 1).is_err());
+        assert!(group_payload(&chat, &participant, "T", false, Some(""), 1).is_err());
+        assert!(
+            group_payload(&chat, &participant, "T", false, Some("a\u{7}b"), 1).is_err(),
+            "control characters are refused"
+        );
+    }
 }
 
 #[cfg(test)]

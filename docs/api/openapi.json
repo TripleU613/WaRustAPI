@@ -395,6 +395,10 @@
           "status": {
             "$ref": "#/components/schemas/StatusPost",
             "description": "Post a status instead of sending to a chat; mutually exclusive with `to` and `group`"
+          },
+          "quote": {
+            "$ref": "#/components/schemas/QuotedTarget",
+            "description": "Reply to, or react to, an existing message in the group named by `group`"
           }
         },
         "description": "Private JSON message request for outbox-send or lab-transport --message. Exactly one target: `to` (direct), `group` (sender-key fan-out) or `status` (a status post). Repeating the same request_id returns the saved outcome locally and never resends."
@@ -2016,6 +2020,32 @@
           }
         },
         "description": "A like on one of our statuses. A status reaction is an ordinary Message.reactionMessage (field 46) whose key names status@broadcast as the remoteJid — that is what distinguishes it from a chat reaction. In the APK it lands in status_add_on with type = 1, which a trigger counts into status_interactions.reaction_count."
+      },
+      "QuotedTarget": {
+        "type": "object",
+        "required": [
+          "message_id",
+          "participant"
+        ],
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "description": "Wire id of the message replied to or reacted to"
+          },
+          "participant": {
+            "type": "string",
+            "description": "Who sent it. A group message id means nothing without this — the same id from two members is two different messages."
+          },
+          "emoji": {
+            "type": "string",
+            "description": "React with this emoji instead of replying; an empty string removes a previous reaction, which is a real operation and not the same as absent"
+          },
+          "quoted_text": {
+            "type": "string",
+            "description": "The quoted message's own text, carried as quotedMessage. Absent quotes an empty body rather than inventing one."
+          }
+        },
+        "description": "An existing group message to reply to or react to. A reply carries `text` and no emoji; a reaction carries an emoji and no body — a reaction with a body, or a reply without one, renders as something else entirely on the recipient."
       }
     }
   },

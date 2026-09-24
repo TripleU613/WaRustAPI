@@ -59,9 +59,56 @@ pub struct MessageRequest {
     /// `to` and `group`.
     #[serde(default)]
     pub status: Option<StatusPost>,
+    /// Reply to, or react to, an existing message in the `group` named above.
+    /// A reaction needs no `text`; a reply uses it as the reply body.
+    #[serde(default)]
+    pub quote: Option<QuotedTarget>,
     /// Stable local idempotency key; reuse it after uncertain outcomes.
     pub request_id: String,
 }
+/// An existing message in a group, to reply to or react to.
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
+pub struct QuotedTarget {
+    /// Wire id of the message being replied to or reacted to.
+    pub message_id: String,
+    /// Who sent it. A group message id means nothing without this — the same id
+    /// from two members is two different messages.
+    pub participant: String,
+    /// React with this emoji instead of replying. An empty string removes a
+    /// previous reaction, which is a real operation and not the same as absent.
+    #[serde(default)]
+    pub emoji: Option<String>,
+    /// The quoted message's own text, so the reply can carry it as
+    /// `quotedMessage`. Absent quotes an empty body rather than inventing one.
+    #[serde(default)]
+    pub quoted_text: Option<zeroize::Zeroizing<String>>,
+}
+
+impl std::fmt::Debug for QuotedTarget {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("QuotedTarget(<redacted>)")
+    }
+}
+
+impl QuotedTarget {
+    /// The sender of the quoted message.
+    pub fn sender(&self) -> crate::Result<Jid> {
+        let jid = Jid::parse(&self.participant)?;
+        if !jid.is_user_like() {
+            return Err(crate::Error::invalid(
+                "quote",
+                "participant is a phone-number or LID identity",
+            ));
+        }
+        Ok(jid)
+    }
+
+    /// Whether this is a reaction rather than a reply.
+    pub fn is_reaction(&self) -> bool {
+        self.emoji.is_some()
+    }
+}
+
 /// A status post: the text, who may see it, and how it is drawn.
 ///
 /// The audience is explicit because a status has no membership list to read and
@@ -201,6 +248,28 @@ impl MessageRequest {
             }
             return Ok(value);
         }
+        if let Some(quote) = &value.quote {
+            if value.group_chat()?.is_none() {
+                return Err(crate::Error::invalid(
+                    "message",
+                    "a quote or reaction needs the `group` it belongs to",
+                ));
+            }
+            quote.sender()?;
+            if quote.message_id.is_empty() || quote.message_id.len() > 128 {
+                return Err(crate::Error::invalid(
+                    "message",
+                    "invalid quoted message id",
+                ));
+            }
+            // A reaction has no body; a reply must have one.
+            if quote.is_reaction() != value.text.is_empty() {
+                return Err(crate::Error::invalid(
+                    "message",
+                    "a reaction carries no text and a reply needs one",
+                ));
+            }
+        }
         match value.group_chat()? {
             Some(_) if !value.to.is_empty() => {
                 return Err(crate::Error::invalid(
@@ -220,10 +289,13 @@ impl MessageRequest {
                 value.recipient()?;
             }
         }
-        if (usize::from(!value.text.is_empty())
+        // A reaction is the one message with no content of its own: it names an
+        // existing message and an emoji, and a body would make it a reply.
+        let reacting = value.quote.as_ref().is_some_and(|q| q.is_reaction());
+        let bodies = usize::from(!value.text.is_empty())
             + usize::from(value.image.is_some())
-            + usize::from(value.voice_note.is_some())
-            != 1)
+            + usize::from(value.voice_note.is_some());
+        if (bodies != usize::from(!reacting))
             || (value.view_once && value.image.is_none())
             || value.text.len() > 4096
             || value.request_id.is_empty()
@@ -997,6 +1069,7 @@ mod tests {
             fresh_sessions: false,
             skdm_delivery: None,
             status: None,
+            quote: None,
             request_id: "r1".into(),
         };
         assert_eq!(
@@ -1027,6 +1100,68 @@ mod tests {
         }
     }
 
+    /// A reply and a reaction differ by exactly one thing in the JSON, and
+    /// getting that wrong would send a reaction with a body or a reply without
+    /// one — both of which a recipient renders as something else entirely.
+    #[test]
+    fn a_group_quote_is_a_reply_or_a_reaction_but_not_both() {
+        let dir = tempfile::tempdir().unwrap();
+        let write = |name: &str, body: &str| {
+            let path = dir.path().join(name);
+            std::fs::write(&path, body).unwrap();
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+                std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o600)).unwrap();
+            }
+            path
+        };
+        let group = r#""group":"120363000000000001@g.us""#;
+        let target = r#""message_id":"T1","participant":"222222222222222@lid""#;
+        // A reply: text, no emoji.
+        let reply = MessageRequest::read(&write(
+            "reply.json",
+            &format!(r#"{{{group},"text":"ok","quote":{{{target}}},"request_id":"r1"}}"#),
+        ))
+        .unwrap();
+        assert!(!reply.quote.as_ref().unwrap().is_reaction());
+        // A reaction: emoji, no text.
+        let react = MessageRequest::read(&write(
+            "react.json",
+            &format!(r#"{{{group},"quote":{{{target},"emoji":"👍"}},"request_id":"r2"}}"#),
+        ))
+        .unwrap();
+        assert!(react.quote.as_ref().unwrap().is_reaction());
+        assert_eq!(
+            react.quote.as_ref().unwrap().sender().unwrap(),
+            Jid::parse("222222222222222@lid").unwrap()
+        );
+        // Both, neither, and a quote with no group are all refused.
+        for (name, body) in [
+            (
+                "both.json",
+                format!(
+                    r#"{{{group},"text":"ok","quote":{{{target},"emoji":"👍"}},"request_id":"r3"}}"#
+                ),
+            ),
+            (
+                "neither.json",
+                format!(r#"{{{group},"quote":{{{target}}},"request_id":"r4"}}"#),
+            ),
+            (
+                "nogroup.json",
+                format!(
+                    r#"{{"to":"15551234567","text":"ok","quote":{{{target}}},"request_id":"r5"}}"#
+                ),
+            ),
+        ] {
+            assert!(
+                MessageRequest::read(&write(name, &body)).is_err(),
+                "{name} must be refused"
+            );
+        }
+    }
+
     /// A group target is a JID in the private JSON, not another command.
     #[test]
     fn message_request_group_target_is_validated() {
@@ -1040,6 +1175,7 @@ mod tests {
             fresh_sessions: false,
             skdm_delivery: None,
             status: None,
+            quote: None,
             request_id: "r1".into(),
         };
         assert_eq!(
