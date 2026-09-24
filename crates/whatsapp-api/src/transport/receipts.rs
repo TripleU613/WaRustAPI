@@ -1042,3 +1042,127 @@ mod tests {
         );
     }
 }
+
+/// A recipient device asking us to send a message again because it could not
+/// decrypt it (`receipt type="retry"`).
+///
+/// **Observed** live 2026-09-24: `<receipt from=<chat> type="retry" id=<message
+/// id> participant=<device> t=…>` with a `<retry count v id t/>` child and a
+/// `<registration>` child holding the sender's current registration id. Two of
+/// three addressed group devices returned nothing and only this one asked, which
+/// is what makes a retry per-device rather than a verdict on the stanza.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RetryRequest {
+    /// The chat the failed message was in — a group, broadcast or direct peer.
+    pub chat: Jid,
+    /// The device that could not decrypt and wants it again.
+    pub device: Jid,
+    /// The original message id, which the resend must reuse so the recipient
+    /// matches it to the message it is holding.
+    pub message_id: String,
+    /// Which attempt this is; the first is 1.
+    pub count: u32,
+    /// The asking device's current registration id. A value different from the
+    /// one in the bundle we encrypted against means their identity moved and a
+    /// fresh prekey bundle is needed rather than the saved session.
+    pub registration: Option<Vec<u8>>,
+}
+
+/// Parse a `receipt type="retry"`. Returns `None` for any other receipt.
+pub fn parse_retry(node: &Node) -> Option<RetryRequest> {
+    if node.description != "receipt" || node.get_attr("type")?.as_text()? != "retry" {
+        return None;
+    }
+    let jid = |name: &str| -> Option<Jid> {
+        let value = node.get_attr(name)?;
+        value
+            .as_jid()
+            .cloned()
+            .or_else(|| Jid::parse(value.as_text()?).ok())
+    };
+    let message_id = node.get_attr("id")?.as_text()?.to_owned();
+    if message_id.is_empty() || message_id.len() > 128 {
+        return None;
+    }
+    let retry = node.child("retry")?;
+    let count = retry.get_attr("count")?.as_text()?.parse().ok()?;
+    let registration = node.child("registration").and_then(|n| match &n.content {
+        crate::binary::NodeContent::Bytes(b) if !b.is_empty() && b.len() <= 64 => Some(b.to_vec()),
+        _ => None,
+    });
+    Some(RetryRequest {
+        chat: jid("from")?,
+        // A direct retry names no participant; the peer is the chat itself.
+        device: jid("participant").or_else(|| jid("from"))?,
+        message_id,
+        count,
+        registration,
+    })
+}
+
+#[cfg(test)]
+mod retry_tests {
+    use super::*;
+
+    fn receipt(with_participant: bool) -> Node {
+        let mut node = Node::new("receipt")
+            .attr("from", Jid::parse("120363000000000001@g.us").unwrap())
+            .attr("type", "retry")
+            .attr("id", "M1");
+        if with_participant {
+            node = node.attr("participant", Jid::parse("222222222222222@lid").unwrap());
+        }
+        node.children(vec![
+            Node::new("retry").attr("count", "1").attr("v", "1"),
+            Node::new("registration").bytes(vec![1, 2, 3, 4]),
+        ])
+    }
+
+    /// The fields a resend needs: which device, which message, and the
+    /// registration id that says whether the saved session is still theirs.
+    #[test]
+    fn a_group_retry_names_the_device_and_the_message() {
+        let parsed = parse_retry(&receipt(true)).unwrap();
+        assert_eq!(parsed.message_id, "M1");
+        assert_eq!(parsed.count, 1);
+        assert_eq!(parsed.registration.as_deref(), Some(&[1, 2, 3, 4][..]));
+        assert_eq!(parsed.device, Jid::parse("222222222222222@lid").unwrap());
+        assert_eq!(parsed.chat, Jid::parse("120363000000000001@g.us").unwrap());
+    }
+
+    /// A direct retry carries no participant, so the peer is the chat.
+    #[test]
+    fn a_direct_retry_falls_back_to_the_sender() {
+        let node = Node::new("receipt")
+            .attr("from", Jid::parse("15551234567@s.whatsapp.net").unwrap())
+            .attr("type", "retry")
+            .attr("id", "M2")
+            .children(vec![Node::new("retry").attr("count", "2")]);
+        let parsed = parse_retry(&node).unwrap();
+        assert_eq!(parsed.device, parsed.chat);
+        assert_eq!(parsed.count, 2);
+        assert!(parsed.registration.is_none());
+    }
+
+    /// Anything that is not a retry must not be mistaken for one — a delivery
+    /// receipt answered as a retry would resend a message nobody asked for.
+    #[test]
+    fn other_receipts_are_not_retries() {
+        assert!(parse_retry(&Node::new("receipt").attr("id", "M1")).is_none());
+        assert!(
+            parse_retry(
+                &Node::new("receipt")
+                    .attr("type", "read")
+                    .attr("id", "M1")
+                    .attr("from", Jid::parse("15551234567@s.whatsapp.net").unwrap())
+            )
+            .is_none()
+        );
+        // A retry with no `<retry>` child has no count and is not actionable.
+        let no_child = Node::new("receipt")
+            .attr("from", Jid::parse("15551234567@s.whatsapp.net").unwrap())
+            .attr("type", "retry")
+            .attr("id", "M1");
+        assert!(parse_retry(&no_child).is_none());
+    }
+}

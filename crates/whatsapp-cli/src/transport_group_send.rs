@@ -392,6 +392,18 @@ pub(super) async fn send(
     })?;
     if accepted {
         println!("group-send: fan-out server_acknowledged; handset delivery/read not yet verified");
+        answer_retries(
+            store,
+            account,
+            channel,
+            message,
+            chat,
+            &plan,
+            &wire_id,
+            &minted.distribution_message,
+            &skmsg,
+        )
+        .await?;
         Ok(())
     } else {
         Err(invalid(format!(
@@ -399,4 +411,164 @@ pub(super) async fn send(
             code.unwrap_or("unknown")
         )))
     }
+}
+
+/// Hold the connection after an accepted fan-out and answer any retry receipt.
+///
+/// A device that cannot decrypt sends `receipt type="retry"`, and the sender is
+/// expected to send that device the message again. Closing on the `ack` — which
+/// is what every earlier attempt did — drops those receipts on the floor and
+/// leaves the recipient holding a message forever.
+///
+/// The resend is deliberately **not** a new message. It reuses the original
+/// message id, so the recipient matches it to what it is already holding, and it
+/// carries the *same* `skmsg` bytes and the *same* distribution message. That
+/// last part matters: the distribution advertises our sender-key chain at the
+/// iteration the `skmsg` was encrypted at, so re-publishing from the advanced
+/// record would hand the recipient a chain one step past the message it is
+/// trying to read. What does change is the pairwise session: a retry is evidence
+/// the old one did not work for them, so a fresh prekey bundle is fetched and
+/// the distribution re-encrypted under a new session. This is
+/// `forceSenderKeyDistribution` with `targetDeviceRawJids` set to the asking
+/// device, which is why the APK insists the two go together.
+#[allow(clippy::too_many_arguments)]
+async fn answer_retries(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    channel: &mut Channel,
+    message: &whatsapp_api::transport::messaging::MessageRequest,
+    chat: &Jid,
+    plan: &FanoutPlan,
+    wire_id: &str,
+    distribution: &[u8],
+    skmsg: &[u8],
+) -> Result<(), Error> {
+    use whatsapp_api::transport::receipts::parse_retry;
+    const WINDOW: std::time::Duration = std::time::Duration::from_secs(45);
+    // One answer per device per send. A retry loop is the peer's to drive, and
+    // answering the same device repeatedly in one window would be us, not them.
+    let mut answered: Vec<Jid> = Vec::new();
+    let deadline = tokio::time::Instant::now() + WINDOW;
+    eprintln!(
+        "group-send: holding the connection for {}s to answer retry receipts",
+        WINDOW.as_secs()
+    );
+    for index in 0..64 {
+        let next = tokio::time::timeout_at(
+            deadline,
+            whatsapp_api::transport::messaging::read_node(channel),
+        )
+        .await;
+        let node = match next {
+            Err(_) => break,
+            Ok(Err(error)) => {
+                eprintln!("group-send: post-send window ended: {error}");
+                break;
+            }
+            Ok(Ok(node)) => node,
+        };
+        let dict = TokenDictionary::comparison_2_26_37_70();
+        let bytes = Encoder::new(dict).encode(&node)?;
+        store.write(|tx| {
+            tx.put_json(
+                Table::Checkpoints,
+                format!("inbound:after-send-{}:{index}", message.request_id).as_bytes(),
+                1,
+                &bytes,
+            )
+        })?;
+        let Some(retry) = parse_retry(&node) else {
+            continue;
+        };
+        if retry.message_id != wire_id {
+            println!("group-send: retry for another message; preserved, not answered");
+            continue;
+        }
+        if answered.contains(&retry.device) {
+            println!("group-send: this device was already answered in this window");
+            continue;
+        }
+        if !plan.devices.contains(&retry.device) {
+            println!("group-send: retry from a device this send did not address; not answered");
+            continue;
+        }
+        println!(
+            "group-send: answering retry count={} for one device with a fresh session and a forced distribution",
+            retry.count
+        );
+
+        let id = format!("{wire_id}-retry");
+        write_node(
+            channel,
+            &key_request_many(std::slice::from_ref(&retry.device), &id)?,
+        )
+        .await?;
+        let (reply, _) = wait_for(channel, "iq", &id).await?;
+        let bundle = prekey_bundle_for(&reply, &retry.device)?;
+        let peer_key = session_key(&retry.device);
+        let identity: Option<Vec<u8>> =
+            store.read(|tx| tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1))?;
+        let prepared = whatsapp_api::signal::direct::prepare_payload(
+            account,
+            &retry.device,
+            Some(&bundle),
+            None,
+            identity.as_deref(),
+            &pad(distribution)?,
+        )
+        .await?;
+        let resend = groups::sender_key_stanza(
+            chat,
+            wire_id,
+            "text",
+            Some(plan.addressing_mode),
+            Some(&plan.participant_hash),
+            &[groups::FanoutTarget {
+                device: retry.device.clone(),
+                kind: prepared.kind,
+                ciphertext: prepared.ciphertext,
+            }],
+            skmsg,
+        )?;
+        // The new session commits before the stanza goes out, exactly as the
+        // original send does: a session we used but did not persist cannot
+        // decrypt what the peer sends back under it.
+        store.write(|tx| {
+            let current_identity: Option<Vec<u8>> =
+                tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?;
+            if current_identity != identity {
+                return Err(invalid("peer identity changed before the retry commit"));
+            }
+            tx.put_json(
+                Table::SignalSessions,
+                peer_key.as_bytes(),
+                1,
+                &*prepared.session,
+            )?;
+            tx.put_json(
+                Table::PeerIdentities,
+                peer_key.as_bytes(),
+                1,
+                &prepared.identity,
+            )?;
+            tx.put_json(
+                Table::Checkpoints,
+                format!("message:{}:retry:{}", message.request_id, retry.device).as_bytes(),
+                1,
+                &serde_json::json!({
+                    "status": "written",
+                    "count": retry.count,
+                    "at": Timestamp::now(),
+                }),
+            )
+        })?;
+        write_node(channel, &resend).await?;
+        answered.push(retry.device.clone());
+        println!("group-send: retry answered; the recipient should now be able to read it");
+    }
+    println!(
+        "group-send: post-send window complete; {} retry answer(s) sent",
+        answered.len()
+    );
+    Ok(())
 }
