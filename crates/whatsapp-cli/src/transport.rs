@@ -556,8 +556,15 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
         {
             // The group path holds its own post-send window, because answering
             // a retry needs the sender key and the skmsg that only it has.
-            super::transport_group_send::send(&store, &account, &mut channel, message, &chat)
-                .await?;
+            super::transport_group_send::send(
+                &store,
+                &account,
+                &mut channel,
+                message,
+                &chat,
+                image_payload.as_deref().map(|v| v.as_slice()),
+            )
+            .await?;
         } else if status == "success"
             && let Some(message) = &message
         {

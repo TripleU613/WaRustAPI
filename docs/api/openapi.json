@@ -1961,7 +1961,7 @@
             "description": "Text colour as ARGB hex, with or without a leading #"
           }
         },
-        "description": "A styled text status. Posted through the same sender-key fan-out as a group message, addressed to status@broadcast, with no addressing_mode and no phash (neither is observed on an incoming status)."
+        "description": "A text or image status. Posted through the same sender-key fan-out as a group message, addressed to status@broadcast, with no addressing_mode and no phash (neither is observed on an incoming status). With `image` set on the request the picture replaces the text rather than captioning it, and `text` must be empty."
       },
       "StatusReceipt": {
         "type": "object",

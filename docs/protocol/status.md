@@ -581,6 +581,18 @@ Note this already flowed through as a `MessageUpdated` event before any of this
 existed, because the reaction path is generic over the chat; what was missing
 was a place to *ask* who liked a status rather than replaying the journal.
 
+## Image statuses (2026-09-24)
+
+A picture status is the text payload swapped for the `Message.imageMessage` the
+upload path already produces, through the same fan-out. Nothing about the stanza
+changes. Setting `image` on a status request replaces the text rather than
+captioning it, and carrying both is refused — silently dropping one of them is
+worse than saying no.
+
+It needs a current media route (`--login --media-route`); routes expire, and the
+upload refuses rather than guessing one. Transmitted and acknowledged
+2026-09-24; handset rendering not separately confirmed.
+
 **Not implemented:** sending a like (the target a reaction is addressed to for a
-status — the poster directly, or `status@broadcast` — was not established), HD
-images, and audio.
+status — the poster directly, or `status@broadcast` — was not established), the
+HD dual upload, and audio.

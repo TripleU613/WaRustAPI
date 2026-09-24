@@ -229,15 +229,24 @@ impl MessageRequest {
                     "a status post names no `to` and no `group`",
                 ));
             }
-            if value.image.is_some() || value.voice_note.is_some() || value.view_once {
+            if value.voice_note.is_some() || value.view_once {
                 return Err(crate::Error::invalid(
                     "message",
-                    "a status post carries text only so far",
+                    "a status post carries text or an image so far",
                 ));
             }
             status.recipients()?;
             status.style()?;
-            if status.text.is_empty() || status.text.len() > 4096 {
+            // An image status replaces the text rather than captioning it;
+            // carrying both would silently drop one of them.
+            if value.image.is_some() {
+                if !status.text.is_empty() {
+                    return Err(crate::Error::invalid(
+                        "message",
+                        "an image status carries no text",
+                    ));
+                }
+            } else if status.text.is_empty() || status.text.len() > 4096 {
                 return Err(crate::Error::invalid(
                     "message",
                     "a status text is 1..=4096 bytes",

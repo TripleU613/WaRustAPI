@@ -130,6 +130,7 @@ pub(super) async fn send(
     channel: &mut Channel,
     message: &whatsapp_api::transport::messaging::MessageRequest,
     chat: &Jid,
+    media_payload: Option<&[u8]>,
 ) -> Result<(), Error> {
     let intent_key = format!("message:{}:send", message.request_id);
     store.read(|tx| {
@@ -161,7 +162,12 @@ pub(super) async fn send(
                 "some of the audience have no device list; they would silently not see this status",
             ));
         }
-        let payload = group_send::status_text_payload(&status.text, &status.style()?)?;
+        // An uploaded image is already a complete `Message.imageMessage`, so a
+        // picture status is the text payload swapped for that one.
+        let payload = match media_payload {
+            Some(bytes) => bytes.to_vec(),
+            None => group_send::status_text_payload(&status.text, &status.style()?)?,
+        };
         return transmit(
             store, account, channel, message, chat, &plan, &payload, &own,
             // Observed on every incoming status: no `addressing_mode`, and the
