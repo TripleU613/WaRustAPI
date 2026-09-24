@@ -398,7 +398,80 @@ pub fn ingest(store: &crate::store::ProtocolStore) -> Result<usize> {
             // stash is dropped rather than promoted; the next patch rebuilds
             // from the last state the server and we agreed on.
             store.write(|tx| tx.delete(Table::Checkpoints, pending.as_bytes()))?;
+            // A conflict is not a dead end: the server returns the patches we
+            // are behind on so a client can catch up. Applying them is what
+            // turns a repeat conflict into a successful next write.
+            if let Some(reply) = &reply {
+                applied += catch_up(store, reply)?;
+            }
         }
+    }
+    Ok(applied)
+}
+
+/// Apply the `<patches>` a `409 conflict` returns, advancing our held state to
+/// what the server already has.
+///
+/// **Observed** 2026-09-24: `<collection type="error" name=…><error code="409"
+/// text="conflict"/><patches><patch>…</patch></patches></collection>`. Each is a
+/// `SyncdPatch` carrying its own `version` — server-sent patches do, outgoing
+/// ones must not — so it goes through exactly the verification an inline patch
+/// from a fetch does. Nothing is applied that does not verify: a conflict is not
+/// permission to trust bytes, and the key a patch names must be one this account
+/// already holds.
+fn catch_up(store: &crate::store::ProtocolStore, reply: &Node) -> Result<usize> {
+    use crate::binary::NodeContent;
+    use crate::signal::{app_state, app_state_collection::CollectionPatch};
+    use crate::store::Table;
+    let Some(patches) = reply
+        .child("sync")
+        .and_then(|sync| sync.child("collection"))
+        .filter(|c| c.get_attr("type").and_then(|v| v.as_text()) == Some("error"))
+        .and_then(|c| c.child("patches"))
+    else {
+        return Ok(0);
+    };
+    let collection = Collection::CriticalUnblockLow;
+    let mut state = held_state(store, collection)?;
+    let mut applied = 0;
+    for node in patches.child_nodes() {
+        if node.description != "patch" {
+            continue;
+        }
+        let NodeContent::Bytes(bytes) = &node.content else {
+            continue;
+        };
+        let decoded = CollectionPatch::decode(bytes)?;
+        let verified = store.write(|tx| {
+            let keys = app_state::keys_for(tx, &decoded.key_id)?.ok_or_else(|| {
+                crate::Error::invalid("app_state_sync", "conflict names a key we do not hold")
+            })?;
+            state.verify_patch(&decoded, |id| {
+                if id == &decoded.key_id {
+                    Ok(&keys)
+                } else {
+                    Err(crate::Error::invalid("app_state_sync", "unexpected key id"))
+                }
+            })
+        })?;
+        state = verified.state;
+        applied += 1;
+    }
+    if applied > 0 {
+        let saved = state.to_saved();
+        store.write(|tx| {
+            tx.put_json(
+                Table::Checkpoints,
+                held_key(collection).as_bytes(),
+                1,
+                &saved,
+            )
+        })?;
+        tracing::info!(
+            patches = applied,
+            version = state.version(),
+            "app state: caught up from a conflict"
+        );
     }
     Ok(applied)
 }

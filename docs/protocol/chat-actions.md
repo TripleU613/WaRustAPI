@@ -516,10 +516,27 @@ accepts *and* reports the version we claimed, so a refused patch cannot advance
 the version we believe we hold. `queue_contact_patch` promotes first, then
 builds on the held state and sends `version` when it holds one.
 
-**Remaining:** consuming the `<patches>` a 409 returns, to catch up instead of
-conflicting again. The first account's patch was queued before the state was
-persisted, so there is nothing to promote for it and the next patch will
-conflict until the catch-up path exists.
+### The full loop, live
+
+Implemented and verified end to end on 2026-09-24:
+
+1. patch with no held version → **accepted**, server reports `version="1"`;
+2. patch still claiming nothing → **`409 conflict`**, server returns the
+   `<patches>` we are behind on;
+3. those patches are verified and applied — same verification an inline patch
+   from a fetch gets, and the key each names must be one this account already
+   holds, because a conflict is not permission to trust bytes;
+4. next patch claims `version="1"` → **accepted**, server reports `version="2"`.
+
+`app_state::keys_for` was added for step 3: `select_active_key` answers "which
+key should I *write* with" and applies an age and fingerprint policy to say so,
+which is the wrong question for verifying a patch that names the key it was
+written with. Applying the write-side policy there would refuse to read our own
+history the moment a key aged out. It still only ever returns a key this account
+already stored.
+
+**Remaining:** only `critical_unblock_low` is handled; the other four
+collections use the same machinery but have no queued actions yet.
 
 ### Third live attempt: the refusal survives the correction
 

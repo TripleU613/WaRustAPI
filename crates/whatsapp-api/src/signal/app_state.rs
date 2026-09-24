@@ -155,6 +155,41 @@ impl SelectedKey {
     }
 }
 
+/// The keys for one exact key id, for verifying a patch the server sent us.
+///
+/// [`select_active_key`] answers "which key should I *write* with", and applies
+/// an age and fingerprint policy to say so. Verifying an incoming patch is a
+/// different question: it names the key it was written with, and either we hold
+/// that key or we cannot verify it. Applying the write-side policy here would
+/// refuse to read our own history the moment a key aged out.
+///
+/// This still only ever returns a key this account already stored. It does not
+/// accept, activate or derive key material from anything incoming.
+#[cfg(any(
+    test,
+    all(feature = "experimental-noise", feature = "experimental-transport")
+))]
+pub fn keys_for(
+    tx: &crate::store::WriteTx<'_>,
+    wanted: &[u8; 6],
+) -> Result<Option<super::app_state_crypto::MutationKeys>> {
+    use crate::store::Table;
+    let mut name = Vec::from(b"app-state-key:".as_slice());
+    name.extend_from_slice(hex::encode(wanted).as_bytes());
+    // Stored as a `StoredKey` record, which is what `select_active_key` decodes
+    // from the raw scan value — reading it as bytes deserializes a JSON map as a
+    // sequence and fails.
+    let Some(saved): Option<StoredKey> = tx.get_json(Table::Checkpoints, &name, 1)? else {
+        return Ok(None);
+    };
+    if saved.data.len() != 32 {
+        return Err(invalid("unsupported active key length"));
+    }
+    Ok(Some(super::app_state_crypto::MutationKeys::derive(
+        &saved.data,
+    )?))
+}
+
 /// APK 0oL.A02/0oK.A04: select epoch DESC/device ASC, then check age and
 /// fingerprint. Never fall back to an older key when the selected one fails.
 ///
