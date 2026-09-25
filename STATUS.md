@@ -24,7 +24,7 @@ Registration uses the recipe in
 | Receive + decrypt direct and group messages | live | [groups](docs/protocol/groups.md) |
 | Group send (sender-key fan-out) | live — operator read it | [groups](docs/protocol/groups.md) |
 | Group replies | acked | same |
-| Group reactions | acked as `type=text`; now sent as `type=reaction` with add-on markers, **not yet sent live** | same |
+| Group reactions | acked, now as `type=reaction` with add-on markers (2026-09-25); handset display unconfirmed | same |
 | Retry receipts: sending ours when we cannot decrypt | offline; shape mirrored from the handset's own | [messaging-transport](docs/protocol/messaging-transport.md) |
 | Retry receipts: answering theirs after a fan-out | offline; one live retry was received before the answer existed | [groups](docs/protocol/groups.md) |
 | Status: receive | live | [status](docs/protocol/status.md) |

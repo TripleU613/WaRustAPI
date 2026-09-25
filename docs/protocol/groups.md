@@ -859,7 +859,8 @@ the content; the per-device encs carry only the sender-key distribution and stay
 minimal. `LX/Cp3->A09` is the shared `enc` builder that emits `mediatype` and
 `decrypt-fail` under their own conditions; which of a fan-out's encs those
 conditions select was **not traced**. A group reaction with these markers has not
-yet been sent live.
+yet been confirmed on a handset: one (`❤️`) was sent and
+acknowledged on 2026-09-25 from profile `l`, with no retry receipt in the window.
 
 ### Retry answers now keep the original stanza's shape (2026-09-25)
 

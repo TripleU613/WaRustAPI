@@ -50,6 +50,14 @@ async fn after_send_window(
         .await;
         let node = match next {
             Err(_) => break,
+            // A silent window runs the per-read I/O timeout out at the same
+            // moment as the window itself, and the inner deadline wins the race.
+            // That is the window completing, not the connection failing.
+            Ok(Err(whatsapp_api::transport::TransportError::Deadline(_)))
+                if tokio::time::Instant::now() + Duration::from_secs(2) >= deadline =>
+            {
+                break;
+            }
             Ok(Err(error)) => {
                 eprintln!("transport: post-send window ended: {error}");
                 break;
