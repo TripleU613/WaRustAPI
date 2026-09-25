@@ -453,24 +453,16 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
             write_node(&mut channel, &chatstate(&typing.chat, typing.state)?).await?;
             println!("transport: chat state {:?} written", typing.state);
             if typing.state != ChatState::Paused {
-                // Hold, preserving whatever arrives, then stop: an indicator
-                // left running is not something a real client does either.
-                let deadline = tokio::time::Instant::now() + typing.hold;
-                let mut kept = 0usize;
-                while let Ok(read) = tokio::time::timeout_at(
-                    deadline,
-                    whatsapp_api::transport::messaging::read_node(&mut channel),
-                )
-                .await
-                {
-                    whatsapp_api::transport::inbox::preserve(&store, &read?)?;
-                    kept += 1;
-                }
+                // Hold, then stop: an indicator left running is not something
+                // a real client does. This deliberately does not read while it
+                // waits. Cancelling a read on this channel closes the
+                // connection (`EncryptedReader::read`), so a timed read would
+                // tear it down before `paused` could be written — which is what
+                // the first live attempt did. Frames that arrive meanwhile stay
+                // queued for whatever follows (`--message`) to read.
+                tokio::time::sleep(typing.hold).await;
                 write_node(&mut channel, &chatstate(&typing.chat, ChatState::Paused)?).await?;
-                println!(
-                    "transport: held {}s, then paused; {kept} frame(s) preserved meanwhile",
-                    typing.hold.as_secs()
-                );
+                println!("transport: held {}s, then paused", typing.hold.as_secs());
             }
         }
         if receive {

@@ -6359,7 +6359,7 @@
                   },
                   "typing": {
                     "type": "string",
-                    "description": "Show a typing indicator in this chat (E.164 digits, a phone/LID JID or a `…@g.us` group): announces `presence type=available`, writes `<chatstate to=…><composing/></chatstate>` (`LX/B2G->A01`, confirmed), holds for `typing_seconds` preserving anything that arrives, then writes `<paused/>` (`LX/B2H->handleMessage`, confirmed). Combined with `message`, the indicator runs before the send. Not live-verified yet."
+                    "description": "Show a typing indicator in this chat (E.164 digits, a phone/LID JID or a `…@g.us` group): announces `presence type=available`, writes `<chatstate to=…><composing/></chatstate>` (`LX/B2G->A01`, confirmed), holds for `typing_seconds` without reading (a cancelled read closes this channel), then writes `<paused/>` (`LX/B2H->handleMessage`, confirmed). Combined with `message`, the indicator runs before the send. Not live-verified yet."
                   },
                   "typing_state": {
                     "type": "string",

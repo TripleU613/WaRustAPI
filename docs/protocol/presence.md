@@ -76,3 +76,16 @@ whatsapp-cli lab-transport --allow-live-request --login --typing <chat> \
 
 `--typing` combined with `--message` runs the indicator before the send.
 The name is recorded locally under the `push-name` checkpoint.
+
+## Live attempts (2026-09-25, profile `l`)
+
+1. `--push-name` plus `--typing` into the operator's group: the name and
+   `composing` were written, then the connection closed during the hold and
+   `paused` was never sent. **Our bug:** the hold read the socket under a
+   timeout, and cancelling a read on `EncryptedConnection` closes it by design.
+   The hold now sleeps without reading.
+2. `--typing` alone, 15 s: `composing` written, held, `paused` written, clean
+   exit.
+
+Neither stanza has a reply, so both are **written, not confirmed**. Whether the
+name and the indicator appeared on the operator's handset is the check.
