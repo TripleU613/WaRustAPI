@@ -680,7 +680,7 @@ Usage: whatsapp-cli mark-read [OPTIONS]...
 | Flag | Value | Required | Default | Env | Values | Help |
 |------|-------|----------|---------|-----|--------|------|
 | --config | CONFIG | no |  |  |  | Private request configuration; defaults to the profile's |
-| --chat | CHAT | yes |  |  |  | Sender JID, e.g. 15551234567@s.whatsapp.net |
+| --chat | CHAT | yes |  |  |  | The chat: the sender's JID for a direct message (e.g. 15551234567@s.whatsapp.net), or the group JID (`…@g.us`) for a group message, whose receipt names the sender itself |
 | --id | IDS | yes |  |  |  | One or more incoming message ids as shown by `events` |
 
 ## whatsapp-cli lab-open-view-once

@@ -88,8 +88,11 @@ fn saved_route(tx: &crate::store::WriteTx<'_>, saved: &serde_json::Value) -> Res
         .ok_or_else(|| Error::invalid("receipt", "capture unavailable"))
 }
 
-/// Durably queue explicit `read` receipts for authenticated incoming direct
-/// messages, one receipt per message ID, all-or-nothing and idempotent.
+/// Durably queue explicit `read` receipts for authenticated incoming direct or
+/// group messages, one receipt per message ID, all-or-nothing and idempotent.
+/// A group receipt names the sender as `participant`, exactly as the group
+/// delivery receipt does; that the read form is the same builder with
+/// `type="read"` is **inferred**, not traced.
 ///
 /// Comparison `LX/Cns.A09` builds client receipts as `to`/`id`/`type` with
 /// optional `participant`/`category` and no timestamp; `LX/CcH.<clinit>` lists
@@ -116,10 +119,13 @@ pub fn queue_read(
         ));
     }
     let chat = receipt.chat.jid();
-    if chat.server != Server::User || chat.device != 0 {
+    // A group is allowed as well: its receipt is the same builder
+    // (`received_confirmation`, `LX/Cp2`) with the sender as `participant`,
+    // which the live-verified group delivery receipt already uses.
+    if !matches!(chat.server, Server::User | Server::Group) || chat.device != 0 {
         return Err(Error::invalid(
             "receipt",
-            "only primary direct chats are supported",
+            "only primary direct chats and groups are supported",
         ));
     }
     let mut ids: Vec<&str> = receipt.message_ids.iter().map(|id| id.as_str()).collect();
@@ -286,7 +292,7 @@ pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
 pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
     if node.description != "ack"
         || node.get_attr("class").and_then(|v| v.as_text()) != Some("receipt")
-        || ["participant", "recipient", "edit"]
+        || ["recipient", "edit"]
             .iter()
             .any(|name| node.get_attr(name).is_some())
     {
@@ -315,10 +321,16 @@ pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
                 let wire: Vec<u8> = serde_json::from_value(row["wire"].clone())
                     .map_err(|_| Error::invalid("receipt", "invalid intent"))?;
                 let sent = decode(&wire)?;
+                // An ack naming a participant settles only a receipt that named
+                // the same one: in a group, the id alone is ambiguous between
+                // members.
                 if sent.get_attr("id") != node.get_attr("id")
                     || sent.get_attr("type") != node.get_attr("type")
                     || jid(&sent, "to").is_none()
                     || jid(&sent, "to") != jid(node, "from")
+                    || (node.get_attr("participant").is_some()
+                        && (jid(&sent, "participant").is_none()
+                            || jid(&sent, "participant") != jid(node, "participant")))
                 {
                     continue;
                 }
@@ -827,6 +839,78 @@ mod tests {
         };
         assert_eq!(status("first"), "server_acknowledged");
         assert_eq!(status("second"), "refused");
+    }
+
+    /// A group message's read receipt goes to the group and names the sender,
+    /// like the group delivery receipt; its ack settles it only when it names
+    /// the same member.
+    #[test]
+    fn group_read_receipts_name_the_sender_and_settle_on_a_matching_ack() {
+        use crate::model::{
+            ids::{ChatId, MessageId},
+            receipt::{Receipt, ReceiptKind},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("group-read.redb"), true);
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let sender = Jid::parse("15555550100@lid").unwrap();
+        let route =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+                .encode(
+                    &Node::new("message")
+                        .attr("id", "G1")
+                        .attr("from", group.clone())
+                        .attr("participant", sender.clone()),
+                )
+                .unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("received:{group}:G1").as_bytes(),
+                    1,
+                    &serde_json::json!({"status":"decrypted", "route":route}),
+                )
+            })
+            .unwrap();
+        let receipt = Receipt {
+            chat: ChatId::from_jid(&group).unwrap(),
+            message_ids: vec![MessageId::new("G1").unwrap()],
+            from: None,
+            kind: ReceiptKind::Read,
+            server_timestamp: None,
+            code: None,
+        };
+        assert_eq!(queue_read(&store, &receipt).unwrap(), 1);
+        let pending = reserve_pending(&store).unwrap();
+        assert_eq!(pending.len(), 1);
+        let node = &pending[0];
+        assert_eq!(jid(node, "to"), Some(group.clone()));
+        assert_eq!(jid(node, "participant"), Some(sender.clone()));
+        assert_eq!(
+            node.get_attr("type").and_then(|v| v.as_text()),
+            Some("read")
+        );
+
+        let ack = |participant: &Jid| {
+            Node::new("ack")
+                .attr("id", "G1")
+                .attr("class", "receipt")
+                .attr("type", "read")
+                .attr("from", group.clone())
+                .attr("participant", participant.clone())
+        };
+        let other = Jid::parse("15555550199@lid").unwrap();
+        assert!(
+            !record_ack(&store, &ack(&other)).unwrap(),
+            "another member's ack"
+        );
+        assert!(record_ack(&store, &ack(&sender)).unwrap());
+
+        // A device-addressed or broadcast chat is still refused.
+        let mut status = receipt.clone();
+        status.chat = ChatId::from_jid(&Jid::parse("status@broadcast").unwrap()).unwrap();
+        assert!(queue_read(&store, &status).is_err());
     }
 
     #[test]

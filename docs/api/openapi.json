@@ -5956,7 +5956,7 @@
           "Receipts"
         ],
         "summary": "Queue explicit read receipts for authenticated incoming messages (offline; the next `listen` session sends them once)",
-        "description": "Durably queue read receipts for incoming messages. The operation is offline and returns immediately; a later session transmits them.",
+        "description": "Durably queue read receipts for incoming messages. The operation is offline and returns immediately; a later session transmits them. Direct chats and groups are supported: a group receipt goes to the group with the sender as `participant`, built by the same confirmation builder as the live-verified group delivery receipt (comparison 2.26.37.71 `LX/Cp2`) plus `type=\"read\"`, which is inferred rather than traced. The server's ack settles a group receipt only when it names the same participant.",
         "operationId": "markRead",
         "x-cli": "whatsapp-cli mark-read",
         "x-transport": [
@@ -5996,7 +5996,7 @@
                 "properties": {
                   "chat": {
                     "$ref": "#/components/schemas/Jid",
-                    "description": "Sender JID, e.g. 15551234567@s.whatsapp.net"
+                    "description": "Sender JID for a direct message, or the group JID (`…@g.us`) for a group message"
                   },
                   "id": {
                     "type": "array",

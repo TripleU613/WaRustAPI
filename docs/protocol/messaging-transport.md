@@ -720,3 +720,15 @@ when the first, broader version of this change swallowed it.
 **Live 2026-09-25:** a `--receive` window on profile `l` hit one undecryptable
 `msg` and wrote the retry receipt. Nothing in that window shows whether the
 sender resent it.
+
+## Read receipts for group messages (2026-09-25)
+
+`mark-read --chat <group>@g.us --id <id>` now queues a read receipt for a group
+message. It is the group delivery receipt — `<receipt to=<group> id=<id>
+participant=<sender>/>`, confirmed from `LX/Cp2` and live since group receive
+— with `type="read"`. That the read receipt uses the same builder is
+**inferred**: the read-receipt job was not traced, which is also why direct
+read receipts carry no `list` children. `receipts::record_ack` used to ignore
+any receipt ack carrying `participant`; it now settles a receipt only when the
+ack names the same participant the receipt did, since in a group an id alone
+does not say which member's message was read.
