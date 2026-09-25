@@ -732,3 +732,8 @@ read receipts carry no `list` children. `receipts::record_ack` used to ignore
 any receipt ack carrying `participant`; it now settles a receipt only when the
 ack names the same participant the receipt did, since in a group an id alone
 does not say which member's message was read.
+
+**Live 2026-09-25 (profile `l`):** one group read receipt for the operator's
+latest Test-group message, queued with `mark-read` and sent by `listen`, was
+settled `server_acknowledged` by a matching ack. Whether the operator's
+"Read by" list shows it is the handset check.
