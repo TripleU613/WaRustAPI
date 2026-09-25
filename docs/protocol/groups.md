@@ -842,3 +842,44 @@ something else entirely by the recipient.
 
 Both were transmitted live and acknowledged on 2026-09-24; handset rendering was
 not separately confirmed.
+
+### Correction: a reaction is not a text stanza (2026-09-25)
+
+"Nothing about the stanza changes" was wrong for reactions. The direct path has
+always sent a reaction as `type="reaction"` with `enc decrypt-fail="hide"` and
+`<meta content_type="add_on"/>` (`LX/BpS` case 1, observed on the official
+client's own reactions; without the `meta` a recipient did not display ours).
+The group reaction went out as a plain `type="text"`. It was acknowledged, which
+only says the server accepted the envelope, not that a handset rendered it.
+
+`sender_key_stanza` now takes a `StanzaContent` (`Text`, `Reaction`,
+`Media(kind)`) and applies the same markers as the direct envelope for that
+content. **Inferred:** they go on the top-level `skmsg` `enc`, the one holding
+the content; the per-device encs carry only the sender-key distribution and stay
+minimal. `LX/Cp3->A09` is the shared `enc` builder that emits `mediatype` and
+`decrypt-fail` under their own conditions; which of a fan-out's encs those
+conditions select was **not traced**. A group reaction with these markers has not
+yet been sent live.
+
+### Retry answers now keep the original stanza's shape (2026-09-25)
+
+A retry resend reuses the original message id, and the recipient matches it to
+the message it is holding, so it has to be the *same* stanza apart from the
+single `<to>`. It previously always carried `addressing_mode` and `phash` — also
+on a status, whose original carried neither — and always `type="text"`. It now
+reuses exactly the type, markers and attributes the original send used.
+
+Two robustness fixes in the same window: frames that arrive while a retry's key
+fetch is in flight (for example a second device's retry) are queued and handled
+instead of discarded, and one device's failed answer is reported and skipped
+rather than ending the window for the rest — the send itself was already
+acknowledged. Frames that arrive while the send waits for its own replies
+(membership, device lists, key query, distribution acks) are now preserved to the
+receive path's content-hashed capture keys, so `lab-inbox` can open them.
+
+### A refused participant is not a member (2026-09-25)
+
+**Observed** 2026-09-22: a `group create` reply listed a `<participant>` carrying
+an `error` attribute. `parse_group` counted it, so the snapshot said two members
+while the next `group info` said one, and the fan-out then had nobody to address.
+Such entries are now skipped.

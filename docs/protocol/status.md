@@ -584,8 +584,11 @@ was a place to *ask* who liked a status rather than replaying the journal.
 ## Image statuses (2026-09-24)
 
 A picture status is the text payload swapped for the `Message.imageMessage` the
-upload path already produces, through the same fan-out. Nothing about the stanza
-changes. Setting `image` on a status request replaces the text rather than
+upload path already produces, through the same fan-out. The stanza is
+`type="media"` with `mediatype="image"` on the `skmsg` `enc`, as the direct
+image envelope is (`messaging::direct_media`); until 2026-09-25 it went out as
+`type="text"`, which the server acknowledged anyway. Where the marker sits in a
+fan-out is inferred — see `groups.md`, "a reaction is not a text stanza". Setting `image` on a status request replaces the text rather than
 captioning it, and carrying both is refused — silently dropping one of them is
 worse than saying no.
 

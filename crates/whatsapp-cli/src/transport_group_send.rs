@@ -19,8 +19,9 @@ use whatsapp_api::{
     transport::{
         devices::{self, SyncContext},
         group_send::{self, FanoutPlan},
-        groups,
+        groups::{self, StanzaContent},
         handshake::EncryptedConnection,
+        inbox,
         messaging::{key_request_many, new_message_id, wait_for, write_node},
     },
 };
@@ -29,6 +30,25 @@ type Channel = EncryptedConnection<tokio::net::TcpStream>;
 
 fn invalid(reason: impl Into<String>) -> Error {
     Error::invalid("group_send", reason)
+}
+
+/// Keep every frame that arrived while we waited for a reply to something else.
+///
+/// `wait_for` returns them rather than dropping them, and one of them may be a
+/// real incoming message or a retry receipt. They go to the same content-hashed
+/// capture keys the receive loop uses, so `lab-inbox` opens them later exactly
+/// as it would a frame read by `--receive`.
+fn keep(store: &ProtocolStore, frames: &[whatsapp_api::binary::Node]) -> Result<(), Error> {
+    for frame in frames {
+        inbox::preserve(store, frame)?;
+    }
+    if !frames.is_empty() {
+        println!(
+            "group-send: kept {} unrelated frame(s) that arrived meanwhile",
+            frames.len()
+        );
+    }
+    Ok(())
 }
 
 fn session_key(device: &Jid) -> String {
@@ -46,7 +66,8 @@ async fn fetch_membership(
 ) -> Result<(), Error> {
     let id = new_message_id()?;
     write_node(channel, &groups::info_request(chat, &id)?).await?;
-    let (reply, _) = wait_for(channel, "iq", &id).await?;
+    let (reply, pending) = wait_for(channel, "iq", &id).await?;
+    keep(store, &pending)?;
     if reply.get_attr("type").and_then(|v| v.as_text()) != Some("result") {
         return Err(invalid("group info query refused; membership unknown"));
     }
@@ -75,7 +96,8 @@ async fn fetch_devices(
         .and_then(|v| v.as_text())
         .ok_or_else(|| invalid("device query lost its id"))?
         .to_owned();
-    let (reply, _) = wait_for(channel, "iq", &id).await?;
+    let (reply, pending) = wait_for(channel, "iq", &id).await?;
+    keep(store, &pending)?;
     if !query.matches(&reply) {
         return Err(invalid("device query reply did not match the reservation"));
     }
@@ -164,15 +186,29 @@ pub(super) async fn send(
         }
         // An uploaded image is already a complete `Message.imageMessage`, so a
         // picture status is the text payload swapped for that one.
-        let payload = match media_payload {
-            Some(bytes) => bytes.to_vec(),
-            None => group_send::status_text_payload(&status.text, &status.style()?)?,
+        let (payload, content) = match media_payload {
+            Some(bytes) => (bytes.to_vec(), StanzaContent::Media("image")),
+            None => (
+                group_send::status_text_payload(&status.text, &status.style()?)?,
+                StanzaContent::Text,
+            ),
         };
         return transmit(
-            store, account, channel, message, chat, &plan, &payload, &own,
-            // Observed on every incoming status: no `addressing_mode`, and the
-            // server has never asked us for a status `phash`.
-            None, None,
+            store,
+            account,
+            channel,
+            message,
+            chat,
+            &plan,
+            &payload,
+            &own,
+            Stanza {
+                content,
+                // Observed on every incoming status: no `addressing_mode`, and
+                // the server has never asked us for a status `phash`.
+                addressing_mode: None,
+                phash: None,
+            },
         )
         .await;
     }
@@ -215,24 +251,33 @@ pub(super) async fn send(
     }
 
     // A reply or a reaction is the same fan-out carrying a different payload.
-    let payload = match &message.quote {
-        Some(quote) if quote.is_reaction() => whatsapp_api::transport::reactions::group_payload(
-            chat,
-            &quote.sender()?,
-            &quote.message_id,
-            false,
-            quote.emoji.as_deref().filter(|e| !e.is_empty()),
-            Timestamp::now().0,
-        )?,
-        Some(quote) => whatsapp_api::transport::quotes::reply_payload(
-            &message.text,
-            &quote.message_id,
-            &quote.sender()?.to_string(),
-            whatsapp_api::transport::quotes::conversation(
-                quote.quoted_text.as_deref().map_or("", |t| t.as_str()),
-            ),
+    let (payload, content) = match &message.quote {
+        Some(quote) if quote.is_reaction() => (
+            whatsapp_api::transport::reactions::group_payload(
+                chat,
+                &quote.sender()?,
+                &quote.message_id,
+                false,
+                quote.emoji.as_deref().filter(|e| !e.is_empty()),
+                Timestamp::now().0,
+            )?,
+            StanzaContent::Reaction,
         ),
-        None => group_send::text_payload(&message.text)?,
+        Some(quote) => (
+            whatsapp_api::transport::quotes::reply_payload(
+                &message.text,
+                &quote.message_id,
+                &quote.sender()?.to_string(),
+                whatsapp_api::transport::quotes::conversation(
+                    quote.quoted_text.as_deref().map_or("", |t| t.as_str()),
+                ),
+            ),
+            StanzaContent::Text,
+        ),
+        None => (
+            group_send::text_payload(&message.text)?,
+            StanzaContent::Text,
+        ),
     };
     transmit(
         store,
@@ -243,10 +288,23 @@ pub(super) async fn send(
         &plan,
         &payload,
         &own,
-        Some(plan.addressing_mode),
-        Some(&plan.participant_hash),
+        Stanza {
+            content,
+            addressing_mode: Some(plan.addressing_mode),
+            phash: Some(&plan.participant_hash),
+        },
     )
     .await
+}
+
+/// The stanza-level choices one send makes. A retry resend reuses them as they
+/// are: the recipient matches the resend to the message it is holding, so it
+/// must not differ in type or attributes from the original.
+#[derive(Clone, Copy)]
+struct Stanza<'a> {
+    content: StanzaContent<'a>,
+    addressing_mode: Option<&'a str>,
+    phash: Option<&'a str>,
 }
 
 /// Encrypt one payload with our sender key, address it to every planned device
@@ -262,8 +320,7 @@ async fn transmit(
     plan: &FanoutPlan,
     payload: &[u8],
     own: &Jid,
-    addressing_mode: Option<&str>,
-    phash: Option<&str>,
+    stanza: Stanza<'_>,
 ) -> Result<(), Error> {
     let intent_key = format!("message:{}:send", message.request_id);
     let mut targets = load_targets(store, plan, message.fresh_sessions)?;
@@ -283,7 +340,8 @@ async fn transmit(
     } else {
         let id = format!("{}-keys", message.request_id);
         write_node(channel, &key_request_many(&needed, &id)?).await?;
-        let (reply, _) = wait_for(channel, "iq", &id).await?;
+        let (reply, pending) = wait_for(channel, "iq", &id).await?;
+        keep(store, &pending)?;
         let dict = TokenDictionary::comparison_2_26_37_70();
         let wire = Encoder::new(dict).encode(&reply)?;
         store.write(|tx| {
@@ -365,9 +423,9 @@ async fn transmit(
     let node = groups::sender_key_stanza(
         chat,
         &wire_id,
-        "text",
-        addressing_mode,
-        phash,
+        stanza.content,
+        stanza.addressing_mode,
+        stanza.phash,
         if out_of_band { &[] } else { &fanout },
         &skmsg,
     )?;
@@ -426,7 +484,8 @@ async fn transmit(
                 target.ciphertext.clone(),
             )?;
             write_node(channel, &distribution).await?;
-            let (ack, _) = wait_for(channel, "ack", &id).await?;
+            let (ack, pending) = wait_for(channel, "ack", &id).await?;
+            keep(store, &pending)?;
             let accepted = ack.get_attr("error").is_none();
             store.write(|tx| {
                 tx.put_json(
@@ -486,11 +545,13 @@ async fn transmit(
             message,
             chat,
             plan,
+            stanza,
             &wire_id,
             &minted.distribution_message,
             &skmsg,
+            pending,
         )
-        .await?;
+        .await;
         Ok(())
     } else {
         Err(invalid(format!(
@@ -526,44 +587,64 @@ async fn answer_retries(
     message: &whatsapp_api::transport::messaging::MessageRequest,
     chat: &Jid,
     plan: &FanoutPlan,
+    stanza: Stanza<'_>,
     wire_id: &str,
     distribution: &[u8],
     skmsg: &[u8],
-) -> Result<(), Error> {
+    early: Vec<whatsapp_api::binary::Node>,
+) {
     use whatsapp_api::transport::receipts::parse_retry;
     const WINDOW: std::time::Duration = std::time::Duration::from_secs(45);
     // One answer per device per send. A retry loop is the peer's to drive, and
     // answering the same device repeatedly in one window would be us, not them.
     let mut answered: Vec<Jid> = Vec::new();
+    // Frames read while waiting for something else — before the ack, or during
+    // a key fetch for another device's retry — are handled before the next
+    // read, so a second device asking at the same moment is not lost.
+    let mut backlog: std::collections::VecDeque<_> = early.into();
     let deadline = tokio::time::Instant::now() + WINDOW;
     eprintln!(
         "group-send: holding the connection for {}s to answer retry receipts",
         WINDOW.as_secs()
     );
     for index in 0..64 {
-        let next = tokio::time::timeout_at(
-            deadline,
-            whatsapp_api::transport::messaging::read_node(channel),
-        )
-        .await;
-        let node = match next {
-            Err(_) => break,
-            Ok(Err(error)) => {
-                eprintln!("group-send: post-send window ended: {error}");
-                break;
+        let node = match backlog.pop_front() {
+            Some(node) => node,
+            None => {
+                let next = tokio::time::timeout_at(
+                    deadline,
+                    whatsapp_api::transport::messaging::read_node(channel),
+                )
+                .await;
+                match next {
+                    Err(_) => break,
+                    Ok(Err(error)) => {
+                        eprintln!("group-send: post-send window ended: {error}");
+                        break;
+                    }
+                    Ok(Ok(node)) => node,
+                }
             }
-            Ok(Ok(node)) => node,
         };
         let dict = TokenDictionary::comparison_2_26_37_70();
-        let bytes = Encoder::new(dict).encode(&node)?;
-        store.write(|tx| {
-            tx.put_json(
-                Table::Checkpoints,
-                format!("inbound:after-send-{}:{index}", message.request_id).as_bytes(),
-                1,
-                &bytes,
-            )
-        })?;
+        let saved = Encoder::new(dict)
+            .encode(&node)
+            .map_err(Error::from)
+            .and_then(|bytes| {
+                store.write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        format!("inbound:after-send-{}:{index}", message.request_id).as_bytes(),
+                        1,
+                        &bytes,
+                    )
+                })
+            });
+        if let Err(error) = saved {
+            // A frame we cannot keep must not be acted on either.
+            eprintln!("group-send: could not preserve a post-send frame ({error}); window ended");
+            break;
+        }
         let Some(retry) = parse_retry(&node) else {
             continue;
         };
@@ -583,79 +664,121 @@ async fn answer_retries(
             "group-send: answering retry count={} for one device with a fresh session and a forced distribution",
             retry.count
         );
-
-        let id = format!("{wire_id}-retry");
-        write_node(
-            channel,
-            &key_request_many(std::slice::from_ref(&retry.device), &id)?,
-        )
-        .await?;
-        let (reply, _) = wait_for(channel, "iq", &id).await?;
-        let bundle = prekey_bundle_for(&reply, &retry.device)?;
-        let peer_key = session_key(&retry.device);
-        let identity: Option<Vec<u8>> =
-            store.read(|tx| tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1))?;
-        let prepared = whatsapp_api::signal::direct::prepare_payload(
-            account,
-            &retry.device,
-            Some(&bundle),
-            None,
-            identity.as_deref(),
-            distribution,
-        )
-        .await?;
-        let resend = groups::sender_key_stanza(
-            chat,
-            wire_id,
-            "text",
-            Some(plan.addressing_mode),
-            Some(&plan.participant_hash),
-            &[groups::FanoutTarget {
-                device: retry.device.clone(),
-                kind: prepared.kind,
-                ciphertext: prepared.ciphertext,
-            }],
-            skmsg,
-        )?;
-        // The new session commits before the stanza goes out, exactly as the
-        // original send does: a session we used but did not persist cannot
-        // decrypt what the peer sends back under it.
-        store.write(|tx| {
-            let current_identity: Option<Vec<u8>> =
-                tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?;
-            if current_identity != identity {
-                return Err(invalid("peer identity changed before the retry commit"));
-            }
-            tx.put_json(
-                Table::SignalSessions,
-                peer_key.as_bytes(),
-                1,
-                &*prepared.session,
-            )?;
-            tx.put_json(
-                Table::PeerIdentities,
-                peer_key.as_bytes(),
-                1,
-                &prepared.identity,
-            )?;
-            tx.put_json(
-                Table::Checkpoints,
-                format!("message:{}:retry:{}", message.request_id, retry.device).as_bytes(),
-                1,
-                &serde_json::json!({
-                    "status": "written",
-                    "count": retry.count,
-                    "at": Timestamp::now(),
-                }),
-            )
-        })?;
-        write_node(channel, &resend).await?;
+        // Marked answered before trying: a failed answer is not retried inside
+        // this window either, for the same reason a successful one is not.
         answered.push(retry.device.clone());
-        println!("group-send: retry answered; the recipient should now be able to read it");
+        // The original send is already acknowledged, so one device's failed
+        // answer is that device's problem, not the send's: it is reported and
+        // the window stays open for the others.
+        match answer_one(
+            store,
+            account,
+            channel,
+            message,
+            chat,
+            stanza,
+            wire_id,
+            distribution,
+            skmsg,
+            &retry,
+            &mut backlog,
+        )
+        .await
+        {
+            Ok(()) => {
+                println!("group-send: retry answered; the recipient should now be able to read it")
+            }
+            Err(error) => eprintln!("group-send: retry answer failed for one device: {error}"),
+        }
     }
     println!(
-        "group-send: post-send window complete; {} retry answer(s) sent",
+        "group-send: post-send window complete; {} retry answer(s) attempted",
         answered.len()
     );
+}
+
+/// Answer one device's retry receipt: fresh bundle, fresh session, the same
+/// distribution and the same `skmsg` under the same id and stanza attributes.
+#[allow(clippy::too_many_arguments)]
+async fn answer_one(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    channel: &mut Channel,
+    message: &whatsapp_api::transport::messaging::MessageRequest,
+    chat: &Jid,
+    stanza: Stanza<'_>,
+    wire_id: &str,
+    distribution: &[u8],
+    skmsg: &[u8],
+    retry: &whatsapp_api::transport::receipts::RetryRequest,
+    backlog: &mut std::collections::VecDeque<whatsapp_api::binary::Node>,
+) -> Result<(), Error> {
+    let id = new_message_id()?;
+    write_node(
+        channel,
+        &key_request_many(std::slice::from_ref(&retry.device), &id)?,
+    )
+    .await?;
+    let (reply, pending) = wait_for(channel, "iq", &id).await?;
+    backlog.extend(pending);
+    let bundle = prekey_bundle_for(&reply, &retry.device)?;
+    let peer_key = session_key(&retry.device);
+    let identity: Option<Vec<u8>> =
+        store.read(|tx| tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1))?;
+    let prepared = whatsapp_api::signal::direct::prepare_payload(
+        account,
+        &retry.device,
+        Some(&bundle),
+        None,
+        identity.as_deref(),
+        distribution,
+    )
+    .await?;
+    let resend = groups::sender_key_stanza(
+        chat,
+        wire_id,
+        stanza.content,
+        stanza.addressing_mode,
+        stanza.phash,
+        &[groups::FanoutTarget {
+            device: retry.device.clone(),
+            kind: prepared.kind,
+            ciphertext: prepared.ciphertext,
+        }],
+        skmsg,
+    )?;
+    // The new session commits before the stanza goes out, exactly as the
+    // original send does: a session we used but did not persist cannot
+    // decrypt what the peer sends back under it.
+    store.write(|tx| {
+        let current_identity: Option<Vec<u8>> =
+            tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?;
+        if current_identity != identity {
+            return Err(invalid("peer identity changed before the retry commit"));
+        }
+        tx.put_json(
+            Table::SignalSessions,
+            peer_key.as_bytes(),
+            1,
+            &*prepared.session,
+        )?;
+        tx.put_json(
+            Table::PeerIdentities,
+            peer_key.as_bytes(),
+            1,
+            &prepared.identity,
+        )?;
+        tx.put_json(
+            Table::Checkpoints,
+            format!("message:{}:retry:{}", message.request_id, retry.device).as_bytes(),
+            1,
+            &serde_json::json!({
+                "status": "written",
+                "count": retry.count,
+                "at": Timestamp::now(),
+            }),
+        )
+    })?;
+    write_node(channel, &resend).await?;
     Ok(())
 }

@@ -294,6 +294,11 @@ pub fn parse_group(node: &Node) -> Option<GroupSnapshot> {
         .child_nodes()
         .iter()
         .filter(|c| c.description == "participant")
+        // A `<participant>` carrying `error` is one the server refused to add
+        // (**observed** 2026-09-22 on a `group create` reply: the snapshot said
+        // two members while the next info fetch said one, and the fan-out then
+        // had nobody to address). It is not a member, so it is not counted.
+        .filter(|c| c.get_attr("error").is_none())
         .filter_map(|c| {
             Some(Member {
                 jid: attr_string(c, "jid")?,
@@ -637,6 +642,41 @@ pub struct FanoutTarget {
     pub ciphertext: Vec<u8>,
 }
 
+/// What a sender-key stanza carries, which decides its `type` and the extra
+/// markers the recipient needs to render it. Each variant mirrors the direct
+/// envelope for the same content (`messaging::direct_typed`,
+/// `messaging::direct_media`), because the payload inside `skmsg` is the same
+/// `Message` a direct send would carry.
+///
+/// **Inferred** for groups: the markers go on the top-level `skmsg` `enc`, the
+/// one that carries the content. `LX/Cp3->A09` is the shared `enc` builder and
+/// emits `mediatype` and `decrypt-fail="hide"` under their own conditions; which
+/// of a fan-out's encs those conditions select was not traced. The per-device
+/// encs carry only the sender-key distribution, which is not media and not an
+/// add-on, so they stay minimal.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum StanzaContent<'a> {
+    /// `type="text"`, nothing else.
+    Text,
+    /// `type="reaction"`, `enc decrypt-fail="hide"` and `meta
+    /// content_type="add_on"`, observed together on the official client's
+    /// reactions (see `messaging::direct_typed`).
+    Reaction,
+    /// `type="media"` and `enc mediatype=<kind>` (`image`, `ptt`), as
+    /// `messaging::direct_media` sends.
+    Media(&'a str),
+}
+
+impl StanzaContent<'_> {
+    fn message_type(self) -> &'static str {
+        match self {
+            Self::Text => "text",
+            Self::Reaction => "reaction",
+            Self::Media(_) => "media",
+        }
+    }
+}
+
 /// Build the outgoing sender-key stanza for a group or broadcast chat.
 ///
 /// Structure, **confirmed** from comparison 2.26.37.71:
@@ -700,7 +740,7 @@ pub struct FanoutTarget {
 pub fn sender_key_stanza(
     chat: &Jid,
     id: &str,
-    message_type: &str,
+    content: StanzaContent<'_>,
     addressing_mode: Option<&str>,
     phash: Option<&str>,
     targets: &[FanoutTarget],
@@ -753,7 +793,7 @@ pub fn sender_key_stanza(
     let mut node = Node::new("message")
         .attr("to", chat.clone())
         .attr("id", id)
-        .attr("type", message_type);
+        .attr("type", content.message_type());
     if let Some(phash) = phash {
         if phash.len() > 32
             || !phash.starts_with(['1', '2'])
@@ -766,6 +806,11 @@ pub fn sender_key_stanza(
         }
         node = node.attr("phash", phash);
     }
+    if let StanzaContent::Media(kind) = content
+        && !matches!(kind, "image" | "ptt")
+    {
+        return Err(Error::invalid("group_send", "unsupported media type"));
+    }
     if let Some(mode) = addressing_mode {
         if !matches!(mode, "pn" | "lid") {
             return Err(Error::invalid("group_send", "addressing_mode is pn or lid"));
@@ -776,12 +821,16 @@ pub fn sender_key_stanza(
     if !participants.is_empty() {
         children.push(Node::new("participants").children(participants));
     }
-    children.push(
-        Node::new("enc")
-            .attr("v", "2")
-            .attr("type", "skmsg")
-            .bytes(skmsg.to_vec()),
-    );
+    let mut enc = Node::new("enc").attr("v", "2").attr("type", "skmsg");
+    match content {
+        StanzaContent::Text => {}
+        StanzaContent::Reaction => enc = enc.attr("decrypt-fail", "hide"),
+        StanzaContent::Media(kind) => enc = enc.attr("mediatype", kind),
+    }
+    children.push(enc.bytes(skmsg.to_vec()));
+    if content == StanzaContent::Reaction {
+        children.push(Node::new("meta").attr("content_type", "add_on"));
+    }
     Ok(node.children(children))
 }
 
@@ -809,7 +858,7 @@ mod tests {
         let node = sender_key_stanza(
             &chat,
             "M1",
-            "text",
+            StanzaContent::Text,
             Some("lid"),
             Some("2:79jEAyGD"),
             &targets,
@@ -863,13 +912,30 @@ mod tests {
         }
         // Omitting it is a choice the caller makes, not a default.
         assert!(
-            sender_key_stanza(&chat, "M1", "text", None, None, &targets, &[9; 32])
-                .unwrap()
-                .get_attr("addressing_mode")
-                .is_none()
+            sender_key_stanza(
+                &chat,
+                "M1",
+                StanzaContent::Text,
+                None,
+                None,
+                &targets,
+                &[9; 32]
+            )
+            .unwrap()
+            .get_attr("addressing_mode")
+            .is_none()
         );
         assert!(
-            sender_key_stanza(&chat, "M1", "text", Some("web"), None, &targets, &[9; 32]).is_err()
+            sender_key_stanza(
+                &chat,
+                "M1",
+                StanzaContent::Text,
+                Some("web"),
+                None,
+                &targets,
+                &[9; 32]
+            )
+            .is_err()
         );
 
         let dict = crate::binary::TokenDictionary::comparison_2_26_37_70();
@@ -882,6 +948,104 @@ mod tests {
     }
 
     #[test]
+    fn a_refused_participant_is_not_a_member() {
+        let group = Node::new("group")
+            .attr("id", "120363000000000001")
+            .children(vec![
+                Node::new("participant")
+                    .attr("jid", "15551234567@s.whatsapp.net")
+                    .attr("type", "superadmin"),
+                Node::new("participant")
+                    .attr("jid", "15559876543@s.whatsapp.net")
+                    .attr("error", "403"),
+            ]);
+        let snapshot = parse_group(&group).unwrap();
+        assert_eq!(snapshot.members.len(), 1);
+        assert_eq!(snapshot.members[0].jid, "15551234567@s.whatsapp.net");
+    }
+
+    /// A reaction and a media status carry the same markers their direct
+    /// envelopes do, on the `skmsg` that holds the content — and only there.
+    #[test]
+    fn sender_key_stanza_marks_reactions_and_media() {
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let target = FanoutTarget {
+            device: Jid::parse("15551234567@s.whatsapp.net").unwrap(),
+            kind: "pkmsg",
+            ciphertext: vec![1],
+        };
+        let targets = std::slice::from_ref(&target);
+        let reaction = sender_key_stanza(
+            &chat,
+            "M",
+            StanzaContent::Reaction,
+            None,
+            None,
+            targets,
+            &[1],
+        )
+        .unwrap();
+        assert_eq!(
+            reaction.get_attr("type").unwrap().as_text(),
+            Some("reaction")
+        );
+        let skmsg = reaction
+            .child_nodes()
+            .iter()
+            .find(|n| n.description == "enc")
+            .unwrap();
+        assert_eq!(
+            skmsg.get_attr("decrypt-fail").unwrap().as_text(),
+            Some("hide")
+        );
+        let meta = reaction.child("meta").unwrap();
+        assert_eq!(
+            meta.get_attr("content_type").unwrap().as_text(),
+            Some("add_on")
+        );
+        let to = &reaction.child("participants").unwrap().child_nodes()[0];
+        assert!(to.child_nodes()[0].get_attr("decrypt-fail").is_none());
+
+        let media = sender_key_stanza(
+            &chat,
+            "M",
+            StanzaContent::Media("image"),
+            None,
+            None,
+            targets,
+            &[1],
+        )
+        .unwrap();
+        assert_eq!(media.get_attr("type").unwrap().as_text(), Some("media"));
+        let skmsg = media
+            .child_nodes()
+            .iter()
+            .find(|n| n.description == "enc")
+            .unwrap();
+        assert_eq!(
+            skmsg.get_attr("mediatype").unwrap().as_text(),
+            Some("image")
+        );
+        assert!(media.child("meta").is_none());
+        let to = &media.child("participants").unwrap().child_nodes()[0];
+        assert!(to.child_nodes()[0].get_attr("mediatype").is_none());
+
+        assert!(
+            sender_key_stanza(
+                &chat,
+                "M",
+                StanzaContent::Media("video"),
+                None,
+                None,
+                targets,
+                &[1]
+            )
+            .is_err(),
+            "no media kind is sent before its direct envelope exists"
+        );
+    }
+
+    #[test]
     fn sender_key_stanza_refuses_malformed_input() {
         let chat = Jid::parse("120363000000000001@g.us").unwrap();
         let ok = FanoutTarget {
@@ -891,14 +1055,23 @@ mod tests {
         };
         // An empty fan-out is allowed (out-of-band distribution) and simply
         // omits `<participants>`; an empty skmsg and an empty id are not.
-        let bare = sender_key_stanza(&chat, "M", "text", Some("lid"), None, &[], &[1]).unwrap();
+        let bare = sender_key_stanza(
+            &chat,
+            "M",
+            StanzaContent::Text,
+            Some("lid"),
+            None,
+            &[],
+            &[1],
+        )
+        .unwrap();
         assert!(bare.child("participants").is_none());
         assert_eq!(bare.child_nodes().len(), 1);
         assert!(
             sender_key_stanza(
                 &chat,
                 "M",
-                "text",
+                StanzaContent::Text,
                 Some("lid"),
                 None,
                 std::slice::from_ref(&ok),
@@ -910,7 +1083,7 @@ mod tests {
             sender_key_stanza(
                 &chat,
                 "",
-                "text",
+                StanzaContent::Text,
                 Some("lid"),
                 None,
                 std::slice::from_ref(&ok),
@@ -923,13 +1096,35 @@ mod tests {
             kind: "skmsg",
             ..ok.clone()
         };
-        assert!(sender_key_stanza(&chat, "M", "text", Some("lid"), None, &[wrong], &[1]).is_err());
+        assert!(
+            sender_key_stanza(
+                &chat,
+                "M",
+                StanzaContent::Text,
+                Some("lid"),
+                None,
+                &[wrong],
+                &[1]
+            )
+            .is_err()
+        );
         // Empty per-device ciphertext.
         let empty = FanoutTarget {
             ciphertext: Vec::new(),
             ..ok
         };
-        assert!(sender_key_stanza(&chat, "M", "text", Some("lid"), None, &[empty], &[1]).is_err());
+        assert!(
+            sender_key_stanza(
+                &chat,
+                "M",
+                StanzaContent::Text,
+                Some("lid"),
+                None,
+                &[empty],
+                &[1]
+            )
+            .is_err()
+        );
     }
 
     /// Vectors computed independently with Python's hashlib and base64 before
