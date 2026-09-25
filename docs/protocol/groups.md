@@ -884,3 +884,34 @@ receive path's content-hashed capture keys, so `lab-inbox` can open them.
 an `error` attribute. `parse_group` counted it, so the snapshot said two members
 while the next `group info` said one, and the fan-out then had nobody to address.
 Such entries are now skipped.
+
+### Group reactions still do not render (2026-09-25)
+
+The operator reports that neither the `👍` (`l-react-1`, sent as `type=text`)
+nor the `❤️` (`l-react-2`, sent as `type=reaction` with the add-on markers)
+appears. Typing indicators into the same group do appear, so the connection and
+addressing are fine. What was checked, all **observed** from saved captures:
+
+* **Payload layout matches the official client's.** The operator's own group
+  reaction decodes as `Message{46}`, `ReactionMessage{1,2,4}`,
+  `MessageKey{1,2,3,4}` with a LID `participant` — the same fields ours sets
+  (`reactions::shape`, printed by `lab-inbox --inspect`).
+* **Stanza matches.** Their incoming reaction is `type=reaction`, `skmsg` with
+  `decrypt-fail=hide`, `<meta content_type=add_on>` — what we now send.
+* **Target is right.** `AC742884…` is a group text from the operator's LID
+  (`participant_tail` in the inspector), 90-day disappearing timer, ~29 h old
+  when reacted to, so it had not expired.
+* **The ack differs.** Every group text fan-out was acked `count="3"`. The
+  `type=reaction` send was acked with **no `count`** and with
+  `addressing_mode="lid"` echoed. `l-react-1`, sent as `type=text`, was acked
+  `count=3` like a text. What an absent `count` means for a group ack was **not
+  established**: the handler first traced (`LX/DMA->run`) turned out to be the
+  status ack path, which parses `addressing_mode` as `pn`/`lid` and `count` as
+  an integer but says nothing about groups.
+* No delivery receipt came back for either reaction; the texts and the reply
+  did get receipts. Whether the official client receipts reactions at all was
+  not checked, so this is not by itself evidence of non-delivery.
+
+`decrypt-fail="hide"` means a reaction the phone cannot decrypt is dropped
+silently, with no retry receipt, so decryption failure cannot be ruled out from
+our side.

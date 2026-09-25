@@ -160,6 +160,63 @@ pub struct Incoming {
     pub emoji: Option<String>,
 }
 
+/// Diagnostic: every field number present in a reaction payload, at the
+/// `Message`, `ReactionMessage` and `MessageKey` levels, plus the participant's
+/// server and whether it carries a device suffix. No identities or text.
+pub fn shape(payload: &[u8]) -> Option<String> {
+    fn fields(bytes: &[u8]) -> Option<Vec<(u32, Option<&[u8]>)>> {
+        let mut out = Vec::new();
+        let mut buf = bytes;
+        while !buf.is_empty() {
+            let tag = prost::encoding::decode_varint(&mut buf).ok()?;
+            let number = (tag >> 3) as u32;
+            match tag & 7 {
+                0 => {
+                    prost::encoding::decode_varint(&mut buf).ok()?;
+                    out.push((number, None));
+                }
+                1 => {
+                    buf = buf.get(8..)?;
+                    out.push((number, None));
+                }
+                2 => {
+                    let len = prost::encoding::decode_varint(&mut buf).ok()? as usize;
+                    let (body, rest) = (buf.get(..len)?, buf.get(len..)?);
+                    out.push((number, Some(body)));
+                    buf = rest;
+                }
+                5 => {
+                    buf = buf.get(4..)?;
+                    out.push((number, None));
+                }
+                _ => return None,
+            }
+        }
+        Some(out)
+    }
+    let top = fields(payload)?;
+    let reaction = top.iter().find(|(n, _)| *n == 46)?.1?;
+    let inner = fields(reaction)?;
+    let key = inner.iter().find(|(n, _)| *n == 1).and_then(|(_, b)| *b);
+    let key_fields = key.and_then(fields).unwrap_or_default();
+    let participant = key_fields
+        .iter()
+        .find(|(n, _)| *n == 4)
+        .and_then(|(_, b)| std::str::from_utf8((*b)?).ok())
+        .map(|p| {
+            let server = p.rsplit_once('@').map_or("", |(_, s)| s);
+            format!("{server}{}", if p.contains(':') { "+device" } else { "" })
+        });
+    let nums = |v: &[(u32, Option<&[u8]>)]| v.iter().map(|(n, _)| *n).collect::<Vec<_>>();
+    Some(format!(
+        "message={:?} reaction={:?} key={:?} participant={:?}",
+        nums(&top),
+        nums(&inner),
+        nums(&key_fields),
+        participant
+    ))
+}
+
 /// Diagnostic: the key's `remoteJid` string and whether `participant` is set.
 pub fn key_fields(payload: &[u8]) -> Option<(Option<String>, bool)> {
     let key = Envelope::decode(payload).ok()?.reaction?.key?;

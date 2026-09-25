@@ -1201,6 +1201,9 @@ pub(super) async fn run(
                     key_fields.1,
                     reaction.emoji.as_deref().map_or(0, str::len)
                 );
+                if let Some(shape) = whatsapp_api::transport::reactions::shape(&plain) {
+                    println!("inbox: reaction shape {shape}");
+                }
             }
         }
     }
@@ -1240,7 +1243,7 @@ pub(super) async fn run(
             replayed.0, replayed.1, replayed.2
         );
     }
-    for (key, value) in captures {
+    for (key, value) in &captures {
         if inspect {
             if is_capture(&key) {
                 let wire: Vec<u8> = serde_json::from_slice(&value)
@@ -1411,11 +1414,15 @@ pub(super) async fn run(
                                 .map(str::to_owned)
                         };
                         format!(
-                            ", class={:?}, phash={:?}, count={:?}, error={:?}",
+                            ", class={:?}, phash={:?}, count={:?}, error={:?}, ack_addressing_mode={:?}, from_server={:?}",
                             show("class"),
                             show("phash"),
                             show("count"),
-                            show("error")
+                            show("error"),
+                            show("addressing_mode"),
+                            node.get_attr("from")
+                                .and_then(|v| v.as_jid())
+                                .map(|j| format!("{:?}", j.server))
                         )
                     } else {
                         String::new()
@@ -1484,7 +1491,37 @@ pub(super) async fn run(
                     } else {
                         String::new()
                     };
-                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{ack}{retry}{routing}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
+                    // A disappearing-message timer and the message's age decide
+                    // whether a later reply or reaction still has a target.
+                    let number = |name: &str| {
+                        node.get_attr(name)
+                            .and_then(|v| v.as_text())
+                            .and_then(|v| v.parse::<i64>().ok())
+                    };
+                    let sender_tail = node
+                        .get_attr("participant")
+                        .and_then(|v| v.as_jid())
+                        .map(|j| {
+                            let raw = j.to_non_ad().to_string();
+                            let tail: String = raw
+                                .chars()
+                                .rev()
+                                .take(9)
+                                .collect::<Vec<_>>()
+                                .into_iter()
+                                .rev()
+                                .collect();
+                            format!(", participant_tail={tail}")
+                        })
+                        .unwrap_or_default();
+                    let timing = match (number("expiration"), number("t")) {
+                        (None, None) => String::new(),
+                        (expiration, t) => format!(
+                            ", expiration_s={expiration:?}, age_s={:?}",
+                            t.map(|t| whatsapp_api::model::time::Timestamp::now().0 / 1000 - t)
+                        ),
+                    };
+                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{ack}{retry}{routing}{timing}{sender_tail}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
                 }
             }
             if key.starts_with(b"received:") {
@@ -1534,6 +1571,53 @@ pub(super) async fn run(
     }
     for shape in capture_shapes {
         println!("{shape}");
+    }
+    if inspect {
+        // Which request produced which wire id, so an `ack` or `receipt` above
+        // (listed by the first eight characters of its id) can be tied to the
+        // send that caused it. Request ids are the operator's own labels.
+        // Where each received message came from, last four characters only —
+        // enough to check a reply or reaction names the right sender.
+        for (key, _) in &captures {
+            if let Some((sender, id)) = std::str::from_utf8(key)
+                .ok()
+                .and_then(|k| k.strip_prefix("received:"))
+                .and_then(|rest| rest.rsplit_once(':'))
+            {
+                let tail: String = sender
+                    .chars()
+                    .rev()
+                    .take(9)
+                    .collect::<Vec<_>>()
+                    .into_iter()
+                    .rev()
+                    .collect();
+                println!(
+                    "inbox: received id={} sender_tail={tail}",
+                    id.chars().take(8).collect::<String>()
+                );
+            }
+        }
+        for (key, value) in &captures {
+            let Some(request) = std::str::from_utf8(key)
+                .ok()
+                .and_then(|k| k.strip_prefix("message:"))
+                .and_then(|k| k.strip_suffix(":send"))
+            else {
+                continue;
+            };
+            let Ok(saved) = serde_json::from_slice::<serde_json::Value>(value) else {
+                continue;
+            };
+            let wire = saved["wire_id"]
+                .as_str()
+                .map(|w| w.chars().take(8).collect::<String>());
+            println!(
+                "inbox: send request={request} wire_id={} status={}",
+                wire.as_deref().unwrap_or("?"),
+                saved["status"].as_str().unwrap_or("?")
+            );
+        }
     }
     println!("inbox: {count} newly decrypted payloads; no network requests");
     Ok(())
