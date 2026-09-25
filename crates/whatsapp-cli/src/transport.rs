@@ -104,6 +104,8 @@ pub(super) struct Session<'a> {
     pub push_name: Option<&'a str>,
     /// Show one typing indicator after login.
     pub typing: Option<Typing>,
+    /// People to subscribe to once a receive window is active.
+    pub subscribe: Vec<whatsapp_api::model::jid::Jid>,
 }
 
 /// One typing indicator: the state to show, and how long before `paused`.
@@ -128,6 +130,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
         media_route,
         push_name,
         typing,
+        subscribe,
     } = session;
     if !allow_live {
         return Err(Error::invalid("transport", "requires --allow-live-request"));
@@ -529,6 +532,30 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                             "connection activation refused; response saved encrypted",
                         ));
                     }
+                    if !subscribe.is_empty() {
+                        use whatsapp_api::transport::{
+                            messaging::{available_presence, write_node},
+                            presence,
+                        };
+                        // Only an available client is sent other people's
+                        // presence; the runtime announces it at this same point.
+                        write_node(&mut channel, &available_presence()).await?;
+                        let mut with_token = 0usize;
+                        for peer in &subscribe {
+                            let token = presence::saved_tctoken(&store, peer)?
+                                .filter(|t| (1..=120).contains(&t.len()));
+                            with_token += usize::from(token.is_some());
+                            write_node(
+                                &mut channel,
+                                &presence::subscribe(peer, None, token.as_deref())?,
+                            )
+                            .await?;
+                        }
+                        println!(
+                            "transport: subscribed to {} contact(s), {with_token} with a saved token",
+                            subscribe.len()
+                        );
+                    }
                     continue;
                 }
                 let tag = match node.description.as_str() {
@@ -553,6 +580,39 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                     format!("inbound:{capture}:{index}").as_bytes(),
                 )
                 .await?;
+                if let Some(seen) = whatsapp_api::transport::presence::parse_presence(&node) {
+                    use whatsapp_api::transport::presence::LastSeen;
+                    println!(
+                        "transport: presence {} (last seen {})",
+                        match seen.available {
+                            Some(true) => "available",
+                            Some(false) => "unavailable",
+                            None => "untyped",
+                        },
+                        match seen.last_seen {
+                            LastSeen::Absent => "not given".to_owned(),
+                            LastSeen::At(t) => format!(
+                                "{}s ago",
+                                u64::try_from(Timestamp::now().0 / 1000)
+                                    .unwrap_or(0)
+                                    .saturating_sub(t)
+                            ),
+                            LastSeen::Withheld(why) => why.to_owned(),
+                        }
+                    );
+                }
+                if let Some(typing) = whatsapp_api::transport::presence::parse_chatstate(&node) {
+                    // Identities stay out of the log, as everywhere else here.
+                    println!(
+                        "transport: chat state {:?} in a {} chat",
+                        typing.state,
+                        if typing.chat.is_group() {
+                            "group"
+                        } else {
+                            "direct"
+                        }
+                    );
+                }
                 if let Some(receipt) = whatsapp_api::transport::status_receipts::parse(&node)
                     && whatsapp_api::transport::status_receipts::record(&store, &receipt)?
                 {

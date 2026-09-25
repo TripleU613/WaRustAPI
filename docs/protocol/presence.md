@@ -63,8 +63,44 @@ not traced; we send it only when asked.
 
 **Confirmed** receive side — `LX/1Qq->A02` reads `from`, `participant`, and a
 `composing` child (with optional `media`) or a `paused` child, the element name
-being `chatstate` (`LX/1Qq->A03`). Our receive path does not project incoming
-chat states yet.
+being `chatstate` (`LX/1Qq->A03`). `presence::parse_chatstate` reads the same,
+and a `--receive` window reports each one (state and direct/group only; no
+identities). They are ephemeral and are not written to the event journal.
+
+## Subscribing to someone's presence
+
+The server forwards a person's availability and typing to clients that asked.
+The official client asks when a chat is opened. **Confirmed** from
+`LX/0y0->A00`, logged `WriterThread/write/subscription-request`:
+
+```
+<presence type="subscribe" [context="<group>"] to="<person>">
+  [<tctoken>…their trusted-contact token…</tctoken>]
+</presence>
+```
+
+* `context` is a group JID (parsed by `LX/1bo->A03` into `LX/1bn`), added only
+  when the caller supplies one. We never supply it; which UI path does was
+  **not traced**.
+* `to` is validated against `LX/1bn` and `UserJid`.
+* The token comes from the message's `tctoken` bundle value and is length
+  checked `1..=120` by `LX/0hp->A04`. It is built as `<tctoken>` inside two
+  `smax:any` nodes; `LX/0ho->A04` treats `smax:any` as "merge into the node this
+  is added to" (its error strings are `Error merging <…/> with <…/>`), so what
+  goes on the wire is a plain `<tctoken>` child carrying the bytes. We send the
+  peer's token saved from a `privacy_token` notification
+  (`incoming-trusted-contact:<jid>`, see [messaging-transport](messaging-transport.md)),
+  or none.
+
+Incoming `presence` — **confirmed** `LX/1Qw->A02`: `from`, `type`
+(`unavailable` / `available`), and `last`, which `LX/8nc->A00` reads as seconds
+(multiplied by 1,000) or one of `deny`, `error`, `none`. The group branch of the
+same handler reads a `count` attribute for a `PermanentGroupJid` `from`; it is
+not implemented.
+
+```
+whatsapp-cli lab-transport --allow-live-request --login --receive --subscribe <person>
+```
 
 ## CLI
 

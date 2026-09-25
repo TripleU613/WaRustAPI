@@ -6338,7 +6338,7 @@
                   },
                   "receive": {
                     "type": "boolean",
-                    "description": "Preserve incoming stanzas for up to 30 seconds without sending a chat"
+                    "description": "Preserve incoming stanzas for up to 30 seconds without sending a chat. Incoming `presence` and `chatstate` stanzas are reported (redacted) as they arrive."
                   },
                   "media_route": {
                     "type": "boolean",
@@ -6377,6 +6377,14 @@
                     "maximum": 25,
                     "default": 5,
                     "description": "How long to hold `composing`/`recording` before `paused`."
+                  },
+                  "subscribe": {
+                    "type": "array",
+                    "maxItems": 16,
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "During `receive`, subscribe to these people's availability and typing, as opening their chat does: after activation, `presence type=available`, then per person `<presence type=\"subscribe\" to=…>` with a `<tctoken>` child carrying their saved trusted-contact token when one is held (comparison 2.26.37.71 `LX/0y0->A00`, `WriterThread/write/subscription-request`, confirmed; token bound 1..=120 bytes). Incoming `presence` (available/unavailable, `last` seen) and `chatstate` (composing/recording/paused) are then reported during the window with identities redacted. People only; group typing arrives without a subscription. Not live-verified yet."
                   }
                 }
               }
@@ -6405,7 +6413,10 @@
           "whatsapp_api::transport::messaging::key_request_many",
           "whatsapp_api::transport::presence::push_name",
           "whatsapp_api::transport::presence::chatstate",
-          "whatsapp_api::transport::presence::chat_target"
+          "whatsapp_api::transport::presence::chat_target",
+          "whatsapp_api::transport::presence::subscribe",
+          "whatsapp_api::transport::presence::parse_presence",
+          "whatsapp_api::transport::presence::parse_chatstate"
         ]
       }
     },

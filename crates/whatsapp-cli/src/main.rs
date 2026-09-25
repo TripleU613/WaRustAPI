@@ -526,6 +526,11 @@ enum Cmd {
         /// or a `…@g.us` group), hold it, then send `paused`.
         #[arg(long, requires = "login", conflicts_with = "recheck_refusal")]
         typing: Option<String>,
+        /// During `--receive`, subscribe to this person's availability and
+        /// typing (repeatable, at most 16), as opening their chat does. Each
+        /// carries their trusted-contact token when one is saved.
+        #[arg(long, requires = "receive")]
+        subscribe: Vec<String>,
         /// `composing` (typing), `recording` (voice note) or `paused`.
         #[arg(long, requires = "typing", default_value = "composing")]
         typing_state: String,
@@ -1422,6 +1427,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
             typing,
             typing_state,
             typing_seconds,
+            subscribe,
         } => {
             let config = cli.config_path(config.as_ref(), None)?;
             // Validated before connecting: a bad input must not cost a login.
@@ -1441,6 +1447,25 @@ async fn run(cli: Cli) -> Result<(), Error> {
             if let Some(name) = push_name {
                 whatsapp_api::transport::presence::push_name(name)?;
             }
+            if subscribe.len() > 16 {
+                return Err(Error::invalid(
+                    "subscribe",
+                    "at most 16 subscriptions per session",
+                ));
+            }
+            let subscribe = subscribe
+                .iter()
+                .map(|raw| {
+                    let jid = whatsapp_api::transport::presence::chat_target(raw)?;
+                    if jid.is_group() {
+                        return Err(Error::invalid(
+                            "subscribe",
+                            "subscribe to people; group typing arrives without one",
+                        ));
+                    }
+                    Ok(jid)
+                })
+                .collect::<Result<Vec<_>, Error>>()?;
             transport::run(
                 &cli,
                 &config,
@@ -1453,6 +1478,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
                     media_route: *media_route,
                     push_name: push_name.as_deref(),
                     typing,
+                    subscribe,
                 },
             )
             .await

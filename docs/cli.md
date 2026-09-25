@@ -736,6 +736,7 @@ Usage: whatsapp-cli lab-transport [OPTIONS]...
 | --media-route | MEDIA_ROUTE | no |  |  | `true`, `false` | Obtain and privately preserve one current media-upload route response |
 | --push-name | PUSH_NAME | no |  |  |  | Set the display name others see beside this number: one `<presence name=… type="available"/>` after login. Fire-and-forget; the server does not acknowledge it |
 | --typing | TYPING | no |  |  |  | Show a typing indicator in this chat (E.164 digits, a phone/LID JID or a `…@g.us` group), hold it, then send `paused` |
+| --subscribe | SUBSCRIBE | no |  |  |  | During `--receive`, subscribe to this person's availability and typing (repeatable, at most 16), as opening their chat does. Each carries their trusted-contact token when one is saved |
 | --typing-state | TYPING_STATE | no | `composing` |  |  | `composing` (typing), `recording` (voice note) or `paused` |
 | --typing-seconds | TYPING_SECONDS | no | `5` |  |  | How long to hold `composing`/`recording` before `paused`, 1–25 s |
 

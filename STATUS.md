@@ -35,8 +35,9 @@ Registration uses the recipe in
 | App-state writes (contact action) incl. 409 catch-up | live | [chat-actions](docs/protocol/chat-actions.md) |
 | Block/unblock, contact check, disappearing, keep-in-chat | live | same |
 | Two-step verification set/change/disable | live (set) | [chat-actions](docs/protocol/chat-actions.md) |
-| Display name (`presence name=…`) | offline | [presence](docs/protocol/presence.md) |
-| Typing / recording indicators (`chatstate`) | offline; incoming ones not projected | same |
+| Display name (`presence name=…`) | written live, handset unconfirmed | [presence](docs/protocol/presence.md) |
+| Typing / recording indicators (`chatstate`) | written live, handset unconfirmed; incoming ones reported in `--receive` (offline) | same |
+| Presence subscribe, incoming availability / last seen | offline | same |
 | Prekey upload and replenishment | live | [messaging-completion](docs/messaging-completion.md) |
 
 A single undecryptable incoming message no longer ends a session; it degrades

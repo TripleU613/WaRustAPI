@@ -18,7 +18,8 @@
 //!   **Confirmed.** The `to` is validated against `UserJid`, `LX/1bn` and
 //!   `LX/9Lm` — a user, and (inferred from the class set) a group.
 //! * The receive side, `LX/1Qq->A02`, reads `from`, `participant`, and a
-//!   `composing` (with optional `media`) or `paused` child. **Confirmed.**
+//!   `composing` (with optional `media`) or `paused` child. **Confirmed**;
+//!   [`parse_chatstate`] reads the same.
 //!
 //! **Not implemented, deliberately:** the `bot` child `LX/B2G` adds for one
 //! branch (`<composing><bot jid=…/></composing>`, a bot-chat case), and the
@@ -123,6 +124,149 @@ pub fn chatstate(chat: &Jid, state: ChatState) -> Result<Node> {
         .children(vec![child]))
 }
 
+/// `<presence type="subscribe" [context=<group>] to=<chat>>[<tctoken>…</tctoken>]`
+/// — ask the server to forward someone's availability and typing to us, which
+/// the official client does when a chat is opened.
+///
+/// **Confirmed** from `LX/0y0->A00`, `WriterThread/write/subscription-request`:
+/// `type="subscribe"`; `context` (a group JID parsed by `LX/1bo->A03`) only when
+/// supplied; `to` validated against `LX/1bn` and `UserJid`; and the peer's
+/// trusted-contact token, when held, bounded to 1..=120 bytes by
+/// `LX/0hp->A04(bytes, 1, 120)`. The token is built as `<tctoken>` wrapped in
+/// two `smax:any` nodes, and `LX/0ho->A04` merges an `smax:any` into the node
+/// it is added to, so on the wire it is a plain `<tctoken>` child of
+/// `presence` carrying the bytes.
+pub fn subscribe(to: &Jid, context: Option<&Jid>, tctoken: Option<&[u8]>) -> Result<Node> {
+    if !matches!(to.server, Server::User | Server::Lid) || to.device != 0 {
+        return Err(invalid(
+            "a subscription is to a person, with no device suffix",
+        ));
+    }
+    let mut node = Node::new("presence").attr("type", "subscribe");
+    if let Some(context) = context {
+        if context.server != Server::Group {
+            return Err(invalid("a subscription context is a group"));
+        }
+        node = node.attr("context", context.clone());
+    }
+    node = node.attr("to", to.clone());
+    if let Some(token) = tctoken {
+        if !(1..=120).contains(&token.len()) {
+            return Err(invalid("a tctoken is 1 to 120 bytes (LX/0hp->A04)"));
+        }
+        node = node.children(vec![Node::new("tctoken").bytes(token.to_vec())]);
+    }
+    Ok(node)
+}
+
+/// When someone was last online, as `LX/8nc->A00` reads `last`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum LastSeen {
+    /// No `last` attribute.
+    Absent,
+    /// Seconds since the epoch (the APK multiplies by 1,000).
+    At(u64),
+    /// `deny`, `error` or `none`: hidden or unavailable, by their setting.
+    Withheld(&'static str),
+}
+
+/// An incoming availability update, as `LX/1Qw->A02` reads it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IncomingPresence {
+    /// Whose it is.
+    pub from: Jid,
+    /// `Some(true)` for `type="available"`, `Some(false)` for `unavailable`,
+    /// `None` when there is no `type` (`LX/1Qw` acts on neither then).
+    pub available: Option<bool>,
+    /// Their last-seen, when offline.
+    pub last_seen: LastSeen,
+}
+
+/// Read an incoming `<presence>`; `None` for our own outgoing shapes and
+/// anything without a sender.
+pub fn parse_presence(node: &Node) -> Option<IncomingPresence> {
+    if node.description != "presence" {
+        return None;
+    }
+    let from = node.get_attr("from").and_then(|v| {
+        v.as_jid()
+            .cloned()
+            .or_else(|| Jid::parse(v.as_text()?).ok())
+    })?;
+    let available = match node.get_attr("type").and_then(|v| v.as_text()) {
+        Some("available") => Some(true),
+        Some("unavailable") => Some(false),
+        _ => None,
+    };
+    let last_seen = match node.get_attr("last").and_then(|v| v.as_text()) {
+        None => LastSeen::Absent,
+        Some("deny") => LastSeen::Withheld("deny"),
+        Some("error") => LastSeen::Withheld("error"),
+        Some("none") => LastSeen::Withheld("none"),
+        Some(raw) => raw
+            .parse()
+            .map(LastSeen::At)
+            .unwrap_or(LastSeen::Withheld("error")),
+    };
+    Some(IncomingPresence {
+        from,
+        available,
+        last_seen,
+    })
+}
+
+/// The peer's saved trusted-contact token (`notifications::record` keeps it
+/// under `incoming-trusted-contact:<jid>`), when one is held.
+pub fn saved_tctoken(store: &crate::store::ProtocolStore, peer: &Jid) -> Result<Option<Vec<u8>>> {
+    let key = format!("incoming-trusted-contact:{peer}");
+    let saved: Option<serde_json::Value> =
+        store.read(|tx| tx.get_json(crate::store::Table::Checkpoints, key.as_bytes(), 1))?;
+    Ok(saved.and_then(|v| serde_json::from_value(v["token"].clone()).ok()))
+}
+
+/// An incoming chat state, as `LX/1Qq->A02` reads it: the chat in `from`, the
+/// member in `participant` when the chat is a group.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IncomingChatState {
+    /// The chat it happened in: a person, or a group.
+    pub chat: Jid,
+    /// Who is typing, in a group; `None` in a direct chat, where it is `chat`.
+    pub participant: Option<Jid>,
+    /// What they are doing.
+    pub state: ChatState,
+}
+
+/// Read a `<chatstate>`; `None` for anything else, including a child this
+/// build does not name. Ephemeral by nature, so the caller decides whether to
+/// keep it — nothing here writes.
+pub fn parse_chatstate(node: &Node) -> Option<IncomingChatState> {
+    if node.description != "chatstate" {
+        return None;
+    }
+    let jid = |name: &str| {
+        node.get_attr(name).and_then(|v| {
+            v.as_jid()
+                .cloned()
+                .or_else(|| Jid::parse(v.as_text()?).ok())
+        })
+    };
+    let chat = jid("from")?;
+    let child = node.child_nodes().first()?;
+    let state = match child.description.as_str() {
+        "composing" => match child.get_attr("media").and_then(|v| v.as_text()) {
+            Some("audio") => ChatState::Recording,
+            _ => ChatState::Composing,
+        },
+        "paused" => ChatState::Paused,
+        _ => return None,
+    };
+    Some(IncomingChatState {
+        chat,
+        participant: jid("participant"),
+        state,
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -183,6 +327,89 @@ mod tests {
 
         let group = chat_target("120363000000000001@g.us").unwrap();
         assert!(chatstate(&group, ChatState::Composing).is_ok());
+    }
+
+    /// The shape `LX/1Qq->A02` reads.
+    #[test]
+    fn incoming_chatstates_are_read_like_the_apk_reads_them() {
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let member = Jid::parse("15551234567@lid").unwrap();
+        let node = Node::new("chatstate")
+            .attr("from", group.clone())
+            .attr("participant", member.clone())
+            .children(vec![Node::new("composing").attr("media", "audio")]);
+        let parsed = parse_chatstate(&node).unwrap();
+        assert_eq!(parsed.chat, group);
+        assert_eq!(parsed.participant, Some(member));
+        assert_eq!(parsed.state, ChatState::Recording);
+
+        let direct = Node::new("chatstate")
+            .attr("from", Jid::parse("15551234567@s.whatsapp.net").unwrap())
+            .children(vec![Node::new("paused")]);
+        let parsed = parse_chatstate(&direct).unwrap();
+        assert_eq!(parsed.state, ChatState::Paused);
+        assert!(parsed.participant.is_none());
+
+        let unknown = Node::new("chatstate")
+            .attr("from", Jid::parse("15551234567@s.whatsapp.net").unwrap())
+            .children(vec![Node::new("dancing")]);
+        assert!(parse_chatstate(&unknown).is_none());
+        assert!(parse_chatstate(&Node::new("presence")).is_none());
+    }
+
+    /// `LX/0y0->A00`, subscription-request writer, after `smax:any` merging.
+    #[test]
+    fn subscribe_matches_the_traced_writer() {
+        let peer = Jid::parse("15551234567@s.whatsapp.net").unwrap();
+        let bare = subscribe(&peer, None, None).unwrap();
+        assert_eq!(bare.description, "presence");
+        assert_eq!(bare.get_attr("type").unwrap().as_text(), Some("subscribe"));
+        assert_eq!(bare.get_attr("to").unwrap().as_jid(), Some(&peer));
+        assert_eq!(bare.attributes.len(), 2);
+        assert!(bare.child_nodes().is_empty());
+        round_trip(&bare);
+
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let full = subscribe(&peer, Some(&group), Some(&[7; 20])).unwrap();
+        assert_eq!(full.get_attr("context").unwrap().as_jid(), Some(&group));
+        let token = full.child("tctoken").unwrap();
+        assert!(
+            matches!(&token.content, crate::binary::NodeContent::Bytes(b) if b == &vec![7; 20])
+        );
+        round_trip(&full);
+
+        assert!(subscribe(&peer, None, Some(&[])).is_err());
+        assert!(subscribe(&peer, None, Some(&[0; 121])).is_err());
+        assert!(subscribe(&group, None, None).is_err());
+        assert!(subscribe(&peer, Some(&peer), None).is_err());
+    }
+
+    /// `LX/1Qw->A02` and `LX/8nc->A00`.
+    #[test]
+    fn incoming_presence_reads_type_and_last_seen() {
+        let peer = Jid::parse("15551234567@s.whatsapp.net").unwrap();
+        let online = Node::new("presence").attr("from", peer.clone());
+        let parsed = parse_presence(&online).unwrap();
+        assert_eq!(parsed.available, None);
+        assert_eq!(parsed.last_seen, LastSeen::Absent);
+
+        let offline = Node::new("presence")
+            .attr("from", peer.clone())
+            .attr("type", "unavailable")
+            .attr("last", "1790000000");
+        let parsed = parse_presence(&offline).unwrap();
+        assert_eq!(parsed.available, Some(false));
+        assert_eq!(parsed.last_seen, LastSeen::At(1_790_000_000));
+
+        let hidden = Node::new("presence")
+            .attr("from", peer)
+            .attr("type", "unavailable")
+            .attr("last", "deny");
+        assert_eq!(
+            parse_presence(&hidden).unwrap().last_seen,
+            LastSeen::Withheld("deny")
+        );
+        assert!(parse_presence(&Node::new("presence").attr("type", "available")).is_none());
     }
 
     #[test]
