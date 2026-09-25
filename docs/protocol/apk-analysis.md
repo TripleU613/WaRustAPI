@@ -115,3 +115,41 @@ Copies `AndroidManifest.xml`, `classes.dex`, `resources.arsc` (if present), ever
   against the exact pinned 2.26.36.75 APK.
 - Which Noise pattern the client selects for a fresh primary registration
   (classic XX vs ML-KEM512 hybrid) and the certificate trust root bytes.
+
+## Reading protobuf field numbers (`apk-proto-fields`)
+
+```sh
+cargo run --release -p xtask -- apk-proto-fields /path/to/WhatsApp.apk --class 'LX/BZc;'
+```
+
+A generated protobuf-lite class carries **no field-number constants**. It hands
+`GeneratedMessageLite.newMessageInfo` an array of field names and an encoded
+string pairing each name with its number and type. Every other way of getting a
+number has produced a wrong answer here:
+
+* **from memory** — `senderKeyDistributionMessage` was implemented as field 18
+  (`liveLocationMessage`), matched nothing, and no group message decrypted for
+  weeks;
+* **from position in the name array** — the array holds the class's own
+  bookkeeping strings first and the numbers are not contiguous, so counting gives
+  `stickerMessage` = 22 rather than 26.
+
+A wrong field number is self-consistent locally — our own encoder and decoder
+agree — and unreadable by every real client, which is the worst failure mode
+available.
+
+The string is a ten-value header then one `(number, type, index)` triple per
+field. `index` counts from zero and the numbers ascend, so a mis-parse breaks
+both invariants at once; the tool stops there and refuses to print a pairing it
+could not verify, rather than emitting plausible nonsense.
+
+**One trap worth naming.** The literal must be extracted honouring `\"`: the
+encoding uses the raw character for field 34, which is `"`, so splitting the
+disassembly line on quotes truncates there. That truncation is silent — a
+110-field message decodes as a 34-field one and the names shift by 76.
+
+Validated on `LX/BZc;` (`Message`) against every number this project already
+knew independently: `conversation` 1, `senderKeyDistributionMessage` 2,
+`imageMessage` 3, `extendedTextMessage` 6, `documentMessage` 7, `audioMessage`
+8, `videoMessage` 9, `reactionMessage` 46. It then gives `stickerMessage` **26**
+and `ptvMessage` **66**.

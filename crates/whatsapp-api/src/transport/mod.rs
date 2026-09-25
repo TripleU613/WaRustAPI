@@ -62,6 +62,11 @@ pub mod framing;
     feature = "experimental-transport"
 ))]
 pub mod group_send;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod groups;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod handshake;
@@ -236,4 +241,5 @@ impl ConnectionEpoch {
     }
 }
 
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod two_factor;

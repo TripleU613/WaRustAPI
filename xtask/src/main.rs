@@ -115,6 +115,21 @@ enum Cmd {
         #[arg(long = "method")]
         method_filter: Option<String>,
     },
+    /// Decode a protobuf-lite message descriptor's field numbers.
+    ///
+    /// A generated protobuf-lite class carries no field-number constants: it
+    /// hands `newMessageInfo` a name array and an encoded string pairing each
+    /// name with its number. Reading a number any other way — from position in
+    /// the name array, or from the public schema, or from memory — has produced
+    /// wrong answers here before, and a wrong field number is self-consistent
+    /// locally and unreadable by every real client.
+    ApkProtoFields {
+        /// Path to the APK (kept outside the repository).
+        apk: PathBuf,
+        /// Substring to match against class descriptors (e.g. `LX/BZc`).
+        #[arg(long = "class")]
+        class_filter: String,
+    },
     /// Derive the comparison APK's `/v2/code` token for a phone number.
     ApkRegistrationToken {
         /// Path to the exact APK whose resources and signature are inputs.
@@ -181,6 +196,7 @@ fn main() -> ExitCode {
             class_filter,
             method_filter,
         } => xref::run_smali(&apk, &class_filter, method_filter.as_deref()),
+        Cmd::ApkProtoFields { apk, class_filter } => xref::run_proto_fields(&apk, &class_filter),
         Cmd::ApkRegistrationToken {
             apk,
             country_code,

@@ -1350,6 +1350,189 @@ fn access_flags_str(flags: u32) -> &'static str {
 
 // ── unit tests ────────────────────────────────────────────────────────────────
 
+/// Decode a protobuf-lite message descriptor's field numbers from the
+/// `newMessageInfo` string a `dynamicMethod` builds.
+///
+/// A generated protobuf-lite class carries no field-number constants: it hands
+/// `GeneratedMessageLite.newMessageInfo` an array of field names and an encoded
+/// string pairing each with its number and type. Reading a number any other way
+/// — from position in the name array, from the public schema, or from memory —
+/// has produced wrong answers in this project before, and a wrong field number
+/// is self-consistent locally and unreadable by every real client.
+///
+/// The string is a ten-value header followed by one `(number, type, index)`
+/// triple per field, where `index` counts up from zero and the numbers ascend.
+/// Those two invariants make the decode self-checking: a mis-parse breaks both
+/// at once, so this stops rather than walking off into plausible nonsense, and
+/// refuses to print a pairing it could not verify.
+pub fn run_proto_fields(apk: &Path, class_filter: &str) -> Result<(), String> {
+    let methods = apk_smali(apk, class_filter, Some("dynamicMethod"))?;
+    let mut printed = 0usize;
+    for method in &methods {
+        let class = method.class_name.clone();
+        let literals: Vec<String> = method
+            .insns
+            .iter()
+            .filter_map(|insn| {
+                let annotation = if insn.annotation.is_empty() {
+                    &insn.flow_annotation
+                } else {
+                    &insn.annotation
+                };
+                quoted_literal(annotation)
+            })
+            .collect();
+        let names: Vec<String> = literals
+            .iter()
+            .filter(|literal| {
+                literal.ends_with('_')
+                    && literal
+                        .chars()
+                        .all(|c| c.is_ascii_alphanumeric() || c == '_')
+            })
+            .cloned()
+            .collect();
+        let decoded = literals
+            .iter()
+            .filter(|literal| literal.starts_with("\\u{1}"))
+            .filter_map(|literal| {
+                let chars: Vec<char> = unescape(literal).chars().collect();
+                if chars.len() < 13 {
+                    return None;
+                }
+                let mut numbers: Vec<u32> = Vec::new();
+                let mut i = 10;
+                while i + 2 < chars.len() {
+                    let number = chars[i] as u32;
+                    if chars[i + 2] as usize != numbers.len()
+                        || numbers.last().is_some_and(|last| number <= *last)
+                    {
+                        break;
+                    }
+                    numbers.push(number);
+                    i += 3;
+                }
+                (!numbers.is_empty()).then_some(numbers)
+            })
+            .max_by_key(Vec::len);
+        let Some(numbers) = decoded else {
+            eprintln!("{class}: no descriptor string decoded cleanly; not guessing");
+            continue;
+        };
+        // The name array carries a few of the class's own bookkeeping strings
+        // before the field names. A walk accounting for nearly all of them is
+        // aligned; one stopping well short means the parse desynchronized and
+        // the pairing below would be silently wrong.
+        if numbers.len() > names.len() || numbers.len() + 8 < names.len() {
+            eprintln!(
+                "{class}: walked {} fields against {} names; not guessing",
+                numbers.len(),
+                names.len()
+            );
+            continue;
+        }
+        let offset = names.len() - numbers.len();
+        println!("# {class}  ({} fields)", numbers.len());
+        for (name, number) in names[offset..].iter().zip(&numbers) {
+            println!("{number:>4}  {}", name.trim_end_matches('_'));
+        }
+        printed += 1;
+    }
+    if printed == 0 {
+        eprintln!("no protobuf descriptor decoded for {class_filter}");
+    }
+    Ok(())
+}
+
+/// The quoted literal inside an instruction annotation, honouring `\"`.
+///
+/// Splitting on `"` truncates any literal containing an escaped quote — and a
+/// protobuf descriptor does, because the field-number encoding uses the raw
+/// character for field 34, which is `"`. That truncation is silent: the walk
+/// simply stops at field 34 and a 110-field message decodes as a 34-field one.
+fn quoted_literal(annotation: &str) -> Option<String> {
+    let chars: Vec<char> = annotation.chars().collect();
+    let open = chars.iter().position(|c| *c == '"')?;
+    let mut out = String::new();
+    let mut i = open + 1;
+    while i < chars.len() {
+        match chars[i] {
+            '"' => return Some(out),
+            '\\' if i + 1 < chars.len() => {
+                out.push('\\');
+                out.push(chars[i + 1]);
+                i += 2;
+            }
+            c => {
+                out.push(c);
+                i += 1;
+            }
+        }
+    }
+    None
+}
+
+/// Decode the disassembler's escaping, entirely in `char` positions. An earlier
+/// version mixed a byte offset from `str::find` with a char index and panicked
+/// on the first multi-byte escape it met.
+fn unescape(raw: &str) -> String {
+    let chars: Vec<char> = raw.chars().collect();
+    let mut out = String::new();
+    let mut i = 0;
+    while i < chars.len() {
+        if chars[i] != '\\' || i + 1 >= chars.len() {
+            out.push(chars[i]);
+            i += 1;
+            continue;
+        }
+        match chars[i + 1] {
+            'u' if i + 2 < chars.len() && chars[i + 2] == '{' => {
+                let decoded = chars[i + 3..]
+                    .iter()
+                    .position(|c| *c == '}')
+                    .and_then(|len| {
+                        let hex: String = chars[i + 3..i + 3 + len].iter().collect();
+                        u32::from_str_radix(&hex, 16)
+                            .ok()
+                            .and_then(char::from_u32)
+                            .map(|c| (c, len))
+                    });
+                match decoded {
+                    Some((c, len)) => {
+                        out.push(c);
+                        i += 4 + len;
+                    }
+                    None => {
+                        out.push(chars[i]);
+                        i += 1;
+                    }
+                }
+            }
+            '0' => {
+                out.push('\0');
+                i += 2;
+            }
+            't' => {
+                out.push('\t');
+                i += 2;
+            }
+            'n' => {
+                out.push('\n');
+                i += 2;
+            }
+            'r' => {
+                out.push('\r');
+                i += 2;
+            }
+            other => {
+                out.push(other);
+                i += 2;
+            }
+        }
+    }
+    out
+}
+
 #[cfg(test)]
 mod tests {
     #[test]
