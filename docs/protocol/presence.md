@@ -151,3 +151,12 @@ incoming shape matches `LX/1Qw`/`LX/8nc`. `deny` means their last-seen is
 withheld from us (their privacy setting, or this account not being a contact
 of theirs); which of the two was **not established**. No chat state arrived,
 since nobody typed during the window.
+
+## Live: the name record was accepted (2026-09-25, profile `l`)
+
+`push-name "TeleWhatsApp"` then `listen --seconds 30`: the patch went to
+`critical_block` with no `version` attribute (we held none), `order="1"`, and
+the server answered `iq type=result` with
+`<collection name="critical_block" version="1"/>`. First write to a second
+app-state collection, accepted first time. Whether a companion device shows the
+name was not checked — this account has none.

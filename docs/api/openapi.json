@@ -8802,13 +8802,13 @@
           "Lab"
         ],
         "summary": "Queue the display name as the pushNameSetting app-state record",
-        "description": "Queues an app-state patch to `critical_block` carrying one SET mutation: index `[\"setting_pushName\"]`, `SyncActionData.version` 1, value `SyncActionValue{timestamp: 1, pushNameSetting: 7 {name: 1}}` (comparison 2.26.37.71 `LX/B66`, `LX/Azq`, `LX/BZV`, `LX/BQd`, all confirmed). This is how the account's other devices learn the name; other people see it through the separate `<presence name=…>` stanza sent by `lab-transport --push-name`. Builds on the collection state the server last accepted and promotes the new state only once the server accepts it; a 409 conflict is caught up from the returned patches. Offline: a session such as `listen` transmits the queued action.",
+        "description": "Queues an app-state patch to `critical_block` carrying one SET mutation: index `[\"setting_pushName\"]`, `SyncActionData.version` 1, value `SyncActionValue{timestamp: 1, pushNameSetting: 7 {name: 1}}` (comparison 2.26.37.71 `LX/B66`, `LX/Azq`, `LX/BZV`, `LX/BQd`, all confirmed). This is how the account's other devices learn the name; other people see it through the separate `<presence name=…>` stanza sent by `lab-transport --push-name`. Builds on the collection state the server last accepted and promotes the new state only once the server accepts it; a 409 conflict is caught up from the returned patches. Offline: a session such as `listen` transmits the queued action. Live 2026-09-25: accepted, `<collection name=\"critical_block\" version=\"1\"/>`.",
         "operationId": "queuePushName",
         "x-cli": "whatsapp-cli push-name",
         "x-transport": [
           "cli"
         ],
-        "x-live": false,
+        "x-live": true,
         "requestBody": {
           "required": true,
           "content": {
