@@ -27,7 +27,7 @@
 //! 10,000 ms (`LX/B2H` constants `0x9c4`, `0x2710`); what those windows mean in
 //! the UI was not traced. The display name is also an app-state setting
 //! (`pushNameSetting`, collection `critical_block`) that companion devices read;
-//! a primary-only client that sends the presence is not writing that record.
+//! `app_state_sync::queue_push_name_patch` writes that record separately.
 use crate::{
     Error, Result,
     binary::Node,

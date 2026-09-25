@@ -645,6 +645,15 @@ enum Cmd {
         #[arg(long)]
         email: Option<String>,
     },
+    /// Queue the display name as the `pushNameSetting` app-state record, so
+    /// this account's other devices show it (offline; a session such as
+    /// `listen` transmits it). Other people see the name through
+    /// `lab-transport --push-name`, which is a separate stanza.
+    #[cfg(feature = "experimental-transport")]
+    PushName {
+        /// The display name.
+        name: String,
+    },
     /// List who has received, viewed, played or liked the statuses we posted
     /// (offline).
     #[cfg(feature = "experimental-transport")]
@@ -2247,6 +2256,27 @@ async fn run(cli: Cli) -> Result<(), Error> {
                 } else {
                     "recovery address"
                 }
+            );
+            Ok(())
+        }
+        #[cfg(feature = "experimental-transport")]
+        Cmd::PushName { name } => {
+            let c = open_client(&cli, false).await?;
+            let store = c.store();
+            let own = whatsapp_api::transport::inbox::own_identities(store)?;
+            let device_index = own.0.as_ref().map_or(0, |j| j.device);
+            let registered: std::collections::BTreeSet<u32> =
+                [u32::from(device_index)].into_iter().collect();
+            let id = whatsapp_api::transport::app_state_sync::queue_push_name_patch(
+                store,
+                device_index,
+                0,
+                &registered,
+                whatsapp_api::model::time::Timestamp::now().0,
+                name,
+            )?;
+            println!(
+                "push-name: pushNameSetting patch queued in critical_block (action {id}); a session transmits it"
             );
             Ok(())
         }

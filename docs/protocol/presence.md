@@ -26,12 +26,27 @@ comparison build **2.26.37.71**.
 * This is a different writer case from the plain availability announcement
   `LX/1Rd->A01` (`messaging::available_presence`), which carries only `type`.
 
-**Not done:** the display name is also an app-state setting
-(`pushNameSetting`, collection `critical_block`, see
-[chat-actions](chat-actions.md)) that companion devices read. A primary-only
-client that sends the presence is not writing that record. When the official
-client sends the push-name presence (on change only, or also on connect) was
-not traced; we send it only when asked.
+### The app-state record (`pushNameSetting`)
+
+The same name is also an app-state setting, which is how the account's other
+devices learn it. All **confirmed** from 2.26.37.71:
+
+| | Value | Evidence |
+| --- | --- | --- |
+| Collection | `critical_block` | `LX/B66.<clinit>` routes `LX/Azq.A1A` through `LX/Azs->A00` |
+| Index | `["setting_pushName"]` (one element) | `LX/B66.<init>`: `Azq.A1A.value` into a one-element `String[]`; `LX/Azq.<clinit>` names it `PushNameSetting` / `setting_pushName`, ordinal 5 |
+| `SyncActionData.version` | 1 | `const/4 v8, #0x1` passed as `LX/Azp.<init>`'s int argument |
+| Value | `SyncActionValue.pushNameSetting` = **7**, `PushNameSetting.name` = **1** | `apk-proto-fields` on `LX/BZV` and `LX/BQd`; `LX/B66->A05` sets only `name_` |
+
+`whatsapp-cli push-name "<name>"` queues it; `listen` transmits it. Writing a
+second collection exposed a latent bug in our own code: `ingest` promoted every
+accepted patch into `critical_unblock_low` and `catch_up` applied every
+conflict there, so the first `critical_block` write would have overwritten the
+contact collection's state. Both now use the collection the patch or conflict
+names, with a regression test.
+
+When the official client sends the push-name presence (on change only, or also
+on connect) was **not traced**; we send it only when asked.
 
 ## Typing and recording indicators
 

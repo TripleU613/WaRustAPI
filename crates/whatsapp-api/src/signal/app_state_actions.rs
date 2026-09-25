@@ -21,6 +21,16 @@ struct SyncActionValue {
     timestamp: Option<i64>,
     #[prost(message, optional, tag = "3")]
     contact_action: Option<ContactAction>,
+    /// `pushNameSetting` is field **7** (`xtask apk-proto-fields` on `LX/BZV`).
+    #[prost(message, optional, tag = "7")]
+    push_name_setting: Option<PushNameSetting>,
+}
+
+/// `PushNameSetting` (`LX/BQd`): one field, `name` = 1.
+#[derive(Message)]
+struct PushNameSetting {
+    #[prost(string, optional, tag = "1")]
+    name: Option<String>,
 }
 
 /// `contactAction` (`LX/BXZ`). `LX/B6M->A05` sets `fullName_` (presence bit
@@ -112,6 +122,7 @@ pub fn contact_mutation(
         index: index_json(&["contact", &raw])?,
         value: SyncActionValue {
             timestamp: Some(timestamp_ms),
+            push_name_setting: None,
             contact_action: Some(ContactAction {
                 full_name: Some(full_name.to_owned()),
                 first_name: first_name.map(str::to_owned),
@@ -125,10 +136,56 @@ pub fn contact_mutation(
     })
 }
 
+/// Build a `pushNameSetting` mutation: the display name as the account's other
+/// devices read it.
+///
+/// All **confirmed** from comparison 2.26.37.71:
+/// * Index is one element, `["setting_pushName"]` — `LX/B66.<init>` puts
+///   `LX/Azq.A1A.value` into a one-element `String[]`, and `LX/Azq.<clinit>`
+///   names that entry `PushNameSetting` / `"setting_pushName"` (ordinal 5).
+/// * `SyncActionData.version` is **1** (the `const/4 v8, #0x1` passed as
+///   `LX/Azp.<init>`'s int argument).
+/// * The value sets only `PushNameSetting.name_` (`LX/B66->A05`, presence bit
+///   0x1) and stores it as `SyncActionValue.pushNameSetting_`.
+/// * Collection `critical_block` (`LX/B66.<clinit>` → `LX/Azs->A00`).
+pub fn push_name_mutation(name: &str, timestamp_ms: i64) -> Result<ActionMutation> {
+    let name = name.trim();
+    if name.is_empty() || name.chars().count() > 100 || timestamp_ms < 0 {
+        return Err(invalid("invalid push name inputs"));
+    }
+    Ok(ActionMutation {
+        index: index_json(&["setting_pushName"])?,
+        value: SyncActionValue {
+            timestamp: Some(timestamp_ms),
+            contact_action: None,
+            push_name_setting: Some(PushNameSetting {
+                name: Some(name.to_owned()),
+            }),
+        }
+        .encode_to_vec(),
+        version: 1,
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::model::jid::Jid;
+
+    /// Field numbers checked against a hand-assembled encoding rather than
+    /// the struct above: SyncActionValue{1: ts, 7: {1: "Lab"}}.
+    #[test]
+    fn push_name_mutation_matches_the_traced_value_class() {
+        let action = push_name_mutation("  Lab ", 5).unwrap();
+        assert_eq!(action.index, br#"["setting_pushName"]"#);
+        assert_eq!(action.version, 1);
+        assert_eq!(
+            action.value,
+            [0x08, 0x05, 0x3a, 0x05, 0x0a, 0x03, b'L', b'a', b'b']
+        );
+        assert!(push_name_mutation(" ", 5).is_err());
+        assert!(push_name_mutation("x", -1).is_err());
+    }
 
     #[test]
     fn index_renders_like_java_jsonarray_tostring() {

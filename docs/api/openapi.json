@@ -8795,6 +8795,50 @@
           "whatsapp_api::transport::two_factor::set_request"
         ]
       }
+    },
+    "/v1/account/push-name": {
+      "post": {
+        "tags": [
+          "Lab"
+        ],
+        "summary": "Queue the display name as the pushNameSetting app-state record",
+        "description": "Queues an app-state patch to `critical_block` carrying one SET mutation: index `[\"setting_pushName\"]`, `SyncActionData.version` 1, value `SyncActionValue{timestamp: 1, pushNameSetting: 7 {name: 1}}` (comparison 2.26.37.71 `LX/B66`, `LX/Azq`, `LX/BZV`, `LX/BQd`, all confirmed). This is how the account's other devices learn the name; other people see it through the separate `<presence name=…>` stanza sent by `lab-transport --push-name`. Builds on the collection state the server last accepted and promotes the new state only once the server accepts it; a 409 conflict is caught up from the returned patches. Offline: a session such as `listen` transmits the queued action.",
+        "operationId": "queuePushName",
+        "x-cli": "whatsapp-cli push-name",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "The display name; trimmed; 100 characters is this client's bound, not WhatsApp's"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Queued action id"
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::app_state_sync::queue_push_name_patch",
+          "whatsapp_api::signal::app_state_actions::push_name_mutation"
+        ]
+      }
     }
   }
 }

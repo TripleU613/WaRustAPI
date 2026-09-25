@@ -1169,6 +1169,18 @@ Usage: whatsapp-cli two-factor [OPTIONS]...
 | --disable | DISABLE | no |  |  | `true`, `false` | Turn two-step verification off. Sends an empty code |
 | --email | EMAIL | no |  |  |  | Recovery email address to store alongside the PIN |
 
+## whatsapp-cli push-name
+
+Queue the display name as the `pushNameSetting` app-state record, so this account's other devices show it (offline; a session such as `listen` transmits it). Other people see the name through `lab-transport --push-name`, which is a separate stanza
+
+```
+Usage: whatsapp-cli push-name [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+|  | NAME | yes |  |  |  | The display name |
+
 ## whatsapp-cli status-viewers
 
 List who has received, viewed, played or liked the statuses we posted (offline)

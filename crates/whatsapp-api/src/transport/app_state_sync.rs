@@ -64,6 +64,11 @@ impl Collection {
     pub fn order(self) -> u8 {
         u8::from(self != Self::CriticalUnblockLow)
     }
+
+    /// The collection a wire or saved name refers to.
+    pub fn from_name(name: &str) -> Option<Self> {
+        ALL_COLLECTIONS.into_iter().find(|c| c.name() == name)
+    }
 }
 
 /// Build an app-state **fetch**: ask the server for each collection's current
@@ -234,7 +239,7 @@ pub fn queue_contact_patch(
     registered: &std::collections::BTreeSet<u32>,
     now_ms: i64,
 ) -> Result<(String, usize)> {
-    use crate::signal::{app_state, app_state_actions};
+    use crate::signal::app_state_actions;
     use crate::transport::contacts;
 
     // Promote anything the server accepted since the last call, so this patch
@@ -268,6 +273,76 @@ pub fn queue_contact_patch(
         );
     }
     let count = mutations.len();
+    let id = queue_patch(
+        store,
+        device_index,
+        raw_id,
+        registered,
+        now_ms,
+        Collection::CriticalUnblockLow,
+        &mutations,
+        "contact app-state patch",
+    )?;
+    Ok((id, count))
+}
+
+/// Queue a `pushNameSetting` patch, so this account's other devices show the
+/// same display name. Mutation, index and version come from
+/// `signal::app_state_actions::push_name_mutation`; the collection is
+/// `critical_block` (`LX/B66.<clinit>` routes `LX/Azq.A1A` through
+/// `LX/Azs->A00`, **confirmed**).
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub fn queue_push_name_patch(
+    store: &crate::store::ProtocolStore,
+    device_index: u16,
+    raw_id: u32,
+    registered: &std::collections::BTreeSet<u32>,
+    now_ms: i64,
+    name: &str,
+) -> Result<String> {
+    ingest(store)?;
+    let action = crate::signal::app_state_actions::push_name_mutation(name, now_ms)?;
+    let mutation = crate::signal::app_state_collection::patch::OutgoingMutation {
+        operation: crate::signal::app_state_crypto::MutationOperation::Set,
+        index: action.index,
+        action: Some(action.value),
+        version: action.version,
+    };
+    queue_patch(
+        store,
+        device_index,
+        raw_id,
+        registered,
+        now_ms,
+        Collection::CriticalBlock,
+        std::slice::from_ref(&mutation),
+        "push-name app-state patch",
+    )
+}
+
+/// Build one patch over the state the server last accepted for `collection`
+/// and queue it, stashing the resulting state until the server accepts it.
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+#[allow(clippy::too_many_arguments)]
+fn queue_patch(
+    store: &crate::store::ProtocolStore,
+    device_index: u16,
+    raw_id: u32,
+    registered: &std::collections::BTreeSet<u32>,
+    now_ms: i64,
+    collection: Collection,
+    mutations: &[crate::signal::app_state_collection::patch::OutgoingMutation],
+    label: &str,
+) -> Result<String> {
+    use crate::signal::app_state;
     // Mint on demand: a primary with no companions still mints its own key
     // (LX/0oK->A05, empty-device-collection branch), purely locally.
     let key_id = store.write(|tx| {
@@ -296,12 +371,11 @@ pub fn queue_contact_patch(
     })?;
     // Build on whatever the server last accepted. Starting from `empty` every
     // time would claim version 1 for ever and hash over nothing.
-    let collection = Collection::CriticalUnblockLow;
     let state = held_state(store, collection)?;
     let held = state.version();
-    let built = state.build_patch(keys.keys(), key_id, device_index.into(), &mutations)?;
+    let built = state.build_patch(keys.keys(), key_id, device_index.into(), mutations)?;
     let saved = built.state.to_saved();
-    let id = super::actions::queue(store, PATCH_ACTION_KIND, "contact app-state patch", |id| {
+    let id = super::actions::queue(store, PATCH_ACTION_KIND, label, |id| {
         // The attribute is the version we *hold*, omitted when we hold none
         // (confirmed, both `CSe.A01` call sites). The patch's own claimed
         // version is never on the wire — `SyncdPatch.version` is read-only in
@@ -324,7 +398,7 @@ pub fn queue_contact_patch(
             &saved,
         )
     })?;
-    Ok((id, count))
+    Ok(id)
 }
 
 const HELD_PREFIX: &str = "app-state-collection:";
@@ -382,11 +456,17 @@ pub fn ingest(store: &crate::store::ProtocolStore) -> Result<usize> {
             .and_then(|c| c.get_attr("version"))
             .and_then(|v| v.as_text())
             .and_then(|v| v.parse::<u64>().ok());
+        // Each stash names its own collection. Promoting into a fixed one would
+        // overwrite, say, `critical_unblock_low` with `critical_block`'s state
+        // the first time a second collection is written.
+        let collection = Collection::from_name(&saved.collection).ok_or_else(|| {
+            crate::Error::invalid("app_state_sync", "stashed state names no known collection")
+        })?;
         if accepted && server_version == Some(saved.version) {
             store.write(|tx| {
                 tx.put_json(
                     Table::Checkpoints,
-                    held_key(Collection::CriticalUnblockLow).as_bytes(),
+                    held_key(collection).as_bytes(),
                     1,
                     &saved,
                 )?;
@@ -423,15 +503,27 @@ fn catch_up(store: &crate::store::ProtocolStore, reply: &Node) -> Result<usize> 
     use crate::binary::NodeContent;
     use crate::signal::{app_state, app_state_collection::CollectionPatch};
     use crate::store::Table;
-    let Some(patches) = reply
+    let Some(conflicted) = reply
         .child("sync")
         .and_then(|sync| sync.child("collection"))
         .filter(|c| c.get_attr("type").and_then(|v| v.as_text()) == Some("error"))
-        .and_then(|c| c.child("patches"))
     else {
         return Ok(0);
     };
-    let collection = Collection::CriticalUnblockLow;
+    let Some(patches) = conflicted.child("patches") else {
+        return Ok(0);
+    };
+    // The collection the conflict is about, as the server names it.
+    let Some(collection) = conflicted
+        .get_attr("name")
+        .and_then(|v| v.as_text())
+        .and_then(Collection::from_name)
+    else {
+        return Err(crate::Error::invalid(
+            "app_state_sync",
+            "conflict names no known collection",
+        ));
+    };
     let mut state = held_state(store, collection)?;
     let mut applied = 0;
     for node in patches.child_nodes() {
@@ -677,5 +769,57 @@ mod tests {
         assert_eq!(decoded, node, "the request must survive the wire codec");
         let patch = &decoded.child_nodes()[0].child_nodes()[0].child_nodes()[0];
         assert!(matches!(&patch.content, NodeContent::Bytes(b) if b.len() == 64));
+    }
+}
+
+#[cfg(all(
+    test,
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+mod per_collection_tests {
+    use super::*;
+    use crate::{
+        model::ids::AccountId,
+        signal::app_state_collection::SavedCollectionState,
+        store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table},
+    };
+
+    /// An accepted patch is promoted into the collection it was built for.
+    /// `ingest` used to promote every stash into `critical_unblock_low`, which
+    /// the first write to a second collection would have overwritten.
+    #[test]
+    fn an_accepted_push_name_patch_lands_in_critical_block_only() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("p.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let registered = [0u32].into_iter().collect();
+        let id = queue_push_name_patch(&store, 0, 0, &registered, 1_000, "Lab").unwrap();
+        crate::transport::actions::reserve_pending(&store).unwrap();
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result")
+            .children(vec![Node::new("sync").children(vec![
+                Node::new("collection")
+                    .attr("name", "critical_block")
+                    .attr("version", "1"),
+            ])]);
+        assert!(crate::transport::actions::record_reply(&store, &reply).unwrap());
+        assert_eq!(ingest(&store).unwrap(), 1);
+        let held = |c: Collection| -> Option<SavedCollectionState> {
+            store
+                .read(|tx| tx.get_json(Table::Checkpoints, held_key(c).as_bytes(), 1))
+                .unwrap()
+        };
+        let block = held(Collection::CriticalBlock).expect("promoted into critical_block");
+        assert_eq!(block.version, 1);
+        assert_eq!(block.collection, "critical_block");
+        assert!(held(Collection::CriticalUnblockLow).is_none());
     }
 }
