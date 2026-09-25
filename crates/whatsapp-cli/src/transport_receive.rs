@@ -1245,8 +1245,8 @@ pub(super) async fn run(
     }
     for (key, value) in &captures {
         if inspect {
-            if is_capture(&key) {
-                let wire: Vec<u8> = serde_json::from_slice(&value)
+            if is_capture(key) {
+                let wire: Vec<u8> = serde_json::from_slice(value)
                     .map_err(|_| Error::invalid("inbox", "invalid capture"))?;
                 let raw = unpack_frame_payload(&wire, &limits)?;
                 let node = Decoder::new(&raw, TokenDictionary::comparison_2_26_37_70(), &limits)
@@ -1525,7 +1525,7 @@ pub(super) async fn run(
                 }
             }
             if key.starts_with(b"received:") {
-                let mut saved: serde_json::Value = serde_json::from_slice(&value)
+                let mut saved: serde_json::Value = serde_json::from_slice(value)
                     .map_err(|_| Error::invalid("inbox", "invalid saved payload"))?;
                 if saved["status"] == "consumed" {
                     println!("inbox: view-once attachment consumed; content unavailable");
@@ -1549,15 +1549,15 @@ pub(super) async fn run(
             }
             continue;
         }
-        if !is_capture(&key) {
+        if !is_capture(key) {
             continue;
         }
-        let bytes: Vec<u8> = serde_json::from_slice(&value)
+        let bytes: Vec<u8> = serde_json::from_slice(value)
             .map_err(|_| Error::invalid("inbox", "invalid capture"))?;
         let unpacked = unpack_frame_payload(&bytes, &limits)?;
         let node = Decoder::new(&unpacked, TokenDictionary::comparison_2_26_37_70(), &limits)
             .decode_node()?;
-        match whatsapp_api::transport::inbox::process(&store, &account, &node, &key).await? {
+        match whatsapp_api::transport::inbox::process(&store, &account, &node, key).await? {
             whatsapp_api::transport::inbox::IncomingResult::Decrypted => {
                 count += 1;
                 println!("inbox: authenticated payload committed; content redacted");

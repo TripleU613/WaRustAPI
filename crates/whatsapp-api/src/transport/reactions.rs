@@ -164,7 +164,9 @@ pub struct Incoming {
 /// `Message`, `ReactionMessage` and `MessageKey` levels, plus the participant's
 /// server and whether it carries a device suffix. No identities or text.
 pub fn shape(payload: &[u8]) -> Option<String> {
-    fn fields(bytes: &[u8]) -> Option<Vec<(u32, Option<&[u8]>)>> {
+    /// A field number and, for length-delimited fields, its body.
+    type Field<'a> = (u32, Option<&'a [u8]>);
+    fn fields(bytes: &[u8]) -> Option<Vec<Field<'_>>> {
         let mut out = Vec::new();
         let mut buf = bytes;
         while !buf.is_empty() {
@@ -207,7 +209,7 @@ pub fn shape(payload: &[u8]) -> Option<String> {
             let server = p.rsplit_once('@').map_or("", |(_, s)| s);
             format!("{server}{}", if p.contains(':') { "+device" } else { "" })
         });
-    let nums = |v: &[(u32, Option<&[u8]>)]| v.iter().map(|(n, _)| *n).collect::<Vec<_>>();
+    let nums = |v: &[Field<'_>]| v.iter().map(|(n, _)| *n).collect::<Vec<_>>();
     Some(format!(
         "message={:?} reaction={:?} key={:?} participant={:?}",
         nums(&top),
