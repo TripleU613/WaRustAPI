@@ -736,6 +736,18 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
                 i32::from_le_bytes([insn_bytes[2], insn_bytes[3], insn_bytes[4], insn_bytes[5]]);
             format!("v{reg}, #{lit:#x}")
         }
+        // const-wide vAA, #+BBBBBBBBBBBBBBBB — 51l (64-bit literal).
+        0x18 if insn_bytes.len() >= 10 => {
+            let mut raw = [0u8; 8];
+            raw.copy_from_slice(&insn_bytes[2..10]);
+            let lit = i64::from_le_bytes(raw);
+            format!("v{reg}, #{lit:#x} ({lit})")
+        }
+        // const-wide/high16 vAA, #+BBBB000000000000 — 21h (64-bit value).
+        0x19 if insn_bytes.len() >= 4 => {
+            let lit = (u16::from_le_bytes([insn_bytes[2], insn_bytes[3]]) as u64) << 48;
+            format!("v{reg}, #{lit:#x}")
+        }
         // const/high16 vAA, #+BBBB0000 — 21h (32-bit value).
         0x15 if insn_bytes.len() >= 4 => {
             let lit = (u16::from_le_bytes([insn_bytes[2], insn_bytes[3]]) as u32) << 16;
@@ -1772,6 +1784,20 @@ mod tests {
         assert_eq!(decoded[1].annotation, "v3, v0");
         assert_eq!(decoded[2].mnemonic, "add-long/2addr");
         assert_eq!(decoded[2].annotation, "v8, v2");
+        for end in 0..bytes.len() {
+            let _ = decode_insns(&bytes[..end], &dex);
+        }
+    }
+
+    #[test]
+    fn decodes_a_full_width_wide_literal() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // const-wide v8, 25 — the 51l form, literal little-endian over 8 bytes.
+        let bytes = [0x18, 0x08, 0x19, 0, 0, 0, 0, 0, 0, 0];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded[0].mnemonic, "const-wide");
+        assert_eq!(decoded[0].annotation, "v8, #0x19 (25)");
         for end in 0..bytes.len() {
             let _ = decode_insns(&bytes[..end], &dex);
         }

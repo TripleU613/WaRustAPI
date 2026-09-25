@@ -6351,6 +6351,32 @@
                   "recheck_refusal": {
                     "type": "boolean",
                     "description": "Authorize exactly one further login after a saved `failure`, to tell a temporary limit from a permanent refusal. Requires a saved `failure` (never an ambiguous `outcome_unknown`), refuses to carry a message, and preserves the earlier refusal under its own key instead of overwriting it."
+                  },
+                  "push_name": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "Set the display name others see beside this number: one `<presence name=… type=\"available\"/>` after login (comparison 2.26.37.71 `LX/0y0->A00`, `WriterThread/write/push-name`, confirmed). Fire-and-forget: the server sends no reply, so the CLI reports `written`, not accepted, and records it under the `push-name` checkpoint. The 100-character bound is this client's; the APK enforces none on the wire. Not live-verified yet."
+                  },
+                  "typing": {
+                    "type": "string",
+                    "description": "Show a typing indicator in this chat (E.164 digits, a phone/LID JID or a `…@g.us` group): announces `presence type=available`, writes `<chatstate to=…><composing/></chatstate>` (`LX/B2G->A01`, confirmed), holds for `typing_seconds` preserving anything that arrives, then writes `<paused/>` (`LX/B2H->handleMessage`, confirmed). Combined with `message`, the indicator runs before the send. Not live-verified yet."
+                  },
+                  "typing_state": {
+                    "type": "string",
+                    "enum": [
+                      "composing",
+                      "recording",
+                      "paused"
+                    ],
+                    "default": "composing",
+                    "description": "`recording` is `composing media=\"audio\"` (shown while recording a voice note); `paused` writes only the stop."
+                  },
+                  "typing_seconds": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 25,
+                    "default": 5,
+                    "description": "How long to hold `composing`/`recording` before `paused`."
                   }
                 }
               }
@@ -6376,7 +6402,10 @@
           "whatsapp_api::WhatsAppClient::connect",
           "whatsapp_api::transport::group_send::plan",
           "whatsapp_api::transport::groups::sender_key_stanza",
-          "whatsapp_api::transport::messaging::key_request_many"
+          "whatsapp_api::transport::messaging::key_request_many",
+          "whatsapp_api::transport::presence::push_name",
+          "whatsapp_api::transport::presence::chatstate",
+          "whatsapp_api::transport::presence::chat_target"
         ]
       }
     },

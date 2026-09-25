@@ -35,6 +35,8 @@ Registration uses the recipe in
 | App-state writes (contact action) incl. 409 catch-up | live | [chat-actions](docs/protocol/chat-actions.md) |
 | Block/unblock, contact check, disappearing, keep-in-chat | live | same |
 | Two-step verification set/change/disable | live (set) | [chat-actions](docs/protocol/chat-actions.md) |
+| Display name (`presence name=…`) | offline | [presence](docs/protocol/presence.md) |
+| Typing / recording indicators (`chatstate`) | offline; incoming ones not projected | same |
 | Prekey upload and replenishment | live | [messaging-completion](docs/messaging-completion.md) |
 
 A single undecryptable incoming message no longer ends a session; it degrades
@@ -46,7 +48,7 @@ to `Undecryptable` and we send a retry receipt.
   (`stickerMessage` 26, `ptvMessage` 66, `VideoMessage` inner fields);
   `StickerMessage`'s inner layout is not yet decoded. No incoming sticker/PTV
   stanza has been captured. [apk-analysis](docs/protocol/apk-analysis.md).
-- Profile/push name, typing indicators, calls.
+- Calls; profile picture and "about".
 - Privacy settings IQ (namespace unknown).
 - Channels and QR/companion pairing — parked by the owner.
 - Companion-device fan-out and own-account device sync.

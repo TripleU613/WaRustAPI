@@ -100,6 +100,17 @@ pub(super) struct Session<'a> {
     pub receive: bool,
     /// Fetch one media-upload route.
     pub media_route: bool,
+    /// Set the display name after login.
+    pub push_name: Option<&'a str>,
+    /// Show one typing indicator after login.
+    pub typing: Option<Typing>,
+}
+
+/// One typing indicator: the state to show, and how long before `paused`.
+pub(super) struct Typing {
+    pub chat: whatsapp_api::model::jid::Jid,
+    pub state: whatsapp_api::transport::presence::ChatState,
+    pub hold: Duration,
 }
 
 /// The one chat a status post is addressed to.
@@ -115,6 +126,8 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
         message,
         receive,
         media_route,
+        push_name,
+        typing,
     } = session;
     if !allow_live {
         return Err(Error::invalid("transport", "requires --allow-live-request"));
@@ -412,6 +425,53 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                 "transport: media route result; hosts={hosts}, auth_present={}; saved encrypted; no image uploaded",
                 route.get_attr("auth").is_some()
             );
+        }
+        if let Some(name) = push_name {
+            use whatsapp_api::transport::{messaging::write_node, presence};
+            write_node(&mut channel, &presence::push_name(name)?).await?;
+            store.write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"push-name",
+                    1,
+                    &serde_json::json!({"status": "written", "name": name.trim(), "at": Timestamp::now()}),
+                )
+            })?;
+            // Fire-and-forget: there is no reply, so "written" is all that can
+            // honestly be claimed. Someone else's view of the name is the check.
+            println!("transport: display name written; the server does not acknowledge it");
+        }
+        if let Some(typing) = typing {
+            use whatsapp_api::transport::{
+                messaging::{available_presence, write_node},
+                presence::{ChatState, chatstate},
+            };
+            // `LX/B2G->A01` writes `composing` only while `LX/09Y->A06` holds;
+            // announcing availability first is what every normal session has
+            // done by this point (`LX/1Rd->A01`).
+            write_node(&mut channel, &available_presence()).await?;
+            write_node(&mut channel, &chatstate(&typing.chat, typing.state)?).await?;
+            println!("transport: chat state {:?} written", typing.state);
+            if typing.state != ChatState::Paused {
+                // Hold, preserving whatever arrives, then stop: an indicator
+                // left running is not something a real client does either.
+                let deadline = tokio::time::Instant::now() + typing.hold;
+                let mut kept = 0usize;
+                while let Ok(read) = tokio::time::timeout_at(
+                    deadline,
+                    whatsapp_api::transport::messaging::read_node(&mut channel),
+                )
+                .await
+                {
+                    whatsapp_api::transport::inbox::preserve(&store, &read?)?;
+                    kept += 1;
+                }
+                write_node(&mut channel, &chatstate(&typing.chat, ChatState::Paused)?).await?;
+                println!(
+                    "transport: held {}s, then paused; {kept} frame(s) preserved meanwhile",
+                    typing.hold.as_secs()
+                );
+            }
         }
         if receive {
             let capture = whatsapp_api::transport::messaging::new_message_id()?;

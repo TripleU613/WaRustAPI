@@ -243,3 +243,6 @@ impl ConnectionEpoch {
 
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod two_factor;
+
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+pub mod presence;

@@ -517,6 +517,21 @@ enum Cmd {
         /// Obtain and privately preserve one current media-upload route response.
         #[arg(long, requires = "login", conflicts_with_all = ["message", "receive"])]
         media_route: bool,
+        /// Set the display name others see beside this number: one
+        /// `<presence name=… type="available"/>` after login. Fire-and-forget;
+        /// the server does not acknowledge it.
+        #[arg(long, requires = "login", conflicts_with = "recheck_refusal")]
+        push_name: Option<String>,
+        /// Show a typing indicator in this chat (E.164 digits, a phone/LID JID
+        /// or a `…@g.us` group), hold it, then send `paused`.
+        #[arg(long, requires = "login", conflicts_with = "recheck_refusal")]
+        typing: Option<String>,
+        /// `composing` (typing), `recording` (voice note) or `paused`.
+        #[arg(long, requires = "typing", default_value = "composing")]
+        typing_state: String,
+        /// How long to hold `composing`/`recording` before `paused`, 1–25 s.
+        #[arg(long, requires = "typing", default_value_t = 5)]
+        typing_seconds: u64,
     },
     /// Submit a ban appeal for the active account via ACS GraphQL.
     #[cfg(feature = "experimental-signup")]
@@ -1403,8 +1418,29 @@ async fn run(cli: Cli) -> Result<(), Error> {
             message,
             receive,
             media_route,
+            push_name,
+            typing,
+            typing_state,
+            typing_seconds,
         } => {
             let config = cli.config_path(config.as_ref(), None)?;
+            // Validated before connecting: a bad input must not cost a login.
+            let typing = typing
+                .as_deref()
+                .map(|chat| -> Result<_, Error> {
+                    if !(1..=25).contains(typing_seconds) {
+                        return Err(Error::invalid("typing", "--typing-seconds is 1 to 25"));
+                    }
+                    Ok(transport::Typing {
+                        chat: whatsapp_api::transport::presence::chat_target(chat)?,
+                        state: whatsapp_api::transport::presence::ChatState::parse(typing_state)?,
+                        hold: Duration::from_secs(*typing_seconds),
+                    })
+                })
+                .transpose()?;
+            if let Some(name) = push_name {
+                whatsapp_api::transport::presence::push_name(name)?;
+            }
             transport::run(
                 &cli,
                 &config,
@@ -1415,6 +1451,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
                     message: message.as_deref(),
                     receive: *receive,
                     media_route: *media_route,
+                    push_name: push_name.as_deref(),
+                    typing,
                 },
             )
             .await

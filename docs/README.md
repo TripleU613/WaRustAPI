@@ -39,6 +39,9 @@ and [STATUS.md](../STATUS.md) for verified behavior and blockers.
 - [Groups](protocol/groups.md)
 - [HTTP POST construction](protocol/http-post-analysis.md)
 - [Messaging transport](protocol/messaging-transport.md)
+- [Display name and typing](protocol/presence.md)
+- [Status](protocol/status.md)
+- [Status history](status-history.md)
 - [Reusable component evaluation](protocol/reusable-components.md)
 - [Generated dependency report](protocol/dependency-report.md)
 
