@@ -915,3 +915,10 @@ addressing are fine. What was checked, all **observed** from saved captures:
 `decrypt-fail="hide"` means a reaction the phone cannot decrypt is dropped
 silently, with no retry receipt, so decryption failure cannot be ruled out from
 our side.
+
+**Fresh-target retest (2026-09-25):** a `👍` to a message the operator had sent
+seconds earlier (`l-react-3`) was acked the same way — no `count`,
+`addressing_mode="lid"` — with no retry receipt in the 45-second window, and it
+did not appear on the handset. So a stale or expired target is ruled out. In
+the same session the operator's own reaction to our `l-reply-1` arrived, which
+confirms that group reply rendered. The reaction cause remains **unknown**.

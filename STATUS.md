@@ -21,11 +21,11 @@ Registration uses the recipe in
 | Direct text, PN or LID addressed | live | [messaging-transport](docs/protocol/messaging-transport.md) |
 | Direct image, voice note, view-once image | live (receipt confirmed; playback not) | same |
 | Replies, reactions, polls (direct) | live | same, [chat-actions](docs/protocol/chat-actions.md) |
-| Receive + decrypt direct and group messages | live |
-| Read receipts, group (`mark-read --chat …@g.us`) | acked 2026-09-25; handset "Read by" unconfirmed | [messaging-transport](docs/protocol/messaging-transport.md) | [groups](docs/protocol/groups.md) |
+| Receive + decrypt direct and group messages | live | [groups](docs/protocol/groups.md) |
+| Read receipts, group (`mark-read --chat …@g.us`) | acked 2026-09-25; handset "Read by" unconfirmed | [messaging-transport](docs/protocol/messaging-transport.md) |
 | Group send (sender-key fan-out) | live — operator read it | [groups](docs/protocol/groups.md) |
-| Group replies | acked | same |
-| Group reactions | acked, now as `type=reaction` with add-on markers (2026-09-25); handset display unconfirmed | same |
+| Group replies | live — shown on the handset (the operator reacted to one) | same |
+| Group reactions | **not rendering**: payload, stanza and target match the official client's, but the handset shows nothing and the server's ack carries no `count`; cause unknown | same |
 | Retry receipts: sending ours when we cannot decrypt | sent live 2026-09-25; whether the sender resent is unconfirmed | [messaging-transport](docs/protocol/messaging-transport.md) |
 | Retry receipts: answering theirs after a fan-out | offline; one live retry was received before the answer existed | [groups](docs/protocol/groups.md) |
 | Status: receive | live | [status](docs/protocol/status.md) |
