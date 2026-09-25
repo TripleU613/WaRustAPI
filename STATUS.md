@@ -25,7 +25,7 @@ Registration uses the recipe in
 | Group send (sender-key fan-out) | live — operator read it | [groups](docs/protocol/groups.md) |
 | Group replies | acked | same |
 | Group reactions | acked, now as `type=reaction` with add-on markers (2026-09-25); handset display unconfirmed | same |
-| Retry receipts: sending ours when we cannot decrypt | offline; shape mirrored from the handset's own | [messaging-transport](docs/protocol/messaging-transport.md) |
+| Retry receipts: sending ours when we cannot decrypt | sent live 2026-09-25; whether the sender resent is unconfirmed | [messaging-transport](docs/protocol/messaging-transport.md) |
 | Retry receipts: answering theirs after a fan-out | offline; one live retry was received before the answer existed | [groups](docs/protocol/groups.md) |
 | Status: receive | live | [status](docs/protocol/status.md) |
 | Status: post styled text | live — operator saw it | same |
@@ -37,7 +37,7 @@ Registration uses the recipe in
 | Two-step verification set/change/disable | live (set) | [chat-actions](docs/protocol/chat-actions.md) |
 | Display name (`presence name=…`) | written live, handset unconfirmed | [presence](docs/protocol/presence.md) |
 | Typing / recording indicators (`chatstate`) | written live, handset unconfirmed; incoming ones reported in `--receive` (offline) | same |
-| Presence subscribe, incoming availability / last seen | offline | same |
+| Presence subscribe, incoming availability / last seen | live — server answered with the peer's presence | same |
 | Prekey upload and replenishment | live | [messaging-completion](docs/messaging-completion.md) |
 
 A single undecryptable incoming message no longer ends a session; it degrades

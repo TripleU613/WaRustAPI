@@ -125,3 +125,14 @@ The name is recorded locally under the `push-name` checkpoint.
 
 Neither stanza has a reply, so both are **written, not confirmed**. Whether the
 name and the indicator appeared on the operator's handset is the check.
+
+## Live: subscription answered (2026-09-25, profile `l`)
+
+`--receive --subscribe <operator>` (no saved token for them): after
+activation we wrote `presence type=available` and one subscribe, and the
+server answered within the window with the operator's presence —
+`type="unavailable"`, `last="deny"`. So the subscription is accepted and the
+incoming shape matches `LX/1Qw`/`LX/8nc`. `deny` means their last-seen is
+withheld from us (their privacy setting, or this account not being a contact
+of theirs); which of the two was **not established**. No chat state arrived,
+since nobody typed during the window.

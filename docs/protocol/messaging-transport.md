@@ -716,3 +716,7 @@ propagating: it means the advanced session and the inbox write rolled back
 together, which the caller must see rather than have reported as an ordinary
 undecryptable message. An existing rollback test caught exactly that distinction
 when the first, broader version of this change swallowed it.
+
+**Live 2026-09-25:** a `--receive` window on profile `l` hit one undecryptable
+`msg` and wrote the retry receipt. Nothing in that window shows whether the
+sender resent it.
