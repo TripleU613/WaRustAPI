@@ -30,7 +30,7 @@ env:
 jobs:
   plan:
     name: Select checks
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, ubuntu-latest]
     timeout-minutes: 5
     outputs:
       rust: ${{ steps.select.outputs.rust }}
@@ -62,7 +62,7 @@ jobs:
   hygiene:
     name: Repository hygiene
     needs: plan
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, ubuntu-latest]
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -84,7 +84,7 @@ jobs:
     name: Rust lint
     needs: plan
     if: needs.plan.outputs.rust == 'true'
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, ubuntu-latest]
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -107,7 +107,7 @@ jobs:
     name: Test (${{ matrix.profile }})
     needs: [plan, lint]
     if: needs.plan.outputs.rust == 'true'
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, ubuntu-latest]
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -134,7 +134,7 @@ jobs:
     name: Generated code and dependency contract
     needs: plan
     if: needs.plan.outputs.dependencies == 'true' || needs.plan.outputs.proto == 'true'
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, ubuntu-latest]
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -158,7 +158,7 @@ jobs:
     name: Package and API documentation
     needs: [plan, lint]
     if: needs.plan.outputs.package == 'true'
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, ubuntu-latest]
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -180,7 +180,7 @@ jobs:
     name: Extended coverage and compatibility
     needs: [plan, test]
     if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.full)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, ubuntu-latest]
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -222,7 +222,7 @@ jobs:
     name: CI required
     if: always()
     needs: [plan, hygiene, lint, test, audit, package, extended]
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, ubuntu-latest]
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
