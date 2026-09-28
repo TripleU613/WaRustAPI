@@ -8844,6 +8844,50 @@
           "whatsapp_api::signal::app_state_actions::push_name_mutation"
         ]
       }
+    },
+    "/v1/account/about": {
+      "post": {
+        "tags": [
+          "Lab"
+        ],
+        "summary": "Set or clear the profile About text",
+        "description": "Queues `<iq xmlns=\"status\" type=\"set\" to=\"s.whatsapp.net\"><status>TEXT</status></iq>` (comparison 2.26.37.71: the About screen `com.whatsapp.profile.ui.SetAboutInfo` saves through `LX/8lM->A04`, which posts writer case 29; `LX/0y0->A00` case 29, `WriterThread/write/status-update`, builds the IQ; confirmed). An empty text is sent as a single space, as `LX/8lM->A04` does. The 256-character bound is this client's; the writer enforces none and the screen's own limit was not traced. Offline: a session such as `listen` transmits the queued action and records the reply.",
+        "operationId": "setAbout",
+        "x-cli": "whatsapp-cli about",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "text"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "description": "The About text; empty clears it"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Queued action id"
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::about::queue_set",
+          "whatsapp_api::transport::about::set_request"
+        ]
+      }
     }
   }
 }

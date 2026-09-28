@@ -160,3 +160,23 @@ the server answered `iq type=result` with
 `<collection name="critical_block" version="1"/>`. First write to a second
 app-state collection, accepted first time. Whether a companion device shows the
 name was not checked — this account has none.
+
+## About text
+
+**Confirmed** from 2.26.37.71. The About screen
+(`com.whatsapp.profile.ui.SetAboutInfo->A5H`) saves through `LX/8lM->A04`,
+which posts writer case 29 (`arg1 = 0x1d`); `LX/0y0->A00` case 29, logged
+`WriterThread/write/status-update`, builds
+
+```
+<iq id=<counter> xmlns="status" type="set" to="s.whatsapp.net">
+  <status>TEXT</status>
+</iq>
+```
+
+and keys the id to the screen's success/failure callbacks. `LX/8lM->A04`
+replaces a null or empty text with `" "`, so clearing the About sends a space.
+`whatsapp-cli about "<text>"` queues it (`transport::about`); `listen` sends it.
+The 256-character bound is ours; the writer enforces none and the screen's own
+limit was not traced. "Status" is the old name for About and is unrelated to
+24-hour status posts.

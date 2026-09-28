@@ -656,6 +656,14 @@ enum Cmd {
         /// The display name.
         name: String,
     },
+    /// Queue the profile "About" text (offline; a session such as `listen`
+    /// transmits it). An empty text clears it, sent as a single space the way
+    /// the official app does.
+    #[cfg(feature = "experimental-transport")]
+    About {
+        /// The About text; `""` clears it.
+        text: String,
+    },
     /// List who has received, viewed, played or liked the statuses we posted
     /// (offline).
     #[cfg(feature = "experimental-transport")]
@@ -2280,6 +2288,13 @@ async fn run(cli: Cli) -> Result<(), Error> {
             println!(
                 "push-name: pushNameSetting patch queued in critical_block (action {id}); a session transmits it"
             );
+            Ok(())
+        }
+        #[cfg(feature = "experimental-transport")]
+        Cmd::About { text } => {
+            let c = open_client(&cli, false).await?;
+            let id = whatsapp_api::transport::about::queue_set(c.store(), text)?;
+            println!("about: change queued (action {id}); a session transmits it");
             Ok(())
         }
         #[cfg(feature = "experimental-transport")]

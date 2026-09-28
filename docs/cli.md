@@ -1181,6 +1181,18 @@ Usage: whatsapp-cli push-name [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 |  | NAME | yes |  |  |  | The display name |
 
+## whatsapp-cli about
+
+Queue the profile "About" text (offline; a session such as `listen` transmits it). An empty text clears it, sent as a single space the way the official app does
+
+```
+Usage: whatsapp-cli about [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+|  | TEXT | yes |  |  |  | The About text; `""` clears it |
+
 ## whatsapp-cli status-viewers
 
 List who has received, viewed, played or liked the statuses we posted (offline)
