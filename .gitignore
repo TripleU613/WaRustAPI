@@ -19,3 +19,6 @@ Thumbs.db
 # Saved agent transcripts contain private numbers and credentials.
 /codex-session-*.md
 .claude/worktrees/
+
+# Not part of this project; kept local only.
+Seeder/
