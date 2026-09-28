@@ -23,6 +23,7 @@ Registration uses the recipe in
 | Replies, reactions, polls (direct) | live | same, [chat-actions](docs/protocol/chat-actions.md) |
 | Receive + decrypt direct and group messages | live | [groups](docs/protocol/groups.md) |
 | Read receipts, group (`mark-read --chat …@g.us`) | acked 2026-09-25; handset "Read by" unconfirmed | [messaging-transport](docs/protocol/messaging-transport.md) |
+| Automatic read receipts (`transport.mark_read`, `listen`) | offline | same |
 | Group send (sender-key fan-out) | live — operator read it | [groups](docs/protocol/groups.md) |
 | Group replies | live — shown on the handset (the operator reacted to one) | same |
 | Group reactions | **not rendering**: payload, stanza and target match the official client's, but the handset shows nothing and the server's ack carries no `count`; cause unknown | same |

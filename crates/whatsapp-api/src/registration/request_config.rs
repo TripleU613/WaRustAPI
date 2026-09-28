@@ -129,6 +129,11 @@ pub struct TransportSettings {
     /// human-scale value (e.g. 5000–15000) to space out block/unblock/report/
     /// group actions rather than flushing them all at once.
     pub action_delay_ms: u64,
+    /// Send a read receipt for every incoming direct or group message with
+    /// readable content that a messaging session decrypts. Off by default: the
+    /// official client marks messages read when a chat is on screen, and this
+    /// client has no screen to infer that from.
+    pub mark_read: bool,
 }
 impl Default for TransportSettings {
     fn default() -> Self {
@@ -139,6 +144,7 @@ impl Default for TransportSettings {
             max_response_bytes: MAX_RESPONSE_BODY_BYTES,
             reconnect: ReconnectSettings::default(),
             action_delay_ms: 0,
+            mark_read: false,
         }
     }
 }

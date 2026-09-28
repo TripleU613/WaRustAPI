@@ -737,3 +737,15 @@ does not say which member's message was read.
 latest Test-group message, queued with `mark-read` and sent by `listen`, was
 settled `server_acknowledged` by a matching ack. Whether the operator's
 "Read by" list shows it is the handset check.
+
+### Automatic read receipts (`transport.mark_read`)
+
+With `"mark_read": true` in the private JSON's `transport` section, `listen`
+queues and sends a read receipt for each incoming message it decrypts whose
+payload carries readable content — `Message` field 1, 3, 6, 7, 8, 9, 26 or 66.
+Payloads that are only a sender-key distribution (2), a protocol message (12) or
+a reaction (46) get none. It uses the same durable, once-only receipt queue as
+`mark-read`, so a redelivered message is not marked twice. A refusal is logged
+and the session continues. Off by default: the official client decides "read"
+from a chat being on screen, which a headless client cannot infer, so this is
+the operator saying so. `lab-transport --receive` does not apply it.

@@ -483,6 +483,17 @@ pub(crate) async fn drive(
                         // A reconnect may confirm a genuine server redelivery again.
                         link.send(&confirmation).await?;
                 }
+                // Opt-in: mark it read too. A refusal (an unsupported chat form,
+                // say) is logged and skipped; it must not end the session.
+                if config.transport.mark_read && received == super::inbox::IncomingResult::Decrypted {
+                    match super::receipts::queue_read_for_incoming(&store, &node) {
+                        Ok(0) => {}
+                        Ok(_) => {
+                            for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
+                        }
+                        Err(error) => tracing::warn!(%error, "automatic read receipt not queued"),
+                    }
+                }
             }
         }
     }

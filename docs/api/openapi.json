@@ -797,6 +797,11 @@
                 "maximum": 300000,
                 "default": 0,
                 "description": "Pause between consecutive queued-action sends in one session"
+              },
+              "mark_read": {
+                "type": "boolean",
+                "default": false,
+                "description": "During a messaging session (`listen`), send a read receipt for every incoming direct or group message with readable content (Message fields 1, 3, 6, 7, 8, 9, 26 or 66) that decrypts. Sender-key distributions, protocol messages and reactions get none. Each receipt goes through the same durable, once-only queue as `mark-read`. Off by default: the official client marks messages read when a chat is on screen, which this client cannot infer."
               }
             },
             "required": [

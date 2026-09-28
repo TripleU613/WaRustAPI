@@ -77,6 +77,7 @@ pub const TEMPLATE_JSON: &str = r#"{
     "connect_timeout_ms": 30000,
     "max_response_bytes": 1048576,
     "action_delay_ms": 0,
+    "mark_read": false,
     "reconnect": { "max_attempts": 5, "base_delay_ms": 2000, "max_delay_ms": 60000 }
   },
   "diagnostics": true,

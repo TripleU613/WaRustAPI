@@ -37,6 +37,7 @@ The private registration configuration file (`request.json`) holds phone, identi
 | `transport.reconnect.base_delay_ms` | int (1–max_delay_ms) | `2000` | first delay, doubles per attempt with jitter | `2000` |
 | `transport.reconnect.max_delay_ms` | int (base–300000) | `60000` | delay ceiling | `60000` |
 | `transport.action_delay_ms` | int (0–300000) | `0` | pause between consecutive queued-action sends in one session | `0` by default; e.g. `5000`–`15000` for human-scale pacing |
+| `transport.mark_read` | bool | `false` | `listen` sends a read receipt for each incoming direct or group message with readable content (text, media, sticker, video note); key distributions, protocol messages and reactions are skipped | `true` if the other side should see messages as read |
 | `diagnostics` | bool | `true` | print sanitized request/response metadata, never bodies | `true` |
 | `preflight` | bool | `false` | run a `/v2/exist` probe before `/v2/code` | `false` |
 

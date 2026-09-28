@@ -188,6 +188,74 @@ pub fn queue_read(
     })
 }
 
+/// `Message` fields that are something a person reads. A payload carrying any
+/// of them earns a read receipt when `transport.mark_read` is on; one carrying
+/// only a sender-key distribution (2), a protocol message (12), a reaction
+/// (46) or anything else does not, because nobody "reads" those. Numbers are
+/// the ones validated against the APK descriptor (`xtask apk-proto-fields`):
+/// conversation 1, imageMessage 3, extendedTextMessage 6, documentMessage 7,
+/// audioMessage 8, videoMessage 9, stickerMessage 26, ptvMessage 66.
+const READABLE_FIELDS: [u32; 8] = [1, 3, 6, 7, 8, 9, 26, 66];
+
+/// Queue a read receipt for one incoming message this client has just
+/// decrypted, when its content is something a person reads. Returns how many
+/// were queued (0 or 1).
+///
+/// This is the automatic form of [`queue_read`], for a session whose operator
+/// asked for everything to be marked read (`transport.mark_read`). The official
+/// client sends read receipts when a chat is on screen; a client without a
+/// screen has to be told, which is why this is opt-in.
+pub fn queue_read_for_incoming(store: &ProtocolStore, node: &Node) -> Result<usize> {
+    use crate::model::{
+        ids::{ChatId, MessageId},
+        receipt::{Receipt, ReceiptKind},
+    };
+    if node.description != "message" {
+        return Ok(0);
+    }
+    let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) else {
+        return Ok(0);
+    };
+    // The chat the inbox keyed the message under: the group for a group
+    // message, the sender's phone JID for a direct one.
+    let chat = match jid(node, "from") {
+        Some(from) if from.server == Server::Group => from,
+        _ => match super::inbox::session_sender(node) {
+            Some(sender) => sender,
+            None => return Ok(0),
+        },
+    };
+    let key = format!("received:{chat}:{id}");
+    let saved: Option<serde_json::Value> =
+        store.read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))?;
+    let Some(saved) = saved else {
+        return Ok(0);
+    };
+    if saved["status"] != "decrypted" {
+        return Ok(0);
+    }
+    let Ok(protobuf) =
+        serde_json::from_value::<zeroize::Zeroizing<Vec<u8>>>(saved["protobuf"].clone())
+    else {
+        return Ok(0);
+    };
+    let fields = crate::signal::direct::payload_fields(&protobuf).unwrap_or_default();
+    if !fields.iter().any(|f| READABLE_FIELDS.contains(f)) {
+        return Ok(0);
+    }
+    queue_read(
+        store,
+        &Receipt {
+            chat: ChatId::from_jid(&chat)?,
+            message_ids: vec![MessageId::new(id.to_owned())?],
+            from: None,
+            kind: ReceiptKind::Read,
+            server_timestamp: None,
+            code: None,
+        },
+    )
+}
+
 /// One queued explicit receipt's outcome, redacted for operators.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct ReceiptOutcome {
@@ -839,6 +907,79 @@ mod tests {
         };
         assert_eq!(status("first"), "server_acknowledged");
         assert_eq!(status("second"), "refused");
+    }
+
+    /// Automatic read receipts go only to content a person reads, in direct
+    /// chats and groups, and only once.
+    #[test]
+    fn automatic_read_receipts_skip_what_nobody_reads() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("auto-read.redb"), true);
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let member = Jid::parse("15555550100@lid").unwrap();
+        let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let encoder =
+            || crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70());
+        let group_msg = |id: &str| {
+            Node::new("message")
+                .attr("id", id)
+                .attr("from", group.clone())
+                .attr("participant", member.clone())
+        };
+        let direct_msg = |id: &str| {
+            Node::new("message")
+                .attr("id", id)
+                .attr("from", peer.clone())
+        };
+        // Hand-assembled payloads: conversation (1), a sender-key distribution
+        // alone (2), a protocol message (12) and a reaction (46, tag 0xf2 0x02).
+        let text = vec![0x0a, 0x02, b'h', b'i'];
+        let skdm = vec![0x12, 0x00];
+        let protocol = vec![0x62, 0x00];
+        let reaction = vec![0xf2, 0x02, 0x00];
+        let rows = [
+            (format!("received:{group}:T"), group_msg("T"), text.clone()),
+            (format!("received:{group}:K"), group_msg("K"), skdm),
+            (format!("received:{group}:R"), group_msg("R"), reaction),
+            (format!("received:{peer}:D"), direct_msg("D"), text),
+            (format!("received:{peer}:P"), direct_msg("P"), protocol),
+        ];
+        store
+            .write(|tx| {
+                for (key, node, payload) in &rows {
+                    let route = encoder().encode(node)?;
+                    tx.put_json(
+                        Table::Checkpoints,
+                        key.as_bytes(),
+                        1,
+                        &serde_json::json!({"status":"decrypted", "route":route, "protobuf":payload}),
+                    )?;
+                }
+                Ok(())
+            })
+            .unwrap();
+        let queued = |node: &Node| queue_read_for_incoming(&store, node).unwrap();
+        assert_eq!(queued(&group_msg("T")), 1);
+        assert_eq!(queued(&group_msg("T")), 0, "once only");
+        assert_eq!(queued(&group_msg("K")), 0, "a key distribution is not read");
+        assert_eq!(queued(&group_msg("R")), 0, "a reaction is not read");
+        assert_eq!(queued(&direct_msg("D")), 1);
+        assert_eq!(
+            queued(&direct_msg("P")),
+            0,
+            "a protocol message is not read"
+        );
+        assert_eq!(queued(&direct_msg("missing")), 0);
+        assert_eq!(queued(&Node::new("receipt").attr("id", "T")), 0);
+
+        let pending = reserve_pending(&store).unwrap();
+        assert_eq!(pending.len(), 2);
+        let to_group = pending
+            .iter()
+            .find(|n| jid(n, "to") == Some(group.clone()))
+            .unwrap();
+        assert_eq!(jid(to_group, "participant"), Some(member.clone()));
+        assert!(pending.iter().any(|n| jid(n, "to") == Some(peer.clone())));
     }
 
     /// A group message's read receipt goes to the group and names the sender,
