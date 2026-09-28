@@ -618,6 +618,8 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                 {
                     println!("transport: recorded a status receipt from one viewer");
                 }
+                // Settles a read receipt this window sent (`transport.mark_read`).
+                whatsapp_api::transport::receipts::record_ack(&store, &node)?;
                 let tracked = whatsapp_api::transport::receipts::record(&store, &node)?;
                 if tracked > 0 {
                     println!("transport: updated {tracked} outgoing receipt records");
@@ -685,8 +687,32 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                         )
                     })?;
                 }
+                // Same opt-in as `listen`: mark readable content read once it
+                // is confirmed delivered.
+                let mut marked_read = false;
+                if config.transport.mark_read
+                    && incoming == whatsapp_api::transport::inbox::IncomingResult::Decrypted
+                {
+                    match whatsapp_api::transport::receipts::queue_read_for_incoming(&store, &node)
+                    {
+                        Ok(0) => {}
+                        Ok(_) => {
+                            for receipt in
+                                whatsapp_api::transport::receipts::reserve_pending(&store)?
+                            {
+                                whatsapp_api::transport::messaging::write_node(
+                                    &mut channel,
+                                    &receipt,
+                                )
+                                .await?;
+                            }
+                            marked_read = true;
+                        }
+                        Err(error) => eprintln!("transport: read receipt not queued: {error}"),
+                    }
+                }
                 println!(
-                    "transport: incoming {tag}, encryption={kind}; saved encrypted; delivery/receipt confirmation={confirmed}; no opened receipt"
+                    "transport: incoming {tag}, encryption={kind}; saved encrypted; delivery/receipt confirmation={confirmed}; marked_read={marked_read}; no opened receipt"
                 );
                 if tag == "stream:error" {
                     break;

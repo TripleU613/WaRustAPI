@@ -2382,8 +2382,15 @@ async fn main() -> ExitCode {
         eprintln!("error: {e}");
         return ExitCode::from(2);
     }
+    // Without RUST_LOG, show warnings and the one-line-per-stanza `incoming`
+    // report. The empty default used to hide both, so a session that received
+    // nothing looked exactly like one that received and dropped something.
     tracing_subscriber::fmt()
-        .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
+        .with_env_filter(
+            tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| {
+                tracing_subscriber::EnvFilter::new("warn,whatsapp_api::incoming=info")
+            }),
+        )
         .with_writer(std::io::stderr)
         .init();
     match run(cli).await {

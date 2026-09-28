@@ -477,26 +477,73 @@ pub(crate) async fn drive(
                     }
                 }
                 super::outgoing::acknowledge(&store, &node)?;
+                let mut confirmed = false;
                 if (node.description == "receipt" || matches!(received, super::inbox::IncomingResult::Decrypted | super::inbox::IncomingResult::Duplicate))
                     && let Some(confirmation) = super::messaging::received_confirmation(&node) {
                         // Raw capture and session/inbox commit precede this write.
                         // A reconnect may confirm a genuine server redelivery again.
                         link.send(&confirmation).await?;
+                        confirmed = true;
                 }
                 // Opt-in: mark it read too. A refusal (an unsupported chat form,
                 // say) is logged and skipped; it must not end the session.
+                let mut marked_read = false;
                 if config.transport.mark_read && received == super::inbox::IncomingResult::Decrypted {
                     match super::receipts::queue_read_for_incoming(&store, &node) {
                         Ok(0) => {}
                         Ok(_) => {
                             for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
+                            marked_read = true;
                         }
                         Err(error) => tracing::warn!(%error, "automatic read receipt not queued"),
                     }
                 }
+                incoming_line(&node, received, confirmed, marked_read);
             }
         }
     }
+}
+
+/// One line per incoming stanza, so an operator can see what arrived and what
+/// was done with it: element, `type`, which encryption, the inbox outcome, and
+/// whether a delivery confirmation or read receipt went back. No identities,
+/// no ids, no content. Keepalive replies are left out; there is one every 20 s.
+fn incoming_line(
+    node: &Node,
+    received: super::inbox::IncomingResult,
+    confirmed: bool,
+    marked_read: bool,
+) {
+    if node.description == "iq" {
+        return;
+    }
+    let chat = node
+        .get_attr("from")
+        .and_then(|v| v.as_jid())
+        .map(|j| match j.server {
+            crate::model::jid::Server::Group => "group",
+            crate::model::jid::Server::Broadcast => "broadcast",
+            crate::model::jid::Server::User | crate::model::jid::Server::Lid => "direct",
+            _ => "other",
+        })
+        .unwrap_or("server");
+    let enc: Vec<&str> = node
+        .child_nodes()
+        .iter()
+        .filter(|n| n.description == "enc")
+        .filter_map(|n| n.get_attr("type").and_then(|v| v.as_text()))
+        .collect();
+    tracing::info!(
+        target: "whatsapp_api::incoming",
+        stanza = %node.description,
+        kind = node.get_attr("type").and_then(|v| v.as_text()).unwrap_or("-"),
+        chat,
+        enc = ?enc,
+        outcome = ?received,
+        confirmed,
+        marked_read,
+        "incoming"
+    );
 }
 
 /// One bounded prekey upload for this session: generate when nothing is

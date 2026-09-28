@@ -748,7 +748,19 @@ a reaction (46) get none. It uses the same durable, once-only receipt queue as
 `mark-read`, so a redelivered message is not marked twice. A refusal is logged
 and the session continues. Off by default: the official client decides "read"
 from a chat being on screen, which a headless client cannot infer, so this is
-the operator saying so. `lab-transport --receive` does not apply it.
+the operator saying so. `lab-transport --receive` applies it too, and now
+settles receipt acks there as `listen` does.
+
+### Seeing what a session received
+
+Without `RUST_LOG`, the CLI now logs warnings plus one `incoming` line per
+stanza from `listen`: element, `type`, direct/group/broadcast/server, the `enc`
+types, the inbox outcome, and whether a delivery confirmation and a read
+receipt went back — no identities, ids or content. Keepalive replies are
+omitted. The previous empty default printed nothing at all, so on 2026-09-28 a
+three-minute `listen` window in which the operator's two messages never arrived
+looked identical to one that dropped them; only a store inspection afterwards
+showed that nothing but keepalive replies and two notifications had come in.
 
 ## LID senders decrypt with the LID session (2026-09-28)
 
