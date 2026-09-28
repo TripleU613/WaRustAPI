@@ -565,9 +565,10 @@ pub fn available_presence() -> Node {
 /// device, which renders identically. So there is no device stripping and no
 /// PN/LID conversion on this path, and echoing the attribute verbatim matches.
 pub fn received_confirmation(incoming: &Node) -> Option<Node> {
-    if !matches!(incoming.description.as_str(), "message" | "receipt")
-        || incoming.get_attr("recipient").is_some()
-    {
+    if incoming.description == "receipt" {
+        return receipt_ack(incoming);
+    }
+    if incoming.description != "message" || incoming.get_attr("recipient").is_some() {
         return None;
     }
     // Status / broadcast: a different receipt shape from an ordinary message.
@@ -638,15 +639,43 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
     if id.is_empty() || id.len() > 128 {
         return None;
     }
-    if incoming.description == "message" {
-        if incoming.get_attr("edit").is_some() {
-            return None;
-        }
-        return Some(Node::new("receipt").attr("to", jid).attr("id", id));
+    if incoming.get_attr("edit").is_some() {
+        return None;
+    }
+    Some(Node::new("receipt").attr("to", jid).attr("id", id))
+}
+
+/// Acknowledge an incoming receipt, as `LX/Cp2->A05` (2.26.37.71,
+/// `WriterThread/write/send-message-ack`, **confirmed**) builds it from the
+/// stanza: `id`; `to` = the receipt's `from`, as given; `class="receipt"`;
+/// `type` unless the receipt's is absent or `delivery`; then `participant` and
+/// `recipient` when present, and `edit` when present and not `"0"`.
+///
+/// Until 2026-09-28 a receipt carrying `participant` or `recipient`, or coming
+/// from a group or a companion device, got no ack at all, so every group
+/// delivery and read receipt was redelivered at each login (seen live as a
+/// burst of `receipt chat=group confirmed=false` lines).
+///
+/// Only the receipt types this client handles are acknowledged — delivery,
+/// read and played. The APK acknowledges every type after processing it; an
+/// ack for a type we do not process would tell the server it was handled when
+/// it was only preserved, so those stay unacknowledged.
+fn receipt_ack(incoming: &Node) -> Option<Node> {
+    let jid_of = |name: &str| {
+        let value = incoming.get_attr(name)?;
+        value
+            .as_jid()
+            .cloned()
+            .or_else(|| Jid::parse(value.as_text()?).ok())
+    };
+    let from = jid_of("from")?;
+    let id = incoming.get_attr("id")?.as_text()?;
+    if id.is_empty() || id.len() > 128 {
+        return None;
     }
     let mut ack = Node::new("ack")
         .attr("id", id)
-        .attr("to", jid)
+        .attr("to", from)
         .attr("class", "receipt");
     match incoming.get_attr("type").and_then(|v| v.as_text()) {
         None | Some("delivery") => {}
@@ -654,6 +683,19 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
             ack = ack.attr("type", kind);
         }
         _ => return None,
+    }
+    if let Some(participant) = jid_of("participant") {
+        ack = ack.attr("participant", participant);
+    }
+    if let Some(recipient) = jid_of("recipient") {
+        ack = ack.attr("recipient", recipient);
+    }
+    if let Some(edit) = incoming
+        .get_attr("edit")
+        .and_then(|v| v.as_text())
+        .filter(|e| !e.is_empty() && *e != "0")
+    {
+        ack = ack.attr("edit", edit);
     }
     Some(ack)
 }
@@ -887,6 +929,61 @@ mod tests {
                 .is_none()
         );
     }
+    /// `LX/Cp2->A05`: a receipt's ack mirrors the receipt — `to` its `from`,
+    /// its `participant` and `recipient`, its `type` unless delivery, and its
+    /// `edit` unless `"0"` — so group receipts are acknowledged too.
+    #[test]
+    fn receipt_acks_mirror_the_receipt_like_the_apk() {
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let member = Jid::parse("15555550100@lid").unwrap();
+        let text = |node: &Node, name: &str| {
+            node.get_attr(name)
+                .and_then(|v| v.as_text())
+                .map(str::to_owned)
+        };
+        let group_receipt = Node::new("receipt")
+            .attr("from", group.clone())
+            .attr("participant", member.clone())
+            .attr("id", "R1");
+        let ack = received_confirmation(&group_receipt).expect("a group receipt is acked");
+        assert_eq!(ack.description, "ack");
+        assert_eq!(ack.get_attr("to").unwrap().as_jid(), Some(&group));
+        assert_eq!(ack.get_attr("participant").unwrap().as_jid(), Some(&member));
+        assert_eq!(text(&ack, "class").as_deref(), Some("receipt"));
+        assert_eq!(text(&ack, "id").as_deref(), Some("R1"));
+        assert!(ack.get_attr("type").is_none(), "no type for a delivery");
+
+        let read = group_receipt.clone().attr("type", "read");
+        assert_eq!(
+            text(&received_confirmation(&read).unwrap(), "type").as_deref(),
+            Some("read")
+        );
+        let delivery = group_receipt.clone().attr("type", "delivery");
+        assert!(
+            received_confirmation(&delivery)
+                .unwrap()
+                .get_attr("type")
+                .is_none()
+        );
+
+        let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let with_recipient = Node::new("receipt")
+            .attr("from", Jid::parse("15555550102:3@s.whatsapp.net").unwrap())
+            .attr("recipient", peer.clone())
+            .attr("id", "R2")
+            .attr("edit", "0");
+        let ack = received_confirmation(&with_recipient).expect("a device receipt is acked");
+        assert_eq!(ack.get_attr("recipient").unwrap().as_jid(), Some(&peer));
+        assert_eq!(ack.get_attr("to").unwrap().as_jid().unwrap().device, 3);
+        assert!(ack.get_attr("edit").is_none(), "edit=0 is not copied");
+        let edited = with_recipient.clone().attr("edit", "7");
+        assert!(received_confirmation(&edited).is_some());
+
+        // A type this client does not process is preserved, not acknowledged.
+        let retry = group_receipt.attr("type", "retry");
+        assert!(received_confirmation(&retry).is_none());
+    }
+
     /// `LX/1Rd->A01` builds exactly one `presence` element with only a `type`
     /// attribute. No `to`, no children — a stray attribute here goes out on a
     /// live account on every connect.

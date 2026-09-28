@@ -780,3 +780,19 @@ receipts and events are unchanged. Replaying the preserved captures offline
 decrypted the message — an extended text, fields `[6, 35]` — and left zero
 undecryptable captures on profile `l`. Resending retries alone could not have
 fixed it: the sender correctly reused the session it held.
+
+## Receipt acknowledgements mirror the receipt (2026-09-28)
+
+**Confirmed** from 2.26.37.71 `LX/Cp2->A05` (`WriterThread/write/send-message-ack`):
+the ack for an incoming receipt is built from the receipt itself — `id`; `to` =
+its `from`, as given (a group, a device); `class="receipt"`; `type` unless the
+receipt's is absent or `delivery`; `participant` and `recipient` when present;
+`edit` when present and not `"0"`.
+
+`received_confirmation` refused any receipt with `participant` or `recipient`,
+or from a group or a companion device, so no group receipt was ever acked and
+the server redelivered them at every login — visible in the new `incoming` log
+as a burst of `receipt chat=group confirmed=false`. Receipts are now acked in
+the APK's shape. Only the types this client processes (delivery, read, played)
+are acknowledged; the APK acks every type after handling it, and an ack for a
+type we only preserve would claim it was handled.
