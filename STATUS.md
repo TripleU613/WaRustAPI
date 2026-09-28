@@ -44,7 +44,12 @@ Registration uses the recipe in
 | Prekey upload and replenishment | live | [messaging-completion](docs/messaging-completion.md) |
 
 A single undecryptable incoming message no longer ends a session; it degrades
-to `Undecryptable` and we send a retry receipt.
+to `Undecryptable` and we send a retry receipt. Direct messages from a LID sender now decrypt with the LID
+session our group sends established; that was why one of the operator's
+messages stayed unreadable for four days (fixed 2026-09-28, verified by offline
+replay). A group payload addressed only to this device (such as a
+`messageHistoryBundle`) is now recorded and acknowledged instead of being
+redelivered at every login.
 
 ## Not done
 

@@ -53,6 +53,37 @@ pub fn session_sender(node: &Node) -> Option<Jid> {
     }
 }
 
+/// The sender's LID when the stanza is LID-addressed (`from=<lid>`, device 0).
+fn lid_sender(node: &Node) -> Option<Jid> {
+    node.get_attr("from")
+        .and_then(|v| v.as_jid().cloned())
+        .filter(|j| j.server == Server::Lid && j.device == 0)
+        .map(|j| j.to_non_ad())
+}
+
+/// Which peer's Signal session decrypts a direct message.
+///
+/// The session is the one for the address the sender used: a LID-addressed
+/// chat encrypts under the LID (`LX/CPQ->A00`, confirmed), and our own sends to
+/// that person's LID device (every group fan-out) keyed their session by the
+/// LID. Looking a LID sender up by the phone number it maps to found a
+/// different ratchet, so every reply they sent over the LID session failed —
+/// observed 2026-09-28 on one message redelivered three times over four days,
+/// which decrypted as soon as the LID session was used. The phone session
+/// stays the fallback for a peer only ever reached by number, and a `pkmsg`
+/// from a LID starts its new session under the LID.
+fn direct_session_peer(
+    phone: &Jid,
+    lid: Option<Jid>,
+    lid_session_held: bool,
+    is_prekey_message: bool,
+) -> Jid {
+    match lid {
+        Some(lid) if lid_session_held || is_prekey_message => lid,
+        _ => phone.clone(),
+    }
+}
+
 /// Sender-key routing: `from` is the chat and `participant` is the authenticated
 /// sender device. Groups (`@g.us`) and broadcasts (`status@broadcast` and
 /// broadcast lists) both address messages this way and both encrypt them with
@@ -371,7 +402,35 @@ async fn process_direct(
     let NodeContent::Bytes(ciphertext) = &encs[0].content else {
         return Ok(IncomingResult::Unsupported);
     };
-    let peer_key = format!("comparison-direct:{sender}");
+    // The Signal session is the one for the address the sender used. A
+    // LID-addressed chat encrypts under the LID (`LX/CPQ->A00`, confirmed), and
+    // our own sends to that person's LID device — every group fan-out — keyed
+    // their session `comparison-direct:<lid>`. Looking a LID sender up by the
+    // phone number it maps to found a different ratchet, so every reply they
+    // sent over the LID session failed ("Signal key/session operation failed",
+    // observed 2026-09-28 on one message redelivered three times). The phone
+    // session stays the fallback for a peer we only ever reached by number.
+    // The inbox record itself stays keyed by `sender`.
+    let is_prekey_message = encs[0].get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg");
+    let lid_peer = if peer_category {
+        None
+    } else {
+        lid_sender(node)
+    };
+    let lid_session_held = match &lid_peer {
+        Some(lid) => store
+            .read(|tx| {
+                tx.get_json::<Vec<u8>>(
+                    Table::SignalSessions,
+                    format!("comparison-direct:{lid}").as_bytes(),
+                    1,
+                )
+            })?
+            .is_some(),
+        None => false,
+    };
+    let session_peer = direct_session_peer(&sender, lid_peer, lid_session_held, is_prekey_message);
+    let peer_key = format!("comparison-direct:{session_peer}");
     let (session, identity): (Option<Vec<u8>>, Option<Vec<u8>>) = store.read(|tx| {
         Ok((
             tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1)?,
@@ -406,7 +465,7 @@ async fn process_direct(
         }
         let incoming = crate::signal::direct::receive_prekey(
             account,
-            &sender,
+            &session_peer,
             (
                 session.as_deref().map(|v| v.as_slice()),
                 identity.as_deref(),
@@ -425,7 +484,8 @@ async fn process_direct(
             return Ok(IncomingResult::Undecryptable);
         };
         (
-            crate::signal::direct::receive(account, &sender, session, identity, ciphertext).await?,
+            crate::signal::direct::receive(account, &session_peer, session, identity, ciphertext)
+                .await?,
             identity.clone(),
         )
     };
@@ -953,6 +1013,34 @@ mod resilience_tests {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A LID sender's message opens with the LID session when we hold one,
+    /// starts one there for a `pkmsg`, and otherwise falls back to the phone
+    /// session.
+    #[test]
+    fn a_lid_sender_uses_the_lid_session() {
+        let phone = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let lid = Jid::parse("99990000111@lid").unwrap();
+        let node = Node::new("message")
+            .attr("from", lid.clone())
+            .attr("sender_pn", phone.clone())
+            .attr("id", "M");
+        assert_eq!(lid_sender(&node), Some(lid.clone()));
+        assert_eq!(
+            direct_session_peer(&phone, Some(lid.clone()), true, false),
+            lid
+        );
+        assert_eq!(
+            direct_session_peer(&phone, Some(lid.clone()), false, true),
+            lid
+        );
+        assert_eq!(direct_session_peer(&phone, Some(lid), false, false), phone);
+        let by_number = Node::new("message")
+            .attr("from", phone.clone())
+            .attr("id", "M");
+        assert_eq!(lid_sender(&by_number), None);
+        assert_eq!(direct_session_peer(&phone, None, false, true), phone);
+    }
 
     /// A status update is addressed `from=status@broadcast participant=<poster>`
     /// and is sender-key encrypted exactly like a group message, so it must

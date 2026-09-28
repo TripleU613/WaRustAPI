@@ -749,3 +749,22 @@ a reaction (46) get none. It uses the same durable, once-only receipt queue as
 and the session continues. Off by default: the official client decides "read"
 from a chat being on screen, which a headless client cannot infer, so this is
 the operator saying so. `lab-transport --receive` does not apply it.
+
+## LID senders decrypt with the LID session (2026-09-28)
+
+**Observed:** one direct `msg` from the operator's LID (`from=<lid>`, with
+`sender_pn`) failed with "Signal key/session operation failed" on its first
+delivery and on two resends that answered our retry receipt (`enc count=1`),
+across four days. The inbox mapped the LID to the phone JID and decrypted with
+`comparison-direct:<phone>`. But a LID-addressed chat encrypts under the LID
+(`LX/CPQ->A00`, confirmed), and our group fan-outs had established the session
+with that person's LID device under `comparison-direct:<lid>`, so the phone
+reply rode a ratchet we were not looking at.
+
+`inbox::direct_session_peer` now picks the LID session when the stanza is
+LID-addressed and we hold one (or when a `pkmsg` starts one), falling back to
+the phone session otherwise. The inbox record stays keyed by phone JID, so
+receipts and events are unchanged. Replaying the preserved captures offline
+decrypted the message — an extended text, fields `[6, 35]` — and left zero
+undecryptable captures on profile `l`. Resending retries alone could not have
+fixed it: the sender correctly reused the session it held.
