@@ -20,5 +20,11 @@ Thumbs.db
 /codex-session-*.md
 .claude/worktrees/
 
-# Not part of this project; kept local only.
-Seeder/
+# Seeder is local by default. Track only its sanitized infrastructure evidence
+# and reproducible configuration; credentials and other local payloads remain
+# ignored.
+Seeder/*
+!Seeder/docs/
+!Seeder/docs/**
+!Seeder/infra/
+!Seeder/infra/**
