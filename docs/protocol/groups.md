@@ -922,3 +922,21 @@ seconds earlier (`l-react-3`) was acked the same way — no `count`,
 did not appear on the handset. So a stale or expired target is ruled out. In
 the same session the operator's own reaction to our `l-reply-1` arrived, which
 confirms that group reply rendered. The reaction cause remains **unknown**.
+
+## A group payload addressed to one device (2026-09-28)
+
+**Observed:** a group stanza from the operator carried a per-device `msg` and
+no `skmsg`. The `msg` decrypted to `Message` fields `[35, 70]` — field 70 is
+`messageHistoryBundle` (`xtask apk-proto-fields` on `LX/BZc`, the `Message`
+descriptor), the group-history share a member's phone sends a newcomer. It is
+not a key distribution, so the inbox found no group key to commit and returned
+`Unsupported` without saving, acknowledging or receipting it — which is why the
+server redelivered it at every login.
+
+Now, when a group stanza has no `skmsg` and its per-device payload is not a
+distribution, that payload is recorded as the group message: the member's
+session and any consumed prekey commit, the group sender key is left as it was,
+and the normal delivery receipt follows. Verified offline by replaying the
+preserved capture (`lab-inbox --replay-captures`: 1 newly decrypted). The
+history bundle's own contents (an encrypted media reference) are not fetched
+or applied.

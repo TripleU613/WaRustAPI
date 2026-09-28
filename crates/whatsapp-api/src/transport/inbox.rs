@@ -703,6 +703,11 @@ async fn process_group_inner(
     let mut used_prekey = None;
     let mut original_prekey: Option<Zeroizing<Vec<u8>>> = None;
     let mut key_after_skdm: Option<Vec<u8>> = None;
+    // A member payload that decrypted but is not a key distribution. In a group
+    // stanza with no `skmsg`, that payload *is* the message: the sender
+    // addressed it to our device alone. Observed 2026-09-28: the operator's
+    // phone sent a `messageHistoryBundle` (Message field 70, `LX/BZc`) this way.
+    let mut pairwise_plaintext = None;
     if let Some(enc) = direct_enc
         && let NodeContent::Bytes(ciphertext) = &enc.content
         && let Some(peer) = participant_session_jid(store, node, &sender_jid)?
@@ -764,11 +769,12 @@ async fn process_group_inner(
             let skdm = crate::signal::group::extract_skdm_from_payload(&received.plaintext);
             if skdm.is_none() {
                 // Field numbers only; this never exposes message content.
-                tracing::warn!(
+                tracing::info!(
                     fields = ?crate::signal::direct::payload_fields(&received.plaintext)
                         .unwrap_or_default(),
-                    "group stanza: member payload decrypted but carried no key distribution"
+                    "group stanza: member payload is addressed to this device, not a key distribution"
                 );
+                pairwise_plaintext = Some(received.plaintext.clone());
             }
             if let Some((skdm_group, axolotl)) = skdm
                 && Jid::parse(&skdm_group).is_ok_and(|g| same_group(&g))
@@ -811,10 +817,17 @@ async fn process_group_inner(
         final_key = Some(received.updated_key.to_vec());
         group_plaintext = Some(received.plaintext);
     }
-    // Nothing usable: no sender key yet and no SKDM in this stanza. Preserve the
-    // capture without acknowledging it. Say which inputs were missing — a silent
-    // refusal here is indistinguishable from the stanza never arriving.
-    let Some(final_key) = final_key else {
+    // No `skmsg` content but a payload addressed to this device: record that as
+    // the message. Before this, such a stanza was left unprocessed and
+    // unacknowledged, so the server redelivered it at every login.
+    if group_plaintext.is_none() && sk_enc.is_none() {
+        group_plaintext = pairwise_plaintext;
+    }
+    // Nothing usable: no sender key yet, no SKDM in this stanza, and no payload
+    // addressed to this device. Preserve the capture without acknowledging it.
+    // Say which inputs were missing — a silent refusal here is
+    // indistinguishable from the stanza never arriving.
+    if final_key.is_none() && group_plaintext.is_none() {
         tracing::warn!(
             had_direct_child = direct_enc.is_some(),
             direct_child_decrypted = direct_commit.is_some(),
@@ -824,7 +837,7 @@ async fn process_group_inner(
             "group stanza not processed: no sender key available and none distributed in it"
         );
         return Ok(IncomingResult::Unsupported);
-    };
+    }
     let route =
         crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
             .encode(node)?;
@@ -835,12 +848,16 @@ async fn process_group_inner(
         {
             return Ok(IncomingResult::Duplicate);
         }
-        crate::signal::group::commit_sender_key(
-            tx,
-            &db_key,
-            previous_bytes.as_deref(),
-            &final_key,
-        )?;
+        // A payload addressed to this device alone leaves the group key as it
+        // was; only a distribution or an `skmsg` advances it.
+        if let Some(final_key) = &final_key {
+            crate::signal::group::commit_sender_key(
+                tx,
+                &db_key,
+                previous_bytes.as_deref(),
+                final_key,
+            )?;
+        }
         if let Some(member) = &direct_commit {
             let peer_key = member.peer_key.as_bytes();
             let current: Option<Vec<u8>> = tx.get_json(Table::SignalSessions, peer_key, 1)?;
