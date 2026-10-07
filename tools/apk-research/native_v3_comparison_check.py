@@ -28,7 +28,13 @@ def run_cases(library):
                          scheme=3, options=options)
         if result['code'] != expected or result['remapped_code'] != mapping[expected]:
             raise ValueError(f'{name}: native V3 status/table differed: {result["code"]}')
-        records.append(dict(case=name, version=version, options=options, **result))
+        def inputs(sides):
+            return [{field: value.decode('ascii') if isinstance(value, bytes) else value
+                     for field, value in side.items()} for side in sides]
+        # Built-in synthetic modeled inputs make the independently executed
+        # native result reusable by client regression tests; no account data.
+        records.append(dict(case=name, version=version, options=options,
+                            known=inputs(known), scanned=inputs(scanned), **result))
 
     for version in (0, 1):
         for options in (1, 3):

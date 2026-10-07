@@ -77,7 +77,7 @@
       "x-cli": "<python-env> tools/apk-research/native_v3_comparison_check.py --library <reconstructed-libwhatsapp.so>",
       "x-transport": "cli",
       "x-live": false,
-      "description": "Offline development utility; no HTTP route or account flow. Requires exact APK 2.26.37.71 reconstructed libwhatsapp.so SHA-256. Executes actual native V3 core (0x7140fc), PN-or-LID/optional-value/PN-presence helpers and remapper (0x7140b8) over 264 built-in synthetic cases. Emits deterministic version/options, native code/remapped code, instruction and modeled-object-comparison counts; one direct-core invalid hosted enum intercepts native abort. Both selected key versions, UI options 1/3, PN/username presence and mismatch, remote identifier OR behavior, precedence and all 81 known/scanned hosted combinations per option are covered; internal bit-off cases do not describe a UI switch. Maximum 227 instructions observed per non-abort case; ten seconds/one million instructions per core/remap invocation and return-PC enforcement. Generic MCFEqual, getters/key equality and logging are modeled; no native object/JID construction, decoder, orientation wrapper, JNI, current inventory, human verification or companion sync executes. Wrong/missing builds, unexpected branches and budget exhaustion refuse without partial JSON. Corpus docs/protocol/fingerprint-native-v3-comparison-cases.json; source and remaining equality/JID unknowns docs/protocol/safety-number.md. This does not implement runtime V3 binary comparison or authorize a verified metadata change."
+      "description": "Offline development utility; no HTTP route or account flow. Requires exact APK 2.26.37.71 reconstructed libwhatsapp.so SHA-256. Executes actual native V3 core (0x7140fc), PN-or-LID/optional-value/PN-presence helpers and remapper (0x7140b8) over 264 built-in synthetic cases. Emits deterministic version/options, native code/remapped code, instruction and modeled-object-comparison counts; one direct-core invalid hosted enum intercepts native abort. Both selected key versions, UI options 1/3, PN/username presence and mismatch, remote identifier OR behavior, precedence and all 81 known/scanned hosted combinations per option are covered; internal bit-off cases do not describe a UI switch. Maximum 227 instructions observed per non-abort case; ten seconds/one million instructions per core/remap invocation and return-PC enforcement. Generic MCFEqual, getters/key equality and logging are modeled; no native object/JID construction, decoder, orientation wrapper, JNI, current inventory, human verification or companion sync executes. Wrong/missing builds, unexpected branches and budget exhaustion refuse without partial JSON. Corpus docs/protocol/fingerprint-native-v3-comparison-cases.json; source and remaining equality/JID unknowns docs/protocol/safety-number.md. This does not implement runtime V3 binary comparison or authorize a verified metadata change. Non-abort case records now include built-in synthetic known/scanned input objects (ASCII byte tokens and hosted integer), preserving every previously observed status/count. These are modeled core inputs, not valid scanned JID or authenticated inventory claims; Rust core regression tests consume all 263 non-abort records."
     },
     {
       "x-cli": "<python-env> tools/apk-research/native_v3_lid_check.py --library <reconstructed-libwhatsapp.so>",
@@ -2803,6 +2803,119 @@
             "description": "Bounded APK-native fingerprint-schema decoding validated against 50 actual protobuf-C cases, including decoded values. Other edges remain unverified; opaque unknown data is skipped, not round-tripped."
           }
         }
+      },
+      "V3Comparison": {
+        "type": "object",
+        "required": [
+          "status",
+          "matches_explicit_inputs",
+          "payload_version",
+          "orientation",
+          "input_authority",
+          "parser_authority",
+          "scheme",
+          "options",
+          "lid_parser_authority"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Internal APK native comparison status, not a server reason or UI label. Zero matches supplied inputs only.",
+            "enum": [
+              0,
+              -38,
+              -37,
+              -36,
+              -35,
+              -34,
+              -33,
+              -32,
+              -31,
+              -30,
+              -29,
+              -28,
+              -27,
+              -26,
+              -25,
+              -24,
+              -23,
+              -22,
+              -21,
+              -20,
+              -19,
+              -18,
+              -17,
+              -16,
+              -15,
+              -14,
+              -13,
+              -12,
+              -11,
+              -10,
+              -8,
+              -7,
+              -6,
+              -5,
+              -4,
+              -3,
+              -2,
+              -1
+            ]
+          },
+          "matches_explicit_inputs": {
+            "type": "boolean",
+            "description": "status == 0 only; no active scheme/inventory, human or server verification claim."
+          },
+          "payload_version": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Decoded version or null before it is available. Unsupported decoded versions return -10."
+          },
+          "orientation": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "local_first",
+              "remote_first",
+              null
+            ],
+            "description": "Known local PN or LID match chooses orientation; local-first wins if both match. Null until oriented."
+          },
+          "input_authority": {
+            "type": "string",
+            "enum": [
+              "caller_supplied_selection_unverified"
+            ]
+          },
+          "parser_authority": {
+            "type": "string",
+            "enum": [
+              "apk_native_schema_corpus_validated_other_edges_unverified"
+            ],
+            "description": "Bounded APK-native fingerprint-schema decoding validated against 50 actual protobuf-C cases, including decoded values. Other edges remain unverified; opaque unknown data is skipped, not round-tripped."
+          },
+          "scheme": {
+            "type": "string",
+            "const": "native_v3"
+          },
+          "options": {
+            "type": "integer",
+            "enum": [
+              1,
+              3
+            ],
+            "description": "APK caller username checks always, optional hosted-state checks."
+          },
+          "lid_parser_authority": {
+            "type": "string",
+            "const": "apk_native_branches_with_modeled_primitives_other_edges_unverified"
+          }
+        },
+        "description": "Metadata-only explicit native V3 comparison. No account or human verification claim."
       }
     }
   },
@@ -10057,8 +10170,8 @@
         "tags": [
           "Account Safety"
         ],
-        "summary": "Compare native V4 binary payload with explicit known inputs (offline)",
-        "description": "CLI only; no HTTP route. Same private JSON format as fingerprint-display plus a private scanned binary protobuf file. Both regular files <=64 KiB and exclude group/other permissions. Does not open an account store, select current scheme/inventory, fetch keys, render/decode a QR image, send or commit human verification. Implements APK 2.26.37.71 conversion/presence order, LID-directed orientation, version-selected key comparison, PN equality, ASCII username equality with exact length and hosted-state legacy branch. Local-first native results are remapped; remote-first are direct. Known params retain both PN/username (no local QR serializer suppression). Native internal codes are surfaced without invented UI/server meanings. Empty/oversized payload refuses as our local resource policy instead of the APK empty-buffer abort. ASCII username equality is independently validated using actual APK merged MCFStringCompare and the pinned public Bionic fixture; other Android implementations remain unverified. Bounded native fingerprint-schema parsing replaces prost after eight acceptance differences were observed. Actual 50-case unpack/free corpus covers accepted/decoded fields, duplicates, unknown enums/fields, groups, wire types, varints and length boundaries. Five-byte tags/lengths, ten-byte scalar termination (low32 values), first-byte tag guard, int31 length bound and message merge follow native rules. Groups refuse even beside otherwise matching data, correcting a possible false match. Other edges remain unverified and reported; opaque unknown data is skipped, not round-tripped. Known CLI inputs require ordinary canonical primary LIDs matching display_identifier and PN/username presence; these existing operator guards are not inferred server requirements. Output has no identifiers, keys or payload. Synthetic fixtures and all 113 executed non-abort core cases plus 268 native string cases test semantics. No live peer scan or current input selection is established. See docs/protocol/safety-number.md.",
+        "summary": "Compare native V3/V4 binary payload with explicit known inputs (offline)",
+        "description": "CLI only; no HTTP route. Same private JSON format as fingerprint-display plus a private scanned binary protobuf file. Both regular files <=64 KiB and exclude group/other permissions. Does not open an account store, select current scheme/inventory, fetch keys, render/decode a QR image, send or commit human verification. Implements APK 2.26.37.71 conversion/presence order, LID-directed orientation, version-selected key comparison, PN equality, ASCII username equality with exact length and hosted-state legacy branch. Local-first native results are remapped; remote-first are direct. Known params retain both PN/username (no local QR serializer suppression). Native internal codes are surfaced without invented UI/server meanings. Empty/oversized payload refuses as our local resource policy instead of the APK empty-buffer abort. ASCII username equality is independently validated using actual APK merged MCFStringCompare and the pinned public Bionic fixture; other Android implementations remain unverified. Bounded native fingerprint-schema parsing replaces prost after eight acceptance differences were observed. Actual 50-case unpack/free corpus covers accepted/decoded fields, duplicates, unknown enums/fields, groups, wire types, varints and length boundaries. Five-byte tags/lengths, ten-byte scalar termination (low32 values), first-byte tag guard, int31 length bound and message merge follow native rules. Groups refuse even beside otherwise matching data, correcting a possible false match. Other edges remain unverified and reported; opaque unknown data is skipped, not round-tripped. Known CLI inputs require ordinary canonical primary LIDs matching display_identifier and PN/username presence; these existing operator guards are not inferred server requirements. Output has no identifiers, keys or payload. Synthetic fixtures and all 113 executed non-abort core cases plus 268 native string cases test semantics. No live peer scan or current input selection is established. See docs/protocol/safety-number.md. Explicit --scheme native-v3 enables APK V3 conversion/orientation/core/remapping; default native-v4 preserves existing behavior. V3 allows PN-only or LID-only known sides and does not require PN/username presence together. Username equality is case-sensitive bytes; orientation and remote identity accept PN OR normalized primary LID. Local/remote PN omission statuses differ; full native subset documented in docs/protocol/safety-number.md. --v3-hosted enables options 3; without it V3 uses options 1 (username checks always). This is operator selection, not inferred APK flags. The flag refuses with native-v4. Same JSON format is reused; V3 display_identifier is present for format compatibility but unused by comparison. V3 adds scheme/options/lid_parser_authority output; modeled native branch corpus and remaining MCF/JNI/input-selection unknowns are explicit. V3 comparison does not export a V3 QR payload or commit verification.",
         "operationId": "fingerprintCompare",
         "x-cli": "whatsapp-cli fingerprint-compare",
         "x-transport": [
@@ -10067,7 +10180,8 @@
         "x-live": false,
         "x-library": [
           "whatsapp_api::fingerprint::qr::compare_v4",
-          "whatsapp_cli::fingerprint::compare"
+          "whatsapp_cli::fingerprint::compare",
+          "whatsapp_api::fingerprint::qr::v3::compare_v3"
         ],
         "parameters": [
           {
@@ -10084,11 +10198,35 @@
             "name": "scanned",
             "in": "query",
             "required": true,
-            "description": "Private native V4 binary protobuf path, not a QR image. Never printed.",
+            "description": "Private native binary protobuf path, not a QR image. Never printed.",
             "schema": {
               "type": "string"
             },
             "x-secret-input": true
+          },
+          {
+            "name": "scheme",
+            "in": "query",
+            "required": false,
+            "description": "Explicit comparison algorithm; default native-v4. Does not infer current APK feature selection.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "native-v4",
+                "native-v3"
+              ],
+              "default": "native-v4"
+            }
+          },
+          {
+            "name": "v3-hosted",
+            "in": "query",
+            "required": false,
+            "description": "Only with native-v3: compare hosted states using APK UI options 3 instead of options 1. Username checks always enabled.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "requestBody": {
@@ -10107,13 +10245,20 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/V4Comparison"
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/V4Comparison"
+                    },
+                    {
+                      "$ref": "#/components/schemas/V3Comparison"
+                    }
+                  ]
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid/private-file policy, known inputs or empty/oversized payload; error excludes offending values."
+            "description": "Invalid/private-file policy, known inputs or empty/oversized payload; error excludes offending values. --v3-hosted with native-v4 refuses before reading inputs."
           }
         }
       }

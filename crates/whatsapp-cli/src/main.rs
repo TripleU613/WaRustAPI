@@ -174,7 +174,7 @@ enum Cmd {
         #[arg(long, requires = "qr_version")]
         qr_output: Option<PathBuf>,
     },
-    /// Compare a private native V4 binary payload against explicit private inputs (offline).
+    /// Compare a private native V3/V4 binary payload against explicit private inputs (offline).
     FingerprintCompare {
         /// Private JSON with local/remote known inputs, same format as fingerprint-display.
         #[arg(long)]
@@ -182,6 +182,12 @@ enum Cmd {
         /// Private binary comparison protobuf; no image decoding or account lookup.
         #[arg(long)]
         scanned: PathBuf,
+        /// Explicit native algorithm; current APK feature selection is not inferred.
+        #[arg(long, value_enum, default_value = "native-v4")]
+        scheme: fingerprint::ComparisonScheme,
+        /// Include V3 hosted-state checks (APK options 3 instead of 1).
+        #[arg(long)]
+        v3_hosted: bool,
     },
     /// Send one private-JSON text, image or voice note through the comparison outbox.
     #[cfg(feature = "experimental-transport")]
@@ -1413,7 +1419,12 @@ async fn run(cli: Cli) -> Result<(), Error> {
             qr_version,
             qr_output,
         } => fingerprint::run(config, *qr_version, qr_output.as_deref()),
-        Cmd::FingerprintCompare { config, scanned } => fingerprint::compare(config, scanned),
+        Cmd::FingerprintCompare {
+            config,
+            scanned,
+            scheme,
+            v3_hosted,
+        } => fingerprint::compare(config, scanned, *scheme, *v3_hosted),
         #[cfg(feature = "experimental-transport")]
         Cmd::OutboxSend {
             config,

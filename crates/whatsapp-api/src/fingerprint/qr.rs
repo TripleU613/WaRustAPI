@@ -1,12 +1,14 @@
-//! Native V4 binary payload serialization and explicit-input comparison, APK 2.26.37.71.
+//! Native V4 serialization and V3/V4 explicit-input comparison, APK 2.26.37.71.
 //! This exports comparison data, not a QR image, authentication, scheme selection
 //! or a human-verification result. Evidence: docs/protocol/safety-number.md.
 use super::{MAX_DISPLAY_IDENTIFIER_BYTES, serialized_keys};
 use crate::{Error, Result};
 use prost::Message;
 mod decode;
+pub mod v3;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha512};
+pub use v3::{V3Comparison, V3Side, compare_v3};
 
 /// Native QR hosted-state enum; distinct from saved identity attestation types.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
@@ -88,14 +90,10 @@ fn ascii(value: &str) -> Result<Vec<u8>> {
     Ok(value.as_bytes().to_vec())
 }
 
-fn individual(side: &V4Side<'_>, version: u8, local: bool) -> Result<Individual> {
-    if side.lid_jid.is_empty() {
-        return Err(Error::invalid(
-            "fingerprint.lid_jid",
-            "full LID JID input is missing",
-        ));
-    }
-    let keys = serialized_keys(side.keys)?;
+type KeyMaterial = (Option<Vec<u8>>, Option<Vec<u8>>);
+
+fn key_material(keys: &[[u8; 32]], version: u8) -> Result<KeyMaterial> {
+    let keys = serialized_keys(keys)?;
     let mut public_key = None;
     let mut hashed_public_key = None;
     if version == 0 {
@@ -115,6 +113,17 @@ fn individual(side: &V4Side<'_>, version: u8, local: bool) -> Result<Individual>
         }
         hashed_public_key = Some(digest.to_vec());
     }
+    Ok((public_key, hashed_public_key))
+}
+
+fn individual(side: &V4Side<'_>, version: u8, local: bool) -> Result<Individual> {
+    if side.lid_jid.is_empty() {
+        return Err(Error::invalid(
+            "fingerprint.lid_jid",
+            "full LID JID input is missing",
+        ));
+    }
+    let (public_key, hashed_public_key) = key_material(side.keys, version)?;
     let pn = side.pn_identifier.map(ascii).transpose()?;
     let username = side.username_identifier.map(ascii).transpose()?;
     Ok(Individual {
@@ -169,9 +178,9 @@ pub const MAX_COMPARISON_PAYLOAD_BYTES: usize = 64 * 1024;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ScanOrientation {
-    /// Known local LID matched scanned local; native result is remapped.
+    /// Known local identity matched scanned local; native result is remapped.
     LocalFirst,
-    /// Known local LID matched scanned remote; swap without remapping.
+    /// Known local identity matched scanned remote; swap without remapping.
     RemoteFirst,
 }
 

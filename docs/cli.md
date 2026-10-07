@@ -30,7 +30,7 @@ Usage: whatsapp-cli fingerprint-display [OPTIONS]...
 
 ## whatsapp-cli fingerprint-compare
 
-Compare a private native V4 binary payload against explicit private inputs (offline)
+Compare a private native V3/V4 binary payload against explicit private inputs (offline)
 
 ```
 Usage: whatsapp-cli fingerprint-compare [OPTIONS]...
@@ -40,6 +40,8 @@ Usage: whatsapp-cli fingerprint-compare [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 | --config | CONFIG | yes |  |  |  | Private JSON with local/remote known inputs, same format as fingerprint-display |
 | --scanned | SCANNED | yes |  |  |  | Private binary comparison protobuf; no image decoding or account lookup |
+| --scheme | SCHEME | no | `native-v4` |  | `native-v4`, `native-v3` | Explicit native algorithm; current APK feature selection is not inferred |
+| --v3-hosted | V3_HOSTED | no |  |  | `true`, `false` | Include V3 hosted-state checks (APK options 3 instead of 1) |
 
 ## whatsapp-cli outbox-send
 

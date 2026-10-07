@@ -2150,3 +2150,112 @@ Final validation: CLI reference regeneration/test and OpenAPI library-symbol
 check passed. Repository hygiene checked 359 local links and staged whitespace
 checks passed. This adds an offline research utility and observations; Rust
 runtime behavior and saved accounts are unchanged.
+
+## Explicit native V3 binary comparison in the client (2026-10-07)
+
+`fingerprint::qr::compare_v3` (also `qr::v3::compare_v3`) and
+`whatsapp-cli fingerprint-compare --scheme native-v3` now implement the traced
+V3 binary comparison with explicit known sides. Default CLI comparison remains
+`native-v4`. This is offline comparison, not feature selection, authenticated
+inventory discovery or a human-verification action. V3 QR export is not added
+by this change; `fingerprint-display` still exports V4 only.
+
+**Confirmed/static final split dependency**, APK 37.71 merged library hash
+as above: **MCFASCIIStringCreateArrayBySeparatingStrings, 0x531978..0x531ac0**
+creates a piece for each match (`0x5319f0..0x531a18`) and appends the trailing
+piece (`0x531a3c..0x531a68`) even when its length is zero. It does not discard
+leading, adjacent or trailing empties. Empty separator returns a one-element
+copy of the original string. The nonempty `@` and `:` constants used by LID
+parsing therefore behave as Rust byte `split`, preserving malformed components.
+[Scoped split evidence](fingerprint-ascii-split-evidence.txt) retains the native
+instructions. This confirms the earlier split model statically, not by running
+the full MCF array/allocator runtime. Allocation/class/ownership edges remain
+unknown. The ignored full dump is `fingerprint-v3-ascii-split.txt`.
+
+**Implemented from attributed static/native-slice evidence:** V3 uses the same
+bounded native-schema decoder as V4, then its own version/holder checks,
+per-side converter order, PN-or-LID orientation, key/PN/username/hosted core and
+local-first remapper. Known sides support optional LID or PN (at least one),
+including PN-only sides. Present LIDs must satisfy the recovered numeric
+primary-LID subset; explicit zero qualifiers normalize to primary. Nonzero
+companions and malformed identifiers refuse. This does not apply the general
+client JID parser's broader acceptance to the V3 converter.
+
+The converter checks PN ASCII (-7), LID ASCII (-1) and primary/stable-LID
+parse (-6), username ASCII (-23), missing both addresses (-3), hosted enum
+(-38), then selected key presence (-4). Decode failure -8, missing version
+-5, unsupported version -10 and missing holder -2 precede conversion. Core
+checks remote identity first, then local/remote selected key, PN, username,
+and optional hosted state. Local-first remaps -21→-20 and other traced codes;
+remote-first swaps sides without remapping. V3 usernames compare exact bytes,
+not V4's case folding. Both-absent PN/username values remain distinct from V4's
+additional presence prerequisite. Native empty-input abort is replaced by a
+nonempty/64-KiB local resource guard, explicitly a client policy.
+
+Known inventories use the shared APK-derived sorted serialized keys and
+`H(K,K)` digest for versions 0/1. The key-material helper was factored out of
+V4 without changing its byte representation, round count or serializer's
+local PN suppression. Known V3 parameters retain both PN/username fields.
+Scanned key presence and bytes follow native conversion/comparison, not an
+invented raw-key-length check.
+
+CLI uses the existing private local/remote JSON format and private scanned
+file, each regular, <=64 KiB, without group/other permissions. V3 permits
+missing `lid_jid` when PN is supplied, and does not use the format's
+`display_identifier` field. V4 keeps its existing display/LID and PN/username
+guards. `--v3-hosted` adds hosted comparison (APK options 3); without it V3
+uses options 1. Username checks are always enabled at this interface, matching
+the APK UI caller. This explicit operator choice does not claim the current
+APK feature's value. `--v3-hosted` with native-v4 refuses before reading inputs.
+
+```sh
+whatsapp-cli fingerprint-compare --config <private-known-inputs.json> \
+  --scanned <private-binary.pb> --scheme native-v3
+whatsapp-cli fingerprint-compare --config <private-known-inputs.json> \
+  --scanned <private-binary.pb> --scheme native-v3 --v3-hosted
+```
+
+V3 output contains only the shared status/match/version/orientation/authority
+metadata, plus `scheme: native_v3`, `options: 1|3` and
+`lid_parser_authority: apk_native_branches_with_modeled_primitives_other_edges_unverified`.
+No identifiers, inventory bytes or payload appear. The typed result contains
+the shared result under its Rust `result` field, flattened in JSON. The
+`matches_explicit_inputs` bit is status zero only. This API never opens a store,
+transmits or calls the separate local peer-verification metadata API. No HTTP
+route exists; OpenAPI's diagnostic path documents CLI/library capabilities.
+
+**Independent validation inputs:** the native V3 tool now includes built-in
+synthetic known/scanned objects in each non-abort record. Removing those added
+objects reproduces the previous committed corpus exactly, preserving every
+code, remapped code and instruction/model-call count. The Rust port compares
+all **263 non-abort native core observations**, including options 0/2 internal
+fixtures (not exposed as CLI settings), and all **38 LID branch observations**.
+The core fixtures' synthetic key/identity tokens bypass conversion in that
+specific regression; they do not assert valid real JIDs or inventories.
+Wrapper tests separately cover both versions, orientation/remapping,
+zero-suffix normalization, PN-only known/scanned sides, V3 username case
+mismatch, converter error ordering, malformed component preservation, resource
+guards and output/Debug redaction. CLI tests cover private PN-only inputs and
+incompatible-flag refusal.
+
+**Remaining unknowns:** native class registry/allocation/ownership/JNI execution,
+complete non-LID parser branches, current generation/scan features, authenticated
+inventories and real peer comparison remain unverified. The native LID branch
+corpus uses modeled MCF primitives, with that authority carried in the result;
+the protobuf decoder has its separate native corpus authority. This does not
+establish a human scan, permit automatically marking verification, or claim
+full messaging completion. No saved account state or live message changed.
+
+Final validation (static/offline): workspace all-feature tests passed (561),
+default-feature workspace tests passed (249), strict workspace/all-target/
+all-feature Clippy and warning-free Rustdoc passed. CLI reference regeneration,
+the four native V3 utility tests and formatting passed. A command-level check
+with independently encoded synthetic version-0 payloads returned V3 status 0
+for matching inputs with options 1 and 3, V3 -25 for a local username case
+mismatch, and default V4 0 for that same mismatch. Incompatible hosted selection
+refused before input-file access. Metadata contained no identifiers; the
+specified nonexistent account-store path remained absent. No authenticated
+account, network request or human verification was involved.
+
+Repository hygiene passed: 364 local links, tracked-file budgets, package
+licenses and research checksums; staged whitespace checks passed.

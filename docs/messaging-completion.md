@@ -830,3 +830,12 @@ nonzero companion rejection and number bounds. MCF primitives and allocation
 remain modeled; this is not a full converter or current-peer validation.
 Runtime V3 binary comparison and authenticated input integration remain open.
 See [executed parser decisions](protocol/safety-number.md#executed-v3-primary-lid-parser-decisions-2026-10-07).
+
+2026-10-07 explicit V3 binary comparison: library `compare_v3` and CLI
+`fingerprint-compare --scheme native-v3 [--v3-hosted]` implement V3 conversion,
+PN-or-LID orientation, case-sensitive usernames, presence rules and remapping.
+263 native core and 38 LID observations agree; split-empty preservation is
+statically confirmed. Current authenticated inputs/feature selection and human
+verification remain unproven; this does not mark metadata or send a message.
+V3 export and native MCF/JNI edge validation remain open.
+See [client comparison](protocol/safety-number.md#explicit-native-v3-binary-comparison-in-the-client-2026-10-07).

@@ -1,0 +1,86 @@
+# Confirmed/static: MCFASCIIStringCreateArrayBySeparatingStrings, APK 2.26.37.71
+# Merged SHA-256 565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa
+# ELF VA 0x531978..0x531ac0. Zero-length pieces are appended, including tail.
+# Source/reasoning in safety-number.md V3 runtime comparison section.
+  531978: d503233f     	paciasp
+  53197c: a9bb7bfd     	stp	x29, x30, [sp, #-0x50]!
+  531980: a90167fa     	stp	x26, x25, [sp, #0x10]
+  531984: a9025ff8     	stp	x24, x23, [sp, #0x20]
+  531988: a90357f6     	stp	x22, x21, [sp, #0x30]
+  53198c: a9044ff4     	stp	x20, x19, [sp, #0x40]
+  531990: 910003fd     	mov	x29, sp
+  531994: aa0003f5     	mov	x21, x0
+  531998: 2a1f03e0     	mov	w0, wzr
+  53199c: aa0103f7     	mov	x23, x1
+  5319a0: 94000b61     	bl	0x534724 <MCFArrayCreateMutable>
+  5319a4: aa0003f3     	mov	x19, x0
+  5319a8: aa1503e0     	mov	x0, x21
+  5319ac: 97fffe74     	bl	0x53137c <MCFASCIIStringGetLength>
+  5319b0: 2a0003f4     	mov	w20, w0
+  5319b4: aa1703e0     	mov	x0, x23
+  5319b8: 97fffe71     	bl	0x53137c <MCFASCIIStringGetLength>
+  5319bc: 340005e0     	cbz	w0, 0x531a78 <MCFASCIIStringCreateArrayBySeparatingStrings+0x100>
+  5319c0: 2a0003f6     	mov	w22, w0
+  5319c4: aa1503e0     	mov	x0, x21
+  5319c8: 97fffdc8     	bl	0x5310e8 <MCFASCIIStringGetCString>
+  5319cc: aa0003f5     	mov	x21, x0
+  5319d0: aa1703e0     	mov	x0, x23
+  5319d4: 97fffdc5     	bl	0x5310e8 <MCFASCIIStringGetCString>
+  5319d8: aa0003f8     	mov	x24, x0
+  5319dc: aa1503e0     	mov	x0, x21
+  5319e0: aa1803e1     	mov	x1, x24
+  5319e4: 9407b50f     	bl	0x71ee20 <strstr@plt>
+  5319e8: aa1503f7     	mov	x23, x21
+  5319ec: b4000280     	cbz	x0, 0x531a3c <MCFASCIIStringCreateArrayBySeparatingStrings+0xc4>
+  5319f0: eb170000     	subs	x0, x0, x23
+  5319f4: 54000623     	b.lo	0x531ab8 <MCFASCIIStringCreateArrayBySeparatingStrings+0x140>
+  5319f8: 94000184     	bl	0x532008 <MCFInt32FromSizeT>
+  5319fc: 2a0003f9     	mov	w25, w0
+  531a00: aa1703e0     	mov	x0, x23
+  531a04: 2a1903e1     	mov	w1, w25
+  531a08: 97fffdc0     	bl	0x531108 <MCFASCIIStringGetCString+0x20>
+  531a0c: aa0003fa     	mov	x26, x0
+  531a10: aa1303e0     	mov	x0, x19
+  531a14: aa1a03e1     	mov	x1, x26
+  531a18: 94000bf1     	bl	0x5349dc <MCFArrayAppendValue>
+  531a1c: aa1a03e0     	mov	x0, x26
+  531a20: 94000cfb     	bl	0x534e0c <MCFRelease>
+  531a24: 0b160328     	add	w8, w25, w22
+  531a28: aa1803e1     	mov	x1, x24
+  531a2c: 8b28c2f7     	add	x23, x23, w8, sxtw
+  531a30: aa1703e0     	mov	x0, x23
+  531a34: 9407b4fb     	bl	0x71ee20 <strstr@plt>
+  531a38: b5fffdc0     	cbnz	x0, 0x5319f0 <MCFASCIIStringCreateArrayBySeparatingStrings+0x78>
+  531a3c: 8b34c2a8     	add	x8, x21, w20, sxtw
+  531a40: cb170100     	sub	x0, x8, x23
+  531a44: 94000171     	bl	0x532008 <MCFInt32FromSizeT>
+  531a48: eb1502ff     	cmp	x23, x21
+  531a4c: 54000383     	b.lo	0x531abc <MCFASCIIStringCreateArrayBySeparatingStrings+0x144>
+  531a50: 2a0003e1     	mov	w1, w0
+  531a54: aa1703e0     	mov	x0, x23
+  531a58: 97fffdac     	bl	0x531108 <MCFASCIIStringGetCString+0x20>
+  531a5c: aa0003f4     	mov	x20, x0
+  531a60: aa1303e0     	mov	x0, x19
+  531a64: aa1403e1     	mov	x1, x20
+  531a68: 94000bdd     	bl	0x5349dc <MCFArrayAppendValue>
+  531a6c: aa1403e0     	mov	x0, x20
+  531a70: 94000ce7     	bl	0x534e0c <MCFRelease>
+  531a74: 14000004     	b	0x531a84 <MCFASCIIStringCreateArrayBySeparatingStrings+0x10c>
+  531a78: aa1303e0     	mov	x0, x19
+  531a7c: aa1503e1     	mov	x1, x21
+  531a80: 94000bd7     	bl	0x5349dc <MCFArrayAppendValue>
+  531a84: aa1303e0     	mov	x0, x19
+  531a88: 94000b1d     	bl	0x5346fc <MCFArrayCreateCopy>
+  531a8c: aa0003f4     	mov	x20, x0
+  531a90: aa1303e0     	mov	x0, x19
+  531a94: 94000cde     	bl	0x534e0c <MCFRelease>
+  531a98: aa1403e0     	mov	x0, x20
+  531a9c: a9444ff4     	ldp	x20, x19, [sp, #0x40]
+  531aa0: a94357f6     	ldp	x22, x21, [sp, #0x30]
+  531aa4: a9425ff8     	ldp	x24, x23, [sp, #0x20]
+  531aa8: a94167fa     	ldp	x26, x25, [sp, #0x10]
+  531aac: a8c57bfd     	ldp	x29, x30, [sp], #0x50
+  531ab0: d50323bf     	autiasp
+  531ab4: d65f03c0     	ret
+  531ab8: 9407aeae     	bl	0x71d570 <abort@plt>
+  531abc: 9407aead     	bl	0x71d570 <abort@plt>

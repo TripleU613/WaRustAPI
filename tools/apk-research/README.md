@@ -426,3 +426,13 @@ This is not full MCF or protobuf-converter execution. Per entry: ten seconds /
 one million instructions; return PC required; 1-MiB heap and 256-byte ASCII
 string bounds. Largest observed case is 1188 instructions. Unknown branches,
 bounds and build failures refuse before JSON. No runtime/account support added.
+
+The V3 native comparison corpus now carries its built-in synthetic known/scanned
+objects beside each non-abort result. All prior codes/counts remain unchanged.
+Client regressions consume these 263 records directly; these are opaque modeled
+core inputs, not authenticated identities or valid converter inputs.
+[Client V3 comparison](../../docs/protocol/safety-number.md#explicit-native-v3-binary-comparison-in-the-client-2026-10-07)
+and [MCF split instructions](../../docs/protocol/fingerprint-ascii-split-evidence.txt)
+record the implementation boundary. The CLI default is native-v4; select V3
+explicitly with `--scheme native-v3`, optional `--v3-hosted` (options 3 vs 1).
+Native class/ownership/JNI and current inventories remain unverified.

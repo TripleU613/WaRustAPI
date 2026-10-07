@@ -12,6 +12,13 @@ use whatsapp_api::{
 };
 use zeroize::Zeroizing;
 
+/// Explicit offline comparison selection; never infer the APK's runtime flag.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+pub(super) enum ComparisonScheme {
+    NativeV4,
+    NativeV3,
+}
+
 const MAX_CONFIG_BYTES: u64 = 64 * 1024;
 
 #[derive(Deserialize)]
@@ -206,11 +213,49 @@ fn compare_input(input: &Input, payload: &[u8]) -> Result<fingerprint::qr::V4Com
     )
 }
 
-pub(super) fn compare(config: &Path, scanned: &Path) -> Result<(), Error> {
+fn compare_v3_input(
+    input: &Input,
+    payload: &[u8],
+    check_hosted: bool,
+) -> Result<fingerprint::qr::V3Comparison, Error> {
+    let local_keys = decode_keys(&input.local)?;
+    let remote_keys = decode_keys(&input.remote)?;
+    fn side<'a>(value: &'a Side, keys: &'a [[u8; 32]]) -> fingerprint::qr::V3Side<'a> {
+        fingerprint::qr::V3Side {
+            keys,
+            lid_jid: value.lid_jid.as_deref(),
+            pn_identifier: value.pn_identifier.as_deref(),
+            username_identifier: value.username_identifier.as_deref(),
+            hosted_state: value.hosted_state,
+        }
+    }
+    fingerprint::qr::compare_v3(
+        &side(&input.local, &local_keys),
+        &side(&input.remote, &remote_keys),
+        payload,
+        check_hosted,
+    )
+}
+
+pub(super) fn compare(
+    config: &Path,
+    scanned: &Path,
+    scheme: ComparisonScheme,
+    check_hosted: bool,
+) -> Result<(), Error> {
+    if check_hosted && scheme != ComparisonScheme::NativeV3 {
+        return Err(invalid("--v3-hosted requires --scheme native-v3"));
+    }
     let input = parse(&read(config)?)?;
-    // Reuse private regular/bounded file handling; binary protobuf contains
-    // contact identifiers and key/hash material just like the explicit JSON.
-    let result = compare_input(&input, &read(scanned)?)?;
+    let payload = read(scanned)?;
+    // Explicit private inputs only; neither path opens the saved account.
+    let result = match scheme {
+        ComparisonScheme::NativeV4 => serde_json::to_value(compare_input(&input, &payload)?),
+        ComparisonScheme::NativeV3 => {
+            serde_json::to_value(compare_v3_input(&input, &payload, check_hosted)?)
+        }
+    }
+    .map_err(|_| invalid("cannot encode comparison result"))?;
     println!(
         "{}",
         serde_json::to_string_pretty(&result)
@@ -228,6 +273,44 @@ mod tests {
             "local":{"display_identifier":"synthetic-local", "raw_identity_keys_hex":["10".repeat(32),"01".repeat(32)]},
             "remote":{"display_identifier":"synthetic-remote", "raw_identity_keys_hex":[hex::encode((0u8..32).collect::<Vec<_>>())]}
         })
+    }
+
+    #[test]
+    fn v3_comparison_supports_pn_only_without_account_access_or_identifier_output() {
+        let mut value = input();
+        value["local"]["pn_identifier"] = serde_json::json!("private-local-pn");
+        value["remote"]["pn_identifier"] = serde_json::json!("private-remote-pn");
+        let input = parse(&serde_json::to_vec(&value).unwrap()).unwrap();
+        let local_keys = decode_keys(&input.local).unwrap();
+        let remote_keys = decode_keys(&input.remote).unwrap();
+        let side = |keys, lid, pn| fingerprint::qr::V4Side {
+            keys,
+            lid_jid: lid,
+            pn_identifier: Some(pn),
+            username_identifier: None,
+            hosted_state: None,
+        };
+        let payload = fingerprint::qr::encode_v4(
+            &side(&local_keys, "123@lid", "private-local-pn"),
+            &side(&remote_keys, "456@lid", "private-remote-pn"),
+            0,
+        )
+        .unwrap();
+        let result = compare_v3_input(&input, &payload, false).unwrap();
+        assert_eq!(result.result.status, 0);
+        assert_eq!(result.options, 1);
+        assert_eq!(compare_v3_input(&input, &payload, true).unwrap().options, 3);
+        let output = serde_json::to_string(&result).unwrap();
+        assert!(!output.contains("private-local-pn"));
+        assert!(!output.contains("synthetic-local"));
+        assert!(!output.contains("123@lid"));
+        let path = Path::new("unused-fingerprint-account.redb");
+        assert!(
+            compare(path, path, ComparisonScheme::NativeV4, true)
+                .unwrap_err()
+                .to_string()
+                .contains("--v3-hosted requires --scheme native-v3")
+        );
     }
 
     #[test]

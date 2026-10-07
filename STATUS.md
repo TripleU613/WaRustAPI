@@ -484,3 +484,22 @@ Final validation: CLI reference regeneration/test and OpenAPI library-symbol
 check passed. Repository hygiene checked 359 local links and staged whitespace
 checks passed. This adds an offline research utility and observations; Rust
 runtime behavior and saved accounts are unchanged.
+
+V3 client comparison follow-up (2026-10-07): explicit `compare_v3` and
+`fingerprint-compare --scheme native-v3` now compare bounded binary payloads
+using the APK's V3 converter/core/orientation/remapping. Optional `--v3-hosted`
+selects APK options 3; otherwise 1. V3 permits PN-only known identities and
+uses case-sensitive usernames. Native MCF splitting is statically confirmed.
+The port matches 263 non-abort core and 38 LID branch observations; current
+input selection, native MCF/JNI/ownership edges and real peer scan remain open.
+No account or live action changed; V3 QR export remains unimplemented.
+[Runtime comparison](docs/protocol/safety-number.md#explicit-native-v3-binary-comparison-in-the-client-2026-10-07).
+
+Validation: workspace all-feature tests (561), default workspace tests (249),
+strict all-target/all-feature Clippy, warning-free Rustdoc, native V3 utility
+tests (4), CLI reference regeneration and formatting passed. Synthetic CLI
+comparison confirmed options 1/3 and V3 case-mismatch -25 versus default V4 0,
+with redacted metadata and no account-store creation.
+
+Repository hygiene passed: 364 local links, tracked-file budgets, package
+licenses and research checksums; staged whitespace checks passed.
