@@ -776,3 +776,10 @@ orientation and result remapping are implemented; native core/string fixtures
 are covered. Complete protobuf-C parsing edges and current inventory selection
 remain unverified; no live scan or automatic human-verification write occurs.
 See [comparison semantics](protocol/safety-number.md#explicit-input-native-v4-binary-comparison-2026-10-07).
+
+2026-10-07 parser correction: actual native unpacking refuted eight prost
+acceptance assumptions. The comparison decoder now reproduces the 50-case
+native corpus's acceptance and recognized values; groups reject even beside
+otherwise valid matching data. Other edges/current inventory/live scanning
+remain unverified, with no account changes. See
+[native decoder evidence](protocol/safety-number.md#actual-protobuf-c-parsing-and-bounded-decoder-correction-2026-10-07).

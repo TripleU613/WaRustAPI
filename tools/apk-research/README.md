@@ -302,3 +302,28 @@ Set `TELEWHATSAPP_BIONIC_LIBRARY` along with the main/merged fixture variables
 for the additional actual-string regression test. Pairing/wrong-build preflight
 checks require no fixtures. See
 [scope and compact observations](../../docs/protocol/safety-number.md#actual-native-ascii-username-comparison-2026-10-07).
+
+## Native fingerprint protobuf-C parser
+
+`native_fingerprint_parse_check.py --library PATH` executes actual APK 37.71
+combined unpack/generated init/internal parse/merge/free instructions on 50
+built-in synthetic buffers. Exact merged-library hash is required. Custom
+allocator/free and memcpy/memset are modeled; no native library initialization,
+JNI, account or socket executes. It accepts no arbitrary/account payload.
+Instruction/return, 64-KiB input, 1-MiB heap and allocation-release guards refuse
+unexpected branches or exhaustion before partial JSON output. The
+[committed corpus](../../docs/protocol/fingerprint-native-parser-cases.json)
+contains synthetic bytes and all recognized decoded fields/presence, including
+noncanonical cases that disproved prost equivalence. See
+[native parsing rules and correction](../../docs/protocol/safety-number.md#actual-protobuf-c-parsing-and-bounded-decoder-correction-2026-10-07).
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
+  tools/apk-research/native_fingerprint_parse_check.py \
+  --library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsappmerged.so
+```
+
+`test_native_fingerprint_parse_check.py` includes actual corpus reproduction
+with `TELEWHATSAPP_SCHEMA_LIBRARY`, otherwise explicitly skipped, and always
+runs missing/wrong-build empty-output refusal checks. All fixture variables
+configured brings the native tooling suite to 25 tests.

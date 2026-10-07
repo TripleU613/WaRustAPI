@@ -341,7 +341,7 @@ compares private native V4 protobuf against explicit known JSON, with traced
 conversion order, both scan orientations and native status remapping. Tests
 match all 113 executed non-abort core cases and 268 native string cases;
 independent wire fixtures cover both versions/orientations. Result reports
-caller-input and prost-parser scope; complete protobuf-C edge equivalence,
+caller-input and bounded native-parser scope; complete protobuf-C edge equivalence,
 current inventory and live scanning remain unverified. No account or human
 verification metadata is changed by comparison.
 [Comparison scope](docs/protocol/safety-number.md#explicit-input-native-v4-binary-comparison-2026-10-07).
@@ -353,3 +353,23 @@ malformed payload/private-permission checks passed. Both-scanned-LIDs-matching
 priority also passed its focused regression. The initial documentation check
 compiled before the new OpenAPI operation was added; completing the contract
 and regenerating/rerunning resolved the coverage refusal.
+
+Native parser correction (offline, 2026-10-07): actual APK 37.71 protobuf-C
+unpack/init/merge/free now reproduces a 50-case synthetic corpus. Eight prost
+acceptance differences were observed; a valid fingerprint plus an unknown group
+could previously produce a false match. `fingerprint-compare` now uses a bounded
+schema decoder matching native tag/wire/length/scalar/merge rules, validated for
+acceptance and all recognized field values. Its parser-authority output reports
+corpus validation with other edges still unverified. Unknown opaque fields are
+skipped, not round-tripped; current inventory/live scanning remain unverified.
+No account store, pin/session or verification metadata was changed.
+[Native parser evidence](docs/protocol/safety-number.md#actual-protobuf-c-parsing-and-bounded-decoder-correction-2026-10-07).
+
+Validation (offline): 552 workspace/all-feature tests, 240 default-feature tests
+and all 25 fully configured native tooling checks passed, alongside strict
+all-target/all-feature Clippy, warning-free Rustdoc, formatting and regenerated
+CLI reference. A rebuilt CLI matched both independent version-0/1 fixtures and
+returned -8 for the otherwise-valid-plus-group and malformed fixtures; the
+unused account-store path remained absent. The corpus test also checks explicit
+nested-holder presence, with its final focused rerun passing.
+Repository hygiene passed with 323 local links; staged diff whitespace checks passed.

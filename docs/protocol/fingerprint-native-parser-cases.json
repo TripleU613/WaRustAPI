@@ -1,0 +1,585 @@
+{
+  "apk_build": "2.26.37.71",
+  "library_sha256": "565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa",
+  "evidence": "observed/offline native protobuf-C; modeled allocator/memcpy/memset",
+  "cases": [
+    {
+      "case": "wire-version-0",
+      "payload_hex": "0800126c0a420501010101010101010101010101010101010101010101010101010101010101010510101010101010101010101010101010101010101010101010101010101010101a13323232323232323232323232323232406c6964220f73796e7468657469632d6c6f63616c28001a560a2105000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f120831353535303130311a13333333333333333333333333333333406c6964221073796e7468657469632d72656d6f74652801",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 0,
+      "local": {
+        "unknown_fields": 0,
+        "public_key": "050101010101010101010101010101010101010101010101010101010101010101051010101010101010101010101010101010101010101010101010101010101010",
+        "pn_identifier": null,
+        "lid_identifier": "323232323232323232323232323232406c6964",
+        "username_identifier": "73796e7468657469632d6c6f63616c",
+        "hashed_public_key": null,
+        "hosted_state": 0
+      },
+      "remote": {
+        "unknown_fields": 0,
+        "public_key": "05000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "pn_identifier": "3135353530313031",
+        "lid_identifier": "333333333333333333333333333333406c6964",
+        "username_identifier": "73796e7468657469632d72656d6f7465",
+        "hashed_public_key": null,
+        "hosted_state": 1
+      },
+      "instructions": 3121,
+      "modeled_allocated_bytes": 608
+    },
+    {
+      "case": "wire-version-1",
+      "payload_hex": "0801126a1a13323232323232323232323232323232406c6964220f73796e7468657469632d6c6f63616c280032404809f38adb90eeb0035a266b47cbe13723826d31ecebef726018ea836c7787daa9a72a30f04b637560b83bceeff8030bb8d28ec5b6fe0a105870d72629b692ff1a75120831353535303130311a13333333333333333333333333333333406c6964221073796e7468657469632d72656d6f746528013240820afb976ff1061f0a02fc6d79eeb83d1ada62f3f07a7d88bc8fab90e5e711b81e79218bb1be8ef19e0c28943373f7bb3c98860447e1aa39af45b155d726a4bc",
+      "accepted": true,
+      "version": 1,
+      "unknown_fields": 0,
+      "local": {
+        "unknown_fields": 0,
+        "public_key": null,
+        "pn_identifier": null,
+        "lid_identifier": "323232323232323232323232323232406c6964",
+        "username_identifier": "73796e7468657469632d6c6f63616c",
+        "hashed_public_key": "4809f38adb90eeb0035a266b47cbe13723826d31ecebef726018ea836c7787daa9a72a30f04b637560b83bceeff8030bb8d28ec5b6fe0a105870d72629b692ff",
+        "hosted_state": 0
+      },
+      "remote": {
+        "unknown_fields": 0,
+        "public_key": null,
+        "pn_identifier": "3135353530313031",
+        "lid_identifier": "333333333333333333333333333333406c6964",
+        "username_identifier": "73796e7468657469632d72656d6f7465",
+        "hashed_public_key": "820afb976ff1061f0a02fc6d79eeb83d1ada62f3f07a7d88bc8fab90e5e711b81e79218bb1be8ef19e0c28943373f7bb3c98860447e1aa39af45b155d726a4bc",
+        "hosted_state": 1
+      },
+      "instructions": 3173,
+      "modeled_allocated_bytes": 608
+    },
+    {
+      "case": "valid-wire-with-unknown-group",
+      "payload_hex": "0800126c0a420501010101010101010101010101010101010101010101010101010101010101010510101010101010101010101010101010101010101010101010101010101010101a13323232323232323232323232323232406c6964220f73796e7468657469632d6c6f63616c28001a560a2105000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f120831353535303130311a13333333333333333333333333333333406c6964221073796e7468657469632d72656d6f746528012324",
+      "accepted": false,
+      "instructions": 438,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "empty",
+      "payload_hex": "",
+      "accepted": true,
+      "version": null,
+      "unknown_fields": 0,
+      "local": null,
+      "remote": null,
+      "instructions": 288,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "missing-version",
+      "payload_hex": "2000",
+      "accepted": true,
+      "version": null,
+      "unknown_fields": 1,
+      "local": null,
+      "remote": null,
+      "instructions": 433,
+      "modeled_allocated_bytes": 96
+    },
+    {
+      "case": "duplicate-version",
+      "payload_hex": "08000801",
+      "accepted": true,
+      "version": 1,
+      "unknown_fields": 0,
+      "local": null,
+      "remote": null,
+      "instructions": 548,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "unknown-enum",
+      "payload_hex": "080012022802",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 0,
+      "local": {
+        "unknown_fields": 0,
+        "public_key": null,
+        "pn_identifier": null,
+        "lid_identifier": null,
+        "username_identifier": null,
+        "hashed_public_key": null,
+        "hosted_state": 2
+      },
+      "remote": null,
+      "instructions": 1154,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "duplicate-local-message",
+      "payload_hex": "080012031a01411203220142",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 0,
+      "local": {
+        "unknown_fields": 0,
+        "public_key": null,
+        "pn_identifier": null,
+        "lid_identifier": "41",
+        "username_identifier": "42",
+        "hashed_public_key": null,
+        "hosted_state": null
+      },
+      "remote": null,
+      "instructions": 2134,
+      "modeled_allocated_bytes": 400
+    },
+    {
+      "case": "truncated",
+      "payload_hex": "08",
+      "accepted": false,
+      "instructions": 167,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "invalid-tag-zero",
+      "payload_hex": "00",
+      "accepted": false,
+      "instructions": 139,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "duplicate-lid-bytes",
+      "payload_hex": "080012061a01411a0142",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 0,
+      "local": {
+        "unknown_fields": 0,
+        "public_key": null,
+        "pn_identifier": null,
+        "lid_identifier": "42",
+        "username_identifier": null,
+        "hashed_public_key": null,
+        "hosted_state": null
+      },
+      "remote": null,
+      "instructions": 1352,
+      "modeled_allocated_bytes": 240
+    },
+    {
+      "case": "duplicate-lid-nested",
+      "payload_hex": "080012031a014112031a0142",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 0,
+      "local": {
+        "unknown_fields": 0,
+        "public_key": null,
+        "pn_identifier": null,
+        "lid_identifier": "42",
+        "username_identifier": null,
+        "hashed_public_key": null,
+        "hosted_state": null
+      },
+      "remote": null,
+      "instructions": 2117,
+      "modeled_allocated_bytes": 400
+    },
+    {
+      "case": "empty-local-message",
+      "payload_hex": "08001200",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 0,
+      "local": {
+        "unknown_fields": 0,
+        "public_key": null,
+        "pn_identifier": null,
+        "lid_identifier": null,
+        "username_identifier": null,
+        "hashed_public_key": null,
+        "hosted_state": null
+      },
+      "remote": null,
+      "instructions": 993,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "empty-key-presence",
+      "payload_hex": "080012020a00",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 0,
+      "local": {
+        "unknown_fields": 0,
+        "public_key": "",
+        "pn_identifier": null,
+        "lid_identifier": null,
+        "username_identifier": null,
+        "hashed_public_key": null,
+        "hosted_state": null
+      },
+      "remote": null,
+      "instructions": 1142,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "unknown-outer-varint",
+      "payload_hex": "08002001",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 1,
+      "local": null,
+      "remote": null,
+      "instructions": 558,
+      "modeled_allocated_bytes": 96
+    },
+    {
+      "case": "unknown-outer-fixed64",
+      "payload_hex": "0800210000000000000000",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 1,
+      "local": null,
+      "remote": null,
+      "instructions": 550,
+      "modeled_allocated_bytes": 96
+    },
+    {
+      "case": "unknown-outer-bytes",
+      "payload_hex": "0800220141",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 1,
+      "local": null,
+      "remote": null,
+      "instructions": 567,
+      "modeled_allocated_bytes": 96
+    },
+    {
+      "case": "unknown-outer-fixed32",
+      "payload_hex": "08002500000000",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 1,
+      "local": null,
+      "remote": null,
+      "instructions": 551,
+      "modeled_allocated_bytes": 96
+    },
+    {
+      "case": "unknown-outer-empty-group",
+      "payload_hex": "08002324",
+      "accepted": false,
+      "instructions": 242,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "unknown-inner-empty-group",
+      "payload_hex": "080012023b3c",
+      "accepted": false,
+      "instructions": 771,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "wrong-version-wire-type",
+      "payload_hex": "0a0100",
+      "accepted": false,
+      "instructions": 413,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "wrong-local-wire-type",
+      "payload_hex": "08001000",
+      "accepted": false,
+      "instructions": 556,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "wrong-lid-wire-type",
+      "payload_hex": "080012021800",
+      "accepted": false,
+      "instructions": 1123,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "truncated-inner-length",
+      "payload_hex": "080012031a0241",
+      "accepted": false,
+      "instructions": 798,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "overlong-version-zero",
+      "payload_hex": "0880808080808080808000",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 0,
+      "local": null,
+      "remote": null,
+      "instructions": 483,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "overflow-version-64",
+      "payload_hex": "08ffffffffffffffffff01",
+      "accepted": true,
+      "version": 4294967295,
+      "unknown_fields": 0,
+      "local": null,
+      "remote": null,
+      "instructions": 483,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "overflow-version-above-64",
+      "payload_hex": "08ffffffffffffffffff02",
+      "accepted": true,
+      "version": 4294967295,
+      "unknown_fields": 0,
+      "local": null,
+      "remote": null,
+      "instructions": 483,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "eleven-byte-version",
+      "payload_hex": "088080808080808080808000",
+      "accepted": false,
+      "instructions": 219,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "overlong-tag",
+      "payload_hex": "888080800000",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 0,
+      "local": null,
+      "remote": null,
+      "instructions": 462,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "overlong-tag-six-bytes",
+      "payload_hex": "88808080800000",
+      "accepted": false,
+      "instructions": 186,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "enum-negative-one",
+      "payload_hex": "0800120b28ffffffffffffffffff01",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 0,
+      "local": {
+        "unknown_fields": 0,
+        "public_key": null,
+        "pn_identifier": null,
+        "lid_identifier": null,
+        "username_identifier": null,
+        "hashed_public_key": null,
+        "hosted_state": -1
+      },
+      "remote": null,
+      "instructions": 1214,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "enum-zero-presence",
+      "payload_hex": "080012022800",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 0,
+      "local": {
+        "unknown_fields": 0,
+        "public_key": null,
+        "pn_identifier": null,
+        "lid_identifier": null,
+        "username_identifier": null,
+        "hashed_public_key": null,
+        "hosted_state": 0
+      },
+      "remote": null,
+      "instructions": 1154,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "enum-one-presence",
+      "payload_hex": "080012022801",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 0,
+      "local": {
+        "unknown_fields": 0,
+        "public_key": null,
+        "pn_identifier": null,
+        "lid_identifier": null,
+        "username_identifier": null,
+        "hashed_public_key": null,
+        "hosted_state": 1
+      },
+      "remote": null,
+      "instructions": 1154,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "duplicate-enum",
+      "payload_hex": "0800120428002801",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 0,
+      "local": {
+        "unknown_fields": 0,
+        "public_key": null,
+        "pn_identifier": null,
+        "lid_identifier": null,
+        "username_identifier": null,
+        "hashed_public_key": null,
+        "hosted_state": 1
+      },
+      "remote": null,
+      "instructions": 1279,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "overlong-zero-tag",
+      "payload_hex": "800000",
+      "accepted": true,
+      "version": null,
+      "unknown_fields": 1,
+      "local": null,
+      "remote": null,
+      "instructions": 434,
+      "modeled_allocated_bytes": 96
+    },
+    {
+      "case": "overflow-tag-field-id",
+      "payload_hex": "888080801000",
+      "accepted": true,
+      "version": null,
+      "unknown_fields": 1,
+      "local": null,
+      "remote": null,
+      "instructions": 472,
+      "modeled_allocated_bytes": 96
+    },
+    {
+      "case": "five-byte-empty-length",
+      "payload_hex": "0800128080808000",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 0,
+      "local": {
+        "unknown_fields": 0,
+        "public_key": null,
+        "pn_identifier": null,
+        "lid_identifier": null,
+        "username_identifier": null,
+        "hashed_public_key": null,
+        "hosted_state": null
+      },
+      "remote": null,
+      "instructions": 1029,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "six-byte-empty-length",
+      "payload_hex": "080012808080808000",
+      "accepted": false,
+      "instructions": 301,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "length-above-int31",
+      "payload_hex": "0800128080808008",
+      "accepted": false,
+      "instructions": 300,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "length-wrap-int32",
+      "payload_hex": "0800128080808010",
+      "accepted": false,
+      "instructions": 300,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "unknown-outer-above-64-varint",
+      "payload_hex": "080020ffffffffffffffffff02",
+      "accepted": true,
+      "version": 0,
+      "unknown_fields": 1,
+      "local": null,
+      "remote": null,
+      "instructions": 603,
+      "modeled_allocated_bytes": 96
+    },
+    {
+      "case": "wrong-version-fixed32",
+      "payload_hex": "0d00000000",
+      "accepted": false,
+      "instructions": 397,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "wrong-version-fixed64",
+      "payload_hex": "090000000000000000",
+      "accepted": false,
+      "instructions": 396,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "wrong-local-fixed32",
+      "payload_hex": "08001500000000",
+      "accepted": false,
+      "instructions": 549,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "wrong-local-fixed64",
+      "payload_hex": "0800110000000000000000",
+      "accepted": false,
+      "instructions": 548,
+      "modeled_allocated_bytes": 48
+    },
+    {
+      "case": "wrong-key-varint",
+      "payload_hex": "080012020800",
+      "accepted": false,
+      "instructions": 1097,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "wrong-hash-varint",
+      "payload_hex": "080012023000",
+      "accepted": false,
+      "instructions": 1123,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "wrong-enum-bytes",
+      "payload_hex": "080012032a0100",
+      "accepted": false,
+      "instructions": 1131,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "wrong-enum-fixed32",
+      "payload_hex": "080012052d00000000",
+      "accepted": false,
+      "instructions": 1115,
+      "modeled_allocated_bytes": 208
+    },
+    {
+      "case": "wrong-enum-fixed64",
+      "payload_hex": "08001209290000000000000000",
+      "accepted": false,
+      "instructions": 1114,
+      "modeled_allocated_bytes": 208
+    }
+  ]
+}

@@ -1234,7 +1234,7 @@ Both files must be regular, <=64 KiB and exclude group/other permissions.
 Output contains `status` (native internal integer), `matches_explicit_inputs`
 (status zero only), `payload_version`, nullable `orientation`,
 `input_authority=caller_supplied_selection_unverified` and
-`parser_authority=prost_native_schema_edge_equivalence_unverified`. No key,
+`parser_authority=apk_native_schema_corpus_validated_other_edges_unverified`. No key,
 contact identifier, scanned bytes, input path or raw parse failure is printed.
 Mismatches are valid comparison results. Known-input/file-policy errors refuse
 without claiming a comparison. No account store, network or metadata write is
@@ -1249,11 +1249,11 @@ Known library inputs keep existing bounded ASCII/key validation; scanned
 strings are limited by the whole payload bound and follow the native ASCII
 byte acceptance (including empty values).
 
-**Unknown/unverified:** parsing is implemented with prost over the recovered
-native schema. Complete protobuf-C equivalence for duplicate fields, unknown
-fields/enums, malformed/truncated encodings and other parser edges is not yet
-established; malformed prost data reports the corresponding decode-stage -8,
-not a claim that every such byte sequence has the same native outcome. Other
+**Implemented/corpus-validated:** the original prost decoder was refuted by
+actual native unpacking on eight edge cases. The bounded fingerprint-schema
+decoder now matches the actual 50-case corpus, including decoded field values;
+see the native-parser follow-up below. Other protobuf-C edges beyond that corpus
+remain **unknown/unverified**. Other
 Android libc versions, current account/peer scheme and complete inventory,
 QR-image decoding, live peer scanning and companion verification sync remain
 unfinished. No successful explicit comparison automatically marks a peer
@@ -1274,3 +1274,108 @@ and local-first orientation while a deliberately unused account-store path
 remained absent. Malformed bytes returned decode-stage -8; public permissions
 refused with empty stdout before any store creation. Private synthetic files
 remain ignored under `lab/fingerprint-comparison-synthetic-check/`.
+
+## Actual protobuf-C parsing and bounded decoder correction (2026-10-07)
+
+**Confirmed/static and observed/offline, APK 2.26.37.71:**
+[native_fingerprint_parse_check.py](../../tools/apk-research/native_fingerprint_parse_check.py)
+executes the actual merged-library generated combined unpack wrapper
+`0x2d3e28..0x2d3e44`, `protobuf_c_message_unpack` at `0x703158`, its internal
+scan/assignment/merge helpers, generated fingerprint/combined initializers at
+`0x2d3db0..0x2d3e18`, and free wrapper `0x2d3e44` / free routine `0x7046c8`.
+Library SHA-256 is `565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa`;
+APK SHA-256 is `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+These are native parser instructions, not a host reimplementation of protobuf-C.
+
+The runner maps the ELF PT_LOAD image and resolves R_AARCH64_RELATIVE plus
+supported defined ABS64/GLOB_DAT/JUMP_SLOT relocations. Only identified generated
+init/unpack/free/internal-helper instruction ranges execute; unexpected branches
+refuse. Allocator/free/memcpy/memset are explicit host models, with synthetic TLS
+and stack. There is no native library initialization, JNI, account or socket.
+The command accepts a library path only, supplies built-in synthetic buffers,
+and rejects missing/wrong builds before emulation. Every unpack/free invocation
+must actually return within ten seconds/one million instructions. Payloads are
+bounded to 64 KiB and the monotonically allocated guest heap to 1 MiB. All modeled
+allocations must be freed after success/free or rejection; these bounds are our
+research tooling policies, not server/Android limits.
+
+The [50-case corpus](fingerprint-native-parser-cases.json) records synthetic
+payload hex, accepted/rejected flag, version/presence, every recognized individual
+field as optional hex bytes/enum, native unknown-field counts, instruction count
+and modeled allocated bytes. Maximum combined unpack/free instructions were
+**3173**, maximum total allocation **608 bytes**. Both independent version-0/1
+wire fixtures parse with exactly their expected data. The raw corpus is synthetic
+protocol data, never a real account QR or contact/key dump.
+
+**Refuted/observed:** the first 40-case comparison against prost found eight
+acceptance differences: outer/inner groups, above-64-bit scalar/unknown varints,
+six-byte tags, overlong zero tags, tags above the standard 29-bit field-number
+range, and six-byte empty lengths. The original parser-authority qualifier was
+necessary: matching ordinary serializer bytes was not parser equivalence.
+A subsequent otherwise-valid wire fixture with an unknown group confirms native
+rejection; prost accepts it without changing recognized fields, so our old
+comparison could have returned a **false match**. The reusable decoder is now
+corrected and the regression resumes with decode-stage -8, without any account
+operation. No malformed data was transmitted or presented as human verification.
+
+**Confirmed/static rules, validated by actual corpus:**
+
+- Native tag scan `0x7035d0..0x703640` rejects first byte <8 and allows at most
+  five tag bytes. Field-id accumulation uses w26 and shifts 4/11/18/25 after
+  extracting the first four id bits: up to 32 id bits, not the standard 29-bit
+  cap. An overlong encoded zero tag can pass the first-byte guard and remain
+  an unknown field; literal zero rejects. These unusual rules are not guessed
+  standard protobuf behavior.
+- Wire scan `0x703788..0x7038b8` accepts only varint/fixed64/bytes/fixed32
+  (types 0/1/2/5), rejects groups 3/4 and types 6/7, and requires enough bytes.
+  Varint termination must occur within ten bytes; the tenth terminal byte is
+  not restricted to <=1. UInt32/enum values preserve their low 32 bits.
+- Length scan `0x703808..0x703898` allows at most five bytes, accumulates in
+  x10, rejects `length >> 31 != 0`, and bounds the body against remaining data.
+  Lengths do not wrap to uint32: values >=2^31 reject.
+- Required-member/merge helpers `0x704bcc..0x705630` preserve field presence,
+  accept explicitly empty bytes, use the last scalar/byte value, merge repeated
+  singular nested messages, and reject mismatched wire types for known fields.
+  Unknown enum values, including negative int32, are preserved by **parsing**;
+  the fingerprint converter separately rejects values outside 0/1.
+- Standalone unpack accepts empty data as an empty message. This is not the
+  complete comparison wrapper: that wrapper aborts for an empty buffer, while
+  our public comparison intentionally refuses empty as local resource policy.
+
+`qr/decode.rs` now implements these rules for this two-message fingerprint
+schema, keeping the existing payload bound and fixed schema depth. Unknown
+fields are opaque and skipped; native unknown-field storage/counts are not
+round-tripped because comparison does not read them. This is a fingerprint
+comparison decoder, not a replacement for every protobuf operation in the
+client. `compare_v4` uses it before the existing conversion/orientation/core
+logic. Output now reports
+`parser_authority=apk_native_schema_corpus_validated_other_edges_unverified`.
+A corpus test checks **acceptance and all recognized decoded values** for every
+case, and the otherwise-valid-plus-group regression proves -8 instead of zero.
+No pin/session, verification sequence, message ID or server wait changed.
+
+Reproduce actual native unpacking:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
+  tools/apk-research/native_fingerprint_parse_check.py \
+  --library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsappmerged.so
+```
+
+Three tool checks cover missing/wrong-build empty-output refusal and actual
+corpus reproduction (the latter explicitly skips without
+`TELEWHATSAPP_SCHEMA_LIBRARY`). Private scoped disassemblies
+`fingerprint-protobuf-unpack.txt` and `fingerprint-protobuf-unpack-helpers.txt`
+retain the instruction evidence. **Unknown/unverified:** arbitrary parser edges
+outside this corpus, allocation-failure/OOM compatibility, other APK builds,
+whole JNI/wrapper execution, current account inventory and live peer scanning.
+No broader parser or human-verification equivalence is claimed.
+
+Validation (offline): 552 workspace/all-feature tests, 240 default-feature tests
+and all 25 fully configured native tooling checks passed, alongside strict
+all-target/all-feature Clippy, warning-free Rustdoc, formatting and regenerated
+CLI reference. A rebuilt CLI matched both independent version-0/1 fixtures and
+returned -8 for the otherwise-valid-plus-group and malformed fixtures; the
+unused account-store path remained absent. The corpus test also checks explicit
+nested-holder presence, with its final focused rerun passing.
+Repository hygiene passed with 323 local links; staged diff whitespace checks passed.

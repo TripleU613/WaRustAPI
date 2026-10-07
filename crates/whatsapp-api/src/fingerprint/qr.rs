@@ -4,6 +4,7 @@
 use super::{MAX_DISPLAY_IDENTIFIER_BYTES, serialized_keys};
 use crate::{Error, Result};
 use prost::Message;
+mod decode;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha512};
 
@@ -188,7 +189,7 @@ pub struct V4Comparison {
     pub orientation: Option<ScanOrientation>,
     /// Explicit-input scope, never account-derived selection.
     pub input_authority: &'static str,
-    /// Schema decoding is implemented with prost; full protobuf-C edge equivalence is unverified.
+    /// Bounded native schema decoder is corpus-validated; other edges remain unverified.
     pub parser_authority: &'static str,
 }
 
@@ -203,7 +204,7 @@ fn comparison(
         payload_version: version,
         orientation,
         input_authority: "caller_supplied_selection_unverified",
-        parser_authority: "prost_native_schema_edge_equivalence_unverified",
+        parser_authority: "apk_native_schema_corpus_validated_other_edges_unverified",
     }
 }
 
@@ -341,9 +342,10 @@ fn remap(code: i32) -> i32 {
 /// Known parameters retain both optional PN/username values, unlike local QR
 /// serialization's PN omission. Returns native internal statuses for decoded
 /// payload failures/mismatches. Empty/oversized buffers refuse as local resource
-/// policy rather than emulating the APK's empty-buffer abort. Prost schema
-/// parsing is used; duplicate-field/unknown-field edge equivalence with native
-/// protobuf-C is unverified. ASCII username semantics are fixture-validated,
+/// policy rather than emulating the APK's empty-buffer abort. Bounded native
+/// schema parsing reproduces the actual unpacking corpus, including duplicates,
+/// unknown enums and noncanonical varint boundaries. Other edges remain unverified.
+/// ASCII username semantics are fixture-validated,
 /// not Unicode normalization or a guarantee across all Android libc versions.
 pub fn compare_v4(local: &V4Side<'_>, remote: &V4Side<'_>, payload: &[u8]) -> Result<V4Comparison> {
     if payload.is_empty() || payload.len() > MAX_COMPARISON_PAYLOAD_BYTES {
@@ -354,7 +356,7 @@ pub fn compare_v4(local: &V4Side<'_>, remote: &V4Side<'_>, payload: &[u8]) -> Re
     }
     // Wrapper 37.71 0x714a60..0x714c70: unpack/version/side/LID presence
     // checks precede per-side conversion; early failures are not remapped.
-    let Ok(parsed) = Combined::decode(payload) else {
+    let Ok(parsed) = decode::combined(payload) else {
         return Ok(comparison(-8, None, None));
     };
     let Some(version) = parsed.version else {
@@ -796,6 +798,17 @@ mod tests {
         assert!(compare_v4(&known, &known, &[]).is_err());
         assert!(compare_v4(&known, &known, &vec![0; MAX_COMPARISON_PAYLOAD_BYTES + 1]).is_err());
         assert_eq!(compare_v4(&known, &known, &[0xff]).unwrap().status, -8);
+        let mut with_group = encode_v4(&known, &known, 0).unwrap();
+        assert_eq!(compare_v4(&known, &known, &with_group).unwrap().status, 0);
+        let before_group = Combined::decode(with_group.as_slice()).unwrap();
+        with_group.extend_from_slice(&[35, 36]);
+        assert_eq!(
+            Combined::decode(with_group.as_slice()).unwrap(),
+            before_group
+        );
+        // Actual native corpus rejects groups even alongside otherwise valid
+        // comparison data. Prost accepted this and could report a false match.
+        assert_eq!(compare_v4(&known, &known, &with_group).unwrap().status, -8);
         let mut input = Combined {
             version: None,
             local: None,
@@ -917,6 +930,63 @@ mod tests {
             observations["native_ascii_checks"]["cases"]
                 .as_u64()
                 .unwrap()
+        );
+    }
+    #[test]
+    fn native_parser_corpus_acceptance() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../../docs/protocol/fingerprint-native-parser-cases.json"
+        ))
+        .unwrap();
+        let mut differences = Vec::new();
+        for case in fixture["cases"].as_array().unwrap() {
+            let bytes = hex::decode(case["payload_hex"].as_str().unwrap()).unwrap();
+            let parsed = decode::combined(bytes.as_slice());
+            if parsed.is_ok() != case["accepted"].as_bool().unwrap() {
+                differences.push(case["case"].as_str().unwrap());
+            }
+            if let Ok(parsed) = parsed {
+                assert_eq!(
+                    serde_json::to_value(parsed.version).unwrap(),
+                    case["version"],
+                    "{}",
+                    case["case"]
+                );
+                for (side, expected) in [
+                    (&parsed.local, &case["local"]),
+                    (&parsed.remote, &case["remote"]),
+                ] {
+                    if let Some(side) = side {
+                        assert!(expected.is_object(), "{} present holder", case["case"]);
+                        for (name, value) in [
+                            ("public_key", &side.public_key),
+                            ("pn_identifier", &side.pn_identifier),
+                            ("lid_identifier", &side.lid_identifier),
+                            ("username_identifier", &side.username_identifier),
+                            ("hashed_public_key", &side.hashed_public_key),
+                        ] {
+                            assert_eq!(
+                                serde_json::to_value(value.as_ref().map(hex::encode)).unwrap(),
+                                expected[name],
+                                "{} {name}",
+                                case["case"]
+                            );
+                        }
+                        assert_eq!(
+                            serde_json::to_value(side.hosted_state).unwrap(),
+                            expected["hosted_state"],
+                            "{} hosted",
+                            case["case"]
+                        );
+                    } else {
+                        assert!(expected.is_null(), "{} missing holder", case["case"]);
+                    }
+                }
+            }
+        }
+        assert!(
+            differences.is_empty(),
+            "parser acceptance differs: {differences:?}"
         );
     }
 }
