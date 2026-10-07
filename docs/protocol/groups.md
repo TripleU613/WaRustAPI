@@ -2257,3 +2257,76 @@ type-before-listen-actions.json, type-info-queued.txt, type-info-selection.json,
 group-type-live.log, type-after-actions.json, type-after-outbox.json,
 and type-after-groups.json. The static remap proposal test also exited 1 and
 created no file for the two-candidate ambiguity.
+
+## Subject contact storage and alias transaction closure (2026-10-07)
+
+**Confirmed static:** APK 2.26.37.71, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Subject storage evidence](group-subject-storage-evidence.txt) advances the
+`0Y9.A0t` boundary. It fetches the contact, writes `0Da.A0b` (0074..007c),
+then calls `0gt.A0V` and `0gq.A0E`. A0V explicitly writes that value as
+`display_name`, along with `phone_label`, `is_whatsapp_user` and
+`history_sync_initial_phash`, before calling A0S (0014..007a). A0S resolves
+applicable user counterparts; A0D constructs `wa_contacts` / `jid IN (...)`,
+delegates the update to `0gr.A02`, invokes `0WV.BIN` with the same values,
+and marks/closes its transaction (0044..00a6). A0E invalidates a different
+cached contact object and, for qualifying users, its counterpart entry.
+It is cache invalidation, not the full event/message callback implementation.
+`9R1.A0J`, `AzB.A0L`, `0gr.A02` and `0WV.BIN` remain **unknown** internally.
+
+In `0yv.A09`, an existing contact whose helper-produced current name equals
+the incoming value reaches 48ae..48ba without the changed-name write/system-
+message construction, then reaches the subject version commit at 4824.
+`0WD.A0L` delegates through A0X/A0D and extracts `1aT.A01`; A0D has
+source-type/JID branches, substitution and empty-name fallback. Its A0E/A0C/A03
+producers and source-type enum meanings remain **unknown**. Treating this as
+an unconditional comparison with raw stored `display_name` is not established.
+Changed names use 47ce..47d4 and distinct typed message
+branches at 482c..48ae. A missing contact instead constructs/stores a new
+group contact with `display_name`, a scaled timestamp string in `phone_label`,
+and further initialized fields (48ba..4ab0), then requests `new_subject`
+refresh (4b06..4b14). Parent/default-group propagation and system-message
+types therefore cannot be replaced by an unconditional snapshot assignment.
+Wire time-range/overflow behavior and complete system-message parity remain
+**unknown/unimplemented**. No receive subject handler was added here.
+
+[Alias transaction evidence](jid-map-transaction-evidence.txt) closes the
+previous `0Xx.A02`/`0Xw.A04` boundary. A02 writes `lid_row_id=Azo.A01` and
+`jid_row_id=Azo.A00` to `jid_map`, plus supplied `sort_id` or an incremented
+maximum initialized from the table/JID IDs (0054..0158). It requests conflict
+mode 5 at 00a8; the wrapper's exact SQLite behavior remains **unknown**.
+Only inserts with result different from -1 enter the returned success list.
+Independent literal DEX bytes `16 02 ff ff` at classes.dex A02+00ba establish
+signed -1; the current disassembler's `#0xffff` is a bit-pattern rendering.
+The success list controls subsequent cache changes and rollback cleanup.
+A04 maps LID row ID to PN row ID and removes the reverse-map entry for that
+PN (0006..002a), under the shared monitor. This is row-ID/contact mapping,
+not a traced Signal key replacement.
+
+**Confirmed constructor resolution:** A0O+0384 references classes.dex method
+34865 with full `(Object,Object,Object,int)V` signature. Its definition is
+classes3.dex method 22384 at 0x41ea54, assigning third argument→A00,
+second→A01, first→A02. Three other constructors have identical `VLLLI`
+shorties but different parameter types and field assignments; reading an
+arbitrary shorty match would invert the receiver/maps. Selector 49 uses
+`3RD.run`'s default 000a, outside cases 0..48, and compares old/new PN→LID
+maps, reporting absent/equal/different via `22j.A0L` with distinct constants.
+Those constants' application meaning and downstream listener bodies remain
+**unknown**; equality does not establish key equality.
+
+**Confirmed commit/rollback:** `0ZN.A04` registers Cpf selector 1;
+`0ZN.A03` registers selector 2. `0Gy.A02` dispatches `Bb1` after successful
+outer completion, whereas A01 dispatches `Bax` after rollback/failure. Cpf
+Bb1 selector 1 and Bax selector 2 run the saved Runnable through `8kU.A1P`.
+Thus the map-difference callback is registered before commit and runs after
+successful completion; DNd selector 18 runs on rollback, iterates successful
+rows and calls `0Xw.A07`, removing both affected cached directions. Cleanup
+invalidates entries; it does not restore old values in memory. A new database
+read can recover the committed prior mapping. Complete nested-transaction,
+callback-exception and downstream notification behavior is not established.
+
+Three new anchored recipe topics preserve the contact writer, ordered alias
+producer and alias storage helper. All account state remains untouched;
+these are static source findings, not live subject/alias validation or a new
+HTTP/control capability. Rust subject application and alias side-effect parity
+remain unfinished.

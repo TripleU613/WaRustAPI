@@ -23,6 +23,10 @@
     "bytes": 3129,
     "sha256": "a87afe547b587ba72687a9d4a61cabf982fd29c19419f50f6f8c86d6c3e780e2"
   },
+  "group-subject-contact-write.txt": {
+    "bytes": 3807,
+    "sha256": "34b07832780f30eeb1a3f5e000ec1aef1eb96ed5b58184805173cd0877cecc84"
+  },
   "group-subject-parent-write.txt": {
     "bytes": 2279,
     "sha256": "23196f8c76c52c9051a15c047eea2883f0cfaeb9eec818c52a0923547393b290"
@@ -35,13 +39,21 @@
     "bytes": 2603,
     "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
   },
+  "jid-map-ordered-write.txt": {
+    "bytes": 13583,
+    "sha256": "d9ae0bb8933ed0ef9cf5d9289dc3a140b4b87a77d937da1e6d3df309f0d154b3"
+  },
+  "jid-map-storage-write.txt": {
+    "bytes": 6531,
+    "sha256": "abe3bb3f6ea657348c3b2dbad877da77fb271ee07389c743810189c37c92f9ff"
+  },
   "manifest.json": {
     "bytes": 1000,
     "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
   },
   "targets.json": {
-    "bytes": 2936,
-    "sha256": "3b4317948b0e6d5df135cd9f0ee084ada0f0b778c1d754f0ce57aa20f2c00212"
+    "bytes": 4004,
+    "sha256": "ddf072bfec9cfeec140da9ca431095af0cfc808851c50d7bed5afd609e9c60d8"
   },
   "tokens.json": {
     "bytes": 23012,

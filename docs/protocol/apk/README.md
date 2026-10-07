@@ -74,8 +74,8 @@ output directory and 2 MiB media-free constraints remain. Default 37.70 selector
 are unchanged.
 
 The new [37.71 group recipe](recipes/2.26.37.71-groups.json) reproduces
-[its scoped baseline](2.26.37.71-groups/manifest.json): 13 files/397,832 bytes.
-This baseline includes eight selected investigation targets, not all APK code.
+[its scoped baseline](2.26.37.71-groups/manifest.json): 16 files/423,242 bytes.
+This baseline includes eleven selected investigation targets, not all APK code.
 The initial six-target export measured 16.768 seconds. Real cached
 self-comparisons of that earlier baseline measured 0.0183..0.0215 seconds,
 returning all six unchanged topics;

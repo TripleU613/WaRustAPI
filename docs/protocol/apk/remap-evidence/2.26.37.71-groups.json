@@ -213,6 +213,38 @@
     },
     {
       "anchor_sites": {
+        "ContactManagerDatabase/updateGroupInfo for jid=": [
+          {
+            "class_name": "LX/0gt;",
+            "dex_byte_off": 6564540,
+            "dex_file": "classes.dex",
+            "method_index": 16408,
+            "method_name": "A0V",
+            "method_proto": "VL"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "class_name": "LX/0gt;",
+          "dex_byte_off": 6564540,
+          "dex_file": "classes.dex",
+          "method_index": 16408,
+          "method_name": "A0V",
+          "method_proto": "VL"
+        }
+      ],
+      "previous_class": "LX/0gt;",
+      "previous_method": "A0V",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "group-subject-contact-write"
+    },
+    {
+      "anchor_sites": {
         "comm-failures/parentGroupJid is null": [
           {
             "class_name": "LX/0yw;",
@@ -247,6 +279,14 @@
     {
       "anchor_sites": {
         "default_sub_group": [
+          {
+            "class_name": "LX/Dpn;",
+            "dex_byte_off": 3373268,
+            "dex_file": "classes8.dex",
+            "method_index": 9371,
+            "method_name": "A0r",
+            "method_proto": "V"
+          },
           {
             "class_name": "Lcom/whatsapp/community/mex/GetSubgroupsGraphQlHandler;",
             "dex_byte_off": 4543848,
@@ -286,17 +326,17 @@
             "method_index": 28032,
             "method_name": "AAK",
             "method_proto": "LLL"
-          },
-          {
-            "class_name": "LX/Dpn;",
-            "dex_byte_off": 3373268,
-            "dex_file": "classes8.dex",
-            "method_index": 9371,
-            "method_name": "A0r",
-            "method_proto": "V"
           }
         ],
         "general_chat": [
+          {
+            "class_name": "LX/0Xo;",
+            "dex_byte_off": 6060144,
+            "dex_file": "classes.dex",
+            "method_index": 11870,
+            "method_name": "A03",
+            "method_proto": "LLL"
+          },
           {
             "class_name": "LX/9Np;",
             "dex_byte_off": 3702344,
@@ -360,14 +400,6 @@
             "method_index": 30552,
             "method_name": "invoke",
             "method_proto": "LL"
-          },
-          {
-            "class_name": "LX/0Xo;",
-            "dex_byte_off": 6060144,
-            "dex_file": "classes.dex",
-            "method_index": 11870,
-            "method_name": "A03",
-            "method_proto": "LLL"
           }
         ],
         "linked_parent": [
@@ -438,44 +470,12 @@
         ],
         "parent": [
           {
-            "class_name": "LX/NI2;",
-            "dex_byte_off": 3884154,
-            "dex_file": "classes11.dex",
-            "method_index": 20842,
-            "method_name": "<clinit>",
-            "method_proto": "V"
-          },
-          {
-            "class_name": "LX/HBY;",
-            "dex_byte_off": 5202924,
-            "dex_file": "classes9.dex",
-            "method_index": 16033,
-            "method_name": "<init>",
+            "class_name": "LX/0P4;",
+            "dex_byte_off": 5751602,
+            "dex_file": "classes.dex",
+            "method_index": 8657,
+            "method_name": "AR6",
             "method_proto": "VL"
-          },
-          {
-            "class_name": "Lcom/facebook/common/dextricks/ReflectionClassLoader;",
-            "dex_byte_off": 5203892,
-            "dex_file": "classes9.dex",
-            "method_index": 40608,
-            "method_name": "install",
-            "method_proto": "L"
-          },
-          {
-            "class_name": "Lcom/facebook/common/dextricks/MultiDexClassLoaderLight;",
-            "dex_byte_off": 5204394,
-            "dex_file": "classes9.dex",
-            "method_index": 40414,
-            "method_name": "install",
-            "method_proto": "ZLL"
-          },
-          {
-            "class_name": "Lcom/facebook/common/dextricks/MultiDexClassLoader;",
-            "dex_byte_off": 3455684,
-            "dex_file": "classes9.dex",
-            "method_index": 40350,
-            "method_name": "<clinit>",
-            "method_proto": "V"
           },
           {
             "class_name": "LX/ADs;",
@@ -526,6 +526,38 @@
             "method_proto": "LLL"
           },
           {
+            "class_name": "LX/HBY;",
+            "dex_byte_off": 5202924,
+            "dex_file": "classes9.dex",
+            "method_index": 16033,
+            "method_name": "<init>",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/facebook/common/dextricks/ReflectionClassLoader;",
+            "dex_byte_off": 5203892,
+            "dex_file": "classes9.dex",
+            "method_index": 40608,
+            "method_name": "install",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "Lcom/facebook/common/dextricks/MultiDexClassLoaderLight;",
+            "dex_byte_off": 5204394,
+            "dex_file": "classes9.dex",
+            "method_index": 40414,
+            "method_name": "install",
+            "method_proto": "ZLL"
+          },
+          {
+            "class_name": "Lcom/facebook/common/dextricks/MultiDexClassLoader;",
+            "dex_byte_off": 3455684,
+            "dex_file": "classes9.dex",
+            "method_index": 40350,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
             "class_name": "LX/4Fu;",
             "dex_byte_off": 4442228,
             "dex_file": "classes4.dex",
@@ -534,12 +566,12 @@
             "method_proto": "VL"
           },
           {
-            "class_name": "LX/0P4;",
-            "dex_byte_off": 5751602,
-            "dex_file": "classes.dex",
-            "method_index": 8657,
-            "method_name": "AR6",
-            "method_proto": "VL"
+            "class_name": "LX/NI2;",
+            "dex_byte_off": 3884154,
+            "dex_file": "classes11.dex",
+            "method_index": 20842,
+            "method_name": "<clinit>",
+            "method_proto": "V"
           }
         ]
       },
@@ -759,6 +791,82 @@
       "scope": "method",
       "status": "unique",
       "topic": "group-type-reply"
+    },
+    {
+      "anchor_sites": {
+        "WaJidMapRepository/setJidOrderedMapping fail; messageStoreManager.isReady:": [
+          {
+            "class_name": "LX/0Xw;",
+            "dex_byte_off": 6072166,
+            "dex_file": "classes.dex",
+            "method_index": 11929,
+            "method_name": "A0O",
+            "method_proto": "LL"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "class_name": "LX/0Xw;",
+          "dex_byte_off": 6072166,
+          "dex_file": "classes.dex",
+          "method_index": 11929,
+          "method_name": "A0O",
+          "method_proto": "LL"
+        }
+      ],
+      "previous_class": "LX/0Xw;",
+      "previous_method": "A0O",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "jid-map-ordered-write"
+    },
+    {
+      "anchor_sites": {
+        "JidMapStore/GET_MAX_SORT_ID": [
+          {
+            "class_name": "LX/0Xx;",
+            "dex_byte_off": 6077572,
+            "dex_file": "classes.dex",
+            "method_index": 11949,
+            "method_name": "A02",
+            "method_proto": "LL"
+          }
+        ],
+        "JidMapStore/INSERT_MAPPING": [
+          {
+            "class_name": "LX/0Xx;",
+            "dex_byte_off": 6077470,
+            "dex_file": "classes.dex",
+            "method_index": 11949,
+            "method_name": "A02",
+            "method_proto": "LL"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "class_name": "LX/0Xx;",
+          "dex_byte_off": 6077470,
+          "dex_file": "classes.dex",
+          "method_index": 11949,
+          "method_name": "A02",
+          "method_proto": "LL"
+        }
+      ],
+      "previous_class": "LX/0Xx;",
+      "previous_method": "A02",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "jid-map-storage-write"
     }
   ]
 }

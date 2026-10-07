@@ -1167,3 +1167,19 @@ five OpenAPI checks, formatting and exact snapshot regeneration passed. All
 three actual caller-negative probes exited 1 without creating proposals.
 Repository hygiene passed (432 local links, tracked-file budgets, licenses
 and reference checksums); final staged whitespace checks passed.
+
+APK 37.71 storage trace now separates group contact display-name writes from
+row-ID JID mappings and closes alias cache commit/rollback cleanup. Full DEX
+constructor signatures disambiguate four identical shorties; downstream listener
+semantics, subject message parity and complete nested-transaction behavior remain
+unknown. No Signal key replacement is established by this path. The group recipe
+now has eleven unique remaps and a 16-file/423,242-byte baseline; three topics
+were added and eight previous code topics stayed unchanged. Same-APK comparison
+is coverage expansion, not a verified upstream release change. No saved account
+opened, chat queued, or live request sent during this static work.
+Validation: 40 xtask tests, five OpenAPI checks, regenerated CLI reference,
+exact 16-file snapshot reproduction, all eleven selector comparisons and
+repository hygiene passed. The unchanged runtime Rust code was not retested
+across the whole workspace for this source-evidence change.
+Final staged hygiene passed (435 local links, budgets, licenses and reference
+checksums); staged whitespace and the five OpenAPI checks passed again.

@@ -93,6 +93,39 @@
       "caller_anchors": [
         "group_response"
       ]
+    },
+    "group-subject-contact-write": {
+      "class": "LX/0gt;",
+      "method": "A0V",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "anchors": [
+        "ContactManagerDatabase/updateGroupInfo for jid="
+      ]
+    },
+    "jid-map-ordered-write": {
+      "class": "LX/0Xw;",
+      "method": "A0O",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "anchors": [
+        "WaJidMapRepository/setJidOrderedMapping fail; messageStoreManager.isReady:"
+      ]
+    },
+    "jid-map-storage-write": {
+      "class": "LX/0Xx;",
+      "method": "A02",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "anchors": [
+        "JidMapStore/INSERT_MAPPING",
+        "JidMapStore/GET_MAX_SORT_ID"
+      ]
     }
   }
 }

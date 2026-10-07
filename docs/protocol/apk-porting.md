@@ -65,6 +65,17 @@ response handling, state transitions and applicable native dependencies are
 traced and reproduced in Rust with meaningful fixtures. A disassembly file,
 green unit test or server ACK alone does not establish full equivalence.
 
+The group recipe now has eleven topics: the new contact subject writer and
+ordered JID-map producer/storage helpers extend the eight-topic baseline.
+[Storage and transaction interpretation](groups.md#subject-contact-storage-and-alias-transaction-closure-2026-10-07)
+records display-name persistence, cache invalidation, successful insert filtering,
+rollback cleanup and full-signature constructor resolution. All eleven topics
+remap uniquely on 37.71. Cached comparison shows three added topics and eight
+unchanged code topics; the 16-file export is 423,242 bytes. Both APK hashes are
+identical, so this establishes source coverage rather than release equivalence.
+Subject notifications and downstream alias listener behavior remain unfinished
+in Rust; the ownership paths identify where further implementation belongs.
+
 Still required for broad release maintenance: comprehensive coverage accounting,
 broader anchor coverage and caller-assisted disambiguation, normalized
 method-level comparison where sound, protobuf/token/config extraction recipes,

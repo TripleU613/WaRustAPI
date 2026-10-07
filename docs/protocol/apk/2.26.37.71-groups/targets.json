@@ -77,6 +77,18 @@
       "crates/whatsapp-api/src/transport/connection.rs"
     ]
   },
+  "group-subject-contact-write": {
+    "anchors": [
+      "ContactManagerDatabase/updateGroupInfo for jid="
+    ],
+    "class": "LX/0gt;",
+    "file": "group-subject-contact-write.txt",
+    "method_filter": "A0V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs"
+    ]
+  },
   "group-subject-parent-write": {
     "anchors": [
       "comm-failures/parentGroupJid is null"
@@ -106,6 +118,33 @@
     "methods": 1,
     "rust_files": [
       "crates/whatsapp-api/src/transport/groups.rs"
+    ]
+  },
+  "jid-map-ordered-write": {
+    "anchors": [
+      "WaJidMapRepository/setJidOrderedMapping fail; messageStoreManager.isReady:"
+    ],
+    "class": "LX/0Xw;",
+    "file": "jid-map-ordered-write.txt",
+    "method_filter": "A0O",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "jid-map-storage-write": {
+    "anchors": [
+      "JidMapStore/INSERT_MAPPING",
+      "JidMapStore/GET_MAX_SORT_ID"
+    ],
+    "class": "LX/0Xx;",
+    "file": "jid-map-storage-write.txt",
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
     ]
   }
 }
