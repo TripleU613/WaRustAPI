@@ -1,0 +1,34 @@
+# APK-derived structural disassembly: LX/D3V;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method COL(VL) flags=0x11 registers=5
+  0000..0004 op=52 iget v0, v3, LX/D3V;->$t:I
+  0004..0008 op=54 iget-object v2, v3, LX/D3V;->A00:Ljava/lang/Object;
+  0008..000e op=2b packed-switch
+  000e..0012 op=1f check-cast v2, Ljava/util/Collection;
+  0012..0016 op=54 iget-object v1, v3, LX/D3V;->A01:Ljava/lang/Object;
+  0016..001a op=1f check-cast v1, LX/0Cy;
+  001a..001e op=55 iget-boolean v0, v3, LX/D3V;->A02:Z
+  001e..0022 op=1f check-cast v4, LX/0Mv;
+  0022..0028 op=71 invoke-static {v4}, LX/1xk;->A1H(VL)
+  0028..002e op=72 invoke-interface {v4, v1, v2, v0}, LX/0Mv;->Bug(VLLZ)
+  002e..0030 op=0e return-void
+  0030..0034 op=1f check-cast v2, Lcom/whatsapp/infra/core/jid/UserJid;
+  0034..0038 op=55 iget-boolean v1, v3, LX/D3V;->A02:Z
+  0038..003c op=1f check-cast v4, LX/DeI;
+  003c..0040 op=62 sget-object v0, LX/078;->A0A:Ljava/util/List;
+  0040..0046 op=72 invoke-interface {v4, v2, v1}, LX/DeI;->C21(VLZ)
+  0046..0048 op=0e return-void
+  0048..004c op=1f check-cast v2, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  004c..0050 op=54 iget-object v1, v3, LX/D3V;->A01:Ljava/lang/Object;
+  0050..0054 op=1f check-cast v1, LX/1B3;
+  0054..0058 op=55 iget-boolean v0, v3, LX/D3V;->A02:Z
+  0058..005c op=1f check-cast v4, LX/DeS;
+  005c..0062 op=71 invoke-static {v4}, LX/1xk;->A1H(VL)
+  0062..0068 op=72 invoke-interface {v4, v2, v1, v0}, LX/DeS;->BqC(VLLZ)
+  0068..006a op=0e return-void
+  006a..006c op=00 nop
+  006c..007c op=00 packed-switch-payload size=2
+.end method

@@ -508,6 +508,144 @@
         "crates/whatsapp-api/src/signal/adv.rs"
       ],
       "anchors": []
+    },
+    "identity-pin-write-route": {
+      "class": "LX/0kc;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "A0H",
+      "method_shorty": "VLL"
+    },
+    "identity-pin-database-write": {
+      "class": "LX/0kc;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [
+        "public_key",
+        "recipient_type",
+        "device_id"
+      ],
+      "method": "A0G",
+      "method_shorty": "VLLL"
+    },
+    "identity-pin-first-event": {
+      "class": "LX/0k4;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "A0L",
+      "method_shorty": "VL"
+    },
+    "identity-change-callback": {
+      "class": "LX/D3V;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "COL",
+      "method_shorty": "VL"
+    },
+    "identity-change-callback-constructor": {
+      "class": "LX/D3V;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "<init>",
+      "method_shorty": "VLLIZ"
+    },
+    "identity-change-observer": {
+      "class": "LX/D4x;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BqC",
+      "method_shorty": "VLLZ"
+    },
+    "identity-change-cleanup": {
+      "class": "LX/D4x;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [
+        "IdentityChangeManager/onIdentityChangedOrDeleted/rotating sender key deviceJid=",
+        "identity_changed"
+      ],
+      "method": "A00",
+      "method_shorty": "VLLZZ"
+    },
+    "identity-success-dispatch": {
+      "class": "LX/ATU;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "A00",
+      "method_shorty": "VLLLI"
+    },
+    "identity-success-callback": {
+      "class": "LX/ATU;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "COL",
+      "method_shorty": "VL"
+    },
+    "identity-wait-observer": {
+      "class": "LX/Fco;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BqC",
+      "method_shorty": "VLLZ"
+    },
+    "identity-wait-completion": {
+      "class": "LX/Fco;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "A00",
+      "method_shorty": "VL"
+    },
+    "sender-key-name": {
+      "class": "LX/Cnr;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": []
+    },
+    "sender-key-device-category": {
+      "class": "LX/C9B;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [
+        "A",
+        "B"
+      ],
+      "method": "A00",
+      "method_shorty": "LL"
     }
   }
 }

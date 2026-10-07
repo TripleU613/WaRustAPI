@@ -1084,3 +1084,24 @@ outbox/receipt/prior-action change or chat send; repeat reuses the original ID.
 This validates the read, not adoption or automatic ADV-failure recovery.
 662 workspace/all-feature tests, 24 default CLI tests, strict Clippy/Rustdoc and
 CLI/API coverage passed; core cached diff is 0.053777 seconds.
+
+Sender-key device separation (2026-10-07, offline): APK Cnr retains recipient
+and device fields; Rust previously flattened companions into the primary's
+record. Storage/libsignal names now preserve the actual sender device and keep
+primary history in place. Real-crypto PN/LID three-device store/reopen coverage
+passes; companions never borrow a historical primary record. Primary save
+callbacks additionally trace remote companion cleanup and sender-key rotation;
+full actor/category/alias variants and identity-triggered rotation remain
+unfinished. Identity-only queries still do not adopt keys.
+[Evidence and limits](cross-device-sync.md#primary-save-callbacks-and-device-sender-key-storage-2026-10-07).
+
+Validation of this correction: 663 workspace/all-feature tests, 24 default CLI
+tests, strict workspace/all-target Clippy, warning-free Rustdoc and regenerated
+CLI/API coverage passed. The 13 added source topics expanded the core to 60
+topics / 197 methods, 65 files / 1,528,287 bytes. Cached comparison took 0.053107
+seconds: all 47 prior topics unchanged; manifest/inventory/tokens unchanged;
+checksums verified. A rebuilt-client 20-second receive-only session ended
+cleanly with peer pins, device inspection, actions, outbox and receipts unchanged,
+no added query or chat sends. Private evidence index:
+`lab/releases/sender-key-live/active.json`. Live companion decryption and
+identity-triggered rotation remain unverified; no primary key was adopted.

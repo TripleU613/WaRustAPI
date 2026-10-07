@@ -390,6 +390,136 @@
       "crates/whatsapp-api/src/transport/socket.rs"
     ]
   },
+  "identity-change-callback": {
+    "class": "LX/D3V;",
+    "file": "identity-change-callback.txt",
+    "method_filter": "COL",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-change-callback-constructor": {
+    "class": "LX/D3V;",
+    "file": "identity-change-callback-constructor.txt",
+    "method_filter": "<init>",
+    "method_shorty": "VLLIZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-change-cleanup": {
+    "anchors": [
+      "IdentityChangeManager/onIdentityChangedOrDeleted/rotating sender key deviceJid=",
+      "identity_changed"
+    ],
+    "class": "LX/D4x;",
+    "file": "identity-change-cleanup.txt",
+    "method_filter": "A00",
+    "method_shorty": "VLLZZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-change-observer": {
+    "class": "LX/D4x;",
+    "file": "identity-change-observer.txt",
+    "method_filter": "BqC",
+    "method_shorty": "VLLZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-pin-database-write": {
+    "anchors": [
+      "public_key",
+      "recipient_type",
+      "device_id"
+    ],
+    "class": "LX/0kc;",
+    "file": "identity-pin-database-write.txt",
+    "method_filter": "A0G",
+    "method_shorty": "VLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-pin-first-event": {
+    "class": "LX/0k4;",
+    "file": "identity-pin-first-event.txt",
+    "method_filter": "A0L",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-pin-write-route": {
+    "class": "LX/0kc;",
+    "file": "identity-pin-write-route.txt",
+    "method_filter": "A0H",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-success-callback": {
+    "class": "LX/ATU;",
+    "file": "identity-success-callback.txt",
+    "method_filter": "COL",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-success-dispatch": {
+    "class": "LX/ATU;",
+    "file": "identity-success-dispatch.txt",
+    "method_filter": "A00",
+    "method_shorty": "VLLLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-wait-completion": {
+    "class": "LX/Fco;",
+    "file": "identity-wait-completion.txt",
+    "method_filter": "A00",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-wait-observer": {
+    "class": "LX/Fco;",
+    "file": "identity-wait-observer.txt",
+    "method_filter": "BqC",
+    "method_shorty": "VLLZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
   "integer-encoding": {
     "anchors": [
       "Input too small: ",
@@ -568,6 +698,31 @@
     "methods": 1,
     "rust_files": [
       "crates/whatsapp-api/src/registration/token.rs"
+    ]
+  },
+  "sender-key-device-category": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "class": "LX/C9B;",
+    "file": "sender-key-device-category.txt",
+    "method_filter": "A00",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "sender-key-name": {
+    "class": "LX/Cnr;",
+    "file": "sender-key-name.txt",
+    "method_filter": null,
+    "methods": 9,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-api/src/transport/identity_query.rs"
     ]
   },
   "socket-factory": {

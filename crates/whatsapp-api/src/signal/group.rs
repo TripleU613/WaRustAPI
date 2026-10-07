@@ -23,11 +23,13 @@ fn crypto(e: SignalProtocolError) -> Error {
 }
 
 /// Storage key for a (group, sender) sender key record.
-/// Sender is stored as its non-AD (device-stripped) JID so that device rotation
-/// does not create orphaned records; the actual signing key inside the record
-/// authenticates the chain, not the device suffix.
+/// APK 37.71 Cnr.A03 includes B76 recipient/device fields in its key tuple.
+/// Keep the actual sender device: flattening companions merges independent
+/// authenticated chains. Existing primary keys keep their original spelling.
+/// Historical flattened records are retained, never guessed to belong to a
+/// companion. Complete APK actor/category variants remain separately unported.
 pub fn sender_key_db_key(group: &Jid, sender: &Jid) -> Vec<u8> {
-    format!("sk:{}:{}", group, sender.to_non_ad()).into_bytes()
+    format!("sk:{group}:{sender}").into_bytes()
 }
 
 /// Minimal in-memory SenderKeyStore over one pre-loaded record. libsignal
@@ -129,7 +131,7 @@ pub async fn receive_group(
         return Ok(None);
     }
     let mut store = SenderKeys::new(previous_bytes)?;
-    let name = SenderKeyName::from_parts(&group.to_string(), &sender.to_non_ad().to_string());
+    let name = SenderKeyName::from_parts(&group.to_string(), &sender.to_string());
     let plaintext = signal::group_decrypt(ciphertext, &mut store, &name)
         .await
         .map_err(crypto)?;
@@ -176,7 +178,7 @@ pub async fn process_skdm(
     skdm_bytes: &[u8],
 ) -> Result<ReceivedSkdm> {
     let mut store = SenderKeys::new(previous_bytes.as_deref())?;
-    let name = SenderKeyName::from_parts(&group.to_string(), &sender.to_non_ad().to_string());
+    let name = SenderKeyName::from_parts(&group.to_string(), &sender.to_string());
     let skdm = SenderKeyDistributionMessage::try_from(skdm_bytes).map_err(crypto)?;
     signal::process_sender_key_distribution_message(&name, &skdm, &mut store)
         .await
@@ -296,7 +298,7 @@ pub async fn prepare_own_sender_key(
 ) -> Result<OwnSenderKey> {
     use prost::Message as _;
     let mut store = SenderKeys::new(previous_bytes)?;
-    let name = SenderKeyName::from_parts(&chat.to_string(), &own.to_non_ad().to_string());
+    let name = SenderKeyName::from_parts(&chat.to_string(), &own.to_string());
     let skdm = signal::create_sender_key_distribution_message(&name, &mut store, &mut rand::rng())
         .await
         .map_err(crypto)?;
@@ -360,7 +362,7 @@ pub async fn encrypt_group_payload(
     }
     let padded = pad(plaintext)?;
     let mut store = SenderKeys::new(Some(key_bytes))?;
-    let name = SenderKeyName::from_parts(&chat.to_string(), &own.to_non_ad().to_string());
+    let name = SenderKeyName::from_parts(&chat.to_string(), &own.to_string());
     let message = signal::group_encrypt(&mut store, &name, &padded, &mut rand::rng())
         .await
         .map_err(crypto)?;
@@ -569,18 +571,110 @@ mod tests {
     }
 
     #[test]
-    fn sender_key_db_key_strips_device() {
+    fn sender_key_db_key_preserves_device_and_primary_history() {
         let g = group_jid();
         let s = Jid::parse("14155550100:3@s.whatsapp.net").unwrap();
         let s_non_ad = sender_jid();
-        // Device :3 variant and non-AD variant should produce the same key.
-        assert_eq!(sender_key_db_key(&g, &s), sender_key_db_key(&g, &s_non_ad));
+        assert_ne!(sender_key_db_key(&g, &s), sender_key_db_key(&g, &s_non_ad));
+        assert_eq!(
+            sender_key_db_key(&g, &s_non_ad),
+            format!("sk:{g}:{s_non_ad}").into_bytes()
+        );
+        assert_ne!(
+            sender_key_db_key(&g, &s),
+            sender_key_db_key(&g, &s.with_device(4))
+        );
         let key = sender_key_db_key(&g, &s);
         assert!(key.starts_with(b"sk:"));
         assert!(
             key.windows(g.to_string().len())
                 .any(|w| w == g.to_string().as_bytes())
         );
+    }
+
+    #[tokio::test]
+    async fn primary_and_companion_sender_chains_stay_independent_across_store_reopen() {
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("device-chains.redb");
+        let open = || {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("device-chains").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [9; 32],
+                ))),
+                create: true,
+            })
+            .unwrap()
+        };
+        for base in [sender_jid(), Jid::parse("111111111111111@lid").unwrap()] {
+            let store = open();
+            let chat = group_jid();
+            let senders = [base.clone(), base.with_device(3), base.with_device(4)];
+            let primary_key = sender_key_db_key(&chat, &base);
+            // Preserve historical primary storage without inventing companion ownership.
+            store
+                .write(|tx| tx.put_json(Table::SenderKeys, &primary_key, 1, &vec![27u8; 8]))
+                .unwrap();
+            let (_, missing) = store
+                .read(|tx| load_sender_key_bytes(tx, &chat, &senders[1]))
+                .unwrap();
+            assert!(missing.is_none());
+            let mut ciphertexts = Vec::new();
+            for (index, sender) in senders.iter().enumerate() {
+                let mine = prepare_own_sender_key(&chat, sender, None).await.unwrap();
+                let (_, axolotl) = extract_skdm_from_payload(&mine.distribution_message).unwrap();
+                let db_key = sender_key_db_key(&chat, sender);
+                let original = store
+                    .read(|tx| load_sender_key_bytes(tx, &chat, sender))
+                    .unwrap()
+                    .1;
+                // Synthetic primary history is not decoded as a valid chain.
+                let installed = process_skdm(&chat, sender, db_key.clone(), None, &axolotl)
+                    .await
+                    .unwrap();
+                store
+                    .write(|tx| {
+                        commit_sender_key(tx, &db_key, original.as_deref(), &installed.updated_key)
+                    })
+                    .unwrap();
+                let payload = vec![0x0a, 1, b'a' + index as u8];
+                let (ciphertext, _) =
+                    encrypt_group_payload(&chat, sender, &mine.updated_key, &payload)
+                        .await
+                        .unwrap();
+                ciphertexts.push((ciphertext, payload));
+            }
+            drop(store);
+            let store = open();
+            for (sender, (ciphertext, payload)) in senders.iter().zip(&ciphertexts) {
+                let (db_key, original) = store
+                    .read(|tx| load_sender_key_bytes(tx, &chat, sender))
+                    .unwrap();
+                let received = receive_group(&chat, sender, original.as_deref(), ciphertext)
+                    .await
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(&*received.plaintext, payload);
+                store
+                    .write(|tx| {
+                        commit_sender_key(tx, &db_key, original.as_deref(), &received.updated_key)
+                    })
+                    .unwrap();
+            }
+            let (_, primary) = store
+                .read(|tx| load_sender_key_bytes(tx, &chat, &base))
+                .unwrap();
+            assert!(
+                receive_group(&chat, &senders[1], primary.as_deref(), &ciphertexts[1].0)
+                    .await
+                    .is_err()
+            );
+        }
     }
 
     /// Full offline round trip: a "sender" side creates an SKDM and encrypts a
@@ -596,7 +690,7 @@ mod tests {
         };
         let group = group_jid();
         let sender = sender_jid();
-        let name = SenderKeyName::from_parts(&group.to_string(), &sender.to_non_ad().to_string());
+        let name = SenderKeyName::from_parts(&group.to_string(), &sender.to_string());
         let mut rng = rand::rng();
 
         // Sender side: fresh record + SKDM.

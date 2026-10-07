@@ -1404,3 +1404,100 @@ APK methods expand the core to 47 topics / 176 methods, 52 files / 1,439,603
 bytes. Cached diff against the preserved previous core took 0.053777 seconds:
 four added topics, all 43 existing topics unchanged, manifest/inventory/tokens
 unchanged, targets updated; checksums verified. No whole-APK equivalence claim.
+
+## Primary save callbacks and device sender-key storage (2026-10-07)
+
+**Confirmed static**, APK **2.26.37.71**, exact SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+
+- [0kc.A0H](apk/2.26.37.71-core/identity-pin-write-route.txt) selects the
+  default C0F.A05 classification unless flag 0x6f43 or 0x6f6f causes A09
+  lookup (`0008..0042`). [A0G](apk/2.26.37.71-core/identity-pin-database-write.txt)
+  separately gates recipient normalization on 0x79da, then writes identities
+  with recipient_id, recipient_type, **device_id**, public_key, timestamp and
+  account_encryption_attestation_type (`0008..00e2`). Effective feature values,
+  classification meaning and normalization internals remain **unknown**.
+  Timestamp field presence is confirmed; the exporter still leaves its division
+  opcode undecoded. No exact signed-long parity is claimed.
+- 0jc.A0K commits its pin transaction before dispatching later callbacks.
+  New identity reaches [0k4.A0L](apk/2.26.37.71-core/identity-pin-first-event.txt)
+  and D3f discriminator 0x29; changed identity creates D3V discriminator **1**
+  (`0236..027e` in the existing primary-identity-commit topic).
+  [D3V constructor](apk/2.26.37.71-core/identity-change-callback-constructor.txt)
+  retains device/metadata/boolean; [D3V.COL](apk/2.26.37.71-core/identity-change-callback.txt)
+  case 1 calls **DeS.BqC** (`0048..0068`). **Negative result:** D3V has no
+  run method; it is an observer callback, not a scheduled Runnable. The full
+  APK method-name scan found BqC bodies on Fco, AU1, D3k and D4x plus the
+  abstract DeS declaration. Other callback names/native code remain outside
+  that search; it does not prove there are no other side effects.
+- [D4x.BqC](apk/2.26.37.71-core/identity-change-observer.txt) calls
+  [D4x.A00](apk/2.26.37.71-core/identity-change-cleanup.txt) with the first
+  boolean false. After security-notification handling, the primary remote
+  branch invokes **0bN.A0F(reason=identity_changed)** (`0476..04b0`), tying
+  changed identity to the previously traced companion cleanup. Pending
+  receipt-device rows have additional cleanup (`04b0..0868`). A later branch
+  discovers groups with `sent_sender_key=1` for this user (`0af0..0bb4`), then
+  rotates/removes selected sender-key records through 0jc.A19 and can reset
+  sent-sender-key flags (`0868..0cc8`). Exact own/feature/category branches,
+  sender-key removal helper semantics, receipt updates and alias effects
+  remain **unported/unknown**. Rust must not indiscriminately delete ACKed
+  receipts or reset our account based on this trace.
+- The identity-read success continuation is distinct: AhK.run case 7 sets
+  discriminator **1** and jumps directly to ATU.A00 at `0e36`, skipping the
+  nearby discriminator-16 setup. [ATU.A00](apk/2.26.37.71-core/identity-success-dispatch.txt)
+  delegates to 078.A00; [ATU.COL](apk/2.26.37.71-core/identity-success-callback.txt)
+  case **1** calls **0Y6.BdR** then **BdO** for the user (`00ce..00ee`).
+  The nearby case 16 list callback is not this path. The method-name scan
+  found BdO bodies on 1za, 3B5, AL2, AL3, AL4, Kv7, 0Y9, 1We, FWe and Fco,
+  plus the abstract 0Y6 declaration. Fco.BdO normalizes to the primary device;
+  [Fco.A00](apk/2.26.37.71-core/identity-wait-completion.txt) completes the
+  matching user's held future, and [Fco.BqC](apk/2.26.37.71-core/identity-wait-observer.txt)
+  reaches the same helper. **Unknown:** complete event registration and wait
+  consumers; these dispatches alone do not prove incoming replay/session repair.
+
+**Refuted local assumption / implemented correction:** Rust group sender-key
+storage previously stripped the sender's device ID, with a regression test
+explicitly requiring companions to share the primary record. That merged
+independent authenticated chains. APK
+[Cnr](apk/2.26.37.71-core/sender-key-name.txt) constructors preserve a B76
+address, raw chat and extra string; A03 emits raw chat, recipient ID, recipient
+category, **device ID** and the extra string (`0000..003c`). Equality includes
+all three stored components. C9B.A00 selects **A** for primary and **B** for
+companion (`0008..0020` in
+[the category helper](apk/2.26.37.71-core/sender-key-device-category.txt)); those
+additional APK variants remain **unported**, not invented from this observation.
+
+Rust now retains the actual sender device in its private storage selector and
+libsignal name for SKDM processing, group decryption, own-key preparation and
+encryption. Both group and broadcast callers already preserve their participant
+device. Primary spellings remain unchanged; historical flattened rows stay in
+place and are **not** silently reassigned or copied to companions. A companion
+without its own key now reports unsupported under the existing receive path
+instead of borrowing primary history. This can expose a missing SKDM previously
+masked by flattening; no historical sender ownership is guessed and no captures,
+event markers or ratchets are rewound. PN/LID aliases and full category/actor
+variants remain separate unfinished work.
+
+**Offline evidence:** the updated selector regression separates primary,
+companion 3 and companion 4 while keeping primary spelling. A new real-crypto
+store/reopen regression installs independent SKDMs, decrypts and atomically
+advances each chain for both PN and LID namespaces; using a primary key to read
+the companion ciphertext fails. Historical primary storage is not used as a
+companion fallback. This is device separation, not complete identity-triggered
+sender-key rotation, companion inventory, live group parity or actor coverage.
+
+**Next action:** primary directory adoption must include its applicable changed
+identity cleanup policy; pin writes alone are not full recovery. Trace 0jc.A19,
+category/alias selection, sent-distribution metadata and wait consumers before
+wiring automatic recovery. Current identity-only queries remain read-only.
+
+Validation of this correction: 663 workspace/all-feature tests, 24 default CLI
+tests, strict workspace/all-target Clippy, warning-free Rustdoc and regenerated
+CLI/API coverage passed. The 13 added source topics expanded the core to 60
+topics / 197 methods, 65 files / 1,528,287 bytes. Cached comparison took 0.053107
+seconds: all 47 prior topics unchanged; manifest/inventory/tokens unchanged;
+checksums verified. A rebuilt-client 20-second receive-only session ended
+cleanly with peer pins, device inspection, actions, outbox and receipts unchanged,
+no added query or chat sends. Private evidence index:
+`lab/releases/sender-key-live/active.json`. Live companion decryption and
+identity-triggered rotation remain unverified; no primary key was adopted.

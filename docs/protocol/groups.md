@@ -115,8 +115,9 @@ passes `Ayl.A0V(CjN.A04())`, the message's sender JID through
 its pair's second element. That helper returns an existing `DeviceJid` unchanged
 and only coerces a bare `UserJid` to its primary device, which renders
 identically. There is no device stripping and no PN/LID conversion on this path,
-so the implementation echoes the attribute verbatim — note this differs from the
-sender-key storage key, which deliberately *does* strip the device. A test pins
+so the implementation echoes the attribute verbatim. For the
+sender-key storage key, the earlier deliberate device stripping was refuted by
+APK Cnr.A03 and corrected on 2026-10-07. Both now retain the actual device. A test pins
 the suffix surviving. Not examined: `LX/Cp2->A04` also reaches `A00` through a
 different pair helper (`LX/CmC->A05`); whether that path normalizes differently
 is **unknown**, but it is not the incoming-message receipt path.
@@ -2733,3 +2734,26 @@ refusals, per-user errors and omitted requested users stop before message
 reservation even when cached lists exist. Candidate fanout-inspect output is
 still offline saved-state information, not proof that live preparation passed.
 [Scoped batching, durable query inspection and remaining limits](messaging-transport.md#scoped-device-batches-and-completeness-2026-10-07).
+
+## Sender-key device storage correction (2026-10-07)
+
+**Confirmed static**, APK 2.26.37.71 Cnr constructors/A03: its sender-key tuple
+retains recipient and device IDs, raw chat and an extra variant string. Rust
+previously flattened every device into the primary row, including an explicit
+regression expecting that. The storage selector and libsignal names now retain
+the actual sender device on SKDM, decrypt, own-key prepare and encrypt paths.
+Existing primary names and flattened historical rows remain in place. They are
+not copied to companions or treated as proof of historical companion ownership.
+Missing companion SKDM stays unsupported with the existing diagnostic/capture
+path. Use existing `lab-inbox --inspect` and `store inspect` to examine preserved
+captures and table counts; neither repairs a missing distribution. Do not remove
+capture/event markers or rewind ratchets to manufacture reprocessing.
+
+**Offline tested:** independent primary/device-3/device-4 crypto chains for PN
+and LID survive encrypted-store reopen and individual atomic advances. A primary
+record cannot decrypt a companion ciphertext. **Observed live:** a bounded
+20-second receive-only check ended cleanly with pins, devices, actions, outbox
+and receipts unchanged; no new query or chat send was added. This does not prove
+live companion/group decryption. C9B A/B variants, complete PN/LID routing,
+identity-triggered sender-key rotation and distribution-flag cleanup remain
+unimplemented/unverified. [Source and callback trace](cross-device-sync.md#primary-save-callbacks-and-device-sender-key-storage-2026-10-07).
