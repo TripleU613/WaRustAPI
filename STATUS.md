@@ -21,7 +21,10 @@ replacement atomically with encrypted prior-key/session history and an
 selects `apk_authenticated` in its preserved private corrected configuration.
 No local account identity, send ID or reservation was reset. Automatic reads
 also cover eligible authenticated duplicates, with once-only write-cut coverage.
-Human safety-number verification remains unfinished.
+Human safety-number verification remains unfinished. Outgoing key-bundle
+mismatches now suspend the original queued intent before ratchet use;
+`outbox-suspended` inspects them offline. Policy-qualified outgoing replacement
+and PN/LID pin agreement remain unverified.
 
 Private state was recovered from the former checkout in the desktop Trash,
 with originals preserved. The selected profile has no eligible chat sends or
@@ -90,7 +93,7 @@ redelivered at every login.
 
 ## Offline verification
 
-502 tests pass on 2026-10-07 (`cargo test --locked --workspace --all-features`); Clippy with
+503 tests pass on 2026-10-07 (`cargo test --locked --workspace --all-features`); Clippy with
 `-D warnings` is clean. Rust 1.98.1 locally and in CI. Store, codec, crash
 matrix, registration state machine and transport coverage are described in
 [docs/design](docs/design/README.md) and the per-area protocol docs.

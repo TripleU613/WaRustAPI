@@ -425,6 +425,26 @@ pub async fn prepare(
     .await
 }
 
+/// Refuse a fetched identity mismatch even when a saved session can encrypt.
+/// No session, identity or ratchet is changed by this check.
+pub(crate) fn validate_bundle_identity(
+    bundle: Option<&PreKeyBundle>,
+    previous_identity: Option<&[u8]>,
+    recipient: &Jid,
+) -> Result<()> {
+    // APK 2.26.37.71 0jc.A0L compares serialized identity type/key bytes
+    // before using a held session. Replacement requires separate trust policy.
+    if let (Some(bundle), Some(pinned)) = (bundle, previous_identity) {
+        let pinned = IdentityKey::decode(pinned).map_err(crypto)?;
+        if bundle.identity_key().map_err(crypto)? != &pinned {
+            return Err(Error::IdentityChanged(
+                crate::model::ids::DeviceAddress::from_jid(recipient)?,
+            ));
+        }
+    }
+    Ok(())
+}
+
 /// Encrypt a bounded, already encoded Message protobuf with the saved session.
 /// Used for non-text payloads; retains the same identity and transaction rules.
 pub async fn prepare_payload(
@@ -448,15 +468,17 @@ pub async fn prepare_payload(
         .map_err(|_| invalid("invalid local private key"))?;
     let local = IdentityKeyPair::new(IdentityKey::new(public), private);
     let address = ProtocolAddress::new(&recipient.user, DeviceId::new(recipient.device.into()));
+    validate_bundle_identity(bundle, previous_identity, recipient)?;
+    let pinned = previous_identity
+        .map(IdentityKey::decode)
+        .transpose()
+        .map_err(crypto)?;
     let mut identities = Identities {
         local,
         registration: account
             .signal_registration_id
             .ok_or_else(|| invalid("missing local registration id"))?,
-        peer: previous_identity
-            .map(IdentityKey::decode)
-            .transpose()
-            .map_err(crypto)?,
+        peer: pinned,
         address: address.clone(),
     };
     let mut sessions = Sessions {
@@ -1080,6 +1102,35 @@ mod tests {
                 .await
                 .is_err()
         );
+        let changed_peer = IdentityKeyPair::generate(&mut rng);
+        let changed_signature = changed_peer
+            .private_key()
+            .calculate_signature(&signed.public_key.serialize(), &mut rng)
+            .unwrap();
+        let changed_bundle = PreKeyBundle::new(
+            42,
+            DeviceId::new(0),
+            Some((8.into(), one.public_key)),
+            7.into(),
+            signed.public_key,
+            changed_signature.to_vec(),
+            *changed_peer.identity_key(),
+        )
+        .unwrap();
+        let error = prepare(
+            &account,
+            &recipient,
+            &changed_bundle,
+            Some(&encrypted.session),
+            Some(&encrypted.identity),
+            "stale session",
+        )
+        .await
+        .err()
+        .unwrap();
+        assert!(matches!(error, Error::IdentityChanged(_)));
+        assert!(!error.to_string().contains(&recipient.user));
+        // The same original ratchet remains usable with its matching bundle.
         let resumed = prepare(
             &account,
             &recipient,

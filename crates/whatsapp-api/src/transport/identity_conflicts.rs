@@ -1,7 +1,7 @@
 //! Durable observations of differing public keys, never authority to replace pins.
 //! APK 2.26.37.71 LX/0jc.A0K separates identity saving from verified state;
-//! LX/0kc.A0I stores mark_as_verified/action_seq. Our trust transition is still
-//! unimplemented, so an unauthenticated envelope must remain an observation.
+//! LX/0kc.A0I stores mark_as_verified/action_seq. Authenticated replacement is
+//! separate; an unauthenticated envelope must remain an observation.
 use crate::{
     Error, Result,
     model::{jid::Jid, time::Timestamp},

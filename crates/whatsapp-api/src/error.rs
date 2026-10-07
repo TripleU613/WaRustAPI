@@ -73,7 +73,7 @@ pub enum Error {
 
     /// A peer identity key changed; affected sends are suspended until the
     /// configured policy resolves the change.
-    #[error("identity changed for {0:?}")]
+    #[error("peer identity changed; affected sends suspended pending trust-policy resolution")]
     IdentityChanged(DeviceAddress),
 
     /// A transport certificate or trust binding failed verification.

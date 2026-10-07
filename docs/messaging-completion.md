@@ -530,3 +530,13 @@ historical projection/idempotence on the saved account, not new incoming deliver
    acknowledgement is already saved. Do not change its ID or resend it.
 6. Handset image display and voice-note playback for the normal-outbox media tests;
    both already have matching server ACKs. Keep their IDs and do not resend.
+
+### Outgoing peer identity boundary (2026-10-07)
+
+- [x] Refuse a changed fetched identity even with a held session; preserve queued
+  intent, query reply/reservation and old ratchet without ending receive.
+- [x] Inspect suspended intent IDs and hashed peer selectors with `outbox-suspended`.
+- [ ] Resolve outgoing PN/LID identity transitions under an explicit evidenced
+  policy, then validate with an authorized selected send. No live send attempted.
+
+Evidence and remaining unknowns: [peer identity](protocol/peer-identity.md#outgoing-held-session-identity-guard-2026-10-07).

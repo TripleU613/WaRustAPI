@@ -25,6 +25,49 @@ fn query_key(id: LocalMessageId) -> String {
     format!("outbox-key-query:{id}")
 }
 
+/// Redacted queued intent suspended by a fetched peer identity mismatch.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct IdentitySuspension {
+    /// Existing local intent selector; never create another ID to retry.
+    pub local_id: LocalMessageId,
+    /// SHA-256 of the session address, not a phone number or safety number.
+    pub peer_ticket: String,
+}
+
+/// Inspect identity-suspended queued sends offline, without replaying queries.
+pub fn identity_suspended(store: &ProtocolStore) -> Result<Vec<IdentitySuspension>> {
+    store.read(|tx| {
+        let mut result = Vec::new();
+        let mut cursor = None;
+        loop {
+            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+            if rows.is_empty() {
+                break;
+            }
+            cursor = rows.last().map(|(key, _)| key.clone());
+            for (key, value) in rows {
+                if !key.starts_with(b"outbox-key-query:") {
+                    continue;
+                }
+                let row: serde_json::Value = serde_json::from_slice(&value)
+                    .map_err(|_| Error::invalid("outbox", "invalid saved query outcome"))?;
+                if row["status"] != "identity_changed" {
+                    continue;
+                }
+                let suspension: IdentitySuspension = serde_json::from_value(row)
+                    .map_err(|_| Error::invalid("outbox", "invalid saved identity suspension"))?;
+                if outbox()
+                    .get(tx, suspension.local_id)?
+                    .is_some_and(|entry| entry.progress == AttemptProgress::Queued)
+                {
+                    result.push(suspension);
+                }
+            }
+        }
+        Ok(result)
+    })
+}
+
 /// A pending query is connection-local; its reservation survives cancellation.
 pub struct Pending {
     local_id: LocalMessageId,
@@ -374,6 +417,39 @@ impl Pending {
         node.description == "iq"
             && node.get_attr("id").and_then(|v| v.as_text()) == Some(self.query_id.as_str())
     }
+    fn suspend_identity(
+        &self,
+        store: &ProtocolStore,
+        peer: &crate::model::jid::Jid,
+        session: Option<&[u8]>,
+        identity: Option<&[u8]>,
+        node: &Node,
+    ) -> Result<()> {
+        use sha2::{Digest, Sha256};
+        let peer_key = format!("comparison-direct:{peer}");
+        let reply = Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(node)?;
+        store.write(|tx| {
+            let current = outbox().get_mut(tx, self.local_id)?
+                .ok_or_else(|| Error::invalid("outbox", "missing intent"))?;
+            let held_session: Option<Vec<u8>> = tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1)?;
+            let held_identity: Option<Vec<u8>> = tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?;
+            if current.progress != AttemptProgress::Queued || held_session.as_deref() != session || held_identity.as_deref() != identity {
+                return Err(Error::invalid("outbox", "peer state changed during identity check"));
+            }
+            let reservation: serde_json::Value = tx.get_json(Table::Checkpoints, query_key(self.local_id).as_bytes(), 1)?
+                .ok_or_else(|| Error::invalid("outbox", "missing key-query reservation"))?;
+            if reservation["query_id"].as_str() != Some(self.query_id.as_str()) || reservation["status"] != "outcome_unknown" {
+                return Err(Error::invalid("outbox", "key-query reservation changed"));
+            }
+            // Keep the exact bundle reply encrypted at rest for later policy
+            // resolution. Its identity/signature is not trusted by saving it;
+            // no replacement, ratchet or send is reserved.
+            tx.put_json(Table::Checkpoints, query_key(self.local_id).as_bytes(), 1,
+                &serde_json::json!({"status":"identity_changed", "query_id":self.query_id,
+                    "local_id":self.local_id, "peer_ticket":hex::encode(Sha256::digest(peer_key.as_bytes())),
+                    "reply":reply, "observed_at":Timestamp::now()}))
+        })
+    }
     /// Prepare E2EE and atomically reserve ratchet + intent before any write.
     pub async fn prepare(
         self,
@@ -417,6 +493,17 @@ impl Pending {
                 tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?,
             ))
         })?;
+        if let Err(error) = crate::signal::direct::validate_bundle_identity(
+            Some(&bundle),
+            identity.as_deref(),
+            peer,
+        ) {
+            if !matches!(error, Error::IdentityChanged(_)) {
+                return Err(error);
+            }
+            self.suspend_identity(store, peer, session.as_deref(), identity.as_deref(), node)?;
+            return Ok(None);
+        }
         let session = session.map(Zeroizing::new);
         let media = match &entry.intent.content {
             MessageContent::Media {
@@ -747,6 +834,99 @@ mod tests {
                     .local_id)
             })
             .unwrap()
+    }
+    #[tokio::test]
+    async fn changed_bundle_suspends_without_advancing_or_replaying_after_restart() {
+        use wacore_libsignal::protocol::{IdentityKeyPair, KeyPair};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("changed.redb");
+        let store = open(&path);
+        let id = enqueue(&store);
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let key = format!("comparison-direct:{peer}");
+        let mut rng = rand::rng();
+        let old = IdentityKeyPair::generate(&mut rng);
+        let new = IdentityKeyPair::generate(&mut rng);
+        let signed = KeyPair::generate(&mut rng);
+        let signature = new
+            .private_key()
+            .calculate_signature(&signed.public_key.serialize(), &mut rng)
+            .unwrap();
+        let pin = old.identity_key().serialize().to_vec();
+        // A changed bundle must be stopped before deserializing/using even a
+        // stale session. Valid ratchet reuse is covered in signal::direct.
+        let session = vec![1, 2, 3];
+        store
+            .write(|tx| {
+                tx.put_json(Table::PeerIdentities, key.as_bytes(), 1, &pin)?;
+                tx.put_json(Table::SignalSessions, key.as_bytes(), 1, &session)
+            })
+            .unwrap();
+        let (pending, _) = begin_selected(&store, Some(id)).unwrap().unwrap();
+        let response = Node::new("iq")
+            .attr("type", "result")
+            .attr("id", pending.query_id.as_str())
+            .children(vec![Node::new("list").children(vec![
+                Node::new("user").attr("jid", peer).children(vec![
+                    Node::new("registration").bytes(vec![0, 0, 0, 9]),
+                    Node::new("type").bytes(vec![5]),
+                    Node::new("identity").bytes(new.public_key().public_key_bytes().to_vec()),
+                    Node::new("skey").children(vec![
+                        Node::new("id").bytes(vec![0, 0, 7]),
+                        Node::new("value").bytes(signed.public_key.public_key_bytes().to_vec()),
+                        Node::new("signature").bytes(signature.to_vec()),
+                    ]),
+                ]),
+            ])]);
+        assert!(
+            pending
+                .prepare(
+                    &store,
+                    &AccountRecord::default(),
+                    &response,
+                    ConnectionEpoch(1)
+                )
+                .await
+                .unwrap()
+                .is_none()
+        );
+        let entry = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
+        assert_eq!(entry.progress, AttemptProgress::Queued);
+        assert!(entry.attempts.is_empty());
+        assert!(entry.wire_id.is_none());
+        store
+            .read(|tx| {
+                assert_eq!(
+                    tx.get_json::<Vec<u8>>(Table::PeerIdentities, key.as_bytes(), 1)?,
+                    Some(pin)
+                );
+                assert_eq!(
+                    tx.get_json::<Vec<u8>>(Table::SignalSessions, key.as_bytes(), 1)?,
+                    Some(session)
+                );
+                let row: serde_json::Value = tx
+                    .get_json(Table::Checkpoints, query_key(id).as_bytes(), 1)?
+                    .unwrap();
+                assert_eq!(row["status"], "identity_changed");
+                let reply: Vec<u8> = serde_json::from_value(row["reply"].clone()).unwrap();
+                assert_eq!(
+                    reply,
+                    Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(&response)?
+                );
+                Ok(())
+            })
+            .unwrap();
+        let rows = identity_suspended(&store).unwrap();
+        assert_eq!(rows.len(), 1);
+        assert_eq!(rows[0].local_id, id);
+        assert_eq!(rows[0].peer_ticket.len(), 64);
+        drop(store);
+        let store = open(&path);
+        assert_eq!(identity_suspended(&store).unwrap(), rows);
+        assert!(begin_selected(&store, Some(id)).unwrap().is_none());
+        assert!(eligible(&store, 10).unwrap().is_empty());
+        store.write(|tx| outbox().cancel(tx, id)).unwrap();
+        assert!(identity_suspended(&store).unwrap().is_empty());
     }
     #[test]
     fn eligible_spans_namespaces_and_excludes_reserved_or_cancelled_intents() {

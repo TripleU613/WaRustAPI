@@ -73,6 +73,14 @@ List queued outbox intents that `listen --send-outbox` would transmit (offline)
 Usage: whatsapp-cli outbox-pending [OPTIONS]...
 ```
 
+## whatsapp-cli outbox-suspended
+
+Inspect queued sends suspended by changed peer identities (offline, redacted)
+
+```
+Usage: whatsapp-cli outbox-suspended [OPTIONS]...
+```
+
 ## whatsapp-cli prekeys
 
 Show one-time prekey counts and upload batches (offline, redacted)

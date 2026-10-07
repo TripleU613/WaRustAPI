@@ -202,6 +202,8 @@ enum Cmd {
     /// List queued outbox intents that `listen --send-outbox` would transmit (offline).
     #[cfg(feature = "experimental-transport")]
     OutboxPending,
+    /// Inspect queued sends suspended by changed peer identities (offline, redacted).
+    OutboxSuspended,
     /// Show one-time prekey counts and upload batches (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Prekeys,
@@ -1382,6 +1384,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
         }
         #[cfg(feature = "experimental-transport")]
         Cmd::OutboxPending => transport_receive::outbox_pending(&cli),
+        Cmd::OutboxSuspended => transport_receive::outbox_suspended(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Prekeys => transport_receive::prekeys_status(&cli),
         #[cfg(feature = "experimental-transport")]

@@ -39,7 +39,7 @@ that an arbitrary remote prekey envelope should replace a pin.
 **Unknown:** the full remote receive caller sequence, the producers/meaning of
 all identity-save branch inputs, and observer behavior after replacement.
 `A0L` (bundle processing) reads a previous remote identity and can invalidate
-a session on differing identity/registration inputs, but its acceptance path
+a session on differing serialized identity type/key bytes, but its acceptance path
 has not been completely traced. `A17` compares saved message base keys;
 `A18` stores sessions. Neither establishes the remote identity trust policy.
 Native fingerprint-generation wrappers were found (`A0U`/`A0V`, wamsys),
@@ -248,3 +248,45 @@ A 20-second follow-up session acknowledged both selected saved-message read
 receipts. The receive/config correction did not require local identity rotation
 or replaying any chat send. Handset confirmation and fresh-message auto-read
 remain unknown; see [the read recovery record](messaging-transport.md#authenticated-duplicate-auto-read-correction-2026-10-07).
+
+## Outgoing held-session identity guard (2026-10-07)
+
+**Confirmed (APK 2.26.37.71):** `LX/0jc.A0L`, offsets `0044..008a`,
+reads the held session remote public identity, separates its first type byte
+from the key bytes, compares the type to `v33` and key bytes to `v31`, then
+invalidates the session through `A0E`/`A0s` (`0096..00a8`) when changed.
+**Refuted:** the earlier description of this comparison as identity/registration
+inputs. `v33` is the serialized curve-key type byte, not registration ID;
+registration is decoded separately later (`01a2..01ac`). Full replacement
+acceptance and branch producers remain **unknown**.
+
+**Confirmed (implementation inspection):** `signal/direct.rs::prepare_payload`
+previously ignored a supplied bundle whenever a session already existed. This
+could encrypt using a stale peer pin/session even after a key query returned
+a changed identity. The common preparation path now refuses mismatched pins
+before using or advancing any ratchet. The normal outbox stores the exact reply
+in encrypted checkpoints (saving does not authenticate its key/signature),
+leaves the original intent queued with no send attempt,
+and marks its existing query reservation `identity_changed`. Receive continues;
+restart does not repeat the query or send. `outbox-suspended` exposes only the
+local intent ID and hashed peer selector. Cancelled intents disappear from this
+inspection. The error display contains no contact address.
+
+**Offline:** generated, independently signed changed bundles are refused with
+an existing real Signal session; matching bundles still advance that original
+ratchet. A normal-outbox fixture verifies unchanged pins/sessions, preserved
+reply, no wire/send reservation, restart protection and cancellation. This is
+an implementation guard, not a WhatsApp server refusal. **Unknown:** canonical
+PN/LID outgoing pin agreement, policy-qualified outgoing replacement, and live
+outgoing validation after the incoming identity recovery. No new chat was sent.
+
+**Observed locally:** `outbox-suspended --profile l --json` returned an empty
+list from the canonical saved account on 2026-10-07; no key query or send was
+issued. Private evidence: `lab/accounts/l/outbox-suspended-2026-10-07.json`.
+**Confirmed (implementation):** this inspector uses only `ProtocolStore::read`,
+but `ProtocolStore::open` itself opens/commits a write transaction to validate
+metadata and ensure tables exist (`store/mod.rs::open`). The pre/post file hash
+changed during this inspection, so raw file-byte equality is not a valid
+read-only protocol-state assertion for this API. That observation does not
+establish a peer-key, account-identity or send-state change. The offline fixture
+asserts those logical records directly; byte-immutable opening remains absent.

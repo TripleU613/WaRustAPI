@@ -823,6 +823,32 @@ pub(super) fn prekeys_status(cli: &super::Cli) -> Result<(), Error> {
 }
 
 /// Offline listing of the queued intents an outbox-enabled session would send.
+pub(super) fn outbox_suspended(cli: &super::Cli) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let rows = whatsapp_api::transport::outgoing::identity_suspended(&store)?;
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&rows)
+                .map_err(|_| Error::invalid("outbox", "cannot encode identity suspensions"))?
+        );
+    } else {
+        println!(
+            "outbox-suspended: {} queued send(s) awaiting peer identity policy resolution",
+            rows.len()
+        );
+        for row in rows {
+            println!("  {} peer_ticket={}", row.local_id, row.peer_ticket);
+        }
+    }
+    Ok(())
+}
+
 pub(super) fn outbox_pending(cli: &super::Cli) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
