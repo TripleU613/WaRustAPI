@@ -180,7 +180,7 @@ and full extraction were validated separately against the pinned artifacts.
 
 ## Fingerprint hash control flow
 
-`native_fingerprint_check.py --library PATH` requires Unicorn and pyelftools,
+`native_fingerprint_check.py --library PATH [--check hash|bytes]` requires Unicorn and pyelftools,
 and the exact reconstructed 37.71 `libwhatsapp.so` hash. It maps only the shared
 hash routine page, runs built-in synthetic cases, and models SHA/MCF calls on
 the host. Native ARM64 ordering/counts must agree with 5200 rounds of SHA-512;
@@ -234,7 +234,26 @@ PYTHONDONTWRITEBYTECODE=1 \
   -s tools/apk-research -p 'test_native_*check.py' -v
 ```
 
-All fourteen cases passed locally with these fixtures. Schema integration skips
+All sixteen cases passed locally with these fixtures. Schema integration skips
 without `TELEWHATSAPP_SCHEMA_LIBRARY`; its missing/wrong-build preflight cases
 need no library or ELF dependency. Neither schema extraction nor these tests
 executes QR comparison or sets a peer's verified bit.
+
+
+`--check bytes` executes the actual 37.71 ARM64 equal-length byte comparator,
+without modeled runtime/crypto calls. The 862 built-in synthetic comparisons
+cover zero length, 8/32-byte loop transitions, 33-byte keys, 64-byte digests,
+66-byte concatenations and 4096 bytes, with shifted pointers and mismatch
+positions. Input ends meet an unmapped page; shifted cases leave one sentinel
+byte. Each invocation has the same ten-second/one-million-instruction bounds
+and must return. Equal-length instruction counts agree for these cases; this
+is not an end-to-end constant-time proof or a full QR comparison.
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
+  tools/apk-research/native_fingerprint_check.py --check bytes \
+  --library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so
+```
+
+[Primitive and orientation-dependent error evidence](../../docs/protocol/safety-number.md#comparison-primitives-and-orientation-dependent-statuses)
+records the remaining comparison-to-verification boundary.

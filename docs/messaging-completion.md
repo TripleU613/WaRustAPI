@@ -682,3 +682,13 @@ alone cannot establish verification. Fourteen offline tooling checks pass.
 Full comparator primitive/error semantics, UI selection/inventory and the
 verified-state action remain unfinished; no account verification was performed.
 [QR evidence and schema](protocol/safety-number.md#native-qr-schema-serialization-and-v4-comparison).
+
+
+Fingerprint comparison primitives now establish NUL/non-ASCII rejection, PN
+byte equality, username strncasecmp and orientation-dependent native status
+remapping in APK 37.71. The actual native byte leaf passed 862 synthetic
+comparisons without modeled callees; all 16 offline tooling tests passed.
+V4 comparison is mapped to jvidispatchIOO selector 4. Its Java caller, active
+scheme/device inventory and human verification-state commit remain untraced.
+No account verification or live request occurred.
+[Evidence and reproducible check](protocol/safety-number.md#comparison-primitives-and-orientation-dependent-statuses).

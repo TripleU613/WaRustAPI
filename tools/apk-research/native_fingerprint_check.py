@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check pinned APK fingerprint hash control flow with synthetic inputs only."""
+"""Check pinned APK fingerprint hash flow or byte equality on synthetic inputs."""
 
 import argparse
 import hashlib
@@ -11,6 +11,96 @@ LIBRARY_HASH = "f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a
 # Caller/input and SHA wrapper evidence: docs/protocol/safety-number.md.
 ENTRY, END = 0x713938, 0x7139E4
 RETURN = 0x5000000
+
+
+def check_bytes(library, left, right, alignment=0):
+    """Execute the actual equal-length primitive, without modeled callees."""
+    from elftools.elf.elffile import ELFFile
+    from unicorn import Uc, UcError, UC_ARCH_ARM64, UC_MODE_ARM, UC_HOOK_CODE
+    from unicorn.arm64_const import (
+        UC_ARM64_REG_X0, UC_ARM64_REG_X1, UC_ARM64_REG_X2,
+        UC_ARM64_REG_LR, UC_ARM64_REG_PC,
+    )
+
+    if len(left) != len(right) or len(left) > 4096 or alignment not in (0, 1):
+        raise ValueError("byte check requires equal bounded lengths and alignment 0/1")
+    # APK 37.71 libwhatsapp.so: MCF-data equality 0x71f060 calls
+    # 0xc9bbfc..0xc9bd20 after checking lengths. This leaf uses XOR/OR
+    # accumulation in 32-byte, 8-byte and tail loops; no runtime calls.
+    entry, end, page = 0xC9BBFC, 0xC9BD20, 0xC9B000
+    guest = Uc(UC_ARCH_ARM64, UC_MODE_ARM)
+    with library.open("rb") as stream:
+        elf = ELFFile(stream)
+        if elf["e_machine"] != "EM_AARCH64":
+            raise ValueError("expected ARM64 ELF")
+        for segment in elf.iter_segments():
+            if (segment["p_type"] == "PT_LOAD"
+                    and segment["p_vaddr"] <= page
+                    and page + 4096 <= segment["p_vaddr"] + segment["p_filesz"]):
+                offset = page - segment["p_vaddr"]
+                guest.mem_map(page, 4096)
+                guest.mem_write(page, segment.data()[offset:offset + 4096])
+                break
+        else:
+            raise ValueError("byte comparator not in a file-backed segment")
+    # End each input exactly at an unmapped page, detecting an over-read.
+    # Alignment 1 shifts it one byte earlier and leaves one sentinel byte.
+    guest.mem_map(0x10000000, 8192)
+    guest.mem_map(0x20000000, 8192)
+    first = 0x10002000 - len(left) - alignment
+    second = 0x20002000 - len(right) - alignment
+    if left:
+        guest.mem_write(first, left)
+        guest.mem_write(second, right)
+    instructions = 0
+
+    def hook(cpu, address, size, user_data):
+        nonlocal instructions
+        if not entry <= address < end:
+            raise ValueError(f"unexpected byte-comparator branch: {address:#x}")
+        instructions += 1
+
+    guest.hook_add(UC_HOOK_CODE, hook)
+    guest.reg_write(UC_ARM64_REG_X0, first)
+    guest.reg_write(UC_ARM64_REG_X1, second)
+    guest.reg_write(UC_ARM64_REG_X2, len(left))
+    guest.reg_write(UC_ARM64_REG_LR, RETURN)
+    try:
+        guest.emu_start(entry, RETURN, timeout=10_000_000, count=1_000_000)
+    except UcError as error:
+        raise ValueError(f"ARM64 byte comparison failed: {error}") from error
+    if guest.reg_read(UC_ARM64_REG_PC) != RETURN:
+        raise ValueError("byte comparison budget exhausted before return")
+    result = guest.reg_read(UC_ARM64_REG_X0) & 0xFFFFFFFF
+    expected = 0
+    for first_byte, second_byte in zip(left, right):
+        expected |= first_byte ^ second_byte
+    if result != expected:
+        raise ValueError("native byte comparison differs from XOR/OR equality")
+    return result, instructions
+
+
+def run_byte_cases(library):
+    cases = 0
+    # Boundaries exercise each vector/tail transition and 33-byte serialized
+    # keys, 64-byte digests and 66-byte concatenations used by fingerprints.
+    for length in (0, 1, 7, 8, 9, 15, 16, 31, 32, 33, 63, 64, 65, 66, 4096):
+        left = bytes(index % 256 for index in range(length))
+        for alignment in (0, 1):
+            _, baseline = check_bytes(library, left, left, alignment)
+            cases += 1
+            # Every byte of small keys/digests; loop edges of the long case.
+            positions = range(length) if length <= 66 else (0, 7, 8, 31, 32, length - 1)
+            for position in positions:
+                right = bytearray(left)
+                right[position] ^= 0x80
+                result, instructions = check_bytes(library, left, bytes(right), alignment)
+                if result != 0x80 or instructions != baseline:
+                    raise ValueError("mismatch result or length-driven instruction count differs")
+                cases += 1
+    print(f"synthetic byte cases={cases}: actual ARM64 XOR/OR results agree; "
+          "equal-length instruction counts agree")
+    print("No modeled callees. This does not prove end-to-end constant time or peer verification.")
 
 
 def check_flow(library, seed, keys):
@@ -112,6 +202,7 @@ def check_flow(library, seed, keys):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--library", type=Path, required=True)
+    parser.add_argument("--check", choices=("hash", "bytes"), default="hash")
     args = parser.parse_args()
     if not args.library.is_file():
         parser.error("missing reconstructed native library")
@@ -120,6 +211,9 @@ def main():
     cases = ((b"synthetic seed", bytes(range(33))),
              (bytes(range(66)), bytes(range(66))))
     try:
+        if args.check == "bytes":
+            run_byte_cases(args.library)
+            return
         for index, (seed, keys) in enumerate(cases, 1):
             digest, instructions = check_flow(args.library, seed, keys)
             print(f"synthetic case {index}: rounds=5200 updates=10400 "

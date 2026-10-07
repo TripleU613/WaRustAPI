@@ -430,8 +430,8 @@ a QR scan's local side must not always be treated as our local side. It invokes
 `0x7150ac..0x715264` to convert each scanned individual. That converter requires
 lid_identifier and the version-selected key field. Optional identifiers are
 ASCII-decoded; invalid LID/PN/username conversion returns negative status.
-Known hosted state must be 0/1; absent state becomes -1. **Unknown:** complete
-ASCII helper behavior at `0x71d5dc` and all error/status-to-UI mappings.
+Known hosted state must be 0/1; absent state becomes -1. The primitive and orientation-dependent remapping follow-up below resolves
+ASCII acceptance and native statuses; error/status-to-UI mappings remain unknown.
 
 **Confirmed/static, V4 comparison `0x7152fc..0x7155d8`:**
 
@@ -447,9 +447,8 @@ ASCII helper behavior at `0x71d5dc` and all error/status-to-UI mappings.
   inequality returns -17 locally / -19 remotely. A missing PN is handled
   separately, consistent with username-bearing local QR omission above.
 - Username helper `0x7155fc..0x715688` distinguishes absent/present pairs and
-  calls MCFStringCompare with literal flag 1 when both exist. Exact flag
-  semantics are untraced; ordinary Rust case-sensitive equality is not proven
-  equivalent. Different/missing username pairings return distinct statuses
+  calls MCFStringCompare with literal flag 1 when both exist. The follow-up below traces flag 1 to the ASCII `strncasecmp` path;
+  ordinary Rust case-sensitive equality is not equivalent to that call. Different/missing username pairings return distinct statuses
   (-24/-26/-28 locally, -29/-31/-33 remotely).
 - Known scanned hosted state is compared with known params state. A mismatch
   returns -34 locally or -36 remotely. If both scanned values are absent,
@@ -457,10 +456,10 @@ ASCII helper behavior at `0x71d5dc` and all error/status-to-UI mappings.
   not a fabricated enum value.
 
 The data equality helper `0x71f060..0x71f108` checks lengths, then calls
-`0xc9bbfc`; its complete byte-comparison implementation is not traced here.
+`0xc9bbfc`; the follow-up below traces and exercises its byte-comparison implementation.
 These native return values are internal comparison results, not HTTP/server
-reasons. The public result remapper `0x7152b8` and Java action/verified-state
-commit remain unfinished. Do not mark a peer verified merely by implementing
+reasons. The follow-up below resolves the native result remapper `0x7152b8`; the Java
+action/verified-state commit remains unfinished. Do not mark a peer verified merely by implementing
 these partial checks or treating an unknown negative code as success.
 
 [`native_schema_check.py`](../../tools/apk-research/native_schema_check.py)
@@ -489,3 +488,134 @@ is static evidence and offline tooling validation, not a live scan/verification.
 The committed schema regenerated unchanged from the pinned ELF in a separate
 invocation. CLI reference regeneration/test and repository hygiene passed;
 Rust runtime code did not change. These checks do not execute the QR comparator.
+
+
+## Comparison primitives and orientation-dependent statuses
+
+**Confirmed/static, APK 2.26.37.71**, reconstructed `libwhatsapp.so` SHA-256
+`f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a` and
+`libwhatsappmerged.so` SHA-256
+`565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa`.
+Addresses below are ELF virtual addresses, not file offsets. These findings
+refine the preceding comparison trace; no account or verified bit changed.
+
+The QR byte-to-identifier bridge `libwhatsapp.so 0x71d5dc..0x71d60c` uses
+MCFInt32FromSizeT and MCFASCIIStringCreate. In the merged library, that creator
+`0x5317b4..0x531818` invokes validator `0x531200..0x531264`. The validator
+accepts zero length, but every nonempty byte must be **1..127**: it loads signed
+bytes and rejects values <=0. Embedded NUL and bytes 0x80..0xff are rejected.
+A negative signed length or null pointer with nonzero length aborts; invalid
+content makes the creator return null. This supersedes the earlier incomplete
+UTF-16 <=127 observation: the final creator still rejects embedded zero.
+The primitive's empty-string acceptance does not prove that an empty LID/PN
+is semantically valid in the complete application.
+
+MCFASCIIStringEqual `merged 0x5316ac..0x5316f4` checks lengths at +0x18, then
+calls memcmp over pointers at +0x20. Thus the PN comparator is byte equality,
+not username comparison. Username helper `main 0x7155fc..0x715688` converts
+MCFASCIIString to MCFString and calls MCFStringCompare with flag 1.
+MCFASCIIStringCreateMCFString `merged 0x53172c..0x531764` supplies encoding
+0x600 to MCFStringCreateWithBytes `0x538260`. Its constructor scans those
+nonnegative bytes at `0x5383a8..0x5383c8`, enters the ASCII branch at
+`0x538340`, sets w27=1 and stores that representation flag at +0x1a via
+`0x538474`. MCFStringCompare `0x538a50..0x538ac0` masks flag bit 0 and compares
+only the shorter length through helper `0x538ac0..0x538c34`, then compares
+lengths if the prefixes match. In the two-ASCII branch `0x538b18..0x538b60`,
+flag 1 selects GOT 0x759d90; its R_AARCH64_GLOB_DAT relocation names
+**strncasecmp**. Flag zero selects GOT 0x75a1a8, **strncmp**. This proves the
+actual called comparison, not locale-independent Unicode case folding.
+**Unknown:** the Android libc implementation/locale dependency and non-ASCII
+helper behavior; neither is substituted with invented normalization.
+
+MCF-data equality `main 0x71f060..0x71f108` first compares lengths, accepts
+matching empty data, and otherwise calls leaf `0xc9bbfc..0xc9bd20`. That leaf
+accumulates XOR differences with OR across 32-byte NEON blocks, 8-byte blocks
+and a byte tail. It returns the OR-reduced byte: zero iff all compared bytes
+match. Branches in the traced routine depend on length/loop position, with
+no early mismatch exit. This statement is local to that routine; it does
+not prove constant-time behavior of the complete verification process.
+
+**Observed/offline:** `native_fingerprint_check.py --check bytes` executed
+that actual leaf, without modeled callees, on 862 built-in synthetic cases.
+Lengths 0, 1, 7, 8, 9, 15, 16, 31, 32, 33, 63, 64, 65, 66 and 4096 exercise
+loop boundaries and fingerprint input sizes. Every mismatch position through
+66 bytes and selected positions of the long case were tested, with pointer
+shifts 0/1. Buffers end at an unmapped page (one sentinel byte for shift 1).
+All results equal OR(XOR(left[i], right[i])); all equal/mismatch cases of the
+same length/shift execute the same instruction count. Each case must return
+within ten seconds/one million instructions. This executes only a leaf on
+synthetic data, not the whole comparator, a human scan or a live client.
+
+**Confirmed/static:** V4 wrapper `main 0x714a60..0x714c70` uses the known
+local LID to choose orientation. If it matches the scanned local side,
+`0x714b94` calls the comparator and `0x714b98` remaps its result through
+`0x7152b8`. If only the scanned remote side matches, `0x714bec..0x714bfc`
+swaps the scanned arguments, then stores the comparator result directly at
+`0x714c00`, without remapping. The first path takes priority if both match.
+Neither match yields -13. Early unpack/version/field/conversion failures also
+have their own return paths. Consequently, the remapper is **not** a generic
+conversion to apply to every negative code.
+
+The remapper `0x7152b8..0x7152fc` accepts only indices `code+41 < 42` whose
+bit is set in mask 0x0201bd5ab5a5, then reads a signed 32-bit result from table
+0x302404. Other inputs abort. Its admitted mappings are:
+
+| Comparator code | Remapped code |
+| --- | --- |
+| -41 | -42 |
+| -39 | -40 |
+| -36 | -37 |
+| -34 | -35 |
+| -33 | -33 |
+| -31 | -32 |
+| -29 | -30 |
+| -28 | -28 |
+| -26 | -27 |
+| -24 | -25 |
+| -22 | -22 |
+| -21 | -20 |
+| -19 | -18 |
+| -17 | -16 |
+| -15 | -15 |
+| -14 | -14 |
+| -13 | -13 |
+| -12 | -11 |
+| -10 | -10 |
+| -9 | -9 |
+| 0 | 0 |
+
+These are native results, not recognized server response reasons. Zero remains
+zero in both orientations; successful native comparison still does not prove
+a human verification action or justify committing a verification bit.
+
+**Negative/static:** the guessed `LX/0jc;.A0S` coordinator method was checked
+with the existing DEX disassembler. It locks the sender-key store and performs
+group sender-key AES/CBC encryption, not fingerprint comparison. The private
+`safety-number-compare-coordinator.smali` retains this refuted path; do not
+repeat the guess or treat its unrelated success as verified peer state.
+A complete disassembly of all 78 methods in `LX/0jc;` also contains no
+`jvidispatchIOO` invocation; the comparison caller is outside this class or
+behind another wrapper. The private `safety-number-coordinator-all.smali`
+retains that search boundary. Absence here is not absence in the APK.
+**Confirmed/static:** native registration entry 9 at `main 0xd06e00` names
+`jvidispatchIOO`, signature `(ILjava/lang/Object;Ljava/lang/Object;)J`,
+function `0x6bcfc8`. The selector-4 branch at `0x6bd084..0x6bd090` reaches
+`0x6bd240`; it unwraps the first object through `0x6b6f30`, converts the
+second through `0x6b7574`, and calls V4 comparison at `0x6bd268`. The result
+is sign-extended to Java long at `0x6bd26c`, then both objects are released.
+The scoped `fingerprint-comparison-jni-dispatch.txt` retains this dispatch.
+**Unknown:** the Java caller of selector 4, active UI scheme/device-key
+inventory and Java action that persists human verification remain untraced.
+
+Private scoped native dumps retain `fingerprint-byte-comparator.txt`,
+`fingerprint-ascii-validator.txt`, `fingerprint-ascii-operations.txt`,
+`fingerprint-mcf-string-constructor.txt`, `fingerprint-string-comparison.txt`,
+`fingerprint-status-remapper.txt` and decoded `fingerprint-status-table.txt`.
+Use `llvm-objdump -d --start-address=VA --stop-address=END LIBRARY` with the
+ranges above; GOT symbol names come from the merged ELF `.dynsym`/`.rela.dyn`.
+The existing synthetic hash mode remains the default and models SHA/MCF;
+only the new byte mode executes its entire primitive without modeled calls.
+
+Validation: all 16 offline tooling tests passed with all three pinned fixture
+variables set; CLI reference regeneration/test and repository hygiene passed.
+No Rust runtime or saved account state changed.
