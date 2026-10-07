@@ -72,6 +72,12 @@
       "x-transport": "cli",
       "x-live": false,
       "description": "Existing offline development command; symbolic Dalvik instruction dump with class and optional method substring filters. No HTTP route, native execution or account state. The pending-invitation producer trace now decodes standard and-long opcode 0xa0 in 23x format; literal APK 2.26.37.71 classes3.dex 1xz.A01 bytes a0070713 at absolute 0x1e0094 show v7,v7,v19, preserving separate isGuest register v1. Independent literal/truncation regression covers the annotation. Unsupported opcodes remain explicitly unknown; a textual dump is not proof of runtime behavior. See docs/protocol/safety-number.md."
+    },
+    {
+      "x-cli": "<python-env> tools/apk-research/native_v3_comparison_check.py --library <reconstructed-libwhatsapp.so>",
+      "x-transport": "cli",
+      "x-live": false,
+      "description": "Offline development utility; no HTTP route or account flow. Requires exact APK 2.26.37.71 reconstructed libwhatsapp.so SHA-256. Executes actual native V3 core (0x7140fc), PN-or-LID/optional-value/PN-presence helpers and remapper (0x7140b8) over 264 built-in synthetic cases. Emits deterministic version/options, native code/remapped code, instruction and modeled-object-comparison counts; one direct-core invalid hosted enum intercepts native abort. Both selected key versions, UI options 1/3, PN/username presence and mismatch, remote identifier OR behavior, precedence and all 81 known/scanned hosted combinations per option are covered; internal bit-off cases do not describe a UI switch. Maximum 227 instructions observed per non-abort case; ten seconds/one million instructions per core/remap invocation and return-PC enforcement. Generic MCFEqual, getters/key equality and logging are modeled; no native object/JID construction, decoder, orientation wrapper, JNI, current inventory, human verification or companion sync executes. Wrong/missing builds, unexpected branches and budget exhaustion refuse without partial JSON. Corpus docs/protocol/fingerprint-native-v3-comparison-cases.json; source and remaining equality/JID unknowns docs/protocol/safety-number.md. This does not implement runtime V3 binary comparison or authorize a verified metadata change."
     }
   ],
   "info": {

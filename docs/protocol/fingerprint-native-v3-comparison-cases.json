@@ -1,0 +1,2378 @@
+{
+  "apk_build": "2.26.37.71",
+  "library_sha256": "f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a",
+  "scope": "actual V3 core, optional-value and PN-or-LID helpers/remapper; modeled dependencies (key getters/equality, object getters, MCFEqual, logging); no decoder, JID construction, orientation wrapper, JNI, account or human action",
+  "cases": [
+    {
+      "case": "baseline-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "key-side0-selectedFalse-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "key-side0-selectedTrue-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": -14,
+      "remapped_code": -14,
+      "instructions": 77,
+      "modeled_object_comparisons": 1
+    },
+    {
+      "case": "key-side1-selectedFalse-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "key-side1-selectedTrue-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": -15,
+      "remapped_code": -15,
+      "instructions": 83,
+      "modeled_object_comparisons": 1
+    },
+    {
+      "case": "remote-lid-different-pn-equal-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "remote-both-identifiers-different-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": -12,
+      "remapped_code": -11,
+      "instructions": 78,
+      "modeled_object_comparisons": 2
+    },
+    {
+      "case": "core-does-not-check-local-lid-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "pn-side0-different-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": -17,
+      "remapped_code": -16,
+      "instructions": 117,
+      "modeled_object_comparisons": 2
+    },
+    {
+      "case": "pn-side0-scanned-absent-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 201,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "pn-side0-known-absent-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": -17,
+      "remapped_code": -16,
+      "instructions": 111,
+      "modeled_object_comparisons": 1
+    },
+    {
+      "case": "pn-side0-both-absent-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "pn-side1-different-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": -19,
+      "remapped_code": -18,
+      "instructions": 155,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "pn-side1-scanned-absent-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": -21,
+      "remapped_code": -20,
+      "instructions": 149,
+      "modeled_object_comparisons": 3
+    },
+    {
+      "case": "pn-side1-known-absent-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": -22,
+      "remapped_code": -22,
+      "instructions": 143,
+      "modeled_object_comparisons": 2
+    },
+    {
+      "case": "pn-side1-both-absent-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side0-different-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": -24,
+      "remapped_code": -25,
+      "instructions": 175,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side0-scanned-absent-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": -26,
+      "remapped_code": -27,
+      "instructions": 167,
+      "modeled_object_comparisons": 3
+    },
+    {
+      "case": "username-side0-known-absent-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": -28,
+      "remapped_code": -28,
+      "instructions": 167,
+      "modeled_object_comparisons": 3
+    },
+    {
+      "case": "username-side0-both-absent-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side1-different-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": -29,
+      "remapped_code": -30,
+      "instructions": 202,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "username-side1-scanned-absent-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": -31,
+      "remapped_code": -32,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side1-known-absent-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": -33,
+      "remapped_code": -33,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side1-both-absent-v0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "baseline-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "key-side0-selectedFalse-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "key-side0-selectedTrue-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -14,
+      "remapped_code": -14,
+      "instructions": 77,
+      "modeled_object_comparisons": 1
+    },
+    {
+      "case": "key-side1-selectedFalse-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "key-side1-selectedTrue-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -15,
+      "remapped_code": -15,
+      "instructions": 83,
+      "modeled_object_comparisons": 1
+    },
+    {
+      "case": "remote-lid-different-pn-equal-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "remote-both-identifiers-different-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -12,
+      "remapped_code": -11,
+      "instructions": 78,
+      "modeled_object_comparisons": 2
+    },
+    {
+      "case": "core-does-not-check-local-lid-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "pn-side0-different-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -17,
+      "remapped_code": -16,
+      "instructions": 117,
+      "modeled_object_comparisons": 2
+    },
+    {
+      "case": "pn-side0-scanned-absent-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 221,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "pn-side0-known-absent-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -17,
+      "remapped_code": -16,
+      "instructions": 111,
+      "modeled_object_comparisons": 1
+    },
+    {
+      "case": "pn-side0-both-absent-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 214,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "pn-side1-different-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -19,
+      "remapped_code": -18,
+      "instructions": 155,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "pn-side1-scanned-absent-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -21,
+      "remapped_code": -20,
+      "instructions": 149,
+      "modeled_object_comparisons": 3
+    },
+    {
+      "case": "pn-side1-known-absent-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -22,
+      "remapped_code": -22,
+      "instructions": 143,
+      "modeled_object_comparisons": 2
+    },
+    {
+      "case": "pn-side1-both-absent-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 214,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side0-different-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -24,
+      "remapped_code": -25,
+      "instructions": 175,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side0-scanned-absent-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -26,
+      "remapped_code": -27,
+      "instructions": 167,
+      "modeled_object_comparisons": 3
+    },
+    {
+      "case": "username-side0-known-absent-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -28,
+      "remapped_code": -28,
+      "instructions": 167,
+      "modeled_object_comparisons": 3
+    },
+    {
+      "case": "username-side0-both-absent-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 214,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side1-different-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -29,
+      "remapped_code": -30,
+      "instructions": 202,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "username-side1-scanned-absent-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -31,
+      "remapped_code": -32,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side1-known-absent-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -33,
+      "remapped_code": -33,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side1-both-absent-v0-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 214,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "baseline-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "key-side0-selectedFalse-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "key-side0-selectedTrue-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": -14,
+      "remapped_code": -14,
+      "instructions": 77,
+      "modeled_object_comparisons": 1
+    },
+    {
+      "case": "key-side1-selectedFalse-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "key-side1-selectedTrue-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": -15,
+      "remapped_code": -15,
+      "instructions": 83,
+      "modeled_object_comparisons": 1
+    },
+    {
+      "case": "remote-lid-different-pn-equal-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "remote-both-identifiers-different-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": -12,
+      "remapped_code": -11,
+      "instructions": 78,
+      "modeled_object_comparisons": 2
+    },
+    {
+      "case": "core-does-not-check-local-lid-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "pn-side0-different-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": -17,
+      "remapped_code": -16,
+      "instructions": 117,
+      "modeled_object_comparisons": 2
+    },
+    {
+      "case": "pn-side0-scanned-absent-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 201,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "pn-side0-known-absent-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": -17,
+      "remapped_code": -16,
+      "instructions": 111,
+      "modeled_object_comparisons": 1
+    },
+    {
+      "case": "pn-side0-both-absent-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "pn-side1-different-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": -19,
+      "remapped_code": -18,
+      "instructions": 155,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "pn-side1-scanned-absent-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": -21,
+      "remapped_code": -20,
+      "instructions": 149,
+      "modeled_object_comparisons": 3
+    },
+    {
+      "case": "pn-side1-known-absent-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": -22,
+      "remapped_code": -22,
+      "instructions": 143,
+      "modeled_object_comparisons": 2
+    },
+    {
+      "case": "pn-side1-both-absent-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side0-different-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": -24,
+      "remapped_code": -25,
+      "instructions": 175,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side0-scanned-absent-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": -26,
+      "remapped_code": -27,
+      "instructions": 167,
+      "modeled_object_comparisons": 3
+    },
+    {
+      "case": "username-side0-known-absent-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": -28,
+      "remapped_code": -28,
+      "instructions": 167,
+      "modeled_object_comparisons": 3
+    },
+    {
+      "case": "username-side0-both-absent-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side1-different-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": -29,
+      "remapped_code": -30,
+      "instructions": 202,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "username-side1-scanned-absent-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": -31,
+      "remapped_code": -32,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side1-known-absent-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": -33,
+      "remapped_code": -33,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side1-both-absent-v1-options1",
+      "version": 1,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "baseline-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "key-side0-selectedFalse-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "key-side0-selectedTrue-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": -14,
+      "remapped_code": -14,
+      "instructions": 77,
+      "modeled_object_comparisons": 1
+    },
+    {
+      "case": "key-side1-selectedFalse-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "key-side1-selectedTrue-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": -15,
+      "remapped_code": -15,
+      "instructions": 83,
+      "modeled_object_comparisons": 1
+    },
+    {
+      "case": "remote-lid-different-pn-equal-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "remote-both-identifiers-different-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": -12,
+      "remapped_code": -11,
+      "instructions": 78,
+      "modeled_object_comparisons": 2
+    },
+    {
+      "case": "core-does-not-check-local-lid-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "pn-side0-different-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": -17,
+      "remapped_code": -16,
+      "instructions": 117,
+      "modeled_object_comparisons": 2
+    },
+    {
+      "case": "pn-side0-scanned-absent-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 221,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "pn-side0-known-absent-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": -17,
+      "remapped_code": -16,
+      "instructions": 111,
+      "modeled_object_comparisons": 1
+    },
+    {
+      "case": "pn-side0-both-absent-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 214,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "pn-side1-different-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": -19,
+      "remapped_code": -18,
+      "instructions": 155,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "pn-side1-scanned-absent-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": -21,
+      "remapped_code": -20,
+      "instructions": 149,
+      "modeled_object_comparisons": 3
+    },
+    {
+      "case": "pn-side1-known-absent-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": -22,
+      "remapped_code": -22,
+      "instructions": 143,
+      "modeled_object_comparisons": 2
+    },
+    {
+      "case": "pn-side1-both-absent-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 214,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side0-different-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": -24,
+      "remapped_code": -25,
+      "instructions": 175,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side0-scanned-absent-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": -26,
+      "remapped_code": -27,
+      "instructions": 167,
+      "modeled_object_comparisons": 3
+    },
+    {
+      "case": "username-side0-known-absent-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": -28,
+      "remapped_code": -28,
+      "instructions": 167,
+      "modeled_object_comparisons": 3
+    },
+    {
+      "case": "username-side0-both-absent-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 214,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side1-different-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": -29,
+      "remapped_code": -30,
+      "instructions": 202,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "username-side1-scanned-absent-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": -31,
+      "remapped_code": -32,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side1-known-absent-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": -33,
+      "remapped_code": -33,
+      "instructions": 194,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "username-side1-both-absent-v1-options3",
+      "version": 1,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 214,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "hosted-known-1,-1-scanned-1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned-1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned-1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned0,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned0,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned0,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned-1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned-1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned-1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned0,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned0,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned0,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned-1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned-1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned-1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned0,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned0,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned0,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned-1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned-1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned-1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned0,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned0,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned0,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned-1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned-1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned-1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned0,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned0,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned0,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned-1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned-1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned-1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned0,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned0,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned0,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned-1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned-1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned-1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned0,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned0,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned0,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned-1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned-1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned-1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned0,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned0,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned0,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned-1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned-1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned-1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned0,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned0,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned0,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned1,-1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned1,0-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned1,1-options1",
+      "version": 0,
+      "options": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 203,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned-1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 225,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned-1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 227,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned-1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 227,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned0,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned0,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned0,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,-1-scanned1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned-1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 225,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned-1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 227,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned-1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 227,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned0,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned0,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned0,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,0-scanned1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned-1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 225,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned-1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 227,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned-1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 227,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned0,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned0,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned0,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known-1,1-scanned1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned-1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 225,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned-1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 222,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned-1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 222,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned0,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned0,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned0,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,-1-scanned1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned-1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 225,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned-1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 222,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned-1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 222,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned0,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned0,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned0,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,0-scanned1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned-1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 225,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned-1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 222,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned-1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 222,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned0,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned0,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned0,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known0,1-scanned1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned-1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 225,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned-1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 222,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned-1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 222,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned0,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned0,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned0,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,-1-scanned1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned-1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 225,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned-1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 222,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned-1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 222,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned0,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned0,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned0,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,0-scanned1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned-1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 225,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned-1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 222,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned-1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 222,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned0,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned0,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned0,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 218,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned1,-1-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned1,0-options3",
+      "version": 0,
+      "options": 3,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "hosted-known1,1-scanned1,1-options3",
+      "version": 0,
+      "options": 3,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "internal-username-bit-off-0",
+      "version": 0,
+      "options": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 149,
+      "modeled_object_comparisons": 3
+    },
+    {
+      "case": "internal-username-bit-off-2",
+      "version": 0,
+      "options": 2,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 169,
+      "modeled_object_comparisons": 3
+    },
+    {
+      "case": "remote-key-before-local-pn",
+      "version": 0,
+      "options": 3,
+      "code": -15,
+      "remapped_code": -15,
+      "instructions": 83,
+      "modeled_object_comparisons": 1
+    },
+    {
+      "case": "remote-pn-before-local-username",
+      "version": 0,
+      "options": 3,
+      "code": -19,
+      "remapped_code": -18,
+      "instructions": 155,
+      "modeled_object_comparisons": 4
+    },
+    {
+      "case": "remote-username-before-local-hosted",
+      "version": 0,
+      "options": 3,
+      "code": -29,
+      "remapped_code": -30,
+      "instructions": 202,
+      "modeled_object_comparisons": 5
+    },
+    {
+      "case": "invalid-scanned-local-hosted-invariant",
+      "native_abort": true
+    }
+  ]
+}

@@ -441,3 +441,18 @@ native extraction matched all 424 converter/helper/core instructions in the
 scoped snapshot. CLI reference regeneration/test passed; repository hygiene
 passed with 344 local links and staged whitespace checks passed. This changes
 research/docs only; native execution and live account validation are not claimed.
+
+V3 native execution follow-up (offline, 2026-10-07): 264 synthetic cases now
+execute the actual V3 core/optional-value/PN-or-LID helpers and remapper,
+validating the traced presence asymmetry, option bits, hosted omission and
+error ordering. Ten V3/shared-V4 tests passed, preserving existing V4
+observations. Generic object equality and constructors remain modeled;
+JID/equality semantics, decoder/orientation integration and runtime V3 binary
+comparison remain open. No account or network state changed.
+[V3 corpus](docs/protocol/safety-number.md#executed-v3-core-and-remapper-corpus-2026-10-07).
+
+Final validation: CLI reference regeneration/test and OpenAPI library-symbol
+check passed. Repository hygiene checked 349 local links; staged whitespace
+checks passed. All ten V3/shared-V4 tests passed again after restricting hooks
+to the selected scheme. Rust runtime code was unchanged; no live validation
+is claimed for this offline research-tool change.

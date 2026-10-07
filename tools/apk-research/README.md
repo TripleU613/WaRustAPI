@@ -375,3 +375,25 @@ resolve selector 19 and options 1/3 using existing apk-smali and llvm-objdump.
 JNI records require `.rela.dyn` addends; raw pointer slots are zero. The V3
 converter/orientation/core differ from V4. No V3 execution checker or binary
 comparison capability is implemented by this static follow-up.
+
+### Execute the native V3 comparison core
+
+`native_v3_comparison_check.py --library PATH` requires the pinned 37.71
+reconstructed main library and runs 264 built-in synthetic cases through the
+actual core, identity/optional-value/PN-presence helpers and remapper. It
+reports deterministic codes and instruction counts; see
+[observations](../../docs/protocol/fingerprint-native-v3-comparison-cases.json)
+and [scope/unknowns](../../docs/protocol/safety-number.md#executed-v3-core-and-remapper-corpus-2026-10-07).
+
+```sh
+<python-env> tools/apk-research/native_v3_comparison_check.py --library <libwhatsapp.so>
+TELEWHATSAPP_FINGERPRINT_LIBRARY=<libwhatsapp.so> <python-env> -m unittest discover -s tools/apk-research -p 'test_native_v3_comparison_check.py'
+```
+
+Generic MCFEqual and getters/key equality are modeled. Native JID construction,
+protobuf decode, orientation wrapper, JNI and human action do not run. No
+arbitrary/account input is accepted. Missing/wrong builds, unmodeled branches
+and execution-budget exhaustion refuse before JSON output. Per core/remap call:
+ten seconds/one million instructions; maximum 227 instructions observed.
+The shared V4 runner retains its existing default/output and explicitly refuses
+using V4's string mode for V3. This is offline research, not runtime V3 support.

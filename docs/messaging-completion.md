@@ -810,3 +810,9 @@ PN-or-LID orientation, converter/core errors and remapping. V4 rules cannot
 substitute for this path. Native corpus execution, JID/equality semantics,
 authenticated inputs and live peer comparison remain open.
 See [V3 branches](protocol/safety-number.md#native-v3-scan-dispatch-and-comparison-branches-2026-10-07).
+
+2026-10-07 V3 core validation: 264 synthetic native cases validate key versions,
+PN/username presence, options 1/3, hosted-state combinations and status
+precedence/remapping. Generic MCFEqual and JID construction remain modeled;
+full binary comparison, current authenticated inputs and human verification
+are still unfinished. See [executed corpus](protocol/safety-number.md#executed-v3-core-and-remapper-corpus-2026-10-07).

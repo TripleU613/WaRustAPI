@@ -17,20 +17,25 @@ class NativeAbort(ValueError):
     """The native routine reached its explicit abort branch."""
 
 
-def execute(library, known, scanned, version, remap=False, string_libraries=None):
+def execute(library, known, scanned, version, remap=False, string_libraries=None,
+            scheme=4, options=3):
     """Actual 37.71 core/helper/remap instructions; modeled object primitives.
 
+    The internal scheme=3 mode executes V3 core/optional-value/orientation
+    helpers/remapper, modeling generic MCFEqual and getter primitives.
     No protobuf parsing, orientation wrapper, JNI, account or human action
-    executes. By default host ASCII lowercasing models string comparison. With
+    executes. For V4, host ASCII lowercasing models string comparison. With
     pinned string_libraries, actual merged MCFStringCompare and public Bionic
     strncasecmp execute over synthetic MCFString objects. Only built-in cases
     invoke this; the public libc fixture is not an APK-bundled Android runtime.
     """
+    if scheme not in (3, 4) or (scheme == 3 and string_libraries):
+        raise ValueError('unsupported synthetic comparison scheme/string mode')
     from elftools.elf.elffile import ELFFile
     from unicorn import Uc, UcError, UC_ARCH_ARM64, UC_MODE_ARM, UC_HOOK_CODE
     from unicorn.arm64_const import (
         UC_ARM64_REG_X0, UC_ARM64_REG_X1, UC_ARM64_REG_X2,
-        UC_ARM64_REG_X3, UC_ARM64_REG_LR, UC_ARM64_REG_PC, UC_ARM64_REG_SP,
+        UC_ARM64_REG_X3, UC_ARM64_REG_X4, UC_ARM64_REG_LR, UC_ARM64_REG_PC, UC_ARM64_REG_SP,
         UC_ARM64_REG_TPIDR_EL0,
     )
     guest = Uc(UC_ARCH_ARM64, UC_MODE_ARM)
@@ -38,6 +43,8 @@ def execute(library, known, scanned, version, remap=False, string_libraries=None
     # status-table page. Each modeled target must be mapped for Unicorn fetch.
     pages = (0x715000, 0x302000, 0x714000, 0x702000, 0x6E1000,
              0xCE8000, 0xCE6000, 0xCE9000)
+    if scheme == 3:
+        pages += (0x6C1000,)  # PN getter target must be mapped before hook fetch.
     with library.open('rb') as stream:
         elf = ELFFile(stream)
         if elf['e_machine'] != 'EM_AARCH64':
@@ -87,6 +94,7 @@ def execute(library, known, scanned, version, remap=False, string_libraries=None
     strings = {}
     instructions = 0
     comparisons = 0
+    object_comparisons = 0
 
     def pointer(value):
         if value is None:
@@ -106,34 +114,46 @@ def execute(library, known, scanned, version, remap=False, string_libraries=None
         return token
 
     def hook(cpu, address, size, user_data):
-        nonlocal instructions, comparisons
+        nonlocal instructions, comparisons, object_comparisons
         instructions += 1
         # Execute the entire core plus PN/username helper instructions.
-        if 0x7152FC <= address < 0x715688:
+        if scheme == 3 and (0x71401C <= address < 0x714358
+                            or 0x714408 <= address < 0x7144A0):
+            return
+        if scheme == 4 and 0x7152FC <= address < 0x715688:
             return
         # Executing this separately establishes its exact table lookup.
-        if remap and 0x7152B8 <= address < 0x7152FC:
+        if scheme == 4 and remap and 0x7152B8 <= address < 0x7152FC:
             return
         if string_libraries and (0x538A50 <= address < 0x538C34
                                  or 0x64E88 <= address < 0x64EC8):
             return
         first = cpu.reg_read(UC_ARM64_REG_X0)
         second = cpu.reg_read(UC_ARM64_REG_X1)
-        if address == 0x715264:  # modeled LID equal getter helper
+        if scheme == 4 and address == 0x715264:  # modeled LID equal getter helper
             result = int(params[first]['lid'] == params[second]['lid'])
         elif address in (0x714358, 0x7143B0):  # modeled data getters/equality
             field = 'public' if address == 0x714358 else 'hash'
             result = int(params[first][field] == params[second][field])
+            if scheme == 3 and (params[first][field] is None or params[second][field] is None):
+                result = 0
         elif address in (0x702A74, 0x6E1814):
-            field = 'username' if address == 0x702A74 else 'pn'
+            field = 'username' if address == 0x702A74 else ('lid' if scheme == 3 else 'pn')
             result = pointer(params[first][field])
+        elif scheme == 3 and address == 0x6C1E4C:
+            result = pointer(params[first]['pn'])
+        elif scheme == 3 and address == 0xCE9150:
+            # V3 invokes generic MCFEqual for PN, retained LID and username.
+            # Equality of synthetic byte tokens is modeled, not native JID semantics.
+            object_comparisons += 1
+            result = int(first != 0 and second != 0 and strings[first] == strings[second])
         elif address == 0x702AB4:
             result = params[first]['hosted'] & 0xFFFFFFFF
-        elif address == 0xCE8E90:  # MCFASCIIStringEqual, PN exact bytes
+        elif scheme == 4 and address == 0xCE8E90:  # MCFASCIIStringEqual, PN exact bytes
             result = int(strings[first] == strings[second])
-        elif address == 0xCE8970:  # synthetic ASCIIString->MCFString
+        elif scheme == 4 and address == 0xCE8970:  # synthetic ASCIIString->MCFString
             result = first
-        elif address == 0xCE9990:  # MCFStringCompare flag 1
+        elif scheme == 4 and address == 0xCE9990:  # MCFStringCompare flag 1
             if cpu.reg_read(UC_ARM64_REG_X2) != 1:
                 raise ValueError('unexpected string comparison flags')
             comparisons += 1
@@ -155,6 +175,8 @@ def execute(library, known, scanned, version, remap=False, string_libraries=None
     guest.reg_write(UC_ARM64_REG_X1, 0x10000400)
     guest.reg_write(UC_ARM64_REG_X2, 0x10000500)
     guest.reg_write(UC_ARM64_REG_X3, version)
+    if scheme == 3:
+        guest.reg_write(UC_ARM64_REG_X4, options)
     guest.reg_write(UC_ARM64_REG_LR, RETURN)
 
     def run(entry):
@@ -166,11 +188,14 @@ def execute(library, known, scanned, version, remap=False, string_libraries=None
             raise ValueError('comparison budget exhausted before return')
         return struct.unpack('<i', struct.pack('<I', guest.reg_read(UC_ARM64_REG_X0) & 0xFFFFFFFF))[0]
 
-    code = run(0x7152FC)
+    code = run(0x7140FC if scheme == 3 else 0x7152FC)
     mapped = None
     if remap:
         guest.reg_write(UC_ARM64_REG_LR, RETURN)
-        mapped = run(0x7152B8)
+        mapped = run(0x7140B8 if scheme == 3 else 0x7152B8)
+    if scheme == 3:
+        return {'code': code, 'remapped_code': mapped, 'instructions': instructions,
+                'modeled_object_comparisons': object_comparisons}
     return {'code':code, 'remapped_code':mapped, 'instructions':instructions,
             ('native_string_comparisons' if string_libraries else 'modeled_string_comparisons'):comparisons}
 

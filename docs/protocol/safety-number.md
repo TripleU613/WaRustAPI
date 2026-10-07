@@ -1892,3 +1892,58 @@ native extraction matched all 424 converter/helper/core instructions in the
 scoped snapshot. CLI reference regeneration/test passed; repository hygiene
 passed with 344 local links and staged whitespace checks passed. This changes
 research/docs only; native execution and live account validation are not claimed.
+
+## Executed V3 core and remapper corpus (2026-10-07)
+
+**Observed/offline native execution**, same APK 37.71 and reconstructed
+`libwhatsapp.so` hash as the preceding V3 trace: the new
+`tools/apk-research/native_v3_comparison_check.py --library PATH` runs **264**
+built-in synthetic cases. [Committed native observations](fingerprint-native-v3-comparison-cases.json)
+retain exact results and instruction/model-call counts. It accepts no account
+or arbitrary scanned inputs. The shared native runner retains its V4 default;
+V3 executes actual instructions at core `0x7140fc..0x714358`, identity helper
+`0x71401c`, optional-value helper `0x714450`, PN-presence mapper `0x714408`
+and result remapper `0x7140b8` over table `0x302370`.
+
+Coverage includes key selection for versions 0/1, UI options 1/3, both sides'
+PN/username differences and presence combinations, remote PN-or-LID matching,
+local-orientation omission from this core, and explicit error precedence.
+All **81** valid known/scanned hosted combinations execute for each UI option.
+Two internal options 0/2 cases establish the username bit can be disabled in
+this core; the APK UI caller passes 1/3, so these are not available UI settings.
+One invalid scanned-local hosted integer reaches the explicit native abort;
+real wrapper conversion rejects unknown enums first. The largest non-abort
+case executes **227 instructions**, below the per-core/remap limit of one
+million instructions / ten seconds. Each call must return to its designated
+return PC. Wrong-build/missing-file/unmodeled-branch/budget failures produce
+no partial JSON.
+
+**Limits / unknown:** this executes native control flow over modeled getters,
+key equality and generic `MCFEqual`, whose synthetic byte tokens model equal
+versus unequal objects. It does not prove case sensitivity, real LID alias or
+JID class equality, stable-LID normalization, constructor acceptance or
+pointer ownership. The decoder, scanned-side converter, orientation wrapper,
+JNI and verification action do not execute. The V4 runner's actual merged/
+Bionic case-folding mode is explicitly refused for V3, since substituting it
+would conceal the untraced generic-equality dependency. Runtime V3 binary
+comparison remains unimplemented; current account inputs remain unknown.
+
+The initial execution failed with an unmapped fetch before the modeled PN
+getter at `0x6c1e4c`; the runner now maps its file-backed page in V3 mode.
+This was a research-harness mapping omission, not an APK/protocol refusal.
+Expectations come from the literal native branches and table in the preceding
+static evidence, not from a client comparison port.
+
+Validation: all **10** V3/shared-V4 tooling tests passed with main, merged and
+public Bionic fixtures configured. V3's rerun exactly matched all 264 committed
+observations. The existing 115 V4 core statuses/counts and 268 native ASCII
+string cases remained unchanged, including the two V4 invariant aborts.
+Missing/wrong-build refusals had empty stdout; unsupported shared-runner mode
+and V3/V4 string-mode mixing refused before emulation. No saved account was
+opened or changed and no network message was sent.
+
+Final validation: CLI reference regeneration/test and OpenAPI library-symbol
+check passed. Repository hygiene checked 349 local links; staged whitespace
+checks passed. All ten V3/shared-V4 tests passed again after restricting hooks
+to the selected scheme. Rust runtime code was unchanged; no live validation
+is claimed for this offline research-tool change.
