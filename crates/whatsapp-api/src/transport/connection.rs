@@ -1090,7 +1090,9 @@ mod tests {
 
             let mut fake = start(&store, false, None);
             fake.activate().await;
-            fake.deliver(failed).await;
+            let mut alternate_from = super::super::receipts::jid(&failed, "from").unwrap();
+            alternate_from.kind = crate::model::jid::JidKind::AgentDevice;
+            fake.deliver(failed.attr("from", alternate_from)).await;
             // Following receipt proves the loop continued after the failed
             // redelivery, without emitting retry or delivery ACK for that message.
             fake.deliver(Node::new("receipt").attr("from", peer()).attr("id", "NEXT"))

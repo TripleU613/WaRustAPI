@@ -1160,3 +1160,15 @@ redacted. APK Message field 2 is existing schema evidence; this private marker
 is a local atomicity fix, and APK internal duplicate policy is unknown. No
 historical marker synthesis or ratchet rewind; fresh live control redelivery
 remains unverified. [Evidence and regression](messaging-transport.md#durable-sender-key-only-group-controls-2026-10-07).
+
+
+Retry/ACK encoding identity correction (2026-10-07): a reproduced second-retry
+reservation caused only by JidKind differences is fixed. Canonical logical
+selectors preserve user/server/agent/device and probe all historical kind keys
+in the same transaction, retaining pending/unknown/refused/acknowledged records
+and original wire. ACKs ignore encoding kind but keep exact logical routes.
+Independent historical-hash, reopen/state-preservation, foreign-route ACK and
+actual receive-loop cut/reconnect tests cover the correction. APK 37.71 Cp2.A05
+is wire ACK context; APK duplicate/retry-limit policy remains unknown. Historical
+duplicate rows are not consolidated; live encoding changes remain unverified.
+[Evidence](messaging-transport.md#retry-reservation-identity-across-jid-encodings-2026-10-07).

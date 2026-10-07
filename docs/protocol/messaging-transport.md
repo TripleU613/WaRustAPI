@@ -1327,3 +1327,58 @@ window after protocol queue preflight. Clean exit, no added query/chat intent,
 and peer/device/action/outbox/receipt inspections unchanged. Private evidence:
 `lab/releases/skdm-control-live/active.json`. No fresh SKDM-only control or its
 redelivery was established; this checks existing receive compatibility only.
+
+
+### Retry reservation identity across JID encodings (2026-10-07)
+
+**Observed / reproduced local bug:** the retry selector serialized the entire
+Jid tuple, including `kind` (wire encoding). A regression changed only a saved
+sender's Plain/AgentDevice representation after an uncertain reservation and
+obtained **1** new retry instead of **0**. The peer, server, agent, device and
+message ID were unchanged. Receipt ACK matching also compared encoding kind,
+so equivalent representations could leave a valid acknowledgement unmatched.
+
+**Implemented local correction:** logical comparisons retain **user, server,
+agent and device**, while ignoring only `JidKind`. Never use `to_non_ad` here:
+that would merge distinct devices. New retry selectors retain the predecessor's
+JSON tuple spelling with canonical Plain kind; ordinary historical Plain
+selectors therefore retain their spelling. Before reserving, the same transaction
+probes every predecessor enum-kind selector (at most 16, or 4 without a participant).
+Any existing row blocks another reservation, including pending, outcome_unknown,
+refused and acknowledged. No row is deleted, rewritten, renamed or assigned a
+new outcome; original request IDs, wire and waits remain intact. Outbound retry
+encoding still uses the original validated input route, not the lookup-normalized
+JID. Enum-kind probing does not establish that all those formats are used by the
+APK or broaden accepted server families.
+
+ACK matching now compares the same logical address fields for destination and
+any named participant. Existing class/type/message ID, recipient/edit exclusions
+and participant-presence policy are unchanged; a different device, agent or
+server still cannot settle the receipt. This applies to the shared receipt queue,
+not only retries. Previously created duplicate historical rows are **not** merged
+or given invented ACK outcomes; retrospective reconciliation remains unknown.
+
+**Evidence boundary:** observed handset retry construction from 2026-09-24 and
+APK **2.26.37.71 Cp2.A05** ACK construction remain the wire substrate. The APK's
+internal duplicate selector and retry limits remain **unknown**. This corrects
+Rust model/guard behavior, not a new APK-derived wire attribute, count or policy.
+
+**Offline tests:** the original regression fails before the fix and passes after.
+An independent Python hashlib fixture pins the a1d4c05 historical JSON selector
+for a synthetic group AD/0 + LID AD/3 + message ID. Across store reopen and all
+four saved statuses, all 16 kind combinations return zero with byte-identical
+protocol checkpoint records; device 4 remains a separate request. ACK tests
+refuse foreign device/agent/server and accept encoding-only differences. The
+actual direct/group receive-loop write-cut regression changes encoding on the
+next epoch's redelivery and still emits no second retry or delivery ACK, while
+continuing to handle later receipts.
+
+**CLI/API:** `receipts` exposes the original outcomes and selectors; no new
+command/flag/HTTP route exists. `listen` and comparison receive share this guard.
+No new live retry is requested merely to test it. **Unknown live:** an actual
+encoding-altered retry/redelivery or ACK from the server; saved-state inspection
+cannot prove that branch occurred.
+
+**Validation:** 671 workspace/all-feature tests, 24 default CLI tests, strict
+Clippy, warning-free Rustdoc and regenerated CLI/API checks passed. No live
+retry was manufactured, settled request replayed or account identity changed.

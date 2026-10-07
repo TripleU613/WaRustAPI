@@ -1542,3 +1542,20 @@ Validation of SKDM-only control markers: 669 workspace/all-feature tests, 24
 default CLI tests, strict Clippy, warning-free Rustdoc and CLI/API checks passed.
 A 20-second receive-only rebuilt-client check left protocol inspection unchanged;
 no fresh control/redelivery was observed, so that live branch remains unverified.
+
+
+Retry/ACK encoding identity correction (2026-10-07): a reproduced second-retry
+reservation caused only by JidKind differences is fixed. Canonical logical
+selectors preserve user/server/agent/device and probe all historical kind keys
+in the same transaction, retaining pending/unknown/refused/acknowledged records
+and original wire. ACKs ignore encoding kind but keep exact logical routes.
+Independent historical-hash, reopen/state-preservation, foreign-route ACK and
+actual receive-loop cut/reconnect tests cover the correction. APK 37.71 Cp2.A05
+is wire ACK context; APK duplicate/retry-limit policy remains unknown. Historical
+duplicate rows are not consolidated; live encoding changes remain unverified.
+[Evidence](docs/protocol/messaging-transport.md#retry-reservation-identity-across-jid-encodings-2026-10-07).
+
+Retry encoding validation: 671 workspace/all-feature tests, 24 default CLI
+tests, strict Clippy, warning-free Rustdoc and regenerated CLI/API checks passed.
+No live retry was manufactured or settled request replayed; actual server
+encoding-altered redelivery/ACK remains unverified.

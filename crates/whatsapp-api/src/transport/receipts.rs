@@ -19,6 +19,23 @@ fn decode(bytes: &[u8]) -> Result<Node> {
     .decode_node()?)
 }
 
+// Encoding kind is not a routing identity. Preserve user/server/agent/device;
+// never use to_non_ad here, which would merge different devices.
+fn logical_address(mut jid: Jid) -> Jid {
+    jid.kind = crate::model::jid::JidKind::Plain;
+    jid
+}
+
+fn retry_selector(chat: &Jid, participant: &Option<Jid>, id: &str) -> Result<String> {
+    // Keep the predecessor JSON tuple spelling for historical lookup.
+    let route = serde_json::to_vec(&(chat, participant, id))
+        .map_err(|_| Error::invalid("receipt", "invalid retry routing"))?;
+    Ok(format!(
+        "receipt-outbox:{}:retry",
+        hex::encode(Sha256::digest(route))
+    ))
+}
+
 /// Record successful display of the consumed image and durably queue `played`.
 /// APK SendPlayedReceiptJobV2.A0G -> LX/0y0 (0x0c1e) -> LX/Cns.A09.
 /// No action for merely downloaded media or historical unknown viewer outcomes.
@@ -293,14 +310,30 @@ pub fn queue_retry_for_incoming(
         .get_attr("id")
         .and_then(|v| v.as_text())
         .ok_or_else(|| Error::invalid("receipt", "retry requires a message id"))?;
-    // Encode the routing tuple without ciphertext or timestamps: redelivery
-    // with changed bytes is still the same message and must not request again.
-    let route = serde_json::to_vec(&(&chat, &participant, id))
-        .map_err(|_| Error::invalid("receipt", "invalid retry routing"))?;
-    let key = format!(
-        "receipt-outbox:{}:retry",
-        hex::encode(Sha256::digest(route))
-    );
+    let key = retry_selector(
+        &logical_address(chat.clone()),
+        &participant.clone().map(logical_address),
+        id,
+    )?;
+    // The old selector serialized JidKind. Probe every historical enum spelling
+    // inside the same transaction before adding a canonical reservation. Keep
+    // old unknown/refused/acknowledged rows and original wire untouched.
+    use crate::model::jid::JidKind::{AgentDevice, Facebook, Interop, Plain};
+    let mut historical = Vec::with_capacity(16);
+    for chat_kind in [Plain, AgentDevice, Interop, Facebook] {
+        let mut old_chat = chat.clone();
+        old_chat.kind = chat_kind;
+        for participant_kind in [Plain, AgentDevice, Interop, Facebook] {
+            let mut old_participant = participant.clone();
+            if let Some(participant) = &mut old_participant {
+                participant.kind = participant_kind;
+            }
+            let candidate = retry_selector(&old_chat, &old_participant, id)?;
+            if !historical.contains(&candidate) {
+                historical.push(candidate);
+            }
+        }
+    }
     let retry = super::messaging::retry_receipt(
         &chat,
         participant.as_ref(),
@@ -312,11 +345,13 @@ pub fn queue_retry_for_incoming(
     let wire = crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
         .encode(&retry)?;
     store.write(|tx| {
-        if tx
-            .get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1)?
-            .is_some()
-        {
-            return Ok(0);
+        for candidate in &historical {
+            if tx
+                .get_json::<serde_json::Value>(Table::Checkpoints, candidate.as_bytes(), 1)?
+                .is_some()
+            {
+                return Ok(0);
+            }
         }
         tx.put_json(
             Table::Checkpoints,
@@ -467,10 +502,12 @@ pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
                 if sent.get_attr("id") != node.get_attr("id")
                     || sent.get_attr("type") != node.get_attr("type")
                     || jid(&sent, "to").is_none()
-                    || jid(&sent, "to") != jid(node, "from")
+                    || jid(&sent, "to").map(logical_address)
+                        != jid(node, "from").map(logical_address)
                     || (node.get_attr("participant").is_some()
                         && (jid(&sent, "participant").is_none()
-                            || jid(&sent, "participant") != jid(node, "participant")))
+                            || jid(&sent, "participant").map(logical_address)
+                                != jid(node, "participant").map(logical_address)))
                 {
                     continue;
                 }
@@ -742,6 +779,14 @@ mod tests {
             0
         );
         assert!(reserve_pending(&store).unwrap().is_empty());
+        let mut alternate = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        alternate.kind = crate::model::jid::JidKind::AgentDevice;
+        assert_eq!(
+            queue_retry_for_incoming(&store, &account, &incoming.clone().attr("from", alternate))
+                .unwrap(),
+            0,
+            "wire encoding changes must not reserve a second retry"
+        );
         let ack = Node::new("ack")
             .attr("class", "receipt")
             .attr("type", "retry")
@@ -764,6 +809,165 @@ mod tests {
             )
             .unwrap(),
             1
+        );
+    }
+
+    #[test]
+    fn historical_retry_encoding_selectors_preserve_all_saved_outcomes() {
+        use crate::model::jid::JidKind;
+        // Independent Python hashlib fixture over a1d4c05's serde JSON tuple:
+        // group AgentDevice/0 + LID AgentDevice/3 + LEGACY-GROUP. Synthetic IDs.
+        const LEGACY: &str =
+            "receipt-outbox:d6ec9bc1c5e86f1775f25cf89eb3344ab4f2c63a4318533e12d3a7995a15a5c8:retry";
+        for status in [
+            "pending",
+            "outcome_unknown",
+            "refused",
+            "server_acknowledged",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("legacy.redb");
+            let store = open(&path, true);
+            let mut chat = Jid::parse("120363000000000001@g.us").unwrap();
+            chat.kind = JidKind::AgentDevice;
+            let member = Jid::parse("123456:3@lid").unwrap();
+            assert_eq!(
+                retry_selector(&chat, &Some(member.clone()), "LEGACY-GROUP").unwrap(),
+                LEGACY
+            );
+            let retry = super::super::messaging::retry_receipt(
+                &chat,
+                Some(&member),
+                "LEGACY-GROUP",
+                1,
+                31,
+                1,
+            )
+            .unwrap();
+            let wire = crate::binary::Encoder::new(
+                crate::binary::TokenDictionary::comparison_2_26_37_71(),
+            )
+            .encode(&retry)
+            .unwrap();
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        LEGACY.as_bytes(),
+                        1,
+                        &serde_json::json!({"status":status,"wire":wire}),
+                    )
+                })
+                .unwrap();
+            drop(store);
+            let store = open(&path, false);
+            let before = store.read(|tx| tx.scan(Table::Checkpoints, 1, 20)).unwrap();
+            let account = crate::session::AccountRecord {
+                signal_registration_id: Some(31),
+                ..Default::default()
+            };
+            for chat_kind in [
+                JidKind::Plain,
+                JidKind::AgentDevice,
+                JidKind::Interop,
+                JidKind::Facebook,
+            ] {
+                for member_kind in [
+                    JidKind::Plain,
+                    JidKind::AgentDevice,
+                    JidKind::Interop,
+                    JidKind::Facebook,
+                ] {
+                    let mut c = chat.clone();
+                    c.kind = chat_kind;
+                    let mut m = member.clone();
+                    m.kind = member_kind;
+                    let node = Node::new("message")
+                        .attr("from", c)
+                        .attr("participant", m)
+                        .attr("id", "LEGACY-GROUP")
+                        .attr("t", "changed");
+                    assert_eq!(
+                        queue_retry_for_incoming(&store, &account, &node).unwrap(),
+                        0
+                    );
+                }
+            }
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Checkpoints, 1, 20)).unwrap(),
+                before
+            );
+            let other = Node::new("message")
+                .attr("from", chat)
+                .attr("participant", member.with_device(4))
+                .attr("id", "LEGACY-GROUP");
+            assert_eq!(
+                queue_retry_for_incoming(&store, &account, &other).unwrap(),
+                1,
+                "different device must remain separate"
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        LEGACY.as_bytes(),
+                        1
+                    ))
+                    .unwrap()
+                    .unwrap()["status"],
+                status
+            );
+        }
+    }
+
+    #[test]
+    fn receipt_ack_ignores_encoding_but_preserves_agent_device_and_server() {
+        use crate::model::jid::JidKind;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("ack-kind.redb"), true);
+        let account = crate::session::AccountRecord {
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        let mut chat = Jid::parse("120363000000000001@g.us").unwrap();
+        chat.kind = JidKind::AgentDevice;
+        let member = Jid::parse("123456:3@lid").unwrap();
+        let incoming = Node::new("message")
+            .attr("from", chat.clone())
+            .attr("participant", member.clone())
+            .attr("id", "ACK-KIND");
+        assert_eq!(
+            queue_retry_for_incoming(&store, &account, &incoming).unwrap(),
+            1
+        );
+        assert_eq!(reserve_pending(&store).unwrap().len(), 1);
+        let ack = Node::new("ack")
+            .attr("class", "receipt")
+            .attr("type", "retry")
+            .attr("from", chat.clone())
+            .attr("participant", member.clone())
+            .attr("id", "ACK-KIND");
+        let mut other_agent = member.clone();
+        other_agent.agent = 1;
+        let mut other_server = member.clone();
+        other_server.server = Server::User;
+        for wrong in [member.with_device(4), other_agent, other_server] {
+            assert!(!record_ack(&store, &ack.clone().attr("participant", wrong)).unwrap());
+        }
+        chat.kind = JidKind::Facebook;
+        let mut equivalent = member;
+        equivalent.kind = JidKind::Plain;
+        assert!(
+            record_ack(
+                &store,
+                &ack.attr("from", chat).attr("participant", equivalent)
+            )
+            .unwrap()
+        );
+        assert_eq!(outcomes(&store).unwrap()[0].status, "server_acknowledged");
+        assert_eq!(
+            queue_retry_for_incoming(&store, &account, &incoming).unwrap(),
+            0
         );
     }
 
