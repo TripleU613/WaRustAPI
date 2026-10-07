@@ -32,7 +32,10 @@ own-account changes, stale-pin rollback and uncertain sends remain blocked.
 The canonical outgoing policy remains pinned; live replacement is unverified. `peer-identity` now inspects both namespaces offline;
 the recovered direct peer has different PN/LID pins, each matching its own
 held session. Authenticated history connects the PN pin to the updated LID pin.
-A fresh outgoing directory bundle has not yet been checked.
+A 25-second directory-only live check obtained a valid signed current bundle
+matching the recovered LID pin and differing from the PN pin. Peer pin/session
+summaries stayed unchanged. One private test draft awaits authorization; no
+new chat was sent.
 
 Private state was recovered from the former checkout in the desktop Trash,
 with originals preserved. The selected profile has no eligible chat sends or
@@ -101,7 +104,7 @@ redelivered at every login.
 
 ## Offline verification
 
-506 all-feature tests (`cargo test --locked --workspace --all-features`) and
+509 all-feature tests (`cargo test --locked --workspace --all-features`) and
 212 default-feature tests (`cargo test --locked --workspace`) pass on
 2026-10-07; Clippy with `-D warnings` is clean. Rust 1.98.1 locally and in CI. Store, codec, crash
 matrix, registration state machine and transport coverage are described in

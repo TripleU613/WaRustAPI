@@ -532,6 +532,48 @@ pub(super) fn receipts_status(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
+pub(super) fn peer_keys(
+    cli: &super::Cli,
+    chat: &str,
+    show: bool,
+    refresh: bool,
+) -> Result<(), Error> {
+    let peer = whatsapp_api::model::jid::Jid::parse(chat)
+        .map_err(|_| Error::invalid("peer_keys", "invalid chat JID"))?;
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let value = if show {
+        serde_json::to_value(whatsapp_api::transport::peer_keys::inspect(&store, &peer)?)
+            .map_err(|_| Error::invalid("peer_keys", "cannot encode inspection"))?
+    } else {
+        let id = whatsapp_api::transport::peer_keys::queue(&store, &peer, refresh)?;
+        serde_json::json!({"action_id":id})
+    };
+    if !cli.json {
+        if show && value.is_null() {
+            println!("peer keys: no saved directory query; queue once with peer-keys --chat");
+        } else if show {
+            println!(
+                "peer keys: saved directory evidence; diagnostic hashes, not safety numbers; pins preserved"
+            );
+        } else {
+            println!(
+                "peer keys: queued or saved action ID; use listen to transmit queued actions once; pins preserved"
+            );
+        }
+    }
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&value)
+            .map_err(|_| Error::invalid("peer_keys", "cannot encode result"))?
+    );
+    Ok(())
+}
+
 pub(super) fn peer_identity(cli: &super::Cli, chat: &str) -> Result<(), Error> {
     let peer = whatsapp_api::model::jid::Jid::parse(chat)
         .map_err(|_| Error::invalid("peer_identity", "invalid chat JID"))?;

@@ -356,11 +356,10 @@ impl MessageRequest {
     /// The direct recipient: E.164 digits, or a full `…@s.whatsapp.net` /
     /// `…@lid` JID.
     ///
-    /// The LID form exists because a LID-addressed chat encrypts under a LID
-    /// Signal address (`LX/CPQ->A00`, **confirmed**: `useLidForEncryption` is
-    /// true exactly when `groupParticipantsManager.A0k(chat)` holds), and that
-    /// addressing form needs to be testable on its own rather than only inside
-    /// a group fan-out.
+    /// Authenticated original captures establish LID Signal addressing in this
+    /// client (docs/protocol/groups.md). The older CPQ.A00 citation is not a
+    /// 2.26.37.71 address producer: that build's method is a cached policy helper.
+    /// The LID form makes direct addressing testable independently of fan-out.
     pub fn recipient(&self) -> crate::Result<Jid> {
         if self.to.contains('@') {
             let jid = Jid::parse(&self.to)?;

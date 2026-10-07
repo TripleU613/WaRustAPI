@@ -4,7 +4,10 @@
 //! separate; an unauthenticated envelope must remain an observation.
 use crate::{
     Error, Result,
-    model::{jid::Jid, time::Timestamp},
+    model::{
+        jid::{Jid, Server},
+        time::Timestamp,
+    },
     store::{ProtocolStore, Table},
 };
 use serde::{Deserialize, Serialize};
@@ -191,82 +194,82 @@ fn pin_state(tx: &crate::store::ReadTx<'_>, peer: &Jid) -> Result<(PeerPinState,
 /// Inspect logical peer identity state without writes, queries or replacement.
 /// Store opening can change engine file bytes; this function only reads records.
 pub fn inspect_peer(store: &ProtocolStore, phone: &Jid) -> Result<PeerIdentityState> {
-    use crate::model::jid::Server;
     if phone.server != Server::User || phone.device != 0 || phone.agent != 0 {
         return Err(Error::invalid(
             "peer_identity",
             "requires a primary phone-number chat JID",
         ));
     }
-    store.read(|tx| {
-        let (phone_state, phone_pin) = pin_state(tx, phone)?;
-        let mut lids = Vec::new();
-        let mut histories: Vec<serde_json::Value> = Vec::new();
-        let mut cursor = None;
-        loop {
-            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-            if rows.is_empty() {
-                break;
-            }
-            cursor = rows.last().map(|(key, _)| key.clone());
-            for (key, value) in rows {
-                if let Some(lid) = std::str::from_utf8(&key)
-                    .ok()
-                    .and_then(|key| key.strip_prefix("authenticated-lid:"))
-                {
-                    let mapped: Jid = serde_json::from_slice(&value).map_err(|_| {
-                        Error::invalid("peer_identity", "invalid saved LID mapping")
-                    })?;
-                    if mapped.to_non_ad() != *phone {
-                        continue;
-                    }
-                    let lid = Jid::parse(lid).map_err(|_| {
-                        Error::invalid("peer_identity", "invalid saved LID address")
-                    })?;
-                    if lid.server == Server::Lid
-                        && lid.device == 0
-                        && lid.agent == 0
-                        && !lids.contains(&lid)
-                    {
-                        lids.push(lid);
-                    }
-                } else if key.starts_with(b"identity-history:") {
-                    histories.push(serde_json::from_slice(&value).map_err(|_| {
-                        Error::invalid("peer_identity", "invalid saved identity history")
-                    })?);
+    store.read(|tx| inspect_peer_in(tx, phone))
+}
+
+pub(crate) fn inspect_peer_in(
+    tx: &crate::store::ReadTx<'_>,
+    phone: &Jid,
+) -> Result<PeerIdentityState> {
+    let (phone_state, phone_pin) = pin_state(tx, phone)?;
+    let mut lids = Vec::new();
+    let mut histories: Vec<serde_json::Value> = Vec::new();
+    let mut cursor = None;
+    loop {
+        let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+        if rows.is_empty() {
+            break;
+        }
+        cursor = rows.last().map(|(key, _)| key.clone());
+        for (key, value) in rows {
+            if let Some(lid) = std::str::from_utf8(&key)
+                .ok()
+                .and_then(|key| key.strip_prefix("authenticated-lid:"))
+            {
+                let mapped: Jid = serde_json::from_slice(&value)
+                    .map_err(|_| Error::invalid("peer_identity", "invalid saved LID mapping"))?;
+                if mapped.to_non_ad() != *phone {
+                    continue;
                 }
+                let lid = Jid::parse(lid)
+                    .map_err(|_| Error::invalid("peer_identity", "invalid saved LID address"))?;
+                if lid.server == Server::Lid
+                    && lid.device == 0
+                    && lid.agent == 0
+                    && !lids.contains(&lid)
+                {
+                    lids.push(lid);
+                }
+            } else if key.starts_with(b"identity-history:") {
+                histories.push(serde_json::from_slice(&value).map_err(|_| {
+                    Error::invalid("peer_identity", "invalid saved identity history")
+                })?);
             }
         }
-        let mut linked = Vec::new();
-        for lid in lids {
-            let (state, pin) = pin_state(tx, &lid)?;
-            let pins_agree = phone_pin.as_ref().zip(pin.as_ref()).map(|(a, b)| a == b);
-            let authenticated_transition_from_phone_pin = pins_agree == Some(false)
-                && histories.iter().any(|row| {
-                    let history_peer: Option<Jid> =
-                        serde_json::from_value(row["peer"].clone()).ok();
-                    let previous: Option<Vec<u8>> =
-                        serde_json::from_value(row["previous_identity"].clone()).ok();
-                    history_peer.as_ref() == Some(&lid)
-                        && row["policy"] == "apk_authenticated"
-                        && matches!(
-                            row["authentication"].as_str(),
-                            None | Some("incoming_message")
-                        )
-                        && previous.as_ref() == phone_pin.as_ref()
-                        && row["current_fingerprint"].as_str()
-                            == state.pinned_fingerprint.as_deref()
-                });
-            linked.push(LinkedPeerIdentity {
-                state,
-                pins_agree,
-                authenticated_transition_from_phone_pin,
+    }
+    let mut linked = Vec::new();
+    for lid in lids {
+        let (state, pin) = pin_state(tx, &lid)?;
+        let pins_agree = phone_pin.as_ref().zip(pin.as_ref()).map(|(a, b)| a == b);
+        let authenticated_transition_from_phone_pin = pins_agree == Some(false)
+            && histories.iter().any(|row| {
+                let history_peer: Option<Jid> = serde_json::from_value(row["peer"].clone()).ok();
+                let previous: Option<Vec<u8>> =
+                    serde_json::from_value(row["previous_identity"].clone()).ok();
+                history_peer.as_ref() == Some(&lid)
+                    && row["policy"] == "apk_authenticated"
+                    && matches!(
+                        row["authentication"].as_str(),
+                        None | Some("incoming_message")
+                    )
+                    && previous.as_ref() == phone_pin.as_ref()
+                    && row["current_fingerprint"].as_str() == state.pinned_fingerprint.as_deref()
             });
-        }
-        Ok(PeerIdentityState {
-            phone: phone_state,
-            linked,
-        })
+        linked.push(LinkedPeerIdentity {
+            state,
+            pins_agree,
+            authenticated_transition_from_phone_pin,
+        });
+    }
+    Ok(PeerIdentityState {
+        phone: phone_state,
+        linked,
     })
 }
 

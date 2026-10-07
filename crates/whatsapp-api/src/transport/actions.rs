@@ -92,8 +92,32 @@ pub fn queue(
     label: &str,
     build: impl FnOnce(&str) -> Result<Node>,
 ) -> Result<String> {
+    // Preserve the public builder contract: callbacks may inspect/update
+    // other local state, so run them before acquiring the store's write lock.
     let id = super::messaging::new_message_id()?;
     let node = build(&id)?;
+    store.write(|tx| queue_prepared_in(tx, kind, label, id, node))
+}
+
+/// Queue atomically with a feature's durable idempotency marker.
+pub(crate) fn queue_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    kind: &str,
+    label: &str,
+    build: impl FnOnce(&str) -> Result<Node>,
+) -> Result<String> {
+    let id = super::messaging::new_message_id()?;
+    let node = build(&id)?;
+    queue_prepared_in(tx, kind, label, id, node)
+}
+
+fn queue_prepared_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    kind: &str,
+    label: &str,
+    id: String,
+    node: Node,
+) -> Result<String> {
     if node.description != "iq" || node.get_attr("id").and_then(|v| v.as_text()) != Some(&id) {
         return Err(Error::invalid(
             "action",
@@ -112,12 +136,44 @@ pub fn queue(
         error_code: None,
         error_text: None,
     };
-    store.write(|tx| tx.put_json(Table::Checkpoints, key(&id).as_bytes(), 1, &row))?;
+    tx.put_json(Table::Checkpoints, key(&id).as_bytes(), 1, &row)?;
     Ok(id)
 }
 
 fn key(id: &str) -> String {
     format!("{PREFIX}{id}")
+}
+
+/// Successful reply for validating an explicit refresh in the same transaction.
+pub(crate) fn completed_reply_in(tx: &crate::store::WriteTx<'_>, id: &str) -> Result<Option<Node>> {
+    let row: Option<Row> = tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1)?;
+    row.filter(|row| row.status == ActionStatus::Ok)
+        .and_then(|row| row.reply)
+        .map(|wire| decode(&wire))
+        .transpose()
+}
+
+/// One immutable view of an action and its authenticated saved response.
+pub(crate) fn view_in(
+    tx: &crate::store::ReadTx<'_>,
+    id: &str,
+) -> Result<Option<(ActionOutcome, Option<Node>)>> {
+    let row: Option<Row> = tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1)?;
+    let Some(row) = row else {
+        return Ok(None);
+    };
+    let reply = row.reply.map(|wire| decode(&wire)).transpose()?;
+    Ok(Some((
+        ActionOutcome {
+            id: id.to_owned(),
+            kind: row.kind,
+            label: row.label,
+            status: row.status,
+            error_code: row.error_code,
+            error_text: row.error_text,
+        },
+        reply,
+    )))
 }
 
 /// Reserve at most sixteen queued actions for one socket write, marking them
@@ -184,8 +240,14 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
             .child_nodes()
             .iter()
             .flat_map(|child| child.child_nodes())
-            .find(|child| child.get_attr("type").and_then(|v| v.as_text()) == Some("error"))
-            .and_then(|child| child.child("error"))
+            .find_map(|child| {
+                // An encrypt directory result can carry <list><user><error/>
+                // without type=error on user. Preserve that refusal too.
+                (child.description == "user"
+                    || child.get_attr("type").and_then(|v| v.as_text()) == Some("error"))
+                .then(|| child.child("error"))
+                .flatten()
+            })
             .or_else(|| node.child("error"));
         let kind = node.get_attr("type").and_then(|v| v.as_text());
         if kind == Some("result") && inner_error.is_none() {

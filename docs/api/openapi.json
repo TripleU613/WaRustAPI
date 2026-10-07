@@ -2224,6 +2224,93 @@
             "description": "Every authenticated primary LID mapped to this PN. Multiple mappings are not silently selected."
           }
         }
+      },
+      "LinkedPinMatch": {
+        "type": "object",
+        "required": [
+          "peer_ticket",
+          "pin_matches"
+        ],
+        "properties": {
+          "peer_ticket": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Hash of saved primary LID session address."
+          },
+          "pin_matches": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Null when no saved pin exists for this mapped alias."
+          }
+        }
+      },
+      "DirectoryInspection": {
+        "type": "object",
+        "required": [
+          "action_id",
+          "status",
+          "server_error_code",
+          "fingerprint",
+          "signature_valid",
+          "phone_pin_matches",
+          "linked_pin_matches"
+        ],
+        "properties": {
+          "action_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "outcome_unknown",
+              "server_refused",
+              "invalid_reply",
+              "invalid_signature",
+              "verified_bundle"
+            ],
+            "description": "Verified bundle means a saved authenticated directory response has a valid signed device key; it does not mean human verification."
+          },
+          "server_error_code": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 65535,
+            "description": "Recognized numeric outer or per-user error code, without claiming its server-internal meaning."
+          },
+          "fingerprint": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 of serialized public directory identity; not a safety number."
+          },
+          "signature_valid": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Null when the bundle cannot be checked."
+          },
+          "phone_pin_matches": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Directory identity equals the saved PN pin; null when either is missing."
+          },
+          "linked_pin_matches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkedPinMatch"
+            }
+          }
+        }
       }
     }
   },
@@ -9230,6 +9317,102 @@
         },
         "x-library": [
           "whatsapp_api::transport::identity_conflicts::inspect_peer"
+        ]
+      }
+    },
+    "/v1/diagnostics/peer-keys": {
+      "post": {
+        "tags": [
+          "Account Safety"
+        ],
+        "summary": "Queue or inspect one peer directory key query (offline)",
+        "description": "peer-keys queues a normal encrypt/key IQ on the existing once-only action queue; listen transmits it over authenticated Noise. Repeated queueing returns the original action ID locally. --show inspects the latest saved result and current PN/LID pin matches without adopting a key, deriving a session or sending a chat. --refresh is explicit and permitted only after a successful valid signed prior bundle; all old replies remain encrypted. Queued, uncertain, refused, invalid and missing prior queries cannot be refreshed. Output omits peer addresses, public key bytes and raw server error text. Fingerprints are SHA-256 diagnostics, not safety numbers or human verification. This is CLI-only; no HTTP route exists.",
+        "operationId": "peerKeys",
+        "x-cli": "whatsapp-cli peer-keys",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "name": "chat",
+            "in": "query",
+            "required": true,
+            "description": "Primary phone-number chat JID (private input, never printed in the result).",
+            "schema": {
+              "type": "string"
+            },
+            "x-secret-input": true
+          },
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          },
+          {
+            "name": "show",
+            "in": "query",
+            "description": "Inspect saved evidence without queueing. Mutually exclusive with refresh.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "refresh",
+            "in": "query",
+            "description": "Explicitly queue a new request only after verified successful prior evidence. Mutually exclusive with show.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Original action selector, saved redacted inspection, or null when no query exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "action_id"
+                      ],
+                      "properties": {
+                        "action_id": {
+                          "type": "string",
+                          "description": "Original one-shot action selector; repeated queueing reuses it."
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "$ref": "#/components/schemas/DirectoryInspection"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::peer_keys::queue",
+          "whatsapp_api::transport::peer_keys::inspect"
         ]
       }
     }

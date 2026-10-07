@@ -77,6 +77,13 @@ pub mod handshake;
 ))]
 pub mod identity_conflicts;
 #[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod peer_keys;
+
+#[cfg(all(
     feature = "experimental-registration-https",
     feature = "experimental-signal-crypto",
     feature = "experimental-noise",

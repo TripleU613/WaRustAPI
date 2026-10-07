@@ -556,3 +556,12 @@ Evidence and remaining unknowns: [peer identity](protocol/peer-identity.md#outgo
   saved reply without another key query or resetting an uncertain send.
 - [ ] Fetch/inspect the recovered peer's current directory bundle and validate
   one authorized selected send. Canonical outgoing policy remains pinned.
+
+### Live peer directory validation (2026-10-07)
+
+- [x] `peer-keys` queues/inspects a once-only directory action; atomic duplicate
+  protection, verified-only explicit refresh, refusal/signature/restart coverage.
+- [x] Current live directory signed bundle matches recovered LID and differs
+  from held PN; no chat send or pin adoption, and saved summaries stayed unchanged.
+- [ ] One new selected outgoing identity-recovery draft awaits authorization;
+  all prior acknowledged sends retain their IDs and are not repeated.

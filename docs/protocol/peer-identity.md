@@ -405,3 +405,72 @@ successful send reservation (`answered`), preserving the fetched signed-key
 material for later rechecking. Retention does not make an in-flight/uncertain
 send replayable. Selected resume preserves the original observation time and
 reply across refusal classification; no secret-bearing reply is printed.
+
+## Directory key inspection without chat sending (2026-10-07)
+
+**Confirmed (inherited comparison evidence, APK 2.26.37.70):**
+`LX/0y0.A00` `1786..193a` constructs `iq/get`, `xmlns=encrypt`,
+`key/user/jid`; an earlier live result supplied identity, signed key and an
+optional one-time key. Source/offsets are recorded in
+[messaging transport](messaging-transport.md).
+This builder attribution has not been independently re-anchored to 37.71.
+**Confirmed (APK 2.26.37.71):** `LX/CQc.A00` `0030..0064` checks the signed
+device key before session derivation; the build separation is intentional.
+
+`peer-keys --chat <primary-PN-JID>` queues one directory IQ offline through the
+existing durable action queue. The action and per-peer selector commit together;
+concurrent/restarted repeats return the same ID. A session reserves it before
+socket write, and unknown writes do not repeat. `--show` reads the saved response
+and current pins in one transaction: queued/outcome_unknown/server_refused/
+invalid_reply/invalid_signature/verified_bundle, numeric refusal code, signature
+validity, diagnostic fingerprint and every PN/LID pin match. No pin, session,
+receipt, event or chat send is written during inspection. Raw key bytes,
+contacts and server error text stay in encrypted storage. This is CLI-only.
+
+An explicit `--refresh` requires an earlier completed valid signed result;
+missing, queued, unknown, refused or invalid evidence cannot be reset. Prior
+actions/replies remain encrypted. General action reply handling now recognizes
+`list/user/error` even without `type=error` on the user, matching the already
+recognized recipient-refusal shape in `signal/direct.rs::prekey_bundle_for`.
+The fixture numeric codes 480/503 test round-trip preservation, not inferred
+server-internal meanings. Unrecognized outer replies remain invalid_reply.
+
+**Offline:** generated independently signed bundles prove signature and pin
+comparison behavior. Four simultaneous queue calls produce one action;
+restart/write-cut reservations never repeat; a verified refresh preserves old
+reply evidence; invalid signatures, outer and per-user refusals block refresh.
+Inspection leaves logical pins, sessions, outbox and checkpoints unchanged and
+omits peer identifiers/error text. Store opening still has its documented
+metadata commit. **Unknown:** the recovered peer's current directory identity;
+no live query has yet been issued by this new command.
+
+**Observed live (2026-10-07):** preflight showed no eligible chats or existing
+queued actions. One peer directory action was queued; repeating the command
+returned its original ID. A 25-second receive-only session logged in/activated
+successfully and settled the action. The response supplied a valid signed bundle:
+`verified_bundle`, `signature_valid=true`, `phone_pin_matches=false`, and the
+one authenticated mapped LID `pin_matches=true`. Pre/post `peer-identity`
+summaries were identical. This establishes that the current directory identity
+matches the recovered LID and differs from the held PN pin. It is not human
+verification or proof of sending with that identity. No chat was sent and no
+outgoing pin was adopted. Private evidence: `lab/accounts/l/peer-keys-live-2026-10-07.log`,
+`peer-keys-result-2026-10-07.json` and the paired pre/post pin summaries.
+
+One new private outgoing test JSON is prepared with a stable ID and text
+"TeleWhatsApp identity recovery test.", plus an independent config enabling the
+outgoing policy. It is not queued or sent. All previously saved test sends are
+acknowledged and cannot be replayed. The new chat send awaits explicit operator
+authorization, while other protocol work may continue.
+
+**Attribution correction:** `MessageRequest::recipient` still repeated the old
+unqualified `CPQ.A00` address-producer citation. Its comment now points to the
+original authenticated LID captures and the recorded 37.71 negative trace in
+[groups](groups.md#group-pairwise-pnlid-session-correction-2026-10-07), without
+claiming a producer re-anchor. Behavior is unchanged.
+
+**Confirmed (implementation review correction):** the new transaction-scoped action helper
+initially moved the existing public queue builder callback inside the store
+write lock. That would break callbacks that update local state. The public
+builder keeps its original outside-lock behavior; only the explicit transaction
+helper builds under its caller's transaction. A bounded callback-reentrancy
+regression and concurrent once-only directory test cover both paths.

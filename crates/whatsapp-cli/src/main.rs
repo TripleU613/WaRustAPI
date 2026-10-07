@@ -221,6 +221,19 @@ enum Cmd {
         #[arg(long)]
         chat: String,
     },
+    /// Queue or inspect one peer directory key query (offline; a session transmits it).
+    #[cfg(feature = "experimental-transport")]
+    PeerKeys {
+        /// Primary phone-number chat JID, never printed in output.
+        #[arg(long)]
+        chat: String,
+        /// Inspect the latest saved response and pin matches without queueing.
+        #[arg(long, conflicts_with = "refresh")]
+        show: bool,
+        /// Queue one fresh query only after a verified successful prior bundle.
+        #[arg(long)]
+        refresh: bool,
+    },
     /// Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Actions {
@@ -1402,6 +1415,12 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::IdentityConflicts => transport_receive::identity_conflicts(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::PeerIdentity { chat } => transport_receive::peer_identity(&cli, chat),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::PeerKeys {
+            chat,
+            show,
+            refresh,
+        } => transport_receive::peer_keys(&cli, chat, *show, *refresh),
         #[cfg(feature = "experimental-transport")]
         Cmd::Actions { show } => transport_receive::actions_status(&cli, show.as_deref()),
         #[cfg(feature = "experimental-transport")]
