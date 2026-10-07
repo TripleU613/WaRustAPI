@@ -221,7 +221,7 @@ enum Cmd {
     /// Inspect saved peer identity conflicts (offline; unauthenticated observations).
     #[cfg(feature = "experimental-transport")]
     IdentityConflicts,
-    /// Inspect saved PN/LID peer pins and session agreement (offline, redacted).
+    /// Inspect saved PN/LID pins, session agreement and retained-device key coverage (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     PeerIdentity {
         /// Primary phone-number chat JID; never printed in the result.

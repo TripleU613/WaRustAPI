@@ -119,7 +119,7 @@ Usage: whatsapp-cli identity-conflicts [OPTIONS]...
 
 ## whatsapp-cli peer-identity
 
-Inspect saved PN/LID peer pins and session agreement (offline, redacted)
+Inspect saved PN/LID pins, session agreement and retained-device key coverage (offline, redacted)
 
 ```
 Usage: whatsapp-cli peer-identity [OPTIONS]...

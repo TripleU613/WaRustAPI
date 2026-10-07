@@ -586,8 +586,15 @@ impl DeviceQuery {
 
 /// Saved device list for a contact, without network access.
 pub fn device_list(store: &ProtocolStore, user: &Jid) -> Result<Option<DeviceList>> {
+    store.read(|tx| device_list_in(tx, user))
+}
+
+pub(crate) fn device_list_in(
+    tx: &crate::store::ReadTx<'_>,
+    user: &Jid,
+) -> Result<Option<DeviceList>> {
     let owner = primary_of(user)?;
-    store.read(|tx| tx.get_json(Table::Checkpoints, list_key(&owner).as_bytes(), 1))
+    tx.get_json(Table::Checkpoints, list_key(&owner).as_bytes(), 1)
 }
 
 #[cfg(test)]

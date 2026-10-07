@@ -258,3 +258,18 @@ Fingerprint calculation validation passed 535 workspace/all-feature tests,
 formatting and repository hygiene. A command-level synthetic calculation
 matched the fixture pair without creating the supplied unused store path.
 No network request or current-account verification was performed.
+
+APK peer fingerprint inventory now traces to a selected device set and a
+nonempty identity map with equal cardinality. Feature 0x1da3 excludes hosted
+99-device classes; the local key helper has separate primary/companion controls.
+`peer-identity` now reports retained E2EE device-key coverage without claiming
+complete APK inventory or fingerprint readiness. Current scheme/contact-state
+values, source inventory freshness and full own-device synchronization remain
+unknown. No account keys or verification metadata were changed.
+
+The rebuilt peer inspector passed on an isolated saved-account copy: PN has
+no saved device list; its mapped LID has one retained device/one pin and no
+missing pins, but companions_verified=false (primary-only fallback).
+Original encrypted database bytes were unchanged. These are saved-state
+observations, not a live directory refresh or proof of complete inventory.
+Validation passed 536 workspace/all-feature tests and strict Clippy.

@@ -700,8 +700,8 @@ compared with ByteString equality, and content checks delegate to `0ko.A01`
 and `0ko.A02`. The complete legacy error/content semantics remain untraced;
 the existence of those calls is not a recovered algorithm for that comparator.
 `KXj.A02` also filters key-set members through Cbb.A00 when feature 0x1da3 is
-true (0004..004a); that predicate's meaning and complete device-key inventory
-remain unknown.
+true (0004..004a); its hosted-class meaning and inventory producers are
+resolved in the peer-device follow-up below; current runtime inputs remain unknown.
 
 An exact caller search for `KXj.A01` returns three sites:
 
@@ -866,3 +866,65 @@ whitespace and repository hygiene (300 local links) passed. A default-feature
 command-level run matched the fixture pair and did not create its supplied
 unused account-store path. This was an offline synthetic calculation only;
 no current account fingerprint, human verification, or live result is claimed.
+
+## Peer device inventory and scheme inputs (37.71)
+
+**Confirmed/static, same pinned 37.71 APK:** JhJ.A0Z 000c..006a obtains
+0bN.A0B(peer), applies KXj.A02, then looks up identities through CSC.A00.
+It returns null at 035e..0362 if the resulting map is empty or its size differs
+from the selected device set. CSC.A00 0000..0052 iterates DeviceJids, converts
+each through B7H.A04, calls 0jc.A0W, and omits missing identities from its map.
+Thus a held primary ratchet alone does not establish peer fingerprint inventory
+coverage. The map values' B7D.A00 keys are collected at 00a8..00ec;
+1xf.A1E 0000..000c constructs an ArrayList, not a deduplicating key set.
+
+**Confirmed/static, hosted filter:** KXj.A02 returns its original set when
+feature 0x1da3 is false (0004..0016). When true, 0016..005e retains only
+non-null members for which Cbb.A00 is false; a null member throws rather than
+being silently skipped. Cbb.A00 0000..001e recognizes Blg and Bli. Their
+constructors enforce device ID **99** (0016..0038 / 0016..0030); their raw
+servers are respectively hosted and hosted.lid, with getType values 24 and 25.
+This confirms exclusion of hosted devices behind the feature. It does not
+justify dropping device 99 on an ordinary PN/LID address by numeric ID alone.
+The current feature value and upstream hosted-device attestation remain unknown.
+
+0bN.A0B's non-self branch copies 1IW.A09(peer).keySet into a HashSet and
+adds peer.getPrimaryDevice (0084..00b8). The two own-account equality branches
+instead use A0A/A09 and own primary getters (0028..0084); their underlying
+contents are untraced. 0bN.A02 returns an empty own-device set when 08Z.BNm
+is false, otherwise 1IW.A08().keySet (0028..0054). BNm implementation, source
+map freshness, signature validation and complete own-device synchronization
+are unknown at this checkpoint; the map is not automatically a complete live
+account directory.
+
+JhJ.A00 receives separate include-primary and include-companions booleans.
+The primary branch reads 0kc.A0B().JAk.A01, strips its first byte, converts
+through B7H.A03 and appends B7D.A00 (0008..0048). The companion branch applies
+KXj.A02 to 0bN.A02, then CSC.A00 and appends each found key (0048..009e).
+1xf.A1D constructs an ArrayList. Unlike the earlier peer-map gate, this helper
+has no matching own-device cardinality refusal. Do not infer a universal
+all-device gate or key deduplication from the peer branch.
+
+**Confirmed/static, scheme predicate:** 26B.A00 0000..0042 requires JID type
+18 (0DE.A0a), loads its contact through 0YA.A09, and returns 0np.A06's result
+when that contact is present. 0np.A06 0008..0026 tests contact 0DV.A0D.A04
+for membership in **{1,2,3}**. This is distinct from the previously traced
+0lr.A01 ==2 verification-control exclusion. The semantic enum and producer of
+0Da.A04 remain **unknown**; equal numeric values do not identify it as the
+stored Signal attestation enum or QR HostedState.
+
+JhJ.A0Z uses fresh feature 0x1d2c checks and this predicate at 0104..012a
+and 01ee..0214, the captured A04 boolean at 0174..018c, PN/LID mappings at
+01aa..01b6 and 02e8..0306, and username/other inputs before A0U/A0T. KXj.A03
+captures feature 0x1d2c when constructing JhJ (0012..002c). KXj.A04 returns
+true for that feature or a non-null contact passing 0np.A06 (0000..002e).
+These traces resolve input producers and a static predicate; they do not
+establish this account's active scheme or the full username/boolean branch
+semantics. An explicit caller-supplied display calculation remains labelled
+unverified selection. No human verification was committed.
+
+Reproduce via apk-smali with exact class filters LX/JhJ; (A0Z/A00), LX/KXj;
+(A02/A03/A04), LX/CSC; (A00), LX/0bN; (A0B/A02), LX/Cbb; (A00), LX/Blg;,
+LX/Bli;, LX/26B; (A00), LX/0np; (A06), and LX/1xf; (A1D/A1E).
+Private fingerprint-*.smali artifacts under lab/apk-2.26.37.71 preserve these
+scoped outputs. Raw APK and account identities are not committed.

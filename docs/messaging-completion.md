@@ -735,3 +735,9 @@ current-account safety number or verification commit is implemented.
   hash-flow fixtures, private inputs and explicit unverified selection labels.
 - [ ] Integrate evidenced current scheme/device-key inventory and peer comparison
   before adding human verification commits. No real peer number was calculated.
+
+- [x] Inspect retained PN/LID device-key coverage through `peer-identity`,
+  including missing-pin selectors, signed-list status and notification mismatch.
+  Complete retained coverage is not proof of current APK fingerprint inventory.
+- [ ] Resolve active scheme/contact-state/username inputs and full own-device
+  inventory before integrating current-peer fingerprint comparison.

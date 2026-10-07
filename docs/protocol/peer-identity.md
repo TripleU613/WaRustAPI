@@ -776,3 +776,61 @@ Validation of this research checkpoint: generated CLI-reference check,
 OpenAPI library-symbol check, staged repository hygiene (299 local links)
 and diff whitespace checks passed. No Rust runtime behavior changed, so the
 workspace suite was not repeated; this is static evidence, not live validation.
+
+## Retained device identity-key coverage
+
+**Implemented/offline, motivated by confirmed 37.71 evidence:**
+`peer-identity --chat <primary-PN-JID>` now includes `device_key_coverage` for
+the PN pin and each authenticated primary LID mapping. Its nullable summary
+counts saved E2EE retained devices and valid saved identity pins, lists missing
+pins by SHA-256 session selector, and carries saved `companions_verified`,
+`hosted_devices_skipped` and `notified_hash_matches`. Null means no saved list;
+it does not manufacture a primary-only list from a held session.
+
+APK JhJ.A0Z 003a..006a requires an identity map covering every selected peer
+device before fingerprint generation, and KXj.A02 conditionally excludes
+hosted device classes. [Inventory evidence](safety-number.md#peer-device-inventory-and-scheme-inputs-3771)
+records those gates. Our E2EE device-list implementation already excludes
+hosted devices and can retain only the primary when companions cannot be
+verified. Therefore even `pinned_devices == retained_devices` is **not** an
+assertion of complete APK inventory, fresh directory state, selected scheme,
+authenticated attestation, matching safety numbers, or human verification.
+A saved notification mismatch remains visible even with every retained pin.
+No new keys are fetched, no pin or ratchet is advanced, and no number is
+calculated from this diagnostic snapshot.
+
+The list and all its pins are read within the same logical transaction as
+PN/LID/session/history inspection. Malformed pins, duplicate/wrong-owner
+entries or a list lacking its primary are diagnosed as corrupt local state;
+these are local consistency checks, not WhatsApp server requirements. Counts
+refer to retained device entries, not unique key values. Public API consumers
+can inspect the same `PeerPinState.device_key_coverage` output. Old serialized
+inspection values without this optional field still decode.
+
+Offline tests cover no list, a primary-only fallback with all retained keys,
+a signed companion list with a missing pin and notification mismatch, adding
+the missing pin, restart stability, redaction, byte-identical logical tables
+before/after inspection, malformed pins, duplicate entries and absent primary.
+No runtime scheme or current account completeness is guessed.
+
+**Observed/offline saved-account check (2026-10-07):** the rebuilt CLI was
+run on an isolated private database copy with the original account/master key
+and existing contact; it exited zero. PN coverage was null. Its one mapped LID
+had retained_devices=1, pinned_devices=1, zero missing pins,
+companions_verified=false, hosted_devices_skipped=0 and
+notified_hash_matches=null. This is an all-pinned **primary-only fallback**, not
+proof that the contact has no companions or that fingerprint inventory is
+complete. The original encrypted database's SHA-256 matched before/after the
+check. No network operation, original database open, identity replacement or
+verification commit occurred. The isolated copy and redacted stdout/stderr are
+retained privately in lab/accounts/l/identity-device-coverage-check.
+
+Validation: 536 workspace/all-feature tests, strict all-target/all-feature
+Clippy, generated CLI reference and formatting passed. Tests include the
+new coverage/regression matrix and existing PN/LID transition inspection.
+
+The additional old-JSON compatibility assertion passed in a targeted rerun:
+missing device_key_coverage decodes to null. Final strict Clippy,
+warning-free all-feature library rustdoc, whitespace and repository hygiene
+(301 local links) also passed. No default-feature workspace rerun was needed
+for these transport-feature-only runtime changes.

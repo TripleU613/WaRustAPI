@@ -11,7 +11,7 @@
       "x-cli": "cargo run -p xtask -- apk-smali <apk> --class <class-filter> [--method <method-filter>]",
       "x-transport": "cli",
       "x-live": false,
-      "description": "Offline DEX developer disassembler; no HTTP route. Names APK identity metadata reads (iget-wide, iget-boolean, iget-byte) and safety-number arithmetic (rem-long/2addr, and-long/2addr, or-long/2addr, shl-long/2addr), preserving byte offsets and operands. Literal 37.71 CjU/B7E-style fixtures verify widths and registers. Unknown opcodes remain explicitly marked. Does not unpack native superpack containers or claim native algorithm recovery. APK 37.71 verification writes now name iput-boolean (0x5c) and iput-wide (0x5a), retaining existing 22c registers, field references and instruction widths. Literal Cg3.A00 instructions at classes7.dex 0x5fc138/0x5fc180 provide regression coverage. This is offline research tooling, not an implemented human-verification commit API. Static 37.71 contact exclusion reproduction also covers 1lL/0bo/0lr/C0F: hosted device-account and identity-attestation SQL sources use distinct enums, and contact-state value 2 remains semantically unknown. Native display getter evidence distinguishes full LID QR bytes from parsed LID-user display input; no runtime fingerprint or human-verification capability is added."
+      "description": "Offline DEX developer disassembler; no HTTP route. Names APK identity metadata reads (iget-wide, iget-boolean, iget-byte) and safety-number arithmetic (rem-long/2addr, and-long/2addr, or-long/2addr, shl-long/2addr), preserving byte offsets and operands. Literal 37.71 CjU/B7E-style fixtures verify widths and registers. Unknown opcodes remain explicitly marked. Does not unpack native superpack containers or claim native algorithm recovery. APK 37.71 verification writes now name iput-boolean (0x5c) and iput-wide (0x5a), retaining existing 22c registers, field references and instruction widths. Literal Cg3.A00 instructions at classes7.dex 0x5fc138/0x5fc180 provide regression coverage. This is offline research tooling, not an implemented human-verification commit API. Static 37.71 contact exclusion reproduction also covers 1lL/0bo/0lr/C0F: hosted device-account and identity-attestation SQL sources use distinct enums, and contact-state value 2 remains semantically unknown. Native display getter evidence distinguishes full LID QR bytes from parsed LID-user display input; no runtime fingerprint or human-verification capability is added. APK 37.71 JhJ/CSC/0bN/KXj/26B/Cbb traces establish peer identity-map cardinality, hosted-99 class filtering, distinct local key controls and a contact-state predicate {1,2,3}; active runtime values remain unknown."
     },
     {
       "x-cli": "<python-env> tools/apk-research/native_loader_check.py --rootfs <public-rootfs> [--check hello|decoder-init|decoder-first-entry|decoder-full-archive] [--timeout-seconds <1..600>] [--max-instructions <1..10000000000>] [--host-meminfo] [--trace-worker]",
@@ -2250,7 +2250,8 @@
           "pinned_fingerprint",
           "has_session",
           "session_fingerprint",
-          "session_pin_matches"
+          "session_pin_matches",
+          "device_key_coverage"
         ],
         "properties": {
           "peer_ticket": {
@@ -2284,6 +2285,17 @@
               "null"
             ],
             "description": "Null when pin or current-session identity is absent."
+          },
+          "device_key_coverage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PeerDeviceKeyCoverage"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Null without a saved list. Full coverage of a retained fallback is not fingerprint readiness. Missing field in old serialized inspection output defaults to null."
           }
         }
       },
@@ -2486,6 +2498,51 @@
           "combined": {
             "type": "string",
             "pattern": "^[0-9]{60}$"
+          }
+        }
+      },
+      "PeerDeviceKeyCoverage": {
+        "type": "object",
+        "required": [
+          "retained_devices",
+          "pinned_devices",
+          "missing_pin_tickets",
+          "companions_verified",
+          "hosted_devices_skipped",
+          "notified_hash_matches"
+        ],
+        "description": "Coverage of saved E2EE retained devices only, not complete APK fingerprint inventory or human verification. The list may be a primary-only fallback and excludes hosted devices.",
+        "properties": {
+          "retained_devices": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "pinned_devices": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "missing_pin_tickets": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "description": "Sorted SHA-256 session selectors for retained devices lacking saved pins, never raw addresses."
+          },
+          "companions_verified": {
+            "type": "boolean",
+            "description": "Saved signed-list companion status; does not establish directory freshness."
+          },
+          "hosted_devices_skipped": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "notified_hash_matches": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Agreement with saved notification hash; null when untested."
           }
         }
       }
@@ -9447,8 +9504,8 @@
         "tags": [
           "Account Safety"
         ],
-        "summary": "Inspect saved primary PN/LID peer pin and session agreement (offline)",
-        "description": "Reads one logical snapshot without queries, key replacement or sends. Requires a primary phone-number chat JID. Returns hashed peer selectors, diagnostic public-key fingerprints, held-session/pin agreement, and all authenticated primary LID mappings. A qualifying saved incoming transition establishes local provenance only; it is not a WhatsApp safety number or human verification. Store opening can commit engine metadata; protocol records are inspected read-only. No HTTP route is implemented.",
+        "summary": "Inspect saved peer pins, sessions and retained-device key coverage (offline)",
+        "description": "Reads one logical snapshot without queries, key replacement or sends. Requires a primary phone-number chat JID. Returns hashed peer selectors, diagnostic public-key fingerprints, held-session/pin agreement, and all authenticated primary LID mappings. A qualifying saved incoming transition establishes local provenance only; it is not a WhatsApp safety number or human verification. Store opening can commit engine metadata; protocol records are inspected read-only. No HTTP route is implemented. Also reports nullable retained E2EE device-key coverage in that snapshot: retained/pinned counts, hashed missing-pin selectors, saved signed-list status, skipped-hosted count and notification-hash agreement. A primary-only fallback or fully pinned retained set does not establish complete current APK fingerprint inventory, selected scheme or human verification. Invalid saved pins/device-list consistency are local diagnostics. No safety number is computed.",
         "operationId": "peerIdentity",
         "x-cli": "whatsapp-cli peer-identity",
         "x-transport": [

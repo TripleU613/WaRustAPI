@@ -120,6 +120,23 @@ pub fn list(store: &ProtocolStore) -> Result<Vec<IdentityConflict>> {
     })
 }
 
+/// Saved E2EE device-list coverage, not the selected APK fingerprint inventory.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PeerDeviceKeyCoverage {
+    /// Number of devices retained in the saved E2EE list, including the primary.
+    pub retained_devices: usize,
+    /// Retained devices with a valid saved public identity pin.
+    pub pinned_devices: usize,
+    /// Hashed session selectors for retained devices whose identity pin is absent.
+    pub missing_pin_tickets: Vec<String>,
+    /// Whether the saved companions came from a verified signed device list.
+    pub companions_verified: bool,
+    /// Hosted devices excluded by the E2EE device-list implementation.
+    pub hosted_devices_skipped: u32,
+    /// Agreement with a saved notification hash, or null when no hash was tested.
+    pub notified_hash_matches: Option<bool>,
+}
+
 /// Redacted pin and held-session state for one primary peer address.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PeerPinState {
@@ -133,6 +150,10 @@ pub struct PeerPinState {
     pub session_fingerprint: Option<String>,
     /// Null when either the saved pin or current session identity is missing.
     pub session_pin_matches: Option<bool>,
+    /// Null without a saved device list. Even full retained-key coverage does
+    /// not establish inventory completeness, current scheme, or verification.
+    #[serde(default)]
+    pub device_key_coverage: Option<PeerDeviceKeyCoverage>,
 }
 
 /// One authenticated incoming LID mapping and its relationship to the PN pin.
@@ -187,8 +208,61 @@ fn pin_state(tx: &crate::store::ReadTx<'_>, peer: &Jid) -> Result<(PeerPinState,
             .as_ref()
             .zip(session_identity.as_ref())
             .map(|(a, b)| a == b),
+        device_key_coverage: device_key_coverage(tx, peer)?,
     };
     Ok((state, pin))
+}
+
+fn device_key_coverage(
+    tx: &crate::store::ReadTx<'_>,
+    peer: &Jid,
+) -> Result<Option<PeerDeviceKeyCoverage>> {
+    use wacore_libsignal::protocol::IdentityKey;
+    let Some(list) = super::devices::device_list_in(tx, peer)? else {
+        return Ok(None);
+    };
+    // APK 37.71 JhJ.A0Z 003a..006a requires nonempty peer identity
+    // lookup coverage for every selected device. Our retained E2EE list can
+    // be a primary-only fallback and excludes hosted devices; it is not the
+    // APK's selected inventory. Diagnose missing pins without computing a
+    // purported complete safety number or fetching/replacing any key.
+    let mut seen = std::collections::HashSet::new();
+    let mut missing_pin_tickets = Vec::new();
+    let mut pinned_devices = 0;
+    for entry in &list.devices {
+        if entry.jid.to_non_ad() != *peer || entry.jid.agent != 0 || !seen.insert(entry.jid.clone())
+        {
+            return Err(Error::invalid(
+                "peer_identity",
+                "invalid saved device inventory",
+            ));
+        }
+        let key = format!("comparison-direct:{}", entry.jid);
+        let pin: Option<Vec<u8>> = tx.get_json(Table::PeerIdentities, key.as_bytes(), 1)?;
+        if let Some(pin) = pin {
+            IdentityKey::decode(&pin).map_err(|_| {
+                Error::invalid("peer_identity", "invalid saved device identity pin")
+            })?;
+            pinned_devices += 1;
+        } else {
+            missing_pin_tickets.push(hex::encode(Sha256::digest(key.as_bytes())));
+        }
+    }
+    if list.owner != *peer || !list.devices.iter().any(|entry| entry.jid == *peer) {
+        return Err(Error::invalid(
+            "peer_identity",
+            "saved device inventory lacks its primary owner",
+        ));
+    }
+    missing_pin_tickets.sort();
+    Ok(Some(PeerDeviceKeyCoverage {
+        retained_devices: list.devices.len(),
+        pinned_devices,
+        missing_pin_tickets,
+        companions_verified: list.companions_verified,
+        hosted_devices_skipped: list.hosted_skipped,
+        notified_hash_matches: list.hash_matches,
+    }))
 }
 
 /// Inspect logical peer identity state without writes, queries or replacement.
@@ -363,6 +437,177 @@ mod tests {
         })
         .unwrap()
     }
+    #[test]
+    fn retained_device_key_coverage_is_redacted_read_only_and_not_inventory_authority() {
+        use super::super::devices::{DeviceEntry, DeviceList};
+        use wacore_libsignal::protocol::IdentityKeyPair;
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("coverage.redb");
+        let store = open(&path, true);
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let companion = Jid::parse("15555550100:2@s.whatsapp.net").unwrap();
+        assert!(
+            inspect_peer(&store, &peer)
+                .unwrap()
+                .phone
+                .device_key_coverage
+                .is_none()
+        );
+        let old_state = inspect_peer(&store, &peer).unwrap().phone;
+        let mut old_json = serde_json::to_value(&old_state).unwrap();
+        old_json
+            .as_object_mut()
+            .unwrap()
+            .remove("device_key_coverage");
+        assert_eq!(
+            serde_json::from_value::<PeerPinState>(old_json).unwrap(),
+            old_state
+        );
+        let primary_key = IdentityKeyPair::generate(&mut rand::rng())
+            .identity_key()
+            .serialize()
+            .to_vec();
+        let companion_key = IdentityKeyPair::generate(&mut rand::rng())
+            .identity_key()
+            .serialize()
+            .to_vec();
+        let primary_selector = format!("comparison-direct:{peer}");
+        let companion_selector = format!("comparison-direct:{companion}");
+        let list_selector = format!("devices:{peer}");
+        let mut list = DeviceList {
+            owner: peer.clone(),
+            devices: vec![DeviceEntry {
+                jid: peer.clone(),
+                key_index: 0,
+            }],
+            raw_id: None,
+            list_timestamp: None,
+            expected_timestamp: None,
+            companions_verified: false,
+            unverified_reason: Some("no signed list".into()),
+            notified_hash: None,
+            hash_matches: None,
+            hosted_skipped: 1,
+            fetched_at: Timestamp(1),
+        };
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::PeerIdentities,
+                    primary_selector.as_bytes(),
+                    1,
+                    &primary_key,
+                )?;
+                tx.put_json(Table::Checkpoints, list_selector.as_bytes(), 1, &list)
+            })
+            .unwrap();
+        let coverage = inspect_peer(&store, &peer)
+            .unwrap()
+            .phone
+            .device_key_coverage
+            .unwrap();
+        assert_eq!(coverage.retained_devices, 1);
+        assert_eq!(coverage.pinned_devices, 1);
+        assert!(!coverage.companions_verified);
+        assert_eq!(coverage.hosted_devices_skipped, 1);
+        // All retained fallback keys can be present without an authenticated
+        // complete device list. Do not expose a "fingerprint ready" assertion.
+        assert!(!serde_json::to_string(&coverage).unwrap().contains("ready"));
+        list.devices.push(DeviceEntry {
+            jid: companion.clone(),
+            key_index: 7,
+        });
+        list.companions_verified = true;
+        list.hash_matches = Some(false);
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, list_selector.as_bytes(), 1, &list))
+            .unwrap();
+        let before = store
+            .read(|tx| {
+                Ok((
+                    tx.scan_after(Table::Checkpoints, 1, None, 64)?,
+                    tx.scan_after(Table::PeerIdentities, 1, None, 64)?,
+                    tx.scan_after(Table::SignalSessions, 1, None, 64)?,
+                ))
+            })
+            .unwrap();
+        let inspected = inspect_peer(&store, &peer).unwrap();
+        let coverage = inspected.phone.device_key_coverage.as_ref().unwrap();
+        assert_eq!(coverage.retained_devices, 2);
+        assert_eq!(coverage.pinned_devices, 1);
+        assert_eq!(
+            coverage.missing_pin_tickets,
+            vec![hex::encode(Sha256::digest(companion_selector.as_bytes()))]
+        );
+        assert_eq!(coverage.notified_hash_matches, Some(false));
+        let encoded = serde_json::to_string(&inspected).unwrap();
+        assert!(!encoded.contains(&peer.user));
+        assert!(!encoded.contains(&hex::encode(&primary_key)));
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    tx.scan_after(Table::Checkpoints, 1, None, 64)?,
+                    tx.scan_after(Table::PeerIdentities, 1, None, 64)?,
+                    tx.scan_after(Table::SignalSessions, 1, None, 64)?,
+                )))
+                .unwrap(),
+            before
+        );
+        drop(store);
+        let store = open(&path, false);
+        assert_eq!(inspect_peer(&store, &peer).unwrap(), inspected);
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::PeerIdentities,
+                    companion_selector.as_bytes(),
+                    1,
+                    &companion_key,
+                )
+            })
+            .unwrap();
+        let coverage = inspect_peer(&store, &peer)
+            .unwrap()
+            .phone
+            .device_key_coverage
+            .unwrap();
+        assert_eq!(coverage.pinned_devices, 2);
+        assert!(coverage.missing_pin_tickets.is_empty());
+        // Neither coverage inspection nor corrupted-pin refusal rotates keys.
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::PeerIdentities,
+                    companion_selector.as_bytes(),
+                    1,
+                    &vec![0u8; 3],
+                )
+            })
+            .unwrap();
+        assert!(inspect_peer(&store, &peer).is_err());
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::PeerIdentities,
+                    companion_selector.as_bytes(),
+                    1,
+                    &companion_key,
+                )?;
+                list.devices.push(list.devices[0].clone());
+                tx.put_json(Table::Checkpoints, list_selector.as_bytes(), 1, &list)
+            })
+            .unwrap();
+        assert!(inspect_peer(&store, &peer).is_err());
+        list.devices = vec![DeviceEntry {
+            jid: companion,
+            key_index: 7,
+        }];
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, list_selector.as_bytes(), 1, &list))
+            .unwrap();
+        assert!(inspect_peer(&store, &peer).is_err());
+    }
+
     #[tokio::test]
     async fn peer_inspection_distinguishes_alias_history_from_pin_and_session_agreement() {
         use crate::session::{AccountRecord, KeyMaterial, RegistrationStatus, SignalIdentityKey};
