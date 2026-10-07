@@ -73,6 +73,10 @@ from offline tests alone. Existing received captures can be processed locally.
   rendering, runtime feature selection and synchronization remain unfinished.
   `DA8.CF4` group/app-data checks and positive metadata requirements are now
   traced; the descriptor reader now supports mixed repeated/scalar fields.
+  Supported metadata now has a pure decoder and redacted diagnostics, with
+  local duplicate/unknown-field and receiver bounds. Saved-account inspection
+  validated one receiver and context presence, without reporting their values.
+  No notice is applied and no history transfer is established.
 - Polls: creation (`pollCreationMessageV3`, field 64, with `messageContextInfo`
   secret) and votes (`pollUpdateMessage`, field 50, AES-256-GCM over an
   HKDF-derived key; the APK performs the derivation natively, so the recipe is

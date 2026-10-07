@@ -70,6 +70,7 @@ pub mod group_send;
 pub mod groups;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod handshake;
+pub mod history_notice;
 #[cfg(all(
     feature = "experimental-signal-crypto",
     feature = "experimental-noise",

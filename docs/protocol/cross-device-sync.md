@@ -782,3 +782,58 @@ target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/AVZ;' --method
 These scoped raw dumps were retained privately. They establish parsing branches,
 not execution of those branches by the saved account or completion of group
 history transfer.
+
+### Supported metadata decoding and diagnostics (2026-10-07)
+
+**Confirmed, local implementation with APK evidence**:
+`transport::history_notice::decode` decodes the Message field-102 envelope and
+validates the traced `BX5` metadata. `DA8.CF4`'s required positive timestamp/count
+and nonempty receivers are enforced. Optional oldest-bundle values are retained
+raw, including negative values: `9ku.A00` copies that optional field, and no
+additional validity or timestamp-unit conversion has been established here.
+
+**Confirmed, static receiver conversion**: `LX/8kZ.A1L` (`0000..0020`) reads a
+receiver string and calls `0D8.A01`; `LX/0D8.A01` (`0000..002a`) parses it through
+`0D1.A00`, requires a `UserJid`, and throws otherwise. Our supported subset is
+primary numeric PN/LID. Hosted, legacy and other identity forms are not silently
+classified as invalid APK inputs; they remain unsupported **locally**. The
+receiver parser's broader concrete subclass behavior remains **unknown**.
+No full receiver address is returned by the metadata model or diagnostic errors.
+
+The decoder refuses duplicate singleton fields, wrong wire types and unknown
+metadata/envelope fields instead of accepting prost's merged/ignored values.
+These are conservative local inspection guards, not claims that the APK rejects
+all such protobuf encodings. It also applies local 65,536-byte and 1,024-entry
+per-list bounds. Context and bot bodies remain opaque: only their presence is
+returned, with no claim of validation or authorization.
+
+`lab-inbox --inspect` now prints `metadata=validated` and receiver/non-receiver
+counts plus optional-body presence flags, or `metadata=unsupported` with a fixed
+redacted reason. It does not print receiver strings, count values, timestamps,
+context or bot contents. Unknown notice fields remain structurally visible in
+the summary. A validation failure does not destroy the encrypted inbox record,
+request media or advance a session. The public pure decoder returns `None` for
+another message type and a local error for a present unsupported notice.
+
+Literal APK-schema fixtures exercise required presence, zero/negative values,
+optional raw timestamps, both receiver lists, opaque bodies, duplicate fields,
+unknown fields/wire types, every truncated prefix, redaction and local bounds.
+The notice is still a preserved unsupported journal reference. Runtime dispatch,
+feature selection, rendering, actual history ingestion and receipt policy remain
+unfinished; no stored notice is promoted to a user reply or sync-completion event.
+
+The inspector uses the full-envelope decoder, not only the nested metadata
+helper. A mixed text/notice or duplicate notice cannot acquire a validated
+label merely because its last nested metadata happens to be valid. The redacted
+summary regression includes that mixed-envelope case.
+
+**Observed, saved-account offline inspection (2026-10-07)**: the rebuilt release
+CLI completed `--profile l lab-inbox --inspect` with exit 0. The one saved
+49-byte field-102 notice returned `metadata=validated`, receivers=1,
+non_receivers=0, oldest_bundle_present=false, context_present=true and
+bot_metadata_present=false. No receiver, count or timestamp value was printed.
+The complete output remains in ignored, mode-0600 private lab storage. Captures
+were not replayed, no request or receipt was sent, no history was applied and
+no message session was advanced. Normal store-open metadata initialization
+still prevents claiming byte-identical database files. This confirms supported
+metadata in the already-stored notice, not runtime display or history transfer.

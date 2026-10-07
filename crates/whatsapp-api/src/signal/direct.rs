@@ -164,6 +164,20 @@ fn payload_summary_depth(bytes: &[u8], depth: usize) -> Result<String> {
             "; message-history-notice fields={:?}; history not applied",
             payload_fields(&notice)?
         ));
+        match crate::transport::history_notice::decode(bytes) {
+            Ok(Some(metadata)) => summary.push_str(&format!(
+                "; metadata=validated; receivers={} non_receivers={} oldest_bundle_present={} context_present={} bot_metadata_present={}",
+                metadata.receiver_count,
+                metadata.non_receiver_count,
+                metadata.oldest_bundle_timestamp.is_some(),
+                metadata.context_present,
+                metadata.bot_metadata_present,
+            )),
+            Ok(None) => summary.push_str("; metadata=unsupported; reason=notice missing"),
+            Err(error) => summary.push_str(&format!(
+                "; metadata=unsupported; reason={error}"
+            )),
+        }
     }
     Ok(summary)
 }
@@ -772,6 +786,15 @@ mod tests {
         assert!(summary.contains("protobuf fields=[102]"));
         assert!(summary.contains("message-history-notice fields=[2]"));
         assert!(summary.contains("history not applied"));
+        assert!(!summary.contains("secret"));
+        assert!(summary.contains("metadata=unsupported"));
+        let valid = payload_summary(b"\xb2\x06\x0d\x12\x0b\x0a\x051@lid\x10\x0a\x18\x02").unwrap();
+        assert!(valid.contains("metadata=validated; receivers=1 non_receivers=0"));
+        assert!(!valid.contains("1@lid"));
+        let mut mixed = b"\xb2\x06\x0d\x12\x0b\x0a\x051@lid\x10\x0a\x18\x02".to_vec();
+        mixed.extend_from_slice(b"\x0a\x06secret");
+        let summary = payload_summary(&mixed).unwrap();
+        assert!(summary.contains("metadata=unsupported"));
         assert!(!summary.contains("secret"));
         assert!(payload_summary(b"\xb2\x06\x01\x12").is_err());
         assert!(
