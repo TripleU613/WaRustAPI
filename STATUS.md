@@ -1510,3 +1510,19 @@ default CLI tests, strict Clippy, warning-free Rustdoc and CLI reference passed.
 Rebuilt-client offline inspection retained verified_bundle/signature_valid=true
 for the existing saved server response without changing protocol inspection.
 No new live query or network session; malformed live responses remain unobserved.
+
+
+Missing group sender-key correction (2026-10-07): supported nonempty skmsg with
+no sender key is now Undecryptable, reaching the existing once-only retry queue;
+it is no longer silently Unsupported. Empty/structured skmsg with a stored key
+cannot be reported Decrypted or delivery-confirmed. Byte/Text ciphertext views
+are consistent across direct/group receive. Real-crypto late-key recovery and
+direct/group loop write-cut fixtures preserve captures, ratchets and retry
+reservations. Handset retry shape is observed; APK 37.71 Cp2.A05 is ACK evidence,
+not a confirmed missing-key retry count policy. Fresh live group recovery remains
+unverified. [Evidence and limits](docs/protocol/messaging-transport.md#missing-group-sender-key-recovery-2026-10-07).
+
+Validation of missing-group-key handling: 668 final workspace/all-feature tests,
+24 default CLI tests, strict Clippy, warning-free Rustdoc and CLI reference passed.
+A 20-second receive-only rebuilt-client session left protocol inspection unchanged;
+no fresh missing-key group recovery was observed and no chat intent was added.

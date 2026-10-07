@@ -1735,3 +1735,14 @@ devices remain valid. Existing peer-keys inspection reports invalid_reply and
 blocks refresh while preserving its selector and pins. APK 37.71 B7H.A06/CQc.A00
 provide address/signature context; exact duplicate policy is not attributed to
 the APK. [Evidence and tests](protocol/peer-identity.md#exact-directory-bundle-selection-2026-10-07).
+
+
+Missing group sender-key correction (2026-10-07): supported nonempty skmsg with
+no sender key is now Undecryptable, reaching the existing once-only retry queue;
+it is no longer silently Unsupported. Empty/structured skmsg with a stored key
+cannot be reported Decrypted or delivery-confirmed. Byte/Text ciphertext views
+are consistent across direct/group receive. Real-crypto late-key recovery and
+direct/group loop write-cut fixtures preserve captures, ratchets and retry
+reservations. Handset retry shape is observed; APK 37.71 Cp2.A05 is ACK evidence,
+not a confirmed missing-key retry count policy. Fresh live group recovery remains
+unverified. [Evidence and limits](protocol/messaging-transport.md#missing-group-sender-key-recovery-2026-10-07).

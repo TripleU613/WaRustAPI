@@ -1184,3 +1184,81 @@ local verification reasons, separately from server per-user errors.
 Device work queued after authenticated primary replacement is picked up on
 the receive heartbeat; saved list authority is bound to its actual verifier.
 [Current authority/refresh behavior](cross-device-sync.md#signed-device-authority-and-authenticated-refresh-2026-10-07).
+
+
+### Missing group sender-key recovery (2026-10-07)
+
+**Observed source defect / refuted local assumption:** supported group `skmsg`
+with no stored/distributed sender key returned `Unsupported`. The normal actor
+and comparison receive loop only queue retries for `Undecryptable`, so that
+message silently missed the existing recovery request. A prior regression even
+required this outcome. Separately, a stored sender key could make an empty or
+structured `skmsg` body fall through to `Decrypted` without plaintext, allowing
+an incorrect delivery confirmation. The same fallthrough affected an empty
+pairwise-only group child with an old stored sender key.
+
+**Implemented:** supported nonempty `skmsg` ciphertext without a usable key now
+returns `Undecryptable`, preserves its capture and reaches the existing durable
+once-only retry queue. Empty/structured bodies remain `Unsupported`, regardless
+of stored key, and cannot commit group state or earn a delivery confirmation.
+An old stored key alone is never sufficient: without authenticated plaintext or
+a newly applied SKDM, a pairwise-only group stanza stays unsupported as well.
+The shared direct/group ciphertext byte view accepts both Bytes and unchanged
+UTF-8 Text. `binary::decoder::read_content` uses read_value(false), so raw binary
+bodies remain Bytes even when UTF-8-valid; token/string values can yield Text.
+This is not a universal UTF-8 conversion of binary ciphertext. This is an
+implementation correction, not an APK-required text encoding or permission to
+reinterpret structured content as bytes.
+
+**Evidence/status:** the retry stanza remains the **observed** 2026-09-24 handset
+shape with group participant routing recorded in [groups](groups.md#the-fan-out-works-one-device-asks-for-a-retry-2026-09-24).
+Existing APK **2.26.37.71 Cp2.A05** supports ACK construction only; the exact
+missing-sender-key retry producer and APK count/limit branches remain **unknown**.
+One count-1 request per exact chat/participant/message ID is the existing local
+policy, unchanged here. Broadcast retry routing stays unsupported; no registration
+ID is invented. This change does not broaden retry scheduling after a saved
+uncertain/refused request or reset a consumed/send/event marker.
+
+**Offline evidence:** a real sender-key ciphertext first returns Undecryptable,
+then decrypts the same original capture after a trusted late test SKDM is installed.
+A repeat becomes Duplicate and leaves the ratchet unchanged. The already reserved
+retry remains outcome_unknown; no new request is queued or reserved. This does
+not test authentication of that imported distribution, which is covered separately
+by the pairwise receive path. Empty and structured skmsg bodies with a stored key
+stay Unsupported and do not advance it. Byte/Text missing-key bodies yield the
+same recovery classification. The actual receive-loop write-cut test now runs
+both direct and group cases: capture persists before a retry write, socket failure
+retains its reservation, next-epoch redelivery emits neither another retry nor a
+delivery ACK, and a later receipt proves receiving continues. Initial new harness
+compile failed converting Zeroizing ciphertext directly to Bytes; corrected to
+an explicit fixture copy before passing.
+
+**CLI/API:** existing `listen` and comparison receive use the shared result and
+queue; `receipts` inspects the same retry outcome. No new command/field/HTTP route
+or server status is introduced. `lab-inbox` processing uses the corrected local
+classification but does not itself transmit a retry. **Unknown live:** fresh
+missing-group-key arrival and recovery; an ordinary receive window alone cannot
+prove these branches ran.
+
+
+Validation: 668 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target Clippy, warning-free Rustdoc and CLI reference generation
+passed for the final classification/body guards. APK research artifacts and
+wire builders were unchanged; no new claim of APK retry-limit parity is made.
+
+
+**Observed live regression check:** rebuilt client, 20-second receive-only
+window after queue preflight. Session ended cleanly; peer/device/action/outbox/
+receipt inspections were unchanged, with no added query or chat intent. Private
+evidence index: `lab/releases/group-key-live/active.json`. No fresh missing-key
+group message was established, so live recovery/late-SKDM decryption remain
+unverified; the window establishes existing receive compatibility only.
+
+
+**Next source-audit boundary:** `inbox::process_group_inner` currently writes
+its `received:` checkpoint only when group_plaintext is present. An SKDM-only
+group control can return Decrypted after committing its key without that
+plaintext checkpoint. The new late-key fixture covers a subsequent skmsg, not
+SKDM-only redelivery. Whether all such controls get durable duplicate handling
+elsewhere is **unknown/unverified**; trace/test that path before claiming full
+group-control idempotency. This finding is not fixed by the missing-key guard.

@@ -56,12 +56,22 @@ pub enum IncomingResult {
     /// Preserved, and it could not be decrypted at all — a broken or missing
     /// session, not merely content this client does not render.
     ///
-    /// Distinguished from [`Self::Unsupported`] because the two want opposite
-    /// answers: unsupported content has arrived and should be acknowledged,
-    /// while an undecryptable one should make us ask the sender to send it
-    /// again. Conflating them is why several of the operator's messages simply
-    /// vanished with no request to resend.
+    /// Distinguished from [`Self::Unsupported`] because the two need different
+    /// recovery: an unsupported envelope stays unacknowledged, while supported
+    /// ciphertext without usable keys can request a bounded resend.
     Undecryptable,
+}
+
+// Token/string node bodies can be Text; raw binary bodies remain Bytes.
+// Treat both opaque byte views identically; structured/empty bodies are not
+// supported ciphertext and must never earn a delivery confirmation.
+fn ciphertext_bytes(node: &Node) -> Option<&[u8]> {
+    let bytes = match &node.content {
+        NodeContent::Bytes(bytes) => bytes.as_ref(),
+        NodeContent::Text(text) => text.as_bytes(),
+        _ => return None,
+    };
+    (!bytes.is_empty()).then_some(bytes)
 }
 
 /// Use explicit primary PN routing or the APK's explicit sender_pn LID mapping.
@@ -448,7 +458,7 @@ async fn process_direct(
     {
         return Ok(IncomingResult::Unsupported);
     }
-    let NodeContent::Bytes(ciphertext) = &encs[0].content else {
+    let Some(ciphertext) = ciphertext_bytes(encs[0]) else {
         return Ok(IncomingResult::Unsupported);
     };
     // The Signal session is the one for the address the sender used. A
@@ -760,9 +770,9 @@ struct MemberSession {
 
 /// Handle incoming group message stanzas (`participant` present, `from` a group).
 ///
-/// A malformed or undecryptable group stanza degrades to `Unsupported` rather
-/// than failing the session: the caller propagates errors from `process`, and
-/// dropping a live connection over one unreadable stanza would lose the whole
+/// Malformed group stanzas stay Unsupported; supported ciphertext that cannot
+/// decrypt is Undecryptable rather than failing the session. The caller propagates
+/// errors from `process`, so dropping a live connection over one unreadable stanza would lose the whole
 /// receive window. The raw capture is already preserved for offline diagnosis
 /// and the stanza stays unacknowledged, so the server may redeliver it.
 /// Storage failures still propagate.
@@ -864,7 +874,7 @@ async fn process_group_inner(
     // phone sent a `messageHistoryBundle` (Message field 70, `LX/BZc`) this way.
     let mut pairwise_plaintext = None;
     if let Some(enc) = direct_enc
-        && let NodeContent::Bytes(ciphertext) = &enc.content
+        && let Some(ciphertext) = ciphertext_bytes(enc)
         && let Some(peer) = participant_session_jid(store, node, &sender_jid)?
     {
         let peer_key = format!("comparison-direct:{peer}");
@@ -966,16 +976,27 @@ async fn process_group_inner(
     let effective_key = key_after_skdm.clone().or_else(|| previous_bytes.clone());
     let mut group_plaintext = None;
     let mut final_key = key_after_skdm.clone();
-    if let Some(enc) = sk_enc
-        && let NodeContent::Bytes(ciphertext) = &enc.content
-        && let Some(received) = crate::signal::group::receive_group(
+    if let Some(enc) = sk_enc {
+        let Some(ciphertext) = ciphertext_bytes(enc) else {
+            tracing::warn!("group stanza preserved: skmsg body is not supported ciphertext");
+            return Ok(IncomingResult::Unsupported);
+        };
+        let Some(received) = crate::signal::group::receive_group(
             &group_jid,
             &sender_jid,
             effective_key.as_deref(),
             ciphertext,
         )
         .await?
-    {
+        else {
+            // No sender-key record is a decryption failure, not an unknown
+            // message format. The shared durable retry queue already supports
+            // group routing; its once-only reservation remains unchanged.
+            tracing::warn!(
+                "group stanza preserved: sender key missing; decryption requires distribution"
+            );
+            return Ok(IncomingResult::Undecryptable);
+        };
         final_key = Some(received.updated_key.to_vec());
         group_plaintext = Some(received.plaintext);
     }
@@ -985,18 +1006,19 @@ async fn process_group_inner(
     if group_plaintext.is_none() && sk_enc.is_none() {
         group_plaintext = pairwise_plaintext;
     }
-    // Nothing usable: no sender key yet, no SKDM in this stanza, and no payload
-    // addressed to this device. Preserve the capture without acknowledging it.
+    // A previously held key does not authenticate this stanza by itself.
+    // Require actual plaintext or a newly applied SKDM before acknowledging;
+    // preserve the capture when neither was processed.
     // Say which inputs were missing — a silent refusal here is
     // indistinguishable from the stanza never arriving.
-    if final_key.is_none() && group_plaintext.is_none() {
+    if key_after_skdm.is_none() && group_plaintext.is_none() {
         tracing::warn!(
             had_direct_child = direct_enc.is_some(),
             direct_child_decrypted = direct_commit.is_some(),
             skdm_installed = key_after_skdm.is_some(),
             had_skmsg_child = sk_enc.is_some(),
             had_stored_sender_key = previous_bytes.is_some(),
-            "group stanza not processed: no sender key available and none distributed in it"
+            "group stanza not processed: no authenticated payload or new key distribution"
         );
         return Ok(IncomingResult::Unsupported);
     }
@@ -1305,7 +1327,7 @@ mod tests {
     /// listen loop propagates errors from `process`, so an undecryptable stanza
     /// would otherwise drop a live connection and lose the whole window.
     #[tokio::test]
-    async fn undecryptable_group_stanza_is_unsupported_and_does_not_fail_the_session() {
+    async fn missing_group_sender_key_is_undecryptable_and_does_not_fail_the_session() {
         use crate::{
             model::ids::AccountId,
             store::{MasterKey, OpenOptions, StaticKeySource},
@@ -1339,7 +1361,20 @@ mod tests {
         let capture = preserve(&store, &node).unwrap();
         assert_eq!(
             process(&store, &account, &node, &capture).await.unwrap(),
-            IncomingResult::Unsupported
+            IncomingResult::Undecryptable
+        );
+        let text_body = node.clone().children(vec![
+            Node::new("enc")
+                .attr("v", "2")
+                .attr("type", "skmsg")
+                .text("\t\t\t\t"),
+        ]);
+        let text_capture = preserve(&store, &text_body).unwrap();
+        assert_eq!(
+            process(&store, &account, &text_body, &text_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Undecryptable
         );
         // No sender key, session or inbox row was created.
         assert!(
@@ -1390,6 +1425,121 @@ mod tests {
                 .unwrap(),
             IncomingResult::Undecryptable
         );
+    }
+
+    #[tokio::test]
+    async fn missing_sender_key_recovers_same_capture_after_distribution_without_resetting_retry() {
+        use crate::signal::group::{
+            commit_skdm, encrypt_group_payload, extract_skdm_from_payload, prepare_own_sender_key,
+            process_skdm, sender_key_db_key,
+        };
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("late-key.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([21; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let sender = Jid::parse("123456:3@lid").unwrap();
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15555550199@s.whatsapp.net").unwrap()),
+            registration: crate::session::RegistrationStatus::Registered,
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        let mine = prepare_own_sender_key(&group, &sender, None).await.unwrap();
+        let payload = super::super::group_send::text_payload("late distribution fixture").unwrap();
+        let (cipher, _) = encrypt_group_payload(&group, &sender, &mine.updated_key, &payload)
+            .await
+            .unwrap();
+        let node = Node::new("message")
+            .attr("from", group.clone())
+            .attr("participant", sender.clone())
+            .attr("id", "LATE-KEY")
+            .children(vec![
+                Node::new("enc")
+                    .attr("v", "2")
+                    .attr("type", "skmsg")
+                    .bytes(cipher.to_vec()),
+            ]);
+        let capture = preserve(&store, &node).unwrap();
+        assert_eq!(
+            process(&store, &account, &node, &capture).await.unwrap(),
+            IncomingResult::Undecryptable
+        );
+        assert_eq!(
+            super::super::receipts::queue_retry_for_incoming(&store, &account, &node).unwrap(),
+            1
+        );
+        assert_eq!(
+            super::super::receipts::reserve_pending(&store)
+                .unwrap()
+                .len(),
+            1
+        );
+        let receipt = super::super::receipts::outcomes(&store).unwrap();
+        // Install the late distribution as trusted test input. This tests the
+        // group crypto/commit path, not authentication of a new direct SKDM.
+        let (_, bytes) = extract_skdm_from_payload(&mine.distribution_message).unwrap();
+        let installed = process_skdm(
+            &group,
+            &sender,
+            sender_key_db_key(&group, &sender),
+            None,
+            &bytes,
+        )
+        .await
+        .unwrap();
+        assert!(store.write(|tx| commit_skdm(tx, &installed)).unwrap());
+        assert_eq!(
+            process(&store, &account, &node, &capture).await.unwrap(),
+            IncomingResult::Decrypted
+        );
+        let ratchet = store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap();
+        assert_eq!(
+            process(&store, &account, &node, &capture).await.unwrap(),
+            IncomingResult::Duplicate
+        );
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap(),
+            ratchet
+        );
+        assert_eq!(
+            super::super::receipts::queue_retry_for_incoming(&store, &account, &node).unwrap(),
+            0
+        );
+        assert_eq!(super::super::receipts::outcomes(&store).unwrap(), receipt);
+        assert!(
+            super::super::receipts::reserve_pending(&store)
+                .unwrap()
+                .is_empty()
+        );
+        // A stored key cannot turn a malformed skmsg body into Decrypted.
+        for enc in [
+            Node::new("enc").attr("v", "2").attr("type", "skmsg"),
+            Node::new("enc")
+                .attr("v", "2")
+                .attr("type", "skmsg")
+                .children(vec![Node::new("bad")]),
+            Node::new("enc").attr("v", "2").attr("type", "msg"),
+        ] {
+            let bad = node.clone().attr("id", "BAD-BODY").children(vec![enc]);
+            let saved = preserve(&store, &bad).unwrap();
+            assert_eq!(
+                process(&store, &account, &bad, &saved).await.unwrap(),
+                IncomingResult::Unsupported
+            );
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap(),
+                ratchet
+            );
+        }
     }
 
     #[tokio::test]
