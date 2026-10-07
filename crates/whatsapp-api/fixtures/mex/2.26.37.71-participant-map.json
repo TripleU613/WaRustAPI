@@ -1,5 +1,5 @@
 {
-  "evidence": "APK ADv.A0D, 32q.A00, 31c constructors; fixture inputs are synthetic. Actual server typename spellings remain unknown. Hash-matched control strings are offline branch probes, not claimed wire names. Floating/structured string coercion errors are local unported behavior, not APK failures.",
+  "evidence": "APK ADv.A0D, 32q.A00, 31c constructors; fixture inputs are synthetic. Actual server typename spellings remain unknown. Hash-matched control strings are offline branch probes, not claimed wire names. Floating/structured string conversions use executed pinned-AOSP/host-Java references; Android runtime equivalence remains unverified.",
   "hash_reference": [
     {
       "value": "\u0003\u0017\u0018\u0002\u001d\u0015\r",
@@ -1159,7 +1159,7 @@
       }
     },
     {
-      "name": "unported-display-floating",
+      "name": "converted-display-floating",
       "payload": {
         "data": {
           "xwa2_group_query_by_id": {
@@ -1184,11 +1184,40 @@
         },
         "errors": []
       },
-      "error_field": "mex.participant.string_coercion",
-      "error_attribute": "display_name"
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "1",
+              "server": "lid",
+              "kind": "lid"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": null
+          },
+          {
+            "primary": {
+              "user": "12345",
+              "server": "s.whatsapp.net",
+              "kind": "phone"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": "1.0"
+          }
+        ]
+      }
     },
     {
-      "name": "unported-display-object",
+      "name": "converted-display-object",
       "payload": {
         "data": {
           "xwa2_group_query_by_id": {
@@ -1215,11 +1244,40 @@
         },
         "errors": []
       },
-      "error_field": "mex.participant.string_coercion",
-      "error_attribute": "display_name"
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "1",
+              "server": "lid",
+              "kind": "lid"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": null
+          },
+          {
+            "primary": {
+              "user": "12345",
+              "server": "s.whatsapp.net",
+              "kind": "phone"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": "{\"private-name\":1}"
+          }
+        ]
+      }
     },
     {
-      "name": "unported-display-array",
+      "name": "converted-display-array",
       "payload": {
         "data": {
           "xwa2_group_query_by_id": {
@@ -1246,11 +1304,40 @@
         },
         "errors": []
       },
-      "error_field": "mex.participant.string_coercion",
-      "error_attribute": "display_name"
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "1",
+              "server": "lid",
+              "kind": "lid"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": null
+          },
+          {
+            "primary": {
+              "user": "12345",
+              "server": "s.whatsapp.net",
+              "kind": "phone"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": "[\"private-name\"]"
+          }
+        ]
+      }
     },
     {
-      "name": "unported-model-string-coercion",
+      "name": "converted-floating-model-is-unknown",
       "payload": {
         "data": {
           "xwa2_group_query_by_id": {
@@ -1268,8 +1355,10 @@
         },
         "errors": []
       },
-      "error_field": "mex.participant.string_coercion",
-      "error_attribute": "__typename"
+      "expected": {
+        "kind": "members",
+        "members": []
+      }
     },
     {
       "name": "scalar-models-unknown",

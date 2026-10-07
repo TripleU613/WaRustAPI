@@ -1217,3 +1217,26 @@ After diagnostic improvements, the full workspace tests/Clippy/Rustdoc reruns
 passed. Refusals name the offending attribute without its value. Scoped model
 constructors were confirmed as wrappers only; broader string formatting remains
 unported. Repository hygiene passed (599 local links); staged whitespace passed.
+
+
+MEX metadata strings (2026-10-07, offline): formerly unsupported floating,
+object and array display metadata now convert against pinned AOSP/host-Java
+references. Private ordered parsing preserves duplicate position, insertion order,
+escaping and integer negative-zero classification; original public serde data,
+requests and persisted serializers are unchanged. Independent exact-rational
+Java 21 formatter adds no dependency or copied JDK source. 2242 IEEE and 424
+raw JSON references, including 848 member conversion paths, passed. Android
+runtime-version/lexical equivalence and full/live durable group conversion remain
+unverified. Evidence and discovered reference-harness failure are preserved in
+[the string trace](docs/protocol/mex.md#participant-metadata-string-conversion-2026-10-07).
+
+Validation: 632 workspace/all-feature tests, 24 default CLI tests, strict Clippy,
+warning-free Rustdoc, formatting and regenerated CLI reference passed. Actual CLI
+checked 82 member modes, 82 combined modes, 82 default redacted modes and 40
+blocked/no-partial-output cases, plus 848 raw structured member checks and 848
+unchanged default summaries. APK owner-only re-export has 59 unchanged method
+texts / 64 files / 205234 bytes; cached diff took 0.038028 seconds. No account
+access, registration, live transmission or new number acquisition occurred.
+Final repository hygiene passed: tracked-file budgets, 611 local links, package
+licenses and 564315 bytes of APK research checksums; staged whitespace was clean.
+The formatter corpus also passed after the strict-Clippy parity expression fix.

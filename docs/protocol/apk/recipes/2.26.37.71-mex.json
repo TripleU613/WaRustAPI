@@ -41,7 +41,8 @@
       "method": "A02",
       "method_shorty": "LLLL",
       "rust_files": [
-        "crates/whatsapp-api/src/transport/mex.rs"
+        "crates/whatsapp-api/src/transport/mex.rs",
+        "crates/whatsapp-api/src/transport/mex/ordered_json.rs"
       ],
       "anchors": [
         "ArgoWireType not found for ",
@@ -75,7 +76,8 @@
       "method": "A00",
       "method_shorty": "LL",
       "rust_files": [
-        "crates/whatsapp-api/src/transport/mex.rs"
+        "crates/whatsapp-api/src/transport/mex.rs",
+        "crates/whatsapp-api/src/transport/mex/ordered_json.rs"
       ],
       "anchors": [
         "Failed to parse both 'data' and 'errors'",
@@ -200,7 +202,9 @@
       "rust_files": [
         "crates/whatsapp-api/src/transport/mex.rs",
         "crates/whatsapp-api/src/transport/mex/coercion.rs",
-        "crates/whatsapp-api/src/transport/mex/participants.rs"
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "crates/whatsapp-api/src/transport/mex/double_string.rs",
+        "crates/whatsapp-api/src/transport/mex/ordered_json.rs"
       ],
       "anchors": [
         "xwa2_group_query_by_id",
@@ -214,7 +218,9 @@
       "rust_files": [
         "crates/whatsapp-api/src/transport/mex.rs",
         "crates/whatsapp-api/src/transport/mex/coercion.rs",
-        "crates/whatsapp-api/src/transport/mex/participants.rs"
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "crates/whatsapp-api/src/transport/mex/double_string.rs",
+        "crates/whatsapp-api/src/transport/mex/ordered_json.rs"
       ],
       "anchors": [
         "participants_phash_match",
@@ -546,7 +552,9 @@
       "method": "A0E",
       "method_shorty": "LL",
       "rust_files": [
-        "crates/whatsapp-api/src/transport/mex/participants.rs"
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "crates/whatsapp-api/src/transport/mex/double_string.rs",
+        "crates/whatsapp-api/src/transport/mex/ordered_json.rs"
       ],
       "anchors": []
     },
@@ -555,7 +563,9 @@
       "method": "A0F",
       "method_shorty": "LL",
       "rust_files": [
-        "crates/whatsapp-api/src/transport/mex/participants.rs"
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "crates/whatsapp-api/src/transport/mex/double_string.rs",
+        "crates/whatsapp-api/src/transport/mex/ordered_json.rs"
       ],
       "anchors": []
     },

@@ -12,6 +12,8 @@ use crate::{
 };
 
 mod coercion;
+mod double_string;
+mod ordered_json;
 mod participant_address;
 mod participants;
 pub use participant_address::{ParticipantAddress, ParticipantAddressKind};
@@ -132,6 +134,10 @@ pub struct MexJsonResponse {
     data: Option<serde_json::Map<String, serde_json::Value>>,
     errors: Option<Vec<serde_json::Value>>,
     summary: MexResponseSummary,
+    // JSONObject uses LinkedHashMap order for structured optString values.
+    // Keep this scoped to receive parsing; global serde map ordering would
+    // also change persisted/request/research serializers outside this module.
+    ordered_data: Option<ordered_json::OrderedJson>,
 }
 
 /// APK 37.71 QueryGroupInfo callback gate, before the group success callback runs.
@@ -310,11 +316,24 @@ impl MexJsonResponse {
 
     /// Convert ADv.A0D's nullable ordered member map without applying it.
     /// Phash match is distinct from an empty map. Invalid strict primary/alias
-    /// addresses abort; invalid nullable bot entries skip. Java floating and
-    /// structured optString coercions currently refuse explicitly; they are
-    /// local unported forms, not APK-required string types.
+    /// addresses abort; invalid nullable bot entries skip. Structured optString
+    /// preserves original object ordering, escapes and distinct scalar/container
+    /// numeric spellings against pinned AOSP/host-Java references. Complete
+    /// Android runtime and outer lexical equivalence remain unverified.
     pub fn group_participant_map(&self) -> Result<GroupParticipantMap> {
-        participants::convert(self.group_participants()?)
+        let participants = self.group_participants()?;
+        let ordered = self
+            .ordered_data
+            .as_ref()
+            .and_then(|data| data.get("xwa2_group_query_by_id"))
+            .and_then(|group| group.get("participants"))
+            .ok_or_else(|| {
+                Error::invalid(
+                    "mex.group.participants",
+                    "missing ordered participant source",
+                )
+            })?;
+        participants::convert(participants, ordered)
     }
 
     /// Project participant hash flag and object-edge scalars. This inspects
@@ -458,6 +477,9 @@ pub fn parse_json_response(node: &Node) -> Result<MexJsonResponse> {
     }
     let value: serde_json::Value = serde_json::from_slice(body)
         .map_err(|_| Error::invalid("mex.response", "malformed UTF-8 JSON object"))?;
+    let ordered = ordered_json::parse(body)
+        .map_err(|_| Error::invalid("mex.response", "malformed ordered JSON object"))?;
+    let ordered_data = ordered.get("data").cloned();
     let serde_json::Value::Object(mut root) = value else {
         return Err(Error::invalid("mex.response", "expected a JSON object"));
     };
@@ -487,6 +509,7 @@ pub fn parse_json_response(node: &Node) -> Result<MexJsonResponse> {
         data,
         errors,
         summary,
+        ordered_data,
     })
 }
 

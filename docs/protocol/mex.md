@@ -1275,3 +1275,114 @@ numbers directly and yields zero for other nonstring forms, matching the later
 Long.parseLong outcome. No numeric-field correction was needed. That shortcut
 cannot implement display_name optString: private floating/structured text must
 be preserved once its Java formatting is ported, rather than replaced with zero.
+
+
+## Participant metadata string conversion (2026-10-07)
+
+**Confirmed static, APK 2.26.37.71:** LbE.A0E checks JSONObject.isNull before
+optString; A0F uses optString directly. These readers feed ADv.A0D participant
+model dispatch and display_name. See the scoped
+[nullable reader](apk/2.26.37.71-mex/mex-member-nullable-string.txt),
+[default reader](apk/2.26.37.71-mex/mex-member-default-string.txt) and
+[member map](apk/2.26.37.71-mex/mex-participant-map.txt). Thus a nonstring JSON
+value is not automatically an invalid member attribute. This section supersedes
+the preceding local refusal for floating/structured optString forms.
+
+**Observed platform reference:** hash-pinned AOSP org.json at commit
+`de876a01b29230b877c9f408348c38a90ee724a5`, executed on Temurin
+21.0.12.1+1, distinguishes scalar String.valueOf from container
+JSONObject.numberToString/JSONStringer. Missing nullable metadata returns None;
+explicit null also returns None. The default typename reader instead spells
+explicit null `null`, and missing as the empty string. Signed Long values retain
+exact decimal digits. Scalar Double retains `.0` when integral; container Double
+reduces integral values to Long spelling, handles negative floating zero as `-0`,
+and uses its saturating double-to-long/equality branch even at positive 2^63
+(which formats as Long.MAX_VALUE). Finite container doubles otherwise use
+Double.toString. Nonfinite values are rejected by the strict response parser;
+the pure formatter corpus does not authorize them as accepted wire JSON.
+
+JSONStringer preserves insertion order, replaces a duplicate key's value at its
+first insertion position, escapes slash/quote/backslash and control characters,
+and leaves printable Unicode (including U+2028/U+2029) literal. The Rust private
+ordered tree reproduces those reference behaviors. It has no Debug/Serialize
+implementation. Original serde public data/errors, request serialization and
+persisted serialization remain unchanged; no global preserve_order feature or
+new dependency was introduced. Original strict UTF-8/size/depth/JSON validation
+runs first. Only metadata conversion uses the second, private ordered source.
+Edges retain original indices before nonobject entries are filtered, so metadata
+cannot be accidentally paired with another participant. Invariant failures name
+the relevant attribute without printing its value.
+
+**Observed discrepancy and correction:** serde classifies integer-token `-0`
+as a negative Double, while pinned JSONTokener parses it as integer zero. The
+scoped second parser normalizes that exact numeric token outside quoted strings.
+Floating `-0.0`/`-0e0`, quoted `-0`, keys and exponent minus signs retain their
+original interpretation. Public serde data is deliberately unchanged. Android's
+lenient lexical behavior, unpaired UTF-16 and nonfinite JSON are not implemented
+by widening this parser.
+
+The new [double formatter](../../crates/whatsapp-api/src/transport/mex/double_string.rs)
+is an independent exact-rational implementation of the Java 21 decimal selection
+contract, not copied JDK implementation code. IEEE binary64 mantissa/exponent are
+converted to integer numerator/denominator. Rust's shortest decimal gives a digit
+count and order estimate; exact comparison corrects the order, then floor/ceil
+candidates are checked against the original raw bits. The nearest eligible
+candidate wins, with an even coefficient on a tie; shortest one-digit selection
+also considers two digits. This matters for subnormals: the second positive
+subnormal formats as `9.9E-324`, rather than Rust's `1e-323`. Java plain notation
+covers decimal exponents -3 through 6; scientific notation uses uppercase E,
+no positive exponent sign, and a required fractional digit. Source SHA-256 pins
+for the inspected installed Java Double.java/DoubleToDecimal.java are in the
+[2242-case IEEE reference](../../crates/whatsapp-api/fixtures/mex/2.26.37.71-double-string-reference.json).
+No GPL JDK source is copied into the implementation or repository.
+
+**Observed validation, not Android execution:**
+[424 raw JSON references](../../crates/whatsapp-api/fixtures/mex/2.26.37.71-json-string-reference.json)
+cover scalar/container differences, duplicate keys/order, controls, Unicode,
+negative-zero token kinds, Long boundaries and selected floating cases. The
+2242 raw IEEE cases separately test scalar and finite container spellings.
+All 424 raw inputs also pass through both result/update member conversion paths
+(848 cases), with nonobject leading edges testing index preservation. Four of
+the existing 41 member fixtures now succeed where the local implementation
+previously refused: floating/object/array display metadata and floating unknown
+model dispatch. Actual typename spellings remain unknown; synthetic hash
+preimages stay offline and are not proposed server values.
+
+[Java double oracle](MexDoubleStringOracle.java) consumes one unsigned IEEE
+hex string per physical LF line; [raw JSON oracle](MexJsonStringOracle.java)
+consumes one Base64 UTF-8 JSON input per physical LF line. Compile against the
+existing pinned AOSP classes with:
+
+```sh
+javac -cp lab/releases/android-json-reference/classes \
+  -d lab/releases/android-json-reference/classes \
+  docs/protocol/MexDoubleStringOracle.java docs/protocol/MexJsonStringOracle.java
+java -cp lab/releases/android-json-reference/classes MexDoubleStringOracle
+java -cp lab/releases/android-json-reference/classes MexJsonStringOracle
+```
+
+The earlier AOSP reference section records source hashes and compilation stubs.
+Reproduction reads bits/raw inputs from the two fixtures, executes the oracle and
+compares outputs. **Observed harness failure:** Python splitlines interpreted
+literal U+2028/U+2029 inside a single JSON output as row separators, yielding seven
+rows from one physical LF row. Oracle output must be split only on physical LF;
+separator-character cases are retained in the fixture to preserve this lesson.
+
+**Unknown:** the Android runtime version's Double.toString equivalence to host
+Java 21, complete lexical equivalence, full feature-dependent group conversion,
+actual server typename strings, downstream phash-null application, live MEX
+dispatch/action settlement and atomic durable group-state replacement. Host
+reference agreement is not proof of full Android or live server parity.
+
+Existing `mex-response-inspect --group-info --participant-members` exposes the
+completed conversions in explicit private output; default inspection stays
+redacted. The API capability remains CLI transport with x-live false and no HTTP
+route. No live request, registration, account/key mutation or message send was
+part of this chunk.
+
+The owner-only APK re-export contains **59 methods / 64 files / 205234 bytes**.
+All 59 prior method texts, inventory, manifest and tokens are byte-identical;
+topic owners now identify the new string modules.
+[Cached owner diff](apk/mex-string-owner-diff.json) took **0.038028 seconds**.
+Old paths refer to the ignored cached snapshot at Git **a737c69**. This validates
+fast scoped file comparison, not complete release remapping or whole-APK parity.

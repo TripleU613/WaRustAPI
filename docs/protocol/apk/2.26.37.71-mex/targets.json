@@ -135,7 +135,9 @@
     "rust_files": [
       "crates/whatsapp-api/src/transport/mex.rs",
       "crates/whatsapp-api/src/transport/mex/coercion.rs",
-      "crates/whatsapp-api/src/transport/mex/participants.rs"
+      "crates/whatsapp-api/src/transport/mex/participants.rs",
+      "crates/whatsapp-api/src/transport/mex/double_string.rs",
+      "crates/whatsapp-api/src/transport/mex/ordered_json.rs"
     ]
   },
   "mex-gdpr-constructor": {
@@ -254,7 +256,8 @@
     "method_shorty": "LL",
     "methods": 1,
     "rust_files": [
-      "crates/whatsapp-api/src/transport/mex.rs"
+      "crates/whatsapp-api/src/transport/mex.rs",
+      "crates/whatsapp-api/src/transport/mex/ordered_json.rs"
     ]
   },
   "mex-json-iq": {
@@ -344,7 +347,8 @@
     "method_shorty": "LLLL",
     "methods": 1,
     "rust_files": [
-      "crates/whatsapp-api/src/transport/mex.rs"
+      "crates/whatsapp-api/src/transport/mex.rs",
+      "crates/whatsapp-api/src/transport/mex/ordered_json.rs"
     ]
   },
   "mex-json-response-handler": {
@@ -395,7 +399,9 @@
     "method_shorty": "LL",
     "methods": 1,
     "rust_files": [
-      "crates/whatsapp-api/src/transport/mex/participants.rs"
+      "crates/whatsapp-api/src/transport/mex/participants.rs",
+      "crates/whatsapp-api/src/transport/mex/double_string.rs",
+      "crates/whatsapp-api/src/transport/mex/ordered_json.rs"
     ]
   },
   "mex-member-jid-equality": {
@@ -450,7 +456,9 @@
     "method_shorty": "LL",
     "methods": 1,
     "rust_files": [
-      "crates/whatsapp-api/src/transport/mex/participants.rs"
+      "crates/whatsapp-api/src/transport/mex/participants.rs",
+      "crates/whatsapp-api/src/transport/mex/double_string.rs",
+      "crates/whatsapp-api/src/transport/mex/ordered_json.rs"
     ]
   },
   "mex-member-pn-alias": {
@@ -541,7 +549,9 @@
     "rust_files": [
       "crates/whatsapp-api/src/transport/mex.rs",
       "crates/whatsapp-api/src/transport/mex/coercion.rs",
-      "crates/whatsapp-api/src/transport/mex/participants.rs"
+      "crates/whatsapp-api/src/transport/mex/participants.rs",
+      "crates/whatsapp-api/src/transport/mex/double_string.rs",
+      "crates/whatsapp-api/src/transport/mex/ordered_json.rs"
     ]
   },
   "mex-participant-role-enum": {

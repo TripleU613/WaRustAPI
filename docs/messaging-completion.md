@@ -1469,3 +1469,18 @@ preimages were used only offline. Java floating/structured string coercion refus
 explicitly until ported. Full group model/durable MEX application remain unfinished.
 [Evidence/limitations](protocol/mex.md#nullable-ordered-participant-map-port-2026-10-07).
 No account state or live request changed.
+
+
+### MEX participant string metadata (2026-10-07, offline)
+
+Floating/structured display metadata and unknown-model optString conversion
+now work against pinned AOSP/host-Java references. Private ordered parsing retains
+object order/duplicate positions without changing public serde data or persisted
+serializers. All 424 JSON references pass both member result/update paths; 2242
+IEEE values verify formatting. Existing private member CLI exposes the result;
+default inspection remains redacted. See
+[string evidence and remaining unknowns](protocol/mex.md#participant-metadata-string-conversion-2026-10-07).
+Android runtime-version/lexical parity, full feature-dependent group conversion,
+actual typename spellings, downstream null-map handling and live durable MEX
+application remain unfinished. No live session, registration or account/key change
+occurred; no additional number is required for the current client/recipient tests.

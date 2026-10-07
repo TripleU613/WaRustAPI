@@ -62,28 +62,27 @@ fn java_hash(text: &str) -> u32 {
     })
 }
 
-fn nullable_string(value: Option<&Value>, name: &'static str) -> Result<Option<String>> {
-    // LbE.A0E isNull first, then optString. Bool/integral Java String.valueOf
-    // are exact here; floating and structured stringify require a separate
-    // platform-formatting port. Refuse rather than silently drop private data.
-    match value {
-        None | Some(Value::Null) => Ok(None),
-        Some(Value::String(text)) => Ok(Some(text.clone())),
-        Some(Value::Bool(value)) => Ok(Some(value.to_string())),
-        Some(Value::Number(value)) if value.as_i64().is_some() => {
-            Ok(Some(value.as_i64().unwrap().to_string()))
-        }
-        _ => Err(Error::invalid(
+fn nullable_string(
+    value: Option<&super::ordered_json::OrderedJson>,
+    name: &'static str,
+) -> Result<Option<String>> {
+    // LbE.A0E isNull before optString; direct scalar and structured paths
+    // retain their distinct AOSP/host-Java spellings and original object order.
+    let Some(value) = value.filter(|v| !v.is_null()) else {
+        return Ok(None);
+    };
+    value.platform_string().map(Some).ok_or_else(|| {
+        Error::invalid(
             "mex.participant.string_coercion",
-            format!("Java floating/structured optString conversion for {name} is not implemented"),
-        )),
-    }
+            format!("Java string conversion for {name} failed"),
+        )
+    })
 }
 
-fn model_hash(participant: &Map<String, Value>) -> Result<u32> {
+fn model_hash(participant: &super::ordered_json::OrderedJson) -> Result<u32> {
     // A0F does not run isNull: explicit JSONObject.NULL spells "null".
     let text = match participant.get("__typename") {
-        Some(Value::Null) => Some("null".into()),
+        Some(value) if value.is_null() => Some("null".into()),
         value => nullable_string(value, "__typename")?,
     };
     Ok(java_hash(text.as_deref().unwrap_or_default()))
@@ -138,7 +137,10 @@ fn alias(
     }
 }
 
-pub(super) fn convert(participants: &Map<String, Value>) -> Result<GroupParticipantMap> {
+pub(super) fn convert(
+    participants: &Map<String, Value>,
+    ordered: &super::ordered_json::OrderedJson,
+) -> Result<GroupParticipantMap> {
     if coercion::boolean(participants.get("participants_phash_match")) {
         return Ok(GroupParticipantMap::PhashMatch);
     }
@@ -147,17 +149,31 @@ pub(super) fn convert(participants: &Map<String, Value>) -> Result<GroupParticip
     // kinds distinguish the eligible subtypes. Hosted canonicalization thus
     // replaces an existing plain key, retaining its original map position.
     let mut positions: HashMap<ParticipantAddress, usize> = HashMap::new();
-    for edge in participants
+    let ordered_edges = ordered
+        .get("edges")
+        .and_then(super::ordered_json::OrderedJson::as_array)
+        .unwrap_or_default();
+    for (index, edge) in participants
         .get("edges")
         .and_then(Value::as_array)
         .into_iter()
         .flatten()
-        .filter_map(Value::as_object)
+        .enumerate()
+        .filter_map(|(index, value)| value.as_object().map(|edge| (index, edge)))
     {
         let Some(participant) = edge.get("participant").and_then(Value::as_object) else {
             continue;
         };
-        let (address, lid, pn, display_name) = match model_hash(participant)? {
+        let ordered_participant = ordered_edges
+            .get(index)
+            .and_then(|edge| edge.get("participant"))
+            .ok_or_else(|| {
+                Error::invalid(
+                    "mex.participant.string_coercion",
+                    "ordered participant source is missing",
+                )
+            })?;
+        let (address, lid, pn, display_name) = match model_hash(ordered_participant)? {
             BOT_MODEL_HASH => {
                 // 0hj.A03 catches every strict-parser failure and returns null.
                 // Wrong/missing/nonstring bot JID skips; aliases/display ignored.
@@ -175,7 +191,7 @@ pub(super) fn convert(participants: &Map<String, Value>) -> Result<GroupParticip
                 let address = primary(participant, "id")?;
                 let lid = alias(participant, "lid", ParticipantAddressKind::Lid)?;
                 let display_name =
-                    nullable_string(participant.get("display_name"), "display_name")?;
+                    nullable_string(ordered_participant.get("display_name"), "display_name")?;
                 let pn = alias(participant, "pn", ParticipantAddressKind::Phone)?;
                 (address, lid, pn, display_name)
             }

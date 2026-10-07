@@ -810,3 +810,25 @@ this port; broader 32q callers remain untraced. Phone/LID types 0/18 confirmed.
 8yk/8yg/8yj constructors confirmed as nonnull JSONObject wrappers only;
 no additional field validation found. Refusals identify the offending attribute
 without its value; diagnostic fixture checks cover id/lid/pn/display_name/__typename.
+
+
+### Participant string metadata (2026-10-07)
+
+**Confirmed static (APK 2.26.37.71):** LbE.A0E/A0F delegate nullable/default
+strings to JSONObject; ADv.A0D consumes them for display metadata/model dispatch.
+**Observed reference:** pinned AOSP org.json on host Temurin 21.0.12.1+1 agrees
+with the scoped ordered Rust conversion across 424 raw JSON and 2242 IEEE
+references. Original source/token distinctions, duplicate ordering, escaping,
+container integral reduction and negative zero are preserved. An independent
+exact-rational Java 21 formatter implements the specification; no JDK source
+was copied. **Observed corrections:** serde's integer `-0` classification needed
+scoped normalization; Python splitlines broke literal Unicode separators in
+oracle rows and was replaced with physical-LF splitting. Both negative results
+and reproduction evidence are in
+[the string conversion trace](mex.md#participant-metadata-string-conversion-2026-10-07).
+The existing CLI exposes these conversions privately and keeps default summaries
+redacted; API metadata remains CLI-only/x-live false. **Unknown:** Android
+runtime-version and full lexical parity, actual typename spellings, full group
+application/live MEX settlement. Owner-only re-export: 59 unchanged method texts,
+64 files/205234 bytes, cached diff 0.038028 s; baseline Git a737c69. No account
+state access/mutation or live network request.

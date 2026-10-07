@@ -1,0 +1,3398 @@
+{
+  "reference": "Executed hash-pinned AOSP org.json on Temurin21.0.12.1+1, raw JSON input preserves order/duplicate keys/numeric token kinds. Not APK or Android execution.",
+  "oracle": "docs/protocol/MexJsonStringOracle.java",
+  "cases": [
+    {
+      "raw": "{}",
+      "expected": {
+        "default_string": "",
+        "nullable_string": null,
+        "container": "{}"
+      }
+    },
+    {
+      "raw": "{\"value\":null}",
+      "expected": {
+        "default_string": "null",
+        "nullable_string": null,
+        "container": "{\"value\":null}"
+      }
+    },
+    {
+      "raw": "{\"value\":true}",
+      "expected": {
+        "default_string": "true",
+        "nullable_string": "true",
+        "container": "{\"value\":true}"
+      }
+    },
+    {
+      "raw": "{\"value\":false}",
+      "expected": {
+        "default_string": "false",
+        "nullable_string": "false",
+        "container": "{\"value\":false}"
+      }
+    },
+    {
+      "raw": "{\"value\":0}",
+      "expected": {
+        "default_string": "0",
+        "nullable_string": "0",
+        "container": "{\"value\":0}"
+      }
+    },
+    {
+      "raw": "{\"value\":-0}",
+      "expected": {
+        "default_string": "0",
+        "nullable_string": "0",
+        "container": "{\"value\":0}"
+      }
+    },
+    {
+      "raw": "{\"value\":0.0}",
+      "expected": {
+        "default_string": "0.0",
+        "nullable_string": "0.0",
+        "container": "{\"value\":0}"
+      }
+    },
+    {
+      "raw": "{\"value\":-0.0}",
+      "expected": {
+        "default_string": "-0.0",
+        "nullable_string": "-0.0",
+        "container": "{\"value\":-0}"
+      }
+    },
+    {
+      "raw": "{\"value\":1}",
+      "expected": {
+        "default_string": "1",
+        "nullable_string": "1",
+        "container": "{\"value\":1}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0}",
+      "expected": {
+        "default_string": "1.0",
+        "nullable_string": "1.0",
+        "container": "{\"value\":1}"
+      }
+    },
+    {
+      "raw": "{\"value\":42}",
+      "expected": {
+        "default_string": "42",
+        "nullable_string": "42",
+        "container": "{\"value\":42}"
+      }
+    },
+    {
+      "raw": "{\"value\":9223372036854775807}",
+      "expected": {
+        "default_string": "9223372036854775807",
+        "nullable_string": "9223372036854775807",
+        "container": "{\"value\":9223372036854775807}"
+      }
+    },
+    {
+      "raw": "{\"value\":9223372036854775808}",
+      "expected": {
+        "default_string": "9.223372036854776E18",
+        "nullable_string": "9.223372036854776E18",
+        "container": "{\"value\":9223372036854775807}"
+      }
+    },
+    {
+      "raw": "{\"value\":18446744073709551615}",
+      "expected": {
+        "default_string": "1.8446744073709552E19",
+        "nullable_string": "1.8446744073709552E19",
+        "container": "{\"value\":1.8446744073709552E19}"
+      }
+    },
+    {
+      "raw": "{\"value\":99999999999999999999999999999999999999}",
+      "expected": {
+        "default_string": "1.0E38",
+        "nullable_string": "1.0E38",
+        "container": "{\"value\":1.0E38}"
+      }
+    },
+    {
+      "raw": "{\"value\":1e-3}",
+      "expected": {
+        "default_string": "0.001",
+        "nullable_string": "0.001",
+        "container": "{\"value\":0.001}"
+      }
+    },
+    {
+      "raw": "{\"value\":1e-4}",
+      "expected": {
+        "default_string": "1.0E-4",
+        "nullable_string": "1.0E-4",
+        "container": "{\"value\":1.0E-4}"
+      }
+    },
+    {
+      "raw": "{\"value\":1e6}",
+      "expected": {
+        "default_string": "1000000.0",
+        "nullable_string": "1000000.0",
+        "container": "{\"value\":1000000}"
+      }
+    },
+    {
+      "raw": "{\"value\":1e7}",
+      "expected": {
+        "default_string": "1.0E7",
+        "nullable_string": "1.0E7",
+        "container": "{\"value\":10000000}"
+      }
+    },
+    {
+      "raw": "{\"value\":1e23}",
+      "expected": {
+        "default_string": "1.0E23",
+        "nullable_string": "1.0E23",
+        "container": "{\"value\":1.0E23}"
+      }
+    },
+    {
+      "raw": "{\"value\":[]}",
+      "expected": {
+        "default_string": "[]",
+        "nullable_string": "[]",
+        "container": "{\"value\":[]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{}}",
+      "expected": {
+        "default_string": "{}",
+        "nullable_string": "{}",
+        "container": "{\"value\":{}}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"z\":2,\"a\":1,\"z\":3}}",
+      "expected": {
+        "default_string": "{\"z\":3,\"a\":1}",
+        "nullable_string": "{\"z\":3,\"a\":1}",
+        "container": "{\"value\":{\"z\":3,\"a\":1}}"
+      }
+    },
+    {
+      "raw": "{\"left\":1,\"value\":{\"b\":2,\"a\":1},\"right\":3}",
+      "expected": {
+        "default_string": "{\"b\":2,\"a\":1}",
+        "nullable_string": "{\"b\":2,\"a\":1}",
+        "container": "{\"left\":1,\"value\":{\"b\":2,\"a\":1},\"right\":3}"
+      }
+    },
+    {
+      "raw": "{\"value\":1,\"a\":2,\"value\":2.0}",
+      "expected": {
+        "default_string": "2.0",
+        "nullable_string": "2.0",
+        "container": "{\"value\":2,\"a\":2}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0,-0.0,0.0,9223372036854775808,{\"z\":2.5,\"a\":\"x/y\"}]}",
+      "expected": {
+        "default_string": "[1,-0,0,9223372036854775807,{\"z\":2.5,\"a\":\"x\\/y\"}]",
+        "nullable_string": "[1,-0,0,9223372036854775807,{\"z\":2.5,\"a\":\"x\\/y\"}]",
+        "container": "{\"value\":[1,-0,0,9223372036854775807,{\"z\":2.5,\"a\":\"x\\/y\"}]}"
+      }
+    },
+    {
+      "raw": "{\"value\":\"\"}",
+      "expected": {
+        "default_string": "",
+        "nullable_string": "",
+        "container": "{\"value\":\"\"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\"\"]}",
+      "expected": {
+        "default_string": "[\"\"]",
+        "nullable_string": "[\"\"]",
+        "container": "{\"value\":[\"\"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"\":\"\"}}",
+      "expected": {
+        "default_string": "{\"\":\"\"}",
+        "nullable_string": "{\"\":\"\"}",
+        "container": "{\"value\":{\"\":\"\"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":\"synthetic\"}",
+      "expected": {
+        "default_string": "synthetic",
+        "nullable_string": "synthetic",
+        "container": "{\"value\":\"synthetic\"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\"synthetic\"]}",
+      "expected": {
+        "default_string": "[\"synthetic\"]",
+        "nullable_string": "[\"synthetic\"]",
+        "container": "{\"value\":[\"synthetic\"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"synthetic\":\"synthetic\"}}",
+      "expected": {
+        "default_string": "{\"synthetic\":\"synthetic\"}",
+        "nullable_string": "{\"synthetic\":\"synthetic\"}",
+        "container": "{\"value\":{\"synthetic\":\"synthetic\"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":\"a/b\"}",
+      "expected": {
+        "default_string": "a/b",
+        "nullable_string": "a/b",
+        "container": "{\"value\":\"a\\/b\"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\"a/b\"]}",
+      "expected": {
+        "default_string": "[\"a\\/b\"]",
+        "nullable_string": "[\"a\\/b\"]",
+        "container": "{\"value\":[\"a\\/b\"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"a/b\":\"a/b\"}}",
+      "expected": {
+        "default_string": "{\"a\\/b\":\"a\\/b\"}",
+        "nullable_string": "{\"a\\/b\":\"a\\/b\"}",
+        "container": "{\"value\":{\"a\\/b\":\"a\\/b\"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":\"a\\\\b\"}",
+      "expected": {
+        "default_string": "a\\b",
+        "nullable_string": "a\\b",
+        "container": "{\"value\":\"a\\\\b\"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\"a\\\\b\"]}",
+      "expected": {
+        "default_string": "[\"a\\\\b\"]",
+        "nullable_string": "[\"a\\\\b\"]",
+        "container": "{\"value\":[\"a\\\\b\"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"a\\\\b\":\"a\\\\b\"}}",
+      "expected": {
+        "default_string": "{\"a\\\\b\":\"a\\\\b\"}",
+        "nullable_string": "{\"a\\\\b\":\"a\\\\b\"}",
+        "container": "{\"value\":{\"a\\\\b\":\"a\\\\b\"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":\"a\\\"b\"}",
+      "expected": {
+        "default_string": "a\"b",
+        "nullable_string": "a\"b",
+        "container": "{\"value\":\"a\\\"b\"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\"a\\\"b\"]}",
+      "expected": {
+        "default_string": "[\"a\\\"b\"]",
+        "nullable_string": "[\"a\\\"b\"]",
+        "container": "{\"value\":[\"a\\\"b\"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"a\\\"b\":\"a\\\"b\"}}",
+      "expected": {
+        "default_string": "{\"a\\\"b\":\"a\\\"b\"}",
+        "nullable_string": "{\"a\\\"b\":\"a\\\"b\"}",
+        "container": "{\"value\":{\"a\\\"b\":\"a\\\"b\"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":\"\\t\\b\\n\\r\\f\"}",
+      "expected": {
+        "default_string": "\t\b\n\r\f",
+        "nullable_string": "\t\b\n\r\f",
+        "container": "{\"value\":\"\\t\\b\\n\\r\\f\"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\"\\t\\b\\n\\r\\f\"]}",
+      "expected": {
+        "default_string": "[\"\\t\\b\\n\\r\\f\"]",
+        "nullable_string": "[\"\\t\\b\\n\\r\\f\"]",
+        "container": "{\"value\":[\"\\t\\b\\n\\r\\f\"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"\\t\\b\\n\\r\\f\":\"\\t\\b\\n\\r\\f\"}}",
+      "expected": {
+        "default_string": "{\"\\t\\b\\n\\r\\f\":\"\\t\\b\\n\\r\\f\"}",
+        "nullable_string": "{\"\\t\\b\\n\\r\\f\":\"\\t\\b\\n\\r\\f\"}",
+        "container": "{\"value\":{\"\\t\\b\\n\\r\\f\":\"\\t\\b\\n\\r\\f\"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"}",
+      "expected": {
+        "default_string": "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f",
+        "nullable_string": "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f",
+        "container": "{\"value\":\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"]}",
+      "expected": {
+        "default_string": "[\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"]",
+        "nullable_string": "[\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"]",
+        "container": "{\"value\":[\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\":\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"}}",
+      "expected": {
+        "default_string": "{\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\":\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"}",
+        "nullable_string": "{\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\":\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"}",
+        "container": "{\"value\":{\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\":\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":\"\\u00e9\\ud83d\\ude00\\u2028\\u2029\"}",
+      "expected": {
+        "default_string": "\u00e9\ud83d\ude00\u2028\u2029",
+        "nullable_string": "\u00e9\ud83d\ude00\u2028\u2029",
+        "container": "{\"value\":\"\u00e9\ud83d\ude00\u2028\u2029\"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\"\\u00e9\\ud83d\\ude00\\u2028\\u2029\"]}",
+      "expected": {
+        "default_string": "[\"\u00e9\ud83d\ude00\u2028\u2029\"]",
+        "nullable_string": "[\"\u00e9\ud83d\ude00\u2028\u2029\"]",
+        "container": "{\"value\":[\"\u00e9\ud83d\ude00\u2028\u2029\"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"\\u00e9\\ud83d\\ude00\\u2028\\u2029\":\"\\u00e9\\ud83d\\ude00\\u2028\\u2029\"}}",
+      "expected": {
+        "default_string": "{\"\u00e9\ud83d\ude00\u2028\u2029\":\"\u00e9\ud83d\ude00\u2028\u2029\"}",
+        "nullable_string": "{\"\u00e9\ud83d\ude00\u2028\u2029\":\"\u00e9\ud83d\ude00\u2028\u2029\"}",
+        "container": "{\"value\":{\"\u00e9\ud83d\ude00\u2028\u2029\":\"\u00e9\ud83d\ude00\u2028\u2029\"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":\"\\ufeff\"}",
+      "expected": {
+        "default_string": "\ufeff",
+        "nullable_string": "\ufeff",
+        "container": "{\"value\":\"\ufeff\"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\"\\ufeff\"]}",
+      "expected": {
+        "default_string": "[\"\ufeff\"]",
+        "nullable_string": "[\"\ufeff\"]",
+        "container": "{\"value\":[\"\ufeff\"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"\\ufeff\":\"\\ufeff\"}}",
+      "expected": {
+        "default_string": "{\"\ufeff\":\"\ufeff\"}",
+        "nullable_string": "{\"\ufeff\":\"\ufeff\"}",
+        "container": "{\"value\":{\"\ufeff\":\"\ufeff\"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":\"<>&\"}",
+      "expected": {
+        "default_string": "<>&",
+        "nullable_string": "<>&",
+        "container": "{\"value\":\"<>&\"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\"<>&\"]}",
+      "expected": {
+        "default_string": "[\"<>&\"]",
+        "nullable_string": "[\"<>&\"]",
+        "container": "{\"value\":[\"<>&\"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"<>&\":\"<>&\"}}",
+      "expected": {
+        "default_string": "{\"<>&\":\"<>&\"}",
+        "nullable_string": "{\"<>&\":\"<>&\"}",
+        "container": "{\"value\":{\"<>&\":\"<>&\"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":\"null\"}",
+      "expected": {
+        "default_string": "null",
+        "nullable_string": "null",
+        "container": "{\"value\":\"null\"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\"null\"]}",
+      "expected": {
+        "default_string": "[\"null\"]",
+        "nullable_string": "[\"null\"]",
+        "container": "{\"value\":[\"null\"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"null\":\"null\"}}",
+      "expected": {
+        "default_string": "{\"null\":\"null\"}",
+        "nullable_string": "{\"null\":\"null\"}",
+        "container": "{\"value\":{\"null\":\"null\"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":\"-0\"}",
+      "expected": {
+        "default_string": "-0",
+        "nullable_string": "-0",
+        "container": "{\"value\":\"-0\"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\"-0\"]}",
+      "expected": {
+        "default_string": "[\"-0\"]",
+        "nullable_string": "[\"-0\"]",
+        "container": "{\"value\":[\"-0\"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"-0\":\"-0\"}}",
+      "expected": {
+        "default_string": "{\"-0\":\"-0\"}",
+        "nullable_string": "{\"-0\":\"-0\"}",
+        "container": "{\"value\":{\"-0\":\"-0\"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":\" -0 \"}",
+      "expected": {
+        "default_string": " -0 ",
+        "nullable_string": " -0 ",
+        "container": "{\"value\":\" -0 \"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\" -0 \"]}",
+      "expected": {
+        "default_string": "[\" -0 \"]",
+        "nullable_string": "[\" -0 \"]",
+        "container": "{\"value\":[\" -0 \"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\" -0 \":\" -0 \"}}",
+      "expected": {
+        "default_string": "{\" -0 \":\" -0 \"}",
+        "nullable_string": "{\" -0 \":\" -0 \"}",
+        "container": "{\"value\":{\" -0 \":\" -0 \"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":\"\\\"-0\\\"\"}",
+      "expected": {
+        "default_string": "\"-0\"",
+        "nullable_string": "\"-0\"",
+        "container": "{\"value\":\"\\\"-0\\\"\"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\"\\\"-0\\\"\"]}",
+      "expected": {
+        "default_string": "[\"\\\"-0\\\"\"]",
+        "nullable_string": "[\"\\\"-0\\\"\"]",
+        "container": "{\"value\":[\"\\\"-0\\\"\"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"\\\"-0\\\"\":\"\\\"-0\\\"\"}}",
+      "expected": {
+        "default_string": "{\"\\\"-0\\\"\":\"\\\"-0\\\"\"}",
+        "nullable_string": "{\"\\\"-0\\\"\":\"\\\"-0\\\"\"}",
+        "container": "{\"value\":{\"\\\"-0\\\"\":\"\\\"-0\\\"\"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":\"\\\\-0\"}",
+      "expected": {
+        "default_string": "\\-0",
+        "nullable_string": "\\-0",
+        "container": "{\"value\":\"\\\\-0\"}"
+      }
+    },
+    {
+      "raw": "{\"value\":[\"\\\\-0\"]}",
+      "expected": {
+        "default_string": "[\"\\\\-0\"]",
+        "nullable_string": "[\"\\\\-0\"]",
+        "container": "{\"value\":[\"\\\\-0\"]}"
+      }
+    },
+    {
+      "raw": "{\"value\":{\"\\\\-0\":\"\\\\-0\"}}",
+      "expected": {
+        "default_string": "{\"\\\\-0\":\"\\\\-0\"}",
+        "nullable_string": "{\"\\\\-0\":\"\\\\-0\"}",
+        "container": "{\"value\":{\"\\\\-0\":\"\\\\-0\"}}"
+      }
+    },
+    {
+      "raw": "{\"value\":[0.0]}",
+      "expected": {
+        "default_string": "[0]",
+        "nullable_string": "[0]",
+        "container": "{\"value\":[0]}"
+      }
+    },
+    {
+      "raw": "{\"value\":[-0.0]}",
+      "expected": {
+        "default_string": "[-0]",
+        "nullable_string": "[-0]",
+        "container": "{\"value\":[-0]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.9E-324}",
+      "expected": {
+        "default_string": "4.9E-324",
+        "nullable_string": "4.9E-324",
+        "container": "{\"value\":4.9E-324}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.9E-324]}",
+      "expected": {
+        "default_string": "[4.9E-324]",
+        "nullable_string": "[4.9E-324]",
+        "container": "{\"value\":[4.9E-324]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.9E-324}",
+      "expected": {
+        "default_string": "9.9E-324",
+        "nullable_string": "9.9E-324",
+        "container": "{\"value\":9.9E-324}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.9E-324]}",
+      "expected": {
+        "default_string": "[9.9E-324]",
+        "nullable_string": "[9.9E-324]",
+        "container": "{\"value\":[9.9E-324]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.5E-323}",
+      "expected": {
+        "default_string": "1.5E-323",
+        "nullable_string": "1.5E-323",
+        "container": "{\"value\":1.5E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.5E-323]}",
+      "expected": {
+        "default_string": "[1.5E-323]",
+        "nullable_string": "[1.5E-323]",
+        "container": "{\"value\":[1.5E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.0E-323}",
+      "expected": {
+        "default_string": "2.0E-323",
+        "nullable_string": "2.0E-323",
+        "container": "{\"value\":2.0E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.0E-323]}",
+      "expected": {
+        "default_string": "[2.0E-323]",
+        "nullable_string": "[2.0E-323]",
+        "container": "{\"value\":[2.0E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.2250738585072014E-308}",
+      "expected": {
+        "default_string": "2.2250738585072014E-308",
+        "nullable_string": "2.2250738585072014E-308",
+        "container": "{\"value\":2.2250738585072014E-308}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.2250738585072014E-308]}",
+      "expected": {
+        "default_string": "[2.2250738585072014E-308]",
+        "nullable_string": "[2.2250738585072014E-308]",
+        "container": "{\"value\":[2.2250738585072014E-308]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.7976931348623157E308}",
+      "expected": {
+        "default_string": "1.7976931348623157E308",
+        "nullable_string": "1.7976931348623157E308",
+        "container": "{\"value\":1.7976931348623157E308}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.7976931348623157E308]}",
+      "expected": {
+        "default_string": "[1.7976931348623157E308]",
+        "nullable_string": "[1.7976931348623157E308]",
+        "container": "{\"value\":[1.7976931348623157E308]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.5E-323}",
+      "expected": {
+        "default_string": "2.5E-323",
+        "nullable_string": "2.5E-323",
+        "container": "{\"value\":2.5E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.5E-323]}",
+      "expected": {
+        "default_string": "[2.5E-323]",
+        "nullable_string": "[2.5E-323]",
+        "container": "{\"value\":[2.5E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.0E-323}",
+      "expected": {
+        "default_string": "3.0E-323",
+        "nullable_string": "3.0E-323",
+        "container": "{\"value\":3.0E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.0E-323]}",
+      "expected": {
+        "default_string": "[3.0E-323]",
+        "nullable_string": "[3.0E-323]",
+        "container": "{\"value\":[3.0E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.5E-323}",
+      "expected": {
+        "default_string": "3.5E-323",
+        "nullable_string": "3.5E-323",
+        "container": "{\"value\":3.5E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.5E-323]}",
+      "expected": {
+        "default_string": "[3.5E-323]",
+        "nullable_string": "[3.5E-323]",
+        "container": "{\"value\":[3.5E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.0E-323}",
+      "expected": {
+        "default_string": "4.0E-323",
+        "nullable_string": "4.0E-323",
+        "container": "{\"value\":4.0E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.0E-323]}",
+      "expected": {
+        "default_string": "[4.0E-323]",
+        "nullable_string": "[4.0E-323]",
+        "container": "{\"value\":[4.0E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.4E-323}",
+      "expected": {
+        "default_string": "4.4E-323",
+        "nullable_string": "4.4E-323",
+        "container": "{\"value\":4.4E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.4E-323]}",
+      "expected": {
+        "default_string": "[4.4E-323]",
+        "nullable_string": "[4.4E-323]",
+        "container": "{\"value\":[4.4E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.9E-323}",
+      "expected": {
+        "default_string": "4.9E-323",
+        "nullable_string": "4.9E-323",
+        "container": "{\"value\":4.9E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.9E-323]}",
+      "expected": {
+        "default_string": "[4.9E-323]",
+        "nullable_string": "[4.9E-323]",
+        "container": "{\"value\":[4.9E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":5.4E-323}",
+      "expected": {
+        "default_string": "5.4E-323",
+        "nullable_string": "5.4E-323",
+        "container": "{\"value\":5.4E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[5.4E-323]}",
+      "expected": {
+        "default_string": "[5.4E-323]",
+        "nullable_string": "[5.4E-323]",
+        "container": "{\"value\":[5.4E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":5.9E-323}",
+      "expected": {
+        "default_string": "5.9E-323",
+        "nullable_string": "5.9E-323",
+        "container": "{\"value\":5.9E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[5.9E-323]}",
+      "expected": {
+        "default_string": "[5.9E-323]",
+        "nullable_string": "[5.9E-323]",
+        "container": "{\"value\":[5.9E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":6.4E-323}",
+      "expected": {
+        "default_string": "6.4E-323",
+        "nullable_string": "6.4E-323",
+        "container": "{\"value\":6.4E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[6.4E-323]}",
+      "expected": {
+        "default_string": "[6.4E-323]",
+        "nullable_string": "[6.4E-323]",
+        "container": "{\"value\":[6.4E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":6.9E-323}",
+      "expected": {
+        "default_string": "6.9E-323",
+        "nullable_string": "6.9E-323",
+        "container": "{\"value\":6.9E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[6.9E-323]}",
+      "expected": {
+        "default_string": "[6.9E-323]",
+        "nullable_string": "[6.9E-323]",
+        "container": "{\"value\":[6.9E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":7.4E-323}",
+      "expected": {
+        "default_string": "7.4E-323",
+        "nullable_string": "7.4E-323",
+        "container": "{\"value\":7.4E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[7.4E-323]}",
+      "expected": {
+        "default_string": "[7.4E-323]",
+        "nullable_string": "[7.4E-323]",
+        "container": "{\"value\":[7.4E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":7.9E-323}",
+      "expected": {
+        "default_string": "7.9E-323",
+        "nullable_string": "7.9E-323",
+        "container": "{\"value\":7.9E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[7.9E-323]}",
+      "expected": {
+        "default_string": "[7.9E-323]",
+        "nullable_string": "[7.9E-323]",
+        "container": "{\"value\":[7.9E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":8.4E-323}",
+      "expected": {
+        "default_string": "8.4E-323",
+        "nullable_string": "8.4E-323",
+        "container": "{\"value\":8.4E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[8.4E-323]}",
+      "expected": {
+        "default_string": "[8.4E-323]",
+        "nullable_string": "[8.4E-323]",
+        "container": "{\"value\":[8.4E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":8.9E-323}",
+      "expected": {
+        "default_string": "8.9E-323",
+        "nullable_string": "8.9E-323",
+        "container": "{\"value\":8.9E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[8.9E-323]}",
+      "expected": {
+        "default_string": "[8.9E-323]",
+        "nullable_string": "[8.9E-323]",
+        "container": "{\"value\":[8.9E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.4E-323}",
+      "expected": {
+        "default_string": "9.4E-323",
+        "nullable_string": "9.4E-323",
+        "container": "{\"value\":9.4E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.4E-323]}",
+      "expected": {
+        "default_string": "[9.4E-323]",
+        "nullable_string": "[9.4E-323]",
+        "container": "{\"value\":[9.4E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.9E-323}",
+      "expected": {
+        "default_string": "9.9E-323",
+        "nullable_string": "9.9E-323",
+        "container": "{\"value\":9.9E-323}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.9E-323]}",
+      "expected": {
+        "default_string": "[9.9E-323]",
+        "nullable_string": "[9.9E-323]",
+        "container": "{\"value\":[9.9E-323]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.04E-322}",
+      "expected": {
+        "default_string": "1.04E-322",
+        "nullable_string": "1.04E-322",
+        "container": "{\"value\":1.04E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.04E-322]}",
+      "expected": {
+        "default_string": "[1.04E-322]",
+        "nullable_string": "[1.04E-322]",
+        "container": "{\"value\":[1.04E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.1E-322}",
+      "expected": {
+        "default_string": "1.1E-322",
+        "nullable_string": "1.1E-322",
+        "container": "{\"value\":1.1E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.1E-322]}",
+      "expected": {
+        "default_string": "[1.1E-322]",
+        "nullable_string": "[1.1E-322]",
+        "container": "{\"value\":[1.1E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.14E-322}",
+      "expected": {
+        "default_string": "1.14E-322",
+        "nullable_string": "1.14E-322",
+        "container": "{\"value\":1.14E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.14E-322]}",
+      "expected": {
+        "default_string": "[1.14E-322]",
+        "nullable_string": "[1.14E-322]",
+        "container": "{\"value\":[1.14E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.2E-322}",
+      "expected": {
+        "default_string": "1.2E-322",
+        "nullable_string": "1.2E-322",
+        "container": "{\"value\":1.2E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.2E-322]}",
+      "expected": {
+        "default_string": "[1.2E-322]",
+        "nullable_string": "[1.2E-322]",
+        "container": "{\"value\":[1.2E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.24E-322}",
+      "expected": {
+        "default_string": "1.24E-322",
+        "nullable_string": "1.24E-322",
+        "container": "{\"value\":1.24E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.24E-322]}",
+      "expected": {
+        "default_string": "[1.24E-322]",
+        "nullable_string": "[1.24E-322]",
+        "container": "{\"value\":[1.24E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.3E-322}",
+      "expected": {
+        "default_string": "1.3E-322",
+        "nullable_string": "1.3E-322",
+        "container": "{\"value\":1.3E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.3E-322]}",
+      "expected": {
+        "default_string": "[1.3E-322]",
+        "nullable_string": "[1.3E-322]",
+        "container": "{\"value\":[1.3E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.33E-322}",
+      "expected": {
+        "default_string": "1.33E-322",
+        "nullable_string": "1.33E-322",
+        "container": "{\"value\":1.33E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.33E-322]}",
+      "expected": {
+        "default_string": "[1.33E-322]",
+        "nullable_string": "[1.33E-322]",
+        "container": "{\"value\":[1.33E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.4E-322}",
+      "expected": {
+        "default_string": "1.4E-322",
+        "nullable_string": "1.4E-322",
+        "container": "{\"value\":1.4E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.4E-322]}",
+      "expected": {
+        "default_string": "[1.4E-322]",
+        "nullable_string": "[1.4E-322]",
+        "container": "{\"value\":[1.4E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.43E-322}",
+      "expected": {
+        "default_string": "1.43E-322",
+        "nullable_string": "1.43E-322",
+        "container": "{\"value\":1.43E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.43E-322]}",
+      "expected": {
+        "default_string": "[1.43E-322]",
+        "nullable_string": "[1.43E-322]",
+        "container": "{\"value\":[1.43E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.5E-322}",
+      "expected": {
+        "default_string": "1.5E-322",
+        "nullable_string": "1.5E-322",
+        "container": "{\"value\":1.5E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.5E-322]}",
+      "expected": {
+        "default_string": "[1.5E-322]",
+        "nullable_string": "[1.5E-322]",
+        "container": "{\"value\":[1.5E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.53E-322}",
+      "expected": {
+        "default_string": "1.53E-322",
+        "nullable_string": "1.53E-322",
+        "container": "{\"value\":1.53E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.53E-322]}",
+      "expected": {
+        "default_string": "[1.53E-322]",
+        "nullable_string": "[1.53E-322]",
+        "container": "{\"value\":[1.53E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.6E-322}",
+      "expected": {
+        "default_string": "1.6E-322",
+        "nullable_string": "1.6E-322",
+        "container": "{\"value\":1.6E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.6E-322]}",
+      "expected": {
+        "default_string": "[1.6E-322]",
+        "nullable_string": "[1.6E-322]",
+        "container": "{\"value\":[1.6E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.63E-322}",
+      "expected": {
+        "default_string": "1.63E-322",
+        "nullable_string": "1.63E-322",
+        "container": "{\"value\":1.63E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.63E-322]}",
+      "expected": {
+        "default_string": "[1.63E-322]",
+        "nullable_string": "[1.63E-322]",
+        "container": "{\"value\":[1.63E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.7E-322}",
+      "expected": {
+        "default_string": "1.7E-322",
+        "nullable_string": "1.7E-322",
+        "container": "{\"value\":1.7E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.7E-322]}",
+      "expected": {
+        "default_string": "[1.7E-322]",
+        "nullable_string": "[1.7E-322]",
+        "container": "{\"value\":[1.7E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.73E-322}",
+      "expected": {
+        "default_string": "1.73E-322",
+        "nullable_string": "1.73E-322",
+        "container": "{\"value\":1.73E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.73E-322]}",
+      "expected": {
+        "default_string": "[1.73E-322]",
+        "nullable_string": "[1.73E-322]",
+        "container": "{\"value\":[1.73E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.8E-322}",
+      "expected": {
+        "default_string": "1.8E-322",
+        "nullable_string": "1.8E-322",
+        "container": "{\"value\":1.8E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.8E-322]}",
+      "expected": {
+        "default_string": "[1.8E-322]",
+        "nullable_string": "[1.8E-322]",
+        "container": "{\"value\":[1.8E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.83E-322}",
+      "expected": {
+        "default_string": "1.83E-322",
+        "nullable_string": "1.83E-322",
+        "container": "{\"value\":1.83E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.83E-322]}",
+      "expected": {
+        "default_string": "[1.83E-322]",
+        "nullable_string": "[1.83E-322]",
+        "container": "{\"value\":[1.83E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.9E-322}",
+      "expected": {
+        "default_string": "1.9E-322",
+        "nullable_string": "1.9E-322",
+        "container": "{\"value\":1.9E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.9E-322]}",
+      "expected": {
+        "default_string": "[1.9E-322]",
+        "nullable_string": "[1.9E-322]",
+        "container": "{\"value\":[1.9E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.93E-322}",
+      "expected": {
+        "default_string": "1.93E-322",
+        "nullable_string": "1.93E-322",
+        "container": "{\"value\":1.93E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.93E-322]}",
+      "expected": {
+        "default_string": "[1.93E-322]",
+        "nullable_string": "[1.93E-322]",
+        "container": "{\"value\":[1.93E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.0E-322}",
+      "expected": {
+        "default_string": "2.0E-322",
+        "nullable_string": "2.0E-322",
+        "container": "{\"value\":2.0E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.0E-322]}",
+      "expected": {
+        "default_string": "[2.0E-322]",
+        "nullable_string": "[2.0E-322]",
+        "container": "{\"value\":[2.0E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.03E-322}",
+      "expected": {
+        "default_string": "2.03E-322",
+        "nullable_string": "2.03E-322",
+        "container": "{\"value\":2.03E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.03E-322]}",
+      "expected": {
+        "default_string": "[2.03E-322]",
+        "nullable_string": "[2.03E-322]",
+        "container": "{\"value\":[2.03E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.08E-322}",
+      "expected": {
+        "default_string": "2.08E-322",
+        "nullable_string": "2.08E-322",
+        "container": "{\"value\":2.08E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.08E-322]}",
+      "expected": {
+        "default_string": "[2.08E-322]",
+        "nullable_string": "[2.08E-322]",
+        "container": "{\"value\":[2.08E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.1E-322}",
+      "expected": {
+        "default_string": "2.1E-322",
+        "nullable_string": "2.1E-322",
+        "container": "{\"value\":2.1E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.1E-322]}",
+      "expected": {
+        "default_string": "[2.1E-322]",
+        "nullable_string": "[2.1E-322]",
+        "container": "{\"value\":[2.1E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.17E-322}",
+      "expected": {
+        "default_string": "2.17E-322",
+        "nullable_string": "2.17E-322",
+        "container": "{\"value\":2.17E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.17E-322]}",
+      "expected": {
+        "default_string": "[2.17E-322]",
+        "nullable_string": "[2.17E-322]",
+        "container": "{\"value\":[2.17E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.2E-322}",
+      "expected": {
+        "default_string": "2.2E-322",
+        "nullable_string": "2.2E-322",
+        "container": "{\"value\":2.2E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.2E-322]}",
+      "expected": {
+        "default_string": "[2.2E-322]",
+        "nullable_string": "[2.2E-322]",
+        "container": "{\"value\":[2.2E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.27E-322}",
+      "expected": {
+        "default_string": "2.27E-322",
+        "nullable_string": "2.27E-322",
+        "container": "{\"value\":2.27E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.27E-322]}",
+      "expected": {
+        "default_string": "[2.27E-322]",
+        "nullable_string": "[2.27E-322]",
+        "container": "{\"value\":[2.27E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.3E-322}",
+      "expected": {
+        "default_string": "2.3E-322",
+        "nullable_string": "2.3E-322",
+        "container": "{\"value\":2.3E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.3E-322]}",
+      "expected": {
+        "default_string": "[2.3E-322]",
+        "nullable_string": "[2.3E-322]",
+        "container": "{\"value\":[2.3E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.37E-322}",
+      "expected": {
+        "default_string": "2.37E-322",
+        "nullable_string": "2.37E-322",
+        "container": "{\"value\":2.37E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.37E-322]}",
+      "expected": {
+        "default_string": "[2.37E-322]",
+        "nullable_string": "[2.37E-322]",
+        "container": "{\"value\":[2.37E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.4E-322}",
+      "expected": {
+        "default_string": "2.4E-322",
+        "nullable_string": "2.4E-322",
+        "container": "{\"value\":2.4E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.4E-322]}",
+      "expected": {
+        "default_string": "[2.4E-322]",
+        "nullable_string": "[2.4E-322]",
+        "container": "{\"value\":[2.4E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.47E-322}",
+      "expected": {
+        "default_string": "2.47E-322",
+        "nullable_string": "2.47E-322",
+        "container": "{\"value\":2.47E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.47E-322]}",
+      "expected": {
+        "default_string": "[2.47E-322]",
+        "nullable_string": "[2.47E-322]",
+        "container": "{\"value\":[2.47E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.5E-322}",
+      "expected": {
+        "default_string": "2.5E-322",
+        "nullable_string": "2.5E-322",
+        "container": "{\"value\":2.5E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.5E-322]}",
+      "expected": {
+        "default_string": "[2.5E-322]",
+        "nullable_string": "[2.5E-322]",
+        "container": "{\"value\":[2.5E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.57E-322}",
+      "expected": {
+        "default_string": "2.57E-322",
+        "nullable_string": "2.57E-322",
+        "container": "{\"value\":2.57E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.57E-322]}",
+      "expected": {
+        "default_string": "[2.57E-322]",
+        "nullable_string": "[2.57E-322]",
+        "container": "{\"value\":[2.57E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.6E-322}",
+      "expected": {
+        "default_string": "2.6E-322",
+        "nullable_string": "2.6E-322",
+        "container": "{\"value\":2.6E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.6E-322]}",
+      "expected": {
+        "default_string": "[2.6E-322]",
+        "nullable_string": "[2.6E-322]",
+        "container": "{\"value\":[2.6E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.67E-322}",
+      "expected": {
+        "default_string": "2.67E-322",
+        "nullable_string": "2.67E-322",
+        "container": "{\"value\":2.67E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.67E-322]}",
+      "expected": {
+        "default_string": "[2.67E-322]",
+        "nullable_string": "[2.67E-322]",
+        "container": "{\"value\":[2.67E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.7E-322}",
+      "expected": {
+        "default_string": "2.7E-322",
+        "nullable_string": "2.7E-322",
+        "container": "{\"value\":2.7E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.7E-322]}",
+      "expected": {
+        "default_string": "[2.7E-322]",
+        "nullable_string": "[2.7E-322]",
+        "container": "{\"value\":[2.7E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.77E-322}",
+      "expected": {
+        "default_string": "2.77E-322",
+        "nullable_string": "2.77E-322",
+        "container": "{\"value\":2.77E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.77E-322]}",
+      "expected": {
+        "default_string": "[2.77E-322]",
+        "nullable_string": "[2.77E-322]",
+        "container": "{\"value\":[2.77E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.8E-322}",
+      "expected": {
+        "default_string": "2.8E-322",
+        "nullable_string": "2.8E-322",
+        "container": "{\"value\":2.8E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.8E-322]}",
+      "expected": {
+        "default_string": "[2.8E-322]",
+        "nullable_string": "[2.8E-322]",
+        "container": "{\"value\":[2.8E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.87E-322}",
+      "expected": {
+        "default_string": "2.87E-322",
+        "nullable_string": "2.87E-322",
+        "container": "{\"value\":2.87E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.87E-322]}",
+      "expected": {
+        "default_string": "[2.87E-322]",
+        "nullable_string": "[2.87E-322]",
+        "container": "{\"value\":[2.87E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.9E-322}",
+      "expected": {
+        "default_string": "2.9E-322",
+        "nullable_string": "2.9E-322",
+        "container": "{\"value\":2.9E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.9E-322]}",
+      "expected": {
+        "default_string": "[2.9E-322]",
+        "nullable_string": "[2.9E-322]",
+        "container": "{\"value\":[2.9E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.96E-322}",
+      "expected": {
+        "default_string": "2.96E-322",
+        "nullable_string": "2.96E-322",
+        "container": "{\"value\":2.96E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.96E-322]}",
+      "expected": {
+        "default_string": "[2.96E-322]",
+        "nullable_string": "[2.96E-322]",
+        "container": "{\"value\":[2.96E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.0E-322}",
+      "expected": {
+        "default_string": "3.0E-322",
+        "nullable_string": "3.0E-322",
+        "container": "{\"value\":3.0E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.0E-322]}",
+      "expected": {
+        "default_string": "[3.0E-322]",
+        "nullable_string": "[3.0E-322]",
+        "container": "{\"value\":[3.0E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.06E-322}",
+      "expected": {
+        "default_string": "3.06E-322",
+        "nullable_string": "3.06E-322",
+        "container": "{\"value\":3.06E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.06E-322]}",
+      "expected": {
+        "default_string": "[3.06E-322]",
+        "nullable_string": "[3.06E-322]",
+        "container": "{\"value\":[3.06E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.1E-322}",
+      "expected": {
+        "default_string": "3.1E-322",
+        "nullable_string": "3.1E-322",
+        "container": "{\"value\":3.1E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.1E-322]}",
+      "expected": {
+        "default_string": "[3.1E-322]",
+        "nullable_string": "[3.1E-322]",
+        "container": "{\"value\":[3.1E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.16E-322}",
+      "expected": {
+        "default_string": "3.16E-322",
+        "nullable_string": "3.16E-322",
+        "container": "{\"value\":3.16E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.16E-322]}",
+      "expected": {
+        "default_string": "[3.16E-322]",
+        "nullable_string": "[3.16E-322]",
+        "container": "{\"value\":[3.16E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.2E-322}",
+      "expected": {
+        "default_string": "3.2E-322",
+        "nullable_string": "3.2E-322",
+        "container": "{\"value\":3.2E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.2E-322]}",
+      "expected": {
+        "default_string": "[3.2E-322]",
+        "nullable_string": "[3.2E-322]",
+        "container": "{\"value\":[3.2E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.26E-322}",
+      "expected": {
+        "default_string": "3.26E-322",
+        "nullable_string": "3.26E-322",
+        "container": "{\"value\":3.26E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.26E-322]}",
+      "expected": {
+        "default_string": "[3.26E-322]",
+        "nullable_string": "[3.26E-322]",
+        "container": "{\"value\":[3.26E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.3E-322}",
+      "expected": {
+        "default_string": "3.3E-322",
+        "nullable_string": "3.3E-322",
+        "container": "{\"value\":3.3E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.3E-322]}",
+      "expected": {
+        "default_string": "[3.3E-322]",
+        "nullable_string": "[3.3E-322]",
+        "container": "{\"value\":[3.3E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.36E-322}",
+      "expected": {
+        "default_string": "3.36E-322",
+        "nullable_string": "3.36E-322",
+        "container": "{\"value\":3.36E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.36E-322]}",
+      "expected": {
+        "default_string": "[3.36E-322]",
+        "nullable_string": "[3.36E-322]",
+        "container": "{\"value\":[3.36E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.4E-322}",
+      "expected": {
+        "default_string": "3.4E-322",
+        "nullable_string": "3.4E-322",
+        "container": "{\"value\":3.4E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.4E-322]}",
+      "expected": {
+        "default_string": "[3.4E-322]",
+        "nullable_string": "[3.4E-322]",
+        "container": "{\"value\":[3.4E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.46E-322}",
+      "expected": {
+        "default_string": "3.46E-322",
+        "nullable_string": "3.46E-322",
+        "container": "{\"value\":3.46E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.46E-322]}",
+      "expected": {
+        "default_string": "[3.46E-322]",
+        "nullable_string": "[3.46E-322]",
+        "container": "{\"value\":[3.46E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.5E-322}",
+      "expected": {
+        "default_string": "3.5E-322",
+        "nullable_string": "3.5E-322",
+        "container": "{\"value\":3.5E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.5E-322]}",
+      "expected": {
+        "default_string": "[3.5E-322]",
+        "nullable_string": "[3.5E-322]",
+        "container": "{\"value\":[3.5E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.56E-322}",
+      "expected": {
+        "default_string": "3.56E-322",
+        "nullable_string": "3.56E-322",
+        "container": "{\"value\":3.56E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.56E-322]}",
+      "expected": {
+        "default_string": "[3.56E-322]",
+        "nullable_string": "[3.56E-322]",
+        "container": "{\"value\":[3.56E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.6E-322}",
+      "expected": {
+        "default_string": "3.6E-322",
+        "nullable_string": "3.6E-322",
+        "container": "{\"value\":3.6E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.6E-322]}",
+      "expected": {
+        "default_string": "[3.6E-322]",
+        "nullable_string": "[3.6E-322]",
+        "container": "{\"value\":[3.6E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.66E-322}",
+      "expected": {
+        "default_string": "3.66E-322",
+        "nullable_string": "3.66E-322",
+        "container": "{\"value\":3.66E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.66E-322]}",
+      "expected": {
+        "default_string": "[3.66E-322]",
+        "nullable_string": "[3.66E-322]",
+        "container": "{\"value\":[3.66E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.7E-322}",
+      "expected": {
+        "default_string": "3.7E-322",
+        "nullable_string": "3.7E-322",
+        "container": "{\"value\":3.7E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.7E-322]}",
+      "expected": {
+        "default_string": "[3.7E-322]",
+        "nullable_string": "[3.7E-322]",
+        "container": "{\"value\":[3.7E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.75E-322}",
+      "expected": {
+        "default_string": "3.75E-322",
+        "nullable_string": "3.75E-322",
+        "container": "{\"value\":3.75E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.75E-322]}",
+      "expected": {
+        "default_string": "[3.75E-322]",
+        "nullable_string": "[3.75E-322]",
+        "container": "{\"value\":[3.75E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.8E-322}",
+      "expected": {
+        "default_string": "3.8E-322",
+        "nullable_string": "3.8E-322",
+        "container": "{\"value\":3.8E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.8E-322]}",
+      "expected": {
+        "default_string": "[3.8E-322]",
+        "nullable_string": "[3.8E-322]",
+        "container": "{\"value\":[3.8E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.85E-322}",
+      "expected": {
+        "default_string": "3.85E-322",
+        "nullable_string": "3.85E-322",
+        "container": "{\"value\":3.85E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.85E-322]}",
+      "expected": {
+        "default_string": "[3.85E-322]",
+        "nullable_string": "[3.85E-322]",
+        "container": "{\"value\":[3.85E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.9E-322}",
+      "expected": {
+        "default_string": "3.9E-322",
+        "nullable_string": "3.9E-322",
+        "container": "{\"value\":3.9E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.9E-322]}",
+      "expected": {
+        "default_string": "[3.9E-322]",
+        "nullable_string": "[3.9E-322]",
+        "container": "{\"value\":[3.9E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":3.95E-322}",
+      "expected": {
+        "default_string": "3.95E-322",
+        "nullable_string": "3.95E-322",
+        "container": "{\"value\":3.95E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[3.95E-322]}",
+      "expected": {
+        "default_string": "[3.95E-322]",
+        "nullable_string": "[3.95E-322]",
+        "container": "{\"value\":[3.95E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.0E-322}",
+      "expected": {
+        "default_string": "4.0E-322",
+        "nullable_string": "4.0E-322",
+        "container": "{\"value\":4.0E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.0E-322]}",
+      "expected": {
+        "default_string": "[4.0E-322]",
+        "nullable_string": "[4.0E-322]",
+        "container": "{\"value\":[4.0E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.05E-322}",
+      "expected": {
+        "default_string": "4.05E-322",
+        "nullable_string": "4.05E-322",
+        "container": "{\"value\":4.05E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.05E-322]}",
+      "expected": {
+        "default_string": "[4.05E-322]",
+        "nullable_string": "[4.05E-322]",
+        "container": "{\"value\":[4.05E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.1E-322}",
+      "expected": {
+        "default_string": "4.1E-322",
+        "nullable_string": "4.1E-322",
+        "container": "{\"value\":4.1E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.1E-322]}",
+      "expected": {
+        "default_string": "[4.1E-322]",
+        "nullable_string": "[4.1E-322]",
+        "container": "{\"value\":[4.1E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.15E-322}",
+      "expected": {
+        "default_string": "4.15E-322",
+        "nullable_string": "4.15E-322",
+        "container": "{\"value\":4.15E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.15E-322]}",
+      "expected": {
+        "default_string": "[4.15E-322]",
+        "nullable_string": "[4.15E-322]",
+        "container": "{\"value\":[4.15E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.2E-322}",
+      "expected": {
+        "default_string": "4.2E-322",
+        "nullable_string": "4.2E-322",
+        "container": "{\"value\":4.2E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.2E-322]}",
+      "expected": {
+        "default_string": "[4.2E-322]",
+        "nullable_string": "[4.2E-322]",
+        "container": "{\"value\":[4.2E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.25E-322}",
+      "expected": {
+        "default_string": "4.25E-322",
+        "nullable_string": "4.25E-322",
+        "container": "{\"value\":4.25E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.25E-322]}",
+      "expected": {
+        "default_string": "[4.25E-322]",
+        "nullable_string": "[4.25E-322]",
+        "container": "{\"value\":[4.25E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.3E-322}",
+      "expected": {
+        "default_string": "4.3E-322",
+        "nullable_string": "4.3E-322",
+        "container": "{\"value\":4.3E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.3E-322]}",
+      "expected": {
+        "default_string": "[4.3E-322]",
+        "nullable_string": "[4.3E-322]",
+        "container": "{\"value\":[4.3E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.35E-322}",
+      "expected": {
+        "default_string": "4.35E-322",
+        "nullable_string": "4.35E-322",
+        "container": "{\"value\":4.35E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.35E-322]}",
+      "expected": {
+        "default_string": "[4.35E-322]",
+        "nullable_string": "[4.35E-322]",
+        "container": "{\"value\":[4.35E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.4E-322}",
+      "expected": {
+        "default_string": "4.4E-322",
+        "nullable_string": "4.4E-322",
+        "container": "{\"value\":4.4E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.4E-322]}",
+      "expected": {
+        "default_string": "[4.4E-322]",
+        "nullable_string": "[4.4E-322]",
+        "container": "{\"value\":[4.4E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.45E-322}",
+      "expected": {
+        "default_string": "4.45E-322",
+        "nullable_string": "4.45E-322",
+        "container": "{\"value\":4.45E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.45E-322]}",
+      "expected": {
+        "default_string": "[4.45E-322]",
+        "nullable_string": "[4.45E-322]",
+        "container": "{\"value\":[4.45E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.5E-322}",
+      "expected": {
+        "default_string": "4.5E-322",
+        "nullable_string": "4.5E-322",
+        "container": "{\"value\":4.5E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.5E-322]}",
+      "expected": {
+        "default_string": "[4.5E-322]",
+        "nullable_string": "[4.5E-322]",
+        "container": "{\"value\":[4.5E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.55E-322}",
+      "expected": {
+        "default_string": "4.55E-322",
+        "nullable_string": "4.55E-322",
+        "container": "{\"value\":4.55E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.55E-322]}",
+      "expected": {
+        "default_string": "[4.55E-322]",
+        "nullable_string": "[4.55E-322]",
+        "container": "{\"value\":[4.55E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.6E-322}",
+      "expected": {
+        "default_string": "4.6E-322",
+        "nullable_string": "4.6E-322",
+        "container": "{\"value\":4.6E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.6E-322]}",
+      "expected": {
+        "default_string": "[4.6E-322]",
+        "nullable_string": "[4.6E-322]",
+        "container": "{\"value\":[4.6E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.64E-322}",
+      "expected": {
+        "default_string": "4.64E-322",
+        "nullable_string": "4.64E-322",
+        "container": "{\"value\":4.64E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.64E-322]}",
+      "expected": {
+        "default_string": "[4.64E-322]",
+        "nullable_string": "[4.64E-322]",
+        "container": "{\"value\":[4.64E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.7E-322}",
+      "expected": {
+        "default_string": "4.7E-322",
+        "nullable_string": "4.7E-322",
+        "container": "{\"value\":4.7E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.7E-322]}",
+      "expected": {
+        "default_string": "[4.7E-322]",
+        "nullable_string": "[4.7E-322]",
+        "container": "{\"value\":[4.7E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.74E-322}",
+      "expected": {
+        "default_string": "4.74E-322",
+        "nullable_string": "4.74E-322",
+        "container": "{\"value\":4.74E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.74E-322]}",
+      "expected": {
+        "default_string": "[4.74E-322]",
+        "nullable_string": "[4.74E-322]",
+        "container": "{\"value\":[4.74E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.8E-322}",
+      "expected": {
+        "default_string": "4.8E-322",
+        "nullable_string": "4.8E-322",
+        "container": "{\"value\":4.8E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.8E-322]}",
+      "expected": {
+        "default_string": "[4.8E-322]",
+        "nullable_string": "[4.8E-322]",
+        "container": "{\"value\":[4.8E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.84E-322}",
+      "expected": {
+        "default_string": "4.84E-322",
+        "nullable_string": "4.84E-322",
+        "container": "{\"value\":4.84E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.84E-322]}",
+      "expected": {
+        "default_string": "[4.84E-322]",
+        "nullable_string": "[4.84E-322]",
+        "container": "{\"value\":[4.84E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.9E-322}",
+      "expected": {
+        "default_string": "4.9E-322",
+        "nullable_string": "4.9E-322",
+        "container": "{\"value\":4.9E-322}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.9E-322]}",
+      "expected": {
+        "default_string": "[4.9E-322]",
+        "nullable_string": "[4.9E-322]",
+        "container": "{\"value\":[4.9E-322]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999994E-309}",
+      "expected": {
+        "default_string": "9.999999999999994E-309",
+        "nullable_string": "9.999999999999994E-309",
+        "container": "{\"value\":9.999999999999994E-309}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999994E-309]}",
+      "expected": {
+        "default_string": "[9.999999999999994E-309]",
+        "nullable_string": "[9.999999999999994E-309]",
+        "container": "{\"value\":[9.999999999999994E-309]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E-308}",
+      "expected": {
+        "default_string": "1.0E-308",
+        "nullable_string": "1.0E-308",
+        "container": "{\"value\":1.0E-308}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E-308]}",
+      "expected": {
+        "default_string": "[1.0E-308]",
+        "nullable_string": "[1.0E-308]",
+        "container": "{\"value\":[1.0E-308]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000004E-308}",
+      "expected": {
+        "default_string": "1.0000000000000004E-308",
+        "nullable_string": "1.0000000000000004E-308",
+        "container": "{\"value\":1.0000000000000004E-308}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000004E-308]}",
+      "expected": {
+        "default_string": "[1.0000000000000004E-308]",
+        "nullable_string": "[1.0000000000000004E-308]",
+        "container": "{\"value\":[1.0000000000000004E-308]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999999E-101}",
+      "expected": {
+        "default_string": "9.999999999999999E-101",
+        "nullable_string": "9.999999999999999E-101",
+        "container": "{\"value\":9.999999999999999E-101}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999999E-101]}",
+      "expected": {
+        "default_string": "[9.999999999999999E-101]",
+        "nullable_string": "[9.999999999999999E-101]",
+        "container": "{\"value\":[9.999999999999999E-101]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E-100}",
+      "expected": {
+        "default_string": "1.0E-100",
+        "nullable_string": "1.0E-100",
+        "container": "{\"value\":1.0E-100}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E-100]}",
+      "expected": {
+        "default_string": "[1.0E-100]",
+        "nullable_string": "[1.0E-100]",
+        "container": "{\"value\":[1.0E-100]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000001E-100}",
+      "expected": {
+        "default_string": "1.0000000000000001E-100",
+        "nullable_string": "1.0000000000000001E-100",
+        "container": "{\"value\":1.0000000000000001E-100}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000001E-100]}",
+      "expected": {
+        "default_string": "[1.0000000000000001E-100]",
+        "nullable_string": "[1.0000000000000001E-100]",
+        "container": "{\"value\":[1.0000000000000001E-100]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999999E-5}",
+      "expected": {
+        "default_string": "9.999999999999999E-5",
+        "nullable_string": "9.999999999999999E-5",
+        "container": "{\"value\":9.999999999999999E-5}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999999E-5]}",
+      "expected": {
+        "default_string": "[9.999999999999999E-5]",
+        "nullable_string": "[9.999999999999999E-5]",
+        "container": "{\"value\":[9.999999999999999E-5]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E-4}",
+      "expected": {
+        "default_string": "1.0E-4",
+        "nullable_string": "1.0E-4",
+        "container": "{\"value\":1.0E-4}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E-4]}",
+      "expected": {
+        "default_string": "[1.0E-4]",
+        "nullable_string": "[1.0E-4]",
+        "container": "{\"value\":[1.0E-4]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000002E-4}",
+      "expected": {
+        "default_string": "1.0000000000000002E-4",
+        "nullable_string": "1.0000000000000002E-4",
+        "container": "{\"value\":1.0000000000000002E-4}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000002E-4]}",
+      "expected": {
+        "default_string": "[1.0000000000000002E-4]",
+        "nullable_string": "[1.0000000000000002E-4]",
+        "container": "{\"value\":[1.0000000000000002E-4]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999998E-4}",
+      "expected": {
+        "default_string": "9.999999999999998E-4",
+        "nullable_string": "9.999999999999998E-4",
+        "container": "{\"value\":9.999999999999998E-4}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999998E-4]}",
+      "expected": {
+        "default_string": "[9.999999999999998E-4]",
+        "nullable_string": "[9.999999999999998E-4]",
+        "container": "{\"value\":[9.999999999999998E-4]}"
+      }
+    },
+    {
+      "raw": "{\"value\":0.001}",
+      "expected": {
+        "default_string": "0.001",
+        "nullable_string": "0.001",
+        "container": "{\"value\":0.001}"
+      }
+    },
+    {
+      "raw": "{\"value\":[0.001]}",
+      "expected": {
+        "default_string": "[0.001]",
+        "nullable_string": "[0.001]",
+        "container": "{\"value\":[0.001]}"
+      }
+    },
+    {
+      "raw": "{\"value\":0.0010000000000000002}",
+      "expected": {
+        "default_string": "0.0010000000000000002",
+        "nullable_string": "0.0010000000000000002",
+        "container": "{\"value\":0.0010000000000000002}"
+      }
+    },
+    {
+      "raw": "{\"value\":[0.0010000000000000002]}",
+      "expected": {
+        "default_string": "[0.0010000000000000002]",
+        "nullable_string": "[0.0010000000000000002]",
+        "container": "{\"value\":[0.0010000000000000002]}"
+      }
+    },
+    {
+      "raw": "{\"value\":0.009999999999999998}",
+      "expected": {
+        "default_string": "0.009999999999999998",
+        "nullable_string": "0.009999999999999998",
+        "container": "{\"value\":0.009999999999999998}"
+      }
+    },
+    {
+      "raw": "{\"value\":[0.009999999999999998]}",
+      "expected": {
+        "default_string": "[0.009999999999999998]",
+        "nullable_string": "[0.009999999999999998]",
+        "container": "{\"value\":[0.009999999999999998]}"
+      }
+    },
+    {
+      "raw": "{\"value\":0.01}",
+      "expected": {
+        "default_string": "0.01",
+        "nullable_string": "0.01",
+        "container": "{\"value\":0.01}"
+      }
+    },
+    {
+      "raw": "{\"value\":[0.01]}",
+      "expected": {
+        "default_string": "[0.01]",
+        "nullable_string": "[0.01]",
+        "container": "{\"value\":[0.01]}"
+      }
+    },
+    {
+      "raw": "{\"value\":0.010000000000000002}",
+      "expected": {
+        "default_string": "0.010000000000000002",
+        "nullable_string": "0.010000000000000002",
+        "container": "{\"value\":0.010000000000000002}"
+      }
+    },
+    {
+      "raw": "{\"value\":[0.010000000000000002]}",
+      "expected": {
+        "default_string": "[0.010000000000000002]",
+        "nullable_string": "[0.010000000000000002]",
+        "container": "{\"value\":[0.010000000000000002]}"
+      }
+    },
+    {
+      "raw": "{\"value\":0.09999999999999999}",
+      "expected": {
+        "default_string": "0.09999999999999999",
+        "nullable_string": "0.09999999999999999",
+        "container": "{\"value\":0.09999999999999999}"
+      }
+    },
+    {
+      "raw": "{\"value\":[0.09999999999999999]}",
+      "expected": {
+        "default_string": "[0.09999999999999999]",
+        "nullable_string": "[0.09999999999999999]",
+        "container": "{\"value\":[0.09999999999999999]}"
+      }
+    },
+    {
+      "raw": "{\"value\":0.1}",
+      "expected": {
+        "default_string": "0.1",
+        "nullable_string": "0.1",
+        "container": "{\"value\":0.1}"
+      }
+    },
+    {
+      "raw": "{\"value\":[0.1]}",
+      "expected": {
+        "default_string": "[0.1]",
+        "nullable_string": "[0.1]",
+        "container": "{\"value\":[0.1]}"
+      }
+    },
+    {
+      "raw": "{\"value\":0.10000000000000002}",
+      "expected": {
+        "default_string": "0.10000000000000002",
+        "nullable_string": "0.10000000000000002",
+        "container": "{\"value\":0.10000000000000002}"
+      }
+    },
+    {
+      "raw": "{\"value\":[0.10000000000000002]}",
+      "expected": {
+        "default_string": "[0.10000000000000002]",
+        "nullable_string": "[0.10000000000000002]",
+        "container": "{\"value\":[0.10000000000000002]}"
+      }
+    },
+    {
+      "raw": "{\"value\":0.9999999999999999}",
+      "expected": {
+        "default_string": "0.9999999999999999",
+        "nullable_string": "0.9999999999999999",
+        "container": "{\"value\":0.9999999999999999}"
+      }
+    },
+    {
+      "raw": "{\"value\":[0.9999999999999999]}",
+      "expected": {
+        "default_string": "[0.9999999999999999]",
+        "nullable_string": "[0.9999999999999999]",
+        "container": "{\"value\":[0.9999999999999999]}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0]}",
+      "expected": {
+        "default_string": "[1]",
+        "nullable_string": "[1]",
+        "container": "{\"value\":[1]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000002}",
+      "expected": {
+        "default_string": "1.0000000000000002",
+        "nullable_string": "1.0000000000000002",
+        "container": "{\"value\":1.0000000000000002}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000002]}",
+      "expected": {
+        "default_string": "[1.0000000000000002]",
+        "nullable_string": "[1.0000000000000002]",
+        "container": "{\"value\":[1.0000000000000002]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999998}",
+      "expected": {
+        "default_string": "9.999999999999998",
+        "nullable_string": "9.999999999999998",
+        "container": "{\"value\":9.999999999999998}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999998]}",
+      "expected": {
+        "default_string": "[9.999999999999998]",
+        "nullable_string": "[9.999999999999998]",
+        "container": "{\"value\":[9.999999999999998]}"
+      }
+    },
+    {
+      "raw": "{\"value\":10.0}",
+      "expected": {
+        "default_string": "10.0",
+        "nullable_string": "10.0",
+        "container": "{\"value\":10}"
+      }
+    },
+    {
+      "raw": "{\"value\":[10.0]}",
+      "expected": {
+        "default_string": "[10]",
+        "nullable_string": "[10]",
+        "container": "{\"value\":[10]}"
+      }
+    },
+    {
+      "raw": "{\"value\":10.000000000000002}",
+      "expected": {
+        "default_string": "10.000000000000002",
+        "nullable_string": "10.000000000000002",
+        "container": "{\"value\":10.000000000000002}"
+      }
+    },
+    {
+      "raw": "{\"value\":[10.000000000000002]}",
+      "expected": {
+        "default_string": "[10.000000000000002]",
+        "nullable_string": "[10.000000000000002]",
+        "container": "{\"value\":[10.000000000000002]}"
+      }
+    },
+    {
+      "raw": "{\"value\":999999.9999999999}",
+      "expected": {
+        "default_string": "999999.9999999999",
+        "nullable_string": "999999.9999999999",
+        "container": "{\"value\":999999.9999999999}"
+      }
+    },
+    {
+      "raw": "{\"value\":[999999.9999999999]}",
+      "expected": {
+        "default_string": "[999999.9999999999]",
+        "nullable_string": "[999999.9999999999]",
+        "container": "{\"value\":[999999.9999999999]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1000000.0}",
+      "expected": {
+        "default_string": "1000000.0",
+        "nullable_string": "1000000.0",
+        "container": "{\"value\":1000000}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1000000.0]}",
+      "expected": {
+        "default_string": "[1000000]",
+        "nullable_string": "[1000000]",
+        "container": "{\"value\":[1000000]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1000000.0000000001}",
+      "expected": {
+        "default_string": "1000000.0000000001",
+        "nullable_string": "1000000.0000000001",
+        "container": "{\"value\":1000000.0000000001}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1000000.0000000001]}",
+      "expected": {
+        "default_string": "[1000000.0000000001]",
+        "nullable_string": "[1000000.0000000001]",
+        "container": "{\"value\":[1000000.0000000001]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9999999.999999998}",
+      "expected": {
+        "default_string": "9999999.999999998",
+        "nullable_string": "9999999.999999998",
+        "container": "{\"value\":9999999.999999998}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9999999.999999998]}",
+      "expected": {
+        "default_string": "[9999999.999999998]",
+        "nullable_string": "[9999999.999999998]",
+        "container": "{\"value\":[9999999.999999998]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E7}",
+      "expected": {
+        "default_string": "1.0E7",
+        "nullable_string": "1.0E7",
+        "container": "{\"value\":10000000}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E7]}",
+      "expected": {
+        "default_string": "[10000000]",
+        "nullable_string": "[10000000]",
+        "container": "{\"value\":[10000000]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000002E7}",
+      "expected": {
+        "default_string": "1.0000000000000002E7",
+        "nullable_string": "1.0000000000000002E7",
+        "container": "{\"value\":1.0000000000000002E7}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000002E7]}",
+      "expected": {
+        "default_string": "[1.0000000000000002E7]",
+        "nullable_string": "[1.0000000000000002E7]",
+        "container": "{\"value\":[1.0000000000000002E7]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999998E15}",
+      "expected": {
+        "default_string": "9.999999999999998E15",
+        "nullable_string": "9.999999999999998E15",
+        "container": "{\"value\":9999999999999998}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999998E15]}",
+      "expected": {
+        "default_string": "[9999999999999998]",
+        "nullable_string": "[9999999999999998]",
+        "container": "{\"value\":[9999999999999998]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E16}",
+      "expected": {
+        "default_string": "1.0E16",
+        "nullable_string": "1.0E16",
+        "container": "{\"value\":10000000000000000}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E16]}",
+      "expected": {
+        "default_string": "[10000000000000000]",
+        "nullable_string": "[10000000000000000]",
+        "container": "{\"value\":[10000000000000000]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000002E16}",
+      "expected": {
+        "default_string": "1.0000000000000002E16",
+        "nullable_string": "1.0000000000000002E16",
+        "container": "{\"value\":10000000000000002}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000002E16]}",
+      "expected": {
+        "default_string": "[10000000000000002]",
+        "nullable_string": "[10000000000000002]",
+        "container": "{\"value\":[10000000000000002]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999998E16}",
+      "expected": {
+        "default_string": "9.999999999999998E16",
+        "nullable_string": "9.999999999999998E16",
+        "container": "{\"value\":99999999999999984}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999998E16]}",
+      "expected": {
+        "default_string": "[99999999999999984]",
+        "nullable_string": "[99999999999999984]",
+        "container": "{\"value\":[99999999999999984]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E17}",
+      "expected": {
+        "default_string": "1.0E17",
+        "nullable_string": "1.0E17",
+        "container": "{\"value\":100000000000000000}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E17]}",
+      "expected": {
+        "default_string": "[100000000000000000]",
+        "nullable_string": "[100000000000000000]",
+        "container": "{\"value\":[100000000000000000]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000002E17}",
+      "expected": {
+        "default_string": "1.0000000000000002E17",
+        "nullable_string": "1.0000000000000002E17",
+        "container": "{\"value\":100000000000000016}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000002E17]}",
+      "expected": {
+        "default_string": "[100000000000000016]",
+        "nullable_string": "[100000000000000016]",
+        "container": "{\"value\":[100000000000000016]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999999E17}",
+      "expected": {
+        "default_string": "9.999999999999999E17",
+        "nullable_string": "9.999999999999999E17",
+        "container": "{\"value\":999999999999999872}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999999E17]}",
+      "expected": {
+        "default_string": "[999999999999999872]",
+        "nullable_string": "[999999999999999872]",
+        "container": "{\"value\":[999999999999999872]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E18}",
+      "expected": {
+        "default_string": "1.0E18",
+        "nullable_string": "1.0E18",
+        "container": "{\"value\":1000000000000000000}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E18]}",
+      "expected": {
+        "default_string": "[1000000000000000000]",
+        "nullable_string": "[1000000000000000000]",
+        "container": "{\"value\":[1000000000000000000]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000001E18}",
+      "expected": {
+        "default_string": "1.0000000000000001E18",
+        "nullable_string": "1.0000000000000001E18",
+        "container": "{\"value\":1000000000000000128}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000001E18]}",
+      "expected": {
+        "default_string": "[1000000000000000128]",
+        "nullable_string": "[1000000000000000128]",
+        "container": "{\"value\":[1000000000000000128]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999998E18}",
+      "expected": {
+        "default_string": "9.999999999999998E18",
+        "nullable_string": "9.999999999999998E18",
+        "container": "{\"value\":9.999999999999998E18}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999998E18]}",
+      "expected": {
+        "default_string": "[9.999999999999998E18]",
+        "nullable_string": "[9.999999999999998E18]",
+        "container": "{\"value\":[9.999999999999998E18]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E19}",
+      "expected": {
+        "default_string": "1.0E19",
+        "nullable_string": "1.0E19",
+        "container": "{\"value\":1.0E19}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E19]}",
+      "expected": {
+        "default_string": "[1.0E19]",
+        "nullable_string": "[1.0E19]",
+        "container": "{\"value\":[1.0E19]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000002E19}",
+      "expected": {
+        "default_string": "1.0000000000000002E19",
+        "nullable_string": "1.0000000000000002E19",
+        "container": "{\"value\":1.0000000000000002E19}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000002E19]}",
+      "expected": {
+        "default_string": "[1.0000000000000002E19]",
+        "nullable_string": "[1.0000000000000002E19]",
+        "container": "{\"value\":[1.0000000000000002E19]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999998E19}",
+      "expected": {
+        "default_string": "9.999999999999998E19",
+        "nullable_string": "9.999999999999998E19",
+        "container": "{\"value\":9.999999999999998E19}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999998E19]}",
+      "expected": {
+        "default_string": "[9.999999999999998E19]",
+        "nullable_string": "[9.999999999999998E19]",
+        "container": "{\"value\":[9.999999999999998E19]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E20}",
+      "expected": {
+        "default_string": "1.0E20",
+        "nullable_string": "1.0E20",
+        "container": "{\"value\":1.0E20}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E20]}",
+      "expected": {
+        "default_string": "[1.0E20]",
+        "nullable_string": "[1.0E20]",
+        "container": "{\"value\":[1.0E20]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000002E20}",
+      "expected": {
+        "default_string": "1.0000000000000002E20",
+        "nullable_string": "1.0000000000000002E20",
+        "container": "{\"value\":1.0000000000000002E20}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000002E20]}",
+      "expected": {
+        "default_string": "[1.0000000000000002E20]",
+        "nullable_string": "[1.0000000000000002E20]",
+        "container": "{\"value\":[1.0000000000000002E20]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999999E20}",
+      "expected": {
+        "default_string": "9.999999999999999E20",
+        "nullable_string": "9.999999999999999E20",
+        "container": "{\"value\":9.999999999999999E20}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999999E20]}",
+      "expected": {
+        "default_string": "[9.999999999999999E20]",
+        "nullable_string": "[9.999999999999999E20]",
+        "container": "{\"value\":[9.999999999999999E20]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E21}",
+      "expected": {
+        "default_string": "1.0E21",
+        "nullable_string": "1.0E21",
+        "container": "{\"value\":1.0E21}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E21]}",
+      "expected": {
+        "default_string": "[1.0E21]",
+        "nullable_string": "[1.0E21]",
+        "container": "{\"value\":[1.0E21]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000001E21}",
+      "expected": {
+        "default_string": "1.0000000000000001E21",
+        "nullable_string": "1.0000000000000001E21",
+        "container": "{\"value\":1.0000000000000001E21}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000001E21]}",
+      "expected": {
+        "default_string": "[1.0000000000000001E21]",
+        "nullable_string": "[1.0000000000000001E21]",
+        "container": "{\"value\":[1.0000000000000001E21]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999998E21}",
+      "expected": {
+        "default_string": "9.999999999999998E21",
+        "nullable_string": "9.999999999999998E21",
+        "container": "{\"value\":9.999999999999998E21}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999998E21]}",
+      "expected": {
+        "default_string": "[9.999999999999998E21]",
+        "nullable_string": "[9.999999999999998E21]",
+        "container": "{\"value\":[9.999999999999998E21]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E22}",
+      "expected": {
+        "default_string": "1.0E22",
+        "nullable_string": "1.0E22",
+        "container": "{\"value\":1.0E22}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E22]}",
+      "expected": {
+        "default_string": "[1.0E22]",
+        "nullable_string": "[1.0E22]",
+        "container": "{\"value\":[1.0E22]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000002E22}",
+      "expected": {
+        "default_string": "1.0000000000000002E22",
+        "nullable_string": "1.0000000000000002E22",
+        "container": "{\"value\":1.0000000000000002E22}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000002E22]}",
+      "expected": {
+        "default_string": "[1.0000000000000002E22]",
+        "nullable_string": "[1.0000000000000002E22]",
+        "container": "{\"value\":[1.0000000000000002E22]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999997E22}",
+      "expected": {
+        "default_string": "9.999999999999997E22",
+        "nullable_string": "9.999999999999997E22",
+        "container": "{\"value\":9.999999999999997E22}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999997E22]}",
+      "expected": {
+        "default_string": "[9.999999999999997E22]",
+        "nullable_string": "[9.999999999999997E22]",
+        "container": "{\"value\":[9.999999999999997E22]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E23}",
+      "expected": {
+        "default_string": "1.0E23",
+        "nullable_string": "1.0E23",
+        "container": "{\"value\":1.0E23}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E23]}",
+      "expected": {
+        "default_string": "[1.0E23]",
+        "nullable_string": "[1.0E23]",
+        "container": "{\"value\":[1.0E23]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000001E23}",
+      "expected": {
+        "default_string": "1.0000000000000001E23",
+        "nullable_string": "1.0000000000000001E23",
+        "container": "{\"value\":1.0000000000000001E23}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000001E23]}",
+      "expected": {
+        "default_string": "[1.0000000000000001E23]",
+        "nullable_string": "[1.0000000000000001E23]",
+        "container": "{\"value\":[1.0000000000000001E23]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999998E23}",
+      "expected": {
+        "default_string": "9.999999999999998E23",
+        "nullable_string": "9.999999999999998E23",
+        "container": "{\"value\":9.999999999999998E23}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999998E23]}",
+      "expected": {
+        "default_string": "[9.999999999999998E23]",
+        "nullable_string": "[9.999999999999998E23]",
+        "container": "{\"value\":[9.999999999999998E23]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E24}",
+      "expected": {
+        "default_string": "1.0E24",
+        "nullable_string": "1.0E24",
+        "container": "{\"value\":1.0E24}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E24]}",
+      "expected": {
+        "default_string": "[1.0E24]",
+        "nullable_string": "[1.0E24]",
+        "container": "{\"value\":[1.0E24]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000001E24}",
+      "expected": {
+        "default_string": "1.0000000000000001E24",
+        "nullable_string": "1.0000000000000001E24",
+        "container": "{\"value\":1.0000000000000001E24}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000001E24]}",
+      "expected": {
+        "default_string": "[1.0000000000000001E24]",
+        "nullable_string": "[1.0000000000000001E24]",
+        "container": "{\"value\":[1.0000000000000001E24]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999998E99}",
+      "expected": {
+        "default_string": "9.999999999999998E99",
+        "nullable_string": "9.999999999999998E99",
+        "container": "{\"value\":9.999999999999998E99}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999998E99]}",
+      "expected": {
+        "default_string": "[9.999999999999998E99]",
+        "nullable_string": "[9.999999999999998E99]",
+        "container": "{\"value\":[9.999999999999998E99]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E100}",
+      "expected": {
+        "default_string": "1.0E100",
+        "nullable_string": "1.0E100",
+        "container": "{\"value\":1.0E100}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E100]}",
+      "expected": {
+        "default_string": "[1.0E100]",
+        "nullable_string": "[1.0E100]",
+        "container": "{\"value\":[1.0E100]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000002E100}",
+      "expected": {
+        "default_string": "1.0000000000000002E100",
+        "nullable_string": "1.0000000000000002E100",
+        "container": "{\"value\":1.0000000000000002E100}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000002E100]}",
+      "expected": {
+        "default_string": "[1.0000000000000002E100]",
+        "nullable_string": "[1.0000000000000002E100]",
+        "container": "{\"value\":[1.0000000000000002E100]}"
+      }
+    },
+    {
+      "raw": "{\"value\":9.999999999999998E307}",
+      "expected": {
+        "default_string": "9.999999999999998E307",
+        "nullable_string": "9.999999999999998E307",
+        "container": "{\"value\":9.999999999999998E307}"
+      }
+    },
+    {
+      "raw": "{\"value\":[9.999999999999998E307]}",
+      "expected": {
+        "default_string": "[9.999999999999998E307]",
+        "nullable_string": "[9.999999999999998E307]",
+        "container": "{\"value\":[9.999999999999998E307]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0E308}",
+      "expected": {
+        "default_string": "1.0E308",
+        "nullable_string": "1.0E308",
+        "container": "{\"value\":1.0E308}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0E308]}",
+      "expected": {
+        "default_string": "[1.0E308]",
+        "nullable_string": "[1.0E308]",
+        "container": "{\"value\":[1.0E308]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.0000000000000002E308}",
+      "expected": {
+        "default_string": "1.0000000000000002E308",
+        "nullable_string": "1.0000000000000002E308",
+        "container": "{\"value\":1.0000000000000002E308}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.0000000000000002E308]}",
+      "expected": {
+        "default_string": "[1.0000000000000002E308]",
+        "nullable_string": "[1.0000000000000002E308]",
+        "container": "{\"value\":[1.0000000000000002E308]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.225073858507201E-308}",
+      "expected": {
+        "default_string": "2.225073858507201E-308",
+        "nullable_string": "2.225073858507201E-308",
+        "container": "{\"value\":2.225073858507201E-308}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.225073858507201E-308]}",
+      "expected": {
+        "default_string": "[2.225073858507201E-308]",
+        "nullable_string": "[2.225073858507201E-308]",
+        "container": "{\"value\":[2.225073858507201E-308]}"
+      }
+    },
+    {
+      "raw": "{\"value\":2.225073858507202E-308}",
+      "expected": {
+        "default_string": "2.225073858507202E-308",
+        "nullable_string": "2.225073858507202E-308",
+        "container": "{\"value\":2.225073858507202E-308}"
+      }
+    },
+    {
+      "raw": "{\"value\":[2.225073858507202E-308]}",
+      "expected": {
+        "default_string": "[2.225073858507202E-308]",
+        "nullable_string": "[2.225073858507202E-308]",
+        "container": "{\"value\":[2.225073858507202E-308]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.4501477170144023E-308}",
+      "expected": {
+        "default_string": "4.4501477170144023E-308",
+        "nullable_string": "4.4501477170144023E-308",
+        "container": "{\"value\":4.4501477170144023E-308}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.4501477170144023E-308]}",
+      "expected": {
+        "default_string": "[4.4501477170144023E-308]",
+        "nullable_string": "[4.4501477170144023E-308]",
+        "container": "{\"value\":[4.4501477170144023E-308]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.450147717014403E-308}",
+      "expected": {
+        "default_string": "4.450147717014403E-308",
+        "nullable_string": "4.450147717014403E-308",
+        "container": "{\"value\":4.450147717014403E-308}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.450147717014403E-308]}",
+      "expected": {
+        "default_string": "[4.450147717014403E-308]",
+        "nullable_string": "[4.450147717014403E-308]",
+        "container": "{\"value\":[4.450147717014403E-308]}"
+      }
+    },
+    {
+      "raw": "{\"value\":4.450147717014404E-308}",
+      "expected": {
+        "default_string": "4.450147717014404E-308",
+        "nullable_string": "4.450147717014404E-308",
+        "container": "{\"value\":4.450147717014404E-308}"
+      }
+    },
+    {
+      "raw": "{\"value\":[4.450147717014404E-308]}",
+      "expected": {
+        "default_string": "[4.450147717014404E-308]",
+        "nullable_string": "[4.450147717014404E-308]",
+        "container": "{\"value\":[4.450147717014404E-308]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.139237815555687E-305}",
+      "expected": {
+        "default_string": "1.139237815555687E-305",
+        "nullable_string": "1.139237815555687E-305",
+        "container": "{\"value\":1.139237815555687E-305}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.139237815555687E-305]}",
+      "expected": {
+        "default_string": "[1.139237815555687E-305]",
+        "nullable_string": "[1.139237815555687E-305]",
+        "container": "{\"value\":[1.139237815555687E-305]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.1392378155556871E-305}",
+      "expected": {
+        "default_string": "1.1392378155556871E-305",
+        "nullable_string": "1.1392378155556871E-305",
+        "container": "{\"value\":1.1392378155556871E-305}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.1392378155556871E-305]}",
+      "expected": {
+        "default_string": "[1.1392378155556871E-305]",
+        "nullable_string": "[1.1392378155556871E-305]",
+        "container": "{\"value\":[1.1392378155556871E-305]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1.1392378155556874E-305}",
+      "expected": {
+        "default_string": "1.1392378155556874E-305",
+        "nullable_string": "1.1392378155556874E-305",
+        "container": "{\"value\":1.1392378155556874E-305}"
+      }
+    },
+    {
+      "raw": "{\"value\":[1.1392378155556874E-305]}",
+      "expected": {
+        "default_string": "[1.1392378155556874E-305]",
+        "nullable_string": "[1.1392378155556874E-305]",
+        "container": "{\"value\":[1.1392378155556874E-305]}"
+      }
+    },
+    {
+      "raw": "{\"value\":0.49999999999999994}",
+      "expected": {
+        "default_string": "0.49999999999999994",
+        "nullable_string": "0.49999999999999994",
+        "container": "{\"value\":0.49999999999999994}"
+      }
+    },
+    {
+      "raw": "{\"value\":[0.49999999999999994]}",
+      "expected": {
+        "default_string": "[0.49999999999999994]",
+        "nullable_string": "[0.49999999999999994]",
+        "container": "{\"value\":[0.49999999999999994]}"
+      }
+    },
+    {
+      "raw": "{\"value\":1e-0}",
+      "expected": {
+        "default_string": "1.0",
+        "nullable_string": "1.0",
+        "container": "{\"value\":1}"
+      }
+    },
+    {
+      "raw": "{\"value\":-0e0}",
+      "expected": {
+        "default_string": "-0.0",
+        "nullable_string": "-0.0",
+        "container": "{\"value\":-0}"
+      }
+    },
+    {
+      "raw": "{\"value\":-0E-0}",
+      "expected": {
+        "default_string": "-0.0",
+        "nullable_string": "-0.0",
+        "container": "{\"value\":-0}"
+      }
+    },
+    {
+      "raw": "{\"value\":0e-0}",
+      "expected": {
+        "default_string": "0.0",
+        "nullable_string": "0.0",
+        "container": "{\"value\":0}"
+      }
+    },
+    {
+      "raw": "{\"value\":[-0,-0.0,-0e0,\"-0\"]}",
+      "expected": {
+        "default_string": "[0,-0,-0,\"-0\"]",
+        "nullable_string": "[0,-0,-0,\"-0\"]",
+        "container": "{\"value\":[0,-0,-0,\"-0\"]}"
+      }
+    },
+    {
+      "raw": "{\"-0\":1,\"value\":\"-0\"}",
+      "expected": {
+        "default_string": "-0",
+        "nullable_string": "-0",
+        "container": "{\"-0\":1,\"value\":\"-0\"}"
+      }
+    }
+  ]
+}
