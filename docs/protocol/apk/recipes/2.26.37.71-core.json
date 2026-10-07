@@ -646,6 +646,86 @@
       ],
       "method": "A00",
       "method_shorty": "LL"
+    },
+    "sender-key-remove": {
+      "class": "LX/0jc;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "anchors": [],
+      "method": "A19",
+      "method_shorty": "ZL"
+    },
+    "sender-key-name-translation": {
+      "class": "LX/0kX;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "anchors": [],
+      "method": "A00",
+      "method_shorty": "LLL"
+    },
+    "sender-key-recipient-translation": {
+      "class": "LX/0kT;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "anchors": [],
+      "method": "A02",
+      "method_shorty": "LLLL"
+    },
+    "sender-key-phone-parse": {
+      "class": "LX/0kT;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "anchors": [],
+      "method": "A01",
+      "method_shorty": "LL"
+    },
+    "sender-key-address-build": {
+      "class": "LX/B7H;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "anchors": [],
+      "method": "A06",
+      "method_shorty": "LLLL"
+    },
+    "sender-key-account-provider": {
+      "class": "LX/1xi;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "anchors": [],
+      "method": "A0l",
+      "method_shorty": "LL"
+    },
+    "sender-key-account-address-first": {
+      "class": "LX/08i;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "anchors": [],
+      "method": "Apw",
+      "method_shorty": "L"
+    },
+    "sender-key-account-address-second": {
+      "class": "LX/08i;",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "anchors": [],
+      "method": "Apz",
+      "method_shorty": "L"
     }
   }
 }

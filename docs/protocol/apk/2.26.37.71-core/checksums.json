@@ -227,13 +227,45 @@
     "bytes": 11814,
     "sha256": "0473bd828037483fa6b47ab60edf96d01a82fa6adfc7b159e3820aea50bf2042"
   },
+  "sender-key-account-address-first.txt": {
+    "bytes": 493,
+    "sha256": "75e0a8776a83ad999f2a543952e0a6df1571b277bac364b44082dcc77c5c15fd"
+  },
+  "sender-key-account-address-second.txt": {
+    "bytes": 493,
+    "sha256": "437e18eb47ac2a16d8316acd1bf2375a5d97da6c7cdb200ecf28382f4e54c280"
+  },
+  "sender-key-account-provider.txt": {
+    "bytes": 576,
+    "sha256": "99d76badc0d2749ceca1bd8ebaab399ac3d39d5951a8189c2d6fddc120cefa19"
+  },
+  "sender-key-address-build.txt": {
+    "bytes": 1264,
+    "sha256": "20f0eb36605cbc715ca25658d9430b9e1622b43d1f8a5cd9fba18ddd67920c43"
+  },
   "sender-key-device-category.txt": {
     "bytes": 752,
     "sha256": "18e22bff933720d5b493b74295231a7af262066f50fffcc62b4b202f09fe3c5d"
   },
+  "sender-key-name-translation.txt": {
+    "bytes": 924,
+    "sha256": "0c692682351c93deb11471fdcb7e5252d43ff587fd7ceeb48edac910c5e949be"
+  },
   "sender-key-name.txt": {
     "bytes": 8104,
     "sha256": "fc461ebe0e286fa4e025cb8d0eaad0b8946e62b7f63622996198a16213a13d06"
+  },
+  "sender-key-phone-parse.txt": {
+    "bytes": 2804,
+    "sha256": "90f8490ee5d004dead64bf51839fa01c5c43e863b80ebc29ff63459ca67d9789"
+  },
+  "sender-key-recipient-translation.txt": {
+    "bytes": 2438,
+    "sha256": "24adbce866d8038b47b74df0ccb90909fa107c8f54981bf7989e7acf5bcc9a7e"
+  },
+  "sender-key-remove.txt": {
+    "bytes": 4023,
+    "sha256": "6a132f16768588fd57835a2141dc58364355e3c2ad4dfd11ceceadf2e801bd6f"
   },
   "socket-factory.txt": {
     "bytes": 68891,
@@ -244,8 +276,8 @@
     "sha256": "82590b7944e627c71d4a54e3403be84e314598ced8789812c7c6951470853c92"
   },
   "targets.json": {
-    "bytes": 21887,
-    "sha256": "4b72d1d51516812c97d1d9f61518f90156eb9588bf71ce7c92e8ebbd57462f5b"
+    "bytes": 24406,
+    "sha256": "cf3902ddbf2b9a162301b2609600257d49edfcf7e5d6d9ace3a54a7a9bf33e8a"
   },
   "token-dictionary-initializer.txt": {
     "bytes": 159791,

@@ -1501,3 +1501,79 @@ cleanly with peer pins, device inspection, actions, outbox and receipts unchange
 no added query or chat sends. Private evidence index:
 `lab/releases/sender-key-live/active.json`. Live companion decryption and
 identity-triggered rotation remain unverified; no primary key was adopted.
+
+
+## Scoped sender-key removal and recipient translation (2026-10-07)
+
+**Confirmed static**, APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+
+- [0jc.A19](apk/2.26.37.71-core/sender-key-remove.txt) acquires the
+  Cnr-scoped lock via 0jp.A01 (`0008..001a`), parses the raw group and translates
+  the sender-key name (`001a..0036`). It deletes from `sender_keys` using
+  **group_id, sender_account_id, sender_account_type, device_id, bucket_id**
+  equality (`0074..0094`), with the tuple supplied by Cnr.A03. Its boolean is
+  affected-row-count > 0, not permission to delete all keys for a user. The
+  database is closed before F1E(group) cache invalidation through 0ka.A01
+  (`009e..00bc`); invalid-group handling returns false (`00d2..00fc`). Cache
+  callback internals and transaction coupling to identity replacement remain
+  **unknown**.
+- [0kX.A00](apk/2.26.37.71-core/sender-key-name-translation.txt) calls
+  **0kT.A02(sender, operation, "sender_keys")** and rebuilds Cnr with the
+  translated sender while retaining the original raw chat and bucket. A key
+  deletion based only on an untranslated input address is therefore incomplete.
+- [0kT.A02](apk/2.26.37.71-core/sender-key-recipient-translation.txt)
+  attempts translation only when B76.A01 is zero. It parses B76.A04 through
+  [0kT.A01](apk/2.26.37.71-core/sender-key-phone-parse.txt), which excludes
+  `"0"`/`"Server"` and calls PhoneUserJid.Companion.A03. Predicate 0hd.A02,
+  feature **0x536a**, and predicate 0hd.A09 select a specialized branch through
+  0DE.A08 and a 0hh type check (`0020..0060`). The alternative uses
+  **0Xw.A0C** (`008c..009c`). Both rebuild a device address using the original
+  **B76.A00 device ID**, then preserve B76.A02/A03 in B7H.A06. A null result from 0Xw.A0C
+  calls the private A00 diagnostic (`00a0..00a6`) and returns the original B76.
+  Nonzero account type, absent parsed address and other bypass branches return
+  the original directly; the diagnostic is not universal.
+  **Unknown:** the specialized predicates' full semantics, feature defaults,
+  0Xw mapping authority/freshness and diagnostic side effects. This does not
+  establish that arbitrary PN/LID aliases may be substituted.
+- [B7H.A06](apk/2.26.37.71-core/sender-key-address-build.txt) derives
+  recipient category via B79.A00 and device via DeviceJid.getDevice, and keeps
+  the two additional B76 components (`001c..003c`). Translation does **not**
+  flatten companions onto the primary device.
+- In the already cached [D4x.A00](apk/2.26.37.71-core/identity-change-cleanup.txt),
+  `0906..092a` obtains the selected sender through
+  [1xi.A0l](apk/2.26.37.71-core/sender-key-account-provider.txt) and
+  **08Z.Apw** (spelled `Apw` in bytecode); the alternative at `0ae4..0af0`
+  uses `Apz`. [08i.Apw](apk/2.26.37.71-core/sender-key-account-address-first.txt)
+  calls 08i.A04 and returns A0G; [08i.Apz](apk/2.26.37.71-core/sender-key-account-address-second.txt)
+  calls A09 and returns A00. A method-name scan found these getters on 08i and
+  the 08a wrapper plus abstract 08Z. **Inferred:** the selected sender is an
+  account-provider address, rather than the changed remote participant itself.
+  Getter initialization and full PN/LID account selection are still untraced;
+  do not promote that inference to complete ownership proof.
+
+**Refuted implementation shortcut:** neither this deletion nor the previously
+traced primary `sent_sender_key=1` group query establishes a blanket deletion
+of that remote peer's incoming sender chains. Rust must retain authenticated
+incoming history and unrelated device/bucket records. Full APK bucket/actor
+selection and outgoing distribution history are needed before automatic rotation.
+
+**Observed source audit:** the comparison group/status send implementation is
+`crates/whatsapp-cli/src/transport_group_send.rs` (`transmit`), not an API
+`transport/outbox_sender.rs` module (the latter path does not exist). It loads
+one own sender-key record, distributes an SKDM to every target, then reserves
+its advanced key and send intent atomically with pairwise state. Searching
+`crates/` for `sent_sender_key` finds no distribution-history implementation.
+Always redistributing an existing key does not rotate it after a peer identity
+change. These are implementation gaps, not server requirements. No automatic
+cleanup, pin adoption, identity reset, group send or live request was performed
+for this trace. The next implementation needs durable group/device distribution
+history and authenticated-change invalidation, preserving uncertain intents.
+
+
+Validation of the scoped-removal trace: 58 xtask tests and CLI reference
+regeneration passed. Eight added source topics expand the core to 68 topics /
+205 methods, 73 files / 1,544,967 bytes. The checksum-verified cached diff
+took 0.067145 seconds: eight added topics and all 60 prior topics unchanged;
+manifest, inventory and tokens unchanged. These are static/offline checks;
+no live behavior or automatic rotation is claimed.

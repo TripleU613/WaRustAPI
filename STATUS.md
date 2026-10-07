@@ -1464,3 +1464,14 @@ cleanly with peer pins, device inspection, actions, outbox and receipts unchange
 no added query or chat sends. Private evidence index:
 `lab/releases/sender-key-live/active.json`. Live companion decryption and
 identity-triggered rotation remain unverified; no primary key was adopted.
+
+
+Sender-key cleanup trace (2026-10-07, **confirmed static** APK 2.26.37.71):
+0jc.A19 deletes one translated chat/account-type/device/bucket tuple;
+0kX.A00 and 0kT.A02 preserve chat, bucket and sender device during translation.
+This does not establish blanket remote incoming-key deletion. Account-provider
+selection is partly traced; feature/alias authority and distribution-history
+parity remain unknown/unimplemented. The comparison CLI distributes an existing
+SKDM to every target but has no sent-sender-key history; redistributing is not
+identity-triggered rotation. No live request or identity adoption occurred.
+See [evidence and next implementation](docs/protocol/cross-device-sync.md#scoped-sender-key-removal-and-recipient-translation-2026-10-07).

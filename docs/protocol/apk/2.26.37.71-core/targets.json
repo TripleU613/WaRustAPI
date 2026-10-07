@@ -700,6 +700,50 @@
       "crates/whatsapp-api/src/registration/token.rs"
     ]
   },
+  "sender-key-account-address-first": {
+    "class": "LX/08i;",
+    "file": "sender-key-account-address-first.txt",
+    "method_filter": "Apw",
+    "method_shorty": "L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-account-address-second": {
+    "class": "LX/08i;",
+    "file": "sender-key-account-address-second.txt",
+    "method_filter": "Apz",
+    "method_shorty": "L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-account-provider": {
+    "class": "LX/1xi;",
+    "file": "sender-key-account-provider.txt",
+    "method_filter": "A0l",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-address-build": {
+    "class": "LX/B7H;",
+    "file": "sender-key-address-build.txt",
+    "method_filter": "A06",
+    "method_shorty": "LLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
   "sender-key-device-category": {
     "anchors": [
       "A",
@@ -723,6 +767,50 @@
     "rust_files": [
       "crates/whatsapp-api/src/signal/group.rs",
       "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "sender-key-name-translation": {
+    "class": "LX/0kX;",
+    "file": "sender-key-name-translation.txt",
+    "method_filter": "A00",
+    "method_shorty": "LLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-phone-parse": {
+    "class": "LX/0kT;",
+    "file": "sender-key-phone-parse.txt",
+    "method_filter": "A01",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-recipient-translation": {
+    "class": "LX/0kT;",
+    "file": "sender-key-recipient-translation.txt",
+    "method_filter": "A02",
+    "method_shorty": "LLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-remove": {
+    "class": "LX/0jc;",
+    "file": "sender-key-remove.txt",
+    "method_filter": "A19",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
     ]
   },
   "socket-factory": {

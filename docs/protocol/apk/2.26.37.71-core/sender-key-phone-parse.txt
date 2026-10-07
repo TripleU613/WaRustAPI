@@ -1,0 +1,54 @@
+# APK-derived structural disassembly: LX/0kT;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(LL) flags=0x11 registers=10
+  0000..0002 op=12 const/4 v6, #0x0
+  0002..0008 op=71 invoke-static {v9, v6}, LX/00h;->A0A(VLI)
+  0008..000c op=13 const/16 v1, #0x5a3
+  000c..0010 op=54 iget-object v0, v8, LX/0kT;->A00:LX/05B;
+  0010..0014 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0014..001a op=72 invoke-interface {v0}, LX/00s;->get(L)
+  001a..001c op=0c move-result-object
+  001c..0020 op=1f check-cast v0, LX/00W;
+  0020..0026 op=6e invoke-virtual {v0}, LX/00W;->A01(L)
+  0026..0028 op=0c move-result-object
+  0028..002e op=71 invoke-static {v0, v1}, LX/08b;->A03(LLI)
+  002e..0030 op=0c move-result-object
+  0030..0034 op=1f check-cast v5, LX/0AH;
+  0034..0038 op=1a const-string v0, "0"
+  0038..003e op=6e invoke-virtual {v9, v0}, Ljava/lang/String;->equals(ZL)
+  003e..0040 op=0a move-result
+  0040..0042 op=12 const/4 v7, #0x0
+  0042..0046 op=39 if-nez v0, +0x3d
+  0046..004a op=1a const-string v0, "Server"
+  004a..0050 op=6e invoke-virtual {v9, v0}, Ljava/lang/String;->equals(ZL)
+  0050..0052 op=0a move-result
+  0052..0056 op=39 if-nez v0, +0x35
+  0056..005a op=62 sget-object v0, Lcom/whatsapp/infra/core/jid/PhoneUserJid;->Companion:LX/0D9;
+  005a..0060 op=6e invoke-virtual {v0, v9}, LX/0D9;->A03(LL)
+  0060..0062 op=0c move-result-object
+  0062..0066 op=39 if-nez v4, +0x26
+  0066..0068 op=12 const/4 v0, #0x4
+  0068..006e op=71 invoke-static {v9, v0}, LX/1fh;->A11(LLI)
+  006e..0070 op=0c move-result-object
+  0070..0076 op=6e invoke-virtual {v9}, Ljava/lang/String;->length(I)
+  0076..0078 op=0a move-result
+  0078..007c op=1a const-string v0, "InvalidJid: "
+  007c..0080 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0080..0086 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+  0086..008c op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(LL)
+  008c..0090 op=1a const-string v0, "; size="
+  0090..0096 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0096..009c op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(LI)
+  009c..00a2 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString(L)
+  00a2..00a4 op=0c move-result-object
+  00a4..00a8 op=1a const-string v0, "AxolotlAccountJidMigrationUtils/getFromPhoneNumberNullable"
+  00a8..00ae op=6e invoke-virtual {v5, v0, v1, v6}, LX/0AH;->A0g(VLLZ)
+  00ae..00b4 op=71 invoke-static {v4}, LX/0hd;->A02(ZL)
+  00b4..00b6 op=0a move-result
+  00b6..00ba op=39 if-nez v0, +0x3
+  00ba..00bc op=11 return-object v4
+  00bc..00be op=11 return-object v7
+.end method
