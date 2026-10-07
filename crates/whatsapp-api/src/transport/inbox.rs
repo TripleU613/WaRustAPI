@@ -195,7 +195,7 @@ pub fn own_identity(store: &ProtocolStore) -> Result<(Option<Jid>, Option<Jid>)>
                 };
                 let Ok(node) = crate::binary::Decoder::new(
                     &raw,
-                    crate::binary::TokenDictionary::comparison_2_26_37_70(),
+                    crate::binary::TokenDictionary::comparison_2_26_37_71(),
                     &limits,
                 )
                 .decode_node() else {
@@ -337,7 +337,7 @@ pub fn reproject(store: &ProtocolStore) -> Result<usize> {
 /// Persist a raw frame before processing or replying. Deterministic capture keys
 /// bound repeated identical redeliveries without losing the original wire data.
 pub fn preserve(store: &ProtocolStore, node: &Node) -> Result<Vec<u8>> {
-    let wire = crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+    let wire = crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
         .encode(node)?;
     let key = format!("inbound:sha256:{}", hex::encode(Sha256::digest(&wire))).into_bytes();
     store.write(|tx| tx.put_json(Table::Checkpoints, &key, 1, &wire))?;
@@ -548,7 +548,7 @@ async fn process_direct(
         )
     };
     let route =
-        crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+        crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
             .encode(node)?;
     let key_share = if peer_category {
         crate::signal::app_state::KeyShare::from_peer_message(&received.plaintext)?
@@ -1001,7 +1001,7 @@ async fn process_group_inner(
         return Ok(IncomingResult::Unsupported);
     }
     let route =
-        crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+        crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
             .encode(node)?;
     store.write(|tx| {
         if tx

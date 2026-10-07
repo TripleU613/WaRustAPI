@@ -64,7 +64,7 @@ async fn after_send_window(
             }
             Ok(Ok(node)) => node,
         };
-        let bytes = Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(&node)?;
+        let bytes = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&node)?;
         store.write(|tx| {
             tx.put_json(
                 Table::Checkpoints,
@@ -309,7 +309,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
         let limits = Limits::default();
         let unpacked = unpack_frame_payload(&frame, &limits)
             .map_err(|_| Error::invalid("transport", "cannot unpack encrypted login response"))?;
-        let node = Decoder::new(&unpacked, TokenDictionary::comparison_2_26_37_70(), &limits)
+        let node = Decoder::new(&unpacked, TokenDictionary::comparison_2_26_37_71(), &limits)
             .decode_node()
             .map_err(|_| {
                 Error::invalid(
@@ -341,7 +341,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
         // token, and saving only the status code throws that away at exactly
         // the moment it matters; a refusal cannot be replayed to fetch it again.
         let login_wire =
-            whatsapp_api::binary::Encoder::new(TokenDictionary::comparison_2_26_37_70())
+            whatsapp_api::binary::Encoder::new(TokenDictionary::comparison_2_26_37_71())
                 .encode(&node)
                 .ok();
         store.write(|tx| {
@@ -401,7 +401,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
             let (reply, pending) = wait_for(&mut channel, "iq", &id).await?;
             let success = reply.get_attr("type").and_then(|v| v.as_text()) == Some("result")
                 && reply.child("media_conn").is_some();
-            let dict = TokenDictionary::comparison_2_26_37_70();
+            let dict = TokenDictionary::comparison_2_26_37_71();
             let wire = whatsapp_api::binary::Encoder::new(dict).encode(&reply)?;
             store.write(|tx| {
                 tx.put_json(Table::Checkpoints, checkpoint.as_bytes(), 1,
@@ -504,7 +504,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                     Ok(Ok(node)) => node,
                 };
                 let bytes =
-                    whatsapp_api::binary::Encoder::new(TokenDictionary::comparison_2_26_37_70())
+                    whatsapp_api::binary::Encoder::new(TokenDictionary::comparison_2_26_37_71())
                         .encode(&node)?;
                 store.write(|tx| {
                     tx.put_json(
@@ -757,7 +757,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
             let (reply, pending) = if let Some(bytes) = saved_keys {
                 let decoded = unpack_frame_payload(&bytes, &limits)?;
                 (
-                    Decoder::new(&decoded, TokenDictionary::comparison_2_26_37_70(), &limits)
+                    Decoder::new(&decoded, TokenDictionary::comparison_2_26_37_71(), &limits)
                         .decode_node()?,
                     Vec::new(),
                 )
@@ -778,7 +778,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                 .map_err(map)?;
                 (reply, pending)
             };
-            let dict = TokenDictionary::comparison_2_26_37_70();
+            let dict = TokenDictionary::comparison_2_26_37_71();
             store.write(|tx| {
                 let bytes = whatsapp_api::binary::Encoder::new(dict)
                     .encode(&reply)

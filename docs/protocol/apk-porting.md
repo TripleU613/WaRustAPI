@@ -203,3 +203,11 @@ matching, payload invoke bytes, invalid parameter indices/truncated lists and
 physical caller/callee index separation. An initial JSON-bound fixture syntax
 error was fixed before the full test rerun. Strict Clippy requested array chunks
 for two-byte type entries; the same checked even-sized extent is retained.
+
+The [core release review](core-release-review.md) expands this workflow to 22
+registration, Noise, framing, socket and dictionary topics. A genuine cached
+37.70→37.71 comparison completes in 0.0512 seconds and points to affected Rust
+files. The [token extraction correction](token-extraction.md) demonstrates the
+porting loop: trace actual indexed APK writes, preserve refuted historical
+results, install a derived Rust fixture, and test literal wire bytes. Broad APK
+coverage and complete client behavior remain unfinished.

@@ -460,3 +460,16 @@ complete fingerprint inventory remain unknown. Two missing DEX field-write
 mnemonics are fixed with literal APK bytes and actual APK re-rendering.
 530 all-feature tests and strict Clippy pass; no account state changed.
 [Control and decoder evidence](peer-identity.md#local-verification-control-and-captured-identity-3771).
+
+### comparison.binary.tokens.37_71 — confirmed static
+
+APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`,
+`1Rl.<clinit>`: typed indexed stores publish 236 single and 4×256 double tokens.
+Four historical comparison page/index-1 values are refuted by actual stores;
+this establishes an extraction defect, not an upstream dictionary change.
+[Token extraction](token-extraction.md) carries offsets, negative results and
+runtime fixture provenance. All 1,260 entries equal the separately held web-v3
+fixture. Live acceptance of the four corrected slots remains unknown.
+[Core release review](core-release-review.md) records 22-topic coverage and seven
+manual relocation decisions; text differences do not establish behavior changes.

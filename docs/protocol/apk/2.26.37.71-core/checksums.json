@@ -1,0 +1,106 @@
+{
+  "certificate-root.txt": {
+    "bytes": 1386,
+    "sha256": "097e7c622db0ce8e18f73efb2b2f4693a8b520958198ec4bce0eef0779d30602"
+  },
+  "frame-reader.txt": {
+    "bytes": 1734,
+    "sha256": "e4136d532df18551ac22dafd0038d05cdfac560cc18648a6bff7ec794947b25f"
+  },
+  "frame-writer.txt": {
+    "bytes": 2380,
+    "sha256": "ac01c83ab4f1076cb0cb98290a1d40fda960ea543d6e30b3d0bd7bb2f8961f50"
+  },
+  "http-chunk-reader.txt": {
+    "bytes": 9335,
+    "sha256": "2c82284a9eafb7e703eaa8603a542f9d0a686398a82de1007c73cfa3da8c4023"
+  },
+  "http-chunk-writer.txt": {
+    "bytes": 6898,
+    "sha256": "38ecdfbcdfe24c8a34b225aca15b493f865214923369fdb24d3a1d0b27fde0d3"
+  },
+  "integer-encoding.txt": {
+    "bytes": 9099,
+    "sha256": "ff56c5cfbab7a315a7d2e50d6ab8fc81ea2f0d570ebb22dd8b4108bd17d041b3"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "node-writer.txt": {
+    "bytes": 26981,
+    "sha256": "86a53d6320cb6abc8a58ba36bf5959005e1dbf9794136f209f989af596b40bc8"
+  },
+  "noise-cipher.txt": {
+    "bytes": 4174,
+    "sha256": "6b216a8b6a39ebdd53f880fec8b254cf304c19c80b0b7358bddfe31f999b5a39"
+  },
+  "noise-config.txt": {
+    "bytes": 7948,
+    "sha256": "3aaeab28f3f80513208adab58be47af0c32778871cf8ccd0f3d0d69d04439308"
+  },
+  "noise-handshake.txt": {
+    "bytes": 69689,
+    "sha256": "63bfc2f38c532980089da19e6bb4902f7980ef8d9d4adea1d3ddbc4d9b2727f6"
+  },
+  "noise-patterns.txt": {
+    "bytes": 18091,
+    "sha256": "20ea1d19454618198fe92aaed8757771b0b3db4eea779113dafca23a87b6d8e4"
+  },
+  "noise-record-state.txt": {
+    "bytes": 1528,
+    "sha256": "dcd18b5172bbcfe015c7cda98af344bf248d2d41d6fc0814ff682a87b29335bf"
+  },
+  "record-writer.txt": {
+    "bytes": 585,
+    "sha256": "e0ad17600509106ef612548d30092fd4e163e6dc2578f16d39b10efaeb5a49d5"
+  },
+  "registration-key-bundle.txt": {
+    "bytes": 4812,
+    "sha256": "9ee9b384ddc95ea31c18c8a204120d5a32500a8540148235856c21a9a0f1ed86"
+  },
+  "registration-paths.txt": {
+    "bytes": 5235,
+    "sha256": "c4cdf7147a7a4e91e2bd0e9fadf80d80ee504a9d717c1bc2bfb31f2983e3bfb1"
+  },
+  "registration-requests.txt": {
+    "bytes": 2659,
+    "sha256": "9cc5136d60f5f8c3e83f89ffcd59cec404d2575f2a8d9975188f68a6327061ef"
+  },
+  "registration-response-bridge.txt": {
+    "bytes": 250491,
+    "sha256": "fbf14400a0aea51380ff9c72df0973dbc2933269e4ea83b01731dd9c07b23cff"
+  },
+  "registration-token-salt.txt": {
+    "bytes": 743,
+    "sha256": "f0fac2635bbb096644ecee927fc45f4fb56d449003e516d4131db7e67da6a9c0"
+  },
+  "registration-token.txt": {
+    "bytes": 11814,
+    "sha256": "0473bd828037483fa6b47ab60edf96d01a82fa6adfc7b159e3820aea50bf2042"
+  },
+  "socket-factory.txt": {
+    "bytes": 68891,
+    "sha256": "71dd7141e4d0331847fc6935026c36f4f1709cc9f7ccdbff29c8e7c6eb5a4437"
+  },
+  "socket-sequence.txt": {
+    "bytes": 29233,
+    "sha256": "82590b7944e627c71d4a54e3403be84e314598ced8789812c7c6951470853c92"
+  },
+  "targets.json": {
+    "bytes": 7902,
+    "sha256": "b9680446fd9cb2b26582dd7cb6265669d9ae5c53582047b2a51ce3fff4ce458e"
+  },
+  "token-dictionary-initializer.txt": {
+    "bytes": 159791,
+    "sha256": "351423acf68cb9641e46493e6e175ff45ca7920a3128571bc6d549e486c149a8"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

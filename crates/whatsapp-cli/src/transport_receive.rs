@@ -1421,7 +1421,7 @@ pub(super) async fn run(
                 continue;
             };
             let Ok(node) =
-                Decoder::new(&raw, TokenDictionary::comparison_2_26_37_70(), &limits).decode_node()
+                Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits).decode_node()
             else {
                 continue;
             };
@@ -1458,7 +1458,7 @@ pub(super) async fn run(
                 let wire: Vec<u8> = serde_json::from_slice(value)
                     .map_err(|_| Error::invalid("inbox", "invalid capture"))?;
                 let raw = unpack_frame_payload(&wire, &limits)?;
-                let node = Decoder::new(&raw, TokenDictionary::comparison_2_26_37_70(), &limits)
+                let node = Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits)
                     .decode_node()?;
                 let safe = |value: &str| {
                     value.len() <= 32
@@ -1768,7 +1768,7 @@ pub(super) async fn run(
         let bytes: Vec<u8> = serde_json::from_slice(value)
             .map_err(|_| Error::invalid("inbox", "invalid capture"))?;
         let unpacked = unpack_frame_payload(&bytes, &limits)?;
-        let node = Decoder::new(&unpacked, TokenDictionary::comparison_2_26_37_70(), &limits)
+        let node = Decoder::new(&unpacked, TokenDictionary::comparison_2_26_37_71(), &limits)
             .decode_node()?;
         match whatsapp_api::transport::inbox::process_with_policy(
             &store,

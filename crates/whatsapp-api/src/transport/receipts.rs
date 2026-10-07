@@ -13,7 +13,7 @@ fn decode(bytes: &[u8]) -> Result<Node> {
     let raw = crate::binary::unpack_frame_payload(bytes, &limits)?;
     Ok(crate::binary::Decoder::new(
         &raw,
-        crate::binary::TokenDictionary::comparison_2_26_37_70(),
+        crate::binary::TokenDictionary::comparison_2_26_37_71(),
         &limits,
     )
     .decode_node()?)
@@ -55,7 +55,7 @@ pub fn queue_opened(store: &ProtocolStore, ticket: &str) -> Result<()> {
             .ok_or_else(|| Error::invalid("receipt", "unsupported opened receipt routing"))?
             .attr("type", "played");
         let wire =
-            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
                 .encode(&receipt)?;
         let receipt_key = format!("receipt-outbox:{ticket}:played");
         if tx
@@ -171,7 +171,7 @@ pub fn queue_read(
                 .ok_or_else(|| Error::invalid("receipt", "unsupported read receipt routing"))?
                 .attr("type", "read");
             let wire = crate::binary::Encoder::new(
-                crate::binary::TokenDictionary::comparison_2_26_37_70(),
+                crate::binary::TokenDictionary::comparison_2_26_37_71(),
             )
             .encode(&node)?;
             tx.put_json(
@@ -309,7 +309,7 @@ pub fn queue_retry_for_incoming(
         registration,
         crate::model::time::Timestamp::now().0 / 1000,
     )?;
-    let wire = crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+    let wire = crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
         .encode(&retry)?;
     store.write(|tx| {
         if tx
@@ -819,7 +819,7 @@ mod tests {
         let key = b"received:15555550100@s.whatsapp.net:fixture";
         let ticket = hex::encode(Sha256::digest(key));
         let route =
-            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
                 .encode(
                     &Node::new("message")
                         .attr("id", "fixture")
@@ -915,7 +915,7 @@ mod tests {
         let store = open(&path, true);
         let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
         let encoder =
-            || crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70());
+            || crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71());
         let route = |id: &str| {
             encoder()
                 .encode(
@@ -1105,7 +1105,7 @@ mod tests {
         let member = Jid::parse("15555550100@lid").unwrap();
         let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
         let encoder =
-            || crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70());
+            || crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71());
         let group_msg = |id: &str| {
             Node::new("message")
                 .attr("id", id)
@@ -1189,7 +1189,7 @@ mod tests {
         let group = Jid::parse("120363000000000001@g.us").unwrap();
         let sender = Jid::parse("15555550100@lid").unwrap();
         let route =
-            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
                 .encode(
                     &Node::new("message")
                         .attr("id", "G1")
@@ -1255,7 +1255,7 @@ mod tests {
         let key = b"received:15555550100@s.whatsapp.net:fixture";
         let ticket = hex::encode(Sha256::digest(key));
         let encoder =
-            || crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70());
+            || crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71());
         let route = encoder()
             .encode(
                 &Node::new("message")

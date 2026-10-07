@@ -25,6 +25,7 @@ mod dex;
 mod manifest;
 mod proto;
 mod registration_token;
+mod token_arrays;
 mod token_material_archive;
 mod xref;
 

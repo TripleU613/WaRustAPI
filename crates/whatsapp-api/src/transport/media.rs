@@ -234,7 +234,7 @@ fn unexpired(store: &ProtocolStore, record: &serde_json::Value, duration: u32) -
     let raw = crate::binary::unpack_frame_payload(&wire, &limits)?;
     let node = crate::binary::Decoder::new(
         &raw,
-        crate::binary::TokenDictionary::comparison_2_26_37_70(),
+        crate::binary::TokenDictionary::comparison_2_26_37_71(),
         &limits,
     )
     .decode_node()?;
@@ -911,7 +911,7 @@ mod tests {
                 route_node = route_node.attr("t", timestamp);
             }
             let route = crate::binary::Encoder::new(
-                crate::binary::TokenDictionary::comparison_2_26_37_70(),
+                crate::binary::TokenDictionary::comparison_2_26_37_71(),
             )
             .encode(&route_node)
             .unwrap();
@@ -944,7 +944,7 @@ mod tests {
         // Replace only the synthetic saved timestamp with an expired one to
         // prove existing references recheck the current authenticated record.
         let old_route =
-            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
                 .encode(&node.clone().attr("t", "1"))
                 .unwrap();
         store.write(|tx| tx.put_json(Table::Checkpoints, b"received:fresh", 1, &serde_json::json!({"status":"decrypted", "protobuf":expiring, "route":old_route}))).unwrap();

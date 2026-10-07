@@ -128,121 +128,45 @@ pub fn run(apk: &Path, contains: &[String]) -> Result<(), String> {
     Ok(())
 }
 
-/// Recover the binary-node token dictionary from the client.
-///
-/// The dictionary is initialised by a long, uninterrupted run of
-/// `const-string` instructions (opcode `0x1a`, format `1a AA BBBB`, or the
-/// jumbo form `0x1b`) in one static initialiser. We scan every dex file for
-/// runs of plausible tokens, anchor on the stream-control token
-/// `xmlstreamstart` (the only place such a literal appears in a const-string
-/// run), and stop at the first repeated string, because a dictionary has no
-/// duplicates. The first 235 strings are the single-byte page (index 0 is the
-/// empty token) and each following block of 256 is a double-byte page. This
-/// heuristic decodes no other bytecode; it is validated by `--check` against a
-/// committed fixture.
-/// A dictionary recovered from bytecode.
+/// A dictionary recovered from checked initializer array assignments.
 pub struct RecoveredDictionary {
     /// Single-byte page (index 0 is the empty token).
     pub single: Vec<String>,
-    /// Double-byte pages of 256 entries each.
+    /// Four double-byte pages of 256 entries each.
     pub double: Vec<Vec<String>>,
-    /// Where the run was found (`<dex file> @ <offset>`).
+    /// DEX file, defining class and anchor instruction offset.
     pub location: String,
 }
 
 pub fn apk_tokens(apk: &Path) -> Result<RecoveredDictionary, String> {
     let f = std::fs::File::open(apk).map_err(|e| format!("{}: {e}", apk.display()))?;
     let mut zip = zip::ZipArchive::new(f).map_err(|e| format!("zip: {e}"))?;
-    let names: Vec<String> = zip
+    let mut names: Vec<String> = zip
         .file_names()
         .filter(|n| n.starts_with("classes") && n.ends_with(".dex"))
         .map(str::to_owned)
         .collect();
-    let mut best: Vec<String> = Vec::new();
-    let mut best_where = String::new();
+    names.sort();
+    if names.is_empty() {
+        return Err("no classes*.dex in APK".into());
+    }
+    let mut found = None;
     for name in names {
-        let mut d = Vec::new();
+        let mut bytes = Vec::new();
         zip.by_name(&name)
             .map_err(|e| e.to_string())?
-            .read_to_end(&mut d)
+            .read_to_end(&mut bytes)
             .map_err(|e| e.to_string())?;
-        let strs = strings(&d)?;
-        let mut run: Vec<(usize, u32)> = Vec::new();
-        let mut i = 0usize;
-        let mut last = 0usize;
-        let flush =
-            |run: &mut Vec<(usize, u32)>, best: &mut Vec<String>, best_where: &mut String| {
-                let names: Vec<&str> = run
-                    .iter()
-                    .map(|&(_, s)| strs[s as usize].as_str())
-                    .collect();
-                if let Some(start) = names.iter().position(|s| *s == "xmlstreamstart") {
-                    let mut seen = std::collections::HashSet::new();
-                    let mut candidate: Vec<String> = Vec::new();
-                    for s in &names[start..] {
-                        if !seen.insert(*s) {
-                            break;
-                        }
-                        candidate.push((*s).to_owned());
-                    }
-                    if candidate.len() > best.len() {
-                        *best = candidate;
-                        *best_where = format!("{name} @ 0x{:x}", run[start].0);
-                    }
-                }
-                run.clear();
-            };
-        while i + 3 < d.len() {
-            let (sidx, width) = match d[i] {
-                0x1a => (u32::from(u16::from_le_bytes([d[i + 2], d[i + 3]])), 4usize),
-                0x1b if i + 5 < d.len() => (
-                    u32::from_le_bytes([d[i + 2], d[i + 3], d[i + 4], d[i + 5]]),
-                    6usize,
-                ),
-                _ => {
-                    i += 1;
-                    continue;
-                }
-            };
-            let Some(s) = strs.get(sidx as usize) else {
-                i += 1;
-                continue;
-            };
-            // Dictionary tokens are short printable ASCII without whitespace.
-            let plausible =
-                !s.is_empty() && s.len() <= 64 && s.bytes().all(|b| (0x21..0x7f).contains(&b));
-            if !plausible {
-                i += 1;
-                continue;
+        if let Some(dictionary) =
+            crate::xref::token_arrays_one(&name, &bytes).map_err(|e| format!("{name}: {e}"))?
+        {
+            if found.is_some() {
+                return Err("multiple token dictionary initializers in APK".into());
             }
-            if !run.is_empty() && i - last > 64 {
-                flush(&mut run, &mut best, &mut best_where);
-            }
-            run.push((i, sidx));
-            last = i;
-            i += width;
+            found = Some(dictionary);
         }
-        flush(&mut run, &mut best, &mut best_where);
     }
-    if best.len() < 235 {
-        return Err(format!(
-            "no plausible token run found (longest {} strings)",
-            best.len()
-        ));
-    }
-    let mut single = vec![String::new()];
-    single.extend(best[..235].iter().cloned());
-    let mut double = Vec::new();
-    let mut rest = &best[235..];
-    while rest.len() >= 256 {
-        double.push(rest[..256].to_vec());
-        rest = &rest[256..];
-    }
-    Ok(RecoveredDictionary {
-        single,
-        double,
-        location: best_where,
-    })
+    found.ok_or_else(|| "no checked token dictionary initializer found".into())
 }
 
 #[derive(serde::Deserialize)]

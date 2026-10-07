@@ -1,0 +1,42 @@
+# APK-derived structural disassembly: LX/HUG;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=1
+  0000..0004 op=62 sget-object v0, LX/HrU;->A0D:Ljava/lang/String;
+  0004..0008 op=69 sput-object v0, LX/HUG;->A0B:Ljava/lang/String;
+  0008..000c op=62 sget-object v0, LX/HrU;->A0E:Ljava/lang/String;
+  000c..0010 op=69 sput-object v0, LX/HUG;->A0C:Ljava/lang/String;
+  0010..0014 op=62 sget-object v0, LX/HrU;->A07:Ljava/lang/String;
+  0014..0018 op=69 sput-object v0, LX/HUG;->A06:Ljava/lang/String;
+  0018..001c op=62 sget-object v0, LX/HrU;->A08:Ljava/lang/String;
+  001c..0020 op=69 sput-object v0, LX/HUG;->A07:Ljava/lang/String;
+  0020..0024 op=62 sget-object v0, LX/HrU;->A0G:Ljava/lang/String;
+  0024..0028 op=69 sput-object v0, LX/HUG;->A0E:Ljava/lang/String;
+  0028..002c op=62 sget-object v0, LX/HrU;->A0C:Ljava/lang/String;
+  002c..0030 op=69 sput-object v0, LX/HUG;->A0A:Ljava/lang/String;
+  0030..0034 op=62 sget-object v0, LX/HrU;->A0H:Ljava/lang/String;
+  0034..0038 op=69 sput-object v0, LX/HUG;->A0F:Ljava/lang/String;
+  0038..003c op=62 sget-object v0, LX/HrU;->A00:Ljava/lang/String;
+  003c..0040 op=69 sput-object v0, LX/HUG;->A00:Ljava/lang/String;
+  0040..0044 op=62 sget-object v0, LX/HrU;->A01:Ljava/lang/String;
+  0044..0048 op=69 sput-object v0, LX/HUG;->A01:Ljava/lang/String;
+  0048..004c op=62 sget-object v0, LX/HrU;->A0F:Ljava/lang/String;
+  004c..0050 op=69 sput-object v0, LX/HUG;->A0D:Ljava/lang/String;
+  0050..0054 op=62 sget-object v0, LX/HrU;->A06:Ljava/lang/String;
+  0054..0058 op=69 sput-object v0, LX/HUG;->A05:Ljava/lang/String;
+  0058..005c op=62 sget-object v0, LX/HrU;->A03:Ljava/lang/String;
+  005c..0060 op=69 sput-object v0, LX/HUG;->A03:Ljava/lang/String;
+  0060..0064 op=62 sget-object v0, LX/HrU;->A0B:Ljava/lang/String;
+  0064..0068 op=69 sput-object v0, LX/HUG;->A09:Ljava/lang/String;
+  0068..006c op=62 sget-object v0, LX/HrU;->A04:Ljava/lang/String;
+  006c..0070 op=69 sput-object v0, LX/HUG;->A04:Ljava/lang/String;
+  0070..0074 op=62 sget-object v0, LX/HrU;->A02:Ljava/lang/String;
+  0074..0078 op=69 sput-object v0, LX/HUG;->A02:Ljava/lang/String;
+  0078..007c op=62 sget-object v0, LX/HrU;->A0A:Ljava/lang/String;
+  007c..0080 op=69 sput-object v0, LX/HUG;->A08:Ljava/lang/String;
+  0080..0084 op=62 sget-object v0, LX/HrU;->A0I:Ljava/lang/String;
+  0084..0088 op=69 sput-object v0, LX/HUG;->A0G:Ljava/lang/String;
+  0088..008a op=0e return-void
+.end method

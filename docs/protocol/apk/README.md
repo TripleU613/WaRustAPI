@@ -60,8 +60,9 @@ This is a focused snapshot of currently mapped protocol classes, not a full
 decompilation or a complete WhatsApp implementation. UI and unrelated code
 are omitted. Constants compiled into an APK are client-static evidence;
 they do not prove server acceptance or promote the active 2.26.36.75 profile.
-The token dictionary differs from the active profile and is not installed
-into the library. Existing curated findings remain authoritative for what
+The historical token extraction has four refuted slots; see
+[token extraction evidence](../token-extraction.md). The comparison runtime now
+uses the checked 37.71 fixture; the pinned Android profile remains unchanged. Existing curated findings remain authoritative for what
 has actually been interpreted and verified.
 
 ## Version-scoped recipes and fast cached differences
@@ -128,3 +129,17 @@ Method targets can add `caller_anchors` to require a caller containing those
 strings and a symbolic invocation with the candidate's full signature. The
 current group classifier ambiguity is resolved this way; missing/noninvoking
 evidence refuses instead of guessing. See [caller workflow](../apk-porting.md#caller-anchors-for-ambiguous-methods-2026-10-07).
+
+## Reviewed 37.71 core baseline
+
+[Core release review](../core-release-review.md) records the real 37.70→37.71
+comparison, fourteen unique relocations and seven manually reviewed selections.
+The [37.71 recipe](recipes/2.26.37.71-core.json) covers 22 topics and maps them to
+Rust files. Its [baseline](2.26.37.71-core/targets.json) contains 27 files,
+731,482 bytes and 150 methods. The [cached difference](37.70-to-37.71-core-diff.json)
+took 0.0512 seconds: one added topic, nineteen changed texts, two unchanged.
+Obfuscation and decoder annotation changes are included; this is not nineteen
+confirmed behavior changes. The raw 37.70 APK is unavailable for re-extraction.
+
+The current eleven-topic group baseline is 16 files/423,249 bytes after checked
+token regeneration. Its eleven code topics did not change in that regeneration.

@@ -1,0 +1,24 @@
+# APK-derived structural disassembly: LX/1QR;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLL) flags=0x10001 registers=8
+  0000..0006 op=70 invoke-direct {v3}, Ljava/lang/Object;-><init>(V)
+  0006..000a op=16 const-wide/16 v0, #0x0
+  000a..000e op=22 new-instance v2, Ljava/util/concurrent/atomic/AtomicLong;
+  000e..0014 op=70 invoke-direct {v2, v0, v1}, Ljava/util/concurrent/atomic/AtomicLong;-><init>(VJ)
+  0014..0018 op=5b iput-object v2, v3, LX/1QR;->A01:Ljava/util/concurrent/atomic/AtomicLong;
+  0018..001c op=22 new-instance v2, Ljava/util/concurrent/atomic/AtomicLong;
+  001c..0022 op=70 invoke-direct {v2, v0, v1}, Ljava/util/concurrent/atomic/AtomicLong;-><init>(VJ)
+  0022..0026 op=5b iput-object v2, v3, LX/1QR;->A00:Ljava/util/concurrent/atomic/AtomicLong;
+  0026..002a op=22 new-instance v0, LX/1Nj;
+  002a..0030 op=70 invoke-direct {v0, v6}, LX/1Nj;-><init>(VL)
+  0030..0034 op=5b iput-object v0, v3, LX/1QR;->A04:LX/1Nj;
+  0034..0038 op=22 new-instance v0, LX/1Nj;
+  0038..003e op=70 invoke-direct {v0, v7}, LX/1Nj;-><init>(VL)
+  003e..0042 op=5b iput-object v0, v3, LX/1QR;->A03:LX/1Nj;
+  0042..0046 op=5b iput-object v4, v3, LX/1QR;->A02:LX/1Lk;
+  0046..004a op=5b iput-object v5, v3, LX/1QR;->A05:Lorg/whispersystems/libsignal/kem/KEMPublicKey;
+  004a..004c op=0e return-void
+.end method

@@ -889,3 +889,32 @@ repository hygiene passed. The unchanged runtime Rust code was not retested
 across the whole workspace for this source-evidence change.
 Final staged hygiene passed (435 local links, budgets, licenses and reference
 checksums); staged whitespace and the five OpenAPI checks passed again.
+
+APK-to-Rust release work now includes a reviewed 22-topic core 37.71 baseline
+(27 files/731,482 bytes/150 methods) and a genuine cached 37.70→37.71 difference
+in 0.0512 seconds. Fourteen old-topic relocations were unique; three ambiguous
+and four unanchored selections required manual review. Automatic proposal
+writing refused without creating an output. Text changes include obfuscation
+and annotations and do not establish nineteen behavior changes.
+
+Confirmed static APK 37.71 `1Rl.<clinit>` indexed stores exposed four corrupted
+historical comparison token slots. The raw-byte heuristic is replaced with
+bounded typed initializer evaluation. The runtime now uses a Derived 37.71
+fixture, independently matching all 1,260 held web-v3 entries. Historical 37.70
+artifacts remain immutable; the old raw APK is unavailable. Literal wire-byte
+regressions cover all four corrected slots. Saved keys, reservations and event
+markers are preserved; old projections are not silently replayed. See
+[core review](docs/protocol/core-release-review.md) and
+[token extraction](docs/protocol/token-extraction.md).
+
+Validation: 598 workspace/all-feature tests, 24 default CLI tests, 42 final xtask
+checks, strict workspace/all-target/all-feature Clippy, warning-free Rustdoc,
+regenerated CLI reference, five OpenAPI checks, formatting and exact core/group
+snapshot reproduction passed. Final review also added a regression refusing a
+const operand that resembles a final return opcode. A bounded 30-second live
+receive session authenticated and exited 0; one automatic group refresh settled
+ok, all sixteen existing outcomes stayed unchanged, and no queued actions or
+eligible chat intents remained. No chats were sent. Individual corrected token
+slots remain live unverified; fourteen unsupported incoming classifications are
+recorded in the token extraction document. The two-factor sent action remains
+unresolved. Full APK/client parity remains unfinished.

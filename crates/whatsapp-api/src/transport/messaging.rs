@@ -413,7 +413,7 @@ pub async fn read_node<S: AsyncRead + AsyncWrite + Unpin>(
     let limits = Limits::default();
     let data =
         unpack_frame_payload(&frame, &limits).map_err(|_| error("invalid stanza compression"))?;
-    Decoder::new(&data, TokenDictionary::comparison_2_26_37_70(), &limits)
+    Decoder::new(&data, TokenDictionary::comparison_2_26_37_71(), &limits)
         .decode_node()
         .map_err(|_| error("invalid comparison stanza"))
 }
@@ -423,7 +423,7 @@ pub async fn write_node<S: AsyncRead + AsyncWrite + Unpin>(
     channel: &mut EncryptedConnection<S>,
     node: &Node,
 ) -> Result<(), TransportError> {
-    let data = Encoder::new(TokenDictionary::comparison_2_26_37_70())
+    let data = Encoder::new(TokenDictionary::comparison_2_26_37_71())
         .encode(node)
         .map_err(|_| error("cannot encode stanza"))?;
     channel.write(&data).await
@@ -995,7 +995,7 @@ mod tests {
         assert!(node.child_nodes().is_empty());
         assert!(node.get_attr("to").is_none());
         // It must survive the wire codec, since it is sent on every session.
-        let dict = TokenDictionary::comparison_2_26_37_70();
+        let dict = TokenDictionary::comparison_2_26_37_71();
         let encoded = Encoder::new(dict).encode(&node).unwrap();
         let decoded = Decoder::new(&encoded[1..], dict, &Limits::default())
             .decode_node()
@@ -1131,7 +1131,7 @@ mod tests {
             node.get_attr("to"),
             key_request(&Jid::parse("15551234567@s.whatsapp.net").unwrap(), "test").get_attr("to")
         );
-        let dict = TokenDictionary::comparison_2_26_37_70();
+        let dict = TokenDictionary::comparison_2_26_37_71();
         let bytes = Encoder::new(dict).encode(&node).unwrap();
         assert_eq!(
             Decoder::new(&bytes[1..], dict, &Limits::default())
@@ -1154,7 +1154,7 @@ mod tests {
                 .as_text(),
             Some("image")
         );
-        let dict = TokenDictionary::comparison_2_26_37_70();
+        let dict = TokenDictionary::comparison_2_26_37_71();
         for node in [image, media_route_request("offline-route")] {
             let bytes = Encoder::new(dict).encode(&node).unwrap();
             assert_eq!(
@@ -1209,7 +1209,7 @@ mod tests {
     fn key_query_roundtrip_uses_comparison_dictionary() {
         let recipient = Jid::parse("15551234567@s.whatsapp.net").unwrap();
         let node = key_request(&recipient, "offline-1");
-        let dict = TokenDictionary::comparison_2_26_37_70();
+        let dict = TokenDictionary::comparison_2_26_37_71();
         let bytes = Encoder::new(dict).encode(&node).unwrap();
         assert_eq!(
             Decoder::new(&bytes[1..], dict, &Limits::default())

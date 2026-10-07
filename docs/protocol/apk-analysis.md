@@ -81,14 +81,17 @@ near the call site instead.
 
 ## How `apk-tokens` works
 
-Dalvik initialises string arrays with runs of `const-string` (opcode `0x1a`,
-`1a AA BBBB`) / `const-string/jumbo` (`0x1b`) instructions. The tool scans
-each `classes*.dex` for runs of plausible tokens separated by no more than 64
-bytes, anchors on the stream-control token `xmlstreamstart`, stops at the
-first repeated string (a dictionary has no duplicates), and splits the run
-into the 235-entry single-byte page (index 0 is the empty token) and
-256-entry double-byte pages. It decodes no other bytecode. For 2.26.36.75
-the run is in `classes2.dex @ 0x126a96` and is identical to the web v3 list.
+The tool locates a unique `xmlstreamstart` initializer through decoded DEX
+instructions, then follows its typed array allocations, register constants,
+indexed stores and static-field publication. Unsupported instructions, malformed
+DEX, ambiguous initializers and incomplete arrays refuse extraction. There is
+no raw-byte scanning fallback. APK 37.71 `1Rl.<clinit>` yields 236 single and
+four 256-entry double pages. See [token extraction evidence](token-extraction.md).
+
+The earlier raw-byte heuristic could mistake operands for string instructions.
+Four historical comparison slots were refuted; the immutable 37.70 snapshot
+remains for reproduction. The earlier 36.75 location/equality claim was produced
+by that heuristic and has not been revalidated with the corrected extractor.
 
 ## Findings recorded so far
 

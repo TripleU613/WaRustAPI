@@ -342,7 +342,7 @@ async fn transmit(
         write_node(channel, &key_request_many(&needed, &id)?).await?;
         let (reply, pending) = wait_for(channel, "iq", &id).await?;
         keep(store, &pending)?;
-        let dict = TokenDictionary::comparison_2_26_37_70();
+        let dict = TokenDictionary::comparison_2_26_37_71();
         let wire = Encoder::new(dict).encode(&reply)?;
         store.write(|tx| {
             tx.put_json(
@@ -429,7 +429,7 @@ async fn transmit(
         if out_of_band { &[] } else { &fanout },
         &skmsg,
     )?;
-    let dict = TokenDictionary::comparison_2_26_37_70();
+    let dict = TokenDictionary::comparison_2_26_37_71();
     let wire = Encoder::new(dict).encode(&node)?;
     let intent = serde_json::json!({
         "status": "outcome_unknown",
@@ -635,7 +635,7 @@ async fn answer_retries(
                 }
             }
         };
-        let dict = TokenDictionary::comparison_2_26_37_70();
+        let dict = TokenDictionary::comparison_2_26_37_71();
         let saved = Encoder::new(dict)
             .encode(&node)
             .map_err(Error::from)

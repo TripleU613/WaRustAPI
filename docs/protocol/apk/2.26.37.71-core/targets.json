@@ -1,0 +1,287 @@
+{
+  "certificate-root": {
+    "anchors": [
+      "WhatsAppLongTerm1"
+    ],
+    "class": "LX/Dev;",
+    "file": "certificate-root.txt",
+    "method_filter": null,
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/cert.rs",
+      "crates/whatsapp-api/src/transport/comparison.rs"
+    ]
+  },
+  "frame-reader": {
+    "anchors": [
+      "Closed before read completed!"
+    ],
+    "class": "LX/1NV;",
+    "file": "frame-reader.txt",
+    "method_filter": null,
+    "methods": 3,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/framing.rs"
+    ]
+  },
+  "frame-writer": {
+    "anchors": [
+      "data too large to write; length="
+    ],
+    "class": "LX/1NX;",
+    "file": "frame-writer.txt",
+    "method_filter": null,
+    "methods": 3,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/framing.rs"
+    ]
+  },
+  "http-chunk-reader": {
+    "anchors": [
+      "corrupt pseudo http input [max http header length exceeded]",
+      "corrupt pseudo http input [max chunk header length exceeded]"
+    ],
+    "class": "LX/HAd;",
+    "file": "http-chunk-reader.txt",
+    "method_filter": null,
+    "methods": 8,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/socket.rs"
+    ]
+  },
+  "http-chunk-writer": {
+    "anchors": [
+      "POST /chat HTTP/1.1\r\nHost: c.whatsapp.net\r\nUser-Agent: Mozilla/5.0 (compatible; WAChat/1.2; +http://www.whatsapp.com/contact)\r\nTransfer-Encoding: chunked\r\n\r\n"
+    ],
+    "class": "LX/MMg;",
+    "file": "http-chunk-writer.txt",
+    "method_filter": null,
+    "methods": 5,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/socket.rs"
+    ]
+  },
+  "integer-encoding": {
+    "anchors": [
+      "Input too small: ",
+      "(byte)0x"
+    ],
+    "class": "LX/1Lz;",
+    "file": "integer-encoding.txt",
+    "method_filter": null,
+    "methods": 8,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/prekeys.rs",
+      "crates/whatsapp-api/src/binary/encoder.rs",
+      "crates/whatsapp-api/src/binary/decoder.rs"
+    ]
+  },
+  "node-writer": {
+    "anchors": [
+      "frame-tree-node-writer/writeJid/failed to write jid: ",
+      "more than one source of inner data for node; countValues="
+    ],
+    "class": "LX/1Qe;",
+    "file": "node-writer.txt",
+    "method_filter": null,
+    "methods": 10,
+    "rust_files": [
+      "crates/whatsapp-api/src/binary/encoder.rs",
+      "crates/whatsapp-api/src/binary/node.rs"
+    ]
+  },
+  "noise-cipher": {
+    "class": "LX/1Nj;",
+    "file": "noise-cipher.txt",
+    "method_filter": null,
+    "methods": 3,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/classic.rs",
+      "crates/whatsapp-api/src/transport/noise.rs"
+    ]
+  },
+  "noise-config": {
+    "anchors": [
+      "IKKEM",
+      "XXKEM_EPH_ONLY"
+    ],
+    "class": "LX/19p;",
+    "file": "noise-config.txt",
+    "method_filter": null,
+    "methods": 13,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/selector.rs",
+      "crates/whatsapp-api/src/transport/handshake.rs"
+    ]
+  },
+  "noise-handshake": {
+    "anchors": [
+      "NoiseSocket/handshakeStart mode=",
+      "NoiseSocket protocol version is not 5 or 6"
+    ],
+    "class": "LX/1N7;",
+    "file": "noise-handshake.txt",
+    "method_filter": null,
+    "methods": 11,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/handshake.rs",
+      "crates/whatsapp-api/src/transport/classic.rs",
+      "crates/whatsapp-api/src/transport/cert.rs"
+    ]
+  },
+  "noise-patterns": {
+    "anchors": [
+      "Noise_XX_25519_AESGCM_SHA256",
+      "Noise_IK_25519_AESGCM_SHA256"
+    ],
+    "class": "LX/1NZ;",
+    "file": "noise-patterns.txt",
+    "method_filter": null,
+    "methods": 10,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/classic.rs",
+      "crates/whatsapp-api/src/transport/noise.rs"
+    ]
+  },
+  "noise-record-state": {
+    "class": "LX/1QR;",
+    "file": "noise-record-state.txt",
+    "method_filter": null,
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/classic.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "record-writer": {
+    "class": "LX/1Qc;",
+    "file": "record-writer.txt",
+    "method_filter": null,
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/classic.rs",
+      "crates/whatsapp-api/src/transport/framing.rs"
+    ]
+  },
+  "registration-key-bundle": {
+    "anchors": [
+      "RegistrationKeyBundleHelper/addKeyBundleParams/success",
+      "RegistrationKeyBundle/getKeyBundle/signedPreKey signature is null"
+    ],
+    "class": "LX/Hu8;",
+    "file": "registration-key-bundle.txt",
+    "method_filter": null,
+    "methods": 3,
+    "rust_files": [
+      "crates/whatsapp-api/src/registration/wire.rs",
+      "crates/whatsapp-api/src/registration/prerequisites.rs"
+    ]
+  },
+  "registration-paths": {
+    "anchors": [
+      "=d =q}vw",
+      "=d =`wu{afw`"
+    ],
+    "class": "LX/HrU;",
+    "file": "registration-paths.txt",
+    "method_filter": null,
+    "methods": 2,
+    "rust_files": [
+      "crates/whatsapp-api/src/registration/envelope.rs",
+      "crates/whatsapp-api/src/registration/request.rs"
+    ]
+  },
+  "registration-requests": {
+    "class": "LX/HUG;",
+    "file": "registration-requests.txt",
+    "method_filter": null,
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/registration/envelope.rs",
+      "crates/whatsapp-api/src/registration/wire.rs"
+    ]
+  },
+  "registration-response-bridge": {
+    "anchors": [
+      "KotlinRegistrationBridge/sendClientFunnelLog/success",
+      "KotlinRegistrationBridge/sendClientFunnelLog/e2e keys not available"
+    ],
+    "class": "Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;",
+    "file": "registration-response-bridge.txt",
+    "method_filter": null,
+    "methods": 35,
+    "rust_files": [
+      "crates/whatsapp-api/src/registration/wire.rs",
+      "crates/whatsapp-api/src/registration/mod.rs"
+    ]
+  },
+  "registration-token": {
+    "anchors": [
+      "PBKDF2WithHmacSHA1And8BIT",
+      "app/md5/bytes/error "
+    ],
+    "class": "LX/Htz;",
+    "file": "registration-token.txt",
+    "method_filter": null,
+    "methods": 3,
+    "rust_files": [
+      "crates/whatsapp-api/src/registration/token.rs",
+      "crates/whatsapp-api/src/registration/token_material.rs"
+    ]
+  },
+  "registration-token-salt": {
+    "anchors": [
+      "PkTwKSZqUfAUyR0rPQ8hYJ0wNsQQ3dW1+3SCnyTXIfEAxxS75FwkDf47wNv/c8pP3p0GXKR6OOQmhyERwx74fw1RYSU10I4r1gyBVDbRJ40pidjM41G1I1oN"
+    ],
+    "class": "LX/HSA;",
+    "file": "registration-token-salt.txt",
+    "method_filter": null,
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/registration/token.rs"
+    ]
+  },
+  "socket-factory": {
+    "anchors": [
+      "ConnectionSocketFactory/try_connect/using-happyEyeball",
+      "ConnectionThread/connect/failed to load auth key, postponing login"
+    ],
+    "class": "LX/1AM;",
+    "file": "socket-factory.txt",
+    "method_filter": null,
+    "methods": 18,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/socket.rs",
+      "crates/whatsapp-api/src/transport/selector.rs"
+    ]
+  },
+  "socket-sequence": {
+    "anchors": [
+      "ConnectionSequence/getPort: using port from history=",
+      "Must call moveToNext first"
+    ],
+    "class": "LX/1BH;",
+    "file": "socket-sequence.txt",
+    "method_filter": null,
+    "methods": 9,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/selector.rs",
+      "crates/whatsapp-api/src/transport/socket.rs"
+    ]
+  },
+  "token-dictionary-initializer": {
+    "anchors": [
+      "xmlstreamstart",
+      "xmlstreamend"
+    ],
+    "class": "LX/1Rl;",
+    "file": "token-dictionary-initializer.txt",
+    "method_filter": "<clinit>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/binary/tokens.rs",
+      "crates/whatsapp-api/src/binary/encoder.rs",
+      "crates/whatsapp-api/src/binary/decoder.rs"
+    ]
+  }
+}

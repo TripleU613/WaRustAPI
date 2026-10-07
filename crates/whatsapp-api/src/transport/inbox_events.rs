@@ -599,7 +599,7 @@ pub(super) fn restore(
     let raw = crate::binary::unpack_frame_payload(&wire, &limits)?;
     let node = crate::binary::Decoder::new(
         &raw,
-        crate::binary::TokenDictionary::comparison_2_26_37_70(),
+        crate::binary::TokenDictionary::comparison_2_26_37_71(),
         &limits,
     )
     .decode_node()?;
@@ -717,7 +717,7 @@ mod tests {
         let node = group_node().children(vec![Node::new("meta").attr("appdata", "group_history")]);
         let key = b"received:120363000000000001@g.us:fixture";
         let route =
-            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
                 .encode(&node)
                 .unwrap();
         let saved = serde_json::json!({"status":"decrypted", "route":route, "protobuf":payload});
@@ -796,7 +796,7 @@ mod tests {
         let node = group_node().attr("from", "status@broadcast");
         let key = b"received:status@broadcast:fixture";
         let route =
-            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
                 .encode(&node)
                 .unwrap();
         let saved = serde_json::json!({"status":"decrypted", "route":route, "protobuf":b"\x0a\x04test".to_vec()});
@@ -1308,7 +1308,7 @@ mod tests {
             .attr("sender_pn", "15555550100@s.whatsapp.net")
             .attr("id", "fixture");
         let route =
-            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
                 .encode(&original)
                 .unwrap();
         let saved = serde_json::json!({"status":"decrypted","route":route,"protobuf":b"\x0a\x04test".to_vec()});

@@ -168,7 +168,7 @@ impl Drop for LinkTasks {
     }
 }
 fn encode(node: &Node) -> Result<Vec<u8>> {
-    Ok(Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(node)?)
+    Ok(Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?)
 }
 fn link_from(channel: EncryptedConnection<tokio::net::TcpStream>) -> Result<(NodeLink, LinkTasks)> {
     let (mut reader, mut writer) = channel.into_split()?;
@@ -181,7 +181,7 @@ fn link_from(channel: EncryptedConnection<tokio::net::TcpStream>) -> Result<(Nod
                     unpack_frame_payload(&bytes, &limits)
                         .map_err(Error::from)
                         .and_then(|raw| {
-                            Decoder::new(&raw, TokenDictionary::comparison_2_26_37_70(), &limits)
+                            Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits)
                                 .decode_node()
                                 .map_err(Error::from)
                         })

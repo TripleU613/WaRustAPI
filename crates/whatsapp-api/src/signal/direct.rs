@@ -740,7 +740,7 @@ mod tests {
         let raw = crate::binary::unpack_frame_payload(&wire, &limits).unwrap();
         let node = crate::binary::Decoder::new(
             &raw,
-            crate::binary::TokenDictionary::comparison_2_26_37_70(),
+            crate::binary::TokenDictionary::comparison_2_26_37_71(),
             &limits,
         )
         .decode_node()

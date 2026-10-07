@@ -81,7 +81,7 @@ mod tests {
         let status = node.child("status").unwrap();
         assert!(matches!(&status.content, NodeContent::Text(t) if t == "Available"));
 
-        let dict = TokenDictionary::comparison_2_26_37_70();
+        let dict = TokenDictionary::comparison_2_26_37_71();
         let encoded = Encoder::new(dict).encode(&node).unwrap();
         let decoded = Decoder::new(&encoded[1..], dict, &crate::profile::Limits::default())
             .decode_node()

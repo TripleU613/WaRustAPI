@@ -1,0 +1,212 @@
+{
+  "apk_sha256": "b2090b0207e9b97449a5b48e98eb4d1649ae8e5e738e9b7431d6242717fee732",
+  "targets": {
+    "certificate-root": {
+      "class": "LX/Aw1;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/cert.rs",
+        "crates/whatsapp-api/src/transport/comparison.rs"
+      ],
+      "anchors": [
+        "WhatsAppLongTerm1"
+      ]
+    },
+    "frame-reader": {
+      "class": "LX/1NV;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/framing.rs"
+      ],
+      "anchors": [
+        "Closed before read completed!"
+      ]
+    },
+    "frame-writer": {
+      "class": "LX/1NX;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/framing.rs"
+      ],
+      "anchors": [
+        "data too large to write; length="
+      ]
+    },
+    "http-chunk-reader": {
+      "class": "LX/H9U;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/socket.rs"
+      ],
+      "anchors": [
+        "corrupt pseudo http input [max http header length exceeded]",
+        "corrupt pseudo http input [max chunk header length exceeded]"
+      ]
+    },
+    "http-chunk-writer": {
+      "class": "LX/H9X;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/socket.rs"
+      ],
+      "anchors": [
+        "POST /chat HTTP/1.1\r\nHost: c.whatsapp.net\r\nUser-Agent: Mozilla/5.0 (compatible; WAChat/1.2; +http://www.whatsapp.com/contact)\r\nTransfer-Encoding: chunked\r\n\r\n"
+      ]
+    },
+    "integer-encoding": {
+      "class": "LX/1Lz;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/prekeys.rs",
+        "crates/whatsapp-api/src/binary/encoder.rs",
+        "crates/whatsapp-api/src/binary/decoder.rs"
+      ],
+      "anchors": [
+        "Input too small: ",
+        "(byte)0x"
+      ]
+    },
+    "node-writer": {
+      "class": "LX/1Qe;",
+      "rust_files": [
+        "crates/whatsapp-api/src/binary/encoder.rs",
+        "crates/whatsapp-api/src/binary/node.rs"
+      ],
+      "anchors": [
+        "frame-tree-node-writer/writeJid/failed to write jid: ",
+        "more than one source of inner data for node; countValues="
+      ]
+    },
+    "noise-cipher": {
+      "class": "LX/1Nj;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/noise.rs"
+      ]
+    },
+    "noise-config": {
+      "class": "LX/19p;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/selector.rs",
+        "crates/whatsapp-api/src/transport/handshake.rs"
+      ],
+      "anchors": [
+        "IKKEM",
+        "XXKEM_EPH_ONLY"
+      ]
+    },
+    "noise-handshake": {
+      "class": "LX/1N7;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/handshake.rs",
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/cert.rs"
+      ],
+      "anchors": [
+        "NoiseSocket/handshakeStart mode=",
+        "NoiseSocket protocol version is not 5 or 6"
+      ]
+    },
+    "noise-patterns": {
+      "class": "LX/1NZ;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/noise.rs"
+      ],
+      "anchors": [
+        "Noise_XX_25519_AESGCM_SHA256",
+        "Noise_IK_25519_AESGCM_SHA256"
+      ]
+    },
+    "noise-record-state": {
+      "class": "LX/1QR;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "record-writer": {
+      "class": "LX/1Qc;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/framing.rs"
+      ]
+    },
+    "registration-key-bundle": {
+      "class": "LX/Cdl;",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/wire.rs",
+        "crates/whatsapp-api/src/registration/prerequisites.rs"
+      ],
+      "anchors": [
+        "RegistrationKeyBundleHelper/addKeyBundleParams/success",
+        "RegistrationKeyBundle/getKeyBundle/signedPreKey signature is null"
+      ]
+    },
+    "registration-paths": {
+      "class": "LX/HpO;",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/envelope.rs",
+        "crates/whatsapp-api/src/registration/request.rs"
+      ],
+      "anchors": [
+        "=d =q}vw",
+        "=d =`wu{afw`"
+      ]
+    },
+    "registration-requests": {
+      "class": "LX/HSP;",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/envelope.rs",
+        "crates/whatsapp-api/src/registration/wire.rs"
+      ]
+    },
+    "registration-response-bridge": {
+      "class": "Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/wire.rs",
+        "crates/whatsapp-api/src/registration/mod.rs"
+      ],
+      "anchors": [
+        "KotlinRegistrationBridge/sendClientFunnelLog/success",
+        "KotlinRegistrationBridge/sendClientFunnelLog/e2e keys not available"
+      ]
+    },
+    "registration-token": {
+      "class": "LX/Hre;",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/token.rs",
+        "crates/whatsapp-api/src/registration/token_material.rs"
+      ],
+      "anchors": [
+        "PBKDF2WithHmacSHA1And8BIT",
+        "app/md5/bytes/error "
+      ]
+    },
+    "registration-token-salt": {
+      "class": "LX/HQP;",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/token.rs"
+      ],
+      "anchors": [
+        "PkTwKSZqUfAUyR0rPQ8hYJ0wNsQQ3dW1+3SCnyTXIfEAxxS75FwkDf47wNv/c8pP3p0GXKR6OOQmhyERwx74fw1RYSU10I4r1gyBVDbRJ40pidjM41G1I1oN"
+      ]
+    },
+    "socket-factory": {
+      "class": "LX/1AM;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/socket.rs",
+        "crates/whatsapp-api/src/transport/selector.rs"
+      ],
+      "anchors": [
+        "ConnectionSocketFactory/try_connect/using-happyEyeball",
+        "ConnectionThread/connect/failed to load auth key, postponing login"
+      ]
+    },
+    "socket-sequence": {
+      "class": "LX/1BH;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/selector.rs",
+        "crates/whatsapp-api/src/transport/socket.rs"
+      ],
+      "anchors": [
+        "ConnectionSequence/getPort: using port from history=",
+        "Must call moveToNext first"
+      ]
+    }
+  }
+}

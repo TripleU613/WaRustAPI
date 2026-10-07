@@ -24,13 +24,13 @@ fn decode(bytes: &[u8]) -> Result<Node> {
     let limits = crate::profile::Limits::default();
     let raw = crate::binary::unpack_frame_payload(bytes, &limits)?;
     Ok(
-        crate::binary::Decoder::new(&raw, TokenDictionary::comparison_2_26_37_70(), &limits)
+        crate::binary::Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits)
             .decode_node()?,
     )
 }
 
 fn encode(node: &Node) -> Result<Vec<u8>> {
-    Ok(Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(node)?)
+    Ok(Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?)
 }
 
 /// Lifecycle of one queued action.

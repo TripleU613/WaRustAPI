@@ -84,8 +84,9 @@ pub struct TokenDictionary {
 }
 
 impl TokenDictionary {
-    /// Version-scoped dictionary recovered from comparison APK 2.26.37.70.
-    /// Never substitutes for the pinned Android profile's dictionary.
+    /// Historical 37.70 heuristic fixture, retained for exact reproduction.
+    /// Four page slot-1 entries are refuted; runtime uses the checked 37.71
+    /// initializer instead. See docs/protocol/token-extraction.md.
     pub fn comparison_2_26_37_70() -> &'static TokenDictionary {
         static DICTIONARY: OnceLock<TokenDictionary> = OnceLock::new();
         DICTIONARY.get_or_init(|| {
@@ -93,6 +94,20 @@ impl TokenDictionary {
                 "../../fixtures/tokens/comparison-2.26.37.70.json"
             ))
             .expect("checked comparison dictionary fixture")
+        })
+    }
+
+    /// Checked APK 37.71 token initializer, for the comparison transport only.
+    /// `1Rl.<clinit>` assigns all 236 single and 4x256 double entries; the old
+    /// raw-byte scanner mistook operands for const-string instructions.
+    /// Never substitutes for the pinned Android profile's dictionary.
+    pub fn comparison_2_26_37_71() -> &'static TokenDictionary {
+        static DICTIONARY: OnceLock<TokenDictionary> = OnceLock::new();
+        DICTIONARY.get_or_init(|| {
+            Self::from_fixture_json(include_str!(
+                "../../fixtures/tokens/comparison-2.26.37.71.json"
+            ))
+            .expect("checked comparison initializer fixture")
         })
     }
 
@@ -199,6 +214,45 @@ impl TokenDictionary {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn checked_apk_initializer_decodes_page_one_slots_as_wire_tokens() {
+        use crate::binary::{Decoder, Encoder, Node};
+        use crate::profile::Limits;
+
+        let dictionary = TokenDictionary::comparison_2_26_37_71();
+        // Independent 37.71 `1Rl.<clinit>` indexed writes at 0baa, 17c8,
+        // 23f8 and 2fdc. Payloads use LIST_8 then page selector/index, not
+        // the encoder's output as the expected decoding input.
+        for (page, expected) in [
+            "active",
+            "dirty",
+            "ptt_playback_speed_enabled",
+            "profile_picture",
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            let wire = [248, 1, 236 + page as u8, 1];
+            let node = Decoder::new(&wire, dictionary, &Limits::default())
+                .decode_node()
+                .unwrap();
+            assert_eq!(node.description, expected);
+            assert_eq!(
+                Encoder::new(dictionary)
+                    .encode(&Node::new(expected))
+                    .unwrap(),
+                [vec![0], wire.to_vec()].concat()
+            );
+        }
+        let independently_held = TokenDictionary::web_md_v3();
+        assert_eq!(dictionary.single, independently_held.single);
+        assert_eq!(dictionary.double, independently_held.double);
+        assert_ne!(
+            dictionary.double,
+            TokenDictionary::comparison_2_26_37_70().double
+        );
+    }
 
     #[test]
     fn embedded_dictionary_matches_reference_counts() {

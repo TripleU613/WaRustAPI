@@ -77,12 +77,19 @@ impl<'a> DexFile<'a> {
         let item_off = self.str_off as usize + 4 * idx as usize;
         let data_off = u32le(self.d, item_off)? as usize;
         let (len_units, body) = uleb128(self.d, data_off)?;
-        let max_bytes = body + len_units as usize * 3 + 1;
-        let end = self.d[body..max_bytes.min(self.d.len())]
+        let max_bytes = (len_units as usize)
+            .checked_mul(3)
+            .and_then(|n| body.checked_add(n))
+            .and_then(|n| n.checked_add(1))
+            .ok_or("string extent overflow")?;
+        let end = self
+            .d
+            .get(body..max_bytes.min(self.d.len()))
+            .ok_or("string body outside DEX")?
             .iter()
             .position(|&b| b == 0)
             .map(|p| body + p)
-            .unwrap_or(body);
+            .ok_or("unterminated DEX string")?;
         Ok(mutf8(&self.d[body..end]))
     }
 
@@ -1130,6 +1137,100 @@ fn const_string_index(insn: &[u8]) -> Option<u32> {
         ])),
         _ => None,
     }
+}
+
+/// Recover only the checked static initializer holding xmlstreamstart. Raw DEX
+/// byte scanning previously interpreted operands as strings, corrupting page
+/// slot 1. APK 37.71 `1Rl.<clinit>` explicitly assigns all 236 + 4x256 entries.
+pub fn token_arrays_one(
+    name: &str,
+    data: &[u8],
+) -> Result<Option<crate::dex::RecoveredDictionary>, String> {
+    let mut anchors = BTreeMap::new();
+    strict_anchors_one(name, data, &["xmlstreamstart".into()], &mut anchors)?;
+    let Some(sites) = anchors.get("xmlstreamstart") else {
+        return Ok(None);
+    };
+    if sites.len() != 1 || sites[0].method_name != "<clinit>" {
+        return Err("ambiguous token initializer anchor".into());
+    }
+    let site = &sites[0];
+    let dex = DexFile::parse(data)?;
+    for class_index in 0..dex.class_count {
+        let definition = dex.class_off as usize + 32 * class_index as usize;
+        if dex.type_name(u32le(data, definition)?)? != site.class_name {
+            continue;
+        }
+        let mut position = u32le(data, definition + 24)? as usize;
+        if position == 0 {
+            return Err("token initializer has no class data".into());
+        }
+        let mut counts = [0; 4];
+        for count in &mut counts {
+            let (value, next) = uleb128(data, position)?;
+            *count = value;
+            position = next;
+        }
+        for _ in 0..counts[0]
+            .checked_add(counts[1])
+            .ok_or("token field count overflow")?
+        {
+            let (_, next) = uleb128(data, position)?;
+            let (_, next) = uleb128(data, next)?;
+            position = next;
+        }
+        for (method, flags, code_offset) in
+            encoded_methods(data, &mut position, counts[2], counts[3])?
+        {
+            if method != site.method_index {
+                continue;
+            }
+            if flags & 8 == 0 || code_offset == 0 {
+                return Err("token initializer is not static code".into());
+            }
+            let code_offset = code_offset as usize;
+            let count = u32le(data, code_offset + 12)? as usize;
+            if count > 512 * 1024 {
+                return Err("token initializer code exceeds local bound".into());
+            }
+            let start = code_offset + 16;
+            let code = data
+                .get(start..start + count * 2)
+                .ok_or("truncated token initializer code")?;
+            let arrays = crate::token_arrays::recover(
+                code,
+                u16le(data, code_offset)? as usize,
+                |index| dex.string(index),
+                |index| dex.type_name(index),
+                |index| {
+                    let (class, _, ty) = dex.field_info(index)?;
+                    if class != site.class_name {
+                        return Err("token field belongs to another class".into());
+                    }
+                    Ok(ty)
+                },
+            )?;
+            if arrays.single.len() != 236
+                || !arrays.single[0].is_empty()
+                || arrays.single[1] != "xmlstreamstart"
+                || arrays.single[2] != "xmlstreamend"
+                || arrays.double.len() != 4
+                || arrays.double.iter().any(|page| page.len() != 256)
+            {
+                return Err("unsupported token dictionary shape; expected 236 and 4x256".into());
+            }
+            return Ok(Some(crate::dex::RecoveredDictionary {
+                single: arrays.single,
+                double: arrays.double,
+                location: format!(
+                    "{name} {}-><clinit> @ 0x{:x}",
+                    site.class_name, site.dex_byte_off
+                ),
+            }));
+        }
+        return Err("token initializer method missing from class data".into());
+    }
+    Err("token initializer class definition absent".into())
 }
 
 fn strict_anchors_one(

@@ -1598,7 +1598,7 @@ mod tests {
             .is_err()
         );
 
-        let dict = crate::binary::TokenDictionary::comparison_2_26_37_70();
+        let dict = crate::binary::TokenDictionary::comparison_2_26_37_71();
         let encoded = crate::binary::Encoder::new(dict).encode(&node).unwrap();
         let decoded =
             crate::binary::Decoder::new(&encoded[1..], dict, &crate::profile::Limits::default())

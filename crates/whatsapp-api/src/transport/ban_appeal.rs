@@ -117,7 +117,7 @@ pub fn recover_appeal_token_from_captures(
 
             let node = match crate::binary::Decoder::new(
                 &payload,
-                crate::binary::TokenDictionary::comparison_2_26_37_70(),
+                crate::binary::TokenDictionary::comparison_2_26_37_71(),
                 &limits,
             )
             .decode_node()

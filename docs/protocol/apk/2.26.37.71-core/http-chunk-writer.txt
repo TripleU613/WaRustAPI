@@ -1,0 +1,134 @@
+# APK-derived structural disassembly: LX/MMg;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VL) flags=0x10001 registers=3
+  0000..0006 op=70 invoke-direct {v1, v2}, Ljava/io/FilterOutputStream;-><init>(VL)
+  0006..000a op=38 if-eqz v2, +0xb
+  000a..000e op=13 const/16 v0, #0x2000
+  000e..0014 op=71 invoke-static {v0}, Ljava/nio/ByteBuffer;->allocate(LI)
+  0014..0016 op=0c move-result-object
+  0016..001a op=5b iput-object v0, v1, LX/MMg;->A01:Ljava/nio/ByteBuffer;
+  001a..001c op=0e return-void
+  001c..0020 op=1a const-string v0, "out may not be null"
+  0020..0026 op=71 invoke-static {v0}, LX/1xf;->A18(LL)
+  0026..0028 op=0c move-result-object
+  0028..002a op=27 throw v0
+.end method
+
+.method close(V) flags=0x20001 registers=4
+  0000..0002 op=1d monitor-enter
+  0002..0008 op=6e invoke-virtual {v3}, Ljava/io/OutputStream;->flush(V)
+  0008..000c op=54 iget-object v2, v3, Ljava/io/FilterOutputStream;->out:Ljava/io/OutputStream;
+  000c..0010 op=1a const-string v1, "0\r\n\r\n"
+  0010..0014 op=62 sget-object v0, LX/08F;->A0A:Ljava/lang/String;
+  0014..001a op=6e invoke-virtual {v1, v0}, Ljava/lang/String;->getBytes(LL)
+  001a..001c op=0c move-result-object
+  001c..0022 op=6e invoke-virtual {v2, v0}, Ljava/io/OutputStream;->write(VL)
+  0022..0024 op=12 const/4 v0, #0x0
+  0024..0026 op=28 goto +0x2
+  0026..0028 op=0d move-exception
+  0028..002e op=6f invoke-super {v3}, Ljava/io/FilterOutputStream;->close(V)
+  002e..0032 op=38 if-eqz v0, +0x9
+  0032..0038 op=71 invoke-static {}, Ljava/lang/Thread;->currentThread(L)
+  0038..003a op=0c move-result-object
+  003a..0040 op=6e invoke-virtual {v0}, Ljava/lang/Thread;->stop(V)
+  0040..0042 op=1e monitor-exit
+  0042..0044 op=0e return-void
+  0044..0046 op=0d move-exception
+  0046..004a op=22 new-instance v0, Ljava/lang/Error;
+  004a..0050 op=70 invoke-direct {v0, v1}, Ljava/lang/Error;-><init>(VL)
+  0050..0052 op=27 throw v0
+  0052..0054 op=0d move-exception
+  0054..0056 op=1e monitor-exit
+  0056..0058 op=27 throw v0
+.end method
+
+.method flush(V) flags=0x20001 registers=8
+  0000..0002 op=1d monitor-enter
+  0002..0006 op=55 iget-boolean v0, v7, LX/MMg;->A00:Z
+  0006..000a op=39 if-nez v0, +0x12
+  000a..000e op=54 iget-object v2, v7, Ljava/io/FilterOutputStream;->out:Ljava/io/OutputStream;
+  000e..0012 op=1a const-string v1, "POST /chat HTTP/1.1\r\nHost: c.whatsapp.net\r\nUser-Agent: Mozilla/5.0 (compatible; WAChat/1.2; +http://www.whatsapp.com/contact)\r\nTransfer-Encoding: chunked\r\n\r\n"
+  0012..0016 op=62 sget-object v0, LX/08F;->A0A:Ljava/lang/String;
+  0016..001c op=6e invoke-virtual {v1, v0}, Ljava/lang/String;->getBytes(LL)
+  001c..001e op=0c move-result-object
+  001e..0024 op=6e invoke-virtual {v2, v0}, Ljava/io/OutputStream;->write(VL)
+  0024..0026 op=12 const/4 v0, #0x1
+  0026..002a op=5c iput-boolean v0, v7, LX/MMg;->A00:Z
+  002a..002e op=54 iget-object v6, v7, LX/MMg;->A01:Ljava/nio/ByteBuffer;
+  002e..0034 op=6e invoke-virtual {v6}, Ljava/nio/Buffer;->position(I)
+  0034..0036 op=0a move-result
+  0036..003a op=3d if-lez v0, +0x3e
+  003a..003e op=54 iget-object v2, v7, Ljava/io/FilterOutputStream;->out:Ljava/io/OutputStream;
+  003e..0044 op=6e invoke-virtual {v6}, Ljava/nio/Buffer;->position(I)
+  0044..0046 op=0a move-result
+  0046..004c op=71 invoke-static {v0}, Ljava/lang/Integer;->toHexString(LI)
+  004c..004e op=0c move-result-object
+  004e..0052 op=62 sget-object v0, LX/08F;->A0A:Ljava/lang/String;
+  0052..0058 op=6e invoke-virtual {v1, v0}, Ljava/lang/String;->getBytes(LL)
+  0058..005a op=0c move-result-object
+  005a..0060 op=6e invoke-virtual {v2, v0}, Ljava/io/OutputStream;->write(VL)
+  0060..0064 op=54 iget-object v0, v7, Ljava/io/FilterOutputStream;->out:Ljava/io/OutputStream;
+  0064..0068 op=13 const/16 v5, #0xd
+  0068..006e op=6e invoke-virtual {v0, v5}, Ljava/io/OutputStream;->write(VI)
+  006e..0072 op=54 iget-object v0, v7, Ljava/io/FilterOutputStream;->out:Ljava/io/OutputStream;
+  0072..0076 op=13 const/16 v4, #0xa
+  0076..007c op=6e invoke-virtual {v0, v4}, Ljava/io/OutputStream;->write(VI)
+  007c..0080 op=54 iget-object v3, v7, Ljava/io/FilterOutputStream;->out:Ljava/io/OutputStream;
+  0080..0086 op=6e invoke-virtual {v6}, Ljava/nio/ByteBuffer;->array(L)
+  0086..0088 op=0c move-result-object
+  0088..008e op=6e invoke-virtual {v6}, Ljava/nio/Buffer;->position(I)
+  008e..0090 op=0a move-result
+  0090..0092 op=12 const/4 v0, #0x0
+  0092..0098 op=6e invoke-virtual {v3, v2, v0, v1}, Ljava/io/OutputStream;->write(VLII)
+  0098..009c op=54 iget-object v0, v7, Ljava/io/FilterOutputStream;->out:Ljava/io/OutputStream;
+  009c..00a2 op=6e invoke-virtual {v0, v5}, Ljava/io/OutputStream;->write(VI)
+  00a2..00a6 op=54 iget-object v0, v7, Ljava/io/FilterOutputStream;->out:Ljava/io/OutputStream;
+  00a6..00ac op=6e invoke-virtual {v0, v4}, Ljava/io/OutputStream;->write(VI)
+  00ac..00b2 op=6e invoke-virtual {v6}, Ljava/nio/Buffer;->clear(L)
+  00b2..00b8 op=6f invoke-super {v7}, Ljava/io/FilterOutputStream;->flush(V)
+  00b8..00ba op=1e monitor-exit
+  00ba..00bc op=0e return-void
+  00bc..00be op=0d move-exception
+  00be..00c0 op=1e monitor-exit
+  00c0..00c2 op=27 throw v0
+.end method
+
+.method write(VI) flags=0x20001 registers=4
+  0000..0002 op=1d monitor-enter
+  0002..0006 op=54 iget-object v1, v2, LX/MMg;->A01:Ljava/nio/ByteBuffer;
+  0006..000c op=6e invoke-virtual {v1}, Ljava/nio/Buffer;->hasRemaining(Z)
+  000c..000e op=0a move-result
+  000e..0012 op=39 if-nez v0, +0x5
+  0012..0018 op=6e invoke-virtual {v2}, Ljava/io/OutputStream;->flush(V)
+  0018..001a op=8d int-to-byte v0, v3
+  001a..0020 op=6e invoke-virtual {v1, v0}, Ljava/nio/ByteBuffer;->put(LB)
+  0020..0022 op=1e monitor-exit
+  0022..0024 op=0e return-void
+  0024..0026 op=0d move-exception
+  0026..0028 op=1e monitor-exit
+  0028..002a op=27 throw v0
+.end method
+
+.method write(VLII) flags=0x20001 registers=6
+  0000..0002 op=1d monitor-enter
+  0002..0006 op=54 iget-object v1, v2, LX/MMg;->A01:Ljava/nio/ByteBuffer;
+  0006..000c op=6e invoke-virtual {v1}, Ljava/nio/Buffer;->remaining(I)
+  000c..000e op=0a move-result
+  000e..0012 op=37 if-le v5, v0, +0xf
+  0012..0018 op=6e invoke-virtual {v1}, Ljava/nio/Buffer;->remaining(I)
+  0018..001a op=0a move-result
+  001a..0020 op=6e invoke-virtual {v1, v3, v4, v0}, Ljava/nio/ByteBuffer;->put(LLII)
+  0020..0026 op=6e invoke-virtual {v2}, Ljava/io/OutputStream;->flush(V)
+  0026..0028 op=b0 add-int/2addr v4, v0
+  0028..002a op=b1 sub-int/2addr v5, v0
+  002a..002c op=28 goto -0x14
+  002c..0032 op=6e invoke-virtual {v1, v3, v4, v5}, Ljava/nio/ByteBuffer;->put(LLII)
+  0032..0034 op=1e monitor-exit
+  0034..0036 op=0e return-void
+  0036..0038 op=0d move-exception
+  0038..003a op=1e monitor-exit
+  003a..003c op=27 throw v0
+.end method

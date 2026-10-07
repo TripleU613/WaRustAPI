@@ -273,7 +273,7 @@ mod tests {
     use crate::binary::{Decoder, Encoder, TokenDictionary};
 
     fn round_trip(node: &Node) {
-        let dict = TokenDictionary::comparison_2_26_37_70();
+        let dict = TokenDictionary::comparison_2_26_37_71();
         let encoded = Encoder::new(dict).encode(node).unwrap();
         let decoded = Decoder::new(&encoded[1..], dict, &crate::profile::Limits::default())
             .decode_node()

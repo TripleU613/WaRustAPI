@@ -174,7 +174,7 @@ fn route(store: &ProtocolStore) -> Result<(String, Zeroizing<String>)> {
     let limits = Limits::default();
     let data = unpack_frame_payload(&wire, &limits)?;
     let node =
-        Decoder::new(&data, TokenDictionary::comparison_2_26_37_70(), &limits).decode_node()?;
+        Decoder::new(&data, TokenDictionary::comparison_2_26_37_71(), &limits).decode_node()?;
     let conn = node
         .child("media_conn")
         .ok_or_else(|| invalid("missing media connection"))?;

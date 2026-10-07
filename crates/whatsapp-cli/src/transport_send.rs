@@ -84,7 +84,7 @@ pub(super) async fn send(
     } else {
         direct_message(&recipient, &wire_id, prepared.kind, prepared.ciphertext)?
     };
-    let wire = Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(&node)?;
+    let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&node)?;
     let image_hash = whatsapp_api::transport::image_upload::fingerprint(message)?;
     let intent = serde_json::json!({"status":"outcome_unknown","wire_id":wire_id,"to":message.to.as_str(),"text":message.text.as_str(),"image_hash":image_hash,"wire":wire,"at":whatsapp_api::model::time::Timestamp::now()});
     store.write(|tx| {
@@ -166,7 +166,7 @@ pub(super) async fn send(
     store.write(|tx| {
         tx.put_json(Table::Checkpoints, intent_key.as_bytes(), 1, &result)?;
         for (index, node) in pending.iter().chain(std::iter::once(&ack)).enumerate() {
-            let bytes = Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(node)?;
+            let bytes = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?;
             tx.put_json(
                 Table::Checkpoints,
                 format!("message:{}:send-response:{index}", message.request_id).as_bytes(),

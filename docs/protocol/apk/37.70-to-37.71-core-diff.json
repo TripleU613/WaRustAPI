@@ -1,0 +1,297 @@
+{
+  "artifacts": [
+    {
+      "file": "inventory.json",
+      "new_file": "2.26.37.71-core/inventory.json",
+      "old_file": "2.26.37.70/inventory.json",
+      "status": "changed"
+    },
+    {
+      "file": "manifest.json",
+      "new_file": "2.26.37.71-core/manifest.json",
+      "old_file": "2.26.37.70/manifest.json",
+      "status": "changed"
+    },
+    {
+      "file": "targets.json",
+      "new_file": "2.26.37.71-core/targets.json",
+      "old_file": "2.26.37.70/targets.json",
+      "status": "changed"
+    },
+    {
+      "file": "tokens.json",
+      "new_file": "2.26.37.71-core/tokens.json",
+      "old_file": "2.26.37.70/tokens.json",
+      "status": "changed"
+    }
+  ],
+  "interpretation": "Structural topic differences, not automatic proof of protocol behavior changes. Unmapped APK code/native behavior is outside this scoped comparison.",
+  "new_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "old_apk": "b2090b0207e9b97449a5b48e98eb4d1649ae8e5e738e9b7431d6242717fee732",
+  "topics": [
+    {
+      "new_class": "LX/Dev;",
+      "new_file": "2.26.37.71-core/certificate-root.txt",
+      "old_class": "LX/Aw1;",
+      "old_file": "2.26.37.70/certificate-root.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/cert.rs",
+        "crates/whatsapp-api/src/transport/comparison.rs"
+      ],
+      "status": "changed",
+      "topic": "certificate-root"
+    },
+    {
+      "new_class": "LX/1NV;",
+      "new_file": "2.26.37.71-core/frame-reader.txt",
+      "old_class": "LX/1NV;",
+      "old_file": "2.26.37.70/frame-reader.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/framing.rs"
+      ],
+      "status": "changed",
+      "topic": "frame-reader"
+    },
+    {
+      "new_class": "LX/1NX;",
+      "new_file": "2.26.37.71-core/frame-writer.txt",
+      "old_class": "LX/1NX;",
+      "old_file": "2.26.37.70/frame-writer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/framing.rs"
+      ],
+      "status": "changed",
+      "topic": "frame-writer"
+    },
+    {
+      "new_class": "LX/HAd;",
+      "new_file": "2.26.37.71-core/http-chunk-reader.txt",
+      "old_class": "LX/H9U;",
+      "old_file": "2.26.37.70/http-chunk-reader.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/socket.rs"
+      ],
+      "status": "changed",
+      "topic": "http-chunk-reader"
+    },
+    {
+      "new_class": "LX/MMg;",
+      "new_file": "2.26.37.71-core/http-chunk-writer.txt",
+      "old_class": "LX/H9X;",
+      "old_file": "2.26.37.70/http-chunk-writer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/socket.rs"
+      ],
+      "status": "changed",
+      "topic": "http-chunk-writer"
+    },
+    {
+      "new_class": "LX/1Lz;",
+      "new_file": "2.26.37.71-core/integer-encoding.txt",
+      "old_class": "LX/1Lz;",
+      "old_file": "2.26.37.70/integer-encoding.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/binary/decoder.rs",
+        "crates/whatsapp-api/src/binary/encoder.rs",
+        "crates/whatsapp-api/src/transport/prekeys.rs"
+      ],
+      "status": "changed",
+      "topic": "integer-encoding"
+    },
+    {
+      "new_class": "LX/1Qe;",
+      "new_file": "2.26.37.71-core/node-writer.txt",
+      "old_class": "LX/1Qe;",
+      "old_file": "2.26.37.70/node-writer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/binary/encoder.rs",
+        "crates/whatsapp-api/src/binary/node.rs"
+      ],
+      "status": "changed",
+      "topic": "node-writer"
+    },
+    {
+      "new_class": "LX/1Nj;",
+      "new_file": "2.26.37.71-core/noise-cipher.txt",
+      "old_class": "LX/1Nj;",
+      "old_file": "2.26.37.70/noise-cipher.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/noise.rs"
+      ],
+      "status": "changed",
+      "topic": "noise-cipher"
+    },
+    {
+      "new_class": "LX/19p;",
+      "new_file": "2.26.37.71-core/noise-config.txt",
+      "old_class": "LX/19p;",
+      "old_file": "2.26.37.70/noise-config.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/handshake.rs",
+        "crates/whatsapp-api/src/transport/selector.rs"
+      ],
+      "status": "unchanged",
+      "topic": "noise-config"
+    },
+    {
+      "new_class": "LX/1N7;",
+      "new_file": "2.26.37.71-core/noise-handshake.txt",
+      "old_class": "LX/1N7;",
+      "old_file": "2.26.37.70/noise-handshake.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/cert.rs",
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/handshake.rs"
+      ],
+      "status": "changed",
+      "topic": "noise-handshake"
+    },
+    {
+      "new_class": "LX/1NZ;",
+      "new_file": "2.26.37.71-core/noise-patterns.txt",
+      "old_class": "LX/1NZ;",
+      "old_file": "2.26.37.70/noise-patterns.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/noise.rs"
+      ],
+      "status": "changed",
+      "topic": "noise-patterns"
+    },
+    {
+      "new_class": "LX/1QR;",
+      "new_file": "2.26.37.71-core/noise-record-state.txt",
+      "old_class": "LX/1QR;",
+      "old_file": "2.26.37.70/noise-record-state.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "status": "changed",
+      "topic": "noise-record-state"
+    },
+    {
+      "new_class": "LX/1Qc;",
+      "new_file": "2.26.37.71-core/record-writer.txt",
+      "old_class": "LX/1Qc;",
+      "old_file": "2.26.37.70/record-writer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/framing.rs"
+      ],
+      "status": "unchanged",
+      "topic": "record-writer"
+    },
+    {
+      "new_class": "LX/Hu8;",
+      "new_file": "2.26.37.71-core/registration-key-bundle.txt",
+      "old_class": "LX/Cdl;",
+      "old_file": "2.26.37.70/registration-key-bundle.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/prerequisites.rs",
+        "crates/whatsapp-api/src/registration/wire.rs"
+      ],
+      "status": "changed",
+      "topic": "registration-key-bundle"
+    },
+    {
+      "new_class": "LX/HrU;",
+      "new_file": "2.26.37.71-core/registration-paths.txt",
+      "old_class": "LX/HpO;",
+      "old_file": "2.26.37.70/registration-paths.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/envelope.rs",
+        "crates/whatsapp-api/src/registration/request.rs"
+      ],
+      "status": "changed",
+      "topic": "registration-paths"
+    },
+    {
+      "new_class": "LX/HUG;",
+      "new_file": "2.26.37.71-core/registration-requests.txt",
+      "old_class": "LX/HSP;",
+      "old_file": "2.26.37.70/registration-requests.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/envelope.rs",
+        "crates/whatsapp-api/src/registration/wire.rs"
+      ],
+      "status": "changed",
+      "topic": "registration-requests"
+    },
+    {
+      "new_class": "Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;",
+      "new_file": "2.26.37.71-core/registration-response-bridge.txt",
+      "old_class": "Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;",
+      "old_file": "2.26.37.70/registration-response-bridge.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/mod.rs",
+        "crates/whatsapp-api/src/registration/wire.rs"
+      ],
+      "status": "changed",
+      "topic": "registration-response-bridge"
+    },
+    {
+      "new_class": "LX/Htz;",
+      "new_file": "2.26.37.71-core/registration-token.txt",
+      "old_class": "LX/Hre;",
+      "old_file": "2.26.37.70/registration-token.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/token.rs",
+        "crates/whatsapp-api/src/registration/token_material.rs"
+      ],
+      "status": "changed",
+      "topic": "registration-token"
+    },
+    {
+      "new_class": "LX/HSA;",
+      "new_file": "2.26.37.71-core/registration-token-salt.txt",
+      "old_class": "LX/HQP;",
+      "old_file": "2.26.37.70/registration-token-salt.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/token.rs"
+      ],
+      "status": "changed",
+      "topic": "registration-token-salt"
+    },
+    {
+      "new_class": "LX/1AM;",
+      "new_file": "2.26.37.71-core/socket-factory.txt",
+      "old_class": "LX/1AM;",
+      "old_file": "2.26.37.70/socket-factory.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/selector.rs",
+        "crates/whatsapp-api/src/transport/socket.rs"
+      ],
+      "status": "changed",
+      "topic": "socket-factory"
+    },
+    {
+      "new_class": "LX/1BH;",
+      "new_file": "2.26.37.71-core/socket-sequence.txt",
+      "old_class": "LX/1BH;",
+      "old_file": "2.26.37.70/socket-sequence.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/selector.rs",
+        "crates/whatsapp-api/src/transport/socket.rs"
+      ],
+      "status": "changed",
+      "topic": "socket-sequence"
+    },
+    {
+      "new_class": "LX/1Rl;",
+      "new_file": "2.26.37.71-core/token-dictionary-initializer.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/binary/decoder.rs",
+        "crates/whatsapp-api/src/binary/encoder.rs",
+        "crates/whatsapp-api/src/binary/tokens.rs"
+      ],
+      "status": "added",
+      "topic": "token-dictionary-initializer"
+    }
+  ],
+  "paths_relative_to": "docs/protocol/apk",
+  "caveat": "Old snapshot retains raw-byte heuristic token errors and older instruction annotations. Changed text is not proof of upstream behavior changes."
+}

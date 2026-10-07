@@ -760,7 +760,7 @@ mod tests {
     fn the_request_round_trips_through_the_comparison_codec() {
         use crate::binary::{Decoder, Encoder, TokenDictionary};
         let node = patch_request("RT1", Collection::RegularHigh, Some(2), &[7; 64], false).unwrap();
-        let dict = TokenDictionary::comparison_2_26_37_70();
+        let dict = TokenDictionary::comparison_2_26_37_71();
         let encoded = Encoder::new(dict).encode(&node).unwrap();
         // The encoder prepends a flag byte; the decoder reads the node after it.
         let decoded = Decoder::new(&encoded[1..], dict, &crate::profile::Limits::default())

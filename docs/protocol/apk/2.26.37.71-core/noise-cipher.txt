@@ -1,0 +1,91 @@
+# APK-derived structural disassembly: LX/1Nj;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VL) flags=0x10001 registers=2
+  0000..0006 op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>(V)
+  0006..000a op=5b iput-object v1, v0, LX/1Nj;->A00:[B
+  000a..000c op=0e return-void
+.end method
+
+.method A00(LLJL) flags=0x1 registers=14
+  0000..0002 op=12 const/4 v5, #0x0
+  0002..0006 op=22 new-instance v0, LX/1OB;
+  0006..000c op=70 invoke-direct {v0}, LX/1OB;-><init>(V)
+  000c..0010 op=22 new-instance v3, LX/1OE;
+  0010..0016 op=70 invoke-direct {v3, v0}, LX/1OE;-><init>(VL)
+  0016..001a op=13 const/16 v0, #0xc
+  001a..001e op=23 new-array v2, v0, [B
+  001e..0020 op=12 const/4 v0, #0x4
+  0020..0026 op=71 invoke-static {v2, v0, v11, v12}, LX/1Lz;->A02(VLIJ)
+  0026..002a op=54 iget-object v0, v9, LX/1Nj;->A00:[B
+  002a..002e op=22 new-instance v1, LX/1OH;
+  002e..0034 op=70 invoke-direct {v1, v0}, LX/1OH;-><init>(VL)
+  0034..0038 op=22 new-instance v0, LX/1OI;
+  0038..003e op=70 invoke-direct {v0, v1, v2}, LX/1OI;-><init>(VLL)
+  003e..0044 op=6e invoke-virtual {v3, v0, v5}, LX/1OE;->BIh(VLZ)
+  0044..0046 op=21 array-length
+  0046..004c op=6e invoke-virtual {v3, v10, v5, v0}, LX/1OE;->CHR(VLII)
+  004c..004e op=07 move-object
+  004e..0050 op=21 array-length
+  0050..0056 op=6e invoke-virtual {v3, v6}, LX/1OE;->AsE(II)
+  0056..0058 op=0a move-result
+  0058..005c op=23 new-array v7, v2, [B
+  005c..005e op=01 move
+  005e..0064 op=74 invoke-virtual/range {v3..v8}, LX/1OE;->CHX(ILIILI)
+  0064..0066 op=0a move-result
+  0066..006c op=6e invoke-virtual {v3, v7, v1}, LX/1OE;->AM6(ILI)
+  006c..006e op=0a move-result
+  006e..0070 op=b0 add-int/2addr v1, v0
+  0070..0074 op=35 if-ge v1, v2, +0x8
+  0074..0078 op=23 new-array v0, v1, [B
+  0078..007e op=71 invoke-static {v7, v5, v0, v5, v1}, Ljava/lang/System;->arraycopy(VLILII)
+  007e..0080 op=11 return-object v0
+  0080..0082 op=11 return-object v7
+  0082..0084 op=0d move-exception
+  0084..0088 op=22 new-instance v0, LX/MTj;
+  0088..008e op=70 invoke-direct {v0, v1, v9}, LX/MTj;-><init>(VLL)
+  008e..0090 op=27 throw v0
+.end method
+
+.method A01(LLLIJ) flags=0x1 registers=16
+  0000..0002 op=12 const/4 v6, #0x0
+  0002..0004 op=12 const/4 v3, #0x1
+  0004..0008 op=22 new-instance v0, LX/1OB;
+  0008..000e op=70 invoke-direct {v0}, LX/1OB;-><init>(V)
+  000e..0012 op=22 new-instance v4, LX/1OE;
+  0012..0018 op=70 invoke-direct {v4, v0}, LX/1OE;-><init>(VL)
+  0018..001c op=13 const/16 v0, #0xc
+  001c..0020 op=23 new-array v2, v0, [B
+  0020..0022 op=12 const/4 v0, #0x4
+  0022..0028 op=71 invoke-static {v2, v0, v14, v15}, LX/1Lz;->A02(VLIJ)
+  0028..002c op=54 iget-object v0, v10, LX/1Nj;->A00:[B
+  002c..0030 op=22 new-instance v1, LX/1OH;
+  0030..0036 op=70 invoke-direct {v1, v0}, LX/1OH;-><init>(VL)
+  0036..003a op=22 new-instance v0, LX/1OI;
+  003a..0040 op=70 invoke-direct {v0, v1, v2}, LX/1OI;-><init>(VLL)
+  0040..0046 op=6e invoke-virtual {v4, v0, v3}, LX/1OE;->BIh(VLZ)
+  0046..0048 op=21 array-length
+  0048..004e op=6e invoke-virtual {v4, v11, v6, v0}, LX/1OE;->CHR(VLII)
+  004e..0050 op=01 move
+  0050..0056 op=6e invoke-virtual {v4, v13}, LX/1OE;->AsE(II)
+  0056..0058 op=0a move-result
+  0058..005c op=23 new-array v8, v2, [B
+  005c..005e op=07 move-object
+  005e..0060 op=01 move
+  0060..0066 op=74 invoke-virtual/range {v4..v9}, LX/1OE;->CHX(ILIILI)
+  0066..0068 op=0a move-result
+  0068..006e op=6e invoke-virtual {v4, v8, v1}, LX/1OE;->AM6(ILI)
+  006e..0070 op=0a move-result
+  0070..0072 op=b0 add-int/2addr v1, v0
+  0072..0076 op=35 if-ge v1, v2, +0x8
+  0076..007a op=23 new-array v0, v1, [B
+  007a..0080 op=71 invoke-static {v8, v6, v0, v6, v1}, Ljava/lang/System;->arraycopy(VLILII)
+  0080..0082 op=11 return-object v0
+  0082..0084 op=11 return-object v8
+  0084..0086 op=0d move-exception
+  0086..008a op=22 new-instance v0, Ljava/lang/AssertionError;
+  008a..0090 op=70 invoke-direct {v0, v1}, Ljava/lang/AssertionError;-><init>(VL)
+  0090..0092 op=27 throw v0
+.end method

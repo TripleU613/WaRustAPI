@@ -166,7 +166,7 @@ pub async fn resume_identity_selected(
     let limits = Limits::default();
     let raw = crate::binary::unpack_frame_payload(&reply, &limits)?;
     let reply =
-        crate::binary::Decoder::new(&raw, TokenDictionary::comparison_2_26_37_70(), &limits)
+        crate::binary::Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits)
             .decode_node()?;
     let pending = Pending {
         local_id: id,
@@ -523,7 +523,7 @@ impl Pending {
         use sha2::{Digest, Sha256};
         let (session, identity) = previous;
         let peer_key = format!("comparison-direct:{peer}");
-        let reply = Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(node)?;
+        let reply = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?;
         store.write(|tx| {
             let current = outbox().get_mut(tx, self.local_id)?
                 .ok_or_else(|| Error::invalid("outbox", "missing intent"))?;
@@ -836,11 +836,11 @@ impl Pending {
         } else {
             super::messaging::direct_message(peer, &wire_id, prepared.kind, prepared.ciphertext)?
         };
-        let wire = Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(&stanza)?;
+        let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&stanza)?;
         // Retain the authenticated directory reply as private evidence even
         // after successful reservation; it never authorizes replay of a send.
         let directory_reply =
-            Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(node)?;
+            Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?;
         store.write(|tx| {
             let mut current = outbox()
                 .get_mut(tx, self.local_id)?
@@ -1415,7 +1415,7 @@ mod tests {
                 assert_eq!(row["status"], "answered");
                 assert_eq!(
                     serde_json::from_value::<Vec<u8>>(row["reply"].clone()).unwrap(),
-                    Encoder::new(TokenDictionary::comparison_2_26_37_70())
+                    Encoder::new(TokenDictionary::comparison_2_26_37_71())
                         .encode(&reply)
                         .unwrap()
                 );
@@ -1530,7 +1530,7 @@ mod tests {
                 let reply: Vec<u8> = serde_json::from_value(row["reply"].clone()).unwrap();
                 assert_eq!(
                     reply,
-                    Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(&response)?
+                    Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&response)?
                 );
                 Ok(())
             })
