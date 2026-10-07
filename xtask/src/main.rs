@@ -23,6 +23,7 @@ mod bundle;
 mod deps;
 mod dex;
 mod manifest;
+mod mex;
 mod proto;
 mod registration_token;
 mod token_arrays;
@@ -92,6 +93,33 @@ enum Cmd {
         /// Compare against a committed token fixture and fail on mismatch.
         #[arg(long)]
         check: Option<PathBuf>,
+    },
+    /// Export selected persisted MEX query IDs as a bounded release-diffable JSON file.
+    ApkMexQueries {
+        apk: PathBuf,
+        /// Exact operation names; no all-operation/bulk export.
+        #[arg(long = "operation", required = true)]
+        operations: Vec<String>,
+        /// Build configuration namespace used by the APK request.
+        #[arg(long, default_value = "whatsapp-android-mex")]
+        namespace: String,
+        /// Compare the complete export, including provenance, without writing.
+        #[arg(long)]
+        check: Option<PathBuf>,
+    },
+    /// Inspect the Rust group MEX node offline; does not open an account or queue an action.
+    MexGroupPreview {
+        #[arg(long)]
+        queries: PathBuf,
+        /// Synthetic group JID recommended: output contains the supplied value.
+        #[arg(long)]
+        chat: String,
+        /// Explicit IQ ID; this command never creates a live reservation.
+        #[arg(long)]
+        id: String,
+        /// Exact APK query context (for example INTERACTIVE or NEW_SUBJECT).
+        #[arg(long, default_value = "INTERACTIVE")]
+        context: String,
     },
     /// Find which classes and methods reference each anchor string constant.
     ///
@@ -229,6 +257,18 @@ fn main() -> ExitCode {
         Cmd::ReferenceManifest { apk, check } => manifest::run(&apk, check.as_deref()),
         Cmd::ApkStrings { apk, contains } => dex::run(&apk, &contains),
         Cmd::ApkTokens { apk, check } => dex::run_tokens(&apk, check.as_deref()),
+        Cmd::ApkMexQueries {
+            apk,
+            operations,
+            namespace,
+            check,
+        } => mex::extract(&apk, &namespace, &operations, check.as_deref()),
+        Cmd::MexGroupPreview {
+            queries,
+            chat,
+            id,
+            context,
+        } => mex::preview(&queries, &chat, &id, &context),
         Cmd::ApkXref { apk, anchors } => xref::run_xref(&apk, &anchors),
         Cmd::ApkCallers {
             apk,

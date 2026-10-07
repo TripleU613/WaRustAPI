@@ -1,0 +1,353 @@
+# APK 2.26.37.71, SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Partial annotated DEX, not compilable smali. Offsets are method-relative bytes.
+# Prototypes are DEX shorties, not full signatures. Selected methods only.
+
+# Local derivation file: mex-LaT-wire.txt
+
+# class: LX/LaT;
+
+.method public A02(LLLL)  # .registers 9
+    0000..0006  const-string/jumbo  v0, "result"
+    0006..000c  invoke-virtual  {v6, v0}, LX/0hs;->A0F(LL)
+    000c..000e  move-result-object  v0
+    000e..0012  if-nez  v0, +0x11
+    0012..0018  const-string/jumbo  v0, "update"
+    0018..001e  invoke-virtual  {v6, v0}, LX/0hs;->A0F(LL)
+    001e..0020  move-result-object  v0
+    0020..0024  if-nez  v0, +0x8
+    0024..0028  new-instance  v0, LX/MEn;
+    0028..002e  invoke-direct  {v0}, LX/MEn;-><init>(V)
+    002e..0030  throw  v0
+    0030..0036  invoke-virtual  {v0}, LX/0hs;->A0I(L)
+    0036..0038  move-result-object  v2
+    0038..003c  if-eqz  v2, +0xbc
+    003c..0042  invoke-virtual  {v2}, Ljava/lang/String;->length(I)
+    0042..0044  move-result  v1
+    0044..0046  const/4  v0, #0x2
+    0046..004a  if-lt  v1, v0, +0xb
+    004a..0050  const-string/jumbo  v0, "{"
+    0050..0056  invoke-static  {v0, v2}, LX/3c8;->A1a(ZLL)
+    0056..0058  move-result  v0
+    0058..005c  if-eqz  v0, +0xac
+    005c..005e  const/4  v0, #0x1
+    005e..0062  if-eqz  v0, +0xe
+    0062..0066  iget-object  v2, v5, LX/LaT;->A03:LX/Lab;
+    0066..006a  new-instance  v0, LX/LaV;
+    006a..0070  invoke-direct  {v0, v6}, LX/LaV;-><init>(VL)
+    0070..0076  invoke-virtual  {v2, v0}, LX/LaZ;->A00(LL)
+    0076..0078  move-result-object  v0
+    0078..007a  return-object  v0
+    007a..007e  iget-object  v0, v5, LX/LaT;->A00:LX/00s;
+    007e..0084  invoke-interface  {v0}, LX/00s;->get(L)
+    0084..0086  move-result-object  v2
+    0086..008a  check-cast  v2, LX/LaF;
+    008a..008e  const-string  v1, "ArgoWireType not found for "
+    008e..0094  const-string/jumbo  v0, "whatsapp-android-mex"
+    0094..009a  invoke-static  {v8, v0}, LX/00h;->areEqual(ZLL)
+    009a..009c  move-result  v0
+    009c..00a0  if-eqz  v0, +0x17
+    00a0..00a4  iget-object  v0, v2, LX/LaF;->A02:LX/00l;
+    00a4..00aa  invoke-interface  {v0}, LX/00l;->getValue(L)
+    00aa..00ac  move-result-object  v0
+    00ac..00b0  check-cast  v0, LX/LaJ;
+    00b0..00b4  iget-object  v0, v0, LX/LaJ;->A00:LX/J8T;
+    00b4..00ba  invoke-virtual  {v0, v7}, LX/J8T;->get(LL)
+    00ba..00bc  move-result-object  v0
+    00bc..00c0  check-cast  v0, LX/LaU;
+    00c0..00c4  if-eqz  v0, +0x8
+    00c4..00c8  iget-object  v1, v0, LX/LaU;->A00:LX/O4x;
+    00c8..00ca  goto  +0x17
+    00ca..00ce  iget-object  v0, v2, LX/LaF;->A01:LX/00l;
+    00ce..00d0  goto  -0x15
+    00d0..00d6  invoke-static  {v1, v7}, LX/000;->A08(LLL)
+    00d6..00d8  move-result-object  v1
+    00d8..00dc  const-string  v0, " in build config "
+    00dc..00e2  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    00e2..00e8  invoke-static  {v8, v1}, LX/3cA;->A0h(LLL)
+    00e8..00ea  move-result-object  v0
+    00ea..00ec  throw  v0
+    00ec..00ee  move-exception  v0
+    00ee..00f4  invoke-static  {v0}, LX/1xf;->A1N(LL)
+    00f4..00f6  move-result-object  v1
+    00f6..00fc  invoke-static  {v1}, LX/0Zb;->A02(LL)
+    00fc..00fe  move-result-object  v4
+    00fe..0102  if-eqz  v4, +0x2b
+    0102..0106  const/16  v1, #0x5a3
+    0106..010a  iget-object  v0, v2, LX/LaF;->A00:LX/05B;
+    010a..0110  invoke-static  {v0}, LX/Ayk;->A0i(LL)
+    0110..0112  move-result-object  v0
+    0112..0118  invoke-static  {v0, v1}, LX/08b;->A03(LLI)
+    0118..011a  move-result-object  v3
+    011a..011e  check-cast  v3, LX/0Gb;
+    011e..0122  const-string  v0, "Unable to get ArgoWireType"
+    0122..0128  invoke-static  {v0}, LX/1xf;->A1B(LL)
+    0128..012a  move-result-object  v0
+    012a..0130  invoke-static  {v0}, LX/1xg;->A1P(LL)
+    0130..0132  move-result-object  v2
+    0132..0136  const-string  v1, "ArgoWireTypeStoreProvider"
+    0136..0138  const/4  v0, #0x0
+    0138..013e  invoke-virtual  {v3, v1, v2, v0}, LX/0AH;->A0g(VLLZ)
+    013e..0142  sget-object  v0, LX/05R;->A00:LX/05R;
+    0142..0148  invoke-static  {v0}, LX/0jH;->A01(VL)
+    0148..014a  throw  v4
+    014a..014c  move-exception  v0
+    014c..0152  invoke-static  {v0}, LX/1xf;->A1N(LL)
+    0152..0154  move-result-object  v1
+    0154..0158  instance-of  v0, v1, LX/0Zd;
+    0158..015c  if-eqz  v0, +0x1e
+    015c..0162  invoke-static  {v1}, LX/0Zb;->A02(LL)
+    0162..0164  move-result-object  v2
+    0164..0168  if-nez  v2, +0xe
+    0168..016c  const-string  v0, "Unexpected null exception while getting wire type for "
+    016c..0172  invoke-static  {v0, v7}, LX/000;->A04(LLL)
+    0172..0174  move-result-object  v1
+    0174..0176  const/4  v0, #0x0
+    0176..017a  new-instance  v2, LX/MEp;
+    017a..0180  invoke-direct  {v2, v1, v0}, LX/MEp;-><init>(VLL)
+    0180..0184  new-instance  v0, LX/MEm;
+    0184..018a  invoke-direct  {v0, v7, v2}, LX/MEm;-><init>(VLL)
+    018a..0190  invoke-static  {v0}, LX/0jH;->A00(LL)
+    0190..0192  move-result-object  v0
+    0192..0194  return-object  v0
+    0194..0198  iget-object  v2, v5, LX/LaT;->A02:LX/Laa;
+    0198..019e  invoke-static  {v1}, LX/0jH;->A01(VL)
+    019e..01a2  check-cast  v1, LX/OXN;
+    01a2..01a6  new-instance  v0, LX/O4t;
+    01a6..01ac  invoke-direct  {v0, v1, v6}, LX/O4t;-><init>(VLL)
+    01ac..01b0  goto/16  -0x9e
+    01b0..01b2  const/4  v0, #0x0
+    01b2..01b6  goto/16  -0xaa
+.end method
+
+# Local derivation file: mex-Lab-detail.txt
+
+# class: LX/Lab;
+
+.method public <init>(V)  # .registers 6
+    0000..0004  const/16  v0, #0x1763
+    0004..000a  invoke-static  {v0}, LX/00S;->A03(LI)
+    000a..000c  move-result-object  v4
+    000c..0010  check-cast  v4, LX/Oau;
+    0010..0012  const/4  v0, #0x0
+    0012..0018  invoke-static  {v4, v0}, LX/00h;->A0A(VLI)
+    0018..001a  const/4  v0, #0x2
+    001a..001e  new-instance  v3, LX/O4r;
+    001e..0024  invoke-direct  {v3, v0}, LX/O4r;-><init>(VI)
+    0024..0026  const/4  v0, #0x1
+    0026..002a  new-instance  v2, LX/O4r;
+    002a..0030  invoke-direct  {v2, v0}, LX/O4r;-><init>(VI)
+    0030..0032  const/4  v1, #0x4
+    0032..0036  new-instance  v0, LX/O4r;
+    0036..003c  invoke-direct  {v0, v1}, LX/O4r;-><init>(VI)
+    003c..0042  invoke-direct  {v5, v4, v3, v2, v0}, LX/LaZ;-><init>(VLLLL)
+    0042..0044  return-void
+.end method
+
+# Local derivation file: mex-LaZ-detail.txt
+
+# class: LX/LaZ;
+
+.method public A00(LL)  # .registers 13
+    0000..0004  iget-object  v0, v11, LX/LaZ;->A03:LX/Oau;
+    0004..000a  invoke-interface  {v0, v12}, LX/Oau;->Cf4(LL)
+    000a..000c  move-result-object  v3
+    000c..000e  goto  +0x6
+    000e..0010  move-exception  v0
+    0010..0016  invoke-static  {v0}, LX/1xf;->A1N(LL)
+    0016..0018  move-result-object  v3
+    0018..001c  instance-of  v0, v3, LX/0Zd;
+    001c..001e  const/4  v5, #0x0
+    001e..0020  const/4  v4, #0x1
+    0020..0024  if-eqz  v0, +0x41
+    0024..0028  iget-object  v0, v11, LX/LaZ;->A03:LX/Oau;
+    0028..002e  invoke-virtual  {v0}, Ljava/lang/Object;->getClass(L)
+    002e..0030  move-result-object  v1
+    0030..0034  const-class  v0, LX/LaG;
+    0034..003a  invoke-static  {v1, v0}, LX/00h;->areEqual(ZLL)
+    003a..003c  move-result  v0
+    003c..0040  if-eqz  v0, +0x30
+    0040..0044  const-string  v2, "Argo"
+    0044..004a  invoke-static  {v3}, LX/0Zb;->A02(LL)
+    004a..004c  move-result-object  v1
+    004c..0050  instance-of  v0, v1, Ljava/lang/OutOfMemoryError;
+    0050..0054  if-eqz  v0, +0x12
+    0054..0058  const-string  v0, " OOM parsing error"
+    0058..005e  invoke-virtual  {v2, v0}, Ljava/lang/String;->concat(LL)
+    005e..0060  move-result-object  v0
+    0060..0064  new-instance  v4, LX/MEo;
+    0064..006a  invoke-direct  {v4, v0, v1}, LX/MEo;-><init>(VLL)
+    006a..0070  invoke-static  {v4}, LX/1xf;->A1N(LL)
+    0070..0072  move-result-object  v1
+    0072..0074  return-object  v1
+    0074..0078  const-string  v0, " parsing error"
+    0078..007e  invoke-virtual  {v2, v0}, Ljava/lang/String;->concat(LL)
+    007e..0080  move-result-object  v3
+    0080..0084  new-array  v2, v4, [Ljava/lang/Throwable;
+    0084..0088  aput-object  v1, v2, v5
+    0088..008c  const/16  v1, #0x1d8
+    008c..0090  const-string  v0, "mex-parsing-failure"
+    0090..0094  new-instance  v4, LX/MEq;
+    0094..009a  invoke-direct  {v4, v3, v0, v2, v1}, LX/MEq;-><init>(VLLLI)
+    009a..009c  goto  -0x18
+    009c..00a0  const-string  v2, "JSON"
+    00a0..00a2  goto  -0x2e
+    00a2..00a8  invoke-static  {v3}, LX/0jH;->A01(VL)
+    00a8..00ac  iget-object  v0, v11, LX/LaZ;->A02:LX/Oau;
+    00ac..00b2  invoke-interface  {v0, v3}, LX/Oau;->Cf4(LL)
+    00b2..00b4  move-result-object  v6
+    00b4..00b6  goto  +0x6
+    00b6..00b8  move-exception  v0
+    00b8..00be  invoke-static  {v0}, LX/1xf;->A1N(LL)
+    00be..00c0  move-result-object  v6
+    00c0..00c4  iget-object  v0, v11, LX/LaZ;->A00:LX/Oau;
+    00c4..00ca  invoke-interface  {v0, v3}, LX/Oau;->Cf4(LL)
+    00ca..00cc  move-result-object  v2
+    00cc..00ce  goto  +0x6
+    00ce..00d0  move-exception  v0
+    00d0..00d6  invoke-static  {v0}, LX/1xf;->A1N(LL)
+    00d6..00d8  move-result-object  v2
+    00d8..00dc  instance-of  v1, v6, LX/0Zd;
+    00dc..00e0  xor-int/lit8  v0, v1, #0x1
+    00e0..00e4  if-eqz  v0, +0x14
+    00e4..00e8  instance-of  v0, v2, LX/0Zd;
+    00e8..00ec  xor-int/lit8  v0, v0, #0x1
+    00ec..00f0  if-eqz  v0, +0xe
+    00f0..00f6  invoke-static  {v2}, LX/0jH;->A01(VL)
+    00f6..00fc  invoke-static  {v6}, LX/0jH;->A01(VL)
+    00fc..0100  new-instance  v1, LX/LZw;
+    0100..0106  invoke-direct  {v1, v2, v6}, LX/LZw;-><init>(VLL)
+    0106..0108  return-object  v1
+    0108..010c  if-eqz  v1, +0x21
+    010c..0110  instance-of  v0, v2, LX/0Zd;
+    0110..0114  if-eqz  v0, +0x1d
+    0114..011a  invoke-static  {v2}, LX/0Zb;->A02(LL)
+    011a..011c  move-result-object  v2
+    011c..0122  invoke-static  {v6}, LX/0Zb;->A02(LL)
+    0122..0124  move-result-object  v1
+    0124..0126  const/4  v0, #0x2
+    0126..012a  new-array  v3, v0, [Ljava/lang/Throwable;
+    012a..012e  aput-object  v2, v3, v5
+    012e..0132  aput-object  v1, v3, v4
+    0132..0136  const-string  v2, "Failed to parse both 'data' and 'errors'"
+    0136..013a  const/16  v1, #0x1d8
+    013a..013e  const-string  v0, "mex-parsing-failure"
+    013e..0142  new-instance  v4, LX/MEq;
+    0142..0148  invoke-direct  {v4, v2, v0, v3, v1}, LX/MEq;-><init>(VLLLI)
+    0148..014a  goto  -0x6f
+    014a..014e  instance-of  v0, v2, LX/0Zd;
+    014e..0152  if-eqz  v0, +0x25
+    0152..0158  invoke-static  {v2}, LX/0Zb;->A02(LL)
+    0158..015a  move-result-object  v9
+    015a..0160  invoke-static  {v6}, LX/0jH;->A01(VL)
+    0160..0164  const-string  v1, "data"
+    0164..0168  const-string  v0, "Failed to parse "
+    0168..016e  invoke-static  {v0, v1}, LX/000;->A08(LLL)
+    016e..0170  move-result-object  v1
+    0170..0174  const-string  v0, " response due to "
+    0174..017a  invoke-static  {v9, v0, v1}, LX/1xj;->A14(LLLL)
+    017a..017c  move-result-object  v7
+    017c..0180  const/16  v10, #0x1d8
+    0180..0184  const-string  v8, "mex-parsing-failure"
+    0184..0188  new-instance  v5, LX/MEq;
+    0188..018e  invoke-direct/range  {v5..v10}, LX/MEq;-><init>(VLLLLI)
+    018e..0194  invoke-static  {v5}, LX/0jH;->A00(LL)
+    0194..0196  move-result-object  v1
+    0196..0198  return-object  v1
+    0198..019e  invoke-static  {v2}, LX/0jH;->A01(VL)
+    019e..01a2  iget-object  v1, v11, LX/LaZ;->A01:LX/Oau;
+    01a2..01a8  invoke-static  {v6}, LX/0Zb;->A02(LL)
+    01a8..01aa  move-result-object  v0
+    01aa..01b0  invoke-interface  {v1, v0}, LX/Oau;->Cf4(LL)
+    01b0..01b2  move-result-object  v0
+    01b2..01b6  new-instance  v1, LX/LZw;
+    01b6..01bc  invoke-direct  {v1, v2, v0}, LX/LZw;-><init>(VLL)
+    01bc..01be  return-object  v1
+.end method
+
+# Local derivation file: mex-group-response.txt
+
+# class: LX/2FU;
+
+.method public <init>(VL)  # .registers 3
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00h;->A0A(VLI)
+    0008..000e  invoke-direct  {v1, v2}, LX/LbE;-><init>(VL)
+    000e..0010  return-void
+.end method
+
+# 0Xo.A03(LLL) initial excerpt only; conversion is not fully traced.
+
+# class: LX/0Xo;
+
+.method public A03(LLL)  # .registers 92
+    0000..0002  const/4  v10, #0x0
+    0002..0006  move-object/from16  v2, v91
+    0006..000c  invoke-static  {v2, v10}, LX/00h;->A0A(VLI)
+    000c..0012  const-string/jumbo  v1, "xwa2_group_query_by_id"
+    0012..0016  const-class  v0, LX/2FT;
+    0016..001c  invoke-virtual  {v2, v0, v1}, LX/LbE;->A04(LLL)
+    001c..001e  move-result-object  v3
+    001e..0022  const/16  v48, #0x0
+    0022..0026  if-eqz  v3, +0x53d
+    0026..002a  iget-object  v4, v3, LX/LbE;->A00:Lorg/json/JSONObject;
+    002a..002e  new-instance  v3, LX/90x;
+    002e..0034  invoke-direct  {v3, v4}, LX/90x;-><init>(VL)
+    0034..003a  invoke-static  {v3}, LX/ADv;->A06(LL)
+    003a..003c  move-result-object  v13
+    003c..0042  invoke-static  {v3}, LX/ADv;->A09(LL)
+    0042..0044  move-result-object  v15
+    0044..004a  invoke-static  {v3}, LX/ADv;->A04(JL)
+    004a..004c  move-result-wide  v33
+    004c..0052  invoke-virtual  {v3}, LX/90x;->A0J(L)
+    0052..0054  move-result-object  v5
+    0054..0058  if-eqz  v5, +0x1c0
+    0058..005e  const-string/jumbo  v4, "value"
+    005e..0064  invoke-virtual  {v5, v4}, LX/LbE;->A0F(LL)
+    0064..0066  move-result-object  v20
+    0066..006c  invoke-static  {v3}, LX/ADv;->A05(JL)
+    006c..006e  move-result-wide  v35
+    006e..0074  invoke-static  {v3}, LX/ADv;->A03(JL)
+    0074..0076  move-result-wide  v37
+    0076..007c  const-string/jumbo  v5, "total_participants_count"
+    007c..0080  iget-object  v4, v3, LX/LbE;->A00:Lorg/json/JSONObject;
+    0080..0086  invoke-virtual  {v4, v5}, Lorg/json/JSONObject;->optInt(IL)
+    0086..0088  move-result  v25
+    0088..008e  invoke-static  {v3}, LX/ADv;->A0B(LL)
+    008e..0090  move-result-object  v16
+    0090..0096  invoke-static  {v3}, LX/ADv;->A0J(ZL)
+    0096..0098  move-result  v44
+    0098..009e  invoke-virtual  {v3}, LX/90x;->A0I(L)
+    009e..00a0  move-result-object  v4
+    00a0..00a6  invoke-static  {v4}, LX/ADv;->A0D(LL)
+    00a6..00a8  move-result-object  v21
+    00a8..00ae  invoke-static  {v3}, LX/ADv;->A0F(LL)
+    00ae..00b0  move-result-object  v22
+    00b0..00b6  invoke-virtual  {v2, v0, v1}, LX/LbE;->A04(LLL)
+    00b6..00b8  move-result-object  v4
+    00b8..00bc  if-eqz  v4, +0x18a
+    00bc..00c0  const-string  v5, "__typename"
+    00c0..00c6  invoke-virtual  {v4, v5}, LX/LbE;->A0F(LL)
+    00c6..00c8  move-result-object  v5
+    00c8..00ce  invoke-virtual  {v5}, Ljava/lang/String;->hashCode(I)
+    00ce..00d0  move-result  v6
+    00d0..00d6  const  v5, #0xec1046f2
+    00d6..00da  if-eq  v6, v5, +0x172
+    00da..00dc  const/4  v8, #0x0
+    00dc..00e2  invoke-virtual  {v2, v0, v1}, LX/LbE;->A04(LLL)
+    00e2..00e4  move-result-object  v4
+    00e4..00e8  if-eqz  v4, +0x168
+    00e8..00ec  const-string  v5, "__typename"
+    00ec..00f2  invoke-virtual  {v4, v5}, LX/LbE;->A0F(LL)
+    00f2..00f4  move-result-object  v5
+    00f4..00fa  invoke-virtual  {v5}, Ljava/lang/String;->hashCode(I)
+    00fa..00fc  move-result  v6
+
+# 0Xo.A03 additional partial field/diagnostic excerpt; remaining conversion untraced.
+    0146..014a  const-string  v9, "missing_participant_identification"
+    014a..0150  invoke-virtual  {v3, v9}, LX/LbE;->A0G(ZL)
+    0150..0152  move-result  v4
+    0152..0156  if-eqz  v4, +0x7
+    0156..015a  const-string  v4, "[un-group] MEX missing participant id"
+    015a..0160  invoke-static  {v4}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+    0160..0164  const/16  v45, #0x0
+    0164..0168  move-object/from16  v7, v89

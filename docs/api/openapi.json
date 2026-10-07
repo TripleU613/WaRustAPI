@@ -111,6 +111,22 @@
         "whatsapp_api::binary::TokenDictionary::comparison_2_26_37_71"
       ],
       "description": "Offline checked DEX token-array extraction; no HTTP route. Requires a unique decoded initializer and complete typed indexed writes; malformed, ambiguous or unsupported input refuses rather than falling back to raw-byte scanning. APK 37.71 1Rl.<clinit> yields 236 single and four 256-entry double pages. Four historical comparison slots were extraction errors. The comparison codec now uses this Derived fixture; the historical 37.70 fixture and pinned Android profile remain preserved. Existing captured projections and account reservations are not replayed or reset. Corrected literal wire-byte regression tests pass; live acceptance of individual corrected tokens remains unverified. Evidence: docs/protocol/token-extraction.md."
+    },
+    {
+      "x-cli": "cargo run -p xtask -- apk-mex-queries <apk> --operation <name> [--operation <name>...] [--namespace <build-config>] [--check <export-json>]",
+      "x-transport": "cli",
+      "x-live": false,
+      "description": "Offline selected MEX persisted-ID extractor; no HTTP route or account access. Default namespace whatsapp-android-mex. Reads exact assets/<namespace>_client_persist_ids.json, refuses missing/duplicate ZIP names and over-budget input, exports at most 64 exact operation names to sorted JSON with format_version=1, apk_version, apk_sha256, namespace, asset_path, asset_sha256 and operations. Each operation records operation_name, operation_name_hash, operation_text_hash, client_doc_id, exact decimal-string server doc_id and schema. Positive u64 extraction avoids floating-point rounding. Identifier bounds 128 bytes; asset budget 4 MiB; check-file budget 128 KiB are local tooling limits. --check verifies complete export/provenance without mutation. Unknown extra source fields require separate review. APK 2.26.37.71 selected QueryGroupInfo fixture established; complete namespace-registration linkage, native branches and next-release compatibility remain unverified. Evidence docs/protocol/mex.md."
+    },
+    {
+      "x-cli": "cargo run -p xtask -- mex-group-preview --queries <export-json> --chat <synthetic-group-jid> --id <iq-id> [--context <APK-context>]",
+      "x-transport": "cli",
+      "x-live": false,
+      "x-library": [
+        "whatsapp_api::transport::mex::group_info_request",
+        "whatsapp_api::transport::mex::GroupQueryContext"
+      ],
+      "description": "Offline Rust QueryGroupInfo request preview, no HTTP route, account/store access, ID allocation, queued action or live request. Uses explicit server doc_id from selected release export, never client_doc_id; emits offline_only, supplied apk_version/apk_sha256 provenance, operation and node with tag, ordered attributes (name/value text or jid), nested children and text content. The supplied provenance is not independently authenticated by preview; run apk-mex-queries --check against the APK. Default context INTERACTIVE; twelve exact source contexts accepted: INTERACTIVE, LID_MIGRATION, NEW_SUBJECT, ACK_GROUP_MISMATCH, SEND_FAILURE, SUB_GROUP_CONFLICT_RECOVERY, INVITE_CODE, PHASH, PARTICIPANT_CHANGE_RECOVERY, PRE_FETCH, UNKNOWN, MISSING_PARTICIPANT_IDENTIFICATION. Export format/namespace/operation/schema and 128-KiB local input budget checked. Plain nonempty group JID, 1..20 decimal ASCII server ID and local 1..256-byte control-free IQ ID required. Preview includes supplied JID and ID; use synthetic diagnostics. APK 2.26.37.71 JSON/XMPP envelope has server-only destination s.whatsapp.net, xmlns w:mex, type get, id, trace/flow_id=doc_id then query query_id=doc_id with JSON string queryId=doc_id and variables.input(group_jid,query_context). JSON object key order is not claimed equivalent. Full response/error conversion, Argo/Pando feature selection, durable MEX dispatch/rate guard and live group-state application remain unfinished. Evidence docs/protocol/mex.md."
     }
   ],
   "info": {

@@ -127,6 +127,7 @@ pub mod login;
 pub mod media;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod messaging;
+pub mod mex;
 #[cfg(feature = "experimental-noise")]
 pub mod noise;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]

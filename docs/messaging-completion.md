@@ -1258,3 +1258,23 @@ exact 25-file/448,127-byte snapshot reproduction, current twenty-topic remap,
 repository hygiene (477 local links, tracked-file budgets, licenses/reference
 checksums) and clean staged whitespace passed. Shared runtime Rust was unchanged
 and was not retested across the workspace for this source-only follow-up.
+
+APK 37.71 MEX request construction now has an offline Rust port. Selected
+QueryGroupInfo persisted IDs export as a small version/hash-scoped file; exact
+server ID appears in trace, query attribute and nested JSON. The release CLI
+checks the real APK export; an offline preview invokes the actual Rust builder.
+This advances APK-to-Rust behavior and file-based release patching. It does not
+queue a MEX action or overwrite group state; complete JSON/Argo/Pando response
+handling and durable dispatch remain unfinished. Namespace initialization,
+assertion failure semantics and timeout units remain explicit unknowns. See
+[MEX source/port](protocol/mex.md). No saved account opened or live request sent.
+
+Validation: 604 workspace/all-feature tests and 24 default CLI tests passed;
+final duplicate-ZIP correction passed all 47 xtask tests. Strict workspace
+Clippy and warning-free Rustdoc passed, with the corrected xtask rechecked.
+CLI reference was regenerated; all five API checks passed. Real APK export
+including provenance matched the fixture after the correction; the Rust node
+preview and five negative CLI probes passed (refusals emitted no partial stdout).
+Repository hygiene checked 487 local links, tracked budgets, licenses and
+reference checksums; formatting and staged whitespace passed. No account
+opened, live request sent or existing saved state changed.

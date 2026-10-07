@@ -506,3 +506,28 @@ and numeric error 429 handling are partial; no retry duration was established.
 [Evidence](group-info-recovery-evidence.txt) and [interpretation](groups.md#subject-recovery-mex-dispatch-and-local-guard-2026-10-07)
 carry offsets, reasoning and remaining unknowns. No client MEX route, handler,
 server wait bypass, identity reset or live request was added by this research.
+
+### comparison.mex.group_query_37_71 — confirmed static, offline Rust port
+
+APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+QueryGroupInfo server ID 37759635623635554 is selected from the namespace's
+persisted-ID asset (SHA-256 a528a786209342b3e1d8cf8a78dc046599731c3842ea4bc3b316c64647bdfec0).
+164.CFb reads doc_id; the separate AFf client_doc_id feature path is not this
+JSON/XMPP ID. Lae/15t/161 resolve it; Lai constructs queryId/variables and passes
+it to BpQ selector 3 and 9QZ(VLLLL). The same ID appears in trace/flow_id,
+query_id and JSON. 1S7.getServer, 8kY.A1H, 8kX.A0T and 8ka.A0a close the
+server-only destination/type/id helper trace. GraphQlCallInput.A00/A01 confirms
+recursive input objects and 1xg.A1P JSONObject string serialization. Missing
+registration returns null, not a guessed identifier. Source assertion semantics,
+actual namespace-registration filename producer, Pando/Argo feature selection,
+timeout units and complete response/error conversion remain unknown.
+[Interpretation and release/CLI workflow](mex.md),
+[request evidence](mex-request-evidence.txt) and
+[partial response evidence](mex-response-evidence.txt) preserve reasoning and
+negative results. LaT chooses result/update; LaZ distinguishes data/errors
+parse failures; 2FU itself has no schema methods. Initial 0Xo.A03 reads
+xwa2_group_query_by_id through 2FT/90x/ADv, not a proven complete projection.
+Rust's offline builder and selected-ID exporter are implemented and invokable;
+no durable MEX action, response application, HTTP route or live verification
+is claimed. Existing account identities, reservations and snapshots untouched.

@@ -1,0 +1,18 @@
+{
+  "format_version": 1,
+  "apk_version": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "namespace": "whatsapp-android-mex",
+  "asset_path": "assets/whatsapp-android-mex_client_persist_ids.json",
+  "asset_sha256": "a528a786209342b3e1d8cf8a78dc046599731c3842ea4bc3b316c64647bdfec0",
+  "operations": {
+    "QueryGroupInfo": {
+      "operation_name": "QueryGroupInfo",
+      "operation_name_hash": "3736295641",
+      "operation_text_hash": "12111573297758520297",
+      "client_doc_id": "373629564112111573297758520297",
+      "doc_id": "37759635623635554",
+      "schema": "whatsapp_mex"
+    }
+  }
+}

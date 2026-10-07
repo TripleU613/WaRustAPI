@@ -250,3 +250,15 @@ callback contract identify the work needed before replacing classic lookup.
 The MEX document/envelope, complete result conversion and recovery callbacks
 must still be traced. Static discovery does not authorize testing invented
 query identifiers or replaying uncertain requests.
+
+## Persisted operation IDs and request ports
+
+[The MEX trace and port](mex.md) adds selected APK asset extraction alongside
+method evidence. `apk-mex-queries` exports version/hash-scoped operation records
+with exact server IDs, preserving client IDs separately. Compare these small
+JSON files directly for the next release; avoid scanning disassembly to patch
+a data-only ID change. `mex-group-preview` invokes the actual Rust group request
+builder using the selected file, making its ordered node and nested JSON
+inspectable without an account. Both tools are offline. The 37.71 QueryGroupInfo
+fixture is reproduced from the real APK; complete response conversion and
+durable live dispatch remain the next port, not a finished group implementation.
