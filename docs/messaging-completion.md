@@ -729,3 +729,9 @@ The other contact-state value's semantic name and current account gate inputs
 remain unknown. Native display/result tracing distinguishes full LID QR bytes
 from parsed-user decimal inputs and locates the Java KKq joining step; no
 current-account safety number or verification commit is implemented.
+
+- [x] Expose the APK 37.71 native identifier-bound display primitive through
+  the library and `fingerprint-display --config` with independent synthetic
+  hash-flow fixtures, private inputs and explicit unverified selection labels.
+- [ ] Integrate evidenced current scheme/device-key inventory and peer comparison
+  before adding human verification commits. No real peer number was calculated.

@@ -783,3 +783,86 @@ The separate local [mark/unmark control](peer-identity.md#local-verification-con
 now connects its saved verified bit and rendered identity to the guarded writer.
 Marking uses explicit confirmation; unmarking schedules its own branch.
 This does not make scan-result presentation a verification metadata commit.
+
+## Explicit-input native display implementation
+
+**Implemented/offline (37.71 evidence, not observed live):**
+`whatsapp_api::fingerprint::native_display` now calculates a native 30-digit
+side from an already normalized display identifier and raw 32-byte public
+identity keys. `native_display_pair` computes both sides and the lexical
+60-digit join. The public API is available without transport features.
+`whatsapp-cli fingerprint-display --config <private-json>` exposes it without
+opening an account store or starting a connection.
+
+The private JSON has exactly `local` and `remote`; each side has
+`display_identifier` and `raw_identity_keys_hex` (array of 64-character hex
+strings). Unknown fields are rejected. These are **display** identifiers:
+stable PN for native V3 or the parsed type-18 LID user for native V4. They are
+not full LID QR strings. The caller supplies the chosen scheme's complete
+inventory and normalized identifiers; current-account selection, authenticated
+key inventory, device membership, PN normalization and QR parsing/comparison
+are still unfinished. A number computed from incomplete or wrong inputs is
+not evidence of account compatibility or human verification. No verification
+metadata is written. This implements the shared native numeric primitive,
+not the default-locale legacy Java rendering path.
+
+Keys are sorted by unsigned raw bytes, prefixed with 0x05, concatenated with
+duplicates preserved, then hashed from `00 00 || K || identifier` with K
+appended in each of 5200 SHA-512 rounds. Six unsigned big-endian five-byte
+chunks modulo 100000 are each formatted to five ASCII digits. Pair joining
+uses KKq's lexical order, while result local/remote labels preserve orientation.
+The result includes `algorithm=apk_2.26.37.71_native_identifier_bound` and
+`input_authority=caller_supplied_selection_unverified`; these do not assert
+which scheme the account uses. Input identifiers and keys are not printed.
+Parse/validation errors omit offending values.
+
+The CLI requires a private regular file no larger than 64 KiB and checks the
+read bound again after opening. The library requires a nonempty ASCII identifier
+without NUL, at most 256 bytes, and 1..128 keys per side. These are explicit
+**local resource/input policies**, not claimed APK/server restrictions.
+No profile request-file fallback is used for this separate diagnostic format.
+
+Independent synthetic fixtures are preserved in
+[the native display fixture](../../crates/whatsapp-api/fixtures/fingerprint/native-display-3771.json).
+Each digest was checked using `native_fingerprint_check.check_flow` against
+the pinned main-library hash, with seed `b'\0\0' + K + identifier` and K built
+from the fixture's sorted keys. All three actual ARM64 slices returned after
+72825 instructions. SHA and MCF calls were host-modeled as previously documented;
+key sorting, seed assembly and decimal conversion are grounded in the static
+traces, not claimed as whole-native display execution. The duplicate-key fixture
+changes the output; side reversal preserves the joined number; hashing a full
+LID-like string changes the output rather than being silently normalized.
+Rust tests also cover empty/NUL/non-ASCII/oversized identifiers, inventory bounds,
+private file permissions, unknown JSON fields, wrong-length/non-hex keys and
+error/output redaction. No real account identifiers or keys appear in fixtures.
+
+Reproduce a synthetic operator calculation:
+
+```sh
+python - <<'PY'
+import json
+from pathlib import Path
+fixture = json.loads(Path('crates/whatsapp-api/fixtures/fingerprint/native-display-3771.json').read_text())
+value = {side: {field: fixture['cases'][index][field]
+               for field in ('display_identifier', 'raw_identity_keys_hex')}
+         for index, side in enumerate(('local', 'remote'))}
+path = Path('lab/fingerprint-display-synthetic.json')
+path.parent.mkdir(exist_ok=True)
+path.touch(mode=0o600, exist_ok=False)
+path.write_text(json.dumps(value))
+PY
+cargo run --locked -p whatsapp-cli -- fingerprint-display --config lab/fingerprint-display-synthetic.json
+```
+
+This prints the fixture-derived number, not a current peer safety number. Reusing
+the same file simply repeats the offline calculation; it does not transmit or
+rotate account state. Complete scheme/inventory integration and a genuine
+peer comparison remain required before implementing human verification.
+
+Validation: 535 workspace/all-feature tests and 229 default-feature tests passed
+with zero failures/ignored tests. Strict all-target/all-feature Clippy,
+warning-free all-feature library rustdoc, generated CLI reference, formatting,
+whitespace and repository hygiene (300 local links) passed. A default-feature
+command-level run matched the fixture pair and did not create its supplied
+unused account-store path. This was an offline synthetic calculation only;
+no current account fingerprint, human verification, or live result is claimed.

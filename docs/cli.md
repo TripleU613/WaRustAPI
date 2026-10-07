@@ -14,6 +14,18 @@ Generated from the command definitions by the `cli_reference_is_current` test; r
 | --json | JSON | no |  |  | `true`, `false` | Machine-readable JSON output where available |
 
 
+## whatsapp-cli fingerprint-display
+
+Compute native fingerprint displays from explicit private inputs (offline; no verification)
+
+```
+Usage: whatsapp-cli fingerprint-display [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --config | CONFIG | yes |  |  |  | Private JSON with normalized display identifiers and raw public key inventories |
+
 ## whatsapp-cli outbox-send
 
 Send one private-JSON text, image or voice note through the comparison outbox

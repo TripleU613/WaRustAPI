@@ -40,6 +40,7 @@ pub mod capabilities;
 pub mod client;
 pub mod error;
 pub mod evidence;
+pub mod fingerprint;
 pub mod model;
 pub mod outbox;
 pub mod profile;

@@ -2416,6 +2416,78 @@
             }
           }
         }
+      },
+      "FingerprintDisplaySide": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "display_identifier",
+          "raw_identity_keys_hex"
+        ],
+        "properties": {
+          "display_identifier": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "Already normalized display identifier: stable PN for native V3, parsed type-18 LID user for native V4. Caller chooses the input; no automatic normalization or current-scheme assertion. NUL/non-ASCII refused."
+          },
+          "raw_identity_keys_hex": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 128,
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{64}$"
+            },
+            "description": "Complete caller-selected raw 32-byte public identity-key inventory. Serialized prefix is added internally; duplicates retained. 128 is a local resource limit, not an APK limit."
+          }
+        }
+      },
+      "FingerprintDisplayInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "local",
+          "remote"
+        ],
+        "properties": {
+          "local": {
+            "$ref": "#/components/schemas/FingerprintDisplaySide"
+          },
+          "remote": {
+            "$ref": "#/components/schemas/FingerprintDisplaySide"
+          }
+        }
+      },
+      "NativeDisplayPair": {
+        "type": "object",
+        "required": [
+          "algorithm",
+          "input_authority",
+          "local",
+          "remote",
+          "combined"
+        ],
+        "properties": {
+          "algorithm": {
+            "const": "apk_2.26.37.71_native_identifier_bound"
+          },
+          "input_authority": {
+            "const": "caller_supplied_selection_unverified"
+          },
+          "local": {
+            "type": "string",
+            "pattern": "^[0-9]{30}$"
+          },
+          "remote": {
+            "type": "string",
+            "pattern": "^[0-9]{30}$"
+          },
+          "combined": {
+            "type": "string",
+            "pattern": "^[0-9]{60}$"
+          }
+        }
       }
     }
   },
@@ -9520,6 +9592,60 @@
         "x-library": [
           "whatsapp_api::transport::peer_keys::queue",
           "whatsapp_api::transport::peer_keys::inspect"
+        ]
+      }
+    },
+    "/v1/diagnostics/fingerprint-display": {
+      "post": {
+        "tags": [
+          "Account Safety"
+        ],
+        "summary": "Compute native fingerprint display from explicit inputs (offline)",
+        "description": "CLI only; no HTTP route. Does not open the account store, fetch keys, compare QR data, select the active APK scheme, or commit human verification. Reads a private regular JSON file <=64 KiB with local/remote sides (FingerprintDisplayInput). Rejects unknown fields; error text omits offending values. Raw keys are sorted unsigned, serialized with 0x05, concatenated without deduplication and hashed using APK 37.71 native 5200-round identifier-bound SHA-512. Six big-endian five-byte groups yield 30 digits per side, with lexical join to 60. Native-display fixtures use actual ARM64 hash control flow with host-modeled SHA/MCF; whole native display and live comparison are not established. Complete device inventory and scheme selection remain caller responsibilities. Output contains no input identifier or public key. Resource bounds are client policy. See docs/protocol/safety-number.md.",
+        "operationId": "fingerprintDisplay",
+        "x-cli": "whatsapp-cli fingerprint-display",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "name": "config",
+            "in": "query",
+            "required": true,
+            "description": "Private JSON path; file must exclude group/other permissions. Input format: FingerprintDisplayInput. No account/profile config fallback.",
+            "schema": {
+              "type": "string"
+            },
+            "x-secret-input": true
+          }
+        ],
+        "requestBody": {
+          "description": "Documents the CLI JSON file format; not an implemented HTTP request body.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FingerprintDisplayInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Caller-supplied unverified native display calculation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NativeDisplayPair"
+                }
+              }
+            }
+          }
+        },
+        "x-library": [
+          "whatsapp_api::fingerprint::native_display",
+          "whatsapp_api::fingerprint::native_display_pair",
+          "whatsapp_cli::fingerprint::run"
         ]
       }
     }

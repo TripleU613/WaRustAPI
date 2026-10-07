@@ -1,0 +1,37 @@
+{
+  "apk_build": "2.26.37.71",
+  "library_sha256": "f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a",
+  "evidence": "Actual ARM64 0x713938..0x7139e4 control flow with host-modeled SHA/MCF. Prefix/key order, identifier seed and decimal conversion grounded in static create/display traces; no whole native display execution, live comparison, or real account data.",
+  "cases": [
+    {
+      "display_identifier": "synthetic-local",
+      "raw_identity_keys_hex": [
+        "1010101010101010101010101010101010101010101010101010101010101010",
+        "0101010101010101010101010101010101010101010101010101010101010101"
+      ],
+      "digest_hex": "53c97aedd4f95ddc089f35515b0fb7f34969d2045d2df4d804b7a89d264a040130dcc77cca06bdffdb37acaf49f15490abfaaf5bcd8361bc66947a40ea161a22",
+      "display": "622605791988983247407933286410",
+      "native_instructions": 72825
+    },
+    {
+      "display_identifier": "synthetic-remote",
+      "raw_identity_keys_hex": [
+        "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+      ],
+      "digest_hex": "3abec3e6fa559597ec788169e7c6475399cee85c644273ab46436cd1b69a2432ec1d87f824d4f87bd020d2a1d116be2b0aeb2cb566c96228c3b712a3ac9380b3",
+      "display": "128588181678439595160634291930",
+      "native_instructions": 72825
+    },
+    {
+      "display_identifier": "synthetic-local",
+      "raw_identity_keys_hex": [
+        "1010101010101010101010101010101010101010101010101010101010101010",
+        "0101010101010101010101010101010101010101010101010101010101010101",
+        "0101010101010101010101010101010101010101010101010101010101010101"
+      ],
+      "digest_hex": "085ff6453a787b8413771cf2cb384161d5868a0bd7e11ea67198f6d8d022f1c20b6ad4adb6f52677e2f8092f4048e4f88ad9ae7270c4cbaf941be0cd9154e631",
+      "display": "134662882388769918835092933186",
+      "native_instructions": 72825
+    }
+  ]
+}

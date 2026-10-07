@@ -29,6 +29,7 @@ use zeroize::Zeroizing;
 use std::os::unix::fs::PermissionsExt;
 
 mod cli_reference;
+mod fingerprint;
 mod http;
 #[cfg(feature = "experimental-transport")]
 mod media;
@@ -159,6 +160,12 @@ impl Cli {
 
 #[derive(Subcommand)]
 enum Cmd {
+    /// Compute native fingerprint displays from explicit private inputs (offline; no verification).
+    FingerprintDisplay {
+        /// Private JSON with normalized display identifiers and raw public key inventories.
+        #[arg(long)]
+        config: PathBuf,
+    },
     /// Send one private-JSON text, image or voice note through the comparison outbox.
     #[cfg(feature = "experimental-transport")]
     OutboxSend {
@@ -1377,6 +1384,7 @@ fn print_step(step: &RegistrationStep, json: bool) {
 
 async fn run(cli: Cli) -> Result<(), Error> {
     match &cli.cmd {
+        Cmd::FingerprintDisplay { config } => fingerprint::run(config),
         #[cfg(feature = "experimental-transport")]
         Cmd::OutboxSend {
             config,

@@ -244,3 +244,17 @@ its decimal seed uses the parsed LID user. Current account inventory, active
 scheme and human-verification implementation remain incomplete. No account
 state or live request changed. See the peer-identity contact-exclusion and
 safety-number display follow-ups.
+
+Native fingerprint display is now implemented as an offline library primitive
+and `fingerprint-display --config` CLI command using explicit private normalized
+identifiers and raw public key inventories. Three independent synthetic ARM64
+hash-flow fixtures match, including duplicate-key preservation; result labels
+state that scheme/input selection is unverified. The calculation does not open
+account storage or mark a peer verified. Active scheme, complete device-key
+inventory, QR comparison and human verification remain unfinished.
+
+Fingerprint calculation validation passed 535 workspace/all-feature tests,
+229 default-feature tests, strict Clippy, warning-free rustdoc, CLI reference,
+formatting and repository hygiene. A command-level synthetic calculation
+matched the fixture pair without creating the supplied unused store path.
+No network request or current-account verification was performed.
