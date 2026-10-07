@@ -154,6 +154,9 @@ pub struct PeerPinState {
     /// not establish inventory completeness, current scheme, or verification.
     #[serde(default)]
     pub device_key_coverage: Option<PeerDeviceKeyCoverage>,
+    /// Local manual claim only; null before the first decision. Not scan/server verification.
+    #[serde(default)]
+    pub verification: Option<super::peer_verification::PeerVerification>,
 }
 
 /// One authenticated incoming LID mapping and its relationship to the PN pin.
@@ -209,6 +212,7 @@ fn pin_state(tx: &crate::store::ReadTx<'_>, peer: &Jid) -> Result<(PeerPinState,
             .zip(session_identity.as_ref())
             .map(|(a, b)| a == b),
         device_key_coverage: device_key_coverage(tx, peer)?,
+        verification: super::peer_verification::inspect_in(tx, peer, pin.as_deref())?,
     };
     Ok((state, pin))
 }
@@ -396,6 +400,7 @@ fn archive_identity(
     let Some(previous) = previous.filter(|old| *old != current) else {
         return Ok(());
     };
+    super::peer_verification::invalidate_in(tx, peer, current)?;
     let observed_at = Timestamp::now();
     let event = tx.append_event(crate::sync::SyncEvent::IdentityChanged(
         crate::sync::IdentityChange {

@@ -747,3 +747,10 @@ current-account safety number or verification commit is implemented.
 - [ ] Render/compare real peer QR data with evidenced complete inventories and
   active scheme before committing human verification. No current-peer QR export
   or scan was performed.
+
+2026-10-07 local verification: guarded manual mark/unmark and nullable inspection
+are implemented and tested offline; both authenticated replacement archives
+clear marks without advancing sequence. Automated safety-number/QR comparison,
+complete APK inventory selection and companion verification sync remain open.
+No real account verification action was taken. See
+[local metadata](protocol/peer-identity.md#local-manual-verification-metadata-2026-10-07).

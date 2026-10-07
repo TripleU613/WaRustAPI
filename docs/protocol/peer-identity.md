@@ -834,3 +834,54 @@ missing device_key_coverage decodes to null. Final strict Clippy,
 warning-free all-feature library rustdoc, whitespace and repository hygiene
 (301 local links) also passed. No default-feature workspace rerun was needed
 for these transport-feature-only runtime changes.
+
+## Local manual verification metadata (2026-10-07)
+
+**Confirmed (static APK 2.26.37.71), implemented and offline tested:**
+`Cg3.A00` rechecks the displayed serialized identity under the address lock
+(`0130..016a`) before writing `CUm(sequence, requested_bit)`; its explicit
+mark/unmark advances the local sequence (`00fa..0116`). The mark control is
+independent of scan success. `0jc.A0K` (`012c..0150`) preserves `action_seq` and
+clears an existing verified bit on identity change. These are the same build
+and source artifacts attributed in the writer/control sections above.
+
+`transport::peer_verification::set_local` implements a primary remote-LID local
+human decision in one encrypted-store transaction. Its input is an expected
+SHA-256 of the serialized pin (a diagnostic selector, **not a WhatsApp safety
+number**), expected action sequence, and requested boolean. It requires saved
+local account/Signal identity and a known login LID, excludes own LID/account
+and own Signal key, and refuses missing/corrupt pins. The stored metadata binds
+the actual serialized identity. `peer-identity` reports nullable `verification`
+with `verified`, `action_sequence` and `identity_matches_pin`; null means no
+local decision. A stored mark whose identity no longer matches reports false.
+
+Reproduction: put `peer`, `expected_fingerprint`, `expected_action_sequence`
+(zero for a null inspection), and `verified` in private JSON, chmod 600, then
+run `whatsapp-cli --store PRIVATE_DB --account ACCOUNT --key-env KEY_ENV
+peer-verification --config PRIVATE_JSON`. The peer is a canonical plain primary
+`@lid`; obtain its pin selector and current metadata from `peer-identity` for
+its saved PN mapping. This command records an explicit human decision: it does
+not compute or compare a safety number. Output contains only metadata; no raw
+peer, key, input JSON or parse-error value is printed. It opens an existing
+store, never creates an account and does not transmit anything.
+
+**Local policy, not an APK/server requirement:** the expected action sequence
+is compare-and-set checked with the pin inside the transaction; stale repeats
+refuse. Signed-int64 exhaustion refuses rather than wrapping. APK overflow and
+a universal sequence CAS guarantee remain **unknown**. Unknown local LID is a
+fail-closed own-account guard in our tooling. Config bounds (64 KiB), permissions
+and canonical JID restrictions are our operator policies.
+
+Both authenticated incoming and signed-directory replacement archival paths
+clear existing metadata in the same transaction as identity history/event and
+pin/session installation, without advancing the decision sequence. Rotation
+A→B→A does not restore A's old mark. Synthetic tests cover both archive entry
+points, rollback, restart persistence, mark/unmark, stale decisions, missing/own
+inputs, exhaustion, and unchanged pin/session records after a manual decision.
+These tests are local, not a live identity-change or human-comparison result.
+
+**Unknown / unimplemented:** automated QR comparison, complete current APK
+fingerprint selection, local verification observer events, and companion
+verification-action serialization/fanout remain unfinished. No real account has
+been marked/unmarked by this implementation and no server verification is
+claimed. A human mark is never authority to accept an unauthenticated new key.

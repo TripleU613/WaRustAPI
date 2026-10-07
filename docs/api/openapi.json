@@ -2251,7 +2251,8 @@
           "has_session",
           "session_fingerprint",
           "session_pin_matches",
-          "device_key_coverage"
+          "device_key_coverage",
+          "verification"
         ],
         "properties": {
           "peer_ticket": {
@@ -2296,6 +2297,17 @@
               }
             ],
             "description": "Null without a saved list. Full coverage of a retained fallback is not fingerprint readiness. Missing field in old serialized inspection output defaults to null."
+          },
+          "verification": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PeerVerification"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Null before any local decision. Missing field in old inspection output defaults to null."
           }
         }
       },
@@ -2605,6 +2617,61 @@
               "null"
             ],
             "description": "Agreement with saved notification hash; null when untested."
+          }
+        }
+      },
+      "PeerVerification": {
+        "type": "object",
+        "required": [
+          "verified",
+          "action_sequence",
+          "identity_matches_pin"
+        ],
+        "properties": {
+          "verified": {
+            "type": "boolean",
+            "description": "Explicit local human claim bound to the current pin; not automated scan or server verification."
+          },
+          "action_sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9223372036854775807,
+            "description": "Local mark/unmark action sequence; retained across identity replacement."
+          },
+          "identity_matches_pin": {
+            "type": "boolean",
+            "description": "Stored decision identity equals current saved pin."
+          }
+        }
+      },
+      "PeerVerificationDecision": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "peer",
+          "expected_fingerprint",
+          "expected_action_sequence",
+          "verified"
+        ],
+        "properties": {
+          "peer": {
+            "type": "string",
+            "description": "Canonical primary remote LID; private input."
+          },
+          "expected_fingerprint": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{64}$",
+            "description": "SHA-256 of serialized pin from peer-identity, not a safety number."
+          },
+          "expected_action_sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9223372036854775807,
+            "description": "Inspected sequence, zero when verification is null; compare-and-set is our local concurrency policy."
+          },
+          "verified": {
+            "type": "boolean",
+            "description": "Explicit human mark/unmark decision; does not perform a comparison."
           }
         }
       }
@@ -9567,7 +9634,7 @@
           "Account Safety"
         ],
         "summary": "Inspect saved peer pins, sessions and retained-device key coverage (offline)",
-        "description": "Reads one logical snapshot without queries, key replacement or sends. Requires a primary phone-number chat JID. Returns hashed peer selectors, diagnostic public-key fingerprints, held-session/pin agreement, and all authenticated primary LID mappings. A qualifying saved incoming transition establishes local provenance only; it is not a WhatsApp safety number or human verification. Store opening can commit engine metadata; protocol records are inspected read-only. No HTTP route is implemented. Also reports nullable retained E2EE device-key coverage in that snapshot: retained/pinned counts, hashed missing-pin selectors, saved signed-list status, skipped-hosted count and notification-hash agreement. A primary-only fallback or fully pinned retained set does not establish complete current APK fingerprint inventory, selected scheme or human verification. Invalid saved pins/device-list consistency are local diagnostics. No safety number is computed.",
+        "description": "Reads one logical snapshot without queries, key replacement or sends. Requires a primary phone-number chat JID. Returns hashed peer selectors, diagnostic public-key fingerprints, held-session/pin agreement, and all authenticated primary LID mappings. A qualifying saved incoming transition establishes local provenance only; it is not a WhatsApp safety number or human verification. Store opening can commit engine metadata; protocol records are inspected read-only. No HTTP route is implemented. Also reports nullable retained E2EE device-key coverage in that snapshot: retained/pinned counts, hashed missing-pin selectors, saved signed-list status, skipped-hosted count and notification-hash agreement. A primary-only fallback or fully pinned retained set does not establish complete current APK fingerprint inventory, selected scheme or human verification. Invalid saved pins/device-list consistency are local diagnostics. No safety number is computed. Reports nullable local verification metadata: verified bit, action sequence and identity/pin agreement. This human claim is distinct from authenticated transition provenance.",
         "operationId": "peerIdentity",
         "x-cli": "whatsapp-cli peer-identity",
         "x-transport": [
@@ -9790,6 +9857,70 @@
           "whatsapp_cli::fingerprint::run",
           "whatsapp_api::fingerprint::qr::encode_v4"
         ]
+      }
+    },
+    "/v1/peers/verification": {
+      "post": {
+        "tags": [
+          "Account Safety"
+        ],
+        "summary": "Record a guarded local human verification decision (offline)",
+        "description": "CLI-only contract; no HTTP route. Private regular JSON at most 64 KiB with no group/other permissions. Requires saved account/Signal identity, known local LID and pinned primary remote LID. Own account/key, stale expected pin or sequence, malformed metadata and sequence exhaustion refuse. Transactionally writes local metadata only; no pin/session rewrite, network, scan, event or companion fanout. Identity replacement through incoming or signed-directory archival clears the bit while retaining sequence. APK 2.26.37.71 Cg3.A00 and 0jc.A0K support captured-key guard and reset behavior; sequence CAS/overflow refusal are our policies. No real-account human verification has been performed.",
+        "operationId": "peerVerification",
+        "x-cli": "whatsapp-cli peer-verification",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "x-library": [
+          "whatsapp_api::transport::peer_verification::set_local"
+        ],
+        "parameters": [
+          {
+            "name": "config",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Private JSON path; PeerVerificationDecision fields.",
+            "x-secret-input": true
+          },
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PeerVerificationDecision"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved local decision; no scan/server claim.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeerVerification"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing, own, stale, malformed or exhausted decision refused without metadata changes."
+          }
+        }
       }
     }
   }

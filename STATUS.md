@@ -289,3 +289,18 @@ CLI matched independent 200/229-byte synthetic payloads for versions 0/1,
 created mode-600 files and refused repeats without changing them or creating
 an account store. A zero-qualified JID test exposed and fixed the new export's
 canonical-input guard; the generic JID parser and account state were unchanged.
+
+Local manual verification metadata (offline, 2026-10-07): `peer-verification`
+records an explicit human mark/unmark bound to an inspected pin and sequence.
+`peer-identity` reports the saved bit/sequence/pin agreement. Authenticated
+incoming and signed-directory replacement clear the bit atomically, preserving
+sequence; rotation back does not restore it. Tests cover restart, stale/own
+refusals, unchanged session/pin and archive rollback. No actual account was
+marked. Automated QR comparison and companion synchronization remain unfinished.
+[Evidence and operator semantics](docs/protocol/peer-identity.md#local-manual-verification-metadata-2026-10-07).
+Validation for this change: 545 workspace/all-feature tests passed; strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, formatting,
+regenerated CLI reference and repository hygiene passed (304 local links).
+The first suite run caught the new OpenAPI `x-cli` including flags instead of
+the command name; corrected to the repository's command-name contract before
+rerunning successfully.

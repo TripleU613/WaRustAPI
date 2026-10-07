@@ -131,6 +131,18 @@ Usage: whatsapp-cli peer-identity [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 | --chat | CHAT | yes |  |  |  | Primary phone-number chat JID; never printed in the result |
 
+## whatsapp-cli peer-verification
+
+Record an explicit local human verification decision (offline; no scan or sync)
+
+```
+Usage: whatsapp-cli peer-verification [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --config | CONFIG | yes |  |  |  | Private JSON with peer, expected_fingerprint, expected_action_sequence, verified |
+
 ## whatsapp-cli peer-keys
 
 Queue or inspect one peer directory key query (offline; a session transmits it)

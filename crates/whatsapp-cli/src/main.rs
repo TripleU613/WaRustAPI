@@ -35,6 +35,8 @@ mod http;
 mod media;
 #[cfg(feature = "experimental-transport")]
 mod outbox_send;
+#[cfg(feature = "experimental-transport")]
+mod peer_verification;
 mod profiles;
 #[cfg(feature = "experimental-signup")]
 mod signup;
@@ -233,6 +235,13 @@ enum Cmd {
         /// Primary phone-number chat JID; never printed in the result.
         #[arg(long)]
         chat: String,
+    },
+    /// Record an explicit local human verification decision (offline; no scan or sync).
+    #[cfg(feature = "experimental-transport")]
+    PeerVerification {
+        /// Private JSON with peer, expected_fingerprint, expected_action_sequence, verified.
+        #[arg(long)]
+        config: PathBuf,
     },
     /// Queue or inspect one peer directory key query (offline; a session transmits it).
     #[cfg(feature = "experimental-transport")]
@@ -1435,6 +1444,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::IdentityConflicts => transport_receive::identity_conflicts(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::PeerIdentity { chat } => transport_receive::peer_identity(&cli, chat),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::PeerVerification { config } => peer_verification::run(&cli, config),
         #[cfg(feature = "experimental-transport")]
         Cmd::PeerKeys {
             chat,
