@@ -1577,3 +1577,76 @@ regeneration passed. Eight added source topics expand the core to 68 topics /
 took 0.067145 seconds: eight added topics and all 60 prior topics unchanged;
 manifest, inventory and tokens unchanged. These are static/offline checks;
 no live behavior or automatic rotation is claimed.
+
+
+## Durable own sender-key exposure and rotation (2026-10-07)
+
+**Confirmed static:** APK 2.26.37.71 D4x.A00 selects groups with
+`sent_sender_key=1` for a changed primary (`0af0..0bb4`) and calls scoped
+0jc.A19 deletion (`0868..0cc8`). The preceding
+[scoped removal trace](#scoped-sender-key-removal-and-recipient-translation-2026-10-07)
+preserves account/device/bucket separation. Full APK ownership initialization,
+feature and bucket selection remain **unknown/unported**.
+
+**Implemented local subset / inferred compatibility:** the supported comparison
+sender now records exact own-key recipient-device exposure inside the transaction
+that reserves its advanced key, pairwise state and once-only send intent.
+Reservation is deliberately conservative: an uncertain write may have exposed
+the key even without an ACK. This metadata is not labelled APK sent-flag parity
+and does not manufacture historical exposure records.
+
+An already policy-approved authenticated remote primary replacement marks only
+indexed own keys exposed to that exact PN/LID namespace as `rotation_pending`,
+in the existing archive/pin/session/event transaction. First-seen/equal keys,
+companions and our own PN/LID are excluded. Unauthenticated conflict observations
+and identity-only directory reads do not invoke this transition. No mapping is
+inferred between PN and LID; separately indexed aliases require their own
+supported transition. Incoming sender chains, cached receipts, send outcomes
+and unknown historical exposure are preserved.
+
+The next **newly reserved** comparison group/status send mints a fresh own key
+when pending. Its commit compares both the original sender-key bytes and exposure
+snapshot; a concurrent identity change cannot be cleared by a stale preparation.
+The prior own key is archived encrypted under the existing request selector,
+and recipient history starts anew for the fresh chain. No additional send is
+scheduled. Repeating an acknowledged/uncertain/refused request retains the
+existing once-only behavior, rather than rotating or retransmitting that intent.
+Absent exposure metadata means historical coverage is unknown: old keys are not
+blindly rotated based on guessed membership. Normal actor group-send integration,
+full bucket variants, companion identity cleanup and retrospective history remain
+unfinished.
+
+**CLI/API:** `peer-identity --chat <primary PN> --json` exposes the redacted
+`pending_sender_key_rotations` count separately for the phone and each mapped
+primary LID. Zero is not proof of complete historical coverage. Old serialized
+inspection output defaults this field to zero. Queue state, addresses, key bytes
+and distribution recipients are not printed; inspection remains offline and
+CLI-only, with no new HTTP route. Library transaction helpers live in
+`transport::sender_key_distribution` and the comparison send uses them directly.
+
+**Offline tests:** authenticated archival triggers exact-primary invalidation
+while first-seen/equal/companion calls do not; reopen retains pending state and
+unrelated LID/group/incoming/uncertain records stay unchanged. Transaction abort
+rolls back invalidation, stale reservations fail OCC, and a fresh reservation
+resets only its new generation's exposure. Real libsignal encryption confirms
+fresh-key ciphertext fails under the old chain and decrypts under the new SKDM;
+marking pending alone does not erase the old key. Initial test compilation exposed
+incorrect helper/signature names in the harness; corrected to the existing
+extract/receive API before these three tests passed. Live group rotation remains
+**unverified**; no draft/group send is authorized by this implementation.
+
+
+Validation: three new focused tests and the final 666 workspace/all-feature
+tests passed, alongside 24 default CLI tests, strict workspace/all-target
+Clippy, warning-free Rustdoc and CLI reference generation. The first workspace
+run hit `store::tests::wrong_key_is_typed` reporting AlreadyOwned on its correct-key
+reopen after wrong-key rejection. A focused rerun and the full final rerun passed;
+root cause remains unknown, and no lock guard or key policy was relaxed.
+
+
+**Observed live receive regression:** rebuilt client, 20-second receive-only
+window after outbox/action/receipt/device-work preflight. Session ended cleanly;
+peer inspection (including pending rotation counts), devices, actions, outbox
+and receipts were unchanged. No query or chat intent was added. Private evidence:
+`lab/releases/sender-distribution-live/active.json`. This checks existing receive
+compatibility only; no identity transition or group rotation occurred live.

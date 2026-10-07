@@ -143,6 +143,9 @@ pub struct PeerDeviceKeyCoverage {
 /// Redacted pin and held-session state for one primary peer address.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PeerPinState {
+    /// Indexed own keys awaiting rotation; zero does not prove historical coverage.
+    #[serde(default)]
+    pub pending_sender_key_rotations: usize,
     /// Hash of the session lookup key; never a raw contact address.
     pub peer_ticket: String,
     /// SHA-256 of serialized saved public identity, not a safety number.
@@ -206,6 +209,9 @@ fn pin_state(tx: &crate::store::ReadTx<'_>, peer: &Jid) -> Result<(PeerPinState,
     };
     let fingerprint = |bytes: &[u8]| hex::encode(Sha256::digest(bytes));
     let state = PeerPinState {
+        pending_sender_key_rotations: super::sender_key_distribution::pending_for_peer_in(
+            tx, peer,
+        )?,
         peer_ticket: hex::encode(Sha256::digest(key.as_bytes())),
         pinned_fingerprint: pin.as_deref().map(fingerprint),
         has_session: session.is_some(),
@@ -406,6 +412,7 @@ fn archive_identity(
     };
     super::peer_verification::invalidate_in(tx, peer, current)?;
     super::devices::after_primary_identity_change_in(tx, peer)?;
+    super::sender_key_distribution::after_primary_change_in(tx, peer)?;
     let observed_at = Timestamp::now();
     let event = tx.append_event(crate::sync::SyncEvent::IdentityChanged(
         crate::sync::IdentityChange {

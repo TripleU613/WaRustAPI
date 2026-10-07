@@ -392,7 +392,23 @@ async fn transmit(
     let own_key_db = sender_key_db_key(chat, own);
     let previous_key: Option<Vec<u8>> =
         store.read(|tx| tx.get_json(Table::SenderKeys, &own_key_db, 1))?;
-    let minted = prepare_own_sender_key(chat, own, previous_key.as_deref()).await?;
+    let distribution = store
+        .read(|tx| whatsapp_api::transport::sender_key_distribution::load_in(tx, chat, own))?;
+    let rotate = distribution
+        .as_ref()
+        .is_some_and(|state| state.rotation_pending());
+    // APK 37.71 D4x.A00 rotates exposed own group keys after primary changes.
+    // Only indexed exposure is known; old unindexed histories are not guessed.
+    let minted = prepare_own_sender_key(
+        chat,
+        own,
+        if rotate {
+            None
+        } else {
+            previous_key.as_deref()
+        },
+    )
+    .await?;
     // Not padded here: `prepare_payload` applies the E2E padding itself. Doing
     // it twice leaves junk bytes on the recipient's protobuf after their single
     // strip, which is what made this fail intermittently for weeks.
@@ -489,6 +505,26 @@ async fn transmit(
             }
             tx.put_json(Table::SignalSessions, key.as_bytes(), 1, &**next_session)?;
             tx.put_json(Table::PeerIdentities, key.as_bytes(), 1, next_identity)?;
+        }
+        whatsapp_api::transport::sender_key_distribution::reserve_in(
+            tx,
+            chat,
+            own,
+            distribution.as_ref(),
+            &fanout
+                .iter()
+                .map(|target| target.device.clone())
+                .collect::<Vec<_>>(),
+        )?;
+        if rotate {
+            // Preserve the prior own generation privately; this is neither a
+            // resend reservation reset nor an incoming sender-chain deletion.
+            tx.put_json(
+                Table::Checkpoints,
+                format!("message:{}:rotated-sender-key", message.request_id).as_bytes(),
+                1,
+                &previous_key,
+            )?;
         }
         tx.put_json(Table::SenderKeys, &own_key_db, 1, &*advanced_key)?;
         tx.put_json(Table::Checkpoints, intent_key.as_bytes(), 1, &intent)

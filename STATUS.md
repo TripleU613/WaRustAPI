@@ -1475,3 +1475,22 @@ parity remain unknown/unimplemented. The comparison CLI distributes an existing
 SKDM to every target but has no sent-sender-key history; redistributing is not
 identity-triggered rotation. No live request or identity adoption occurred.
 See [evidence and next implementation](docs/protocol/cross-device-sync.md#scoped-sender-key-removal-and-recipient-translation-2026-10-07).
+
+
+Own sender-key exposure/rotation (2026-10-07): the comparison sender reserves
+exact recipient-device exposure with key/session/send state. An authenticated
+remote primary change marks indexed own keys pending in the same archive/event
+transaction; the next new authorized group/status intent rotates with OCC and
+private old-key archival. Incoming chains and uncertain intents are retained.
+`peer-identity` exposes redacted pending_sender_key_rotations counts; zero does
+not establish historical coverage. APK 37.71 D4x.A00/0jc.A19 motivate this local
+subset; full bucket/alias/companion and normal actor group parity remain
+unimplemented, and live rotation is unverified.
+See [evidence and limits](docs/protocol/cross-device-sync.md#durable-own-sender-key-exposure-and-rotation-2026-10-07).
+
+Validation of own-key exposure handling: 666 final workspace/all-feature tests,
+24 default CLI tests, strict Clippy, warning-free Rustdoc, CLI/API checks passed.
+A 20-second receive-only rebuilt-client check left peer/device/action/outbox/receipt
+inspection unchanged. Live rotation remains unverified. The initial workspace
+wrong-key reopen test failed AlreadyOwned; focused and full reruns passed without
+relaxing locking or key validation.
