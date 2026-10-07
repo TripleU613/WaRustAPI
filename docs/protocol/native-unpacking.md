@@ -109,8 +109,9 @@ and `asset-decompressor.smali`. Raw libraries/trees stay outside Git.
 **Observed/local tooling:** Qiling 1.4.6 with CPython 3.12.14 runs the public
 ARM64 Android hello executable to an observed `exit_group(0)` using
 [native_loader_check.py](../../tools/apk-research/native_loader_check.py).
-This only establishes an ELF-loader baseline; the WhatsApp decoder has not
-been invoked. No WhatsApp app, account, device or network session runs here.
+The initial hello check only established an ELF-loader baseline. The follow-up
+below loads and invokes the APK decoder locally. No WhatsApp app, account,
+device or network session runs here.
 
 The four fixtures come from the official
 [Qiling rootfs repository](https://github.com/qilingframework/rootfs/tree/df3fa4dfc0b9d4164f8678699d8923df847eb3d2/arm64_android),
@@ -129,15 +130,16 @@ resolved it. Single-threaded loading failed at futex (`thread_management=None`).
 Multithreaded loading then failed because Qiling's `newfstatat` did not resolve
 `/proc/self/exe`. The helper supplies real executable metadata only for flags=0
 on that exact path; all other calls retain the original syscall implementation.
-It uses an empty guest environment and bounded execution, requiring a recorded
-successful guest exit rather than treating an emulator timeout as success.
+It uses an empty guest environment and requires a recorded successful guest
+exit rather than treating an emulator timeout as success. The first helper's
+claimed execution bounds were refuted and corrected as recorded below.
 
 **Observed limitations:** sigaltstack is unimplemented; `/system/etc/ld.config.txt`
 is absent (linker defaults used); `/proc/self/fd/{3,4}` readlink warns and the
 given library paths are used; the property client reports failed loading.
-These warnings are retained. Full Android runtime compatibility, superpack
-reconstruction, native algorithms and human safety-number verification remain
-**unknown/unimplemented**. Searches of public extraction tools did not establish
+These warnings are retained. Full Android runtime compatibility, successful
+superpack reconstruction, native algorithms and human safety-number verification
+remain **unknown/unimplemented**. Searches of public extraction tools did not establish
 a working portable decoder; device-based workflows were not used.
 
 **Validation for this tooling/docs change:** the checked-in helper observed
@@ -147,3 +149,108 @@ OpenAPI JSON parsing, Python source compilation, staged diff whitespace checks
 and repository hygiene passed (255 local links, 564315 research-checksum bytes).
 No Rust runtime code changed; workspace results in STATUS.md are from the
 preceding Rust change, not a newly repeated test run.
+
+## Follow-up: ARM64 decoder execution
+
+**Confirmed/static, same APK:** the original ZIP entries are
+`lib/arm64-v8a/libs.so` (outer container) and `lib/arm64-v8a/libsuperpack.so`
+(decoder); their hashes match the table above. ARM64 JNI relocations identify:
+
+| Name | Function VA | Name/signature/function relocation slots |
+| --- | --- | --- |
+| `decompress_range_from_so` | `0x9a50` | `0x380e8`, `0x380f0`, `0x380f8` |
+| `decompress_from_so` | `0x9ec8` | `0x38118`, `0x38120`, `0x38128` |
+
+The range signature is
+`(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[Ljava/lang/String;`.
+At `0x9ec8..0x9ed0`, the simpler entry passes both integer bounds as -1.
+At `0x96d0..0x9760`, JNI registration finds the AssetDecompressor class
+(literal `0x34dc`), checks exceptions, copies the eight-method table and
+registers it. `JNI_OnLoad` is at `0x8f30`; successful registration proceeds
+through initialization calls `0xb43c`, `0xb288`, `0x1b5d4`
+(`0x9058..0x9060`). `0x9cdc..0x9cec` checks literal `spo` (`0x39a4`).
+The reconstruction wrapper is `0xa964`; its index/end comparison
+`0xaa0c..0xaa14` makes the upper bound exclusive. The third Java string is
+passed through as the writer's path input (`0x9e84`, `0xa9a4`, `0xaa48`);
+exact path-join internals remain **untraced**.
+
+**Observed/local:** the public rootfs lacks libandroid/liblog, so the initial
+load returned guest exit 2 and `dlopen failed: library "libandroid.so" not found`.
+Own-source [asset imports](../../tools/apk-research/native-android-imports.c)
+abort when called; [log imports](../../tools/apk-research/native-log-imports.c)
+render diagnostics using Bionic vprintf. With those imports, the unmodified
+APK decoder loads and resolves `JNI_OnLoad`. The
+[probe](../../tools/apk-research/native-probe.c) then supplies a limited local
+JNI adapter: known class selectors, native registration and ASCII strings/arrays
+only. All unsupported callbacks abort. This is not a Java VM; unused adapter
+objects live until the isolated worker exits. The standard table-slot layout
+comes from Oracle's [JNI Functions](https://docs.oracle.com/en/java/javase/21/docs/specs/jni/functions.html)
+and [Invocation API](https://docs.oracle.com/en/java/javase/21/docs/specs/jni/invocation.html).
+
+The decoder returned `JNI_OnLoad=0x10006`, registering 8 AssetDecompressor,
+6 WhatsAppObiInputStream and 5 WhatsAppOpenboxArchive methods (19 total), and
+the guest exited zero. This proves local loading/initialization only. The
+container is preloaded with flags 2 because the APK's flags 6 request
+NOW|NOLOAD on ARM64; those values are documented in
+[Bionic dlfcn.h](https://android.googlesource.com/platform/bionic/+/refs/heads/main/libc/include/dlfcn.h).
+
+**Negative/fixed harness:** an initial range call used a C main argument named
+`env` that shadowed the adapter pointer, causing an unmapped read at native
+`0x9a84`. Renaming the argument/global adapter removed that error; this was
+our harness bug, not a format rejection. Another initial load hit Qiling's
+`munmap`/`del_mapinfo` IndexError. The helper now returns EINVAL for unaligned
+or zero-length calls and zero for a valid wholly unmapped range, delegating
+mapped ranges to the original handler. Linux explicitly allows unmapping an
+unmapped range ([munmap manual](https://man7.org/linux/man-pages/man2/munmap.2.html)).
+Partial mappings/shared-file handling remain the original Qiling behavior;
+this adapter is not a complete syscall implementation.
+
+**Correction/observed tooling:** Qiling 1.4.6 `os/linux/linux.py:run` delegates
+to `thread_management.run`; `thread.py:_run` invokes `emu_start` in fixed
+31337-instruction slices without the supplied run timeout/count. Therefore
+the original `run(timeout=10000000, count=1000000)` did not establish bounds.
+The helper now runs a child under a parent subprocess wall timeout and charges
+ARM64 basic blocks conservatively before execution, across all guest threads.
+Defaults are 10 seconds/1 million; allowed ranges are 1–60 seconds/1–1 billion.
+Timeout, instruction exhaustion, missing exit and nonzero guest exit all fail.
+Integration tests prove successful hello, actual guest instruction exhaustion,
+missing-fixture refusal and timeout of an actual infinite ARM64 guest.
+
+**Observed negative reconstruction:** range `[0,1)`, type `spo`, destination
+`/decoded` reaches the archive work queue but returns native `Could not open
+archive: 9/2`, then `AssetDecompressionException: could not extract file from
+archive`, guest exit 7. The output directory remains empty. Diagnostics identify
+stream 6 with expected/returned size 125448 and 163 incomplete work items.
+Equal printed sizes do not establish valid reconstructed content. The APK
+worker (`0x1ebe4`) checks output size at `0x1ef00..0x1ef08` and also conditionally
+checks a hash (`0x1ef0c..0x1ef30`); the error branch/log is `0x1f044..0x1f094`.
+The precise failing branch and cause are **unknown**; no checksum verification
+was disabled or failure forced to success.
+
+The 50-million instruction check stopped before the native result. With
+1 billion/30-second bounds, the completed failed attempt charged 123367393
+instructions. Explicitly mapping actual host `/proc/meminfo` removed the
+missing-memory warning but yielded the same error/empty destination, charging
+123365694 instructions. Missing meminfo alone is **refuted** as the explanation.
+This metadata is only for the local decoder's resource estimate, not Android
+device provenance or account protocol data. An initial adapter used the wrong
+Qiling API owner (`ql.os.add_fs_mapper`); `ql.add_fs_mapper` is the working API.
+
+Reproduce with the [helper setup/commands](../../tools/apk-research/README.md).
+Private evidence includes `arm64-superpack-disassembly.txt`,
+`arm64-decompress-entry.txt`, `arm64-reconstruct-wrapper.txt`,
+`arm64-file-writer.txt` and the rootfs under the native lab directory.
+No library was reconstructed and no modern fingerprint algorithm recovered.
+The next useful step is tracing the native worker's actual failure branch,
+not replacing identity pins or repeating account requests.
+
+**Follow-up validation:** all three checked-in C sources were cross-compiled
+against the pinned Bionic fixtures, and the resulting initialization probe
+exited zero (985744 charged instructions). Four integration checks passed with
+none skipped. Python source compilation, OpenAPI parsing, CLI-reference
+regeneration, Rust formatting and diff whitespace checks passed. The two
+completed reconstruction failures above are negative evidence, not passing
+extraction tests. Repository hygiene passed with 261 local links and 564315
+research-checksum bytes. Rust runtime sources were unchanged. Diagnostic logs
+are preserved privately in native `execution-checks-2026-10-07/`; this includes
+the original failed attempts rather than only their corrected successors.

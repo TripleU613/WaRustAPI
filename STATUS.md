@@ -127,9 +127,13 @@ redelivered at every login.
 ## Offline verification
 
 Native research now locates separate Superpack decoders and V3/V4 fingerprint
-symbols in one decoded stream. A reproducible public ARM64 hello loader check
-exits zero; archive reconstruction and modern safety-number algorithms remain
-unfinished. This tooling check makes no live account request.
+symbols in one decoded stream. The ARM64 decoder loads and initializes all
+19 JNI methods locally, exiting zero. A bounded first-entry reconstruction
+returns native `9/2` / `could not extract file from archive`, with no output;
+real host memory metadata did not fix it. The helper's previously ineffective
+threaded-runner limits are corrected, with four integration checks including
+an infinite guest. Archive reconstruction and modern safety-number algorithms
+remain unfinished. These tooling checks make no live account request.
 [Evidence, setup failures and remaining warnings](docs/protocol/native-unpacking.md).
 
 529 all-feature tests (`cargo test --locked --workspace --all-features`) and

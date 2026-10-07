@@ -349,3 +349,17 @@ environment run hello to `exit_group(0)` with a narrow proc-exe stat adapter.
 Python 3.14, single-threaded futex and proc-exe stat failures are preserved,
 along with remaining loader warnings. No APK decoder or live account request
 was executed. [Hashes, offsets, reproducer and limits](native-unpacking.md).
+
+**Follow-up, confirmed/static:** ARM64 JNI relocations identify range entry
+`0x9a50` and simple entry `0x9ec8`; wrapper `0xa964` has an exclusive upper
+range bound. **Observed/local:** own-source, fail-closed asset/JNI adapters
+allow the exact decoder to load and register 19 methods, returning `0x10006`
+and guest exit zero. First-entry reconstruction reaches the work queue but
+returns native `9/2` / `AssetDecompressionException`, exit 7, no file. Real
+host meminfo removes one warning but not this failure. The cause is unknown;
+neither equal printed byte counts nor initialization prove extraction.
+**Refuted/fixed:** Qiling's threaded runner ignores its ordinary timeout/count
+arguments. Parent-process wall limits and shared block charging now enforce
+bounds, tested with actual hello/infinite ARM64 guests. An initial C shadowed
+JNI pointer and proc-mapper API owner error were our harness bugs, corrected.
+No live account request occurred. [Full follow-up evidence](native-unpacking.md).

@@ -636,8 +636,11 @@ disassembler successfully rendered the actual APK decimal-group method with
 its previous opaque arithmetic instructions named. No live request occurred.
 
 Native follow-up: separate Superpack decoders and first-stream V3/V4 fingerprint
-symbols are located. The stream is not a reconstructed ELF. A bounded public
-ARM64 hello loader check exits zero; decoder invocation, native algorithm
-recovery and human verification remain unfinished. Python/setup failures and
-remaining loader warnings are recorded in
+symbols are located. The stream is not a reconstructed ELF. The ARM64 decoder
+now loads and registers 19 JNI methods locally, exiting zero. Bounded first-entry
+reconstruction fails with native `9/2`; no file is produced, even with real host
+memory metadata. Native algorithm recovery and human verification remain
+unfinished. The helper's ineffective original threaded limits were corrected;
+four integration checks cover actual guest execution and both resource guards.
+Setup failures and remaining loader warnings are recorded in
 [native reconstruction evidence](protocol/native-unpacking.md).

@@ -14,10 +14,16 @@
       "description": "Offline DEX developer disassembler; no HTTP route. Names APK identity metadata reads (iget-wide, iget-boolean, iget-byte) and safety-number arithmetic (rem-long/2addr, and-long/2addr, or-long/2addr, shl-long/2addr), preserving byte offsets and operands. Literal 37.71 CjU/B7E-style fixtures verify widths and registers. Unknown opcodes remain explicitly marked. Does not unpack native superpack containers or claim native algorithm recovery."
     },
     {
-      "x-cli": "<python-env> tools/apk-research/native_loader_check.py --rootfs <public-rootfs>",
+      "x-cli": "<python-env> tools/apk-research/native_loader_check.py --rootfs <public-rootfs> [--check hello|decoder-init|decoder-first-entry] [--timeout-seconds <1..60>] [--max-instructions <1..1000000000>] [--host-meminfo]",
       "x-transport": "cli",
       "x-live": false,
-      "description": "Offline developer loader baseline; no HTTP route. Runs only the public Qiling ARM64 Android hello fixture with an empty guest environment and bounded execution, requiring observed exit_group(0). Diagnoses missing rootfs fixtures and Qiling dependencies. A flags-zero /proc/self/exe stat adapter uses real executable metadata; other calls retain the original implementation. Does not invoke the APK decoder, reconstruct Superpack, recover native safety-number algorithms or establish Android runtime compatibility. See docs/protocol/native-unpacking.md for pinned provenance, failures and remaining loader warnings."
+      "description": "Offline developer artifact harness; no HTTP route or live account flow. Defaults to public ARM64 hello. decoder-init loads the configured APK 37.71 Superpack decoder through own-source asset/log/JNI adapters; unsupported asset/JNI operations abort. Requires JNI_OnLoad=0x10006, 19 methods and observed exit_group(0). decoder-first-entry preloads the outer ELF and invokes registered decompress_range_from_so with spo, /decoded and exclusive range [0,1); may write local output and refuses a missing/nonempty decoded directory without deleting partial results. Current first-entry result is native 9/2, AssetDecompressionException, exit 7 and no output; initialization does not establish extraction. timeout-seconds is enforced by a parent subprocess (default 10); max-instructions conservatively charges ARM64 basic blocks across guest threads (default 1000000). Qiling threaded run timeout/count alone were refuted as bounds. host-meminfo explicitly maps real host /proc/meminfo for local resource estimation; it removed a warning but did not fix reconstruction. Empty guest environment; missing fixtures/dependencies and invalid bounds fail preflight. Proc-exe stat uses actual fixture metadata; munmap permits valid wholly unmapped ranges, rejects unaligned/zero-length input and delegates mapped ranges. Does not recover native safety-number algorithms or establish Android VM/runtime compatibility. Setup, source hashes, methods, errors and integration validation are in docs/protocol/native-unpacking.md and tools/apk-research/README.md."
+    },
+    {
+      "x-cli": "TELEWHATSAPP_LOADER_ROOTFS=<public-rootfs> <python-env> -m unittest discover -s tools/apk-research -p test_native_loader_check.py -v",
+      "x-transport": "cli",
+      "x-live": false,
+      "description": "Offline developer integration checks for missing-fixture refusal, successful actual ARM64 hello, actual guest instruction exhaustion and killing an infinite ARM64 guest with the parent wall limit. Rootfs-dependent tests skip when TELEWHATSAPP_LOADER_ROOTFS is absent; the infinite fixture also requires Clang/LLD and is compiled in a temporary directory. Does not execute the APK decoder or contact an account."
     }
   ],
   "info": {
