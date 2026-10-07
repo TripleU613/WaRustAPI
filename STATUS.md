@@ -184,3 +184,13 @@ connect to the recovered routines; the traced result path emits QR version 0.
 Current scheme selection, complete device inventory, individual QR fields,
 comparison semantics and human verification remain unfinished.
 [Callback and dispatch evidence](docs/protocol/safety-number.md#native-to-java-identifier-callback-and-dispatch-mapping).
+
+
+Native QR descriptors and serialization are now recorded with a reproducible
+metadata extractor. Version zero carries serialized keys; version one their
+identifier-free digest. V4 comparison resolves peer orientation and checks
+keys, LID and additional PN/username/hosted-state conditions; LID/key equality
+alone cannot establish verification. Fourteen offline tooling checks pass.
+Full comparator primitive/error semantics, UI selection/inventory and the
+verified-state action remain unfinished; no account verification was performed.
+[QR evidence and schema](docs/protocol/safety-number.md#native-qr-schema-serialization-and-v4-comparison).

@@ -1,0 +1,120 @@
+{
+  "apk_build": "2.26.37.71",
+  "library_sha256": "565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa",
+  "evidence": "confirmed/static",
+  "messages": [
+    {
+      "name": "whatsapp.FingerprintData",
+      "address": "0x740b60",
+      "size": 152,
+      "fields": [
+        {
+          "name": "public_key",
+          "tag": 1,
+          "label": "optional",
+          "type": "bytes",
+          "address": "0x740c80",
+          "quantifier_offset": 24,
+          "offset": 32
+        },
+        {
+          "name": "pn_identifier",
+          "tag": 2,
+          "label": "optional",
+          "type": "bytes",
+          "address": "0x740cc8",
+          "quantifier_offset": 48,
+          "offset": 56
+        },
+        {
+          "name": "lid_identifier",
+          "tag": 3,
+          "label": "optional",
+          "type": "bytes",
+          "address": "0x740d10",
+          "quantifier_offset": 72,
+          "offset": 80
+        },
+        {
+          "name": "username_identifier",
+          "tag": 4,
+          "label": "optional",
+          "type": "bytes",
+          "address": "0x740d58",
+          "quantifier_offset": 96,
+          "offset": 104
+        },
+        {
+          "name": "hosted_state",
+          "tag": 5,
+          "label": "optional",
+          "type": "enum",
+          "address": "0x740da0",
+          "quantifier_offset": 120,
+          "offset": 124,
+          "enum": "whatsapp.HostedState"
+        },
+        {
+          "name": "hashed_public_key",
+          "tag": 6,
+          "label": "optional",
+          "type": "bytes",
+          "address": "0x740de8",
+          "quantifier_offset": 128,
+          "offset": 136
+        }
+      ]
+    },
+    {
+      "name": "whatsapp.CombinedFingerprint",
+      "address": "0x740c08",
+      "size": 48,
+      "fields": [
+        {
+          "name": "version",
+          "tag": 1,
+          "label": "optional",
+          "type": "uint32",
+          "address": "0x740e30",
+          "quantifier_offset": 24,
+          "offset": 28
+        },
+        {
+          "name": "local_fingerprint",
+          "tag": 2,
+          "label": "optional",
+          "type": "message",
+          "address": "0x740e78",
+          "quantifier_offset": 0,
+          "offset": 32,
+          "message": "whatsapp.FingerprintData"
+        },
+        {
+          "name": "remote_fingerprint",
+          "tag": 3,
+          "label": "optional",
+          "type": "message",
+          "address": "0x740ec0",
+          "quantifier_offset": 0,
+          "offset": 40,
+          "message": "whatsapp.FingerprintData"
+        }
+      ]
+    }
+  ],
+  "enums": {
+    "whatsapp.HostedState": {
+      "address": "0x740f58",
+      "values": [
+        {
+          "name": "E2EE",
+          "value": 0
+        },
+        {
+          "name": "HOSTED",
+          "value": 1
+        }
+      ]
+    }
+  }
+}

@@ -210,3 +210,31 @@ connects the static ELF dispatch table to Java PN/LID normalization and the
 V4 create/result routines. Existing `xtask apk-smali` and `llvm-objdump`
 commands there reproduce it. The synthetic checker models SHA/MCF entry calls;
 it does not execute these JNI conversions, QR serializers or key constructors.
+
+
+## Native fingerprint QR schema
+
+`native_schema_check.py --library PATH` requires pyelftools and the exact
+reconstructed 37.71 `libwhatsappmerged.so` hash. It reads the two message and
+hosted-state enum descriptors without native execution or account inputs.
+Output is protocol metadata, including tags, types, offsets and source addresses;
+[committed output](../../docs/protocol/fingerprint-native-schema.json) is reproducible.
+[Serialization/comparison findings](../../docs/protocol/safety-number.md#native-qr-schema-serialization-and-v4-comparison)
+distinguish optional schema fields from required comparison inputs.
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
+  tools/apk-research/native_schema_check.py \
+  --library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsappmerged.so
+PYTHONDONTWRITEBYTECODE=1 \
+  TELEWHATSAPP_LOADER_ROOTFS=lab/apk-2.26.37.71/native/qiling-rootfs \
+  TELEWHATSAPP_FINGERPRINT_LIBRARY=lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so \
+  TELEWHATSAPP_SCHEMA_LIBRARY=lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsappmerged.so \
+  lab/native-analysis-tools-py312/bin/python -m unittest discover \
+  -s tools/apk-research -p 'test_native_*check.py' -v
+```
+
+All fourteen cases passed locally with these fixtures. Schema integration skips
+without `TELEWHATSAPP_SCHEMA_LIBRARY`; its missing/wrong-build preflight cases
+need no library or ELF dependency. Neither schema extraction nor these tests
+executes QR comparison or sets a peer's verified bit.

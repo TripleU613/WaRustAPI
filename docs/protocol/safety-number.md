@@ -361,3 +361,131 @@ native tooling checks passed with both fixtures configured; they cover the
 hash slice and runner guards, not execution of the newly traced JNI callbacks
 or QR serialization. CLI reference regeneration and repository hygiene passed.
 This change records static evidence; it changes no Rust client runtime policy.
+
+## Native QR schema, serialization and V4 comparison
+
+**Confirmed/static, APK 2.26.37.71:** reconstructed `libwhatsappmerged.so`
+SHA-256 `565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa`
+exports the fingerprint protobuf-C initializer/pack/unpack functions at
+`0x2d3db0..0x2d3e54`. Individual initializer template `0x740ac8` points to
+message descriptor `0x740b60`; combined template `0x740bd8` and unpack code
+point to descriptor `0x740c08`. Relative ELF relocations resolve names and
+nested descriptors. Both message descriptor magic values are `0x28aaeef9`;
+the hosted-state enum magic is `0x114315af`.
+
+The ARM64 layout matches the upstream
+[protobuf-C v1.5.2 descriptor declarations](https://github.com/protobuf-c/protobuf-c/blob/v1.5.2/protobuf-c/protobuf-c.h):
+field metadata names each tag, type, presence selector and native structure
+offset. This structural match does **not** establish the APK's protobuf-C
+release version. The extracted compact [schema artifact](fingerprint-native-schema.json)
+records every native field/descriptor address, offset and enum value. All
+fields below are optional in the descriptor; runtime comparison imposes
+additional requirements.
+
+| Message | Tag | Name | Type | Native presence/value offsets |
+| --- | ---: | --- | --- | --- |
+| FingerprintData | 1 | public_key | bytes | `0x18 / 0x20` |
+| FingerprintData | 2 | pn_identifier | bytes | `0x30 / 0x38` |
+| FingerprintData | 3 | lid_identifier | bytes | `0x48 / 0x50` |
+| FingerprintData | 4 | username_identifier | bytes | `0x60 / 0x68` |
+| FingerprintData | 5 | hosted_state | enum | `0x78 / 0x7c` |
+| FingerprintData | 6 | hashed_public_key | bytes | `0x80 / 0x88` |
+| CombinedFingerprint | 1 | version | uint32 | `0x18 / 0x1c` |
+| CombinedFingerprint | 2 | local_fingerprint | FingerprintData | pointer `0x20` |
+| CombinedFingerprint | 3 | remote_fingerprint | FingerprintData | pointer `0x28` |
+
+`whatsapp.HostedState` descriptor `0x740f58` has exactly two values, **E2EE=0**
+and **HOSTED=1**, in value table `0x740f08`. Missing/unknown state is represented
+by the params sentinel -1, not a third declared enum value. Individual native
+message size is 152 bytes; combined size is 48 bytes. Bytes fields are explicit
+length/pointer pairs, not NUL-terminated protobuf strings.
+
+**Confirmed/static, serializers in libwhatsapp.so:** V3
+`0x713cf8..0x713e00` and V4 `0x714f98..0x7150ac` select the key field from
+the combined version argument. Zero copies params `+0x18` into **public_key**;
+nonzero copies params `+0x20` into **hashed_public_key**. These are respectively
+the concatenated serialized key inventory and its previously traced `H(K,K)`
+64-byte digest. Version is validated as 0/1 on the receive/comparison wrapper.
+Thus tag 6 is not the identifier-bound digest used for decimal display.
+
+V3 writes params `+0x28` to pn_identifier and the retained LID object's `+0x20`
+string to lid_identifier; V4 writes params `+0x28` to lid_identifier and
+`+0x30` to pn_identifier. Neither serializer itself invokes the normalization
+callback while writing these fields. In particular, do not replace LID QR
+bytes with display-identifier bytes merely because the descriptor says
+identifier. The field receives the params string as supplied; the display
+path separately parses it through Java. Both serialize username from params
+`+0x38`, and include hosted_state only for 0 or 1 (`0x713dc4..0x713dd8`,
+`0x715070..0x715084`). V4 has an additional local-side condition: if its third
+argument has bit 0 set and username_identifier is present, pn_identifier is
+omitted (`0x715050..0x71506c`). Combined V4 passes third argument 1 for local
+and 0 for remote (`0x714974..0x714998`). This omission is deliberate APK
+behavior, not proof of missing PN inventory.
+
+**Confirmed/static, V4 comparison wrapper `0x714a60..0x714c70`:** it unpacks
+the combined payload, requires a present version <=1, both individual messages
+and both lid_identifier presence bits. At `0x714b60..0x714bfc`, it matches the
+known local LID against the scanned sides and swaps orientation when required;
+a QR scan's local side must not always be treated as our local side. It invokes
+`0x7150ac..0x715264` to convert each scanned individual. That converter requires
+lid_identifier and the version-selected key field. Optional identifiers are
+ASCII-decoded; invalid LID/PN/username conversion returns negative status.
+Known hosted state must be 0/1; absent state becomes -1. **Unknown:** complete
+ASCII helper behavior at `0x71d5dc` and all error/status-to-UI mappings.
+
+**Confirmed/static, V4 comparison `0x7152fc..0x7155d8`:**
+
+- A remote LID comparison through `0x715264` must match; otherwise -12.
+- Version zero compares both sides' public_key data through `0x714358`;
+  version one compares hashed_public_key through `0x7143b0`. Local mismatch
+  returns -14 and remote mismatch -15.
+- For each side, both the known and scanned individual must have at least one
+  of PN or username. Missing both on the local pairing returns -39; missing
+  both on the remote pairing returns -41. A matching LID/key alone is therefore
+  insufficient on this path.
+- When both PN values are present, `0x7155d8` uses MCFASCIIStringEqual;
+  inequality returns -17 locally / -19 remotely. A missing PN is handled
+  separately, consistent with username-bearing local QR omission above.
+- Username helper `0x7155fc..0x715688` distinguishes absent/present pairs and
+  calls MCFStringCompare with literal flag 1 when both exist. Exact flag
+  semantics are untraced; ordinary Rust case-sensitive equality is not proven
+  equivalent. Different/missing username pairings return distinct statuses
+  (-24/-26/-28 locally, -29/-31/-33 remotely).
+- Known scanned hosted state is compared with known params state. A mismatch
+  returns -34 locally or -36 remotely. If both scanned values are absent,
+  comparison logs the legacy-state case and can return zero; unknown state is
+  not a fabricated enum value.
+
+The data equality helper `0x71f060..0x71f108` checks lengths, then calls
+`0xc9bbfc`; its complete byte-comparison implementation is not traced here.
+These native return values are internal comparison results, not HTTP/server
+reasons. The public result remapper `0x7152b8` and Java action/verified-state
+commit remain unfinished. Do not mark a peer verified merely by implementing
+these partial checks or treating an unknown negative code as success.
+
+[`native_schema_check.py`](../../tools/apk-research/native_schema_check.py)
+requires the exact merged-library hash and pyelftools, reads descriptors without
+executing any native library, and prints the compact JSON artifact above.
+It validates ARM64 ELF layout, file-backed reads, descriptor magic, known
+optional types, bounded counts, sorted tags and structure offsets. Wrong/missing
+builds refuse before producing any schema. No QR bytes, key bytes, phone/LID
+values, account state or network requests are inputs to this command.
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
+  tools/apk-research/native_schema_check.py \
+  --library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsappmerged.so
+```
+
+Private scoped dumps `fingerprint-v3-qr-serialize.txt`,
+`fingerprint-v4-qr-serialize.txt`, `fingerprint-v4-qr-parse.txt`,
+`fingerprint-v4-orientation.txt`, `fingerprint-data-equality.txt` and
+`fingerprint-native-protobuf-init.txt` retain the source instructions under
+the native APK lab root. The schema artifact contains only protocol metadata.
+Fourteen Python tooling checks passed with all three fixture variables set,
+including actual descriptor extraction and missing/wrong-build refusals. This
+is static evidence and offline tooling validation, not a live scan/verification.
+
+The committed schema regenerated unchanged from the pinned ELF in a separate
+invocation. CLI reference regeneration/test and repository hygiene passed;
+Rust runtime code did not change. These checks do not execute the QR comparator.

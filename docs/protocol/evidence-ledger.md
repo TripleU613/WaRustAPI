@@ -417,3 +417,19 @@ scheme/input inventory and individual QR fields/comparison semantics remain
 unfinished. Exact-class getType searches missed the obfuscated LID class;
 0ZY.getType confirms type 18. No live request or account verification occurred.
 [Complete callback/relocation/DEX evidence](safety-number.md#native-to-java-identifier-callback-and-dispatch-mapping).
+
+
+**Confirmed/static, 37.71 native QR:** libwhatsappmerged.so initializer and
+unpack wrappers resolve two protobuf-C message descriptors and HostedState.
+FingerprintData has six optional fields: public_key, PN, LID, username,
+hosted_state and hashed_public_key. The compact committed schema artifact
+records actual tags/types/offsets/addresses; upstream descriptor ABI matching
+is not proof of the APK's protobuf-C version. Serializer version zero carries
+concatenated serialized keys, version one H(K,K), not the display digest.
+V4 can deliberately omit local PN when a username exists. Comparison resolves
+orientation by LID and requires selected key equality plus identifier conditions;
+matching LID/key alone is insufficient. Hosted enum is E2EE=0/HOSTED=1; unknown
+is params sentinel -1, not an invented enum. Username comparison flag semantics,
+complete error remapping and verified-state action remain unfinished. Fourteen
+local tooling checks pass; no live scan or account verification occurred.
+[Schema and comparison evidence](safety-number.md#native-qr-schema-serialization-and-v4-comparison).
