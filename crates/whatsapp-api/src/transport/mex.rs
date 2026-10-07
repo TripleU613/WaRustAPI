@@ -55,6 +55,25 @@ pub struct MexJsonResponse {
     summary: MexResponseSummary,
 }
 
+/// APK 37.71 QueryGroupInfo callback gate, before the group success callback runs.
+/// This is not a success verdict or permission to overwrite a saved snapshot.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum GroupInfoDisposition {
+    /// A selected field has an unsupported type; Java exception conversion is not modeled.
+    UnsupportedParts,
+    /// Missing/null data cannot construct the nonnull JSONObject-backed model.
+    MissingModel,
+    /// I1H's getJSONObject rejects at least one error array entry.
+    InvalidErrorEntry,
+    /// Group callback returns false after error handling, even with partial data.
+    ServerErrors,
+    /// Empty model and no errors: the inherited callback does not invoke A04.
+    EmptyData,
+    /// Nonempty model without errors reaches A04; feature-gated conversion may still fail.
+    InvokeGroupCallback,
+}
+
 impl std::fmt::Debug for MexJsonResponse {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.summary.fmt(f)
@@ -76,6 +95,46 @@ impl MexJsonResponse {
     /// Redacted presence/type/count inspection, without a success verdict.
     pub fn summary(&self) -> &MexResponseSummary {
         &self.summary
+    }
+
+    /// Inspect the confirmed group callback gate without running callbacks,
+    /// advancing rate guards or applying state. Valid error objects remain
+    /// opaque: no error code, retry duration or exception hierarchy is guessed.
+    pub fn group_info_disposition(&self) -> GroupInfoDisposition {
+        // LaZ independent parser failures have their own exception/fallback
+        // paths. Do not equate the local explicit-invalid state with no errors.
+        if self.summary.data_state == JsonFieldState::Invalid
+            || self.summary.errors_state == JsonFieldState::Invalid
+        {
+            return GroupInfoDisposition::UnsupportedParts;
+        }
+        // LaT.A00 -> 2FU.<init> requires a nonnull JSONObject before LZv,
+        // even when a valid server error array accompanies missing/null data.
+        let Some(data) = &self.data else {
+            return GroupInfoDisposition::MissingModel;
+        };
+        let Some(errors) = &self.errors else {
+            return GroupInfoDisposition::UnsupportedParts;
+        };
+        // Lac.BEE and BaseMexCallback.A03 construct I1H; its constructor
+        // +004c..0064 calls JSONArray.getJSONObject for every array entry.
+        if errors.iter().any(|entry| !entry.is_object()) {
+            return GroupInfoDisposition::InvalidErrorEntry;
+        }
+        // 9Np.A06 selector 0 always ends at +0028..002c (false), including
+        // the 429 timestamp/runnable branch. BaseMexCallback.A03+005e..006a
+        // therefore never dispatches partial group data after any error array.
+        if !errors.is_empty() {
+            return GroupInfoDisposition::ServerErrors;
+        }
+        // LZv.A02 is JSONObject.length()>0; BaseMexCallback.A03 requires it
+        // before A04. The later required xwa2_group_query_by_id conversion is
+        // distinct: a nonempty object here is not a proven complete group.
+        if data.is_empty() {
+            GroupInfoDisposition::EmptyData
+        } else {
+            GroupInfoDisposition::InvokeGroupCallback
+        }
     }
 }
 
@@ -287,6 +346,23 @@ pub fn group_info_request(
 mod tests {
     use super::*;
     use crate::binary::{AttributeValue, NodeContent};
+
+    #[test]
+    fn group_callback_corpus_blocks_partial_data_errors_and_only_gates_callback() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/mex/2.26.37.71-group-callback.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            let node = Node::new("iq")
+                .children(vec![Node::new("result").text(case["payload"].to_string())]);
+            let parsed = parse_json_response(&node).unwrap();
+            assert_eq!(
+                serde_json::to_value(parsed.group_info_disposition()).unwrap(),
+                case["group_info_disposition"]
+            );
+        }
+    }
 
     #[test]
     fn independent_nullable_field_corpus_preserves_partial_results_and_redacts() {

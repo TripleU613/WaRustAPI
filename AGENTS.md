@@ -209,6 +209,9 @@ request—not adding Rust code, another command or a number-specific script.**
 - When asked to inspect/merge a PR, inspect its diff, checks and conflicts, then
   complete the authorized merge when sound. Do not force a merge or overwrite
   user changes merely to satisfy “somehow.”
+- Push every completed, tested project chunk without waiting for another request.
+  Keep private state, credentials, raw APKs, bulk trees and unrelated exports out
+  of those commits. Report the actual commit/push result.
 - When asked to push everything local, push all relevant reviewed project work,
   not credentials, private lab data, large raw APKs, unrelated changes or
   generated build output. Report the actual commit/push result.

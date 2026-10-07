@@ -1664,6 +1664,8 @@ pub fn run_callers(apk: &Path, target_class: &str, target_method: &str) -> Resul
 /// One decoded method from a single class.
 pub struct MethodDump {
     pub class_name: String,
+    /// Direct class_def_item superclass, not a guessed inherited method owner.
+    pub superclass: String,
     pub method_name: String,
     pub method_proto: String,
     pub access_flags: u32,
@@ -1688,6 +1690,8 @@ fn smali_one(
             continue;
         }
 
+        // DEX class_def_item+8 is superclass_idx; NO_INDEX is resolved as <none>.
+        let superclass = dex.type_name(u32le(d, cdef_off + 8)?)?;
         let class_data_off = u32le(d, cdef_off + 24)?;
         if class_data_off == 0 {
             continue;
@@ -1721,6 +1725,7 @@ fn smali_one(
             if code_off == 0 {
                 out.push(MethodDump {
                     class_name: class_name.clone(),
+                    superclass: superclass.clone(),
                     method_name,
                     method_proto,
                     access_flags,
@@ -1740,6 +1745,7 @@ fn smali_one(
 
             out.push(MethodDump {
                 class_name: class_name.clone(),
+                superclass: superclass.clone(),
                 method_name,
                 method_proto,
                 access_flags,
@@ -1799,6 +1805,7 @@ pub fn run_smali(
     for m in &methods {
         if m.class_name != last_class {
             println!("\n# class: {}", m.class_name);
+            println!("# extends: {}", m.superclass);
             last_class = m.class_name.clone();
         }
         let flags = access_flags_str(m.access_flags);
@@ -2684,6 +2691,22 @@ mod tests {
         data[0x1d0..0x1d4].copy_from_slice(&1u32.to_le_bytes());
         data[0x1d4..0x1d6].copy_from_slice(&parameter_type.to_le_bytes());
         data
+    }
+
+    #[test]
+    fn method_dump_resolves_checked_direct_superclass_and_no_index() {
+        let mut data = object_signature_fixture(0, &[0x0e, 0]);
+        // Literal class_def_item+8, type table index 3 -> LX/Other;.
+        data[0xb8..0xbc].copy_from_slice(&3u32.to_le_bytes());
+        let mut methods = Vec::new();
+        smali_one(&data, "LX/Contact;", None, &mut methods).unwrap();
+        assert_eq!(methods[0].superclass, "LX/Other;");
+        data[0xb8..0xbc].copy_from_slice(&u32::MAX.to_le_bytes());
+        let mut root = Vec::new();
+        smali_one(&data, "LX/Contact;", None, &mut root).unwrap();
+        assert_eq!(root[0].superclass, "<none>");
+        data[0xb8..0xbc].copy_from_slice(&4u32.to_le_bytes());
+        assert!(smali_one(&data, "LX/Contact;", None, &mut Vec::new()).is_err());
     }
 
     #[test]

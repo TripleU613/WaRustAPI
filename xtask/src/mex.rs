@@ -255,7 +255,7 @@ pub fn preview(queries: &Path, chat: &str, id: &str, context: &str) -> Result<()
 }
 
 /// Only redacted summary is printed; raw JSON never appears in diagnostics.
-pub fn inspect_response(input: &Path, child: &str) -> Result<(), String> {
+pub fn inspect_response(input: &Path, child: &str, group_info: bool) -> Result<(), String> {
     use whatsapp_api::transport::mex::{MAX_JSON_RESPONSE_BYTES, parse_json_response};
     if !matches!(child, "result" | "update") {
         return Err("expected result or update payload child".into());
@@ -266,9 +266,14 @@ pub fn inspect_response(input: &Path, child: &str) -> Result<(), String> {
     )?;
     let node = Node::new("iq").children(vec![Node::new(child).bytes(body)]);
     let parsed = parse_json_response(&node).map_err(|e| e.to_string())?;
+    let mut summary = serde_json::to_value(parsed.summary()).map_err(|e| e.to_string())?;
+    if group_info {
+        summary["group_info_disposition"] =
+            serde_json::to_value(parsed.group_info_disposition()).map_err(|e| e.to_string())?;
+    }
     println!(
         "{}",
-        serde_json::to_string_pretty(parsed.summary()).map_err(|e| e.to_string())?
+        serde_json::to_string_pretty(&summary).map_err(|e| e.to_string())?
     );
     Ok(())
 }

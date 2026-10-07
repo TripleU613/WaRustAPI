@@ -551,3 +551,21 @@ Rust response-parts parsing and a counts-only CLI inspector are implemented,
 including explicit invalid states, preserved counterparts and redacted Debug.
 Sixteen synthetic getter-derived combinations exercise result/update; no
 server response, live request or durable group-state update is claimed.
+
+### comparison.mex.group_callback_37_71 — confirmed static, offline gate port
+
+APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+Lac/LaT typed model conversion dispatches Okj.C2c; 9Np directly extends
+BaseMexCallback, whose A03 consults A06 before nonempty-data A04. Group
+selector-0 A06 always returns false, including 429 handling: partial data with
+errors cannot reach success callback. I1H requires every error entry to be a
+JSONObject. 2FU requires nonnull data; A04's 0yw.A0x gate can skip conversion.
+[Source/interpretation](mex.md#group-callback-gate-and-inherited-dispatch-2026-10-07)
+include IWF extensions/root code precedence, backoff/severity/path/message,
+selected-error ranking boundary and partial ADv/LbE getter findings. Full
+transport classification, exception/coercion/ranking, native/Pando/Argo,
+converter and durable application remain unfinished. Rust group disposition
+and the optional offline --group-info inspector are implemented; no live
+request or account/state change is claimed. apk-smali's checked superclass
+header exposes inherited ownership rather than guessing absent functionality.

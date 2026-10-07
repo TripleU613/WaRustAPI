@@ -129,6 +129,9 @@ enum Cmd {
         /// Payload child supplied to the actual Rust node parser.
         #[arg(long, default_value = "result", value_parser = ["result", "update"])]
         child: String,
+        /// Include the APK QueryGroupInfo callback gate; no group conversion or state update.
+        #[arg(long)]
+        group_info: bool,
     },
     /// Find which classes and methods reference each anchor string constant.
     ///
@@ -278,7 +281,11 @@ fn main() -> ExitCode {
             id,
             context,
         } => mex::preview(&queries, &chat, &id, &context),
-        Cmd::MexResponseInspect { input, child } => mex::inspect_response(&input, &child),
+        Cmd::MexResponseInspect {
+            input,
+            child,
+            group_info,
+        } => mex::inspect_response(&input, &child, group_info),
         Cmd::ApkXref { apk, anchors } => xref::run_xref(&apk, &anchors),
         Cmd::ApkCallers {
             apk,

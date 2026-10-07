@@ -1,0 +1,91 @@
+{
+  "apk_version": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "evidence": "Synthetic callback-gate corpus from LaT.A00, 2FU/LZv constructors, I1H constructor, BaseMexCallback.A03 and 9Np.A06 selector 0. Not group conversion or live responses.",
+  "cases": [
+    {
+      "payload": {},
+      "group_info_disposition": "missing_model"
+    },
+    {
+      "payload": {
+        "data": null,
+        "errors": [
+          {
+            "message": "synthetic-private-error"
+          }
+        ]
+      },
+      "group_info_disposition": "missing_model"
+    },
+    {
+      "payload": {
+        "data": {}
+      },
+      "group_info_disposition": "empty_data"
+    },
+    {
+      "payload": {
+        "data": {
+          "unrelated": true
+        }
+      },
+      "group_info_disposition": "invoke_group_callback"
+    },
+    {
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {}
+        },
+        "errors": [
+          {
+            "message": "synthetic-private-error"
+          }
+        ]
+      },
+      "group_info_disposition": "server_errors"
+    },
+    {
+      "payload": {
+        "data": {},
+        "errors": [
+          {}
+        ]
+      },
+      "group_info_disposition": "server_errors"
+    },
+    {
+      "payload": {
+        "data": {},
+        "errors": [
+          "opaque-error"
+        ]
+      },
+      "group_info_disposition": "invalid_error_entry"
+    },
+    {
+      "payload": {
+        "data": {},
+        "errors": [
+          null
+        ]
+      },
+      "group_info_disposition": "invalid_error_entry"
+    },
+    {
+      "payload": {
+        "data": []
+      },
+      "group_info_disposition": "unsupported_parts"
+    },
+    {
+      "payload": {
+        "data": {
+          "unrelated": true
+        },
+        "errors": {}
+      },
+      "group_info_disposition": "unsupported_parts"
+    }
+  ]
+}

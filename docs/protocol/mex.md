@@ -293,3 +293,106 @@ string-free constructors/provider/storage helpers remain unanchored. Those
 require caller-based/manual review on a new APK. A full proposed recipe must
 remain blocked until every mapping is resolved; class names alone are not a
 safe patch. Selected persisted-ID asset files remain separately diffable.
+
+## Group callback gate and inherited dispatch (2026-10-07)
+
+**Confirmed static**, same SHA-pinned APK 37.71:
+[callback/source evidence](mex-callback-evidence.txt) closes the path from the
+ordinary IQ handler to group-specific success/error decisions. `Laf.A02`
++01cc..01ec creates Lac, then LbK. LbK delegates response handling to 8lU;
+8lU classifies through 9pA/1xl and calls Lac's BEE/BEC/BEF/BEW. Complete
+transport classification remains untraced, but BEE is the traced successful-IQ
+path into LaT.A01/A02 and typed model construction through LaT.A00.
+
+LaT.A00 uses the requested class constructor accepting JSONObject (2FU for
+group info), creates LZv with the parsed errors, and wraps constructor failures
+as MEj. Missing/null data cannot construct 2FU: its constructor asserts a
+nonnull JSONObject. LZv's flags describe nonempty model/errors, not complete
+group validity. Lac.BEE+00e4..0116 constructs I1H when errors are nonempty,
+records its flags and invokes Okj.C2c. A nonempty error array therefore does
+not alone stop this transport handler from calling C2c.
+
+The direct superclass of 9Np is
+`com.whatsapp.infra.graphql.pando.BaseMexCallback` (read from DEX class_def_item,
+not guessed from naming). Its C2c invokes A03. A03 constructs I1H for errors,
+calls the subclass A06, and invokes subclass A04 only if A06 permits it and the
+model is nonempty. With no errors it also requires the nonempty-model flag.
+`I1H.<init>`+004c..0064 calls JSONArray.getJSONObject for **every** error entry;
+an array of strings/null/primitives accepted by the earlier field reader is
+not a valid typed callback error summary. Exceptions have separate telemetry/
+product-failure paths; they are not converted into successful group data.
+
+**Confirmed group policy:** 9Np selector 0 A06 returns false at +0028..002c,
+including after its normal cleanup, numeric code inspection, 429 timestamp
+update and scheduled runnable. The +0088 branch returns to +0028. Thus any
+nonempty valid error array blocks this group's A04, even with partial data.
+Do not import another callback's partial-data policy. When A04 does run, it
+cleans up again and consults 0yw.A0x at +0b1a. Only an enabled gate invokes
+0Xo.A03 and applies its result via 0yw.A0X; disabled goes to return-void.
+The feature predicate, complete converter and resulting state transitions
+remain unfinished. An invocation of A04 is not a successful snapshot update.
+
+**Implemented offline, live unverified:** MexJsonResponse now exposes
+`group_info_disposition()`, with states `unsupported_parts`, `missing_model`,
+`invalid_error_entry`, `server_errors`, `empty_data`, `invoke_group_callback`.
+Invalid local field states stay unsupported; Java exceptions/fallback text
+are not fabricated. On supported shapes, model presence precedes error-summary
+construction, all error entries must be objects, any valid nonempty errors
+block the callback, and empty error-free model skips it. Nonempty error-free
+model reaches the callback, even if it lacks xwa2_group_query_by_id: downstream
+conversion must still validate that field and all required group structure.
+[Ten synthetic gate cases](../../crates/whatsapp-api/fixtures/mex/2.26.37.71-group-callback.json)
+include partial data plus errors and unrelated nonempty data to distinguish
+callback invocation from full group validity.
+
+```sh
+target/debug/xtask mex-response-inspect --input /private/mex-result.json --group-info
+```
+
+The optional flag adds only `group_info_disposition` to the existing redacted
+summary. It does not run callbacks, change rate guards, settle actions, open an
+account, apply group state or send anything. Complete Java exception/model/
+Android coercion behavior and durable MEX dispatch remain unfinished.
+
+### Error-code schema and converter getter boundaries
+
+**Confirmed static, not yet ported:** `1xn.A05` selects through I1H.A00, then
+AuM.AYS; it does not simply read the first error. I1H.A00's ranking references
+`summary`, critical severity and MGQ exception classes; complete selection
+semantics remain unported. `IWF` stores root and optional extensions object.
+AYS uses extensions.error_code when that object exists; otherwise root code
+with explicit default `0x1a1` (417). A missing extensions.error_code does not
+fall back to root code. A00 reads extensions.backoff as a string, A02 compares
+extensions.severity with critical ignoring case, A01 reads root path array
+(default empty), Act reads root message. Android optInt/optString coercion and
+implicit defaults, ranking and backoff duration are not reproduced here.
+I1H.A06 reads the selected IWF extensions.is_retryable with explicit default
+true (also true when no eligible extensions object exists). That source flag
+is not wired into this runtime. These getters establish neither an automatic
+retry nor a server wait duration.
+
+[Additional group getters](mex-group-getters-evidence.txt) preserve partial
+converter tracing: ADv.A06 reads id and calls 1bo.A01; A04 reads creation_time
+through LbE.A0F/8kY.A0B; A05 reads subject.creation_time through nullable A0E;
+A03 reads announcement_version through A0E/0Gv.A01 with literal default zero.
+A07 reads creator-related pn through 90x.A0H; A08 reads subject.creator.pn;
+A09 follows A0H into 8kU.A1A/A0d. The underlying 90x.A0H field name and those
+producer/parsing helper semantics remain untraced, so no creator identity or
+time units are claimed from these calls alone. LbE.A04 uses optJSONObject and
+reflective construction, returning null on construction failure; A0E treats
+missing/null as nullable while A0F uses optString. A03 has a string-specific
+0CK.A08 long parse then optLong fallback, and A0G combines integer/boolean
+coercion. LbE.A01 error_code enum and A02 retry_after_seconds getters are not
+proof that these fields occur in the top-level GraphQL error array or group
+reply. This partial research adds no numeric-code or retry-duration CLI output.
+
+### Inspecting inherited methods
+
+`apk-smali` now prints `# extends: <descriptor>` from the checked direct
+superclass_idx at DEX class_def_item+8; NO_INDEX prints `<none>`. Malformed type
+indices refuse rather than inventing a parent. This is metadata, not method
+resolution: inspect the printed parent separately for a missing inherited body.
+A method filter that matches no bodies retains the existing explicit diagnostic.
+A synthetic class-table regression covers distinct parent, NO_INDEX and invalid
+index; the real 9Np constructor inspection demonstrated the callback linkage.
+Versioned bundle formatting remains unchanged by this CLI-only header addition.

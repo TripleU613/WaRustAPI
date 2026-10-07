@@ -1005,3 +1005,21 @@ exactly (17 files/58,761 bytes); cached comparison took 0.0064 seconds.
 Remap has six unique/four unanchored/two ambiguous mappings, with no complete
 proposal claimed. Repository hygiene and staged whitespace passed. No account
 opened, outgoing intent queued or live request sent.
+
+MEX group callback gate is now ported: supported partial data with nonempty
+error objects blocks the success callback; nonobject error entries and absent
+model are explicit separate states. Nonempty error-free data can invoke the
+callback, but its feature gate and complete group conversion/application are
+unfinished. --group-info exposes the redacted disposition offline. Direct DEX
+superclass inspection closed the inherited 9Np/BaseMexCallback C2c path;
+IWF error fields and partial ADv getters remain source-only where not ported.
+See [callback trace](docs/protocol/mex.md#group-callback-gate-and-inherited-dispatch-2026-10-07).
+No account opened, intent queued or live request sent.
+
+Callback-gate validation: workspace/all-feature tests **609 passed**, default
+CLI **24 passed**, CLI reference regeneration, OpenAPI library-symbol check,
+strict workspace/all-target/all-feature Clippy, warning-free Rustdoc and
+formatting passed. Actual CLI probes covered **20** callback cases across
+result/update plus **10** default-mode checks with redacted output. The existing
+37.71 MEX bundle reproduced exactly (**17 files, 58,761 bytes**). No live
+account request or group-state application occurred in this chunk.
