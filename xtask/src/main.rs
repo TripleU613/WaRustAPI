@@ -121,6 +121,12 @@ enum Cmd {
         #[arg(long, default_value = "INTERACTIVE")]
         context: String,
     },
+    /// Inspect one MEX role string offline using the actual Rust converter.
+    MexRoleInspect {
+        /// Server enum string; omission exercises the missing-value fallback.
+        #[arg(long)]
+        value: Option<String>,
+    },
     /// Inspect MEX JSON presence offline; group-numbers explicitly reveals numeric metadata.
     MexResponseInspect {
         /// Private JSON payload file (local budget 1 MiB).
@@ -287,6 +293,7 @@ fn main() -> ExitCode {
             id,
             context,
         } => mex::preview(&queries, &chat, &id, &context),
+        Cmd::MexRoleInspect { value } => mex::inspect_role(value.as_deref()),
         Cmd::MexResponseInspect {
             input,
             child,

@@ -1385,3 +1385,15 @@ refusals. Oracle runtime was checked directly as Temurin **21.0.12.1+1 LTS**;
 479 corpus cases and all 65,536 UTF-16 units matched that independent reference.
 Hygiene (540 local links) and staged whitespace passed. No saved account,
 identity, action state or live server request was changed.
+
+MEX role prerequisite now implemented: nullable-string conversion preserves
+four enum states and exact empty/admin/superadmin member strings, with 91
+independent host Java reference cases. Offline `mex-role-inspect` exposes the
+actual helper without private input echo. Complete Android Unicode parity,
+participant phash/list/JID/alias/history conversion and durable application
+remain unfinished; no live test or saved account mutation. See
+[role/participant trace](protocol/mex.md#participant-role-conversion-and-member-map-boundaries-2026-10-07).
+Role-port checks: 619 workspace/all-feature tests, 24 default CLI tests, strict
+Clippy, warning-free Rustdoc, formatting, CLI reference/API-symbol checks;
+90 actual CLI inputs plus omission (NUL is library-only: OS argv restriction).
+Repository hygiene checked 548 local links; staged whitespace passed.

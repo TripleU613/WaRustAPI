@@ -254,6 +254,19 @@ pub fn preview(queries: &Path, chat: &str, id: &str, context: &str) -> Result<()
     Ok(())
 }
 
+/// Prints only recognized enum and stored-role output, never the supplied text.
+pub fn inspect_role(value: Option<&str>) -> Result<(), String> {
+    let role = whatsapp_api::transport::mex::GroupParticipantRole::from_server_value(value);
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&serde_json::json!({
+            "offline_only": true, "role": role, "member_role": role.member_role(),
+        }))
+        .map_err(|_| "cannot encode MEX role inspection")?
+    );
+    Ok(())
+}
+
 /// Summary is redacted; explicit group_numbers opts into numeric content only.
 /// Raw JSON/group names/server error content never appear in diagnostics.
 pub fn inspect_response(

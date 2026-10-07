@@ -704,3 +704,77 @@ target/debug/xtask mex-response-inspect --input /private/mex-result.json \
 No HTTP route, account access, action settlement, retry, live MEX dispatch,
 group-state mutation or feature selection is added. Full converter/state
 application remains unfinished; this ports its confirmed numeric component.
+
+## Participant role conversion and member-map boundaries (2026-10-07)
+
+**Confirmed static, APK 2.26.37.71 / SHA above:** selected instructions are
+preserved in [participant/role evidence](mex-participant-role-evidence.txt),
+with the two consuming branches in
+[ADv.A0D](mex-group-converter-evidence.txt).
+`2hu.<clinit>` defines ordinal 0 `UNSET_OR_UNRECOGNIZED_ENUM_VALUE` (A05),
+1 `ADMIN_MEMBER` (A02), 2 `MEMBER` (A03), 3 `SUPERADMIN_MEMBER` (A04).
+`LbE.A0C` reads `JSONObject.optString`, then `4R7.A00` uppercases using
+`Locale.US` and calls `Enum.valueOf`. Null/empty returns the supplied default;
+IllegalArgumentException at code units 0008..0017 goes to default at 0017.
+There is **no trimming**. `3c5.A0C` returns ordinal. In both ADv.A0D branches,
+ordinal 1 becomes `admin`, 3 `superadmin`, and 0/2 an empty string. In particular
++00ce's ordinal-2 branch skips the assignments; treating ordinal 2 as admin
+would grant the wrong role.
+
+**Implemented:** `GroupParticipantRole::from_server_value(Option<&str>)`
+and `member_role()` preserve four enum states and the exact stored strings.
+Unknown and ordinary members stay distinguishable. This is a nullable-string
+conversion, not a port of arbitrary JSONObject.optString value coercion.
+It will be reused by the full converter; no existing membership is mutated.
+Inspect the actual Rust helper without account access:
+
+```sh
+cargo run --locked -p xtask -- mex-role-inspect --value admin_member
+cargo run --locked -p xtask -- mex-role-inspect
+```
+
+Output is `offline_only`, recognized `role`, and `member_role`; supplied text
+is not echoed. Missing, empty and unknown resolve to `unrecognized`.
+
+**Executed host reference / inferred platform compatibility:** the
+[Java oracle](MexJavaNumericOracle.java) `roles` mode uses APK-derived enum
+names and ordinals but executes Java Locale.US/Enum.valueOf independently of
+Rust. [91 cases](../../crates/whatsapp-api/fixtures/mex/2.26.37.71-role-reference.json)
+include mixed/per-letter casing, missing-string equivalent empty, padding,
+control characters, unknown values, dotless i, long s, dotted capital I,
+sharp s, fullwidth letters and supplementary characters. Actual host runtime
+is Temurin **21.0.12.1+1 LTS**. Rust's Unicode uppercase matches this corpus.
+This is not Android/APK execution; complete Android SDK/Unicode parity remains
+**unknown**. Regenerate with javac, then Base64 UTF-8 inputs one per line:
+`java -cp <compiled-directory> MexJavaNumericOracle roles`.
+
+**Confirmed guard, not yet implemented:** ADv.A0D returns null immediately
+when `participants_phash_match` is true. That is a retain-members path, not an
+empty replacement. `LbE.A0G` derives a default from JSONObject.optInt via
+`Ayj.A1R` (**integer exactly 1**, not any nonzero value), then calls optBoolean
+with that default. Full Android integer/boolean coercion remains **unknown in
+our Rust port**; a simplistic nonzero rule would contradict the APK.
+
+**Confirmed participant routing:** ADv.A0D iterates edges, skips missing
+participant models and unknown typename hashes, then uses two branches:
+`0xc745b457` reads `jid` through nullable `0hj.A03`, whose strict parser
+`0hj.A00` requires BotJid (`0hh`). `0x2179873b` reads `id` through strict
+`0D8.A01` requiring UserJid; it also carries optional lid, pn and display_name.
+Role is read from the **edge**, not the nested participant. Positive join_time
+and nullable group_history_sent are carried. LinkedHashMap.put means duplicate
+primary JIDs replace values while retaining insertion position. All 453,954
+escaped DEX strings were previously searched and none matched either hash;
+wire typename strings remain **unknown**, not invented from class names.
+
+`0hh.getServer` returns **bot**, `getType` returns 26. Its constructor accepts
+1..20 ASCII digits with **no leading zero**. This is distinct from the Unicode
+decimal-digit support of the numeric metadata helper. Generic `0D1.A00`
+recognizes the bot domain by hash then exact string equality, and also has a
+bot device-wrapper branch (`Ble`); its complete agent/device semantics remain
+unported. Existing Rust JID modeling is unchanged in this role chunk.
+`32q.A00` filters optional alias objects to their concrete LID/phone/interop
+classes before passing reordered arguments to `31c.<init>`. The constructor's
+field mapping, edge-list helper, history coercion, alias feature maps, full
+participant converter and durable application remain **unknown/unimplemented**.
+No alias observations or identity pins may be manufactured from this trace.
+No saved account was opened and no live request was sent.

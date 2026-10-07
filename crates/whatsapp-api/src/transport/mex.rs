@@ -14,6 +14,48 @@ use crate::{
 /// Local JSON response budget. This is not an APK/server payload limit.
 pub const MAX_JSON_RESPONSE_BYTES: usize = 1024 * 1024;
 
+/// APK 37.71 MEX participant role, before conversion to the stored member role.
+/// Missing/unknown values remain distinct from `Member`, despite sharing its
+/// empty stored role. This does not establish a complete participant record.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum GroupParticipantRole {
+    /// 2hu ordinal 0, also the fallback supplied to LbE.A0C.
+    Unrecognized,
+    /// 2hu ordinal 1.
+    Admin,
+    /// 2hu ordinal 2.
+    Member,
+    /// 2hu ordinal 3.
+    Superadmin,
+}
+
+impl GroupParticipantRole {
+    /// Convert a nullable server string without trimming it.
+    /// APK 37.71 LbE.A0C -> 4R7.A00 uses Locale.US uppercase and Enum.valueOf,
+    /// catching IllegalArgumentException to the supplied 2hu.A05 fallback.
+    /// Rust Unicode uppercase is checked against the committed host-Java cases;
+    /// complete Android Unicode-version parity remains unverified.
+    pub fn from_server_value(value: Option<&str>) -> Self {
+        match value.map(str::to_uppercase).as_deref() {
+            Some("ADMIN_MEMBER") => Self::Admin,
+            Some("MEMBER") => Self::Member,
+            Some("SUPERADMIN_MEMBER") => Self::Superadmin,
+            _ => Self::Unrecognized,
+        }
+    }
+
+    /// Exact role string selected by both participant branches in ADv.A0D.
+    /// Ordinal 2 skips the admin assignments; it is the ordinary member.
+    pub const fn member_role(self) -> &'static str {
+        match self {
+            Self::Admin => "admin",
+            Self::Superadmin => "superadmin",
+            Self::Member | Self::Unrecognized => "",
+        }
+    }
+}
+
 /// Presence/type of one selected JSON response field.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -463,6 +505,29 @@ pub fn group_info_request(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn participant_role_matches_independent_java_reference() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/mex/2.26.37.71-role-reference.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            let role = GroupParticipantRole::from_server_value(case["value"].as_str());
+            assert_eq!(serde_json::to_value(role).unwrap(), case["role"]);
+            assert_eq!(role.member_role(), case["member_role"].as_str().unwrap());
+        }
+        assert_eq!(
+            GroupParticipantRole::from_server_value(None),
+            GroupParticipantRole::Unrecognized
+        );
+        // Losing this distinction would hide unknown server values even though
+        // the APK deliberately gives both variants the same stored-role string.
+        assert_ne!(
+            GroupParticipantRole::Member,
+            GroupParticipantRole::Unrecognized
+        );
+    }
+
     use super::*;
     use crate::binary::{AttributeValue, NodeContent};
 

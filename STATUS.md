@@ -1091,3 +1091,18 @@ refusals. Oracle runtime was checked directly as Temurin **21.0.12.1+1 LTS**;
 479 corpus cases and all 65,536 UTF-16 units matched that independent reference.
 Hygiene (540 local links) and staged whitespace passed. No saved account,
 identity, action state or live server request was changed.
+
+MEX participant roles now convert in Rust from nullable server strings using
+APK 37.71 enum/fallback and exact member role mapping; missing/unknown versus
+ordinary member stay distinct. Offline `mex-role-inspect` invokes that helper
+without echoing input. Independent host Java reference contains 91 cases;
+full Android Unicode-version parity remains unverified. The same trace
+confirms phash retain semantics and separate BotJid/UserJid participant paths;
+full member conversion and durable application remain unfinished. See
+[role/participant evidence](docs/protocol/mex.md#participant-role-conversion-and-member-map-boundaries-2026-10-07).
+No saved account, identity, queued action or live request changed.
+Role-port validation: 619 workspace/all-feature tests and 24 default CLI tests,
+strict Clippy, warning-free Rustdoc, formatting, CLI reference and API symbol
+checks passed. Actual CLI matched 90 representable oracle inputs plus omission;
+the embedded-NUL case is library-tested because OS argv cannot carry NUL.
+Hygiene checked 548 local links and staged whitespace passed.

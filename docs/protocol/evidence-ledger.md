@@ -668,3 +668,22 @@ JSON lexical acceptance and live Android SDK/Unicode behavior remain unverified.
 [Interpretation/reference links](mex.md#numeric-group-projection-into-rust-2026-10-07)
 separate APK evidence, host reference, inferred coercion and unknown runtime.
 No account opened, saved identity/state mutated or live request sent.
+
+## comparison.mex.participant_roles_37_71 — 2026-10-07
+
+**Confirmed static**, APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+2hu enum ordinals, LbE.A0C -> 4R7.A00 Locale.US/no-trim/typed fallback,
+3c5.A0C ordinal and both ADv.A0D stored-role branches. Rust nullable-string
+role helper now preserves member versus unrecognized; CLI mex-role-inspect
+prints only recognized output. **Executed independent host reference:** 91
+Java cases, Temurin 21.0.12.1+1 LTS; complete Android Unicode parity unknown.
+[Findings and boundaries](mex.md#participant-role-conversion-and-member-map-boundaries-2026-10-07),
+[attributable selected bytecode](mex-participant-role-evidence.txt).
+
+Additional **confirmed static prerequisites**, unported: matching phash returns
+null/retain; Ayj.A1R true only for integer 1; BotJid branch/domain bot/type26,
+1..20 ASCII digits/no leading zero; separate strict UserJid branch and optional
+aliases; 32q alias type filtering. Unknown wire typename hash preimages are
+preserved as unknown; complete list/coercion/device/result-field mapping and
+member application are unfinished. No saved account or live server touched.

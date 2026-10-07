@@ -1,0 +1,680 @@
+APK build: 2.26.37.71
+APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed static selected participant/role/JID helpers; not live values.
+Offsets are method-relative bytes; catch ranges are code units.
+Regenerate using xtask apk-smali --class X/<class> --method <name> [--exceptions].
+
+=== mex-participant-role-enum.txt ===
+
+# class: LX/2hu;
+# extends: Ljava/lang/Enum;
+
+.method public <clinit>(V)  # .registers 6
+    0000..0004  const-string  v1, "UNSET_OR_UNRECOGNIZED_ENUM_VALUE"
+    0004..0006  const/4  v0, #0x0
+    0006..000a  new-instance  v5, LX/2hu;
+    000a..0010  invoke-direct  {v5, v1, v0, v1}, LX/2hu;-><init>(VLIL)
+    0010..0014  sput-object  v5, LX/2hu;->A05:LX/2hu;
+    0014..0018  const-string  v1, "ADMIN_MEMBER"
+    0018..001a  const/4  v0, #0x1
+    001a..001e  new-instance  v4, LX/2hu;
+    001e..0024  invoke-direct  {v4, v1, v0, v1}, LX/2hu;-><init>(VLIL)
+    0024..0028  sput-object  v4, LX/2hu;->A02:LX/2hu;
+    0028..002c  const-string  v1, "MEMBER"
+    002c..002e  const/4  v0, #0x2
+    002e..0032  new-instance  v3, LX/2hu;
+    0032..0038  invoke-direct  {v3, v1, v0, v1}, LX/2hu;-><init>(VLIL)
+    0038..003c  sput-object  v3, LX/2hu;->A03:LX/2hu;
+    003c..0040  const-string  v0, "SUPERADMIN_MEMBER"
+    0040..0042  const/4  v2, #0x3
+    0042..0046  new-instance  v1, LX/2hu;
+    0046..004c  invoke-direct  {v1, v0, v2, v0}, LX/2hu;-><init>(VLIL)
+    004c..0050  sput-object  v1, LX/2hu;->A04:LX/2hu;
+    0050..0052  const/4  v0, #0x4
+    0052..0056  new-array  v0, v0, [LX/2hu;
+    0056..005c  invoke-static  {v5, v4, v3, v0}, LX/1xk;->A1N(VLLLL)
+    005c..0060  aput-object  v1, v0, v2
+    0060..0064  sput-object  v0, LX/2hu;->A01:[LX/2hu;
+    0064..006a  invoke-static  {v0}, LX/05g;->A00(LL)
+    006a..006c  move-result-object  v0
+    006c..0070  sput-object  v0, LX/2hu;->A00:LX/05j;
+    0070..0072  return-void
+.end method
+
+.method public <init>(VLIL)  # .registers 4
+    0000..0006  invoke-direct  {v0, v1, v2}, Ljava/lang/Enum;-><init>(VLI)
+    0006..000a  iput-object  v3, v0, LX/2hu;->serverValue:Ljava/lang/String;
+    000a..000c  return-void
+.end method
+
+.method public valueOf(LL)  # .registers 2
+    0000..0004  const-class  v0, LX/2hu;
+    0004..000a  invoke-static  {v0, v1}, Ljava/lang/Enum;->valueOf(LLL)
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/2hu;
+    0010..0012  return-object  v0
+.end method
+
+.method public values(L)  # .registers 1
+    0000..0004  sget-object  v0, LX/2hu;->A01:[LX/2hu;
+    0004..000a  invoke-virtual  {v0}, Ljava/lang/Object;->clone(L)
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, [LX/2hu;
+    0010..0012  return-object  v0
+.end method
+
+.method public toString(L)  # .registers 2
+    0000..0004  iget-object  v0, v1, LX/2hu;->serverValue:Ljava/lang/String;
+    0004..0006  return-object  v0
+.end method
+
+
+=== mex-role-reader.txt ===
+
+# class: LX/LbE;
+# extends: Ljava/lang/Object;
+
+.method public A0C(LLL)  # .registers 4
+    0000..0004  iget-object  v0, v1, LX/LbE;->A00:Lorg/json/JSONObject;
+    0004..000a  invoke-virtual  {v0, v2}, Lorg/json/JSONObject;->optString(LL)
+    000a..000c  move-result-object  v0
+    000c..0012  invoke-static  {v0, v3}, LX/4R7;->A00(LLL)
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-static  {v0}, LX/00h;->A06(VL)
+    001a..001c  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+
+=== mex-role-ordinal-helper.txt ===
+
+# class: LX/3c5;
+# extends: Ljava/lang/Object;
+
+.method public A0C(ILI)  # .registers 2
+    0000..0006  invoke-static  {v0, v1}, LX/00h;->A0A(VLI)
+    0006..000c  invoke-virtual  {v0}, Ljava/lang/Enum;->ordinal(I)
+    000c..000e  move-result  v0
+    000e..0010  return  v0
+.end method
+
+
+=== mex-role-resolution.txt ===
+
+# class: LX/4R7;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLL)  # .registers 4
+    0000..0004  if-eqz  v2, +0x17
+    0004..000a  invoke-virtual  {v2}, Ljava/lang/String;->length(I)
+    000a..000c  move-result  v0
+    000c..0010  if-eqz  v0, +0x11
+    0010..0016  invoke-virtual  {v3}, Ljava/lang/Object;->getClass(L)
+    0016..0018  move-result-object  v1
+    0018..001c  sget-object  v0, Ljava/util/Locale;->US:Ljava/util/Locale;
+    001c..0022  invoke-virtual  {v2, v0}, Ljava/lang/String;->toUpperCase(LL)
+    0022..0024  move-result-object  v0
+    0024..002a  invoke-static  {v1, v0}, Ljava/lang/Enum;->valueOf(LLL)
+    002a..002c  move-result-object  v0
+    002c..002e  return-object  v0
+    002e..0030  return-object  v3
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/IllegalArgumentException; code_units 0008..0017 -> 0017
+.end method
+
+
+=== mex-phash-boolean-helper.txt ===
+
+# class: LX/LbE;
+# extends: Ljava/lang/Object;
+
+.method public A0G(ZL)  # .registers 4
+    0000..0004  iget-object  v1, v2, LX/LbE;->A00:Lorg/json/JSONObject;
+    0004..000a  invoke-virtual  {v1, v3}, Lorg/json/JSONObject;->optInt(IL)
+    000a..000c  move-result  v0
+    000c..0012  invoke-static  {v0}, LX/Ayj;->A1R(ZI)
+    0012..0014  move-result  v0
+    0014..001a  invoke-virtual  {v1, v3, v0}, Lorg/json/JSONObject;->optBoolean(ZLZ)
+    001a..001c  move-result  v0
+    001c..001e  return  v0
+.end method
+
+
+=== mex-numeric-boolean.txt ===
+
+# class: LX/Ayj;
+# extends: Ljava/lang/Object;
+
+.method public A1R(ZI)  # .registers 2
+    0000..0002  const/4  v0, #0x1
+    0002..0006  if-eq  v1, v0, +0x3
+    0006..0008  const/4  v0, #0x0
+    0008..000a  return  v0
+.end method
+
+
+=== mex-participant-jid-first-helper.txt ===
+
+# class: LX/0hj;
+# extends: Ljava/lang/Object;
+
+.method public A03(LL)  # .registers 5
+    0000..0002  const/4  v2, #0x0
+    0002..0006  if-eqz  v4, +0x1a
+    0006..000c  invoke-virtual  {v4}, Ljava/lang/String;->length(I)
+    000c..000e  move-result  v0
+    000e..0012  if-eqz  v0, +0x14
+    0012..0018  invoke-static  {v4}, LX/0hj;->A00(LL)
+    0018..001a  move-result-object  v1
+    001a..001c  goto  +0x7
+    001c..001e  move-exception  v0
+    001e..0022  new-instance  v1, LX/0Zd;
+    0022..0028  invoke-direct  {v1, v0}, LX/0Zd;-><init>(VL)
+    0028..002c  instance-of  v0, v1, LX/0Zd;
+    002c..0030  if-nez  v0, +0x3
+    0030..0032  move-object  v2, v1
+    0032..0036  check-cast  v2, LX/0hh;
+    0036..0038  return-object  v2
+.end method
+
+
+=== mex-participant-jid-second-helper.txt ===
+
+# class: LX/0D8;
+# extends: Ljava/lang/Object;
+
+.method public A01(LL)  # .registers 3
+    0000..0004  sget-object  v0, Lcom/whatsapp/infra/core/jid/Jid;->Companion:LX/0D1;
+    0004..000a  invoke-static  {v2}, LX/0D1;->A00(LL)
+    000a..000c  move-result-object  v1
+    000c..0010  instance-of  v0, v1, Lcom/whatsapp/infra/core/jid/UserJid;
+    0010..0014  if-eqz  v0, +0x7
+    0014..0018  check-cast  v1, Lcom/whatsapp/infra/core/jid/UserJid;
+    0018..001c  if-eqz  v1, +0x3
+    001c..001e  return-object  v1
+    001e..0022  new-instance  v0, LX/08j;
+    0022..0028  invoke-direct  {v0, v2}, LX/08j;-><init>(VL)
+    0028..002a  throw  v0
+.end method
+
+
+=== mex-participant-first-parser.txt ===
+
+# class: LX/0hj;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 3
+    0000..0004  sget-object  v0, Lcom/whatsapp/infra/core/jid/Jid;->Companion:LX/0D1;
+    0004..000a  invoke-static  {v2}, LX/0D1;->A00(LL)
+    000a..000c  move-result-object  v1
+    000c..0010  instance-of  v0, v1, LX/0hh;
+    0010..0014  if-eqz  v0, +0x7
+    0014..0018  check-cast  v1, LX/0hh;
+    0018..001c  if-eqz  v1, +0x3
+    001c..001e  return-object  v1
+    001e..0022  const-string  v1, "invalid bot jid: "
+    0022..0026  new-instance  v0, Ljava/lang/StringBuilder;
+    0026..002c  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(VL)
+    002c..0032  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(LL)
+    0032..0038  invoke-virtual  {v0}, Ljava/lang/Object;->toString(L)
+    0038..003a  move-result-object  v1
+    003a..003e  new-instance  v0, LX/08j;
+    003e..0044  invoke-direct  {v0, v1}, LX/08j;-><init>(VL)
+    0044..0046  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+
+=== mex-participant-first-type.txt ===
+
+# class: LX/0hh;
+# extends: LX/0ZX;
+
+.method public <init>(VL)  # .registers 8
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v7, v0}, LX/00h;->A0A(VLI)
+    0008..000e  invoke-direct  {v6, v7}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(VL)
+    000e..0012  iput-object  v7, v6, LX/0hh;->A00:Ljava/lang/String;
+    0012..0018  invoke-virtual  {v7}, Ljava/lang/String;->length(I)
+    0018..001a  move-result  v1
+    001a..001c  const/4  v0, #0x1
+    001c..0020  const-string  v5, "Invalid BotJid: "
+    0020..0024  if-lt  v1, v0, +0x5d
+    0024..0028  const/16  v0, #0x14
+    0028..002c  if-gt  v1, v0, +0x59
+    002c..0030  const-string  v0, "0"
+    0030..0032  const/4  v4, #0x0
+    0032..0038  invoke-virtual  {v7, v0}, Ljava/lang/String;->startsWith(ZL)
+    0038..003a  move-result  v0
+    003a..003e  if-nez  v0, +0x39
+    003e..0044  invoke-virtual  {v7}, Ljava/lang/String;->toCharArray(L)
+    0044..0046  move-result-object  v3
+    0046..004c  invoke-static  {v3}, LX/00h;->A06(VL)
+    004c..004e  array-length  v2, v3
+    004e..0052  if-ge  v4, v2, +0x2e
+    0052..0056  aget-char  v1, v3, v4
+    0056..005a  const/16  v0, #0x30
+    005a..0060  invoke-static  {v1, v0}, LX/00h;->A00(III)
+    0060..0062  move-result  v0
+    0062..0066  if-ltz  v0, +0xd
+    0066..006a  const/16  v0, #0x39
+    006a..0070  invoke-static  {v1, v0}, LX/00h;->A00(III)
+    0070..0072  move-result  v0
+    0072..0076  if-gtz  v0, +0x5
+    0076..007a  add-int/lit8  v4, v4, #0x1
+    007a..007c  goto  -0x16
+    007c..0080  new-instance  v1, Ljava/lang/StringBuilder;
+    0080..0086  invoke-direct  {v1, v5}, Ljava/lang/StringBuilder;-><init>(VL)
+    0086..008c  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(LL)
+    008c..0090  const-string  v0, " - must be numeric only"
+    0090..0096  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    0096..009c  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    009c..009e  move-result-object  v1
+    009e..00a2  new-instance  v0, LX/08j;
+    00a2..00a8  invoke-direct  {v0, v1}, LX/08j;-><init>(VL)
+    00a8..00aa  throw  v0
+    00aa..00ac  return-void
+    00ac..00b0  new-instance  v1, Ljava/lang/StringBuilder;
+    00b0..00b6  invoke-direct  {v1, v5}, Ljava/lang/StringBuilder;-><init>(VL)
+    00b6..00bc  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(LL)
+    00bc..00c0  const-string  v0, " - cannot start with 0"
+    00c0..00c6  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    00c6..00cc  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    00cc..00ce  move-result-object  v1
+    00ce..00d2  new-instance  v0, LX/08j;
+    00d2..00d8  invoke-direct  {v0, v1}, LX/08j;-><init>(VL)
+    00d8..00da  throw  v0
+    00da..00de  new-instance  v1, Ljava/lang/StringBuilder;
+    00de..00e4  invoke-direct  {v1, v5}, Ljava/lang/StringBuilder;-><init>(VL)
+    00e4..00ea  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(LL)
+    00ea..00ee  const-string  v0, " - length must be between 1 and 20"
+    00ee..00f4  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    00f4..00fa  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    00fa..00fc  move-result-object  v1
+    00fc..0100  new-instance  v0, LX/08j;
+    0100..0106  invoke-direct  {v0, v1}, LX/08j;-><init>(VL)
+    0106..0108  throw  v0
+.end method
+
+
+=== mex-participant-result-builder.txt ===
+
+# class: LX/32q;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLLLLLLL)  # .registers 13
+    0000..0002  move-object  v3, v7
+    0002..0004  move-object  v2, v6
+    0004..0006  const/4  v1, #0x0
+    0006..000c  invoke-static  {v6}, LX/0DE;->A0Z(ZL)
+    000c..000e  move-result  v0
+    000e..0012  if-eqz  v0, +0x30
+    0012..0016  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.LidUserJid"
+    0016..001c  invoke-static  {v6, v0}, LX/00h;->A0D(VLL)
+    001c..0020  check-cast  v2, LX/0ZY;
+    0020..0026  invoke-static  {v7}, LX/0DE;->A0e(ZL)
+    0026..0028  move-result  v0
+    0028..002c  if-eqz  v0, +0x21
+    002c..0030  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.PhoneUserJid"
+    0030..0036  invoke-static  {v7, v0}, LX/00h;->A0D(VLL)
+    0036..003a  check-cast  v3, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    003a..0040  invoke-static  {v4}, LX/0DE;->A0X(ZL)
+    0040..0042  move-result  v0
+    0042..0046  if-eqz  v0, +0x8
+    0046..0048  move-object  v1, v4
+    0048..004c  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.InteropUserJid"
+    004c..0052  invoke-static  {v4, v0}, LX/00h;->A0D(VLL)
+    0052..0056  new-instance  v0, LX/31c;
+    0056..0058  move-object  v4, v5
+    0058..005a  move-object  v5, v8
+    005a..005c  move-object  v6, v9
+    005c..005e  move-object  v8, v10
+    005e..0060  move-object  v7, v11
+    0060..0062  move-object  v9, v12
+    0062..0068  invoke-direct/range  {v0..v9}, LX/31c;-><init>(VLLLLLLLLL)
+    0068..006a  return-object  v0
+    006a..006c  move-object  v3, v1
+    006c..006e  goto  -0x19
+    006e..0070  move-object  v2, v1
+    0070..0072  goto  -0x28
+.end method
+
+
+=== mex-bot-jid-class.txt ===
+
+# class: LX/0hh;
+# extends: LX/0ZX;
+
+.method public <clinit>(V)  # .registers 1
+    0000..0004  new-instance  v0, LX/0hj;
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    000a..000e  sput-object  v0, LX/0hh;->A01:LX/0hj;
+    000e..0012  new-instance  v0, LX/0hl;
+    0012..0018  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0018..001c  sput-object  v0, LX/0hh;->CREATOR:Landroid/os/Parcelable$Creator;
+    001c..001e  return-void
+.end method
+
+.method public <init>(VL)  # .registers 8
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v7, v0}, LX/00h;->A0A(VLI)
+    0008..000e  invoke-direct  {v6, v7}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(VL)
+    000e..0012  iput-object  v7, v6, LX/0hh;->A00:Ljava/lang/String;
+    0012..0018  invoke-virtual  {v7}, Ljava/lang/String;->length(I)
+    0018..001a  move-result  v1
+    001a..001c  const/4  v0, #0x1
+    001c..0020  const-string  v5, "Invalid BotJid: "
+    0020..0024  if-lt  v1, v0, +0x5d
+    0024..0028  const/16  v0, #0x14
+    0028..002c  if-gt  v1, v0, +0x59
+    002c..0030  const-string  v0, "0"
+    0030..0032  const/4  v4, #0x0
+    0032..0038  invoke-virtual  {v7, v0}, Ljava/lang/String;->startsWith(ZL)
+    0038..003a  move-result  v0
+    003a..003e  if-nez  v0, +0x39
+    003e..0044  invoke-virtual  {v7}, Ljava/lang/String;->toCharArray(L)
+    0044..0046  move-result-object  v3
+    0046..004c  invoke-static  {v3}, LX/00h;->A06(VL)
+    004c..004e  array-length  v2, v3
+    004e..0052  if-ge  v4, v2, +0x2e
+    0052..0056  aget-char  v1, v3, v4
+    0056..005a  const/16  v0, #0x30
+    005a..0060  invoke-static  {v1, v0}, LX/00h;->A00(III)
+    0060..0062  move-result  v0
+    0062..0066  if-ltz  v0, +0xd
+    0066..006a  const/16  v0, #0x39
+    006a..0070  invoke-static  {v1, v0}, LX/00h;->A00(III)
+    0070..0072  move-result  v0
+    0072..0076  if-gtz  v0, +0x5
+    0076..007a  add-int/lit8  v4, v4, #0x1
+    007a..007c  goto  -0x16
+    007c..0080  new-instance  v1, Ljava/lang/StringBuilder;
+    0080..0086  invoke-direct  {v1, v5}, Ljava/lang/StringBuilder;-><init>(VL)
+    0086..008c  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(LL)
+    008c..0090  const-string  v0, " - must be numeric only"
+    0090..0096  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    0096..009c  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    009c..009e  move-result-object  v1
+    009e..00a2  new-instance  v0, LX/08j;
+    00a2..00a8  invoke-direct  {v0, v1}, LX/08j;-><init>(VL)
+    00a8..00aa  throw  v0
+    00aa..00ac  return-void
+    00ac..00b0  new-instance  v1, Ljava/lang/StringBuilder;
+    00b0..00b6  invoke-direct  {v1, v5}, Ljava/lang/StringBuilder;-><init>(VL)
+    00b6..00bc  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(LL)
+    00bc..00c0  const-string  v0, " - cannot start with 0"
+    00c0..00c6  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    00c6..00cc  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    00cc..00ce  move-result-object  v1
+    00ce..00d2  new-instance  v0, LX/08j;
+    00d2..00d8  invoke-direct  {v0, v1}, LX/08j;-><init>(VL)
+    00d8..00da  throw  v0
+    00da..00de  new-instance  v1, Ljava/lang/StringBuilder;
+    00de..00e4  invoke-direct  {v1, v5}, Ljava/lang/StringBuilder;-><init>(VL)
+    00e4..00ea  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(LL)
+    00ea..00ee  const-string  v0, " - length must be between 1 and 20"
+    00ee..00f4  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    00f4..00fa  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    00fa..00fc  move-result-object  v1
+    00fc..0100  new-instance  v0, LX/08j;
+    0100..0106  invoke-direct  {v0, v1}, LX/08j;-><init>(VL)
+    0106..0108  throw  v0
+.end method
+
+.method public describeContents(I)  # .registers 2
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+.end method
+
+.method public getServer(L)  # .registers 2
+    0000..0004  const-string  v0, "bot"
+    0004..0006  return-object  v0
+.end method
+
+.method public getType(I)  # .registers 2
+    0000..0004  const/16  v0, #0x1a
+    0004..0006  return  v0
+.end method
+
+.method public writeToParcel(VLI)  # .registers 4
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00h;->A0A(VLI)
+    0008..000c  iget-object  v0, v1, LX/0hh;->A00:Ljava/lang/String;
+    000c..0012  invoke-virtual  {v2, v0}, Landroid/os/Parcel;->writeString(VL)
+    0012..0014  return-void
+.end method
+
+
+=== mex-primary-jid-dispatch.txt ===
+
+# class: LX/0D1;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 11
+    0000..0004  sget-object  v9, Lcom/whatsapp/infra/core/jid/Jid;->JID_FACTORY:LX/0D2;
+    0004..0008  if-eqz  v10, +0x1af
+    0008..000c  iget-object  v2, v9, LX/0D2;->A00:LX/0D3;
+    000c..0012  invoke-virtual  {v2, v10}, LX/0D3;->get(LL)
+    0012..0014  move-result-object  v0
+    0014..0018  check-cast  v0, Lcom/whatsapp/infra/core/jid/Jid;
+    0018..001c  if-nez  v0, +0x181
+    001c..0022  invoke-static  {v10}, Landroid/text/TextUtils;->isEmpty(ZL)
+    0022..0024  move-result  v0
+    0024..0028  if-nez  v0, +0x197
+    0028..002c  const/16  v0, #0x40
+    002c..0032  invoke-virtual  {v10, v0}, Ljava/lang/String;->lastIndexOf(II)
+    0032..0034  move-result  v1
+    0034..0036  const/4  v0, #0xff
+    0036..003a  if-eq  v1, v0, +0x145
+    003a..003e  if-eqz  v1, +0x180
+    003e..0044  invoke-virtual  {v10}, Ljava/lang/String;->length(I)
+    0044..0046  move-result  v0
+    0046..004a  if-eq  v1, v0, +0x17a
+    004a..004c  const/4  v0, #0x0
+    004c..0052  invoke-virtual  {v10, v0, v1}, Ljava/lang/String;->substring(LII)
+    0052..0054  move-result-object  v7
+    0054..0058  add-int/lit8  v0, v1, #0x1
+    0058..005e  invoke-virtual  {v10, v0}, Ljava/lang/String;->substring(LI)
+    005e..0060  move-result-object  v3
+    0060..0066  invoke-virtual  {v3}, Ljava/lang/String;->hashCode(I)
+    0066..0068  move-result  v0
+    0068..006e  sparse-switch  v0, payload@0x374, cases=[-1673355044:@0x7a, -1618876223:@0xa4, -1211484089:@0xf4, -605206432:@0xfa, 97735:@0x100, 107143:@0x106, 3045982:@0x10c, 3116421:@0x12a, 3556308:@0x148, 1102578873:@0x168, 1180231958:@0x2fa, 1958063037:@0x184], default@0x6e
+    006e..0072  new-instance  v0, LX/08j;
+    0072..0078  invoke-direct  {v0, v10}, LX/08j;-><init>(VL)
+    0078..007a  throw  v0
+    007a..0080  const-string/jumbo  v0, "s.whatsapp.net"
+    0080..0086  invoke-virtual  {v3, v0}, Ljava/lang/String;->equals(ZL)
+    0086..0088  move-result  v0
+    0088..008c  if-eqz  v0, -0xd
+    008c..0090  const-string  v0, "gdpr"
+    0090..0096  invoke-virtual  {v7, v0}, Ljava/lang/String;->equals(ZL)
+    0096..0098  move-result  v0
+    0098..009c  if-eqz  v0, +0x80
+    009c..00a0  sget-object  v0, LX/Gyk;->A00:LX/Gyk;
+    00a0..00a4  goto/16  +0x13a
+    00a4..00a8  const-string  v0, "broadcast"
+    00a8..00ae  invoke-virtual  {v3, v0}, Ljava/lang/String;->equals(ZL)
+    00ae..00b0  move-result  v0
+    00b0..00b4  if-eqz  v0, -0x21
+    00b4..00b8  const-string  v0, "location"
+    00b8..00be  invoke-virtual  {v7, v0}, Ljava/lang/String;->equals(ZL)
+    00be..00c0  move-result  v0
+    00c0..00c4  if-eqz  v0, +0x6
+    00c4..00c8  sget-object  v0, LX/Blf;->A00:LX/Blf;
+    00c8..00cc  goto/16  +0x126
+    00cc..00d2  const-string/jumbo  v0, "status"
+    00d2..00d8  invoke-virtual  {v7, v0}, Ljava/lang/String;->equals(ZL)
+    00d8..00da  move-result  v0
+    00da..00de  if-eqz  v0, +0x6
+    00de..00e2  sget-object  v0, LX/8oR;->A00:LX/8oR;
+    00e2..00e6  goto/16  +0x119
+    00e6..00ea  new-instance  v0, LX/9Ln;
+    00ea..00f0  invoke-direct  {v0, v7}, LX/9Ln;-><init>(VL)
+    00f0..00f4  goto/16  +0x112
+    00f4..00f8  const-string  v0, "hosted"
+    00f8..00fa  goto  +0x48
+    00fa..00fe  const-string  v0, "hosted.lid"
+    00fe..0100  goto  +0x45
+    0100..0104  const-string  v0, "bot"
+    0104..0106  goto  +0x42
+    0106..010a  const-string  v0, "lid"
+    010a..010c  goto  +0x3f
+    010c..0110  const-string  v0, "call"
+    0110..0116  invoke-virtual  {v3, v0}, Ljava/lang/String;->equals(ZL)
+    0116..0118  move-result  v0
+    0118..011c  if-eqz  v0, -0x55
+    011c..0120  new-instance  v0, LX/Blh;
+    0120..0126  invoke-direct  {v0, v7}, LX/Blh;-><init>(VL)
+    0126..012a  goto/16  +0xf7
+    012a..012e  const-string  v0, "g.us"
+    012e..0134  invoke-virtual  {v3, v0}, Ljava/lang/String;->equals(ZL)
+    0134..0136  move-result  v0
+    0136..013a  if-eqz  v0, -0x64
+    013a..013e  new-instance  v0, LX/1bn;
+    013e..0144  invoke-direct  {v0, v7}, LX/1bn;-><init>(VL)
+    0144..0148  goto/16  +0xe8
+    0148..014e  const-string/jumbo  v0, "temp"
+    014e..0154  invoke-virtual  {v3, v0}, Ljava/lang/String;->equals(ZL)
+    0154..0156  move-result  v0
+    0156..015a  if-eqz  v0, -0x74
+    015a..015e  new-instance  v0, LX/9Lo;
+    015e..0164  invoke-direct  {v0, v7}, LX/9Lo;-><init>(VL)
+    0164..0168  goto/16  +0xd8
+    0168..016c  const-string  v0, "newsletter"
+    016c..0172  invoke-virtual  {v3, v0}, Ljava/lang/String;->equals(ZL)
+    0172..0174  move-result  v0
+    0174..0178  if-eqz  v0, -0x83
+    0178..017e  invoke-virtual  {v9, v7, v3}, LX/0D2;->A03(LLL)
+    017e..0180  move-result-object  v0
+    0180..0184  goto/16  +0xca
+    0184..0188  const-string  v0, "interop"
+    0188..018e  invoke-virtual  {v3, v0}, Ljava/lang/String;->equals(ZL)
+    018e..0190  move-result  v0
+    0190..0194  if-nez  v0, +0x4
+    0194..0198  goto/16  -0x93
+    0198..019c  const/16  v0, #0x2e
+    019c..01a2  invoke-virtual  {v7, v0}, Ljava/lang/String;->lastIndexOf(II)
+    01a2..01a4  move-result  v8
+    01a4..01a8  const/16  v0, #0x3a
+    01a8..01ae  invoke-virtual  {v7, v0}, Ljava/lang/String;->lastIndexOf(II)
+    01ae..01b0  move-result  v6
+    01b0..01b2  const/4  v5, #0xff
+    01b2..01b6  if-ne  v6, v5, +0xa
+    01b6..01ba  if-ne  v8, v5, +0x8
+    01ba..01c0  invoke-static  {v7, v3}, LX/0D2;->A02(LLL)
+    01c0..01c2  move-result-object  v0
+    01c2..01c6  goto/16  +0xa9
+    01c6..01cc  invoke-virtual  {v7}, Ljava/lang/String;->length(I)
+    01cc..01ce  move-result  v1
+    01ce..01d2  add-int/lit8  v0, v1, #0xff
+    01d2..01d6  if-eq  v6, v0, +0xae
+    01d6..01da  if-eq  v8, v0, +0xac
+    01da..01de  if-eq  v6, v5, +0x3
+    01de..01e0  move  v1, v6
+    01e0..01e4  if-eq  v8, v5, +0x14
+    01e4..01e8  if-lt  v8, v6, +0x4
+    01e8..01ec  if-ne  v6, v5, +0x10
+    01ec..01ee  const/4  v4, #0x0
+    01ee..01f4  invoke-virtual  {v7, v4, v8}, Ljava/lang/String;->substring(LII)
+    01f4..01f6  move-result-object  v0
+    01f6..01fc  invoke-virtual  {v9, v0, v3}, LX/0D2;->A04(LLL)
+    01fc..01fe  move-result-object  v1
+    01fe..0202  if-eq  v6, v5, +0xf
+    0202..0206  add-int/lit8  v0, v6, #0x1
+    0206..0208  goto  +0x3
+    0208..020a  move  v8, v1
+    020a..020c  goto  -0xf
+    020c..0212  invoke-virtual  {v7, v0}, Ljava/lang/String;->substring(LI)
+    0212..0214  move-result-object  v0
+    0214..021a  invoke-static  {v0}, Ljava/lang/Integer;->parseInt(IL)
+    021a..021c  move-result  v4
+    021c..0220  const-string  v0, "lid"
+    0220..0226  invoke-virtual  {v0, v3}, Ljava/lang/String;->equals(ZL)
+    0226..0228  move-result  v0
+    0228..022c  if-eqz  v0, +0x8
+    022c..0230  new-instance  v0, LX/0e1;
+    0230..0236  invoke-direct  {v0, v1, v4}, LX/0e1;-><init>(VLI)
+    0236..0238  goto  +0x6f
+    0238..023c  const-string  v0, "hosted.lid"
+    023c..0242  invoke-virtual  {v0, v3}, Ljava/lang/String;->equals(ZL)
+    0242..0244  move-result  v0
+    0244..0248  if-eqz  v0, +0xa
+    0248..024c  check-cast  v1, LX/0ZY;
+    024c..0250  new-instance  v0, LX/Bli;
+    0250..0256  invoke-direct  {v0, v1, v4}, LX/Bli;-><init>(VLI)
+    0256..0258  goto  +0x5f
+    0258..025c  const-string  v0, "interop"
+    025c..0262  invoke-virtual  {v0, v3}, Ljava/lang/String;->equals(ZL)
+    0262..0264  move-result  v0
+    0264..0268  if-eqz  v0, +0xa
+    0268..026c  check-cast  v1, LX/9Lm;
+    026c..0270  new-instance  v0, LX/1SK;
+    0270..0276  invoke-direct  {v0, v1, v4}, LX/1SK;-><init>(VLI)
+    0276..0278  goto  +0x4f
+    0278..027c  const-string  v0, "hosted"
+    027c..0282  invoke-virtual  {v0, v3}, Ljava/lang/String;->equals(ZL)
+    0282..0284  move-result  v0
+    0284..0288  if-eqz  v0, +0x8
+    0288..028c  new-instance  v0, LX/Blg;
+    028c..0292  invoke-direct  {v0, v1, v4}, LX/Blg;-><init>(VLI)
+    0292..0294  goto  +0x41
+    0294..0298  const-string  v0, "bot"
+    0298..029e  invoke-virtual  {v0, v3}, Ljava/lang/String;->equals(ZL)
+    029e..02a0  move-result  v0
+    02a0..02a4  if-eqz  v0, +0xa
+    02a4..02a8  check-cast  v1, LX/0hh;
+    02a8..02ac  new-instance  v0, LX/Ble;
+    02ac..02b2  invoke-direct  {v0, v1, v4}, LX/Ble;-><init>(VLI)
+    02b2..02b4  goto  +0x31
+    02b4..02b8  new-instance  v0, LX/0DO;
+    02b8..02be  invoke-direct  {v0, v1, v4}, LX/0DO;-><init>(VLI)
+    02be..02c0  goto  +0x2b
+    02c0..02c6  invoke-static  {v10}, LX/0D2;->A00(LL)
+    02c6..02c8  move-result-object  v0
+    02c8..02cc  if-nez  v0, +0x26
+    02cc..02d2  const-string/jumbo  v0, "status_me"
+    02d2..02d8  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(ZL)
+    02d8..02da  move-result  v0
+    02da..02de  if-eqz  v0, +0x5
+    02de..02e2  sget-object  v0, LX/0DR;->A00:LX/0DR;
+    02e2..02e4  goto  +0x19
+    02e4..02e8  const-string  v0, "lid_me"
+    02e8..02ee  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(ZL)
+    02ee..02f0  move-result  v0
+    02f0..02f4  if-eqz  v0, +0x2b
+    02f4..02f8  sget-object  v0, LX/1xv;->A00:LX/1xv;
+    02f8..02fa  goto  +0xe
+    02fa..02fe  const-string  v0, "interop.g.us"
+    02fe..0304  invoke-virtual  {v3, v0}, Ljava/lang/String;->equals(ZL)
+    0304..0306  move-result  v0
+    0306..030a  if-eqz  v0, -0x14c
+    030a..030e  new-instance  v0, LX/Gym;
+    030e..0314  invoke-direct  {v0, v7}, LX/Gym;-><init>(VL)
+    0314..031a  invoke-virtual  {v2, v10, v0}, LX/0D3;->put(LLL)
+    031a..0320  invoke-static  {v0}, LX/00h;->A06(VL)
+    0320..0322  return-object  v0
+    0322..0326  new-instance  v0, LX/08j;
+    0326..032c  invoke-direct  {v0, v7}, LX/08j;-><init>(VL)
+    032c..032e  throw  v0
+    032e..0332  new-instance  v0, LX/08j;
+    0332..0338  invoke-direct  {v0, v7}, LX/08j;-><init>(VL)
+    0338..033a  throw  v0
+    033a..033e  new-instance  v0, LX/08j;
+    033e..0344  invoke-direct  {v0, v10}, LX/08j;-><init>(VL)
+    0344..0346  throw  v0
+    0346..034a  new-instance  v0, LX/08j;
+    034a..0350  invoke-direct  {v0, v10}, LX/08j;-><init>(VL)
+    0350..0352  throw  v0
+    0352..0356  const-string  v1, "<empty>"
+    0356..035a  new-instance  v0, LX/08j;
+    035a..0360  invoke-direct  {v0, v1}, LX/08j;-><init>(VL)
+    0360..0362  throw  v0
+    0362..0366  const-string  v1, "null"
+    0366..036a  new-instance  v0, LX/08j;
+    036a..0370  invoke-direct  {v0, v1}, LX/08j;-><init>(VL)
+    0370..0372  throw  v0
+    0372..0374  nop
+    0374..03d8  sparse-switch-payload  size=12
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/NumberFormatException; code_units 0106..010e -> 0191
+.end method

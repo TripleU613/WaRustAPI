@@ -1,0 +1,462 @@
+{
+  "apk_version": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "reference": "Executed host Temurin 21.0.12.1+1 LTS; Locale.US uppercase/Enum.valueOf. Names/ordinals from 2hu, role strings from ADv.A0D. Not Android/APK execution.",
+  "cases": [
+    {
+      "value": "",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "unknown",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "admin",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "superadmin",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "private-unknown-role-sentinel",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": " ADMIN_MEMBER",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "ADMIN_MEMBER ",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "ADMIN_MEMBER\n",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "\tMEMBER",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "MEM BER",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "MEMBER\u0000",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "ADMİN_MEMBER",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "admın_member",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "ſuperadmin_member",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "ſUPERADMIN_MEMBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "ßuperadmin_member",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "ＡＤＭＩＮ＿ＭＥＭＢＥＲ",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "😀",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "ADMIN_MEMBER",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "admin_member",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "AdMiN_MeMbEr",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "aDMIN_MEMBER",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "AdMIN_MEMBER",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "ADmIN_MEMBER",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "ADMiN_MEMBER",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "ADMIn_MEMBER",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "ADMIN_mEMBER",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "ADMIN_MeMBER",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "ADMIN_MEmBER",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "ADMIN_MEMbER",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "ADMIN_MEMBeR",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "ADMIN_MEMBEr",
+      "role": "admin",
+      "member_role": "admin"
+    },
+    {
+      "value": "MEMBER",
+      "role": "member",
+      "member_role": ""
+    },
+    {
+      "value": "member",
+      "role": "member",
+      "member_role": ""
+    },
+    {
+      "value": "MeMbEr",
+      "role": "member",
+      "member_role": ""
+    },
+    {
+      "value": "mEMBER",
+      "role": "member",
+      "member_role": ""
+    },
+    {
+      "value": "MeMBER",
+      "role": "member",
+      "member_role": ""
+    },
+    {
+      "value": "MEmBER",
+      "role": "member",
+      "member_role": ""
+    },
+    {
+      "value": "MEMbER",
+      "role": "member",
+      "member_role": ""
+    },
+    {
+      "value": "MEMBeR",
+      "role": "member",
+      "member_role": ""
+    },
+    {
+      "value": "MEMBEr",
+      "role": "member",
+      "member_role": ""
+    },
+    {
+      "value": "SUPERADMIN_MEMBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "superadmin_member",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SuPeRaDmIn_mEmBeR",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "sUPERADMIN_MEMBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SuPERADMIN_MEMBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SUpERADMIN_MEMBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SUPeRADMIN_MEMBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SUPErADMIN_MEMBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SUPERaDMIN_MEMBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SUPERAdMIN_MEMBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SUPERADmIN_MEMBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SUPERADMiN_MEMBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SUPERADMIn_MEMBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SUPERADMIN_mEMBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SUPERADMIN_MeMBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SUPERADMIN_MEmBER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SUPERADMIN_MEMbER",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SUPERADMIN_MEMBeR",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "SUPERADMIN_MEMBEr",
+      "role": "superadmin",
+      "member_role": "superadmin"
+    },
+    {
+      "value": "unset_or_unrecognized_enum_value",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UnSeT_Or_uNrEcOgNiZeD_EnUm_vAlUe",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "uNSET_OR_UNRECOGNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UnSET_OR_UNRECOGNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNsET_OR_UNRECOGNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSeT_OR_UNRECOGNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSEt_OR_UNRECOGNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_oR_UNRECOGNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_Or_UNRECOGNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_uNRECOGNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UnRECOGNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNrECOGNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNReCOGNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNREcOGNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECoGNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOgNIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGnIZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGNiZED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGNIzED_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGNIZeD_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGNIZEd_ENUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGNIZED_eNUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGNIZED_EnUM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGNIZED_ENuM_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGNIZED_ENUm_VALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGNIZED_ENUM_vALUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGNIZED_ENUM_VaLUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGNIZED_ENUM_VAlUE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGNIZED_ENUM_VALuE",
+      "role": "unrecognized",
+      "member_role": ""
+    },
+    {
+      "value": "UNSET_OR_UNRECOGNIZED_ENUM_VALUe",
+      "role": "unrecognized",
+      "member_role": ""
+    }
+  ]
+}
