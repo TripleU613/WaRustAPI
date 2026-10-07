@@ -1310,3 +1310,84 @@ Final local checks for this trace: generated CLI reference, five OpenAPI
 coverage/HTTP/library-symbol tests, formatting, staged whitespace and repository
 hygiene (383 local links) passed. No live group notification application was
 validated.
+
+
+## Truncated snapshot protection and completion boundary (2026-10-07)
+
+**Confirmed/local bug and correction:** `parse_group` accepted a reply with
+`truncated=true` as a complete snapshot. `record_info_reply` and queued
+`apply_reply` then replaced the saved members, potentially emitting false
+participant removals or replacing the subject with missing data. Both paths
+now reject a truncated reply with a specific refresh diagnostic before any
+snapshot/event write. `parse_group` returns None for such an element. A saved
+settled action retains its response and lacks the ingestion marker; reopening
+and another local ingestion remain diagnosable rather than reporting completion.
+No automatic request, retry, reservation reset or notification ACK is added.
+
+**Evidence:** APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+`ADs.A0C` 002e..0078 returns id/size before building full group data, as
+recorded in the preceding [response evidence](group-refresh-response-evidence.txt).
+[Application evidence](group-refresh-application-evidence.txt) adds both
+`A9s` constructors: `(VLL)` sets A03=true and AAO=null (000e..001a), while
+`(VLLL)` sets A03=false and stores full AAO (000c..0018).
+`8lQ.A01` separates A03=true entries from full ones (016a..018e); full
+entries reach `8lQ.A00`, which requires AAO (0004..000c) and throws
+"Expected group data info but got null" at 01b6..01c4. This independently
+confirms that truncated results cannot replace full membership.
+
+**Local policy:** absent `truncated` or case-insensitive false permits full
+parsing; case-insensitive true is rejected. Any other or non-text value is
+rejected as an invalid truncated flag. The latter is stronger than Java
+Boolean.parseBoolean's false-for-other-strings behavior, not a server rule.
+The `size` attribute is not treated as a member list. Full empty-member results
+remain parseable; this guard does not infer truncation just from an empty list.
+The complete APK membership/attribute parser is still unfinished.
+
+Reproduce without an account or network:
+`cargo test --locked -p whatsapp-api --all-features truncated_replies_preserve_members_events_and_saved_action_after_restart`.
+This regression seeds two members, submits a flagged partial result containing
+one member through both direct and saved-action paths, reopens the actual
+encrypted store, and checks exact snapshot equality, one original creation
+event, retained reply and absent ingestion marker. A second test covers
+absent/false/mixed-case/invalid flags. Existing full-result tests continue to
+cover normal replacement and events. `group list` exposes the refusal through
+its existing ingestion path; `actions` inspects the saved action. Refresh must
+be an explicit supported operation until the APK batch flow is implemented.
+
+**Confirmed/static completion handoff:** the job creates `AjR` selector 12,
+not the earlier guessed Au1 callback. `AjR.invoke` 0e62..0f62 handles `9R6`
+with A9t, reports nonempty errors, passes its result list/context/round/params
+to `8lQ.A01` (0f14..0f2e), combines the error map with returned pending map
+and processed set, and completes AzY (0f30..0f5e). `8lY.<init>` stores
+A00=first map, A01=second map, A02=processed set. Searches for A03.invoke
+and Au1.invoke returned no method bodies. A03's recovered constructor stores
+two integers; it is not evidence of an invoke callback.
+
+`8lQ.A01` distinguishes legacy and later-round/context paths. It applies full
+entries separately, preserves truncated JID/size pairs in the pending map
+(02ec..0312), and constructs 8lY with pending map plus processed set
+(0314..0326). Some contexts enqueue FetchTruncatedGroupsJob (029a..02bc).
+The full-round and participating-groups context conditions must be retained;
+this is not a reason to auto-query indefinitely or clear a partial batch.
+
+**Confirmed/static, still partial application trace:** `8lQ.A00` passes
+AAO fields into `0yw.A0U` at 0184..018a and later invokes `246.A02`
+(018e..01b4). The full underlying commit/membership transaction is still
+untraced. `0yw.A0t` calls 8lc.A01, 8l2.A00, 8l3.A01, per-group 8ld.A00
+and 1BZ.A0L; those database semantics remain **unknown**. Do not label it
+proven dirty-state deletion from the method name or call alone.
+`0yw.A0u` is labelled onGroupSyncSucceeded and compares stored group JIDs
+against the passed set (0034..008a), then reaches feature-gated absent-group
+operations behind 0x2c53 (008a..0108). This broader reconciliation cannot be
+copied onto an arbitrary partial batch. Exact deletion/state semantics and
+active feature value remain **unknown**.
+
+No saved account was opened or live query was sent for this correction. The
+live occurrence of a truncated reply against our client is unverified.
+Validation: 571 workspace/all-feature tests, 24 default-feature CLI tests,
+strict workspace/all-target/all-feature Clippy and warning-free Rustdoc passed.
+
+Final checks: generated CLI reference, all five OpenAPI coverage/HTTP/library
+checks, formatting, staged whitespace and repository hygiene (387 local links)
+passed. The added non-text-flag regression also passed independently.

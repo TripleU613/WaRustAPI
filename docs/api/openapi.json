@@ -4698,7 +4698,7 @@
           "Groups"
         ],
         "summary": "List the stored group snapshots",
-        "description": "Apply settled replies and list the stored group snapshots (numbers masked).",
+        "description": "Apply settled replies and list the stored group snapshots (numbers masked). Full-snapshot ingestion recognizes the wire group truncated flag: case-insensitive true refuses with a refresh diagnostic, preserving existing members/events and the saved response without an ingestion marker or automatic retry. Missing or case-insensitive false allows full parsing; other/non-text flags refuse as explicit local validation stronger than APK Boolean.parseBoolean. parse_group returns no complete snapshot for rejected flags; record_info_reply and queued ingest return an error. Truncated size is not membership. Applies to direct group fan-out info replies as well. Live truncated-reply behavior is unverified; no HTTP route added.",
         "operationId": "listGroups",
         "x-cli": "whatsapp-cli group list",
         "x-transport": [
@@ -5009,7 +5009,7 @@
           "Groups"
         ],
         "summary": "Queue an interactive group info query",
-        "description": "Queue an interactive group info query (offline; a session transmits).",
+        "description": "Queue an interactive group info query (offline; a session transmits). Full-snapshot ingestion recognizes the wire group truncated flag: case-insensitive true refuses with a refresh diagnostic, preserving existing members/events and the saved response without an ingestion marker or automatic retry. Missing or case-insensitive false allows full parsing; other/non-text flags refuse as explicit local validation stronger than APK Boolean.parseBoolean. parse_group returns no complete snapshot for rejected flags; record_info_reply and queued ingest return an error. Truncated size is not membership. Applies to direct group fan-out info replies as well. Live truncated-reply behavior is unverified; no HTTP route added.",
         "operationId": "groupInfo",
         "x-cli": "whatsapp-cli group info",
         "x-transport": [

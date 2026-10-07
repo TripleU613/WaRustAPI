@@ -279,11 +279,33 @@ fn key(jid: &str) -> String {
     format!("group:{jid}")
 }
 
-/// Parse a `group` element into a snapshot.
+fn require_complete_group(node: &Node) -> Result<()> {
+    // APK 37.71 ADs.A0C 002e..0078 returns a size-only A9s for truncated
+    // groups, before constructing AAO. Replacing membership would invent removals.
+    if let Some(flag) = node.get_attr("truncated") {
+        let flag = flag
+            .as_text()
+            .ok_or_else(|| invalid("invalid group truncated flag"))?;
+        if flag.eq_ignore_ascii_case("true") {
+            return Err(invalid(
+                "truncated group reply requires refresh; existing snapshot preserved",
+            ));
+        }
+        // Local validation is stricter than Java Boolean.parseBoolean, which
+        // treats any string other than case-insensitive true as false.
+        if !flag.eq_ignore_ascii_case("false") {
+            return Err(invalid("invalid group truncated flag"));
+        }
+    }
+    Ok(())
+}
+
+/// Parse a complete `group` element; truncated or invalid flags yield no snapshot.
 pub fn parse_group(node: &Node) -> Option<GroupSnapshot> {
     if node.description != "group" {
         return None;
     }
+    require_complete_group(node).ok()?;
     let jid = attr_string(node, "id")?;
     let jid = if jid.contains('@') {
         jid
@@ -322,12 +344,17 @@ pub fn parse_group(node: &Node) -> Option<GroupSnapshot> {
 /// Save the snapshot from a `w:g2` info reply obtained outside the durable
 /// action queue, emitting the same `GroupCreated`/`GroupUpdated` events the
 /// queued path does. Returns false when the reply carries no `group` element.
+/// Truncated replies return an error and preserve the current snapshot.
 ///
 /// A fan-out needs the membership inside the one connection it is allowed, so
 /// it issues [`info_request`] itself; the result must still land in the same
 /// snapshot the rest of the client reads.
 pub fn record_info_reply(store: &ProtocolStore, reply: &Node) -> Result<bool> {
-    let Some(group) = reply.child("group").and_then(parse_group) else {
+    let Some(node) = reply.child("group") else {
+        return Ok(false);
+    };
+    require_complete_group(node)?;
+    let Some(group) = parse_group(node) else {
         return Ok(false);
     };
     save_snapshot(store, group)?;
@@ -387,8 +414,11 @@ pub fn ingest(store: &ProtocolStore) -> Result<usize> {
 }
 
 fn apply_reply(store: &ProtocolStore, kind: &str, action_id: &str, reply: &Node) -> Result<()> {
-    if let Some(group) = reply.child("group").and_then(parse_group) {
-        return save_snapshot(store, group);
+    if let Some(node) = reply.child("group") {
+        require_complete_group(node)?;
+        if let Some(group) = parse_group(node) {
+            return save_snapshot(store, group);
+        }
     }
     if kind == "group-invite" {
         let Some(code) = reply.child("invite").and_then(|n| attr_string(n, "code")) else {
@@ -1236,6 +1266,104 @@ mod tests {
 
     fn text(node: &Node, name: &str) -> Option<String> {
         attr_string(node, name)
+    }
+
+    #[test]
+    fn truncated_replies_preserve_members_events_and_saved_action_after_restart() {
+        let (dir, s) = store();
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let complete = Node::new("iq").children(vec![
+            Node::new("group")
+                .attr("id", group.clone())
+                .attr("subject", "Original")
+                .children(vec![
+                    Node::new("participant").attr("jid", "15550000001@s.whatsapp.net"),
+                    Node::new("participant").attr("jid", "15550000002@s.whatsapp.net"),
+                ]),
+        ]);
+        assert!(record_info_reply(&s, &complete).unwrap());
+        let before = serde_json::to_value(get(&s, &group).unwrap()).unwrap();
+        // APK ADs.A0C returns the id/size result before reading full metadata.
+        // Even a partial participant child must not become a complete snapshot.
+        let partial = Node::new("group")
+            .attr("id", group.clone())
+            .attr("truncated", "true")
+            .attr("size", "2")
+            .children(vec![
+                Node::new("participant").attr("jid", "15550000001@s.whatsapp.net"),
+            ]);
+        assert!(parse_group(&partial).is_none());
+        let id = queue_info(&s, &group).unwrap();
+        let _ = super::super::actions::reserve_pending(&s).unwrap();
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result")
+            .children(vec![partial]);
+        assert!(
+            record_info_reply(&s, &reply)
+                .unwrap_err()
+                .to_string()
+                .contains("existing snapshot preserved")
+        );
+        assert!(super::super::actions::record_reply(&s, &reply).unwrap());
+        assert!(
+            ingest(&s)
+                .unwrap_err()
+                .to_string()
+                .contains("requires refresh")
+        );
+        drop(s);
+        let s = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("p.redb"),
+            account_id: AccountId::new("a").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9u8; 32]))),
+            create: false,
+        })
+        .unwrap();
+        assert!(ingest(&s).is_err(), "unprocessed reply remains diagnosable");
+        assert_eq!(
+            serde_json::to_value(get(&s, &group).unwrap()).unwrap(),
+            before
+        );
+        assert_eq!(super::super::actions::reply(&s, &id).unwrap(), Some(reply));
+        let marker: Option<bool> = s
+            .read(|tx| {
+                tx.get_json(
+                    Table::Checkpoints,
+                    format!("{INGESTED_PREFIX}{id}").as_bytes(),
+                    1,
+                )
+            })
+            .unwrap();
+        assert!(marker.is_none());
+        let events = s
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("truncated-test")?,
+                    crate::model::ids::EventCursor::START,
+                    64,
+                )
+            })
+            .unwrap();
+        assert_eq!(events.events.len(), 1);
+        assert_eq!(events.events[0].event.kind(), "group_created");
+    }
+
+    #[test]
+    fn truncated_flag_validation_keeps_complete_results_available() {
+        let group = Node::new("group").attr("id", "120363000000000001@g.us");
+        assert!(parse_group(&group).is_some());
+        for flag in ["false", "FALSE"] {
+            assert!(parse_group(&group.clone().attr("truncated", flag)).is_some());
+        }
+        for flag in ["true", "TRUE", "", "unknown", "0"] {
+            let node = group.clone().attr("truncated", flag);
+            assert!(parse_group(&node).is_none());
+            assert!(require_complete_group(&node).is_err());
+        }
+        let non_text = group.attr("truncated", Jid::parse("g.us").unwrap());
+        assert!(parse_group(&non_text).is_none());
+        assert!(require_complete_group(&non_text).is_err());
     }
 
     #[test]

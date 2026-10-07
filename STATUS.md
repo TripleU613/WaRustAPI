@@ -596,3 +596,19 @@ Final local checks for this trace: generated CLI reference, five OpenAPI
 coverage/HTTP/library-symbol tests, formatting, staged whitespace and repository
 hygiene (383 local links) passed. No live group notification application was
 validated.
+
+
+Truncated group snapshot correction (2026-10-07, **offline**): direct and
+queued info reply ingestion now refuse truncated group data before replacing
+members or emitting removal events. The original snapshot/events and saved
+reply survive restart; no ingestion marker or automatic retry is created.
+Invalid non-boolean truncation flags also refuse as local policy. APK A9s/8lQ
+separate full and truncated processing; the underlying full membership commit
+and dirty-state database semantics remain untraced. Notification handling is
+still incomplete. [Correction and evidence](docs/protocol/groups.md#truncated-snapshot-protection-and-completion-boundary-2026-10-07).
+571 workspace/all-feature and 24 default CLI tests, strict Clippy and Rustdoc
+passed. No account was opened or live request sent.
+
+Final checks: generated CLI reference, all five OpenAPI coverage/HTTP/library
+checks, formatting, staged whitespace and repository hygiene (387 local links)
+passed. The added non-text-flag regression also passed independently.
