@@ -1895,6 +1895,7 @@ pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error
             participants,
         } => queued(groups::queue_create(&store, subject, &jids(participants)?)?),
         super::GroupCmd::Info { chat } => queued(groups::queue_info(&store, &Jid::parse(chat)?)?),
+        super::GroupCmd::Refresh { chats } => queued(groups::queue_refresh(&store, &jids(chats)?)?),
         super::GroupCmd::Subject { chat, text } => {
             queued(groups::queue_subject(&store, &Jid::parse(chat)?, text)?)
         }

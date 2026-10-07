@@ -18,9 +18,10 @@ use serde::{Deserialize, Serialize};
 const XMLNS: &str = "w:g2";
 const INGESTED_PREFIX: &str = "groups-ingested:";
 const PENDING_PREFIX: &str = "groups-pending-ingestion:";
-const ACTION_KINDS: [&str; 10] = [
+const ACTION_KINDS: [&str; 11] = [
     "group-create",
     "group-info",
+    "group-refresh",
     "group-subject",
     "group-description",
     "group-add",
@@ -219,6 +220,41 @@ pub fn info_request(group: &Jid, id: &str) -> Result<Node> {
         require_group(group)?,
         vec![Node::new("query").attr("request", "interactive")],
     ))
+}
+
+/// Queue one classic batch query. APK 37.71 EJy selector 4 emits this
+/// per_group_dirty_recovery context; 9QE selector 11 emits group@jid.
+/// No automatic retry or truncated follow-up is queued by this operation.
+pub fn queue_refresh(store: &ProtocolStore, groups: &[Jid]) -> Result<String> {
+    if groups.is_empty() || groups.len() > 256 {
+        return Err(invalid(
+            "batch refresh requires one to 256 groups (local bound)",
+        ));
+    }
+    let mut unique = std::collections::BTreeSet::new();
+    let mut children = Vec::new();
+    for group in groups {
+        require_group(group)?;
+        if group.user.is_empty() || group.is_ad() {
+            return Err(invalid("batch refresh requires concrete group identities"));
+        }
+        if !unique.insert(group.to_string()) {
+            return Err(invalid("batch refresh has duplicate groups"));
+        }
+        children.push(Node::new("group").attr("jid", group.clone()));
+    }
+    queue(store, "group-refresh", "refresh groups", move |id| {
+        Ok(iq(
+            id,
+            "get",
+            group_server()?,
+            vec![
+                Node::new("query")
+                    .attr("context", "per_group_dirty_recovery")
+                    .children(children),
+            ],
+        ))
+    })
 }
 
 /// `<subject>text</subject>` (`LX/0Xm.A0E`).
@@ -561,6 +597,9 @@ fn apply_reply_in(
     request: Option<&Node>,
     reply: &Node,
 ) -> Result<()> {
+    if kind == "group-refresh" {
+        return apply_refresh_in(tx, request, reply);
+    }
     if let Some(node) = reply.child("group") {
         require_complete_group(node)?;
         if let Some(group) = parse_group(node) {
@@ -605,6 +644,60 @@ fn apply_reply_in(
         {
             tx.delete(Table::Checkpoints, key(&group).as_bytes())?;
         }
+    }
+    Ok(())
+}
+
+fn apply_refresh_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    request: Option<&Node>,
+    reply: &Node,
+) -> Result<()> {
+    let request = request.ok_or_else(|| invalid("batch refresh request is missing"))?;
+    let query = request
+        .child("query")
+        .ok_or_else(|| invalid("batch refresh query is missing"))?;
+    let expected: std::collections::BTreeSet<_> = query
+        .child_nodes()
+        .iter()
+        .filter_map(|group| attr_string(group, "jid"))
+        .collect();
+    if expected.is_empty() {
+        return Err(invalid("batch refresh request has no groups"));
+    }
+    // APK 37.71 Aov selectors 10/11 decode groups/group with AZM selector 15.
+    // Full/truncated/error union application is not interchangeable with one
+    // complete group snapshot. Validate the supported whole batch before writes.
+    if reply.child_nodes().len() != 1 || reply.child_nodes()[0].description != "groups" {
+        return Err(invalid("batch refresh reply requires one groups container"));
+    }
+    let nodes = reply.child_nodes()[0].child_nodes();
+    if nodes.len() != expected.len() {
+        return Err(invalid("batch refresh reply omits or adds groups"));
+    }
+    let mut found = std::collections::BTreeSet::new();
+    let mut snapshots = Vec::new();
+    for node in nodes {
+        if node.description != "group"
+            || node.get_attr("error").is_some()
+            || node.child("error").is_some()
+        {
+            return Err(invalid(
+                "batch refresh contains an unsupported group result; snapshots preserved",
+            ));
+        }
+        require_complete_group(node)?;
+        let snapshot =
+            parse_group(node).ok_or_else(|| invalid("batch refresh group has no identity"))?;
+        if !expected.contains(&snapshot.jid) || !found.insert(snapshot.jid.clone()) {
+            return Err(invalid(
+                "batch refresh contains an unexpected or duplicate group",
+            ));
+        }
+        snapshots.push(snapshot);
+    }
+    for snapshot in snapshots {
+        save_snapshot_in(tx, snapshot)?;
     }
     Ok(())
 }
@@ -1480,6 +1573,130 @@ mod tests {
 
     fn text(node: &Node, name: &str) -> Option<String> {
         attr_string(node, name)
+    }
+
+    #[test]
+    fn batch_refresh_applies_only_complete_correlated_snapshots_atomically() {
+        for case in [
+            "complete",
+            "truncated",
+            "missing",
+            "duplicate",
+            "unexpected",
+            "error",
+        ] {
+            let (_dir, s) = store();
+            let first = Jid::parse("12345-67890@g.us").unwrap();
+            let second = Jid::parse("12345-67891@g.us").unwrap();
+            for group in [&first, &second] {
+                record_info_reply(
+                    &s,
+                    &Node::new("iq").children(vec![
+                        Node::new("group")
+                            .attr("id", group.clone())
+                            .attr("subject", "Before"),
+                    ]),
+                )
+                .unwrap();
+            }
+            let before = serde_json::to_value(list(&s).unwrap()).unwrap();
+            let id = queue_refresh(&s, &[first.clone(), second.clone()]).unwrap();
+            assert!(queue_refresh(&s, &[]).is_err());
+            assert!(queue_refresh(&s, &[first.clone(), first.clone()]).is_err());
+            assert!(queue_refresh(&s, &[Jid::parse("g.us").unwrap()]).is_err());
+            assert!(
+                queue_refresh(&s, &[Jid::parse("15555550100@s.whatsapp.net").unwrap()]).is_err()
+            );
+            let request = super::super::actions::reserve_pending(&s)
+                .unwrap()
+                .pop()
+                .unwrap();
+            // Literal APK 37.71 EJy selector 4 / 9QE selector 11 shape.
+            assert_eq!(attr_string(&request, "to").as_deref(), Some("g.us"));
+            assert_eq!(attr_string(&request, "xmlns").as_deref(), Some("w:g2"));
+            let query = request.child("query").unwrap();
+            assert_eq!(
+                attr_string(query, "context").as_deref(),
+                Some("per_group_dirty_recovery")
+            );
+            assert_eq!(query.child_nodes().len(), 2);
+            assert_eq!(
+                attr_string(&query.child_nodes()[0], "jid"),
+                Some(first.to_string())
+            );
+            let full = |jid: &Jid| {
+                Node::new("group")
+                    .attr("id", jid.clone())
+                    .attr("subject", "After")
+            };
+            let mut children = vec![full(&first), full(&second)];
+            match case {
+                "truncated" => children[1] = full(&second).attr("truncated", "true"),
+                "missing" => {
+                    children.pop();
+                }
+                "duplicate" => children[1] = full(&first),
+                "unexpected" => children[1] = full(&Jid::parse("12345-67892@g.us").unwrap()),
+                "error" => children[1] = full(&second).attr("error", "403"),
+                _ => {}
+            }
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("groups").children(children)]);
+            assert!(super::super::actions::record_reply(&s, &reply).unwrap());
+            assert_eq!(
+                apply_pending(&s, &id).unwrap(),
+                case == "complete",
+                "{case}"
+            );
+            if case == "complete" {
+                assert!(
+                    list(&s)
+                        .unwrap()
+                        .iter()
+                        .all(|g| g.subject.as_deref() == Some("After"))
+                );
+                assert!(!apply_pending(&s, &id).unwrap());
+                assert_eq!(ingest(&s).unwrap(), 0);
+            } else {
+                assert_eq!(
+                    serde_json::to_value(list(&s).unwrap()).unwrap(),
+                    before,
+                    "{case}"
+                );
+                assert!(ingest(&s).is_err());
+                assert_eq!(
+                    s.read(|tx| tx.get_json::<bool>(
+                        Table::Checkpoints,
+                        format!("{PENDING_PREFIX}{id}").as_bytes(),
+                        1
+                    ))
+                    .unwrap(),
+                    Some(true)
+                );
+            }
+            assert_eq!(super::super::actions::reply(&s, &id).unwrap(), Some(reply));
+            assert!(
+                super::super::actions::reserve_pending(&s)
+                    .unwrap()
+                    .is_empty()
+            );
+            let events = s
+                .read(|tx| {
+                    tx.read_events(
+                        &crate::store::ConsumerId::new("batch-refresh-test")?,
+                        crate::model::ids::EventCursor::START,
+                        64,
+                    )
+                })
+                .unwrap();
+            assert_eq!(
+                events.events.len(),
+                if case == "complete" { 4 } else { 2 },
+                "{case}"
+            );
+        }
     }
 
     #[test]

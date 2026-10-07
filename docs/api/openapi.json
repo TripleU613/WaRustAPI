@@ -10359,6 +10359,87 @@
           "whatsapp_api::signal::image::decrypt_document"
         ]
       }
+    },
+    "/v1/groups/refresh": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Queue one classic batch group refresh",
+        "description": "Offline queueing of one APK 37.71 classic w:g2 IQ to g.us with query context per_group_dirty_recovery and group children carrying jid. Repeat --chat for each concrete distinct group. Local input bound is one to 256 groups; this is not an APK or server limit. The receive session applies a complete groups/group response atomically only when all requested identities occur exactly once. Missing/extra/duplicate/unexpected identities, truncated groups, unsupported shapes or per-group error attributes/children preserve all previous snapshots/events and retain the saved response and projection marker with an explicit diagnostic. Root/recognized inner IQ refusals settle without snapshot projection. No follow-up/retry or notification ACK is queued. Inspect with actions --show and group list. One bounded 30-second live receive session settled one two-group batch ok with both matching snapshots updated during receiving; subsequent group list applied zero actions. No chat intent was transmitted and the unresolved two-factor action stayed sent. Automatic dirty/truncated pipeline, mixed union application, MEX feature selection and live mixed/truncated validation remain unfinished. This contract is CLI-only; no HTTP route exists.",
+        "operationId": "groupRefresh",
+        "x-cli": "whatsapp-cli group refresh",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Batch group refresh queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueuedAck"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "423": {
+            "$ref": "#/components/responses/Blocked"
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::groups::queue_refresh"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "chats"
+                ],
+                "properties": {
+                  "chats": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 256,
+                    "uniqueItems": true,
+                    "items": {
+                      "$ref": "#/components/schemas/Jid"
+                    },
+                    "description": "Distinct concrete group identities; repeat CLI --chat for each entry."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

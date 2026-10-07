@@ -233,6 +233,18 @@ Usage: whatsapp-cli group info [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 | --chat | CHAT | yes |  |  |  |  |
 
+## whatsapp-cli group refresh
+
+Queue one classic batch refresh; incomplete replies preserve existing snapshots
+
+```
+Usage: whatsapp-cli group refresh [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --chat | CHATS | yes |  |  |  | Concrete group JIDs; repeat --chat for each group (local maximum 256) |
+
 ## whatsapp-cli group subject
 
 Queue a subject change

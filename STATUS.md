@@ -695,3 +695,22 @@ Validation: 576 workspace/all-feature tests, 24 default CLI tests, strict
 workspace/all-target/all-feature Clippy, warning-free Rustdoc, generated CLI
 reference, five OpenAPI checks, formatting and repository hygiene passed.
 Client wire behavior is unchanged by this disassembler/research change.
+
+
+Classic batch refresh (2026-10-07): `group refresh --chat <group-jid>` (repeat
+--chat) queues one classic per_group_dirty_recovery IQ. Complete groups/group
+responses project only when all requested identities occur once, atomically with
+events and the projection marker. Incomplete/truncated/error-bearing batches
+preserve all snapshots and saved responses. [Batch queue and limitation](docs/protocol/groups.md#classic-batch-queue-and-complete-response-projection-2026-10-07).
+Mixed-union application, follow-up rounds and automatic dirty notification
+scheduling/ACK remain unfinished.
+
+One two-group classic batch was live verified in a bounded 30-second receive
+session: ok, two matching saved results and both snapshots updated during the
+window (one/four members). Group list afterward applied zero actions. No chat
+intent was sent; the unresolved two-factor action remained sent. Identity/keys
+and existing request IDs were preserved. Mixed/truncated continuation remains
+unimplemented and unverified. 577 workspace/all-feature and 24 default CLI tests,
+strict Clippy, warning-free Rustdoc, CLI reference and five OpenAPI checks passed.
+
+Final staged whitespace and repository hygiene (407 local links) passed.

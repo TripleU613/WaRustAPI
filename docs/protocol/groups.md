@@ -1804,3 +1804,86 @@ Validation: 576 workspace/all-feature tests, 24 default CLI tests, strict
 workspace/all-target/all-feature Clippy, warning-free Rustdoc, generated CLI
 reference, five OpenAPI checks, formatting and repository hygiene passed.
 Client wire behavior is unchanged by this disassembler/research change.
+
+
+## Classic batch queue and complete response projection (2026-10-07)
+
+**Confirmed/static request**, APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Existing serializer evidence](group-refresh-request-evidence.txt) anchors
+EJy constructor selector 4 at 0144..0214 and 9QE selector 11: IQ to g.us,
+xmlns w:g2, type get, query context per_group_dirty_recovery and group children
+with jid. `groups::queue_refresh` emits that classic shape through the existing
+durable one-shot action queue. `whatsapp-cli group refresh --chat <group-jid>
+--chat <another-group-jid>` is the offline operator entry point; an authenticated
+session transmits it once. Inputs must be distinct concrete group identities
+and number one to 256. That ceiling is explicitly **local**, not an APK/server
+limit; no APK memory/partition/round policy is silently approximated by it.
+
+**Confirmed/local complete-result application:** group-refresh is the eleventh
+supported group action kind. Settlement uses the existing pending projection
+marker, and session receiving/startup recovery applies full results.
+[Response evidence](group-refresh-response-evidence.txt) identifies groups/group
+with AZM selector 15. Our implementation supports a single groups container whose
+complete group snapshots correspond exactly once to every original query JID.
+It rejects missing/extra/duplicate/unexpected identities, unsupported children,
+truncated flags and group-level error attributes/children, validating the full
+batch before writing. All full snapshots, events, once-only marker and pending
+marker removal share the existing transaction. Refused IQ outcomes follow the
+action queue's existing saved-error behavior without projecting snapshots.
+
+**Local limitation, not a server rule:** the APK recognizes a wider full/truncated/
+forbidden/not-exist union and can apply supported full results while scheduling
+remaining work. This intermediate complete-result path rejects the whole partial
+batch instead. It preserves all prior state and the encrypted reply/pending marker,
+with a diagnostic, rather than inventing group deletion or dropping a size-only
+result. Mixed-union projection, bounded subsequent rounds and unsolicited
+groups_dirty scheduling/ACK remain required follow-up work. No resend, implicit
+new request ID, MEX feature guess or blanket notification acknowledgement occurs.
+
+`actions --show <action-id>` inspects the saved batch request/reply; `group list`
+inspects resulting snapshots and exposes rejected historical ingestion. API
+contract `/v1/groups/refresh` is CLI-only, x-live false for offline queueing; no
+HTTP route was added. Existing listen performs the explicitly authorized network
+transmission.
+
+**Confirmed/offline fixtures:** literal serializer vocabulary comes from the
+APK constructors, with synthetic IDs/subjects. Two-group full results produce
+two subject events in one commit. Truncated second result, missing/duplicate/
+unexpected identities and an error-bearing result preserve both prior snapshots
+including update timestamps and event count; the reply and pending marker stay
+inspectable. Repeat complete ingestion is zero and reserve_pending yields no
+replayed query. Empty, duplicate, server-only and non-group inputs reject before
+queueing. Reproduce with `cargo test --locked -p whatsapp-api --all-features
+batch_refresh_applies_only_complete_correlated_snapshots_atomically`. The error
+fixture is a local unsupported-shape guard, not proof of a specific APK error code.
+
+
+**Observed/live complete batch:** after preflight showed zero queued actions and
+zero eligible chat intents, one two-group refresh was queued for the two existing
+stored groups. The existing authenticated-receive configuration and saved identity
+were reused in a bounded 30-second listen session without --send-outbox. It exited
+zero. The action settled ok with no error code; its encrypted saved reply contained
+one groups container and two group elements. Both matching snapshots updated
+within that receive window, with member counts one and four. Subsequent group list
+applied zero actions, confirming automatic projection rather than deferred CLI
+application. No queued actions remained; the existing unresolved two-factor action
+remained sent. No chat intent was transmitted, local identity/key was reset, or
+original send/request ID changed.
+
+Private mode-0600 evidence is retained under ignored lab/accounts/l:
+group-batch-preflight-actions.json, group-batch-preflight-outbox.json,
+group-batch-queued-actions.json, group-batch-action-id.txt, group-batch-live.log,
+group-batch-actions-after.json, group-batch-selected-action.log,
+group-batch-list-after.log and group-batch-snapshots-after.json. Inspect the saved
+ID; do not queue a fresh action merely to repeat this completed validation.
+The live CLI executable was copied to a temporary local path after the explicit
+experimental build so concurrent default-feature tests could not replace the
+binary used for this test/inspection. No private fixture or account data is
+committed. Live mixed/error/truncated batch projection remains **unverified**.
+
+Validation: 577 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, generated CLI
+reference, five OpenAPI checks, formatting and repository hygiene passed.
+
+Final staged whitespace and repository hygiene (407 local links) passed.
