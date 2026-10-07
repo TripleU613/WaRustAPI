@@ -569,3 +569,23 @@ converter and durable application remain unfinished. Rust group disposition
 and the optional offline --group-info inspector are implemented; no live
 request or account/state change is claimed. apk-smali's checked superclass
 header exposes inherited ownership rather than guessing absent functionality.
+
+## comparison.mex.callback_source_coverage_37_71 — 2026-10-07
+
+**Confirmed static**, APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+The [eighteen-topic recipe](apk/recipes/2.26.37.71-mex.json) now reproduces
+Lac.BEE, LaT.A00, BaseMexCallback.A03, 9Np.A06, IWF.AYS and I1H.A06 as
+separate versioned methods with Rust ownership, on top of twelve unchanged
+request/parser topics. Exact export/check: 23 files/76,908 bytes.
+[Coverage diff](apk/mex-callback-coverage-diff.json) compares old Git cdd4056
+against this change, using the same APK hash: six added, twelve unchanged;
+targets metadata changed, other three artifacts unchanged, 0.0069 seconds.
+This is cached source coverage, not a new release or six protocol changes.
+
+[Actual remap](apk/remap-evidence/2.26.37.71-mex.json): eight unique, seven
+unanchored, three ambiguous. IWF.AYS code/error_code plus shorty I is unique;
+is_retryable plus shorty Z still matches I1H.A06 and 916.BGC/BQ2. Unknown
+new-release mapping remains explicitly unresolved; no full recipe proposal.
+[Interpretation](mex.md#versioned-parserrequest-files) distinguishes source-only
+getters and callback admission from unfinished converter/live application.

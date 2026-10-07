@@ -130,6 +130,68 @@
       "anchors": [
         "subject"
       ]
+    },
+    "mex-json-response-handler": {
+      "class": "LX/Lac;",
+      "method": "BEE",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": [
+        "Unknown product failure while processing response",
+        "Unknown parsing failure while processing response"
+      ]
+    },
+    "mex-json-model-conversion": {
+      "class": "LX/LaT;",
+      "method": "A00",
+      "method_shorty": "LLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-inherited-callback-gate": {
+      "class": "Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;",
+      "method": "A03",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-group-error-callback": {
+      "class": "LX/9Np;",
+      "method": "A06",
+      "method_shorty": "ZL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-error-code-getter": {
+      "class": "LX/IWF;",
+      "method": "AYS",
+      "method_shorty": "I",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": [
+        "error_code",
+        "code"
+      ]
+    },
+    "mex-error-retryable-getter": {
+      "class": "LX/I1H;",
+      "method": "A06",
+      "method_shorty": "Z",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": [
+        "is_retryable"
+      ]
     }
   }
 }

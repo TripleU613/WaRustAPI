@@ -1317,3 +1317,16 @@ formatting passed. Actual CLI probes covered **20** callback cases across
 result/update plus **10** default-mode checks with redacted output. The existing
 37.71 MEX bundle reproduced exactly (**17 files, 58,761 bytes**). No live
 account request or group-state application occurred in this chunk.
+
+MEX callback source coverage is now versioned with the request/parser files:
+18 topics, 23 files/76,908 bytes, exact APK reproduction passed. Cached
+comparison against Git cdd4056 took 0.0069 seconds: six added/twelve unchanged
+topics on the same APK. Remap: eight unique/seven unanchored/three ambiguous;
+is_retryable/shorty-Z still matches three methods and needs review. Full group
+conversion, Argo/Pando and durable live application remain unfinished.
+All 48 xtask tests passed; no Rust behavior changed or account request sent.
+See [versioned MEX files](protocol/mex.md#versioned-parserrequest-files).
+
+Coverage validation also passed exact checksum membership/18 single-method
+selections, CLI reference regeneration, OpenAPI library-symbol validation,
+repository hygiene (518 local links) and staged whitespace.

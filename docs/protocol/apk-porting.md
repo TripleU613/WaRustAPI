@@ -263,11 +263,14 @@ inspectable without an account. Both tools are offline. The 37.71 QueryGroupInfo
 fixture is reproduced from the real APK; complete response conversion and
 durable live dispatch remain the next port, not a finished group implementation.
 
-MEX response-parts parsing now closes provider/nullable-field handling and adds
-counts-only `mex-response-inspect`. The [twelve-topic MEX recipe](apk/recipes/2.26.37.71-mex.json)
-exports 17 files/58,761 bytes linked to the actual Rust module; exact source
-reproduction passed and cached comparison took 0.0064 seconds. Six topics remap
-uniquely, four are unanchored and two ambiguous; unresolved mappings require
-review before next-release patching. [Parser interpretation](mex.md#json-response-field-port-2026-10-07)
-distinguishes independent field parsing from unfinished model/callback/group
+MEX response-parts parsing and group callback gating now have offline inspection.
+The [eighteen-topic MEX recipe](apk/recipes/2.26.37.71-mex.json) exports 23 files/
+76,908 bytes including checksums, linked to the actual Rust module. The
+[callback coverage comparison](apk/mex-callback-coverage-diff.json) adds six
+methods with twelve unchanged sources in 0.0069 seconds; both sides use the
+same APK, so this is coverage expansion rather than a release change. Remap
+has eight unique/seven unanchored/three ambiguous mappings. Ambiguous
+is_retryable/shorty-Z matches include I1H.A06 and 916.BGC/BQ2; unresolved
+mappings require review before next-release patching. [Callback interpretation](mex.md#group-callback-gate-and-inherited-dispatch-2026-10-07)
+distinguishes a permitted callback from complete group validity and state
 application. A parser inspection or self-diff is not full APK/client parity.

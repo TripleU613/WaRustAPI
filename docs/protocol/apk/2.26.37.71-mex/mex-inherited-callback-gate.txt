@@ -1,0 +1,48 @@
+# APK-derived structural disassembly: Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(VL) flags=0x1 registers=6
+  0000..0004 op=55 iget-boolean v0, v5, LX/LZv;->A03:Z
+  0004..0006 op=12 const/4 v2, #0x0
+  0006..000a op=38 if-eqz v0, +0xa
+  000a..000e op=54 iget-object v1, v5, LX/LZv;->A01:Lorg/json/JSONArray;
+  000e..0012 op=22 new-instance v0, LX/I1H;
+  0012..0018 op=70 invoke-direct {v0, v2, v1}, LX/I1H;-><init>(VLL)
+  0018..001a op=07 move-object
+  001a..001c op=12 const/4 v3, #0x1
+  001c..0020 op=38 if-eqz v2, +0x23
+  0020..0026 op=6e invoke-virtual {v4, v2}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A06(ZL)
+  0026..0028 op=0a move-result
+  0028..002c op=55 iget-boolean v0, v5, LX/LZv;->A02:Z
+  002c..0032 op=6e invoke-virtual {v4, v2, v0}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A02(VLZ)
+  0032..0034 op=28 goto +0x16
+  0034..0036 op=0d move-exception
+  0036..003a op=54 iget-object v0, v4, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A00:LX/Mfx;
+  003a..003e op=22 new-instance v3, LX/MEs;
+  003e..0044 op=70 invoke-direct {v3, v0, v1}, LX/MEs;-><init>(VLL)
+  0044..0048 op=55 iget-boolean v2, v5, LX/LZv;->A02:Z
+  0048..004c op=54 iget-object v1, v5, LX/LZv;->A01:Lorg/json/JSONArray;
+  004c..0050 op=22 new-instance v0, LX/I1H;
+  0050..0056 op=70 invoke-direct {v0, v3, v1}, LX/I1H;-><init>(VLL)
+  0056..005c op=6e invoke-virtual {v4, v0, v2}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A02(VLZ)
+  005c..005e op=27 throw v3
+  005e..0062 op=38 if-eqz v1, +0x22
+  0062..0066 op=55 iget-boolean v0, v5, LX/LZv;->A02:Z
+  0066..006a op=38 if-eqz v0, +0x1e
+  006a..006e op=54 iget-object v0, v5, LX/LZv;->A00:Ljava/lang/Object;
+  006e..0074 op=6e invoke-virtual {v4, v0}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A04(VL)
+  0074..007a op=6e invoke-virtual {v4, v2, v3}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A02(VLZ)
+  007a..007c op=0e return-void
+  007c..007e op=0d move-exception
+  007e..0082 op=54 iget-object v0, v4, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A00:LX/Mfx;
+  0082..0086 op=22 new-instance v2, LX/MEr;
+  0086..008c op=70 invoke-direct {v2, v0, v1}, LX/MEr;-><init>(VLL)
+  008c..0090 op=54 iget-object v1, v5, LX/LZv;->A01:Lorg/json/JSONArray;
+  0090..0094 op=22 new-instance v0, LX/I1H;
+  0094..009a op=70 invoke-direct {v0, v2, v1}, LX/I1H;-><init>(VLL)
+  009a..00a0 op=6e invoke-virtual {v4, v0, v3}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A02(VLZ)
+  00a0..00a2 op=27 throw v2
+  00a2..00a4 op=0e return-void
+.end method

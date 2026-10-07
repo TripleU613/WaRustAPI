@@ -1,4 +1,51 @@
 {
+  "mex-error-code-getter": {
+    "anchors": [
+      "error_code",
+      "code"
+    ],
+    "class": "LX/IWF;",
+    "file": "mex-error-code-getter.txt",
+    "method_filter": "AYS",
+    "method_shorty": "I",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex.rs"
+    ]
+  },
+  "mex-error-retryable-getter": {
+    "anchors": [
+      "is_retryable"
+    ],
+    "class": "LX/I1H;",
+    "file": "mex-error-retryable-getter.txt",
+    "method_filter": "A06",
+    "method_shorty": "Z",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex.rs"
+    ]
+  },
+  "mex-group-error-callback": {
+    "class": "LX/9Np;",
+    "file": "mex-group-error-callback.txt",
+    "method_filter": "A06",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex.rs"
+    ]
+  },
+  "mex-inherited-callback-gate": {
+    "class": "Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;",
+    "file": "mex-inherited-callback-gate.txt",
+    "method_filter": "A03",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex.rs"
+    ]
+  },
   "mex-json-field-readers": {
     "anchors": [
       "data",
@@ -36,6 +83,16 @@
     "file": "mex-json-iq.txt",
     "method_filter": "<init>",
     "method_shorty": "VLLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex.rs"
+    ]
+  },
+  "mex-json-model-conversion": {
+    "class": "LX/LaT;",
+    "file": "mex-json-model-conversion.txt",
+    "method_filter": "A00",
+    "method_shorty": "LLL",
     "methods": 1,
     "rust_files": [
       "crates/whatsapp-api/src/transport/mex.rs"
@@ -95,6 +152,20 @@
     "file": "mex-json-response-discriminator.txt",
     "method_filter": "A02",
     "method_shorty": "LLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex.rs"
+    ]
+  },
+  "mex-json-response-handler": {
+    "anchors": [
+      "Unknown product failure while processing response",
+      "Unknown parsing failure while processing response"
+    ],
+    "class": "LX/Lac;",
+    "file": "mex-json-response-handler.txt",
+    "method_filter": "BEE",
+    "method_shorty": "VL",
     "methods": 1,
     "rust_files": [
       "crates/whatsapp-api/src/transport/mex.rs"

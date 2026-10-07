@@ -1,0 +1,23 @@
+# APK-derived structural disassembly: LX/I1H;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A06(Z) flags=0x11 registers=4
+  0000..0004 op=54 iget-object v0, v3, LX/I1H;->A01:Ljava/util/List;
+  0004..000a op=71 invoke-static {v0}, LX/I1H;->A00(LL)
+  000a..000c op=0c move-result-object
+  000c..0010 op=20 instance-of v0, v1, LX/IWF;
+  0010..0014 op=38 if-eqz v0, +0x12
+  0014..0018 op=1f check-cast v1, LX/IWF;
+  0018..001c op=38 if-eqz v1, +0xe
+  001c..0020 op=54 iget-object v2, v1, LX/IWF;->A00:Lorg/json/JSONObject;
+  0020..0022 op=12 const/4 v1, #0x1
+  0022..0026 op=38 if-eqz v2, +0x9
+  0026..002a op=1a const-string v0, "is_retryable"
+  002a..0030 op=6e invoke-virtual {v2, v0, v1}, Lorg/json/JSONObject;->optBoolean(ZLZ)
+  0030..0032 op=0a move-result
+  0032..0034 op=0f return v0
+  0034..0036 op=12 const/4 v0, #0x1
+  0036..0038 op=0f return v0
+.end method

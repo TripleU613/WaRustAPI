@@ -267,18 +267,31 @@ The next trace belongs to actual IQ callback/model-conversion callers.
 
 ## Versioned parser/request files
 
-[The MEX release recipe](apk/recipes/2.26.37.71-mex.json) exports twelve
+[The MEX release recipe](apk/recipes/2.26.37.71-mex.json) exports eighteen
 method topics to [the 37.71 baseline](apk/2.26.37.71-mex/manifest.json):
-17 files, 58,761 bytes, reproduced exactly with `--check`. Each topic names
+23 files, 76,908 bytes including the checksum index. Each topic names
 `crates/whatsapp-api/src/transport/mex.rs` as its Rust owner. The baseline is
 additional source coverage, not a new APK release or full MEX parity.
-A cached same-baseline comparison took **0.0064 seconds**, twelve unchanged
-topics and four unchanged artifacts; this measures cached comparison only.
+
+**Confirmed source coverage, 2026-10-07:** the callback expansion adds Lac.BEE
+(response handler), LaT.A00 (typed model construction), BaseMexCallback.A03
+(inherited gate), 9Np.A06 (group-specific error decision), IWF.AYS (numeric
+error getter), and I1H.A06 (retryable getter). These method files retain actual
+DEX shorties and instruction offsets. The last two are source-only where their
+error selection/coercion behavior remains unported. Their existence does not
+authorize automatic retry or infer server waits.
+
+[The cached coverage comparison](apk/mex-callback-coverage-diff.json) took
+**0.0069 seconds**: six added topics, twelve unchanged topics; targets changed
+while inventory, manifest and tokens stayed unchanged. Its old baseline is Git
+revision `cdd4056`; old/new file paths in that report refer to their respective
+revisions. Both APK hashes are identical. This measures cached comparison only,
+not a release change, APK scanning, full-app parity or behavioral differences.
 
 ```sh
 target/debug/xtask apk-research-bundle /path/to/WhatsApp.apk \
   --recipe docs/protocol/apk/recipes/2.26.37.71-mex.json \
-  --output lab/releases/mex --check
+  --output docs/protocol/apk/2.26.37.71-mex --check
 
 # After re-anchoring and exporting the next actual APK:
 target/debug/xtask apk-research-diff \
@@ -286,13 +299,16 @@ target/debug/xtask apk-research-diff \
 ```
 
 Use `--check` only with an existing complete export; for a new output directory,
-omit it. Recipe relocation on this APK has six unique, four unanchored and two
-ambiguous topics ([actual remap report](apk/remap-evidence/2.26.37.71-mex.json)).
-Common `doc_id` and `subject` anchors remain ambiguous despite method shorties;
-string-free constructors/provider/storage helpers remain unanchored. Those
-require caller-based/manual review on a new APK. A full proposed recipe must
-remain blocked until every mapping is resolved; class names alone are not a
-safe patch. Selected persisted-ID asset files remain separately diffable.
+omit it. [Actual remapping](apk/remap-evidence/2.26.37.71-mex.json) on this APK
+has eight unique, seven unanchored and three ambiguous topics. IWF.AYS is unique
+only after shorty `I` removes four other code/error_code methods. `is_retryable`
+plus shorty `Z` still matches I1H.A06 and 916.BGC/BQ2: one string and a return
+type do not establish the intended owner. Common doc_id and subject anchors
+also remain ambiguous. String-free construction/provider/storage/model/gate
+methods remain unanchored and require caller-based/manual review on a new APK.
+A full proposed recipe remains blocked until every mapping is resolved; class
+names alone are not a safe patch. Selected persisted-ID asset files remain
+separately diffable.
 
 ## Group callback gate and inherited dispatch (2026-10-07)
 

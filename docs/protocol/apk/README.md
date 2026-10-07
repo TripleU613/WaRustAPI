@@ -157,10 +157,12 @@ recovery/MEX/guard topics were added with fifteen unchanged sources in a
 unique and four unanchored topics. [Recovery interpretation](../groups.md#subject-recovery-mex-dispatch-and-local-guard-2026-10-07)
 distinguishes recovered MEX behavior from the current classic Rust lookup.
 
-The [37.71 MEX recipe](recipes/2.26.37.71-mex.json) adds twelve request/JSON
-parser/model topics linked to Rust's MEX module. Its
-[baseline manifest](2.26.37.71-mex/manifest.json) covers 17 files/58,761 bytes,
-exactly reproduced; [interpretation and cached diff workflow](../mex.md#versioned-parserrequest-files)
-record 0.0064-second cached comparison and six unique/four unanchored/two
-ambiguous relocations. Complete callbacks, group conversion and Argo/Pando
-remain unfinished; no live MEX behavior is established by these files.
+The [37.71 MEX recipe](recipes/2.26.37.71-mex.json) covers eighteen request,
+JSON parser/model, callback and error-getter topics linked to Rust's MEX module.
+Its baseline is 23 files/76,908 bytes including checksums. The
+[callback coverage comparison](mex-callback-coverage-diff.json) against Git
+revision cdd4056 took 0.0069 seconds: six topics added, twelve unchanged, same
+APK. [Current remapping](remap-evidence/2.26.37.71-mex.json) finds eight unique,
+seven unanchored and three ambiguous topics. [Interpretation and reproduction](../mex.md#versioned-parserrequest-files)
+separate source coverage from full conversion, Argo/Pando and live application;
+these remain unfinished.
