@@ -653,3 +653,12 @@ and human verification remain unfinished. Full-entry/QEMU checks and
 hash-pinned read-only branch/futex diagnostics are exposed.
 Setup failures and remaining loader warnings are recorded in
 [native reconstruction evidence](protocol/native-unpacking.md).
+
+
+Native safety-number follow-up traces the shared V3/V4 5200-round SHA-512
+helper, sorted key concatenation and separate identifier-bound display seed.
+A pinned ARM64 slice checker validates iteration/input ordering on synthetic
+data with explicitly modeled SHA/MCF operations. Full input producers,
+JNI normalization, QR semantics and current scheme/human verification remain
+unfinished; no account verification state or live connection changed.
+[Evidence and reproducible check](protocol/safety-number.md).

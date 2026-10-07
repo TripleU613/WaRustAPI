@@ -177,3 +177,29 @@ PYTHONDONTWRITEBYTECODE=1 \
 
 QEMU preflight checks require no emulator execution; real QEMU initialization
 and full extraction were validated separately against the pinned artifacts.
+
+## Fingerprint hash control flow
+
+`native_fingerprint_check.py --library PATH` requires Unicorn and pyelftools,
+and the exact reconstructed 37.71 `libwhatsapp.so` hash. It maps only the shared
+hash routine page, runs built-in synthetic cases, and models SHA/MCF calls on
+the host. Native ARM64 ordering/counts must agree with 5200 rounds of SHA-512;
+each case has a ten-second/one-million-instruction limit and must actually
+return. Unexpected branches refuse. This does not recover the JNI producers,
+execute native crypto or establish an account safety number.
+[Addresses, validation and unresolved inputs](../../docs/protocol/safety-number.md).
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
+  tools/apk-research/native_fingerprint_check.py \
+  --library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so
+PYTHONDONTWRITEBYTECODE=1 \
+  TELEWHATSAPP_LOADER_ROOTFS=lab/apk-2.26.37.71/native/qiling-rootfs \
+  TELEWHATSAPP_FINGERPRINT_LIBRARY=lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so \
+  lab/native-analysis-tools-py312/bin/python -m unittest discover \
+  -s tools/apk-research -p 'test_native_*check.py' -v
+```
+
+The latter includes eleven checks. Pinned-library execution skips without
+`TELEWHATSAPP_FINGERPRINT_LIBRARY`; fingerprint preflight checks need no ELF
+or emulator dependency. Existing rootfs requirements/skips still apply.

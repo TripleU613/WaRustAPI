@@ -422,3 +422,10 @@ cancelled and successful execution logs are retained privately under
 `lab/apk-2.26.37.71/native/execution-checks-2026-10-07/`; native outputs and
 the complete per-file manifest remain ignored local artifacts. No account
 store was opened and no live WhatsApp request was sent.
+
+
+The subsequent [fingerprint trace](safety-number.md#reconstructed-native-hash-and-display-paths)
+resolves the shared 5200-round hash helper, distinct create/display seeds and
+PN/LID params layout differences. It exposes a hash-pinned synthetic ARM64
+control-flow check with explicit host models; full native inputs and real
+account verification remain unfinished.

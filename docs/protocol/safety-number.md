@@ -107,8 +107,10 @@ ELF (13,615,136 bytes; SHA-256
 implementation. That is an **outer packed-container limitation**, not evidence
 that native fingerprint code is absent. `assets/native_deps.txt` names
 `superpack`, `whatsappmerged` and `whatsapp`, but does not identify which member
-owns these routines. The archive format, unpacked member selection, native
-algorithm, modern QR payloads and native comparison remain unknown.
+owns these routines. At that checkpoint, member reconstruction and native algorithms remained
+unknown. Subsequent reconstruction recovered 79 unique ELF members; the four
+V3/V4 anchors are in `libwhatsapp.so`. See [native reconstruction](native-unpacking.md)
+for pinned hashes, reproducible extraction and negative results.
 
 No account verification bit, trust policy, session or identity was changed;
 no server query or chat was sent. Human safety-number verification and
@@ -137,3 +139,116 @@ Clippy, warning-free rustdoc, regenerated CLI reference, formatting and reposito
 hygiene passed. Rebuilt `apk-smali` renders the actual `CjU.A01` mask/shift/or/
 remainder instructions at their original byte extents, with no `??` remaining in
 that method. These are static-tool checks, not a live safety-number comparison.
+
+## Reconstructed native hash and display paths
+
+**Confirmed/static, APK 2.26.37.71:** the reconstructed ARM64 `libwhatsapp.so`
+has SHA-256 `f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a`.
+Addresses below are ELF virtual addresses, not DEX offsets or bare XZ offsets.
+The V3/V4 create anchor routines are `0x7132b4..0x713620` and
+`0x7145d0..0x71493c` (end-exclusive). Both call the same hash helper at
+`0x713938..0x7139e4` (`0x7134cc`, `0x71476c`).
+
+The helper creates a SHA-512 context, appends its two data arguments, finishes
+into a 64-byte output, then repeats output-plus-second-argument another 5199
+times. `0x713994` loads `0x144f` (5199); `0x7139bc..0x7139c0` decrements
+and loops. SHA wrappers `0x711828..0x71199c` resolve to the named imports
+`mbedtls_sha512_init`, `starts` (second argument zero), `update` and `finish`.
+The finish wrapper `0x711914..0x71194c` explicitly initializes/restarts the
+context after finishing. It does not keep a cumulative hash state across rounds:
+
+```text
+H(seed, K):
+    state = SHA512(seed || K)
+    repeat 5199 times:
+        state = SHA512(state || K)
+    return state  # 64 bytes
+```
+
+**Confirmed/static, create inputs:** V3/V4 copy their supplied key array,
+sort it through a function pointer at relocation slot `0xd1c2d0`, concatenate
+each key object's `+0x28` MCF data and call `H(K, K)`. Sorting occurs at
+`0x713408..0x71341c` / `0x7146a8..0x7146bc`; concatenation at
+`0x713450..0x71348c` / `0x7146f0..0x71472c`; the copied seed is constructed
+at `0x713498..0x7134c0` / `0x714738..0x714760`.
+The relocation's addend is `0x712ef0`. That comparator reads each object's
+`+0x20` MCF data, requires equal lengths (otherwise abort), calls `memcmp`
+and returns -1/0/1 (`0x712ef0..0x712f84`). Sorting is therefore by that
+byte representation, not by the later digest or identifier. Exact constructors
+linking these two key representations remain untraced here; do not claim
+arbitrary raw bytes reproduce a complete APK identity-key object. No
+concatenation-time deduplication is present in these traced loops.
+
+**Confirmed/static, validation:** V4 requires a non-null supplied LID object;
+its refused branch resolves to `no addressable lid identifier provided`
+(`0x714634`, `0x7147b0..0x7147ec`, string `0x12cc88`). V3 rejects when both
+supplied PN and LID objects are null (`0x713318..0x71339c`, string `0x12cc65`).
+Both require a nonempty key array and a hosted-state integer in {-1,0,1}; the
+unsigned `(state + 1) >= 3` rejection is at `0x7133d8..0x7133e0` /
+`0x714678..0x714680`. Strings resolve to `missing identity keys` at `0xb3fd4`
+and `unknown hosted state: %d` at `0x14d93f`. PN objects also take a stable-PN
+conversion branch whose failure logs `Stable PN JID creation failed` at
+`0x128cd3`; its JNI-backed producer `0x6b7a04` is not implemented by our slice
+checker. These conditions are APK input validation, not server requirements.
+
+**Confirmed/static, separate display seed:** V3 display routine
+`0x7139e4..0x713cf8` reads individual params data at `+0x18` and an ASCII
+identifier at `+0x28`. Its seed is two zero bytes, that data, then the identifier
+bytes; `0x713aa0` calls `H(seed, data)`. V3 params construction
+`0x718ffc..0x7190dc` places concatenated keys at `+0x18`, their `H(K,K)` digest
+at `+0x20`, stable PN identifier at `+0x28`, and retains supplied LID at
+`+0x30`. This proves that the identifier-free create digest and identifier-bound
+display digest differ. It does not establish all QR field assignments.
+
+V4 display routine `0x714c70..0x714f98` similarly uses concatenated keys from
+`+0x18`, but reads `+0x28` through the JNI-backed conversion at `0x6b7a94`
+before constructing the identifier-bound seed. V4 params constructor
+`0x71916c..0x719264` copies the supplied LID's ASCII identifier into `+0x28`
+and stable PN into `+0x30`, in the opposite layout to the V3 fields above.
+The exact conversion/normalization behavior is **unknown**. Do not substitute
+raw PN/LID digits or reuse Java `HNy.A00` without tracing this producer.
+
+Both display routines group the first 30 digest bytes into six five-byte
+unsigned big-endian values, reduce each modulo 100000 and format with literal
+`%.5lu` (string VA `0x9ae01`). V3 groups are at
+`0x713ac4..0x713c94`; V4 at `0x714d58..0x714f38`. The ARM64 multiply-high
+reciprocal uses `0x0a7c5ac471b47843` and subtracts quotient times 100000.
+A local arithmetic check matched modulo for 10045 synthetic 40-bit values,
+including endpoints, powers of two and seeded random cases. Native formatting
+uses the MCF formatting import; Java default-locale behavior is not thereby
+established for it.
+
+**Observed/local, bounded control-flow check:**
+[`native_fingerprint_check.py`](../../tools/apk-research/native_fingerprint_check.py)
+checks the exact reconstructed library hash, maps only the hash routine's page
+and emulates that routine under Unicorn. SHA/MCF entry calls are explicitly
+host-modeled; any branch outside the routine or six supported entry points
+refuses. Two synthetic cases exercise distinct seed/key data and equal seed/key
+data, independently comparing the ARM64 iteration/input sequence to `H` above.
+Each returns after 72825 instructions, 5200 finishes and 10400 updates, within
+one million instructions and ten seconds. Only an actual return PC counts as
+success. This validates native control flow with modeled primitives, not the
+native SHA implementation, JNI/MCF runtime, complete create/display routines,
+real account safety number, QR compatibility or human verification.
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
+  tools/apk-research/native_fingerprint_check.py \
+  --library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so
+```
+
+Dependencies are Unicorn and pyelftools from the existing private research
+venv. No account store or live connection is used; inputs are built-in synthetic
+bytes. Private scoped disassemblies are `native/fingerprint-hash.txt`,
+`fingerprint-sha-wrappers.txt`, `fingerprint-key-comparator.txt`,
+`fingerprint-v3-display.txt`, `fingerprint-v4-display.txt`,
+`fingerprint-v3-params.txt` and `fingerprint-v4-params.txt`, under the APK lab
+root. The current scheme selector, key/identifier producers, full QR descriptor
+and comparison semantics remain unfinished. These findings do not set a peer's
+verified bit or authorize marking an identity verified.
+
+Validation of this follow-up: eleven Python checks passed with both the public
+rootfs and pinned library configured (no skipped cases), including the actual
+synthetic ARM64 slice and wrong-build refusal. CLI reference regeneration,
+workspace formatting and repository hygiene passed; Rust runtime code did not
+change. No live safety-number comparison was performed.

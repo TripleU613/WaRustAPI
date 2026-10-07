@@ -387,3 +387,17 @@ Dynamic exports/direct relocation references are absent for those names;
 input/crypto algorithms and dispatch mapping remain untraced. The redundant
 Qiling long run was explicitly terminated after QEMU success. No account
 state was opened or live request sent. [Complete evidence](native-unpacking.md).
+
+
+**Confirmed/static, reconstructed 37.71 libwhatsapp.so:** shared V3/V4 hash
+helper `0x713938..0x7139e4` finishes/restarts SHA-512 once plus 5199 further
+rounds, hashing previous output plus its second data argument. Both create
+paths concatenate sorted key data and call H(K,K); their display routines
+construct a separate identifier-bound seed with two zero bytes. V3/V4 params
+place PN/LID inputs differently; JNI-backed normalization remains untraced.
+Sort slot `0xd1c2d0` resolves to `0x712ef0`, which requires equal-length
+representations and uses memcmp. Modern QR field mapping/current scheme and
+human verification remain unfinished. **Observed/local:** two bounded native
+control-flow slices with host-modeled SHA/MCF calls agree on 5200 finishes and
+10400 updates. This does not execute native crypto or verify an account.
+[Full source addresses and model limitations](safety-number.md).

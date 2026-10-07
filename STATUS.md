@@ -165,3 +165,12 @@ cargo build --release -p whatsapp-cli --features experimental-transport
 cargo run --locked -p xtask -- proto-check
 cargo run --locked -p xtask -- dependency-audit
 ```
+
+
+Native safety-number follow-up traces the shared V3/V4 5200-round SHA-512
+helper, sorted key concatenation and separate identifier-bound display seed.
+A pinned ARM64 slice checker validates iteration/input ordering on synthetic
+data with explicitly modeled SHA/MCF operations. Full input producers,
+JNI normalization, QR semantics and current scheme/human verification remain
+unfinished; no account verification state or live connection changed.
+[Evidence and reproducible check](docs/protocol/safety-number.md).
