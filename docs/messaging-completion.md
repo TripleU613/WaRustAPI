@@ -762,3 +762,10 @@ known-state checks on the legacy path. This narrows implementation requirements;
 production parsing/orientation/Android username semantics remain open, and no
 live scan or human verification is claimed. See
 [comparison execution](protocol/safety-number.md#executed-native-v4-comparison-branches-2026-10-07).
+
+2026-10-07 native username comparison: the same 115 core statuses reproduce with
+actual APK MCFStringCompare and the public Bionic strncasecmp fixture; 268 native
+ASCII/prefix cases narrow the runtime comparison requirements. Object
+construction/other primitives remain modeled; whole parsing, orientation,
+current inventory and production scanning remain open. See
+[actual string scope](protocol/safety-number.md#actual-native-ascii-username-comparison-2026-10-07).

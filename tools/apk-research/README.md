@@ -281,3 +281,24 @@ PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
 compares all observations against the committed artifact. Actual emulation skips
 unless `TELEWHATSAPP_FINGERPRINT_LIBRARY` is set. See the
 [execution scope and findings](../../docs/protocol/safety-number.md#executed-native-v4-comparison-branches-2026-10-07).
+
+Optional paired flags on that checker execute actual APK merged MCFStringCompare
+and public Bionic strncasecmp over synthetic MCFString objects, replacing host
+case-folding. Both additional libraries must match their pinned hashes. The
+public libc fixture is not APK-bundled or evidence of every Android version.
+The 115 core statuses agree; 268 additional ASCII-byte/prefix/empty/256-byte
+cases reproduce case-insensitive ASCII equality with exact lengths. Other
+primitives/object construction remain modeled. No account state changes.
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
+  tools/apk-research/native_v4_comparison_check.py \
+  --library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so \
+  --string-library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsappmerged.so \
+  --libc lab/apk-2.26.37.71/native/qiling-rootfs/system/lib64/libc.so
+```
+
+Set `TELEWHATSAPP_BIONIC_LIBRARY` along with the main/merged fixture variables
+for the additional actual-string regression test. Pairing/wrong-build preflight
+checks require no fixtures. See
+[scope and compact observations](../../docs/protocol/safety-number.md#actual-native-ascii-username-comparison-2026-10-07).

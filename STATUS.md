@@ -319,3 +319,17 @@ CLI reference regeneration and repository hygiene passed (310 local links).
 The final attributed observation artifact also regenerated identically and
 passed its three focused preflight/execution checks. Rust runtime code did not
 change in this research increment.
+
+Native username primitive (offline, 2026-10-07): the V4 checker now optionally
+executes actual APK 37.71 merged MCFStringCompare and the pinned public Bionic
+strncasecmp fixture. All 115 core statuses agree; 268 additional accepted-ASCII,
+every-position mismatch, prefix, empty and 256-byte cases confirm ASCII
+case-insensitive equality plus exact length for these fixtures. Public Bionic
+is not APK-bundled or proof of every Android build; object construction and
+non-string dependencies remain modeled. QR parsing/orientation/current inventory
+and production scanning remain unfinished. No account state changed.
+[Native string evidence](docs/protocol/safety-number.md#actual-native-ascii-username-comparison-2026-10-07).
+Validation for the native-string increment: all 22 native tooling tests passed
+with all four fixtures configured, alongside 36 CLI/API tests, regenerated CLI
+reference, formatting and repository hygiene (315 local links). Rust runtime
+code did not change; the account database was not opened.

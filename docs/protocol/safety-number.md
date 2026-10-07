@@ -1109,3 +1109,78 @@ The artifact regenerated identically in a separate invocation. Three focused
 checks passed, including actual pinned execution and missing/wrong-build
 refusals with empty stdout. This is offline branch verification, not a live
 scan, automatic verified-state write or companion synchronization.
+
+## Actual native ASCII username comparison (2026-10-07)
+
+**Confirmed/static and observed/offline, explicitly scoped fixtures:** optional
+paired `--string-library` and `--libc` flags on the existing V4 checker replace
+its host case-folding comparison with actual APK **2.26.37.71** merged
+`MCFStringCompare` (`0x538a50..0x538c34`) and the public Bionic rootfs fixture's
+`strncasecmp` (`0x64e88..0x64ec8`). This remains a synthetic execution slice,
+not an Android client or a scan. The pinned inputs are:
+
+| Artifact | SHA-256 | Authority |
+| --- | --- | --- |
+| Reconstructed libwhatsapp.so | `f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a` | APK 37.71 comparison/helper instructions |
+| Reconstructed libwhatsappmerged.so | `565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa` | APK 37.71 MCFStringCompare instructions |
+| Public rootfs system/lib64/libc.so | `4e6d025f3356a3353418981e475561cfa133a0e439a20c9d9bede715ae167697` | Comparison Android/Bionic fixture; **not APK-bundled libc** |
+
+The [public rootfs provenance](native-unpacking.md#bounded-loader-check)
+and existing hashes are recorded in native-unpacking; the public fixture is
+not evidence of the server, this account's platform or every Android build.
+The APK SHA-256 remains `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+
+**Confirmed/static in the public Bionic fixture:** strncasecmp has no calls or
+locale/TLS reads. It uses an unsigned byte lookup in a fixed table at
+`0xab94a`, compares folded bytes, stops on difference/NUL/count exhaustion and
+returns their difference. `strncasecmp_l` at `0x260d4` tail-calls strncasecmp
+without inspecting a locale argument. The separate `tolower` implementation
+at `0x5e2c8` uses a table pointer; it is **not called** by this strncasecmp
+slice. These statements are fixture-local; they do not resolve arbitrary
+Android libc versions or Unicode comparison, which are not accepted native
+ASCII fingerprint inputs in the traced creator.
+
+The runner supplies synthetic MCFString objects in the traced ASCII/pointer
+representation: +0x19 storage flag 0, +0x1a ASCII flag 1, +0x24 character count,
++0x28 pointer to bytes. Native object construction/retention remains modeled.
+Synthetic TLS supplies the stack guard. The actual merged flag-1 branch resolves
+GOT slot `0x759d90` to the pinned Bionic entry, then executes its instructions;
+the flag-zero strncmp slot is null so an unexpected branch refuses. No merged
+or Bionic comparison instruction is replaced by host lowercasing in this mode.
+Other key/LID/getter/PN-equality/logging primitives remain modeled. No library
+initialization, JNI, protobuf unpacking or scan-orientation wrapper executes.
+
+**Observed/offline:** all original **115** core cases retain identical native
+and remapped status codes with actual string comparison. Those cases execute
+**195** native string comparisons and at most **493** instructions per
+core/remap run. A further **268** cases exercise both local and remote username
+pairings: all accepted ASCII bytes 1..127 with swapped letter case, a distinct
+mismatch at each of 127 positions, both prefix-length directions, empty/empty,
+empty/nonempty in both directions, and the local 256-byte input bound. All
+match ASCII case-insensitive byte equality plus exact length. This comparison
+is not Unicode normalization. Maximum instruction count was **2986**; every
+ordinary run returned within the existing ten-second/one-million-instruction
+limits. Wrong/missing libraries or unpaired flags refuse before emulation and
+before any JSON output. A
+[compact attributed observation](fingerprint-native-string-check.json) records
+hashes/counts/bounds; the checker reproduces full core results plus the ASCII
+check summary.
+
+Reproduce:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
+  tools/apk-research/native_v4_comparison_check.py \
+  --library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so \
+  --string-library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsappmerged.so \
+  --libc lab/apk-2.26.37.71/native/qiling-rootfs/system/lib64/libc.so
+```
+
+Native-string regression execution requires `TELEWHATSAPP_FINGERPRINT_LIBRARY`,
+`TELEWHATSAPP_SCHEMA_LIBRARY` and new `TELEWHATSAPP_BIONIC_LIBRARY`; otherwise
+that fixture-dependent case explicitly skips. Default modeled mode still
+matches its original committed artifact. This resolves the practical
+ASCII-comparison primitive for the pinned comparison fixture. **Unknown:**
+compatibility across other Android libc implementations and complete current
+APK scheme/inventory/QR parser behavior. Production scanning and human
+verification remain separate unfinished work; no account state changed.

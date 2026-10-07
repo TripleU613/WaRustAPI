@@ -1,0 +1,20 @@
+{
+  "apk_build": "2.26.37.71",
+  "library_sha256": "f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a",
+  "string_library_sha256": "565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa",
+  "bionic_fixture_sha256": "4e6d025f3356a3353418981e475561cfa133a0e439a20c9d9bede715ae167697",
+  "scope": "native core, PN/username helpers and status remapper; modeled dependencies; not whole QR comparison; actual merged MCFStringCompare and public Bionic strncasecmp; synthetic object construction",
+  "native_ascii_checks": {
+    "cases": 268,
+    "accepted_ascii_byte_values": 127,
+    "mismatch_positions_per_side": 127,
+    "empty_prefix_and_256_byte_cases_per_side": 6,
+    "max_instructions": 2986,
+    "string_object_construction": "synthetic",
+    "string_comparison": "actual APK merged MCFStringCompare and public Bionic strncasecmp"
+  },
+  "core_cases": 115,
+  "core_max_instructions": 493,
+  "native_string_comparisons_in_core_cases": 195,
+  "evidence": "observed/offline; actual comparison instructions with synthetic object construction and modeled non-string dependencies"
+}
