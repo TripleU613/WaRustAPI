@@ -2,10 +2,11 @@
 //!
 //! Callers must supply the selected scheme's already normalized identifier and
 //! complete key inventory. This module does not select the current APK scheme,
-//! fetch device keys, parse/compare QR codes, or commit human verification.
+//! fetch device keys or commit human verification. Its QR module compares binary
+//! V4 payloads against explicit inputs, with documented parsing/platform limits.
 //! Evidence and independent fixtures: docs/protocol/safety-number.md.
 
-/// Native V4 comparison-payload serialization from explicit inputs.
+/// Native V4 payload serialization/comparison from explicit inputs.
 pub mod qr;
 
 use crate::{Error, Result};

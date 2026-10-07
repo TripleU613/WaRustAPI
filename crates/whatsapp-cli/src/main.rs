@@ -174,6 +174,15 @@ enum Cmd {
         #[arg(long, requires = "qr_version")]
         qr_output: Option<PathBuf>,
     },
+    /// Compare a private native V4 binary payload against explicit private inputs (offline).
+    FingerprintCompare {
+        /// Private JSON with local/remote known inputs, same format as fingerprint-display.
+        #[arg(long)]
+        config: PathBuf,
+        /// Private binary comparison protobuf; no image decoding or account lookup.
+        #[arg(long)]
+        scanned: PathBuf,
+    },
     /// Send one private-JSON text, image or voice note through the comparison outbox.
     #[cfg(feature = "experimental-transport")]
     OutboxSend {
@@ -1404,6 +1413,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
             qr_version,
             qr_output,
         } => fingerprint::run(config, *qr_version, qr_output.as_deref()),
+        Cmd::FingerprintCompare { config, scanned } => fingerprint::compare(config, scanned),
         #[cfg(feature = "experimental-transport")]
         Cmd::OutboxSend {
             config,

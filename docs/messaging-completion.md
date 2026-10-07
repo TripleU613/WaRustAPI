@@ -769,3 +769,10 @@ ASCII/prefix cases narrow the runtime comparison requirements. Object
 construction/other primitives remain modeled; whole parsing, orientation,
 current inventory and production scanning remain open. See
 [actual string scope](protocol/safety-number.md#actual-native-ascii-username-comparison-2026-10-07).
+
+2026-10-07 comparison implementation: `fingerprint-compare` consumes private V4
+binary protobuf with explicit private known inputs. Traced conversion,
+orientation and result remapping are implemented; native core/string fixtures
+are covered. Complete protobuf-C parsing edges and current inventory selection
+remain unverified; no live scan or automatic human-verification write occurs.
+See [comparison semantics](protocol/safety-number.md#explicit-input-native-v4-binary-comparison-2026-10-07).

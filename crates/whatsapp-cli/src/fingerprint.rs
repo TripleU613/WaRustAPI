@@ -196,6 +196,29 @@ pub(super) fn run(
     Ok(())
 }
 
+fn compare_input(input: &Input, payload: &[u8]) -> Result<fingerprint::qr::V4Comparison, Error> {
+    let local_keys = decode_keys(&input.local)?;
+    let remote_keys = decode_keys(&input.remote)?;
+    fingerprint::qr::compare_v4(
+        &qr_side(&input.local, &local_keys)?,
+        &qr_side(&input.remote, &remote_keys)?,
+        payload,
+    )
+}
+
+pub(super) fn compare(config: &Path, scanned: &Path) -> Result<(), Error> {
+    let input = parse(&read(config)?)?;
+    // Reuse private regular/bounded file handling; binary protobuf contains
+    // contact identifiers and key/hash material just like the explicit JSON.
+    let result = compare_input(&input, &read(scanned)?)?;
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&result)
+            .map_err(|_| invalid("cannot encode comparison result"))?
+    );
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -362,5 +385,98 @@ mod tests {
         assert!(read(&path).is_err());
         std::fs::remove_file(&path).unwrap();
         assert!(read(&std::env::temp_dir()).is_err());
+    }
+    #[test]
+    fn comparison_cli_uses_private_explicit_inputs_and_redacts_payload() {
+        use clap::Parser;
+        assert!(
+            crate::Cli::try_parse_from([
+                "whatsapp-cli",
+                "fingerprint-compare",
+                "--config",
+                "private.json"
+            ])
+            .is_err()
+        );
+        assert!(
+            crate::Cli::try_parse_from([
+                "whatsapp-cli",
+                "fingerprint-compare",
+                "--config",
+                "private.json",
+                "--scanned",
+                "private.pb"
+            ])
+            .is_ok()
+        );
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../whatsapp-api/fixtures/fingerprint/native-qr-3771.json"
+        ))
+        .unwrap();
+        let mut value = input();
+        for side in ["local", "remote"] {
+            for field in [
+                "lid_jid",
+                "pn_identifier",
+                "username_identifier",
+                "raw_identity_keys_hex",
+            ] {
+                value[side][field] = fixture[side][field].clone();
+            }
+            value[side]["display_identifier"] = fixture[side]["lid_jid"]
+                .as_str()
+                .unwrap()
+                .split('@')
+                .next()
+                .unwrap()
+                .into();
+        }
+        value["local"]["hosted_state"] = "e2ee".into();
+        value["remote"]["hosted_state"] = "hosted".into();
+        let config = parse(&serde_json::to_vec(&value).unwrap()).unwrap();
+        for version in 0..=1 {
+            let payload =
+                hex::decode(fixture[format!("version_{version}_hex")].as_str().unwrap()).unwrap();
+            let result = compare_input(&config, &payload).unwrap();
+            assert_eq!(result.status, 0);
+            assert!(result.matches_explicit_inputs);
+            let json = serde_json::to_string(&result).unwrap();
+            assert!(!json.contains("222222"));
+            assert!(!json.contains("synthetic-local"));
+            assert!(!json.contains(&hex::encode(payload)));
+        }
+        assert_eq!(
+            compare_input(&config, b"secret-sentinel").unwrap().status,
+            -8
+        );
+        value["local"]["lid_jid"] = "secret-sentinel".into();
+        assert!(
+            !compare_input(
+                &parse(&serde_json::to_vec(&value).unwrap()).unwrap(),
+                b"invalid"
+            )
+            .unwrap_err()
+            .to_string()
+            .contains("secret-sentinel")
+        );
+    }
+    #[test]
+    fn comparison_api_covers_native_codes_in_both_orientations() {
+        let api: serde_json::Value =
+            serde_json::from_str(include_str!("../../../docs/api/openapi.json")).unwrap();
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../docs/protocol/fingerprint-native-comparison-cases.json"
+        ))
+        .unwrap();
+        let statuses = api["components"]["schemas"]["V4Comparison"]["properties"]["status"]["enum"]
+            .as_array()
+            .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            for field in ["code", "remapped_code"] {
+                if let Some(code) = case.get(field) {
+                    assert!(statuses.contains(code), "undocumented {field} {code}");
+                }
+            }
+        }
     }
 }

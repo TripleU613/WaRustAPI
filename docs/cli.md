@@ -28,6 +28,19 @@ Usage: whatsapp-cli fingerprint-display [OPTIONS]...
 | --qr-version | QR_VERSION | no |  |  |  | Export native V4 comparison protobuf version 0 (keys) or 1 (digest) |
 | --qr-output | QR_OUTPUT | no |  |  |  | Create a new private binary QR payload file; existing files are refused |
 
+## whatsapp-cli fingerprint-compare
+
+Compare a private native V4 binary payload against explicit private inputs (offline)
+
+```
+Usage: whatsapp-cli fingerprint-compare [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --config | CONFIG | yes |  |  |  | Private JSON with local/remote known inputs, same format as fingerprint-display |
+| --scanned | SCANNED | yes |  |  |  | Private binary comparison protobuf; no image decoding or account lookup |
+
 ## whatsapp-cli outbox-send
 
 Send one private-JSON text, image or voice note through the comparison outbox

@@ -2680,6 +2680,99 @@
             "description": "Explicit human mark/unmark decision; does not perform a comparison."
           }
         }
+      },
+      "V4Comparison": {
+        "type": "object",
+        "required": [
+          "status",
+          "matches_explicit_inputs",
+          "payload_version",
+          "orientation",
+          "input_authority",
+          "parser_authority"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Internal APK native comparison status, not a server reason or UI label. Zero matches supplied inputs only.",
+            "enum": [
+              0,
+              -44,
+              -43,
+              -42,
+              -41,
+              -40,
+              -39,
+              -38,
+              -37,
+              -36,
+              -35,
+              -34,
+              -33,
+              -32,
+              -31,
+              -30,
+              -29,
+              -28,
+              -27,
+              -26,
+              -25,
+              -24,
+              -23,
+              -19,
+              -18,
+              -17,
+              -16,
+              -15,
+              -14,
+              -13,
+              -12,
+              -11,
+              -10,
+              -8,
+              -5,
+              -4,
+              -2,
+              -1
+            ]
+          },
+          "matches_explicit_inputs": {
+            "type": "boolean",
+            "description": "status == 0 only; no active scheme/inventory, human or server verification claim."
+          },
+          "payload_version": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Decoded version or null before it is available. Unsupported decoded versions return -10."
+          },
+          "orientation": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "local_first",
+              "remote_first",
+              null
+            ],
+            "description": "Local-first remaps core codes; remote-first swaps scanned sides without remapping. Null before selection or if no local LID matched."
+          },
+          "input_authority": {
+            "type": "string",
+            "enum": [
+              "caller_supplied_selection_unverified"
+            ]
+          },
+          "parser_authority": {
+            "type": "string",
+            "enum": [
+              "prost_native_schema_edge_equivalence_unverified"
+            ],
+            "description": "Prost native schema parsing; complete protobuf-C duplicate/unknown-field edge equivalence remains unverified."
+          }
+        }
       }
     }
   },
@@ -9925,6 +10018,72 @@
           },
           "400": {
             "description": "Missing, own, stale, malformed or exhausted decision refused without metadata changes."
+          }
+        }
+      }
+    },
+    "/v1/diagnostics/fingerprint-compare": {
+      "post": {
+        "tags": [
+          "Account Safety"
+        ],
+        "summary": "Compare native V4 binary payload with explicit known inputs (offline)",
+        "description": "CLI only; no HTTP route. Same private JSON format as fingerprint-display plus a private scanned binary protobuf file. Both regular files <=64 KiB and exclude group/other permissions. Does not open an account store, select current scheme/inventory, fetch keys, render/decode a QR image, send or commit human verification. Implements APK 2.26.37.71 conversion/presence order, LID-directed orientation, version-selected key comparison, PN equality, ASCII username equality with exact length and hosted-state legacy branch. Local-first native results are remapped; remote-first are direct. Known params retain both PN/username (no local QR serializer suppression). Native internal codes are surfaced without invented UI/server meanings. Empty/oversized payload refuses as our local resource policy instead of the APK empty-buffer abort. ASCII username equality is independently validated using actual APK merged MCFStringCompare and the pinned public Bionic fixture; other Android implementations remain unverified. Prost schema parsing is used; complete duplicate/unknown-field edge equivalence with protobuf-C is unverified and reported. Known CLI inputs require ordinary canonical primary LIDs matching display_identifier and PN/username presence; these existing operator guards are not inferred server requirements. Output has no identifiers, keys or payload. Synthetic fixtures and all 113 executed non-abort core cases plus 268 native string cases test semantics. No live peer scan or current input selection is established. See docs/protocol/safety-number.md.",
+        "operationId": "fingerprintCompare",
+        "x-cli": "whatsapp-cli fingerprint-compare",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "x-library": [
+          "whatsapp_api::fingerprint::qr::compare_v4",
+          "whatsapp_cli::fingerprint::compare"
+        ],
+        "parameters": [
+          {
+            "name": "config",
+            "in": "query",
+            "required": true,
+            "description": "Private explicit local/remote JSON, FingerprintDisplayInput. No profile/account fallback.",
+            "schema": {
+              "type": "string"
+            },
+            "x-secret-input": true
+          },
+          {
+            "name": "scanned",
+            "in": "query",
+            "required": true,
+            "description": "Private native V4 binary protobuf path, not a QR image. Never printed.",
+            "schema": {
+              "type": "string"
+            },
+            "x-secret-input": true
+          }
+        ],
+        "requestBody": {
+          "description": "Documents the explicit CLI known-input JSON; not an HTTP body. Scanned data is supplied separately by private binary file.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FingerprintDisplayInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Redacted internal comparison code and scoped match result. Mismatches are normal result codes, not invocation errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V4Comparison"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid/private-file policy, known inputs or empty/oversized payload; error excludes offending values."
           }
         }
       }

@@ -21,9 +21,11 @@ replacement atomically with encrypted prior-key/session history and an
 selects `apk_authenticated` in its preserved private corrected configuration.
 No local account identity, send ID or reservation was reset. Automatic reads
 also cover eligible authenticated duplicates, with once-only write-cut coverage.
-Human safety-number verification remains unfinished. The legacy Java algorithm,
-phone-identifier normalization, key-set ordering and QR content are now traced;
-modern native schemes and active selection remain unknown.
+Human safety-number verification remains incomplete. Native V4 explicit-input
+display, binary export/comparison and guarded local manual marks are implemented
+and tested offline. Current account/peer scheme and complete inventory selection,
+protobuf-C edge equivalence and companion verification synchronization remain
+unverified.
 [Safety-number evidence](docs/protocol/safety-number.md). Outgoing key-bundle
 mismatches now suspend the original queued intent before ratchet use;
 `outbox-suspended` inspects them offline. Independent
@@ -333,3 +335,21 @@ Validation for the native-string increment: all 22 native tooling tests passed
 with all four fixtures configured, alongside 36 CLI/API tests, regenerated CLI
 reference, formatting and repository hygiene (315 local links). Rust runtime
 code did not change; the account database was not opened.
+
+Explicit binary comparison (offline, 2026-10-07): `fingerprint-compare` now
+compares private native V4 protobuf against explicit known JSON, with traced
+conversion order, both scan orientations and native status remapping. Tests
+match all 113 executed non-abort core cases and 268 native string cases;
+independent wire fixtures cover both versions/orientations. Result reports
+caller-input and prost-parser scope; complete protobuf-C edge equivalence,
+current inventory and live scanning remain unverified. No account or human
+verification metadata is changed by comparison.
+[Comparison scope](docs/protocol/safety-number.md#explicit-input-native-v4-binary-comparison-2026-10-07).
+Validation: 551 workspace/all-feature tests and 239 default-feature tests passed,
+with strict all-target/all-feature Clippy, warning-free Rustdoc, formatting,
+CLI reference and repository hygiene (317 local links). Command-level synthetic
+version-0/1 fixtures matched without creating an unused account-store path;
+malformed payload/private-permission checks passed. Both-scanned-LIDs-matching
+priority also passed its focused regression. The initial documentation check
+compiled before the new OpenAPI operation was added; completing the contract
+and regenerating/rerunning resolved the coverage refusal.

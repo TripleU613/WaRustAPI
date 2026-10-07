@@ -1184,3 +1184,93 @@ ASCII-comparison primitive for the pinned comparison fixture. **Unknown:**
 compatibility across other Android libc implementations and complete current
 APK scheme/inventory/QR parser behavior. Production scanning and human
 verification remain separate unfinished work; no account state changed.
+
+## Explicit-input native V4 binary comparison (2026-10-07)
+
+**Implemented/offline, grounded in confirmed static APK 2.26.37.71 traces:**
+`fingerprint::qr::compare_v4` and `whatsapp-cli fingerprint-compare` compare a
+binary native V4 payload against explicit known inputs. Source attribution is
+unchanged: APK SHA-256 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`,
+main library SHA-256 `f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a`,
+merged SHA-256 `565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa`.
+Addresses above identify native descriptors, converter, wrapper and core;
+the executed native cases remain the independent authority for core results.
+
+The wrapper order is implemented from `0x714a60..0x714c70`: protobuf decode,
+version presence/range, both individuals, both LID presence bits, then
+local/remote conversion. Early statuses are **not remapped**. Converter
+`0x7150ac..0x715264` checks ASCII LID, PN, username, hosted enum and the
+version-selected key presence in that order. Versions 0/1 compare public/hash
+fields respectively. Known inputs are constructed with both PN and username
+retained, as params constructor `0x71916c` does; the known local holder must
+not use QR serialization's local PN suppression.
+
+Known local LID matching the scanned local side takes priority (including when
+both scanned LIDs match), invokes the core and remaps its code. Matching only
+the scanned remote side swaps the pair and returns the core code unchanged.
+Neither matching is -13. A wrong remote LID is therefore -11 in local-first,
+-12 in remote-first. Returning core zero without the wrapper orientation guard
+would have been incorrect; the public comparison function includes that guard.
+
+PN checks preserve absent versus empty and use byte equality only when both
+values are present. Username checks distinguish missing/different sides and use
+ASCII case-insensitive equality **with exact length**. This is independently
+executed against the actual merged MCFStringCompare and pinned public Bionic
+fixture, not an invented Unicode/locale normalization. Both scanned hosted
+states absent take the native legacy success branch regardless of known states;
+otherwise local then remote agreement is checked. An invalid enum returns -38
+in conversion before the core; no native invariant abort is exposed.
+
+Use the existing private display/QR JSON (local/remote raw key inventories,
+full canonical primary lid_jid, matching display_identifier and chosen optional
+PN/username/hosted inputs), plus private binary protobuf:
+
+```sh
+whatsapp-cli fingerprint-compare --config <private-known-inputs.json> \
+  --scanned <private-native-payload.pb>
+```
+
+Both files must be regular, <=64 KiB and exclude group/other permissions.
+Output contains `status` (native internal integer), `matches_explicit_inputs`
+(status zero only), `payload_version`, nullable `orientation`,
+`input_authority=caller_supplied_selection_unverified` and
+`parser_authority=prost_native_schema_edge_equivalence_unverified`. No key,
+contact identifier, scanned bytes, input path or raw parse failure is printed.
+Mismatches are valid comparison results. Known-input/file-policy errors refuse
+without claiming a comparison. No account store, network or metadata write is
+performed, including on status zero. This command consumes binary protobuf;
+it does not decode a QR image or assume a camera/device is available.
+
+**Local policies:** empty input refuses instead of reproducing the APK's
+empty-buffer abort; payload size is bounded before decoding. Known CLI input
+uses the existing canonical primary-LID/display consistency and PN/username
+presence guard. These are our operator/resource policies, not server rules.
+Known library inputs keep existing bounded ASCII/key validation; scanned
+strings are limited by the whole payload bound and follow the native ASCII
+byte acceptance (including empty values).
+
+**Unknown/unverified:** parsing is implemented with prost over the recovered
+native schema. Complete protobuf-C equivalence for duplicate fields, unknown
+fields/enums, malformed/truncated encodings and other parser edges is not yet
+established; malformed prost data reports the corresponding decode-stage -8,
+not a claim that every such byte sequence has the same native outcome. Other
+Android libc versions, current account/peer scheme and complete inventory,
+QR-image decoding, live peer scanning and companion verification sync remain
+unfinished. No successful explicit comparison automatically marks a peer
+verified. The separate manual decision still requires its saved-pin/sequence
+guards and an actual human decision.
+
+Tests compare every **113** non-abort executed core/remapper case against the
+committed native observation artifact, plus all **268** native string cases.
+Independent version-0/1 wire fixtures succeed in both orientations; wrong
+remote/no matching local LID, conversion ordering, missing fields, invalid
+ASCII/enums, version-selected missing keys, size/empty refusals and output
+redaction are covered. CLI checks require both private paths and validate
+known input/redacted output. These are synthetic offline tests, not a live
+scan or active inventory verification.
+
+Command-level synthetic validation also matched version 0/1 with status zero
+and local-first orientation while a deliberately unused account-store path
+remained absent. Malformed bytes returned decode-stage -8; public permissions
+refused with empty stdout before any store creation. Private synthetic files
+remain ignored under `lab/fingerprint-comparison-synthetic-check/`.
