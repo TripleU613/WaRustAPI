@@ -1,4 +1,5 @@
 //! Shared durable incoming-message processing. No network side effects here.
+use crate::registration::request::IdentityChangePolicy;
 use crate::store::WriteTx;
 use crate::{
     Error, Result,
@@ -9,6 +10,39 @@ use crate::{
 };
 use sha2::{Digest, Sha256};
 use zeroize::Zeroizing;
+
+fn remote_identity_policy(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    peer: &Jid,
+    policy: IdentityChangePolicy,
+) -> Result<IdentityChangePolicy> {
+    // APK 2.26.37.71 0jc.A14 has a separate own-companion safeguard.
+    // A remote incoming policy must not replace a session for our own PN.
+    if policy == IdentityChangePolicy::Pinned
+        || account
+            .own_jid
+            .as_ref()
+            .is_some_and(|own| own.user == peer.user && own.server == peer.server)
+    {
+        return Ok(IdentityChangePolicy::Pinned);
+    }
+    let own: Option<serde_json::Value> =
+        store.read(|tx| tx.get_json(Table::Checkpoints, b"login-identity", 1))?;
+    let own_alias = own.as_ref().is_some_and(|saved| {
+        ["pn", "lid"].into_iter().any(|field| {
+            saved[field]
+                .as_str()
+                .and_then(|s| Jid::parse(s).ok())
+                .is_some_and(|j| j.user == peer.user && j.server == peer.server)
+        })
+    });
+    Ok(if own_alias {
+        IdentityChangePolicy::Pinned
+    } else {
+        policy
+    })
+}
 
 /// Outcome never includes plaintext or sender identifiers in diagnostics.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -318,6 +352,19 @@ pub async fn process(
     node: &Node,
     capture: &[u8],
 ) -> Result<IncomingResult> {
+    process_with_policy(store, account, node, capture, IdentityChangePolicy::Pinned).await
+}
+
+/// Process using an explicit incoming remote identity policy. Own-device
+/// messages always remain pinned; authenticated replacements archive old state
+/// and emit an IdentityChanged event in the inbox commit transaction.
+pub async fn process_with_policy(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    node: &Node,
+    capture: &[u8],
+    policy: IdentityChangePolicy,
+) -> Result<IncomingResult> {
     // One message we cannot open must not end the session. The group path has
     // degraded like this since the first live group stanza; the direct path
     // still propagated, so a single undecryptable `pkmsg` tore down the whole
@@ -328,7 +375,7 @@ pub async fn process(
     // `InvalidInput`, and that one must keep propagating: it means the advanced
     // session and the inbox write rolled back together, which the caller has to
     // see rather than have reported as an ordinary undecryptable message.
-    match process_direct(store, account, node, capture).await {
+    match process_direct(store, account, node, capture, policy).await {
         Err(Error::InvalidInput { field, reason }) if field == "direct_message" => {
             tracing::warn!(
                 field,
@@ -346,6 +393,7 @@ async fn process_direct(
     account: &AccountRecord,
     node: &Node,
     capture: &[u8],
+    policy: IdentityChangePolicy,
 ) -> Result<IncomingResult> {
     if node.description != "message" {
         return Ok(IncomingResult::Unsupported);
@@ -354,7 +402,7 @@ async fn process_direct(
     // `from` is the group JID. Route them to the sender-key path.
     #[cfg(feature = "experimental-signal-crypto")]
     if node.get_attr("participant").is_some() {
-        return process_group(store, account, node, capture).await;
+        return process_group(store, account, node, capture, policy).await;
     }
     let peer_category = node.get_attr("category").and_then(|v| v.as_text()) == Some("peer");
     let sender = if peer_category {
@@ -466,12 +514,17 @@ async fn process_direct(
                 })?
                 .map(Zeroizing::new);
         }
-        let incoming = crate::signal::direct::receive_prekey(
+        let incoming = crate::signal::direct::receive_prekey_with_policy(
             account,
             &session_peer,
             (
                 session.as_deref().map(|v| v.as_slice()),
                 identity.as_deref(),
+                if peer_category {
+                    IdentityChangePolicy::Pinned
+                } else {
+                    remote_identity_policy(store, account, &session_peer, policy)?
+                },
             ),
             &signed,
             original_prekey.as_deref().map(|v| v.as_slice()),
@@ -569,6 +622,13 @@ async fn process_direct(
             peer_key.as_bytes(),
             1,
             &*received.session,
+        )?;
+        super::identity_conflicts::archive_replacement(
+            tx,
+            &session_peer,
+            identity.as_deref(),
+            session.as_deref().map(|v| v.as_slice()),
+            &pinned_identity,
         )?;
         tx.put_json(
             Table::PeerIdentities,
@@ -685,8 +745,9 @@ async fn process_group(
     account: &AccountRecord,
     node: &Node,
     capture: &[u8],
+    policy: IdentityChangePolicy,
 ) -> Result<IncomingResult> {
-    match process_group_inner(store, account, node, capture).await {
+    match process_group_inner(store, account, node, capture, policy).await {
         Err(Error::InvalidInput { field, reason }) => {
             // A group stanza that fails in the crypto is undecryptable; one
             // that fails elsewhere is merely unsupported. Only the first is
@@ -722,6 +783,7 @@ async fn process_group_inner(
     account: &AccountRecord,
     node: &Node,
     capture: &[u8],
+    policy: IdentityChangePolicy,
 ) -> Result<IncomingResult> {
     let Some((group_jid, sender_jid)) = sender_key_chat(node) else {
         return Ok(IncomingResult::Unsupported);
@@ -802,10 +864,14 @@ async fn process_group_inner(
                     })?
                     .map(Zeroizing::new);
             }
-            let incoming = crate::signal::direct::receive_prekey(
+            let incoming = crate::signal::direct::receive_prekey_with_policy(
                 account,
                 &peer,
-                (session.as_deref(), identity.as_deref()),
+                (
+                    session.as_deref(),
+                    identity.as_deref(),
+                    remote_identity_policy(store, account, &peer, policy)?,
+                ),
                 &signed,
                 original_prekey.as_deref().map(|v| v.as_slice()),
                 ciphertext,
@@ -941,6 +1007,20 @@ async fn process_group_inner(
                 ));
             }
             tx.put_json(Table::SignalSessions, peer_key, 1, &*member.session)?;
+            // The archived peer must be the actual pairwise session selector.
+            let peer = Jid::parse(
+                member
+                    .peer_key
+                    .strip_prefix("comparison-direct:")
+                    .ok_or_else(|| Error::invalid("inbox", "invalid member session selector"))?,
+            )?;
+            super::identity_conflicts::archive_replacement(
+                tx,
+                &peer,
+                member.previous_identity.as_deref(),
+                member.previous_session.as_deref(),
+                &member.identity,
+            )?;
             tx.put_json(Table::PeerIdentities, peer_key, 1, &member.identity)?;
             if let Some(pid) = used_prekey {
                 let prekey_key = format!("comparison-prekey:{pid}");
@@ -1255,6 +1335,40 @@ mod tests {
             assert_eq!(
                 process(&store, &account, &node, &capture).await.unwrap(),
                 IncomingResult::Unsupported
+            );
+            assert_eq!(
+                process_with_policy(
+                    &store,
+                    &account,
+                    &node,
+                    &capture,
+                    IdentityChangePolicy::ApkAuthenticated
+                )
+                .await
+                .unwrap(),
+                IncomingResult::Unsupported
+            );
+        }
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"login-identity",
+                    1,
+                    &serde_json::json!({"pn":"15555550100@s.whatsapp.net","lid":"123456789@lid"}),
+                )
+            })
+            .unwrap();
+        for own in ["15555550100@s.whatsapp.net", "123456789:2@lid"] {
+            assert_eq!(
+                remote_identity_policy(
+                    &store,
+                    &account,
+                    &Jid::parse(own).unwrap(),
+                    IdentityChangePolicy::ApkAuthenticated
+                )
+                .unwrap(),
+                IdentityChangePolicy::Pinned
             );
         }
         assert!(

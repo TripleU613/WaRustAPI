@@ -35,10 +35,13 @@ once-only retry was server-acknowledged, and redelivery still failed. No new
 read receipt was queued. This verifies the retry path, not fresh-message auto-read.
 Offline pin inspection shows that both PN and LID aliases mismatch the incoming
 prekey identities; the cause is unknown and verified identity-change handling
-is absent. The pins remain intact. Direct/group prekey processing now preserves
+was absent at that live checkpoint. The pins remain intact. Direct/group prekey processing now preserves
 first-seen conflict fingerprints across restart/redelivery, inspectable through
 `identity-conflicts` (offline). These records establish an observed difference,
-not a legitimate replacement. See [peer identity evidence](protocol/peer-identity.md).
+not a legitimate replacement. A subsequent explicit `apk_authenticated` policy
+adds authenticated remote replacement, archived prior state and atomic journal
+events. Isolated replay recovered one direct message from the original captures,
+with the original account unchanged; group session-alias/prekey recovery remains; the current live profile still uses the default pin refusal. See [peer identity evidence](protocol/peer-identity.md).
 
 Work remains on broad notification/cross-device synchronization, socket-level
 cut-point crash coverage and full outbox integration. Preserve the existing encrypted account, identities, send IDs

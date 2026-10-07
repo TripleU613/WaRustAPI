@@ -109,6 +109,19 @@ pub enum RequestBodyMode {
     EncEmptyH,
 }
 
+/// Incoming peer identity policy; never changes the local account identity.
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum IdentityChangePolicy {
+    /// Refuse incoming keys differing from an existing saved pin.
+    #[default]
+    Pinned,
+    /// APK 2.26.37.71 0km.BRS/COt and Cnp.A04 permit peer changes. Here the
+    /// candidate is committed only after message authentication, with history.
+    /// Authentication establishes possession of the new key, not human trust.
+    ApkAuthenticated,
+}
+
 /// Bounded transport configuration. TLS validation cannot be disabled.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(default, deny_unknown_fields)]
@@ -134,6 +147,8 @@ pub struct TransportSettings {
     /// official client marks messages read when a chat is on screen, and this
     /// client has no screen to infer that from.
     pub mark_read: bool,
+    /// Policy for authenticated incoming remote prekey identity changes.
+    pub identity_changes: IdentityChangePolicy,
 }
 impl Default for TransportSettings {
     fn default() -> Self {
@@ -145,6 +160,7 @@ impl Default for TransportSettings {
             reconnect: ReconnectSettings::default(),
             action_delay_ms: 0,
             mark_read: false,
+            identity_changes: IdentityChangePolicy::default(),
         }
     }
 }
@@ -629,6 +645,25 @@ mod tests {
             serde_json::from_str(super::super::request::TEMPLATE_JSON).unwrap();
         assert!(template.validate().is_err());
         config().validate().unwrap();
+    }
+
+    #[test]
+    fn incoming_identity_policy_is_explicit_and_backward_compatible() {
+        let mut json = serde_json::to_value(config()).unwrap();
+        json["transport"]
+            .as_object_mut()
+            .unwrap()
+            .remove("identity_changes");
+        let old: LabRegistrationConfig = serde_json::from_value(json.clone()).unwrap();
+        assert_eq!(old.transport.identity_changes, IdentityChangePolicy::Pinned);
+        json["transport"]["identity_changes"] = serde_json::json!("apk_authenticated");
+        let new: LabRegistrationConfig = serde_json::from_value(json.clone()).unwrap();
+        assert_eq!(
+            new.transport.identity_changes,
+            IdentityChangePolicy::ApkAuthenticated
+        );
+        json["transport"]["identity_changes"] = serde_json::json!("ignore_validation");
+        assert!(serde_json::from_value::<LabRegistrationConfig>(json).is_err());
     }
 
     #[test]

@@ -573,11 +573,12 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                     .and_then(|v| v.as_text())
                     .filter(|v| matches!(*v, "msg" | "pkmsg" | "skmsg"))
                     .unwrap_or("none/other");
-                let incoming = whatsapp_api::transport::inbox::process(
+                let incoming = whatsapp_api::transport::inbox::process_with_policy(
                     &store,
                     &account,
                     &node,
                     format!("inbound:{capture}:{index}").as_bytes(),
+                    config.transport.identity_changes,
                 )
                 .await?;
                 if let Some(seen) = whatsapp_api::transport::presence::parse_presence(&node) {

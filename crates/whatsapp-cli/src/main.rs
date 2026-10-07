@@ -491,6 +491,10 @@ enum Cmd {
         /// Already-committed messages dedupe; nothing is sent and no receipt goes out.
         #[arg(long)]
         replay_captures: bool,
+        /// Permit authenticated remote prekey identity changes offline, preserving
+        /// prior pins/sessions and emitting IdentityChanged. Not human verification.
+        #[arg(long, requires = "replay_captures", conflicts_with = "inspect")]
+        accept_authenticated_identity_changes: bool,
     },
     /// One comparison-server connection; optional bounded primary login.
     #[cfg(feature = "experimental-transport")]
@@ -1437,7 +1441,16 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::LabInbox {
             inspect,
             replay_captures,
-        } => transport_receive::run(&cli, *inspect, *replay_captures).await,
+            accept_authenticated_identity_changes,
+        } => {
+            transport_receive::run(
+                &cli,
+                *inspect,
+                *replay_captures,
+                *accept_authenticated_identity_changes,
+            )
+            .await
+        }
         #[cfg(feature = "experimental-transport")]
         Cmd::LabTransport {
             config,

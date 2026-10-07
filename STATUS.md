@@ -15,13 +15,19 @@ the earlier window with no incoming messages. A 90-second receive-only session
 logged in and activated successfully; one
 automatic retry was server-acknowledged, but its redelivery still failed
 decryption. Offline inspection confirms that the incoming prekey identities
-differ from both saved PN and LID pins; the cause and a verified identity-change
-workflow remain unresolved. `lab-inbox --inspect` exposes these comparisons
+differ from both saved PN and LID pins; the original cause remains unknown. `lab-inbox --inspect` exposes these comparisons
 without keys or session mutation. Direct/group prekey processing also saves
 first-seen fingerprint conflicts durably; `identity-conflicts` inspects them
 offline. These are unauthenticated observations, not key replacement or safety
 number verification. [Peer identity evidence](docs/protocol/peer-identity.md)
 records the APK verification-state transition and remaining trust-policy gaps.
+An explicit `transport.identity_changes=apk_authenticated` policy now permits
+authenticated remote prekey replacements with atomic encrypted history and an
+`IdentityChanged` event; default stays `pinned`. Offline replay exposes the
+explicit opt-in. This does not provide human safety-number verification.
+Isolated replay using that explicit policy recovered one direct message and
+emitted one identity-change event; the original database stayed byte-for-byte
+unchanged. A group capture still needs session-alias/prekey diagnosis.
 Fresh incoming/auto-read validation remains
 pending. Private `lab/` state was recovered from the former checkout in the
 desktop Trash, preserving the original. Profile `l`
@@ -87,7 +93,7 @@ redelivered at every login.
 
 ## Offline verification
 
-498 tests pass on 2026-10-07 (`cargo test --locked --workspace --all-features`); Clippy with
+500 tests pass on 2026-10-07 (`cargo test --locked --workspace --all-features`); Clippy with
 `-D warnings` is clean. Rust 1.98.1 locally and in CI. Store, codec, crash
 matrix, registration state machine and transport coverage are described in
 [docs/design](docs/design/README.md) and the per-area protocol docs.

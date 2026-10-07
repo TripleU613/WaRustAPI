@@ -19,7 +19,7 @@ use zeroize::Zeroizing;
 mod incoming;
 pub use incoming::{
     ReceivedPrekey, incoming_prekey_id, incoming_prekey_identity_fingerprints,
-    incoming_prekey_identity_matches, receive_prekey,
+    incoming_prekey_identity_matches, receive_prekey, receive_prekey_with_policy,
 };
 
 fn invalid(reason: &'static str) -> Error {
@@ -1001,6 +1001,52 @@ mod tests {
                 &signed_bytes,
                 Some(&one_bytes),
                 &encrypted.ciphertext
+            )
+            .await
+            .is_err()
+        );
+        let accepted_change = receive_prekey_with_policy(
+            &bob_account,
+            &sender,
+            (
+                None,
+                Some(&changed),
+                crate::registration::request::IdentityChangePolicy::ApkAuthenticated,
+            ),
+            &signed_bytes,
+            Some(&one_bytes),
+            &encrypted.ciphertext,
+        )
+        .await
+        .unwrap();
+        assert_eq!(&*accepted_change.received.plaintext, b"\x0a\x04test");
+        assert_eq!(
+            accepted_change.identity,
+            alice.identity_key().serialize().to_vec()
+        );
+        assert_eq!(accepted_change.consumed_prekey, Some(8));
+        let mut damaged = encrypted.ciphertext.clone();
+        // Break the authenticated nested Signal message, preserving its
+        // public identity. Permitting a key change must never skip its MAC.
+        let envelope = PreKeySignalMessage::try_from(encrypted.ciphertext.as_slice()).unwrap();
+        let nested = envelope.message().serialized();
+        let start = damaged
+            .windows(nested.len())
+            .position(|w| w == nested)
+            .unwrap();
+        damaged[start + nested.len() - 1] ^= 1;
+        assert!(
+            receive_prekey_with_policy(
+                &bob_account,
+                &sender,
+                (
+                    None,
+                    Some(&changed),
+                    crate::registration::request::IdentityChangePolicy::ApkAuthenticated
+                ),
+                &signed_bytes,
+                Some(&one_bytes),
+                &damaged,
             )
             .await
             .is_err()

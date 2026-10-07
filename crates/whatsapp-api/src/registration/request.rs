@@ -24,8 +24,9 @@
 //! Supply observed/real inputs, not invented telemetry or challenge tokens.
 
 pub use super::request_config::{
-    ClientSettings, DeliveryMethod, DeviceSettings, EndpointFields, LAB_PROFILE_ID,
-    LabRegistrationConfig, MAX_CONFIG_BYTES, ReconnectSettings, RequestBodyMode, TransportSettings,
+    ClientSettings, DeliveryMethod, DeviceSettings, EndpointFields, IdentityChangePolicy,
+    LAB_PROFILE_ID, LabRegistrationConfig, MAX_CONFIG_BYTES, ReconnectSettings, RequestBodyMode,
+    TransportSettings,
 };
 #[cfg(feature = "experimental-signal-crypto")]
 pub(crate) use super::request_config::{append_byte_fields, append_fields};
@@ -78,6 +79,7 @@ pub const TEMPLATE_JSON: &str = r#"{
     "max_response_bytes": 1048576,
     "action_delay_ms": 0,
     "mark_read": false,
+    "identity_changes": "pinned",
     "reconnect": { "max_attempts": 5, "base_delay_ms": 2000, "max_delay_ms": 60000 }
   },
   "diagnostics": true,

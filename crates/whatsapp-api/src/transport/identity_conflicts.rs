@@ -117,6 +117,42 @@ pub fn list(store: &ProtocolStore) -> Result<Vec<IdentityConflict>> {
     })
 }
 
+/// Commit authenticated replacement history in the same transaction as inbox,
+/// session and prekey changes. Call only after OCC checks and authentication.
+pub(super) fn archive_replacement(
+    tx: &mut crate::store::WriteTx<'_>,
+    peer: &Jid,
+    previous: Option<&[u8]>,
+    previous_session: Option<&[u8]>,
+    current: &[u8],
+) -> Result<()> {
+    let Some(previous) = previous.filter(|old| *old != current) else {
+        return Ok(());
+    };
+    let observed_at = Timestamp::now();
+    let event = tx.append_event(crate::sync::SyncEvent::IdentityChanged(
+        crate::sync::IdentityChange {
+            device: crate::model::ids::DeviceAddress::from_jid(peer)?,
+            previous_fingerprint: Some(hex::encode(Sha256::digest(previous))),
+            new_fingerprint: hex::encode(Sha256::digest(current)),
+            observed_at,
+        },
+    ))?;
+    // Unique journal event selector preserves repeated A->B->A transitions;
+    // a deterministic old/new selector would overwrite distinct ratchets.
+    let key = format!("identity-history:{}", hex::encode(event.event_id.0));
+    tx.put_json(
+        Table::Checkpoints,
+        key.as_bytes(),
+        1,
+        &serde_json::json!({
+            "peer":peer, "previous_identity":previous, "previous_session":previous_session,
+            "current_fingerprint":hex::encode(Sha256::digest(current)), "at":observed_at,
+            "verification":"unverified", "policy":"apk_authenticated",
+        }),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -253,5 +289,214 @@ mod tests {
                 Ok(())
             })
             .unwrap();
+    }
+
+    #[tokio::test]
+    async fn authenticated_replacement_is_atomic_for_direct_and_group_messages() {
+        use crate::{
+            binary::Node,
+            registration::request::{IdentityChangePolicy, LabRegistrationConfig},
+            session::{AccountRecord, KeyMaterial, RegistrationStatus, SignalIdentityKey},
+        };
+        use wacore_libsignal::protocol::{
+            DeviceId, GenericSignedPreKey, IdentityKey, IdentityKeyPair, PreKeyBundle,
+            SessionRecord, SignedPreKeyRecord,
+        };
+        for group in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("replace.redb");
+            let store = open(&path, true);
+            let mut config: LabRegistrationConfig =
+                serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+            config.registration_id = 42;
+            config.signed_pre_key_id = 7;
+            crate::registration::factory::install_test_material(&store, &config).unwrap();
+            let receiver = store.read(AccountRecord::load).unwrap().unwrap();
+            let signed = crate::registration::factory::registered_signed_prekey(&store).unwrap();
+            let signed = SignedPreKeyRecord::deserialize(&signed).unwrap();
+            let local = receiver.signal_identity.as_ref().unwrap();
+            let mut serialized_identity = vec![5];
+            serialized_identity.extend(local.0.public);
+            let bundle = PreKeyBundle::new(
+                42,
+                DeviceId::new(0),
+                None,
+                7.into(),
+                signed.public_key().unwrap(),
+                signed.signature().unwrap().to_vec(),
+                IdentityKey::decode(&serialized_identity).unwrap(),
+            )
+            .unwrap();
+            let mut rng = rand::rng();
+            let alice = IdentityKeyPair::generate(&mut rng);
+            let old = IdentityKeyPair::generate(&mut rng)
+                .identity_key()
+                .serialize()
+                .to_vec();
+            let sender = Jid::parse("15557654321@s.whatsapp.net").unwrap();
+            let peer_key = format!("comparison-direct:{sender}");
+            let old_session = SessionRecord::new_fresh().serialize().unwrap();
+            store
+                .write(|tx| {
+                    tx.put_json(Table::PeerIdentities, peer_key.as_bytes(), 1, &old)?;
+                    tx.put_json(Table::SignalSessions, peer_key.as_bytes(), 1, &old_session)
+                })
+                .unwrap();
+            let sending = AccountRecord {
+                registration: RegistrationStatus::Registered,
+                signal_registration_id: Some(31),
+                signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                    public: alice.public_key().public_key_bytes().try_into().unwrap(),
+                    private: *alice.private_key().serialize(),
+                })),
+                ..Default::default()
+            };
+            let prepared = crate::signal::direct::prepare(
+                &sending,
+                &receiver.own_jid.clone().unwrap(),
+                &bundle,
+                None,
+                None,
+                "identity test",
+            )
+            .await
+            .unwrap();
+            let node = |id: &str, ciphertext: Vec<u8>| {
+                let mut n = Node::new("message").attr("id", id).attr("type", "text");
+                n = if group {
+                    n.attr("from", "120363000000000001@g.us")
+                        .attr("participant", sender.clone())
+                } else {
+                    n.attr("from", sender.clone())
+                };
+                n.children(vec![
+                    Node::new("enc")
+                        .attr("v", "2")
+                        .attr("type", "pkmsg")
+                        .bytes(ciphertext),
+                ])
+            };
+            let n = node("identity-good", prepared.ciphertext.clone());
+            let capture = super::super::inbox::preserve(&store, &n).unwrap();
+            assert_eq!(
+                super::super::inbox::process(&store, &receiver, &n, &capture)
+                    .await
+                    .unwrap(),
+                super::super::inbox::IncomingResult::Undecryptable
+            );
+            let initial_head = store.journal_head().unwrap();
+            let mut damaged = prepared.ciphertext.clone();
+            let envelope = wacore_libsignal::protocol::PreKeySignalMessage::try_from(
+                prepared.ciphertext.as_slice(),
+            )
+            .unwrap();
+            let nested = envelope.message().serialized();
+            let start = damaged
+                .windows(nested.len())
+                .position(|w| w == nested)
+                .unwrap();
+            damaged[start + nested.len() - 1] ^= 1;
+            let bad = node("identity-bad", damaged);
+            let bad_capture = super::super::inbox::preserve(&store, &bad).unwrap();
+            assert_eq!(
+                super::super::inbox::process_with_policy(
+                    &store,
+                    &receiver,
+                    &bad,
+                    &bad_capture,
+                    IdentityChangePolicy::ApkAuthenticated
+                )
+                .await
+                .unwrap(),
+                super::super::inbox::IncomingResult::Undecryptable
+            );
+            assert_eq!(store.journal_head().unwrap(), initial_head);
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<Vec<u8>>(
+                        Table::PeerIdentities,
+                        peer_key.as_bytes(),
+                        1
+                    ))
+                    .unwrap(),
+                Some(old.clone())
+            );
+            assert_eq!(
+                super::super::inbox::process_with_policy(
+                    &store,
+                    &receiver,
+                    &n,
+                    &capture,
+                    IdentityChangePolicy::ApkAuthenticated
+                )
+                .await
+                .unwrap(),
+                super::super::inbox::IncomingResult::Decrypted
+            );
+            let head = store.journal_head().unwrap();
+            assert!(head > initial_head);
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<Vec<u8>>(
+                        Table::PeerIdentities,
+                        peer_key.as_bytes(),
+                        1
+                    ))
+                    .unwrap(),
+                Some(alice.identity_key().serialize().to_vec())
+            );
+            let archives = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 256))
+                .unwrap();
+            let archives: Vec<_> = archives
+                .into_iter()
+                .filter(|(k, _)| k.starts_with(b"identity-history:"))
+                .collect();
+            assert_eq!(archives.len(), 1);
+            let history: serde_json::Value = serde_json::from_slice(&archives[0].1).unwrap();
+            assert_eq!(history["previous_identity"], serde_json::json!(old));
+            assert_eq!(history["previous_session"], serde_json::json!(old_session));
+            assert_eq!(history["verification"], "unverified");
+            // Aborting a replacement transaction rolls back both its archive
+            // and its journal event, including a repeated key transition.
+            let before = store.journal_head().unwrap();
+            let failed: Result<()> = store.write(|tx| {
+                archive_replacement(
+                    tx,
+                    &sender,
+                    Some(&alice.identity_key().serialize()),
+                    Some(&old_session),
+                    &old,
+                )?;
+                Err(Error::invalid("test", "simulated commit refusal"))
+            });
+            assert!(failed.is_err());
+            assert_eq!(store.journal_head().unwrap(), before);
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 256))
+                    .unwrap()
+                    .iter()
+                    .filter(|(k, _)| k.starts_with(b"identity-history:"))
+                    .count(),
+                1
+            );
+            // Duplicate after reopening must not rotate again or append history/events.
+            drop(store);
+            let store = open(&path, false);
+            assert_eq!(
+                super::super::inbox::process_with_policy(
+                    &store,
+                    &receiver,
+                    &n,
+                    &capture,
+                    IdentityChangePolicy::ApkAuthenticated
+                )
+                .await
+                .unwrap(),
+                super::super::inbox::IncomingResult::Duplicate
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+        }
     }
 }

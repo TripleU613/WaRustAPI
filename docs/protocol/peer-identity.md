@@ -104,7 +104,7 @@ types. Short backwards branch offsets may print in two's-complement hex;
 interpret the signed width before deriving a target. Private scoped dumps
 remain local under ignored `lab/`; no bulk decompiled tree is committed.
 
-## Current receive behavior
+## Receive checkpoint, 2026-10-06
 
 **Observed, 2026-10-06:** saved-account primary login and activation succeeded.
 One automatic retry got a matching server ACK, but the redelivery still could
@@ -152,3 +152,64 @@ restart/deduplication and incoming-envelope integration, alongside the existing
 Signal identity-refusal tests. Strict Clippy, formatting and repository hygiene
 passed. The CLI reference was regenerated. APK trust-policy implementation
 remains incomplete; these checks do not validate a replacement on the server.
+
+
+## Explicit authenticated-change policy, 2026-10-07
+
+**Implemented/offline:** private request JSON `transport.identity_changes`
+accepts `pinned` (default) or `apk_authenticated`. Old JSON defaults to
+`pinned`; unknown spellings are rejected. Both `listen` and lab receive apply
+this policy. Offline recovery explicitly selects it with:
+
+```sh
+whatsapp-cli --profile PROFILE lab-inbox --replay-captures --accept-authenticated-identity-changes
+```
+
+The flag requires replay and conflicts with inspection. This selects normal
+APK-compatible remote peer changes; it is not operator verification of a person
+or WhatsApp safety-number verification. The local account identity, own-device
+messages, outgoing bundle trust, queued send IDs and uncertain reservations
+are unaffected. No private live profile was changed to enable it in this step.
+
+The new prekey identity is an in-memory candidate. Nested Signal decryption,
+MAC and padding checks must succeed before a durable update. Existing sessions
+are supplied to the Signal backend; our transaction independently archives
+previous pin/session bytes in encrypted storage. Inbox/session/pin/prekey OCC
+checks precede or share the commit; failure rolls everything back. A successful
+replacement appends `IdentityChanged` and `identity-history:<event-id>` in the
+same transaction as the authenticated inbox/session/prekey update. Unique event
+IDs preserve repeated A→B→A transitions without overwriting prior ratchets.
+History records explicitly mark the new identity **unverified**. The identity
+change is inspectable through the normal durable `events` journal; unauthenticated
+conflict observations remain separately inspectable through `identity-conflicts`.
+
+First-use identities and identical pins do not emit a replacement event. Failed
+MACs and default-policy refusals retain the pin/session and emit no replacement.
+Direct and group pairwise replacement tests use generated registered signed
+keys and actual Signal envelopes, test damaged nested MACs, inspect archived
+prior bytes and verify duplicate suppression after reopening the store.
+This implements the configured policy resolution described in
+[the messaging design](../design/messaging.md), rather than replacing pins on
+every bundle fetch. Human safety-number verification and full cross-device
+verification-state synchronization remain unfinished.
+
+
+**Observed offline, isolated real-state validation:** the new policy replayed
+original server captures against a private copy of the saved encrypted account
+store. It recovered one direct message, counted 34 already committed captures
+(including its repeated envelope) and left one group capture unprocessed. The
+journal contains one `identity_changed` entry. The group failure is now
+`Signal one-time prekey unavailable or invalid`, replacing the old identity
+refusal. This is not proof that the key can never be recovered: the group path
+currently selects the PN session even when `participant` names a LID, unlike
+the corrected direct path. That alias/session selection is the next diagnosis.
+The original database SHA-256 stayed identical before/after every isolated
+command. No network request, read receipt, delivery confirmation or plaintext
+export occurred. The recovered content stays encrypted in the private copy.
+
+Verification: 500 workspace/all-feature tests passed; strict Clippy,
+warning-free rustdoc and CLI-reference regeneration passed. Regression coverage
+also confirms transaction rollback removes an attempted archive/journal append
+and the remote policy cannot bootstrap own-device sessions or replace saved
+local PN/LID aliases. This verifies the implementation and original-capture
+recovery offline; current live account policy remains `pinned`.

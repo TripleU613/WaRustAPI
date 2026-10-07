@@ -86,7 +86,8 @@ pub fn incoming_prekey_identity_fingerprints(
 pub struct ReceivedPrekey {
     /// Authenticated plaintext and updated session; commit together.
     pub received: ReceivedDirect,
-    /// First-use identity to pin; changed existing identities are refused.
+    /// Authenticated identity to pin under the selected policy. Replacement
+    /// requires an atomic archive and event with the session/inbox commit.
     pub identity: Vec<u8>,
     /// One-time key to delete in the same transaction, when actually consumed.
     pub consumed_prekey: Option<u32>,
@@ -106,6 +107,36 @@ pub async fn receive_prekey(
     one_time: Option<&[u8]>,
     ciphertext: &[u8],
 ) -> Result<ReceivedPrekey> {
+    receive_prekey_with_policy(
+        account,
+        sender,
+        (
+            previous.0,
+            previous.1,
+            crate::registration::request::IdentityChangePolicy::Pinned,
+        ),
+        signed,
+        one_time,
+        ciphertext,
+    )
+    .await
+}
+
+/// Prepare an authenticated incoming message under an explicit remote identity
+/// policy. Changes remain in memory; the caller must compare saved state and
+/// atomically archive the previous pin/session when committing a replacement.
+pub async fn receive_prekey_with_policy(
+    account: &AccountRecord,
+    sender: &Jid,
+    previous: (
+        Option<&[u8]>,
+        Option<&[u8]>,
+        crate::registration::request::IdentityChangePolicy,
+    ),
+    signed: &[u8],
+    one_time: Option<&[u8]>,
+    ciphertext: &[u8],
+) -> Result<ReceivedPrekey> {
     if !account.is_registered() || ciphertext.len() > 65536 {
         return Err(invalid("invalid incoming prekey account or size"));
     }
@@ -118,16 +149,27 @@ pub async fn receive_prekey(
     let private = PrivateKey::deserialize(&key.0.private)
         .map_err(|_| invalid("invalid local private identity"))?;
     let address = ProtocolAddress::new(&sender.user, DeviceId::new(sender.device.into()));
+    let message = PreKeySignalMessage::try_from(ciphertext).map_err(crypto)?;
+    let saved_identity = previous
+        .1
+        .map(IdentityKey::decode)
+        .transpose()
+        .map_err(crypto)?;
+    // APK 2.26.37.71 0km.BRS trusts the supplied peer identity and COt saves
+    // it through the coordinator. Limit that behavior to this bounded candidate:
+    // no durable key/session mutation happens before nested MAC and padding pass.
+    let candidate_identity = match previous.2 {
+        crate::registration::request::IdentityChangePolicy::Pinned => saved_identity,
+        crate::registration::request::IdentityChangePolicy::ApkAuthenticated => {
+            Some(*message.identity_key())
+        }
+    };
     let mut identities = Identities {
         local: IdentityKeyPair::new(IdentityKey::new(public), private),
         registration: account
             .signal_registration_id
             .ok_or_else(|| invalid("missing registration id"))?,
-        peer: previous
-            .1
-            .map(IdentityKey::decode)
-            .transpose()
-            .map_err(crypto)?,
+        peer: candidate_identity,
         address: address.clone(),
     };
     let mut sessions = Sessions {
@@ -145,7 +187,6 @@ pub async fn receive_prekey(
             .map_err(crypto)?,
     };
     let signed = Signed(SignedPreKeyRecord::deserialize(signed).map_err(crypto)?);
-    let message = PreKeySignalMessage::try_from(ciphertext).map_err(crypto)?;
     let decrypted = signal::message_decrypt_prekey(
         &message,
         &address,

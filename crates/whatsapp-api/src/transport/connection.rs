@@ -442,7 +442,7 @@ pub(crate) async fn drive(
                         pending_ping = None; continue;
                     }
                 }
-                let received = super::inbox::process(&store, &account, &node, &capture).await?;
+                let received = super::inbox::process_with_policy(&store, &account, &node, &capture, config.transport.identity_changes).await?;
                 super::receipts::record(&store, &node)?;
                 super::receipts::record_ack(&store, &node)?;
                 // Who has received or viewed a status we posted. Recording it

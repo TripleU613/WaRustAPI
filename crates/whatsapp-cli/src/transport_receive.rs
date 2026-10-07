@@ -1033,7 +1033,13 @@ pub(super) async fn run(
     cli: &super::Cli,
     inspect: bool,
     replay_captures: bool,
+    accept_authenticated_identity_changes: bool,
 ) -> Result<(), Error> {
+    let identity_policy = if accept_authenticated_identity_changes {
+        whatsapp_api::registration::request::IdentityChangePolicy::ApkAuthenticated
+    } else {
+        whatsapp_api::registration::request::IdentityChangePolicy::Pinned
+    };
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
         account_id: AccountId::new(cli.account.clone())?,
@@ -1308,7 +1314,15 @@ pub(super) async fn run(
             }
             // The same durable path a live session uses: dedupe, atomic commit,
             // no network. A stanza already committed returns Duplicate untouched.
-            match whatsapp_api::transport::inbox::process(&store, &account, &node, &wire).await? {
+            match whatsapp_api::transport::inbox::process_with_policy(
+                &store,
+                &account,
+                &node,
+                &wire,
+                identity_policy,
+            )
+            .await?
+            {
                 whatsapp_api::transport::inbox::IncomingResult::Decrypted => replayed.0 += 1,
                 whatsapp_api::transport::inbox::IncomingResult::Duplicate => replayed.1 += 1,
                 // Offline replay sends nothing, so an undecryptable capture is
@@ -1643,7 +1657,15 @@ pub(super) async fn run(
         let unpacked = unpack_frame_payload(&bytes, &limits)?;
         let node = Decoder::new(&unpacked, TokenDictionary::comparison_2_26_37_70(), &limits)
             .decode_node()?;
-        match whatsapp_api::transport::inbox::process(&store, &account, &node, key).await? {
+        match whatsapp_api::transport::inbox::process_with_policy(
+            &store,
+            &account,
+            &node,
+            key,
+            identity_policy,
+        )
+        .await?
+        {
             whatsapp_api::transport::inbox::IncomingResult::Decrypted => {
                 count += 1;
                 println!("inbox: authenticated payload committed; content redacted");
