@@ -746,3 +746,19 @@ This is not a member map or state application. Full JSONTokener/Android runtime
 parity and remaining member/JID/alias/feature assembly stay unverified/unported.
 Four topic owners add the coercion Rust module; 38 unchanged topic texts,
 owner-only cached diff0.016635s, 43 files/162671bytes. No account/live action.
+
+
+## comparison.mex.participant_addresses — 2026-10-07
+
+**Confirmed static** APK 2.26.37.71 / SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+0D2.A02/A04, strict 0ZZ.A00/0D9.A00, PhoneUserJid/0ZY/9Lm constructors,
+0D9.A02, 3c8.A1a, 0CM.A0J, DeviceJid and device-subclass constructors.
+Thirteen literal class definitions prove DeviceJid is outside UserJid:
+strict participant/alias checks reject device wrappers; plain bot/interop qualify.
+Phone prefix/length/ASCII rules and plain hosted-domain normalization are traced.
+Interop uses last hyphen and signed Java parseInt; no unsigned-only rule inferred.
+[Source, reasoning and negative results](mex.md#participant-address-validation-and-strict-type-boundary-2026-10-07).
+Remaining unknowns: singleton types, platform parseInt parity, Ble final assertion,
+full member assembly and phash downstream application. Existing send policy,
+API/CLI capabilities, saved account state and live transport remain unchanged.

@@ -1157,3 +1157,16 @@ flag dependency. Actual 43-file/162671-byte APK snapshot re-export matched.
 
 Phone/account inventory audit (2026-10-07, offline): 19 profile files reference
 13 distinct country/national-number pairs across 16 existing configurations.
+
+Participant address trace (2026-10-07, static): APK 37.71 strict member/alias
+checks reject device wrappers (DeviceJid extends Jid, outside UserJid); plain
+bot/LID/interop constructors qualify. Phone/LID digit and length rules, reserved
+phone prefix, interop last-hyphen/signed parseInt behavior and plain hosted-domain
+normalization are recorded with scoped instructions and thirteen literal class
+definitions. Full singleton parsing/member assembly/durable MEX application remain
+unfinished; no API/CLI change, saved account access or live request.
+[Evidence and negative results](docs/protocol/mex.md#participant-address-validation-and-strict-type-boundary-2026-10-07).
+Validation: APK hash and all thirteen class-definition literal bytes rechecked;
+phone validation, full interop class and DeviceJid constructor re-exported exactly.
+Repository hygiene passed (583 local links); staged whitespace passed. This
+source-only chunk changes no runtime code, so no new runtime test result is claimed.

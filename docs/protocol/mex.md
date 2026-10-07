@@ -1020,3 +1020,72 @@ Input format is Base64 of each fixture's `input` string, one line per case;
 compare parsed output objects with its `expected` object. The APK-derived
 integer-equals-one/join-positive guards live only in the small oracle; conversion
 and JSON runtime behavior execute the independent unmodified AOSP/Java code.
+
+
+## Participant address validation and strict type boundary (2026-10-07)
+
+**Confirmed static**, APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Scoped method evidence](mex-participant-address-evidence.txt) carries constructor,
+factory, alias and helper instructions plus ordered exception tables.
+[Literal class definitions](mex-participant-jid-hierarchy.json) now cover thirteen
+classes, including classes without method bodies. Reproduce an individual trace:
+
+```sh
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk \
+  --class 'LX/0D9;' --method A02 --exceptions
+```
+
+The ADv.A0D primary-user branch calls 0D8.A01, whose instanceof UserJid check
+is strict. UserJid extends 0Cy -> Jid. DeviceJid extends Jid directly; 0DO
+extends DeviceJid, and abstract 0e0 extends DeviceJid with class_data_offset=0.
+0e1/Ble/1SK extend 0e0; Bli extends 0e1. Thus **device JIDs are rejected by
+this strict member-primary check**, even when their wrapped account is a valid
+UserJid. Plain 0hh (bot), 0ZY (LID) and 9Lm (interop) extend 0ZX -> UserJid
+and pass the type check after their constructors succeed. The pre-existing Rust
+is_user_like predicate is not an APK instanceof substitute: it accepts other
+domains and excludes bot/interop. No sending policy or saved identity was changed.
+
+0D2.A02 maps both lid and hosted.lid to a plain 0ZY, whose getServer returns
+lid. Both hosted and s.whatsapp.net map ordinary users to PhoneUserJid, whose
+getServer returns s.whatsapp.net. Jid.<init> stores the provided user string
+unchanged: it neither trims nor normalizes it. PhoneUserJid calls 0D9.A02:
+Java UTF-16 length 5..20, no leading 0, ASCII digits only, and a prefix 10
+requires prefix 1008. This is a JID constructor rule, **not** a country/number
+registration verdict. Why those prefixes are reserved remains **unknown**.
+0ZY requires length 1..15, no leading 0, ASCII digits only. Optional lid/pn
+aliases in ADv.A0D use strict 0ZZ.A00/0D9.A00: a present invalid alias throws
+08j rather than being omitted. Their instanceof tests require plain 0ZY and
+PhoneUserJid respectively, excluding device wrappers.
+
+9Lm uses 0CM.A0J, confirmed as String.lastIndexOf, to split the **last hyphen**.
+The integrator prefix is length 1..3, does not start with 0 (3c8.A1a explicitly
+calls String.startsWith), and must parse with Integer.parseInt. There is no
+explicit positivity or ASCII-only integrator check: treating it as unsigned
+1..999 would introduce a rule absent from this constructor. The account suffix
+is length 1..15, no leading 0 and ASCII digits only. A missing/trailing hyphen
+fails. Parsed integrator and account occupy A00/A01, original user A02;
+getServer returns interop, getType returns 22. Integer.parseInt platform Unicode
+parity remains to be checked before implementing this input path.
+
+DeviceJid narrows its integer device argument with int-to-byte, rejects the
+0DR singleton account, and requires the narrowed signed byte in 0..99. This
+is not a general assertion that the original integer itself must be 0..99.
+Bli separately requires the original integer ==99; 1SK requires ==0. Ble
+uses 1xm.A1P (explicit equality to zero) and 00K.A0D; that final assertion
+helper's throwing behavior remains **unknown**. These constructor rules do
+not make device wrappers eligible for the strict member/alias checks above.
+The scoped decoder currently renders DeviceJid's deviceByte store opcode 0x5d
+as ??(0x5d), while resolving its operands/field; its raw mnemonic deficiency
+has not been corrected in this source-only change.
+
+**Negative results / remaining unknowns:** 0e0 has no method bodies because
+its literal class definition has no class data; it is present. An initial
+PhoneUserJid lookup used the wrong package (com/whatsapp/jid); the actual class
+is com/whatsapp/infra/core/jid. UserJid has no getServer body. Generic parser
+special singleton addresses (Server/0/gdpr) and remaining domain dispatch need
+explicit type checks before completing the primary parser. The thirteen literal
+class records decode ASCII descriptors only; no full Modified UTF-8 equivalence
+is claimed. Complete member assembly, downstream phash-null application and
+live MEX group-state replacement remain unimplemented/unverified. No new API,
+CLI flag, HTTP route, saved-account mutation or live request was introduced.

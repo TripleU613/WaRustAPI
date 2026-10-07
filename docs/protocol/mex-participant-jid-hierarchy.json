@@ -60,6 +60,96 @@
       ],
       "class_data_offset": 9228153,
       "raw_class_def_hex": "9e1700001100000022020000f4b71a00000000000000000079cf8c0000000000"
+    },
+    {
+      "dex_file": "classes.dex",
+      "class_def_offset": 1387456,
+      "class": "LX/0Cy;",
+      "access_flags": "0x401",
+      "superclass": "Lcom/whatsapp/infra/core/jid/Jid;",
+      "interfaces": [],
+      "class_data_offset": 9738173,
+      "raw_class_def_hex": "df02000001040000aa4b0000000000000000000000000000bd97940000000000"
+    },
+    {
+      "dex_file": "classes.dex",
+      "class_def_offset": 1388096,
+      "class": "Lcom/whatsapp/infra/core/jid/DeviceJid;",
+      "access_flags": "0x401",
+      "superclass": "Lcom/whatsapp/infra/core/jid/Jid;",
+      "interfaces": [],
+      "class_data_offset": 9739160,
+      "raw_class_def_hex": "a84b000001040000aa4b0000000000000000000000000000989b940000000000"
+    },
+    {
+      "dex_file": "classes.dex",
+      "class_def_offset": 1388288,
+      "class": "LX/0DO;",
+      "access_flags": "0x11",
+      "superclass": "Lcom/whatsapp/infra/core/jid/DeviceJid;",
+      "interfaces": [
+        "Landroid/os/Parcelable;"
+      ],
+      "class_data_offset": 9739758,
+      "raw_class_def_hex": "f502000011000000a84b0000d8e418000000000000000000ee9d940000000000"
+    },
+    {
+      "dex_file": "classes.dex",
+      "class_def_offset": 1441088,
+      "class": "LX/0e0;",
+      "access_flags": "0x401",
+      "superclass": "Lcom/whatsapp/infra/core/jid/DeviceJid;",
+      "interfaces": [],
+      "class_data_offset": 0,
+      "raw_class_def_hex": "2a09000001040000a84b00000000000000000000000000000000000000000000"
+    },
+    {
+      "dex_file": "classes.dex",
+      "class_def_offset": 1441120,
+      "class": "LX/0e1;",
+      "access_flags": "0x1",
+      "superclass": "LX/0e0;",
+      "interfaces": [
+        "Landroid/os/Parcelable;"
+      ],
+      "class_data_offset": 9832916,
+      "raw_class_def_hex": "2b090000010000002a090000d8e418000000000000000000d409960000000000"
+    },
+    {
+      "dex_file": "classes.dex",
+      "class_def_offset": 1540928,
+      "class": "LX/1SK;",
+      "access_flags": "0x11",
+      "superclass": "LX/0e0;",
+      "interfaces": [
+        "Landroid/os/Parcelable;"
+      ],
+      "class_data_offset": 10031047,
+      "raw_class_def_hex": "2a140000110000002a090000d8e418000000000000000000c70f990000000000"
+    },
+    {
+      "dex_file": "classes6.dex",
+      "class_def_offset": 1072256,
+      "class": "LX/9Lm;",
+      "access_flags": "0x11",
+      "superclass": "LX/0ZX;",
+      "interfaces": [
+        "Landroid/os/Parcelable;"
+      ],
+      "class_data_offset": 6870217,
+      "raw_class_def_hex": "59120000110000009a010000148614000000000000000000c9d4680000000000"
+    },
+    {
+      "dex_file": "classes7.dex",
+      "class_def_offset": 1435764,
+      "class": "LX/Bli;",
+      "access_flags": "0x11",
+      "superclass": "LX/0e1;",
+      "interfaces": [
+        "Landroid/os/Parcelable;"
+      ],
+      "class_data_offset": 9228403,
+      "raw_class_def_hex": "a21700001100000023020000f4b71a00000000000000000073d08c0000000000"
     }
   ]
 }

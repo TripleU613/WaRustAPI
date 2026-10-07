@@ -1439,3 +1439,12 @@ hygiene (578 links) and staged whitespace. Reference408cases reproduced from
 pinned AOSP sources with committed annotation stubs. Actual CLI:816scalar,
 816combined,816default-redacted,16blocked/no-partial-output and flag dependency.
 43-file/162671-byte APK snapshot reproduced exactly; account state unchanged.
+
+
+Participant address prerequisite traced: strict primary UserJid and plain alias
+types reject device wrappers; plain bot/interop remain eligible. Thirteen literal
+class definitions plus scoped constructor/factory/helper evidence preserve phone,
+LID, interop, hosted normalization and device constraints. Full primary singleton
+handling, member assembly and durable MEX application remain unfinished.
+[Evidence/unknowns](protocol/mex.md#participant-address-validation-and-strict-type-boundary-2026-10-07).
+No API/CLI capability or saved account/live state changed.
