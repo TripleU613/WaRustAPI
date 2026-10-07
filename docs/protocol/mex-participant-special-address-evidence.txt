@@ -1,0 +1,426 @@
+# APK 2.26.37.71; SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# apk-smali --exceptions; instruction offsets bytes, catches code units.
+
+# SOURCE server-zero
+
+# class: LX/8l6;
+# extends: Lcom/whatsapp/infra/core/jid/UserJid;
+
+.method public <clinit>(V)  # .registers 1
+    0000..0004  new-instance  v0, LX/8l6;
+    0004..000a  invoke-direct  {v0}, LX/8l6;-><init>(V)
+    000a..000e  sput-object  v0, LX/8l6;->A00:LX/8l6;
+    000e..0012  new-instance  v0, LX/8l5;
+    0012..0018  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0018..001c  sput-object  v0, LX/8l6;->CREATOR:Landroid/os/Parcelable$Creator;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(V)  # .registers 2
+    0000..0004  const-string  v0, "0"
+    0004..000a  invoke-direct  {v1, v0}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(VL)
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public describeContents(I)  # .registers 2
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getObfuscatedString(L)  # .registers 2
+    0000..0006  invoke-virtual  {v1}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString(L)
+    0006..0008  move-result-object  v0
+    0008..000a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getServer(L)  # .registers 2
+    0000..0004  const-string  v0, "s.whatsapp.net"
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getType(I)  # .registers 2
+    0000..0002  const/4  v0, #0x7
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public writeToParcel(VLI)  # .registers 3
+    0000..0006  invoke-static  {v1}, LX/6ap;->A0h(VL)
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# SOURCE server-name
+
+# class: LX/Blj;
+# extends: Lcom/whatsapp/infra/core/jid/UserJid;
+
+.method public <clinit>(V)  # .registers 1
+    0000..0004  new-instance  v0, LX/Blj;
+    0004..000a  invoke-direct  {v0}, LX/Blj;-><init>(V)
+    000a..000e  sput-object  v0, LX/Blj;->A00:LX/Blj;
+    000e..0012  new-instance  v0, LX/Cq5;
+    0012..0018  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0018..001c  sput-object  v0, LX/Blj;->CREATOR:Landroid/os/Parcelable$Creator;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(V)  # .registers 2
+    0000..0004  const-string  v0, "Server"
+    0004..000a  invoke-direct  {v1, v0}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(VL)
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public describeContents(I)  # .registers 2
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getObfuscatedString(L)  # .registers 2
+    0000..0006  invoke-virtual  {v1}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString(L)
+    0006..0008  move-result-object  v0
+    0008..000a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getServer(L)  # .registers 2
+    0000..0004  const-string  v0, "s.whatsapp.net"
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getType(I)  # .registers 2
+    0000..0004  const/16  v0, #0x8
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public writeToParcel(VLI)  # .registers 3
+    0000..0006  invoke-static  {v1}, LX/6ap;->A0h(VL)
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# SOURCE gdpr
+
+# class: LX/Gyk;
+# extends: LX/0Cy;
+
+.method public <clinit>(V)  # .registers 1
+    0000..0004  new-instance  v0, LX/Gyk;
+    0004..000a  invoke-direct  {v0}, LX/Gyk;-><init>(V)
+    000a..000e  sput-object  v0, LX/Gyk;->A00:LX/Gyk;
+    000e..0012  new-instance  v0, LX/ICY;
+    0012..0018  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0018..001c  sput-object  v0, LX/Gyk;->CREATOR:Landroid/os/Parcelable$Creator;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(V)  # .registers 2
+    0000..0004  const-string  v0, "gdpr"
+    0004..000a  invoke-direct  {v1, v0}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(VL)
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public describeContents(I)  # .registers 2
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getServer(L)  # .registers 2
+    0000..0004  const-string  v0, "s.whatsapp.net"
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getType(I)  # .registers 2
+    0000..0004  const/16  v0, #0x9
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public writeToParcel(VLI)  # .registers 4
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00h;->A0A(VLI)
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-virtual  {v2, v0}, Landroid/os/Parcel;->writeInt(VI)
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# SOURCE lid-me
+
+# class: LX/1xv;
+# extends: Lcom/whatsapp/infra/core/jid/UserJid;
+
+.method public <clinit>(V)  # .registers 1
+    0000..0004  new-instance  v0, LX/1xv;
+    0004..000a  invoke-direct  {v0}, LX/1xv;-><init>(V)
+    000a..000e  sput-object  v0, LX/1xv;->A00:LX/1xv;
+    000e..0012  new-instance  v0, LX/1xu;
+    0012..0018  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0018..001c  sput-object  v0, LX/1xv;->CREATOR:Landroid/os/Parcelable$Creator;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(V)  # .registers 2
+    0000..0004  const-string  v0, ""
+    0004..000a  invoke-direct  {v1, v0}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(VL)
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public describeContents(I)  # .registers 2
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getObfuscatedString(L)  # .registers 2
+    0000..0006  invoke-virtual  {v1}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString(L)
+    0006..0008  move-result-object  v0
+    0008..000a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getPrimaryDevice(L)  # .registers 3
+    0000..0004  const-string  v1, "getPrimaryDevice() must not be called for LidMeJid"
+    0004..0008  new-instance  v0, Ljava/lang/UnsupportedOperationException;
+    0008..000e  invoke-direct  {v0, v1}, Ljava/lang/UnsupportedOperationException;-><init>(VL)
+    000e..0010  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getServer(L)  # .registers 2
+    0000..0004  const-string  v0, "lid_me"
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getType(I)  # .registers 2
+    0000..0004  const/16  v0, #0xb
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public writeToParcel(VLI)  # .registers 4
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00h;->A0A(VLI)
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-virtual  {v2, v0}, Landroid/os/Parcel;->writeInt(VI)
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# SOURCE status-me
+
+# class: LX/0DR;
+# extends: Lcom/whatsapp/infra/core/jid/UserJid;
+
+.method public <clinit>(V)  # .registers 1
+    0000..0004  new-instance  v0, LX/0DR;
+    0004..000a  invoke-direct  {v0}, LX/0DR;-><init>(V)
+    000a..000e  sput-object  v0, LX/0DR;->A00:LX/0DR;
+    000e..0012  new-instance  v0, LX/0DS;
+    0012..0018  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0018..001c  sput-object  v0, LX/0DR;->CREATOR:Landroid/os/Parcelable$Creator;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(V)  # .registers 2
+    0000..0004  const-string  v0, ""
+    0004..000a  invoke-direct  {v1, v0}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(VL)
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(ZL)  # .registers 3
+    0000..0004  sget-object  v1, LX/0DR;->A00:LX/0DR;
+    0004..0006  const/4  v0, #0x0
+    0006..000a  if-ne  v2, v1, +0x3
+    000a..000c  const/4  v0, #0x1
+    000c..000e  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public describeContents(I)  # .registers 2
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getObfuscatedString(L)  # .registers 2
+    0000..0006  invoke-virtual  {v1}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString(L)
+    0006..0008  move-result-object  v0
+    0008..000a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getPrimaryDevice(L)  # .registers 3
+    0000..0004  const-string  v1, "getPrimaryDevice() must not be called for MeJid"
+    0004..0008  new-instance  v0, Ljava/lang/UnsupportedOperationException;
+    0008..000e  invoke-direct  {v0, v1}, Ljava/lang/UnsupportedOperationException;-><init>(VL)
+    000e..0010  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getServer(L)  # .registers 2
+    0000..0006  const-string/jumbo  v0, "status_me"
+    0006..0008  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getType(I)  # .registers 2
+    0000..0004  const/16  v0, #0xb
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public writeToParcel(VLI)  # .registers 4
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00h;->A0A(VLI)
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-virtual  {v2, v0}, Landroid/os/Parcel;->writeInt(VI)
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# SOURCE bare-addresses
+
+# class: LX/0D2;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 2
+    0000..0006  const-string/jumbo  v0, "s.whatsapp.net"
+    0006..000c  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(ZL)
+    000c..000e  move-result  v0
+    000e..0012  if-eqz  v0, +0x5
+    0012..0016  sget-object  v0, LX/1S7;->A00:LX/1S7;
+    0016..0018  return-object  v0
+    0018..001c  const-string  v0, "g.us"
+    001c..0022  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(ZL)
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v0, +0x5
+    0028..002c  sget-object  v0, LX/9Lp;->A00:LX/9Lp;
+    002c..002e  return-object  v0
+    002e..0032  const-string  v0, "call"
+    0032..0038  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(ZL)
+    0038..003a  move-result  v0
+    003a..003e  if-eqz  v0, +0x5
+    003e..0042  sget-object  v0, LX/Gyl;->A00:LX/Gyl;
+    0042..0044  return-object  v0
+    0044..0046  const/4  v0, #0x0
+    0046..0048  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+# SOURCE bare-server
+
+# class: LX/1S7;
+# extends: Lcom/whatsapp/infra/core/jid/Jid;
+
+.method public <clinit>(V)  # .registers 1
+    0000..0004  new-instance  v0, LX/1S7;
+    0004..000a  invoke-direct  {v0}, LX/1S7;-><init>(V)
+    000a..000e  sput-object  v0, LX/1S7;->A00:LX/1S7;
+    000e..0012  new-instance  v0, LX/1S8;
+    0012..0018  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0018..001c  sput-object  v0, LX/1S7;->CREATOR:Landroid/os/Parcelable$Creator;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(V)  # .registers 2
+    0000..0004  const-string  v0, ""
+    0004..000a  invoke-direct  {v1, v0}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(VL)
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public describeContents(I)  # .registers 2
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getServer(L)  # .registers 2
+    0000..0006  const-string/jumbo  v0, "s.whatsapp.net"
+    0006..0008  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getType(I)  # .registers 2
+    0000..0004  const/16  v0, #0xd
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public writeToParcel(VLI)  # .registers 4
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00h;->A0A(VLI)
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-virtual  {v2, v0}, Landroid/os/Parcel;->writeInt(VI)
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# SOURCE newsletter-factory
+
+# class: LX/0D2;
+# extends: Ljava/lang/Object;
+
+.method public A03(LLL)  # .registers 7
+    0000..0006  invoke-virtual  {v5}, Ljava/lang/String;->trim(L)
+    0006..0008  move-result-object  v2
+    0008..000e  invoke-virtual  {v2}, Ljava/lang/String;->isEmpty(Z)
+    000e..0010  move-result  v0
+    0010..0014  if-nez  v0, +0x3e
+    0014..0018  const-string  v1, "0"
+    0018..001e  invoke-virtual  {v1, v2}, Ljava/lang/String;->equals(ZL)
+    001e..0020  move-result  v0
+    0020..0024  if-nez  v0, +0x36
+    0024..002a  invoke-virtual  {v2, v1}, Ljava/lang/String;->indexOf(IL)
+    002a..002c  move-result  v0
+    002c..0030  if-eqz  v0, +0x30
+    0030..0034  sget-object  v0, Lcom/whatsapp/infra/core/jid/Jid;->Companion:LX/0D1;
+    0034..003a  invoke-static  {v5, v6}, LX/0D1;->A01(LLL)
+    003a..003c  move-result-object  v3
+    003c..0040  const-string  v0, "newsletter"
+    0040..0046  invoke-virtual  {v0, v6}, Ljava/lang/String;->equals(ZL)
+    0046..0048  move-result  v0
+    0048..004c  if-eqz  v0, +0x1c
+    004c..0050  iget-object  v2, v4, LX/0D2;->A00:LX/0D3;
+    0050..0056  invoke-virtual  {v2, v3}, LX/0D3;->get(LL)
+    0056..0058  move-result-object  v1
+    0058..005c  check-cast  v1, Lcom/whatsapp/infra/core/jid/Jid;
+    005c..0062  invoke-static  {v1}, LX/0DE;->A0b(ZL)
+    0062..0064  move-result  v0
+    0064..0068  if-eqz  v0, +0x5
+    0068..006c  check-cast  v1, LX/1cj;
+    006c..006e  return-object  v1
+    006e..0072  new-instance  v1, LX/1cj;
+    0072..0078  invoke-direct  {v1, v5}, LX/1cj;-><init>(VL)
+    0078..007e  invoke-virtual  {v2, v3, v1}, LX/0D3;->put(LLL)
+    007e..0080  return-object  v1
+    0080..0084  new-instance  v0, LX/08j;
+    0084..008a  invoke-direct  {v0, v3}, LX/08j;-><init>(VL)
+    008a..008c  throw  v0
+    008c..0090  const-string  v1, "Identifier must be a valid number starting with non-zero"
+    0090..0094  new-instance  v0, LX/08j;
+    0094..009a  invoke-direct  {v0, v1}, LX/08j;-><init>(VL)
+    009a..009c  throw  v0
+    # exception table: 0 try range(s)
+.end method

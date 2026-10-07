@@ -1,0 +1,33 @@
+# APK-derived structural disassembly: LX/0CM;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0J(ILCI) flags=0x19 registers=7
+  0000..0002 op=12 const/4 v3, #0x0
+  0002..0006 op=20 instance-of v0, v4, Ljava/lang/String;
+  0006..000a op=39 if-nez v0, +0x20
+  000a..000c op=12 const/4 v0, #0x1
+  000c..0010 op=23 new-array v2, v0, [C
+  0010..0014 op=50 aput-char v5, v2, v3
+  0014..001a op=72 invoke-interface {v4}, Ljava/lang/CharSequence;->length(I)
+  001a..001c op=0a move-result
+  001c..0020 op=d8 add-int/lit8 v0, v0, #0xff
+  0020..0024 op=37 if-le v6, v0, +0x3
+  0024..0026 op=01 move
+  0026..0028 op=12 const/4 v0, #0xff
+  0028..002c op=35 if-ge v0, v6, +0xe
+  002c..0032 op=72 invoke-interface {v4, v6}, Ljava/lang/CharSequence;->charAt(CI)
+  0032..0034 op=0a move-result
+  0034..0038 op=49 aget-char v0, v2, v3
+  0038..003c op=33 if-ne v0, v1, +0x3
+  003c..003e op=0f return v6
+  003e..0042 op=d8 add-int/lit8 v6, v6, #0xff
+  0042..0044 op=28 goto -0xe
+  0044..0046 op=0f return v0
+  0046..004a op=1f check-cast v4, Ljava/lang/String;
+  004a..0050 op=6e invoke-virtual {v4, v5, v6}, Ljava/lang/String;->lastIndexOf(III)
+  0050..0052 op=0a move-result
+  0052..0054 op=0f return v0
+  # exception table: 0 try range(s)
+.end method

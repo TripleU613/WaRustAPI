@@ -1089,3 +1089,72 @@ class records decode ASCII descriptors only; no full Modified UTF-8 equivalence
 is claimed. Complete member assembly, downstream phash-null application and
 live MEX group-state replacement remain unimplemented/unverified. No new API,
 CLI flag, HTTP route, saved-account mutation or live request was introduced.
+
+
+## Strict member-primary address parser in Rust (2026-10-07)
+
+**Confirmed static** APK 2.26.37.71, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+[Special singleton/factory instructions](mex-participant-special-address-evidence.txt)
+and [nineteen domain class-definition literals](mex-participant-domain-types.json)
+settle the prior singleton/type unknowns. 8l6 (0) and Blj (Server) extend UserJid,
+retain their literal users and return s.whatsapp.net. Gyk (gdpr) extends 0Cy,
+not UserJid. 1xv/0DR extend UserJid with empty users and servers lid_me/status_me.
+0D1.A00 accepts those two bare placeholder names; explicit @lid_me/@status_me
+is not a recognized domain route. Bare s.whatsapp.net maps through 0D2.A00 to
+1S7, which extends Jid directly and fails strict member typing.
+
+The other recognized generic domains also resolve outside UserJid: 1bn/9Lo
+(group/temp) -> GroupJid -> 0c3 -> 0Cy -> Jid; Gym interop.g.us -> 1bn;
+9Ln/Blf/8oR (broadcast/location/status) -> 9Lq -> 0c3; Blh (call) -> Jid;
+1cj (newsletter) -> 0Cy. Bare g.us/call singletons also extend Jid. 0D2.A03
+newsletter factory checks a trimmed identifier for empty/equal-0/leading-0 and
+then caches/constructs 1cj using the original user. Its constructor and full
+newsletter validation are **unknown/unported**; its non-UserJid class is enough
+to reject it from this specific primary parser. No newsletter send behavior
+is inferred from that diagnostic or these guards.
+
+**Implemented** `ParticipantAddress::parse` in the MEX module uses the strict
+primary type boundary, original user string, phone/LID/bot constructor guards,
+interop last-hyphen Java integer semantics and traced singleton cases. Explicit
+device suffixes fail even when zero. Plain hosted domains normalize to their
+getServer results. `kind()` reveals only a recognized subtype; `user()` explicitly
+exposes private identifiers and `server()` the canonical domain. Debug hides
+identifiers. This type is separate from existing Jid/send policy: validation is
+not permission to send to bot/interop/server/placeholders, and no saved identity
+is reclassified. Optional LID/PN alias subtype checks and member assembly still
+need integration. Cache effects, complete Android Unicode-version parity and
+live MEX state application remain **unknown/unverified**.
+
+```sh
+target/debug/xtask mex-participant-address-inspect --value '1@hosted.lid'
+```
+
+This offline command invokes the actual library parser and prints only
+`offline_only` plus `kind`; it never echoes input/canonical addresses or opens
+an account. Invalid input returns empty stdout and a content-free
+mex.participant.address diagnostic. **Observed local CLI defect fixed:** Clap
+initially interpreted negative interop input as a flag. The value option now
+accepts hyphen-prefixed values, with a command-parser regression test. NUL cannot
+be supplied through OS argv; it remains covered by the library fixture.
+
+**Independent executed platform reference:**
+[Java integer oracle](MexParticipantIntegratorOracle.java), direct
+Integer.parseInt on Base64-decoded UTF-8 strings, Temurin21.0.12.1+1 LTS;
+[283-case fixture](../../crates/whatsapp-api/fixtures/mex/2.26.37.71-integrator-reference.json).
+The Rust test checks parsed integer values independently and then APK UTF-16
+length/ASCII-leading-zero predicates, including all 37 previously checked BMP
+digit blocks, signed/non-ASCII zero, boundaries, supplementary digits, padding
+and malformed signs. This is host Java validation, not execution of Android
+or WhatsApp. Reproduce with javac into an ignored directory and feed one Base64
+string per line to `java -cp <classes> MexParticipantIntegratorOracle`.
+
+**Release tracking:** recipe adds twelve selected address/factory/constructor
+methods and maps four existing parser/type topics to the new Rust owner.
+The bundle is now **50 methods / 55 files / 191422 bytes**; all 38 existing
+instruction files remain byte-identical. Inventory/manifest/tokens are unchanged.
+[Actual cached diff](apk/mex-address-coverage-diff.json) took **0.051814 seconds**;
+its old paths refer to ignored cached baseline from Git revision **857b7a7**.
+This coverage is scoped, not all generic parser/singleton methods or a complete
+release remap. Full member map, phash-null downstream behavior, feature gates,
+live MEX dispatcher and durable group application remain unfinished.

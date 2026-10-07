@@ -1448,3 +1448,12 @@ LID, interop, hosted normalization and device constraints. Full primary singleto
 handling, member assembly and durable MEX application remain unfinished.
 [Evidence/unknowns](protocol/mex.md#participant-address-validation-and-strict-type-boundary-2026-10-07).
 No API/CLI capability or saved account/live state changed.
+
+
+Strict MEX member-primary UserJid prerequisite is now implemented with redacted
+offline inspection: APK constructor predicates, canonical plain hosted domains,
+interop signed/Unicode integer semantics and confirmed special singleton types.
+283 independent Java cases plus literal type evidence underpin it. Device/non-user
+addresses refuse; existing send policy and account identity remain unchanged.
+Full member/alias assembly, downstream phash-null application and live durable MEX
+state remain unfinished. [Port/unknowns](protocol/mex.md#strict-member-primary-address-parser-in-rust-2026-10-07).

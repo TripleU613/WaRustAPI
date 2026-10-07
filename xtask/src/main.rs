@@ -127,6 +127,12 @@ enum Cmd {
         #[arg(long)]
         value: Option<String>,
     },
+    /// Validate a strict APK member-primary address offline, without echoing it.
+    MexParticipantAddressInspect {
+        /// Private JID; output contains only the recognized subtype.
+        #[arg(long, allow_hyphen_values = true)]
+        value: String,
+    },
     /// Inspect MEX JSON presence offline; group-numbers explicitly reveals numeric metadata.
     MexResponseInspect {
         /// Private JSON payload file (local budget 1 MiB).
@@ -300,6 +306,7 @@ fn main() -> ExitCode {
             context,
         } => mex::preview(&queries, &chat, &id, &context),
         Cmd::MexRoleInspect { value } => mex::inspect_role(value.as_deref()),
+        Cmd::MexParticipantAddressInspect { value } => mex::inspect_participant_address(&value),
         Cmd::MexResponseInspect {
             input,
             child,
@@ -352,6 +359,23 @@ fn main() -> ExitCode {
         Err(e) => {
             eprintln!("error: {e}");
             ExitCode::FAILURE
+        }
+    }
+}
+
+#[cfg(test)]
+mod cli_tests {
+    use super::*;
+
+    #[test]
+    fn participant_address_inspector_accepts_signed_private_values() {
+        for value in ["-1-1@interop", "-0-1@interop", "--invalid-private-jid"] {
+            let cli =
+                Cli::try_parse_from(["xtask", "mex-participant-address-inspect", "--value", value])
+                    .unwrap();
+            assert!(
+                matches!(cli.cmd, Cmd::MexParticipantAddressInspect { value: parsed } if parsed == value)
+            );
         }
     }
 }

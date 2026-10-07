@@ -12,6 +12,8 @@ use crate::{
 };
 
 mod coercion;
+mod participant_address;
+pub use participant_address::{ParticipantAddress, ParticipantAddressKind};
 
 /// APK participant-list scalar fields, before member/type/JID validation.
 /// Join values can disclose private timing, so Debug hides all values.

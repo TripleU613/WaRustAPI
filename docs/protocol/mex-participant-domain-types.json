@@ -1,0 +1,140 @@
+{
+  "apk_version": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "evidence": "Literal class_def reads, ASCII descriptors only, not full Modified UTF-8 parsing. No constructor execution.",
+  "classes": [
+    {
+      "class": "LX/0DR;",
+      "superclass": "Lcom/whatsapp/infra/core/jid/UserJid;",
+      "dex_file": "classes.dex",
+      "class_def_offset": 1388384,
+      "raw_class_def_hex": "f802000011000000ac4b0000d8e4180000000000000000005d9e940000000000"
+    },
+    {
+      "class": "LX/1S7;",
+      "superclass": "Lcom/whatsapp/infra/core/jid/Jid;",
+      "dex_file": "classes.dex",
+      "class_def_offset": 1540512,
+      "raw_class_def_hex": "1d14000011000000aa4b0000d8e418000000000000000000070e990000000000"
+    },
+    {
+      "class": "LX/1bn;",
+      "superclass": "Lcom/whatsapp/infra/core/jid/GroupJid;",
+      "dex_file": "classes2.dex",
+      "class_def_offset": 283728,
+      "raw_class_def_hex": "5004000001000000a7130000544b0500000000000000000089641a0000000000"
+    },
+    {
+      "class": "LX/1xv;",
+      "superclass": "Lcom/whatsapp/infra/core/jid/UserJid;",
+      "dex_file": "classes3.dex",
+      "class_def_offset": 767784,
+      "raw_class_def_hex": "860500001100000061290000e08f0f000000000000000000b4bb4b0000000000"
+    },
+    {
+      "class": "LX/8l6;",
+      "superclass": "Lcom/whatsapp/infra/core/jid/UserJid;",
+      "dex_file": "classes6.dex",
+      "class_def_offset": 999488,
+      "raw_class_def_hex": "650a0000110000001c3300001486140000000000000000002b6b670000000000"
+    },
+    {
+      "class": "LX/8oR;",
+      "superclass": "LX/9Lq;",
+      "dex_file": "classes6.dex",
+      "class_def_offset": 1006112,
+      "raw_class_def_hex": "300b0000110000005d1200001486140000000000000000004e99670000000000"
+    },
+    {
+      "class": "LX/9Ln;",
+      "superclass": "LX/9Lq;",
+      "dex_file": "classes6.dex",
+      "class_def_offset": 1072288,
+      "raw_class_def_hex": "5a120000110000005d12000014861400000000000000000001d5680000000000"
+    },
+    {
+      "class": "LX/9Lo;",
+      "superclass": "Lcom/whatsapp/infra/core/jid/GroupJid;",
+      "dex_file": "classes6.dex",
+      "class_def_offset": 1072320,
+      "raw_class_def_hex": "5b120000110000001933000014861400000000000000000041d5680000000000"
+    },
+    {
+      "class": "LX/9Lp;",
+      "superclass": "Lcom/whatsapp/infra/core/jid/Jid;",
+      "dex_file": "classes6.dex",
+      "class_def_offset": 1072352,
+      "raw_class_def_hex": "5c120000110000001a3300001486140000000000000000007dd5680000000000"
+    },
+    {
+      "class": "LX/Blf;",
+      "superclass": "LX/9Lq;",
+      "dex_file": "classes7.dex",
+      "class_def_offset": 1435668,
+      "raw_class_def_hex": "9f170000110000001d0b0000000000000000000000000000bfcf8c0000000000"
+    },
+    {
+      "class": "LX/Blh;",
+      "superclass": "Lcom/whatsapp/infra/core/jid/Jid;",
+      "dex_file": "classes7.dex",
+      "class_def_offset": 1435732,
+      "raw_class_def_hex": "a1170000110000004c3c0000f4b71a0000000000000000003bd08c0000000000"
+    },
+    {
+      "class": "LX/Blj;",
+      "superclass": "Lcom/whatsapp/infra/core/jid/UserJid;",
+      "dex_file": "classes7.dex",
+      "class_def_offset": 1435796,
+      "raw_class_def_hex": "a3170000110000004e3c0000f4b71a000000000000000000b3d08c0000000000"
+    },
+    {
+      "class": "LX/Gyk;",
+      "superclass": "LX/0Cy;",
+      "dex_file": "classes9.dex",
+      "class_def_offset": 1350684,
+      "raw_class_def_hex": "5c160000110000001b010000e8c819000000000000000000f3997e0000000000"
+    },
+    {
+      "class": "LX/Gyl;",
+      "superclass": "Lcom/whatsapp/infra/core/jid/Jid;",
+      "dex_file": "classes9.dex",
+      "class_def_offset": 1350716,
+      "raw_class_def_hex": "5d16000011000000233d0000e8c819000000000000000000269a7e0000000000"
+    },
+    {
+      "class": "LX/Gym;",
+      "superclass": "LX/1bn;",
+      "dex_file": "classes9.dex",
+      "class_def_offset": 1350748,
+      "raw_class_def_hex": "5e1600001100000054050000e8c819000000000000000000599a7e0000000000"
+    },
+    {
+      "class": "Lcom/whatsapp/infra/core/jid/GroupJid;",
+      "superclass": "LX/0c3;",
+      "dex_file": "classes.dex",
+      "class_def_offset": 1437248,
+      "raw_class_def_hex": "a94b000001040000b6080000000000000000000000000000d5ee950000000000"
+    },
+    {
+      "class": "LX/1cj;",
+      "superclass": "LX/0Cy;",
+      "dex_file": "classes2.dex",
+      "class_def_offset": 285584,
+      "raw_class_def_hex": "8a0400001100000097000000544b05000000000000000000d06d1a0000000000"
+    },
+    {
+      "class": "LX/9Lq;",
+      "superclass": "LX/0c3;",
+      "dex_file": "classes6.dex",
+      "class_def_offset": 1072384,
+      "raw_class_def_hex": "5d12000001040000d30100000000000000000000000000000000000000000000"
+    },
+    {
+      "class": "LX/0c3;",
+      "superclass": "LX/0Cy;",
+      "dex_file": "classes.dex",
+      "class_def_offset": 1437216,
+      "raw_class_def_hex": "b608000001040000df0200000000000000000000000000000000000000000000"
+    }
+  ]
+}

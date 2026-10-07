@@ -1,0 +1,1426 @@
+{
+  "reference": "Executed host Java Integer.parseInt; APK 9Lm length/leading-zero predicates applied separately. Not Android execution.",
+  "runtime": [
+    "openjdk version \"21.0.12.1\" 2026-08-18 LTS",
+    "OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)",
+    "OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)"
+  ],
+  "oracle": "docs/protocol/MexParticipantIntegratorOracle.java",
+  "cases": [
+    {
+      "integrator": "",
+      "java_integer": null,
+      "accepted": false
+    },
+    {
+      "integrator": "0",
+      "java_integer": 0,
+      "accepted": false
+    },
+    {
+      "integrator": "00",
+      "java_integer": 0,
+      "accepted": false
+    },
+    {
+      "integrator": "01",
+      "java_integer": 1,
+      "accepted": false
+    },
+    {
+      "integrator": "1",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "9",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "99",
+      "java_integer": 99,
+      "accepted": true
+    },
+    {
+      "integrator": "999",
+      "java_integer": 999,
+      "accepted": true
+    },
+    {
+      "integrator": "1000",
+      "java_integer": 1000,
+      "accepted": false
+    },
+    {
+      "integrator": "+0",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "-0",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "+1",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-1",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "+01",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-01",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "++1",
+      "java_integer": null,
+      "accepted": false
+    },
+    {
+      "integrator": "--1",
+      "java_integer": null,
+      "accepted": false
+    },
+    {
+      "integrator": "1-",
+      "java_integer": null,
+      "accepted": false
+    },
+    {
+      "integrator": "1.0",
+      "java_integer": null,
+      "accepted": false
+    },
+    {
+      "integrator": "1:0",
+      "java_integer": null,
+      "accepted": false
+    },
+    {
+      "integrator": " 1",
+      "java_integer": null,
+      "accepted": false
+    },
+    {
+      "integrator": "1 ",
+      "java_integer": null,
+      "accepted": false
+    },
+    {
+      "integrator": "\t1",
+      "java_integer": null,
+      "accepted": false
+    },
+    {
+      "integrator": "١",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "+١",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-١",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "１",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "+１",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-１",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "𝟙",
+      "java_integer": null,
+      "accepted": false
+    },
+    {
+      "integrator": "\u00001",
+      "java_integer": null,
+      "accepted": false
+    },
+    {
+      "integrator": "2147483647",
+      "java_integer": 2147483647,
+      "accepted": false
+    },
+    {
+      "integrator": "2147483648",
+      "java_integer": null,
+      "accepted": false
+    },
+    {
+      "integrator": "-2147483648",
+      "java_integer": -2147483648,
+      "accepted": false
+    },
+    {
+      "integrator": "-2147483649",
+      "java_integer": null,
+      "accepted": false
+    },
+    {
+      "integrator": "111",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "1111",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "٠",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "٩",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "١١١",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "١١١١",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "۰",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "۱",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "۹",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+۱",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-۱",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "۱۱۱",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "۱۱۱۱",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "߀",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "߁",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "߉",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+߁",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-߁",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "߁߁߁",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "߁߁߁߁",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "०",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "१",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "९",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+१",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-१",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "१११",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "११११",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "০",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "১",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "৯",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+১",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-১",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "১১১",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "১১১১",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "੦",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "੧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "੯",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+੧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-੧",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "੧੧੧",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "੧੧੧੧",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "૦",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "૧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "૯",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+૧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-૧",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "૧૧૧",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "૧૧૧૧",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "୦",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "୧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "୯",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+୧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-୧",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "୧୧୧",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "୧୧୧୧",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "௦",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "௧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "௯",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+௧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-௧",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "௧௧௧",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "௧௧௧௧",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "౦",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "౧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "౯",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+౧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-౧",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "౧౧౧",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "౧౧౧౧",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "೦",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "೧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "೯",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+೧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-೧",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "೧೧೧",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "೧೧೧೧",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "൦",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "൧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "൯",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+൧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-൧",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "൧൧൧",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "൧൧൧൧",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "෦",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "෧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "෯",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+෧",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-෧",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "෧෧෧",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "෧෧෧෧",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "๐",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "๑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "๙",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+๑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-๑",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "๑๑๑",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "๑๑๑๑",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "໐",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "໑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "໙",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+໑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-໑",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "໑໑໑",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "໑໑໑໑",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "༠",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "༡",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "༩",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+༡",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-༡",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "༡༡༡",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "༡༡༡༡",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "၀",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "၁",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "၉",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+၁",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-၁",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "၁၁၁",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "၁၁၁၁",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "႐",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "႑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "႙",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+႑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-႑",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "႑႑႑",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "႑႑႑႑",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "០",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "១",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "៩",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+១",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-១",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "១១១",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "១១១១",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "᠐",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "᠑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "᠙",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+᠑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-᠑",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "᠑᠑᠑",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "᠑᠑᠑᠑",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "᥆",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "᥇",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "᥏",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+᥇",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-᥇",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "᥇᥇᥇",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "᥇᥇᥇᥇",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "᧐",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "᧑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "᧙",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+᧑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-᧑",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "᧑᧑᧑",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "᧑᧑᧑᧑",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "᪀",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "᪁",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "᪉",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+᪁",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-᪁",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "᪁᪁᪁",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "᪁᪁᪁᪁",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "᪐",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "᪑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "᪙",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+᪑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-᪑",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "᪑᪑᪑",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "᪑᪑᪑᪑",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "᭐",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "᭑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "᭙",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+᭑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-᭑",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "᭑᭑᭑",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "᭑᭑᭑᭑",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "᮰",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "᮱",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "᮹",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+᮱",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-᮱",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "᮱᮱᮱",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "᮱᮱᮱᮱",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "᱀",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "᱁",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "᱉",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+᱁",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-᱁",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "᱁᱁᱁",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "᱁᱁᱁᱁",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "᱐",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "᱑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "᱙",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+᱑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-᱑",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "᱑᱑᱑",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "᱑᱑᱑᱑",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "꘠",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "꘡",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "꘩",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+꘡",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-꘡",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "꘡꘡꘡",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "꘡꘡꘡꘡",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "꣐",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "꣑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "꣙",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+꣑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-꣑",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "꣑꣑꣑",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "꣑꣑꣑꣑",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "꤀",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "꤁",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "꤉",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+꤁",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-꤁",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "꤁꤁꤁",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "꤁꤁꤁꤁",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "꧐",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "꧑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "꧙",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+꧑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-꧑",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "꧑꧑꧑",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "꧑꧑꧑꧑",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "꧰",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "꧱",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "꧹",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+꧱",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-꧱",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "꧱꧱꧱",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "꧱꧱꧱꧱",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "꩐",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "꩑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "꩙",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+꩑",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-꩑",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "꩑꩑꩑",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "꩑꩑꩑꩑",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "꯰",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "꯱",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "꯹",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "+꯱",
+      "java_integer": 1,
+      "accepted": true
+    },
+    {
+      "integrator": "-꯱",
+      "java_integer": -1,
+      "accepted": true
+    },
+    {
+      "integrator": "꯱꯱꯱",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "꯱꯱꯱꯱",
+      "java_integer": 1111,
+      "accepted": false
+    },
+    {
+      "integrator": "０",
+      "java_integer": 0,
+      "accepted": true
+    },
+    {
+      "integrator": "９",
+      "java_integer": 9,
+      "accepted": true
+    },
+    {
+      "integrator": "１１１",
+      "java_integer": 111,
+      "accepted": true
+    },
+    {
+      "integrator": "１１１１",
+      "java_integer": 1111,
+      "accepted": false
+    }
+  ]
+}

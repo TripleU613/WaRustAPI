@@ -1170,3 +1170,23 @@ Validation: APK hash and all thirteen class-definition literal bytes rechecked;
 phone validation, full interop class and DeviceJid constructor re-exported exactly.
 Repository hygiene passed (583 local links); staged whitespace passed. This
 source-only chunk changes no runtime code, so no new runtime test result is claimed.
+
+
+Strict MEX participant primary-address parser now implemented (2026-10-07):
+constructor/type guards, plain hosted normalization, signed/Unicode interop
+integrators and confirmed Server/0/Me singleton handling, separate from sending
+eligibility. New offline inspector outputs subtype only and redacts failures.
+283 independent Java references and nineteen domain class literals preserved;
+full member/alias/durable MEX application and Android/cache parity remain open.
+Release bundle expands to 50 methods / 55 files / 191422 bytes; 38 old texts
+unchanged, cached diff0.051814s. No saved account access or live request.
+[Evidence and limitations](docs/protocol/mex.md#strict-member-primary-address-parser-in-rust-2026-10-07).
+
+Validation: 625 workspace/all-feature tests, 24 default CLI tests, strict workspace
+all-target/all-feature Clippy, warning-free Rustdoc, formatting and regenerated
+CLI reference/API-symbol checks passed. After the negative-prefix CLI correction,
+all 56 xtask tests and strict xtask Clippy passed. Actual CLI:282 integrator cases,
+seven subtype successes, eight content-free/no-stdout refusals; NUL library-only.
+All nineteen domain class literal records were reread against the APK; final
+snapshot checksums and repository hygiene passed (591 local links). Staged
+whitespace passed. No complete member conversion or live validation is claimed.

@@ -762,3 +762,20 @@ Interop uses last hyphen and signed Java parseInt; no unsigned-only rule inferre
 Remaining unknowns: singleton types, platform parseInt parity, Ble final assertion,
 full member assembly and phash downstream application. Existing send policy,
 API/CLI capabilities, saved account state and live transport remain unchanged.
+
+
+## comparison.mex.strict_participant_address_port — 2026-10-07
+
+**Confirmed static** APK 2.26.37.71 / SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+0D2.A00/A02/A03, seven scoped singleton/factory classes, nineteen literal domain
+class definitions settle strict UserJid special cases and non-user domains.
+Server/0 and bare Me placeholders qualify; gdpr/bare-server/group/broadcast/
+newsletter/call/temp/interop.g.us do not. **Implemented** ParticipantAddress
+strict primary parsing and redacted offline inspector, separate from send policy.
+283 executed host Java Integer.parseInt cases validate platform conversion;
+Android Unicode/cache parity and member/alias/durable application remain unknown.
+Observed negative-prefix CLI flag bug fixed with regression and actual CLI checks.
+[Sources, reasoning and reproduction](mex.md#strict-member-primary-address-parser-in-rust-2026-10-07).
+Release recipe now 50 methods / 55 files / 191422 bytes, twelve additions,
+38 prior texts unchanged; cached diff0.051814s. No saved account/live request.

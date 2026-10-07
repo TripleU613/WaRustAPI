@@ -11,6 +11,10 @@
     "bytes": 714,
     "sha256": "8c04c31473e3235b645e9ff2769e8fe4fc4763ad8b77484d297c2eb41d0339d5"
   },
+  "mex-bare-server-constructor.txt": {
+    "bytes": 543,
+    "sha256": "ec265e4933d0ad9b8e0eeeb1dc46004c7871ac61e6d97518302a1c490a576675"
+  },
   "mex-bot-server.txt": {
     "bytes": 461,
     "sha256": "c8fe5b1ca9ff3d1120c9543f3a8c769dedc465b6aa5bb98e8e94ff813bb1e329"
@@ -43,6 +47,10 @@
     "bytes": 32840,
     "sha256": "0ba764944512778bc9880bdd2e2e788dbc78bc663e6f6af1e96599e45a922a8e"
   },
+  "mex-gdpr-constructor.txt": {
+    "bytes": 547,
+    "sha256": "b840d49a88437ed4ad6a10707290583479ad3fe1649d1e8fefc10e54777d8ba6"
+  },
   "mex-generic-jid-routing.txt": {
     "bytes": 10802,
     "sha256": "ea4cf9c051339a95df05e0d9f09d6c95258632a79589332c20cbcefda833ca62"
@@ -54,6 +62,18 @@
   "mex-inherited-callback-gate.txt": {
     "bytes": 2926,
     "sha256": "916e572c93f505fcd7e37455ef84d68338e5c9c34d05c872ddc85c296b165a86"
+  },
+  "mex-interop-last-hyphen.txt": {
+    "bytes": 1442,
+    "sha256": "3b13d1c6b8549a31aea88e3d50f99d3d7ba4177737f2c2445842b8f250420248"
+  },
+  "mex-interop-prefix-helper.txt": {
+    "bytes": 615,
+    "sha256": "8437d1515a1123c0e3f97031a003021ceb622aa0a52a8609fc55a6ed7766e5fa"
+  },
+  "mex-interop-user-validation.txt": {
+    "bytes": 7941,
+    "sha256": "eeb5f78b91767b6e2e3da2011474d48415857a1a914c68654f0173cfde313013"
   },
   "mex-json-field-readers.txt": {
     "bytes": 3395,
@@ -95,6 +115,14 @@
     "bytes": 5243,
     "sha256": "829add1ea90f9e8907cf8db73dd544a4981943e7b5d31f1f7f501470dbcef3ef"
   },
+  "mex-lid-me-constructor.txt": {
+    "bytes": 543,
+    "sha256": "377a57405bacedf7c9a55dd97607286a6f36398fd16e632c149efee2cfb48048"
+  },
+  "mex-lid-user-validation.txt": {
+    "bytes": 3736,
+    "sha256": "797008fc9cc16b84457aaeb7306cbf254ff955c055dc9b33c460aad7dd2f51e7"
+  },
   "mex-nullable-bot-jid.txt": {
     "bytes": 1089,
     "sha256": "ff3816fab4f1a79f7797af84dea64c00ee9c46e53d83f4355f1ee5b0727557e4"
@@ -127,6 +155,14 @@
     "bytes": 1120,
     "sha256": "e3f6e8e1e15015aba9cc11c621789a2f0bb39b69b8b99a458a1051adf308c618"
   },
+  "mex-phone-user-validation.txt": {
+    "bytes": 2105,
+    "sha256": "40bc48766e93988cb95ccef0c4507622e1d8c96ebc8e64470ca09fccc6e2c7ad"
+  },
+  "mex-primary-user-factory.txt": {
+    "bytes": 3580,
+    "sha256": "267d5473b0bb80d4012e31ccd21c6182367026de131eea570efbd844dd274ba5"
+  },
   "mex-response-model-flags.txt": {
     "bytes": 2732,
     "sha256": "cc170ec8f755549e1f75a0ea30d70cd5c0e6613b8b4614419d2f584911e6ed70"
@@ -142,6 +178,18 @@
   "mex-scaled-long.txt": {
     "bytes": 640,
     "sha256": "03c3fbe09abaa61668722b4cd7886f14f5d7cf3b48379e5e289ea6178e6a66f0"
+  },
+  "mex-server-name-constructor.txt": {
+    "bytes": 549,
+    "sha256": "bb514976124b9abd9e8a6bb7eb4d1eff1dd56a4f2ebede469cfb2be31def0145"
+  },
+  "mex-server-zero-constructor.txt": {
+    "bytes": 544,
+    "sha256": "ca9be009e539fe39bbc7195879d0f4be2b5170facbda1d579d4ffca034dbc5ad"
+  },
+  "mex-status-me-constructor.txt": {
+    "bytes": 543,
+    "sha256": "66c5ea773b682a8cfff4a45f683b7a9667e3b722cc99b727b749cf430031528c"
   },
   "mex-strict-bot-jid.txt": {
     "bytes": 1282,
@@ -160,8 +208,8 @@
     "sha256": "12a6c73f8362eb3c22b1f43211bd422b99b069e12efb6c8cbd3f9ea9613591a6"
   },
   "targets.json": {
-    "bytes": 12784,
-    "sha256": "70999c8276c0e0bc68f673f0811da85b1ee3f009a5aee245372ceef085ed7a19"
+    "bytes": 17155,
+    "sha256": "fa33d53b34ba3921317bbd4d7cf0d61f8759c8adb7c1f59287e9f83d83484852"
   },
   "tokens.json": {
     "bytes": 23019,

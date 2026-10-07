@@ -158,6 +158,20 @@
         "whatsapp_api::transport::mex::GroupParticipantRole::member_role"
       ],
       "description": "Offline APK 2.26.37.71 MEX participant role conversion; no HTTP route, account access, live request or participant/state application. Optional --value supplies a nullable server string; omission, empty, unknown and whitespace-padded values resolve to unrecognized. LbE.A0C -> 4R7.A00 uses Locale.US uppercase without trimming and Enum.valueOf, with IllegalArgumentException fallback to 2hu.A05. ADMIN_MEMBER maps to admin, MEMBER to member, SUPERADMIN_MEMBER to superadmin; explicit UNSET_OR_UNRECOGNIZED_ENUM_VALUE maps to unrecognized. Unicode uppercase matches the 91 committed host Java reference cases (including dotless i and long s); complete Android SDK/Unicode version parity remains unverified. Output offline_only=true, role (unrecognized/admin/member/superadmin) and member_role (empty/admin/superadmin) only, never echoes the supplied value. Member and unrecognized remain distinct despite identical empty stored role. This string-only helper does not implement JSONObject optString coercions, participant hash guard, edge/JID conversion, full group validation or durable application. Evidence docs/protocol/mex.md#participant-role-conversion-and-member-map-boundaries-2026-10-07."
+    },
+    {
+      "x-cli": "cargo run -p xtask -- mex-participant-address-inspect --value <private-jid>",
+      "x-transport": "cli",
+      "x-live": false,
+      "x-library": [
+        "whatsapp_api::transport::mex::ParticipantAddress",
+        "whatsapp_api::transport::mex::ParticipantAddress::parse",
+        "whatsapp_api::transport::mex::ParticipantAddress::kind",
+        "whatsapp_api::transport::mex::ParticipantAddress::user",
+        "whatsapp_api::transport::mex::ParticipantAddress::server",
+        "whatsapp_api::transport::mex::ParticipantAddressKind"
+      ],
+      "description": "Offline APK 37.71 strict member-primary UserJid validation; no HTTP route, account access, sending eligibility or group-state application. Required --value is private input; success prints only offline_only=true and kind (phone, lid, bot, interop, server_zero, server_name, lid_me, status_me), never the supplied or canonical address. Failure has empty stdout and a content-free mex.participant.address diagnostic. Device suffixes, non-user domains and gdpr refuse. Phone/LID/bot constructor ASCII/length/prefix guards and interop last-hyphen/signed Integer.parseInt rules are preserved. Plain hosted/hosted.lid canonical domains normalize through explicit library server(); user() reveals private identifiers, while Debug hides them. Server/0 singletons and bare lid_me/status_me are accepted; bare server and @lid_me/@status_me domains refuse. Integer digit semantics validated against independent host Java, not Android Unicode-version parity. Full member assembly, alias application, Java cache effects and live MEX application remain unfinished. Evidence docs/protocol/mex.md."
     }
   ],
   "info": {

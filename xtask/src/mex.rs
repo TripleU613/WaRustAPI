@@ -267,6 +267,20 @@ pub fn inspect_role(value: Option<&str>) -> Result<(), String> {
     Ok(())
 }
 
+/// Strict member-primary validation without private address echo or account access.
+pub fn inspect_participant_address(value: &str) -> Result<(), String> {
+    let address = whatsapp_api::transport::mex::ParticipantAddress::parse(value)
+        .map_err(|e| e.to_string())?;
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&serde_json::json!({
+            "offline_only": true, "kind": address.kind(),
+        }))
+        .map_err(|_| "cannot encode participant address inspection")?
+    );
+    Ok(())
+}
+
 /// Summary is redacted; explicit group_numbers opts into numeric content only.
 /// Raw JSON/group names/server error content never appear in diagnostics.
 pub fn inspect_response(
