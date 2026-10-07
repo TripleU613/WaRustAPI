@@ -503,3 +503,23 @@ with redacted metadata and no account-store creation.
 
 Repository hygiene passed: 364 local links, tracked-file budgets, package
 licenses and research checksums; staged whitespace checks passed.
+
+V3 export follow-up (2026-10-07): explicit `encode_v3` and
+`fingerprint-display --qr-scheme native-v3 --qr-version 0|1 --qr-output` now
+produce V3 comparison bytes, preserving both PN fields with usernames. Static
+combined/individual serializer instructions confirm field/order differences.
+Independent Python wire/hash fixtures cover both versions, optional addresses,
+zero suffix preservation and both comparison orientations. CLI V3 display/export
+requires stable PN display input; library export also accepts LID-only sides.
+Current feature/inventory selection and real-peer interoperability remain open.
+No account or network action changed.
+[V3 export evidence](docs/protocol/safety-number.md#explicit-native-v3-binary-export-2026-10-07).
+
+Validation (offline): 564 workspace/all-feature tests and 252 default-feature
+workspace tests passed. Strict workspace/all-target/all-feature Clippy,
+warning-free Rustdoc, generated CLI reference, formatting and repository hygiene
+(367 local links) passed. The initial workspace run preceded doc regeneration
+and failed only its stale-reference test; after regeneration the full rerun
+passed. A built-CLI synthetic PN-only export in versions 0/1 matched the exact
+independent fixture, created mode-0600 files, compared with V3 status zero and
+refused overwrite without changing bytes. No account store was created.

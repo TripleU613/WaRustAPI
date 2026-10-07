@@ -108,6 +108,35 @@ fn known(side: &V3Side<'_>, version: u8) -> Result<Individual> {
     })
 }
 
+/// Encode a native V3 combined payload, preserving PN on both sides.
+/// Explicit selected inputs only; no active feature/inventory or verification claim.
+/// Present LIDs use the supported primary subset; their supplied ASCII text is
+/// retained, whereas comparison normalizes zero-device suffixes. Version is 0/1.
+pub fn encode_v3(local: &V3Side<'_>, remote: &V3Side<'_>, version: u8) -> Result<Vec<u8>> {
+    if version > 1 {
+        return Err(Error::invalid(
+            "fingerprint.qr_version",
+            "native QR version must be 0 or 1",
+        ));
+    }
+    fn serialized(side: &V3Side<'_>, version: u8) -> Result<Individual> {
+        let mut value = known(side, version)?;
+        // 37.71 serializer 713cf8..713e00 retains supplied LID full string
+        // and PN regardless of username. Do not apply V4 local PN suppression
+        // or the scanned converter's zero-device normalization while exporting.
+        value.lid_identifier = side.lid_jid.map(ascii).transpose()?;
+        Ok(value)
+    }
+    Ok(Combined {
+        // 713660 writes both presence=1 and version, including zero;
+        // 713664/713674 pass the same version to local and remote serializers.
+        version: Some(u32::from(version)),
+        local: Some(serialized(local, version)?),
+        remote: Some(serialized(remote, version)?),
+    }
+    .encode_to_vec())
+}
+
 fn convert(side: &mut Individual, version: u32) -> std::result::Result<(), i32> {
     // Native V3 converter 713e00: PN ASCII, LID ASCII/parse, username ASCII,
     // address presence, hosted enum, then version-selected key. Order matters.
@@ -297,6 +326,98 @@ pub fn compare_v3(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn export_matches_independent_v3_wire_fixtures_and_roundtrips_both_orientations() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../fixtures/fingerprint/native-v3-qr-3771.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            let keys = |value: &serde_json::Value| {
+                value["raw_identity_keys_hex"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|key| {
+                        hex::decode(key.as_str().unwrap())
+                            .unwrap()
+                            .try_into()
+                            .unwrap()
+                    })
+                    .collect::<Vec<[u8; 32]>>()
+            };
+            let local_keys = keys(&case["local"]);
+            let remote_keys = keys(&case["remote"]);
+            fn side<'a>(value: &'a serde_json::Value, keys: &'a [[u8; 32]]) -> V3Side<'a> {
+                V3Side {
+                    keys,
+                    lid_jid: value["lid_jid"].as_str(),
+                    pn_identifier: value["pn_identifier"].as_str(),
+                    username_identifier: value["username_identifier"].as_str(),
+                    hosted_state: match value["hosted_state"].as_i64() {
+                        Some(0) => Some(HostedState::E2ee),
+                        Some(1) => Some(HostedState::Hosted),
+                        _ => None,
+                    },
+                }
+            }
+            let local = side(&case["local"], &local_keys);
+            let remote = side(&case["remote"], &remote_keys);
+            for version in [0, 1] {
+                let bytes = encode_v3(&local, &remote, version).unwrap();
+                assert_eq!(
+                    hex::encode(&bytes),
+                    case[format!("version_{version}_hex")],
+                    "{}",
+                    case["case"]
+                );
+                for (a, b, orientation) in [
+                    (&local, &remote, ScanOrientation::LocalFirst),
+                    (&remote, &local, ScanOrientation::RemoteFirst),
+                ] {
+                    let result = compare_v3(a, b, &bytes, true).unwrap().result;
+                    assert_eq!(result.status, 0, "{}", case["case"]);
+                    assert_eq!(result.orientation, Some(orientation));
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn export_refuses_unknown_version_missing_identity_invalid_ascii_and_empty_keys() {
+        let keys = [[1u8; 32]];
+        let mut side = V3Side {
+            keys: &keys,
+            lid_jid: None,
+            pn_identifier: Some(""),
+            username_identifier: Some(""),
+            hosted_state: None,
+        };
+        let parsed = decode::combined(&encode_v3(&side, &side, 0).unwrap()).unwrap();
+        assert_eq!(parsed.version, Some(0));
+        let individual = parsed.local.unwrap();
+        assert_eq!(individual.pn_identifier, Some(vec![]));
+        assert_eq!(individual.username_identifier, Some(vec![]));
+        assert_eq!(individual.lid_identifier, None);
+        assert_eq!(individual.hosted_state, None);
+        assert!(encode_v3(&side, &side, 2).is_err());
+        side.pn_identifier = None;
+        assert!(encode_v3(&side, &side, 0).is_err());
+        side.pn_identifier = Some("private\0sentinel");
+        assert!(
+            !encode_v3(&side, &side, 0)
+                .unwrap_err()
+                .to_string()
+                .contains("sentinel")
+        );
+        side.pn_identifier = Some("synthetic-pn");
+        side.lid_jid = Some("123:1@lid");
+        assert!(encode_v3(&side, &side, 0).is_err());
+        side.lid_jid = None;
+        side.keys = &[];
+        assert!(encode_v3(&side, &side, 0).is_err());
+    }
 
     #[test]
     fn port_matches_every_non_abort_native_core_observation() {

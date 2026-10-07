@@ -2259,3 +2259,76 @@ account, network request or human verification was involved.
 
 Repository hygiene passed: 364 local links, tracked-file budgets, package
 licenses and research checksums; staged whitespace checks passed.
+
+## Explicit native V3 binary export (2026-10-07)
+
+**Confirmed/static**, APK 2.26.37.71, reconstructed `libwhatsapp.so` SHA-256
+`f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a`:
+fresh disassembly of combined serializer **0x713620..0x71373c** establishes
+version presence=1 and supplied version at `0x713660`, then the same individual
+serializer/version for local (`0x713664`) and remote (`0x713674`). Packed-size,
+pack and free calls precede display composition. Individual serializer
+**0x713cf8..0x713e00** selects concatenated serialized keys for version zero
+(`0x713d48`) or identifier-free digest otherwise (`0x713d30`). It writes optional
+PN (`0x713d74..0x713d84`), retained LID's full string
+(`0x713d8c..0x713da4`), username (`0x713dac..0x713dc0`) and hosted state only
+for 0/1 (`0x713dc8..0x713dd8`). Unlike V4, there is no local-side username/PN
+suppression flag. [Scoped instructions](fingerprint-v3-export-evidence.txt)
+retain both functions; the previously recorded native schema supplies tags.
+This is static evidence, not native pack/MCF/JNI execution.
+
+**Implemented/offline:** `fingerprint::qr::encode_v3` (also `qr::v3::encode_v3`)
+exports version 0/1 from explicit `V3Side` inventories. It shares the sorted
+0x05-prefixed concatenation and 5200-round H(K,K), retains both PN fields even
+with username, preserves optional/empty ASCII values, and writes explicit
+version-zero presence. At least PN or LID and nonempty keys are required.
+The typed hosted enum cannot export the absent sentinel or unknown value.
+Present LIDs must satisfy the client's traced primary numeric subset; zero
+suffixes are accepted and supplied full text is retained on export. Scanned
+comparison separately normalizes zero suffixes. Broader APK JID constructors
+remain unsupported locally; this does not prove the APK rejects them.
+
+CLI `fingerprint-display --qr-version 0|1 --qr-output <new-private-file>
+--qr-scheme native-v3` exposes export with the existing private JSON format.
+Omitting `--qr-scheme` preserves V4 export. Selecting a scheme requires the
+version/output pair and refuses before input access when that pair is absent.
+Display and export use one parsed input; the existing create-only mode-0600
+writer refuses overwrite and preserves a partial private artifact on I/O failure.
+Stdout adds only `qr_export.format: native_v3_protobuf`, version, byte count and
+creation flag; payload/keys/contact identifiers and output path are absent.
+The shared display output intentionally includes the computed decimal number.
+
+**Client subset, not server requirement:** V3 CLI display/export requires
+`pn_identifier == display_identifier` for both sides. Native V3 display reads
+stable PN at params +0x28 (`0x7139e4..0x713cf8`, preceding trace); it does not
+justify substituting a LID display user into this input. LID is optional here
+and need not equal the PN display identifier. Library-only V3 export supports
+LID-only sides without claiming a decimal display. Unknown current PN selection,
+normalization producers, feature values and authenticated complete inventories
+are not filled with guesses.
+
+**Independent fixtures:** `fixtures/fingerprint/native-v3-qr-3771.json` uses a
+manual Python literal-tag/length/varint encoder and hashlib SHA512 with explicit
+5199 additional rounds. Digests independently match the earlier actual native
+hash-control-flow fixtures (host-modeled SHA/MCF). Four variants cover both
+addresses, PN-only, LID-only and zero suffixes with empty usernames, each in
+versions 0/1. Exact encoded bytes match Rust; separate comparisons succeed in
+both orientations with hosted checks. Guard tests distinguish absent/empty,
+unknown version, missing identity, NUL, nonprimary LID and empty keys. CLI tests
+match all supported fixture variants and reject mismatched display input with
+redacted diagnostics. These checks prove local serialization against the
+attributed schema/branches, not whole native execution or real-peer scanning.
+
+**Unknown:** current generation/scan flags, full authorized inventories, native
+allocation/registry/JNI/pack runtime, rendered QR interoperability and live peer
+comparison remain unverified. No saved account, verification metadata, session,
+request ID, outbox reservation or network action is changed by export.
+
+Validation (offline): 564 workspace/all-feature tests and 252 default-feature
+workspace tests passed. Strict workspace/all-target/all-feature Clippy,
+warning-free Rustdoc, generated CLI reference, formatting and repository hygiene
+(367 local links) passed. The initial workspace run preceded doc regeneration
+and failed only its stale-reference test; after regeneration the full rerun
+passed. A built-CLI synthetic PN-only export in versions 0/1 matched the exact
+independent fixture, created mode-0600 files, compared with V3 status zero and
+refused overwrite without changing bytes. No account store was created.

@@ -167,12 +167,15 @@ enum Cmd {
         /// Private JSON with normalized display identifiers and raw public key inventories.
         #[arg(long)]
         config: PathBuf,
-        /// Export native V4 comparison protobuf version 0 (keys) or 1 (digest).
+        /// Export native V3/V4 comparison protobuf version 0 (keys) or 1 (digest).
         #[arg(long, requires = "qr_output", value_parser = clap::value_parser!(u8).range(0..=1))]
         qr_version: Option<u8>,
         /// Create a new private binary QR payload file; existing files are refused.
         #[arg(long, requires = "qr_version")]
         qr_output: Option<PathBuf>,
+        /// Explicit export algorithm (default native-v4); requires QR export.
+        #[arg(long, value_enum, requires = "qr_version")]
+        qr_scheme: Option<fingerprint::ComparisonScheme>,
     },
     /// Compare a private native V3/V4 binary payload against explicit private inputs (offline).
     FingerprintCompare {
@@ -1418,7 +1421,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
             config,
             qr_version,
             qr_output,
-        } => fingerprint::run(config, *qr_version, qr_output.as_deref()),
+            qr_scheme,
+        } => fingerprint::run(config, *qr_version, qr_output.as_deref(), *qr_scheme),
         Cmd::FingerprintCompare {
             config,
             scanned,

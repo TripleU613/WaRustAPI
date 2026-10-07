@@ -839,3 +839,11 @@ statically confirmed. Current authenticated inputs/feature selection and human
 verification remain unproven; this does not mark metadata or send a message.
 V3 export and native MCF/JNI edge validation remain open.
 See [client comparison](protocol/safety-number.md#explicit-native-v3-binary-comparison-in-the-client-2026-10-07).
+
+2026-10-07 explicit V3 export: library `encode_v3` and optional
+`fingerprint-display --qr-scheme native-v3` now export V3 binary versions 0/1,
+retaining local PN with username. Independent fixtures cover PN-only/LID-only,
+zero suffix and orientation. CLI combined display/export requires stable PN
+inputs; current authenticated inventories/feature selection and real-peer scan
+remain unverified. No verification mark or account/network action occurred.
+See [V3 export](protocol/safety-number.md#explicit-native-v3-binary-export-2026-10-07).

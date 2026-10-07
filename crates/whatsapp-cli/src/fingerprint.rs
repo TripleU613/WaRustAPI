@@ -12,7 +12,7 @@ use whatsapp_api::{
 };
 use zeroize::Zeroizing;
 
-/// Explicit offline comparison selection; never infer the APK's runtime flag.
+/// Explicit offline native algorithm selection; never infer the APK's runtime flag.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
 pub(super) enum ComparisonScheme {
     NativeV4,
@@ -147,14 +147,33 @@ fn qr_side<'a>(side: &'a Side, keys: &'a [[u8; 32]]) -> Result<fingerprint::qr::
     })
 }
 
-fn qr(input: &Input, version: u8) -> Result<Vec<u8>, Error> {
+fn qr(input: &Input, version: u8, scheme: ComparisonScheme) -> Result<Vec<u8>, Error> {
     let local_keys = decode_keys(&input.local)?;
     let remote_keys = decode_keys(&input.remote)?;
-    fingerprint::qr::encode_v4(
-        &qr_side(&input.local, &local_keys)?,
-        &qr_side(&input.remote, &remote_keys)?,
-        version,
-    )
+    match scheme {
+        ComparisonScheme::NativeV4 => fingerprint::qr::encode_v4(
+            &qr_side(&input.local, &local_keys)?,
+            &qr_side(&input.remote, &remote_keys)?,
+            version,
+        ),
+        ComparisonScheme::NativeV3 => {
+            // Native display 7139e4 reads stable PN at params +28. This
+            // CLI's explicit V3 export subset requires that display input;
+            // missing PN is our display/export limitation, not a server rule.
+            for side in [&input.local, &input.remote] {
+                if side.pn_identifier.as_deref() != Some(side.display_identifier.as_str()) {
+                    return Err(invalid(
+                        "V3 display/export requires pn_identifier equal to display_identifier on each side",
+                    ));
+                }
+            }
+            fingerprint::qr::encode_v3(
+                &v3_side(&input.local, &local_keys),
+                &v3_side(&input.remote, &remote_keys),
+                version,
+            )
+        }
+    }
 }
 
 fn export(path: &Path, payload: &[u8]) -> Result<(), Error> {
@@ -174,12 +193,17 @@ pub(super) fn run(
     path: &Path,
     qr_version: Option<u8>,
     qr_output: Option<&Path>,
+    qr_scheme: Option<ComparisonScheme>,
 ) -> Result<(), Error> {
     if qr_version.is_some() != qr_output.is_some() {
         return Err(invalid(
             "QR export requires both --qr-version and --qr-output",
         ));
     }
+    if qr_scheme.is_some() && qr_version.is_none() {
+        return Err(invalid("--qr-scheme requires --qr-version and --qr-output"));
+    }
+    let scheme = qr_scheme.unwrap_or(ComparisonScheme::NativeV4);
     // Parse once, so the displayed number and exported QR share the same inputs
     // even if an operator updates the config while this command is running.
     let bytes = read(path)?;
@@ -188,10 +212,13 @@ pub(super) fn run(
     let mut value =
         serde_json::to_value(result).map_err(|_| invalid("cannot encode fingerprint result"))?;
     if let (Some(version), Some(output)) = (qr_version, qr_output) {
-        let payload = qr(&input, version)?;
+        let payload = qr(&input, version, scheme)?;
         export(output, &payload)?;
         value["qr_export"] = serde_json::json!({
-            "format":"native_v4_protobuf", "version":version,
+            "format": match scheme {
+                ComparisonScheme::NativeV4 => "native_v4_protobuf",
+                ComparisonScheme::NativeV3 => "native_v3_protobuf",
+            }, "version":version,
             "bytes":payload.len(), "private_file_created":true
         });
     }
@@ -213,6 +240,16 @@ fn compare_input(input: &Input, payload: &[u8]) -> Result<fingerprint::qr::V4Com
     )
 }
 
+fn v3_side<'a>(value: &'a Side, keys: &'a [[u8; 32]]) -> fingerprint::qr::V3Side<'a> {
+    fingerprint::qr::V3Side {
+        keys,
+        lid_jid: value.lid_jid.as_deref(),
+        pn_identifier: value.pn_identifier.as_deref(),
+        username_identifier: value.username_identifier.as_deref(),
+        hosted_state: value.hosted_state,
+    }
+}
+
 fn compare_v3_input(
     input: &Input,
     payload: &[u8],
@@ -220,18 +257,9 @@ fn compare_v3_input(
 ) -> Result<fingerprint::qr::V3Comparison, Error> {
     let local_keys = decode_keys(&input.local)?;
     let remote_keys = decode_keys(&input.remote)?;
-    fn side<'a>(value: &'a Side, keys: &'a [[u8; 32]]) -> fingerprint::qr::V3Side<'a> {
-        fingerprint::qr::V3Side {
-            keys,
-            lid_jid: value.lid_jid.as_deref(),
-            pn_identifier: value.pn_identifier.as_deref(),
-            username_identifier: value.username_identifier.as_deref(),
-            hosted_state: value.hosted_state,
-        }
-    }
     fingerprint::qr::compare_v3(
-        &side(&input.local, &local_keys),
-        &side(&input.remote, &remote_keys),
+        &v3_side(&input.local, &local_keys),
+        &v3_side(&input.remote, &remote_keys),
         payload,
         check_hosted,
     )
@@ -273,6 +301,64 @@ mod tests {
             "local":{"display_identifier":"synthetic-local", "raw_identity_keys_hex":["10".repeat(32),"01".repeat(32)]},
             "remote":{"display_identifier":"synthetic-remote", "raw_identity_keys_hex":[hex::encode((0u8..32).collect::<Vec<_>>())]}
         })
+    }
+
+    #[test]
+    fn v3_export_uses_stable_pn_display_and_retains_local_pn_with_username() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../whatsapp-api/fixtures/fingerprint/native-v3-qr-3771.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|c| c["case"] != "lid-only")
+        {
+            let mut value = input();
+            for side in ["local", "remote"] {
+                for field in [
+                    "lid_jid",
+                    "pn_identifier",
+                    "username_identifier",
+                    "raw_identity_keys_hex",
+                ] {
+                    value[side][field] = case[side][field].clone();
+                }
+                value[side]["display_identifier"] = case[side]["pn_identifier"].clone();
+                value[side]["hosted_state"] = match case[side]["hosted_state"].as_i64() {
+                    Some(0) => serde_json::json!("e2ee"),
+                    Some(1) => serde_json::json!("hosted"),
+                    _ => serde_json::Value::Null,
+                };
+            }
+            let config = parse(&serde_json::to_vec(&value).unwrap()).unwrap();
+            for version in [0, 1] {
+                let bytes = qr(&config, version, ComparisonScheme::NativeV3).unwrap();
+                assert_eq!(hex::encode(&bytes), case[format!("version_{version}_hex")]);
+                assert_eq!(
+                    compare_v3_input(&config, &bytes, true)
+                        .unwrap()
+                        .result
+                        .status,
+                    0
+                );
+            }
+            value["local"]["display_identifier"] = serde_json::json!("private-sentinel");
+            let config = parse(&serde_json::to_vec(&value).unwrap()).unwrap();
+            let error = qr(&config, 0, ComparisonScheme::NativeV3)
+                .unwrap_err()
+                .to_string();
+            assert!(error.contains("pn_identifier equal to display_identifier"));
+            assert!(!error.contains("private-sentinel"));
+        }
+        let missing = Path::new("unused-v3-export-input.json");
+        assert!(
+            run(missing, None, None, Some(ComparisonScheme::NativeV3))
+                .unwrap_err()
+                .to_string()
+                .contains("--qr-scheme requires")
+        );
     }
 
     #[test]
@@ -378,7 +464,7 @@ mod tests {
             "telewhatsapp-fingerprint-qr-{}.pb",
             std::process::id()
         ));
-        let payload = qr(&config, 0).unwrap();
+        let payload = qr(&config, 0, ComparisonScheme::NativeV4).unwrap();
         assert_eq!(hex::encode(&payload), fixture["version_0_hex"]);
         export(&path, &payload).unwrap();
         assert_eq!(
@@ -391,7 +477,7 @@ mod tests {
         value["local"]["display_identifier"] = "secret-sentinel".into();
         let config = parse(&serde_json::to_vec(&value).unwrap()).unwrap();
         assert!(
-            !qr(&config, 0)
+            !qr(&config, 0, ComparisonScheme::NativeV4)
                 .unwrap_err()
                 .to_string()
                 .contains("secret-sentinel")
@@ -404,9 +490,23 @@ mod tests {
             "222222222222222@s.whatsapp.net",
         ] {
             value["local"]["lid_jid"] = jid.into();
-            assert!(qr(&parse(&serde_json::to_vec(&value).unwrap()).unwrap(), 0).is_err());
+            assert!(
+                qr(
+                    &parse(&serde_json::to_vec(&value).unwrap()).unwrap(),
+                    0,
+                    ComparisonScheme::NativeV4
+                )
+                .is_err()
+            );
         }
-        assert!(qr(&parse(&serde_json::to_vec(&input()).unwrap()).unwrap(), 0).is_err());
+        assert!(
+            qr(
+                &parse(&serde_json::to_vec(&input()).unwrap()).unwrap(),
+                0,
+                ComparisonScheme::NativeV4
+            )
+            .is_err()
+        );
         value["local"]["hosted_state"] = "secret-sentinel".into();
         assert!(
             !parse(&serde_json::to_vec(&value).unwrap())
@@ -427,6 +527,22 @@ mod tests {
             "private.json",
         ];
         assert!(crate::Cli::try_parse_from(base).is_ok());
+        assert!(
+            crate::Cli::try_parse_from(base.into_iter().chain(["--qr-scheme", "native-v3"]))
+                .is_err()
+        );
+        assert!(
+            crate::Cli::try_parse_from(base.into_iter().chain([
+                "--qr-scheme",
+                "native-v3",
+                "--qr-version",
+                "0",
+                "--qr-output",
+                "private.pb"
+            ]))
+            .is_ok()
+        );
+
         assert!(crate::Cli::try_parse_from(base.into_iter().chain(["--qr-version", "0"])).is_err());
         assert!(
             crate::Cli::try_parse_from(base.into_iter().chain(["--qr-output", "private.pb"]))

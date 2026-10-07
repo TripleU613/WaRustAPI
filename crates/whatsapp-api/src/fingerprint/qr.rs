@@ -1,4 +1,4 @@
-//! Native V4 serialization and V3/V4 explicit-input comparison, APK 2.26.37.71.
+//! Native V3/V4 serialization and explicit-input comparison, APK 2.26.37.71.
 //! This exports comparison data, not a QR image, authentication, scheme selection
 //! or a human-verification result. Evidence: docs/protocol/safety-number.md.
 use super::{MAX_DISPLAY_IDENTIFIER_BYTES, serialized_keys};
@@ -8,7 +8,7 @@ mod decode;
 pub mod v3;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha512};
-pub use v3::{V3Comparison, V3Side, compare_v3};
+pub use v3::{V3Comparison, V3Side, compare_v3, encode_v3};
 
 /// Native QR hosted-state enum; distinct from saved identity attestation types.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]

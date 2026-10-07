@@ -1,0 +1,152 @@
+APK 2.26.37.71; reconstructed libwhatsapp.so SHA256 f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a
+Confirmed/static V3 combined and individual serializer instructions.
+No native pack/MCF/JNI execution or live peer comparison claimed.
+
+lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000006b3834 <op_read>:
+  713620: d503233f     	paciasp
+  713624: a9bc7bfd     	stp	x29, x30, [sp, #-0x40]!
+  713628: f9000bf7     	str	x23, [sp, #0x10]
+  71362c: a90257f6     	stp	x22, x21, [sp, #0x20]
+  713630: a9034ff4     	stp	x20, x19, [sp, #0x30]
+  713634: 910003fd     	mov	x29, sp
+  713638: a9425815     	ldp	x21, x22, [x0, #0x20]
+  71363c: aa0003f3     	mov	x19, x0
+  713640: 52800600     	mov	w0, #0x30               // =48
+  713644: 2a0103f7     	mov	w23, w1
+  713648: 9417537a     	bl	0xce8430 <MCFMalloc@plt>
+  71364c: aa0003f4     	mov	x20, x0
+  713650: 941758c4     	bl	0xce9960 <whatsapp__combined_fingerprint__init@plt>
+  713654: 52800028     	mov	w8, #0x1                // =1
+  713658: aa1503e0     	mov	x0, x21
+  71365c: 2a1703e1     	mov	w1, w23
+  713660: 29035e88     	stp	w8, w23, [x20, #0x18]
+  713664: 940001a5     	bl	0x713cf8 <op_read+0x604c4>
+  713668: f9001280     	str	x0, [x20, #0x20]
+  71366c: aa1603e0     	mov	x0, x22
+  713670: 2a1703e1     	mov	w1, w23
+  713674: 940001a1     	bl	0x713cf8 <op_read+0x604c4>
+  713678: f9001680     	str	x0, [x20, #0x28]
+  71367c: aa1403e0     	mov	x0, x20
+  713680: 941758ac     	bl	0xce9930 <whatsapp__combined_fingerprint__get_packed_size@plt>
+  713684: aa0003f6     	mov	x22, x0
+  713688: 2a1f03e0     	mov	w0, wzr
+  71368c: 94175561     	bl	0xce8c10 <MCFDataCreateMutable@plt>
+  713690: aa0003f5     	mov	x21, x0
+  713694: aa1603e0     	mov	x0, x22
+  713698: 9417544a     	bl	0xce87c0 <MCFInt32FromSizeT@plt>
+  71369c: 2a0003e1     	mov	w1, w0
+  7136a0: aa1503e0     	mov	x0, x21
+  7136a4: 9417555f     	bl	0xce8c20 <MCFDataSetLength@plt>
+  7136a8: aa1503e0     	mov	x0, x21
+  7136ac: 94175765     	bl	0xce9440 <MCFDataGetMutableBytePtr@plt>
+  7136b0: aa0003e1     	mov	x1, x0
+  7136b4: aa1403e0     	mov	x0, x20
+  7136b8: 941758a2     	bl	0xce9940 <whatsapp__combined_fingerprint__pack@plt>
+  7136bc: eb16001f     	cmp	x0, x22
+  7136c0: 540003c8     	b.hi	0x713738 <op_read+0x5ff04>
+  7136c4: f0003081     	adrp	x1, 0xd26000
+  7136c8: 913f6021     	add	x1, x1, #0xfd8
+  7136cc: aa1403e0     	mov	x0, x20
+  7136d0: 941758a0     	bl	0xce9950 <whatsapp__combined_fingerprint__free_unpacked@plt>
+  7136d4: f9401260     	ldr	x0, [x19, #0x20]
+  7136d8: 940000c3     	bl	0x7139e4 <op_read+0x601b0>
+  7136dc: f9401668     	ldr	x8, [x19, #0x28]
+  7136e0: aa0003f3     	mov	x19, x0
+  7136e4: aa0803e0     	mov	x0, x8
+  7136e8: 940000bf     	bl	0x7139e4 <op_read+0x601b0>
+  7136ec: aa0003f4     	mov	x20, x0
+  7136f0: aa1503e0     	mov	x0, x21
+  7136f4: aa1303e1     	mov	x1, x19
+  7136f8: aa1403e2     	mov	x2, x20
+  7136fc: 940009e7     	bl	0x715e98 <op_read+0x62664>
+  713700: aa0003f6     	mov	x22, x0
+  713704: aa1503e0     	mov	x0, x21
+  713708: 94174b76     	bl	0xce64e0 <MCFRelease@plt>
+  71370c: aa1303e0     	mov	x0, x19
+  713710: 94174b74     	bl	0xce64e0 <MCFRelease@plt>
+  713714: aa1403e0     	mov	x0, x20
+  713718: 94174b72     	bl	0xce64e0 <MCFRelease@plt>
+  71371c: aa1603e0     	mov	x0, x22
+  713720: a9434ff4     	ldp	x20, x19, [sp, #0x30]
+  713724: a94257f6     	ldp	x22, x21, [sp, #0x20]
+  713728: f9400bf7     	ldr	x23, [sp, #0x10]
+  71372c: a8c47bfd     	ldp	x29, x30, [sp], #0x40
+  713730: d50323bf     	autiasp
+  713734: d65f03c0     	ret
+  713738: 94174b6e     	bl	0xce64f0 <abort@plt>
+
+lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000006b3834 <op_read>:
+  713cf8: d503233f     	paciasp
+  713cfc: a9bc7bfd     	stp	x29, x30, [sp, #-0x40]!
+  713d00: f9000bf7     	str	x23, [sp, #0x10]
+  713d04: a90257f6     	stp	x22, x21, [sp, #0x20]
+  713d08: a9034ff4     	stp	x20, x19, [sp, #0x30]
+  713d0c: 910003fd     	mov	x29, sp
+  713d10: aa0003f4     	mov	x20, x0
+  713d14: 52801300     	mov	w0, #0x98               // =152
+  713d18: 2a0103f5     	mov	w21, w1
+  713d1c: 941751c5     	bl	0xce8430 <MCFMalloc@plt>
+  713d20: aa0003f3     	mov	x19, x0
+  713d24: 94175713     	bl	0xce9970 <whatsapp__fingerprint_data__init@plt>
+  713d28: aa1403e0     	mov	x0, x20
+  713d2c: 340000f5     	cbz	w21, 0x713d48 <op_read+0x60514>
+  713d30: 97ff36b1     	bl	0x6e17f4 <op_read+0x2dfc0>
+  713d34: b4000620     	cbz	x0, 0x713df8 <op_read+0x605c4>
+  713d38: 52801215     	mov	w21, #0x90              // =144
+  713d3c: 52801116     	mov	w22, #0x88              // =136
+  713d40: 52801008     	mov	w8, #0x80               // =128
+  713d44: 14000006     	b	0x713d5c <op_read+0x60528>
+  713d48: 97feb831     	bl	0x6c1e0c <op_read+0xe5d8>
+  713d4c: b4000580     	cbz	x0, 0x713dfc <op_read+0x605c8>
+  713d50: 52800515     	mov	w21, #0x28              // =40
+  713d54: 52800416     	mov	w22, #0x20              // =32
+  713d58: 52800308     	mov	w8, #0x18               // =24
+  713d5c: 52800037     	mov	w23, #0x1               // =1
+  713d60: b8286a77     	str	w23, [x19, x8]
+  713d64: 940025de     	bl	0x71d4dc <op_read+0x69ca8>
+  713d68: f8366a60     	str	x0, [x19, x22]
+  713d6c: aa1403e0     	mov	x0, x20
+  713d70: f8356a61     	str	x1, [x19, x21]
+  713d74: 97feb836     	bl	0x6c1e4c <op_read+0xe618>
+  713d78: b4000080     	cbz	x0, 0x713d88 <op_read+0x60554>
+  713d7c: b9003277     	str	w23, [x19, #0x30]
+  713d80: 940025ff     	bl	0x71d57c <op_read+0x69d48>
+  713d84: a9038660     	stp	x0, x1, [x19, #0x38]
+  713d88: aa1403e0     	mov	x0, x20
+  713d8c: 97ff36a2     	bl	0x6e1814 <op_read+0x2dfe0>
+  713d90: b40000c0     	cbz	x0, 0x713da8 <op_read+0x60574>
+  713d94: f9401000     	ldr	x0, [x0, #0x20]
+  713d98: 52800028     	mov	w8, #0x1                // =1
+  713d9c: b9004a68     	str	w8, [x19, #0x48]
+  713da0: 940025f7     	bl	0x71d57c <op_read+0x69d48>
+  713da4: a9050660     	stp	x0, x1, [x19, #0x50]
+  713da8: aa1403e0     	mov	x0, x20
+  713dac: 97ffbb32     	bl	0x702a74 <op_read+0x4f240>
+  713db0: b40000a0     	cbz	x0, 0x713dc4 <op_read+0x60590>
+  713db4: 52800028     	mov	w8, #0x1                // =1
+  713db8: b9006268     	str	w8, [x19, #0x60]
+  713dbc: 940025f0     	bl	0x71d57c <op_read+0x69d48>
+  713dc0: a9068660     	stp	x0, x1, [x19, #0x68]
+  713dc4: aa1403e0     	mov	x0, x20
+  713dc8: 97ffbb3b     	bl	0x702ab4 <op_read+0x4f280>
+  713dcc: 7100041f     	cmp	w0, #0x1
+  713dd0: 54000068     	b.hi	0x713ddc <op_read+0x605a8>
+  713dd4: 52800028     	mov	w8, #0x1                // =1
+  713dd8: 290f0268     	stp	w8, w0, [x19, #0x78]
+  713ddc: aa1303e0     	mov	x0, x19
+  713de0: a9434ff4     	ldp	x20, x19, [sp, #0x30]
+  713de4: a94257f6     	ldp	x22, x21, [sp, #0x20]
+  713de8: f9400bf7     	ldr	x23, [sp, #0x10]
+  713dec: a8c47bfd     	ldp	x29, x30, [sp], #0x40
+  713df0: d50323bf     	autiasp
+  713df4: d65f03c0     	ret
+  713df8: 941749be     	bl	0xce64f0 <abort@plt>
+  713dfc: 941749bd     	bl	0xce64f0 <abort@plt>
