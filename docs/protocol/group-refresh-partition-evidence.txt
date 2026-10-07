@@ -1,0 +1,270 @@
+APK 2.26.37.71 SHA256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed/static partition and round construction; no live batch validation.
+Method-relative byte offsets, unrelated instructions omitted as marked.
+Reproduce: target/debug/xtask apk-smali <apk> --class <class> --method <method>.
+
+# Independent raw bytes
+classes6.dex A0G 00fe..0106 absolute 673e42: 90 01 04 02 37 91 0d 00
+classes6.dex A0G 0478..047c absolute 6741bc: d8 0e 01 01
+classes6.dex A0G 04d8..04f4 absolute 67421c: d3 31 10 27 d8 01 01 01 83 13 18 05 66 66 66 66 66 66 f2 3f cd 53 8a 31 d8 03 01 01
+
+# groupsToFetch exact field-reference offsets anchoring method code
+classes6.dex  Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;-><init>(VLLLLII)
+  write opcode 0x5b, dex byte offset: 0x673cca
+classes6.dex  Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A0G(V)
+  read opcode 0x54, dex byte offset: 0x673e02
+classes6.dex  Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A0G(V)
+  read opcode 0x54, dex byte offset: 0x6740ae
+classes6.dex  Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A0G(V)
+  read opcode 0x54, dex byte offset: 0x6741e6
+
+# group-notification-executor.smali excerpt 0072..009a; other branches omitted
+    0072..0076  iget-object  v4, v8, LX/Fpc;->A01:Ljava/lang/Object;
+    0076..007a  check-cast  v4, LX/0yO;
+    007a..007e  iget  v3, v8, LX/Fpc;->A00:I
+    007e..0082  iget-object  v2, v8, LX/Fpc;->A04:Ljava/lang/String;
+    0082..0086  iget-object  v1, v8, LX/Fpc;->A02:Ljava/lang/Object;
+    0086..008a  check-cast  v1, LX/1B3;
+    008a..008e  iget-object  v0, v8, LX/Fpc;->A03:Ljava/lang/Object;
+    008e..0092  check-cast  v0, LX/Cb1;
+    0092..0098  invoke-static  {v4, v1, v0, v2, v3}, LX/0yO;->A01(VLLLLI)
+    0098..009a  return-void
+
+# group-refresh-job-partition-current.smali excerpt 00be..014c; other branches omitted
+    00be..00c2  iget-object  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->groupsToFetch:Ljava/util/List;
+    00c2..00c8  invoke-static  {}, LX/1xf;->A1D(L)
+    00c8..00ca  move-result-object  v8
+    00ca..00d0  invoke-static  {}, LX/1xf;->A1D(L)
+    00d0..00d2  move-result-object  v7
+    00d2..00d8  invoke-interface  {v1}, Ljava/util/List;->iterator(L)
+    00d8..00da  move-result-object  v6
+    00da..00dc  const/4  v5, #0x0
+    00dc..00de  const/4  v4, #0x0
+    00de..00e4  invoke-interface  {v6}, Ljava/util/Iterator;->hasNext(Z)
+    00e4..00e6  move-result  v1
+    00e6..00ea  if-eqz  v1, +0x20
+    00ea..00f0  invoke-static  {v6}, LX/1xk;->A11(LL)
+    00f0..00f2  move-result-object  v3
+    00f2..00f8  invoke-static  {v3}, LX/1xl;->A05(IL)
+    00f8..00fa  move-result  v2
+    00fa..00fe  if-eqz  v4, +0x11
+    00fe..0102  add-int  v1, v4, v2
+    0102..0106  if-le  v1, v9, +0xd
+    0106..010c  invoke-virtual  {v8, v7}, Ljava/util/AbstractCollection;->add(ZL)
+    010c..010e  const/4  v1, #0x1
+    010e..0112  new-array  v1, v1, [LX/07o;
+    0112..0118  invoke-static  {v3, v1, v5}, LX/6ak;->A1I(LLLI)
+    0118..011a  move-result-object  v7
+    011a..011c  goto  -0x1f
+    011c..0122  invoke-virtual  {v7, v3}, Ljava/util/AbstractCollection;->add(ZL)
+    0122..0124  add-int/2addr  v4, v2
+    0124..0126  goto  -0x23
+    0126..012c  invoke-virtual  {v7}, Ljava/util/AbstractCollection;->isEmpty(Z)
+    012c..012e  move-result  v1
+    012e..0132  if-nez  v1, +0x5
+    0132..0138  invoke-virtual  {v8, v7}, Ljava/util/AbstractCollection;->add(ZL)
+    0138..013e  invoke-static  {v8}, LX/0C6;->A1F(LL)
+    013e..0140  move-result-object  v1
+    0140..0146  invoke-static  {v1}, LX/0C6;->A0u(LL)
+    0146..0148  move-result-object  v3
+    0148..014c  check-cast  v3, Ljava/util/List;
+
+# group-refresh-job-partition-current.smali excerpt 036a..0502; other branches omitted
+    036a..036e  iget-object  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->groupsToFetch:Ljava/util/List;
+    036e..0374  invoke-static  {}, LX/1xf;->A1D(L)
+    0374..0376  move-result-object  v5
+    0376..037c  invoke-interface  {v1}, Ljava/util/List;->iterator(L)
+    037c..037e  move-result-object  v4
+    037e..0384  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext(Z)
+    0384..0386  move-result  v1
+    0386..038a  if-eqz  v1, +0x15
+    038a..0390  invoke-interface  {v4}, Ljava/util/Iterator;->next(L)
+    0390..0392  move-result-object  v3
+    0392..0394  move-object  v1, v3
+    0394..0398  check-cast  v1, LX/07o;
+    0398..039c  iget-object  v1, v1, LX/07o;->first:Ljava/lang/Object;
+    039c..03a2  invoke-interface  {v7, v1}, Ljava/util/Collection;->contains(ZL)
+    03a2..03a4  move-result  v1
+    03a4..03a8  if-nez  v1, -0x13
+    03a8..03ae  invoke-virtual  {v5, v3}, Ljava/util/AbstractCollection;->add(ZL)
+    03ae..03b0  goto  -0x18
+    03b0..03b6  invoke-static  {v5}, LX/1xi;->A19(LL)
+    03b6..03b8  move-result-object  v12
+    03b8..03be  invoke-virtual  {v5}, Ljava/util/AbstractCollection;->iterator(L)
+    03be..03c0  move-result-object  v5
+    03c0..03c6  invoke-interface  {v5}, Ljava/util/Iterator;->hasNext(Z)
+    03c6..03c8  move-result  v1
+    03c8..03cc  if-eqz  v1, +0x1e
+    03cc..03d2  invoke-static  {v5}, LX/1xk;->A11(LL)
+    03d2..03d4  move-result-object  v1
+    03d4..03d8  iget-object  v4, v1, LX/07o;->first:Ljava/lang/Object;
+    03d8..03de  invoke-static  {v1}, LX/1xl;->A05(IL)
+    03de..03e0  move-result  v3
+    03e0..03e4  iget-object  v1, v6, LX/8lY;->A01:Ljava/util/Map;
+    03e4..03ea  invoke-static  {v4, v1}, LX/6ak;->A1C(LLL)
+    03ea..03ec  move-result-object  v1
+    03ec..03f2  invoke-static  {v1, v3}, LX/8kV;->A06(ILI)
+    03f2..03f4  move-result  v1
+    03f4..03fa  invoke-static  {v1}, Ljava/lang/Integer;->valueOf(LI)
+    03fa..03fc  move-result-object  v1
+    03fc..0402  invoke-static  {v4, v1, v12}, LX/1xm;->A1K(VLLL)
+    0402..0404  goto  -0x21
+    0404..0408  iget-object  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->maxNumberOfRounds:Ljava/lang/Integer;
+    0408..040c  if-eqz  v1, +0x4d
+    040c..0412  invoke-virtual  {v1}, Ljava/lang/Number;->intValue(I)
+    0412..0414  move-result  v3
+    0414..0418  iget-object  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->successfullyProcessedGroups:Ljava/util/Set;
+    0418..041e  invoke-static  {v8, v1}, LX/0EA;->A06(LLL)
+    041e..0420  move-result-object  v13
+    0420..0426  invoke-virtual  {v12}, Ljava/util/AbstractCollection;->isEmpty(Z)
+    0426..0428  move-result  v1
+    0428..042a  const/4  v6, #0x1
+    042a..042e  if-nez  v1, +0x66
+    042e..0432  iget  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->round:I
+    0432..0436  if-ge  v1, v3, +0x62
+    0436..043c  invoke-interface  {v7}, Ljava/util/Collection;->size(I)
+    043c..043e  move-result  v2
+    043e..0444  invoke-virtual  {v12}, Ljava/util/AbstractCollection;->size(I)
+    0444..0446  move-result  v4
+    0446..044a  const-string  v1, "GroupInfoBatchProcessor/FetchTruncatedGroupsJob/Scheduling new batch for processing.\n              | Processed "
+    044a..0450  invoke-static  {v2, v1}, LX/000;->A06(LIL)
+    0450..0452  move-result-object  v2
+    0452..0456  const-string  v1, " groups. "
+    0456..045c  invoke-virtual  {v2, v1}, Ljava/lang/StringBuilder;->append(LL)
+    045c..0462  invoke-virtual  {v2, v4}, Ljava/lang/StringBuilder;->append(LI)
+    0462..0466  const-string  v1, " to go."
+    0466..046c  invoke-static  {v1, v2}, LX/000;->A05(LLL)
+    046c..046e  move-result-object  v1
+    046e..0474  invoke-static  {v1}, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A00(LL)
+    0474..0478  iget  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->round:I
+    0478..047c  add-int/lit8  v14, v1, #0x1
+    047c..0482  invoke-static  {v3}, Ljava/lang/Integer;->valueOf(LI)
+    0482..0484  move-result-object  v11
+    0484..0488  iget  v15, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->params:I
+    0488..048c  new-instance  v9, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;
+    048c..0492  invoke-direct/range  {v9..v15}, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;-><init>(VLLLLII)
+    0492..0496  iget-object  v0, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A08:LX/0ls;
+    0496..049a  if-eqz  v0, +0xb9
+    049a..04a0  invoke-virtual  {v0, v9}, LX/0ls;->A01(VL)
+    04a0..04a2  return-void
+    04a2..04a6  iget-object  v3, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->groupsToFetch:Ljava/util/List;
+    04a6..04aa  iget-object  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A02:LX/8lS;
+    04aa..04ae  if-eqz  v1, +0xac
+    04ae..04b4  invoke-interface  {v3}, Ljava/util/List;->iterator(L)
+    04b4..04b6  move-result-object  v4
+    04b6..04b8  const/4  v3, #0x0
+    04b8..04be  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext(Z)
+    04be..04c0  move-result  v1
+    04c0..04c4  if-eqz  v1, +0xc
+    04c4..04ca  invoke-static  {v4}, LX/1xk;->A11(LL)
+    04ca..04cc  move-result-object  v1
+    04cc..04d2  invoke-static  {v1}, LX/1xl;->A05(IL)
+    04d2..04d4  move-result  v1
+    04d4..04d6  add-int/2addr  v3, v1
+    04d6..04d8  goto  -0xf
+    04d8..04dc  div-int/lit16  v1, v3, #0x2710
+    04dc..04e0  add-int/lit8  v1, v1, #0x1
+    04e0..04e2  int-to-double  v3, v1
+    04e2..04ec  const-wide  v5, #0x3ff2666666666666 (4607857958744122982)
+    04ec..04ee  mul-double/2addr  v3, v5
+    04ee..04f0  double-to-int  v1, v3
+    04f0..04f4  add-int/lit8  v3, v1, #0x1
+    04f4..04f6  goto  -0x70
+    04f6..04fc  invoke-virtual  {v12}, Ljava/util/AbstractCollection;->isEmpty(Z)
+    04fc..04fe  move-result  v1
+    04fe..0502  if-nez  v1, +0x25
+
+# class: LX/8kV;
+
+.method public A06(ILI)  # .registers 2
+    0000..0004  if-eqz  v0, +0x7
+    0004..000a  invoke-virtual  {v0}, Ljava/lang/Number;->intValue(I)
+    000a..000c  move-result  v0
+    000c..000e  return  v0
+    000e..0010  return  v1
+.end method
+
+# Collection helper group-refresh-new-batch-helper.smali
+
+# class: LX/6ak;
+
+.method public A1I(LLLI)  # .registers 3
+    0000..0004  aput-object  v0, v1, v2
+    0004..000a  invoke-static  {v1}, LX/01d;->A06(LL)
+    000a..000c  move-result-object  v0
+    000c..000e  return-object  v0
+.end method
+
+# Collection helper group-refresh-pair-list-conversion.smali
+
+# class: LX/01d;
+
+.method public A06(LL)  # .registers 3
+    0000..0002  const/4  v0, #0x1
+    0002..0006  new-instance  v1, LX/0Kr;
+    0006..000c  invoke-direct  {v1, v2, v0}, LX/0Kr;-><init>(VLZ)
+    000c..0010  new-instance  v0, Ljava/util/ArrayList;
+    0010..0016  invoke-direct  {v0, v1}, Ljava/util/ArrayList;-><init>(VL)
+    0016..0018  return-object  v0
+.end method
+
+# Collection helper group-refresh-batch-order-helper.smali
+
+# class: LX/0C6;
+
+.method public A1F(LL)  # .registers 5
+    0000..0002  const/4  v3, #0x0
+    0002..0008  invoke-static  {v4, v3}, LX/00h;->A0A(VLI)
+    0008..000c  instance-of  v0, v4, Ljava/util/Collection;
+    000c..0010  if-eqz  v0, +0x32
+    0010..0012  move-object  v2, v4
+    0012..0016  check-cast  v2, Ljava/util/Collection;
+    0016..001c  invoke-interface  {v2}, Ljava/util/Collection;->size(I)
+    001c..001e  move-result  v1
+    001e..0022  if-eqz  v1, +0x26
+    0022..0024  const/4  v0, #0x1
+    0024..0028  if-eq  v1, v0, +0x8
+    0028..002c  new-instance  v0, Ljava/util/ArrayList;
+    002c..0032  invoke-direct  {v0, v2}, Ljava/util/ArrayList;-><init>(VL)
+    0032..0034  return-object  v0
+    0034..0038  instance-of  v0, v4, Ljava/util/List;
+    0038..003c  if-eqz  v0, +0x10
+    003c..0040  check-cast  v4, Ljava/util/List;
+    0040..0046  invoke-interface  {v4, v3}, Ljava/util/List;->get(LI)
+    0046..0048  move-result-object  v0
+    0048..004e  invoke-static  {v0}, Ljava/util/Collections;->singletonList(LL)
+    004e..0050  move-result-object  v0
+    0050..0056  invoke-static  {v0}, LX/00h;->A06(VL)
+    0056..0058  return-object  v0
+    0058..005e  invoke-interface  {v2}, Ljava/util/Collection;->iterator(L)
+    005e..0060  move-result-object  v0
+    0060..0066  invoke-interface  {v0}, Ljava/util/Iterator;->next(L)
+    0066..0068  move-result-object  v0
+    0068..006a  goto  -0x10
+    006a..006e  sget-object  v0, LX/01f;->A00:LX/01f;
+    006e..0070  return-object  v0
+    0070..0076  invoke-static  {v4}, LX/0C6;->A1G(LL)
+    0076..0078  move-result-object  v0
+    0078..007e  invoke-static  {v0}, LX/01d;->A09(LL)
+    007e..0080  move-result-object  v0
+    0080..0082  return-object  v0
+.end method
+
+# Collection helper group-refresh-batch-selector.smali
+
+# class: LX/0C6;
+
+.method public A0u(LL)  # .registers 3
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-static  {v2, v1}, LX/00h;->A0A(VLI)
+    0008..000e  invoke-interface  {v2}, Ljava/util/List;->isEmpty(Z)
+    000e..0010  move-result  v0
+    0010..0014  if-nez  v0, +0x7
+    0014..001a  invoke-interface  {v2, v1}, Ljava/util/List;->get(LI)
+    001a..001c  move-result-object  v0
+    001c..001e  return-object  v0
+    001e..0022  const-string  v1, "List is empty."
+    0022..0026  new-instance  v0, Ljava/util/NoSuchElementException;
+    0026..002c  invoke-direct  {v0, v1}, Ljava/util/NoSuchElementException;-><init>(VL)
+    002c..002e  throw  v0
+.end method

@@ -990,3 +990,19 @@ unsolicited group notification completion remains open.
 
 Final OpenAPI checks (five), staged whitespace and repository hygiene
 (399 local links) also passed.
+
+
+Dirty batch partition/round trace (2026-10-07, **offline**): corrected missing
+23x binary operands in xtask and independently checked raw job bytes. The APK
+partitions by accumulated participant estimate, carries returned truncated sizes
+with fallback to the previous estimate, and computes a bounded round limit when
+none is provided. The all-zero dirty input derives bound 2, subject to outcomes.
+The alternate notification executor also reaches application-before-ACK.
+[Evidence and remaining boundaries](protocol/groups.md#batch-partition-and-bounded-follow-up-rounds-2026-10-07).
+Automatic dirty refresh/error/rate-limit application remains unfinished; no
+account state was opened or live request sent for this trace.
+
+Validation: 576 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, generated CLI
+reference, five OpenAPI checks, formatting and repository hygiene passed.
+Client wire behavior is unchanged by this disassembler/research change.

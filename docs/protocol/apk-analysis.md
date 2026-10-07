@@ -218,3 +218,10 @@ all-target xtask Clippy passed. No flag or HTTP capability was introduced.
 [Group response evidence](group-refresh-response-evidence.txt) retains the
 actual constructor/base callbacks and identifies the current Cp2 ACK writer;
 Cns is a stale 37.70 anchor. Full dump files and negative searches stay local.
+
+
+2026-10-07: binary-operation 23x operands now cover the existing width range
+0x90..0xaf, fixing named add-int without registers in APK 37.71
+FetchTruncatedGroupsJob.A0G. The literal bytes at classes6.dex 0x673e42 plus
+high-register/truncated fixtures verify formatting; mnemonic coverage is unchanged.
+[Job partition and bounded round evidence](groups.md#batch-partition-and-bounded-follow-up-rounds-2026-10-07).

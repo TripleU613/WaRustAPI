@@ -1711,3 +1711,96 @@ unsolicited group notification completion remains open.
 
 Final OpenAPI checks (five), staged whitespace and repository hygiene
 (399 local links) also passed.
+
+
+## Batch partition and bounded follow-up rounds (2026-10-07)
+
+**Confirmed/static**, APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Partition, raw bytes and executor evidence](group-refresh-partition-evidence.txt)
+resolves two gaps in the earlier dirty refresh trace. No live batch request was
+sent, and no saved account was opened.
+
+**Confirmed tooling limitation and correction:** xtask already named add-int
+(opcode 0x90) and knew its two-code-unit width, but its 23x operand formatter
+covered only opcode 0xa0 among binary operations. `FetchTruncatedGroupsJob.A0G`
+00fe..0102 consequently printed add-int without registers. The formatter now
+covers the existing-width range 0x90..0xaf, preserving all three unsigned register
+bytes; mnemonic coverage remains unchanged, and unknown names remain unknown.
+
+Three independent groupsToFetch field references anchor the method instruction
+base to classes6.dex 0x673d44: 0x673e02 minus 0xbe, 0x6740ae minus 0x36a, and
+0x6741e6 minus 0x4a2. Reading APK ZIP classes6.dex at base + 0xfe gives
+`90 01 04 02 37 91 0d 00`: add-int v1,v4,v2, followed by if-le v1,v9,+0xd.
+The literal fixture verifies operands, comparison displacement, next instruction
+offset and width independently of the formatter. Unsigned high-register fixtures
+cover all binary opcodes in that format; every truncated literal prefix is also
+decoded without panic. Reproduce with `cargo test --locked -p xtask
+decodes_group_fetch_partition_sum_registers`, then re-dump the job's A0G method.
+
+**Confirmed/static partition rule:** A0G 00be..014c walks (JID, integer) pairs,
+accumulating that integer in v4. With nonzero accumulated v4, it compares the
+prospective sum v4+v2 to the derived participant budget v9. A strictly larger sum
+flushes the current list and starts a new list containing the current pair; the
+branch at 011a jumps to 00dc, resetting v4 to zero; it does not add that
+inserted pair's estimate to the new accumulator. Otherwise it appends and adds
+v2. The final nonempty list is appended. Do not silently substitute conventional
+packing that counts the new first pair in v4: the bytecode's reset differs, and
+its rationale is **unknown**. For example, estimates 7000/4000/7000 with budget
+10000 produce lists [7000] and [4000,7000] in this loop despite the latter's
+mathematical sum being 11000. This is a static trace example, not an assertion
+of live limits or a server bug. 6ak.A1I writes the current pair into the supplied
+one-element array and passes it to 01d.A06, which constructs an ArrayList through
+a 0Kr collection wrapper. Complete 0Kr internals remain **unknown**.
+
+0C6.A1F copies a multi-element Collection into an ArrayList and preserves the
+sole entry of a singleton List; its empty branch returns the empty singleton.
+For the ArrayList produced by this job, it does not reverse the partition list.
+0C6.A0u checks isEmpty, returns get(0), and throws NoSuchElementException with
+`List is empty.` when empty. The job therefore selects the first partition,
+not all partitions at once. Non-Collection fallback conversion in A1F remains
+untraced and is not needed for this concrete ArrayList path. A groupsToFetch
+input that produces no partition reaches that empty-list throw; the earlier
+static dirty extractor's empty input does not imply a valid empty wire query.
+There is no demonstrated fixed group-count batching cap in this loop. Zero initial
+values do not hit the nonzero-sum split predicate: do not invent a group-count cap
+from the participant budget or interpret these integers as reason codes. The
+integer is used as a participant-cost estimate; complete producer/value semantics
+remain incomplete beyond the traced dirty zero and truncated size inputs.
+
+**Confirmed/static remaining work:** 036a..03b8 removes original pairs whose
+JIDs occur in the current processed collection. For each remaining pair it looks
+up the result's pending size map and uses 8kV.A06 with the old value as fallback
+(03d4..0404). 8kV.A06 returns Number.intValue when non-null and the supplied
+fallback otherwise; it is replacement, not a maximum or increment.
+
+When maxNumberOfRounds is null (0404..040c), 04a2..04f4 sums the current job's
+input integers, performs Java integer division by 10,000, adds one, multiplies
+that value as double by literal 1.15 (0x3ff2666666666666), narrows to int, then
+adds one. For nonnegative nonoverflowing estimates, the bound is
+`int((sum / 10000 + 1) * 1.15) + 1`, with integer division inside the brackets.
+The source performs 32-bit arithmetic; this expression is not a claim about
+unchecked mathematical sums or malformed negative estimates.
+
+If remaining work is nonempty and current round is less than that bound
+(0420..0436), it queues a new job with round+1, the bound explicitly boxed,
+remaining pairs, processed-set union and unchanged params (0474..04a0).
+An initial all-zero dirty list therefore computes bound 2 and can schedule
+rounds 1 and 2 after round 0, subject to the intervening outcomes and completion
+branches. This is a static upper-bound derivation, not proof of three live
+requests or permission to retry an unanswered/refused request. Error/rate-limit
+handling and some collection/processed-set helpers remain **unknown**. The
+recovered rule can guide implementation; automatic dirty batch scheduling is
+still unfinished.
+
+**Confirmed/static alternate executor:** Fpc.run selector 3 at 0072..009a
+loads the base handler, incoming stanza, Cb1 metadata, child tag and message
+code, then calls 0yO.A01 at 0092..0098. This resolves the alternate runnable
+body left unknown in the prior producer trace: both direct and scheduled paths
+reach the same already documented application-before-ACK method. Upstream group
+message-code assignment and active executor/feature values remain **unknown**.
+
+Validation: 576 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, generated CLI
+reference, five OpenAPI checks, formatting and repository hygiene passed.
+Client wire behavior is unchanged by this disassembler/research change.

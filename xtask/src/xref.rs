@@ -809,8 +809,9 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
             let offset = i16::from_le_bytes([insn_bytes[2], insn_bytes[3]]);
             format!("v{reg}, {}", relative_jump(i32::from(offset)))
         }
-        // cmp and aget/aput vAA, vBB, vCC — format 23x.
-        0x2d..=0x31 | 0x44..=0x51 | 0xa0 if insn_bytes.len() >= 4 => {
+        // cmp, aget/aput and binary ops vAA, vBB, vCC — format 23x.
+        // APK 37.71 FetchTruncatedGroupsJob.A0G 00fe uses add-int v1,v4,v2.
+        0x2d..=0x31 | 0x44..=0x51 | 0x90..=0xaf if insn_bytes.len() >= 4 => {
             format!("v{reg}, v{}, v{}", insn_bytes[2], insn_bytes[3])
         }
         // Unary/conversion and binary /2addr operations vA, vB — format 12x.
@@ -2148,6 +2149,30 @@ mod tests {
             decoded.iter().map(|v| v.width).collect::<Vec<_>>(),
             [2, 2, 2]
         );
+    }
+
+    #[test]
+    fn decodes_group_fetch_partition_sum_registers() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // APK 37.71 classes6.dex absolute 0x673e42, A0G 00fe..0106:
+        // sum estimated participants into v1, then compare v1 against v9.
+        let bytes = [0x90, 0x01, 0x04, 0x02, 0x37, 0x91, 0x0d, 0x00];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded.len(), 2);
+        assert_eq!(decoded[0].mnemonic, "add-int");
+        assert_eq!(decoded[0].annotation, "v1, v4, v2");
+        assert_eq!(decoded[1].annotation, "v1, v9, +0xd");
+        assert_eq!(decoded[1].byte_off, 4);
+        assert_eq!(decoded[0].width, 2);
+        for end in 0..bytes.len() {
+            let _ = decode_insns(&bytes[..end], &dex);
+        }
+        // Register bytes are unsigned in 23x, unlike 22b's signed literal.
+        for opcode in 0x90..=0xaf {
+            let bytes = [opcode, 0xff, 0x80, 0xfe];
+            assert_eq!(decode_insns(&bytes, &dex)[0].annotation, "v255, v128, v254");
+        }
     }
 
     #[test]
