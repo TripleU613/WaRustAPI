@@ -1,0 +1,8 @@
+{
+  "source": "Independent Python stdlib HKDF/HMAC/SHA256 plus OpenSSL AES-256-CBC; APK 2.26.37.71 1qB video domain. Synthetic plaintext, not a renderable MP4.",
+  "plaintext": "synthetic video domain fixture",
+  "media_key": "0707070707070707070707070707070707070707070707070707070707070707",
+  "body": "71f04e05a7141e0b6aad9b0c45d06f5e454332597d48ddd0390559e8e2e9361b08b75227cfe8b1d63ed5",
+  "plaintext_hash": "26f6f0af4f070764f8a5ce32c210da73de375445197d2c1b62a86b478e1ae66c",
+  "encrypted_hash": "0fe0c55320274478f5435ea5ff067573b756931e1856b1967482933bbc641bdd"
+}

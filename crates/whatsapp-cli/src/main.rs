@@ -173,7 +173,7 @@ enum Cmd {
     /// List ordinary incoming attachments by opaque selector, with content redacted.
     #[cfg(feature = "experimental-transport")]
     MediaList,
-    /// Download/authenticate an ordinary image, voice note or WebP sticker and open it locally.
+    /// Download/authenticate an ordinary image, voice note, WebP sticker or MP4 video/video note and open it locally.
     #[cfg(feature = "experimental-transport")]
     MediaOpen {
         #[arg(long)]

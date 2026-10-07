@@ -106,6 +106,24 @@ pub fn decrypt_audio(
         b"WhatsApp Audio Keys",
     )
 }
+/// Authenticate and decrypt video/video-note ciphertext. APK 2.26.37.71
+/// `1qB.<clinit>` 0054..006a, 02e4..031a supplies this domain to both types.
+pub fn decrypt_video(
+    body: &[u8],
+    key: &[u8; 32],
+    encrypted_hash: &[u8; 32],
+    plaintext_hash: &[u8; 32],
+    plaintext_len: u64,
+) -> Result<Zeroizing<Vec<u8>>> {
+    decrypt_kind(
+        body,
+        key,
+        encrypted_hash,
+        plaintext_hash,
+        plaintext_len,
+        b"WhatsApp Video Keys",
+    )
+}
 fn decrypt_kind(
     body: &[u8],
     key: &[u8; 32],

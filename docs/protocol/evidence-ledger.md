@@ -301,3 +301,24 @@ xref has no references. **Offline:** ordinary URL-bearing WebP receive media
 uses the existing bounded authenticated retrieval and sealed references.
 **Unknown:** live sticker receive/display, Lottie and directPath-only retrieval.
 Full evidence and reasoning: [stickers](stickers.md).
+
+## 2026-10-07: video and PTV receive media
+
+**Confirmed/static, 37.71:** Message fields 9 and 66 reference BZE; its
+`dynamicMethod` descriptor (`01a4..01b2`) plus `Ayq.A12` establishes the
+30-field shared schema, including caption=7 and viewOnce=20. `1qB.<clinit>`
+(`0054..006a`, `02e4..031a`) passes the video-key label to both types.
+**Negative/tooling:** automatic field extraction refuses helper-filled names.
+**Offline:** ordinary URL-bearing MP4 retrieval and event/reference projection
+use the distinct domain and existing bounded downloader. An independent
+Python/OpenSSL fixture checks domain separation and journal/retrieval behavior.
+**Unknown:** live incoming/playback, directPath-only retrieval, HD variants,
+circular rendering, sending and view-once video consumption.
+[Full video evidence](video-media.md).
+
+**Observed/negative live check:** a rebuilt saved-account 60-second receive-only
+window authenticated/activated and ended cleanly. No new event or receipt was
+recorded, so it does not verify incoming video/PTV or automatic reads. The
+complete 20-event journal and nine acknowledged receipts were unchanged; the
+existing uncertain action was preserved. Private evidence paths are in the
+video document.

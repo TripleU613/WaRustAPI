@@ -597,3 +597,25 @@ Validation: 525 workspace/all-feature tests, 221 default-feature tests, strict
 all-target/all-feature Clippy, warning-free rustdoc, generated CLI reference,
 formatting and repository hygiene passed. No live request was made for this
 sticker extension.
+
+## Ordinary video and video-note receive extension (2026-10-07)
+
+APK 2.26.37.71's shared VideoMessage schema and distinct video-key domain now
+support ordinary URL-bearing MP4 receive media through existing CLI inspection,
+retrieval, event projection and sealed references. Offline independent crypto
+fixtures test both kinds, caption tags, once-only journal events and cached
+retrieval. No live video sample or playback is established; sending, HD/streaming,
+circular rendering and view-once video remain unsupported.
+[Video evidence and limitations](protocol/video-media.md).
+
+Validation for the video extension: 527 workspace/all-feature tests, 221
+default-feature tests, strict all-target/all-feature Clippy, warning-free rustdoc,
+generated CLI reference, formatting and repository hygiene passed. The current
+release CLI was rebuilt before the bounded receive check.
+
+The rebuilt saved account then completed one 60-second receive window with chat
+sends disabled: authenticated/active, clean shutdown, unchanged 20-event journal,
+unchanged nine server-acknowledged receipts, no eligible outbox and no queued
+actions. An existing uncertain action remained preserved. No fresh incoming
+message/video or automatic-read result was established; private evidence and
+backup locations are recorded in the video protocol document.

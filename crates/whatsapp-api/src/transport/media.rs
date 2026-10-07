@@ -1,4 +1,4 @@
-//! Ordinary incoming image/voice-note/sticker retrieval. View-once content never enters
+//! Ordinary incoming image/audio/sticker/video retrieval. View-once content never enters
 //! this replayable path. APK BWp/BWZ/BZC schemas and 1qB image/audio key domains.
 use crate::{
     Error, Result,
@@ -18,6 +18,10 @@ pub enum MediaKind {
     VoiceNote,
     /// Ordinary WebP sticker (including animated WebP); Lottie is unsupported.
     Sticker,
+    /// Ordinary MP4 video.
+    Video,
+    /// MP4 push-to-video note; preserves its distinct inbox selector kind.
+    VideoNote,
 }
 /// Redacted local attachment selector. Contains no phone, URL or media key.
 #[derive(Debug, Clone)]
@@ -84,6 +88,25 @@ struct Sticker {
     #[prost(bool, tag = "21")]
     lottie: bool,
 }
+// APK 2.26.37.71 BZE.dynamicMethod 01a4..01b2 plus Ayq.A12:
+// videoMessage and ptvMessage share this schema; viewOnce is wire field 20.
+#[derive(Message)]
+struct Video {
+    #[prost(string, tag = "1")]
+    url: String,
+    #[prost(string, tag = "2")]
+    mime: String,
+    #[prost(bytes = "vec", tag = "3")]
+    hash: Vec<u8>,
+    #[prost(uint64, tag = "4")]
+    length: u64,
+    #[prost(bytes = "vec", tag = "6")]
+    key: Vec<u8>,
+    #[prost(bytes = "vec", tag = "11")]
+    enc_hash: Vec<u8>,
+    #[prost(bool, tag = "20")]
+    once: bool,
+}
 #[derive(Message)]
 struct Envelope {
     #[prost(message, optional, tag = "3")]
@@ -93,6 +116,11 @@ struct Envelope {
     // APK 2.26.37.71 BZc Message descriptor: stickerMessage=26.
     #[prost(message, optional, tag = "26")]
     sticker: Option<Sticker>,
+    // APK 2.26.37.71 BZc: videoMessage=9, ptvMessage=66; both BZE.
+    #[prost(message, optional, tag = "9")]
+    video: Option<Video>,
+    #[prost(message, optional, tag = "66")]
+    ptv: Option<Video>,
     #[prost(bytes = "vec", optional, tag = "37")]
     once: Option<Vec<u8>>,
     #[prost(bytes = "vec", optional, tag = "55")]
@@ -126,6 +154,10 @@ struct RawEnvelope {
     audio: Option<Vec<u8>>,
     #[prost(bytes = "vec", optional, tag = "26")]
     sticker: Option<Vec<u8>>,
+    #[prost(bytes = "vec", optional, tag = "9")]
+    video: Option<Vec<u8>>,
+    #[prost(bytes = "vec", optional, tag = "66")]
+    ptv: Option<Vec<u8>>,
 }
 #[derive(Message)]
 struct ContextOnly {
@@ -145,7 +177,13 @@ struct MediaContext {
 }
 fn media_context(payload: &[u8]) -> Result<Option<MediaContext>> {
     let raw = RawEnvelope::decode(payload).map_err(|_| bad("invalid media envelope"))?;
-    let Some(nested) = raw.image.or(raw.audio).or(raw.sticker) else {
+    let Some(nested) = raw
+        .image
+        .or(raw.audio)
+        .or(raw.sticker)
+        .or(raw.video)
+        .or(raw.ptv)
+    else {
         return Ok(None);
     };
     Ok(ContextOnly::decode(nested.as_slice())
@@ -193,14 +231,25 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
     if e.once.is_some() || e.once_v2.is_some() || e.once_ext.is_some() {
         return Ok(None);
     }
-    if [e.image.is_some(), e.audio.is_some(), e.sticker.is_some()]
-        .into_iter()
-        .filter(|present| *present)
-        .count()
+    if [
+        e.image.is_some(),
+        e.audio.is_some(),
+        e.sticker.is_some(),
+        e.video.is_some(),
+        e.ptv.is_some(),
+    ]
+    .into_iter()
+    .filter(|present| *present)
+    .count()
         > 1
     {
         return Err(bad("ambiguous media message"));
     }
+    let video_kind = if e.ptv.is_some() {
+        MediaKind::VideoNote
+    } else {
+        MediaKind::Video
+    };
     let d = if let Some(i) = e.image {
         if i.once {
             return Ok(None);
@@ -226,6 +275,19 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
             key: a.key,
             enc_hash: a.enc_hash,
             length: a.length,
+        }
+    } else if let Some(v) = e.video.or(e.ptv) {
+        if v.once {
+            return Ok(None);
+        }
+        Descriptor {
+            kind: video_kind,
+            url: v.url,
+            mime: v.mime,
+            hash: v.hash,
+            key: v.key,
+            enc_hash: v.enc_hash,
+            length: v.length,
         }
     } else if let Some(s) = e.sticker {
         if s.lottie {
@@ -305,8 +367,14 @@ pub(super) fn event_content(
     payload: &[u8],
 ) -> Result<Option<(crate::model::message::MessageContent, Option<u32>)>> {
     let fields = crate::signal::direct::payload_fields(payload)?;
-    if fields.iter().any(|v| !matches!(v, 3 | 8 | 26 | 35))
-        || fields.iter().filter(|v| matches!(v, 3 | 8 | 26)).count() != 1
+    if fields
+        .iter()
+        .any(|v| !matches!(v, 3 | 8 | 9 | 26 | 35 | 66))
+        || fields
+            .iter()
+            .filter(|v| matches!(v, 3 | 8 | 9 | 26 | 66))
+            .count()
+            != 1
     {
         return Ok(None);
     }
@@ -321,6 +389,8 @@ pub(super) fn event_content(
         .as_ref()
         .or(raw.audio.as_ref())
         .or(raw.sticker.as_ref())
+        .or(raw.video.as_ref())
+        .or(raw.ptv.as_ref())
         .ok_or_else(|| bad("missing media"))?;
     let context = media_context(payload)?;
     if context
@@ -334,9 +404,19 @@ pub(super) fn event_content(
         return Ok(None);
     };
     media_url(&d)?;
+    #[derive(Message)]
+    struct VideoCaptionOnly {
+        // APK BZE.dynamicMethod: caption=7 (ImageMessage uses field 3).
+        #[prost(string, optional, tag = "7")]
+        caption: Option<String>,
+    }
     let caption = if raw.image.is_some() {
         CaptionOnly::decode(nested.as_slice())
             .map_err(|_| bad("invalid image caption"))?
+            .caption
+    } else if raw.video.is_some() || raw.ptv.is_some() {
+        VideoCaptionOnly::decode(nested.as_slice())
+            .map_err(|_| bad("invalid video caption"))?
             .caption
     } else {
         None
@@ -352,6 +432,9 @@ pub(super) fn event_content(
                     MediaKind::Image => crate::model::message::MediaKind::Image,
                     MediaKind::VoiceNote => crate::model::message::MediaKind::Audio,
                     MediaKind::Sticker => crate::model::message::MediaKind::Sticker,
+                    MediaKind::Video | MediaKind::VideoNote => {
+                        crate::model::message::MediaKind::Video
+                    }
                 },
                 mime_type: d.mime.clone(),
                 length: Some(d.length),
@@ -379,6 +462,9 @@ pub fn references(store: &ProtocolStore) -> Result<Vec<crate::model::message::Me
                     MediaKind::Image => crate::model::message::MediaKind::Image,
                     MediaKind::VoiceNote => crate::model::message::MediaKind::Audio,
                     MediaKind::Sticker => crate::model::message::MediaKind::Sticker,
+                    MediaKind::Video | MediaKind::VideoNote => {
+                        crate::model::message::MediaKind::Video
+                    }
                 },
                 mime_type: d.mime.clone(),
                 length: Some(d.length),
@@ -406,6 +492,7 @@ pub fn reference_selector(
         MediaKind::Image => crate::model::message::MediaKind::Image,
         MediaKind::VoiceNote => crate::model::message::MediaKind::Audio,
         MediaKind::Sticker => crate::model::message::MediaKind::Sticker,
+        MediaKind::Video | MediaKind::VideoNote => crate::model::message::MediaKind::Video,
     };
     if reference.kind != kind || reference.mime_type != d.mime || reference.length != Some(d.length)
     {
@@ -441,6 +528,7 @@ fn media_url(d: &Descriptor) -> Result<reqwest::Url> {
         MediaKind::Image => matches!(mime, "image/jpeg" | "image/png" | "image/webp"),
         MediaKind::VoiceNote => mime == "audio/ogg",
         MediaKind::Sticker => mime == "image/webp",
+        MediaKind::Video | MediaKind::VideoNote => mime == "video/mp4",
     };
     if !allowed || d.url.len() > 8192 {
         return Err(bad("unsupported media format"));
@@ -465,6 +553,7 @@ fn decrypt(d: &Descriptor, body: &[u8]) -> Result<Zeroizing<Vec<u8>>> {
         // to the sticker type constructor; there is no separate sticker domain.
         MediaKind::Image | MediaKind::Sticker => crate::signal::image::decrypt,
         MediaKind::VoiceNote => crate::signal::image::decrypt_audio,
+        MediaKind::Video | MediaKind::VideoNote => crate::signal::image::decrypt_video,
     };
     let plain = f(
         body,
@@ -807,6 +896,8 @@ mod tests {
             }),
             audio: None,
             sticker: None,
+            video: None,
+            ptv: None,
             once: None,
             once_v2: None,
             once_ext: None,
@@ -1015,6 +1106,179 @@ mod tests {
         );
     }
 
+    fn video_fixture() -> crate::signal::image::EncryptedImage {
+        let f: serde_json::Value =
+            serde_json::from_str(include_str!("../../tests/fixtures/video-media.json")).unwrap();
+        let bytes = |name: &str| hex::decode(f[name].as_str().unwrap()).unwrap();
+        crate::signal::image::EncryptedImage {
+            media_key: Zeroizing::new(bytes("media_key").try_into().unwrap()),
+            body: bytes("body"),
+            plaintext_hash: bytes("plaintext_hash").try_into().unwrap(),
+            encrypted_hash: bytes("encrypted_hash").try_into().unwrap(),
+            plaintext_len: f["plaintext"].as_str().unwrap().len() as u64,
+        }
+    }
+    fn video_payload(
+        encrypted: &crate::signal::image::EncryptedImage,
+        ptv: bool,
+        suffix: &[u8],
+    ) -> Vec<u8> {
+        // BZE descriptor literal plus Ayq.A12 establishes these wire tags.
+        let mut body = Vec::new();
+        for (tag, value) in [
+            (0x0a, b"https://mmg.whatsapp.net/video-fixture".as_slice()),
+            (0x12, b"video/mp4".as_slice()),
+            (0x1a, encrypted.plaintext_hash.as_slice()),
+            (0x32, encrypted.media_key.as_slice()),
+            (0x5a, encrypted.encrypted_hash.as_slice()),
+        ] {
+            body.extend_from_slice(&[tag, value.len() as u8]);
+            body.extend(value);
+        }
+        assert!(encrypted.plaintext_len < 128);
+        body.extend_from_slice(&[0x20, encrypted.plaintext_len as u8]);
+        body.extend(suffix);
+        // Message videoMessage=9 or ptvMessage=66, both of type BZE.
+        let mut payload = if ptv { vec![0x92, 0x04] } else { vec![0x4a] };
+        prost::encoding::encode_varint(body.len() as u64, &mut payload);
+        payload.extend(body);
+        payload
+    }
+    #[test]
+    fn video_and_ptv_literal_schema_independent_crypto_and_once_guards() {
+        let fixture = video_fixture();
+        for (ptv, kind) in [(false, MediaKind::Video), (true, MediaKind::VideoNote)] {
+            let payload = video_payload(&fixture, ptv, b"");
+            let mut d = descriptor(&payload).unwrap().unwrap();
+            assert_eq!(d.kind, kind);
+            assert_eq!(
+                &*decrypt(&d, &fixture.body).unwrap(),
+                b"synthetic video domain fixture"
+            );
+            assert!(
+                crate::signal::image::decrypt(
+                    &fixture.body,
+                    &fixture.media_key,
+                    &fixture.encrypted_hash,
+                    &fixture.plaintext_hash,
+                    fixture.plaintext_len
+                )
+                .is_err()
+            );
+            assert!(
+                crate::signal::image::decrypt_audio(
+                    &fixture.body,
+                    &fixture.media_key,
+                    &fixture.encrypted_hash,
+                    &fixture.plaintext_hash,
+                    fixture.plaintext_len
+                )
+                .is_err()
+            );
+            media_url(&d).unwrap();
+            d.mime = "video/webm".into();
+            assert!(media_url(&d).is_err());
+            d.hash[0] ^= 1;
+            assert!(decrypt(&d, &fixture.body).is_err());
+            let once = video_payload(&fixture, ptv, b"\xa0\x01\x01"); // BZE.viewOnce=20.
+            assert!(descriptor(&once).unwrap().is_none());
+            for wrapper in [b"\xaa\x02\x00".as_slice(), b"\xba\x03\x00", b"\xda\x03\x00"] {
+                let mut wrapped = payload.clone();
+                wrapped.extend(wrapper);
+                assert!(descriptor(&wrapped).unwrap().is_none());
+            }
+        }
+        let mut mixed = video_payload(&fixture, false, b"");
+        mixed.extend(video_payload(&fixture, true, b""));
+        assert!(descriptor(&mixed).is_err());
+    }
+    #[tokio::test]
+    async fn video_events_commit_once_and_cached_retrieval_preserves_kind() {
+        use crate::{
+            model::ids::{AccountId, EventCursor},
+            store::{ConsumerId, MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let options = || OpenOptions {
+            path: dir.path().join("video.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            create: true,
+        };
+        let store = ProtocolStore::open(options()).unwrap();
+        let mut config: LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        config.token = Zeroizing::new("offline-fixture".into());
+        let fixture = video_fixture();
+        for (ptv, kind) in [(false, MediaKind::Video), (true, MediaKind::VideoNote)] {
+            // BZE caption=7; the encrypted hash at 11 must not be a caption.
+            let payload = video_payload(&fixture, ptv, b"\x3a\x07caption");
+            let key = if ptv {
+                b"received:ptv".as_slice()
+            } else {
+                b"received:video".as_slice()
+            };
+            let id = hex::encode(Sha256::digest(key));
+            let node = crate::binary::Node::new("message")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("id", if ptv { "ptv" } else { "video" });
+            store
+                .write(|tx| {
+                    crate::session::AccountRecord {
+                        phone: Some(config.phone.clone()),
+                        registration: crate::session::RegistrationStatus::Registered,
+                        ..Default::default()
+                    }
+                    .save(tx)?;
+                    tx.put_json(
+                        Table::Checkpoints,
+                        key,
+                        1,
+                        &serde_json::json!({"status":"decrypted","protobuf":payload}),
+                    )?;
+                    tx.put_json(
+                        Table::Checkpoints,
+                        format!("media-download:{id}").as_bytes(),
+                        1,
+                        &serde_json::json!({"status":"downloaded","body":fixture.body}),
+                    )?;
+                    assert!(super::super::inbox_events::publish(
+                        tx, key, &node, &payload
+                    )?);
+                    assert!(!super::super::inbox_events::publish(
+                        tx, key, &node, &payload
+                    )?);
+                    Ok(())
+                })
+                .unwrap();
+            let (actual, plain) = open(&store, &config, &id).await.unwrap();
+            assert_eq!(actual, kind);
+            assert_eq!(&*plain, b"synthetic video domain fixture");
+        }
+        drop(store);
+        let store = ProtocolStore::open(options()).unwrap();
+        let events = store
+            .read_events(&ConsumerId::new("test").unwrap(), EventCursor::START, 10)
+            .unwrap();
+        assert_eq!(events.events.len(), 2);
+        for event in events.events {
+            let crate::sync::SyncEvent::NewMessage(message) = event.event else {
+                panic!("missing video event")
+            };
+            let crate::model::message::MessageContent::Media {
+                reference, caption, ..
+            } = message.content
+            else {
+                panic!("missing video reference")
+            };
+            assert_eq!(reference.kind, crate::model::message::MediaKind::Video);
+            assert_eq!(caption.as_deref(), Some("caption"));
+            assert!(reference_selector(&store, &reference).is_ok());
+            let json = serde_json::to_string(&reference).unwrap();
+            assert!(!json.contains("whatsapp.net"));
+        }
+    }
+
     #[test]
     fn references_are_account_bound_and_view_once_cannot_be_exported() {
         use crate::{
@@ -1047,6 +1311,8 @@ mod tests {
                 }),
                 audio: None,
                 sticker: None,
+                video: None,
+                ptv: None,
                 once: None,
                 once_v2: None,
                 once_ext: None,

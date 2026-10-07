@@ -327,7 +327,9 @@ to mpv. Verified ciphertext is cached encrypted at rest. No plaintext file is
 created. Ordinary access rejects view-once content; use the explicit one-use
 viewer for that. Ordinary URL-bearing WebP stickers also use this path and the
 image-key domain; Lottie and directPath-only retrieval remain unsupported.
-[Sticker schema and evidence](stickers.md). Voice notes require Ogg/Opus; incoming playback still needs a
+[Sticker schema and evidence](stickers.md). Ordinary MP4 video/video notes
+also use this downloader with the distinct video-key domain and audio/video
+playback enabled. [Video schema and limits](video-media.md). Voice notes require Ogg/Opus; incoming playback still needs a
 live sample. Successful one-use viewing queues `played` for the next connection;
 download alone does not. Uncertain receipt writes are not replayed.
 

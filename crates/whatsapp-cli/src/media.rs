@@ -57,10 +57,14 @@ pub(super) async fn open(
         "--image-display-duration=30",
         "--title=TeleWhatsApp attachment",
     ]);
-    if matches!(kind, MediaKind::Image | MediaKind::Sticker) {
-        command.arg("--no-audio");
-    } else {
-        command.arg("--no-video");
+    match kind {
+        MediaKind::Image | MediaKind::Sticker => {
+            command.arg("--no-audio");
+        }
+        MediaKind::VoiceNote => {
+            command.arg("--no-video");
+        }
+        MediaKind::Video | MediaKind::VideoNote => {}
     }
     let mut child = command
         .arg("-")
