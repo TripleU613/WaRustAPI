@@ -779,3 +779,34 @@ Observed negative-prefix CLI flag bug fixed with regression and actual CLI check
 [Sources, reasoning and reproduction](mex.md#strict-member-primary-address-parser-in-rust-2026-10-07).
 Release recipe now 50 methods / 55 files / 191422 bytes, twelve additions,
 38 prior texts unchanged; cached diff0.051814s. No saved account/live request.
+
+
+## comparison.mex.nullable_ordered_members — 2026-10-07
+
+**Confirmed static** APK 2.26.37.71 / SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+LbE.A0E/A0F nullable/default optString, 8kU.A1A id, 32q.A00 filters and inherited
+Jid.equals/hashCode/raw formatting (08p.A00 nullable Object.equals).
+**Implemented** ADv.A0D member map with distinct phash-null variant, object-edge
+filter, Java typename-hash dispatch, bot skip versus strict UserJid/alias failure,
+ordered duplicate replacement and mapped role/join/history/display fields.
+**Independent host execution:** eight Java String.hashCode cases; 41 synthetic
+APK-branch cases through both children. Wire typename names remain unknown;
+fixture preimages are not claimed server spellings and were never sent.
+[Source/reasoning/limitations](mex.md#nullable-ordered-participant-map-port-2026-10-07).
+Explicit local refusal for unported Java floating/structured optString forms;
+this is not an APK field-type requirement. Downstream phash handling, complete
+group conversion/Android/cache parity and live/durable application remain open.
+New private --participant-members inspection composes with existing projections,
+redacts Debug/default output and never emits a partial failed map. No account/live
+request, sending-policy change or identity reclassification.
+
+0DE.A0Z/A0e/A0X are numeric type predicates (18/19/25; 0; 22), not
+instanceof checks. Strict caller alias parsers prevent device aliases from entering
+this port; broader 32q callers remain untraced. Phone/LID types 0/18 confirmed.
+59 methods/64 files/204600bytes; nine added topics, seven owners updated,
+50 prior method texts unchanged; checksum-verified cached diff0.019005s.
+
+8yk/8yg/8yj constructors confirmed as nonnull JSONObject wrappers only;
+no additional field validation found. Refusals identify the offending attribute
+without its value; diagnostic fixture checks cover id/lid/pn/display_name/__typename.

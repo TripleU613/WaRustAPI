@@ -1190,3 +1190,30 @@ seven subtype successes, eight content-free/no-stdout refusals; NUL library-only
 All nineteen domain class literal records were reread against the APK; final
 snapshot checksums and repository hygiene passed (591 local links). Staged
 whitespace passed. No complete member conversion or live validation is claimed.
+
+
+Nullable ordered MEX member map implemented (2026-10-07): phash null remains a
+separate variant, invalid nullable bots skip, strict primary/alias failures abort,
+canonical duplicate keys replace values in first insertion order. Role/join/history/
+display slots mapped, with explicit refusal for unported Java floating/structured
+string coercions. Private --participant-members inspection composes with prior
+projections; failed partial maps, Debug and default output remain redacted.
+41 synthetic APK-branch fixtures and eight independently executed Java hashes
+cover both payload paths. Actual typename names, complete group conversion and
+live/durable application remain unknown/unverified. No saved account/live action.
+[Sources and current boundary](docs/protocol/mex.md#nullable-ordered-participant-map-port-2026-10-07).
+
+Validation: 628 workspace/all-feature tests, 24 default CLI tests, strict workspace
+all-target/all-feature Clippy, warning-free Rustdoc, formatting, regenerated CLI
+reference and API-symbol checks passed. Actual CLI:82 member modes,82 combined,
+82 unchanged default summaries,56 no-partial-output refusals and flag dependency.
+
+Release snapshot:59 methods/64 files/204600bytes; all 50 prior instruction texts
+unchanged, checksums verified; cached comparison0.019005s. Builder numeric type
+predicates are documented separately from strict alias instanceof checks; broader
+32q callers remain untraced. No device-alias acceptance was introduced.
+
+After diagnostic improvements, the full workspace tests/Clippy/Rustdoc reruns
+passed. Refusals name the offending attribute without its value. Scoped model
+constructors were confirmed as wrappers only; broader string formatting remains
+unported. Repository hygiene passed (599 local links); staged whitespace passed.

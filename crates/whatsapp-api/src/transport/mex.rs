@@ -13,7 +13,9 @@ use crate::{
 
 mod coercion;
 mod participant_address;
+mod participants;
 pub use participant_address::{ParticipantAddress, ParticipantAddressKind};
+pub use participants::{GroupParticipant, GroupParticipantMap};
 
 /// APK participant-list scalar fields, before member/type/JID validation.
 /// Join values can disclose private timing, so Debug hides all values.
@@ -304,6 +306,15 @@ impl MexJsonResponse {
                 )
             })
             .collect())
+    }
+
+    /// Convert ADv.A0D's nullable ordered member map without applying it.
+    /// Phash match is distinct from an empty map. Invalid strict primary/alias
+    /// addresses abort; invalid nullable bot entries skip. Java floating and
+    /// structured optString coercions currently refuse explicitly; they are
+    /// local unported forms, not APK-required string types.
+    pub fn group_participant_map(&self) -> Result<GroupParticipantMap> {
+        participants::convert(self.group_participants()?)
     }
 
     /// Project participant hash flag and object-edge scalars. This inspects

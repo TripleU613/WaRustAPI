@@ -290,6 +290,7 @@ pub fn inspect_response(
     group_numbers: bool,
     edge_roles: bool,
     participant_scalars: bool,
+    participant_members: bool,
 ) -> Result<(), String> {
     use whatsapp_api::transport::mex::{MAX_JSON_RESPONSE_BYTES, parse_json_response};
     if !matches!(child, "result" | "update") {
@@ -334,6 +335,30 @@ pub fn inspect_response(
                 "group_history_sent": edge.group_history_sent,
             })).collect::<Vec<_>>(),
         });
+    }
+    if participant_members {
+        use whatsapp_api::transport::mex::{GroupParticipantMap, ParticipantAddress};
+        let address = |address: &ParticipantAddress| {
+            serde_json::json!({
+                "user": address.user(), "server": address.server(), "kind": address.kind(),
+            })
+        };
+        summary["group_participant_map"] = match parsed
+            .group_participant_map()
+            .map_err(|e| e.to_string())?
+        {
+            GroupParticipantMap::PhashMatch => {
+                serde_json::json!({"kind": "phash_match", "members": null})
+            }
+            GroupParticipantMap::Members(members) => serde_json::json!({
+                "kind": "members", "members": members.iter().map(|member| serde_json::json!({
+                    "primary": address(&member.primary),
+                    "lid": member.lid.as_ref().map(address), "pn": member.pn.as_ref().map(address),
+                    "role": member.role, "join_time": member.join_time.map(|v| v.to_string()),
+                    "group_history_sent": member.group_history_sent, "display_name": member.display_name,
+                })).collect::<Vec<_>>(),
+            }),
+        };
     }
     println!(
         "{}",

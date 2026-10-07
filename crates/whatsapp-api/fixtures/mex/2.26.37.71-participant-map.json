@@ -1,0 +1,1426 @@
+{
+  "evidence": "APK ADv.A0D, 32q.A00, 31c constructors; fixture inputs are synthetic. Actual server typename spellings remain unknown. Hash-matched control strings are offline branch probes, not claimed wire names. Floating/structured string coercion errors are local unported behavior, not APK failures.",
+  "hash_reference": [
+    {
+      "value": "\u0003\u0017\u0018\u0002\u001d\u0015\r",
+      "java_unsigned_hex": "c745b457"
+    },
+    {
+      "value": "\u0013\u0013\u0003\u0017\u000b\u0012",
+      "java_unsigned_hex": "2179873b"
+    },
+    {
+      "value": "\u0000\u0003\u0017\u0018\u0002\u001d\u0015\r",
+      "java_unsigned_hex": "c745b457"
+    },
+    {
+      "value": "\u0000\u0013\u0013\u0003\u0017\u000b\u0012",
+      "java_unsigned_hex": "2179873b"
+    },
+    {
+      "value": "unknown",
+      "java_unsigned_hex": "ef05ac4a"
+    },
+    {
+      "value": "\ud83d\ude00",
+      "java_unsigned_hex": "1b0d63"
+    },
+    {
+      "value": "null",
+      "java_unsigned_hex": "33c587"
+    },
+    {
+      "value": "",
+      "java_unsigned_hex": "0"
+    }
+  ],
+  "cases": [
+    {
+      "name": "phash-short-circuit-invalid-primary",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "participants_phash_match": true,
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "invalid-private-jid"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "phash_match",
+        "members": null
+      }
+    },
+    {
+      "name": "phash-string-exact-one",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "participants_phash_match": "1",
+              "edges": "invalid"
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "phash_match",
+        "members": null
+      }
+    },
+    {
+      "name": "phash-numeric-wrap-one",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "participants_phash_match": 4294967297
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "phash_match",
+        "members": null
+      }
+    },
+    {
+      "name": "phash-fraction-not-one",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "participants_phash_match": 0.5
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": []
+      }
+    },
+    {
+      "name": "edges-missing",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {}
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": []
+      }
+    },
+    {
+      "name": "edges-null",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": null
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": []
+      }
+    },
+    {
+      "name": "edges-nonarray",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": {}
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": []
+      }
+    },
+    {
+      "name": "edges-number",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": 1
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": []
+      }
+    },
+    {
+      "name": "edge-object-filter",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                null,
+                1,
+                [],
+                {},
+                {
+                  "participant": null
+                },
+                {
+                  "participant": []
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": []
+      }
+    },
+    {
+      "name": "unknown-model-skips-invalid-primary",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "unknown",
+                    "id": "invalid-private-jid"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": []
+      }
+    },
+    {
+      "name": "missing-and-null-model",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "id": "12345@s.whatsapp.net"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": null,
+                    "id": "12345@s.whatsapp.net"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": []
+      }
+    },
+    {
+      "name": "bot-fields-and-ignored-aliases",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0003\u0017\u0018\u0002\u001d\u0015\r",
+                    "jid": "1@bot",
+                    "lid": "invalid",
+                    "pn": "invalid",
+                    "display_name": {
+                      "ignored": 1
+                    }
+                  },
+                  "role": "ADMIN_MEMBER",
+                  "join_time": 5,
+                  "group_history_sent": true
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "1",
+              "server": "bot",
+              "kind": "bot"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "admin",
+            "join_time": "5",
+            "group_history_sent": true,
+            "display_name": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "invalid-nullable-bots-skip",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0003\u0017\u0018\u0002\u001d\u0015\r",
+                    "jid": null
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0003\u0017\u0018\u0002\u001d\u0015\r",
+                    "jid": ""
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0003\u0017\u0018\u0002\u001d\u0015\r",
+                    "jid": "12345@s.whatsapp.net"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0003\u0017\u0018\u0002\u001d\u0015\r",
+                    "jid": "1:0@bot"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0003\u0017\u0018\u0002\u001d\u0015\r",
+                    "jid": 1
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0003\u0017\u0018\u0002\u001d\u0015\r",
+                    "jid": {}
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0003\u0017\u0018\u0002\u001d\u0015\r",
+                    "jid": false
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0003\u0017\u0018\u0002\u001d\u0015\r",
+                    "jid": "0@bot"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": []
+      }
+    },
+    {
+      "name": "user-aliases-scalars-display",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "lid": "1@hosted.lid",
+                    "pn": "12345@hosted",
+                    "display_name": "synthetic-member-name"
+                  },
+                  "role": "member",
+                  "join_time": 2.9,
+                  "group_history_sent": "false"
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "12345",
+              "server": "s.whatsapp.net",
+              "kind": "phone"
+            },
+            "lid": {
+              "user": "1",
+              "server": "lid",
+              "kind": "lid"
+            },
+            "pn": {
+              "user": "12345",
+              "server": "s.whatsapp.net",
+              "kind": "phone"
+            },
+            "role": "",
+            "join_time": "2",
+            "group_history_sent": false,
+            "display_name": "synthetic-member-name"
+          }
+        ]
+      }
+    },
+    {
+      "name": "user-branch-bot-is-userjid",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@bot",
+                    "display_name": "synthetic-user-branch-bot"
+                  },
+                  "role": "SUPERADMIN_MEMBER",
+                  "join_time": -1,
+                  "group_history_sent": null
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "1",
+              "server": "bot",
+              "kind": "bot"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "superadmin",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": "synthetic-user-branch-bot"
+          }
+        ]
+      }
+    },
+    {
+      "name": "user-interop-signed",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "-1-1@interop"
+                  },
+                  "join_time": 4294967297
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "-1-1",
+              "server": "interop",
+              "kind": "interop"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": "1",
+            "group_history_sent": null,
+            "display_name": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "user-interop-unicode",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "\u0661-1@interop"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "\u0661-1",
+              "server": "interop",
+              "kind": "interop"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "special-primary-user-singletons",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "0@hosted"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "Server@s.whatsapp.net"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "lid_me"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "status_me"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "0",
+              "server": "s.whatsapp.net",
+              "kind": "server_zero"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": null
+          },
+          {
+            "primary": {
+              "user": "Server",
+              "server": "s.whatsapp.net",
+              "kind": "server_name"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": null
+          },
+          {
+            "primary": {
+              "user": "",
+              "server": "lid_me",
+              "kind": "lid_me"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": null
+          },
+          {
+            "primary": {
+              "user": "",
+              "server": "status_me",
+              "kind": "status_me"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "duplicate-canonical-key-replaces-at-first-position",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@lid"
+                  },
+                  "role": "ADMIN_MEMBER"
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net"
+                  },
+                  "role": "MEMBER"
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@hosted.lid"
+                  },
+                  "role": "SUPERADMIN_MEMBER",
+                  "join_time": 7
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "1",
+              "server": "lid",
+              "kind": "lid"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "superadmin",
+            "join_time": "7",
+            "group_history_sent": null,
+            "display_name": null
+          },
+          {
+            "primary": {
+              "user": "12345",
+              "server": "s.whatsapp.net",
+              "kind": "phone"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "aliases-do-not-merge-primary-keys",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "lid": "1@lid"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@lid",
+                    "pn": "12345@s.whatsapp.net"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "12345",
+              "server": "s.whatsapp.net",
+              "kind": "phone"
+            },
+            "lid": {
+              "user": "1",
+              "server": "lid",
+              "kind": "lid"
+            },
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": null
+          },
+          {
+            "primary": {
+              "user": "1",
+              "server": "lid",
+              "kind": "lid"
+            },
+            "lid": null,
+            "pn": {
+              "user": "12345",
+              "server": "s.whatsapp.net",
+              "kind": "phone"
+            },
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "bad-primary",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@lid"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "private-invalid-primary"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "error_field": "mex.participant.primary",
+      "error_attribute": "id"
+    },
+    {
+      "name": "device-primary",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@lid"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345:0@s.whatsapp.net"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "error_field": "mex.participant.primary",
+      "error_attribute": "id"
+    },
+    {
+      "name": "nonstring-primary",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@lid"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": 12345
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "error_field": "mex.participant.primary",
+      "error_attribute": "id"
+    },
+    {
+      "name": "bad-lid",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@lid"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "lid": "12345@s.whatsapp.net"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "error_field": "mex.participant.alias",
+      "error_attribute": "lid"
+    },
+    {
+      "name": "bad-pn",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@lid"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "pn": "1@lid"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "error_field": "mex.participant.alias",
+      "error_attribute": "pn"
+    },
+    {
+      "name": "pn-singleton-not-phone",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@lid"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "pn": "0@s.whatsapp.net"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "error_field": "mex.participant.alias",
+      "error_attribute": "pn"
+    },
+    {
+      "name": "empty-lid-present",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@lid"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "lid": ""
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "error_field": "mex.participant.alias",
+      "error_attribute": "lid"
+    },
+    {
+      "name": "nonstring-alias",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@lid"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "lid": 1
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "error_field": "mex.participant.alias",
+      "error_attribute": "lid"
+    },
+    {
+      "name": "explicit-null-optionals",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "lid": null,
+                    "pn": null,
+                    "display_name": null
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "12345",
+              "server": "s.whatsapp.net",
+              "kind": "phone"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "display-bool",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "display_name": true
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "12345",
+              "server": "s.whatsapp.net",
+              "kind": "phone"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": "true"
+          }
+        ]
+      }
+    },
+    {
+      "name": "display-integer",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "display_name": 42
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "12345",
+              "server": "s.whatsapp.net",
+              "kind": "phone"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": "42"
+          }
+        ]
+      }
+    },
+    {
+      "name": "display-empty",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "display_name": ""
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "12345",
+              "server": "s.whatsapp.net",
+              "kind": "phone"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": ""
+          }
+        ]
+      }
+    },
+    {
+      "name": "unported-display-floating",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@lid"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "display_name": 1.0
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "error_field": "mex.participant.string_coercion",
+      "error_attribute": "display_name"
+    },
+    {
+      "name": "unported-display-object",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@lid"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "display_name": {
+                      "private-name": 1
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "error_field": "mex.participant.string_coercion",
+      "error_attribute": "display_name"
+    },
+    {
+      "name": "unported-display-array",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "1@lid"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "display_name": [
+                      "private-name"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "error_field": "mex.participant.string_coercion",
+      "error_attribute": "display_name"
+    },
+    {
+      "name": "unported-model-string-coercion",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": 1.0,
+                    "id": "12345@s.whatsapp.net"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "error_field": "mex.participant.string_coercion",
+      "error_attribute": "__typename"
+    },
+    {
+      "name": "scalar-models-unknown",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": true,
+                    "id": "12345@s.whatsapp.net"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": false,
+                    "id": "12345@s.whatsapp.net"
+                  }
+                },
+                {
+                  "participant": {
+                    "__typename": 42,
+                    "id": "12345@s.whatsapp.net"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": []
+      }
+    },
+    {
+      "name": "edge-role-not-nested-role",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net",
+                    "role": "SUPERADMIN_MEMBER"
+                  },
+                  "role": "ADMIN_MEMBER",
+                  "join_time": "0",
+                  "group_history_sent": 0
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "12345",
+              "server": "s.whatsapp.net",
+              "kind": "phone"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "admin",
+            "join_time": null,
+            "group_history_sent": false,
+            "display_name": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "hash-only-not-equality",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0000\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": []
+      },
+      "expected": {
+        "kind": "members",
+        "members": [
+          {
+            "primary": {
+              "user": "12345",
+              "server": "s.whatsapp.net",
+              "kind": "phone"
+            },
+            "lid": null,
+            "pn": null,
+            "role": "",
+            "join_time": null,
+            "group_history_sent": null,
+            "display_name": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "callback-blocks-server-error",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "participant": {
+                    "__typename": "\u0013\u0013\u0003\u0017\u000b\u0012",
+                    "id": "12345@s.whatsapp.net"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "errors": [
+          {
+            "message": "synthetic-private-error"
+          }
+        ]
+      },
+      "error_field": "mex.group.participants"
+    },
+    {
+      "name": "required-participants-model",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {}
+        },
+        "errors": []
+      },
+      "error_field": "mex.group.participants"
+    }
+  ]
+}

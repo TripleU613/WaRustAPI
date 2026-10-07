@@ -134,7 +134,8 @@
     "methods": 1,
     "rust_files": [
       "crates/whatsapp-api/src/transport/mex.rs",
-      "crates/whatsapp-api/src/transport/mex/coercion.rs"
+      "crates/whatsapp-api/src/transport/mex/coercion.rs",
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
     ]
   },
   "mex-gdpr-constructor": {
@@ -386,6 +387,108 @@
       "crates/whatsapp-api/src/transport/mex/participant_address.rs"
     ]
   },
+  "mex-member-default-string": {
+    "class": "LX/LbE;",
+    "file": "mex-member-default-string.txt",
+    "include_exception_tables": true,
+    "method_filter": "A0F",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
+    ]
+  },
+  "mex-member-jid-equality": {
+    "class": "Lcom/whatsapp/infra/core/jid/Jid;",
+    "file": "mex-member-jid-equality.txt",
+    "include_exception_tables": true,
+    "method_filter": "equals",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
+    ]
+  },
+  "mex-member-jid-hash": {
+    "class": "Lcom/whatsapp/infra/core/jid/Jid;",
+    "file": "mex-member-jid-hash.txt",
+    "include_exception_tables": true,
+    "method_filter": "hashCode",
+    "method_shorty": "I",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
+    ]
+  },
+  "mex-member-jid-raw": {
+    "class": "Lcom/whatsapp/infra/core/jid/Jid;",
+    "file": "mex-member-jid-raw.txt",
+    "include_exception_tables": true,
+    "method_filter": "getRawString",
+    "method_shorty": "L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
+    ]
+  },
+  "mex-member-lid-alias": {
+    "class": "LX/0ZZ;",
+    "file": "mex-member-lid-alias.txt",
+    "include_exception_tables": true,
+    "method_filter": "A00",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
+    ]
+  },
+  "mex-member-nullable-string": {
+    "class": "LX/LbE;",
+    "file": "mex-member-nullable-string.txt",
+    "include_exception_tables": true,
+    "method_filter": "A0E",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
+    ]
+  },
+  "mex-member-pn-alias": {
+    "class": "LX/0D9;",
+    "file": "mex-member-pn-alias.txt",
+    "include_exception_tables": true,
+    "method_filter": "A00",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
+    ]
+  },
+  "mex-member-primary-id": {
+    "anchors": [
+      "id"
+    ],
+    "class": "LX/8kU;",
+    "file": "mex-member-primary-id.txt",
+    "include_exception_tables": true,
+    "method_filter": "A1A",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
+    ]
+  },
+  "mex-member-user-equality": {
+    "class": "LX/08p;",
+    "file": "mex-member-user-equality.txt",
+    "include_exception_tables": true,
+    "method_filter": "A00",
+    "method_shorty": "ZLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
+    ]
+  },
   "mex-nullable-bot-jid": {
     "class": "LX/0hj;",
     "file": "mex-nullable-bot-jid.txt",
@@ -394,7 +497,8 @@
     "method_shorty": "LL",
     "methods": 1,
     "rust_files": [
-      "crates/whatsapp-api/src/transport/mex.rs"
+      "crates/whatsapp-api/src/transport/mex.rs",
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
     ]
   },
   "mex-participant-alias-builder": {
@@ -405,7 +509,8 @@
     "method_shorty": "LLLLLLLLLL",
     "methods": 1,
     "rust_files": [
-      "crates/whatsapp-api/src/transport/mex.rs"
+      "crates/whatsapp-api/src/transport/mex.rs",
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
     ]
   },
   "mex-participant-hash-boolean": {
@@ -417,7 +522,8 @@
     "methods": 1,
     "rust_files": [
       "crates/whatsapp-api/src/transport/mex.rs",
-      "crates/whatsapp-api/src/transport/mex/coercion.rs"
+      "crates/whatsapp-api/src/transport/mex/coercion.rs",
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
     ]
   },
   "mex-participant-map": {
@@ -434,7 +540,8 @@
     "methods": 1,
     "rust_files": [
       "crates/whatsapp-api/src/transport/mex.rs",
-      "crates/whatsapp-api/src/transport/mex/coercion.rs"
+      "crates/whatsapp-api/src/transport/mex/coercion.rs",
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
     ]
   },
   "mex-participant-role-enum": {
@@ -461,7 +568,8 @@
     "method_shorty": "LLL",
     "methods": 1,
     "rust_files": [
-      "crates/whatsapp-api/src/transport/mex.rs"
+      "crates/whatsapp-api/src/transport/mex.rs",
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
     ]
   },
   "mex-participant-role-resolver": {
@@ -629,7 +737,8 @@
     "methods": 1,
     "rust_files": [
       "crates/whatsapp-api/src/transport/mex.rs",
-      "crates/whatsapp-api/src/transport/mex/participant_address.rs"
+      "crates/whatsapp-api/src/transport/mex/participant_address.rs",
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
     ]
   },
   "mex-subject-field": {

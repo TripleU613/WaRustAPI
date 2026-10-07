@@ -5,7 +5,7 @@
 use crate::{Error, Result};
 
 /// Plain APK UserJid subtype accepted by the member-primary type check.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, serde::Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ParticipantAddressKind {
     /// Ordinary PhoneUserJid, including plain hosted input.
@@ -28,7 +28,7 @@ pub enum ParticipantAddressKind {
 
 /// Private participant address with APK canonical domain, separate from send policy.
 /// Debug hides the address; explicit access can reveal account identifiers.
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq, Hash)]
 pub struct ParticipantAddress {
     kind: ParticipantAddressKind,
     user: String,

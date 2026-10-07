@@ -153,6 +153,9 @@ enum Cmd {
         /// Explicitly print private phash/history/join scalars; requires --group-info.
         #[arg(long, requires = "group_info")]
         participant_scalars: bool,
+        /// Explicitly print private converted members; requires --group-info.
+        #[arg(long, requires = "group_info")]
+        participant_members: bool,
     },
     /// Find which classes and methods reference each anchor string constant.
     ///
@@ -314,6 +317,7 @@ fn main() -> ExitCode {
             group_numbers,
             edge_roles,
             participant_scalars,
+            participant_members,
         } => mex::inspect_response(
             &input,
             &child,
@@ -321,6 +325,7 @@ fn main() -> ExitCode {
             group_numbers,
             edge_roles,
             participant_scalars,
+            participant_members,
         ),
         Cmd::ApkXref { apk, anchors } => xref::run_xref(&apk, &anchors),
         Cmd::ApkCallers {

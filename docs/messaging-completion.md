@@ -1457,3 +1457,15 @@ interop signed/Unicode integer semantics and confirmed special singleton types.
 addresses refuse; existing send policy and account identity remain unchanged.
 Full member/alias assembly, downstream phash-null application and live durable MEX
 state remain unfinished. [Port/unknowns](protocol/mex.md#strict-member-primary-address-parser-in-rust-2026-10-07).
+
+
+Nullable ordered MEX member conversion implemented for supported string coercions:
+phash null versus empty map, edge filtering, hash-only model dispatch, nullable bot
+skip/strict primary and alias failures, canonical duplicate replacement and role/
+join/history/display fields. Private --participant-members opts into inspection;
+default/Debug and failed partial maps stay redacted. 41 APK-branch fixtures cover
+both payload children. Actual server typename names remain unknown; synthetic hash
+preimages were used only offline. Java floating/structured string coercion refuses
+explicitly until ported. Full group model/durable MEX application remain unfinished.
+[Evidence/limitations](protocol/mex.md#nullable-ordered-participant-map-port-2026-10-07).
+No account state or live request changed.

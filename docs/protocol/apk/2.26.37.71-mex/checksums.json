@@ -123,6 +123,42 @@
     "bytes": 3736,
     "sha256": "797008fc9cc16b84457aaeb7306cbf254ff955c055dc9b33c460aad7dd2f51e7"
   },
+  "mex-member-default-string.txt": {
+    "bytes": 664,
+    "sha256": "b446b65ce9f9c87c1e2e32242982194b12e0163e359e41dec6cb71b4ebce3c87"
+  },
+  "mex-member-jid-equality.txt": {
+    "bytes": 1733,
+    "sha256": "f315fd7aa6afc1cf3545e7db591e33ddb011ab65594563ee21869be2b9740727"
+  },
+  "mex-member-jid-hash.txt": {
+    "bytes": 1202,
+    "sha256": "417faeb40a3c9f37d08522bc40347d31630a4bf13df468252a1bb0adad4b1e39"
+  },
+  "mex-member-jid-raw.txt": {
+    "bytes": 771,
+    "sha256": "0c3577e380d571beb570a1628ca2c417aa7f6779e6ea93e165e49bdff1c61bbd"
+  },
+  "mex-member-lid-alias.txt": {
+    "bytes": 1278,
+    "sha256": "67232f69bd326d21a6f1f924d55e56be3cfc006bd6d439175407b950c2de68cb"
+  },
+  "mex-member-nullable-string.txt": {
+    "bytes": 824,
+    "sha256": "383b55e40a564abc70d086bf51a16b53e39f4ad014df0d5be76e295267ae8bdb"
+  },
+  "mex-member-pn-alias.txt": {
+    "bytes": 961,
+    "sha256": "4b86686316d3ca8568e183e9da92c669cb39dd71c4598ece3b8174cb5a55d202"
+  },
+  "mex-member-primary-id.txt": {
+    "bytes": 554,
+    "sha256": "29fccf3db63e00800892768168998c0c18ed91b1266ba500cb8dbf649b8bf642"
+  },
+  "mex-member-user-equality.txt": {
+    "bytes": 685,
+    "sha256": "f3aed0f9904679347abbbfc48ccb68bc082340dff92bba4870d3b8d0c8b8b680"
+  },
   "mex-nullable-bot-jid.txt": {
     "bytes": 1089,
     "sha256": "ff3816fab4f1a79f7797af84dea64c00ee9c46e53d83f4355f1ee5b0727557e4"
@@ -208,8 +244,8 @@
     "sha256": "12a6c73f8362eb3c22b1f43211bd422b99b069e12efb6c8cbd3f9ea9613591a6"
   },
   "targets.json": {
-    "bytes": 17155,
-    "sha256": "fa33d53b34ba3921317bbd4d7cf0d61f8759c8adb7c1f59287e9f83d83484852"
+    "bytes": 20419,
+    "sha256": "cba2c36dc0563e4351b3f3007739afb314a6b113a26e833b30bb3ffd68f1c0aa"
   },
   "tokens.json": {
     "bytes": 23019,

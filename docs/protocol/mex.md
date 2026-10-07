@@ -1158,3 +1158,120 @@ its old paths refer to ignored cached baseline from Git revision **857b7a7**.
 This coverage is scoped, not all generic parser/singleton methods or a complete
 release remap. Full member map, phash-null downstream behavior, feature gates,
 live MEX dispatcher and durable group application remain unfinished.
+
+
+## Nullable ordered participant map port (2026-10-07)
+
+**Confirmed static** APK 2.26.37.71 / SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+ADv.A0D, LbE.A0E/A0F, 8kU.A1A, 32q.A00 and Jid.equals/hashCode/getRawString
+with 08p.A00 are preserved in [scoped member evidence](mex-member-map-evidence.txt)
+and prior [full converter trace](mex-group-converter-evidence.txt).
+LbE.A0E first checks isNull, then optString; A0F skips the null guard, so explicit
+JSONObject.NULL stringifies to "null" rather than the missing-field empty fallback.
+8kU.A1A reads id via A0E. The earlier string-only diagnostic projections did not
+establish that the APK requires JSON strings; it coerces other types too.
+
+Jid.equals requires equal user strings (08p.A00 is nullable Object.equals),
+getServer strings and getType integers. UserJid and 0Cy have no equals method
+bodies in this build; this is inherited behavior, not missing classes. Jid.hashCode
+combines those same three values; raw formatting calls 0D1.A01(user,server).
+Within the eligible parsed types, ParticipantAddress's kind/user/canonical-domain
+key preserves that equality boundary. Plain hosted/hosted.lid duplicates replace
+their ordinary PN/LID key; aliases do not merge distinct primary namespace keys.
+Interop original user text remains the equality input, not its parsed integrator.
+
+**Implemented** `MexJsonResponse::group_participant_map()` returns
+`GroupParticipantMap::PhashMatch` or `Members(Vec<GroupParticipant>)`.
+The first represents ADv.A0D's **null** result, not an empty replacement;
+retain-existing downstream semantics remain **inferred/untraced**. Phash true
+returns before looking at malformed edges. Missing/null/nonarray edges yield an
+empty map; nonobject edges and missing/nonobject participant models skip. Model
+hashes other than the two APK constants skip. Role strings are taken from edges.
+Invalid nullable bot JIDs skip and bot aliases/display metadata are ignored.
+The strict-user branch accepts every traced valid plain UserJid subtype; present
+LID/PN aliases must be plain LID/ordinary PhoneUserJid, so PN server singletons
+and device wrappers refuse. A strict failure discards the local partial map.
+Duplicate canonical primary keys replace the value at the first insertion position.
+
+GroupParticipant exposes primary, nullable lid/pn, exact role string, positive
+optInt boxed-long join_time (units unknown), nullable history boolean and nullable
+display_name. Fields carry private identifiers/content. Debug hides every member
+value; map Debug reports only variant/count. 32q.A00 subtype-filters its LID/PN/
+interop inputs before 31c construction. The separately filtered interop alias slot
+and A08 extra string are null in both traced ADv branches; their meanings/other
+producers remain unknown and no values are fabricated here.
+
+**Explicit local limitation:** strings, booleans and signed integral JSON numbers
+have exact supported nullable string conversion. Floating numbers, large integers
+that Android parses as Double, and structured JSONObject/JSONArray stringification
+refuse with content-free mex.participant.string_coercion. These are **unported
+forms in our converter**, not APK-mandated string fields or server refusals.
+Nonstring primary/alias values cannot stringify into any eligible address:
+numeric/boolean forms lack @; structured JSON strings end in their delimiters.
+They therefore fail strict parsing (or skip in the nullable bot path) without
+requiring a guessed Java display string. Full Java floating/structured formatting,
+Android JSON lexical/Unicode-version parity and cache behavior remain unverified.
+
+```sh
+target/debug/xtask mex-response-inspect --input <private-payload.json> \
+  --group-info --participant-members
+```
+
+This explicit opt-in prints private `group_participant_map`, variant kind and
+members (null for phash match, array otherwise). Addresses are objects containing
+user/server/kind; aliases are nullable, join_time is a decimal string or null.
+It composes with --group-numbers, --edge-roles and --participant-scalars. The
+complete conversion is computed before stdout; failures never export earlier
+members or prior diagnostic projections. Default summary stays redacted. No
+account, send eligibility, receive journal or durable group state is changed.
+
+**Tests/evidence:**
+[41-case branch fixture](../../crates/whatsapp-api/fixtures/mex/2.26.37.71-participant-map.json)
+uses synthetic inputs grounded in the APK branches, including malformed optional
+lists, phash short-circuit, bot skips, strict failures after an earlier valid edge,
+canonical duplicate ordering, namespace/alias separation, role source, scalar
+coercion, placeholders and explicit unsupported local forms. Both result/update
+paths are tested. **Server typename spellings remain unknown.** The fixture's
+control strings are synthetic base-31 hash preimages, labelled as offline branch
+probes, not proposed wire names. [Independent Java hash oracle](MexParticipantHashOracle.java)
+executed String.hashCode on eight inputs, including supplementary Unicode and
+leading-NUL collisions. Its values support the UTF-16/wrapping/hash-only dispatch;
+they do not establish actual server schema names. No synthetic probe was sent.
+
+Remaining work: complete string coercion, full group feature-dependent conversion,
+actual typename identification, downstream phash-null application, live MEX
+response dispatch/action settlement and atomic durable group-state replacement.
+This member map is not a complete group model or a live success verdict.
+
+
+Builder filter follow-up (**confirmed static**): 0DE.A0Z accepts type IDs
+18/19/25, A0e accepts type 0, A0X accepts type 22; null fails all. These are
+numeric type predicates, **not** instanceof plain-LID/PN/interop tests.
+32q subsequently casts accepted inputs to its field classes. ADv's stricter
+alias parsers already supply plain aliases (or null); this port does not broaden
+their accepted types just because the builder predicate includes device IDs.
+PhoneUserJid.getType=0, 0ZY.getType=18 and 9Lm.getType=22 confirm the expected
+non-null field paths. Other callers of 32q and those broader type branches are
+untraced; no general-purpose device-alias builder is claimed.
+
+Release coverage now **59 methods / 64 files / 204600 bytes**: nine newly
+selected field/equality/alias readers and seven updated Rust topic owners.
+All 50 prior method texts remain byte-identical; inventory/manifest/tokens stay
+unchanged. [Actual cached diff](apk/mex-member-coverage-diff.json) took
+**0.019005 seconds**. Old report paths refer to the ignored cached snapshot at
+Git revision **2960c95**, not a second committed bulk tree. This does not claim
+full release remapping or complete coverage of every helper read in this trace.
+
+Constructor follow-up (**confirmed static**): 8yk/8yg/8yj constructors only
+assert a nonnull JSONObject and delegate to LbE; no additional participant
+validation occurs in these wrappers. Reflection fallback remains in LbE.A04,
+not a constructor field parser. This supports the object-only nested model gate.
+Refusals identify the specific id/lid/pn/display_name/__typename attribute without
+including its value; fixture cases assert that diagnostic boundary.
+
+Existing group_long_zero was also rechecked: it already handles integral JSON
+numbers directly and yields zero for other nonstring forms, matching the later
+Long.parseLong outcome. No numeric-field correction was needed. That shortcut
+cannot implement display_name optString: private floating/structured text must
+be preserved once its Java formatting is ported, rather than replaced with zero.
