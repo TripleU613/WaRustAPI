@@ -1154,3 +1154,6 @@ hygiene (578 local links) passed. All 408 oracle cases reproduced using the
 committed annotation stubs; actual CLI checked 816 scalar modes, 816 combined
 modes, 816 unchanged redacted defaults, 16 blocked/no-partial-output modes and
 flag dependency. Actual 43-file/162671-byte APK snapshot re-export matched.
+
+Phone/account inventory audit (2026-10-07, offline): 19 profile files reference
+13 distinct country/national-number pairs across 16 existing configurations.
