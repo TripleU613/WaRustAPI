@@ -26,6 +26,20 @@ fn is_capture(key: &[u8]) -> bool {
     matches!(parts.as_slice(), ["message", _, "pending" | "send-response", index] if !index.is_empty() && index.bytes().all(|b| b.is_ascii_digit()))
 }
 
+fn capture_protocol_type(value: Option<&str>) -> &str {
+    value
+        .filter(|value| {
+            // APK 37.71 Fbq.<init> registers the literal group notification
+            // type w:gp2. Do not widen the general filter to numeric IDs.
+            *value == "w:gp2"
+                || (value.len() <= 32
+                    && value
+                        .bytes()
+                        .all(|b| b.is_ascii_alphabetic() || matches!(b, b'_' | b'-' | b':')))
+        })
+        .unwrap_or("none")
+}
+
 /// Read-only alias comparisons: missing pin is `None`, malformed input is an
 /// error, and a differing identity is `Some(false)`. These do not select a
 /// session or authorize replacement; they help distinguish routing from trust.
@@ -1459,11 +1473,8 @@ pub(super) async fn run(
                         .filter(|n| safe(&n.description))
                         .map(|n| n.description.as_str())
                         .collect();
-                    let kind = node
-                        .get_attr("type")
-                        .and_then(|v| v.as_text())
-                        .filter(|v| safe(v))
-                        .unwrap_or("none");
+                    let kind =
+                        capture_protocol_type(node.get_attr("type").and_then(|v| v.as_text()));
                     let offline = node
                         .child("offline")
                         .and_then(|n| n.get_attr("count"))
@@ -2126,6 +2137,26 @@ mod tests {
     use super::*;
     use whatsapp_api::binary::Node;
     use whatsapp_api::model::jid::Jid;
+
+    #[test]
+    fn capture_type_preserves_apk_group_label_without_disclosing_numeric_values() {
+        assert_eq!(capture_protocol_type(Some("w:gp2")), "w:gp2");
+        for value in ["privacy_token", "devices", "encrypt", "mex", "psa"] {
+            assert_eq!(capture_protocol_type(Some(value)), value);
+        }
+        for value in [
+            "15555550100",
+            "12345@lid",
+            "w:gp3",
+            "private123",
+            "bad\nvalue",
+            "é",
+        ] {
+            assert_eq!(capture_protocol_type(Some(value)), "none");
+        }
+        assert_eq!(capture_protocol_type(None), "none");
+        assert_eq!(capture_protocol_type(Some(&"a".repeat(33))), "none");
+    }
 
     #[test]
     fn poll_inspection_never_prints_question_options_or_secret() {

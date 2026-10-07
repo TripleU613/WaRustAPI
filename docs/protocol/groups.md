@@ -1000,3 +1000,97 @@ message authentication against the original server captures; its APK routing
 producer still needs re-anchoring by strings/callers rather than class-name
 reuse. The inherited `ADw.A02` alias citation was not independently retraced in
 this change. No claim here derives a mandatory field from its mere existence.
+
+## Saved group notifications and inspection correction (2026-10-07)
+
+**Confirmed/static** for APK 2.26.37.71, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+Fbq.<init> 0006..0014 registers literal `w:gp2` through EGu. ADw.A0G
+0004..001a checks notification, reads group route and notify metadata, type
+w:gp2, timestamp/offline fields, and builds 9P6/9PA at 0146..016e.
+This is a parsed notification holder, not the final membership application.
+9PA's four constructors are compiler-merged variants; its name alone cannot
+identify one meaning. A holder trace is retained privately.
+
+The exact groups_dirty anchor uniquely resolves 0yv.A09. Its branch at
+2912..298e iterates child `group` nodes, reads each `jid`, logs/continues on a
+missing JID, and accumulates JID/reason pairs. At 6548..6570 it queues
+FetchTruncatedGroupsJob with that list, an empty HashSet and final params value 3 (the job constructor stores it as params, not a guessed wire reason).
+Thus groups_dirty is a refresh instruction, not a complete member snapshot.
+The job's exact request fields and response application remain **untraced**;
+a blind generic group-info request is not established by this partial trace.
+[Scoped label/parser/dirty evidence](group-notification-evidence.txt) retains
+these instructions. Full raw handler (over 6,000 lines) stays in ignored lab.
+
+**Confirmed local defect:** lab-inbox --inspect's lexical type filter excluded
+all digits, so a real w:gp2 capture printed type=none. The correction permits
+only this exact APK literal in addition to the existing bounded alphabetic
+filter. It does not permit arbitrary numeric-containing type strings, IDs or
+addresses. Tests cover recognized types, w:gp2, unknown w:gp3, numeric address,
+long/Unicode/newline values and absence. CLI/API inspection metadata is updated;
+no handler, ACK, query, membership write or verification decision is added.
+
+**Observed/offline:** inspection of the saved profile l after the rebuilt CLI
+exposed 26 group-notification shape lines, comprising create with no attributes,
+create with key/type attribute names, and groups_dirty. That count is the
+inspector's distinct shape-line output, not 26 independently delivered groups:
+its set includes ID/time metadata and historical/duplicate captures. No group
+address, key/type attribute value, subject, member or raw notification body was
+printed. Private before/after logs are under
+lab/accounts/l/document-receive-check-2026-10-07/inbox-inspection*.log.
+The full saved history was inspected, not just the latest receive window.
+
+Other preserved shapes include mex/update[op_name] and psa campaign[id,duration],
+surfaces, messages[campaign_id] and psa_wakeup[psa_push_id]. Fbs.<init>
+0006..0014 statically registers psa. No op_name, campaign or push ID values were
+examined or applied. Their payload semantics and ACK policy remain **unknown**.
+Exact GroupNotification string search found no literal reference; groups_dirty
+found the real handler, refuting any inference of absence from the first search.
+0yv has no A00 override in the scoped method lookup; inherited ACK construction
+must still be traced before implementing notification acknowledgements.
+
+**Current client boundary:** groups::ingest consumes settled group action
+replies; connection dispatch does not apply w:gp2 notifications. The original
+notifications remain encrypted captures. Generic incoming outcome=Unsupported
+does not prove every side handler is absent (encrypt/devices have separate
+handlers); code inspection establishes this particular group gap. Next work is
+the evidenced groups_dirty job/request/commit path and create application with
+route/membership/duplicate guards. No saved account keys, sessions or identities
+were replaced and no network request occurred during this inspection.
+
+**Confirmed/static job boundary:** FetchTruncatedGroupsJob.<init> stores
+round, maxNumberOfRounds, params, groupsToFetch, successfullyProcessedGroups
+and batchContext at 0036..004e; it requires chat connection (0018..0028).
+A0G drops a stale job with null batchContext (0004..0018), calculates a
+participant budget, bounds it with feature 0x187b (0082..0098), and selects
+between 9x2.A00 and 9qZ paths behind feature 0x344e then 0x2a35
+(01bc..0208). The alternate path's enum branches choose operation labels
+per_group_dirty_recovery_truncatable, per_group_dirty_recovery,
+get_participating_groups_paginated or inactive_group_migration
+(0252..0274,0310..0322). Their serializer/request fields are still untraced.
+Current feature values are unknown; a wire operation cannot be selected just
+from its presence. Later rounds retain processed groups and queue another
+job (0446..0492); implementing unbounded refresh/retries would not reproduce
+that bounded state. Our general action queue's uncertain reservations must
+remain intact when this protocol is added.
+
+**Tooling unknown:** A0G's memory-budget arithmetic contains DEX opcodes cd/ce
+at 003c..0044, displayed as opaque by the current disassembler. Their precise
+instruction rendering/formula has not been asserted here. Raw job dump and
+callers remain local; [scoped evidence](group-notification-evidence.txt)
+includes constructor, relevant feature/operation branches and next-round setup.
+The inherited notification ACK writer, batch context definition, concrete wire
+serializers, membership/application guards and crash/deduplication behavior
+are the next trace boundaries. No server query was guessed from this finding.
+
+**Negative dispatch search:** apk-callers for the concrete 0yv.A09 returned
+zero callers. This does not refute its override-based use: the inherited
+0yO notification dispatch is the remaining caller/ACK trace boundary. The
+scoped A00 lookup found no matching method in 0yv, consistent with inheritance,
+not proof that an ACK is absent from the APK.
+
+Validation: 568 workspace/all-feature tests, 24 default-feature CLI tests,
+42 final all-feature CLI tests, strict CLI all-target/all-feature Clippy,
+CLI reference regeneration/test, formatting and repository hygiene (374 local
+links) passed. Rebuilt-CLI saved-account inspection exposed the previously
+hidden group type without network I/O, replay or notification application.

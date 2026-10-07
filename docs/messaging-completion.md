@@ -862,3 +862,10 @@ stopped cleanly with chat sends disabled. Redacted saved summaries were unchange
 no new encrypted message or document arrived. This is a runtime receive check,
 not fresh-document or automatic-read validation. Prior IDs/uncertain actions
 remain preserved. See the document evidence page for private log locations.
+
+Group-notification follow-up (2026-10-07): capture inspection now preserves the
+APK's exact w:gp2 label instead of hiding it because of its digit. Saved
+create/groups_dirty shapes are visible with values redacted. Static 0yv.A09
+shows groups_dirty queues FetchTruncatedGroupsJob; request/application and ACK
+policy remain unfinished. No notification or membership was applied and no
+network request was made. [Evidence and next boundary](protocol/groups.md#saved-group-notifications-and-inspection-correction-2026-10-07).

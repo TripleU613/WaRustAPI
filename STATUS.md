@@ -545,3 +545,16 @@ cleanly. Events/receipts/actions/outbox summaries were unchanged (20/9/12/0),
 with the prior uncertain action preserved. No fresh encrypted message/document
 arrived; live document retrieval is still unverified. Private backup/log paths
 and notification observations are recorded in the document protocol page.
+
+Group-notification follow-up (2026-10-07): capture inspection now preserves the
+APK's exact w:gp2 label instead of hiding it because of its digit. Saved
+create/groups_dirty shapes are visible with values redacted. Static 0yv.A09
+shows groups_dirty queues FetchTruncatedGroupsJob; request/application and ACK
+policy remain unfinished. No notification or membership was applied and no
+network request was made. [Evidence and next boundary](docs/protocol/groups.md#saved-group-notifications-and-inspection-correction-2026-10-07).
+
+Validation: 568 workspace/all-feature tests, 24 default-feature CLI tests,
+42 final all-feature CLI tests, strict CLI all-target/all-feature Clippy,
+CLI reference regeneration/test, formatting and repository hygiene (374 local
+links) passed. Rebuilt-CLI saved-account inspection exposed the previously
+hidden group type without network I/O, replay or notification application.
