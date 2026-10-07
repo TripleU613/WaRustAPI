@@ -433,3 +433,11 @@ is params sentinel -1, not an invented enum. Username comparison flag semantics,
 complete error remapping and verified-state action remain unfinished. Fourteen
 local tooling checks pass; no live scan or account verification occurred.
 [Schema and comparison evidence](safety-number.md#native-qr-schema-serialization-and-v4-comparison).
+
+
+**Confirmed/static, 37.71 fingerprint comparison caller:** KXj.A01 invokes
+V4 selector 4 with a native holder and feature 0x1d2d; 1xm.A1P accepts exactly
+zero. NFC/camera/async callers and success callbacks reach presentation through
+A18. No persisted verification action is established; delayed callbacks and
+writer chain remain unknown. Other same-dispatch operations are not fingerprint
+evidence. [Selection and action trace](safety-number.md#java-comparison-selection-and-scan-result-action).

@@ -42,6 +42,12 @@
       "x-transport": "cli",
       "x-live": false,
       "description": "Offline APK 2.26.37.71 native fingerprint protobuf-C schema extractor; no HTTP route or live flow. Requires exact reconstructed merged-library SHA-256 and pyelftools; executes no native instructions. Reads relocation-backed descriptors with ELF64 little-endian ARM64, file-backed extent, magic, count, optional-type, sorted-tag and native-offset checks. Missing/wrong builds refuse with no partial schema. Output metadata includes apk_build, library_sha256, evidence, messages (name/address/size/fields), and enums. Each field has name/tag/label/type/address/quantifier_offset/offset, plus nested message or enum names where applicable. FingerprintData tags: public_key=1 bytes, pn_identifier=2 bytes, lid_identifier=3 bytes, username_identifier=4 bytes, hosted_state=5 enum, hashed_public_key=6 bytes. CombinedFingerprint: version=1 uint32, local_fingerprint=2 message, remote_fingerprint=3 message. HostedState enum E2EE=0, HOSTED=1. Descriptor-optional status is distinct from runtime comparison requirements. Version zero uses serialized key inventory and version one its identifier-free digest. Does not parse user QR data, establish full comparison compatibility or change account verification. Reproducible output: docs/protocol/fingerprint-native-schema.json; serializer/comparison evidence: docs/protocol/safety-number.md."
+    },
+    {
+      "x-cli": "cargo run -p xtask -- apk-callers <apk> --class <exact-class-descriptor> --method <exact-method-name>",
+      "x-transport": "cli",
+      "x-live": false,
+      "description": "Existing offline DEX development utility; no HTTP route or account input. Reports exact class/method invoke sites with caller class, method shorty and DEX byte offset. Locates invocations, not interface implementations. APK 37.71 JniBridge.jvidispatchIOO has eleven sites; KXj.A01 has three callers. Sharing a dispatch name is not proof of sharing a selector or fingerprint semantics. Reproduce Java comparison selection and result-presentation traces in docs/protocol/safety-number.md."
     }
   ],
   "info": {

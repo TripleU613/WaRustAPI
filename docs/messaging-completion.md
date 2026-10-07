@@ -692,3 +692,12 @@ V4 comparison is mapped to jvidispatchIOO selector 4. Its Java caller, active
 scheme/device inventory and human verification-state commit remain untraced.
 No account verification or live request occurred.
 [Evidence and reproducible check](protocol/safety-number.md#comparison-primitives-and-orientation-dependent-statuses).
+
+
+APK 37.71 Java comparison selection now connects KXj.A01 to native V4
+selector 4 behind holder/feature gates and an exact zero-result success test.
+All three comparison callers are located. Camera/NFC success reaches result
+presentation; the traced path does not establish a persisted human-verification
+bit. Delayed callbacks, the verification writer and complete scheme/device
+inventory remain unfinished. No account state or live request changed.
+[Java caller evidence](protocol/safety-number.md#java-comparison-selection-and-scan-result-action).

@@ -619,3 +619,117 @@ only the new byte mode executes its entire primitive without modeled calls.
 Validation: all 16 offline tooling tests passed with all three pinned fixture
 variables set; CLI reference regeneration/test and repository hygiene passed.
 No Rust runtime or saved account state changed.
+
+
+## Java comparison selection and scan result action
+
+**Confirmed/static, APK 2.26.37.71**, APK SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+DEX offsets below are method-relative byte offsets from `xtask apk-smali`.
+These findings continue the native JNI mapping above, without changing account
+state or implementing an unproven verification commit.
+
+An exact `apk-callers` search for JniBridge.jvidispatchIOO returns eleven
+invoke sites in eight unique methods of seven classes. `LX/KXj;.A01` is the
+fingerprint selector-4 caller (classes10.dex invoke offset 0x4c0b3c).
+Other sites are in `13o.A03` (three), `1BW.AFt`, `1BW.AFu`, `1CP.<init>`,
+`1CY.run`, `I6R.A0S` and `Igr.run` (two). Sharing a dispatch name does not make
+those other operations fingerprint comparisons; their complete behavior was
+not traced. The private `safety-number-comparison-callers.txt` preserves the
+complete search, not merely the matching fingerprint site.
+
+`KXj.A01` selects its comparison as follows:
+
+| Input/branch | Method-relative evidence | Comparison/result |
+| --- | --- | --- |
+| KBk native holder present and feature 0x1d2d true | 000c..002c, 003a..0058 | jvidispatchIOO selector 4, V4, JhN |
+| Native holder present and 0x1d2d false | 007c..00c4 | feature 0x1da3 feeds 3c8.A07, OR with 1; jvidispatchIIOO selector 19, JhM |
+| Native holder absent | 00c6..030c | Parse M76 and compare in Java, JhL |
+
+On the V4 branch, the native result is converted long-to-int at 0044..0046,
+then passed to `LX/1xm;.A1P` at 0046..004c. That helper's entire body
+0000..000a returns true **iff its integer argument is zero**. Both that boolean
+and the exact integer enter the result constructor `KA1.<init>` at 0052..0058.
+The same zero test is used on the other native branch at 00b0..00c4.
+The ctor stores the boolean through opcode 0x5c at 0006..000a (currently shown
+as opaque by our disassembler) and the status through iput at 000a..000e;
+the callers subsequently read A01 with iget-boolean and A00 with iget.
+No nonzero native result is converted into success by the traced zero helper.
+**Unknown:** complete native selector-19 mapping, the 3c8.A07 option conversion,
+and runtime feature values. Do not substitute the V4 branch for all scans.
+
+The legacy branch checks top-level presence bits and version equality before
+identifier/content comparisons. Its two possible identifier orientations are
+compared with ByteString equality, and content checks delegate to `0ko.A01`
+and `0ko.A02`. The complete legacy error/content semantics remain untraced;
+the existence of those calls is not a recovered algorithm for that comparator.
+`KXj.A02` also filters key-set members through Cbb.A00 when feature 0x1da3 is
+true (0004..004a); that predicate's meaning and complete device-key inventory
+remain unknown.
+
+An exact caller search for `KXj.A01` returns three sites:
+
+| Caller | Invoke DEX offset | Result handling traced |
+| --- | --- | --- |
+| IdentityVerificationActivity.A0Z | classes10.dex 0x42999e | NFC payload comparison; A18 displays result |
+| Kzw.C0k | classes10.dex 0x5ec35a | Scanner result; LSY.C0n(true) callback |
+| LEL.invokeSuspend | classes10.dex 0x693070 | Async comparison; LDi then KaD.A00 |
+
+The NFC method `IdentityVerificationActivity.A0Z` reads the first NDEF record's
+payload at 0026..003a and identifier at 0044..0052, parses the record identifier
+as US-ASCII UserJid, and invokes the comparison at 0112..0118 using the saved
+KBk. A nonnull result with A01=true calls `A18(activity,true)` at 012c..0132.
+This establishes the path being NFC, rather than mislabeling it camera QR.
+
+`Kzw.C0k` invokes the same wrapper at 00d2..00d8. At 0108..0124, a nonnull
+successful result calls the configured `LSY.C0n(true)`. The async route
+`LEL.invokeSuspend` invokes it at 130c..1312 and schedules `LDi` at
+1372..138a; `LDi.invokeSuspend` delegates to `KaD.A00` at 0126..013c.
+`KaD.A00` reads the success bit at 0006..000e and reaches the same listener
+at 007a..0080. Its A01 helper only logs selected legacy error statuses;
+it is not a verification transaction.
+
+The activity installs `Kwr(activity, selector)` as KaD's listener at
+`IdentityVerificationActivity.onCreate 05a4..05b4`. The activity branch of
+`Kwr.C0n`, 00a6..00d0, creates L54 selector 4 with the result boolean and
+passes it to `KaD.A03`. `L54.run 0634..0648` calls `A18(activity,boolean)`.
+`A18` itself (0000..0130) sets result-view visibility, icons/accessibility
+text, animates, focuses the result and schedules A0q after 4000 ms. It has no
+direct identity/verification-store write. `KaD.A03` changes scanner views and
+attaches a JoG animation listener; the animation completion details remain
+untraced. The other Kwr branch shows QrCodeValidationResultBottomSheet with
+`is_valid`; it is a distinct activity path, not a peer metadata write.
+
+**Negative/unknown:** the compared success paths traced here do not establish
+any `mark_as_verified` or `mark_as_verified_action_seq` update. They show
+comparison and result presentation. Delayed A0q/animation callbacks, any
+separate human confirmation action, and the complete verification-state writer
+call chain remain untraced. Do not infer that such a writer is absent from the
+APK, or update TeleWhatsApp's verified bit from these UI paths alone. Existing
+identity replacement continues clearing verification on changed keys as
+recorded in [peer identity evidence](peer-identity.md).
+
+Reproduce the searches and scoped disassembly with existing offline commands:
+
+```sh
+target/debug/xtask apk-callers ~/Downloads/WhatsApp.apk \
+  --class 'Lcom/whatsapp/wamsys/JniBridge;' --method jvidispatchIOO
+target/debug/xtask apk-callers ~/Downloads/WhatsApp.apk \
+  --class 'LX/KXj;' --method A01
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk \
+  --class 'LX/KXj;' --method A01
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk \
+  --class 'Lcom/whatsapp/identity/ui/IdentityVerificationActivity;' --method A18
+```
+
+Private source dumps under the 37.71 lab root retain comparison caller lists,
+`safety-number-compare-{KXj,13o,I6R,Igr}.smali`, result helpers 1xm/KA1,
+scan callers 0/1/2 (activity/Kzw/LEL), KaD/LDi, the Kwr verified listener and
+L54 scan-result runnable. The LSY caller search returned four sites; it locates
+invocations, not implementations. Repeated exact caller searches reproduced
+identical output. No Rust runtime, saved account state or live request changed.
+
+Validation: repeated caller outputs matched byte for byte, CLI reference
+regeneration/test passed, and repository hygiene checked 289 local links.
+This change records static evidence and an existing research command; it adds
+no runtime protocol behavior and claims no live comparison result.
