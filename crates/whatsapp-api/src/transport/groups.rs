@@ -288,24 +288,154 @@ fn queue_refresh_mode(store: &ProtocolStore, groups: &[Jid], follow_up: bool) ->
             size: 0,
         });
     }
-    store.write(|tx| {
-        let id = super::actions::queue_in(tx, "group-refresh", "refresh groups", |id| {
-            refresh_node(id, &inputs, follow_up)
-        })?;
-        if follow_up {
-            tx.put_json(
-                Table::Checkpoints,
-                format!("group-refresh-job:{id}").as_bytes(),
-                1,
-                &RefreshContinuation {
-                    root: id.clone(),
-                    round: 0,
-                    remaining: Vec::new(),
-                },
-            )?;
+    store.write(|tx| queue_refresh_in(tx, &inputs, follow_up, "refresh groups"))
+}
+
+fn queue_refresh_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    inputs: &[TruncatedGroup],
+    follow_up: bool,
+    label: &str,
+) -> Result<String> {
+    let id = super::actions::queue_in(tx, "group-refresh", label, |id| {
+        refresh_node(id, inputs, follow_up)
+    })?;
+    if follow_up {
+        tx.put_json(
+            Table::Checkpoints,
+            format!("group-refresh-job:{id}").as_bytes(),
+            1,
+            &RefreshContinuation {
+                root: id.clone(),
+                round: 0,
+                remaining: Vec::new(),
+            },
+        )?;
+    }
+    Ok(id)
+}
+
+#[derive(Serialize, Deserialize)]
+struct DirtyNotification {
+    fingerprint: String,
+    action: String,
+}
+
+/// Apply the supported w:gp2/groups_dirty notification before acknowledging.
+/// APK 37.71 0yv.A09 2912..2990/6548..6572 queues zero-estimate truncatable
+/// refresh; 0yO.A01 dispatches before ACK. Unknown shapes receive no ACK.
+/// Capture must already be durable and the stream authenticated by the caller.
+pub fn handle_dirty_notification(store: &ProtocolStore, node: &Node) -> Result<Option<Node>> {
+    if node.description != "notification"
+        || node.get_attr("type").and_then(|v| v.as_text()) != Some("w:gp2")
+        || node.child_nodes().len() != 1
+        || node.child_nodes()[0].description != "groups_dirty"
+    {
+        return Ok(None);
+    }
+    // Local input restrictions are stronger than the APK raw-string extraction.
+    // Invalid/empty lists stay captured rather than acknowledging an empty job.
+    let prepare = || -> Result<_> {
+        let from = super::receipts::jid(node, "from")
+            .ok_or_else(|| invalid("dirty notification source is missing or invalid"))?;
+        let id = node
+            .get_attr("id")
+            .and_then(|v| v.as_text())
+            .filter(|id| !id.is_empty() && id.len() <= 128)
+            .ok_or_else(|| invalid("dirty notification ID is missing or outside local bound"))?;
+        let participant = if node.get_attr("participant").is_some() {
+            Some(
+                super::receipts::jid(node, "participant")
+                    .ok_or_else(|| invalid("dirty notification participant is invalid"))?,
+            )
+        } else {
+            None
+        };
+        let children = node.child_nodes()[0].child_nodes();
+        if children.len() > 256 || children.iter().any(|g| g.description != "group") {
+            return Err(invalid(
+                "dirty notification list is excessive or unsupported",
+            ));
         }
-        Ok(id)
-    })
+        let mut unique = std::collections::BTreeSet::new();
+        let mut inputs = Vec::new();
+        for group in children {
+            if group.get_attr("jid").is_none() {
+                continue;
+            }
+            let jid = super::receipts::jid(group, "jid")
+                .ok_or_else(|| invalid("dirty notification group identity is invalid"))?;
+            require_group(&jid)?;
+            if jid.user.is_empty() || jid.is_ad() || !unique.insert(jid.to_string()) {
+                return Err(invalid(
+                    "dirty notification group identity is empty, device or duplicate",
+                ));
+            }
+            inputs.push(TruncatedGroup {
+                jid: jid.to_string(),
+                size: 0,
+            });
+        }
+        if inputs.is_empty() {
+            return Err(invalid("dirty notification has no supported groups"));
+        }
+        // CmG.A02/A00 extracts from/id/type/participant; recipient/category/edit
+        // belong to its separate receipt wrapper, so are not echoed here.
+        let mut ack = Node::new("ack")
+            .attr("to", from.clone())
+            .attr("id", id)
+            .attr("class", "notification")
+            .attr("type", "w:gp2");
+        if let Some(participant) = &participant {
+            ack = ack.attr("participant", participant.clone());
+        }
+        use sha2::{Digest, Sha256};
+        let key = format!(
+            "groups-dirty:{}",
+            hex::encode(Sha256::digest(
+                serde_json::to_vec(&(from.to_string(), id))
+                    .map_err(|_| invalid("dirty source serialization failed"))?
+            ))
+        );
+        let fingerprint = hex::encode(Sha256::digest(
+            serde_json::to_vec(&(inputs.clone(), participant))
+                .map_err(|_| invalid("dirty inputs serialization failed"))?,
+        ));
+        Ok((inputs, ack, key, fingerprint))
+    };
+    let (inputs, ack, key, fingerprint) = match prepare() {
+        Ok(prepared) => prepared,
+        Err(Error::InvalidInput { reason, .. }) => {
+            tracing::warn!(%reason, "group dirty notification unsupported; captured without ACK");
+            return Ok(None);
+        }
+        Err(error) => return Err(error),
+    };
+    let accepted = store.write(|tx| {
+        if let Some(saved) =
+            tx.get_json::<DirtyNotification>(Table::Checkpoints, key.as_bytes(), 1)?
+        {
+            // Repeat ACK is safe; never rotate/resend an existing query ID.
+            return Ok(saved.fingerprint == fingerprint);
+        }
+        let action = queue_refresh_in(tx, &inputs, true, "refresh dirty groups")?;
+        tx.put_json(
+            Table::Checkpoints,
+            key.as_bytes(),
+            1,
+            &DirtyNotification {
+                fingerprint,
+                action,
+            },
+        )?;
+        Ok(true)
+    })?;
+    if !accepted {
+        tracing::warn!(
+            "group dirty notification ID conflicts with saved inputs; captured without ACK"
+        );
+    }
+    Ok(accepted.then_some(ack))
 }
 
 fn first_refresh_partition(
@@ -2108,6 +2238,109 @@ mod tests {
                     .unwrap()
                     .is_empty()
             );
+        }
+    }
+
+    fn dirty_fixture() -> Node {
+        Node::new("notification")
+            .attr("from", "s.whatsapp.net")
+            .attr("id", "DIRTY1")
+            .attr("type", "w:gp2")
+            .attr("participant", "15555550100@s.whatsapp.net")
+            .attr("recipient", "15555550101@s.whatsapp.net")
+            .attr("category", "ignored")
+            .attr("edit", "7")
+            .children(vec![Node::new("groups_dirty").children(vec![
+                Node::new("group"), // APK logs/skips missing jid.
+                Node::new("group").attr("jid", "12345-67890@g.us"),
+            ])])
+    }
+
+    #[test]
+    fn dirty_notifications_queue_before_ack_and_deduplicate_across_restart() {
+        let (dir, s) = store();
+        let node = dirty_fixture();
+        let ack = handle_dirty_notification(&s, &node).unwrap().unwrap();
+        for name in ["recipient", "category", "edit"] {
+            assert!(ack.get_attr(name).is_none());
+        }
+        assert_eq!(text(&ack, "participant"), text(&node, "participant"));
+        assert_eq!(text(&ack, "to"), Some("s.whatsapp.net".into()));
+        let actions = super::super::actions::outcomes(&s).unwrap();
+        assert_eq!(actions.len(), 1);
+        assert_eq!(actions[0].label, "refresh dirty groups");
+        let request = super::super::actions::reserve_pending(&s).unwrap();
+        assert_eq!(request.len(), 1);
+        assert_eq!(
+            text(request[0].child("query").unwrap(), "context").as_deref(),
+            Some("per_group_dirty_recovery_truncatable")
+        );
+        drop(s);
+        let s = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("p.redb"),
+            account_id: AccountId::new("a").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            create: false,
+        })
+        .unwrap();
+        assert_eq!(handle_dirty_notification(&s, &node).unwrap(), Some(ack));
+        assert_eq!(super::super::actions::outcomes(&s).unwrap().len(), 1);
+        assert!(
+            super::super::actions::reserve_pending(&s)
+                .unwrap()
+                .is_empty()
+        );
+        let changed = Node::new("notification")
+            .attr("from", "s.whatsapp.net")
+            .attr("id", "DIRTY1")
+            .attr("type", "w:gp2")
+            .children(vec![Node::new("groups_dirty").children(vec![
+                Node::new("group").attr("jid", "12345-67891@g.us"),
+            ])]);
+        assert!(handle_dirty_notification(&s, &changed).unwrap().is_none());
+        assert_eq!(super::super::actions::outcomes(&s).unwrap().len(), 1);
+    }
+
+    #[test]
+    fn unsupported_dirty_notifications_do_not_ack_or_queue() {
+        for case in [
+            "empty",
+            "bad-jid",
+            "duplicate",
+            "other-child",
+            "missing-id",
+            "bad-participant",
+        ] {
+            let (_dir, s) = store();
+            let mut node = Node::new("notification")
+                .attr("from", "s.whatsapp.net")
+                .attr("type", "w:gp2");
+            if case != "missing-id" {
+                node = node.attr("id", "fixture");
+            }
+            if case == "bad-participant" {
+                node = node.attr("participant", "user:broken@s.whatsapp.net");
+            }
+            let group = Node::new("group").attr(
+                "jid",
+                if case == "bad-jid" {
+                    "12345@s.whatsapp.net"
+                } else {
+                    "12345-67890@g.us"
+                },
+            );
+            let children = match case {
+                "empty" => vec![],
+                "duplicate" => vec![group.clone(), group],
+                "other-child" => vec![Node::new("unknown")],
+                _ => vec![group],
+            };
+            node = node.children(vec![Node::new("groups_dirty").children(children)]);
+            assert!(
+                handle_dirty_notification(&s, &node).unwrap().is_none(),
+                "{case}"
+            );
+            assert!(super::super::actions::outcomes(&s).unwrap().is_empty());
         }
     }
 

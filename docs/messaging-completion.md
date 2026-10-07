@@ -1057,3 +1057,25 @@ checks are offline; live truncated continuation remains unverified.
 
 Final five OpenAPI checks, whitespace and repository hygiene (413 local links)
 also passed. Private account state and conversation exports remain untracked.
+
+Automatic dirty notifications (2026-10-07, **offline tested**): authenticated
+`listen` handles the supported w:gp2/groups_dirty shape, commits one bounded
+refresh and deduplication marker, then ACKs. Duplicate notifications never create
+or resend a query; changed supported inputs for the same source/ID refuse without
+ACK. Unsupported lists log redacted reasons and remain captured. Existing action
+and refresh-status inspection covers this path. See
+[protocol boundaries](protocol/groups.md#automatic-supported-dirty-notifications-2026-10-07).
+No live request sent; live dirty input/ACK, other group types and APK waits remain
+open. Identity/key state is unchanged.
+
+Live supported dirty projection subsequently passed: 45-second authenticated
+receive window, one notification-derived action ok, one full group projected in
+session at round 0, no pending/follow-up. Preflight queued actions/chat intents
+were zero. Clean stop; no incoming user message/chat send and two-factor stayed
+sent. ACK socket write completed, not independent server confirmation.
+Live truncated continuation, duplicates/conflicts and failure recovery remain
+unverified. 586 workspace/all-feature and 24 default CLI tests, strict Clippy,
+warning-free Rustdoc, CLI reference and five OpenAPI checks passed.
+
+Final OpenAPI rerun, whitespace and repository hygiene (417 local links) passed.
+Private receive evidence and conversation exports remain excluded from Git.

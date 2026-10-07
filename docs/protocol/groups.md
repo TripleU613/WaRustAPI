@@ -2004,3 +2004,84 @@ helper branches and full metadata reconciliation remain open. No live query was
 repeated for this change. Tests cover reversed response ordering, partition
 carry-forward, rollback, encrypted-store reopen, once-only projection, bounds,
 recognized terminal exclusions and refusal/uncertain non-replay.
+
+## Automatic supported dirty notifications (2026-10-07)
+
+**Confirmed static:** APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+Fbq labels `w:gp2`; ADw.A0G selects notification/type w:gp2;
+0yv.A09 `2912..2990` reads groups_dirty/group@jid, skipping null JIDs,
+and `6548..6572` queues the zero-estimate, round-zero truncatable job.
+0yO.A01 applies before acknowledgment. CmG.A02/A00 extracts
+from/id/type/participant; Cp2.A05 emits the corresponding ACK fields.
+[Notification shape](group-notification-evidence.txt) and
+[metadata/application evidence](group-notification-input-evidence.txt) are
+existing scoped traces; no new upstream message-code/feature claim is made.
+
+**Implemented, offline tested:** authenticated `listen` captures the incoming
+node first, then `groups::handle_dirty_notification` supports exactly one
+`groups_dirty` root child. It atomically queues the existing bounded refresh
+pipeline and an encrypted deduplication marker scoped by source/notification ID.
+Only after commit does it return `ack` with to/id/class=notification/type=w:gp2
+and optional participant. It deliberately does not echo recipient/category/edit,
+which the APK notification wrapper does not read. ACK writes may repeat when
+the same supported notification is redelivered; its group query never duplicates.
+A reused source/ID with changed supported group ordering or participant refuses
+without ACK. Extra unrelated root attributes are not part of that comparison.
+
+**Local restrictions, not server requirements:** nonempty ID <=128 bytes,
+parseable source/optional participant, one to 256 listed nodes, only group nodes,
+concrete unique non-device group JIDs. Missing jid nodes are skipped as in the
+APK. Invalid/unsupported or empty remaining lists stay captured without ACK and
+produce a redacted reason. The APK can create an empty job that subsequently
+throws; we do not manufacture a bare all-groups query. Storage failures propagate
+and stop receiving. The local deduplication/strict validation policies do not
+claim identical APK redelivery semantics.
+
+`actions` exposes the `refresh dirty groups` queued intent. Its ID is accepted
+by `group refresh-status`; bounded reports and subsequent child IDs use the
+same inspection path. Protocol reads queue even without `--send-outbox`.
+The injected-link test cuts the ACK socket write after inspecting the committed
+queued action, reconnects, sends that original unsent query once, redelivers the
+notification, then completes projection without CLI ingestion. Separate encrypted
+store reopen tests prove an already-sent query is not replayed after duplicate
+notification delivery. Unsupported-shape and conflicting-input tests create no
+new action. This is offline fault injection, not live or process-kill proof.
+
+**Unknown/unverified:** full group notifications, MEX/feature selection, APK
+error/wait helpers and complete metadata reconciliation remain open. Static and
+offline implementation checks opened no account or network connection; the
+subsequent bounded live result below establishes only the supported full-result
+dirty path.
+
+**Negative test finding:** our generic JID parser accepts bare server names, so
+`bad` is not a malformed-JID fixture. The invalid-participant test uses an invalid
+device suffix instead. This does not add a participant subclass restriction beyond
+the APK wrapper's generic typed JID extraction.
+
+**Observed live (2026-10-07):** one bounded 45-second canonical authenticated
+receive session started with zero queued actions and zero chat intents. Login and
+activation succeeded; two w:gp2 incoming notification log lines were recorded.
+One new `refresh dirty groups` action settled `ok` and its saved projection report
+showed automatic_follow_up=true, round=0, complete=1, truncated=0, forbidden=0,
+not_found=0, pending=0, next_action=null, exhausted=false. Thus one supported
+notification triggered a correlated query and full in-session projection without
+manual queueing or CLI ingestion. Notification ACK socket writing did not fail
+in the clean session; this is not a separate server confirmation of the ACK.
+Do not infer that both w:gp2 lines were supported dirty notifications or that
+live deduplication was exercised. No incoming user message was logged. The
+previously unresolved two-factor action stayed sent. No outgoing chat was sent,
+identity/key/request config changed, or completed query repeated.
+
+Private evidence remains ignored with mode 0600:
+`lab/accounts/l/dirty-preflight-actions.json`, `dirty-preflight-outbox.json`,
+`group-dirty-live.log`, `group-dirty-actions-after.json`, `group-dirty-report-0.json`.
+Live truncated continuation, duplicate/conflicting notification inputs and ACK
+failure recovery remain unverified; their tests are offline. This observation
+supersedes only the earlier lack of live supported-dirty input/query projection.
+
+Validation: 586 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, regenerated CLI
+reference, all five OpenAPI checks, formatting and whitespace passed. Initial
+invalid-JID test fixture failure was corrected as explained above; the full
+workspace rerun passed.

@@ -466,6 +466,7 @@ pub(crate) async fn drive(
                     super::status_receipts::record(&store, &receipt)?;
                 }
                 if let Some(ack)=super::notifications::handle(&store, &node)? {link.send(&ack).await?;}
+                if let Some(ack)=super::groups::handle_dirty_notification(&store, &node)? {link.send(&ack).await?;}
                 if let Some(change) = super::devices::notification(&node) {
                     // LX/11Q.A09: acknowledge after capture, then record the contact for a
                     // device sync (LX/101.A02). Own-account changes use account sync, which is
@@ -765,6 +766,71 @@ mod tests {
             assert!(self.finished().await.is_ok());
         }
     }
+    #[tokio::test]
+    async fn dirty_notification_ack_cut_preserves_one_query_for_next_session() {
+        use super::super::{actions, groups};
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("dirty-session.redb"));
+        let notification = Node::new("notification")
+            .attr("from", "s.whatsapp.net")
+            .attr("id", "DIRTY-CUT")
+            .attr("type", "w:gp2")
+            .children(vec![Node::new("groups_dirty").children(vec![
+                Node::new("group").attr("jid", "12345-67890@g.us"),
+            ])]);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver(notification.clone()).await;
+        let (ack, written) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        let outcomes = actions::outcomes(&store).unwrap();
+        assert_eq!(outcomes.len(), 1);
+        assert_eq!(outcomes[0].status, actions::ActionStatus::Queued);
+        let id = outcomes[0].id.clone();
+        // Queue commit precedes the ACK write, which fails ambiguously here.
+        written
+            .send(Err(Error::Transport(TransportError::PeerClosed)))
+            .unwrap();
+        assert!(fake.finished().await.is_err());
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (query, written) = fake.written().await;
+        assert_eq!(
+            query.get_attr("id").and_then(|v| v.as_text()),
+            Some(id.as_str())
+        );
+        written.send(Ok(())).unwrap();
+        fake.deliver(notification).await;
+        let (repeat_ack, written) = fake.written().await;
+        assert_eq!(repeat_ack, ack);
+        written.send(Ok(())).unwrap();
+        assert_eq!(actions::outcomes(&store).unwrap().len(), 1);
+        fake.deliver(
+            Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("groups").children(vec![Node::new("group")
+                .attr("id", "12345-67890@g.us").attr("subject", "Recovered")])]),
+        )
+        .await;
+        tokio::time::timeout(Duration::from_secs(5), async {
+            while groups::refresh_outcome(&store, &id).unwrap().is_none() {
+                tokio::time::sleep(Duration::from_millis(5)).await;
+            }
+        })
+        .await
+        .unwrap();
+        assert_eq!(
+            groups::refresh_outcome(&store, &id)
+                .unwrap()
+                .unwrap()
+                .complete,
+            1
+        );
+        assert!(actions::reserve_pending(&store).unwrap().is_empty());
+        fake.stop_cleanly().await;
+    }
+
     #[tokio::test]
     async fn settled_group_reply_updates_snapshot_during_receive_without_cli_ingestion() {
         use super::super::{actions, groups};
