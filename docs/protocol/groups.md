@@ -2330,3 +2330,71 @@ producer and alias storage helper. All account state remains untouched;
 these are static source findings, not live subject/alias validation or a new
 HTTP/control capability. Rust subject application and alias side-effect parity
 remain unfinished.
+
+## Subject typed branches and signed timestamp contract (2026-10-07)
+
+**Confirmed static:** APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Selected source](group-subject-types-evidence.txt) and the new release topics
+close three boundaries without claiming a completed receive handler.
+
+`0hs.A09` 0000..000a directly calls `Long.parseLong` and returns the signed
+long. Its error construction names the attribute and tag and throws B7l
+(000a..0056). `0hs.A08` supplies a caller default only when an attribute is
+absent; otherwise it invokes A09. The subject handler uses required A0L/A09
+at 1044..1054, not the optional A08 default path. A0L 0000..004e returns
+the attribute when present and constructs a required-attribute B7l error when
+absent. There is no unsigned range
+check in this parser. Negative values and the signed 64-bit boundaries are
+accepted by Java parsing, while malformed/overflowing numbers do not yield a
+parsed long. No separate subject acceptance/range or multiply-overflow policy
+has been established. Existing Rust unsigned snapshot parsing is our supported
+subset; it is not an APK/server requirement. Seconds-to-milliseconds use for
+subject still has only the previously recorded factor-1000 evidence.
+
+`0Fs.A0A` 0000..002e checks 0DE.A0m, loads the initialized chat map via A02,
+and returns `0Ze.A04` when a row exists; otherwise it returns zero. A02's
+047c..0488 selects database column `group_type`; 0aa4..0ab4 reads that column
+with getInt and stores A04. The supplied type is persistent chat metadata,
+not inferred from the subject string. The other cache initialization branches,
+0DE predicate internals and complete database update lifecycle remain unknown.
+
+`0yv.A09` reads that type at 4774..477c and distinguishes values 3 and 1
+at 477c..478c. These agree with the separately traced default-subgroup/parent
+reply values. Value 1 sets v19=1; value 3 keeps v8=1 and resolves the local
+parent through 0a6.A06 at 4b28..4b40. Other types clear v8 and use null parent
+at 4b44..4b4a. On a changed existing name, 47d4 branches on v19: the parent
+path performs propagation and cache work and reaches the version commit;
+the other path creates a system message. Value 3 uses BoJ and the literal
+kind 0x6b at 4844, while the ordinary path uses Bo3 and kind 1 at 487a.
+`1bh.<init>` writes its integer argument into A00 after initializing common
+message fields. This ties the literals to system-message kinds, rather than
+inventing an enum from allocation order. Same-shorty 1iz/Bo8 constructor
+variants remain distinct; their complete signatures/dispatch are not resolved
+by these listings. Message storage, parent propagation side effects, common
+message-key formation and full subject event parity remain unfinished.
+
+`Bo3.A0f/A0g` return its A00 subject; A0i/A0j replace it. Its separate A01
+field is written by the main handler at 4898; the complete register provenance
+and downstream readers are not traced, so its semantics remain unknown. `BoJ.A0x/A0y` store new/old parent information through
+Aym.A1I, with selectors 1/4 and diagnostics requiring each to be set once.
+Aym's list representation and complete system-message persistence are unknown.
+No subject notification is acknowledged or applied by this change.
+
+The fifteen-topic recipe adds the timestamp parser, cache getter, ordinary
+message and parent message sources. The timestamp diagnostics initially matched
+0hs.A06 (integer), 0hs.A09 (long), and 8lB.A0L (reference result); matching strings
+alone was ambiguous. A checked `method_shorty: JLL` constraint selects the long
+parser without reusing its old class name. Shorties collapse references to L,
+so they do not prove full-signature or overload equivalence. The two string-free
+helper topics still require manual review on the next APK release.
+
+Validation of these research changes: cached comparison took 0.0227 seconds,
+with four added topics, two signed-annotation-only changes and nine unchanged
+code topics. The same APK core export remains byte-identical. The 20-file
+430,619-byte group snapshot reproduces exactly. Remap finds thirteen unique and
+two unanchored topics and exits 1 without writing a whole-recipe proposal.
+A deliberately wrong VLL constraint rejects all three parser candidates with
+no_matching_shorty and creates no proposal. Invalid parameter-void and shorty
+without method configurations refuse before APK processing. These are offline
+observations; no saved account opened or live request sent this turn.

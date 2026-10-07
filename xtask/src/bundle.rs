@@ -57,8 +57,25 @@ struct Target {
     caller_anchors: Vec<String>,
     #[serde(default)]
     method: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    method_shorty: Option<String>,
     #[serde(default)]
     rust_files: Vec<String>,
+}
+
+fn valid_shorty(shorty: &str) -> bool {
+    // DEX shorties collapse every reference/array to L; V is return-only.
+    // They distinguish 37.71 0hs.A06 (ILL) from A09 (JLL), not overload identity.
+    !shorty.is_empty()
+        && shorty.len() <= 256
+        && shorty
+            .bytes()
+            .enumerate()
+            .all(|(i, b)| b"ZBSCIJFDL".contains(&b) || (i == 0 && b == b'V'))
+}
+
+fn shorty_matches(expected: Option<&str>, actual: &str) -> bool {
+    expected.is_none_or(|expected| expected == actual)
 }
 
 fn safe_name(name: &str) -> bool {
@@ -88,6 +105,10 @@ fn read_recipe(path: &Path) -> Result<Recipe, String> {
             || !target.class.starts_with('L')
             || !target.class.ends_with(';')
             || target.method.as_ref().is_some_and(|m| m.is_empty())
+            || target
+                .method_shorty
+                .as_ref()
+                .is_some_and(|s| target.method.is_none() || !valid_shorty(s))
             || target.anchors.len() > 8
             || target.caller_anchors.len() > 8
             || (!target.caller_anchors.is_empty()
@@ -225,6 +246,7 @@ pub fn run(
                     anchors: Vec::new(),
                     caller_anchors: Vec::new(),
                     method: None,
+                    method_shorty: None,
                     rust_files: Vec::new(),
                 },
             )
@@ -234,9 +256,13 @@ pub fn run(
     for (topic, target) in targets {
         let class = target.class.as_str();
         eprintln!("exporting {topic} ({class})");
-        let methods = crate::xref::apk_smali(apk, class, target.method.as_deref())?;
+        let mut methods = crate::xref::apk_smali(apk, class, target.method.as_deref())?;
+        methods.retain(|m| shorty_matches(target.method_shorty.as_deref(), &m.method_proto));
         if methods.is_empty() || methods.iter().any(|m| m.class_name != class) {
-            return Err(format!("missing or ambiguous class {class}"));
+            return Err(format!(
+                "missing or ambiguous class/method {class}; method filter {:?}, shorty {:?}",
+                target.method, target.method_shorty
+            ));
         }
         let mut text = format!(
             "# APK-derived structural disassembly: {class}\n# APK SHA-256: {expected_hash}\n# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.\n# This is partial annotated bytecode, not compilable smali or recovered Java.\n"
@@ -275,6 +301,9 @@ pub fn run(
         if recipe.is_some() {
             entry["method_filter"] = serde_json::json!(target.method);
             entry["rust_files"] = serde_json::json!(target.rust_files);
+            if let Some(shorty) = &target.method_shorty {
+                entry["method_shorty"] = serde_json::json!(shorty);
+            }
             if !target.anchors.is_empty() {
                 entry["anchors"] = serde_json::json!(target.anchors);
             }
@@ -417,7 +446,12 @@ pub fn remap(apk: &Path, recipe_path: &Path, output: Option<&Path>) -> Result<()
     let mut complete = true;
     for (topic, target) in &mut recipe.targets {
         let method_scoped = target.method.is_some();
-        let initial = anchor_candidates(&target.anchors, &hits, method_scoped);
+        let anchored = anchor_candidates(&target.anchors, &hits, method_scoped);
+        let initial: Vec<_> = anchored
+            .iter()
+            .filter(|s| shorty_matches(target.method_shorty.as_deref(), &s.method_proto))
+            .cloned()
+            .collect();
         let qualified = anchor_candidates(&target.caller_anchors, &hits, true);
         let candidates = if target.caller_anchors.is_empty() {
             initial.clone()
@@ -432,8 +466,10 @@ pub fn remap(apk: &Path, recipe_path: &Path, output: Option<&Path>) -> Result<()
             .any(|a| hits.get(a).is_none_or(Vec::is_empty))
         {
             "missing"
-        } else if initial.is_empty() {
+        } else if anchored.is_empty() {
             "no_common_scope"
+        } else if initial.is_empty() {
+            "no_matching_shorty"
         } else if target
             .caller_anchors
             .iter()
@@ -456,6 +492,11 @@ pub fn remap(apk: &Path, recipe_path: &Path, output: Option<&Path>) -> Result<()
             .collect();
         report.push(serde_json::json!({"topic":topic,"status":status,"previous_class":target.class,
             "previous_method":target.method,"scope":if method_scoped { "method" } else { "class" },"candidates":candidates,"anchor_sites":sites,"rust_files":target.rust_files}));
+        if let Some(shorty) = &target.method_shorty {
+            let entry = report.last_mut().expect("topic report exists");
+            entry["method_shorty"] = serde_json::json!(shorty);
+            entry["before_shorty_candidates"] = serde_json::json!(anchored);
+        }
         if !target.caller_anchors.is_empty() {
             let entry = report.last_mut().expect("topic report exists");
             entry["initial_candidates"] = serde_json::json!(initial);
@@ -487,11 +528,14 @@ pub fn remap(apk: &Path, recipe_path: &Path, output: Option<&Path>) -> Result<()
     println!("{}", serde_json::to_string_pretty(&serde_json::json!({
         "previous_apk":recipe.apk_sha256,"candidate_apk":manifest.apk_sha256,
         "all_unique":complete,"topics":report,
-        "interpretation":"Exact string co-occurrence and optional symbolic caller references locate scopes; they do not prove protocol equivalence or dynamic dispatch. Proposed selectors require semantic review. Any unresolved topic blocks recipe output."
+        "interpretation":"Exact string co-occurrence, optional checked DEX shorties and symbolic caller references locate scopes; they do not prove protocol equivalence or dynamic dispatch. Proposed selectors require semantic review. Any unresolved topic blocks recipe output."
     })).map_err(|e|e.to_string())?);
     if let Some(output) = output {
         if !complete {
-            return Err("recipe not written: unresolved anchor scope or caller evidence".into());
+            return Err(
+                "recipe not written: unresolved anchor scope, method shorty or caller evidence"
+                    .into(),
+            );
         }
         recipe.apk_sha256 = manifest.apk_sha256;
         let mut file = fs::OpenOptions::new()
@@ -739,6 +783,32 @@ mod tests {
                 .unwrap_err()
                 .contains("checksum mismatch")
         );
+    }
+
+    #[test]
+    fn shorty_filter_distinguishes_long_parser_without_claiming_full_signature() {
+        // Actual 37.71 diagnostic co-occurrence: 0hs.A06, 0hs.A09, 8lB.A0L.
+        let candidates = ["ILL", "JLL", "LLLLLLLZ"];
+        assert_eq!(
+            candidates
+                .into_iter()
+                .filter(|s| shorty_matches(Some("JLL"), s))
+                .collect::<Vec<_>>(),
+            ["JLL"]
+        );
+        assert!(
+            candidates
+                .into_iter()
+                .all(|s| !shorty_matches(Some("VLL"), s))
+        );
+        assert!(candidates.into_iter().all(|s| shorty_matches(None, s)));
+        for invalid in ["", "LV", "V[V", "(LL)J", "JL;", "?", "é"] {
+            assert!(!valid_shorty(invalid));
+        }
+        for valid in ["V", "JLL", "LLLLLLLZ", "VZBSCIJFDL"] {
+            assert!(valid_shorty(valid));
+        }
+        assert!(!valid_shorty(&"L".repeat(257)));
     }
 
     #[test]

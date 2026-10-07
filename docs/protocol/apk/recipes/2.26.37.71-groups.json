@@ -126,6 +126,45 @@
         "JidMapStore/INSERT_MAPPING",
         "JidMapStore/GET_MAX_SORT_ID"
       ]
+    },
+    "group-subject-time-parser": {
+      "class": "LX/0hs;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ],
+      "method": "A09",
+      "anchors": [
+        "attribute ",
+        " is not integral: "
+      ],
+      "method_shorty": "JLL"
+    },
+    "group-type-cache-read": {
+      "class": "LX/0Fs;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ],
+      "method": "A0A"
+    },
+    "group-subject-ordinary-message": {
+      "class": "LX/Bo3;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "group-subject-parent-message": {
+      "class": "LX/BoJ;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ],
+      "anchors": [
+        "FMessageSystemParentGroupNameChanged/setNewParentInfo/parent info should only be set once",
+        "FMessageSystemParentGroupNameChanged/setOldParentInfo/old parent info should only be set once"
+      ]
     }
   }
 }

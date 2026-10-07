@@ -48,7 +48,7 @@
   00ae..00b2 op=1a const-string v0, "jid_map"
   00b2..00b8 op=6e invoke-virtual {v3, v0, v1, v5, v2}, LX/0IY;->A09(JLLLI)
   00b8..00ba op=0b move-result-wide
-  00ba..00be op=16 const-wide/16 v2, #0xffff
+  00ba..00be op=16 const-wide/16 v2, #0xffff (-1)
   00be..00c2 op=31 cmp-long v1, v9, v2
   00c2..00c4 op=12 const/4 v0, #0x0
   00c4..00c8 op=38 if-eqz v1, +0x3
@@ -59,7 +59,7 @@
   00d6..00da op=54 iget-object v3, v13, LX/0Xx;->A01:Ljava/util/concurrent/atomic/AtomicLong;
   00da..00e0 op=6e invoke-virtual {v3}, Ljava/util/concurrent/atomic/AtomicLong;->get(J)
   00e0..00e2 op=0b move-result-wide
-  00e2..00e6 op=16 const-wide/16 v9, #0xffff
+  00e2..00e6 op=16 const-wide/16 v9, #0xffff (-1)
   00e6..00ea op=31 cmp-long v0, v1, v9
   00ea..00ee op=39 if-nez v0, +0x32
   00ee..00f0 op=1d monitor-enter

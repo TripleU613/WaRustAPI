@@ -141,5 +141,11 @@ took 0.0512 seconds: one added topic, nineteen changed texts, two unchanged.
 Obfuscation and decoder annotation changes are included; this is not nineteen
 confirmed behavior changes. The raw 37.70 APK is unavailable for re-extraction.
 
-The current eleven-topic group baseline is 16 files/423,249 bytes after checked
-token regeneration. Its eleven code topics did not change in that regeneration.
+The current fifteen-topic group baseline is 20 files/430,619 bytes. Checked token
+regeneration previously left eleven code topics unchanged; subsequent typed
+subject coverage adds four topics and signed annotations update two existing
+texts. [Coverage diff](subject-types-coverage-diff.json) took 0.0227 seconds.
+[Relocation evidence](remap-evidence/2.26.37.71-subject-types.json) has thirteen
+unique topics and two unanchored helpers. The JLL parser constraint distinguishes
+three string-matching methods; [wrong-signature evidence](remap-evidence/2.26.37.71-subject-wrong-shorty.json)
+records an actual no_matching_shorty refusal without proposal creation.

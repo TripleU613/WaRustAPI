@@ -1,0 +1,101 @@
+{
+  "all_unique": false,
+  "candidate_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "interpretation": "Exact string co-occurrence and optional symbolic caller references locate scopes; they do not prove protocol equivalence or dynamic dispatch. Proposed selectors require semantic review. Any unresolved topic blocks recipe output.",
+  "previous_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "topics": [
+    {
+      "anchor_sites": {
+        " is not integral: ": [
+          {
+            "class_name": "LX/0hs;",
+            "dex_byte_off": 6608770,
+            "dex_file": "classes.dex",
+            "method_index": 16894,
+            "method_name": "A06",
+            "method_proto": "ILL"
+          },
+          {
+            "class_name": "LX/0hs;",
+            "dex_byte_off": 6608970,
+            "dex_file": "classes.dex",
+            "method_index": 16897,
+            "method_name": "A09",
+            "method_proto": "JLL"
+          },
+          {
+            "class_name": "LX/8lB;",
+            "dex_byte_off": 2555456,
+            "dex_file": "classes6.dex",
+            "method_index": 6822,
+            "method_name": "A0L",
+            "method_proto": "LLLLLLLZ"
+          }
+        ],
+        "attribute ": [
+          {
+            "class_name": "LX/0hs;",
+            "dex_byte_off": 6608730,
+            "dex_file": "classes.dex",
+            "method_index": 16894,
+            "method_name": "A06",
+            "method_proto": "ILL"
+          },
+          {
+            "class_name": "LX/0hs;",
+            "dex_byte_off": 6608930,
+            "dex_file": "classes.dex",
+            "method_index": 16897,
+            "method_name": "A09",
+            "method_proto": "JLL"
+          },
+          {
+            "class_name": "LX/8lB;",
+            "dex_byte_off": 2555464,
+            "dex_file": "classes6.dex",
+            "method_index": 6822,
+            "method_name": "A0L",
+            "method_proto": "LLLLLLLZ"
+          }
+        ]
+      },
+      "before_shorty_candidates": [
+        {
+          "class_name": "LX/0hs;",
+          "dex_byte_off": 6608730,
+          "dex_file": "classes.dex",
+          "method_index": 16894,
+          "method_name": "A06",
+          "method_proto": "ILL"
+        },
+        {
+          "class_name": "LX/0hs;",
+          "dex_byte_off": 6608930,
+          "dex_file": "classes.dex",
+          "method_index": 16897,
+          "method_name": "A09",
+          "method_proto": "JLL"
+        },
+        {
+          "class_name": "LX/8lB;",
+          "dex_byte_off": 2555464,
+          "dex_file": "classes6.dex",
+          "method_index": 6822,
+          "method_name": "A0L",
+          "method_proto": "LLLLLLLZ"
+        }
+      ],
+      "candidates": [],
+      "method_shorty": "VLL",
+      "previous_class": "LX/0hs;",
+      "previous_method": "A09",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ],
+      "scope": "method",
+      "status": "no_matching_shorty",
+      "topic": "time-parser"
+    }
+  ]
+}

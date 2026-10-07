@@ -89,6 +89,30 @@
       "crates/whatsapp-api/src/transport/groups.rs"
     ]
   },
+  "group-subject-ordinary-message": {
+    "class": "LX/Bo3;",
+    "file": "group-subject-ordinary-message.txt",
+    "method_filter": null,
+    "methods": 4,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs"
+    ]
+  },
+  "group-subject-parent-message": {
+    "anchors": [
+      "FMessageSystemParentGroupNameChanged/setNewParentInfo/parent info should only be set once",
+      "FMessageSystemParentGroupNameChanged/setOldParentInfo/old parent info should only be set once"
+    ],
+    "class": "LX/BoJ;",
+    "file": "group-subject-parent-message.txt",
+    "method_filter": null,
+    "methods": 2,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs"
+    ]
+  },
   "group-subject-parent-write": {
     "anchors": [
       "comm-failures/parentGroupJid is null"
@@ -100,6 +124,31 @@
     "rust_files": [
       "crates/whatsapp-api/src/transport/groups.rs",
       "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "group-subject-time-parser": {
+    "anchors": [
+      "attribute ",
+      " is not integral: "
+    ],
+    "class": "LX/0hs;",
+    "file": "group-subject-time-parser.txt",
+    "method_filter": "A09",
+    "method_shorty": "JLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs"
+    ]
+  },
+  "group-type-cache-read": {
+    "class": "LX/0Fs;",
+    "file": "group-type-cache-read.txt",
+    "method_filter": "A0A",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/inbox_events.rs"
     ]
   },
   "group-type-reply": {

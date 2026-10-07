@@ -824,10 +824,17 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
             let lit = (reg as i8) >> 4;
             format!("v{v}, #{lit:#x}")
         }
-        // const/16 vAA, #+BBBB — 21s
+        // AOSP 21s sign-extends to int or long. APK 37.71 0Xx.A02+00ba
+        // (16 02 ff ff) compares the insert result with -1, not 65535.
+        // Keep raw bits for rechecking, and expose the negative signed value.
         0x13 | 0x16 if insn_bytes.len() >= 4 => {
             let lit = i16::from_le_bytes([insn_bytes[2], insn_bytes[3]]);
-            format!("v{reg}, #{lit:#x}")
+            let signed = if lit < 0 {
+                format!(" ({lit})")
+            } else {
+                String::new()
+            };
+            format!("v{reg}, #{lit:#x}{signed}")
         }
         // const vAA, #+BBBBBBBB — 31i
         0x14 | 0x17 if insn_bytes.len() >= 6 => {
@@ -2407,12 +2414,26 @@ mod tests {
         let bytes = [0x16, 0x00, 0xff, 0xff, 0x31, 0x00, 0x04, 0x01];
         let decoded = decode_insns(&bytes, &dex);
         assert_eq!(decoded[0].mnemonic, "const-wide/16");
-        assert_eq!(decoded[0].annotation, "v0, #0xffff");
+        assert_eq!(decoded[0].annotation, "v0, #0xffff (-1)");
         assert_eq!(decoded[1].mnemonic, "cmp-long");
         assert_eq!(decoded[1].annotation, "v0, v4, v1");
         for end in 0..bytes.len() {
             let _ = decode_insns(&bytes[..end], &dex);
         }
+    }
+
+    #[test]
+    fn signed_21s_insert_sentinel_is_not_a_positive_row_id() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // Independently read APK 37.71 0Xx.A02+00ba; next cmp-long is 00be.
+        let bytes = [0x16, 0x02, 0xff, 0xff, 0x31, 0x01, 0x09, 0x02];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded[0].annotation, "v2, #0xffff (-1)");
+        assert_eq!(decoded[1].annotation, "v1, v9, v2");
+        // Same 21s sign extension for const/16, including its minimum.
+        let decoded = decode_insns(&[0x13, 0xff, 0x00, 0x80], &dex);
+        assert_eq!(decoded[0].annotation, "v255, #0x8000 (-32768)");
     }
 
     #[test]

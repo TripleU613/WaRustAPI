@@ -918,3 +918,29 @@ eligible chat intents remained. No chats were sent. Individual corrected token
 slots remain live unverified; fourteen unsupported incoming classifications are
 recorded in the token extraction document. The two-factor sent action remains
 unresolved. Full APK/client parity remains unfinished.
+
+APK-to-Rust coverage now traces required subject timestamps to signed Long
+parsing, cached group_type to its database column, and separate ordinary/parent
+system-message construction. Fifteen group topics map to Rust ownership paths;
+full subject application/message storage remains unfinished. A reusable checked
+method_shorty recipe constraint resolves the three diagnostic-matching timestamp
+parsers without obfuscated-name fallback, retaining prefilter evidence. Thirteen
+topics remap uniquely; two string-free helpers still require manual relocation.
+Wrong/malformed constraints refuse; whole-recipe proposal writing remains blocked
+by those explicit unknowns. Signed 21s constants now show raw hex and negative
+meaning, with independently checked APK insert-sentinel bytes.
+
+The group baseline is 20 files/430,619 bytes; a cached comparison takes 0.0227
+seconds (four topics added, two annotation-only changes, nine unchanged). The
+core baseline remains byte-identical. No saved account opened or live request
+sent during this static work. See [typed subject trace](docs/protocol/groups.md#subject-typed-branches-and-signed-timestamp-contract-2026-10-07).
+
+Validation: 600 workspace/all-feature tests, 44 final xtask tests, 24 default
+CLI tests, strict workspace/all-target/all-feature Clippy, warning-free Rustdoc,
+regenerated CLI reference, five OpenAPI checks, formatting, exact 20-file group
+snapshot reproduction and byte-identical core comparison passed. Actual wrong
+signature, malformed parameter and missing-method probes refused as documented;
+no proposal was created for either unresolved full mapping or wrong signature.
+Repository hygiene passed (467 local links, budgets, licenses and reference
+checksums), with clean staged whitespace. Runtime/client behavior is unchanged
+by this research-tool and source-coverage checkpoint.

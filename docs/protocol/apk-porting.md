@@ -211,3 +211,31 @@ files. The [token extraction correction](token-extraction.md) demonstrates the
 porting loop: trace actual indexed APK writes, preserve refuted historical
 results, install a derived Rust fixture, and test literal wire bytes. Broad APK
 coverage and complete client behavior remain unfinished.
+
+## Checked shorty constraints
+
+Recipe method targets may specify `method_shorty`, an exact DEX shorty (return
+character followed by parameter characters). References/arrays collapse to L;
+V is legal only in the return position. Local bound is 256 characters. A shorty
+requires a method filter and cannot replace full-signature caller evidence.
+Export and remap both apply it; absent matches diagnose `no_matching_shorty`.
+The remap report preserves `before_shorty_candidates` and the chosen constraint.
+Unknown fields, malformed shorties and a constraint without a method refuse.
+
+The 37.71 subject timestamp parser's diagnostics occur in three methods. The
+reviewed JLL return/parameter shape selects 0hs.A09 instead of integer parser
+0hs.A06 or reference-valued 8lB.A0L. An intentionally wrong VLL constraint
+must refuse proposal creation; it must not fall back to names or another return
+type. Two unanchored subject helper topics remain unresolved automatically.
+[Typed subject evidence](groups.md#subject-typed-branches-and-signed-timestamp-contract-2026-10-07)
+records the resulting source coverage and unfinished Rust notification behavior.
+
+Current typed-subject coverage is fifteen topics (20 files/430,619 bytes).
+The [cached coverage diff](apk/subject-types-coverage-diff.json) took 0.0227
+seconds: four added topics, two signed-annotation changes, nine unchanged topics.
+The [reviewed remap](apk/remap-evidence/2.26.37.71-subject-types.json) has thirteen
+unique and two unanchored topics; full proposal creation still refuses.
+[Wrong-shorty evidence](apk/remap-evidence/2.26.37.71-subject-wrong-shorty.json)
+preserves all three diagnostic matches and their rejection by VLL. Current core
+27-file export remains byte-identical. This is same-APK coverage expansion and
+rendering correction, not a new release or completed subject receive behavior.

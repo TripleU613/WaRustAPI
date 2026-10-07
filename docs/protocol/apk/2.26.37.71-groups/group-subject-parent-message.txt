@@ -1,0 +1,40 @@
+# APK-derived structural disassembly: LX/BoJ;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0x(VLL) flags=0x11 registers=6
+  0000..0004 op=38 if-eqz v4, +0x1a
+  0004..0006 op=12 const/4 v0, #0x1
+  0006..000c op=6e invoke-virtual {v3, v0}, LX/Bo8;->A0v(LI)
+  000c..000e op=0c move-result-object
+  000e..0014 op=6e invoke-virtual {v0}, Ljava/util/AbstractCollection;->size(I)
+  0014..0016 op=0a move-result
+  0016..001a op=3d if-lez v0, +0x8
+  001a..001e op=1a const-string v1, "FMessageSystemParentGroupNameChanged/setNewParentInfo/parent info should only be set once"
+  001e..0020 op=12 const/4 v0, #0x0
+  0020..0026 op=71 invoke-static {v0, v1}, LX/00K;->A0D(VZL)
+  0026..002a op=54 iget-object v2, v3, LX/Bo8;->A00:Ljava/util/List;
+  002a..002c op=12 const/4 v1, #0x1
+  002c..002e op=12 const/4 v0, #0x0
+  002e..0034 op=71 invoke-static {v4, v5, v2, v1, v0}, LX/Aym;->A1I(VLLLII)
+  0034..0036 op=0e return-void
+.end method
+
+.method A0y(VLL) flags=0x11 registers=6
+  0000..0004 op=38 if-eqz v4, +0x1a
+  0004..0006 op=12 const/4 v0, #0x4
+  0006..000c op=6e invoke-virtual {v3, v0}, LX/Bo8;->A0v(LI)
+  000c..000e op=0c move-result-object
+  000e..0014 op=6e invoke-virtual {v0}, Ljava/util/AbstractCollection;->size(I)
+  0014..0016 op=0a move-result
+  0016..001a op=3d if-lez v0, +0x8
+  001a..001e op=1a const-string v1, "FMessageSystemParentGroupNameChanged/setOldParentInfo/old parent info should only be set once"
+  001e..0020 op=12 const/4 v0, #0x0
+  0020..0026 op=71 invoke-static {v0, v1}, LX/00K;->A0D(VZL)
+  0026..002a op=54 iget-object v2, v3, LX/Bo8;->A00:Ljava/util/List;
+  002a..002c op=12 const/4 v1, #0x4
+  002c..002e op=12 const/4 v0, #0x0
+  002e..0034 op=71 invoke-static {v4, v5, v2, v1, v0}, LX/Aym;->A1I(VLLLII)
+  0034..0036 op=0e return-void
+.end method

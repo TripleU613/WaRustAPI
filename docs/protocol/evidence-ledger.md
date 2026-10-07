@@ -473,3 +473,21 @@ runtime fixture provenance. All 1,260 entries equal the separately held web-v3
 fixture. Live acceptance of the four corrected slots remains unknown.
 [Core release review](core-release-review.md) records 22-topic coverage and seven
 manual relocation decisions; text differences do not establish behavior changes.
+
+### comparison.group.subject.typed_37_71 — confirmed static
+
+APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+0hs.A09 calls signed Long.parseLong; A08 is the separate optional-default path.
+0Fs.A0A reads cached 0Ze.A04; A02 ties it to database group_type at 047c/0aa4.
+0yv.A09 branches on types 1/3 at 477c..478c; typed message constructions and
+Bo3/BoJ getters/setters are preserved in [source evidence](group-subject-types-evidence.txt).
+1bh.<init> stores the supplied system kind in A00. Full-signature constructor
+resolution, message storage and receive parity remain unknown/unimplemented;
+see [interpretation](groups.md#subject-typed-branches-and-signed-timestamp-contract-2026-10-07).
+The long parser diagnostic also matches integer/reference-valued methods;
+method_shorty JLL distinguishes them without class-name fallback. VLL yields
+no_matching_shorty and no proposal. Two string-free helpers remain unanchored.
+0Xx.A02+00ba raw 16 02 ff ff 31 01 09 02 occurs once in classes.dex at 0x5cbc2e:
+-1 insert-result comparison, not 65535. Corrected display retains hex bits and
+signed meaning. No server request or saved-account access occurred in this work.

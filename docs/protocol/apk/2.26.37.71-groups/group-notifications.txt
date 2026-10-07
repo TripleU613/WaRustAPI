@@ -3074,7 +3074,7 @@
   30b0..30b4 op=1f check-cast v1, LX/17H;
   30b4..30b8 op=08 move-object/from16
   30b8..30be op=6e invoke-virtual {v1, v0, v9}, LX/17H;->A04(VLZ)
-  30be..30c2 op=16 const-wide/16 v97, #0xffff
+  30be..30c2 op=16 const-wide/16 v97, #0xffff (-1)
   30c2..30c6 op=38 if-eqz v7, +0x107
   30c6..30ca op=08 move-object/from16
   30ca..30d0 op=6e invoke-virtual {v0, v7}, LX/0Fs;->A0U(ZL)
@@ -4555,7 +4555,7 @@
   48f0..48f4 op=22 new-instance v12, LX/0DV;
   48f4..48fa op=70 invoke-direct {v12, v11}, LX/0DV;-><init>(VL)
   48fa..48fe op=62 sget-object v10, LX/0lV;->A05:LX/0lV;
-  48fe..4902 op=16 const-wide/16 v14, #0xffff
+  48fe..4902 op=16 const-wide/16 v14, #0xffff (-1)
   4902..4908 op=71 invoke-static {v14, v15}, Ljava/lang/Long;->valueOf(LJ)
   4908..490a op=0c move-result-object
   490a..490e op=13 const/16 v17, #0x0

@@ -1,0 +1,233 @@
+APK 2.26.37.71 SHA256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed static selected bytecode. Offsets are method-relative bytes.
+Shorties in constructor listings are not complete signatures; same-shorty overloads remain distinct.
+Omitted methods/ranges and downstream message persistence remain untraced.
+
+
+# class: LX/0hs;
+
+.method public A09(JLL)  # .registers 5
+    0000..0006  invoke-static  {v3}, Ljava/lang/Long;->parseLong(JL)
+    0006..0008  move-result-wide  v0
+    0008..000a  return-wide  v0
+    000a..000e  const-string  v0, "attribute "
+    000e..0012  new-instance  v1, Ljava/lang/StringBuilder;
+    0012..0018  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+    0018..001e  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(LL)
+    001e..0022  const-string  v0, " for tag "
+    0022..0028  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    0028..002c  iget-object  v0, v2, LX/0hs;->A00:Ljava/lang/String;
+    002c..0032  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    0032..0036  const-string  v0, " is not integral: "
+    0036..003c  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    003c..0042  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(LL)
+    0042..0048  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    0048..004a  move-result-object  v1
+    004a..004e  new-instance  v0, LX/B7l;
+    004e..0054  invoke-direct  {v0, v1}, LX/B7l;-><init>(VL)
+    0054..0056  throw  v0
+.end method
+
+# class: LX/0hs;
+
+.method public A08(JLJ)  # .registers 6
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-virtual  {v2, v3, v0}, LX/0hs;->A0M(LLL)
+    0008..000a  move-result-object  v0
+    000a..000e  if-nez  v0, +0x3
+    000e..0010  return-wide  v4
+    0010..0016  invoke-virtual  {v2, v0, v3}, LX/0hs;->A09(JLL)
+    0016..0018  move-result-wide  v0
+    0018..001a  return-wide  v0
+.end method
+
+# class: LX/0Fs;
+
+.method public A0A(IL)  # .registers 4
+    0000..0006  invoke-static  {v3}, LX/0DE;->A0m(ZL)
+    0006..0008  move-result  v0
+    0008..000a  const/4  v1, #0x0
+    000a..000e  if-eqz  v0, +0x11
+    000e..0014  invoke-static  {v2, v3}, LX/0Fs;->A02(LLL)
+    0014..0016  move-result-object  v0
+    0016..001c  invoke-interface  {v0, v3}, Ljava/util/Map;->get(LL)
+    001c..001e  move-result-object  v0
+    001e..0022  check-cast  v0, LX/0Ze;
+    0022..0026  if-eqz  v0, +0x5
+    0026..002a  iget  v0, v0, LX/0Ze;->A04:I
+    002a..002c  return  v0
+    002c..002e  return  v1
+.end method
+
+# class: LX/Bo3;
+
+.method public A0f(L)  # .registers 2
+    0000..0004  iget-object  v0, v1, LX/Bo3;->A00:Ljava/lang/String;
+    0004..0006  return-object  v0
+.end method
+
+.method public A0g(L)  # .registers 2
+    0000..0004  iget-object  v0, v1, LX/Bo3;->A00:Ljava/lang/String;
+    0004..0006  return-object  v0
+.end method
+
+.method public A0i(VL)  # .registers 2
+    0000..0004  iput-object  v1, v0, LX/Bo3;->A00:Ljava/lang/String;
+    0004..0006  return-void
+.end method
+
+.method public A0j(VL)  # .registers 2
+    0000..0004  iput-object  v1, v0, LX/Bo3;->A00:Ljava/lang/String;
+    0004..0006  return-void
+.end method
+
+# class: LX/BoJ;
+
+.method public A0x(VLL)  # .registers 6
+    0000..0004  if-eqz  v4, +0x1a
+    0004..0006  const/4  v0, #0x1
+    0006..000c  invoke-virtual  {v3, v0}, LX/Bo8;->A0v(LI)
+    000c..000e  move-result-object  v0
+    000e..0014  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->size(I)
+    0014..0016  move-result  v0
+    0016..001a  if-lez  v0, +0x8
+    001a..001e  const-string  v1, "FMessageSystemParentGroupNameChanged/setNewParentInfo/parent info should only be set once"
+    001e..0020  const/4  v0, #0x0
+    0020..0026  invoke-static  {v0, v1}, LX/00K;->A0D(VZL)
+    0026..002a  iget-object  v2, v3, LX/Bo8;->A00:Ljava/util/List;
+    002a..002c  const/4  v1, #0x1
+    002c..002e  const/4  v0, #0x0
+    002e..0034  invoke-static  {v4, v5, v2, v1, v0}, LX/Aym;->A1I(VLLLII)
+    0034..0036  return-void
+.end method
+
+.method public A0y(VLL)  # .registers 6
+    0000..0004  if-eqz  v4, +0x1a
+    0004..0006  const/4  v0, #0x4
+    0006..000c  invoke-virtual  {v3, v0}, LX/Bo8;->A0v(LI)
+    000c..000e  move-result-object  v0
+    000e..0014  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->size(I)
+    0014..0016  move-result  v0
+    0016..001a  if-lez  v0, +0x8
+    001a..001e  const-string  v1, "FMessageSystemParentGroupNameChanged/setOldParentInfo/old parent info should only be set once"
+    001e..0020  const/4  v0, #0x0
+    0020..0026  invoke-static  {v0, v1}, LX/00K;->A0D(VZL)
+    0026..002a  iget-object  v2, v3, LX/Bo8;->A00:Ljava/util/List;
+    002a..002c  const/4  v1, #0x4
+    002c..002e  const/4  v0, #0x0
+    002e..0034  invoke-static  {v4, v5, v2, v1, v0}, LX/Aym;->A1I(VLLLII)
+    0034..0036  return-void
+.end method
+
+# class: LX/1iz;
+
+.method public <init>(VLIJ)  # .registers 11
+    0000..0002  const/4  v0, #0x0
+    0002..0004  move-object  v1, v7
+    0004..000a  invoke-static  {v7, v0}, LX/00h;->A0A(VLI)
+    000a..000c  const/4  v2, #0x0
+    000c..000e  move-object  v0, v6
+    000e..0010  move  v3, v8
+    0010..0012  move-wide  v4, v9
+    0012..0018  invoke-direct/range  {v0..v5}, LX/1iz;-><init>(VLLIJ)
+    0018..001a  return-void
+.end method
+
+.method public <init>(VLLIJ)  # .registers 8
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-direct  {v2, v3, v5, v6, v7}, LX/1bh;-><init>(VLIJ)
+    0008..000c  sget-object  v0, LX/01f;->A00:LX/01f;
+    000c..0010  iput-object  v0, v2, LX/1iz;->A01:Ljava/util/List;
+    0010..0014  iput-object  v1, v2, LX/1iz;->A03:LX/AAR;
+    0014..0018  iput-object  v1, v2, LX/1iz;->A02:LX/1jL;
+    0018..001a  return-void
+.end method
+
+.method public <init>(VLLIJ)  # .registers 10
+    0000..0004  iget-object  v3, v6, LX/AAR;->A02:LX/0Cy;
+    0004..0008  iget-object  v2, v6, LX/AAR;->A05:Ljava/lang/String;
+    0008..000a  const/4  v1, #0x1
+    000a..000e  new-instance  v0, LX/1gc;
+    000e..0014  invoke-direct  {v0, v3, v2, v1}, LX/1gc;-><init>(VLLZ)
+    0014..001a  invoke-direct  {v4, v0, v7, v8, v9}, LX/1bh;-><init>(VLIJ)
+    001a..001e  sget-object  v0, LX/01f;->A00:LX/01f;
+    001e..0022  iput-object  v0, v4, LX/1iz;->A01:Ljava/util/List;
+    0022..0026  iput-object  v5, v4, LX/1iz;->A02:LX/1jL;
+    0026..002a  iput-object  v6, v4, LX/1iz;->A03:LX/AAR;
+    002a..002c  return-void
+.end method
+
+# class: LX/Bo8;
+
+.method public <init>(VLIJ)  # .registers 12
+    0000..0002  const/4  v3, #0x0
+    0002..0004  move-object  v1, v7
+    0004..0006  move-object  v2, v8
+    0006..0008  move  v4, v9
+    0008..000a  move-wide  v5, v10
+    000a..0010  invoke-direct/range  {v1..v6}, LX/1iz;-><init>(VLLIJ)
+    0010..0016  invoke-static  {}, LX/1xf;->A1D(L)
+    0016..0018  move-result-object  v0
+    0018..001c  iput-object  v0, v7, LX/Bo8;->A00:Ljava/util/List;
+    001c..001e  return-void
+.end method
+
+.method public <init>(VLLIJ)  # .registers 7
+    0000..0002  const/4  v3, #0x0
+    0002..0008  invoke-direct/range  {v1..v6}, LX/1iz;-><init>(VLLIJ)
+    0008..000e  invoke-static  {}, LX/1xf;->A1D(L)
+    000e..0010  move-result-object  v0
+    0010..0014  iput-object  v0, v1, LX/Bo8;->A00:Ljava/util/List;
+    0014..0016  return-void
+.end method
+
+.method public <init>(VLLIJ)  # .registers 7
+    0000..0006  invoke-direct/range  {v1..v6}, LX/1iz;-><init>(VLLIJ)
+    0006..000c  invoke-static  {}, LX/1xf;->A1D(L)
+    000c..000e  move-result-object  v0
+    000e..0012  iput-object  v0, v1, LX/Bo8;->A00:Ljava/util/List;
+    0012..0014  return-void
+.end method
+
+# 0Fs.A02 selected database group_type load; other ranges omitted
+    047c..0480  const-string  v3, "group_type"
+    0480..0486  invoke-interface  {v0, v3}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+    0486..0488  move-result  v46
+    0aa4..0aa8  move/from16  v6, v46
+    0aa8..0aae  invoke-interface  {v0, v6}, Landroid/database/Cursor;->getInt(II)
+    0aae..0ab0  move-result  v6
+    0ab0..0ab4  iput  v6, v5, LX/0Ze;->A04:I
+
+# class: LX/1bh;
+
+.method public <init>(VLIJ)  # .registers 6
+    0000..0002  const/4  v0, #0x7
+    0002..0008  invoke-direct  {v1, v2, v0, v4, v5}, LX/178;-><init>(VLIJ)
+    0008..000a  const/4  v0, #0x6
+    000a..0010  invoke-super  {v1, v0}, LX/178;->A0H(VI)
+    0010..0014  iput  v3, v1, LX/1bh;->A00:I
+    0014..0016  return-void
+.end method
+
+# class: LX/0hs;
+
+.method public A0L(LL)  # .registers 4
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-virtual  {v2, v3, v0}, LX/0hs;->A0M(LLL)
+    0008..000a  move-result-object  v0
+    000a..000e  if-eqz  v0, +0x3
+    000e..0010  return-object  v0
+    0010..0016  const-string/jumbo  v0, "required attribute '"
+    0016..001a  new-instance  v1, Ljava/lang/StringBuilder;
+    001a..0020  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+    0020..0026  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(LL)
+    0026..002a  const-string  v0, "' missing for tag "
+    002a..0030  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    0030..0034  iget-object  v0, v2, LX/0hs;->A00:Ljava/lang/String;
+    0034..003a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    003a..0040  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    0040..0042  move-result-object  v1
+    0042..0046  new-instance  v0, LX/B7l;
+    0046..004c  invoke-direct  {v0, v1}, LX/B7l;-><init>(VL)
+    004c..004e  throw  v0
+.end method
