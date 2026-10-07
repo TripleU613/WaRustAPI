@@ -1123,6 +1123,17 @@ pub(super) fn is_saved_message(
     ))
 }
 
+fn poll_inspection_summary(poll: &whatsapp_api::transport::polls::Poll) -> String {
+    format!(
+        "name_len={} options_count={} option_lengths={:?} selectable_count={} secret_present={}",
+        poll.name.len(),
+        poll.options.len(),
+        poll.options.iter().map(String::len).collect::<Vec<_>>(),
+        poll.selectable_count,
+        poll.secret.is_some(),
+    )
+}
+
 pub(super) async fn run(
     cli: &super::Cli,
     inspect: bool,
@@ -1229,11 +1240,8 @@ pub(super) async fn run(
                     .map(|(_, id)| id.to_owned())
                     .unwrap_or_default();
                 println!(
-                    "inbox: poll id={id} name={:?} options={:?} selectable_count={} secret_present={}",
-                    poll.name,
-                    poll.options,
-                    poll.selectable_count,
-                    poll.secret.is_some()
+                    "inbox: poll id={id} {}; values redacted",
+                    poll_inspection_summary(&poll)
                 );
             }
             if let Some(vote) = whatsapp_api::transport::polls::decode_vote(&plain) {
@@ -2118,6 +2126,31 @@ mod tests {
     use super::*;
     use whatsapp_api::binary::Node;
     use whatsapp_api::model::jid::Jid;
+
+    #[test]
+    fn poll_inspection_never_prints_question_options_or_secret() {
+        let poll = whatsapp_api::transport::polls::Poll {
+            name: "private question".into(),
+            options: vec!["private option".into(), "🔒".into()],
+            selectable_count: 1,
+            secret: Some([0xab; 32]),
+        };
+        let summary = poll_inspection_summary(&poll);
+        for value in ["private question", "private option", "🔒", "abab", "171"] {
+            assert!(!summary.contains(value));
+        }
+        assert!(summary.contains("name_len=16"));
+        assert!(summary.contains("options_count=2"));
+        assert!(summary.contains("option_lengths=[14, 4]"));
+        assert!(summary.contains("secret_present=true"));
+        assert!(
+            poll_inspection_summary(&whatsapp_api::transport::polls::Poll {
+                secret: None,
+                ..poll
+            })
+            .contains("secret_present=false")
+        );
+    }
 
     #[test]
     fn delivery_requires_committed_decrypted_message() {

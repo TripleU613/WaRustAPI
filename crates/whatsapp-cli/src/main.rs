@@ -506,6 +506,7 @@ enum Cmd {
     #[cfg(feature = "experimental-transport")]
     LabInbox {
         /// Inspect saved plaintext protobuf structure without advancing sessions.
+        /// Labels message-history notices; history remains unapplied and values redacted.
         #[arg(long)]
         inspect: bool,
         /// Re-run preserved incoming message captures through the normal receive

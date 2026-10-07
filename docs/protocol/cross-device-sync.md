@@ -660,3 +660,61 @@ Unknown notifications remain encrypted captures. Authenticated unsupported
 protocol payloads remain encrypted inbox records with opaque event references,
 not key-bearing journal copies. No speculative key requests or device linking
 have been added. See the [completion checklist](../messaging-completion.md).
+
+
+### Message-history notice identification (2026-10-07)
+
+**Confirmed, static APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+`LX/BZc.dynamicMethod` contains `messageHistoryNotice_` at `0422..0426`.
+The encoded protobuf-lite descriptor, decoded with `apk-proto-fields`, assigns
+it Message field **102**. The string-array slot (`0x55`) is not the wire field
+number. The dex field table types `BZc.messageHistoryNotice_` as `LX/BV6;`.
+`BV6.dynamicMethod` names contextInfo (`0036..003a`), messageHistoryMetadata
+(`003e..0042`) and botHistoryShareSyncMetadata (`0048..004c`); its descriptor
+at `0052..0056` assigns fields **1, 2, 3** respectively. This is separate from
+Message.messageHistoryBundle (field 70), not another name for that envelope.
+
+Reproduce from the local APK with the repository's existing research CLI:
+
+```sh
+target/debug/xtask apk-xref ~/Downloads/WhatsApp.apk --anchor messageHistoryNotice_
+target/debug/xtask apk-proto-fields ~/Downloads/WhatsApp.apk --class 'LX/BZc;'
+target/debug/xtask apk-proto-fields ~/Downloads/WhatsApp.apk --class 'LX/BV6;'
+```
+
+**Inferred**: the previously observed 49-byte `[102]` payload belongs to this
+message type, based on the observed wire field and the current APK descriptor.
+Size alone says nothing about its contents or availability of history. The
+redacted `lab-inbox --inspect` summary now labels this envelope and lists its
+nested field numbers. It retains unknown field numbers, refuses truncated nested
+protobuf and prints no metadata values. Inspection does not import history,
+request media, change sessions, adopt keys, or authorize an own-device sender.
+Literal protobuf tests distinguish this notice from other control messages and
+verify redaction, malformed input and retention of unknown field numbers.
+
+**Unknown / negative result**: runtime dispatch and authorization for this notice
+have not been traced. Its metadata field is typed `LX/BX5;`, but the current
+`apk-proto-fields` heuristic refuses that class's mixed repeated/singular
+schema (`no descriptor string decoded cleanly; not guessing`). A private static
+dump of `BX5.dynamicMethod` has been retained; no inferred metadata field map has
+been encoded in the client. Full notice behavior remains unfinished. Raw dex
+and private captures remain outside Git.
+
+**Confirmed, local inspection defect and correction**: while adding this label,
+`transport_receive::run(inspect=true)` was found to print poll questions and
+option strings despite its redaction claim. It now prints question byte length,
+option count/byte lengths, selectable count and secret-presence only. A fixture
+containing private text, Unicode and a nonzero secret verifies neither text nor
+key values enter the summary. This changes diagnostic output, not poll messages
+or stored plaintext. No historical terminal-log cleanup is claimed.
+
+**Observed, saved-account offline inspection (2026-10-07)**: the rebuilt release
+CLI completed `--profile l lab-inbox --inspect` with exit 0. Exactly one saved
+payload was labelled: 49 bytes, top-level fields `[102]`, nested notice fields
+`[1, 2]`. This corroborates a context-plus-history-metadata notice shape without
+exposing either value. The full inspection output was retained under private
+`lab/accounts/l/`; nothing was sent and captures were not replayed. Opening the
+store still runs its normal metadata/table initialization transaction, so this
+is not a claim that the database file stayed byte-identical. No notice was
+applied and no incoming-message session was advanced.

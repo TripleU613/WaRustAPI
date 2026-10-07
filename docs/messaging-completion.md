@@ -64,6 +64,13 @@ from offline tests alone. Existing received captures can be processed locally.
 
 ### Implemented and verified locally
 
+- History-notice diagnostics (2026-10-07): current APK 2.26.37.71
+  `BZc/BV6.dynamicMethod` identifies Message field 102 and its nested schema.
+  `lab-inbox --inspect` labels it without applying history or printing values.
+  The same inspection path now redacts poll question/option strings. Static
+  evidence, literal-fixture tests and saved-account offline inspection of the
+  49-byte notice (nested fields `[1, 2]`) establish diagnostic behavior; history
+  dispatch, authorization and synchronization remain unfinished.
 - Polls: creation (`pollCreationMessageV3`, field 64, with `messageContextInfo`
   secret) and votes (`pollUpdateMessage`, field 50, AES-256-GCM over an
   HKDF-derived key; the APK performs the derivation natively, so the recipe is

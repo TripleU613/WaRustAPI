@@ -71,6 +71,11 @@ fn payload_summary_depth(bytes: &[u8], depth: usize) -> Result<String> {
         extended: Option<Vec<u8>>,
         #[prost(message, optional, tag = "12")]
         protocol: Option<Protocol>,
+        // APK 2.26.37.71 BZc.dynamicMethod: messageHistoryNotice=102;
+        // BV6.dynamicMethod: contextInfo=1, messageHistoryMetadata=2,
+        // botHistoryShareSyncMetadata=3. Inspect structure, never process history.
+        #[prost(bytes = "vec", optional, tag = "102")]
+        history_notice: Option<Vec<u8>>,
     }
     #[derive(prost::Message)]
     struct Wrapper {
@@ -152,6 +157,13 @@ fn payload_summary_depth(bytes: &[u8], depth: usize) -> Result<String> {
                 share.len()
             ));
         }
+    }
+    if let Some(notice) = envelope.history_notice {
+        let notice = Zeroizing::new(notice);
+        summary.push_str(&format!(
+            "; message-history-notice fields={:?}; history not applied",
+            payload_fields(&notice)?
+        ));
     }
     Ok(summary)
 }
@@ -750,6 +762,23 @@ mod tests {
         assert!(payload_summary(b"\x62\x05\x10").is_err());
         assert!(payload_fields(&vec![0; 65537]).is_err());
         assert_eq!(payload_fields(b"\x98\x06\x01").unwrap(), vec![99]);
+    }
+    #[test]
+    fn history_notice_inspection_is_structural_and_redacted() {
+        // Independently encoded BZc field 102 (wire key b2 06), containing
+        // BV6 field 2. The metadata values are intentionally opaque here.
+        let notice = b"\xb2\x06\x0a\x12\x08\x0a\x06secret";
+        let summary = payload_summary(notice).unwrap();
+        assert!(summary.contains("protobuf fields=[102]"));
+        assert!(summary.contains("message-history-notice fields=[2]"));
+        assert!(summary.contains("history not applied"));
+        assert!(!summary.contains("secret"));
+        assert!(payload_summary(b"\xb2\x06\x01\x12").is_err());
+        assert!(
+            payload_summary(b"\xb2\x06\x04\xfa\x07\x01\x00")
+                .unwrap()
+                .contains("message-history-notice fields=[127]")
+        );
     }
     use crate::session::{KeyMaterial, RegistrationStatus, SignalIdentityKey};
     use signal::{

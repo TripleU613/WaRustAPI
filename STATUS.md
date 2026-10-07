@@ -100,11 +100,15 @@ redelivered at every login.
 - Privacy settings IQ (namespace unknown).
 - Channels and QR/companion pairing — parked by the owner.
 - Companion-device fan-out and own-account device sync.
-- An unexplained 49-byte `[102]` payload seen on receive.
+- History-notice handling. APK 2.26.37.71 identifies the formerly unexplained
+  49-byte `[102]` envelope as `messageHistoryNotice`; offline inspection labels
+  its structure without applying history. Saved-account offline inspection
+  confirmed 49 bytes with notice fields `[1, 2]`. Sender intent and processing remain
+  unverified. [Cross-device evidence](docs/protocol/cross-device-sync.md).
 
 ## Offline verification
 
-509 all-feature tests (`cargo test --locked --workspace --all-features`) and
+511 all-feature tests (`cargo test --locked --workspace --all-features`) and
 212 default-feature tests (`cargo test --locked --workspace`) pass on
 2026-10-07; Clippy with `-D warnings` is clean. Rust 1.98.1 locally and in CI. Store, codec, crash
 matrix, registration state machine and transport coverage are described in
