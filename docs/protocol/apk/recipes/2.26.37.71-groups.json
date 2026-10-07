@@ -165,6 +165,59 @@
         "FMessageSystemParentGroupNameChanged/setNewParentInfo/parent info should only be set once",
         "FMessageSystemParentGroupNameChanged/setOldParentInfo/old parent info should only be set once"
       ]
+    },
+    "group-info-recovery-dispatch": {
+      "class": "LX/0Xm;",
+      "method": "A0H",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "anchors": [
+        "GroupLidInfra/one_in_flight_group_info_mismatch",
+        "GroupLidInfra/addressing_mode_mismatch"
+      ]
+    },
+    "group-info-dispatch": {
+      "class": "LX/0Xm;",
+      "method": "A0F",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "anchors": [
+        "GroupXmppMethods/skip sendGetGroupInfo",
+        "GroupXmppMethods/sendGetGroupInfo/"
+      ]
+    },
+    "group-info-mex-context": {
+      "class": "LX/0Xo;",
+      "method": "A02",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "anchors": [
+        "MISSING_PARTICIPANT_IDENTIFICATION",
+        "QueryGroupInfo",
+        "NEW_SUBJECT"
+      ]
+    },
+    "group-info-local-rate-limit": {
+      "class": "LX/8km;",
+      "method": "A02",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "group-info-recovery-arguments": {
+      "class": "LX/A9r;",
+      "method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
     }
   }
 }

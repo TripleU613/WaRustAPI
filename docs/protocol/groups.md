@@ -2398,3 +2398,84 @@ A deliberately wrong VLL constraint rejects all three parser candidates with
 no_matching_shorty and creates no proposal. Invalid parameter-void and shorty
 without method configurations refuse before APK processing. These are offline
 observations; no saved account opened or live request sent this turn.
+
+## Subject-recovery MEX dispatch and local guard (2026-10-07)
+
+**Confirmed static:** APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`;
+[source evidence](group-info-recovery-evidence.txt) preserves dispatch, arguments,
+context translation, local guard and selector-0 callback excerpts. No live request
+or saved-account access occurred in this trace.
+
+`0yv.A09` invokes `0Xm.A0H` with reason new_subject and mode 2 for a new contact,
+and participant_me_not_included_change_recovery/mode 2 for parent mismatch.
+A0H constructs A9r with both boolean arguments false and calls A0F. Only modes
+5/6 take its separate synchronized in-flight-set admission branch (0020..00b8);
+its duplicate diagnostic is not evidence that every group lookup is deduplicated.
+A9r.<init> stores reason=A01, mode=A00, first flag=A03 and second flag=A02.
+The flags' complete downstream semantics remain unknown.
+
+`0Xm.A0F` consults `8km.A02` before sending (0014..002c); refusal logs skip and
+returns. It then records a separate A0G timestamp, and branches on 0DE.A0W:
+qualifying interoperability JIDs schedule 3RD selector 39, while the normal
+branch calls 0Xo.A02 and submits its returned request through 15s.A01, attaching
+9Np selector 0 (009a..00d4). Predicate internals and the interoperability runnable
+remain unknown. The normal branch is **MEX QueryGroupInfo**, not our current
+classic IQ group-info builder. Static source does not justify labelling those
+transports equivalent just because classic group queries have worked live.
+
+`0Xo.A02` constructs group_jid/getRawString and query_context, operation
+QueryGroupInfo, namespace whatsapp-android-mex and response class 2FU. A group
+present in 0Xp.A00's set overrides the reason with
+MISSING_PARTICIPANT_IDENTIFICATION; that set's population/lifecycle is unknown.
+Otherwise its checked string switch translates:
+
+| Input reason | MEX query_context |
+| --- | --- |
+| interactive | INTERACTIVE |
+| lid_migration | LID_MIGRATION |
+| new_subject | NEW_SUBJECT |
+| ack_group_mismatch | ACK_GROUP_MISMATCH |
+| send_failure | SEND_FAILURE |
+| subgroup_conflict_recovery | SUB_GROUP_CONFLICT_RECOVERY |
+| accept_invite_conflict_recovery | INVITE_CODE |
+| phash | PHASH |
+| participant_change_recovery | PARTICIPANT_CHANGE_RECOVERY |
+| prefetch | PRE_FETCH |
+| all other non-null reasons | UNKNOWN |
+
+In particular, participant_me_not_included_change_recovery has no explicit
+switch case and reaches UNKNOWN unless the set override applies. Do not invent
+an uppercase enum for it. Full MEX envelope/document identifier, response schema,
+transport serialization and a Rust implementation remain **unknown/unimplemented**.
+
+`8km.A02` synchronizes on its owner and uses SystemClock.elapsedRealtime, with
+literal 0xea60 (60,000 milliseconds). Existing per-group timestamp+60,000 greater
+than now returns false; equality/expiry permits admission and records now.
+6al.A1R 0000..0010 boxes the supplied long and puts it in the supplied map
+under the supplied group, closing that write rather than inferring it from
+the caller alone. Feature
+0x6f63 gates pruning expired map entries, not the actual duplicate/time check.
+This is an APK-local monotonic-time guard, **not a server-directed cooldown**.
+It must not be imposed as an invented server requirement on unrelated batch
+refresh transport. Clock overflow/boot lifecycle and complete map initialization
+remain unknown; no account state or identity is reset to evade the guard.
+
+9Np's constructor stores selector, group, A9r and owner. Selector 0 success casts
+2FU, calls 0Xm.A02 cleanup, gates projection on 0yw.A0x, then passes 0Xo.A03's
+conversion to 0yw.A0X (0aec..0b42). The error path extracts a numeric code,
+performs cleanup, treats 0x1ad (429) specially by updating the separate A0G time,
+and schedules Ahb selector 11 with the error code. The cleanup, result conversion,
+Ahb behavior and server wait interpretation remain untraced. This does not
+establish a retry duration or authorize replaying uncertain requests.
+
+Five new release topics preserve recovery dispatch, common dispatch, context
+construction, rate guard and argument storage with Rust ownership paths. The
+string-free guard/constructor need manual relocation, just like earlier helper
+topics. Callback excerpts are partial, not a complete port of every 9Np branch.
+
+The expanded group recipe now has twenty topics (25 files/448,127 bytes), with
+sixteen unique remaps and four unanchored helpers. A cached same-APK comparison
+completed in 0.0204 seconds: five new topics, fifteen unchanged. These are source
+coverage additions, not five upstream protocol changes. The release report
+preserves unmatched helpers rather than inventing anchors or type meanings.

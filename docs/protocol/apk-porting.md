@@ -239,3 +239,14 @@ unique and two unanchored topics; full proposal creation still refuses.
 preserves all three diagnostic matches and their rejection by VLL. Current core
 27-file export remains byte-identical. This is same-APK coverage expansion and
 rendering correction, not a new release or completed subject receive behavior.
+
+The [recovery follow-up](groups.md#subject-recovery-mex-dispatch-and-local-guard-2026-10-07)
+adds five topics for twenty total group topics (25 files/448,127 bytes).
+[Cached coverage comparison](apk/group-info-recovery-coverage-diff.json) took
+0.0204 seconds, with fifteen previous code topics unchanged. Sixteen remaps are
+unique and four helpers are unanchored. MEX QueryGroupInfo is now a concrete
+missing Rust path; the recovered local monotonic guard, context enums and
+callback contract identify the work needed before replacing classic lookup.
+The MEX document/envelope, complete result conversion and recovery callbacks
+must still be traced. Static discovery does not authorize testing invented
+query identifiers or replaying uncertain requests.

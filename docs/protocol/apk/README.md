@@ -141,7 +141,7 @@ took 0.0512 seconds: one added topic, nineteen changed texts, two unchanged.
 Obfuscation and decoder annotation changes are included; this is not nineteen
 confirmed behavior changes. The raw 37.70 APK is unavailable for re-extraction.
 
-The current fifteen-topic group baseline is 20 files/430,619 bytes. Checked token
+The typed-subject checkpoint had fifteen topics and 20 files/430,619 bytes. Checked token
 regeneration previously left eleven code topics unchanged; subsequent typed
 subject coverage adds four topics and signed annotations update two existing
 texts. [Coverage diff](subject-types-coverage-diff.json) took 0.0227 seconds.
@@ -149,3 +149,10 @@ texts. [Coverage diff](subject-types-coverage-diff.json) took 0.0227 seconds.
 unique topics and two unanchored helpers. The JLL parser constraint distinguishes
 three string-matching methods; [wrong-signature evidence](remap-evidence/2.26.37.71-subject-wrong-shorty.json)
 records an actual no_matching_shorty refusal without proposal creation.
+
+The current twenty-topic group baseline is **25 files/448,127 bytes**. Five
+recovery/MEX/guard topics were added with fifteen unchanged sources in a
+[0.0204-second cached comparison](group-info-recovery-coverage-diff.json).
+[Current remapping](remap-evidence/2.26.37.71-group-info-recovery.json) finds sixteen
+unique and four unanchored topics. [Recovery interpretation](../groups.md#subject-recovery-mex-dispatch-and-local-guard-2026-10-07)
+distinguishes recovered MEX behavior from the current classic Rust lookup.

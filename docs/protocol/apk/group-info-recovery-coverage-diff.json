@@ -1,0 +1,273 @@
+{
+  "artifacts": [
+    {
+      "file": "inventory.json",
+      "new_file": "2.26.37.71-groups/inventory.json",
+      "old_file": "2.26.37.71-groups/inventory.json",
+      "status": "unchanged"
+    },
+    {
+      "file": "manifest.json",
+      "new_file": "2.26.37.71-groups/manifest.json",
+      "old_file": "2.26.37.71-groups/manifest.json",
+      "status": "unchanged"
+    },
+    {
+      "file": "targets.json",
+      "new_file": "2.26.37.71-groups/targets.json",
+      "old_file": "2.26.37.71-groups/targets.json",
+      "status": "changed"
+    },
+    {
+      "file": "tokens.json",
+      "new_file": "2.26.37.71-groups/tokens.json",
+      "old_file": "2.26.37.71-groups/tokens.json",
+      "status": "unchanged"
+    }
+  ],
+  "interpretation": "Structural topic differences, not automatic proof of protocol behavior changes. Unmapped APK code/native behavior is outside this scoped comparison. Same APK: five source topics added, fifteen unchanged. Old paths resolve at commit 8c392fd; new paths resolve in the current snapshot.",
+  "new_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "old_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "topics": [
+    {
+      "new_class": "LX/0Xm;",
+      "new_file": "2.26.37.71-groups/group-info-dispatch.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "added",
+      "topic": "group-info-dispatch"
+    },
+    {
+      "new_class": "LX/8km;",
+      "new_file": "2.26.37.71-groups/group-info-local-rate-limit.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "added",
+      "topic": "group-info-local-rate-limit"
+    },
+    {
+      "new_class": "LX/0Xo;",
+      "new_file": "2.26.37.71-groups/group-info-mex-context.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "added",
+      "topic": "group-info-mex-context"
+    },
+    {
+      "new_class": "LX/A9r;",
+      "new_file": "2.26.37.71-groups/group-info-recovery-arguments.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "added",
+      "topic": "group-info-recovery-arguments"
+    },
+    {
+      "new_class": "LX/0Xm;",
+      "new_file": "2.26.37.71-groups/group-info-recovery-dispatch.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "added",
+      "topic": "group-info-recovery-dispatch"
+    },
+    {
+      "new_class": "LX/Cp2;",
+      "new_file": "2.26.37.71-groups/group-notification-ack.txt",
+      "old_class": "LX/Cp2;",
+      "old_file": "2.26.37.71-groups/group-notification-ack.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-notification-ack"
+    },
+    {
+      "new_class": "LX/0yv;",
+      "new_file": "2.26.37.71-groups/group-notifications.txt",
+      "old_class": "LX/0yv;",
+      "old_file": "2.26.37.71-groups/group-notifications.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-notifications"
+    },
+    {
+      "new_class": "Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;",
+      "new_file": "2.26.37.71-groups/group-refresh-job.txt",
+      "old_class": "Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;",
+      "old_file": "2.26.37.71-groups/group-refresh-job.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-refresh-job"
+    },
+    {
+      "new_class": "LX/118;",
+      "new_file": "2.26.37.71-groups/group-subject-cache-insert.txt",
+      "old_class": "LX/118;",
+      "old_file": "2.26.37.71-groups/group-subject-cache-insert.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-subject-cache-insert"
+    },
+    {
+      "new_class": "LX/118;",
+      "new_file": "2.26.37.71-groups/group-subject-cache-read.txt",
+      "old_class": "LX/118;",
+      "old_file": "2.26.37.71-groups/group-subject-cache-read.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-subject-cache-read"
+    },
+    {
+      "new_class": "LX/117;",
+      "new_file": "2.26.37.71-groups/group-subject-cache-write.txt",
+      "old_class": "LX/117;",
+      "old_file": "2.26.37.71-groups/group-subject-cache-write.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-subject-cache-write"
+    },
+    {
+      "new_class": "LX/0gt;",
+      "new_file": "2.26.37.71-groups/group-subject-contact-write.txt",
+      "old_class": "LX/0gt;",
+      "old_file": "2.26.37.71-groups/group-subject-contact-write.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-subject-contact-write"
+    },
+    {
+      "new_class": "LX/Bo3;",
+      "new_file": "2.26.37.71-groups/group-subject-ordinary-message.txt",
+      "old_class": "LX/Bo3;",
+      "old_file": "2.26.37.71-groups/group-subject-ordinary-message.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-subject-ordinary-message"
+    },
+    {
+      "new_class": "LX/BoJ;",
+      "new_file": "2.26.37.71-groups/group-subject-parent-message.txt",
+      "old_class": "LX/BoJ;",
+      "old_file": "2.26.37.71-groups/group-subject-parent-message.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-subject-parent-message"
+    },
+    {
+      "new_class": "LX/0yw;",
+      "new_file": "2.26.37.71-groups/group-subject-parent-write.txt",
+      "old_class": "LX/0yw;",
+      "old_file": "2.26.37.71-groups/group-subject-parent-write.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-subject-parent-write"
+    },
+    {
+      "new_class": "LX/0hs;",
+      "new_file": "2.26.37.71-groups/group-subject-time-parser.txt",
+      "old_class": "LX/0hs;",
+      "old_file": "2.26.37.71-groups/group-subject-time-parser.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-subject-time-parser"
+    },
+    {
+      "new_class": "LX/0Fs;",
+      "new_file": "2.26.37.71-groups/group-type-cache-read.txt",
+      "old_class": "LX/0Fs;",
+      "old_file": "2.26.37.71-groups/group-type-cache-read.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-type-cache-read"
+    },
+    {
+      "new_class": "LX/ADs;",
+      "new_file": "2.26.37.71-groups/group-type-reply.txt",
+      "old_class": "LX/ADs;",
+      "old_file": "2.26.37.71-groups/group-type-reply.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-type-reply"
+    },
+    {
+      "new_class": "LX/0Xw;",
+      "new_file": "2.26.37.71-groups/jid-map-ordered-write.txt",
+      "old_class": "LX/0Xw;",
+      "old_file": "2.26.37.71-groups/jid-map-ordered-write.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "jid-map-ordered-write"
+    },
+    {
+      "new_class": "LX/0Xx;",
+      "new_file": "2.26.37.71-groups/jid-map-storage-write.txt",
+      "old_class": "LX/0Xx;",
+      "old_file": "2.26.37.71-groups/jid-map-storage-write.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "jid-map-storage-write"
+    }
+  ],
+  "measured_elapsed_seconds": 0.0204,
+  "paths_relative_to": "docs/protocol/apk",
+  "old_files_at_commit": "8c392fd"
+}

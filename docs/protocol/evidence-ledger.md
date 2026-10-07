@@ -491,3 +491,18 @@ no_matching_shorty and no proposal. Two string-free helpers remain unanchored.
 0Xx.A02+00ba raw 16 02 ff ff 31 01 09 02 occurs once in classes.dex at 0x5cbc2e:
 -1 insert-result comparison, not 65535. Corrected display retains hex bits and
 signed meaning. No server request or saved-account access occurred in this work.
+
+### comparison.group.info.recovery_37_71 — confirmed static
+
+APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+0Xm.A0H constructs false/false A9r arguments for normal mode 2; 5/6 alone use
+its in-flight-set branch. A0F consults 8km.A02's 60,000-ms local monotonic guard,
+then normal-JID dispatch submits 0Xo.A02's MEX QueryGroupInfo. That context
+builder maps ten explicit reasons, unknown reasons to UNKNOWN, and a private
+set membership override to MISSING_PARTICIPANT_IDENTIFICATION. Our working
+classic IQ info path is not this recovered APK path. 9Np selector-0 callbacks
+and numeric error 429 handling are partial; no retry duration was established.
+[Evidence](group-info-recovery-evidence.txt) and [interpretation](groups.md#subject-recovery-mex-dispatch-and-local-guard-2026-10-07)
+carry offsets, reasoning and remaining unknowns. No client MEX route, handler,
+server wait bypass, identity reset or live request was added by this research.

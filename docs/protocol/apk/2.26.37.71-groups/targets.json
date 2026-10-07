@@ -1,4 +1,67 @@
 {
+  "group-info-dispatch": {
+    "anchors": [
+      "GroupXmppMethods/skip sendGetGroupInfo",
+      "GroupXmppMethods/sendGetGroupInfo/"
+    ],
+    "class": "LX/0Xm;",
+    "file": "group-info-dispatch.txt",
+    "method_filter": "A0F",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "group-info-local-rate-limit": {
+    "class": "LX/8km;",
+    "file": "group-info-local-rate-limit.txt",
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "group-info-mex-context": {
+    "anchors": [
+      "MISSING_PARTICIPANT_IDENTIFICATION",
+      "QueryGroupInfo",
+      "NEW_SUBJECT"
+    ],
+    "class": "LX/0Xo;",
+    "file": "group-info-mex-context.txt",
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "group-info-recovery-arguments": {
+    "class": "LX/A9r;",
+    "file": "group-info-recovery-arguments.txt",
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "group-info-recovery-dispatch": {
+    "anchors": [
+      "GroupLidInfra/one_in_flight_group_info_mismatch",
+      "GroupLidInfra/addressing_mode_mismatch"
+    ],
+    "class": "LX/0Xm;",
+    "file": "group-info-recovery-dispatch.txt",
+    "method_filter": "A0H",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
   "group-notification-ack": {
     "anchors": [
       "received stanza with null class",

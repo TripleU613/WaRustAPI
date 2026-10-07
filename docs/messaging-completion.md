@@ -1238,3 +1238,23 @@ no proposal was created for either unresolved full mapping or wrong signature.
 Repository hygiene passed (467 local links, budgets, licenses and reference
 checksums), with clean staged whitespace. Runtime/client behavior is unchanged
 by this research-tool and source-coverage checkpoint.
+
+Further APK 37.71 subject recovery tracing establishes a material runtime gap:
+0Xm.A0F dispatches normal group info through MEX QueryGroupInfo, while Rust's
+working group-info command uses classic IQ. Exact ten-reason context mapping,
+private-set override, mode-5/6 in-flight guard and the separate 60,000-ms local
+monotonic rate guard are preserved, including its confirmed map write. Error
+429 is traced to an A0G time update and an untraced runnable, not a proven retry
+wait. Envelope/document ID, response conversion and complete callbacks remain
+unknown; no MEX endpoint or subject handler is claimed implemented.
+
+Group source coverage is now twenty topics, 25 files/448,127 bytes. Sixteen
+remaps are unique; four string-free helpers remain unresolved automatically.
+Cached same-APK comparison took 0.0204 seconds (five added, fifteen unchanged).
+No saved account opened or live request sent. See [recovery trace](protocol/groups.md#subject-recovery-mex-dispatch-and-local-guard-2026-10-07).
+
+Validation: 44 xtask tests, five OpenAPI checks, regenerated CLI reference,
+exact 25-file/448,127-byte snapshot reproduction, current twenty-topic remap,
+repository hygiene (477 local links, tracked-file budgets, licenses/reference
+checksums) and clean staged whitespace passed. Shared runtime Rust was unchanged
+and was not retested across the workspace for this source-only follow-up.
