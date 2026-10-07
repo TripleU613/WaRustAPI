@@ -426,3 +426,18 @@ Rustdoc, formatting and CLI reference regeneration/test passed. Fresh APK
 method output confirms both backward jumps and matches the scoped selection
 excerpt. No account state was opened or changed and no live request was sent.
 Repository hygiene passed with 339 local links; staged whitespace checks passed.
+
+Native V3 comparison follow-up (static, 2026-10-07): selector 19 now resolves
+through the relocated JNI table to 0x71373c, with Java options 1/3 and distinct
+PN-or-LID orientation, conversion errors, PN/username presence checks, hosted
+omission and result remapping. Generation and scan selection use separate
+feature flags. Native execution, MCFEqual/JID semantics and binary comparison
+implementation remain open; no account state or live request changed.
+[V3 evidence](docs/protocol/safety-number.md#native-v3-scan-dispatch-and-comparison-branches-2026-10-07).
+
+Validation (static/offline): APK and reconstructed-library hashes matched the
+pinned values; the option extraction returned one method. Independent fresh
+native extraction matched all 424 converter/helper/core instructions in the
+scoped snapshot. CLI reference regeneration/test passed; repository hygiene
+passed with 344 local links and staged whitespace checks passed. This changes
+research/docs only; native execution and live account validation are not claimed.

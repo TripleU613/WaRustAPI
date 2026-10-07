@@ -804,3 +804,9 @@ username sources/normalization and nullable PN-sharing state are traced; the
 smali signed-jump display is corrected and tested. Active values and authenticated
 inventory still need integration, and native V3 binary comparison is unfinished.
 See [input branches](protocol/safety-number.md#scheme-username-and-pn-sharing-input-branches-2026-10-07).
+
+2026-10-07 V3 scan follow-up: traced selector-19 JNI entry, options 1/3,
+PN-or-LID orientation, converter/core errors and remapping. V4 rules cannot
+substitute for this path. Native corpus execution, JID/equality semantics,
+authenticated inputs and live peer comparison remain open.
+See [V3 branches](protocol/safety-number.md#native-v3-scan-dispatch-and-comparison-branches-2026-10-07).

@@ -368,3 +368,10 @@ self_user_name`. Relative code-unit jumps now print signed magnitudes, including
 goto/32. The former plus-prefixed two's-complement output obscured backwards
 control flow; APK/minimum/truncation tests cover the correction. No active
 account feature values, verified membership or current-peer scan are inferred.
+
+The [V3 scan trace](../../docs/protocol/safety-number.md#native-v3-scan-dispatch-and-comparison-branches-2026-10-07)
+and [scoped native evidence](../../docs/protocol/fingerprint-v3-comparison-evidence.txt)
+resolve selector 19 and options 1/3 using existing apk-smali and llvm-objdump.
+JNI records require `.rela.dyn` addends; raw pointer slots are zero. The V3
+converter/orientation/core differ from V4. No V3 execution checker or binary
+comparison capability is implemented by this static follow-up.

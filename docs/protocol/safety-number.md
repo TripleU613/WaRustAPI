@@ -1762,3 +1762,133 @@ Rustdoc, formatting and CLI reference regeneration/test passed. Fresh APK
 method output confirms both backward jumps and matches the scoped selection
 excerpt. No account state was opened or changed and no live request was sent.
 Repository hygiene passed with 339 local links; staged whitespace checks passed.
+
+## Native V3 scan dispatch and comparison branches (2026-10-07)
+
+**Confirmed/static, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`,
+reconstructed ARM64 `libwhatsapp.so` SHA-256
+`f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a`.
+[Scoped dispatch/converter/core evidence](fingerprint-v3-comparison-evidence.txt)
+resolves the selector-19 and option-conversion unknowns in the earlier Java
+comparison section. It does not implement V3 comparison or validate current
+account inputs. Native addresses here are ELF virtual addresses; Java offsets
+are method-relative bytes.
+
+`KXj.A01` checks feature **0x1d2d** to choose native V4 versus this native V3
+scan comparator. That is separate from generation's 0x1d2c captured/contact
+gate. Do not assume generation and scan branch selection share one flag.
+On the non-V4 branch it reads 0x1da3 (007c..0086), calls `3c8.A07`
+(0088..008e), then ORs the result with 1 (0090..0094). The full `3c8.A07`
+body returns **1 for zero, 2 for nonzero** (0000..000a). Thus the scan caller
+passes option **1** with hosted feature off and **3** with it on. The native
+core tests bit 0 for username checks and bit 1 for hosted checks; this caller
+always enables username checks. Unknown runtime flags remain unknown.
+
+**Confirmed/static dispatch:** `.rela.dyn` resolves JNI registration entry
+`0xd06d88` to name `jvidispatchIIOO`, signature
+`(IJLjava/lang/Object;Ljava/lang/Object;)J`, entry `0x6bc4b4`. Raw file-backed
+pointer slots are zero before relocations; reading them as final pointers
+produced no matching entry, and was corrected by using relocation addends.
+The entry reads a uint16 jump table at `0x300df6`, whose selector-19 word is
+`0x125`: base `0x6bc4f4 + 4*0x125` reaches `0x6bc988`. That branch unwraps
+the known holder through `0x6b6f30`, scanned bytes through `0x6b7574`, copies
+the low 32 bits of Java's long options into w2, and calls **0x71373c** at
+`0x6bc9b8`. Its status is sign-extended to Java long at `0x6bc9bc`, then the
+objects are released. Zero alone becomes success through the already traced
+`1xm.A1P` and `KA1` result constructor.
+
+**Confirmed/static wrapper, 0x71373c..0x713938:** nonpositive byte length
+aborts, decode failure returns -8, missing version -5, version outside {0,1}
+-10, and a missing individual holder -2. It converts scanned local first,
+remote second through **0x713e00**, returning their conversion errors before
+orientation. Unlike V4, this wrapper does not pre-require both LID fields.
+The orientation helper **0x71401c** compares known local with each scanned
+side: first their non-null PN values from getter `0x6c1e4c` (+0x28), then
+non-null retained LID objects from `0x6e1814` (+0x30), using `MCFEqual`.
+Either match suffices. If both sides match, local-first wins. Local-first
+calls core **0x7140fc** then remaps through **0x7140b8**; remote-first swaps
+scanned sides and calls the core without remapping. Neither match returns
+-13. Object-construction failure with a zero conversion-error slot is an
+explicit abort, not success.
+
+**Confirmed/static individual converter, 0x713e00..0x71401c:** optional PN
+ASCII creation fails with -7. Optional LID ASCII creation fails with -1;
+its subsequent JID parse `0x71dfa4` and stable-LID conversion `0x71f2b8`
+fail with -6. Optional username ASCII creation fails with -23. After these
+operations, both PN and LID absent is -3, even when username exists. Present
+hosted state outside {0,1} is -38; absence becomes -1. The version-selected
+key field must be present (-4 otherwise): public_key for version 0,
+hashed_public_key for 1. Constructor `0x718ffc` stores public/hash data at
++0x18/+0x20, PN at +0x28, retained LID at +0x30, username at +0x38 and hosted
+integer at +0x40. Full JID/stable-LID acceptance and JNI normalization are
+not recovered by these calls alone; no synthetic LID should be invented to
+make conversion succeed.
+
+**Confirmed/static core order, 0x7140fc..0x714358:** known remote must match
+scanned remote by the same PN-or-LID helper (-12 otherwise). Version-selected
+key equality then checks known local (-14) before known remote (-15), through
+the shared data comparators `0x714358`/`0x7143b0`. PN comparison follows local
+then remote, even after an orientation match by LID. The shared optional-value
+helper **0x714450** yields 0 equal/both absent, 1 unequal, 2 known present /
+scanned absent, 3 known absent / scanned present. Its equality calls
+`MCFEqual`; it does not call the V4 PN/username helpers.
+
+| Check | Unequal | Known present, scanned absent | Known absent, scanned present |
+| --- | --- | --- | --- |
+| Local PN (`0x714408`, side 0) | -17 | 0 (allowed) | -17 |
+| Remote PN (`0x714408`, side 1) | -19 | -21 | -22 |
+| Local username, options bit 0 | -24 | -26 | -28 |
+| Remote username, options bit 0 | -29 | -31 | -33 |
+
+Both-absent username comparison returns zero in this V3 helper. The traced
+V4 core has additional no-PN/no-username statuses and a separate case-folding
+string helper; copying that behavior into V3 would change these branches.
+**Unknown:** complete MCFEqual behavior for these ASCII strings and retained
+JID classes, including case sensitivity and alias equality. Calls to MCFEqual
+are not proof of byte equality or V4-compatible case folding.
+
+Hosted checks run only with options bit 1. When both scanned hosted integers
+are -1, core skips matching against known values and returns zero (with an
+optional diagnostic log). Otherwise known local must equal scanned local
+(-34), then known remote must equal scanned remote (-36). The shown core can
+abort for invalid scanned hosted enums, but the wrapper's converter rejects
+such present values first. Do not treat the legacy omission branch as proof
+of hosted status or manufacture E2EE=0 for absent inputs.
+
+**Confirmed/static remapper:** `0x7140b8` accepts indices `status+36` in
+0..36 selected by mask `0x100dead5ad`, and loads int32 results from table
+`0x302370`. Its full accepted map is in the scoped snapshot: -36→-37,
+-34→-35, -31→-32, -29→-30, -26→-27, -24→-25, -21→-20, -19→-18,
+-17→-16, -12→-11; -33, -28, -22, -15, -14, -13, -10, -9 and 0 are
+unchanged. Other inputs abort. This range differs from the V4 remapper;
+conversion errors bypass it. These are native local scan results, not server
+response reasons, and zero does not authorize marking a peer verified.
+
+Reproduce the Java option extraction with:
+
+```sh
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/3c8;' --method A07
+```
+
+For native code use `llvm-objdump -d --start-address=VA --stop-address=END`
+with entry range 0x6bc4b4..0x6bc9c4, wrapper 0x71373c..0x713938 and
+converter/helper/core 0x713e00..0x7144a0. Apply `.rela.dyn` addends when reading
+JNI pointer records, not zero raw slots. Existing tooling exposes these
+static reproductions; no new runtime command, HTTP route or live capability
+is claimed. Ignored raw dumps are `fingerprint-v3-comparison-*.txt` under
+`lab/apk-2.26.37.71/native/` and the option smali under its parent.
+
+**Unknown / next validation:** execute the actual V3 core/remapper over an
+independent synthetic corpus, follow its MCFEqual/JID semantics, and trace the
+stable-LID converter before implementing binary comparison. Active feature
+values, authenticated inventory and a real peer scan remain unverified.
+No account state was opened or changed, verification committed, or live
+message transmitted in this trace.
+
+Validation (static/offline): APK and reconstructed-library hashes matched the
+pinned values; the option extraction returned one method. Independent fresh
+native extraction matched all 424 converter/helper/core instructions in the
+scoped snapshot. CLI reference regeneration/test passed; repository hygiene
+passed with 344 local links and staged whitespace checks passed. This changes
+research/docs only; native execution and live account validation are not claimed.
