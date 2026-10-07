@@ -356,3 +356,15 @@ The [contact-state follow-up](../../docs/protocol/safety-number.md#fingerprint-c
 and [scoped evidence](../../docs/protocol/fingerprint-contact-state-evidence.txt)
 use this command to identify all 17 direct APK 37.71 writes to 0Da.A04 and trace
 the fingerprint predicate to `external_user_state`. Raw APKs/dumps stay local.
+
+### Scheme and optional fingerprint inputs
+
+[Selection evidence](../../docs/protocol/fingerprint-input-selection-evidence.txt)
+and [branch reasoning](../../docs/protocol/safety-number.md#scheme-username-and-pn-sharing-input-branches-2026-10-07)
+connect JhJ.A0Z to V3/V4, own companion inclusion, username storage/prefixing
+and nullable PN-sharing state. Reproduce with `apk-smali --class 'LX/JhJ;' \
+--method A0Z`, class-empty ATB/Aq3 definition searches and `apk-xref --anchor \
+self_user_name`. Relative code-unit jumps now print signed magnitudes, including
+goto/32. The former plus-prefixed two's-complement output obscured backwards
+control flow; APK/minimum/truncation tests cover the correction. No active
+account feature values, verified membership or current-peer scan are inferred.

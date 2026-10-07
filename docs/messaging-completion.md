@@ -797,3 +797,10 @@ locates direct DEX field producers/consumers. APK 37.71 0Da.A04 is stored as
 This narrows scheme-input requirements without manufacturing contact state.
 Active inputs/authenticated inventory and live peer comparison remain open.
 See [contact-state mapping](protocol/safety-number.md#fingerprint-contact-predicate-is-external-user-state-2026-10-07).
+
+2026-10-07 fingerprint input selection: distinct captured/fresh gates now
+separate V3/V4 selection from PN inclusion. Local companion-key inclusion,
+username sources/normalization and nullable PN-sharing state are traced; the
+smali signed-jump display is corrected and tested. Active values and authenticated
+inventory still need integration, and native V3 binary comparison is unfinished.
+See [input branches](protocol/safety-number.md#scheme-username-and-pn-sharing-input-branches-2026-10-07).

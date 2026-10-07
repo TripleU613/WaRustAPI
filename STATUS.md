@@ -409,3 +409,20 @@ The new field-search command sorts DEX names to make its output reproducible.
 No live account or identity-change test was performed in this change.
 Two sorted field-search runs matched byte-for-byte. Repository hygiene passed
 with 334 local links; final staged whitespace checks passed.
+
+Fingerprint selection follow-up (static, 2026-10-07): APK 37.71's captured/contact
+gate selects native V3/V4; the later fresh read selects PN inclusion. Own-key
+companion inclusion, empty-to-null strings, stored own username, remote `@`
+prefixing and nullable `is_pn_shared` storage are now traced. The earlier
+username-availability hypothesis for that Boolean was refuted. Smali branch
+annotations now show signed jumps, with regression coverage. Current feature
+values, authenticated input producers and native V3 comparison remain open;
+no current account fingerprint or verification action occurred.
+[Selection evidence](docs/protocol/safety-number.md#scheme-username-and-pn-sharing-input-branches-2026-10-07).
+
+Validation (offline): 556 workspace/all-feature tests and 244 default-feature
+tests passed. Strict workspace/all-target/all-feature Clippy, warning-free
+Rustdoc, formatting and CLI reference regeneration/test passed. Fresh APK
+method output confirms both backward jumps and matches the scoped selection
+excerpt. No account state was opened or changed and no live request was sent.
+Repository hygiene passed with 339 local links; staged whitespace checks passed.

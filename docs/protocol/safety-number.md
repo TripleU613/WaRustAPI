@@ -1613,3 +1613,152 @@ The new field-search command sorts DEX names to make its output reproducible.
 No live account or identity-change test was performed in this change.
 Two sorted field-search runs matched byte-for-byte. Repository hygiene passed
 with 334 local links; final staged whitespace checks passed.
+
+## Scheme, username and PN-sharing input branches (2026-10-07)
+
+**Confirmed/static**, APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+The [scoped selection evidence](fingerprint-input-selection-evidence.txt)
+connects JhJ.A0Z's previously partial branches to the optional-string producers.
+Offsets are method-relative bytes. No account inputs or APK feature values
+were observed; no current-peer fingerprint was calculated.
+
+**Scheme selection is not universally V4:** JhJ.A0Z retains the earlier
+nonempty/exact-cardinality remote-device key gate (003a..006a). Its separate
+Java branch calls A0V (0140..0170). For PN/LID target branches, it resolves
+PN/LID aliases and optional inputs before deciding between native A0U and A0T.
+The captured/contact gate at 023c selects A0U when true, or jumps to the
+A0T construction at 030a when false. The later fresh feature/contact check
+at 01ee..0214 chooses the PN-inclusion calculation, not the native scheme.
+Its false branch at 0298..02d6 jumps **back** to shared construction at 022c. A0U's log names say
+`generateV4Fingerprint` and its create selector is 2 / result selector 4
+(00b2..00e2); A0T's names say `generateFingerprint` and its corresponding
+selectors are 1 / 2. These connect to the already traced distinct native V4/V3
+routines. A successful V4 explicit-input comparator is not a V3 comparator.
+The current client still lacks integrated current-input selection and full
+V3 binary comparison; substituting V4 based on convenience would change the
+APK-selected scheme.
+
+**Captured and fresh gates are separate:** JhJ.A04, captured by the earlier
+KXj constructor, is combined with the target's 26B.A00 predicate at
+0174..018e. That boolean controls the later external-contact special branch
+and local key inclusion. A0Z additionally rereads feature 0x1d2c at
+0104..0128 and 01ee..0214; it must not be reduced to one globally assumed
+snapshot. The mapped remote LID's own contact predicate is computed separately
+(01c6..01d2). An original PN target and its mapped LID need not produce the
+same predicate result: 26B.A00 requires the LID type, as traced above.
+Neither a PN/LID alias nor equal identity-key bytes proves contact-state or
+feature equivalence.
+
+**Local keys differ by branch:** A0T calls JhJ.A00(true,true) (030a..0312),
+including its primary key plus found filtered own-companion keys. A0U is reached only when the captured/contact boolean is true, and calls
+A00(true,!mapped_remote_external_predicate)
+(023c..024c). Thus the special external-contact branch omits local companions
+rather than hashing every retained identity. JhJ.A00 still reloads the own
+source, applies KXj.A02 and CSC.A00, and appends available keys without the
+remote branch's cardinality refusal (0048..009e). No key-byte deduplication
+is introduced by this helper. This complements, rather than replaces, the
+[own-directory filtering/alias rules](#own-directory-source-logout-filtering-and-alias-precedence-2026-10-07).
+
+**Optional string helper:** 1cg.A02 returns null for null or length zero and
+otherwise returns the original string (0000..0014). It does not trim, case-fold,
+strip an `@`, parse a JID or infer a phone number. A0Z uses it for the own
+username from Aq3 (01b6..01c6) and the remote candidate (01de..01ee).
+Accordingly the selected own username is absent when empty. This differs
+from the lower-level serializer's ability to represent explicitly present
+empty bytes; those explicit-input fixtures remain valid primitive tests,
+not evidence of UI input selection.
+
+**Own username:** an exact Aq3 definition search locates abstract 08Z,
+08a forwarding, and 08i.Aq3. The implementation first uses cached A03; otherwise
+it reads `self_user_name` from 0FU's preferences, defaults null/empty to an
+empty return, and caches a nonempty value (0000..0054). 08i.CU3 writes its
+supplied string to that preference/cache without visible prefixing or trimming
+(0000..004c). The exact preference-string xref has four sites: Aq3, CU3,
+0g1.A0F and 5SX.A02. The latter two and complete setter callers remain
+untraced; this does not establish whether this account's stored own username
+includes `@` or how upstream validation formats it.
+
+**Remote username-position input:** when the mapped LID is non-null, the
+captured/contact boolean is true and its contact passes 26B.A00, A0Z uses
+that LID's **raw JID string** as the remote candidate (01d2..01ee). This is
+what the caller places in the username argument position; do not replace it
+with a fabricated public username. The other usable-LID path calls
+0Xr.ATB (02d6..02e4); no-LID yields null. Exact ATB definition search finds
+0Xr's abstract declaration, 0Xs' cache/database adapter and 0o2's cache leaf.
+0o2.ATB reads 0o3.A01 through ATA and applies the empty-to-null helper
+(0008..0026). 0Xs.ATB first asks its provider; on null, it loads 0o5.A03 by
+LID row ID, repopulates BJQ with the row fields and returns A01 (0008..0074).
+The complete provider wiring and authenticated row producers remain unknown.
+
+0o5.A03 selects `display_name, username FROM lid_display_name WHERE lid_row_id = ?`
+(0010..0032), reads the username, maps length-zero to null, creates the row
+and calls A00 (0064..00b6). A00 returns an A01 username formed by **prefixing
+`@`** to a non-null nonblank supplied username; otherwise A01 is null
+(0004..0068). Its blank predicate 0CM.A0p iterates UTF-16 characters and calls
+0Gj.A01, which uses `Character.isWhitespace || Character.isSpaceChar`.
+It does not trim a nonblank string before prefixing. Exact runtime Unicode
+classification and upstream stored-string validation are unverified. This
+proves a producer transformation, not permission to strip/prefix arbitrary
+operator strings or normalize every native comparison input identically.
+
+**Refuted label — PN sharing, not username availability:** the nullable Boolean
+read via 0qq.A05 in A0T's branch is not a username-enable flag. A05 checks a
+row-ID-indexed cache, otherwise loads 8md.A01 and caches the result
+(000a..0074). 8md.A01 selects `is_pn_shared FROM lid_chat_state WHERE jid_row_id = ?`
+(0010..0026); it returns false only for 0, true only for 1, and null for
+other values, missing column or missing row (0028..0072). A05 similarly returns
+null for its missing-ID branch. No missing value becomes false in the store
+reader itself. When the fresh feature/contact check is false, in A0Z's non-PN LID branch
+only an explicitly true Boolean
+makes the local PN-inclusion flag true (0298..02d6). An originally PN target
+retains its already true flag. That controls whether the CMn result is passed
+as local PN (0312..0318). When the fresh feature/contact check is true, the flag instead becomes
+whether the normalized own username is absent (0218..022c). That flag
+feeds either constructor depending on the separate captured/contact gate;
+A0U reads it at 024c..0252 and A0T at 0312..0318. PN-sharing privacy
+state and username presence are distinct inputs; current values are unknown.
+The private probe filename `fingerprint-input-username-enabled.smali` records
+an earlier hypothesis, not a confirmed name; it is explicitly refuted here.
+
+**Hosted-state authority:** J83.A1Y forwards to 0bo.A02 with its extra flag true
+(0000..001c), connecting A0Z's per-side booleans to the previously traced
+hosted-contact predicates. A0Z gates that lookup behind feature 0x1da3.
+Both A0T and A0U additionally reread 0x1da3 and replace supplied state integers
+with **-1** when disabled (0048..007e), before constructing params. Thus a
+false default Boolean cannot be treated as confirmed E2EE state when this
+feature is disabled. The native converter accepts -1/0/1, with absent versus
+explicit enum presence already distinguished by the corpus. Upstream hosted
+attestation, runtime feature values and complete account-sync authority remain
+unverified; no value was synthesized to satisfy a comparison.
+
+Reproduce using existing static commands:
+
+```sh
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/JhJ;' --method A0Z
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class '' --method ATB
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class '' --method Aq3
+target/debug/xtask apk-xref ~/Downloads/WhatsApp.apk --anchor self_user_name
+```
+
+Also inspect exact classes 1cg (A02), 0o5 (A00/A03), 0qq (A04/A05),
+8md (A01), 0CM (A0p), 0Gj (A01), J83 (A1Y), 0jc (A0T/A0U) and 08i (CU3).
+Full dumps stay ignored under `lab/apk-2.26.37.71/fingerprint-*`. The committed
+snapshot contains attributed scoped instructions, no media or account values.
+
+**Diagnosability correction:** the original smali formatter rendered negative
+8/16-bit jumps as two's-complement hex after a literal plus sign. This made
+A0Z's 02d0/02d4 jumps look forward; they are -82/-84 code units, both reaching
+022c. The initial scheme interpretation was corrected before integration:
+01ee's fresh check chooses PN inclusion; 023c's captured/contact gate chooses
+A0U versus A0T. `apk-smali` now prints explicit signed magnitudes for goto,
+goto/16, goto/32 and conditional branches. A literal APK backward-jump fixture
+plus signed minima, forward conditional and truncated-prefix tests cover this
+formatting correction; no instruction widths or protocol values changed.
+
+Validation (offline): 556 workspace/all-feature tests and 244 default-feature
+tests passed. Strict workspace/all-target/all-feature Clippy, warning-free
+Rustdoc, formatting and CLI reference regeneration/test passed. Fresh APK
+method output confirms both backward jumps and matches the scoped selection
+excerpt. No account state was opened or changed and no live request was sent.
+Repository hygiene passed with 339 local links; staged whitespace checks passed.

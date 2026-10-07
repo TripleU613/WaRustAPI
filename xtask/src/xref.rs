@@ -613,6 +613,16 @@ fn decode_register_flow(bytes: &[u8]) -> String {
     }
 }
 
+// Display signed code-unit jumps as signed magnitudes, not two's-complement
+// hex with a misleading '+' prefix (37.71 JhJ.A0Z 02d0 loops to 022c).
+fn relative_jump(offset: i32) -> String {
+    if offset < 0 {
+        format!("-{:#x}", offset.unsigned_abs())
+    } else {
+        format!("+{offset:#x}")
+    }
+}
+
 fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> String {
     match op {
         // const-string vAA, string@BBBB
@@ -773,23 +783,27 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
         0x0f | 0x10 | 0x11 | 0x27 => format!("v{reg}"),
         0x28 => {
             let offset = insn_bytes[1] as i8;
-            format!("+{offset:#x}")
+            relative_jump(i32::from(offset))
         }
         0x29 if insn_bytes.len() >= 4 => {
             let offset = i16::from_le_bytes([insn_bytes[2], insn_bytes[3]]);
-            format!("+{offset:#x}")
+            relative_jump(i32::from(offset))
+        }
+        0x2a if insn_bytes.len() >= 6 => {
+            let offset = i32::from_le_bytes(insn_bytes[2..6].try_into().unwrap());
+            relative_jump(offset)
         }
         // if-test vA, vB, +CCCC — 22t
         0x32..=0x37 if insn_bytes.len() >= 4 => {
             let va = reg & 0xf;
             let vb = (reg >> 4) & 0xf;
             let offset = i16::from_le_bytes([insn_bytes[2], insn_bytes[3]]);
-            format!("v{va}, v{vb}, +{offset:#x}")
+            format!("v{va}, v{vb}, {}", relative_jump(i32::from(offset)))
         }
         // if-testz vAA, +BBBB — 21t
         0x38..=0x3d if insn_bytes.len() >= 4 => {
             let offset = i16::from_le_bytes([insn_bytes[2], insn_bytes[3]]);
-            format!("v{reg}, +{offset:#x}")
+            format!("v{reg}, {}", relative_jump(i32::from(offset)))
         }
         // cmp and aget/aput vAA, vBB, vCC — format 23x.
         0x2d..=0x31 | 0x44..=0x51 | 0xa0 if insn_bytes.len() >= 4 => {
@@ -2301,6 +2315,34 @@ mod tests {
         assert_eq!(decoded[0].mnemonic, "and-long");
         assert_eq!(decoded[0].annotation, "v7, v7, v19");
         assert_eq!(decoded[0].width, 2);
+        for end in 0..bytes.len() {
+            let _ = decode_insns(&bytes[..end], &dex);
+        }
+    }
+
+    #[test]
+    fn branch_offsets_display_signed_magnitudes() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // APK 37.71 JhJ.A0Z 02d0: goto -82 code units reaches 022c.
+        let bytes = [
+            0x28, 0xae, 0x29, 0, 0, 0x80, 0x2a, 0, 0, 0, 0, 0x80, 0x32, 0x21, 0xff, 0xff, 0x38, 3,
+            2, 0,
+        ];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(
+            decoded
+                .iter()
+                .map(|v| v.annotation.as_str())
+                .collect::<Vec<_>>(),
+            [
+                "-0x52",
+                "-0x8000",
+                "-0x80000000",
+                "v1, v2, -0x1",
+                "v3, +0x2"
+            ]
+        );
         for end in 0..bytes.len() {
             let _ = decode_insns(&bytes[..end], &dex);
         }
