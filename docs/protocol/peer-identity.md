@@ -42,8 +42,10 @@ all identity-save branch inputs, and observer behavior after replacement.
 a session on differing serialized identity type/key bytes, but its acceptance path
 has not been completely traced. `A17` compares saved message base keys;
 `A18` stores sessions. Neither establishes the remote identity trust policy.
-Native fingerprint-generation wrappers were found (`A0U`/`A0V`, wamsys),
-but the safety-number algorithm and display are not established here.
+Subsequent safety-number research refutes the earlier classification of both
+`A0U` and `A0V` as native wrappers: `A0V` uses the traced Java legacy algorithm;
+`A0U` and `A0T` use native dispatch. Current scheme selection, native algorithms
+and verification remain unestablished. See [safety-number evidence](safety-number.md).
 An exact APK string-reference search for `isTrustedIdentity` returned no
 references; this does not prove the check is absent (obfuscation/native paths
 may implement it without that string).
@@ -97,8 +99,8 @@ cargo run -p xtask -- apk-smali ~/Downloads/WhatsApp.apk --class 'LX/0kc;'
 cargo run -p xtask -- apk-callers ~/Downloads/WhatsApp.apk --class 'LX/0jc;' --method A0K
 ```
 
-The disassembler currently shows field opcodes `0x53`/`0x55` as unknown
-mnemonics, while retaining operands. They are DEX `iget-wide`/`iget-boolean`;
+The disassembler formerly showed field opcodes `0x53`/`0x55` as unknown
+mnemonics, while retaining operands. It now names them `iget-wide`/`iget-boolean`;
 the field descriptors and store column names independently identify their
 types. Short backwards branch offsets may print in two's-complement hex;
 interpret the signed width before deriving a target. Private scoped dumps

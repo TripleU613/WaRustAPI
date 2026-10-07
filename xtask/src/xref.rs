@@ -298,7 +298,12 @@ fn opcode_name(op: u8) -> &'static str {
         0x4f => "aput-byte",
         0x50 => "aput-char",
         0x51 => "aput-short",
+        // Android DEX instruction table; needed by 37.71 identity metadata
+        // and B7E serialization traces (wide/boolean/byte field reads).
         0x52 => "iget",
+        0x53 => "iget-wide",
+        0x55 => "iget-boolean",
+        0x56 => "iget-byte",
         0x54 => "iget-object",
         0x59 => "iput",
         0x5b => "iput-object",
@@ -353,6 +358,12 @@ fn opcode_name(op: u8) -> &'static str {
         0xb7 => "xor-int/2addr",
         0xbb => "add-long/2addr",
         0xbc => "sub-long/2addr",
+        // CjU.A01: five unsigned bytes form a 40-bit value modulo 100000.
+        // https://source.android.com/docs/core/runtime/dalvik-bytecode
+        0xbf => "rem-long/2addr",
+        0xc0 => "and-long/2addr",
+        0xc1 => "or-long/2addr",
+        0xc3 => "shl-long/2addr",
         0xd0 => "add-int/lit16",
         0xd1 => "rsub-int",
         0xd2 => "mul-int/lit16",
@@ -1929,6 +1940,49 @@ mod tests {
         for end in 0..bytes.len() {
             let _ = decode_insns(&bytes[..end], &dex);
         }
+    }
+
+    #[test]
+    fn decodes_apk_safety_number_unsigned_group_arithmetic() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // 2.26.37.71 CjU.A01 offsets 000a,0010,0024,0062, preserving registers.
+        let bytes = [0xc0, 0x64, 0xc3, 0x04, 0xc1, 0x14, 0xbf, 0x02];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(
+            decoded
+                .iter()
+                .map(|v| (v.mnemonic, v.annotation.as_str()))
+                .collect::<Vec<_>>(),
+            [
+                ("and-long/2addr", "v4, v6"),
+                ("shl-long/2addr", "v4, v0"),
+                ("or-long/2addr", "v4, v1"),
+                ("rem-long/2addr", "v2, v0")
+            ]
+        );
+        assert_eq!(
+            decoded.last().unwrap().byte_off + decoded.last().unwrap().width * 2,
+            bytes.len()
+        );
+    }
+    #[test]
+    fn decodes_identity_metadata_and_serialized_type_field_reads() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // 22c operand layouts seen in 0jc metadata and B7E.A00; field index zero
+        // is deliberately unresolved in this minimal fixture, not fabricated.
+        let bytes = [0x53, 0x50, 0, 0, 0x55, 0x50, 0, 0, 0x56, 0x50, 0, 0];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(
+            decoded.iter().map(|v| v.mnemonic).collect::<Vec<_>>(),
+            ["iget-wide", "iget-boolean", "iget-byte"]
+        );
+        assert!(decoded.iter().all(|v| v.annotation.starts_with("v0, v5,")));
+        assert_eq!(
+            decoded.iter().map(|v| v.width).collect::<Vec<_>>(),
+            [2, 2, 2]
+        );
     }
 
     #[test]

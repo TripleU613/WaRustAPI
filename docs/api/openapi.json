@@ -6,6 +6,12 @@
       "x-transport": "cli",
       "x-live": false,
       "description": "Offline development utility, separate from the whatsapp-cli control API; no HTTP route. Decodes complete protobuf-lite descriptors with variable-width scalar-presence and repeated entries, UTF-16 integer continuation/overflow checks, header/count validation and exact field-name pairing. Excludes bitFieldN_ bookkeeping names. Unsupported oneof mapping, malformed/truncated input, ambiguous descriptors or name mismatches are diagnosed on stderr without printing a partial pairing. Existing utility parameters remain positional APK and required --class. APK 2.26.37.71 BX5 mixes repeated strings and scalar int64 fields; fixed-triple decoding was refuted. BZc still decodes all 110 Message fields."
+    },
+    {
+      "x-cli": "cargo run -p xtask -- apk-smali <apk> --class <class-filter> [--method <method-filter>]",
+      "x-transport": "cli",
+      "x-live": false,
+      "description": "Offline DEX developer disassembler; no HTTP route. Names APK identity metadata reads (iget-wide, iget-boolean, iget-byte) and safety-number arithmetic (rem-long/2addr, and-long/2addr, or-long/2addr, shl-long/2addr), preserving byte offsets and operands. Literal 37.71 CjU/B7E-style fixtures verify widths and registers. Unknown opcodes remain explicitly marked. Does not unpack native superpack containers or claim native algorithm recovery."
     }
   ],
   "info": {

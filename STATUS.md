@@ -21,7 +21,10 @@ replacement atomically with encrypted prior-key/session history and an
 selects `apk_authenticated` in its preserved private corrected configuration.
 No local account identity, send ID or reservation was reset. Automatic reads
 also cover eligible authenticated duplicates, with once-only write-cut coverage.
-Human safety-number verification remains unfinished. Outgoing key-bundle
+Human safety-number verification remains unfinished. The legacy Java algorithm,
+phone-identifier normalization, key-set ordering and QR content are now traced;
+modern native schemes and active selection remain unknown.
+[Safety-number evidence](docs/protocol/safety-number.md). Outgoing key-bundle
 mismatches now suspend the original queued intent before ratchet use;
 `outbox-suspended` inspects them offline. Independent
 `transport.outgoing_identity_changes=apk_authenticated` now stages a signed
@@ -123,8 +126,8 @@ redelivered at every login.
 
 ## Offline verification
 
-527 all-feature tests (`cargo test --locked --workspace --all-features`) and
-221 default-feature tests (`cargo test --locked --workspace`) pass on
+529 all-feature tests (`cargo test --locked --workspace --all-features`) and
+223 default-feature tests (`cargo test --locked --workspace`) pass on
 2026-10-07; Clippy with `-D warnings` is clean. Rust 1.98.1 locally and in CI. Store, codec, crash
 matrix, registration state machine and transport coverage are described in
 [docs/design](docs/design/README.md) and the per-area protocol docs.

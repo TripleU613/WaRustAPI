@@ -322,3 +322,16 @@ recorded, so it does not verify incoming video/PTV or automatic reads. The
 complete 20-event journal and nine acknowledged receipts were unchanged; the
 existing uncertain action was preserved. Private evidence paths are in the
 video document.
+
+## 2026-10-07: safety-number schemes and packed native boundary
+
+**Confirmed/static, 37.71:** Java `0jc.A0V` / `CjU` uses sorted serialized
+identity-key sets, normalized UTF-8 identifiers, 5200 SHA-512 iterations and
+six five-digit decimal groups per side. Its legacy QR uses version zero and
+raw concatenated public identities. **Refuted:** A0V is not a native wrapper;
+one diagnostic SHA-256 pin is not its safety-number input. **Unknown:** native
+A0T/A0U algorithms, active UI scheme, inventory producers, modern QR comparison
+and human verification. The native ELF is an outer superpack archive container;
+ordinary strings/export inspection cannot establish absence of fingerprint code.
+The disassembler now names the seven previously opaque opcodes used in these
+traces, with literal DEX fixtures. [Full evidence](safety-number.md).

@@ -619,3 +619,18 @@ unchanged nine server-acknowledged receipts, no eligible outbox and no queued
 actions. An existing uncertain action remained preserved. No fresh incoming
 message/video or automatic-read result was established; private evidence and
 backup locations are recorded in the video protocol document.
+
+## Safety-number research boundary (2026-10-07)
+
+The Java legacy safety-number path, identifier normalization, unsigned identity
+key ordering and version-zero QR fields are now traced from 37.71. Newer native
+paths and runtime scheme selection remain untraced; no human verification bit
+or account protocol record was changed. The APK native ELF contains an outer
+packed archive, so missing fingerprint strings there do not prove absence.
+Seven disassembler mnemonic gaps exposed by these traces are fixed and tested.
+[Evidence and next native boundary](protocol/safety-number.md).
+
+Validation: 529 workspace/all-feature tests, 223 default-feature tests, strict
+Clippy, rustdoc, CLI reference, formatting and hygiene passed. The rebuilt
+disassembler successfully rendered the actual APK decimal-group method with
+its previous opaque arithmetic instructions named. No live request occurred.
