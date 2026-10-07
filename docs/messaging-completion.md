@@ -823,3 +823,10 @@ primary-JID and LID-kind guards; exact number/suffix bounds are recorded.
 Existing synthetic tokens do not prove converter acceptance. Native parser
 execution, runtime integration and authenticated inputs remain open.
 See [equality and conversion](protocol/safety-number.md#v3-equality-callbacks-and-primary-lid-conversion-2026-10-07).
+
+2026-10-07 V3 primary-LID execution: 38 synthetic cases validate the native
+routing/constructor/flattening decisions, including zero suffix normalization,
+nonzero companion rejection and number bounds. MCF primitives and allocation
+remain modeled; this is not a full converter or current-peer validation.
+Runtime V3 binary comparison and authenticated input integration remain open.
+See [executed parser decisions](protocol/safety-number.md#executed-v3-primary-lid-parser-decisions-2026-10-07).

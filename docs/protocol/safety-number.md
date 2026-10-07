@@ -2082,3 +2082,71 @@ build. Fresh extraction matched all 18 ASCII comparator instructions. CLI
 reference regeneration/test passed, repository hygiene checked 354 local
 links and staged whitespace checks passed. This change adds attributed research
 only; it does not execute the native parser or change runtime/account behavior.
+
+## Executed V3 primary-LID parser decisions (2026-10-07)
+
+**Observed/offline native execution**, APK 37.71, pinned main-library hash
+as above: `tools/apk-research/native_v3_lid_check.py --library PATH` now runs
+**38 built-in synthetic inputs** through the actual primary-JID parser,
+server routing, LID validators, user/device decomposition, constructors,
+device-zero flattening and final LID-kind gate. The
+[committed observations](fingerprint-native-v3-lid-cases.json) retain exact
+input/output/error and native instruction/model-call counts. They resolve the
+preceding static inference about ordinary and explicit-zero LID spellings
+within this execution slice's modeled primitive boundaries.
+
+The parser at **0x71dfa4**, option-0 path from **0x71f30c**, LID branch
+**0x71f760 / 0x71f860**, validators **0x7204bc / 0x71fdc0 / 0x71fd24 /
+0x71fe0c**, decomposer **0x720bac / 0x720d1c**, device constructor **0x71da6c /
+0x71d944**, full-string constructor **0x71de28 / 0x71ddb4**, flattening
+**0x71ebd8**, stable constructor **0x71f2a4** and kind gate **0x71f2b8** execute
+actual ARM64 instructions. Only traced ranges may execute; mapping a library
+page does not enable unrelated operations. Internal relative relocations are
+applied. Cached server constants are modeled from the library's relocated
+pointer/length records `0xd0ae98 + 16*i`, tied to producer functions
+`0x71e198 + 0x70*i` for i=0..12.
+
+**Observed in this slice:** base lengths 1..15 and 20 succeed; 16..19 and 21
+fail with primary parser error -1. Leading-zero, zero-only, alphabetic,
+negative, dotted users and invalid server spellings fail. Device suffix `0`
+and `00` both produce category 0 / kind 5 and the same primary `123@lid`.
+Suffixes `1`, `01`, `9` and `99` produce parser error **-2** after remaining
+non-primary objects; suffixes `100`, `000` and `-1` fail syntax validation
+with **-1**. These are synthetic values, not account identifiers. The actual
+individual converter maps failure of this primary parse/stable gate to -6;
+that converter is not executed by this utility, so its mapping remains the
+separately attributed static evidence rather than another observed result.
+
+**Modeled / limits:** cached constant creation, MCF ASCII getters/copies/
+equality/formatting, split arrays, allocation/type registration, retain/release
+and error construction are modeled. The split model preserves empty pieces;
+this corpus uses nonempty pieces and does not establish native empty-split
+behavior. Equality is exact bytes, grounded in the preceding registered ASCII
+callback trace, but MCF class dispatch does not execute here. Suffix `strtol`
+is modeled only for the already validated one/two decimal digits or default
+literal zero; arbitrary C integer parsing is refused. Actual constructors
+write the native category/string/kind/device fields, but their allocation,
+string copies and ownership are modeled. No object-registry, allocation-failure
+or reference-count correctness is claimed.
+
+Each modeled string is at most 256 non-NUL ASCII bytes; heap use is bounded
+at one MiB. Each entry must reach its return PC within ten seconds / one
+million instructions. Largest observed case: **1188 instructions**, including
+the separate final kind gate. Unknown branches, wrong builds and bound failures
+refuse before JSON output. Full library mapping is only byte storage; the
+hook refuses execution outside the named native ranges or recognized modeled
+primitive targets. There is no arbitrary scan/config/account input option.
+
+Validation: all four new utility tests passed with the pinned library present,
+including a complete rerun matching all 38 observations, missing/wrong-build
+refusals with empty stdout, modeled string/heap bounds and an untraced native
+entry refusal. Current account inputs, complete binary V3 comparison, native
+MCF splitting/class execution and live peer scans remain unverified. No saved
+account was opened or changed, verification action committed or live message
+sent. The next implementation must preserve these acceptance rules and the
+separate converter/status order, not simply call the general client JID parser.
+
+Final validation: CLI reference regeneration/test and OpenAPI library-symbol
+check passed. Repository hygiene checked 359 local links and staged whitespace
+checks passed. This adds an offline research utility and observations; Rust
+runtime behavior and saved accounts are unchanged.

@@ -405,3 +405,24 @@ The corpus's synthetic identity tokens remain control-flow inputs, not valid
 converter fixtures. Case-sensitive byte equality differs from V4's username
 helper. Device-zero flattening occurs before the final kind gate. Actual
 class runtime/parser execution and full binary V3 support remain unfinished.
+
+### Execute V3 primary-LID decisions
+
+`native_v3_lid_check.py --library PATH` requires the pinned 37.71 main library.
+It accepts only 38 built-in synthetic inputs and executes native parser routing,
+LID validation, constructors, device-zero flattening and final kind selection.
+[Observations](../../docs/protocol/fingerprint-native-v3-lid-cases.json) and
+[scope/limits](../../docs/protocol/safety-number.md#executed-v3-primary-lid-parser-decisions-2026-10-07)
+retain the evidence and modeled dependencies.
+
+```sh
+<python-env> tools/apk-research/native_v3_lid_check.py --library <libwhatsapp.so>
+TELEWHATSAPP_FINGERPRINT_LIBRARY=<libwhatsapp.so> <python-env> -m unittest discover -s tools/apk-research -p 'test_native_v3_lid_check.py'
+```
+
+MCF split/getters/copies/equality/formatting, allocation/class registration,
+retain/release/errors, constants and validated decimal conversion are modeled.
+This is not full MCF or protobuf-converter execution. Per entry: ten seconds /
+one million instructions; return PC required; 1-MiB heap and 256-byte ASCII
+string bounds. Largest observed case is 1188 instructions. Unknown branches,
+bounds and build failures refuse before JSON. No runtime/account support added.

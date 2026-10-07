@@ -471,3 +471,16 @@ build. Fresh extraction matched all 18 ASCII comparator instructions. CLI
 reference regeneration/test passed, repository hygiene checked 354 local
 links and staged whitespace checks passed. This change adds attributed research
 only; it does not execute the native parser or change runtime/account behavior.
+
+V3 primary-LID execution follow-up (offline, 2026-10-07): 38 synthetic inputs
+now execute native parser routing, validators, constructors, device-zero
+flattening and kind selection. They confirm explicit zero suffix normalization,
+nonzero companion rejection and exact base-number bounds within modeled MCF
+primitive boundaries. Four utility tests passed. Native MCF/class/ownership
+behavior and full binary V3 comparison remain unfinished; accounts unchanged.
+[Executed LID decisions](docs/protocol/safety-number.md#executed-v3-primary-lid-parser-decisions-2026-10-07).
+
+Final validation: CLI reference regeneration/test and OpenAPI library-symbol
+check passed. Repository hygiene checked 359 local links and staged whitespace
+checks passed. This adds an offline research utility and observations; Rust
+runtime behavior and saved accounts are unchanged.
