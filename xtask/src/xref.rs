@@ -354,6 +354,7 @@ fn opcode_name(op: u8) -> &'static str {
         0x95 => "and-int",
         0x96 => "or-int",
         0x97 => "xor-int",
+        0xa0 => "and-long",
         0xb0 => "add-int/2addr",
         0xb1 => "sub-int/2addr",
         0xb4 => "rem-int/2addr",
@@ -791,7 +792,7 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
             format!("v{reg}, +{offset:#x}")
         }
         // cmp and aget/aput vAA, vBB, vCC — format 23x.
-        0x2d..=0x31 | 0x44..=0x51 if insn_bytes.len() >= 4 => {
+        0x2d..=0x31 | 0x44..=0x51 | 0xa0 if insn_bytes.len() >= 4 => {
             format!("v{reg}, v{}, v{}", insn_bytes[2], insn_bytes[3])
         }
         // Unary/conversion and binary /2addr operations vA, vB — format 12x.
@@ -1066,24 +1067,34 @@ fn invoked_method_index(instruction: &[u8]) -> Option<u32> {
     ])))
 }
 
-fn callers_one(
+// Standard DEX field opcodes use 22c (instance) or 21c (static), with
+// a little-endian field_idx in the second code unit. Do not reinterpret
+// quickened odex offsets as field IDs. Literal APK 37.71 contact writes
+// and a synthetic payload/truncation fixture cover this search.
+fn accessed_field_index(instruction: &[u8], writes_only: bool) -> Option<u32> {
+    let opcode = *instruction.first()?;
+    let write = matches!(opcode, 0x59..=0x5f | 0x67..=0x6d);
+    let read = matches!(opcode, 0x52..=0x58 | 0x60..=0x66);
+    if !write && (!read || writes_only) {
+        return None;
+    }
+    Some(u32::from(u16::from_le_bytes([
+        *instruction.get(2)?,
+        *instruction.get(3)?,
+    ])))
+}
+
+fn references_one(
     dex_name: &str,
     d: &[u8],
-    target_class: &str,
-    target_method: &str,
-    out: &mut Vec<XRef>,
+    targets: &std::collections::HashSet<u32>,
+    reference_index: impl Fn(&[u8]) -> Option<u32>,
+    mut record: impl FnMut(XRef, u8),
 ) -> Result<(), String> {
     let dex = DexFile::parse(d)?;
-    let targets: std::collections::HashSet<u32> = (0..dex.method_count)
-        .filter(|&index| {
-            dex.method_info(index)
-                .is_ok_and(|(class, method, _)| class == target_class && method == target_method)
-        })
-        .collect();
     if targets.is_empty() {
         return Ok(());
     }
-
     for class_index in 0..dex.class_count {
         let definition_offset = dex.class_off as usize + 32 * class_index as usize;
         let class_type = u32le(d, definition_offset)?;
@@ -1118,29 +1129,133 @@ fn callers_one(
             let instruction_count = u32le(d, code_item_offset + 12)? as usize;
             let instruction_start = code_item_offset + 16;
             let instruction_end = instruction_start.saturating_add(instruction_count * 2);
-            let Some(instructions) = d.get(instruction_start..instruction_end) else {
-                continue;
-            };
+            let instructions = d
+                .get(instruction_start..instruction_end)
+                .ok_or_else(|| "truncated method instruction stream".to_owned())?;
             let mut offset = 0usize;
             while offset + 1 < instructions.len() {
                 let opcode = instructions[offset];
                 let width = payload_at(instructions, offset)
                     .map_or_else(|| insn_width(opcode), |(width, _, _)| width);
-                if let Some(callee) = invoked_method_index(&instructions[offset..])
+                if width * 2 > instructions.len() - offset {
+                    return Err("truncated instruction or payload".to_owned());
+                }
+                if let Some(callee) = reference_index(&instructions[offset..])
                     && targets.contains(&callee)
                 {
-                    out.push(XRef {
-                        dex_file: dex_name.to_owned(),
-                        class_name: class_name.clone(),
-                        method_name: caller_name.clone(),
-                        method_proto: caller_proto.clone(),
-                        dex_byte_off: instruction_start + offset,
-                    });
+                    record(
+                        XRef {
+                            dex_file: dex_name.to_owned(),
+                            class_name: class_name.clone(),
+                            method_name: caller_name.clone(),
+                            method_proto: caller_proto.clone(),
+                            dex_byte_off: instruction_start + offset,
+                        },
+                        opcode,
+                    );
                 }
                 offset = offset.saturating_add(width.max(1) * 2);
             }
         }
     }
+    Ok(())
+}
+
+fn callers_one(
+    dex_name: &str,
+    d: &[u8],
+    target_class: &str,
+    target_method: &str,
+    out: &mut Vec<XRef>,
+) -> Result<(), String> {
+    let dex = DexFile::parse(d)?;
+    let targets = (0..dex.method_count)
+        .filter(|&index| {
+            dex.method_info(index)
+                .is_ok_and(|(class, method, _)| class == target_class && method == target_method)
+        })
+        .collect();
+    references_one(dex_name, d, &targets, invoked_method_index, |site, _| {
+        out.push(site)
+    })
+}
+
+fn field_refs_one(
+    dex_name: &str,
+    d: &[u8],
+    target_class: &str,
+    target_field: &str,
+    target_type: &str,
+    writes_only: bool,
+    out: &mut Vec<(XRef, u8)>,
+) -> Result<(), String> {
+    let dex = DexFile::parse(d)?;
+    let mut targets = std::collections::HashSet::new();
+    for index in 0..dex.field_count {
+        let (class, field, ty) = dex.field_info(index)?;
+        if class == target_class && field == target_field && ty == target_type {
+            targets.insert(index);
+        }
+    }
+    references_one(
+        dex_name,
+        d,
+        &targets,
+        |instruction| accessed_field_index(instruction, writes_only),
+        |site, opcode| out.push((site, opcode)),
+    )
+}
+
+/// Exact DEX field search, no reflective/native/quickened access claim.
+/// Assemble all results before stdout so a malformed DEX cannot appear complete.
+pub fn run_field_refs(
+    apk: &Path,
+    class: &str,
+    field: &str,
+    ty: &str,
+    writes_only: bool,
+) -> Result<(), String> {
+    let file = std::fs::File::open(apk).map_err(|error| format!("{}: {error}", apk.display()))?;
+    let mut archive = zip::ZipArchive::new(file).map_err(|error| format!("zip: {error}"))?;
+    let mut names: Vec<String> = archive
+        .file_names()
+        .filter(|name| name.starts_with("classes") && name.ends_with(".dex"))
+        .map(str::to_owned)
+        .collect();
+    if names.is_empty() {
+        return Err("APK contains no classes*.dex files".to_owned());
+    }
+    names.sort_unstable();
+    let mut sites = Vec::new();
+    for name in names {
+        let mut bytes = Vec::new();
+        archive
+            .by_name(&name)
+            .map_err(|error| error.to_string())?
+            .read_to_end(&mut bytes)
+            .map_err(|error| error.to_string())?;
+        field_refs_one(&name, &bytes, class, field, ty, writes_only, &mut sites)
+            .map_err(|error| format!("{name}: {error}"))?;
+    }
+    for (site, opcode) in &sites {
+        println!(
+            "{}  {}->{}({})",
+            site.dex_file, site.class_name, site.method_name, site.method_proto
+        );
+        let access = if matches!(opcode, 0x59..=0x5f | 0x67..=0x6d) {
+            "write"
+        } else {
+            "read"
+        };
+        println!(
+            "  {access} opcode 0x{opcode:02x}, dex byte offset: 0x{:x}",
+            site.dex_byte_off
+        );
+    }
+    eprintln!(
+        "{} field reference(s) to {class}->{field}:{ty}",
+        sites.len()
+    );
     Ok(())
 }
 
@@ -2054,6 +2169,138 @@ mod tests {
         assert_eq!(decoded[0].mnemonic, "and-int/lit16");
         assert_eq!(decoded[0].annotation, "v1, v0, #0xff");
         assert_eq!(decoded[1].annotation, "v3, v4, #0xffff");
+        for end in 0..bytes.len() {
+            let _ = decode_insns(&bytes[..end], &dex);
+        }
+    }
+
+    fn field_fixture(code: &[u8]) -> Vec<u8> {
+        let mut data = minimal_dex_header();
+        data.resize(0x200, 0);
+        let strings = ["LX/Contact;", "state", "I", "update", "V"];
+        let mut body = 0x150;
+        for (index, value) in strings.iter().enumerate() {
+            data[0x70 + index * 4..0x74 + index * 4].copy_from_slice(&(body as u32).to_le_bytes());
+            data[body] = value.len() as u8;
+            data[body + 1..body + 1 + value.len()].copy_from_slice(value.as_bytes());
+            body += value.len() + 2;
+        }
+        for (header, count, offset) in [
+            (0x38, 5u32, 0x70u32),
+            (0x40, 3, 0x88),
+            (0x48, 1, 0x94),
+            (0x50, 1, 0xa0),
+            (0x58, 1, 0xa8),
+            (0x60, 1, 0xb0),
+        ] {
+            data[header..header + 4].copy_from_slice(&count.to_le_bytes());
+            data[header + 4..header + 8].copy_from_slice(&offset.to_le_bytes());
+        }
+        // Types: Contact/I/V; one method update():V; field Contact.state:I.
+        data[0x8c..0x90].copy_from_slice(&2u32.to_le_bytes());
+        data[0x90..0x94].copy_from_slice(&4u32.to_le_bytes());
+        data[0x94..0x98].copy_from_slice(&4u32.to_le_bytes());
+        data[0x98..0x9c].copy_from_slice(&2u32.to_le_bytes());
+        data[0xa2..0xa4].copy_from_slice(&1u16.to_le_bytes());
+        data[0xa4..0xa8].copy_from_slice(&1u32.to_le_bytes());
+        data[0xac..0xb0].copy_from_slice(&3u32.to_le_bytes());
+        data[0xc8..0xcc].copy_from_slice(&0xe0u32.to_le_bytes());
+        // class_data: zero fields, one direct method at code offset 0x100.
+        data[0xe0..0xe8].copy_from_slice(&[0, 0, 1, 0, 0, 1, 0x80, 2]);
+        data[0x10c..0x110].copy_from_slice(&((code.len() / 2) as u32).to_le_bytes());
+        data[0x110..0x110 + code.len()].copy_from_slice(code);
+        data
+    }
+
+    #[test]
+    fn exact_field_search_skips_payload_and_selects_writes() {
+        // Standard DEX 22c/21c forms. Embedded iput bytes in a real
+        // fill-array-data payload must not become a spurious field write.
+        let code = [
+            0x52, 0x10, 0, 0, 0x59, 0x10, 0, 0, 0x60, 0, 0, 0, 0x67, 0, 0, 0, 0, 3, 1, 0, 4, 0, 0,
+            0, 0x59, 0x10, 0, 0, 0x0e, 0,
+        ];
+        let data = field_fixture(&code);
+        let mut all = Vec::new();
+        field_refs_one(
+            "classes.dex",
+            &data,
+            "LX/Contact;",
+            "state",
+            "I",
+            false,
+            &mut all,
+        )
+        .unwrap();
+        assert_eq!(
+            all.iter()
+                .map(|(site, op)| (site.dex_byte_off, *op))
+                .collect::<Vec<_>>(),
+            [(0x110, 0x52), (0x114, 0x59), (0x118, 0x60), (0x11c, 0x67)]
+        );
+        assert!(all.iter().all(|(site, _)| site.class_name == "LX/Contact;"
+            && site.method_name == "update"
+            && site.method_proto == "V"));
+        let mut writes = Vec::new();
+        field_refs_one(
+            "classes.dex",
+            &data,
+            "LX/Contact;",
+            "state",
+            "I",
+            true,
+            &mut writes,
+        )
+        .unwrap();
+        assert_eq!(
+            writes.iter().map(|(_, op)| *op).collect::<Vec<_>>(),
+            [0x59, 0x67]
+        );
+        for (class, field, ty) in [
+            ("LX/Other;", "state", "I"),
+            ("LX/Contact;", "other", "I"),
+            ("LX/Contact;", "state", "J"),
+        ] {
+            let mut missing = Vec::new();
+            field_refs_one("classes.dex", &data, class, field, ty, false, &mut missing).unwrap();
+            assert!(missing.is_empty());
+        }
+    }
+
+    #[test]
+    fn field_search_refuses_truncated_instructions_and_quickened_offsets() {
+        let data = field_fixture(&[0x59, 0x10]);
+        let mut out = Vec::new();
+        assert!(
+            field_refs_one(
+                "classes.dex",
+                &data,
+                "LX/Contact;",
+                "state",
+                "I",
+                true,
+                &mut out
+            )
+            .unwrap_err()
+            .contains("truncated")
+        );
+        assert!(out.is_empty());
+        // An odex quickened opcode's operand is an offset, not a DEX field ID.
+        assert_eq!(accessed_field_index(&[0xe3, 0x10, 0, 0], false), None);
+        assert_eq!(accessed_field_index(&[0x59, 0x10, 0], true), None);
+    }
+
+    #[test]
+    fn decodes_pending_invitation_chat_flag_mask() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // APK 37.71 classes3.dex 1xz.A01 relative 0094, absolute 1e0094:
+        // this masks the wide chat-state register pair, not isGuest in v1.
+        let bytes = [0xa0, 0x07, 0x07, 0x13];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded[0].mnemonic, "and-long");
+        assert_eq!(decoded[0].annotation, "v7, v7, v19");
+        assert_eq!(decoded[0].width, 2);
         for end in 0..bytes.len() {
             let _ = decode_insns(&bytes[..end], &dex);
         }

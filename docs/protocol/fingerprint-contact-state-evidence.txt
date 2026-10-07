@@ -1,0 +1,260 @@
+# Fingerprint contact-state evidence, APK 2.26.37.71
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Confirmed/static. Existing apk-smali plus new exact apk-field-refs search.
+# Instructions use method-relative byte ranges; field search uses absolute DEX offsets.
+# Full raw dumps remain private under lab/. Interpretation/unknowns in safety-number.md.
+
+# All 17 direct writes to LX/0Da;->A04:I (reflection/native accesses not covered):
+classes.dex  LX/0Y9;->A0B(LL)
+  write opcode 0x59, dex byte offset: 0x5d169e
+classes.dex  LX/0Y9;->A0B(LL)
+  write opcode 0x59, dex byte offset: 0x5d16be
+classes.dex  LX/0Y9;->A0C(LL)
+  write opcode 0x59, dex byte offset: 0x5d1730
+classes.dex  LX/0Y9;->A0C(LL)
+  write opcode 0x59, dex byte offset: 0x5d1750
+classes.dex  LX/0Y9;->A0D(LL)
+  write opcode 0x59, dex byte offset: 0x5d17c4
+classes.dex  LX/0Y9;->A0D(LL)
+  write opcode 0x59, dex byte offset: 0x5d17e4
+classes.dex  LX/0lO;->A01(LLLLLZ)
+  write opcode 0x59, dex byte offset: 0x66f38e
+classes.dex  LX/17J;->BFC(ZLI)
+  write opcode 0x59, dex byte offset: 0x805da0
+classes.dex  LX/17J;->BFC(ZLI)
+  write opcode 0x59, dex byte offset: 0x805e2a
+classes3.dex  LX/1xz;->A01(VLZ)
+  write opcode 0x59, dex byte offset: 0x1e00b6
+classes3.dex  LX/2YX;->A07(VLL)
+  write opcode 0x59, dex byte offset: 0x2cd29a
+classes3.dex  LX/2xA;->A00(VLL)
+  write opcode 0x59, dex byte offset: 0x32a8d8
+classes3.dex  LX/2xA;->A01(VLL)
+  write opcode 0x59, dex byte offset: 0x32aa08
+classes3.dex  LX/33c;->A00(VLLLI)
+  write opcode 0x59, dex byte offset: 0x345c08
+classes3.dex  LX/35v;->A07(VLL)
+  write opcode 0x59, dex byte offset: 0x357bf4
+classes3.dex  LX/3Ng;->A00(V)
+  write opcode 0x59, dex byte offset: 0x3e8644
+classes6.dex  LX/AW9;->BqR(VLL)
+  write opcode 0x59, dex byte offset: 0x56d874
+
+# LX/0Da;-><init>
+.method public <init>(V)  # .registers 3
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>(V)
+    0006..0008  const/4  v1, #0x1
+    0008..000c  iput-boolean  v1, v2, LX/0Da;->A19:Z
+    000c..0010  const-string  v0, "lid"
+    0010..0014  iput-object  v0, v2, LX/0Da;->A0X:Ljava/lang/String;
+    0014..0018  iput-boolean  v1, v2, LX/0Da;->A14:Z
+    0018..001a  return-void
+.end method
+
+# LX/0lO;->A01
+.method public A01(LLLLLZ)  # .registers 19
+    06aa..06ae  const-string  v0, "external_user_state"
+    06ae..06b4  invoke-static  {v7, v0, v11}, LX/0lO;->A00(ILLL)
+    06b4..06b6  move-result  v0
+    06b6..06bc  invoke-interface  {v7, v0}, Landroid/database/Cursor;->getInt(II)
+    06bc..06be  move-result  v0
+    06be..06c2  iput  v0, v4, LX/0Da;->A04:I
+.end method
+
+# LX/0Y9;->A0b
+.method public A0b(VL)  # .registers 8
+    0060..0064  iget-object  v0, v7, LX/0DV;->A0D:LX/0Da;
+    0064..0068  iget  v0, v0, LX/0Da;->A04:I
+    0068..006e  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    006e..0070  move-result-object  v1
+    0070..0074  const-string  v0, "external_user_state"
+    0074..007a  invoke-virtual  {v2, v0, v1}, Landroid/content/ContentValues;->put(VLL)
+    007a..0080  invoke-virtual  {v7}, LX/0DV;->A09(L)
+    0080..0082  move-result-object  v0
+    0082..0088  invoke-virtual  {v3, v2, v0}, LX/0gt;->A0S(VLL)
+.end method
+
+# LX/0np;->A06
+.method public A06(ZL)  # .registers 5
+    0000..0002  const/4  v3, #0x0
+    0002..0008  invoke-static  {v4, v3}, LX/00h;->A0A(VLI)
+    0008..000c  iget-object  v0, v4, LX/0DV;->A0D:LX/0Da;
+    000c..0010  iget  v2, v0, LX/0Da;->A04:I
+    0010..0012  const/4  v1, #0x1
+    0012..0016  if-eq  v2, v1, +0x9
+    0016..0018  const/4  v0, #0x2
+    0018..001c  if-eq  v2, v0, +0x6
+    001c..001e  const/4  v0, #0x3
+    001e..0022  if-eq  v2, v0, +0x3
+    0022..0024  return  v3
+    0024..0026  return  v1
+.end method
+
+# LX/0Y9;->A0B
+.method public A0B(LL)  # .registers 7
+    0034..0036  const/4  v2, #0x1
+    0036..003a  if-eqz  v3, +0x2b
+    0066..006c  invoke-static  {v3}, LX/0np;->A06(ZL)
+    006c..006e  move-result  v0
+    006e..0072  if-nez  v0, +0xe
+    0072..0076  if-nez  v1, +0xc
+    0076..007a  iget-object  v0, v3, LX/0DV;->A0D:LX/0Da;
+    007a..007e  iput  v2, v0, LX/0Da;->A04:I
+    007e..0080  const/4  v0, #0x0
+    0080..0084  iput-boolean  v0, v3, LX/0DV;->A0A:Z
+    0084..008a  invoke-virtual  {v5, v3}, LX/0Y9;->A0b(VL)
+    008a..008c  return-object  v3
+    008c..0090  new-instance  v3, LX/0DV;
+    0090..0096  invoke-direct  {v3, v6}, LX/0DV;-><init>(VL)
+    0096..009a  iget-object  v1, v3, LX/0DV;->A0D:LX/0Da;
+    009a..009e  iput  v2, v1, LX/0Da;->A04:I
+.end method
+
+# LX/0Y9;->A0C
+.method public A0C(LL)  # .registers 7
+    003a..0040  invoke-static  {v3}, LX/0np;->A09(ZL)
+    0040..0042  move-result  v0
+    0042..0046  if-nez  v0, +0xc
+    0046..0048  const/4  v1, #0x4
+    0048..004c  iget-object  v0, v3, LX/0DV;->A0D:LX/0Da;
+    004c..0050  iput  v1, v0, LX/0Da;->A04:I
+    0050..0054  iput-boolean  v2, v3, LX/0DV;->A0A:Z
+    0054..005a  invoke-virtual  {v5, v3}, LX/0Y9;->A0b(VL)
+    005a..005c  return-object  v3
+    005c..0060  new-instance  v3, LX/0DV;
+    0060..0066  invoke-direct  {v3, v6}, LX/0DV;-><init>(VL)
+    0066..0068  const/4  v0, #0x4
+    0068..006c  iget-object  v1, v3, LX/0DV;->A0D:LX/0Da;
+    006c..0070  iput  v0, v1, LX/0Da;->A04:I
+    0070..0074  iput-boolean  v2, v3, LX/0DV;->A0A:Z
+    0074..0076  const/4  v0, #0x1
+    0076..007a  iput  v0, v1, LX/0Da;->A0D:I
+    007a..0080  invoke-virtual  {v4, v3, v2}, LX/0gt;->A0Z(VLZ)
+.end method
+
+# LX/0Y9;->A0D
+.method public A0D(LL)  # .registers 7
+    003a..0040  invoke-static  {v3}, LX/0np;->A0A(ZL)
+    0040..0042  move-result  v0
+    0042..0046  if-nez  v0, +0xc
+    0046..0048  const/4  v1, #0x5
+    0048..004c  iget-object  v0, v3, LX/0DV;->A0D:LX/0Da;
+    004c..0050  iput  v1, v0, LX/0Da;->A04:I
+    0050..0054  iput-boolean  v2, v3, LX/0DV;->A0A:Z
+    0054..005a  invoke-virtual  {v5, v3}, LX/0Y9;->A0b(VL)
+    005a..005c  return-object  v3
+    005c..0060  new-instance  v3, LX/0DV;
+    0060..0066  invoke-direct  {v3, v6}, LX/0DV;-><init>(VL)
+    0066..0068  const/4  v0, #0x5
+    0068..006c  iget-object  v1, v3, LX/0DV;->A0D:LX/0Da;
+    006c..0070  iput  v0, v1, LX/0Da;->A04:I
+    0070..0074  iput-boolean  v2, v3, LX/0DV;->A0A:Z
+    0074..0076  const/4  v0, #0x1
+    0076..007a  iput  v0, v1, LX/0Da;->A0D:I
+    007a..0080  invoke-virtual  {v4, v3, v2}, LX/0gt;->A0Z(VLZ)
+.end method
+
+# LX/2YX;->A07
+.method public A07(VLL)  # .registers 35
+    0050..0054  const-string  v0, "CameoUserJoinedNotificationHandler/handleNotification/guestLid:"
+    0054..005a  invoke-static  {v0, v4}, LX/1xk;->A1Q(VLL)
+    005a..005e  move-object/from16  v8, v32
+    005e..0062  iget-object  v0, v8, LX/2YX;->A07:LX/05B;
+    0062..0066  iget-object  v9, v0, LX/05B;->A00:LX/00s;
+    0066..006c  invoke-interface  {v9}, LX/00s;->get(L)
+    006c..006e  move-result-object  v1
+    006e..0072  check-cast  v1, LX/1xz;
+    0072..0074  const/4  v3, #0x1
+    013e..0142  iget-object  v1, v0, LX/0DV;->A0D:LX/0Da;
+    0142..0146  iput  v3, v1, LX/0Da;->A04:I
+    0146..014a  iget-object  v1, v8, LX/2YX;->A01:LX/05B;
+    014a..0150  invoke-static  {v1, v0}, LX/1xk;->A1B(VLL)
+.end method
+
+# LX/35v;->A07
+.method public A07(VLL)  # .registers 34
+    1668..166c  const-string  v1, "CameoRegisteredNotificationHandler/handleNotification/reason:"
+    166c..1672  invoke-static  {v9, v1}, LX/000;->A07(LLL)
+    1672..1674  move-result-object  v2
+    1674..1678  const-string  v1, ", guestLid:"
+    1678..167e  invoke-static  {v10, v1, v2}, LX/1xj;->A1L(VLLL)
+    167e..1684  invoke-static  {}, LX/1xf;->A1D(L)
+    1684..1686  move-result-object  v6
+    1686..168a  iget-object  v1, v0, LX/2YU;->A01:LX/05B;
+    168a..168e  iget-object  v3, v1, LX/05B;->A00:LX/00s;
+    168e..1694  invoke-static  {v3, v10}, LX/1xj;->A0U(LLL)
+    1694..1696  move-result-object  v5
+    1696..169a  if-eqz  v5, +0xa
+    169a..169c  const/4  v2, #0x3
+    169c..16a0  iget-object  v1, v5, LX/0DV;->A0D:LX/0Da;
+    16a0..16a4  iput  v2, v1, LX/0Da;->A04:I
+    16a4..16aa  invoke-virtual  {v6, v5}, Ljava/util/AbstractCollection;->add(ZL)
+.end method
+
+# LX/2xA;->A01
+.method public A01(VLL)  # .registers 9
+    0000..0002  const/4  v4, #0x0
+    0002..0004  const/4  v5, #0x1
+    0004..000a  invoke-static  {v7, v5}, LX/00h;->A0A(VLI)
+    000a..000e  const-string  v0, "CameoUtils/transitionCameoUserToNormalWAUser/pnUserJid:"
+    000e..0014  invoke-static  {v8, v0}, LX/000;->A07(LLL)
+    0014..0016  move-result-object  v1
+    0016..001a  const-string  v0, ", userLid:"
+    001a..0020  invoke-static  {v7, v0, v1}, LX/1xj;->A1L(VLLL)
+    0064..006a  invoke-static  {v3, v8}, LX/1xj;->A0T(LLL)
+    006a..006c  move-result-object  v1
+    006c..0070  iput-boolean  v5, v1, LX/0DV;->A0A:Z
+    0070..0074  iget-object  v0, v1, LX/0DV;->A0D:LX/0Da;
+    0074..0078  iput  v4, v0, LX/0Da;->A04:I
+    0078..007c  iget-object  v0, v6, LX/2xA;->A04:LX/05B;
+    007c..0082  invoke-static  {v0, v1}, LX/1xk;->A1B(VLL)
+.end method
+
+# LX/1xz;->A01
+.method public A01(VLZ)  # .registers 32
+    002c..0030  const-string  v3, " isGuest="
+    0030..0034  move/from16  v1, v31
+    0034..003a  invoke-static  {v3, v4, v1}, LX/1xj;->A1O(VLLZ)
+    0094..0098  and-long  v7, v7, v19
+    00b2..00b6  iget-object  v7, v2, LX/0DV;->A0D:LX/0Da;
+    00b6..00ba  iput  v1, v7, LX/0Da;->A04:I
+    00ba..00bc  const/4  v4, #0x1
+    00bc..00c0  iput-boolean  v4, v2, LX/0DV;->A0A:Z
+    010e..0112  iget  v5, v7, LX/0Da;->A04:I
+    0112..0116  const-string  v4, "PendingInviteUtils/deliverUnsentMessagesForPendingInvite/flipped contact to externalUserState="
+    0116..011c  invoke-static  {v5, v4}, LX/000;->A06(LIL)
+    011c..011e  move-result-object  v5
+    011e..0122  const-string  v4, ", sending unsent messages for lid="
+    0122..0128  invoke-static  {v15, v4, v5}, LX/1xj;->A1L(VLLL)
+.end method
+
+# LX/17J;->BFC
+.method public BFC(ZLI)  # .registers 31
+    10b2..10b6  const/16  v7, #0x1006
+    10b6..10ba  if-ne  v2, v7, +0xb
+    10ba..10c0  invoke-static  {v6}, LX/0DE;->A0a(ZL)
+    10c0..10c2  move-result  v7
+    10c2..10c6  if-eqz  v7, +0xfe4d
+    10c6..10ca  if-eqz  v6, +0xaf
+    10ca..10cc  goto  +0x51
+    10cc..10d0  const/16  v7, #0x1005
+    10d0..10d4  if-ne  v2, v7, +0xfe46
+    10d4..10da  invoke-static  {v6}, LX/0DE;->A0a(ZL)
+    10da..10dc  move-result  v7
+    10dc..10e0  if-eqz  v7, +0xfe40
+    10e0..10e4  if-eqz  v6, +0xa8
+    1100..1104  if-eqz  v9, +0x65
+    1104..110a  invoke-static  {v9}, LX/0np;->A06(ZL)
+    110a..110c  move-result  v7
+    110c..1110  if-eqz  v7, +0x5f
+    1110..1114  iget-object  v7, v9, LX/0DV;->A0D:LX/0Da;
+    1114..1118  iput  v4, v7, LX/0Da;->A04:I
+    1118..111c  iput-boolean  v5, v9, LX/0DV;->A0A:Z
+    1188..118c  if-eqz  v9, +0x21
+    118c..1192  invoke-static  {v9}, LX/0np;->A06(ZL)
+    1192..1194  move-result  v7
+    1194..1198  if-eqz  v7, +0x1b
+    1198..119a  const/4  v8, #0x2
+    119a..119e  iget-object  v7, v9, LX/0DV;->A0D:LX/0Da;
+    119e..11a2  iput  v8, v7, LX/0Da;->A04:I
+.end method

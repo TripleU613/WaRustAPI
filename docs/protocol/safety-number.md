@@ -1503,3 +1503,113 @@ and its test passed; repository hygiene passed with 329 local links. The initial
 snapshot's trailing blank line was removed; final staged whitespace checks passed.
 This change adds static research evidence only; runtime code and API/CLI
 capabilities are unchanged, and no live account validation is claimed.
+
+## Fingerprint contact predicate is external-user state (2026-10-07)
+
+**Confirmed/static**, APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Scoped instruction evidence and exact write sites](fingerprint-contact-state-evidence.txt)
+resolve the storage domain of the previously unnamed 0Da.A04 scheme input.
+Offsets here are method-relative bytes; the artifact's field-reference list
+separately identifies absolute DEX byte offsets.
+
+0Da's constructor initializes unrelated boolean/string members and contains
+no A04 write (0000..001a). The clone helper identifies the object as
+`com.whatsapp.infra.core.data.contact.WaContactData`; field existence alone
+therefore did not identify an enum or its producer. The new exact
+`xtask apk-field-refs --class 'LX/0Da;' --field A04 --type I --writes-only`
+search found **17 standard DEX writes in 13 methods** across the pinned APK.
+A second search with reads included found 36 total sites (19 reads, 17 writes).
+This counts direct iget/iput/sget/sput instructions, not native or reflective accesses.
+It located the stored-field mapping without guessing neighboring class names.
+
+**Storage mapping:** 0lO.A01 obtains the `external_user_state` cursor column,
+reads its integer and writes 0Da.A04 (06aa..06c2). Conversely 0Y9.A0b reads
+A04, writes the same named ContentValues column, and calls 0gt.A0S with the
+contact's JID (0060..0088). The mapping is confirmed in both directions.
+**Refuted:** this field is not identified by its numeric values as the saved
+Signal encryption-attestation enum or the native QR HostedState. The field's
+actual storage domain is external-user contact state; its producers below
+include Cameo/guest and pending-invitation transitions. No server/internal
+meaning is inferred just because another enum has equal numeric members.
+
+The observed producer branches are:
+
+| Producer | Assignment / guards | Evidence |
+| --- | --- | --- |
+| 0Y9.A0B | Uses value 1 on new LID contacts; existing contact conversion additionally checks 0np.A0A, chat existence and 0np.A06 before writing | 0034..007e, 008c..00b0 |
+| 0Y9.A0C | Writes 4 when the existing contact does not pass 0np.A09, or creates a new contact with 4 | 003a..0082 |
+| 0Y9.A0D | Writes 5 when the existing contact does not pass 0np.A0A, or creates a new contact with 5 | 003a..0082 |
+| 2YX.A07 | `CameoUserJoinedNotificationHandler` logs the guest LID, loads literal 1 and later writes it to the contact | 0050..0074, 013e..0150 |
+| 35v.A07 | The `CameoRegisteredNotificationHandler` branch loads the guest LID and reason, then writes literal 3 to a non-null contact | 163a..16aa |
+| 2xA.A01 | `CameoUtils/transitionCameoUserToNormalWAUser` starts with literal 0, then writes 0 before saving the contact | 0000..0020, 0064..0082 |
+| 2xA.A00 | Behind its additional reason/chat gates, a contact passing 0np.A06 is written with literal 2 | 0000..009e |
+| 1xz.A01 | `PendingInviteUtils/deliverUnsentMessagesForPendingInvite` uses the supplied isGuest boolean as integer 0/1 when updating a qualifying contact | 002c..003a, 00b2..00c0, 010e..0128 |
+| 17J.BFC | Its existing message-status path has LID/contact/0np.A06 guards; branches testing numeric codes 0x1005/0x1006 write 0 or 2 respectively | 0a90..0a92, 10b2..11a2 |
+
+These are **branch descriptions**, not invented canonical enum names. Complete
+reason definitions, notification authentication, persistence ordering and the
+message-status codes' server-facing meanings remain unknown. In particular,
+1xz's direct boolean assignment does not authorize setting isGuest ourselves
+or sending any of its pending messages. None of these APK handlers was executed.
+The remaining direct writers AW9.BqR, 33c.A00 and 3Ng.A00 are located but their
+full provenance is not established; 33c's visible write takes its supplied
+integer argument (0070..0078), so that site alone does not define an enum.
+
+**Scheme consequence:** 0np.A06 still tests exactly A04 membership in {1,2,3}
+(0008..0026); 26B.A00 still requires a LID-type target and an available contact
+before delegating to that predicate. Thus the predicate concerns these external-
+user contact states, not a generic hosted-device or human-verification flag.
+The separate 0np.A09 tests 4, A0A tests 5, and A02 tests {2,3}; their existence
+corroborates separate contact branches without naming an authoritative enum.
+Neither this research nor the explicit-input comparator populates contact data,
+sets feature 0x1d2c, or establishes this account's active scheme. Username and
+complete current inventory integration remain open.
+
+**Reusable research capability:** `xtask apk-field-refs` accepts the exact
+class, field and type plus optional `--writes-only`. It scans standard
+iget/iput/sget/sput variants using the shared class/method visitor, reports
+DEX file, referencing class/method/shorty, opcode and absolute byte offset, and
+prints the total on stderr. DEX filenames are sorted for reproducible output;
+the ZIP iterator order was observed to vary between runs. Direct/virtual method indices reset independently;
+instruction payloads are skipped. Results are assembled before stdout, and
+missing DEX files or malformed traversed field tables/instructions refuse.
+This is not a general DEX verifier or a native/reflection/quickened-offset
+search. The older caller utility now shares this checked instruction visitor;
+its existing per-DEX warning policy remains distinct from field-search refusal.
+The pending-invitation trace also exposed a missing and-long mnemonic/operand
+display: literal bytes `a0 07 07 13` at classes3.dex `0x1e0094` decode as
+`and-long v7, v7, v19`, masking chat flags without changing isGuest in v1.
+That reusable decoder gap is fixed with an APK-byte regression and truncated
+prefix checks. This supports the boolean-to-integer flow above; it does not
+define all chat-flag meanings.
+Synthetic DEX tests cover read/write selection, exact class/name/type matching,
+payload bytes that resemble writes, truncation and quickened-opcode exclusion.
+No runtime account, field-value mutation or network capability was added.
+
+Reproduce the field search and targeted mapping:
+
+```sh
+cargo run --locked -p xtask -- apk-field-refs ~/Downloads/WhatsApp.apk \
+  --class 'LX/0Da;' --field A04 --type I --writes-only
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/0lO;' --method A01
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/0Y9;' --method A0b
+```
+
+Private raw method dumps and the writer list remain under
+`lab/apk-2.26.37.71/fingerprint-contact-state-*` and
+`fingerprint-external-state-predicates.smali`. No real contact values were read,
+changed, copied into fixtures or described as current-account observations.
+
+Validation: 555 workspace/all-feature tests and 243 default-feature tests
+passed, including three new APK/DEX regression checks. Strict workspace
+all-target/all-feature Clippy, warning-free Rustdoc, formatting and regenerated
+CLI reference passed. Final tool-only tests/Clippy also cover filename sorting.
+Command-level no-DEX and malformed-DEX archives refused with empty stdout;
+wrong field type produced zero sites. The shared caller search reproduced all
+134 previous BNm call-site records; the first byte-for-byte check differed
+because ZIP filename iteration order varies, so record sets were compared.
+The new field-search command sorts DEX names to make its output reproducible.
+No live account or identity-change test was performed in this change.
+Two sorted field-search runs matched byte-for-byte. Repository hygiene passed
+with 334 local links; final staged whitespace checks passed.

@@ -340,3 +340,19 @@ three mode-predicate definitions without guessing the implementation class.
 These static excerpts establish source/logout/alias/cache rules, not current
 account membership, signed-list freshness or a live safety-number calculation.
 Raw dumps remain ignored under `lab/apk-2.26.37.71/`.
+
+### Exact DEX field producers and consumers
+
+`cargo run --locked -p xtask -- apk-field-refs <apk> --class 'LX/Contact;' \
+--field state --type I [--writes-only]` finds exact standard instance/static
+field access sites. The optional switch excludes reads. Output includes DEX
+file, method/shorty, read/write opcode and absolute DEX byte offset; total count
+is on stderr. Payloads are skipped; malformed traversed structures and no DEX
+files refuse before stdout. Reflection/native/quickened offsets are outside
+scope. Follow each site with `apk-smali`, rather than treating a write as proof
+of its input's origin or server meaning.
+
+The [contact-state follow-up](../../docs/protocol/safety-number.md#fingerprint-contact-predicate-is-external-user-state-2026-10-07)
+and [scoped evidence](../../docs/protocol/fingerprint-contact-state-evidence.txt)
+use this command to identify all 17 direct APK 37.71 writes to 0Da.A04 and trace
+the fingerprint predicate to `external_user_state`. Raw APKs/dumps stay local.

@@ -389,3 +389,23 @@ and its test passed; repository hygiene passed with 329 local links. The initial
 snapshot's trailing blank line was removed; final staged whitespace checks passed.
 This change adds static research evidence only; runtime code and API/CLI
 capabilities are unchanged, and no live account validation is claimed.
+
+Fingerprint contact-state follow-up (static, 2026-10-07): the reusable
+`xtask apk-field-refs` command found 17 direct writes to APK 37.71 0Da.A04.
+Read/write tracing identifies `external_user_state`, with guest/Cameo,
+pending-invitation and normal-user transitions, rather than Signal attestation
+or QR HostedState. Complete producer authority and active scheme remain open.
+[Contact input evidence](docs/protocol/safety-number.md#fingerprint-contact-predicate-is-external-user-state-2026-10-07).
+
+Validation: 555 workspace/all-feature tests and 243 default-feature tests
+passed, including three new APK/DEX regression checks. Strict workspace
+all-target/all-feature Clippy, warning-free Rustdoc, formatting and regenerated
+CLI reference passed. Final tool-only tests/Clippy also cover filename sorting.
+Command-level no-DEX and malformed-DEX archives refused with empty stdout;
+wrong field type produced zero sites. The shared caller search reproduced all
+134 previous BNm call-site records; the first byte-for-byte check differed
+because ZIP filename iteration order varies, so record sets were compared.
+The new field-search command sorts DEX names to make its output reproducible.
+No live account or identity-change test was performed in this change.
+Two sorted field-search runs matched byte-for-byte. Repository hygiene passed
+with 334 local links; final staged whitespace checks passed.

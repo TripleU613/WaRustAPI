@@ -9,6 +9,7 @@
 //! * `apk-tokens <apk>` — recover the binary-node token dictionary from bytecode.
 //! * `apk-xref <apk> --anchor <s>…` — find classes/methods referencing string constants.
 //! * `apk-callers <apk> --class <c> --method <m>` — find callers of a method.
+//! * `apk-field-refs <apk> --class <c> --field <f> --type <t>` — exact field access sites.
 //! * `apk-smali <apk> --class <filter>` — dump Dalvik instructions for matching classes.
 //! * `apk-registration-token <apk> …` — derive the comparison build's code-request token.
 //! * `apk-token-material --from-dir <dir> --logo-from <apk> --out <zip> [--verify-config <json>]` — assemble token material archive.
@@ -99,6 +100,23 @@ enum Cmd {
         /// Exact target method name.
         #[arg(long = "method")]
         method_name: String,
+    },
+    /// Find exact field read/write instructions across the APK DEX files.
+    ApkFieldRefs {
+        /// Path to the APK (kept outside the repository).
+        apk: PathBuf,
+        /// Exact declaring class descriptor.
+        #[arg(long = "class")]
+        class_name: String,
+        /// Exact field name.
+        #[arg(long = "field")]
+        field_name: String,
+        /// Exact field type descriptor (for example I or Ljava/lang/String;).
+        #[arg(long = "type")]
+        field_type: String,
+        /// Include writes only (iput/sput); otherwise include reads too.
+        #[arg(long)]
+        writes_only: bool,
     },
     /// Dump the Dalvik instruction stream for classes whose name contains `--class`.
     ///
@@ -191,6 +209,13 @@ fn main() -> ExitCode {
             class_name,
             method_name,
         } => xref::run_callers(&apk, &class_name, &method_name),
+        Cmd::ApkFieldRefs {
+            apk,
+            class_name,
+            field_name,
+            field_type,
+            writes_only,
+        } => xref::run_field_refs(&apk, &class_name, &field_name, &field_type, writes_only),
         Cmd::ApkSmali {
             apk,
             class_filter,

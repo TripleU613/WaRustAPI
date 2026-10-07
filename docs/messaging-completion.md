@@ -790,3 +790,10 @@ now traced in APK 37.71. BNm is Me-presence rather than signed-list freshness.
 Active own membership/authentication, scheme/contact inputs and live comparison
 remain open; no peer mark or account operation occurred. See
 [own-directory selection](protocol/safety-number.md#own-directory-source-logout-filtering-and-alias-precedence-2026-10-07).
+
+2026-10-07 fingerprint contact predicate: exact field-reference searching now
+locates direct DEX field producers/consumers. APK 37.71 0Da.A04 is stored as
+`external_user_state`; guest/Cameo and pending-invitation branches are traced.
+This narrows scheme-input requirements without manufacturing contact state.
+Active inputs/authenticated inventory and live peer comparison remain open.
+See [contact-state mapping](protocol/safety-number.md#fingerprint-contact-predicate-is-external-user-state-2026-10-07).

@@ -60,6 +60,18 @@
       "x-transport": "cli",
       "x-live": false,
       "description": "Offline developer utility, no HTTP route or account flow. Exact APK 2.26.37.71 merged-library SHA-256 required. Executes actual protobuf-C combined unpack, generated initializers, parsing/merge helpers and free over 50 built-in synthetic buffers; emits accepted flags, recognized presence/hex bytes/enum/version, native unknown-field counts, instruction counts and modeled allocation totals. No arbitrary/user/account payloads accepted. ELF PT_LOAD images and relevant internal relocations are mapped, but hook permits only identified parser/generated-init ranges and modeled allocator/free/memcpy/memset stubs. Empty input is accepted by this standalone parser; actual comparison wrapper separately aborts, while our client refuses empty as local policy. Ten seconds/one million instructions per unpack/free invocation, 64-KiB input and 1-MiB monotonically allocated guest heap bounds. Return PC and no live modeled allocations after free/rejection required. Unexpected branches/wrong builds/budget exhaustion refuse before partial JSON. Independent corpus docs/protocol/fingerprint-native-parser-cases.json disproves eight prost acceptance assumptions and validates the bounded schema decoder. This is not full JNI/QR comparison, device inventory or human verification. Evidence: docs/protocol/safety-number.md."
+    },
+    {
+      "x-cli": "cargo run -p xtask -- apk-field-refs <apk> --class <exact-class-descriptor> --field <exact-field-name> --type <exact-type-descriptor> [--writes-only]",
+      "x-transport": "cli",
+      "x-live": false,
+      "description": "Offline DEX development utility, no HTTP route or account operation. Scans standard instance/static field read/write opcodes (iget/iput/sget/sput variants) against an exact declaring class, name and type. --writes-only excludes reads. Sorts DEX filenames for reproducible output. Outputs DEX file, referencing class/method/shorty, read/write opcode and absolute DEX byte offset; reports count on stderr, including zero results. Uses the shared method visitor with independently reset direct/virtual method deltas and skips instruction payloads. Malformed traversed field tables/instruction streams or missing classes*.dex refuse before stdout; this is not a general DEX verifier. Quickened odex offsets, native/reflection accesses and dynamic provenance are outside scope. APK 2.26.37.71 LX/0Da;->A04:I has 17 direct write sites; scoped contact-state evidence in docs/protocol/safety-number.md establishes external_user_state, not Signal attestation or QR HostedState. No active scheme or account metadata is changed."
+    },
+    {
+      "x-cli": "cargo run -p xtask -- apk-smali <apk> --class <class-substring> [--method <method-substring>]",
+      "x-transport": "cli",
+      "x-live": false,
+      "description": "Existing offline development command; symbolic Dalvik instruction dump with class and optional method substring filters. No HTTP route, native execution or account state. The pending-invitation producer trace now decodes standard and-long opcode 0xa0 in 23x format; literal APK 2.26.37.71 classes3.dex 1xz.A01 bytes a0070713 at absolute 0x1e0094 show v7,v7,v19, preserving separate isGuest register v1. Independent literal/truncation regression covers the annotation. Unsupported opcodes remain explicitly unknown; a textual dump is not proof of runtime behavior. See docs/protocol/safety-number.md."
     }
   ],
   "info": {
