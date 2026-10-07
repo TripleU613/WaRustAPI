@@ -1,5 +1,9 @@
 {
   "group-notification-ack": {
+    "anchors": [
+      "received stanza with null class",
+      "received stanza with null id"
+    ],
     "class": "LX/Cp2;",
     "file": "group-notification-ack.txt",
     "method_filter": "A05",
@@ -10,6 +14,9 @@
     ]
   },
   "group-notifications": {
+    "anchors": [
+      "GroupNotificationHandler/handleSubject/old timestamp, gjid="
+    ],
     "class": "LX/0yv;",
     "file": "group-notifications.txt",
     "method_filter": "A09",
@@ -20,6 +27,9 @@
     ]
   },
   "group-refresh-job": {
+    "anchors": [
+      "GroupInfoBatchProcessor/FetchTruncatedGroupsJob/null context, dropping stale job"
+    ],
     "class": "Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;",
     "file": "group-refresh-job.txt",
     "method_filter": "A0G",
@@ -30,6 +40,9 @@
     ]
   },
   "group-subject-cache-read": {
+    "anchors": [
+      "GET_GROUP_NOTIFICATION_VERSION_SQL"
+    ],
     "class": "LX/118;",
     "file": "group-subject-cache-read.txt",
     "method_filter": "A00",
@@ -40,6 +53,9 @@
     ]
   },
   "group-subject-cache-write": {
+    "anchors": [
+      "UPDATE_GROUP_NOTIFICATION_SUBJECT_TIMESTAMP"
+    ],
     "class": "LX/117;",
     "file": "group-subject-cache-write.txt",
     "method_filter": "A01",
@@ -50,6 +66,9 @@
     ]
   },
   "group-subject-parent-write": {
+    "anchors": [
+      "comm-failures/parentGroupJid is null"
+    ],
     "class": "LX/0yw;",
     "file": "group-subject-parent-write.txt",
     "method_filter": "A0B",

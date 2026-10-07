@@ -7,6 +7,9 @@
       "rust_files": [
         "crates/whatsapp-api/src/transport/groups.rs",
         "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "anchors": [
+        "GroupNotificationHandler/handleSubject/old timestamp, gjid="
       ]
     },
     "group-notification-ack": {
@@ -15,6 +18,10 @@
       "rust_files": [
         "crates/whatsapp-api/src/transport/groups.rs",
         "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "anchors": [
+        "received stanza with null class",
+        "received stanza with null id"
       ]
     },
     "group-refresh-job": {
@@ -23,6 +30,9 @@
       "rust_files": [
         "crates/whatsapp-api/src/transport/groups.rs",
         "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "anchors": [
+        "GroupInfoBatchProcessor/FetchTruncatedGroupsJob/null context, dropping stale job"
       ]
     },
     "group-subject-cache-read": {
@@ -31,6 +41,9 @@
       "rust_files": [
         "crates/whatsapp-api/src/transport/groups.rs",
         "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "anchors": [
+        "GET_GROUP_NOTIFICATION_VERSION_SQL"
       ]
     },
     "group-subject-cache-write": {
@@ -39,6 +52,9 @@
       "rust_files": [
         "crates/whatsapp-api/src/transport/groups.rs",
         "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "anchors": [
+        "UPDATE_GROUP_NOTIFICATION_SUBJECT_TIMESTAMP"
       ]
     },
     "group-subject-parent-write": {
@@ -47,6 +63,9 @@
       "rust_files": [
         "crates/whatsapp-api/src/transport/groups.rs",
         "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "anchors": [
+        "comm-failures/parentGroupJid is null"
       ]
     }
   }

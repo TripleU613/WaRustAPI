@@ -1,0 +1,216 @@
+{
+  "all_unique": true,
+  "candidate_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "interpretation": "Exact string co-occurrence locates class/method scopes; it does not prove protocol equivalence. Proposed selectors require semantic review. Missing/ambiguous/unanchored/no-common-scope topics block recipe output.",
+  "previous_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "topics": [
+    {
+      "anchor_sites": {
+        "received stanza with null class": [
+          {
+            "class_name": "LX/Cp2;",
+            "dex_byte_off": 6988688,
+            "dex_file": "classes7.dex",
+            "method_index": 29740,
+            "method_name": "A05",
+            "method_proto": "LLL"
+          }
+        ],
+        "received stanza with null id": [
+          {
+            "class_name": "LX/Cp2;",
+            "dex_byte_off": 6988706,
+            "dex_file": "classes7.dex",
+            "method_index": 29740,
+            "method_name": "A05",
+            "method_proto": "LLL"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "class_name": "LX/Cp2;",
+          "dex_byte_off": 6988688,
+          "dex_file": "classes7.dex",
+          "method_index": 29740,
+          "method_name": "A05",
+          "method_proto": "LLL"
+        }
+      ],
+      "previous_class": "LX/Cp2;",
+      "previous_method": "A05",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "group-notification-ack"
+    },
+    {
+      "anchor_sites": {
+        "GroupNotificationHandler/handleSubject/old timestamp, gjid=": [
+          {
+            "class_name": "LX/0yv;",
+            "dex_byte_off": 7706400,
+            "dex_file": "classes.dex",
+            "method_index": 22814,
+            "method_name": "A09",
+            "method_proto": "VLI"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "class_name": "LX/0yv;",
+          "dex_byte_off": 7706400,
+          "dex_file": "classes.dex",
+          "method_index": 22814,
+          "method_name": "A09",
+          "method_proto": "VLI"
+        }
+      ],
+      "previous_class": "LX/0yv;",
+      "previous_method": "A09",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "group-notifications"
+    },
+    {
+      "anchor_sites": {
+        "GroupInfoBatchProcessor/FetchTruncatedGroupsJob/null context, dropping stale job": [
+          {
+            "class_name": "Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;",
+            "dex_byte_off": 6765904,
+            "dex_file": "classes6.dex",
+            "method_index": 38998,
+            "method_name": "A0G",
+            "method_proto": "V"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "class_name": "Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;",
+          "dex_byte_off": 6765904,
+          "dex_file": "classes6.dex",
+          "method_index": 38998,
+          "method_name": "A0G",
+          "method_proto": "V"
+        }
+      ],
+      "previous_class": "Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;",
+      "previous_method": "A0G",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "group-refresh-job"
+    },
+    {
+      "anchor_sites": {
+        "GET_GROUP_NOTIFICATION_VERSION_SQL": [
+          {
+            "class_name": "LX/118;",
+            "dex_byte_off": 7953866,
+            "dex_file": "classes.dex",
+            "method_index": 23955,
+            "method_name": "A00",
+            "method_proto": "LLL"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "class_name": "LX/118;",
+          "dex_byte_off": 7953866,
+          "dex_file": "classes.dex",
+          "method_index": 23955,
+          "method_name": "A00",
+          "method_proto": "LLL"
+        }
+      ],
+      "previous_class": "LX/118;",
+      "previous_method": "A00",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "group-subject-cache-read"
+    },
+    {
+      "anchor_sites": {
+        "UPDATE_GROUP_NOTIFICATION_SUBJECT_TIMESTAMP": [
+          {
+            "class_name": "LX/117;",
+            "dex_byte_off": 7953438,
+            "dex_file": "classes.dex",
+            "method_index": 23952,
+            "method_name": "A01",
+            "method_proto": "VLJ"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "class_name": "LX/117;",
+          "dex_byte_off": 7953438,
+          "dex_file": "classes.dex",
+          "method_index": 23952,
+          "method_name": "A01",
+          "method_proto": "VLJ"
+        }
+      ],
+      "previous_class": "LX/117;",
+      "previous_method": "A01",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "group-subject-cache-write"
+    },
+    {
+      "anchor_sites": {
+        "comm-failures/parentGroupJid is null": [
+          {
+            "class_name": "LX/0yw;",
+            "dex_byte_off": 7722124,
+            "dex_file": "classes.dex",
+            "method_index": 22828,
+            "method_name": "A0B",
+            "method_proto": "VLLLLZ"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "class_name": "LX/0yw;",
+          "dex_byte_off": 7722124,
+          "dex_file": "classes.dex",
+          "method_index": 22828,
+          "method_name": "A0B",
+          "method_proto": "VLLLLZ"
+        }
+      ],
+      "previous_class": "LX/0yw;",
+      "previous_method": "A0B",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "group-subject-parent-write"
+    }
+  ]
+}

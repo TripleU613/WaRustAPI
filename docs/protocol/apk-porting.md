@@ -66,8 +66,64 @@ traced and reproduced in Rust with meaningful fixtures. A disassembly file,
 green unit test or server ACK alone does not establish full equivalence.
 
 Still required for broad release maintenance: comprehensive coverage accounting,
-automatic anchor-assisted remapping with ambiguity diagnostics, normalized
+broader anchor coverage and caller-assisted disambiguation, normalized
 method-level comparison where sound, protobuf/token/config extraction recipes,
 and native-code change attribution. UI/media payload extraction is unnecessary
 for protocol reproduction. Bulk analysis trees and native binaries stay local;
 compact attributable evidence and interpreted code stay in Git.
+
+## Anchor-assisted relocation
+
+Recipe targets now accept `anchors`: exact string constants chosen from the
+interpreted source. Use specific diagnostic/protocol constants, preferably more
+than one independent string. Common strings such as `type` are weak locators.
+Local bounds are eight nonempty anchors per target, each at most 4096 bytes.
+
+```sh
+target/debug/xtask apk-research-remap /path/to/new-WhatsApp.apk \
+  --recipe docs/protocol/apk/recipes/2.26.37.71-groups.json \
+  --output lab/releases/proposed-next-groups.json
+```
+
+The scanner runs all anchors in one DEX pass. It uses checked string/class-data/
+instruction extents and fails reported DEX/structural errors rather than using
+the exploratory `apk-xref` warning-and-continue path. This does not constitute
+full VM verification or recovery of unknown/native behavior.
+
+Method targets intersect physical `(DEX, class, method-index)` identities;
+whole-class targets intersect `(DEX, class)`. Repeated loads in a method do not
+create ambiguity. Same name/shorty with different indices and same index in
+another DEX remain distinct. Whole-class targets retain their whole-class filter,
+instead of silently narrowing to the method that loaded an anchor.
+
+JSON statuses are `unique`, `missing`, `ambiguous`, `unanchored`, and
+`no_common_scope` (all strings exist but share no required scope). Both complete
+candidate locations and per-anchor occurrence lists are retained. Index/offset
+values are APK-local locators, never stable cross-release identifiers. Original
+class/method/Rust ownership remains in the report for comparison. No old-name
+fallback is made when anchors disappear or move to separate helpers.
+
+Without `--output`, the command only inspects. With `--output`, every topic must
+be unique or the command refuses to write, after printing its diagnostics.
+Existing output files are never overwritten. A generated proposal still needs
+source/caller/condition review before Rust behavior is changed; matching strings
+alone cannot establish equivalence. Method-substring filters become the observed
+method name in proposals; broad substring scopes require explicit review.
+
+The committed six-topic group recipe includes scoped anchors from its existing
+bytecode evidence. [Current-APK relocation evidence](apk/remap-evidence/2.26.37.71-groups.json)
+records every candidate and occurrence. This verifies relocation against the
+current baseline; a distinct new-release APK comparison remains unverified.
+
+Confirmed static validation (2026-10-07): APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`,
+yielded unique candidates for all six topics in 5.225 seconds, matching the
+reviewed class/method selectors exactly. The linked report carries the DEX,
+method indices and instruction offsets needed to repeat each match.
+A negative probe combining `GET_GROUP_NOTIFICATION_VERSION_SQL` and
+`UPDATE_GROUP_NOTIFICATION_SUBJECT_TIMESTAMP` found both strings but no common
+method scope: output was refused, exit 1, with no proposal file created.
+An existing proposal was refused without changing its bytes. Adding anchors
+changed only the target metadata in the cached comparison: zero code-topic
+changes. The regenerated baseline contains 11 files/392,185 bytes.
+These are local static observations, not a new-release or live protocol test.

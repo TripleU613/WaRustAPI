@@ -801,3 +801,20 @@ five OpenAPI checks, formatting, staged whitespace and hygiene (425 local links)
 passed. Exact 37.71 snapshot regeneration with --check passed in 17.467s. Final
 cached reports (six topics plus four metadata/dictionary artifacts) took
 0.0200..0.0213s; all unchanged in the real self-comparison.
+
+Anchor-assisted APK release maintenance (2026-10-07): `apk-research-remap`
+finds exact-string co-occurrences while preserving method versus whole-class
+scope. Ambiguous, missing, split-scope and unanchored topics cannot produce a
+recipe; existing proposals cannot be overwritten. Confirmed static scan of
+2.26.37.71 uniquely recovered all six reviewed group targets in 5.225 seconds.
+A real split-scope negative probe refused output; adding anchors changed only
+metadata, with no code-topic differences. The baseline is now 392,185 bytes.
+Broader APK/native coverage and a distinct next-release comparison remain
+unfinished. No account state was opened or live request sent for this work.
+
+Validation: 590 workspace/all-feature tests and 24 default CLI tests passed,
+as did strict workspace/all-target/all-feature Clippy, warning-free Rustdoc,
+regenerated CLI reference, five OpenAPI checks, formatting and exact baseline
+regeneration with --check.
+Repository hygiene passed: tracked-file budgets, 427 local links, package
+licenses and reference research checksums; staged whitespace passed.

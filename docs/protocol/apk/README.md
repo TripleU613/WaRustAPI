@@ -74,7 +74,7 @@ output directory and 2 MiB media-free constraints remain. Default 37.70 selector
 are unchanged.
 
 The new [37.71 group recipe](recipes/2.26.37.71-groups.json) reproduces
-[its scoped baseline](2.26.37.71-groups/manifest.json): 11 files/391,666 bytes.
+[its scoped baseline](2.26.37.71-groups/manifest.json): 11 files/392,185 bytes.
 This baseline includes six selected investigation targets, not all APK code.
 Initial export measured 16.768 seconds. Real cached self-comparisons of this
 baseline measured 0.0183..0.0215 seconds, returning all six unchanged topics;
@@ -107,3 +107,18 @@ five OpenAPI checks, formatting, staged whitespace and hygiene (425 local links)
 passed. Exact 37.71 snapshot regeneration with --check passed in 17.467s. Final
 cached reports (six topics plus four metadata/dictionary artifacts) took
 0.0200..0.0213s; all unchanged in the real self-comparison.
+
+## Re-anchor a new release
+
+`apk-research-remap <apk> --recipe <old-json> [--output <new-json>]` uses optional
+exact-string `anchors` in each target. All anchors must share the target's method
+or class scope. Missing, ambiguous, unanchored and split-scope results stay
+explicit; no previous class name is copied as a guessed match. A new proposal is
+written only when all topics are unique, under the new APK SHA-256; existing
+files are refused. Source/caller review remains necessary before patching Rust.
+
+The checked scanner fails DEX/structure errors rather than returning the older
+exploratory xref tool's partial result. Physical method indices keep name/shorty
+overloads distinct and whole-class selectors stay whole-class selectors. Candidate
+sites and all anchor occurrences are preserved in JSON. This is not full DEX VM
+verification or native-code remapping. See [porting workflow](../apk-porting.md#anchor-assisted-relocation).

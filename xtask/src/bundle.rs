@@ -40,17 +40,19 @@ const TARGETS: &[(&str, &str)] = &[
 ];
 
 /// A reviewed mapping is specific to one APK; class renames require re-anchoring.
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct Recipe {
     apk_sha256: String,
     targets: BTreeMap<String, Target>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct Target {
     class: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    anchors: Vec<String>,
     #[serde(default)]
     method: Option<String>,
     #[serde(default)]
@@ -84,6 +86,11 @@ fn read_recipe(path: &Path) -> Result<Recipe, String> {
             || !target.class.starts_with('L')
             || !target.class.ends_with(';')
             || target.method.as_ref().is_some_and(|m| m.is_empty())
+            || target.anchors.len() > 8
+            || target
+                .anchors
+                .iter()
+                .any(|a| a.is_empty() || a.len() > 4096)
             || target.rust_files.iter().any(|p| {
                 p.is_empty()
                     || Path::new(p).is_absolute()
@@ -209,6 +216,7 @@ pub fn run(
                 topic.into(),
                 Target {
                     class: class.into(),
+                    anchors: Vec::new(),
                     method: None,
                     rust_files: Vec::new(),
                 },
@@ -260,6 +268,9 @@ pub fn run(
         if recipe.is_some() {
             entry["method_filter"] = serde_json::json!(target.method);
             entry["rust_files"] = serde_json::json!(target.rust_files);
+            if !target.anchors.is_empty() {
+                entry["anchors"] = serde_json::json!(target.anchors);
+            }
         }
         index.insert(topic, entry);
         files.insert(name, text.into_bytes());
@@ -298,6 +309,123 @@ pub fn run(
         if check { "Verified" } else { "Exported" },
         files.len()
     );
+    Ok(())
+}
+
+fn anchor_candidates(
+    anchors: &[String],
+    hits: &BTreeMap<String, Vec<crate::xref::XRef>>,
+    method_scoped: bool,
+) -> Vec<crate::xref::XRef> {
+    let Some(first) = anchors.first() else {
+        return Vec::new();
+    };
+    let mut candidates: BTreeMap<_, _> = hits
+        .get(first)
+        .into_iter()
+        .flatten()
+        .map(|r| {
+            (
+                (
+                    r.dex_file.clone(),
+                    r.class_name.clone(),
+                    method_scoped.then_some(r.method_index),
+                ),
+                r.clone(),
+            )
+        })
+        .collect();
+    for anchor in &anchors[1..] {
+        let keys: std::collections::BTreeSet<_> = hits
+            .get(anchor)
+            .into_iter()
+            .flatten()
+            .map(|r| {
+                (
+                    r.dex_file.clone(),
+                    r.class_name.clone(),
+                    method_scoped.then_some(r.method_index),
+                )
+            })
+            .collect();
+        candidates.retain(|key, _| keys.contains(key));
+    }
+    candidates.into_values().collect()
+}
+
+/// Resolve exact string anchors within the declared class or method scope. A proposed
+/// recipe still needs semantic review; stable strings are locators, not proof.
+pub fn remap(apk: &Path, recipe_path: &Path, output: Option<&Path>) -> Result<(), String> {
+    if output.is_some_and(Path::exists) {
+        return Err("recipe output exists; refusing overwrite".into());
+    }
+    let mut recipe = read_recipe(recipe_path)?;
+    let manifest = crate::manifest::extract(apk)?;
+    let anchors: Vec<_> = recipe
+        .targets
+        .values()
+        .flat_map(|t| t.anchors.iter().cloned())
+        .collect::<std::collections::BTreeSet<_>>()
+        .into_iter()
+        .collect();
+    let hits = crate::xref::apk_xref_strict(apk, &anchors)?;
+    let mut report = Vec::new();
+    let mut complete = true;
+    for (topic, target) in &mut recipe.targets {
+        let method_scoped = target.method.is_some();
+        let candidates = anchor_candidates(&target.anchors, &hits, method_scoped);
+        let status = if target.anchors.is_empty() {
+            "unanchored"
+        } else if target
+            .anchors
+            .iter()
+            .any(|a| hits.get(a).is_none_or(Vec::is_empty))
+        {
+            "missing"
+        } else if candidates.is_empty() {
+            "no_common_scope"
+        } else if candidates.len() == 1 {
+            "unique"
+        } else {
+            "ambiguous"
+        };
+        let sites: BTreeMap<_, _> = target
+            .anchors
+            .iter()
+            .map(|a| (a, hits.get(a).cloned().unwrap_or_default()))
+            .collect();
+        report.push(serde_json::json!({"topic":topic,"status":status,"previous_class":target.class,
+            "previous_method":target.method,"scope":if method_scoped { "method" } else { "class" },"candidates":candidates,"anchor_sites":sites,"rust_files":target.rust_files}));
+        if status == "unique" {
+            target.class.clone_from(&candidates[0].class_name);
+            if method_scoped {
+                target.method = Some(candidates[0].method_name.clone());
+            }
+        } else {
+            complete = false;
+        }
+    }
+    println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+        "previous_apk":recipe.apk_sha256,"candidate_apk":manifest.apk_sha256,
+        "all_unique":complete,"topics":report,
+        "interpretation":"Exact string co-occurrence locates class/method scopes; it does not prove protocol equivalence. Proposed selectors require semantic review. Missing/ambiguous/unanchored/no-common-scope topics block recipe output."
+    })).map_err(|e|e.to_string())?);
+    if let Some(output) = output {
+        if !complete {
+            return Err(
+                "recipe not written: missing, ambiguous, unanchored or no-common-scope topics"
+                    .into(),
+            );
+        }
+        recipe.apk_sha256 = manifest.apk_sha256;
+        let mut file = fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(output)
+            .map_err(|e| e.to_string())?;
+        use std::io::Write as _;
+        file.write_all(&json(&recipe)?).map_err(|e| e.to_string())?;
+    }
     Ok(())
 }
 
@@ -535,6 +663,54 @@ mod tests {
                 .unwrap_err()
                 .contains("checksum mismatch")
         );
+    }
+
+    #[test]
+    fn anchor_intersection_preserves_physical_method_ambiguity_and_deduplicates_sites() {
+        fn site(dex: &str, index: u32, offset: usize) -> crate::xref::XRef {
+            crate::xref::XRef {
+                dex_file: dex.into(),
+                class_name: "LX/New;".into(),
+                method_name: "A00".into(),
+                method_proto: "VLL".into(),
+                method_index: index,
+                dex_byte_off: offset,
+            }
+        }
+        let anchors = vec!["first".into(), "second".into()];
+        let mut hits = BTreeMap::new();
+        hits.insert(
+            "first".into(),
+            vec![
+                site("classes.dex", 1, 10),
+                site("classes.dex", 1, 20),
+                site("classes.dex", 2, 30),
+            ],
+        );
+        hits.insert("second".into(), vec![site("classes.dex", 1, 40)]);
+        let unique = anchor_candidates(&anchors, &hits, true);
+        assert_eq!(unique.len(), 1);
+        assert_eq!(unique[0].method_index, 1);
+        hits.get_mut("second")
+            .unwrap()
+            .push(site("classes.dex", 2, 50));
+        assert_eq!(
+            anchor_candidates(&anchors, &hits, true).len(),
+            2,
+            "same name/shorty can refer to different overloads"
+        );
+        assert_eq!(
+            anchor_candidates(&anchors, &hits, false).len(),
+            1,
+            "whole-class scope does not collapse to a method selector"
+        );
+        hits.insert("second".into(), vec![site("classes2.dex", 1, 40)]);
+        assert!(
+            anchor_candidates(&anchors, &hits, true).is_empty(),
+            "matching index in another DEX is a different method"
+        );
+        assert!(anchor_candidates(&["missing".into()], &hits, true).is_empty());
+        assert!(anchor_candidates(&[], &hits, true).is_empty());
     }
 
     #[test]

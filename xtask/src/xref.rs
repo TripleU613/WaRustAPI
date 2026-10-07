@@ -859,7 +859,7 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
 // ── cross-reference result ────────────────────────────────────────────────────
 
 /// One occurrence of an anchor string in the APK bytecode.
-#[derive(Debug)]
+#[derive(Debug, Clone, serde::Serialize)]
 pub struct XRef {
     /// Dex file where this was found (e.g. `classes2.dex`).
     pub dex_file: String,
@@ -869,6 +869,8 @@ pub struct XRef {
     pub method_name: String,
     /// Proto shorty string of the method.
     pub method_proto: String,
+    /// APK-local method table index; distinguishes overloaded shorty signatures.
+    pub method_index: u32,
     /// Byte offset of the const-string instruction from the start of the dex blob.
     pub dex_byte_off: usize,
 }
@@ -1013,6 +1015,7 @@ fn xref_one(
                         class_name: class_name.clone(),
                         method_name: method_name.clone(),
                         method_proto: method_proto.clone(),
+                        method_index: method_idx,
                         dex_byte_off: insns_start + i,
                     });
                 }
@@ -1047,6 +1050,82 @@ pub fn apk_xref(apk: &Path, anchors: &[String]) -> Result<BTreeMap<String, Vec<X
         if let Err(e) = xref_one(name, &buf, anchors, &mut out) {
             eprintln!("warning: {name}: {e}");
         }
+    }
+    Ok(out)
+}
+
+fn const_string_index(insn: &[u8]) -> Option<u32> {
+    match insn.first()? {
+        0x1a => Some(u32::from(u16::from_le_bytes([
+            *insn.get(2)?,
+            *insn.get(3)?,
+        ]))),
+        0x1b => Some(u32::from_le_bytes([
+            *insn.get(2)?,
+            *insn.get(3)?,
+            *insn.get(4)?,
+            *insn.get(5)?,
+        ])),
+        _ => None,
+    }
+}
+
+fn strict_anchors_one(
+    name: &str,
+    data: &[u8],
+    anchors: &[String],
+    out: &mut BTreeMap<String, Vec<XRef>>,
+) -> Result<(), String> {
+    let dex = DexFile::parse(data)?;
+    let mut selected = BTreeMap::new();
+    let wanted: std::collections::HashSet<_> = anchors.iter().map(String::as_str).collect();
+    for index in 0..dex.str_count {
+        let value = dex.string(index)?;
+        if wanted.contains(value.as_str()) {
+            selected.insert(index, value);
+        }
+    }
+    let indices = selected.keys().copied().collect();
+    // Use the checked structural scanner, not exploratory xref_one's skipped
+    // malformed headers/streams. No partial-scan uniqueness claims on remapping.
+    references_one(name, data, &indices, const_string_index, |site, _| {
+        let index =
+            const_string_index(&data[site.dex_byte_off..]).expect("checked const-string extent");
+        out.entry(selected[&index].clone()).or_default().push(site);
+    })
+}
+
+/// Checked anchor scan for release remapping. Any DEX/read/structure error
+/// aborts instead of hiding a possible competing candidate behind a warning.
+pub fn apk_xref_strict(
+    apk: &Path,
+    anchors: &[String],
+) -> Result<BTreeMap<String, Vec<XRef>>, String> {
+    let file = std::fs::File::open(apk).map_err(|e| e.to_string())?;
+    let mut zip = zip::ZipArchive::new(file).map_err(|e| e.to_string())?;
+    let names: Vec<_> = zip
+        .file_names()
+        .filter(|n| n.starts_with("classes") && n.ends_with(".dex"))
+        .map(str::to_owned)
+        .collect();
+    if names.is_empty() {
+        return Err("APK has no DEX entries".into());
+    }
+    let mut out = BTreeMap::new();
+    for name in names {
+        let mut bytes = Vec::new();
+        zip.by_name(&name)
+            .map_err(|e| e.to_string())?
+            .read_to_end(&mut bytes)
+            .map_err(|e| e.to_string())?;
+        strict_anchors_one(&name, &bytes, anchors, &mut out).map_err(|e| format!("{name}: {e}"))?;
+    }
+    if out
+        .values()
+        .flatten()
+        .any(|r| r.class_name.is_empty() || r.method_name.is_empty() || r.method_proto.is_empty())
+    {
+        return Err("matched anchor has unresolved method/class metadata".into());
     }
     Ok(out)
 }
@@ -1168,6 +1247,7 @@ fn references_one(
                             class_name: class_name.clone(),
                             method_name: caller_name.clone(),
                             method_proto: caller_proto.clone(),
+                            method_index: caller_index,
                             dex_byte_off: instruction_start + offset,
                         },
                         opcode,
@@ -2423,6 +2503,25 @@ mod tests {
     }
 
     #[test]
+    fn strict_anchor_scan_refuses_a_bad_dex_instead_of_returning_partial_results() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("fixture.apk");
+        let mut zip = zip::ZipWriter::new(std::fs::File::create(&path).unwrap());
+        let opts = zip::write::FileOptions::default();
+        use std::io::Write as _;
+        zip.start_file("classes.dex", opts).unwrap();
+        zip.write_all(&minimal_dex_header()).unwrap();
+        zip.start_file("classes2.dex", opts).unwrap();
+        zip.write_all(b"malformed").unwrap();
+        zip.finish().unwrap();
+        assert!(
+            apk_xref_strict(&path, &["anchor".into()])
+                .unwrap_err()
+                .contains("classes2.dex")
+        );
+    }
+
+    #[test]
     fn xref_scan_finds_string_in_crafted_dex() {
         // Build a minimal dex that has:
         //   1 string ("v.whatsapp.net"),
@@ -2569,5 +2668,13 @@ mod tests {
         assert_eq!(refs.len(), 1, "exactly one reference");
         assert_eq!(refs[0].class_name, "v.whatsapp.net"); // type descriptor = string 0
         assert_eq!(refs[0].method_name, "v.whatsapp.net"); // name = string 0 (same in this minimal test)
+        let mut strict = BTreeMap::new();
+        strict_anchors_one("test.dex", &d, &anchors, &mut strict).unwrap();
+        assert_eq!(strict["v.whatsapp.net"][0].method_index, 0);
+        let mut truncated = d.clone();
+        truncated[code_item_off + 12..code_item_off + 16].copy_from_slice(&100u32.to_le_bytes());
+        assert!(
+            strict_anchors_one("test.dex", &truncated, &anchors, &mut BTreeMap::new()).is_err()
+        );
     }
 }

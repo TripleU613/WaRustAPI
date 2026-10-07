@@ -57,6 +57,15 @@ enum Cmd {
     },
     /// Compare checksum-verified cached topic files without rescanning either APK.
     ApkResearchDiff { old: PathBuf, new: PathBuf },
+    /// Locate renamed topic methods by checked exact-string anchor intersection.
+    ApkResearchRemap {
+        apk: PathBuf,
+        #[arg(long)]
+        recipe: PathBuf,
+        /// Write a proposed hash-pinned recipe only when all topics are unique.
+        #[arg(long)]
+        output: Option<PathBuf>,
+    },
     /// Regenerate protobuf Rust code into crates/whatsapp-api/src/proto.
     ProtoGen,
     /// Verify committed protobuf Rust code is up to date.
@@ -208,6 +217,11 @@ fn main() -> ExitCode {
             recipe,
         } => bundle::run(&apk, &output, check, recipe.as_deref()),
         Cmd::ApkResearchDiff { old, new } => bundle::compare(&old, &new),
+        Cmd::ApkResearchRemap {
+            apk,
+            recipe,
+            output,
+        } => bundle::remap(&apk, &recipe, output.as_deref()),
         Cmd::ProtoGen => proto::generate(&root),
         Cmd::ProtoCheck => proto::check(&root),
         Cmd::DependencyAudit { strict } => deps::audit(&root, strict),
