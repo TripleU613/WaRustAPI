@@ -121,7 +121,7 @@ enum Cmd {
         #[arg(long, default_value = "INTERACTIVE")]
         context: String,
     },
-    /// Inspect MEX JSON data/error presence offline without printing payload content.
+    /// Inspect MEX JSON presence offline; group-numbers explicitly reveals numeric metadata.
     MexResponseInspect {
         /// Private JSON payload file (local budget 1 MiB).
         #[arg(long)]
@@ -132,6 +132,9 @@ enum Cmd {
         /// Include the APK QueryGroupInfo callback gate; no group conversion or state update.
         #[arg(long)]
         group_info: bool,
+        /// Explicitly print private group numeric metadata as decimal strings; requires --group-info.
+        #[arg(long, requires = "group_info")]
+        group_numbers: bool,
     },
     /// Find which classes and methods reference each anchor string constant.
     ///
@@ -288,7 +291,8 @@ fn main() -> ExitCode {
             input,
             child,
             group_info,
-        } => mex::inspect_response(&input, &child, group_info),
+            group_numbers,
+        } => mex::inspect_response(&input, &child, group_info, group_numbers),
         Cmd::ApkXref { apk, anchors } => xref::run_xref(&apk, &anchors),
         Cmd::ApkCallers {
             apk,

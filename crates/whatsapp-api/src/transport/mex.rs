@@ -74,6 +74,89 @@ pub enum GroupInfoDisposition {
     InvokeGroupCallback,
 }
 
+/// Confirmed numeric projection before full group conversion/application.
+/// Values may reveal private group timing; Debug hides them.
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub struct GroupNumericMetadata {
+    /// ADv.A04 -> 8kY.A0B, signed parsed creation_time multiplied by 1000.
+    /// Storage units are not established by this projection.
+    pub creation_scaled: i64,
+    /// ADv.A05 -> 8kY.A0B, nullable subject.creation_time multiplied by 1000.
+    pub subject_creation_scaled: i64,
+    /// ADv.A03 -> 0Gv.A01, unscaled announcement_version.
+    pub announcement_version: i64,
+}
+
+impl std::fmt::Debug for GroupNumericMetadata {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("GroupNumericMetadata")
+            .finish_non_exhaustive()
+    }
+}
+
+// Host Java 21 Character.digit(char,10), checked across all 65536 UTF-16 units.
+// Source/reference corpus: fixtures/mex/2.26.37.71-numeric-reference.json.
+// This is platform-reference data, not a digit table recovered from the APK.
+const BMP_DECIMAL_ZEROES: [u16; 37] = [
+    48, 1632, 1776, 1984, 2406, 2534, 2662, 2790, 2918, 3046, 3174, 3302, 3430, 3558, 3664, 3792,
+    3872, 4160, 4240, 6112, 6160, 6470, 6608, 6784, 6800, 6992, 7088, 7232, 7248, 42528, 43216,
+    43264, 43472, 43504, 43600, 44016, 65296,
+];
+
+fn decimal_digit(unit: u16) -> Option<u16> {
+    let index = BMP_DECIMAL_ZEROES.partition_point(|&start| start <= unit);
+    let zero = *BMP_DECIMAL_ZEROES.get(index.checked_sub(1)?)?;
+    let digit = unit - zero;
+    (digit < 10).then_some(digit)
+}
+
+fn java_decimal_long(text: &str) -> Option<i64> {
+    // Long.parseLong iterates UTF-16 chars, so supplementary-plane digit
+    // scalars are not accepted as one character. Do not trim or accept radix prefixes.
+    let mut units = text.encode_utf16().peekable();
+    let negative = match units.peek().copied()? {
+        0x2d => {
+            units.next();
+            true
+        }
+        0x2b => {
+            units.next();
+            false
+        }
+        _ => false,
+    };
+    let mut value = 0i64;
+    let mut any = false;
+    // Accumulate negatively to represent MIN_VALUE without positive overflow.
+    for unit in units {
+        any = true;
+        value = value
+            .checked_mul(10)?
+            .checked_sub(i64::from(decimal_digit(unit)?))?;
+    }
+    if !any {
+        return None;
+    }
+    if negative {
+        Some(value)
+    } else {
+        value.checked_neg()
+    }
+}
+
+fn group_long_zero(value: Option<&serde_json::Value>) -> i64 {
+    // APK 0Gv.A01 catches NumberFormatException and returns supplied zero.
+    // LbE.A0E/A0F -> JSONObject.optString -> JSON.toString/String.valueOf.
+    // Wire JSON integral Long values preserve signed precision. Double values
+    // stringify with fraction/exponent, and objects/arrays/bools/null cannot
+    // parse as decimal long; their numeric result is zero without copying content.
+    match value {
+        Some(serde_json::Value::String(text)) => java_decimal_long(text).unwrap_or(0),
+        Some(serde_json::Value::Number(number)) => number.as_i64().unwrap_or(0),
+        _ => 0,
+    }
+}
+
 impl std::fmt::Debug for MexJsonResponse {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.summary.fmt(f)
@@ -95,6 +178,42 @@ impl MexJsonResponse {
     /// Redacted presence/type/count inspection, without a success verdict.
     pub fn summary(&self) -> &MexResponseSummary {
         &self.summary
+    }
+
+    /// Project the APK's three confirmed time/version numbers, without applying
+    /// a snapshot, parsing membership or claiming complete group validity.
+    /// Refuses blocked callback gates or missing/nonobject query data. The
+    /// caller's later feature gate and all other converter requirements remain.
+    pub fn group_numeric_metadata(&self) -> Result<GroupNumericMetadata> {
+        let disposition = self.group_info_disposition();
+        if disposition != GroupInfoDisposition::InvokeGroupCallback {
+            return Err(Error::invalid(
+                "mex.group.numeric_metadata",
+                format!("callback gate blocks numeric projection: {disposition:?}"),
+            ));
+        }
+        // 0Xo.A03+000c..0026 requires this JSONObject-backed 2FT.
+        let group = self
+            .data()
+            .and_then(|data| data.get("xwa2_group_query_by_id"))
+            .and_then(serde_json::Value::as_object)
+            .ok_or_else(|| {
+                Error::invalid(
+                    "mex.group.numeric_metadata",
+                    "missing/nonobject xwa2_group_query_by_id",
+                )
+            })?;
+        // 90x.A0J uses nullable optJSONObject, including wrong-type fallback.
+        let subject = group.get("subject").and_then(serde_json::Value::as_object);
+        Ok(GroupNumericMetadata {
+            // ADv.A04/A05 -> 8kY.A0B, literal mul-long/2addr 1000; Java
+            // overflow wraps, unlike Rust debug-mode multiplication.
+            creation_scaled: group_long_zero(group.get("creation_time")).wrapping_mul(1000),
+            subject_creation_scaled: group_long_zero(subject.and_then(|s| s.get("creation_time")))
+                .wrapping_mul(1000),
+            // ADv.A03 directly invokes 0Gv.A01; A4m stores in distinct A08.
+            announcement_version: group_long_zero(group.get("announcement_version")),
+        })
     }
 
     /// Inspect the confirmed group callback gate without running callbacks,
@@ -346,6 +465,108 @@ pub fn group_info_request(
 mod tests {
     use super::*;
     use crate::binary::{AttributeValue, NodeContent};
+
+    fn numeric_reference() -> serde_json::Value {
+        serde_json::from_str(include_str!(
+            "../../fixtures/mex/2.26.37.71-numeric-reference.json"
+        ))
+        .unwrap()
+    }
+
+    #[test]
+    fn group_numeric_projection_matches_independent_java_reference() {
+        for case in numeric_reference()["cases"].as_array().unwrap() {
+            let text = case["input"].as_str().unwrap();
+            let expected = case["parsed"].as_str().unwrap().parse::<i64>().unwrap();
+            let scaled = case["scaled"].as_str().unwrap().parse::<i64>().unwrap();
+            let body = serde_json::json!({"data": {"xwa2_group_query_by_id": {
+                "creation_time": text, "subject": {"creation_time": text},
+                "announcement_version": text
+            }}});
+            let node = Node::new("iq").children(vec![Node::new("result").text(body.to_string())]);
+            let numbers = parse_json_response(&node)
+                .unwrap()
+                .group_numeric_metadata()
+                .unwrap();
+            assert_eq!(numbers.creation_scaled, scaled, "{text:?}");
+            assert_eq!(numbers.subject_creation_scaled, scaled, "{text:?}");
+            assert_eq!(numbers.announcement_version, expected, "{text:?}");
+            assert_eq!(java_decimal_long(text).unwrap_or(0), expected);
+            assert_eq!(format!("{numbers:?}"), "GroupNumericMetadata { .. }");
+        }
+        let zeroes: Vec<u16> = numeric_reference()["bmp_decimal_zeroes"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|n| n.as_u64().unwrap() as u16)
+            .collect();
+        // Complete host Character.digit(char,10) reference domain, including
+        // surrogate units and nondecimal numeric symbols that must be rejected.
+        for unit in 0..=u16::MAX {
+            let expected = zeroes
+                .iter()
+                .find_map(|&zero| unit.checked_sub(zero).filter(|&n| n < 10));
+            assert_eq!(decimal_digit(unit), expected, "unit {unit:x}");
+        }
+    }
+
+    #[test]
+    fn numeric_json_coercions_preserve_distinct_fields_and_nullable_subject() {
+        for (value, expected) in [
+            (serde_json::json!(42), 42),
+            (serde_json::json!(-42), -42),
+            (serde_json::json!(i64::MAX), i64::MAX),
+            (serde_json::json!(i64::MIN), i64::MIN),
+            (serde_json::json!(9223372036854775808u64), 0),
+            (serde_json::json!(1.0), 0),
+            (serde_json::json!(1000.0), 0),
+            (serde_json::json!(true), 0),
+            (serde_json::json!(null), 0),
+            (serde_json::json!(["synthetic-private-value"]), 0),
+            (serde_json::json!({"private": "synthetic-private-value"}), 0),
+        ] {
+            assert_eq!(group_long_zero(Some(&value)), expected);
+        }
+        assert_eq!(group_long_zero(None), 0);
+        for subject in [
+            serde_json::json!(null),
+            serde_json::json!({}),
+            serde_json::json!(3),
+            serde_json::json!([]),
+        ] {
+            let body = serde_json::json!({"data": {"xwa2_group_query_by_id": {
+                "creation_time": 42, "subject": subject, "announcement_version": "+7"
+            }}});
+            let node = Node::new("iq").children(vec![Node::new("result").text(body.to_string())]);
+            let numbers = parse_json_response(&node)
+                .unwrap()
+                .group_numeric_metadata()
+                .unwrap();
+            assert_eq!(numbers.creation_scaled, 42000);
+            assert_eq!(numbers.subject_creation_scaled, 0);
+            assert_eq!(numbers.announcement_version, 7);
+        }
+    }
+
+    #[test]
+    fn numeric_projection_refuses_blocked_callbacks_and_wrong_query_shape_without_content() {
+        for body in [
+            serde_json::json!({"data": {"unrelated": "synthetic-private-value"}}),
+            serde_json::json!({"data": {"xwa2_group_query_by_id": null}}),
+            serde_json::json!({"data": {"xwa2_group_query_by_id": []}}),
+            serde_json::json!({"data": {"xwa2_group_query_by_id": {}}, "errors": [{"message":"synthetic-private-value"}]}),
+            serde_json::json!({"data": {"xwa2_group_query_by_id": {}}, "errors": ["synthetic-private-value"]}),
+            serde_json::json!({"data": {}}),
+            serde_json::json!({}),
+        ] {
+            let node = Node::new("iq").children(vec![Node::new("result").text(body.to_string())]);
+            let error = parse_json_response(&node)
+                .unwrap()
+                .group_numeric_metadata()
+                .unwrap_err();
+            assert!(!error.to_string().contains("synthetic-private-value"));
+        }
+    }
 
     #[test]
     fn group_callback_corpus_blocks_partial_data_errors_and_only_gates_callback() {

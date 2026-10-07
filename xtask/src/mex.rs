@@ -254,8 +254,14 @@ pub fn preview(queries: &Path, chat: &str, id: &str, context: &str) -> Result<()
     Ok(())
 }
 
-/// Only redacted summary is printed; raw JSON never appears in diagnostics.
-pub fn inspect_response(input: &Path, child: &str, group_info: bool) -> Result<(), String> {
+/// Summary is redacted; explicit group_numbers opts into numeric content only.
+/// Raw JSON/group names/server error content never appear in diagnostics.
+pub fn inspect_response(
+    input: &Path,
+    child: &str,
+    group_info: bool,
+    group_numbers: bool,
+) -> Result<(), String> {
     use whatsapp_api::transport::mex::{MAX_JSON_RESPONSE_BYTES, parse_json_response};
     if !matches!(child, "result" | "update") {
         return Err("expected result or update payload child".into());
@@ -270,6 +276,15 @@ pub fn inspect_response(input: &Path, child: &str, group_info: bool) -> Result<(
     if group_info {
         summary["group_info_disposition"] =
             serde_json::to_value(parsed.group_info_disposition()).map_err(|e| e.to_string())?;
+    }
+    if group_numbers {
+        let numbers = parsed.group_numeric_metadata().map_err(|e| e.to_string())?;
+        // Decimal strings preserve full signed-long precision in JSON consumers.
+        summary["group_numeric_metadata"] = serde_json::json!({
+            "creation_scaled": numbers.creation_scaled.to_string(),
+            "subject_creation_scaled": numbers.subject_creation_scaled.to_string(),
+            "announcement_version": numbers.announcement_version.to_string(),
+        });
     }
     println!(
         "{}",

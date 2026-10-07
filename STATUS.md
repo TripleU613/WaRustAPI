@@ -1071,3 +1071,23 @@ Core's one prior op=bd unknown annotation was refreshed with identical opcode,
 offsets and operands (one changed/21 unchanged topics, four unchanged artifacts,
 same APK; cached presentation diff 0.0328 seconds). Hygiene (533 local links)
 and staged whitespace passed. No live request or saved account mutation.
+
+MEX numeric group conversion is now in Rust: distinct signed creation/subject
+numbers scaled by 1000 and unscaled announcement version, zero fallback and
+wrapping arithmetic. Independent host Java reference covers 479 cases and
+all UTF-16 code units (370 decimal digits/37 BMP blocks); Android runtime/SDK
+and full JSON lexical parity remain unverified. --group-numbers with
+--group-info explicitly prints private numbers as decimal strings; default
+summary/Debug remain redacted. Full membership/type/feature/state application
+remains unfinished. No live request or saved account mutation. See [numeric
+projection](docs/protocol/mex.md#numeric-group-projection-into-rust-2026-10-07).
+
+Numeric-port validation: **618** workspace/all-feature tests, **24** default
+CLI tests, strict workspace/all-target/all-feature Clippy, warning-free Rustdoc,
+formatting, CLI reference regeneration and OpenAPI library-symbol validation
+passed. Actual CLI probes: **70** numeric cases across result/update, **70**
+unchanged redacted modes, flag dependency and six content-free/no-partial-output
+refusals. Oracle runtime was checked directly as Temurin **21.0.12.1+1 LTS**;
+479 corpus cases and all 65,536 UTF-16 units matched that independent reference.
+Hygiene (540 local links) and staged whitespace passed. No saved account,
+identity, action state or live server request was changed.

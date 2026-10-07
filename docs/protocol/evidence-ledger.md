@@ -645,3 +645,26 @@ shows no other method-content change; same operands/offset/opcode. Only that
 file/checksum refreshed, core 27 files/731,494 bytes. [Cached diff](apk/core-mul-long-rendering-diff.json)
 against Git 34b5ab5: 0.0328 seconds, one changed/21 unchanged topics, all four
 artifacts unchanged, same APK. This is presentation, not a protocol delta.
+
+## comparison.mex.numeric_projection_37_71 — 2026-10-07
+
+**Confirmed static APK calls**, build 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+ADv.A04/A05 -> 8kY.A0B -> 0Gv.A01 typed NumberFormatException/default zero,
+then signed multiplication 1000; ADv.A03 unscaled; A4m A0A/A0B/A08 slots.
+Rust GroupNumericMetadata now projects the three numbers after callback gate
+and required group-object checks; it does not validate/apply a complete group.
+CLI --group-numbers (requires --group-info) explicitly prints private numeric
+values as signed decimal strings. Default summaries/Debug remain redacted;
+blocked callbacks/wrong group shape refuse without partial output.
+
+**Executed host reference / inferred platform compatibility:** independent
+[Java oracle](MexJavaNumericOracle.java), Temurin 21.0.12.1+1 LTS, produces
+[479 cases](../../crates/whatsapp-api/fixtures/mex/2.26.37.71-numeric-reference.json)
+and the complete UTF-16 digit-domain enumeration (370 digits/37 BMP blocks).
+Tests compare parsing/default/wrapping and all 65,536 code units. AOSP
+JSONObject/JSON String.valueOf supports inferred numeric coercions; strict
+JSON lexical acceptance and live Android SDK/Unicode behavior remain unverified.
+[Interpretation/reference links](mex.md#numeric-group-projection-into-rust-2026-10-07)
+separate APK evidence, host reference, inferred coercion and unknown runtime.
+No account opened, saved identity/state mutated or live request sent.

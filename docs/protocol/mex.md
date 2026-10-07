@@ -619,3 +619,88 @@ old/new paths refer to their respective Git revisions. Only noise-handshake
 and its checksum were refreshed. The core now has 27 files/731,494 bytes,
 12 bytes larger from naming the existing opcode. This is not a release or
 protocol delta, and the older 37.70 evidence remains untouched.
+
+## Numeric group projection into Rust (2026-10-07)
+
+**Confirmed APK call chain**, same 2.26.37.71 SHA:
+ADv.A04/A05 -> 8kY.A0B -> 0Gv.A01 parse/default-zero followed by signed-long
+multiplication by 1000; ADv.A03 skips multiplication. A4m stores the results
+separately in A0A, A0B and A08. The typed NumberFormatException/default return
+is independently preserved in the earlier raw code_item fixture. The new
+`MexJsonResponse::group_numeric_metadata()` ports these three fields as
+`GroupNumericMetadata`: creation_scaled, subject_creation_scaled and
+announcement_version, all i64. Names do not assert downstream storage units.
+
+**Implemented, offline verified:** the method first requires the error-free
+nonempty callback disposition and an object xwa2_group_query_by_id. Missing/
+nonobject group data refuses with a named diagnostic. Subject is a nullable
+object through 90x.A0J/LbE.A04; missing/null/nonobject subject gives zero time.
+It does not validate group id, __typename/properties, membership, feature gate
+or every converter field. Numeric projection is not full group validity and
+must not be applied as a complete saved GroupSnapshot.
+
+Numeric strings use signed decimal parsing without trimming, radix prefixes,
+underscores, exponents or fractions. Optional ASCII signs and BMP decimal
+digits are supported; UTF-16 surrogate units reject supplementary digit
+scalars. Overflow/invalid/empty input returns zero. Multiplication uses explicit
+wrapping signed-long arithmetic, not saturating or Rust debug panic behavior.
+In particular, MAX_VALUE times 1000 is -1000 and MIN_VALUE times 1000 is zero;
+announcement_version retains its unscaled signed value. Missing/null/boolean/
+array/object values also produce zero. Signed integral JSON values retain
+precision; floating/wider-unsigned numeric values produce zero rather than
+being truncated into integers. The APK uses optString followed by parseLong,
+not optLong; those conversions are not interchangeable.
+
+**Platform reference / inferred coercion, not Android execution:** checked
+[AOSP JSONObject.optString](https://android.googlesource.com/platform/libcore/+/refs/heads/main/json/src/main/java/org/json/JSONObject.java)
+and [JSON.toString](https://android.googlesource.com/platform/libcore/+/refs/heads/main/json/src/main/java/org/json/JSON.java)
+show string conversion via String.valueOf for other nonnull objects. Combined
+with Java numeric string formatting and the APK's parseLong/default-zero call,
+this supports the scalar results above. Full Android JSONTokener lexical
+acceptance is not reproduced by strict serde_json; its runtime was not
+executed here. For string parsing, the
+[Java Long API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Long.html)
+and [Android Character API](https://developer.android.com/reference/java/lang/Character)
+provide the reference semantics. The exact Android SDK/Unicode table used by
+a live peer/build remains unverified, especially for non-ASCII input.
+
+[Independent Java oracle](MexJavaNumericOracle.java) was executed on host
+Temurin **21.0.12.1+1 LTS**, not on an Android device or inside the APK. It calls
+actual Long.parseLong and long multiplication. Its
+[479-case output](../../crates/whatsapp-api/fixtures/mex/2.26.37.71-numeric-reference.json)
+covers signs, leading zeroes, boundaries, overflow, whitespace, punctuation,
+BMP/supplementary digits and all 370 recognized BMP digits across 37 blocks.
+The oracle enumerates all 65,536 UTF-16 units; Rust checks the full domain
+against the resulting independent digit-block table. This is host-reference
+verification, not observed live Android/client equivalence. Values and tests
+are synthetic and contain no account data.
+
+To reproduce the reference digit enumeration (with a local JDK):
+
+```sh
+javac -d /tmp/mex-java-reference docs/protocol/MexJavaNumericOracle.java
+java -cp /tmp/mex-java-reference MexJavaNumericOracle digits
+```
+
+Without digits mode the oracle reads one Base64-encoded UTF-8 synthetic string
+per input line and prints parsed/default-zero and wrapped-times-1000 decimal
+values separated by a tab. The retained source prevents expectations from
+being regenerated from the Rust implementation itself.
+
+**CLI:** default `mex-response-inspect` and --group-info still print redacted
+counts/gate only. New **--group-numbers requires --group-info** and explicitly
+opts into private numeric content. It adds group_numeric_metadata with the
+three **signed decimal strings**, preserving values beyond JSON consumers'
+53-bit numeric precision. This flag must not be used as a redacted diagnostic
+for real private group data. Library numeric Debug is redacted; diagnostics
+never include input values or server error text. Blocked callback/wrong group
+shape refuses before any partial stdout.
+
+```sh
+target/debug/xtask mex-response-inspect --input /private/mex-result.json \
+  --group-info --group-numbers
+```
+
+No HTTP route, account access, action settlement, retry, live MEX dispatch,
+group-state mutation or feature selection is added. Full converter/state
+application remains unfinished; this ports its confirmed numeric component.
