@@ -612,3 +612,19 @@ passed. No account was opened or live request sent.
 Final checks: generated CLI reference, all five OpenAPI coverage/HTTP/library
 checks, formatting, staged whitespace and repository hygiene (387 local links)
 passed. The added non-text-flag regression also passed independently.
+
+
+Atomic queued group ingestion (2026-10-07, **offline**): the once-only marker
+now commits with the snapshot/events, invite update or leave deletion. An abort
+and encrypted-store reopen test proves rollback across all three paths, then
+one successful application and no repeat after another reopen. Truncated replies
+still preserve state without an ingestion marker. Two APK completion helpers
+include gated state handling and member-suggestion sync, not proven generic
+dirty-state deletion. Full group notification parsing/application remains open.
+[Atomic ingestion and helper evidence](docs/protocol/groups.md#atomic-queued-group-ingestion-2026-10-07).
+No account state was opened or live request sent.
+
+Validation: 572 workspace/all-feature tests, 24 default-feature CLI tests,
+strict workspace/all-target/all-feature Clippy, warning-free Rustdoc, generated
+CLI reference, five OpenAPI checks, formatting, staged whitespace and repository
+hygiene (390 local links) passed. Group notification handling remains incomplete.

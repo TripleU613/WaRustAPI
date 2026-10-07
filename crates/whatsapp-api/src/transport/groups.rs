@@ -379,7 +379,7 @@ fn to_model(snapshot: &GroupSnapshot) -> Option<Group> {
 /// Apply every settled group action once: `group` replies replace the
 /// snapshot (and emit `GroupCreated` for a new one or `GroupUpdated` for a
 /// changed subject or membership); `invite` replies save the code; refused
-/// actions are only marked seen.
+/// actions are only marked seen. State, events and the marker commit atomically.
 pub fn ingest(store: &ProtocolStore) -> Result<usize> {
     let mut applied = 0usize;
     for kind in [
@@ -395,29 +395,52 @@ pub fn ingest(store: &ProtocolStore) -> Result<usize> {
         "group-invite",
     ] {
         for (outcome, reply) in super::actions::settled(store, kind)? {
-            let marker = format!("{INGESTED_PREFIX}{}", outcome.id);
-            let seen: Option<bool> =
-                store.read(|tx| tx.get_json(Table::Checkpoints, marker.as_bytes(), 1))?;
-            if seen.unwrap_or(false) {
-                continue;
-            }
-            if outcome.status == super::actions::ActionStatus::Ok
-                && let Some(reply) = &reply
+            // The stored request is immutable. Load it before the write lock;
+            // invite/leave application must not nest a store transaction.
+            let request = super::actions::request(store, &outcome.id)?;
+            if store
+                .write(|tx| ingest_reply_in(tx, kind, &outcome, request.as_ref(), reply.as_ref()))?
             {
-                apply_reply(store, kind, &outcome.id, reply)?;
+                applied += 1;
             }
-            store.write(|tx| tx.put_json(Table::Checkpoints, marker.as_bytes(), 1, &true))?;
-            applied += 1;
         }
     }
     Ok(applied)
 }
 
-fn apply_reply(store: &ProtocolStore, kind: &str, action_id: &str, reply: &Node) -> Result<()> {
+fn ingest_reply_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    kind: &str,
+    outcome: &super::actions::ActionOutcome,
+    request: Option<&Node>,
+    reply: Option<&Node>,
+) -> Result<bool> {
+    let marker = format!("{INGESTED_PREFIX}{}", outcome.id);
+    let seen: Option<bool> = tx.get_json(Table::Checkpoints, marker.as_bytes(), 1)?;
+    if seen.unwrap_or(false) {
+        return Ok(false);
+    }
+    if outcome.status == super::actions::ActionStatus::Ok
+        && let Some(reply) = reply
+    {
+        apply_reply_in(tx, kind, request, reply)?;
+    }
+    // Snapshot, journal events and this marker share the same commit. Otherwise
+    // concurrent ingestion or an intervening reply can apply a saved reply twice.
+    tx.put_json(Table::Checkpoints, marker.as_bytes(), 1, &true)?;
+    Ok(true)
+}
+
+fn apply_reply_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    kind: &str,
+    request: Option<&Node>,
+    reply: &Node,
+) -> Result<()> {
     if let Some(node) = reply.child("group") {
         require_complete_group(node)?;
         if let Some(group) = parse_group(node) {
-            return save_snapshot(store, group);
+            return save_snapshot_in(tx, group);
         }
     }
     if kind == "group-invite" {
@@ -425,97 +448,94 @@ fn apply_reply(store: &ProtocolStore, kind: &str, action_id: &str, reply: &Node)
             return Ok(());
         };
         // The request's `to` is the group.
-        let Some(request) = super::actions::request(store, action_id)? else {
+        let Some(request) = request else {
             return Ok(());
         };
-        let Some(group) = attr_string(&request, "to") else {
+        let Some(group) = attr_string(request, "to") else {
             return Ok(());
         };
-        return store.write(|tx| {
-            let mut snapshot: GroupSnapshot = tx
-                .get_json(Table::Checkpoints, key(&group).as_bytes(), 1)?
-                .unwrap_or(GroupSnapshot {
-                    jid: group.clone(),
-                    subject: None,
-                    subject_time: None,
-                    subject_owner: None,
-                    creator: None,
-                    creation: None,
-                    members: Vec::new(),
-                    invite_code: None,
-                    updated_at: Timestamp::now(),
-                });
-            snapshot.invite_code = Some(code);
-            snapshot.updated_at = Timestamp::now();
-            tx.put_json(Table::Checkpoints, key(&group).as_bytes(), 1, &snapshot)
-        });
+        let mut snapshot: GroupSnapshot = tx
+            .get_json(Table::Checkpoints, key(&group).as_bytes(), 1)?
+            .unwrap_or(GroupSnapshot {
+                jid: group.clone(),
+                subject: None,
+                subject_time: None,
+                subject_owner: None,
+                creator: None,
+                creation: None,
+                members: Vec::new(),
+                invite_code: None,
+                updated_at: Timestamp::now(),
+            });
+        snapshot.invite_code = Some(code);
+        snapshot.updated_at = Timestamp::now();
+        return tx.put_json(Table::Checkpoints, key(&group).as_bytes(), 1, &snapshot);
     }
     if kind == "group-leave" {
         // The request names the group inside `leave/group@id`.
-        if let Some(request) = super::actions::request(store, action_id)?
+        if let Some(request) = request
             && let Some(group) = request
                 .child("leave")
                 .and_then(|l| l.child("group"))
                 .and_then(|g| attr_string(g, "id"))
         {
-            store.write(|tx| {
-                tx.delete(Table::Checkpoints, key(&group).as_bytes())?;
-                Ok(())
-            })?;
+            tx.delete(Table::Checkpoints, key(&group).as_bytes())?;
         }
     }
     Ok(())
 }
 
-fn save_snapshot(store: &ProtocolStore, mut group: GroupSnapshot) -> Result<()> {
-    store.write(|tx| {
-        let previous: Option<GroupSnapshot> =
-            tx.get_json(Table::Checkpoints, key(&group.jid).as_bytes(), 1)?;
-        if let Some(previous) = &previous {
-            group.invite_code = previous.invite_code.clone();
+fn save_snapshot(store: &ProtocolStore, group: GroupSnapshot) -> Result<()> {
+    store.write(|tx| save_snapshot_in(tx, group))
+}
+
+fn save_snapshot_in(tx: &mut crate::store::WriteTx<'_>, mut group: GroupSnapshot) -> Result<()> {
+    let previous: Option<GroupSnapshot> =
+        tx.get_json(Table::Checkpoints, key(&group.jid).as_bytes(), 1)?;
+    if let Some(previous) = &previous {
+        group.invite_code = previous.invite_code.clone();
+    }
+    let Some(model) = to_model(&group) else {
+        return Err(invalid("group reply carries an invalid JID"));
+    };
+    match previous {
+        None => {
+            tx.append_event(SyncEvent::GroupCreated(model))?;
         }
-        let Some(model) = to_model(&group) else {
-            return Err(invalid("group reply carries an invalid JID"));
-        };
-        match previous {
-            None => {
-                tx.append_event(SyncEvent::GroupCreated(model))?;
+        Some(previous) => {
+            if previous.subject != group.subject {
+                tx.append_event(SyncEvent::GroupUpdated(GroupUpdate::Subject {
+                    id: model.id.clone(),
+                    subject: group.subject.clone(),
+                }))?;
             }
-            Some(previous) => {
-                if previous.subject != group.subject {
-                    tx.append_event(SyncEvent::GroupUpdated(GroupUpdate::Subject {
-                        id: model.id.clone(),
-                        subject: group.subject.clone(),
-                    }))?;
-                }
-                let before: std::collections::BTreeSet<_> =
-                    previous.members.iter().map(|m| m.jid.clone()).collect();
-                let after: std::collections::BTreeSet<_> =
-                    group.members.iter().map(|m| m.jid.clone()).collect();
-                let added: Vec<ContactId> = after
-                    .difference(&before)
-                    .filter_map(|j| ContactId::from_jid(&Jid::parse(j).ok()?).ok())
-                    .collect();
-                let removed: Vec<ContactId> = before
-                    .difference(&after)
-                    .filter_map(|j| ContactId::from_jid(&Jid::parse(j).ok()?).ok())
-                    .collect();
-                if !added.is_empty() {
-                    tx.append_event(SyncEvent::GroupUpdated(GroupUpdate::ParticipantsAdded {
-                        id: model.id.clone(),
-                        participants: added,
-                    }))?;
-                }
-                if !removed.is_empty() {
-                    tx.append_event(SyncEvent::GroupUpdated(GroupUpdate::ParticipantsRemoved {
-                        id: model.id.clone(),
-                        participants: removed,
-                    }))?;
-                }
+            let before: std::collections::BTreeSet<_> =
+                previous.members.iter().map(|m| m.jid.clone()).collect();
+            let after: std::collections::BTreeSet<_> =
+                group.members.iter().map(|m| m.jid.clone()).collect();
+            let added: Vec<ContactId> = after
+                .difference(&before)
+                .filter_map(|j| ContactId::from_jid(&Jid::parse(j).ok()?).ok())
+                .collect();
+            let removed: Vec<ContactId> = before
+                .difference(&after)
+                .filter_map(|j| ContactId::from_jid(&Jid::parse(j).ok()?).ok())
+                .collect();
+            if !added.is_empty() {
+                tx.append_event(SyncEvent::GroupUpdated(GroupUpdate::ParticipantsAdded {
+                    id: model.id.clone(),
+                    participants: added,
+                }))?;
+            }
+            if !removed.is_empty() {
+                tx.append_event(SyncEvent::GroupUpdated(GroupUpdate::ParticipantsRemoved {
+                    id: model.id.clone(),
+                    participants: removed,
+                }))?;
             }
         }
-        tx.put_json(Table::Checkpoints, key(&group.jid).as_bytes(), 1, &group)
-    })
+    }
+    tx.put_json(Table::Checkpoints, key(&group.jid).as_bytes(), 1, &group)
 }
 
 /// All stored group snapshots.
@@ -1266,6 +1286,109 @@ mod tests {
 
     fn text(node: &Node, name: &str) -> Option<String> {
         attr_string(node, name)
+    }
+
+    #[test]
+    fn ingestion_snapshot_invite_leave_and_marker_rollback_together() {
+        for kind in ["group-info", "group-invite", "group-leave"] {
+            let (dir, s) = store();
+            let group = Jid::parse("120363000000000001@g.us").unwrap();
+            let initial = Node::new("group")
+                .attr("id", group.clone())
+                .attr("subject", "Before")
+                .children(vec![
+                    Node::new("participant").attr("jid", "15550000001@s.whatsapp.net"),
+                ]);
+            record_info_reply(&s, &Node::new("iq").children(vec![initial.clone()])).unwrap();
+            let before = serde_json::to_value(get(&s, &group).unwrap()).unwrap();
+            let id = match kind {
+                "group-info" => queue_info(&s, &group),
+                "group-invite" => queue_invite(&s, &group, false),
+                _ => queue_leave(&s, &group),
+            }
+            .unwrap();
+            super::super::actions::reserve_pending(&s).unwrap();
+            let children = match kind {
+                "group-info" => vec![initial.attr("subject", "After")],
+                "group-invite" => vec![Node::new("invite").attr("code", "synthetic-code")],
+                _ => vec![],
+            };
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(children);
+            assert!(super::super::actions::record_reply(&s, &reply).unwrap());
+            let outcome = super::super::actions::outcomes(&s)
+                .unwrap()
+                .into_iter()
+                .find(|outcome| outcome.id == id)
+                .unwrap();
+            let request = super::super::actions::request(&s, &id).unwrap();
+            let marker = format!("{INGESTED_PREFIX}{id}");
+            let failed: Result<()> = s.write(|tx| {
+                assert!(ingest_reply_in(
+                    tx,
+                    kind,
+                    &outcome,
+                    request.as_ref(),
+                    Some(&reply)
+                )?);
+                assert_eq!(
+                    tx.get_json::<bool>(Table::Checkpoints, marker.as_bytes(), 1)?,
+                    Some(true)
+                );
+                Err(invalid("test rollback after snapshot and marker writes"))
+            });
+            assert!(failed.is_err());
+            drop(s);
+            let reopen = || {
+                ProtocolStore::open(OpenOptions {
+                    path: dir.path().join("p.redb"),
+                    account_id: AccountId::new("a").unwrap(),
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9u8; 32]))),
+                    create: false,
+                })
+                .unwrap()
+            };
+            let s = reopen();
+            assert_eq!(
+                serde_json::to_value(get(&s, &group).unwrap()).unwrap(),
+                before
+            );
+            assert_eq!(
+                s.read(|tx| tx.get_json::<bool>(Table::Checkpoints, marker.as_bytes(), 1))
+                    .unwrap(),
+                None
+            );
+            let event_count = |s: &ProtocolStore| {
+                s.read(|tx| {
+                    tx.read_events(
+                        &crate::store::ConsumerId::new("atomic-group-test")?,
+                        crate::model::ids::EventCursor::START,
+                        64,
+                    )
+                })
+                .unwrap()
+                .events
+                .len()
+            };
+            assert_eq!(event_count(&s), 1, "aborted subject event must roll back");
+            assert_eq!(ingest(&s).unwrap(), 1);
+            let after = get(&s, &group).unwrap();
+            match kind {
+                "group-info" => assert_eq!(after.unwrap().subject.as_deref(), Some("After")),
+                "group-invite" => assert_eq!(
+                    after.unwrap().invite_code.as_deref(),
+                    Some("synthetic-code")
+                ),
+                _ => assert!(after.is_none()),
+            }
+            assert_eq!(event_count(&s), if kind == "group-info" { 2 } else { 1 });
+            drop(s);
+            let s = reopen();
+            assert_eq!(ingest(&s).unwrap(), 0, "committed marker survives restart");
+            assert_eq!(event_count(&s), if kind == "group-info" { 2 } else { 1 });
+        }
     }
 
     #[test]

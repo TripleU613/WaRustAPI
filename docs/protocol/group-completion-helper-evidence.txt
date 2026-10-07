@@ -1,0 +1,153 @@
+APK 2.26.37.71 SHA256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed/static partial group completion helper trace. No live query or dirty-state deletion proved.
+Method-relative offsets, omissions marked. Reproduce: target/debug/xtask apk-smali <apk> --class <class> --method <method>.
+
+
+# class: LX/8lc;
+
+.method public A01(VL)  # .registers 5
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v4, v0}, LX/00h;->A0A(VLI)
+    0008..000e  invoke-interface  {v4}, Ljava/util/Set;->iterator(L)
+    000e..0010  move-result-object  v2
+    0010..0016  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext(Z)
+    0016..0018  move-result  v0
+    0018..001c  if-eqz  v0, +0x2e
+    001c..0022  invoke-interface  {v2}, Ljava/util/Iterator;->next(L)
+    0022..0024  move-result-object  v1
+    0024..0028  check-cast  v1, LX/1bn;
+    0028..002c  iget-object  v0, v3, LX/8lc;->A00:LX/05B;
+    002c..0030  iget-object  v0, v0, LX/05B;->A00:LX/00s;
+    0030..0036  invoke-interface  {v0}, LX/00s;->get(L)
+    0036..0038  move-result-object  v0
+    0038..003c  check-cast  v0, LX/0YA;
+    003c..0042  invoke-virtual  {v0, v1}, LX/0YA;->A0B(LL)
+    0042..0044  move-result-object  v0
+    0044..0048  if-eqz  v0, -0x1a
+    0048..004e  invoke-virtual  {v0}, LX/0DV;->A06(L)
+    004e..0050  move-result-object  v0
+    0050..0054  iget-object  v0, v0, LX/0lR;->A00:LX/0Da;
+    0054..0058  iget-boolean  v0, v0, LX/0Da;->A1A:Z
+    0058..005c  if-eqz  v0, -0x24
+    005c..0060  iget-object  v0, v3, LX/8lc;->A04:LX/0bA;
+    0060..0066  invoke-virtual  {v0, v1}, LX/0bA;->A0m(ZL)
+    0066..0068  move-result  v0
+    0068..006c  if-eqz  v0, -0x2c
+    006c..0072  invoke-virtual  {v3, v1}, LX/8lc;->A00(VL)
+    0072..0074  goto  -0x31
+    0074..0076  return-void
+.end method
+
+# class: LX/8l2;
+
+.method public A00(VL)  # .registers 8
+    0000..0006  invoke-static  {v7}, LX/1xn;->A0l(LL)
+    0006..0008  move-result-object  v5
+    0008..000e  invoke-interface  {v7}, Ljava/lang/Iterable;->iterator(L)
+    000e..0010  move-result-object  v4
+    0010..0016  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext(Z)
+    0016..0018  move-result  v0
+    0018..001c  if-eqz  v0, +0x23
+    001c..0022  invoke-interface  {v4}, Ljava/util/Iterator;->next(L)
+    0022..0024  move-result-object  v3
+    0024..0026  move-object  v2, v3
+    0026..002a  check-cast  v2, LX/0Cy;
+    002a..0030  invoke-static  {v2}, LX/0DE;->A0n(ZL)
+    0030..0032  move-result  v0
+    0032..0036  if-eqz  v0, -0x11
+    0036..003a  iget-object  v1, v6, LX/8l2;->A04:LX/0Fs;
+    003a..003e  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.GroupJid"
+    003e..0044  invoke-static  {v2, v0}, LX/00h;->A0D(VLL)
+    0044..0048  check-cast  v2, Lcom/whatsapp/infra/core/jid/GroupJid;
+    0048..004e  invoke-virtual  {v1, v2}, LX/0Fs;->A0A(IL)
+    004e..0050  move-result  v1
+    0050..0052  const/4  v0, #0x1
+    0052..0056  if-ne  v1, v0, -0x21
+    0056..005c  invoke-virtual  {v5, v3}, Ljava/util/AbstractCollection;->add(ZL)
+    005c..005e  goto  -0x26
+    005e..0064  invoke-interface  {v5}, Ljava/util/List;->iterator(L)
+    0064..0066  move-result-object  v2
+    0066..006c  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext(Z)
+    006c..006e  move-result  v0
+    006e..0072  if-eqz  v0, +0x17
+    0072..0078  invoke-interface  {v2}, Ljava/util/Iterator;->next(L)
+    0078..007a  move-result-object  v0
+    007a..007e  check-cast  v0, Lcom/whatsapp/infra/core/jid/Jid;
+    007e..0084  invoke-virtual  {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString(L)
+    0084..0086  move-result-object  v0
+    0086..008a  new-instance  v1, Lcom/whatsapp/community/membersuggestedgroups/MemberSuggestedGroupsSyncJob;
+    008a..0090  invoke-direct  {v1, v0}, Lcom/whatsapp/community/membersuggestedgroups/MemberSuggestedGroupsSyncJob;-><init>(VL)
+    0090..0094  iget-object  v0, v6, LX/8l2;->A03:LX/0ls;
+    0094..009a  invoke-virtual  {v0, v1}, LX/0ls;->A01(VL)
+    009a..009c  goto  -0x1a
+    009c..009e  return-void
+.end method
+
+# class: LX/0yw;
+
+.method public A0U(VLLLLLLLLLLLLLIIIIIIIIJJJZZZZZZZZZZZZZZZ)  # .registers 96
+    0000..0004  move-wide/from16  v16, v77
+    0004..0008  const-string  v0, "groupmgr/onGroupInfoFromList"
+    0008..000e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+    000e..0012  move-object/from16  v2, v53
+    0012..0016  iget-object  v1, v2, LX/0yw;->A1l:LX/0Xp;
+    0016..001c  invoke-static  {v1}, LX/0Xp;->A00(LL)
+    001c..001e  move-result-object  v0
+    001e..0024  invoke-static  {v0}, LX/0C6;->A1O(LL)
+    0024..0026  move-result-object  v0
+    0026..002a  move-object/from16  v3, v55
+    002a..002e  if-eqz  v94, +0x482
+    002e..0034  invoke-interface  {v0, v3}, Ljava/util/Set;->add(ZL)
+    # omitted
+    01c4..01c8  move-object/from16  v27, v56
+    01c8..01cc  if-nez  v19, +0x314
+    01cc..01d0  iget-object  v4, v2, LX/0yw;->A0B:LX/00s;
+    01d0..01d6  invoke-interface  {v4}, LX/00s;->get(L)
+    01d6..01da  iget-object  v4, v2, LX/0yw;->A1B:LX/08Z;
+    01da..01de  move-object/from16  v28, v4
+    01de..01e4  invoke-interface/range  {v28..v28}, LX/08Z;->Apx(L)
+    01e4..01e6  move-result-object  v4
+    01e6..01ea  if-eqz  v4, +0x302
+    01ea..01ee  if-eqz  v63, +0x300
+    01ee..01f4  invoke-interface  {v1, v4}, Ljava/util/Map;->get(LL)
+    01f4..01f6  move-result-object  v1
+    01f6..01fa  check-cast  v1, LX/31c;
+    01fa..01fe  if-eqz  v1, +0x2f8
+    01fe..0202  iget-object  v4, v1, LX/31c;->A07:Ljava/lang/String;
+    0202..0206  const-string  v1, "admin"
+    0206..020a  if-eq  v4, v1, +0x7
+    020a..0210  const-string/jumbo  v1, "superadmin"
+    0210..0214  if-ne  v4, v1, +0x2ed
+    0214..0216  const/4  v1, #0x1
+    0216..021a  if-eqz  v35, +0x22
+    # omitted
+    05ac..05b0  iget-object  v0, v2, LX/0yw;->A0U:LX/00s;
+    05b0..05b6  invoke-interface  {v0}, LX/00s;->get(L)
+    05b6..05b8  move-result-object  v0
+    05b8..05bc  check-cast  v0, LX/AAI;
+    05bc..05c0  move/from16  v1, v86
+    05c0..05c6  invoke-virtual  {v0, v3, v1}, LX/AAI;->A03(ZLZ)
+    05c6..05c8  move-result  v0
+    05c8..05cc  if-eqz  v0, +0x1e
+    # omitted
+    08cc..08d2  invoke-virtual  {v4, v3}, LX/0bA;->A0B(LL)
+    08d2..08d4  move-result-object  v28
+    08d4..08da  invoke-virtual  {v14}, LX/0DV;->A06(L)
+    08da..08dc  move-result-object  v4
+    08dc..08e0  iget-object  v4, v4, LX/0lR;->A00:LX/0Da;
+    08e0..08e4  iget-object  v4, v4, LX/0Da;->A0e:Ljava/lang/String;
+    08e4..08e8  const/16  v33, #0x1
+    08e8..08ec  const/16  v34, #0x0
+    08ec..08f0  move-object/from16  v26, v52
+    08f0..08f4  move-object/from16  v27, v2
+    08f4..08f8  move-object/from16  v29, v4
+    08f8..08fc  move-object/from16  v30, v1
+    08fc..0900  move/from16  v32, v12
+    0900..0906  invoke-static/range  {v26..v35}, LX/0yw;->A00(ILLLLLZZZZZ)
+    0906..0908  move-result  v13
+    0908..090c  and-int/lit8  v4, v13, #0x1
+    090c..0910  if-eqz  v4, -0x3a6
+    0910..0914  iget-object  v4, v2, LX/0yw;->A0r:LX/0WD;
+    0914..091a  invoke-virtual  {v4, v3}, LX/0WD;->A0v(VL)
+    # omitted
+.end method

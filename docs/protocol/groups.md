@@ -1391,3 +1391,68 @@ strict workspace/all-target/all-feature Clippy and warning-free Rustdoc passed.
 Final checks: generated CLI reference, all five OpenAPI coverage/HTTP/library
 checks, formatting, staged whitespace and repository hygiene (387 local links)
 passed. The added non-text-flag regression also passed independently.
+
+
+## Atomic queued group ingestion (2026-10-07)
+
+**Confirmed/local defect and correction:** queued group replies used separate
+transactions for applying the snapshot/events and marking the action ingested.
+A stop between those commits left the earlier action eligible for reapplication;
+concurrent callers also checked that marker outside the write transaction.
+A newer intervening reply could then be overwritten by reapplying an older
+saved result. This is our persistence gap, not a WhatsApp requirement.
+
+`ingest_reply_in` now checks the marker, applies the reply and saves the marker
+under one store write transaction. Snapshot replacement and its journal events,
+invite-code changes and leave deletion all use that same transaction. The
+immutable stored request is loaded before the write lock so invite/leave do not
+nest transactions. A rejected truncated response still rolls back without a
+marker. Direct `record_info_reply` continues to save snapshot/events atomically;
+it has no queued-action marker. No socket query, receipt, server retry or new
+request ID was introduced.
+
+**Confirmed/offline regression:**
+`ingestion_snapshot_invite_leave_and_marker_rollback_together` exercises a
+saved successful info, invite and leave reply in turn. It aborts the actual
+transaction after both application and marker writes, reopens the encrypted
+store and checks the original snapshot, original event count and missing marker.
+Normal ingestion then applies the retained reply once. Another reopen preserves
+the marker and does not repeat the application or event. The subject-update
+case proves event rollback, the invite case proves request-derived mutation,
+and leave proves deletion rollback. This is transaction-abort/reopen coverage,
+not a claim of disk-full or process-kill fault injection.
+
+Reproduce without an account/network:
+`cargo test --locked -p whatsapp-api --all-features ingestion_snapshot_invite_leave_and_marker_rollback_together`.
+The existing `group list` command invokes ingestion; `actions` retains the
+original queued action inspection path. No additional command is needed.
+Ordering between distinct replies and complete notification application remain
+unfinished; an atomic commit alone does not establish freshness or membership
+validation for all inbound group shapes.
+
+**Confirmed/static helper follow-up, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Scoped helper evidence](group-completion-helper-evidence.txt) resolves two
+parts of the previous `0yw.A0t` boundary. `8lc.A01` iterates supplied groups,
+requires an existing 0DV, tests 0Da.A1A and `0bA.A0m`, then calls `8lc.A00`
+(0008..0076). The predicates and downstream operation remain **unknown**;
+this is not established as dirty-state deletion. `8l2.A00` selects group-like
+JIDs via `0DE.A0n` and `0Fs.A0A == 1`, then enqueues
+MemberSuggestedGroupsSyncJob for their raw JIDs (002a..009c). This is a separate
+member-suggestion sync job, refuting the assumption that every A0t helper is a
+simple dirty-marker clear. The value-1 predicate's meaning remains **unknown**.
+
+`0yw.A0U` labels its entry onGroupInfoFromList (0004..000e), checks
+admin/superadmin role strings from a map in the scoped 01c4..021a branch,
+and includes many additional feature/state/system-message operations. Its
+remaining field mapping, membership transaction and full parser are **unknown**;
+this partial trace does not justify directly copying the whole method into
+our smaller snapshot model. Raw full dumps remain local. Further static work
+is still available; this is not an external blocker.
+
+No saved account was opened or live request sent for this change.
+
+Validation: 572 workspace/all-feature tests, 24 default-feature CLI tests,
+strict workspace/all-target/all-feature Clippy, warning-free Rustdoc, generated
+CLI reference, five OpenAPI checks, formatting, staged whitespace and repository
+hygiene (390 local links) passed. Group notification handling remains incomplete.
