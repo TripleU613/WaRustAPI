@@ -832,3 +832,33 @@ runtime-version and full lexical parity, actual typename spellings, full group
 application/live MEX settlement. Owner-only re-export: 59 unchanged method texts,
 64 files/205234 bytes, cached diff 0.038028 s; baseline Git a737c69. No account
 state access/mutation or live network request.
+
+
+### MEX downstream participant storage (2026-10-07)
+
+**Confirmed static, APK 2.26.37.71:** exact A4m.A0O field search finds one
+behavioral reader, 0yw.A0X; it forwards the nullable map to A0U. Null skips
+A00 membership reconciliation while other group-field updates continue; empty
+nonnull maps still reconcile. A00 scales positive 31c.A05 by 1000, otherwise
+preserves positive previous 1uU.A01 or uses 08B.A00. 0bA.A00 maps nullable history
+to prior integer state: true minimum 2, false null/zero→ 1 otherwise unchanged,
+null preserves. **Inferred:** join storage milliseconds/raw seconds from the
+multiplication and clock calls. **Observed reference:** pure Rust metadata helper
+and CLI match 432 host-Java transcribed branch cases; not Android/APK execution.
+**Unknown:** clock calibration, higher history-state meanings, inner storage
+atomicity, full alias/device/own-account reconciliation and live MEX durable
+application. Those are not inferred from A0i delegation order. Seven methods
+added to the versioned bundle; 59 existing texts unchanged,66 methods / 71 files /
+285828 bytes, cached diff 0.035567s, baseline 8295e18.
+[Trace, negative boundaries, evidence and reproduction](mex.md#downstream-member-storage-and-null-map-2026-10-07).
+No private account state or live operation changed.
+
+
+**Observed research tooling correction (same chunk):** CI hygiene's checksum
+pass covered only the hardcoded 37.70 snapshot. It now verifies every discovered
+checksum snapshot separately; four bundles/2029764 bytes and 621 local links
+passed. A standalone corruption/size/extra-file regression is wired into CI.
+Earlier 564315-byte hygiene output did not establish newer snapshot coverage;
+MEX exports were separately checked by apk-research-diff. See
+[checksum correction](apk-porting.md#checksum-coverage-correction-2026-10-07).
+No new protocol/API capability is inferred from this tooling change.

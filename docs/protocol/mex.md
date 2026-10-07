@@ -1386,3 +1386,142 @@ topic owners now identify the new string modules.
 [Cached owner diff](apk/mex-string-owner-diff.json) took **0.038028 seconds**.
 Old paths refer to the ignored cached snapshot at Git **a737c69**. This validates
 fast scoped file comparison, not complete release remapping or whole-APK parity.
+
+
+## Downstream member storage and null map (2026-10-07)
+
+**Confirmed static, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+[selected application/storage evidence](mex-participant-storage-evidence.txt)
+closes the previously unknown immediate consumer of the ADv.A0D nullable map.
+An exact APK-wide field-reference search for `A4m.A0O:Ljava/util/Map;` returned
+six sites: constructor write, two equals reads, hashCode, toString, and the sole
+behavioral reader `0yw.A0X`. This is a direct-field search; it is not proof
+that reflection/native code or copied references have no other consumers.
+
+### Null map forwarding and reconciliation boundary
+
+0yw.A0X+008c..0094 reads A4m.A0O and saves it in v27; +016e..0172 copies it
+to v25 before the +017e invoke range v15..v57 into A0U. That method has 96
+registers/43 incoming words, so incoming `this` is v53 and the map is v63.
+A0U+0174..01a0 first avoids its separate 17H.A04 alias refresh for null/empty
+maps. Its +01ba conditional branches to +08c8 only for a nonnull map.
++08c8..0906 obtains the current 1jL member model and invokes 0yw.A00 with the
+map (v1 copied to v30). A null map instead initializes its local change result
+at +01be and bypasses this reconciliation call. **Null preserves membership
+through this path; it is not an empty replacement.** Other group metadata updates
+still run. A nonnull empty map skips the separate alias refresh but still enters
+A00; it therefore differs from null.
+
+A00 iterates the supplied entries and resolves stored roles as 0/1/2 for
+ordinary/admin/superadmin. Later it iterates existing entries, tests whether the
+new map contains each key, and also protects selected LID aliases and own-account
+aliases before queuing removals (+03fc..050a). It calls 0bA.A0i with new stored
+rows and removal candidates at +0552. This establishes a reconciliation path,
+not permission to replace the whole membership vector naively. All alias/own
+account/device/history/event/recovery branches still need a full port. No
+membership application or change-event generation is implemented by this chunk.
+
+### Stored join timestamp and history state
+
+The 31c input remains raw converted metadata. Its immediate storage consumer is
+0yw.A00, not the ADv converter. This resolves the previously unknown scaling:
+
+| Selection | APK evidence | Stored result |
+| --- | --- | --- |
+| Present positive 31c.A05 Long | A00+0112..013e | Raw value multiplied by literal 1000 with Java long wrapping |
+| Missing/nonpositive raw value, positive previous 1uU.A01 | A00+0336..035a | Preserve the previous timestamp |
+| Missing/nonpositive raw value, absent/nonpositive previous timestamp | A00+034a..0356 | Use 08B.A00 clock result |
+
+Selection happens **before** multiplication. A wider positive Long whose product
+wraps to zero/negative does not trigger clock fallback. The normal ADv producer
+is positive optInt widened to Long, so its maximum cannot overflow this product;
+wide-Long tests validate consumer arithmetic without claiming such inputs are
+normally produced by ADv. The chosen long is forwarded to 1uU's constructor;
+its +0058 write stores it in A01. 08B.A00 selects elapsedRealtime plus its
+nonzero A03/A04 offsets, or currentTimeMillis minus A02. **Inferred units:**
+stored timestamps are milliseconds and raw join values are seconds, supported
+by the explicit 1000 conversion and the millisecond clock methods. Calibration,
+server epoch meaning and the producers of those clock offsets remain untraced.
+Our helper requires an explicitly supplied clock; it does not synthesize APK
+calibration or read wall time.
+
+0yw.A00+014a..015e combines 31c.A04 with previous 1uU.A02 through 0bA.A00.
+The nullable Boolean is not stored as a Boolean and false does not reset every
+existing state. Confirmed integer selection is:
+
+| Incoming history flag | Previous nullable integer | Result |
+| --- | --- | --- |
+| true | null or less than 2 | 2 |
+| true | at least 2 | Previous unchanged |
+| false | null or zero | 1 |
+| false | any other value, including negative | Previous unchanged |
+| null | Any | Previous unchanged |
+
+1uU's +0064 constructor write stores this result in A02. Meanings of higher or
+negative integer states are **unknown**; preserving them follows the actual
+branch rather than naming or flattening them. 0bA.A0i delegates in order to
+1jL.A04, 290.A02, and 1jL.A0U with removal candidates. Those inner storage
+methods and their transaction/rollback semantics remain untraced here; no
+atomicity guarantee is inferred from their call order.
+
+### Rust implementation and explicit offline inspection
+
+[participant_storage.rs](../../crates/whatsapp-api/src/transport/mex/participant_storage.rs)
+implements these two storage selections as the pure library helper
+`participant_storage_metadata`. `GroupParticipant::storage_metadata` supplies
+its existing raw join/history fields and accepts explicit previous state/clock.
+The returned `ParticipantStorageMetadata` exposes join_time_ms/history_state
+only on explicit field access; Debug hides values and no Serialize is implemented.
+This does not change the raw member/edge CLI fields or apply a group snapshot.
+
+The existing toolkit now exposes:
+
+```sh
+cargo run -p xtask -- mex-participant-storage-inspect --input /private/storage.json
+```
+
+The private typed JSON has required signed integer `clock_ms` and optional/null
+`join_time`, `group_history_sent`, `previous_join_time_ms`,
+`previous_history_state`. The timestamps use signed i64, prior history i32, and
+incoming history bool. Omitted optional fields are null. These are already
+converted scalar inputs, not raw JSONObject coercion. Output includes
+`offline_only: true`, exact decimal-string join_time_ms and nullable integer
+history_state. Local input limit is 16 KiB; unknown/duplicate fields, missing
+clock and wrong types refuse with content-free diagnostics and empty stdout.
+Refusals name the missing/mistyped known field; unknown private key text is never
+echoed.
+This is CLI-only/x-live false with no HTTP route or account access.
+
+[432-case fixture](../../crates/whatsapp-api/fixtures/mex/2.26.37.71-participant-storage-reference.json)
+is produced by the [Java branch oracle](MexParticipantStorageOracle.java), which
+independently transcribes the selected APK branches and executes host Java long
+arithmetic/boxed state comparisons. **Observed host reference, not APK execution.**
+Cross products cover raw null/negative/zero/positive/int-max/long-max joins,
+null/negative/zero/positive prior timestamps, nullable flags, and null/-1/0/1/2/4
+prior states. The CLI passed all 432 reference cases; nine invalid/oversized
+inputs refused with empty stdout and no supplied private marker in diagnostics.
+The corpus and oracle verify the difference between absent and false history.
+The separate selected APK trace and existing member fixture preserve the null
+versus empty-map distinction; neither establishes full reconciliation parity.
+
+To reproduce, compile `MexParticipantStorageOracle.java` into the existing
+ignored Java classes directory, then run it with one tab-separated row per case:
+join_time, history flag, prior join timestamp, prior history integer, clock_ms.
+Use `n` for null and lowercase true/false. Outputs are tab-separated timestamp
+and integer/null (`n`); compare against the committed fixture. Java runtime is
+host Temurin 21.0.12.1+1 used by the preceding platform references.
+
+**Unknown / unfinished:** full MEX group variants/feature maps, actual typename
+spellings, alias/device/own-account reconciliation, stored display handling,
+removal/event/recovery policy, transaction boundaries and live MEX dispatch plus
+durable settlement. The null-map and metadata consumer gaps are now traced, but
+full group application remains unimplemented. No account state was opened or
+mutated, no registration attempted and no live request sent.
+
+The versioned bundle adds seven selected methods: **66 methods / 71 files /
+285828 bytes**. All 59 previous method texts remain byte-identical. The
+[actual cached diff](apk/mex-participant-storage-diff.json) took **0.035567 s**;
+old paths reference ignored baseline Git **8295e18**. Inventory/manifest/token
+artifacts stay unchanged. New owners bind this trace to its Rust metadata module,
+while complete APK inventory/native release remapping remains unfinished.

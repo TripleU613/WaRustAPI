@@ -521,6 +521,45 @@
       "crates/whatsapp-api/src/transport/mex/participants.rs"
     ]
   },
+  "mex-participant-apply-core": {
+    "anchors": [
+      "groupmgr/onGroupInfoFromList"
+    ],
+    "class": "LX/0yw;",
+    "file": "mex-participant-apply-core.txt",
+    "include_exception_tables": true,
+    "method_filter": "A0U",
+    "method_shorty": "VLLLLLLLLLLLLLIIIIIIIIJJJZZZZZZZZZZZZZZZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participant_storage.rs",
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
+    ]
+  },
+  "mex-participant-apply-result": {
+    "class": "LX/0yw;",
+    "file": "mex-participant-apply-result.txt",
+    "include_exception_tables": true,
+    "method_filter": "A0X",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participant_storage.rs",
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
+    ]
+  },
+  "mex-participant-clock": {
+    "class": "LX/08B;",
+    "file": "mex-participant-clock.txt",
+    "include_exception_tables": true,
+    "method_filter": "A00",
+    "method_shorty": "JL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participant_storage.rs",
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
+    ]
+  },
   "mex-participant-hash-boolean": {
     "class": "LX/LbE;",
     "file": "mex-participant-hash-boolean.txt",
@@ -531,6 +570,18 @@
     "rust_files": [
       "crates/whatsapp-api/src/transport/mex.rs",
       "crates/whatsapp-api/src/transport/mex/coercion.rs",
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
+    ]
+  },
+  "mex-participant-history-state": {
+    "class": "LX/0bA;",
+    "file": "mex-participant-history-state.txt",
+    "include_exception_tables": true,
+    "method_filter": "A00",
+    "method_shorty": "LLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participant_storage.rs",
       "crates/whatsapp-api/src/transport/mex/participants.rs"
     ]
   },
@@ -552,6 +603,22 @@
       "crates/whatsapp-api/src/transport/mex/participants.rs",
       "crates/whatsapp-api/src/transport/mex/double_string.rs",
       "crates/whatsapp-api/src/transport/mex/ordered_json.rs"
+    ]
+  },
+  "mex-participant-reconcile": {
+    "anchors": [
+      "GroupParticipantsManager/sync-add-participant: ",
+      "GroupParticipantsManager/sync-remove-participant:"
+    ],
+    "class": "LX/0yw;",
+    "file": "mex-participant-reconcile.txt",
+    "include_exception_tables": true,
+    "method_filter": "A00",
+    "method_shorty": "ILLLLLZZZZZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participant_storage.rs",
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
     ]
   },
   "mex-participant-role-enum": {
@@ -591,6 +658,18 @@
     "methods": 1,
     "rust_files": [
       "crates/whatsapp-api/src/transport/mex.rs"
+    ]
+  },
+  "mex-participant-store": {
+    "class": "LX/0bA;",
+    "file": "mex-participant-store.txt",
+    "include_exception_tables": true,
+    "method_filter": "A0i",
+    "method_shorty": "VLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participant_storage.rs",
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
     ]
   },
   "mex-persisted-id": {
@@ -721,6 +800,18 @@
     "methods": 1,
     "rust_files": [
       "crates/whatsapp-api/src/transport/mex/participant_address.rs"
+    ]
+  },
+  "mex-stored-participant-constructor": {
+    "class": "LX/1uU;",
+    "file": "mex-stored-participant-constructor.txt",
+    "include_exception_tables": true,
+    "method_filter": "<init>",
+    "method_shorty": "VLLLLLIJZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/mex/participant_storage.rs",
+      "crates/whatsapp-api/src/transport/mex/participants.rs"
     ]
   },
   "mex-strict-bot-jid": {

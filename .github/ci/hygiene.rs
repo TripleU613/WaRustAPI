@@ -65,7 +65,36 @@ fn check() -> Result<(), String> {
             }
         }
     }
-    let bundle = Path::new("docs/protocol/apk/2.26.37.70");
+    let mut bundles = Vec::new();
+    for entry in fs::read_dir("docs/protocol/apk").map_err(|e| e.to_string())? {
+        let path = entry.map_err(|e| e.to_string())?.path();
+        if path.is_dir() && path.join("checksums.json").is_file() {
+            bundles.push(path);
+        }
+    }
+    bundles.sort();
+    if bundles.is_empty() {
+        return Err("no APK research checksum bundles found".into());
+    }
+    let mut total = 0;
+    for bundle in &bundles {
+        total += check_bundle(bundle).map_err(|e| format!("{}: {e}", bundle.display()))?;
+    }
+    for name in ["LICENSE-MIT", "LICENSE-APACHE"] {
+        if fs::read(name).map_err(|e| e.to_string())?
+            != fs::read(format!("crates/whatsapp-api/{name}")).map_err(|e| e.to_string())?
+        {
+            return Err(format!("packaged license differs: {name}"));
+        }
+    }
+    println!(
+        "Checked tracked-file budgets, {links} local links, package licenses, and {total} bytes across {} APK research checksum bundles.",
+        bundles.len()
+    );
+    Ok(())
+}
+
+fn check_bundle(bundle: &Path) -> Result<u64, String> {
     let checksum_file = bundle.join("checksums.json");
     let entries = output(
         "jq",
@@ -106,22 +135,55 @@ fn check() -> Result<(), String> {
     if actual != expected || total > 2 * 1024 * 1024 {
         return Err("APK bundle file list or size budget failed".into());
     }
-    for name in ["LICENSE-MIT", "LICENSE-APACHE"] {
-        if fs::read(name).map_err(|e| e.to_string())?
-            != fs::read(format!("crates/whatsapp-api/{name}")).map_err(|e| e.to_string())?
-        {
-            return Err(format!("packaged license differs: {name}"));
-        }
-    }
-    println!(
-        "Checked tracked-file budgets, {links} local links, package licenses, and {total} bytes of APK research checksums."
-    );
-    Ok(())
+    Ok(total)
 }
 
 fn main() {
     if let Err(e) = check() {
         eprintln!("{e}");
         std::process::exit(1);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    struct Scratch(std::path::PathBuf);
+    impl Drop for Scratch {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+    #[test]
+    fn every_selected_bundle_refuses_hash_size_and_file_set_changes() {
+        let path = std::env::temp_dir().join(format!(
+            "telewhatsapp-hygiene-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        fs::create_dir(&path).unwrap();
+        let scratch = Scratch(path);
+        let original = r#"{"topic.txt":{"bytes":3,"sha256":"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"}}"#;
+        fs::write(scratch.0.join("checksums.json"), original).unwrap();
+        fs::write(scratch.0.join("topic.txt"), "abc").unwrap();
+        assert!(check_bundle(&scratch.0).is_ok());
+        fs::write(scratch.0.join("topic.txt"), "abd").unwrap();
+        assert!(
+            check_bundle(&scratch.0)
+                .unwrap_err()
+                .contains("checksum mismatch")
+        );
+        fs::write(scratch.0.join("topic.txt"), "abcd").unwrap();
+        assert!(
+            check_bundle(&scratch.0)
+                .unwrap_err()
+                .contains("size mismatch")
+        );
+        fs::write(scratch.0.join("topic.txt"), "abc").unwrap();
+        fs::write(scratch.0.join("extra.txt"), "unexpected").unwrap();
+        assert!(check_bundle(&scratch.0).unwrap_err().contains("file list"));
     }
 }

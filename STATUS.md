@@ -1240,3 +1240,31 @@ access, registration, live transmission or new number acquisition occurred.
 Final repository hygiene passed: tracked-file budgets, 611 local links, package
 licenses and 564315 bytes of APK research checksums; staged whitespace was clean.
 The formatter corpus also passed after the strict-Clippy parity expression fix.
+
+
+MEX member-storage consumers (2026-10-07, offline): APK 37.71 A4m.A0O has one
+behavioral reader, 0yw.A0X; A0U skips member reconciliation for null but calls it
+for nonnull empty maps. Consumer timestamp scaling/previous-clock fallback and
+nullable-history integer preservation are now implemented as a pure Rust helper
+and GroupParticipant method, with explicit private-JSON CLI inspection. 432 host
+Java transcribed-branch reference cases and 432 actual CLI cases passed; nine
+invalid/oversized input refusals stayed content-free with empty stdout. Full
+membership/alias/device/own-account application, storage atomicity and live MEX
+settlement remain unfinished. [Evidence](docs/protocol/mex.md#downstream-member-storage-and-null-map-2026-10-07).
+
+Validation: 634 workspace/all-feature tests, 24 default CLI tests, regenerated CLI
+reference, warning-free Rustdoc, formatting and final strict Clippy passed.
+The initial Clippy run found redundant test-only qualifications; they were
+removed and strict Clippy rerun successfully. No live request/account access or
+identity/key change. Versioned bundle adds seven methods (66 methods / 71 files /
+285828 bytes), preserving all 59 prior texts; cached diff 0.035567s. Baseline 8295e18.
+
+Final hygiene corrected an existing coverage gap: its checksum section formerly
+checked only 37.70, while MEX had separate diff verification. It now checks all
+four discovered snapshot bundles (2029764 bytes), with 621 local links, tracked
+budgets and package licenses passing. Its standalone corruption/size/extra-file
+test passed and is wired into CI. Staged whitespace and CI-tool formatting passed.
+[Scope correction](docs/protocol/apk-porting.md#checksum-coverage-correction-2026-10-07).
+Final diagnostic correction reran all 634 workspace/all-feature tests and strict
+Clippy successfully; all 432 actual CLI cases and nine named refusals passed.
+Actionlint accepted the changed workflow. No new live validation is claimed.

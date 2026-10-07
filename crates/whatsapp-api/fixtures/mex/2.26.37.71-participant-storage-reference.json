@@ -1,0 +1,5622 @@
+{
+  "reference": "Executed host Java transcribed APK 37.71 0yw.A00/0bA.A00 branches; not APK/Android execution. i64 MAX join tests consumer overflow, not normal positive optInt production.",
+  "oracle": "docs/protocol/MexParticipantStorageOracle.java",
+  "cases": [
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": null,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": -1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1735689600123",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 0,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "91",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 1,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 2147483647,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "2147483647000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": null,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": -1,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": 0,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": null
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 0
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": null,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": -1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 1
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": false,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 4
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": null,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": -1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 0,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 1,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 2,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 2
+      }
+    },
+    {
+      "input": {
+        "join_time": 9223372036854775807,
+        "group_history_sent": true,
+        "previous_join_time_ms": 91,
+        "previous_history_state": 4,
+        "clock_ms": 1735689600123
+      },
+      "expected": {
+        "join_time_ms": "-1000",
+        "history_state": 4
+      }
+    }
+  ]
+}

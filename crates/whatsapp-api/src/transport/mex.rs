@@ -15,8 +15,10 @@ mod coercion;
 mod double_string;
 mod ordered_json;
 mod participant_address;
+mod participant_storage;
 mod participants;
 pub use participant_address::{ParticipantAddress, ParticipantAddressKind};
+pub use participant_storage::{ParticipantStorageMetadata, participant_storage_metadata};
 pub use participants::{GroupParticipant, GroupParticipantMap};
 
 /// APK participant-list scalar fields, before member/type/JID validation.

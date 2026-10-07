@@ -1,0 +1,27 @@
+# APK-derived structural disassembly: LX/08B;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(JL) flags=0x9 registers=8
+  0000..0006 op=71 invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime(J)
+  0006..0008 op=0b move-result-wide
+  0008..000c op=53 iget-wide v1, v7, LX/08B;->A03:J
+  000c..0010 op=16 const-wide/16 v3, #0x0
+  0010..0014 op=31 cmp-long v0, v1, v3
+  0014..0018 op=38 if-eqz v0, +0x6
+  0018..001c op=53 iget-wide v0, v7, LX/08B;->A03:J
+  001c..001e op=bb add-long/2addr v0, v5
+  001e..0020 op=10 return-wide v0
+  0020..0024 op=53 iget-wide v1, v7, LX/08B;->A04:J
+  0024..0028 op=31 cmp-long v0, v1, v3
+  0028..002c op=38 if-eqz v0, +0x5
+  002c..0030 op=53 iget-wide v0, v7, LX/08B;->A04:J
+  0030..0032 op=28 goto -0xa
+  0032..0038 op=71 invoke-static {}, Ljava/lang/System;->currentTimeMillis(J)
+  0038..003a op=0b move-result-wide
+  003a..003e op=53 iget-wide v0, v7, LX/08B;->A02:J
+  003e..0040 op=bc sub-long/2addr v2, v0
+  0040..0042 op=10 return-wide v2
+  # exception table: 0 try range(s)
+.end method

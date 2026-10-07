@@ -70,6 +70,8 @@ jobs:
           persist-credentials: false
       - name: Local links, licenses, file budgets, and APK checksums
         run: |
+          rustup run stable rustc --edition=2024 --test .github/ci/hygiene.rs -o /tmp/ci-hygiene-tests
+          /tmp/ci-hygiene-tests
           rustup run stable rustc --edition=2024 .github/ci/hygiene.rs -o /tmp/ci-hygiene
           /tmp/ci-hygiene
       - name: Validate GitHub Actions

@@ -175,6 +175,18 @@
         "whatsapp_api::transport::mex::ParticipantAddressKind"
       ],
       "description": "Offline APK 37.71 strict member-primary UserJid validation; no HTTP route, account access, sending eligibility or group-state application. Required --value is private input; success prints only offline_only=true and kind (phone, lid, bot, interop, server_zero, server_name, lid_me, status_me), never the supplied or canonical address. Failure has empty stdout and a content-free mex.participant.address diagnostic. Device suffixes, non-user domains and gdpr refuse. Phone/LID/bot constructor ASCII/length/prefix guards and interop last-hyphen/signed Integer.parseInt rules are preserved. Plain hosted/hosted.lid canonical domains normalize through explicit library server(); user() reveals private identifiers, while Debug hides them. Server/0 singletons and bare lid_me/status_me are accepted; bare server and @lid_me/@status_me domains refuse. Integer digit semantics validated against independent host Java, not Android Unicode-version parity. Full member assembly, alias application, Java cache effects and live MEX application remain unfinished. Evidence docs/protocol/mex.md."
+    },
+    {
+      "x-cli": "cargo run -p xtask -- mex-participant-storage-inspect --input <private-json>",
+      "x-transport": "cli",
+      "x-live": false,
+      "x-secret-input": true,
+      "x-library": [
+        "whatsapp_api::transport::mex::ParticipantStorageMetadata",
+        "whatsapp_api::transport::mex::participant_storage_metadata",
+        "whatsapp_api::transport::mex::GroupParticipant::storage_metadata"
+      ],
+      "description": "Offline APK 37.71 member-storage scalar selection; no HTTP route, account access, clock read, membership reconciliation or durable write. Required --input is a private typed JSON object, local 16 KiB limit: required clock_ms signed i64; optional/null join_time and previous_join_time_ms signed i64, group_history_sent boolean, previous_history_state signed i32. Unknown/duplicate fields or invalid types refuse with content-free stderr and no partial stdout; missing/mistyped known fields are named without values, and unknown private keys are never echoed. Inputs are already converted 31c join/history metadata, not raw JSONObject coercion; normal ADv join producer is positive optInt widened to Long. Output offline_only=true, join_time_ms as exact signed decimal string, history_state nullable signed i32. Positive join_time multiplies by 1000 with Java wrapping; selection precedes multiplication so overflow never triggers fallback. Missing/nonpositive join preserves a positive previous millisecond timestamp, otherwise uses supplied clock_ms exactly. true history raises null or <2 to2; false raises null or0 to1 and preserves every other prior state including negative/higher values; null history preserves prior unchanged. Pure output Debug omits values. GroupParticipant::storage_metadata delegates its converted join/history fields to the shared helper. APK 0yw.A0X forwards A4m.A0O to A0U, whose null branch skips A00 membership reconciliation while other group-field updates continue; a nonnull empty map still enters reconciliation. This trace does not establish full alias/device/recovery/atomic group application. Independent executed host Java transcribed-branch corpus covers432 combinations, not APK/Android execution. Clock calibration and higher history-state meanings remain untraced. Evidence docs/protocol/mex.md#downstream-member-storage-and-null-map-2026-10-07."
     }
   ],
   "info": {

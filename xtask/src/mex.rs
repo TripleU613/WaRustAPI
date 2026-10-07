@@ -281,6 +281,92 @@ pub fn inspect_participant_address(value: &str) -> Result<(), String> {
     Ok(())
 }
 
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ParticipantStorageInput {
+    join_time: Option<i64>,
+    group_history_sent: Option<bool>,
+    previous_join_time_ms: Option<i64>,
+    previous_history_state: Option<i32>,
+    clock_ms: i64,
+}
+
+fn participant_storage_input_error(body: &[u8]) -> String {
+    // Explain the known field/type without exposing serde's private scalar or
+    // unknown key text. This diagnostic pass never changes parsing acceptance.
+    let Ok(serde_json::Value::Object(fields)) = serde_json::from_slice(body) else {
+        return "invalid storage input: expected a UTF-8 JSON object".into();
+    };
+    if !fields.contains_key("clock_ms") {
+        return "invalid storage input: missing required clock_ms".into();
+    }
+    const NAMES: [&str; 5] = [
+        "clock_ms",
+        "join_time",
+        "previous_join_time_ms",
+        "group_history_sent",
+        "previous_history_state",
+    ];
+    if fields.keys().any(|key| !NAMES.contains(&key.as_str())) {
+        return "invalid storage input: unknown fields are not accepted".into();
+    }
+    for name in NAMES {
+        let Some(value) = fields.get(name) else {
+            continue;
+        };
+        if name != "clock_ms" && value.is_null() {
+            continue;
+        }
+        let valid = match name {
+            "group_history_sent" => value.is_boolean(),
+            "previous_history_state" => value.as_i64().is_some_and(|v| i32::try_from(v).is_ok()),
+            _ => value.as_i64().is_some(),
+        };
+        if !valid {
+            let kind = match name {
+                "group_history_sent" => "boolean or null",
+                "previous_history_state" => "signed i32 or null",
+                "clock_ms" => "signed i64",
+                _ => "signed i64 or null",
+            };
+            return format!("invalid storage input: {name} must be {kind}");
+        }
+    }
+    "invalid storage input: duplicate fields or invalid typed input".into()
+}
+
+fn participant_storage_output(body: &[u8]) -> Result<serde_json::Value, String> {
+    // Do not expose serde's offending scalar/string in private input diagnostics.
+    let input: ParticipantStorageInput =
+        serde_json::from_slice(body).map_err(|_| participant_storage_input_error(body))?;
+    let metadata = whatsapp_api::transport::mex::participant_storage_metadata(
+        input.join_time,
+        input.group_history_sent,
+        input.previous_join_time_ms,
+        input.previous_history_state,
+        input.clock_ms,
+    );
+    Ok(serde_json::json!({
+        "offline_only": true,
+        "join_time_ms": metadata.join_time_ms.to_string(),
+        "history_state": metadata.history_state,
+    }))
+}
+
+/// Explicit private numeric output; does not open an account or read wall time.
+pub fn inspect_participant_storage(input: &Path) -> Result<(), String> {
+    let body = bounded_read(
+        File::open(input).map_err(|_| "cannot open storage metadata file")?,
+        16 * 1024,
+    )?;
+    let output = participant_storage_output(&body)?;
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&output).map_err(|_| "cannot encode storage metadata")?
+    );
+    Ok(())
+}
+
 /// Summary is redacted; explicit group_numbers opts into numeric content only.
 /// Raw JSON/group names/server error content never appear in diagnostics.
 pub fn inspect_response(
@@ -369,6 +455,37 @@ pub fn inspect_response(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn storage_inputs_are_typed_and_content_free_on_refusal() {
+        let output = participant_storage_output(br#"{"clock_ms":99,"group_history_sent":false,"previous_history_state":4,"previous_join_time_ms":23}"#).unwrap();
+        assert_eq!(
+            output,
+            serde_json::json!({"offline_only":true,"join_time_ms":"23","history_state":4})
+        );
+        assert!(
+            participant_storage_output(br#"{}"#)
+                .unwrap_err()
+                .contains("missing required clock_ms")
+        );
+        assert!(
+            participant_storage_output(br#"{"clock_ms":99,"join_time":"private-content"}"#)
+                .unwrap_err()
+                .contains("join_time must be signed i64")
+        );
+        for raw in [
+            r#"{"clock_ms":99,"join_time":"private-content"}"#,
+            r#"{"clock_ms":99,"group_history_sent":"private-content"}"#,
+            r#"{"clock_ms":99,"previous_history_state":2147483648}"#,
+            r#"{"clock_ms":99,"clock_ms":100}"#,
+            r#"{"clock_ms":99,"private-content":1}"#,
+            r#"{}"#,
+        ] {
+            let error = participant_storage_output(raw.as_bytes()).unwrap_err();
+            assert!(error.starts_with("invalid storage input:"));
+            assert!(!error.contains("private-content"));
+        }
+    }
+
     use super::*;
     use std::io::{Cursor, Write};
 

@@ -8,7 +8,8 @@ use serde_json::{Map, Value};
 use std::collections::HashMap;
 
 /// ADv.A0D distinguishes a null phash result from an ordered (possibly empty) map.
-/// It does not establish how the downstream caller applies that null result.
+/// APK 0yw.A0X -> A0U skips membership reconciliation when this map is null.
+/// Other group updates continue; this type does not apply any state.
 pub enum GroupParticipantMap {
     /// APK returned null before inspecting edges; not an empty replacement.
     PhashMatch,
@@ -27,12 +28,32 @@ pub struct GroupParticipant {
     pub pn: Option<ParticipantAddress>,
     /// 31c.A07 converted role string (empty/admin/superadmin).
     pub role: &'static str,
-    /// 31c.A05 positive optInt boxed as long; final time unit unknown.
+    /// 31c.A05 positive optInt boxed as long; raw value before the consumer
+    /// multiplies by 1000. Use storage_metadata for stored millisecond selection.
     pub join_time: Option<i64>,
     /// 31c.A04 present/null distinction preserved.
     pub group_history_sent: Option<bool>,
     /// 31c.A06 optional display_name; bot branch ignores it.
     pub display_name: Option<String>,
+}
+
+impl GroupParticipant {
+    /// Resolve the APK member-storage scalars using explicit previous state/clock.
+    /// Does not reconcile aliases, apply membership, mutate a store or read time.
+    pub fn storage_metadata(
+        &self,
+        previous_join_time_ms: Option<i64>,
+        previous_history_state: Option<i32>,
+        clock_ms: i64,
+    ) -> super::ParticipantStorageMetadata {
+        super::participant_storage_metadata(
+            self.join_time,
+            self.group_history_sent,
+            previous_join_time_ms,
+            previous_history_state,
+            clock_ms,
+        )
+    }
 }
 
 impl std::fmt::Debug for GroupParticipant {

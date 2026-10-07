@@ -1,0 +1,34 @@
+# APK-derived structural disassembly: LX/1uU;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLLLIJZ) flags=0x10001 registers=14
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v5, v0}, LX/00h;->A0A(VLI)
+  0008..000e op=70 invoke-direct {v4}, Ljava/lang/Object;-><init>(V)
+  000e..0012 op=22 new-instance v0, Ljava/util/concurrent/ConcurrentHashMap;
+  0012..0018 op=70 invoke-direct {v0}, Ljava/util/concurrent/ConcurrentHashMap;-><init>(V)
+  0018..001c op=5b iput-object v0, v4, LX/1uU;->A07:Ljava/util/concurrent/ConcurrentHashMap;
+  001c..0020 op=5b iput-object v5, v4, LX/1uU;->A06:Lcom/whatsapp/infra/core/jid/UserJid;
+  0020..0026 op=72 invoke-interface {v9}, Ljava/util/Set;->iterator(L)
+  0026..0028 op=0c move-result-object
+  0028..002e op=72 invoke-interface {v3}, Ljava/util/Iterator;->hasNext(Z)
+  002e..0030 op=0a move-result
+  0030..0034 op=38 if-eqz v0, +0x10
+  0034..003a op=72 invoke-interface {v3}, Ljava/util/Iterator;->next(L)
+  003a..003c op=0c move-result-object
+  003c..0040 op=1f check-cast v2, LX/1tn;
+  0040..0044 op=54 iget-object v1, v4, LX/1uU;->A07:Ljava/util/concurrent/ConcurrentHashMap;
+  0044..0048 op=54 iget-object v0, v2, LX/1tn;->A03:Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0048..004e op=6e invoke-virtual {v1, v0, v2}, Ljava/util/AbstractMap;->put(LLL)
+  004e..0050 op=28 goto -0x13
+  0050..0054 op=59 iput v10, v4, LX/1uU;->A00:I
+  0054..0058 op=5c iput-boolean v13, v4, LX/1uU;->A05:Z
+  0058..005c op=5a iput-wide v11, v4, LX/1uU;->A01:J
+  005c..0060 op=5b iput-object v8, v4, LX/1uU;->A04:Ljava/lang/String;
+  0060..0064 op=5b iput-object v6, v4, LX/1uU;->A03:Ljava/lang/Integer;
+  0064..0068 op=5b iput-object v7, v4, LX/1uU;->A02:Ljava/lang/Integer;
+  0068..006a op=0e return-void
+  # exception table: 0 try range(s)
+.end method

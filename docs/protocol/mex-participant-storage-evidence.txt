@@ -1,0 +1,110 @@
+# APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Static field search and additional selected constructor evidence, not Android execution.
+# Full application bodies are checksum-pinned in apk/2.26.37.71-mex/:
+# mex-participant-apply-result.txt: 0yw.A0X(VL)
+# mex-participant-apply-core.txt: 0yw.A0U(VLLLLLLLLLLLLLIIIIIIIIJJJZZZZZZZZZZZZZZZ)
+# mex-participant-reconcile.txt: 0yw.A00(ILLLLLZZZZZ)
+# mex-participant-history-state.txt: 0bA.A00(LLL)
+# mex-participant-clock.txt: 08B.A00(JL)
+# mex-participant-store.txt: 0bA.A0i(VLLL)
+# mex-stored-participant-constructor.txt: 1uU.<init>(VLLLLLIJZ)
+# Reproduce selected bodies via xtask apk-smali APK --class CLASS --method METHOD --exceptions.
+# The recipe selects the exact shorty for overloaded constructor export.
+# The additional constructor dump below records all three bodies inspected locally;
+# only VLLLLLIJZ is called in the traced 0yw.A00 branch. Other callers remain untraced.
+
+## Exact APK-wide A4m.A0O field-reference search
+# xtask apk-field-refs APK --class 'LX/A4m;' --field A0O --type 'Ljava/util/Map;'
+classes.dex  LX/0yw;->A0X(VL)
+  read opcode 0x54, dex byte offset: 0x75f3e4
+classes6.dex  LX/A4m;-><init>(VLLLLLLLLLLLLLIIIIIIIIJJJJZZZZZZZZZZZZZ)
+  write opcode 0x5b, dex byte offset: 0x48972a
+classes6.dex  LX/A4m;->equals(ZL)
+  read opcode 0x54, dex byte offset: 0x4898f4
+classes6.dex  LX/A4m;->equals(ZL)
+  read opcode 0x54, dex byte offset: 0x4898f8
+classes6.dex  LX/A4m;->hashCode(I)
+  read opcode 0x54, dex byte offset: 0x489b24
+classes6.dex  LX/A4m;->toString(L)
+  read opcode 0x54, dex byte offset: 0x489cd4
+
+## 1uU constructor bodies
+
+# class: LX/1uU;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLIZZ)  # .registers 8
+    0000..0002  const/4  v2, #0x0
+    0002..0006  sget-object  v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0DK;
+    0006..000c  invoke-virtual  {v4}, Lcom/whatsapp/infra/core/jid/UserJid;->getPrimaryDevice(L)
+    000c..000e  move-result-object  v1
+    000e..0014  invoke-static  {v1}, LX/00K;->A06(VL)
+    0014..001a  invoke-static  {v1}, LX/00h;->A06(VL)
+    001a..001e  new-instance  v0, LX/1tn;
+    001e..0024  invoke-direct  {v0, v1, v2, v6, v7}, LX/1tn;-><init>(VLLZZ)
+    0024..002a  invoke-static  {v0}, Ljava/util/Collections;->singleton(LL)
+    002a..002c  move-result-object  v1
+    002c..0032  invoke-static  {v1}, LX/00h;->A06(VL)
+    0032..0034  const/4  v0, #0x0
+    0034..003a  invoke-direct  {v3, v4, v1, v5, v0}, LX/1uU;-><init>(VLLIZ)
+    003a..003c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLLLLIJZ)  # .registers 14
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v5, v0}, LX/00h;->A0A(VLI)
+    0008..000e  invoke-direct  {v4}, Ljava/lang/Object;-><init>(V)
+    000e..0012  new-instance  v0, Ljava/util/concurrent/ConcurrentHashMap;
+    0012..0018  invoke-direct  {v0}, Ljava/util/concurrent/ConcurrentHashMap;-><init>(V)
+    0018..001c  iput-object  v0, v4, LX/1uU;->A07:Ljava/util/concurrent/ConcurrentHashMap;
+    001c..0020  iput-object  v5, v4, LX/1uU;->A06:Lcom/whatsapp/infra/core/jid/UserJid;
+    0020..0026  invoke-interface  {v9}, Ljava/util/Set;->iterator(L)
+    0026..0028  move-result-object  v3
+    0028..002e  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext(Z)
+    002e..0030  move-result  v0
+    0030..0034  if-eqz  v0, +0x10
+    0034..003a  invoke-interface  {v3}, Ljava/util/Iterator;->next(L)
+    003a..003c  move-result-object  v2
+    003c..0040  check-cast  v2, LX/1tn;
+    0040..0044  iget-object  v1, v4, LX/1uU;->A07:Ljava/util/concurrent/ConcurrentHashMap;
+    0044..0048  iget-object  v0, v2, LX/1tn;->A03:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0048..004e  invoke-virtual  {v1, v0, v2}, Ljava/util/AbstractMap;->put(LLL)
+    004e..0050  goto  -0x13
+    0050..0054  iput  v10, v4, LX/1uU;->A00:I
+    0054..0058  iput-boolean  v13, v4, LX/1uU;->A05:Z
+    0058..005c  iput-wide  v11, v4, LX/1uU;->A01:J
+    005c..0060  iput-object  v8, v4, LX/1uU;->A04:Ljava/lang/String;
+    0060..0064  iput-object  v6, v4, LX/1uU;->A03:Ljava/lang/Integer;
+    0064..0068  iput-object  v7, v4, LX/1uU;->A02:Ljava/lang/Integer;
+    0068..006a  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLIZ)  # .registers 10
+    0000..0002  const/4  v4, #0x0
+    0002..0004  const/4  v0, #0x0
+    0004..000a  invoke-static  {v6, v0}, LX/00h;->A0A(VLI)
+    000a..0010  invoke-direct  {v5}, Ljava/lang/Object;-><init>(V)
+    0010..0014  new-instance  v0, Ljava/util/concurrent/ConcurrentHashMap;
+    0014..001a  invoke-direct  {v0}, Ljava/util/concurrent/ConcurrentHashMap;-><init>(V)
+    001a..001e  iput-object  v0, v5, LX/1uU;->A07:Ljava/util/concurrent/ConcurrentHashMap;
+    001e..0022  iput-object  v6, v5, LX/1uU;->A06:Lcom/whatsapp/infra/core/jid/UserJid;
+    0022..0028  invoke-interface  {v7}, Ljava/util/Set;->iterator(L)
+    0028..002a  move-result-object  v3
+    002a..0030  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext(Z)
+    0030..0032  move-result  v0
+    0032..0036  if-eqz  v0, +0x10
+    0036..003c  invoke-interface  {v3}, Ljava/util/Iterator;->next(L)
+    003c..003e  move-result-object  v2
+    003e..0042  check-cast  v2, LX/1tn;
+    0042..0046  iget-object  v1, v5, LX/1uU;->A07:Ljava/util/concurrent/ConcurrentHashMap;
+    0046..004a  iget-object  v0, v2, LX/1tn;->A03:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    004a..0050  invoke-virtual  {v1, v0, v2}, Ljava/util/AbstractMap;->put(LLL)
+    0050..0052  goto  -0x13
+    0052..0056  iput  v8, v5, LX/1uU;->A00:I
+    0056..005a  iput-boolean  v9, v5, LX/1uU;->A05:Z
+    005a..005e  iput-object  v4, v5, LX/1uU;->A04:Ljava/lang/String;
+    005e..0060  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1484,3 +1484,18 @@ Android runtime-version/lexical parity, full feature-dependent group conversion,
 actual typename spellings, downstream null-map handling and live durable MEX
 application remain unfinished. No live session, registration or account/key change
 occurred; no additional number is required for the current client/recipient tests.
+
+
+### MEX member storage consumers (2026-10-07, offline)
+
+APK 37.71 downstream null-map handling is now traced: null skips member
+reconciliation, empty does not. Pure Rust metadata selection scales positive
+joins by 1000, preserves positive previous timestamps otherwise uses an explicit
+clock; nullable history resolves to the APK integer state while preserving
+higher/nonzero prior values. Library GroupParticipant storage helper and
+`mex-participant-storage-inspect --input` expose these rules; 432 executed host
+Java cases and 432 actual CLI cases passed, nine refusals stayed content-free.
+See [consumer evidence and remaining work](protocol/mex.md#downstream-member-storage-and-null-map-2026-10-07).
+Full alias/device/own-account reconciliation, group feature maps, transaction
+boundaries and live MEX durable application remain unfinished. No account or live
+session was touched; no new number was acquired or required.

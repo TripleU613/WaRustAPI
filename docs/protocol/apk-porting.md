@@ -274,3 +274,28 @@ is_retryable/shorty-Z matches include I1H.A06 and 916.BGC/BQ2; unresolved
 mappings require review before next-release patching. [Callback interpretation](mex.md#group-callback-gate-and-inherited-dispatch-2026-10-07)
 distinguishes a permitted callback from complete group validity and state
 application. A parser inspection or self-diff is not full APK/client parity.
+
+
+## Checksum coverage correction (2026-10-07)
+
+**Observed local checker limitation:** `.github/ci/hygiene.rs` checked file
+budgets/links across tracked files, but its research-checksum section hardcoded
+only `docs/protocol/apk/2.26.37.70`. Thus prior hygiene output of 564315 bytes
+proved that older bundle's checksums, not every newer group/MEX snapshot.
+Checksum-verifying `apk-research-diff` had separately validated the scoped MEX
+exports; the old hygiene output must not be promoted to whole-snapshot coverage.
+
+The checker now discovers direct snapshot directories under `docs/protocol/apk`
+with a checksums.json, sorts them, and validates every selected bundle's exact
+file list, byte sizes, SHA-256 values and separate 2 MiB budget. No snapshot
+allows undeclared files; an empty discovery refuses. Recipe directories without
+checksums are outside snapshot verification. This is CI/research validation,
+not a new protocol requirement or client/server capability.
+
+The current run verified **four bundles / 2029764 bytes**, plus 621 local links,
+tracked-file budgets and package licenses. A dependency-free test creates its
+own temporary bundle and proves same-size hash corruption, changed size and an
+unexpected file are rejected; CI runs it before the real repository checker.
+No committed research artifact was changed to make an invalid checksum pass.
+Current APK evidence remains build 2.26.37.71 with the recorded hash; this
+repository-checker finding is observed tooling behavior, not APK behavior.
