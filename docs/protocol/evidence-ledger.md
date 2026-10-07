@@ -531,3 +531,23 @@ xwa2_group_query_by_id through 2FT/90x/ADv, not a proven complete projection.
 Rust's offline builder and selected-ID exporter are implemented and invokable;
 no durable MEX action, response application, HTTP route or live verification
 is claimed. Existing account identities, reservations and snapshots untouched.
+
+### comparison.mex.json_response_37_71 — confirmed static, offline response-parts port
+
+APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+00S/1UE provider 0x1763 resolves through the checked packed-switch entry
+(classes.dex 0x909e70 fd010000, target A0E+03fe) to 0yN.A00/O4r selector 0.
+Lab/LaZ constructors resolve selectors 2/1/4 for nullable object data, nullable
+array errors, and malformed-errors exception conversion. Independent failures
+preserve the other field. LZw stores data/errors; LZv's nonempty flags do not
+establish group success. 90x.A0J confirms subject/8yq rather than the earlier
+inferred getter interpretation. Complete callback, per-error model, Argo/Pando,
+Android lexical JSON acceptance and group projection remain unverified.
+[Interpretation](mex.md#json-response-field-port-2026-10-07),
+[source evidence](mex-json-parser-evidence.txt) and
+[raw switch entry](mex-json-provider-switch.json) preserve offsets and reasoning.
+Rust response-parts parsing and a counts-only CLI inspector are implemented,
+including explicit invalid states, preserved counterparts and redacted Debug.
+Sixteen synthetic getter-derived combinations exercise result/update; no
+server response, live request or durable group-state update is claimed.

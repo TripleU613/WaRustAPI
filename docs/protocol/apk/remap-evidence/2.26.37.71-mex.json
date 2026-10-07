@@ -1,0 +1,4860 @@
+{
+  "all_unique": false,
+  "candidate_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "interpretation": "Exact string co-occurrence, optional checked DEX shorties and symbolic caller references locate scopes; they do not prove protocol equivalence or dynamic dispatch. Proposed selectors require semantic review. Any unresolved topic blocks recipe output.",
+  "previous_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "topics": [
+    {
+      "anchor_sites": {
+        "data": [
+          {
+            "class_name": "LX/0Cc;",
+            "dex_byte_off": 4815762,
+            "dex_file": "classes.dex",
+            "method_index": 3860,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/0Fp;",
+            "dex_byte_off": 5338988,
+            "dex_file": "classes.dex",
+            "method_index": 4726,
+            "method_name": "A00",
+            "method_proto": "LLLZ"
+          },
+          {
+            "class_name": "LX/0HP;",
+            "dex_byte_off": 5406424,
+            "dex_file": "classes.dex",
+            "method_index": 5534,
+            "method_name": "A00",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/0HP;",
+            "dex_byte_off": 5411446,
+            "dex_file": "classes.dex",
+            "method_index": 5555,
+            "method_name": "A0L",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/0Nf;",
+            "dex_byte_off": 5727450,
+            "dex_file": "classes.dex",
+            "method_index": 8237,
+            "method_name": "AR4",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/0Pe;",
+            "dex_byte_off": 5759228,
+            "dex_file": "classes.dex",
+            "method_index": 8820,
+            "method_name": "AR4",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/0RY;",
+            "dex_byte_off": 5804398,
+            "dex_file": "classes.dex",
+            "method_index": 9426,
+            "method_name": "A00",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/0ob;",
+            "dex_byte_off": 7091260,
+            "dex_file": "classes.dex",
+            "method_index": 19095,
+            "method_name": "A00",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/0ob;",
+            "dex_byte_off": 7091796,
+            "dex_file": "classes.dex",
+            "method_index": 19097,
+            "method_name": "A02",
+            "method_proto": "JL"
+          },
+          {
+            "class_name": "LX/0rj;",
+            "dex_byte_off": 7318516,
+            "dex_file": "classes.dex",
+            "method_index": 20541,
+            "method_name": "A00",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/0rj;",
+            "dex_byte_off": 7319374,
+            "dex_file": "classes.dex",
+            "method_index": 20543,
+            "method_name": "A02",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/0zl;",
+            "dex_byte_off": 7859274,
+            "dex_file": "classes.dex",
+            "method_index": 23375,
+            "method_name": "A0C",
+            "method_proto": "VLJ"
+          },
+          {
+            "class_name": "LX/16R;",
+            "dex_byte_off": 8372790,
+            "dex_file": "classes.dex",
+            "method_index": 25876,
+            "method_name": "A01",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/integrityai/modeldownload/IntegrityAiModelDownloadCoordinator;",
+            "dex_byte_off": 8481508,
+            "dex_file": "classes.dex",
+            "method_index": 55233,
+            "method_name": "A02",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/B38;",
+            "dex_byte_off": 4108660,
+            "dex_file": "classes7.dex",
+            "method_index": 9155,
+            "method_name": "BTJ",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/BpQ;",
+            "dex_byte_off": 5361484,
+            "dex_file": "classes7.dex",
+            "method_index": 19025,
+            "method_name": "<init>",
+            "method_proto": "VLLLLLJ"
+          },
+          {
+            "class_name": "LX/BpT;",
+            "dex_byte_off": 5366792,
+            "dex_file": "classes7.dex",
+            "method_index": 19057,
+            "method_name": "<init>",
+            "method_proto": "VLLLLJ"
+          },
+          {
+            "class_name": "LX/C7g;",
+            "dex_byte_off": 5761310,
+            "dex_file": "classes7.dex",
+            "method_index": 22341,
+            "method_name": "A00",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/CAk;",
+            "dex_byte_off": 5785904,
+            "dex_file": "classes7.dex",
+            "method_index": 22530,
+            "method_name": "A00",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/Cae;",
+            "dex_byte_off": 6160766,
+            "dex_file": "classes7.dex",
+            "method_index": 25980,
+            "method_name": "A00",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/Cae;",
+            "dex_byte_off": 6164376,
+            "dex_file": "classes7.dex",
+            "method_index": 25983,
+            "method_name": "A03",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/Cma;",
+            "dex_byte_off": 6625114,
+            "dex_file": "classes7.dex",
+            "method_index": 28580,
+            "method_name": "A03",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/Cwt;",
+            "dex_byte_off": 7306910,
+            "dex_file": "classes7.dex",
+            "method_index": 31636,
+            "method_name": "A08",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/CyK;",
+            "dex_byte_off": 7374666,
+            "dex_file": "classes7.dex",
+            "method_index": 32115,
+            "method_name": "Bdk",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/CyK;",
+            "dex_byte_off": 7374858,
+            "dex_file": "classes7.dex",
+            "method_index": 32116,
+            "method_name": "Bdt",
+            "method_proto": "VLZ"
+          },
+          {
+            "class_name": "LX/D7w;",
+            "dex_byte_off": 7736744,
+            "dex_file": "classes7.dex",
+            "method_index": 35034,
+            "method_name": "APp",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/DPY;",
+            "dex_byte_off": 8603594,
+            "dex_file": "classes7.dex",
+            "method_index": 39780,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/8lm;",
+            "dex_byte_off": 2613716,
+            "dex_file": "classes6.dex",
+            "method_index": 7101,
+            "method_name": "A00",
+            "method_proto": "LLLLZZ"
+          },
+          {
+            "class_name": "LX/8m3;",
+            "dex_byte_off": 2624586,
+            "dex_file": "classes6.dex",
+            "method_index": 7162,
+            "method_name": "A00",
+            "method_proto": "LLLLZ"
+          },
+          {
+            "class_name": "LX/9K1;",
+            "dex_byte_off": 3607040,
+            "dex_file": "classes6.dex",
+            "method_index": 13616,
+            "method_name": "A03",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/group/product/shareinvitelink/ShareGroupInviteLinkActivity;",
+            "dex_byte_off": 3794764,
+            "dex_file": "classes6.dex",
+            "method_index": 39109,
+            "method_name": "onOptionsItemSelected",
+            "method_proto": "ZL"
+          },
+          {
+            "class_name": "LX/ACg;",
+            "dex_byte_off": 5045752,
+            "dex_file": "classes6.dex",
+            "method_index": 21927,
+            "method_name": "A03",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/AUe;",
+            "dex_byte_off": 5648310,
+            "dex_file": "classes6.dex",
+            "method_index": 26870,
+            "method_name": "AR4",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/Agv;",
+            "dex_byte_off": 5953968,
+            "dex_file": "classes6.dex",
+            "method_index": 30039,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/Agv;",
+            "dex_byte_off": 5954078,
+            "dex_file": "classes6.dex",
+            "method_index": 30039,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/1zK;",
+            "dex_byte_off": 2054368,
+            "dex_file": "classes3.dex",
+            "method_index": 5009,
+            "method_name": "A00",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/2kZ;",
+            "dex_byte_off": 3211460,
+            "dex_file": "classes3.dex",
+            "method_index": 13620,
+            "method_name": "A00",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/370;",
+            "dex_byte_off": 3564122,
+            "dex_file": "classes3.dex",
+            "method_index": 16808,
+            "method_name": "A00",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "Landroidx/sharetarget/ChooserTargetServiceCompat;",
+            "dex_byte_off": 2973660,
+            "dex_file": "classes10.dex",
+            "method_index": 44492,
+            "method_name": "onGetChooserTargets",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/JUz;",
+            "dex_byte_off": 3786984,
+            "dex_file": "classes10.dex",
+            "method_index": 12836,
+            "method_name": "Abq",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/KDZ;",
+            "dex_byte_off": 4571648,
+            "dex_file": "classes10.dex",
+            "method_index": 19299,
+            "method_name": "<init>",
+            "method_proto": "VLLZ"
+          },
+          {
+            "class_name": "Lcom/whatsapp/subscriptionmanagement/app/network/PromoEligibilityGraphqlClient;",
+            "dex_byte_off": 4599496,
+            "dex_file": "classes10.dex",
+            "method_index": 49432,
+            "method_name": "A00",
+            "method_proto": "LLLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/infra/location/metapoi/MetaPoiApi;",
+            "dex_byte_off": 4625312,
+            "dex_file": "classes10.dex",
+            "method_index": 47854,
+            "method_name": "A00",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/KMg;",
+            "dex_byte_off": 4719812,
+            "dex_file": "classes10.dex",
+            "method_index": 20764,
+            "method_name": "<init>",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/KPE;",
+            "dex_byte_off": 4797202,
+            "dex_file": "classes10.dex",
+            "method_index": 21409,
+            "method_name": "A01",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/wamo/request/WamoGraphQLExecutor;",
+            "dex_byte_off": 4916944,
+            "dex_file": "classes10.dex",
+            "method_index": 50095,
+            "method_name": "A02",
+            "method_proto": "LLLLLLLZ"
+          },
+          {
+            "class_name": "Lcom/whatsapp/password/canonical/CanonicalPasswordService;",
+            "dex_byte_off": 5178266,
+            "dex_file": "classes10.dex",
+            "method_index": 48540,
+            "method_name": "A02",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/password/canonical/CanonicalPasswordService;",
+            "dex_byte_off": 5178702,
+            "dex_file": "classes10.dex",
+            "method_index": 48541,
+            "method_name": "A03",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/L7g;",
+            "dex_byte_off": 6536752,
+            "dex_file": "classes10.dex",
+            "method_index": 33758,
+            "method_name": "invoke",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/L88;",
+            "dex_byte_off": 6561506,
+            "dex_file": "classes10.dex",
+            "method_index": 33826,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/L88;",
+            "dex_byte_off": 6566236,
+            "dex_file": "classes10.dex",
+            "method_index": 33826,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/5Cz;",
+            "dex_byte_off": 5095470,
+            "dex_file": "classes4.dex",
+            "method_index": 15448,
+            "method_name": "A02",
+            "method_proto": "ZLLLL"
+          },
+          {
+            "class_name": "LX/5JS;",
+            "dex_byte_off": 5245224,
+            "dex_file": "classes4.dex",
+            "method_index": 16438,
+            "method_name": "A00",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/5KK;",
+            "dex_byte_off": 5261516,
+            "dex_file": "classes4.dex",
+            "method_index": 16563,
+            "method_name": "A00",
+            "method_proto": "VLLLLL"
+          },
+          {
+            "class_name": "LX/5Ks;",
+            "dex_byte_off": 3332980,
+            "dex_file": "classes4.dex",
+            "method_index": 16648,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/5Od;",
+            "dex_byte_off": 5404522,
+            "dex_file": "classes4.dex",
+            "method_index": 17626,
+            "method_name": "A00",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/5Qv;",
+            "dex_byte_off": 5512712,
+            "dex_file": "classes4.dex",
+            "method_index": 18084,
+            "method_name": "A00",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/5Qv;",
+            "dex_byte_off": 5512754,
+            "dex_file": "classes4.dex",
+            "method_index": 18084,
+            "method_name": "A00",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/5Qv;",
+            "dex_byte_off": 5512792,
+            "dex_file": "classes4.dex",
+            "method_index": 18084,
+            "method_name": "A00",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/5kQ;",
+            "dex_byte_off": 6322984,
+            "dex_file": "classes4.dex",
+            "method_index": 24216,
+            "method_name": "CXV",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/5yg;",
+            "dex_byte_off": 6666432,
+            "dex_file": "classes4.dex",
+            "method_index": 27472,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/65c;",
+            "dex_byte_off": 6983042,
+            "dex_file": "classes4.dex",
+            "method_index": 28628,
+            "method_name": "AQz",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/65c;",
+            "dex_byte_off": 6983222,
+            "dex_file": "classes4.dex",
+            "method_index": 28630,
+            "method_name": "B69",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/6Mu;",
+            "dex_byte_off": 7441574,
+            "dex_file": "classes4.dex",
+            "method_index": 32161,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/GAZ;",
+            "dex_byte_off": 3614204,
+            "dex_file": "classes9.dex",
+            "method_index": 6438,
+            "method_name": "A12",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/GMk;",
+            "dex_byte_off": 4014668,
+            "dex_file": "classes9.dex",
+            "method_index": 8847,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/GNq;",
+            "dex_byte_off": 4042408,
+            "dex_file": "classes9.dex",
+            "method_index": 8919,
+            "method_name": "<init>",
+            "method_proto": "VLLLL"
+          },
+          {
+            "class_name": "LX/Gwv;",
+            "dex_byte_off": 4574084,
+            "dex_file": "classes9.dex",
+            "method_index": 13886,
+            "method_name": "getFieldsMapForFalco",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/Gwv;",
+            "dex_byte_off": 4574250,
+            "dex_file": "classes9.dex",
+            "method_index": 13890,
+            "method_name": "toString",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/H0H;",
+            "dex_byte_off": 4652912,
+            "dex_file": "classes9.dex",
+            "method_index": 14628,
+            "method_name": "A04",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/H0I;",
+            "dex_byte_off": 4653882,
+            "dex_file": "classes9.dex",
+            "method_index": 14631,
+            "method_name": "A04",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/registration/verification/silentauth/VerifySilentAuthUseCase;",
+            "dex_byte_off": 4763706,
+            "dex_file": "classes9.dex",
+            "method_index": 50023,
+            "method_name": "A00",
+            "method_proto": "LLLLLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/privacy/disclosure/usernotice/UserNoticeBottomSheetDialogFragment;",
+            "dex_byte_off": 4862956,
+            "dex_file": "classes9.dex",
+            "method_index": 49232,
+            "method_name": "A20",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/HeG;",
+            "dex_byte_off": 5352300,
+            "dex_file": "classes9.dex",
+            "method_index": 18324,
+            "method_name": "A00",
+            "method_proto": "VLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/subscriptionmanagement/app/network/GetSubscriptionsGraphqlClient;",
+            "dex_byte_off": 5353902,
+            "dex_file": "classes9.dex",
+            "method_index": 50555,
+            "method_name": "A00",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/waffle/accountlinking/mex/MexGetLinkedProfileBundleApi;",
+            "dex_byte_off": 5386720,
+            "dex_file": "classes9.dex",
+            "method_index": 50924,
+            "method_name": "A00",
+            "method_proto": "LLLLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/waffle/accountlinking/mex/MexEscpsMigrationApi;",
+            "dex_byte_off": 5392102,
+            "dex_file": "classes9.dex",
+            "method_index": 50920,
+            "method_name": "A00",
+            "method_proto": "LLLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/contact/sync/handler/ContactUploadMexRequestHandler;",
+            "dex_byte_off": 6176560,
+            "dex_file": "classes9.dex",
+            "method_index": 48095,
+            "method_name": "A00",
+            "method_proto": "LLLLL"
+          },
+          {
+            "class_name": "Lcom/facebook/common/dextricks/classid/ClassId;",
+            "dex_byte_off": 3577242,
+            "dex_file": "classes9.dex",
+            "method_index": 40746,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/I7P;",
+            "dex_byte_off": 6375820,
+            "dex_file": "classes9.dex",
+            "method_index": 24391,
+            "method_name": "handleMessage",
+            "method_proto": "ZL"
+          },
+          {
+            "class_name": "LX/IEI;",
+            "dex_byte_off": 6492628,
+            "dex_file": "classes9.dex",
+            "method_index": 25810,
+            "method_name": "onClick",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/ITM;",
+            "dex_byte_off": 7034296,
+            "dex_file": "classes9.dex",
+            "method_index": 28972,
+            "method_name": "C8s",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/IW4;",
+            "dex_byte_off": 7117826,
+            "dex_file": "classes9.dex",
+            "method_index": 29786,
+            "method_name": "ADs",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/IWC;",
+            "dex_byte_off": 7130476,
+            "dex_file": "classes9.dex",
+            "method_index": 29831,
+            "method_name": "CG8",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/Ib9;",
+            "dex_byte_off": 7257850,
+            "dex_file": "classes9.dex",
+            "method_index": 31343,
+            "method_name": "Bro",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/IdX;",
+            "dex_byte_off": 7327344,
+            "dex_file": "classes9.dex",
+            "method_index": 31840,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/Ih8;",
+            "dex_byte_off": 7470702,
+            "dex_file": "classes9.dex",
+            "method_index": 32308,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/IhH;",
+            "dex_byte_off": 7514488,
+            "dex_file": "classes9.dex",
+            "method_index": 32353,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/IkB;",
+            "dex_byte_off": 7679978,
+            "dex_file": "classes9.dex",
+            "method_index": 32888,
+            "method_name": "invoke",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/IkM;",
+            "dex_byte_off": 7694856,
+            "dex_file": "classes9.dex",
+            "method_index": 32920,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/Ikc;",
+            "dex_byte_off": 7729460,
+            "dex_file": "classes9.dex",
+            "method_index": 32958,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/Ikc;",
+            "dex_byte_off": 7729660,
+            "dex_file": "classes9.dex",
+            "method_index": 32958,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/fbusers/canonical/companions/CanonicalUserCompanionDeviceManager$onCredentialsReceived$1;",
+            "dex_byte_off": 7914390,
+            "dex_file": "classes9.dex",
+            "method_index": 48245,
+            "method_name": "invokeSuspend",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/fbusers/recovery/AccountRecoveryManager$processNonce$2;",
+            "dex_byte_off": 7955502,
+            "dex_file": "classes9.dex",
+            "method_index": 48294,
+            "method_name": "invokeSuspend",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/6wW;",
+            "dex_byte_off": 3294476,
+            "dex_file": "classes5.dex",
+            "method_index": 9291,
+            "method_name": "A01",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/76D;",
+            "dex_byte_off": 3539414,
+            "dex_file": "classes5.dex",
+            "method_index": 11727,
+            "method_name": "A00",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/8Ak;",
+            "dex_byte_off": 5562626,
+            "dex_file": "classes5.dex",
+            "method_index": 23788,
+            "method_name": "AR4",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/8Cu;",
+            "dex_byte_off": 5613702,
+            "dex_file": "classes5.dex",
+            "method_index": 24310,
+            "method_name": "BIV",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/8Cu;",
+            "dex_byte_off": 5614136,
+            "dex_file": "classes5.dex",
+            "method_index": 24311,
+            "method_name": "CFc",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/Der;",
+            "dex_byte_off": 2777140,
+            "dex_file": "classes8.dex",
+            "method_index": 6424,
+            "method_name": "A0m",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/DkJ;",
+            "dex_byte_off": 3077456,
+            "dex_file": "classes8.dex",
+            "method_index": 8365,
+            "method_name": "AP4",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/DkT;",
+            "dex_byte_off": 3084652,
+            "dex_file": "classes8.dex",
+            "method_index": 8410,
+            "method_name": "onReceiveResult",
+            "method_proto": "VIL"
+          },
+          {
+            "class_name": "LX/DkU;",
+            "dex_byte_off": 3084936,
+            "dex_file": "classes8.dex",
+            "method_index": 8412,
+            "method_name": "onReceiveResult",
+            "method_proto": "VIL"
+          },
+          {
+            "class_name": "LX/DlL;",
+            "dex_byte_off": 3114926,
+            "dex_file": "classes8.dex",
+            "method_index": 8663,
+            "method_name": "shouldInterceptRequest",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/conversation/ui/conversationrow/businessmessaging/interactive/InteractiveMessageView;",
+            "dex_byte_off": 3234720,
+            "dex_file": "classes8.dex",
+            "method_index": 40157,
+            "method_name": "A0D",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/conversation/ui/conversationrow/businessmessaging/interactive/InteractiveMessageView;",
+            "dex_byte_off": 3242964,
+            "dex_file": "classes8.dex",
+            "method_index": 40163,
+            "method_name": "A0J",
+            "method_proto": "VLLLLLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/catalog/product/biz/view/viewmodel/CatalogWebViewModel;",
+            "dex_byte_off": 3339040,
+            "dex_file": "classes8.dex",
+            "method_index": 39627,
+            "method_name": "A0s",
+            "method_proto": "LLLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/flows/ui/app/webview/viewmodel/WaFlowsViewModel;",
+            "dex_byte_off": 3366750,
+            "dex_file": "classes8.dex",
+            "method_index": 40806,
+            "method_name": "A0t",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/DxX;",
+            "dex_byte_off": 3528684,
+            "dex_file": "classes8.dex",
+            "method_index": 10707,
+            "method_name": "Abr",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/E76;",
+            "dex_byte_off": 3578372,
+            "dex_file": "classes8.dex",
+            "method_index": 11903,
+            "method_name": "A00",
+            "method_proto": "VLLL"
+          },
+          {
+            "class_name": "LX/EBg;",
+            "dex_byte_off": 3660618,
+            "dex_file": "classes8.dex",
+            "method_index": 12631,
+            "method_name": "A07",
+            "method_proto": "VLLLLLL"
+          },
+          {
+            "class_name": "LX/EIa;",
+            "dex_byte_off": 3956422,
+            "dex_file": "classes8.dex",
+            "method_index": 15369,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/EIc;",
+            "dex_byte_off": 3956808,
+            "dex_file": "classes8.dex",
+            "method_index": 15374,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/ES5;",
+            "dex_byte_off": 4228284,
+            "dex_file": "classes8.dex",
+            "method_index": 16583,
+            "method_name": "A03",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/EVu;",
+            "dex_byte_off": 4469720,
+            "dex_file": "classes8.dex",
+            "method_index": 17264,
+            "method_name": "A03",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/flows/ui/app/webview/view/FlowsWebBottomSheetContainer;",
+            "dex_byte_off": 4818396,
+            "dex_file": "classes8.dex",
+            "method_index": 40770,
+            "method_name": "CDb",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/group/product/writenfctag/WriteNfcTagActivity;",
+            "dex_byte_off": 4851276,
+            "dex_file": "classes8.dex",
+            "method_index": 40857,
+            "method_name": "onCreate",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/catalog/product/biz/view/activity/CatalogWebActivity;",
+            "dex_byte_off": 4948938,
+            "dex_file": "classes8.dex",
+            "method_index": 39608,
+            "method_name": "CDb",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/EqP;",
+            "dex_byte_off": 2691194,
+            "dex_file": "classes8.dex",
+            "method_index": 19661,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/Eqg;",
+            "dex_byte_off": 2692020,
+            "dex_file": "classes8.dex",
+            "method_index": 19677,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/F1B;",
+            "dex_byte_off": 5124738,
+            "dex_file": "classes8.dex",
+            "method_index": 20357,
+            "method_name": "A00",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/F3I;",
+            "dex_byte_off": 5157534,
+            "dex_file": "classes8.dex",
+            "method_index": 20609,
+            "method_name": "A00",
+            "method_proto": "VLZ"
+          },
+          {
+            "class_name": "LX/FB1;",
+            "dex_byte_off": 5332086,
+            "dex_file": "classes8.dex",
+            "method_index": 22307,
+            "method_name": "A04",
+            "method_proto": "VLLLL"
+          },
+          {
+            "class_name": "LX/FB1;",
+            "dex_byte_off": 5332180,
+            "dex_file": "classes8.dex",
+            "method_index": 22307,
+            "method_name": "A04",
+            "method_proto": "VLLLL"
+          },
+          {
+            "class_name": "LX/FCC;",
+            "dex_byte_off": 5370650,
+            "dex_file": "classes8.dex",
+            "method_index": 22541,
+            "method_name": "A01",
+            "method_proto": "LLLLLLLL"
+          },
+          {
+            "class_name": "LX/FFG;",
+            "dex_byte_off": 5416064,
+            "dex_file": "classes8.dex",
+            "method_index": 22958,
+            "method_name": "A01",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/FHh;",
+            "dex_byte_off": 5492816,
+            "dex_file": "classes8.dex",
+            "method_index": 23563,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/FHh;",
+            "dex_byte_off": 5495988,
+            "dex_file": "classes8.dex",
+            "method_index": 23564,
+            "method_name": "A03",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/FHh;",
+            "dex_byte_off": 5499468,
+            "dex_file": "classes8.dex",
+            "method_index": 23564,
+            "method_name": "A03",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/FHh;",
+            "dex_byte_off": 5501240,
+            "dex_file": "classes8.dex",
+            "method_index": 23567,
+            "method_name": "A06",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/FJV;",
+            "dex_byte_off": 5570980,
+            "dex_file": "classes8.dex",
+            "method_index": 24008,
+            "method_name": "A00",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/FKn;",
+            "dex_byte_off": 5656822,
+            "dex_file": "classes8.dex",
+            "method_index": 24484,
+            "method_name": "A09",
+            "method_proto": "LLLI"
+          },
+          {
+            "class_name": "Lcom/whatsapp/flows/ui/app/webview/bridge/FlowsWebViewDataRepository;",
+            "dex_byte_off": 5774844,
+            "dex_file": "classes8.dex",
+            "method_index": 40717,
+            "method_name": "A07",
+            "method_proto": "VLLL"
+          },
+          {
+            "class_name": "LX/FbZ;",
+            "dex_byte_off": 6244652,
+            "dex_file": "classes8.dex",
+            "method_index": 28766,
+            "method_name": "C8q",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/FeI;",
+            "dex_byte_off": 6358900,
+            "dex_file": "classes8.dex",
+            "method_index": 29497,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/FeI;",
+            "dex_byte_off": 6359028,
+            "dex_file": "classes8.dex",
+            "method_index": 29497,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/FgW;",
+            "dex_byte_off": 6415024,
+            "dex_file": "classes8.dex",
+            "method_index": 30073,
+            "method_name": "C0P",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/FpJ;",
+            "dex_byte_off": 6654840,
+            "dex_file": "classes8.dex",
+            "method_index": 32584,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/Fu5;",
+            "dex_byte_off": 2749462,
+            "dex_file": "classes8.dex",
+            "method_index": 33496,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/Fud;",
+            "dex_byte_off": 2752948,
+            "dex_file": "classes8.dex",
+            "method_index": 33700,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/FwR;",
+            "dex_byte_off": 7211344,
+            "dex_file": "classes8.dex",
+            "method_index": 34093,
+            "method_name": "A00",
+            "method_proto": "LLLLLL"
+          },
+          {
+            "class_name": "LX/FwR;",
+            "dex_byte_off": 7215474,
+            "dex_file": "classes8.dex",
+            "method_index": 34099,
+            "method_name": "invokeSuspend",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/FwR;",
+            "dex_byte_off": 7219554,
+            "dex_file": "classes8.dex",
+            "method_index": 34099,
+            "method_name": "invokeSuspend",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/FwR;",
+            "dex_byte_off": 7219680,
+            "dex_file": "classes8.dex",
+            "method_index": 34099,
+            "method_name": "invokeSuspend",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/FwS;",
+            "dex_byte_off": 7229546,
+            "dex_file": "classes8.dex",
+            "method_index": 34107,
+            "method_name": "invokeSuspend",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/FwU;",
+            "dex_byte_off": 7252518,
+            "dex_file": "classes8.dex",
+            "method_index": 34125,
+            "method_name": "invokeSuspend",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/1Yd;",
+            "dex_byte_off": 913330,
+            "dex_file": "classes2.dex",
+            "method_index": 1631,
+            "method_name": "AR4",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/federatedanalytics/impl/WaFaConfigFetcher;",
+            "dex_byte_off": 1543766,
+            "dex_file": "classes2.dex",
+            "method_index": 10428,
+            "method_name": "A00",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/LaZ;",
+            "dex_byte_off": 4059920,
+            "dex_file": "classes11.dex",
+            "method_index": 4926,
+            "method_name": "A00",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/Lac;",
+            "dex_byte_off": 4060934,
+            "dex_file": "classes11.dex",
+            "method_index": 4934,
+            "method_name": "BEE",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/Lck;",
+            "dex_byte_off": 4165954,
+            "dex_file": "classes11.dex",
+            "method_index": 5466,
+            "method_name": "A00",
+            "method_proto": "VLLLLLLLLJZ"
+          },
+          {
+            "class_name": "LX/Lj8;",
+            "dex_byte_off": 4446258,
+            "dex_file": "classes11.dex",
+            "method_index": 7094,
+            "method_name": "CE0",
+            "method_proto": "JL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/flows/ui/app/webview/nativeUI/FlowsCalendarPickerActivity;",
+            "dex_byte_off": 5352708,
+            "dex_file": "classes11.dex",
+            "method_index": 54498,
+            "method_name": "onCreate",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/Mjm;",
+            "dex_byte_off": 3858130,
+            "dex_file": "classes11.dex",
+            "method_index": 17097,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/NES;",
+            "dex_byte_off": 5804636,
+            "dex_file": "classes11.dex",
+            "method_index": 20381,
+            "method_name": "<init>",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/NK1;",
+            "dex_byte_off": 5876796,
+            "dex_file": "classes11.dex",
+            "method_index": 21075,
+            "method_name": "<init>",
+            "method_proto": "VLLLLL"
+          },
+          {
+            "class_name": "LX/Nc4;",
+            "dex_byte_off": 6714392,
+            "dex_file": "classes11.dex",
+            "method_index": 25149,
+            "method_name": "A08",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/music/productinfra/api/MusicApi;",
+            "dex_byte_off": 6774752,
+            "dex_file": "classes11.dex",
+            "method_index": 55472,
+            "method_name": "A05",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/music/productinfra/api/MusicApi;",
+            "dex_byte_off": 6775558,
+            "dex_file": "classes11.dex",
+            "method_index": 55475,
+            "method_name": "A08",
+            "method_proto": "LLLLLJJJ"
+          },
+          {
+            "class_name": "Lcom/whatsapp/music/productinfra/api/MusicApi;",
+            "dex_byte_off": 6776014,
+            "dex_file": "classes11.dex",
+            "method_index": 55476,
+            "method_name": "A09",
+            "method_proto": "LLLLLLLLLLZ"
+          },
+          {
+            "class_name": "Lcom/whatsapp/music/productinfra/api/MusicApi;",
+            "dex_byte_off": 6776914,
+            "dex_file": "classes11.dex",
+            "method_index": 55477,
+            "method_name": "A0A",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/music/productinfra/api/MusicApi;",
+            "dex_byte_off": 6777200,
+            "dex_file": "classes11.dex",
+            "method_index": 55478,
+            "method_name": "A0B",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/music/productinfra/api/MusicApi;",
+            "dex_byte_off": 6777484,
+            "dex_file": "classes11.dex",
+            "method_index": 55479,
+            "method_name": "A0C",
+            "method_proto": "LLLLII"
+          },
+          {
+            "class_name": "Lcom/whatsapp/music/productinfra/api/MusicApi;",
+            "dex_byte_off": 6777872,
+            "dex_file": "classes11.dex",
+            "method_index": 55480,
+            "method_name": "A0D",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/music/productinfra/api/MusicApi;",
+            "dex_byte_off": 6778222,
+            "dex_file": "classes11.dex",
+            "method_index": 55481,
+            "method_name": "A0E",
+            "method_proto": "LLLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/music/productinfra/api/MusicApi;",
+            "dex_byte_off": 6778544,
+            "dex_file": "classes11.dex",
+            "method_index": 55482,
+            "method_name": "A0F",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/Ncr;",
+            "dex_byte_off": 6926586,
+            "dex_file": "classes11.dex",
+            "method_index": 25428,
+            "method_name": "A09",
+            "method_proto": "LLLZ"
+          },
+          {
+            "class_name": "Lca/psiphon/PsiphonTunnel;",
+            "dex_byte_off": 7127474,
+            "dex_file": "classes11.dex",
+            "method_index": 45614,
+            "method_name": "handlePsiphonNotice",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/Nhf;",
+            "dex_byte_off": 7319826,
+            "dex_file": "classes11.dex",
+            "method_index": 26974,
+            "method_name": "CE0",
+            "method_proto": "JL"
+          },
+          {
+            "class_name": "LX/Nkw;",
+            "dex_byte_off": 7575316,
+            "dex_file": "classes11.dex",
+            "method_index": 28525,
+            "method_name": "CFB",
+            "method_proto": "LLI"
+          },
+          {
+            "class_name": "LX/O4o;",
+            "dex_byte_off": 8333978,
+            "dex_file": "classes11.dex",
+            "method_index": 34929,
+            "method_name": "ADs",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/O4r;",
+            "dex_byte_off": 8336530,
+            "dex_file": "classes11.dex",
+            "method_index": 34945,
+            "method_name": "Cf4",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/O5x;",
+            "dex_byte_off": 8393872,
+            "dex_file": "classes11.dex",
+            "method_index": 35262,
+            "method_name": "BEE",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/O98;",
+            "dex_byte_off": 8548448,
+            "dex_file": "classes11.dex",
+            "method_index": 36383,
+            "method_name": "A02",
+            "method_proto": "BJ"
+          },
+          {
+            "class_name": "LX/O9r;",
+            "dex_byte_off": 8566504,
+            "dex_file": "classes11.dex",
+            "method_index": 36548,
+            "method_name": "readObject",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/facebook/quicklog/QuickEventImpl;",
+            "dex_byte_off": 8708432,
+            "dex_file": "classes11.dex",
+            "method_index": 48345,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/OKc;",
+            "dex_byte_off": 3987656,
+            "dex_file": "classes11.dex",
+            "method_index": 38611,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "Lca/psiphon/PsiphonTunnel$PsiphonTunnelFeedback$1$1;",
+            "dex_byte_off": 9006922,
+            "dex_file": "classes11.dex",
+            "method_index": 45558,
+            "method_name": "notice",
+            "method_proto": "VL"
+          }
+        ],
+        "errors": [
+          {
+            "class_name": "Lcom/whatsapp/wamo/request/WamoGraphQLExecutor;",
+            "dex_byte_off": 4916714,
+            "dex_file": "classes10.dex",
+            "method_index": 50095,
+            "method_name": "A02",
+            "method_proto": "LLLLLLLZ"
+          },
+          {
+            "class_name": "LX/LDf;",
+            "dex_byte_off": 6775562,
+            "dex_file": "classes10.dex",
+            "method_index": 34964,
+            "method_name": "invokeSuspend",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/IWC;",
+            "dex_byte_off": 7130240,
+            "dex_file": "classes9.dex",
+            "method_index": 29831,
+            "method_name": "CG8",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/analytics/pathfinder/storage/PathfinderTraceProvider;",
+            "dex_byte_off": 1507698,
+            "dex_file": "classes2.dex",
+            "method_index": 10371,
+            "method_name": "A01",
+            "method_proto": "LLI"
+          },
+          {
+            "class_name": "LX/Laj;",
+            "dex_byte_off": 4065026,
+            "dex_file": "classes11.dex",
+            "method_index": 4958,
+            "method_name": "A04",
+            "method_proto": "VLZ"
+          },
+          {
+            "class_name": "LX/O4o;",
+            "dex_byte_off": 8334002,
+            "dex_file": "classes11.dex",
+            "method_index": 34929,
+            "method_name": "ADs",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/O4r;",
+            "dex_byte_off": 8336576,
+            "dex_file": "classes11.dex",
+            "method_index": 34945,
+            "method_name": "Cf4",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/O5x;",
+            "dex_byte_off": 8393932,
+            "dex_file": "classes11.dex",
+            "method_index": 35262,
+            "method_name": "BEE",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/OKc;",
+            "dex_byte_off": 3987668,
+            "dex_file": "classes11.dex",
+            "method_index": 38611,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          }
+        ]
+      },
+      "before_shorty_candidates": [
+        {
+          "class_name": "Lcom/whatsapp/wamo/request/WamoGraphQLExecutor;",
+          "dex_byte_off": 4916944,
+          "dex_file": "classes10.dex",
+          "method_index": 50095,
+          "method_name": "A02",
+          "method_proto": "LLLLLLLZ"
+        },
+        {
+          "class_name": "LX/O4o;",
+          "dex_byte_off": 8333978,
+          "dex_file": "classes11.dex",
+          "method_index": 34929,
+          "method_name": "ADs",
+          "method_proto": "VL"
+        },
+        {
+          "class_name": "LX/O4r;",
+          "dex_byte_off": 8336530,
+          "dex_file": "classes11.dex",
+          "method_index": 34945,
+          "method_name": "Cf4",
+          "method_proto": "LL"
+        },
+        {
+          "class_name": "LX/O5x;",
+          "dex_byte_off": 8393872,
+          "dex_file": "classes11.dex",
+          "method_index": 35262,
+          "method_name": "BEE",
+          "method_proto": "VL"
+        },
+        {
+          "class_name": "LX/OKc;",
+          "dex_byte_off": 3987656,
+          "dex_file": "classes11.dex",
+          "method_index": 38611,
+          "method_name": "<clinit>",
+          "method_proto": "V"
+        },
+        {
+          "class_name": "LX/IWC;",
+          "dex_byte_off": 7130476,
+          "dex_file": "classes9.dex",
+          "method_index": 29831,
+          "method_name": "CG8",
+          "method_proto": "VL"
+        }
+      ],
+      "candidates": [
+        {
+          "class_name": "LX/O4r;",
+          "dex_byte_off": 8336530,
+          "dex_file": "classes11.dex",
+          "method_index": 34945,
+          "method_name": "Cf4",
+          "method_proto": "LL"
+        }
+      ],
+      "method_shorty": "LL",
+      "previous_class": "LX/O4r;",
+      "previous_method": "Cf4",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "mex-json-field-readers"
+    },
+    {
+      "anchor_sites": {
+        "Failed to parse both 'data' and 'errors'": [
+          {
+            "class_name": "LX/LaZ;",
+            "dex_byte_off": 4059874,
+            "dex_file": "classes11.dex",
+            "method_index": 4926,
+            "method_name": "A00",
+            "method_proto": "LL"
+          }
+        ],
+        "mex-parsing-failure": [
+          {
+            "class_name": "LX/LaZ;",
+            "dex_byte_off": 4059708,
+            "dex_file": "classes11.dex",
+            "method_index": 4926,
+            "method_name": "A00",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/LaZ;",
+            "dex_byte_off": 4059882,
+            "dex_file": "classes11.dex",
+            "method_index": 4926,
+            "method_name": "A00",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/LaZ;",
+            "dex_byte_off": 4059952,
+            "dex_file": "classes11.dex",
+            "method_index": 4926,
+            "method_name": "A00",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/MEq;",
+            "dex_byte_off": 5221158,
+            "dex_file": "classes11.dex",
+            "method_index": 13240,
+            "method_name": "<init>",
+            "method_proto": "VLLLI"
+          }
+        ]
+      },
+      "before_shorty_candidates": [
+        {
+          "class_name": "LX/LaZ;",
+          "dex_byte_off": 4059874,
+          "dex_file": "classes11.dex",
+          "method_index": 4926,
+          "method_name": "A00",
+          "method_proto": "LL"
+        }
+      ],
+      "candidates": [
+        {
+          "class_name": "LX/LaZ;",
+          "dex_byte_off": 4059874,
+          "dex_file": "classes11.dex",
+          "method_index": 4926,
+          "method_name": "A00",
+          "method_proto": "LL"
+        }
+      ],
+      "method_shorty": "LL",
+      "previous_class": "LX/LaZ;",
+      "previous_method": "A00",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "mex-json-independent-results"
+    },
+    {
+      "anchor_sites": {
+        "query_id": [
+          {
+            "class_name": "LX/9QZ;",
+            "dex_byte_off": 3765994,
+            "dex_file": "classes6.dex",
+            "method_index": 14904,
+            "method_name": "<init>",
+            "method_proto": "VLLLL"
+          },
+          {
+            "class_name": "LX/Jfb;",
+            "dex_byte_off": 3960142,
+            "dex_file": "classes10.dex",
+            "method_index": 14920,
+            "method_name": "getFieldsMapForFalco",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/Jk8;",
+            "dex_byte_off": 4088198,
+            "dex_file": "classes10.dex",
+            "method_index": 16043,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/KaO;",
+            "dex_byte_off": 5085996,
+            "dex_file": "classes10.dex",
+            "method_index": 23694,
+            "method_name": "A00",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/Kws;",
+            "dex_byte_off": 6104456,
+            "dex_file": "classes10.dex",
+            "method_index": 30835,
+            "method_name": "A09",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/5kO;",
+            "dex_byte_off": 6322490,
+            "dex_file": "classes4.dex",
+            "method_index": 24208,
+            "method_name": "CXV",
+            "method_proto": "LLLL"
+          }
+        ],
+        "w:mex": [
+          {
+            "class_name": "LX/9QZ;",
+            "dex_byte_off": 3765912,
+            "dex_file": "classes6.dex",
+            "method_index": 14904,
+            "method_name": "<init>",
+            "method_proto": "VLLLL"
+          }
+        ]
+      },
+      "before_shorty_candidates": [
+        {
+          "class_name": "LX/9QZ;",
+          "dex_byte_off": 3765912,
+          "dex_file": "classes6.dex",
+          "method_index": 14904,
+          "method_name": "<init>",
+          "method_proto": "VLLLL"
+        }
+      ],
+      "candidates": [
+        {
+          "class_name": "LX/9QZ;",
+          "dex_byte_off": 3765912,
+          "dex_file": "classes6.dex",
+          "method_index": 14904,
+          "method_name": "<init>",
+          "method_proto": "VLLLL"
+        }
+      ],
+      "method_shorty": "VLLLL",
+      "previous_class": "LX/9QZ;",
+      "previous_method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "mex-json-iq"
+    },
+    {
+      "anchor_sites": {},
+      "before_shorty_candidates": [],
+      "candidates": [],
+      "method_shorty": "V",
+      "previous_class": "LX/Lab;",
+      "previous_method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "scope": "method",
+      "status": "unanchored",
+      "topic": "mex-json-parser-assembly"
+    },
+    {
+      "anchor_sites": {},
+      "before_shorty_candidates": [],
+      "candidates": [],
+      "method_shorty": "VLLLL",
+      "previous_class": "LX/LaZ;",
+      "previous_method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "scope": "method",
+      "status": "unanchored",
+      "topic": "mex-json-parser-fields"
+    },
+    {
+      "anchor_sites": {},
+      "before_shorty_candidates": [],
+      "candidates": [],
+      "method_shorty": "L",
+      "previous_class": "LX/0yN;",
+      "previous_method": "A00",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "scope": "method",
+      "status": "unanchored",
+      "topic": "mex-json-provider"
+    },
+    {
+      "anchor_sites": {
+        "queryId": [
+          {
+            "class_name": "LX/Jfb;",
+            "dex_byte_off": 3960390,
+            "dex_file": "classes10.dex",
+            "method_index": 14923,
+            "method_name": "toString",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/Lai;",
+            "dex_byte_off": 4064594,
+            "dex_file": "classes11.dex",
+            "method_index": 4951,
+            "method_name": "<init>",
+            "method_proto": "VLLL"
+          }
+        ],
+        "variables": [
+          {
+            "class_name": "LX/Boi;",
+            "dex_byte_off": 5340322,
+            "dex_file": "classes7.dex",
+            "method_index": 18872,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/Boj;",
+            "dex_byte_off": 5340604,
+            "dex_file": "classes7.dex",
+            "method_index": 18874,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/Bok;",
+            "dex_byte_off": 5341158,
+            "dex_file": "classes7.dex",
+            "method_index": 18876,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/Bxd;",
+            "dex_byte_off": 5682010,
+            "dex_file": "classes7.dex",
+            "method_index": 20234,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/Bxe;",
+            "dex_byte_off": 5682216,
+            "dex_file": "classes7.dex",
+            "method_index": 20236,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/infra/location/metapoi/MetaPoiApi;",
+            "dex_byte_off": 4625776,
+            "dex_file": "classes10.dex",
+            "method_index": 47854,
+            "method_name": "A00",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/infra/acsohai/AcsOhaiFetcher;",
+            "dex_byte_off": 4890586,
+            "dex_file": "classes10.dex",
+            "method_index": 47795,
+            "method_name": "A00",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/wamo/request/WamoGraphQLExecutor;",
+            "dex_byte_off": 4916414,
+            "dex_file": "classes10.dex",
+            "method_index": 50095,
+            "method_name": "A02",
+            "method_proto": "LLLLLLLZ"
+          },
+          {
+            "class_name": "LX/3c6;",
+            "dex_byte_off": 3409554,
+            "dex_file": "classes4.dex",
+            "method_index": 2555,
+            "method_name": "A1S",
+            "method_proto": "VLLLL"
+          },
+          {
+            "class_name": "LX/48H;",
+            "dex_byte_off": 4277318,
+            "dex_file": "classes4.dex",
+            "method_index": 8453,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/4B2;",
+            "dex_byte_off": 4336444,
+            "dex_file": "classes4.dex",
+            "method_index": 8981,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/4B5;",
+            "dex_byte_off": 4336924,
+            "dex_file": "classes4.dex",
+            "method_index": 8989,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/4B6;",
+            "dex_byte_off": 4337768,
+            "dex_file": "classes4.dex",
+            "method_index": 8995,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/4IR;",
+            "dex_byte_off": 4524262,
+            "dex_file": "classes4.dex",
+            "method_index": 9896,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/4IS;",
+            "dex_byte_off": 4524748,
+            "dex_file": "classes4.dex",
+            "method_index": 9899,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/5kQ;",
+            "dex_byte_off": 6323100,
+            "dex_file": "classes4.dex",
+            "method_index": 24216,
+            "method_name": "CXV",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/H05;",
+            "dex_byte_off": 4648092,
+            "dex_file": "classes9.dex",
+            "method_index": 14600,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/H06;",
+            "dex_byte_off": 4648272,
+            "dex_file": "classes9.dex",
+            "method_index": 14602,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/H07;",
+            "dex_byte_off": 4648422,
+            "dex_file": "classes9.dex",
+            "method_index": 14604,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/H08;",
+            "dex_byte_off": 4648648,
+            "dex_file": "classes9.dex",
+            "method_index": 14606,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/H09;",
+            "dex_byte_off": 4649074,
+            "dex_file": "classes9.dex",
+            "method_index": 14608,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/H9D;",
+            "dex_byte_off": 5172912,
+            "dex_file": "classes9.dex",
+            "method_index": 15739,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/H9E;",
+            "dex_byte_off": 5173168,
+            "dex_file": "classes9.dex",
+            "method_index": 15741,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/H9G;",
+            "dex_byte_off": 5173952,
+            "dex_file": "classes9.dex",
+            "method_index": 15745,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/H9k;",
+            "dex_byte_off": 5181276,
+            "dex_file": "classes9.dex",
+            "method_index": 15820,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/H9n;",
+            "dex_byte_off": 5181760,
+            "dex_file": "classes9.dex",
+            "method_index": 15826,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/newsletter/forwardcounter/api/ForwardCounterApi;",
+            "dex_byte_off": 5848646,
+            "dex_file": "classes9.dex",
+            "method_index": 49000,
+            "method_name": "A01",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/EIX;",
+            "dex_byte_off": 3955750,
+            "dex_file": "classes8.dex",
+            "method_index": 15363,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/EIY;",
+            "dex_byte_off": 3955962,
+            "dex_file": "classes8.dex",
+            "method_index": 15365,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/EId;",
+            "dex_byte_off": 3956992,
+            "dex_file": "classes8.dex",
+            "method_index": 15377,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/Lai;",
+            "dex_byte_off": 4064604,
+            "dex_file": "classes11.dex",
+            "method_index": 4951,
+            "method_name": "<init>",
+            "method_proto": "VLLL"
+          },
+          {
+            "class_name": "LX/MEc;",
+            "dex_byte_off": 5218672,
+            "dex_file": "classes11.dex",
+            "method_index": 13205,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/MEd;",
+            "dex_byte_off": 5218954,
+            "dex_file": "classes11.dex",
+            "method_index": 13207,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/MEe;",
+            "dex_byte_off": 5219176,
+            "dex_file": "classes11.dex",
+            "method_index": 13210,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/MEf;",
+            "dex_byte_off": 5219602,
+            "dex_file": "classes11.dex",
+            "method_index": 13215,
+            "method_name": "A08",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671304,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671410,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671512,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671664,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671764,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671864,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671968,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5672068,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5672150,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          }
+        ]
+      },
+      "before_shorty_candidates": [
+        {
+          "class_name": "LX/Lai;",
+          "dex_byte_off": 4064594,
+          "dex_file": "classes11.dex",
+          "method_index": 4951,
+          "method_name": "<init>",
+          "method_proto": "VLLL"
+        }
+      ],
+      "candidates": [
+        {
+          "class_name": "LX/Lai;",
+          "dex_byte_off": 4064594,
+          "dex_file": "classes11.dex",
+          "method_index": 4951,
+          "method_name": "<init>",
+          "method_proto": "VLLL"
+        }
+      ],
+      "method_shorty": "VLLL",
+      "previous_class": "LX/Lai;",
+      "previous_method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "mex-json-request"
+    },
+    {
+      "anchor_sites": {
+        "ArgoWireType not found for ": [
+          {
+            "class_name": "LX/LaT;",
+            "dex_byte_off": 4058646,
+            "dex_file": "classes11.dex",
+            "method_index": 4908,
+            "method_name": "A02",
+            "method_proto": "LLLL"
+          }
+        ],
+        "result": [
+          {
+            "class_name": "Lcom/whatsapp/stickers/ui/storage/WhitelistPackQueryContentProvider;",
+            "dex_byte_off": 4076724,
+            "dex_file": "classes.dex",
+            "method_index": 55810,
+            "method_name": "A0K",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/stickers/command/StickerCommandProvider;",
+            "dex_byte_off": 4082450,
+            "dex_file": "classes.dex",
+            "method_index": 55797,
+            "method_name": "A0K",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/orbitsso/OrbitSsoProvider;",
+            "dex_byte_off": 4101942,
+            "dex_file": "classes.dex",
+            "method_index": 55543,
+            "method_name": "A0G",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/orbitsso/OrbitSsoProvider;",
+            "dex_byte_off": 4102654,
+            "dex_file": "classes.dex",
+            "method_index": 55543,
+            "method_name": "A0G",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/orbitsso/OrbitSsoProvider;",
+            "dex_byte_off": 4103100,
+            "dex_file": "classes.dex",
+            "method_index": 55543,
+            "method_name": "A0G",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/orbitsso/OrbitSsoProvider;",
+            "dex_byte_off": 4103314,
+            "dex_file": "classes.dex",
+            "method_index": 55543,
+            "method_name": "A0G",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/orbitsso/OrbitSsoProvider;",
+            "dex_byte_off": 4103564,
+            "dex_file": "classes.dex",
+            "method_index": 55543,
+            "method_name": "A0G",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/wamsys/JniBridge;",
+            "dex_byte_off": 5314100,
+            "dex_file": "classes.dex",
+            "method_index": 56406,
+            "method_name": "jnidispatchIO",
+            "method_proto": "JIL"
+          },
+          {
+            "class_name": "LX/0NC;",
+            "dex_byte_off": 5721032,
+            "dex_file": "classes.dex",
+            "method_index": 8145,
+            "method_name": "AR4",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/0u7;",
+            "dex_byte_off": 7457906,
+            "dex_file": "classes.dex",
+            "method_index": 21175,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/0y0;",
+            "dex_byte_off": 7645484,
+            "dex_file": "classes.dex",
+            "method_index": 22526,
+            "method_name": "A00",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/0y8;",
+            "dex_byte_off": 7657312,
+            "dex_file": "classes.dex",
+            "method_index": 22576,
+            "method_name": "A0G",
+            "method_proto": "ZLL"
+          },
+          {
+            "class_name": "LX/11J;",
+            "dex_byte_off": 7968640,
+            "dex_file": "classes.dex",
+            "method_index": 23986,
+            "method_name": "BFC",
+            "method_proto": "ZLI"
+          },
+          {
+            "class_name": "LX/11m;",
+            "dex_byte_off": 8022282,
+            "dex_file": "classes.dex",
+            "method_index": 24172,
+            "method_name": "A09",
+            "method_proto": "VLI"
+          },
+          {
+            "class_name": "LX/12s;",
+            "dex_byte_off": 8119658,
+            "dex_file": "classes.dex",
+            "method_index": 24676,
+            "method_name": "A02",
+            "method_proto": "VLLI"
+          },
+          {
+            "class_name": "LX/1Qt;",
+            "dex_byte_off": 9291014,
+            "dex_file": "classes.dex",
+            "method_index": 31105,
+            "method_name": "A02",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/1Rl;",
+            "dex_byte_off": 3903824,
+            "dex_file": "classes.dex",
+            "method_index": 31305,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/B8C;",
+            "dex_byte_off": 4280320,
+            "dex_file": "classes7.dex",
+            "method_index": 10341,
+            "method_name": "onTransact",
+            "method_proto": "ZILLI"
+          },
+          {
+            "class_name": "LX/Bos;",
+            "dex_byte_off": 5348878,
+            "dex_file": "classes7.dex",
+            "method_index": 18907,
+            "method_name": "A03",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/CfZ;",
+            "dex_byte_off": 6259110,
+            "dex_file": "classes7.dex",
+            "method_index": 26703,
+            "method_name": "A00",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/CgE;",
+            "dex_byte_off": 6285710,
+            "dex_file": "classes7.dex",
+            "method_index": 26826,
+            "method_name": "A01",
+            "method_proto": "ZLLL"
+          },
+          {
+            "class_name": "LX/CiY;",
+            "dex_byte_off": 6385798,
+            "dex_file": "classes7.dex",
+            "method_index": 27465,
+            "method_name": "A01",
+            "method_proto": "LLLLL"
+          },
+          {
+            "class_name": "LX/CiY;",
+            "dex_byte_off": 6387184,
+            "dex_file": "classes7.dex",
+            "method_index": 27466,
+            "method_name": "A02",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/Cjd;",
+            "dex_byte_off": 6461056,
+            "dex_file": "classes7.dex",
+            "method_index": 27811,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/CnW;",
+            "dex_byte_off": 6740858,
+            "dex_file": "classes7.dex",
+            "method_index": 28972,
+            "method_name": "A00",
+            "method_proto": "LLLZ"
+          },
+          {
+            "class_name": "LX/DNs;",
+            "dex_byte_off": 8426486,
+            "dex_file": "classes7.dex",
+            "method_index": 39468,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/DNs;",
+            "dex_byte_off": 8427048,
+            "dex_file": "classes7.dex",
+            "method_index": 39468,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/DNs;",
+            "dex_byte_off": 8427716,
+            "dex_file": "classes7.dex",
+            "method_index": 39468,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/DV0;",
+            "dex_byte_off": 8895164,
+            "dex_file": "classes7.dex",
+            "method_index": 40663,
+            "method_name": "invokeSuspend",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/92e;",
+            "dex_byte_off": 3091404,
+            "dex_file": "classes6.dex",
+            "method_index": 10198,
+            "method_name": "AzQ",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/92l;",
+            "dex_byte_off": 3092044,
+            "dex_file": "classes6.dex",
+            "method_index": 10215,
+            "method_name": "AzQ",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/931;",
+            "dex_byte_off": 3093668,
+            "dex_file": "classes6.dex",
+            "method_index": 10262,
+            "method_name": "AzQ",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/93W;",
+            "dex_byte_off": 3096992,
+            "dex_file": "classes6.dex",
+            "method_index": 10359,
+            "method_name": "AzQ",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/93Z;",
+            "dex_byte_off": 3097196,
+            "dex_file": "classes6.dex",
+            "method_index": 10365,
+            "method_name": "AzQ",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/9QG;",
+            "dex_byte_off": 3754810,
+            "dex_file": "classes6.dex",
+            "method_index": 14816,
+            "method_name": "<init>",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/9QQ;",
+            "dex_byte_off": 3757636,
+            "dex_file": "classes6.dex",
+            "method_index": 14845,
+            "method_name": "<init>",
+            "method_proto": "VLIJ"
+          },
+          {
+            "class_name": "LX/9QQ;",
+            "dex_byte_off": 3757842,
+            "dex_file": "classes6.dex",
+            "method_index": 14846,
+            "method_name": "<init>",
+            "method_proto": "VLJJ"
+          },
+          {
+            "class_name": "LX/9Qf;",
+            "dex_byte_off": 3770022,
+            "dex_file": "classes6.dex",
+            "method_index": 14921,
+            "method_name": "<init>",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/9Qg;",
+            "dex_byte_off": 3770450,
+            "dex_file": "classes6.dex",
+            "method_index": 14922,
+            "method_name": "<init>",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/9Qi;",
+            "dex_byte_off": 3771874,
+            "dex_file": "classes6.dex",
+            "method_index": 14924,
+            "method_name": "<init>",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/9Ql;",
+            "dex_byte_off": 3776058,
+            "dex_file": "classes6.dex",
+            "method_index": 14928,
+            "method_name": "<init>",
+            "method_proto": "VLLI"
+          },
+          {
+            "class_name": "LX/9Qm;",
+            "dex_byte_off": 3777140,
+            "dex_file": "classes6.dex",
+            "method_index": 14929,
+            "method_name": "<init>",
+            "method_proto": "VLLI"
+          },
+          {
+            "class_name": "LX/9Qn;",
+            "dex_byte_off": 3778804,
+            "dex_file": "classes6.dex",
+            "method_index": 14931,
+            "method_name": "<init>",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/9Qw;",
+            "dex_byte_off": 3784952,
+            "dex_file": "classes6.dex",
+            "method_index": 14949,
+            "method_name": "<init>",
+            "method_proto": "VLLI"
+          },
+          {
+            "class_name": "LX/AD3;",
+            "dex_byte_off": 5078282,
+            "dex_file": "classes6.dex",
+            "method_index": 22058,
+            "method_name": "A02",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/ADi;",
+            "dex_byte_off": 5143230,
+            "dex_file": "classes6.dex",
+            "method_index": 22378,
+            "method_name": "A01",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/ADw;",
+            "dex_byte_off": 5185004,
+            "dex_file": "classes6.dex",
+            "method_index": 22579,
+            "method_name": "A0F",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/ADx;",
+            "dex_byte_off": 5189680,
+            "dex_file": "classes6.dex",
+            "method_index": 22609,
+            "method_name": "A0K",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/AWj;",
+            "dex_byte_off": 5721380,
+            "dex_file": "classes6.dex",
+            "method_index": 27539,
+            "method_name": "A04",
+            "method_proto": "VLLL"
+          },
+          {
+            "class_name": "LX/AWw;",
+            "dex_byte_off": 5731094,
+            "dex_file": "classes6.dex",
+            "method_index": 27588,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/AZL;",
+            "dex_byte_off": 5767298,
+            "dex_file": "classes6.dex",
+            "method_index": 28036,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/AZL;",
+            "dex_byte_off": 5767420,
+            "dex_file": "classes6.dex",
+            "method_index": 28036,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/AZN;",
+            "dex_byte_off": 5773402,
+            "dex_file": "classes6.dex",
+            "method_index": 28045,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/AZN;",
+            "dex_byte_off": 5773730,
+            "dex_file": "classes6.dex",
+            "method_index": 28045,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/AZN;",
+            "dex_byte_off": 5774508,
+            "dex_file": "classes6.dex",
+            "method_index": 28045,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/Aov;",
+            "dex_byte_off": 6756582,
+            "dex_file": "classes6.dex",
+            "method_index": 31542,
+            "method_name": "invoke",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/deeplink/ui/dfa/ThreePGroupCreateActivity;",
+            "dex_byte_off": 3182592,
+            "dex_file": "classes3.dex",
+            "method_index": 30321,
+            "method_name": "A03",
+            "method_proto": "VLLLL"
+          },
+          {
+            "class_name": "LX/3Aw;",
+            "dex_byte_off": 3777364,
+            "dex_file": "classes3.dex",
+            "method_index": 17705,
+            "method_name": "Bp3",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/3BD;",
+            "dex_byte_off": 3786972,
+            "dex_file": "classes3.dex",
+            "method_index": 17784,
+            "method_name": "Bf4",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/3BD;",
+            "dex_byte_off": 3786996,
+            "dex_file": "classes3.dex",
+            "method_index": 17784,
+            "method_name": "Bf4",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/3SP;",
+            "dex_byte_off": 4448598,
+            "dex_file": "classes3.dex",
+            "method_index": 22609,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/3Sf;",
+            "dex_byte_off": 4479466,
+            "dex_file": "classes3.dex",
+            "method_index": 22648,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/PAb;",
+            "dex_byte_off": 2667580,
+            "dex_file": "classes12.dex",
+            "method_index": 5986,
+            "method_name": "<init>",
+            "method_proto": "VLLI"
+          },
+          {
+            "class_name": "LX/PAc;",
+            "dex_byte_off": 2668176,
+            "dex_file": "classes12.dex",
+            "method_index": 5987,
+            "method_name": "<init>",
+            "method_proto": "VLLI"
+          },
+          {
+            "class_name": "LX/PAd;",
+            "dex_byte_off": 2668792,
+            "dex_file": "classes12.dex",
+            "method_index": 5988,
+            "method_name": "<init>",
+            "method_proto": "VLLI"
+          },
+          {
+            "class_name": "LX/PAe;",
+            "dex_byte_off": 2669456,
+            "dex_file": "classes12.dex",
+            "method_index": 5989,
+            "method_name": "<init>",
+            "method_proto": "VLLI"
+          },
+          {
+            "class_name": "LX/PAf;",
+            "dex_byte_off": 2669996,
+            "dex_file": "classes12.dex",
+            "method_index": 5990,
+            "method_name": "<init>",
+            "method_proto": "VLLI"
+          },
+          {
+            "class_name": "LX/PAg;",
+            "dex_byte_off": 2670580,
+            "dex_file": "classes12.dex",
+            "method_index": 5991,
+            "method_name": "<init>",
+            "method_proto": "VLLI"
+          },
+          {
+            "class_name": "Lcom/whatsapp/passkeys/PasskeyServerApiImpl;",
+            "dex_byte_off": 3043642,
+            "dex_file": "classes12.dex",
+            "method_index": 23212,
+            "method_name": "A00",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/passkeys/PasskeyServerApiImpl;",
+            "dex_byte_off": 3046804,
+            "dex_file": "classes12.dex",
+            "method_index": 23219,
+            "method_name": "A07",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/Pq9;",
+            "dex_byte_off": 2021722,
+            "dex_file": "classes12.dex",
+            "method_index": 10004,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/Prr;",
+            "dex_byte_off": 2029678,
+            "dex_file": "classes12.dex",
+            "method_index": 10322,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/PtM;",
+            "dex_byte_off": 2035370,
+            "dex_file": "classes12.dex",
+            "method_index": 10601,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "Lcom/google/android/gms/internal/mlkit_genai_speech/zzqy;",
+            "dex_byte_off": 2043250,
+            "dex_file": "classes12.dex",
+            "method_index": 18275,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "Lcom/google/android/gms/internal/mlkit_genai_speech/zzvk;",
+            "dex_byte_off": 2049330,
+            "dex_file": "classes12.dex",
+            "method_index": 18584,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "Lcom/google/android/gms/internal/mlkit_genai_speech/zzvl;",
+            "dex_byte_off": 2049374,
+            "dex_file": "classes12.dex",
+            "method_index": 18587,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/Pxm;",
+            "dex_byte_off": 2053722,
+            "dex_file": "classes12.dex",
+            "method_index": 10799,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/Pxn;",
+            "dex_byte_off": 2053770,
+            "dex_file": "classes12.dex",
+            "method_index": 10802,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/PyQ;",
+            "dex_byte_off": 2057294,
+            "dex_file": "classes12.dex",
+            "method_index": 10919,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/Q5u;",
+            "dex_byte_off": 3610662,
+            "dex_file": "classes12.dex",
+            "method_index": 12229,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/J8h;",
+            "dex_byte_off": 2609216,
+            "dex_file": "classes10.dex",
+            "method_index": 7090,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/JAE;",
+            "dex_byte_off": 2885198,
+            "dex_file": "classes10.dex",
+            "method_index": 7800,
+            "method_name": "A01",
+            "method_proto": "LJ"
+          },
+          {
+            "class_name": "LX/JMz;",
+            "dex_byte_off": 3541086,
+            "dex_file": "classes10.dex",
+            "method_index": 11407,
+            "method_name": "A0t",
+            "method_proto": "VLLLLLLLLZ"
+          },
+          {
+            "class_name": "LX/KzG;",
+            "dex_byte_off": 6198156,
+            "dex_file": "classes10.dex",
+            "method_index": 31563,
+            "method_name": "A00",
+            "method_proto": "VLLLLLLLLFIIIII"
+          },
+          {
+            "class_name": "LX/KzG;",
+            "dex_byte_off": 6198466,
+            "dex_file": "classes10.dex",
+            "method_index": 31564,
+            "method_name": "A01",
+            "method_proto": "VLLLLLLIIJ"
+          },
+          {
+            "class_name": "LX/L5I;",
+            "dex_byte_off": 6411386,
+            "dex_file": "classes10.dex",
+            "method_index": 32835,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/5yX;",
+            "dex_byte_off": 6640366,
+            "dex_file": "classes4.dex",
+            "method_index": 27440,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/H1O;",
+            "dex_byte_off": 4672482,
+            "dex_file": "classes9.dex",
+            "method_index": 14750,
+            "method_name": "<init>",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/H1P;",
+            "dex_byte_off": 4672634,
+            "dex_file": "classes9.dex",
+            "method_index": 14752,
+            "method_name": "<init>",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/H1U;",
+            "dex_byte_off": 4677294,
+            "dex_file": "classes9.dex",
+            "method_index": 14778,
+            "method_name": "<init>",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/HOp;",
+            "dex_byte_off": 5292420,
+            "dex_file": "classes9.dex",
+            "method_index": 17345,
+            "method_name": "A00",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/HxN;",
+            "dex_byte_off": 5771628,
+            "dex_file": "classes9.dex",
+            "method_index": 21638,
+            "method_name": "A00",
+            "method_proto": "VI"
+          },
+          {
+            "class_name": "LX/HxN;",
+            "dex_byte_off": 5771692,
+            "dex_file": "classes9.dex",
+            "method_index": 21639,
+            "method_name": "A01",
+            "method_proto": "VIL"
+          },
+          {
+            "class_name": "LX/I0C;",
+            "dex_byte_off": 5854550,
+            "dex_file": "classes9.dex",
+            "method_index": 22199,
+            "method_name": "A02",
+            "method_proto": "VLLI"
+          },
+          {
+            "class_name": "Lcom/whatsapp/registration/ui/task/RequestCodeRepository;",
+            "dex_byte_off": 5857274,
+            "dex_file": "classes9.dex",
+            "method_index": 49980,
+            "method_name": "A00",
+            "method_proto": "LLLLLLLLLLLIIII"
+          },
+          {
+            "class_name": "Lcom/whatsapp/registration/ui/task/VerifyCodeRepository;",
+            "dex_byte_off": 5965382,
+            "dex_file": "classes9.dex",
+            "method_index": 49988,
+            "method_name": "A00",
+            "method_proto": "LLLLLLLLLLLLLII"
+          },
+          {
+            "class_name": "LX/I3S;",
+            "dex_byte_off": 6035362,
+            "dex_file": "classes9.dex",
+            "method_index": 23049,
+            "method_name": "A02",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/IFU;",
+            "dex_byte_off": 6554916,
+            "dex_file": "classes9.dex",
+            "method_index": 26011,
+            "method_name": "Bp3",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/IX0;",
+            "dex_byte_off": 7155624,
+            "dex_file": "classes9.dex",
+            "method_index": 30087,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/IXD;",
+            "dex_byte_off": 7172960,
+            "dex_file": "classes9.dex",
+            "method_index": 30152,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/IXD;",
+            "dex_byte_off": 7173384,
+            "dex_file": "classes9.dex",
+            "method_index": 30152,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/IXD;",
+            "dex_byte_off": 7173500,
+            "dex_file": "classes9.dex",
+            "method_index": 30152,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/IXS;",
+            "dex_byte_off": 7187128,
+            "dex_file": "classes9.dex",
+            "method_index": 30215,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/IXS;",
+            "dex_byte_off": 7187406,
+            "dex_file": "classes9.dex",
+            "method_index": 30215,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/IXS;",
+            "dex_byte_off": 7187934,
+            "dex_file": "classes9.dex",
+            "method_index": 30215,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/Ika;",
+            "dex_byte_off": 7719580,
+            "dex_file": "classes9.dex",
+            "method_index": 32952,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/privacy/disclosure/protocol/xmpp/DisclosureResultSendJob;",
+            "dex_byte_off": 8165570,
+            "dex_file": "classes9.dex",
+            "method_index": 49199,
+            "method_name": "A0G",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "Lcom/whatsapp/accountlinking/ipc/handler/crosspost/ExecuteCrosspostOperationHandler;",
+            "dex_byte_off": 5451128,
+            "dex_file": "classes5.dex",
+            "method_index": 36827,
+            "method_name": "A06",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/8TG;",
+            "dex_byte_off": 6036848,
+            "dex_file": "classes5.dex",
+            "method_index": 29441,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/8Vi;",
+            "dex_byte_off": 6296288,
+            "dex_file": "classes5.dex",
+            "method_index": 29882,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/8Vi;",
+            "dex_byte_off": 6296400,
+            "dex_file": "classes5.dex",
+            "method_index": 29882,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/Df6;",
+            "dex_byte_off": 2811884,
+            "dex_file": "classes8.dex",
+            "method_index": 6651,
+            "method_name": "A00",
+            "method_proto": "VLLL"
+          },
+          {
+            "class_name": "LX/Df6;",
+            "dex_byte_off": 2812442,
+            "dex_file": "classes8.dex",
+            "method_index": 6651,
+            "method_name": "A00",
+            "method_proto": "VLLL"
+          },
+          {
+            "class_name": "LX/DoC;",
+            "dex_byte_off": 3316918,
+            "dex_file": "classes8.dex",
+            "method_index": 9144,
+            "method_name": "Bhk",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/Dpe;",
+            "dex_byte_off": 3352316,
+            "dex_file": "classes8.dex",
+            "method_index": 9344,
+            "method_name": "A03",
+            "method_proto": "VLLL"
+          },
+          {
+            "class_name": "LX/EJt;",
+            "dex_byte_off": 3967480,
+            "dex_file": "classes8.dex",
+            "method_index": 15527,
+            "method_name": "A00",
+            "method_proto": "VLLL"
+          },
+          {
+            "class_name": "LX/EJt;",
+            "dex_byte_off": 3968058,
+            "dex_file": "classes8.dex",
+            "method_index": 15527,
+            "method_name": "A00",
+            "method_proto": "VLLL"
+          },
+          {
+            "class_name": "LX/EK0;",
+            "dex_byte_off": 3982768,
+            "dex_file": "classes8.dex",
+            "method_index": 15581,
+            "method_name": "<init>",
+            "method_proto": "VLLI"
+          },
+          {
+            "class_name": "Lcom/whatsapp/payments/common/ui/MessageWithLinkWebViewActivity;",
+            "dex_byte_off": 4157066,
+            "dex_file": "classes8.dex",
+            "method_index": 42316,
+            "method_name": "onActivityResult",
+            "method_proto": "VIIL"
+          },
+          {
+            "class_name": "LX/ERs;",
+            "dex_byte_off": 4215364,
+            "dex_file": "classes8.dex",
+            "method_index": 16513,
+            "method_name": "A05",
+            "method_proto": "VLLLL"
+          },
+          {
+            "class_name": "LX/ERu;",
+            "dex_byte_off": 4217958,
+            "dex_file": "classes8.dex",
+            "method_index": 16523,
+            "method_name": "A03",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/EVu;",
+            "dex_byte_off": 4470224,
+            "dex_file": "classes8.dex",
+            "method_index": 17264,
+            "method_name": "A03",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/payments/upr/nux/UprOnboardingFragment;",
+            "dex_byte_off": 4659352,
+            "dex_file": "classes8.dex",
+            "method_index": 44244,
+            "method_name": "BxK",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/payments/upr/nux/UprOnboardingFragment;",
+            "dex_byte_off": 4659608,
+            "dex_file": "classes8.dex",
+            "method_index": 44245,
+            "method_name": "BxL",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/FK5;",
+            "dex_byte_off": 5611302,
+            "dex_file": "classes8.dex",
+            "method_index": 24242,
+            "method_name": "A00",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/FL9;",
+            "dex_byte_off": 5676604,
+            "dex_file": "classes8.dex",
+            "method_index": 24622,
+            "method_name": "A04",
+            "method_proto": "VLLL"
+          },
+          {
+            "class_name": "LX/FL9;",
+            "dex_byte_off": 5676700,
+            "dex_file": "classes8.dex",
+            "method_index": 24623,
+            "method_name": "A05",
+            "method_proto": "VLLL"
+          },
+          {
+            "class_name": "LX/FL9;",
+            "dex_byte_off": 5676816,
+            "dex_file": "classes8.dex",
+            "method_index": 24624,
+            "method_name": "A06",
+            "method_proto": "VLLLZ"
+          },
+          {
+            "class_name": "LX/FL9;",
+            "dex_byte_off": 5676944,
+            "dex_file": "classes8.dex",
+            "method_index": 24625,
+            "method_name": "A07",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/FLF;",
+            "dex_byte_off": 5689858,
+            "dex_file": "classes8.dex",
+            "method_index": 24666,
+            "method_name": "A00",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/FLo;",
+            "dex_byte_off": 5746598,
+            "dex_file": "classes8.dex",
+            "method_index": 25012,
+            "method_name": "A00",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/FN3;",
+            "dex_byte_off": 5859416,
+            "dex_file": "classes8.dex",
+            "method_index": 25377,
+            "method_name": "A00",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/FeF;",
+            "dex_byte_off": 6338026,
+            "dex_file": "classes8.dex",
+            "method_index": 29484,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/FeF;",
+            "dex_byte_off": 6338650,
+            "dex_file": "classes8.dex",
+            "method_index": 29484,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/FeF;",
+            "dex_byte_off": 6339564,
+            "dex_file": "classes8.dex",
+            "method_index": 29484,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/FeF;",
+            "dex_byte_off": 6339864,
+            "dex_file": "classes8.dex",
+            "method_index": 29484,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/FeF;",
+            "dex_byte_off": 6340140,
+            "dex_file": "classes8.dex",
+            "method_index": 29484,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/FeF;",
+            "dex_byte_off": 6340400,
+            "dex_file": "classes8.dex",
+            "method_index": 29484,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/Fi1;",
+            "dex_byte_off": 6455536,
+            "dex_file": "classes8.dex",
+            "method_index": 30515,
+            "method_name": "C30",
+            "method_proto": "VLLL"
+          },
+          {
+            "class_name": "LX/Frp;",
+            "dex_byte_off": 6886184,
+            "dex_file": "classes8.dex",
+            "method_index": 32976,
+            "method_name": "invoke",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/FsM;",
+            "dex_byte_off": 6952396,
+            "dex_file": "classes8.dex",
+            "method_index": 33107,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/Fsc;",
+            "dex_byte_off": 6972654,
+            "dex_file": "classes8.dex",
+            "method_index": 33142,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/Fsi;",
+            "dex_byte_off": 7016440,
+            "dex_file": "classes8.dex",
+            "method_index": 33160,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/Fsi;",
+            "dex_byte_off": 7016634,
+            "dex_file": "classes8.dex",
+            "method_index": 33160,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/Ftd;",
+            "dex_byte_off": 2747244,
+            "dex_file": "classes8.dex",
+            "method_index": 33328,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/1q8;",
+            "dex_byte_off": 1553272,
+            "dex_file": "classes2.dex",
+            "method_index": 5897,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/1q9;",
+            "dex_byte_off": 1553882,
+            "dex_file": "classes2.dex",
+            "method_index": 5900,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/1uJ;",
+            "dex_byte_off": 906744,
+            "dex_file": "classes2.dex",
+            "method_index": 6637,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/LaG;",
+            "dex_byte_off": 4055502,
+            "dex_file": "classes11.dex",
+            "method_index": 4852,
+            "method_name": "Cf4",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/LaT;",
+            "dex_byte_off": 4058508,
+            "dex_file": "classes11.dex",
+            "method_index": 4908,
+            "method_name": "A02",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/Lac;",
+            "dex_byte_off": 4060878,
+            "dex_file": "classes11.dex",
+            "method_index": 4934,
+            "method_name": "BEE",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/google/android/gms/internal/mlkit_genai_speech/zzbkd;",
+            "dex_byte_off": 4813206,
+            "dex_file": "classes11.dex",
+            "method_index": 51406,
+            "method_name": "<init>",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/google/android/gms/internal/mlkit_genai_speech/zzbkd;",
+            "dex_byte_off": 4813252,
+            "dex_file": "classes11.dex",
+            "method_index": 51407,
+            "method_name": "toString",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "Lcom/google/android/gms/internal/mlkit_genai_speech/zzbkl;",
+            "dex_byte_off": 4813318,
+            "dex_file": "classes11.dex",
+            "method_index": 51449,
+            "method_name": "<init>",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/google/android/gms/internal/mlkit_genai_speech/zzbkl;",
+            "dex_byte_off": 4813364,
+            "dex_file": "classes11.dex",
+            "method_index": 51450,
+            "method_name": "toString",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/MhR;",
+            "dex_byte_off": 5480582,
+            "dex_file": "classes11.dex",
+            "method_index": 16958,
+            "method_name": "A00",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/status/api/playback/content/StatusDownloadEngine;",
+            "dex_byte_off": 6624630,
+            "dex_file": "classes11.dex",
+            "method_index": 55667,
+            "method_name": "A01",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/O4r;",
+            "dex_byte_off": 8336640,
+            "dex_file": "classes11.dex",
+            "method_index": 34945,
+            "method_name": "Cf4",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/O6i;",
+            "dex_byte_off": 8442936,
+            "dex_file": "classes11.dex",
+            "method_index": 35542,
+            "method_name": "Bko",
+            "method_proto": "VLLL"
+          }
+        ],
+        "update": [
+          {
+            "class_name": "LX/04o;",
+            "dex_byte_off": 4030924,
+            "dex_file": "classes.dex",
+            "method_index": 1107,
+            "method_name": "update",
+            "method_proto": "ILLLL"
+          },
+          {
+            "class_name": "LX/0yP;",
+            "dex_byte_off": 7668680,
+            "dex_file": "classes.dex",
+            "method_index": 22661,
+            "method_name": "A09",
+            "method_proto": "VLI"
+          },
+          {
+            "class_name": "LX/0yP;",
+            "dex_byte_off": 7668914,
+            "dex_file": "classes.dex",
+            "method_index": 22662,
+            "method_name": "BFC",
+            "method_proto": "ZLI"
+          },
+          {
+            "class_name": "LX/12t;",
+            "dex_byte_off": 8121256,
+            "dex_file": "classes.dex",
+            "method_index": 24683,
+            "method_name": "A09",
+            "method_proto": "VLI"
+          },
+          {
+            "class_name": "LX/134;",
+            "dex_byte_off": 8132144,
+            "dex_file": "classes.dex",
+            "method_index": 24755,
+            "method_name": "A09",
+            "method_proto": "VLI"
+          },
+          {
+            "class_name": "LX/17a;",
+            "dex_byte_off": 8429300,
+            "dex_file": "classes.dex",
+            "method_index": 26199,
+            "method_name": "A09",
+            "method_proto": "VLI"
+          },
+          {
+            "class_name": "LX/1RV;",
+            "dex_byte_off": 9318244,
+            "dex_file": "classes.dex",
+            "method_index": 31258,
+            "method_name": "A06",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/1Rl;",
+            "dex_byte_off": 3905070,
+            "dex_file": "classes.dex",
+            "method_index": 31305,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/1SP;",
+            "dex_byte_off": 9354002,
+            "dex_file": "classes.dex",
+            "method_index": 31418,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/ADj;",
+            "dex_byte_off": 5150308,
+            "dex_file": "classes6.dex",
+            "method_index": 22391,
+            "method_name": "A06",
+            "method_proto": "LLLLLZ"
+          },
+          {
+            "class_name": "LX/AWY;",
+            "dex_byte_off": 5705370,
+            "dex_file": "classes6.dex",
+            "method_index": 27469,
+            "method_name": "BmU",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/AWY;",
+            "dex_byte_off": 5705578,
+            "dex_file": "classes6.dex",
+            "method_index": 27470,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/Jny;",
+            "dex_byte_off": 4204466,
+            "dex_file": "classes10.dex",
+            "method_index": 16675,
+            "method_name": "A0J",
+            "method_proto": "VLLL"
+          },
+          {
+            "class_name": "LX/8ba;",
+            "dex_byte_off": 6846108,
+            "dex_file": "classes5.dex",
+            "method_index": 31010,
+            "method_name": "<init>",
+            "method_proto": "VLI"
+          },
+          {
+            "class_name": "LX/EJw;",
+            "dex_byte_off": 3970470,
+            "dex_file": "classes8.dex",
+            "method_index": 15539,
+            "method_name": "<init>",
+            "method_proto": "VLLLLLL"
+          },
+          {
+            "class_name": "LX/1hh;",
+            "dex_byte_off": 1300598,
+            "dex_file": "classes2.dex",
+            "method_index": 4051,
+            "method_name": "A01",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/LaG;",
+            "dex_byte_off": 4055520,
+            "dex_file": "classes11.dex",
+            "method_index": 4852,
+            "method_name": "Cf4",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/LaT;",
+            "dex_byte_off": 4058526,
+            "dex_file": "classes11.dex",
+            "method_index": 4908,
+            "method_name": "A02",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/Lac;",
+            "dex_byte_off": 4060896,
+            "dex_file": "classes11.dex",
+            "method_index": 4934,
+            "method_name": "BEE",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/MS2;",
+            "dex_byte_off": 3835174,
+            "dex_file": "classes11.dex",
+            "method_index": 16010,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/O4r;",
+            "dex_byte_off": 8336658,
+            "dex_file": "classes11.dex",
+            "method_index": 34945,
+            "method_name": "Cf4",
+            "method_proto": "LL"
+          }
+        ]
+      },
+      "before_shorty_candidates": [
+        {
+          "class_name": "LX/LaT;",
+          "dex_byte_off": 4058646,
+          "dex_file": "classes11.dex",
+          "method_index": 4908,
+          "method_name": "A02",
+          "method_proto": "LLLL"
+        }
+      ],
+      "candidates": [
+        {
+          "class_name": "LX/LaT;",
+          "dex_byte_off": 4058646,
+          "dex_file": "classes11.dex",
+          "method_index": 4908,
+          "method_name": "A02",
+          "method_proto": "LLLL"
+        }
+      ],
+      "method_shorty": "LLLL",
+      "previous_class": "LX/LaT;",
+      "previous_method": "A02",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "mex-json-response-discriminator"
+    },
+    {
+      "anchor_sites": {
+        "doc_id": [
+          {
+            "class_name": "LX/164;",
+            "dex_byte_off": 8347364,
+            "dex_file": "classes.dex",
+            "method_index": 25753,
+            "method_name": "CFb",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/infra/location/metapoi/MetaPoiApi;",
+            "dex_byte_off": 4625720,
+            "dex_file": "classes10.dex",
+            "method_index": 47854,
+            "method_name": "A00",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/infra/acsohai/AcsOhaiFetcher;",
+            "dex_byte_off": 4890576,
+            "dex_file": "classes10.dex",
+            "method_index": 47795,
+            "method_name": "A00",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/wamo/request/WamoGraphQLExecutor;",
+            "dex_byte_off": 4916386,
+            "dex_file": "classes10.dex",
+            "method_index": 50095,
+            "method_name": "A02",
+            "method_proto": "LLLLLLLZ"
+          },
+          {
+            "class_name": "LX/5kQ;",
+            "dex_byte_off": 6323054,
+            "dex_file": "classes4.dex",
+            "method_index": 24216,
+            "method_name": "CXV",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/newsletter/forwardcounter/api/ForwardCounterApi;",
+            "dex_byte_off": 5848632,
+            "dex_file": "classes9.dex",
+            "method_index": 49000,
+            "method_name": "A01",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/IWC;",
+            "dex_byte_off": 7129378,
+            "dex_file": "classes9.dex",
+            "method_index": 29831,
+            "method_name": "CG8",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/Lak;",
+            "dex_byte_off": 4065274,
+            "dex_file": "classes11.dex",
+            "method_index": 4960,
+            "method_name": "A00",
+            "method_proto": "VLLIIZ"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671290,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671396,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671498,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671580,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671650,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671750,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671850,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5671954,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5672054,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/N8o;",
+            "dex_byte_off": 5672136,
+            "dex_file": "classes11.dex",
+            "method_index": 19118,
+            "method_name": "A02",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/O4q;",
+            "dex_byte_off": 8335474,
+            "dex_file": "classes11.dex",
+            "method_index": 34939,
+            "method_name": "A01",
+            "method_proto": "VLLLLL"
+          },
+          {
+            "class_name": "LX/O4q;",
+            "dex_byte_off": 8335818,
+            "dex_file": "classes11.dex",
+            "method_index": 34942,
+            "method_name": "CG8",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/infra/privateexp/PrivateExperimentConfigApi$fetchPrivateUniverses$2;",
+            "dex_byte_off": 9095890,
+            "dex_file": "classes11.dex",
+            "method_index": 55021,
+            "method_name": "invokeSuspend",
+            "method_proto": "LL"
+          }
+        ]
+      },
+      "before_shorty_candidates": [
+        {
+          "class_name": "LX/164;",
+          "dex_byte_off": 8347364,
+          "dex_file": "classes.dex",
+          "method_index": 25753,
+          "method_name": "CFb",
+          "method_proto": "LL"
+        },
+        {
+          "class_name": "Lcom/whatsapp/infra/acsohai/AcsOhaiFetcher;",
+          "dex_byte_off": 4890576,
+          "dex_file": "classes10.dex",
+          "method_index": 47795,
+          "method_name": "A00",
+          "method_proto": "LLLL"
+        },
+        {
+          "class_name": "Lcom/whatsapp/infra/location/metapoi/MetaPoiApi;",
+          "dex_byte_off": 4625720,
+          "dex_file": "classes10.dex",
+          "method_index": 47854,
+          "method_name": "A00",
+          "method_proto": "LLL"
+        },
+        {
+          "class_name": "Lcom/whatsapp/wamo/request/WamoGraphQLExecutor;",
+          "dex_byte_off": 4916386,
+          "dex_file": "classes10.dex",
+          "method_index": 50095,
+          "method_name": "A02",
+          "method_proto": "LLLLLLLZ"
+        },
+        {
+          "class_name": "LX/Lak;",
+          "dex_byte_off": 4065274,
+          "dex_file": "classes11.dex",
+          "method_index": 4960,
+          "method_name": "A00",
+          "method_proto": "VLLIIZ"
+        },
+        {
+          "class_name": "LX/N8o;",
+          "dex_byte_off": 5672136,
+          "dex_file": "classes11.dex",
+          "method_index": 19118,
+          "method_name": "A02",
+          "method_proto": "LL"
+        },
+        {
+          "class_name": "LX/O4q;",
+          "dex_byte_off": 8335474,
+          "dex_file": "classes11.dex",
+          "method_index": 34939,
+          "method_name": "A01",
+          "method_proto": "VLLLLL"
+        },
+        {
+          "class_name": "LX/O4q;",
+          "dex_byte_off": 8335818,
+          "dex_file": "classes11.dex",
+          "method_index": 34942,
+          "method_name": "CG8",
+          "method_proto": "VL"
+        },
+        {
+          "class_name": "Lcom/whatsapp/infra/privateexp/PrivateExperimentConfigApi$fetchPrivateUniverses$2;",
+          "dex_byte_off": 9095890,
+          "dex_file": "classes11.dex",
+          "method_index": 55021,
+          "method_name": "invokeSuspend",
+          "method_proto": "LL"
+        },
+        {
+          "class_name": "LX/5kQ;",
+          "dex_byte_off": 6323054,
+          "dex_file": "classes4.dex",
+          "method_index": 24216,
+          "method_name": "CXV",
+          "method_proto": "LLLL"
+        },
+        {
+          "class_name": "LX/IWC;",
+          "dex_byte_off": 7129378,
+          "dex_file": "classes9.dex",
+          "method_index": 29831,
+          "method_name": "CG8",
+          "method_proto": "VL"
+        },
+        {
+          "class_name": "Lcom/whatsapp/newsletter/forwardcounter/api/ForwardCounterApi;",
+          "dex_byte_off": 5848632,
+          "dex_file": "classes9.dex",
+          "method_index": 49000,
+          "method_name": "A01",
+          "method_proto": "LLLL"
+        }
+      ],
+      "candidates": [
+        {
+          "class_name": "LX/164;",
+          "dex_byte_off": 8347364,
+          "dex_file": "classes.dex",
+          "method_index": 25753,
+          "method_name": "CFb",
+          "method_proto": "LL"
+        },
+        {
+          "class_name": "LX/N8o;",
+          "dex_byte_off": 5672136,
+          "dex_file": "classes11.dex",
+          "method_index": 19118,
+          "method_name": "A02",
+          "method_proto": "LL"
+        },
+        {
+          "class_name": "Lcom/whatsapp/infra/privateexp/PrivateExperimentConfigApi$fetchPrivateUniverses$2;",
+          "dex_byte_off": 9095890,
+          "dex_file": "classes11.dex",
+          "method_index": 55021,
+          "method_name": "invokeSuspend",
+          "method_proto": "LL"
+        }
+      ],
+      "method_shorty": "LL",
+      "previous_class": "LX/164;",
+      "previous_method": "CFb",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "scope": "method",
+      "status": "ambiguous",
+      "topic": "mex-persisted-id"
+    },
+    {
+      "anchor_sites": {
+        "Null type supplied to MexResponse": [
+          {
+            "class_name": "LX/LZv;",
+            "dex_byte_off": 4045974,
+            "dex_file": "classes11.dex",
+            "method_index": 4773,
+            "method_name": "<init>",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/LZv;",
+            "dex_byte_off": 4046200,
+            "dex_file": "classes11.dex",
+            "method_index": 4774,
+            "method_name": "toString",
+            "method_proto": "L"
+          }
+        ]
+      },
+      "before_shorty_candidates": [
+        {
+          "class_name": "LX/LZv;",
+          "dex_byte_off": 4045974,
+          "dex_file": "classes11.dex",
+          "method_index": 4773,
+          "method_name": "<init>",
+          "method_proto": "VLL"
+        },
+        {
+          "class_name": "LX/LZv;",
+          "dex_byte_off": 4046200,
+          "dex_file": "classes11.dex",
+          "method_index": 4774,
+          "method_name": "toString",
+          "method_proto": "L"
+        }
+      ],
+      "candidates": [
+        {
+          "class_name": "LX/LZv;",
+          "dex_byte_off": 4045974,
+          "dex_file": "classes11.dex",
+          "method_index": 4773,
+          "method_name": "<init>",
+          "method_proto": "VLL"
+        }
+      ],
+      "method_shorty": "VLL",
+      "previous_class": "LX/LZv;",
+      "previous_method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "mex-response-model-flags"
+    },
+    {
+      "anchor_sites": {},
+      "before_shorty_candidates": [],
+      "candidates": [],
+      "method_shorty": "VLL",
+      "previous_class": "LX/LZw;",
+      "previous_method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "scope": "method",
+      "status": "unanchored",
+      "topic": "mex-response-parts-storage"
+    },
+    {
+      "anchor_sites": {
+        "subject": [
+          {
+            "class_name": "LX/0Fs;",
+            "dex_byte_off": 5345018,
+            "dex_file": "classes.dex",
+            "method_index": 4743,
+            "method_name": "A02",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/0Fs;",
+            "dex_byte_off": 5348076,
+            "dex_file": "classes.dex",
+            "method_index": 4743,
+            "method_name": "A02",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/0MC;",
+            "dex_byte_off": 5678810,
+            "dex_file": "classes.dex",
+            "method_index": 7715,
+            "method_name": "AR4",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/0VS;",
+            "dex_byte_off": 5946558,
+            "dex_file": "classes.dex",
+            "method_index": 10639,
+            "method_name": "A03",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/0Xm;",
+            "dex_byte_off": 6054634,
+            "dex_file": "classes.dex",
+            "method_index": 11779,
+            "method_name": "A0E",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/0ZT;",
+            "dex_byte_off": 3799466,
+            "dex_file": "classes.dex",
+            "method_index": 12961,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/0a2;",
+            "dex_byte_off": 6250906,
+            "dex_file": "classes.dex",
+            "method_index": 13172,
+            "method_name": "A04",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/0a2;",
+            "dex_byte_off": 6256720,
+            "dex_file": "classes.dex",
+            "method_index": 13188,
+            "method_name": "A0K",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/0aK;",
+            "dex_byte_off": 6294844,
+            "dex_file": "classes.dex",
+            "method_index": 13379,
+            "method_name": "A00",
+            "method_proto": "ZLLLL"
+          },
+          {
+            "class_name": "LX/0aK;",
+            "dex_byte_off": 6295670,
+            "dex_file": "classes.dex",
+            "method_index": 13381,
+            "method_name": "A02",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/0bT;",
+            "dex_byte_off": 6353856,
+            "dex_file": "classes.dex",
+            "method_index": 13867,
+            "method_name": "A00",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/0bT;",
+            "dex_byte_off": 6354680,
+            "dex_file": "classes.dex",
+            "method_index": 13869,
+            "method_name": "A02",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/0yv;",
+            "dex_byte_off": 7687484,
+            "dex_file": "classes.dex",
+            "method_index": 22809,
+            "method_name": "A02",
+            "method_proto": "LLI"
+          },
+          {
+            "class_name": "LX/0yv;",
+            "dex_byte_off": 7688602,
+            "dex_file": "classes.dex",
+            "method_index": 22814,
+            "method_name": "A09",
+            "method_proto": "VLI"
+          },
+          {
+            "class_name": "LX/0yv;",
+            "dex_byte_off": 7692216,
+            "dex_file": "classes.dex",
+            "method_index": 22814,
+            "method_name": "A09",
+            "method_proto": "VLI"
+          },
+          {
+            "class_name": "LX/0yv;",
+            "dex_byte_off": 7692320,
+            "dex_file": "classes.dex",
+            "method_index": 22814,
+            "method_name": "A09",
+            "method_proto": "VLI"
+          },
+          {
+            "class_name": "LX/0yv;",
+            "dex_byte_off": 7699094,
+            "dex_file": "classes.dex",
+            "method_index": 22814,
+            "method_name": "A09",
+            "method_proto": "VLI"
+          },
+          {
+            "class_name": "LX/1Rl;",
+            "dex_byte_off": 3908032,
+            "dex_file": "classes.dex",
+            "method_index": 31305,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/BpT;",
+            "dex_byte_off": 5366374,
+            "dex_file": "classes7.dex",
+            "method_index": 19056,
+            "method_name": "<init>",
+            "method_proto": "VLI"
+          },
+          {
+            "class_name": "LX/8xo;",
+            "dex_byte_off": 3074324,
+            "dex_file": "classes6.dex",
+            "method_index": 9684,
+            "method_name": "<init>",
+            "method_proto": "VLLLLLLLLLLLLLLLL"
+          },
+          {
+            "class_name": "LX/90x;",
+            "dex_byte_off": 3080864,
+            "dex_file": "classes6.dex",
+            "method_index": 9887,
+            "method_name": "A0J",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/9QR;",
+            "dex_byte_off": 3758018,
+            "dex_file": "classes6.dex",
+            "method_index": 14848,
+            "method_name": "<init>",
+            "method_proto": "VLLLLLLL"
+          },
+          {
+            "class_name": "LX/9QZ;",
+            "dex_byte_off": 3762996,
+            "dex_file": "classes6.dex",
+            "method_index": 14888,
+            "method_name": "<init>",
+            "method_proto": "VLLLLLLLL"
+          },
+          {
+            "class_name": "LX/9QZ;",
+            "dex_byte_off": 3763468,
+            "dex_file": "classes6.dex",
+            "method_index": 14890,
+            "method_name": "<init>",
+            "method_proto": "VLLLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/community/mex/GetSubgroupsGraphQlHandler;",
+            "dex_byte_off": 4543888,
+            "dex_file": "classes6.dex",
+            "method_index": 37262,
+            "method_name": "A00",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/community/mex/GetSubgroupsGraphQlHandler;",
+            "dex_byte_off": 4544184,
+            "dex_file": "classes6.dex",
+            "method_index": 37262,
+            "method_name": "A00",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/A50;",
+            "dex_byte_off": 4768570,
+            "dex_file": "classes6.dex",
+            "method_index": 20207,
+            "method_name": "A01",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/A8X;",
+            "dex_byte_off": 4857264,
+            "dex_file": "classes6.dex",
+            "method_index": 20737,
+            "method_name": "A00",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/A8X;",
+            "dex_byte_off": 4857466,
+            "dex_file": "classes6.dex",
+            "method_index": 20737,
+            "method_name": "A00",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/ADs;",
+            "dex_byte_off": 5168998,
+            "dex_file": "classes6.dex",
+            "method_index": 22501,
+            "method_name": "A0C",
+            "method_proto": "LLLLLI"
+          },
+          {
+            "class_name": "LX/AUK;",
+            "dex_byte_off": 5643480,
+            "dex_file": "classes6.dex",
+            "method_index": 26790,
+            "method_name": "AR4",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/AUT;",
+            "dex_byte_off": 5645538,
+            "dex_file": "classes6.dex",
+            "method_index": 26826,
+            "method_name": "AR4",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/AWV;",
+            "dex_byte_off": 5704100,
+            "dex_file": "classes6.dex",
+            "method_index": 27455,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/AWX;",
+            "dex_byte_off": 5704824,
+            "dex_file": "classes6.dex",
+            "method_index": 27465,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/AWc;",
+            "dex_byte_off": 5709156,
+            "dex_file": "classes6.dex",
+            "method_index": 27490,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/AWf;",
+            "dex_byte_off": 5713556,
+            "dex_file": "classes6.dex",
+            "method_index": 27504,
+            "method_name": "A00",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/AWf;",
+            "dex_byte_off": 5713722,
+            "dex_file": "classes6.dex",
+            "method_index": 27504,
+            "method_name": "A00",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/AWi;",
+            "dex_byte_off": 5718424,
+            "dex_file": "classes6.dex",
+            "method_index": 27527,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/AWi;",
+            "dex_byte_off": 5718814,
+            "dex_file": "classes6.dex",
+            "method_index": 27527,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/AXU;",
+            "dex_byte_off": 5736566,
+            "dex_file": "classes6.dex",
+            "method_index": 27689,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/AXV;",
+            "dex_byte_off": 5736686,
+            "dex_file": "classes6.dex",
+            "method_index": 27692,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/Aim;",
+            "dex_byte_off": 6171772,
+            "dex_file": "classes6.dex",
+            "method_index": 30397,
+            "method_name": "invoke",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "Lcom/whatsapp/community/mex/GetSuggestedGroupsGraphQlHandler;",
+            "dex_byte_off": 3252692,
+            "dex_file": "classes3.dex",
+            "method_index": 29434,
+            "method_name": "A00",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/2tv;",
+            "dex_byte_off": 3255056,
+            "dex_file": "classes3.dex",
+            "method_index": 14217,
+            "method_name": "A00",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "LX/3LT;",
+            "dex_byte_off": 4036364,
+            "dex_file": "classes3.dex",
+            "method_index": 20792,
+            "method_name": "A00",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/3LT;",
+            "dex_byte_off": 4037254,
+            "dex_file": "classes3.dex",
+            "method_index": 20794,
+            "method_name": "A02",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/3QR;",
+            "dex_byte_off": 4195790,
+            "dex_file": "classes3.dex",
+            "method_index": 22238,
+            "method_name": "run",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/65d;",
+            "dex_byte_off": 6984224,
+            "dex_file": "classes4.dex",
+            "method_index": 28635,
+            "method_name": "AQz",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/65d;",
+            "dex_byte_off": 6984606,
+            "dex_file": "classes4.dex",
+            "method_index": 28637,
+            "method_name": "B69",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "Lca/psiphon/PsiphonTunnel;",
+            "dex_byte_off": 7128780,
+            "dex_file": "classes11.dex",
+            "method_index": 45614,
+            "method_name": "handlePsiphonNotice",
+            "method_proto": "VL"
+          }
+        ]
+      },
+      "before_shorty_candidates": [
+        {
+          "class_name": "LX/0Fs;",
+          "dex_byte_off": 5348076,
+          "dex_file": "classes.dex",
+          "method_index": 4743,
+          "method_name": "A02",
+          "method_proto": "LLL"
+        },
+        {
+          "class_name": "LX/0MC;",
+          "dex_byte_off": 5678810,
+          "dex_file": "classes.dex",
+          "method_index": 7715,
+          "method_name": "AR4",
+          "method_proto": "VLL"
+        },
+        {
+          "class_name": "LX/0VS;",
+          "dex_byte_off": 5946558,
+          "dex_file": "classes.dex",
+          "method_index": 10639,
+          "method_name": "A03",
+          "method_proto": "LLLL"
+        },
+        {
+          "class_name": "LX/0Xm;",
+          "dex_byte_off": 6054634,
+          "dex_file": "classes.dex",
+          "method_index": 11779,
+          "method_name": "A0E",
+          "method_proto": "VL"
+        },
+        {
+          "class_name": "LX/0ZT;",
+          "dex_byte_off": 3799466,
+          "dex_file": "classes.dex",
+          "method_index": 12961,
+          "method_name": "<clinit>",
+          "method_proto": "V"
+        },
+        {
+          "class_name": "LX/0a2;",
+          "dex_byte_off": 6250906,
+          "dex_file": "classes.dex",
+          "method_index": 13172,
+          "method_name": "A04",
+          "method_proto": "LLL"
+        },
+        {
+          "class_name": "LX/0a2;",
+          "dex_byte_off": 6256720,
+          "dex_file": "classes.dex",
+          "method_index": 13188,
+          "method_name": "A0K",
+          "method_proto": "VL"
+        },
+        {
+          "class_name": "LX/0aK;",
+          "dex_byte_off": 6294844,
+          "dex_file": "classes.dex",
+          "method_index": 13379,
+          "method_name": "A00",
+          "method_proto": "ZLLLL"
+        },
+        {
+          "class_name": "LX/0aK;",
+          "dex_byte_off": 6295670,
+          "dex_file": "classes.dex",
+          "method_index": 13381,
+          "method_name": "A02",
+          "method_proto": "L"
+        },
+        {
+          "class_name": "LX/0bT;",
+          "dex_byte_off": 6353856,
+          "dex_file": "classes.dex",
+          "method_index": 13867,
+          "method_name": "A00",
+          "method_proto": "LL"
+        },
+        {
+          "class_name": "LX/0bT;",
+          "dex_byte_off": 6354680,
+          "dex_file": "classes.dex",
+          "method_index": 13869,
+          "method_name": "A02",
+          "method_proto": "LLLL"
+        },
+        {
+          "class_name": "LX/0yv;",
+          "dex_byte_off": 7687484,
+          "dex_file": "classes.dex",
+          "method_index": 22809,
+          "method_name": "A02",
+          "method_proto": "LLI"
+        },
+        {
+          "class_name": "LX/0yv;",
+          "dex_byte_off": 7699094,
+          "dex_file": "classes.dex",
+          "method_index": 22814,
+          "method_name": "A09",
+          "method_proto": "VLI"
+        },
+        {
+          "class_name": "LX/1Rl;",
+          "dex_byte_off": 3908032,
+          "dex_file": "classes.dex",
+          "method_index": 31305,
+          "method_name": "<clinit>",
+          "method_proto": "V"
+        },
+        {
+          "class_name": "Lca/psiphon/PsiphonTunnel;",
+          "dex_byte_off": 7128780,
+          "dex_file": "classes11.dex",
+          "method_index": 45614,
+          "method_name": "handlePsiphonNotice",
+          "method_proto": "VL"
+        },
+        {
+          "class_name": "LX/2tv;",
+          "dex_byte_off": 3255056,
+          "dex_file": "classes3.dex",
+          "method_index": 14217,
+          "method_name": "A00",
+          "method_proto": "L"
+        },
+        {
+          "class_name": "LX/3LT;",
+          "dex_byte_off": 4036364,
+          "dex_file": "classes3.dex",
+          "method_index": 20792,
+          "method_name": "A00",
+          "method_proto": "LL"
+        },
+        {
+          "class_name": "LX/3LT;",
+          "dex_byte_off": 4037254,
+          "dex_file": "classes3.dex",
+          "method_index": 20794,
+          "method_name": "A02",
+          "method_proto": "VL"
+        },
+        {
+          "class_name": "LX/3QR;",
+          "dex_byte_off": 4195790,
+          "dex_file": "classes3.dex",
+          "method_index": 22238,
+          "method_name": "run",
+          "method_proto": "V"
+        },
+        {
+          "class_name": "Lcom/whatsapp/community/mex/GetSuggestedGroupsGraphQlHandler;",
+          "dex_byte_off": 3252692,
+          "dex_file": "classes3.dex",
+          "method_index": 29434,
+          "method_name": "A00",
+          "method_proto": "LLLL"
+        },
+        {
+          "class_name": "LX/65d;",
+          "dex_byte_off": 6984224,
+          "dex_file": "classes4.dex",
+          "method_index": 28635,
+          "method_name": "AQz",
+          "method_proto": "LL"
+        },
+        {
+          "class_name": "LX/65d;",
+          "dex_byte_off": 6984606,
+          "dex_file": "classes4.dex",
+          "method_index": 28637,
+          "method_name": "B69",
+          "method_proto": "LLL"
+        },
+        {
+          "class_name": "LX/8xo;",
+          "dex_byte_off": 3074324,
+          "dex_file": "classes6.dex",
+          "method_index": 9684,
+          "method_name": "<init>",
+          "method_proto": "VLLLLLLLLLLLLLLLL"
+        },
+        {
+          "class_name": "LX/90x;",
+          "dex_byte_off": 3080864,
+          "dex_file": "classes6.dex",
+          "method_index": 9887,
+          "method_name": "A0J",
+          "method_proto": "L"
+        },
+        {
+          "class_name": "LX/9QR;",
+          "dex_byte_off": 3758018,
+          "dex_file": "classes6.dex",
+          "method_index": 14848,
+          "method_name": "<init>",
+          "method_proto": "VLLLLLLL"
+        },
+        {
+          "class_name": "LX/9QZ;",
+          "dex_byte_off": 3762996,
+          "dex_file": "classes6.dex",
+          "method_index": 14888,
+          "method_name": "<init>",
+          "method_proto": "VLLLLLLLL"
+        },
+        {
+          "class_name": "LX/9QZ;",
+          "dex_byte_off": 3763468,
+          "dex_file": "classes6.dex",
+          "method_index": 14890,
+          "method_name": "<init>",
+          "method_proto": "VLLLLL"
+        },
+        {
+          "class_name": "LX/A50;",
+          "dex_byte_off": 4768570,
+          "dex_file": "classes6.dex",
+          "method_index": 20207,
+          "method_name": "A01",
+          "method_proto": "VL"
+        },
+        {
+          "class_name": "LX/A8X;",
+          "dex_byte_off": 4857466,
+          "dex_file": "classes6.dex",
+          "method_index": 20737,
+          "method_name": "A00",
+          "method_proto": "L"
+        },
+        {
+          "class_name": "LX/ADs;",
+          "dex_byte_off": 5168998,
+          "dex_file": "classes6.dex",
+          "method_index": 22501,
+          "method_name": "A0C",
+          "method_proto": "LLLLLI"
+        },
+        {
+          "class_name": "LX/AUK;",
+          "dex_byte_off": 5643480,
+          "dex_file": "classes6.dex",
+          "method_index": 26790,
+          "method_name": "AR4",
+          "method_proto": "VLL"
+        },
+        {
+          "class_name": "LX/AUT;",
+          "dex_byte_off": 5645538,
+          "dex_file": "classes6.dex",
+          "method_index": 26826,
+          "method_name": "AR4",
+          "method_proto": "VLL"
+        },
+        {
+          "class_name": "LX/AWV;",
+          "dex_byte_off": 5704100,
+          "dex_file": "classes6.dex",
+          "method_index": 27455,
+          "method_name": "C8f",
+          "method_proto": "VLL"
+        },
+        {
+          "class_name": "LX/AWX;",
+          "dex_byte_off": 5704824,
+          "dex_file": "classes6.dex",
+          "method_index": 27465,
+          "method_name": "C8f",
+          "method_proto": "VLL"
+        },
+        {
+          "class_name": "LX/AWc;",
+          "dex_byte_off": 5709156,
+          "dex_file": "classes6.dex",
+          "method_index": 27490,
+          "method_name": "C8f",
+          "method_proto": "VLL"
+        },
+        {
+          "class_name": "LX/AWf;",
+          "dex_byte_off": 5713722,
+          "dex_file": "classes6.dex",
+          "method_index": 27504,
+          "method_name": "A00",
+          "method_proto": "V"
+        },
+        {
+          "class_name": "LX/AWi;",
+          "dex_byte_off": 5718814,
+          "dex_file": "classes6.dex",
+          "method_index": 27527,
+          "method_name": "C8f",
+          "method_proto": "VLL"
+        },
+        {
+          "class_name": "LX/AXU;",
+          "dex_byte_off": 5736566,
+          "dex_file": "classes6.dex",
+          "method_index": 27689,
+          "method_name": "AAK",
+          "method_proto": "LLL"
+        },
+        {
+          "class_name": "LX/AXV;",
+          "dex_byte_off": 5736686,
+          "dex_file": "classes6.dex",
+          "method_index": 27692,
+          "method_name": "AAK",
+          "method_proto": "LLL"
+        },
+        {
+          "class_name": "LX/Aim;",
+          "dex_byte_off": 6171772,
+          "dex_file": "classes6.dex",
+          "method_index": 30397,
+          "method_name": "invoke",
+          "method_proto": "L"
+        },
+        {
+          "class_name": "Lcom/whatsapp/community/mex/GetSubgroupsGraphQlHandler;",
+          "dex_byte_off": 4544184,
+          "dex_file": "classes6.dex",
+          "method_index": 37262,
+          "method_name": "A00",
+          "method_proto": "LLLL"
+        },
+        {
+          "class_name": "LX/BpT;",
+          "dex_byte_off": 5366374,
+          "dex_file": "classes7.dex",
+          "method_index": 19056,
+          "method_name": "<init>",
+          "method_proto": "VLI"
+        }
+      ],
+      "candidates": [
+        {
+          "class_name": "LX/0aK;",
+          "dex_byte_off": 6295670,
+          "dex_file": "classes.dex",
+          "method_index": 13381,
+          "method_name": "A02",
+          "method_proto": "L"
+        },
+        {
+          "class_name": "LX/2tv;",
+          "dex_byte_off": 3255056,
+          "dex_file": "classes3.dex",
+          "method_index": 14217,
+          "method_name": "A00",
+          "method_proto": "L"
+        },
+        {
+          "class_name": "LX/90x;",
+          "dex_byte_off": 3080864,
+          "dex_file": "classes6.dex",
+          "method_index": 9887,
+          "method_name": "A0J",
+          "method_proto": "L"
+        },
+        {
+          "class_name": "LX/A8X;",
+          "dex_byte_off": 4857466,
+          "dex_file": "classes6.dex",
+          "method_index": 20737,
+          "method_name": "A00",
+          "method_proto": "L"
+        },
+        {
+          "class_name": "LX/Aim;",
+          "dex_byte_off": 6171772,
+          "dex_file": "classes6.dex",
+          "method_index": 30397,
+          "method_name": "invoke",
+          "method_proto": "L"
+        }
+      ],
+      "method_shorty": "L",
+      "previous_class": "LX/90x;",
+      "previous_method": "A0J",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "scope": "method",
+      "status": "ambiguous",
+      "topic": "mex-subject-field"
+    }
+  ]
+}

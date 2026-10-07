@@ -11,6 +11,146 @@ use crate::{
     model::jid::{Jid, Server},
 };
 
+/// Local JSON response budget. This is not an APK/server payload limit.
+pub const MAX_JSON_RESPONSE_BYTES: usize = 1024 * 1024;
+
+/// Presence/type of one selected JSON response field.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum JsonFieldState {
+    /// The field was absent.
+    Missing,
+    /// Explicit JSON null, accepted by the APK's nullable field getter.
+    Null,
+    /// The expected object (`data`) or array (`errors`) was present.
+    Valid,
+    /// The field was present with an unexpected type; its meaning is unknown.
+    Invalid,
+}
+
+/// Counts/presence only: no group identifiers, content or server error text.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
+pub struct MexResponseSummary {
+    /// Selected payload child (`result` takes precedence over `update`).
+    pub payload_child: &'static str,
+    /// Object-field state; empty object is valid, not automatically success.
+    pub data_state: JsonFieldState,
+    /// Number of top-level data fields, not participants or complete groups.
+    pub data_field_count: usize,
+    /// Error-array state; invalid differs from an absent/empty error array.
+    pub errors_state: JsonFieldState,
+    /// Number of opaque error array entries, without interpreting their schema.
+    pub error_count: usize,
+}
+
+/// Parsed JSON response parts. Debug output is redacted to the summary.
+///
+/// Independent field failures preserve the other part. This does not indicate
+/// semantic success or implement group-model conversion. The APK's malformed
+/// errors fallback contains Java exception strings; this port keeps an explicit
+/// invalid state rather than fabricating those strings or treating it as empty.
+pub struct MexJsonResponse {
+    data: Option<serde_json::Map<String, serde_json::Value>>,
+    errors: Option<Vec<serde_json::Value>>,
+    summary: MexResponseSummary,
+}
+
+impl std::fmt::Debug for MexJsonResponse {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.summary.fmt(f)
+    }
+}
+
+impl MexJsonResponse {
+    /// Parsed data object, if valid. Contains private server/group content.
+    pub fn data(&self) -> Option<&serde_json::Map<String, serde_json::Value>> {
+        self.data.as_ref()
+    }
+
+    /// Opaque error entries, if valid; missing/null fields yield an empty slice.
+    /// Contains private server error content. Invalid type returns None.
+    pub fn errors(&self) -> Option<&[serde_json::Value]> {
+        self.errors.as_deref()
+    }
+
+    /// Redacted presence/type/count inspection, without a success verdict.
+    pub fn summary(&self) -> &MexResponseSummary {
+        &self.summary
+    }
+}
+
+/// Parse the APK 37.71 JSON MEX envelope and its independent data/errors fields.
+///
+/// Source: LaT.A02, Lab/LaZ constructors, provider 0x1763 -> 0yN.A00 ->
+/// O4r(selector 0), and O4r.Cf4 selectors 2/1. Leading whitespace does not
+/// satisfy LaT's JSON branch discriminator. Argo/Pando remain unsupported.
+/// Raw JSON/UTF-8 parse failures never echo payloads into errors. No IQ ID
+/// matching, action settlement, callbacks or group-state application occurs.
+pub fn parse_json_response(node: &Node) -> Result<MexJsonResponse> {
+    use crate::binary::NodeContent;
+    // LaT.A02+0000..002e and O4r.Cf4+009e..00c4 prefer result over update.
+    let (payload_child, payload) = if let Some(child) = node.child("result") {
+        ("result", child)
+    } else if let Some(child) = node.child("update") {
+        ("update", child)
+    } else {
+        return Err(Error::invalid(
+            "mex.response",
+            "missing result/update payload child",
+        ));
+    };
+    let body = match &payload.content {
+        NodeContent::Text(text) => text.as_bytes(),
+        NodeContent::Bytes(bytes) => bytes.as_ref(),
+        _ => return Err(Error::invalid("mex.response", "payload is not text/bytes")),
+    };
+    if body.len() > MAX_JSON_RESPONSE_BYTES {
+        return Err(Error::invalid(
+            "mex.response",
+            "JSON payload exceeds local 1-MiB limit",
+        ));
+    }
+    // LaT.A02+003c..0058 requires length >=2 and literal first character '{'.
+    if body.len() < 2 || body.first() != Some(&b'{') {
+        return Err(Error::invalid(
+            "mex.response",
+            "payload does not select the traced JSON branch; Argo/Pando unsupported",
+        ));
+    }
+    let value: serde_json::Value = serde_json::from_slice(body)
+        .map_err(|_| Error::invalid("mex.response", "malformed UTF-8 JSON object"))?;
+    let serde_json::Value::Object(mut root) = value else {
+        return Err(Error::invalid("mex.response", "expected a JSON object"));
+    };
+    // O4r.Cf4+002a..0056: absent/null is nullable; present requires JSONObject.
+    let (data_state, data) = match root.remove("data") {
+        None => (JsonFieldState::Missing, None),
+        Some(serde_json::Value::Null) => (JsonFieldState::Null, None),
+        Some(serde_json::Value::Object(data)) => (JsonFieldState::Valid, Some(data)),
+        Some(_) => (JsonFieldState::Invalid, None),
+    };
+    // O4r.Cf4+0058..008e: absent/null -> new empty JSONArray; other types
+    // throw. LaZ.A00 catches this separately from the data parser.
+    let (errors_state, errors) = match root.remove("errors") {
+        None => (JsonFieldState::Missing, Some(Vec::new())),
+        Some(serde_json::Value::Null) => (JsonFieldState::Null, Some(Vec::new())),
+        Some(serde_json::Value::Array(errors)) => (JsonFieldState::Valid, Some(errors)),
+        Some(_) => (JsonFieldState::Invalid, None),
+    };
+    let summary = MexResponseSummary {
+        payload_child,
+        data_state,
+        data_field_count: data.as_ref().map_or(0, serde_json::Map::len),
+        errors_state,
+        error_count: errors.as_ref().map_or(0, Vec::len),
+    };
+    Ok(MexJsonResponse {
+        data,
+        errors,
+        summary,
+    })
+}
+
 /// Query contexts produced by APK 37.71 `0Xo.A02`, including its private-set override.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum GroupQueryContext {
@@ -147,6 +287,91 @@ pub fn group_info_request(
 mod tests {
     use super::*;
     use crate::binary::{AttributeValue, NodeContent};
+
+    #[test]
+    fn independent_nullable_field_corpus_preserves_partial_results_and_redacts() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/mex/2.26.37.71-response-parts.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            let body = case["payload"].to_string();
+            for child in ["result", "update"] {
+                let node = Node::new("iq").children(vec![Node::new(child).text(&body)]);
+                let parsed = parse_json_response(&node).unwrap();
+                let summary = serde_json::to_value(parsed.summary()).unwrap();
+                for field in [
+                    "data_state",
+                    "errors_state",
+                    "data_field_count",
+                    "error_count",
+                ] {
+                    assert_eq!(summary[field], case[field]);
+                }
+                assert_eq!(summary["payload_child"], child);
+                assert_eq!(parsed.data().is_some(), case["data_state"] == "valid");
+                assert_eq!(parsed.errors().is_some(), case["errors_state"] != "invalid");
+                if let Some(data) = parsed.data() {
+                    assert_eq!(
+                        &serde_json::Value::Object(data.clone()),
+                        &case["payload"]["data"]
+                    );
+                }
+                if case["errors_state"] == "valid" {
+                    assert_eq!(
+                        parsed.errors().unwrap(),
+                        case["payload"]["errors"].as_array().unwrap()
+                    );
+                }
+                let debug = format!("{parsed:?}");
+                assert!(!debug.contains("synthetic-private"));
+                assert!(!summary.to_string().contains("synthetic-private"));
+            }
+        }
+    }
+
+    #[test]
+    fn payload_selection_invalid_json_bounds_and_failures_do_not_echo() {
+        let node = |body: &str| Node::new("iq").children(vec![Node::new("result").text(body)]);
+        assert!(parse_json_response(&Node::new("iq")).is_err());
+        for body in [
+            "",
+            "{",
+            " {\"data\":{}}",
+            "[]",
+            "{\"private-failed-marker\":",
+        ] {
+            let error = parse_json_response(&node(body)).unwrap_err().to_string();
+            assert!(!error.contains("private-failed-marker"));
+        }
+        let mixed = Node::new("iq").children(vec![
+            Node::new("update").text("{\"data\":{}}"),
+            Node::new("result").text("{\"errors\":[\"opaque\"]}"),
+        ]);
+        assert_eq!(
+            parse_json_response(&mixed).unwrap().summary().payload_child,
+            "result"
+        );
+        assert_eq!(
+            parse_json_response(&mixed).unwrap().summary().error_count,
+            1
+        );
+        let invalid_first = Node::new("iq").children(vec![
+            Node::new("result").text("malformed"),
+            Node::new("update").text("{}"),
+        ]);
+        assert!(parse_json_response(&invalid_first).is_err());
+        let oversized = "{".to_owned() + &" ".repeat(MAX_JSON_RESPONSE_BYTES);
+        assert!(
+            parse_json_response(&node(&oversized))
+                .unwrap_err()
+                .to_string()
+                .contains("limit")
+        );
+        let utf8 =
+            Node::new("iq").children(vec![Node::new("result").bytes(vec![b'{', 0xff, b'}'])]);
+        assert!(parse_json_response(&utf8).is_err());
+    }
 
     #[test]
     fn literal_apk_envelope_uses_server_id_at_all_three_locations() {

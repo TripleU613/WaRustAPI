@@ -1,0 +1,54 @@
+# APK-derived structural disassembly: LX/LZv;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLL) flags=0x10001 registers=6
+  0000..0002 op=12 const/4 v0, #0x1
+  0002..0008 op=71 invoke-static {v5, v0}, LX/00h;->A0A(VLI)
+  0008..000e op=70 invoke-direct {v3, v4, v5}, LX/LZw;-><init>(VLL)
+  000e..0012 op=5b iput-object v4, v3, LX/LZv;->A00:Ljava/lang/Object;
+  0012..0016 op=5b iput-object v5, v3, LX/LZv;->A01:Lorg/json/JSONArray;
+  0016..001a op=20 instance-of v0, v4, LX/LbE;
+  001a..001c op=12 const/4 v2, #0x1
+  001c..0020 op=38 if-eqz v0, +0x1c
+  0020..0024 op=1f check-cast v4, LX/LbE;
+  0024..0028 op=54 iget-object v0, v4, LX/LbE;->A01:Lorg/json/JSONObject;
+  0028..002e op=6e invoke-virtual {v0}, Lorg/json/JSONObject;->length(I)
+  002e..0030 op=0a move-result
+  0030..0032 op=12 const/4 v0, #0x0
+  0032..0036 op=3d if-lez v1, +0x3
+  0036..0038 op=12 const/4 v0, #0x1
+  0038..003c op=5c iput-boolean v0, v3, LX/LZv;->A02:Z
+  003c..0040 op=54 iget-object v0, v3, LX/LZv;->A01:Lorg/json/JSONArray;
+  0040..0046 op=6e invoke-virtual {v0}, Lorg/json/JSONArray;->length(I)
+  0046..0048 op=0a move-result
+  0048..004c op=3c if-gtz v0, +0x3
+  004c..004e op=12 const/4 v2, #0x0
+  004e..0052 op=5c iput-boolean v2, v3, LX/LZv;->A03:Z
+  0052..0054 op=0e return-void
+  0054..0058 op=20 instance-of v0, v4, LX/3Bg;
+  0058..005c op=38 if-eqz v0, +0x13
+  005c..0060 op=1f check-cast v4, LX/OWB;
+  0060..0066 op=71 invoke-static {v4}, LX/MbI;->A00(LL)
+  0066..0068 op=0c move-result-object
+  0068..006c op=20 instance-of v0, v1, LX/Np5;
+  006c..0070 op=38 if-eqz v0, -0x1b
+  0070..0074 op=1f check-cast v1, LX/Np5;
+  0074..0078 op=38 if-eqz v1, -0x1f
+  0078..007c op=54 iget-object v0, v1, LX/Np5;->A01:Lorg/json/JSONObject;
+  007c..007e op=28 goto -0x2a
+  007e..0082 op=38 if-eqz v4, +0x12
+  0082..0088 op=6e invoke-virtual {v4}, Ljava/lang/Object;->getClass(L)
+  0088..008a op=0c move-result-object
+  008a..0090 op=71 invoke-static {v0}, LX/1xm;->A0w(LL)
+  0090..0092 op=0c move-result-object
+  0092..0096 op=1a const-string v0, " is neither MinimalFragmentModel nor BaseGraphQLModel"
+  0096..009c op=71 invoke-static {v0, v1}, LX/000;->A05(LLL)
+  009c..009e op=0c move-result-object
+  009e..00a2 op=39 if-nez v1, +0x4
+  00a2..00a6 op=1a const-string v1, "Null type supplied to MexResponse"
+  00a6..00aa op=22 new-instance v0, Ljava/lang/ClassCastException;
+  00aa..00b0 op=70 invoke-direct {v0, v1}, Ljava/lang/ClassCastException;-><init>(VL)
+  00b0..00b2 op=27 throw v0
+.end method

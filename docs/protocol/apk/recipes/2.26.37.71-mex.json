@@ -1,0 +1,135 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "targets": {
+    "mex-json-request": {
+      "class": "LX/Lai;",
+      "method": "<init>",
+      "method_shorty": "VLLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": [
+        "queryId",
+        "variables"
+      ]
+    },
+    "mex-json-iq": {
+      "class": "LX/9QZ;",
+      "method": "<init>",
+      "method_shorty": "VLLLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": [
+        "w:mex",
+        "query_id"
+      ]
+    },
+    "mex-persisted-id": {
+      "class": "LX/164;",
+      "method": "CFb",
+      "method_shorty": "LL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": [
+        "doc_id"
+      ]
+    },
+    "mex-json-response-discriminator": {
+      "class": "LX/LaT;",
+      "method": "A02",
+      "method_shorty": "LLLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": [
+        "ArgoWireType not found for ",
+        "result",
+        "update"
+      ]
+    },
+    "mex-json-field-readers": {
+      "class": "LX/O4r;",
+      "method": "Cf4",
+      "method_shorty": "LL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": [
+        "data",
+        "errors"
+      ]
+    },
+    "mex-json-parser-assembly": {
+      "class": "LX/Lab;",
+      "method": "<init>",
+      "method_shorty": "V",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-json-independent-results": {
+      "class": "LX/LaZ;",
+      "method": "A00",
+      "method_shorty": "LL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": [
+        "Failed to parse both 'data' and 'errors'",
+        "mex-parsing-failure"
+      ]
+    },
+    "mex-json-parser-fields": {
+      "class": "LX/LaZ;",
+      "method": "<init>",
+      "method_shorty": "VLLLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-json-provider": {
+      "class": "LX/0yN;",
+      "method": "A00",
+      "method_shorty": "L",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-response-parts-storage": {
+      "class": "LX/LZw;",
+      "method": "<init>",
+      "method_shorty": "VLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-response-model-flags": {
+      "class": "LX/LZv;",
+      "method": "<init>",
+      "method_shorty": "VLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": [
+        "Null type supplied to MexResponse"
+      ]
+    },
+    "mex-subject-field": {
+      "class": "LX/90x;",
+      "method": "A0J",
+      "method_shorty": "L",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "anchors": [
+        "subject"
+      ]
+    }
+  }
+}

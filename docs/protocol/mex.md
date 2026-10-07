@@ -173,3 +173,123 @@ JSON error handling, 90x/ADv/2FT/2H8 response schema, complete 0Xo.A03 state
 conversion, Pando/Argo selection and native dependencies. Durable dispatch and
 the separately traced monotonic rate guard must follow that response work.
 Full group recovery, subject application and MEX live behavior are unfinished.
+
+## JSON response field port (2026-10-07)
+
+This closes the earlier **unknown** JSON provider/field-reader boundary, while
+leaving the error-model/callback and full group conversion boundary open.
+[Selected parser instructions](mex-json-parser-evidence.txt) and
+[single provider-switch entry](mex-json-provider-switch.json) retain the source.
+All claims in this section refer to the same SHA-pinned 37.71 APK above.
+
+**Confirmed:** `00S.A03` -> `00S.A04`+0062 -> `1UE.A00` dispatches provider
+`0x1763` (5987). The high seven-bit group selector is zero, so it enters A01;
+the masked low fourteen bits fall in `0x16e7..0x17fd`, selecting A0E.
+A0E's packed switch begins at +0004 with a 279-entry payload at +0bc4,
+first key 5863. The selected index is `5987-5863=124`. The payload uniquely
+matches header `00011701e7160000` in classes.dex at absolute 0x909c78;
+selected entry at 0x909e70 is `fd010000`, signed code-unit offset 509.
+Thus the target is `4 + 2*509 = 0x03fe`, which invokes `0yN.A00`.
+That method creates `O4r(selector 0)`, closing the provider linkage without
+assuming that the class name implies its role. The raw entry was checked
+against the APK ZIP DEX bytes; it is not a server response or guessed selector.
+The current disassembler prints only the first 64 switch cases, so key 5987
+was absent from its abbreviated case list. Preserve this negative tooling
+finding rather than interpreting an omitted case as an absent binding.
+
+**Confirmed:** `LaV.Axk` supplies the original node. `O4r.Cf4` selector 0
+(+0090..00f0) chooses `result`, else `update`, reads its string, and invokes
+`Ayk.A18` (new JSONObject from the string) when nonempty; missing child throws
+MEn, empty/null string yields an empty JSONObject. At the higher `LaT.A02`
+JSON/Argo discriminator, however, only length >=2 and first character `{`
+enters this JSON parser. Do not remove that distinction or retry malformed
+`result` by falling back to an available `update`.
+
+`LaZ.<init>` ties its fields to `Lab`'s callback arguments: A03 is that provider,
+A00 is O4r selector 2 (`data`), A02 selector 1 (`errors`), A01 selector 4
+(error-parser failure conversion). Selector 2 (+002a..0056) returns null for
+absent/explicit-null data, otherwise requires JSONObject. Selector 1
+(+0058..008e) returns a new empty JSONArray for absent/null errors, otherwise
+requires JSONArray. It does not constrain the array elements here.
+`LaZ.A00` runs errors and data independently, catches each failure and preserves
+valid counterparts. Both valid become `LZw(data, errors)`. Invalid data with
+valid errors becomes a structured MEq failure; both invalid become a two-cause
+MEq failure. Invalid errors with valid data are converted by selector 4/default
+into a one-element array containing `String.valueOf(exception)`, then returned
+with the data. Therefore malformed errors cannot be safely treated as no error.
+Exception text itself is runtime-dependent, and no Java exception text is
+invented by the Rust port.
+
+`LZw.<init>` stores A00=data/A01=errors. The later typed `LZv.<init>` stores
+both again; for LbE data it derives a nonempty-data flag from A01 JSONObject
+length, and a nonempty-errors flag from JSONArray length. Other model types
+have separate branches; null/wrong model handling throws. These flags are
+**not** a traced group success policy. Caller decisions after model conversion,
+per-error code/retry schema and partial-group application remain **unknown**.
+`90x.A0J`+0000..0014 explicitly reads `subject` as `8yq`, confirming the
+previously inferred subject getter. Full subject union/timestamp/member schema
+and the complete ADv/0Xo.A03 conversion remain unfinished.
+
+**Implemented, offline/live unverified:** `transport::mex::parse_json_response`
+selects result/update, preserves the discriminator and parses a bounded strict
+UTF-8 JSON object. Its local 1-MiB cap and serde_json lexical acceptance are
+implementation choices, not additional server requirements or proof of complete
+Android JSONObject parser equivalence. It handles the selected fields separately:
+valid data and error entries are retained even when their counterpart has an
+invalid type. Field states `missing`, `null`, `valid`, `invalid` distinguish
+unknown malformed values from accepted empty/missing values. Instead of
+fabricating Java fallback strings, invalid fields stay explicit. This is a
+response-parts port, not a reproduced full MEq exception/callback hierarchy.
+No semantic-success method is exposed; `error_count=0` alone proves nothing.
+
+`MexJsonResponse.data()` / `.errors()` expose private content deliberately;
+its Debug and `.summary()` reveal only payload child, field state and counts.
+[Sixteen synthetic field-type cases](../../crates/whatsapp-api/fixtures/mex/2.26.37.71-response-parts.json)
+are derived from the actual field getters, not live captures. Every case tests
+both payload children, independent preservation and content redaction; selection,
+invalid JSON/UTF-8, size bounds and content-free errors have separate tests.
+
+```sh
+target/debug/xtask mex-response-inspect --input /private/mex-result.json
+# If the saved payload came from an update child:
+target/debug/xtask mex-response-inspect --input /private/mex-update.json --child update
+```
+
+The command invokes the actual Rust node parser. It prints only
+`payload_child`, `data_state`, `data_field_count`, `errors_state`, `error_count`;
+it does not print group IDs, subject text, server error messages or raw JSON.
+Argo/Pando and malformed/oversized input refuse without partial stdout. No
+account/store is opened, action settled, group snapshot overwritten, or network
+request sent. A direct Laf.A00 method lookup found no matching bodies; full
+Laf contains only its constructor/A02, and Lal only its constructor. Those
+lookups do not establish that response callbacks are absent from the APK.
+The next trace belongs to actual IQ callback/model-conversion callers.
+
+## Versioned parser/request files
+
+[The MEX release recipe](apk/recipes/2.26.37.71-mex.json) exports twelve
+method topics to [the 37.71 baseline](apk/2.26.37.71-mex/manifest.json):
+17 files, 58,761 bytes, reproduced exactly with `--check`. Each topic names
+`crates/whatsapp-api/src/transport/mex.rs` as its Rust owner. The baseline is
+additional source coverage, not a new APK release or full MEX parity.
+A cached same-baseline comparison took **0.0064 seconds**, twelve unchanged
+topics and four unchanged artifacts; this measures cached comparison only.
+
+```sh
+target/debug/xtask apk-research-bundle /path/to/WhatsApp.apk \
+  --recipe docs/protocol/apk/recipes/2.26.37.71-mex.json \
+  --output lab/releases/mex --check
+
+# After re-anchoring and exporting the next actual APK:
+target/debug/xtask apk-research-diff \
+  docs/protocol/apk/2.26.37.71-mex lab/releases/next-mex
+```
+
+Use `--check` only with an existing complete export; for a new output directory,
+omit it. Recipe relocation on this APK has six unique, four unanchored and two
+ambiguous topics ([actual remap report](apk/remap-evidence/2.26.37.71-mex.json)).
+Common `doc_id` and `subject` anchors remain ambiguous despite method shorties;
+string-free constructors/provider/storage helpers remain unanchored. Those
+require caller-based/manual review on a new APK. A full proposed recipe must
+remain blocked until every mapping is resolved; class names alone are not a
+safe patch. Selected persisted-ID asset files remain separately diffable.

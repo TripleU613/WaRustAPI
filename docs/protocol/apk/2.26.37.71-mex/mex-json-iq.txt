@@ -1,0 +1,48 @@
+# APK-derived structural disassembly: LX/9QZ;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLL) flags=0x10001 registers=15
+  0000..0002 op=12 const/4 v0, #0x4
+  0002..0006 op=59 iput v0, v10, LX/9QZ;->$t:I
+  0006..0008 op=12 const/4 v9, #0x0
+  0008..000e op=70 invoke-direct {v10}, Ljava/lang/Object;-><init>(V)
+  000e..0014 op=71 invoke-static {}, LX/8kV;->A0l(L)
+  0014..0016 op=0c move-result-object
+  0016..001c op=71 invoke-static {v2}, LX/8kY;->A1H(VL)
+  001c..0020 op=1a const-string v1, "xmlns"
+  0020..0024 op=1a const-string v0, "w:mex"
+  0024..002a op=71 invoke-static {v2, v1, v0}, LX/8kV;->A1Q(VLLL)
+  002a..0030 op=71 invoke-static {}, LX/8kX;->A0T(L)
+  0030..0032 op=0c move-result-object
+  0032..0038 op=71 invoke-static {v0, v2, v12, v9}, LX/8ka;->A0a(VLLLZ)
+  0038..003c op=38 if-eqz v11, +0x9
+  003c..0040 op=54 iget-object v0, v11, LX/BpQ;->A00:Ljava/lang/Object;
+  0040..0044 op=1f check-cast v0, LX/0hs;
+  0044..004a op=6e invoke-virtual {v2, v0}, LX/0ho;->A03(VL)
+  004a..004e op=1a const-string v0, "query"
+  004e..0054 op=71 invoke-static {v0}, LX/8kU;->A0m(LL)
+  0054..0056 op=0c move-result-object
+  0056..0058 op=07 move-object
+  0058..005c op=38 if-eqz v13, +0x12
+  005c..0060 op=16 const-wide/16 v4, #0x1
+  0060..0064 op=16 const-wide/16 v6, #0x14
+  0064..0066 op=12 const/4 v8, #0x1
+  0066..006c op=77 invoke-static/range {v3..v8}, LX/0hp;->A06(ZLJJZ)
+  006c..006e op=0a move-result
+  006e..0072 op=38 if-eqz v0, +0x7
+  0072..0076 op=1a const-string v0, "query_id"
+  0076..007c op=71 invoke-static {v1, v0, v13}, LX/8kV;->A1Q(VLLL)
+  007c..0080 op=16 const-wide/16 v5, #0x1
+  0080..0086 op=17 const-wide/32 v7, #0x80e800
+  0086..0088 op=07 move-object
+  0088..008e op=77 invoke-static/range {v4..v9}, LX/0hp;->A06(ZLJJZ)
+  008e..0090 op=0a move-result
+  0090..0094 op=38 if-eqz v0, +0x5
+  0094..009a op=6e invoke-virtual {v1, v14}, LX/0ho;->A05(VL)
+  009a..00a0 op=71 invoke-static {v1, v2}, LX/8kY;->A0Z(LLL)
+  00a0..00a2 op=0c move-result-object
+  00a2..00a6 op=5b iput-object v0, v10, LX/9QZ;->A00:Ljava/lang/Object;
+  00a6..00a8 op=0e return-void
+.end method

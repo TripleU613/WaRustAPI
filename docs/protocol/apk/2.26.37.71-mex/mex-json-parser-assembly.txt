@@ -1,0 +1,24 @@
+# APK-derived structural disassembly: LX/Lab;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(V) flags=0x10001 registers=6
+  0000..0004 op=13 const/16 v0, #0x1763
+  0004..000a op=71 invoke-static {v0}, LX/00S;->A03(LI)
+  000a..000c op=0c move-result-object
+  000c..0010 op=1f check-cast v4, LX/Oau;
+  0010..0012 op=12 const/4 v0, #0x0
+  0012..0018 op=71 invoke-static {v4, v0}, LX/00h;->A0A(VLI)
+  0018..001a op=12 const/4 v0, #0x2
+  001a..001e op=22 new-instance v3, LX/O4r;
+  001e..0024 op=70 invoke-direct {v3, v0}, LX/O4r;-><init>(VI)
+  0024..0026 op=12 const/4 v0, #0x1
+  0026..002a op=22 new-instance v2, LX/O4r;
+  002a..0030 op=70 invoke-direct {v2, v0}, LX/O4r;-><init>(VI)
+  0030..0032 op=12 const/4 v1, #0x4
+  0032..0036 op=22 new-instance v0, LX/O4r;
+  0036..003c op=70 invoke-direct {v0, v1}, LX/O4r;-><init>(VI)
+  003c..0042 op=70 invoke-direct {v5, v4, v3, v2, v0}, LX/LaZ;-><init>(VLLLL)
+  0042..0044 op=0e return-void
+.end method

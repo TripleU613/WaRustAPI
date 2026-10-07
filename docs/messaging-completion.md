@@ -1278,3 +1278,24 @@ preview and five negative CLI probes passed (refusals emitted no partial stdout)
 Repository hygiene checked 487 local links, tracked budgets, licenses and
 reference checksums; formatting and staged whitespace passed. No account
 opened, live request sent or existing saved state changed.
+
+MEX JSON response provider 0x1763 is now traced through the actual DEX switch
+entry to O4r selector 0. Nullable object data and array errors parse separately;
+valid counterparts survive malformed fields. Rust reproduces these response
+parts with explicit invalid states and redacted inspection, without inventing
+Java exception strings or treating an IQ result as group success. The subject
+getter is now confirmed as subject/8yq. Full callback/error schema, Argo/Pando,
+group conversion and durable MEX dispatch remain unfinished. Sixteen synthetic
+field-type combinations cover both result/update. See [parser trace](protocol/mex.md#json-response-field-port-2026-10-07).
+No saved account opened or live request sent in this work.
+
+Validation: 607 workspace/all-feature tests, 24 default CLI tests, all 47 xtask
+tests, regenerated CLI reference and five OpenAPI checks passed. Strict
+workspace/all-target/all-feature Clippy, warning-free workspace Rustdoc and
+formatting passed.
+Five positive and three refusal CLI probes preserved counts/types without
+content or partial failure output. The twelve-topic MEX baseline reproduced
+exactly (17 files/58,761 bytes); cached comparison took 0.0064 seconds.
+Remap has six unique/four unanchored/two ambiguous mappings, with no complete
+proposal claimed. Repository hygiene and staged whitespace passed. No account
+opened, outgoing intent queued or live request sent.

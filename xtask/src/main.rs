@@ -121,6 +121,15 @@ enum Cmd {
         #[arg(long, default_value = "INTERACTIVE")]
         context: String,
     },
+    /// Inspect MEX JSON data/error presence offline without printing payload content.
+    MexResponseInspect {
+        /// Private JSON payload file (local budget 1 MiB).
+        #[arg(long)]
+        input: PathBuf,
+        /// Payload child supplied to the actual Rust node parser.
+        #[arg(long, default_value = "result", value_parser = ["result", "update"])]
+        child: String,
+    },
     /// Find which classes and methods reference each anchor string constant.
     ///
     /// Output: for each anchor, the class descriptor, method name, proto shorty,
@@ -269,6 +278,7 @@ fn main() -> ExitCode {
             id,
             context,
         } => mex::preview(&queries, &chat, &id, &context),
+        Cmd::MexResponseInspect { input, child } => mex::inspect_response(&input, &child),
         Cmd::ApkXref { apk, anchors } => xref::run_xref(&apk, &anchors),
         Cmd::ApkCallers {
             apk,

@@ -1,0 +1,202 @@
+{
+  "apk_version": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "evidence": "Synthetic field-type corpus derived from O4r.Cf4 selectors 2/1 and LaZ.A00; not live responses or complete callback equivalence.",
+  "cases": [
+    {
+      "payload": {},
+      "data_state": "missing",
+      "errors_state": "missing",
+      "data_field_count": 0,
+      "error_count": 0
+    },
+    {
+      "payload": {
+        "errors": null
+      },
+      "data_state": "missing",
+      "errors_state": "null",
+      "data_field_count": 0,
+      "error_count": 0
+    },
+    {
+      "payload": {
+        "errors": [
+          {
+            "message": "synthetic-private-error"
+          },
+          "opaque-error"
+        ]
+      },
+      "data_state": "missing",
+      "errors_state": "valid",
+      "data_field_count": 0,
+      "error_count": 2
+    },
+    {
+      "payload": {
+        "errors": {}
+      },
+      "data_state": "missing",
+      "errors_state": "invalid",
+      "data_field_count": 0,
+      "error_count": 0
+    },
+    {
+      "payload": {
+        "data": null
+      },
+      "data_state": "null",
+      "errors_state": "missing",
+      "data_field_count": 0,
+      "error_count": 0
+    },
+    {
+      "payload": {
+        "data": null,
+        "errors": null
+      },
+      "data_state": "null",
+      "errors_state": "null",
+      "data_field_count": 0,
+      "error_count": 0
+    },
+    {
+      "payload": {
+        "data": null,
+        "errors": [
+          {
+            "message": "synthetic-private-error"
+          },
+          "opaque-error"
+        ]
+      },
+      "data_state": "null",
+      "errors_state": "valid",
+      "data_field_count": 0,
+      "error_count": 2
+    },
+    {
+      "payload": {
+        "data": null,
+        "errors": {}
+      },
+      "data_state": "null",
+      "errors_state": "invalid",
+      "data_field_count": 0,
+      "error_count": 0
+    },
+    {
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "subject": {
+              "value": "synthetic-private-subject"
+            }
+          }
+        }
+      },
+      "data_state": "valid",
+      "errors_state": "missing",
+      "data_field_count": 1,
+      "error_count": 0
+    },
+    {
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "subject": {
+              "value": "synthetic-private-subject"
+            }
+          }
+        },
+        "errors": null
+      },
+      "data_state": "valid",
+      "errors_state": "null",
+      "data_field_count": 1,
+      "error_count": 0
+    },
+    {
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "subject": {
+              "value": "synthetic-private-subject"
+            }
+          }
+        },
+        "errors": [
+          {
+            "message": "synthetic-private-error"
+          },
+          "opaque-error"
+        ]
+      },
+      "data_state": "valid",
+      "errors_state": "valid",
+      "data_field_count": 1,
+      "error_count": 2
+    },
+    {
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "subject": {
+              "value": "synthetic-private-subject"
+            }
+          }
+        },
+        "errors": {}
+      },
+      "data_state": "valid",
+      "errors_state": "invalid",
+      "data_field_count": 1,
+      "error_count": 0
+    },
+    {
+      "payload": {
+        "data": []
+      },
+      "data_state": "invalid",
+      "errors_state": "missing",
+      "data_field_count": 0,
+      "error_count": 0
+    },
+    {
+      "payload": {
+        "data": [],
+        "errors": null
+      },
+      "data_state": "invalid",
+      "errors_state": "null",
+      "data_field_count": 0,
+      "error_count": 0
+    },
+    {
+      "payload": {
+        "data": [],
+        "errors": [
+          {
+            "message": "synthetic-private-error"
+          },
+          "opaque-error"
+        ]
+      },
+      "data_state": "invalid",
+      "errors_state": "valid",
+      "data_field_count": 0,
+      "error_count": 2
+    },
+    {
+      "payload": {
+        "data": [],
+        "errors": {}
+      },
+      "data_state": "invalid",
+      "errors_state": "invalid",
+      "data_field_count": 0,
+      "error_count": 0
+    }
+  ]
+}

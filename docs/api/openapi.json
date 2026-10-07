@@ -127,6 +127,18 @@
         "whatsapp_api::transport::mex::GroupQueryContext"
       ],
       "description": "Offline Rust QueryGroupInfo request preview, no HTTP route, account/store access, ID allocation, queued action or live request. Uses explicit server doc_id from selected release export, never client_doc_id; emits offline_only, supplied apk_version/apk_sha256 provenance, operation and node with tag, ordered attributes (name/value text or jid), nested children and text content. The supplied provenance is not independently authenticated by preview; run apk-mex-queries --check against the APK. Default context INTERACTIVE; twelve exact source contexts accepted: INTERACTIVE, LID_MIGRATION, NEW_SUBJECT, ACK_GROUP_MISMATCH, SEND_FAILURE, SUB_GROUP_CONFLICT_RECOVERY, INVITE_CODE, PHASH, PARTICIPANT_CHANGE_RECOVERY, PRE_FETCH, UNKNOWN, MISSING_PARTICIPANT_IDENTIFICATION. Export format/namespace/operation/schema and 128-KiB local input budget checked. Plain nonempty group JID, 1..20 decimal ASCII server ID and local 1..256-byte control-free IQ ID required. Preview includes supplied JID and ID; use synthetic diagnostics. APK 2.26.37.71 JSON/XMPP envelope has server-only destination s.whatsapp.net, xmlns w:mex, type get, id, trace/flow_id=doc_id then query query_id=doc_id with JSON string queryId=doc_id and variables.input(group_jid,query_context). JSON object key order is not claimed equivalent. Full response/error conversion, Argo/Pando feature selection, durable MEX dispatch/rate guard and live group-state application remain unfinished. Evidence docs/protocol/mex.md."
+    },
+    {
+      "x-cli": "cargo run -p xtask -- mex-response-inspect --input <private-json-payload> [--child <result|update>]",
+      "x-transport": "cli",
+      "x-live": false,
+      "x-library": [
+        "whatsapp_api::transport::mex::parse_json_response",
+        "whatsapp_api::transport::mex::MexJsonResponse",
+        "whatsapp_api::transport::mex::MexResponseSummary",
+        "whatsapp_api::transport::mex::JsonFieldState"
+      ],
+      "description": "Offline APK 37.71 MEX JSON response inspection; no HTTP route, account access, action settlement or group-state application. Wraps the private file in a result (default) or update child and invokes the actual Rust node parser. Local input bound 1 MiB. LaT first-character JSON gate preserved: leading whitespace, binary Argo/Pando, missing/nontext child, malformed UTF-8/JSON and excess size refuse with content-free diagnostics. Library prefers result over update. Redacted output fields payload_child, data_state, data_field_count, errors_state, error_count; states missing/null/valid/invalid. Data must be an object and errors an array when nonnull. Missing/null errors yield an empty known array, while invalid errors remain unknown rather than being treated as absent. Fields parse independently and preserve valid data or opaque error elements when the other field has an invalid type. MexJsonResponse data()/errors() expose private content explicitly; Debug and summary() expose only counts/types. No semantic success verdict is produced, and error_count=0 alone does not establish success. Confirmed provider 0x1763 resolves through 00S/1UE/0yN to O4r selector 0; selectors 2/1 choose nullable data and errors. Java exception fallback strings are not fabricated: the Rust inspector reports invalid field state. Complete Android JSON lexical acceptance, per-error schema/callback decisions, Argo/Pando and group conversion remain unimplemented. Source docs/protocol/mex.md; sixteen synthetic field-type fixtures cover both payload children, not live responses."
     }
   ],
   "info": {

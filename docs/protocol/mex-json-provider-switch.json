@@ -1,0 +1,22 @@
+{
+  "apk_version": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "dex": "classes.dex",
+  "class": "LX/1UE;",
+  "method": "A0E",
+  "method_shorty": "LILL",
+  "switch_instruction_method_offset": "0x0004",
+  "payload_method_offset": "0x0bc4",
+  "payload_absolute_offset": "0x909c78",
+  "payload_header_hex": "00011701e7160000",
+  "size": 279,
+  "first_key": 5863,
+  "selected_key": 5987,
+  "selected_index": 124,
+  "entry_absolute_offset": "0x909e70",
+  "entry_hex": "fd010000",
+  "target_code_units": 509,
+  "target_method_offset": "0x03fe",
+  "target_call": "LX/0yN;->A00(L)",
+  "note": "Bounded single-entry evidence; apk-smali displays only the first 64 cases. Payload header uniquely matched in the source APK; no runtime provider selection inferred from class names."
+}
