@@ -118,4 +118,8 @@
   01b2..01b6 op=22 new-instance v1, LX/LZw;
   01b6..01bc op=70 invoke-direct {v1, v2, v0}, LX/LZw;-><init>(VLL)
   01bc..01be op=11 return-object v1
+  # exception table: 3 try range(s)
+  # catch <all> code_units 0000..0007 -> 0007
+  # catch <all> code_units 0054..005b -> 005b
+  # catch <all> code_units 0060..0067 -> 0067
 .end method

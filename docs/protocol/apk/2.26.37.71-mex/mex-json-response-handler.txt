@@ -95,4 +95,8 @@
   0174..0176 op=0d move-exception
   0176..017c op=6e invoke-virtual {v4}, LX/Lad;->A06(V)
   017c..017e op=27 throw v0
+  # exception table: 3 try range(s)
+  # catch <all> code_units 0015..003d -> 003d
+  # catch <all> code_units 004f..0069 -> 00ba
+  # catch <all> code_units 0086..008e -> 008e
 .end method

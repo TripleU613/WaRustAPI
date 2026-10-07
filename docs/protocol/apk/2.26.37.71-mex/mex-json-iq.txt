@@ -45,4 +45,5 @@
   00a0..00a2 op=0c move-result-object
   00a2..00a6 op=5b iput-object v0, v10, LX/9QZ;->A00:Ljava/lang/Object;
   00a6..00a8 op=0e return-void
+  # exception table: 0 try range(s)
 .end method

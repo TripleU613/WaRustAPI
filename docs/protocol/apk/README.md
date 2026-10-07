@@ -157,15 +157,21 @@ recovery/MEX/guard topics were added with fifteen unchanged sources in a
 unique and four unanchored topics. [Recovery interpretation](../groups.md#subject-recovery-mex-dispatch-and-local-guard-2026-10-07)
 distinguishes recovered MEX behavior from the current classic Rust lookup.
 
-The [37.71 MEX recipe](recipes/2.26.37.71-mex.json) covers eighteen request,
-JSON parser/model, callback and error-getter topics linked to Rust's MEX module.
-Its baseline is 23 files/76,908 bytes including checksums. The
-[callback coverage comparison](mex-callback-coverage-diff.json) against Git
-revision cdd4056 took 0.0069 seconds: six topics added, twelve unchanged, same
-APK. [Current remapping](remap-evidence/2.26.37.71-mex.json) finds eight unique,
-seven unanchored and three ambiguous topics. [Interpretation and reproduction](../mex.md#versioned-parserrequest-files)
-separate source coverage from full conversion, Argo/Pando and live application;
-these remain unfinished.
+The [37.71 MEX recipe](recipes/2.26.37.71-mex.json) now covers **38** request,
+parser/callback, numeric, full group converter and participant/JID helper
+methods linked to Rust's MEX module. Baseline: **43 files/162,435 bytes**,
+including checksums and explicit catch tables. The opt-in recipe boolean
+`include_exception_tables` defaults to false, preserving historical exports.
+[Current coverage comparison](mex-participant-coverage-diff.json) against Git
+78a7218 took **0.023364 seconds**: twenty added topics, eighteen changed only
+by catch-table annotations; all their old instructions are identical after
+stripping those annotations. This is a source/format expansion on the same
+APK, not eighteen protocol changes. A fixture-based regression verifies that
+a catch-only change is detectable. Inventory/manifest/tokens remain unchanged.
+[Current remapping](remap-evidence/2.26.37.71-mex.json): fourteen unique,
+seventeen unanchored, seven ambiguous; no full automatic proposal. Previous
+[callback coverage checkpoint](mex-callback-coverage-diff.json) against cdd4056
+retains its historical eighteen-topic interpretation. [Reproduction/boundaries](../mex.md#exception-aware-numeric-and-participant-release-coverage-2026-10-07).
 
 Core source presentation refresh: naming bd mul-long/2addr updates one
 noise-handshake annotation (+045e..0460), retaining opcode/offsets/operands.

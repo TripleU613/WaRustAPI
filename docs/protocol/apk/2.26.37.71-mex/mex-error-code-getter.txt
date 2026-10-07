@@ -16,4 +16,5 @@
   0022..0028 op=6e invoke-virtual {v2, v1, v0}, Lorg/json/JSONObject;->optInt(ILI)
   0028..002a op=0a move-result
   002a..002c op=0f return v0
+  # exception table: 0 try range(s)
 .end method

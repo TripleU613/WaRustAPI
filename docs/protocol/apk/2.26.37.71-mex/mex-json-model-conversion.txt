@@ -69,4 +69,6 @@
   00f0..00f6 op=71 invoke-static {v0}, LX/0jH;->A00(LL)
   00f6..00f8 op=0c move-result-object
   00f8..00fa op=11 return-object v0
+  # exception table: 1 try range(s)
+  # catch <all> code_units 0025..0050 -> 0050
 .end method

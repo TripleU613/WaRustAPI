@@ -1,0 +1,42 @@
+# APK-derived structural disassembly: LX/32q;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LLLLLLLLLL) flags=0x9 registers=13
+  0000..0002 op=07 move-object
+  0002..0004 op=07 move-object
+  0004..0006 op=12 const/4 v1, #0x0
+  0006..000c op=71 invoke-static {v6}, LX/0DE;->A0Z(ZL)
+  000c..000e op=0a move-result
+  000e..0012 op=38 if-eqz v0, +0x30
+  0012..0016 op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.LidUserJid"
+  0016..001c op=71 invoke-static {v6, v0}, LX/00h;->A0D(VLL)
+  001c..0020 op=1f check-cast v2, LX/0ZY;
+  0020..0026 op=71 invoke-static {v7}, LX/0DE;->A0e(ZL)
+  0026..0028 op=0a move-result
+  0028..002c op=38 if-eqz v0, +0x21
+  002c..0030 op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.PhoneUserJid"
+  0030..0036 op=71 invoke-static {v7, v0}, LX/00h;->A0D(VLL)
+  0036..003a op=1f check-cast v3, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+  003a..0040 op=71 invoke-static {v4}, LX/0DE;->A0X(ZL)
+  0040..0042 op=0a move-result
+  0042..0046 op=38 if-eqz v0, +0x8
+  0046..0048 op=07 move-object
+  0048..004c op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.InteropUserJid"
+  004c..0052 op=71 invoke-static {v4, v0}, LX/00h;->A0D(VLL)
+  0052..0056 op=22 new-instance v0, LX/31c;
+  0056..0058 op=07 move-object
+  0058..005a op=07 move-object
+  005a..005c op=07 move-object
+  005c..005e op=07 move-object
+  005e..0060 op=07 move-object
+  0060..0062 op=07 move-object
+  0062..0068 op=76 invoke-direct/range {v0..v9}, LX/31c;-><init>(VLLLLLLLLL)
+  0068..006a op=11 return-object v0
+  006a..006c op=07 move-object
+  006c..006e op=28 goto -0x19
+  006e..0070 op=07 move-object
+  0070..0072 op=28 goto -0x28
+  # exception table: 0 try range(s)
+.end method

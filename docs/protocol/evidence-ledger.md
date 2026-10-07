@@ -682,8 +682,27 @@ Java cases, Temurin 21.0.12.1+1 LTS; complete Android Unicode parity unknown.
 [attributable selected bytecode](mex-participant-role-evidence.txt).
 
 Additional **confirmed static prerequisites**, unported: matching phash returns
-null/retain; Ayj.A1R true only for integer 1; BotJid branch/domain bot/type26,
+null (retain intent inferred; downstream application untraced); Ayj.A1R true only for integer 1; BotJid branch/domain bot/type26,
 1..20 ASCII digits/no leading zero; separate strict UserJid branch and optional
 aliases; 32q alias type filtering. Unknown wire typename hash preimages are
 preserved as unknown; complete list/coercion/device/result-field mapping and
 member application are unfinished. No saved account or live server touched.
+
+## comparison.mex.exception_aware_release_coverage — 2026-10-07
+
+**Confirmed static/tooling**, same APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+recipe expands to 38 methods / 43 files / 162,435 bytes and opts into explicit
+catch tables via include_exception_tables=true. Default false preserves old
+formats. [Actual cached diff](apk/mex-participant-coverage-diff.json), Git
+78a7218 old paths: 0.023364 seconds, twenty added/eighteen annotations-only
+changed; prior instruction content identical, inventory/manifest/tokens same.
+Fixture-based catch-only mutation regression proves the diff blind spot fixed.
+
+**Negative relocation results:** [report](apk/remap-evidence/2.26.37.71-mex.json)
+14 unique / 17 unanchored / 7 ambiguous; creation_time/JL matches both times,
+invalid-bot/LL both parsers, bot/L four methods. No automatic full proposal.
+**New static catch facts:** 0hj.A03 local catch-all 0009..000e -> 000e, versus
+0D1.A00 NumberFormatException 0106..010e -> 0191, code units. Complete members,
+device/alias/feature/state conversion remains unknown/unported; account state
+unchanged and no live request. [Reproduce/interpret](mex.md#exception-aware-numeric-and-participant-release-coverage-2026-10-07).

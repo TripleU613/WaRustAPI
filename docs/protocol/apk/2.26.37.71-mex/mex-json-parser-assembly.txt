@@ -21,4 +21,5 @@
   0036..003c op=70 invoke-direct {v0, v1}, LX/O4r;-><init>(VI)
   003c..0042 op=70 invoke-direct {v5, v4, v3, v2, v0}, LX/LaZ;-><init>(VLLLL)
   0042..0044 op=0e return-void
+  # exception table: 0 try range(s)
 .end method

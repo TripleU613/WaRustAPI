@@ -45,4 +45,7 @@
   009a..00a0 op=6e invoke-virtual {v4, v0, v3}, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A02(VLZ)
   00a0..00a2 op=27 throw v2
   00a2..00a4 op=0e return-void
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0010..001a -> 001a
+  # catch <all> code_units 0035..003e -> 003e
 .end method

@@ -1397,3 +1397,16 @@ Role-port checks: 619 workspace/all-feature tests, 24 default CLI tests, strict
 Clippy, warning-free Rustdoc, formatting, CLI reference/API-symbol checks;
 90 actual CLI inputs plus omission (NUL is library-only: OS argv restriction).
 Repository hygiene checked 548 local links; staged whitespace passed.
+
+APK change tracking now covers 38 MEX methods / 43 files / 162,435 bytes,
+including numeric/group/participant/JID helpers and opt-in exception tables.
+Catch-only changes are regression-tested; actual cached comparison took
+0.023364 seconds. Full automatic remap remains unresolved (14 unique,
+17 unanchored, 7 ambiguous); source coverage is not complete Rust conversion
+or live group-state application. No saved account/live request changed. See
+[exception-aware release coverage](protocol/mex.md#exception-aware-numeric-and-participant-release-coverage-2026-10-07).
+Snapshot validation: 620 workspace/all-feature tests (55 xtask), 24 default CLI
+tests, strict Clippy, warning-free Rustdoc, formatting, CLI reference/API symbols,
+hygiene (557 links), staged whitespace. Both actual new catch-aware and prior
+default-format APK exports reproduced exactly. Phash null return is confirmed;
+retaining existing members remains inferred until downstream application is traced.

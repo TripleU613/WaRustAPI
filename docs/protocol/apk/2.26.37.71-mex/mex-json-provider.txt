@@ -8,4 +8,5 @@
   0002..0006 op=22 new-instance v0, LX/O4r;
   0006..000c op=70 invoke-direct {v0, v1}, LX/O4r;-><init>(VI)
   000c..000e op=11 return-object v0
+  # exception table: 0 try range(s)
 .end method

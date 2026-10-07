@@ -1106,3 +1106,18 @@ strict Clippy, warning-free Rustdoc, formatting, CLI reference and API symbol
 checks passed. Actual CLI matched 90 representable oracle inputs plus omission;
 the embedded-NUL case is library-tested because OS argv cannot carry NUL.
 Hygiene checked 548 local links and staged whitespace passed.
+
+APK release comparison now includes 38 MEX methods / 43 files / 162,435 bytes,
+with opt-in typed/catch-all exception tables. Default-format exports remain
+unchanged. Actual cached diff took 0.023364 seconds; twenty new topics and
+eighteen catch-annotation additions, with all prior instructions identical.
+A catch-only mutation test now verifies handler changes are visible. Actual
+remapping: 14 unique, 17 unanchored, 7 ambiguous; full automatic relocation
+still requires review. Source coverage does not complete member/state ports.
+[Coverage and catch evidence](docs/protocol/mex.md#exception-aware-numeric-and-participant-release-coverage-2026-10-07).
+No account opened, state changed or live request sent.
+Exception-aware snapshot validation: 620 workspace/all-feature tests (55
+xtask), 24 default CLI tests, strict Clippy, warning-free Rustdoc, formatting,
+CLI reference/API symbols, hygiene (557 local links), staged whitespace passed.
+Both actual exports reproduced: new 43-file catch-aware snapshot and prior
+23-file default-format snapshot, with complete checksums unchanged for the latter.

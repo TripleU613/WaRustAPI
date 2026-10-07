@@ -267,9 +267,9 @@ The next trace belongs to actual IQ callback/model-conversion callers.
 
 ## Versioned parser/request files
 
-[The MEX release recipe](apk/recipes/2.26.37.71-mex.json) exports eighteen
+[The MEX release recipe](apk/recipes/2.26.37.71-mex.json) exports thirty-eight
 method topics to [the 37.71 baseline](apk/2.26.37.71-mex/manifest.json):
-23 files, 76,908 bytes including the checksum index. Each topic names
+43 files, 162,435 bytes including the checksum index. Each topic names
 `crates/whatsapp-api/src/transport/mex.rs` as its Rust owner. The baseline is
 additional source coverage, not a new APK release or full MEX parity.
 
@@ -300,7 +300,7 @@ target/debug/xtask apk-research-diff \
 
 Use `--check` only with an existing complete export; for a new output directory,
 omit it. [Actual remapping](apk/remap-evidence/2.26.37.71-mex.json) on this APK
-has eight unique, seven unanchored and three ambiguous topics. IWF.AYS is unique
+has fourteen unique, seventeen unanchored and seven ambiguous topics. IWF.AYS is unique
 only after shorty `I` removes four other code/error_code methods. `is_retryable`
 plus shorty `Z` still matches I1H.A06 and 916.BGC/BQ2: one string and a return
 type do not establish the intended owner. Common doc_id and subject anchors
@@ -749,8 +749,9 @@ This is not Android/APK execution; complete Android SDK/Unicode parity remains
 `java -cp <compiled-directory> MexJavaNumericOracle roles`.
 
 **Confirmed guard, not yet implemented:** ADv.A0D returns null immediately
-when `participants_phash_match` is true. That is a retain-members path, not an
-empty replacement. `LbE.A0G` derives a default from JSONObject.optInt via
+when `participants_phash_match` is true. Returning null rather than an empty
+replacement is confirmed. Retaining existing members is the inferred intent;
+0yw.A0X downstream application remains untraced. `LbE.A0G` derives a default from JSONObject.optInt via
 `Ayj.A1R` (**integer exactly 1**, not any nonzero value), then calls optBoolean
 with that default. Full Android integer/boolean coercion remains **unknown in
 our Rust port**; a simplistic nonzero rule would contradict the APK.
@@ -778,3 +779,59 @@ field mapping, edge-list helper, history coercion, alias feature maps, full
 participant converter and durable application remain **unknown/unimplemented**.
 No alias observations or identity pins may be manufactured from this trace.
 No saved account was opened and no live request was sent.
+
+## Exception-aware numeric and participant release coverage (2026-10-07)
+
+**Confirmed static / reproducible tooling**, same 37.71 SHA: the
+[recipe](apk/recipes/2.26.37.71-mex.json) adds twenty selected methods to the
+previous eighteen. This includes the full 0Xo.A03 and ADv.A0D converters,
+ADv.A03/A04/A05 numbers, 0Gv.A01 and 8kY.A0B numeric helpers, 2hu enum,
+LbE.A0C/4R7.A00 role lookup, LbE.A0G/Ayj.A1R phash boolean, BotJid constructor
+and domain, nullable/strict bot and strict user parsers, 32q alias builder,
+A4m result constructor and 0D1 generic JID routing. These are source topics,
+not a claim that their complete Rust ports exist. All topics point to the
+Rust MEX implementation owner, including currently unimplemented prerequisites.
+
+The recipe's optional root `include_exception_tables` boolean defaults to
+false. When true, each method records ordered typed/catch-all handlers with
+half-open **code-unit** ranges and code-unit targets, plus explicit zero counts.
+Instruction offsets remain bytes. Targets metadata records the option as true;
+resolved remap proposals retain the recipe setting. Invalid nonboolean values
+refuse. Previously exported instruction-only formats stay reproducible.
+This closes a concrete diff blind spot: unchanged instructions can have a
+changed catch type or destination. A regression based on the independent
+0Gv code_item fixture changes only its catch type to catch-all and verifies the
+cached diff reports the owning topic changed.
+
+Current baseline **43 files/162,435 bytes**, all **38** methods. The
+[cached coverage diff](apk/mex-participant-coverage-diff.json) took
+**0.023364 seconds**, one actual command with no APK scanning. Old baseline
+is Git **78a7218**; old_file paths refer to that revision. Twenty topics added;
+the old eighteen changed only because exception annotations were enabled.
+Every prior instruction text was independently compared after stripping
+`# exception table` / `# catch` lines and is identical. Inventory, manifest
+and tokens unchanged; targets metadata changed. This is same-APK coverage
+and formatting, not a new release or demonstrated behavioral change.
+APK re-export still requires scanning and is not claimed subsecond.
+
+**Confirmed relocation limitations:** [actual remapping](apk/remap-evidence/2.26.37.71-mex.json)
+finds fourteen unique, seventeen unanchored, seven ambiguous. `creation_time`
+with shorty JL still matches **both ADv.A04 and A05**; the locator cannot tell
+creation from subject time from this anchor. `invalid bot jid: ` with LL
+matches **0hj.A00 and A01**. `bot` with L matches **0hh.getServer,
+Ble.getRawString, Ble.getServer, CSe.A00**. These are negative results to
+preserve, not permission to pick the old class. String-free helpers require
+caller-based/manual evidence. Full proposed recipe remains unresolved.
+
+**Confirmed newly visible catch detail:** nullable `0hj.A03` catches **all**
+from code units 0009..000e at 000e, wraps failure as 0Zd and returns null;
+strict 0hj.A00 does not have that local fallback. `0D1.A00` has a typed
+NumberFormatException handler at units 0106..010e -> 0191 in device parsing.
+Complete device semantics and exception propagation beyond these local
+handlers remain **unknown/unported**. Numeric/role typed catches retain their
+previously documented behavior. No account/state access or live request.
+
+Use the existing `apk-research-bundle --recipe ... --check` and
+`apk-research-diff <old-cache> <new-cache>` commands above. Compare fully
+checksum-verified snapshots; review annotation/scope changes separately from
+protocol changes before applying a Rust patch.

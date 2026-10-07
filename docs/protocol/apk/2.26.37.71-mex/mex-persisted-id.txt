@@ -16,4 +16,7 @@
   0024..0026 op=11 return-object v0
   0026..002a op=1a const-string v0, ""
   002a..002c op=11 return-object v0
+  # exception table: 1 try range(s)
+  # catch Lorg/json/JSONException; code_units 0000..0013 -> 0013
+  # catch Ljava/io/IOException; code_units 0000..0013 -> 0013
 .end method

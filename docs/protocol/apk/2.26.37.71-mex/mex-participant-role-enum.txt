@@ -1,0 +1,37 @@
+# APK-derived structural disassembly: LX/2hu;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=6
+  0000..0004 op=1a const-string v1, "UNSET_OR_UNRECOGNIZED_ENUM_VALUE"
+  0004..0006 op=12 const/4 v0, #0x0
+  0006..000a op=22 new-instance v5, LX/2hu;
+  000a..0010 op=70 invoke-direct {v5, v1, v0, v1}, LX/2hu;-><init>(VLIL)
+  0010..0014 op=69 sput-object v5, LX/2hu;->A05:LX/2hu;
+  0014..0018 op=1a const-string v1, "ADMIN_MEMBER"
+  0018..001a op=12 const/4 v0, #0x1
+  001a..001e op=22 new-instance v4, LX/2hu;
+  001e..0024 op=70 invoke-direct {v4, v1, v0, v1}, LX/2hu;-><init>(VLIL)
+  0024..0028 op=69 sput-object v4, LX/2hu;->A02:LX/2hu;
+  0028..002c op=1a const-string v1, "MEMBER"
+  002c..002e op=12 const/4 v0, #0x2
+  002e..0032 op=22 new-instance v3, LX/2hu;
+  0032..0038 op=70 invoke-direct {v3, v1, v0, v1}, LX/2hu;-><init>(VLIL)
+  0038..003c op=69 sput-object v3, LX/2hu;->A03:LX/2hu;
+  003c..0040 op=1a const-string v0, "SUPERADMIN_MEMBER"
+  0040..0042 op=12 const/4 v2, #0x3
+  0042..0046 op=22 new-instance v1, LX/2hu;
+  0046..004c op=70 invoke-direct {v1, v0, v2, v0}, LX/2hu;-><init>(VLIL)
+  004c..0050 op=69 sput-object v1, LX/2hu;->A04:LX/2hu;
+  0050..0052 op=12 const/4 v0, #0x4
+  0052..0056 op=23 new-array v0, v0, [LX/2hu;
+  0056..005c op=71 invoke-static {v5, v4, v3, v0}, LX/1xk;->A1N(VLLLL)
+  005c..0060 op=4d aput-object v1, v0, v2
+  0060..0064 op=69 sput-object v0, LX/2hu;->A01:[LX/2hu;
+  0064..006a op=71 invoke-static {v0}, LX/05g;->A00(LL)
+  006a..006c op=0c move-result-object
+  006c..0070 op=69 sput-object v0, LX/2hu;->A00:LX/05j;
+  0070..0072 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

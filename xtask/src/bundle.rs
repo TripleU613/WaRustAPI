@@ -44,6 +44,9 @@ const TARGETS: &[(&str, &str)] = &[
 #[serde(deny_unknown_fields)]
 struct Recipe {
     apk_sha256: String,
+    /// Opt in to catch-table source coverage without rewriting historical bundles.
+    #[serde(default)]
+    include_exception_tables: bool,
     targets: BTreeMap<String, Target>,
 }
 
@@ -204,6 +207,25 @@ fn validate_size(files: &BTreeMap<String, Vec<u8>>) -> Result<usize, String> {
     Ok(total)
 }
 
+fn append_exception_table(text: &mut String, blocks: &[crate::xref::TryBlock]) {
+    // Catch ranges/addresses are DEX code units; instruction offsets above
+    // remain bytes. 37.71 0Gv.A01/4R7.A00 show why fallback types matter.
+    writeln!(text, "  # exception table: {} try range(s)", blocks.len()).unwrap();
+    for block in blocks {
+        for (ty, address) in &block.handlers {
+            writeln!(
+                text,
+                "  # catch {} code_units {:04x}..{:04x} -> {:04x}",
+                ty.as_deref().unwrap_or("<all>"),
+                block.start,
+                block.end,
+                address
+            )
+            .unwrap();
+        }
+    }
+}
+
 pub fn run(
     apk: &Path,
     output: &Path,
@@ -286,6 +308,9 @@ pub fn run(
                 )
                 .unwrap();
             }
+            if recipe.as_ref().is_some_and(|r| r.include_exception_tables) {
+                append_exception_table(&mut text, &method.try_blocks);
+            }
             text.push_str(".end method\n");
         }
         // Empty annotations must not introduce trailing whitespace.
@@ -299,6 +324,9 @@ pub fn run(
         let mut entry =
             serde_json::json!({ "class": class, "methods": methods.len(), "file": name });
         if recipe.is_some() {
+            if recipe.as_ref().is_some_and(|r| r.include_exception_tables) {
+                entry["include_exception_tables"] = serde_json::json!(true);
+            }
             entry["method_filter"] = serde_json::json!(target.method);
             entry["rust_files"] = serde_json::json!(target.rust_files);
             if let Some(shorty) = &target.method_shorty {
@@ -731,6 +759,43 @@ mod tests {
     }
 
     #[test]
+    fn cached_comparison_detects_catch_only_changes() {
+        // APK 37.71 0Gv.A01 independent code_item fixture: instructions remain
+        // identical while a changed handler type must become a visible delta.
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../docs/protocol/mex-long-parser-catch-fixture.json"
+        ))
+        .unwrap();
+        let block = crate::xref::TryBlock {
+            start: fixture["try_start_units"].as_u64().unwrap() as u32,
+            end: fixture["try_end_units"].as_u64().unwrap() as u32,
+            handlers: vec![(
+                Some(fixture["catch_type"].as_str().unwrap().into()),
+                fixture["handler_units"].as_u64().unwrap() as u32,
+            )],
+        };
+        let mut old_text = "unchanged instructions\n".to_owned();
+        append_exception_table(&mut old_text, std::slice::from_ref(&block));
+        assert!(old_text.contains("NumberFormatException; code_units 0007..000c -> 000c"));
+        let mut new_text = "unchanged instructions\n".to_owned();
+        let mut changed = block;
+        changed.handlers[0].0 = None;
+        append_exception_table(&mut new_text, &[changed]);
+        assert!(new_text.contains("<all> code_units 0007..000c -> 000c"));
+        let dir = tempfile::tempdir().unwrap();
+        let old = dir.path().join("old");
+        let new = dir.path().join("new");
+        fixture_bundle(&old, "same-apk", &[("parser", &old_text)]);
+        fixture_bundle(&new, "same-apk", &[("parser", &new_text)]);
+        let report = comparison(&old, &new).unwrap();
+        assert_eq!(report["topics"][0]["status"], "changed");
+        assert_eq!(report["artifacts"][0]["status"], "unchanged");
+        let mut empty = String::new();
+        append_exception_table(&mut empty, &[]);
+        assert_eq!(empty, "  # exception table: 0 try range(s)\n");
+    }
+
+    #[test]
     fn cached_comparison_separates_provenance_and_code_and_verifies_inputs() {
         let dir = tempfile::tempdir().unwrap();
         let old = dir.path().join("old");
@@ -893,6 +958,7 @@ mod tests {
             serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"../escape":{"class":"LX/Test;"}}}),
             serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","rust_files":["../escape"]}}}),
             serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","invented":true}}}),
+            serde_json::json!({"apk_sha256":"0".repeat(64),"include_exception_tables":"yes","targets":{"subject":{"class":"LX/Test;"}}}),
             serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","anchors":["x"],"caller_anchors":["y"]}}}),
             serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","method":"A00","caller_anchors":["y"]}}}),
             serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","method":"A00","anchors":["x"],"caller_anchors":[""]}}}),
@@ -902,7 +968,12 @@ mod tests {
             assert!(read_recipe(&path).is_err());
         }
         fs::write(&path,json(&serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","method":"A09","rust_files":["crates/group.rs"]}}})).unwrap()).unwrap();
-        assert!(read_recipe(&path).is_ok());
+        assert!(!read_recipe(&path).unwrap().include_exception_tables);
+        let mut enabled: serde_json::Value =
+            serde_json::from_slice(&fs::read(&path).unwrap()).unwrap();
+        enabled["include_exception_tables"] = serde_json::json!(true);
+        fs::write(&path, json(&enabled).unwrap()).unwrap();
+        assert!(read_recipe(&path).unwrap().include_exception_tables);
         let cache = dir.path().join("bad-cache");
         fs::create_dir(&cache).unwrap();
         fs::write(

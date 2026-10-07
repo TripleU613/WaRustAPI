@@ -51,4 +51,5 @@
   00a6..00aa op=22 new-instance v0, Ljava/lang/ClassCastException;
   00aa..00b0 op=70 invoke-direct {v0, v1}, Ljava/lang/ClassCastException;-><init>(VL)
   00b0..00b2 op=27 throw v0
+  # exception table: 0 try range(s)
 .end method

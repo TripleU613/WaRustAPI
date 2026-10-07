@@ -10,4 +10,5 @@
   000e..0012 op=5b iput-object v3, v0, LX/LaZ;->A02:LX/Oau;
   0012..0016 op=5b iput-object v4, v0, LX/LaZ;->A01:LX/Oau;
   0016..0018 op=0e return-void
+  # exception table: 0 try range(s)
 .end method

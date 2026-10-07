@@ -37,4 +37,5 @@
   007c..0082 op=76 invoke-direct/range {v2..v7}, LX/Ahb;-><init>(VLLLII)
   0082..0088 op=72 invoke-interface {v0, v2}, LX/07u;->COM(VL)
   0088..008a op=28 goto -0x30
+  # exception table: 0 try range(s)
 .end method

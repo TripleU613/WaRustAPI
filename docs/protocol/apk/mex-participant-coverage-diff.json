@@ -1,0 +1,458 @@
+{
+  "artifacts": [
+    {
+      "file": "inventory.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/inventory.json",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/inventory.json",
+      "status": "unchanged"
+    },
+    {
+      "file": "manifest.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/manifest.json",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/manifest.json",
+      "status": "unchanged"
+    },
+    {
+      "file": "targets.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/targets.json",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/targets.json",
+      "status": "changed"
+    },
+    {
+      "file": "tokens.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/tokens.json",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/tokens.json",
+      "status": "unchanged"
+    }
+  ],
+  "interpretation": "Structural topic differences, not automatic proof of protocol behavior changes. Unmapped APK code/native behavior is outside this scoped comparison.",
+  "new_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "old_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "topics": [
+    {
+      "new_class": "LX/ADv;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-announcement-number.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-announcement-number"
+    },
+    {
+      "new_class": "LX/0hh;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-bot-server.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-bot-server"
+    },
+    {
+      "new_class": "LX/0hh;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-bot-user-validation.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-bot-user-validation"
+    },
+    {
+      "new_class": "LX/ADv;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-creation-number.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-creation-number"
+    },
+    {
+      "new_class": "LX/0Gv;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-default-long-parser.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-default-long-parser"
+    },
+    {
+      "new_class": "LX/IWF;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-error-code-getter.txt",
+      "old_class": "LX/IWF;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-error-code-getter.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-error-code-getter"
+    },
+    {
+      "new_class": "LX/I1H;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-error-retryable-getter.txt",
+      "old_class": "LX/I1H;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-error-retryable-getter.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-error-retryable-getter"
+    },
+    {
+      "new_class": "LX/Ayj;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-exact-one-boolean.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-exact-one-boolean"
+    },
+    {
+      "new_class": "LX/0Xo;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-full-group-converter.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-full-group-converter"
+    },
+    {
+      "new_class": "LX/0D1;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-generic-jid-routing.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-generic-jid-routing"
+    },
+    {
+      "new_class": "LX/9Np;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-group-error-callback.txt",
+      "old_class": "LX/9Np;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-group-error-callback.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-group-error-callback"
+    },
+    {
+      "new_class": "Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-inherited-callback-gate.txt",
+      "old_class": "Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-inherited-callback-gate.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-inherited-callback-gate"
+    },
+    {
+      "new_class": "LX/O4r;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-field-readers.txt",
+      "old_class": "LX/O4r;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-field-readers.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-json-field-readers"
+    },
+    {
+      "new_class": "LX/LaZ;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-independent-results.txt",
+      "old_class": "LX/LaZ;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-independent-results.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-json-independent-results"
+    },
+    {
+      "new_class": "LX/9QZ;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-iq.txt",
+      "old_class": "LX/9QZ;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-iq.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-json-iq"
+    },
+    {
+      "new_class": "LX/LaT;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-model-conversion.txt",
+      "old_class": "LX/LaT;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-model-conversion.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-json-model-conversion"
+    },
+    {
+      "new_class": "LX/Lab;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-parser-assembly.txt",
+      "old_class": "LX/Lab;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-parser-assembly.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-json-parser-assembly"
+    },
+    {
+      "new_class": "LX/LaZ;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-parser-fields.txt",
+      "old_class": "LX/LaZ;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-parser-fields.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-json-parser-fields"
+    },
+    {
+      "new_class": "LX/0yN;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-provider.txt",
+      "old_class": "LX/0yN;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-provider.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-json-provider"
+    },
+    {
+      "new_class": "LX/Lai;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-request.txt",
+      "old_class": "LX/Lai;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-request.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-json-request"
+    },
+    {
+      "new_class": "LX/LaT;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-response-discriminator.txt",
+      "old_class": "LX/LaT;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-response-discriminator.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-json-response-discriminator"
+    },
+    {
+      "new_class": "LX/Lac;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-response-handler.txt",
+      "old_class": "LX/Lac;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-json-response-handler.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-json-response-handler"
+    },
+    {
+      "new_class": "LX/0hj;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-nullable-bot-jid.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-nullable-bot-jid"
+    },
+    {
+      "new_class": "LX/32q;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-participant-alias-builder.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-participant-alias-builder"
+    },
+    {
+      "new_class": "LX/LbE;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-participant-hash-boolean.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-participant-hash-boolean"
+    },
+    {
+      "new_class": "LX/ADv;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-participant-map.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-participant-map"
+    },
+    {
+      "new_class": "LX/2hu;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-participant-role-enum.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-participant-role-enum"
+    },
+    {
+      "new_class": "LX/LbE;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-participant-role-reader.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-participant-role-reader"
+    },
+    {
+      "new_class": "LX/4R7;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-participant-role-resolver.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-participant-role-resolver"
+    },
+    {
+      "new_class": "LX/164;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-persisted-id.txt",
+      "old_class": "LX/164;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-persisted-id.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-persisted-id"
+    },
+    {
+      "new_class": "LX/LZv;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-response-model-flags.txt",
+      "old_class": "LX/LZv;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-response-model-flags.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-response-model-flags"
+    },
+    {
+      "new_class": "LX/LZw;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-response-parts-storage.txt",
+      "old_class": "LX/LZw;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-response-parts-storage.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-response-parts-storage"
+    },
+    {
+      "new_class": "LX/A4m;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-result-constructor.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-result-constructor"
+    },
+    {
+      "new_class": "LX/8kY;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-scaled-long.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-scaled-long"
+    },
+    {
+      "new_class": "LX/0hj;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-strict-bot-jid.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-strict-bot-jid"
+    },
+    {
+      "new_class": "LX/0D8;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-strict-user-jid.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-strict-user-jid"
+    },
+    {
+      "new_class": "LX/90x;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-subject-field.txt",
+      "old_class": "LX/90x;",
+      "old_file": "docs/protocol/apk/2.26.37.71-mex/mex-subject-field.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "changed",
+      "topic": "mex-subject-field"
+    },
+    {
+      "new_class": "LX/ADv;",
+      "new_file": "docs/protocol/apk/2.26.37.71-mex/mex-subject-number.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ],
+      "status": "added",
+      "topic": "mex-subject-number"
+    }
+  ],
+  "measurement": {
+    "elapsed_seconds": 0.023364,
+    "mode": "one cached command invocation, no APK rescanning",
+    "old_git_revision": "78a7218",
+    "old_paths": "old_file values refer to the named Git revision; cached files were materialized under ignored lab/",
+    "new_paths": "new_file values refer to this change"
+  }
+}

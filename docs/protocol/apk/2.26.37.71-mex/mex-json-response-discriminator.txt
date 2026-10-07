@@ -114,4 +114,7 @@
   01ac..01b0 op=29 goto/16 -0x9e
   01b0..01b2 op=12 const/4 v0, #0x0
   01b2..01b6 op=29 goto/16 -0xaa
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0047..0076 -> 0076
+  # catch <all> code_units 0081..00a5 -> 00a5
 .end method

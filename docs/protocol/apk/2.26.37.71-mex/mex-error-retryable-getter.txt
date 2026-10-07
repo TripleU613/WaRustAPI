@@ -20,4 +20,5 @@
   0032..0034 op=0f return v0
   0034..0036 op=12 const/4 v0, #0x1
   0036..0038 op=0f return v0
+  # exception table: 0 try range(s)
 .end method

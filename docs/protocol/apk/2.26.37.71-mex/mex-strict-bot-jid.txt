@@ -1,0 +1,25 @@
+# APK-derived structural disassembly: LX/0hj;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LL) flags=0x19 registers=3
+  0000..0004 op=62 sget-object v0, Lcom/whatsapp/infra/core/jid/Jid;->Companion:LX/0D1;
+  0004..000a op=71 invoke-static {v2}, LX/0D1;->A00(LL)
+  000a..000c op=0c move-result-object
+  000c..0010 op=20 instance-of v0, v1, LX/0hh;
+  0010..0014 op=38 if-eqz v0, +0x7
+  0014..0018 op=1f check-cast v1, LX/0hh;
+  0018..001c op=38 if-eqz v1, +0x3
+  001c..001e op=11 return-object v1
+  001e..0022 op=1a const-string v1, "invalid bot jid: "
+  0022..0026 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0026..002c op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(VL)
+  002c..0032 op=6e invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(LL)
+  0032..0038 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString(L)
+  0038..003a op=0c move-result-object
+  003a..003e op=22 new-instance v0, LX/08j;
+  003e..0044 op=70 invoke-direct {v0, v1}, LX/08j;-><init>(VL)
+  0044..0046 op=27 throw v0
+  # exception table: 0 try range(s)
+.end method

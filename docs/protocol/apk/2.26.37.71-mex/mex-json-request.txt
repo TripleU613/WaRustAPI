@@ -37,4 +37,5 @@
   0082..0086 op=1f check-cast v0, LX/0hs;
   0086..008a op=5b iput-object v0, v4, LX/Lai;->A01:LX/0hs;
   008a..008c op=0e return-void
+  # exception table: 0 try range(s)
 .end method
