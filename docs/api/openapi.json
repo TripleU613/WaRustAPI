@@ -813,7 +813,16 @@
                   "apk_authenticated"
                 ],
                 "default": "pinned",
-                "description": "Incoming remote prekey trust policy for listen and lab receive. pinned refuses changed saved identities. apk_authenticated permits replacement only after nested message authentication, atomically archiving the prior pin/session and emitting IdentityChanged with the inbox commit. It does not establish human verification. Own-device messages remain pinned. Outgoing bundle trust and uncertain sends are unchanged."
+                "description": "Incoming remote prekey trust policy for listen and lab receive. pinned refuses changed saved identities. apk_authenticated permits replacement only after nested message authentication, atomically archiving the prior pin/session and emitting IdentityChanged with the inbox commit. It does not establish human verification. Own-device messages remain pinned. Outgoing bundle replacement has a separate opt-in outgoing_identity_changes; uncertain sends never replay."
+              },
+              "outgoing_identity_changes": {
+                "type": "string",
+                "enum": [
+                  "pinned",
+                  "apk_authenticated"
+                ],
+                "default": "pinned",
+                "description": "Independent outgoing remote directory-bundle policy for the normal comparison outbox. Pinned suspends changed identities. Apk_authenticated requires a valid signed device key received through authenticated Noise, derives a fresh peer session, archives prior pin/session with signed_directory_bundle provenance and emits IdentityChanged atomically with the original send reservation. Own-account identities remain pinned. It is not human verification. Incoming identity_changes does not enable this. Unknown/refused queries and uncertain sends never resume. Repeating the original outbox-send JSON may resolve an identity-suspended intent using its saved reply; no new query or intent ID is created. General listen --send-outbox does not select suspended intents. Suspensions without an observed pin snapshot cannot resume, and stale replies cannot roll a newer current peer pin back."
               }
             },
             "required": [
@@ -2105,7 +2114,8 @@
         "type": "object",
         "required": [
           "local_id",
-          "peer_ticket"
+          "peer_ticket",
+          "reason"
         ],
         "properties": {
           "local_id": {
@@ -2116,6 +2126,15 @@
             "type": "string",
             "pattern": "^[a-f0-9]{64}$",
             "description": "SHA-256 of local session address. Not a phone number or WhatsApp safety number."
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "identity_changed",
+              "invalid_signed_bundle",
+              "own_identity_pinned"
+            ],
+            "description": "Static local suspension reason. Old saved records default to identity_changed. Invalid signatures never resume."
           }
         }
       },
@@ -5879,7 +5898,7 @@
           "Outbox"
         ],
         "summary": "Send one private-JSON text, image or voice note through the comparison outbox",
-        "description": "Transmit one message immediately through the comparison client (x-live). Body is a MessageRequest with to, request_id, and one of text, image (PNG path), or voice_note (Ogg/Opus). Repeating the same request_id returns the saved outcome locally without resending.",
+        "description": "Transmit one message immediately through the comparison client (x-live). Body is a MessageRequest with to, request_id, and one of text, image (PNG path), or voice_note (Ogg/Opus). Repeating the same request_id returns the saved outcome locally without resending. A saved identity-suspended queued intent may resume only under explicit transport.outgoing_identity_changes=apk_authenticated, using its original saved signed directory reply and unchanged private JSON ID. It does not repeat the key query. Unknown/refused queries, invalid signatures, own-device changes and uncertain sends remain blocked.",
         "operationId": "outboxSend",
         "x-cli": "whatsapp-cli outbox-send",
         "x-transport": [
@@ -5935,7 +5954,9 @@
           }
         },
         "x-library": [
-          "whatsapp_cli::outbox_send::run"
+          "whatsapp_cli::outbox_send::run",
+          "whatsapp_api::transport::outgoing::Pending::prepare_with_policy",
+          "whatsapp_api::transport::outgoing::resume_identity_selected"
         ]
       }
     },
@@ -9109,7 +9130,7 @@
           "Outbox"
         ],
         "summary": "Inspect queued sends suspended by changed peer identities (offline, redacted)",
-        "description": "Lists identity-mismatch suspensions without contacts, keys, payloads or network requests. Intents remain queued under their original local IDs; the saved key-query reply and reservation remain encrypted. No automatic identity replacement or replay is performed. This contract is implemented by the CLI only.",
+        "description": "Lists identity-mismatch suspensions without contacts, keys, payloads or network requests. Intents remain queued under their original local IDs; the saved key-query reply and reservation remain encrypted. The static reason distinguishes identity_changed from invalid_signed_bundle and own_identity_pinned. Inspection performs no replacement or replay; selected outbox-send can resolve a valid saved reply under the independent outgoing policy. This contract is implemented by the CLI only.",
         "operationId": "outboxSuspended",
         "x-cli": "whatsapp-cli outbox-suspended",
         "x-transport": [
@@ -9149,7 +9170,9 @@
           }
         },
         "x-library": [
-          "whatsapp_api::transport::outgoing::identity_suspended"
+          "whatsapp_api::transport::outgoing::identity_suspended",
+          "whatsapp_api::transport::outgoing::identity_suspension",
+          "whatsapp_api::WhatsAppClient::identity_suspension"
         ]
       }
     },

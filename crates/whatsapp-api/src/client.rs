@@ -416,6 +416,20 @@ impl WhatsAppClient {
             .await
     }
 
+    /// Read one normal comparison-outbox identity suspension while the account
+    /// runtime owns its store. No directory request or trust change is made.
+    #[cfg(feature = "comparison-client")]
+    pub async fn identity_suspension(
+        &self,
+        ticket: &SendTicket,
+    ) -> Result<Option<crate::transport::outgoing::IdentitySuspension>> {
+        let id = ticket.local_id;
+        self.inner
+            .store
+            .run_blocking(move |store| crate::transport::outgoing::identity_suspension(store, id))
+            .await
+    }
+
     /// Cancel a queued send. Returns `false` for an unknown ticket.
     pub async fn cancel_send(&self, local_id: LocalMessageId) -> Result<bool> {
         let outbox = self.inner.outbox.clone();

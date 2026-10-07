@@ -23,8 +23,13 @@ No local account identity, send ID or reservation was reset. Automatic reads
 also cover eligible authenticated duplicates, with once-only write-cut coverage.
 Human safety-number verification remains unfinished. Outgoing key-bundle
 mismatches now suspend the original queued intent before ratchet use;
-`outbox-suspended` inspects them offline. Policy-qualified outgoing replacement
-remains unverified. `peer-identity` now inspects both namespaces offline;
+`outbox-suspended` inspects them offline. Independent
+`transport.outgoing_identity_changes=apk_authenticated` now stages a signed
+directory-bundle replacement and commits prior-state history, the identity
+event and original send reservation atomically. Explicitly selected suspended
+intents can use their saved reply without another key query; invalid signatures,
+own-account changes, stale-pin rollback and uncertain sends remain blocked.
+The canonical outgoing policy remains pinned; live replacement is unverified. `peer-identity` now inspects both namespaces offline;
 the recovered direct peer has different PN/LID pins, each matching its own
 held session. Authenticated history connects the PN pin to the updated LID pin.
 A fresh outgoing directory bundle has not yet been checked.
@@ -96,8 +101,8 @@ redelivered at every login.
 
 ## Offline verification
 
-504 all-feature tests (`cargo test --locked --workspace --all-features`) and
-211 default-feature tests (`cargo test --locked --workspace`) pass on
+506 all-feature tests (`cargo test --locked --workspace --all-features`) and
+212 default-feature tests (`cargo test --locked --workspace`) pass on
 2026-10-07; Clippy with `-D warnings` is clean. Rust 1.98.1 locally and in CI. Store, codec, crash
 matrix, registration state machine and transport coverage are described in
 [docs/design](docs/design/README.md) and the per-area protocol docs.

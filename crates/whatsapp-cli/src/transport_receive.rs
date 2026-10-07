@@ -866,7 +866,10 @@ pub(super) fn outbox_suspended(cli: &super::Cli) -> Result<(), Error> {
             rows.len()
         );
         for row in rows {
-            println!("  {} peer_ticket={}", row.local_id, row.peer_ticket);
+            println!(
+                "  {} peer_ticket={} reason={}",
+                row.local_id, row.peer_ticket, row.reason
+            );
         }
     }
     Ok(())

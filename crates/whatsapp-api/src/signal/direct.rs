@@ -425,6 +425,25 @@ pub async fn prepare(
     .await
 }
 
+/// Verify the fetched signed device key before a policy admits a new identity.
+pub(crate) fn validate_bundle_signature(bundle: &PreKeyBundle) -> Result<()> {
+    // APK 2.26.37.71 CQc.A00 0030..0064 checks this signature before
+    // session derivation/save. A fetched identity signing itself is not human
+    // verification; the directory response must arrive over authenticated Noise.
+    if !bundle
+        .identity_key()
+        .map_err(crypto)?
+        .public_key()
+        .verify_signature(
+            &bundle.signed_pre_key_public().map_err(crypto)?.serialize(),
+            bundle.signed_pre_key_signature().map_err(crypto)?,
+        )
+    {
+        return Err(invalid("invalid signed directory bundle signature"));
+    }
+    Ok(())
+}
+
 /// Refuse a fetched identity mismatch even when a saved session can encrypt.
 /// No session, identity or ratchet is changed by this check.
 pub(crate) fn validate_bundle_identity(

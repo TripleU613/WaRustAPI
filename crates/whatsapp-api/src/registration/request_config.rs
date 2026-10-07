@@ -109,15 +109,16 @@ pub enum RequestBodyMode {
     EncEmptyH,
 }
 
-/// Incoming peer identity policy; never changes the local account identity.
+/// Explicit remote peer identity policy; never changes the local account identity.
 #[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum IdentityChangePolicy {
-    /// Refuse incoming keys differing from an existing saved pin.
+    /// Refuse remote keys differing from an existing saved pin.
     #[default]
     Pinned,
     /// APK 2.26.37.71 0km.BRS/COt and Cnp.A04 permit peer changes. Here the
-    /// candidate is committed only after message authentication, with history.
+    /// candidate is committed only after message authentication or an explicitly
+    /// enabled signed directory bundle check, with prior state preserved.
     /// Authentication establishes possession of the new key, not human trust.
     ApkAuthenticated,
 }
@@ -149,6 +150,9 @@ pub struct TransportSettings {
     pub mark_read: bool,
     /// Policy for authenticated incoming remote prekey identity changes.
     pub identity_changes: IdentityChangePolicy,
+    /// Independent opt-in for remote outgoing directory bundle changes. Signed
+    /// bundles refresh the session atomically with the original send reservation.
+    pub outgoing_identity_changes: IdentityChangePolicy,
 }
 impl Default for TransportSettings {
     fn default() -> Self {
@@ -161,6 +165,7 @@ impl Default for TransportSettings {
             action_delay_ms: 0,
             mark_read: false,
             identity_changes: IdentityChangePolicy::default(),
+            outgoing_identity_changes: IdentityChangePolicy::default(),
         }
     }
 }
@@ -663,6 +668,29 @@ mod tests {
             IdentityChangePolicy::ApkAuthenticated
         );
         json["transport"]["identity_changes"] = serde_json::json!("ignore_validation");
+        assert!(serde_json::from_value::<LabRegistrationConfig>(json).is_err());
+    }
+
+    #[test]
+    fn outgoing_identity_policy_requires_its_own_opt_in() {
+        let mut json = serde_json::to_value(config()).unwrap();
+        json["transport"]
+            .as_object_mut()
+            .unwrap()
+            .remove("outgoing_identity_changes");
+        json["transport"]["identity_changes"] = serde_json::json!("apk_authenticated");
+        let old: LabRegistrationConfig = serde_json::from_value(json.clone()).unwrap();
+        assert_eq!(
+            old.transport.outgoing_identity_changes,
+            IdentityChangePolicy::Pinned
+        );
+        json["transport"]["outgoing_identity_changes"] = serde_json::json!("apk_authenticated");
+        let enabled: LabRegistrationConfig = serde_json::from_value(json.clone()).unwrap();
+        assert_eq!(
+            enabled.transport.outgoing_identity_changes,
+            IdentityChangePolicy::ApkAuthenticated
+        );
+        json["transport"]["outgoing_identity_changes"] = serde_json::json!("ignore_signature");
         assert!(serde_json::from_value::<LabRegistrationConfig>(json).is_err());
     }
 

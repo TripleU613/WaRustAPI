@@ -11,14 +11,14 @@ use crate::{
 use sha2::{Digest, Sha256};
 use zeroize::Zeroizing;
 
-fn remote_identity_policy(
+pub(super) fn remote_identity_policy(
     store: &ProtocolStore,
     account: &AccountRecord,
     peer: &Jid,
     policy: IdentityChangePolicy,
 ) -> Result<IdentityChangePolicy> {
     // APK 2.26.37.71 0jc.A14 has a separate own-companion safeguard.
-    // A remote incoming policy must not replace a session for our own PN.
+    // A remote policy must not replace a session for our own PN/LID.
     if policy == IdentityChangePolicy::Pinned
         || account
             .own_jid

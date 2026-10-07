@@ -546,3 +546,13 @@ Evidence and remaining unknowns: [peer identity](protocol/peer-identity.md#outgo
   direct peer has distinct pins, both internally consistent; history links the
   held PN pin to the current LID pin. Directory refresh remains unverified.
   Default-feature CLI builds now include the corrected transport command guards.
+
+### Signed outgoing identity replacement (2026-10-07)
+
+- [x] Independent `transport.outgoing_identity_changes` opt-in, valid signed
+  directory bundle check, atomic old-state history/identity event/send reserve,
+  and own-account identity protection.
+- [x] Resume one explicitly selected identity-suspended original JSON from its
+  saved reply without another key query or resetting an uncertain send.
+- [ ] Fetch/inspect the recovered peer's current directory bundle and validate
+  one authorized selected send. Canonical outgoing policy remains pinned.

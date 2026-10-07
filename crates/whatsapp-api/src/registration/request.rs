@@ -80,6 +80,7 @@ pub const TEMPLATE_JSON: &str = r#"{
     "action_delay_ms": 0,
     "mark_read": false,
     "identity_changes": "pinned",
+    "outgoing_identity_changes": "pinned",
     "reconnect": { "max_attempts": 5, "base_delay_ms": 2000, "max_delay_ms": 60000 }
   },
   "diagnostics": true,

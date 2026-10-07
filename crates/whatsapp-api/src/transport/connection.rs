@@ -314,6 +314,11 @@ pub(crate) async fn drive(
                 if outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now()>=v.deadline) {
                     return Err(Error::invalid("outbox", "key query outcome unknown; reserved, no retry"));
                 }
+                if outgoing.is_none() && let Some(id)=ticket
+                    && let Some(stanza)=super::outgoing::resume_identity_selected(&store,&account,id,epoch,config.transport.outgoing_identity_changes).await? {
+                    link.send(&stanza).await?;
+                    continue;
+                }
                 if outgoing.is_none() && let Some((pending,node))=super::outgoing::begin_selected(&store,ticket)? {
                     outgoing=Some(pending);
                     link.send(&node).await?;
@@ -383,7 +388,7 @@ pub(crate) async fn drive(
                 }
                 if node.description == "iq" {
                     if outgoing.as_ref().is_some_and(|v|v.matches(&node)) {
-                        if let Some(stanza)=outgoing.take().expect("matched pending query").prepare(&store,&account,&node,epoch).await? {
+                        if let Some(stanza)=outgoing.take().expect("matched pending query").prepare_with_policy(&store,&account,&node,epoch,config.transport.outgoing_identity_changes).await? {
                             link.send(&stanza).await?;
                         }
                         continue;

@@ -249,6 +249,10 @@ pub fn inspect_peer(store: &ProtocolStore, phone: &Jid) -> Result<PeerIdentitySt
                         serde_json::from_value(row["previous_identity"].clone()).ok();
                     history_peer.as_ref() == Some(&lid)
                         && row["policy"] == "apk_authenticated"
+                        && matches!(
+                            row["authentication"].as_str(),
+                            None | Some("incoming_message")
+                        )
                         && previous.as_ref() == phone_pin.as_ref()
                         && row["current_fingerprint"].as_str()
                             == state.pinned_fingerprint.as_deref()
@@ -275,6 +279,43 @@ pub(super) fn archive_replacement(
     previous_session: Option<&[u8]>,
     current: &[u8],
 ) -> Result<()> {
+    archive_identity(
+        tx,
+        peer,
+        previous,
+        previous_session,
+        current,
+        "incoming_message",
+    )
+}
+
+/// A policy-approved, signed directory response; preserve its different
+/// authentication source rather than claiming an incoming message was read.
+pub(super) fn archive_bundle_replacement(
+    tx: &mut crate::store::WriteTx<'_>,
+    peer: &Jid,
+    previous: Option<&[u8]>,
+    previous_session: Option<&[u8]>,
+    current: &[u8],
+) -> Result<()> {
+    archive_identity(
+        tx,
+        peer,
+        previous,
+        previous_session,
+        current,
+        "signed_directory_bundle",
+    )
+}
+
+fn archive_identity(
+    tx: &mut crate::store::WriteTx<'_>,
+    peer: &Jid,
+    previous: Option<&[u8]>,
+    previous_session: Option<&[u8]>,
+    current: &[u8],
+    authentication: &str,
+) -> Result<()> {
     let Some(previous) = previous.filter(|old| *old != current) else {
         return Ok(());
     };
@@ -298,6 +339,7 @@ pub(super) fn archive_replacement(
             "peer":peer, "previous_identity":previous, "previous_session":previous_session,
             "current_fingerprint":hex::encode(Sha256::digest(current)), "at":observed_at,
             "verification":"unverified", "policy":"apk_authenticated",
+            "authentication":authentication,
         }),
     )
 }

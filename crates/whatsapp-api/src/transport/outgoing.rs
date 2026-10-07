@@ -32,6 +32,13 @@ pub struct IdentitySuspension {
     pub local_id: LocalMessageId,
     /// SHA-256 of the session address, not a phone number or safety number.
     pub peer_ticket: String,
+    /// Static local reason; old records default to identity_changed.
+    #[serde(default = "identity_change_reason")]
+    pub reason: String,
+}
+
+fn identity_change_reason() -> String {
+    "identity_changed".into()
 }
 
 /// Inspect identity-suspended queued sends offline, without replaying queries.
@@ -68,6 +75,29 @@ pub fn identity_suspended(store: &ProtocolStore) -> Result<Vec<IdentitySuspensio
     })
 }
 
+/// Inspect one identity-suspended queued intent without exposing its saved reply.
+pub fn identity_suspension(
+    store: &ProtocolStore,
+    id: LocalMessageId,
+) -> Result<Option<IdentitySuspension>> {
+    store.read(|tx| {
+        let Some(entry) = outbox().get(tx, id)? else {
+            return Ok(None);
+        };
+        if entry.progress != AttemptProgress::Queued {
+            return Ok(None);
+        }
+        let row: Option<serde_json::Value> =
+            tx.get_json(Table::Checkpoints, query_key(id).as_bytes(), 1)?;
+        let Some(row) = row.filter(|row| row["status"] == "identity_changed") else {
+            return Ok(None);
+        };
+        Ok(Some(serde_json::from_value(row).map_err(|_| {
+            Error::invalid("outbox", "invalid saved identity suspension")
+        })?))
+    })
+}
+
 /// A pending query is connection-local; its reservation survives cancellation.
 pub struct Pending {
     local_id: LocalMessageId,
@@ -81,6 +111,71 @@ impl std::fmt::Debug for Pending {
             .field("deadline", &self.deadline)
             .finish_non_exhaustive()
     }
+}
+
+/// Whether an already answered identity query can be used under this explicit
+/// policy. Unknown/refused queries and invalid signatures are never replayed.
+pub fn identity_query_resumable(
+    row: &serde_json::Value,
+    policy: crate::registration::request::IdentityChangePolicy,
+) -> bool {
+    policy == crate::registration::request::IdentityChangePolicy::ApkAuthenticated
+        && row["status"] == "identity_changed"
+        && matches!(row["reason"].as_str(), None | Some("identity_changed"))
+        && row["reply"].is_array()
+        && row["pinned_fingerprint"]
+            .as_str()
+            .is_some_and(|v| v.len() == 64 && v.bytes().all(|b| b.is_ascii_hexdigit()))
+}
+
+/// Resolve one explicitly selected suspended intent using its original saved
+/// directory reply. No network query, new intent ID or replay of uncertain
+/// sends occurs. The returned stanza is already durably reserved before write.
+pub async fn resume_identity_selected(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    id: LocalMessageId,
+    epoch: ConnectionEpoch,
+    policy: crate::registration::request::IdentityChangePolicy,
+) -> Result<Option<Node>> {
+    if policy == crate::registration::request::IdentityChangePolicy::Pinned {
+        return Ok(None);
+    }
+    let row: Option<serde_json::Value> =
+        store.read(|tx| tx.get_json(Table::Checkpoints, query_key(id).as_bytes(), 1))?;
+    let Some(row) = row.filter(|row| identity_query_resumable(row, policy)) else {
+        return Ok(None);
+    };
+    let entry = store
+        .read(|tx| outbox().get(tx, id))?
+        .ok_or_else(|| Error::invalid("outbox", "missing suspended intent"))?;
+    if entry.progress != AttemptProgress::Queued {
+        return Ok(None);
+    }
+    if super::inbox::remote_identity_policy(store, account, entry.intent.chat.jid(), policy)?
+        == crate::registration::request::IdentityChangePolicy::Pinned
+    {
+        return Ok(None);
+    }
+    let query_id = row["query_id"]
+        .as_str()
+        .ok_or_else(|| Error::invalid("outbox", "suspended query has no selector"))?
+        .to_owned();
+    let reply: Vec<u8> = serde_json::from_value(row["reply"].clone())
+        .map_err(|_| Error::invalid("outbox", "invalid saved directory reply"))?;
+    let limits = Limits::default();
+    let raw = crate::binary::unpack_frame_payload(&reply, &limits)?;
+    let reply =
+        crate::binary::Decoder::new(&raw, TokenDictionary::comparison_2_26_37_70(), &limits)
+            .decode_node()?;
+    let pending = Pending {
+        local_id: id,
+        query_id,
+        deadline: tokio::time::Instant::now(),
+    };
+    pending
+        .prepare_with_policy(store, account, &reply, epoch, policy)
+        .await
 }
 
 /// Reserve one eligible plain direct text intent before sending its key query.
@@ -421,11 +516,12 @@ impl Pending {
         &self,
         store: &ProtocolStore,
         peer: &crate::model::jid::Jid,
-        session: Option<&[u8]>,
-        identity: Option<&[u8]>,
+        previous: (Option<&[u8]>, Option<&[u8]>),
         node: &Node,
+        reason: &str,
     ) -> Result<()> {
         use sha2::{Digest, Sha256};
+        let (session, identity) = previous;
         let peer_key = format!("comparison-direct:{peer}");
         let reply = Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(node)?;
         store.write(|tx| {
@@ -438,7 +534,7 @@ impl Pending {
             }
             let reservation: serde_json::Value = tx.get_json(Table::Checkpoints, query_key(self.local_id).as_bytes(), 1)?
                 .ok_or_else(|| Error::invalid("outbox", "missing key-query reservation"))?;
-            if reservation["query_id"].as_str() != Some(self.query_id.as_str()) || reservation["status"] != "outcome_unknown" {
+            if reservation["query_id"].as_str() != Some(self.query_id.as_str()) || !(reservation["status"] == "outcome_unknown" || identity_query_resumable(&reservation, crate::registration::request::IdentityChangePolicy::ApkAuthenticated)) {
                 return Err(Error::invalid("outbox", "key-query reservation changed"));
             }
             // Keep the exact bundle reply encrypted at rest for later policy
@@ -447,7 +543,9 @@ impl Pending {
             tx.put_json(Table::Checkpoints, query_key(self.local_id).as_bytes(), 1,
                 &serde_json::json!({"status":"identity_changed", "query_id":self.query_id,
                     "local_id":self.local_id, "peer_ticket":hex::encode(Sha256::digest(peer_key.as_bytes())),
-                    "reply":reply, "observed_at":Timestamp::now()}))
+                    "reply":reply, "reason":reason,
+                    "observed_at":reservation.get("observed_at").cloned().unwrap_or_else(|| serde_json::json!(Timestamp::now())),
+                    "pinned_fingerprint":identity.map(|pin| hex::encode(Sha256::digest(pin)))}))
         })
     }
     /// Prepare E2EE and atomically reserve ratchet + intent before any write.
@@ -457,6 +555,26 @@ impl Pending {
         account: &AccountRecord,
         node: &Node,
         epoch: ConnectionEpoch,
+    ) -> Result<Option<Node>> {
+        self.prepare_with_policy(
+            store,
+            account,
+            node,
+            epoch,
+            crate::registration::request::IdentityChangePolicy::Pinned,
+        )
+        .await
+    }
+
+    /// Explicit normal-outbox policy; only authenticated directory replies are
+    /// passed here by the connection actor. The default wrapper stays pinned.
+    pub async fn prepare_with_policy(
+        self,
+        store: &ProtocolStore,
+        account: &AccountRecord,
+        node: &Node,
+        epoch: ConnectionEpoch,
+        policy: crate::registration::request::IdentityChangePolicy,
     ) -> Result<Option<Node>> {
         if !self.matches(node) {
             return Err(Error::invalid("outbox", "mismatched key response"));
@@ -487,24 +605,93 @@ impl Pending {
         let peer = entry.intent.chat.jid();
         let bundle = crate::signal::direct::prekey_bundle(node, peer)?;
         let peer_key = format!("comparison-direct:{peer}");
-        let (session, identity): (Option<Vec<u8>>, Option<Vec<u8>>) = store.read(|tx| {
+        let (session, identity, reservation): (
+            Option<Vec<u8>>,
+            Option<Vec<u8>>,
+            serde_json::Value,
+        ) = store.read(|tx| {
             Ok((
                 tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1)?,
                 tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?,
+                tx.get_json(Table::Checkpoints, query_key(self.local_id).as_bytes(), 1)?
+                    .ok_or_else(|| Error::invalid("outbox", "missing key-query reservation"))?,
             ))
         })?;
-        if let Err(error) = crate::signal::direct::validate_bundle_identity(
+        if reservation["status"] == "identity_changed" {
+            use sha2::{Digest, Sha256};
+            let current = identity
+                .as_deref()
+                .map(|pin| hex::encode(Sha256::digest(pin)));
+            // Check against the same snapshot used for OCC: a newer incoming
+            // transition cannot be rolled back by an older directory reply.
+            if current.as_deref() != reservation["pinned_fingerprint"].as_str()
+                && (identity.is_none()
+                    || crate::signal::direct::validate_bundle_identity(
+                        Some(&bundle),
+                        identity.as_deref(),
+                        peer,
+                    )
+                    .is_err())
+            {
+                return Err(Error::invalid(
+                    "outbox",
+                    "peer pin changed since saved directory reply; intent preserved, no send",
+                ));
+            }
+        }
+        let replacement = match crate::signal::direct::validate_bundle_identity(
             Some(&bundle),
             identity.as_deref(),
             peer,
         ) {
-            if !matches!(error, Error::IdentityChanged(_)) {
-                return Err(error);
+            Ok(()) => false,
+            Err(Error::IdentityChanged(_)) => {
+                let effective = super::inbox::remote_identity_policy(store, account, peer, policy)?;
+                if effective == crate::registration::request::IdentityChangePolicy::Pinned {
+                    self.suspend_identity(
+                        store,
+                        peer,
+                        (session.as_deref(), identity.as_deref()),
+                        node,
+                        if policy
+                            == crate::registration::request::IdentityChangePolicy::ApkAuthenticated
+                        {
+                            "own_identity_pinned"
+                        } else {
+                            "identity_changed"
+                        },
+                    )?;
+                    return Ok(None);
+                }
+                if crate::signal::direct::validate_bundle_signature(&bundle).is_err() {
+                    self.suspend_identity(
+                        store,
+                        peer,
+                        (session.as_deref(), identity.as_deref()),
+                        node,
+                        "invalid_signed_bundle",
+                    )?;
+                    return Ok(None);
+                }
+                true
             }
-            self.suspend_identity(store, peer, session.as_deref(), identity.as_deref(), node)?;
-            return Ok(None);
-        }
+            Err(error) => return Err(error),
+        };
         let session = session.map(Zeroizing::new);
+        // APK 2.26.37.71 0jc.A0L invalidates the old ratchet for a changed
+        // identity, then CQc.A00 verifies the signed bundle and derives a new
+        // session. Preserve the originals for OCC/history, stage new keys only.
+        let encryption_session = if replacement {
+            None
+        } else {
+            session.as_deref().map(|v| v.as_slice())
+        };
+        let encryption_identity = if replacement {
+            None
+        } else {
+            identity.as_deref()
+        };
+
         let media = match &entry.intent.content {
             MessageContent::Media {
                 reference,
@@ -578,8 +765,8 @@ impl Pending {
                 account,
                 peer,
                 Some(&bundle),
-                session.as_deref().map(|v| v.as_slice()),
-                identity.as_deref(),
+                encryption_session,
+                encryption_identity,
                 payload,
             )
             .await?
@@ -592,8 +779,8 @@ impl Pending {
                 account,
                 peer,
                 Some(&bundle),
-                session.as_deref().map(|v| v.as_slice()),
-                identity.as_deref(),
+                encryption_session,
+                encryption_identity,
                 payload,
             )
             .await?
@@ -602,8 +789,8 @@ impl Pending {
                 account,
                 peer,
                 Some(&bundle),
-                session.as_deref().map(|v| v.as_slice()),
-                identity.as_deref(),
+                encryption_session,
+                encryption_identity,
                 payload,
             )
             .await?
@@ -615,8 +802,8 @@ impl Pending {
                 account,
                 peer,
                 &bundle,
-                session.as_deref().map(|v| v.as_slice()),
-                identity.as_deref(),
+                encryption_session,
+                encryption_identity,
                 body,
             )
             .await?
@@ -650,6 +837,10 @@ impl Pending {
             super::messaging::direct_message(peer, &wire_id, prepared.kind, prepared.ciphertext)?
         };
         let wire = Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(&stanza)?;
+        // Retain the authenticated directory reply as private evidence even
+        // after successful reservation; it never authorizes replay of a send.
+        let directory_reply =
+            Encoder::new(TokenDictionary::comparison_2_26_37_70()).encode(node)?;
         store.write(|tx| {
             let mut current = outbox()
                 .get_mut(tx, self.local_id)?
@@ -666,6 +857,27 @@ impl Pending {
                     "outbox",
                     "intent or peer session changed before reservation",
                 ));
+            }
+            let query: serde_json::Value = tx
+                .get_json(Table::Checkpoints, query_key(self.local_id).as_bytes(), 1)?
+                .ok_or_else(|| Error::invalid("outbox", "missing key-query reservation"))?;
+            if query["query_id"].as_str() != Some(self.query_id.as_str())
+                || !(query["status"] == "outcome_unknown"
+                    || identity_query_resumable(&query, policy))
+            {
+                return Err(Error::invalid(
+                    "outbox",
+                    "key-query reservation changed before send",
+                ));
+            }
+            if replacement {
+                super::identity_conflicts::archive_bundle_replacement(
+                    tx,
+                    peer,
+                    identity.as_deref(),
+                    session.as_deref().map(|v| v.as_slice()),
+                    &prepared.identity,
+                )?;
             }
             if let Some((secret, options, name)) = &poll_secret {
                 let (own_pn, own_lid) = login_identity(tx, account)?;
@@ -720,7 +932,9 @@ impl Pending {
                 Table::Checkpoints,
                 query_key(self.local_id).as_bytes(),
                 1,
-                &serde_json::json!({"status":"answered","query_id":self.query_id}),
+                &serde_json::json!({"status":"answered","query_id":self.query_id,
+                    "reply":directory_reply,
+                    "observed_at":query.get("observed_at").cloned().unwrap_or_else(|| serde_json::json!(Timestamp::now()))}),
             )
         })?;
         Ok(Some(stanza))
@@ -835,6 +1049,411 @@ mod tests {
             })
             .unwrap()
     }
+    #[tokio::test]
+    async fn signed_outgoing_replacement_is_explicit_atomic_and_never_replayed() {
+        use crate::{
+            model::ids::EventCursor,
+            registration::request::IdentityChangePolicy,
+            session::{KeyMaterial, RegistrationStatus, SignalIdentityKey},
+            store::ConsumerId,
+        };
+        use wacore_libsignal::protocol::{
+            DeviceId, GenericSignedPreKey, IdentityKeyPair, KeyPair, PreKeyBundle,
+            SignedPreKeyRecord,
+        };
+        for scenario in 0..6 {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("outgoing-policy.redb");
+            let store = open(&path);
+            let id = enqueue(&store);
+            let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+            let sender = Jid::parse("15555550199@s.whatsapp.net").unwrap();
+            let key = format!("comparison-direct:{peer}");
+            let mut rng = rand::rng();
+            let local = IdentityKeyPair::generate(&mut rng);
+            let old = IdentityKeyPair::generate(&mut rng);
+            let new = IdentityKeyPair::generate(&mut rng);
+            let signed = KeyPair::generate(&mut rng);
+            let account_for = |identity: &IdentityKeyPair, registration| AccountRecord {
+                registration: RegistrationStatus::Registered,
+                signal_registration_id: Some(registration),
+                signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                    public: identity.public_key().public_key_bytes().try_into().unwrap(),
+                    private: *identity.private_key().serialize(),
+                })),
+                ..Default::default()
+            };
+            let mut account = account_for(&local, 31);
+            account.own_jid = Some(if scenario == 3 {
+                peer.clone()
+            } else {
+                sender.clone()
+            });
+            let old_signature = old
+                .private_key()
+                .calculate_signature(&signed.public_key.serialize(), &mut rng)
+                .unwrap();
+            let old_bundle = PreKeyBundle::new(
+                42,
+                DeviceId::new(0),
+                None,
+                7.into(),
+                signed.public_key,
+                old_signature.to_vec(),
+                *old.identity_key(),
+            )
+            .unwrap();
+            let previous = crate::signal::direct::prepare(
+                &account,
+                &peer,
+                &old_bundle,
+                None,
+                None,
+                "prior fixture",
+            )
+            .await
+            .unwrap();
+            store
+                .write(|tx| {
+                    tx.put_json(Table::PeerIdentities, key.as_bytes(), 1, &previous.identity)?;
+                    tx.put_json(Table::SignalSessions, key.as_bytes(), 1, &*previous.session)?;
+                    AccountRecord::save(&account, tx)?;
+                    if scenario == 4 {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"login-identity",
+                            1,
+                            &serde_json::json!({"pn":peer.to_string()}),
+                        )?;
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let saved_account = store
+                .read(|tx| tx.scan_after(Table::Account, 1, None, 256))
+                .unwrap();
+            let signature = new
+                .private_key()
+                .calculate_signature(&signed.public_key.serialize(), &mut rng)
+                .unwrap();
+            let (pending, _) = begin_selected(&store, Some(id)).unwrap().unwrap();
+            let reply = Node::new("iq")
+                .attr("type", "result")
+                .attr("id", pending.query_id.as_str())
+                .children(vec![Node::new("list").children(vec![
+                    Node::new("user").attr("jid", peer.clone()).children(vec![
+                        Node::new("registration").bytes(vec![0, 0, 0, 42]),
+                        Node::new("type").bytes(vec![5]),
+                        Node::new("identity").bytes(new.public_key().public_key_bytes().to_vec()),
+                        Node::new("skey").children(vec![
+                            Node::new("id").bytes(vec![0, 0, 7]),
+                            Node::new("value").bytes(signed.public_key.public_key_bytes().to_vec()),
+                            Node::new("signature").bytes(if scenario == 2 || scenario == 5 {
+                                vec![0; 64]
+                            } else {
+                                signature.to_vec()
+                            }),
+                        ]),
+                    ]),
+                ])]);
+            assert!(
+                resume_identity_selected(
+                    &store,
+                    &account,
+                    id,
+                    ConnectionEpoch(1),
+                    IdentityChangePolicy::ApkAuthenticated
+                )
+                .await
+                .unwrap()
+                .is_none(),
+                "unanswered queries never resume"
+            );
+            let policy = if scenario == 1 || scenario == 5 {
+                IdentityChangePolicy::Pinned
+            } else {
+                IdentityChangePolicy::ApkAuthenticated
+            };
+            let stanza = pending
+                .prepare_with_policy(&store, &account, &reply, ConnectionEpoch(1), policy)
+                .await
+                .unwrap();
+            let entry = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
+            assert_eq!(entry.local_id, id);
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan_after(Table::Account, 1, None, 256))
+                    .unwrap(),
+                saved_account
+            );
+            let events = store
+                .read_events(&ConsumerId::new("fixture").unwrap(), EventCursor::START, 32)
+                .unwrap();
+            let changes = events
+                .events
+                .iter()
+                .filter(|event| matches!(event.event, crate::sync::SyncEvent::IdentityChanged(_)))
+                .count();
+            let history = store
+                .read(|tx| {
+                    Ok(tx
+                        .scan_after(Table::Checkpoints, 1, None, 256)?
+                        .into_iter()
+                        .filter(|(k, _)| k.starts_with(b"identity-history:"))
+                        .collect::<Vec<_>>())
+                })
+                .unwrap();
+            if scenario == 0 {
+                let stanza = stanza.unwrap();
+                let enc = stanza.child("enc").unwrap();
+                assert_eq!(
+                    enc.get_attr("type").and_then(|v| v.as_text()),
+                    Some("pkmsg")
+                );
+                let crate::binary::NodeContent::Bytes(ciphertext) = &enc.content else {
+                    panic!("ciphertext missing")
+                };
+                let signed_record = SignedPreKeyRecord::new(
+                    7.into(),
+                    wacore_libsignal::protocol::Timestamp::from_epoch_millis(0),
+                    &signed,
+                    &signature,
+                );
+                let decoded = crate::signal::direct::receive_prekey(
+                    &account_for(&new, 42),
+                    &sender,
+                    (None, None),
+                    &signed_record.serialize().unwrap(),
+                    None,
+                    ciphertext,
+                )
+                .await
+                .unwrap();
+                assert_eq!(
+                    crate::signal::direct::payload_summary(&decoded.received.plaintext).unwrap(),
+                    "protobuf fields=[1]"
+                );
+                assert_eq!(&*decoded.received.plaintext, b"\x0a\x0foffline fixture");
+                assert_eq!(entry.progress, AttemptProgress::InFlight);
+                assert_eq!(entry.attempts.len(), 1);
+                assert!(entry.wire_id.is_some());
+                assert!(
+                    entry
+                        .facts
+                        .iter()
+                        .any(|fact| fact.kind == DeliveryFactKind::DeliveryUnknown)
+                );
+                assert_eq!(changes, 1);
+                assert_eq!(history.len(), 1);
+                let row: serde_json::Value = serde_json::from_slice(&history[0].1).unwrap();
+                assert_eq!(row["authentication"], "signed_directory_bundle");
+                assert_eq!(row["verification"], "unverified");
+                assert_eq!(
+                    serde_json::from_value::<Vec<u8>>(row["previous_identity"].clone()).unwrap(),
+                    previous.identity
+                );
+                assert_eq!(
+                    serde_json::from_value::<Vec<u8>>(row["previous_session"].clone()).unwrap(),
+                    *previous.session
+                );
+                assert_eq!(
+                    store
+                        .read(|tx| tx.get_json::<Vec<u8>>(Table::PeerIdentities, key.as_bytes(), 1))
+                        .unwrap(),
+                    Some(new.identity_key().serialize().to_vec())
+                );
+                assert!(identity_suspended(&store).unwrap().is_empty());
+                assert!(identity_suspension(&store, id).unwrap().is_none());
+                // Drop the unsent stanza to model a crash after durable reserve,
+                // before socket write. It stays unknown rather than replaying.
+            } else {
+                assert!(stanza.is_none());
+                assert_eq!(entry.progress, AttemptProgress::Queued);
+                assert!(entry.attempts.is_empty());
+                assert_eq!(changes, 0);
+                assert!(history.is_empty());
+                let suspension = identity_suspended(&store).unwrap();
+                assert_eq!(suspension.len(), 1);
+                assert_eq!(
+                    identity_suspension(&store, id).unwrap(),
+                    Some(suspension[0].clone())
+                );
+                assert_eq!(
+                    suspension[0].reason,
+                    if scenario == 2 {
+                        "invalid_signed_bundle"
+                    } else if scenario == 3 || scenario == 4 {
+                        "own_identity_pinned"
+                    } else {
+                        "identity_changed"
+                    }
+                );
+                assert_eq!(
+                    store
+                        .read(|tx| tx.get_json::<Vec<u8>>(Table::PeerIdentities, key.as_bytes(), 1))
+                        .unwrap(),
+                    Some(previous.identity.clone())
+                );
+                assert_eq!(
+                    store
+                        .read(|tx| tx.get_json::<Vec<u8>>(Table::SignalSessions, key.as_bytes(), 1))
+                        .unwrap(),
+                    Some((*previous.session).clone())
+                );
+            }
+            if scenario == 5 {
+                // Pinned policy records the mismatch before signature admission.
+                // Enabling the policy must classify that original bad reply,
+                // preserving first observation and never attempting a send.
+                let before: serde_json::Value = store
+                    .read(|tx| tx.get_json(Table::Checkpoints, query_key(id).as_bytes(), 1))
+                    .unwrap()
+                    .unwrap();
+                assert!(
+                    resume_identity_selected(
+                        &store,
+                        &account,
+                        id,
+                        ConnectionEpoch(2),
+                        IdentityChangePolicy::ApkAuthenticated
+                    )
+                    .await
+                    .unwrap()
+                    .is_none()
+                );
+                assert_eq!(
+                    identity_suspension(&store, id).unwrap().unwrap().reason,
+                    "invalid_signed_bundle"
+                );
+                let after: serde_json::Value = store
+                    .read(|tx| tx.get_json(Table::Checkpoints, query_key(id).as_bytes(), 1))
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(before["observed_at"], after["observed_at"]);
+                assert_eq!(before["reply"], after["reply"]);
+            }
+            if scenario == 1 {
+                assert!(
+                    resume_identity_selected(
+                        &store,
+                        &account,
+                        id,
+                        ConnectionEpoch(2),
+                        IdentityChangePolicy::Pinned
+                    )
+                    .await
+                    .unwrap()
+                    .is_none()
+                );
+                let newer = IdentityKeyPair::generate(&mut rng);
+                store
+                    .write(|tx| {
+                        tx.put_json(
+                            Table::PeerIdentities,
+                            key.as_bytes(),
+                            1,
+                            &newer.identity_key().serialize().to_vec(),
+                        )
+                    })
+                    .unwrap();
+                let error = resume_identity_selected(
+                    &store,
+                    &account,
+                    id,
+                    ConnectionEpoch(2),
+                    IdentityChangePolicy::ApkAuthenticated,
+                )
+                .await
+                .err()
+                .unwrap();
+                assert!(
+                    error
+                        .to_string()
+                        .contains("peer pin changed since saved directory reply")
+                );
+                assert_eq!(
+                    store
+                        .read(|tx| outbox().get(tx, id))
+                        .unwrap()
+                        .unwrap()
+                        .progress,
+                    AttemptProgress::Queued
+                );
+                // Restore fixture setup only; a real newer peer pin is preserved.
+                store
+                    .write(|tx| {
+                        tx.put_json(Table::PeerIdentities, key.as_bytes(), 1, &previous.identity)
+                    })
+                    .unwrap();
+                let resumed = resume_identity_selected(
+                    &store,
+                    &account,
+                    id,
+                    ConnectionEpoch(2),
+                    IdentityChangePolicy::ApkAuthenticated,
+                )
+                .await
+                .unwrap()
+                .unwrap();
+                assert_eq!(
+                    resumed
+                        .child("enc")
+                        .unwrap()
+                        .get_attr("type")
+                        .and_then(|v| v.as_text()),
+                    Some("pkmsg")
+                );
+                assert!(identity_suspended(&store).unwrap().is_empty());
+                let row: serde_json::Value = store
+                    .read(|tx| tx.get_json(Table::Checkpoints, query_key(id).as_bytes(), 1))
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(
+                    row["query_id"].as_str(),
+                    reply.get_attr("id").and_then(|v| v.as_text())
+                );
+                assert_eq!(row["status"], "answered");
+                assert_eq!(
+                    serde_json::from_value::<Vec<u8>>(row["reply"].clone()).unwrap(),
+                    Encoder::new(TokenDictionary::comparison_2_26_37_70())
+                        .encode(&reply)
+                        .unwrap()
+                );
+                assert_eq!(
+                    store
+                        .read(|tx| outbox().get(tx, id))
+                        .unwrap()
+                        .unwrap()
+                        .progress,
+                    AttemptProgress::InFlight
+                );
+            } else {
+                assert!(
+                    resume_identity_selected(
+                        &store,
+                        &account,
+                        id,
+                        ConnectionEpoch(2),
+                        IdentityChangePolicy::ApkAuthenticated
+                    )
+                    .await
+                    .unwrap()
+                    .is_none(),
+                    "invalid, own-device and already in-flight rows cannot resume"
+                );
+            }
+            let entry = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
+            drop(store);
+            let store = open(&path);
+            assert!(begin_selected(&store, Some(id)).unwrap().is_none());
+            assert!(eligible(&store, 10).unwrap().is_empty());
+            assert_eq!(
+                store.read(|tx| outbox().get(tx, id)).unwrap().unwrap(),
+                entry
+            );
+        }
+    }
+
     #[tokio::test]
     async fn changed_bundle_suspends_without_advancing_or_replaying_after_restart() {
         use wacore_libsignal::protocol::{IdentityKeyPair, KeyPair};

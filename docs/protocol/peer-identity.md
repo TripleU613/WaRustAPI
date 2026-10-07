@@ -339,3 +339,69 @@ signed bundle, preserve prior state and refuse local-account replacement.
 contact of the recovered direct text. Redacted result: `{"phone_session_pin_matches": true, "linked_alias_count": 1, "linked": [{"session_pin_matches": true, "pins_agree": false, "authenticated_transition_from_phone_pin": true}]}`.
 Private evidence: `lab/accounts/l/peer-identity-2026-10-07.json`.
 No query, send, replacement or protocol-state write was performed.
+
+## Explicit signed outgoing bundle policy (2026-10-07)
+
+**Confirmed (APK 2.26.37.71):** `LX/0jc.A0L` compares the remote identity
+before invalidating its held session, reconstructs the fetched identity and
+signed device key, and calls `LX/CQc.A00`. The latter checks the signed device
+key signature (`0030..0064`) before deriving/storing the new session and saving
+its identity (`04ea..04f6`). `0km.BRS` returns true and does not enforce our
+unchanged-pin default. This is normal peer key processing, not a registration
+reset, server-refusal bypass or account identity rotation.
+
+**Implementation:** `transport.outgoing_identity_changes` independently selects
+`pinned` (default) or `apk_authenticated`. Incoming recovery does not enable it.
+Under the outgoing opt-in, a changed primary remote directory bundle must pass
+its signed device key signature check; its response is supplied by the actor's
+authenticated Noise connection. The candidate ratchet is derived in memory.
+The original pin/session are archived with `authentication=signed_directory_bundle`
+and `verification=unverified`; `IdentityChanged`, new pin/session and the same
+intent's one send reservation commit atomically after original-state checks.
+Old incoming history is still supported and new incoming archives explicitly
+say `authentication=incoming_message`. The PN/LID inspector's incoming history
+flag excludes directory archives. Own PN and saved login PN/LID aliases remain
+pinned under both policies.
+
+Invalid signed bundles leave the original intent queued, preserve the reply and
+old pin/session and expose reason `invalid_signed_bundle` through
+`outbox-suspended`; receive continues. Explicitly selecting the original
+`outbox-send` JSON under the outgoing opt-in can resolve a previous
+`identity_changed` suspension from its saved reply, without a second key query,
+new local ID or reset. General `listen --send-outbox` retains its existing
+eligible-list behavior and does not select suspended intents. Unknown/refused
+queries, invalid signatures and in-flight/uncertain sends never resume. Suspensions
+without an observed pin snapshot cannot resume. A saved reply also cannot roll
+a newer peer pin back: a changed current pin must already match that reply. The
+returned message is reserved before socket write, so a crash before writing
+still leaves uncertainty and never causes automatic retransmission.
+
+**Offline:** generated signed bundle tests decrypt the refreshed outgoing
+prekey message with the new peer's real Signal keys, check old-key/session
+history, one identity event and send reservation, account-key preservation,
+restart protection, pinned/default refusal, invalid-signature refusal and own
+PN/login-alias guards. The same original suspended intent can resume under
+explicit policy with its saved reply; unanswered queries cannot. **Unknown:**
+live outgoing directory key agreement and sending after the recovered peer's
+identity change. The canonical profile has not enabled the new outgoing policy;
+no chat or peer key replacement was performed on that account.
+
+**Diagnosability:** `outbox-send` can inspect a suspended intent through the live
+client's store handle, rather than reopening a locked database or waiting for an
+ACK that cannot arrive. It returns the static pinned, invalid-signed-bundle or
+own-identity-pinned reason while preserving the original intent. This diagnostic
+makes no network request. Own-policy refusals are `own_identity_pinned`; a valid
+identity-suspended reply under an enabled remote policy gets time to resolve.
+
+**Negative-path correction:** a pinned mismatch can contain an invalid signed
+bundle, since pinned policy refuses before attempting signature admission.
+Later explicit resume now changes that same saved suspension to
+`invalid_signed_bundle` without losing its original reply/observation time,
+reserving a send or ending receive. The signed-policy fixture covers this
+pinned-to-enabled transition, as well as stale-current-pin refusal.
+
+The directory reply is also retained in encrypted query checkpoints after a
+successful send reservation (`answered`), preserving the fetched signed-key
+material for later rechecking. Retention does not make an in-flight/uncertain
+send replayable. Selected resume preserves the original observation time and
+reply across refusal classification; no secret-bearing reply is printed.

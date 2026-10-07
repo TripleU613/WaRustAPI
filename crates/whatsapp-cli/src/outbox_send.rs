@@ -157,10 +157,15 @@ pub(super) async fn run(
                 1,
             )
         })?;
-        if query.is_some() {
+        if query.as_ref().is_some_and(|row| {
+            !whatsapp_api::transport::outgoing::identity_query_resumable(
+                row,
+                config.transport.outgoing_identity_changes,
+            )
+        }) {
             return Err(Error::invalid(
                 "outbox_send",
-                "prior key query is reserved; inspect its saved outcome, no retry",
+                "prior key query cannot resume under this policy; inspect outbox-suspended; no query replay",
             ));
         }
     }
@@ -169,7 +174,7 @@ pub(super) async fn run(
         .account_id(AccountId::new(cli.account.clone())?)
         .key_source(Arc::new(EnvKeySource::new(cli.key_env.clone())))
         .create_store(false)
-        .comparison_transport(config)
+        .comparison_transport(config.clone())
         .comparison_outbox_ticket(ticket.local_id)
         .build()
         .await?;
@@ -183,6 +188,20 @@ pub(super) async fn run(
                 println!("outbox: server_acknowledged; handset delivery/read not yet established");
                 println!("{}", receipt_summary(&status));
                 return Ok(());
+            }
+            if status.progress == AttemptProgress::Queued
+                && let Some(suspension) = client.identity_suspension(&ticket).await?
+                && (suspension.reason != "identity_changed"
+                    || config.transport.outgoing_identity_changes
+                        == whatsapp_api::registration::request::IdentityChangePolicy::Pinned)
+            {
+                return Err(Error::invalid(
+                    "outbox_send",
+                    format!(
+                        "send suspended: {}; inspect outbox-suspended; original intent preserved",
+                        suspension.reason
+                    ),
+                ));
             }
             if status.progress == AttemptProgress::Failed {
                 return Err(Error::invalid(
