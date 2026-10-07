@@ -662,3 +662,13 @@ data with explicitly modeled SHA/MCF operations. Full input producers,
 JNI normalization, QR semantics and current scheme/human verification remain
 unfinished; no account verification state or live connection changed.
 [Evidence and reproducible check](protocol/safety-number.md).
+
+
+The native identifier callback is now traced back into Java: PN shortening
+uses HNy, LID output uses the parsed JID user, and the return conversion
+requires ASCII. Native key constructors establish 32-byte sorting versus
+33-byte serialized hashing inputs. Java V4 creation and result dispatch now
+connect to the recovered routines; the traced result path emits QR version 0.
+Current scheme selection, complete device inventory, individual QR fields,
+comparison semantics and human verification remain unfinished.
+[Callback and dispatch evidence](protocol/safety-number.md#native-to-java-identifier-callback-and-dispatch-mapping).

@@ -401,3 +401,19 @@ human verification remain unfinished. **Observed/local:** two bounded native
 control-flow slices with host-modeled SHA/MCF calls agree on 5200 finishes and
 10400 updates. This does not execute native crypto or verify an account.
 [Full source addresses and model limitations](safety-number.md).
+
+
+**Confirmed/static, same 37.71 reconstructed ELF:** stable PN/LID adapters
+`0x6b7a04` / `0x6b7a94` call Java `JniBridge.jnidispatchOO` selectors 1/2,
+resolved through initializer method slot `0xd36ae8`. The PN/type-zero branch
+uses HNy shortening; type-18 LID branches return the parsed JID user and native
+conversion rejects non-ASCII output. Key constructors resolve raw 32-byte sort
+data versus full 33-byte serialized hashing data (raw adapter prefix 0x05).
+Java V4 creation selector 2 now connects through the registered dispatch entry
+and context wrapper to the V4 native create routines. Its result selector 4
+passes QR serialization version zero; alternate selector 5 passes one.
+This refutes inferring QR version 4 from the V4 algorithm name. Current UI
+scheme/input inventory and individual QR fields/comparison semantics remain
+unfinished. Exact-class getType searches missed the obfuscated LID class;
+0ZY.getType confirms type 18. No live request or account verification occurred.
+[Complete callback/relocation/DEX evidence](safety-number.md#native-to-java-identifier-callback-and-dispatch-mapping).

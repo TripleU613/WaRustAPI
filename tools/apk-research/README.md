@@ -203,3 +203,10 @@ PYTHONDONTWRITEBYTECODE=1 \
 The latter includes eleven checks. Pinned-library execution skips without
 `TELEWHATSAPP_FINGERPRINT_LIBRARY`; fingerprint preflight checks need no ELF
 or emulator dependency. Existing rootfs requirements/skips still apply.
+
+
+The [native callback follow-up](../../docs/protocol/safety-number.md#native-to-java-identifier-callback-and-dispatch-mapping)
+connects the static ELF dispatch table to Java PN/LID normalization and the
+V4 create/result routines. Existing `xtask apk-smali` and `llvm-objdump`
+commands there reproduce it. The synthetic checker models SHA/MCF entry calls;
+it does not execute these JNI conversions, QR serializers or key constructors.

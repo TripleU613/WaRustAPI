@@ -174,9 +174,9 @@ at `0x713498..0x7134c0` / `0x714738..0x714760`.
 The relocation's addend is `0x712ef0`. That comparator reads each object's
 `+0x20` MCF data, requires equal lengths (otherwise abort), calls `memcmp`
 and returns -1/0/1 (`0x712ef0..0x712f84`). Sorting is therefore by that
-byte representation, not by the later digest or identifier. Exact constructors
-linking these two key representations remain untraced here; do not claim
-arbitrary raw bytes reproduce a complete APK identity-key object. No
+byte representation, not by the later digest or identifier. The constructors were untraced at this checkpoint; the follow-up below resolves
+full serialized data versus prefix-stripped comparator data. Full upstream
+inventory completeness remains unknown. No
 concatenation-time deduplication is present in these traced loops.
 
 **Confirmed/static, validation:** V4 requires a non-null supplied LID object;
@@ -205,8 +205,9 @@ V4 display routine `0x714c70..0x714f98` similarly uses concatenated keys from
 before constructing the identifier-bound seed. V4 params constructor
 `0x71916c..0x719264` copies the supplied LID's ASCII identifier into `+0x28`
 and stable PN into `+0x30`, in the opposite layout to the V3 fields above.
-The exact conversion/normalization behavior is **unknown**. Do not substitute
-raw PN/LID digits or reuse Java `HNy.A00` without tracing this producer.
+The exact conversion/normalization behavior was **unknown** at this checkpoint.
+The JNI callback follow-up below resolves it; this is not permission to guess
+the current account's input inventory or selected scheme.
 
 Both display routines group the first 30 digest bytes into six five-byte
 unsigned big-endian values, reduce each modulo 100000 and format with literal
@@ -252,3 +253,111 @@ rootfs and pinned library configured (no skipped cases), including the actual
 synthetic ARM64 slice and wrong-build refusal. CLI reference regeneration,
 workspace formatting and repository hygiene passed; Rust runtime code did not
 change. No live safety-number comparison was performed.
+
+## Native-to-Java identifier callback and dispatch mapping
+
+**Confirmed/static, same APK and reconstructed-library hashes as above:**
+`0x6b7a04` (stable PN) and `0x6b7a94` (stable LID) both call the JNI bridge
+`0x6c0cf4`, with selectors 1 and 2 respectively. The former converts a native
+JID object's `+0x20` MCF string to Java (`0x6b777c..0x6b77cc`); the latter
+converts its supplied MCF ASCII string (`0x6b73fc..0x6b7430`). The JNI call
+loads class slot `0xd36ad0` and method slot `0xd36ae8` and invokes a static
+object method (`0x6c0d20..0x6c0d30`).
+
+Registration initializer `0x6bbd74..0x6bbea8` resolves the class through pointer
+slot `0xd1c250` -> `0xd262b0` -> string `0x115430`,
+`com/whatsapp/wamsys/JniBridge`. Its method-name and signature arrays begin at
+`0xd06b28` and `0xd06c28`; relocation entries at `+0x10` give
+`jnidispatchOO` (`0x164104`) and
+`(ILjava/lang/Object;)Ljava/lang/Object;` (`0x169d58`). The initializer writes
+that method ID to `0xd36ae8`. This distinguishes the Java callback
+**jnidispatchOO** from the Java-to-native **jvidispatchOO** method; selector
+numbers must not be interpreted against the wrong dispatch direction.
+
+| Callback selector | Java 37.71 branch | Result |
+| --- | --- | --- |
+| 1 | `JniBridge.jnidispatchOO`, `000a..004a` | Parses a UserJid; type 0 returns `HNy.A00(jid.user)`, type 18 returns `jid.user`; other types return null |
+| 2 | same method, `038e..03e8` | Parses a UserJid and requires type 18; returns `jid.user`; wrong type or caught invalid-JID failure returns null |
+
+`0DE.A0e` checks JID type zero (`0004..0014`);
+`PhoneUserJid.getType` returns zero (`0000..0004`). `0DE.A0a` checks type
+`0x12` / 18 (`0004..0018`); the actual obfuscated `0ZY.getType` returns
+18 (`0000..0006`). `0D8.A01` calls `0D1.A00`, requires the parsed object to
+be a UserJid and otherwise throws `08j` (`0000..002a`). The parser splits at
+the final `@` and handles domain/type branches. These callbacks operate on
+parsed JID user fields, not an unvalidated string with an arbitrary suffix
+removed. The native return conversion `0x6b72ac..0x6b73fc` accepts null,
+checks every Java UTF-16 character is <=127 and constructs MCF ASCII data;
+non-ASCII output returns null. JNI exceptions are asserted separately.
+
+This **resolves** the normalization uncertainty recorded above: ordinary PN
+stable identifiers use the already traced `HNy.A00` rule; the stable LID
+callback returns the parsed type-18 user's bytes, with no HNy shortening in
+that branch. It does not establish the current UI's selected input set or all
+JID parser/device/hosted variants. Exact-class/method-filter searches for
+`UserJid.getType`, `UserLidJid.getType` and `LidUserJid.getType` returned no
+matching method output; that was not evidence that a LID type was missing.
+`0ZY.getType` supplies the actual type-18 implementation in this build.
+
+**Confirmed/static, key representation follow-up:** native key constructor
+`0x712c00..0x712cf4` requires 33 serialized bytes, copies all 33 into `+0x28`,
+and the final 32 into `+0x20` (`0x712c68..0x712cac`). The data-input constructor
+`0x712cf4..0x712dc0` validates through `0xc9aa10`, copies the full input into
+`+0x28` and copies input beginning at byte 1 into `+0x20` on success
+(`0x712d60..0x712d94`). The raw-data adapter
+`0x712dc0..0x712e58` prepends the literal byte at `0x30236d`, **0x05**, before
+calling that constructor. Together with the comparator above, the normal
+33-byte path sorts by the 32 key bytes and concatenates the 33-byte
+prefix-plus-key representation. The validation helper's complete internals
+remain untraced; a constructor call with arbitrary malformed input is not
+claimed equivalent to a valid APK key.
+
+**Confirmed/static, Java-to-native fingerprint path:** the 49-entry native
+registration table begins at `0xd06d28`. Entry 16 (`0xd06ea8`) registers
+`jvidispatchOOOO` at `0x6bdca0`; entry 7 (`0xd06dd0`) registers
+`jvidispatchOO` at `0x6bcab0`. `0jc.A0U`'s selector 2 goes through
+`0x6bdce0..0x6bdd1c` -> `0x6daeb4..0x6daeec` -> `0x714520` -> the two V4
+individual create calls `0x714540` / `0x714554`. This connects the Java
+V4-labelled wrapper to the reconstructed V4 anchor, rather than inferring
+that connection from a string name alone.
+
+Its result selector 4 indexes the byte jump table at `0x300e22`:
+`0x6bcae8 + 4*table[4] = 0x6bcb20`. That branch sets the serialization argument
+to zero before reaching `0x71493c` at `0x6bcc28`. The native V4 serializer
+passes that argument to the combined fingerprint's version field and both
+individual serializers (`0x714960..0x714998`). Hence this traced Java path
+serializes combined version **0**, despite being called a V4 fingerprint.
+Selector 5 instead targets `0x6bcc10`, sets the serialization argument to one
+and calls the same V4 serializer. Its complete Java caller/selection conditions
+and individual protobuf fields remain unfinished. Do not equate the algorithm
+label V4 with QR version 4.
+
+Reproduce using the existing offline CLI and native disassembler:
+
+```sh
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk \
+  --class 'Lcom/whatsapp/wamsys/JniBridge;' --method jnidispatchOO
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk \
+  --class 'LX/0DE;' --method A0a
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk \
+  --class 'LX/0ZY;' --method getType
+llvm-objdump -d --start-address=0x6bbd74 --stop-address=0x6bbea8 \
+  lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so
+llvm-objdump -d --start-address=0x712c00 --stop-address=0x712e58 \
+  lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so
+```
+
+Private `safety-number-jni-callback.smali`, `safety-number-pn-predicate.smali`,
+`safety-number-lid-predicate.smali`, `safety-number-pn-type.smali`,
+`safety-number-lid-obfuscated-type.smali`, `safety-number-user-parser.smali`,
+`safety-number-jid-parser.smali` and `safety-number-jid-types.smali` retain
+scoped DEX output. Negative type-filter outputs and native bridge/key
+constructor dumps are also retained locally. No native JNI callback was run,
+account state opened, verified bit set, or live WhatsApp request sent.
+
+Validation of the callback follow-up: actual APK disassembly and ELF
+relocations/jump-table bytes establish the mappings above. Eleven existing
+native tooling checks passed with both fixtures configured; they cover the
+hash slice and runner guards, not execution of the newly traced JNI callbacks
+or QR serialization. CLI reference regeneration and repository hygiene passed.
+This change records static evidence; it changes no Rust client runtime policy.
