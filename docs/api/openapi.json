@@ -11,7 +11,7 @@
       "x-cli": "cargo run -p xtask -- apk-smali <apk> --class <class-filter> [--method <method-filter>]",
       "x-transport": "cli",
       "x-live": false,
-      "description": "Offline DEX developer disassembler; no HTTP route. Names APK identity metadata reads (iget-wide, iget-boolean, iget-byte) and safety-number arithmetic (rem-long/2addr, and-long/2addr, or-long/2addr, shl-long/2addr), preserving byte offsets and operands. Literal 37.71 CjU/B7E-style fixtures verify widths and registers. Unknown opcodes remain explicitly marked. Does not unpack native superpack containers or claim native algorithm recovery."
+      "description": "Offline DEX developer disassembler; no HTTP route. Names APK identity metadata reads (iget-wide, iget-boolean, iget-byte) and safety-number arithmetic (rem-long/2addr, and-long/2addr, or-long/2addr, shl-long/2addr), preserving byte offsets and operands. Literal 37.71 CjU/B7E-style fixtures verify widths and registers. Unknown opcodes remain explicitly marked. Does not unpack native superpack containers or claim native algorithm recovery. APK 37.71 verification writes now name iput-boolean (0x5c) and iput-wide (0x5a), retaining existing 22c registers, field references and instruction widths. Literal Cg3.A00 instructions at classes7.dex 0x5fc138/0x5fc180 provide regression coverage. This is offline research tooling, not an implemented human-verification commit API."
     },
     {
       "x-cli": "<python-env> tools/apk-research/native_loader_check.py --rootfs <public-rootfs> [--check hello|decoder-init|decoder-first-entry|decoder-full-archive] [--timeout-seconds <1..600>] [--max-instructions <1..10000000000>] [--host-meminfo] [--trace-worker]",

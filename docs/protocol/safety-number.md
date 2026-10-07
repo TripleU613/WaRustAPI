@@ -706,8 +706,9 @@ comparison and result presentation. Delayed A0q/animation callbacks, any
 separate human confirmation action, and the complete verification-state writer
 call chain remain untraced. Do not infer that such a writer is absent from the
 APK, or update TeleWhatsApp's verified bit from these UI paths alone. Existing
-identity replacement continues clearing verification on changed keys as
-recorded in [peer identity evidence](peer-identity.md).
+identity replacement records the new identity as unverified in its history;
+the client has no editable human-verification metadata yet. See
+[peer identity evidence](peer-identity.md).
 
 Reproduce the searches and scoped disassembly with existing offline commands:
 
@@ -740,3 +741,9 @@ resolved separately in [verification metadata writers](peer-identity.md#verifica
 The writer checks the rendered identity, rechecks serialized identity under
 lock, then updates the bit and action sequence; it is distinct from A18 scan
 presentation. Complete UI triggers and scheme/device inventory remain unfinished.
+
+
+The separate local [mark/unmark control](peer-identity.md#local-verification-control-and-captured-identity-3771)
+now connects its saved verified bit and rendered identity to the guarded writer.
+Marking uses explicit confirmation; unmarking schedules its own branch.
+This does not make scan-result presentation a verification metadata commit.

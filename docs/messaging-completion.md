@@ -712,3 +712,13 @@ and ProtocolMessage field 32 are confirmed. Delayed scan callbacks only present
 results. Full human-trigger wiring, active fingerprint scheme/device inventory
 and client implementation remain unfinished; no account state changed.
 [Writer and schema evidence](protocol/peer-identity.md#verification-metadata-writers-and-rotation-guards-3771).
+
+
+The APK local verification control now traces from saved metadata/rendered
+identity to explicit mark confirmation and separate unmark execution. The
+writer receives that captured key, allowing its rotation guards to refuse stale
+confirmation. Feature/predicate gates and complete fingerprint inventory remain
+unverified; client verification metadata remains unimplemented. Two missing
+DEX field-write mnemonics are fixed with literal APK instruction regression
+coverage. No live account operation occurred.
+[Local control evidence](protocol/peer-identity.md#local-verification-control-and-captured-identity-3771).

@@ -450,3 +450,13 @@ verification metadata and sequence. Companion peer actions require a LID,
 DNu history applies a distinct BT5 path. BWE descriptor tags 1..4 and
 ProtocolMessage field 32 are recovered. Delayed scan callbacks are presentation.
 No live verification/metadata update occurred. [Writer evidence](peer-identity.md#verification-metadata-writers-and-rotation-guards-3771).
+
+
+**Confirmed/static, 37.71 local verification control:** DUm selector 15
+binds primary LID, rendered key and saved verified bit; 6Ac installs 5XZ.
+Its marked branch schedules unmark, while unmarked opens confirmation whose
+positive callback schedules mark. Runtime feature/exclusion predicates and
+complete fingerprint inventory remain unknown. Two missing DEX field-write
+mnemonics are fixed with literal APK bytes and actual APK re-rendering.
+530 all-feature tests and strict Clippy pass; no account state changed.
+[Control and decoder evidence](peer-identity.md#local-verification-control-and-captured-identity-3771).

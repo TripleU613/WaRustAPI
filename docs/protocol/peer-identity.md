@@ -617,3 +617,78 @@ Validation: independent BWE schema extraction reproduced the exact saved
 field output; CLI reference regeneration/test and repository hygiene passed
 (294 local links). These are static research checks, not a live verification
 action or implemented account-state transition.
+
+
+## Local verification control and captured identity (37.71)
+
+**Confirmed/static**, comparison APK 2.26.37.71, same APK SHA-256 as above.
+Offsets are method-relative bytes. This resolves the local human-action
+boundary without claiming that the client now implements it or the current
+account has been verified.
+
+`6Ac.invokeSuspend 0a36..0a8a` receives a 4AH state containing the LID,
+rendered B7D identity and boolean. It renders one of two labels and installs
+`5XZ(activity,lid,key,boolean)` on the visible text control. The exact constructor
+search found only this invocation (classes4.dex offset 0x6d0f20). Its state
+producer is `DUm.invokeSuspend` selector 15 (0638..073c): feature 0x729f is
+required at 0652..0662; the companion-device branch, non-0ZY target and self
+target are excluded at 0662..0696. It also runs 1lL.A00 and checks predicates
+1lL.A03/A02 (0696..06e0); those predicate meanings remain untraced. It derives
+the primary address, loads saved CUm.A01 through A0X (06f8..071a), loads B7D
+through A0W (071a..072a), then returns 4AH with both. Missing metadata defaults
+the boolean to false. `1xm.A1Q 0000..000c` is exactly the integer ==1 test,
+so the control's boolean comes from the saved verified bit, not scan success.
+No complete snapshot atomicity is proven for these separate reads.
+
+`5XZ.onClick` reads that captured boolean at 0000..0004. True takes
+0028..005a: it schedules 6Am selector 6, whose branch at 04cc..04f2 calls
+Cg3.A00 with **false** (unmark). False takes 005a..00aa: it invokes Cg3.A01
+with the captured LID/key to open the mark confirmation dialog. Cg3.A01's
+positive listener is AES selector 3; `AES.onClick` reaches its default branch
+000a..0040, which schedules 6Am selector 5. That branch calls Cg3.A00 with
+**true** at 0478..0496. The controller's earlier key-rotation checks therefore
+use the identity rendered on the control, rather than silently reselecting a
+new identity after the operator confirms.
+
+`5Xc.onClick` has a parallel CompareNumberBottomSheet branch at 000c..007a:
+its captured true boolean schedules selector 6 (unmark); its false branch
+at 0172..019c invokes Cg3.A01 (mark confirmation). Its other selector branch
+belongs to 48w and is not verification evidence. The complete bottom-sheet
+state producer remains untraced. Neither verified-control branch requires the
+A18 scan-result flag. This is an explicit local mark/unmark workflow; it does
+not establish an automatic scan-to-verified state transition.
+
+**Implementation finding:** the static trace exposed missing names for DEX
+opcodes 0x5c and 0x5a in the development disassembler. Their operands/widths
+were already decoded as format 22c; they appeared as opaque instructions.
+The decoder now names **iput-boolean** and **iput-wide**, as specified by the
+[Android instruction table](https://source.android.com/docs/core/runtime/dalvik-bytecode).
+An independent literal regression fixture uses APK classes7.dex bytes
+`5c 16 a8 29` at 0x5fc138 (Cg3.A00 025c) and `5a 13 a4 29` at 0x5fc180
+(Cg3.A00 02a4). It checks mnemonics, registers v6/v1 and v3/v1, two-code-unit
+width and byte extents, with field indices intentionally unresolved in the
+minimal test DEX. The actual APK field references are verified separately by
+re-rendering the method with the rebuilt utility. These bytes are public APK
+code, not account identifiers or verification values.
+
+**Unknown:** feature 0x729f runtime state, 1lL's two exclusion predicates,
+complete device-key/fingerprint inputs, companion fan-out protocol serialization,
+and UI result callback behavior after writer failure. Our account client still
+has no human verification commit API. Existing replacement history labels the
+new identity unverified; it does not prove an implemented editable verification
+metadata record. No live mark/unmark or identity replacement was performed.
+
+Private artifacts retain `safety-number-local-click-5XZ.smali`,
+`safety-number-local-click-5Xc.smali`, `safety-number-confirmation-positive.smali`,
+`safety-number-local-toggle-producers.txt`, `safety-number-verification-ui-render.smali`,
+`safety-number-local-verification-state.smali`,
+`safety-number-verification-render-state-callers.txt` and
+`safety-number-verified-bool-test.smali`. Exact 4AH constructor search found
+one site in DUm.invokeSuspend. Existing APK instruction dumps remain preserved;
+the corrected writer is saved separately rather than overwriting its source trace.
+
+Validation: rebuilt disassembler rendered the actual Cg3.A00 verified and
+actionSeq stores with their resolved fields/registers. Formatting, 530
+workspace/all-feature tests (zero failed/ignored), strict workspace Clippy,
+CLI reference regeneration/test and repository hygiene passed. This changes
+research tooling only; no live verification claim or account mutation occurred.

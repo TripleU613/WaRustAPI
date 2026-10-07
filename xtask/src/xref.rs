@@ -306,7 +306,11 @@ fn opcode_name(op: u8) -> &'static str {
         0x56 => "iget-byte",
         0x54 => "iget-object",
         0x59 => "iput",
+        // Android DEX 22c writes; APK 37.71 Cg3.A00 stores verified/actionSeq
+        // at 025c/02a4. See docs/protocol/peer-identity.md.
+        0x5a => "iput-wide",
         0x5b => "iput-object",
+        0x5c => "iput-boolean",
         0x60 => "sget",
         0x62 => "sget-object",
         0x67 => "sput",
@@ -1966,6 +1970,27 @@ mod tests {
             bytes.len()
         );
     }
+    #[test]
+    fn decodes_apk_verification_boolean_and_sequence_writes() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // Literal 37.71 classes7.dex bytes at 0x5fc138 and 0x5fc180,
+        // Cg3.A00 method offsets 025c and 02a4. Minimal DEX intentionally
+        // leaves real field indices unresolved instead of inventing fields.
+        let bytes = [0x5c, 0x16, 0xa8, 0x29, 0x5a, 0x13, 0xa4, 0x29];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(
+            decoded.iter().map(|v| v.mnemonic).collect::<Vec<_>>(),
+            ["iput-boolean", "iput-wide"]
+        );
+        assert!(decoded[0].annotation.starts_with("v6, v1,"));
+        assert!(decoded[1].annotation.starts_with("v3, v1,"));
+        assert_eq!(decoded[0].byte_off, 0);
+        assert_eq!(decoded[1].byte_off, 4);
+        assert!(decoded.iter().all(|v| v.width == 2));
+        assert_eq!(decoded.last().unwrap().byte_off + 4, bytes.len());
+    }
+
     #[test]
     fn decodes_identity_metadata_and_serialized_type_field_reads() {
         let data = minimal_dex_header();
