@@ -754,3 +754,11 @@ clear marks without advancing sequence. Automated safety-number/QR comparison,
 complete APK inventory selection and companion verification sync remain open.
 No real account verification action was taken. See
 [local metadata](protocol/peer-identity.md#local-manual-verification-metadata-2026-10-07).
+
+2026-10-07 native comparison validation: actual V4 core/helper/remapper execution
+now reproduces 115 synthetic cases, including all 81 hosted-state combinations,
+with explicitly modeled dependencies. Both scanned hosted states absent skips
+known-state checks on the legacy path. This narrows implementation requirements;
+production parsing/orientation/Android username semantics remain open, and no
+live scan or human verification is claimed. See
+[comparison execution](protocol/safety-number.md#executed-native-v4-comparison-branches-2026-10-07).

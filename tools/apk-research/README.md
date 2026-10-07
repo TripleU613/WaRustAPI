@@ -237,7 +237,7 @@ PYTHONDONTWRITEBYTECODE=1 \
 All sixteen cases passed locally with these fixtures. Schema integration skips
 without `TELEWHATSAPP_SCHEMA_LIBRARY`; its missing/wrong-build preflight cases
 need no library or ELF dependency. Neither schema extraction nor these tests
-executes QR comparison or sets a peer's verified bit.
+executes whole QR comparison or sets a peer's verified bit.
 
 
 `--check bytes` executes the actual 37.71 ARM64 equal-length byte comparator,
@@ -257,3 +257,27 @@ PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
 
 [Primitive and orientation-dependent error evidence](../../docs/protocol/safety-number.md#comparison-primitives-and-orientation-dependent-statuses)
 records the remaining comparison-to-verification boundary.
+
+## Native V4 comparison branch checker
+
+`native_v4_comparison_check.py --library PATH` requires the pinned 37.71
+reconstructed `libwhatsapp.so`, Unicorn and pyelftools. It executes actual core,
+PN/username helper and remapper instructions on 115 built-in synthetic cases;
+getters, key/LID equality and MCF string primitives are modeled. It accepts no
+account data, keys or scanned payloads. Output is deterministic JSON matching
+[committed observations](../../docs/protocol/fingerprint-native-comparison-cases.json).
+Wrong/missing builds, unexpected branches and budget exhaustion refuse before
+printing partial results. Bounds are ten seconds/one million instructions per
+core/remap call. Both explicit native abort cases are intercepted. No native
+protobuf parsing, orientation wrapper or Android libc string behavior is tested.
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
+  tools/apk-research/native_v4_comparison_check.py --library \
+  lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so
+```
+
+`test_native_v4_comparison_check.py` covers missing/wrong-build refusals and
+compares all observations against the committed artifact. Actual emulation skips
+unless `TELEWHATSAPP_FINGERPRINT_LIBRARY` is set. See the
+[execution scope and findings](../../docs/protocol/safety-number.md#executed-native-v4-comparison-branches-2026-10-07).

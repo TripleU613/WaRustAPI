@@ -304,3 +304,18 @@ regenerated CLI reference and repository hygiene passed (304 local links).
 The first suite run caught the new OpenAPI `x-cli` including flags instead of
 the command name; corrected to the repository's command-name contract before
 rerunning successfully.
+
+Native V4 comparison follow-up (offline, 2026-10-07): 115 synthetic cases execute
+actual APK 37.71 comparison/helper/remapper branches with explicit host-modeled
+getters and string/key/LID primitives. All 81 hosted-state combinations confirm
+that both scanned states absent takes the legacy success branch regardless of
+known states. Missing-versus-unequal username results and version-selected key
+checks are reproduced. Converter refusal codes are statically attributed.
+Whole parsing/orientation/Android string behavior and production scanning remain
+unimplemented; no account was marked or changed.
+[Executed branches and boundaries](docs/protocol/safety-number.md#executed-native-v4-comparison-branches-2026-10-07).
+Validation: all 19 pinned native tooling tests and 36 CLI/API tests passed;
+CLI reference regeneration and repository hygiene passed (310 local links).
+The final attributed observation artifact also regenerated identically and
+passed its three focused preflight/execution checks. Rust runtime code did not
+change in this research increment.

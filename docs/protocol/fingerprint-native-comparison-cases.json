@@ -1,0 +1,924 @@
+{
+  "apk_build": "2.26.37.71",
+  "library_sha256": "f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a",
+  "evidence": "observed/offline with modeled dependencies",
+  "core_address": "0x7152fc",
+  "helpers_range": "0x7155d8..0x715688",
+  "remapper_address": "0x7152b8",
+  "status_table_address": "0x302404",
+  "scope": "native core, PN/username helpers and status remapper; modeled dependencies; not whole QR comparison",
+  "cases": [
+    {
+      "case": "baseline-v0",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "key-side0-v0",
+      "version": 0,
+      "code": -14,
+      "remapped_code": -14,
+      "instructions": 43,
+      "modeled_string_comparisons": 0
+    },
+    {
+      "case": "unselected-key-side0-v0",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "key-side1-v0",
+      "version": 0,
+      "code": -15,
+      "remapped_code": -15,
+      "instructions": 49,
+      "modeled_string_comparisons": 0
+    },
+    {
+      "case": "unselected-key-side1-v0",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "baseline-v1",
+      "version": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "key-side0-v1",
+      "version": 1,
+      "code": -14,
+      "remapped_code": -14,
+      "instructions": 43,
+      "modeled_string_comparisons": 0
+    },
+    {
+      "case": "unselected-key-side0-v1",
+      "version": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "key-side1-v1",
+      "version": 1,
+      "code": -15,
+      "remapped_code": -15,
+      "instructions": 49,
+      "modeled_string_comparisons": 0
+    },
+    {
+      "case": "unselected-key-side1-v1",
+      "version": 1,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "remote-lid",
+      "version": 0,
+      "code": -12,
+      "remapped_code": -11,
+      "instructions": 38,
+      "modeled_string_comparisons": 0
+    },
+    {
+      "case": "core-does-not-repeat-local-orientation-check",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "no-identifiers-known-side0",
+      "version": 0,
+      "code": -39,
+      "remapped_code": -40,
+      "instructions": 67,
+      "modeled_string_comparisons": 0
+    },
+    {
+      "case": "no-identifiers-scanned-side0",
+      "version": 0,
+      "code": -39,
+      "remapped_code": -40,
+      "instructions": 69,
+      "modeled_string_comparisons": 0
+    },
+    {
+      "case": "pn-mismatch-side0",
+      "version": 0,
+      "code": -17,
+      "remapped_code": -16,
+      "instructions": 109,
+      "modeled_string_comparisons": 0
+    },
+    {
+      "case": "pn-omission-known-side0",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "pn-omission-scanned-side0",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 224,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "username-different-side0",
+      "version": 0,
+      "code": -24,
+      "remapped_code": -25,
+      "instructions": 173,
+      "modeled_string_comparisons": 1
+    },
+    {
+      "case": "username-known-absent-side0",
+      "version": 0,
+      "code": -28,
+      "remapped_code": -28,
+      "instructions": 156,
+      "modeled_string_comparisons": 0
+    },
+    {
+      "case": "username-scanned-absent-side0",
+      "version": 0,
+      "code": -26,
+      "remapped_code": -27,
+      "instructions": 154,
+      "modeled_string_comparisons": 0
+    },
+    {
+      "case": "both-usernames-absent-side0",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_string_comparisons": 1
+    },
+    {
+      "case": "modeled-case-insensitive-side0",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "no-identifiers-known-side1",
+      "version": 0,
+      "code": -41,
+      "remapped_code": -42,
+      "instructions": 88,
+      "modeled_string_comparisons": 0
+    },
+    {
+      "case": "no-identifiers-scanned-side1",
+      "version": 0,
+      "code": -41,
+      "remapped_code": -42,
+      "instructions": 90,
+      "modeled_string_comparisons": 0
+    },
+    {
+      "case": "pn-mismatch-side1",
+      "version": 0,
+      "code": -19,
+      "remapped_code": -18,
+      "instructions": 125,
+      "modeled_string_comparisons": 0
+    },
+    {
+      "case": "pn-omission-known-side1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 226,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "pn-omission-scanned-side1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 227,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "username-different-side1",
+      "version": 0,
+      "code": -29,
+      "remapped_code": -30,
+      "instructions": 221,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "username-known-absent-side1",
+      "version": 0,
+      "code": -33,
+      "remapped_code": -33,
+      "instructions": 204,
+      "modeled_string_comparisons": 1
+    },
+    {
+      "case": "username-scanned-absent-side1",
+      "version": 0,
+      "code": -31,
+      "remapped_code": -32,
+      "instructions": 202,
+      "modeled_string_comparisons": 1
+    },
+    {
+      "case": "both-usernames-absent-side1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 223,
+      "modeled_string_comparisons": 1
+    },
+    {
+      "case": "modeled-case-insensitive-side1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1--1--1--1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 243,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1--1--1-0",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 245,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1--1--1-1",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 245,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1--1-0--1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1--1-0-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1--1-0-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1--1-1--1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1--1-1-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1--1-1-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-0--1--1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 243,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-0--1-0",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 245,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-0--1-1",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 245,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-0-0--1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-0-0-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-0-0-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-0-1--1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-0-1-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-0-1-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-1--1--1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 243,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-1--1-0",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 245,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-1--1-1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 245,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-1-0--1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-1-0-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-1-0-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-1-1--1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-1-1-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted--1-1-1-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0--1--1--1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 243,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0--1--1-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 240,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0--1--1-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 240,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0--1-0--1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0--1-0-0",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0--1-0-1",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0--1-1--1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0--1-1-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0--1-1-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-0--1--1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 243,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-0--1-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 240,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-0--1-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 240,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-0-0--1",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-0-0-0",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-0-0-1",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-0-1--1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-0-1-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-0-1-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-1--1--1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 243,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-1--1-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 240,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-1--1-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 240,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-1-0--1",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-1-0-0",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-1-0-1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-1-1--1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-1-1-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-0-1-1-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1--1--1--1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 243,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1--1--1-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 240,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1--1--1-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 240,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1--1-0--1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1--1-0-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1--1-0-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1--1-1--1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1--1-1-0",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1--1-1-1",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-0--1--1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 243,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-0--1-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 240,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-0--1-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 240,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-0-0--1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-0-0-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-0-0-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-0-1--1",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-0-1-0",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-0-1-1",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-1--1--1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 243,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-1--1-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 240,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-1--1-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 240,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-1-0--1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-1-0-0",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-1-0-1",
+      "version": 0,
+      "code": -34,
+      "remapped_code": -35,
+      "instructions": 236,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-1-1--1",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-1-1-0",
+      "version": 0,
+      "code": -36,
+      "remapped_code": -37,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "hosted-1-1-1-1",
+      "version": 0,
+      "code": 0,
+      "remapped_code": 0,
+      "instructions": 241,
+      "modeled_string_comparisons": 2
+    },
+    {
+      "case": "unknown-scanned-hosted-side0",
+      "native_abort": true
+    },
+    {
+      "case": "unknown-scanned-hosted-side1",
+      "native_abort": true
+    }
+  ]
+}

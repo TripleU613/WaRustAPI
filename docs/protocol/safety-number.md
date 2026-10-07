@@ -1017,3 +1017,95 @@ lab/fingerprint-qr-synthetic-check. No current-account QR, native full serialize
 execution, actual QR image/scan, live request or human verification is claimed.
 Final staged repository hygiene (302 local links) and diff whitespace checks
 also passed; only reviewed source/docs and synthetic fixtures are committed.
+
+## Executed native V4 comparison branches (2026-10-07)
+
+**Observed/offline, with explicitly modeled dependencies:**
+[native_v4_comparison_check.py](../../tools/apk-research/native_v4_comparison_check.py)
+executes actual APK **2.26.37.71** reconstructed `libwhatsapp.so` instructions
+at `0x7152fc..0x715688` (core plus PN/username helpers) and
+`0x7152b8..0x7152fc` (status remapper), reading its table at `0x302404`.
+The runner requires SHA-256
+`f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a`,
+from APK SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+This builds on the attributed static comparator trace above. It accepts a
+library path only and supplies built-in synthetic parameters, never account
+keys/identifiers or scanned user payloads. No account store/network opens.
+
+The [115-case artifact](fingerprint-native-comparison-cases.json) records
+actual core code, remapped code, instruction count and modeled-string-call
+count, or an explicit invariant-abort observation. Its expectations are
+literal instruction return branches and the separately traced table, not a
+Rust comparator's expected values. All ordinary runs returned to the designated
+return PC, using at most **245 instructions** including remapping. Each core
+and remapper invocation has a ten-second/one-million-instruction bound;
+unexpected branches, budget exhaustion and wrong/missing libraries refuse
+without partial JSON output. Expected aborts are intercepted as Python
+exceptions, not allowed to abort a host process.
+
+**Modeled boundary:** LID/key getter-equality helpers, PN/username/hosted getters,
+MCF string allocation/release, PN byte equality and username string comparison
+are host models. Logging is disabled. The actual PN helper converts the modeled
+equality boolean into its mismatch result; the actual username helper executes
+its absent/present branches and passes literal flag 1 to the modeled string
+comparison. Host `bytes.lower()` is used on these synthetic ASCII examples,
+**not** asserted to reproduce Android libc/locale behavior. Whole protobuf
+unpacking/conversion, native object construction, orientation wrapper, JNI,
+Android string primitives and current APK inventory are **not executed**.
+
+The cases establish these branch results with matching key/LID models:
+
+| Pairing issue | Local code | Remote code |
+| --- | --- | --- |
+| Either known or scanned side lacks both PN and username | -39 | -41 |
+| Both PNs present but unequal | -17 | -19 |
+| Both usernames present but modeled comparison unequal | -24 | -29 |
+| Known username present, scanned absent | -26 | -31 |
+| Known username absent, scanned present | -28 | -33 |
+| Known/scanned hosted state unequal when checked | -34 | -36 |
+
+A missing PN alone succeeds when the usernames match; both absent usernames
+succeed when PNs match. Versions 0/1 select only their public/hash key field;
+a mismatch in the other field is ignored on the core path. Known remote LID
+mismatch is -12. The core does **not** repeat the known-local LID orientation
+check; the previously traced wrapper supplies that guard. Core zero in the
+synthetic local-LID mismatch case is therefore **not** a valid full scan result.
+The runner invokes remapping separately; it does not prove which orientation
+would select that remapper. Actual wrapper tracing remains the authority for
+when to swap/remap, and success alone never records human verification.
+
+All **81** combinations of known and scanned hosted states {-1,0,1} were
+executed. When **both scanned states are absent (-1)**, the legacy branch
+returns zero regardless of the two known states. When at least one scanned
+state is present, it checks local agreement first (-34), then remote (-36).
+This resolves the earlier "can return zero" boundary; do not reject the legacy
+both-absent case solely because known states are present. Two direct-core cases
+with scanned state 2 reach native abort. They are invariant tests, **not** proof
+that a real QR causes an abort: the preceding converter rejects invalid known
+enum values before calling this core.
+
+**Confirmed/static converter details, same build:** `0x7150ac..0x715264`
+returns -43 for absent LID (`0x715134`), -1 for failed
+LID ASCII creation (`0x71514c`), -44 for failed PN creation (`0x71518c`), -23
+for failed username creation (`0x715128`), -38 for a present hosted enum outside
+0/1 (`0x715174..0x715188`), and -4 for an absent version-selected key
+(`0x7151a0..0x715220`). Hosted absence becomes -1. These are internal native
+codes, not server reasons. No key length/content validation is established by
+the converter trace alone. Complete protobuf-C acceptance (including duplicate
+fields/unknown enums), Android username behavior, UI status meanings and a
+production scan comparator remain **unknown/unimplemented**. The private
+`fingerprint-v4-qr-parse.txt` and comparison dumps retain the source ranges.
+
+Reproduce:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
+  tools/apk-research/native_v4_comparison_check.py \
+  --library lab/apk-2.26.37.71/native/qiling-rootfs/decoded/libwhatsapp.so
+```
+
+The artifact regenerated identically in a separate invocation. Three focused
+checks passed, including actual pinned execution and missing/wrong-build
+refusals with empty stdout. This is offline branch verification, not a live
+scan, automatic verified-state write or companion synchronization.
