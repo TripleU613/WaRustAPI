@@ -818,7 +818,8 @@ showed that nothing but keepalive replies and two notifications had come in.
 delivery and on two resends that answered our retry receipt (`enc count=1`),
 across four days. The inbox mapped the LID to the phone JID and decrypted with
 `comparison-direct:<phone>`. But a LID-addressed chat encrypts under the LID
-(`LX/CPQ->A00`, confirmed), and our group fan-outs had established the session
+(authenticated offline recovery; the older unversioned `LX/CPQ.A00`
+citation is not established for current 2.26.37.71), and our group fan-outs had established the session
 with that person's LID device under `comparison-direct:<lid>`, so the phone
 reply rode a ratchet we were not looking at.
 
@@ -899,3 +900,45 @@ tests passed, strict Clippy, rustdoc with warnings denied, formatting, generated
 CLI-reference verification and repository hygiene passed. The receipt OpenAPI
 schema was corrected to the actual CLI fields and states. Handset ticks and
 fresh-message automatic-read behavior remain unconfirmed in this run.
+
+
+## Authenticated duplicate auto-read correction, 2026-10-07
+
+**Observed live:** after canonical recovery, a 45-second receive-only session
+logged in and activated successfully. The server redelivered one direct and
+one group message; both were `Duplicate`, delivery-confirmed, and not marked
+read. No fresh message arrived. The durable queue still held six acknowledged
+reads and one acknowledged retry after the window.
+
+**Confirmed in our code / corrected:** `connection::drive` and lab receive
+only invoked the automatic-read helper on `Decrypted`, suppressing an eligible
+authenticated duplicate that had been recovered offline. Both now also invoke
+it on `Duplicate` when `transport.mark_read` is enabled. The helper still
+requires a saved decrypted, readable payload and uses the original authenticated
+route. Cleared/consumed records and non-readable protocol content are skipped.
+Its durable once-only queue prevents repeats after ACK or uncertain writes.
+This does not mark arbitrary historical messages read merely at startup; it
+responds to a delivered authenticated duplicate under the explicit read policy.
+
+A real node-loop regression starts from an offline-authenticated text row,
+observes delivery confirmation plus one read receipt, cuts the read write,
+and confirms that another epoch/redelivery sends no second read. The reserve
+remains `outcome_unknown` pending actual server acknowledgement.
+
+For bounded validation, the two recovered Text events were selected from the
+journal in memory and queued with the existing `mark-read` command. The private
+selector JSON contains only their chat/message IDs, no message content. No
+network request occurred while selecting/queuing. The subsequent short session
+transmits these receipts through the normal durable actor without sending
+queued chats; results are recorded after completion. This is an explicit saved-
+message read test, not proof of a fresh incoming automatic-read result.
+
+
+**Observed live, saved-message read test:** the subsequent 20-second receive-
+only session logged in/activated successfully and obtained matching server
+ACKs for both selected recovered text reads. Final durable totals are eight
+`read/server_acknowledged` and one `retry/server_acknowledged`. No queued chat
+send was enabled. This verifies direct/group saved-message read receipt
+acceptance; it does not confirm handset blue ticks or a fresh incoming automatic
+read. Private selectors and redacted outcomes remain under ignored account
+storage. No automatic retry of these acknowledged receipts is permitted.

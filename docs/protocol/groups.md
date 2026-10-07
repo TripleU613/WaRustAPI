@@ -77,7 +77,7 @@ child decrypts, its plaintext is scanned for field 2; if present and its
 `process_sender_key_distribution_message` (wacore-libsignal 0.7.0), storing the
 updated `SenderKeyRecord` at `sk:{group_jid}:{sender_non_ad_jid}` in
 `Table::SenderKeys`. The SKDM-bearing child advances that member's ordinary
-direct Signal session (`comparison-direct:<phone>`), so the session, pinned
+direct Signal session (`comparison-direct:<selected PN or LID>`), so the session, pinned
 identity, any consumed one-time prekey and the sender key all commit together.
 A direct (non-group) message carrying field 2 is handled the same way.
 
@@ -85,9 +85,11 @@ A direct (non-group) message carrying field 2 is handled the same way.
 `participant` is a LID (`LX/ADw->A02` reads it as a `UserJid`, **confirmed**;
 it is the group analogue of `sender_pn`). `participant_lid`, `sender_lid` and
 `peer_recipient_pn` also exist in this build. When the attribute is absent, a
-LID participant is mapped through the `authenticated-lid:` checkpoint the direct
-path writes; an unmapped LID has no addressable session, so its SKDM child is
-skipped and only a previously stored sender key can decrypt the `skmsg`.
+LID participant may use the `authenticated-lid:` checkpoint the direct path
+writes. A held LID session takes priority over a PN alias; an unmapped LID can
+also use its held LID session. Without either mapping or session, its SKDM child
+is skipped and only a previously stored sender key can decrypt the `skmsg`.
+See the dated session-selection correction below.
 
 **skmsg receive**: `signal::group::receive_group` calls `group_decrypt` with the
 key in effect (the one an SKDM in the same stanza just installed, else the
@@ -940,3 +942,61 @@ and the normal delivery receipt follows. Verified offline by replaying the
 preserved capture (`lab-inbox --replay-captures`: 1 newly decrypted). The
 history bundle's own contents (an encrypted media reference) are not fetched
 or applied.
+
+
+## Group pairwise PN/LID session correction, 2026-10-07
+
+**Inferred from APK addressing; observed offline:** `participant_pn` is a contact
+alias, not a ratchet selector. The existing direct-path authenticated recovery evidence
+([LID receive note](messaging-transport.md#lid-senders-decrypt-with-the-lid-session-2026-09-28))
+shows LID session addressing, while the earlier note attributes `LX/ADw.A02`
+reads the group participant PN alias. The earlier group implementation always
+selected that PN session, even when a different LID session already existed.
+
+After the explicit authenticated identity policy recovered a direct capture in
+an isolated store, a group pairwise capture still reported a missing/invalid
+one-time prekey. Selecting its held LID session recovered it: **one newly
+decrypted, 35 already committed, zero still unsupported** on replay of the
+original captures. The missing-prekey result was produced by our wrong session
+selection; it did not establish that the required key was globally absent.
+The original account database stayed byte-for-byte unchanged. No receipt,
+network request, key invention, identity reset or plaintext export occurred.
+This is authentication/decryption of a captured group payload, not handset
+confirmation or proof that it is a fresh human reply.
+
+**Implemented:** LID participants prefer a held LID session; a mapped prekey
+message establishes its session under the LID, as direct receive already does.
+A normal `msg` falls back to PN only when no LID session is held. An unmapped
+LID may use a held LID session; absent both mapping and session, it is still
+skipped. PN participants retain PN selection. There is no fallback on a failed
+MAC: that would risk advancing an unrelated ratchet. The selected session,
+identity, SKDM and inbox still share the existing atomic commit.
+
+Regression coverage exercises actual generated group prekey decryption with
+an incompatible PN session beside the valid LID session; it also covers PN
+fallback, mapped new prekeys, unmapped held sessions and malformed PN aliases.
+Companion-device addressing remains as before; full device-specific receive
+routing is not established by this primary-device recovery.
+
+
+**Observed offline, subsequent canonical recovery:** after preserving the
+original configuration/state and selecting the APK-compatible incoming policy,
+the real saved account recovered the pending direct and group captures
+(two newly decrypted, 34 duplicates, zero unsupported). The local account
+identity and all send IDs/reservations were preserved; previous peer state is
+archived atomically. No receipt/network request occurred in replay.
+
+
+**Negative static result / attribution correction:** scoped disassembly of
+current comparison APK 2.26.37.71 (SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`)
+shows `LX/CPQ.A00(ZL)` as a cached message-policy boolean helper with fields
+`0bA`, `0Fs` and a concurrent map. It does not construct a Signal session
+address. The older direct note's unversioned `CPQ.A00` citation must not be
+used as confirmed 37.71 addressing evidence. The original reference build
+and a replacement static producer anchor remain **unknown**. The group
+session-choice correction is independently **observed offline** by successful
+message authentication against the original server captures; its APK routing
+producer still needs re-anchoring by strings/callers rather than class-name
+reuse. The inherited `ADw.A02` alias citation was not independently retraced in
+this change. No claim here derives a mandatory field from its mere existence.

@@ -41,7 +41,17 @@ first-seen conflict fingerprints across restart/redelivery, inspectable through
 not a legitimate replacement. A subsequent explicit `apk_authenticated` policy
 adds authenticated remote replacement, archived prior state and atomic journal
 events. Isolated replay recovered one direct message from the original captures,
-with the original account unchanged; group session-alias/prekey recovery remains; the current live profile still uses the default pin refusal. See [peer identity evidence](protocol/peer-identity.md).
+with the original account unchanged. Correcting group pairwise selection to
+prefer the held LID session recovered the remaining group capture; the saved profile now selects the APK-compatible policy in a private corrected
+configuration. Canonical offline replay recovered both pending captures; previous
+peer keys/sessions and the original configuration were preserved. See [peer identity evidence](protocol/peer-identity.md).
+
+A subsequent 45-second receive-only session delivery-confirmed both recovered
+messages as duplicates. No fresh message arrived; the duplicate auto-read gap
+was corrected and covered by a real-loop write-cut regression. A bounded
+explicit saved-message read test obtained matching server ACKs for both recovered
+text reads (eight reads plus the earlier retry acknowledged in total). Handset
+blue ticks remain unconfirmed; do not call this fresh-message auto-read validation.
 
 Work remains on broad notification/cross-device synchronization, socket-level
 cut-point crash coverage and full outbox integration. Preserve the existing encrypted account, identities, send IDs

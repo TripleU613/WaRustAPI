@@ -98,7 +98,8 @@ fn lid_sender(node: &Node) -> Option<Jid> {
 /// Which peer's Signal session decrypts a direct message.
 ///
 /// The session is the one for the address the sender used: a LID-addressed
-/// chat encrypts under the LID (`LX/CPQ->A00`, confirmed), and our own sends to
+/// chat used the held LID session (authenticated recovery, 2026-09-28;
+/// the old CPQ.A00 citation is not re-anchored for 37.71), and our own sends to
 /// that person's LID device (every group fan-out) keyed their session by the
 /// LID. Looking a LID sender up by the phone number it maps to found a
 /// different ratchet, so every reply they sent over the LID session failed —
@@ -451,7 +452,8 @@ async fn process_direct(
         return Ok(IncomingResult::Unsupported);
     };
     // The Signal session is the one for the address the sender used. A
-    // LID-addressed chat encrypts under the LID (`LX/CPQ->A00`, confirmed), and
+    // LID-addressed chat used the held LID session (authenticated 2026-09-28
+    // recovery; the old CPQ.A00 citation is not re-anchored for 37.71), and
     // our own sends to that person's LID device — every group fan-out — keyed
     // their session `comparison-direct:<lid>`. Looking a LID sender up by the
     // phone number it maps to found a different ratchet, so every reply they
@@ -686,34 +688,59 @@ async fn process_direct(
 
 /// The participant's direct-session identity. The sender-key distribution for a
 /// group arrives inside an ordinary Signal session with that member, keyed the
-/// same way as a direct chat (`comparison-direct:<phone>`). A LID participant is
-/// mapped through the `authenticated-lid:` checkpoint the direct path writes; an
-/// unmapped LID has no pinned session, so its SKDM child is skipped.
+/// same way as a direct chat (`comparison-direct:<selected PN or LID>`). Prefer
+/// a held LID session, or establish a mapped LID prekey session. An explicit PN
+/// alias supplies contact identity but does not select a different ratchet.
+/// An unmapped LID can use its held session; without either it remains skipped.
 #[cfg(feature = "experimental-signal-crypto")]
 fn participant_session_jid(
     store: &ProtocolStore,
     node: &Node,
     participant: &Jid,
 ) -> Result<Option<Jid>> {
-    // An explicit phone mapping on the stanza wins when the server supplies one.
+    // Authenticated original-capture recovery (2026-10-07, groups.md) proved
+    // that the held LID ratchet decrypts where the PN alias does not. The older
+    // CPQ.A00 citation is not established for 37.71; its producer is untraced.
+    // participant_pn is a contact alias, not authority to switch ratchets.
+    let mut phone = None;
     for attr in ["participant_pn", "sender_pn"] {
-        if let Some(phone) = node.get_attr(attr).and_then(|v| {
-            v.as_jid()
-                .cloned()
-                .or_else(|| Jid::parse(v.as_text()?).ok())
-        }) && phone.server == Server::User
+        if let Some(value) = super::receipts::jid(node, attr)
+            && value.server == Server::User
         {
-            return Ok(Some(phone.to_non_ad()));
+            phone = Some(value.to_non_ad());
+            break;
         }
     }
-    match participant.server {
-        Server::User => Ok(Some(participant.to_non_ad())),
-        Server::Lid => {
-            let map_key = format!("authenticated-lid:{}", participant.to_non_ad());
-            store.read(|tx| tx.get_json::<Jid>(Table::Checkpoints, map_key.as_bytes(), 1))
-        }
-        _ => Ok(None),
+    if participant.server == Server::User {
+        return Ok(phone.or_else(|| Some(participant.to_non_ad())));
     }
+    if participant.server != Server::Lid {
+        return Ok(None);
+    }
+    let lid = participant.to_non_ad();
+    if phone.is_none() {
+        let map_key = format!("authenticated-lid:{lid}");
+        phone = store.read(|tx| tx.get_json::<Jid>(Table::Checkpoints, map_key.as_bytes(), 1))?;
+    }
+    let held = store
+        .read(|tx| {
+            tx.get_json::<Vec<u8>>(
+                Table::SignalSessions,
+                format!("comparison-direct:{lid}").as_bytes(),
+                1,
+            )
+        })?
+        .is_some();
+    let is_prekey = node.child_nodes().iter().any(|n| {
+        n.description == "enc"
+            && n.get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg")
+            && n.get_attr("v").and_then(|v| v.as_text()) == Some("2")
+    });
+    Ok(match phone {
+        Some(phone) => Some(direct_session_peer(&phone, Some(lid), held, is_prekey)),
+        None if held => Some(lid),
+        None => None,
+    })
 }
 
 /// A group member's direct Signal session advance, staged for the atomic commit.
@@ -721,7 +748,7 @@ fn participant_session_jid(
 /// ordinary direct session, so reading it moves that session forward.
 #[cfg(feature = "experimental-signal-crypto")]
 struct MemberSession {
-    /// `comparison-direct:<phone>` storage key.
+    /// `comparison-direct:<selected PN or LID>` storage key.
     peer_key: String,
     /// Session and identity as read before decryption, for the OCC check.
     previous_session: Option<Vec<u8>>,
@@ -1063,6 +1090,70 @@ mod resilience_tests {
         model::ids::AccountId,
         store::{MasterKey, OpenOptions, StaticKeySource},
     };
+
+    #[test]
+    fn group_lid_session_selection_preserves_phone_fallback_and_existing_ratchets() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("aliases.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([3; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let phone = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let lid = Jid::parse("123456789@lid").unwrap();
+        let node = |kind, mapped| {
+            let n = Node::new("message")
+                .attr("from", "120363000000000001@g.us")
+                .attr("participant", lid.clone())
+                .children(vec![
+                    Node::new("enc")
+                        .attr("type", kind)
+                        .attr("v", "2")
+                        .bytes(vec![1]),
+                ]);
+            if mapped {
+                n.attr("participant_pn", phone.clone())
+            } else {
+                n
+            }
+        };
+        assert_eq!(
+            participant_session_jid(&store, &node("msg", true), &lid).unwrap(),
+            Some(phone.clone())
+        );
+        assert_eq!(
+            participant_session_jid(&store, &node("pkmsg", true), &lid).unwrap(),
+            Some(lid.clone())
+        );
+        assert_eq!(
+            participant_session_jid(&store, &node("msg", false), &lid).unwrap(),
+            None
+        );
+        let key = format!("comparison-direct:{lid}");
+        store
+            .write(|tx| tx.put_json(Table::SignalSessions, key.as_bytes(), 1, &vec![1u8; 20]))
+            .unwrap();
+        for mapped in [false, true] {
+            assert_eq!(
+                participant_session_jid(&store, &node("msg", mapped), &lid).unwrap(),
+                Some(lid.clone())
+            );
+        }
+        // A malformed mapping cannot convert a group's identity into a peer.
+        let bad = node("msg", false).attr("participant_pn", "120363000000000002@g.us");
+        assert_eq!(
+            participant_session_jid(&store, &bad, &lid).unwrap(),
+            Some(lid)
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<Vec<u8>>(Table::SignalSessions, key.as_bytes(), 1))
+                .unwrap(),
+            Some(vec![1; 20])
+        );
+    }
 
     /// A message we cannot open must not end the session. Before this, a single
     /// undecryptable `pkmsg` propagated out of `process` and tore down the whole

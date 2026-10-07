@@ -7,32 +7,29 @@ superseded conclusion and dead end, is in
 **acked** = the server accepted it but a handset result is not confirmed,
 **offline** = tested locally only.
 
-Receive-path correction (2026-10-06): `listen` now requests a resend for an
-undecryptable incoming message through the same durable once-only retry queue
-as lab receive; `receipts` inspects the outcome. It preserves uncertain writes
-and never substitutes a missing Signal registration ID. This does not explain
-the earlier window with no incoming messages. A 90-second receive-only session
-logged in and activated successfully; one
-automatic retry was server-acknowledged, but its redelivery still failed
-decryption. Offline inspection confirms that the incoming prekey identities
-differ from both saved PN and LID pins; the original cause remains unknown. `lab-inbox --inspect` exposes these comparisons
-without keys or session mutation. Direct/group prekey processing also saves
-first-seen fingerprint conflicts durably; `identity-conflicts` inspects them
-offline. These are unauthenticated observations, not key replacement or safety
-number verification. [Peer identity evidence](docs/protocol/peer-identity.md)
-records the APK verification-state transition and remaining trust-policy gaps.
-An explicit `transport.identity_changes=apk_authenticated` policy now permits
-authenticated remote prekey replacements with atomic encrypted history and an
-`IdentityChanged` event; default stays `pinned`. Offline replay exposes the
-explicit opt-in. This does not provide human safety-number verification.
-Isolated replay using that explicit policy recovered one direct message and
-emitted one identity-change event; the original database stayed byte-for-byte
-unchanged. A group capture still needs session-alias/prekey diagnosis.
-Fresh incoming/auto-read validation remains
-pending. Private `lab/` state was recovered from the former checkout in the
-desktop Trash, preserving the original. Profile `l`
-opens offline with no eligible chat sends or queued actions. Evidence and
-tests: [runtime parity correction](docs/protocol/messaging-transport.md#runtime-parity-correction-2026-10-06).
+Receive recovery (2026-10-07): the saved account recovered its blocked direct
+and group texts, then delivery-confirmed both on live redelivery. The two
+recovered-message read receipts received matching server ACKs. Current receipt
+state: eight acknowledged reads and one acknowledged retry. Handset blue ticks
+and fresh-message automatic-read validation remain unconfirmed.
+
+The causes in our implementation were blanket refusal of changed peer pins
+and group pairwise selection of a PN ratchet despite a held LID session. An
+explicit APK-compatible incoming policy now commits an authenticated peer
+replacement atomically with encrypted prior-key/session history and an
+`IdentityChanged` event. The library default remains `pinned`; profile `l`
+selects `apk_authenticated` in its preserved private corrected configuration.
+No local account identity, send ID or reservation was reset. Automatic reads
+also cover eligible authenticated duplicates, with once-only write-cut coverage.
+Human safety-number verification remains unfinished.
+
+Private state was recovered from the former checkout in the desktop Trash,
+with originals preserved. The selected profile has no eligible chat sends or
+queued actions. The successful 45-second receive window and 20-second read
+window sent no queued chats. Evidence: [peer identity](docs/protocol/peer-identity.md),
+[group session selection](docs/protocol/groups.md#group-pairwise-pnlid-session-correction-2026-10-07),
+[read recovery](docs/protocol/messaging-transport.md#authenticated-duplicate-auto-read-correction-2026-10-07).
+The earlier interval with no incoming messages is still unexplained.
 
 ## Accounts
 
@@ -93,7 +90,7 @@ redelivered at every login.
 
 ## Offline verification
 
-500 tests pass on 2026-10-07 (`cargo test --locked --workspace --all-features`); Clippy with
+502 tests pass on 2026-10-07 (`cargo test --locked --workspace --all-features`); Clippy with
 `-D warnings` is clean. Rust 1.98.1 locally and in CI. Store, codec, crash
 matrix, registration state machine and transport coverage are described in
 [docs/design](docs/design/README.md) and the per-area protocol docs.

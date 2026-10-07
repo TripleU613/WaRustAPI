@@ -501,7 +501,7 @@ pub(crate) async fn drive(
                 // Opt-in: mark it read too. A refusal (an unsupported chat form,
                 // say) is logged and skipped; it must not end the session.
                 let mut marked_read = false;
-                if config.transport.mark_read && received == super::inbox::IncomingResult::Decrypted {
+                if config.transport.mark_read && matches!(received, super::inbox::IncomingResult::Decrypted | super::inbox::IncomingResult::Duplicate) {
                     match super::receipts::queue_read_for_incoming(&store, &node) {
                         Ok(0) => {}
                         Ok(_) => {
@@ -650,6 +650,14 @@ mod tests {
         send_outbox: bool,
         ticket: Option<crate::model::ids::LocalMessageId>,
     ) -> Fake {
+        start_with_config(store, send_outbox, ticket, config())
+    }
+    fn start_with_config(
+        store: &Arc<ProtocolStore>,
+        send_outbox: bool,
+        ticket: Option<crate::model::ids::LocalMessageId>,
+        config: LabRegistrationConfig,
+    ) -> Fake {
         let (to_worker, incoming) = mpsc::channel(16);
         let (outgoing, from_worker) = mpsc::channel(16);
         let (stop, stop_rx) = watch::channel(false);
@@ -657,7 +665,7 @@ mod tests {
         let task = tokio::spawn(drive(
             Session {
                 store: store.clone(),
-                config: config(),
+                config,
                 epoch: ConnectionEpoch(1),
                 send_outbox,
                 ticket,
@@ -999,6 +1007,68 @@ mod tests {
         })
         .await
         .unwrap();
+        fake.stop_cleanly().await;
+    }
+
+    #[tokio::test]
+    async fn automatic_read_for_recovered_duplicate_is_once_only_after_write_cut() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("offline-read.redb"));
+        let node = Node::new("message")
+            .attr("from", peer())
+            .attr("id", "OFFLINE-RECOVERED")
+            .attr("type", "text");
+        let key = format!("received:{}:OFFLINE-RECOVERED", peer());
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    key.as_bytes(),
+                    1,
+                    &serde_json::json!({"status":"decrypted","route":encode(&node)?,
+                "protobuf":vec![0x0au8,1,b'x']}),
+                )
+            })
+            .unwrap();
+        let mut configured = config();
+        configured.transport.mark_read = true;
+        let mut fake = start_with_config(&store, false, None, configured.clone());
+        fake.activate().await;
+        fake.deliver(node.clone()).await;
+        let (delivery, reply) = fake.written().await;
+        assert_eq!(delivery.description, "receipt");
+        assert_ne!(
+            delivery.get_attr("type").and_then(|v| v.as_text()),
+            Some("read")
+        );
+        reply.send(Ok(())).unwrap();
+        let (read, reply) = fake.written().await;
+        assert_eq!(
+            read.get_attr("type").and_then(|v| v.as_text()),
+            Some("read")
+        );
+        assert_eq!(
+            receipt_status(&store, "OFFLINE-RECOVERED"),
+            "outcome_unknown"
+        );
+        reply
+            .send(Err(Error::Transport(TransportError::PeerClosed)))
+            .unwrap();
+        assert!(fake.finished().await.is_err());
+        let mut fake = start_with_config(&store, false, None, configured);
+        fake.activate().await;
+        fake.deliver(node).await;
+        let (delivery, reply) = fake.written().await;
+        assert_ne!(
+            delivery.get_attr("type").and_then(|v| v.as_text()),
+            Some("read")
+        );
+        reply.send(Ok(())).unwrap();
+        fake.nothing_written(Duration::from_millis(100)).await;
+        assert_eq!(
+            receipt_status(&store, "OFFLINE-RECOVERED"),
+            "outcome_unknown"
+        );
         fake.stop_cleanly().await;
     }
 

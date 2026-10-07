@@ -197,8 +197,8 @@ pub fn queue_read(
 /// audioMessage 8, videoMessage 9, stickerMessage 26, ptvMessage 66.
 const READABLE_FIELDS: [u32; 8] = [1, 3, 6, 7, 8, 9, 26, 66];
 
-/// Queue a read receipt for one incoming message this client has just
-/// decrypted, when its content is something a person reads. Returns how many
+/// Queue a read receipt for one authenticated incoming message, including a
+/// duplicate recovered offline, when its content is something a person reads. Returns how many
 /// were queued (0 or 1).
 ///
 /// This is the automatic form of [`queue_read`], for a session whose operator

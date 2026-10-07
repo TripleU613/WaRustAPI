@@ -688,7 +688,11 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                 // is confirmed delivered.
                 let mut marked_read = false;
                 if config.transport.mark_read
-                    && incoming == whatsapp_api::transport::inbox::IncomingResult::Decrypted
+                    && matches!(
+                        incoming,
+                        whatsapp_api::transport::inbox::IncomingResult::Decrypted
+                            | whatsapp_api::transport::inbox::IncomingResult::Duplicate
+                    )
                 {
                     match whatsapp_api::transport::receipts::queue_read_for_incoming(&store, &node)
                     {

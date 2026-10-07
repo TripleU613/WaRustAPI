@@ -213,3 +213,38 @@ also confirms transaction rollback removes an attempted archive/journal append
 and the remote policy cannot bootstrap own-device sessions or replace saved
 local PN/LID aliases. This verifies the implementation and original-capture
 recovery offline; current live account policy remains `pinned`.
+
+
+**Subsequent observed offline correction:** selecting the held LID pairwise
+session recovered the remaining group capture in the same isolated store
+(one newly decrypted, 35 duplicates, zero unsupported). See
+[the group receive correction](groups.md#group-pairwise-pnlid-session-correction-2026-10-07).
+The earlier missing-prekey result was a wrong-session symptom, not proof that
+the account lacked every usable key. The original database remained unchanged.
+
+
+## Canonical saved-account recovery, 2026-10-07
+
+**Observed offline:** after the isolated test recovered both captures, the
+saved profile selected `transport.identity_changes=apk_authenticated` in
+`lab/accounts/l/request-authenticated-receive.json`. Its original request,
+profile and pre-recovery encrypted database were preserved privately before
+this data change. No local account key, account generation, send ID, reservation
+or refusal state was reset. The original configuration remains intact; the
+active profile points to the corrected request file.
+
+Canonical offline replay recovered **two** pending payloads, counted **34**
+duplicates, and left **zero** unsupported captures. The first authenticated
+peer replacement archives its old pin/session and emits `IdentityChanged`;
+the group reuses the corrected LID session. No receipt or network request was
+sent during replay. This count refers to authenticated payloads, not two new
+human replies. A subsequent bounded receive-only live check is recorded below
+when complete; do not infer automatic read-receipt success from offline replay.
+
+
+**Observed live follow-up:** the canonical account's 45-second receive-only
+session delivery-confirmed both recovered captures on duplicate redelivery.
+A 20-second follow-up session acknowledged both selected saved-message read
+receipts. The receive/config correction did not require local identity rotation
+or replaying any chat send. Handset confirmation and fresh-message auto-read
+remain unknown; see [the read recovery record](messaging-transport.md#authenticated-duplicate-auto-read-correction-2026-10-07).

@@ -334,12 +334,28 @@ mod tests {
                 .serialize()
                 .to_vec();
             let sender = Jid::parse("15557654321@s.whatsapp.net").unwrap();
-            let peer_key = format!("comparison-direct:{sender}");
+            let session_peer = if group {
+                Jid::parse("123456789@lid").unwrap()
+            } else {
+                sender.clone()
+            };
+            let peer_key = format!("comparison-direct:{session_peer}");
             let old_session = SessionRecord::new_fresh().serialize().unwrap();
             store
                 .write(|tx| {
                     tx.put_json(Table::PeerIdentities, peer_key.as_bytes(), 1, &old)?;
-                    tx.put_json(Table::SignalSessions, peer_key.as_bytes(), 1, &old_session)
+                    tx.put_json(Table::SignalSessions, peer_key.as_bytes(), 1, &old_session)?;
+                    if group {
+                        // A separate incompatible PN session must not displace
+                        // the sender's LID ratchet merely because its alias exists.
+                        tx.put_json(
+                            Table::SignalSessions,
+                            format!("comparison-direct:{sender}").as_bytes(),
+                            1,
+                            &vec![4u8; 20],
+                        )?;
+                    }
+                    Ok(())
                 })
                 .unwrap();
             let sending = AccountRecord {
@@ -365,7 +381,8 @@ mod tests {
                 let mut n = Node::new("message").attr("id", id).attr("type", "text");
                 n = if group {
                     n.attr("from", "120363000000000001@g.us")
-                        .attr("participant", sender.clone())
+                        .attr("participant", session_peer.clone())
+                        .attr("participant_pn", sender.clone())
                 } else {
                     n.attr("from", sender.clone())
                 };
@@ -463,7 +480,7 @@ mod tests {
             let failed: Result<()> = store.write(|tx| {
                 archive_replacement(
                     tx,
-                    &sender,
+                    &session_peer,
                     Some(&alice.identity_key().serialize()),
                     Some(&old_session),
                     &old,
