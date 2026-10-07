@@ -1526,3 +1526,19 @@ Validation of missing-group-key handling: 668 final workspace/all-feature tests,
 24 default CLI tests, strict Clippy, warning-free Rustdoc and CLI reference passed.
 A 20-second receive-only rebuilt-client session left protocol inspection unchanged;
 no fresh missing-key group recovery was observed and no chat intent was added.
+
+
+SKDM-only group control deduplication (2026-10-07): real Signal regression
+reproduced Undecryptable after a previously accepted control was redelivered
+across reopen. Newly authenticated controls now commit sender_key_distributed
+markers with key/session state and return Duplicate without another decrypt.
+They carry no user protobuf/event/read receipt; lab-inbox --inspect labels them
+redacted. APK Message field 2 is existing schema evidence; this private marker
+is a local atomicity fix, and APK internal duplicate policy is unknown. No
+historical marker synthesis or ratchet rewind; fresh live control redelivery
+remains unverified. [Evidence and regression](docs/protocol/messaging-transport.md#durable-sender-key-only-group-controls-2026-10-07).
+
+Validation of SKDM-only control markers: 669 workspace/all-feature tests, 24
+default CLI tests, strict Clippy, warning-free Rustdoc and CLI/API checks passed.
+A 20-second receive-only rebuilt-client check left protocol inspection unchanged;
+no fresh control/redelivery was observed, so that live branch remains unverified.

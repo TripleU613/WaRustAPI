@@ -47,7 +47,7 @@ pub(super) fn remote_identity_policy(
 /// Outcome never includes plaintext or sender identifiers in diagnostics.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum IncomingResult {
-    /// Authenticated protobuf and ratchet committed together.
+    /// Authenticated payload or key control and protocol state committed together.
     Decrypted,
     /// Already committed, including consumed view-once media.
     Duplicate,
@@ -853,11 +853,16 @@ async fn process_group_inner(
         store.read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))?
     {
         super::inbox_events::restore(store, key.as_bytes(), &saved)?;
-        return Ok(if matches!(saved["status"].as_str(), Some("decrypted")) {
-            IncomingResult::Duplicate
-        } else {
-            IncomingResult::Unsupported
-        });
+        return Ok(
+            if matches!(
+                saved["status"].as_str(),
+                Some("decrypted" | "sender_key_distributed")
+            ) {
+                IncomingResult::Duplicate
+            } else {
+                IncomingResult::Unsupported
+            },
+        );
     }
     let (db_key, previous_bytes) = store
         .read(|tx| crate::signal::group::load_sender_key_bytes(tx, &group_jid, &sender_jid))?;
@@ -1100,6 +1105,19 @@ async fn process_group_inner(
                 }),
             )?;
             super::inbox_events::publish(tx, key.as_bytes(), node, plaintext)?;
+        } else {
+            // The APK-derived SKDM (Message field 2) installs a key, not user
+            // content. A local control marker must share the key/session commit
+            // or replaying its pairwise ciphertext falsely requests a retry.
+            tx.put_json(
+                Table::Checkpoints,
+                key.as_bytes(),
+                1,
+                &serde_json::json!({
+                    "status": "sender_key_distributed", "capture": capture,
+                    "route": route, "received_at": crate::model::time::Timestamp::now(),
+                }),
+            )?;
         }
         Ok(IncomingResult::Decrypted)
     })
@@ -1540,6 +1558,216 @@ mod tests {
                 ratchet
             );
         }
+    }
+
+    #[tokio::test]
+    async fn sender_key_only_group_control_is_durable_without_user_event_or_read_receipt() {
+        use crate::{
+            model::ids::AccountId,
+            session::{KeyMaterial, RegistrationStatus, SignalIdentityKey},
+            signal::{direct, group},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        use wacore_libsignal::protocol::{
+            DeviceId, GenericSignedPreKey, IdentityKeyPair, KeyPair, PreKeyBundle,
+            SignedPreKeyRecord, Timestamp,
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("control.redb");
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("fixture").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [22; 32],
+                ))),
+                create,
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        let alice = IdentityKeyPair::generate(&mut rand::rng());
+        let bob = IdentityKeyPair::generate(&mut rand::rng());
+        let alice_jid = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let bob_jid = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+        let account = |identity: &IdentityKeyPair, jid: Jid, id| AccountRecord {
+            own_jid: Some(jid),
+            registration: RegistrationStatus::Registered,
+            signal_registration_id: Some(id),
+            signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                public: identity.public_key().public_key_bytes().try_into().unwrap(),
+                private: *identity.private_key().serialize(),
+            })),
+            ..Default::default()
+        };
+        let alice_account = account(&alice, alice_jid.clone(), 31);
+        let bob_account = account(&bob, bob_jid.clone(), 42);
+        let signed = KeyPair::generate(&mut rand::rng());
+        let signature = alice
+            .private_key()
+            .calculate_signature(&signed.public_key.serialize(), &mut rand::rng())
+            .unwrap();
+        let bundle = PreKeyBundle::new(
+            31,
+            DeviceId::new(0),
+            None,
+            7.into(),
+            signed.public_key,
+            signature.to_vec(),
+            *alice.identity_key(),
+        )
+        .unwrap();
+        let first = direct::prepare_payload(
+            &bob_account,
+            &alice_jid,
+            Some(&bundle),
+            None,
+            None,
+            b"\x0a\x04init",
+        )
+        .await
+        .unwrap();
+        let signed_record = SignedPreKeyRecord::new(
+            7.into(),
+            Timestamp::from_epoch_millis(0),
+            &signed,
+            &signature,
+        )
+        .serialize()
+        .unwrap();
+        let incoming = direct::receive_prekey(
+            &alice_account,
+            &bob_jid,
+            (None, None),
+            &signed_record,
+            None,
+            &first.ciphertext,
+        )
+        .await
+        .unwrap();
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let own_key = group::prepare_own_sender_key(&chat, &alice_jid, None)
+            .await
+            .unwrap();
+        let distribution = direct::prepare_payload(
+            &alice_account,
+            &bob_jid,
+            None,
+            Some(&incoming.received.session),
+            Some(&incoming.identity),
+            &own_key.distribution_message,
+        )
+        .await
+        .unwrap();
+        assert_eq!(distribution.kind, "msg");
+        let peer_key = format!("comparison-direct:{alice_jid}");
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::PeerIdentities,
+                    peer_key.as_bytes(),
+                    1,
+                    &first.identity,
+                )?;
+                tx.put_json(
+                    Table::SignalSessions,
+                    peer_key.as_bytes(),
+                    1,
+                    &*first.session,
+                )
+            })
+            .unwrap();
+        let node = Node::new("message")
+            .attr("from", chat.clone())
+            .attr("participant", alice_jid)
+            .attr("id", "KEY-ONLY")
+            .children(vec![
+                Node::new("enc")
+                    .attr("v", "2")
+                    .attr("type", "msg")
+                    .bytes(distribution.ciphertext.to_vec()),
+            ]);
+        let capture = preserve(&store, &node).unwrap();
+        assert_eq!(
+            process(&store, &bob_account, &node, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        assert_eq!(
+            super::super::receipts::queue_read_for_incoming(&store, &node).unwrap(),
+            0
+        );
+        let marker_key = format!("received:{chat}:KEY-ONLY");
+        let marker: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, marker_key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(marker["status"], "sender_key_distributed");
+        assert!(marker.get("protobuf").is_none());
+        assert!(!marker["route"].is_null() && !marker["capture"].is_null());
+        let state = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::SenderKeys, 1, 10)?,
+                    tx.scan(Table::SignalSessions, 1, 10)?,
+                ))
+            })
+            .unwrap();
+        assert_eq!(state.0.len(), 1);
+        drop(store);
+        let store = open(false);
+        assert_eq!(
+            process(&store, &bob_account, &node, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    tx.scan(Table::SenderKeys, 1, 10)?,
+                    tx.scan(Table::SignalSessions, 1, 10)?
+                )))
+                .unwrap(),
+            state
+        );
+        assert_eq!(
+            super::super::receipts::queue_read_for_incoming(&store, &node).unwrap(),
+            0
+        );
+        let redelivery = node.clone().children(vec![
+            Node::new("enc")
+                .attr("v", "2")
+                .attr("type", "msg")
+                .bytes(vec![9; 48]),
+        ]);
+        let redelivery_capture = preserve(&store, &redelivery).unwrap();
+        assert_eq!(
+            process(&store, &bob_account, &redelivery, &redelivery_capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(
+                    Table::Checkpoints,
+                    marker_key.as_bytes(),
+                    1
+                ))
+                .unwrap(),
+            Some(marker)
+        );
+        assert!(super::super::receipts::outcomes(&store).unwrap().is_empty());
+        let events = store
+            .read_events(
+                &crate::store::ConsumerId::new("fixture").unwrap(),
+                crate::model::ids::EventCursor::START,
+                100,
+            )
+            .unwrap();
+        assert!(events.events.is_empty());
     }
 
     #[tokio::test]

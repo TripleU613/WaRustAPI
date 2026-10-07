@@ -1826,6 +1826,12 @@ pub(super) async fn run(
                     println!("inbox: view-once attachment consumed; content unavailable");
                     continue;
                 }
+                if saved["status"] == "sender_key_distributed" {
+                    println!(
+                        "inbox: sender-key distribution committed; no user payload or read receipt"
+                    );
+                    continue;
+                }
                 if saved["status"] == "cleared" {
                     // `clear_chat` strips `protobuf` and keeps the row so
                     // redeliveries still dedupe. Skip it rather than failing the

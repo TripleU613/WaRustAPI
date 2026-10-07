@@ -1746,3 +1746,14 @@ direct/group loop write-cut fixtures preserve captures, ratchets and retry
 reservations. Handset retry shape is observed; APK 37.71 Cp2.A05 is ACK evidence,
 not a confirmed missing-key retry count policy. Fresh live group recovery remains
 unverified. [Evidence and limits](protocol/messaging-transport.md#missing-group-sender-key-recovery-2026-10-07).
+
+
+SKDM-only group control deduplication (2026-10-07): real Signal regression
+reproduced Undecryptable after a previously accepted control was redelivered
+across reopen. Newly authenticated controls now commit sender_key_distributed
+markers with key/session state and return Duplicate without another decrypt.
+They carry no user protobuf/event/read receipt; lab-inbox --inspect labels them
+redacted. APK Message field 2 is existing schema evidence; this private marker
+is a local atomicity fix, and APK internal duplicate policy is unknown. No
+historical marker synthesis or ratchet rewind; fresh live control redelivery
+remains unverified. [Evidence and regression](protocol/messaging-transport.md#durable-sender-key-only-group-controls-2026-10-07).

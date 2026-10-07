@@ -1262,3 +1262,68 @@ plaintext checkpoint. The new late-key fixture covers a subsequent skmsg, not
 SKDM-only redelivery. Whether all such controls get durable duplicate handling
 elsewhere is **unknown/unverified**; trace/test that path before claiming full
 group-control idempotency. This finding is not fixed by the missing-key guard.
+
+
+### Durable sender-key-only group controls (2026-10-07)
+
+**Observed / reproduced local bug:** a real independently established Signal
+session delivers an SKDM-only group control, which commits the new sender key
+and pairwise session. The prior implementation wrote no `received:` marker when
+there was no user plaintext. After store reopen, redelivery therefore returned
+**Undecryptable** (real regression failure), rather than Duplicate, potentially
+entering the once-only retry queue for an already accepted distribution. The
+preceding missing-key guard did not solve this distinct deduplication gap.
+
+**APK context / confirmed existing schema:** Message field **2** carries the
+sender-key distribution; its inner group ID/axolotl fields are **1/2**, recorded
+in [groups](groups.md) with the 2.26.37.71 descriptor/call evidence and historical
+live decrypts. These are key exchange inputs, not user conversation text.
+**Unknown:** exact APK internal SKDM-only storage/duplicate marker policy. The
+checkpoint added below is a **local atomicity/idempotency correction**, not an
+APK-derived new field or outbound wire requirement.
+
+Newly authenticated SKDM-only group controls now commit a private
+`status=sender_key_distributed` marker with their key, pairwise session, applicable
+prekey consumption and original capture/route. The marker has **no protobuf**,
+publishes no user event, and earns no automatic read receipt. Redelivery returns
+Duplicate before decryption and preserves the original marker, key and ratchet,
+even if the redelivered ciphertext bytes differ. Existing delivery-confirmation
+handling can acknowledge the already stored control; this does not mean a user
+message was received or read. Event backfill and read scheduling already skip
+statuses other than decrypted, so they do not parse missing control plaintext.
+
+**CLI/API:** `lab-inbox --inspect` recognizes the marker and prints only
+`sender-key distribution committed; no user payload or read receipt`. Without
+this explicit branch, inspection would fail trying to parse its absent protobuf.
+The existing command remains offline and CLI-only. `listen` and comparison receive
+share the corrected Duplicate outcome; no new command/flag/HTTP route or retry
+reset exists. Aggregate decrypted outcomes still describe processing, not proof
+of a human reply; use the event journal for user-message projection.
+
+**Offline regression:** independently generated accounts/signed prekey establish
+both sides of a real pairwise session; a subsequent Signal msg distributes a
+fresh own group key. The first process succeeds and the marker lacks plaintext;
+reopen/redelivery returns Duplicate, stored keys/sessions remain unchanged,
+read scheduling returns zero, and no receipt or user journal event is created.
+Changed-ciphertext redelivery preserves the original marker/capture/route. The
+initial test failed with Undecryptable instead of Duplicate, confirming the gap
+before the correction; the corrected regression passes.
+
+**Historical boundary / unknown live:** do not synthesize markers for past
+controls based solely on unauthenticated captures or rewind ratchets to replay
+them. Prior controls without an authenticated durable marker remain unclassified;
+no migration/reset is implemented. Fresh live SKDM-only arrival/redelivery is
+not established by these offline tests.
+
+
+Validation: 669 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target Clippy, warning-free Rustdoc and regenerated CLI reference
+passed. API/CLI coverage is included in workspace checks. Existing APK bundles
+and all outbound wire builders remain unchanged.
+
+
+**Observed live receive regression:** rebuilt client, 20-second receive-only
+window after protocol queue preflight. Clean exit, no added query/chat intent,
+and peer/device/action/outbox/receipt inspections unchanged. Private evidence:
+`lab/releases/skdm-control-live/active.json`. No fresh SKDM-only control or its
+redelivery was established; this checks existing receive compatibility only.
