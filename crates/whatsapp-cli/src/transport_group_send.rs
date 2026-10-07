@@ -118,11 +118,12 @@ async fn fetch_devices(
         }
         let summary = query.ingest(store, &reply)?;
         println!(
-            "group-send: device lists ingested={}, partial_errors={}, omitted_users={}, superseded_users={}, accepted={}",
+            "group-send: device lists ingested={}, partial_errors={}, omitted_users={}, superseded_users={}, verification_errors={}, accepted={}",
             summary.ingested,
             summary.partial_errors,
             summary.omitted_users,
             summary.superseded_users,
+            summary.verification_errors,
             summary.accepted
         );
         summary.require_complete()?;

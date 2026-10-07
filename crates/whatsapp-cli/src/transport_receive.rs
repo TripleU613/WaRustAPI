@@ -261,6 +261,8 @@ fn device_query_inspection(
             "offline_only":true,"found":true,"status":record.status,
             "requested_users":record.users.len(),"ingested":record.ingested,
             "partial_errors":record.partial_errors,"omitted_users":record.omitted_users,"superseded_users":record.superseded_users,
+            "verification_errors":record.verification_failures.as_ref().map(|r| r.values().sum::<u32>()),
+            "verification_failures":record.verification_failures,
             "code":record.code.as_ref().filter(|c| !c.is_empty() && c.bytes().all(|b| b.is_ascii_digit())),
         }),
     }
@@ -2259,6 +2261,7 @@ mod tests {
             omitted_users: Some(1),
             generations: None,
             superseded_users: None,
+            verification_failures: None,
             requested_at: Timestamp::now(),
         };
         let out = device_query_inspection(Some(&record));
@@ -2266,6 +2269,8 @@ mod tests {
         assert_eq!(out["omitted_users"], 1);
         assert_eq!(out["superseded_users"], serde_json::Value::Null);
         assert!(out.get("generations").is_none());
+        assert_eq!(out["verification_errors"], serde_json::Value::Null);
+        assert_eq!(out["verification_failures"], serde_json::Value::Null);
         assert_eq!(out["code"], serde_json::Value::Null);
         for private in ["15555550101", "PRIVATE"] {
             assert!(!out.to_string().contains(private));
@@ -2273,12 +2278,21 @@ mod tests {
         record.omitted_users = None;
         record.superseded_users = Some(1);
         record.generations = Some(vec![7]);
+        record.verification_failures = Some(std::collections::BTreeMap::from([(
+            whatsapp_api::transport::devices::DeviceVerificationFailure::MissingPinnedIdentity,
+            1,
+        )]));
         record.code = Some("503".into());
         let historical = device_query_inspection(Some(&record));
         assert_eq!(historical["omitted_users"], serde_json::Value::Null);
         assert_eq!(historical["code"], "503");
         assert_eq!(historical["superseded_users"], 1);
         assert!(historical.get("generations").is_none());
+        assert_eq!(historical["verification_errors"], 1);
+        assert_eq!(
+            historical["verification_failures"]["missing_pinned_identity"],
+            1
+        );
         assert_eq!(
             device_query_inspection(None),
             serde_json::json!({"offline_only":true,"found":false})

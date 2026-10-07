@@ -997,3 +997,99 @@ regeneration, four CLI OpenAPI coverage checks, API symbol check, formatting and
 staged whitespace passed. Hygiene verified 659 local links and 2642000 bytes
 across all four independent APK bundles. This source/comment-only chunk makes
 no runtime behavior change; no new workspace-test or live-interop claim.
+
+
+### Rejected device candidate retention (2026-10-07)
+
+**Confirmed substrate, APK 37.71:** Lck.A00 `099a..09f2` diverts older
+stanza timestamps before application; `0b6c..0cd8` does not construct/apply
+signed candidates for a missing/failed verification result. `0a50..0aa8`
+refuses unsigned companion entries, separately from the unsigned primary-only
+path. The eleven selected core methods and preceding caller analysis establish
+these distinctions. `11T.A07` selects/verifies the key; A08 reconciles only a
+valid candidate. A04 raw-ID mismatch has separate reset branches.
+
+**Implemented / observed offline:** `ingest_user` now refuses a failed candidate
+without replacing the cached device vector, verified timestamp/raw ID, trust
+flags, notification hash, fetched_at or any other saved-list metadata. It leaves
+the matching pending revision intact. Rejected supplied signed material never
+becomes a primary-only successful replacement. No cache is invented when none
+existed. Non-hosted unsigned companions refuse; unsigned primary-only replies
+keep their existing supported path. Missing pinned key is explicit because the
+strict verifier cannot establish supplied-key authority; that limitation is ours.
+
+`DeviceVerificationFailure` has fixed reasons: conflicting_user_rows, unsigned_companions,
+invalid_signed_list_shape, missing_timestamp, missing_pinned_identity,
+stale_timestamp, invalid_signed_list, raw_id_mismatch, reconciliation_refused.
+Invalid signed list combines signature/protobuf and conservative verifier guards,
+including a different bundled key; it does not diagnose the server's internals.
+Raw-ID mismatch remains an explicit **local unsupported-replacement policy**:
+no account or contact reset is inferred or performed from the APK reset branch.
+Wall-clock age flag/parity and full signed-long time behavior remain unfinished.
+
+A query persists nullable `verification_failures` reason/count maps, counting
+unique rejected users even with duplicate rows. Historical and unsettled rows
+are null; a settled result with none is an empty map. `IngestSummary` exposes
+`verification_errors` separately from actual server `partial_errors`.
+`accepted=true` / server_acknowledged still means an IQ result, even when local
+verification failed. `code` remains a recognized server refusal code or null;
+local reasons never manufacture a server code. `require_complete` refuses local
+verification failure before group/status message reservation, even with a cached
+list. Background partial success still saves other users, and the per-connection
+cursor defers rejected users despite newer notifications. A later distinct valid
+read can settle the retained work without reviving a refused/old reservation.
+
+`device-query --id` exports nullable verification_errors plus the fixed
+verification_failures count map offline, without private generations, addresses,
+keys, timestamps, supplied query ID or raw bodies. The send guard directs the
+operator to this existing inspector. No new command, flag or HTTP route exists.
+
+**Observed regression scope:** a genuine synthetic signed baseline with a
+companion survives nine refused reads (seven failure categories, including
+malformed/tampered/foreign-key signed material) byte-for-byte with its saved pin
+and session marker. Duplicate rows count one rejection. New notifications do not
+retry the same refused user during that connection. All refusal records and
+pending work survive encrypted-store reopen; a later valid signed read adds a
+companion and clears pending while leaving identity/session unchanged. Another
+mixed reply saves an unsigned-primary success beside a missing-pin refusal,
+then advances only the successful user's new revision. CLI tests distinguish
+null history from fixed reason counts without exporting identifiers.
+
+**Unknown / unfinished:** this is candidate failure retention over the traced
+caller substrate, not complete supplied-key identity replacement, age policy,
+raw-ID reset, PN/LID authority binding, own-account sync or human verification.
+A valid old cached list is historical evidence, not proof it was signed by a
+subsequently changed pin. Live failed-signature/stale/refusal cases are not
+injected against the server. No canonical account or live request was changed
+while implementing these regressions.
+
+Conflicting duplicate-row correction: a valid first row could previously clear
+pending before a later refused row. Selection now preflights all requested-user
+rows before mutation; exact duplicates collapse, differing rows refuse with fixed
+local conflicting_user_rows, preserving cached/pending state in both orders and
+across reopen. This is local ambiguity policy; APK duplicate dispatch is unknown.
+
+Diagnosability: a background local-verification failure emits WARN under the
+default CLI filter with its matching opaque local reservation ID and count, so
+`device-query --id` is usable without guessing an ID. No address/key/raw response
+is logged; inspection itself omits the supplied ID. Ordinary success remains INFO.
+
+
+Observed live 2026-10-07 22:13:51 UTC: zero outbox/queued-action/pending-receipt/
+pending-device preflight, one existing-peer read and a 20-second authenticated
+receive-only session completed cleanly. Saved CLI query: server_acknowledged,
+requested_users=1, ingested=1, partial_errors=0, omitted_users=0,
+superseded_users=0, verification_errors=0, verification_failures={}, code=null.
+Pending users returned to zero; outbox, 17 actions (error1/ok15/sent1) and all
+nine ACKed receipts unchanged. No chat sends or resets. This proves the supported
+unsigned-primary live path and new diagnostics schema, not live rejected-list or
+supplied-key behavior; the primary-only list still has no signed index evidence.
+
+Validation: 654 workspace/all-feature tests and 24 default CLI tests passed;
+strict workspace/all-target Clippy, warning-free Rustdoc, CLI reference/API
+coverage and formatting passed. Fifteen actual isolated CLI probes covered all
+nine local reasons, zero success, historical/unsettled null, absent, unchanged
+repeat and invalid-ID redaction. Conflicting duplicates preserve cache/pending
+in either order and after encrypted reopen. Hygiene663 local links and 2642000
+bytes across four unchanged APK checksum bundles passed. No live malformed,
+signature-refusal or raw-ID replacement claim is made.

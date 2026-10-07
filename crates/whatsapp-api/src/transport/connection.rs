@@ -447,7 +447,12 @@ pub(crate) async fn drive(
                     if device_query.as_ref().is_some_and(|q| q.matches(&node)) {
                         let query = device_query.take().expect("matched device query");
                         let summary = device_cursor.settle(&query, &store, &node)?;
-                        tracing::info!(accepted = summary.accepted, ingested = summary.ingested, partial_errors = summary.partial_errors, omitted_users = summary.omitted_users, superseded_users = summary.superseded_users, "device query settled");
+                        if summary.verification_errors > 0 {
+                            // Matching proves this is our opaque local reservation
+                            // ID, not a user address or arbitrary response body.
+                            tracing::warn!(query_id = node.get_attr("id").and_then(|v| v.as_text()).unwrap_or("unavailable"), verification_errors = summary.verification_errors, "device candidates refused locally; inspect device-query --id; saved lists and pending work retained");
+                        }
+                        tracing::info!(accepted = summary.accepted, ingested = summary.ingested, partial_errors = summary.partial_errors, omitted_users = summary.omitted_users, superseded_users = summary.superseded_users, verification_errors = summary.verification_errors, "device query settled");
                         if let Some((query, sync)) = device_cursor.begin_next(&store, device_context)? {
                             device_query = Some(query);
                             link.send(&sync).await?;

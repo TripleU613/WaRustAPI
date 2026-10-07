@@ -33,10 +33,11 @@
 //!
 //! Local policy: a query is a read, so an unanswered query leaves its users
 //! pending and a later session asks again. Lists are persisted atomically per
-//! user. Current raw-ID/stale/signature refusal falls back to primary-only,
-//! preserving only the raw-ID/time floor, not the prior device set. APK caller
-//! parity for this fallback is unfinished (docs/protocol/cross-device-sync.md,
-//! contact-adv-verification-and-retention-2026-10-07). `sid` is a
+//! user. Failed signed candidates preserve the complete prior list and pending
+//! revision and are reported as local verification refusals, independently of
+//! server errors. Unsigned companion lists refuse; primary-only unsigned reads
+//! remain supported. Supplied-key identity application and raw-ID replacement
+//! are still unsupported. `sid` is a
 //! client-chosen opaque identifier like our message ids.
 use crate::{
     Error, Result,
@@ -144,6 +145,30 @@ struct Pending {
     notified_hash: Option<String>,
     reason: String,
 }
+/// Fixed local verification failures; not WhatsApp server error codes.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum DeviceVerificationFailure {
+    /// Conflicting rows for one requested user; local ambiguity guard.
+    ConflictingUserRows,
+    /// Companion entries were advertised without signed index material.
+    UnsignedCompanions,
+    /// The supplied key-index-list has no byte body.
+    InvalidSignedListShape,
+    /// Signed material has no valid stanza timestamp.
+    MissingTimestamp,
+    /// No independently pinned primary key is available for this verifier.
+    MissingPinnedIdentity,
+    /// Stanza timestamp precedes the saved verified time floor.
+    StaleTimestamp,
+    /// Signature, protobuf or conservative verifier checks failed.
+    InvalidSignedList,
+    /// Local raw-ID replacement is unsupported; no reset is performed.
+    RawIdMismatch,
+    /// Device reconciliation failed its ownership/index guards.
+    ReconciliationRefused,
+}
+
 /// Reserved query record.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct QueryRecord {
@@ -168,6 +193,10 @@ pub struct QueryRecord {
     /// Successfully parsed users whose pending work changed before the reply.
     #[serde(default)]
     pub superseded_users: Option<u32>,
+    /// Local rejected-user counts by fixed reason. None for old/unsettled rows.
+    /// These are not server response codes and contain no addresses or keys.
+    #[serde(default)]
+    pub verification_failures: Option<BTreeMap<DeviceVerificationFailure, u32>>,
     /// Reservation time.
     pub requested_at: Timestamp,
 }
@@ -386,7 +415,7 @@ impl DeviceSyncCursor {
         }
         Ok(Some((query, node)))
     }
-    /// Settle one reply and defer only its refused, errored or omitted users. Successful
+    /// Settle a reply, deferring refused, errored, locally rejected or omitted users. Successful
     /// users with newer pending revisions remain eligible in this connection.
     pub fn settle(
         &mut self,
@@ -474,6 +503,7 @@ fn reserve_query(
                 omitted_users: None,
                 generations: Some(generations.clone()),
                 superseded_users: None,
+                verification_failures: None,
                 requested_at: Timestamp::now(),
             },
         )?;
@@ -524,6 +554,8 @@ pub struct IngestSummary {
     pub omitted_users: u32,
     /// Parsed lists that did not settle the currently pending revision.
     pub superseded_users: u32,
+    /// Distinct users whose candidate was locally refused by verification.
+    pub verification_errors: u32,
 }
 
 impl IngestSummary {
@@ -537,6 +569,12 @@ impl IngestSummary {
             return Err(invalid(format!(
                 "device query has {} per-user error(s); send preparation stopped",
                 self.partial_errors
+            )));
+        }
+        if self.verification_errors > 0 {
+            return Err(invalid(format!(
+                "device query has {} local verification refusal(s); inspect device-query --id; send preparation stopped",
+                self.verification_errors
             )));
         }
         if self.omitted_users > 0 {
@@ -588,18 +626,26 @@ fn pinned_primary_identity(
     ))
 }
 
-/// Parse one `user` element into a stored list, verifying companions when the
-/// contact's primary identity is pinned. Returns `None` for a per-user error.
+enum UserIngest {
+    Stored,
+    ServerError,
+    VerificationRefused(DeviceVerificationFailure),
+}
+
+/// Apply one candidate only after verification/reconciliation. The exact APK
+/// 37.71 Lck.A00 caller (099a..09f2, 0b6c..0cd8) does not apply stale or
+/// failed signed candidates. Refusal must preserve the prior list and pending
+/// work, not manufacture a successful primary-only replacement.
 fn ingest_user(
     tx: &mut crate::store::WriteTx<'_>,
     user: &Node,
     notified_hash: Option<String>,
     clear_pending: bool,
-) -> Result<Option<DeviceList>> {
+) -> Result<UserIngest> {
     let owner = primary_of(&attr_jid(user, "jid").ok_or_else(|| invalid("user without jid"))?)?;
     let devices = child(user, "devices").ok_or_else(|| invalid("user without devices"))?;
     if child(devices, "error").is_some() {
-        return Ok(None);
+        return Ok(UserIngest::ServerError);
     }
     let mut incoming = BTreeMap::new();
     let mut hosted_skipped = 0u32;
@@ -653,28 +699,58 @@ fn ingest_user(
     let mut unverified_reason = None;
     let mut raw_id = saved.as_ref().and_then(|s| s.raw_id);
     let mut companions_verified = false;
-    let verified = match (signed, list_timestamp, pinned_primary_identity(tx, &owner)?) {
-        (Some(bytes), Some(ts), Some(key)) => {
-            let minimum = saved.as_ref().and_then(|s| s.list_timestamp).unwrap_or(0);
-            match VerifiedIndexList::verify(bytes, &key, ts, minimum) {
-                Ok(list) => Some(list),
-                Err(_) => {
-                    unverified_reason = Some("signed index list failed verification".into());
-                    None
-                }
+    let verified = if index_list.is_some() {
+        let Some(bytes) = signed else {
+            return Ok(UserIngest::VerificationRefused(
+                DeviceVerificationFailure::InvalidSignedListShape,
+            ));
+        };
+        let Some(ts) = list_timestamp else {
+            return Ok(UserIngest::VerificationRefused(
+                DeviceVerificationFailure::MissingTimestamp,
+            ));
+        };
+        let minimum = saved.as_ref().and_then(|s| s.list_timestamp).unwrap_or(0);
+        if ts < minimum {
+            return Ok(UserIngest::VerificationRefused(
+                DeviceVerificationFailure::StaleTimestamp,
+            ));
+        }
+        let Some(key) = pinned_primary_identity(tx, &owner)? else {
+            // The APK's supplied-key branch has additional caller application.
+            // This strict pinned-key adapter does not establish that authority.
+            return Ok(UserIngest::VerificationRefused(
+                DeviceVerificationFailure::MissingPinnedIdentity,
+            ));
+        };
+        match VerifiedIndexList::verify(bytes, &key, ts, minimum) {
+            Ok(list) => Some(list),
+            Err(_) => {
+                return Ok(UserIngest::VerificationRefused(
+                    DeviceVerificationFailure::InvalidSignedList,
+                ));
             }
         }
-        (None, _, _) | (_, None, _) => {
-            unverified_reason = Some("no signed index list".into());
-            None
+    } else {
+        // Lck.A00 0a50..0aa8 refuses unsigned companion entries. The separate
+        // unsigned primary-only path remains supported; no companion is invented.
+        if incoming.len() > 1 {
+            return Ok(UserIngest::VerificationRefused(
+                DeviceVerificationFailure::UnsignedCompanions,
+            ));
         }
-        (_, _, None) => {
-            unverified_reason = Some("no pinned primary identity".into());
-            None
-        }
+        unverified_reason = Some("no signed index list".into());
+        None
     };
     let retained: ReconciledDevices = match verified {
         Some(list) => {
+            if raw_id.is_some_and(|id| id != list.raw_id()) {
+                // APK 11T.A04 has reset branches here. Local raw-ID replacement
+                // remains unsupported; retaining state does not authorize reset.
+                return Ok(UserIngest::VerificationRefused(
+                    DeviceVerificationFailure::RawIdMismatch,
+                ));
+            }
             let expected = raw_id.unwrap_or_else(|| list.raw_id());
             match list.reconcile_devices(&owner, expected, &current, &incoming) {
                 Ok(devices) => {
@@ -683,8 +759,9 @@ fn ingest_user(
                     devices
                 }
                 Err(_) => {
-                    unverified_reason = Some("reconciliation refused (raw id or indexes)".into());
-                    ReconciledDevices::primary_only(&owner)?
+                    return Ok(UserIngest::VerificationRefused(
+                        DeviceVerificationFailure::ReconciliationRefused,
+                    ));
                 }
             }
         }
@@ -723,7 +800,7 @@ fn ingest_user(
     if clear_pending {
         tx.delete(Table::Checkpoints, pending_key(&owner).as_bytes())?;
     }
-    Ok(Some(list))
+    Ok(UserIngest::Stored)
 }
 
 impl DeviceQuery {
@@ -765,11 +842,18 @@ impl DeviceQuery {
             let mut ingested = std::collections::BTreeSet::new();
             let mut errored = std::collections::BTreeSet::new();
             let mut superseded = std::collections::BTreeSet::new();
+            let mut rejected = BTreeMap::new();
             if accepted {
                 let users = child(node, "usync")
                     .and_then(|u| child(u, "list"))
                     .map(|l| l.child_nodes().to_vec())
                     .unwrap_or_default();
+                // Preflight duplicates before any mutation: a valid first row
+                // must not clear pending work before a conflicting refused row.
+                // Exact duplicates are harmless. This is local ambiguity policy,
+                // not an established APK duplicate-row dispatch rule.
+                let mut selected = BTreeMap::new();
+                let mut conflicts = std::collections::BTreeSet::new();
                 for user in users.iter().filter(|u| u.description == "user") {
                     let Some(owner) = attr_jid(user, "jid").and_then(|j| primary_of(&j).ok())
                     else {
@@ -778,7 +862,18 @@ impl DeviceQuery {
                     if !self.users.contains(&owner) {
                         continue;
                     }
+                    if let Some(previous) = selected.insert(owner.clone(), user)
+                        && previous != user
+                    {
+                        conflicts.insert(owner);
+                    }
+                }
+                for (owner, user) in selected {
                     represented.insert(owner.clone());
+                    if conflicts.contains(&owner) {
+                        rejected.insert(owner, DeviceVerificationFailure::ConflictingUserRows);
+                        continue;
+                    }
                     let notified: Option<Pending> =
                         tx.get_json(Table::Checkpoints, pending_key(&owner).as_bytes(), 1)?;
                     let index = self
@@ -786,25 +881,25 @@ impl DeviceQuery {
                         .iter()
                         .position(|u| u == &owner)
                         .expect("checked requested user");
-                    // Snapshot before parsing: duplicate rows in this reply may
-                    // see a marker already cleared by their first occurrence.
                     let current = notified.as_ref().map(|p| p.generation);
                     let clear_pending = current == self.generations.get(index).copied();
-                    let was_ingested = ingested.contains(&owner);
                     match ingest_user(
                         tx,
                         user,
                         notified.and_then(|p| p.notified_hash),
                         clear_pending,
                     )? {
-                        Some(_) => {
-                            if !clear_pending && !was_ingested {
+                        UserIngest::Stored => {
+                            if !clear_pending {
                                 superseded.insert(owner.clone());
                             }
                             ingested.insert(owner.clone());
                         }
-                        None => {
+                        UserIngest::ServerError => {
                             errored.insert(owner.clone());
+                        }
+                        UserIngest::VerificationRefused(reason) => {
+                            rejected.insert(owner.clone(), reason);
                         }
                     }
                 }
@@ -813,6 +908,12 @@ impl DeviceQuery {
             summary.partial_errors = errored.len() as u32;
             summary.omitted_users = (self.users.len() - represented.len()) as u32;
             summary.superseded_users = superseded.len() as u32;
+            summary.verification_errors = rejected.len() as u32;
+            let mut reasons = BTreeMap::new();
+            for reason in rejected.values() {
+                *reasons.entry(*reason).or_insert(0) += 1;
+            }
+            record.verification_failures = Some(reasons);
             record.superseded_users = Some(summary.superseded_users);
             record.omitted_users = Some(summary.omitted_users);
             record.status = if accepted {
@@ -829,7 +930,11 @@ impl DeviceQuery {
                 // must not retry that unresolved read in this connection.
                 self.users
                     .iter()
-                    .filter(|u| errored.contains(*u) || !represented.contains(*u))
+                    .filter(|u| {
+                        errored.contains(*u)
+                            || rejected.contains_key(*u)
+                            || !represented.contains(*u)
+                    })
                     .cloned()
                     .collect()
             } else {
@@ -919,6 +1024,367 @@ mod tests {
         Node::new("user")
             .attr("jid", owner.clone())
             .children(vec![Node::new("devices").children(children)])
+    }
+
+    #[test]
+    fn rejected_candidates_preserve_verified_lists_pins_sessions_and_pending_across_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("retention.redb");
+        let store = open(&path);
+        let peer = contact();
+        let private = [11u8; 32];
+        let (signed, key) =
+            crate::signal::adv::test_signed_list(7, 1_700_000_000, 2, &[1, 2], &private);
+        pin_identity(&store, &peer, &key);
+        request_sync(&store, None, &peer, None, "seed").unwrap();
+        let (query, iq) = begin_query(&store, SyncContext::Interactive)
+            .unwrap()
+            .unwrap();
+        query
+            .ingest(
+                &store,
+                &reply(
+                    &iq,
+                    vec![user_node(
+                        &peer,
+                        &[(0, 0, false), (3, 1, false)],
+                        Some((1_700_000_000, signed.clone())),
+                    )],
+                ),
+            )
+            .unwrap()
+            .require_complete()
+            .unwrap();
+        let baseline = device_list(&store, &peer).unwrap().unwrap();
+        assert!(baseline.companions_verified);
+        let selector = format!("comparison-direct:{peer}");
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::SignalSessions,
+                    selector.as_bytes(),
+                    1,
+                    &vec![19u8, 27],
+                )
+            })
+            .unwrap();
+        let protected = |store: &ProtocolStore| {
+            store
+                .read(|tx| {
+                    Ok((
+                        tx.get_json::<Vec<u8>>(Table::PeerIdentities, selector.as_bytes(), 1)?,
+                        tx.get_json::<Vec<u8>>(Table::SignalSessions, selector.as_bytes(), 1)?,
+                    ))
+                })
+                .unwrap()
+        };
+        let protected_before = protected(&store);
+        let (stale, _) =
+            crate::signal::adv::test_signed_list(7, 1_699_999_999, 2, &[1, 2], &private);
+        let (raw, _) = crate::signal::adv::test_signed_list(8, 1_700_000_100, 2, &[1, 2], &private);
+        let mut tampered = signed.clone();
+        tampered[3] ^= 1;
+        let (foreign_signed, _) =
+            crate::signal::adv::test_signed_list(7, 1_700_000_100, 2, &[1, 2], &[13; 32]);
+        let with_index = |index: Node| {
+            Node::new("user").attr("jid", peer.clone()).children(vec![
+                Node::new("devices").children(vec![
+                    Node::new("device-list").children(vec![
+                        Node::new("device").attr("id", "0"),
+                        Node::new("device").attr("id", "3").attr("key-index", "1"),
+                    ]),
+                    index,
+                ]),
+            ])
+        };
+        let cases = vec![
+            (
+                DeviceVerificationFailure::UnsignedCompanions,
+                user_node(&peer, &[(0, 0, false), (3, 1, false)], None),
+            ),
+            (
+                DeviceVerificationFailure::InvalidSignedListShape,
+                with_index(Node::new("key-index-list").attr("ts", "1700000000")),
+            ),
+            (
+                DeviceVerificationFailure::MissingTimestamp,
+                with_index(Node::new("key-index-list").bytes(signed.clone())),
+            ),
+            (
+                DeviceVerificationFailure::StaleTimestamp,
+                user_node(
+                    &peer,
+                    &[(0, 0, false), (3, 1, false)],
+                    Some((1_699_999_999, stale)),
+                ),
+            ),
+            (
+                DeviceVerificationFailure::InvalidSignedList,
+                user_node(
+                    &peer,
+                    &[(0, 0, false), (3, 1, false)],
+                    Some((1_700_000_000, vec![0xff])),
+                ),
+            ),
+            (
+                DeviceVerificationFailure::InvalidSignedList,
+                user_node(
+                    &peer,
+                    &[(0, 0, false), (3, 1, false)],
+                    Some((1_700_000_000, tampered)),
+                ),
+            ),
+            (
+                DeviceVerificationFailure::InvalidSignedList,
+                user_node(
+                    &peer,
+                    &[(0, 0, false), (3, 1, false)],
+                    Some((1_700_000_100, foreign_signed)),
+                ),
+            ),
+            (
+                DeviceVerificationFailure::RawIdMismatch,
+                user_node(
+                    &peer,
+                    &[(0, 0, false), (3, 1, false)],
+                    Some((1_700_000_100, raw)),
+                ),
+            ),
+            (
+                DeviceVerificationFailure::ReconciliationRefused,
+                user_node(
+                    &peer,
+                    &[(0, 0, false), (3, 1, false), (5, 1, false)],
+                    Some((1_700_000_000, signed)),
+                ),
+            ),
+        ];
+        let mut ids = Vec::new();
+        for (reason, candidate) in cases {
+            request_sync(&store, None, &peer, Some("2:retained"), "test").unwrap();
+            let mut cursor = DeviceSyncCursor::default();
+            let (query, iq) = cursor
+                .begin_next(&store, SyncContext::Interactive)
+                .unwrap()
+                .unwrap();
+            let summary = cursor
+                .settle(
+                    &query,
+                    &store,
+                    &reply(&iq, vec![candidate.clone(), candidate]),
+                )
+                .unwrap();
+            assert_eq!(
+                summary.verification_errors, 1,
+                "duplicate rows count one user"
+            );
+            assert_eq!(
+                (
+                    summary.ingested,
+                    summary.partial_errors,
+                    summary.omitted_users
+                ),
+                (0, 0, 0)
+            );
+            assert!(
+                summary.accepted,
+                "IQ result is separate from local verification"
+            );
+            assert!(
+                summary
+                    .require_complete()
+                    .unwrap_err()
+                    .to_string()
+                    .contains("verification")
+            );
+            let record = query_record(&store, &query.iq_id).unwrap().unwrap();
+            assert_eq!(
+                record.verification_failures,
+                Some(BTreeMap::from([(reason, 1)]))
+            );
+            assert_eq!(record.status, "server_acknowledged");
+            assert_eq!(
+                record.code, None,
+                "no server code invented for local refusal"
+            );
+            assert_eq!(device_list(&store, &peer).unwrap().unwrap(), baseline);
+            assert_eq!(protected(&store), protected_before);
+            assert_eq!(
+                pending_users(&store).unwrap().as_slice(),
+                std::slice::from_ref(&peer)
+            );
+            request_sync(&store, None, &peer, None, "newer-notification").unwrap();
+            assert!(
+                cursor
+                    .begin_next(&store, SyncContext::Notification)
+                    .unwrap()
+                    .is_none()
+            );
+            ids.push((query.iq_id, reason));
+        }
+        drop(store);
+        let store = open(&path);
+        assert_eq!(device_list(&store, &peer).unwrap().unwrap(), baseline);
+        assert_eq!(protected(&store), protected_before);
+        assert_eq!(
+            pending_users(&store).unwrap().as_slice(),
+            std::slice::from_ref(&peer)
+        );
+        for (id, reason) in ids {
+            assert_eq!(
+                query_record(&store, &id)
+                    .unwrap()
+                    .unwrap()
+                    .verification_failures,
+                Some(BTreeMap::from([(reason, 1)]))
+            );
+        }
+        // A distinct valid later read settles retained work normally, without
+        // reviving old reservations or resetting the prior identity/session.
+        let (fresh, _) =
+            crate::signal::adv::test_signed_list(7, 1_700_000_200, 3, &[1, 2, 3], &private);
+        let (query, iq) = DeviceSyncCursor::default()
+            .begin_next(&store, SyncContext::Interactive)
+            .unwrap()
+            .unwrap();
+        query
+            .ingest(
+                &store,
+                &reply(
+                    &iq,
+                    vec![user_node(
+                        &peer,
+                        &[(0, 0, false), (3, 1, false), (9, 3, false)],
+                        Some((1_700_000_200, fresh)),
+                    )],
+                ),
+            )
+            .unwrap()
+            .require_complete()
+            .unwrap();
+        assert!(pending_users(&store).unwrap().is_empty());
+        assert_eq!(
+            device_list(&store, &peer).unwrap().unwrap().devices.len(),
+            3
+        );
+        assert_eq!(protected(&store), protected_before);
+    }
+
+    #[test]
+    fn conflicting_duplicate_rows_do_not_apply_the_first_candidate_in_either_order() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("duplicate-conflict.redb");
+        let store = open(&path);
+        let peer = contact();
+        request_sync(&store, None, &peer, None, "seed").unwrap();
+        let (query, iq) = begin_query(&store, SyncContext::Interactive)
+            .unwrap()
+            .unwrap();
+        let good = user_node(&peer, &[(0, 0, false)], None);
+        query
+            .ingest(&store, &reply(&iq, vec![good.clone()]))
+            .unwrap()
+            .require_complete()
+            .unwrap();
+        let baseline = device_list(&store, &peer).unwrap().unwrap();
+        let bad = user_node(&peer, &[(0, 0, false), (3, 1, false)], None);
+        for rows in [vec![good.clone(), bad.clone()], vec![bad.clone(), good]] {
+            request_sync(&store, None, &peer, Some("2:pending"), "test").unwrap();
+            let (query, iq) = begin_query(&store, SyncContext::Interactive)
+                .unwrap()
+                .unwrap();
+            let summary = query.ingest(&store, &reply(&iq, rows)).unwrap();
+            assert_eq!(
+                (
+                    summary.ingested,
+                    summary.verification_errors,
+                    summary.partial_errors,
+                    summary.omitted_users
+                ),
+                (0, 1, 0, 0)
+            );
+            assert!(summary.require_complete().is_err());
+            assert_eq!(device_list(&store, &peer).unwrap().unwrap(), baseline);
+            assert_eq!(pending_users(&store).unwrap(), [contact()]);
+            assert_eq!(
+                query_record(&store, &query.iq_id)
+                    .unwrap()
+                    .unwrap()
+                    .verification_failures,
+                Some(BTreeMap::from([(
+                    DeviceVerificationFailure::ConflictingUserRows,
+                    1
+                )]))
+            );
+        }
+        drop(store);
+        let store = open(&path);
+        assert_eq!(device_list(&store, &peer).unwrap().unwrap(), baseline);
+        assert_eq!(pending_users(&store).unwrap(), [peer]);
+    }
+
+    #[test]
+    fn missing_pin_refusal_is_distinct_and_does_not_block_other_successful_users() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("missing-pin.redb"));
+        let missing = contact();
+        let good = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+        for user in [&missing, &good] {
+            request_sync(&store, None, user, None, "test").unwrap();
+        }
+        let mut cursor = DeviceSyncCursor::default();
+        let (query, iq) = cursor
+            .begin_next(&store, SyncContext::Interactive)
+            .unwrap()
+            .unwrap();
+        let (signed, _) =
+            crate::signal::adv::test_signed_list(7, 1_700_000_000, 2, &[1, 2], &[11; 32]);
+        let summary = cursor
+            .settle(
+                &query,
+                &store,
+                &reply(
+                    &iq,
+                    vec![
+                        user_node(
+                            &missing,
+                            &[(0, 0, false), (3, 1, false)],
+                            Some((1_700_000_000, signed)),
+                        ),
+                        user_node(&good, &[(0, 0, false)], None),
+                    ],
+                ),
+            )
+            .unwrap();
+        assert_eq!(
+            (
+                summary.ingested,
+                summary.verification_errors,
+                summary.partial_errors
+            ),
+            (1, 1, 0)
+        );
+        assert!(summary.require_complete().is_err());
+        assert!(device_list(&store, &missing).unwrap().is_none());
+        assert!(device_list(&store, &good).unwrap().is_some());
+        let failures = query_record(&store, &query.iq_id)
+            .unwrap()
+            .unwrap()
+            .verification_failures
+            .unwrap();
+        assert_eq!(
+            failures,
+            BTreeMap::from([(DeviceVerificationFailure::MissingPinnedIdentity, 1)])
+        );
+        // Hold the locally refused user, while another user's new work advances.
+        for user in [&missing, &good] {
+            request_sync(&store, None, user, None, "notification").unwrap();
+        }
+        let (next, _) = cursor
+            .begin_next(&store, SyncContext::Notification)
+            .unwrap()
+            .unwrap();
+        assert_eq!(next.users.as_slice(), std::slice::from_ref(&good));
     }
 
     #[test]
@@ -1330,6 +1796,7 @@ mod tests {
         assert_eq!(record.omitted_users, None);
         assert_eq!(record.generations, None);
         assert_eq!(record.superseded_users, None);
+        assert_eq!(record.verification_failures, None);
     }
 
     #[test]
@@ -1476,11 +1943,7 @@ mod tests {
             &[(0, 0, false), (3, 1, false), (5, 9, false), (7, 2, true)],
             Some((1_700_000_000, signed.clone())),
         );
-        let unpinned_user = user_node(
-            &unpinned,
-            &[(0, 0, false), (4, 1, false)],
-            Some((1_700_000_000, signed.clone())),
-        );
+        let unpinned_user = user_node(&unpinned, &[(0, 0, false)], None);
         let errored_user = Node::new("user")
             .attr("jid", errored.clone())
             .children(vec![
@@ -1501,6 +1964,7 @@ mod tests {
                 partial_errors: 1,
                 omitted_users: 0,
                 superseded_users: 0,
+                verification_errors: 0,
             }
         );
         assert!(query.ingest(&store, &node).is_err(), "settled once");
@@ -1525,7 +1989,7 @@ mod tests {
         assert!(!fallback.companions_verified);
         assert_eq!(
             fallback.unverified_reason.as_deref(),
-            Some("no pinned primary identity")
+            Some("no signed index list")
         );
         assert_eq!(fallback.devices.len(), 1);
         assert_eq!(fallback.devices[0].jid, unpinned);
@@ -1557,9 +2021,8 @@ mod tests {
             Some(true)
         );
 
-        // Current local fallback preserves raw ID/time floor, but not the prior
-        // device set; APK caller retention is still unfinished. A newer signed
-        // list replaces the candidate. Restart preserves the stored state.
+        // Failed candidates retain the complete prior list across restart.
+        // A later valid signed list replaces it without resetting identity.
         drop(store);
         let store = open(&path);
         let (changed_raw, _) =
@@ -1576,9 +2039,12 @@ mod tests {
                 Some((1_700_000_100, changed_raw)),
             )],
         );
-        query.ingest(&store, &node).unwrap();
+        let summary = query.ingest(&store, &node).unwrap();
+        assert_eq!(summary.verification_errors, 1);
+        assert!(summary.require_complete().is_err());
         let kept = device_list(&store, &contact()).unwrap().unwrap();
-        assert!(!kept.companions_verified);
+        assert_eq!(kept, pinned);
+        assert!(kept.companions_verified);
         assert_eq!(kept.raw_id, Some(7));
         assert_eq!(kept.list_timestamp, Some(1_700_000_000));
         let (stale, _) =
@@ -1600,13 +2066,15 @@ mod tests {
                 ),
             )
             .unwrap();
+        assert_eq!(device_list(&store, &contact()).unwrap().unwrap(), pinned);
         assert_eq!(
-            device_list(&store, &contact())
+            query_record(&store, &query.iq_id)
                 .unwrap()
                 .unwrap()
-                .unverified_reason
-                .as_deref(),
-            Some("signed index list failed verification")
+                .verification_failures
+                .unwrap()
+                .get(&DeviceVerificationFailure::StaleTimestamp),
+            Some(&1)
         );
         let (newer, _) =
             crate::signal::adv::test_signed_list(7, 1_700_000_200, 3, &[1, 2, 3], &private);

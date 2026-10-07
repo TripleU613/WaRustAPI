@@ -1579,3 +1579,41 @@ regeneration, four CLI OpenAPI coverage checks, API symbol check, formatting and
 staged whitespace passed. Hygiene verified 659 local links and 2642000 bytes
 across all four independent APK bundles. This source/comment-only chunk makes
 no runtime behavior change; no new workspace-test or live-interop claim.
+
+
+Device candidate retention implemented (2026-10-07): stale/invalid supplied
+signed candidates and unsigned non-hosted companions now preserve cached lists,
+pins/sessions and pending work. Fixed local verification_failures counts remain
+separate from server errors; device-query exposes counts/null history and send
+preparation blocks rejected reads. The receive cursor defers rejected users while
+other users advance. Raw-ID replacement/supplied-key application remain unsupported;
+no resets occur. Regression covers cache/pin/session preservation, duplicate rows,
+encrypted reopen, fresh valid settlement and mixed missing-pin/other-user success.
+[Evidence and limits](protocol/cross-device-sync.md#rejected-device-candidate-retention-2026-10-07).
+
+Conflicting duplicate-row correction: a valid first row could previously clear
+pending before a later refused row. Selection now preflights all requested-user
+rows before mutation; exact duplicates collapse, differing rows refuse with fixed
+local conflicting_user_rows, preserving cached/pending state in both orders and
+across reopen. This is local ambiguity policy; APK duplicate dispatch is unknown.
+The fixed local reason set above additionally includes conflicting_user_rows.
+
+
+Observed live 2026-10-07 22:13:51 UTC: zero outbox/queued-action/pending-receipt/
+pending-device preflight, one existing-peer read and a 20-second authenticated
+receive-only session completed cleanly. Saved CLI query: server_acknowledged,
+requested_users=1, ingested=1, partial_errors=0, omitted_users=0,
+superseded_users=0, verification_errors=0, verification_failures={}, code=null.
+Pending users returned to zero; outbox, 17 actions (error1/ok15/sent1) and all
+nine ACKed receipts unchanged. No chat sends or resets. This proves the supported
+unsigned-primary live path and new diagnostics schema, not live rejected-list or
+supplied-key behavior; the primary-only list still has no signed index evidence.
+
+Validation: 654 workspace/all-feature tests and 24 default CLI tests passed;
+strict workspace/all-target Clippy, warning-free Rustdoc, CLI reference/API
+coverage and formatting passed. Fifteen actual isolated CLI probes covered all
+nine local reasons, zero success, historical/unsettled null, absent, unchanged
+repeat and invalid-ID redaction. Conflicting duplicates preserve cache/pending
+in either order and after encrypted reopen. Hygiene663 local links and 2642000
+bytes across four unchanged APK checksum bundles passed. No live malformed,
+signature-refusal or raw-ID replacement claim is made.

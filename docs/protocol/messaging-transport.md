@@ -1174,3 +1174,8 @@ superseded and absent records; no private generations, addresses or query IDs
 were exported. The live saved query was inspected by the actual CLI. Repository
 hygiene checked 645 local links and 2405965 bytes across four independent APK
 checksum bundles, unchanged by this correction.
+
+
+Device synchronization now preserves rejected signed candidates and records fixed
+local verification reasons, separately from server per-user errors.
+[Current retention/inspection behavior](cross-device-sync.md#rejected-device-candidate-retention-2026-10-07).
