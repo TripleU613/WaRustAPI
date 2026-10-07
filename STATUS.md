@@ -1559,3 +1559,18 @@ Retry encoding validation: 671 workspace/all-feature tests, 24 default CLI
 tests, strict Clippy, warning-free Rustdoc and regenerated CLI/API checks passed.
 No live retry was manufactured or settled request replayed; actual server
 encoding-altered redelivery/ACK remains unverified.
+
+Primary-change encoding correction (2026-10-07, confirmed offline): reproduced
+missed own group-key rotation for a remote AgentDevice/0 primary and accidental
+own-PN device refresh. Encoding is normalized only after primary agent/device
+checks; PN/LID namespaces and companion boundaries remain exact. Redacted rotation
+inspection now ignores kind without folding devices. PN incoming and LID signed
+bundle archive/reopen, own exclusion, rollback and stale-reservation tests cover
+the local correction. APK 37.71 D4x.A00/B7H.A06 remain source context; live alternate
+primary encoding and subsequent group rotation remain unverified.
+[Evidence](docs/protocol/cross-device-sync.md#encoding-independent-primary-change-follow-ups-2026-10-07).
+
+Primary-change encoding validation: 673 workspace/all-feature tests, 24 default
+CLI tests, strict Clippy, warning-free Rustdoc and CLI/API checks passed. Rebuilt
+CLI read-only saved-account inspection left all inspected protocol state unchanged;
+no login/query/send or manufactured identity change was used to test the branch.

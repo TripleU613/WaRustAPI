@@ -97,6 +97,9 @@ pub(super) fn after_primary_change_in(tx: &mut WriteTx<'_>, peer: &Jid) -> Resul
     if peer.device != 0 || peer.agent != 0 || !matches!(peer.server, Server::User | Server::Lid) {
         return Ok(());
     }
+    // The primary-only guard above preserves agent/device scope. JidKind is
+    // wire representation, so compare the validated primary without that kind.
+    let peer = &peer.to_non_ad();
     let own = crate::session::AccountRecord::load_in_write(tx)?
         .and_then(|a| a.own_jid)
         .map(|j| j.to_non_ad());
@@ -133,6 +136,10 @@ pub(super) fn after_primary_change_in(tx: &mut WriteTx<'_>, peer: &Jid) -> Resul
 
 /// Redacted count for peer-identity inspection; zero does not prove historical coverage.
 pub(super) fn pending_for_peer_in(tx: &ReadTx<'_>, peer: &Jid) -> Result<usize> {
+    // Match primary encoding variants without folding companions or agents.
+    let mut logical_peer = peer.clone();
+    logical_peer.kind = crate::model::jid::JidKind::Plain;
+    let peer = &logical_peer;
     let mut count = 0;
     let mut cursor = None;
     loop {
@@ -210,7 +217,10 @@ mod tests {
                     None,
                     &[2],
                 )?;
-                after_primary_change_in(tx, &peer.with_device(3))
+                after_primary_change_in(tx, &peer.with_device(3))?;
+                let mut agent = peer.clone();
+                agent.agent = 1;
+                after_primary_change_in(tx, &agent)
             })
             .unwrap();
         assert!(
@@ -220,11 +230,13 @@ mod tests {
                 .unwrap()
                 .rotation_pending()
         );
+        let mut encoded_primary = peer.clone();
+        encoded_primary.kind = crate::model::jid::JidKind::AgentDevice;
         store
             .write(|tx| {
                 super::super::identity_conflicts::archive_replacement(
                     tx,
-                    &peer,
+                    &encoded_primary,
                     Some(&[1]),
                     None,
                     &[2],
@@ -233,7 +245,25 @@ mod tests {
             .unwrap();
         drop(store);
         let store = open(&path, false);
-        assert_eq!(store.read(|tx| pending_for_peer_in(tx, &peer)).unwrap(), 1);
+        for kind in [
+            crate::model::jid::JidKind::Plain,
+            crate::model::jid::JidKind::AgentDevice,
+            crate::model::jid::JidKind::Interop,
+            crate::model::jid::JidKind::Facebook,
+        ] {
+            let mut encoded = peer.clone();
+            encoded.kind = kind;
+            assert_eq!(
+                store.read(|tx| pending_for_peer_in(tx, &encoded)).unwrap(),
+                1
+            );
+        }
+        assert_eq!(
+            store
+                .read(|tx| pending_for_peer_in(tx, &peer.with_device(3)))
+                .unwrap(),
+            0
+        );
         assert!(
             !store
                 .read(|tx| load_in(tx, &other, &own))
@@ -259,6 +289,107 @@ mod tests {
                 .read(|tx| load_in(tx, &jid("999999@g.us"), &own))
                 .unwrap()
                 .is_none()
+        );
+    }
+
+    #[test]
+    fn authenticated_lid_change_with_alternate_encoding_queues_rotation_and_refresh() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("lid-primary-kind.redb");
+        let store = open(&path, true);
+        let own = jid("15555550101@s.whatsapp.net");
+        let peer = jid("123456@lid");
+        let group = jid("123456@g.us");
+        store
+            .write(|tx| reserve_in(tx, &group, &own, None, &[peer.with_device(3)]))
+            .unwrap();
+        let mut encoded = peer.clone();
+        encoded.kind = crate::model::jid::JidKind::AgentDevice;
+        store
+            .write(|tx| {
+                super::super::identity_conflicts::archive_bundle_replacement(
+                    tx,
+                    &encoded,
+                    Some(&[1]),
+                    None,
+                    &[2],
+                )
+            })
+            .unwrap();
+        drop(store);
+        let store = open(&path, false);
+        assert!(
+            store
+                .read(|tx| load_in(tx, &group, &own))
+                .unwrap()
+                .unwrap()
+                .rotation_pending()
+        );
+        assert_eq!(
+            super::super::devices::pending_users(&store).unwrap(),
+            vec![peer.clone()]
+        );
+        assert_eq!(
+            store.read(|tx| pending_for_peer_in(tx, &encoded)).unwrap(),
+            1
+        );
+        assert_eq!(
+            store
+                .read(|tx| pending_for_peer_in(tx, &jid("123456@s.whatsapp.net")))
+                .unwrap(),
+            0
+        );
+    }
+
+    #[test]
+    fn own_primary_encoding_variants_do_not_invalidate_exposure() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("own-primary-kind.redb");
+        let store = open(&path, true);
+        let own = jid("15555550101@s.whatsapp.net");
+        let lid = jid("123456@lid");
+        let group = jid("123456@g.us");
+        let other_owner = jid("15555550102@s.whatsapp.net");
+        store
+            .write(|tx| {
+                crate::session::AccountRecord {
+                    own_jid: Some(own.clone()),
+                    ..Default::default()
+                }
+                .save(tx)?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    super::super::group_send::OWN_LID_KEY,
+                    1,
+                    &lid,
+                )?;
+                reserve_in(tx, &group, &other_owner, None, &[own.clone(), lid.clone()])
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        for primary in [&own, &lid] {
+            for kind in [
+                crate::model::jid::JidKind::Plain,
+                crate::model::jid::JidKind::AgentDevice,
+                crate::model::jid::JidKind::Interop,
+                crate::model::jid::JidKind::Facebook,
+            ] {
+                let mut encoded = primary.clone();
+                encoded.kind = kind;
+                store
+                    .write(|tx| after_primary_change_in(tx, &encoded))
+                    .unwrap();
+            }
+        }
+        drop(store);
+        let store = open(&path, false);
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
         );
     }
 

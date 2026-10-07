@@ -1650,3 +1650,54 @@ peer inspection (including pending rotation counts), devices, actions, outbox
 and receipts were unchanged. No query or chat intent was added. Private evidence:
 `lab/releases/sender-distribution-live/active.json`. This checks existing receive
 compatibility only; no identity transition or group rotation occurred live.
+
+## Encoding-independent primary-change follow-ups (2026-10-07)
+
+**Confirmed locally:** authenticated primary identity-change follow-ups compared
+normalized saved addresses against the original peer including `JidKind`. A
+synthetic AgentDevice/0 primary therefore skipped indexed own sender-key rotation;
+the same representation of our own PN queued an unnecessary device refresh. The
+expanded pre-fix archive test reported rotation count 0 instead of 1; the own
+refresh test found a nonempty pending queue. These are Rust comparison failures,
+not server refusals or evidence of an APK retry policy.
+
+**Correction:** `devices::after_primary_identity_change_in` and
+`sender_key_distribution::after_primary_change_in` first retain the existing
+primary-only user/LID, agent-0, device-0 guard, then normalize encoding for own
+exclusions and recipient matching. A companion or agent is never promoted to
+primary. `pending_for_peer_in` ignores encoding kind while preserving agent and
+device so inspection reflects the same logical primary. PN/LID equivalence is
+not inferred. Stored exposure snapshots, sender chains, request IDs, old lists,
+refusals and uncertain send reservations remain intact; no query is automatically
+adopted and no send is replayed.
+
+**APK context:** build **2.26.37.71 D4x.A00** selects changed-primary groups with
+`sent_sender_key=1` at `0af0..0bb4`, with the identity-change device follow-up at
+`0476..04b0`; **B7H.A06** preserves account category and device in recipient
+address construction. These retained sources support the existing scoped
+follow-ups. This change corrects local model equality; APK internal encoding
+normalization and the actual occurrence of alternate primary encodings on these
+live paths remain **unknown**. Testing all Rust kind variants does not establish
+that all variants occur in this APK.
+
+**Offline evidence:** authenticated incoming PN archive and signed-directory LID
+archive entry points queue rotation across encoding variants and store reopen;
+LID refresh remains scoped to LID, not a guessed PN alias. Inspection accepts
+kind variants but rejects companions. Own PN/LID exclusion tests leave complete
+checkpoint records unchanged across reopen; foreign agent/companion exclusions
+remain covered. Existing transaction rollback and stale exposure-reservation tests
+still enforce atomicity. **Unknown live:** a fresh authenticated changed-primary
+message with alternate encoding and the next newly authorized group send. No
+identity replacement, settled request replay or group send was manufactured.
+
+**Negative comparison audit:** `peer_verification::invalidate_in` addresses
+metadata through a formatted JID selector; `Jid::Display` retains
+user/server/agent/device but does not serialize kind. The same kind-equality
+failure was not established there, so verification storage was not changed.
+
+**Validation:** 673 workspace/all-feature tests, 24 default CLI tests, strict
+Clippy, warning-free Rustdoc, CLI reference/API checks and rebuilt CLI passed.
+Read-only inspection of the existing private account left outbox/actions/receipts,
+devices and pins unchanged. Evidence index remains private at
+`lab/releases/primary-kind-inspection/active.json`; no network request or key
+replacement occurred during this inspection.

@@ -1172,3 +1172,13 @@ actual receive-loop cut/reconnect tests cover the correction. APK 37.71 Cp2.A05
 is wire ACK context; APK duplicate/retry-limit policy remains unknown. Historical
 duplicate rows are not consolidated; live encoding changes remain unverified.
 [Evidence](messaging-transport.md#retry-reservation-identity-across-jid-encodings-2026-10-07).
+
+Primary-change encoding correction (2026-10-07, confirmed offline): reproduced
+missed own group-key rotation for a remote AgentDevice/0 primary and accidental
+own-PN device refresh. Encoding is normalized only after primary agent/device
+checks; PN/LID namespaces and companion boundaries remain exact. Redacted rotation
+inspection now ignores kind without folding devices. PN incoming and LID signed
+bundle archive/reopen, own exclusion, rollback and stale-reservation tests cover
+the local correction. APK 37.71 D4x.A00/B7H.A06 remain source context; live alternate
+primary encoding and subsequent group rotation remain unverified.
+[Evidence](cross-device-sync.md#encoding-independent-primary-change-follow-ups-2026-10-07).

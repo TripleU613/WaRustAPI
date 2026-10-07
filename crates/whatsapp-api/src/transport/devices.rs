@@ -353,6 +353,9 @@ pub(super) fn after_primary_identity_change_in(
     if peer.device != 0 || peer.agent != 0 || !matches!(peer.server, Server::Lid | Server::User) {
         return Ok(());
     }
+    // The primary-only guard above preserves agent/device scope. JidKind is
+    // wire representation, so compare the validated primary without that kind.
+    let peer = &peer.to_non_ad();
     let own = crate::session::AccountRecord::load_in_write(tx)?
         .and_then(|a| a.own_jid)
         .map(|j| j.to_non_ad());
@@ -1264,6 +1267,12 @@ mod tests {
             .write(|tx| after_primary_identity_change_in(tx, &peer.with_device(3)))
             .unwrap();
         assert!(pending_users(&store).unwrap().is_empty());
+        let mut agent = peer.clone();
+        agent.agent = 1;
+        store
+            .write(|tx| after_primary_identity_change_in(tx, &agent))
+            .unwrap();
+        assert!(pending_users(&store).unwrap().is_empty());
         store
             .write(|tx| {
                 crate::session::AccountRecord {
@@ -1271,7 +1280,9 @@ mod tests {
                     ..Default::default()
                 }
                 .save(tx)?;
-                after_primary_identity_change_in(tx, &peer)
+                let mut encoded_primary = peer.clone();
+                encoded_primary.kind = crate::model::jid::JidKind::AgentDevice;
+                after_primary_identity_change_in(tx, &encoded_primary)
             })
             .unwrap();
         assert!(pending_users(&store).unwrap().is_empty());
@@ -1284,7 +1295,19 @@ mod tests {
                     1,
                     &own,
                 )?;
-                after_primary_identity_change_in(tx, &own)
+                for primary in [&peer, &own] {
+                    for kind in [
+                        crate::model::jid::JidKind::Plain,
+                        crate::model::jid::JidKind::AgentDevice,
+                        crate::model::jid::JidKind::Interop,
+                        crate::model::jid::JidKind::Facebook,
+                    ] {
+                        let mut encoded = primary.clone();
+                        encoded.kind = kind;
+                        after_primary_identity_change_in(tx, &encoded)?;
+                    }
+                }
+                Ok(())
             })
             .unwrap();
         assert!(pending_users(&store).unwrap().is_empty());
