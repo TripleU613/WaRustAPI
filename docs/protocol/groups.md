@@ -1547,3 +1547,79 @@ Validation: 573 workspace/all-feature tests, 24 default-feature CLI tests,
 strict workspace/all-target/all-feature Clippy, warning-free Rustdoc, generated
 CLI reference, five OpenAPI checks, formatting, staged whitespace and repository
 hygiene (393 local links) passed. No live participant-map validation occurred.
+
+
+## Notification metadata producer and initial refresh round (2026-10-07)
+
+**Confirmed/static**, APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Scoped disassembly and exact caller results](group-notification-input-evidence.txt)
+connect the earlier ACK writer to the base handler's incoming metadata producer.
+Reproduce with `target/debug/xtask apk-smali <apk> --class 'LX/0yO;'
+--method BFC`, then `LX/CmG;`, `LX/CSu; --method A00` and
+`LX/FpD; --method run`. These are offline development utilities, not network
+commands or HTTP routes.
+
+`0yO.BFC` first checks its accepted message-code array (000a..0020). It reads
+the incoming stanza through `1B3.AtB` (0020..003a), obtains the
+`loggableStanzaId` bundle long (003e..0052), and calls `CmG.A02` with that
+stanza, null second argument, and the long (0052..005a). It constructs
+`FpD` selector 9 and calls `run` (005c..0070). `FpD.run` selector 9 begins
+at 0768: it reads the first child at index zero and its tag, records diagnostic
+metadata by stanza ID, then directly invokes `0yO.A01` at 07e2..07e8 when
+the handler's A09 executor is null. With an executor it schedules `Fpc` selector
+3 (07f2..0804). **Unknown:** that alternate runnable's full body, actual message
+code chosen by the upstream group parser, and current executor/feature state.
+This extends the previously confirmed application-before-ACK trace without
+claiming every upstream route is now recovered.
+
+`CmG.A02` supplies class `notification`, null explicit from, null failure reason
+and null default type to `CmG.A00` (0000..0016). `A00` therefore reads typed
+`from` from the incoming stanza (0000..0014), required `id` (0014..0020),
+typed `participant` (0020..0030), and `type` with the supplied null fallback
+(0030..003c). These become CSu A02/A08/A01/A09 respectively; class becomes
+A06 (0046..005a). CSu.A00 forwards these fields to Cb1's constructor
+(0012..004a). A missing type is not manufactured as `w:gp2`.
+
+**Confirmed/static distinction:** this notification wrapper does not read
+`recipient`, `category` or `edit`. The separate `CmG.A03` receipt wrapper reads
+those attributes, supplies class `receipt` and default type `delivery`, then
+writes CSu A03/A05/A07. The common Cp2 ACK writer's ability to serialize these
+fields does not prove that notifications echo them. Do not copy all root
+attributes into a future group notification ACK. Exact Cb1 constructor search
+found one caller, CSu.A00 (classes7.dex invoke offset 0x5b6174); CmG.A02 has
+three callers, 0yO.BFC, 1RV.A06 and D34.B38. The latter two are not traced here.
+
+**Confirmed/static normal control flow:** in `0yv.A09`, v6 is initialized to
+zero at 11a6..11a8 before the fallback tag chain. A reverse normal-edge
+predecessor traversal from the groups_dirty selector at 2912 visited 119
+instructions and found that initialization as the sole reaching v6 definition.
+The traversal uses instruction byte starts/ends, signed relative jumps in
+code units (target = start + 2 * signed displacement), conditional fallthrough,
+switch case/default targets, no fallthrough after return/throw/payload, and
+stops a path at its first v6 destination write. It excludes exception edges;
+exception-handler coverage is **unknown**, not a claim about all execution.
+
+Each non-null group `jid` is paired with Integer.valueOf(v6) at 2976..2988;
+a missing jid logs and skips (2966..2976). After iteration, 6548..6572 creates
+an empty processed set, context 8lX.A05 (dirty-truncatable), null maximum rounds,
+initial round v6=0, and params=3, then queues FetchTruncatedGroupsJob. The integer
+in each pair is confirmed zero on this path; its semantic meaning remains
+**unknown**, so it must not be described as a reason code. Static construction
+also queues an empty list if all child JIDs are absent; subsequent job empty-list
+behavior has not been established. No JID-validation requirement follows merely
+from this raw string extraction.
+
+**Negative search results:** 0zH.A05 is a message-class metadata producer,
+not the notification wrapper. 12s.A01 constructs an outgoing location notification,
+not the group receive parser. 0h8.A02 normalizes primary DeviceJid addresses in
+existing Cb1 metadata; it is not the initial incoming stanza parser. These scoped
+methods were inspected after exact CSu A06/A02 field-writer searches (31/34
+write sites respectively). Other sites and the complete upstream dispatch remain
+**unknown**. The needed runtime work is still durable group-refresh scheduling,
+correlated batch response application and supported notification acknowledgement.
+No account store was opened, request sent, identity changed or saved message
+replayed in this research change.
+
+Validation: all five OpenAPI checks, generated CLI reference, whitespace and
+repository hygiene passed. No runtime behavior changed or live validation occurred.

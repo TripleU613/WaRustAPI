@@ -644,3 +644,16 @@ Validation: 573 workspace/all-feature tests, 24 default-feature CLI tests,
 strict workspace/all-target/all-feature Clippy, warning-free Rustdoc, generated
 CLI reference, five OpenAPI checks, formatting, staged whitespace and repository
 hygiene (393 local links) passed. No live participant-map validation occurred.
+
+
+Notification input trace (2026-10-07, **offline**): base handler BFC produces
+notification ACK metadata through CmG.A02/A00 using incoming from/id/participant/type.
+Receipt-only recipient/category/edit extraction is a different wrapper. Normal-edge
+analysis confirms dirty refresh round zero and zero per-group integer; its meaning
+and exception paths remain unknown. Alternate executor and upstream group dispatch
+remain untraced; runtime group notification completion is still open.
+[Producer and round evidence](docs/protocol/groups.md#notification-metadata-producer-and-initial-refresh-round-2026-10-07).
+No account store was opened or live request sent.
+
+Validation: all five OpenAPI checks, generated CLI reference, whitespace and
+repository hygiene passed. No runtime behavior changed or live validation occurred.
