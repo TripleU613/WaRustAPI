@@ -1039,3 +1039,21 @@ Validation: 579 workspace/all-feature and 24 default CLI tests, strict Clippy,
 warning-free Rustdoc, regenerated CLI reference, all five OpenAPI checks,
 formatting and repository hygiene passed. Mixed/report live validation remains
 unverified.
+
+Opt-in group continuation (2026-10-07, **offline tested**):
+`group refresh --follow-up` creates an atomic, durable chain through round 2
+only after supported results. Reports retain unsent/size-only pending work and
+expose next action/exhaustion. Default manual refresh is unchanged. Refusal and
+uncertain non-replay guards remain in force. Conservative local partition budget
+10000 does not claim APK runtime heap/feature equivalence. See
+[protocol evidence](protocol/groups.md#opt-in-bounded-refresh-continuation-2026-10-07).
+No live query repeated; live truncated chains, unsolicited dirty notifications,
+ACK and APK error/wait helpers remain open.
+
+Validation: 583 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, regenerated CLI
+reference and formatting passed. Transaction/reopen and old-report inspection
+checks are offline; live truncated continuation remains unverified.
+
+Final five OpenAPI checks, whitespace and repository hygiene (413 local links)
+also passed. Private account state and conversation exports remain untracked.

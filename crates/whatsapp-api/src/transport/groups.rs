@@ -226,13 +226,55 @@ pub fn info_request(group: &Jid, id: &str) -> Result<Node> {
 /// per_group_dirty_recovery context; 9QE selector 11 emits group@jid.
 /// No automatic retry or truncated follow-up is queued by this operation.
 pub fn queue_refresh(store: &ProtocolStore, groups: &[Jid]) -> Result<String> {
+    queue_refresh_mode(store, groups, false)
+}
+
+/// Opt into APK-derived bounded continuation of authenticated truncated results.
+/// Initial zero estimates derive round limit 2 in APK 37.71 job A0G 04a2..04f4.
+/// Refused, unanswered or unsupported responses never generate another request.
+pub fn queue_refresh_follow_up(store: &ProtocolStore, groups: &[Jid]) -> Result<String> {
+    queue_refresh_mode(store, groups, true)
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct RefreshContinuation {
+    root: String,
+    round: u8,
+    remaining: Vec<TruncatedGroup>,
+}
+
+fn refresh_node(id: &str, groups: &[TruncatedGroup], follow_up: bool) -> Result<Node> {
+    let children = groups
+        .iter()
+        .map(|g| Ok(Node::new("group").attr("jid", Jid::parse(&g.jid)?)))
+        .collect::<Result<Vec<_>>>()?;
+    Ok(iq(
+        id,
+        "get",
+        group_server()?,
+        vec![
+            Node::new("query")
+                .attr(
+                    "context",
+                    if follow_up {
+                        "per_group_dirty_recovery_truncatable"
+                    } else {
+                        "per_group_dirty_recovery"
+                    },
+                )
+                .children(children),
+        ],
+    ))
+}
+
+fn queue_refresh_mode(store: &ProtocolStore, groups: &[Jid], follow_up: bool) -> Result<String> {
     if groups.is_empty() || groups.len() > 256 {
         return Err(invalid(
             "batch refresh requires one to 256 groups (local bound)",
         ));
     }
     let mut unique = std::collections::BTreeSet::new();
-    let mut children = Vec::new();
+    let mut inputs = Vec::new();
     for group in groups {
         require_group(group)?;
         if group.user.is_empty() || group.is_ad() {
@@ -241,20 +283,54 @@ pub fn queue_refresh(store: &ProtocolStore, groups: &[Jid]) -> Result<String> {
         if !unique.insert(group.to_string()) {
             return Err(invalid("batch refresh has duplicate groups"));
         }
-        children.push(Node::new("group").attr("jid", group.clone()));
+        inputs.push(TruncatedGroup {
+            jid: group.to_string(),
+            size: 0,
+        });
     }
-    queue(store, "group-refresh", "refresh groups", move |id| {
-        Ok(iq(
-            id,
-            "get",
-            group_server()?,
-            vec![
-                Node::new("query")
-                    .attr("context", "per_group_dirty_recovery")
-                    .children(children),
-            ],
-        ))
+    store.write(|tx| {
+        let id = super::actions::queue_in(tx, "group-refresh", "refresh groups", |id| {
+            refresh_node(id, &inputs, follow_up)
+        })?;
+        if follow_up {
+            tx.put_json(
+                Table::Checkpoints,
+                format!("group-refresh-job:{id}").as_bytes(),
+                1,
+                &RefreshContinuation {
+                    root: id.clone(),
+                    round: 0,
+                    remaining: Vec::new(),
+                },
+            )?;
+        }
+        Ok(id)
     })
+}
+
+fn first_refresh_partition(
+    inputs: Vec<TruncatedGroup>,
+) -> (Vec<TruncatedGroup>, Vec<TruncatedGroup>) {
+    // APK 37.71 job A0G 00de..0126 flushes above participant budget,
+    // resetting the accumulator to zero after the inserted first pair.
+    // 10000 is our conservative local budget, equal to the APK floor before
+    // its unknown feature cap; it does not claim identical heap/feature state.
+    let mut first = Vec::new();
+    let mut remaining = Vec::new();
+    let mut cost = 0u32;
+    let mut split = false;
+    for group in inputs {
+        if !split && cost != 0 && cost + group.size > 10000 {
+            split = true;
+        }
+        if split {
+            remaining.push(group);
+        } else {
+            cost += group.size;
+            first.push(group);
+        }
+    }
+    (first, remaining)
 }
 
 /// `<subject>text</subject>` (`LX/0Xm.A0E`).
@@ -662,22 +738,45 @@ pub struct TruncatedGroup {
 pub struct RefreshOutcome {
     /// Complete snapshots committed in this batch.
     pub complete: usize,
-    /// Pending size-only groups; no automatic follow-up is implemented yet.
+    /// Size-only groups returned by this response; not a member list.
     pub truncated: Vec<TruncatedGroup>,
     /// APK GroupForbidden results (group@error=403); snapshots retained.
     pub forbidden: usize,
     /// APK GroupNotExist results (group@error=404); snapshots retained.
     pub not_found: usize,
+    /// Whether this action opted into the bounded continuation chain.
+    #[serde(default)]
+    pub automatic_follow_up: bool,
+    /// Current round, zero for initial or noncontinuing refreshes.
+    #[serde(default)]
+    pub round: u8,
+    /// Next durable query ID, when a recognized result permits continuation.
+    #[serde(default)]
+    pub next_action: Option<String>,
+    /// All groups still needing full results, including unsent partitions.
+    #[serde(default)]
+    pub pending: Vec<TruncatedGroup>,
+    /// Pending work remains but APK-derived round limit 2 was reached.
+    #[serde(default)]
+    pub exhausted: bool,
 }
 
 /// Inspect the projection result of one settled batch, without transmitting.
 pub fn refresh_outcome(store: &ProtocolStore, id: &str) -> Result<Option<RefreshOutcome>> {
     store.read(|tx| {
-        tx.get_json(
+        let report: Option<RefreshOutcome> = tx.get_json(
             Table::Checkpoints,
             format!("group-refresh-result:{id}").as_bytes(),
             1,
-        )
+        )?;
+        Ok(report.map(|mut report| {
+            // Pre-continuation reports contain truncated inputs but no pending
+            // field. Recover inspection counts without writes or new queries.
+            if !report.automatic_follow_up && report.pending.is_empty() {
+                report.pending.clone_from(&report.truncated);
+            }
+            report
+        }))
     })
 }
 
@@ -765,6 +864,48 @@ fn apply_refresh_in(
     }
     for snapshot in snapshots {
         save_snapshot_in(tx, snapshot)?;
+    }
+    let continuation: Option<RefreshContinuation> = tx.get_json(
+        Table::Checkpoints,
+        format!("group-refresh-job:{id}").as_bytes(),
+        1,
+    )?;
+    if let Some(continuation) = continuation {
+        outcome.automatic_follow_up = true;
+        outcome.round = continuation.round;
+        // A0G 036a..03b8 retains original input order when removing processed
+        // groups. Response order does not control the next partition.
+        for requested in query.child_nodes() {
+            let jid = attr_string(requested, "jid").unwrap_or_default();
+            if let Some(group) = outcome.truncated.iter().find(|g| g.jid == jid) {
+                outcome.pending.push(group.clone());
+            }
+        }
+        outcome.pending.extend(continuation.remaining);
+        // APK A0G 0420..0436 schedules only nonempty pending work with round
+        // below the bound; 0474..049a creates a new job with round+1. New read
+        // queries are distinct actions; an unanswered action is never replayed.
+        if !outcome.pending.is_empty() && continuation.round < 2 {
+            let (next, remaining) = first_refresh_partition(outcome.pending.clone());
+            let next_id = super::actions::queue_in(tx, "group-refresh", "refresh groups", |id| {
+                refresh_node(id, &next, true)
+            })?;
+            tx.put_json(
+                Table::Checkpoints,
+                format!("group-refresh-job:{next_id}").as_bytes(),
+                1,
+                &RefreshContinuation {
+                    root: continuation.root,
+                    round: continuation.round + 1,
+                    remaining,
+                },
+            )?;
+            outcome.next_action = Some(next_id);
+        } else {
+            outcome.exhausted = !outcome.pending.is_empty();
+        }
+    } else {
+        outcome.pending = outcome.truncated.clone();
     }
     tx.put_json(
         Table::Checkpoints,
@@ -1737,6 +1878,11 @@ mod tests {
                 }],
                 forbidden: 1,
                 not_found: 1,
+                pending: vec![TruncatedGroup {
+                    jid: groups[1].to_string(),
+                    size: 19999
+                }],
+                ..Default::default()
             }
         );
         assert_eq!(
@@ -1767,6 +1913,218 @@ mod tests {
             })
             .unwrap();
         assert_eq!(events.events.len(), 5);
+    }
+
+    #[test]
+    fn follow_up_is_atomic_ordered_bounded_and_once_only_after_reopen() {
+        let (dir, mut s) = store();
+        let groups: Vec<Jid> = (0..3)
+            .map(|n| Jid::parse(&format!("12345-6789{n}@g.us")).unwrap())
+            .collect();
+        let mut id = queue_refresh_follow_up(&s, &groups).unwrap();
+        for round in 0..=2 {
+            let queued = super::super::actions::reserve_pending(&s).unwrap();
+            assert_eq!(queued.len(), 1);
+            assert_eq!(text(&queued[0], "id").as_deref(), Some(id.as_str()));
+            let query = queued[0].child("query").unwrap();
+            assert_eq!(
+                text(query, "context").as_deref(),
+                Some("per_group_dirty_recovery_truncatable")
+            );
+            // Source-derived bounded size, deliberately reverse server ordering.
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![
+                    Node::new("groups").children(
+                        query
+                            .child_nodes()
+                            .iter()
+                            .rev()
+                            .map(|g| {
+                                Node::new("group")
+                                    .attr("id", text(g, "jid").unwrap())
+                                    .attr("truncated", "true")
+                                    .attr("size", "7000")
+                            })
+                            .collect(),
+                    ),
+                ]);
+            super::super::actions::record_reply(&s, &reply).unwrap();
+            if round == 0 {
+                let (action, saved) = s
+                    .read(|tx| super::super::actions::view_in(tx, &id))
+                    .unwrap()
+                    .unwrap();
+                let abort: Result<()> = s.write(|tx| {
+                    ingest_reply_in(
+                        tx,
+                        "group-refresh",
+                        &action,
+                        Some(&queued[0]),
+                        saved.as_ref(),
+                    )?;
+                    Err(invalid("abort continuation"))
+                });
+                assert!(abort.is_err());
+                assert!(refresh_outcome(&s, &id).unwrap().is_none());
+                assert!(
+                    super::super::actions::reserve_pending(&s)
+                        .unwrap()
+                        .is_empty()
+                );
+            }
+            assert!(apply_pending(&s, &id).unwrap());
+            let report = refresh_outcome(&s, &id).unwrap().unwrap();
+            assert_eq!(report.round, round);
+            assert!(report.automatic_follow_up);
+            assert_eq!(
+                report
+                    .pending
+                    .iter()
+                    .map(|g| g.jid.clone())
+                    .collect::<Vec<_>>(),
+                groups.iter().map(ToString::to_string).collect::<Vec<_>>()
+            );
+            assert_eq!(report.exhausted, round == 2);
+            assert_eq!(report.next_action.is_some(), round < 2);
+            drop(s);
+            s = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("p.redb"),
+                account_id: AccountId::new("a").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+                create: false,
+            })
+            .unwrap();
+            assert_eq!(refresh_outcome(&s, &id).unwrap(), Some(report.clone()));
+            assert_eq!(recover_pending(&s).unwrap(), 0);
+            assert_eq!(ingest(&s).unwrap(), 0);
+            if let Some(next) = report.next_action {
+                let request = super::super::actions::request(&s, &next).unwrap().unwrap();
+                // 7000 + 7000 exceeds local floor: only first group queried.
+                assert_eq!(request.child("query").unwrap().child_nodes().len(), 1);
+                id = next;
+            }
+        }
+        assert!(
+            super::super::actions::reserve_pending(&s)
+                .unwrap()
+                .is_empty()
+        );
+    }
+
+    #[test]
+    fn follow_up_excludes_completed_errors_and_never_replays_uncertain_queries() {
+        let (_dir, s) = store();
+        let groups: Vec<Jid> = (0..4)
+            .map(|n| Jid::parse(&format!("12345-6789{n}@g.us")).unwrap())
+            .collect();
+        let id = queue_refresh_follow_up(&s, &groups).unwrap();
+        super::super::actions::reserve_pending(&s).unwrap();
+        assert!(
+            super::super::actions::reserve_pending(&s)
+                .unwrap()
+                .is_empty()
+        );
+        assert_eq!(recover_pending(&s).unwrap(), 0);
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result")
+            .children(vec![Node::new("groups").children(vec![
+                    Node::new("group")
+                        .attr("id", groups[0].clone())
+                        .attr("subject", "Complete"),
+                    Node::new("group")
+                        .attr("id", groups[1].clone())
+                        .attr("error", "403"),
+                    Node::new("group")
+                        .attr("id", groups[2].clone())
+                        .attr("error", "404"),
+                    Node::new("group")
+                        .attr("id", groups[3].clone())
+                        .attr("truncated", "true")
+                        .attr("size", "0"),
+                ])]);
+        super::super::actions::record_reply(&s, &reply).unwrap();
+        assert!(apply_pending(&s, &id).unwrap());
+        let report = refresh_outcome(&s, &id).unwrap().unwrap();
+        assert_eq!(
+            (report.complete, report.forbidden, report.not_found),
+            (1, 1, 1)
+        );
+        assert_eq!(report.pending.len(), 1);
+        let next = report.next_action.unwrap();
+        let queued = super::super::actions::reserve_pending(&s).unwrap();
+        assert_eq!(queued.len(), 1);
+        assert_eq!(
+            text(&queued[0].child("query").unwrap().child_nodes()[0], "jid"),
+            Some(groups[3].to_string())
+        );
+        let refusal = Node::new("iq")
+            .attr("id", next.as_str())
+            .attr("type", "error")
+            .children(vec![Node::new("error").attr("code", "403")]);
+        super::super::actions::record_reply(&s, &refusal).unwrap();
+        apply_pending(&s, &next).unwrap();
+        assert!(refresh_outcome(&s, &next).unwrap().is_none());
+        assert!(
+            super::super::actions::reserve_pending(&s)
+                .unwrap()
+                .is_empty()
+        );
+    }
+
+    #[test]
+    fn follow_up_stops_on_complete_unknown_and_root_refusal() {
+        for case in ["complete", "unknown", "refused"] {
+            let (_dir, s) = store();
+            let group = Jid::parse("12345-67890@g.us").unwrap();
+            let id = queue_refresh_follow_up(&s, std::slice::from_ref(&group)).unwrap();
+            super::super::actions::reserve_pending(&s).unwrap();
+            let mut node = Node::new("group").attr("id", group);
+            if case == "unknown" {
+                node = node.attr("error", "500");
+            }
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", if case == "refused" { "error" } else { "result" })
+                .children(if case == "refused" {
+                    vec![Node::new("error").attr("code", "403")]
+                } else {
+                    vec![Node::new("groups").children(vec![node])]
+                });
+            super::super::actions::record_reply(&s, &reply).unwrap();
+            assert_eq!(apply_pending(&s, &id).unwrap(), case != "unknown");
+            let report = refresh_outcome(&s, &id).unwrap();
+            assert_eq!(report.is_some(), case == "complete");
+            if let Some(report) = report {
+                assert_eq!(report.complete, 1);
+                assert!(report.pending.is_empty());
+                assert!(report.next_action.is_none());
+                assert!(!report.exhausted);
+            }
+            assert!(
+                super::super::actions::reserve_pending(&s)
+                    .unwrap()
+                    .is_empty()
+            );
+        }
+    }
+
+    #[test]
+    fn historical_report_inspection_recovers_pending_count_without_queueing() {
+        let (_dir, s) = store();
+        s.write(|tx| tx.put_json(Table::Checkpoints, b"group-refresh-result:old", 1,
+            &serde_json::json!({"complete":0,"truncated":[{"jid":"12345-67890@g.us","size":100}],"forbidden":0,"not_found":0}))).unwrap();
+        let report = refresh_outcome(&s, "old").unwrap().unwrap();
+        assert_eq!(report.pending, report.truncated);
+        assert!(!report.automatic_follow_up);
+        assert!(report.next_action.is_none());
+        assert!(
+            super::super::actions::reserve_pending(&s)
+                .unwrap()
+                .is_empty()
+        );
     }
 
     #[test]

@@ -848,6 +848,9 @@ enum GroupCmd {
         /// Concrete group JIDs; repeat --chat for each group (local maximum 256).
         #[arg(long = "chat", required = true)]
         chats: Vec<String>,
+        /// Allow at most two further rounds after supported truncated results.
+        #[arg(long)]
+        follow_up: bool,
     },
     /// Inspect one saved batch projection outcome (offline, counts only).
     RefreshStatus {

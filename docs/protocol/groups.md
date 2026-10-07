@@ -1958,3 +1958,49 @@ reference, five OpenAPI checks, formatting and repository hygiene passed.
 The first workspace run caught a stale CLI reference after the help wording
 changed; regeneration and a complete workspace rerun passed. No live mixed
 validation occurred.
+
+## Opt-in bounded refresh continuation (2026-10-07)
+
+**Confirmed static:** APK 2.26.37.71 (SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`)
+job A0G `036a..03b8` retains unprocessed inputs in original order,
+`0420..0436` requires nonempty pending work and a round below its bound, and
+`04a2..04f4` derives bound 2 for initial zero estimates. See
+[group-refresh-partition-evidence.txt](group-refresh-partition-evidence.txt).
+EJy selector 4 and enum 8lX.A05 select
+`per_group_dirty_recovery_truncatable`; the default manual context stays
+`per_group_dirty_recovery`.
+
+**Implemented, offline tested:** `group refresh --chat <group-jid> --follow-up`
+(or `groups::queue_refresh_follow_up`) explicitly opts into rounds 0, 1 and 2.
+Supported correlated results create at most one distinct next read action per
+round. The projection, journal events, report, continuation context and child
+queue insertion commit together. A transaction abort leaves no child; committed
+projection cannot create another child when recovered or inspected after restart.
+Unanswered/sent actions are never replayed. Refusals and unsupported results
+create no continuation. Full and recognized 403/404 groups leave the pending set;
+this conservative terminal handling does not claim the APK error/wait helper has
+been fully traced.
+
+Pending ordering comes from the original request, followed by its unsent inputs,
+not the reply's order. Returned truncated sizes replace the selected estimates.
+Only the first partition is queried per round. **Local policy:** budget 10000
+uses the APK floor, rather than inventing its runtime heap or unknown feature
+187b cap. The first group may itself exceed the budget, as in the APK branch.
+This is not a server limit or proof of identical APK partitioning at runtime.
+
+`group refresh-status --id <action-id>` reports counts plus
+`automatic_follow_up`, `round`, `next_action`, `pending` and `exhausted`.
+`next_action` means queued, not sent or completed; inspect that ID separately.
+At round 2 pending inputs remain encrypted and `exhausted=true` stops the chain.
+The command prints no group identities or estimates. Older reports default
+missing continuation metadata; pending counts for old noncontinuing reports
+are reconstructed from their saved truncated inputs without writes. Completed historical markers are never removed
+or backfilled to produce new requests.
+
+**Unknown/unverified:** live truncated continuation, current APK memory/feature
+selection, automatic `groups_dirty` scheduling/ACK, MEX, the APK error/rate-limit
+helper branches and full metadata reconciliation remain open. No live query was
+repeated for this change. Tests cover reversed response ordering, partition
+carry-forward, rollback, encrypted-store reopen, once-only projection, bounds,
+recognized terminal exclusions and refusal/uncertain non-replay.

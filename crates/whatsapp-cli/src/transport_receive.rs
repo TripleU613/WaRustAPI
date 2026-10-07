@@ -1895,13 +1895,21 @@ pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error
             participants,
         } => queued(groups::queue_create(&store, subject, &jids(participants)?)?),
         super::GroupCmd::Info { chat } => queued(groups::queue_info(&store, &Jid::parse(chat)?)?),
-        super::GroupCmd::Refresh { chats } => queued(groups::queue_refresh(&store, &jids(chats)?)?),
+        super::GroupCmd::Refresh { chats, follow_up } => {
+            let chats = jids(chats)?;
+            queued(if *follow_up {
+                groups::queue_refresh_follow_up(&store, &chats)?
+            } else {
+                groups::queue_refresh(&store, &chats)?
+            })
+        }
         super::GroupCmd::RefreshStatus { id } => {
             let summary = groups::refresh_outcome(&store, id)?.map(|v| {
                 serde_json::json!({
                     "complete": v.complete, "truncated": v.truncated.len(),
                     "forbidden": v.forbidden, "not_found": v.not_found,
-                    "automatic_follow_up": false,
+                    "automatic_follow_up": v.automatic_follow_up, "round": v.round,
+                    "next_action": v.next_action, "pending": v.pending.len(), "exhausted": v.exhausted,
                 })
             });
             if cli.json {
@@ -1912,11 +1920,15 @@ pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error
                 );
             } else if let Some(summary) = summary {
                 println!(
-                    "group refresh: complete={} truncated={} forbidden={} not_found={}; follow-up not queued",
+                    "group refresh: complete={} truncated={} forbidden={} not_found={} pending={} round={} exhausted={} next={}",
                     summary["complete"],
                     summary["truncated"],
                     summary["forbidden"],
-                    summary["not_found"]
+                    summary["not_found"],
+                    summary["pending"],
+                    summary["round"],
+                    summary["exhausted"],
+                    summary["next_action"]
                 );
             } else {
                 println!(
