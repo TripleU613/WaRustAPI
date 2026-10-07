@@ -15,7 +15,7 @@ const MAX_BYTES: usize = 65_536;
 const MAX_RECEIVERS: usize = 1024;
 
 /// Validated supported metadata without receiver addresses or context contents.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Metadata {
     /// Positive history message count (BX5 field 3, int64).
     pub message_count: i64,
@@ -97,6 +97,46 @@ pub fn decode(payload: &[u8]) -> Result<Option<Metadata>> {
     let envelope = Envelope::decode(payload).map_err(|_| invalid("invalid message envelope"))?;
     let notice = zeroize::Zeroizing::new(envelope.notice.ok_or_else(|| invalid("notice missing"))?);
     decode_body(&notice).map(Some)
+}
+
+/// Decode the supported ordinary group-notice context. The caller must already
+/// authenticate/store the payload. APK internal app-data bypass branches are
+/// untraced and deliberately unsupported; this does not select its UI feature.
+pub fn decode_for_stanza(node: &crate::binary::Node, payload: &[u8]) -> Result<Option<Metadata>> {
+    let Some(metadata) = decode(payload)? else {
+        return Ok(None);
+    };
+    let from = node.get_attr("from").and_then(|value| {
+        value
+            .as_jid()
+            .cloned()
+            .or_else(|| value.as_text().and_then(|s| Jid::parse(s).ok()))
+    });
+    // DA8.CF4 0020..0076 requires group context and normal group_history
+    // app data. Cp5.A0B/DEm.CF0 read it from the message's meta child.
+    if node.description != "message"
+        || !from.is_some_and(|jid| jid.server == Server::Group)
+        || node.get_attr("category").and_then(|v| v.as_text()) == Some("peer")
+    {
+        return Err(invalid("unsupported group-notice context"));
+    }
+    let metas: Vec<_> = node
+        .child_nodes()
+        .iter()
+        .filter(|child| child.description == "meta")
+        .collect();
+    if metas.len() != 1 {
+        return Err(invalid("one group-history meta child required"));
+    }
+    let attributes: Vec<_> = metas[0]
+        .attributes
+        .iter()
+        .filter(|attr| attr.name == "appdata")
+        .collect();
+    if attributes.len() != 1 || attributes[0].value.as_text() != Some("group_history") {
+        return Err(invalid("group_history meta appdata required"));
+    }
+    Ok(Some(metadata))
 }
 
 fn decode_body(body: &[u8]) -> Result<Metadata> {
@@ -276,5 +316,36 @@ mod tests {
                 .to_string()
                 .contains("receiver list exceeds local inspection limit")
         );
+    }
+
+    #[test]
+    fn ordinary_dispatch_requires_group_and_exact_meta_appdata() {
+        use crate::binary::Node;
+        let group = Node::new("message")
+            .attr("from", "123@g.us")
+            .children(vec![Node::new("meta").attr("appdata", "group_history")]);
+        assert!(decode_for_stanza(&group, PAYLOAD).unwrap().is_some());
+        for bad in [
+            Node::new("message")
+                .attr("from", "1@lid")
+                .children(vec![Node::new("meta").attr("appdata", "group_history")]),
+            group.clone().attr("category", "peer"),
+            Node::new("message")
+                .attr("from", "123@g.us")
+                .attr("appdata", "group_history"),
+            Node::new("message")
+                .attr("from", "123@g.us")
+                .children(vec![Node::new("enc").attr("appdata", "group_history")]),
+            Node::new("message")
+                .attr("from", "123@g.us")
+                .children(vec![Node::new("meta").attr("appdata", "other")]),
+            Node::new("message").attr("from", "123@g.us").children(vec![
+                Node::new("meta").attr("appdata", "group_history"),
+                Node::new("meta"),
+            ]),
+        ] {
+            assert!(decode_for_stanza(&bad, PAYLOAD).is_err());
+        }
+        assert_eq!(decode_for_stanza(&group, b"\x0a\x02hi").unwrap(), None);
     }
 }

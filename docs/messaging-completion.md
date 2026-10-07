@@ -76,7 +76,12 @@ from offline tests alone. Existing received captures can be processed locally.
   Supported metadata now has a pure decoder and redacted diagnostics, with
   local duplicate/unknown-field and receiver bounds. Saved-account inspection
   validated one receiver and context presence, without reporting their values.
-  No notice is applied and no history transfer is established.
+  Ordinary authenticated group notices with meta/appdata=group_history now
+  project to the distinct group_history_notice control event. Historical group
+  and broadcast backfill now checks their original chat route; rollback/restart
+  tests cover once-only projection. Private-copy and canonical backfill each
+  upgraded exactly one group_history_notice; repetition upgraded zero and
+  changed no other event kind. No history transfer is established.
 - Polls: creation (`pollCreationMessageV3`, field 64, with `messageContextInfo`
   secret) and votes (`pollUpdateMessage`, field 50, AES-256-GCM over an
   HKDF-derived key; the APK performs the derivation natively, so the recipe is

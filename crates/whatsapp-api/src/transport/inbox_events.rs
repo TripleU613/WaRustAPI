@@ -229,6 +229,41 @@ fn project(
         let Ok(fields) = crate::signal::direct::payload_fields(payload) else {
             return unsupported();
         };
+        if fields.contains(&102) {
+            // APK 2.26.37.71 DA8.CF4: an ordinary group-history notice needs
+            // group context and meta/appdata=group_history, plus valid BX5
+            // metadata. This event never substitutes notice text/history data.
+            let Ok(Some(metadata)) = super::history_notice::decode_for_stanza(node, payload) else {
+                return unsupported();
+            };
+            let Some((chat @ ChatId::Group(_), sender)) = chat_and_sender(node) else {
+                return unsupported();
+            };
+            let Some(id) = node
+                .get_attr("id")
+                .and_then(|v| v.as_text())
+                .and_then(|v| MessageId::new(v).ok())
+            else {
+                return unsupported();
+            };
+            return SyncEvent::GroupHistoryNotice {
+                key: MessageKey {
+                    chat,
+                    sender: Some(sender),
+                    direction: Direction::Incoming,
+                    id,
+                },
+                metadata,
+                server_timestamp: node
+                    .get_attr("t")
+                    .and_then(|v| v.as_text())
+                    .and_then(|v| v.parse::<i64>().ok())
+                    .filter(|v| *v >= 0)
+                    .and_then(|v| v.checked_mul(1000))
+                    .map(Timestamp),
+                observed_at: Timestamp::now(),
+            };
+        }
         // Chat-setting protocol message (comparison 2.26.37.71
         // `Message.protocolMessage` field 12; docs/protocol/chat-actions.md §3,
         // §5): a disappearing-timer change, its peer echo, or advanced chat
@@ -505,7 +540,9 @@ pub(super) fn publish(
     if let Some(marker) = tx.get_json::<serde_json::Value>(Table::Inbox, key, 1)? {
         if !matches!(
             projected,
-            SyncEvent::NewMessage(_) | SyncEvent::MessageUpdated(_)
+            SyncEvent::NewMessage(_)
+                | SyncEvent::MessageUpdated(_)
+                | SyncEvent::GroupHistoryNotice { .. }
         ) {
             return Ok(false);
         }
@@ -566,7 +603,13 @@ pub(super) fn restore(
         &limits,
     )
     .decode_node()?;
-    let Some(sender) = super::inbox::session_sender(&node) else {
+    // Group/broadcast rows are keyed by their chat, not the participant's
+    // direct-session selector. The direct-only check silently skipped their
+    // authenticated historical captures, including field-102 history notices.
+    let Some(sender) = super::inbox::sender_key_chat(&node)
+        .map(|(chat, _)| chat)
+        .or_else(|| super::inbox::session_sender(&node))
+    else {
         return Ok(false);
     };
     let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) else {
@@ -626,6 +669,142 @@ mod tests {
             .attr("participant", "15555550100@s.whatsapp.net")
             .attr("id", "fixture")
             .attr("t", "123")
+    }
+    #[test]
+    fn history_notice_is_a_control_event_not_a_reply_or_send_form() {
+        let payload = b"\xb2\x06\x0d\x12\x0b\x0a\x051@lid\x10\x0a\x18\x02";
+        let node = group_node().children(vec![Node::new("meta").attr("appdata", "group_history")]);
+        let projected = event(b"notice", &node, payload);
+        assert_eq!(projected.kind(), "group_history_notice");
+        let SyncEvent::GroupHistoryNotice {
+            key,
+            metadata,
+            server_timestamp,
+            ..
+        } = &projected
+        else {
+            panic!("notice did not project");
+        };
+        assert!(matches!(key.chat, ChatId::Group(_)));
+        assert_eq!(key.id.as_str(), "fixture");
+        assert_eq!(key.direction, Direction::Incoming);
+        assert_eq!(metadata.message_count, 2);
+        assert_eq!(*server_timestamp, Some(Timestamp(123000)));
+        let encoded = serde_json::to_value(&projected).unwrap();
+        assert!(!encoded.to_string().contains("1@lid"));
+        assert!(serde_json::from_value::<MessageContent>(encoded).is_err());
+        assert!(matches!(
+            event(b"notice", &group_node(), payload),
+            SyncEvent::UnsupportedMessage(_)
+        ));
+        assert!(matches!(
+            event(b"notice", &node.clone().attr("category", "peer"), payload),
+            SyncEvent::UnsupportedMessage(_)
+        ));
+    }
+
+    #[test]
+    fn group_notice_backfill_is_atomic_once_only_and_preserves_protocol_rows() {
+        let dir = tempfile::tempdir().unwrap();
+        let options = || OpenOptions {
+            path: dir.path().join("notice.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([3; 32]))),
+            create: true,
+        };
+        let store = ProtocolStore::open(options()).unwrap();
+        let payload = b"\xb2\x06\x0d\x12\x0b\x0a\x051@lid\x10\x0a\x18\x02".to_vec();
+        let node = group_node().children(vec![Node::new("meta").attr("appdata", "group_history")]);
+        let key = b"received:120363000000000001@g.us:fixture";
+        let route =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+                .encode(&node)
+                .unwrap();
+        let saved = serde_json::json!({"status":"decrypted", "route":route, "protobuf":payload});
+        store
+            .write(|tx| {
+                tx.put_json(Table::Checkpoints, key, 1, &saved)?;
+                tx.put_json(Table::PeerIdentities, b"baseline", 1, &vec![1u8, 2, 3])?;
+                tx.put_json(Table::SignalSessions, b"baseline", 1, &vec![4u8, 5, 6])?;
+                // Simulate the old unimplemented content projection while retaining
+                // the original authenticated route/body for its subsequent upgrade.
+                let old = tx.append_event(SyncEvent::UnsupportedMessage(UnsupportedMessage {
+                    type_hint: "fixture".into(),
+                    raw: bytes::Bytes::new(),
+                    truncated: true,
+                }))?;
+                tx.put_json(
+                    Table::Inbox,
+                    key,
+                    1,
+                    &serde_json::json!({"event_id":old.event_id, "kind":"unsupported_message"}),
+                )
+            })
+            .unwrap();
+        let cancelled: Result<()> = store.write(|tx| {
+            assert!(publish(tx, key, &node, &payload)?);
+            Err(Error::Cancelled)
+        });
+        assert!(cancelled.is_err());
+        let kind = |store: &ProtocolStore| {
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(Table::Inbox, key, 1))
+                .unwrap()
+                .unwrap()["kind"]
+                .clone()
+        };
+        assert_eq!(kind(&store), "unsupported_message");
+        assert!(restore(&store, key, &saved).unwrap());
+        assert_eq!(kind(&store), "group_history_notice");
+        drop(store);
+        let store = ProtocolStore::open(options()).unwrap();
+        assert!(!restore(&store, key, &saved).unwrap());
+        let events = store
+            .read_events(&ConsumerId::new("notice").unwrap(), EventCursor::START, 10)
+            .unwrap()
+            .events;
+        assert_eq!(events.len(), 2);
+        assert_eq!(events[1].event.kind(), "group_history_notice");
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<Vec<u8>>(Table::PeerIdentities, b"baseline", 1))
+                .unwrap(),
+            Some(vec![1, 2, 3])
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<Vec<u8>>(Table::SignalSessions, b"baseline", 1))
+                .unwrap(),
+            Some(vec![4, 5, 6])
+        );
+        assert!(restore(&store, b"received:other@g.us:fixture", &saved).is_err());
+        let mut consumed = saved.clone();
+        consumed["status"] = "consumed".into();
+        assert!(!restore(&store, key, &consumed).unwrap());
+    }
+
+    #[test]
+    fn authenticated_broadcast_backfill_uses_original_chat_route() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("broadcast.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([3; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let node = group_node().attr("from", "status@broadcast");
+        let key = b"received:status@broadcast:fixture";
+        let route =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+                .encode(&node)
+                .unwrap();
+        let saved = serde_json::json!({"status":"decrypted", "route":route, "protobuf":b"\x0a\x04test".to_vec()});
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key, 1, &saved))
+            .unwrap();
+        assert!(restore(&store, key, &saved).unwrap());
+        assert!(!restore(&store, key, &saved).unwrap());
     }
     #[test]
     fn group_text_projects_with_group_chat_and_participant_sender() {

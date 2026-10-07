@@ -837,3 +837,68 @@ were not replayed, no request or receipt was sent, no history was applied and
 no message session was advanced. Normal store-open metadata initialization
 still prevents claiming byte-identical database files. This confirms supported
 metadata in the already-stored notice, not runtime display or history transfer.
+
+### Ordinary notice dispatch and historical group backfill (2026-10-07)
+
+**Confirmed, static APK 2.26.37.71**: `Cp5.A0B` selects the message's `meta`
+child (`0000..000e`) and reads its `appdata` attribute (`0012..0022`). It
+separately recognizes category `peer`, `member_tag`, and `medianotify` branches;
+these are not guessed history-notice bypasses. `DEm.CF0` calls `Ayp.A0H` to
+select `meta`, reads `appdata`, and constructs `DFN` (`0000..0028`). `DFN`'s
+string representation names this value `IncomingAppDataValues(metaAppData=…)`.
+`DEZ.AR2` serializes appdata from `1in.ATi` (`0942..0958`). Together with
+`DA8.CF4`'s group-history check, this supports the normal meta/app-data gate.
+The exact downstream DFN-to-CoT.A0P setter bridge remains **untraced**; the
+producer relationship there remains an **inference**, not another confirmed
+method offset. No appdata value is invented on receive.
+
+**Confirmed, local implementation**: `decode_for_stanza` supports an ordinary
+group `message` with exactly one `meta` child and one `appdata=group_history`
+attribute. A direct chat, category-peer context, missing/ambiguous meta, appdata
+placed on `enc` or the outer message, or unknown appdata remains unsupported.
+Its caller must already authenticate/store the plaintext. The untraced APK
+internal app-data bypasses are not enabled, and no APK UI feature value is
+fabricated.
+
+The atomic receive journal now emits `SyncEvent::GroupHistoryNotice` for that
+supported context, with diagnostic kind `group_history_notice`. It retains the
+original message key, address-free validated metadata, ordinary stanza timestamp
+and local observation time. This is distinct from a `NewMessage` human reply;
+it does not create history messages, request media or emit a sync-completion
+signal. There is no corresponding outgoing MessageContent form; deserializing
+this received event as outgoing content fails. Automatic read eligibility still
+excludes field 102. Feature-controlled rendering, timestamp units and history
+transfer remain unfinished. Rebuilt clients understand the new event variant;
+older binaries do not know it.
+
+**Confirmed, local backfill defect and correction**: `inbox_events::restore`
+used only `session_sender`, which intentionally refuses participant-addressed
+group/broadcast stanzas. It therefore silently skipped those authenticated
+historical captures. It now checks the original sender-key chat route first,
+then the direct route, and verifies `received:<chat>:<id>` against the original
+capture. Consumed/cleared records remain excluded. Existing typed markers stay
+idempotent; old unsupported placeholders upgrade in one marker/event transaction.
+No capture or marker deletion is used to replay an event.
+
+Fixtures cover normal/incorrect meta placement, direct/peer rejection, typed
+control serialization, no automatic read, group/broadcast original-route backfill,
+wrong-route refusal, rollback before commit, reopen and once-only upgrade.
+The group rollback fixture verifies stored identity/session records remain
+unchanged. These tests prove local projection; live incoming notice processing
+and official rendering are not claimed.
+
+**Observed, saved-account offline projection (2026-10-07)**: with the rebuilt
+release, a private copy of the existing database upgraded exactly one event.
+Its second `reproject` returned zero; complete before/after `events --summary`
+batches showed only one added `group_history_notice` and no other kind change.
+The same bounded canonical backfill then upgraded one event, followed by zero
+on repeat, with the same sole kind delta. The original encrypted database copy
+and all canonical/copy summaries and reproject logs remain in private
+mode-0600 lab storage under a mode-0700 directory. No capture or event marker was
+deleted, no consumer batch was acknowledged, and no network request/receipt was
+sent. The prior unsupported journal event is retained as history; the projection
+marker now points at its typed control-event upgrade. This demonstrates durable
+recognition of the previously received notice, not a new human reply, APK UI
+rendering, or completed history transfer. The receive/backfill code does not
+write Signal identity/session/prekey/account-generation/send-state tables;
+normal store-open metadata initialization still changes physical file bytes.

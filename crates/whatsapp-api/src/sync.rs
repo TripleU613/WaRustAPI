@@ -133,6 +133,18 @@ pub enum SyncEvent {
     IdentityChanged(IdentityChange),
     /// History is missing and may not be recoverable.
     HistoryGap(HistoryGap),
+    /// Authenticated shared-group-history notice, not a human reply or proof
+    /// of history transfer. Raw timestamp units and APK UI policy remain unknown.
+    GroupHistoryNotice {
+        /// Original group-message route and identifier.
+        key: MessageKey,
+        /// Validated metadata, without receiver addresses/context/bot contents.
+        metadata: crate::transport::history_notice::Metadata,
+        /// Ordinary stanza timestamp, if present (milliseconds).
+        server_timestamp: Option<Timestamp>,
+        /// When projection occurred locally.
+        observed_at: Timestamp,
+    },
     /// An inbound message could not be interpreted.
     UnsupportedMessage(UnsupportedMessage),
     /// The session was revoked.
@@ -162,6 +174,7 @@ impl SyncEvent {
             Self::GroupUpdated(_) => "group_updated",
             Self::IdentityChanged(_) => "identity_changed",
             Self::HistoryGap(_) => "history_gap",
+            Self::GroupHistoryNotice { .. } => "group_history_notice",
             Self::UnsupportedMessage(_) => "unsupported_message",
             Self::SessionRevoked(_) => "session_revoked",
             Self::ChatCleared { .. } => "chat_cleared",

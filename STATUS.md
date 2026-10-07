@@ -105,14 +105,16 @@ redelivered at every login.
   supported metadata and reports redacted counts without applying history. Saved-account offline inspection
   confirmed the 49-byte notice metadata: one receiver, no non-receivers, context
   present, no optional bundle timestamp or bot metadata. The APK group-notice handler
-  and metadata requirements are traced; runtime
-  feature selection, rendering, timestamp units and history processing remain
+  and metadata requirements are traced. Supported normal group/meta context now
+  projects a distinct control event; historical group/broadcast backfill is fixed.
+  Canonical offline backfill upgraded this one notice; repetition upgraded zero.
+  APK feature selection, rendering, timestamp units and history processing remain
   unverified. [Cross-device evidence](docs/protocol/cross-device-sync.md).
 
 ## Offline verification
 
-519 all-feature tests (`cargo test --locked --workspace --all-features`) and
-220 default-feature tests (`cargo test --locked --workspace`) pass on
+523 all-feature tests (`cargo test --locked --workspace --all-features`) and
+221 default-feature tests (`cargo test --locked --workspace`) pass on
 2026-10-07; Clippy with `-D warnings` is clean. Rust 1.98.1 locally and in CI. Store, codec, crash
 matrix, registration state machine and transport coverage are described in
 [docs/design](docs/design/README.md) and the per-area protocol docs.

@@ -1123,10 +1123,16 @@ mod tests {
         let skdm = vec![0x12, 0x00];
         let protocol = vec![0x62, 0x00];
         let reaction = vec![0xf2, 0x02, 0x00];
+        let history_notice = b"\xb2\x06\x0d\x12\x0b\x0a\x051@lid\x10\x0a\x18\x02".to_vec();
         let rows = [
             (format!("received:{group}:T"), group_msg("T"), text.clone()),
             (format!("received:{group}:K"), group_msg("K"), skdm),
             (format!("received:{group}:R"), group_msg("R"), reaction),
+            (
+                format!("received:{group}:H"),
+                group_msg("H"),
+                history_notice,
+            ),
             (format!("received:{peer}:D"), direct_msg("D"), text),
             (format!("received:{peer}:P"), direct_msg("P"), protocol),
         ];
@@ -1149,6 +1155,7 @@ mod tests {
         assert_eq!(queued(&group_msg("T")), 0, "once only");
         assert_eq!(queued(&group_msg("K")), 0, "a key distribution is not read");
         assert_eq!(queued(&group_msg("R")), 0, "a reaction is not read");
+        assert_eq!(queued(&group_msg("H")), 0, "a history notice is not read");
         assert_eq!(queued(&direct_msg("D")), 1);
         assert_eq!(
             queued(&direct_msg("P")),
