@@ -718,3 +718,67 @@ exposing either value. The full inspection output was retained under private
 store still runs its normal metadata/table initialization transaction, so this
 is not a claim that the database file stayed byte-identical. No notice was
 applied and no incoming-message session was advanced.
+
+### History metadata reader correction (2026-10-07)
+
+**Confirmed, local tooling correction with APK 2.26.37.71 evidence**: the
+`BX5` refusal above came from our fixed-triple descriptor reader, not absent
+metadata in the APK. `BX5.dynamicMethod` at `0066..006a` encodes repeated strings
+without a presence index, interleaved with presence-bearing int64 fields.
+The corrected `apk-proto-fields` fully validates this mixed descriptor and prints
+historyReceivers=1, oldestMessageTimestampInWindow=2, messageCount=3,
+nonHistoryReceivers=4, oldestMessageTimestampInBundle=5. The strings in fields
+1/4 do not establish how receivers are authorized. Our earlier claim that all
+fields carry an incrementing third index is refuted; see
+[the corrected reader and runtime evidence](apk-analysis.md#reading-protobuf-field-numbers-apk-proto-fields).
+The original refusal is retained above as historical evidence, superseded by
+this correction. No server request or private account change was needed.
+
+### Group-history notice dispatch (2.26.37.71)
+
+**Confirmed, static APK** (same hash above): string anchors for
+`FMessageGroupHistoryNoticeProtobuf/parseProtobufMessage` identify `LX/DA8.CF4`.
+It checks Message field-102 presence (`0008..0020`), requires a group chat
+(`0020..003c`) and normally requires app data `group_history` (`004c..0076`).
+Two internal boolean branches can skip that app-data check (`003c..004c`);
+their producers/meaning remain **unknown**, so they are not compatibility
+switches in our client. The metadata must exist (`0092..00ac`), have at least
+one history receiver (`00ac..00bc`), contain a strictly positive oldest-window
+timestamp (`00bc..00d8`) and a strictly positive message count (`00d8..00ec`).
+The APK emits distinct refusals for each invalid case at `023c..028a`.
+
+`DA8.CF4` reads feature flag `0x3d6a` (`0120..0134`). Its enabled branch creates
+`9NL` with type `0x76` (118) and copies metadata through `9ku.A00`
+(`0134..0170`), retaining optional bot-share metadata (`0170..0184`). Its other
+branch makes the existing fallback message with code `0x2718` (10008)
+(`022a..023c`). Whether that flag is enabled for this account is **unknown**.
+The handler compares history receivers with own PN/LID identities and the
+message sender (`0188..022a`); this affects its notice-marking path, not a proof
+that a receiver string independently authorizes downloading history.
+
+`LX/9ku.A00` copies count, oldest-window and optional oldest-bundle values
+without unit conversion (`0004..0076`), then receiver lists (`0076..0182`).
+Timestamp units and subsequent rendered text remain **unknown** at this trace
+boundary. `LX/AVZ.Cir` validates app data `group_history`: it accepts `9NL`, the
+`1il` fallback with code 10008, or `1ik`; other message classes are rejected
+(`0006..0082`). `DA8.AD7` also serializes this notice into field 102, rather than
+encoding it as a ProtocolMessage (`0030..0114`).
+
+**Inferred**: this envelope describes shared group history as a conversation
+notice; it is not itself an app-state key share or an instruction to treat its
+49-byte body as actual history messages. Dispatch, rendering, feature selection
+and receipt policy in TeleWhatsApp remain unfinished. It remains a preserved
+unsupported journal reference, with redacted structural inspection available;
+no text was invented and no history/media request was sent.
+
+Reproduce the handler anchors/dumps with `apk-xref` and `apk-smali`, for example:
+
+```sh
+target/debug/xtask apk-xref ~/Downloads/WhatsApp.apk --anchor 'FMessageGroupHistoryNoticeProtobuf/parseProtobufMessage does not have metadata'
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/DA8;' --method CF4
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/AVZ;' --method Cir
+```
+
+These scoped raw dumps were retained privately. They establish parsing branches,
+not execution of those branches by the saved account or completion of group
+history transfer.

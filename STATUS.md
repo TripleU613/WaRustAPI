@@ -103,13 +103,15 @@ redelivered at every login.
 - History-notice handling. APK 2.26.37.71 identifies the formerly unexplained
   49-byte `[102]` envelope as `messageHistoryNotice`; offline inspection labels
   its structure without applying history. Saved-account offline inspection
-  confirmed 49 bytes with notice fields `[1, 2]`. Sender intent and processing remain
+  confirmed 49 bytes with notice fields `[1, 2]`. The APK group-notice handler
+  and metadata requirements are traced; runtime
+  feature selection, rendering, timestamp units and history processing remain
   unverified. [Cross-device evidence](docs/protocol/cross-device-sync.md).
 
 ## Offline verification
 
-511 all-feature tests (`cargo test --locked --workspace --all-features`) and
-212 default-feature tests (`cargo test --locked --workspace`) pass on
+514 all-feature tests (`cargo test --locked --workspace --all-features`) and
+215 default-feature tests (`cargo test --locked --workspace`) pass on
 2026-10-07; Clippy with `-D warnings` is clean. Rust 1.98.1 locally and in CI. Store, codec, crash
 matrix, registration state machine and transport coverage are described in
 [docs/design](docs/design/README.md) and the per-area protocol docs.

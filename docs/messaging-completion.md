@@ -70,7 +70,9 @@ from offline tests alone. Existing received captures can be processed locally.
   The same inspection path now redacts poll question/option strings. Static
   evidence, literal-fixture tests and saved-account offline inspection of the
   49-byte notice (nested fields `[1, 2]`) establish diagnostic behavior; history
-  dispatch, authorization and synchronization remain unfinished.
+  rendering, runtime feature selection and synchronization remain unfinished.
+  `DA8.CF4` group/app-data checks and positive metadata requirements are now
+  traced; the descriptor reader now supports mixed repeated/scalar fields.
 - Polls: creation (`pollCreationMessageV3`, field 64, with `messageContextInfo`
   secret) and votes (`pollUpdateMessage`, field 50, AES-256-GCM over an
   HKDF-derived key; the APK performs the derivation natively, so the recipe is

@@ -99,3 +99,8 @@ so the CLI can embed and serve it without extra dependencies).
    `#/components/schemas`.
 8. Include descriptions on every property.
 9. Run `cargo test -p whatsapp-cli` to verify coverage.
+
+Offline development utilities outside `whatsapp-cli` are recorded in the
+root `x-research-tools` extension with `x-cli`, `x-transport` and `x-live`.
+These entries do not create HTTP routes or add commands to the control CLI.
+The `apk-proto-fields` entry records its validated descriptor-reader capability.

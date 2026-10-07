@@ -1,5 +1,13 @@
 {
   "openapi": "3.1.0",
+  "x-research-tools": [
+    {
+      "x-cli": "cargo run -p xtask -- apk-proto-fields <apk> --class <class-filter>",
+      "x-transport": "cli",
+      "x-live": false,
+      "description": "Offline development utility, separate from the whatsapp-cli control API; no HTTP route. Decodes complete protobuf-lite descriptors with variable-width scalar-presence and repeated entries, UTF-16 integer continuation/overflow checks, header/count validation and exact field-name pairing. Excludes bitFieldN_ bookkeeping names. Unsupported oneof mapping, malformed/truncated input, ambiguous descriptors or name mismatches are diagnosed on stderr without printing a partial pairing. Existing utility parameters remain positional APK and required --class. APK 2.26.37.71 BX5 mixes repeated strings and scalar int64 fields; fixed-triple decoding was refuted. BZc still decodes all 110 Message fields."
+    }
+  ],
   "info": {
     "title": "TeleWhatsApp control API",
     "version": "0.0.1",

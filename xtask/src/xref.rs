@@ -1365,18 +1365,16 @@ fn access_flags_str(flags: u32) -> &'static str {
 /// Decode a protobuf-lite message descriptor's field numbers from the
 /// `newMessageInfo` string a `dynamicMethod` builds.
 ///
-/// A generated protobuf-lite class carries no field-number constants: it hands
-/// `GeneratedMessageLite.newMessageInfo` an array of field names and an encoded
+/// Derive field numbers from the descriptor rather than assuming static values
+/// were recovered: `GeneratedMessageLite.newMessageInfo` receives field names and an encoded
 /// string pairing each with its number and type. Reading a number any other way
 /// — from position in the name array, from the public schema, or from memory —
 /// has produced wrong answers in this project before, and a wrong field number
 /// is self-consistent locally and unreadable by every real client.
 ///
-/// The string is a ten-value header followed by one `(number, type, index)`
-/// triple per field, where `index` counts up from zero and the numbers ascend.
-/// Those two invariants make the decode self-checking: a mis-parse breaks both
-/// at once, so this stops rather than walking off into plausible nonsense, and
-/// refuses to print a pairing it could not verify.
+/// The descriptor has a ten-integer header and variable-width field entries:
+/// presence-bearing scalar fields have an additional index; lists do not.
+/// Validate the entire descriptor and exact field-name count before pairing.
 pub fn run_proto_fields(apk: &Path, class_filter: &str) -> Result<(), String> {
     let methods = apk_smali(apk, class_filter, Some("dynamicMethod"))?;
     let mut printed = 0usize;
@@ -1404,48 +1402,39 @@ pub fn run_proto_fields(apk: &Path, class_filter: &str) -> Result<(), String> {
             })
             .cloned()
             .collect();
-        let decoded = literals
+        let candidates: Vec<_> = literals
             .iter()
-            .filter(|literal| literal.starts_with("\\u{1}"))
-            .filter_map(|literal| {
-                let chars: Vec<char> = unescape(literal).chars().collect();
-                if chars.len() < 13 {
-                    return None;
-                }
-                let mut numbers: Vec<u32> = Vec::new();
-                let mut i = 10;
-                while i + 2 < chars.len() {
-                    let number = chars[i] as u32;
-                    if chars[i + 2] as usize != numbers.len()
-                        || numbers.last().is_some_and(|last| number <= *last)
-                    {
-                        break;
-                    }
-                    numbers.push(number);
-                    i += 3;
-                }
-                (!numbers.is_empty()).then_some(numbers)
-            })
-            .max_by_key(Vec::len);
-        let Some(numbers) = decoded else {
-            eprintln!("{class}: no descriptor string decoded cleanly; not guessing");
+            .filter(|literal| literal.starts_with("\\u{1}") || literal.starts_with("\\0"))
+            .map(|literal| decode_proto_field_numbers(&unescape(literal)))
+            .collect();
+        let decoded: Vec<_> = candidates.iter().filter_map(|r| r.as_ref().ok()).collect();
+        if decoded.len() != 1 {
+            let reason = candidates
+                .iter()
+                .find_map(|r| r.as_ref().err())
+                .copied()
+                .unwrap_or("missing or ambiguous descriptor");
+            eprintln!("{class}: {reason}; not guessing");
             continue;
-        };
-        // The name array carries a few of the class's own bookkeeping strings
-        // before the field names. A walk accounting for nearly all of them is
-        // aligned; one stopping well short means the parse desynchronized and
-        // the pairing below would be silently wrong.
-        if numbers.len() > names.len() || numbers.len() + 8 < names.len() {
+        }
+        let numbers = decoded[0];
+        // The bitField bookkeeping names may be supplied by helper calls, or
+        // occur as literals. Neither is a protobuf field name. Oneof objects
+        // need distinct object-array tracing and are explicitly refused below.
+        let names: Vec<_> = names
+            .iter()
+            .filter(|name| !is_presence_bookkeeping(name))
+            .collect();
+        if numbers.len() != names.len() {
             eprintln!(
-                "{class}: walked {} fields against {} names; not guessing",
+                "{class}: decoded {} fields against {} names; not guessing",
                 numbers.len(),
                 names.len()
             );
             continue;
         }
-        let offset = names.len() - numbers.len();
         println!("# {class}  ({} fields)", numbers.len());
-        for (name, number) in names[offset..].iter().zip(&numbers) {
+        for (name, number) in names.iter().zip(numbers) {
             println!("{number:>4}  {}", name.trim_end_matches('_'));
         }
         printed += 1;
@@ -1454,6 +1443,108 @@ pub fn run_proto_fields(apk: &Path, class_filter: &str) -> Result<(), String> {
         eprintln!("no protobuf descriptor decoded for {class_filter}");
     }
     Ok(())
+}
+
+fn is_presence_bookkeeping(name: &str) -> bool {
+    name.strip_prefix("bitField")
+        .and_then(|s| s.strip_suffix('_'))
+        .is_some_and(|s| !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()))
+}
+
+/// Field-entry layout follows protobuf MessageSchema.newSchemaForRawMessageInfo
+/// (official Java runtime): low byte is type, HAS_HAS_BIT=0x1000 adds a presence
+/// index only for scalar types <=17. The former fixed triples silently stopped
+/// at repeated fields such as APK 2.26.37.71 BX5.dynamicMethod's type 26.
+fn decode_proto_field_numbers(info: &str) -> Result<Vec<u32>, &'static str> {
+    fn integer(input: &mut std::str::Chars<'_>) -> Result<u32, &'static str> {
+        let mut value = 0u32;
+        let mut shift = 0;
+        loop {
+            let c = input.next().ok_or("truncated descriptor integer")? as u32;
+            if c > u16::MAX as u32 {
+                return Err("non-UTF16 descriptor integer");
+            }
+            let part = if c >= 0xd800 { c & 0x1fff } else { c };
+            if shift >= 32 || part > (u32::MAX >> shift) {
+                return Err("descriptor integer overflow");
+            }
+            value |= part << shift;
+            if c < 0xd800 {
+                return Ok(value);
+            }
+            shift += 13;
+        }
+    }
+    let mut input = info.chars();
+    let flags = integer(&mut input)?;
+    if flags > 1 {
+        return Err("unsupported descriptor flags");
+    }
+    let count = integer(&mut input)?;
+    if count == 0 {
+        return if input.next().is_none() {
+            Ok(Vec::new())
+        } else {
+            Err("trailing empty descriptor data")
+        };
+    }
+    if count > 4096 {
+        return Err("descriptor field count exceeds bound");
+    }
+    let oneofs = integer(&mut input)?;
+    let presence_words = integer(&mut input)?;
+    let min = integer(&mut input)?;
+    let max = integer(&mut input)?;
+    let entries = integer(&mut input)?;
+    let maps = integer(&mut input)?;
+    let lists = integer(&mut input)?;
+    let initialized = integer(&mut input)?;
+    if oneofs != 0 {
+        return Err("oneof field-name pairing is unsupported");
+    }
+    if entries != count || presence_words > count || min == 0 || max > 0x1fff_ffff {
+        return Err("invalid descriptor header");
+    }
+    let mut numbers = Vec::with_capacity(count as usize);
+    let mut seen_maps = 0;
+    let mut seen_lists = 0;
+    let mut seen_initialized = 0;
+    for _ in 0..count {
+        let number = integer(&mut input)?;
+        let kind = integer(&mut input)?;
+        let base = kind & 0xff;
+        if number == 0
+            || number > 0x1fff_ffff
+            || numbers.last().is_some_and(|previous| number <= *previous)
+            || base > 50
+            || kind & !0x1fff != 0
+        {
+            return Err("invalid descriptor field entry");
+        }
+        if kind & 0x1000 != 0 {
+            if base > 17 {
+                return Err("presence on a non-scalar field");
+            }
+            let presence = integer(&mut input)?;
+            if presence >= presence_words * 32 {
+                return Err("presence index outside descriptor header");
+            }
+        }
+        seen_maps += u32::from(base == 50);
+        seen_lists += u32::from((18..=49).contains(&base));
+        seen_initialized += u32::from(kind & 0x400 != 0);
+        numbers.push(number);
+    }
+    if input.next().is_some()
+        || numbers.first() != Some(&min)
+        || numbers.last() != Some(&max)
+        || maps != seen_maps
+        || lists != seen_lists
+        || initialized != seen_initialized
+    {
+        return Err("descriptor header or length mismatch");
+    }
+    Ok(numbers)
 }
 
 /// The quoted literal inside an instruction annotation, honouring `\"`.
@@ -1590,6 +1681,78 @@ mod tests {
     }
 
     use super::*;
+
+    #[test]
+    fn mixed_history_metadata_descriptor_uses_variable_width_entries() {
+        // Exact 2.26.37.71 BX5.dynamicMethod descriptor at 0066..006a.
+        // Repeated string fields 1/4 have no presence index; int64 2/3/5 do.
+        let info = "\u{1}\u{5}\0\u{1}\u{1}\u{5}\u{5}\0\u{2}\0\u{1}\u{1a}\u{2}\u{1002}\0\u{3}\u{1002}\u{1}\u{4}\u{1a}\u{5}\u{1002}\u{2}";
+        assert_eq!(
+            decode_proto_field_numbers(info).unwrap(),
+            vec![1, 2, 3, 4, 5]
+        );
+        for (end, _) in info.char_indices() {
+            assert!(decode_proto_field_numbers(&info[..end]).is_err());
+        }
+        assert!(decode_proto_field_numbers(&format!("{info}\0")).is_err());
+        assert!(is_presence_bookkeeping("bitField0_"));
+        assert!(is_presence_bookkeeping("bitField12_"));
+        assert!(!is_presence_bookkeeping("bitFieldName_"));
+        assert!(!is_presence_bookkeeping("messageCount_"));
+    }
+
+    #[test]
+    fn descriptor_checks_header_presence_types_and_complete_input() {
+        // Singular proto2 bool with presence bit 0; no assumption that its
+        // presence index equals its field number or array position.
+        let valid = "\u{1}\u{1}\0\u{1}\u{5}\u{5}\u{1}\0\0\0\u{5}\u{1007}\0";
+        assert_eq!(decode_proto_field_numbers(valid).unwrap(), vec![5]);
+        let mut values: Vec<char> = valid.chars().collect();
+        for (index, replacement) in [
+            (0, 2),
+            (1, 2),
+            (2, 1),
+            (3, 0),
+            (4, 1),
+            (5, 6),
+            (6, 2),
+            (7, 1),
+            (8, 1),
+            (9, 1),
+            (10, 0),
+            (11, 0x1033),
+            (12, 32),
+        ] {
+            let old = values[index];
+            values[index] = char::from_u32(replacement).unwrap();
+            assert!(decode_proto_field_numbers(&values.iter().collect::<String>()).is_err());
+            values[index] = old;
+        }
+        assert_eq!(
+            decode_proto_field_numbers("\0\0").unwrap(),
+            Vec::<u32>::new()
+        );
+        // A proto3 bool without presence consumes exactly number/type.
+        assert_eq!(
+            decode_proto_field_numbers("\0\u{1}\0\0\u{1}\u{1}\u{1}\0\0\0\u{1}\u{7}").unwrap(),
+            vec![1]
+        );
+    }
+
+    #[test]
+    fn descriptor_integers_support_utf16_continuations_and_refuse_overflow() {
+        // 65536 encodes as continuation 0xe000 followed by terminal 8.
+        let info = "\u{1}\u{1}\0\0\u{e000}\u{8}\u{e000}\u{8}\u{1}\0\0\0\u{e000}\u{8}\u{7}";
+        assert_eq!(decode_proto_field_numbers(info).unwrap(), vec![65536]);
+        for info in [
+            "\u{e000}",
+            "\u{e000}\u{e000}\u{e000}\u{ffff}\u{1}",
+            "\u{10000}",
+            "\u{1}\0\0",
+        ] {
+            assert!(decode_proto_field_numbers(info).is_err());
+        }
+    }
 
     /// Minimal valid dex header scaffold for tests.
     /// Supplies only the header; content tables are empty.

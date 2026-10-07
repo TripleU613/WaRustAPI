@@ -117,8 +117,8 @@ enum Cmd {
     },
     /// Decode a protobuf-lite message descriptor's field numbers.
     ///
-    /// A generated protobuf-lite class carries no field-number constants: it
-    /// hands `newMessageInfo` a name array and an encoded string pairing each
+    /// Read `newMessageInfo`'s field-name array and encoded descriptor rather
+    /// than assuming static field-number values were recovered. This pairs each
     /// name with its number. Reading a number any other way — from position in
     /// the name array, or from the public schema, or from memory — has produced
     /// wrong answers here before, and a wrong field number is self-consistent

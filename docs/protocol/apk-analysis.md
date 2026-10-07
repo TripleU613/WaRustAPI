@@ -122,7 +122,8 @@ Copies `AndroidManifest.xml`, `classes.dex`, `resources.arsc` (if present), ever
 cargo run --release -p xtask -- apk-proto-fields /path/to/WhatsApp.apk --class 'LX/BZc;'
 ```
 
-A generated protobuf-lite class carries **no field-number constants**. It hands
+This tool derives numbers from the protobuf-lite descriptor, without assuming
+encoded static field values were recovered. A class hands
 `GeneratedMessageLite.newMessageInfo` an array of field names and an encoded
 string pairing each name with its number and type. Every other way of getting a
 number has produced a wrong answer here:
@@ -138,10 +139,29 @@ A wrong field number is self-consistent locally — our own encoder and decoder
 agree — and unreadable by every real client, which is the worst failure mode
 available.
 
-The string is a ten-value header then one `(number, type, index)` triple per
-field. `index` counts from zero and the numbers ascend, so a mis-parse breaks
-both invariants at once; the tool stops there and refuses to print a pairing it
-could not verify, rather than emitting plausible nonsense.
+The descriptor uses a ten-integer header and **variable-width entries**. Every
+entry has a field number and type/flags; scalar presence bit `0x1000` adds a
+presence index, while repeated fields do not. The earlier fixed-triple reader
+was incorrect for mixed schemas. It could stop early and pair a partial prefix
+with trailing names. The reader now validates the full declared field count,
+header bounds/list/map/initialization counts, ascending wire numbers, presence
+bounds and exact field-name count before printing any pairing. UTF-16 integer
+continuations are decoded with overflow checks. `bitFieldN_` bookkeeping names
+are excluded explicitly; oneof name mapping is refused rather than guessed.
+
+**Confirmed, APK 2.26.37.71**: `com/google/protobuf/MessageSchema`'s
+`newSchemaForRawMessageInfo` tests `0x1000` at `0262..026a`, limits presence
+indices to scalar type <=17 at `026a..0272`, and reads the additional integer
+at `0272..02c6`. `LX/BX5.dynamicMethod`'s literal at `0066..006a` mixes repeated
+string fields with presence-bearing int64 fields. It now decodes completely:
+`historyReceivers=1`, `oldestMessageTimestampInWindow=2`, `messageCount=3`,
+`nonHistoryReceivers=4`, `oldestMessageTimestampInBundle=5`. The complete
+`BZc` Message descriptor still decodes 110 fields. The APK runtime agrees with
+the [official protobuf Java reader](https://github.com/protocolbuffers/protobuf/blob/main/java/core/src/main/java/com/google/protobuf/MessageSchema.java)
+(accessed 2026-10-07); the APK offsets are the evidence for this build.
+Literal APK fixtures test mixed entry widths and every truncated prefix;
+additional fixtures test header corruption, presence bounds, integer overflow
+and unsupported oneofs. No partial field pairing is printed.
 
 **One trap worth naming.** The literal must be extracted honouring `\"`: the
 encoding uses the raw character for field 34, which is `"`, so splitting the
@@ -153,3 +173,9 @@ knew independently: `conversation` 1, `senderKeyDistributionMessage` 2,
 `imageMessage` 3, `extendedTextMessage` 6, `documentMessage` 7, `audioMessage`
 8, `videoMessage` 9, `reactionMessage` 46. It then gives `stickerMessage` **26**
 and `ptvMessage` **66**.
+
+**Refuted wording (2026-10-07)**: protobuf-lite classes do not universally lack
+field-number symbols. Current `DA8.AD7` at `0068..006c` reads
+`BV6.BOT_HISTORY_SHARE_SYNC_METADATA_FIELD_NUMBER`. The tool reads descriptors,
+not dex encoded static values; that implementation choice must not be presented
+as absence of constants in the APK.
