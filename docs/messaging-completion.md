@@ -783,3 +783,10 @@ native corpus's acceptance and recognized values; groups reject even beside
 otherwise valid matching data. Other edges/current inventory/live scanning
 remain unverified, with no account changes. See
 [native decoder evidence](protocol/safety-number.md#actual-protobuf-c-parsing-and-bounded-decoder-correction-2026-10-07).
+
+2026-10-07 own fingerprint inventory: the own-directory source, strict positive
+logout-time exclusion, alias precedence and add/remove cache invalidation are
+now traced in APK 37.71. BNm is Me-presence rather than signed-list freshness.
+Active own membership/authentication, scheme/contact inputs and live comparison
+remain open; no peer mark or account operation occurred. See
+[own-directory selection](protocol/safety-number.md#own-directory-source-logout-filtering-and-alias-precedence-2026-10-07).

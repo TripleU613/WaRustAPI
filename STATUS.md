@@ -373,3 +373,19 @@ returned -8 for the otherwise-valid-plus-group and malformed fixtures; the
 unused account-store path remained absent. The corpus test also checks explicit
 nested-holder presence, with its final focused rerun passing.
 Repository hygiene passed with 323 local links; staged diff whitespace checks passed.
+
+Own fingerprint inventory follow-up (static, 2026-10-07): APK 37.71 own-device
+selection is now traced to the cached `devices` directory, strict positive
+logout-time exclusion, self LID-to-PN projection with existing-PN precedence,
+and later fingerprint-facing address remapping. BNm checks loaded Me presence,
+not signed-list freshness. Add/remove paths invalidate both directory caches.
+Current membership, authentication and active fingerprint inputs remain unknown;
+no account state was opened or changed.
+[Own-directory evidence](docs/protocol/safety-number.md#own-directory-source-logout-filtering-and-alias-precedence-2026-10-07).
+
+Validation: the APK hash was rechecked, and an independent exact A08 method
+extraction matched the scoped snapshot byte-for-byte. CLI reference regeneration
+and its test passed; repository hygiene passed with 329 local links. The initial
+snapshot's trailing blank line was removed; final staged whitespace checks passed.
+This change adds static research evidence only; runtime code and API/CLI
+capabilities are unchanged, and no live account validation is claimed.

@@ -327,3 +327,16 @@ PYTHONDONTWRITEBYTECODE=1 lab/native-analysis-tools-py312/bin/python \
 with `TELEWHATSAPP_SCHEMA_LIBRARY`, otherwise explicitly skipped, and always
 runs missing/wrong-build empty-output refusal checks. All fixture variables
 configured brings the native tooling suite to 25 tests.
+
+### Own-device fingerprint directory (37.71)
+
+Existing `xtask apk-smali` now has attributed own-directory excerpts in
+[the evidence snapshot](../../docs/protocol/fingerprint-own-directory-evidence.txt)
+and [selection reasoning](../../docs/protocol/safety-number.md#own-directory-source-logout-filtering-and-alias-precedence-2026-10-07).
+Use exact class filters `LX/1IW;` (A08/A0F), `LX/1IY;` (A01/A07/A08),
+`LX/HxZ;` (constructor/A01/A03), `LX/1xi;` (A1Q), `LX/1Kt;` (constructor)
+and `LX/0bN;` (A09/A0A). A class-empty `--method BNm` dump identifies all
+three mode-predicate definitions without guessing the implementation class.
+These static excerpts establish source/logout/alias/cache rules, not current
+account membership, signed-list freshness or a live safety-number calculation.
+Raw dumps remain ignored under `lab/apk-2.26.37.71/`.

@@ -1379,3 +1379,127 @@ returned -8 for the otherwise-valid-plus-group and malformed fixtures; the
 unused account-store path remained absent. The corpus test also checks explicit
 nested-holder presence, with its final focused rerun passing.
 Repository hygiene passed with 323 local links; staged diff whitespace checks passed.
+
+## Own-directory source, logout filtering and alias precedence (2026-10-07)
+
+**Confirmed/static**, APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+The [scoped instruction evidence](fingerprint-own-directory-evidence.txt)
+resolves the own-device producers left open in the earlier inventory section.
+Offsets below are method-relative bytes. This is static construction evidence,
+not a current-account directory, authenticated device membership or live scan.
+
+**Mode predicate:** exact `BNm` method-definition search across the APK found
+three definitions: abstract 08Z, 08a forwarding to 08i (0000..000e), and
+08i.BNm. The latter calls A09, then returns whether its `A0F:Me` is non-null
+(0000..0014). A09 conditionally runs the 08t loader (0000..002a). This closes
+BNm's immediate implementation; it does **not** check a directory signature,
+ADV timestamp, logout time or map completeness. The complete loader/Me producer
+and actual current value remain unknown. Do not describe this gate as signed
+inventory freshness or derive a linked-device membership claim from it.
+
+**Stored directory:** 1IW.A08 obtains 1IY.A07, then filters its entries
+(0000..0078). 1IY.A01 lazily reads the `devices` table: 1Kt.<clinit> builds
+`SELECT <1Ku.A00 columns> FROM devices` (0016..0042), with no WHERE clause in
+that constructor. A01 parses `device_id` via 0DK.A04 and skips failed parses
+(01ec..0218). It records the difference between rows read and map size as A00
+(042c..043a), rather than refusing the entire map. Complete duplicate-row and
+parser semantics are untraced; do not label that difference exclusively as
+unparseable rows. The table contains more than active fingerprint devices.
+
+**Logout filter:** A01 reads `logout_time` into v74/v75 (0074..0080,
+038e..039a), supplies it as the third long argument to HxZ.<init>
+(0400..0416), whose 002e..0036 stores it in HxZ.A02. HxZ.A03 compares this
+field with zero and calls 1xi.A1Q (0000..0016); A1Q returns true only for a
+strictly positive comparison (0000..000a). 1IW.A08 omits such rows
+(004a..0056). Thus **logout_time > 0 is excluded**, while zero and negative
+values pass this particular filter. This is a traced predicate, not an
+assertion that negative logout times are normal or valid server inputs.
+1IW.A0F independently writes HxZ.A02 to the `logout_time` column
+(0192..01a8), corroborating the field mapping. It is unrelated to whether an
+identity key or signed-list entry is available.
+
+**Alias precedence before filtering:** 1IY.A07 builds a cached projection of
+A01's raw directory under a monitor. If the account PN getter Aq0 is null,
+it retains the raw map (0018..0024, 013e..0142). Otherwise its first pass
+preserves every entry except LID-form entries belonging to self
+(002e..0092). The second pass considers exactly those removed self LID entries
+(0092..00e2), maps their device number onto the account PN using 0DK.A02
+(00e2..00f6), and:
+
+- Keeps the original LID row if conversion returns null (00f6..010e).
+- Uses an existing entry at the mapped PN address when present; it does not
+  overwrite that row (010e..011a).
+- Otherwise inserts an HxZ copy with the mapped address (011a..0134).
+  HxZ.A01 copies the original logout/key-index/other metadata while replacing
+  the address (0000..007c).
+
+The order matters: **PN-row precedence occurs before 1IW.A08's logout
+filter**. A present logged-out PN row can suppress the corresponding LID row
+in the projection and then itself be filtered out. Choosing whichever alias
+looks active, unioning both key inventories or dropping logout rows before
+alias selection would not reproduce this traced path. The first-pass LID
+predicate 0DE.A0Z includes JID types 18, 19 and 25 (0000..002c); it is not
+merely an ordinary `@lid` string suffix test. 0DE.A0e separately recognizes
+type 0 (0000..0016). Hosted filtering still occurs later through KXj.A02,
+as described above; the hosted feature's current value remains unknown.
+
+**Fingerprint-facing alias sets:** 0bN.A09 uses A02's already filtered map
+keys, maps type-0 devices onto own LID with the same device number, catches
+conversion failures with `Failed to map to LID companion`, and directly retains
+LID-form devices (0036..008e). A0A retains type-0 devices directly; a LID-form
+entry is mapped onto own PN only when own PN exists and BO0 confirms self
+(003a..008c). Both outputs are HashSets of device addresses. This does not
+establish deduplication of identity-key bytes: JhJ's subsequent key lists remain
+ArrayLists, as traced earlier. Source map filtering and address normalization
+must precede identity lookup and fingerprint hashing.
+
+**Cache mutation boundaries:** the observed add-my-device writer 1IW.A0F
+replaces a `devices` row, marks its database transaction successful, then clears
+both 1IY.A01 (raw) and A02 (projected) caches under the monitor
+(0450..0474). The removal path 1IY.A08 expands input addresses through A06,
+deletes matching `devices` rows, marks the transaction successful and likewise
+clears both caches (001e..0026, 0062..0086). These two paths explain why a
+cached map need not remain unchanged after those mutations; they do not prove
+complete synchronization, all mutation paths, or atomicity across the additional
+outer transactions and notification effects. A06 expands self-device selectors
+to available PN/LID aliases (0000..00c6); its full conversion semantics remain
+untraced. No deletion, reset, account mutation or linking action was executed.
+
+**Negative results / remaining unknowns:** the exact 0bA class-definition probe
+found no matching class, so it is not used as BNm implementation evidence.
+The 1IY.A02 caller search found six callers, but A02 is a cache-row lookup,
+not the hypothesized cache invalidator (0000..0050). 1IW.A00 instead groups
+instrumentation-device identifiers (0000..00dc); A0B clears the separate
+`user_device_info` and `user_device` tables (002c..00dc), not the own `devices`
+source studied here. Those methods were inspected only to distinguish the
+paths and were never invoked. The 1IW.A09 non-self map still branches through
+B7j or Chv according to 0bq.A06 (001a..00a2); full contact-directory freshness
+and alias authority remain untraced. Complete add/remove callers, account-sync
+transport authentication, primary ADV ownership, current feature/contact-state/
+username inputs and own identity-key lookup coverage remain unfinished. The
+[account-sync authority distinction](cross-device-sync.md#refresh-response-versus-primary-adv-ownership)
+still applies. Our explicit-input fingerprint commands do not acquire current
+inventory or mark a peer verified from this evidence.
+
+Reproduce with existing static CLI, for example:
+
+```sh
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class '' --method BNm
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/1IW;' --method A08
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/1IY;' --method A07
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/HxZ;' --method A03
+```
+
+Additional scoped sources are 1IY.A01/A06/A08, HxZ.<init>/A01,
+1xi.A1Q, 1Kt.<clinit>, 1IW.A0F, 0bN.A09/A0A and 0DE.A0Z/A0e.
+Full raw dumps, caller lists and unsuccessful probes remain ignored in
+`lab/apk-2.26.37.71/fingerprint-own-*.smali` / `*.txt`. The committed evidence
+contains only relevant attributed instruction ranges and no media/account data.
+
+Validation: the APK hash was rechecked, and an independent exact A08 method
+extraction matched the scoped snapshot byte-for-byte. CLI reference regeneration
+and its test passed; repository hygiene passed with 329 local links. The initial
+snapshot's trailing blank line was removed; final staged whitespace checks passed.
+This change adds static research evidence only; runtime code and API/CLI
+capabilities are unchanged, and no live account validation is claimed.
