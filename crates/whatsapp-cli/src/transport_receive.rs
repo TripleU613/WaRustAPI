@@ -1896,6 +1896,35 @@ pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error
         } => queued(groups::queue_create(&store, subject, &jids(participants)?)?),
         super::GroupCmd::Info { chat } => queued(groups::queue_info(&store, &Jid::parse(chat)?)?),
         super::GroupCmd::Refresh { chats } => queued(groups::queue_refresh(&store, &jids(chats)?)?),
+        super::GroupCmd::RefreshStatus { id } => {
+            let summary = groups::refresh_outcome(&store, id)?.map(|v| {
+                serde_json::json!({
+                    "complete": v.complete, "truncated": v.truncated.len(),
+                    "forbidden": v.forbidden, "not_found": v.not_found,
+                    "automatic_follow_up": false,
+                })
+            });
+            if cli.json {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&summary)
+                        .map_err(|e| Error::invalid("group", e.to_string()))?
+                );
+            } else if let Some(summary) = summary {
+                println!(
+                    "group refresh: complete={} truncated={} forbidden={} not_found={}; follow-up not queued",
+                    summary["complete"],
+                    summary["truncated"],
+                    summary["forbidden"],
+                    summary["not_found"]
+                );
+            } else {
+                println!(
+                    "group refresh: no saved projection outcome; inspect actions for pending/refused/unapplied status"
+                );
+            }
+            Ok(())
+        }
         super::GroupCmd::Subject { chat, text } => {
             queued(groups::queue_subject(&store, &Jid::parse(chat)?, text)?)
         }

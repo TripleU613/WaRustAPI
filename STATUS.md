@@ -714,3 +714,17 @@ unimplemented and unverified. 577 workspace/all-feature and 24 default CLI tests
 strict Clippy, warning-free Rustdoc, CLI reference and five OpenAPI checks passed.
 
 Final staged whitespace and repository hygiene (407 local links) passed.
+
+
+Mixed batch projection (2026-10-07, **offline tested**): full snapshots now commit
+beside APK-recognized truncated(size 0..19999), forbidden(403) and not-found(404)
+results. Partial items preserve existing membership, and a durable outcome commits
+with full updates/events and projection markers. `group refresh-status --id`
+inspects only counts without queueing. [Union evidence and remaining work](docs/protocol/groups.md#mixed-batch-projection-and-outcome-inspection-2026-10-07).
+No live query was repeated or saved account opened. Bounded follow-up and dirty
+notification handling remain unfinished; mixed/report behavior is not live verified.
+
+Validation: 579 workspace/all-feature and 24 default CLI tests, strict Clippy,
+warning-free Rustdoc, regenerated CLI reference, all five OpenAPI checks,
+formatting and repository hygiene passed. Mixed/report live validation remains
+unverified.

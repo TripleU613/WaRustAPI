@@ -1887,3 +1887,74 @@ workspace/all-target/all-feature Clippy, warning-free Rustdoc, generated CLI
 reference, five OpenAPI checks, formatting and repository hygiene passed.
 
 Final staged whitespace and repository hygiene (407 local links) passed.
+
+
+## Mixed batch projection and outcome inspection (2026-10-07)
+
+**Confirmed/static**, APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Union validators and constructor mapping](group-refresh-union-evidence.txt)
+extend the earlier AZM/Aov trace. AXA.AAK requires group, selects id through
+8kU.A1V, bounds that string with 10/50 and requires error exactly 403
+(0058..0092), constructing 9PO (0092..009c). AXB follows the same structure
+with error exactly 404. 9PO's constructor puts id in A02 and code in A01; its
+already traced A74 puts them in the per-group error map. This establishes
+GroupForbidden/GroupNotExist classification, not deletion or retry authority.
+Complete string-length/JID validation equivalence remains unfinished.
+
+AX9.AAK requires id, then primitive-long size (0058..0094) with lower bound
+from 3c8.A0k (boxed zero) and upper bound 0x4e1f=19999, then exact text
+truncated=true (0098..00c2), constructing 9PN. It is not optional-size parsing
+in this generated union validator. The separately documented ADs converter's
+size fallback does not prove an absent size is accepted by AX9. Full AZK
+validation is large and remains incompletely traced; no equivalence claim is
+made from its eventual 9PP construction.
+
+**Confirmed/local correction:** the c3ea9d0 batch implementation refused all
+mixed results, so a valid full group could not update beside a supported
+truncated/error group. The current parser first validates complete request
+correlation for the whole batch, then classifies each supported item. It commits
+full snapshots and their events, plus an encrypted RefreshOutcome and once-only
+projection markers, in one transaction. Recognized 403/404 items increment
+forbidden/not_found counts and preserve any existing snapshot. Exact lowercase
+truncated=true requires an explicit decimal integer size in 0..19999; its JID/size is
+stored in the outcome rather than replacing membership. Missing/invalid/negative/
+out-of-range sizes, unknown error codes, child-error shapes and missing/extra/
+duplicate/unexpected identities still reject the whole batch without changes.
+This stricter correlation guard is **local**, not an asserted APK requirement.
+
+`group-refresh-result:<action-id>` stores the outcome beside the authenticated
+saved reply. Its full/truncated/error counts describe projection, independently
+of actions' outer IQ status (a result containing group@error can settle ok).
+`groups::refresh_outcome` exposes the saved typed result offline.
+`whatsapp-cli group refresh-status --id <action-id>` prints only aggregate counts
+and automatic_follow_up=false; JSON prints null when no report is saved. It
+prints no group JIDs or truncated size values. `actions --show` retains the
+existing masked request/reply inspection. A missing report does not mean success:
+inspect actions to distinguish pending, refused, unapplied or a historical batch
+consumed before report storage was introduced. No old marker is removed and no
+historical snapshot is backfilled to manufacture an outcome.
+
+**Confirmed/offline:** a synthetic four-group batch carries full, truncated size
+19999, forbidden 403 and not-found 404 results. An injected transaction abort
+rolls back the full subject/event and report; successful projection/reopen retains
+counts 1/1/1/1, updates only the full snapshot, emits exactly one subject event,
+and repeats consume zero without sending. Boundary fixtures accept sizes 0 and
+19999 and reject absent/-1/20000/nonnumeric sizes. The saved raw reply remains
+unchanged. Existing rejection fixtures now use unknown error 500; supported 403
+is no longer described as an unsupported batch variant.
+
+**Unknown/live and remaining work:** no live mixed/error/truncated batch has
+been received for this change. The previous live two-full-group result does not
+prove those variants or report persistence. No live request was repeated or saved
+account opened. Supported truncated work is durable in the outcome, but bounded
+follow-up scheduling, complete full-union metadata, root rate-limit/wait handling
+and automatic groups_dirty notification scheduling/ACK remain unfinished.
+The outcome is a projection report, not proof refresh completed for every group.
+
+Validation: 579 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, regenerated CLI
+reference, five OpenAPI checks, formatting and repository hygiene passed.
+The first workspace run caught a stale CLI reference after the help wording
+changed; regeneration and a complete workspace rerun passed. No live mixed
+validation occurred.

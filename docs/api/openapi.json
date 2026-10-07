@@ -4698,7 +4698,7 @@
           "Groups"
         ],
         "summary": "List the stored group snapshots",
-        "description": "Apply settled replies and list the stored group snapshots (numbers masked). Full-snapshot ingestion recognizes the wire group truncated flag: case-insensitive true refuses with a refresh diagnostic, preserving existing members/events and the saved response without an ingestion marker or automatic retry. Missing or case-insensitive false allows full parsing; other/non-text flags refuse as explicit local validation stronger than APK Boolean.parseBoolean. parse_group returns no complete snapshot for rejected flags; record_info_reply and queued ingest return an error. Truncated size is not membership. Applies to direct group fan-out info replies as well. Live truncated-reply behavior is unverified; no HTTP route added. Queued group ingestion now checks its once-only marker inside the write transaction and commits that marker with snapshot replacement/journal events, invite-code mutation or leave deletion. Abort preserves the previous state and leaves the saved reply eligible for local reapplication; successful commit is once-only across restart. This is offline transaction/reopen validation, not live group notification application or disk-full/process-kill proof. Group snapshot participant parsing now uses supported non-device user-like JIDs; missing/unparseable/non-user/empty-user/agent/device entries and error-bearing refused entries are skipped. Duplicate accepted JIDs use last-role-wins with first insertion order retained, matching APK 37.71 ADs.A05 LinkedHashMap behavior. Missing role remains null in our model. Role changes update snapshots but do not emit a dedicated role-change event. Alias/name/history/country fields are static research only; no pin or contact binding is applied. Live participant-map validation is pending. Newly settled supported group-action replies now project snapshots/events inside the receive session without requiring group list. Settlement creates a durable pending-projection marker; startup recovers only these newly marked replies and never requeues their requests. Projection and pending-marker removal share the once-only snapshot/event transaction. Truncated or invalid group replies remain encrypted/pending with a secret-free warning and do not stop unrelated receiving; storage errors still stop the session. Group list keeps historical ingestion and its explicit invalid-reply diagnostics. Injected-link and encrypted-store reopen/rollback tests passed. One bounded 30-second authenticated listen session also settled a new info action ok, saved a four-member snapshot during receiving, and left zero projection work for subsequent group list; no chat outbox sends occurred and the previously unresolved two-factor action stayed sent. Live interruption/truncated recovery remains unverified. Unsolicited groups_dirty scheduling and notification ACKs remain unimplemented.",
+        "description": "Apply settled replies and list the stored group snapshots (numbers masked). Full-snapshot ingestion recognizes the wire group truncated flag: case-insensitive true refuses with a refresh diagnostic, preserving existing members/events and the saved response without an ingestion marker or automatic retry. Missing or case-insensitive false allows full parsing; other/non-text flags refuse as explicit local validation stronger than APK Boolean.parseBoolean. parse_group returns no complete snapshot for rejected flags; record_info_reply and queued ingest return an error. Truncated size is not membership. Applies to direct group fan-out info replies as well. Live truncated-reply behavior is unverified; no HTTP route added. Queued group ingestion now checks its once-only marker inside the write transaction and commits that marker with snapshot replacement/journal events, invite-code mutation or leave deletion. Abort preserves the previous state and leaves the saved reply eligible for local reapplication; successful commit is once-only across restart. This is offline transaction/reopen validation, not live group notification application or disk-full/process-kill proof. Group snapshot participant parsing now uses supported non-device user-like JIDs; missing/unparseable/non-user/empty-user/agent/device entries and error-bearing refused entries are skipped. Duplicate accepted JIDs use last-role-wins with first insertion order retained, matching APK 37.71 ADs.A05 LinkedHashMap behavior. Missing role remains null in our model. Role changes update snapshots but do not emit a dedicated role-change event. Alias/name/history/country fields are static research only; no pin or contact binding is applied. Live participant-map validation is pending. Newly settled supported group-action replies now project snapshots/events inside the receive session without requiring group list. Settlement creates a durable pending-projection marker; startup recovers only these newly marked replies and never requeues their requests. Projection and pending-marker removal share the once-only snapshot/event transaction. Truncated or invalid group replies remain encrypted/pending with a secret-free warning and do not stop unrelated receiving; storage errors still stop the session. Group list keeps historical ingestion and its explicit invalid-reply diagnostics. Injected-link and encrypted-store reopen/rollback tests passed. One bounded 30-second authenticated listen session also settled a new info action ok, saved a four-member snapshot during receiving, and left zero projection work for subsequent group list; no chat outbox sends occurred and the previously unresolved two-factor action stayed sent. Live interruption/truncated recovery remains unverified. Unsolicited groups_dirty scheduling and notification ACKs remain unimplemented. Batch group-refresh replies now use their supported mixed-union path: full results commit beside exact truncated=true/size=0..19999 and group@error=403/404 items, with a durable projection report. These size/error items preserve old membership instead of failing the whole supported batch. Invalid/unrecognized or uncorrelated items still preserve the whole prior state. group refresh-status --id reports counts and no automatic follow-up; absent reports remain distinguishable only by inspecting action state. Direct single-group truncated snapshot ingestion retains its earlier explicit refusal behavior. Mixed/report behavior is offline tested, not live verified.",
         "operationId": "listGroups",
         "x-cli": "whatsapp-cli group list",
         "x-transport": [
@@ -7313,7 +7313,7 @@
           "Session"
         ],
         "summary": "Maintain an authenticated comparison connection and process incoming messages",
-        "description": "Establish an authenticated session to the messaging server (x-live). Hold the connection for the requested duration, receive incoming messages, and optionally transmit all eligible queued intents. Authenticated Message field-102 notices in a normal group context with meta/appdata=group_history now emit the distinct group_history_notice control event. Receiver addresses/context/bot contents are omitted from its metadata. It is not a human reply or completed history transfer and does not earn an automatic read receipt. Unknown or category-peer contexts stay opaque; internal APK bypasses and UI feature branches are not enabled. Group messages (enc type=skmsg) are decrypted when a SenderKeyDistributionMessage for the (group, sender) pair has been received in a prior or current direct message; messages without a stored sender key are preserved as Unsupported without acknowledgement. SKDM distribution arrives embedded in pkmsg/msg payloads (WhatsApp Message field 2), either standalone or as a second enc child of the group stanza, and is committed atomically with the inbox row. A decrypted group message is confirmed with a receipt addressed to the group carrying the sender as participant. Status updates (from=status@broadcast) route through the same sender-key path and project into a Broadcast chat with the poster as sender, but are never confirmed with a receipt: the status receipt shape (class=status, type=sender) has an unresolved sts input, so none is sent. Each incoming stanza except keepalive replies is reported on stderr as one redacted `incoming` log line (element, type, chat class, enc types, inbox outcome, confirmed, marked_read); this is the default when RUST_LOG is unset. On Undecryptable incoming messages, queues a retry receipt using the saved Signal registration ID. Both listen and lab receive use one request per chat/participant/message ID, durably reserved before transmission; repeats and uncertain outcomes never reset it. This is a conservative client policy, not an APK retry limit. Missing registration or unsupported routing is logged without ending receive; storage failures propagate. The receipts command inspects outcomes offline. Live 2026-10-06: saved-account login and activation succeeded; one automatic retry received a matching server ACK. Its redelivery still failed decryption, and fresh-message automatic read validation remains pending. Signal failure diagnostics classify missing keys, untrusted identity, bad MAC, duplicate counter and invalid encoding without printing peer addresses or backend details. This does not explain the historical window with no incoming message stanzas. Offline preserved-capture inspection found incoming prekey identities differing from both saved PN and LID pins; no pin was replaced. Human safety-number verification is not implemented, and the underlying cause of the saved mismatch remains unknown. Explicit authenticated incoming replacement is available as described below. Direct and group pairwise prekey processing persists first-seen differing public-key fingerprints; identity-conflicts inspects these unauthenticated observations offline. Pins and sessions are not replaced. A failing direct Signal child within a group stanza is also Undecryptable and eligible for the same once-only retry; missing sender-key/session support remains Unsupported. transport.identity_changes explicitly selects pinned (default) or apk_authenticated; the latter atomically archives old remote keys/sessions and emits IdentityChanged after message authentication. Local/own-device identities are not replaced. Group pairwise Signal children from a LID participant select the held LID session; participant_pn identifies a contact alias and does not displace that ratchet. A mapped new pkmsg establishes a LID session; msg retains PN fallback when no LID session exists. An unmapped LID may use a held session. Wrong-session correction recovered the remaining original group capture offline in an isolated store, without network requests or changing the original account. When mark_read is enabled, eligible authenticated duplicates recovered offline also enter the once-only read queue on redelivery. The helper checks the saved decrypted readable payload; cleared/consumed rows and protocol-only content are skipped. A write-cut regression verifies uncertain reads are never replayed. Live 2026-10-07: a 45-second session delivery-confirmed the two recovered direct/group messages as duplicates. A subsequent 20-second session server-acknowledged both explicitly queued saved-message reads; eight reads and one retry are now acknowledged. Handset blue ticks and fresh-message automatic reads remain unconfirmed. Newly settled supported group-action replies now project snapshots/events inside the receive session without requiring group list. Settlement creates a durable pending-projection marker; startup recovers only these newly marked replies and never requeues their requests. Projection and pending-marker removal share the once-only snapshot/event transaction. Truncated or invalid group replies remain encrypted/pending with a secret-free warning and do not stop unrelated receiving; storage errors still stop the session. Group list keeps historical ingestion and its explicit invalid-reply diagnostics. Injected-link and encrypted-store reopen/rollback tests passed. One bounded 30-second authenticated listen session also settled a new info action ok, saved a four-member snapshot during receiving, and left zero projection work for subsequent group list; no chat outbox sends occurred and the previously unresolved two-factor action stayed sent. Live interruption/truncated recovery remains unverified. Unsolicited groups_dirty scheduling and notification ACKs remain unimplemented.",
+        "description": "Establish an authenticated session to the messaging server (x-live). Hold the connection for the requested duration, receive incoming messages, and optionally transmit all eligible queued intents. Authenticated Message field-102 notices in a normal group context with meta/appdata=group_history now emit the distinct group_history_notice control event. Receiver addresses/context/bot contents are omitted from its metadata. It is not a human reply or completed history transfer and does not earn an automatic read receipt. Unknown or category-peer contexts stay opaque; internal APK bypasses and UI feature branches are not enabled. Group messages (enc type=skmsg) are decrypted when a SenderKeyDistributionMessage for the (group, sender) pair has been received in a prior or current direct message; messages without a stored sender key are preserved as Unsupported without acknowledgement. SKDM distribution arrives embedded in pkmsg/msg payloads (WhatsApp Message field 2), either standalone or as a second enc child of the group stanza, and is committed atomically with the inbox row. A decrypted group message is confirmed with a receipt addressed to the group carrying the sender as participant. Status updates (from=status@broadcast) route through the same sender-key path and project into a Broadcast chat with the poster as sender, but are never confirmed with a receipt: the status receipt shape (class=status, type=sender) has an unresolved sts input, so none is sent. Each incoming stanza except keepalive replies is reported on stderr as one redacted `incoming` log line (element, type, chat class, enc types, inbox outcome, confirmed, marked_read); this is the default when RUST_LOG is unset. On Undecryptable incoming messages, queues a retry receipt using the saved Signal registration ID. Both listen and lab receive use one request per chat/participant/message ID, durably reserved before transmission; repeats and uncertain outcomes never reset it. This is a conservative client policy, not an APK retry limit. Missing registration or unsupported routing is logged without ending receive; storage failures propagate. The receipts command inspects outcomes offline. Live 2026-10-06: saved-account login and activation succeeded; one automatic retry received a matching server ACK. Its redelivery still failed decryption, and fresh-message automatic read validation remains pending. Signal failure diagnostics classify missing keys, untrusted identity, bad MAC, duplicate counter and invalid encoding without printing peer addresses or backend details. This does not explain the historical window with no incoming message stanzas. Offline preserved-capture inspection found incoming prekey identities differing from both saved PN and LID pins; no pin was replaced. Human safety-number verification is not implemented, and the underlying cause of the saved mismatch remains unknown. Explicit authenticated incoming replacement is available as described below. Direct and group pairwise prekey processing persists first-seen differing public-key fingerprints; identity-conflicts inspects these unauthenticated observations offline. Pins and sessions are not replaced. A failing direct Signal child within a group stanza is also Undecryptable and eligible for the same once-only retry; missing sender-key/session support remains Unsupported. transport.identity_changes explicitly selects pinned (default) or apk_authenticated; the latter atomically archives old remote keys/sessions and emits IdentityChanged after message authentication. Local/own-device identities are not replaced. Group pairwise Signal children from a LID participant select the held LID session; participant_pn identifies a contact alias and does not displace that ratchet. A mapped new pkmsg establishes a LID session; msg retains PN fallback when no LID session exists. An unmapped LID may use a held session. Wrong-session correction recovered the remaining original group capture offline in an isolated store, without network requests or changing the original account. When mark_read is enabled, eligible authenticated duplicates recovered offline also enter the once-only read queue on redelivery. The helper checks the saved decrypted readable payload; cleared/consumed rows and protocol-only content are skipped. A write-cut regression verifies uncertain reads are never replayed. Live 2026-10-07: a 45-second session delivery-confirmed the two recovered direct/group messages as duplicates. A subsequent 20-second session server-acknowledged both explicitly queued saved-message reads; eight reads and one retry are now acknowledged. Handset blue ticks and fresh-message automatic reads remain unconfirmed. Newly settled supported group-action replies now project snapshots/events inside the receive session without requiring group list. Settlement creates a durable pending-projection marker; startup recovers only these newly marked replies and never requeues their requests. Projection and pending-marker removal share the once-only snapshot/event transaction. Truncated or invalid group replies remain encrypted/pending with a secret-free warning and do not stop unrelated receiving; storage errors still stop the session. Group list keeps historical ingestion and its explicit invalid-reply diagnostics. Injected-link and encrypted-store reopen/rollback tests passed. One bounded 30-second authenticated listen session also settled a new info action ok, saved a four-member snapshot during receiving, and left zero projection work for subsequent group list; no chat outbox sends occurred and the previously unresolved two-factor action stayed sent. Live interruption/truncated recovery remains unverified. Unsolicited groups_dirty scheduling and notification ACKs remain unimplemented. Batch group-refresh replies now use their supported mixed-union path: full results commit beside exact truncated=true/size=0..19999 and group@error=403/404 items, with a durable projection report. These size/error items preserve old membership instead of failing the whole supported batch. Invalid/unrecognized or uncorrelated items still preserve the whole prior state. group refresh-status --id reports counts and no automatic follow-up; absent reports remain distinguishable only by inspecting action state. Direct single-group truncated snapshot ingestion retains its earlier explicit refusal behavior. Mixed/report behavior is offline tested, not live verified.",
         "operationId": "listen",
         "x-cli": "whatsapp-cli listen",
         "x-transport": [
@@ -10366,7 +10366,7 @@
           "Groups"
         ],
         "summary": "Queue one classic batch group refresh",
-        "description": "Offline queueing of one APK 37.71 classic w:g2 IQ to g.us with query context per_group_dirty_recovery and group children carrying jid. Repeat --chat for each concrete distinct group. Local input bound is one to 256 groups; this is not an APK or server limit. The receive session applies a complete groups/group response atomically only when all requested identities occur exactly once. Missing/extra/duplicate/unexpected identities, truncated groups, unsupported shapes or per-group error attributes/children preserve all previous snapshots/events and retain the saved response and projection marker with an explicit diagnostic. Root/recognized inner IQ refusals settle without snapshot projection. No follow-up/retry or notification ACK is queued. Inspect with actions --show and group list. One bounded 30-second live receive session settled one two-group batch ok with both matching snapshots updated during receiving; subsequent group list applied zero actions. No chat intent was transmitted and the unresolved two-factor action stayed sent. Automatic dirty/truncated pipeline, mixed union application, MEX feature selection and live mixed/truncated validation remain unfinished. This contract is CLI-only; no HTTP route exists.",
+        "description": "Offline queueing of one APK 37.71 classic w:g2 IQ to g.us with query context per_group_dirty_recovery and group children carrying jid. Repeat --chat for each concrete distinct group (local bound one to 256). Correlated mixed groups/group results now atomically commit full snapshots/events and a durable projection outcome. Exact group@error=403/404 count as forbidden/not_found without deleting previous snapshots. Exact truncated=true requires explicit size 0..19999 and stores pending JID/size without replacing membership. Missing/extra/duplicate/unexpected identities, unknown errors, child-error shapes or invalid truncated sizes preserve the whole prior state and saved response. Inspect projection counts using group refresh-status --id; action IQ status alone is not complete refresh success. The earlier two-full-group batch was live verified; mixed/report behavior is offline tested only. No follow-up/retry/notification ACK is queued. Root refusals retain the action queue behavior. Automatic dirty/truncated pipeline, full union metadata, MEX and wait handling remain unfinished. CLI-only; no HTTP route exists.",
         "operationId": "groupRefresh",
         "x-cli": "whatsapp-cli group refresh",
         "x-transport": [
@@ -10438,7 +10438,105 @@
               }
             }
           }
+        },
+        "x-wire-result": {
+          "container": "groups",
+          "item": "group",
+          "recognized_attributes": {
+            "id": "requested group identity",
+            "error": [
+              "403",
+              "404"
+            ],
+            "truncated": "true",
+            "size": {
+              "minimum": 0,
+              "maximum": 19999,
+              "required_for": "truncated=true"
+            }
+          },
+          "evidence": "docs/protocol/group-refresh-union-evidence.txt"
         }
+      }
+    },
+    "/v1/groups/refresh-status": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Inspect one saved batch projection outcome",
+        "description": "Offline counts-only inspection of the encrypted RefreshOutcome for an existing group-refresh action ID. Prints complete, truncated, forbidden, not_found counts and automatic_follow_up=false. JSON null means no report is saved; inspect actions for pending/refused/unapplied state or a historical completed batch. Does not queue a query, backfill old markers, print group IDs/sizes or claim every group is refreshed. Per-group 403/404 preserve snapshots; size-only groups remain pending for unimplemented follow-up. Mixed/outcome behavior is offline tested, not live verified. CLI-only; no HTTP route exists.",
+        "operationId": "groupRefreshStatus",
+        "x-cli": "whatsapp-cli group refresh-status",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Existing action ID, supplied with --id; no new request is queued."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Saved projection counts or null",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "properties": {
+                    "complete": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "truncated": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "forbidden": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "not_found": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "automatic_follow_up": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::groups::refresh_outcome"
+        ]
       }
     }
   }

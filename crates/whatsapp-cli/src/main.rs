@@ -843,11 +843,17 @@ enum GroupCmd {
         #[arg(long)]
         chat: String,
     },
-    /// Queue one classic batch refresh; incomplete replies preserve existing snapshots.
+    /// Queue one classic batch refresh of the selected groups.
     Refresh {
         /// Concrete group JIDs; repeat --chat for each group (local maximum 256).
         #[arg(long = "chat", required = true)]
         chats: Vec<String>,
+    },
+    /// Inspect one saved batch projection outcome (offline, counts only).
+    RefreshStatus {
+        /// Existing batch action ID; does not queue another query.
+        #[arg(long)]
+        id: String,
     },
     /// Queue a subject change.
     Subject {

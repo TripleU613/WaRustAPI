@@ -1,0 +1,227 @@
+APK 2.26.37.71 SHA256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed/static group union variants and constructor mapping, not live mixed results.
+Method-relative offsets. Reproduce: target/debug/xtask apk-smali <apk> --class <class> --method <method>.
+
+# class: LX/AX9;
+
+.method public <clinit>(V)  # .registers 1
+    0000..0004  new-instance  v0, LX/AX9;
+    0004..000a  invoke-direct  {v0}, LX/AX9;-><init>(V)
+    000a..000e  sput-object  v0, LX/AX9;->A00:LX/AX9;
+    000e..0010  return-void
+.end method
+
+.method public <init>(V)  # .registers 1
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0006..0008  return-void
+.end method
+
+.method public AAK(LLL)  # .registers 23
+    0000..0002  const/4  v11, #0x0
+    0002..0006  move-object/from16  v5, v21
+    0006..000a  move-object/from16  v4, v22
+    000a..0010  invoke-static  {v5, v4, v11}, LX/1xi;->A1X(ZLLI)
+    0010..0012  move-result  v2
+    0012..0016  const-string  v0, "group"
+    0016..001c  invoke-virtual  {v4, v5, v0}, LX/8lB;->A0P(ZLL)
+    001c..001e  move-result  v0
+    001e..0020  const/4  v9, #0x0
+    0020..0024  if-eqz  v0, +0x56
+    0024..002a  invoke-static  {v2}, LX/8kU;->A1V(LI)
+    002a..002c  move-result-object  v10
+    002c..0030  const-class  v6, Ljava/lang/String;
+    0030..0034  const-wide/16  v0, #0xa
+    0034..003a  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(LJ)
+    003a..003c  move-result-object  v7
+    003c..0040  const-wide/16  v0, #0x32
+    0040..0046  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(LJ)
+    0046..0048  move-result-object  v8
+    0048..004e  invoke-virtual/range  {v4..v11}, LX/8lB;->A0L(LLLLLLLZ)
+    004e..0050  move-result-object  v0
+    0050..0054  if-eqz  v0, +0x3e
+    0054..0058  new-array  v3, v2, [Ljava/lang/String;
+    0058..005c  const-string  v0, "size"
+    005c..0060  aput-object  v0, v3, v11
+    0060..0064  sget-object  v14, Ljava/lang/Long;->TYPE:Ljava/lang/Class;
+    0064..006a  invoke-static  {}, LX/3c8;->A0k(L)
+    006a..006c  move-result-object  v15
+    006c..0070  const-wide/16  v0, #0x4e1f
+    0070..0076  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(LJ)
+    0076..0078  move-result-object  v16
+    0078..007a  move-object  v12, v4
+    007a..007c  move-object  v13, v5
+    007c..0080  move-object/from16  v17, v9
+    0080..0084  move-object/from16  v18, v3
+    0084..0088  move/from16  v19, v11
+    0088..008e  invoke-virtual/range  {v12..v19}, LX/8lB;->A0L(LLLLLLLZ)
+    008e..0090  move-result-object  v0
+    0090..0094  if-eqz  v0, +0x1e
+    0094..0098  new-array  v1, v2, [Ljava/lang/String;
+    0098..009c  const-string  v0, "truncated"
+    009c..00a2  invoke-static  {v0, v1, v11}, LX/8kY;->A0l(LLLI)
+    00a2..00a4  move-result-object  v15
+    00a4..00aa  invoke-static  {}, LX/8kX;->A0n(L)
+    00aa..00ac  move-result-object  v16
+    00ac..00b0  const-string  v17, "true"
+    00b0..00b2  move-object  v14, v6
+    00b2..00b6  move-object/from16  v18, v1
+    00b6..00bc  invoke-virtual/range  {v12..v19}, LX/8lB;->A0L(LLLLLLLZ)
+    00bc..00be  move-result-object  v0
+    00be..00c2  if-eqz  v0, +0x7
+    00c2..00c6  new-instance  v9, LX/9PN;
+    00c6..00cc  invoke-direct  {v9, v5}, LX/9PN;-><init>(VL)
+    00cc..00ce  return-object  v9
+.end method
+
+# class: LX/AXA;
+
+.method public <clinit>(V)  # .registers 1
+    0000..0004  new-instance  v0, LX/AXA;
+    0004..000a  invoke-direct  {v0}, LX/AXA;-><init>(V)
+    000a..000e  sput-object  v0, LX/AXA;->A00:LX/AXA;
+    000e..0010  return-void
+.end method
+
+.method public <init>(V)  # .registers 1
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0006..0008  return-void
+.end method
+
+.method public AAK(LLL)  # .registers 23
+    0000..0002  const/4  v11, #0x0
+    0002..0006  move-object/from16  v5, v21
+    0006..000a  move-object/from16  v4, v22
+    000a..0010  invoke-static  {v5, v4, v11}, LX/1xi;->A1X(ZLLI)
+    0010..0012  move-result  v3
+    0012..0016  const-string  v0, "group"
+    0016..001c  invoke-virtual  {v4, v5, v0}, LX/8lB;->A0P(ZLL)
+    001c..001e  move-result  v0
+    001e..0020  const/4  v9, #0x0
+    0020..0024  if-eqz  v0, +0x3e
+    0024..002a  invoke-static  {v3}, LX/8kU;->A1V(LI)
+    002a..002c  move-result-object  v10
+    002c..0030  const-class  v6, Ljava/lang/String;
+    0030..0034  const-wide/16  v0, #0xa
+    0034..003a  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(LJ)
+    003a..003c  move-result-object  v7
+    003c..0040  const-wide/16  v0, #0x32
+    0040..0046  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(LJ)
+    0046..0048  move-result-object  v8
+    0048..004e  invoke-virtual/range  {v4..v11}, LX/8lB;->A0L(LLLLLLLZ)
+    004e..0050  move-result-object  v2
+    0050..0054  check-cast  v2, Ljava/lang/String;
+    0054..0058  if-eqz  v2, +0x24
+    0058..005c  new-array  v1, v3, [Ljava/lang/String;
+    005c..0060  const-string  v0, "error"
+    0060..0066  invoke-static  {v0, v1, v11}, LX/8kY;->A0l(LLLI)
+    0066..0068  move-result-object  v15
+    0068..006e  invoke-static  {}, LX/8kX;->A0n(L)
+    006e..0070  move-result-object  v16
+    0070..0074  const-string  v17, "403"
+    0074..0076  move-object  v12, v4
+    0076..0078  move-object  v13, v5
+    0078..007a  move-object  v14, v6
+    007a..007e  move-object/from16  v18, v1
+    007e..0082  move/from16  v19, v11
+    0082..0088  invoke-virtual/range  {v12..v19}, LX/8lB;->A0L(LLLLLLLZ)
+    0088..008a  move-result-object  v0
+    008a..008e  check-cast  v0, Ljava/lang/String;
+    008e..0092  if-eqz  v0, +0x7
+    0092..0096  new-instance  v9, LX/9PO;
+    0096..009c  invoke-direct  {v9, v5, v2, v0, v11}, LX/9PO;-><init>(VLLLI)
+    009c..009e  return-object  v9
+.end method
+
+# class: LX/AXB;
+
+.method public <clinit>(V)  # .registers 1
+    0000..0004  new-instance  v0, LX/AXB;
+    0004..000a  invoke-direct  {v0}, LX/AXB;-><init>(V)
+    000a..000e  sput-object  v0, LX/AXB;->A00:LX/AXB;
+    000e..0010  return-void
+.end method
+
+.method public <init>(V)  # .registers 1
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0006..0008  return-void
+.end method
+
+.method public AAK(LLL)  # .registers 23
+    0000..0002  const/4  v11, #0x0
+    0002..0006  move-object/from16  v5, v21
+    0006..000a  move-object/from16  v4, v22
+    000a..0010  invoke-static  {v5, v4, v11}, LX/1xi;->A1X(ZLLI)
+    0010..0012  move-result  v3
+    0012..0016  const-string  v0, "group"
+    0016..001c  invoke-virtual  {v4, v5, v0}, LX/8lB;->A0P(ZLL)
+    001c..001e  move-result  v0
+    001e..0020  const/4  v9, #0x0
+    0020..0024  if-eqz  v0, +0x3e
+    0024..002a  invoke-static  {v3}, LX/8kU;->A1V(LI)
+    002a..002c  move-result-object  v10
+    002c..0030  const-class  v6, Ljava/lang/String;
+    0030..0034  const-wide/16  v0, #0xa
+    0034..003a  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(LJ)
+    003a..003c  move-result-object  v7
+    003c..0040  const-wide/16  v0, #0x32
+    0040..0046  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(LJ)
+    0046..0048  move-result-object  v8
+    0048..004e  invoke-virtual/range  {v4..v11}, LX/8lB;->A0L(LLLLLLLZ)
+    004e..0050  move-result-object  v2
+    0050..0054  check-cast  v2, Ljava/lang/String;
+    0054..0058  if-eqz  v2, +0x24
+    0058..005c  new-array  v1, v3, [Ljava/lang/String;
+    005c..0060  const-string  v0, "error"
+    0060..0066  invoke-static  {v0, v1, v11}, LX/8kY;->A0l(LLLI)
+    0066..0068  move-result-object  v15
+    0068..006e  invoke-static  {}, LX/8kX;->A0n(L)
+    006e..0070  move-result-object  v16
+    0070..0074  const-string  v17, "404"
+    0074..0076  move-object  v12, v4
+    0076..0078  move-object  v13, v5
+    0078..007a  move-object  v14, v6
+    007a..007e  move-object/from16  v18, v1
+    007e..0082  move/from16  v19, v11
+    0082..0088  invoke-virtual/range  {v12..v19}, LX/8lB;->A0L(LLLLLLLZ)
+    0088..008a  move-result-object  v0
+    008a..008e  check-cast  v0, Ljava/lang/String;
+    008e..0092  if-eqz  v0, +0x7
+    0092..0096  new-instance  v9, LX/9PO;
+    0096..009c  invoke-direct  {v9, v5, v2, v0, v3}, LX/9PO;-><init>(VLLLI)
+    009c..009e  return-object  v9
+.end method
+
+# class: LX/8kU;
+
+.method public A1V(LI)  # .registers 4
+    0000..0002  const/4  v2, #0x0
+    0002..0006  new-array  v1, v3, [Ljava/lang/String;
+    0006..000a  const-string  v0, "id"
+    000a..000e  aput-object  v0, v1, v2
+    000e..0010  return-object  v1
+.end method
+
+# class: LX/3c8;
+
+.method public A0k(L)  # .registers 2
+    0000..0004  const-wide/16  v0, #0x0
+    0004..000a  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(LJ)
+    000a..000c  move-result-object  v0
+    000c..000e  return-object  v0
+.end method
+
+# class: LX/9PO;
+
+.method public <init>(VLLLI)  # .registers 5
+    0000..0004  iput  v4, v0, LX/9PO;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    000a..000e  iput-object  v2, v0, LX/9PO;->A02:Ljava/lang/String;
+    000e..0012  iput-object  v3, v0, LX/9PO;->A01:Ljava/lang/String;
+    0012..0016  iput-object  v1, v0, LX/9PO;->A00:Ljava/lang/Object;
+    0016..001a  iput-object  v1, v0, LX/8lP;->A00:LX/0hs;
+    001a..001c  return-void
+.end method
+
+# AZK full parser is large and not completely traced here; it constructs 9PP.
+    0e3c..0e40  new-instance  v31, LX/9PP;
+    0e88..0e8e  invoke-direct/range  {v31..v63}, LX/9PP;-><init>(VLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL)

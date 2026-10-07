@@ -235,7 +235,7 @@ Usage: whatsapp-cli group info [OPTIONS]...
 
 ## whatsapp-cli group refresh
 
-Queue one classic batch refresh; incomplete replies preserve existing snapshots
+Queue one classic batch refresh of the selected groups
 
 ```
 Usage: whatsapp-cli group refresh [OPTIONS]...
@@ -244,6 +244,18 @@ Usage: whatsapp-cli group refresh [OPTIONS]...
 | Flag | Value | Required | Default | Env | Values | Help |
 |------|-------|----------|---------|-----|--------|------|
 | --chat | CHATS | yes |  |  |  | Concrete group JIDs; repeat --chat for each group (local maximum 256) |
+
+## whatsapp-cli group refresh-status
+
+Inspect one saved batch projection outcome (offline, counts only)
+
+```
+Usage: whatsapp-cli group refresh-status [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --id | ID | yes |  |  |  | Existing batch action ID; does not queue another query |
 
 ## whatsapp-cli group subject
 

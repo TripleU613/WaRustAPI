@@ -648,12 +648,47 @@ fn apply_reply_in(
     Ok(())
 }
 
+/// One group whose batch response contains only size, not complete membership.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TruncatedGroup {
+    /// Concrete group identity. Stored encrypted; CLI summaries do not print it.
+    pub jid: String,
+    /// APK 37.71 AX9 permits size 0..=19999; this is not a member list.
+    pub size: u32,
+}
+
+/// Durable projection result, separate from the outer IQ action status.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
+pub struct RefreshOutcome {
+    /// Complete snapshots committed in this batch.
+    pub complete: usize,
+    /// Pending size-only groups; no automatic follow-up is implemented yet.
+    pub truncated: Vec<TruncatedGroup>,
+    /// APK GroupForbidden results (group@error=403); snapshots retained.
+    pub forbidden: usize,
+    /// APK GroupNotExist results (group@error=404); snapshots retained.
+    pub not_found: usize,
+}
+
+/// Inspect the projection result of one settled batch, without transmitting.
+pub fn refresh_outcome(store: &ProtocolStore, id: &str) -> Result<Option<RefreshOutcome>> {
+    store.read(|tx| {
+        tx.get_json(
+            Table::Checkpoints,
+            format!("group-refresh-result:{id}").as_bytes(),
+            1,
+        )
+    })
+}
+
 fn apply_refresh_in(
     tx: &mut crate::store::WriteTx<'_>,
     request: Option<&Node>,
     reply: &Node,
 ) -> Result<()> {
     let request = request.ok_or_else(|| invalid("batch refresh request is missing"))?;
+    let id =
+        attr_string(request, "id").ok_or_else(|| invalid("batch refresh request ID is missing"))?;
     let query = request
         .child("query")
         .ok_or_else(|| invalid("batch refresh query is missing"))?;
@@ -666,8 +701,7 @@ fn apply_refresh_in(
         return Err(invalid("batch refresh request has no groups"));
     }
     // APK 37.71 Aov selectors 10/11 decode groups/group with AZM selector 15.
-    // Full/truncated/error union application is not interchangeable with one
-    // complete group snapshot. Validate the supported whole batch before writes.
+    // Validate correlation/union before any snapshot or outcome write.
     if reply.child_nodes().len() != 1 || reply.child_nodes()[0].description != "groups" {
         return Err(invalid("batch refresh reply requires one groups container"));
     }
@@ -677,29 +711,67 @@ fn apply_refresh_in(
     }
     let mut found = std::collections::BTreeSet::new();
     let mut snapshots = Vec::new();
+    let mut outcome = RefreshOutcome::default();
     for node in nodes {
-        if node.description != "group"
-            || node.get_attr("error").is_some()
-            || node.child("error").is_some()
-        {
+        if node.description != "group" || node.child("error").is_some() {
             return Err(invalid(
                 "batch refresh contains an unsupported group result; snapshots preserved",
             ));
         }
-        require_complete_group(node)?;
-        let snapshot =
-            parse_group(node).ok_or_else(|| invalid("batch refresh group has no identity"))?;
-        if !expected.contains(&snapshot.jid) || !found.insert(snapshot.jid.clone()) {
+        let raw = attr_string(node, "id")
+            .ok_or_else(|| invalid("batch refresh group has no identity"))?;
+        let jid = if raw.contains('@') {
+            raw
+        } else {
+            format!("{raw}@g.us")
+        };
+        if !expected.contains(&jid) || !found.insert(jid.clone()) {
             return Err(invalid(
                 "batch refresh contains an unexpected or duplicate group",
             ));
         }
-        snapshots.push(snapshot);
+        if let Some(error) = node.get_attr("error") {
+            // APK 37.71 AXA/AXB.AAK 0070..009c require exact 403/404
+            // and construct 9PO; A74 puts the code in the per-group result map.
+            match error.as_text() {
+                Some("403") => outcome.forbidden += 1,
+                Some("404") => outcome.not_found += 1,
+                _ => {
+                    return Err(invalid(
+                        "batch refresh contains an unrecognized group error",
+                    ));
+                }
+            }
+        } else if node.get_attr("truncated").and_then(|v| v.as_text()) == Some("true") {
+            // AX9.AAK 0064..008e checks primitive long size 0..19999;
+            // 0098..00bc requires exact lowercase true before constructing 9PN.
+            let size = node
+                .get_attr("size")
+                .and_then(|v| v.as_text())
+                .and_then(|raw| raw.parse::<i64>().ok())
+                .filter(|n| (0..=19999).contains(n))
+                .ok_or_else(|| invalid("truncated batch group requires size 0..19999"))?;
+            outcome.truncated.push(TruncatedGroup {
+                jid,
+                size: size as u32,
+            });
+        } else {
+            require_complete_group(node)?;
+            snapshots.push(
+                parse_group(node).ok_or_else(|| invalid("batch refresh group has no identity"))?,
+            );
+            outcome.complete += 1;
+        }
     }
     for snapshot in snapshots {
         save_snapshot_in(tx, snapshot)?;
     }
-    Ok(())
+    tx.put_json(
+        Table::Checkpoints,
+        format!("group-refresh-result:{id}").as_bytes(),
+        1,
+        &outcome,
+    )
 }
 
 fn save_snapshot(store: &ProtocolStore, group: GroupSnapshot) -> Result<()> {
@@ -1576,6 +1648,165 @@ mod tests {
     }
 
     #[test]
+    fn mixed_refresh_outcome_and_full_snapshot_commit_once_across_restart() {
+        let (dir, s) = store();
+        let groups: Vec<Jid> = (0..4)
+            .map(|n| Jid::parse(&format!("12345-6789{n}@g.us")).unwrap())
+            .collect();
+        for group in &groups {
+            record_info_reply(
+                &s,
+                &Node::new("iq").children(vec![
+                    Node::new("group")
+                        .attr("id", group.clone())
+                        .attr("subject", "Before"),
+                ]),
+            )
+            .unwrap();
+        }
+        let id = queue_refresh(&s, &groups).unwrap();
+        super::super::actions::reserve_pending(&s).unwrap();
+        // APK 37.71 AX9 size=0..19999 plus exact truncated=true;
+        // AXA/AXB classify exact group@error 403/404. Synthetic group IDs.
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result")
+            .children(vec![Node::new("groups").children(vec![
+                    Node::new("group")
+                        .attr("id", groups[0].clone())
+                        .attr("subject", "After"),
+                    Node::new("group")
+                        .attr("id", groups[1].clone())
+                        .attr("truncated", "true")
+                        .attr("size", "19999"),
+                    Node::new("group")
+                        .attr("id", groups[2].clone())
+                        .attr("error", "403"),
+                    Node::new("group")
+                        .attr("id", groups[3].clone())
+                        .attr("error", "404"),
+                ])]);
+        assert!(super::super::actions::record_reply(&s, &reply).unwrap());
+        let (outcome, saved) = s
+            .read(|tx| super::super::actions::view_in(tx, &id))
+            .unwrap()
+            .unwrap();
+        let request = super::super::actions::request(&s, &id).unwrap();
+        let abort: Result<()> = s.write(|tx| {
+            assert!(ingest_reply_in(
+                tx,
+                "group-refresh",
+                &outcome,
+                request.as_ref(),
+                saved.as_ref()
+            )?);
+            assert!(
+                tx.get_json::<RefreshOutcome>(
+                    Table::Checkpoints,
+                    format!("group-refresh-result:{id}").as_bytes(),
+                    1
+                )?
+                .is_some()
+            );
+            Err(invalid("abort mixed projection"))
+        });
+        assert!(abort.is_err());
+        assert!(refresh_outcome(&s, &id).unwrap().is_none());
+        assert!(
+            list(&s)
+                .unwrap()
+                .iter()
+                .all(|g| g.subject.as_deref() == Some("Before"))
+        );
+        assert!(apply_pending(&s, &id).unwrap());
+        drop(s);
+        let s = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("p.redb"),
+            account_id: AccountId::new("a").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            create: false,
+        })
+        .unwrap();
+        assert_eq!(
+            refresh_outcome(&s, &id).unwrap().unwrap(),
+            RefreshOutcome {
+                complete: 1,
+                truncated: vec![TruncatedGroup {
+                    jid: groups[1].to_string(),
+                    size: 19999
+                }],
+                forbidden: 1,
+                not_found: 1,
+            }
+        );
+        assert_eq!(
+            get(&s, &groups[0]).unwrap().unwrap().subject.as_deref(),
+            Some("After")
+        );
+        for group in &groups[1..] {
+            assert_eq!(
+                get(&s, group).unwrap().unwrap().subject.as_deref(),
+                Some("Before")
+            );
+        }
+        assert_eq!(recover_pending(&s).unwrap(), 0);
+        assert_eq!(ingest(&s).unwrap(), 0);
+        assert!(
+            super::super::actions::reserve_pending(&s)
+                .unwrap()
+                .is_empty()
+        );
+        assert_eq!(super::super::actions::reply(&s, &id).unwrap(), Some(reply));
+        let events = s
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("mixed-test")?,
+                    crate::model::ids::EventCursor::START,
+                    64,
+                )
+            })
+            .unwrap();
+        assert_eq!(events.events.len(), 5);
+    }
+
+    #[test]
+    fn truncated_refresh_size_requires_apk_bounds_and_explicit_value() {
+        for size in [
+            None,
+            Some("-1"),
+            Some("20000"),
+            Some("invalid"),
+            Some("0"),
+            Some("19999"),
+        ] {
+            let (_dir, s) = store();
+            let group = Jid::parse("12345-67890@g.us").unwrap();
+            let id = queue_refresh(&s, std::slice::from_ref(&group)).unwrap();
+            super::super::actions::reserve_pending(&s).unwrap();
+            let mut node = Node::new("group")
+                .attr("id", group)
+                .attr("truncated", "true");
+            if let Some(size) = size {
+                node = node.attr("size", size);
+            }
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("groups").children(vec![node])]);
+            super::super::actions::record_reply(&s, &reply).unwrap();
+            assert_eq!(
+                apply_pending(&s, &id).unwrap(),
+                matches!(size, Some("0" | "19999"))
+            );
+            assert_eq!(
+                refresh_outcome(&s, &id).unwrap().is_some(),
+                matches!(size, Some("0" | "19999"))
+            );
+            assert!(list(&s).unwrap().is_empty());
+        }
+    }
+
+    #[test]
     fn batch_refresh_applies_only_complete_correlated_snapshots_atomically() {
         for case in [
             "complete",
@@ -1637,7 +1868,7 @@ mod tests {
                 }
                 "duplicate" => children[1] = full(&first),
                 "unexpected" => children[1] = full(&Jid::parse("12345-67892@g.us").unwrap()),
-                "error" => children[1] = full(&second).attr("error", "403"),
+                "error" => children[1] = full(&second).attr("error", "500"),
                 _ => {}
             }
             let reply = Node::new("iq")
