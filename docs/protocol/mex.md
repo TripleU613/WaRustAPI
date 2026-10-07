@@ -477,8 +477,8 @@ mul-long/2addr. ADv.A03 announcement_version calls 0Gv.A01 directly, with no
 multiplier. Thus these fields do not share identical numeric conversion.
 0Gv.A01 checks TextUtils.isEmpty, returns the supplied default on that path,
 and calls Long.parseLong otherwise; another return-default site exists.
-The current annotated dump does not identify its exception-table catch type,
-so exact parse-failure behavior is still unknown. Android optString coercion,
+The initial default dump did not identify its exception-table catch type;
+the later explicit exception section resolves the NumberFormatException path. Android optString coercion,
 Java signed-long/overflow behavior, resulting storage units and all constructor
 slots are not ported by this arithmetic finding alone.
 
@@ -487,9 +487,9 @@ existing 12x operand/width decoder. The literal eight-byte extent at
 classes6.dex **0x26374c** (8kY.A0B+000c..0014) is independently read as
 `16 00 e8 03 bd 02 10 02`: load 1000, multiply v2 by v0, return-wide v2.
 The regression covers exact operands, boundaries and truncated prefixes.
-This reports bytecode; it does not execute a timestamp converter. Existing
-37.71 versioned source files contain no unknown-bd marker, so this new name
-requires no unrelated baseline rewrites.
+This reports bytecode; it does not execute a timestamp converter. The initial search for CLI-style ??(0xbd) markers missed the bundle syntax
+op=bd ??. The following full core-bundle audit found one such instruction
+in noise-handshake; the later presentation audit below records its refresh.
 
 Creator getter ADv.A09 follows 90x.A0H -> 8kU.A1A (nullable **id**) -> A0d;
 1bo.A01 parses group id and requires subtype 1bn, throwing 08j otherwise.
@@ -501,3 +501,121 @@ map; otherwise it returns empty. ADv.A0H and full creator/JID/country parsing
 remain unfinished. Feature-enabled identity metadata must not be silently
 substituted by PN-only assumptions. No saved identity/key/group state changed,
 account opened, MEX request sent or server response recognized live here.
+
+## Result constructor and explicit exception inspection (2026-10-07)
+
+**Confirmed static**, same APK 2.26.37.71/hash:
+[selected constructor/catch source](mex-group-constructor-catch-evidence.txt)
+resolves A4m's constructor writes. With 45 registers and 43 incoming register
+words, this is v2 and arguments start at v3. Four longs consume two words each;
+ignoring their widths would mislabel every later boolean. Cross-reading
+0Xo.A03's ordinary-branch invoke range v11..v53 gives the following mapping:
+
+| Constructor register | A4m field | Traced input |
+| --- | --- | --- |
+| v3 | A0C | A9r request context |
+| v4 | A0D | typed group id |
+| v5 | A0E | linked parent (null in ordinary branch) |
+| v6 | A0F | creator user JID |
+| v7 | A0G | description metadata from ADv.A0B |
+| v8 | A0H | nullable growth_locked2 metadata |
+| v9 | A0I | group_safety_check boxed boolean |
+| v10 | A0J | nullable integer, passed null in ordinary branch |
+| v11 | A0K | optional subject.value |
+| v12 | A0O | ADv.A0D participant map (null on phash match) |
+| v13 | A0L | ADv.A0F map, complete meaning untraced |
+| v14 | A0N | feature-gated 0Xo.A01 map |
+| v15 | A0M | feature-gated creator LID/id/country map |
+| v16 | A07 | total_participants_count |
+| v17 | A02 | ephemeral expiration |
+| v18 | A03 | group type integer: 0 / 2 or 6 / 3 / 1 across branches |
+| v19 | A00 | literal zero in ordinary branch, meaning untraced |
+| v20 | A04 | converted member_add_mode |
+| v21 | A05 | converted member_link_mode |
+| v22 | A06 | converted member_share_group_history_mode |
+| v23 | A01 | capi-derived integer |
+| v24/v25 | A0A | creation_time parsed and multiplied by 1000 |
+| v26/v27 | A0B | subject.creation_time parsed and multiplied by 1000 |
+| v28/v29 | A08 | unscaled announcement_version |
+| v30/v31 | A09 | optional appeal_update_time integer widened to long |
+| v32 | A0S | support |
+| v33 | A0b | locked |
+| v34 | A0R | announcement |
+| v35 | A0Z | ADv.A0J boolean, complete meaning untraced |
+| v36 | A0a | limit_sharing_enabled |
+| v37 | A0V | false ordinary; true 2FI branch; meaning untraced |
+| v38 | A0W | membership_approval_mode_enabled |
+| v39 | A0P | ack ordinary; literal true 2FK branch |
+| v40 | A0Y | allow_admin_reports ordinary; non-admin subgroup creation 2FK |
+| v41 | A0Q | literal false ordinary, meaning untraced |
+| v42 | A0U | false ordinary; hidden_group in 2H7 |
+| v43 | A0X | missing_participant_identification |
+| v44 | A0T | internal ordinary/2H7; false other traced branches |
+
+This confirms argument-slot provenance and group type field A03; it does not
+complete every enum/coercion or downstream database write. Full application
+0yw.A0X and alias/participant side effects remain unfinished. The type-name
+hashes still have no established wire spelling; alternate branch flag reuse
+must be interpreted per branch, not assumed identical to the ordinary case.
+
+**Resolved parse failure:** 0Gv.A01's try_item covers code units 7..12
+(byte offsets +000e..0018), with typed NumberFormatException handler at unit
+12 (+0018). That instruction returns the supplied default v2; the traced
+creation/subject/version callers supply zero. This is a typed catch, not
+catch-all. Empty strings follow the separate TextUtils.isEmpty/default path.
+[Literal code_item fixture](mex-long-parser-catch-fixture.json), independently
+read from classes.dex offset 5390684, carries the real catch index/descriptor
+and byte extent. Its regression reconstructs only the needed string/type
+tables and proves range, handler and return-default bytes. Java Long.parseLong
+lexical/coercion details remain unported; callers do not preserve malformed
+numeric input as an unknown raw number.
+
+LbE.A04 has four typed catches over code units 0c..21, all to unit 21:
+IllegalAccessException, NoSuchMethodException, InstantiationException and
+InvocationTargetException. Its handler stores the exception and returns null.
+This closes the earlier broad statement about construction failure: arbitrary
+Throwable is not caught locally by this table. 0Xo.A03 has no local try ranges;
+this does not establish absence of caller-level exception handling.
+
+**Implemented tooling:** `apk-smali --exceptions` prints each ordered typed
+catch and final catch-all, with explicitly labeled code-unit half-open ranges
+and targets, plus an explicit try-range count (including zero). Matching method metadata is checked whether or not the flag is
+printed. Malformed padding/ranges/overlap/handler offsets/types/addresses,
+truncation and signed/unsigned LEB overflow refuse without partial method
+output. The prior scanner warned on a later DEX parse error and returned
+earlier methods; it now propagates the named DEX error and prints no method
+results. A two-DEX regression covers malformed bytes and invalid catch tables
+after valid methods. No class hierarchy or instruction-boundary/whole-DEX verifier is
+claimed. Existing default annotated output and versioned bundle format remain
+unchanged. The format follows [AOSP DEX code_item and catch tables](https://source.android.com/docs/core/runtime/dex-format).
+
+```sh
+target/debug/xtask apk-smali /path/to/WhatsApp.apk \
+  --class 'LX/0Gv;' --method A01 --exceptions
+```
+
+Synthetic regressions cover typed plus catch-all negative size, catch-all-only
+zero size, odd instruction padding, code-unit addresses and malformed tables.
+The actual APK fixture separately establishes this time parser's exception
+path. No account opened, intent queued, group snapshot/identity overwritten or
+live server response obtained by these offline inspections.
+
+### Core bundle presentation audit
+
+The strict scanner also rechecked all current 37.71 bundles. MEX and group
+files reproduced unchanged. The core check exposed one stale annotation from
+the preceding bd mnemonic fix: noise-handshake +045e..0460 now says
+`op=bd mul-long/2addr v1, v10` instead of `op=bd ?? v1, v10`. Exact textual
+replacement proves this is the only method-content change. The instruction
+opcode, offsets and operands are unchanged; no handshake behavior is changed
+or inferred here. The prior marker search used CLI spelling, whereas bundle
+files have a separate op= column; that negative result did not establish full
+bundle reproducibility.
+
+[Cached rendering comparison](apk/core-mul-long-rendering-diff.json) against
+old Git revision **34b5ab5** took **0.0328 seconds**: one changed topic, 21
+unchanged topics, four unchanged metadata artifacts, same APK hash. Report
+old/new paths refer to their respective Git revisions. Only noise-handshake
+and its checksum were refreshed. The core now has 27 files/731,494 bytes,
+12 bytes larger from naming the existing opcode. This is not a release or
+protocol delta, and the older 37.70 evidence remains untouched.

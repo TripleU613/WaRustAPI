@@ -166,3 +166,10 @@ APK. [Current remapping](remap-evidence/2.26.37.71-mex.json) finds eight unique,
 seven unanchored and three ambiguous topics. [Interpretation and reproduction](../mex.md#versioned-parserrequest-files)
 separate source coverage from full conversion, Argo/Pando and live application;
 these remain unfinished.
+
+Core source presentation refresh: naming bd mul-long/2addr updates one
+noise-handshake annotation (+045e..0460), retaining opcode/offsets/operands.
+[Exact cached comparison](core-mul-long-rendering-diff.json) against Git 34b5ab5
+shows one changed/21 unchanged topics and four unchanged artifacts in 0.0328
+seconds, same APK. Current core size: 27 files/731,494 bytes. This is an
+annotation/checksum correction, not a new release or handshake behavior.

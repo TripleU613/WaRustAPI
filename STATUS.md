@@ -1050,3 +1050,24 @@ Converter-trace validation: **610** workspace/all-feature tests (including
 CLI reference regeneration, OpenAPI library-symbol check, exact MEX snapshot
 reproduction (23 files/76,908 bytes), hygiene (523 links) and staged whitespace
 passed. No saved account opened, queued intent or live validation performed.
+
+MEX result constructor mapping now confirms group type A03, distinct long
+slots and participant/creator maps, preserving unknown flag/getter meanings.
+The long parser's NumberFormatException catch returns the supplied zero;
+reflection fallback catches four named exceptions, not arbitrary Throwable.
+apk-smali --exceptions exposes checked code-unit ranges/types/targets, with
+independent APK code_item regression. Complete numeric coercion, participant
+conversion and durable group application remain unfinished. No live request.
+See [constructor/catch trace](docs/protocol/mex.md#result-constructor-and-explicit-exception-inspection-2026-10-07).
+
+Constructor/catch validation: **615** workspace/all-feature tests, including
+**54** xtask tests, strict workspace/all-target/all-feature Clippy, warning-free
+Rustdoc, formatting, CLI reference regeneration and OpenAPI library-symbol
+validation passed. Actual CLI probes verified the typed numeric catch, four
+reflection catches, explicit zero-range result, unchanged default output and
+named-file/no-partial-output refusal for malformed later DEX. All three 37.71
+bundles reproduce: MEX 23 files/76,908 bytes; groups 25/448,127; core 27/731,494.
+Core's one prior op=bd unknown annotation was refreshed with identical opcode,
+offsets and operands (one changed/21 unchanged topics, four unchanged artifacts,
+same APK; cached presentation diff 0.0328 seconds). Hygiene (533 local links)
+and staged whitespace passed. No live request or saved account mutation.

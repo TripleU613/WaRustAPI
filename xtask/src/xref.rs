@@ -1664,6 +1664,135 @@ pub fn run_callers(apk: &Path, target_class: &str, target_method: &str) -> Resul
 
 // ── smali dump ────────────────────────────────────────────────────────────────
 
+/// Ordered exception handlers for a half-open range of instruction code units.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TryBlock {
+    pub start: u32,
+    pub end: u32,
+    /// None denotes the final catch-all; addresses are code units, not bytes.
+    pub handlers: Vec<(Option<String>, u32)>,
+}
+
+// AOSP DEX code_item / try_item / encoded_catch_handler_list formats:
+// https://source.android.com/docs/core/runtime/dex-format
+// Handler offsets include the list's ULEB prefix. Signed sizes <=0 add catch-all.
+fn catch_uleb(d: &[u8], pos: &mut usize) -> Result<u32, String> {
+    let start = *pos;
+    let (value, next) = uleb128(d, start)?;
+    if next - start == 5 && d[next - 1] & 0xf0 != 0 {
+        return Err("dex: overflowing catch uleb128".into());
+    }
+    *pos = next;
+    Ok(value)
+}
+
+fn catch_sleb(d: &[u8], pos: &mut usize) -> Result<i32, String> {
+    let mut value = 0i64;
+    for index in 0..5 {
+        let byte = *d.get(*pos).ok_or("dex: truncated catch sleb128")?;
+        *pos += 1;
+        value |= i64::from(byte & 0x7f) << (index * 7);
+        if byte & 0x80 == 0 {
+            if byte & 0x40 != 0 {
+                value |= !0i64 << ((index + 1) * 7);
+            }
+            return i32::try_from(value).map_err(|_| "dex: overflowing catch sleb128".into());
+        }
+    }
+    Err("dex: catch sleb128 too long".into())
+}
+
+fn code_try_blocks(dex: &DexFile<'_>, code: usize) -> Result<Vec<TryBlock>, String> {
+    let d = dex.d;
+    let count = usize::from(u16le(d, code + 6)?);
+    let units = u32le(d, code + 12)?;
+    let code_end = code
+        .checked_add(16)
+        .and_then(|v| {
+            (units as usize)
+                .checked_mul(2)
+                .and_then(|size| v.checked_add(size))
+        })
+        .filter(|&v| v <= d.len())
+        .ok_or("dex: instruction extent out of bounds")?;
+    if count == 0 {
+        return Ok(Vec::new());
+    }
+    let tries = if units % 2 == 1 {
+        if u16le(d, code_end)? != 0 {
+            return Err("dex: nonzero try padding".into());
+        }
+        code_end + 2
+    } else {
+        code_end
+    };
+    let list = tries
+        .checked_add(count * 8)
+        .filter(|&v| v <= d.len())
+        .ok_or("dex: try array out of bounds")?;
+    let mut pos = list;
+    let handler_count = catch_uleb(d, &mut pos)? as usize;
+    if handler_count > d.len() - pos {
+        return Err("dex: catch list count out of bounds".into());
+    }
+    let mut lists = BTreeMap::new();
+    for _ in 0..handler_count {
+        let offset = pos - list;
+        let size = catch_sleb(d, &mut pos)?;
+        let typed_count = size.unsigned_abs() as usize;
+        if typed_count > (d.len() - pos) / 2 {
+            return Err("dex: catch pair count out of bounds".into());
+        }
+        let mut handlers = Vec::new();
+        for _ in 0..typed_count {
+            let ty = catch_uleb(d, &mut pos)?;
+            if ty >= dex.type_count {
+                return Err("dex: catch type index out of bounds".into());
+            }
+            let name = dex.type_name(ty)?;
+            let address = catch_uleb(d, &mut pos)?;
+            if address >= units {
+                return Err("dex: catch address out of bounds".into());
+            }
+            handlers.push((Some(name), address));
+        }
+        if size <= 0 {
+            let address = catch_uleb(d, &mut pos)?;
+            if address >= units {
+                return Err("dex: catch-all address out of bounds".into());
+            }
+            handlers.push((None, address));
+        }
+        lists.insert(offset, handlers);
+    }
+    let mut out = Vec::new();
+    let mut previous_end = 0;
+    for index in 0..count {
+        let item = tries + index * 8;
+        let start = u32le(d, item)?;
+        let length = u32::from(u16le(d, item + 4)?);
+        let end = start
+            .checked_add(length)
+            .filter(|&v| length != 0 && v <= units)
+            .ok_or("dex: try range out of bounds")?;
+        if start < previous_end {
+            return Err("dex: overlapping or unordered try ranges".into());
+        }
+        previous_end = end;
+        let offset = usize::from(u16le(d, item + 6)?);
+        let handlers = lists
+            .get(&offset)
+            .ok_or("dex: try offset is not a handler start")?
+            .clone();
+        out.push(TryBlock {
+            start,
+            end,
+            handlers,
+        });
+    }
+    Ok(out)
+}
+
 /// One decoded method from a single class.
 pub struct MethodDump {
     pub class_name: String,
@@ -1674,6 +1803,7 @@ pub struct MethodDump {
     pub access_flags: u32,
     pub registers: u16,
     pub insns: Vec<Insn>,
+    pub try_blocks: Vec<TryBlock>,
 }
 
 fn smali_one(
@@ -1734,12 +1864,14 @@ fn smali_one(
                     access_flags,
                     registers: 0,
                     insns: vec![],
+                    try_blocks: vec![],
                 });
                 continue;
             }
 
             let ci_off = code_off as usize;
-            let registers = u16le(d, ci_off).unwrap_or(0);
+            let try_blocks = code_try_blocks(&dex, ci_off)?;
+            let registers = u16le(d, ci_off)?;
             let insns_size = u32le(d, ci_off + 12).unwrap_or(0);
             let insns_start = ci_off + 16;
             let insns_end = insns_start + insns_size as usize * 2;
@@ -1754,6 +1886,7 @@ fn smali_one(
                 access_flags,
                 registers,
                 insns,
+                try_blocks,
             });
         }
     }
@@ -1780,9 +1913,10 @@ pub fn apk_smali(
             .map_err(|e| e.to_string())?
             .read_to_end(&mut buf)
             .map_err(|e| e.to_string())?;
-        if let Err(e) = smali_one(&buf, class_filter, method_filter, &mut out) {
-            eprintln!("warning: {name}: {e}");
-        }
+        // A failed later DEX must not turn already collected methods into a
+        // seemingly complete dump (especially when auditing exception paths).
+        smali_one(&buf, class_filter, method_filter, &mut out)
+            .map_err(|e| format!("{name}: {e}"))?;
     }
     Ok(out)
 }
@@ -1791,6 +1925,7 @@ pub fn run_smali(
     apk: &Path,
     class_filter: &str,
     method_filter: Option<&str>,
+    exceptions: bool,
 ) -> Result<(), String> {
     let methods = apk_smali(apk, class_filter, method_filter)?;
     if methods.is_empty() {
@@ -1838,6 +1973,20 @@ pub fn run_smali(
                     "    {:04x}..{:04x}  {name}  {}",
                     insn.byte_off, end, annotation
                 );
+            }
+        }
+        if exceptions {
+            println!("    # exception table: {} try range(s)", m.try_blocks.len());
+            for block in &m.try_blocks {
+                for (ty, address) in &block.handlers {
+                    println!(
+                        "    # catch {} code_units {:04x}..{:04x} -> {:04x}",
+                        ty.as_deref().unwrap_or("<all>"),
+                        block.start,
+                        block.end,
+                        address
+                    );
+                }
             }
         }
         println!(".end method");
@@ -2714,6 +2863,161 @@ mod tests {
         data[0x1d0..0x1d4].copy_from_slice(&1u32.to_le_bytes());
         data[0x1d4..0x1d6].copy_from_slice(&parameter_type.to_le_bytes());
         data
+    }
+
+    fn catch_fixture() -> Vec<u8> {
+        let mut data = object_signature_fixture(0, &[0x0e, 0, 0x0e, 0, 0x0e, 0]);
+        // Three code units need two zero padding bytes, then one try item.
+        data[0x106..0x108].copy_from_slice(&1u16.to_le_bytes());
+        data[0x118..0x120].copy_from_slice(&[0, 0, 0, 0, 2, 0, 1, 0]);
+        // One list, signed -1 = typed Contact catch followed by catch-all.
+        data[0x120..0x125].copy_from_slice(&[1, 0x7f, 0, 2, 1]);
+        data
+    }
+
+    #[test]
+    fn literal_apk_long_parser_catches_number_format_to_default_return() {
+        let f: serde_json::Value = serde_json::from_str(include_str!(
+            "../../docs/protocol/mex-long-parser-catch-fixture.json"
+        ))
+        .unwrap();
+        let ty = f["catch_type_index"].as_u64().unwrap() as usize;
+        let name = f["catch_type"].as_str().unwrap();
+        let mut d = minimal_dex_header();
+        // Reconstruct only the string/type table needed for this literal code_item.
+        let type_off = 0x74usize;
+        let string_off = type_off + (ty + 1) * 4;
+        let code_off = (string_off + name.len() + 5) & !3;
+        let bytes = hex::decode(f["code_item_hex"].as_str().unwrap()).unwrap();
+        d.resize(code_off + bytes.len(), 0);
+        d[0x38..0x3c].copy_from_slice(&1u32.to_le_bytes());
+        d[0x3c..0x40].copy_from_slice(&0x70u32.to_le_bytes());
+        d[0x40..0x44].copy_from_slice(&((ty + 1) as u32).to_le_bytes());
+        d[0x44..0x48].copy_from_slice(&(type_off as u32).to_le_bytes());
+        d[0x70..0x74].copy_from_slice(&(string_off as u32).to_le_bytes());
+        d[string_off] = name.len() as u8;
+        d[string_off + 1..string_off + 1 + name.len()].copy_from_slice(name.as_bytes());
+        d[code_off..].copy_from_slice(&bytes);
+        let blocks = code_try_blocks(&DexFile::parse(&d).unwrap(), code_off).unwrap();
+        assert_eq!(
+            blocks,
+            vec![TryBlock {
+                start: f["try_start_units"].as_u64().unwrap() as u32,
+                end: f["try_end_units"].as_u64().unwrap() as u32,
+                handlers: vec![(
+                    Some(name.into()),
+                    f["handler_units"].as_u64().unwrap() as u32
+                )],
+            }]
+        );
+        assert_eq!(blocks[0].start, 7);
+        assert_eq!(blocks[0].end, 12);
+        assert_eq!(blocks[0].handlers[0].1, 12);
+        // Actual handler instruction at byte +0018 returns the supplied default v2.
+        assert_eq!(&bytes[16 + 24..16 + 26], &[0x10, 0x02]);
+    }
+
+    #[test]
+    fn exception_ranges_preserve_signed_handlers_and_code_unit_addresses() {
+        let data = catch_fixture();
+        let dex = DexFile::parse(&data).unwrap();
+        assert_eq!(
+            code_try_blocks(&dex, 0x100).unwrap(),
+            vec![TryBlock {
+                start: 0,
+                end: 2,
+                handlers: vec![(Some("LX/Contact;".into()), 2), (None, 1)],
+            }]
+        );
+        let mut only_all = data.clone();
+        only_all[0x121..0x123].copy_from_slice(&[0, 2]);
+        assert_eq!(
+            code_try_blocks(&DexFile::parse(&only_all).unwrap(), 0x100).unwrap()[0].handlers,
+            vec![(None, 2)]
+        );
+        let mut methods = Vec::new();
+        smali_one(&data, "LX/Contact;", None, &mut methods).unwrap();
+        assert_eq!(methods[0].try_blocks.len(), 1);
+    }
+
+    #[test]
+    fn malformed_exception_metadata_refuses_without_partial_ranges() {
+        let original = catch_fixture();
+        for (offset, byte) in [
+            (0x116, 1), // nonzero odd-code padding
+            (0x11c, 4), // range extends beyond three code units
+            (0x11c, 0), // zero-length protected range
+            (0x11e, 2), // points inside handler rather than its start
+            (0x122, 4), // type outside four-entry table
+            (0x123, 3), // handler address at end of instruction extent
+            (0x124, 3), // catch-all address at end of instruction extent
+        ] {
+            let mut data = original.clone();
+            data[offset] = byte;
+            assert!(
+                code_try_blocks(&DexFile::parse(&data).unwrap(), 0x100).is_err(),
+                "offset {offset:x}"
+            );
+        }
+        for end in 0x110..0x125 {
+            assert!(code_try_blocks(&DexFile::parse(&original[..end]).unwrap(), 0x100).is_err());
+        }
+        let mut data = original;
+        // Two try items overlap, while both point to a valid catch-all list.
+        data[0x106..0x108].copy_from_slice(&2u16.to_le_bytes());
+        data[0x120..0x128].copy_from_slice(&[1, 0, 0, 0, 1, 0, 1, 0]);
+        data[0x128..0x12b].copy_from_slice(&[1, 0, 2]);
+        assert!(code_try_blocks(&DexFile::parse(&data).unwrap(), 0x100).is_err());
+    }
+
+    #[test]
+    fn smali_scan_refuses_later_bad_dex_instead_of_partial_method_results() {
+        use std::io::Write as _;
+        for mut invalid in [b"malformed".to_vec(), catch_fixture()] {
+            if invalid.len() > 0x123 {
+                invalid[0x123] = 3;
+            }
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("fixture.apk");
+            let mut zip = zip::ZipWriter::new(std::fs::File::create(&path).unwrap());
+            let opts = zip::write::FileOptions::default();
+            zip.start_file("classes.dex", opts).unwrap();
+            zip.write_all(&catch_fixture()).unwrap();
+            zip.start_file("classes2.dex", opts).unwrap();
+            zip.write_all(&invalid).unwrap();
+            zip.finish().unwrap();
+            let error = match apk_smali(&path, "LX/Contact;", None) {
+                Ok(_) => panic!("partial method results must not escape"),
+                Err(error) => error,
+            };
+            assert!(error.starts_with("classes2.dex:"), "{error}");
+        }
+    }
+
+    #[test]
+    fn catch_leb_readers_refuse_overflow_and_unterminated_values() {
+        for bytes in [
+            &[0xff, 0xff, 0xff, 0xff, 0x10][..],
+            &[0x80; 5][..],
+            &[0x80][..],
+        ] {
+            assert!(catch_uleb(bytes, &mut 0).is_err());
+        }
+        for bytes in [
+            &[0xff, 0xff, 0xff, 0xff, 0x0f][..],
+            &[0x80; 5][..],
+            &[0x80][..],
+        ] {
+            assert!(catch_sleb(bytes, &mut 0).is_err());
+        }
+        assert_eq!(
+            catch_sleb(&[0xff, 0xff, 0xff, 0xff, 0x07], &mut 0).unwrap(),
+            i32::MAX
+        );
+        assert_eq!(
+            catch_sleb(&[0x80, 0x80, 0x80, 0x80, 0x78], &mut 0).unwrap(),
+            i32::MIN
+        );
     }
 
     #[test]

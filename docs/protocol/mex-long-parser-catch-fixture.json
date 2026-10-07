@@ -1,0 +1,15 @@
+{
+  "apk_version": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "dex_file": "classes.dex",
+  "class": "LX/0Gv;",
+  "method": "A01",
+  "code_item_offset": 5390684,
+  "code_item_hex": "04000300010001004f5da1000d0000007110cab801000a003800030010027110cfdd01000b0010001002000007000000050001000101fd9a010c",
+  "catch_type_index": 19837,
+  "catch_type": "Ljava/lang/NumberFormatException;",
+  "try_start_units": 7,
+  "try_end_units": 12,
+  "handler_units": 12,
+  "evidence": "Independent literal code_item extent; only the synthetic type table is reconstructed in the regression."
+}

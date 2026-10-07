@@ -187,6 +187,9 @@ enum Cmd {
         /// Optional additional substring filter on method names.
         #[arg(long = "method")]
         method_filter: Option<String>,
+        /// Include checked exception ranges and handler types (addresses in code units).
+        #[arg(long)]
+        exceptions: bool,
     },
     /// Decode a protobuf-lite message descriptor's field numbers.
     ///
@@ -303,7 +306,8 @@ fn main() -> ExitCode {
             apk,
             class_filter,
             method_filter,
-        } => xref::run_smali(&apk, &class_filter, method_filter.as_deref()),
+            exceptions,
+        } => xref::run_smali(&apk, &class_filter, method_filter.as_deref(), exceptions),
         Cmd::ApkProtoFields { apk, class_filter } => xref::run_proto_fields(&apk, &class_filter),
         Cmd::ApkRegistrationToken {
             apk,

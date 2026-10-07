@@ -1039,7 +1039,7 @@
   0450..0454 op=1a const-string v0, "; expires="
   0454..045a op=6e invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(LL)
   045a..045e op=53 iget-wide v1, v9, LX/BWw;->expires_:J
-  045e..0460 op=bd ?? v1, v10
+  045e..0460 op=bd mul-long/2addr v1, v10
   0460..0464 op=22 new-instance v0, Ljava/util/Date;
   0464..046a op=70 invoke-direct {v0, v1, v2}, Ljava/util/Date;-><init>(VJ)
   046a..0470 op=6e invoke-virtual {v5, v0}, Ljava/text/DateFormat;->format(LL)

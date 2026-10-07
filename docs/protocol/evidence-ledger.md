@@ -610,3 +610,38 @@ independent regression. Parser catch types/coercion/storage units remain
 unknown. Creator is creator.id, with feature 0x36fe controlling additional
 LID/country maps. [Interpretation and boundaries](mex.md#group-converter-branches-and-time-arithmetic-2026-10-07)
 record source facts without claiming a live or completed Rust converter.
+
+## comparison.mex.constructor_and_catches_37_71 — 2026-10-07
+
+**Confirmed static**, APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[A4m/catch source](mex-group-constructor-catch-evidence.txt) and
+[literal code_item](mex-long-parser-catch-fixture.json) resolve group type
+A03, distinct creation/subject/version/appeal long slots and ordered map/flag
+inputs. Wide arguments occupy two words; interpreting every argument as one
+register would mislabel later fields. [Full mapping/boundaries](mex.md#result-constructor-and-explicit-exception-inspection-2026-10-07)
+retain unknown enum/getter meanings and unfinished state application.
+
+0Gv.A01 catches NumberFormatException over code units 7..12, handler 12 returns
+the supplied default (zero at traced callers). This closes the previous
+unknown parse-failure path, not all Java numeric lexing/coercion. LbE.A04
+catches four reflection exceptions at one null-return handler; it has no
+arbitrary Throwable catch. 0Xo.A03 has no local try range; caller handling is
+not refuted. Reusable apk-smali --exceptions adds checked table inspection,
+synthetic malformed/overflow/catch-all tests and independent APK regression.
+Source format AOSP DEX code_item/try_item/encoded_catch_handler_list;
+no live account/server validation or full group converter claimed.
+
+Inspection failure correction: apk_smali previously warned on a later DEX
+parse error and returned earlier methods. It now propagates the named file
+error before rendering any method result; two-DEX tests cover malformed bytes
+and invalid catch tables following valid methods. This changes failure
+reporting, not valid default output or protocol state.
+
+Core rendering correction: the full 37.71 check found noise-handshake
++045e..0460 op=bd had retained ?? after the preceding multiplication-name fix.
+Searching for CLI-style ??(0xbd) missed bundle op=bd syntax. Exact replacement
+shows no other method-content change; same operands/offset/opcode. Only that
+file/checksum refreshed, core 27 files/731,494 bytes. [Cached diff](apk/core-mul-long-rendering-diff.json)
+against Git 34b5ab5: 0.0328 seconds, one changed/21 unchanged topics, all four
+artifacts unchanged, same APK. This is presentation, not a protocol delta.

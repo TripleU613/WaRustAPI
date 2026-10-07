@@ -44,8 +44,8 @@
     "sha256": "3aaeab28f3f80513208adab58be47af0c32778871cf8ccd0f3d0d69d04439308"
   },
   "noise-handshake.txt": {
-    "bytes": 69689,
-    "sha256": "63bfc2f38c532980089da19e6bb4902f7980ef8d9d4adea1d3ddbc4d9b2727f6"
+    "bytes": 69701,
+    "sha256": "038e76cd5d1c57968bb85c69bd3906aad9500ef96c52383800dc5e7b886a7291"
   },
   "noise-patterns.txt": {
     "bytes": 18091,

@@ -1,0 +1,187 @@
+APK build: 2.26.37.71
+APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed static selected constructor/exception evidence, not live values.
+Exception range and target numbers below are 16-bit code units; instructions
+use byte offsets. Source code_item bytes are separately preserved in
+mex-long-parser-catch-fixture.json for independent parser regression.
+
+=== mex-group-result-constructor.txt ===
+
+# class: LX/A4m;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLLLLLLIIIIIIIIJJJJZZZZZZZZZZZZZ)  # .registers 45
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>(V)
+    0006..000a  iput-object  v4, v2, LX/A4m;->A0D:LX/1bn;
+    000a..000e  iput-object  v6, v2, LX/A4m;->A0F:Lcom/whatsapp/infra/core/jid/UserJid;
+    000e..0012  move-wide/from16  v0, v24
+    0012..0016  iput-wide  v0, v2, LX/A4m;->A0A:J
+    0016..001a  iput-object  v11, v2, LX/A4m;->A0K:Ljava/lang/String;
+    001a..001e  move-wide/from16  v0, v26
+    001e..0022  iput-wide  v0, v2, LX/A4m;->A0B:J
+    0022..0026  move-wide/from16  v0, v28
+    0026..002a  iput-wide  v0, v2, LX/A4m;->A08:J
+    002a..002e  move/from16  v0, v16
+    002e..0032  iput  v0, v2, LX/A4m;->A07:I
+    0032..0036  iput-object  v7, v2, LX/A4m;->A0G:LX/0lV;
+    0036..003a  move/from16  v0, v32
+    003a..003e  iput-boolean  v0, v2, LX/A4m;->A0S:Z
+    003e..0042  move/from16  v0, v33
+    0042..0046  iput-boolean  v0, v2, LX/A4m;->A0b:Z
+    0046..004a  move/from16  v0, v34
+    004a..004e  iput-boolean  v0, v2, LX/A4m;->A0R:Z
+    004e..0052  move/from16  v0, v35
+    0052..0056  iput-boolean  v0, v2, LX/A4m;->A0Z:Z
+    0056..005a  iput-object  v8, v2, LX/A4m;->A0H:LX/0Zl;
+    005a..005e  move/from16  v0, v17
+    005e..0062  iput  v0, v2, LX/A4m;->A02:I
+    0062..0066  iput-object  v3, v2, LX/A4m;->A0C:LX/A9r;
+    0066..006a  move/from16  v0, v18
+    006a..006e  iput  v0, v2, LX/A4m;->A03:I
+    006e..0072  move/from16  v0, v36
+    0072..0076  iput-boolean  v0, v2, LX/A4m;->A0a:Z
+    0076..007a  iput-object  v5, v2, LX/A4m;->A0E:LX/1bn;
+    007a..007e  iput-object  v12, v2, LX/A4m;->A0O:Ljava/util/Map;
+    007e..0082  move/from16  v0, v37
+    0082..0086  iput-boolean  v0, v2, LX/A4m;->A0V:Z
+    0086..008a  move/from16  v0, v38
+    008a..008e  iput-boolean  v0, v2, LX/A4m;->A0W:Z
+    008e..0092  move/from16  v0, v19
+    0092..0096  iput  v0, v2, LX/A4m;->A00:I
+    0096..009a  move/from16  v0, v20
+    009a..009e  iput  v0, v2, LX/A4m;->A04:I
+    009e..00a2  move/from16  v0, v21
+    00a2..00a6  iput  v0, v2, LX/A4m;->A05:I
+    00a6..00aa  move/from16  v0, v22
+    00aa..00ae  iput  v0, v2, LX/A4m;->A06:I
+    00ae..00b2  move/from16  v0, v39
+    00b2..00b6  iput-boolean  v0, v2, LX/A4m;->A0P:Z
+    00b6..00ba  move/from16  v0, v40
+    00ba..00be  iput-boolean  v0, v2, LX/A4m;->A0Y:Z
+    00be..00c2  move/from16  v0, v41
+    00c2..00c6  iput-boolean  v0, v2, LX/A4m;->A0Q:Z
+    00c6..00ca  move/from16  v0, v23
+    00ca..00ce  iput  v0, v2, LX/A4m;->A01:I
+    00ce..00d2  move/from16  v0, v42
+    00d2..00d6  iput-boolean  v0, v2, LX/A4m;->A0U:Z
+    00d6..00da  iput-object  v13, v2, LX/A4m;->A0L:Ljava/util/Map;
+    00da..00de  iput-object  v9, v2, LX/A4m;->A0I:Ljava/lang/Boolean;
+    00de..00e2  iput-object  v14, v2, LX/A4m;->A0N:Ljava/util/Map;
+    00e2..00e6  iput-object  v15, v2, LX/A4m;->A0M:Ljava/util/Map;
+    00e6..00ea  move/from16  v0, v43
+    00ea..00ee  iput-boolean  v0, v2, LX/A4m;->A0X:Z
+    00ee..00f2  move/from16  v0, v44
+    00f2..00f6  iput-boolean  v0, v2, LX/A4m;->A0T:Z
+    00f6..00fa  iput-object  v10, v2, LX/A4m;->A0J:Ljava/lang/Integer;
+    00fa..00fe  move-wide/from16  v0, v30
+    00fe..0102  iput-wide  v0, v2, LX/A4m;->A09:J
+    0102..0104  return-void
+.end method
+
+=== mex-long-parser-catches.txt ===
+
+# class: LX/0Gv;
+# extends: Ljava/lang/Object;
+
+.method public A01(JLJ)  # .registers 4
+    0000..0006  invoke-static  {v1}, Landroid/text/TextUtils;->isEmpty(ZL)
+    0006..0008  move-result  v0
+    0008..000c  if-eqz  v0, +0x3
+    000c..000e  return-wide  v2
+    000e..0014  invoke-static  {v1}, Ljava/lang/Long;->parseLong(JL)
+    0014..0016  move-result-wide  v0
+    0016..0018  return-wide  v0
+    0018..001a  return-wide  v2
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/NumberFormatException; code_units 0007..000c -> 000c
+.end method
+
+
+=== mex-nested-model-catches.txt ===
+
+# class: LX/LbE;
+# extends: Ljava/lang/Object;
+
+.method public A04(LLL)  # .registers 9
+    0000..0002  const/4  v5, #0x0
+    0002..0004  const/4  v4, #0x1
+    0004..0008  iget-object  v0, v6, LX/LbE;->A00:Lorg/json/JSONObject;
+    0008..000e  invoke-virtual  {v0, v8}, Lorg/json/JSONObject;->optJSONObject(LL)
+    000e..0010  move-result-object  v3
+    0010..0012  const/4  v2, #0x0
+    0012..0016  if-nez  v3, +0x3
+    0016..0018  return-object  v2
+    0018..001c  new-array  v1, v4, [Ljava/lang/Class;
+    001c..0020  const-class  v0, Lorg/json/JSONObject;
+    0020..0024  aput-object  v0, v1, v5
+    0024..002a  invoke-virtual  {v7, v1}, Ljava/lang/Class;->getConstructor(LL)
+    002a..002c  move-result-object  v1
+    002c..0030  new-array  v0, v4, [Ljava/lang/Object;
+    0030..0034  aput-object  v3, v0, v5
+    0034..003a  invoke-virtual  {v1, v0}, Ljava/lang/reflect/Constructor;->newInstance(LL)
+    003a..003c  move-result-object  v0
+    003c..0040  check-cast  v0, LX/LbE;
+    0040..0042  return-object  v0
+    0042..0044  move-exception  v0
+    0044..0048  sput-object  v0, LX/LbE;->A02:Ljava/lang/Exception;
+    0048..004a  return-object  v2
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/IllegalAccessException; code_units 000c..0021 -> 0021
+    # catch Ljava/lang/NoSuchMethodException; code_units 000c..0021 -> 0021
+    # catch Ljava/lang/InstantiationException; code_units 000c..0021 -> 0021
+    # catch Ljava/lang/reflect/InvocationTargetException; code_units 000c..0021 -> 0021
+.end method
+
+
+0Xo.A03 inspected with --exceptions: no local try_item ranges. Its full
+method body is preserved in mex-group-converter-evidence.txt; this does not
+claim absence of caller-level exception handling.
+
+=== ADv.A0B description metadata producer ===
+.method public A0B(LL)  # .registers 11
+    0000..0004  const-string  v1, "description"
+    0004..0008  const-class  v0, LX/8yf;
+    0008..000e  invoke-virtual  {v10, v0, v1}, LX/LbE;->A04(LLL)
+    000e..0010  move-result-object  v3
+    0010..0014  if-eqz  v3, +0x4b
+    0014..0018  const-string  v4, "id"
+    0018..001e  invoke-virtual  {v3, v4}, LX/LbE;->A0E(LL)
+    001e..0020  move-result-object  v7
+    0020..0024  const-string  v0, "creation_time"
+    0024..002a  invoke-virtual  {v3, v0}, LX/LbE;->A0E(LL)
+    002a..002c  move-result-object  v2
+    002c..0030  const-wide/16  v0, #0x0
+    0030..0036  invoke-static  {v2, v0, v1}, LX/0Gv;->A01(JLJ)
+    0036..0038  move-result-wide  v9
+    0038..003c  const-string  v2, "creator"
+    003c..0040  const-class  v1, LX/8ye;
+    0040..0046  invoke-virtual  {v3, v1, v2}, LX/LbE;->A04(LLL)
+    0046..0048  move-result-object  v0
+    0048..004a  const/4  v5, #0x0
+    004a..004e  if-eqz  v0, +0x2c
+    004e..0054  invoke-virtual  {v0, v4}, LX/LbE;->A0E(LL)
+    0054..0056  move-result-object  v0
+    0056..005a  if-eqz  v0, +0x26
+    005a..0060  invoke-static  {v0}, LX/8kU;->A0d(LL)
+    0060..0062  move-result-object  v6
+    0062..0066  const-string  v0, "value"
+    0066..006c  invoke-virtual  {v3, v0}, LX/LbE;->A0F(LL)
+    006c..006e  move-result-object  v8
+    006e..0074  invoke-virtual  {v3, v1, v2}, LX/LbE;->A04(LLL)
+    0074..0076  move-result-object  v1
+    0076..007a  if-eqz  v1, +0x10
+    007a..007e  const-string  v0, "pn"
+    007e..0084  invoke-virtual  {v1, v0}, LX/LbE;->A0E(LL)
+    0084..0086  move-result-object  v1
+    0086..008a  if-eqz  v1, +0x8
+    008a..008e  sget-object  v0, Lcom/whatsapp/infra/core/jid/PhoneUserJid;->Companion:LX/0D9;
+    008e..0094  invoke-virtual  {v0, v1}, LX/0D9;->A04(LL)
+    0094..0096  move-result-object  v5
+    0096..009a  new-instance  v4, LX/0lV;
+    009a..00a0  invoke-direct/range  {v4..v10}, LX/0lV;-><init>(VLLLLJ)
+    00a0..00a2  return-object  v4
+    00a2..00a4  move-object  v6, v5
+    00a4..00a6  goto  -0x21
+    00a6..00aa  sget-object  v0, LX/0lV;->A05:LX/0lV;
+    00aa..00ac  return-object  v0
+.end method
