@@ -208,6 +208,20 @@ Group management over the durable action queue (offline; a session transmits)
 Usage: whatsapp-cli group [OPTIONS]...
 ```
 
+## whatsapp-cli group fanout-inspect
+
+Inspect saved group fan-out counts offline; does not query or queue
+
+```
+Usage: whatsapp-cli group fanout-inspect [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --chat | CHAT | yes |  |  |  |  |
+| --own | OWN | yes |  |  |  | Own primary identity in the group's PN/LID form |
+| --hash | HASH | no |  |  | `true`, `false` | Explicitly reveal the private candidate participant hash |
+
 ## whatsapp-cli group create
 
 Queue a group creation with the given subject and participants

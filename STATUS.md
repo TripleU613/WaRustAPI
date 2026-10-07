@@ -1,12 +1,20 @@
 # Status — 2026-10-07
 
+Group hash inventory (2026-10-07, offline): saved recipient companions now
+contribute to the candidate V2 hash, alongside the known own primary. Previously
+they could be addressed but omitted from phash. New group fanout-inspect shows
+redacted input counts and own inventory unknown; explicit --hash reveals the
+candidate. Complete own-account device sync, active feature selection and live
+companion-group sending remain unverified. The 34-method group snapshot compares
+in 0.045388 seconds. [Evidence and limits](docs/protocol/groups.md#saved-device-hash-planning-2026-10-07).
+
 Participant hashing/cache trace (2026-10-07, offline): APK 37.71 confirms
 UTF-16 ordering, V2 literal agent zero and feature-gated V3 no-agent hashing.
 Pure Rust hashing and offline inspection match 684 executed host-Java reference
 modes; default xtask feature-gating is fixed. Existing member updates preserve
 devices; traced cache/alias writes do not prove a database transaction.
-Automatic group sends still use V2 primary-member hashing before device
-resolution; complete inventory and active feature selection remain unfinished.
+Automatic sends remain V2; the subsequent correction includes saved recipient
+devices. Own inventory and active feature selection remain unfinished.
 The expanded 86-method snapshot compares in 0.052231 seconds. No account state
 or live operation changed. [Evidence and limits](docs/protocol/groups.md#participant-cache-and-versioned-hashes-2026-10-07).
 

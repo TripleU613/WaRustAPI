@@ -200,7 +200,7 @@
         "whatsapp_api::transport::participant_hash::DeviceParticipantHashVersion",
         "whatsapp_api::transport::groups::sender_key_stanza"
       ],
-      "description": "Offline explicit private hash inspection, no HTTP route/account access/live feature selection or snapshot mutation. --input is a UTF-8 JSON array of strings, local limit 64 KiB/1024 entries; malformed/type/entry/address errors are content-free and produce no partial stdout. --version is required 1,2,3. V1 hashes supplied raw strings using SHA-1; V2/V3 parse the existing Rust Jid model and hash interpreted user/device/server components with SHA-256. V2 always renders user.0:device@server (literal agent zero); V3 renders user:device@server. Java UTF-16 sorting, concatenation without separators, first six digest bytes, standard Base64 and version prefix. Default collection mode preserves repeated entries, including distinct agents that render identically. --as-set explicitly prepares unique raw strings for V1 or unique Rust model addresses for V2/V3; this models producer preparation, not APK DeviceJid subtype/equality or complete membership validation. Output offline_only=true, version string, as_set boolean, input_count/hashed_count and explicit hash; never raw identifiers. Pure hashes are available without messaging crypto features in transport::participant_hash and re-exported from transport::groups for compatibility. Existing participant_hash_v2 convenience helper prepares a Rust address set then invokes the corrected V2 collection helper. New enum V2/V3 does not assert current feature 0x415b; automatic group sends retain V2. Explicit sender_key_stanza phash now accepts prefixes 1/2/3 with colon/maximum 32 bound; no new automatic sending or full Base64 validation is claimed. Existing primary-member runtime hash inventory has not been replaced with the APK cached complete device set; that integration remains unfinished. UTF-8 encoding assumption/host Java 114-case/684-vector reference is not Android execution or strict APK JID validation. Source APK 37.71 1jL.A02/A05/A0N/A0O, AzR.A03, Ayj.A18/A19, DeviceJid.getRawStringWithNoAgent. Evidence docs/protocol/groups.md#participant-cache-and-versioned-hashes-2026-10-07."
+      "description": "Offline explicit private hash inspection, no HTTP route/account access/live feature selection or snapshot mutation. --input is a UTF-8 JSON array of strings, local limit 64 KiB/1024 entries; malformed/type/entry/address errors are content-free and produce no partial stdout. --version is required 1,2,3. V1 hashes supplied raw strings using SHA-1; V2/V3 parse the existing Rust Jid model and hash interpreted user/device/server components with SHA-256. V2 always renders user.0:device@server (literal agent zero); V3 renders user:device@server. Java UTF-16 sorting, concatenation without separators, first six digest bytes, standard Base64 and version prefix. Default collection mode preserves repeated entries, including distinct agents that render identically. --as-set explicitly prepares unique raw strings for V1 or unique Rust model addresses for V2/V3; this models producer preparation, not APK DeviceJid subtype/equality or complete membership validation. Output offline_only=true, version string, as_set boolean, input_count/hashed_count and explicit hash; never raw identifiers. Pure hashes are available without messaging crypto features in transport::participant_hash and re-exported from transport::groups for compatibility. Existing participant_hash_v2 convenience helper prepares a Rust address set then invokes the corrected V2 collection helper. New enum V2/V3 does not assert current feature 0x415b; automatic group sends retain V2. Explicit sender_key_stanza phash now accepts prefixes 1/2/3 with colon/maximum 32 bound; no new automatic sending or full Base64 validation is claimed. The planner now includes saved recipient devices and its known own primary; full own-companion inventory/account synchronization remains unfinished. group fanout-inspect exposes saved input counts and unknowns offline; active feature negotiation remains unfinished. UTF-8 encoding assumption/host Java 114-case/684-vector reference is not Android execution or strict APK JID validation. Source APK 37.71 1jL.A02/A05/A0N/A0O, AzR.A03, Ayj.A18/A19, DeviceJid.getRawStringWithNoAgent. Evidence docs/protocol/groups.md#participant-cache-and-versioned-hashes-2026-10-07."
     }
   ],
   "info": {
@@ -4778,6 +4778,76 @@
         "x-library": [
           "whatsapp_api::transport::inbox::reproject",
           "whatsapp_api::transport::history_notice::decode_for_stanza"
+        ]
+      }
+    },
+    "/v1/groups/fanout-inspect": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Inspect saved group fan-out and hash input counts offline",
+        "operationId": "groupFanoutInspect",
+        "x-cli": "whatsapp-cli group fanout-inspect",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "x-secret-input": true,
+        "description": "Offline saved-state inspection; no HTTP handler, request, queued action, snapshot projection or send. --chat and --own are required; own is the primary identity in the group's PN/LID addressing form. Output offline_only, addressing_mode, recipients, devices, without_device_list, own_devices_unknown, participant_hash_version=2 and participant_hash_device_count; identifiers are not echoed. --hash explicitly adds the private candidate participant_hash. Missing snapshot, mixed membership, absent own membership, wrong addressing form, no recipient devices or a foreign saved device list refuse with content-free diagnostics. APK 37.71 1jL.A0N/A0O -> AzR.A03 hashes cached device sets. The planner now hashes saved recipient devices plus the known own primary, instead of primary members alone. A missing recipient list contributes its primary placeholder for partial-plan diagnostics; live lab sends refuse any missing recipient list. Own companions/account sync remain unknown and are not invented through contact usync. Hash input count does not establish complete verified inventory; the currently selected version stays V2, with active feature 0x415b unknown. Saved device verification/filtering is unchanged; no dropped/unverified advertised companions are manufactured. Group-send device queries now use APK message context instead of interactive. Status fan-out reuses the planner but still emits no phash. Normal public outbox full group fan-out and complete own-device coverage remain unfinished; no live validation is claimed. Source/reproduction docs/protocol/groups.md#saved-device-hash-planning-2026-10-07.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          },
+          {
+            "name": "chat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Jid"
+            }
+          },
+          {
+            "name": "own",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Jid"
+            }
+          },
+          {
+            "name": "hash",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Redacted saved fan-out counts; optional explicitly requested private hash"
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::group_send::plan",
+          "whatsapp_api::transport::group_send::FanoutPlan"
         ]
       }
     },

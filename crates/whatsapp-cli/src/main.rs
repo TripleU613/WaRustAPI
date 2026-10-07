@@ -830,6 +830,17 @@ enum ContactsCmd {
 #[derive(Subcommand)]
 #[cfg(feature = "experimental-transport")]
 enum GroupCmd {
+    /// Inspect saved group fan-out counts offline; does not query or queue.
+    FanoutInspect {
+        #[arg(long)]
+        chat: String,
+        /// Own primary identity in the group's PN/LID form.
+        #[arg(long)]
+        own: String,
+        /// Explicitly reveal the private candidate participant hash.
+        #[arg(long)]
+        hash: bool,
+    },
     /// Queue a group creation with the given subject and participants.
     Create {
         #[arg(long)]

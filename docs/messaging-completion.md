@@ -1510,3 +1510,13 @@ still hash primary members before resolving devices; complete own/companion
 inventory, durable group application and live MEX settlement remain unfinished.
 No cross-device checklist item is closed by this offline chunk.
 [Sources and reproducible inspection](protocol/groups.md#participant-cache-and-versioned-hashes-2026-10-07).
+
+
+2026-10-07 saved-device hash correction: group planning now includes retained
+recipient companions in the V2 candidate hash plus known own primary; missing
+recipient lists remain a send refusal. group fanout-inspect reports counts and
+own inventory unknown offline, with optional explicitly revealed hash. APK
+send-job hash consumer and message-specific cache branches are traced separately.
+Full own-device/account sync, normal public-outbox group fan-out and live
+companion-group validation remain unfinished; item 8 stays open.
+[Evidence and inspection](protocol/groups.md#saved-device-hash-planning-2026-10-07).

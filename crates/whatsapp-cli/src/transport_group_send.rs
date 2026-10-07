@@ -87,7 +87,7 @@ async fn fetch_devices(
     for recipient in recipients {
         devices::request_sync(store, Some(own), recipient, None, "group-send")?;
     }
-    let Some((query, node)) = devices::begin_query(store, SyncContext::Interactive)? else {
+    let Some((query, node)) = devices::begin_query(store, SyncContext::Message)? else {
         return Ok(());
     };
     write_node(channel, &node).await?;
@@ -237,9 +237,11 @@ pub(super) async fn send(
     fetch_devices(store, channel, &own, &members).await?;
     let plan = group_send::plan(store, chat, &own)?;
     println!(
-        "group-send: chat addressing_mode={}, phash={}, recipients={}, devices={}, without_device_list={}",
+        "group-send: chat addressing_mode={}, phash={}, hash_devices={}, own_devices_unknown={}, recipients={}, devices={}, without_device_list={}",
         plan.addressing_mode,
         plan.participant_hash,
+        plan.participant_hash_device_count,
+        plan.own_devices_unknown,
         plan.recipients.len(),
         plan.devices.len(),
         plan.without_device_list.len()

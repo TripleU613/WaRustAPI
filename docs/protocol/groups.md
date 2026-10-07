@@ -2609,3 +2609,119 @@ not upstream changes. Manifest/inventory/tokens remain unchanged. The
 ignored baseline Git **875ed8f**. Owners connect the selected hash methods to
 the pure module. String-free cache/ordinal helpers still need manual relocation;
 complete APK/native coverage and automatic release remapping remain unfinished.
+
+
+## Saved device hash planning (2026-10-07)
+
+**Confirmed static, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Versioned selected sources](apk/2.26.37.71-groups/targets.json) preserve the
+following getters, hash namespace selection and outgoing caller branches.
+
+`1jL.A0I/A0K` return cached non-PN/PN device hashes under A0G's monitor;
+A0J/A0L lazily hash raw non-PN/PN user keys under A09. `0bA.A0H(group, lid)`
+selects A0I for true, A0K for false; A0I(group, lid) selects the corresponding
+user getters A0J/A0L. This connects the prior device/user cache trace to actual
+hash lookup rather than treating the names as proof.
+
+In `SendE2EMessageJob.A06` +0698..06da, the one-to-one-on-phash-mismatch branch
+loads useParticipantUserHash, useLidForEncryption and both stored hash strings.
+At +08e6..094e, a qualifying group without an explicit participant and with
+A03 false compares either the current user hash against groupParticipantUserHash
+or current device hash against groupParticipantHash. On mismatch it invokes the
+DVd callback and chooses a different encryption-mode result; exact callback
+side effects and complete mode meanings remain **unknown**, not a server reset
+or permission to replay. At +1300 and +13bc..13ca, the outgoing phash attribute
+uses the stored **groupParticipantHash**, not the separate user-hash string.
+The mismatch gate does not automatically rewrite that field.
+
+**Confirmed negative boundary:** `DNu.run` +2d88..2dc4 does not simply hash
+current group membership. Ayp.A0c obtains `0Z4.A02(message)`, 6ak.A1J copies
+that set, DNu.A00 adds Apw plus a gated 8nJ-selected set, and AzR.A03 hashes it.
+The neighboring branch +2cd4..2d18 computes the separate user hash after 0DE.A0F.
+The complete A0e/message-branch conditions, Apw device subtype and 8nJ gates
+are not fully traced. Ceo.A00 likewise uses explicit A0c targets when present,
+otherwise reads 0Z4.A02. These are message-specific inputs, not evidence to
+reuse receipt-cache rows as a fresh contact resolver.
+
+`0Z4.A02` feature 0x4731 true calls 0Z5.A05(message), which copies keys from
+its 7hf cache; false calls 0Z5.A0O(message key). The latter is **abstract** in
+0Z5: this search does not establish its concrete implementation. Previous
+receipt-device table findings remain scoped; these selected helpers do not
+prove fresh complete group/own inventory. The three direct callers of
+0bA.A0H found across the APK are status job parameters, the multi-device session
+requirement and SendE2EMessageJob.A06; getters' six caller records each also
+include cache refresh/equality/hashCode/toString. These searches establish
+reachable consumers, not successful live fan-out.
+
+A separate explored `1jL.A0W` clears the PN map and copies only entries passing
+0DE.A0e; other entries log the selected “trying to add a lid participant” error
+and skip. It does not refresh hashes in this method. This is not the earlier
+A04 diagnostic, nor proof that all group conversion forbids LIDs.
+[Exact A0W and abstract-method negative evidence](group-device-selection-boundaries.txt).
+
+**Observed local bug:** the planner already addressed saved recipient companion
+devices but computed phash over only primary member addresses. A two-member
+synthetic group with one recipient companion therefore had two hash inputs
+but three known device addresses. Corrected `group_send::plan` now hashes
+saved recipient devices plus its known own primary, with model-address set
+preparation before V2 rendering. Independent Python SHA-256/Base64 gives
+`2:Fhoy7LxL` for own .0:0 plus peer .0:0 and .0:3, versus primary-only
+`2:79jEAyGD`. A saved companion addition changes the candidate hash; reordered
+or repeated identical devices do not. Primary-only historical vectors retain
+the same hash. This implements the cached-recipient portion of the APK device
+hash requirement, **not complete own-account inventory**.
+
+Own companion fan-out remains unknown; own_devices_unknown is still true.
+No contact-usync query invents own-account coverage. A missing recipient list
+contributes only its primary placeholder to the partial diagnostic plan and
+remains in without_device_list; the send caller refuses that list before
+reserving/transmitting the message. A foreign owner/device in a saved member
+list now refuses with a content-free diagnostic rather than hashing/addressing
+another user. Signed-list verification and filtered-out advertised companions
+are unchanged. The model uses saved retained devices; a list's presence alone
+does not prove all advertised devices were verified or all account inventory
+is current. Active feature 0x415b remains unknown; automatic hashes stay V2.
+Status planning shares the candidate calculation but the status stanza still
+emits no phash. Full normal public-outbox group fan-out remains unfinished.
+
+**Implemented offline inspection:**
+
+```sh
+whatsapp-cli --profile <saved-profile> group fanout-inspect --chat <saved-group-jid> --own <own-pn-or-lid>
+```
+
+This reads existing snapshots/lists without applying replies, queueing queries,
+reserving sends or contacting WhatsApp. It emits offline_only, addressing_mode,
+recipients, devices, without_device_list, own_devices_unknown,
+participant_hash_version and participant_hash_device_count. Required own must
+match the group's addressing form and membership. Default output hides
+identifiers and the candidate hash; `--hash` explicitly reveals only the private
+candidate hash. No-device/snapshot/addressing failures remain distinguishable
+content-free diagnostics; invalid supplied addresses are not echoed. Existing
+live lab group-send logs now show hash-device count and own inventory unknown.
+Its device query uses the already traced APK message sync context rather than
+interactive, for both group and status send preparation. This is a request
+context correction, not a new retry or server requirement.
+
+**Unknown / unverified:** own account-sync device inventory and fan-out,
+full fresh-vs-retry producer selection, APK concrete abstract-method branch,
+active hash feature, full durable group application and live corrected
+companion-group sending. No canonical account was opened or mutated and no
+new send ID, registration request or live message was generated in this chunk.
+
+**Observed validation:** 639 workspace all-feature tests, 24 default CLI tests,
+strict workspace Clippy, warning-free Rustdoc, formatting and regenerated CLI
+reference passed. Actual CLI execution on an isolated encrypted synthetic store
+reported one recipient, two target devices and three hash inputs; default output
+had no identifiers/hash, --hash returned 2:Fhoy7LxL, repeated inspection retained
+its counts, and a malformed private address refused without partial stdout or
+value echo. No canonical account was opened. Repository hygiene checked 637
+local links and 2405965 bytes across all four independent checksum bundles.
+
+The group snapshot expands from 20 to **34 selected methods / 39 files /
+773068 bytes**, preserving all twenty older method texts. Fourteen source
+coverage additions are not upstream protocol changes. Its [cached diff](apk/group-device-inventory-diff.json)
+took **0.045388 seconds**, against ignored baseline Git **0e216b2**.
+Manifest/inventory/tokens remain unchanged; string-free helpers retain explicit
+manual relocation requirements. Complete APK/native remapping is still unfinished.

@@ -43,10 +43,10 @@
 //!
 //! ## The participant hash
 //!
-//! Settled on 2026-09-22 against the `phash` the server returned in the `ack`
-//! for our first fan-out: it covers **every member including the sender**, in
-//! the AD JID form, under SHA-256. See
-//! [`super::groups::participant_hash_v2`].
+//! APK 37.71 `1jL.A0N/A0O -> AzR.A03` hashes cached device sets, not
+//! just primary member addresses. Hash the saved recipient device lists and
+//! our known primary. Own companion inventory is still unresolved; the
+//! historical primary-only server ACK did not prove complete inventory parity.
 //!
 //! ## Still unknown
 //!
@@ -171,10 +171,13 @@ pub struct FanoutPlan {
     /// Always true: whether our own companion devices belong in the fan-out was
     /// not established, and this account has none to observe it with.
     pub own_devices_unknown: bool,
-    /// The version 2 participant hash over the whole membership, us included.
-    /// See [`super::groups::participant_hash_v2`] for how its construction was
-    /// established against a value the server itself returned.
+    /// V2 hash of saved recipient devices plus our known primary. A missing
+    /// recipient list contributes its primary only; callers must check
+    /// without_device_list before sending. Own companions remain unknown.
     pub participant_hash: String,
+    /// Unique device addresses hashed, including our primary and any missing
+    /// recipient's primary placeholder; not proof of complete inventory.
+    pub participant_hash_device_count: usize,
 }
 
 /// Build the fan-out plan for `chat` from the saved group snapshot and the
@@ -263,13 +266,6 @@ fn plan_over(
     if !members.contains(&own) {
         return Err(invalid("we are not a member of this group"));
     }
-    // The hash covers every member, the sender included, before we drop
-    // ourselves from the recipient list.
-    // This planner still hashes primary-member addresses. APK 37.71
-    // 1jL.A0N/A0O -> AzR.A03 instead hash complete cached device sets.
-    // Companion/own-device inventory integration remains unported; see
-    // docs/protocol/groups.md participant cache/versioned hash trace.
-    let participant_hash = super::groups::participant_hash_v2(&members);
     let mut recipients: Vec<Jid> = members.into_iter().filter(|j| *j != own).collect();
     recipients.sort_by_key(Jid::to_string);
     recipients.dedup();
@@ -277,13 +273,28 @@ fn plan_over(
         return Err(invalid("the group has no other member to address"));
     }
     let mut devices = Vec::new();
+    // APK 37.71 1jL.A0N/A0O gather stored device values before AzR.A03.
+    // Our primary is known; own companions require the unported account-sync
+    // inventory. Do not turn that unknown into an invented contact usync.
+    let mut hash_devices = vec![own.clone()];
     let mut without_device_list = Vec::new();
     for recipient in &recipients {
         match super::devices::device_list(store, recipient)? {
             Some(list) if !list.devices.is_empty() => {
+                if list.owner != *recipient
+                    || list.devices.iter().any(|d| d.jid.to_non_ad() != *recipient)
+                {
+                    return Err(invalid("saved device list does not belong to its member"));
+                }
+                hash_devices.extend(list.devices.iter().map(|d| d.jid.clone()));
                 devices.extend(list.devices.iter().map(|d| d.jid.clone()));
             }
-            _ => without_device_list.push(recipient.clone()),
+            _ => {
+                // Preserve partial-plan diagnostics; the send caller refuses
+                // missing recipient lists before any message reservation.
+                hash_devices.push(recipient.clone());
+                without_device_list.push(recipient.clone());
+            }
         }
     }
     // Group by identity first, then by device index, so the primary of each
@@ -295,6 +306,10 @@ fn plan_over(
             "no member has a saved device list; run a usync devices query first",
         ));
     }
+    hash_devices.sort();
+    hash_devices.dedup();
+    let participant_hash = super::groups::participant_hash_v2(&hash_devices);
+    let participant_hash_device_count = hash_devices.len();
     Ok(FanoutPlan {
         chat: chat.clone(),
         addressing_mode,
@@ -304,6 +319,7 @@ fn plan_over(
         without_device_list,
         own_devices_unknown: true,
         participant_hash,
+        participant_hash_device_count,
     })
 }
 
@@ -405,22 +421,64 @@ mod tests {
         );
         assert!(plan.without_device_list.is_empty());
         assert!(plan.own_devices_unknown);
-        // The hash covers the whole membership, us included — that is the part
-        // the server's own value settled, and dropping ourselves would silently
-        // produce a different one.
-        assert_eq!(
-            plan.participant_hash,
-            super::super::groups::participant_hash_v2(&[
-                jid("111111111111111@lid"),
-                jid("222222222222222@lid"),
-            ])
-        );
-        assert_ne!(
-            plan.participant_hash,
-            super::super::groups::participant_hash_v2(&[jid("222222222222222@lid")])
-        );
+        // Independent Python hashlib SHA-256 vector: sorted
+        // own.0:0 + peer.0:0 + peer.0:3. The companion must be hashed even
+        // though the member snapshot contains only the peer's user address.
+        assert_eq!(plan.participant_hash, "2:Fhoy7LxL");
+        assert_eq!(plan.participant_hash_device_count, 3);
+        assert_ne!(plan.participant_hash, "2:79jEAyGD");
         // We never address ourselves.
         assert!(!plan.devices.iter().any(|d| d.to_non_ad() == own));
+    }
+
+    #[test]
+    fn plan_hash_tracks_saved_device_changes_without_addressing_own_primary() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("p.redb"));
+        let chat = jid("120363000000000001@g.us");
+        let own = jid("111111111111111@lid");
+        save_group(
+            &store,
+            "120363000000000001@g.us",
+            &["111111111111111@lid", "222222222222222@lid"],
+        );
+        save_devices(&store, "222222222222222@lid", &["222222222222222@lid"]);
+        let first = plan(&store, &chat, &own).unwrap();
+        assert_eq!(first.participant_hash, "2:79jEAyGD");
+        assert_eq!(first.participant_hash_device_count, 2);
+        save_devices(
+            &store,
+            "222222222222222@lid",
+            &[
+                "222222222222222:3@lid",
+                "222222222222222@lid",
+                "222222222222222:3@lid",
+            ],
+        );
+        let changed = plan(&store, &chat, &own).unwrap();
+        assert_eq!(changed.participant_hash, "2:Fhoy7LxL");
+        assert_eq!(changed.participant_hash_device_count, 3);
+        assert_eq!(changed.devices.len(), 2);
+        assert_eq!(changed.recipients, first.recipients);
+        assert!(changed.own_devices_unknown);
+        assert!(!changed.devices.contains(&own));
+    }
+
+    #[test]
+    fn plan_refuses_foreign_devices_in_a_saved_member_list() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("p.redb"));
+        let chat = jid("120363000000000001@g.us");
+        let own = jid("111111111111111@lid");
+        save_group(
+            &store,
+            "120363000000000001@g.us",
+            &["111111111111111@lid", "222222222222222@lid"],
+        );
+        save_devices(&store, "222222222222222@lid", &["333333333333333:3@lid"]);
+        let error = plan(&store, &chat, &own).unwrap_err().to_string();
+        assert!(error.contains("saved device list does not belong to its member"));
+        assert!(!error.contains("333333333333333"));
     }
 
     /// A member whose devices we never fetched is reported, not silently

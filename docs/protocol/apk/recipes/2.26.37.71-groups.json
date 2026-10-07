@@ -218,6 +218,125 @@
         "crates/whatsapp-api/src/transport/groups.rs",
         "crates/whatsapp-api/src/transport/connection.rs"
       ]
+    },
+    "group-device-hash-other-read": {
+      "class": "LX/1jL;",
+      "method": "A0I",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ]
+    },
+    "group-user-hash-other-read": {
+      "class": "LX/1jL;",
+      "method": "A0J",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ]
+    },
+    "group-device-hash-pn-read": {
+      "class": "LX/1jL;",
+      "method": "A0K",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ]
+    },
+    "group-user-hash-pn-read": {
+      "class": "LX/1jL;",
+      "method": "A0L",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ]
+    },
+    "group-device-hash-namespace": {
+      "class": "LX/0bA;",
+      "method": "A0H",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ]
+    },
+    "group-user-hash-namespace": {
+      "class": "LX/0bA;",
+      "method": "A0I",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ]
+    },
+    "group-message-device-read": {
+      "class": "LX/Ayp;",
+      "method": "A0c",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ]
+    },
+    "group-device-set-copy": {
+      "class": "LX/6ak;",
+      "method": "A1J",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ]
+    },
+    "group-message-device-source": {
+      "class": "LX/0Z4;",
+      "method": "A02",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ]
+    },
+    "group-message-device-cache": {
+      "class": "LX/0Z5;",
+      "method": "A05",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ]
+    },
+    "group-send-runnable": {
+      "class": "LX/DNu;",
+      "method": "run",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ]
+    },
+    "group-send-own-device-add": {
+      "class": "LX/DNu;",
+      "method": "A00",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ]
+    },
+    "group-send-device-params": {
+      "class": "LX/Ceo;",
+      "method": "A00",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "anchors": [
+        "SendMessageRunnable/getRecipientDevices/"
+      ]
+    },
+    "group-send-job-hash-check": {
+      "class": "Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;",
+      "method": "A06",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "anchors": [
+        "phash",
+        "addressing_mode"
+      ]
     }
   }
 }

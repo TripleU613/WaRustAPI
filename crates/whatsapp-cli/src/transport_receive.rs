@@ -1871,6 +1871,26 @@ fn mask_number_in(text: &str) -> String {
 
 /// Group management: every subcommand queues one action (a session
 /// transmits it) except `list`, which also ingests historical replies and prints snapshots.
+fn fanout_inspection(
+    plan: &whatsapp_api::transport::group_send::FanoutPlan,
+    reveal_hash: bool,
+) -> serde_json::Value {
+    let mut output = serde_json::json!({
+        "offline_only": true,
+        "addressing_mode": plan.addressing_mode,
+        "recipients": plan.recipients.len(),
+        "devices": plan.devices.len(),
+        "without_device_list": plan.without_device_list.len(),
+        "own_devices_unknown": plan.own_devices_unknown,
+        "participant_hash_version": "2",
+        "participant_hash_device_count": plan.participant_hash_device_count,
+    });
+    if reveal_hash {
+        output["participant_hash"] = serde_json::json!(plan.participant_hash);
+    }
+    output
+}
+
 pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error> {
     use whatsapp_api::model::jid::Jid;
     use whatsapp_api::transport::groups;
@@ -1890,6 +1910,23 @@ pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error
         Ok(())
     };
     match cmd {
+        super::GroupCmd::FanoutInspect { chat, own, hash } => {
+            let parse = |value: &str| {
+                Jid::parse(value)
+                    .map_err(|_| Error::invalid("group_send", "invalid inspection address"))
+            };
+            let plan =
+                whatsapp_api::transport::group_send::plan(&store, &parse(chat)?, &parse(own)?)?;
+            let output = fanout_inspection(&plan, *hash);
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&output).map_err(|_| Error::invalid(
+                    "group_send",
+                    "cannot encode fan-out inspection"
+                ))?
+            );
+            Ok(())
+        }
         super::GroupCmd::Create {
             subject,
             participants,
@@ -2179,6 +2216,39 @@ mod tests {
     use super::*;
     use whatsapp_api::binary::Node;
     use whatsapp_api::model::jid::Jid;
+
+    #[test]
+    fn fanout_inspection_reports_unknowns_without_identifiers_or_implicit_hash() {
+        let plan = whatsapp_api::transport::group_send::FanoutPlan {
+            chat: Jid::parse("120363000000000001@g.us").unwrap(),
+            own: Jid::parse("111111111111111@lid").unwrap(),
+            addressing_mode: "lid",
+            recipients: vec![Jid::parse("222222222222222@lid").unwrap()],
+            devices: vec![Jid::parse("222222222222222:3@lid").unwrap()],
+            without_device_list: vec![Jid::parse("333333333333333@lid").unwrap()],
+            own_devices_unknown: true,
+            participant_hash: "2:private!".into(),
+            participant_hash_device_count: 3,
+        };
+        let output = fanout_inspection(&plan, false);
+        assert_eq!(output["without_device_list"], 1);
+        assert_eq!(output["participant_hash_device_count"], 3);
+        assert_eq!(output["own_devices_unknown"], true);
+        assert!(output.get("participant_hash").is_none());
+        let rendered = output.to_string();
+        for secret in [
+            "120363000000000001",
+            "111111111111111",
+            "222222222222222",
+            "333333333333333",
+            "2:private!",
+        ] {
+            assert!(!rendered.contains(secret));
+        }
+        let explicit = fanout_inspection(&plan, true);
+        assert_eq!(explicit["participant_hash"], "2:private!");
+        assert!(!explicit.to_string().contains("111111111111111"));
+    }
 
     #[test]
     fn capture_type_preserves_apk_group_label_without_disclosing_numeric_values() {

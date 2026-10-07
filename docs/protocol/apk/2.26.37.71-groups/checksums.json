@@ -1,4 +1,20 @@
 {
+  "group-device-hash-namespace.txt": {
+    "bytes": 884,
+    "sha256": "488590a923e3ecafe9066921a44e92808ec7c58e80635d8051e529b26a341f1e"
+  },
+  "group-device-hash-other-read.txt": {
+    "bytes": 734,
+    "sha256": "49e4e8ecd67434d1b6fd67fa83e5f05661369b757db73095ea6adbfcfa7dcc07"
+  },
+  "group-device-hash-pn-read.txt": {
+    "bytes": 734,
+    "sha256": "2721d1c0b8bfe98f178fd4dfde5d3317e7e1d0e7aa99bf4b1814240b3fd70d28"
+  },
+  "group-device-set-copy.txt": {
+    "bytes": 509,
+    "sha256": "4270ac19e3fc1d44145318d3d70f65f1de16c1d9e8f56e101b9e4d3ea3cda59a"
+  },
   "group-info-dispatch.txt": {
     "bytes": 3154,
     "sha256": "82a7d735afb868f94e10348ee51174517dc8e946f98831bd53a02a7064883507"
@@ -19,6 +35,18 @@
     "bytes": 2967,
     "sha256": "5efddd10b85b8fc3d96844ccf003fe058d4b0258e97b9ded355bc2e71821e9cf"
   },
+  "group-message-device-cache.txt": {
+    "bytes": 870,
+    "sha256": "c191620e884aa262a61416eb42b1c3a271f611cb7e5d6c27d618c91aa2d132ba"
+  },
+  "group-message-device-read.txt": {
+    "bytes": 676,
+    "sha256": "7eaad7d118eb347eb2cf86b9796f802f26e244eb15940d59044bf431f13b805e"
+  },
+  "group-message-device-source.txt": {
+    "bytes": 1352,
+    "sha256": "41eaa229f87217ad06ce38097700000169267e74700ffb88c891e4874d2fb157"
+  },
   "group-notification-ack.txt": {
     "bytes": 3952,
     "sha256": "2e443505172bc6a607cabcd27ca1bedc00feb3999abf41264769517c4f775603"
@@ -30,6 +58,22 @@
   "group-refresh-job.txt": {
     "bytes": 21928,
     "sha256": "418782c1023b0fceb757ced49c7cf800901f310c360f7749f73dc7d3e97eb8ad"
+  },
+  "group-send-device-params.txt": {
+    "bytes": 1639,
+    "sha256": "bd2fac54efb66f8895044f5c80b6b9f5606b534db7dd3d55fabce97941797840"
+  },
+  "group-send-job-hash-check.txt": {
+    "bytes": 114984,
+    "sha256": "94252a6df71b9ec9fa6bad69d4c16a54d434c7ac7d6e8e94e7f992eed4f09e0e"
+  },
+  "group-send-own-device-add.txt": {
+    "bytes": 1192,
+    "sha256": "b2064840df621fcaf2cc44a34e5719b11a044a5256ed605d8e021d6042b6260f"
+  },
+  "group-send-runnable.txt": {
+    "bytes": 192029,
+    "sha256": "544a6011fe052de6579c06aeb7da4b4cd6f00dd1035087f48bdb3e48cff4fa5c"
   },
   "group-subject-cache-insert.txt": {
     "bytes": 3072,
@@ -71,6 +115,18 @@
     "bytes": 1568,
     "sha256": "5faa7151ffedcffbc3798b507c4baa59fc560a4de1e94ea8433459b9b75dfe68"
   },
+  "group-user-hash-namespace.txt": {
+    "bytes": 884,
+    "sha256": "63a8b197c9844988a60df790e212094fbf94ddc8200a5bc94e334fb677d1accf"
+  },
+  "group-user-hash-other-read.txt": {
+    "bytes": 1109,
+    "sha256": "7ab4dddbf792b3fe90c307cd67a1142e3ce0e432372e92d291e7403f3e39f96e"
+  },
+  "group-user-hash-pn-read.txt": {
+    "bytes": 1109,
+    "sha256": "66ee29534fd279bdfccd4c50f872bb0a4f7b926824d3aecac575a9cca3ac8940"
+  },
   "inventory.json": {
     "bytes": 2603,
     "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
@@ -88,8 +144,8 @@
     "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
   },
   "targets.json": {
-    "bytes": 7292,
-    "sha256": "b1d9744ffe2141ce23cc7a7698ec3c7b5125f250181012588d46c4ecd4e51dfe"
+    "bytes": 11546,
+    "sha256": "57ba4acd834bcae6411f897a0ccf85a7b514bdb459f01b8bff1bc2306e4cd1f3"
   },
   "tokens.json": {
     "bytes": 23019,

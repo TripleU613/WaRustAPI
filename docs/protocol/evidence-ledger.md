@@ -882,3 +882,26 @@ Automatic group sends still V2 primary-member hashing before device resolution.
 [Sources, reasoning, reproduction and negative boundaries](groups.md#participant-cache-and-versioned-hashes-2026-10-07).
 Snapshot: 86 methods/91 files/337088 bytes; all 66 older texts unchanged, cached
 diff 0.052231 s against 875ed8f. No account access, new numbers or live sends.
+
+
+### Saved group device hash inputs and send-job consumers (2026-10-07)
+
+**Confirmed static, APK 37.71:** 1jL.A0I/J/K/L and 0bA.A0H/I select cached
+PN/non-PN device/user hashes; SendE2EMessageJob.A06 compares separate hashes
+in its gated mismatch resolver and emits groupParticipantHash as phash.
+DNu/Ceo receipt/message-specific source branches are distinct from fresh group
+inventory; 0Z5.A0O is abstract here, concrete behavior remains unknown. A0W
+PN-map replacement skips/logs non-PN entries, does not itself refresh hashes.
+**Observed local correction:** the planner hashes saved recipient companion
+devices plus known own primary, instead of ignoring addressed companions;
+independent Python vector 2:Fhoy7LxL versus primary-only 2:79jEAyGD. Foreign
+saved devices refuse. CLI group fanout-inspect exposes counts/own unknown
+without addresses or implicit hash; --hash reveals only the requested candidate.
+Device preparation uses message context. **Unknown:** full own-device/account
+sync, fresh/retry selection, active feature and live companion send parity.
+34 group methods/39 files/773068 bytes, 20 prior texts unchanged; cached diff
+0.045388 s, baseline 0e216b2. Actual CLI checks used only an isolated encrypted synthetic store: default
+redaction, explicit hash, repeated counts and content-free refusal passed. No
+canonical account opened or live operation performed. 639 workspace tests and
+24 default CLI tests, strict Clippy/Rustdoc/reference/hygiene passed.
+[Reasoning, sources, negative results and reproduction](groups.md#saved-device-hash-planning-2026-10-07).
