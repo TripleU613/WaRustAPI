@@ -203,11 +203,47 @@ display digest differ. It does not establish all QR field assignments.
 V4 display routine `0x714c70..0x714f98` similarly uses concatenated keys from
 `+0x18`, but reads `+0x28` through the JNI-backed conversion at `0x6b7a94`
 before constructing the identifier-bound seed. V4 params constructor
-`0x71916c..0x719264` copies the supplied LID's ASCII identifier into `+0x28`
+`0x71916c..0x719264` copies the supplied LID's full ASCII JID string into `+0x28`
 and stable PN into `+0x30`, in the opposite layout to the V3 fields above.
 The exact conversion/normalization behavior was **unknown** at this checkpoint.
 The JNI callback follow-up below resolves it; this is not permission to guess
 the current account's input inventory or selected scheme.
+
+**Confirmed/static, display getter and result follow-up (37.71, same pinned
+main-library hash):** the shared getters `0x6c1e0c..0x6c1e2c` and
+`0x6c1e4c..0x6c1e6c` load `+0x18` and `+0x28` respectively. They perform no
+class check and abort on a null object. These offsets alone do not identify an
+object's type: the create routines also use them on input parameter objects.
+For display, V4 result assembly reads the two completed individual objects
+from the combined object's `+0x20`/`+0x28` at `0x7149f8..0x714a0c`, then calls
+the display routine separately. Each object's `+0x18` is therefore K and its
+`+0x28` is the copied full LID JID string. `0x714cb4..0x714cc0` converts that
+string through selector 2 before hashing the parsed LID **user**. The native
+adapter `0x6b73fc..0x6b7458` reads MCFASCIIStringGetCString and invokes JNI
+table slot `+0x538` (NewStringUTF); it does not reinterpret the ASCII object
+as a native JID. The [JNI specification](https://docs.oracle.com/en/java/javase/24/docs/specs/jni/functions.html#newstringutf)
+assigns NewStringUTF index 167; `167 * 8 = 0x538` for ARM64 pointers.
+QR tag 3 retains the full string, while decimal display uses
+the parsed user. Hashing the full QR string directly would change the number.
+
+The shared result constructor `0x715e98..0x715f34` copies QR bytes into
+`+0x18`, local display into `+0x20`, and remote display into `+0x28`; it
+preserves null displays and does not sort or join them. Java `0jc.A0U
+0138..019a` requests model fields 7/8 through jvidispatchOIO selector 2,
+requires both non-null before constructing KKq, and retains the QR model even
+when the display model is null. KKq supplies the previously traced lexical
+joining step. The native field-7/8 dispatch mapping remains **unknown**;
+the constructor layout alone does not prove it. Exact JhM/JhN class dumps
+contain only toString methods; they are comparison-result types, not display
+assemblers. No account fingerprint inventory or verification bit was inferred.
+
+Reproduce the native portions with `llvm-objdump -d` on the pinned main
+library, using ranges `--start-address=0x6c1d84 --stop-address=0x6c1e6c`,
+`0x71493c..0x714a60`, `0x6b73fc..0x6b745c`, and `0x715e98..0x715f34`.
+The existing apk-smali utility reproduces `LX/0jc; --method A0U` and the
+negative exact-class inspections `LX/JhM;` / `LX/JhN;`. Private getter/result
+dumps are retained as `native/fingerprint-shared-getters.txt` and
+`native/fingerprint-result-constructor.txt`; JhM/JhN outputs are retained too.
 
 Both display routines group the first 30 digest bytes into six five-byte
 unsigned big-endian values, reduce each modulo 100000 and format with literal

@@ -633,7 +633,7 @@ search found only this invocation (classes4.dex offset 0x6d0f20). Its state
 producer is `DUm.invokeSuspend` selector 15 (0638..073c): feature 0x729f is
 required at 0652..0662; the companion-device branch, non-0ZY target and self
 target are excluded at 0662..0696. It also runs 1lL.A00 and checks predicates
-1lL.A03/A02 (0696..06e0); those predicate meanings remain untraced. It derives
+1lL.A03/A02 (0696..06e0); the follow-up below resolves their static inputs. It derives
 the primary address, loads saved CUm.A01 through A0X (06f8..071a), loads B7D
 through A0W (071a..072a), then returns 4AH with both. Missing metadata defaults
 the boolean to false. `1xm.A1Q 0000..000c` is exactly the integer ==1 test,
@@ -671,7 +671,8 @@ minimal test DEX. The actual APK field references are verified separately by
 re-rendering the method with the rebuilt utility. These bytes are public APK
 code, not account identifiers or verification values.
 
-**Unknown:** feature 0x729f runtime state, 1lL's two exclusion predicates,
+**Unknown:** feature 0x729f runtime state, the contact-state value's meaning
+and actual exclusion-predicate inputs for this account,
 complete device-key/fingerprint inputs, companion fan-out protocol serialization,
 and UI result callback behavior after writer failure. Our account client still
 has no human verification commit API. Existing replacement history labels the
@@ -692,3 +693,86 @@ actionSeq stores with their resolved fields/registers. Formatting, 530
 workspace/all-feature tests (zero failed/ignored), strict workspace Clippy,
 CLI reference regeneration/test and repository hygiene passed. This changes
 research tooling only; no live verification claim or account mutation occurred.
+
+## Verification contact exclusions (37.71)
+
+**Confirmed/static:** the same comparison APK 2.26.37.71 (SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`)
+resolves DUm selector 15's remaining 1lL predicates. These are local UI gates,
+not server refusals or permission to synthesize contact/attestation state.
+
+| Predicate | Exact static behavior | Evidence |
+| --- | --- | --- |
+| 1lL.A00 | Resolves A07's provider and discards the result; no contact mutation is visible in this method | 0000..0010 |
+| 1lL.A03 | Returns false for null, otherwise the truth value of A04, which calls 0bo.A02 with its third argument true | A03 0000..0016; A04 0000..0028 |
+| 1lL.A02 | Requires non-self UserJid; loads contact through 0YA.A0C; returns true only for non-null 0DV.A0D.A0J whose 0lr.A01 returns true | 0000..0054 |
+| 0lr.A01 | Tests its integer A01 for equality to 2 | 0000..0010 |
+
+The contact load in A02 is dereferenced without a visible null guard before
+reading 0DV.A0D. The semantic name and producer of 0lr's value 2 remain
+**unknown**; this trace does not identify it as a hosted flag, verified bit,
+ban, or server challenge. Provider initialization side effects in 1lL.A00
+also remain unknown. The separate 1lL.A01 has an optional company-name branch
+and is not called by this DUm path; its existence does not classify the target.
+
+**Confirmed/static, hosted predicate:** 0bo.A02 first excludes self
+(0000..0022). Its PN branch (0022..00fa) may map a PhoneUserJid through
+0Xw.A0E depending on a lazy Boolean and other predicates. On a usable target,
+it locks A0B, initializes the sets when needed, then returns true if A01
+contains the target; alternatively, with the passed third argument true,
+A00 membership requires feature 0x6f6f (0100..0180). Thus 1lL.A03 checks both
+sources, not just a field on a JID. PN-mapping predicates and current feature
+values remain unknown; DUm already requires the LID class 0ZY before this call.
+
+0bo.A01 initializes A01 from 0bo.A00 and A00 from saved Signal identities
+(0000..0160). The first loader's SQL joins user_device_info to jid by
+user_jid_row_id and selects raw_string for **account_encryption_type = 1**;
+when its supplied Boolean is true it additionally requires **type != 0**.
+The query labels are GET_HOSTED_ACCOUNT_JIDS and GET_HOSTED_LID_ACCOUNT_JIDS
+(0bo.A00 005c..0096). The branch includes main-thread diagnostics, not a
+network fetch. The complete row parser below 0bp.A01 is untraced.
+
+The second set is empty without feature 0x6f6f. With that feature it calls
+0kc.A0D(C0F.A03), converts saved B76 addresses through B7H.A00 to DeviceJid
+userJid values, omits null conversions, and, when the lazy Boolean is true,
+filters out the PN type through 0DE.A0e (0bo.A01 0098..0152). The two sets
+are installed under A0B; an observer is registered once while the feature is
+active (0152..019e). Its AU2 callback/invalidation behavior is **unknown**.
+
+0kc.A0D 001c..0040 queries existing identities with:
+
+```sql
+SELECT recipient_id, recipient_type, device_id FROM identities
+WHERE account_encryption_attestation_type = ?
+```
+
+The bound value is C0F.intValue. C0F.<clinit> 0028..003c identifies A03 as
+**HYBRID_E2EE = 2**, and its constructor 0000..000c stores the third argument
+in intValue. Other values are NOT_SET=0, E2EE=1, NON_E2EE=3. These database
+attestation values are distinct from the native fingerprint QR HostedState
+enum (E2EE=0, HOSTED=1); reusing one numeric enum for the other is refuted.
+This is a stored-type query, not proof that an attestation was authenticated
+or that our current client has the necessary hosted-device inventory.
+
+Reproduce with the existing offline CLI:
+
+```sh
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/1lL;'
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/0lr;' --method A01
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/0bo;'
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/0kc;' --method A0D
+target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/C0F;'
+```
+
+Private artifacts under lab/apk-2.26.37.71 retain the scoped
+verification-contact-gates, verification-contact-kind,
+verification-hosted-predicate, verification-hosted-set-producer,
+verification-hosted-device-set, verification-hosted-identity-query,
+verification-attestation-enum and verification-attestation-enum-constructor
+smali outputs. No account records, verification metadata, key inventories or
+feature flags were changed, and no live request was made.
+
+Validation of this research checkpoint: generated CLI-reference check,
+OpenAPI library-symbol check, staged repository hygiene (299 local links)
+and diff whitespace checks passed. No Rust runtime behavior changed, so the
+workspace suite was not repeated; this is static evidence, not live validation.

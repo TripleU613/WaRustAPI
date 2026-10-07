@@ -234,3 +234,13 @@ unverified; client verification metadata remains unimplemented. Two missing
 DEX field-write mnemonics are fixed with literal APK instruction regression
 coverage. No live account operation occurred.
 [Local control evidence](docs/protocol/peer-identity.md#local-verification-control-and-captured-identity-3771).
+
+APK 37.71 manual-verification contact exclusions now resolve to a hosted-set
+predicate and a saved contact-state value ==2 (semantic name still unknown).
+Hosted device-account type 1 and identity attestation HYBRID_E2EE type 2 come
+from separate SQL sources; neither is the native QR HostedState enum. Native
+display getter tracing also confirms that QR retains the full LID JID while
+its decimal seed uses the parsed LID user. Current account inventory, active
+scheme and human-verification implementation remain incomplete. No account
+state or live request changed. See the peer-identity contact-exclusion and
+safety-number display follow-ups.

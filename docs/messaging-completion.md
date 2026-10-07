@@ -722,3 +722,10 @@ unverified; client verification metadata remains unimplemented. Two missing
 DEX field-write mnemonics are fixed with literal APK instruction regression
 coverage. No live account operation occurred.
 [Local control evidence](protocol/peer-identity.md#local-verification-control-and-captured-identity-3771).
+
+Verification gate follow-up: the hosted/contact-state exclusions and stored
+SQL sources are now traced in [peer identity](protocol/peer-identity.md#verification-contact-exclusions-3771).
+The other contact-state value's semantic name and current account gate inputs
+remain unknown. Native display/result tracing distinguishes full LID QR bytes
+from parsed-user decimal inputs and locates the Java KKq joining step; no
+current-account safety number or verification commit is implemented.
