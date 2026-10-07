@@ -260,7 +260,7 @@ fn device_query_inspection(
         Some(record) => serde_json::json!({
             "offline_only":true,"found":true,"status":record.status,
             "requested_users":record.users.len(),"ingested":record.ingested,
-            "partial_errors":record.partial_errors,"omitted_users":record.omitted_users,
+            "partial_errors":record.partial_errors,"omitted_users":record.omitted_users,"superseded_users":record.superseded_users,
             "code":record.code.as_ref().filter(|c| !c.is_empty() && c.bytes().all(|b| b.is_ascii_digit())),
         }),
     }
@@ -2257,20 +2257,28 @@ mod tests {
             ingested: 0,
             partial_errors: 0,
             omitted_users: Some(1),
+            generations: None,
+            superseded_users: None,
             requested_at: Timestamp::now(),
         };
         let out = device_query_inspection(Some(&record));
         assert_eq!(out["requested_users"], 1);
         assert_eq!(out["omitted_users"], 1);
+        assert_eq!(out["superseded_users"], serde_json::Value::Null);
+        assert!(out.get("generations").is_none());
         assert_eq!(out["code"], serde_json::Value::Null);
         for private in ["15555550101", "PRIVATE"] {
             assert!(!out.to_string().contains(private));
         }
         record.omitted_users = None;
+        record.superseded_users = Some(1);
+        record.generations = Some(vec![7]);
         record.code = Some("503".into());
         let historical = device_query_inspection(Some(&record));
         assert_eq!(historical["omitted_users"], serde_json::Value::Null);
         assert_eq!(historical["code"], "503");
+        assert_eq!(historical["superseded_users"], 1);
+        assert!(historical.get("generations").is_none());
         assert_eq!(
             device_query_inspection(None),
             serde_json::json!({"offline_only":true,"found":false})

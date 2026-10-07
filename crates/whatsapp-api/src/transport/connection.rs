@@ -304,6 +304,8 @@ pub(crate) async fn drive(
     let mut upload: Option<super::prekeys::PendingUpload> = None;
     let mut upload_rounds: u32 = 0;
     let mut device_query: Option<super::devices::DeviceQuery> = None;
+    let mut device_cursor = super::devices::DeviceSyncCursor::default();
+    let mut device_context = super::devices::SyncContext::Interactive;
     let mut outbox_tick = tokio::time::interval(Duration::from_secs(1));
     outbox_tick.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
     loop {
@@ -338,7 +340,11 @@ pub(crate) async fn drive(
                 if device_query.as_ref().is_some_and(|q| tokio::time::Instant::now() >= q.deadline) {
                     // Queries are reads: pending users stay pending for a later session.
                     tracing::warn!("device query unanswered; users remain pending");
-                    device_query = None;
+                    if let Some(query) = device_query.take() { device_cursor.defer(&query); }
+                    if let Some((query, node)) = device_cursor.begin_next(&store, device_context)? {
+                        device_query = Some(query);
+                        link.send(&node).await?;
+                    }
                 }
                 for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
                 {
@@ -422,7 +428,7 @@ pub(crate) async fn drive(
                             maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds).await?;
                         }
                         // SyncDevicesJob default preset: pending users are queried interactively.
-                        if let Some((query, node)) = super::devices::begin_query(&store, super::devices::SyncContext::Interactive)? {
+                        if let Some((query, node)) = device_cursor.begin_next(&store, device_context)? {
                             device_query = Some(query);
                             link.send(&node).await?;
                         }
@@ -439,8 +445,13 @@ pub(crate) async fn drive(
                         continue;
                     }
                     if device_query.as_ref().is_some_and(|q| q.matches(&node)) {
-                        let summary = device_query.take().expect("matched device query").ingest(&store, &node)?;
-                        tracing::info!(accepted = summary.accepted, ingested = summary.ingested, partial_errors = summary.partial_errors, omitted_users = summary.omitted_users, "device query settled");
+                        let query = device_query.take().expect("matched device query");
+                        let summary = device_cursor.settle(&query, &store, &node)?;
+                        tracing::info!(accepted = summary.accepted, ingested = summary.ingested, partial_errors = summary.partial_errors, omitted_users = summary.omitted_users, superseded_users = summary.superseded_users, "device query settled");
+                        if let Some((query, sync)) = device_cursor.begin_next(&store, device_context)? {
+                            device_query = Some(query);
+                            link.send(&sync).await?;
+                        }
                         continue;
                     }
                     if upload.as_ref().is_some_and(|u| u.matches(&node)) {
@@ -468,21 +479,24 @@ pub(crate) async fn drive(
                 if let Some(ack)=super::notifications::handle(&store, &node)? {link.send(&ack).await?;}
                 if let Some(ack)=super::groups::handle_dirty_notification(&store, &node)? {link.send(&ack).await?;}
                 if let Some(change) = super::devices::notification(&node) {
-                    // LX/11Q.A09: acknowledge after capture, then record the contact for a
-                    // device sync (LX/101.A02). Own-account changes use account sync, which is
+                    // LX/11Q.A09 / LX/101.A02: contact notifications request a device
+                    // sync. Locally persist work before ACK. Own-account changes use account sync, which is
                     // not implemented: captured and acknowledged only.
-                    link.send(&super::devices::notification_ack(&node)?).await?;
                     let own = account.own_jid.as_ref().map(|j| j.to_non_ad());
                     if own.as_ref() != Some(&change.owner) {
+                        // Capture already committed above. Record pending work
+                        // before ACK so a socket cut cannot silently lose it.
                         super::devices::request_sync(&store, own.as_ref(), &change.owner, change.device_hash.as_deref(), "notification")?;
-                        if device_query.is_none()
-                            && let Some((query, sync)) = super::devices::begin_query(&store, super::devices::SyncContext::Notification)?
-                        {
-                            device_query = Some(query);
-                            link.send(&sync).await?;
-                        }
+                        device_context = super::devices::SyncContext::Notification;
+                    }
+                    link.send(&super::devices::notification_ack(&node)?).await?;
+                    if device_query.is_none()
+                        && let Some((query, sync)) = device_cursor.begin_next(&store, device_context)? {
+                        device_query = Some(query);
+                        link.send(&sync).await?;
                     }
                 }
+
                 if let Some(low) = super::prekeys::low_count(&node) {
                     // LX/14z.A09: acknowledge after the durable capture above, then LX/14z.A02:
                     // legacy count triggers generate-if-empty and upload; pq-only takes no action.
@@ -1447,6 +1461,331 @@ mod tests {
         .unwrap();
         assert!(unsent_ids(&store).unwrap().is_empty());
         assert_eq!(summary(&store).unwrap().uncertain, 50);
+        fake.stop_cleanly().await;
+    }
+
+    fn device_reply(query: &Node, users: Vec<Jid>) -> Node {
+        Node::new("iq")
+            .attr(
+                "id",
+                query.get_attr("id").and_then(|v| v.as_text()).unwrap(),
+            )
+            .attr("type", "result")
+            .children(vec![Node::new("usync").children(vec![
+                    Node::new("list").children(
+                        users
+                            .into_iter()
+                            .map(|user| {
+                                Node::new("user").attr("jid", user).children(vec![
+                                    Node::new("devices").children(vec![
+                                        Node::new("device-list")
+                                            .children(vec![Node::new("device").attr("id", "0")]),
+                                    ]),
+                                ])
+                            })
+                            .collect(),
+                    ),
+                ])])
+    }
+
+    #[tokio::test]
+    async fn background_device_batches_advance_without_repeating_a_refused_batch() {
+        use super::super::devices::{pending_users, request_sync};
+        let dir = tempfile::tempdir().unwrap();
+        let store = registered_store(&dir.path().join("device-batches.redb"));
+        let users: Vec<Jid> = (0..130)
+            .map(|i| Jid::parse(&format!("1555555{:04}@s.whatsapp.net", i + 100)).unwrap())
+            .collect();
+        for user in &users {
+            request_sync(&store, None, user, None, "test").unwrap();
+        }
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (upload, write) = fake.written().await;
+        assert_eq!(
+            upload.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("encrypt")
+        );
+        write.send(Ok(())).unwrap();
+        let mut sizes = Vec::new();
+        let mut ids = std::collections::BTreeSet::new();
+        for index in 0..3 {
+            let (query, write) = fake.written().await;
+            assert_eq!(
+                query.get_attr("xmlns").and_then(|v| v.as_text()),
+                Some("usync")
+            );
+            let list = query.child("usync").unwrap().child("list").unwrap();
+            let targets: Vec<Jid> = list
+                .child_nodes()
+                .iter()
+                .map(|u| u.get_attr("jid").unwrap().as_jid().unwrap().clone())
+                .collect();
+            sizes.push(targets.len());
+            assert_eq!(targets, users[index * 64..((index + 1) * 64).min(130)]);
+            let id = query.get_attr("id").unwrap().as_text().unwrap().to_owned();
+            assert!(ids.insert(id.clone()));
+            write.send(Ok(())).unwrap();
+            if index == 0 {
+                fake.deliver(
+                    Node::new("iq")
+                        .attr("id", id)
+                        .attr("type", "error")
+                        .children(vec![Node::new("error").attr("code", "503")]),
+                )
+                .await;
+            } else {
+                fake.deliver(device_reply(&query, targets)).await;
+            }
+        }
+        assert_eq!(sizes, [64, 64, 2]);
+        tokio::time::timeout(Duration::from_secs(5), async {
+            while pending_users(&store).unwrap().len() != 64 {
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .unwrap();
+        assert_eq!(pending_users(&store).unwrap(), users[..64]);
+        fake.nothing_written(Duration::from_millis(300)).await;
+        fake.stop_cleanly().await;
+    }
+
+    #[tokio::test]
+    async fn newer_device_notification_survives_inflight_reply_and_gets_a_fresh_query() {
+        use super::super::devices::{pending_users, query_record, request_sync};
+        let dir = tempfile::tempdir().unwrap();
+        let store = registered_store(&dir.path().join("device-newer.redb"));
+        let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        request_sync(&store, None, &peer, Some("2:old"), "test").unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (_, write) = fake.written().await;
+        write.send(Ok(())).unwrap();
+        let (old, write) = fake.written().await;
+        write.send(Ok(())).unwrap();
+        let old_id = old.get_attr("id").unwrap().as_text().unwrap().to_owned();
+        fake.deliver(
+            Node::new("notification")
+                .attr("type", "devices")
+                .attr("id", "D-NEW")
+                .attr("from", peer.clone())
+                .children(vec![
+                    Node::new("add")
+                        .attr("device_hash", "2:new")
+                        .children(vec![Node::new("device").attr("jid", peer.with_device(3))]),
+                ]),
+        )
+        .await;
+        let (ack, write) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        write.send(Ok(())).unwrap();
+        fake.deliver(device_reply(&old, vec![peer.clone()])).await;
+        let (fresh, write) = fake.written().await;
+        assert_eq!(
+            fresh.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("usync")
+        );
+        assert_eq!(
+            fresh
+                .child("usync")
+                .unwrap()
+                .get_attr("context")
+                .and_then(|v| v.as_text()),
+            Some("notification")
+        );
+        let fresh_id = fresh.get_attr("id").unwrap().as_text().unwrap().to_owned();
+        assert_ne!(old_id, fresh_id);
+        assert_eq!(
+            query_record(&store, &old_id)
+                .unwrap()
+                .unwrap()
+                .superseded_users,
+            Some(1)
+        );
+        assert_eq!(
+            query_record(&store, &fresh_id)
+                .unwrap()
+                .unwrap()
+                .generations,
+            Some(vec![2])
+        );
+        assert_eq!(
+            pending_users(&store).unwrap().as_slice(),
+            std::slice::from_ref(&peer)
+        );
+        write.send(Ok(())).unwrap();
+        fake.deliver(device_reply(&fresh, vec![peer])).await;
+        tokio::time::timeout(Duration::from_secs(5), async {
+            while !pending_users(&store).unwrap().is_empty() {
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .unwrap();
+        assert_eq!(
+            query_record(&store, &fresh_id)
+                .unwrap()
+                .unwrap()
+                .superseded_users,
+            Some(0)
+        );
+        fake.nothing_written(Duration::from_millis(300)).await;
+        fake.stop_cleanly().await;
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn unanswered_device_batch_is_deferred_while_other_users_advance() {
+        use super::super::devices::{pending_users, query_record, request_sync};
+        let dir = tempfile::tempdir().unwrap();
+        let store = registered_store(&dir.path().join("device-timeout.redb"));
+        let users: Vec<Jid> = (0..65)
+            .map(|i| Jid::parse(&format!("1555555{:04}@s.whatsapp.net", i + 100)).unwrap())
+            .collect();
+        for user in &users {
+            request_sync(&store, None, user, None, "test").unwrap();
+        }
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (_, write) = fake.written().await;
+        write.send(Ok(())).unwrap();
+        let (first, write) = fake.written().await;
+        write.send(Ok(())).unwrap();
+        let first_id = first.get_attr("id").unwrap().as_text().unwrap().to_owned();
+        // Service keepalives while the first read remains unanswered.
+        let second = loop {
+            let (node, write) = fake.written_within(Duration::from_secs(60)).await;
+            write.send(Ok(())).unwrap();
+            if node.get_attr("xmlns").and_then(|v| v.as_text()) == Some("usync") {
+                break node;
+            }
+            assert_eq!(
+                node.get_attr("xmlns").and_then(|v| v.as_text()),
+                Some("w:p")
+            );
+            fake.deliver(
+                Node::new("iq")
+                    .attr("id", node.get_attr("id").unwrap().as_text().unwrap())
+                    .attr("type", "result"),
+            )
+            .await;
+        };
+        let targets = second
+            .child("usync")
+            .unwrap()
+            .child("list")
+            .unwrap()
+            .child_nodes();
+        assert_eq!(targets.len(), 1);
+        assert_eq!(
+            targets[0].get_attr("jid").unwrap().as_jid(),
+            Some(&users[64])
+        );
+        assert_ne!(
+            second.get_attr("id").unwrap().as_text(),
+            Some(first_id.as_str())
+        );
+        // The same heartbeat writes its ping after the newly selected batch.
+        let (ping, write) = fake.written().await;
+        assert_eq!(
+            ping.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("w:p")
+        );
+        write.send(Ok(())).unwrap();
+        fake.deliver(
+            Node::new("iq")
+                .attr("id", ping.get_attr("id").unwrap().as_text().unwrap())
+                .attr("type", "result"),
+        )
+        .await;
+        fake.deliver(device_reply(&second, vec![users[64].clone()]))
+            .await;
+        // The timeout and a late old reply do not revive/replay its reservation.
+        fake.deliver(device_reply(&first, users[..64].to_vec()))
+            .await;
+        tokio::time::timeout(Duration::from_secs(5), async {
+            while pending_users(&store).unwrap().len() != 64 {
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .unwrap();
+        assert_eq!(
+            query_record(&store, &first_id).unwrap().unwrap().status,
+            "outcome_unknown"
+        );
+        assert_eq!(pending_users(&store).unwrap(), users[..64]);
+        fake.stop_cleanly().await;
+    }
+
+    #[tokio::test]
+    async fn device_notification_ack_write_cut_keeps_pending_sync_for_restart() {
+        use super::super::devices::pending_users;
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("device-ack-cut.redb");
+        let store = registered_store(&path);
+        let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (_, write) = fake.written().await;
+        write.send(Ok(())).unwrap();
+        fake.deliver(
+            Node::new("notification")
+                .attr("type", "devices")
+                .attr("id", "D-CUT")
+                .attr("from", peer.clone())
+                .children(vec![Node::new("add").children(vec![
+                    Node::new("device").attr("jid", peer.with_device(3)),
+                ])]),
+        )
+        .await;
+        let (ack, write) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(
+            pending_users(&store).unwrap().as_slice(),
+            std::slice::from_ref(&peer)
+        );
+        write
+            .send(Err(Error::Transport(TransportError::PeerClosed)))
+            .unwrap();
+        assert!(fake.finished().await.is_err());
+        let account_before =
+            serde_json::to_value(store.read(AccountRecord::load).unwrap()).unwrap();
+        drop(store);
+        let store = Arc::new(
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([4; 32]))),
+                create: false,
+            })
+            .unwrap(),
+        );
+        assert_eq!(
+            serde_json::to_value(store.read(AccountRecord::load).unwrap()).unwrap(),
+            account_before
+        );
+        assert_eq!(
+            pending_users(&store).unwrap().as_slice(),
+            std::slice::from_ref(&peer)
+        );
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (query, write) = fake.written().await;
+        assert_eq!(
+            query.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("usync")
+        );
+        write.send(Ok(())).unwrap();
+        fake.deliver(device_reply(&query, vec![peer])).await;
+        tokio::time::timeout(Duration::from_secs(5), async {
+            while !pending_users(&store).unwrap().is_empty() {
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .unwrap();
+        fake.nothing_written(Duration::from_millis(300)).await;
         fake.stop_cleanly().await;
     }
 

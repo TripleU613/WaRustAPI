@@ -1536,3 +1536,24 @@ one-user query accounting and saved inspection: one ingested, zero errors/
 omissions, no remaining pending device users. Retained primary-only/no signed
 index list; no chat sends, action or receipt status changes. This does not verify
 multi-batch group preparation or close own-device synchronization.
+
+
+Background device-sync correction (2026-10-07): durable local revisions keep
+newer pending notifications when an older reply settles; notification pending
+work commits before ACK writing. The receive actor continues eligible 64-user
+batches while deferring refused/errored/omitted/unanswered users for this
+connection. No wire/identity changes or automatic refusal replay. Offline
+injected-link checks cover 130 users, newer-notification race, ACK socket-cut
+reopen and timeout/late reply; live coverage of these branches remains unknown.
+Own-account sync and notification-ID deduplication remain unfinished.
+[Evidence and limits](protocol/messaging-transport.md#background-device-revisions-and-continuation-2026-10-07).
+
+Live follow-up 21:57:48 UTC: one existing-peer device read in a bounded
+20-second receive-only session saved server_acknowledged, one requested/ingested,
+zero errors/omissions/superseded, code null. Device pending returned to zero;
+outbox/actions/nine ACKed receipts unchanged, no chat sends. Primary only,
+companions still unverified. Live races/large batches/socket-cut remain unknown.
+Validation: 651 workspace/all-feature tests, default CLI24, strict Clippy,
+warning-free Rustdoc, CLI reference and formatting passed. Six actual isolated
+CLI probes plus live saved-query inspection passed; hygiene645 local links,
+2405965 bytes/four unchanged APK bundles.

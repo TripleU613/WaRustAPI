@@ -628,15 +628,17 @@ references in docs/protocol/cross-device-sync.md; `LX/0u7` and `LX/0xX`/`0xY`/
   changes go through `LX/17V.A09`/`LX/1Tc.A01` account sync, not implemented:
   captured and acknowledged only.
 
-Implementation (`transport::devices`): pending users are recorded durably; a
-session queries up to 64 of them interactively at start and immediately after a
-notification; replies are verified, reconciled and stored per user in one
-transaction, clearing that user's pending marker. A raw-ID change or stale
-timestamp keeps the saved list; refusals record the code; unanswered queries
-leave users pending for a later session (queries are reads and safe to repeat).
+Implementation (`transport::devices`): pending users/revisions are durable;
+each query selects at most 64 users. The receive actor continues eligible
+batches and clears only the revision settled by that user's verified/reconciled
+reply. Refused, omitted, errored and unanswered work remains pending and is
+deferred for the connection. See the current [revision/continuation safeguards](#background-device-revisions-and-continuation-2026-10-07)
+and [scoped send-preparation guards](#scoped-device-batches-and-completeness-2026-10-07).
 `client.device_list(&chat)` / `request_device_sync(&chat)` and `whatsapp-cli
-devices --chat <jid> [--request]` are offline. Device lists are not yet used
-for send fan-out. `sid` is client-chosen. The first live query (2026-09-19) returned one primary device and no signed list for a single-device contact.
+devices --chat <jid> [--request]` are offline. Device lists feed the explicit
+group/status send preparation; full public-outbox group fan-out and own-account
+inventory remain unfinished. `sid` is client-chosen. The first live query
+(2026-09-19) returned one primary and no signed list for a single-device contact.
 
 ### Public ordinary-media download
 
@@ -1084,3 +1086,91 @@ outcome_unknown, historical null, absent ID, invalid ID without value echo, and
 unchanged refused status on repeat. The live saved query was also inspected by
 the actual CLI. Repository hygiene checked 641 local links and 2405965 bytes across all four
 independent APK checksum bundles; cached APK snapshots remain unchanged.
+
+
+### Background device revisions and continuation (2026-10-07)
+
+**Confirmed substrate, APK 2.26.37.71:** this correction uses the existing
+`LX/0u7.A06` usync request and `C8f` response traces, `SyncDevicesJob`
+context presets, `LX/11Q.A09` notification parsing and `LX/11T.A07/A08`
+signed-index verification/reconciliation. The exact instruction evidence remains
+in this document's device-sync section and [cross-device analysis](cross-device-sync.md).
+`LX/Cp2.A05` establishes ACK shape, not retry policy. No APK snapshot or wire
+field changes are introduced. The 64-user bound and revision bookkeeping below
+are **local implementation safeguards**, not inferred server requirements.
+
+**Observed local defects:** the receive actor previously queried only the first
+startup batch. An in-flight old reply could delete a newer notification's pending
+marker. A failed notification ACK write could terminate the connection before
+pending work was recorded. These are our implementation defects; none establishes
+a server refusal or ban condition.
+
+Pending work now carries a monotonically increasing local generation. Its
+separate durable counter survives marker deletion, preventing deletion/recreation
+from reusing an old revision. Overflow refuses without changing state. A plain
+refresh preserves an existing pending notification hash; no hint is manufactured.
+Reservation atomically snapshots the generations beside the selected users.
+A reconciled reply stores its list but clears pending only for the matching
+revision. Newer work remains pending and successful superseded users are counted.
+`require_complete` refuses that count before group/status send preparation.
+These generations are not on-wire fields, keys, account identities or APK values.
+Historical pending rows default generation zero; historical query generations and
+superseded counts remain null, rather than guessing completion.
+
+The per-connection `DeviceSyncCursor` reserves remaining eligible batches after
+settlement or timeout. Each unchanged revision is attempted once. Exact refused,
+errored, omitted or unanswered users are deferred for the rest of the connection,
+including after a newer notification; their pending work remains saved. Successful
+users with newer work remain eligible even if another user failed. A later
+connection may perform its normal read with a fresh query ID; it never retransmits
+an old reservation. Startup uses interactive context; after a notification trigger
+continuation uses notification context. This scheduling is local behavior over the
+known presets, not a claim of exact APK job grouping.
+
+Contact notification pending work commits before ACK socket writing. Own-account
+notifications retain the existing capture/ACK path; full own-account/LID sync is
+still **unknown/unimplemented**. Notification-ID duplicate/conflict semantics and
+durable deduplication across restart remain **unknown/untraced**. A repeated
+notification can still produce a new local revision; unchanged-revision eligibility
+does not prove deduplication of repeated upstream notifications.
+
+**Observed offline regression:** injected-link receive tests cover 130 startup
+users across 64/64/2 queries with a refused first batch retained; an ACK write cut
+followed by encrypted-store reopen and recovery without rewriting the account;
+an unanswered batch followed by another batch and an ignored late old reply; and
+a new notification during an in-flight query requiring a distinct follow-up query.
+Library tests cover durable counter non-reuse, hash-hint preservation, exact
+failed-user deferral alongside eligible successful newer work, and omitted-user
+holding despite newer notifications. Historical null and redacted CLI summaries
+are tested. `device-query --id` exposes nullable `superseded_users`; private
+aligned generations and addresses are not exported. No new command or HTTP route.
+
+**Unknown live boundaries:** large-batch continuation, notification race, ACK
+socket-cut recovery and timeout/late-reply cases are offline verified only. The
+previous one-user live read predates this correction and is not proof of these
+new branches. No canonical account or live request was touched while developing
+these regressions. Full own-device inventory, ADV-key verification and public
+outbox group fan-out remain unfinished.
+
+
+**Observed live, 2026-10-07 21:57:48 UTC:** after zero eligible outbox,
+queued-action, pending-receipt and pending-device preflight, one existing peer's
+device read was queued and a 20-second authenticated receive-only session ended
+cleanly. Actual saved-query CLI inspection reported server_acknowledged,
+requested_users=1, ingested=1, partial_errors=0, omitted_users=0,
+superseded_users=0, code=null. Pending users returned to zero; outbox, all
+17 actions (1 error/15 ok/1 sent) and nine acknowledged receipts were unchanged.
+One primary remains, companions_verified=false, reason “no signed index list”.
+No chat sends, identity rotation, reset or refusal replay occurred. This proves
+the new cursor/reservation/settlement path for one live user; it does not prove
+live large-batch, notification-race, ACK-cut or timeout behavior.
+
+**Observed verification:** 651 workspace/all-feature tests and 24 default CLI
+tests passed. Strict workspace/all-target Clippy passed after removing four
+unnecessary clones in test assertions; warning-free Rustdoc, formatting and CLI
+reference regeneration passed. Six actual offline CLI probes on an isolated
+encrypted synthetic store covered omission, refusal, unknown, historical null,
+superseded and absent records; no private generations, addresses or query IDs
+were exported. The live saved query was inspected by the actual CLI. Repository
+hygiene checked 645 local links and 2405965 bytes across four independent APK
+checksum bundles, unchanged by this correction.

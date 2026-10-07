@@ -53,6 +53,7 @@ pub const MAX_USERS_PER_QUERY: usize = 64;
 const PENDING_PREFIX: &str = "device-sync-pending:";
 const QUERY_PREFIX: &str = "device-sync:";
 const LIST_PREFIX: &str = "devices:";
+const GENERATION_PREFIX: &str = "device-sync-generation:";
 
 fn invalid(reason: impl Into<String>) -> Error {
     Error::invalid("devices", reason)
@@ -132,6 +133,10 @@ pub struct DeviceList {
 /// Pending-user marker.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Pending {
+    // Local revision prevents an old reply erasing a newer notification. The
+    // separate counter survives marker deletion, preventing revision reuse.
+    #[serde(default)]
+    generation: u64,
     requested_at: Timestamp,
     notified_hash: Option<String>,
     reason: String,
@@ -153,6 +158,13 @@ pub struct QueryRecord {
     /// an unsettled query; never infer completeness from old aggregate counts.
     #[serde(default)]
     pub omitted_users: Option<u32>,
+    /// Local marker revisions captured at reservation, aligned with users.
+    /// None for historical rows; these are not APK/server values or identities.
+    #[serde(default)]
+    pub generations: Option<Vec<u64>>,
+    /// Successfully parsed users whose pending work changed before the reply.
+    #[serde(default)]
+    pub superseded_users: Option<u32>,
     /// Reservation time.
     pub requested_at: Timestamp,
 }
@@ -256,13 +268,33 @@ pub fn request_sync(
         ));
     }
     store.write(|tx| {
+        let previous: Option<Pending> =
+            tx.get_json(Table::Checkpoints, pending_key(&user).as_bytes(), 1)?;
+        let generation_key = format!("{GENERATION_PREFIX}{user}");
+        let prior: Option<u64> = tx.get_json(Table::Checkpoints, generation_key.as_bytes(), 1)?;
+        let generation = prior
+            .unwrap_or(0)
+            .max(previous.as_ref().map_or(0, |p| p.generation))
+            .checked_add(1)
+            .ok_or_else(|| invalid("local device sync revision exhausted"))?;
+        tx.put_json(
+            Table::Checkpoints,
+            generation_key.as_bytes(),
+            1,
+            &generation,
+        )?;
         tx.put_json(
             Table::Checkpoints,
             pending_key(&user).as_bytes(),
             1,
             &Pending {
+                generation,
                 requested_at: Timestamp::now(),
-                notified_hash: notified_hash.map(|v| v.chars().take(64).collect()),
+                // A plain refresh request must not erase an observed pending
+                // notification hash. No hash is invented when neither exists.
+                notified_hash: notified_hash
+                    .map(|v| v.chars().take(64).collect())
+                    .or_else(|| previous.and_then(|p| p.notified_hash)),
                 reason: reason.chars().take(64).collect(),
             },
         )
@@ -298,9 +330,78 @@ pub fn pending_users(store: &ProtocolStore) -> Result<Vec<Jid>> {
 pub struct DeviceQuery {
     iq_id: String,
     users: Vec<Jid>,
+    generations: Vec<u64>,
     /// After this instant the reply is no longer awaited this session.
     pub deadline: tokio::time::Instant,
 }
+/// Connection-local eligibility: each unchanged pending revision is queried
+/// once. Refused/uncertain users stay deferred for a later connection; fresh
+/// notifications after successful reads may create new eligible work.
+#[derive(Default)]
+pub struct DeviceSyncCursor {
+    attempted: BTreeMap<Jid, u64>,
+    deferred: std::collections::BTreeSet<Jid>,
+}
+impl std::fmt::Debug for DeviceSyncCursor {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("DeviceSyncCursor")
+            .field("attempted_users", &self.attempted.len())
+            .field("deferred_users", &self.deferred.len())
+            .finish()
+    }
+}
+impl DeviceSyncCursor {
+    /// Reserve the next eligible local batch, excluding already attempted work.
+    pub fn begin_next(
+        &mut self,
+        store: &ProtocolStore,
+        context: SyncContext,
+    ) -> Result<Option<(DeviceQuery, Node)>> {
+        let pending = pending_users(store)?;
+        let users = store.read(|tx| {
+            let mut selected = Vec::new();
+            for user in pending {
+                let pending: Option<Pending> =
+                    tx.get_json(Table::Checkpoints, pending_key(&user).as_bytes(), 1)?;
+                if let Some(pending) = pending
+                    && !self.deferred.contains(&user)
+                    && self.attempted.get(&user) != Some(&pending.generation)
+                {
+                    selected.push(user);
+                    if selected.len() == MAX_USERS_PER_QUERY {
+                        break;
+                    }
+                }
+            }
+            Ok(selected)
+        })?;
+        let Some((query, node)) = begin_query_for_users(store, context, &users)? else {
+            return Ok(None);
+        };
+        for (user, revision) in query.users.iter().zip(&query.generations) {
+            self.attempted.insert(user.clone(), *revision);
+        }
+        Ok(Some((query, node)))
+    }
+    /// Settle one reply and defer only its refused, errored or omitted users. Successful
+    /// users with newer pending revisions remain eligible in this connection.
+    pub fn settle(
+        &mut self,
+        query: &DeviceQuery,
+        store: &ProtocolStore,
+        node: &Node,
+    ) -> Result<IngestSummary> {
+        let (summary, failed) = query.ingest_internal(store, node)?;
+        self.deferred.extend(failed);
+        Ok(summary)
+    }
+    /// A top-level refusal or uncertain read must not be repeated merely because
+    /// another notification arrived during this connection.
+    pub fn defer(&mut self, query: &DeviceQuery) {
+        self.deferred.extend(query.users.iter().cloned());
+    }
+}
+
 /// Build one `usync devices` query for pending users. Returns `None` when
 /// nothing is pending. The reservation is durable before the socket write.
 pub fn begin_query(
@@ -344,17 +445,17 @@ fn reserve_query(
     }
     let iq_id = super::messaging::new_message_id()?;
     let sid = super::messaging::new_message_id()?;
-    store.write(|tx| {
+    let generations = store.write(|tx| {
+        let mut generations = Vec::with_capacity(users.len());
         // Selection and reservation share a transaction: a stale batch cannot
         // silently invent pending work after another query settled its users.
         for user in &users {
             let pending: Option<Pending> =
                 tx.get_json(Table::Checkpoints, pending_key(user).as_bytes(), 1)?;
-            if pending.is_none() {
-                return Err(invalid(
-                    "selected device user is not pending; request synchronization first",
-                ));
-            }
+            let pending = pending.ok_or_else(|| {
+                invalid("selected device user is not pending; request synchronization first")
+            })?;
+            generations.push(pending.generation);
         }
 
         tx.put_json(
@@ -368,9 +469,12 @@ fn reserve_query(
                 ingested: 0,
                 partial_errors: 0,
                 omitted_users: None,
+                generations: Some(generations.clone()),
+                superseded_users: None,
                 requested_at: Timestamp::now(),
             },
-        )
+        )?;
+        Ok(generations)
     })?;
     let list = users
         .iter()
@@ -396,6 +500,7 @@ fn reserve_query(
         DeviceQuery {
             iq_id,
             users,
+            generations,
             deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
         },
         node,
@@ -414,6 +519,8 @@ pub struct IngestSummary {
     /// Requested users not represented by a recognized user row. A result
     /// stanza alone is not a complete answer.
     pub omitted_users: u32,
+    /// Parsed lists that did not settle the currently pending revision.
+    pub superseded_users: u32,
 }
 
 impl IngestSummary {
@@ -433,6 +540,12 @@ impl IngestSummary {
             return Err(invalid(format!(
                 "device query omitted {} requested user(s); send preparation stopped",
                 self.omitted_users
+            )));
+        }
+        if self.superseded_users > 0 {
+            return Err(invalid(format!(
+                "device query superseded for {} user(s); send preparation stopped",
+                self.superseded_users
             )));
         }
         Ok(())
@@ -478,6 +591,7 @@ fn ingest_user(
     tx: &mut crate::store::WriteTx<'_>,
     user: &Node,
     notified_hash: Option<String>,
+    clear_pending: bool,
 ) -> Result<Option<DeviceList>> {
     let owner = primary_of(&attr_jid(user, "jid").ok_or_else(|| invalid("user without jid"))?)?;
     let devices = child(user, "devices").ok_or_else(|| invalid("user without devices"))?;
@@ -603,7 +717,9 @@ fn ingest_user(
         fetched_at: Timestamp::now(),
     };
     tx.put_json(Table::Checkpoints, list_key(&owner).as_bytes(), 1, &list)?;
-    tx.delete(Table::Checkpoints, pending_key(&owner).as_bytes())?;
+    if clear_pending {
+        tx.delete(Table::Checkpoints, pending_key(&owner).as_bytes())?;
+    }
     Ok(Some(list))
 }
 
@@ -613,8 +729,16 @@ impl DeviceQuery {
         node.description == "iq" && attr_text(node, "id") == Some(self.iq_id.as_str())
     }
     /// Apply the reply durably: each user's list is verified, reconciled and
-    /// stored in one transaction; pending markers clear only for ingested users.
+    /// stored in one transaction; only ingested matching pending revisions clear.
     pub fn ingest(&self, store: &ProtocolStore, node: &Node) -> Result<IngestSummary> {
+        self.ingest_internal(store, node)
+            .map(|(summary, _)| summary)
+    }
+    fn ingest_internal(
+        &self,
+        store: &ProtocolStore,
+        node: &Node,
+    ) -> Result<(IngestSummary, Vec<Jid>)> {
         if !self.matches(node) {
             return Err(invalid("reply does not belong to this query"));
         }
@@ -637,6 +761,7 @@ impl DeviceQuery {
             let mut represented = std::collections::BTreeSet::new();
             let mut ingested = std::collections::BTreeSet::new();
             let mut errored = std::collections::BTreeSet::new();
+            let mut superseded = std::collections::BTreeSet::new();
             if accepted {
                 let users = child(node, "usync")
                     .and_then(|u| child(u, "list"))
@@ -653,8 +778,26 @@ impl DeviceQuery {
                     represented.insert(owner.clone());
                     let notified: Option<Pending> =
                         tx.get_json(Table::Checkpoints, pending_key(&owner).as_bytes(), 1)?;
-                    match ingest_user(tx, user, notified.and_then(|p| p.notified_hash))? {
+                    let index = self
+                        .users
+                        .iter()
+                        .position(|u| u == &owner)
+                        .expect("checked requested user");
+                    // Snapshot before parsing: duplicate rows in this reply may
+                    // see a marker already cleared by their first occurrence.
+                    let current = notified.as_ref().map(|p| p.generation);
+                    let clear_pending = current == self.generations.get(index).copied();
+                    let was_ingested = ingested.contains(&owner);
+                    match ingest_user(
+                        tx,
+                        user,
+                        notified.and_then(|p| p.notified_hash),
+                        clear_pending,
+                    )? {
                         Some(_) => {
+                            if !clear_pending && !was_ingested {
+                                superseded.insert(owner.clone());
+                            }
                             ingested.insert(owner.clone());
                         }
                         None => {
@@ -666,6 +809,8 @@ impl DeviceQuery {
             summary.ingested = ingested.len() as u32;
             summary.partial_errors = errored.len() as u32;
             summary.omitted_users = (self.users.len() - represented.len()) as u32;
+            summary.superseded_users = superseded.len() as u32;
+            record.superseded_users = Some(summary.superseded_users);
             record.omitted_users = Some(summary.omitted_users);
             record.status = if accepted {
                 "server_acknowledged".into()
@@ -676,7 +821,18 @@ impl DeviceQuery {
             record.ingested = summary.ingested;
             record.partial_errors = summary.partial_errors;
             tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &record)?;
-            Ok(summary)
+            let failed = if accepted {
+                // Omitted users have no settled list either; a new notification
+                // must not retry that unresolved read in this connection.
+                self.users
+                    .iter()
+                    .filter(|u| errored.contains(*u) || !represented.contains(*u))
+                    .cloned()
+                    .collect()
+            } else {
+                self.users.clone()
+            };
+            Ok((summary, failed))
         })
     }
 }
@@ -760,6 +916,181 @@ mod tests {
         Node::new("user")
             .attr("jid", owner.clone())
             .children(vec![Node::new("devices").children(children)])
+    }
+
+    #[test]
+    fn newer_pending_revisions_survive_old_replies_and_deleted_markers_do_not_reuse_revisions() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("revisions.redb");
+        let store = open(&path);
+        request_sync(&store, None, &contact(), Some("2:old"), "notification").unwrap();
+        let mut cursor = DeviceSyncCursor::default();
+        let (old, iq) = cursor
+            .begin_next(&store, SyncContext::Notification)
+            .unwrap()
+            .unwrap();
+        assert_eq!(old.generations, [1]);
+        request_sync(&store, None, &contact(), Some("2:new"), "notification").unwrap();
+        let summary = cursor
+            .settle(
+                &old,
+                &store,
+                &reply(&iq, vec![user_node(&contact(), &[(0, 0, false)], None)]),
+            )
+            .unwrap();
+        assert_eq!(summary.superseded_users, 1);
+        assert!(
+            summary
+                .require_complete()
+                .unwrap_err()
+                .to_string()
+                .contains("superseded")
+        );
+        assert_eq!(pending_users(&store).unwrap(), [contact()]);
+        assert_eq!(
+            query_record(&store, &old.iq_id)
+                .unwrap()
+                .unwrap()
+                .superseded_users,
+            Some(1)
+        );
+        let (new, iq) = cursor
+            .begin_next(&store, SyncContext::Notification)
+            .unwrap()
+            .unwrap();
+        assert_eq!(new.generations, [2]);
+        cursor
+            .settle(
+                &new,
+                &store,
+                &reply(&iq, vec![user_node(&contact(), &[(0, 0, false)], None)]),
+            )
+            .unwrap()
+            .require_complete()
+            .unwrap();
+        assert!(pending_users(&store).unwrap().is_empty());
+        request_sync(&store, None, &contact(), Some("2:latest"), "notification").unwrap();
+        request_sync(&store, None, &contact(), None, "cli").unwrap();
+        let pending: Pending = store
+            .read(|tx| tx.get_json(Table::Checkpoints, pending_key(&contact()).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(pending.generation, 4);
+        assert_eq!(pending.notified_hash.as_deref(), Some("2:latest"));
+        drop(store);
+        let store = open(&path);
+        let (again, _) = cursor
+            .begin_next(&store, SyncContext::Interactive)
+            .unwrap()
+            .unwrap();
+        assert_eq!(again.generations, [4]);
+        assert_eq!(
+            query_record(&store, &again.iq_id)
+                .unwrap()
+                .unwrap()
+                .generations,
+            Some(vec![4])
+        );
+    }
+
+    #[test]
+    fn cursor_defers_actual_failed_users_but_keeps_successful_newer_work_eligible() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("cursor.redb"));
+        let failed = contact();
+        let success = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+        for user in [&failed, &success] {
+            request_sync(&store, None, user, None, "test").unwrap();
+        }
+        let mut cursor = DeviceSyncCursor::default();
+        let (query, iq) = cursor
+            .begin_next(&store, SyncContext::Interactive)
+            .unwrap()
+            .unwrap();
+        request_sync(&store, None, &success, Some("2:new"), "notification").unwrap();
+        let bad = Node::new("user").attr("jid", failed.clone()).children(vec![
+            Node::new("devices").children(vec![Node::new("error").attr("code", "404")]),
+        ]);
+        let summary = cursor
+            .settle(
+                &query,
+                &store,
+                &reply(&iq, vec![bad, user_node(&success, &[(0, 0, false)], None)]),
+            )
+            .unwrap();
+        assert_eq!(summary.partial_errors, 1);
+        assert_eq!(summary.superseded_users, 1);
+        request_sync(&store, None, &failed, Some("2:later"), "notification").unwrap();
+        let (next, iq) = cursor
+            .begin_next(&store, SyncContext::Notification)
+            .unwrap()
+            .unwrap();
+        assert_eq!(next.users.as_slice(), std::slice::from_ref(&success));
+        cursor
+            .settle(
+                &next,
+                &store,
+                &reply(&iq, vec![user_node(&success, &[(0, 0, false)], None)]),
+            )
+            .unwrap();
+        assert!(
+            cursor
+                .begin_next(&store, SyncContext::Notification)
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(
+            pending_users(&store).unwrap().as_slice(),
+            std::slice::from_ref(&failed)
+        );
+        let mut later = DeviceSyncCursor::default();
+        let (query, _) = later
+            .begin_next(&store, SyncContext::Interactive)
+            .unwrap()
+            .unwrap();
+        assert_eq!(query.users, [failed]);
+        // The uncertain read is held for this connection even after fresh input.
+        later.defer(&query);
+        request_sync(&store, None, &contact(), None, "test").unwrap();
+        assert!(
+            later
+                .begin_next(&store, SyncContext::Interactive)
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(
+            query_record(&store, &query.iq_id).unwrap().unwrap().status,
+            "outcome_unknown"
+        );
+    }
+
+    #[test]
+    fn cursor_holds_omitted_users_despite_newer_notifications() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("omitted.redb"));
+        request_sync(&store, None, &contact(), None, "test").unwrap();
+        let mut cursor = DeviceSyncCursor::default();
+        let (query, iq) = cursor
+            .begin_next(&store, SyncContext::Interactive)
+            .unwrap()
+            .unwrap();
+        let summary = cursor.settle(&query, &store, &reply(&iq, vec![])).unwrap();
+        assert_eq!(summary.omitted_users, 1);
+        assert!(summary.require_complete().is_err());
+        request_sync(&store, None, &contact(), Some("2:later"), "notification").unwrap();
+        assert!(
+            cursor
+                .begin_next(&store, SyncContext::Notification)
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(pending_users(&store).unwrap(), [contact()]);
+        assert!(
+            DeviceSyncCursor::default()
+                .begin_next(&store, SyncContext::Interactive)
+                .unwrap()
+                .is_some()
+        );
     }
 
     #[test]
@@ -994,6 +1325,8 @@ mod tests {
         let old = serde_json::json!({"users":[],"status":"server_acknowledged","code":null,"ingested":0,"partial_errors":0,"requested_at":0});
         let record: QueryRecord = serde_json::from_value(old).unwrap();
         assert_eq!(record.omitted_users, None);
+        assert_eq!(record.generations, None);
+        assert_eq!(record.superseded_users, None);
     }
 
     #[test]
@@ -1164,6 +1497,7 @@ mod tests {
                 ingested: 2,
                 partial_errors: 1,
                 omitted_users: 0,
+                superseded_users: 0,
             }
         );
         assert!(query.ingest(&store, &node).is_err(), "settled once");

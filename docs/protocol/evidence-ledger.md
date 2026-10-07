@@ -939,3 +939,24 @@ assertion failure; the same completed session was inspected, never restarted.
 This proves shared one-user accounting, not live selected multi-batch/group send.
 644 workspace tests, default24, strict Clippy/Rustdoc/reference passed; actual
 synthetic/query CLI redaction and canonical saved-query inspection passed.
+
+
+**2026-10-07 — background device revision/continuation safeguards.** Confirmed
+substrate: APK 37.71 0u7.A06/C8f, SyncDevicesJob presets, 11Q.A09,
+11T.A07/A08 and Cp2.A05. No new upstream trace or APK bundle change. Observed
+local lost-work races (old reply/new notification and ACK write cut) and single
+startup-batch limit corrected using durable local generations and a per-connection
+cursor. Exact failed/omitted/unknown users remain held; successful newer work and
+other batches advance. Offline actor/reopen tests establish local behavior;
+live races, full own-account sync and notification-ID dedup remain unknown.
+[Reasoning and regression scope](messaging-transport.md#background-device-revisions-and-continuation-2026-10-07).
+
+Live follow-up 21:57:48 UTC: one existing-peer device read in a bounded
+20-second receive-only session saved server_acknowledged, one requested/ingested,
+zero errors/omissions/superseded, code null. Device pending returned to zero;
+outbox/actions/nine ACKed receipts unchanged, no chat sends. Primary only,
+companions still unverified. Live races/large batches/socket-cut remain unknown.
+Validation: 651 workspace/all-feature tests, default CLI24, strict Clippy,
+warning-free Rustdoc, CLI reference and formatting passed. Six actual isolated
+CLI probes plus live saved-query inspection passed; hygiene645 local links,
+2405965 bytes/four unchanged APK bundles.
