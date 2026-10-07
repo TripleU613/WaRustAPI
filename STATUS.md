@@ -213,3 +213,14 @@ presentation; the traced path does not establish a persisted human-verification
 bit. Delayed callbacks, the verification writer and complete scheme/device
 inventory remain unfinished. No account state or live request changed.
 [Java caller evidence](docs/protocol/safety-number.md#java-comparison-selection-and-scan-result-action).
+
+
+APK 37.71 verification metadata writers are now traced: the local sender
+rejects stale rendered identities, rechecks the stored key under lock, advances
+the action sequence and writes existing metadata before companion fan-out.
+Inbound peer actions are companion-only with target/key/sequence guards;
+history verification has separate presence/key requirements. BWE/BT5 schemas
+and ProtocolMessage field 32 are confirmed. Delayed scan callbacks only present
+results. Full human-trigger wiring, active fingerprint scheme/device inventory
+and client implementation remain unfinished; no account state changed.
+[Writer and schema evidence](docs/protocol/peer-identity.md#verification-metadata-writers-and-rotation-guards-3771).

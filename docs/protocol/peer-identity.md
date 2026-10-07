@@ -476,3 +476,144 @@ write lock. That would break callbacks that update local state. The public
 builder keeps its original outside-lock behavior; only the explicit transaction
 helper builds under its caller's transaction. A bounded callback-reentrancy
 regression and concurrent once-only directory test cover both paths.
+
+
+## Verification metadata writers and rotation guards (37.71)
+
+**Confirmed/static**, APK 2.26.37.71, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+All offsets are method-relative bytes from the existing `xtask apk-smali`.
+This follows [scan-result tracing](safety-number.md#java-comparison-selection-and-scan-result-action).
+No saved identity, verification bit or sequence was changed by this research.
+
+Exact caller searches now resolve the metadata writers:
+
+| Target | Callers |
+| --- | --- |
+| 0kc.A0I | 0jc.A0K, 0jc.A15, Cg3.A00 |
+| 0jc.A15 | CSj.A00, DNu.run |
+| CSj.A00 | Two sites in 1gz.A00 |
+| Cg3.A00 | Two sites in 6Am.invokeSuspend |
+| Cg3.A01 | 5XZ.onClick, 5Xc.onClick |
+
+The fresh `0kc.A0I` disassembly resolves the earlier opaque reads: CUm.A01
+is read with iget-boolean at 0022..0026 and A00 with iget-wide at 003a..003e.
+It updates existing `identities` rows selected by recipient ID/type/device,
+writes both `mark_as_verified` and `mark_as_verified_action_seq`, and returns
+whether the database update changed any row (006a..007a). This leaf has no
+key-equality or sequence-order guard: callers must supply those conditions.
+`0jc.A15 0000..002e` normalizes the address, locks it and delegates to this
+leaf. It is not a universal verification/trust decision.
+
+**Confirmed/static, local sender flow `Cg3.A00`:** its log names identify
+MarkAsVerifiedFlowController and MarkAsVerifiedSender. It refuses a null
+rendered identity key (0000..001c), the companion-device branch (0046..006c)
+and a target identified as self (006c..008a). It addresses the target's primary
+device through B7H.A04 (008a..009a), loads the current identity via A0W, and
+refuses absent identity or inequality with the supplied rendered B7D
+(00aa..00e6). Thus a stale UI identity must not authorize a different key.
+
+At 00ee..0104 it reads the prior CUm action sequence, defaults to zero if
+metadata is absent (012a..0130), and adds one. It constructs CUm with this
+sequence and the requested mark boolean, then locks the address at
+0116..0128. **Under that lock**, 0130..0164 reads the current serialized
+identity using 0kc.A0J and compares it with the supplied key's B7E.A00 bytes.
+Missing row and rotation produce distinct refusal branches; only equality
+reaches 0kc.A0I at 0164..016a. After closing the lock, the success branch
+inserts verification events through CSj.A01 (019a..01b0) and builds companion
+fan-out. A second key check is required because the identity could change
+between rendering, the first check and acquisition of the write lock.
+**Unknown:** sequence-overflow policy beyond the traced add-long/2addr and
+complete concurrency semantics of the surrounding sender monitor; no global
+atomicity claim is made for the subsequent event/fan-out operations.
+
+The fan-out list is built from HxZ.A0A DeviceJids at 01c4..01f0. An empty list
+logs `no companions — skipping fanout` and returns at 01fc..020e: lack of
+companions does not undo the prior local metadata update. With companions,
+020e..02b4 builds BWE with target JID, requested boolean, raw B7E.A01 key and
+sequence. It creates per-device BnY peer messages at 0302..031e, attempts
+0ob.A02 insertion, and logs an insertion failure per device at 0336..034e.
+The value 0x8c is the domain message type passed to Bn4, not an established
+ProtocolMessage enum. Complete peer serialization/transmission remains untraced.
+
+`6Am.invokeSuspend` passes true to Cg3.A00 at 0490..0496 and false at
+04ec..04f2, then schedules result handling. `Cg3.A01` constructs an explicit
+confirmation dialog with an AES positive-button callback (0034..0058) and a
+negative button (0058..0066). Exact callers locate 5XZ.onClick and 5Xc.onClick,
+but those click handlers, the dialog callback and complete connection to scan
+success remain untraced. This evidence establishes the guarded writer, not
+permission to mark our live peer verified without human comparison.
+
+**Confirmed/static, inbound own-account action `1gz.A00`:** its peer branch
+checks the source DeviceJid's UserJid against the local account through BO0 at
+017c..01be. BnY is dispatched at 425a..4272. The action handler's second mode
+check at 42b4..42c8 logs `dropping inbound MarkAsVerifiedAction on primary`.
+The accepted companion branch requires payload and all four BWE presence bits
+(42c8..42fc), a parsed LID (42fc..4318), a non-self target (4318..4338),
+exactly 32 key bytes (4338..436e) and actionSeq >=1 (436e..43a8).
+It loads primary-device metadata and rejects sequence <= saved sequence
+(43ac..4424). For mark=true, a differing/missing current key can be saved
+through A14 before marking and device invalidation (4456..44c6). For
+mark=false, only a matching key reaches the applier (44ca..44fc); a mismatch
+is a no-op (4500..4508). This trusted own-account companion action is distinct
+from accepting an arbitrary remote prekey identity or a remote verification bit.
+**Unknown:** complete transport authentication/linked-device provenance and
+atomic application boundaries; no new receive trust policy is implemented.
+
+`CSj.A00 0000..004a` builds CUm, calls A15 and inserts events only if an
+identity row was updated; failure logs that event insertion is skipped.
+`CSj.A01` chooses event constructors P9R/type 0xe5 for mark and P9S/type 0xe6
+for unmark (004a..0068, 0136..014c), with additional group event branches.
+Full group selection and event rendering remain untraced.
+
+**Confirmed/static, history path `DNu.run`:** the branch beginning
+099a..09c8 takes a UserJid and derives its primary address. The surrounding
+identity-save mode depends on feature 0x6f29 and other inputs. At 0a14..0a52,
+BZK.identityVerification presence is required; BT5 must contain both verified
+and actionSeq, with sequence >=1. At 32d0..3302, verified=true additionally
+requires contactPrimaryIdentityKey presence and length 32; false bypasses that
+particular key-presence/length guard. The branch writes CUm through A15 at
+3302..331c. This does not establish a universal stale-sequence guard for history:
+that guard is confirmed above specifically for the live peer action handler.
+History authenticity, key-save branch inputs and complete ordering remain unknown.
+
+**Confirmed/static, descriptor schemas:** `apk-proto-fields` decodes
+BWE.dynamicMethod's descriptor at 005c..006a and BT5.dynamicMethod's at
+0048..0056 (field-name strings start at 0036 in both classes). BZb.dynamicMethod identifies
+ProtocolMessage field 32 as markAsVerifiedAction; BZc identifies Message field
+12 as protocolMessage. The nested layouts are:
+
+| Class | Tag | Field | Type |
+| --- | --- | --- | --- |
+| BWE | 1 | userJidString | string |
+| BWE | 2 | verified | bool |
+| BWE | 3 | verifiedIdentityKey | bytes |
+| BWE | 4 | actionSeq | int64 |
+| BT5 | 1 | verified | bool |
+| BT5 | 2 | actionSeq | int64 |
+
+Schema optionality does not remove the handler's presence/size/mode guards.
+**Negative/static:** BZc has no direct markAsVerified field; it is nested under
+ProtocolMessage. An exact BnY class-definition dump finds no class in the local
+APK despite the references above. Its absence from the DEX definitions is not
+absence of the referenced protocol capability; BnY's conversion remains unknown.
+
+The delayed UI boundary is now resolved: activity constructor 0216..0224
+assigns A0q to L52 selector 1, whose run branch 09d8..0a9a removes focus,
+hides and fades the result view. JoG.onAnimationEnd selector 0 at 0024..004a
+hides the scanner and invokes the supplied Runnable, already mapped to
+L54 selector 4 -> A18. These callbacks perform presentation, not verification
+metadata writes. This closes those previous unknowns without inferring that
+human verification is absent elsewhere in the APK.
+
+Private reproduction artifacts retain writer/caller lists, CSj/DNu/1gz/Cg3
+method dumps, refreshed database A0I, 6Am coroutine, BWE/BT5 descriptor dumps
+and field outputs, BZb/BZc field outputs, L52/JoG callbacks and the negative
+BnY dump under `lab/apk-2.26.37.71/`. Reproduce with existing `apk-callers`,
+`apk-smali --class 'LX/Cg3;' --method A00`, and
+`apk-proto-fields --class 'LX/BWE;'` against the pinned comparison APK.
+
+Validation: independent BWE schema extraction reproduced the exact saved
+field output; CLI reference regeneration/test and repository hygiene passed
+(294 local links). These are static research checks, not a live verification
+action or implemented account-state transition.

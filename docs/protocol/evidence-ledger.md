@@ -441,3 +441,12 @@ zero. NFC/camera/async callers and success callbacks reach presentation through
 A18. No persisted verification action is established; delayed callbacks and
 writer chain remain unknown. Other same-dispatch operations are not fingerprint
 evidence. [Selection and action trace](safety-number.md#java-comparison-selection-and-scan-result-action).
+
+
+**Confirmed/static, 37.71 verification writers:** Cg3.A00 checks rendered
+identity then rechecks serialized bytes under the address lock before updating
+verification metadata and sequence. Companion peer actions require a LID,
+32-byte key and fresh positive sequence; primary inbound actions drop.
+DNu history applies a distinct BT5 path. BWE descriptor tags 1..4 and
+ProtocolMessage field 32 are recovered. Delayed scan callbacks are presentation.
+No live verification/metadata update occurred. [Writer evidence](peer-identity.md#verification-metadata-writers-and-rotation-guards-3771).

@@ -733,3 +733,10 @@ Validation: repeated caller outputs matched byte for byte, CLI reference
 regeneration/test passed, and repository hygiene checked 289 local links.
 This change records static evidence and an existing research command; it adds
 no runtime protocol behavior and claims no live comparison result.
+
+
+The delayed result callbacks and guarded local verification writer are now
+resolved separately in [verification metadata writers](peer-identity.md#verification-metadata-writers-and-rotation-guards-3771).
+The writer checks the rendered identity, rechecks serialized identity under
+lock, then updates the bit and action sequence; it is distinct from A18 scan
+presentation. Complete UI triggers and scheme/device inventory remain unfinished.
