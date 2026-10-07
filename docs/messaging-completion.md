@@ -1079,3 +1079,19 @@ warning-free Rustdoc, CLI reference and five OpenAPI checks passed.
 
 Final OpenAPI rerun, whitespace and repository hygiene (417 local links) passed.
 Private receive evidence and conversation exports remain excluded from Git.
+
+Owner steering (2026-10-07) prioritizes APK reverse engineering into Rust plus
+versioned release comparison/patching. See [workflow](protocol/apk-porting.md).
+The first hash-pinned 37.71 group recipe exports a stable file baseline and Rust
+ownership paths; checksum-verified cached comparison measured 0.0183..0.0215s.
+This covers six selected topics, not the whole APK. Complete cross-device and
+notification parity remains required. Subject freshness research refutes treating
+ordinary snapshot s_t as the separate notification version; no subject ACK or
+identity alias mutation is implemented from that incomplete trace.
+
+Final validation: 588 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, CLI reference,
+five OpenAPI checks, formatting, staged whitespace and hygiene (425 local links)
+passed. Exact 37.71 snapshot regeneration with --check passed in 17.467s. Final
+cached reports (six topics plus four metadata/dictionary artifacts) took
+0.0200..0.0213s; all unchanged in the real self-comparison.

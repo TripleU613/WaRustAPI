@@ -1,0 +1,43 @@
+# APK-derived structural disassembly: LX/0yw;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0B(VLLLLZ) flags=0x9 registers=8
+  0000..0004 op=38 if-eqz v7, +0x1d
+  0004..0008 op=39 if-nez v5, +0x1c
+  0008..000c op=54 iget-object v3, v3, LX/0yw;->A1A:LX/0AH;
+  000c..0010 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0010..0016 op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>(V)
+  0016..001c op=6e invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;->append(LL)
+  001c..0020 op=1a const-string v0, " has a null parent group"
+  0020..0026 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0026..002c op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString(L)
+  002c..002e op=0c move-result-object
+  002e..0030 op=12 const/4 v1, #0x0
+  0030..0034 op=1a const-string v0, "comm-failures/parentGroupJid is null"
+  0034..003a op=6e invoke-virtual {v3, v0, v2, v1}, LX/0AH;->A0g(VLLZ)
+  003a..003c op=0e return-void
+  003c..0040 op=54 iget-object v0, v3, LX/0yw;->A0o:LX/0YA;
+  0040..0046 op=6e invoke-virtual {v0, v5}, LX/0YA;->A0B(LL)
+  0046..0048 op=0c move-result-object
+  0048..004c op=38 if-eqz v1, -0x7
+  004c..0050 op=54 iget-object v0, v3, LX/0yw;->A0r:LX/0WD;
+  0050..0056 op=6e invoke-virtual {v0, v1}, LX/0WD;->A0L(LL)
+  0056..0058 op=0c move-result-object
+  0058..005c op=38 if-eqz v0, -0xf
+  005c..0062 op=6e invoke-virtual {v0, v6}, Ljava/lang/String;->equals(ZL)
+  0062..0064 op=0a move-result
+  0064..0068 op=39 if-nez v0, -0x15
+  0068..006c op=54 iget-object v0, v3, LX/0yw;->A0n:LX/0Y9;
+  006c..0072 op=6e invoke-virtual {v0, v5, v6}, LX/0Y9;->A0t(VLL)
+  0072..0076 op=54 iget-object v1, v3, LX/0yw;->A1K:LX/0aK;
+  0076..0078 op=12 const/4 v0, #0x0
+  0078..007e op=6e invoke-virtual {v1, v5, v0, v6}, LX/0aK;->A04(VLLL)
+  007e..0082 op=54 iget-object v0, v3, LX/0yw;->A0J:LX/00s;
+  0082..0088 op=72 invoke-interface {v0}, LX/00s;->get(L)
+  0088..008a op=0c move-result-object
+  008a..008e op=1f check-cast v0, LX/11F;
+  008e..0094 op=6e invoke-virtual {v0, v5}, LX/11F;->A0L(VL)
+  0094..0096 op=0e return-void
+.end method

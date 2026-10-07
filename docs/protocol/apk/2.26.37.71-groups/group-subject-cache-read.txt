@@ -1,0 +1,87 @@
+# APK-derived structural disassembly: LX/118;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LLL) flags=0x9 registers=16
+  0000..0004 op=54 iget-object v2, v15, LX/118;->A02:Ljava/util/Map;
+  0004..0006 op=1d monitor-enter
+  0006..000a op=54 iget-object v0, v15, LX/118;->A00:LX/0VT;
+  000a..0010 op=6e invoke-virtual {v0, v14}, LX/0VT;->A07(JL)
+  0010..0012 op=0b move-result-wide
+  0012..0018 op=71 invoke-static {v0, v1}, Ljava/lang/Long;->toString(LJ)
+  0018..001a op=0c move-result-object
+  001a..001c op=12 const/4 v0, #0x1
+  001c..0020 op=23 new-array v5, v0, [Ljava/lang/String;
+  0020..0022 op=12 const/4 v0, #0x0
+  0022..0026 op=4d aput-object v1, v5, v0
+  0026..002a op=54 iget-object v0, v15, LX/118;->A01:LX/0Gc;
+  002a..0030 op=6e invoke-virtual {v0}, LX/0Gc;->A06(L)
+  0030..0032 op=0c move-result-object
+  0032..0036 op=54 iget-object v3, v4, LX/0ZN;->A02:LX/0IY;
+  0036..003a op=1a const-string v1, "\n          SELECT\n            subject_timestamp, \n            announcement_version,\n            group_join_request_timestamp,\n            group_photo_timestamp\n          FROM\n            group_notification_version\n          WHERE \n            group_jid_row_id = ?\n        "
+  003a..003e op=1a const-string v0, "GET_GROUP_NOTIFICATION_VERSION_SQL"
+  003e..0044 op=6e invoke-virtual {v3, v1, v0, v5}, LX/0IY;->A0A(LLLL)
+  0044..0046 op=0c move-result-object
+  0046..004a op=38 if-eqz v3, +0x3
+  004a..004c op=28 goto +0xc
+  004c..0050 op=16 const-wide/16 v6, #0x0
+  0050..0054 op=22 new-instance v5, LX/PaC;
+  0054..0056 op=04 move-wide
+  0056..0058 op=04 move-wide
+  0058..005a op=04 move-wide
+  005a..0060 op=76 invoke-direct/range {v5..v13}, LX/PaC;-><init>(VJJJJ)
+  0060..0062 op=28 goto +0x37
+  0062..0068 op=72 invoke-interface {v3}, Landroid/database/Cursor;->moveToNext(Z)
+  0068..006a op=0a move-result
+  006a..006e op=38 if-eqz v0, -0xf
+  006e..0072 op=1a const-string v5, "group_join_request_timestamp"
+  0072..0076 op=16 const-wide/16 v0, #0x0
+  0076..007c op=72 invoke-interface {v3, v5}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  007c..007e op=0a move-result
+  007e..0084 op=71 invoke-static {v3, v5, v0, v1}, LX/0KS;->A01(JLIJ)
+  0084..0086 op=0b move-result-wide
+  0086..008a op=1a const-string v5, "group_photo_timestamp"
+  008a..0090 op=72 invoke-interface {v3, v5}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  0090..0092 op=0a move-result
+  0092..0098 op=71 invoke-static {v3, v5, v0, v1}, LX/0KS;->A01(JLIJ)
+  0098..009a op=0b move-result-wide
+  009a..00a0 op=1b const-string/jumbo v0, "subject_timestamp"
+  00a0..00a6 op=72 invoke-interface {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  00a6..00a8 op=0a move-result
+  00a8..00ae op=72 invoke-interface {v3, v0}, Landroid/database/Cursor;->getLong(JI)
+  00ae..00b0 op=0b move-result-wide
+  00b0..00b4 op=1a const-string v0, "announcement_version"
+  00b4..00ba op=72 invoke-interface {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  00ba..00bc op=0a move-result
+  00bc..00c2 op=72 invoke-interface {v3, v0}, Landroid/database/Cursor;->getLong(JI)
+  00c2..00c4 op=0b move-result-wide
+  00c4..00c8 op=22 new-instance v5, LX/PaC;
+  00c8..00ce op=76 invoke-direct/range {v5..v13}, LX/PaC;-><init>(VJJJJ)
+  00ce..00d4 op=72 invoke-interface {v2, v14, v5}, Ljava/util/Map;->put(LLL)
+  00d4..00d8 op=38 if-eqz v3, +0x5
+  00d8..00de op=72 invoke-interface {v3}, Landroid/database/Cursor;->close(V)
+  00de..00e4 op=6e invoke-virtual {v4}, LX/0ZN;->close(V)
+  00e4..00ea op=72 invoke-interface {v2, v14}, Ljava/util/Map;->get(LL)
+  00ea..00ec op=0c move-result-object
+  00ec..00f0 op=1f check-cast v0, LX/PaC;
+  00f0..00f6 op=71 invoke-static {v0}, LX/00K;->A06(VL)
+  00f6..00f8 op=1e monitor-exit
+  00f8..00fa op=11 return-object v0
+  00fa..00fc op=0d move-exception
+  00fc..0100 op=38 if-eqz v3, +0xa
+  0100..0106 op=72 invoke-interface {v3}, Landroid/database/Cursor;->close(V)
+  0106..0108 op=28 goto +0x5
+  0108..010a op=0d move-exception
+  010a..0110 op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  0110..0112 op=27 throw v1
+  0112..0114 op=0d move-exception
+  0114..011a op=6e invoke-virtual {v4}, LX/0ZN;->close(V)
+  011a..011c op=28 goto +0x5
+  011c..011e op=0d move-exception
+  011e..0124 op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  0124..0126 op=27 throw v1
+  0126..0128 op=0d move-exception
+  0128..012a op=1e monitor-exit
+  012a..012c op=27 throw v0
+.end method

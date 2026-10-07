@@ -2085,3 +2085,38 @@ workspace/all-target/all-feature Clippy, warning-free Rustdoc, regenerated CLI
 reference, all five OpenAPI checks, formatting and whitespace passed. Initial
 invalid-JID test fixture failure was corrected as explained above; the full
 workspace rerun passed.
+
+## Subject notification freshness research (2026-10-07)
+
+**Confirmed static:** APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Scoped regenerated evidence](group-subject-freshness-evidence.txt) traces
+0yv.A09 subject/s_t/s_o/s_o_pn at 102c..1096 and the freshness branch at
+4484..44b8. It reads a separate 118 cache backed by group_notification_version,
+not the ordinary full-group snapshot. 117.A01 writes the supplied timestamp to
+subject_timestamp (0026..003e), updates/inserts that version row, then schedules
+Q4N selector 16 after the transaction. Its cache update runnable is not traced.
+118.A00 queries that table, creates zero defaults when absent, and caches the
+four-version value. PaC.<init> stores the first long (subject_timestamp from
+118.A00) in A03 at 0006..000a, confirming the field compared by 0yv.A09.
+**Refuted shortcut:** ordinary snapshot s_t alone is not
+shown to be the APK's notification freshness state.
+
+The branch skips when the cached version is strictly greater than the incoming
+s_t; equality is allowed through. Parent/subgroup mismatches can queue explicit
+participant_me_not_included_change_recovery (453c..455c). Normal handling also
+has group-type branches, system-message writes and new_subject recovery
+(4b00..4b14), so it must not be implemented as an unconditional subject overwrite.
+The separate 0yw.A0B helper is parent propagation, not the main subject writer.
+0yv.A05 calls 0yw.A0r only when a typed logical identity predicate passes and a
+PN alias is present; the downstream mapping operation remains untraced. No
+identity binding or pin replacement is justified by this partial alias trace.
+
+**Unknown:** complete freshness cache population/invalidation, group-type enum
+semantics, alias-map effects, system-message equivalence and relevant timestamp
+units/overflow at the remaining arithmetic operations. Opcode 9d is multiplication
+in [AOSP's bytecode specification](https://source.android.com/docs/core/runtime/dalvik-bytecode),
+but our scoped decoder still reports it unknown; no mnemonic/runtime patch was
+made from an unverified transcribed byte fixture. Subject notification application
+remains unimplemented; no saved account opened or live request sent for this trace.
+The new release recipe makes these methods reproducible for future comparisons.

@@ -1,0 +1,42 @@
+{
+  "group-notification-ack.txt": {
+    "bytes": 3952,
+    "sha256": "2e443505172bc6a607cabcd27ca1bedc00feb3999abf41264769517c4f775603"
+  },
+  "group-notifications.txt": {
+    "bytes": 326042,
+    "sha256": "d7de69a32582d49087d12c7cd70697167b73c290e91cf21faf20bd8c0b607d7b"
+  },
+  "group-refresh-job.txt": {
+    "bytes": 21928,
+    "sha256": "418782c1023b0fceb757ced49c7cf800901f310c360f7749f73dc7d3e97eb8ad"
+  },
+  "group-subject-cache-read.txt": {
+    "bytes": 4637,
+    "sha256": "d9dc739cca3c3b5eb15987cf197ce4291b800e70f3bb5a1e98a3f09962461142"
+  },
+  "group-subject-cache-write.txt": {
+    "bytes": 3129,
+    "sha256": "a87afe547b587ba72687a9d4a61cabf982fd29c19419f50f6f8c86d6c3e780e2"
+  },
+  "group-subject-parent-write.txt": {
+    "bytes": 2279,
+    "sha256": "23196f8c76c52c9051a15c047eea2883f0cfaeb9eec818c52a0923547393b290"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "targets.json": {
+    "bytes": 1740,
+    "sha256": "5d868dad4fe7ff229fd8853abb502bed34895052e4785784f9f366879fe13797"
+  },
+  "tokens.json": {
+    "bytes": 23012,
+    "sha256": "72900aeb9946a5ff0b8a8f0a091713607c33a4204ea14689821d2ad4fe6da30e"
+  }
+}

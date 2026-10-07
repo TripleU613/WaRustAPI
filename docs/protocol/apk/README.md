@@ -63,3 +63,47 @@ they do not prove server acceptance or promote the active 2.26.36.75 profile.
 The token dictionary differs from the active profile and is not installed
 into the library. Existing curated findings remain authoritative for what
 has actually been interpreted and verified.
+
+## Version-scoped recipes and fast cached differences
+
+`apk-research-bundle --recipe <json>` supports a different release only when the
+recipe's exact SHA-256 matches. Each stable topic maps to an exact class, optional
+method substring filter and relative affected Rust paths. Unknown fields and
+unsafe names/paths refuse; absent/ambiguous classes refuse before writing. The
+output directory and 2 MiB media-free constraints remain. Default 37.70 selectors
+are unchanged.
+
+The new [37.71 group recipe](recipes/2.26.37.71-groups.json) reproduces
+[its scoped baseline](2.26.37.71-groups/manifest.json): 11 files/391,666 bytes.
+This baseline includes six selected investigation targets, not all APK code.
+Initial export measured 16.768 seconds. Real cached self-comparisons of this
+baseline measured 0.0183..0.0215 seconds, returning all six unchanged topics;
+this is not a measured comparison of two distinct APK releases. Separate fixture
+tests exercise meaningful changed/added/removed topics and provenance-only changes.
+
+```sh
+cargo run --locked -p xtask -- apk-research-bundle /path/to/WhatsApp.apk \
+  --recipe docs/protocol/apk/recipes/2.26.37.71-groups.json \
+  --output lab/group-baseline
+
+target/debug/xtask apk-research-diff lab/group-baseline lab/next-group-baseline
+```
+
+The diff loads checksum-verified bounded exports without APK scanning and prints
+JSON topic status, both evidence file paths/class names and affected Rust paths.
+Only the per-file APK hash header is excluded from content comparison; renames,
+offsets and unknown instructions remain visible. Re-anchor the next release's
+recipe before exporting it. See [full porting direction](../apk-porting.md) for
+coverage expansion and interpretation/patch requirements. There is no HTTP route,
+account access, live request or automatic application of the changes.
+
+Non-topic `artifacts` changes include manifest, inventory, target mappings and
+the token dictionary; these remain visible separately from code topic changes.
+The checksum index itself is input verification, not a semantic-change report.
+
+Final validation: 588 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, CLI reference,
+five OpenAPI checks, formatting, staged whitespace and hygiene (425 local links)
+passed. Exact 37.71 snapshot regeneration with --check passed in 17.467s. Final
+cached reports (six topics plus four metadata/dictionary artifacts) took
+0.0200..0.0213s; all unchanged in the real self-comparison.

@@ -773,3 +773,31 @@ recorded in protocol docs.
 
 Final OpenAPI rerun, whitespace and repository hygiene (417 local links) passed.
 Private receive evidence and conversation exports remain excluded from Git.
+
+Owner steering (2026-10-07): comprehensive APK-derived Rust behavior and quick
+release-to-release file comparison now drive the work queue. Normal onboarding,
+messaging, identity/state preservation and honest live boundaries remain required.
+[Porting and release workflow](docs/protocol/apk-porting.md).
+
+Version-aware research export now accepts an exact-hash JSON recipe with stable
+topic/class/optional method filter and affected Rust paths. The committed 37.71
+six-topic group baseline has 11 files/391,666 bytes; initial extraction took
+16.768 seconds. `apk-research-diff` checksum-verifies cached topic files and links
+structural changes to evidence/Rust paths. Three real cached self-comparisons
+returned six unchanged topics in 0.0183..0.0215 seconds. Added/removed/changed,
+provenance-only changes and tampering are covered by distinct synthetic fixtures.
+This is scoped evidence comparison, not complete APK coverage or automatic
+semantic remapping/translation. Only the current APK was found in Downloads/lab;
+the committed 37.70 snapshot remains available, but its group mapping is absent.
+
+Subject freshness trace confirms a separate notification-version cache;
+ordinary snapshot s_t is not proven equivalent. The parent propagation helper is
+not the main subject writer. Application, alias effects and full cache lifecycle
+remain unfinished. No saved account opened or live request sent for this change.
+
+Final validation: 588 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, CLI reference,
+five OpenAPI checks, formatting, staged whitespace and hygiene (425 local links)
+passed. Exact 37.71 snapshot regeneration with --check passed in 17.467s. Final
+cached reports (six topics plus four metadata/dictionary artifacts) took
+0.0200..0.0213s; all unchanged in the real self-comparison.

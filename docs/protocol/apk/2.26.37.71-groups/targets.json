@@ -1,0 +1,62 @@
+{
+  "group-notification-ack": {
+    "class": "LX/Cp2;",
+    "file": "group-notification-ack.txt",
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "group-notifications": {
+    "class": "LX/0yv;",
+    "file": "group-notifications.txt",
+    "method_filter": "A09",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "group-refresh-job": {
+    "class": "Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;",
+    "file": "group-refresh-job.txt",
+    "method_filter": "A0G",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "group-subject-cache-read": {
+    "class": "LX/118;",
+    "file": "group-subject-cache-read.txt",
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "group-subject-cache-write": {
+    "class": "LX/117;",
+    "file": "group-subject-cache-write.txt",
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "group-subject-parent-write": {
+    "class": "LX/0yw;",
+    "file": "group-subject-parent-write.txt",
+    "method_filter": "A0B",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  }
+}

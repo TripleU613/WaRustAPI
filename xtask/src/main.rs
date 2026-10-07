@@ -51,7 +51,12 @@ enum Cmd {
         /// Recompute and compare without changing any files.
         #[arg(long)]
         check: bool,
+        /// Hash-pinned JSON topic/class/method/Rust-file mapping for another release.
+        #[arg(long)]
+        recipe: Option<PathBuf>,
     },
+    /// Compare checksum-verified cached topic files without rescanning either APK.
+    ApkResearchDiff { old: PathBuf, new: PathBuf },
     /// Regenerate protobuf Rust code into crates/whatsapp-api/src/proto.
     ProtoGen,
     /// Verify committed protobuf Rust code is up to date.
@@ -196,7 +201,13 @@ fn main() -> ExitCode {
     let cli = Cli::parse();
     let root = workspace_root();
     let result = match cli.cmd {
-        Cmd::ApkResearchBundle { apk, output, check } => bundle::run(&apk, &output, check),
+        Cmd::ApkResearchBundle {
+            apk,
+            output,
+            check,
+            recipe,
+        } => bundle::run(&apk, &output, check, recipe.as_deref()),
+        Cmd::ApkResearchDiff { old, new } => bundle::compare(&old, &new),
         Cmd::ProtoGen => proto::generate(&root),
         Cmd::ProtoCheck => proto::check(&root),
         Cmd::DependencyAudit { strict } => deps::audit(&root, strict),

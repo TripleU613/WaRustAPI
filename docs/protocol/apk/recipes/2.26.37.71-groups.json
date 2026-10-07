@@ -1,0 +1,53 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "targets": {
+    "group-notifications": {
+      "class": "LX/0yv;",
+      "method": "A09",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "group-notification-ack": {
+      "class": "LX/Cp2;",
+      "method": "A05",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "group-refresh-job": {
+      "class": "Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;",
+      "method": "A0G",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "group-subject-cache-read": {
+      "class": "LX/118;",
+      "method": "A00",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "group-subject-cache-write": {
+      "class": "LX/117;",
+      "method": "A01",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "group-subject-parent-write": {
+      "class": "LX/0yw;",
+      "method": "A0B",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    }
+  }
+}
