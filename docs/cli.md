@@ -83,10 +83,18 @@ Usage: whatsapp-cli prekeys [OPTIONS]...
 
 ## whatsapp-cli receipts
 
-Show queued explicit receipts and their server outcomes (offline, redacted)
+Show queued read, played and retry receipts and their outcomes (offline, redacted)
 
 ```
 Usage: whatsapp-cli receipts [OPTIONS]...
+```
+
+## whatsapp-cli identity-conflicts
+
+Inspect saved peer identity conflicts (offline; unauthenticated observations)
+
+```
+Usage: whatsapp-cli identity-conflicts [OPTIONS]...
 ```
 
 ## whatsapp-cli actions

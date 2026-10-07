@@ -682,6 +682,55 @@ verified live result.
 
 ## Asking for a resend (2026-09-24)
 
+### Runtime parity correction (2026-10-06)
+
+**Confirmed by source inspection:** the earlier implementation below existed
+only in `whatsapp-cli::transport`'s lab receive window. The public-client
+`transport::connection::drive` classified decryption failures but never called
+the retry builder. Both paths now use
+`receipts::queue_retry_for_incoming` and the existing durable receipt queue.
+This corrects a receive-path difference; it does **not** explain the historical
+window where no incoming message stanzas were captured.
+
+**Observed historical evidence:** the retry shape remains the operator handset's
+2026-09-24 receipt, recorded below and in `messaging::retry_receipt`. This change
+adds no new APK claim or traced retry policy. The existing APK **2.26.37.71**
+`LX/Cp2.A05` evidence concerns acknowledgement shape, not the outbound retry
+count or limit; those producer branches remain **unknown** here.
+
+Our policy is one request, count 1, per exact sender/chat, participant and
+message ID. Timestamp or ciphertext changes on redelivery do not reset it.
+The saved Signal registration ID is required; no default ID is invented.
+Broadcast routing is unsupported. The capture is stored before processing,
+then the request is queued and reserved as `outcome_unknown` before any write.
+Write failure, reconnect and process restart do not replay a reservation.
+An ordinary receipt ACK matching the queued route, ID and type settles its
+outcome through the existing queue; a matching retry ACK settled the live request on 2026-10-06. Acceptance of a retry request is not delivery or
+decryption of the replacement message.
+
+`whatsapp-cli receipts` exposes `kind=retry` and its durable outcome offline.
+The OpenAPI receipt schema now matches the actual CLI fields (`message_id`,
+`kind`, `status`) and status vocabulary instead of the unrelated action states.
+Missing registration/routing yields a redacted diagnostic and leaves receive
+running; storage failures propagate rather than masquerading as absent input.
+The lab receive path shares this policy instead of repeatedly writing count 1.
+Tests exercise an actual undecryptable message through the session loop, a
+socket write cut, no replay next epoch, continuation without registration data,
+queue persistence, sender/participant separation and ACK correlation.
+
+**Observed recovery:** the fresh checkout initially lacked `lab/`. A search
+including ignored files found the former checkout under the desktop Trash at
+`~/.local/share/Trash/files/TeleWhatsApp/lab`. It was copied back
+with private permissions; the original was preserved and all restored files
+remain Git-ignored. Offline inspection of profile `l` opened the saved encrypted
+store: registered, last login checkpoint `success`, zero eligible outbox
+intents, no queued actions (nine `ok`, one `error`, one already `sent`), six
+acknowledged explicit receipts, and 49 uploaded prekeys with none unsent or
+uncertain. `transport.mark_read` was already true; request data was unchanged.
+This establishes recoverable local state, not a fresh successful server login.
+The first filename search respected ignore rules and missed this state; use
+`rg --files --hidden --no-ignore` when looking for private recovery artifacts.
+
 When we cannot decrypt an incoming message we now send a `receipt type="retry"`,
 which is the mirror of the ones we answer. Not sending them is why several of
 the operator's messages simply vanished: the stanza was preserved, nothing was
@@ -796,3 +845,57 @@ as a burst of `receipt chat=group confirmed=false`. Receipts are now acked in
 the APK's shape. Only the types this client processes (delivery, read, played)
 are acknowledged; the APK acks every type after handling it, and an ack for a
 type we only preserve would claim it was handled.
+
+
+## Recovered-account receive window (2026-10-06 local / 2026-10-07 UTC)
+
+**Observed:** the rebuilt release CLI ran one 90-second `listen` window for
+profile `l`, with the existing `transport.mark_read=true` and without
+`--send-outbox`. Certificate-checked login and connection activation succeeded.
+Queued traffic included a direct `pkmsg` and a group `pkmsg`/`skmsg`; neither
+decrypted. The direct failure queued one retry, a matching ACK settled it as
+`server_acknowledged`, and its redelivery failed too. The saved marker suppressed
+a second request. Six prior read receipts remained acknowledged; the only new
+receipt outcome was the acknowledged retry. The session stopped cleanly.
+Private log and receipt snapshots are under `lab/accounts/l/` with prefix
+`receive-2026-10-06-runtime-retry`; no content or identities are reproduced here.
+
+The former `signal::direct::crypto` erased the failure variant into one generic
+message. It now maps typed `wacore-libsignal` 0.7.0 errors to fixed, redacted
+reasons (missing prekey/session, untrusted identity, bad MAC, invalid encoding,
+duplicate counter, etc.). It never formats address/string/backend payloads.
+A regression test checks those redactions. This is an implementation diagnostic
+correction, not new APK evidence or a relaxation of cryptographic checks.
+Identity pins, keys and retry reservations stay intact during offline diagnosis.
+
+`lab-inbox --inspect` now includes `prekey_pin_matches` for the first `pkmsg`
+child against stored `comparison-direct` pins for its `from`, `sender_pn`,
+`participant` and `participant_pn` aliases. `Some(true)` is a matching public
+identity, `Some(false)` a mismatch, and `None` no saved pin; malformed inputs
+are labelled `invalid_input` (or `invalid_ciphertext` for a non-byte payload). `signal::direct::incoming_prekey_identity_matches`
+only parses and compares public keys; neither inspection nor a match authenticates
+the ciphertext or permits replacing a pin. It prints no keys or full addresses
+and never advances sessions. This exposes the inputs needed to distinguish a
+PN/LID routing issue from an identity difference.
+
+**Confirmed by offline inspection of the preserved captures:** both direct
+prekey envelopes differ from both existing `from` (LID) and `sender_pn` pins.
+The group envelope differs from both `participant` (LID) and `participant_pn`
+pins. All four alias types had saved pins (`Some(false)`, not `None`). Switching
+only from the saved LID session to the saved PN session therefore cannot fix
+these identity comparisons. Offline replay decrypted nothing new, skipped 33
+already committed captures and left three unsupported captures; it sent no
+receipts. The keys and pins were preserved.
+
+**Unknown:** whether this is a legitimate peer identity change, incorrect
+historical pins or another upstream identity/routing issue. A prekey-envelope
+key comparison alone does not authenticate the new key. The existing blanket
+TOFU/pin guard has no verified identity-change workflow; that is this client's
+limitation, not a server requirement or delivery refusal. Do not replace pins
+or create a fresh account merely to make these messages decrypt.
+
+Validation after the diagnostic and inspection changes: 496 workspace/all-feature
+tests passed, strict Clippy, rustdoc with warnings denied, formatting, generated
+CLI-reference verification and repository hygiene passed. The receipt OpenAPI
+schema was corrected to the actual CLI fields and states. Handset ticks and
+fresh-message automatic-read behavior remain unconfirmed in this run.

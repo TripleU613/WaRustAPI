@@ -477,6 +477,19 @@ pub(crate) async fn drive(
                     }
                 }
                 super::outgoing::acknowledge(&store, &node)?;
+                if received == super::inbox::IncomingResult::Undecryptable {
+                    match super::receipts::queue_retry_for_incoming(&store, &account, &node) {
+                        Ok(0) => tracing::info!(target: "whatsapp_api::incoming", "retry already recorded; no repeat"),
+                        Ok(_) => {
+                            for receipt in super::receipts::reserve_pending(&store)? {
+                                link.send(&receipt).await?;
+                            }
+                            tracing::info!(target: "whatsapp_api::incoming", "retry queued; reserved receipt batch written; delivery remains unconfirmed");
+                        }
+                        Err(Error::InvalidInput { field, reason }) => tracing::warn!(field, reason, "retry receipt not queued"),
+                        Err(error) => return Err(error),
+                    }
+                }
                 let mut confirmed = false;
                 if (node.description == "receipt" || matches!(received, super::inbox::IncomingResult::Decrypted | super::inbox::IncomingResult::Duplicate))
                     && let Some(confirmation) = super::messaging::received_confirmation(&node) {
@@ -839,6 +852,105 @@ mod tests {
                 .is_some(),
             "server reason preserved encrypted at rest"
         );
+    }
+
+    #[tokio::test]
+    async fn undecryptable_message_requests_once_before_write_cut_and_never_replays() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("retry-cut.redb"));
+        store
+            .write(|tx| {
+                let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                account.signal_registration_id = Some(0x0102_0304);
+                account.save(tx)
+            })
+            .unwrap();
+        // Like the inbox resilience fixture: no session for this sender, so
+        // this is a genuine decryption failure through the production loop.
+        let failed = Node::new("message")
+            .attr("from", peer())
+            .attr("id", "FAILED")
+            .attr("type", "text")
+            .children(vec![
+                Node::new("enc")
+                    .attr("v", "2")
+                    .attr("type", "msg")
+                    .bytes(vec![9; 48]),
+            ]);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver(failed.clone()).await;
+        let (retry, reply) = fake.written().await;
+        assert_eq!(retry.description, "receipt");
+        assert_eq!(
+            retry.get_attr("type").and_then(|v| v.as_text()),
+            Some("retry")
+        );
+        assert_eq!(
+            retry.get_attr("id").and_then(|v| v.as_text()),
+            Some("FAILED")
+        );
+        assert_eq!(
+            super::super::receipts::outcomes(&store).unwrap()[0].status,
+            "outcome_unknown"
+        );
+        let wire = encode(&failed).unwrap();
+        let capture = format!("inbound:sha256:{}", hex::encode(sha2::Sha256::digest(wire)));
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        reply
+            .send(Err(Error::Transport(TransportError::PeerClosed)))
+            .unwrap();
+        assert!(
+            fake.finished()
+                .await
+                .unwrap_err()
+                .is_recoverable_by_reconnect()
+        );
+
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver(failed).await;
+        // Following receipt proves the loop continued after the failed
+        // redelivery, without emitting retry or delivery ACK for that message.
+        fake.deliver(Node::new("receipt").attr("from", peer()).attr("id", "NEXT"))
+            .await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(ack.get_attr("id").and_then(|v| v.as_text()), Some("NEXT"));
+        reply.send(Ok(())).unwrap();
+        fake.nothing_written(Duration::from_millis(100)).await;
+        assert_eq!(super::super::receipts::outcomes(&store).unwrap().len(), 1);
+        fake.stop_cleanly().await;
+    }
+
+    #[tokio::test]
+    async fn missing_registration_skips_retry_without_ending_receive() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("retry-missing-registration.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.deliver(
+            Node::new("message")
+                .attr("from", peer())
+                .attr("id", "FAILED")
+                .children(vec![
+                    Node::new("enc").attr("type", "msg").bytes(vec![9; 48]),
+                ]),
+        )
+        .await;
+        fake.deliver(Node::new("receipt").attr("from", peer()).attr("id", "NEXT"))
+            .await;
+        let (ack, reply) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(ack.get_attr("id").and_then(|v| v.as_text()), Some("NEXT"));
+        reply.send(Ok(())).unwrap();
+        assert!(super::super::receipts::outcomes(&store).unwrap().is_empty());
+        fake.stop_cleanly().await;
     }
 
     #[tokio::test]

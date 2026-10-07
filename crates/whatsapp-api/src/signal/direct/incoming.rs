@@ -54,6 +54,34 @@ pub fn incoming_prekey_id(ciphertext: &[u8]) -> Result<Option<u32>> {
         .pre_key_id()
         .map(u32::from))
 }
+/// Compare an incoming prekey's public identity to a saved pin without
+/// decrypting, advancing a session or exposing either key. A match is not
+/// authentication of the message; it is only an offline inspection result.
+pub fn incoming_prekey_identity_matches(ciphertext: &[u8], pinned: &[u8]) -> Result<bool> {
+    if ciphertext.len() > 65536 {
+        return Err(invalid("prekey envelope exceeds bound"));
+    }
+    let message = PreKeySignalMessage::try_from(ciphertext).map_err(crypto)?;
+    let pinned = IdentityKey::decode(pinned).map_err(crypto)?;
+    Ok(message.identity_key() == &pinned)
+}
+/// SHA-256 diagnostics for the saved and observed public identities. These
+/// are local key fingerprints, not WhatsApp safety numbers or authentication.
+pub fn incoming_prekey_identity_fingerprints(
+    ciphertext: &[u8],
+    pinned: &[u8],
+) -> Result<(String, String)> {
+    use sha2::{Digest, Sha256};
+    if ciphertext.len() > 65536 {
+        return Err(invalid("prekey envelope exceeds bound"));
+    }
+    let message = PreKeySignalMessage::try_from(ciphertext).map_err(crypto)?;
+    let pinned = IdentityKey::decode(pinned).map_err(crypto)?;
+    Ok((
+        hex::encode(Sha256::digest(pinned.serialize())),
+        hex::encode(Sha256::digest(message.identity_key().serialize())),
+    ))
+}
 /// Prepared incoming session and peer identity, plus the consumed prekey ID.
 pub struct ReceivedPrekey {
     /// Authenticated plaintext and updated session; commit together.

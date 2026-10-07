@@ -437,6 +437,9 @@ async fn process_direct(
             tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?,
         ))
     })?;
+    if is_prekey_message {
+        super::identity_conflicts::observe(store, &session_peer, ciphertext, identity.as_deref())?;
+    }
     let session = session.map(Zeroizing::new);
     if peer_category
         && (session.is_none()
@@ -688,7 +691,10 @@ async fn process_group(
             // A group stanza that fails in the crypto is undecryptable; one
             // that fails elsewhere is merely unsupported. Only the first is
             // worth asking the sender to repeat.
-            let undecryptable = matches!(field, "group_crypto" | "group_message");
+            // SKDM-bearing group children use the direct Signal decryptor.
+            // Its failures need the same bounded retry as sender-key failures.
+            let undecryptable =
+                matches!(field, "group_crypto" | "group_message" | "direct_message");
             tracing::warn!(
                 field,
                 reason,
@@ -780,6 +786,9 @@ async fn process_group_inner(
             ))
         })?;
         let is_prekey = enc.get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg");
+        if is_prekey {
+            super::identity_conflicts::observe(store, &peer, ciphertext, identity.as_deref())?;
+        }
         let decrypted = if is_prekey {
             let signed = crate::registration::factory::registered_signed_prekey(store)?;
             if let Some(pid) = crate::signal::direct::incoming_prekey_id(ciphertext)? {
@@ -1173,6 +1182,42 @@ mod tests {
                 .read(|tx| tx.scan(Table::SignalSessions, 1, 10))
                 .unwrap()
                 .is_empty()
+        );
+        // Pairwise group children use direct Signal sessions. A failure here
+        // used to be classified Unsupported, silently suppressing retries.
+        let peer_key = "comparison-direct:15555550100@s.whatsapp.net";
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::SignalSessions,
+                    peer_key.as_bytes(),
+                    1,
+                    &vec![1u8; 32],
+                )?;
+                tx.put_json(
+                    Table::PeerIdentities,
+                    peer_key.as_bytes(),
+                    1,
+                    &vec![5u8; 33],
+                )
+            })
+            .unwrap();
+        let pairwise = Node::new("message")
+            .attr("from", "120363000000000001@g.us")
+            .attr("participant", "15555550100@s.whatsapp.net")
+            .attr("id", "grp-pairwise-bad")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", "msg")
+                    .attr("v", "2")
+                    .bytes(vec![9, 9, 9, 9]),
+            ]);
+        let capture = preserve(&store, &pairwise).unwrap();
+        assert_eq!(
+            process(&store, &account, &pairwise, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Undecryptable
         );
     }
 

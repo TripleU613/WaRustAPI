@@ -205,9 +205,12 @@ enum Cmd {
     /// Show one-time prekey counts and upload batches (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Prekeys,
-    /// Show queued explicit receipts and their server outcomes (offline, redacted).
+    /// Show queued read, played and retry receipts and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Receipts,
+    /// Inspect saved peer identity conflicts (offline; unauthenticated observations).
+    #[cfg(feature = "experimental-transport")]
+    IdentityConflicts,
     /// Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Actions {
@@ -1379,6 +1382,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::Prekeys => transport_receive::prekeys_status(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Receipts => transport_receive::receipts_status(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::IdentityConflicts => transport_receive::identity_conflicts(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Actions { show } => transport_receive::actions_status(&cli, show.as_deref()),
         #[cfg(feature = "experimental-transport")]

@@ -355,11 +355,11 @@
         "properties": {
           "to": {
             "$ref": "#/components/schemas/Jid",
-            "description": "Direct recipient: E.164 digits, a `…@s.whatsapp.net` JID, or a `…@lid` JID. Omit when `group` is set. The LID form exists because a LID-addressed chat encrypts under a LID Signal address, which needs to be testable outside a group fan-out."
+            "description": "Direct recipient: E.164 digits, a `\u2026@s.whatsapp.net` JID, or a `\u2026@lid` JID. Omit when `group` is set. The LID form exists because a LID-addressed chat encrypts under a LID Signal address, which needs to be testable outside a group fan-out."
           },
           "group": {
             "type": "string",
-            "description": "Group chat JID (`…@g.us`) for a sender-key fan-out send. Mutually exclusive with `to`; text only so far. lab-transport resolves the membership with a `w:g2` info query, the members' devices with `usync devices`, then addresses every device individually."
+            "description": "Group chat JID (`\u2026@g.us`) for a sender-key fan-out send. Mutually exclusive with `to`; text only so far. lab-transport resolves the membership with a `w:g2` info query, the members' devices with `usync devices`, then addresses every device individually."
           },
           "fresh_sessions": {
             "type": "boolean",
@@ -371,7 +371,7 @@
               "participants",
               "direct"
             ],
-            "description": "Group send only: how the sender key is distributed. `participants` (default) puts one `<enc>` per device inside the group stanza's `<participants>`; `direct` sends one ordinary direct message per device carrying the distribution, before the group stanza, and omits `<participants>` entirely. Both are real — `includeSenderKeysInMessage` is a per-send flag in SendE2EMessageJob and SendLiveLocationKeyJob distributes keys entirely out of band."
+            "description": "Group send only: how the sender key is distributed. `participants` (default) puts one `<enc>` per device inside the group stanza's `<participants>`; `direct` sends one ordinary direct message per device carrying the distribution, before the group stanza, and omits `<participants>` entirely. Both are real \u2014 `includeSenderKeysInMessage` is a per-send flag in SendE2EMessageJob and SendLiveLocationKeyJob distributes keys entirely out of band."
           },
           "request_id": {
             "$ref": "#/components/schemas/RequestId"
@@ -488,33 +488,36 @@
       "ReceiptOutcome": {
         "type": "object",
         "required": [
-          "id",
+          "message_id",
           "kind",
           "status"
         ],
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "Receipt identifier"
-          },
-          "chat": {
-            "type": "string",
-            "description": "Chat JID (masked for privacy)"
-          },
           "kind": {
             "type": "string",
             "enum": [
               "read",
-              "delivery",
-              "played"
+              "played",
+              "retry"
             ],
             "description": "Type of receipt"
           },
           "status": {
-            "$ref": "#/components/schemas/ActionStatus"
+            "type": "string",
+            "enum": [
+              "pending",
+              "outcome_unknown",
+              "server_acknowledged",
+              "refused"
+            ],
+            "description": "Durable receipt transmission outcome. An acknowledged retry is not confirmation of replacement-message delivery."
+          },
+          "message_id": {
+            "type": "string",
+            "description": "Wire message ID referenced by the queued receipt; no recipient or message content is included."
           }
         },
-        "description": "Outcome of a queued receipt transmission"
+        "description": "Outcome of a queued read, played or automatic once-only retry receipt transmission."
       },
       "RegistrationStep": {
         "type": "object",
@@ -1909,7 +1912,7 @@
           "background_argb": {
             "type": "integer",
             "format": "int64",
-            "description": "backgroundArgb, field 8, FIXED32 on the wire (unsigned, 4 bytes little-endian — NOT a varint int32). ARGB with alpha most significant."
+            "description": "backgroundArgb, field 8, FIXED32 on the wire (unsigned, 4 bytes little-endian \u2014 NOT a varint int32). ARGB with alpha most significant."
           },
           "text_argb": {
             "type": "integer",
@@ -1949,7 +1952,7 @@
             "items": {
               "type": "string"
             },
-            "description": "Identities allowed to see it (phone-number or LID form). Explicit because a status has no membership list and this client does not sync the account's status privacy list — this is WhatsApp's \"share with only…\"."
+            "description": "Identities allowed to see it (phone-number or LID form). Explicit because a status has no membership list and this client does not sync the account's status privacy list \u2014 this is WhatsApp's \"share with only\u2026\"."
           },
           "font": {
             "type": "integer",
@@ -1998,7 +2001,7 @@
             "description": "When we recorded it"
           }
         },
-        "description": "One viewer's report about one of our statuses. Observed shape: `<receipt from=<viewer> [type]><participants message_id=<status id>/></receipt>` — the status is named by the participants child, not the receipt's own id. Recorded only; this client sends no read receipts of its own."
+        "description": "One viewer's report about one of our statuses. Observed shape: `<receipt from=<viewer> [type]><participants message_id=<status id>/></receipt>` \u2014 the status is named by the participants child, not the receipt's own id. Recorded only; this client sends no read receipts of its own."
       },
       "StatusLike": {
         "type": "object",
@@ -2024,7 +2027,7 @@
             "type": "integer"
           }
         },
-        "description": "A like on one of our statuses. A status reaction is an ordinary Message.reactionMessage (field 46) whose key names status@broadcast as the remoteJid — that is what distinguishes it from a chat reaction. In the APK it lands in status_add_on with type = 1, which a trigger counts into status_interactions.reaction_count."
+        "description": "A like on one of our statuses. A status reaction is an ordinary Message.reactionMessage (field 46) whose key names status@broadcast as the remoteJid \u2014 that is what distinguishes it from a chat reaction. In the APK it lands in status_add_on with type = 1, which a trigger counts into status_interactions.reaction_count."
       },
       "QuotedTarget": {
         "type": "object",
@@ -2039,7 +2042,7 @@
           },
           "participant": {
             "type": "string",
-            "description": "Who sent it. A group message id means nothing without this — the same id from two members is two different messages."
+            "description": "Who sent it. A group message id means nothing without this \u2014 the same id from two members is two different messages."
           },
           "emoji": {
             "type": "string",
@@ -2050,7 +2053,44 @@
             "description": "The quoted message's own text, carried as quotedMessage. Absent quotes an empty body rather than inventing one."
           }
         },
-        "description": "An existing group message to reply to or react to. A reply carries `text` and no emoji; a reaction carries an emoji and no body — a reaction with a body, or a reply without one, renders as something else entirely on the recipient."
+        "description": "An existing group message to reply to or react to. A reply carries `text` and no emoji; a reaction carries an emoji and no body \u2014 a reaction with a body, or a reply without one, renders as something else entirely on the recipient."
+      },
+      "IdentityConflict": {
+        "type": "object",
+        "required": [
+          "ticket",
+          "peer_ticket",
+          "pinned_fingerprint",
+          "observed_fingerprint",
+          "observed_at"
+        ],
+        "properties": {
+          "ticket": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "Local selector for peer/pinned/observed tuple."
+          },
+          "peer_ticket": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "SHA-256 of local session address selector; no raw address."
+          },
+          "pinned_fingerprint": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "SHA-256 of serialized saved public identity; not a WhatsApp safety number."
+          },
+          "observed_fingerprint": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "SHA-256 of serialized public identity in unauthenticated envelope."
+          },
+          "observed_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "First local observation, milliseconds since Unix epoch."
+          }
+        }
       }
     }
   },
@@ -4598,7 +4638,7 @@
           "Events"
         ],
         "summary": "Decrypt captured direct replies locally, without network I/O",
-        "description": "Decrypt authenticated incoming records locally. The operation is offline. With `inspect: true`, display the plaintext protobuf structure without advancing sessions. With replay_captures, preserved message captures are re-run through inbox::process offline to recover stanzas that an earlier defect refused; this is how the first live group messages were recovered after the sender-key distribution field number was corrected.",
+        "description": "Decrypt authenticated incoming records locally. The operation is offline. With `inspect: true`, display the plaintext protobuf structure without advancing sessions. With replay_captures, preserved message captures are re-run through inbox::process offline to recover stanzas that an earlier defect refused; this is how the first live group messages were recovered after the sender-key distribution field number was corrected. With --inspect, prekey_pin_matches compares the first pkmsg public identity to saved comparison-direct pins for from, sender_pn, participant and participant_pn aliases. Some(true) means matching, Some(false) means differing, None means no saved pin; invalid_input marks malformed inspection data, and invalid_ciphertext marks a non-byte pkmsg payload. This is offline, read-only, prints no keys or full addresses, does not authenticate the ciphertext and does not authorize a pin replacement. Signal failures report fixed redacted categories rather than underlying address/backend strings.",
         "operationId": "labInbox",
         "x-cli": "whatsapp-cli lab-inbox",
         "x-transport": [
@@ -4655,7 +4695,8 @@
           }
         },
         "x-library": [
-          "whatsapp_api::transport::inbox::reproject"
+          "whatsapp_api::transport::inbox::reproject",
+          "whatsapp_api::signal::direct::incoming_prekey_identity_matches"
         ]
       }
     },
@@ -5910,8 +5951,8 @@
         "tags": [
           "Receipts"
         ],
-        "summary": "Show queued explicit receipts and their server outcomes (offline, redacted)",
-        "description": "Returns the list of queued explicit receipts and their outcomes. The operation is offline and response content is redacted.",
+        "summary": "Show queued read, played and retry receipts and their outcomes (offline, redacted)",
+        "description": "Lists the durable receipt queue, including automatic decryption-failure retries. Status is pending, outcome_unknown, server_acknowledged or refused. A retry ACK confirms the request was accepted, not that a replacement message arrived or decrypted. Includes message IDs, but no recipients or message content. CLI only; no HTTP route is served.",
         "operationId": "getReceipts",
         "x-cli": "whatsapp-cli receipts",
         "x-transport": [
@@ -6001,7 +6042,7 @@
                 "properties": {
                   "chat": {
                     "$ref": "#/components/schemas/Jid",
-                    "description": "Sender JID for a direct message, or the group JID (`…@g.us`) for a group message"
+                    "description": "Sender JID for a direct message, or the group JID (`\u2026@g.us`) for a group message"
                   },
                   "id": {
                     "type": "array",
@@ -6303,7 +6344,7 @@
           "Lab"
         ],
         "summary": "One comparison-server connection; optional bounded primary login",
-        "description": "Establish a single connection to the comparison server (x-live) with optional bounded primary login, message transmission, or receive mode. A successful login records this account's own LID from the `<success>` stanza, which a LID-addressed group names us by. When the message JSON carries `group` instead of `to`, the send is a sender-key fan-out: a `w:g2` info query resolves the membership, a `usync devices` query resolves each member's devices, `encrypt` supplies bundles for devices without a session, and one `<message>` carries a per-device `<enc>` distribution inside `<participants>` beside the group `skmsg`. It refuses rather than sending when a member has no device list. After any send the connection is held briefly and whatever the server sends next is preserved, because a recipient that cannot decrypt answers with a `receipt type=\"retry\"` naming the failing device. A `<success>` or `<failure>` login result is preserved too: a `<failure>` carries an `appeal_token` and a refusal cannot be replayed to fetch one again.",
+        "description": "Establish a single connection to the comparison server (x-live) with optional bounded primary login, message transmission, or receive mode. A successful login records this account's own LID from the `<success>` stanza, which a LID-addressed group names us by. When the message JSON carries `group` instead of `to`, the send is a sender-key fan-out: a `w:g2` info query resolves the membership, a `usync devices` query resolves each member's devices, `encrypt` supplies bundles for devices without a session, and one `<message>` carries a per-device `<enc>` distribution inside `<participants>` beside the group `skmsg`. It refuses rather than sending when a member has no device list. After any send the connection is held briefly and whatever the server sends next is preserved, because a recipient that cannot decrypt answers with a `receipt type=\"retry\"` naming the failing device. A `<success>` or `<failure>` login result is preserved too: a `<failure>` carries an `appeal_token` and a refusal cannot be replayed to fetch one again. Receive mode shares listen\u2019s durable once-only decryption-failure retry queue; no repeated count=1 requests after redelivery or uncertain writes. Inspect with receipts (offline).",
         "operationId": "labTransport",
         "x-cli": "whatsapp-cli lab-transport",
         "x-transport": [
@@ -6351,7 +6392,7 @@
                   },
                   "message": {
                     "$ref": "#/components/schemas/MessageRequest",
-                    "description": "Private JSON: request_id, either to (direct) or group (`…@g.us` fan-out), and text, image (PNG) or voice_note (Ogg/Opus); a group send is text only so far"
+                    "description": "Private JSON: request_id, either to (direct) or group (`\u2026@g.us` fan-out), and text, image (PNG) or voice_note (Ogg/Opus); a group send is text only so far"
                   },
                   "recheck_refusal": {
                     "type": "boolean",
@@ -6360,11 +6401,11 @@
                   "push_name": {
                     "type": "string",
                     "maxLength": 100,
-                    "description": "Set the display name others see beside this number: one `<presence name=… type=\"available\"/>` after login (comparison 2.26.37.71 `LX/0y0->A00`, `WriterThread/write/push-name`, confirmed). Fire-and-forget: the server sends no reply, so the CLI reports `written`, not accepted, and records it under the `push-name` checkpoint. The 100-character bound is this client's; the APK enforces none on the wire. Not live-verified yet."
+                    "description": "Set the display name others see beside this number: one `<presence name=\u2026 type=\"available\"/>` after login (comparison 2.26.37.71 `LX/0y0->A00`, `WriterThread/write/push-name`, confirmed). Fire-and-forget: the server sends no reply, so the CLI reports `written`, not accepted, and records it under the `push-name` checkpoint. The 100-character bound is this client's; the APK enforces none on the wire. Not live-verified yet."
                   },
                   "typing": {
                     "type": "string",
-                    "description": "Show a typing indicator in this chat (E.164 digits, a phone/LID JID or a `…@g.us` group): announces `presence type=available`, writes `<chatstate to=…><composing/></chatstate>` (`LX/B2G->A01`, confirmed), holds for `typing_seconds` without reading (a cancelled read closes this channel), then writes `<paused/>` (`LX/B2H->handleMessage`, confirmed). Combined with `message`, the indicator runs before the send. Not live-verified yet."
+                    "description": "Show a typing indicator in this chat (E.164 digits, a phone/LID JID or a `\u2026@g.us` group): announces `presence type=available`, writes `<chatstate to=\u2026><composing/></chatstate>` (`LX/B2G->A01`, confirmed), holds for `typing_seconds` without reading (a cancelled read closes this channel), then writes `<paused/>` (`LX/B2H->handleMessage`, confirmed). Combined with `message`, the indicator runs before the send. Not live-verified yet."
                   },
                   "typing_state": {
                     "type": "string",
@@ -6389,7 +6430,7 @@
                     "items": {
                       "type": "string"
                     },
-                    "description": "During `receive`, subscribe to these people's availability and typing, as opening their chat does: after activation, `presence type=available`, then per person `<presence type=\"subscribe\" to=…>` with a `<tctoken>` child carrying their saved trusted-contact token when one is held (comparison 2.26.37.71 `LX/0y0->A00`, `WriterThread/write/subscription-request`, confirmed; token bound 1..=120 bytes). Incoming `presence` (available/unavailable, `last` seen) and `chatstate` (composing/recording/paused) are then reported during the window with identities redacted. People only; group typing arrives without a subscription. Not live-verified yet."
+                    "description": "During `receive`, subscribe to these people's availability and typing, as opening their chat does: after activation, `presence type=available`, then per person `<presence type=\"subscribe\" to=\u2026>` with a `<tctoken>` child carrying their saved trusted-contact token when one is held (comparison 2.26.37.71 `LX/0y0->A00`, `WriterThread/write/subscription-request`, confirmed; token bound 1..=120 bytes). Incoming `presence` (available/unavailable, `last` seen) and `chatstate` (composing/recording/paused) are then reported during the window with identities redacted. People only; group typing arrives without a subscription. Not live-verified yet."
                   }
                 }
               }
@@ -6431,7 +6472,7 @@
           "Session"
         ],
         "summary": "Maintain an authenticated comparison connection and process incoming messages",
-        "description": "Establish an authenticated session to the messaging server (x-live). Hold the connection for the requested duration, receive incoming messages, and optionally transmit all eligible queued intents. Group messages (enc type=skmsg) are decrypted when a SenderKeyDistributionMessage for the (group, sender) pair has been received in a prior or current direct message; messages without a stored sender key are preserved as Unsupported without acknowledgement. SKDM distribution arrives embedded in pkmsg/msg payloads (WhatsApp Message field 2), either standalone or as a second enc child of the group stanza, and is committed atomically with the inbox row. A decrypted group message is confirmed with a receipt addressed to the group carrying the sender as participant. Status updates (from=status@broadcast) route through the same sender-key path and project into a Broadcast chat with the poster as sender, but are never confirmed with a receipt: the status receipt shape (class=status, type=sender) has an unresolved sts input, so none is sent. Each incoming stanza except keepalive replies is reported on stderr as one redacted `incoming` log line (element, type, chat class, enc types, inbox outcome, confirmed, marked_read); this is the default when RUST_LOG is unset.",
+        "description": "Establish an authenticated session to the messaging server (x-live). Hold the connection for the requested duration, receive incoming messages, and optionally transmit all eligible queued intents. Group messages (enc type=skmsg) are decrypted when a SenderKeyDistributionMessage for the (group, sender) pair has been received in a prior or current direct message; messages without a stored sender key are preserved as Unsupported without acknowledgement. SKDM distribution arrives embedded in pkmsg/msg payloads (WhatsApp Message field 2), either standalone or as a second enc child of the group stanza, and is committed atomically with the inbox row. A decrypted group message is confirmed with a receipt addressed to the group carrying the sender as participant. Status updates (from=status@broadcast) route through the same sender-key path and project into a Broadcast chat with the poster as sender, but are never confirmed with a receipt: the status receipt shape (class=status, type=sender) has an unresolved sts input, so none is sent. Each incoming stanza except keepalive replies is reported on stderr as one redacted `incoming` log line (element, type, chat class, enc types, inbox outcome, confirmed, marked_read); this is the default when RUST_LOG is unset. On Undecryptable incoming messages, queues a retry receipt using the saved Signal registration ID. Both listen and lab receive use one request per chat/participant/message ID, durably reserved before transmission; repeats and uncertain outcomes never reset it. This is a conservative client policy, not an APK retry limit. Missing registration or unsupported routing is logged without ending receive; storage failures propagate. The receipts command inspects outcomes offline. Live 2026-10-06: saved-account login and activation succeeded; one automatic retry received a matching server ACK. Its redelivery still failed decryption, and fresh-message automatic read validation remains pending. Signal failure diagnostics classify missing keys, untrusted identity, bad MAC, duplicate counter and invalid encoding without printing peer addresses or backend details. This does not explain the historical window with no incoming message stanzas. Offline preserved-capture inspection found incoming prekey identities differing from both saved PN and LID pins; no pin was replaced. A verified identity-change workflow is not implemented, and the underlying cause remains unknown. Direct and group pairwise prekey processing persists first-seen differing public-key fingerprints; identity-conflicts inspects these unauthenticated observations offline. Pins and sessions are not replaced. A failing direct Signal child within a group stanza is also Undecryptable and eligible for the same once-only retry; missing sender-key/session support remains Unsupported.",
         "operationId": "listen",
         "x-cli": "whatsapp-cli listen",
         "x-transport": [
@@ -6497,7 +6538,8 @@
           }
         },
         "x-library": [
-          "whatsapp_api::WhatsAppClient::connect"
+          "whatsapp_api::WhatsAppClient::connect",
+          "whatsapp_api::transport::receipts::queue_retry_for_incoming"
         ]
       }
     },
@@ -8565,7 +8607,7 @@
     "/v1/app-state/publish-contacts": {
       "post": {
         "summary": "Queue an app-state contactAction patch publishing every saved contact (offline; a session transmits it)",
-        "description": "Build and queue a SyncdPatch of contactAction SET mutations, one per saved contact, into the critical_unblock_low collection (LX/Azs->A00 routes contactAction there, confirmed — not a 'regular' collection). Index is [\"contact\", <jid>] and SyncActionData.version is 2, both confirmed from LX/B6M. Mints this device's app-state key if it has none. The <collection version> attribute is the version the client currently holds and is omitted for a never-synced collection (confirmed, CSe.A01 call sites). LIVE STATUS: refused. Two attempts, both answered iq type=error code=400 text=bad-request; the second carried the corrected version semantics. Not iterated further. See docs/protocol/chat-actions.md for the undistinguished candidates.",
+        "description": "Build and queue a SyncdPatch of contactAction SET mutations, one per saved contact, into the critical_unblock_low collection (LX/Azs->A00 routes contactAction there, confirmed \u2014 not a 'regular' collection). Index is [\"contact\", <jid>] and SyncActionData.version is 2, both confirmed from LX/B6M. Mints this device's app-state key if it has none. The <collection version> attribute is the version the client currently holds and is omitted for a never-synced collection (confirmed, CSe.A01 call sites). LIVE STATUS: refused. Two attempts, both answered iq type=error code=400 text=bad-request; the second carried the corrected version semantics. Not iterated further. See docs/protocol/chat-actions.md for the undistinguished candidates.",
         "operationId": "publishContactAppState",
         "x-cli": "whatsapp-cli contacts publish-app-state",
         "x-transport": [
@@ -8807,7 +8849,7 @@
           "Lab"
         ],
         "summary": "Queue the display name as the pushNameSetting app-state record",
-        "description": "Queues an app-state patch to `critical_block` carrying one SET mutation: index `[\"setting_pushName\"]`, `SyncActionData.version` 1, value `SyncActionValue{timestamp: 1, pushNameSetting: 7 {name: 1}}` (comparison 2.26.37.71 `LX/B66`, `LX/Azq`, `LX/BZV`, `LX/BQd`, all confirmed). This is how the account's other devices learn the name; other people see it through the separate `<presence name=…>` stanza sent by `lab-transport --push-name`. Builds on the collection state the server last accepted and promotes the new state only once the server accepts it; a 409 conflict is caught up from the returned patches. Offline: a session such as `listen` transmits the queued action. Live 2026-09-25: accepted, `<collection name=\"critical_block\" version=\"1\"/>`.",
+        "description": "Queues an app-state patch to `critical_block` carrying one SET mutation: index `[\"setting_pushName\"]`, `SyncActionData.version` 1, value `SyncActionValue{timestamp: 1, pushNameSetting: 7 {name: 1}}` (comparison 2.26.37.71 `LX/B66`, `LX/Azq`, `LX/BZV`, `LX/BQd`, all confirmed). This is how the account's other devices learn the name; other people see it through the separate `<presence name=\u2026>` stanza sent by `lab-transport --push-name`. Builds on the collection state the server last accepted and promotes the new state only once the server accepts it; a 409 conflict is caught up from the returned patches. Offline: a session such as `listen` transmits the queued action. Live 2026-09-25: accepted, `<collection name=\"critical_block\" version=\"1\"/>`.",
         "operationId": "queuePushName",
         "x-cli": "whatsapp-cli push-name",
         "x-transport": [
@@ -8886,6 +8928,57 @@
         "x-library": [
           "whatsapp_api::transport::about::queue_set",
           "whatsapp_api::transport::about::set_request"
+        ]
+      }
+    },
+    "/v1/identity-conflicts": {
+      "get": {
+        "tags": [
+          "Account Safety"
+        ],
+        "summary": "Inspect durable peer identity conflict observations offline",
+        "description": "Lists first-seen SHA-256 public-key fingerprint differences observed in incoming prekey envelopes. These observations are unauthenticated: they do not establish a legitimate identity change, replace a pin, advance a session, clear verification, or authorize sending. The peer address is represented by a local SHA-256 selector. Replay/redelivery of the same peer/pinned/observed combination preserves the original timestamp. CLI only; no HTTP route exists.",
+        "operationId": "getIdentityConflicts",
+        "x-cli": "whatsapp-cli identity-conflicts",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of unauthenticated conflict observations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IdentityConflict"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::identity_conflicts::list",
+          "whatsapp_api::signal::direct::incoming_prekey_identity_fingerprints"
         ]
       }
     }

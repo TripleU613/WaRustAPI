@@ -71,6 +71,12 @@ pub mod groups;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod handshake;
 #[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod identity_conflicts;
+#[cfg(all(
     feature = "experimental-registration-https",
     feature = "experimental-signal-crypto",
     feature = "experimental-noise",

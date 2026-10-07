@@ -1,4 +1,4 @@
-# Status — 2026-09-25
+# Status — 2026-10-07
 
 What is true now. The dated experiment log that led here, including every
 superseded conclusion and dead end, is in
@@ -6,6 +6,27 @@ superseded conclusion and dead end, is in
 `docs/protocol/`. Labels: **live** = seen working against the real server,
 **acked** = the server accepted it but a handset result is not confirmed,
 **offline** = tested locally only.
+
+Receive-path correction (2026-10-06): `listen` now requests a resend for an
+undecryptable incoming message through the same durable once-only retry queue
+as lab receive; `receipts` inspects the outcome. It preserves uncertain writes
+and never substitutes a missing Signal registration ID. This does not explain
+the earlier window with no incoming messages. A 90-second receive-only session
+logged in and activated successfully; one
+automatic retry was server-acknowledged, but its redelivery still failed
+decryption. Offline inspection confirms that the incoming prekey identities
+differ from both saved PN and LID pins; the cause and a verified identity-change
+workflow remain unresolved. `lab-inbox --inspect` exposes these comparisons
+without keys or session mutation. Direct/group prekey processing also saves
+first-seen fingerprint conflicts durably; `identity-conflicts` inspects them
+offline. These are unauthenticated observations, not key replacement or safety
+number verification. [Peer identity evidence](docs/protocol/peer-identity.md)
+records the APK verification-state transition and remaining trust-policy gaps.
+Fresh incoming/auto-read validation remains
+pending. Private `lab/` state was recovered from the former checkout in the
+desktop Trash, preserving the original. Profile `l`
+opens offline with no eligible chat sends or queued actions. Evidence and
+tests: [runtime parity correction](docs/protocol/messaging-transport.md#runtime-parity-correction-2026-10-06).
 
 ## Accounts
 
@@ -27,7 +48,7 @@ Registration uses the recipe in
 | Group send (sender-key fan-out) | live — operator read it | [groups](docs/protocol/groups.md) |
 | Group replies | live — shown on the handset (the operator reacted to one) | same |
 | Group reactions | **not rendering**: payload, stanza and target match the official client's, but the handset shows nothing and the server's ack carries no `count`; cause unknown | same |
-| Retry receipts: sending ours when we cannot decrypt | sent live 2026-09-25; whether the sender resent is unconfirmed | [messaging-transport](docs/protocol/messaging-transport.md) |
+| Retry receipts: sending ours when we cannot decrypt | runtime retry server-acknowledged 2026-10-06; redelivery still undecryptable | [messaging-transport](docs/protocol/messaging-transport.md) |
 | Retry receipts: answering theirs after a fan-out | offline; one live retry was received before the answer existed | [groups](docs/protocol/groups.md) |
 | Status: receive | live | [status](docs/protocol/status.md) |
 | Status: post styled text | live — operator saw it | same |
@@ -37,10 +58,10 @@ Registration uses the recipe in
 | App-state writes (contact action) incl. 409 catch-up | live | [chat-actions](docs/protocol/chat-actions.md) |
 | Block/unblock, contact check, disappearing, keep-in-chat | live | same |
 | Two-step verification set/change/disable | live (set) | [chat-actions](docs/protocol/chat-actions.md) |
-| Display name (`presence name=…`) | written live, handset unconfirmed |
+| Display name (`presence name=…`) | written live, handset unconfirmed | [presence](docs/protocol/presence.md) |
 | Display name app-state record (`pushNameSetting`, `critical_block`) | live — accepted at version 1 | same |
-| About text (`iq xmlns=status`, `whatsapp-cli about`) | offline | same | [presence](docs/protocol/presence.md) |
-| Typing / recording indicators (`chatstate`) | written live, handset unconfirmed; incoming ones reported in `--receive` (offline) | same |
+| About text (`iq xmlns=status`, `whatsapp-cli about`) | server-accepted 2026-09-28, as reported in the session export; handset unconfirmed | [presence](docs/protocol/presence.md) |
+| Typing / recording indicators (`chatstate`) | typing handset-confirmed in the session export; recording and incoming indicators unconfirmed | same |
 | Presence subscribe, incoming availability / last seen | live — server answered with the peer's presence | same |
 | Prekey upload and replenishment | live | [messaging-completion](docs/messaging-completion.md) |
 
@@ -58,7 +79,7 @@ redelivered at every login.
   (`stickerMessage` 26, `ptvMessage` 66, `VideoMessage` inner fields);
   `StickerMessage`'s inner layout is not yet decoded. No incoming sticker/PTV
   stanza has been captured. [apk-analysis](docs/protocol/apk-analysis.md).
-- Calls; profile picture and "about".
+- Calls; profile picture.
 - Privacy settings IQ (namespace unknown).
 - Channels and QR/companion pairing — parked by the owner.
 - Companion-device fan-out and own-account device sync.
@@ -66,7 +87,7 @@ redelivered at every login.
 
 ## Offline verification
 
-475 tests pass (`cargo test --locked --workspace --all-features`); Clippy with
+498 tests pass on 2026-10-07 (`cargo test --locked --workspace --all-features`); Clippy with
 `-D warnings` is clean. Rust 1.98.1 locally and in CI. Store, codec, crash
 matrix, registration state machine and transport coverage are described in
 [docs/design](docs/design/README.md) and the per-area protocol docs.

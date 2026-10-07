@@ -22,6 +22,24 @@ Comparison APK evidence is 2.26.37.70, not the pinned 2.26.36.75 profile.
 
 ## Verification and operator handoff
 
+2026-10-06 receive-path audit: `listen` lacked the retry request that lab
+receive sent for undecryptable messages. Both now share the durable once-only
+retry queue, inspectable with `receipts`; restart and write-cut tests cover it.
+See [runtime parity correction](protocol/messaging-transport.md#runtime-parity-correction-2026-10-06).
+Fresh live receive/auto-read validation remains pending. The saved private
+`lab/` state was recovered from the former checkout in the desktop Trash;
+profile `l` opens offline, registered, with no eligible sends or queued actions.
+The original and all identities/send IDs were preserved. A 90-second receive-only
+session then logged in and activated successfully; a direct pkmsg failed, its
+once-only retry was server-acknowledged, and redelivery still failed. No new
+read receipt was queued. This verifies the retry path, not fresh-message auto-read.
+Offline pin inspection shows that both PN and LID aliases mismatch the incoming
+prekey identities; the cause is unknown and verified identity-change handling
+is absent. The pins remain intact. Direct/group prekey processing now preserves
+first-seen conflict fingerprints across restart/redelivery, inspectable through
+`identity-conflicts` (offline). These records establish an observed difference,
+not a legitimate replacement. See [peer identity evidence](protocol/peer-identity.md).
+
 Work remains on broad notification/cross-device synchronization, socket-level
 cut-point crash coverage and full outbox integration. Preserve the existing encrypted account, identities, send IDs
 and uncertain outcomes. No unsolicited chats, identity replacement, registration

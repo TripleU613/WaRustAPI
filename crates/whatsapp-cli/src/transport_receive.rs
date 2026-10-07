@@ -26,6 +26,54 @@ fn is_capture(key: &[u8]) -> bool {
     matches!(parts.as_slice(), ["message", _, "pending" | "send-response", index] if !index.is_empty() && index.bytes().all(|b| b.is_ascii_digit()))
 }
 
+/// Read-only alias comparisons: missing pin is `None`, malformed input is an
+/// error, and a differing identity is `Some(false)`. These do not select a
+/// session or authorize replacement; they help distinguish routing from trust.
+fn prekey_pin_summary(
+    store: &ProtocolStore,
+    node: &whatsapp_api::binary::Node,
+) -> Result<String, Error> {
+    use whatsapp_api::binary::NodeContent;
+    let Some(enc) = node.child_nodes().iter().find(|n| {
+        n.description == "enc" && n.get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg")
+    }) else {
+        return Ok(String::new());
+    };
+    let NodeContent::Bytes(ciphertext) = &enc.content else {
+        return Ok(", prekey_pin_inspection=invalid_ciphertext".into());
+    };
+    let mut comparisons = Vec::new();
+    for attribute in ["from", "sender_pn", "participant", "participant_pn"] {
+        let Some(peer) = node
+            .get_attr(attribute)
+            .and_then(|v| {
+                v.as_jid()
+                    .cloned()
+                    .or_else(|| whatsapp_api::model::jid::Jid::parse(v.as_text()?).ok())
+            })
+            .filter(|j| {
+                matches!(
+                    j.server,
+                    whatsapp_api::model::jid::Server::User | whatsapp_api::model::jid::Server::Lid
+                )
+            })
+        else {
+            continue;
+        };
+        let peer = peer.with_device(peer.device);
+        let key = format!("comparison-direct:{peer}");
+        let identity: Option<Vec<u8>> =
+            store.read(|tx| tx.get_json(Table::PeerIdentities, key.as_bytes(), 1))?;
+        let matches = identity
+            .map(|pin| {
+                whatsapp_api::signal::direct::incoming_prekey_identity_matches(ciphertext, &pin)
+            })
+            .transpose()?;
+        comparisons.push(format!("{attribute}={matches:?}"));
+    }
+    Ok(format!(", prekey_pin_matches={comparisons:?}"))
+}
+
 pub(super) async fn listen(
     cli: &super::Cli,
     path: &std::path::Path,
@@ -457,7 +505,7 @@ pub(super) fn reproject(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
-/// Offline list of explicit receipts (read/played) and their outcomes.
+/// Offline list of receipts (read/played/retry) and their outcomes.
 pub(super) fn receipts_status(cli: &super::Cli) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
@@ -474,15 +522,46 @@ pub(super) fn receipts_status(cli: &super::Cli) -> Result<(), Error> {
         );
         return Ok(());
     }
-    println!(
-        "receipts: {} explicit receipt(s) queued so far",
-        outcomes.len()
-    );
+    println!("receipts: {} receipt(s) queued so far", outcomes.len());
     for r in &outcomes {
         println!(
             "  kind={} status={} message_id={}",
             r.kind, r.status, r.message_id
         );
+    }
+    Ok(())
+}
+
+/// Offline diagnostic observations, without exposing peer addresses or keys.
+pub(super) fn identity_conflicts(cli: &super::Cli) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let rows = whatsapp_api::transport::identity_conflicts::list(&store)?;
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&rows)
+                .map_err(|_| Error::invalid("identity_conflict", "serialization failed"))?
+        );
+    } else {
+        println!(
+            "identity conflicts: {} unauthenticated observation(s); pins preserved",
+            rows.len()
+        );
+        for row in rows {
+            println!(
+                "  ticket={} peer_ticket={} pinned={} observed={} observed_at={}",
+                row.ticket,
+                row.peer_ticket,
+                row.pinned_fingerprint,
+                row.observed_fingerprint,
+                row.observed_at.0
+            );
+        }
     }
     Ok(())
 }
@@ -1521,7 +1600,14 @@ pub(super) async fn run(
                             t.map(|t| whatsapp_api::model::time::Timestamp::now().0 / 1000 - t)
                         ),
                     };
-                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{ack}{retry}{routing}{timing}{sender_tail}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
+                    let pins = match prekey_pin_summary(&store, &node) {
+                        Ok(summary) => summary,
+                        Err(Error::InvalidInput { .. }) => {
+                            ", prekey_pin_inspection=invalid_input".into()
+                        }
+                        Err(error) => return Err(error),
+                    };
+                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{ack}{retry}{routing}{timing}{sender_tail}{pins}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
                 }
             }
             if key.starts_with(b"received:") {

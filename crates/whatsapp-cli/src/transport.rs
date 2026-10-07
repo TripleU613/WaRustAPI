@@ -624,35 +624,31 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                 if tracked > 0 {
                     println!("transport: updated {tracked} outgoing receipt records");
                 }
-                // We could not decrypt it: ask for it again rather than letting
-                // it vanish. This is the mirror of the retries we answer, and
-                // not asking is why several messages simply disappeared.
-                if incoming == whatsapp_api::transport::inbox::IncomingResult::Undecryptable
-                    && let Some(id) = node.get_attr("id").and_then(|v| v.as_text())
-                    && let Some(from) = node.get_attr("from").and_then(|v| v.as_jid().cloned())
-                {
-                    let participant = node
-                        .get_attr("participant")
-                        .and_then(|v| v.as_jid().cloned());
-                    let registration = account.signal_registration_id.unwrap_or(0);
-                    match whatsapp_api::transport::messaging::retry_receipt(
-                        &from,
-                        participant.as_ref(),
-                        id,
-                        1,
-                        registration,
-                        Timestamp::now().0 / 1000,
+                // Share the runtime's durable one-request policy; a repeated
+                // capture or an uncertain write must never restart count=1.
+                if incoming == whatsapp_api::transport::inbox::IncomingResult::Undecryptable {
+                    match whatsapp_api::transport::receipts::queue_retry_for_incoming(
+                        &store, &account, &node,
                     ) {
-                        Ok(receipt) => {
-                            whatsapp_api::transport::messaging::write_node(&mut channel, &receipt)
+                        Ok(0) => println!("transport: retry already recorded; no repeat"),
+                        Ok(_) => {
+                            for receipt in
+                                whatsapp_api::transport::receipts::reserve_pending(&store)?
+                            {
+                                whatsapp_api::transport::messaging::write_node(
+                                    &mut channel,
+                                    &receipt,
+                                )
                                 .await?;
+                            }
                             println!(
-                                "transport: could not decrypt that one; asked the sender to send it again"
+                                "transport: retry queued; reserved receipt batch written; delivery remains unconfirmed"
                             );
                         }
-                        Err(error) => {
-                            eprintln!("transport: no retry receipt sent: {error}");
+                        Err(Error::InvalidInput { field, reason }) => {
+                            eprintln!("transport: retry receipt not queued: {field}: {reason}");
                         }
+                        Err(error) => return Err(error),
                     }
                 }
                 let confirmation = if tag == "receipt"

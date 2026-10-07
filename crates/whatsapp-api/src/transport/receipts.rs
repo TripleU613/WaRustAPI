@@ -256,17 +256,89 @@ pub fn queue_read_for_incoming(store: &ProtocolStore, node: &Node) -> Result<usi
     )
 }
 
-/// One queued explicit receipt's outcome, redacted for operators.
+/// Queue at most one resend request for a failed incoming message. Call only
+/// after preserving the capture and classifying it as `Undecryptable`.
+///
+/// Shape: `messaging::retry_receipt`, observed handset receipts 2026-09-24.
+/// One request per (chat, participant, message ID) is our conservative policy,
+/// not an APK retry limit. The normal receipt reservation prevents replay after
+/// an uncertain write; redelivery never resets the saved outcome or count.
+pub fn queue_retry_for_incoming(
+    store: &ProtocolStore,
+    account: &crate::session::AccountRecord,
+    node: &Node,
+) -> Result<usize> {
+    if node.description != "message" {
+        return Err(Error::invalid(
+            "receipt",
+            "retry requires an incoming message",
+        ));
+    }
+    let registration = account.signal_registration_id.ok_or_else(|| {
+        Error::invalid("receipt", "retry requires the saved Signal registration id")
+    })?;
+    let chat = jid(node, "from")
+        .ok_or_else(|| Error::invalid("receipt", "retry requires a sender JID"))?;
+    let participant = jid(node, "participant");
+    if !matches!(chat.server, Server::User | Server::Lid | Server::Group)
+        || (chat.server == Server::Group && participant.is_none())
+        || (node.get_attr("participant").is_some() && participant.is_none())
+        || participant
+            .as_ref()
+            .is_some_and(|p| !matches!(p.server, Server::User | Server::Lid))
+    {
+        return Err(Error::invalid("receipt", "unsupported retry routing"));
+    }
+    let id = node
+        .get_attr("id")
+        .and_then(|v| v.as_text())
+        .ok_or_else(|| Error::invalid("receipt", "retry requires a message id"))?;
+    // Encode the routing tuple without ciphertext or timestamps: redelivery
+    // with changed bytes is still the same message and must not request again.
+    let route = serde_json::to_vec(&(&chat, &participant, id))
+        .map_err(|_| Error::invalid("receipt", "invalid retry routing"))?;
+    let key = format!(
+        "receipt-outbox:{}:retry",
+        hex::encode(Sha256::digest(route))
+    );
+    let retry = super::messaging::retry_receipt(
+        &chat,
+        participant.as_ref(),
+        id,
+        1,
+        registration,
+        crate::model::time::Timestamp::now().0 / 1000,
+    )?;
+    let wire = crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_70())
+        .encode(&retry)?;
+    store.write(|tx| {
+        if tx
+            .get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1)?
+            .is_some()
+        {
+            return Ok(0);
+        }
+        tx.put_json(
+            Table::Checkpoints,
+            key.as_bytes(),
+            1,
+            &serde_json::json!({"status":"pending", "wire":wire}),
+        )?;
+        Ok(1)
+    })
+}
+
+/// One queued receipt's outcome, redacted for operators.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct ReceiptOutcome {
-    /// `played` or `read`.
+    /// `played`, `read` or `retry`.
     pub kind: String,
     /// `pending`, `outcome_unknown`, `server_acknowledged` or `refused`.
     pub status: String,
     /// Wire message id the receipt refers to.
     pub message_id: String,
 }
-/// Every explicit receipt ever queued, in key order. No recipient is printed.
+/// Every receipt ever queued, in key order. No recipient is printed.
 pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ReceiptOutcome>> {
     store.read(|tx| {
         let mut out = Vec::new();
@@ -625,6 +697,120 @@ mod tests {
         })
         .unwrap()
     }
+    #[test]
+    fn retry_queue_is_once_per_route_and_survives_restart_and_uncertainty() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("retry.redb");
+        let store = open(&path, true);
+        let account = crate::session::AccountRecord {
+            signal_registration_id: Some(0x0102_0304),
+            ..Default::default()
+        };
+        let incoming = Node::new("message")
+            .attr("from", Jid::parse("15555550100@s.whatsapp.net").unwrap())
+            .attr("id", "FAILED");
+        assert_eq!(
+            queue_retry_for_incoming(&store, &account, &incoming).unwrap(),
+            1
+        );
+        assert_eq!(
+            queue_retry_for_incoming(&store, &account, &incoming).unwrap(),
+            0
+        );
+        drop(store);
+        let store = open(&path, false);
+        let pending = reserve_pending(&store).unwrap();
+        assert_eq!(pending.len(), 1);
+        assert!(
+            matches!(&pending[0].child("registration").unwrap().content, crate::binary::NodeContent::Bytes(b) if b.as_ref() == [1, 2, 3, 4])
+        );
+        assert_eq!(
+            pending[0]
+                .child("retry")
+                .unwrap()
+                .get_attr("count")
+                .and_then(|v| v.as_text()),
+            Some("1")
+        );
+        assert_eq!(outcomes(&store).unwrap()[0].kind, "retry");
+        assert_eq!(outcomes(&store).unwrap()[0].status, "outcome_unknown");
+        drop(store);
+        let store = open(&path, false);
+        // Changed ciphertext/metadata on redelivery cannot reset the request.
+        assert_eq!(
+            queue_retry_for_incoming(&store, &account, &incoming.clone().attr("t", "123")).unwrap(),
+            0
+        );
+        assert!(reserve_pending(&store).unwrap().is_empty());
+        let ack = Node::new("ack")
+            .attr("class", "receipt")
+            .attr("type", "retry")
+            .attr("id", "FAILED")
+            .attr("from", Jid::parse("15555550101@s.whatsapp.net").unwrap());
+        assert!(!record_ack(&store, &ack).unwrap());
+        let ack = ack.attr("from", Jid::parse("15555550100@s.whatsapp.net").unwrap());
+        assert!(record_ack(&store, &ack).unwrap());
+        assert_eq!(outcomes(&store).unwrap()[0].status, "server_acknowledged");
+        assert_eq!(
+            queue_retry_for_incoming(&store, &account, &incoming).unwrap(),
+            0
+        );
+        // Same ID, different authenticated sender: a different request.
+        assert_eq!(
+            queue_retry_for_incoming(
+                &store,
+                &account,
+                &incoming.attr("from", Jid::parse("15555550101@s.whatsapp.net").unwrap())
+            )
+            .unwrap(),
+            1
+        );
+    }
+
+    #[test]
+    fn retry_requires_registration_and_supported_routing_without_writing() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("invalid-retry.redb"), true);
+        let account = crate::session::AccountRecord::default();
+        let incoming = Node::new("message")
+            .attr("id", "FAILED")
+            .attr("from", Jid::parse("15555550100@s.whatsapp.net").unwrap());
+        assert!(queue_retry_for_incoming(&store, &account, &incoming).is_err());
+        let account = crate::session::AccountRecord {
+            signal_registration_id: Some(7),
+            ..Default::default()
+        };
+        for invalid in [
+            Node::new("receipt"),
+            Node::new("message").attr("from", Jid::parse("15555550100@s.whatsapp.net").unwrap()),
+            incoming
+                .clone()
+                .attr("from", Jid::parse("status@broadcast").unwrap()),
+            incoming
+                .clone()
+                .attr("from", Jid::parse("123-456@g.us").unwrap()),
+            incoming.clone().attr("participant", "invalid"),
+        ] {
+            assert!(queue_retry_for_incoming(&store, &account, &invalid).is_err());
+        }
+        assert!(outcomes(&store).unwrap().is_empty());
+        let group = incoming.attr("from", Jid::parse("123-456@g.us").unwrap());
+        for participant in ["111111111111111@lid", "222222222222222@lid"] {
+            assert_eq!(
+                queue_retry_for_incoming(
+                    &store,
+                    &account,
+                    &group
+                        .clone()
+                        .attr("participant", Jid::parse(participant).unwrap())
+                )
+                .unwrap(),
+                1
+            );
+        }
+        assert_eq!(reserve_pending(&store).unwrap().len(), 2);
+    }
+
     #[test]
     fn opened_queue_survives_restart_and_never_replays_uncertain_receipts() {
         let dir = tempfile::tempdir().unwrap();

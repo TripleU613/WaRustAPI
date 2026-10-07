@@ -17,7 +17,10 @@ use wacore_libsignal::protocol::{
 };
 use zeroize::Zeroizing;
 mod incoming;
-pub use incoming::{ReceivedPrekey, incoming_prekey_id, receive_prekey};
+pub use incoming::{
+    ReceivedPrekey, incoming_prekey_id, incoming_prekey_identity_fingerprints,
+    incoming_prekey_identity_matches, receive_prekey,
+};
 
 fn invalid(reason: &'static str) -> Error {
     Error::invalid("direct_message", reason)
@@ -152,8 +155,44 @@ fn payload_summary_depth(bytes: &[u8], depth: usize) -> Result<String> {
     }
     Ok(summary)
 }
-fn crypto(_: SignalProtocolError) -> Error {
-    invalid("Signal key/session operation failed")
+fn crypto(error: SignalProtocolError) -> Error {
+    // libsignal errors can carry peer addresses, application strings and
+    // backend details. Classify by variant, never format the underlying error.
+    // Preserved live pkmsg failures (2026-10-06) exposed how the former blanket
+    // message hid missing keys versus changed identity pins versus a bad MAC.
+    let reason = match error {
+        SignalProtocolError::UntrustedIdentity(_) => {
+            "Signal peer identity untrusted; saved pin preserved"
+        }
+        SignalProtocolError::InvalidPreKeyId => "Signal one-time prekey unavailable or invalid",
+        SignalProtocolError::InvalidSignedPreKeyId => "Signal signed prekey unavailable or invalid",
+        SignalProtocolError::SessionNotFound(_) => "Signal session not found",
+        SignalProtocolError::DuplicatedMessage(..) => "Signal duplicate or old message counter",
+        SignalProtocolError::BadMac(_) => "Signal message MAC verification failed",
+        SignalProtocolError::InvalidMessage(..) => "Signal message invalid",
+        SignalProtocolError::InvalidSessionStructure(_)
+        | SignalProtocolError::InvalidSenderKeySession => "Signal session structure invalid",
+        SignalProtocolError::NoSenderKeyState(_) => "Signal sender-key state missing",
+        SignalProtocolError::InvalidRegistrationId(..) => "Signal session registration id invalid",
+        SignalProtocolError::SignatureValidationFailed => "Signal signature verification failed",
+        SignalProtocolError::InvalidProtobufEncoding => "Signal protobuf encoding invalid",
+        SignalProtocolError::CiphertextMessageTooShort(_) => "Signal ciphertext too short",
+        SignalProtocolError::LegacyCiphertextVersion(_)
+        | SignalProtocolError::UnrecognizedCiphertextVersion(_)
+        | SignalProtocolError::UnrecognizedMessageVersion(_) => {
+            "Signal message version unsupported"
+        }
+        SignalProtocolError::NoKeyTypeIdentifier
+        | SignalProtocolError::BadKeyType(_)
+        | SignalProtocolError::BadKeyLength(..)
+        | SignalProtocolError::InvalidMacKeyLength(_) => "Signal key encoding invalid",
+        SignalProtocolError::KeyAgreementFailed(_) => "Signal key agreement failed",
+        SignalProtocolError::BackendError(..)
+        | SignalProtocolError::ApplicationCallbackError(..)
+        | SignalProtocolError::FfiBindingError(_) => "Signal backend operation failed",
+        _ => "Signal key/session operation failed",
+    };
+    invalid(reason)
 }
 fn data(node: &Node) -> Result<&[u8]> {
     match &node.content {
@@ -559,6 +598,47 @@ pub async fn receive(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn crypto_diagnostics_classify_without_address_or_backend_details() {
+        let address = ProtocolAddress::new("private-peer-marker", DeviceId::new(0));
+        for (error, expected) in [
+            (
+                SignalProtocolError::UntrustedIdentity(address.clone()),
+                "identity untrusted",
+            ),
+            (
+                SignalProtocolError::SessionNotFound(address),
+                "session not found",
+            ),
+            (SignalProtocolError::InvalidPreKeyId, "one-time prekey"),
+            (SignalProtocolError::InvalidSignedPreKeyId, "signed prekey"),
+            (
+                SignalProtocolError::DuplicatedMessage(123, 456),
+                "old message counter",
+            ),
+            (
+                SignalProtocolError::InvalidArgument("private-peer-marker".into()),
+                "operation failed",
+            ),
+            (
+                SignalProtocolError::BackendError(
+                    "private-peer-marker",
+                    Box::new(std::io::Error::other("private-peer-marker")),
+                ),
+                "backend operation failed",
+            ),
+        ] {
+            let error = crypto(error);
+            let Error::InvalidInput { field, reason } = error else {
+                panic!("same typed decryption classification")
+            };
+            assert_eq!(field, "direct_message");
+            assert!(reason.contains(expected));
+            assert!(!reason.contains("private-peer-marker"));
+            assert!(!reason.contains("123"));
+            assert!(!reason.contains("456"));
+        }
+    }
     #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
     #[tokio::test]
     async fn receive_process_exit_fixture() {
@@ -768,6 +848,39 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(encrypted.kind, "pkmsg");
+        use sha2::Digest;
+        let (old, observed) = incoming_prekey_identity_fingerprints(
+            &encrypted.ciphertext,
+            &bob.identity_key().serialize(),
+        )
+        .unwrap();
+        assert_eq!(
+            observed,
+            hex::encode(sha2::Sha256::digest(alice.identity_key().serialize()))
+        );
+        assert_eq!(
+            old,
+            hex::encode(sha2::Sha256::digest(bob.identity_key().serialize()))
+        );
+        assert_ne!(old, observed);
+        assert!(
+            incoming_prekey_identity_matches(
+                &encrypted.ciphertext,
+                &alice.identity_key().serialize()
+            )
+            .unwrap()
+        );
+        assert!(
+            !incoming_prekey_identity_matches(
+                &encrypted.ciphertext,
+                &bob.identity_key().serialize()
+            )
+            .unwrap()
+        );
+        assert!(
+            incoming_prekey_identity_matches(&vec![0; 65537], &alice.identity_key().serialize())
+                .is_err()
+        );
         let bad_bundle = PreKeyBundle::new(
             42,
             DeviceId::new(0),
