@@ -1415,3 +1415,13 @@ metadata probes test inspection, not cryptographic signing; genuine signed
 baseline/replacement tests cover authority separately. The own-primary hook
 additionally passed explicit PN/LID/companion exclusions. Hygiene668 local
 links and 2642000 bytes across four unchanged APK checksum bundles passed.
+
+ADV identity follow-up trace (2026-10-07, **confirmed static**, APK 37.71):
+DNy case 40 sends an encrypt/identity read after verifier failure; DF6/DNk
+separate primary identity saves from companion ADV validation. Feature 0x3285
+enabled skips immediate application; its raw-ID callback does not establish
+ordinary deferred success. Raw-ID cleanup removes remote companions while
+explicitly preserving the primary. Remaining key-type/companion verifier,
+continuation and cleanup internals are unknown; current full peer-keys queries
+are not identity-only recovery. No account or live request changed.
+[Source and limits](docs/protocol/cross-device-sync.md#adv-identity-follow-up-and-raw-id-cleanup-2026-10-07).

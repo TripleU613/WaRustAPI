@@ -347,6 +347,119 @@
         "crates/whatsapp-api/src/signal/adv.rs"
       ],
       "anchors": []
+    },
+    "adv-identity-query-worker": {
+      "class": "LX/DNy;",
+      "method": "run",
+      "method_shorty": "V",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "anchors": [
+        "ConversationDelegate/requestMissingLidsOnGetIdentities"
+      ]
+    },
+    "adv-identity-reply": {
+      "class": "LX/DF6;",
+      "method": "C8f",
+      "method_shorty": "VLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "anchors": [
+        "identity",
+        "device-identity",
+        "type node should contain exactly 1 byte"
+      ]
+    },
+    "adv-identity-error-reply": {
+      "class": "LX/DF6;",
+      "method": "BmU",
+      "method_shorty": "VLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "anchors": []
+    },
+    "adv-identity-save-worker": {
+      "class": "LX/DNk;",
+      "method": "run",
+      "method_shorty": "V",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "anchors": [
+        "recvmessagelistener/on-get-identity-success/invalid device identity"
+      ]
+    },
+    "adv-identity-save-worker-constructor": {
+      "class": "LX/DNk;",
+      "method": "<init>",
+      "method_shorty": "VLLLLLI",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "anchors": []
+    },
+    "adv-identity-query-error": {
+      "class": "LX/11S;",
+      "method": "A00",
+      "method_shorty": "VLLI",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "anchors": [
+        "recvmessagelistener/on-get-identity-error/jid = "
+      ]
+    },
+    "adv-candidate-identity-callback": {
+      "class": "LX/ODa;",
+      "method": "run",
+      "method_shorty": "V",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "anchors": []
+    },
+    "adv-candidate-identity-callback-constructor": {
+      "class": "LX/ODa;",
+      "method": "<init>",
+      "method_shorty": "VLLLI",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "anchors": []
+    },
+    "adv-contact-raw-id-cleanup": {
+      "class": "LX/0bN;",
+      "method": "A0F",
+      "method_shorty": "VLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "anchors": []
+    },
+    "adv-contact-companion-removal": {
+      "class": "LX/1IW;",
+      "method": "A0D",
+      "method_shorty": "VLLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "anchors": [
+        "never remove primary device.",
+        "only remove device for others"
+      ]
     }
   }
 }

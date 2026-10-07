@@ -1,0 +1,53 @@
+# APK-derived structural disassembly: LX/0bN;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0F(VLL) flags=0x1 registers=7
+  0000..0004 op=54 iget-object v0, v4, LX/0bN;->A01:LX/00s;
+  0004..000a op=72 invoke-interface {v0}, LX/00s;->get(L)
+  000a..000c op=0c move-result-object
+  000c..0010 op=1f check-cast v0, LX/00W;
+  0010..0016 op=6e invoke-virtual {v0}, LX/00W;->A01(L)
+  0016..0018 op=0c move-result-object
+  0018..001c op=13 const/16 v0, #0xee0
+  001c..0022 op=71 invoke-static {v1, v0}, LX/08b;->A03(LLI)
+  0022..0024 op=0c move-result-object
+  0024..0028 op=1f check-cast v3, LX/1IW;
+  0028..002c op=54 iget-object v0, v4, LX/0bN;->A02:LX/08Z;
+  002c..0032 op=72 invoke-interface {v0, v5}, LX/08Z;->BO0(ZL)
+  0032..0034 op=0a move-result
+  0034..0038 op=df xor-int/lit8 v0, v0, #0x1
+  0038..003e op=71 invoke-static {v0}, LX/00K;->A0C(VZ)
+  003e..0044 op=6e invoke-virtual {v3, v5}, LX/1IW;->A09(LL)
+  0044..0046 op=0c move-result-object
+  0046..004c op=6e invoke-virtual {v0}, Lcom/google/common/collect/ImmutableMap;->keySet(L)
+  004c..004e op=0c move-result-object
+  004e..0052 op=22 new-instance v2, Ljava/util/HashSet;
+  0052..0058 op=70 invoke-direct {v2, v0}, Ljava/util/HashSet;-><init>(VL)
+  0058..005e op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/UserJid;->getPrimaryDevice(L)
+  005e..0060 op=0c move-result-object
+  0060..0066 op=6e invoke-virtual {v2, v0}, Ljava/util/AbstractCollection;->remove(ZL)
+  0066..006c op=6e invoke-virtual {v3, v5}, LX/1IW;->A09(LL)
+  006c..006e op=0c move-result-object
+  006e..0074 op=6e invoke-virtual {v0}, Lcom/google/common/collect/ImmutableMap;->keySet(L)
+  0074..0076 op=0c move-result-object
+  0076..007a op=22 new-instance v1, Ljava/util/HashSet;
+  007a..0080 op=70 invoke-direct {v1, v0}, Ljava/util/HashSet;-><init>(VL)
+  0080..0086 op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/UserJid;->getPrimaryDevice(L)
+  0086..0088 op=0c move-result-object
+  0088..008e op=6e invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;->remove(ZL)
+  008e..0094 op=71 invoke-static {v1}, Lcom/google/common/collect/ImmutableSet;->copyOf(LL)
+  0094..0096 op=0c move-result-object
+  0096..009c op=6e invoke-virtual {v3, v0, v5, v6}, LX/1IW;->A0D(VLLL)
+  009c..00a2 op=6e invoke-virtual {v2}, Ljava/util/AbstractCollection;->isEmpty(Z)
+  00a2..00a4 op=0a move-result
+  00a4..00a8 op=39 if-nez v0, +0xf
+  00a8..00ac op=54 iget-object v0, v4, LX/0bN;->A00:LX/00s;
+  00ac..00b2 op=72 invoke-interface {v0}, LX/00s;->get(L)
+  00b2..00b4 op=0c move-result-object
+  00b4..00b8 op=1f check-cast v1, LX/JhE;
+  00b8..00bc op=62 sget-object v0, Ljava/util/Collections;->EMPTY_SET:Ljava/util/Set;
+  00bc..00c2 op=6e invoke-virtual {v1, v5, v0, v2}, LX/JhE;->A0L(VLLL)
+  00c2..00c4 op=0e return-void
+.end method

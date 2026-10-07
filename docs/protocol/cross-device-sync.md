@@ -946,14 +946,18 @@ and must not be copied as 37.71 class names.
   timestamp floor is not a substitute for this complete age policy.
 - A04 raw-ID mismatch (`0192..0214`, `028a..029e`) has reset/cleanup branches;
   these are distinct from stale/malformed/signature failure. The contact
-  cleanup helper and its exact mutation scope remain **untraced**. No saved
+  cleanup helper is traced in the later
+  [identity follow-up section](#adv-identity-follow-up-and-raw-id-cleanup-2026-10-07);
+  complete downstream session/group effects remain **untraced**. No saved
   account reset is authorized by this finding. A valid candidate eventually
   reaches 0bN.A0H (`029e..02c4`); the self/companion path separately updates
   its ADV baseline and device map (`024c..027c`).
 - Lck invokes [11T.A0C](apk/2.26.37.71-core/adv-contact-identity-apply.txt)
   after successful candidate validation, conditionally on feature **0x3285**
-  (`0cd8..0cf2`). Its enabled-path runtime value and alternate deferred
-  application remain **unknown**. A0C first removes the primary session through
+  (`0cd8..0cf2`). Its runtime value remains **unknown**. The later
+  [identity follow-up trace](#adv-identity-follow-up-and-raw-id-cleanup-2026-10-07)
+  establishes that enabled skips this immediate call; it does not establish a
+  general deferred successful-application path. A0C first removes the primary session through
   [0jc.A0s](apk/2.26.37.71-core/adv-primary-session-removal.txt), then calls
   [0jc.A14](apk/2.26.37.71-core/adv-primary-identity-save.txt) to save the
   supplied key. A14 refuses saving one's companion identity as primary and
@@ -969,7 +973,9 @@ and must not be copied as 37.71 class names.
   explicit verifier-failure flag. Validated data merges current/add maps and
   applies through 0bN.A0H before A0C (`00dc..0170`).
   [11S.A01](apk/2.26.37.71-core/adv-contact-session-cleanup-schedule.txt)
-  only schedules DNy discriminator 0x28; the runnable's effects are **unknown**.
+  schedules DNy discriminator 0x28. The later
+  [identity follow-up trace](#adv-identity-follow-up-and-raw-id-cleanup-2026-10-07)
+  resolves this as an identity-directory read, not immediate session cleanup.
   This is not proof of automatic identity replacement on signature failure.
 
 **Observed local implementation discrepancy / refuted claim:** devices.rs and
@@ -1210,3 +1216,96 @@ metadata probes test inspection, not cryptographic signing; genuine signed
 baseline/replacement tests cover authority separately. The own-primary hook
 additionally passed explicit PN/LID/companion exclusions. Hygiene668 local
 links and 2642000 bytes across four unchanged APK checksum bundles passed.
+
+## ADV identity follow-up and raw-ID cleanup (2026-10-07)
+
+**Confirmed static evidence**, APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+This resolves previously labelled unknown caller effects; no live identity
+change, account reset or new key adoption was performed.
+
+- [DNy.run](apk/2.26.37.71-core/adv-identity-query-worker.txt), discriminator
+  **0x28 / 40**, branches to `11b0`. It first attempts missing-LID resolution
+  through Cio.A02 (`11c0..1218`), then constructs one `user@jid` per supplied
+  entry and `iq type=get xmlns=encrypt to=server`, containing
+  **`identity` with those user children** (`1232..12da`). It sends via 0h8.A0T
+  with DF6 discriminator **0**, selector **0x99** and timeout **0x7d00 / 32000**
+  (`12da..12f2`). This is an identity-only read, not the existing full
+  `encrypt/key` prekey-bundle query, and has no immediate pin/session write.
+  Missing-LID resolver internals and selector semantics remain **unknown**.
+- [DF6.C8f](apk/2.26.37.71-core/adv-identity-reply.txt), discriminator **0**,
+  requires `list/user`, parses each **DeviceJid**, and routes a per-user
+  `error@code` to 11S.A00 (`003c..00ba`). Otherwise it reads `identity` and
+  `type` bodies plus optional `device-identity`; the type body must contain
+  exactly **one byte**, otherwise it throws (`00ba..0120`, `0898..08a6`).
+  Valid type shape schedules DNk discriminator **7** on 0kY. This trace does
+  not establish a full signed-prekey requirement for an identity-only reply.
+- [DNk constructor](apk/2.26.37.71-core/adv-identity-save-worker-constructor.txt)
+  maps the reply's type bytes, device JID, identity node, optional ADV node
+  and DF6 handler into the fields used by
+  [DNk.run](apk/2.26.37.71-core/adv-identity-save-worker.txt), case **7** at
+  `02aa..03dc`. It opens a 0jp.A05 context for that device, extracts the
+  identity bytes and type byte, and branches on `isPrimary` (`02da..0318`).
+  Companions must pass **11T.A0D** with source discriminator **5** and false
+  final flag (`0318..0354`); failure logs invalid device identity and invokes
+  11T.A0B. Primary replies bypass that companion ADV verifier. Success joins
+  the one-byte type with the identity body, parses it through B7H.A02,
+  invokes **0jc.A14**, then schedules AhK discriminator **7** (`0354..03bc`).
+  Invalid keys log failure; the opened context closes. **Unknown:** complete
+  A0D/A0B, B7H type/key constraints, AhK continuation, alias addressing and
+  downstream session invalidation. Do not treat the one-byte shape check as
+  complete cryptographic validation or copy this into automatic Rust adoption.
+- [DF6.BmU](apk/2.26.37.71-core/adv-identity-error-reply.txt), case **0**,
+  sends the recognized outer error to 11S.A00 for every requested entry
+  (`0030..0068`). [11S.A00](apk/2.26.37.71-core/adv-identity-query-error.txt)
+  emits a local failure event and schedules DLx discriminator **0x11** only
+  for non-primary devices (`0032..0094`). Its cleanup effects remain
+  **unknown**. Delivery-failure discriminator 0 in DF6.BjL returns directly;
+  no automatic retry is established by this handler.
+- Lck.A00's feature **0x3285** test is an `if-nez` skip over immediate
+  11T.A0C (`0ce0..0cf2`): **disabled** calls it, **enabled** skips it.
+  The key-bearing callback it constructs earlier is ODa discriminator
+  **0x15 / 21** (`0c32..0c44`).
+  [ODa.run](apk/2.26.37.71-core/adv-candidate-identity-callback.txt), case 21,
+  calls the same 11T.A0C with owner and candidate key (`11a2..11c6`).
+  [Its constructor topic](apk/2.26.37.71-core/adv-candidate-identity-callback-constructor.txt)
+  includes **two overloads with the same DEX shorty**; field layout identifies
+  the owner/key roles consumed by this case, but shorty selection alone does
+  not uniquely identify a full Java signature. 11T.A04 invokes its runnable
+  only on the traced raw-ID mismatch self/companion branch (`01ac..0214`),
+  before candidate application. **Refuted inference:** this callback is not
+  proof of a general deferred application whenever 0x3285 is enabled.
+- [0bN.A0F](apk/2.26.37.71-core/adv-contact-raw-id-cleanup.txt) rejects an
+  own-account owner, collects cached device keys **excluding the primary**,
+  and calls 1IW.A0D with those companions and the supplied reason
+  (`0028..009c`). If companions existed, it also calls JhE.A0L with an empty
+  added set and the removed set (`009c..00c4`).
+  [1IW.A0D](apk/2.26.37.71-core/adv-contact-companion-removal.txt) independently
+  asserts remote owner and **never remove primary**, resolves an owner set,
+  and runs database/cache removal plus downstream device updates
+  (`0008..01aa`). Non-null reasons can invoke A06 and B7j/0bp cleanup
+  helpers; empty removals have a separate reason-dependent cleanup
+  (`01c8..0248`). The reason `identity_changed` affects an update flag
+  (`0128..013e`). **Unknown:** A06/B7j/0bp/JhE internals, alias completeness,
+  full session/group mutation and all transaction boundaries. This is peer
+  companion cleanup, not permission to reset our account or rotate identity.
+
+**Implementation gap / next action:** current `peer-keys` uses a full signed
+prekey-bundle reply and cannot stand in for this `encrypt/identity` read.
+Failed ADV candidates currently remain durable and deferred; Rust does not
+perform the APK's identity-only recovery. Trace the remaining identity type,
+companion verification and continuation helpers before implementing a distinct
+bounded, correlated identity read and authenticated application policy. The
+existing strict verifier also still lacks supplied-key candidate application,
+raw-ID transition parity and effective age/feature selection. Preserve prior
+pins, sessions, device history and unresolved work while closing these gaps.
+
+**Validation:** the exact pinned APK exported 43 topics / 172 selected methods
+in 48 files, 1,332,728 bytes. Cached comparison against the preserved previous
+core snapshot reported 10 added topics and all 33 previous topics unchanged;
+manifest, inventory and tokens remained unchanged. The promoted cache comparison
+took 0.041250 seconds. Its topic statuses matched the temporary export; path
+fields intentionally differ by output directory, so whole-JSON equality is not
+claimed. All cached file checksums were verified by the diff command. The
+58 xtask tests and regenerated CLI reference passed. This is source/research
+validation, not live recovery or whole-APK semantic equivalence.

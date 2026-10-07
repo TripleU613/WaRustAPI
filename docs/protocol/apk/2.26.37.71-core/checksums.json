@@ -1,4 +1,12 @@
 {
+  "adv-candidate-identity-callback-constructor.txt": {
+    "bytes": 1385,
+    "sha256": "198e741083a2561bc0cf023ac2bcba886bdd531ea1130ad7c1eac82ebe53b30e"
+  },
+  "adv-candidate-identity-callback.txt": {
+    "bytes": 79978,
+    "sha256": "9ff36890c0e97f833f033a18824457d592dbfe394413675615b91ce400b73557"
+  },
   "adv-contact-add-notification.txt": {
     "bytes": 5929,
     "sha256": "5a5d0bdfa5d29e9506c35047e640f48b3caecf65da202bc9f2f1312db2a9ba11"
@@ -7,9 +15,17 @@
     "bytes": 1523,
     "sha256": "94d2f302452701e22ab1927505b8e343cfd5e439d005d1ab355b8d6aa43b509c"
   },
+  "adv-contact-companion-removal.txt": {
+    "bytes": 8186,
+    "sha256": "a80b6a8de68144f846c587dcc2232ff6e4186f4e60e1bf613d4a492e16236692"
+  },
   "adv-contact-identity-apply.txt": {
     "bytes": 828,
     "sha256": "b64e6e0468c5df11820c07f942bad0425dcdceb4c539bdd761f16aecf7731123"
+  },
+  "adv-contact-raw-id-cleanup.txt": {
+    "bytes": 2974,
+    "sha256": "c1f017b562f94cfa9d142f4097cb86dcf572f6082e89a37b167639491981b357"
   },
   "adv-contact-reconciliation.txt": {
     "bytes": 7478,
@@ -30,6 +46,30 @@
   "adv-contact-validation.txt": {
     "bytes": 9855,
     "sha256": "f0ee461d6b2b19df24091a757938f78c72269161ede33d8eefa1d6aaae29ee6d"
+  },
+  "adv-identity-error-reply.txt": {
+    "bytes": 4017,
+    "sha256": "611fd8e405a8ee62b5cdb887b97940400bc5ab5fbe99998b71648edd0cc9235b"
+  },
+  "adv-identity-query-error.txt": {
+    "bytes": 2241,
+    "sha256": "dda999a96e4f552f60bde0eddd12be2c349d11c05433c42d50503658bb8cef7a"
+  },
+  "adv-identity-query-worker.txt": {
+    "bytes": 82833,
+    "sha256": "0b4ba98081bf027700102a991b5fbcbb43ae20db900be09e2fa5ee758bfd103a"
+  },
+  "adv-identity-reply.txt": {
+    "bytes": 28279,
+    "sha256": "6342af8dc99864f9f0f31ecb5a14faec893782674976be327c5838da1dd76111"
+  },
+  "adv-identity-save-worker-constructor.txt": {
+    "bytes": 855,
+    "sha256": "9492c1d174170de001ef5a282223e23b7ebf9a9c766d11b231d3f1ddbe08dc2f"
+  },
+  "adv-identity-save-worker.txt": {
+    "bytes": 149286,
+    "sha256": "1f12a4d07efbe6c258f89bc38ba3e052c084829f8f077511d633ce42de0e8aea"
   },
   "adv-primary-identity-commit.txt": {
     "bytes": 9288,
@@ -136,8 +176,8 @@
     "sha256": "82590b7944e627c71d4a54e3403be84e314598ced8789812c7c6951470853c92"
   },
   "targets.json": {
-    "bytes": 12220,
-    "sha256": "b81d6218b2fd761a60eb648c86b5dd3f9ccaefcfddd5e8689ae60f554679115b"
+    "bytes": 15931,
+    "sha256": "f45c9ff2afde97ccf0e1ebdfbdd972e7209689328f5df2746f16ea130bfc20c5"
   },
   "token-dictionary-initializer.txt": {
     "bytes": 159791,

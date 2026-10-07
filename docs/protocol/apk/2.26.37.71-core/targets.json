@@ -1,4 +1,26 @@
 {
+  "adv-candidate-identity-callback": {
+    "class": "LX/ODa;",
+    "file": "adv-candidate-identity-callback.txt",
+    "method_filter": "run",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "adv-candidate-identity-callback-constructor": {
+    "class": "LX/ODa;",
+    "file": "adv-candidate-identity-callback-constructor.txt",
+    "method_filter": "<init>",
+    "method_shorty": "VLLLI",
+    "methods": 2,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
   "adv-contact-add-notification": {
     "anchors": [
       "SyncDeviceNotificationRunnable/verifyADVIndexList/no key index list in device add notification"
@@ -24,6 +46,21 @@
       "crates/whatsapp-api/src/signal/adv.rs"
     ]
   },
+  "adv-contact-companion-removal": {
+    "anchors": [
+      "never remove primary device.",
+      "only remove device for others"
+    ],
+    "class": "LX/1IW;",
+    "file": "adv-contact-companion-removal.txt",
+    "method_filter": "A0D",
+    "method_shorty": "VLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
   "adv-contact-identity-apply": {
     "class": "LX/11T;",
     "file": "adv-contact-identity-apply.txt",
@@ -33,6 +70,17 @@
     "rust_files": [
       "crates/whatsapp-api/src/transport/devices.rs",
       "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
+  "adv-contact-raw-id-cleanup": {
+    "class": "LX/0bN;",
+    "file": "adv-contact-raw-id-cleanup.txt",
+    "method_filter": "A0F",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
     ]
   },
   "adv-contact-reconciliation": {
@@ -101,6 +149,86 @@
     "rust_files": [
       "crates/whatsapp-api/src/transport/devices.rs",
       "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
+  "adv-identity-error-reply": {
+    "class": "LX/DF6;",
+    "file": "adv-identity-error-reply.txt",
+    "method_filter": "BmU",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "adv-identity-query-error": {
+    "anchors": [
+      "recvmessagelistener/on-get-identity-error/jid = "
+    ],
+    "class": "LX/11S;",
+    "file": "adv-identity-query-error.txt",
+    "method_filter": "A00",
+    "method_shorty": "VLLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "adv-identity-query-worker": {
+    "anchors": [
+      "ConversationDelegate/requestMissingLidsOnGetIdentities"
+    ],
+    "class": "LX/DNy;",
+    "file": "adv-identity-query-worker.txt",
+    "method_filter": "run",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "adv-identity-reply": {
+    "anchors": [
+      "identity",
+      "device-identity",
+      "type node should contain exactly 1 byte"
+    ],
+    "class": "LX/DF6;",
+    "file": "adv-identity-reply.txt",
+    "method_filter": "C8f",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "adv-identity-save-worker": {
+    "anchors": [
+      "recvmessagelistener/on-get-identity-success/invalid device identity"
+    ],
+    "class": "LX/DNk;",
+    "file": "adv-identity-save-worker.txt",
+    "method_filter": "run",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
+    ]
+  },
+  "adv-identity-save-worker-constructor": {
+    "class": "LX/DNk;",
+    "file": "adv-identity-save-worker-constructor.txt",
+    "method_filter": "<init>",
+    "method_shorty": "VLLLLLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/peer_keys.rs"
     ]
   },
   "adv-primary-identity-commit": {
