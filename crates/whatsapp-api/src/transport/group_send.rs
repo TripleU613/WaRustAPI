@@ -265,6 +265,10 @@ fn plan_over(
     }
     // The hash covers every member, the sender included, before we drop
     // ourselves from the recipient list.
+    // This planner still hashes primary-member addresses. APK 37.71
+    // 1jL.A0N/A0O -> AzR.A03 instead hash complete cached device sets.
+    // Companion/own-device inventory integration remains unported; see
+    // docs/protocol/groups.md participant cache/versioned hash trace.
     let participant_hash = super::groups::participant_hash_v2(&members);
     let mut recipients: Vec<Jid> = members.into_iter().filter(|j| *j != own).collect();
     recipients.sort_by_key(Jid::to_string);

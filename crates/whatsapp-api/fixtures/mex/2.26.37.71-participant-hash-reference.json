@@ -1,0 +1,4782 @@
+{
+  "reference": "Executed host Java transcribed 37.71 hashing branches over explicit model fields. UTF-8 assumption; not APK/Android parser/runtime execution. Unicode sorting and u16/agent bounds are model probes, not strict APK JID validation. Set mode models Rust component identity preparation, not Java subtype equality.",
+  "oracle": "docs/protocol/ParticipantHashOracle.java",
+  "cases": [
+    {
+      "input": [],
+      "fields": [],
+      "expected": {
+        "v1": "1:2jmj7l5r",
+        "v2": "2:47DEQpj8",
+        "v3": "3:47DEQpj8",
+        "v1_set": "1:2jmj7l5r",
+        "v2_set": "2:47DEQpj8",
+        "v3_set": "3:47DEQpj8"
+      }
+    },
+    {
+      "input": [
+        "12345@lid"
+      ],
+      "fields": [
+        {
+          "user": "12345",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:8l4LIsov",
+        "v2": "2:pbSdjFT4",
+        "v3": "3:gtSc6SAs",
+        "v1_set": "1:8l4LIsov",
+        "v2_set": "2:pbSdjFT4",
+        "v3_set": "3:gtSc6SAs"
+      }
+    },
+    {
+      "input": [
+        "12345@lid",
+        "67890@lid"
+      ],
+      "fields": [
+        {
+          "user": "12345",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "67890",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:OZuGr0QX",
+        "v2": "2:Kzai6qG+",
+        "v3": "3:5w+8PETG",
+        "v1_set": "1:OZuGr0QX",
+        "v2_set": "2:Kzai6qG+",
+        "v3_set": "3:5w+8PETG"
+      }
+    },
+    {
+      "input": [
+        "67890@lid",
+        "12345@lid",
+        "12345@lid"
+      ],
+      "fields": [
+        {
+          "user": "67890",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "12345",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "12345",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:jwQBBv9f",
+        "v2": "2:qHPZ6wP6",
+        "v3": "3:6M1Cu8cZ",
+        "v1_set": "1:OZuGr0QX",
+        "v2_set": "2:Kzai6qG+",
+        "v3_set": "3:5w+8PETG"
+      }
+    },
+    {
+      "input": [
+        "12345@lid",
+        "12345@lid"
+      ],
+      "fields": [
+        {
+          "user": "12345",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "12345",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:/xjTUE1W",
+        "v2": "2:twgILmQf",
+        "v3": "3:pRPpsgMf",
+        "v1_set": "1:8l4LIsov",
+        "v2_set": "2:pbSdjFT4",
+        "v3_set": "3:gtSc6SAs"
+      }
+    },
+    {
+      "input": [
+        "12345.7:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "12345",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:Ubt6zlSh",
+        "v2": "2:F7A4WmFi",
+        "v3": "3:dWrohP6v",
+        "v1_set": "1:Ubt6zlSh",
+        "v2_set": "2:F7A4WmFi",
+        "v3_set": "3:dWrohP6v"
+      }
+    },
+    {
+      "input": [
+        "12345.7:2@lid",
+        "12345.8:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "12345",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "12345",
+          "agent": 8,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:xs4uoodA",
+        "v2": "2:YncJxOaM",
+        "v3": "3:GNHJthuR",
+        "v1_set": "1:xs4uoodA",
+        "v2_set": "2:YncJxOaM",
+        "v3_set": "3:GNHJthuR"
+      }
+    },
+    {
+      "input": [
+        "12345.7:2@lid",
+        "12345.7:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "12345",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "12345",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:fySGGqcc",
+        "v2": "2:YncJxOaM",
+        "v3": "3:GNHJthuR",
+        "v1_set": "1:Ubt6zlSh",
+        "v2_set": "2:F7A4WmFi",
+        "v3_set": "3:dWrohP6v"
+      }
+    },
+    {
+      "input": [
+        "12345@lid",
+        "12345.0:0@lid"
+      ],
+      "fields": [
+        {
+          "user": "12345",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "12345",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:v/VXdp/r",
+        "v2": "2:twgILmQf",
+        "v3": "3:pRPpsgMf",
+        "v1_set": "1:v/VXdp/r",
+        "v2_set": "2:pbSdjFT4",
+        "v3_set": "3:gtSc6SAs"
+      }
+    },
+    {
+      "input": [
+        "12345.0:99@lid",
+        "12345.0:1@lid"
+      ],
+      "fields": [
+        {
+          "user": "12345",
+          "agent": 0,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "12345",
+          "agent": 0,
+          "device": 1,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:9lzY9B8k",
+        "v2": "2:e3HCFu1R",
+        "v3": "3:I7HxxNvx",
+        "v1_set": "1:9lzY9B8k",
+        "v2_set": "2:e3HCFu1R",
+        "v3_set": "3:I7HxxNvx"
+      }
+    },
+    {
+      "input": [
+        "\ud800\udc00@lid",
+        "\ue000@lid"
+      ],
+      "fields": [
+        {
+          "user": "\ud800\udc00",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "\ue000",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:Uv0VNyjI",
+        "v2": "2:zY2RNyqf",
+        "v3": "3:O4S6wpry",
+        "v1_set": "1:Uv0VNyjI",
+        "v2_set": "2:zY2RNyqf",
+        "v3_set": "3:O4S6wpry"
+      }
+    },
+    {
+      "input": [
+        "A\ud800\udc00@lid",
+        "A\ue000@lid"
+      ],
+      "fields": [
+        {
+          "user": "A\ud800\udc00",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "A\ue000",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:taB2Clj0",
+        "v2": "2:Q2nAQ6HL",
+        "v3": "3:KHV9Aeo1",
+        "v1_set": "1:taB2Clj0",
+        "v2_set": "2:Q2nAQ6HL",
+        "v3_set": "3:KHV9Aeo1"
+      }
+    },
+    {
+      "input": [
+        "15551234567@s.whatsapp.net",
+        "12345@lid"
+      ],
+      "fields": [
+        {
+          "user": "15551234567",
+          "agent": 0,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "12345",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:mg1jTMtZ",
+        "v2": "2:aPpcOOJU",
+        "v3": "3:IvBJ5yjw",
+        "v1_set": "1:mg1jTMtZ",
+        "v2_set": "2:aPpcOOJU",
+        "v3_set": "3:IvBJ5yjw"
+      }
+    },
+    {
+      "input": [
+        "12345.0:65535@lid"
+      ],
+      "fields": [
+        {
+          "user": "12345",
+          "agent": 0,
+          "device": 65535,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:9Mr7x+nd",
+        "v2": "2:XIZyABqx",
+        "v3": "3:IPOluDGk",
+        "v1_set": "1:9Mr7x+nd",
+        "v2_set": "2:XIZyABqx",
+        "v3_set": "3:IPOluDGk"
+      }
+    },
+    {
+      "input": [
+        "64883.0:99@s.whatsapp.net",
+        "26016.1:0@interop",
+        "73920.7:99@lid",
+        "64883.0:99@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "64883",
+          "agent": 0,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "26016",
+          "agent": 1,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "73920",
+          "agent": 7,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "64883",
+          "agent": 0,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:1N/cgsv6",
+        "v2": "2:j3Z2ptw5",
+        "v3": "3:6qzY/DCc",
+        "v1_set": "1:GfG4goq8",
+        "v2_set": "2:ZKE62NoN",
+        "v3_set": "3:/9VNJvkE"
+      }
+    },
+    {
+      "input": [
+        "23997@lid",
+        "95519.0:1@s.whatsapp.net",
+        "51069.1:99@lid",
+        "64871.7:0@interop",
+        "95519.0:1@s.whatsapp.net",
+        "73349.1:99@lid",
+        "50277@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "23997",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "95519",
+          "agent": 0,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "51069",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "64871",
+          "agent": 7,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "95519",
+          "agent": 0,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "73349",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "50277",
+          "agent": 0,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:9CtF5kYh",
+        "v2": "2:P21HDHvJ",
+        "v3": "3:xjmNuK0a",
+        "v1_set": "1:yOv3ZN3G",
+        "v2_set": "2:z5MhMni9",
+        "v3_set": "3:gCdlA7Cq"
+      }
+    },
+    {
+      "input": [
+        "26702.1:1@s.whatsapp.net",
+        "62716.0:99@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "26702",
+          "agent": 1,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "62716",
+          "agent": 0,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:HOfBV2qK",
+        "v2": "2:xT3Z3LKU",
+        "v3": "3:GpegsyM5",
+        "v1_set": "1:HOfBV2qK",
+        "v2_set": "2:xT3Z3LKU",
+        "v3_set": "3:GpegsyM5"
+      }
+    },
+    {
+      "input": [
+        "51206.7:2@interop",
+        "39760.1:0@lid",
+        "34934.0:99@interop",
+        "62159.7:1@s.whatsapp.net",
+        "67746.1:99@interop",
+        "96946.7:2@s.whatsapp.net",
+        "62538.7:2@interop"
+      ],
+      "fields": [
+        {
+          "user": "51206",
+          "agent": 7,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "39760",
+          "agent": 1,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "34934",
+          "agent": 0,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "62159",
+          "agent": 7,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "67746",
+          "agent": 1,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "96946",
+          "agent": 7,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "62538",
+          "agent": 7,
+          "device": 2,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:vGZTRJsU",
+        "v2": "2:NWb0fibz",
+        "v3": "3:F4WQJNxS",
+        "v1_set": "1:vGZTRJsU",
+        "v2_set": "2:NWb0fibz",
+        "v3_set": "3:F4WQJNxS"
+      }
+    },
+    {
+      "input": [
+        "72211.255:1@interop",
+        "61316.255:0@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "72211",
+          "agent": 255,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "61316",
+          "agent": 255,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:XNoNurgK",
+        "v2": "2:V2L2pqNu",
+        "v3": "3:Sm2rO6Yo",
+        "v1_set": "1:XNoNurgK",
+        "v2_set": "2:V2L2pqNu",
+        "v3_set": "3:Sm2rO6Yo"
+      }
+    },
+    {
+      "input": [
+        "57213.1:1@s.whatsapp.net",
+        "41422.7:2@s.whatsapp.net",
+        "33680.1:2@lid",
+        "36250@lid"
+      ],
+      "fields": [
+        {
+          "user": "57213",
+          "agent": 1,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "41422",
+          "agent": 7,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "33680",
+          "agent": 1,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "36250",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:v75vZM+s",
+        "v2": "2:oKCTwm51",
+        "v3": "3:fAdFtHM0",
+        "v1_set": "1:v75vZM+s",
+        "v2_set": "2:oKCTwm51",
+        "v3_set": "3:fAdFtHM0"
+      }
+    },
+    {
+      "input": [
+        "11433.0:99@interop",
+        "38909.255:99@interop",
+        "63497.255:2@interop",
+        "74965.7:2@interop",
+        "84690.7:0@s.whatsapp.net",
+        "27424.1:1@lid",
+        "39089.0:99@s.whatsapp.net",
+        "67587.1:99@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "11433",
+          "agent": 0,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "38909",
+          "agent": 255,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "63497",
+          "agent": 255,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "74965",
+          "agent": 7,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "84690",
+          "agent": 7,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "27424",
+          "agent": 1,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "39089",
+          "agent": 0,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "67587",
+          "agent": 1,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:EFTfw6JP",
+        "v2": "2:du0I0Dpw",
+        "v3": "3:gFXShsxP",
+        "v1_set": "1:EFTfw6JP",
+        "v2_set": "2:du0I0Dpw",
+        "v3_set": "3:gFXShsxP"
+      }
+    },
+    {
+      "input": [
+        "33821.7:2@s.whatsapp.net",
+        "35304.255:2@lid",
+        "49297.7:99@lid",
+        "33821.7:2@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "33821",
+          "agent": 7,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "35304",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "49297",
+          "agent": 7,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "33821",
+          "agent": 7,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:Pwbi32wH",
+        "v2": "2:vB6NcbU/",
+        "v3": "3:J1n3X9TV",
+        "v1_set": "1:/eqSliaF",
+        "v2_set": "2:0TONBKmo",
+        "v3_set": "3:oGXv4VRT"
+      }
+    },
+    {
+      "input": [
+        "43633.255:99@interop",
+        "47517.1:1@s.whatsapp.net",
+        "41820.0:1@lid",
+        "62502.255:1@interop",
+        "44861.255:0@s.whatsapp.net",
+        "86663.255:0@s.whatsapp.net",
+        "63339.1:1@lid",
+        "78744.7:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "43633",
+          "agent": 255,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "47517",
+          "agent": 1,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "41820",
+          "agent": 0,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "62502",
+          "agent": 255,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "44861",
+          "agent": 255,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "86663",
+          "agent": 255,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "63339",
+          "agent": 1,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "78744",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:op6DCmOm",
+        "v2": "2:rk2lP7by",
+        "v3": "3:ro06vA1T",
+        "v1_set": "1:op6DCmOm",
+        "v2_set": "2:rk2lP7by",
+        "v3_set": "3:ro06vA1T"
+      }
+    },
+    {
+      "input": [
+        "14093.7:2@lid",
+        "79690.7:99@s.whatsapp.net",
+        "52940.1:99@s.whatsapp.net",
+        "73436.0:2@interop",
+        "35241.0:99@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "14093",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "79690",
+          "agent": 7,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "52940",
+          "agent": 1,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "73436",
+          "agent": 0,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "35241",
+          "agent": 0,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:GDyDJ6Xz",
+        "v2": "2:ux0fE5rN",
+        "v3": "3:Q2zBmI24",
+        "v1_set": "1:GDyDJ6Xz",
+        "v2_set": "2:ux0fE5rN",
+        "v3_set": "3:Q2zBmI24"
+      }
+    },
+    {
+      "input": [
+        "20054.1:2@interop",
+        "14669.1:0@interop",
+        "28261.255:99@interop",
+        "20054.1:2@interop",
+        "97168.1:0@lid"
+      ],
+      "fields": [
+        {
+          "user": "20054",
+          "agent": 1,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "14669",
+          "agent": 1,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "28261",
+          "agent": 255,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "20054",
+          "agent": 1,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "97168",
+          "agent": 1,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:wCom7Flz",
+        "v2": "2:yDgNF5Ej",
+        "v3": "3:et7FG01L",
+        "v1_set": "1:GmvY53wT",
+        "v2_set": "2:RGED9KKF",
+        "v3_set": "3:348t8pPp"
+      }
+    },
+    {
+      "input": [],
+      "fields": [],
+      "expected": {
+        "v1": "1:2jmj7l5r",
+        "v2": "2:47DEQpj8",
+        "v3": "3:47DEQpj8",
+        "v1_set": "1:2jmj7l5r",
+        "v2_set": "2:47DEQpj8",
+        "v3_set": "3:47DEQpj8"
+      }
+    },
+    {
+      "input": [
+        "81065.1:0@lid",
+        "15232@interop",
+        "81065.1:0@lid"
+      ],
+      "fields": [
+        {
+          "user": "81065",
+          "agent": 1,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "15232",
+          "agent": 0,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "81065",
+          "agent": 1,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:rsJ9lO+F",
+        "v2": "2:mXTkXe6k",
+        "v3": "3:DXKCGfLJ",
+        "v1_set": "1:a0zJKrDa",
+        "v2_set": "2:4zfpqcgW",
+        "v3_set": "3:zdr9hT/5"
+      }
+    },
+    {
+      "input": [
+        "94844.0:2@interop",
+        "25756.7:99@lid",
+        "58513.0:99@lid",
+        "69098.1:99@interop",
+        "18251.1:1@interop",
+        "26038.7:2@lid",
+        "46441.7:2@interop",
+        "59386.1:1@interop"
+      ],
+      "fields": [
+        {
+          "user": "94844",
+          "agent": 0,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "25756",
+          "agent": 7,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "58513",
+          "agent": 0,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "69098",
+          "agent": 1,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "18251",
+          "agent": 1,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "26038",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "46441",
+          "agent": 7,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "59386",
+          "agent": 1,
+          "device": 1,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:UMeoc00j",
+        "v2": "2:KDHm8xt+",
+        "v3": "3:NfbpOXZ3",
+        "v1_set": "1:UMeoc00j",
+        "v2_set": "2:KDHm8xt+",
+        "v3_set": "3:NfbpOXZ3"
+      }
+    },
+    {
+      "input": [
+        "97093.0:1@lid",
+        "97093.0:1@lid",
+        "68287.255:2@lid",
+        "73470.0:99@s.whatsapp.net",
+        "18348.7:2@lid",
+        "30511.0:1@lid"
+      ],
+      "fields": [
+        {
+          "user": "97093",
+          "agent": 0,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "97093",
+          "agent": 0,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "68287",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "73470",
+          "agent": 0,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "18348",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "30511",
+          "agent": 0,
+          "device": 1,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:HkPX9ZnE",
+        "v2": "2:qO1m/3sW",
+        "v3": "3:piEti+mZ",
+        "v1_set": "1:wGd5IeNV",
+        "v2_set": "2:IF4bIpvK",
+        "v3_set": "3:rHzXM11Y"
+      }
+    },
+    {
+      "input": [
+        "29011.1:2@interop",
+        "63908.255:0@s.whatsapp.net",
+        "41369.7:0@s.whatsapp.net",
+        "16953.1:1@interop",
+        "26902.0:99@interop",
+        "42557.1:1@lid",
+        "89231.255:99@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "29011",
+          "agent": 1,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "63908",
+          "agent": 255,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "41369",
+          "agent": 7,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "16953",
+          "agent": 1,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "26902",
+          "agent": 0,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "42557",
+          "agent": 1,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "89231",
+          "agent": 255,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:mhS1CZfp",
+        "v2": "2:8PkjE+DJ",
+        "v3": "3:FQJqUuGe",
+        "v1_set": "1:mhS1CZfp",
+        "v2_set": "2:8PkjE+DJ",
+        "v3_set": "3:FQJqUuGe"
+      }
+    },
+    {
+      "input": [
+        "54428.255:1@interop",
+        "18916.0:2@s.whatsapp.net",
+        "23271.255:1@lid",
+        "13057.255:2@lid",
+        "13014.1:99@interop"
+      ],
+      "fields": [
+        {
+          "user": "54428",
+          "agent": 255,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "18916",
+          "agent": 0,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "23271",
+          "agent": 255,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "13057",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "13014",
+          "agent": 1,
+          "device": 99,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:RwNwhDje",
+        "v2": "2:jQ5QJyww",
+        "v3": "3:QVg6goFr",
+        "v1_set": "1:RwNwhDje",
+        "v2_set": "2:jQ5QJyww",
+        "v3_set": "3:QVg6goFr"
+      }
+    },
+    {
+      "input": [
+        "45928.0:99@interop",
+        "45928.0:99@interop",
+        "91796@lid",
+        "62944.1:0@s.whatsapp.net",
+        "44017@interop"
+      ],
+      "fields": [
+        {
+          "user": "45928",
+          "agent": 0,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "45928",
+          "agent": 0,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "91796",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "62944",
+          "agent": 1,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "44017",
+          "agent": 0,
+          "device": 0,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:3WKw37px",
+        "v2": "2:zO6MxHdU",
+        "v3": "3:0HNSvOec",
+        "v1_set": "1:4aBwTTKR",
+        "v2_set": "2:8Uamg1b+",
+        "v3_set": "3:/qw6xy3D"
+      }
+    },
+    {
+      "input": [
+        "14377.1:2@interop",
+        "96197.255:1@s.whatsapp.net",
+        "74734.7:1@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "14377",
+          "agent": 1,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "96197",
+          "agent": 255,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "74734",
+          "agent": 7,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:fyYwnEg4",
+        "v2": "2:0R9zsqz3",
+        "v3": "3:OCpf8aw7",
+        "v1_set": "1:fyYwnEg4",
+        "v2_set": "2:0R9zsqz3",
+        "v3_set": "3:OCpf8aw7"
+      }
+    },
+    {
+      "input": [
+        "73669.7:2@s.whatsapp.net",
+        "92085.255:2@s.whatsapp.net",
+        "83486.255:2@s.whatsapp.net",
+        "99531.0:2@lid",
+        "24494.255:1@s.whatsapp.net",
+        "36951.1:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "73669",
+          "agent": 7,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "92085",
+          "agent": 255,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "83486",
+          "agent": 255,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "99531",
+          "agent": 0,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "24494",
+          "agent": 255,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "36951",
+          "agent": 1,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:36j3j9/v",
+        "v2": "2:P0+q1Vvt",
+        "v3": "3:F35DQJAS",
+        "v1_set": "1:36j3j9/v",
+        "v2_set": "2:P0+q1Vvt",
+        "v3_set": "3:F35DQJAS"
+      }
+    },
+    {
+      "input": [
+        "47874@s.whatsapp.net",
+        "47874@s.whatsapp.net",
+        "30177.7:1@lid",
+        "74805.7:2@interop"
+      ],
+      "fields": [
+        {
+          "user": "47874",
+          "agent": 0,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "47874",
+          "agent": 0,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "30177",
+          "agent": 7,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "74805",
+          "agent": 7,
+          "device": 2,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:ooKyz6yS",
+        "v2": "2:Wy0be+wD",
+        "v3": "3:IJ8ILYy1",
+        "v1_set": "1:dCIxZ6oT",
+        "v2_set": "2:D6uAwxNC",
+        "v3_set": "3:A7ewceqb"
+      }
+    },
+    {
+      "input": [
+        "17310.1:0@lid"
+      ],
+      "fields": [
+        {
+          "user": "17310",
+          "agent": 1,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:C9lU4A1I",
+        "v2": "2:AuRQCTyF",
+        "v3": "3:xi4UqJdt",
+        "v1_set": "1:C9lU4A1I",
+        "v2_set": "2:AuRQCTyF",
+        "v3_set": "3:xi4UqJdt"
+      }
+    },
+    {
+      "input": [
+        "38913.1:0@lid",
+        "77444.0:1@interop",
+        "39972.255:2@s.whatsapp.net",
+        "60230.7:99@lid",
+        "60230.7:99@lid",
+        "84837.0:1@lid",
+        "57039.7:99@lid"
+      ],
+      "fields": [
+        {
+          "user": "38913",
+          "agent": 1,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "77444",
+          "agent": 0,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "39972",
+          "agent": 255,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "60230",
+          "agent": 7,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "60230",
+          "agent": 7,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "84837",
+          "agent": 0,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "57039",
+          "agent": 7,
+          "device": 99,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:aGWiJtGN",
+        "v2": "2:ab81j1op",
+        "v3": "3:tF91GGoy",
+        "v1_set": "1:qavdFXMP",
+        "v2_set": "2:9AZ2QCvM",
+        "v3_set": "3:5lVInhDB"
+      }
+    },
+    {
+      "input": [],
+      "fields": [],
+      "expected": {
+        "v1": "1:2jmj7l5r",
+        "v2": "2:47DEQpj8",
+        "v3": "3:47DEQpj8",
+        "v1_set": "1:2jmj7l5r",
+        "v2_set": "2:47DEQpj8",
+        "v3_set": "3:47DEQpj8"
+      }
+    },
+    {
+      "input": [
+        "49469.1:0@interop",
+        "30460.1:1@interop",
+        "89511.1:1@interop",
+        "88890.1:0@lid"
+      ],
+      "fields": [
+        {
+          "user": "49469",
+          "agent": 1,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "30460",
+          "agent": 1,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "89511",
+          "agent": 1,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "88890",
+          "agent": 1,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:PoeH2Kna",
+        "v2": "2:zerBxLQC",
+        "v3": "3:6nPWYLAa",
+        "v1_set": "1:PoeH2Kna",
+        "v2_set": "2:zerBxLQC",
+        "v3_set": "3:6nPWYLAa"
+      }
+    },
+    {
+      "input": [
+        "70691.0:99@lid",
+        "53905.255:0@lid",
+        "53905.255:0@lid"
+      ],
+      "fields": [
+        {
+          "user": "70691",
+          "agent": 0,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "53905",
+          "agent": 255,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "53905",
+          "agent": 255,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:Pj7w7KKW",
+        "v2": "2:BZ+IPqAJ",
+        "v3": "3:4XewTG+o",
+        "v1_set": "1:v+sSRQhM",
+        "v2_set": "2:BTx05ddT",
+        "v3_set": "3:lqvRJQca"
+      }
+    },
+    {
+      "input": [
+        "16164.255:99@s.whatsapp.net",
+        "72923.1:1@lid",
+        "38603.1:0@s.whatsapp.net",
+        "38603.1:0@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "16164",
+          "agent": 255,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "72923",
+          "agent": 1,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "38603",
+          "agent": 1,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "38603",
+          "agent": 1,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:jP728nhC",
+        "v2": "2:aDvo7QI1",
+        "v3": "3:pWect7jW",
+        "v1_set": "1:4TubfHxI",
+        "v2_set": "2:b10LNR6+",
+        "v3_set": "3:EK19rfQ7"
+      }
+    },
+    {
+      "input": [
+        "68345.0:2@lid",
+        "68345.0:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "68345",
+          "agent": 0,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "68345",
+          "agent": 0,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:NRK4CacW",
+        "v2": "2:k1Na9sfA",
+        "v3": "3:sV6S0QAL",
+        "v1_set": "1:pCpzolAD",
+        "v2_set": "2:9Gf3po2H",
+        "v3_set": "3:2yOh1TYM"
+      }
+    },
+    {
+      "input": [
+        "99723.0:2@lid",
+        "93937.0:2@interop",
+        "63009@lid",
+        "87612.1:2@lid",
+        "99723.0:2@lid",
+        "66796.255:0@s.whatsapp.net",
+        "48336.1:99@s.whatsapp.net",
+        "28126.255:2@lid",
+        "50720.7:1@interop"
+      ],
+      "fields": [
+        {
+          "user": "99723",
+          "agent": 0,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "93937",
+          "agent": 0,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "63009",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "87612",
+          "agent": 1,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "99723",
+          "agent": 0,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "66796",
+          "agent": 255,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "48336",
+          "agent": 1,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "28126",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "50720",
+          "agent": 7,
+          "device": 1,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:vggDQtje",
+        "v2": "2:tJUrQor6",
+        "v3": "3:buQNvCkJ",
+        "v1_set": "1:BOFpQ7ji",
+        "v2_set": "2:tyRDDLdT",
+        "v3_set": "3:NXKDGfxJ"
+      }
+    },
+    {
+      "input": [
+        "15353.255:1@interop",
+        "38814.1:99@lid",
+        "72198.7:1@s.whatsapp.net",
+        "38814.1:99@lid",
+        "84697.1:1@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "15353",
+          "agent": 255,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "38814",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "72198",
+          "agent": 7,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "38814",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "84697",
+          "agent": 1,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:fP5sHRBR",
+        "v2": "2:XITgV2N5",
+        "v3": "3:QJF4Ol65",
+        "v1_set": "1:n0+yTWrC",
+        "v2_set": "2:CfyE3VdT",
+        "v3_set": "3:ugjkVLFv"
+      }
+    },
+    {
+      "input": [],
+      "fields": [],
+      "expected": {
+        "v1": "1:2jmj7l5r",
+        "v2": "2:47DEQpj8",
+        "v3": "3:47DEQpj8",
+        "v1_set": "1:2jmj7l5r",
+        "v2_set": "2:47DEQpj8",
+        "v3_set": "3:47DEQpj8"
+      }
+    },
+    {
+      "input": [],
+      "fields": [],
+      "expected": {
+        "v1": "1:2jmj7l5r",
+        "v2": "2:47DEQpj8",
+        "v3": "3:47DEQpj8",
+        "v1_set": "1:2jmj7l5r",
+        "v2_set": "2:47DEQpj8",
+        "v3_set": "3:47DEQpj8"
+      }
+    },
+    {
+      "input": [],
+      "fields": [],
+      "expected": {
+        "v1": "1:2jmj7l5r",
+        "v2": "2:47DEQpj8",
+        "v3": "3:47DEQpj8",
+        "v1_set": "1:2jmj7l5r",
+        "v2_set": "2:47DEQpj8",
+        "v3_set": "3:47DEQpj8"
+      }
+    },
+    {
+      "input": [
+        "88678.7:1@interop",
+        "67561.7:0@s.whatsapp.net",
+        "19515.7:1@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "88678",
+          "agent": 7,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "67561",
+          "agent": 7,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "19515",
+          "agent": 7,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:EjpxrjY7",
+        "v2": "2:zs3tNFf8",
+        "v3": "3:fRAJOEOa",
+        "v1_set": "1:EjpxrjY7",
+        "v2_set": "2:zs3tNFf8",
+        "v3_set": "3:fRAJOEOa"
+      }
+    },
+    {
+      "input": [
+        "28101.255:99@interop",
+        "35174.1:99@lid",
+        "31555.7:1@s.whatsapp.net",
+        "52377.7:2@lid",
+        "80470.255:2@interop",
+        "38477.0:1@interop",
+        "35754.1:2@s.whatsapp.net",
+        "28101.255:99@interop",
+        "31052.0:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "28101",
+          "agent": 255,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "35174",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "31555",
+          "agent": 7,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "52377",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "80470",
+          "agent": 255,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "38477",
+          "agent": 0,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "35754",
+          "agent": 1,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "28101",
+          "agent": 255,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "31052",
+          "agent": 0,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:t6+Mc9hJ",
+        "v2": "2:jq/+1Csl",
+        "v3": "3:Gw0wVww8",
+        "v1_set": "1:2zN1ljZr",
+        "v2_set": "2:+dTnDzIe",
+        "v3_set": "3:i3ApJvG7"
+      }
+    },
+    {
+      "input": [
+        "15539.255:1@lid",
+        "42447.255:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "15539",
+          "agent": 255,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "42447",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:oeAgkSAA",
+        "v2": "2:JHUaRtve",
+        "v3": "3:rGB+UEsj",
+        "v1_set": "1:oeAgkSAA",
+        "v2_set": "2:JHUaRtve",
+        "v3_set": "3:rGB+UEsj"
+      }
+    },
+    {
+      "input": [
+        "25640.0:1@lid",
+        "15202.255:99@lid",
+        "58429.7:0@interop",
+        "10879.7:1@s.whatsapp.net",
+        "16667.1:1@s.whatsapp.net",
+        "15868.1:1@interop",
+        "48763.255:99@s.whatsapp.net",
+        "59319.7:2@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "25640",
+          "agent": 0,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "15202",
+          "agent": 255,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "58429",
+          "agent": 7,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "10879",
+          "agent": 7,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "16667",
+          "agent": 1,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "15868",
+          "agent": 1,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "48763",
+          "agent": 255,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "59319",
+          "agent": 7,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:Mra29v6t",
+        "v2": "2:6vL8t7pd",
+        "v3": "3:UY0DPFA0",
+        "v1_set": "1:Mra29v6t",
+        "v2_set": "2:6vL8t7pd",
+        "v3_set": "3:UY0DPFA0"
+      }
+    },
+    {
+      "input": [
+        "99862.255:0@interop",
+        "99862.255:0@interop",
+        "73089.255:2@interop"
+      ],
+      "fields": [
+        {
+          "user": "99862",
+          "agent": 255,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "99862",
+          "agent": 255,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "73089",
+          "agent": 255,
+          "device": 2,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:FEUEZe3Z",
+        "v2": "2:w+yN1MBt",
+        "v3": "3:gHS4N1Md",
+        "v1_set": "1:LWsN1NJg",
+        "v2_set": "2:c4cp3oaK",
+        "v3_set": "3:STDdMsxO"
+      }
+    },
+    {
+      "input": [
+        "85679.255:2@lid",
+        "85679.255:2@lid",
+        "27663.0:1@s.whatsapp.net",
+        "99515.7:99@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "85679",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "85679",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "27663",
+          "agent": 0,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "99515",
+          "agent": 7,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:58ka9d2I",
+        "v2": "2:RY87j4YN",
+        "v3": "3:+n4oMqwY",
+        "v1_set": "1:vxZCCNKu",
+        "v2_set": "2:v3njNtuJ",
+        "v3_set": "3:4REjyCYx"
+      }
+    },
+    {
+      "input": [
+        "63701.0:2@lid",
+        "81855.0:99@interop"
+      ],
+      "fields": [
+        {
+          "user": "63701",
+          "agent": 0,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "81855",
+          "agent": 0,
+          "device": 99,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:K2TRoG6I",
+        "v2": "2:ibUAgixN",
+        "v3": "3:AFoz2hz1",
+        "v1_set": "1:K2TRoG6I",
+        "v2_set": "2:ibUAgixN",
+        "v3_set": "3:AFoz2hz1"
+      }
+    },
+    {
+      "input": [
+        "18762.1:2@interop",
+        "55934.255:2@lid",
+        "40240.7:0@s.whatsapp.net",
+        "98514.0:2@s.whatsapp.net",
+        "19197.0:1@s.whatsapp.net",
+        "47227.1:0@interop",
+        "91941.7:99@s.whatsapp.net",
+        "49810.7:99@lid",
+        "49810.7:99@lid"
+      ],
+      "fields": [
+        {
+          "user": "18762",
+          "agent": 1,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "55934",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "40240",
+          "agent": 7,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "98514",
+          "agent": 0,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "19197",
+          "agent": 0,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "47227",
+          "agent": 1,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "91941",
+          "agent": 7,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "49810",
+          "agent": 7,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "49810",
+          "agent": 7,
+          "device": 99,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:z/Z8y/HV",
+        "v2": "2:ZG2YWo3k",
+        "v3": "3:eyxu8SDb",
+        "v1_set": "1:rUqdkBn6",
+        "v2_set": "2:C9p53jEo",
+        "v3_set": "3:Qt3wEN4D"
+      }
+    },
+    {
+      "input": [
+        "86364.7:0@lid",
+        "34904.1:0@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "86364",
+          "agent": 7,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "34904",
+          "agent": 1,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:fMqoYm+s",
+        "v2": "2:xoNcOoU6",
+        "v3": "3:zbxaXUeI",
+        "v1_set": "1:fMqoYm+s",
+        "v2_set": "2:xoNcOoU6",
+        "v3_set": "3:zbxaXUeI"
+      }
+    },
+    {
+      "input": [
+        "52789.255:99@s.whatsapp.net",
+        "52789.255:99@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "52789",
+          "agent": 255,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "52789",
+          "agent": 255,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:MClMZ7gA",
+        "v2": "2:W/DQDNiM",
+        "v3": "3:PeUtzYoN",
+        "v1_set": "1:lU4PF0fk",
+        "v2_set": "2:STyQfCV8",
+        "v3_set": "3:MiOkoZB1"
+      }
+    },
+    {
+      "input": [],
+      "fields": [],
+      "expected": {
+        "v1": "1:2jmj7l5r",
+        "v2": "2:47DEQpj8",
+        "v3": "3:47DEQpj8",
+        "v1_set": "1:2jmj7l5r",
+        "v2_set": "2:47DEQpj8",
+        "v3_set": "3:47DEQpj8"
+      }
+    },
+    {
+      "input": [
+        "44771.7:0@interop",
+        "23833.7:99@interop",
+        "44771.7:0@interop",
+        "91798@interop"
+      ],
+      "fields": [
+        {
+          "user": "44771",
+          "agent": 7,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "23833",
+          "agent": 7,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "44771",
+          "agent": 7,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "91798",
+          "agent": 0,
+          "device": 0,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:XxsUSFBn",
+        "v2": "2:35fO2gRU",
+        "v3": "3:YgHZ/Ml2",
+        "v1_set": "1:gweQhaV0",
+        "v2_set": "2:UwtJpTLa",
+        "v3_set": "3:eIyA2FN4"
+      }
+    },
+    {
+      "input": [
+        "73286.1:99@interop",
+        "79582.1:1@interop",
+        "20698.7:0@s.whatsapp.net",
+        "73286.1:99@interop",
+        "63947.255:2@interop",
+        "86180.7:1@lid",
+        "58639.255:2@interop"
+      ],
+      "fields": [
+        {
+          "user": "73286",
+          "agent": 1,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "79582",
+          "agent": 1,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "20698",
+          "agent": 7,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "73286",
+          "agent": 1,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "63947",
+          "agent": 255,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "86180",
+          "agent": 7,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "58639",
+          "agent": 255,
+          "device": 2,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:vD1oIhIT",
+        "v2": "2:xTuFm6Li",
+        "v3": "3:rdhPi477",
+        "v1_set": "1:VYbpfgSq",
+        "v2_set": "2:EmQuomtH",
+        "v3_set": "3:zTLilHJS"
+      }
+    },
+    {
+      "input": [
+        "93312.0:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "93312",
+          "agent": 0,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:mLIwSR4I",
+        "v2": "2:PnC2iuL+",
+        "v3": "3:8kvg+7sW",
+        "v1_set": "1:mLIwSR4I",
+        "v2_set": "2:PnC2iuL+",
+        "v3_set": "3:8kvg+7sW"
+      }
+    },
+    {
+      "input": [
+        "83396.7:1@lid",
+        "83396.7:1@lid",
+        "34688.1:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "83396",
+          "agent": 7,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "83396",
+          "agent": 7,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "34688",
+          "agent": 1,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:tgnpNpqs",
+        "v2": "2:ZeKUBuHW",
+        "v3": "3:7jeNcLmS",
+        "v1_set": "1:SoDhzG/4",
+        "v2_set": "2:/SiApTqW",
+        "v3_set": "3:XeU/H9bf"
+      }
+    },
+    {
+      "input": [
+        "23455.0:2@s.whatsapp.net",
+        "37815.0:1@s.whatsapp.net",
+        "99151.0:2@lid",
+        "77278.0:2@s.whatsapp.net",
+        "23455.0:2@s.whatsapp.net",
+        "14306.7:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "23455",
+          "agent": 0,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "37815",
+          "agent": 0,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "99151",
+          "agent": 0,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "77278",
+          "agent": 0,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "23455",
+          "agent": 0,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "14306",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:edRkijUX",
+        "v2": "2:e0t5yWHm",
+        "v3": "3:G64l82n5",
+        "v1_set": "1:aBP1Mjhk",
+        "v2_set": "2:cDRL3a9r",
+        "v3_set": "3:JUW3wtfq"
+      }
+    },
+    {
+      "input": [
+        "62054.0:99@s.whatsapp.net",
+        "12705.1:2@s.whatsapp.net",
+        "36470.1:1@interop",
+        "11042.0:2@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "62054",
+          "agent": 0,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "12705",
+          "agent": 1,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "36470",
+          "agent": 1,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "11042",
+          "agent": 0,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:mY7xMkMl",
+        "v2": "2:/o56aJnN",
+        "v3": "3:0STk4D6S",
+        "v1_set": "1:mY7xMkMl",
+        "v2_set": "2:/o56aJnN",
+        "v3_set": "3:0STk4D6S"
+      }
+    },
+    {
+      "input": [
+        "31528.7:1@s.whatsapp.net",
+        "86115.255:99@interop",
+        "21997@lid"
+      ],
+      "fields": [
+        {
+          "user": "31528",
+          "agent": 7,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "86115",
+          "agent": 255,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "21997",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:nVZledBG",
+        "v2": "2:W17sATn3",
+        "v3": "3:jtIAOLXR",
+        "v1_set": "1:nVZledBG",
+        "v2_set": "2:W17sATn3",
+        "v3_set": "3:jtIAOLXR"
+      }
+    },
+    {
+      "input": [],
+      "fields": [],
+      "expected": {
+        "v1": "1:2jmj7l5r",
+        "v2": "2:47DEQpj8",
+        "v3": "3:47DEQpj8",
+        "v1_set": "1:2jmj7l5r",
+        "v2_set": "2:47DEQpj8",
+        "v3_set": "3:47DEQpj8"
+      }
+    },
+    {
+      "input": [
+        "62719.7:1@interop",
+        "40239.1:99@s.whatsapp.net",
+        "21915@lid",
+        "93520.7:99@interop",
+        "35101.0:2@interop",
+        "89711.7:1@s.whatsapp.net",
+        "94260.0:2@interop"
+      ],
+      "fields": [
+        {
+          "user": "62719",
+          "agent": 7,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "40239",
+          "agent": 1,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "21915",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "93520",
+          "agent": 7,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "35101",
+          "agent": 0,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "89711",
+          "agent": 7,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "94260",
+          "agent": 0,
+          "device": 2,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:7svIV2qz",
+        "v2": "2:/WcQOu61",
+        "v3": "3:1p8HbPfF",
+        "v1_set": "1:7svIV2qz",
+        "v2_set": "2:/WcQOu61",
+        "v3_set": "3:1p8HbPfF"
+      }
+    },
+    {
+      "input": [
+        "14231.1:0@s.whatsapp.net",
+        "65782.7:1@interop",
+        "14231.1:0@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "14231",
+          "agent": 1,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "65782",
+          "agent": 7,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "14231",
+          "agent": 1,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:yhG4MvUW",
+        "v2": "2:TmmwNM3e",
+        "v3": "3:4IEn7Ha8",
+        "v1_set": "1:Q6j+J5Db",
+        "v2_set": "2:YoZ8yee4",
+        "v3_set": "3:CeAAYxnN"
+      }
+    },
+    {
+      "input": [
+        "14980.1:1@lid",
+        "93126.255:1@lid",
+        "73755.1:99@lid",
+        "73755.1:99@lid"
+      ],
+      "fields": [
+        {
+          "user": "14980",
+          "agent": 1,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "93126",
+          "agent": 255,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "73755",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "73755",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:4dRbW83D",
+        "v2": "2:qpKcbMr/",
+        "v3": "3:un1ofE/I",
+        "v1_set": "1:RS0aLvo6",
+        "v2_set": "2:RBgLqXOU",
+        "v3_set": "3:UW1VaFsh"
+      }
+    },
+    {
+      "input": [],
+      "fields": [],
+      "expected": {
+        "v1": "1:2jmj7l5r",
+        "v2": "2:47DEQpj8",
+        "v3": "3:47DEQpj8",
+        "v1_set": "1:2jmj7l5r",
+        "v2_set": "2:47DEQpj8",
+        "v3_set": "3:47DEQpj8"
+      }
+    },
+    {
+      "input": [
+        "48778.1:0@lid",
+        "38553.255:1@lid"
+      ],
+      "fields": [
+        {
+          "user": "48778",
+          "agent": 1,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "38553",
+          "agent": 255,
+          "device": 1,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:TenqW1A3",
+        "v2": "2:l0tQ9gZG",
+        "v3": "3:j0JJMxDl",
+        "v1_set": "1:TenqW1A3",
+        "v2_set": "2:l0tQ9gZG",
+        "v3_set": "3:j0JJMxDl"
+      }
+    },
+    {
+      "input": [
+        "54818.0:2@s.whatsapp.net",
+        "53780.255:99@lid",
+        "28326.7:0@lid",
+        "65412.7:0@lid",
+        "14170.7:1@lid",
+        "15005.1:1@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "54818",
+          "agent": 0,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "53780",
+          "agent": 255,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "28326",
+          "agent": 7,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "65412",
+          "agent": 7,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "14170",
+          "agent": 7,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "15005",
+          "agent": 1,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:Srs01wCU",
+        "v2": "2:Y62g/MBp",
+        "v3": "3:ZgPSSfE3",
+        "v1_set": "1:Srs01wCU",
+        "v2_set": "2:Y62g/MBp",
+        "v3_set": "3:ZgPSSfE3"
+      }
+    },
+    {
+      "input": [
+        "73677.7:2@lid",
+        "88339.255:2@lid",
+        "42319.255:2@s.whatsapp.net",
+        "33648.0:1@s.whatsapp.net",
+        "73808.1:99@lid",
+        "56189.7:0@interop",
+        "42761.7:2@lid",
+        "77740.1:1@lid"
+      ],
+      "fields": [
+        {
+          "user": "73677",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "88339",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "42319",
+          "agent": 255,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "33648",
+          "agent": 0,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "73808",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "56189",
+          "agent": 7,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "42761",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "77740",
+          "agent": 1,
+          "device": 1,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:9h4qtjh9",
+        "v2": "2:P4JS0Qkr",
+        "v3": "3:pAzbmn/n",
+        "v1_set": "1:9h4qtjh9",
+        "v2_set": "2:P4JS0Qkr",
+        "v3_set": "3:pAzbmn/n"
+      }
+    },
+    {
+      "input": [
+        "30175.0:2@s.whatsapp.net",
+        "49115.255:2@s.whatsapp.net",
+        "49115.255:2@s.whatsapp.net",
+        "40123.0:99@lid",
+        "98310.1:0@lid",
+        "94300.1:2@s.whatsapp.net",
+        "13817.7:1@interop",
+        "87213.255:1@lid",
+        "40201.7:99@lid"
+      ],
+      "fields": [
+        {
+          "user": "30175",
+          "agent": 0,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "49115",
+          "agent": 255,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "49115",
+          "agent": 255,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "40123",
+          "agent": 0,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "98310",
+          "agent": 1,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "94300",
+          "agent": 1,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "13817",
+          "agent": 7,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "87213",
+          "agent": 255,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "40201",
+          "agent": 7,
+          "device": 99,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:kNSr97/m",
+        "v2": "2:+2P25KR9",
+        "v3": "3:YZ/HvZoa",
+        "v1_set": "1:JANgj/GL",
+        "v2_set": "2:2cKpWp1a",
+        "v3_set": "3:VAMYS0SD"
+      }
+    },
+    {
+      "input": [
+        "56427.0:2@s.whatsapp.net",
+        "66328.7:99@s.whatsapp.net",
+        "55313.7:99@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "56427",
+          "agent": 0,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "66328",
+          "agent": 7,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "55313",
+          "agent": 7,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:yfEa62e1",
+        "v2": "2:NwgAK6yE",
+        "v3": "3:8K65FraY",
+        "v1_set": "1:yfEa62e1",
+        "v2_set": "2:NwgAK6yE",
+        "v3_set": "3:8K65FraY"
+      }
+    },
+    {
+      "input": [
+        "75728.7:0@interop",
+        "29148.255:99@interop"
+      ],
+      "fields": [
+        {
+          "user": "75728",
+          "agent": 7,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "29148",
+          "agent": 255,
+          "device": 99,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:r1zXmz0j",
+        "v2": "2:/huCkKoS",
+        "v3": "3:EMe5n+xS",
+        "v1_set": "1:r1zXmz0j",
+        "v2_set": "2:/huCkKoS",
+        "v3_set": "3:EMe5n+xS"
+      }
+    },
+    {
+      "input": [
+        "22804.1:99@lid",
+        "23606.7:2@s.whatsapp.net",
+        "13360.0:1@interop",
+        "12951.1:0@s.whatsapp.net",
+        "74717.7:99@lid",
+        "47047.0:2@s.whatsapp.net",
+        "20115@lid"
+      ],
+      "fields": [
+        {
+          "user": "22804",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "23606",
+          "agent": 7,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "13360",
+          "agent": 0,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "12951",
+          "agent": 1,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "74717",
+          "agent": 7,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "47047",
+          "agent": 0,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "20115",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:YD38Gf3r",
+        "v2": "2:tinVDN9u",
+        "v3": "3:cpoDZTB5",
+        "v1_set": "1:YD38Gf3r",
+        "v2_set": "2:tinVDN9u",
+        "v3_set": "3:cpoDZTB5"
+      }
+    },
+    {
+      "input": [
+        "81269@lid",
+        "66547.7:1@lid",
+        "53434.255:0@lid"
+      ],
+      "fields": [
+        {
+          "user": "81269",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "66547",
+          "agent": 7,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "53434",
+          "agent": 255,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:r+abL8Qw",
+        "v2": "2:y71ITZ35",
+        "v3": "3:ro2VHx/J",
+        "v1_set": "1:r+abL8Qw",
+        "v2_set": "2:y71ITZ35",
+        "v3_set": "3:ro2VHx/J"
+      }
+    },
+    {
+      "input": [
+        "61387.255:2@lid",
+        "61387.255:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "61387",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "61387",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:gU+UbLun",
+        "v2": "2:3kd2918A",
+        "v3": "3:RBhb5PGp",
+        "v1_set": "1:OE/ciSjE",
+        "v2_set": "2:eAR3xCzJ",
+        "v3_set": "3:MEeoIMV1"
+      }
+    },
+    {
+      "input": [
+        "93062.7:2@interop",
+        "38526.255:1@lid",
+        "99452@s.whatsapp.net",
+        "89733.255:0@lid",
+        "90088.255:2@interop",
+        "44198.255:2@lid",
+        "26639.1:1@interop"
+      ],
+      "fields": [
+        {
+          "user": "93062",
+          "agent": 7,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "38526",
+          "agent": 255,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "99452",
+          "agent": 0,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "89733",
+          "agent": 255,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "90088",
+          "agent": 255,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "44198",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "26639",
+          "agent": 1,
+          "device": 1,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:bL4RlXkE",
+        "v2": "2:NCM96+Ph",
+        "v3": "3:Gd37mep2",
+        "v1_set": "1:bL4RlXkE",
+        "v2_set": "2:NCM96+Ph",
+        "v3_set": "3:Gd37mep2"
+      }
+    },
+    {
+      "input": [
+        "34622.0:1@lid",
+        "98677.0:1@lid",
+        "79292.7:99@interop",
+        "53640.255:99@s.whatsapp.net",
+        "68768.0:99@interop",
+        "43853.255:99@interop",
+        "50025.1:99@interop",
+        "43853.255:99@interop",
+        "28995.0:1@interop"
+      ],
+      "fields": [
+        {
+          "user": "34622",
+          "agent": 0,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "98677",
+          "agent": 0,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "79292",
+          "agent": 7,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "53640",
+          "agent": 255,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "68768",
+          "agent": 0,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "43853",
+          "agent": 255,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "50025",
+          "agent": 1,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "43853",
+          "agent": 255,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "28995",
+          "agent": 0,
+          "device": 1,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:fv5f+2iA",
+        "v2": "2:mY1Yi8dP",
+        "v3": "3:aFojzI+u",
+        "v1_set": "1:OIrKVWMW",
+        "v2_set": "2:GGUgHuyg",
+        "v3_set": "3:rbuwRLRj"
+      }
+    },
+    {
+      "input": [
+        "12780.1:99@lid",
+        "87040.7:2@lid",
+        "80978.1:2@interop",
+        "44584.1:99@s.whatsapp.net",
+        "91236.7:1@interop",
+        "44584.1:99@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "12780",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "87040",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "80978",
+          "agent": 1,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "44584",
+          "agent": 1,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "91236",
+          "agent": 7,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "44584",
+          "agent": 1,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:08AMcSOE",
+        "v2": "2:yZDSz20G",
+        "v3": "3:CdVyEYNv",
+        "v1_set": "1:SAZjY7y7",
+        "v2_set": "2:YbsqjnqW",
+        "v3_set": "3:dsk01YvV"
+      }
+    },
+    {
+      "input": [
+        "15348@lid",
+        "92975.7:99@interop",
+        "59530.255:2@s.whatsapp.net",
+        "43018.255:99@s.whatsapp.net",
+        "64485.0:2@s.whatsapp.net",
+        "96359.1:2@lid",
+        "95361.1:2@interop",
+        "63221.0:99@interop"
+      ],
+      "fields": [
+        {
+          "user": "15348",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "92975",
+          "agent": 7,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "59530",
+          "agent": 255,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "43018",
+          "agent": 255,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "64485",
+          "agent": 0,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "96359",
+          "agent": 1,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "95361",
+          "agent": 1,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "63221",
+          "agent": 0,
+          "device": 99,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:9Pipdjxy",
+        "v2": "2:3vvWuTz9",
+        "v3": "3:GgFlAqZJ",
+        "v1_set": "1:9Pipdjxy",
+        "v2_set": "2:3vvWuTz9",
+        "v3_set": "3:GgFlAqZJ"
+      }
+    },
+    {
+      "input": [
+        "82607.0:2@s.whatsapp.net",
+        "11919.7:0@lid"
+      ],
+      "fields": [
+        {
+          "user": "82607",
+          "agent": 0,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "11919",
+          "agent": 7,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:FQJ8BLLm",
+        "v2": "2:ppqTFOHi",
+        "v3": "3:FDdPl7co",
+        "v1_set": "1:FQJ8BLLm",
+        "v2_set": "2:ppqTFOHi",
+        "v3_set": "3:FDdPl7co"
+      }
+    },
+    {
+      "input": [
+        "50650.1:0@interop",
+        "78015@s.whatsapp.net",
+        "26690.1:99@lid",
+        "39816.7:2@interop",
+        "85742.7:99@lid",
+        "50650.1:0@interop",
+        "69960.7:1@lid",
+        "70049.1:0@lid",
+        "52413.0:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "50650",
+          "agent": 1,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "78015",
+          "agent": 0,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "26690",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "39816",
+          "agent": 7,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "85742",
+          "agent": 7,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "50650",
+          "agent": 1,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "69960",
+          "agent": 7,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "70049",
+          "agent": 1,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "52413",
+          "agent": 0,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:TxrLi8jt",
+        "v2": "2:VbB9RTQw",
+        "v3": "3:n5eT+Zwg",
+        "v1_set": "1:mKC2a+JO",
+        "v2_set": "2:9Q4BojX+",
+        "v3_set": "3:cPsoparr"
+      }
+    },
+    {
+      "input": [
+        "26535.255:99@s.whatsapp.net",
+        "26535.255:99@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "26535",
+          "agent": 255,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "26535",
+          "agent": 255,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:mFBl3fQO",
+        "v2": "2:ZvRmUh2Z",
+        "v3": "3:pSN+Oypy",
+        "v1_set": "1:7v/t0M1I",
+        "v2_set": "2:1G2/29/i",
+        "v3_set": "3:mXc6JaPm"
+      }
+    },
+    {
+      "input": [
+        "21357.255:99@s.whatsapp.net",
+        "45765.7:2@lid",
+        "39745.1:99@interop",
+        "76909.1:2@interop",
+        "74093.7:2@lid",
+        "95717.255:1@s.whatsapp.net",
+        "15462.7:2@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "21357",
+          "agent": 255,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "45765",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "39745",
+          "agent": 1,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "76909",
+          "agent": 1,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "74093",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "95717",
+          "agent": 255,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "15462",
+          "agent": 7,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:zOj7H0Ws",
+        "v2": "2:Nq7Go8dP",
+        "v3": "3:cbLjEJmr",
+        "v1_set": "1:zOj7H0Ws",
+        "v2_set": "2:Nq7Go8dP",
+        "v3_set": "3:cbLjEJmr"
+      }
+    },
+    {
+      "input": [],
+      "fields": [],
+      "expected": {
+        "v1": "1:2jmj7l5r",
+        "v2": "2:47DEQpj8",
+        "v3": "3:47DEQpj8",
+        "v1_set": "1:2jmj7l5r",
+        "v2_set": "2:47DEQpj8",
+        "v3_set": "3:47DEQpj8"
+      }
+    },
+    {
+      "input": [
+        "93677.255:2@s.whatsapp.net",
+        "86175.255:2@lid",
+        "27368.255:0@s.whatsapp.net",
+        "88064.255:99@lid",
+        "99665.1:1@interop",
+        "51013.1:2@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "93677",
+          "agent": 255,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "86175",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "27368",
+          "agent": 255,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "88064",
+          "agent": 255,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "99665",
+          "agent": 1,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "51013",
+          "agent": 1,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:nB+JpD1F",
+        "v2": "2:PswYV+Rj",
+        "v3": "3:60C6LX3D",
+        "v1_set": "1:nB+JpD1F",
+        "v2_set": "2:PswYV+Rj",
+        "v3_set": "3:60C6LX3D"
+      }
+    },
+    {
+      "input": [
+        "69288.1:99@s.whatsapp.net",
+        "37764.7:99@lid",
+        "65471.0:99@lid",
+        "17984.1:0@s.whatsapp.net",
+        "90807.7:99@interop",
+        "18535.0:2@interop"
+      ],
+      "fields": [
+        {
+          "user": "69288",
+          "agent": 1,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "37764",
+          "agent": 7,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "65471",
+          "agent": 0,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "17984",
+          "agent": 1,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "90807",
+          "agent": 7,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "18535",
+          "agent": 0,
+          "device": 2,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:5wI9H6f2",
+        "v2": "2:Wl6/kEYQ",
+        "v3": "3:qG3Sf6Wk",
+        "v1_set": "1:5wI9H6f2",
+        "v2_set": "2:Wl6/kEYQ",
+        "v3_set": "3:qG3Sf6Wk"
+      }
+    },
+    {
+      "input": [
+        "57828.7:99@interop",
+        "34019@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "57828",
+          "agent": 7,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "34019",
+          "agent": 0,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:Mdee7hPq",
+        "v2": "2:rR4zmhHn",
+        "v3": "3:aMJWQ1z/",
+        "v1_set": "1:Mdee7hPq",
+        "v2_set": "2:rR4zmhHn",
+        "v3_set": "3:aMJWQ1z/"
+      }
+    },
+    {
+      "input": [
+        "99924.0:1@interop",
+        "36091.1:1@s.whatsapp.net",
+        "64605.1:2@s.whatsapp.net",
+        "23865.7:1@interop",
+        "64605.1:2@s.whatsapp.net",
+        "17554.7:1@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "99924",
+          "agent": 0,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "36091",
+          "agent": 1,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "64605",
+          "agent": 1,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "23865",
+          "agent": 7,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "64605",
+          "agent": 1,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "17554",
+          "agent": 7,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:UYR8Nfz7",
+        "v2": "2:e5aoUu7j",
+        "v3": "3:mchbkWCH",
+        "v1_set": "1:jgVY0kAq",
+        "v2_set": "2:0uDf/Hm2",
+        "v3_set": "3:+xcj99LP"
+      }
+    },
+    {
+      "input": [
+        "32389.0:2@lid",
+        "98691.1:2@interop",
+        "19465@lid",
+        "20098.7:2@interop"
+      ],
+      "fields": [
+        {
+          "user": "32389",
+          "agent": 0,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "98691",
+          "agent": 1,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "19465",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "20098",
+          "agent": 7,
+          "device": 2,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:2JvGg2Mb",
+        "v2": "2:021vDR3L",
+        "v3": "3:tlO+ypCI",
+        "v1_set": "1:2JvGg2Mb",
+        "v2_set": "2:021vDR3L",
+        "v3_set": "3:tlO+ypCI"
+      }
+    },
+    {
+      "input": [
+        "28445.1:2@lid",
+        "88509.1:0@s.whatsapp.net",
+        "69751.255:1@s.whatsapp.net",
+        "33833.0:2@s.whatsapp.net",
+        "41058.1:99@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "28445",
+          "agent": 1,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "88509",
+          "agent": 1,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "69751",
+          "agent": 255,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "33833",
+          "agent": 0,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "41058",
+          "agent": 1,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:wKwBBgzo",
+        "v2": "2:7Yin7HH8",
+        "v3": "3:d1SGNvB/",
+        "v1_set": "1:wKwBBgzo",
+        "v2_set": "2:7Yin7HH8",
+        "v3_set": "3:d1SGNvB/"
+      }
+    },
+    {
+      "input": [
+        "68026.255:1@s.whatsapp.net",
+        "28200.1:99@lid",
+        "64009.7:1@interop",
+        "80431.1:1@interop",
+        "49560.1:1@lid"
+      ],
+      "fields": [
+        {
+          "user": "68026",
+          "agent": 255,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "28200",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "64009",
+          "agent": 7,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "80431",
+          "agent": 1,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "49560",
+          "agent": 1,
+          "device": 1,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:LM2Dlc4Z",
+        "v2": "2:QToq0zbV",
+        "v3": "3:fRKiA3IO",
+        "v1_set": "1:LM2Dlc4Z",
+        "v2_set": "2:QToq0zbV",
+        "v3_set": "3:fRKiA3IO"
+      }
+    },
+    {
+      "input": [
+        "27119.0:2@s.whatsapp.net",
+        "16008.7:2@lid",
+        "33972.0:99@s.whatsapp.net",
+        "54149.255:1@lid"
+      ],
+      "fields": [
+        {
+          "user": "27119",
+          "agent": 0,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "16008",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "33972",
+          "agent": 0,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "54149",
+          "agent": 255,
+          "device": 1,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:+kXvNWy8",
+        "v2": "2:Zx8do+8B",
+        "v3": "3:UTQyNtCh",
+        "v1_set": "1:+kXvNWy8",
+        "v2_set": "2:Zx8do+8B",
+        "v3_set": "3:UTQyNtCh"
+      }
+    },
+    {
+      "input": [
+        "76925.1:99@s.whatsapp.net",
+        "62801.1:2@lid",
+        "73936.7:99@interop",
+        "20863@s.whatsapp.net",
+        "20863@s.whatsapp.net",
+        "99257.1:99@lid",
+        "20660.255:0@s.whatsapp.net",
+        "61886.255:0@lid",
+        "40905.0:2@interop"
+      ],
+      "fields": [
+        {
+          "user": "76925",
+          "agent": 1,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "62801",
+          "agent": 1,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "73936",
+          "agent": 7,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "20863",
+          "agent": 0,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "20863",
+          "agent": 0,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "99257",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "20660",
+          "agent": 255,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "61886",
+          "agent": 255,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "40905",
+          "agent": 0,
+          "device": 2,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:rEz41tX5",
+        "v2": "2:0iq7dG8D",
+        "v3": "3:B3+IqDb9",
+        "v1_set": "1:H2KS1ysl",
+        "v2_set": "2:3GDHz/ZM",
+        "v3_set": "3:8CPJY1IK"
+      }
+    },
+    {
+      "input": [
+        "15841.255:1@s.whatsapp.net",
+        "51414.255:0@s.whatsapp.net",
+        "34918.1:1@lid",
+        "83851.1:1@s.whatsapp.net",
+        "31321.7:1@interop",
+        "83851.1:1@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "15841",
+          "agent": 255,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "51414",
+          "agent": 255,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "34918",
+          "agent": 1,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "83851",
+          "agent": 1,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "31321",
+          "agent": 7,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "83851",
+          "agent": 1,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:u+OYQItV",
+        "v2": "2:mESq68Gb",
+        "v3": "3:5YH5mXGm",
+        "v1_set": "1:DDqVFYZy",
+        "v2_set": "2:eDgn1JaF",
+        "v3_set": "3:Lbq7A4n0"
+      }
+    },
+    {
+      "input": [
+        "56899.255:99@interop",
+        "49222.255:1@interop",
+        "12815.7:2@interop"
+      ],
+      "fields": [
+        {
+          "user": "56899",
+          "agent": 255,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "49222",
+          "agent": 255,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "12815",
+          "agent": 7,
+          "device": 2,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:7EF50aOW",
+        "v2": "2:LouP8OBO",
+        "v3": "3:4u5wQWoC",
+        "v1_set": "1:7EF50aOW",
+        "v2_set": "2:LouP8OBO",
+        "v3_set": "3:4u5wQWoC"
+      }
+    },
+    {
+      "input": [
+        "88830.7:2@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "88830",
+          "agent": 7,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:yThcOxmf",
+        "v2": "2:9wybm30I",
+        "v3": "3:KTR0K9eN",
+        "v1_set": "1:yThcOxmf",
+        "v2_set": "2:9wybm30I",
+        "v3_set": "3:KTR0K9eN"
+      }
+    },
+    {
+      "input": [
+        "85514.7:2@interop",
+        "96123.7:1@s.whatsapp.net",
+        "50633.7:1@lid",
+        "65322.255:99@lid",
+        "42319.0:1@lid",
+        "49724.255:1@lid",
+        "90543.7:2@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "85514",
+          "agent": 7,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "96123",
+          "agent": 7,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "50633",
+          "agent": 7,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "65322",
+          "agent": 255,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "42319",
+          "agent": 0,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "49724",
+          "agent": 255,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "90543",
+          "agent": 7,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:r6Y7LJju",
+        "v2": "2:VtaxDR3o",
+        "v3": "3:8lIGxVWE",
+        "v1_set": "1:r6Y7LJju",
+        "v2_set": "2:VtaxDR3o",
+        "v3_set": "3:8lIGxVWE"
+      }
+    },
+    {
+      "input": [
+        "61187.7:2@s.whatsapp.net",
+        "95119.255:1@lid",
+        "52509.7:2@interop",
+        "52509.7:2@interop",
+        "30707.7:99@interop",
+        "72669.0:1@interop"
+      ],
+      "fields": [
+        {
+          "user": "61187",
+          "agent": 7,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "95119",
+          "agent": 255,
+          "device": 1,
+          "server": "lid"
+        },
+        {
+          "user": "52509",
+          "agent": 7,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "52509",
+          "agent": 7,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "30707",
+          "agent": 7,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "72669",
+          "agent": 0,
+          "device": 1,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:xoBD9PRO",
+        "v2": "2:8mSmatkt",
+        "v3": "3:dIYSaisf",
+        "v1_set": "1:xSahkyx9",
+        "v2_set": "2:lNC2reHR",
+        "v3_set": "3:YWUAm0xt"
+      }
+    },
+    {
+      "input": [
+        "84951.1:1@interop",
+        "12423.1:99@lid",
+        "97366.1:99@s.whatsapp.net",
+        "84951.1:1@interop"
+      ],
+      "fields": [
+        {
+          "user": "84951",
+          "agent": 1,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "12423",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "97366",
+          "agent": 1,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "84951",
+          "agent": 1,
+          "device": 1,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:YwYNaRaT",
+        "v2": "2:91xCfapp",
+        "v3": "3:UocNuK08",
+        "v1_set": "1:+kOSIL6H",
+        "v2_set": "2:0RY2tieI",
+        "v3_set": "3:xSrxbS1E"
+      }
+    },
+    {
+      "input": [
+        "37364.0:1@interop",
+        "66973.255:1@interop",
+        "60850.1:1@s.whatsapp.net",
+        "43164.255:1@s.whatsapp.net",
+        "64759.7:1@s.whatsapp.net",
+        "98638.1:0@s.whatsapp.net",
+        "82018.255:0@s.whatsapp.net",
+        "37364.0:1@interop"
+      ],
+      "fields": [
+        {
+          "user": "37364",
+          "agent": 0,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "66973",
+          "agent": 255,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "60850",
+          "agent": 1,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "43164",
+          "agent": 255,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "64759",
+          "agent": 7,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "98638",
+          "agent": 1,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "82018",
+          "agent": 255,
+          "device": 0,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "37364",
+          "agent": 0,
+          "device": 1,
+          "server": "interop"
+        }
+      ],
+      "expected": {
+        "v1": "1:K2fV0Hcc",
+        "v2": "2:CwXDRX7X",
+        "v3": "3:ivoEGBtR",
+        "v1_set": "1:gDYUgqfU",
+        "v2_set": "2:/C25oO4l",
+        "v3_set": "3:ROAtk5L8"
+      }
+    },
+    {
+      "input": [],
+      "fields": [],
+      "expected": {
+        "v1": "1:2jmj7l5r",
+        "v2": "2:47DEQpj8",
+        "v3": "3:47DEQpj8",
+        "v1_set": "1:2jmj7l5r",
+        "v2_set": "2:47DEQpj8",
+        "v3_set": "3:47DEQpj8"
+      }
+    },
+    {
+      "input": [
+        "99616.7:2@interop",
+        "98011.7:0@lid",
+        "98011.7:0@lid"
+      ],
+      "fields": [
+        {
+          "user": "99616",
+          "agent": 7,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "98011",
+          "agent": 7,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "98011",
+          "agent": 7,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:sQ91b6yi",
+        "v2": "2:Ur8bMXfw",
+        "v3": "3:VrLCCG+c",
+        "v1_set": "1:4qV32F78",
+        "v2_set": "2:fcoG8vCP",
+        "v3_set": "3:MjHeQH9y"
+      }
+    },
+    {
+      "input": [],
+      "fields": [],
+      "expected": {
+        "v1": "1:2jmj7l5r",
+        "v2": "2:47DEQpj8",
+        "v3": "3:47DEQpj8",
+        "v1_set": "1:2jmj7l5r",
+        "v2_set": "2:47DEQpj8",
+        "v3_set": "3:47DEQpj8"
+      }
+    },
+    {
+      "input": [
+        "99177.255:2@s.whatsapp.net",
+        "35020.255:0@interop",
+        "73330.7:0@interop",
+        "17702.0:1@lid"
+      ],
+      "fields": [
+        {
+          "user": "99177",
+          "agent": 255,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "35020",
+          "agent": 255,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "73330",
+          "agent": 7,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "17702",
+          "agent": 0,
+          "device": 1,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:YG+gbvW2",
+        "v2": "2:Txj2t9KQ",
+        "v3": "3:2VRHLHS6",
+        "v1_set": "1:YG+gbvW2",
+        "v2_set": "2:Txj2t9KQ",
+        "v3_set": "3:2VRHLHS6"
+      }
+    },
+    {
+      "input": [
+        "70450.0:2@interop",
+        "46873.7:99@lid",
+        "98007.1:1@s.whatsapp.net",
+        "15373.255:2@lid",
+        "93696.1:2@lid",
+        "70450.0:2@interop",
+        "90894.7:2@interop",
+        "41788.0:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "70450",
+          "agent": 0,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "46873",
+          "agent": 7,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "98007",
+          "agent": 1,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "15373",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "93696",
+          "agent": 1,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "70450",
+          "agent": 0,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "90894",
+          "agent": 7,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "41788",
+          "agent": 0,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:dRTfLQ28",
+        "v2": "2:CXfz5C50",
+        "v3": "3:TygPURla",
+        "v1_set": "1:NorQ7uzi",
+        "v2_set": "2:v0ntKjIf",
+        "v3_set": "3:jJb1mop6"
+      }
+    },
+    {
+      "input": [],
+      "fields": [],
+      "expected": {
+        "v1": "1:2jmj7l5r",
+        "v2": "2:47DEQpj8",
+        "v3": "3:47DEQpj8",
+        "v1_set": "1:2jmj7l5r",
+        "v2_set": "2:47DEQpj8",
+        "v3_set": "3:47DEQpj8"
+      }
+    },
+    {
+      "input": [
+        "75808@interop",
+        "18404.255:99@s.whatsapp.net",
+        "70519.1:99@interop",
+        "32514.255:2@lid",
+        "75808@interop",
+        "63197.7:2@lid",
+        "74032.1:0@lid",
+        "11724.0:1@s.whatsapp.net",
+        "25667.255:1@lid"
+      ],
+      "fields": [
+        {
+          "user": "75808",
+          "agent": 0,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "18404",
+          "agent": 255,
+          "device": 99,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "70519",
+          "agent": 1,
+          "device": 99,
+          "server": "interop"
+        },
+        {
+          "user": "32514",
+          "agent": 255,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "75808",
+          "agent": 0,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "63197",
+          "agent": 7,
+          "device": 2,
+          "server": "lid"
+        },
+        {
+          "user": "74032",
+          "agent": 1,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "11724",
+          "agent": 0,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "25667",
+          "agent": 255,
+          "device": 1,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:la/S2lMa",
+        "v2": "2:3Eqlb8L/",
+        "v3": "3:eOHCn9/d",
+        "v1_set": "1:jhlYr+pa",
+        "v2_set": "2:ZAP5ivvI",
+        "v3_set": "3:bxhqkSEc"
+      }
+    },
+    {
+      "input": [
+        "94801.1:99@lid",
+        "29765.1:2@interop",
+        "64392.7:2@s.whatsapp.net"
+      ],
+      "fields": [
+        {
+          "user": "94801",
+          "agent": 1,
+          "device": 99,
+          "server": "lid"
+        },
+        {
+          "user": "29765",
+          "agent": 1,
+          "device": 2,
+          "server": "interop"
+        },
+        {
+          "user": "64392",
+          "agent": 7,
+          "device": 2,
+          "server": "s.whatsapp.net"
+        }
+      ],
+      "expected": {
+        "v1": "1:0DdI53Tn",
+        "v2": "2:A86ho60U",
+        "v3": "3:3b6mjM0Y",
+        "v1_set": "1:0DdI53Tn",
+        "v2_set": "2:A86ho60U",
+        "v3_set": "3:3b6mjM0Y"
+      }
+    },
+    {
+      "input": [
+        "40139@lid",
+        "18209@interop",
+        "90119.1:1@interop",
+        "88781.0:1@interop",
+        "94334.0:1@s.whatsapp.net",
+        "60925@interop",
+        "41840.0:2@lid"
+      ],
+      "fields": [
+        {
+          "user": "40139",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        },
+        {
+          "user": "18209",
+          "agent": 0,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "90119",
+          "agent": 1,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "88781",
+          "agent": 0,
+          "device": 1,
+          "server": "interop"
+        },
+        {
+          "user": "94334",
+          "agent": 0,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "60925",
+          "agent": 0,
+          "device": 0,
+          "server": "interop"
+        },
+        {
+          "user": "41840",
+          "agent": 0,
+          "device": 2,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:DHoCELKa",
+        "v2": "2:xWtLA3s5",
+        "v3": "3:xB7FdKLV",
+        "v1_set": "1:DHoCELKa",
+        "v2_set": "2:xWtLA3s5",
+        "v3_set": "3:xB7FdKLV"
+      }
+    },
+    {
+      "input": [
+        "65629.0:1@s.whatsapp.net",
+        "62459@lid"
+      ],
+      "fields": [
+        {
+          "user": "65629",
+          "agent": 0,
+          "device": 1,
+          "server": "s.whatsapp.net"
+        },
+        {
+          "user": "62459",
+          "agent": 0,
+          "device": 0,
+          "server": "lid"
+        }
+      ],
+      "expected": {
+        "v1": "1:c7T28ZjP",
+        "v2": "2:hfeNGMZw",
+        "v3": "3:laGKN7VY",
+        "v1_set": "1:c7T28ZjP",
+        "v2_set": "2:hfeNGMZw",
+        "v3_set": "3:laGKN7VY"
+      }
+    }
+  ]
+}

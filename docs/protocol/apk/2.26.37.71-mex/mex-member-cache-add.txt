@@ -1,0 +1,35 @@
+# APK-derived structural disassembly: LX/1jL;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0T(VL) flags=0x1 registers=16
+  0000..0006 op=72 invoke-interface {v15}, Ljava/util/Collection;->iterator(L)
+  0006..0008 op=0c move-result-object
+  0008..000e op=72 invoke-interface {v2}, Ljava/util/Iterator;->hasNext(Z)
+  000e..0010 op=0a move-result
+  0010..0012 op=07 move-object
+  0012..0016 op=38 if-eqz v0, +0x28
+  0016..001c op=72 invoke-interface {v2}, Ljava/util/Iterator;->next(L)
+  001c..001e op=0c move-result-object
+  001e..0022 op=1f check-cast v1, LX/1uU;
+  0022..0026 op=54 iget-object v3, v1, LX/1uU;->A06:Lcom/whatsapp/infra/core/jid/UserJid;
+  0026..002a op=54 iget-object v0, v1, LX/1uU;->A07:Ljava/util/concurrent/ConcurrentHashMap;
+  002a..0030 op=6e invoke-virtual {v0}, Ljava/util/AbstractMap;->keySet(L)
+  0030..0032 op=0c move-result-object
+  0032..0038 op=71 invoke-static {v0}, Lcom/google/common/collect/ImmutableSet;->copyOf(LL)
+  0038..003a op=0c move-result-object
+  003a..0040 op=71 invoke-static {v8}, LX/00h;->A06(VL)
+  0040..0044 op=52 iget v9, v1, LX/1uU;->A00:I
+  0044..0048 op=55 iget-boolean v12, v1, LX/1uU;->A05:Z
+  0048..004c op=53 iget-wide v10, v1, LX/1uU;->A01:J
+  004c..0050 op=54 iget-object v7, v1, LX/1uU;->A04:Ljava/lang/String;
+  0050..0054 op=54 iget-object v5, v1, LX/1uU;->A03:Ljava/lang/Integer;
+  0054..0058 op=54 iget-object v6, v1, LX/1uU;->A02:Ljava/lang/Integer;
+  0058..005a op=12 const/4 v13, #0x0
+  005a..0060 op=77 invoke-static/range {v3..v13}, LX/1jL;->A00(LLLLLLLIJZZ)
+  0060..0062 op=28 goto -0x2c
+  0062..0068 op=6e invoke-virtual {v14}, LX/1jL;->A0R(V)
+  0068..006a op=0e return-void
+  # exception table: 0 try range(s)
+.end method

@@ -133,6 +133,18 @@ enum Cmd {
         #[arg(long, allow_hyphen_values = true)]
         value: String,
     },
+    /// Hash an explicit private address collection offline using APK-derived rules.
+    GroupParticipantHashInspect {
+        /// Private JSON array of address strings; local limit 64 KiB/1024 entries.
+        #[arg(long)]
+        input: PathBuf,
+        /// Explicit hash version; this does not select an account feature.
+        #[arg(long, value_parser = ["1", "2", "3"])]
+        version: String,
+        /// Prepare a set before hashing; otherwise preserve repeated entries.
+        #[arg(long)]
+        as_set: bool,
+    },
     /// Resolve APK member-storage metadata offline from private JSON; prints explicit values.
     MexParticipantStorageInspect {
         /// Typed raw join/history, previous state and required clock_ms; local limit 16 KiB.
@@ -316,6 +328,11 @@ fn main() -> ExitCode {
         } => mex::preview(&queries, &chat, &id, &context),
         Cmd::MexRoleInspect { value } => mex::inspect_role(value.as_deref()),
         Cmd::MexParticipantAddressInspect { value } => mex::inspect_participant_address(&value),
+        Cmd::GroupParticipantHashInspect {
+            input,
+            version,
+            as_set,
+        } => mex::inspect_participant_hash(&input, &version, as_set),
         Cmd::MexParticipantStorageInspect { input } => mex::inspect_participant_storage(&input),
         Cmd::MexResponseInspect {
             input,

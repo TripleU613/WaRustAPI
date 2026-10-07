@@ -281,6 +281,72 @@ pub fn inspect_participant_address(value: &str) -> Result<(), String> {
     Ok(())
 }
 
+fn participant_hash_output(
+    body: &[u8],
+    version: &str,
+    as_set: bool,
+) -> Result<serde_json::Value, String> {
+    use whatsapp_api::transport::participant_hash::{
+        DeviceParticipantHashVersion, participant_device_hash, participant_hash,
+    };
+    let raw: Vec<String> =
+        serde_json::from_slice(body).map_err(|_| "expected a private JSON array of strings")?;
+    if raw.len() > 1024 {
+        return Err("participant hash input exceeds local entry limit".into());
+    }
+    let input_count = raw.len();
+    let (hash, hashed_count) = if version == "1" {
+        let selected: Vec<String> = if as_set {
+            raw.into_iter()
+                .collect::<std::collections::BTreeSet<_>>()
+                .into_iter()
+                .collect()
+        } else {
+            raw
+        };
+        (participant_hash(&selected), selected.len())
+    } else {
+        let version = match version {
+            "2" => DeviceParticipantHashVersion::V2,
+            "3" => DeviceParticipantHashVersion::V3,
+            _ => return Err("expected participant hash version 1, 2 or 3".into()),
+        };
+        let mut selected = Vec::with_capacity(raw.len());
+        for (index, text) in raw.iter().enumerate() {
+            selected.push(
+                Jid::parse(text)
+                    .map_err(|_| format!("invalid model address at input index {index}"))?,
+            );
+        }
+        if as_set {
+            selected = selected
+                .into_iter()
+                .collect::<std::collections::BTreeSet<_>>()
+                .into_iter()
+                .collect();
+        }
+        (participant_device_hash(&selected, version), selected.len())
+    };
+    Ok(
+        serde_json::json!({"offline_only":true,"version":version,"as_set":as_set,"input_count":input_count,"hashed_count":hashed_count,"hash":hash}),
+    )
+}
+
+/// Explicit private hash inspection only; never selects a live account scheme.
+pub fn inspect_participant_hash(input: &Path, version: &str, as_set: bool) -> Result<(), String> {
+    let body = bounded_read(
+        File::open(input).map_err(|_| "cannot open participant hash input")?,
+        64 * 1024,
+    )?;
+    let output = participant_hash_output(&body, version, as_set)?;
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&output)
+            .map_err(|_| "cannot encode participant hash inspection")?
+    );
+    Ok(())
+}
+
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 struct ParticipantStorageInput {
@@ -455,6 +521,34 @@ pub fn inspect_response(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn participant_hash_inspection_matches_reference_modes_and_redacts_refusals() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../crates/whatsapp-api/fixtures/mex/2.26.37.71-participant-hash-reference.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            let body = serde_json::to_vec(&case["input"]).unwrap();
+            for version in ["1", "2", "3"] {
+                for as_set in [false, true] {
+                    let output = participant_hash_output(&body, version, as_set).unwrap();
+                    let key = format!("v{version}{}", if as_set { "_set" } else { "" });
+                    assert_eq!(output["hash"], case["expected"][key]);
+                    assert!(output.get("input").is_none());
+                }
+            }
+        }
+        for (body, version) in [
+            (br#"["private-invalid/address@lid"]"#.as_slice(), "3"),
+            (br#"{"private-marker":1}"#.as_slice(), "2"),
+            (br#"["private-marker", 1]"#.as_slice(), "1"),
+            (br#"[]"#.as_slice(), "4"),
+        ] {
+            let error = participant_hash_output(body, version, false).unwrap_err();
+            assert!(!error.contains("private-"));
+        }
+    }
+
     #[test]
     fn storage_inputs_are_typed_and_content_free_on_refusal() {
         let output = participant_storage_output(br#"{"clock_ms":99,"group_history_sent":false,"previous_history_state":4,"previous_join_time_ms":23}"#).unwrap();

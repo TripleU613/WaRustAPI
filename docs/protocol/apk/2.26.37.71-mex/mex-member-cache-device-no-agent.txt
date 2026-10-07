@@ -1,0 +1,25 @@
+# APK-derived structural disassembly: Lcom/whatsapp/infra/core/jid/DeviceJid;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method getRawStringWithNoAgent(L) flags=0x11 registers=5
+  0000..0004 op=54 iget-object v0, v4, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+  0004..000a op=6e invoke-virtual {v4}, Lcom/whatsapp/infra/core/jid/Jid;->getServer(L)
+  000a..000c op=0c move-result-object
+  000c..0012 op=6e invoke-virtual {v4}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice(I)
+  0012..0014 op=0a move-result
+  0014..0018 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0018..001e op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>(V)
+  001e..0024 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0024..0028 op=1a const-string v0, ":"
+  0028..002e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  002e..0034 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(LI)
+  0034..0038 op=1a const-string v0, "@"
+  0038..003e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  003e..0044 op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(LL)
+  0044..004a op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString(L)
+  004a..004c op=0c move-result-object
+  004c..004e op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

@@ -1499,3 +1499,14 @@ See [consumer evidence and remaining work](protocol/mex.md#downstream-member-sto
 Full alias/device/own-account reconciliation, group feature maps, transaction
 boundaries and live MEX durable application remain unfinished. No account or live
 session was touched; no new number was acquired or required.
+
+
+2026-10-07 offline member-cache/hash follow-up: existing-row device preservation,
+nullable history updates, alias ordinals and user/device hash caches are now
+traced from APK 37.71. Pure V1/V2/V3 hashing matches 684 host-Java modes; V1
+UTF-16 sorting and V2 agent/dedup behavior are corrected. Explicit V3 inspection
+and builder support do not select the active account feature. Normal group sends
+still hash primary members before resolving devices; complete own/companion
+inventory, durable group application and live MEX settlement remain unfinished.
+No cross-device checklist item is closed by this offline chunk.
+[Sources and reproducible inspection](protocol/groups.md#participant-cache-and-versioned-hashes-2026-10-07).

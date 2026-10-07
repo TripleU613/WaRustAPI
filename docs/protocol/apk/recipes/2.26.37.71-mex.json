@@ -708,6 +708,245 @@
         "crates/whatsapp-api/src/transport/mex/participants.rs"
       ],
       "anchors": []
+    },
+    "mex-member-cache-add-guard": {
+      "class": "LX/1jL;",
+      "method": "A04",
+      "method_shorty": "VLLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs"
+      ],
+      "anchors": [
+        "trying to add a lid participant when is not an incognito CAG"
+      ]
+    },
+    "mex-member-cache-add": {
+      "class": "LX/1jL;",
+      "method": "A0T",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-member-cache-remove": {
+      "class": "LX/1jL;",
+      "method": "A0U",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-member-cache-remove-one": {
+      "class": "LX/1jL;",
+      "method": "A01",
+      "method_shorty": "LLLZ",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-member-cache-upsert": {
+      "class": "LX/1jL;",
+      "method": "A00",
+      "method_shorty": "LLLLLLLIJZZ",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-member-cache-refresh": {
+      "class": "LX/1jL;",
+      "method": "A0R",
+      "method_shorty": "V",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-member-cache-device-refresh": {
+      "class": "LX/1jL;",
+      "method": "A05",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-member-cache-lookup": {
+      "class": "LX/1jL;",
+      "method": "A0G",
+      "method_shorty": "LLZ",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-member-cache-user-hash": {
+      "class": "LX/1jL;",
+      "method": "A02",
+      "method_shorty": "LL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs",
+        "crates/whatsapp-api/src/transport/participant_hash.rs"
+      ],
+      "anchors": [
+        "SHA1",
+        "1:"
+      ]
+    },
+    "mex-member-cache-devices-other": {
+      "class": "LX/1jL;",
+      "method": "A0N",
+      "method_shorty": "L",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-member-cache-devices-pn": {
+      "class": "LX/1jL;",
+      "method": "A0O",
+      "method_shorty": "L",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-member-alias-order-sync": {
+      "class": "LX/290;",
+      "method": "A02",
+      "method_shorty": "VLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs"
+      ],
+      "anchors": [
+        "null cannot be cast to non-null type com.whatsapp.infra.core.jid.LidUserJid"
+      ]
+    },
+    "mex-member-bot-type-predicate": {
+      "class": "LX/0DE;",
+      "method": "A0P",
+      "method_shorty": "ZL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-member-device-values": {
+      "class": "LX/1uU;",
+      "method": "A00",
+      "method_shorty": "L",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs"
+      ],
+      "anchors": []
+    },
+    "mex-member-cache-device-hash": {
+      "class": "LX/AzR;",
+      "method": "A03",
+      "method_shorty": "LLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs",
+        "crates/whatsapp-api/src/transport/participant_hash.rs"
+      ],
+      "anchors": [
+        "2:",
+        "3:",
+        ".0:"
+      ]
+    },
+    "mex-member-cache-hash-digest": {
+      "class": "LX/Ayj;",
+      "method": "A19",
+      "method_shorty": "L",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs",
+        "crates/whatsapp-api/src/transport/participant_hash.rs"
+      ],
+      "anchors": [
+        "SHA-256"
+      ]
+    },
+    "mex-member-cache-hash-base64": {
+      "class": "LX/Ayj;",
+      "method": "A18",
+      "method_shorty": "LL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs",
+        "crates/whatsapp-api/src/transport/participant_hash.rs"
+      ],
+      "anchors": []
+    },
+    "mex-member-cache-device-no-agent": {
+      "class": "Lcom/whatsapp/infra/core/jid/DeviceJid;",
+      "method": "getRawStringWithNoAgent",
+      "method_shorty": "L",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "xtask/src/mex.rs",
+        "crates/whatsapp-api/src/transport/participant_hash.rs"
+      ],
+      "anchors": [
+        ":",
+        "@"
+      ]
+    },
+    "mex-member-alias-order-write": {
+      "class": "LX/28z;",
+      "method": "A00",
+      "method_shorty": "VLI",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "anchors": []
+    },
+    "mex-member-alias-order-read": {
+      "class": "LX/2l0;",
+      "method": "A00",
+      "method_shorty": "LLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/mex/participants.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "anchors": []
     }
   },
   "include_exception_tables": true

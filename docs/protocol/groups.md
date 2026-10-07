@@ -2479,3 +2479,133 @@ sixteen unique remaps and four unanchored helpers. A cached same-APK comparison
 completed in 0.0204 seconds: five new topics, fifteen unchanged. These are source
 coverage additions, not five upstream protocol changes. The release report
 preserves unmatched helpers rather than inventing anchors or type meanings.
+
+
+## Participant cache and versioned hashes (2026-10-07)
+
+**Confirmed static, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+The selected methods are preserved in the [versioned MEX bundle](apk/2.26.37.71-mex/targets.json).
+This follows the previously traced `0bA.A0i` delegation through `1jL.A04`,
+`290.A02` and `1jL.A0U`. They update member caches and alias ordering;
+**this trace does not establish a database transaction**.
+
+`1jL.A04` checks the first LID-like primary (`0DE.A0Z`): mode A00 == 0 and
+non-incognito group predicate produce the diagnostic “trying to add a lid
+participant when is not an incognito CAG” through `0AH.A0g`, then the normal
+path calls A0T. There is no explicit refusal/throw branch here; the logger's
+internals are not established. The previously selected `0yw.A00` reconciliation
+sets cache mode to 2, so this guard does not justify rejecting all LID additions.
+A0T copies stored A07 device keys into an immutable set and forwards metadata
+to A00 with refresh false; it finally refreshes even an empty addition batch.
+
+`1jL.A00` looks up an existing row through A0G(primary, false). Existing rows
+receive role, flag, join timestamp, string and A03 updates; A02 history changes
+only when incoming history is nonnull. **Existing A07 device collections are
+preserved**, whereas a new `1uU` receives the supplied device set. PN predicates
+route new rows to A0B; other accepted LID-like/interop/bot types route to A0A
+with mode-dependent bot behavior. Mode-zero bot construction can return an
+uncached row. `0DE.A0P` accepts numeric types 26/27, null false. This is not
+permission to broaden the separately traced strict UserJid conversion.
+
+A0G routes LID-like/interop values to A0A, bots there when mode != 0 or its
+boolean argument is true, and otherwise to A0B; null returns null. A01 removes
+PN rows from A0B and other rows from A0A, decrementing the bot counter on an
+actual bot removal. A0U batches removals and refreshes once if any row changed.
+A0R calls A05, then refreshes user hashes under a separate A09 monitor. A05
+refreshes device hashes and related caches under A0G's monitor. Separate locks
+and delegation order do not prove atomic durable group application.
+
+A0R/A02 hash raw **user keys**: A0B is the PN namespace, A0A is the other
+namespace. This resolves the earlier uncertainty over whether these maps were
+device-keyed. A0N/A0O instead collect DeviceJids from each stored row's A07
+values (`1uU.A00`), extracting `1tn.A03` into a HashSet. Hash collection input
+and membership selection are separate stages.
+
+`290.A02` obtains PN/LID mappings through `0Xw.A0K` and synchronizes available
+counterpart ordering. `2l0.A00` reads the ordinal from `28z`'s ConcurrentHashMap;
+`28z.A00` puts a boxed integer there. These are cache ordinal reads/writes,
+not demonstrated database writes. The complete lifecycle/meaning remains
+unknown; [exact helper evidence](mex-member-alias-order-evidence.txt) is preserved.
+
+| Version | Selected source | Rendering and digest |
+| --- | --- | --- |
+| 1 | `1jL.A02` | Raw strings, SHA-1 |
+| 2 | `AzR.A03`, feature 0x415b false | `user.0:device@server`, SHA-256 |
+| 3 | `AzR.A03`, feature 0x415b true | `user:device@server`, SHA-256 |
+
+All three sort by Java String natural **UTF-16** order, concatenate without
+separators, retain the first six digest bytes and use standard Base64 without
+wrapping, prefixed by the version and colon. AzR's V2 branch writes literal
+agent zero; it does not render the input's agent. V3 delegates to
+`DeviceJid.getRawStringWithNoAgent`, which still writes device zero explicitly.
+`Ayj.A19` names SHA-256 and A18 uses Base64 flag 2. The collection hash does
+not deduplicate rendered strings: distinct agent-qualified device objects may
+render identically. APK caller HashSet construction is a separate operation.
+
+**Observed implementation correction:** prior Rust V1 sorted UTF-8 rather
+than UTF-16. Prior V2 rendered the actual agent and deduplicated rendered
+strings. An independent host-Java corpus exposes 2 V1 and 89 V2-set mismatches
+among 114 synthetic cases under those old rules. These are model/Unicode
+probes, not observed failures of the current account. Existing ASCII/agent-zero
+historical fixtures still pass. The corrected pure module
+[participant_hash.rs](../../crates/whatsapp-api/src/transport/participant_hash.rs)
+provides duplicate-preserving V1 and device V2/V3 functions. The old
+`participant_hash_v2` convenience API deduplicates **Rust model addresses before
+rendering**, retaining its set policy. Existing groups module paths re-export
+these APIs. Rust address equality is not established as full Java DeviceJid
+subtype/equality parity.
+
+The offline inspection command is:
+
+```sh
+cargo run -p xtask -- group-participant-hash-inspect --input /private/members.json --version 2
+```
+
+Input is a private JSON array of strings, bounded to 64 KiB and 1024 entries.
+Version 1 hashes raw strings; versions 2/3 parse existing Rust model addresses,
+not the strict APK UserJid converter or an APK DeviceJid validator. Optional
+`--as-set` deduplicates raw strings for V1 or model addresses for V2/V3. Output
+contains offline_only, version, as_set, input_count, hashed_count and the
+explicitly requested hash, without identifiers. Invalid input returns a
+content-free diagnostic, including an input index for invalid model addresses.
+No account or HTTP route is involved; API metadata is x-live false.
+
+[Host Java oracle](ParticipantHashOracle.java) transcribes the selected hashing
+branches, uses Collections.sort and explicit UTF-8, and accepts structured
+address fields to avoid claiming APK parser execution. The [114-case fixture](../../crates/whatsapp-api/fixtures/mex/2.26.37.71-participant-hash-reference.json)
+covers six modes each: three versions, collection/set. Compile the oracle with
+`javac -cp lab/releases/android-json-reference/classes -d lab/releases/android-json-reference/classes docs/protocol/ParticipantHashOracle.java`;
+run `java -cp lab/releases/android-json-reference/classes ParticipantHashOracle`
+with one fixture case JSON per physical input line and compare output keys with
+its expected object. Host Temurin 21.0.12.1+1 is a reference, not Android/APK
+execution. The APK uses default-charset getBytes; Android runtime charset parity
+and unpaired surrogate handling are not established by these valid-scalar probes.
+Actual CLI execution matched all 684 reference modes; six invalid/oversized/
+unsupported-version probes refused with empty stdout and no private marker.
+
+**Observed packaging correction:** default xtask initially failed because
+hashing lived in the feature-gated groups module; all-feature checks had missed
+this. Pure hashing is now an unconditional module, with compatible re-exports.
+Default xtask build/tests and default API hash tests pass without enabling live
+transport features or changing dependencies. Workspace all-feature tests
+(636), strict Clippy, warning-free Rustdoc, default CLI tests and CLI reference
+regeneration also passed. Repository hygiene verified 631 local links and
+2081024 bytes across all four checksum bundles.
+
+**Unknown / unfinished:** active feature 0x415b value, complete own/companion
+device selection, full cache/database application, cross-device synchronization
+and live MEX settlement. `group_send::plan_over` still hashes primary members
+before device resolution; the historical primary-device ACK sample does not
+establish complete inventory parity. Automatic sends remain V2. The explicit
+sender-key builder accepts prefixes 1/2/3 (length guard retained); this is not
+feature negotiation or a full Base64 validator. No private account state was
+opened, no new number configured and no live request sent in this chunk.
+
+The versioned snapshot now has **86 selected methods / 91 files / 337088 bytes**.
+All 66 prior methods remain byte-identical; twenty additions are source coverage,
+not upstream changes. Manifest/inventory/tokens remain unchanged. The
+[actual cached comparison](apk/mex-cache-hash-diff.json) took **0.052231 s** against
+ignored baseline Git **875ed8f**. Owners connect the selected hash methods to
+the pure module. String-free cache/ordinal helpers still need manual relocation;
+complete APK/native coverage and automatic release remapping remain unfinished.

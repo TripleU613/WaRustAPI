@@ -123,9 +123,89 @@
     "bytes": 3736,
     "sha256": "797008fc9cc16b84457aaeb7306cbf254ff955c055dc9b33c460aad7dd2f51e7"
   },
+  "mex-member-alias-order-read.txt": {
+    "bytes": 855,
+    "sha256": "3c0d00e7d6c5898d4e51d6b4450c37405c9c3416f9b528db42a7a39ecf431d40"
+  },
+  "mex-member-alias-order-sync.txt": {
+    "bytes": 4772,
+    "sha256": "cbb7c66a0ef3ff55c736fbabb80bd4de863192f473555aceef2d9e796a77e622"
+  },
+  "mex-member-alias-order-write.txt": {
+    "bytes": 793,
+    "sha256": "7e11819cece8a3c4d6bee5a15fdc93dcee8b27c0844d0bd6415fa228813c7229"
+  },
+  "mex-member-bot-type-predicate.txt": {
+    "bytes": 813,
+    "sha256": "7f3ad97bfa2caf4be1f28adb206e99b55f30d980fa0689d22b2c14565dcb1a9a"
+  },
+  "mex-member-cache-add-guard.txt": {
+    "bytes": 1629,
+    "sha256": "7cd59cc16edb0e346815d2c0ed6dd367f91a36b011064d49660a12b9fc21e6af"
+  },
+  "mex-member-cache-add.txt": {
+    "bytes": 1905,
+    "sha256": "4329fc04159f7b41ae2b66da3f0498aca39854bdaad7631f15080ab9999a9f07"
+  },
+  "mex-member-cache-device-hash.txt": {
+    "bytes": 6475,
+    "sha256": "7f25478879e428c7a236a083777676e9e18bd99fae2c169140b069eaf2c2b94a"
+  },
+  "mex-member-cache-device-no-agent.txt": {
+    "bytes": 1547,
+    "sha256": "695cf4675321ffebbb02557db19b9ecdf9dfbf6c26f2d1ce49186311c723af3e"
+  },
+  "mex-member-cache-device-refresh.txt": {
+    "bytes": 1385,
+    "sha256": "92f58ed8e632b958875c7c3a62ccae6fd96cf5c1f5e479894470865e1960d929"
+  },
+  "mex-member-cache-devices-other.txt": {
+    "bytes": 2023,
+    "sha256": "dba98cf58604d6225674ea3b89fcd7eb762dc1c2ddaef8001d5010df1add478e"
+  },
+  "mex-member-cache-devices-pn.txt": {
+    "bytes": 2023,
+    "sha256": "9bd55d8850200e73c8c744f98a500f699dfa79d9883dad2077038f61058976e3"
+  },
+  "mex-member-cache-hash-base64.txt": {
+    "bytes": 574,
+    "sha256": "518381315cb9439861163f2f9d809bf305ff77abe8e6514582ad846a9c2bed93"
+  },
+  "mex-member-cache-hash-digest.txt": {
+    "bytes": 583,
+    "sha256": "1c096aaf22ea25beb056ac47b6755cf4ea6747ba5559022e6745b8acc585110f"
+  },
+  "mex-member-cache-lookup.txt": {
+    "bytes": 1322,
+    "sha256": "12c50e4efd4b2e73aeff2b1ba56eb4e1c4fa4eb783abcafeeb2af051af82f291"
+  },
+  "mex-member-cache-refresh.txt": {
+    "bytes": 1420,
+    "sha256": "2c9d15dce8d7436055562a317bc24cb909d7438ec20b585eb76c19e1c2b02d60"
+  },
+  "mex-member-cache-remove-one.txt": {
+    "bytes": 1497,
+    "sha256": "8035c061033ac7d00bd48fc7b5fc2a13fd866985180336f7b6d3d41b96a9d066"
+  },
+  "mex-member-cache-remove.txt": {
+    "bytes": 1292,
+    "sha256": "d05139017ca300c526b745245b9e4ce06937ef96e8f577fb9f744ea329717682"
+  },
+  "mex-member-cache-upsert.txt": {
+    "bytes": 4819,
+    "sha256": "d73647004d88aa3191f83b539428e1b3d3cd0de32324bdcdff06314b01f73fdd"
+  },
+  "mex-member-cache-user-hash.txt": {
+    "bytes": 3378,
+    "sha256": "d66db329c6777d85b1f4578ae538518f20276fa94352f415ab21c8424d388833"
+  },
   "mex-member-default-string.txt": {
     "bytes": 664,
     "sha256": "b446b65ce9f9c87c1e2e32242982194b12e0163e359e41dec6cb71b4ebce3c87"
+  },
+  "mex-member-device-values.txt": {
+    "bytes": 806,
+    "sha256": "9036bfb1fbda6f413a84157da224fb353b469dcc786098739c41d28495341b49"
   },
   "mex-member-jid-equality.txt": {
     "bytes": 1733,
@@ -272,8 +352,8 @@
     "sha256": "12a6c73f8362eb3c22b1f43211bd422b99b069e12efb6c8cbd3f9ea9613591a6"
   },
   "targets.json": {
-    "bytes": 23963,
-    "sha256": "27009143fbafa90759b036f5ca7a24cf620da5988f6b3b85cf5cc355123a06c9"
+    "bytes": 32447,
+    "sha256": "f27e1549dfeb439d1bd7125691578053d5881d207cd276de2116360329be5a00"
   },
   "tokens.json": {
     "bytes": 23019,

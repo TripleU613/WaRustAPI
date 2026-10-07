@@ -1,7 +1,7 @@
 //! Transport: byte-stream framing, Noise adapter and certificate binding
 //! (docs/design/README.md sections 8.3 and 8.4).
 //!
-//! Only framing is compiled by default. The Noise adapter lives behind the
+//! Offline framing and inspection helpers compile by default. The Noise adapter lives behind the
 //! `experimental-noise` feature because the handshake pattern, prologue and
 //! trust root are `ReferenceOnly` for the Android primary profile.
 
@@ -77,6 +77,7 @@ pub mod history_notice;
     feature = "experimental-transport"
 ))]
 pub mod identity_conflicts;
+pub mod participant_hash;
 #[cfg(all(
     feature = "experimental-signal-crypto",
     feature = "experimental-noise",

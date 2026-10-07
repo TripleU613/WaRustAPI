@@ -1178,116 +1178,9 @@ pub fn get(store: &ProtocolStore, group: &Jid) -> Result<Option<GroupSnapshot>> 
     store.read(|tx| tx.get_json(Table::Checkpoints, key(&group).as_bytes(), 1))
 }
 
-/// Participant hash (`phash`) for a group send.
-///
-/// Comparison 2.26.37.71 `LX/1jL->A02(Collection<Jid>) -> String`
-/// (**confirmed**): take each JID's raw string, sort the strings with natural
-/// ordering, feed them to **SHA-1** concatenated with **no separator**, take the
-/// **first 6 bytes** of the 20-byte digest, Base64-encode them with the standard
-/// alphabet and `NO_WRAP`, and prefix `"1:"`.
-///
-/// Self-consistency check: six bytes encode to exactly eight Base64 characters
-/// with no padding, which with the two-character prefix is exactly the ten
-/// characters `LX/0hp->A06(value, 0, 10, …)` bounds `phash` to in the emitter
-/// `LX/BpS`. The width matching the emitter's own bound is independent
-/// corroboration that this is the right derivation.
-///
-/// **The membership set is the caller's problem and is currently unknown.**
-/// `A02` does not normalize: it hashes whatever `getRawString()` yields, so the
-/// JID form is decided by the caller. The APK has two lazily cached hashes
-/// (`A0J` over `A0A.keySet()`, `A0L` over `A0B.keySet()`), matching
-/// `SendE2EMessageJob`'s `groupParticipantHash` / `groupParticipantUserHash`
-/// pair and its `useParticipantUserHash` flag — but which map is device-keyed
-/// versus user-keyed, and whether the sender itself is a member, were **not**
-/// established. A wrong membership set produces a wrong six-byte prefix and a
-/// refused send, so nothing here picks a set.
-pub fn participant_hash(jids: &[String]) -> String {
-    use sha1::{Digest, Sha1};
-    let mut sorted: Vec<&str> = jids.iter().map(String::as_str).collect();
-    sorted.sort_unstable();
-    let mut hasher = Sha1::new();
-    for jid in &sorted {
-        hasher.update(jid.as_bytes());
-    }
-    let digest = hasher.finalize();
-    let mut out = String::from("1:");
-    out.push_str(&base64_no_wrap(&digest[..6]));
-    out
-}
-
-/// The **version 2** participant hash, solved against a value the server itself
-/// supplied and reproduced exactly.
-///
-/// On 2026-09-22 the `ack` for our first group fan-out carried
-/// `phash="2:…"`. Searching locally for a construction that reproduces those six
-/// bytes — every subset of the known membership, four JID renderings, four
-/// orderings, five separators, four digests, with and without a group or count
-/// prefix — produced exactly one match, and it answers all three questions
-/// [`participant_hash`] had left open:
-///
-/// * the set is **every member of the group, including the sender**;
-/// * the JID form is the **AD form** `user.agent:device@server`, with `.0` and
-///   `:0` written out — not the display form, which omits them;
-/// * the digest is **SHA-256**, not the SHA-1 of the version 1 form.
-///
-/// The rest matches version 1: sort the rendered strings, concatenate with no
-/// separator, take the first six digest bytes, Base64 them, and prefix the
-/// version and a colon.
-///
-/// This is a local search against one known-correct target, not probing the
-/// server. The committed vectors are computed independently and use synthetic
-/// identities; the real value that anchored it stays in private lab state.
-pub fn participant_hash_v2(jids: &[Jid]) -> String {
-    use sha2::{Digest, Sha256};
-    let mut rendered: Vec<String> = jids.iter().map(ad_form).collect();
-    rendered.sort_unstable();
-    rendered.dedup();
-    let mut hasher = Sha256::new();
-    for jid in &rendered {
-        hasher.update(jid.as_bytes());
-    }
-    let digest = hasher.finalize();
-    let mut out = String::from("2:");
-    out.push_str(&base64_no_wrap(&digest[..6]));
-    out
-}
-
-/// `user.agent:device@server`, always writing the agent and device even when
-/// they are zero. `Display` omits them, which is the right wire form for an
-/// attribute but the wrong input for [`participant_hash_v2`].
-fn ad_form(jid: &Jid) -> String {
-    format!(
-        "{}.{}:{}@{}",
-        jid.user,
-        jid.agent,
-        jid.device,
-        jid.server.as_str()
-    )
-}
-
-/// Standard-alphabet Base64 without padding-free wrapping, matching Android's
-/// `Base64.encodeToString(bytes, NO_WRAP)`. Six input bytes divide evenly into
-/// four-character groups, so no padding is produced for this caller.
-fn base64_no_wrap(bytes: &[u8]) -> String {
-    const ALPHABET: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    let mut out = String::new();
-    for chunk in bytes.chunks(3) {
-        let b = [
-            chunk[0],
-            chunk.get(1).copied().unwrap_or(0),
-            chunk.get(2).copied().unwrap_or(0),
-        ];
-        let n = (u32::from(b[0]) << 16) | (u32::from(b[1]) << 8) | u32::from(b[2]);
-        let take = chunk.len() + 1;
-        for i in 0..take {
-            out.push(ALPHABET[((n >> (18 - 6 * i)) & 0x3f) as usize] as char);
-        }
-        for _ in take..4 {
-            out.push('=');
-        }
-    }
-    out
-}
+pub use super::participant_hash::{
+    DeviceParticipantHashVersion, participant_device_hash, participant_hash, participant_hash_v2,
+};
 
 /// One recipient device and the sender-key distribution ciphertext addressed
 /// to it.
@@ -1455,8 +1348,10 @@ pub fn sender_key_stanza(
         .attr("id", id)
         .attr("type", content.message_type());
     if let Some(phash) = phash {
+        // APK 37.71 AzR.A03 produces "3:" as well as "2:". Accept the
+        // explicit builder input without changing automatic version selection.
         if phash.len() > 32
-            || !phash.starts_with(['1', '2'])
+            || !phash.starts_with(['1', '2', '3'])
             || phash.as_bytes().get(1) != Some(&b':')
         {
             return Err(Error::invalid(
@@ -1795,6 +1690,34 @@ mod tests {
             &[1],
         )
         .unwrap();
+        for phash in ["1:79jEAyGD", "2:79jEAyGD", "3:79jEAyGD"] {
+            let stanza = sender_key_stanza(
+                &chat,
+                "M",
+                StanzaContent::Text,
+                Some("lid"),
+                Some(phash),
+                &[],
+                &[1],
+            )
+            .unwrap();
+            assert_eq!(
+                stanza.get_attr("phash").and_then(|value| value.as_text()),
+                Some(phash)
+            );
+        }
+        assert!(
+            sender_key_stanza(
+                &chat,
+                "M",
+                StanzaContent::Text,
+                Some("lid"),
+                Some("4:79jEAyGD"),
+                &[],
+                &[1]
+            )
+            .is_err()
+        );
         assert!(bare.child("participants").is_none());
         assert_eq!(bare.child_nodes().len(), 1);
         assert!(
@@ -1854,94 +1777,6 @@ mod tests {
                 &[1]
             )
             .is_err()
-        );
-    }
-
-    /// Vectors computed independently with Python's hashlib and base64 before
-    /// this function existed: AD-form JIDs (`user.agent:device@server`, with the
-    /// zeros written out), sorted as strings, concatenated with no separator,
-    /// SHA-256, first six digest bytes, standard Base64, `"2:"` prefix.
-    ///
-    /// The construction was solved against a `phash` the server returned in an
-    /// `ack`; that real value and the identities behind it stay in private lab
-    /// state, so these vectors use synthetic ones.
-    #[test]
-    fn participant_hash_v2_matches_independent_vectors() {
-        let jids = |v: &[&str]| v.iter().map(|s| Jid::parse(s).unwrap()).collect::<Vec<_>>();
-        assert_eq!(
-            participant_hash_v2(&jids(&["111111111111111@lid", "222222222222222@lid"])),
-            "2:79jEAyGD"
-        );
-        assert_eq!(
-            participant_hash_v2(&jids(&[
-                "100000000000001@lid",
-                "200000000000002@lid",
-                "300000000000003@lid",
-            ])),
-            "2:/EhFlOmO"
-        );
-        assert_eq!(
-            participant_hash_v2(&jids(&["999999999999999@lid"])),
-            "2:VByC+b12"
-        );
-        // Order and duplicates must not change it; the set does.
-        assert_eq!(
-            participant_hash_v2(&jids(&[
-                "222222222222222@lid",
-                "111111111111111@lid",
-                "111111111111111@lid",
-            ])),
-            "2:79jEAyGD"
-        );
-        assert_ne!(
-            participant_hash_v2(&jids(&["111111111111111@lid"])),
-            "2:79jEAyGD",
-            "dropping a member must change the hash"
-        );
-        // The AD rendering is the point: the display form omits `.0:0`, and
-        // hashing that instead silently produces a different, wrong value.
-        assert_ne!(
-            participant_hash_v2(&jids(&["999999999999999@lid"])),
-            participant_hash(&["999999999999999@lid".to_owned()])
-        );
-        // Version 1 and version 2 are different constructions, not a rename.
-        assert!(participant_hash_v2(&jids(&["999999999999999@lid"])).starts_with("2:"));
-    }
-
-    /// Vectors computed independently with Python's hashlib and base64, not by
-    /// running this implementation: sorted raw JID strings concatenated with no
-    /// separator, SHA-1, first six digest bytes, standard Base64, "1:" prefix.
-    #[test]
-    fn participant_hash_matches_independent_vectors() {
-        let jids = |v: &[&str]| v.iter().map(|s| (*s).to_owned()).collect::<Vec<_>>();
-        assert_eq!(
-            participant_hash(&jids(&["15551234567@s.whatsapp.net"])),
-            "1:XS9Zi8u/"
-        );
-        let three = jids(&[
-            "15551234567@s.whatsapp.net",
-            "15559876543@s.whatsapp.net",
-            "120363000000000001@g.us",
-        ]);
-        assert_eq!(participant_hash(&three), "1:Lz4D7Wb2");
-        // Sorting is part of the derivation: input order must not matter.
-        let shuffled = jids(&[
-            "120363000000000001@g.us",
-            "15559876543@s.whatsapp.net",
-            "15551234567@s.whatsapp.net",
-        ]);
-        assert_eq!(participant_hash(&shuffled), participant_hash(&three));
-        // The emitter bounds phash to ten characters; six digest bytes encode to
-        // eight Base64 characters, so the prefixed value is exactly ten.
-        assert_eq!(participant_hash(&three).len(), 10);
-        assert_eq!(participant_hash(&jids(&[])).len(), 10);
-        // Membership changes the hash, which is the point of it.
-        assert_ne!(
-            participant_hash(&three),
-            participant_hash(&jids(&[
-                "15551234567@s.whatsapp.net",
-                "15559876543@s.whatsapp.net",
-            ]))
         );
     }
 

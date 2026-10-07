@@ -1,5 +1,15 @@
 # Status — 2026-10-07
 
+Participant hashing/cache trace (2026-10-07, offline): APK 37.71 confirms
+UTF-16 ordering, V2 literal agent zero and feature-gated V3 no-agent hashing.
+Pure Rust hashing and offline inspection match 684 executed host-Java reference
+modes; default xtask feature-gating is fixed. Existing member updates preserve
+devices; traced cache/alias writes do not prove a database transaction.
+Automatic group sends still use V2 primary-member hashing before device
+resolution; complete inventory and active feature selection remain unfinished.
+The expanded 86-method snapshot compares in 0.052231 seconds. No account state
+or live operation changed. [Evidence and limits](docs/protocol/groups.md#participant-cache-and-versioned-hashes-2026-10-07).
+
 What is true now. The dated experiment log that led here, including every
 superseded conclusion and dead end, is in
 [`docs/status-history.md`](docs/status-history.md); per-area evidence is in

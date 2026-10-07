@@ -1,0 +1,61 @@
+# APK-derived structural disassembly: LX/1jL;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(LL) flags=0x9 registers=5
+  0000..0006 op=72 invoke-interface {v4}, Ljava/util/Collection;->size(I)
+  0006..0008 op=0a move-result
+  0008..000c op=22 new-instance v3, Ljava/util/ArrayList;
+  000c..0012 op=70 invoke-direct {v3, v0}, Ljava/util/ArrayList;-><init>(VI)
+  0012..0018 op=72 invoke-interface {v4}, Ljava/util/Collection;->iterator(L)
+  0018..001a op=0c move-result-object
+  001a..0020 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext(Z)
+  0020..0022 op=0a move-result
+  0022..0026 op=38 if-eqz v0, +0x10
+  0026..002c op=72 invoke-interface {v1}, Ljava/util/Iterator;->next(L)
+  002c..002e op=0c move-result-object
+  002e..0032 op=1f check-cast v0, Lcom/whatsapp/infra/core/jid/Jid;
+  0032..0038 op=6e invoke-virtual {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString(L)
+  0038..003a op=0c move-result-object
+  003a..0040 op=6e invoke-virtual {v3, v0}, Ljava/util/AbstractCollection;->add(ZL)
+  0040..0042 op=28 goto -0x13
+  0042..0048 op=71 invoke-static {v3}, Ljava/util/Collections;->sort(VL)
+  0048..004c op=1a const-string v0, "SHA1"
+  004c..0052 op=71 invoke-static {v0}, Ljava/security/MessageDigest;->getInstance(LL)
+  0052..0054 op=0c move-result-object
+  0054..005a op=6e invoke-virtual {v3}, Ljava/util/AbstractCollection;->iterator(L)
+  005a..005c op=0c move-result-object
+  005c..0062 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext(Z)
+  0062..0064 op=0a move-result
+  0064..0068 op=38 if-eqz v0, +0x10
+  0068..006e op=72 invoke-interface {v1}, Ljava/util/Iterator;->next(L)
+  006e..0070 op=0c move-result-object
+  0070..0074 op=1f check-cast v0, Ljava/lang/String;
+  0074..007a op=6e invoke-virtual {v0}, Ljava/lang/String;->getBytes(L)
+  007a..007c op=0c move-result-object
+  007c..0082 op=6e invoke-virtual {v2, v0}, Ljava/security/MessageDigest;->update(VL)
+  0082..0084 op=28 goto -0x13
+  0084..008a op=6e invoke-virtual {v2}, Ljava/security/MessageDigest;->digest(L)
+  008a..008c op=0c move-result-object
+  008c..008e op=12 const/4 v1, #0x6
+  008e..0092 op=23 new-array v2, v1, [B
+  0092..0094 op=12 const/4 v0, #0x0
+  0094..009a op=71 invoke-static {v3, v0, v2, v0, v1}, Ljava/lang/System;->arraycopy(VLILII)
+  009a..009e op=1a const-string v0, "1:"
+  009e..00a2 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  00a2..00a8 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+  00a8..00aa op=12 const/4 v0, #0x2
+  00aa..00b0 op=71 invoke-static {v2, v0}, Landroid/util/Base64;->encodeToString(LLI)
+  00b0..00b2 op=0c move-result-object
+  00b2..00b8 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  00b8..00be op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString(L)
+  00be..00c0 op=0c move-result-object
+  00c0..00c2 op=11 return-object v0
+  00c2..00c4 op=0d move-exception
+  00c4..00c8 op=22 new-instance v0, Ljava/lang/RuntimeException;
+  00c8..00ce op=70 invoke-direct {v0, v1}, Ljava/lang/RuntimeException;-><init>(VL)
+  00ce..00d0 op=27 throw v0
+  # exception table: 1 try range(s)
+  # catch Ljava/security/NoSuchAlgorithmException; code_units 0024..002a -> 0061
+.end method

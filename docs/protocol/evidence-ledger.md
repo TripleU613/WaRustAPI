@@ -862,3 +862,23 @@ Earlier 564315-byte hygiene output did not establish newer snapshot coverage;
 MEX exports were separately checked by apk-research-diff. See
 [checksum correction](apk-porting.md#checksum-coverage-correction-2026-10-07).
 No new protocol/API capability is inferred from this tooling change.
+
+
+### Member cache and versioned participant hashes (2026-10-07)
+
+**Confirmed static, APK 2.26.37.71:** `1jL.A04/A0T/A00/A0G/A01/A0U/A0R/A05`
+trace cache changes, preserve existing devices and nullable history; separate
+locks do not prove a database transaction. `290.A02` plus `28z.A00/2l0.A00`
+synchronize alias ordinals. A0R/A02 hash user keys; A0N/A0O gather stored device
+values, refuting the earlier device-keyed-map uncertainty. `AzR.A03` selects
+V2 literal agent zero or feature-0x415b V3 no-agent rendering; both SHA-256 via
+Ayj.A19, first six bytes, NO_WRAP via A18, Java UTF-16 sorting, no rendered dedup.
+**Observed host reference:** 114 synthetic cases/684 CLI modes match executed
+Java; old Rust rules disagree on 2 V1 and 89 V2-set probes. Six redacted refusal
+probes pass. Pure offline module fixes default xtask's feature-gating build
+failure; no dependency changes. **Unknown:** active feature, Android charset/
+subtype equality, complete own/companion inventory and durable/live application.
+Automatic group sends still V2 primary-member hashing before device resolution.
+[Sources, reasoning, reproduction and negative boundaries](groups.md#participant-cache-and-versioned-hashes-2026-10-07).
+Snapshot: 86 methods/91 files/337088 bytes; all 66 older texts unchanged, cached
+diff 0.052231 s against 875ed8f. No account access, new numbers or live sends.

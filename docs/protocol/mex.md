@@ -1525,3 +1525,18 @@ The versioned bundle adds seven selected methods: **66 methods / 71 files /
 old paths reference ignored baseline Git **8295e18**. Inventory/manifest/token
 artifacts stay unchanged. New owners bind this trace to its Rust metadata module,
 while complete APK inventory/native release remapping remains unfinished.
+
+
+## Downstream cache follow-up (2026-10-07)
+
+**Confirmed static, APK 2.26.37.71:** the subsequent `1jL`/`290` trace closes
+cache upsert/removal, alias ordinals and cached hash refresh calls previously
+left at `0bA.A0i`. Existing upserts preserve device collections and nullable
+history, while separate refresh monitors do not establish a database transaction.
+PN/non-PN user maps and their separately gathered device sets are now identified.
+The mode-dependent LID/bot branches are not blanket conversion refusals.
+[Exact evidence, hash correction, reference reproduction and remaining boundaries](groups.md#participant-cache-and-versioned-hashes-2026-10-07).
+Full durable group application, runtime complete-device hashing and live MEX
+settlement remain unimplemented/unverified. No account state or live operation
+changed. The snapshot adds twenty selected methods (86 total), preserving all
+66 older texts; 91 files/337088 bytes, cached diff 0.052231 s.
