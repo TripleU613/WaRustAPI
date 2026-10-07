@@ -80,6 +80,21 @@ Usage: whatsapp-cli media-open [OPTIONS]...
 | --id | ID | yes |  |  |  |  |
 | --allow-live-request | ALLOW_LIVE_REQUEST | no |  |  | `true`, `false` |  |
 
+## whatsapp-cli media-save
+
+Authenticate an ordinary attachment and save to a new private file
+
+```
+Usage: whatsapp-cli media-save [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --config | CONFIG | yes |  |  |  |  |
+| --id | ID | yes |  |  |  |  |
+| --output | OUTPUT | yes |  |  |  | Explicit destination; sender filename is never used as a path |
+| --allow-live-request | ALLOW_LIVE_REQUEST | no |  |  | `true`, `false` |  |
+
 ## whatsapp-cli listen
 
 Maintain an authenticated comparison connection and process incoming messages

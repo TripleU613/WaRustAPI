@@ -1,0 +1,8 @@
+{
+  "source": "Independent Python stdlib HKDF/HMAC/SHA256 and OpenSSL AES-256-CBC; APK 2.26.37.71 1qB document domain. Synthetic text, not an executable document.",
+  "plaintext": "synthetic document domain fixture",
+  "media_key": "0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c",
+  "body": "b23d8f7fe9118b81c4a6765b99b897ee1af3cae2f90be8baffbd06b9cacb38e21fd52e22b67435c6ac2d1abd50a0af5657794efe1508c848eb2f",
+  "plaintext_hash": "6a839bd336c730aa1a7762f9afd00780f463385c6d3ae74000bcb73c62eabf22",
+  "encrypted_hash": "135898519cd7d2be59bea0c1247f4cf26cde52545f7cd36694eadee9aa3f7ae2"
+}

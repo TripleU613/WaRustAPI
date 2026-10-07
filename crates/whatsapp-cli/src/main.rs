@@ -216,6 +216,19 @@ enum Cmd {
         #[arg(long)]
         allow_live_request: bool,
     },
+    /// Authenticate an ordinary attachment and save to a new private file.
+    #[cfg(feature = "experimental-transport")]
+    MediaSave {
+        #[arg(long)]
+        config: PathBuf,
+        #[arg(long)]
+        id: String,
+        /// Explicit destination; sender filename is never used as a path.
+        #[arg(long)]
+        output: PathBuf,
+        #[arg(long)]
+        allow_live_request: bool,
+    },
     /// Maintain an authenticated comparison connection and process incoming messages.
     #[cfg(feature = "experimental-transport")]
     Listen {
@@ -1438,6 +1451,13 @@ async fn run(cli: Cli) -> Result<(), Error> {
             let config = cli.config_path(config.as_ref(), None)?;
             outbox_send::run(&cli, &config, message, *allow_live_request).await
         }
+        #[cfg(feature = "experimental-transport")]
+        Cmd::MediaSave {
+            config,
+            id,
+            output,
+            allow_live_request,
+        } => media::save(&cli, config, id, output, *allow_live_request).await,
         #[cfg(feature = "experimental-transport")]
         Cmd::MediaList => media::list(&cli),
         #[cfg(feature = "experimental-transport")]

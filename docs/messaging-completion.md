@@ -847,3 +847,18 @@ zero suffix and orientation. CLI combined display/export requires stable PN
 inputs; current authenticated inventories/feature selection and real-peer scan
 remain unverified. No verification mark or account/network action occurred.
 See [V3 export](protocol/safety-number.md#explicit-native-v3-binary-export-2026-10-07).
+
+Ordinary document receive extension (2026-10-07): APK 37.71 BZB schema and
+distinct document-key domain now support URL-bearing documents, sealed media
+references and durable receive events. New media-save explicitly exports to a
+create-only private operator path; filenames remain metadata. Document playback
+refuses and names that command. Independent crypto/wire/store fixtures cover
+authentication, restart, deduplication, labels and overwrite/symlink refusal.
+Live incoming documents, directPath-only retrieval, large files and sending
+remain unfinished. [Evidence and limits](protocol/document-media.md).
+
+Document-extension receive check: one 45-second session authenticated and
+stopped cleanly with chat sends disabled. Redacted saved summaries were unchanged;
+no new encrypted message or document arrived. This is a runtime receive check,
+not fresh-document or automatic-read validation. Prior IDs/uncertain actions
+remain preserved. See the document evidence page for private log locations.

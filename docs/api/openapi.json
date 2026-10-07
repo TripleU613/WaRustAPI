@@ -1490,9 +1490,10 @@
               "sticker",
               "video",
               "video_note",
-              "view_once_image"
+              "view_once_image",
+              "document"
             ],
-            "description": "Media type; ordinary stickers support URL-bearing WebP and video/video notes support URL-bearing MP4. CLI labels are Image, VoiceNote, Sticker, Video and VideoNote."
+            "description": "Media type; ordinary stickers support URL-bearing WebP and video/video notes support URL-bearing MP4. CLI labels are Image, VoiceNote, Sticker, Video and VideoNote. Ordinary document selector kind is Document (document); URL-bearing retrieval uses its distinct Document Keys domain and explicit media-save output. Live incoming documents remain unverified."
           },
           "bytes": {
             "type": "integer",
@@ -5680,7 +5681,7 @@
           "Media"
         ],
         "summary": "List ordinary incoming attachments",
-        "description": "List ordinary incoming images, voice notes, URL-bearing WebP stickers and MP4 videos/video notes by opaque selector, with content redacted. Lottie and directPath-only retrieval remain unsupported.",
+        "description": "List ordinary incoming images, voice notes, URL-bearing WebP stickers and MP4 videos/video notes by opaque selector, with content redacted. Lottie and directPath-only retrieval remain unsupported. Ordinary URL-bearing documents are now included as Document; labels, URLs and keys remain redacted. Documents require media-save for explicit private export, not media-open playback.",
         "operationId": "listMedia",
         "x-cli": "whatsapp-cli media-list",
         "x-transport": [
@@ -5839,7 +5840,7 @@
           "Media"
         ],
         "summary": "Download and open an ordinary image, voice note, WebP sticker or MP4 video/video note locally",
-        "description": "Download/authenticate an ordinary image, voice note, WebP sticker or MP4 video/video note and open it locally.",
+        "description": "Download/authenticate an ordinary image, voice note, WebP sticker or MP4 video/video note and open it locally. Documents refuse before download and name media-save --output; MIME and filename are never used to launch a document viewer.",
         "operationId": "openMedia",
         "x-cli": "whatsapp-cli media-open",
         "x-transport": [
@@ -10280,6 +10281,83 @@
             "description": "Invalid/private-file policy, known inputs or empty/oversized payload; error excludes offending values. --v3-hosted with native-v4 refuses before reading inputs."
           }
         }
+      }
+    },
+    "/v1/media/{id}/save": {
+      "post": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Authenticate and save an ordinary incoming attachment to a new private file",
+        "description": "CLI only; no HTTP route. media-save requires config, opaque id, explicit output and allow-live-request. Supports ordinary URL-bearing images, voice notes, stickers, MP4 video/video notes and documents. Uses saved account binding, one-shot download reservation and encrypted ciphertext cache. Authenticates encrypted hash/MAC/CBC/plain hash/length before create-only mode-0600 export. Existing targets (including symlinks) refuse before download, with an atomic create_new check after retrieval. Uses only the operator output path; sender filename and MIME never choose a path or executable/viewer. Expiration and view-once exclusions remain enforced. I/O failure truncates the owned output descriptor; an empty private file may remain. DirectPath-only, large files over local 8 MiB bound and live incoming-document interoperability remain unverified/unsupported. No chat send or registration is performed.",
+        "operationId": "saveMedia",
+        "x-cli": "whatsapp-cli media-save",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": true,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/Config"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "output",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Explicit new private plaintext file path. Existing files/symlinks refuse; not derived from document filename."
+          },
+          {
+            "name": "allow-live-request",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "const": true
+            },
+            "description": "Explicit authorization for the one-shot media download; absence refuses before config or account access."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authenticated ordinary attachment exported; CLI prints byte count without content, identifiers or output path."
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "409": {
+            "description": "Existing output, uncertain/refused download or unavailable attachment; preserved reservations are not reset."
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::media::save",
+          "whatsapp_api::signal::image::decrypt_document"
+        ]
       }
     }
   }

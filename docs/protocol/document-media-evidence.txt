@@ -1,0 +1,147 @@
+APK 2.26.37.71 SHA256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed/static document schema and key-domain evidence; no live document claim.
+Field-id references: BZc.documentMessage_: classes.dex[24818], classes7.dex[15637], classes8.dex[1810] => LX/BZB;.
+
+# class: LX/BZB;
+
+.method public dynamicMethod(LLLL)  # .registers 7
+    0000..0006  invoke-virtual  {v4}, Ljava/lang/Enum;->ordinal(I)
+    0006..0008  move-result  v2
+    0008..000a  const/4  v1, #0x1
+    000a..000c  const/4  v0, #0x0
+    000c..0012  packed-switch  v2, payload@0x17c, cases=[0:@0x1c, 1:@0x26, 2:@0x2e, 3:@0x170, 4:@0x130, 5:@0x28, 6:@0x13c], default@0x12
+    0012..0018  invoke-static  {}, LX/6aj;->A1C(L)
+    0018..001a  move-result-object  v0
+    001a..001c  throw  v0
+    001c..0022  invoke-static  {v1}, Ljava/lang/Byte;->valueOf(LB)
+    0022..0024  move-result-object  v0
+    0024..0026  return-object  v0
+    0026..0028  return-object  v0
+    0028..002c  sget-object  v0, LX/BZB;->DEFAULT_INSTANCE:LX/BZB;
+    002c..002e  return-object  v0
+    002e..0032  const/16  v0, #0x16
+    0032..0036  new-array  v2, v0, [Ljava/lang/Object;
+    0036..003c  invoke-static  {v2}, LX/6al;->A1W(VL)
+    003c..0040  const-string  v0, "url_"
+    0040..0044  aput-object  v0, v2, v1
+    0044..0048  const-string  v1, "mimetype_"
+    0048..004a  const/4  v0, #0x2
+    004a..004e  aput-object  v1, v2, v0
+    004e..0052  const-string  v0, "title_"
+    0052..0058  invoke-static  {v2, v0}, LX/Ayp;->A1K(VLL)
+    0058..005c  const-string  v1, "fileLength_"
+    005c..005e  const/4  v0, #0x5
+    005e..0062  aput-object  v1, v2, v0
+    0062..0066  const-string  v1, "pageCount_"
+    0066..0068  const/4  v0, #0x6
+    0068..006c  aput-object  v1, v2, v0
+    006c..0070  const-string  v1, "mediaKey_"
+    0070..0072  const/4  v0, #0x7
+    0072..0076  aput-object  v1, v2, v0
+    0076..007a  const-string  v1, "fileName_"
+    007a..007e  const/16  v0, #0x8
+    007e..0082  aput-object  v1, v2, v0
+    0082..0086  const-string  v1, "fileEncSha256_"
+    0086..008a  const/16  v0, #0x9
+    008a..008e  aput-object  v1, v2, v0
+    008e..0092  const-string  v1, "directPath_"
+    0092..0096  const/16  v0, #0xa
+    0096..009a  aput-object  v1, v2, v0
+    009a..009e  const-string  v1, "mediaKeyTimestamp_"
+    009e..00a2  const/16  v0, #0xb
+    00a2..00a6  aput-object  v1, v2, v0
+    00a6..00aa  const-string  v1, "contactVcard_"
+    00aa..00ae  const/16  v0, #0xc
+    00ae..00b2  aput-object  v1, v2, v0
+    00b2..00b6  const-string  v1, "thumbnailDirectPath_"
+    00b6..00ba  const/16  v0, #0xd
+    00ba..00be  aput-object  v1, v2, v0
+    00be..00c2  const-string  v1, "thumbnailSha256_"
+    00c2..00c6  const/16  v0, #0xe
+    00c6..00ca  aput-object  v1, v2, v0
+    00ca..00ce  const-string  v1, "thumbnailEncSha256_"
+    00ce..00d2  const/16  v0, #0xf
+    00d2..00d6  aput-object  v1, v2, v0
+    00d6..00da  const-string  v1, "jpegThumbnail_"
+    00da..00de  const/16  v0, #0x10
+    00de..00e2  aput-object  v1, v2, v0
+    00e2..00e6  const-string  v1, "contextInfo_"
+    00e6..00ea  const/16  v0, #0x11
+    00ea..00ee  aput-object  v1, v2, v0
+    00ee..00f2  const-string  v1, "thumbnailHeight_"
+    00f2..00f6  const/16  v0, #0x12
+    00f6..00fa  aput-object  v1, v2, v0
+    00fa..00fe  const-string  v1, "thumbnailWidth_"
+    00fe..0102  const/16  v0, #0x13
+    0102..0106  aput-object  v1, v2, v0
+    0106..010a  const-string  v1, "caption_"
+    010a..010e  const/16  v0, #0x14
+    010e..0112  aput-object  v1, v2, v0
+    0112..0116  const-string  v1, "accessibilityLabel_"
+    0116..011a  const/16  v0, #0x15
+    011a..011e  aput-object  v1, v2, v0
+    011e..0122  const-string  v1, "\u{1}\u{15}\0\u{1}\u{1}\u{15}\u{15}\0\0\0\u{1}ဈ\0\u{2}ဈ\u{1}\u{3}ဈ\u{2}\u{4}ည\u{3}\u{5}ဃ\u{4}\u{6}ဋ\u{5}\u{7}ည\u{6}\u{8}ဈ\u{7}\tည\u{8}\nဈ\t\u{b}ဂ\n\u{c}ဇ\u{b}\rဈ\u{c}\u{e}ည\r\u{f}ည\u{e}\u{10}ည\u{f}\u{11}ဉ\u{10}\u{12}ဋ\u{11}\u{13}ဋ\u{12}\u{14}ဈ\u{13}\u{15}ဈ\u{14}"
+    0122..0126  sget-object  v0, LX/BZB;->DEFAULT_INSTANCE:LX/BZB;
+    0126..012c  invoke-static  {v0, v1, v2}, Lcom/google/protobuf/GeneratedMessageLite;->newMessageInfo(LLLL)
+    012c..012e  move-result-object  v0
+    012e..0130  return-object  v0
+    0130..0134  new-instance  v0, LX/BNz;
+    0134..013a  invoke-direct  {v0}, LX/BNz;-><init>(V)
+    013a..013c  return-object  v0
+    013c..0140  sget-object  v0, LX/BZB;->PARSER:Lcom/google/protobuf/Parser;
+    0140..0144  if-nez  v0, +0x1d
+    0144..0148  const-class  v1, LX/BZB;
+    0148..014a  monitor-enter
+    014a..014e  sget-object  v0, LX/BZB;->PARSER:Lcom/google/protobuf/Parser;
+    014e..0152  if-nez  v0, +0xc
+    0152..0156  sget-object  v0, Lcom/google/protobuf/AbstractParser;->EMPTY_REGISTRY:Lcom/google/protobuf/ExtensionRegistryLite;
+    0156..015a  sget-object  v0, LX/BZB;->DEFAULT_INSTANCE:LX/BZB;
+    015a..0160  invoke-static  {v0}, LX/6ak;->A0M(LL)
+    0160..0162  move-result-object  v0
+    0162..0166  sput-object  v0, LX/BZB;->PARSER:Lcom/google/protobuf/Parser;
+    0166..0168  monitor-exit
+    0168..016a  return-object  v0
+    016a..016c  move-exception  v0
+    016c..016e  monitor-exit
+    016e..0170  throw  v0
+    0170..0174  new-instance  v0, LX/BZB;
+    0174..017a  invoke-direct  {v0}, LX/BZB;-><init>(V)
+    017a..017c  return-object  v0
+    017c..01a0  packed-switch-payload  size=7
+.end method
+
+
+# class: LX/Ayp;
+
+.method public A1K(VLL)  # .registers 4
+    0000..0002  const/4  v0, #0x3
+    0002..0006  aput-object  v3, v2, v0
+    0006..000a  const-string  v1, "fileSha256_"
+    000a..000c  const/4  v0, #0x4
+    000c..0010  aput-object  v1, v2, v0
+    0010..0012  return-void
+.end method
+
+
+# class: LX/6al;
+
+.method public A1W(VL)  # .registers 3
+    0000..0004  const-string  v1, "bitField0_"
+    0004..0006  const/4  v0, #0x0
+    0006..000a  aput-object  v1, v2, v0
+    000a..000c  return-void
+.end method
+
+    0080..0084  const-string  v0, "WhatsApp Document Keys"
+    0084..008a  invoke-virtual  {v0, v1}, Ljava/lang/String;->getBytes(LL)
+    008a..008c  move-result-object  v4
+    008c..0092  invoke-static  {v4}, LX/00h;->A06(VL)
+    0092..0096  sput-object  v4, LX/1qB;->A1D:[B
+    03c2..03c6  const-string  v13, "document"
+    03c6..03ca  const-string  v1, "DOC"
+    03ca..03ce  new-instance  v0, LX/1qB;
+    03ce..03d4  invoke-direct  {v0, v13, v1, v4, v12}, LX/1qB;-><init>(VLLLI)
+    03d4..03d8  sput-object  v0, LX/1qB;->A0B:LX/1qB;
+    03d8..03dc  new-instance  v0, LX/1qB;
+    03dc..03e2  invoke-direct  {v0, v13, v1, v4, v12}, LX/1qB;-><init>(VLLLI)
+    03e2..03e6  sput-object  v0, LX/1qB;->A0H:LX/1qB;

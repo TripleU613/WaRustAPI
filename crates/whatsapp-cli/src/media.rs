@@ -42,6 +42,15 @@ pub(super) async fn open(
     if !account.is_registered() || account.phone.as_ref() != Some(&config.phone) {
         return Err(Error::NotRegistered);
     }
+    if media::list(&store)?
+        .iter()
+        .any(|entry| entry.id == id && entry.kind == MediaKind::Document)
+    {
+        return Err(Error::invalid(
+            "media",
+            "document retrieval requires media-save --output",
+        ));
+    }
     let (kind, plain) = media::open(&store, &config, id).await?;
     let mut command = tokio::process::Command::new("mpv");
     command.args([
@@ -65,6 +74,12 @@ pub(super) async fn open(
             command.arg("--no-video");
         }
         MediaKind::Video | MediaKind::VideoNote => {}
+        MediaKind::Document => {
+            return Err(Error::invalid(
+                "media",
+                "document retrieval requires media-save --output",
+            ));
+        }
     }
     let mut child = command
         .arg("-")
@@ -99,4 +114,50 @@ pub(super) async fn open(
     }
     println!("media: player finished successfully");
     Ok(())
+}
+
+pub(super) async fn save(
+    cli: &super::Cli,
+    path: &Path,
+    id: &str,
+    output: &Path,
+    allow_live: bool,
+) -> Result<(), Error> {
+    if !allow_live {
+        return Err(Error::invalid("media", "requires --allow-live-request"));
+    }
+    let config = super::signup::config(path)?;
+    let store = store(cli)?;
+    let bytes = media::save(&store, &config, id, output).await?;
+    println!("media: authenticated attachment exported to new private file; bytes={bytes}");
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    #[tokio::test]
+    async fn save_requires_explicit_network_opt_in_before_files_or_store() {
+        use clap::Parser;
+        let cli = crate::Cli::try_parse_from([
+            "whatsapp-cli",
+            "media-save",
+            "--config",
+            "missing-request.json",
+            "--id",
+            "opaque",
+            "--output",
+            "unused-output.txt",
+        ])
+        .unwrap();
+        let error = super::save(
+            &cli,
+            std::path::Path::new("missing-request.json"),
+            "opaque",
+            std::path::Path::new("unused-output.txt"),
+            false,
+        )
+        .await
+        .unwrap_err();
+        assert!(error.to_string().contains("--allow-live-request"));
+    }
 }

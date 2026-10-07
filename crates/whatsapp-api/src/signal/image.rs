@@ -124,6 +124,25 @@ pub fn decrypt_video(
         b"WhatsApp Video Keys",
     )
 }
+/// Authenticate/decrypt document media. APK 37.71 `1qB.<clinit>`
+/// 0080..0096 and 03c2..03e6 assign this domain to document/DOC.
+/// This primitive does not open, execute or choose an output filename.
+pub fn decrypt_document(
+    body: &[u8],
+    key: &[u8; 32],
+    encrypted_hash: &[u8; 32],
+    plaintext_hash: &[u8; 32],
+    plaintext_len: u64,
+) -> Result<Zeroizing<Vec<u8>>> {
+    decrypt_kind(
+        body,
+        key,
+        encrypted_hash,
+        plaintext_hash,
+        plaintext_len,
+        b"WhatsApp Document Keys",
+    )
+}
 fn decrypt_kind(
     body: &[u8],
     key: &[u8; 32],

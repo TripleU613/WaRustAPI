@@ -1,4 +1,4 @@
-//! Ordinary incoming image/audio/sticker/video retrieval. View-once content never enters
+//! Ordinary incoming image/audio/sticker/video/document retrieval. View-once content never enters
 //! this replayable path. APK BWp/BWZ/BZC schemas and 1qB image/audio key domains.
 use crate::{
     Error, Result,
@@ -22,6 +22,8 @@ pub enum MediaKind {
     Video,
     /// MP4 push-to-video note; preserves its distinct inbox selector kind.
     VideoNote,
+    /// Ordinary document; CLI uses explicit plaintext export.
+    Document,
 }
 /// Redacted local attachment selector. Contains no phone, URL or media key.
 #[derive(Debug, Clone)]
@@ -107,8 +109,28 @@ struct Video {
     #[prost(bool, tag = "20")]
     once: bool,
 }
+// APK 37.71 BZB.dynamicMethod 011e..012c, with Ayp.A1K name helper:
+// DocumentMessage tags differ from image/video; caption=20, fileName=8.
+#[derive(Message)]
+struct Document {
+    #[prost(string, tag = "1")]
+    url: String,
+    #[prost(string, tag = "2")]
+    mime: String,
+    #[prost(bytes = "vec", tag = "4")]
+    hash: Vec<u8>,
+    #[prost(uint64, tag = "5")]
+    length: u64,
+    #[prost(bytes = "vec", tag = "7")]
+    key: Vec<u8>,
+    #[prost(bytes = "vec", tag = "9")]
+    enc_hash: Vec<u8>,
+}
 #[derive(Message)]
 struct Envelope {
+    // BZc Message descriptor: documentMessage=7, type BZB.
+    #[prost(message, optional, tag = "7")]
+    document: Option<Document>,
     #[prost(message, optional, tag = "3")]
     image: Option<Image>,
     #[prost(message, optional, tag = "8")]
@@ -148,6 +170,8 @@ fn bad(reason: &'static str) -> Error {
 }
 #[derive(Message)]
 struct RawEnvelope {
+    #[prost(bytes = "vec", optional, tag = "7")]
+    document: Option<Vec<u8>>,
     #[prost(bytes = "vec", optional, tag = "3")]
     image: Option<Vec<u8>>,
     #[prost(bytes = "vec", optional, tag = "8")]
@@ -183,6 +207,7 @@ fn media_context(payload: &[u8]) -> Result<Option<MediaContext>> {
         .or(raw.sticker)
         .or(raw.video)
         .or(raw.ptv)
+        .or(raw.document)
     else {
         return Ok(None);
     };
@@ -237,6 +262,7 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
         e.sticker.is_some(),
         e.video.is_some(),
         e.ptv.is_some(),
+        e.document.is_some(),
     ]
     .into_iter()
     .filter(|present| *present)
@@ -288,6 +314,16 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
             key: v.key,
             enc_hash: v.enc_hash,
             length: v.length,
+        }
+    } else if let Some(doc) = e.document {
+        Descriptor {
+            kind: MediaKind::Document,
+            url: doc.url,
+            mime: doc.mime,
+            hash: doc.hash,
+            key: doc.key,
+            enc_hash: doc.enc_hash,
+            length: doc.length,
         }
     } else if let Some(s) = e.sticker {
         if s.lottie {
@@ -369,10 +405,10 @@ pub(super) fn event_content(
     let fields = crate::signal::direct::payload_fields(payload)?;
     if fields
         .iter()
-        .any(|v| !matches!(v, 3 | 8 | 9 | 26 | 35 | 66))
+        .any(|v| !matches!(v, 3 | 7 | 8 | 9 | 26 | 35 | 66))
         || fields
             .iter()
-            .filter(|v| matches!(v, 3 | 8 | 9 | 26 | 66))
+            .filter(|v| matches!(v, 3 | 7 | 8 | 9 | 26 | 66))
             .count()
             != 1
     {
@@ -391,6 +427,7 @@ pub(super) fn event_content(
         .or(raw.sticker.as_ref())
         .or(raw.video.as_ref())
         .or(raw.ptv.as_ref())
+        .or(raw.document.as_ref())
         .ok_or_else(|| bad("missing media"))?;
     let context = media_context(payload)?;
     if context
@@ -421,6 +458,21 @@ pub(super) fn event_content(
     } else {
         None
     };
+    #[derive(Message)]
+    struct DocumentLabels {
+        #[prost(string, optional, tag = "8")]
+        file_name: Option<String>,
+        #[prost(string, optional, tag = "20")]
+        caption: Option<String>,
+    }
+    let (caption, file_name) = if raw.document.is_some() {
+        let labels = DocumentLabels::decode(nested.as_slice())
+            .map_err(|_| bad("invalid document labels"))?;
+        // Display metadata only. Never use sender fileName as an output path.
+        (labels.caption, labels.file_name)
+    } else {
+        (caption, None)
+    };
     let id = hex::encode(Sha256::digest(key));
     Ok(Some((
         crate::model::message::MessageContent::Media {
@@ -432,6 +484,7 @@ pub(super) fn event_content(
                     MediaKind::Image => crate::model::message::MediaKind::Image,
                     MediaKind::VoiceNote => crate::model::message::MediaKind::Audio,
                     MediaKind::Sticker => crate::model::message::MediaKind::Sticker,
+                    MediaKind::Document => crate::model::message::MediaKind::Document,
                     MediaKind::Video | MediaKind::VideoNote => {
                         crate::model::message::MediaKind::Video
                     }
@@ -440,7 +493,7 @@ pub(super) fn event_content(
                 length: Some(d.length),
             },
             caption,
-            file_name: None,
+            file_name,
         },
         expiration,
     )))
@@ -462,6 +515,7 @@ pub fn references(store: &ProtocolStore) -> Result<Vec<crate::model::message::Me
                     MediaKind::Image => crate::model::message::MediaKind::Image,
                     MediaKind::VoiceNote => crate::model::message::MediaKind::Audio,
                     MediaKind::Sticker => crate::model::message::MediaKind::Sticker,
+                    MediaKind::Document => crate::model::message::MediaKind::Document,
                     MediaKind::Video | MediaKind::VideoNote => {
                         crate::model::message::MediaKind::Video
                     }
@@ -492,6 +546,7 @@ pub fn reference_selector(
         MediaKind::Image => crate::model::message::MediaKind::Image,
         MediaKind::VoiceNote => crate::model::message::MediaKind::Audio,
         MediaKind::Sticker => crate::model::message::MediaKind::Sticker,
+        MediaKind::Document => crate::model::message::MediaKind::Document,
         MediaKind::Video | MediaKind::VideoNote => crate::model::message::MediaKind::Video,
     };
     if reference.kind != kind || reference.mime_type != d.mime || reference.length != Some(d.length)
@@ -505,7 +560,6 @@ pub fn reference_selector(
 /// Export explicitly requested ordinary plaintext to a new private file. Never
 /// overwrites existing files/symlinks. An I/O failure truncates this owned file
 /// descriptor; the empty private file may remain for operator inspection.
-#[cfg(any(test, feature = "comparison-client"))]
 pub(crate) fn export_new(path: &std::path::Path, plain: &[u8]) -> Result<u64> {
     use std::io::Write;
     let mut options = std::fs::OpenOptions::new();
@@ -522,6 +576,26 @@ pub(crate) fn export_new(path: &std::path::Path, plain: &[u8]) -> Result<u64> {
     }
     Ok(plain.len() as u64)
 }
+/// Authenticate/retrieve an ordinary attachment and export to a new private file.
+/// Uses the caller's output path, never the sender's filename; never opens it.
+/// Existing files/symlinks refuse. Download reservations and ciphertext persist.
+pub async fn save(
+    store: &ProtocolStore,
+    config: &LabRegistrationConfig,
+    id: &str,
+    output: &std::path::Path,
+) -> Result<u64> {
+    // Refuse an existing target before reserving any network download. The
+    // create_new writer still checks atomically after retrieval.
+    match std::fs::symlink_metadata(output) {
+        Ok(_) => return Err(bad("output already exists")),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+        Err(e) => return Err(e.into()),
+    }
+    let (_, plain) = open(store, config, id).await?;
+    ensure_available(store, id)?;
+    export_new(output, &plain)
+}
 fn media_url(d: &Descriptor) -> Result<reqwest::Url> {
     let mime = d.mime.split(';').next().unwrap_or("").trim();
     let allowed = match d.kind {
@@ -529,6 +603,21 @@ fn media_url(d: &Descriptor) -> Result<reqwest::Url> {
         MediaKind::VoiceNote => mime == "audio/ogg",
         MediaKind::Sticker => mime == "image/webp",
         MediaKind::Video | MediaKind::VideoNote => mime == "video/mp4",
+        // Export-only media: MIME is metadata, never a program/viewer choice.
+        // Token syntax/256-byte bound is local policy, not an APK MIME allowlist.
+        MediaKind::Document => {
+            let mut parts = mime.split('/');
+            let token = |part: &str| {
+                !part.is_empty()
+                    && part
+                        .bytes()
+                        .all(|b| b.is_ascii_alphanumeric() || b"!#$&^_.+-".contains(&b))
+            };
+            mime.len() <= 256
+                && parts.next().is_some_and(token)
+                && parts.next().is_some_and(token)
+                && parts.next().is_none()
+        }
     };
     if !allowed || d.url.len() > 8192 {
         return Err(bad("unsupported media format"));
@@ -553,6 +642,7 @@ fn decrypt(d: &Descriptor, body: &[u8]) -> Result<Zeroizing<Vec<u8>>> {
         // to the sticker type constructor; there is no separate sticker domain.
         MediaKind::Image | MediaKind::Sticker => crate::signal::image::decrypt,
         MediaKind::VoiceNote => crate::signal::image::decrypt_audio,
+        MediaKind::Document => crate::signal::image::decrypt_document,
         MediaKind::Video | MediaKind::VideoNote => crate::signal::image::decrypt_video,
     };
     let plain = f(
@@ -894,6 +984,7 @@ mod tests {
                 enc_hash: encrypted.encrypted_hash.to_vec(),
                 once: false,
             }),
+            document: None,
             audio: None,
             sticker: None,
             video: None,
@@ -1106,6 +1197,212 @@ mod tests {
         );
     }
 
+    fn document_fixture() -> crate::signal::image::EncryptedImage {
+        let f: serde_json::Value =
+            serde_json::from_str(include_str!("../../tests/fixtures/document-media.json")).unwrap();
+        let bytes = |name: &str| hex::decode(f[name].as_str().unwrap()).unwrap();
+        crate::signal::image::EncryptedImage {
+            media_key: Zeroizing::new(bytes("media_key").try_into().unwrap()),
+            body: bytes("body"),
+            plaintext_hash: bytes("plaintext_hash").try_into().unwrap(),
+            encrypted_hash: bytes("encrypted_hash").try_into().unwrap(),
+            plaintext_len: f["plaintext"].as_str().unwrap().len() as u64,
+        }
+    }
+    fn document_payload(f: &crate::signal::image::EncryptedImage, suffix: &[u8]) -> Vec<u8> {
+        let mut body = Vec::new();
+        // Literal BZB tags: hash=4, length=5, mediaKey=7, encHash=9.
+        for (tag, value) in [
+            (
+                0x0a,
+                b"https://mmg.whatsapp.net/document-fixture".as_slice(),
+            ),
+            (0x12, b"text/plain".as_slice()),
+            (0x22, f.plaintext_hash.as_slice()),
+            (0x3a, f.media_key.as_slice()),
+            (0x4a, f.encrypted_hash.as_slice()),
+        ] {
+            body.extend_from_slice(&[tag, value.len() as u8]);
+            body.extend_from_slice(value);
+        }
+        body.extend_from_slice(&[0x28, f.plaintext_len as u8]);
+        body.extend_from_slice(suffix);
+        let mut out = vec![0x3a]; // BZc.documentMessage=7.
+        prost::encoding::encode_varint(body.len() as u64, &mut out);
+        out.extend(body);
+        out
+    }
+    #[test]
+    fn document_literal_schema_distinct_crypto_domain_and_export_only_mime() {
+        let fixture = document_fixture();
+        let payload = document_payload(&fixture, b"");
+        let mut d = descriptor(&payload).unwrap().unwrap();
+        assert_eq!(d.kind, MediaKind::Document);
+        assert_eq!(
+            &*decrypt(&d, &fixture.body).unwrap(),
+            b"synthetic document domain fixture"
+        );
+        media_url(&d).unwrap();
+        for mime in [
+            "application/pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/octet-stream",
+            "text/plain; charset=utf-8",
+        ] {
+            d.mime = mime.into();
+            media_url(&d).unwrap();
+        }
+        for mime in [
+            "",
+            "text",
+            "/plain",
+            "text/",
+            "text/plain/extra",
+            "text/pla\nin",
+        ] {
+            d.mime = mime.into();
+            assert!(media_url(&d).is_err());
+        }
+        for f in [
+            crate::signal::image::decrypt,
+            crate::signal::image::decrypt_audio,
+            crate::signal::image::decrypt_video,
+        ] {
+            assert!(
+                f(
+                    &fixture.body,
+                    &fixture.media_key,
+                    &fixture.encrypted_hash,
+                    &fixture.plaintext_hash,
+                    fixture.plaintext_len
+                )
+                .is_err()
+            );
+        }
+        for i in 0..fixture.body.len() {
+            let mut corrupted = fixture.body.clone();
+            corrupted[i] ^= 1;
+            assert!(decrypt(&d, &corrupted).is_err());
+        }
+        d.hash[0] ^= 1;
+        assert!(decrypt(&d, &fixture.body).is_err());
+        for wrapper in [b"\xaa\x02\x00".as_slice(), b"\xba\x03\x00", b"\xda\x03\x00"] {
+            let mut wrapped = payload.clone();
+            wrapped.extend(wrapper);
+            assert!(descriptor(&wrapped).unwrap().is_none());
+        }
+        let mut mixed = payload;
+        mixed.extend_from_slice(b"\x1a\x00");
+        assert!(descriptor(&mixed).is_err());
+    }
+    #[tokio::test]
+    async fn document_journal_cached_save_restart_metadata_and_overwrite_guards() {
+        use crate::{
+            model::ids::{AccountId, EventCursor},
+            store::{ConsumerId, MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let options = || OpenOptions {
+            path: dir.path().join("document.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([11; 32]))),
+            create: true,
+        };
+        let store = ProtocolStore::open(options()).unwrap();
+        let mut config: LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        config.token = Zeroizing::new("offline-fixture".into());
+        let fixture = document_fixture();
+        // Sender filename is metadata only, even if it looks like a relative path.
+        let payload = document_payload(&fixture, b"\x42\x0b../file.txt\xa2\x01\x07caption");
+        let key = b"received:document";
+        let id = hex::encode(Sha256::digest(key));
+        let node = crate::binary::Node::new("message")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("id", "document");
+        store
+            .write(|tx| {
+                crate::session::AccountRecord {
+                    phone: Some(config.phone.clone()),
+                    registration: crate::session::RegistrationStatus::Registered,
+                    ..Default::default()
+                }
+                .save(tx)?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    key,
+                    1,
+                    &serde_json::json!({"status":"decrypted","protobuf":payload}),
+                )?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("media-download:{id}").as_bytes(),
+                    1,
+                    &serde_json::json!({"status":"downloaded","body":fixture.body}),
+                )?;
+                assert!(super::super::inbox_events::publish(
+                    tx, key, &node, &payload
+                )?);
+                assert!(!super::super::inbox_events::publish(
+                    tx, key, &node, &payload
+                )?);
+                Ok(())
+            })
+            .unwrap();
+        drop(store);
+        let store = ProtocolStore::open(options()).unwrap();
+        let events = store
+            .read_events(&ConsumerId::new("test").unwrap(), EventCursor::START, 10)
+            .unwrap();
+        assert_eq!(events.events.len(), 1);
+        let crate::sync::SyncEvent::NewMessage(message) = &events.events[0].event else {
+            panic!("missing document event")
+        };
+        let crate::model::message::MessageContent::Media {
+            reference,
+            caption,
+            file_name,
+        } = &message.content
+        else {
+            panic!("missing document reference")
+        };
+        assert_eq!(reference.kind, crate::model::message::MediaKind::Document);
+        assert_eq!(caption.as_deref(), Some("caption"));
+        assert_eq!(file_name.as_deref(), Some("../file.txt"));
+        assert_eq!(reference_selector(&store, reference).unwrap(), id);
+        let output = dir.path().join("operator-choice.txt");
+        assert_eq!(
+            save(&store, &config, &id, &output).await.unwrap(),
+            fixture.plaintext_len
+        );
+        assert_eq!(
+            std::fs::read(&output).unwrap(),
+            b"synthetic document domain fixture"
+        );
+        use std::os::unix::fs::PermissionsExt;
+        assert_eq!(
+            std::fs::metadata(&output).unwrap().permissions().mode() & 0o777,
+            0o600
+        );
+        assert!(save(&store, &config, &id, &output).await.is_err());
+        let link = dir.path().join("link");
+        std::os::unix::fs::symlink(&output, &link).unwrap();
+        assert!(save(&store, &config, &id, &link).await.is_err());
+        assert_eq!(
+            std::fs::read(&output).unwrap(),
+            b"synthetic document domain fixture"
+        );
+        let (kind, _) = open(&store, &config, &id).await.unwrap();
+        assert_eq!(kind, MediaKind::Document);
+        let quoted = document_payload(&fixture, b"\x8a\x01\x03\x0a\x01q");
+        assert!(
+            store
+                .write(|tx| event_content(tx, key, &quoted))
+                .unwrap()
+                .is_none()
+        );
+    }
+
     fn video_fixture() -> crate::signal::image::EncryptedImage {
         let f: serde_json::Value =
             serde_json::from_str(include_str!("../../tests/fixtures/video-media.json")).unwrap();
@@ -1309,6 +1606,7 @@ mod tests {
                     enc_hash: vec![3; 32],
                     once,
                 }),
+                document: None,
                 audio: None,
                 sticker: None,
                 video: None,

@@ -523,3 +523,25 @@ and failed only its stale-reference test; after regeneration the full rerun
 passed. A built-CLI synthetic PN-only export in versions 0/1 matched the exact
 independent fixture, created mode-0600 files, compared with V3 status zero and
 refused overwrite without changing bytes. No account store was created.
+
+Ordinary document receive extension (2026-10-07): APK 37.71 BZB schema and
+distinct document-key domain now support URL-bearing documents, sealed media
+references and durable receive events. New media-save explicitly exports to a
+create-only private operator path; filenames remain metadata. Document playback
+refuses and names that command. Independent crypto/wire/store fixtures cover
+authentication, restart, deduplication, labels and overwrite/symlink refusal.
+Live incoming documents, directPath-only retrieval, large files and sending
+remain unfinished. [Evidence and limits](docs/protocol/document-media.md).
+
+Validation: 567 workspace/all-feature tests and 252 default-feature workspace
+tests passed, plus strict all-target/all-feature Clippy, warning-free Rustdoc,
+generated CLI reference, formatting and repository hygiene (370 local links).
+The first Rustdoc run rejected an unescaped <clinit> in the new API comment;
+after formatting that name as code, its rerun passed. No runtime change was
+needed. Focused document/schema/crypto/restart/export tests passed.
+
+A bounded 45-second receive-only check authenticated/activated and stopped
+cleanly. Events/receipts/actions/outbox summaries were unchanged (20/9/12/0),
+with the prior uncertain action preserved. No fresh encrypted message/document
+arrived; live document retrieval is still unverified. Private backup/log paths
+and notification observations are recorded in the document protocol page.
