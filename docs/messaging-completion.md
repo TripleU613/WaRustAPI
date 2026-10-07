@@ -816,3 +816,10 @@ PN/username presence, options 1/3, hosted-state combinations and status
 precedence/remapping. Generic MCFEqual and JID construction remain modeled;
 full binary comparison, current authenticated inputs and human verification
 are still unfinished. See [executed corpus](protocol/safety-number.md#executed-v3-core-and-remapper-corpus-2026-10-07).
+
+2026-10-07 V3 equality/LID trace: class registrations resolve ASCII byte equality
+and constructed-full-string JID equality. Device-zero flattening precedes the
+primary-JID and LID-kind guards; exact number/suffix bounds are recorded.
+Existing synthetic tokens do not prove converter acceptance. Native parser
+execution, runtime integration and authenticated inputs remain open.
+See [equality and conversion](protocol/safety-number.md#v3-equality-callbacks-and-primary-lid-conversion-2026-10-07).

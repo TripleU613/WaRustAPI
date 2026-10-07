@@ -1947,3 +1947,138 @@ check passed. Repository hygiene checked 349 local links; staged whitespace
 checks passed. All ten V3/shared-V4 tests passed again after restricting hooks
 to the selected scheme. Rust runtime code was unchanged; no live validation
 is claimed for this offline research-tool change.
+
+## V3 equality callbacks and primary-LID conversion (2026-10-07)
+
+**Confirmed/static**, APK 2.26.37.71, APK/main-library hashes as in the
+preceding V3 sections, merged-library SHA-256
+`565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa`.
+[Scoped instructions and relocation-resolved constants](fingerprint-v3-equality-lid-evidence.txt)
+resolve the earlier generic-equality and stable-LID questions for these traced
+classes. They do not execute the object runtime, parser or constructors.
+This narrows the implementation requirements beyond the modeled V3 corpus.
+
+**Confirmed/static generic dispatch:** merged `MCFEqual` at
+`0x534f34..0x534fe8` returns true for identical pointers (including both
+null), false for exactly one null or different object-header type IDs, and
+otherwise resolves each class descriptor through `0x534e8c`. Different resolved
+descriptors or a missing descriptor abort; a missing equality callback returns
+false. An existing callback at descriptor +0x28 receives both objects.
+The V3 optional-value helper checks null presence before calling MCFEqual;
+therefore the corpus's modeled non-null comparisons did not establish this
+whole generic dispatch or need a null/null MCFEqual call.
+
+**Confirmed/static ASCII class:** `MCFASCIIStringGetTypeID` at
+`0x530fc4..0x531000` registers descriptor `0x74ee18`. Its +0x28 relocation
+resolves to callback **0x53102c**, which checks/casts both objects to that class
+then tail-calls **MCFASCIIStringEqual, 0x5316ac..0x5316f4**. That function
+compares stored lengths at +0x18; differing lengths return false. Equal lengths
+invoke `memcmp` over pointers at +0x20 with the exact length, returning true
+only for zero. This is **case-sensitive byte equality**, with no lowercase,
+trimming, prefix removal, parsing or Unicode normalization in this callback.
+PN and username fields reach this class through the traced ASCII construction/
+copy paths, so V3's generic calls do not inherit V4's case-folding username
+rule. The result is a property of this build's class callback, not a claim that
+all objects passed to generic MCFEqual are ASCII strings.
+
+**Confirmed/static JID class:** main registration `0x71ecc0..0x71ecfc` uses
+descriptor `0xd0afd8`; +0x28 relocates to **0x71eda4**. That callback casts
+both JID objects, reads their stored strings at +0x20, and tail-calls MCFEqual
+on those strings (`0x71edd8..0x71edf4`). The constructor **0x71de28** formats
+user plus the selected server with literal `%s@%s` at string VA `0xce7ce`,
+then copies that full ASCII result into +0x20 (`0x71de88..0x71de98`).
+It separately stores the user at +0x28 and server kind at +0x30. Equality thus
+uses the constructed full string, not just user bytes, not display LID-user
+normalization, and not an implicit PN-to-LID mapping. Parsing may change which
+string gets constructed; comparing raw scan bytes without following it can
+still be wrong even with the correct callback.
+
+**Confirmed/static primary parse:** V3's scanned individual converter first
+ASCII-creates its supplied LID, then calls **0x71dfa4**. That calls the shared
+parser `0x71f30c` with option 0, applies **0x71ebd8**, and accepts only resulting
+JID objects whose +0x18 category is zero. Parse failure records internal error
+-1; a parsed but non-primary category records -2. Both cause the individual
+converter's -6, rather than exposing the parser's internal error directly.
+Afterwards **0x71f2b8** requires the typed server kind returned by **0x71efe4**
+to equal **5** and otherwise returns null. It returns the same pointer on
+success: this last function itself does not rewrite or normalize a JID.
+The typed getter allows kinds {0,4,5,7,9,10} and aborts outside its mask;
+these are internal JID kinds, distinct from protobuf HostedState {0,1}.
+
+**Confirmed/static LID routing:** `0x71f30c` separates the supplied string
+using the literal `@` constant (relocation-resolved at `0xd0af98`). Exactly
+two pieces pass to user/server parsing **0x71f4e0**; one piece follows a
+separate server-only path, other counts fail. Server classifier **0x71fa08**
+checks length, third character and exact MCFEqual against cached constants;
+`0x71fb20..0x71fb3c` compares against the `lid` constant from **0x71e438**
+and produces server kind 5. The user/server jump table at `0x3039fd` routes
+kind 5 to **0x71f760**. This confirms the literal lowercase `lid` branch;
+no case-insensitive or arbitrary-server acceptance is inferred.
+
+With parser option 0, that branch jumps directly to **0x71f860**, validates
+user through **0x7204bc**, decomposes it through **0x720d1c / 0x720bac**,
+and constructs a device-LID object through **0x71da6c**. The validator's
+separator is the literal `:` (`0x71e978`, constant pointer record `0xd0afb8`).
+With exactly two pieces it validates base number via **0x71fdc0** and suffix
+via **0x71fe0c**; otherwise it validates the full user as a base number.
+These are the traced static bounds, not a general registration-number rule:
+
+| Input part | Branch requirements |
+| --- | --- |
+| Base number | `0x71fd24` accepts length 1..20, first character `1`..`9`, remaining characters `0`..`9` |
+| LID-specific base | `0x71fdc0` additionally rejects lengths 16..19 (`length & ~3 == 16`) |
+| Device suffix | `0x71fe0c` accepts one or two digits `0`..`9`, including zero |
+
+The parser option-1 shortcut (`0x71f764..0x71f79c`) was traced but is **not**
+the option supplied by V3's primary parse. Do not replace the option-0 route
+with the simpler constructor merely because it yields the same ordinary case.
+The shared decomposer also knows a literal `.` separator (`0xd0afa8`), but
+this LID validator rejects a dotted user before reaching it. Its broader
+non-LID callers were not recovered by this trace.
+
+**Confirmed/static decomposition/construction:** `0x720bac` obtains a base
+string and device suffix, defaults to the literal `0` (`0x71eac8`, record
+`0xd0af88`) when absent, parses suffix decimal with `strtol`, and returns the
+base pointer plus integer. `0x71da6c` requires that integer in 0..99 and calls
+**0x71d944** with server kind 5. That initializes category +0x18 to **5**,
+formats the device user with `%s:%d` (VA `0x1347aa`), stores original base at
++0x38, and device integer at +0x40. It then uses the ordinary full-string
+constructor for +0x20. Suffix formatting normalizes its decimal spelling;
+this is not authority to manufacture a companion device or identity.
+
+**Confirmed/static flattening:** `0x71ebd8` preserves ordinary objects and
+nonzero-device objects. For device-category 5, server kind 5, device integer
+zero, it reads original base +0x38 and invokes **0x71f2a4**, which constructs
+category 0 with kind 5. Thus a plain valid `base@lid` goes through a temporary
+device-zero object and becomes a primary `base@lid`. An explicit accepted
+zero suffix also becomes primary. A nonzero device remains category 5 and
+is rejected by the following primary-category guard in `0x71dfa4`.
+**Inferred from these branches, not executed end-to-end:** valid synthetic
+`base:0@lid` and `base:00@lid` converge to the same primary string, while
+nonzero companion suffixes yield the converter's -6. Full decimal/array/
+allocation behavior still needs actual native parser execution before a
+runtime comparator should adopt these examples as fixtures.
+
+**Negative / limits:** the final stable-kind gate is not the normalizer;
+normalization happens earlier in the primary parse. Generic equality is not
+universally byte equality; the class registration is the evidence for these
+strings. The existing native V3 corpus still models object construction and
+equality and accepts synthetic tokens such as `synthetic-local`; those are
+control-flow fixtures, not valid LID-converter inputs. No claim is made for
+all MCF classes, unrelated server kinds, allocation failure, runtime class
+registry state, current authenticated inventories or active feature flags.
+Full binary V3 comparison is still unimplemented. Account state was not
+opened or changed, verification was not marked and no live request was sent.
+
+Reproduce with existing `llvm-objdump -d --start-address=VA --stop-address=END`
+using the scoped range labels. Use `.rela.dyn` addends for the class callback
+and constant records; their raw pointer slots are zero before relocation.
+The scoped snapshot carries all source/build addresses without private data.
+Ignored full dumps remain under `lab/apk-2.26.37.71/native/` with prefix
+`fingerprint-v3-`. No new command, runtime field or HTTP route is introduced.
+
+Validation (static/offline): APK, main and merged hashes matched the pinned
+build. Fresh extraction matched all 18 ASCII comparator instructions. CLI
+reference regeneration/test passed, repository hygiene checked 354 local
+links and staged whitespace checks passed. This change adds attributed research
+only; it does not execute the native parser or change runtime/account behavior.

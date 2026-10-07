@@ -397,3 +397,11 @@ and execution-budget exhaustion refuse before JSON output. Per core/remap call:
 ten seconds/one million instructions; maximum 227 instructions observed.
 The shared V4 runner retains its existing default/output and explicitly refuses
 using V4's string mode for V3. This is offline research, not runtime V3 support.
+
+The [V3 equality/LID follow-up](../../docs/protocol/safety-number.md#v3-equality-callbacks-and-primary-lid-conversion-2026-10-07)
+and [scoped native ranges](../../docs/protocol/fingerprint-v3-equality-lid-evidence.txt)
+resolve class equality callbacks and primary-LID conversion statically.
+The corpus's synthetic identity tokens remain control-flow inputs, not valid
+converter fixtures. Case-sensitive byte equality differs from V4's username
+helper. Device-zero flattening occurs before the final kind gate. Actual
+class runtime/parser execution and full binary V3 support remain unfinished.

@@ -1,0 +1,720 @@
+# V3 equality and LID conversion, APK 2.26.37.71
+# Confirmed/static only; native addresses are ELF virtual addresses.
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Main library SHA-256: f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a
+# Merged library SHA-256: 565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa
+# .rela.dyn merged class descriptor 0x74ee18 +0x28 -> equality callback 0x53102c
+# .rela.dyn main class descriptor 0xd0afd8 +0x28 -> equality callback 0x71eda4
+# Main constants, relocation-resolved pointers and explicit lengths:
+# 0xd0aef8 -> 0x11f5e4, length 3: lid
+# 0xd0af98 -> 0x1687b2, length 1: @
+# 0xd0afb8 -> 0x16bdd3, length 1: :
+# 0xd0afa8 -> 0x17750f, length 1: .
+# 0xd0af88 -> default suffix bytes 0
+# Format at 0xce7ce: %s@%s; format at 0x1347aa: %s:%d
+# User/server jump table 0x3039fd, kind 5 -> 0x71f760
+# Server formatter jump table 0x3039f0, kind 5 -> 0x71eba8 -> 0x71e438 (lid)
+# Interpretation / unexecuted edges: safety-number.md equality/LID follow-up.
+
+# libwhatsappmerged.so: Generic MCFEqual
+  534f34: d503233f     	paciasp
+  534f38: a9bd7bfd     	stp	x29, x30, [sp, #-0x30]!
+  534f3c: a90157f6     	stp	x22, x21, [sp, #0x10]
+  534f40: a9024ff4     	stp	x20, x19, [sp, #0x20]
+  534f44: 910003fd     	mov	x29, sp
+  534f48: eb01001f     	cmp	x0, x1
+  534f4c: 540003a0     	b.eq	0x534fc0 <MCFEqual+0x8c>
+  534f50: aa0003e8     	mov	x8, x0
+  534f54: 2a1f03e0     	mov	w0, wzr
+  534f58: b40003a8     	cbz	x8, 0x534fcc <MCFEqual+0x98>
+  534f5c: b4000381     	cbz	x1, 0x534fcc <MCFEqual+0x98>
+  534f60: f9400109     	ldr	x9, [x8]
+  534f64: f940002a     	ldr	x10, [x1]
+  534f68: eb0a013f     	cmp	x9, x10
+  534f6c: 540002e1     	b.ne	0x534fc8 <MCFEqual+0x94>
+  534f70: aa0803e0     	mov	x0, x8
+  534f74: aa0803f5     	mov	x21, x8
+  534f78: aa0103f4     	mov	x20, x1
+  534f7c: 97ffffc4     	bl	0x534e8c <MCFRelease+0x80>
+  534f80: aa0003f3     	mov	x19, x0
+  534f84: aa1403e0     	mov	x0, x20
+  534f88: aa1403f6     	mov	x22, x20
+  534f8c: 97ffffc0     	bl	0x534e8c <MCFRelease+0x80>
+  534f90: eb00027f     	cmp	x19, x0
+  534f94: 54000261     	b.ne	0x534fe0 <MCFEqual+0xac>
+  534f98: b4000273     	cbz	x19, 0x534fe4 <MCFEqual+0xb0>
+  534f9c: f9401670     	ldr	x16, [x19, #0x28]
+  534fa0: b4000150     	cbz	x16, 0x534fc8 <MCFEqual+0x94>
+  534fa4: aa1603e1     	mov	x1, x22
+  534fa8: aa1503e0     	mov	x0, x21
+  534fac: a9424ff4     	ldp	x20, x19, [sp, #0x20]
+  534fb0: a94157f6     	ldp	x22, x21, [sp, #0x10]
+  534fb4: a8c37bfd     	ldp	x29, x30, [sp], #0x30
+  534fb8: d50323bf     	autiasp
+  534fbc: d61f0200     	br	x16
+  534fc0: 52800020     	mov	w0, #0x1                // =1
+  534fc4: 14000002     	b	0x534fcc <MCFEqual+0x98>
+  534fc8: 2a1f03e0     	mov	w0, wzr
+  534fcc: a9424ff4     	ldp	x20, x19, [sp, #0x20]
+  534fd0: a94157f6     	ldp	x22, x21, [sp, #0x10]
+  534fd4: a8c37bfd     	ldp	x29, x30, [sp], #0x30
+  534fd8: d50323bf     	autiasp
+  534fdc: d65f03c0     	ret
+  534fe0: 9407a164     	bl	0x71d570 <abort@plt>
+  534fe4: 9407a163     	bl	0x71d570 <abort@plt>
+
+# libwhatsappmerged.so: ASCII class equality callback
+  53102c: d503233f     	paciasp
+  531030: a9be7bfd     	stp	x29, x30, [sp, #-0x20]!
+  531034: a9014ff4     	stp	x20, x19, [sp, #0x10]
+  531038: 910003fd     	mov	x29, sp
+  53103c: aa0103f3     	mov	x19, x1
+  531040: aa0003f4     	mov	x20, x0
+  531044: 97ffffe0     	bl	0x530fc4 <MCFASCIIStringGetTypeID>
+  531048: aa1403e1     	mov	x1, x20
+  53104c: 94000411     	bl	0x532090 <__MCFCastToClassOrNull+0x20>
+  531050: 97ffffdd     	bl	0x530fc4 <MCFASCIIStringGetTypeID>
+  531054: aa1303e1     	mov	x1, x19
+  531058: 9400040e     	bl	0x532090 <__MCFCastToClassOrNull+0x20>
+  53105c: aa1403e0     	mov	x0, x20
+  531060: aa1303e1     	mov	x1, x19
+  531064: a9414ff4     	ldp	x20, x19, [sp, #0x10]
+  531068: a8c27bfd     	ldp	x29, x30, [sp], #0x20
+  53106c: d50323bf     	autiasp
+  531070: 1400018f     	b	0x5316ac <MCFASCIIStringEqual>
+
+# libwhatsappmerged.so: Length and memcmp equality
+  5316ac: d503245f     	bti	c
+  5316b0: b9801802     	ldrsw	x2, [x0, #0x18]
+  5316b4: b9401828     	ldr	w8, [x1, #0x18]
+  5316b8: 6b08005f     	cmp	w2, w8
+  5316bc: 54000181     	b.ne	0x5316ec <MCFASCIIStringEqual+0x40>
+  5316c0: d503233f     	paciasp
+  5316c4: a9bf7bfd     	stp	x29, x30, [sp, #-0x10]!
+  5316c8: 910003fd     	mov	x29, sp
+  5316cc: f9401000     	ldr	x0, [x0, #0x20]
+  5316d0: f9401021     	ldr	x1, [x1, #0x20]
+  5316d4: 9407b02f     	bl	0x71d790 <memcmp@plt>
+  5316d8: 7100001f     	cmp	w0, #0x0
+  5316dc: 1a9f17e0     	cset	w0, eq
+  5316e0: a8c17bfd     	ldp	x29, x30, [sp], #0x10
+  5316e4: d50323bf     	autiasp
+  5316e8: d65f03c0     	ret
+  5316ec: 2a1f03e0     	mov	w0, wzr
+  5316f0: d65f03c0     	ret
+
+# libwhatsapp.so: JID class equality callback
+  71eda4: d503233f     	paciasp
+  71eda8: a9be7bfd     	stp	x29, x30, [sp, #-0x20]!
+  71edac: a9014ff4     	stp	x20, x19, [sp, #0x10]
+  71edb0: 910003fd     	mov	x29, sp
+  71edb4: aa0103f3     	mov	x19, x1
+  71edb8: aa0003f4     	mov	x20, x0
+  71edbc: 97ffffc1     	bl	0x71ecc0 <op_read+0x6b48c>
+  71edc0: aa1403e1     	mov	x1, x20
+  71edc4: 941725af     	bl	0xce8480 <__MCFCastToClassNotNull@plt>
+  71edc8: aa0003f4     	mov	x20, x0
+  71edcc: 97ffffbd     	bl	0x71ecc0 <op_read+0x6b48c>
+  71edd0: aa1303e1     	mov	x1, x19
+  71edd4: 941725ab     	bl	0xce8480 <__MCFCastToClassNotNull@plt>
+  71edd8: f9401288     	ldr	x8, [x20, #0x20]
+  71eddc: a9414ff4     	ldp	x20, x19, [sp, #0x10]
+  71ede0: f9401001     	ldr	x1, [x0, #0x20]
+  71ede4: aa0803e0     	mov	x0, x8
+  71ede8: a8c27bfd     	ldp	x29, x30, [sp], #0x20
+  71edec: d50323bf     	autiasp
+  71edf0: 141728d8     	b	0xce9150 <MCFEqual@plt>
+
+# libwhatsapp.so: Primary-JID parse
+  71dfa4: d503233f     	paciasp
+  71dfa8: a9bd7bfd     	stp	x29, x30, [sp, #-0x30]!
+  71dfac: f9000bf5     	str	x21, [sp, #0x10]
+  71dfb0: a9024ff4     	stp	x20, x19, [sp, #0x20]
+  71dfb4: 910003fd     	mov	x29, sp
+  71dfb8: aa0103f3     	mov	x19, x1
+  71dfbc: 2a1f03e1     	mov	w1, wzr
+  71dfc0: 940004d3     	bl	0x71f30c <op_read+0x6bad8>
+  71dfc4: b40002e0     	cbz	x0, 0x71e020 <op_read+0x6a7ec>
+  71dfc8: aa0003f4     	mov	x20, x0
+  71dfcc: 94000303     	bl	0x71ebd8 <op_read+0x6b3a4>
+  71dfd0: aa0003f5     	mov	x21, x0
+  71dfd4: aa1403e0     	mov	x0, x20
+  71dfd8: 94172142     	bl	0xce64e0 <MCFRelease@plt>
+  71dfdc: b9401aa8     	ldr	w8, [x21, #0x18]
+  71dfe0: aa1503e0     	mov	x0, x21
+  71dfe4: 35000048     	cbnz	w8, 0x71dfec <op_read+0x6a7b8>
+  71dfe8: b5000320     	cbnz	x0, 0x71e04c <op_read+0x6a818>
+  71dfec: b4000173     	cbz	x19, 0x71e018 <op_read+0x6a7e4>
+  71dff0: b0003048     	adrp	x8, 0xd26000
+  71dff4: 913ea108     	add	x8, x8, #0xfa8
+  71dff8: aa0003f4     	mov	x20, x0
+  71dffc: aa0803e0     	mov	x0, x8
+  71e000: 12800021     	mov	w1, #-0x2               // =-2
+  71e004: aa1f03e2     	mov	x2, xzr
+  71e008: 94172a3e     	bl	0xce8900 <MCFErrorCreate@plt>
+  71e00c: aa0003e8     	mov	x8, x0
+  71e010: aa1403e0     	mov	x0, x20
+  71e014: f9000268     	str	x8, [x19]
+  71e018: 94172132     	bl	0xce64e0 <MCFRelease@plt>
+  71e01c: 1400000b     	b	0x71e048 <op_read+0x6a814>
+  71e020: b4000153     	cbz	x19, 0x71e048 <op_read+0x6a814>
+  71e024: 90003040     	adrp	x0, 0xd26000
+  71e028: 913ea000     	add	x0, x0, #0xfa8
+  71e02c: 12800001     	mov	w1, #-0x1               // =-1
+  71e030: aa1f03e2     	mov	x2, xzr
+  71e034: 94172a33     	bl	0xce8900 <MCFErrorCreate@plt>
+  71e038: aa0003e8     	mov	x8, x0
+  71e03c: aa1f03e0     	mov	x0, xzr
+  71e040: f9000268     	str	x8, [x19]
+  71e044: 14000002     	b	0x71e04c <op_read+0x6a818>
+  71e048: aa1f03e0     	mov	x0, xzr
+  71e04c: a9424ff4     	ldp	x20, x19, [sp, #0x20]
+  71e050: f9400bf5     	ldr	x21, [sp, #0x10]
+  71e054: a8c37bfd     	ldp	x29, x30, [sp], #0x30
+  71e058: d50323bf     	autiasp
+  71e05c: d65f03c0     	ret
+
+# libwhatsapp.so: Device-zero flattening
+  71ebd8: d503233f     	paciasp
+  71ebdc: a9be7bfd     	stp	x29, x30, [sp, #-0x20]!
+  71ebe0: f9000bf3     	str	x19, [sp, #0x10]
+  71ebe4: 910003fd     	mov	x29, sp
+  71ebe8: aa0003f3     	mov	x19, x0
+  71ebec: b4000120     	cbz	x0, 0x71ec10 <op_read+0x6b3dc>
+  71ebf0: b9401a68     	ldr	w8, [x19, #0x18]
+  71ebf4: 7100151f     	cmp	w8, #0x5
+  71ebf8: 540000c1     	b.ne	0x71ec10 <op_read+0x6b3dc>
+  71ebfc: b9403268     	ldr	w8, [x19, #0x30]
+  71ec00: 7100111f     	cmp	w8, #0x4
+  71ec04: 54000060     	b.eq	0x71ec10 <op_read+0x6b3dc>
+  71ec08: b9404269     	ldr	w9, [x19, #0x40]
+  71ec0c: 34000109     	cbz	w9, 0x71ec2c <op_read+0x6b3f8>
+  71ec10: aa1303e0     	mov	x0, x19
+  71ec14: 941725df     	bl	0xce8390 <MCFRetain@plt>
+  71ec18: aa1303e0     	mov	x0, x19
+  71ec1c: f9400bf3     	ldr	x19, [sp, #0x10]
+  71ec20: a8c27bfd     	ldp	x29, x30, [sp], #0x20
+  71ec24: d50323bf     	autiasp
+  71ec28: d65f03c0     	ret
+  71ec2c: 7100191f     	cmp	w8, #0x6
+  71ec30: 5400018d     	b.le	0x71ec60 <op_read+0x6b42c>
+  71ec34: 71001d1f     	cmp	w8, #0x7
+  71ec38: 54000240     	b.eq	0x71ec80 <op_read+0x6b44c>
+  71ec3c: 7100251f     	cmp	w8, #0x9
+  71ec40: 540002a0     	b.eq	0x71ec94 <op_read+0x6b460>
+  71ec44: 7100291f     	cmp	w8, #0xa
+  71ec48: 540003a1     	b.ne	0x71ecbc <op_read+0x6b488>
+  71ec4c: f9401e60     	ldr	x0, [x19, #0x38]
+  71ec50: f9400bf3     	ldr	x19, [sp, #0x10]
+  71ec54: a8c27bfd     	ldp	x29, x30, [sp], #0x20
+  71ec58: d50323bf     	autiasp
+  71ec5c: 1400007d     	b	0x71ee50 <op_read+0x6b61c>
+  71ec60: 34000248     	cbz	w8, 0x71eca8 <op_read+0x6b474>
+  71ec64: 7100151f     	cmp	w8, #0x5
+  71ec68: 540002a1     	b.ne	0x71ecbc <op_read+0x6b488>
+  71ec6c: f9401e60     	ldr	x0, [x19, #0x38]
+  71ec70: f9400bf3     	ldr	x19, [sp, #0x10]
+  71ec74: a8c27bfd     	ldp	x29, x30, [sp], #0x20
+  71ec78: d50323bf     	autiasp
+  71ec7c: 1400018a     	b	0x71f2a4 <op_read+0x6ba70>
+  71ec80: f9401e60     	ldr	x0, [x19, #0x38]
+  71ec84: f9400bf3     	ldr	x19, [sp, #0x10]
+  71ec88: a8c27bfd     	ldp	x29, x30, [sp], #0x20
+  71ec8c: d50323bf     	autiasp
+  71ec90: 17fffc9e     	b	0x71df08 <op_read+0x6a6d4>
+  71ec94: f9401e60     	ldr	x0, [x19, #0x38]
+  71ec98: f9400bf3     	ldr	x19, [sp, #0x10]
+  71ec9c: a8c27bfd     	ldp	x29, x30, [sp], #0x20
+  71eca0: d50323bf     	autiasp
+  71eca4: 1400017b     	b	0x71f290 <op_read+0x6ba5c>
+  71eca8: f9401e60     	ldr	x0, [x19, #0x38]
+  71ecac: f9400bf3     	ldr	x19, [sp, #0x10]
+  71ecb0: a8c27bfd     	ldp	x29, x30, [sp], #0x20
+  71ecb4: d50323bf     	autiasp
+  71ecb8: 14000190     	b	0x71f2f8 <op_read+0x6bac4>
+  71ecbc: 94171e0d     	bl	0xce64f0 <abort@plt>
+
+# libwhatsapp.so: Typed getter invariants
+  71efe4: d503245f     	bti	c
+  71efe8: b9403000     	ldr	w0, [x0, #0x30]
+  71efec: 52800028     	mov	w8, #0x1                // =1
+  71eff0: 5280d629     	mov	w9, #0x6b1              // =1713
+  71eff4: 1ac02108     	lsl	w8, w8, w0
+  71eff8: 7100281f     	cmp	w0, #0xa
+  71effc: 0a090108     	and	w8, w8, w9
+  71f000: 7a409904     	ccmp	w8, #0x0, #0x4, ls
+  71f004: 54000040     	b.eq	0x71f00c <op_read+0x6b7d8>
+  71f008: d65f03c0     	ret
+  71f00c: d503233f     	paciasp
+  71f010: a9bf7bfd     	stp	x29, x30, [sp, #-0x10]!
+  71f014: 910003fd     	mov	x29, sp
+  71f018: 94171d36     	bl	0xce64f0 <abort@plt>
+
+# libwhatsapp.so: Stable LID constructor and converter
+  71f2a4: d503245f     	bti	c
+  71f2a8: aa0003e1     	mov	x1, x0
+  71f2ac: 2a1f03e0     	mov	w0, wzr
+  71f2b0: 528000a2     	mov	w2, #0x5                // =5
+  71f2b4: 17fffac0     	b	0x71ddb4 <op_read+0x6a580>
+  71f2b8: d503233f     	paciasp
+  71f2bc: a9be7bfd     	stp	x29, x30, [sp, #-0x20]!
+  71f2c0: f9000bf3     	str	x19, [sp, #0x10]
+  71f2c4: 910003fd     	mov	x29, sp
+  71f2c8: aa0003f3     	mov	x19, x0
+  71f2cc: 97ffff46     	bl	0x71efe4 <op_read+0x6b7b0>
+  71f2d0: 7100141f     	cmp	w0, #0x5
+  71f2d4: 54000061     	b.ne	0x71f2e0 <op_read+0x6baac>
+  71f2d8: b5000073     	cbnz	x19, 0x71f2e4 <op_read+0x6bab0>
+  71f2dc: 94171c85     	bl	0xce64f0 <abort@plt>
+  71f2e0: aa1f03f3     	mov	x19, xzr
+  71f2e4: aa1303e0     	mov	x0, x19
+  71f2e8: f9400bf3     	ldr	x19, [sp, #0x10]
+  71f2ec: a8c27bfd     	ldp	x29, x30, [sp], #0x20
+  71f2f0: d50323bf     	autiasp
+  71f2f4: d65f03c0     	ret
+
+# libwhatsapp.so: At-sign parse routing
+  71f30c: d503233f     	paciasp
+  71f310: a9bd7bfd     	stp	x29, x30, [sp, #-0x30]!
+  71f314: f9000bf5     	str	x21, [sp, #0x10]
+  71f318: a9024ff4     	stp	x20, x19, [sp, #0x20]
+  71f31c: 910003fd     	mov	x29, sp
+  71f320: 2a0103f4     	mov	w20, w1
+  71f324: aa0003f5     	mov	x21, x0
+  71f328: 97fffd5c     	bl	0x71e898 <op_read+0x6b064>
+  71f32c: aa0003e1     	mov	x1, x0
+  71f330: aa1503e0     	mov	x0, x21
+  71f334: 941727b3     	bl	0xce9200 <MCFASCIIStringCreateArrayBySeparatingStrings@plt>
+  71f338: aa0003f3     	mov	x19, x0
+  71f33c: 94172531     	bl	0xce8800 <MCFArrayGetCount@plt>
+  71f340: 7100081f     	cmp	w0, #0x2
+  71f344: 540001a1     	b.ne	0x71f378 <op_read+0x6bb44>
+  71f348: aa1303e0     	mov	x0, x19
+  71f34c: 2a1f03e1     	mov	w1, wzr
+  71f350: 94172530     	bl	0xce8810 <MCFArrayGetValueAtIndex@plt>
+  71f354: aa0003f5     	mov	x21, x0
+  71f358: aa1303e0     	mov	x0, x19
+  71f35c: 52800021     	mov	w1, #0x1                // =1
+  71f360: 9417252c     	bl	0xce8810 <MCFArrayGetValueAtIndex@plt>
+  71f364: aa0003e1     	mov	x1, x0
+  71f368: 12000282     	and	w2, w20, #0x1
+  71f36c: aa1503e0     	mov	x0, x21
+  71f370: 9400005c     	bl	0x71f4e0 <op_read+0x6bcac>
+  71f374: 14000007     	b	0x71f390 <op_read+0x6bb5c>
+  71f378: aa1303e0     	mov	x0, x19
+  71f37c: 94172521     	bl	0xce8800 <MCFArrayGetCount@plt>
+  71f380: 7100041f     	cmp	w0, #0x1
+  71f384: 540000a1     	b.ne	0x71f398 <op_read+0x6bb64>
+  71f388: aa1503e0     	mov	x0, x21
+  71f38c: 9400000c     	bl	0x71f3bc <op_read+0x6bb88>
+  71f390: aa0003f4     	mov	x20, x0
+  71f394: 14000002     	b	0x71f39c <op_read+0x6bb68>
+  71f398: aa1f03f4     	mov	x20, xzr
+  71f39c: aa1303e0     	mov	x0, x19
+  71f3a0: 94171c50     	bl	0xce64e0 <MCFRelease@plt>
+  71f3a4: aa1403e0     	mov	x0, x20
+  71f3a8: a9424ff4     	ldp	x20, x19, [sp, #0x20]
+  71f3ac: f9400bf5     	ldr	x21, [sp, #0x10]
+  71f3b0: a8c37bfd     	ldp	x29, x30, [sp], #0x30
+  71f3b4: d50323bf     	autiasp
+  71f3b8: d65f03c0     	ret
+
+# libwhatsapp.so: LID branch selection
+  71f760: d503249f     	bti	j
+  71f764: 360007f4     	tbz	w20, #0x0, 0x71f860 <op_read+0x6c02c>
+  71f768: aa1303e0     	mov	x0, x19
+  71f76c: 94000195     	bl	0x71fdc0 <op_read+0x6c58c>
+  71f770: 36000780     	tbz	w0, #0x0, 0x71f860 <op_read+0x6c02c>
+  71f774: f94016a8     	ldr	x8, [x21, #0x28]
+  71f778: f94007e9     	ldr	x9, [sp, #0x8]
+  71f77c: eb09011f     	cmp	x8, x9
+  71f780: 54001401     	b.ne	0x71fa00 <op_read+0x6c1cc>
+  71f784: aa1303e0     	mov	x0, x19
+  71f788: a9434ff4     	ldp	x20, x19, [sp, #0x30]
+  71f78c: a9417bfd     	ldp	x29, x30, [sp, #0x10]
+  71f790: f94013f5     	ldr	x21, [sp, #0x20]
+  71f794: 910103ff     	add	sp, sp, #0x40
+  71f798: d50323bf     	autiasp
+  71f79c: 17fffec2     	b	0x71f2a4 <op_read+0x6ba70>
+
+# libwhatsapp.so: Strict parse fallback
+  71f860: aa1303e0     	mov	x0, x19
+  71f864: 94000316     	bl	0x7204bc <op_read+0x6cc88>
+  71f868: 36000b60     	tbz	w0, #0x0, 0x71f9d4 <op_read+0x6c1a0>
+  71f86c: aa1303e0     	mov	x0, x19
+  71f870: 9400052b     	bl	0x720d1c <op_read+0x6d4e8>
+  71f874: aa0003f3     	mov	x19, x0
+  71f878: 97fff87d     	bl	0x71da6c <op_read+0x6a238>
+  71f87c: 1400003f     	b	0x71f978 <op_read+0x6c144>
+
+# libwhatsapp.so: LID user validation
+  7204bc: d503233f     	paciasp
+  7204c0: a9bd7bfd     	stp	x29, x30, [sp, #-0x30]!
+  7204c4: f9000bf5     	str	x21, [sp, #0x10]
+  7204c8: a9024ff4     	stp	x20, x19, [sp, #0x20]
+  7204cc: 910003fd     	mov	x29, sp
+  7204d0: aa0003f4     	mov	x20, x0
+  7204d4: 97fff929     	bl	0x71e978 <op_read+0x6b144>
+  7204d8: aa0003e1     	mov	x1, x0
+  7204dc: aa1403e0     	mov	x0, x20
+  7204e0: 94172348     	bl	0xce9200 <MCFASCIIStringCreateArrayBySeparatingStrings@plt>
+  7204e4: aa0003f3     	mov	x19, x0
+  7204e8: b4000280     	cbz	x0, 0x720538 <op_read+0x6cd04>
+  7204ec: aa1303e0     	mov	x0, x19
+  7204f0: 941720c4     	bl	0xce8800 <MCFArrayGetCount@plt>
+  7204f4: 7100081f     	cmp	w0, #0x2
+  7204f8: 54000201     	b.ne	0x720538 <op_read+0x6cd04>
+  7204fc: aa1303e0     	mov	x0, x19
+  720500: 2a1f03e1     	mov	w1, wzr
+  720504: 941720c3     	bl	0xce8810 <MCFArrayGetValueAtIndex@plt>
+  720508: aa0003f4     	mov	x20, x0
+  72050c: aa1303e0     	mov	x0, x19
+  720510: 52800021     	mov	w1, #0x1                // =1
+  720514: 941720bf     	bl	0xce8810 <MCFArrayGetValueAtIndex@plt>
+  720518: aa0003f5     	mov	x21, x0
+  72051c: aa1403e0     	mov	x0, x20
+  720520: 97fffe28     	bl	0x71fdc0 <op_read+0x6c58c>
+  720524: 2a1f03f4     	mov	w20, wzr
+  720528: 360000e0     	tbz	w0, #0x0, 0x720544 <op_read+0x6cd10>
+  72052c: aa1503e0     	mov	x0, x21
+  720530: 97fffe37     	bl	0x71fe0c <op_read+0x6c5d8>
+  720534: 14000003     	b	0x720540 <op_read+0x6cd0c>
+  720538: aa1403e0     	mov	x0, x20
+  72053c: 97fffe21     	bl	0x71fdc0 <op_read+0x6c58c>
+  720540: 2a0003f4     	mov	w20, w0
+  720544: aa1303e0     	mov	x0, x19
+  720548: 941717e6     	bl	0xce64e0 <MCFRelease@plt>
+  72054c: 12000280     	and	w0, w20, #0x1
+  720550: a9424ff4     	ldp	x20, x19, [sp, #0x20]
+  720554: f9400bf5     	ldr	x21, [sp, #0x10]
+  720558: a8c37bfd     	ldp	x29, x30, [sp], #0x30
+  72055c: d50323bf     	autiasp
+  720560: d65f03c0     	ret
+
+# libwhatsapp.so: LID number bounds
+  71fd24: d503233f     	paciasp
+  71fd28: a9bd7bfd     	stp	x29, x30, [sp, #-0x30]!
+  71fd2c: f9000bf5     	str	x21, [sp, #0x10]
+  71fd30: a9024ff4     	stp	x20, x19, [sp, #0x20]
+  71fd34: 910003fd     	mov	x29, sp
+  71fd38: aa0003f3     	mov	x19, x0
+  71fd3c: 941723a1     	bl	0xce8bc0 <MCFASCIIStringGetLength@plt>
+  71fd40: 51005408     	sub	w8, w0, #0x15
+  71fd44: 3100511f     	cmn	w8, #0x14
+  71fd48: 54000123     	b.lo	0x71fd6c <op_read+0x6c538>
+  71fd4c: 2a0003f5     	mov	w21, w0
+  71fd50: aa1303e0     	mov	x0, x19
+  71fd54: 2a1f03e1     	mov	w1, wzr
+  71fd58: 9417273e     	bl	0xce9a50 <MCFASCIIStringGetCharacterAtIndex@plt>
+  71fd5c: 5100e808     	sub	w8, w0, #0x3a
+  71fd60: 12001d08     	and	w8, w8, #0xff
+  71fd64: 7103dd1f     	cmp	w8, #0xf7
+  71fd68: 540000e2     	b.hs	0x71fd84 <op_read+0x6c550>
+  71fd6c: 2a1f03e0     	mov	w0, wzr
+  71fd70: a9424ff4     	ldp	x20, x19, [sp, #0x20]
+  71fd74: f9400bf5     	ldr	x21, [sp, #0x10]
+  71fd78: a8c37bfd     	ldp	x29, x30, [sp], #0x30
+  71fd7c: d50323bf     	autiasp
+  71fd80: d65f03c0     	ret
+  71fd84: 2a1f03f4     	mov	w20, wzr
+  71fd88: 510006b5     	sub	w21, w21, #0x1
+  71fd8c: aa1303e0     	mov	x0, x19
+  71fd90: 2a1403e1     	mov	w1, w20
+  71fd94: 9417272f     	bl	0xce9a50 <MCFASCIIStringGetCharacterAtIndex@plt>
+  71fd98: 5100c008     	sub	w8, w0, #0x30
+  71fd9c: 12001d08     	and	w8, w8, #0xff
+  71fda0: 7100291f     	cmp	w8, #0xa
+  71fda4: 1a9f27e0     	cset	w0, lo
+  71fda8: 7100251f     	cmp	w8, #0x9
+  71fdac: 54fffe28     	b.hi	0x71fd70 <op_read+0x6c53c>
+  71fdb0: 6b1402bf     	cmp	w21, w20
+  71fdb4: 11000694     	add	w20, w20, #0x1
+  71fdb8: 54fffea1     	b.ne	0x71fd8c <op_read+0x6c558>
+  71fdbc: 17ffffed     	b	0x71fd70 <op_read+0x6c53c>
+  71fdc0: d503233f     	paciasp
+  71fdc4: a9be7bfd     	stp	x29, x30, [sp, #-0x20]!
+  71fdc8: f9000bf3     	str	x19, [sp, #0x10]
+  71fdcc: 910003fd     	mov	x29, sp
+  71fdd0: aa0003f3     	mov	x19, x0
+  71fdd4: 9417237b     	bl	0xce8bc0 <MCFASCIIStringGetLength@plt>
+  71fdd8: 121e7408     	and	w8, w0, #0xfffffffc
+  71fddc: 7100411f     	cmp	w8, #0x10
+  71fde0: 540000c1     	b.ne	0x71fdf8 <op_read+0x6c5c4>
+  71fde4: f9400bf3     	ldr	x19, [sp, #0x10]
+  71fde8: 2a1f03e0     	mov	w0, wzr
+  71fdec: a8c27bfd     	ldp	x29, x30, [sp], #0x20
+  71fdf0: d50323bf     	autiasp
+  71fdf4: d65f03c0     	ret
+  71fdf8: aa1303e0     	mov	x0, x19
+  71fdfc: f9400bf3     	ldr	x19, [sp, #0x10]
+  71fe00: a8c27bfd     	ldp	x29, x30, [sp], #0x20
+  71fe04: d50323bf     	autiasp
+  71fe08: 17ffffc7     	b	0x71fd24 <op_read+0x6c4f0>
+
+# libwhatsapp.so: Device-suffix validation
+  71fe0c: d503233f     	paciasp
+  71fe10: a9be7bfd     	stp	x29, x30, [sp, #-0x20]!
+  71fe14: a9014ff4     	stp	x20, x19, [sp, #0x10]
+  71fe18: 910003fd     	mov	x29, sp
+  71fe1c: aa0003f3     	mov	x19, x0
+  71fe20: 94172368     	bl	0xce8bc0 <MCFASCIIStringGetLength@plt>
+  71fe24: 51000c08     	sub	w8, w0, #0x3
+  71fe28: 3100091f     	cmn	w8, #0x2
+  71fe2c: 54000062     	b.hs	0x71fe38 <op_read+0x6c604>
+  71fe30: 2a1f03e0     	mov	w0, wzr
+  71fe34: 14000014     	b	0x71fe84 <op_read+0x6c650>
+  71fe38: 2a0003f4     	mov	w20, w0
+  71fe3c: aa1303e0     	mov	x0, x19
+  71fe40: 2a1f03e1     	mov	w1, wzr
+  71fe44: 94172703     	bl	0xce9a50 <MCFASCIIStringGetCharacterAtIndex@plt>
+  71fe48: 5100c008     	sub	w8, w0, #0x30
+  71fe4c: 12001d08     	and	w8, w8, #0xff
+  71fe50: 7100291f     	cmp	w8, #0xa
+  71fe54: 1a9f27e0     	cset	w0, lo
+  71fe58: 7100251f     	cmp	w8, #0x9
+  71fe5c: 54000148     	b.hi	0x71fe84 <op_read+0x6c650>
+  71fe60: 7100069f     	cmp	w20, #0x1
+  71fe64: 54000100     	b.eq	0x71fe84 <op_read+0x6c650>
+  71fe68: aa1303e0     	mov	x0, x19
+  71fe6c: 52800021     	mov	w1, #0x1                // =1
+  71fe70: 941726f8     	bl	0xce9a50 <MCFASCIIStringGetCharacterAtIndex@plt>
+  71fe74: 5100c008     	sub	w8, w0, #0x30
+  71fe78: 12001d08     	and	w8, w8, #0xff
+  71fe7c: 7100291f     	cmp	w8, #0xa
+  71fe80: 1a9f27e0     	cset	w0, lo
+  71fe84: a9414ff4     	ldp	x20, x19, [sp, #0x10]
+  71fe88: a8c27bfd     	ldp	x29, x30, [sp], #0x20
+  71fe8c: d50323bf     	autiasp
+  71fe90: d65f03c0     	ret
+
+# libwhatsapp.so: Checked user decomposition
+  720d1c: d503233f     	paciasp
+  720d20: a9be7bfd     	stp	x29, x30, [sp, #-0x20]!
+  720d24: f9000bf3     	str	x19, [sp, #0x10]
+  720d28: 910003fd     	mov	x29, sp
+  720d2c: aa0003f3     	mov	x19, x0
+  720d30: 97fffde3     	bl	0x7204bc <op_read+0x6cc88>
+  720d34: 360000c0     	tbz	w0, #0x0, 0x720d4c <op_read+0x6d518>
+  720d38: aa1303e0     	mov	x0, x19
+  720d3c: f9400bf3     	ldr	x19, [sp, #0x10]
+  720d40: a8c27bfd     	ldp	x29, x30, [sp], #0x20
+  720d44: d50323bf     	autiasp
+  720d48: 17ffff99     	b	0x720bac <op_read+0x6d378>
+  720d4c: 941715e9     	bl	0xce64f0 <abort@plt>
+
+# libwhatsapp.so: User/device decomposition
+  720bac: d503233f     	paciasp
+  720bb0: a9bd7bfd     	stp	x29, x30, [sp, #-0x30]!
+  720bb4: a90157f6     	stp	x22, x21, [sp, #0x10]
+  720bb8: a9024ff4     	stp	x20, x19, [sp, #0x20]
+  720bbc: 910003fd     	mov	x29, sp
+  720bc0: aa0003f3     	mov	x19, x0
+  720bc4: 97fff751     	bl	0x71e908 <op_read+0x6b0d4>
+  720bc8: aa0003e1     	mov	x1, x0
+  720bcc: aa1303e0     	mov	x0, x19
+  720bd0: 9417218c     	bl	0xce9200 <MCFASCIIStringCreateArrayBySeparatingStrings@plt>
+  720bd4: aa0003f4     	mov	x20, x0
+  720bd8: 94171f0a     	bl	0xce8800 <MCFArrayGetCount@plt>
+  720bdc: 7100081f     	cmp	w0, #0x2
+  720be0: 54000281     	b.ne	0x720c30 <op_read+0x6d3fc>
+  720be4: aa1403e0     	mov	x0, x20
+  720be8: 2a1f03e1     	mov	w1, wzr
+  720bec: 94171f09     	bl	0xce8810 <MCFArrayGetValueAtIndex@plt>
+  720bf0: aa0003f3     	mov	x19, x0
+  720bf4: aa1403e0     	mov	x0, x20
+  720bf8: 52800021     	mov	w1, #0x1                // =1
+  720bfc: 94171f05     	bl	0xce8810 <MCFArrayGetValueAtIndex@plt>
+  720c00: aa0003f5     	mov	x21, x0
+  720c04: 97fff75d     	bl	0x71e978 <op_read+0x6b144>
+  720c08: aa0003e1     	mov	x1, x0
+  720c0c: aa1503e0     	mov	x0, x21
+  720c10: 9417217c     	bl	0xce9200 <MCFASCIIStringCreateArrayBySeparatingStrings@plt>
+  720c14: aa0003f5     	mov	x21, x0
+  720c18: b4000300     	cbz	x0, 0x720c78 <op_read+0x6d444>
+  720c1c: aa1503e0     	mov	x0, x21
+  720c20: 94171ef8     	bl	0xce8800 <MCFArrayGetCount@plt>
+  720c24: 7100081f     	cmp	w0, #0x2
+  720c28: 54000200     	b.eq	0x720c68 <op_read+0x6d434>
+  720c2c: 14000013     	b	0x720c78 <op_read+0x6d444>
+  720c30: 97fff752     	bl	0x71e978 <op_read+0x6b144>
+  720c34: aa0003e1     	mov	x1, x0
+  720c38: aa1303e0     	mov	x0, x19
+  720c3c: 94172171     	bl	0xce9200 <MCFASCIIStringCreateArrayBySeparatingStrings@plt>
+  720c40: aa0003f5     	mov	x21, x0
+  720c44: b40001a0     	cbz	x0, 0x720c78 <op_read+0x6d444>
+  720c48: aa1503e0     	mov	x0, x21
+  720c4c: 94171eed     	bl	0xce8800 <MCFArrayGetCount@plt>
+  720c50: 7100081f     	cmp	w0, #0x2
+  720c54: 54000121     	b.ne	0x720c78 <op_read+0x6d444>
+  720c58: aa1503e0     	mov	x0, x21
+  720c5c: 2a1f03e1     	mov	w1, wzr
+  720c60: 94171eec     	bl	0xce8810 <MCFArrayGetValueAtIndex@plt>
+  720c64: aa0003f3     	mov	x19, x0
+  720c68: aa1503e0     	mov	x0, x21
+  720c6c: 52800021     	mov	w1, #0x1                // =1
+  720c70: 94171ee8     	bl	0xce8810 <MCFArrayGetValueAtIndex@plt>
+  720c74: 14000002     	b	0x720c7c <op_read+0x6d448>
+  720c78: 97fff794     	bl	0x71eac8 <op_read+0x6b294>
+  720c7c: aa0003f6     	mov	x22, x0
+  720c80: aa1303e0     	mov	x0, x19
+  720c84: 94171dc3     	bl	0xce8390 <MCFRetain@plt>
+  720c88: aa1603e0     	mov	x0, x22
+  720c8c: 94171db5     	bl	0xce8360 <MCFASCIIStringGetCString@plt>
+  720c90: aa1f03e1     	mov	x1, xzr
+  720c94: 52800142     	mov	w2, #0xa                // =10
+  720c98: 94171d06     	bl	0xce80b0 <strtol@plt>
+  720c9c: b26187e8     	mov	x8, #-0x7fffffff        // =-2147483647
+  720ca0: eb08001f     	cmp	x0, x8
+  720ca4: 5400006a     	b.ge	0x720cb0 <op_read+0x6d47c>
+  720ca8: 52b00016     	mov	w22, #-0x80000000       // =-2147483648
+  720cac: 14000011     	b	0x720cf0 <op_read+0x6d4bc>
+  720cb0: aa1603e0     	mov	x0, x22
+  720cb4: 94171dab     	bl	0xce8360 <MCFASCIIStringGetCString@plt>
+  720cb8: aa1f03e1     	mov	x1, xzr
+  720cbc: 52800142     	mov	w2, #0xa                // =10
+  720cc0: 94171cfc     	bl	0xce80b0 <strtol@plt>
+  720cc4: 321f77e8     	mov	w8, #0x7ffffffe         // =2147483646
+  720cc8: eb08001f     	cmp	x0, x8
+  720ccc: 5400006d     	b.le	0x720cd8 <op_read+0x6d4a4>
+  720cd0: 12b00016     	mov	w22, #0x7fffffff        // =2147483647
+  720cd4: 14000007     	b	0x720cf0 <op_read+0x6d4bc>
+  720cd8: aa1603e0     	mov	x0, x22
+  720cdc: 94171da1     	bl	0xce8360 <MCFASCIIStringGetCString@plt>
+  720ce0: aa1f03e1     	mov	x1, xzr
+  720ce4: 52800142     	mov	w2, #0xa                // =10
+  720ce8: 94171cf2     	bl	0xce80b0 <strtol@plt>
+  720cec: 2a0003f6     	mov	w22, w0
+  720cf0: aa1403e0     	mov	x0, x20
+  720cf4: 941715fb     	bl	0xce64e0 <MCFRelease@plt>
+  720cf8: aa1503e0     	mov	x0, x21
+  720cfc: 941715f9     	bl	0xce64e0 <MCFRelease@plt>
+  720d00: aa1303e0     	mov	x0, x19
+  720d04: aa1603e1     	mov	x1, x22
+  720d08: a9424ff4     	ldp	x20, x19, [sp, #0x20]
+  720d0c: a94157f6     	ldp	x22, x21, [sp, #0x10]
+  720d10: a8c37bfd     	ldp	x29, x30, [sp], #0x30
+  720d14: d50323bf     	autiasp
+  720d18: d65f03c0     	ret
+
+# libwhatsapp.so: Device LID constructor
+  71da6c: d503233f     	paciasp
+  71da70: a9bd7bfd     	stp	x29, x30, [sp, #-0x30]!
+  71da74: f9000bf5     	str	x21, [sp, #0x10]
+  71da78: a9024ff4     	stp	x20, x19, [sp, #0x20]
+  71da7c: 910003fd     	mov	x29, sp
+  71da80: 37f802a1     	tbnz	w1, #0x1f, 0x71dad4 <op_read+0x6a2a0>
+  71da84: 2a0103f3     	mov	w19, w1
+  71da88: 7101903f     	cmp	w1, #0x64
+  71da8c: 54000262     	b.hs	0x71dad8 <op_read+0x6a2a4>
+  71da90: aa0003f4     	mov	x20, x0
+  71da94: 9400048b     	bl	0x71ecc0 <op_read+0x6b48c>
+  71da98: 52800601     	mov	w1, #0x30               // =48
+  71da9c: aa1f03e2     	mov	x2, xzr
+  71daa0: aa1f03e3     	mov	x3, xzr
+  71daa4: 94172a93     	bl	0xce84f0 <MCFRuntimeCreateInstance@plt>
+  71daa8: aa1403e1     	mov	x1, x20
+  71daac: 2a1303e2     	mov	w2, w19
+  71dab0: 528000a3     	mov	w3, #0x5                // =5
+  71dab4: aa0003f5     	mov	x21, x0
+  71dab8: 97ffffa3     	bl	0x71d944 <op_read+0x6a110>
+  71dabc: a9424ff4     	ldp	x20, x19, [sp, #0x20]
+  71dac0: aa1503e0     	mov	x0, x21
+  71dac4: f9400bf5     	ldr	x21, [sp, #0x10]
+  71dac8: a8c37bfd     	ldp	x29, x30, [sp], #0x30
+  71dacc: d50323bf     	autiasp
+  71dad0: d65f03c0     	ret
+  71dad4: 94172287     	bl	0xce64f0 <abort@plt>
+  71dad8: 94172286     	bl	0xce64f0 <abort@plt>
+
+# libwhatsapp.so: Device fields and formatted user
+  71d944: d503233f     	paciasp
+  71d948: a9bc7bfd     	stp	x29, x30, [sp, #-0x40]!
+  71d94c: f9000bf7     	str	x23, [sp, #0x10]
+  71d950: a90257f6     	stp	x22, x21, [sp, #0x20]
+  71d954: a9034ff4     	stp	x20, x19, [sp, #0x30]
+  71d958: 910003fd     	mov	x29, sp
+  71d95c: 71002c7f     	cmp	w3, #0xb
+  71d960: 540004a8     	b.hi	0x71d9f4 <op_read+0x6a1c0>
+  71d964: 52800028     	mov	w8, #0x1                // =1
+  71d968: 5281de29     	mov	w9, #0xef1              // =3825
+  71d96c: 2a0303f6     	mov	w22, w3
+  71d970: 1ac32108     	lsl	w8, w8, w3
+  71d974: 6a09011f     	tst	w8, w9
+  71d978: 540003e0     	b.eq	0x71d9f4 <op_read+0x6a1c0>
+  71d97c: aa0003f4     	mov	x20, x0
+  71d980: aa0103e0     	mov	x0, x1
+  71d984: 2a0203f3     	mov	w19, w2
+  71d988: aa0103f5     	mov	x21, x1
+  71d98c: 94172a75     	bl	0xce8360 <MCFASCIIStringGetCString@plt>
+  71d990: aa0003e1     	mov	x1, x0
+  71d994: f0ffd0a0     	adrp	x0, 0x134000
+  71d998: 911ea800     	add	x0, x0, #0x7aa
+  71d99c: 2a1303e2     	mov	w2, w19
+  71d9a0: 94172be8     	bl	0xce8940 <MCFASCIIStringCreateWithFormat@plt>
+  71d9a4: b4000260     	cbz	x0, 0x71d9f0 <op_read+0x6a1bc>
+  71d9a8: aa0003f7     	mov	x23, x0
+  71d9ac: aa1403e0     	mov	x0, x20
+  71d9b0: 528000a1     	mov	w1, #0x5                // =5
+  71d9b4: aa1703e2     	mov	x2, x23
+  71d9b8: 2a1603e3     	mov	w3, w22
+  71d9bc: 9400011b     	bl	0x71de28 <op_read+0x6a5f4>
+  71d9c0: aa1503e0     	mov	x0, x21
+  71d9c4: 94172d8f     	bl	0xce9000 <MCFASCIIStringCreateCopy@plt>
+  71d9c8: aa0003e8     	mov	x8, x0
+  71d9cc: b9004293     	str	w19, [x20, #0x40]
+  71d9d0: aa1703e0     	mov	x0, x23
+  71d9d4: f9001e88     	str	x8, [x20, #0x38]
+  71d9d8: a9434ff4     	ldp	x20, x19, [sp, #0x30]
+  71d9dc: a94257f6     	ldp	x22, x21, [sp, #0x20]
+  71d9e0: f9400bf7     	ldr	x23, [sp, #0x10]
+  71d9e4: a8c47bfd     	ldp	x29, x30, [sp], #0x40
+  71d9e8: d50323bf     	autiasp
+  71d9ec: 141722bd     	b	0xce64e0 <MCFRelease@plt>
+  71d9f0: 941722c0     	bl	0xce64f0 <abort@plt>
+  71d9f4: 941722bf     	bl	0xce64f0 <abort@plt>
+
+# libwhatsapp.so: Canonical user/server string
+  71de28: d503233f     	paciasp
+  71de2c: a9bc7bfd     	stp	x29, x30, [sp, #-0x40]!
+  71de30: f9000bf7     	str	x23, [sp, #0x10]
+  71de34: a90257f6     	stp	x22, x21, [sp, #0x20]
+  71de38: a9034ff4     	stp	x20, x19, [sp, #0x30]
+  71de3c: 910003fd     	mov	x29, sp
+  71de40: 2a0303f3     	mov	w19, w3
+  71de44: aa0203f5     	mov	x21, x2
+  71de48: 2a0103f6     	mov	w22, w1
+  71de4c: 7100203f     	cmp	w1, #0x8
+  71de50: aa0003f4     	mov	x20, x0
+  71de54: 540003a2     	b.hs	0x71dec8 <op_read+0x6a694>
+  71de58: aa1503e0     	mov	x0, x21
+  71de5c: 94172941     	bl	0xce8360 <MCFASCIIStringGetCString@plt>
+  71de60: aa0003f7     	mov	x23, x0
+  71de64: 2a1303e0     	mov	w0, w19
+  71de68: 94000334     	bl	0x71eb38 <op_read+0x6b304>
+  71de6c: 9417293d     	bl	0xce8360 <MCFASCIIStringGetCString@plt>
+  71de70: aa0003e2     	mov	x2, x0
+  71de74: b0ffcd80     	adrp	x0, 0xce000
+  71de78: 911f3800     	add	x0, x0, #0x7ce
+  71de7c: aa1703e1     	mov	x1, x23
+  71de80: 94172ab0     	bl	0xce8940 <MCFASCIIStringCreateWithFormat@plt>
+  71de84: b4000280     	cbz	x0, 0x71ded4 <op_read+0x6a6a0>
+  71de88: b9001a96     	str	w22, [x20, #0x18]
+  71de8c: aa0003f6     	mov	x22, x0
+  71de90: 94172c5c     	bl	0xce9000 <MCFASCIIStringCreateCopy@plt>
+  71de94: f9001280     	str	x0, [x20, #0x20]
+  71de98: aa1503e0     	mov	x0, x21
+  71de9c: 94172c59     	bl	0xce9000 <MCFASCIIStringCreateCopy@plt>
+  71dea0: aa0003e8     	mov	x8, x0
+  71dea4: aa1603e0     	mov	x0, x22
+  71dea8: b9003293     	str	w19, [x20, #0x30]
+  71deac: f9001688     	str	x8, [x20, #0x28]
+  71deb0: a9434ff4     	ldp	x20, x19, [sp, #0x30]
+  71deb4: a94257f6     	ldp	x22, x21, [sp, #0x20]
+  71deb8: f9400bf7     	ldr	x23, [sp, #0x10]
+  71debc: a8c47bfd     	ldp	x29, x30, [sp], #0x40
+  71dec0: d50323bf     	autiasp
+  71dec4: 14172187     	b	0xce64e0 <MCFRelease@plt>
+  71dec8: 710032df     	cmp	w22, #0xc
+  71decc: 54fffc60     	b.eq	0x71de58 <op_read+0x6a624>
+  71ded0: 94172188     	bl	0xce64f0 <abort@plt>
+  71ded4: 94172187     	bl	0xce64f0 <abort@plt>

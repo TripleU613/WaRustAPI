@@ -456,3 +456,18 @@ check passed. Repository hygiene checked 349 local links; staged whitespace
 checks passed. All ten V3/shared-V4 tests passed again after restricting hooks
 to the selected scheme. Rust runtime code was unchanged; no live validation
 is claimed for this offline research-tool change.
+
+V3 equality/LID follow-up (static, 2026-10-07): registered ASCII equality is
+length-sensitive byte equality, including case-sensitive usernames. JID
+equality uses the constructed full string. The scanned LID path parses and
+flattens device-zero objects before requiring primary category and LID kind;
+nonzero companions fail that guard. Exact validator bounds are preserved.
+Actual parser/class-runtime execution and full binary V3 comparison remain
+open; no account or live action changed.
+[Equality/LID evidence](docs/protocol/safety-number.md#v3-equality-callbacks-and-primary-lid-conversion-2026-10-07).
+
+Validation (static/offline): APK, main and merged hashes matched the pinned
+build. Fresh extraction matched all 18 ASCII comparator instructions. CLI
+reference regeneration/test passed, repository hygiene checked 354 local
+links and staged whitespace checks passed. This change adds attributed research
+only; it does not execute the native parser or change runtime/account behavior.
