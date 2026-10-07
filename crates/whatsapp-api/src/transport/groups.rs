@@ -312,22 +312,42 @@ pub fn parse_group(node: &Node) -> Option<GroupSnapshot> {
     } else {
         format!("{jid}@g.us")
     };
-    let members = node
+    let mut members: Vec<Member> = Vec::new();
+    let mut member_indices = std::collections::HashMap::new();
+    for participant in node
         .child_nodes()
         .iter()
         .filter(|c| c.description == "participant")
+    {
         // A `<participant>` carrying `error` is one the server refused to add
         // (**observed** 2026-09-22 on a `group create` reply: the snapshot said
         // two members while the next info fetch said one, and the fan-out then
         // had nobody to address). It is not a member, so it is not counted.
-        .filter(|c| c.get_attr("error").is_none())
-        .filter_map(|c| {
-            Some(Member {
-                jid: attr_string(c, "jid")?,
-                role: attr_string(c, "type"),
-            })
-        })
-        .collect();
+        if participant.get_attr("error").is_some() {
+            continue;
+        }
+        // APK 37.71 ADs.A05 002e..0046 casts jid to UserJid and skips null;
+        // DeviceJid extends Jid directly, not UserJid. Our user-level snapshot
+        // uses the supported user-like namespaces without an agent/device.
+        let Some(jid) = attr_string(participant, "jid")
+            .and_then(|raw| Jid::parse(&raw).ok())
+            .filter(|jid| jid.is_user_like() && !jid.is_ad())
+        else {
+            continue;
+        };
+        let member = Member {
+            jid: jid.to_string(),
+            role: attr_string(participant, "type"),
+        };
+        // ADs.A05 016c..0172 uses Map.put on 1xf.A1H's LinkedHashMap:
+        // last value wins, with the first insertion position retained.
+        if let Some(&index) = member_indices.get(&member.jid) {
+            members[index] = member;
+        } else {
+            member_indices.insert(member.jid.clone(), members.len());
+            members.push(member);
+        }
+    }
     Some(GroupSnapshot {
         jid,
         subject: attr_string(node, "subject"),
@@ -1012,6 +1032,76 @@ mod tests {
         let snapshot = parse_group(&group).unwrap();
         assert_eq!(snapshot.members.len(), 1);
         assert_eq!(snapshot.members[0].jid, "15551234567@s.whatsapp.net");
+    }
+
+    #[test]
+    fn member_map_uses_user_identities_and_last_duplicate_role() {
+        // Synthetic ADs.A05 branch fixture: typed user JIDs, skipped casts,
+        // LinkedHashMap replacement, plus our observed create-error exclusion.
+        let alice = Jid::parse("15550000001@s.whatsapp.net").unwrap();
+        let bob = Jid::parse("90000000002@lid").unwrap();
+        let mut children = vec![
+            Node::new("participant")
+                .attr("jid", alice.clone())
+                .attr("type", "admin"),
+            Node::new("participant").attr("jid", bob.clone()),
+            Node::new("participant")
+                .attr("jid", alice.to_string())
+                .attr("type", "superadmin"),
+            Node::new("participant")
+                .attr("jid", bob.clone())
+                .attr("error", "403"),
+            Node::new("participant"),
+        ];
+        for invalid in [
+            "",
+            "broken",
+            "s.whatsapp.net",
+            "120363000000000001@g.us",
+            "status@broadcast",
+            "15550000001:1@s.whatsapp.net",
+            "90000000002.1@lid",
+        ] {
+            children.push(Node::new("participant").attr("jid", invalid));
+        }
+        let node = Node::new("group")
+            .attr("id", "120363000000000001@g.us")
+            .children(children);
+        let (_dir, s) = store();
+        assert!(record_info_reply(&s, &Node::new("iq").children(vec![node])).unwrap());
+        let snapshot = get(&s, &Jid::parse("120363000000000001@g.us").unwrap())
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            snapshot.members,
+            vec![
+                Member {
+                    jid: alice.to_string(),
+                    role: Some("superadmin".into())
+                },
+                Member {
+                    jid: bob.to_string(),
+                    role: None
+                },
+            ]
+        );
+        let events = s
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("member-map-test")?,
+                    crate::model::ids::EventCursor::START,
+                    64,
+                )
+            })
+            .unwrap();
+        let SyncEvent::GroupCreated(created) = &events.events[0].event else {
+            panic!("expected group creation")
+        };
+        assert_eq!(
+            created.participants.len(),
+            2,
+            "journal must not contain duplicate or invalid members"
+        );
     }
 
     /// A reaction and a media status carry the same markers their direct

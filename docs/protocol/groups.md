@@ -1456,3 +1456,94 @@ Validation: 572 workspace/all-feature tests, 24 default-feature CLI tests,
 strict workspace/all-target/all-feature Clippy, warning-free Rustdoc, generated
 CLI reference, five OpenAPI checks, formatting, staged whitespace and repository
 hygiene (390 local links) passed. Group notification handling remains incomplete.
+
+
+## Typed participant map and duplicate roles (2026-10-07)
+
+**Confirmed/static, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Scoped participant evidence](group-participant-evidence.txt) contains the map
+parser, typed reader, factory and metadata helper boundaries.
+`ADs.A0C` invokes `ADs.A05` for the member map at 01a6..01ac when its
+mode's low bit is set; mode 3 from 9PN/9PP satisfies that branch. It derives
+size from the returned map unless a size attribute parses (01ae..01d0).
+This is a map-cardinality fallback, not proof size must match raw child count.
+
+`ADs.A05` gets participant children (000a..0026), reads jid as UserJid and
+skips a null typed result (002e..0046). **Refuted concern:** skipping missing
+or uncastable participant JIDs is also APK behavior; it is not evidence by
+itself that our snapshot must reject every such element. `0hs.A0A` uses a
+cached JID attribute or the Jid companion parser, calls isProtocolCompliant,
+logs noncompliance, and proceeds to the class cast (0000..00b0). Failed casts
+log and return null (00b8..00f6). The compliance check is not an unconditional
+refusal guard. Full companion factory and subclass compliance rules remain
+**unknown** in this trace.
+
+`1xf.A1H` constructs LinkedHashMap (0000..000c); `ADs.A05` uses Map.put at
+016c..0172. Repeated typed JIDs therefore replace the prior value while
+retaining first insertion position. The parser defaults missing type to an
+empty string (0058..0074). No allowed-role enum check is present in that
+scoped extraction; roles beyond the ordinary admin/superadmin vocabulary are
+not assigned new semantics here.
+
+**Confirmed class hierarchy:** APK class_def superclass indices establish
+DeviceJid extends Jid directly (classes.dex 0x152e40), while PhoneUserJid
+extends UserJid (0x152c00), which extends 0Cy (0x152be0). DeviceJid is not a
+UserJid subclass through that branch. These offsets are class_def headers,
+not method offsets. A local Python ZIP/DEX header read used class_defs_off
+at header 0x64, 32-byte class definitions, superclass_idx at entry +8, and
+type/string ID tables at header 0x44/0x3c. The output also locates 9Lm
+extending 0ZX (classes6.dex 0x105c80); its full ancestry is not established.
+
+**Confirmed/local mismatch and correction:** our Vec accepted any raw
+participant jid string and retained duplicate entries. It now parses through
+our existing Jid type, keeps supported user-like non-device identities, and
+replaces a duplicate's role at its original position. Missing, unparseable,
+non-user, empty-user or agent/device identities are skipped. This is our
+supported user-level representation; it does not claim full equivalence to
+every APK JID subclass or compliance predicate. Error-bearing participants
+remain excluded by the separately observed create-refusal rule from 2026-09-22.
+A later refused duplicate does not erase a previously accepted member.
+Absent role still uses None in our model, representing the APK's empty default.
+
+`member_map_uses_user_identities_and_last_duplicate_role` is a synthetic
+fixture grounded in the typed-cast/LinkedHashMap branches. It combines a typed
+PN and LID, a repeated text PN with a new role, an error-bearing duplicate,
+missing/invalid/non-user/device/agent JIDs, then checks the saved unique members
+and GroupCreated journal participant count. Existing refusal and full-reply
+persistence tests continue to pass. No saved snapshots were rewritten or
+backfilled: this behavior applies to subsequently ingested replies.
+Reproduce with `cargo test --locked -p whatsapp-api --all-features
+member_map_uses_user_identities_and_last_duplicate_role`. `group list` retains
+the existing operator inspection path. A dedicated role-change event is not
+implemented; role changes update the snapshot, while the existing event model
+only describes subject and participant additions/removals.
+
+**Confirmed/static extra fields, still incomplete:** ADs.A05 additionally
+reads lid as UserJid (0074..008a), display_name with a StringUtils predicate
+(008a..00a8), phone_number as UserJid (00a8..00f6), join_time accepted only
+when a parsed long is positive (010e..0142), and group_history_sent through
+0CM.A0P (0142..0160). A PN predicate and equality trigger a diagnostic for
+phone_number with a PN jid (00bc..00f4), rather than a demonstrated refusal.
+0DE.A0e/A0X, display-name filtering, history-flag conversion and the 32q
+result factory remain **unknown**. Do not use these attribute names alone to
+manufacture PN/LID bindings or change Signal identity pins.
+
+**Negative producer correction:** ADs.A07 is not the primary member parser.
+It gates on 8kV.A1V, builds username mappings from participant jid/username,
+creator/creator_username, s_o/s_o_username and description
+participant/participant_username (0026..0094). ADs.A06 gates on the same
+predicate, reads creator as UserJid and creator_country_code, converts with
+C9h.A00, then creates CTQ when both exist (0000..005e). The feature predicate,
+country-code interpretation and complete alias application remain **unknown**.
+These optional producers do not establish a mandatory registration/device field.
+No alias, name, history state or country metadata is added to runtime snapshots
+in this change. Full notification/batch application remains unfinished.
+
+No saved account was opened or live request sent for this change; live
+participant-map behavior against this client remains unverified.
+
+Validation: 573 workspace/all-feature tests, 24 default-feature CLI tests,
+strict workspace/all-target/all-feature Clippy, warning-free Rustdoc, generated
+CLI reference, five OpenAPI checks, formatting, staged whitespace and repository
+hygiene (393 local links) passed. No live participant-map validation occurred.

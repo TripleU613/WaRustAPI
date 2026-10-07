@@ -939,3 +939,19 @@ Validation: 572 workspace/all-feature tests, 24 default-feature CLI tests,
 strict workspace/all-target/all-feature Clippy, warning-free Rustdoc, generated
 CLI reference, five OpenAPI checks, formatting, staged whitespace and repository
 hygiene (390 local links) passed. Group notification handling remains incomplete.
+
+
+Typed group participants (2026-10-07, **offline**): the snapshot parser now
+keeps supported user-level JIDs and applies APK linked-map duplicate behavior:
+one entry per JID, last role wins, first position retained. Refused participant
+entries remain excluded. The saved snapshot and GroupCreated journal regression
+covers typed/text duplicates and missing/invalid/non-user/device entries.
+APK alias/name/history/country metadata producers are traced but not applied;
+role-change events and full group notification handling remain incomplete.
+[Participant evidence](protocol/groups.md#typed-participant-map-and-duplicate-roles-2026-10-07).
+No account was opened or live request sent.
+
+Validation: 573 workspace/all-feature tests, 24 default-feature CLI tests,
+strict workspace/all-target/all-feature Clippy, warning-free Rustdoc, generated
+CLI reference, five OpenAPI checks, formatting, staged whitespace and repository
+hygiene (393 local links) passed. No live participant-map validation occurred.
