@@ -513,6 +513,13 @@ enum Cmd {
         #[arg(long)]
         request: bool,
     },
+    /// Inspect one saved device query offline; counts only, never reserves or resets.
+    #[cfg(feature = "experimental-transport")]
+    DeviceQuery {
+        /// Existing query ID from the send-preparation log.
+        #[arg(long)]
+        id: String,
+    },
     /// Manage the local address book and its WhatsApp-existence checks (offline).
     #[cfg(feature = "experimental-transport")]
     Contacts {
@@ -1553,6 +1560,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         } => transport_receive::report(&cli, chat, flow.as_deref(), *known_chat),
         #[cfg(feature = "experimental-transport")]
         Cmd::Devices { chat, request } => transport_receive::devices(&cli, chat, *request),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::DeviceQuery { id } => transport_receive::device_query(&cli, id),
         #[cfg(feature = "experimental-transport")]
         Cmd::Contacts { action } => transport_receive::contacts(&cli, action),
         #[cfg(feature = "experimental-transport")]

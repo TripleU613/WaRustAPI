@@ -905,3 +905,37 @@ redaction, explicit hash, repeated counts and content-free refusal passed. No
 canonical account opened or live operation performed. 639 workspace tests and
 24 default CLI tests, strict Clippy/Rustdoc/reference/hygiene passed.
 [Reasoning, sources, negative results and reproduction](groups.md#saved-device-hash-planning-2026-10-07).
+
+
+### Scoped send-preparation device queries (2026-10-07)
+
+**Observed local correction:** lab group/status fetch_devices formerly queried
+only one global 64-user batch and returned success even on refused/partial
+refreshes; cached lists could then permit preparation. Selected pending batches
+now reserve atomically, process a fixed recipient set once, and require accepted
+complete per-user replies before advancing. Distinct-user accounting prevents
+duplicate rows hiding omissions. QueryRecord's new omitted_users is nullable:
+historical/unsettled unknown stays null, never inferred from old counts. CLI
+device-query exposes saved status/counts and numeric codes only, no HTTP/reset.
+**Confirmed substrate:** APK 37.71 0u7.A06/C8f, SyncDevicesJob presets and
+11T.A07/A08 previously selected request/parsing/verification traces. The 64-user
+bound and completeness guard are local policy, not newly proven APK requirements.
+**Observed offline:** 130 targets settle 64/64/2, unrelated pending remains;
+503 with old lists and duplicate-row omission block; explicit later 404 keeps
+prior state, refused record stays refused; reopen/null/redaction cases pass.
+**Unknown:** live large-group batches, own account sync, complete ADV-key/fresh
+source selection and public-outbox group parity. No APK snapshot change claimed.
+[Reasoning, negative cases and reproduction](messaging-transport.md#scoped-device-batches-and-completeness-2026-10-07).
+
+
+**Observed live follow-up, same chunk:** a 20-second receive-only session after
+zero-send/action/receipt/device-pending preflight completed one existing-peer
+device read. Saved query: server_acknowledged, one requested/ingested user,
+zero partial errors/omissions, no code; pending users returned to zero. Retained
+one primary/no signed index list, companions unverified. Nine ACKed receipts
+and action counts (1 error/15 ok/1 sent) stayed unchanged; no chat send occurred.
+Default incoming-only logging hid the INFO counters and caused a harness-only
+assertion failure; the same completed session was inspected, never restarted.
+This proves shared one-user accounting, not live selected multi-batch/group send.
+644 workspace tests, default24, strict Clippy/Rustdoc/reference passed; actual
+synthetic/query CLI redaction and canonical saved-query inspection passed.

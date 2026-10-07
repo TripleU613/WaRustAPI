@@ -2725,3 +2725,11 @@ coverage additions are not upstream protocol changes. Its [cached diff](apk/grou
 took **0.045388 seconds**, against ignored baseline Git **0e216b2**.
 Manifest/inventory/tokens remain unchanged; string-free helpers retain explicit
 manual relocation requirements. Complete APK/native remapping is still unfinished.
+
+
+**Send preparation follow-up (2026-10-07):** device requests now process every
+selected recipient batch once, excluding unrelated pending contacts. Top-level
+refusals, per-user errors and omitted requested users stop before message
+reservation even when cached lists exist. Candidate fanout-inspect output is
+still offline saved-state information, not proof that live preparation passed.
+[Scoped batching, durable query inspection and remaining limits](messaging-transport.md#scoped-device-batches-and-completeness-2026-10-07).

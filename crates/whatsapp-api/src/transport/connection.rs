@@ -440,7 +440,7 @@ pub(crate) async fn drive(
                     }
                     if device_query.as_ref().is_some_and(|q| q.matches(&node)) {
                         let summary = device_query.take().expect("matched device query").ingest(&store, &node)?;
-                        tracing::info!(ingested = summary.ingested, partial_errors = summary.partial_errors, "device lists updated");
+                        tracing::info!(accepted = summary.accepted, ingested = summary.ingested, partial_errors = summary.partial_errors, omitted_users = summary.omitted_users, "device query settled");
                         continue;
                     }
                     if upload.as_ref().is_some_and(|u| u.matches(&node)) {

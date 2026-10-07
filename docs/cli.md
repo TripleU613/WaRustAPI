@@ -703,6 +703,18 @@ Usage: whatsapp-cli devices [OPTIONS]...
 | --chat | CHAT | yes |  |  |  | Contact JID, e.g. 15551234567@s.whatsapp.net |
 | --request | REQUEST | no |  |  | `true`, `false` | Record the contact for the next `usync devices` query (offline) |
 
+## whatsapp-cli device-query
+
+Inspect one saved device query offline; counts only, never reserves or resets
+
+```
+Usage: whatsapp-cli device-query [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --id | ID | yes |  |  |  | Existing query ID from the send-preparation log |
+
 ## whatsapp-cli contacts
 
 Manage the local address book and its WhatsApp-existence checks (offline)

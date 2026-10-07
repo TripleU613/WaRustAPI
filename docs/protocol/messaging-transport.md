@@ -946,3 +946,141 @@ send was enabled. This verifies direct/group saved-message read receipt
 acceptance; it does not confirm handset blue ticks or a fresh incoming automatic
 read. Private selectors and redacted outcomes remain under ignored account
 storage. No automatic retry of these acknowledged receipts is permitted.
+
+
+### Scoped device batches and completeness (2026-10-07)
+
+**Confirmed static protocol substrate, APK 2.26.37.71:** the selected
+`0u7.A06` request layout and C8f user/device/error parsing, `11T.A07/A08`
+signed-list reconciliation, and SyncDevicesJob query presets remain the
+sources cited in the contact-device section above. This correction changes
+local selection, accounting and send preparation; it does not establish a new
+APK/server limit or claim that the APK applies our completeness policy.
+
+**Observed local bugs:** `transport_group_send::fetch_devices` recorded every
+recipient as pending, then called global `begin_query` once. That selected only
+64 pending users, including unrelated contacts that sorted before recipients.
+Groups larger than the local batch size could remain unfetched. Worse, the
+caller printed accepted=false/per-user errors and returned success; existing
+cached device lists could then let planning proceed despite the failed refresh.
+A matching IQ result with omitted users had the same problem. These were our
+plumbing failures, not a WhatsApp requirement or evidence that a server refusal
+could be bypassed by cached state.
+
+**Implemented:** `devices::begin_query_for_users(store, context, users)` selects
+only the explicit pending batch, normalizes to user addresses and deduplicates
+model identities. At most 64 supplied entries is a **local bound**, not a server
+maximum. Pending validation and durable query reservation share the write
+transaction; missing/invalid/oversized inputs create no query or state changes.
+An empty selection returns None. It uses the same usync v2 node builder as global
+begin_query: a fresh opaque sid/ID, index=0/last=true, mode=query, and explicit
+context. Each batch is an independent read, not an unimplemented multi-index
+protocol stream. Background global selection remains available.
+
+Group/status lab send preparation captures and deduplicates its recipient
+snapshot, records those recipients, and processes fixed chunks once in message
+context. It never loops until the global pending queue empties. The reservation
+ID and batch/user count are logged before the write; socket uncertainty or
+refusal exits without another batch or message reservation. Matching replies
+are committed before their completion guard runs. A later explicit read may
+query pending users again under the established read policy; the failed query's
+ID/status is never reset and this preparation has no automatic retry.
+
+`IngestSummary` now counts distinct ingested and errored requested users and
+reports **omitted_users**: requested identities with no recognized user row.
+Duplicate recognized rows cannot inflate success to cover a missing identity;
+row reconciliation itself still follows the existing loop. A requested user
+represented by devices/error is a partial error rather than an omission.
+Unrequested or invalid-owner rows do not settle a requested user. A malformed
+requested device row still aborts the transaction, preserving unknown outcome,
+old lists and pending markers. A top-level refusal represents no user rows and
+records the corresponding omitted count; that does not claim “missing field”
+is the server's refusal reason.
+
+`IngestSummary::require_complete` stops send preparation on accepted=false,
+any per-user errors, or any omissions, with content-free count/category
+messages. It does not promote server_acknowledged to complete: an IQ result
+can be saved successfully while selected users remain unresolved. Old cached
+lists cannot satisfy this guard. Earlier complete batches and successfully
+reconciled users in a partial batch stay saved; errored/omitted users keep
+pending markers and prior lists. No message/session reservation or outbound
+chat occurs after that preparation failure. Own-account device sync is still
+separate and unimplemented; no own identity or companion set is fabricated.
+No SMS/voice wait, saved refusal, primary key or chat request ID is reset.
+
+QueryRecord persists nullable omitted_users with serde default. **Historical
+and unsettled records retain null/unknown**, even when old aggregate counts
+look complete; no identity/store migration or inferred retroactive success.
+The existing refusal regression has two pending users, including an earlier
+per-user failure; the new count honestly reports two rather than the old
+Default summary's absent accounting. This also illustrates why a send's
+selected recipients must not silently drain global pending users.
+
+**Implemented offline inspection:**
+
+```sh
+whatsapp-cli --profile <saved-profile> device-query --id <existing-query-id>
+```
+
+No HTTP handler exists. It reads an existing query without login, queuing,
+projection, reservation or reset. Output always includes offline_only/found;
+found records include status, requested_users, ingested, partial_errors,
+omitted_users (nullable unknown) and a bounded numeric code or null. It omits
+addresses, supplied ID, timestamps and raw response text. Unknown IDs return
+found=false, invalid IDs refuse without echo. A nonnumeric saved code is not
+printed or replaced by an invented recognized value. Existing `devices`
+inspection/request behavior remains available. Receive logs now include accepted
+and omitted counts instead of describing every settled refusal as “lists updated”.
+Background partial-success synchronization keeps its existing behavior.
+
+**Observed offline regression:** 130 synthetic requested users settle as
+64/64/2 disjoint batches; one unrelated pending contact remains untouched.
+Every query is durably unknown before reply and settles once. Missing selection
+and oversized/invalid input leave all checkpoints unchanged. A cached-list
+503 refusal blocks preparation and preserves both old lists/pending users;
+a duplicate-row result counts one ingested user and one omission, still blocks,
+and survives encrypted-store reopen. A later explicit 404 per-user-error read
+preserves its prior list and blocks without rewriting the earlier refused record.
+Historical omission remains null. CLI summary tests hide identifiers/unknown
+codes and preserve the null distinction. These are synthetic injected-node
+checks, not live large-group or socket-cut batching validation.
+
+**Unknown / unfinished:** full APK fresh/retry device-source selection, own
+account-sync inventory/fan-out, active hash feature, full public-outbox group
+sending, large-group live batch behavior and complete incoming ADV-key branch.
+The selected APK bundles stay unchanged in this correction; it reuses their
+existing attributable protocol substrate, not new upstream source differences.
+
+
+**Observed live, 2026-10-07 21:30:49 UTC:** preflight found zero eligible outbox
+intents, queued actions, pending receipts and device users. One existing peer's
+device read was recorded; an authenticated 20-second receive-only session
+activated and stopped cleanly with chat sending disabled. Saved query inspection
+reported server_acknowledged, requested_users=1, ingested=1, partial_errors=0,
+omitted_users=0, code=null. Pending device users returned to zero. The retained
+list contains one primary, companions_verified=false, reason “no signed index
+list”; this does not establish companion coverage. No new chat intent was
+created/transmitted. Action counts stayed error=1/ok=15/sent=1 (including the
+unresolved sent action); all nine existing receipts remained acknowledged.
+Original identities, keys, send IDs, refusals and waits were preserved.
+This validates the shared one-user reservation/parser/accounting path and saved
+inspector against a real reply, **not selected multi-batch or group-send parity**.
+
+**Observed diagnostic limitation:** the first validation harness expected the
+settlement INFO line in default stderr and falsely failed its log assertion.
+The CLI defaults to `warn,whatsapp_api::incoming=info`, hiding connection INFO
+counter events. No request was restarted because of this observation failure;
+the same session had already stopped normally. Offline canonical-store inspection
+found the single new peer query, and device-query established its saved complete
+counts; pending/action/receipt state was rechecked. Connection INFO can be
+explicitly selected through RUST_LOG; the offline saved inspector is independent
+of log filters. Raw private outputs and the query ID remain in ignored lab data.
+
+**Observed verification:** 644 workspace all-feature tests and 24 default CLI
+tests passed; strict workspace/all-target Clippy, warning-free Rustdoc, formatting
+and CLI reference regeneration passed. Actual device-query CLI probes on an
+isolated encrypted synthetic store covered acknowledged-with-omission, refused,
+outcome_unknown, historical null, absent ID, invalid ID without value echo, and
+unchanged refused status on repeat. The live saved query was also inspected by
+the actual CLI. Repository hygiene checked 641 local links and 2405965 bytes across all four
+independent APK checksum bundles; cached APK snapshots remain unchanged.

@@ -54,7 +54,7 @@ const PENDING_PREFIX: &str = "device-sync-pending:";
 const QUERY_PREFIX: &str = "device-sync:";
 const LIST_PREFIX: &str = "devices:";
 
-fn invalid(reason: &'static str) -> Error {
+fn invalid(reason: impl Into<String>) -> Error {
     Error::invalid("devices", reason)
 }
 fn pending_key(user: &Jid) -> String {
@@ -149,6 +149,10 @@ pub struct QueryRecord {
     pub ingested: u32,
     /// Users with a per-user error in this reply.
     pub partial_errors: u32,
+    /// Requested users absent from the reply. None for historical records or
+    /// an unsettled query; never infer completeness from old aggregate counts.
+    #[serde(default)]
+    pub omitted_users: Option<u32>,
     /// Reservation time.
     pub requested_at: Timestamp,
 }
@@ -307,12 +311,52 @@ pub fn begin_query(
         .into_iter()
         .take(MAX_USERS_PER_QUERY)
         .collect();
+    reserve_query(store, context, users)
+}
+
+/// Reserve exactly this pending device-user batch, never unrelated pending
+/// contacts. This is local batching over the same APK usync v2 layout; it does
+/// not retry a refused query or assert complete own-account device inventory.
+pub fn begin_query_for_users(
+    store: &ProtocolStore,
+    context: SyncContext,
+    users: &[Jid],
+) -> Result<Option<(DeviceQuery, Node)>> {
+    if users.len() > MAX_USERS_PER_QUERY {
+        return Err(invalid(
+            "selected device query exceeds the local 64-user limit",
+        ));
+    }
+    let users = users
+        .iter()
+        .map(primary_of)
+        .collect::<Result<std::collections::BTreeSet<_>>>()?;
+    reserve_query(store, context, users.into_iter().collect())
+}
+
+fn reserve_query(
+    store: &ProtocolStore,
+    context: SyncContext,
+    users: Vec<Jid>,
+) -> Result<Option<(DeviceQuery, Node)>> {
     if users.is_empty() {
         return Ok(None);
     }
     let iq_id = super::messaging::new_message_id()?;
     let sid = super::messaging::new_message_id()?;
     store.write(|tx| {
+        // Selection and reservation share a transaction: a stale batch cannot
+        // silently invent pending work after another query settled its users.
+        for user in &users {
+            let pending: Option<Pending> =
+                tx.get_json(Table::Checkpoints, pending_key(user).as_bytes(), 1)?;
+            if pending.is_none() {
+                return Err(invalid(
+                    "selected device user is not pending; request synchronization first",
+                ));
+            }
+        }
+
         tx.put_json(
             Table::Checkpoints,
             query_key(&iq_id).as_bytes(),
@@ -323,6 +367,7 @@ pub fn begin_query(
                 code: None,
                 ingested: 0,
                 partial_errors: 0,
+                omitted_users: None,
                 requested_at: Timestamp::now(),
             },
         )
@@ -364,8 +409,48 @@ pub struct IngestSummary {
     pub accepted: bool,
     /// Users whose list was stored.
     pub ingested: u32,
-    /// Users with a per-user error.
+    /// Distinct users with a per-user error.
     pub partial_errors: u32,
+    /// Requested users not represented by a recognized user row. A result
+    /// stanza alone is not a complete answer.
+    pub omitted_users: u32,
+}
+
+impl IngestSummary {
+    /// Require every requested user to have an ingested list before preparing
+    /// a send. Background synchronization may retain partial success instead.
+    pub fn require_complete(&self) -> Result<()> {
+        if !self.accepted {
+            return Err(invalid("device query refused; send preparation stopped"));
+        }
+        if self.partial_errors > 0 {
+            return Err(invalid(format!(
+                "device query has {} per-user error(s); send preparation stopped",
+                self.partial_errors
+            )));
+        }
+        if self.omitted_users > 0 {
+            return Err(invalid(format!(
+                "device query omitted {} requested user(s); send preparation stopped",
+                self.omitted_users
+            )));
+        }
+        Ok(())
+    }
+}
+
+/// Inspect a saved query offline. Historical omitted-user information remains
+/// None; this never resets or reserves a query.
+pub fn query_record(store: &ProtocolStore, id: &str) -> Result<Option<QueryRecord>> {
+    if id.is_empty()
+        || id.len() > 128
+        || !id
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b':'))
+    {
+        return Err(invalid("invalid device query id"));
+    }
+    store.read(|tx| tx.get_json(Table::Checkpoints, query_key(id).as_bytes(), 1))
 }
 
 fn pinned_primary_identity(
@@ -549,6 +634,9 @@ impl DeviceQuery {
                 accepted,
                 ..Default::default()
             };
+            let mut represented = std::collections::BTreeSet::new();
+            let mut ingested = std::collections::BTreeSet::new();
+            let mut errored = std::collections::BTreeSet::new();
             if accepted {
                 let users = child(node, "usync")
                     .and_then(|u| child(u, "list"))
@@ -562,14 +650,23 @@ impl DeviceQuery {
                     if !self.users.contains(&owner) {
                         continue;
                     }
+                    represented.insert(owner.clone());
                     let notified: Option<Pending> =
                         tx.get_json(Table::Checkpoints, pending_key(&owner).as_bytes(), 1)?;
                     match ingest_user(tx, user, notified.and_then(|p| p.notified_hash))? {
-                        Some(_) => summary.ingested += 1,
-                        None => summary.partial_errors += 1,
+                        Some(_) => {
+                            ingested.insert(owner.clone());
+                        }
+                        None => {
+                            errored.insert(owner.clone());
+                        }
                     }
                 }
             }
+            summary.ingested = ingested.len() as u32;
+            summary.partial_errors = errored.len() as u32;
+            summary.omitted_users = (self.users.len() - represented.len()) as u32;
+            record.omitted_users = Some(summary.omitted_users);
             record.status = if accepted {
                 "server_acknowledged".into()
             } else {
@@ -663,6 +760,240 @@ mod tests {
         Node::new("user")
             .attr("jid", owner.clone())
             .children(vec![Node::new("devices").children(children)])
+    }
+
+    #[test]
+    fn scoped_queries_process_three_batches_without_draining_unrelated_pending_users() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("batches.redb"));
+        let users: Vec<Jid> = (0..130)
+            .map(|i| Jid::parse(&format!("1555555{:04}@s.whatsapp.net", i + 100)).unwrap())
+            .collect();
+        let unrelated = Jid::parse("15550000000@s.whatsapp.net").unwrap();
+        for user in users.iter().chain(std::iter::once(&unrelated)) {
+            request_sync(&store, None, user, None, "test").unwrap();
+        }
+        let mut ids = std::collections::BTreeSet::new();
+        let mut batch_sizes = Vec::new();
+        for batch in users.chunks(MAX_USERS_PER_QUERY) {
+            let (query, iq) = begin_query_for_users(&store, SyncContext::Message, batch)
+                .unwrap()
+                .unwrap();
+            assert_eq!(query.users, batch);
+            assert!(ids.insert(query.iq_id.clone()));
+            let wire_users = child(child(&iq, "usync").unwrap(), "list")
+                .unwrap()
+                .child_nodes();
+            assert_eq!(wire_users.len(), batch.len());
+            assert!(!query.users.contains(&unrelated));
+            assert_eq!(
+                attr_text(child(&iq, "usync").unwrap(), "context"),
+                Some("message")
+            );
+            let stored = query_record(&store, &query.iq_id).unwrap().unwrap();
+            assert_eq!(stored.status, "outcome_unknown");
+            assert_eq!(stored.omitted_users, None);
+            let response = reply(
+                &iq,
+                batch
+                    .iter()
+                    .map(|u| user_node(u, &[(0, 0, false)], None))
+                    .collect(),
+            );
+            let summary = query.ingest(&store, &response).unwrap();
+            summary.require_complete().unwrap();
+            assert_eq!(summary.ingested as usize, batch.len());
+            assert_eq!(summary.omitted_users, 0);
+            assert!(query.ingest(&store, &response).is_err());
+            batch_sizes.push(batch.len());
+        }
+        assert_eq!(batch_sizes, [64, 64, 2]);
+        assert_eq!(pending_users(&store).unwrap(), [unrelated]);
+        assert!(
+            users
+                .iter()
+                .all(|user| device_list(&store, user).unwrap().is_some())
+        );
+    }
+
+    #[test]
+    fn scoped_selection_validates_atomically_and_normalizes_only_user_addresses() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("scope.redb"));
+        request_sync(&store, None, &contact(), None, "test").unwrap();
+        let before = store
+            .read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 512))
+            .unwrap();
+        let absent = Jid::parse("15555550999@s.whatsapp.net").unwrap();
+        for batch in [
+            vec![contact(), absent],
+            vec![contact(); 65],
+            vec![Jid::parse("120363000000000001@g.us").unwrap()],
+        ] {
+            assert!(begin_query_for_users(&store, SyncContext::Message, &batch).is_err());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 512))
+                    .unwrap(),
+                before
+            );
+        }
+        assert!(
+            begin_query_for_users(&store, SyncContext::Message, &[])
+                .unwrap()
+                .is_none()
+        );
+        let (query, _) = begin_query_for_users(
+            &store,
+            SyncContext::Message,
+            &[contact(), contact().with_device(3)],
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(query.users, [contact()]);
+        assert_eq!(
+            query_record(&store, &query.iq_id).unwrap().unwrap().users,
+            [contact()]
+        );
+    }
+
+    #[test]
+    fn incomplete_or_refused_queries_cannot_use_cached_lists_to_pass_send_preparation() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("incomplete.redb");
+        let store = open(&path);
+        let other = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+        let targets = vec![contact(), other.clone()];
+        for u in &targets {
+            request_sync(&store, None, u, None, "test").unwrap();
+        }
+        let (initial, iq) = begin_query_for_users(&store, SyncContext::Message, &targets)
+            .unwrap()
+            .unwrap();
+        initial
+            .ingest(
+                &store,
+                &reply(
+                    &iq,
+                    targets
+                        .iter()
+                        .map(|u| user_node(u, &[(0, 0, false)], None))
+                        .collect(),
+                ),
+            )
+            .unwrap()
+            .require_complete()
+            .unwrap();
+        let saved: Vec<_> = targets
+            .iter()
+            .map(|u| device_list(&store, u).unwrap().unwrap())
+            .collect();
+        for u in &targets {
+            request_sync(&store, None, u, None, "test").unwrap();
+        }
+        let (refused, iq) = begin_query_for_users(&store, SyncContext::Message, &targets)
+            .unwrap()
+            .unwrap();
+        let summary = refused
+            .ingest(
+                &store,
+                &Node::new("iq")
+                    .attr("id", attr_text(&iq, "id").unwrap())
+                    .attr("type", "error")
+                    .children(vec![Node::new("error").attr("code", "503")]),
+            )
+            .unwrap();
+        assert!(!summary.accepted);
+        assert!(
+            summary
+                .require_complete()
+                .unwrap_err()
+                .to_string()
+                .contains("refused")
+        );
+        assert_eq!(summary.omitted_users, 2);
+        assert_eq!(
+            query_record(&store, &refused.iq_id)
+                .unwrap()
+                .unwrap()
+                .status,
+            "refused"
+        );
+        assert_eq!(pending_users(&store).unwrap(), targets);
+        assert_eq!(
+            targets
+                .iter()
+                .map(|u| device_list(&store, u).unwrap().unwrap())
+                .collect::<Vec<_>>(),
+            saved
+        );
+        // A separate explicit read remains possible; no code resets the refused
+        // reservation. Duplicate rows cannot hide the omitted second user.
+        let (incomplete, iq) = begin_query_for_users(&store, SyncContext::Message, &targets)
+            .unwrap()
+            .unwrap();
+        let duplicated = user_node(&contact(), &[(0, 0, false)], None);
+        let summary = incomplete
+            .ingest(&store, &reply(&iq, vec![duplicated.clone(), duplicated]))
+            .unwrap();
+        assert_eq!(summary.ingested, 1);
+        assert_eq!(summary.omitted_users, 1);
+        assert!(
+            summary
+                .require_complete()
+                .unwrap_err()
+                .to_string()
+                .contains("omitted 1")
+        );
+        assert_eq!(
+            pending_users(&store).unwrap().as_slice(),
+            std::slice::from_ref(&other)
+        );
+        let id = incomplete.iq_id.clone();
+        drop(store);
+        let reopened = open(&path);
+        let record = query_record(&reopened, &id).unwrap().unwrap();
+        assert_eq!(record.status, "server_acknowledged");
+        assert_eq!(record.omitted_users, Some(1));
+        assert_eq!(
+            pending_users(&reopened).unwrap().as_slice(),
+            std::slice::from_ref(&other)
+        );
+        let (partial, iq) = begin_query_for_users(
+            &reopened,
+            SyncContext::Message,
+            std::slice::from_ref(&other),
+        )
+        .unwrap()
+        .unwrap();
+        let error = Node::new("user").attr("jid", other.clone()).children(vec![
+            Node::new("devices").children(vec![Node::new("error").attr("code", "404")]),
+        ]);
+        let summary = partial.ingest(&reopened, &reply(&iq, vec![error])).unwrap();
+        assert_eq!(summary.partial_errors, 1);
+        assert_eq!(summary.omitted_users, 0);
+        assert!(
+            summary
+                .require_complete()
+                .unwrap_err()
+                .to_string()
+                .contains("per-user error")
+        );
+        assert_eq!(device_list(&reopened, &other).unwrap().unwrap(), saved[1]);
+        assert_eq!(
+            query_record(&reopened, &refused.iq_id)
+                .unwrap()
+                .unwrap()
+                .status,
+            "refused"
+        );
+    }
+
+    #[test]
+    fn historical_query_records_keep_omission_unknown() {
+        let old = serde_json::json!({"users":[],"status":"server_acknowledged","code":null,"ingested":0,"partial_errors":0,"requested_at":0});
+        let record: QueryRecord = serde_json::from_value(old).unwrap();
+        assert_eq!(record.omitted_users, None);
     }
 
     #[test]
@@ -831,7 +1162,8 @@ mod tests {
             IngestSummary {
                 accepted: true,
                 ingested: 2,
-                partial_errors: 1
+                partial_errors: 1,
+                omitted_users: 0,
             }
         );
         assert!(query.ingest(&store, &node).is_err(), "settled once");
@@ -972,7 +1304,10 @@ mod tests {
             .children(vec![Node::new("error").attr("code", "503")]);
         assert_eq!(
             query.ingest(&store, &error).unwrap(),
-            IngestSummary::default()
+            IngestSummary {
+                omitted_users: 2,
+                ..Default::default()
+            }
         );
         assert_eq!(
             pending_users(&store).unwrap(),

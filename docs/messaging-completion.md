@@ -1520,3 +1520,19 @@ send-job hash consumer and message-specific cache branches are traced separately
 Full own-device/account sync, normal public-outbox group fan-out and live
 companion-group validation remain unfinished; item 8 stays open.
 [Evidence and inspection](protocol/groups.md#saved-device-hash-planning-2026-10-07).
+
+
+2026-10-07 send-preparation follow-up: scoped device batches process each selected
+recipient once, leaving unrelated pending contacts untouched. Refused/partial/
+omitted-user replies now block before message reservation despite cached lists.
+Saved query inspection distinguishes historical null omissions from measured
+counts. 130-target, cached-refusal and duplicate-omission cases are offline
+regressions; large-group live batching, own sync and normal public-outbox group
+fan-out remain unfinished. Item 8 remains open.
+[Evidence and inspection](protocol/messaging-transport.md#scoped-device-batches-and-completeness-2026-10-07).
+
+A bounded 20-second live receive-only session subsequently confirmed shared
+one-user query accounting and saved inspection: one ingested, zero errors/
+omissions, no remaining pending device users. Retained primary-only/no signed
+index list; no chat sends, action or receipt status changes. This does not verify
+multi-batch group preparation or close own-device synchronization.

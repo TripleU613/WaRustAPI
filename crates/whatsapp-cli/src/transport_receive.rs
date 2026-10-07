@@ -252,6 +252,36 @@ pub(super) async fn mark_read(
     Ok(())
 }
 
+fn device_query_inspection(
+    record: Option<&whatsapp_api::transport::devices::QueryRecord>,
+) -> serde_json::Value {
+    match record {
+        None => serde_json::json!({"offline_only":true,"found":false}),
+        Some(record) => serde_json::json!({
+            "offline_only":true,"found":true,"status":record.status,
+            "requested_users":record.users.len(),"ingested":record.ingested,
+            "partial_errors":record.partial_errors,"omitted_users":record.omitted_users,
+            "code":record.code.as_ref().filter(|c| !c.is_empty() && c.bytes().all(|b| b.is_ascii_digit())),
+        }),
+    }
+}
+
+pub(super) fn device_query(cli: &super::Cli, id: &str) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let record = whatsapp_api::transport::devices::query_record(&store, id)?;
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&device_query_inspection(record.as_ref()))
+            .map_err(|_| Error::invalid("devices", "cannot encode query inspection"))?
+    );
+    Ok(())
+}
+
 /// Offline contact device list, optionally recording a sync for the next session.
 pub(super) fn devices(cli: &super::Cli, chat: &str, request: bool) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
@@ -2216,6 +2246,36 @@ mod tests {
     use super::*;
     use whatsapp_api::binary::Node;
     use whatsapp_api::model::jid::Jid;
+
+    #[test]
+    fn device_query_inspection_keeps_users_and_unknown_codes_private() {
+        use whatsapp_api::{model::time::Timestamp, transport::devices::QueryRecord};
+        let mut record = QueryRecord {
+            users: vec![Jid::parse("15555550101@s.whatsapp.net").unwrap()],
+            status: "refused".into(),
+            code: Some("PRIVATE".into()),
+            ingested: 0,
+            partial_errors: 0,
+            omitted_users: Some(1),
+            requested_at: Timestamp::now(),
+        };
+        let out = device_query_inspection(Some(&record));
+        assert_eq!(out["requested_users"], 1);
+        assert_eq!(out["omitted_users"], 1);
+        assert_eq!(out["code"], serde_json::Value::Null);
+        for private in ["15555550101", "PRIVATE"] {
+            assert!(!out.to_string().contains(private));
+        }
+        record.omitted_users = None;
+        record.code = Some("503".into());
+        let historical = device_query_inspection(Some(&record));
+        assert_eq!(historical["omitted_users"], serde_json::Value::Null);
+        assert_eq!(historical["code"], "503");
+        assert_eq!(
+            device_query_inspection(None),
+            serde_json::json!({"offline_only":true,"found":false})
+        );
+    }
 
     #[test]
     fn fanout_inspection_reports_unknowns_without_identifiers_or_implicit_hash() {

@@ -84,28 +84,45 @@ async fn fetch_devices(
     own: &Jid,
     recipients: &[Jid],
 ) -> Result<(), Error> {
-    for recipient in recipients {
+    let recipients: Vec<Jid> = recipients
+        .iter()
+        .map(Jid::to_non_ad)
+        .collect::<std::collections::BTreeSet<_>>()
+        .into_iter()
+        .collect();
+    for recipient in &recipients {
         devices::request_sync(store, Some(own), recipient, None, "group-send")?;
     }
-    let Some((query, node)) = devices::begin_query(store, SyncContext::Message)? else {
-        return Ok(());
-    };
-    write_node(channel, &node).await?;
-    let id = node
-        .get_attr("id")
-        .and_then(|v| v.as_text())
-        .ok_or_else(|| invalid("device query lost its id"))?
-        .to_owned();
-    let (reply, pending) = wait_for(channel, "iq", &id).await?;
-    keep(store, &pending)?;
-    if !query.matches(&reply) {
-        return Err(invalid("device query reply did not match the reservation"));
+    // MAX_USERS_PER_QUERY is our local bound. Iterate a fixed target snapshot
+    // once; looping on all pending users would resend errors and drain other
+    // contacts. Each reply must be complete before advancing to the next batch.
+    for (index, batch) in recipients.chunks(devices::MAX_USERS_PER_QUERY).enumerate() {
+        let (query, node) = devices::begin_query_for_users(store, SyncContext::Message, batch)?
+            .ok_or_else(|| invalid("selected device batch unexpectedly empty"))?;
+        let id = node
+            .get_attr("id")
+            .and_then(|v| v.as_text())
+            .ok_or_else(|| invalid("device query lost its id"))?
+            .to_owned();
+        println!(
+            "group-send: device batch={} users={} query_id={}",
+            index + 1,
+            batch.len(),
+            id
+        );
+        write_node(channel, &node).await?;
+        let (reply, pending) = wait_for(channel, "iq", &id).await?;
+        keep(store, &pending)?;
+        if !query.matches(&reply) {
+            return Err(invalid("device query reply did not match the reservation"));
+        }
+        let summary = query.ingest(store, &reply)?;
+        println!(
+            "group-send: device lists ingested={}, partial_errors={}, omitted_users={}, accepted={}",
+            summary.ingested, summary.partial_errors, summary.omitted_users, summary.accepted
+        );
+        summary.require_complete()?;
     }
-    let summary = query.ingest(store, &reply)?;
-    println!(
-        "group-send: device lists ingested={}, partial_errors={}, accepted={}",
-        summary.ingested, summary.partial_errors, summary.accepted
-    );
     Ok(())
 }
 

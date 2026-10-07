@@ -1,5 +1,17 @@
 # Status — 2026-10-07
 
+Device send preparation (2026-10-07): selected recipient queries now
+cover all local 64-user batches once, without draining unrelated pending users.
+Refused, partial and omitted-user replies block before message reservation even
+with cached lists. Saved omitted counts remain null for historical/unknown
+records; device-query inspects them offline without identifiers or resets.
+130-target and cached-refusal/duplicate-omission regressions pass. A 20-second
+receive-only live check saved one acknowledged device query with one ingested
+user and zero errors/omissions; no chat sends or queued work remained. The list
+is primary-only/no signed index list. Large-group batches and own device sync
+remain unverified.
+[Evidence and limits](docs/protocol/messaging-transport.md#scoped-device-batches-and-completeness-2026-10-07).
+
 Group hash inventory (2026-10-07, offline): saved recipient companions now
 contribute to the candidate V2 hash, alongside the known own primary. Previously
 they could be addressed but omitted from phash. New group fanout-inspect shows
