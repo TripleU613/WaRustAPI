@@ -222,7 +222,7 @@ pub fn notification(node: &Node) -> Option<DevicesNotification> {
     })
 }
 /// Acknowledge a device-list notification after its durable capture
-/// (`LX/Cns.A05` layout: id/to/class/type).
+/// (`APK 37.71 LX/Cp2.A05 (0036..0074)` layout: id/to/class/type).
 pub fn notification_ack(node: &Node) -> Result<Node> {
     let id = attr_text(node, "id")
         .filter(|v| !v.is_empty() && v.len() <= 128)

@@ -4,8 +4,8 @@
 use super::receipts::jid;
 
 /// Process a fully supported notification before returning its acknowledgement.
-/// LX/0yO.A01 dispatches the handler before A00 acknowledges; LX/Cns.A05
-/// serializes id/to/class/type. Unknown token kinds are preserved without ACK.
+/// APK 37.71 LX/0yO.A01 dispatches before A00 acknowledges; LX/Cp2.A05
+/// (0036..0074) serializes id/to/class/type. Unknown token kinds stay without ACK.
 pub fn handle(store: &ProtocolStore, node: &Node) -> Result<Option<Node>> {
     if node.description != "notification"
         || node.get_attr("type").and_then(|v| v.as_text()) != Some("privacy_token")

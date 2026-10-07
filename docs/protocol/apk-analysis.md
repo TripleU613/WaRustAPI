@@ -202,3 +202,19 @@ memory-budget formula, recorded with its feature-cap unknown in
 [Scoped instruction evidence](group-refresh-request-evidence.txt) retains the
 method context. All 32 xtask tests and strict all-target xtask Clippy passed.
 This is offline tooling, not a runtime group-query capability or live validation.
+
+
+### Empty method-filter diagnostics (2026-10-07)
+
+**Confirmed/local tooling defect:** `apk-smali --class 9R2 --method C8h`
+reported "no classes match" even though APK 37.71 contains 9R2's constructor
+and its callbacks are inherited from AWW. The method visitor returns matching
+bodies, so an empty result cannot establish class absence. The command now
+reports "no method bodies match" and includes both active filters, preserving
+its exit behavior. A rebuilt-tool smoke run on the actual APK returned empty
+stdout and the expected two-filter diagnostic. 32 xtask tests and strict
+all-target xtask Clippy passed. No flag or HTTP capability was introduced.
+
+[Group response evidence](group-refresh-response-evidence.txt) retains the
+actual constructor/base callbacks and identifies the current Cp2 ACK writer;
+Cns is a stale 37.70 anchor. Full dump files and negative searches stay local.

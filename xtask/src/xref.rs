@@ -1449,7 +1449,14 @@ pub fn run_smali(
 ) -> Result<(), String> {
     let methods = apk_smali(apk, class_filter, method_filter)?;
     if methods.is_empty() {
-        eprintln!("no classes match filter {:?}", class_filter);
+        // A method filter can exclude all bodies of a class that does exist
+        // (37.71 9R2 has a constructor but no C8h body). Do not claim absence.
+        match method_filter {
+            Some(method) => eprintln!(
+                "no method bodies match class filter {class_filter:?} and method filter {method:?}"
+            ),
+            None => eprintln!("no method bodies match class filter {class_filter:?}"),
+        }
         return Ok(());
     }
     let mut last_class = String::new();

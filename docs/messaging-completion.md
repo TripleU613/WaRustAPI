@@ -889,3 +889,21 @@ Final checks for this change: generated CLI reference test, all five OpenAPI
 coverage/HTTP/library-symbol checks, formatting, staged whitespace and repository
 hygiene (379 local links) passed. These are local checks, not live group refresh
 validation.
+
+
+Batch response/ACK follow-up (2026-10-07, **offline/static**): the 37.71
+writer is Cp2.A05 reached from selector 76 through 0y2.A02. The response
+parser distinguishes full/truncated/error groups and checks request-correlated
+attributes. ID guards check string length; request child-count diagnostics log
+without throwing. A truncated result is not a complete group snapshot. Full
+membership commit, dirty-state clearing and inbound ACK-route production remain
+untraced; notification handling remains incomplete. Empty apk-smali results now
+name the active class/method filters without falsely claiming class absence.
+32 xtask tests, strict Clippy and the actual APK diagnostic smoke passed.
+[Evidence and remaining boundary](protocol/groups.md#batch-response-and-current-build-ack-writer-2026-10-07).
+No account state was opened or live request sent for this trace.
+
+Final local checks for this trace: generated CLI reference, five OpenAPI
+coverage/HTTP/library-symbol tests, formatting, staged whitespace and repository
+hygiene (383 local links) passed. No live group notification application was
+validated.

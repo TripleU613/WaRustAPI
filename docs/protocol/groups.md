@@ -1193,3 +1193,120 @@ Final checks for this change: generated CLI reference test, all five OpenAPI
 coverage/HTTP/library-symbol checks, formatting, staged whitespace and repository
 hygiene (379 local links) passed. These are local checks, not live group refresh
 validation.
+
+
+## Batch response and current-build ACK writer (2026-10-07)
+
+**Confirmed/static, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Scoped response/ACK evidence](group-refresh-response-evidence.txt) extends the
+preceding trace; no account was opened and no query/ACK was sent.
+
+**Resolved request guard semantics:** `0hp.A06` validates Java string length,
+not a numeric value. At 001c..002a it obtains `String.length()` and compares
+that length to the supplied lower bound; 0054..0072 checks the upper bound.
+The ID builder's 0..9007199254740991 arguments are therefore string-length
+bounds. Null with optional=false logs and returns false (0000..0016).
+An out-of-bound non-null string logs then returns true (002e..0054,
+005c..0072). `0hp.A07` similarly logs null then returns false (0000..0012),
+but an out-of-range non-null child list logs then returns true
+(0022..0064,0064..0098). `00K.A0D` constructs/logs an AssertionError and
+returns (0000..0016); it does not throw that error. This refutes interpreting
+these writer diagnostics as mandatory refusal guards. A non-null empty list
+can still produce an empty query. Receiver validation is a separate path.
+
+**Resolved service spelling:** `Jid.getRawString` 0000..0016 delegates user
+and server to `0D1.A01`. That helper returns the server directly when the user
+has length zero (0010..001e), otherwise joins user, `@`, server. Combined with
+`9Lp`'s empty user and `g.us` server, the batch IQ destination renders as
+`g.us`, not an invented user at that domain.
+
+**Confirmed callback selection:** the job's `Aov` selectors 10 and 11 both
+reach the default batch parser branch (the packed switch has cases 0..9).
+`9R2.<init>` stores the two parser callbacks as A01/A00 and delegates to
+`AWW.<init>`. Inherited `AWW.C8f` calls A01 then passes a `9R6` result to its
+completion callback; `BmU` calls A00 then passes `9R3`. `BjL` passes `9R4`
+containing `HFb`. A search for concrete `9R2.C8h` had no method body, not
+proof that the class or callback dispatch was absent. This was also a defect
+in our disassembler's empty-result diagnostic, corrected below.
+
+**Confirmed batch response parser:** `Aov.invoke` default branch
+0016..0366 handles `AaH` plus the returned stanza. `8kX.A0W` requires the
+`iq` tag and retrieves the request template (`EJy.A00`), not the response body.
+The success branch reads template `to` and `id`, then corresponding response
+attributes (007e..0118); `8lB.A0L`'s string/JID paths perform expected-value
+comparison when provided (01da..01ea,0300..036e). It separately checks type
+against `result` (0118..0144). It requests children at path `groups/group`
+(0144..017c), with decoder `AZM` selector 15 and bounds 1..10000.
+
+`8lB.A0O` traverses the parent path, decodes each matching child and skips
+null decoder results (000a..008a), then validates the count of decoded results
+(008a..00da). Missing path/count failures return null with a diagnostic;
+this is stricter than the request-writer assertion behavior above. It does not
+establish that every raw group child must decode successfully.
+
+`AZM.AAK` selector 15 (041c..050c) requires `group`, reads optional
+`create_ctx` from e2ee_migration/regular/rtc and `key`, then dispatches the
+`GroupInfo|TruncatedGroupInfo|GroupForbidden|GroupNotExist` union using
+AZK/AX9/AXA/AXB. `Aov` iterates decoded `Asn` values through `9rm`
+(0182..01ca), and returns `A9t` carrying a result list and map (01cc..01ec).
+The client-error path names `IQErrorBadRequest|IQErrorRateOverlimit`
+(0266..02c6); the subsequent server-error path uses `AZN` selector 6
+(02ee..0344). Failed parsing accumulates BatchGetGroupInfoResponseSuccess,
+ClientError and ServerError diagnostics before throwing (0228..0366).
+Exact codes, all union validators and server wait interpretation remain
+**unknown**; the strings alone do not authorize retries or a refusal reset.
+
+**Confirmed model boundary:** `9PN.A74` and `9PP.A74` call `ADs.A0C`
+with mode 3, using Aou callbacks 23/24 and 21/22 respectively, then append
+the converted result. `9PO.A74` decodes its A02 string as a group ID and
+stores its A01 string in the map; the exact semantic mapping of that string
+is not established here. `ADs.A0C` reads `id`, then `truncated`; a true
+truncated value reads `size` and creates `A9s` without a full `AAO`
+(000c..0078). The nontruncated path builds `AAO` then `A9s`
+(02dc..02f0). Thus a truncated result is not a complete membership snapshot.
+The complete nontruncated participant/attribute parser remains to be traced.
+Creation-time arithmetic at 00be is still opaque opcode 9d in our tool;
+its scale is not asserted from that rendering.
+
+Aou cases 21/23 share 0764..0792: they call `0yw.A0W` only when the
+A9s.A03 flag is false and A9s.A00 contains an AAO. Cases 22/24 report a
+participant-attribute-parser diagnostic (0792..07cc). `0yw.A0W` builds
+LID/PN mappings from two AAO pairs, calls A0r if nonempty, conditionally A0s
+behind feature 0x36fe, and forwards a nonempty A0M map to `0r0.CRs`.
+**Negative:** this method is not a complete group membership commit; no
+transaction or full group snapshot update was established in its 0000..009e
+body. Membership replacement, dirty-state clearing, crash/deduplication and
+these feature values remain **unknown**.
+
+**Resolved ACK writer:** the 37.70 `Cns` anchor has no matching class in
+37.71 and no exact A05 callers. An exact field-read search for
+`Cb1.A06:String` returned 25 sites, including `Cp2.A05` in classes7.dex
+at absolute DEX offset 0x6aa2a0. There are four exact Cp2.A05 callers:
+0y0.A00, 0y2.A02, Cgl.A01 and 1q7.A07. `0y0.A00`'s selector 76/0x4c
+at 00f0 resolves to 11c2..11d2, calls `0y2.A02`, which passes Cb1.A04
+and Cb1 into `Cp2.A05` (0008..0014), then writes via `1Rd.A04`.
+The earlier `0yG.handleMessage` search was a dead end: its cases 1..8
+cover callback/timeout handling, not the selector-76 outbound writer.
+
+`Cp2.A05` builds `ack` with optional ID, destination, class, type,
+participant, recipient and edit, followed by any additional Cb1 attributes
+and optional child (0036..00f8). Notification type is preserved; only the
+receipt/delivery combination strips type (0004..002e,0116..011c).
+Participant is included whenever non-null here; do not copy the separate
+receipt writer's participant-versus-destination suppression into this ACK.
+Edit is omitted when empty or literal 0. Missing ID/class logs a diagnostic;
+our own runtime may enforce stronger local validation, which must be named
+as our policy. The inbound stanza-to-Cb1 producer is still untraced here;
+`0zd.A03` is a read/played readreceipts-feature helper, not that producer.
+
+The ACK serialization boundary is now established, but which group events
+are fully and durably processed remains unfinished. Unknown notifications
+must remain captured. The next implementation needs the complete group
+response-to-snapshot/dirty-state path and authenticated original-route
+validation before enabling application and acknowledgements.
+
+Final local checks for this trace: generated CLI reference, five OpenAPI
+coverage/HTTP/library-symbol tests, formatting, staged whitespace and repository
+hygiene (383 local links) passed. No live group notification application was
+validated.

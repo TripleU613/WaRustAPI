@@ -496,7 +496,7 @@ pub fn low_count(node: &Node) -> Option<LowCount> {
     })
 }
 /// Acknowledge a recognized count notification (`LX/0yO.A07(true)`; ack shape
-/// `LX/Cns.A05` equivalent: id/to/class/type).
+/// `APK 37.71 LX/Cp2.A05 (0036..0074)` equivalent: id/to/class/type).
 pub fn low_count_ack(node: &Node) -> Result<Node> {
     let id = node
         .get_attr("id")
