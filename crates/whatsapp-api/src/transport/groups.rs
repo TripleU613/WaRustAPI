@@ -17,6 +17,113 @@ use serde::{Deserialize, Serialize};
 
 const XMLNS: &str = "w:g2";
 const INGESTED_PREFIX: &str = "groups-ingested:";
+const PENDING_PREFIX: &str = "groups-pending-ingestion:";
+const ACTION_KINDS: [&str; 10] = [
+    "group-create",
+    "group-info",
+    "group-subject",
+    "group-description",
+    "group-add",
+    "group-remove",
+    "group-promote",
+    "group-demote",
+    "group-leave",
+    "group-invite",
+];
+
+/// The action settlement and recovery marker share one commit. This marks only
+/// newly received replies, rather than backfilling historical snapshots at login.
+pub(crate) fn mark_pending_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    kind: &str,
+    id: &str,
+) -> Result<()> {
+    if ACTION_KINDS.contains(&kind) {
+        tx.put_json(
+            Table::Checkpoints,
+            format!("{PENDING_PREFIX}{id}").as_bytes(),
+            1,
+            &true,
+        )?;
+    }
+    Ok(())
+}
+
+/// Apply a session's pending group reply once. Unsupported/truncated replies
+/// remain inspectable without preventing unrelated receiving; storage errors
+/// still stop the session rather than masking a failed durable commit.
+pub(crate) fn apply_pending(store: &ProtocolStore, id: &str) -> Result<bool> {
+    let pending: Option<bool> = store.read(|tx| {
+        tx.get_json(
+            Table::Checkpoints,
+            format!("{PENDING_PREFIX}{id}").as_bytes(),
+            1,
+        )
+    })?;
+    if pending != Some(true) {
+        return Ok(false);
+    }
+    let Some((outcome, reply)) = store.read(|tx| super::actions::view_in(tx, id))? else {
+        return Err(invalid("pending group action is missing"));
+    };
+    if !ACTION_KINDS.contains(&outcome.kind.as_str())
+        || !matches!(
+            outcome.status,
+            super::actions::ActionStatus::Ok | super::actions::ActionStatus::Error
+        )
+    {
+        return Err(invalid("pending group action is not settled"));
+    }
+    let request = super::actions::request(store, id)?;
+    match store.write(|tx| {
+        ingest_reply_in(
+            tx,
+            &outcome.kind,
+            &outcome,
+            request.as_ref(),
+            reply.as_ref(),
+        )
+    }) {
+        Err(Error::InvalidInput {
+            field: "group",
+            reason,
+        }) => {
+            tracing::warn!(%reason, "queued group reply remains unapplied; saved response preserved");
+            Ok(false)
+        }
+        result => result,
+    }
+}
+
+/// Recover only replies marked during session settlement, without transmitting
+/// their requests again or replaying already consumed historical action rows.
+pub(crate) fn recover_pending(store: &ProtocolStore) -> Result<usize> {
+    let ids = store.read(|tx| {
+        let mut ids = Vec::new();
+        let mut cursor = None;
+        loop {
+            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+            if rows.is_empty() {
+                break;
+            }
+            cursor = rows.last().map(|(key, _)| key.clone());
+            for (key, _) in rows {
+                if let Some(id) = std::str::from_utf8(&key)
+                    .ok()
+                    .and_then(|k| k.strip_prefix(PENDING_PREFIX))
+                {
+                    ids.push(id.to_owned());
+                }
+            }
+        }
+        Ok(ids)
+    })?;
+    let mut applied = 0;
+    for id in ids {
+        applied += usize::from(apply_pending(store, &id)?);
+    }
+    Ok(applied)
+}
 
 fn invalid(msg: &'static str) -> Error {
     Error::invalid("group", msg)
@@ -402,18 +509,7 @@ fn to_model(snapshot: &GroupSnapshot) -> Option<Group> {
 /// actions are only marked seen. State, events and the marker commit atomically.
 pub fn ingest(store: &ProtocolStore) -> Result<usize> {
     let mut applied = 0usize;
-    for kind in [
-        "group-create",
-        "group-info",
-        "group-subject",
-        "group-description",
-        "group-add",
-        "group-remove",
-        "group-promote",
-        "group-demote",
-        "group-leave",
-        "group-invite",
-    ] {
+    for kind in ACTION_KINDS {
         for (outcome, reply) in super::actions::settled(store, kind)? {
             // The stored request is immutable. Load it before the write lock;
             // invite/leave application must not nest a store transaction.
@@ -438,6 +534,10 @@ fn ingest_reply_in(
     let marker = format!("{INGESTED_PREFIX}{}", outcome.id);
     let seen: Option<bool> = tx.get_json(Table::Checkpoints, marker.as_bytes(), 1)?;
     if seen.unwrap_or(false) {
+        tx.delete(
+            Table::Checkpoints,
+            format!("{PENDING_PREFIX}{}", outcome.id).as_bytes(),
+        )?;
         return Ok(false);
     }
     if outcome.status == super::actions::ActionStatus::Ok
@@ -448,6 +548,10 @@ fn ingest_reply_in(
     // Snapshot, journal events and this marker share the same commit. Otherwise
     // concurrent ingestion or an intervening reply can apply a saved reply twice.
     tx.put_json(Table::Checkpoints, marker.as_bytes(), 1, &true)?;
+    tx.delete(
+        Table::Checkpoints,
+        format!("{PENDING_PREFIX}{}", outcome.id).as_bytes(),
+    )?;
     Ok(true)
 }
 
@@ -1379,6 +1483,80 @@ mod tests {
     }
 
     #[test]
+    fn session_pending_projection_survives_restart_and_skips_truncated_reply() {
+        let (dir, s) = store();
+        let first = Jid::parse("12345-67890@g.us").unwrap();
+        let second = Jid::parse("12345-67891@g.us").unwrap();
+        let incomplete = queue_info(&s, &first).unwrap();
+        let complete = queue_info(&s, &second).unwrap();
+        super::super::actions::reserve_pending(&s).unwrap();
+        for (id, group) in [
+            (
+                &incomplete,
+                Node::new("group")
+                    .attr("id", first.clone())
+                    .attr("truncated", "true"),
+            ),
+            (
+                &complete,
+                Node::new("group")
+                    .attr("id", second.clone())
+                    .attr("subject", "Saved before interruption"),
+            ),
+        ] {
+            assert!(
+                super::super::actions::record_reply(
+                    &s,
+                    &Node::new("iq")
+                        .attr("id", id.as_str())
+                        .attr("type", "result")
+                        .children(vec![group])
+                )
+                .unwrap()
+            );
+        }
+        assert!(
+            list(&s).unwrap().is_empty(),
+            "only settlement has committed"
+        );
+        drop(s);
+        let s = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("p.redb"),
+            account_id: AccountId::new("a").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            create: false,
+        })
+        .unwrap();
+        assert_eq!(recover_pending(&s).unwrap(), 1);
+        assert!(get(&s, &first).unwrap().is_none());
+        assert_eq!(
+            get(&s, &second).unwrap().unwrap().subject.as_deref(),
+            Some("Saved before interruption")
+        );
+        assert_eq!(recover_pending(&s).unwrap(), 0);
+        assert!(!apply_pending(&s, &complete).unwrap());
+        assert_eq!(
+            s.read(|tx| tx.get_json::<bool>(
+                Table::Checkpoints,
+                format!("{PENDING_PREFIX}{incomplete}").as_bytes(),
+                1
+            ))
+            .unwrap(),
+            Some(true)
+        );
+        assert!(
+            super::super::actions::reply(&s, &incomplete)
+                .unwrap()
+                .is_some()
+        );
+        assert!(
+            super::super::actions::reserve_pending(&s)
+                .unwrap()
+                .is_empty()
+        );
+    }
+
+    #[test]
     fn ingestion_snapshot_invite_leave_and_marker_rollback_together() {
         for kind in ["group-info", "group-invite", "group-leave"] {
             let (dir, s) = store();
@@ -1427,6 +1605,14 @@ mod tests {
                     tx.get_json::<bool>(Table::Checkpoints, marker.as_bytes(), 1)?,
                     Some(true)
                 );
+                assert_eq!(
+                    tx.get_json::<bool>(
+                        Table::Checkpoints,
+                        format!("{PENDING_PREFIX}{id}").as_bytes(),
+                        1
+                    )?,
+                    None
+                );
                 Err(invalid("test rollback after snapshot and marker writes"))
             });
             assert!(failed.is_err());
@@ -1462,8 +1648,23 @@ mod tests {
                 .events
                 .len()
             };
+            assert_eq!(
+                s.read(|tx| tx.get_json::<bool>(
+                    Table::Checkpoints,
+                    format!("{PENDING_PREFIX}{id}").as_bytes(),
+                    1
+                ))
+                .unwrap(),
+                Some(true),
+                "pending recovery survives aborted projection"
+            );
             assert_eq!(event_count(&s), 1, "aborted subject event must roll back");
             assert_eq!(ingest(&s).unwrap(), 1);
+            assert_eq!(
+                recover_pending(&s).unwrap(),
+                0,
+                "CLI ingestion clears session recovery marker"
+            );
             let after = get(&s, &group).unwrap();
             match kind {
                 "group-info" => assert_eq!(after.unwrap().subject.as_deref(), Some("After")),

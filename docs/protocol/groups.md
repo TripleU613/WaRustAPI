@@ -1623,3 +1623,91 @@ replayed in this research change.
 
 Validation: all five OpenAPI checks, generated CLI reference, whitespace and
 repository hygiene passed. No runtime behavior changed or live validation occurred.
+
+
+## Apply queued replies during receiving (2026-10-07)
+
+**Confirmed/local bug:** `connection::drive` consumed IQ replies after
+`actions::record_reply` without invoking group projection. The only production
+caller of `groups::ingest` was CLI `group list`, so the receive session could
+report a settled action while snapshots/events remained absent until inspection.
+The socket path now projects the selected newly settled group action immediately.
+This uses the already documented parser and atomic snapshot/event/once-only commit.
+
+**Confirmed/static motivation:** APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`,
+`8lQ.A01` separates truncated and full results, and `8lQ.A00` invokes
+`0yw.A0U` at 0184..018a for full state.
+[Existing application evidence](group-refresh-application-evidence.txt) establishes
+callback-driven application, not complete equivalence to our subset snapshot.
+This change adds no new wire fields, requests or guessed APK response semantics.
+
+**Confirmed/local durability:** action settlement atomically creates an encrypted
+`groups-pending-ingestion:<action-id>` boolean marker only for the ten supported
+group action kinds. Projection atomically removes that pending marker with the
+snapshot/events and `groups-ingested:<action-id>` once-only marker. An interrupted
+projection can be recovered at the next session's start. Already consumed markers
+are cleared without reapplication. Startup scans pending markers created by this
+settlement behavior; it does not backfill the account's historical settled actions.
+No sent action is requeued, and original query/request IDs remain unchanged.
+
+Truncated or otherwise invalid group replies retain their encrypted saved response
+and pending marker. The session logs the secret-free group validation reason and
+continues receiving; a rejected snapshot does not block another group's projection.
+Storage or other unexpected errors still stop the session. `group list` retains
+its explicit diagnostic behavior for historical unsupported replies, and also
+clears a session pending marker when it successfully applies the same action.
+The local marker is a recovery mechanism, not an APK field or automatic refresh
+request. `actions` inspects settlement, `group list` inspects supported snapshots,
+and `events --summary` inspects their durable journal entries.
+
+**Confirmed/offline tests:** injected receive link sends a queued info IQ, accepts
+a synthetic full reply, and verifies that snapshot/member state exists before any
+CLI ingestion. Calling ingest afterward returns zero, and the query is never
+reserved again. A store reopen between settlement and projection verifies one
+recovery despite a separate truncated response, repeat recovery returns zero,
+and the truncated reply remains saved/pending. Existing transaction-abort tests
+for snapshot, invite and leave now also verify pending-marker deletion rolls back
+and that CLI ingestion clears it. Reproduce with `cargo test --locked
+-p whatsapp-api --all-features session_pending_projection`,
+`settled_group_reply_updates_snapshot`, and
+`ingestion_snapshot_invite_leave_and_marker_rollback_together` as filters.
+
+**Observed/live:** one new group-info action for the already configured group
+was queued after inspecting the action/chat outboxes: zero queued actions and zero
+pending chat intents, with one previously sent two-factor action left unresolved.
+A bounded 30-second `listen` session using the existing authenticated-receive
+configuration and no send-outbox flag exited zero. The selected action settled
+`ok` with no error code, with a saved group element. The four-member snapshot's
+updated_at fell inside that window (12.37 seconds after local queueing), and
+subsequent `group list` reported zero actions left to apply. This establishes
+automatic supported snapshot projection for this live info reply, not just IQ
+acceptance. Two saved groups were inspectable; no queued actions remained. The
+previously sent two-factor action remained sent; no chat intent was transmitted.
+
+Private evidence is retained in ignored, mode-0600 files under `lab/accounts/l/`:
+`group-session-preflight-actions.json`, `group-session-preflight-outbox.json`,
+`group-session-actions-queued.json`, `group-session-query-id.txt`,
+`group-session-live.log`, `group-session-actions-after.json`,
+`group-session-selected-action.log`, `group-session-list-after.log`, and
+`group-session-snapshots-after.json`. Reusing the saved ID is inspection only;
+do not create another action to repeat this completed validation. No identity,
+key, configuration or historical account migration was performed.
+
+**Confirmed/local tooling correction:** default-feature CLI checks replaced
+the target/debug binary, so the first post-session inspection lacked experimental
+commands. Rebuilding with `cargo build --locked -p whatsapp-cli --features
+experimental-transport` restored inspection; the same completed action was
+inspected without a second live connection/query.
+
+**Unknown:** live interruption/recovery and truncated automatic projection have
+only offline fixtures. Unsolicited w:gp2 groups_dirty scheduling, batch response
+handling, notification ACKs and full APK metadata application remain unfinished.
+
+Validation: 575 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, CLI reference
+regeneration and formatting passed. Bounded live snapshot projection passed;
+unsolicited group notification completion remains open.
+
+Final OpenAPI checks (five), staged whitespace and repository hygiene
+(399 local links) also passed.

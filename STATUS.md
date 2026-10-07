@@ -657,3 +657,25 @@ No account store was opened or live request sent.
 
 Validation: all five OpenAPI checks, generated CLI reference, whitespace and
 repository hygiene passed. No runtime behavior changed or live validation occurred.
+
+
+Queued group replies now apply during receiving (2026-10-07, **offline tested**),
+instead of waiting for `group list`. Settlement stores a durable projection marker;
+startup recovers only these newly marked replies once. Truncated/invalid group
+responses remain saved and diagnosable without blocking unrelated receiving;
+storage failures still stop the session. No request is replayed or historical
+account state backfilled. [Session projection](docs/protocol/groups.md#apply-queued-replies-during-receiving-2026-10-07).
+One bounded 30-second live group-info check settled ok with a matching saved group
+reply and four-member snapshot updated during receiving. Group list afterward
+applied zero replies. No chat outbox sends occurred; the previously unresolved
+two-factor action remained sent. Existing account identity, keys and config were
+preserved. Unsolicited group notifications/batch refresh and live recovery remain
+unverified.
+
+Validation: 575 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, CLI reference
+regeneration and formatting passed. Bounded live snapshot projection passed;
+unsolicited group notification completion remains open.
+
+Final OpenAPI checks (five), staged whitespace and repository hygiene
+(399 local links) also passed.

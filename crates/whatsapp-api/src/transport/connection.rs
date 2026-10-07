@@ -289,6 +289,7 @@ pub(crate) async fn drive(
     let account = store
         .read(AccountRecord::load)?
         .ok_or(Error::NotRegistered)?;
+    super::groups::recover_pending(&store)?;
     let active_id = super::messaging::new_message_id()?;
     link.send(&super::messaging::active_request(&active_id))
         .await?;
@@ -428,7 +429,15 @@ pub(crate) async fn drive(
                         continue;
                     }
                     // Queued one-shot actions (block list, reports, lookups) settle by iq id.
-                    if super::actions::record_reply(&store, &node)? { continue; }
+                    if super::actions::record_reply(&store, &node)? {
+                        if let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) {
+                            // APK 37.71 8lQ.A01 separates truncated/full results;
+                            // 8lQ.A00 sends full state to 0yw.A0U. Our supported
+                            // snapshot projection runs here, not only in CLI list.
+                            super::groups::apply_pending(&store, id)?;
+                        }
+                        continue;
+                    }
                     if device_query.as_ref().is_some_and(|q| q.matches(&node)) {
                         let summary = device_query.take().expect("matched device query").ingest(&store, &node)?;
                         tracing::info!(ingested = summary.ingested, partial_errors = summary.partial_errors, "device lists updated");
@@ -756,6 +765,59 @@ mod tests {
             assert!(self.finished().await.is_ok());
         }
     }
+    #[tokio::test]
+    async fn settled_group_reply_updates_snapshot_during_receive_without_cli_ingestion() {
+        use super::super::{actions, groups};
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("group-session.redb"));
+        let group = Jid::parse("12345-67890@g.us").unwrap();
+        let id = groups::queue_info(&store, &group).unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (query, written) = fake.written().await;
+        assert_eq!(
+            query.get_attr("id").and_then(|v| v.as_text()),
+            Some(id.as_str())
+        );
+        written.send(Ok(())).unwrap();
+        fake.deliver(
+            Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![
+                    Node::new("group")
+                        .attr("id", group.clone())
+                        .attr("subject", "Received in session")
+                        .children(vec![Node::new("participant").attr("jid", peer())]),
+                ]),
+        )
+        .await;
+        tokio::time::timeout(Duration::from_secs(5), async {
+            while groups::get(&store, &group).unwrap().is_none() {
+                tokio::time::sleep(Duration::from_millis(5)).await;
+            }
+        })
+        .await
+        .unwrap();
+        let snapshot = groups::get(&store, &group).unwrap().unwrap();
+        assert_eq!(snapshot.subject.as_deref(), Some("Received in session"));
+        assert_eq!(snapshot.members.len(), 1);
+        assert_eq!(
+            actions::outcomes(&store).unwrap()[0].status,
+            actions::ActionStatus::Ok
+        );
+        assert_eq!(
+            groups::ingest(&store).unwrap(),
+            0,
+            "CLI has no remaining projection work"
+        );
+        assert!(
+            actions::reserve_pending(&store).unwrap().is_empty(),
+            "query is never replayed"
+        );
+        fake.stop_cleanly().await;
+    }
+
     fn queue_read_receipt(store: &ProtocolStore, id: &str) {
         let route = encode(&Node::new("message").attr("id", id).attr("from", peer())).unwrap();
         let key = format!("received:{}:{id}", peer());

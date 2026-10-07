@@ -1870,7 +1870,7 @@ fn mask_number_in(text: &str) -> String {
 }
 
 /// Group management: every subcommand queues one action (a session
-/// transmits it) except `list`, which ingests replies and prints snapshots.
+/// transmits it) except `list`, which also ingests historical replies and prints snapshots.
 pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error> {
     use whatsapp_api::model::jid::Jid;
     use whatsapp_api::transport::groups;
@@ -1885,7 +1885,7 @@ pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error
     };
     let queued = |id: String| {
         println!(
-            "group: action {id} queued; a session transmits it; `group list` applies the reply"
+            "group: action {id} queued; a session transmits it and applies the reply; `group list` inspects snapshots"
         );
         Ok(())
     };

@@ -267,6 +267,7 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
         }
         row.settled_at = Some(Timestamp::now());
         row.reply = Some(encode(node)?);
+        super::groups::mark_pending_in(tx, &row.kind, id)?;
         tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)?;
         Ok(true)
     })
