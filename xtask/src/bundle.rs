@@ -53,6 +53,8 @@ struct Target {
     class: String,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     anchors: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    caller_anchors: Vec<String>,
     #[serde(default)]
     method: Option<String>,
     #[serde(default)]
@@ -87,9 +89,13 @@ fn read_recipe(path: &Path) -> Result<Recipe, String> {
             || !target.class.ends_with(';')
             || target.method.as_ref().is_some_and(|m| m.is_empty())
             || target.anchors.len() > 8
+            || target.caller_anchors.len() > 8
+            || (!target.caller_anchors.is_empty()
+                && (target.method.is_none() || target.anchors.is_empty()))
             || target
                 .anchors
                 .iter()
+                .chain(&target.caller_anchors)
                 .any(|a| a.is_empty() || a.len() > 4096)
             || target.rust_files.iter().any(|p| {
                 p.is_empty()
@@ -217,6 +223,7 @@ pub fn run(
                 Target {
                     class: class.into(),
                     anchors: Vec::new(),
+                    caller_anchors: Vec::new(),
                     method: None,
                     rust_files: Vec::new(),
                 },
@@ -270,6 +277,9 @@ pub fn run(
             entry["rust_files"] = serde_json::json!(target.rust_files);
             if !target.anchors.is_empty() {
                 entry["anchors"] = serde_json::json!(target.anchors);
+            }
+            if !target.caller_anchors.is_empty() {
+                entry["caller_anchors"] = serde_json::json!(target.caller_anchors);
             }
         }
         index.insert(topic, entry);
@@ -353,6 +363,29 @@ fn anchor_candidates(
     candidates.into_values().collect()
 }
 
+fn same_method(a: &crate::xref::XRef, b: &crate::xref::XRef) -> bool {
+    a.dex_file == b.dex_file && a.class_name == b.class_name && a.method_index == b.method_index
+}
+
+fn filter_callers(
+    candidates: &[crate::xref::XRef],
+    qualified: &[crate::xref::XRef],
+    evidence: &[crate::xref::CallerEvidence],
+) -> Vec<crate::xref::XRef> {
+    candidates
+        .iter()
+        .filter(|candidate| {
+            evidence.iter().any(|e| {
+                same_method(candidate, &e.target)
+                    && e.callers
+                        .iter()
+                        .any(|caller| qualified.iter().any(|q| same_method(q, caller)))
+            })
+        })
+        .cloned()
+        .collect()
+}
+
 /// Resolve exact string anchors within the declared class or method scope. A proposed
 /// recipe still needs semantic review; stable strings are locators, not proof.
 pub fn remap(apk: &Path, recipe_path: &Path, output: Option<&Path>) -> Result<(), String> {
@@ -364,16 +397,33 @@ pub fn remap(apk: &Path, recipe_path: &Path, output: Option<&Path>) -> Result<()
     let anchors: Vec<_> = recipe
         .targets
         .values()
-        .flat_map(|t| t.anchors.iter().cloned())
+        .flat_map(|t| t.anchors.iter().chain(&t.caller_anchors).cloned())
         .collect::<std::collections::BTreeSet<_>>()
         .into_iter()
         .collect();
     let hits = crate::xref::apk_xref_strict(apk, &anchors)?;
+    let caller_targets: Vec<_> = recipe
+        .targets
+        .values()
+        .filter(|t| !t.caller_anchors.is_empty())
+        .flat_map(|t| anchor_candidates(&t.anchors, &hits, true))
+        .collect();
+    let caller_evidence = if caller_targets.is_empty() {
+        Vec::new()
+    } else {
+        crate::xref::apk_candidate_callers(apk, &caller_targets)?
+    };
     let mut report = Vec::new();
     let mut complete = true;
     for (topic, target) in &mut recipe.targets {
         let method_scoped = target.method.is_some();
-        let candidates = anchor_candidates(&target.anchors, &hits, method_scoped);
+        let initial = anchor_candidates(&target.anchors, &hits, method_scoped);
+        let qualified = anchor_candidates(&target.caller_anchors, &hits, true);
+        let candidates = if target.caller_anchors.is_empty() {
+            initial.clone()
+        } else {
+            filter_callers(&initial, &qualified, &caller_evidence)
+        };
         let status = if target.anchors.is_empty() {
             "unanchored"
         } else if target
@@ -382,8 +432,18 @@ pub fn remap(apk: &Path, recipe_path: &Path, output: Option<&Path>) -> Result<()
             .any(|a| hits.get(a).is_none_or(Vec::is_empty))
         {
             "missing"
-        } else if candidates.is_empty() {
+        } else if initial.is_empty() {
             "no_common_scope"
+        } else if target
+            .caller_anchors
+            .iter()
+            .any(|a| hits.get(a).is_none_or(Vec::is_empty))
+        {
+            "missing_caller_anchor"
+        } else if !target.caller_anchors.is_empty() && qualified.is_empty() {
+            "no_common_caller_scope"
+        } else if candidates.is_empty() {
+            "no_matching_caller"
         } else if candidates.len() == 1 {
             "unique"
         } else {
@@ -396,6 +456,25 @@ pub fn remap(apk: &Path, recipe_path: &Path, output: Option<&Path>) -> Result<()
             .collect();
         report.push(serde_json::json!({"topic":topic,"status":status,"previous_class":target.class,
             "previous_method":target.method,"scope":if method_scoped { "method" } else { "class" },"candidates":candidates,"anchor_sites":sites,"rust_files":target.rust_files}));
+        if !target.caller_anchors.is_empty() {
+            let entry = report.last_mut().expect("topic report exists");
+            entry["initial_candidates"] = serde_json::json!(initial);
+            entry["caller_anchors"] = serde_json::json!(target.caller_anchors);
+            entry["caller_anchor_sites"] = serde_json::json!(
+                target
+                    .caller_anchors
+                    .iter()
+                    .map(|a| (a, hits.get(a).cloned().unwrap_or_default()))
+                    .collect::<BTreeMap<_, _>>()
+            );
+            entry["qualifying_callers"] = serde_json::json!(qualified);
+            entry["caller_matches"] = serde_json::json!(
+                caller_evidence
+                    .iter()
+                    .filter(|e| initial.iter().any(|s| same_method(s, &e.target)))
+                    .collect::<Vec<_>>()
+            );
+        }
         if status == "unique" {
             target.class.clone_from(&candidates[0].class_name);
             if method_scoped {
@@ -408,14 +487,11 @@ pub fn remap(apk: &Path, recipe_path: &Path, output: Option<&Path>) -> Result<()
     println!("{}", serde_json::to_string_pretty(&serde_json::json!({
         "previous_apk":recipe.apk_sha256,"candidate_apk":manifest.apk_sha256,
         "all_unique":complete,"topics":report,
-        "interpretation":"Exact string co-occurrence locates class/method scopes; it does not prove protocol equivalence. Proposed selectors require semantic review. Missing/ambiguous/unanchored/no-common-scope topics block recipe output."
+        "interpretation":"Exact string co-occurrence and optional symbolic caller references locate scopes; they do not prove protocol equivalence or dynamic dispatch. Proposed selectors require semantic review. Any unresolved topic blocks recipe output."
     })).map_err(|e|e.to_string())?);
     if let Some(output) = output {
         if !complete {
-            return Err(
-                "recipe not written: missing, ambiguous, unanchored or no-common-scope topics"
-                    .into(),
-            );
+            return Err("recipe not written: unresolved anchor scope or caller evidence".into());
         }
         recipe.apk_sha256 = manifest.apk_sha256;
         let mut file = fs::OpenOptions::new()
@@ -711,6 +787,31 @@ mod tests {
         );
         assert!(anchor_candidates(&["missing".into()], &hits, true).is_empty());
         assert!(anchor_candidates(&[], &hits, true).is_empty());
+        let target = site("classes.dex", 1, 10);
+        let caller = site("classes2.dex", 2, 20);
+        let evidence = vec![crate::xref::CallerEvidence {
+            target: target.clone(),
+            signature: "()V".into(),
+            callers: vec![caller.clone()],
+        }];
+        assert_eq!(
+            filter_callers(
+                std::slice::from_ref(&target),
+                std::slice::from_ref(&caller),
+                &evidence
+            )
+            .len(),
+            1
+        );
+        assert!(
+            filter_callers(
+                std::slice::from_ref(&target),
+                &[site("classes.dex", 2, 20)],
+                &evidence
+            )
+            .is_empty()
+        );
+        assert!(filter_callers(&[site("classes.dex", 3, 10)], &[caller], &evidence).is_empty());
     }
 
     #[test]
@@ -722,6 +823,10 @@ mod tests {
             serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"../escape":{"class":"LX/Test;"}}}),
             serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","rust_files":["../escape"]}}}),
             serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","invented":true}}}),
+            serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","anchors":["x"],"caller_anchors":["y"]}}}),
+            serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","method":"A00","caller_anchors":["y"]}}}),
+            serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","method":"A00","anchors":["x"],"caller_anchors":[""]}}}),
+            serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","method":"A00","anchors":["x"],"caller_anchors":vec!["y";9]}}}),
         ] {
             fs::write(&path, json(&value).unwrap()).unwrap();
             assert!(read_recipe(&path).is_err());

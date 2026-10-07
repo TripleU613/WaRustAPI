@@ -89,6 +89,9 @@
         "linked_parent",
         "parent",
         "general_chat"
+      ],
+      "caller_anchors": [
+        "group_response"
       ]
     }
   }

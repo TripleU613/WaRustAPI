@@ -74,7 +74,7 @@ output directory and 2 MiB media-free constraints remain. Default 37.70 selector
 are unchanged.
 
 The new [37.71 group recipe](recipes/2.26.37.71-groups.json) reproduces
-[its scoped baseline](2.26.37.71-groups/manifest.json): 13 files/397,778 bytes.
+[its scoped baseline](2.26.37.71-groups/manifest.json): 13 files/397,832 bytes.
 This baseline includes eight selected investigation targets, not all APK code.
 The initial six-target export measured 16.768 seconds. Real cached
 self-comparisons of that earlier baseline measured 0.0183..0.0215 seconds,
@@ -123,3 +123,8 @@ exploratory xref tool's partial result. Physical method indices keep name/shorty
 overloads distinct and whole-class selectors stay whole-class selectors. Candidate
 sites and all anchor occurrences are preserved in JSON. This is not full DEX VM
 verification or native-code remapping. See [porting workflow](../apk-porting.md#anchor-assisted-relocation).
+
+Method targets can add `caller_anchors` to require a caller containing those
+strings and a symbolic invocation with the candidate's full signature. The
+current group classifier ambiguity is resolved this way; missing/noninvoking
+evidence refuses instead of guessing. See [caller workflow](../apk-porting.md#caller-anchors-for-ambiguous-methods-2026-10-07).

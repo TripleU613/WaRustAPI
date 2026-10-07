@@ -124,6 +124,41 @@ impl<'a> DexFile<'a> {
         self.string(shorty_idx)
     }
 
+    // Shorties collapse every object parameter to L. Cross-DEX invoke matching
+    // must retain descriptors to avoid accepting a different overload as a caller.
+    // AOSP dex-format: method_id_item -> proto_id_item -> type_list.
+    // https://source.android.com/docs/core/runtime/dex-format
+    fn method_symbol(&self, index: u32) -> Result<(String, String, String), String> {
+        let (class, name, _) = self.method_info(index)?;
+        let proto = u16le(self.d, self.method_off as usize + 8 * index as usize + 2)? as u32;
+        if proto >= self.proto_count {
+            return Err("method prototype index out of bounds".into());
+        }
+        let offset = self.proto_off as usize + 12 * proto as usize;
+        let result = self.type_name(u32le(self.d, offset + 4)?)?;
+        let params = u32le(self.d, offset + 8)? as usize;
+        let mut signature = String::from("(");
+        if params != 0 {
+            let count = u32le(self.d, params)? as usize;
+            let start = params.checked_add(4).ok_or("prototype offset overflow")?;
+            let end = count
+                .checked_mul(2)
+                .and_then(|n| start.checked_add(n))
+                .ok_or("prototype extent overflow")?;
+            let entries = self
+                .d
+                .get(start..end)
+                .ok_or("prototype parameters truncated")?;
+            for entry in entries.as_chunks::<2>().0 {
+                signature
+                    .push_str(&self.type_name(u16::from_le_bytes([entry[0], entry[1]]) as u32)?);
+            }
+        }
+        signature.push(')');
+        signature.push_str(&result);
+        Ok((class, name, signature))
+    }
+
     /// `(class_descriptor, field_name, type_descriptor)` for a field_id_item.
     fn field_info(&self, field_idx: u32) -> Result<(String, String, String), String> {
         if field_idx >= self.field_count {
@@ -1413,6 +1448,91 @@ pub fn apk_callers(
     Ok(callers)
 }
 
+#[derive(serde::Serialize)]
+pub struct CallerEvidence {
+    pub target: XRef,
+    pub signature: String,
+    pub callers: Vec<XRef>,
+}
+
+/// Exact symbolic invoke references for physical candidates, with full
+/// cross-DEX signatures. No partial warning-only results or virtual dispatch claim.
+pub fn apk_candidate_callers(apk: &Path, sites: &[XRef]) -> Result<Vec<CallerEvidence>, String> {
+    let mut zip = zip::ZipArchive::new(std::fs::File::open(apk).map_err(|e| e.to_string())?)
+        .map_err(|e| e.to_string())?;
+    let names: Vec<_> = zip
+        .file_names()
+        .filter(|n| n.starts_with("classes") && n.ends_with(".dex"))
+        .map(str::to_owned)
+        .collect();
+    let mut blobs = BTreeMap::new();
+    for name in names {
+        let mut bytes = Vec::new();
+        zip.by_name(&name)
+            .map_err(|e| e.to_string())?
+            .read_to_end(&mut bytes)
+            .map_err(|e| e.to_string())?;
+        DexFile::parse(&bytes).map_err(|e| format!("{name}: {e}"))?;
+        blobs.insert(name, bytes);
+    }
+    let mut evidence = Vec::new();
+    let mut symbols: BTreeMap<_, Vec<usize>> = BTreeMap::new();
+    for site in sites {
+        let data = blobs.get(&site.dex_file).ok_or("candidate DEX missing")?;
+        let symbol = DexFile::parse(data)?.method_symbol(site.method_index)?;
+        if symbol.0 != site.class_name || symbol.1 != site.method_name {
+            return Err("candidate metadata differs from method table".into());
+        }
+        symbols
+            .entry(symbol.clone())
+            .or_default()
+            .push(evidence.len());
+        evidence.push(CallerEvidence {
+            target: site.clone(),
+            signature: symbol.2,
+            callers: Vec::new(),
+        });
+    }
+    for (name, data) in &blobs {
+        let dex = DexFile::parse(data)?;
+        let wanted: std::collections::HashSet<_> = symbols
+            .keys()
+            .map(|s| (s.0.as_str(), s.1.as_str()))
+            .collect();
+        let mut targets = std::collections::HashSet::new();
+        let mut matches = BTreeMap::new();
+        for index in 0..dex.method_count {
+            let (class, method, _) = dex.method_info(index).map_err(|e| format!("{name}: {e}"))?;
+            if !wanted.contains(&(class.as_str(), method.as_str())) {
+                continue;
+            }
+            let symbol = dex
+                .method_symbol(index)
+                .map_err(|e| format!("{name}: {e}"))?;
+            if let Some(indices) = symbols.get(&symbol) {
+                targets.insert(index);
+                matches.insert(index, indices);
+            }
+        }
+        references_one(name, data, &targets, invoked_method_index, |caller, _| {
+            let index =
+                invoked_method_index(&data[caller.dex_byte_off..]).expect("checked invoke extent");
+            for &i in matches[&index] {
+                evidence[i].callers.push(caller.clone());
+            }
+        })
+        .map_err(|e| format!("{name}: {e}"))?;
+    }
+    if evidence
+        .iter()
+        .flat_map(|e| &e.callers)
+        .any(|r| r.class_name.is_empty() || r.method_name.is_empty() || r.method_proto.is_empty())
+    {
+        return Err("caller has unresolved method/class metadata".into());
+    }
+    Ok(evidence)
+}
+
 pub fn run_callers(apk: &Path, target_class: &str, target_method: &str) -> Result<(), String> {
     let callers = apk_callers(apk, target_class, target_method)?;
     for caller in &callers {
@@ -2423,6 +2543,89 @@ mod tests {
         data[0x10c..0x110].copy_from_slice(&((code.len() / 2) as u32).to_le_bytes());
         data[0x110..0x110 + code.len()].copy_from_slice(code);
         data
+    }
+
+    fn object_signature_fixture(parameter_type: u16, code: &[u8]) -> Vec<u8> {
+        let mut data = field_fixture(code);
+        data[0x38..0x3c].copy_from_slice(&7u32.to_le_bytes());
+        data[0x84..0x88].copy_from_slice(&0x1e0u32.to_le_bytes());
+        data[0x88..0x8c].copy_from_slice(&0x1c0u32.to_le_bytes());
+        data[0x1e0..0x1eb].copy_from_slice(b"\x09LX/Other;\0");
+        data[0x1c0..0x1c4].copy_from_slice(b"\x02VL\0");
+        data[0x40..0x44].copy_from_slice(&4u32.to_le_bytes());
+        data[0x44..0x48].copy_from_slice(&0x1b0u32.to_le_bytes());
+        for (i, string) in [0u32, 2, 4, 5].iter().enumerate() {
+            data[0x1b0 + i * 4..0x1b4 + i * 4].copy_from_slice(&string.to_le_bytes());
+        }
+        data[0x94..0x98].copy_from_slice(&6u32.to_le_bytes());
+        data[0x9c..0xa0].copy_from_slice(&0x1d0u32.to_le_bytes());
+        data[0x1d0..0x1d4].copy_from_slice(&1u32.to_le_bytes());
+        data[0x1d4..0x1d6].copy_from_slice(&parameter_type.to_le_bytes());
+        data
+    }
+
+    #[test]
+    fn full_method_symbols_separate_object_overloads_and_reject_bad_parameters() {
+        let first = object_signature_fixture(0, &[0x0e, 0]);
+        let second = object_signature_fixture(3, &[0x0e, 0]);
+        let first = DexFile::parse(&first).unwrap();
+        let second = DexFile::parse(&second).unwrap();
+        assert_eq!(
+            first.method_info(0).unwrap(),
+            second.method_info(0).unwrap()
+        );
+        assert_eq!(first.method_symbol(0).unwrap().2, "(LX/Contact;)V");
+        assert_eq!(second.method_symbol(0).unwrap().2, "(LX/Other;)V");
+        let invalid = object_signature_fixture(4, &[0x0e, 0]);
+        assert!(DexFile::parse(&invalid).unwrap().method_symbol(0).is_err());
+        let mut truncated = object_signature_fixture(0, &[0x0e, 0]);
+        truncated[0x1d0..0x1d4].copy_from_slice(&100u32.to_le_bytes());
+        assert!(
+            DexFile::parse(&truncated)
+                .unwrap()
+                .method_symbol(0)
+                .is_err()
+        );
+    }
+
+    #[test]
+    fn candidate_callers_match_cross_dex_descriptors_not_shorties_or_payload_bytes() {
+        let dir = tempfile::tempdir().unwrap();
+        let apk = dir.path().join("calls.apk");
+        let mut zip = zip::ZipWriter::new(std::fs::File::create(&apk).unwrap());
+        let opts = zip::write::FileOptions::default();
+        use std::io::Write as _;
+        let invoke = [0x71, 0, 0, 0, 0, 0, 0x0e, 0];
+        for (name, data) in [
+            ("classes.dex", object_signature_fixture(0, &[0x0e, 0])),
+            ("classes2.dex", object_signature_fixture(0, &invoke)),
+            ("classes3.dex", object_signature_fixture(3, &invoke)),
+            // Invoke-like bytes in an array payload must not create an edge.
+            (
+                "classes4.dex",
+                object_signature_fixture(
+                    0,
+                    &[0, 3, 1, 0, 6, 0, 0, 0, 0x71, 0, 0, 0, 0, 0, 0x0e, 0],
+                ),
+            ),
+        ] {
+            zip.start_file(name, opts).unwrap();
+            zip.write_all(&data).unwrap();
+        }
+        zip.finish().unwrap();
+        let target = XRef {
+            dex_file: "classes.dex".into(),
+            class_name: "LX/Contact;".into(),
+            method_name: "update".into(),
+            method_proto: "VL".into(),
+            method_index: 0,
+            dex_byte_off: 0x110,
+        };
+        let evidence = apk_candidate_callers(&apk, &[target]).unwrap();
+        assert_eq!(evidence[0].signature, "(LX/Contact;)V");
+        assert_eq!(evidence[0].callers.len(), 1);
+        assert_eq!(evidence[0].callers[0].dex_file, "classes2.dex");
+        assert_eq!(evidence[0].callers[0].dex_byte_off, 0x110);
     }
 
     #[test]

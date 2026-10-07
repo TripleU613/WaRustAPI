@@ -1151,3 +1151,19 @@ warning-free Rustdoc, CLI reference, five OpenAPI checks, formatting and exact
 snapshot regeneration (13 files/397,778 bytes) passed.
 Repository hygiene passed (430 local links, tracked-file budgets, licenses
 and reference checksums); staged whitespace and final OpenAPI rerun passed.
+
+APK release maintenance now supports bounded method caller_anchors with full
+cross-DEX signatures, preserving prefilter candidates/call sites and refusing
+missing/split/noninvoking caller evidence. In APK 37.71, group_response caller
+metadata resolves the classifier's ADs.A01/AZK.AAK ambiguity without old-name
+fallback: all eight topics now unique (10.012s) and a new proposal was written.
+Eight code topics remained unchanged in cached comparison; only target metadata
+changed (baseline 397,832 bytes). Indirect/native dispatch and a distinct next
+APK remain unverified. No saved account opened or live request sent this turn.
+
+Validation: 595 workspace/all-feature and 24 default CLI tests, final strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, CLI reference,
+five OpenAPI checks, formatting and exact snapshot regeneration passed. All
+three actual caller-negative probes exited 1 without creating proposals.
+Repository hygiene passed (432 local links, tracked-file budgets, licenses
+and reference checksums); final staged whitespace checks passed.

@@ -97,6 +97,9 @@
       "parent",
       "general_chat"
     ],
+    "caller_anchors": [
+      "group_response"
+    ],
     "class": "LX/ADs;",
     "file": "group-type-reply.txt",
     "method_filter": "A01",

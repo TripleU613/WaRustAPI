@@ -1,0 +1,47 @@
+APK 2.26.37.71 SHA256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed/static symbolic invoke and literal caller anchor evidence.
+No absence of indirect/native/runtime dispatch is inferred.
+
+# Exploratory exact-name callers, independently corroborated by strict proposal report
+classes6.dex  LX/ADs;->A0B(IL)
+  invoke dex byte offset: 0x4ede56
+classes6.dex  LX/ADs;->A0C(LLLLLI)
+  invoke dex byte offset: 0x4ee0ec
+classes6.dex  LX/ADs;->A0E(LL)
+  invoke dex byte offset: 0x4ee1ee
+classes6.dex  LX/AWV;->C8f(VLL)
+  invoke dex byte offset: 0x5709c4
+classes6.dex  LX/AWc;->C8f(VLL)
+  invoke dex byte offset: 0x571f58
+classes6.dex  LX/AWi;->C8f(VLL)
+  invoke dex byte offset: 0x574288
+classes6.dex  LX/AWi;->C8f(VLL)
+  invoke dex byte offset: 0x5743c8
+classes.dex  LX/0yv;->A09(VLI)
+  invoke dex byte offset: 0x757c20
+
+# AZK.AAK exact-name symbolic callers: zero returned. This is not full reachability proof.
+
+# Exact string caller anchor occurrences
+["group_response"]  (5 reference(s))
+  classes6.dex  LX/A9r;->A00(L)
+    dex byte offset: 0x4a9ffa
+  classes6.dex  Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;->A00(LLLLLI)
+    dex byte offset: 0x4bb5d4
+  classes6.dex  LX/ADs;->A0C(LLLLLI)
+    dex byte offset: 0x4ee0da
+  classes6.dex  LX/AWc;->C8f(VLL)
+    dex byte offset: 0x571f44
+  classes6.dex  LX/AjB;->invoke(LL)
+    dex byte offset: 0x5edfbc
+
+# LX/ADs.A0C selected method-relative byte extents
+    0236..023a  const-string  v4, "group_response"
+    023a..023c  const/4  v3, #0x3
+    023c..023e  const/4  v2, #0x0
+    023e..0242  new-instance  v8, LX/A9r;
+    0242..0248  invoke-direct  {v8, v3, v4, v2, v2}, LX/A9r;-><init>(VILZZ)
+    0248..024e  invoke-static  {v0}, LX/ADs;->A01(IL)
+    024e..0250  move-result  v22
+    0250..0256  invoke-static  {v0}, LX/ADs;->A03(LL)
+    0256..0258  move-result-object  v9

@@ -1,7 +1,7 @@
 {
-  "all_unique": false,
+  "all_unique": true,
   "candidate_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
-  "interpretation": "Exact string co-occurrence locates class/method scopes; it does not prove protocol equivalence. Proposed selectors require semantic review. Missing/ambiguous/unanchored/no-common-scope topics block recipe output.",
+  "interpretation": "Exact string co-occurrence and optional symbolic caller references locate scopes; they do not prove protocol equivalence or dynamic dispatch. Proposed selectors require semantic review. Any unresolved topic blocks recipe output.",
   "previous_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
   "topics": [
     {
@@ -248,14 +248,6 @@
       "anchor_sites": {
         "default_sub_group": [
           {
-            "class_name": "LX/Dpn;",
-            "dex_byte_off": 3373268,
-            "dex_file": "classes8.dex",
-            "method_index": 9371,
-            "method_name": "A0r",
-            "method_proto": "V"
-          },
-          {
             "class_name": "Lcom/whatsapp/community/mex/GetSubgroupsGraphQlHandler;",
             "dex_byte_off": 4543848,
             "dex_file": "classes6.dex",
@@ -294,6 +286,14 @@
             "method_index": 28032,
             "method_name": "AAK",
             "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/Dpn;",
+            "dex_byte_off": 3373268,
+            "dex_file": "classes8.dex",
+            "method_index": 9371,
+            "method_name": "A0r",
+            "method_proto": "V"
           }
         ],
         "general_chat": [
@@ -438,6 +438,46 @@
         ],
         "parent": [
           {
+            "class_name": "LX/NI2;",
+            "dex_byte_off": 3884154,
+            "dex_file": "classes11.dex",
+            "method_index": 20842,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/HBY;",
+            "dex_byte_off": 5202924,
+            "dex_file": "classes9.dex",
+            "method_index": 16033,
+            "method_name": "<init>",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/facebook/common/dextricks/ReflectionClassLoader;",
+            "dex_byte_off": 5203892,
+            "dex_file": "classes9.dex",
+            "method_index": 40608,
+            "method_name": "install",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "Lcom/facebook/common/dextricks/MultiDexClassLoaderLight;",
+            "dex_byte_off": 5204394,
+            "dex_file": "classes9.dex",
+            "method_index": 40414,
+            "method_name": "install",
+            "method_proto": "ZLL"
+          },
+          {
+            "class_name": "Lcom/facebook/common/dextricks/MultiDexClassLoader;",
+            "dex_byte_off": 3455684,
+            "dex_file": "classes9.dex",
+            "method_index": 40350,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
             "class_name": "LX/ADs;",
             "dex_byte_off": 5167336,
             "dex_file": "classes6.dex",
@@ -486,44 +526,12 @@
             "method_proto": "LLL"
           },
           {
-            "class_name": "LX/HBY;",
-            "dex_byte_off": 5202924,
-            "dex_file": "classes9.dex",
-            "method_index": 16033,
-            "method_name": "<init>",
+            "class_name": "LX/4Fu;",
+            "dex_byte_off": 4442228,
+            "dex_file": "classes4.dex",
+            "method_index": 9733,
+            "method_name": "A01",
             "method_proto": "VL"
-          },
-          {
-            "class_name": "Lcom/facebook/common/dextricks/ReflectionClassLoader;",
-            "dex_byte_off": 5203892,
-            "dex_file": "classes9.dex",
-            "method_index": 40608,
-            "method_name": "install",
-            "method_proto": "L"
-          },
-          {
-            "class_name": "Lcom/facebook/common/dextricks/MultiDexClassLoaderLight;",
-            "dex_byte_off": 5204394,
-            "dex_file": "classes9.dex",
-            "method_index": 40414,
-            "method_name": "install",
-            "method_proto": "ZLL"
-          },
-          {
-            "class_name": "Lcom/facebook/common/dextricks/MultiDexClassLoader;",
-            "dex_byte_off": 3455684,
-            "dex_file": "classes9.dex",
-            "method_index": 40350,
-            "method_name": "<clinit>",
-            "method_proto": "V"
-          },
-          {
-            "class_name": "LX/NI2;",
-            "dex_byte_off": 3884154,
-            "dex_file": "classes11.dex",
-            "method_index": 20842,
-            "method_name": "<clinit>",
-            "method_proto": "V"
           },
           {
             "class_name": "LX/0P4;",
@@ -532,18 +540,158 @@
             "method_index": 8657,
             "method_name": "AR6",
             "method_proto": "VL"
-          },
-          {
-            "class_name": "LX/4Fu;",
-            "dex_byte_off": 4442228,
-            "dex_file": "classes4.dex",
-            "method_index": 9733,
-            "method_name": "A01",
-            "method_proto": "VL"
           }
         ]
       },
+      "caller_anchor_sites": {
+        "group_response": [
+          {
+            "class_name": "LX/A9r;",
+            "dex_byte_off": 4890618,
+            "dex_file": "classes6.dex",
+            "method_index": 21111,
+            "method_name": "A00",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;",
+            "dex_byte_off": 4961748,
+            "dex_file": "classes6.dex",
+            "method_index": 39009,
+            "method_name": "A00",
+            "method_proto": "LLLLLI"
+          },
+          {
+            "class_name": "LX/ADs;",
+            "dex_byte_off": 5169370,
+            "dex_file": "classes6.dex",
+            "method_index": 22501,
+            "method_name": "A0C",
+            "method_proto": "LLLLLI"
+          },
+          {
+            "class_name": "LX/AWc;",
+            "dex_byte_off": 5709636,
+            "dex_file": "classes6.dex",
+            "method_index": 27490,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/AjB;",
+            "dex_byte_off": 6217660,
+            "dex_file": "classes6.dex",
+            "method_index": 30488,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          }
+        ]
+      },
+      "caller_anchors": [
+        "group_response"
+      ],
+      "caller_matches": [
+        {
+          "callers": [
+            {
+              "class_name": "LX/0yv;",
+              "dex_byte_off": 7699488,
+              "dex_file": "classes.dex",
+              "method_index": 22814,
+              "method_name": "A09",
+              "method_proto": "VLI"
+            },
+            {
+              "class_name": "LX/ADs;",
+              "dex_byte_off": 5168726,
+              "dex_file": "classes6.dex",
+              "method_index": 22500,
+              "method_name": "A0B",
+              "method_proto": "IL"
+            },
+            {
+              "class_name": "LX/ADs;",
+              "dex_byte_off": 5169388,
+              "dex_file": "classes6.dex",
+              "method_index": 22501,
+              "method_name": "A0C",
+              "method_proto": "LLLLLI"
+            },
+            {
+              "class_name": "LX/ADs;",
+              "dex_byte_off": 5169646,
+              "dex_file": "classes6.dex",
+              "method_index": 22503,
+              "method_name": "A0E",
+              "method_proto": "LL"
+            },
+            {
+              "class_name": "LX/AWV;",
+              "dex_byte_off": 5704132,
+              "dex_file": "classes6.dex",
+              "method_index": 27455,
+              "method_name": "C8f",
+              "method_proto": "VLL"
+            },
+            {
+              "class_name": "LX/AWc;",
+              "dex_byte_off": 5709656,
+              "dex_file": "classes6.dex",
+              "method_index": 27490,
+              "method_name": "C8f",
+              "method_proto": "VLL"
+            },
+            {
+              "class_name": "LX/AWi;",
+              "dex_byte_off": 5718664,
+              "dex_file": "classes6.dex",
+              "method_index": 27527,
+              "method_name": "C8f",
+              "method_proto": "VLL"
+            },
+            {
+              "class_name": "LX/AWi;",
+              "dex_byte_off": 5718984,
+              "dex_file": "classes6.dex",
+              "method_index": 27527,
+              "method_name": "C8f",
+              "method_proto": "VLL"
+            }
+          ],
+          "signature": "(LX/0hs;)I",
+          "target": {
+            "class_name": "LX/ADs;",
+            "dex_byte_off": 5167302,
+            "dex_file": "classes6.dex",
+            "method_index": 22490,
+            "method_name": "A01",
+            "method_proto": "IL"
+          }
+        },
+        {
+          "callers": [],
+          "signature": "(LX/0hs;LX/8lB;)Ljava/lang/Object;",
+          "target": {
+            "class_name": "LX/AZK;",
+            "dex_byte_off": 5760794,
+            "dex_file": "classes6.dex",
+            "method_index": 28032,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          }
+        }
+      ],
       "candidates": [
+        {
+          "class_name": "LX/ADs;",
+          "dex_byte_off": 5167302,
+          "dex_file": "classes6.dex",
+          "method_index": 22490,
+          "method_name": "A01",
+          "method_proto": "IL"
+        }
+      ],
+      "initial_candidates": [
         {
           "class_name": "LX/ADs;",
           "dex_byte_off": 5167302,
@@ -563,11 +711,53 @@
       ],
       "previous_class": "LX/ADs;",
       "previous_method": "A01",
+      "qualifying_callers": [
+        {
+          "class_name": "LX/A9r;",
+          "dex_byte_off": 4890618,
+          "dex_file": "classes6.dex",
+          "method_index": 21111,
+          "method_name": "A00",
+          "method_proto": "L"
+        },
+        {
+          "class_name": "LX/ADs;",
+          "dex_byte_off": 5169370,
+          "dex_file": "classes6.dex",
+          "method_index": 22501,
+          "method_name": "A0C",
+          "method_proto": "LLLLLI"
+        },
+        {
+          "class_name": "LX/AWc;",
+          "dex_byte_off": 5709636,
+          "dex_file": "classes6.dex",
+          "method_index": 27490,
+          "method_name": "C8f",
+          "method_proto": "VLL"
+        },
+        {
+          "class_name": "LX/AjB;",
+          "dex_byte_off": 6217660,
+          "dex_file": "classes6.dex",
+          "method_index": 30488,
+          "method_name": "invoke",
+          "method_proto": "LL"
+        },
+        {
+          "class_name": "Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;",
+          "dex_byte_off": 4961748,
+          "dex_file": "classes6.dex",
+          "method_index": 39009,
+          "method_name": "A00",
+          "method_proto": "LLLLLI"
+        }
+      ],
       "rust_files": [
         "crates/whatsapp-api/src/transport/groups.rs"
       ],
       "scope": "method",
-      "status": "ambiguous",
+      "status": "unique",
       "topic": "group-type-reply"
     }
   ]

@@ -141,3 +141,54 @@ automatic proposal writing correctly refuses the ambiguous topic. Seven other
 topics remain unique. This is evidence of an actual duplicated locator scope,
 not a reason to choose the old obfuscated name in a new release. Caller-assisted
 disambiguation remains needed.
+
+
+## Caller anchors for ambiguous methods (2026-10-07)
+
+`caller_anchors` is an optional exact-string array with the same eight-string /
+4096-byte bounds as target anchors. It requires target anchors and method scope;
+whole-class caller filtering is deliberately unsupported. All caller anchors
+must occur in one physical caller method, and that method must symbolically
+invoke the candidate. Multiple qualifying callers are allowed; multiple surviving
+candidates remain ambiguous. No old class/name fallback is used.
+
+The scanner maps declaring class, method name and **full** parameter/return
+signature across DEX pools. Shorties cannot distinguish different object overloads;
+[DEX method/prototype/type-list tables](https://source.android.com/docs/core/runtime/dex-format)
+provide the actual descriptors. Code streams use the checked reference walker,
+including payload exclusion. Reported read/structure/metadata failures propagate;
+this is not complete DEX VM verification, reflective/native reachability or
+runtime virtual dispatch resolution.
+
+Extra unresolved statuses: `missing_caller_anchor`, `no_common_caller_scope`,
+`no_matching_caller`. Configured topics retain `initial_candidates`,
+`caller_anchor_sites`, `qualifying_callers`, `caller_matches` (target, full
+signature and all symbolic caller sites); `candidates` is the filtered set.
+These are source locators, not proof of unchanged behavior or automatic patches.
+
+**Confirmed static:** APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+The group-type recipe's target strings originally matched ADs.A01 and AZK.AAK.
+Adding actual caller anchor `group_response` resolves ADs.A01 through its caller
+A0C and AWc.C8f; A0C loads the string at method-relative 0236 and invokes the
+classifier at 0248. [Evidence](group-type-caller-evidence.txt) records all eight
+symbolic classifier invokes and five string-anchor scopes. The strict report
+retains zero direct invokes for the competing schema reader; it does not claim
+that reader is unused or cannot be reached indirectly.
+
+The real scan resolved all eight topics and wrote a new proposal in 10.012s.
+All selected class/method pairs match the reviewed current recipe. The updated
+baseline is 13 files/397,832 bytes; cached before/after comparison found all
+8 code topics unchanged and only targets metadata changed. A distinct new
+release remains unverified. This supersedes the earlier current-APK inability
+to generate an all-unique proposal, not the need for semantic review.
+
+Three actual current-APK negative fixtures used a missing caller string,
+existing strings split across caller scopes, and a valid unrelated writer
+anchor. They respectively reported missing_caller_anchor, no_common_caller_scope
+and no_matching_caller; every requested proposal exited 1 with no output file.
+Synthetic DEX fixtures separately cover same-shorty object overloads, cross-DEX
+matching, payload invoke bytes, invalid parameter indices/truncated lists and
+physical caller/callee index separation. An initial JSON-bound fixture syntax
+error was fixed before the full test rerun. Strict Clippy requested array chunks
+for two-byte type entries; the same checked even-sized extent is retained.
