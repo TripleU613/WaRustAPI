@@ -1319,3 +1319,25 @@ Validation: 651 workspace/all-feature tests, default CLI24, strict Clippy,
 warning-free Rustdoc, CLI reference and formatting passed. Six actual isolated
 CLI probes plus live saved-query inspection passed; hygiene645 local links,
 2405965 bytes/four unchanged APK bundles.
+
+
+Contact ADV caller trace (2026-10-07, APK 37.71): eleven exact selected
+methods now preserve supplied-key verification, stale/invalid caller branches,
+notification addition and primary identity/session application. Saved identity
+is not always the APK's selected key. Invalid/stale signed candidates do not
+apply through the success path; raw-ID mismatch has separate reset branches.
+Our current fallback actually drops companions and keeps only raw-ID/time floor;
+prior preservation comments were wrong and are corrected. Runtime retention,
+verified device authority after identity change, feature 0x3285 selection and
+full supplied-key integration remain unfinished; no account/live request changed.
+[Evidence and unknowns](docs/protocol/cross-device-sync.md#contact-adv-verification-and-retention-2026-10-07).
+Core snapshot: 33 topics/161 methods, 38 files/967529 bytes. Cached comparison
+against b058f61 took 0.028928 seconds: eleven added, all twenty-two old topics
+unchanged; inventory/manifest/tokens unchanged, targets metadata expanded.
+
+Validation: exact APK re-export/check verified all 38 files/967529 bytes;
+checksum-verified cached diff preserved all 22 older topic texts. CLI reference
+regeneration, four CLI OpenAPI coverage checks, API symbol check, formatting and
+staged whitespace passed. Hygiene verified 659 local links and 2642000 bytes
+across all four independent APK bundles. This source/comment-only chunk makes
+no runtime behavior change; no new workspace-test or live-interop claim.

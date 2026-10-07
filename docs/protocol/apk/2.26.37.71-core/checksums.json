@@ -1,4 +1,48 @@
 {
+  "adv-contact-add-notification.txt": {
+    "bytes": 5929,
+    "sha256": "5a5d0bdfa5d29e9506c35047e640f48b3caecf65da202bc9f2f1312db2a9ba11"
+  },
+  "adv-contact-baseline-candidate.txt": {
+    "bytes": 1523,
+    "sha256": "94d2f302452701e22ab1927505b8e343cfd5e439d005d1ab355b8d6aa43b509c"
+  },
+  "adv-contact-identity-apply.txt": {
+    "bytes": 828,
+    "sha256": "b64e6e0468c5df11820c07f942bad0425dcdceb4c539bdd761f16aecf7731123"
+  },
+  "adv-contact-reconciliation.txt": {
+    "bytes": 7478,
+    "sha256": "373dd5a825f560dc460f0c7e7aee4228374329029e26eb946dfe6d600689815f"
+  },
+  "adv-contact-session-cleanup-schedule.txt": {
+    "bytes": 651,
+    "sha256": "917fb0d2f04b10487ff1bc61c6ec28820ae2593f540401943b6f5692b35c71f9"
+  },
+  "adv-contact-signature.txt": {
+    "bytes": 8145,
+    "sha256": "9c99ea2dceee4586fbde699cee1befc3a931615cbc16ceadd2bfada4ad1eac97"
+  },
+  "adv-contact-sync-updater.txt": {
+    "bytes": 181519,
+    "sha256": "01a9234911e2357abf2a6307e3ade2e787f1c2cf5dc13699c9c1551a530ee71e"
+  },
+  "adv-contact-validation.txt": {
+    "bytes": 9855,
+    "sha256": "f0ee461d6b2b19df24091a757938f78c72269161ede33d8eefa1d6aaae29ee6d"
+  },
+  "adv-primary-identity-commit.txt": {
+    "bytes": 9288,
+    "sha256": "844ae1addcebd8a3fa4d80196ee941009ee64c55a3e7238c01df841bb9842302"
+  },
+  "adv-primary-identity-save.txt": {
+    "bytes": 1390,
+    "sha256": "186aa27226515002afb75fb1db2b45cd28363720e8e5a90f1e7e0be3c0bfb72a"
+  },
+  "adv-primary-session-removal.txt": {
+    "bytes": 3531,
+    "sha256": "059b61c9205eb05b4f42cd555801a83d51ed4a1abebfbac0473c4404d26f1a0f"
+  },
   "certificate-root.txt": {
     "bytes": 1386,
     "sha256": "097e7c622db0ce8e18f73efb2b2f4693a8b520958198ec4bce0eef0779d30602"
@@ -92,8 +136,8 @@
     "sha256": "82590b7944e627c71d4a54e3403be84e314598ced8789812c7c6951470853c92"
   },
   "targets.json": {
-    "bytes": 7902,
-    "sha256": "b9680446fd9cb2b26582dd7cb6265669d9ae5c53582047b2a51ce3fff4ce458e"
+    "bytes": 12220,
+    "sha256": "b81d6218b2fd761a60eb648c86b5dd3f9ccaefcfddd5e8689ae60f554679115b"
   },
   "token-dictionary-initializer.txt": {
     "bytes": 159791,

@@ -1,0 +1,115 @@
+# APK-derived structural disassembly: LX/ODU;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(ZLLL) flags=0x12 registers=24
+  0000..0004 op=13 const/16 v1, #0x5a3
+  0004..0008 op=08 move-object/from16
+  0008..000c op=54 iget-object v0, v8, LX/ODU;->A00:LX/05B;
+  000c..0012 op=71 invoke-static {v0, v1}, LX/3cB;->A0z(LLI)
+  0012..0014 op=0c move-result-object
+  0014..0018 op=1f check-cast v3, LX/0AH;
+  0018..001c op=08 move-object/from16
+  001c..0022 op=6e invoke-virtual {v4}, Lcom/google/common/collect/ImmutableMap;->isEmpty(Z)
+  0022..0024 op=0a move-result
+  0024..0026 op=12 const/4 v2, #0x0
+  0026..002a op=39 if-nez v0, +0xbb
+  002a..002e op=54 iget-object v0, v8, LX/ODU;->A06:LX/08Z;
+  002e..0032 op=08 move-object/from16
+  0032..0038 op=72 invoke-interface {v0, v1}, LX/08Z;->BO0(ZL)
+  0038..003a op=0a move-result
+  003a..003e op=39 if-nez v0, +0xa0
+  003e..0042 op=08 move-object/from16
+  0042..0046 op=54 iget-object v0, v9, LX/NL5;->A08:[B
+  0046..004a op=39 if-nez v0, +0xe
+  004a..004e op=1a const-string v0, "SyncDeviceNotificationRunnable/verifyADVIndexList/no key index list in device add notification"
+  004e..0054 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+  0054..0058 op=1a const-string v0, "SyncDeviceNotificationRunnable/handleUserDeviceUpdate/invalid adv data"
+  0058..005e op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+  005e..0060 op=12 const/4 v0, #0x1
+  0060..0062 op=0f return v0
+  0062..0066 op=54 iget-object v5, v9, LX/NL5;->A06:Lcom/whatsapp/infra/core/jid/UserJid;
+  0066..006a op=54 iget-object v4, v8, LX/ODU;->A02:LX/11T;
+  006a..0070 op=6e invoke-virtual {v4, v5, v0}, LX/11T;->A07(LLL)
+  0070..0072 op=0c move-result-object
+  0072..0076 op=38 if-eqz v3, +0x13
+  0076..007a op=55 iget-boolean v0, v3, LX/NAc;->A02:Z
+  007a..007e op=38 if-eqz v0, +0xf
+  007e..0082 op=54 iget-object v1, v8, LX/ODU;->A03:LX/11S;
+  0082..0088 op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/UserJid;->getPrimaryDevice(L)
+  0088..008a op=0c move-result-object
+  008a..0090 op=71 invoke-static {v0}, LX/1xg;->A1Q(LL)
+  0090..0092 op=0c move-result-object
+  0092..0098 op=6e invoke-virtual {v1, v0}, LX/11S;->A01(VL)
+  0098..009a op=12 const/4 v7, #0x0
+  009a..009e op=38 if-eqz v3, +0x1f
+  009e..00a2 op=54 iget-object v0, v3, LX/NAc;->A01:LX/GsF;
+  00a2..00a6 op=38 if-eqz v0, +0x1b
+  00a6..00a8 op=07 move-object
+  00a8..00ac op=54 iget-object v3, v3, LX/NAc;->A00:LX/B7D;
+  00ac..00b0 op=53 iget-wide v0, v9, LX/NL5;->A00:J
+  00b0..00b4 op=62 sget-object v12, LX/1Tx;->A01:LX/1Tx;
+  00b4..00b6 op=12 const/4 v14, #0x0
+  00b6..00b8 op=07 move-object
+  00b8..00ba op=07 move-object
+  00ba..00bc op=07 move-object
+  00bc..00be op=04 move-wide
+  00be..00c4 op=77 invoke-static/range {v10..v16}, LX/11T;->A04(ZLLLLLJ)
+  00c4..00c6 op=0a move-result
+  00c6..00ca op=39 if-nez v6, +0xb
+  00ca..00ce op=1a const-string v0, "SyncDeviceNotificationRunnable/verifyADVIndexList/validate indexList fail, userJid="
+  00ce..00d4 op=71 invoke-static {v0, v5}, LX/1xj;->A15(LLL)
+  00d4..00d6 op=0c move-result-object
+  00d6..00d8 op=28 goto -0x44
+  00d8..00da op=07 move-object
+  00da..00dc op=28 goto -0x17
+  00dc..00e0 op=38 if-eqz v7, +0x4a
+  00e0..00e4 op=54 iget-object v6, v8, LX/ODU;->A01:LX/0bN;
+  00e4..00ea op=6e invoke-virtual {v6, v5}, LX/0bN;->A0C(LL)
+  00ea..00ec op=0c move-result-object
+  00ec..00f2 op=71 invoke-static {v8}, LX/LZj;->A0v(LL)
+  00f2..00f4 op=0c move-result-object
+  00f4..00f8 op=54 iget-object v9, v9, LX/NL5;->A02:Lcom/google/common/collect/ImmutableMap;
+  00f8..00fe op=6e invoke-virtual {v8, v9}, Ljava/util/AbstractMap;->putAll(VL)
+  00fe..0104 op=6e invoke-virtual {v6, v5}, LX/0bN;->A04(LL)
+  0104..0106 op=0c move-result-object
+  0106..010a op=39 if-nez v9, +0x1a
+  010a..010e op=52 iget v11, v7, LX/GsF;->rawId_:I
+  010e..0112 op=16 const-wide/16 v12, #0x0
+  0112..0116 op=52 iget v9, v7, LX/GsF;->accountType_:I
+  0116..011c op=71 invoke-static {v9}, LX/Azc;->forNumber(LI)
+  011c..011e op=0c move-result-object
+  011e..0122 op=39 if-nez v10, +0x4
+  0122..0126 op=62 sget-object v10, LX/Azc;->A01:LX/Azc;
+  0126..012a op=22 new-instance v9, LX/LbQ;
+  012a..012e op=05 move-wide/from16
+  012e..0132 op=05 move-wide/from16
+  0132..0134 op=04 move-wide
+  0134..013a op=76 invoke-direct/range {v9..v19}, LX/LbQ;-><init>(VLIJJJJ)
+  013a..0140 op=6e invoke-virtual {v6, v9, v0, v1}, LX/0bN;->A05(LLJ)
+  0140..0142 op=0c move-result-object
+  0142..0148 op=6e invoke-virtual {v6, v5}, LX/0bN;->A0C(LL)
+  0148..014a op=0c move-result-object
+  014a..014e op=54 iget-object v1, v7, LX/GsF;->validIndexes_:Lcom/google/protobuf/Internal$IntList;
+  014e..0152 op=52 iget v0, v7, LX/GsF;->currentIndex_:I
+  0152..0158 op=6e invoke-virtual {v4, v1, v9, v8, v0}, LX/11T;->A08(LLLLI)
+  0158..015a op=0c move-result-object
+  015a..0160 op=71 invoke-static {v0}, Lcom/google/common/collect/ImmutableMap;->copyOf(LL)
+  0160..0162 op=0c move-result-object
+  0162..0168 op=6e invoke-virtual {v6, v0, v5, v10, v2}, LX/0bN;->A0H(ZLLLZ)
+  0168..016e op=6e invoke-virtual {v4, v5, v3}, LX/11T;->A0C(VLL)
+  016e..0170 op=0f return v2
+  0170..0176 op=71 invoke-static {}, LX/1xh;->A1B(L)
+  0176..0178 op=0c move-result-object
+  0178..017a op=27 throw v0
+  017a..017e op=1a const-string v0, "Add self device, userJid="
+  017e..0184 op=71 invoke-static {v1, v0}, LX/000;->A07(LLL)
+  0184..0186 op=0c move-result-object
+  0186..018a op=1a const-string v0, "; toAdd="
+  018a..0190 op=71 invoke-static {v4, v0, v1}, LX/1xj;->A14(LLLL)
+  0190..0192 op=0c move-result-object
+  0192..0196 op=1a const-string v0, "invalid-device-notification"
+  0196..019c op=6e invoke-virtual {v3, v0, v1, v2}, LX/0AH;->A0g(VLLZ)
+  019c..019e op=0f return v2
+.end method

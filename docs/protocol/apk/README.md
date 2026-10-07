@@ -185,3 +185,12 @@ Rust coercion module. [Cached comparison](mex-coercion-owner-diff.json) against
 Git 4fea159: 0.016635 seconds, all 38 method texts unchanged, targets metadata only.
 Current snapshot remains 43 files, now 162,671 bytes; no new APK/behavior claim.
 [Scalar port/reference](../mex.md#participant-scalar-coercion-and-float-rounding-2026-10-07).
+
+
+Contact ADV caller expansion (37.71): core now includes eleven exact selected
+signature/reconciliation/validation, sync/add-notification, baseline and identity
+application methods. Current core: 33 topics/161 methods, 38 files/967529 bytes.
+[Cached comparison](core-adv-contact-diff.json) against Git b058f61 took
+0.028928 seconds: eleven added/twenty-two unchanged topics; inventory, manifest
+and tokens unchanged, targets metadata expanded. Existing topics are not
+rewritten as a new release. [Caller findings and runtime gaps](../cross-device-sync.md#contact-adv-verification-and-retention-2026-10-07).

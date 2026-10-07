@@ -902,3 +902,98 @@ recognition of the previously received notice, not a new human reply, APK UI
 rendering, or completed history transfer. The receive/backfill code does not
 write Signal identity/session/prekey/account-generation/send-state tables;
 normal store-open metadata initialization still changes physical file bytes.
+
+### Contact ADV verification and retention (2026-10-07)
+
+**Confirmed, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+The new hash-pinned core topics preserve eleven exact selected methods, including
+the actual contact-sync caller. This build names the signed/details protobuf
+classes **Grm/GsF**; older BRD/BUg references above belong to the earlier build
+and must not be copied as 37.71 class names.
+
+- [11T.A07](apk/2.26.37.71-core/adv-contact-signature.txt)
+  loads the primary Signal identity at `0014..0030`, constructs the optional
+  supplied account-signature key at `0034..005e`, and selects it when different
+  (`00bc..0110`). Thus “a saved identity always selects local” is refuted.
+  Signature verification is over prefix/details (`0110..014a`). On success
+  `0192..01b4` returns parsed details and a nonnull replacement key only for the
+  supplied-key branch; it does not itself persist trust. Missing keys or bad
+  signature yield NAc(null,null,true); malformed protobuf yields null. Neither
+  supplies a valid candidate. No human safety-number verification is established.
+- [Lck.A00](apk/2.26.37.71-core/adv-contact-sync-updater.txt)
+  is one of the **two exact A07 callers** found across the APK; the other is
+  ODU.A01. `099a..09f2` compares saved and incoming envelope timestamps and
+  diverts a strictly older result before signature verification or device-map
+  application. A missing signed list with companion entries is refused
+  (`0a50..0aa8`); primary-only/missing-map cases have a separate unsigned path
+  (`0aaa..0b68`). “No signed list always means the same primary fallback” is
+  not a complete APK rule.
+- In Lck `0b6c..0b98`, a null verifier result or null parsed details jumps to
+  `0cc8..0cd8`, records a failed outcome, and rejoins the contact-updater
+  result path. It does **not** construct/apply the signed candidate. Valid
+  details select the self/current contact map, merge via 11T.A08
+  (`0bf6..0c0e`) and create the baseline/candidate callback (`0c0e..0c8a`).
+  The device-only contact branch reaches that merge through `0cbe..0cc8`.
+  This caller evidence matters: A08 alone does not define failure retention.
+- [11T.A04](apk/2.26.37.71-core/adv-contact-validation.txt)
+  returns false on null details or envelope/signed timestamp mismatch
+  (`0036..00dc`). Its wall-clock age threshold uses integer flag **0x2da**,
+  clamped to 1..35 days (`00ec..012a`); older multi-index candidates return
+  false before applying callbacks (`012c..018c`). The effective runtime flag
+  and signed-long division overflow/negative-time parity are **unknown**;
+  the exporter still shows undecoded `0xbe` division instructions. Our saved
+  timestamp floor is not a substitute for this complete age policy.
+- A04 raw-ID mismatch (`0192..0214`, `028a..029e`) has reset/cleanup branches;
+  these are distinct from stale/malformed/signature failure. The contact
+  cleanup helper and its exact mutation scope remain **untraced**. No saved
+  account reset is authorized by this finding. A valid candidate eventually
+  reaches 0bN.A0H (`029e..02c4`); the self/companion path separately updates
+  its ADV baseline and device map (`024c..027c`).
+- Lck invokes [11T.A0C](apk/2.26.37.71-core/adv-contact-identity-apply.txt)
+  after successful candidate validation, conditionally on feature **0x3285**
+  (`0cd8..0cf2`). Its enabled-path runtime value and alternate deferred
+  application remain **unknown**. A0C first removes the primary session through
+  [0jc.A0s](apk/2.26.37.71-core/adv-primary-session-removal.txt), then calls
+  [0jc.A14](apk/2.26.37.71-core/adv-primary-identity-save.txt) to save the
+  supplied key. A14 refuses saving one's companion identity as primary and
+  delegates to [0jc.A0K](apk/2.26.37.71-core/adv-primary-identity-commit.txt).
+  A0K writes primary identity bytes through 0kc.A0H (`00f2..0108`) and commits
+  its own transaction (`0164..0180`). A0s commits its own session-removal
+  transaction earlier. **No transaction spanning both is established** by this
+  sequence. Alias target selection/0kc internals and downstream cleanup/events
+  remain untraced; these methods do not prove normal Rust receive parity.
+- [ODU.A01](apk/2.26.37.71-core/adv-contact-add-notification.txt)
+  separately handles notification addition. Missing/bad ADV material follows
+  its invalid-input path (`003e..00dc`), including scheduling 11S.A01 on the
+  explicit verifier-failure flag. Validated data merges current/add maps and
+  applies through 0bN.A0H before A0C (`00dc..0170`).
+  [11S.A01](apk/2.26.37.71-core/adv-contact-session-cleanup-schedule.txt)
+  only schedules DNy discriminator 0x28; the runnable's effects are **unknown**.
+  This is not proof of automatic identity replacement on signature failure.
+
+**Observed local implementation discrepancy / refuted claim:** devices.rs and
+its regression comment claimed stale/raw-ID failure kept the saved list. Actual
+`ingest_user` replaces the device vector with primary-only, preserves raw ID and
+saved list_timestamp, marks companions unverified, and clears matching pending
+work as successfully ingested. The test asserted metadata, not retained devices.
+This chunk corrects those comments, **not the runtime behavior**. In particular,
+stale/signature/malformed supplied-list retention and failed-query accounting
+remain unfinished; last verified companion data can currently be lost. Missing
+signed material, unpinned identity, invalid supplied material and raw-ID mismatch
+must be treated as separate cases when implementing the APK caller behavior.
+
+**Unknown / next implementation boundary:** the current strict ADV verifier
+refuses a different bundled key; full supplied-key candidate validation, feature
+selection, identity/session archival, device authority binding to a changed pin,
+and atomic Rust application still need integration. Existing incoming-message
+identity changes authenticate the message; that is not proof that an old cached
+ADV list was signed by the new pin. No real account, key, session, pending action,
+request ID or live request was changed by this static investigation.
+
+Validation: exact APK re-export/check verified all 38 files/967529 bytes;
+checksum-verified cached diff preserved all 22 older topic texts. CLI reference
+regeneration, four CLI OpenAPI coverage checks, API symbol check, formatting and
+staged whitespace passed. Hygiene verified 659 local links and 2642000 bytes
+across all four independent APK bundles. This source/comment-only chunk makes
+no runtime behavior change; no new workspace-test or live-interop claim.

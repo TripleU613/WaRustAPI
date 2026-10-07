@@ -1,4 +1,150 @@
 {
+  "adv-contact-add-notification": {
+    "anchors": [
+      "SyncDeviceNotificationRunnable/verifyADVIndexList/no key index list in device add notification"
+    ],
+    "class": "LX/ODU;",
+    "file": "adv-contact-add-notification.txt",
+    "method_filter": "A01",
+    "method_shorty": "ZLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
+  "adv-contact-baseline-candidate": {
+    "class": "LX/Lcr;",
+    "file": "adv-contact-baseline-candidate.txt",
+    "method_filter": "A00",
+    "method_shorty": "LLLIJZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
+  "adv-contact-identity-apply": {
+    "class": "LX/11T;",
+    "file": "adv-contact-identity-apply.txt",
+    "method_filter": "A0C",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
+  "adv-contact-reconciliation": {
+    "anchors": [
+      "DeviceADVInfoHandler/filterDeviceWithKeyIndexList index, jid="
+    ],
+    "class": "LX/11T;",
+    "file": "adv-contact-reconciliation.txt",
+    "method_filter": "A08",
+    "method_shorty": "LLLLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
+  "adv-contact-session-cleanup-schedule": {
+    "class": "LX/11S;",
+    "file": "adv-contact-session-cleanup-schedule.txt",
+    "method_filter": "A01",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
+  "adv-contact-signature": {
+    "anchors": [
+      "DeviceADVInfoHandler/verifyADVSignedKeyIndexList/fail to verify account signature"
+    ],
+    "class": "LX/11T;",
+    "file": "adv-contact-signature.txt",
+    "method_filter": "A07",
+    "method_shorty": "LLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
+  "adv-contact-sync-updater": {
+    "anchors": [
+      "contactsyncDevicesupdater/update/timestamp is less than existing one, current=",
+      "contactsyncDevicesupdater/update/verifyADVSignedKeyIndexList fail keyIndexListNull, userJid="
+    ],
+    "class": "LX/Lck;",
+    "file": "adv-contact-sync-updater.txt",
+    "method_filter": "A00",
+    "method_shorty": "VLLLLLLLLJZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
+  "adv-contact-validation": {
+    "anchors": [
+      "DeviceADVInfoHandler/verifyKeyIndexListData/verifyKeyIndexListData advTimestampMismatch; ts="
+    ],
+    "class": "LX/11T;",
+    "file": "adv-contact-validation.txt",
+    "method_filter": "A04",
+    "method_shorty": "ZLLLLLJ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
+  "adv-primary-identity-commit": {
+    "anchors": [
+      "saveIdentityInternal"
+    ],
+    "class": "LX/0jc;",
+    "file": "adv-primary-identity-commit.txt",
+    "method_filter": "A0K",
+    "method_shorty": "ZLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
+  "adv-primary-identity-save": {
+    "anchors": [
+      "SignalCoordinator/saveIdentity - Not allowed to save my companion identity as primary"
+    ],
+    "class": "LX/0jc;",
+    "file": "adv-primary-identity-save.txt",
+    "method_filter": "A14",
+    "method_shorty": "ZLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
+  "adv-primary-session-removal": {
+    "anchors": [
+      "removeSession"
+    ],
+    "class": "LX/0jc;",
+    "file": "adv-primary-session-removal.txt",
+    "method_filter": "A0s",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
   "certificate-root": {
     "anchors": [
       "WhatsAppLongTerm1"

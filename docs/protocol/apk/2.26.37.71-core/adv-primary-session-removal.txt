@@ -1,0 +1,76 @@
+# APK-derived structural disassembly: LX/0jc;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0s(VL) flags=0x1 registers=7
+  0000..0004 op=1a const-string v2, "removeSession"
+  0004..0008 op=54 iget-object v1, v5, LX/0jc;->A0Q:LX/0kT;
+  0008..000e op=1b const-string/jumbo v0, "sessions"
+  000e..0014 op=6e invoke-virtual {v1, v6, v2, v0}, LX/0kT;->A02(LLLL)
+  0014..0016 op=0c move-result-object
+  0016..001c op=70 invoke-direct {v5}, LX/0jc;->A0J(Z)
+  001c..001e op=0a move-result
+  001e..0022 op=38 if-eqz v0, +0x3e
+  0022..0026 op=54 iget-object v0, v5, LX/0jc;->A0J:LX/0jp;
+  0026..002c op=71 invoke-static {v4, v0}, LX/0jp;->A00(LLL)
+  002c..002e op=0c move-result-object
+  002e..0034 op=6e invoke-virtual {v3}, Ljava/util/concurrent/locks/ReentrantLock;->lock(V)
+  0034..0038 op=54 iget-object v0, v5, LX/0jc;->A0R:LX/0aC;
+  0038..003e op=6e invoke-virtual {v0}, LX/0aC;->A07(L)
+  003e..0040 op=0c move-result-object
+  0040..0046 op=6e invoke-virtual {v2}, LX/0ZN;->A00(L)
+  0046..0048 op=0c move-result-object
+  0048..004e op=70 invoke-direct {v5, v6, v4}, LX/0jc;->A0D(VLL)
+  004e..0054 op=6e invoke-virtual {v0}, LX/1gB;->A00(V)
+  0054..005a op=6e invoke-virtual {v0}, LX/1gB;->close(V)
+  005a..0060 op=6e invoke-virtual {v2}, LX/0ZN;->close(V)
+  0060..0066 op=6e invoke-virtual {v3}, LX/B75;->close(V)
+  0066..0068 op=0e return-void
+  0068..006a op=0d move-exception
+  006a..0070 op=6e invoke-virtual {v0}, LX/1gB;->close(V)
+  0070..0072 op=28 goto +0x5
+  0072..0074 op=0d move-exception
+  0074..007a op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  007a..007c op=27 throw v1
+  007c..007e op=0d move-exception
+  007e..0084 op=6e invoke-virtual {v2}, LX/0ZN;->close(V)
+  0084..0086 op=28 goto +0x5
+  0086..0088 op=0d move-exception
+  0088..008e op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  008e..0090 op=27 throw v1
+  0090..0092 op=0d move-exception
+  0092..0098 op=6e invoke-virtual {v3}, LX/B75;->close(V)
+  0098..009a op=27 throw v1
+  009a..009e op=54 iget-object v0, v5, LX/0jc;->A0R:LX/0aC;
+  009e..00a4 op=6e invoke-virtual {v0}, LX/0aC;->A07(L)
+  00a4..00a6 op=0c move-result-object
+  00a6..00ac op=6e invoke-virtual {v3}, LX/0ZN;->A00(L)
+  00ac..00ae op=0c move-result-object
+  00ae..00b2 op=54 iget-object v0, v5, LX/0jc;->A06:LX/00s;
+  00b2..00b8 op=72 invoke-interface {v0}, LX/00s;->get(L)
+  00b8..00ba op=0c move-result-object
+  00ba..00be op=1f check-cast v1, LX/Cap;
+  00be..00c0 op=1d monitor-enter
+  00c0..00c6 op=70 invoke-direct {v5, v6, v4}, LX/0jc;->A0D(VLL)
+  00c6..00cc op=6e invoke-virtual {v2}, LX/1gB;->A00(V)
+  00cc..00ce op=1e monitor-exit
+  00ce..00d4 op=6e invoke-virtual {v2}, LX/1gB;->close(V)
+  00d4..00da op=6e invoke-virtual {v3}, LX/0ZN;->close(V)
+  00da..00dc op=0e return-void
+  00dc..00de op=0d move-exception
+  00de..00e0 op=1e monitor-exit
+  00e0..00e2 op=27 throw v0
+  00e2..00e4 op=0d move-exception
+  00e4..00ea op=6e invoke-virtual {v2}, LX/1gB;->close(V)
+  00ea..00ec op=28 goto +0x5
+  00ec..00ee op=0d move-exception
+  00ee..00f4 op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  00f4..00f6 op=27 throw v1
+  00f6..00f8 op=0d move-exception
+  00f8..00fe op=6e invoke-virtual {v3}, LX/0ZN;->close(V)
+  00fe..0100 op=27 throw v1
+  0100..0102 op=0d move-exception
+  0102..0108 op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  0108..010a op=27 throw v1
+.end method

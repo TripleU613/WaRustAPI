@@ -1,0 +1,28 @@
+# APK-derived structural disassembly: LX/0jc;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A14(ZLL) flags=0x1 registers=5
+  0000..0006 op=71 invoke-static {v4}, LX/B7H;->A00(LL)
+  0006..0008 op=0c move-result-object
+  0008..000c op=54 iget-object v1, v2, LX/0jc;->A0C:LX/08Z;
+  000c..0012 op=72 invoke-interface {v1, v0}, LX/08Z;->BL6(ZL)
+  0012..0014 op=0a move-result
+  0014..0018 op=38 if-eqz v0, +0x13
+  0018..001e op=72 invoke-interface {v1}, LX/08Z;->BMv(Z)
+  001e..0020 op=0a move-result
+  0020..0024 op=38 if-eqz v0, +0x12
+  0024..002a op=71 invoke-static {v4}, LX/B7H;->A00(LL)
+  002a..002c op=0c move-result-object
+  002c..0032 op=72 invoke-interface {v1, v0}, LX/08Z;->BL6(ZL)
+  0032..0034 op=0a move-result
+  0034..003a op=71 invoke-static {v0}, LX/00K;->A0B(VZ)
+  003a..0040 op=71 invoke-static {v2, v3, v4}, LX/0jc;->A0K(ZLLL)
+  0040..0042 op=0a move-result
+  0042..0044 op=0f return v0
+  0044..0048 op=1a const-string v0, "SignalCoordinator/saveIdentity - Not allowed to save my companion identity as primary"
+  0048..004e op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+  004e..0050 op=12 const/4 v0, #0x0
+  0050..0052 op=0f return v0
+.end method

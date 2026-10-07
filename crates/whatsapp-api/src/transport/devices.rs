@@ -18,9 +18,9 @@
 //!   key-index list; per-user `devices/error[code,text]` marks a partial failure.
 //!   Hosted devices are refused for E2EE (`LX/0bN.A0H` "cannot add hosted device
 //!   with adv e2ee").
-//! * Verification `LX/11T.A07`: the signed list is checked with the contact's
-//!   pinned primary identity when one is stored ("local"); the ADV-provided key
-//!   branch ("adv") is not implemented here, so contacts without a pinned
+//! * Verification `LX/11T.A07` selects the local identity or a supplied ADV
+//!   key when different. Only the already-pinned key branch is implemented
+//!   here; no supplied key replaces identity. Contacts without a pinned
 //!   identity keep only their primary device. Companion filtering follows
 //!   `LX/11T.A08` (`VerifiedIndexList::reconcile_devices`).
 //! * Notification `LX/11Q.A09`: `notification type=devices` carries `add` or
@@ -33,7 +33,10 @@
 //!
 //! Local policy: a query is a read, so an unanswered query leaves its users
 //! pending and a later session asks again. Lists are persisted atomically per
-//! user; a raw-ID change or a stale timestamp keeps the saved list. `sid` is a
+//! user. Current raw-ID/stale/signature refusal falls back to primary-only,
+//! preserving only the raw-ID/time floor, not the prior device set. APK caller
+//! parity for this fallback is unfinished (docs/protocol/cross-device-sync.md,
+//! contact-adv-verification-and-retention-2026-10-07). `sid` is a
 //! client-chosen opaque identifier like our message ids.
 use crate::{
     Error, Result,
@@ -1554,8 +1557,9 @@ mod tests {
             Some(true)
         );
 
-        // A raw-id change or stale timestamp keeps the saved list; a newer signed
-        // list replaces it. Restart preserves everything.
+        // Current local fallback preserves raw ID/time floor, but not the prior
+        // device set; APK caller retention is still unfinished. A newer signed
+        // list replaces the candidate. Restart preserves the stored state.
         drop(store);
         let store = open(&path);
         let (changed_raw, _) =
