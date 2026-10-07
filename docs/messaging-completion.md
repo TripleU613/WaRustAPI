@@ -583,3 +583,17 @@ Evidence and remaining unknowns: [peer identity](protocol/peer-identity.md#outgo
   from held PN; no chat send or pin adoption, and saved summaries stayed unchanged.
 - [ ] One new selected outgoing identity-recovery draft awaits authorization;
   all prior acknowledged sends retain their IDs and are not repeated.
+
+## Ordinary sticker receive extension (2026-10-07)
+
+APK 2.26.37.71's StickerMessage schema and image-key domain now support
+ordinary URL-bearing WebP stickers through existing media inspection/retrieval
+and sealed event references. Offline tests cover literal APK wire tags,
+authentication failures, cached retrieval, quote/view-once exclusion and
+reference projection. Live incoming/display, Lottie, directPath-only retrieval
+and sending remain unverified or unsupported. See [sticker evidence](protocol/stickers.md).
+
+Validation: 525 workspace/all-feature tests, 221 default-feature tests, strict
+all-target/all-feature Clippy, warning-free rustdoc, generated CLI reference,
+formatting and repository hygiene passed. No live request was made for this
+sticker extension.

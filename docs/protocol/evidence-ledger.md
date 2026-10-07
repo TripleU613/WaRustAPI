@@ -288,3 +288,16 @@ returned HTTP 200 / fail / too_many_all_methods (329 bytes, 1017 ms), with
 32417 seconds for retry, SMS and voice. The service persisted a cooldown;
 no further request or delivery-method switch followed. No SMS dispatch or
 successful registration was established for this number.
+
+## 2026-10-07: comparison 37.71 sticker descriptor and key domain
+
+**Confirmed/static:** `BZC.dynamicMethod` (`00de..00ec`), with field-name
+array helpers `6al.A1W` and `Ayq.A11`, establishes all 22 StickerMessage
+fields, including skipped wire tags and integer `premium`.
+`1qB.<clinit>` (`0028..0034`, `02a0..02be`) passes the image-key label to
+the sticker type. **Negative/tooling:** automatic descriptor extraction refuses
+the incomplete directly visible name array; exact-string sticker-key-domain
+xref has no references. **Offline:** ordinary URL-bearing WebP receive media
+uses the existing bounded authenticated retrieval and sealed references.
+**Unknown:** live sticker receive/display, Lottie and directPath-only retrieval.
+Full evidence and reasoning: [stickers](stickers.md).

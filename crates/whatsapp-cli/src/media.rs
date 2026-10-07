@@ -57,7 +57,7 @@ pub(super) async fn open(
         "--image-display-duration=30",
         "--title=TeleWhatsApp attachment",
     ]);
-    if kind == MediaKind::Image {
+    if matches!(kind, MediaKind::Image | MediaKind::Sticker) {
         command.arg("--no-audio");
     } else {
         command.arg("--no-video");

@@ -38,7 +38,7 @@ Usage: whatsapp-cli media-list [OPTIONS]...
 
 ## whatsapp-cli media-open
 
-Download/authenticate an ordinary image or voice note and open it locally
+Download/authenticate an ordinary image, voice note or WebP sticker and open it locally
 
 ```
 Usage: whatsapp-cli media-open [OPTIONS]...

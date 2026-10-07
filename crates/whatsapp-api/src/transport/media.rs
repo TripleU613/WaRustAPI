@@ -1,5 +1,5 @@
-//! Ordinary incoming image/voice-note retrieval. View-once content never enters
-//! this replayable path. APK BWp/BWZ schemas and 1qB image/audio key domains.
+//! Ordinary incoming image/voice-note/sticker retrieval. View-once content never enters
+//! this replayable path. APK BWp/BWZ/BZC schemas and 1qB image/audio key domains.
 use crate::{
     Error, Result,
     registration::request::LabRegistrationConfig,
@@ -16,6 +16,8 @@ pub enum MediaKind {
     Image,
     /// Ogg/Opus push-to-talk audio, not view-once.
     VoiceNote,
+    /// Ordinary WebP sticker (including animated WebP); Lottie is unsupported.
+    Sticker,
 }
 /// Redacted local attachment selector. Contains no phone, URL or media key.
 #[derive(Debug, Clone)]
@@ -63,12 +65,34 @@ struct Audio {
     #[prost(bool, tag = "21")]
     once: bool,
 }
+// APK 2.26.37.71 BZC.dynamicMethod 00de..00ec; names assembled by
+// 6al.A1W and Ayq.A11. Sticker hashes/key use 2/3/4, unlike ImageMessage.
+#[derive(Message)]
+struct Sticker {
+    #[prost(string, tag = "1")]
+    url: String,
+    #[prost(bytes = "vec", tag = "2")]
+    hash: Vec<u8>,
+    #[prost(bytes = "vec", tag = "3")]
+    enc_hash: Vec<u8>,
+    #[prost(bytes = "vec", tag = "4")]
+    key: Vec<u8>,
+    #[prost(string, tag = "5")]
+    mime: String,
+    #[prost(uint64, tag = "9")]
+    length: u64,
+    #[prost(bool, tag = "21")]
+    lottie: bool,
+}
 #[derive(Message)]
 struct Envelope {
     #[prost(message, optional, tag = "3")]
     image: Option<Image>,
     #[prost(message, optional, tag = "8")]
     audio: Option<Audio>,
+    // APK 2.26.37.71 BZc Message descriptor: stickerMessage=26.
+    #[prost(message, optional, tag = "26")]
+    sticker: Option<Sticker>,
     #[prost(bytes = "vec", optional, tag = "37")]
     once: Option<Vec<u8>>,
     #[prost(bytes = "vec", optional, tag = "55")]
@@ -100,6 +124,8 @@ struct RawEnvelope {
     image: Option<Vec<u8>>,
     #[prost(bytes = "vec", optional, tag = "8")]
     audio: Option<Vec<u8>>,
+    #[prost(bytes = "vec", optional, tag = "26")]
+    sticker: Option<Vec<u8>>,
 }
 #[derive(Message)]
 struct ContextOnly {
@@ -119,7 +145,7 @@ struct MediaContext {
 }
 fn media_context(payload: &[u8]) -> Result<Option<MediaContext>> {
     let raw = RawEnvelope::decode(payload).map_err(|_| bad("invalid media envelope"))?;
-    let Some(nested) = raw.image.or(raw.audio) else {
+    let Some(nested) = raw.image.or(raw.audio).or(raw.sticker) else {
         return Ok(None);
     };
     Ok(ContextOnly::decode(nested.as_slice())
@@ -167,7 +193,12 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
     if e.once.is_some() || e.once_v2.is_some() || e.once_ext.is_some() {
         return Ok(None);
     }
-    if e.image.is_some() && e.audio.is_some() {
+    if [e.image.is_some(), e.audio.is_some(), e.sticker.is_some()]
+        .into_iter()
+        .filter(|present| *present)
+        .count()
+        > 1
+    {
         return Err(bad("ambiguous media message"));
     }
     let d = if let Some(i) = e.image {
@@ -195,6 +226,19 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
             key: a.key,
             enc_hash: a.enc_hash,
             length: a.length,
+        }
+    } else if let Some(s) = e.sticker {
+        if s.lottie {
+            return Ok(None);
+        }
+        Descriptor {
+            kind: MediaKind::Sticker,
+            url: s.url,
+            mime: s.mime,
+            hash: s.hash,
+            key: s.key,
+            enc_hash: s.enc_hash,
+            length: s.length,
         }
     } else {
         return Ok(None);
@@ -261,8 +305,8 @@ pub(super) fn event_content(
     payload: &[u8],
 ) -> Result<Option<(crate::model::message::MessageContent, Option<u32>)>> {
     let fields = crate::signal::direct::payload_fields(payload)?;
-    if fields.iter().any(|v| !matches!(v, 3 | 8 | 35))
-        || fields.iter().filter(|v| matches!(v, 3 | 8)).count() != 1
+    if fields.iter().any(|v| !matches!(v, 3 | 8 | 26 | 35))
+        || fields.iter().filter(|v| matches!(v, 3 | 8 | 26)).count() != 1
     {
         return Ok(None);
     }
@@ -276,6 +320,7 @@ pub(super) fn event_content(
         .image
         .as_ref()
         .or(raw.audio.as_ref())
+        .or(raw.sticker.as_ref())
         .ok_or_else(|| bad("missing media"))?;
     let context = media_context(payload)?;
     if context
@@ -306,6 +351,7 @@ pub(super) fn event_content(
                 kind: match d.kind {
                     MediaKind::Image => crate::model::message::MediaKind::Image,
                     MediaKind::VoiceNote => crate::model::message::MediaKind::Audio,
+                    MediaKind::Sticker => crate::model::message::MediaKind::Sticker,
                 },
                 mime_type: d.mime.clone(),
                 length: Some(d.length),
@@ -332,6 +378,7 @@ pub fn references(store: &ProtocolStore) -> Result<Vec<crate::model::message::Me
                 kind: match d.kind {
                     MediaKind::Image => crate::model::message::MediaKind::Image,
                     MediaKind::VoiceNote => crate::model::message::MediaKind::Audio,
+                    MediaKind::Sticker => crate::model::message::MediaKind::Sticker,
                 },
                 mime_type: d.mime.clone(),
                 length: Some(d.length),
@@ -358,6 +405,7 @@ pub fn reference_selector(
     let kind = match d.kind {
         MediaKind::Image => crate::model::message::MediaKind::Image,
         MediaKind::VoiceNote => crate::model::message::MediaKind::Audio,
+        MediaKind::Sticker => crate::model::message::MediaKind::Sticker,
     };
     if reference.kind != kind || reference.mime_type != d.mime || reference.length != Some(d.length)
     {
@@ -392,6 +440,7 @@ fn media_url(d: &Descriptor) -> Result<reqwest::Url> {
     let allowed = match d.kind {
         MediaKind::Image => matches!(mime, "image/jpeg" | "image/png" | "image/webp"),
         MediaKind::VoiceNote => mime == "audio/ogg",
+        MediaKind::Sticker => mime == "image/webp",
     };
     if !allowed || d.url.len() > 8192 {
         return Err(bad("unsupported media format"));
@@ -412,7 +461,9 @@ fn media_url(d: &Descriptor) -> Result<reqwest::Url> {
 }
 fn decrypt(d: &Descriptor, body: &[u8]) -> Result<Zeroizing<Vec<u8>>> {
     let f = match d.kind {
-        MediaKind::Image => crate::signal::image::decrypt,
+        // APK 1qB.<clinit> 02a0..02be passes the image-key label v7
+        // to the sticker type constructor; there is no separate sticker domain.
+        MediaKind::Image | MediaKind::Sticker => crate::signal::image::decrypt,
         MediaKind::VoiceNote => crate::signal::image::decrypt_audio,
     };
     let plain = f(
@@ -755,6 +806,7 @@ mod tests {
                 once: false,
             }),
             audio: None,
+            sticker: None,
             once: None,
             once_v2: None,
             once_ext: None,
@@ -811,6 +863,158 @@ mod tests {
         client.shutdown().await;
     }
 
+    // Literal APK 2.26.37.71 BZC wire tags, independently of Sticker's encoder.
+    fn sticker_fixture(encrypted: &crate::signal::image::EncryptedImage) -> Vec<u8> {
+        let mut body = Vec::new();
+        for (tag, value) in [
+            (0x0a, b"https://mmg.whatsapp.net/sticker-fixture".as_slice()),
+            (0x12, encrypted.plaintext_hash.as_slice()),
+            (0x1a, encrypted.encrypted_hash.as_slice()),
+            (0x22, encrypted.media_key.as_slice()),
+            (0x2a, b"image/webp".as_slice()),
+        ] {
+            body.extend_from_slice(&[tag, value.len() as u8]);
+            body.extend_from_slice(value);
+        }
+        assert!(encrypted.plaintext_len < 128);
+        body.extend_from_slice(&[0x48, encrypted.plaintext_len as u8]);
+        assert!(body.len() < 256);
+        let mut payload = vec![0xd2, 0x01]; // Message.stickerMessage=26.
+        prost::encoding::encode_varint(body.len() as u64, &mut payload);
+        payload.extend(body);
+        payload
+    }
+
+    #[test]
+    fn sticker_literal_schema_crypto_and_exclusion_guards() {
+        // Synthetic crypto plaintext: this test does not claim renderer validity.
+        let encrypted = crate::signal::image::encrypt(b"sticker crypto fixture").unwrap();
+        let payload = sticker_fixture(&encrypted);
+        let mut d = descriptor(&payload).unwrap().unwrap();
+        assert_eq!(d.kind, MediaKind::Sticker);
+        assert_eq!(
+            &*decrypt(&d, &encrypted.body).unwrap(),
+            b"sticker crypto fixture"
+        );
+        media_url(&d).unwrap();
+        d.hash[0] ^= 1;
+        assert!(decrypt(&d, &encrypted.body).is_err());
+        d.hash[0] ^= 1;
+        d.length += 1;
+        assert!(decrypt(&d, &encrypted.body).is_err());
+        d.length -= 1;
+        let mut corrupted = encrypted.body.clone();
+        corrupted[0] ^= 1;
+        assert!(decrypt(&d, &corrupted).is_err());
+        assert!(
+            crate::signal::image::decrypt_audio(
+                &encrypted.body,
+                &encrypted.media_key,
+                &encrypted.encrypted_hash,
+                &encrypted.plaintext_hash,
+                encrypted.plaintext_len
+            )
+            .is_err()
+        );
+        d.mime = "image/png".into();
+        assert!(media_url(&d).is_err());
+        let mut mixed = payload.clone();
+        mixed.extend_from_slice(b"\x1a\x00"); // ImageMessage alongside sticker.
+        assert!(descriptor(&mixed).is_err());
+        let mut wrapped = payload.clone();
+        wrapped.extend_from_slice(b"\xaa\x02\x00"); // viewOnceMessage=37.
+        assert!(descriptor(&wrapped).unwrap().is_none());
+        let mut envelope = Envelope::decode(payload.as_slice()).unwrap();
+        envelope.sticker.as_mut().unwrap().lottie = true;
+        assert!(descriptor(&envelope.encode_to_vec()).unwrap().is_none());
+    }
+
+    #[tokio::test]
+    async fn sticker_projection_reference_and_cached_retrieval() {
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("stickers.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let mut config: LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        config.token = Zeroizing::new("offline-fixture".into());
+        let encrypted = crate::signal::image::encrypt(b"sticker crypto fixture").unwrap();
+        let payload = sticker_fixture(&encrypted);
+        let key = b"received:sticker-fixture";
+        let id = hex::encode(Sha256::digest(key));
+        let content = store
+            .write(|tx| {
+                crate::session::AccountRecord {
+                    phone: Some(config.phone.clone()),
+                    registration: crate::session::RegistrationStatus::Registered,
+                    ..Default::default()
+                }
+                .save(tx)?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    key,
+                    1,
+                    &serde_json::json!({"status":"decrypted","protobuf":payload}),
+                )?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("media-download:{id}").as_bytes(),
+                    1,
+                    &serde_json::json!({"status":"downloaded","body":encrypted.body}),
+                )?;
+                event_content(tx, key, &payload)
+            })
+            .unwrap()
+            .unwrap()
+            .0;
+        let crate::model::message::MessageContent::Media {
+            reference, caption, ..
+        } = content
+        else {
+            panic!("missing sticker");
+        };
+        assert_eq!(reference.kind, crate::model::message::MediaKind::Sticker);
+        assert!(caption.is_none());
+        assert_eq!(reference_selector(&store, &reference).unwrap(), id);
+        assert_eq!(references(&store).unwrap().len(), 1);
+        let serialized = serde_json::to_string(&reference).unwrap();
+        assert!(!serialized.contains("whatsapp.net"));
+        assert!(!serialized.contains(&hex::encode(encrypted.media_key)));
+        let (kind, plain) = open(&store, &config, &id).await.unwrap();
+        assert_eq!(kind, MediaKind::Sticker);
+        assert_eq!(&*plain, b"sticker crypto fixture");
+        // Mixed messages must never publish a sticker event.
+        let mut mixed = payload.clone();
+        mixed.extend_from_slice(b"\x0a\x01x");
+        assert!(
+            store
+                .write(|tx| event_content(tx, key, &mixed))
+                .unwrap()
+                .is_none()
+        );
+        // BZC contextInfo=17 must obey the existing quote exclusion.
+        let mut envelope = Envelope::decode(payload.as_slice()).unwrap();
+        let mut nested = envelope.sticker.take().unwrap().encode_to_vec();
+        nested.extend_from_slice(b"\x8a\x01\x02\x1a\x00");
+        let mut quoted = vec![0xd2, 0x01];
+        prost::encoding::encode_varint(nested.len() as u64, &mut quoted);
+        quoted.extend(nested);
+        assert!(
+            store
+                .write(|tx| event_content(tx, key, &quoted))
+                .unwrap()
+                .is_none()
+        );
+    }
+
     #[test]
     fn references_are_account_bound_and_view_once_cannot_be_exported() {
         use crate::{
@@ -842,6 +1046,7 @@ mod tests {
                     once,
                 }),
                 audio: None,
+                sticker: None,
                 once: None,
                 once_v2: None,
                 once_ext: None,

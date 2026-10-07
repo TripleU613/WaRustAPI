@@ -1409,9 +1409,10 @@
             "enum": [
               "image",
               "voice_note",
+              "sticker",
               "view_once_image"
             ],
-            "description": "Media type"
+            "description": "Media type; ordinary sticker retrieval supports URL-bearing WebP only. CLI text labels use Image, VoiceNote and Sticker."
           },
           "bytes": {
             "type": "integer",
@@ -5131,7 +5132,7 @@
           "Media"
         ],
         "summary": "List ordinary incoming attachments",
-        "description": "List ordinary incoming attachments by opaque selector, with content redacted.",
+        "description": "List ordinary incoming images, voice notes and URL-bearing WebP stickers by opaque selector, with content redacted. Lottie and directPath-only retrieval remain unsupported.",
         "operationId": "listMedia",
         "x-cli": "whatsapp-cli media-list",
         "x-transport": [
@@ -5289,8 +5290,8 @@
         "tags": [
           "Media"
         ],
-        "summary": "Download and open an ordinary image or voice note locally",
-        "description": "Download/authenticate an ordinary image or voice note and open it locally.",
+        "summary": "Download and open an ordinary image, voice note or WebP sticker locally",
+        "description": "Download/authenticate an ordinary image, voice note or WebP sticker and open it locally.",
         "operationId": "openMedia",
         "x-cli": "whatsapp-cli media-open",
         "x-transport": [

@@ -94,8 +94,12 @@ redelivered at every login.
 
 - **Stickers and video notes.** Field numbers are decoded from the APK
   (`stickerMessage` 26, `ptvMessage` 66, `VideoMessage` inner fields);
-  `StickerMessage`'s inner layout is not yet decoded. No incoming sticker/PTV
-  stanza has been captured. [apk-analysis](docs/protocol/apk-analysis.md).
+  StickerMessage's 22-field schema and image-key domain are now traced in
+  2.26.37.71. Ordinary URL-bearing WebP sticker listing, sealed references,
+  authenticated retrieval and local visual playback are implemented offline.
+  Lottie, directPath-only retrieval and sending remain unsupported; no incoming
+  sticker/PTV stanza or sticker display has been captured.
+  [Sticker evidence](docs/protocol/stickers.md), [apk-analysis](docs/protocol/apk-analysis.md).
 - Calls; profile picture.
 - Privacy settings IQ (namespace unknown).
 - Channels and QR/companion pairing — parked by the owner.
@@ -113,7 +117,7 @@ redelivered at every login.
 
 ## Offline verification
 
-523 all-feature tests (`cargo test --locked --workspace --all-features`) and
+525 all-feature tests (`cargo test --locked --workspace --all-features`) and
 221 default-feature tests (`cargo test --locked --workspace`) pass on
 2026-10-07; Clippy with `-D warnings` is clean. Rust 1.98.1 locally and in CI. Store, codec, crash
 matrix, registration state machine and transport coverage are described in
