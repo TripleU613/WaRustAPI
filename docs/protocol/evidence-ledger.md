@@ -335,3 +335,17 @@ and human verification. The native ELF is an outer superpack archive container;
 ordinary strings/export inspection cannot establish absence of fingerprint code.
 The disassembler now names the seven previously opaque opcodes used in these
 traces, with literal DEX fixtures. [Full evidence](safety-number.md).
+
+## 2026-10-07: native decoder and loader baseline
+
+**Confirmed/static, 37.71:** the APK includes separate ARM64/x86_64 Superpack
+decoders; the earlier scoped name search missed them. One bounded XZ stream
+reveals V3/V4 fingerprint creation/comparison anchors, but does not reconstruct
+an ELF (all four ELF-magic matches have invalid header bytes). x86_64 JNI
+relocations and entry-point disassembly establish the `spo` branch and archive
+start/end resolution; reconstruction internals remain unknown.
+**Observed/local:** a pinned four-file public Qiling rootfs and Python 3.12
+environment run hello to `exit_group(0)` with a narrow proc-exe stat adapter.
+Python 3.14, single-threaded futex and proc-exe stat failures are preserved,
+along with remaining loader warnings. No APK decoder or live account request
+was executed. [Hashes, offsets, reproducer and limits](native-unpacking.md).

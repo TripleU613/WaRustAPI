@@ -12,6 +12,12 @@
       "x-transport": "cli",
       "x-live": false,
       "description": "Offline DEX developer disassembler; no HTTP route. Names APK identity metadata reads (iget-wide, iget-boolean, iget-byte) and safety-number arithmetic (rem-long/2addr, and-long/2addr, or-long/2addr, shl-long/2addr), preserving byte offsets and operands. Literal 37.71 CjU/B7E-style fixtures verify widths and registers. Unknown opcodes remain explicitly marked. Does not unpack native superpack containers or claim native algorithm recovery."
+    },
+    {
+      "x-cli": "<python-env> tools/apk-research/native_loader_check.py --rootfs <public-rootfs>",
+      "x-transport": "cli",
+      "x-live": false,
+      "description": "Offline developer loader baseline; no HTTP route. Runs only the public Qiling ARM64 Android hello fixture with an empty guest environment and bounded execution, requiring observed exit_group(0). Diagnoses missing rootfs fixtures and Qiling dependencies. A flags-zero /proc/self/exe stat adapter uses real executable metadata; other calls retain the original implementation. Does not invoke the APK decoder, reconstruct Superpack, recover native safety-number algorithms or establish Android runtime compatibility. See docs/protocol/native-unpacking.md for pinned provenance, failures and remaining loader warnings."
     }
   ],
   "info": {

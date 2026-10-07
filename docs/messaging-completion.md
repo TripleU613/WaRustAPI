@@ -634,3 +634,10 @@ Validation: 529 workspace/all-feature tests, 223 default-feature tests, strict
 Clippy, rustdoc, CLI reference, formatting and hygiene passed. The rebuilt
 disassembler successfully rendered the actual APK decimal-group method with
 its previous opaque arithmetic instructions named. No live request occurred.
+
+Native follow-up: separate Superpack decoders and first-stream V3/V4 fingerprint
+symbols are located. The stream is not a reconstructed ELF. A bounded public
+ARM64 hello loader check exits zero; decoder invocation, native algorithm
+recovery and human verification remain unfinished. Python/setup failures and
+remaining loader warnings are recorded in
+[native reconstruction evidence](protocol/native-unpacking.md).

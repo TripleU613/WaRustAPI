@@ -126,6 +126,12 @@ redelivered at every login.
 
 ## Offline verification
 
+Native research now locates separate Superpack decoders and V3/V4 fingerprint
+symbols in one decoded stream. A reproducible public ARM64 hello loader check
+exits zero; archive reconstruction and modern safety-number algorithms remain
+unfinished. This tooling check makes no live account request.
+[Evidence, setup failures and remaining warnings](docs/protocol/native-unpacking.md).
+
 529 all-feature tests (`cargo test --locked --workspace --all-features`) and
 223 default-feature tests (`cargo test --locked --workspace`) pass on
 2026-10-07; Clippy with `-D warnings` is clean. Rust 1.98.1 locally and in CI. Store, codec, crash
