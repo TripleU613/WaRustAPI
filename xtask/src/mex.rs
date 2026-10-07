@@ -275,6 +275,7 @@ pub fn inspect_response(
     group_info: bool,
     group_numbers: bool,
     edge_roles: bool,
+    participant_scalars: bool,
 ) -> Result<(), String> {
     use whatsapp_api::transport::mex::{MAX_JSON_RESPONSE_BYTES, parse_json_response};
     if !matches!(child, "result" | "update") {
@@ -307,6 +308,18 @@ pub fn inspect_response(
                 .map_err(|e| e.to_string())?,
         )
         .map_err(|_| "cannot encode MEX edge roles")?;
+    }
+    if participant_scalars {
+        let scalars = parsed
+            .group_participant_scalars()
+            .map_err(|e| e.to_string())?;
+        summary["group_participant_scalars"] = serde_json::json!({
+            "phash_match": scalars.phash_match,
+            "edges": scalars.edges.iter().map(|edge| serde_json::json!({
+                "join_time": edge.join_time.map(|n| n.to_string()),
+                "group_history_sent": edge.group_history_sent,
+            })).collect::<Vec<_>>(),
+        });
     }
     println!(
         "{}",

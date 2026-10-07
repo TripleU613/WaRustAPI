@@ -198,7 +198,8 @@
       "method": "A03",
       "method_shorty": "LLL",
       "rust_files": [
-        "crates/whatsapp-api/src/transport/mex.rs"
+        "crates/whatsapp-api/src/transport/mex.rs",
+        "crates/whatsapp-api/src/transport/mex/coercion.rs"
       ],
       "anchors": [
         "xwa2_group_query_by_id",
@@ -210,7 +211,8 @@
       "method": "A0D",
       "method_shorty": "LL",
       "rust_files": [
-        "crates/whatsapp-api/src/transport/mex.rs"
+        "crates/whatsapp-api/src/transport/mex.rs",
+        "crates/whatsapp-api/src/transport/mex/coercion.rs"
       ],
       "anchors": [
         "participants_phash_match",
@@ -305,7 +307,8 @@
       "method": "A0G",
       "method_shorty": "ZL",
       "rust_files": [
-        "crates/whatsapp-api/src/transport/mex.rs"
+        "crates/whatsapp-api/src/transport/mex.rs",
+        "crates/whatsapp-api/src/transport/mex/coercion.rs"
       ],
       "anchors": []
     },
@@ -314,7 +317,8 @@
       "method": "A1R",
       "method_shorty": "ZI",
       "rust_files": [
-        "crates/whatsapp-api/src/transport/mex.rs"
+        "crates/whatsapp-api/src/transport/mex.rs",
+        "crates/whatsapp-api/src/transport/mex/coercion.rs"
       ],
       "anchors": []
     },

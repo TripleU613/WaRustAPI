@@ -144,6 +144,9 @@ enum Cmd {
         /// Print recognized roles of object edges, before member/JID validation; requires --group-info.
         #[arg(long, requires = "group_info")]
         edge_roles: bool,
+        /// Explicitly print private phash/history/join scalars; requires --group-info.
+        #[arg(long, requires = "group_info")]
+        participant_scalars: bool,
     },
     /// Find which classes and methods reference each anchor string constant.
     ///
@@ -303,7 +306,15 @@ fn main() -> ExitCode {
             group_info,
             group_numbers,
             edge_roles,
-        } => mex::inspect_response(&input, &child, group_info, group_numbers, edge_roles),
+            participant_scalars,
+        } => mex::inspect_response(
+            &input,
+            &child,
+            group_info,
+            group_numbers,
+            edge_roles,
+            participant_scalars,
+        ),
         Cmd::ApkXref { apk, anchors } => xref::run_xref(&apk, &anchors),
         Cmd::ApkCallers {
             apk,

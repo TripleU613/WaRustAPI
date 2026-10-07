@@ -1,0 +1,4123 @@
+{
+  "apk_version": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "reference_runtime": "Temurin 21.0.12.1+1 LTS, executed pinned AOSP org.json with compile-only annotation stubs; not APK or Android execution.",
+  "reference_sources": {
+    "reference_commit": "de876a01b29230b877c9f408348c38a90ee724a5",
+    "sources": [
+      {
+        "file": "JSON.java",
+        "sha256": "a2cc5e4bf64bfe3edd73c6a14409f3200640454051d9947ee79f16a2396a19b1",
+        "url": "https://android.googlesource.com/platform/libcore/+/de876a01b29230b877c9f408348c38a90ee724a5/json/src/main/java/org/json/JSON.java"
+      },
+      {
+        "file": "JSONObject.java",
+        "sha256": "b7770e43fdad8415e8f5c37a7dc06a7c1ffb3a16c557887ded1479f3116c868f",
+        "url": "https://android.googlesource.com/platform/libcore/+/de876a01b29230b877c9f408348c38a90ee724a5/json/src/main/java/org/json/JSONObject.java"
+      },
+      {
+        "file": "JSONArray.java",
+        "sha256": "24f10dbe57a9228b8aec8a891355c26285e7fc4e070a2f826a080300e3ca4180",
+        "url": "https://android.googlesource.com/platform/libcore/+/de876a01b29230b877c9f408348c38a90ee724a5/json/src/main/java/org/json/JSONArray.java"
+      },
+      {
+        "file": "JSONTokener.java",
+        "sha256": "744c9ffb50c2472d7269c8d64a7d8331ea1a1691fb6536619ac9590e9ebbbd4b",
+        "url": "https://android.googlesource.com/platform/libcore/+/de876a01b29230b877c9f408348c38a90ee724a5/json/src/main/java/org/json/JSONTokener.java"
+      },
+      {
+        "file": "JSONStringer.java",
+        "sha256": "8772ac80610cd62e906330152b09864c471a0921f199f4b9d670d98050e3d86c",
+        "url": "https://android.googlesource.com/platform/libcore/+/de876a01b29230b877c9f408348c38a90ee724a5/json/src/main/java/org/json/JSONStringer.java"
+      },
+      {
+        "file": "JSONException.java",
+        "sha256": "26e10aae9c209dabbc8f15b4156fe9fdc87f5d9d2cb2d2f078b475a61ba0df7d",
+        "url": "https://android.googlesource.com/platform/libcore/+/de876a01b29230b877c9f408348c38a90ee724a5/json/src/main/java/org/json/JSONException.java"
+      }
+    ],
+    "scope": "Independent AOSP org.json host reference, not execution of APK or Android SDK."
+  },
+  "cases": [
+    {
+      "input": "{}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": null,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":null}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": null,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":true}",
+      "expected": {
+        "integer": "0",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":false}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":[]}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":{}}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":1}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":2}",
+      "expected": {
+        "integer": "2",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":-1}",
+      "expected": {
+        "integer": "-1",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":0}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":1.0}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":1.9}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":-1.9}",
+      "expected": {
+        "integer": "-1",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":2147483647}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":2147483648}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":4294967297}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":-4294967295}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":9223372036854775807}",
+      "expected": {
+        "integer": "-1",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":-9223372036854775808}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":9223372036854775808}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":18446744073709551615}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"true\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"TRUE\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"TrUe\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"false\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"FALSE\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"fal\\u017fe\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\" true\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"false \"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"True\\u0000\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"1\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"1.0\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"1.9\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ffe666666666666"
+      }
+    },
+    {
+      "input": "{\"value\":\"2\"}",
+      "expected": {
+        "integer": "2",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2",
+        "string_double_bits": "4000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-1\"}",
+      "expected": {
+        "integer": "-1",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "bff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"+1\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"01\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"1e0\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"1E+00\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"1f\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"1D\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\" 1\\t\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"NaN\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "7ff8000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"+NaN\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "7ff8000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-NaN\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "7ff8000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"nan\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"Infinity\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"+Infinity\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-Infinity\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "fff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"infinity\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"inf\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"NaNf\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"InfinityD\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p0\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0X1.P+0f\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x.8p1\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.0\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"0x.p0\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p+\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p0p1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1_p0\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p0fF\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p0d\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffff7p-1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "3fefffffffffffff"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffff8p-1\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffff9p-1\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.ffffffffffffe8p-1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "3feffffffffffffe"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p-1074\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "1"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p-1075\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.0000000000001p-1075\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "1"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffffp1023\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7fefffffffffffff"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffff8p1023\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0p9999999999999999999999\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p9999999999999999999999\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p-9999999999999999999999\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"1e999999999999999999\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"1e-999999999999999999\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"0e999999999999999999\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"1_0\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u0661\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"\\uff11\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00a01\\u00a0\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u20031\\u2003\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"1 0\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"++1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"--1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"+.1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "3fb999999999999a"
+      }
+    },
+    {
+      "input": "{\"value\":\".1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "3fb999999999999a"
+      }
+    },
+    {
+      "input": "{\"value\":\"1.\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"1.e0\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\".\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"e1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"1e\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"1e-\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"1ee0\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"private-scalar-sentinel\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":\"0\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"0.0\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"0f\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-1.0\"}",
+      "expected": {
+        "integer": "-1",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "bff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-1f\"}",
+      "expected": {
+        "integer": "-1",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "bff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"2147483647\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "41dfffffffc00000"
+      }
+    },
+    {
+      "input": "{\"value\":\"2147483647.0\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "41dfffffffc00000"
+      }
+    },
+    {
+      "input": "{\"value\":\"2147483647f\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "41dfffffffc00000"
+      }
+    },
+    {
+      "input": "{\"value\":\"2147483648\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "41e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"2147483648.0\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "41e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"2147483648f\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "41e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"4294967297\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "41f0000000100000"
+      }
+    },
+    {
+      "input": "{\"value\":\"4294967297.0\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "41f0000000100000"
+      }
+    },
+    {
+      "input": "{\"value\":\"4294967297f\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "41f0000000100000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-4294967295\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c1efffffffe00000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-4294967295.0\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c1efffffffe00000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-4294967295f\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c1efffffffe00000"
+      }
+    },
+    {
+      "input": "{\"value\":\"9223372036854775807\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "43e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"9223372036854775807.0\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "43e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"9223372036854775807f\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "43e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-9223372036854775808\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c3e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-9223372036854775808.0\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c3e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-9223372036854775808f\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c3e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00001\\u0000\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00011\\u0001\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00021\\u0002\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00031\\u0003\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00041\\u0004\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00051\\u0005\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00061\\u0006\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00071\\u0007\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\b1\\b\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\t1\\t\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\n1\\n\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u000b1\\u000b\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\f1\\f\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\r1\\r\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u000e1\\u000e\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u000f1\\u000f\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00101\\u0010\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00111\\u0011\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00121\\u0012\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00131\\u0013\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00141\\u0014\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00151\\u0015\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00161\\u0016\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00171\\u0017\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00181\\u0018\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u00191\\u0019\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u001a1\\u001a\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u001b1\\u001b\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u001c1\\u001c\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u001d1\\u001d\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u001e1\\u001e\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"\\u001f1\\u001f\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\" 1 \"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0p-1076\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0p-1076\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p-1076\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1p-1076\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.00000000000008p-1076\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.00000000000008p-1076\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffff8p-1076\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.fffffffffffff8p-1076\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.fp-1076\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "4"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.fp-1076\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000004"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0.00000000000001p-1076\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0.00000000000001p-1076\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0p-1075\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0p-1075\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1p-1075\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.00000000000008p-1075\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "1"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.00000000000008p-1075\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000001"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffff8p-1075\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "1"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.fffffffffffff8p-1075\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000001"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.fp-1075\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.fp-1075\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000008"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0.00000000000001p-1075\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0.00000000000001p-1075\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0p-1074\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0p-1074\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1p-1074\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000001"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.00000000000008p-1074\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "1"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.00000000000008p-1074\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000001"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffff8p-1074\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "2"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.fffffffffffff8p-1074\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000002"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.fp-1074\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "10"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.fp-1074\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000010"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0.00000000000001p-1074\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0.00000000000001p-1074\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0p-1023\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0p-1023\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p-1023\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1p-1023\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8008000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.00000000000008p-1023\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.00000000000008p-1023\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8008000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffff8p-1023\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "10000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.fffffffffffff8p-1023\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8010000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.fp-1023\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "3fe00000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.fp-1023\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "803fe00000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0.00000000000001p-1023\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0.00000000000001p-1023\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0p-1022\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0p-1022\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p-1022\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "10000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1p-1022\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8010000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.00000000000008p-1022\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "10000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.00000000000008p-1022\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8010000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffff8p-1022\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "20000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.fffffffffffff8p-1022\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8020000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.fp-1022\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "4fe00000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.fp-1022\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "804fe00000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0.00000000000001p-1022\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0.00000000000001p-1022\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0p-1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0p-1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p-1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "3fe0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1p-1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "bfe0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.00000000000008p-1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "3fe0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.00000000000008p-1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "bfe0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.fffffffffffff8p-1\"}",
+      "expected": {
+        "integer": "-1",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "bff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.fp-1\"}",
+      "expected": {
+        "integer": "7",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "7",
+        "string_double_bits": "401fe00000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.fp-1\"}",
+      "expected": {
+        "integer": "-7",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c01fe00000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0.00000000000001p-1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "3c60000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0.00000000000001p-1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "bc60000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0p0\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0p0\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1p0\"}",
+      "expected": {
+        "integer": "-1",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "bff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.00000000000008p0\"}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": "3ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.00000000000008p0\"}",
+      "expected": {
+        "integer": "-1",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "bff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffff8p0\"}",
+      "expected": {
+        "integer": "2",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2",
+        "string_double_bits": "4000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.fffffffffffff8p0\"}",
+      "expected": {
+        "integer": "-2",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.fp0\"}",
+      "expected": {
+        "integer": "15",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "15",
+        "string_double_bits": "402fe00000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.fp0\"}",
+      "expected": {
+        "integer": "-15",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c02fe00000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0.00000000000001p0\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "3c70000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0.00000000000001p0\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "bc70000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0p1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0p1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p1\"}",
+      "expected": {
+        "integer": "2",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2",
+        "string_double_bits": "4000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1p1\"}",
+      "expected": {
+        "integer": "-2",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.00000000000008p1\"}",
+      "expected": {
+        "integer": "2",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2",
+        "string_double_bits": "4000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.00000000000008p1\"}",
+      "expected": {
+        "integer": "-2",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffff8p1\"}",
+      "expected": {
+        "integer": "4",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "4",
+        "string_double_bits": "4010000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.fffffffffffff8p1\"}",
+      "expected": {
+        "integer": "-4",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c010000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.fp1\"}",
+      "expected": {
+        "integer": "31",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "31",
+        "string_double_bits": "403fe00000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.fp1\"}",
+      "expected": {
+        "integer": "-31",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c03fe00000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0.00000000000001p1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "3c80000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0.00000000000001p1\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "bc80000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0p30\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0p30\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p30\"}",
+      "expected": {
+        "integer": "1073741824",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "1073741824",
+        "string_double_bits": "41d0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1p30\"}",
+      "expected": {
+        "integer": "-1073741824",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c1d0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.00000000000008p30\"}",
+      "expected": {
+        "integer": "1073741824",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "1073741824",
+        "string_double_bits": "41d0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.00000000000008p30\"}",
+      "expected": {
+        "integer": "-1073741824",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c1d0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffff8p30\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "41e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.fffffffffffff8p30\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c1e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.fp30\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "420fe00000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.fp30\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c20fe00000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0.00000000000001p30\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "3e50000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0.00000000000001p30\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "be50000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0p31\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0p31\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p31\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "41e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1p31\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c1e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.00000000000008p31\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "41e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.00000000000008p31\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c1e0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffff8p31\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "41f0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.fffffffffffff8p31\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c1f0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.fp31\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "421fe00000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.fp31\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c21fe00000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0.00000000000001p31\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "3e60000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0.00000000000001p31\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "be60000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0p1023\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0p1023\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p1023\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7fe0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1p1023\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "ffe0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.00000000000008p1023\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7fe0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.00000000000008p1023\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "ffe0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.fffffffffffff8p1023\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "fff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.fp1023\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.fp1023\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "fff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0.00000000000001p1023\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7c60000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0.00000000000001p1023\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "fc60000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0p1024\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0p1024\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1p1024\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1p1024\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "fff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.00000000000008p1024\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.00000000000008p1024\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "fff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.fffffffffffff8p1024\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.fffffffffffff8p1024\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "fff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.fp1024\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.fp1024\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "fff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0.00000000000001p1024\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7c70000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0.00000000000001p1024\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "fc70000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x2.1aee0ef6be5d48fc827b6e2ebfe6a50882p-429\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "a530d77077b5f2ea"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xd.c1e826f0a24e7c47ed92p1011\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "ff5b83d04de1449d"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xb.eb1c3bcfp-715\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "1377d638779e0000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xc.255ea81bp442\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "dbc84abd50360000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xe.be3500480cd028p-995\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "81fd7c6a009019a0"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.2b1b9cd498bc5c6b849a50c8a4aed55d576p1257\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x2.8c571bf14d406c09e5357d44336a150573a37ae05fp-652\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "974462b8df8a6a03"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x5.bc5dc9464f241b372e7b3ed82abeccd3c6060075d85p-158\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "3636f17725193c90"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x2.b5c2743p256\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "d005ae13a1800000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x3.1bb2ff5db3959fb91bd75437e747350049119da4fd3p-525\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "9f38dd97faed9cad"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xd.da00f3e5ea421dc1ecd954496b5275fd25787b1p472\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "5dabb401e7cbd484"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x6.15f58a1988b45a0df5cd00ff0116ef7a1fe2da979ef9becp-273\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "2f0857d6286622d1"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x9.673e0fa9731d8acc8p853\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "f572ce7c1f52e63b"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x6.2f33419828cb67cb529ecc600be3f83e2p-543\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "9e28bccd0660a32e"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x5.f3ae8bf103a8e801b48a6cfd3b73179a97p-696\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "1497ceba2fc40ea4"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x5.a447e1324070e82e808p645\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "e866911f84c901c4"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x0.0ebbp-446\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "a3cd760000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xa.f3469466bf5479ee49ba5617063754059d7fbp-402\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "2705e68d28cd7ea9"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x9.c8e977cf85474db97d90c168p-1280\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x7.2aa3e4b1dcc2fe24305ec704aeebp163\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "ca4caa8f92c7730c"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xa.92024237df296bb4c97f6852c2aba23c3b81177fc11dd208a49495078ca3c18c0c16ecd7p397\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "58f52404846fbe53"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x4.bdb085ef82489c92c490p1030\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "fff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x7.e22aa69f85a5592fb0ab4cp-1072\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000020"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.793000486d649a47031a9a3aa984ebp878\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "f70ef2600090dac9"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xc.5c6d9adb002555a24b75132b15e73073ef803e1995cf32c271031bff8p-1228\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x4.c7c623ec5a9cb6b67fa064ce593b489f88810a6b9p694\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "6b731f188fb16a73"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x0.274ef71efeec60e5ab542ebb4916ab7f896e02e7bfc44ff76106bee9c9a429c791f9b86p731\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "6d73a77b8f7f7630"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xa.a296848089905a4619468d98d911e124f4f1a378c7cbc0f4635bfp-1069\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "154"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x7.71f1d463954659684fa960286840a939d792fd79d8407be484d8c0p908\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "f8ddc7c7518e5519"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x2.2f8ab4e8a084e4a7f29d9930fc0065a3def7b92c1d828ef8adb337p767\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "6ff17c55a7450427"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x4.ded7fbbb10bd09p814\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "f2f37b5feeec42f4"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x2.caf532918f5eeb8b97af0f17013a24ec7668a03a0ddp-383\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "281657a9948c7af7"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xb.d36882e68658659313c4f2397baap451\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "dc57a6d105cd0cb1"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x7.a23bd870d1a3a96d5b5f0f75dc4p-939\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "856e88ef61c3468f"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.334cc91d80ed2a1f451e03177c9b554c15972d7b1334216879ca8d1d14620fp-1007\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "813e6699923b01da"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x6.983415153ccb1ef671e5ddf8b139117200940eb94e0ccaf6eff424e2bc300c88eap-385\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "a80a60d05454f32c"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xa.64768538b48e65fa4cad10779a686e86fa2577b42a79f25c058f842a595e0d625871f5fp778\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "f0c4c8ed0a71691d"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x8.528064cc4b036be9c6b8c72874e0b24511bf3e0e84517p352\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "5620a500c9989607"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xa.71e1790b0be87p-994\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8204e3c2f21617d1"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x9.fe19ff7520949ee27067fea1d02c7ae80e2dd08865eb8d213bdd19120231fd29b45f4b209p562\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "6343fc33feea4129"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x5.b310f2ab2b73bca56c024a6ff28p-685\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "9546cc43caacadcf"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x7.e8b120968cad532b8020p5\"}",
+      "expected": {
+        "integer": "-253",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "c06fa2c4825a32b5"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x6.31dd30130f88c70e3b25760a735e09a0909312261c77efe2462a8ac5fd19b501d2p791\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7188c774c04c3e23"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xe.e5e66f0264d913652a228046dee74b44c49e5e91480f00a36dp1145\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xb.ap631\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "e797400000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xe.0464beca0f48eb34f69a08fd851ac5a74ba0p49\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "433c08c97d941e92"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x9.73f21ee4106668694a1c76feffd5195ebc2533f7c49203c4d21ed5ab8f84aep679\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "ea92e7e43dc820cd"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xa.64e76a0ab85d9f2b8d9p-439\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "24b4c9ced41570bb"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xb.430517d3b34590e2221f29f12737a202b4a8c7336b0p-93\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "ba56860a2fa7668b"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.96fb513ed8059a52443e134ba5b1b3cd9e53p1010\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7f196fb513ed805a"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x8.03506b604cfb365e02c1e22fb9e8f842750aa82c3dp-345\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "2a9006a0d6c099f6"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.5859adb67e36b34070755213c492618dd8fa1c4829db258da88806b5b9df4cf6p1223\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "fff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.7fb4b139199e6fbf9dc5437ce7f532d43e8ba7abd47c1f529364a36a7143f2c89e3ep23\"}",
+      "expected": {
+        "integer": "12573272",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "12573272",
+        "string_double_bits": "4167fb4b139199e7"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x7.2e57b3d2661597d55b71f280c1fd22ac6c65p-1215\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.22bde928d05780696bc14fe6619cbd8c01bd442de24403d37p-163\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "b5fe457bd251a0af"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xb.701d014740a1bafd6a09501250d9p-241\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "3116e03a028e8143"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xe.d84bcec80f2db14feebffef3dcc67a3494b938adp952\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7badb0979d901e5b"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x4.52911e4ad957aa9df6cb59678abfad2b296cada8p544\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "62114a44792b655f"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x2.cb82ff5947cdce679805f2ffa8p-1162\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x8.7a41p1195\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "fff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xe.67bd6845c6e7c1f6cd9f114dcb1c2p-641\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "181ccf7ad08b8dd0"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x6.a38b825dde9b82831ae7a0be9d54af8fc61fbca44705c912ddff4a321de06652a4986c3bfb94b0p1030\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x7.888e8dea939d7b0e757f0bcfce31a27dd2ebp-1062\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000007889"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.f398d8a78d08p585\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "648f398d8a78d080"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x7.4e7fa15045e70cf781dp-789\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8ecd39fe8541179c"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xc.2cc98cecadbp534\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "6188599319d95b60"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xe.21ap783\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "f11c434000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x7.881a316c3362ee350172ccc7350fc2b9e74af99f2p1226\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "fff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x3.7e2172ee434d76e4185ed35b89210258b46796a7b6bd9c1d8d3c2c80c5f64ab1ff2c6f9c6de585p1111\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "fff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x9.f26fede8f685da6681104b7f9d10d29cd77384891c6cb1e8fbcba346b2398ac49b395fbc16a49p-716\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "9363e4dfdbd1ed0c"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x8.5039f2abc93780c4435ea8e884c21155f08c6e906aeb00899d5ca025b9203d7476a5e989p-529\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "1f10a073e557926f"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.9e6f21f9be7abcc552ae75751b31a729d35ec7159dfe8ed4b156ee9d0e373ce50b330a9325p800\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "f22f3cde43f37cf5"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x8.1f794698f2fc6fb5b563a30f5e2c129870db2d35287dp-1155\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "8000000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.0a1ded4030b1p-703\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "143e143bda806162"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xd.127d3c6525ac40feec724af4850e6p103\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "469a24fa78ca4b59"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x5.78296dad60ead3a44ebfaf7b649c8d1236794196ed20a5a8ba29537cc422afc19b34fp-391\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "27a5e0a5b6b583ab"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xa.a022fd58b1bdfdc8e4518fcd8e02318a3d0a2b79f0db5e081bfcb241284104512p-713\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "93954045fab1637c"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.a5b8d5810132b77398bef4b3ce29df20ece56eb67ec4p1197\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "7ff0000000000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xb.26edc23b301e71b3c6f2ebc957323b44b36f95be8179a7ef9b4402609p-497\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "a1164ddb8476603d"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x9.9480facc2fec91f711ba055e6831d596dac3e6b8f0864fdecfe09be2afeec6d9bp-378\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "28832901f5985fd9"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x1.8604288b2a35598b86a5f793c88bp257\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "5008604288b2a356"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xd.c8dd597babdb2bf80e061b7f0a61f523bd203e84acfa633dbac3309e56p-1032\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "800037237565eeaf"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xc.7a4e547b2e1db70900aa252de3c7c9b8be4d88f47bp-319\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "ac38f49ca8f65c3b"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x6.6bbe61ba3e8dbb555329p145\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "4929aef986e8fa37"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x8.4c9ep-903\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "87b0993c00000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x9.d6315d3cd962caa1138bf03ae04c7ea4c8p570\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "e3c3ac62ba79b2c6"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xe.180f4ef177edb8e11aa20e5dd424c98a0e8202fe1d29p-887\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "88bc301e9de2efdb"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xa.d832fa72619c2419d9f72e2305e007p799\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "f215b065f4e4c338"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xf.818db927778p441\"}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "dbbf031b724eef00"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xe.98fb7dc490p135\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "489d31f6fb892000"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0xd.2ee67b08d8d4c55ac9e04753405420dad7ea38f96169fd9fb416c13f60ca000df04c2a8c2eb23dp-625\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "991a5dccf611b1aa"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x1.79b9d3732b6a46b83d65dp-252\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "b0379b9d3732b6a4"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xd.0d0fbp898\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "784a1a1f60000000"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xf.b9de09a2fe7a666p401\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "593f73bc1345fcf5"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x5.570e00a1fe7cc723aea0d3dcd4f2c59a35e440f9e9c5c416f66440e6e96413d528p-1183\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"0xa.e281a23cb6a08392bf89c3bc137119952ac3fd74275e122fc994c6ee5b8d4b84e3p-1229\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "0"
+      }
+    },
+    {
+      "input": "{\"value\":\"-0x8.c6b3560ceefc7b99cb5b4ba1fb35479ff54cecc44da70f7a6160ed444p-471\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "a2b18d66ac19ddf9"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x7.008e3ed4764a5cb3371ec7cd891aa5834f6cd3c5d2502e78c7ce90b2c0p-858\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "a7c0238fb51d929"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x8.a70560778545508023fa4c625bccefe3c5bd92f17550ad32f95e5a86p487\"}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": "5e914e0ac0ef0a8b"
+      }
+    },
+    {
+      "input": "{\"value\":\"0x9.1e0fa88302205649b111c0d2acf582994668b1fp-184\"}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": "34a23c1f51060441"
+      }
+    },
+    {
+      "input": "{\"value\":0.99999999999999994}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":0.99999999999999999}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":1.9999999999999998}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":1.9999999999999999}",
+      "expected": {
+        "integer": "2",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":1.99999999999999999}",
+      "expected": {
+        "integer": "2",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":-0.99999999999999994}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":-1.9999999999999999}",
+      "expected": {
+        "integer": "-2",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":1.0000000000000001}",
+      "expected": {
+        "integer": "1",
+        "boolean": true,
+        "nullable_boolean": true,
+        "join_time": "1",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":1e308}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":1e-308}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":5e-324}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":1e-324}",
+      "expected": {
+        "integer": "0",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":18446744073709551616}",
+      "expected": {
+        "integer": "2147483647",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": "2147483647",
+        "string_double_bits": null
+      }
+    },
+    {
+      "input": "{\"value\":-9223372036854775809}",
+      "expected": {
+        "integer": "-2147483648",
+        "boolean": false,
+        "nullable_boolean": false,
+        "join_time": null,
+        "string_double_bits": null
+      }
+    }
+  ]
+}

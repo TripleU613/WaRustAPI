@@ -159,7 +159,7 @@ distinguishes recovered MEX behavior from the current classic Rust lookup.
 
 The [37.71 MEX recipe](recipes/2.26.37.71-mex.json) now covers **38** request,
 parser/callback, numeric, full group converter and participant/JID helper
-methods linked to Rust's MEX module. Baseline: **43 files/162,435 bytes**,
+methods linked to Rust's MEX module. Baseline: **43 files/162,671 bytes**,
 including checksums and explicit catch tables. The opt-in recipe boolean
 `include_exception_tables` defaults to false, preserving historical exports.
 [Current coverage comparison](mex-participant-coverage-diff.json) against Git
@@ -179,3 +179,9 @@ noise-handshake annotation (+045e..0460), retaining opcode/offsets/operands.
 shows one changed/21 unchanged topics and four unchanged artifacts in 0.0328
 seconds, same APK. Current core size: 27 files/731,494 bytes. This is an
 annotation/checksum correction, not a new release or handshake behavior.
+
+MEX coercion ownership refresh: four topics additionally identify the private
+Rust coercion module. [Cached comparison](mex-coercion-owner-diff.json) against
+Git 4fea159: 0.016635 seconds, all 38 method texts unchanged, targets metadata only.
+Current snapshot remains 43 files, now 162,671 bytes; no new APK/behavior claim.
+[Scalar port/reference](../mex.md#participant-scalar-coercion-and-float-rounding-2026-10-07).

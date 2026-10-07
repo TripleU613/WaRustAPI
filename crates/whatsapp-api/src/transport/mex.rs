@@ -11,6 +11,39 @@ use crate::{
     model::jid::{Jid, Server},
 };
 
+mod coercion;
+
+/// APK participant-list scalar fields, before member/type/JID validation.
+/// Join values can disclose private timing, so Debug hides all values.
+pub struct GroupParticipantScalars {
+    /// LbE.A0G result; true makes ADv.A0D return null, not an empty map.
+    pub phash_match: bool,
+    /// One entry per object edge, preserving source order and duplicates.
+    pub edges: Vec<ParticipantEdgeScalars>,
+}
+
+/// Scalar fields carried by ADv.A0D into 31c, not a valid member record.
+pub struct ParticipantEdgeScalars {
+    /// Positive optInt value sign-extended and boxed as long; units unverified.
+    pub join_time: Option<i64>,
+    /// Absent/null stays None; present unconvertible values yield Some(false).
+    pub group_history_sent: Option<bool>,
+}
+
+impl std::fmt::Debug for GroupParticipantScalars {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("GroupParticipantScalars")
+            .finish_non_exhaustive()
+    }
+}
+
+impl std::fmt::Debug for ParticipantEdgeScalars {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ParticipantEdgeScalars")
+            .finish_non_exhaustive()
+    }
+}
+
 /// Local JSON response budget. This is not an APK/server payload limit.
 pub const MAX_JSON_RESPONSE_BYTES: usize = 1024 * 1024;
 
@@ -222,34 +255,37 @@ impl MexJsonResponse {
         &self.summary
     }
 
-    /// Project roles of JSONObject edges in source order, before participant
-    /// type/JID validation or phash short-circuiting. This is not a member map:
-    /// missing participant models and unknown types may later be skipped.
-    /// Missing/null/nonarray edges yield an empty list; nonobject entries skip.
-    pub fn group_participant_edge_roles(&self) -> Result<Vec<GroupParticipantRole>> {
+    // The callback and two required model objects are shared by field projections.
+    fn group_participants(&self) -> Result<&serde_json::Map<String, serde_json::Value>> {
         let disposition = self.group_info_disposition();
         if disposition != GroupInfoDisposition::InvokeGroupCallback {
             return Err(Error::invalid(
-                "mex.group.edge_roles",
-                format!("callback gate blocks edge projection: {disposition:?}"),
+                "mex.group.participants",
+                format!("callback gate blocks participant projection: {disposition:?}"),
             ));
         }
         // 0Xo.A03 requires group; 90x.A0I -> LbE.A05 requires participants.
-        let participants = self
-            .data()
+        self.data()
             .and_then(|data| data.get("xwa2_group_query_by_id"))
             .and_then(serde_json::Value::as_object)
             .ok_or_else(|| {
                 Error::invalid(
-                    "mex.group.edge_roles",
+                    "mex.group.participants",
                     "missing/nonobject xwa2_group_query_by_id",
                 )
             })?
             .get("participants")
             .and_then(serde_json::Value::as_object)
             .ok_or_else(|| {
-                Error::invalid("mex.group.edge_roles", "missing/nonobject participants")
-            })?;
+                Error::invalid("mex.group.participants", "missing/nonobject participants")
+            })
+    }
+
+    /// Project object-edge roles before phash/type/JID validation, not a member map.
+    /// Missing/null/nonarray edges yield an empty list; nonobject entries skip.
+    /// Ordering and duplicates are preserved even if member conversion later skips them.
+    pub fn group_participant_edge_roles(&self) -> Result<Vec<GroupParticipantRole>> {
+        let participants = self.group_participants()?;
         // LbE.A0A -> A09 optJSONArray, optJSONObject per element; 8yl.<init>
         // just wraps nonnull JSONObject. Ordering/duplicates are preserved.
         Ok(participants
@@ -266,6 +302,30 @@ impl MexJsonResponse {
                 )
             })
             .collect())
+    }
+
+    /// Project participant hash flag and object-edge scalars. This inspects
+    /// edges even when phash matches; it does not run/apply ADv.A0D's member map.
+    /// APK calls are confirmed; AOSP/host numeric semantics are reference-tested,
+    /// not live Android verification. Outer JSON lexical parity is incomplete.
+    pub fn group_participant_scalars(&self) -> Result<GroupParticipantScalars> {
+        let participants = self.group_participants()?;
+        Ok(GroupParticipantScalars {
+            phash_match: coercion::boolean(participants.get("participants_phash_match")),
+            edges: participants
+                .get("edges")
+                .and_then(serde_json::Value::as_array)
+                .into_iter()
+                .flatten()
+                .filter_map(serde_json::Value::as_object)
+                .map(|edge| ParticipantEdgeScalars {
+                    // ADv.A0D -> optInt positive guard -> 1xf.A17 Long boxing.
+                    join_time: coercion::join_time(edge.get("join_time")),
+                    // ADv.A0D isNull guard -> 8kW.A0q -> LbE.A0G.
+                    group_history_sent: coercion::nullable_boolean(edge.get("group_history_sent")),
+                })
+                .collect(),
+        })
     }
 
     /// Project the APK's three confirmed time/version numbers, without applying
@@ -551,6 +611,55 @@ pub fn group_info_request(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn participant_scalars_project_reference_values_without_applying_members() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/mex/2.26.37.71-coercion-reference.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            let input: serde_json::Value =
+                serde_json::from_str(case["input"].as_str().unwrap()).unwrap();
+            let mut participants = serde_json::Map::new();
+            let mut edge = serde_json::Map::new();
+            if let Some(value) = input.get("value") {
+                participants.insert("participants_phash_match".into(), value.clone());
+                edge.insert("join_time".into(), value.clone());
+                edge.insert("group_history_sent".into(), value.clone());
+            }
+            participants.insert(
+                "edges".into(),
+                serde_json::json!([null, edge, "private-scalar-sentinel"]),
+            );
+            let payload = serde_json::json!({"data":{"xwa2_group_query_by_id":{"participants":participants}}});
+            for child in ["result", "update"] {
+                let node =
+                    Node::new("iq").children(vec![Node::new(child).text(payload.to_string())]);
+                let response = parse_json_response(&node).unwrap();
+                let scalars = response.group_participant_scalars().unwrap();
+                assert_eq!(
+                    scalars.phash_match,
+                    case["expected"]["boolean"].as_bool().unwrap()
+                );
+                assert_eq!(scalars.edges.len(), 1);
+                assert_eq!(
+                    serde_json::to_value(scalars.edges[0].join_time.map(|n| n.to_string()))
+                        .unwrap(),
+                    case["expected"]["join_time"]
+                );
+                assert_eq!(
+                    serde_json::to_value(scalars.edges[0].group_history_sent).unwrap(),
+                    case["expected"]["nullable_boolean"]
+                );
+                assert_eq!(format!("{scalars:?}"), "GroupParticipantScalars { .. }");
+                assert_eq!(
+                    format!("{:?}", scalars.edges[0]),
+                    "ParticipantEdgeScalars { .. }"
+                );
+            }
+        }
+    }
+
     #[test]
     fn participant_object_edges_preserve_order_and_nullable_list_semantics() {
         let fixture: serde_json::Value = serde_json::from_str(include_str!(

@@ -37,7 +37,9 @@ bytes.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 serde.workspace = true
-serde_json.workspace = true
+# APK JSONObject numeric coercion can branch at integer boundaries. The default
+# fast parser rounded 0.99999999999999994 to 1; Java Double correctly stays below.
+serde_json = { workspace = true, features = ["float_roundtrip"] }
 zeroize.workspace = true
 hex.workspace = true
 redb.workspace = true

@@ -725,3 +725,24 @@ default summary remain redacted. This is not a member map/state application.
 Constructor A08 extra string, final join-time unit, device hierarchy and full
 member/alias/boolean/feature application remain unknown/unported. No saved
 account access, identity reclassification or live request.
+
+## comparison.mex.participant_scalars — 2026-10-07
+
+**Confirmed static** APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+LbE.A0G/Ayj.A1R optInt==1 then optBoolean; ADv.A0D/1xf.A17 positive join int
+boxed long, isNull/8kW.A0q nullable history. **Inferred platform / executed
+reference:** six hash-pinned AOSP org.json sources commit de876a01b29230b877c9f408348c38a90ee724a5,
+Temurin21.0.12.1+1 with compile-only annotation stubs, 408 independent cases.
+**Observed local defect fixed:** default serde float parser rounded
+0.99999999999999994 to1, falsely setting phash true; float_roundtrip restores
+Java-reference below1 result. The exact literal remains a regression.
+[Sources/oracle/semantics/unknowns](mex.md#participant-scalar-coercion-and-float-rounding-2026-10-07).
+
+Rust scalar projection/explicit --participant-scalars now exposes private
+phash/history/join, with redacted Debug/default output; integer Number wrapping
+versus string/floating saturation and decimal/hex/suffix/NaN/Infinity supported.
+This is not a member map or state application. Full JSONTokener/Android runtime
+parity and remaining member/JID/alias/feature assembly stay unverified/unported.
+Four topic owners add the coercion Rust module; 38 unchanged topic texts,
+owner-only cached diff0.016635s, 43 files/162671bytes. No account/live action.

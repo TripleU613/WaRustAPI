@@ -1424,3 +1424,18 @@ tests, strict Clippy, warning-free Rustdoc, formatting, CLI reference/API symbol
 checks, hygiene (564 links) and staged whitespace. Actual CLI: 36 edge modes,
 36 combined numeric modes, 36 default summaries and flag dependency; private
 content and partial stdout were absent on refusals.
+
+Participant scalar prerequisite ported: phash exact-one/default boolean,
+nullable history, positive int-to-long join; explicit offline --participant-scalars
+opts into private timing output. Independent pinned-AOSP/host-Java reference
+has 408 cases, including exact hexadecimal Double rounding. Corrected observed
+local JSON float misrounding at0.99999999999999994 via float_roundtrip; it had
+falsely yielded phash=true. Full member/JID/alias/feature/state application and
+Android runtime/outer lexical parity remain unverified. No saved account/live
+request changed. [Source/oracle/boundaries](protocol/mex.md#participant-scalar-coercion-and-float-rounding-2026-10-07).
+Scalar-port checks: 623 workspace/all-feature tests, 24 default CLI tests,
+strict Clippy, warning-free Rustdoc, formatting, CLI reference/API symbols,
+hygiene (578 links) and staged whitespace. Reference408cases reproduced from
+pinned AOSP sources with committed annotation stubs. Actual CLI:816scalar,
+816combined,816default-redacted,16blocked/no-partial-output and flag dependency.
+43-file/162671-byte APK snapshot reproduced exactly; account state unchanged.

@@ -105,7 +105,8 @@
     "method_shorty": "ZI",
     "methods": 1,
     "rust_files": [
-      "crates/whatsapp-api/src/transport/mex.rs"
+      "crates/whatsapp-api/src/transport/mex.rs",
+      "crates/whatsapp-api/src/transport/mex/coercion.rs"
     ]
   },
   "mex-full-group-converter": {
@@ -120,7 +121,8 @@
     "method_shorty": "LLL",
     "methods": 1,
     "rust_files": [
-      "crates/whatsapp-api/src/transport/mex.rs"
+      "crates/whatsapp-api/src/transport/mex.rs",
+      "crates/whatsapp-api/src/transport/mex/coercion.rs"
     ]
   },
   "mex-generic-jid-routing": {
@@ -326,7 +328,8 @@
     "method_shorty": "ZL",
     "methods": 1,
     "rust_files": [
-      "crates/whatsapp-api/src/transport/mex.rs"
+      "crates/whatsapp-api/src/transport/mex.rs",
+      "crates/whatsapp-api/src/transport/mex/coercion.rs"
     ]
   },
   "mex-participant-map": {
@@ -342,7 +345,8 @@
     "method_shorty": "LL",
     "methods": 1,
     "rust_files": [
-      "crates/whatsapp-api/src/transport/mex.rs"
+      "crates/whatsapp-api/src/transport/mex.rs",
+      "crates/whatsapp-api/src/transport/mex/coercion.rs"
     ]
   },
   "mex-participant-role-enum": {

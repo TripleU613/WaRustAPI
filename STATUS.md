@@ -1137,3 +1137,20 @@ tests, strict Clippy, warning-free Rustdoc, formatting, CLI reference/API symbol
 checks and hygiene (564 local links) passed. Actual CLI checked 36 edge modes,
 36 combined numeric modes, 36 unchanged redacted defaults and the flag dependency;
 blocked projections never emitted partial stdout or private sentinel content.
+
+MEX phash/history/join scalar coercions now project in Rust and explicit
+--participant-scalars (--group-info required), with redacted Debug/defaults.
+408 independent pinned-AOSP/host-Java cases cover number wrapping, string/float
+saturation, decimal/hex rounding and nullable values. A local serde JSON
+precision bug falsely mapped 0.99999999999999994 to1/phash=true; float_roundtrip
+fixes it with a regression. Full Android/JSONTokener and member-map/state
+application remain unverified/unfinished. Snapshot owners now include the
+coercion module, 43 files/162671 bytes; all 38 topic texts unchanged.
+[Evidence and limits](docs/protocol/mex.md#participant-scalar-coercion-and-float-rounding-2026-10-07).
+No saved account, keys, identity, action state or live request changed.
+Scalar-port validation: 623 workspace/all-feature tests, 24 default CLI tests,
+strict Clippy, warning-free Rustdoc, formatting, CLI reference/API symbols and
+hygiene (578 local links) passed. All 408 oracle cases reproduced using the
+committed annotation stubs; actual CLI checked 816 scalar modes, 816 combined
+modes, 816 unchanged redacted defaults, 16 blocked/no-partial-output modes and
+flag dependency. Actual 43-file/162671-byte APK snapshot re-export matched.

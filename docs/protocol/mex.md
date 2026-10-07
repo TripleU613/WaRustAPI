@@ -269,7 +269,7 @@ The next trace belongs to actual IQ callback/model-conversion callers.
 
 [The MEX release recipe](apk/recipes/2.26.37.71-mex.json) exports thirty-eight
 method topics to [the 37.71 baseline](apk/2.26.37.71-mex/manifest.json):
-43 files, 162,435 bytes including the checksum index. Each topic names
+43 files, 162,671 bytes including the checksum index. Each topic names
 `crates/whatsapp-api/src/transport/mex.rs` as its Rust owner. The baseline is
 additional source coverage, not a new APK release or full MEX parity.
 
@@ -915,3 +915,108 @@ group validity verdict, or durable state application. It does not reinterpret
 phash null as empty. Full participant boolean/JID/alias/type conversion,
 feature maps and downstream state application remain **unknown/unimplemented**.
 No saved account was opened and no live request was sent.
+
+## Participant scalar coercion and float rounding (2026-10-07)
+
+**Confirmed APK calls**, build 2.26.37.71 SHA above: LbE.A0G first optInt,
+Ayj.A1R compares exactly **1**, then optBoolean with that default. ADv.A0D
+uses positive optInt(join_time), boxes via 1xf.A17 into Long without scaling;
+present/non-null history goes through 8kW.A0q to A0G. Existing selected
+[role/boolean](mex-participant-role-evidence.txt) and
+[model/history/join](mex-participant-model-evidence.txt) bytecode carries the
+proof; storage units and downstream member application remain unknown.
+
+**Inferred platform compatibility, independently executed reference:** pinned
+[AOSP JSON conversion](https://android.googlesource.com/platform/libcore/+/de876a01b29230b877c9f408348c38a90ee724a5/json/src/main/java/org/json/JSON.java)
+uses Number.intValue, string Double.parseDouble narrowed to int, and boolean/
+true-false string lookup. [JSONTokener](https://android.googlesource.com/platform/libcore/+/de876a01b29230b877c9f408348c38a90ee724a5/json/src/main/java/org/json/JSONTokener.java)
+selects integral Integer/Long before Double for ordinary integral literals.
+Thus numeric **4294967297** narrows to **1** (boolean true), whereas string
+**"4294967297"** saturates to **2147483647** (boolean false). Floating numbers
+and strings truncate toward zero with saturation; invalid strings/NaN yield
+zero. Missing/null history is null; a present unconvertible value is false.
+A join time survives only if the resulting int is positive, then sign-extends
+into a long. These conversions are not generic nonzero truthiness.
+
+The [host oracle](MexAndroidCoercionOracle.java) compiles the six unmodified
+AOSP org.json sources at commit **de876a01b29230b877c9f408348c38a90ee724a5**,
+with empty compilation-only Android/Nullness annotation stubs. These stubs
+supply annotations, not JSON behavior. Source URLs and SHA-256 values are
+preserved in the [408-case fixture](../../crates/whatsapp-api/fixtures/mex/2.26.37.71-coercion-reference.json).
+Actual runtime: Temurin **21.0.12.1+1 LTS**. Each input is a strict JSON object
+with optional value; oracle output records optInt, composed boolean, nullable
+boolean, positive join time and Double bit pattern for string values. Source
+and compiled classes stay ignored/local. Reproduce by compiling the cited
+six sources/stubs plus oracle, then feed one Base64 UTF-8 JSON object per line.
+This executes AOSP source on host Java, **not APK or Android SDK code**.
+
+**Implemented:** private Rust coercion module supports
+[Java numeric-string syntax](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Double.html#valueOf(java.lang.String)):
+ASCII-control/space trim <=U+0020 (Unicode spaces stay invalid), signed decimal
+and exponent forms, optional f/F/d/D suffix without float32 rounding,
+case-sensitive NaN/Infinity, hexadecimal significands with mandatory p/P
+binary exponent. Hex conversion uses guard/sticky bits and ties-to-even,
+including subnormal/overflow boundaries; sequential floating addition would
+round twice. Tests compare all 408 conversion outputs and exact string-double
+bits to the independent oracle. Outer JSON remains serde's strict grammar,
+not complete Android JSONTokener lexical acceptance; Android SDK/Unicode and
+all malformed platform lexical differences remain **unknown/unverified**.
+
+**Observed local bug, corrected:** serde_json's default fast float parser
+rounded JSON literal **0.99999999999999994** to **1**, giving optInt=1 and
+incorrect true phash/history. Java rounds it below 1, giving zero/false. The
+whatsapp-api dependency now enables **float_roundtrip**; that literal and
+nearby thresholds remain independent oracle regressions. This changes shared
+JSON floating parsing precision, not account identity or stored keys. Full
+workspace verification is required; the float feature adds no package/version
+change.
+
+`MexJsonResponse::group_participant_scalars()` now projects phash flag and
+ordered object-edge join/history fields after the existing callback/model
+guards. `GroupParticipantScalars` and `ParticipantEdgeScalars` Debug redact
+values. Missing/null/nonarray edges yields empty; nonobjects skip. The CLI's
+explicit **--participant-scalars** requires --group-info and prints
+`group_participant_scalars` with phash_match and edges; join_time uses a signed
+decimal string or null, history a boolean or null. This opts into private
+timing output; default summaries stay unchanged. Shared participant validation
+errors use mex.group.participants and name the missing model without values.
+All requested projections finish before stdout, including combined flags.
+
+```sh
+target/debug/xtask mex-response-inspect --input /private/mex-response.json \
+  --group-info --participant-scalars
+```
+
+This inspection visits edges even if phash matches. It is not the ADv.A0D
+member-map converter and does not turn null into empty or apply state.
+Participant JID/type/alias validation, constructor assembly, feature maps and
+downstream application remain unfinished; no live request or saved account
+access. Previous dated unported-boolean statements are historical checkpoints.
+
+Four release topics now also point to the coercion Rust file. The snapshot
+remains 38 methods/43 files, now **162,671 bytes**. [Cached owner-only diff](apk/mex-coercion-owner-diff.json)
+against Git 4fea159 took **0.016635 seconds**: all 38 topic texts unchanged;
+target metadata changed, inventory/manifest/tokens unchanged. This is Rust
+ownership metadata, not APK behavior or a release delta.
+
+The reference annotation definitions are committed as small reproducible sources:
+[SystemApi](java-reference-stubs/android/annotation/SystemApi.java),
+[UnsupportedAppUsage](java-reference-stubs/android/compat/annotation/UnsupportedAppUsage.java),
+[NonNull](java-reference-stubs/libcore/util/NonNull.java),
+[Nullable](java-reference-stubs/libcore/util/Nullable.java). After fetching the
+six hash-matching AOSP .java files into the ignored reference directory:
+
+```sh
+javac -d lab/releases/android-json-reference/classes \
+  lab/releases/android-json-reference/*.java \
+  docs/protocol/java-reference-stubs/android/annotation/*.java \
+  docs/protocol/java-reference-stubs/android/compat/annotation/*.java \
+  docs/protocol/java-reference-stubs/libcore/util/*.java \
+  docs/protocol/MexAndroidCoercionOracle.java
+java -cp lab/releases/android-json-reference/classes MexAndroidCoercionOracle
+```
+
+Input format is Base64 of each fixture's `input` string, one line per case;
+compare parsed output objects with its `expected` object. The APK-derived
+integer-equals-one/join-positive guards live only in the small oracle; conversion
+and JSON runtime behavior execute the independent unmodified AOSP/Java code.
