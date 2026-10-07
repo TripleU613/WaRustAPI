@@ -1779,3 +1779,13 @@ bundle archive/reopen, own exclusion, rollback and stale-reservation tests cover
 the local correction. APK 37.71 D4x.A00/B7H.A06 remain source context; live alternate
 primary encoding and subsequent group rotation remain unverified.
 [Evidence](protocol/cross-device-sync.md#encoding-independent-primary-change-follow-ups-2026-10-07).
+
+Own sender account selection (2026-10-07, confirmed static APK 37.71): 08i
+initializes Apw from self_lid and Apz from saved Me.jabber_id; both retain the
+persisted registration_device_id (default 0). D4x.A00 selects LID versus PN using
+0bA.A0k -> 1jL.A0Y (group row.A00 == 2), then wraps the own device via B7H.A04.
+Me.lid consistency diagnostics are not an established immediate self_lid fallback;
+1XY is a call callback, not run. Group-row mode production, async reconciliation,
+complete bucket/actor semantics and Rust own-address parity remain unfinished.
+No account state, keys, identity policy or live traffic changed.
+[Sources and boundaries](protocol/cross-device-sync.md#own-pn-lid-sender-selection-and-persisted-device-index-2026-10-07).

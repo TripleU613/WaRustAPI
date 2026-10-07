@@ -1574,3 +1574,20 @@ Primary-change encoding validation: 673 workspace/all-feature tests, 24 default
 CLI tests, strict Clippy, warning-free Rustdoc and CLI/API checks passed. Rebuilt
 CLI read-only saved-account inspection left all inspected protocol state unchanged;
 no login/query/send or manufactured identity change was used to test the branch.
+
+Own sender account selection (2026-10-07, confirmed static APK 37.71): 08i
+initializes Apw from self_lid and Apz from saved Me.jabber_id; both retain the
+persisted registration_device_id (default 0). D4x.A00 selects LID versus PN using
+0bA.A0k -> 1jL.A0Y (group row.A00 == 2), then wraps the own device via B7H.A04.
+Me.lid consistency diagnostics are not an established immediate self_lid fallback;
+1XY is a call callback, not run. Group-row mode production, async reconciliation,
+complete bucket/actor semantics and Rust own-address parity remain unfinished.
+No account state, keys, identity policy or live traffic changed.
+[Sources and boundaries](docs/protocol/cross-device-sync.md#own-pn-lid-sender-selection-and-persisted-device-index-2026-10-07).
+
+Own-account trace validation: 58 xtask tests, CLI reference regeneration and five
+API checks passed. The core now holds 81 topics / 219 methods, 86 files /
+1,586,459 bytes under its 2 MiB limit. The checksum-verified cached diff took
+0.080554 seconds: 13 added topics, all 68 prior topics unchanged; manifest,
+inventory and tokens unchanged. This measures cached scoped source comparison,
+not full-app decompilation or automatic porting. No live request was needed.

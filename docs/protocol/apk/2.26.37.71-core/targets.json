@@ -722,6 +722,132 @@
       "crates/whatsapp-cli/src/transport_group_send.rs"
     ]
   },
+  "sender-key-account-device-build": {
+    "anchors": [
+      "hosted.lid",
+      "hosted"
+    ],
+    "class": "LX/0DK;",
+    "file": "sender-key-account-device-build.txt",
+    "method_filter": "A01",
+    "method_shorty": "LLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-account-device-index": {
+    "anchors": [
+      "registration_device_id"
+    ],
+    "class": "LX/08i;",
+    "file": "sender-key-account-device-index.txt",
+    "method_filter": "Apt",
+    "method_shorty": "I",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-account-lid-device-build": {
+    "class": "LX/0DE;",
+    "file": "sender-key-account-lid-device-build.txt",
+    "method_filter": "A04",
+    "method_shorty": "LLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-account-lid-initialize": {
+    "anchors": [
+      "self_lid"
+    ],
+    "class": "LX/08i;",
+    "file": "sender-key-account-lid-initialize.txt",
+    "method_filter": "A04",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-account-lid-parse": {
+    "class": "LX/08i;",
+    "file": "sender-key-account-lid-parse.txt",
+    "method_filter": "A00",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-account-lid-set": {
+    "anchors": [
+      "memanager/setSelfLidsFromJid: "
+    ],
+    "class": "LX/08i;",
+    "file": "sender-key-account-lid-set.txt",
+    "method_filter": "A02",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-account-me-load": {
+    "anchors": [
+      "MeManager/loadMe"
+    ],
+    "class": "LX/1XY;",
+    "file": "sender-key-account-me-load.txt",
+    "method_filter": null,
+    "methods": 2,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-account-me-set": {
+    "anchors": [
+      "memanager/setMe/invalid_jid_error"
+    ],
+    "class": "LX/08i;",
+    "file": "sender-key-account-me-set.txt",
+    "method_filter": "A01",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-account-pn-ensure": {
+    "class": "LX/08i;",
+    "file": "sender-key-account-pn-ensure.txt",
+    "method_filter": "A09",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
   "sender-key-account-provider": {
     "class": "LX/1xi;",
     "file": "sender-key-account-provider.txt",
@@ -730,6 +856,18 @@
     "methods": 1,
     "rust_files": [
       "crates/whatsapp-api/src/signal/group.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-account-recipient-wrap": {
+    "class": "LX/B7H;",
+    "file": "sender-key-account-recipient-wrap.txt",
+    "method_filter": "A04",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
       "crates/whatsapp-cli/src/transport_group_send.rs"
     ]
   },
@@ -757,6 +895,42 @@
     "rust_files": [
       "crates/whatsapp-api/src/signal/group.rs",
       "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "sender-key-group-account-flag": {
+    "class": "LX/1jL;",
+    "file": "sender-key-group-account-flag.txt",
+    "method_filter": "A0Y",
+    "method_shorty": "Z",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-group-account-row": {
+    "class": "LX/0bA;",
+    "file": "sender-key-group-account-row.txt",
+    "method_filter": "A0B",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "sender-key-group-account-select": {
+    "class": "LX/0bA;",
+    "file": "sender-key-group-account-select.txt",
+    "method_filter": "A0k",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs"
     ]
   },
   "sender-key-name": {

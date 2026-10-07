@@ -1701,3 +1701,80 @@ Read-only inspection of the existing private account left outbox/actions/receipt
 devices and pins unchanged. Evidence index remains private at
 `lab/releases/primary-kind-inspection/active.json`; no network request or key
 replacement occurred during this inspection.
+
+## Own PN/LID sender selection and persisted device index (2026-10-07)
+
+**Confirmed static, APK 2.26.37.71:** cleanup selects our account's sender
+address, not the changed remote participant. The prior account-provider ownership
+inference can now be narrowed using these retained initialization paths:
+
+- [08i.A04](apk/2.26.37.71-core/sender-key-account-lid-initialize.txt) lazily
+  initializes LIDs under a monitor. It reads preference `self_lid` with null
+  default (`001e..0036`), parses it, calls A02 and sets its loaded flag
+  (`0036..004e`). [08i.A02](apk/2.26.37.71-core/sender-key-account-lid-set.txt)
+  stores a LID user in A0H and builds A0G using Apt (`0014..0030`), or retains
+  an existing LID device JID and its user (`0032..005a`). Thus the already cached
+  **Apw** getter returns our persisted LID device address after this initializer.
+  Invalid-type/caught-error behavior does not establish unconditional clearing
+  of a previously held A0G; no invalid-address reset is inferred.
+- [08i.Apt](apk/2.26.37.71-core/sender-key-account-device-index.txt) reads integer
+  `registration_device_id`, default **0** (`0000..001c`). A LID user is converted
+  by [0DE.A04](apk/2.26.37.71-core/sender-key-account-lid-device-build.txt) into
+  an ordinary 0e1 device except for index **0x63**, which constructs Bli. The
+  builder retains the supplied device index. This is not permission to invent
+  one or to flatten an existing companion to primary.
+- [08i.A09](apk/2.26.37.71-core/sender-key-account-pn-ensure.txt) ensures Me
+  loading using **1XY(this, 1)** and 08t.A04/A00. The nonzero discriminator in
+  [1XY.call](apk/2.26.37.71-core/sender-key-account-me-load.txt) opens app-private
+  file `me`, reads the serialized object and passes a **Me** to 08i.A01
+  (`0042..008c`); MeOldFormat converts before the same path (`0094..00b4`).
+  **Negative:** searching 1XY for `run` found no body. It is a `call` callback;
+  the unrelated discriminator-zero branch must not be mistaken for Me loading.
+- [08i.A01](apk/2.26.37.71-core/sender-key-account-me-set.txt) sets A0F to Me,
+  parses **Me.jabber_id** as PhoneUserJid (`0000..002a`) and builds **A00** with
+  Apt and DeviceJid.Companion.A01 (`002a..0052`). The cached **Apz** getter
+  returns this PN device address. Null/invalid Me resets PN fields and invokes
+  08m.A00(0); those account-loading side effects are not ported as a Rust reset.
+  [0DK.A01](apk/2.26.37.71-core/sender-key-account-device-build.txt) preserves
+  the supplied device index and user agent while building the route; index
+  0x63 selects `hosted.lid` or `hosted`. Full hosted-account semantics remain
+  **unknown**, and existing support is not broadened.
+- Me.lid is parsed by [08i.A00](apk/2.26.37.71-core/sender-key-account-lid-parse.txt)
+  for the A04 consistency checks (`009a..016e`). Missing/unparseable/mismatched
+  Me/prefs produces named diagnostics and queues **Igs discriminator 0x11**.
+  It is **not established** as an immediate fallback that overwrites `self_lid`:
+  the direct A02 write precedes the consistency diagnostics. Igs reconciliation
+  side effects, storage writers and network provenance remain **unknown**.
+
+**Confirmed selection condition:** in retained **D4x.A00 `08fe..092a`**, the
+return from **0bA.A0k(group)** is placed in v1 (`0904..0906`); true selects
+**Apw/LID**, false branches to **Apz/PN** at `0ae4..0af0`. The resulting device
+JID passes through [B7H.A04](apk/2.26.37.71-core/sender-key-account-recipient-wrap.txt)
+into B7H.A06 with **B78.A02** and **B77.A03**. The sender's device survives;
+these enum constants' complete bucket/actor semantics remain **unknown**.
+
+[0bA.A0k](apk/2.26.37.71-core/sender-key-group-account-select.txt) accepts a 0c3
+group, obtains its row through [0bA.A0B](apk/2.26.37.71-core/sender-key-group-account-row.txt)
+(which delegates to 0bI.A0G), and returns
+[1jL.A0Y](apk/2.26.37.71-core/sender-key-group-account-flag.txt). A0Y is exactly
+**row.A00 == 2**, not a test on a particular recipient JID's textual suffix.
+It selects LID in this cleanup path. **Unknown:** row initialization, persisted
+mode producer, transitions and complete correspondence to the outbound group
+addressing mode. The Rust comparison planner chooses a homogeneous membership
+namespace and the CLI currently requires own LID; this is not full parity with
+this authoritative APK group-row selector or PN fallback.
+
+**Implementation boundary:** no arbitrary alias mapping, primary adoption,
+companion identity cleanup or sender-key deletion was added. Existing exposure
+rotation remains the documented supported subset. This trace reduces the
+ownership uncertainty and records the precise next prerequisite: derive the
+group-row mode producer before changing automatic own-address selection.
+Static analysis cannot establish that the saved Rust account has a current
+complete device inventory. No live/account request was sent for this research.
+
+Own-account trace validation: 58 xtask tests, CLI reference regeneration and five
+API checks passed. The core now holds 81 topics / 219 methods, 86 files /
+1,586,459 bytes under its 2 MiB limit. The checksum-verified cached diff took
+0.080554 seconds: 13 added topics, all 68 prior topics unchanged; manifest,
+inventory and tokens unchanged. This measures cached scoped source comparison,
+not full-app decompilation or automatic porting. No live request was needed.

@@ -1,0 +1,34 @@
+# APK-derived structural disassembly: LX/0bA;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0B(LL) flags=0x11 registers=5
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v4, v0}, LX/00h;->A0A(VLI)
+  0008..000c op=54 iget-object v2, v3, LX/0bA;->A0O:LX/00s;
+  000c..0012 op=72 invoke-interface {v2}, LX/00s;->get(L)
+  0012..0018 op=71 invoke-static {}, LX/0KP;->A03(Z)
+  0018..001a op=0a move-result
+  001a..001e op=38 if-eqz v0, +0x7
+  001e..0022 op=54 iget-object v0, v3, LX/0bA;->A0N:LX/00s;
+  0022..0028 op=72 invoke-interface {v0}, LX/00s;->get(L)
+  0028..002c op=54 iget-object v0, v3, LX/0bA;->A0B:LX/0bI;
+  002c..0032 op=6e invoke-virtual {v0, v4}, LX/0bI;->A0G(LL)
+  0032..0034 op=0c move-result-object
+  0034..003a op=71 invoke-static {}, LX/0KP;->A03(Z)
+  003a..003c op=0a move-result
+  003c..0040 op=38 if-eqz v0, +0x7
+  0040..0044 op=54 iget-object v0, v3, LX/0bA;->A0N:LX/00s;
+  0044..004a op=72 invoke-interface {v0}, LX/00s;->get(L)
+  004a..0050 op=72 invoke-interface {v2}, LX/00s;->get(L)
+  0050..0052 op=11 return-object v1
+  0052..0054 op=0d move-exception
+  0054..005a op=71 invoke-static {}, LX/0KP;->A03(Z)
+  005a..005c op=0a move-result
+  005c..0060 op=38 if-eqz v0, +0x7
+  0060..0064 op=54 iget-object v0, v3, LX/0bA;->A0N:LX/00s;
+  0064..006a op=72 invoke-interface {v0}, LX/00s;->get(L)
+  006a..0070 op=72 invoke-interface {v2}, LX/00s;->get(L)
+  0070..0072 op=27 throw v1
+.end method

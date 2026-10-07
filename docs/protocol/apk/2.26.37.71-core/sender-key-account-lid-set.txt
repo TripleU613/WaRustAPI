@@ -1,0 +1,46 @@
+# APK-derived structural disassembly: LX/08i;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(VL) flags=0x20002 registers=6
+  0000..0004 op=1a const-string v3, "memanager/setSelfLidsFromJid: "
+  0004..0006 op=1d monitor-enter
+  0006..000c op=71 invoke-static {v5}, LX/0DE;->A0a(ZL)
+  000c..000e op=0a move-result
+  000e..0012 op=38 if-eqz v0, +0x12
+  0012..0014 op=07 move-object
+  0014..0018 op=1f check-cast v1, LX/0ZY;
+  0018..001c op=5b iput-object v1, v4, LX/08i;->A0H:LX/0ZY;
+  001c..0022 op=6e invoke-virtual {v4}, LX/08i;->Apt(I)
+  0022..0024 op=0a move-result
+  0024..002a op=71 invoke-static {v1, v0}, LX/0DE;->A04(LLI)
+  002a..002c op=0c move-result-object
+  002c..0030 op=5b iput-object v0, v4, LX/08i;->A0G:LX/0e1;
+  0030..0032 op=28 goto +0x1c
+  0032..0036 op=20 instance-of v0, v5, LX/0e1;
+  0036..003a op=38 if-eqz v0, +0x19
+  003a..003c op=07 move-object
+  003c..0040 op=1f check-cast v2, LX/0e1;
+  0040..0044 op=54 iget-object v1, v2, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+  0044..0048 op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.LidUserJid"
+  0048..004e op=71 invoke-static {v1, v0}, LX/00h;->A0D(VLL)
+  004e..0052 op=1f check-cast v1, LX/0ZY;
+  0052..0056 op=5b iput-object v1, v4, LX/08i;->A0H:LX/0ZY;
+  0056..005a op=5b iput-object v2, v4, LX/08i;->A0G:LX/0e1;
+  005a..005c op=28 goto +0x7
+  005c..005e op=0d move-exception
+  005e..0062 op=1a const-string v0, "memanager/setMyLidDeviceJid/invalid_jid_error"
+  0062..0068 op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->w(VLL)
+  0068..006c op=22 new-instance v0, Ljava/lang/StringBuilder;
+  006c..0072 op=70 invoke-direct {v0, v3}, Ljava/lang/StringBuilder;-><init>(VL)
+  0072..0078 op=6e invoke-virtual {v0, v5}, Ljava/lang/StringBuilder;->append(LL)
+  0078..007e op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString(L)
+  007e..0080 op=0c move-result-object
+  0080..0086 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+  0086..0088 op=1e monitor-exit
+  0088..008a op=0e return-void
+  008a..008c op=0d move-exception
+  008c..008e op=1e monitor-exit
+  008e..0090 op=27 throw v0
+.end method

@@ -235,9 +235,49 @@
     "bytes": 493,
     "sha256": "437e18eb47ac2a16d8316acd1bf2375a5d97da6c7cdb200ecf28382f4e54c280"
   },
+  "sender-key-account-device-build.txt": {
+    "bytes": 2321,
+    "sha256": "4afbab15bb33dbb41ccc800eacb46a4e7ac71b3ab358b8847f3e98376ff1339e"
+  },
+  "sender-key-account-device-index.txt": {
+    "bytes": 805,
+    "sha256": "94c4f35b532bc632a970e696d8d94bb5121d6a5e5100a334eabb96c992deeb55"
+  },
+  "sender-key-account-lid-device-build.txt": {
+    "bytes": 715,
+    "sha256": "8cdcf4200ea32d4478e2e79340d45584136196cddd832375c9b1408a7d97225a"
+  },
+  "sender-key-account-lid-initialize.txt": {
+    "bytes": 5303,
+    "sha256": "04ce1c3afa9059d1dfe1f0ac584de85fb3f100d1f88bbf240b2bdfa203019dfe"
+  },
+  "sender-key-account-lid-parse.txt": {
+    "bytes": 1402,
+    "sha256": "c01a55df6cd79d0c8de77e005b5a076fb5fdc28f788630a6f312f3e22de23421"
+  },
+  "sender-key-account-lid-set.txt": {
+    "bytes": 2401,
+    "sha256": "46f0e13d294104720def0c67437871ec15654d992810055a8cd202ddb29cb071"
+  },
+  "sender-key-account-me-load.txt": {
+    "bytes": 12998,
+    "sha256": "886b02919bc1b60986f4954b4603252838e6b08fb2a63a22903ce01608396a90"
+  },
+  "sender-key-account-me-set.txt": {
+    "bytes": 3790,
+    "sha256": "12ebf0617f99a7a7004216ca254c2dbfef2743ec60f1e36247ad53fff91052fb"
+  },
+  "sender-key-account-pn-ensure.txt": {
+    "bytes": 832,
+    "sha256": "6d1f4f51e503559b8271ab2c669274bd31ef3849874a79839b99e80bb269b903"
+  },
   "sender-key-account-provider.txt": {
     "bytes": 576,
     "sha256": "99d76badc0d2749ceca1bd8ebaab399ac3d39d5951a8189c2d6fddc120cefa19"
+  },
+  "sender-key-account-recipient-wrap.txt": {
+    "bytes": 594,
+    "sha256": "c7eff7575c78b8434ed9f6328cf7161622a309746ee40226f75895c95af09ef0"
   },
   "sender-key-address-build.txt": {
     "bytes": 1264,
@@ -246,6 +286,18 @@
   "sender-key-device-category.txt": {
     "bytes": 752,
     "sha256": "18e22bff933720d5b493b74295231a7af262066f50fffcc62b4b202f09fe3c5d"
+  },
+  "sender-key-group-account-flag.txt": {
+    "bytes": 563,
+    "sha256": "81c1172a86f82255c0eaa966167276839d90108ed4d18f9e689f680946afca3e"
+  },
+  "sender-key-group-account-row.txt": {
+    "bytes": 1642,
+    "sha256": "0f7acfee4d3a144b35d3105237a62462190b05b8f1200e819f1f0e0e9890b259"
+  },
+  "sender-key-group-account-select.txt": {
+    "bytes": 746,
+    "sha256": "e86c4899dd3701d9d2ea7810057f7c8feaf073a7ae93acba69b2a43745a54e4e"
   },
   "sender-key-name-translation.txt": {
     "bytes": 924,
@@ -276,8 +328,8 @@
     "sha256": "82590b7944e627c71d4a54e3403be84e314598ced8789812c7c6951470853c92"
   },
   "targets.json": {
-    "bytes": 24406,
-    "sha256": "cf3902ddbf2b9a162301b2609600257d49edfcf7e5d6d9ace3a54a7a9bf33e8a"
+    "bytes": 29886,
+    "sha256": "c6b7faa4f4f624c38e7cefd9cdfa2ef4e208e08a082c8ac5f8a98cb2f31c2e64"
   },
   "token-dictionary-initializer.txt": {
     "bytes": 159791,

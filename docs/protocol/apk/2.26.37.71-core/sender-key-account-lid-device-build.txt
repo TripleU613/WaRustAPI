@@ -1,0 +1,15 @@
+# APK-derived structural disassembly: LX/0DE;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(LLI) flags=0x9 registers=3
+  0000..0004 op=13 const/16 v0, #0x63
+  0004..0008 op=33 if-ne v2, v0, +0x8
+  0008..000c op=22 new-instance v0, LX/Bli;
+  000c..0012 op=70 invoke-direct {v0, v1, v2}, LX/Bli;-><init>(VLI)
+  0012..0014 op=11 return-object v0
+  0014..0018 op=22 new-instance v0, LX/0e1;
+  0018..001e op=70 invoke-direct {v0, v1, v2}, LX/0e1;-><init>(VLI)
+  001e..0020 op=11 return-object v0
+.end method
