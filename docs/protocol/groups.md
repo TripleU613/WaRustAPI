@@ -2172,3 +2172,88 @@ changed notification disassembly (new arithmetic names), and five unchanged
 code topics. Manifest, inventory and tokens were unchanged; targets metadata
 changed. Both sides have the same APK hash, so this is tooling/evidence expansion,
 not an observed upstream behavior change.
+
+
+## Complete-reply group classification and subject alias boundary (2026-10-07)
+
+**Confirmed static:** APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Classification and alias evidence](group-type-alias-evidence.txt) records
+`ADs.A01` 0000..0064: parent child → 1, default_sub_group → 3,
+general_chat → 6, linked_parent → 2, otherwise 0, in that precedence order.
+`8kZ.A1Z` and `1xi.A1U` establish existence tests, not Boolean text/attributes.
+`ADs.A0C` calls A01 at 0248..024e when constructing the complete group result;
+truncated handling returns earlier. `ADs.A03` 0000..002a separately extracts
+linked_parent@jid as a typed group identity. Its absence or invalidity does
+not alter A01's presence-based classification.
+
+Rust `GroupSnapshot` now persists `group_type` and `linked_parent` through the
+shared complete-response parser, including direct info/fan-out and full batch
+results. `group list --json` exposes both. Types serialize as ordinary, parent,
+linked_subgroup, default_subgroup and general_chat. Historical encrypted rows
+and invite-only stubs deserialize both fields as null: no old row is guessed
+ordinary or rewritten just to infer classification. A fresh complete reply
+with no type child establishes ordinary. Supported parent identities are
+concrete non-device g.us JIDs; other parsed namespaces stay absent, an explicit
+local supported-subset policy. No new type-change event or subject-notification
+ACK/application is added. Tests cover mixed-tag precedence regardless of
+order, false text, misleading attributes, invalid/missing parent identities,
+truncated refusal and persistence alongside historical rows across reopen.
+
+**Confirmed static alias producer:** `0yv.A05` conditionally passes logical
+user→phone-user singletonMap to `0yw.A0r` (0014..0022). A0r delegates to
+`17H.A03` (0010..0016), which copies to HashMap and calls `0Xw.A0P` (001c..002c).
+A0P preserves ordered key/value pairs in 1VC and calls A0O (005c..0062).
+A0O has message-store readiness and feature checks before mapping; it resolves
+both JID row IDs, excludes nonpositive/equal pairs (0166..01a2), delegates
+mapping storage to `0Xx.A02` in a transaction (0248..0264), updates map caches
+through A04 (0284..0292), and schedules callbacks before commit (037c..03b6).
+This establishes a contact JID mapping path. It does **not** establish Signal
+identity-key replacement, ratchet selection, or permission to overwrite peer
+pins from subject-owner metadata. The previous untraced alias boundary advances
+to `0Xx.A02`/`0Xw.A04` and callback bodies, which remain **unknown**.
+
+**Negative distinction:** `CnI.A03` and `CoO.A02` write group types while
+processing protobuf history data, with separate presence/overwrite branches.
+They are not binary group-reply producers. Their values must not substitute
+for A01's precedence. A full field-write scan found 21 sites for `0Ze.A04`
+across constructors, caches, subgroup/history producers; only the selected
+paths were read here. `0Fs.A0A` reads A04 or returns zero on cache miss; that
+zero does not prove that an unclassified historical Rust snapshot is ordinary.
+Full subject branching, cache population, history type merging and alias-map
+side effects remain unfinished. Static work opened no saved account and made
+no live request.
+
+The API Group schema is corrected to the actual list JSON shape (`members`
+with nullable `role`, wire timestamps, creator/invite and local updated_at),
+replacing the earlier descriptive participants/admin/created_at shape that
+was not serialized by this CLI. No HTTP route is claimed.
+
+**Observed static remapping negative:** the new four-anchor classification topic
+matched both ADs.A01 and AZK.AAK. Inspection of AZK.AAK found a broader group
+schema reader referencing these same tags, not evidence of an identical
+classification helper. The tool cannot choose from co-occurrence alone and
+correctly reports ambiguous; proposal writing stays blocked for that topic.
+The baseline's reviewed ADs.A01 selector remains exact/hash-pinned. Seven older
+topics remain unique. Source/caller review is required when re-anchoring a new
+release; no fallback to the old obfuscated class is justified.
+
+
+**Observed live:** one bounded 30-second canonical authenticated receive session
+followed a preflight with zero queued actions and zero chat intents. One new
+info query for an already-stored group settled `ok`; its fresh complete reply
+projected a four-member snapshot with group_type=ordinary and linked_parent=null.
+The second, unqueried historical snapshot stayed group_type=null, demonstrating
+that no classification was guessed from old storage. Clean session exit 0;
+afterward zero queued actions/chat intents remained. The previously unresolved
+two-factor action remained sent. No chat was queued/sent by this test, no request
+identity/config was rotated, and no completed query was replayed. This verifies
+ordinary complete-reply projection only: parent/default/general/linked types and
+subject-notification handling are not live verified.
+
+Private 0600 evidence stays ignored: lab/accounts/l/type-preflight-actions.json,
+type-preflight-outbox-pending.json, type-preflight-groups.json,
+type-before-listen-actions.json, type-info-queued.txt, type-info-selection.json,
+group-type-live.log, type-after-actions.json, type-after-outbox.json,
+and type-after-groups.json. The static remap proposal test also exited 1 and
+created no file for the two-candidate ambiguity.

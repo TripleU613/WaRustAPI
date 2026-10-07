@@ -89,5 +89,20 @@
       "crates/whatsapp-api/src/transport/groups.rs",
       "crates/whatsapp-api/src/transport/connection.rs"
     ]
+  },
+  "group-type-reply": {
+    "anchors": [
+      "default_sub_group",
+      "linked_parent",
+      "parent",
+      "general_chat"
+    ],
+    "class": "LX/ADs;",
+    "file": "group-type-reply.txt",
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs"
+    ]
   }
 }

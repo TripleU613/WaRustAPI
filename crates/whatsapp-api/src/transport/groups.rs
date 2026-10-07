@@ -589,11 +589,50 @@ pub struct Member {
     pub role: Option<String>,
 }
 
+/// Classification derived from complete group reply child elements.
+/// APK 37.71 ADs.A01 uses precedence parent=1, default_sub_group=3,
+/// general_chat=6, linked_parent=2, otherwise=0 (0044..0064).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum GroupType {
+    /// No classification child in the complete reply (APK value 0).
+    Ordinary,
+    /// Parent group child (APK value 1).
+    Parent,
+    /// Linked parent child (APK value 2).
+    LinkedSubgroup,
+    /// Default subgroup child (APK value 3).
+    DefaultSubgroup,
+    /// General chat child (APK value 6).
+    GeneralChat,
+}
+
+fn group_type(node: &Node) -> GroupType {
+    // 8kZ.A1Z and 1xi.A1U test child presence, not text or attributes.
+    if node.child("parent").is_some() {
+        GroupType::Parent
+    } else if node.child("default_sub_group").is_some() {
+        GroupType::DefaultSubgroup
+    } else if node.child("general_chat").is_some() {
+        GroupType::GeneralChat
+    } else if node.child("linked_parent").is_some() {
+        GroupType::LinkedSubgroup
+    } else {
+        GroupType::Ordinary
+    }
+}
+
 /// Stored snapshot of a group (`group:<jid>`), built from `group` replies.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct GroupSnapshot {
     /// Group JID.
     pub jid: String,
+    /// Complete-reply classification; null for historical rows or local stubs.
+    #[serde(default)]
+    pub group_type: Option<GroupType>,
+    /// Typed group JID from `linked_parent@jid`; null if absent or unsupported.
+    #[serde(default)]
+    pub linked_parent: Option<String>,
     /// Subject.
     pub subject: Option<String>,
     /// Subject change time (`s_t`, seconds).
@@ -699,6 +738,15 @@ pub fn parse_group(node: &Node) -> Option<GroupSnapshot> {
     }
     Some(GroupSnapshot {
         jid,
+        group_type: Some(group_type(node)),
+        // APK 37.71 ADs.A03 0000..002a reads linked_parent child and typed
+        // group jid. An unsupported/missing identity stays absent; type is
+        // independently determined by child presence, not valid parent data.
+        linked_parent: node
+            .child("linked_parent")
+            .and_then(|parent| super::receipts::jid(parent, "jid"))
+            .filter(|jid| jid.server == Server::Group && !jid.user.is_empty() && !jid.is_ad())
+            .map(|jid| jid.to_string()),
         subject: attr_string(node, "subject"),
         subject_time: attr_u64(node, "s_t"),
         subject_owner: attr_string(node, "s_o"),
@@ -827,6 +875,8 @@ fn apply_reply_in(
             .get_json(Table::Checkpoints, key(&group).as_bytes(), 1)?
             .unwrap_or(GroupSnapshot {
                 jid: group.clone(),
+                group_type: None,
+                linked_parent: None,
                 subject: None,
                 subject_time: None,
                 subject_owner: None,
@@ -1916,6 +1966,107 @@ mod tests {
 
     fn text(node: &Node, name: &str) -> Option<String> {
         attr_string(node, name)
+    }
+
+    #[test]
+    fn complete_group_classification_obeys_apk_child_precedence() {
+        // APK 37.71 ADs.A01 0044..0064, A03 0014..002a; synthetic identities.
+        // Text "false" still counts as presence; attributes do not classify.
+        let group = Node::new("group")
+            .attr("id", "120363000000000001")
+            .attr("parent", "true")
+            .attr("default_sub_group", "true");
+        assert_eq!(
+            parse_group(&group).unwrap().group_type,
+            Some(GroupType::Ordinary)
+        );
+        let parent = Node::new("linked_parent").attr("jid", "120363000000000002@g.us");
+        let cases = [
+            (vec![parent.clone()], GroupType::LinkedSubgroup),
+            (
+                vec![parent.clone(), Node::new("general_chat").text("false")],
+                GroupType::GeneralChat,
+            ),
+            (
+                vec![
+                    Node::new("general_chat"),
+                    parent.clone(),
+                    Node::new("default_sub_group"),
+                ],
+                GroupType::DefaultSubgroup,
+            ),
+            (
+                vec![
+                    Node::new("default_sub_group"),
+                    parent,
+                    Node::new("parent"),
+                    Node::new("general_chat"),
+                ],
+                GroupType::Parent,
+            ),
+        ];
+        for (children, expected) in cases {
+            let snapshot = parse_group(&group.clone().children(children)).unwrap();
+            assert_eq!(snapshot.group_type, Some(expected));
+            assert_eq!(
+                snapshot.linked_parent.as_deref(),
+                Some("120363000000000002@g.us")
+            );
+        }
+        for raw in [
+            None,
+            Some("15551234567@s.whatsapp.net"),
+            Some("120363000000000002:1@g.us"),
+            Some("@g.us"),
+        ] {
+            let mut parent = Node::new("linked_parent");
+            if let Some(raw) = raw {
+                parent = parent.attr("jid", raw);
+            }
+            let snapshot = parse_group(&group.clone().children(vec![parent])).unwrap();
+            assert_eq!(snapshot.group_type, Some(GroupType::LinkedSubgroup));
+            assert_eq!(snapshot.linked_parent, None);
+        }
+        assert!(parse_group(&group.attr("truncated", "true")).is_none());
+    }
+
+    #[test]
+    fn group_classification_survives_reopen_without_guessing_historical_rows() {
+        let (dir, s) = store();
+        let jid = Jid::parse("120363000000000001@g.us").unwrap();
+        let reply = Node::new("iq").children(vec![
+            Node::new("group")
+                .attr("id", jid.clone())
+                .attr("subject", "Example")
+                .children(vec![
+                    Node::new("general_chat"),
+                    Node::new("linked_parent").attr("jid", "120363000000000002@g.us"),
+                ]),
+        ]);
+        assert!(record_info_reply(&s, &reply).unwrap());
+        let current = get(&s, &jid).unwrap().unwrap();
+        let mut old = serde_json::to_value(&current).unwrap();
+        old.as_object_mut().unwrap().remove("group_type");
+        old.as_object_mut().unwrap().remove("linked_parent");
+        let historical: GroupSnapshot = serde_json::from_value(old.clone()).unwrap();
+        assert_eq!(historical.group_type, None);
+        assert_eq!(historical.linked_parent, None);
+        let old_jid = "120363000000000003@g.us";
+        old["jid"] = serde_json::json!(old_jid);
+        s.write(|tx| tx.put_json(Table::Checkpoints, key(old_jid).as_bytes(), 1, &old))
+            .unwrap();
+        drop(s);
+        let s = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("p.redb"),
+            account_id: AccountId::new("a").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9u8; 32]))),
+            create: false,
+        })
+        .unwrap();
+        assert_eq!(get(&s, &jid).unwrap(), Some(current));
+        let historical = get(&s, &Jid::parse(old_jid).unwrap()).unwrap().unwrap();
+        assert_eq!(historical.group_type, None);
+        assert_eq!(historical.linked_parent, None);
     }
 
     #[test]

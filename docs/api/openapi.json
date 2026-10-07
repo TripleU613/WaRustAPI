@@ -1395,53 +1395,106 @@
         "required": [
           "jid",
           "subject",
-          "participants"
+          "subject_time",
+          "subject_owner",
+          "creator",
+          "creation",
+          "members",
+          "invite_code",
+          "updated_at"
         ],
         "properties": {
           "jid": {
             "$ref": "#/components/schemas/Jid"
           },
-          "subject": {
-            "type": "string",
-            "description": "Group name/topic"
-          },
-          "description": {
+          "group_type": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Group description text"
+            "enum": [
+              "ordinary",
+              "parent",
+              "linked_subgroup",
+              "default_subgroup",
+              "general_chat",
+              null
+            ],
+            "description": "Complete-reply child classification in APK 37.71 ADs.A01 precedence order. Historical rows/local stubs are null, not inferred ordinary."
           },
-          "participants": {
+          "linked_parent": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Supported non-device concrete group JID from the first linked_parent child; absent/invalid identities remain null independently of classification."
+          },
+          "subject": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "subject_time": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Stored s_t wire value; separate notification version cache is not inferred."
+          },
+          "subject_owner": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "creator": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "creation": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "members": {
             "type": "array",
             "items": {
               "type": "object",
               "required": [
                 "jid",
-                "admin"
+                "role"
               ],
               "properties": {
                 "jid": {
                   "$ref": "#/components/schemas/Jid"
                 },
-                "admin": {
-                  "type": "boolean",
-                  "description": "Whether participant has admin privileges"
+                "role": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 }
               }
-            },
-            "description": "Group members and their roles"
+            }
           },
-          "created_at": {
+          "invite_code": {
             "type": [
               "string",
               "null"
-            ],
-            "format": "date-time",
-            "description": "Group creation timestamp"
+            ]
+          },
+          "updated_at": {
+            "type": "integer",
+            "description": "Local Unix timestamp in milliseconds."
           }
         },
-        "description": "Stored group snapshot with participants and metadata"
+        "description": "Actual group list --json snapshot shape. New optional classification fields default to null when reading historical rows."
       },
       "GroupInvite": {
         "type": "object",
@@ -4716,7 +4769,7 @@
           "Groups"
         ],
         "summary": "List the stored group snapshots",
-        "description": "Apply settled replies and list the stored group snapshots (numbers masked). Full-snapshot ingestion recognizes the wire group truncated flag: case-insensitive true refuses with a refresh diagnostic, preserving existing members/events and the saved response without an ingestion marker or automatic retry. Missing or case-insensitive false allows full parsing; other/non-text flags refuse as explicit local validation stronger than APK Boolean.parseBoolean. parse_group returns no complete snapshot for rejected flags; record_info_reply and queued ingest return an error. Truncated size is not membership. Applies to direct group fan-out info replies as well. Live truncated-reply behavior is unverified; no HTTP route added. Queued group ingestion now checks its once-only marker inside the write transaction and commits that marker with snapshot replacement/journal events, invite-code mutation or leave deletion. Abort preserves the previous state and leaves the saved reply eligible for local reapplication; successful commit is once-only across restart. This is offline transaction/reopen validation, not live group notification application or disk-full/process-kill proof. Group snapshot participant parsing now uses supported non-device user-like JIDs; missing/unparseable/non-user/empty-user/agent/device entries and error-bearing refused entries are skipped. Duplicate accepted JIDs use last-role-wins with first insertion order retained, matching APK 37.71 ADs.A05 LinkedHashMap behavior. Missing role remains null in our model. Role changes update snapshots but do not emit a dedicated role-change event. Alias/name/history/country fields are static research only; no pin or contact binding is applied. Live participant-map validation is pending. Newly settled supported group-action replies now project snapshots/events inside the receive session without requiring group list. Settlement creates a durable pending-projection marker; startup recovers only these newly marked replies and never requeues their requests. Projection and pending-marker removal share the once-only snapshot/event transaction. Truncated or invalid group replies remain encrypted/pending with a secret-free warning and do not stop unrelated receiving; storage errors still stop the session. Group list keeps historical ingestion and its explicit invalid-reply diagnostics. Injected-link and encrypted-store reopen/rollback tests passed. One bounded 30-second authenticated listen session also settled a new info action ok, saved a four-member snapshot during receiving, and left zero projection work for subsequent group list; no chat outbox sends occurred and the previously unresolved two-factor action stayed sent. Live interruption/truncated recovery remains unverified. Supported groups_dirty scheduling and ACK are implemented offline; other unsolicited group notifications remain unsupported. Batch group-refresh replies now use their supported mixed-union path: full results commit beside exact truncated=true/size=0..19999 and group@error=403/404 items, with a durable projection report. These size/error items preserve old membership instead of failing the whole supported batch. Invalid/unrecognized or uncorrelated items still preserve the whole prior state. group refresh --follow-up enables bounded supported-result continuation; group refresh-status --id reports counts, round, next_action, pending and exhaustion; absent reports remain distinguishable only by inspecting action state. Direct single-group truncated snapshot ingestion retains its earlier explicit refusal behavior. Mixed/report behavior is offline tested, not live verified.",
+        "description": "Apply settled replies and list the stored group snapshots (numbers masked). Full-snapshot ingestion recognizes the wire group truncated flag: case-insensitive true refuses with a refresh diagnostic, preserving existing members/events and the saved response without an ingestion marker or automatic retry. Missing or case-insensitive false allows full parsing; other/non-text flags refuse as explicit local validation stronger than APK Boolean.parseBoolean. parse_group returns no complete snapshot for rejected flags; record_info_reply and queued ingest return an error. Truncated size is not membership. Applies to direct group fan-out info replies as well. Live truncated-reply behavior is unverified; no HTTP route added. Queued group ingestion now checks its once-only marker inside the write transaction and commits that marker with snapshot replacement/journal events, invite-code mutation or leave deletion. Abort preserves the previous state and leaves the saved reply eligible for local reapplication; successful commit is once-only across restart. This is offline transaction/reopen validation, not live group notification application or disk-full/process-kill proof. Group snapshot participant parsing now uses supported non-device user-like JIDs; missing/unparseable/non-user/empty-user/agent/device entries and error-bearing refused entries are skipped. Duplicate accepted JIDs use last-role-wins with first insertion order retained, matching APK 37.71 ADs.A05 LinkedHashMap behavior. Missing role remains null in our model. Role changes update snapshots but do not emit a dedicated role-change event. Alias/name/history/country fields are static research only; no pin or contact binding is applied. Live participant-map validation is pending. Newly settled supported group-action replies now project snapshots/events inside the receive session without requiring group list. Settlement creates a durable pending-projection marker; startup recovers only these newly marked replies and never requeues their requests. Projection and pending-marker removal share the once-only snapshot/event transaction. Truncated or invalid group replies remain encrypted/pending with a secret-free warning and do not stop unrelated receiving; storage errors still stop the session. Group list keeps historical ingestion and its explicit invalid-reply diagnostics. Injected-link and encrypted-store reopen/rollback tests passed. One bounded 30-second authenticated listen session also settled a new info action ok, saved a four-member snapshot during receiving, and left zero projection work for subsequent group list; no chat outbox sends occurred and the previously unresolved two-factor action stayed sent. Live interruption/truncated recovery remains unverified. Supported groups_dirty scheduling and ACK are implemented offline; other unsolicited group notifications remain unsupported. Batch group-refresh replies now use their supported mixed-union path: full results commit beside exact truncated=true/size=0..19999 and group@error=403/404 items, with a durable projection report. These size/error items preserve old membership instead of failing the whole supported batch. Invalid/unrecognized or uncorrelated items still preserve the whole prior state. group refresh --follow-up enables bounded supported-result continuation; group refresh-status --id reports counts, round, next_action, pending and exhaustion; absent reports remain distinguishable only by inspecting action state. Direct single-group truncated snapshot ingestion retains its earlier explicit refusal behavior. Mixed/report behavior is offline tested, not live verified. Complete full-group snapshots now preserve group_type and linked_parent. APK 37.71 ADs.A01 checks child presence with precedence parent, default_sub_group, general_chat, linked_parent, otherwise ordinary. Text/attributes do not affect classification. ADs.A03 extracts linked_parent@jid; only supported concrete non-device group identities are stored. Historical rows/local stubs default both new fields to null without rewriting or guessing ordinary. group list --json exposes these fields; metadata-only changes do not add new event types. Direct and batch full-reply paths share parsing. Subject notification application/alias mapping remain unfinished and classification is offline tested, not live validated. Observed live 2026-10-07: one bounded 30-second saved-account receive session transmitted one newly queued existing-group info query, settled it ok and projected ordinary classification/null parent for four members. The unqueried historical snapshot remained null; zero queued actions/chat intents remained, and an unresolved two-factor action stayed sent. Other type branches and subject notification application remain live unverified. Queue/list commands themselves are offline; no HTTP route added.",
         "operationId": "listGroups",
         "x-cli": "whatsapp-cli group list",
         "x-transport": [
@@ -5027,7 +5080,7 @@
           "Groups"
         ],
         "summary": "Queue an interactive group info query",
-        "description": "Queue an interactive group info query (offline; a session transmits). Full-snapshot ingestion recognizes the wire group truncated flag: case-insensitive true refuses with a refresh diagnostic, preserving existing members/events and the saved response without an ingestion marker or automatic retry. Missing or case-insensitive false allows full parsing; other/non-text flags refuse as explicit local validation stronger than APK Boolean.parseBoolean. parse_group returns no complete snapshot for rejected flags; record_info_reply and queued ingest return an error. Truncated size is not membership. Applies to direct group fan-out info replies as well. Live truncated-reply behavior is unverified; no HTTP route added. Group snapshot participant parsing now uses supported non-device user-like JIDs; missing/unparseable/non-user/empty-user/agent/device entries and error-bearing refused entries are skipped. Duplicate accepted JIDs use last-role-wins with first insertion order retained, matching APK 37.71 ADs.A05 LinkedHashMap behavior. Missing role remains null in our model. Role changes update snapshots but do not emit a dedicated role-change event. Alias/name/history/country fields are static research only; no pin or contact binding is applied. Live participant-map validation is pending.",
+        "description": "Queue an interactive group info query (offline; a session transmits). Full-snapshot ingestion recognizes the wire group truncated flag: case-insensitive true refuses with a refresh diagnostic, preserving existing members/events and the saved response without an ingestion marker or automatic retry. Missing or case-insensitive false allows full parsing; other/non-text flags refuse as explicit local validation stronger than APK Boolean.parseBoolean. parse_group returns no complete snapshot for rejected flags; record_info_reply and queued ingest return an error. Truncated size is not membership. Applies to direct group fan-out info replies as well. Live truncated-reply behavior is unverified; no HTTP route added. Group snapshot participant parsing now uses supported non-device user-like JIDs; missing/unparseable/non-user/empty-user/agent/device entries and error-bearing refused entries are skipped. Duplicate accepted JIDs use last-role-wins with first insertion order retained, matching APK 37.71 ADs.A05 LinkedHashMap behavior. Missing role remains null in our model. Role changes update snapshots but do not emit a dedicated role-change event. Alias/name/history/country fields are static research only; no pin or contact binding is applied. Live participant-map validation is pending. Complete full-group snapshots now preserve group_type and linked_parent. APK 37.71 ADs.A01 checks child presence with precedence parent, default_sub_group, general_chat, linked_parent, otherwise ordinary. Text/attributes do not affect classification. ADs.A03 extracts linked_parent@jid; only supported concrete non-device group identities are stored. Historical rows/local stubs default both new fields to null without rewriting or guessing ordinary. group list --json exposes these fields; metadata-only changes do not add new event types. Direct and batch full-reply paths share parsing. Subject notification application/alias mapping remain unfinished and classification is offline tested, not live validated. Observed live 2026-10-07: one bounded 30-second saved-account receive session transmitted one newly queued existing-group info query, settled it ok and projected ordinary classification/null parent for four members. The unqueried historical snapshot remained null; zero queued actions/chat intents remained, and an unresolved two-factor action stayed sent. Other type branches and subject notification application remain live unverified. Queue/list commands themselves are offline; no HTTP route added.",
         "operationId": "groupInfo",
         "x-cli": "whatsapp-cli group info",
         "x-transport": [
@@ -10385,7 +10438,7 @@
           "Groups"
         ],
         "summary": "Queue one classic batch group refresh",
-        "description": "Offline queueing of one APK 37.71 classic w:g2 IQ to g.us with query context per_group_dirty_recovery and group children carrying jid. Repeat --chat for each concrete distinct group (local bound one to 256). Correlated mixed groups/group results now atomically commit full snapshots/events and a durable projection outcome. Exact group@error=403/404 count as forbidden/not_found without deleting previous snapshots. Exact truncated=true requires explicit size 0..19999 and stores pending JID/size without replacing membership. Missing/extra/duplicate/unexpected identities, unknown errors, child-error shapes or invalid truncated sizes preserve the whole prior state and saved response. Inspect projection counts using group refresh-status --id; action IQ status alone is not complete refresh success. The earlier two-full-group batch was live verified; mixed/report behavior is offline tested only. Default queueing has no follow-up. --follow-up opts into per_group_dirty_recovery_truncatable with initial zero estimates and APK-derived maximum round 2 (at most two further queries). Supported truncated results and unsent partitions create distinct queries atomically with projection; original input order is preserved. Conservative local participant budget 10000 selects only the first partition per round; current APK heap/feature cap is unknown. Full and 403/404 groups are excluded from continuation. Refused, uncertain, unanswered or unsupported results never generate a next query. Reports expose round, next_action, pending count and exhausted. No notification ACK is queued. Root refusals retain the action queue behavior. Supported automatic groups_dirty scheduling/ACK now uses this bounded truncatable pipeline in listen; offline tested only. Other notifications, full union metadata, MEX and APK wait handling remain unfinished. CLI-only; no HTTP route exists.",
+        "description": "Offline queueing of one APK 37.71 classic w:g2 IQ to g.us with query context per_group_dirty_recovery and group children carrying jid. Repeat --chat for each concrete distinct group (local bound one to 256). Correlated mixed groups/group results now atomically commit full snapshots/events and a durable projection outcome. Exact group@error=403/404 count as forbidden/not_found without deleting previous snapshots. Exact truncated=true requires explicit size 0..19999 and stores pending JID/size without replacing membership. Missing/extra/duplicate/unexpected identities, unknown errors, child-error shapes or invalid truncated sizes preserve the whole prior state and saved response. Inspect projection counts using group refresh-status --id; action IQ status alone is not complete refresh success. The earlier two-full-group batch was live verified; mixed/report behavior is offline tested only. Default queueing has no follow-up. --follow-up opts into per_group_dirty_recovery_truncatable with initial zero estimates and APK-derived maximum round 2 (at most two further queries). Supported truncated results and unsent partitions create distinct queries atomically with projection; original input order is preserved. Conservative local participant budget 10000 selects only the first partition per round; current APK heap/feature cap is unknown. Full and 403/404 groups are excluded from continuation. Refused, uncertain, unanswered or unsupported results never generate a next query. Reports expose round, next_action, pending count and exhausted. No notification ACK is queued. Root refusals retain the action queue behavior. Supported automatic groups_dirty scheduling/ACK now uses this bounded truncatable pipeline in listen; offline tested only. Other notifications, full union metadata, MEX and APK wait handling remain unfinished. CLI-only; no HTTP route exists. Complete full-group snapshots now preserve group_type and linked_parent. APK 37.71 ADs.A01 checks child presence with precedence parent, default_sub_group, general_chat, linked_parent, otherwise ordinary. Text/attributes do not affect classification. ADs.A03 extracts linked_parent@jid; only supported concrete non-device group identities are stored. Historical rows/local stubs default both new fields to null without rewriting or guessing ordinary. group list --json exposes these fields; metadata-only changes do not add new event types. Direct and batch full-reply paths share parsing. Subject notification application/alias mapping remain unfinished and classification is offline tested, not live validated. Observed live 2026-10-07: one bounded 30-second saved-account receive session transmitted one newly queued existing-group info query, settled it ok and projected ordinary classification/null parent for four members. The unqueried historical snapshot remained null; zero queued actions/chat intents remained, and an unresolved two-factor action stayed sent. Other type branches and subject notification application remain live unverified. Queue/list commands themselves are offline; no HTTP route added.",
         "operationId": "groupRefresh",
         "x-cli": "whatsapp-cli group refresh",
         "x-transport": [

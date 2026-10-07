@@ -1,5 +1,5 @@
 {
-  "all_unique": true,
+  "all_unique": false,
   "candidate_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
   "interpretation": "Exact string co-occurrence locates class/method scopes; it does not prove protocol equivalence. Proposed selectors require semantic review. Missing/ambiguous/unanchored/no-common-scope topics block recipe output.",
   "previous_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
@@ -243,6 +243,332 @@
       "scope": "method",
       "status": "unique",
       "topic": "group-subject-parent-write"
+    },
+    {
+      "anchor_sites": {
+        "default_sub_group": [
+          {
+            "class_name": "LX/Dpn;",
+            "dex_byte_off": 3373268,
+            "dex_file": "classes8.dex",
+            "method_index": 9371,
+            "method_name": "A0r",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "Lcom/whatsapp/community/mex/GetSubgroupsGraphQlHandler;",
+            "dex_byte_off": 4543848,
+            "dex_file": "classes6.dex",
+            "method_index": 37262,
+            "method_name": "A00",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/ADs;",
+            "dex_byte_off": 5167302,
+            "dex_file": "classes6.dex",
+            "method_index": 22490,
+            "method_name": "A01",
+            "method_proto": "IL"
+          },
+          {
+            "class_name": "LX/AWX;",
+            "dex_byte_off": 5704854,
+            "dex_file": "classes6.dex",
+            "method_index": 27465,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/AZJ;",
+            "dex_byte_off": 5757468,
+            "dex_file": "classes6.dex",
+            "method_index": 28028,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/AZK;",
+            "dex_byte_off": 5760794,
+            "dex_file": "classes6.dex",
+            "method_index": 28032,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          }
+        ],
+        "general_chat": [
+          {
+            "class_name": "LX/9Np;",
+            "dex_byte_off": 3702344,
+            "dex_file": "classes6.dex",
+            "method_index": 14381,
+            "method_name": "A04",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/whatsapp/community/mex/GetSubgroupsGraphQlHandler;",
+            "dex_byte_off": 4544264,
+            "dex_file": "classes6.dex",
+            "method_index": 37262,
+            "method_name": "A00",
+            "method_proto": "LLLL"
+          },
+          {
+            "class_name": "LX/ADs;",
+            "dex_byte_off": 5167348,
+            "dex_file": "classes6.dex",
+            "method_index": 22490,
+            "method_name": "A01",
+            "method_proto": "IL"
+          },
+          {
+            "class_name": "LX/AZJ;",
+            "dex_byte_off": 5757172,
+            "dex_file": "classes6.dex",
+            "method_index": 28028,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/AZK;",
+            "dex_byte_off": 5760920,
+            "dex_file": "classes6.dex",
+            "method_index": 28032,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/AjB;",
+            "dex_byte_off": 6218334,
+            "dex_file": "classes6.dex",
+            "method_index": 30488,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/AjH;",
+            "dex_byte_off": 6225588,
+            "dex_file": "classes6.dex",
+            "method_index": 30500,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/AjX;",
+            "dex_byte_off": 6292604,
+            "dex_file": "classes6.dex",
+            "method_index": 30552,
+            "method_name": "invoke",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/0Xo;",
+            "dex_byte_off": 6060144,
+            "dex_file": "classes.dex",
+            "method_index": 11870,
+            "method_name": "A03",
+            "method_proto": "LLL"
+          }
+        ],
+        "linked_parent": [
+          {
+            "class_name": "LX/ADs;",
+            "dex_byte_off": 5167324,
+            "dex_file": "classes6.dex",
+            "method_index": 22490,
+            "method_name": "A01",
+            "method_proto": "IL"
+          },
+          {
+            "class_name": "LX/ADs;",
+            "dex_byte_off": 5167472,
+            "dex_file": "classes6.dex",
+            "method_index": 22492,
+            "method_name": "A03",
+            "method_proto": "LL"
+          },
+          {
+            "class_name": "LX/AWf;",
+            "dex_byte_off": 5712926,
+            "dex_file": "classes6.dex",
+            "method_index": 27504,
+            "method_name": "A00",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/AWf;",
+            "dex_byte_off": 5713828,
+            "dex_file": "classes6.dex",
+            "method_index": 27504,
+            "method_name": "A00",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/AWi;",
+            "dex_byte_off": 5718680,
+            "dex_file": "classes6.dex",
+            "method_index": 27527,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/AWi;",
+            "dex_byte_off": 5719000,
+            "dex_file": "classes6.dex",
+            "method_index": 27527,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/AZJ;",
+            "dex_byte_off": 5757018,
+            "dex_file": "classes6.dex",
+            "method_index": 28028,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/AZK;",
+            "dex_byte_off": 5760992,
+            "dex_file": "classes6.dex",
+            "method_index": 28032,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          }
+        ],
+        "parent": [
+          {
+            "class_name": "LX/ADs;",
+            "dex_byte_off": 5167336,
+            "dex_file": "classes6.dex",
+            "method_index": 22490,
+            "method_name": "A01",
+            "method_proto": "IL"
+          },
+          {
+            "class_name": "LX/ADs;",
+            "dex_byte_off": 5168740,
+            "dex_file": "classes6.dex",
+            "method_index": 22500,
+            "method_name": "A0B",
+            "method_proto": "IL"
+          },
+          {
+            "class_name": "LX/AWf;",
+            "dex_byte_off": 5712958,
+            "dex_file": "classes6.dex",
+            "method_index": 27504,
+            "method_name": "A00",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/AWf;",
+            "dex_byte_off": 5713856,
+            "dex_file": "classes6.dex",
+            "method_index": 27504,
+            "method_name": "A00",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/AWi;",
+            "dex_byte_off": 5718560,
+            "dex_file": "classes6.dex",
+            "method_index": 27527,
+            "method_name": "C8f",
+            "method_proto": "VLL"
+          },
+          {
+            "class_name": "LX/AZK;",
+            "dex_byte_off": 5758910,
+            "dex_file": "classes6.dex",
+            "method_index": 28032,
+            "method_name": "AAK",
+            "method_proto": "LLL"
+          },
+          {
+            "class_name": "LX/HBY;",
+            "dex_byte_off": 5202924,
+            "dex_file": "classes9.dex",
+            "method_index": 16033,
+            "method_name": "<init>",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "Lcom/facebook/common/dextricks/ReflectionClassLoader;",
+            "dex_byte_off": 5203892,
+            "dex_file": "classes9.dex",
+            "method_index": 40608,
+            "method_name": "install",
+            "method_proto": "L"
+          },
+          {
+            "class_name": "Lcom/facebook/common/dextricks/MultiDexClassLoaderLight;",
+            "dex_byte_off": 5204394,
+            "dex_file": "classes9.dex",
+            "method_index": 40414,
+            "method_name": "install",
+            "method_proto": "ZLL"
+          },
+          {
+            "class_name": "Lcom/facebook/common/dextricks/MultiDexClassLoader;",
+            "dex_byte_off": 3455684,
+            "dex_file": "classes9.dex",
+            "method_index": 40350,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/NI2;",
+            "dex_byte_off": 3884154,
+            "dex_file": "classes11.dex",
+            "method_index": 20842,
+            "method_name": "<clinit>",
+            "method_proto": "V"
+          },
+          {
+            "class_name": "LX/0P4;",
+            "dex_byte_off": 5751602,
+            "dex_file": "classes.dex",
+            "method_index": 8657,
+            "method_name": "AR6",
+            "method_proto": "VL"
+          },
+          {
+            "class_name": "LX/4Fu;",
+            "dex_byte_off": 4442228,
+            "dex_file": "classes4.dex",
+            "method_index": 9733,
+            "method_name": "A01",
+            "method_proto": "VL"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "class_name": "LX/ADs;",
+          "dex_byte_off": 5167302,
+          "dex_file": "classes6.dex",
+          "method_index": 22490,
+          "method_name": "A01",
+          "method_proto": "IL"
+        },
+        {
+          "class_name": "LX/AZK;",
+          "dex_byte_off": 5760794,
+          "dex_file": "classes6.dex",
+          "method_index": 28032,
+          "method_name": "AAK",
+          "method_proto": "LLL"
+        }
+      ],
+      "previous_class": "LX/ADs;",
+      "previous_method": "A01",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "scope": "method",
+      "status": "ambiguous",
+      "topic": "group-type-reply"
     }
   ]
 }

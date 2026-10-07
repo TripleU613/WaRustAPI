@@ -133,3 +133,11 @@ recipe; all seven anchors resolve uniquely in the same 37.71 APK. The updated
 baseline is 12 files/395,753 bytes. Newly named standard arithmetic opcodes
 change disassembly rendering, not the APK hash or demonstrated runtime behavior.
 See [trace](groups.md#subject-cache-invalidation-and-timestamp-decoding-2026-10-07).
+
+The complete-group classification follow-up adds an eighth reviewed topic
+(13 files/397,778 bytes). Its four anchors resolve to **two** methods in 37.71:
+ADs.A01 and AZK.AAK. The exact reviewed baseline selector remains ADs.A01, but
+automatic proposal writing correctly refuses the ambiguous topic. Seven other
+topics remain unique. This is evidence of an actual duplicated locator scope,
+not a reason to choose the old obfuscated name in a new release. Caller-assisted
+disambiguation remains needed.

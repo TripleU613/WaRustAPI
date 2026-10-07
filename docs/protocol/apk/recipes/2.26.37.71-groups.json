@@ -77,6 +77,19 @@
       "anchors": [
         "INSERT_GROUP_NOTIFICATION_VERSION"
       ]
+    },
+    "group-type-reply": {
+      "class": "LX/ADs;",
+      "method": "A01",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "anchors": [
+        "default_sub_group",
+        "linked_parent",
+        "parent",
+        "general_chat"
+      ]
     }
   }
 }

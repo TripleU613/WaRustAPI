@@ -27,6 +27,10 @@
     "bytes": 2279,
     "sha256": "23196f8c76c52c9051a15c047eea2883f0cfaeb9eec818c52a0923547393b290"
   },
+  "group-type-reply.txt": {
+    "bytes": 1568,
+    "sha256": "5faa7151ffedcffbc3798b507c4baa59fc560a4de1e94ea8433459b9b75dfe68"
+  },
   "inventory.json": {
     "bytes": 2603,
     "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
@@ -36,8 +40,8 @@
     "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
   },
   "targets.json": {
-    "bytes": 2558,
-    "sha256": "43dfb77a6b1a38283929ba2ab02a987ac62578dd4133f2bc9d7f0c4b10e0fdec"
+    "bytes": 2882,
+    "sha256": "8c3e2fb5f6ba199a9a2024124f968753c9fd1e730176fdc22b3ab09122915d1f"
   },
   "tokens.json": {
     "bytes": 23012,

@@ -1129,3 +1129,25 @@ regenerated CLI reference, five OpenAPI checks, formatting and exact snapshot
 regeneration (--check, 12 files/395,753 bytes). All seven targets resolved uniquely.
 Repository hygiene passed (429 local links, tracked-file budgets, licenses
 and reference checksums), as did staged whitespace.
+
+APK 37.71 complete-group classification is now persisted in Rust: parent,
+default subgroup, general chat, linked subgroup, ordinary, with APK child
+presence precedence and separate linked-parent identity. group list --json
+exposes it; historical rows/local stubs remain null until a complete reply.
+The actual snapshot API schema is corrected. Offline precedence, invalid-parent,
+truncated and encrypted-store historical/reopen checks passed. Alias research
+traces through 17H/0Xw to transactional contact mapping, not Signal pin replacement;
+remaining storage/cache/callback bodies and subject handling are unfinished.
+
+Observed bounded live classification check: one new info query for an already
+known group settled ok and projected ordinary/null-parent with four members.
+The unqueried historical row stayed unknown; zero queued actions/chat intents
+remained after the clean 30-second session. The unresolved two-factor action
+remained sent. Other group types and subject handling remain live unverified.
+The eight-topic recipe has seven unique remaps and one two-candidate ambiguity;
+proposal writing refuses rather than guessing. Validation: 593 workspace/all-
+feature and 24 default CLI tests, strict workspace/all-target/all-feature Clippy,
+warning-free Rustdoc, CLI reference, five OpenAPI checks, formatting and exact
+snapshot regeneration (13 files/397,778 bytes) passed.
+Repository hygiene passed (430 local links, tracked-file budgets, licenses
+and reference checksums); staged whitespace and final OpenAPI rerun passed.
