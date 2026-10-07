@@ -461,3 +461,23 @@ operation is not idempotent*. A message, a group create, a payment — those mus
 never be repeated on an unknown outcome. A set-to-a-known-value may be. The
 original uncertain action is left recorded as `Sent` rather than rewritten,
 because that is what happened to it.
+
+## Saved account inventory (2026-10-07)
+
+**Observed locally**, not an APK finding: the 16 one-letter private profiles
+contain 13 distinct configured numbers. Read-only `accounts status --name`
+inspection using existing local keys found two registered profiles, ten
+unregistered profiles and four locked/unknown profiles. The registered `l`
+profile has a successful saved login and a successful current bounded receive
+check; `j` has a failed saved login. Failure alone does not identify a ban or
+its cause. Three legacy retry profile stores are absent; do not count their
+files as usable additional accounts. Deduplication was performed privately
+from country code and national number without emitting either value.
+
+**Unknown:** locked-profile registration outcomes and the detailed signup
+outcomes of the ten unregistered profiles were not reconstructed by this
+inventory. The status command's `registration_state=none` is a placeholder,
+not evidence that registration was never attempted. No live registration,
+identity reset, retry or message transmission was performed for this count.
+More numbers are unnecessary for static research/current single-account
+checks; two-client end-to-end tests need a second working account.

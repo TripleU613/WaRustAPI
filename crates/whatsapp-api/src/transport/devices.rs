@@ -123,6 +123,11 @@ pub struct DeviceList {
     pub expected_timestamp: Option<u64>,
     /// Companions came from a verified signed list; false means primary only.
     pub companions_verified: bool,
+    /// SHA-256 of the raw primary public key that verified this signed list.
+    /// Private local binding, not an APK field or human verification. Historical
+    /// rows stay unknown; never bind an old list to whichever pin exists now.
+    #[serde(default)]
+    pub verified_primary_key_fingerprint: Option<String>,
     /// Why companions were not verified, sanitized.
     pub unverified_reason: Option<String>,
     /// `device_hash` from the latest notification, if any.
@@ -299,38 +304,64 @@ pub fn request_sync(
             "own-account device sync uses account sync, not usync",
         ));
     }
-    store.write(|tx| {
-        let previous: Option<Pending> =
-            tx.get_json(Table::Checkpoints, pending_key(&user).as_bytes(), 1)?;
-        let generation_key = format!("{GENERATION_PREFIX}{user}");
-        let prior: Option<u64> = tx.get_json(Table::Checkpoints, generation_key.as_bytes(), 1)?;
-        let generation = prior
-            .unwrap_or(0)
-            .max(previous.as_ref().map_or(0, |p| p.generation))
-            .checked_add(1)
-            .ok_or_else(|| invalid("local device sync revision exhausted"))?;
-        tx.put_json(
-            Table::Checkpoints,
-            generation_key.as_bytes(),
-            1,
-            &generation,
-        )?;
-        tx.put_json(
-            Table::Checkpoints,
-            pending_key(&user).as_bytes(),
-            1,
-            &Pending {
-                generation,
-                requested_at: Timestamp::now(),
-                // A plain refresh request must not erase an observed pending
-                // notification hash. No hash is invented when neither exists.
-                notified_hash: notified_hash
-                    .map(|v| v.chars().take(64).collect())
-                    .or_else(|| previous.and_then(|p| p.notified_hash)),
-                reason: reason.chars().take(64).collect(),
-            },
-        )
-    })
+    store.write(|tx| request_sync_in(tx, &user, notified_hash, reason))
+}
+fn request_sync_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    user: &Jid,
+    notified_hash: Option<&str>,
+    reason: &str,
+) -> Result<()> {
+    let previous: Option<Pending> =
+        tx.get_json(Table::Checkpoints, pending_key(user).as_bytes(), 1)?;
+    let generation_key = format!("{GENERATION_PREFIX}{user}");
+    let prior: Option<u64> = tx.get_json(Table::Checkpoints, generation_key.as_bytes(), 1)?;
+    let generation = prior
+        .unwrap_or(0)
+        .max(previous.as_ref().map_or(0, |p| p.generation))
+        .checked_add(1)
+        .ok_or_else(|| invalid("local device sync revision exhausted"))?;
+    tx.put_json(
+        Table::Checkpoints,
+        generation_key.as_bytes(),
+        1,
+        &generation,
+    )?;
+    tx.put_json(
+        Table::Checkpoints,
+        pending_key(user).as_bytes(),
+        1,
+        &Pending {
+            generation,
+            requested_at: Timestamp::now(),
+            // A plain refresh request must not erase an observed pending
+            // notification hash. No hash is invented when neither exists.
+            notified_hash: notified_hash
+                .map(|v| v.chars().take(64).collect())
+                .or_else(|| previous.and_then(|p| p.notified_hash)),
+            reason: reason.chars().take(64).collect(),
+        },
+    )
+}
+/// Local follow-up to an already authenticated primary-key replacement. This
+/// shares the pin/session/archive transaction; no old list is rewritten or
+/// automatically bound to the replacement key.
+pub(super) fn after_primary_identity_change_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    peer: &Jid,
+) -> Result<()> {
+    if peer.device != 0 || peer.agent != 0 || !matches!(peer.server, Server::Lid | Server::User) {
+        return Ok(());
+    }
+    let own = crate::session::AccountRecord::load_in_write(tx)?
+        .and_then(|a| a.own_jid)
+        .map(|j| j.to_non_ad());
+    let own_lid: Option<Jid> =
+        tx.get_json(Table::Checkpoints, super::group_send::OWN_LID_KEY, 1)?;
+    if own.as_ref() == Some(peer) || own_lid.as_ref().map(Jid::to_non_ad).as_ref() == Some(peer) {
+        return Ok(());
+    }
+    request_sync_in(tx, peer, None, "authenticated-primary-change")
 }
 /// Users waiting for a device query, ascending.
 pub fn pending_users(store: &ProtocolStore) -> Result<Vec<Jid>> {
@@ -616,14 +647,15 @@ fn pinned_primary_identity(
     else {
         return Ok(None);
     };
+    parse_primary_key(&bytes).map(Some)
+}
+fn parse_primary_key(bytes: &[u8]) -> Result<[u8; 32]> {
     let raw = match bytes.len() {
         33 if bytes[0] == 0x05 => &bytes[1..],
-        32 => &bytes[..],
+        32 => bytes,
         _ => return Err(invalid("pinned identity has an unexpected length")),
     };
-    Ok(Some(
-        raw.try_into().map_err(|_| invalid("pinned identity"))?,
-    ))
+    raw.try_into().map_err(|_| invalid("pinned identity"))
 }
 
 enum UserIngest {
@@ -699,6 +731,7 @@ fn ingest_user(
     let mut unverified_reason = None;
     let mut raw_id = saved.as_ref().and_then(|s| s.raw_id);
     let mut companions_verified = false;
+    let mut verified_primary_key_fingerprint = None;
     let verified = if index_list.is_some() {
         let Some(bytes) = signed else {
             return Ok(UserIngest::VerificationRefused(
@@ -724,7 +757,13 @@ fn ingest_user(
             ));
         };
         match VerifiedIndexList::verify(bytes, &key, ts, minimum) {
-            Ok(list) => Some(list),
+            Ok(list) => {
+                use sha2::Digest as _;
+                // APK 37.71 11T.A07 verifies with this selected primary key.
+                // Persist the exact verifier key binding in the same transaction.
+                verified_primary_key_fingerprint = Some(hex::encode(sha2::Sha256::digest(key)));
+                Some(list)
+            }
             Err(_) => {
                 return Ok(UserIngest::VerificationRefused(
                     DeviceVerificationFailure::InvalidSignedList,
@@ -790,6 +829,7 @@ fn ingest_user(
         },
         expected_timestamp,
         companions_verified,
+        verified_primary_key_fingerprint,
         unverified_reason,
         notified_hash,
         hash_matches,
@@ -945,6 +985,59 @@ impl DeviceQuery {
     }
 }
 
+/// Current pin relationship of a historical saved signed-device list.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct DeviceListAuthority {
+    /// The saved row records the actual verifier key; false for historical rows.
+    pub binding_known: bool,
+    /// An independently saved primary identity exists in this namespace.
+    pub primary_pin_present: bool,
+    /// Null if binding or pin is missing; false for a changed key.
+    pub primary_pin_matches: Option<bool>,
+    /// Signed companions are verified under the currently saved primary key.
+    /// This is membership authority, not human verification or companion-key trust.
+    pub companions_current: bool,
+}
+/// Inspect current authority without rewriting cached history or changing pins.
+pub fn device_list_authority(
+    store: &ProtocolStore,
+    user: &Jid,
+) -> Result<Option<DeviceListAuthority>> {
+    store.read(|tx| {
+        let Some(list) = device_list_in(tx, user)? else {
+            return Ok(None);
+        };
+        authority_in(tx, &list).map(Some)
+    })
+}
+pub(crate) fn authority_in(
+    tx: &crate::store::ReadTx<'_>,
+    list: &DeviceList,
+) -> Result<DeviceListAuthority> {
+    use sha2::Digest as _;
+    let pin: Option<Vec<u8>> = tx.get_json(
+        Table::PeerIdentities,
+        format!("comparison-direct:{}", list.owner).as_bytes(),
+        1,
+    )?;
+    let fingerprint = pin
+        .as_deref()
+        .map(parse_primary_key)
+        .transpose()?
+        .map(|key| hex::encode(sha2::Sha256::digest(key)));
+    let matches = list
+        .verified_primary_key_fingerprint
+        .as_ref()
+        .zip(fingerprint.as_ref())
+        .map(|(a, b)| a == b);
+    Ok(DeviceListAuthority {
+        binding_known: list.verified_primary_key_fingerprint.is_some(),
+        primary_pin_present: pin.is_some(),
+        primary_pin_matches: matches,
+        companions_current: list.companions_verified && matches == Some(true),
+    })
+}
+
 /// Saved device list for a contact, without network access.
 pub fn device_list(store: &ProtocolStore, user: &Jid) -> Result<Option<DeviceList>> {
     store.read(|tx| device_list_in(tx, user))
@@ -1024,6 +1117,177 @@ mod tests {
         Node::new("user")
             .attr("jid", owner.clone())
             .children(vec![Node::new("devices").children(children)])
+    }
+
+    #[test]
+    fn signed_authority_tracks_its_verifier_not_a_replacement_pin_or_legacy_row() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("authority.redb");
+        let store = open(&path);
+        let peer = contact();
+        let (signed, key) =
+            crate::signal::adv::test_signed_list(7, 1_700_000_000, 2, &[1, 2], &[11; 32]);
+        pin_identity(&store, &peer, &key);
+        request_sync(&store, None, &peer, None, "seed").unwrap();
+        let (query, iq) = begin_query(&store, SyncContext::Interactive)
+            .unwrap()
+            .unwrap();
+        query
+            .ingest(
+                &store,
+                &reply(
+                    &iq,
+                    vec![user_node(
+                        &peer,
+                        &[(0, 0, false), (3, 1, false)],
+                        Some((1_700_000_000, signed)),
+                    )],
+                ),
+            )
+            .unwrap()
+            .require_complete()
+            .unwrap();
+        let baseline = device_list(&store, &peer).unwrap().unwrap();
+        let authority = device_list_authority(&store, &peer).unwrap().unwrap();
+        assert!(authority.binding_known && authority.companions_current);
+        assert_eq!(authority.primary_pin_matches, Some(true));
+        // Historical JSON has no independent verifier binding; do not stamp
+        // today's pin on old metadata just because its verified flag was true.
+        let mut old = serde_json::to_value(&baseline).unwrap();
+        old.as_object_mut()
+            .unwrap()
+            .remove("verified_primary_key_fingerprint");
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, list_key(&peer).as_bytes(), 1, &old))
+            .unwrap();
+        let legacy = device_list_authority(&store, &peer).unwrap().unwrap();
+        assert!(!legacy.binding_known && !legacy.companions_current);
+        assert!(legacy.primary_pin_present);
+        assert_eq!(legacy.primary_pin_matches, None);
+        assert!(
+            device_list(&store, &peer)
+                .unwrap()
+                .unwrap()
+                .verified_primary_key_fingerprint
+                .is_none()
+        );
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, list_key(&peer).as_bytes(), 1, &baseline))
+            .unwrap();
+        let (fresh, new_key) =
+            crate::signal::adv::test_signed_list(7, 1_700_000_100, 2, &[1, 2], &[13; 32]);
+        let selector = format!("comparison-direct:{peer}");
+        let old_pin: Vec<u8> = store
+            .read(|tx| tx.get_json(Table::PeerIdentities, selector.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        let new_pin = [vec![5u8], new_key.to_vec()].concat();
+        let replace = |tx: &mut crate::store::WriteTx<'_>| {
+            super::super::identity_conflicts::archive_replacement(
+                tx,
+                &peer,
+                Some(&old_pin),
+                None,
+                &new_pin,
+            )?;
+            tx.put_json(Table::PeerIdentities, selector.as_bytes(), 1, &new_pin)
+        };
+        assert!(
+            store
+                .write::<()>(|tx| {
+                    replace(tx)?;
+                    Err(invalid("injected abort after authenticated replacement"))
+                })
+                .is_err()
+        );
+        assert!(pending_users(&store).unwrap().is_empty());
+        assert!(
+            device_list_authority(&store, &peer)
+                .unwrap()
+                .unwrap()
+                .companions_current
+        );
+        store.write(replace).unwrap();
+        let changed = device_list_authority(&store, &peer).unwrap().unwrap();
+        assert_eq!(changed.primary_pin_matches, Some(false));
+        assert!(!changed.companions_current);
+        assert_eq!(device_list(&store, &peer).unwrap().unwrap(), baseline);
+        assert_eq!(pending_users(&store).unwrap(), [contact()]);
+        drop(store);
+        let store = open(&path);
+        assert_eq!(
+            device_list_authority(&store, &peer).unwrap().unwrap(),
+            changed
+        );
+        assert_eq!(device_list(&store, &peer).unwrap().unwrap(), baseline);
+        assert_eq!(pending_users(&store).unwrap(), [contact()]);
+        let (query, iq) = begin_query(&store, SyncContext::Interactive)
+            .unwrap()
+            .unwrap();
+        query
+            .ingest(
+                &store,
+                &reply(
+                    &iq,
+                    vec![user_node(
+                        &peer,
+                        &[(0, 0, false), (3, 1, false)],
+                        Some((1_700_000_100, fresh)),
+                    )],
+                ),
+            )
+            .unwrap()
+            .require_complete()
+            .unwrap();
+        assert!(
+            device_list_authority(&store, &peer)
+                .unwrap()
+                .unwrap()
+                .companions_current
+        );
+        assert_ne!(
+            device_list(&store, &peer)
+                .unwrap()
+                .unwrap()
+                .verified_primary_key_fingerprint,
+            baseline.verified_primary_key_fingerprint
+        );
+        assert!(pending_users(&store).unwrap().is_empty());
+    }
+
+    #[test]
+    fn primary_refresh_hook_does_not_queue_companion_or_own_lid() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("own-exclusions.redb"));
+        let peer = contact();
+        store
+            .write(|tx| after_primary_identity_change_in(tx, &peer.with_device(3)))
+            .unwrap();
+        assert!(pending_users(&store).unwrap().is_empty());
+        store
+            .write(|tx| {
+                crate::session::AccountRecord {
+                    own_jid: Some(peer.clone()),
+                    ..Default::default()
+                }
+                .save(tx)?;
+                after_primary_identity_change_in(tx, &peer)
+            })
+            .unwrap();
+        assert!(pending_users(&store).unwrap().is_empty());
+        let own = Jid::parse("111111111111111@lid").unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    super::super::group_send::OWN_LID_KEY,
+                    1,
+                    &own,
+                )?;
+                after_primary_identity_change_in(tx, &own)
+            })
+            .unwrap();
+        assert!(pending_users(&store).unwrap().is_empty());
     }
 
     #[test]

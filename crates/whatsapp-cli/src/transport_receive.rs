@@ -296,15 +296,24 @@ pub(super) fn devices(cli: &super::Cli, chat: &str, request: bool) -> Result<(),
     if request {
         let own = store.read(AccountRecord::load)?.and_then(|a| a.own_jid);
         whatsapp_api::transport::devices::request_sync(&store, own.as_ref(), &jid, None, "cli")?;
-        println!("devices: sync recorded; the next listen session queries this contact");
+        if !cli.json {
+            println!("devices: sync recorded; a listen session queries this contact");
+        }
     }
     let list = whatsapp_api::transport::devices::device_list(&store, &jid)?;
+    let authority = whatsapp_api::transport::devices::device_list_authority(&store, &jid)?;
     let pending = whatsapp_api::transport::devices::pending_users(&store)?;
     if cli.json {
+        let mut displayed = serde_json::to_value(&list)
+            .map_err(|_| Error::invalid("devices", "cannot inspect saved list"))?;
+        if let Some(row) = displayed.as_object_mut() {
+            row.remove("verified_primary_key_fingerprint");
+        }
         println!(
             "{}",
             serde_json::to_string_pretty(&serde_json::json!({
-                "list": list,
+                "list": displayed,
+                "authority": authority,
                 "pending_users": pending.iter().map(|j| j.to_string()).collect::<Vec<_>>(),
             }))
             .map_err(|e| Error::invalid("devices", e.to_string()))?
@@ -329,6 +338,12 @@ pub(super) fn devices(cli: &super::Cli, chat: &str, request: bool) -> Result<(),
                 println!("  companions not verified: {reason}");
             }
         }
+    }
+    if let Some(a) = authority {
+        println!(
+            "devices: companions_current={} binding_known={} primary_pin_present={} primary_pin_matches={:?}",
+            a.companions_current, a.binding_known, a.primary_pin_present, a.primary_pin_matches
+        );
     }
     println!("devices: {} contact(s) pending a query", pending.len());
     Ok(())

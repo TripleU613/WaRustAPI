@@ -1179,3 +1179,8 @@ checksum bundles, unchanged by this correction.
 Device synchronization now preserves rejected signed candidates and records fixed
 local verification reasons, separately from server per-user errors.
 [Current retention/inspection behavior](cross-device-sync.md#rejected-device-candidate-retention-2026-10-07).
+
+
+Device work queued after authenticated primary replacement is picked up on
+the receive heartbeat; saved list authority is bound to its actual verifier.
+[Current authority/refresh behavior](cross-device-sync.md#signed-device-authority-and-authenticated-refresh-2026-10-07).

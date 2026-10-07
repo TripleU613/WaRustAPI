@@ -341,10 +341,12 @@ pub(crate) async fn drive(
                     // Queries are reads: pending users stay pending for a later session.
                     tracing::warn!("device query unanswered; users remain pending");
                     if let Some(query) = device_query.take() { device_cursor.defer(&query); }
-                    if let Some((query, node)) = device_cursor.begin_next(&store, device_context)? {
-                        device_query = Some(query);
-                        link.send(&node).await?;
-                    }
+                }
+                // Authenticated primary-key changes and offline requests can
+                // queue work during this connection without a devices notification.
+                if device_query.is_none() && let Some((query,node))=device_cursor.begin_next(&store,device_context)? {
+                    device_query=Some(query);
+                    link.send(&node).await?;
                 }
                 for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
                 {
@@ -1466,6 +1468,49 @@ mod tests {
         .unwrap();
         assert!(unsent_ids(&store).unwrap().is_empty());
         assert_eq!(summary(&store).unwrap().uncertain, 50);
+        fake.stop_cleanly().await;
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn newly_queued_device_work_is_picked_up_without_a_notification_or_reconnect() {
+        use super::super::devices::{pending_users, request_sync};
+        let dir = tempfile::tempdir().unwrap();
+        let store = registered_store(&dir.path().join("late-device-work.redb"));
+        let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (_, write) = fake.written().await;
+        write.send(Ok(())).unwrap();
+        // Let activation's initial pending scan finish before adding new work.
+        fake.nothing_written(Duration::from_millis(100)).await;
+        request_sync(&store, None, &peer, None, "authenticated-primary-change").unwrap();
+        let (query, write) = fake.written_within(Duration::from_secs(25)).await;
+        assert_eq!(
+            query.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("usync")
+        );
+        write.send(Ok(())).unwrap();
+        let (ping, write) = fake.written().await;
+        assert_eq!(
+            ping.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("w:p")
+        );
+        write.send(Ok(())).unwrap();
+        fake.deliver(
+            Node::new("iq")
+                .attr("id", ping.get_attr("id").unwrap().as_text().unwrap())
+                .attr("type", "result"),
+        )
+        .await;
+        fake.deliver(device_reply(&query, vec![peer])).await;
+        tokio::time::timeout(Duration::from_secs(5), async {
+            while !pending_users(&store).unwrap().is_empty() {
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .unwrap();
+        fake.nothing_written(Duration::from_millis(300)).await;
         fake.stop_cleanly().await;
     }
 

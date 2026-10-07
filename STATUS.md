@@ -1379,3 +1379,39 @@ repeat and invalid-ID redaction. Conflicting duplicates preserve cache/pending
 in either order and after encrypted reopen. Hygiene663 local links and 2642000
 bytes across four unchanged APK checksum bundles passed. No live malformed,
 signature-refusal or raw-ID replacement claim is made.
+
+
+Signed-device authority binding and authenticated refresh (2026-10-07): successful
+signed lists privately bind their actual verifier key; historical rows remain
+unknown. devices/peer-identity expose current authority flags without the binding
+fingerprint. Group/status plans refuse unbound/changed cached companions while
+preserving history. Already-authenticated remote primary changes queue refresh
+inside their pin/session/archive/event transaction; own PN/LID and companions
+are excluded. Receive heartbeat picks up eligible post-startup work without a
+notification/reconnect and keeps existing refusal/unknown deferral. Offline
+rollback/reopen/rebinding and queued-during-receive checks cover the local path;
+live primary replacement/own inventory/supplied ADV-key adoption remain unknown.
+[Evidence and limits](docs/protocol/cross-device-sync.md#signed-device-authority-and-authenticated-refresh-2026-10-07).
+
+
+Observed live 2026-10-07 22:33:56 UTC: a zero-send/action/receipt/device-pending preflight,
+one existing-peer read and a 20-second authenticated receive-only session
+completed cleanly. Saved query: server_acknowledged, requested/ingested=1,
+partial_errors/omitted/superseded/verification_errors=0, verification_failures={},
+code=null. Pending devices returned to zero; outbox, all 17 actions
+(error1/ok15/sent1) and nine ACKed receipts unchanged, no chat sends. Authority:
+binding_known=false, primary_pin_present=true, primary_pin_matches=null,
+companions_current=false. This accurately reports the unsigned primary-only
+reply with no signed index list; it does not prove live companion binding,
+identity replacement, own inventory or a supplied-key branch.
+
+Validation: 658 workspace/all-feature tests and 24 default CLI tests passed.
+Strict workspace/all-target Clippy, warning-free Rustdoc, CLI reference/API
+coverage, formatting and staged whitespace passed. Thirteen actual isolated
+CLI JSON/human/request probes covered bound/current, changed, missing pin,
+historical unknown, unsigned primary and absent list; no private verifier
+fingerprint was exported and --json --request parsed as one object. Fixture
+metadata probes test inspection, not cryptographic signing; genuine signed
+baseline/replacement tests cover authority separately. The own-primary hook
+additionally passed explicit PN/LID/companion exclusions. Hygiene668 local
+links and 2642000 bytes across four unchanged APK checksum bundles passed.

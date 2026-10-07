@@ -279,12 +279,27 @@ fn plan_over(
     let mut hash_devices = vec![own.clone()];
     let mut without_device_list = Vec::new();
     for recipient in &recipients {
-        match super::devices::device_list(store, recipient)? {
+        let saved = store.read(|tx| {
+            let list = super::devices::device_list_in(tx, recipient)?;
+            let authority = list
+                .as_ref()
+                .map(|list| super::devices::authority_in(tx, list))
+                .transpose()?;
+            Ok((list, authority))
+        })?;
+        match saved.0 {
             Some(list) if !list.devices.is_empty() => {
                 if list.owner != *recipient
                     || list.devices.iter().any(|d| d.jid.to_non_ad() != *recipient)
                 {
                     return Err(invalid("saved device list does not belong to its member"));
+                }
+                if list.devices.iter().any(|d| d.jid.device != 0)
+                    && !saved.1.as_ref().is_some_and(|a| a.companions_current)
+                {
+                    return Err(invalid(
+                        "saved companion authority is unknown or changed; inspect devices and request synchronization before preparing a send",
+                    ));
                 }
                 hash_devices.extend(list.devices.iter().map(|d| d.jid.clone()));
                 devices.extend(list.devices.iter().map(|d| d.jid.clone()));
@@ -363,8 +378,15 @@ mod tests {
 
     fn save_devices(store: &ProtocolStore, owner: &str, devices: &[&str]) {
         let owner = jid(owner);
+        use sha2::Digest as _;
         store
             .write(|tx| {
+                tx.put_json(
+                    Table::PeerIdentities,
+                    format!("comparison-direct:{owner}").as_bytes(),
+                    1,
+                    &vec![4u8; 32],
+                )?;
                 tx.put_json(
                     Table::Checkpoints,
                     format!("devices:{owner}").as_bytes(),
@@ -382,6 +404,9 @@ mod tests {
                         list_timestamp: None,
                         expected_timestamp: None,
                         companions_verified: true,
+                        verified_primary_key_fingerprint: Some(hex::encode(sha2::Sha256::digest(
+                            [4u8; 32],
+                        ))),
                         unverified_reason: None,
                         notified_hash: None,
                         hash_matches: None,
@@ -391,6 +416,71 @@ mod tests {
                 )
             })
             .unwrap();
+    }
+
+    #[test]
+    fn companion_plans_refuse_legacy_or_changed_primary_authority_without_mutating_history() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("authority-plan.redb"));
+        let own = jid("15555550100@s.whatsapp.net");
+        let peer = jid("15555550101@s.whatsapp.net");
+        save_devices(
+            &store,
+            "15555550101@s.whatsapp.net",
+            &["15555550101@s.whatsapp.net", "15555550101:3@s.whatsapp.net"],
+        );
+        assert_eq!(
+            plan_status(&store, &own, std::slice::from_ref(&peer))
+                .unwrap()
+                .devices
+                .len(),
+            2
+        );
+        let key = format!("devices:{peer}");
+        let baseline: DeviceList = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        let mut legacy = baseline.clone();
+        legacy.verified_primary_key_fingerprint = None;
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &legacy))
+            .unwrap();
+        assert!(
+            plan_status(&store, &own, std::slice::from_ref(&peer))
+                .unwrap_err()
+                .to_string()
+                .contains("companion authority")
+        );
+        assert_eq!(
+            super::super::devices::device_list(&store, &peer)
+                .unwrap()
+                .unwrap(),
+            legacy
+        );
+        store
+            .write(|tx| {
+                tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &baseline)?;
+                tx.put_json(
+                    Table::PeerIdentities,
+                    format!("comparison-direct:{peer}").as_bytes(),
+                    1,
+                    &vec![5u8; 32],
+                )
+            })
+            .unwrap();
+        assert!(
+            plan_status(&store, &own, std::slice::from_ref(&peer))
+                .unwrap_err()
+                .to_string()
+                .contains("companion authority")
+        );
+        assert_eq!(
+            super::super::devices::device_list(&store, &peer)
+                .unwrap()
+                .unwrap(),
+            baseline
+        );
     }
 
     /// The whole point of the plan: a LID-addressed group expands to its

@@ -131,6 +131,9 @@ pub struct PeerDeviceKeyCoverage {
     pub missing_pin_tickets: Vec<String>,
     /// Whether the saved companions came from a verified signed device list.
     pub companions_verified: bool,
+    /// Current primary-key relationship of the historical signed list.
+    #[serde(default)]
+    pub device_authority: Option<super::devices::DeviceListAuthority>,
     /// Hosted devices excluded by the E2EE device-list implementation.
     pub hosted_devices_skipped: u32,
     /// Agreement with a saved notification hash, or null when no hash was tested.
@@ -264,6 +267,7 @@ fn device_key_coverage(
         pinned_devices,
         missing_pin_tickets,
         companions_verified: list.companions_verified,
+        device_authority: Some(super::devices::authority_in(tx, &list)?),
         hosted_devices_skipped: list.hosted_skipped,
         notified_hash_matches: list.hash_matches,
     }))
@@ -401,6 +405,7 @@ fn archive_identity(
         return Ok(());
     };
     super::peer_verification::invalidate_in(tx, peer, current)?;
+    super::devices::after_primary_identity_change_in(tx, peer)?;
     let observed_at = Timestamp::now();
     let event = tx.append_event(crate::sync::SyncEvent::IdentityChanged(
         crate::sync::IdentityChange {
@@ -489,6 +494,7 @@ mod tests {
             list_timestamp: None,
             expected_timestamp: None,
             companions_verified: false,
+            verified_primary_key_fingerprint: None,
             unverified_reason: Some("no signed list".into()),
             notified_hash: None,
             hash_matches: None,

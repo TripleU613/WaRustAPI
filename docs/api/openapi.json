@@ -1615,30 +1615,94 @@
       "DeviceList": {
         "type": "object",
         "required": [
-          "jid",
-          "devices"
+          "owner",
+          "devices",
+          "raw_id",
+          "list_timestamp",
+          "expected_timestamp",
+          "companions_verified",
+          "unverified_reason",
+          "notified_hash",
+          "hash_matches",
+          "hosted_skipped",
+          "fetched_at"
         ],
         "properties": {
-          "jid": {
-            "$ref": "#/components/schemas/Jid"
+          "owner": {
+            "$ref": "#/components/schemas/StoredDeviceJid"
           },
           "devices": {
             "type": "array",
             "items": {
-              "type": "integer"
-            },
-            "description": "List of device IDs registered for this contact"
+              "type": "object",
+              "required": [
+                "jid",
+                "key_index"
+              ],
+              "properties": {
+                "jid": {
+                  "$ref": "#/components/schemas/StoredDeviceJid"
+                },
+                "key_index": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
           },
-          "synced_at": {
+          "raw_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "list_timestamp": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "expected_timestamp": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "companions_verified": {
+            "type": "boolean",
+            "description": "Historical successful signed-list verification; current authority is separate."
+          },
+          "unverified_reason": {
             "type": [
               "string",
               "null"
-            ],
-            "format": "date-time",
-            "description": "Last device synchronization timestamp"
+            ]
+          },
+          "notified_hash": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hash_matches": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "hosted_skipped": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "fetched_at": {
+            "type": "integer",
+            "description": "Local saved ingest time in Unix milliseconds."
           }
         },
-        "description": "Contact's registered device list for multi-device messaging"
+        "description": "Actual CLI saved historical list schema. The private optional verified_primary_key_fingerprint is stored by the library but omitted from CLI output; old rows remain unbound. No served HTTP handler."
       },
       "MediaItem": {
         "type": "object",
@@ -2828,6 +2892,17 @@
               "null"
             ],
             "description": "Agreement with saved notification hash; null when untested."
+          },
+          "device_authority": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DeviceListAuthority"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Current relationship of the historical saved list to its primary pin; null on old serialized summaries."
           }
         }
       },
@@ -3091,6 +3166,71 @@
           }
         },
         "description": "Metadata-only explicit native V3 comparison. No account or human verification claim."
+      },
+      "StoredDeviceJid": {
+        "type": "object",
+        "required": [
+          "user",
+          "agent",
+          "device",
+          "server",
+          "kind"
+        ],
+        "properties": {
+          "user": {
+            "type": "string",
+            "description": "Private user identifier; CLI --json explicitly includes saved list addresses."
+          },
+          "agent": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "device": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 65535
+          },
+          "server": {
+            "type": "string",
+            "enum": [
+              "User",
+              "Lid"
+            ]
+          },
+          "kind": {
+            "type": "string"
+          }
+        },
+        "description": "Stored Rust Jid object for a supported contact-device row; CLI chat inputs remain string JIDs."
+      },
+      "DeviceListAuthority": {
+        "type": "object",
+        "required": [
+          "binding_known",
+          "primary_pin_present",
+          "primary_pin_matches",
+          "companions_current"
+        ],
+        "properties": {
+          "binding_known": {
+            "type": "boolean"
+          },
+          "primary_pin_present": {
+            "type": "boolean"
+          },
+          "primary_pin_matches": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Unknown when binding/pin absent; false if changed."
+          },
+          "companions_current": {
+            "type": "boolean",
+            "description": "Saved signed-list verification is bound to the current raw primary key. Not human verification, full inventory or companion-key trust."
+          }
+        }
       }
     }
   },
@@ -3960,7 +4100,7 @@
           "Devices"
         ],
         "summary": "Show a contact's saved device list or queue a device sync",
-        "description": "Show a contact's saved device list, or queue a device sync for the next session.",
+        "description": "Offline saved history and current primary-key authority inspection, or --request queues a refresh; no HTTP route. JSON returns list (nullable saved Rust Jid/device objects), authority (nullable DeviceListAuthority), pending_users (string JIDs). Human output includes current authority flags. Successful signed ingestion privately binds SHA-256 of the raw primary key actually used by APK-derived 11T.A07 verification. The private binding fingerprint is omitted from CLI JSON. Historical rows remain binding_known=false, primary_pin_matches=null; no old list is stamped with the current pin. Changed/missing pins invalidate current companion authority without rewriting saved history. Unsigned-primary lists remain supported and never claim signed companion authority. Authenticated incoming/directory primary changes queue a refresh atomically with pin/session/archive/event commit, preserving identity history; no unauthenticated observation or supplied ADV key enables this. Own PN/LID and companion changes do not queue this primary refresh. Normal receive heartbeat picks up eligible newly queued work without reconnect, with existing cursor refusal/unknown deferral; no automatic old-reservation replay. Evidence docs/protocol/cross-device-sync.md#signed-device-authority-and-authenticated-refresh-2026-10-07. --json --request now returns one valid JSON object without the former plain-text queue header; the human mode retains its queued-work notice. Queueing is still offline and does not transmit. Live 2026-10-07 22:33:56 UTC: one-peer 20-second receive-only device read acknowledged with zero local/server errors and pending returned to zero; authority binding_known=false, primary_pin_present=true, primary_pin_matches=null, companions_current=false for unsigned primary-only/no signed index list. Queues/17 actions/nine ACKed receipts unchanged and no chat sends. This is not live companion binding or primary replacement validation.",
         "operationId": "getDevices",
         "x-cli": "whatsapp-cli devices",
         "x-transport": [
@@ -4006,7 +4146,40 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeviceList"
+                  "type": "object",
+                  "required": [
+                    "list",
+                    "authority",
+                    "pending_users"
+                  ],
+                  "properties": {
+                    "list": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/components/schemas/DeviceList"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "authority": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/components/schemas/DeviceListAuthority"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "pending_users": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Jid"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -4020,7 +4193,9 @@
         },
         "x-library": [
           "whatsapp_api::transport::devices::request_sync",
-          "whatsapp_api::transport::devices::device_list"
+          "whatsapp_api::transport::devices::device_list",
+          "whatsapp_api::transport::devices::DeviceListAuthority",
+          "whatsapp_api::transport::devices::device_list_authority"
         ]
       }
     },
@@ -4971,7 +5146,7 @@
         ],
         "x-live": false,
         "x-secret-input": true,
-        "description": "Offline saved-state inspection; no HTTP handler, request, queued action, snapshot projection or send. --chat and --own are required; own is the primary identity in the group's PN/LID addressing form. Output offline_only, addressing_mode, recipients, devices, without_device_list, own_devices_unknown, participant_hash_version=2 and participant_hash_device_count; identifiers are not echoed. --hash explicitly adds the private candidate participant_hash. Missing snapshot, mixed membership, absent own membership, wrong addressing form, no recipient devices or a foreign saved device list refuse with content-free diagnostics. APK 37.71 1jL.A0N/A0O -> AzR.A03 hashes cached device sets. The planner now hashes saved recipient devices plus the known own primary, instead of primary members alone. A missing recipient list contributes its primary placeholder for partial-plan diagnostics; live lab sends refuse any missing recipient list. Own companions/account sync remain unknown and are not invented through contact usync. Hash input count does not establish complete verified inventory; the currently selected version stays V2, with active feature 0x415b unknown. Saved device verification/filtering is unchanged; no dropped/unverified advertised companions are manufactured. Group-send device queries now use APK message context instead of interactive. Status fan-out reuses the planner but still emits no phash. Normal public outbox full group fan-out and complete own-device coverage remain unfinished; no live validation is claimed. Source/reproduction docs/protocol/groups.md#saved-device-hash-planning-2026-10-07.",
+        "description": "Offline saved-state inspection; no HTTP handler, request, queued action, snapshot projection or send. --chat and --own are required; own is the primary identity in the group's PN/LID addressing form. Output offline_only, addressing_mode, recipients, devices, without_device_list, own_devices_unknown, participant_hash_version=2 and participant_hash_device_count; identifiers are not echoed. --hash explicitly adds the private candidate participant_hash. Missing snapshot, mixed membership, absent own membership, wrong addressing form, no recipient devices or a foreign saved device list refuse with content-free diagnostics. APK 37.71 1jL.A0N/A0O -> AzR.A03 hashes cached device sets. The planner now hashes saved recipient devices plus the known own primary, instead of primary members alone. A missing recipient list contributes its primary placeholder for partial-plan diagnostics; live lab sends refuse any missing recipient list. Own companions/account sync remain unknown and are not invented through contact usync. Hash input count does not establish complete verified inventory; the currently selected version stays V2, with active feature 0x415b unknown. Saved device verification/filtering is unchanged; no dropped/unverified advertised companions are manufactured. Group-send device queries now use APK message context instead of interactive. Status fan-out reuses the planner but still emits no phash. Normal public outbox full group fan-out and complete own-device coverage remain unfinished; no live validation is claimed. Source/reproduction docs/protocol/groups.md#saved-device-hash-planning-2026-10-07. Planning now refuses cached companion entries whose current primary verification binding is missing or changed, with an explicit devices/requery diagnostic before preparing any send. It reads each cached list/pin relationship together; no stale list is rebound or silently downgraded. Primary-only plans keep their prior behavior. Full multi-recipient atomic message preparation and own inventory remain unfinished. Evidence docs/protocol/cross-device-sync.md#signed-device-authority-and-authenticated-refresh-2026-10-07.",
         "parameters": [
           {
             "$ref": "#/components/parameters/Store"
@@ -7730,7 +7905,7 @@
           "Session"
         ],
         "summary": "Maintain an authenticated comparison connection and process incoming messages",
-        "description": "Establish an authenticated session to the messaging server (x-live). Hold the connection for the requested duration, receive incoming messages, and optionally transmit all eligible queued intents. Authenticated Message field-102 notices in a normal group context with meta/appdata=group_history now emit the distinct group_history_notice control event. Receiver addresses/context/bot contents are omitted from its metadata. It is not a human reply or completed history transfer and does not earn an automatic read receipt. Unknown or category-peer contexts stay opaque; internal APK bypasses and UI feature branches are not enabled. Group messages (enc type=skmsg) are decrypted when a SenderKeyDistributionMessage for the (group, sender) pair has been received in a prior or current direct message; messages without a stored sender key are preserved as Unsupported without acknowledgement. SKDM distribution arrives embedded in pkmsg/msg payloads (WhatsApp Message field 2), either standalone or as a second enc child of the group stanza, and is committed atomically with the inbox row. A decrypted group message is confirmed with a receipt addressed to the group carrying the sender as participant. Status updates (from=status@broadcast) route through the same sender-key path and project into a Broadcast chat with the poster as sender, but are never confirmed with a receipt: the status receipt shape (class=status, type=sender) has an unresolved sts input, so none is sent. Each incoming stanza except keepalive replies is reported on stderr as one redacted `incoming` log line (element, type, chat class, enc types, inbox outcome, confirmed, marked_read); this is the default when RUST_LOG is unset. On Undecryptable incoming messages, queues a retry receipt using the saved Signal registration ID. Both listen and lab receive use one request per chat/participant/message ID, durably reserved before transmission; repeats and uncertain outcomes never reset it. This is a conservative client policy, not an APK retry limit. Missing registration or unsupported routing is logged without ending receive; storage failures propagate. The receipts command inspects outcomes offline. Live 2026-10-06: saved-account login and activation succeeded; one automatic retry received a matching server ACK. Its redelivery still failed decryption, and fresh-message automatic read validation remains pending. Signal failure diagnostics classify missing keys, untrusted identity, bad MAC, duplicate counter and invalid encoding without printing peer addresses or backend details. This does not explain the historical window with no incoming message stanzas. Offline preserved-capture inspection found incoming prekey identities differing from both saved PN and LID pins; no pin was replaced. Human safety-number verification is not implemented, and the underlying cause of the saved mismatch remains unknown. Explicit authenticated incoming replacement is available as described below. Direct and group pairwise prekey processing persists first-seen differing public-key fingerprints; identity-conflicts inspects these unauthenticated observations offline. Pins and sessions are not replaced. A failing direct Signal child within a group stanza is also Undecryptable and eligible for the same once-only retry; missing sender-key/session support remains Unsupported. transport.identity_changes explicitly selects pinned (default) or apk_authenticated; the latter atomically archives old remote keys/sessions and emits IdentityChanged after message authentication. Local/own-device identities are not replaced. Group pairwise Signal children from a LID participant select the held LID session; participant_pn identifies a contact alias and does not displace that ratchet. A mapped new pkmsg establishes a LID session; msg retains PN fallback when no LID session exists. An unmapped LID may use a held session. Wrong-session correction recovered the remaining original group capture offline in an isolated store, without network requests or changing the original account. When mark_read is enabled, eligible authenticated duplicates recovered offline also enter the once-only read queue on redelivery. The helper checks the saved decrypted readable payload; cleared/consumed rows and protocol-only content are skipped. A write-cut regression verifies uncertain reads are never replayed. Live 2026-10-07: a 45-second session delivery-confirmed the two recovered direct/group messages as duplicates. A subsequent 20-second session server-acknowledged both explicitly queued saved-message reads; eight reads and one retry are now acknowledged. Handset blue ticks and fresh-message automatic reads remain unconfirmed. Newly settled supported group-action replies now project snapshots/events inside the receive session without requiring group list. Settlement creates a durable pending-projection marker; startup recovers only these newly marked replies and never requeues their requests. Projection and pending-marker removal share the once-only snapshot/event transaction. Truncated or invalid group replies remain encrypted/pending with a secret-free warning and do not stop unrelated receiving; storage errors still stop the session. Group list keeps historical ingestion and its explicit invalid-reply diagnostics. Injected-link and encrypted-store reopen/rollback tests passed. One bounded 30-second authenticated listen session also settled a new info action ok, saved a four-member snapshot during receiving, and left zero projection work for subsequent group list; no chat outbox sends occurred and the previously unresolved two-factor action stayed sent. Live interruption/truncated recovery remains unverified. Supported groups_dirty scheduling and ACK are implemented offline; other unsolicited group notifications remain unsupported. Batch group-refresh replies now use their supported mixed-union path: full results commit beside exact truncated=true/size=0..19999 and group@error=403/404 items, with a durable projection report. These size/error items preserve old membership instead of failing the whole supported batch. Invalid/unrecognized or uncorrelated items still preserve the whole prior state. group refresh --follow-up enables bounded supported-result continuation; group refresh-status --id reports counts, round, next_action, pending and exhaustion; absent reports remain distinguishable only by inspecting action state. Direct single-group truncated snapshot ingestion retains its earlier explicit refusal behavior. Mixed/report behavior is offline tested, not live verified. Supported authenticated w:gp2/groups_dirty notifications now atomically queue one zero-estimate truncatable group refresh plus a durable from/ID-scoped deduplication marker before returning the notification ACK. ACK fields are to/id/class/type and optional participant; recipient/category/edit are not echoed. Duplicate supported inputs may repeat the ACK but never create or resend a query; same from/ID with changed supported inputs refuses without ACK. Local limits: one root child, 1..256 listed group nodes, concrete unique non-device group JIDs, nonempty ID <=128 bytes and parseable from/participant. Missing jid nodes are skipped as in APK 37.71 0yv.A09; an empty remaining list is unacknowledged rather than creating the APK job that later throws. Unsupported shapes stay captured and log secret-free diagnostics; storage failure stops receiving. Existing actions lists the refresh dirty groups intent; group refresh-status inspects its eventual bounded projection chain. Queueing also occurs without --send-outbox, since this is a protocol read. Offline injected-link ACK-write-cut and encrypted-store reopen/deduplication tests cover durability; Live 2026-10-07: a bounded 45-second saved-account receive session (zero queued actions/chat intents at preflight) observed two w:gp2 notification log lines, queued one refresh dirty groups action, settled it ok with one complete group projected in-session and no pending/truncated/follow-up inputs, then stopped cleanly. Notification ACK socket writing completed without session error, but no separate server confirmation of that ACK is claimed. The unresolved two-factor action stayed sent and no incoming user message was logged. Live truncated continuation, conflicting/duplicate dirty inputs and notification failure recovery remain unverified. Other group notification types and APK error/wait helpers remain unfinished. Background device synchronization advances remaining eligible batches and retains newer pending notifications across old replies. Refused, errored, omitted and unanswered users are deferred for this connection; their saved pending work and query outcomes remain intact. Pending contact work is stored before ACK writing. These local scheduling/revision safeguards do not change APK usync wire fields, enable chat sending, or establish full own-account synchronization. Offline device-query inspection exposes nullable superseded_users counts; generations stay private. Evidence docs/protocol/messaging-transport.md#background-device-revisions-and-continuation-2026-10-07. Device candidate local verification failures preserve cached lists/pending work, settle fixed reason counts independently of server error codes and defer affected users for this connection; other users can continue. device-query inspects nullable verification_errors/verification_failures offline. No raw-ID reset or supplied-key identity replacement is enabled. Evidence docs/protocol/cross-device-sync.md#rejected-device-candidate-retention-2026-10-07.",
+        "description": "Establish an authenticated session to the messaging server (x-live). Hold the connection for the requested duration, receive incoming messages, and optionally transmit all eligible queued intents. Authenticated Message field-102 notices in a normal group context with meta/appdata=group_history now emit the distinct group_history_notice control event. Receiver addresses/context/bot contents are omitted from its metadata. It is not a human reply or completed history transfer and does not earn an automatic read receipt. Unknown or category-peer contexts stay opaque; internal APK bypasses and UI feature branches are not enabled. Group messages (enc type=skmsg) are decrypted when a SenderKeyDistributionMessage for the (group, sender) pair has been received in a prior or current direct message; messages without a stored sender key are preserved as Unsupported without acknowledgement. SKDM distribution arrives embedded in pkmsg/msg payloads (WhatsApp Message field 2), either standalone or as a second enc child of the group stanza, and is committed atomically with the inbox row. A decrypted group message is confirmed with a receipt addressed to the group carrying the sender as participant. Status updates (from=status@broadcast) route through the same sender-key path and project into a Broadcast chat with the poster as sender, but are never confirmed with a receipt: the status receipt shape (class=status, type=sender) has an unresolved sts input, so none is sent. Each incoming stanza except keepalive replies is reported on stderr as one redacted `incoming` log line (element, type, chat class, enc types, inbox outcome, confirmed, marked_read); this is the default when RUST_LOG is unset. On Undecryptable incoming messages, queues a retry receipt using the saved Signal registration ID. Both listen and lab receive use one request per chat/participant/message ID, durably reserved before transmission; repeats and uncertain outcomes never reset it. This is a conservative client policy, not an APK retry limit. Missing registration or unsupported routing is logged without ending receive; storage failures propagate. The receipts command inspects outcomes offline. Live 2026-10-06: saved-account login and activation succeeded; one automatic retry received a matching server ACK. Its redelivery still failed decryption, and fresh-message automatic read validation remains pending. Signal failure diagnostics classify missing keys, untrusted identity, bad MAC, duplicate counter and invalid encoding without printing peer addresses or backend details. This does not explain the historical window with no incoming message stanzas. Offline preserved-capture inspection found incoming prekey identities differing from both saved PN and LID pins; no pin was replaced. Human safety-number verification is not implemented, and the underlying cause of the saved mismatch remains unknown. Explicit authenticated incoming replacement is available as described below. Direct and group pairwise prekey processing persists first-seen differing public-key fingerprints; identity-conflicts inspects these unauthenticated observations offline. Pins and sessions are not replaced. A failing direct Signal child within a group stanza is also Undecryptable and eligible for the same once-only retry; missing sender-key/session support remains Unsupported. transport.identity_changes explicitly selects pinned (default) or apk_authenticated; the latter atomically archives old remote keys/sessions and emits IdentityChanged after message authentication. Local/own-device identities are not replaced. Group pairwise Signal children from a LID participant select the held LID session; participant_pn identifies a contact alias and does not displace that ratchet. A mapped new pkmsg establishes a LID session; msg retains PN fallback when no LID session exists. An unmapped LID may use a held session. Wrong-session correction recovered the remaining original group capture offline in an isolated store, without network requests or changing the original account. When mark_read is enabled, eligible authenticated duplicates recovered offline also enter the once-only read queue on redelivery. The helper checks the saved decrypted readable payload; cleared/consumed rows and protocol-only content are skipped. A write-cut regression verifies uncertain reads are never replayed. Live 2026-10-07: a 45-second session delivery-confirmed the two recovered direct/group messages as duplicates. A subsequent 20-second session server-acknowledged both explicitly queued saved-message reads; eight reads and one retry are now acknowledged. Handset blue ticks and fresh-message automatic reads remain unconfirmed. Newly settled supported group-action replies now project snapshots/events inside the receive session without requiring group list. Settlement creates a durable pending-projection marker; startup recovers only these newly marked replies and never requeues their requests. Projection and pending-marker removal share the once-only snapshot/event transaction. Truncated or invalid group replies remain encrypted/pending with a secret-free warning and do not stop unrelated receiving; storage errors still stop the session. Group list keeps historical ingestion and its explicit invalid-reply diagnostics. Injected-link and encrypted-store reopen/rollback tests passed. One bounded 30-second authenticated listen session also settled a new info action ok, saved a four-member snapshot during receiving, and left zero projection work for subsequent group list; no chat outbox sends occurred and the previously unresolved two-factor action stayed sent. Live interruption/truncated recovery remains unverified. Supported groups_dirty scheduling and ACK are implemented offline; other unsolicited group notifications remain unsupported. Batch group-refresh replies now use their supported mixed-union path: full results commit beside exact truncated=true/size=0..19999 and group@error=403/404 items, with a durable projection report. These size/error items preserve old membership instead of failing the whole supported batch. Invalid/unrecognized or uncorrelated items still preserve the whole prior state. group refresh --follow-up enables bounded supported-result continuation; group refresh-status --id reports counts, round, next_action, pending and exhaustion; absent reports remain distinguishable only by inspecting action state. Direct single-group truncated snapshot ingestion retains its earlier explicit refusal behavior. Mixed/report behavior is offline tested, not live verified. Supported authenticated w:gp2/groups_dirty notifications now atomically queue one zero-estimate truncatable group refresh plus a durable from/ID-scoped deduplication marker before returning the notification ACK. ACK fields are to/id/class/type and optional participant; recipient/category/edit are not echoed. Duplicate supported inputs may repeat the ACK but never create or resend a query; same from/ID with changed supported inputs refuses without ACK. Local limits: one root child, 1..256 listed group nodes, concrete unique non-device group JIDs, nonempty ID <=128 bytes and parseable from/participant. Missing jid nodes are skipped as in APK 37.71 0yv.A09; an empty remaining list is unacknowledged rather than creating the APK job that later throws. Unsupported shapes stay captured and log secret-free diagnostics; storage failure stops receiving. Existing actions lists the refresh dirty groups intent; group refresh-status inspects its eventual bounded projection chain. Queueing also occurs without --send-outbox, since this is a protocol read. Offline injected-link ACK-write-cut and encrypted-store reopen/deduplication tests cover durability; Live 2026-10-07: a bounded 45-second saved-account receive session (zero queued actions/chat intents at preflight) observed two w:gp2 notification log lines, queued one refresh dirty groups action, settled it ok with one complete group projected in-session and no pending/truncated/follow-up inputs, then stopped cleanly. Notification ACK socket writing completed without session error, but no separate server confirmation of that ACK is claimed. The unresolved two-factor action stayed sent and no incoming user message was logged. Live truncated continuation, conflicting/duplicate dirty inputs and notification failure recovery remain unverified. Other group notification types and APK error/wait helpers remain unfinished. Background device synchronization advances remaining eligible batches and retains newer pending notifications across old replies. Refused, errored, omitted and unanswered users are deferred for this connection; their saved pending work and query outcomes remain intact. Pending contact work is stored before ACK writing. These local scheduling/revision safeguards do not change APK usync wire fields, enable chat sending, or establish full own-account synchronization. Offline device-query inspection exposes nullable superseded_users counts; generations stay private. Evidence docs/protocol/messaging-transport.md#background-device-revisions-and-continuation-2026-10-07. Device candidate local verification failures preserve cached lists/pending work, settle fixed reason counts independently of server error codes and defer affected users for this connection; other users can continue. device-query inspects nullable verification_errors/verification_failures offline. No raw-ID reset or supplied-key identity replacement is enabled. Evidence docs/protocol/cross-device-sync.md#rejected-device-candidate-retention-2026-10-07. Authenticated supported remote primary identity replacements durably queue a device refresh inside the existing pin/session/archive/event transaction; no pin replacement is newly authorized. Own PN/LID and companion changes are excluded. The normal heartbeat picks up eligible pending revisions queued during receiving without needing a device notification/reconnect; cursor refusal/unknown deferral still applies. Saved signed lists bind to their actual verifier key and inspection distinguishes historical verification from current authority. No supplied-key ADV replacement, alias guess or account reset is added. Evidence docs/protocol/cross-device-sync.md#signed-device-authority-and-authenticated-refresh-2026-10-07.",
         "operationId": "listen",
         "x-cli": "whatsapp-cli listen",
         "x-transport": [
@@ -10299,7 +10474,7 @@
           "Account Safety"
         ],
         "summary": "Inspect saved peer pins, sessions and retained-device key coverage (offline)",
-        "description": "Reads one logical snapshot without queries, key replacement or sends. Requires a primary phone-number chat JID. Returns hashed peer selectors, diagnostic public-key fingerprints, held-session/pin agreement, and all authenticated primary LID mappings. A qualifying saved incoming transition establishes local provenance only; it is not a WhatsApp safety number or human verification. Store opening can commit engine metadata; protocol records are inspected read-only. No HTTP route is implemented. Also reports nullable retained E2EE device-key coverage in that snapshot: retained/pinned counts, hashed missing-pin selectors, saved signed-list status, skipped-hosted count and notification-hash agreement. A primary-only fallback or fully pinned retained set does not establish complete current APK fingerprint inventory, selected scheme or human verification. Invalid saved pins/device-list consistency are local diagnostics. No safety number is computed. Reports nullable local verification metadata: verified bit, action sequence and identity/pin agreement. This human claim is distinct from authenticated transition provenance.",
+        "description": "Reads one logical snapshot without queries, key replacement or sends. Requires a primary phone-number chat JID. Returns hashed peer selectors, diagnostic public-key fingerprints, held-session/pin agreement, and all authenticated primary LID mappings. A qualifying saved incoming transition establishes local provenance only; it is not a WhatsApp safety number or human verification. Store opening can commit engine metadata; protocol records are inspected read-only. No HTTP route is implemented. Also reports nullable retained E2EE device-key coverage in that snapshot: retained/pinned counts, hashed missing-pin selectors, saved signed-list status, skipped-hosted count and notification-hash agreement. A primary-only fallback or fully pinned retained set does not establish complete current APK fingerprint inventory, selected scheme or human verification. Invalid saved pins/device-list consistency are local diagnostics. No safety number is computed. Reports nullable local verification metadata: verified bit, action sequence and identity/pin agreement. This human claim is distinct from authenticated transition provenance. Saved device_key_coverage additionally exposes nullable device_authority (binding_known, primary_pin_present, primary_pin_matches and companions_current), recomputed read-only against the exact current primary namespace pin. Historical companions_verified does not prove current signer authority; the private binding fingerprint is not exported. No PN/LID alias is inferred. Evidence docs/protocol/cross-device-sync.md#signed-device-authority-and-authenticated-refresh-2026-10-07.",
         "operationId": "peerIdentity",
         "x-cli": "whatsapp-cli peer-identity",
         "x-transport": [

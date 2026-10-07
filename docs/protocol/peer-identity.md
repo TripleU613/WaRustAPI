@@ -885,3 +885,8 @@ fingerprint selection, local verification observer events, and companion
 verification-action serialization/fanout remain unfinished. No real account has
 been marked/unmarked by this implementation and no server verification is
 claimed. A human mark is never authority to accept an unauthenticated new key.
+
+
+Saved device coverage now distinguishes historical verification from current
+primary-key authority and authenticated changes queue a transactional refresh.
+[Authority binding and limits](cross-device-sync.md#signed-device-authority-and-authenticated-refresh-2026-10-07).

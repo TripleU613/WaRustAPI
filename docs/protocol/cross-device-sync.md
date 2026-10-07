@@ -1093,3 +1093,120 @@ repeat and invalid-ID redaction. Conflicting duplicates preserve cache/pending
 in either order and after encrypted reopen. Hygiene663 local links and 2642000
 bytes across four unchanged APK checksum bundles passed. No live malformed,
 signature-refusal or raw-ID replacement claim is made.
+
+### Signed device authority and authenticated refresh (2026-10-07)
+
+**Confirmed substrate, APK 37.71:** selected 11T.A07 `0014..0030` loads the
+primary Signal identity and `0110..014a` verifies signed details with its chosen
+key. Lck.A00/A04 apply only a validated candidate; A0C and 0jc.A0s/A14/A0K
+establish identity/session application as a separate action. The already-ported
+incoming nested-message and outgoing signed-directory policies archive their old
+pins/sessions and emit IdentityChanged only after authentication. These sources
+establish which key verifies membership; they do **not** establish our new local
+storage field or heartbeat scheduling as APK wire fields/jobs.
+
+**Observed local gap:** DeviceList retained only a historical verified flag,
+raw ID and timestamp. It had no link to the actual verification key. After a
+valid primary replacement, the cached companions could still feed group/status
+planning under the old flag. Incoming/outgoing authenticated replacement did
+not queue a fresh device read, and the receive loop only scanned pending work
+at startup, device notification, settlement or timeout. A new pending marker
+alone would therefore remain idle in an otherwise active session.
+
+**Implemented local authority invariant:** a successful signed ingestion now
+persists SHA-256 of its exact raw 32-byte verifier key in private nullable
+`verified_primary_key_fingerprint`, inside the same list transaction. It is not
+an APK attribute or a human verification claim. Encoded Signal type byte 05 is
+removed consistently before binding/checking. Historical rows lacking this
+field remain null; neither inspection nor pin replacement stamps the current
+key onto an old list. No old signed bytes are retained/reverified by this change.
+
+`DeviceListAuthority` reports binding_known, primary_pin_present,
+primary_pin_matches (nullable) and companions_current. The last is true only
+when the saved list was successfully signed-verified and its actual verifier
+binding equals the current primary pin in the same PN/LID namespace. A missing
+binding or pin remains unknown; a different pin reports false. Raw saved
+history, devices, metadata and its original historical verified bit remain
+untouched by inspection/key change. This is membership authority, not companion
+identity-key trust, full inventory or a human safety-number verification.
+
+`devices` shows these flags in human output and adds nullable `authority` to
+JSON beside `list` and `pending_users`. Its JSON preserves the existing explicit
+private saved-address output but strips the new private binding fingerprint.
+`peer-identity` device-key coverage adds nullable device_authority; old serialized
+coverage defaults null. Group/status planning reads each list/pin relationship
+together and refuses companion entries with missing/changed authority before
+preparing a send. Primary-only planning keeps its prior supported behavior.
+The old OpenAPI DeviceList skeleton (jid/integer devices/synced_at) did not match
+actual CLI output and is corrected to owner/Rust Jid objects/device entries and
+saved metadata; the existing CLI is still offline, with no HTTP handler.
+
+The existing authenticated primary-replacement archive path now queues the
+refresh **inside the same transaction** as pin/session/history/event changes.
+Transaction abort rolls it back too. It preserves any prior pending notification
+hint/revision history; no key, hash or identity is invented. Only supported remote
+primary PN/LID addresses qualify; own observed PN/LID and companion-device keys
+are excluded. Unauthenticated conflict observation and an untrusted supplied ADV
+key cannot call this authenticated archive path. This does not newly authorize
+pin replacement or reset any account/contact/session.
+
+Normal receiving checks eligible pending work on its existing heartbeat when
+no device query is active. Work queued after startup can thus progress without
+a device notification or reconnect. Existing cursor semantics remain: one attempt
+per unchanged revision, failed/unknown users deferred for that connection,
+reservations durable before writing, no old query replay. This local follow-up
+read is not claimed to reproduce the APK's exact feature/job selection.
+
+**Observed offline coverage:** a genuine synthetic signed companion list has
+current authority under its verifier key; removing the new field yields unknown
+history without mutation. An injected abort after authenticated replacement
+leaves the original pin/current authority and no refresh marker. A committed
+replacement leaves the old list byte-for-byte, reports changed authority and
+retains pending work across encrypted reopen. A fresh valid list signed by the
+already replaced pin restores current authority normally, without supplied-key
+adoption. Group/status planning refuses unbound and changed cached companions
+without modifying their history. The hook excludes a companion and observed own
+LID. An injected receive test queues work **after** activation's initial scan,
+then picks it up/settles it on heartbeat with no notification or reconnect.
+
+**Observed test-harness correction:** the first heartbeat test queued work while
+activation still awaited prekey-upload writing. Startup therefore picked it up,
+so the expected same-heartbeat ping never arrived within the short observation
+window. The fixture now lets the startup scan finish before queueing new work.
+No live session/request was repeated because of this synthetic harness failure.
+
+**Unknown / unfinished:** live primary replacement/companion rebinding, full
+supplied-key ADV application, raw-ID replacement, age-flag selection, PN/LID
+alias/authority transfer, own-account inventory and full public group fan-out.
+Each plan recipient has a consistent local list/pin read; this is not a claim of
+whole multi-recipient atomic preparation. Historical companion lists require a
+fresh real read, rather than a guessed migration. No canonical pin was rotated
+or private draft sent to manufacture a live identity change for these tests.
+
+CLI output correction: devices --json --request previously prepended a human
+queue notice to JSON. The notice now appears only in human mode, preserving one
+parseable JSON object for the existing flag combination. The queued operation
+remains offline and the request/data format is unchanged.
+
+
+Observed live 2026-10-07 22:33:56 UTC: a zero-send/action/receipt/device-pending preflight,
+one existing-peer read and a 20-second authenticated receive-only session
+completed cleanly. Saved query: server_acknowledged, requested/ingested=1,
+partial_errors/omitted/superseded/verification_errors=0, verification_failures={},
+code=null. Pending devices returned to zero; outbox, all 17 actions
+(error1/ok15/sent1) and nine ACKed receipts unchanged, no chat sends. Authority:
+binding_known=false, primary_pin_present=true, primary_pin_matches=null,
+companions_current=false. This accurately reports the unsigned primary-only
+reply with no signed index list; it does not prove live companion binding,
+identity replacement, own inventory or a supplied-key branch.
+
+Validation: 658 workspace/all-feature tests and 24 default CLI tests passed.
+Strict workspace/all-target Clippy, warning-free Rustdoc, CLI reference/API
+coverage, formatting and staged whitespace passed. Thirteen actual isolated
+CLI JSON/human/request probes covered bound/current, changed, missing pin,
+historical unknown, unsigned primary and absent list; no private verifier
+fingerprint was exported and --json --request parsed as one object. Fixture
+metadata probes test inspection, not cryptographic signing; genuine signed
+baseline/replacement tests cover authority separately. The own-primary hook
+additionally passed explicit PN/LID/companion exclusions. Hygiene668 local
+links and 2642000 bytes across four unchanged APK checksum bundles passed.
