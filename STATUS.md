@@ -558,3 +558,23 @@ Validation: 568 workspace/all-feature tests, 24 default-feature CLI tests,
 CLI reference regeneration/test, formatting and repository hygiene (374 local
 links) passed. Rebuilt-CLI saved-account inspection exposed the previously
 hidden group type without network I/O, replay or notification application.
+
+
+Group refresh serializer follow-up (2026-10-07, **offline/static**): APK
+37.71 context A05 is truncatable dirty recovery. The concrete `AaH` →
+`Aib` case 25 → `9QE`/`EJy` IQ constructor uses `w:g2`, `type=get`,
+`query[context]` and per-group JID children; the feature-gated alternative
+uses MEX `QueryBatchGetGroups`, `groups` and `request_context`.
+Inherited `0yO.A01` dispatch explains the zero concrete-handler caller result
+and reaches a queued/direct ACK boundary. Complete ACK serialization,
+response/application guards and current feature values remain untraced;
+notification implementation remains unchecked. The disassembler now names the
+literal double multiply/divide used in the memory budget. See
+[request/dispatch evidence](docs/protocol/groups.md#dirty-refresh-request-and-inherited-dispatch-trace-2026-10-07).
+32 xtask tests, strict all-target xtask Clippy and an actual APK re-dump passed.
+No account state was opened or live request sent for this research.
+
+Final checks for this change: generated CLI reference test, all five OpenAPI
+coverage/HTTP/library-symbol checks, formatting, staged whitespace and repository
+hygiene (379 local links) passed. These are local checks, not live group refresh
+validation.

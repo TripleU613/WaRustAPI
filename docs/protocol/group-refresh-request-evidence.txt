@@ -1,0 +1,713 @@
+APK 2.26.37.71 SHA256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed/static request/context/dispatch excerpts; no current-account or live compatibility claim.
+Byte ranges are method-relative; omitted instructions are explicitly marked.
+Reproduce with target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class <class> --method <method>.
+
+
+# class: Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;
+
+.method public A0G(V)  # .registers 23
+    # omitted
+    0020..0026  invoke-static  {}, Ljava/lang/Runtime;->getRuntime(L)
+    0026..0028  move-result-object  v1
+    0028..002e  invoke-virtual  {v1}, Ljava/lang/Runtime;->freeMemory(J)
+    002e..0030  move-result-wide  v1
+    0030..0032  long-to-double  v3, v1
+    0032..003c  const-wide  v1, #0x3fc3333333333333 (4594572339843380019)
+    003c..003e  mul-double/2addr  v3, v1
+    003e..0042  const-wide/high16  v1, #0x404e000000000000
+    0042..0044  div-double/2addr  v3, v1
+    0044..0046  double-to-int  v9, v3
+    0046..004a  const/16  v1, #0x2710
+    004a..004e  if-ge  v9, v1, +0x4
+    004e..0052  const/16  v9, #0x2710
+    # omitted
+    0082..0086  iget-object  v2, v6, LX/8lS;->A00:LX/07t;
+    0086..008a  const/16  v1, #0x187b
+    008a..0090  invoke-virtual  {v2, v1}, LX/00D;->A0b(II)
+    0090..0092  move-result  v1
+    0092..0096  if-gt  v1, v9, +0x3
+    0096..0098  move  v9, v1
+    # omitted
+    01bc..01c0  if-eqz  v3, +0x220
+    01c0..01c4  const/16  v1, #0x344e
+    01c4..01ca  invoke-virtual  {v3, v1}, LX/00D;->A10(ZI)
+    01ca..01cc  move-result  v1
+    01cc..01d0  if-eqz  v1, +0x38
+    01d0..01d4  iget-object  v3, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A00:LX/07t;
+    01d4..01d8  if-eqz  v3, +0x214
+    01d8..01dc  const/16  v1, #0x2a35
+    01dc..01e2  invoke-virtual  {v3, v1}, LX/00D;->A10(ZI)
+    01e2..01e4  move-result  v1
+    01e4..01e8  if-eqz  v1, +0x2c
+    01e8..01ec  iget  v5, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->round:I
+    01ec..01f0  iget  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->params:I
+    01f0..01f4  new-instance  v3, LX/A03;
+    01f4..01fa  invoke-direct  {v3, v5, v1}, LX/A03;-><init>(VII)
+    01fa..01fe  iget-object  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A04:LX/9x2;
+    01fe..0202  if-eqz  v1, +0x1f4
+    0202..0208  invoke-virtual  {v1, v10, v3, v4, v8}, LX/9x2;->A00(VLLLL)
+    0208..020e  invoke-virtual  {v4}, LX/AzY;->get(L)
+    # omitted
+    0252..0254  const/4  v1, #0x2
+    0254..025a  invoke-virtual  {v10}, Ljava/lang/Enum;->ordinal(I)
+    025a..025c  move-result  v3
+    025c..0260  if-eq  v3, v1, +0x60
+    0260..0264  if-eq  v3, v5, +0x5b
+    0264..0266  const/4  v1, #0x1
+    0266..026a  if-eq  v3, v1, +0x55
+    026a..026c  const/4  v1, #0x3
+    026c..0270  if-ne  v3, v1, +0x1c0
+    0270..0274  const-string  v5, "inactive_group_migration"
+    0274..0278  iget-object  v1, v6, LX/9qZ;->A01:LX/05B;
+    0278..027c  iget-object  v1, v1, LX/05B;->A00:LX/00s;
+    027c..0282  invoke-static  {v1}, LX/8kY;->A0s(LL)
+    0282..0284  move-result-object  v3
+    0284..0288  new-instance  v12, LX/AaH;
+    0288..028e  invoke-direct  {v12, v3, v5, v8}, LX/AaH;-><init>(VLLL)
+    028e..0294  invoke-static  {v1}, LX/8kT;->A12(LL)
+    0294..0296  move-result-object  v1
+    0296..029a  iget-object  v5, v6, LX/9qZ;->A00:LX/05B;
+    029a..029e  iget-object  v6, v5, LX/05B;->A00:LX/00s;
+    029e..02a4  invoke-interface  {v6}, LX/00s;->get(L)
+    02a4..02a6  move-result-object  v5
+    02a6..02aa  new-instance  v14, LX/Aov;
+    02aa..02b0  invoke-direct  {v14, v5, v7}, LX/Aov;-><init>(VLI)
+    02b0..02b6  invoke-interface  {v6}, LX/00s;->get(L)
+    02b6..02b8  move-result-object  v6
+    02b8..02bc  const/16  v5, #0xb
+    02bc..02c0  new-instance  v15, LX/Aov;
+    02c0..02c6  invoke-direct  {v15, v6, v5}, LX/Aov;-><init>(VLI)
+    02c6..02ca  const/16  v19, #0x14
+    02ca..02cc  const/4  v5, #0x0
+    02cc..02d2  invoke-static  {v1, v5}, LX/00h;->A0A(VLI)
+    02d2..02d6  iget-object  v5, v12, LX/AaH;->A03:LX/00l;
+    02d6..02dc  invoke-interface  {v5}, LX/00l;->getValue(L)
+    02dc..02de  move-result-object  v5
+    02de..02e2  check-cast  v5, LX/EJy;
+    02e2..02e8  invoke-virtual  {v5}, LX/EJy;->A00(L)
+    02e8..02ea  move-result-object  v17
+    02ea..02ee  const/16  v16, #0x0
+    02ee..02f2  new-instance  v11, LX/9R2;
+    02f2..02f8  invoke-direct/range  {v11..v16}, LX/9R2;-><init>(VLLLLI)
+    02f8..02fc  const-wide/16  v20, #0x7d00
+    02fc..02fe  move-object  v15, v1
+    02fe..0302  move-object/from16  v16, v11
+    0302..0306  move-object/from16  v18, v3
+    0306..030c  invoke-virtual/range  {v15..v21}, LX/0h8;->A0T(ZLLLIJ)
+    # omitted
+    0310..0314  const-string  v5, "per_group_dirty_recovery_truncatable"
+    0314..0316  goto  -0x50
+    0316..031a  const-string  v5, "per_group_dirty_recovery"
+    031a..031c  goto  -0x53
+    031c..0320  const-string  v5, "get_participating_groups_paginated"
+    0320..0322  goto  -0x56
+    # omitted
+.end method
+
+
+# class: LX/8lX;
+
+.method public <clinit>(V)  # .registers 6
+    0000..0004  const-string  v1, "PER_GROUP_DIRTY_RECOVERY"
+    0004..0006  const/4  v0, #0x0
+    0006..000a  new-instance  v5, LX/8lX;
+    000a..0010  invoke-direct  {v5, v1, v0}, LX/8lX;-><init>(VLI)
+    0010..0014  sput-object  v5, LX/8lX;->A04:LX/8lX;
+    0014..0018  const-string  v1, "PER_GROUP_DIRTY_RECOVERY_TRUNCATABLE"
+    0018..001a  const/4  v0, #0x1
+    001a..001e  new-instance  v4, LX/8lX;
+    001e..0024  invoke-direct  {v4, v1, v0}, LX/8lX;-><init>(VLI)
+    0024..0028  sput-object  v4, LX/8lX;->A05:LX/8lX;
+    0028..002c  const-string  v1, "GET_PARTICIPATING_GROUPS_PAGINATED"
+    002c..002e  const/4  v0, #0x2
+    002e..0032  new-instance  v3, LX/8lX;
+    0032..0038  invoke-direct  {v3, v1, v0}, LX/8lX;-><init>(VLI)
+    0038..003c  sput-object  v3, LX/8lX;->A02:LX/8lX;
+    003c..0040  const-string  v0, "INACTIVE_GROUP_MIGRATION"
+    0040..0042  const/4  v2, #0x3
+    0042..0046  new-instance  v1, LX/8lX;
+    0046..004c  invoke-direct  {v1, v0, v2}, LX/8lX;-><init>(VLI)
+    004c..0050  sput-object  v1, LX/8lX;->A03:LX/8lX;
+    0050..0052  const/4  v0, #0x4
+    0052..0056  new-array  v0, v0, [LX/8lX;
+    0056..005c  invoke-static  {v5, v4, v3, v0}, LX/1xk;->A1N(VLLLL)
+    005c..0060  aput-object  v1, v0, v2
+    0060..0064  sput-object  v0, LX/8lX;->A01:[LX/8lX;
+    0064..006a  invoke-static  {v0}, LX/05g;->A00(LL)
+    006a..006c  move-result-object  v0
+    006c..0070  sput-object  v0, LX/8lX;->A00:LX/05j;
+    0070..0072  return-void
+.end method
+
+
+# class: LX/AaH;
+
+.method public <init>(VLLL)  # .registers 5
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>(V)
+    0006..000a  iput-object  v2, v1, LX/AaH;->A01:Ljava/lang/String;
+    000a..000e  iput-object  v3, v1, LX/AaH;->A00:Ljava/lang/String;
+    000e..0012  iput-object  v4, v1, LX/AaH;->A02:Ljava/util/List;
+    0012..0016  const/16  v0, #0x19
+    0016..001c  invoke-static  {v1, v0}, LX/Aib;->A01(LLI)
+    001c..001e  move-result-object  v0
+    001e..0022  iput-object  v0, v1, LX/AaH;->A03:LX/00l;
+    0022..0024  return-void
+.end method
+
+
+# class: LX/AaH;
+
+.method public toString(L)  # .registers 5
+    0000..0004  iget-object  v1, v4, LX/AaH;->A01:Ljava/lang/String;
+    0004..0008  iget-object  v3, v4, LX/AaH;->A00:Ljava/lang/String;
+    0008..000c  iget-object  v2, v4, LX/AaH;->A02:Ljava/util/List;
+    000c..0010  const-string  v0, "BatchGetGroupInfoRequest(iqId="
+    0010..0016  invoke-static  {v0, v1}, LX/000;->A08(LLL)
+    0016..0018  move-result-object  v1
+    0018..001c  const-string  v0, ", context="
+    001c..0022  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    0022..0028  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(LL)
+    0028..002c  const-string  v0, ", groupJids="
+    002c..0032  invoke-static  {v2, v0, v1}, LX/1YP;->A0H(LLLL)
+    0032..0034  move-result-object  v0
+    0034..0036  return-object  v0
+.end method
+
+
+# class: LX/Aib;
+
+.method public A01(LLI)  # .registers 3
+    0000..0004  new-instance  v0, LX/Aib;
+    0004..000a  invoke-direct  {v0, v1, v2}, LX/Aib;-><init>(VLI)
+    000a..0010  invoke-static  {v0}, LX/00k;->A01(LL)
+    0010..0012  move-result-object  v0
+    0012..0014  return-object  v0
+.end method
+
+
+# class: LX/Aib;
+
+.method public invoke(L)  # .registers 14
+    0000..0004  iget  v0, v13, LX/Aib;->$t:I
+    0004..000a  packed-switch  v0, payload@0x9a8, cases=[0:@0x942, 1:@0x924, 2:@0x904, 3:@0x8e4, 4:@0x8c4, 5:@0x8a4, 6:@0x884, 7:@0x85e, 8:@0x81e, 9:@0x7f8, 10:@0x7e0, 11:@0x7c2, 12:@0x7a2, 13:@0x782, 14:@0x750, 15:@0x73e, 16:@0x70c, 17:@0x6da, 18:@0x188, 19:@0x52, 20:@0x6b8, 21:@0x5a6, 22:@0x66a, 23:@0x606, 24:@0x154, 25:@0x546, 26:@0x51c, 27:@0x12c, 28:@0xec, 29:@0x504, 30:@0x4ec, 31:@0x4d4, 32:@0x4bc, 33:@0x422, 34:@0x3f4, 35:@0x3c2, 36:@0x388, 37:@0x33c, 38:@0x326, 39:@0x310, 40:@0x2e6, 41:@0x2cc, 42:@0x2b2, 43:@0x29a, 44:@0xa, 45:@0x270, 46:@0xa, 47:@0x22a, 48:@0x1e8, 49:@0x1ca], default@0xa
+    # omitted
+    0546..054a  iget-object  v5, v13, LX/Aib;->A00:Ljava/lang/Object;
+    054a..054e  check-cast  v5, LX/AaH;
+    054e..0552  iget-object  v0, v5, LX/AaH;->A02:Ljava/util/List;
+    0552..0558  invoke-static  {v0}, LX/0AD;->A0H(LL)
+    0558..055a  move-result-object  v4
+    055a..0560  invoke-interface  {v0}, Ljava/util/List;->iterator(L)
+    0560..0562  move-result-object  v3
+    0562..0568  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext(Z)
+    0568..056a  move-result  v0
+    056a..056e  if-eqz  v0, +0x13
+    056e..0574  invoke-interface  {v3}, Ljava/util/Iterator;->next(L)
+    0574..0576  move-result-object  v2
+    0576..057a  check-cast  v2, LX/1bn;
+    057a..057e  const/16  v1, #0xb
+    057e..0582  new-instance  v0, LX/9QE;
+    0582..0588  invoke-direct  {v0, v2, v1}, LX/9QE;-><init>(VLI)
+    0588..058e  invoke-virtual  {v4, v0}, Ljava/util/AbstractCollection;->add(ZL)
+    058e..0590  goto  -0x16
+    0590..0594  iget-object  v2, v5, LX/AaH;->A01:Ljava/lang/String;
+    0594..0598  iget-object  v1, v5, LX/AaH;->A00:Ljava/lang/String;
+    0598..059a  const/4  v0, #0x4
+    059a..059e  new-instance  v6, LX/EJy;
+    059e..05a4  invoke-direct  {v6, v2, v1, v4, v0}, LX/EJy;-><init>(VLLLI)
+    05a4..05a6  return-object  v6
+    # omitted
+.end method
+
+
+# class: LX/9QE;
+
+.method public <init>(VLI)  # .registers 5
+    0000..0004  iput  v4, v2, LX/9QE;->$t:I
+    0004..0008  const-string  v1, "jid"
+    0008..000a  const/4  v0, #0x0
+    000a..0010  invoke-static  {v3, v0}, LX/00h;->A0A(VLI)
+    0010..0014  rsub-int/lit8  v4, v4, #0xb
+    0014..0018  if-eqz  v4, +0x15
+    0018..001e  invoke-direct  {v2}, Ljava/lang/Object;-><init>(V)
+    001e..0022  const-string  v0, "sub_group_suggestion"
+    0022..0028  invoke-static  {v0}, LX/8kU;->A0m(LL)
+    0028..002a  move-result-object  v0
+    002a..0030  invoke-static  {v3, v0, v1}, LX/8kV;->A1M(VLLL)
+    0030..0036  invoke-virtual  {v0}, LX/0ho;->A01(L)
+    0036..0038  move-result-object  v0
+    0038..003c  iput-object  v0, v2, LX/9QE;->A00:Ljava/lang/Object;
+    003c..003e  return-void
+    003e..0044  invoke-direct  {v2}, Ljava/lang/Object;-><init>(V)
+    0044..0048  const-string  v0, "group"
+    0048..004a  goto  -0x13
+.end method
+
+.method public <init>(VLI)  # .registers 4
+    0000..0004  iput  v3, v1, LX/9QE;->$t:I
+    0004..000a  invoke-direct  {v1}, Ljava/lang/Object;-><init>(V)
+    000a..000e  const-string  v0, "context"
+    000e..0014  invoke-static  {v0}, LX/8kU;->A0m(LL)
+    0014..0016  move-result-object  v0
+    0016..001c  invoke-static  {v0, v2}, LX/8kY;->A1I(VLL)
+    001c..0022  invoke-virtual  {v0}, LX/0ho;->A01(L)
+    0022..0024  move-result-object  v0
+    0024..0028  iput-object  v0, v1, LX/9QE;->A00:Ljava/lang/Object;
+    0028..002a  return-void
+.end method
+
+.method public <init>(VLI)  # .registers 12
+    0000..0004  iput  v11, v9, LX/9QE;->$t:I
+    0004..0006  move-object  v3, v10
+    0006..000c  packed-switch  v11, payload@0xc8, cases=[0:@0x56, 1:@0xc, 2:@0xc, 3:@0xc, 4:@0x8c], default@0xc
+    000c..000e  const/4  v8, #0x0
+    000e..0014  invoke-direct  {v9}, Ljava/lang/Object;-><init>(V)
+    0014..0018  const-string  v0, "description"
+    0018..001e  invoke-static  {v0}, LX/8kU;->A0m(LL)
+    001e..0020  move-result-object  v2
+    0020..0024  const-string  v0, "body"
+    0024..002a  invoke-static  {v0}, LX/8kU;->A0m(LL)
+    002a..002c  move-result-object  v1
+    002c..0030  const-wide/16  v4, #0x1
+    0030..0036  const-wide/32  v6, #0x10000
+    0036..003c  invoke-static/range  {v3..v8}, LX/0hp;->A06(ZLJJZ)
+    003c..003e  move-result  v0
+    003e..0042  if-eqz  v0, +0x5
+    0042..0048  invoke-virtual  {v1, v10}, LX/0ho;->A05(VL)
+    0048..004e  invoke-static  {v1, v2}, LX/8kY;->A0Z(LLL)
+    004e..0050  move-result-object  v0
+    0050..0054  iput-object  v0, v9, LX/9QE;->A00:Ljava/lang/Object;
+    0054..0056  return-void
+    0056..0058  const/4  v8, #0x0
+    0058..005e  invoke-direct  {v9}, Ljava/lang/Object;-><init>(V)
+    005e..0062  const-string  v0, "id_token"
+    0062..0068  invoke-static  {v0}, LX/8kU;->A0m(LL)
+    0068..006a  move-result-object  v1
+    006a..006e  const-wide/16  v4, #0x0
+    006e..0078  const-wide  v6, #0x1fffffffffffff (9007199254740991)
+    0078..007e  invoke-static/range  {v3..v8}, LX/0hp;->A06(ZLJJZ)
+    007e..0080  move-result  v0
+    0080..0084  if-eqz  v0, +0x1f
+    0084..008a  invoke-virtual  {v1, v10}, LX/0ho;->A05(VL)
+    008a..008c  goto  +0x1a
+    008c..0090  const-string  v2, "dhash"
+    0090..0092  const/4  v8, #0x0
+    0092..0098  invoke-direct  {v9}, Ljava/lang/Object;-><init>(V)
+    0098..009c  const-string  v0, "item"
+    009c..00a2  invoke-static  {v0}, LX/8kU;->A0m(LL)
+    00a2..00a4  move-result-object  v1
+    00a4..00a8  const-wide/16  v4, #0x0
+    00a8..00ac  const-wide/16  v6, #0x64
+    00ac..00b2  invoke-static/range  {v3..v8}, LX/0hp;->A06(ZLJJZ)
+    00b2..00b4  move-result  v0
+    00b4..00b8  if-eqz  v0, +0x5
+    00b8..00be  invoke-static  {v1, v2, v10}, LX/8kV;->A1Q(VLLL)
+    00be..00c4  invoke-virtual  {v1}, LX/0ho;->A01(L)
+    00c4..00c6  move-result-object  v0
+    00c6..00c8  goto  -0x3b
+    00c8..00e4  packed-switch-payload  size=5
+.end method
+
+.method public <init>(VLI)  # .registers 8
+    0000..0004  iput  v7, v5, LX/9QE;->$t:I
+    0004..000a  packed-switch  v7, payload@0xe0, cases=[19:@0x4c, 20:@0xa, 21:@0x8e], default@0xa
+    000a..0010  invoke-direct  {v5}, Ljava/lang/Object;-><init>(V)
+    0010..0014  const-string  v0, "reject"
+    0014..001a  invoke-static  {v0}, LX/8kU;->A0m(LL)
+    001a..001c  move-result-object  v4
+    001c..0020  const-wide/16  v2, #0x1
+    0020..0024  const-wide/16  v0, #0x3e8
+    0024..002a  invoke-static  {v6, v2, v3, v0, v1}, LX/0hp;->A07(ZLJJ)
+    002a..002c  move-result  v0
+    002c..0030  if-eqz  v0, +0x52
+    0030..0036  invoke-interface  {v6}, Ljava/util/List;->iterator(L)
+    0036..0038  move-result-object  v1
+    0038..003e  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext(Z)
+    003e..0040  move-result  v0
+    0040..0044  if-eqz  v0, +0x48
+    0044..004a  invoke-static  {v4, v1}, LX/9QE;->A00(VLL)
+    004a..004c  goto  -0x9
+    004c..0052  invoke-direct  {v5}, Ljava/lang/Object;-><init>(V)
+    0052..0056  const-string  v0, "approve"
+    0056..005c  invoke-static  {v0}, LX/8kU;->A0m(LL)
+    005c..005e  move-result-object  v4
+    005e..0062  const-wide/16  v2, #0x1
+    0062..0066  const-wide/16  v0, #0x3e8
+    0066..006c  invoke-static  {v6, v2, v3, v0, v1}, LX/0hp;->A07(ZLJJ)
+    006c..006e  move-result  v0
+    006e..0072  if-eqz  v0, +0x31
+    0072..0078  invoke-interface  {v6}, Ljava/util/List;->iterator(L)
+    0078..007a  move-result-object  v1
+    007a..0080  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext(Z)
+    0080..0082  move-result  v0
+    0082..0086  if-eqz  v0, +0x27
+    0086..008c  invoke-static  {v4, v1}, LX/9QE;->A00(VLL)
+    008c..008e  goto  -0x9
+    008e..0094  invoke-direct  {v5}, Ljava/lang/Object;-><init>(V)
+    0094..0098  const-string  v0, "cancel"
+    0098..009e  invoke-static  {v0}, LX/8kU;->A0m(LL)
+    009e..00a0  move-result-object  v4
+    00a0..00a4  const-wide/16  v2, #0x1
+    00a4..00a8  const-wide/16  v0, #0x3e8
+    00a8..00ae  invoke-static  {v6, v2, v3, v0, v1}, LX/0hp;->A07(ZLJJ)
+    00ae..00b0  move-result  v0
+    00b0..00b4  if-eqz  v0, +0x10
+    00b4..00ba  invoke-interface  {v6}, Ljava/util/List;->iterator(L)
+    00ba..00bc  move-result-object  v1
+    00bc..00c2  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext(Z)
+    00c2..00c4  move-result  v0
+    00c4..00c8  if-eqz  v0, +0x6
+    00c8..00ce  invoke-static  {v4, v1}, LX/9QE;->A00(VLL)
+    00ce..00d0  goto  -0x9
+    00d0..00d6  invoke-virtual  {v4}, LX/0ho;->A01(L)
+    00d6..00d8  move-result-object  v0
+    00d8..00dc  iput-object  v0, v5, LX/9QE;->A00:Ljava/lang/Object;
+    00dc..00de  return-void
+    00de..00e0  nop
+    00e0..00f4  packed-switch-payload  size=3
+.end method
+
+
+# class: LX/EJy;
+
+.method public <init>(VLLLI)  # .registers 12
+    0000..0004  iput  v11, v7, LX/EJy;->$t:I
+    0004..000a  packed-switch  v11, payload@0x214, cases=[3:@0xb0, 4:@0x144], default@0xa
+    # omitted
+    0144..0146  const/4  v3, #0x0
+    0146..0148  const/4  v4, #0x2
+    0148..014e  invoke-direct  {v7}, Ljava/lang/Object;-><init>(V)
+    014e..0150  const/4  v0, #0x4
+    0150..0154  new-array  v2, v0, [Ljava/lang/String;
+    0154..0158  const-string  v0, "get_participating_groups_paginated"
+    0158..015c  aput-object  v0, v2, v3
+    015c..0160  const-string  v1, "inactive_group_migration"
+    0160..0162  const/4  v0, #0x1
+    0162..0166  aput-object  v1, v2, v0
+    0166..016a  const-string  v0, "per_group_dirty_recovery"
+    016a..016e  aput-object  v0, v2, v4
+    016e..0172  const-string  v1, "per_group_dirty_recovery_truncatable"
+    0172..0174  const/4  v0, #0x3
+    0174..017a  invoke-static  {v1, v2, v0}, LX/1xf;->A1J(LLLI)
+    017a..017c  move-result-object  v2
+    017c..0180  iput-object  v2, v7, LX/EJy;->A01:Ljava/lang/Object;
+    0180..0186  invoke-static  {}, LX/8kV;->A0l(L)
+    0186..0188  move-result-object  v4
+    0188..018c  sget-object  v1, LX/9Lp;->A00:LX/9Lp;
+    018c..0190  const-string  v0, "to"
+    0190..0196  invoke-static  {v1, v4, v0}, LX/8kV;->A1M(VLLL)
+    0196..019a  const-string  v1, "xmlns"
+    019a..019e  const-string  v0, "w:g2"
+    019e..01a4  invoke-static  {v4, v1, v0}, LX/8kV;->A1Q(VLLL)
+    01a4..01aa  invoke-static  {}, LX/8kX;->A0T(L)
+    01aa..01ac  move-result-object  v0
+    01ac..01b2  invoke-static  {v0, v4, v8, v3}, LX/8ka;->A0a(VLLLZ)
+    01b2..01b6  const-string  v0, "query"
+    01b6..01bc  invoke-static  {v0}, LX/8kU;->A0m(LL)
+    01bc..01be  move-result-object  v5
+    01be..01c2  const-string  v0, "context"
+    01c2..01c8  invoke-virtual  {v5, v9, v0, v2}, LX/0ho;->A06(VLLL)
+    01c8..01cc  const-wide/16  v2, #0x1
+    01cc..01d0  const-wide/16  v0, #0x2710
+    01d0..01d6  invoke-static  {v10, v2, v3, v0, v1}, LX/0hp;->A07(ZLJJ)
+    01d6..01d8  move-result  v0
+    01d8..01dc  if-eqz  v0, +0x10
+    01dc..01e2  invoke-interface  {v10}, Ljava/util/List;->iterator(L)
+    01e2..01e4  move-result-object  v1
+    01e4..01ea  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext(Z)
+    01ea..01ec  move-result  v0
+    01ec..01f0  if-eqz  v0, +0x6
+    01f0..01f6  invoke-static  {v5, v1}, LX/9QE;->A00(VLL)
+    01f6..01f8  goto  -0x9
+    01f8..01fe  invoke-virtual  {v5}, LX/0ho;->A01(L)
+    01fe..0200  move-result-object  v0
+    0200..0206  invoke-virtual  {v4, v0}, LX/0ho;->A03(VL)
+    0206..020c  invoke-virtual  {v4}, LX/0ho;->A01(L)
+    020c..020e  move-result-object  v0
+    020e..0212  iput-object  v0, v7, LX/EJy;->A00:Ljava/lang/Object;
+    0212..0214  return-void
+    # omitted
+.end method
+
+
+# class: LX/8kV;
+
+.method public A0l(L)  # .registers 2
+    0000..0004  const-string  v1, "iq"
+    0004..0008  new-instance  v0, LX/0ho;
+    0008..000e  invoke-direct  {v0, v1}, LX/0ho;-><init>(VL)
+    000e..0010  return-object  v0
+.end method
+
+
+# class: LX/8kX;
+
+.method public A0T(L)  # .registers 3
+    0000..0004  const-string  v2, "type"
+    0004..0008  const-string  v1, "get"
+    0008..000c  new-instance  v0, LX/0hq;
+    000c..0012  invoke-direct  {v0, v2, v1}, LX/0hq;-><init>(VLL)
+    0012..0014  return-object  v0
+.end method
+
+
+# class: LX/8ka;
+
+.method public A0a(VLLLZ)  # .registers 11
+    0000..0004  const-string  v1, "id"
+    0004..000a  invoke-virtual  {v8, v7}, LX/0ho;->A02(VL)
+    000a..000e  const-wide/16  v3, #0x0
+    000e..0018  const-wide  v5, #0x1fffffffffffff (9007199254740991)
+    0018..001a  move-object  v2, v9
+    001a..001c  move  v7, v10
+    001c..0022  invoke-static/range  {v2..v7}, LX/0hp;->A06(ZLJJZ)
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v0, +0xa
+    0028..002c  new-instance  v0, LX/0hq;
+    002c..0032  invoke-direct  {v0, v1, v9}, LX/0hq;-><init>(VLL)
+    0032..0038  invoke-virtual  {v8, v0}, LX/0ho;->A02(VL)
+    0038..003a  return-void
+.end method
+
+
+# class: LX/9Lp;
+
+.method public <clinit>(V)  # .registers 1
+    0000..0004  new-instance  v0, LX/9Lp;
+    0004..000a  invoke-direct  {v0}, LX/9Lp;-><init>(V)
+    000a..000e  sput-object  v0, LX/9Lp;->A00:LX/9Lp;
+    000e..0012  new-instance  v0, LX/AFQ;
+    0012..0018  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0018..001c  sput-object  v0, LX/9Lp;->CREATOR:Landroid/os/Parcelable$Creator;
+    001c..001e  return-void
+.end method
+
+.method public <init>(V)  # .registers 2
+    0000..0004  const-string  v0, ""
+    0004..000a  invoke-direct  {v1, v0}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(VL)
+    000a..000c  return-void
+.end method
+
+.method public describeContents(I)  # .registers 2
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+.end method
+
+.method public getServer(L)  # .registers 2
+    0000..0004  const-string  v0, "g.us"
+    0004..0006  return-object  v0
+.end method
+
+.method public getType(I)  # .registers 2
+    0000..0004  const/16  v0, #0x10
+    0004..0006  return  v0
+.end method
+
+.method public writeToParcel(VLI)  # .registers 3
+    0000..0006  invoke-static  {v1}, LX/6ap;->A0h(VL)
+    0006..0008  return-void
+.end method
+
+
+# class: LX/9x2;
+
+.method public A00(VLLLL)  # .registers 22
+    0000..0004  move-object/from16  v13, v17
+    0004..0008  iget-object  v3, v13, LX/9x2;->A04:LX/15q;
+    0008..000a  const/4  v12, #0x0
+    000a..0010  invoke-static  {}, LX/3c4;->A0Z(L)
+    0010..0012  move-result-object  v6
+    0012..0018  invoke-static/range  {v21..v21}, LX/0AD;->A0H(LL)
+    0018..001a  move-result-object  v4
+    001a..0020  invoke-interface/range  {v21..v21}, Ljava/util/List;->iterator(L)
+    0020..0022  move-result-object  v5
+    0022..0028  invoke-interface  {v5}, Ljava/util/Iterator;->hasNext(Z)
+    0028..002a  move-result  v0
+    002a..002e  if-eqz  v0, +0x1f
+    002e..0034  invoke-static  {v5}, LX/1xk;->A0S(LL)
+    0034..0036  move-result-object  v0
+    0036..003a  new-instance  v2, LX/2Ew;
+    003a..0040  invoke-direct  {v2}, Lcom/facebook/graphql/calls/GraphQlCallInput;-><init>(V)
+    0040..0046  invoke-static  {v0}, LX/1xn;->A0i(LL)
+    0046..0048  move-result-object  v1
+    0048..004c  const-string  v0, "group_jid"
+    004c..0052  invoke-virtual  {v2, v0, v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A09(VLL)
+    0052..0056  const-string  v1, "INTERACTIVE"
+    0056..005a  const-string  v0, "query_context"
+    005a..0060  invoke-virtual  {v2, v0, v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A09(VLL)
+    0060..0066  invoke-virtual  {v4, v2}, Ljava/util/AbstractCollection;->add(ZL)
+    0066..0068  goto  -0x22
+    0068..006c  move-object/from16  v15, v18
+    006c..0072  invoke-virtual  {v15}, Ljava/lang/Enum;->ordinal(I)
+    0072..0074  move-result  v1
+    0074..0076  const/4  v0, #0x2
+    0076..007a  if-eq  v1, v0, +0x44
+    007a..007c  const/4  v0, #0x1
+    007c..0080  if-eq  v1, v0, +0x3e
+    0080..0084  if-eq  v1, v12, +0x39
+    0084..0086  const/4  v0, #0x3
+    0086..008a  if-ne  v1, v0, +0x3f
+    008a..008e  const-string  v2, "INACTIVE_GROUP_MIGRATION"
+    008e..0092  new-instance  v1, LX/8xE;
+    0092..0098  invoke-direct  {v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;-><init>(V)
+    0098..009c  const-string  v0, "groups"
+    009c..00a2  invoke-virtual  {v1, v0, v4}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(VLL)
+    00a2..00a6  const-string  v0, "request_context"
+    00a6..00ac  invoke-virtual  {v1, v0, v2}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A09(VLL)
+    00ac..00b2  invoke-static  {v1, v6}, LX/8kT;->A1J(VLL)
+    00b2..00b6  const-class  v7, LX/8z9;
+    00b6..00ba  const-string  v10, "whatsapp-android-mex"
+    00ba..00be  const-string  v9, "QueryBatchGetGroups"
+    00be..00c0  const/4  v8, #0x0
+    00c0..00c4  new-instance  v5, LX/J8p;
+    00c4..00c6  move-object  v11, v8
+    00c6..00cc  invoke-direct/range  {v5..v12}, LX/J8p;-><init>(VLLLLLLZ)
+    00cc..00d2  invoke-static  {v5, v3}, LX/1xk;->A0a(LLL)
+    00d2..00d4  move-result-object  v0
+    00d4..00d8  const/16  v16, #0x6
+    00d8..00dc  new-instance  v11, LX/AjS;
+    00dc..00e0  move-object/from16  v14, v19
+    00e0..00e4  move-object/from16  v12, v20
+    00e4..00ea  invoke-direct/range  {v11..v16}, LX/AjS;-><init>(VLLLLI)
+    00ea..00f0  invoke-virtual  {v0, v11}, LX/GAw;->AOJ(VL)
+    00f0..00f2  return-void
+    00f2..00f6  const-string  v2, "PER_GROUP_DIRTY_RECOVERY"
+    00f6..00f8  goto  -0x34
+    00f8..00fc  const-string  v2, "PER_GROUP_DIRTY_RECOVERY_TRUNCATABLE"
+    00fc..00fe  goto  -0x37
+    00fe..0102  const-string  v2, "GET_PARTICIPATING_GROUPS_PAGINATED"
+    0102..0104  goto  -0x3a
+    0104..010a  invoke-static  {}, LX/1xk;->A10(L)
+    010a..010c  move-result-object  v0
+    010c..010e  throw  v0
+.end method
+
+
+# class: LX/0yO;
+
+.method public A00(VLLL)  # .registers 10
+    0000..0002  move-object  v4, v8
+    0002..0008  invoke-interface  {v8}, LX/1B3;->BPe(Z)
+    0008..000a  move-result  v0
+    000a..000e  if-eqz  v0, +0x24
+    000e..0012  iget-object  v0, v7, LX/0yO;->A06:LX/05B;
+    0012..0016  iget-object  v0, v0, LX/05B;->A00:LX/00s;
+    0016..001c  invoke-interface  {v0}, LX/00s;->get(L)
+    001c..001e  move-result-object  v1
+    001e..0022  check-cast  v1, LX/18B;
+    0022..0026  check-cast  v4, LX/1B5;
+    0026..0028  const/4  v3, #0x0
+    0028..002a  const/4  v9, #0x1
+    002a..002e  new-instance  v2, LX/CZF;
+    002e..0030  move-object  v6, v3
+    0030..0032  move-object  v7, v3
+    0032..0034  move-object  v8, v3
+    0034..0036  move-object  v5, v3
+    0036..003c  invoke-direct/range  {v2..v9}, LX/CZF;-><init>(VLLLLLLZ)
+    003c..0042  invoke-static  {v2}, Ljava/util/Collections;->singletonList(LL)
+    0042..0044  move-result-object  v0
+    0044..004a  invoke-static  {v0}, LX/00h;->A06(VL)
+    004a..0050  invoke-virtual  {v1, v0}, LX/18B;->A0C(VL)
+    0050..0052  return-void
+    0052..0056  iget-object  v0, v7, LX/0yO;->A05:LX/05B;
+    0056..005a  iget-object  v0, v0, LX/05B;->A00:LX/00s;
+    005a..0060  invoke-interface  {v0}, LX/00s;->get(L)
+    0060..0062  move-result-object  v0
+    0062..0066  check-cast  v0, LX/0h8;
+    0066..006c  invoke-virtual  {v0, v8, v9}, LX/0h8;->A0N(VLL)
+    006c..006e  return-void
+.end method
+
+
+# class: LX/0h8;
+
+.method public A0N(VLL)  # .registers 4
+    0000..0006  invoke-interface  {v2}, LX/1B3;->BPe(Z)
+    0006..0008  move-result  v0
+    0008..000e  invoke-direct  {v1, v3, v0}, LX/0h8;->A07(VLZ)
+    000e..0010  return-void
+.end method
+
+
+# class: LX/0h8;
+
+.method private A07(VLZ)  # .registers 8
+    0000..0004  if-eqz  v7, +0x2c
+    0004..0008  iget-object  v4, v5, LX/0h8;->A05:LX/0AH;
+    0008..000c  iget-object  v0, v6, LX/Cb1;->A06:Ljava/lang/String;
+    000c..0010  iget-object  v3, v6, LX/Cb1;->A09:Ljava/lang/String;
+    0010..0016  invoke-virtual  {v6}, LX/Cb1;->A01(L)
+    0016..0018  move-result-object  v2
+    0018..001c  new-instance  v1, Ljava/lang/StringBuilder;
+    001c..0022  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>(V)
+    0022..0028  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    0028..002c  const-string  v0, "-"
+    002c..0032  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    0032..0038  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(LL)
+    0038..003e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    003e..0044  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(LL)
+    0044..004a  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    004a..004c  move-result-object  v2
+    004c..004e  const/4  v1, #0x1
+    004e..0052  const-string  v0, "ccq_android_ack_bypassed"
+    0052..0058  invoke-virtual  {v4, v0, v2, v1}, LX/0AH;->A0g(VLLZ)
+    0058..005c  iget-object  v1, v5, LX/0h8;->A04:LX/07t;
+    005c..0060  iget-object  v0, v5, LX/0h8;->A05:LX/0AH;
+    0060..0066  invoke-static  {v1, v0, v6}, LX/1q7;->A03(LLLL)
+    0066..0068  move-result-object  v0
+    0068..006e  invoke-static  {v0}, LX/00h;->A06(VL)
+    006e..0074  invoke-virtual  {v5, v0}, LX/0h8;->A0S(ZL)
+    0074..0076  return-void
+.end method
+
+
+# class: LX/1q7;
+
+.method public A03(LLLL)  # .registers 11
+    0000..0004  iget-wide  v5, v10, LX/Cb1;->A00:J
+    0004..000a  invoke-virtual  {v10}, LX/Cb1;->A02(Z)
+    000a..000c  move-result  v7
+    000c..0010  iget-object  v2, v10, LX/Cb1;->A06:Ljava/lang/String;
+    0010..0016  invoke-virtual  {v10}, LX/Cb1;->A01(L)
+    0016..0018  move-result-object  v3
+    0018..001c  iget-object  v4, v10, LX/Cb1;->A08:Ljava/lang/String;
+    001c..001e  move-object  v0, v8
+    001e..0020  move-object  v1, v9
+    0020..0026  invoke-static/range  {v0..v7}, LX/1q7;->A08(VLLLLLJZ)
+    0026..0028  const/4  v2, #0x0
+    0028..002c  const/16  v1, #0x4c
+    002c..002e  const/4  v0, #0x0
+    002e..0034  invoke-static  {v0, v2, v1, v2, v10}, Landroid/os/Message;->obtain(LLIIIL)
+    0034..0036  move-result-object  v0
+    0036..0038  return-object  v0
+.end method
+
+
+# class: LX/0yO;
+
+.method public A01(VLLLLI)  # .registers 21
+    # omitted
+    0146..014a  iget-object  v0, v2, LX/Cb1;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    014a..014e  iput-object  v0, v4, LX/0yO;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    014e..0152  iget-object  v0, v2, LX/Cb1;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    0152..0156  iput-object  v0, v4, LX/0yO;->A00:Lcom/whatsapp/infra/core/jid/Jid;
+    # omitted
+    0206..020c  invoke-virtual  {v4, v9, v8}, LX/0yO;->A09(VLI)
+    020c..020e  goto  +0x45
+    # omitted
+    029e..02a0  move-result-object  v1
+    02a0..02a4  check-cast  v1, LX/CUu;
+    02a4..02a8  if-eqz  v1, +0x57
+    02a8..02ac  iget-object  v2, v1, LX/CUu;->A01:LX/Cb1;
+    02ac..02b0  iget-object  v0, v4, LX/0yO;->A0A:Ljava/util/Map;
+    02b0..02b6  invoke-interface  {v0, v2}, Ljava/util/Map;->containsKey(ZL)
+    02b6..02b8  move-result  v0
+    02b8..02bc  if-nez  v0, +0x4d
+    02bc..02c0  iget-object  v0, v1, LX/CUu;->A00:LX/1B3;
+    02c0..02c6  invoke-static  {v4, v0, v2}, LX/0yO;->A00(VLLL)
+    02c6..02ca  iget-object  v1, v4, LX/0yO;->A0B:Ljava/util/Map;
+    02ca..02ce  iget-object  v0, v2, LX/Cb1;->A08:Ljava/lang/String;
+    02ce..02d4  invoke-interface  {v1, v0}, Ljava/util/Map;->remove(LL)
+    02d4..02d6  return-void
+    # omitted
+.end method

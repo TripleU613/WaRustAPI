@@ -179,3 +179,26 @@ field-number symbols. Current `DA8.AD7` at `0068..006c` reads
 `BV6.BOT_HISTORY_SHARE_SYNC_METADATA_FIELD_NUMBER`. The tool reads descriptors,
 not dex encoded static values; that implementation choice must not be presented
 as absence of constants in the APK.
+
+
+### Group-fetch double arithmetic names (2026-10-07)
+
+**Confirmed/static, APK 2.26.37.71** (SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`):
+`FetchTruncatedGroupsJob.A0G` 003c..0044 contains literal instruction bytes
+`cd13 19014e40 ce13`. The [AOSP Dalvik table](https://source.android.com/docs/core/runtime/dalvik-bytecode)
+identifies cd as `mul-double/2addr` and ce as `div-double/2addr`, both 12x.
+Existing register/width decoding already handled them; the missing names
+made the otherwise decoded operations look opaque. The correction changes
+only mnemonic rendering. A literal APK regression checks both registers,
+three instruction offsets/widths and every truncated prefix.
+
+Reproduce with `cargo run --locked -p xtask -- apk-smali
+~/Downloads/WhatsApp.apk --class FetchTruncatedGroupsJob --method A0G`.
+The rebuilt tool rendered `mul-double/2addr v3, v1` at 003c and
+`div-double/2addr v3, v1` at 0042. The surrounding constants establish the
+memory-budget formula, recorded with its feature-cap unknown in
+[groups](groups.md#dirty-refresh-request-and-inherited-dispatch-trace-2026-10-07).
+[Scoped instruction evidence](group-refresh-request-evidence.txt) retains the
+method context. All 32 xtask tests and strict all-target xtask Clippy passed.
+This is offline tooling, not a runtime group-query capability or live validation.

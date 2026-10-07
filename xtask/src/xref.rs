@@ -369,6 +369,10 @@ fn opcode_name(op: u8) -> &'static str {
         0xc0 => "and-long/2addr",
         0xc1 => "or-long/2addr",
         0xc3 => "shl-long/2addr",
+        // APK 37.71 FetchTruncatedGroupsJob.A0G 003c/0042: memory budget.
+        // AOSP Dalvik bytecode table: cd/ce are 12x double binary operations.
+        0xcd => "mul-double/2addr",
+        0xce => "div-double/2addr",
         0xd0 => "add-int/lit16",
         0xd1 => "rsub-int",
         0xd2 => "mul-int/lit16",
@@ -2137,6 +2141,33 @@ mod tests {
             decoded.iter().map(|v| v.width).collect::<Vec<_>>(),
             [2, 2, 2]
         );
+    }
+
+    #[test]
+    fn decodes_group_fetch_memory_budget_double_operations() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // Literal instruction extents at APK 37.71 job A0G 003c..0044:
+        // multiply v3 by v1, load double 60 into v1, then divide v3 by v1.
+        let bytes = [0xcd, 0x13, 0x19, 0x01, 0x4e, 0x40, 0xce, 0x13];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded.len(), 3);
+        assert_eq!(decoded[0].mnemonic, "mul-double/2addr");
+        assert_eq!(decoded[0].annotation, "v3, v1");
+        assert_eq!(decoded[1].mnemonic, "const-wide/high16");
+        assert_eq!(decoded[2].mnemonic, "div-double/2addr");
+        assert_eq!(decoded[2].annotation, "v3, v1");
+        assert_eq!(
+            decoded.iter().map(|v| v.byte_off).collect::<Vec<_>>(),
+            [0, 2, 6]
+        );
+        assert_eq!(
+            decoded.iter().map(|v| v.width).collect::<Vec<_>>(),
+            [1, 2, 1]
+        );
+        for end in 0..bytes.len() {
+            let _ = decode_insns(&bytes[..end], &dex);
+        }
     }
 
     #[test]

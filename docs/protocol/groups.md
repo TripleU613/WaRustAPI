@@ -1094,3 +1094,102 @@ Validation: 568 workspace/all-feature tests, 24 default-feature CLI tests,
 CLI reference regeneration/test, formatting and repository hygiene (374 local
 links) passed. Rebuilt-CLI saved-account inspection exposed the previously
 hidden group type without network I/O, replay or notification application.
+
+
+## Dirty refresh request and inherited dispatch trace (2026-10-07)
+
+**Confirmed/static, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Scoped method evidence](group-refresh-request-evidence.txt) preserves the
+context, concrete request constructors, arithmetic and inherited ACK boundary.
+This follow-up resolves the preceding serializer and opaque-opcode unknowns;
+it does not establish current feature settings or implement notification handling.
+
+`8lX.<clinit>` maps ordinal 0/A04 to PER_GROUP_DIRTY_RECOVERY (0000..0014),
+1/A05 to PER_GROUP_DIRTY_RECOVERY_TRUNCATABLE (0014..0028), 2/A02 to
+GET_PARTICIPATING_GROUPS_PAGINATED (0028..003c), and 3/A03 to
+INACTIVE_GROUP_MIGRATION (003c..0050). The previously traced `0yv.A09`
+`groups_dirty` branch (6548..6570) uses A05, so its context is specifically
+truncatable dirty recovery. Constructor `params=3` is a stored job argument,
+not evidence of a wire attribute. Its supplied round is not traced upstream.
+
+**Confirmed/static participant budget:** `FetchTruncatedGroupsJob.A0G`
+0020..0046 converts `Runtime.freeMemory()` to double, multiplies by the
+literal double 0.15, divides by double 60, then narrows to int. 0046..0052
+floors this memory-derived budget at 10000; 0082..0098 caps it using feature
+0x187b. The formula before the feature cap is therefore
+`max(10000, int(freeMemory * 0.15 / 60))`. This is APK code, not a measurement
+of our account, a known server limit or a recommendation for our runtime.
+The disassembler now names cd/ce at 003c/0042; its previous opaque rendering
+was a tooling limitation, not an unknown Dalvik operation.
+
+**Confirmed/static IQ branch:** the job creates `AaH(iqId, context,
+groupJids)` at 0288..028e, obtains its lazy packet at 02d2..02ea and sends via
+`0h8.A0T` at 02ee..030c. `AaH.<init>` 0006..0022 stores these values and
+selects `Aib` case 25; `AaH.toString` explicitly names them.
+`Aib.A01` creates the lazy wrapper. `Aib.invoke` case 25 (0546..05a6)
+constructs one `9QE(groupJid, 11)` per entry, then
+`EJy(iqId, context, entries, 4)`. `9QE.<init>(VLI)` selector 11
+(0010..0018,003e..004a, shared 0018..003e) builds `group` with `jid`.
+`EJy.<init>(VLLLI)` selector 4 (0144..0214) builds:
+
+- an `iq` root, a `to` attribute containing `9Lp.A00`, `xmlns=w:g2`,
+  `type=get`, and an ID through `8ka.A0a`;
+- a `query` child with `context` selected from
+  `per_group_dirty_recovery`, `per_group_dirty_recovery_truncatable`,
+  `get_participating_groups_paginated`, `inactive_group_migration`;
+- the per-group children, after `0hp.A07(entries, 1, 10000)`.
+
+`8kV.A0l` 0000..0010 confirms the root tag; `8kX.A0T` 0000..0012
+confirms `type=get`. `9Lp.<init>` constructs an empty-user JID and
+`getServer` returns `g.us`; its exact raw-string encoder has not been traced
+here. `8ka.A0a` 000a..0028 calls the ID guard with 0..9007199254740991
+and `false`, then emits `id` at 0028..0038 when the guard returns true.
+**Unknown:** the full ID/list guard semantics (including error behavior),
+actual generated ID, current list size, complete response parser and
+membership/application guards. Passing bounds to a guard is not proof of its
+refusal behavior. **Negative:** `9qZ` has only a constructor in the scoped
+lookup; its presence as a dependency is not the concrete request serializer.
+`EJy.A00` is a getter, not the constructor recovered above.
+
+**Confirmed/static MEX branch:** feature 0x344e then 0x2a35 selects
+`9x2.A00` at job 01bc..0208. `9x2.A00` 001a..0068 creates each entry with
+`group_jid` and `query_context=INTERACTIVE`. Its ordinal mapping
+(0068..008a,00f2..0102) selects the uppercase enum name for
+`request_context`; 0098..00b2 assembles `groups` and `request_context`.
+00b2..00d2 builds the `QueryBatchGetGroups` operation with caller
+`whatsapp-android-mex`, class `8z9`, and dispatches through `1xk.A0a`;
+00d4..00ea installs an `AjS` callback. **Unknown:** operation/document ID,
+complete MEX envelope, response validation and active feature values. These
+strings do not establish a HTTP route or justify guessing a GraphQL request.
+
+**Confirmed/static inherited handler ordering:** `0yO.A01` invokes the
+virtual `A09` at 0206..020c, explaining the earlier zero exact callers of
+concrete `0yv.A09`. On the traced normal path it subsequently checks the
+pending `CUu` and map state, then calls `0yO.A00` at 02c0..02c6.
+`0yO.A00` branches on handler `BPe`: one path queues `CZF` through
+`18B.A0C` (0012..0050), the other calls `0h8.A0N` (0052..006c).
+`0h8.A0N` passes `1B3.BPe()` into `A07`. `A07` optionally records
+`ccq_android_ack_bypassed` telemetry (0000..0058), then calls `1q7.A03`
+(0058..0068) and sends through `A0S` (006e..0074).
+
+**Negative/unknown ACK boundary:** `1q7.A03` reads `Cb1` metadata, calls
+`A08`, then creates an Android message with selector 0x4c (0028..0038).
+It is not the binary ACK serializer. That selector's send handler and the
+`Cb1` to wire-node mapping remain untraced. Current `BPe` values, exception
+paths and complete pending/map behavior are unknown. Do not implement group
+notification ACK attributes from this intermediate object or infer that every
+notification receives an unconditional immediate ACK.
+
+**Current client boundary:** no dirty-refresh request, notification application
+or new ACK was added here. Saved captures, identities, keys and reservations
+remain intact; no account was opened and no live request was made for this
+trace. The next implementation needs the actual response/application and
+wire ACK evidence, with durable-before-ACK, membership and duplicate guards.
+Validation: 32 xtask tests and strict all-target xtask Clippy passed; the rebuilt
+tool names both instructions at the actual APK method offsets.
+
+Final checks for this change: generated CLI reference test, all five OpenAPI
+coverage/HTTP/library-symbol checks, formatting, staged whitespace and repository
+hygiene (379 local links) passed. These are local checks, not live group refresh
+validation.
