@@ -188,6 +188,19 @@ Usage: whatsapp-cli peer-keys [OPTIONS]...
 | --show | SHOW | no |  |  | `true`, `false` | Inspect the latest saved response and pin matches without queueing |
 | --refresh | REFRESH | no |  |  | `true`, `false` | Queue one fresh query only after a verified successful prior bundle |
 
+## whatsapp-cli peer-identity-query
+
+Queue or inspect one primary identity-only directory read (offline; no key adoption)
+
+```
+Usage: whatsapp-cli peer-identity-query [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --chat | CHAT | yes |  |  |  | Primary PN or LID chat JID, never printed in output |
+| --show | SHOW | no |  |  | `true`, `false` | Inspect saved evidence without queueing or changing pins |
+
 ## whatsapp-cli actions
 
 Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted)

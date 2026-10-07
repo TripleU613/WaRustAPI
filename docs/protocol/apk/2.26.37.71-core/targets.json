@@ -21,6 +21,21 @@
       "crates/whatsapp-api/src/transport/peer_keys.rs"
     ]
   },
+  "adv-companion-identity-validation": {
+    "anchors": [
+      "DeviceADVInfoHandler/verifySignature/fail to verify account signature",
+      "DeviceADVInfoHandler/verifySignature/fail to verify device signature"
+    ],
+    "class": "LX/11T;",
+    "file": "adv-companion-identity-validation.txt",
+    "method_filter": "A0D",
+    "method_shorty": "ZLLLBIZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_query.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
   "adv-contact-add-notification": {
     "anchors": [
       "SyncDeviceNotificationRunnable/verifyADVIndexList/no key index list in device add notification"
@@ -231,6 +246,17 @@
       "crates/whatsapp-api/src/transport/peer_keys.rs"
     ]
   },
+  "adv-identity-success-event": {
+    "class": "LX/AhK;",
+    "file": "adv-identity-success-event.txt",
+    "method_filter": "run",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_query.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
   "adv-primary-identity-commit": {
     "anchors": [
       "saveIdentityInternal"
@@ -270,6 +296,35 @@
     "methods": 1,
     "rust_files": [
       "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
+  "adv-public-key-parser": {
+    "anchors": [
+      "Bad key type: ",
+      "Invalid byte array"
+    ],
+    "class": "LX/B7H;",
+    "file": "adv-public-key-parser.txt",
+    "method_filter": "A02",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_query.rs",
+      "crates/whatsapp-api/src/signal/adv.rs"
+    ]
+  },
+  "adv-typed-public-key": {
+    "anchors": [
+      "DeviceVerificationUtil/generatePublicIdentityKey invalidKeyException"
+    ],
+    "class": "LX/11T;",
+    "file": "adv-typed-public-key.txt",
+    "method_filter": "A02",
+    "method_shorty": "LLB",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_query.rs",
       "crates/whatsapp-api/src/signal/adv.rs"
     ]
   },

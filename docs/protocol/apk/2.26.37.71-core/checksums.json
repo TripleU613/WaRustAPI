@@ -7,6 +7,10 @@
     "bytes": 79978,
     "sha256": "9ff36890c0e97f833f033a18824457d592dbfe394413675615b91ce400b73557"
   },
+  "adv-companion-identity-validation.txt": {
+    "bytes": 49812,
+    "sha256": "32f4461947aad166398e84d99242fe745b40638fbe729f24e7fa9b4bcfa22003"
+  },
   "adv-contact-add-notification.txt": {
     "bytes": 5929,
     "sha256": "5a5d0bdfa5d29e9506c35047e640f48b3caecf65da202bc9f2f1312db2a9ba11"
@@ -71,6 +75,10 @@
     "bytes": 149286,
     "sha256": "1f12a4d07efbe6c258f89bc38ba3e052c084829f8f077511d633ce42de0e8aea"
   },
+  "adv-identity-success-event.txt": {
+    "bytes": 52120,
+    "sha256": "99a0259181ec7f640a1eae9deeb542adb2249da406adf9d715e087be1a330b3e"
+  },
   "adv-primary-identity-commit.txt": {
     "bytes": 9288,
     "sha256": "844ae1addcebd8a3fa4d80196ee941009ee64c55a3e7238c01df841bb9842302"
@@ -82,6 +90,14 @@
   "adv-primary-session-removal.txt": {
     "bytes": 3531,
     "sha256": "059b61c9205eb05b4f42cd555801a83d51ed4a1abebfbac0473c4404d26f1a0f"
+  },
+  "adv-public-key-parser.txt": {
+    "bytes": 1583,
+    "sha256": "f099664bd90246c75bb726408753bdc96ad1fe27251e068f934cbf3155018e5c"
+  },
+  "adv-typed-public-key.txt": {
+    "bytes": 1177,
+    "sha256": "a36a06df6564c3fe46da9aaddb2e27a8c201ae90ddfddbd4389e57db5a7f08af"
   },
   "certificate-root.txt": {
     "bytes": 1386,
@@ -176,8 +192,8 @@
     "sha256": "82590b7944e627c71d4a54e3403be84e314598ced8789812c7c6951470853c92"
   },
   "targets.json": {
-    "bytes": 15931,
-    "sha256": "f45c9ff2afde97ccf0e1ebdfbdd972e7209689328f5df2746f16ea130bfc20c5"
+    "bytes": 17544,
+    "sha256": "c8d5b88e1ffe74428b92d4af4d161fd4170373416ef4ded0507f5d4d4658f344"
   },
   "token-dictionary-initializer.txt": {
     "bytes": 159791,

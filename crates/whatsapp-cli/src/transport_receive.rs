@@ -635,6 +635,41 @@ pub(super) fn peer_keys(
     Ok(())
 }
 
+pub(super) fn peer_identity_query(cli: &super::Cli, chat: &str, show: bool) -> Result<(), Error> {
+    let peer = whatsapp_api::model::jid::Jid::parse(chat)
+        .map_err(|_| Error::invalid("identity_query", "invalid chat JID"))?;
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let value = if show {
+        serde_json::to_value(whatsapp_api::transport::identity_query::inspect(
+            &store, &peer,
+        )?)
+        .map_err(|_| Error::invalid("identity_query", "cannot encode inspection"))?
+    } else {
+        serde_json::json!({"action_id":whatsapp_api::transport::identity_query::queue(&store, &peer)?})
+    };
+    if !cli.json {
+        println!(
+            "peer identity query: {}; pins and sessions preserved",
+            if show {
+                "saved identity-only evidence; not human verification"
+            } else {
+                "queued or saved ID; listen transmits queued reads once"
+            }
+        );
+    }
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&value)
+            .map_err(|_| Error::invalid("identity_query", "cannot encode result"))?
+    );
+    Ok(())
+}
+
 pub(super) fn peer_identity(cli: &super::Cli, chat: &str) -> Result<(), Error> {
     let peer = whatsapp_api::model::jid::Jid::parse(chat)
         .map_err(|_| Error::invalid("peer_identity", "invalid chat JID"))?;

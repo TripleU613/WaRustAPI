@@ -287,6 +287,16 @@ enum Cmd {
         #[arg(long)]
         refresh: bool,
     },
+    /// Queue or inspect one primary identity-only directory read (offline; no key adoption).
+    #[cfg(feature = "experimental-transport")]
+    PeerIdentityQuery {
+        /// Primary PN or LID chat JID, never printed in output.
+        #[arg(long)]
+        chat: String,
+        /// Inspect saved evidence without queueing or changing pins.
+        #[arg(long)]
+        show: bool,
+    },
     /// Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Actions {
@@ -1530,6 +1540,10 @@ async fn run(cli: Cli) -> Result<(), Error> {
             show,
             refresh,
         } => transport_receive::peer_keys(&cli, chat, *show, *refresh),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::PeerIdentityQuery { chat, show } => {
+            transport_receive::peer_identity_query(&cli, chat, *show)
+        }
         #[cfg(feature = "experimental-transport")]
         Cmd::Actions { show } => transport_receive::actions_status(&cli, show.as_deref()),
         #[cfg(feature = "experimental-transport")]

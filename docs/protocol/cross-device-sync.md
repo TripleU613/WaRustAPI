@@ -1290,10 +1290,12 @@ change, account reset or new key adoption was performed.
   full session/group mutation and all transaction boundaries. This is peer
   companion cleanup, not permission to reset our account or rotate identity.
 
-**Implementation gap / next action:** current `peer-keys` uses a full signed
+**Implementation gap at this trace:** `peer-keys` uses a full signed
 prekey-bundle reply and cannot stand in for this `encrypt/identity` read.
 Failed ADV candidates currently remain durable and deferred; Rust does not
-perform the APK's identity-only recovery. Trace the remaining identity type,
+perform automatic APK identity-only recovery. The subsequent
+[primary query staging](#primary-identity-only-query-2026-10-07) implements
+the distinct explicit read without adoption. Trace the remaining identity type,
 companion verification and continuation helpers before implementing a distinct
 bounded, correlated identity read and authenticated application policy. The
 existing strict verifier also still lacks supplied-key candidate application,
@@ -1309,3 +1311,96 @@ fields intentionally differ by output directory, so whole-JSON equality is not
 claimed. All cached file checksums were verified by the diff command. The
 58 xtask tests and regenerated CLI reference passed. This is source/research
 validation, not live recovery or whole-APK semantic equivalence.
+
+## Primary identity-only query (2026-10-07)
+
+**Confirmed static**, APK **2.26.37.71** (same exact SHA-256 as the preceding
+trace): [B7H.A02](apk/2.26.37.71-core/adv-public-key-parser.txt)
+`0008..003c` requires at least 33 encoded bytes, accepts only type **5**, and
+copies the first **32** public bytes after the type. Extra trailing bytes are
+ignored. [11T.A02](apk/2.26.37.71-core/adv-typed-public-key.txt) prefixes the
+supplied type byte, delegates to that parser and returns null on invalid-key
+exception (`0000..003c`). This resolves the earlier key-shape unknown; it is
+not evidence of signature validity or human trust.
+
+[11T.A0D](apk/2.26.37.71-core/adv-companion-identity-validation.txt)
+confirms that companion identities require ADV processing. It permits an
+already-held identical device key on one early branch (`0088..00ec`), treats
+in-progress login separately (`00ec..010e`), and otherwise requires ADV and
+identity material. It parses Grz/GsB and selects a supplied account-signature
+key or existing primary (`0160..01cc`). The account signature covers the
+selected account prefix + serialized details + companion public bytes
+(`024c..02ca`); the device signature covers its prefix + details + companion
+bytes + primary public bytes (`02cc..0308`). **Both** B7H.A09 checks must pass
+(`030a..0374`); account/device encryption-type compatibility is checked before
+that. Teardown, self/remote, raw-ID and stored-account-type branches follow;
+these complete mutation policies remain **unported/unverified**. Do not adopt
+companions merely because a `device-identity` node exists.
+
+[AhK.run](apk/2.26.37.71-core/adv-identity-success-event.txt), case **7**,
+resolves the device's user, selects event 0MN.A03 and argument 1, then invokes
+ATU.A00 (`0dba..0dea`, `0e2e..0e3c`). **Unknown:** complete event consumers,
+receive replay behavior and downstream session cleanup. The handler does not
+itself prove that saving a returned identity immediately recovers receiving.
+
+**Implemented local staging:** `peer-identity-query --chat <primary-PN-or-LID>`
+queues one APK-shaped encrypt/identity/user read using the existing durable
+one-shot action actor. Repeats reuse the same ID even after refusal, malformed
+reply or uncertain write; no refresh/reset exists. `--show` only inspects the
+saved correlated evidence. It validates the IQ ID/type, exactly one matching
+requested primary user, unique type/identity children and the APK key-shape
+rules. Extra/duplicate/foreign user rows produce a fixed `user_set` failure;
+those ambiguity guards are **local invariants**, not claimed APK wire rules.
+Byte and UTF-8 text node bodies are both supported because the binary decoder
+can represent raw strings as text. Root/per-user refusal codes remain explicit;
+raw error text is never emitted and no wait duration is invented.
+
+The redacted result reports queued / outcome_unknown / server_refused /
+invalid_reply / primary_identity_received, fixed envelope/user_set/type/key
+failure, optional recognized error code, SHA-256 diagnostic fingerprint of the
+canonical 33-byte public identity, exact-namespace pin match and optional ADV
+node presence. These hashes are not native safety numbers. Missing pin gives
+null; PN/LID aliases are not guessed. Saved raw-32-byte pins are normalized
+for comparison only. Inspection is a single read transaction and never writes
+pins, sessions, device lists, events, verification or chat intents.
+
+**Remaining implementation gap:** this is the distinct normal request and
+reproducible inspection needed before wiring automatic ADV-failure recovery.
+It does not yet queue automatically on failure, apply returned identities,
+verify companions, implement account sync, or reproduce the downstream event
+and cleanup policies. The existing full `peer-keys` path remains separate.
+Returned primary keys are directory evidence, not independently signed-prekey
+proof; no automatic key adoption or new identity-change authority was added.
+
+**Offline validation:** four regressions cover once-only request shape and
+uncertain write/refused/malformed reuse, wrong correlation, duplicate/foreign
+users, type/length/trailing-byte semantics, Text/Bytes body parity, exact LID
+and raw pin normalization, secret-free failure output, inspection immutability
+and encrypted-store reopen with prior pin/session/device history preserved.
+Synthetic arbitrary pin/session bytes test preservation, not cryptographic
+session validity. No live failure recovery is established by these tests.
+
+**Observed live (2026-10-07):** one existing-peer identity-only read was queued
+with no eligible chat sends, queued actions, pending receipts or device work.
+A bounded 20-second saved-account receive session returned cleanly. The new
+one-shot action settled `ok`; inspection reported `primary_identity_received`,
+failure/code null, `pin_matches=false`, `device_identity_present=false`.
+A separate offline cross-check matched its canonical fingerprint to the already
+saved `peer-keys` **verified_bundle** with a valid signed prekey. This agreement
+is not a signature on the identity-only reply and does not authorize an alias
+transfer or pin replacement. Exact peer pin/session inspection, outbox, receipts
+and all prior actions stayed unchanged. Repeating queue returned the original
+selector locally without creating another action or session. Private evidence
+is indexed by `lab/releases/identity-query-live/active.json`; no raw keys,
+addresses or reply bodies are exported. No chat send, key adoption, automatic
+ADV-failure recovery or live companion handling was tested.
+
+**Validation:** 662 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target Clippy and warning-free Rustdoc passed. CLI reference and
+API symbol/command coverage passed after regeneration. The first workspace run
+found a stale reference because it ran before the parallel regeneration;
+regeneration followed by a fresh workspace run resolved it. Four newly selected
+APK methods expand the core to 47 topics / 176 methods, 52 files / 1,439,603
+bytes. Cached diff against the preserved previous core took 0.053777 seconds:
+four added topics, all 43 existing topics unchanged, manifest/inventory/tokens
+unchanged, targets updated; checksums verified. No whole-APK equivalence claim.

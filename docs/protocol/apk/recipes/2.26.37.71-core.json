@@ -460,6 +460,54 @@
         "never remove primary device.",
         "only remove device for others"
       ]
+    },
+    "adv-public-key-parser": {
+      "class": "LX/B7H;",
+      "method": "A02",
+      "method_shorty": "LL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs",
+        "crates/whatsapp-api/src/signal/adv.rs"
+      ],
+      "anchors": [
+        "Bad key type: ",
+        "Invalid byte array"
+      ]
+    },
+    "adv-typed-public-key": {
+      "class": "LX/11T;",
+      "method": "A02",
+      "method_shorty": "LLB",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs",
+        "crates/whatsapp-api/src/signal/adv.rs"
+      ],
+      "anchors": [
+        "DeviceVerificationUtil/generatePublicIdentityKey invalidKeyException"
+      ]
+    },
+    "adv-companion-identity-validation": {
+      "class": "LX/11T;",
+      "method": "A0D",
+      "method_shorty": "ZLLLBIZ",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs",
+        "crates/whatsapp-api/src/signal/adv.rs"
+      ],
+      "anchors": [
+        "DeviceADVInfoHandler/verifySignature/fail to verify account signature",
+        "DeviceADVInfoHandler/verifySignature/fail to verify device signature"
+      ]
+    },
+    "adv-identity-success-event": {
+      "class": "LX/AhK;",
+      "method": "run",
+      "method_shorty": "V",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs",
+        "crates/whatsapp-api/src/signal/adv.rs"
+      ],
+      "anchors": []
     }
   }
 }

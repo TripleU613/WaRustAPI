@@ -1066,3 +1066,21 @@ explicitly preserving the primary. Remaining key-type/companion verifier,
 continuation and cleanup internals are unknown; current full peer-keys queries
 are not identity-only recovery. No account or live request changed.
 [Source and limits](cross-device-sync.md#adv-identity-follow-up-and-raw-id-cleanup-2026-10-07).
+
+Primary identity-only read staging (2026-10-07): peer-identity-query queues the
+APK 37.71 encrypt/identity read once; --show classifies saved primary PN/LID
+public-key evidence with exact namespace pin match and redacted failures.
+B7H type 5 / first 32 key bytes and companion dual-signature checks are traced.
+Four offline regressions preserve state and uncertain/refused IDs. Automatic
+ADV-failure scheduling, key adoption, companion policy and downstream success
+event/session recovery remain unfinished; presence is not verification.
+[Evidence and usage](cross-device-sync.md#primary-identity-only-query-2026-10-07).
+
+Identity-only read live validation (2026-10-07): one bounded 20-second session
+settled the existing-peer query ok / primary_identity_received, null failure/code,
+PN pin match false and no device-identity node. Returned public identity matched
+an already saved verified full bundle in an offline cross-check. No pin/session,
+outbox/receipt/prior-action change or chat send; repeat reuses the original ID.
+This validates the read, not adoption or automatic ADV-failure recovery.
+662 workspace/all-feature tests, 24 default CLI tests, strict Clippy/Rustdoc and
+CLI/API coverage passed; core cached diff is 0.053777 seconds.

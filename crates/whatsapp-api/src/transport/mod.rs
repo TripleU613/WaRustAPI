@@ -77,6 +77,12 @@ pub mod history_notice;
     feature = "experimental-transport"
 ))]
 pub mod identity_conflicts;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod identity_query;
 pub mod participant_hash;
 #[cfg(all(
     feature = "experimental-signal-crypto",

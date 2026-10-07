@@ -3231,6 +3231,81 @@
             "description": "Saved signed-list verification is bound to the current raw primary key. Not human verification, full inventory or companion-key trust."
           }
         }
+      },
+      "IdentityQueryInspection": {
+        "type": "object",
+        "description": "Read-only correlated primary identity evidence; no keys or addresses exposed.",
+        "required": [
+          "action_id",
+          "status",
+          "failure",
+          "server_error_code",
+          "fingerprint",
+          "pin_matches",
+          "device_identity_present"
+        ],
+        "properties": {
+          "action_id": {
+            "type": "string",
+            "description": "Original once-only action selector."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "outcome_unknown",
+              "server_refused",
+              "invalid_reply",
+              "primary_identity_received"
+            ],
+            "description": "Identity-only read lifecycle; received does not mean adopted or human verified."
+          },
+          "failure": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "envelope",
+              "user_set",
+              "type",
+              "key",
+              null
+            ],
+            "description": "Fixed local parser failure; null otherwise. No raw private input."
+          },
+          "server_error_code": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 65535,
+            "description": "Recognized correlated refusal code; no guessed wait or raw text."
+          },
+          "fingerprint": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "SHA-256 of type 5 plus first 32 public bytes; diagnostic, not safety number."
+          },
+          "pin_matches": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Exact queried namespace pin comparison; null if absent. No PN/LID alias guess."
+          },
+          "device_identity_present": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Optional ADV node presence; no signature validity claim."
+          }
+        },
+        "additionalProperties": false
       }
     }
   },
@@ -10531,7 +10606,7 @@
           "Account Safety"
         ],
         "summary": "Queue or inspect one peer directory key query (offline)",
-        "description": "peer-keys queues a normal encrypt/key IQ on the existing once-only action queue; listen transmits it over authenticated Noise. Repeated queueing returns the original action ID locally. --show inspects the latest saved result and current PN/LID pin matches without adopting a key, deriving a session or sending a chat. --refresh is explicit and permitted only after a successful valid signed prior bundle; all old replies remain encrypted. Queued, uncertain, refused, invalid and missing prior queries cannot be refreshed. Output omits peer addresses, public key bytes and raw server error text. Fingerprints are SHA-256 diagnostics, not safety numbers or human verification. This is CLI-only; no HTTP route exists. This full prekey-bundle query does not implement APK 37.71 encrypt/identity recovery after ADV verification failure; that distinct read/application path remains unimplemented. See docs/protocol/cross-device-sync.md#adv-identity-follow-up-and-raw-id-cleanup-2026-10-07.",
+        "description": "peer-keys queues a normal encrypt/key IQ on the existing once-only action queue; listen transmits it over authenticated Noise. Repeated queueing returns the original action ID locally. --show inspects the latest saved result and current PN/LID pin matches without adopting a key, deriving a session or sending a chat. --refresh is explicit and permitted only after a successful valid signed prior bundle; all old replies remain encrypted. Queued, uncertain, refused, invalid and missing prior queries cannot be refreshed. Output omits peer addresses, public key bytes and raw server error text. Fingerprints are SHA-256 diagnostics, not safety numbers or human verification. This is CLI-only; no HTTP route exists. This full prekey-bundle query does not implement APK 37.71 encrypt/identity recovery after ADV verification failure; peer-identity-query now stages that distinct read without adopting keys; automatic recovery/application remains unfinished. See docs/protocol/cross-device-sync.md#adv-identity-follow-up-and-raw-id-cleanup-2026-10-07.",
         "operationId": "peerKeys",
         "x-cli": "whatsapp-cli peer-keys",
         "x-transport": [
@@ -11158,6 +11233,96 @@
         },
         "x-library": [
           "whatsapp_api::transport::groups::refresh_outcome"
+        ]
+      }
+    },
+    "/v1/diagnostics/peer-identity-query": {
+      "post": {
+        "tags": [
+          "Account Safety"
+        ],
+        "summary": "Queue or inspect one primary identity-only directory read (offline)",
+        "description": "Queues APK 37.71 DNy.run case 40 encrypt/identity/user on the existing durable once-only IQ action queue. listen transmits the read over authenticated Noise; CLI queue/show itself is offline and no HTTP route exists. Supports one primary PN or LID namespace. Repeats always return the original selector, including refused, malformed or uncertain outcomes; no refresh/reset/automatic failure recovery exists. --show requires a correlated IQ and exactly one requested user, reads the single-byte type and primary public identity, reports fixed parser failures or server refusal code, and compares only the exact saved namespace pin. B7H.A02 type 5 / at least 32 body bytes / first 32 copy semantics are preserved; Text and Bytes node representations both work. These are public-key shape rules, not signature proof, human verification or permission to adopt an identity. Result omits addresses, key bytes and raw error text. No session, pin, device list, alias, verification or send state changes. Companions, automatic ADV-failure recovery and identity application remain unfinished. Evidence docs/protocol/cross-device-sync.md#primary-identity-only-query-2026-10-07. Observed live 2026-10-07: one 20-second saved-account receive session settled the identity action ok, inspection primary_identity_received with failure/code null, pin_matches=false and device_identity_present=false. Returned fingerprint matched an already saved verified full prekey bundle in an offline cross-check. Peer pins/sessions, outbox, receipts and prior actions remained unchanged; repeat queue reused the original ID without another action/session. This validates the primary read only, not identity adoption, companion verification or automatic recovery.",
+        "operationId": "peerIdentityQuery",
+        "x-cli": "whatsapp-cli peer-identity-query",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "name": "chat",
+            "in": "query",
+            "required": true,
+            "description": "Primary PN or LID chat JID; private input, never printed.",
+            "schema": {
+              "type": "string"
+            },
+            "x-secret-input": true
+          },
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          },
+          {
+            "name": "show",
+            "in": "query",
+            "description": "Inspect saved identity-only evidence without queueing or changing pins.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Original action selector, saved redacted inspection, or null when no query exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "action_id"
+                      ],
+                      "properties": {
+                        "action_id": {
+                          "type": "string",
+                          "description": "Original one-shot action selector; repeated queueing reuses it."
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "$ref": "#/components/schemas/IdentityQueryInspection"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::identity_query::queue",
+          "whatsapp_api::transport::identity_query::inspect",
+          "whatsapp_api::transport::identity_query::IdentityQueryInspection",
+          "whatsapp_api::transport::identity_query::IdentityQueryStatus",
+          "whatsapp_api::transport::identity_query::IdentityReplyFailure"
         ]
       }
     }

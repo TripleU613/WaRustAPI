@@ -1,0 +1,34 @@
+# APK-derived structural disassembly: LX/B7H;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(LL) flags=0x19 registers=6
+  0000..0002 op=12 const/4 v4, #0x0
+  0002..0008 op=71 invoke-static {v5, v4}, LX/00h;->A0A(VLI)
+  0008..000a op=21 array-length
+  000a..000e op=13 const/16 v0, #0x21
+  000e..0012 op=34 if-lt v1, v0, +0x24
+  0012..0016 op=48 aget-byte v0, v5, v4
+  0016..001a op=d5 and-int/lit16 v0, v0, #0xff
+  001a..001c op=8d int-to-byte v1, v0
+  001c..001e op=12 const/4 v3, #0x5
+  001e..0022 op=33 if-ne v1, v3, +0x10
+  0022..0026 op=13 const/16 v2, #0x20
+  0026..002a op=23 new-array v1, v2, [B
+  002a..002c op=12 const/4 v0, #0x1
+  002c..0032 op=71 invoke-static {v5, v0, v1, v4, v2}, Ljava/lang/System;->arraycopy(VLILII)
+  0032..0036 op=22 new-instance v0, LX/B7E;
+  0036..003c op=70 invoke-direct {v0, v1, v3}, LX/B7E;-><init>(VLB)
+  003c..003e op=11 return-object v0
+  003e..0042 op=1a const-string v0, "Bad key type: "
+  0042..0048 op=71 invoke-static {v0, v1}, LX/000;->A03(LLI)
+  0048..004a op=0c move-result-object
+  004a..004e op=22 new-instance v0, LX/C4M;
+  004e..0054 op=70 invoke-direct {v0, v1}, LX/C4M;-><init>(VL)
+  0054..0056 op=27 throw v0
+  0056..005a op=1a const-string v1, "Invalid byte array"
+  005a..005e op=22 new-instance v0, LX/C4M;
+  005e..0064 op=70 invoke-direct {v0, v1}, LX/C4M;-><init>(VL)
+  0064..0066 op=27 throw v0
+.end method

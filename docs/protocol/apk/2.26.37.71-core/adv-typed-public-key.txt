@@ -1,0 +1,25 @@
+# APK-derived structural disassembly: LX/11T;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(LLB) flags=0x9 registers=6
+  0000..0002 op=12 const/4 v3, #0x1
+  0002..0006 op=23 new-array v2, v3, [B
+  0006..0008 op=12 const/4 v1, #0x0
+  0008..000c op=4f aput-byte v5, v2, v1
+  000c..000e op=12 const/4 v0, #0x2
+  000e..0012 op=23 new-array v0, v0, [[B
+  0012..0016 op=4d aput-object v2, v0, v1
+  0016..001a op=4d aput-object v4, v0, v3
+  001a..0020 op=71 invoke-static {v0}, LX/1Lz;->A05(LL)
+  0020..0022 op=0c move-result-object
+  0022..0028 op=71 invoke-static {v0}, LX/B7H;->A02(LL)
+  0028..002a op=0c move-result-object
+  002a..002c op=11 return-object v0
+  002c..002e op=0d move-exception
+  002e..0032 op=1a const-string v0, "DeviceVerificationUtil/generatePublicIdentityKey invalidKeyException"
+  0032..0038 op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(VLL)
+  0038..003a op=12 const/4 v0, #0x0
+  003a..003c op=11 return-object v0
+.end method
