@@ -2095,7 +2095,7 @@ workspace rerun passed.
 4484..44b8. It reads a separate 118 cache backed by group_notification_version,
 not the ordinary full-group snapshot. 117.A01 writes the supplied timestamp to
 subject_timestamp (0026..003e), updates/inserts that version row, then schedules
-Q4N selector 16 after the transaction. Its cache update runnable is not traced.
+Q4N selector 16 after the transaction. Its cache invalidation runnable was initially untraced; the follow-up below resolves it.
 118.A00 queries that table, creates zero defaults when absent, and caches the
 four-version value. PaC.<init> stores the first long (subject_timestamp from
 118.A00) in A03 at 0006..000a, confirming the field compared by 0yv.A09.
@@ -2116,7 +2116,59 @@ identity binding or pin replacement is justified by this partial alias trace.
 semantics, alias-map effects, system-message equivalence and relevant timestamp
 units/overflow at the remaining arithmetic operations. Opcode 9d is multiplication
 in [AOSP's bytecode specification](https://source.android.com/docs/core/runtime/dalvik-bytecode),
-but our scoped decoder still reports it unknown; no mnemonic/runtime patch was
-made from an unverified transcribed byte fixture. Subject notification application
+and the follow-up below verifies literal APK bytes before adding its mnemonic. Subject notification application
 remains unimplemented; no saved account opened or live request sent for this trace.
 The new release recipe makes these methods reproducible for future comparisons.
+
+
+## Subject cache invalidation and timestamp decoding (2026-10-07)
+
+**Confirmed static:** APK 2.26.37.71, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Cache lifecycle evidence](group-subject-cache-lifecycle-evidence.txt) closes the
+post-commit path from `117.A01` 0096..00aa. Selector 16 is stored as `Q4N.$t`;
+the constructor stores the second object argument (118) in A00 and first (group)
+in A01. `Q4N.run` routes selector 16 to 000a; 000a..0020 casts those fields and
+calls `118.A01(group, cache)`. That method synchronizes on the version map and
+removes the group entry at 0006..000c. It invalidates the cached record rather
+than replacing it. The next miss can use the already traced `118.A00` database
+read. This connects the writer, runnable and reader without guessing a cache
+update value.
+
+`118.A02` 003a..0096 inserts all four supplied versions and initializes
+participant_version to zero, under `INSERT_GROUP_NOTIFICATION_VERSION`
+009a..00a8. For the `117.A01` update-miss path, subject retains the supplied
+incoming timestamp while the other three arguments are zero. An existing row
+update changes only subject_timestamp; it does not zero unrelated versions.
+The insertion is now a seventh hash-pinned recipe topic with its own anchor
+and Rust ownership path, so changes can appear in release comparison.
+
+**Confirmed static arithmetic:** independent reading of DEX class/method/code
+tables located `0yv.A09` literal extents in classes.dex: 03ea..03f2 at 0x7553de
+loads 1000 into v90 then multiplies; 4572 at 0x759566 and 475a at 0x75974e
+multiply by the incoming subject timestamp. Their later consumers use the
+scaled value for subgroup subject_ts or message construction. The notification
+cache writer still receives the original v5/v6 timestamp at 4824..482a.
+The factor of 1000 is confirmed; interpreting the wire value as seconds and
+those consumers as milliseconds is **inferred** pending their complete type
+contracts. Division at 3ffa/0x758fee belongs to a different handler branch,
+not proof of subject division.
+
+The decoder now names the complete standard 23x binary family (90..af) using
+[AOSP's opcode table](https://source.android.com/docs/core/runtime/dalvik-bytecode).
+A regression fixture uses the independently extracted literal bytes, retains
+register pairs/unsigned operand indices, and checks instruction boundaries.
+This improves structural evidence, not arithmetic execution or a notification
+handler. Unknown/native instructions outside this family stay visible.
+
+**Unknown/unimplemented:** all other version writers, population after full
+refresh, event/system-message parity, typed group branching, alias changes,
+wire timestamp range/overflow policy and subject notification application.
+No identity replacement, subject ACK, network request or saved-account access
+was performed. Cache invalidation is now traced; full cache lifecycle is not.
+
+The real before/after cached comparison found one added insertion topic, one
+changed notification disassembly (new arithmetic names), and five unchanged
+code topics. Manifest, inventory and tokens were unchanged; targets metadata
+changed. Both sides have the same APK hash, so this is tooling/evidence expansion,
+not an observed upstream behavior change.

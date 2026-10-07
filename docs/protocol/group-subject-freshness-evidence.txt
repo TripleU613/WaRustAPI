@@ -297,7 +297,7 @@ Only selected handler ranges included; omitted branches are not claimed recovere
     474e..4754  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
     4754..4756  throw  v0
     4756..475a  iget-object  v3, v3, LX/0yv;->A0A:LX/0yw;
-    475a..475e  ??(0x9d)  v21, v5, v90
+    475a..475e  mul-long  v21, v5, v90
     475e..4762  iget-object  v0, v9, LX/AAR;->A02:LX/0Cy;
     4762..4768  invoke-static  {v0}, LX/1bo;->A00(LL)
     4768..476a  move-result-object  v11
@@ -327,3 +327,6 @@ Only selected handler ranges included; omitted branches are not claimed recovere
     0012..0016  iput-wide  v7, v0, LX/PaC;->A02:J
     0016..0018  return-void
 .end method
+
+# 9d mnemonic now verified by independent literal DEX extraction; see
+# group-subject-cache-lifecycle-evidence.txt for bytes/absolute offsets.

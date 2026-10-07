@@ -244,7 +244,7 @@
   03e2..03e8 op=6e invoke-virtual {v4, v2, v5, v6}, LX/0hs;->A08(JLJ)
   03e8..03ea op=0b move-result-wide
   03ea..03ee op=16 const-wide/16 v90, #0x3e8
-  03ee..03f2 op=9d ?? v23, v23, v90
+  03ee..03f2 op=9d mul-long v23, v23, v90
   03f2..03f6 op=31 cmp-long v2, v23, v29
   03f6..03fa op=39 if-nez v2, +0x8
   03fa..03fe op=54 iget-object v2, v3, LX/0yv;->A0M:LX/08B;
@@ -2689,7 +2689,7 @@
   2a52..2a56 op=05 move-wide/from16
   2a56..2a5c op=71 invoke-static {v5, v1, v2}, LX/0Gv;->A01(JLJ)
   2a5c..2a5e op=0b move-result-wide
-  2a5e..2a62 op=9d ?? v25, v25, v90
+  2a5e..2a62 op=9d mul-long v25, v25, v90
   2a62..2a66 op=54 iget-object v2, v3, LX/0yv;->A0A:LX/0yw;
   2a66..2a6c op=6e invoke-virtual {v2, v13, v7}, LX/0yw;->A0k(VLL)
   2a6c..2a70 op=62 sget-object v1, LX/ADs;->A00:LX/ADs;
@@ -2714,7 +2714,7 @@
   2abe..2ac2 op=05 move-wide/from16
   2ac2..2ac8 op=71 invoke-static {v9, v4, v5}, LX/0Gv;->A01(JLJ)
   2ac8..2aca op=0b move-result-wide
-  2aca..2ace op=9d ?? v19, v19, v90
+  2aca..2ace op=9d mul-long v19, v19, v90
   2ace..2ad2 op=1a const-string v9, "a_v_id"
   2ad2..2ad8 op=6e invoke-virtual {v7, v9, v4, v5}, LX/0hs;->A08(JLJ)
   2ad8..2ada op=0b move-result-wide
@@ -3999,7 +3999,7 @@
   3fea..3ff0 op=76 invoke-direct/range {v5..v10}, LX/3J2;-><init>(VLLIIZ)
   3ff0..3ff6 op=71 invoke-static {v2, v1, v0}, LX/078;->A00(VLLL)
   3ff6..3ffa op=54 iget-object v2, v3, LX/0yv;->A08:LX/117;
-  3ffa..3ffe op=9e ?? v19, v19, v90
+  3ffa..3ffe op=9e div-long v19, v19, v90
   3ffe..4002 op=05 move-wide/from16
   4002..4008 op=6e invoke-virtual {v2, v6, v0, v1}, LX/117;->A01(VLJ)
   4008..400c op=05 move-wide/from16
@@ -4342,7 +4342,7 @@
   4566..456c op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
   456c..456e op=28 goto -0x7a
   456e..4572 op=54 iget-object v8, v3, LX/0yv;->A07:LX/0a8;
-  4572..4576 op=9d ?? v90, v90, v5
+  4572..4576 op=9d mul-long v90, v90, v5
   4576..457a op=13 const/16 v16, #0x0
   457a..457c op=12 const/4 v10, #0x1
   457c..4582 op=6e invoke-virtual {v8}, LX/0a8;->A05(V)
@@ -4454,7 +4454,7 @@
   474e..4754 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
   4754..4756 op=27 throw v0
   4756..475a op=54 iget-object v3, v3, LX/0yv;->A0A:LX/0yw;
-  475a..475e op=9d ?? v21, v5, v90
+  475a..475e op=9d mul-long v21, v5, v90
   475e..4762 op=54 iget-object v0, v9, LX/AAR;->A02:LX/0Cy;
   4762..4768 op=71 invoke-static {v0}, LX/1bo;->A00(LL)
   4768..476a op=0c move-result-object
@@ -4851,11 +4851,11 @@
   4da8..4dac op=1f check-cast v11, LX/1bh;
   4dac..4db0 op=53 iget-wide v9, v11, LX/178;->A0F:J
   4db0..4db4 op=53 iget-wide v2, v8, LX/0lV;->A00:J
-  4db4..4db8 op=9d ?? v0, v2, v90
+  4db4..4db8 op=9d mul-long v0, v2, v90
   4db8..4dbe op=71 invoke-static {v9, v10, v0, v1}, LX/8na;->A09(ZJJ)
   4dbe..4dc0 op=0a move-result
   4dc0..4dc4 op=53 iget-wide v8, v11, LX/178;->A0F:J
-  4dc4..4dc8 op=9c ?? v16, v0, v8
+  4dc4..4dc8 op=9c sub-long v16, v0, v8
   4dc8..4dce op=77 invoke-static/range {v16..v17}, Ljava/lang/Math;->abs(JJ)
   4dce..4dd0 op=0b move-result-wide
   4dd0..4dd6 op=17 const-wide/32 v9, #0x15f90
@@ -4909,7 +4909,7 @@
   4e82..4e84 op=12 const/4 v0, #0x4
   4e84..4e8a op=71 invoke-static {v6, v0}, LX/00h;->A0A(VLI)
   4e8a..4e8e op=53 iget-wide v0, v8, LX/0lV;->A00:J
-  4e8e..4e92 op=9d ?? v0, v0, v90
+  4e8e..4e92 op=9d mul-long v0, v0, v90
   4e92..4e96 op=13 const/16 v19, #0x83
   4e96..4e9a op=13 const/16 v17, #0x0
   4e9a..4e9e op=22 new-instance v8, LX/1iz;

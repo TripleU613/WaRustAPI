@@ -4,12 +4,16 @@
     "sha256": "2e443505172bc6a607cabcd27ca1bedc00feb3999abf41264769517c4f775603"
   },
   "group-notifications.txt": {
-    "bytes": 326042,
-    "sha256": "d7de69a32582d49087d12c7cd70697167b73c290e91cf21faf20bd8c0b607d7b"
+    "bytes": 326096,
+    "sha256": "56fc6cbcdd51fb5e19d59f7fadaaa720268997045536e58f6dac8930ceed2878"
   },
   "group-refresh-job.txt": {
     "bytes": 21928,
     "sha256": "418782c1023b0fceb757ced49c7cf800901f310c360f7749f73dc7d3e97eb8ad"
+  },
+  "group-subject-cache-insert.txt": {
+    "bytes": 3072,
+    "sha256": "9225a4575afb73aac61dde24a39265ffa207628d54cce0ed7c6adad52019dc5e"
   },
   "group-subject-cache-read.txt": {
     "bytes": 4637,
@@ -32,8 +36,8 @@
     "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
   },
   "targets.json": {
-    "bytes": 2259,
-    "sha256": "e5835c06a21d045f5e51aefd9129822af8d61cee804312c7a1ad75c96ea98bbc"
+    "bytes": 2558,
+    "sha256": "43dfb77a6b1a38283929ba2ab02a987ac62578dd4133f2bc9d7f0c4b10e0fdec"
   },
   "tokens.json": {
     "bytes": 23012,

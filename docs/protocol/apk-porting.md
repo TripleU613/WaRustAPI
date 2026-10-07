@@ -127,3 +127,9 @@ An existing proposal was refused without changing its bytes. Adding anchors
 changed only the target metadata in the cached comparison: zero code-topic
 changes. The regenerated baseline contains 11 files/392,185 bytes.
 These are local static observations, not a new-release or live protocol test.
+
+The cache-lifecycle follow-up adds a seventh insertion topic to the current
+recipe; all seven anchors resolve uniquely in the same 37.71 APK. The updated
+baseline is 12 files/395,753 bytes. Newly named standard arithmetic opcodes
+change disassembly rendering, not the APK hash or demonstrated runtime behavior.
+See [trace](groups.md#subject-cache-invalidation-and-timestamp-decoding-2026-10-07).

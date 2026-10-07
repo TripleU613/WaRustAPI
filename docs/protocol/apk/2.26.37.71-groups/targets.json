@@ -39,6 +39,18 @@
       "crates/whatsapp-api/src/transport/connection.rs"
     ]
   },
+  "group-subject-cache-insert": {
+    "anchors": [
+      "INSERT_GROUP_NOTIFICATION_VERSION"
+    ],
+    "class": "LX/118;",
+    "file": "group-subject-cache-insert.txt",
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs"
+    ]
+  },
   "group-subject-cache-read": {
     "anchors": [
       "GET_GROUP_NOTIFICATION_VERSION_SQL"

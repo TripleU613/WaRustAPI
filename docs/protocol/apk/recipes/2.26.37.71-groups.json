@@ -67,6 +67,16 @@
       "anchors": [
         "comm-failures/parentGroupJid is null"
       ]
+    },
+    "group-subject-cache-insert": {
+      "class": "LX/118;",
+      "method": "A02",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "anchors": [
+        "INSERT_GROUP_NOTIFICATION_VERSION"
+      ]
     }
   }
 }

@@ -115,6 +115,38 @@
     },
     {
       "anchor_sites": {
+        "INSERT_GROUP_NOTIFICATION_VERSION": [
+          {
+            "class_name": "LX/118;",
+            "dex_byte_off": 7954422,
+            "dex_file": "classes.dex",
+            "method_index": 23957,
+            "method_name": "A02",
+            "method_proto": "VLLJJJJ"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "class_name": "LX/118;",
+          "dex_byte_off": 7954422,
+          "dex_file": "classes.dex",
+          "method_index": 23957,
+          "method_name": "A02",
+          "method_proto": "VLLJJJJ"
+        }
+      ],
+      "previous_class": "LX/118;",
+      "previous_method": "A02",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "scope": "method",
+      "status": "unique",
+      "topic": "group-subject-cache-insert"
+    },
+    {
+      "anchor_sites": {
         "GET_GROUP_NOTIFICATION_VERSION_SQL": [
           {
             "class_name": "LX/118;",

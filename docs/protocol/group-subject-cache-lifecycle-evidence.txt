@@ -1,0 +1,106 @@
+APK 2.26.37.71 SHA256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed/static subject version insertion and invalidation. Not a live result.
+Offsets are method-relative bytes; generated with xtask apk-smali.
+
+
+# class: LX/118;
+
+.method public A02(VLLJJJJ)  # .registers 17
+    0000..0004  const-wide/16  v5, #0x0
+    0004..0008  iget-object  v0, v8, LX/118;->A01:LX/0Gc;
+    0008..000e  invoke-virtual  {v0}, LX/0Gc;->A07(L)
+    000e..0010  move-result-object  v3
+    0010..0012  const/4  v0, #0x6
+    0012..0016  new-instance  v4, Landroid/content/ContentValues;
+    0016..001c  invoke-direct  {v4, v0}, Landroid/content/ContentValues;-><init>(VI)
+    001c..0020  const-string  v2, "group_jid_row_id"
+    0020..0024  iget-object  v0, v8, LX/118;->A00:LX/0VT;
+    0024..002a  invoke-virtual  {v0, v7}, LX/0VT;->A07(JL)
+    002a..002c  move-result-wide  v0
+    002c..0032  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(LJ)
+    0032..0034  move-result-object  v0
+    0034..003a  invoke-virtual  {v4, v2, v0}, Landroid/content/ContentValues;->put(VLL)
+    003a..0040  const-string/jumbo  v1, "subject_timestamp"
+    0040..0046  invoke-static  {v9, v10}, Ljava/lang/Long;->valueOf(LJ)
+    0046..0048  move-result-object  v0
+    0048..004e  invoke-virtual  {v4, v1, v0}, Landroid/content/ContentValues;->put(VLL)
+    004e..0052  const-string  v1, "announcement_version"
+    0052..0058  invoke-static  {v11, v12}, Ljava/lang/Long;->valueOf(LJ)
+    0058..005a  move-result-object  v0
+    005a..0060  invoke-virtual  {v4, v1, v0}, Landroid/content/ContentValues;->put(VLL)
+    0060..0064  const-string  v1, "participant_version"
+    0064..006a  invoke-static  {v5, v6}, Ljava/lang/Long;->valueOf(LJ)
+    006a..006c  move-result-object  v0
+    006c..0072  invoke-virtual  {v4, v1, v0}, Landroid/content/ContentValues;->put(VLL)
+    0072..0076  const-string  v1, "group_join_request_timestamp"
+    0076..007c  invoke-static  {v13, v14}, Ljava/lang/Long;->valueOf(LJ)
+    007c..007e  move-result-object  v0
+    007e..0084  invoke-virtual  {v4, v1, v0}, Landroid/content/ContentValues;->put(VLL)
+    0084..0088  const-string  v1, "group_photo_timestamp"
+    0088..008e  invoke-static/range  {v15..v16}, Ljava/lang/Long;->valueOf(LJ)
+    008e..0090  move-result-object  v0
+    0090..0096  invoke-virtual  {v4, v1, v0}, Landroid/content/ContentValues;->put(VLL)
+    0096..009a  iget-object  v2, v3, LX/0ZN;->A02:LX/0IY;
+    009a..009e  const-string  v1, "group_notification_version"
+    009e..00a2  const-string  v0, "INSERT_GROUP_NOTIFICATION_VERSION"
+    00a2..00a8  invoke-virtual  {v2, v1, v0, v4}, LX/0IY;->A05(JLLL)
+    00a8..00ae  invoke-virtual  {v3}, LX/0ZN;->close(V)
+    00ae..00b0  return-void
+    00b0..00b2  move-exception  v1
+    00b2..00b8  invoke-virtual  {v3}, LX/0ZN;->close(V)
+    00b8..00ba  throw  v1
+    00ba..00bc  move-exception  v0
+    00bc..00c2  invoke-static  {v1, v0}, LX/HKG;->A00(VLL)
+    00c2..00c4  throw  v1
+.end method
+
+# class: LX/118;
+
+.method public A01(VLL)  # .registers 2
+    0000..0004  iget-object  v1, v1, LX/118;->A02:Ljava/util/Map;
+    0004..0006  monitor-enter
+    0006..000c  invoke-interface  {v1, v0}, Ljava/util/Map;->remove(LL)
+    000c..000e  monitor-exit
+    000e..0010  return-void
+    0010..0012  move-exception  v0
+    0012..0014  monitor-exit
+    0014..0016  throw  v0
+.end method
+
+# LX/Q4N.run selected dispatch and invalidation path; other cases omitted
+
+# class: LX/Q4N;
+
+.method public run(V)  # .registers 13
+    0000..0004  iget  v0, v12, LX/Q4N;->$t:I
+    0004..000a  packed-switch  v0, payload@0x554, cases=[0:@0x50e, 1:@0x4fc, 2:@0x2f8, 3:@0x2f8, 4:@0x70, 5:@0x22, 6:@0x4e4, 7:@0x4cc, 8:@0x4b4, 9:@0x49c, 10:@0x484, 11:@0x468, 12:@0x44c, 13:@0x42a, 14:@0x418, 15:@0x406, 16:@0xa, 17:@0xa, 18:@0xa, 19:@0xa, 20:@0x3ee], default@0xa
+    000a..000e  iget-object  v1, v12, LX/Q4N;->A00:Ljava/lang/Object;
+    000e..0012  check-cast  v1, LX/118;
+    0012..0016  iget-object  v0, v12, LX/Q4N;->A01:Ljava/lang/Object;
+    0016..001a  check-cast  v0, LX/1bn;
+    001a..0020  invoke-static  {v0, v1}, LX/118;->A01(VLL)
+    0020..0022  return-void
+    0022..0026  iget-object  v4, v12, LX/Q4N;->A00:Ljava/lang/Object;
+    0026..002a  check-cast  v4, LX/178;
+# other branches omitted
+.end method
+
+# Literal instruction bytes independently read from DEX method tables
+# LX/0yv.A09 classes.dex code_item instruction start 0x754ff4
+# method-relative / absolute / bytes / interpretation
+03ea..03f2 / 0x7553de / 16 5a e8 03 9d 17 17 5a / const-wide/16 v90, 1000; mul-long v23, v23, v90
+4572..4576 / 0x759566 / 9d 5a 5a 05 / mul-long v90, v90, v5
+475a..475e / 0x75974e / 9d 15 05 5a / mul-long v21, v5, v90
+3ffa..3ffe / 0x758fee / 9e 13 13 5a / div-long v19, v19, v90
+# Opcode identity: AOSP https://source.android.com/docs/core/runtime/dalvik-bytecode
+# This file does not establish timestamp overflow/range policy or all cache writers.
+
+# class: LX/Q4N;
+
+.method public <init>(VLLI)  # .registers 4
+    0000..0004  iput  v3, v0, LX/Q4N;->$t:I
+    0004..0008  iput-object  v2, v0, LX/Q4N;->A00:Ljava/lang/Object;
+    0008..000c  iput-object  v1, v0, LX/Q4N;->A01:Ljava/lang/Object;
+    000c..0012  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0012..0014  return-void
+.end method

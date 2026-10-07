@@ -354,7 +354,34 @@ fn opcode_name(op: u8) -> &'static str {
         0x95 => "and-int",
         0x96 => "or-int",
         0x97 => "xor-int",
+        // AOSP Dalvik 90..af: 23x typed binary operations. APK 37.71
+        // 0yv.A09 at 475a uses 9d for the subject timestamp scale;
+        // classes.dex absolute 0x75974e: 9d 15 05 5a.
+        // https://source.android.com/docs/core/runtime/dalvik-bytecode
+        0x98 => "shl-int",
+        0x99 => "shr-int",
+        0x9a => "ushr-int",
+        0x9b => "add-long",
+        0x9c => "sub-long",
+        0x9d => "mul-long",
+        0x9e => "div-long",
+        0x9f => "rem-long",
         0xa0 => "and-long",
+        0xa1 => "or-long",
+        0xa2 => "xor-long",
+        0xa3 => "shl-long",
+        0xa4 => "shr-long",
+        0xa5 => "ushr-long",
+        0xa6 => "add-float",
+        0xa7 => "sub-float",
+        0xa8 => "mul-float",
+        0xa9 => "div-float",
+        0xaa => "rem-float",
+        0xab => "add-double",
+        0xac => "sub-double",
+        0xad => "mul-double",
+        0xae => "div-double",
+        0xaf => "rem-double",
         0xb0 => "add-int/2addr",
         0xb1 => "sub-int/2addr",
         0xb4 => "rem-int/2addr",
@@ -2253,6 +2280,35 @@ mod tests {
             let bytes = [opcode, 0xff, 0x80, 0xfe];
             assert_eq!(decode_insns(&bytes, &dex)[0].annotation, "v255, v128, v254");
         }
+    }
+
+    #[test]
+    fn decodes_literal_group_subject_timestamp_arithmetic() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // APK 37.71 classes.dex, 0yv.A09: absolute 0x7553de (03ea..03f2),
+        // 0x759566 (4572), 0x75974e (475a), 0x758fee (3ffa).
+        // Concatenated literal extents, not a claimed contiguous APK stream.
+        let bytes = [
+            0x16, 0x5a, 0xe8, 0x03, 0x9d, 0x17, 0x17, 0x5a, 0x9d, 0x5a, 0x5a, 0x05, 0x9d, 0x15,
+            0x05, 0x5a, 0x9e, 0x13, 0x13, 0x5a,
+        ];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded.len(), 5);
+        assert_eq!(decoded[0].mnemonic, "const-wide/16");
+        assert_eq!(decoded[0].annotation, "v90, #0x3e8");
+        for (index, operands) in [
+            (1, "v23, v23, v90"),
+            (2, "v90, v90, v5"),
+            (3, "v21, v5, v90"),
+        ] {
+            assert_eq!(decoded[index].mnemonic, "mul-long");
+            assert_eq!(decoded[index].annotation, operands);
+        }
+        assert_eq!(decoded[4].mnemonic, "div-long");
+        assert_eq!(decoded[4].annotation, "v19, v19, v90");
+        assert!(decoded.iter().all(|insn| insn.width == 2));
+        assert_eq!(decoded[4].byte_off + 4, bytes.len());
     }
 
     #[test]

@@ -1112,3 +1112,20 @@ regenerated CLI reference, five OpenAPI checks, formatting and exact baseline
 regeneration with --check.
 Repository hygiene passed: tracked-file budgets, 427 local links, package
 licenses and reference research checksums; staged whitespace passed.
+
+Confirmed static APK 37.71 subject-cache follow-up: the post-commit Q4N selector
+16 calls 118.A01 to remove the group from the cached version map. 118.A02
+insertion preserves supplied versions and initializes participant_version=0;
+the subject writer's update-miss branch supplies zeros for the other versions.
+Literal DEX timestamp multiplication/division bytes are independently verified,
+and the decoder now names all standard 90..af typed binary operations. The
+versioned group recipe gains an insertion topic. This establishes research
+boundaries, not a subject receive handler; full lifecycle/type/alias/system-message
+parity remains open. No saved account opened or live request sent.
+
+Validation: 591 workspace/all-feature tests and 24 default CLI tests passed,
+plus strict workspace/all-target/all-feature Clippy, warning-free Rustdoc,
+regenerated CLI reference, five OpenAPI checks, formatting and exact snapshot
+regeneration (--check, 12 files/395,753 bytes). All seven targets resolved uniquely.
+Repository hygiene passed (429 local links, tracked-file budgets, licenses
+and reference checksums), as did staged whitespace.
