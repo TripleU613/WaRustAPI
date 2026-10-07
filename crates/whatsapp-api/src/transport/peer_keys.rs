@@ -366,6 +366,64 @@ mod tests {
     }
 
     #[test]
+    fn ambiguous_directory_bundle_stays_invalid_across_reopen_without_refresh_or_pin_changes() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("ambiguous.redb");
+        let store = open(&path);
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let old = IdentityKeyPair::generate(&mut rand::rng());
+        let new = IdentityKeyPair::generate(&mut rand::rng());
+        let pin_key = format!("comparison-direct:{peer}");
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::PeerIdentities,
+                    pin_key.as_bytes(),
+                    1,
+                    &old.identity_key().serialize().to_vec(),
+                )
+            })
+            .unwrap();
+        let id = queue(&store, &peer, false).unwrap();
+        assert_eq!(actions::reserve_pending(&store).unwrap().len(), 1);
+        let mut reply = signed_reply(&peer, &id, &new, true);
+        let user = reply.child("list").unwrap().child("user").unwrap().clone();
+        reply.content = crate::binary::NodeContent::Children(vec![
+            Node::new("list").children(vec![user.clone(), user]),
+        ]);
+        assert!(actions::record_reply(&store, &reply).unwrap());
+        drop(store);
+        let store = open(&path);
+        let before = store
+            .read(|tx| {
+                Ok((
+                    tx.scan_after(Table::PeerIdentities, 1, None, 256)?,
+                    tx.scan_after(Table::SignalSessions, 1, None, 256)?,
+                    tx.scan_after(Table::Checkpoints, 1, None, 256)?,
+                ))
+            })
+            .unwrap();
+        let result = inspect(&store, &peer).unwrap().unwrap();
+        assert_eq!(result.status, DirectoryStatus::InvalidReply);
+        assert_eq!(result.signature_valid, None);
+        assert_eq!(result.fingerprint, None);
+        assert!(queue(&store, &peer, true).is_err());
+        assert_eq!(queue(&store, &peer, false).unwrap(), id);
+        assert!(actions::reserve_pending(&store).unwrap().is_empty());
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    tx.scan_after(Table::PeerIdentities, 1, None, 256)?,
+                    tx.scan_after(Table::SignalSessions, 1, None, 256)?,
+                    tx.scan_after(Table::Checkpoints, 1, None, 256)?
+                )))
+                .unwrap(),
+            before
+        );
+        assert!(!serde_json::to_string(&result).unwrap().contains(&peer.user));
+    }
+
+    #[test]
     fn existing_action_builders_run_outside_the_store_write_lock() {
         let dir = tempfile::tempdir().unwrap();
         let store = std::sync::Arc::new(open(&dir.path().join("builder.redb")));

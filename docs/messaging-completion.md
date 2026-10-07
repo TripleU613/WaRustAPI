@@ -1725,3 +1725,13 @@ not establish historical coverage. APK 37.71 D4x.A00/0jc.A19 motivate this local
 subset; full bucket/alias/companion and normal actor group parity remain
 unimplemented, and live rotation is unverified.
 See [evidence and limits](protocol/cross-device-sync.md#durable-own-sender-key-exposure-and-rotation-2026-10-07).
+
+
+Directory bundle selection (2026-10-07): shared parser now compares user/server/
+agent/device without conflating wire-encoding kinds, refuses duplicate requested
+user rows and optional one-time keys, and refuses contradictory outer errors.
+These local ambiguity guards precede identity/session preparation; other batch
+devices remain valid. Existing peer-keys inspection reports invalid_reply and
+blocks refresh while preserving its selector and pins. APK 37.71 B7H.A06/CQc.A00
+provide address/signature context; exact duplicate policy is not attributed to
+the APK. [Evidence and tests](protocol/peer-identity.md#exact-directory-bundle-selection-2026-10-07).

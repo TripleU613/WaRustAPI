@@ -890,3 +890,61 @@ claimed. A human mark is never authority to accept an unauthenticated new key.
 Saved device coverage now distinguishes historical verification from current
 primary-key authority and authenticated changes queue a transactional refresh.
 [Authority binding and limits](cross-device-sync.md#signed-device-authority-and-authenticated-refresh-2026-10-07).
+
+
+## Exact directory bundle selection (2026-10-07)
+
+**Confirmed static context**, APK 2.26.37.71:
+[B7H.A06](apk/2.26.37.71-core/sender-key-address-build.txt) preserves recipient
+category and DeviceJid.getDevice when constructing a session address. Existing
+CQc.A00 signed-key checks (`0030..0064`) still apply before new session derivation.
+These sources do not establish the APK's malformed/duplicate reply policy or a
+mapping between an arbitrary hosted/agent identity and an ordinary user device.
+
+**Observed source bug / implemented local correction:** shared
+`signal::direct::prekey_bundle_for` selected the first matching user row using
+non-AD identity plus device index. That erased the agent distinction, and two
+rows for the requested address silently selected the first. The optional
+one-time `<key>` also used the first child, although required fields already
+used duplicate-refusing `child`. Body decoding already supports Text and Bytes;
+there was no missing UTF-8 body fix to make. Required-field/list singleton checks
+were already present and have not been rediscovered as new behavior.
+
+Selection now compares **user, server, agent and device**, ignoring only the
+wire-encoding kind. Parsed Text JIDs and Jid attributes use the same comparison.
+Other devices in a legitimate batch are still allowed. Exactly one matching
+user is required; both identical and conflicting duplicates fail with the fixed,
+redacted `key reply carries duplicate bundles for this device` diagnostic.
+Duplicate optional keys fail through the existing singleton guard, and an outer
+`error` contradicting `type=result` is refused. These are **local ambiguity
+guards**, not claims about mandatory server response shapes or newly confirmed
+APK refusal policy. No identity is adopted, no session is reserved and no retry
+or reset is introduced by parsing failure.
+
+**Offline evidence:** independently generated identity/signed-key rows exercise
+primary and companion selection, agent-only refusal, mixed-agent batch selection
+for both attribute forms, encoding-kind equivalence, identical/conflicting/Text
+alias duplicates, duplicate optional prekeys and contradictory outer errors.
+A durable directory-action regression saves an ambiguous reply, reopens the
+store and reports `invalid_reply` with fingerprint/signature null. Refresh is
+refused, ordinary repeat reuses the original action ID and reserves nothing;
+pins, sessions and checkpoints remain unchanged. The first new harness compile
+failed because PreKeyBundle lacks Debug for unwrap_err; the harness now extracts
+the error explicitly. That failure did not change protocol behavior.
+
+**CLI/API:** existing `peer-keys --show` exposes its existing `invalid_reply`
+classification. Comparison group/status sending and normal direct outbox
+preparation share the corrected parser. No new command/flag/HTTP route exists.
+Malformed saved evidence stays private and once-only outcomes remain preserved.
+**Unknown:** live occurrence of ambiguous/agent-conflicting directory responses;
+no such response is manufactured or queried for this change.
+
+
+Validation: 667 workspace/all-feature tests, 24 default CLI tests, strict
+workspace/all-target Clippy, warning-free Rustdoc and regenerated CLI reference
+passed. **Observed offline using saved live evidence:** the rebuilt parser still
+reports verified_bundle/signature_valid=true for the existing primary directory
+response; pins, actions, outbox, receipts and device inspection remain unchanged.
+Private evidence index: `lab/releases/exact-bundle-inspection/active.json`. No
+network session or new query was issued. This validates compatibility with the
+saved successful response, not fresh live malformed-response handling.

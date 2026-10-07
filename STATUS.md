@@ -1494,3 +1494,19 @@ A 20-second receive-only rebuilt-client check left peer/device/action/outbox/rec
 inspection unchanged. Live rotation remains unverified. The initial workspace
 wrong-key reopen test failed AlreadyOwned; focused and full reruns passed without
 relaxing locking or key validation.
+
+
+Directory bundle selection (2026-10-07): shared parser now compares user/server/
+agent/device without conflating wire-encoding kinds, refuses duplicate requested
+user rows and optional one-time keys, and refuses contradictory outer errors.
+These local ambiguity guards precede identity/session preparation; other batch
+devices remain valid. Existing peer-keys inspection reports invalid_reply and
+blocks refresh while preserving its selector and pins. APK 37.71 B7H.A06/CQc.A00
+provide address/signature context; exact duplicate policy is not attributed to
+the APK. [Evidence and tests](docs/protocol/peer-identity.md#exact-directory-bundle-selection-2026-10-07).
+
+Validation of exact directory selection: 667 workspace/all-feature tests, 24
+default CLI tests, strict Clippy, warning-free Rustdoc and CLI reference passed.
+Rebuilt-client offline inspection retained verified_bundle/signature_valid=true
+for the existing saved server response without changing protocol inspection.
+No new live query or network session; malformed live responses remain unobserved.

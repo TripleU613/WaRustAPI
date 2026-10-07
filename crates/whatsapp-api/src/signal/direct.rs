@@ -264,7 +264,7 @@ pub fn prekey_bundle(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> {
 ///
 /// A reply listing other devices is not an error for this recipient; only the
 /// absence of *this* device, or a per-user `<error>` on it, is. The JID match
-/// compares the non-AD identity and the device index, so a reply that echoes
+/// compares the complete address, including agent and device, so a reply that echoes
 /// the phone JID where we asked with a LID (or the reverse) is refused rather
 /// than silently paired with the wrong identity key.
 pub fn prekey_bundle_for(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> {
@@ -273,12 +273,25 @@ pub fn prekey_bundle_for(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> 
     {
         return Err(invalid("key query was not successful"));
     }
+    if reply.child("error").is_some() {
+        return Err(invalid("server refused recipient key lookup"));
+    }
     let list = child(reply, "list")?;
+    let same_address = |v: &Jid| {
+        v.user == recipient.user
+            && v.server == recipient.server
+            && v.agent == recipient.agent
+            && v.device == recipient.device
+    };
     let matches = |user: &&&Node| {
         user.get_attr("jid").is_some_and(|jid| {
-            jid.as_jid().is_some_and(|v| {
-                v.to_non_ad() == recipient.to_non_ad() && v.device == recipient.device
-            }) || jid.as_text().is_some_and(|v| v == recipient.to_string())
+            // APK 37.71 B7H.A06 preserves account category and device.
+            // Do not match a hosted/agent address to an ordinary device by
+            // flattening it. Duplicate-row rejection below is a local guard.
+            jid.as_jid().is_some_and(same_address)
+                || jid
+                    .as_text()
+                    .is_some_and(|v| Jid::parse(v).is_ok_and(|v| same_address(&v)))
         })
     };
     let users: Vec<&Node> = list
@@ -286,10 +299,15 @@ pub fn prekey_bundle_for(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> 
         .iter()
         .filter(|n| n.description == "user")
         .collect();
-    let user = *users
-        .iter()
-        .find(matches)
+    let mut selected = users.iter().filter(matches);
+    let user = *selected
+        .next()
         .ok_or_else(|| invalid("key reply carries no bundle for this device"))?;
+    if selected.next().is_some() {
+        return Err(invalid(
+            "key reply carries duplicate bundles for this device",
+        ));
+    }
     if user.child("error").is_some() {
         return Err(invalid("server refused recipient key lookup"));
     }
@@ -304,7 +322,8 @@ pub fn prekey_bundle_for(reply: &Node, recipient: &Jid) -> Result<PreKeyBundle> 
     }
     let prekey = user
         .child("key")
-        .map(|key| -> Result<_> {
+        .map(|_| -> Result<_> {
+            let key = child(user, "key")?;
             Ok((
                 number(child(key, "id")?, 3)?.into(),
                 public(child(key, "value")?)?,
@@ -904,6 +923,84 @@ mod tests {
             Node::new("list").children(vec![user("222222222222222@lid", &first, true)]),
         ]);
         assert!(prekey_bundle_for(&refused, &Jid::parse("222222222222222@lid").unwrap()).is_err());
+
+        let peer = Jid::parse("222222222222222:3@lid").unwrap();
+        let exact = user("222222222222222:3@lid", &second, false);
+        // Wire encoding kind is not a different account/device identity.
+        let mut different_encoding = peer.clone();
+        different_encoding.kind = crate::model::jid::JidKind::Plain;
+        let equivalent = Node::new("iq").attr("type", "result").children(vec![
+            Node::new("list").children(vec![exact.clone().attr("jid", different_encoding)]),
+        ]);
+        assert_eq!(
+            prekey_bundle_for(&equivalent, &peer)
+                .unwrap()
+                .identity_key()
+                .unwrap(),
+            second.identity_key()
+        );
+        let mut foreign = peer.clone();
+        foreign.agent = 1;
+        for text in [false, true] {
+            let agent = exact.clone().attr(
+                "jid",
+                if text {
+                    crate::binary::AttributeValue::Text(foreign.to_string())
+                } else {
+                    crate::binary::AttributeValue::Jid(foreign.clone())
+                },
+            );
+            let agent_only = Node::new("iq")
+                .attr("type", "result")
+                .children(vec![Node::new("list").children(vec![agent.clone()])]);
+            assert!(prekey_bundle_for(&agent_only, &peer).is_err());
+            let mixed = Node::new("iq")
+                .attr("type", "result")
+                .children(vec![Node::new("list").children(vec![agent, exact.clone()])]);
+            assert_eq!(
+                prekey_bundle_for(&mixed, &peer)
+                    .unwrap()
+                    .identity_key()
+                    .unwrap(),
+                second.identity_key()
+            );
+        }
+        for duplicate in [
+            exact.clone(),
+            user("222222222222222:3@lid", &first, false),
+            exact.clone().attr("jid", peer.to_string()),
+        ] {
+            let ambiguous = Node::new("iq").attr("type", "result").children(vec![
+                Node::new("list").children(vec![exact.clone(), duplicate]),
+            ]);
+            let error = prekey_bundle_for(&ambiguous, &peer)
+                .err()
+                .unwrap()
+                .to_string();
+            assert!(error.contains("duplicate bundles"));
+            assert!(!error.contains(&peer.user));
+        }
+        let one = Node::new("key").children(vec![
+            Node::new("id").bytes(vec![0, 0, 8]),
+            Node::new("value").bytes(first.public_key().public_key_bytes().to_vec()),
+        ]);
+        let mut children = exact.child_nodes().to_vec();
+        children.extend([one.clone(), one]);
+        let duplicate_prekey = Node::new("iq").attr("type", "result").children(vec![
+            Node::new("list").children(vec![exact.clone().children(children)]),
+        ]);
+        assert!(
+            prekey_bundle_for(&duplicate_prekey, &peer)
+                .err()
+                .unwrap()
+                .to_string()
+                .contains("duplicate key bundle field")
+        );
+        let conflicting_outer_error = Node::new("iq").attr("type", "result").children(vec![
+            Node::new("list").children(vec![exact]),
+            Node::new("error").attr("code", "503"),
+        ]);
+        assert!(prekey_bundle_for(&conflicting_outer_error, &peer).is_err());
     }
 
     #[tokio::test]
