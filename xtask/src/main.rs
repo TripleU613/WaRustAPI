@@ -141,6 +141,9 @@ enum Cmd {
         /// Explicitly print private group numeric metadata as decimal strings; requires --group-info.
         #[arg(long, requires = "group_info")]
         group_numbers: bool,
+        /// Print recognized roles of object edges, before member/JID validation; requires --group-info.
+        #[arg(long, requires = "group_info")]
+        edge_roles: bool,
     },
     /// Find which classes and methods reference each anchor string constant.
     ///
@@ -299,7 +302,8 @@ fn main() -> ExitCode {
             child,
             group_info,
             group_numbers,
-        } => mex::inspect_response(&input, &child, group_info, group_numbers),
+            edge_roles,
+        } => mex::inspect_response(&input, &child, group_info, group_numbers, edge_roles),
         Cmd::ApkXref { apk, anchors } => xref::run_xref(&apk, &anchors),
         Cmd::ApkCallers {
             apk,

@@ -222,6 +222,52 @@ impl MexJsonResponse {
         &self.summary
     }
 
+    /// Project roles of JSONObject edges in source order, before participant
+    /// type/JID validation or phash short-circuiting. This is not a member map:
+    /// missing participant models and unknown types may later be skipped.
+    /// Missing/null/nonarray edges yield an empty list; nonobject entries skip.
+    pub fn group_participant_edge_roles(&self) -> Result<Vec<GroupParticipantRole>> {
+        let disposition = self.group_info_disposition();
+        if disposition != GroupInfoDisposition::InvokeGroupCallback {
+            return Err(Error::invalid(
+                "mex.group.edge_roles",
+                format!("callback gate blocks edge projection: {disposition:?}"),
+            ));
+        }
+        // 0Xo.A03 requires group; 90x.A0I -> LbE.A05 requires participants.
+        let participants = self
+            .data()
+            .and_then(|data| data.get("xwa2_group_query_by_id"))
+            .and_then(serde_json::Value::as_object)
+            .ok_or_else(|| {
+                Error::invalid(
+                    "mex.group.edge_roles",
+                    "missing/nonobject xwa2_group_query_by_id",
+                )
+            })?
+            .get("participants")
+            .and_then(serde_json::Value::as_object)
+            .ok_or_else(|| {
+                Error::invalid("mex.group.edge_roles", "missing/nonobject participants")
+            })?;
+        // LbE.A0A -> A09 optJSONArray, optJSONObject per element; 8yl.<init>
+        // just wraps nonnull JSONObject. Ordering/duplicates are preserved.
+        Ok(participants
+            .get("edges")
+            .and_then(serde_json::Value::as_array)
+            .into_iter()
+            .flatten()
+            .filter_map(serde_json::Value::as_object)
+            .map(|edge| {
+                // LbE.A0C optString: nonstring JSON values cannot spell any
+                // 2hu enum name, so they share the unrecognized fallback.
+                GroupParticipantRole::from_server_value(
+                    edge.get("role").and_then(serde_json::Value::as_str),
+                )
+            })
+            .collect())
+    }
+
     /// Project the APK's three confirmed time/version numbers, without applying
     /// a snapshot, parsing membership or claiming complete group validity.
     /// Refuses blocked callback gates or missing/nonobject query data. The
@@ -505,6 +551,30 @@ pub fn group_info_request(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn participant_object_edges_preserve_order_and_nullable_list_semantics() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/mex/2.26.37.71-edge-roles.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            for child in ["result", "update"] {
+                let node = Node::new("iq").children(vec![
+                    Node::new(child).text(serde_json::to_string(&case["payload"]).unwrap()),
+                ]);
+                let response = parse_json_response(&node).unwrap();
+                let result = response.group_participant_edge_roles();
+                if let Some(expected) = case.get("roles") {
+                    assert_eq!(serde_json::to_value(result.unwrap()).unwrap(), *expected);
+                } else {
+                    let error = result.unwrap_err().to_string();
+                    assert!(!error.contains("private-edge-sentinel"));
+                }
+                assert!(!format!("{response:?}").contains("private-edge-sentinel"));
+            }
+        }
+    }
+
     #[test]
     fn participant_role_matches_independent_java_reference() {
         let fixture: serde_json::Value = serde_json::from_str(include_str!(

@@ -706,3 +706,22 @@ invalid-bot/LL both parsers, bot/L four methods. No automatic full proposal.
 0D1.A00 NumberFormatException 0106..010e -> 0191, code units. Complete members,
 device/alias/feature/state conversion remains unknown/unported; account state
 unchanged and no live request. [Reproduce/interpret](mex.md#exception-aware-numeric-and-participant-release-coverage-2026-10-07).
+
+## comparison.mex.participant_model_and_edges — 2026-10-07
+
+**Confirmed static**, APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+LbE.A0A/A09 object-array filter and empty fallback, 8yl constructor, 31c
+field slots, 1xf.A17 int-to-long join boxing, 8kW.A0q nullable-history value
+boxing, 3c9.A0E optString typename/hash. A0F is not a required field reader.
+**Independent literal class_def evidence** proves 0hh -> abstract 0ZX ->
+UserJid; 0ZX has no class data, not no class. Strict UserJid is not PN-only or
+disjoint from bot. [Full findings/sources](mex.md#participant-model-fields-and-object-edge-projection-2026-10-07).
+
+Rust group_participant_edge_roles and explicit offline --edge-roles now expose
+ordered recognized roles of object edges, before phash/model/JID validation.
+Eighteen synthetic cases cover both payload children; private diagnostics and
+default summary remain redacted. This is not a member map/state application.
+Constructor A08 extra string, final join-time unit, device hierarchy and full
+member/alias/boolean/feature application remain unknown/unported. No saved
+account access, identity reclassification or live request.

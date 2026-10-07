@@ -1,0 +1,167 @@
+APK build: 2.26.37.71
+APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed static selected model/list helpers. Byte instruction offsets, code-unit catch ranges.
+
+=== mex-participant-constructor-fields.txt ===
+
+# class: LX/31c;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLL)  # .registers 10
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0006..000a  iput-object  v4, v0, LX/31c;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+    000a..000e  iput-object  v7, v0, LX/31c;->A07:Ljava/lang/String;
+    000e..0012  iput-object  v2, v0, LX/31c;->A01:LX/0ZY;
+    0012..0016  iput-object  v8, v0, LX/31c;->A06:Ljava/lang/String;
+    0016..001a  iput-object  v3, v0, LX/31c;->A02:Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    001a..001e  iput-object  v9, v0, LX/31c;->A08:Ljava/lang/String;
+    001e..0022  iput-object  v1, v0, LX/31c;->A00:LX/9Lm;
+    0022..0026  iput-object  v6, v0, LX/31c;->A05:Ljava/lang/Long;
+    0026..002a  iput-object  v5, v0, LX/31c;->A04:Ljava/lang/Boolean;
+    002a..002c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+
+=== mex-participant-edge-array.txt ===
+
+# class: LX/LbE;
+# extends: Ljava/lang/Object;
+
+.method public A0A(LLL)  # .registers 4
+    0000..0006  invoke-virtual  {v1, v2, v3}, LX/LbE;->A09(LLL)
+    0006..0008  move-result-object  v0
+    0008..000c  if-nez  v0, +0x9
+    000c..0012  invoke-static  {}, Lcom/google/common/collect/ImmutableList;->of(L)
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-static  {v0}, LX/00h;->A06(VL)
+    001a..001c  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+
+=== mex-participant-edge-array-inner.txt ===
+
+# class: LX/LbE;
+# extends: Ljava/lang/Object;
+
+.method public A09(LLL)  # .registers 12
+    0000..0002  const/4  v8, #0x0
+    0002..0004  const/4  v7, #0x1
+    0004..0008  iget-object  v0, v9, LX/LbE;->A00:Lorg/json/JSONObject;
+    0008..000e  invoke-virtual  {v0, v10}, Lorg/json/JSONObject;->optJSONArray(LL)
+    000e..0010  move-result-object  v6
+    0010..0014  if-nez  v6, +0x4
+    0014..0016  const/4  v0, #0x0
+    0016..0018  return-object  v0
+    0018..001c  new-array  v1, v7, [Ljava/lang/Class;
+    001c..0020  const-class  v0, Lorg/json/JSONObject;
+    0020..0024  aput-object  v0, v1, v8
+    0024..002a  invoke-virtual  {v11, v1}, Ljava/lang/Class;->getConstructor(LL)
+    002a..002c  move-result-object  v5
+    002c..0030  new-instance  v4, Lcom/google/common/collect/ImmutableList$Builder;
+    0030..0036  invoke-direct  {v4}, Lcom/google/common/collect/ImmutableList$Builder;-><init>(V)
+    0036..003c  invoke-virtual  {v6}, Lorg/json/JSONArray;->length(I)
+    003c..003e  move-result  v3
+    003e..0040  const/4  v2, #0x0
+    0040..0044  if-ge  v2, v3, +0x16
+    0044..004a  invoke-virtual  {v6, v2}, Lorg/json/JSONArray;->optJSONObject(LI)
+    004a..004c  move-result-object  v1
+    004c..0050  if-eqz  v1, +0xd
+    0050..0054  new-array  v0, v7, [Ljava/lang/Object;
+    0054..0058  aput-object  v1, v0, v8
+    0058..005e  invoke-virtual  {v5, v0}, Ljava/lang/reflect/Constructor;->newInstance(LL)
+    005e..0060  move-result-object  v0
+    0060..0066  invoke-virtual  {v4, v0}, Lcom/google/common/collect/ImmutableList$Builder;->add(LL)
+    0066..006a  add-int/lit8  v2, v2, #0x1
+    006a..006c  goto  -0x15
+    006c..0072  invoke-virtual  {v4}, Lcom/google/common/collect/ImmutableList$Builder;->build(L)
+    0072..0074  move-result-object  v0
+    0074..0076  return-object  v0
+    0076..007c  invoke-static  {}, Lcom/google/common/collect/ImmutableList;->of(L)
+    007c..007e  move-result-object  v0
+    007e..0080  return-object  v0
+    # exception table: 3 try range(s)
+    # catch Ljava/lang/NoSuchMethodException; code_units 000c..0028 -> 003b
+    # catch Ljava/lang/IllegalAccessException; code_units 000c..0028 -> 003b
+    # catch Ljava/lang/InstantiationException; code_units 0028..0033 -> 0033
+    # catch Ljava/lang/reflect/InvocationTargetException; code_units 0028..0033 -> 0033
+    # catch Ljava/lang/NoSuchMethodException; code_units 0028..0033 -> 003b
+    # catch Ljava/lang/IllegalAccessException; code_units 0028..0033 -> 003b
+    # catch Ljava/lang/NoSuchMethodException; code_units 0036..003b -> 003b
+    # catch Ljava/lang/IllegalAccessException; code_units 0036..003b -> 003b
+.end method
+
+
+=== mex-participant-edge-constructor.txt ===
+
+# class: LX/8yl;
+# extends: LX/LbE;
+
+.method public <init>(VL)  # .registers 3
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00h;->A0A(VLI)
+    0008..000e  invoke-direct  {v1, v2}, LX/LbE;-><init>(VL)
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+
+=== mex-participant-history-reader.txt ===
+
+# class: LX/8kW;
+# extends: Ljava/lang/Object;
+
+.method public A0q(LLL)  # .registers 2
+    0000..0006  invoke-virtual  {v0, v1}, LX/LbE;->A0G(ZL)
+    0006..0008  move-result  v0
+    0008..000e  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+    000e..0010  move-result-object  v0
+    0010..0012  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+
+=== mex-participant-type-hash.txt ===
+
+# class: LX/3c9;
+# extends: Ljava/lang/Object;
+
+.method public A0E(IL)  # .registers 2
+    0000..0004  const-string  v0, "__typename"
+    0004..000a  invoke-virtual  {v1, v0}, LX/LbE;->A0F(LL)
+    000a..000c  move-result-object  v0
+    000c..0012  invoke-virtual  {v0}, Ljava/lang/String;->hashCode(I)
+    0012..0014  move-result  v0
+    0014..0016  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+
+=== mex-participant-required-string.txt ===
+
+# class: LX/LbE;
+# extends: Ljava/lang/Object;
+
+.method public A0F(LL)  # .registers 3
+    0000..0004  iget-object  v0, v1, LX/LbE;->A00:Lorg/json/JSONObject;
+    0004..000a  invoke-virtual  {v0, v2}, Lorg/json/JSONObject;->optString(LL)
+    000a..000c  move-result-object  v0
+    000c..0012  invoke-static  {v0}, LX/00h;->A06(VL)
+    0012..0014  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+
+=== mex-participant-join-boxing.txt ===
+
+# class: LX/1xf;
+# extends: Ljava/lang/Object;
+
+.method public A17(LI)  # .registers 2
+    0000..0002  int-to-long  v0, v1
+    0002..0008  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(LJ)
+    0008..000a  move-result-object  v0
+    000a..000c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

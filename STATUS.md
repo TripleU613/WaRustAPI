@@ -1121,3 +1121,19 @@ xtask), 24 default CLI tests, strict Clippy, warning-free Rustdoc, formatting,
 CLI reference/API symbols, hygiene (557 local links), staged whitespace passed.
 Both actual exports reproduced: new 43-file catch-aware snapshot and prior
 23-file default-format snapshot, with complete checksums unchanged for the latter.
+
+MEX object-edge roles now project in Rust and via explicit --edge-roles on
+mex-response-inspect (--group-info required): ordered recognized enum strings,
+nonobject skips and nullable/wrong-type list fallback. Eighteen synthetic cases
+cover both payload children. This is a field projection before phash/member
+validation, not a member map/state update. Participant constructor fields and
+history/join boxing are now traced; literal class tables confirm BotJid is a
+UserJid through abstract 0ZX, whose zero class-data pointer explains the empty
+method lookup. Remaining full conversion/type/alias/boolean/application gaps
+are [documented](docs/protocol/mex.md#participant-model-fields-and-object-edge-projection-2026-10-07).
+No saved account, identity, action state or live request changed.
+Edge projection validation: 621 workspace/all-feature tests, 24 default CLI
+tests, strict Clippy, warning-free Rustdoc, formatting, CLI reference/API symbol
+checks and hygiene (564 local links) passed. Actual CLI checked 36 edge modes,
+36 combined numeric modes, 36 unchanged redacted defaults and the flag dependency;
+blocked projections never emitted partial stdout or private sentinel content.

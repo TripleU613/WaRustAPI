@@ -1410,3 +1410,17 @@ tests, strict Clippy, warning-free Rustdoc, formatting, CLI reference/API symbol
 hygiene (557 links), staged whitespace. Both actual new catch-aware and prior
 default-format APK exports reproduced exactly. Phash null return is confirmed;
 retaining existing members remains inferred until downstream application is traced.
+
+MEX object-edge projection prerequisite: Rust and explicit --edge-roles on the
+existing offline inspector preserve list filtering/order and recognized roles
+(18 synthetic cases, both payload children). This is before phash/participant
+validation, not a completed member map. Participant result slots/history/join
+boxing and literal BotJid -> abstract 0ZX -> UserJid hierarchy are now traced;
+zero class data did not mean class absence. Full conversion and durable
+application remain unfinished. [Findings/unknowns](protocol/mex.md#participant-model-fields-and-object-edge-projection-2026-10-07).
+No saved account/live request changed.
+Edge projection validation: 621 workspace/all-feature tests, 24 default CLI
+tests, strict Clippy, warning-free Rustdoc, formatting, CLI reference/API symbol
+checks, hygiene (564 links) and staged whitespace. Actual CLI: 36 edge modes,
+36 combined numeric modes, 36 default summaries and flag dependency; private
+content and partial stdout were absent on refusals.

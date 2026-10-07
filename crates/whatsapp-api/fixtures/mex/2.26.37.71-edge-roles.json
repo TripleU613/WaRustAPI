@@ -1,0 +1,295 @@
+{
+  "apk_version": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "evidence": "Synthetic branch fixtures: LbE.A0A/A09 object filtering and empty fallback; 8yl constructor; LbE.A0C/4R7 roles; callback gate. Edge diagnostics precede participant/JID/phash conversion and are not a member map.",
+  "cases": [
+    {
+      "name": "missing",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {}
+          }
+        }
+      },
+      "roles": []
+    },
+    {
+      "name": "null",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": null
+            }
+          }
+        }
+      },
+      "roles": []
+    },
+    {
+      "name": "string",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": "private-edge-sentinel"
+            }
+          }
+        }
+      },
+      "roles": []
+    },
+    {
+      "name": "number",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": 42
+            }
+          }
+        }
+      },
+      "roles": []
+    },
+    {
+      "name": "object",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": {}
+            }
+          }
+        }
+      },
+      "roles": []
+    },
+    {
+      "name": "boolean",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": true
+            }
+          }
+        }
+      },
+      "roles": []
+    },
+    {
+      "name": "empty",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": []
+            }
+          }
+        }
+      },
+      "roles": []
+    },
+    {
+      "name": "mixed-object-list",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                null,
+                7,
+                true,
+                "private-edge-sentinel",
+                [],
+                {
+                  "role": "admin_member"
+                },
+                {
+                  "role": "MEMBER"
+                },
+                {
+                  "role": "SUPERADMIN_MEMBER"
+                },
+                {
+                  "role": "unknown"
+                },
+                {},
+                {
+                  "role": null
+                },
+                {
+                  "role": true
+                },
+                {
+                  "role": {
+                    "name": "ADMIN_MEMBER"
+                  }
+                },
+                {
+                  "role": [
+                    "ADMIN_MEMBER"
+                  ]
+                },
+                {
+                  "role": 4
+                },
+                {
+                  "role": " ADMIN_MEMBER"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "roles": [
+        "admin",
+        "member",
+        "superadmin",
+        "unrecognized",
+        "unrecognized",
+        "unrecognized",
+        "unrecognized",
+        "unrecognized",
+        "unrecognized",
+        "unrecognized",
+        "unrecognized"
+      ]
+    },
+    {
+      "name": "duplicate-and-source-role",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "edges": [
+                {
+                  "role": "MEMBER",
+                  "participant": {
+                    "role": "ADMIN_MEMBER",
+                    "display_name": "private-edge-sentinel"
+                  }
+                },
+                {
+                  "role": "MEMBER"
+                },
+                {
+                  "role": "admın_member"
+                },
+                {
+                  "role": "ſuperadmin_member"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "roles": [
+        "member",
+        "member",
+        "admin",
+        "superadmin"
+      ]
+    },
+    {
+      "name": "hash-match-diagnostic-not-map",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {
+              "participants_phash_match": true,
+              "edges": [
+                {
+                  "role": "ADMIN_MEMBER"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "roles": [
+        "admin"
+      ]
+    },
+    {
+      "name": "missing-group",
+      "payload": {
+        "data": {
+          "private-edge-sentinel": 1
+        }
+      }
+    },
+    {
+      "name": "null-group",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": null
+        }
+      }
+    },
+    {
+      "name": "missing-participants",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {}
+        }
+      }
+    },
+    {
+      "name": "null-participants",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": null
+          }
+        }
+      }
+    },
+    {
+      "name": "nonobject-participants",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": "private-edge-sentinel"
+          }
+        }
+      }
+    },
+    {
+      "name": "server-errors",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {}
+          }
+        },
+        "errors": [
+          {
+            "message": "private-edge-sentinel"
+          }
+        ]
+      }
+    },
+    {
+      "name": "invalid-errors",
+      "payload": {
+        "data": {
+          "xwa2_group_query_by_id": {
+            "participants": {}
+          }
+        },
+        "errors": [
+          "private-edge-sentinel"
+        ]
+      }
+    },
+    {
+      "name": "blocked-invalid-field",
+      "payload": {
+        "data": "private-edge-sentinel"
+      }
+    }
+  ]
+}

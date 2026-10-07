@@ -835,3 +835,83 @@ Use the existing `apk-research-bundle --recipe ... --check` and
 `apk-research-diff <old-cache> <new-cache>` commands above. Compare fully
 checksum-verified snapshots; review annotation/scope changes separately from
 protocol changes before applying a Rust patch.
+
+## Participant model fields and object-edge projection (2026-10-07)
+
+**Confirmed static**, APK 2.26.37.71 SHA-256 above: selected
+[model/list instructions](mex-participant-model-evidence.txt) close the
+previously untraced list reader, role typename getter, history boxing and
+participant constructor. Earlier [32q.A00](mex-participant-role-evidence.txt)
+passes reordered/filtered arguments to `31c.<init>`; the constructor has ten
+registers, this=v0 and arguments v1..v9. Its exact stored fields are:
+
+| Field | Constructor register | Meaning from ADv.A0D/32q callers |
+| --- | --- | --- |
+| A00 | v1 | filtered InteropUserJid (null on these two branches) |
+| A01 | v2 | filtered LID alias |
+| A02 | v3 | filtered PhoneUserJid alias |
+| A03 | v4 | primary UserJid, including BotJid |
+| A04 | v5 | nullable boxed history boolean |
+| A05 | v6 | nullable boxed join-time long |
+| A07 | v7 | converted role string |
+| A06 | v8 | nullable display name |
+| A08 | v9 | extra nullable string; null on these branches, meaning unknown |
+
+`1xf.A17` **int-to-long** sign extends then boxes Long. ADv.A0D only calls
+it after optInt(join_time)>0. There is no multiplication here; its final
+storage unit remains **unknown**. `8kW.A0q` calls the already traced A0G and
+boxes Boolean. The caller's isNull guard distinguishes missing/null history
+from a present false/default-false value. `3c9.A0E` calls A0F("__typename")
+then String.hashCode. A0F itself is **optString**, not a required-string getter;
+missing values use platform empty-string fallback. This refutes treating a
+missing participant typename as a required-field exception at this helper.
+
+**Confirmed class hierarchy, independently read class_def literals:**
+[small class-table artifact](mex-participant-jid-hierarchy.json) records DEX
+name, absolute class_def offset, flags, superclass, interfaces, class_data
+pointer and literal 32 bytes. `0hh -> 0ZX -> UserJid`; 0ZX is public abstract
+(flags 0x401) with **class_data_offset=0**. Thus apk-smali's no-method-body
+result for 0ZX was not class absence. BotJid is also a UserJid; do not model
+the second strict UserJid parser as PN-only or disjoint from bot. The artifact
+also records concrete LID 0ZY and device bot Ble (parent 0e0, ancestor chain
+not traced here). This raw read used the DEX class_def layout and only ASCII
+descriptor literals, not a claim of a new full Modified UTF-8/DEX verifier.
+Rust's existing JID/server/send policy remains unchanged; no saved identities
+are reclassified or merged from these type facts.
+
+**Confirmed list semantics:** LbE.A0A calls A09 then substitutes empty
+ImmutableList for null. A09 optJSONArray returns null for missing/null/wrong
+type. It visits each array entry using optJSONObject, skips nonobjects,
+instantiates the selected class and preserves source order/duplicates. The
+known 8yl constructor only asserts nonnull then wraps JSONObject. Reflection
+NoSuchMethodException/IllegalAccessException returns empty; the per-element
+InstantiationException/InvocationTargetException skips that element. Catch
+ranges and typed targets are in the artifact. Reflection failure simulation
+is not part of the Rust JSON-value projection.
+
+**Implemented:** `MexJsonResponse::group_participant_edge_roles()` applies
+this object-edge filter and the existing role converter. It requires the
+supported callback gate and group/participants objects. Missing/null/nonarray
+edges yields empty; nonobject array entries skip; duplicate edges stay ordered.
+Role comes from the edge, not its nested participant. Nonstring JSON values
+cannot spell an enum name, so optString/enum lookup gives unrecognized for all
+such values. [Eighteen synthetic branch cases](../../crates/whatsapp-api/fixtures/mex/2.26.37.71-edge-roles.json)
+cover both payload children, nullable/wrong-type lists, mixed objects, duplicates,
+Unicode role reference cases, required-model refusals and blocked callbacks.
+
+```sh
+target/debug/xtask mex-response-inspect --input /private/mex-response.json \
+  --group-info --edge-roles
+```
+
+`--edge-roles` requires `--group-info`, prints only
+`group_participant_edge_roles` enum strings, never identifiers/subject/display
+names or unrecognized input text. Default output remains unchanged. All
+projections are calculated before stdout, so a failure after --group-numbers
+still produces no partial output. These are **object-edge roles**, before
+phash short-circuit or nested participant/typename/JID checks; even missing
+nested participants can appear. The output is not a member count/map, a full
+group validity verdict, or durable state application. It does not reinterpret
+phash null as empty. Full participant boolean/JID/alias/type conversion,
+feature maps and downstream state application remain **unknown/unimplemented**.
+No saved account was opened and no live request was sent.

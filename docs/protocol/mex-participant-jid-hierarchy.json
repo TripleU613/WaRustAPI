@@ -1,0 +1,65 @@
+{
+  "apk_version": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "evidence": "Direct DEX class_def literal reads; no constructor execution. Descriptor literals here are ASCII; this script does not claim a full Modified UTF-8 decoder.",
+  "classes": [
+    {
+      "dex_file": "classes.dex",
+      "class_def_offset": 1387488,
+      "class": "Lcom/whatsapp/infra/core/jid/UserJid;",
+      "access_flags": "0x401",
+      "superclass": "LX/0Cy;",
+      "interfaces": [
+        "Ljava/lang/Cloneable;"
+      ],
+      "class_data_offset": 9738189,
+      "raw_class_def_hex": "ac4b000001040000df020000342b19000000000000000000cd97940000000000"
+    },
+    {
+      "dex_file": "classes.dex",
+      "class_def_offset": 1432224,
+      "class": "LX/0ZX;",
+      "access_flags": "0x401",
+      "superclass": "Lcom/whatsapp/infra/core/jid/UserJid;",
+      "interfaces": [],
+      "class_data_offset": 0,
+      "raw_class_def_hex": "2408000001040000ac4b00000000000000000000000000000000000000000000"
+    },
+    {
+      "dex_file": "classes.dex",
+      "class_def_offset": 1432256,
+      "class": "LX/0ZY;",
+      "access_flags": "0x11",
+      "superclass": "LX/0ZX;",
+      "interfaces": [
+        "Landroid/os/Parcelable;"
+      ],
+      "class_data_offset": 9815033,
+      "raw_class_def_hex": "250800001100000024080000d8e418000000000000000000f9c3950000000000"
+    },
+    {
+      "dex_file": "classes.dex",
+      "class_def_offset": 1448416,
+      "class": "LX/0hh;",
+      "access_flags": "0x11",
+      "superclass": "LX/0ZX;",
+      "interfaces": [
+        "Landroid/os/Parcelable;"
+      ],
+      "class_data_offset": 9850234,
+      "raw_class_def_hex": "0b0a00001100000024080000d8e4180000000000000000007a4d960000000000"
+    },
+    {
+      "dex_file": "classes7.dex",
+      "class_def_offset": 1435636,
+      "class": "LX/Ble;",
+      "access_flags": "0x11",
+      "superclass": "LX/0e0;",
+      "interfaces": [
+        "Landroid/os/Parcelable;"
+      ],
+      "class_data_offset": 9228153,
+      "raw_class_def_hex": "9e1700001100000022020000f4b71a00000000000000000079cf8c0000000000"
+    }
+  ]
+}

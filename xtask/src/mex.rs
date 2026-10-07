@@ -274,6 +274,7 @@ pub fn inspect_response(
     child: &str,
     group_info: bool,
     group_numbers: bool,
+    edge_roles: bool,
 ) -> Result<(), String> {
     use whatsapp_api::transport::mex::{MAX_JSON_RESPONSE_BYTES, parse_json_response};
     if !matches!(child, "result" | "update") {
@@ -298,6 +299,14 @@ pub fn inspect_response(
             "subject_creation_scaled": numbers.subject_creation_scaled.to_string(),
             "announcement_version": numbers.announcement_version.to_string(),
         });
+    }
+    if edge_roles {
+        summary["group_participant_edge_roles"] = serde_json::to_value(
+            parsed
+                .group_participant_edge_roles()
+                .map_err(|e| e.to_string())?,
+        )
+        .map_err(|_| "cannot encode MEX edge roles")?;
     }
     println!(
         "{}",
