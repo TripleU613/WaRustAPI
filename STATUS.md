@@ -130,10 +130,19 @@ Native research now locates separate Superpack decoders and V3/V4 fingerprint
 symbols in one decoded stream. The ARM64 decoder loads and initializes all
 19 JNI methods locally, exiting zero. A bounded first-entry reconstruction
 returns native `9/2` / `could not extract file from archive`, with no output;
-real host memory metadata did not fix it. The helper's previously ineffective
-threaded-runner limits are corrected, with four integration checks including
-an infinite guest. Archive reconstruction and modern safety-number algorithms
-remain unfinished. These tooling checks make no live account request.
+real host memory metadata did not fix it. Worker tracing now identifies an
+oversized-file comparison against zero requested bytes, despite the matching
+125448 declared/produced sizes. This partial-range result does not establish
+ordinary full extraction failure; bounded full-entry checks have reached wall
+limits without output or native refusal. Hash-pinned branch/futex tracing is
+available. The unmodified ordinary full decoder now succeeds under QEMU,
+returning 80 entries (one duplicate) and 79 valid ARM64 ELFs; a second run
+matches all 79 hashes. V3/V4 fingerprint code anchors and containing unwind
+ranges are located in reconstructed `libwhatsapp.so`; the algorithms and active
+scheme remain unfinished. The helper's previously ineffective threaded-runner
+limits are corrected, with eight regression checks including actual guest
+execution, resource guards and preflight/output preservation. These tooling
+checks make no live account request.
 [Evidence, setup failures and remaining warnings](docs/protocol/native-unpacking.md).
 
 529 all-feature tests (`cargo test --locked --workspace --all-features`) and

@@ -1,5 +1,12 @@
 # Native archive reconstruction boundary
 
+**Current result:** the ordinary unmodified 37.71 ARM64 decoder completes under
+QEMU: 80 returned entries, 79 unique valid ELF libraries, independently reproduced
+with matching hashes. The duplicate entry is `libsodium.so`. The Qiling partial
+range failure and full-run timeouts below are historical tool-specific results,
+not evidence that the archive cannot be reconstructed. Native fingerprint
+algorithms and active UI scheme selection still require tracing.
+
 ## Evidence and result (2026-10-07)
 
 **Confirmed/static:** the comparison APK is WhatsApp **2.26.37.71**, SHA-256
@@ -254,3 +261,164 @@ extraction tests. Repository hygiene passed with 261 local links and 564315
 research-checksum bytes. Rust runtime sources were unchanged. Diagnostic logs
 are preserved privately in native `execution-checks-2026-10-07/`; this includes
 the original failed attempts rather than only their corrected successors.
+
+## Follow-up: requested bytes versus declared stream size
+
+**Observed/local, same unmodified ARM64 decoder:** a bounded read-only worker
+trace reaches `0x1ef00`, `0x1ef40`, `0x1efa4`, then `0x1f044` for stream 6,
+type 42. Produced bytes are 125448, but task `+0x20` is **zero**. Task
+`+0x18` is 125448, and `+0x50` (conditional hash-check flag) is zero.
+Thus the failure is the oversized-file branch against the requested count;
+it is **not** a traced hash mismatch or failure to produce the declared size.
+The previous general statement that equal printed sizes did not identify the
+branch is superseded by this trace. The error and comparison are preserved;
+no task field or native return value was patched.
+
+**Confirmed/static:** producer `0x1e544..0x1e564` writes stream index/type at
+`+8/+12`, declared length at `+0x18`, requested length at `+0x20`, and the
+equality-derived hash-check flag at `+0x50`. At `0x1e3f8..0x1e424`, the
+requested size initially equals declared size; context `+0xc8` can instead
+select an indexed size from the stack table using context `+0xcc`. Worker
+`0x1ef00..0x1ef08` compares produced to requested. The failure diagnostic
+`0x1f044..0x1f078` prints declared size as "Expected" and requested count
+separately, explaining why the two prominent printed lengths agreed.
+
+**Inferred/unknown:** the partial range recipe likely activates the indexed
+size selection. The flag's complete setter/caller chain, why a zero requested
+count reaches this file handler, and whether this is valid for partial ranges
+remain untraced. The `[0,1)` result cannot establish that ordinary full-archive
+extraction fails. The harness now also captures `decompress_from_so` by its
+registered signature and calls that ordinary entry without a partial range.
+
+**Observed negative, not a native refusal:** the first full-archive check used
+1 billion/60-second bounds and was terminated by its parent wall limit, with
+no output. A subsequent 30-second worker trace likewise timed out after
+progress beyond 100 million charged instructions. The optimized branch/futex
+observer reached beyond 200 million before its 30-second limit, with no
+recorded worker failure branch or file. These results establish insufficient
+completed execution, not the same native `9/2` response as the range attempt.
+
+`--trace-worker` requires the exact 37.71 ARM64 decoder hash before interpreting
+any native offsets. It reports at most 64 exceptional branch records with
+stage/offset, stream/type, declared/requested/produced byte counts and the
+hash-check flag. Futex observation reports at most 64 state transitions using
+local selector numbers rather than addresses; consecutive duplicates are
+collapsed. It preserves the underlying syscall/scheduler behavior. Progress is
+reported each 100 million conservatively charged instructions. Other builds
+are refused instead of being interpreted with this layout.
+
+The full-archive mode retains the empty-destination guard. Integration coverage
+now also proves both extraction modes preserve partial output and tracing
+refuses an unknown decoder before execution. Execution bounds remain enforced
+by the same mechanisms; the configurable ceilings are now 600 seconds and
+10 billion instructions, with unchanged 10-second/1-million defaults, because
+full reconstruction exceeded the initial short research windows. These are
+local tooling budgets, not server limits.
+
+**Observed extended execution:** a 150-second full-entry run progressed past
+1.2 billion charged instructions before its wall timeout, without a traced
+failure or file. A subsequent full-entry attempt is bounded at 600 seconds/
+10 billion instructions. Its outcome must be inspected from the live process
+and output; the larger budget is not evidence of extraction success.
+
+**Confirmed/static path construction:** `0x33628..0x33704` measures both path
+components, checks a 4096-byte combined-length boundary and formats literal
+`%s/%s` at `0x33f5`. Writer `0xa774` supplies the third input string as the
+first component and the archive entry name as the second. This resolves the
+previously untraced join: `/decoded` produces `/decoded/<entry-name>` rather
+than concatenating the two without a separator.
+
+## Ordinary full extraction succeeds under QEMU
+
+**Observed/local:** installed QEMU **11.1.1** loads the own-source probe and
+the exact unmodified 37.71 decoder against the same pinned Bionic fixtures.
+Initial attempts returned `Exec format error` because the private probe/linker
+copies lacked executable mode. Making those two copies executable resolved
+it; relative interpreter prefixes also worked after that correction. No ELF
+bytes, account identity or protocol input were changed. The public hello was
+only tried before this correction; its QEMU success is not claimed.
+
+A first isolated attempt failed because `/qemu` did not exist under a read-only
+root mount. Preparing an empty mount point resolved it. The checked-in
+[QEMU runner](../../tools/apk-research/native_qemu_check.py) handles these local
+fixture prerequisites, validates the exact decoder/container hashes, and uses
+Bubblewrap with network/PID namespaces, an empty environment, a read-only
+fixture root and only `/decoded` writable for extraction. It runs the decoder
+probe, not WhatsApp or any account. Process timeout is enforced by the parent;
+Bubblewrap's die-with-parent behavior terminates the worker. QEMU has no
+instruction counter in this helper. The configurable wall limit defaults to
+30 seconds and allows 1–600 seconds. QEMU's
+[official user-mode documentation](https://www.qemu.org/docs/master/user/main.html)
+describes syscall translation and host-backed guest threading; it does not
+establish Android application/runtime compatibility.
+
+**Observed/local positive:** full `decompress_from_so`, type `spo`, destination
+`/decoded`, returned 80 names and process exit zero within the 30-second bound.
+The list contains `libsodium.so` twice, leaving 79 unique files totaling
+**62,743,576 bytes**. All 79 parse as little-endian 64-bit `EM_AARCH64`, `ET_DYN`
+ELFs; every program segment's file extent lies within its file. This is actual
+ELF reconstruction, unlike the earlier bare XZ stream. The duplicate entries'
+original byte equality is **unknown**; only the final unique file is retained
+by the official writer. Do not silently report 80 distinct libraries.
+
+The checked-in wrapper reproduced full extraction into the original Qiling
+fixture root, exited zero, and all 79 hashes independently match the first
+run. Repeating extraction into that populated directory refuses locally;
+partial/existing files are not deleted or overwritten. Original APK, decoder,
+container and failed-attempt logs remain preserved. The slower Qiling attempt
+was terminated after QEMU success (its process handle completed with 143);
+it had continued past 2.8 billion charged instructions without an output.
+This was an intentional cancellation of a redundant local comparison, not a
+native refusal or a completed Qiling extraction.
+
+| Reconstructed target | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `libwhatsapp.so` | 13790464 | `f41f3fae89dbc18f8469c2c048df3dcf0648c193f9c7d60b878ac2014ec9551a` |
+| `libwhatsappmerged.so` | 7726208 | `565f6c0e5581fe0b9ccc564f2d807d5363b8333abd32513e1722d6880d1c70aa` |
+
+Private outputs are in native `qiling-range-trace-rootfs/decoded/` and
+`qiling-rootfs/decoded/`; `extracted-libraries-manifest.json` records every
+unique file's hash/size and target anchors. They are ignored raw libraries,
+not committed research/media bundles. Only the own-source harness, evidence
+and reproducible command surface are tracked.
+
+## Fingerprint anchors in a reconstructed ELF
+
+**Confirmed/static, reconstructed `libwhatsapp.so`, same build/hash above:**
+the four earlier strings now have real ELF `.rodata` file offsets/VAs. They
+have no matching dynamic export or direct `.rela.dyn` addend; absence there
+does not mean the routines are missing. ARM64 ADRP/ADD references and compiler
+unwind ranges establish the following containing code locations:
+
+| Anchor | String file offset/VA | Example ADRP/ADD VAs | Containing unwind range |
+| --- | --- | --- | --- |
+| V3 create individual params | `0x11f558` | `0x71333c`, `0x713340` | `0x7132b4..0x713620` |
+| V4 create individual params | `0x11f529` | `0x7147cc`, `0x7147d0` | `0x7145d0..0x71493c` |
+| V3 compare individual fingerprints | `0xb50cc` | `0x714328`, `0x71432c` | `0x7140fc..0x714358` |
+| V4 compare individual fingerprints | `0xb5094` | `0x7155a4`, `0x7155a8` | `0x7152fc..0x7155d8` |
+
+These are the literal names recorded in the earlier anchor table, shortened
+here for readability. Range ends are exclusive. The unwind ranges identify
+compiler code extents containing those references, not a recovered C signature
+or proof of a complete fingerprint algorithm. They must not be confused with
+the first-XZ-stream offsets. Compact private disassemblies are
+`fingerprint-v3-create.txt`, `fingerprint-v4-create.txt`,
+`fingerprint-v3-compare.txt`, `fingerprint-v4-compare.txt`, plus
+`fingerprint-anchor-xrefs.txt`. The next step is tracing their input validation,
+producers and cryptographic calls, then the Java/wamsys dispatch mapping.
+
+## Validation of the full-reconstruction tooling change
+
+**Observed/local:** all eight Python runner regressions passed with the public
+rootfs configured (no skipped cases). Separate actual QEMU initialization
+registered 19 JNI methods and exited zero. A populated-destination check
+returned exit 2 and preserved all 79 existing file hashes. The independently
+reproduced full extraction described above is the positive reconstruction
+check; the regression suite itself does not execute the APK decoder.
+
+CLI reference regeneration/test, workspace formatting and repository hygiene
+passed. No Rust runtime behavior changed in this tooling update. The failed,
+cancelled and successful execution logs are retained privately under
+`lab/apk-2.26.37.71/native/execution-checks-2026-10-07/`; native outputs and
+the complete per-file manifest remain ignored local artifacts. No account
+store was opened and no live WhatsApp request was sent.

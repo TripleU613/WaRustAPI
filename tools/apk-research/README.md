@@ -28,9 +28,9 @@ hello fixture by default, with an empty guest environment. It requires an
 observed `exit_group(0)`. Missing fixtures/dependencies
 are diagnosed before execution. Rootfs/tool environments stay in ignored `lab/`.
 
-`--timeout-seconds` is a parent-process wall limit (default 10, range 1–60).
+`--timeout-seconds` is a parent-process wall limit (default 10, range 1–600).
 `--max-instructions` charges whole ARM64 basic blocks across all guest threads
-before execution (default 1000000, range 1–1000000000). Qiling's threaded runner
+before execution (default 1000000, range 1–10000000000). Qiling's threaded runner
 ignores its ordinary `run(timeout, count)` arguments; those alone did **not**
 enforce the bounds claimed by the first version of this helper. Both guards now
 have integration checks, including a real infinite ARM64 guest. A limit or
@@ -100,14 +100,32 @@ and does not delete partial results. Selecting one output still requires
 internal shared archive work. Tested bounds: `--max-instructions 1000000000
 --timeout-seconds 30`. This attempt **fails**, with native `9/2` and an
 `AssetDecompressionException`; no file was reconstructed. A 50-million budget
-was insufficient even to reach that outcome. Native extraction is unfinished.
+was insufficient even to reach that outcome. This Qiling range mode does not
+establish the ordinary full extraction outcome; QEMU succeeds as described below.
+
+`--check decoder-full-archive` invokes the registered ordinary
+`decompress_from_so` entry without partial-range bounds, using the same required
+container and empty destination. The range failure compares returned length to
+a zero requested-byte count, whereas its prominent diagnostic prints the full
+declared size. It does not establish the ordinary full-archive outcome. Initial
+full checks exceeded 30/60-second limits without a native refusal or output.
+
+`--trace-worker` requires the pinned 37.71 ARM64 decoder hash and an extraction
+check. It emits exceptional branch stage/offset, stream/type, declared/requested/
+produced counts and the hash-check flag, capped at 64 records. At most 64 futex
+state transitions use local selector numbers instead of addresses; consecutive
+duplicates are collapsed. Charged instruction progress prints each 100 million.
+It observes without altering native comparisons, returns or syscall behavior.
+Unknown decoder builds are refused. The source/layout evidence is in
+[the worker follow-up](../../docs/protocol/native-unpacking.md).
 
 `--host-meminfo` explicitly maps real host `/proc/meminfo` for the local decoder.
 It removes the missing-memory-metadata warning, but the tested reconstruction
 still fails identically. It neither invents Android properties nor supplies
 WhatsApp account/device prerequisites. Without the flag that path stays absent.
 
-Regression checks (four passed locally, including genuine guest execution):
+Regression checks (six passed locally, including genuine guest execution,
+partial-output preservation and refusal to trace an unknown decoder):
 
 ```sh
 TELEWHATSAPP_LOADER_ROOTFS=lab/apk-2.26.37.71/native/qiling-rootfs \
@@ -119,3 +137,43 @@ The rootfs-dependent tests skip if that environment variable is absent. The
 timeout test also needs Clang/LLD and builds its loop fixture in a temporary
 directory. [Native evidence and remaining unknowns](../../docs/protocol/native-unpacking.md)
 records APK addresses, JNI provenance, failures and actual check results.
+
+## Ordinary full extraction with QEMU
+
+`native_qemu_check.py --rootfs PATH [--check decoder-init|decoder-full-archive]
+[--timeout-seconds N]` uses installed `bwrap` and `qemu-aarch64-static`.
+The wall limit defaults to 30 seconds and accepts 1–600; there is no instruction
+counter in this runner. It validates the exact 37.71 decoder/container hashes,
+uses an empty environment, isolates network/PIDs, mounts fixtures read-only
+and permits extraction file writes only under `/decoded`. It prepares mount
+points and makes only the local probe/linker copies executable (QEMU refused
+their original non-executable mode). Build the same C probe/imports above first.
+
+```sh
+python tools/apk-research/native_qemu_check.py \
+  --rootfs lab/apk-2.26.37.71/native/qiling-rootfs --check decoder-init
+python tools/apk-research/native_qemu_check.py \
+  --rootfs lab/apk-2.26.37.71/native/qiling-rootfs \
+  --check decoder-full-archive --timeout-seconds 30
+```
+
+Full extraction requires an empty `decoded/` destination and the original
+outer ELF at `system/lib64/wa_archive.so`. A repeat into populated storage
+refuses; no existing/partial output is deleted. Locally the normal full entry
+returned 80 names and process exit zero, yielding 79 unique ARM64 ELF files
+(one duplicate `libsodium.so` name). An independent wrapper run reproduced all
+79 hashes. Raw libraries remain ignored. This executes the decoder alone;
+it does not run WhatsApp, authenticate an account or recover a safety-number
+algorithm by itself.
+
+Both runners' regression checks (eight passed locally):
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 \
+  TELEWHATSAPP_LOADER_ROOTFS=lab/apk-2.26.37.71/native/qiling-rootfs \
+  lab/native-analysis-tools-py312/bin/python -m unittest discover \
+  -s tools/apk-research -p 'test_native_*check.py' -v
+```
+
+QEMU preflight checks require no emulator execution; real QEMU initialization
+and full extraction were validated separately against the pinned artifacts.

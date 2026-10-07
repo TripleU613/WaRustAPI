@@ -641,6 +641,15 @@ now loads and registers 19 JNI methods locally, exiting zero. Bounded first-entr
 reconstruction fails with native `9/2`; no file is produced, even with real host
 memory metadata. Native algorithm recovery and human verification remain
 unfinished. The helper's ineffective original threaded limits were corrected;
-four integration checks cover actual guest execution and both resource guards.
+eight regression checks cover actual guest execution, both resource guards,
+partial-output preservation and refusing unknown trace layouts. Worker tracing
+shows a zero requested count triggering the partial-range oversized-file
+branch; normal full extraction has exceeded short wall limits without a
+native refusal/output. Ordinary full extraction now succeeds under QEMU:
+80 returned entries, 79 unique valid ARM64 ELF files, independently matching
+all hashes on a wrapper reproduction. V3/V4 fingerprint anchors and containing
+unwind ranges are located in `libwhatsapp.so`; algorithms, dispatch mapping
+and human verification remain unfinished. Full-entry/QEMU checks and
+hash-pinned read-only branch/futex diagnostics are exposed.
 Setup failures and remaining loader warnings are recorded in
 [native reconstruction evidence](protocol/native-unpacking.md).

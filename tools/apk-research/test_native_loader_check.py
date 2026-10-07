@@ -40,6 +40,28 @@ class LoaderTests(unittest.TestCase):
         self.assertIn("Hello, World!", result.stdout)
         self.assertIn("guest exit observed: [0]", result.stdout)
 
+    def test_archive_checks_preserve_partial_outputs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "decoded").mkdir()
+            partial = root / "decoded/partial.so"
+            partial.write_bytes(b"preserved partial artifact")
+            for check in ("decoder-first-entry", "decoder-full-archive"):
+                result = self.invoke(root, "--check", check)
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("requires an empty", result.stderr)
+                self.assertEqual(partial.read_bytes(), b"preserved partial artifact")
+
+    def test_trace_refuses_unknown_decoder_before_execution(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "system/lib64").mkdir(parents=True)
+            (root / "system/lib64/libsuperpack.so").write_bytes(b"wrong build")
+            result = self.invoke(root, "--check", "decoder-full-archive", "--trace-worker")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("requires the pinned 37.71", result.stderr)
+        self.assertNotIn("worker branch=", result.stdout)
+
     def test_instruction_guard_stops_actual_threaded_guest(self):
         result = self.invoke(self.public_root(), "--max-instructions", "1")
         self.assertNotEqual(result.returncode, 0)

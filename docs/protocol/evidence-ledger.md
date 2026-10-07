@@ -363,3 +363,27 @@ arguments. Parent-process wall limits and shared block charging now enforce
 bounds, tested with actual hello/infinite ARM64 guests. An initial C shadowed
 JNI pointer and proc-mapper API owner error were our harness bugs, corrected.
 No live account request occurred. [Full follow-up evidence](native-unpacking.md).
+
+**Observed/confirmed, worker follow-up:** stream 6's produced/declared sizes
+are 125448, but requested bytes are zero. It reaches the oversized-file branch
+`0x1efa4`, not a traced checksum mismatch. Producer `0x1e544..0x1e564` and
+worker `0x1ef00..0x1f078` distinguish the requested and declared fields; the
+diagnostic prominently prints the latter. Partial-range activation of the
+indexed requested-size selection remains inferred. Full `decompress_from_so`
+checks first timed out with no output/refusal; this refutes generalizing the
+range's `9/2` result to a demonstrated full-extraction failure. Read-only
+hash-pinned tracing and a normal full-entry probe are now reproducible, with
+tests for preserving partial files and rejecting unknown decoder layouts.
+
+**Observed/local positive:** QEMU 11.1.1 completes ordinary full extraction
+through the same unmodified decoder and own-source JNI probe. Executable-mode
+and read-only mount-point setup failures are corrected reproducibly. The
+isolated checked-in wrapper returns process zero and reproduces all 79 unique
+ELF hashes (80 names, duplicate libsodium.so), totaling 62743576 bytes. All
+parse as little-endian ARM64 ET_DYN with bounded file segment extents.
+**Confirmed/static:** reconstructed libwhatsapp.so contains the four V3/V4
+fingerprint anchors and identifiable ADRP/ADD references/unwind ranges.
+Dynamic exports/direct relocation references are absent for those names;
+input/crypto algorithms and dispatch mapping remain untraced. The redundant
+Qiling long run was explicitly terminated after QEMU success. No account
+state was opened or live request sent. [Complete evidence](native-unpacking.md).

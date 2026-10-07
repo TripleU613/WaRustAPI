@@ -24,7 +24,7 @@ struct NativeMethod {
 static void *env_table[234], *jni_env = env_table;
 static void *vm_table[8], *jni_vm = vm_table;
 static int registered, exception_pending;
-static void *range_entry;
+static void *range_entry, *full_entry;
 struct StringArray {
   int length;
   char **items;
@@ -117,6 +117,14 @@ static int register_natives(void *env, void *klass,
         unsupported();
       range_entry = methods[i].fn;
     }
+  for (int i = 0; i < count; i++)
+    if (!strcmp(methods[i].name, "decompress_from_so")) {
+      if (strcmp(methods[i].sig, "(Ljava/lang/String;Ljava/lang/String;Ljava/"
+                                 "lang/String;)[Ljava/lang/String;") ||
+          full_entry)
+        unsupported();
+      full_entry = methods[i].fn;
+    }
   registered += count;
   return 0;
 }
@@ -159,7 +167,8 @@ int main(int argc, char **argv, char **envp) {
   printf("JNI_OnLoad result=0x%x registered=%d\n", result, registered);
   if (result != 0x10006 || registered != 19 || exception_pending)
     return 4;
-  if (argc == 2 && !strcmp(argv[1], "--first-entry")) {
+  if (argc == 2 && (!strcmp(argv[1], "--first-entry") ||
+                    !strcmp(argv[1], "--full-archive"))) {
     /* APK entry requests flags=6 (NOW|NOLOAD); preload this local ELF. */
     void *archive = dlopen("/system/lib64/wa_archive.so", 2);
     if (!archive) {
@@ -168,12 +177,21 @@ int main(int argc, char **argv, char **envp) {
     }
     if (!range_entry)
       return 6;
-    /* 0xa964 loops while index < end: [0,1) selects one output entry. */
-    struct StringArray *files =
-        ((struct StringArray * (*)(void *, void *, const char *, const char *,
-                                   const char *, int, int))
-             range_entry)(&jni_env, 0, "/system/lib64/wa_archive.so", "spo",
-                          "/decoded", 0, 1);
+    struct StringArray *files;
+    if (!strcmp(argv[1], "--full-archive")) {
+      if (!full_entry)
+        return 6;
+      files = ((struct StringArray *
+                (*)(void *, void *, const char *, const char *, const char *))
+                   full_entry)(&jni_env, 0, "/system/lib64/wa_archive.so",
+                               "spo", "/decoded");
+    } else {
+      /* 0xa964 loops while index < end: [0,1) selects one output entry. */
+      files = ((struct StringArray * (*)(void *, void *, const char *,
+                                         const char *, const char *, int, int))
+                   range_entry)(&jni_env, 0, "/system/lib64/wa_archive.so",
+                                "spo", "/decoded", 0, 1);
+    }
     if (exception_pending || !files)
       return 7;
     printf("returned files=%d\n", files->length);
