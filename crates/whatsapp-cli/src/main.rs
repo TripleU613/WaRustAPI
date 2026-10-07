@@ -165,6 +165,12 @@ enum Cmd {
         /// Private JSON with normalized display identifiers and raw public key inventories.
         #[arg(long)]
         config: PathBuf,
+        /// Export native V4 comparison protobuf version 0 (keys) or 1 (digest).
+        #[arg(long, requires = "qr_output", value_parser = clap::value_parser!(u8).range(0..=1))]
+        qr_version: Option<u8>,
+        /// Create a new private binary QR payload file; existing files are refused.
+        #[arg(long, requires = "qr_version")]
+        qr_output: Option<PathBuf>,
     },
     /// Send one private-JSON text, image or voice note through the comparison outbox.
     #[cfg(feature = "experimental-transport")]
@@ -1384,7 +1390,11 @@ fn print_step(step: &RegistrationStep, json: bool) {
 
 async fn run(cli: Cli) -> Result<(), Error> {
     match &cli.cmd {
-        Cmd::FingerprintDisplay { config } => fingerprint::run(config),
+        Cmd::FingerprintDisplay {
+            config,
+            qr_version,
+            qr_output,
+        } => fingerprint::run(config, *qr_version, qr_output.as_deref()),
         #[cfg(feature = "experimental-transport")]
         Cmd::OutboxSend {
             config,

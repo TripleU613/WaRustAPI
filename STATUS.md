@@ -273,3 +273,19 @@ missing pins, but companions_verified=false (primary-only fallback).
 Original encrypted database bytes were unchanged. These are saved-state
 observations, not a live directory refresh or proof of complete inventory.
 Validation passed 536 workspace/all-feature tests and strict Clippy.
+
+Native V4 combined fingerprint protobuf export now supports QR versions 0/1
+through the library and paired fingerprint-display --qr-version/--qr-output
+flags. Independent synthetic wire fixtures preserve full LID, hosted-state
+presence and local PN omission; version 1 uses identifier-free H(K,K).
+Exports are private/create-only and do not open account storage. This is binary
+comparison data, not a QR image or a verified peer comparison. Active scheme,
+complete inventory, scanning/comparison and human-verification commits remain
+unfinished; no current-account QR or live operation was performed.
+
+Native QR export validation passed 540 workspace/all-feature and 233 default
+feature tests, strict Clippy, warning-free rustdoc and CLI reference. The rebuilt
+CLI matched independent 200/229-byte synthetic payloads for versions 0/1,
+created mode-600 files and refused repeats without changing them or creating
+an account store. A zero-qualified JID test exposed and fixed the new export's
+canonical-input guard; the generic JID parser and account state were unchanged.

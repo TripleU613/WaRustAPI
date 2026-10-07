@@ -741,3 +741,9 @@ current-account safety number or verification commit is implemented.
   Complete retained coverage is not proof of current APK fingerprint inventory.
 - [ ] Resolve active scheme/contact-state/username inputs and full own-device
   inventory before integrating current-peer fingerprint comparison.
+
+- [x] Export native V4 combined fingerprint protobuf version 0/1 from explicit
+  private inputs, with full LID/optional fields and create-only private output.
+- [ ] Render/compare real peer QR data with evidenced complete inventories and
+  active scheme before committing human verification. No current-peer QR export
+  or scan was performed.

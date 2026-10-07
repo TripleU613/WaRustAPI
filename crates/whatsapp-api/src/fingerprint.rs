@@ -5,6 +5,9 @@
 //! fetch device keys, parse/compare QR codes, or commit human verification.
 //! Evidence and independent fixtures: docs/protocol/safety-number.md.
 
+/// Native V4 comparison-payload serialization from explicit inputs.
+pub mod qr;
+
 use crate::{Error, Result};
 use serde::Serialize;
 use sha2::{Digest, Sha512};
@@ -32,22 +35,7 @@ pub fn native_display(identifier: &str, keys: &[[u8; 32]]) -> Result<String> {
             "requires a nonempty normalized ASCII identifier without NUL, at most 256 bytes",
         ));
     }
-    if keys.is_empty() || keys.len() > MAX_IDENTITY_KEYS {
-        return Err(Error::invalid(
-            "fingerprint.identity_keys",
-            "requires 1..128 raw 32-byte public identity keys",
-        ));
-    }
-    // 37.71 main 0x712ef0..0x712f84 sorts unsigned raw 32-byte keys;
-    // 0x712dc0..0x712e58 prepends 0x05; create 0x7146bc..0x714730
-    // concatenates serialized keys without deduplication. Input order is irrelevant.
-    let mut sorted = keys.to_vec();
-    sorted.sort_unstable();
-    let mut serialized = Vec::with_capacity(sorted.len() * 33);
-    for key in sorted {
-        serialized.push(0x05);
-        serialized.extend_from_slice(&key);
-    }
+    let serialized = serialized_keys(keys)?;
     // V3 0x7139e4 / V4 0x714c70: display seed 00 00 || K || identifier.
     // Shared helper 0x713938: SHA512(seed || K), then 5199 SHA512(digest || K).
     // This is distinct from the identifier-free H(K,K) used for QR version 1.
@@ -74,6 +62,26 @@ pub fn native_display(identifier: &str, keys: &[[u8; 32]]) -> Result<String> {
             .map_err(|_| Error::invalid("fingerprint.display", "cannot format number"))?;
     }
     Ok(display)
+}
+
+fn serialized_keys(keys: &[[u8; 32]]) -> Result<Vec<u8>> {
+    if keys.is_empty() || keys.len() > MAX_IDENTITY_KEYS {
+        return Err(Error::invalid(
+            "fingerprint.identity_keys",
+            "requires 1..128 raw 32-byte public identity keys",
+        ));
+    }
+    // 37.71 main 0x712ef0..0x712f84 sorts unsigned raw 32-byte keys;
+    // 0x712dc0..0x712e58 prepends 0x05; create 0x7146bc..0x714730
+    // concatenates serialized keys without deduplication. Input order is irrelevant.
+    let mut sorted = keys.to_vec();
+    sorted.sort_unstable();
+    let mut serialized = Vec::with_capacity(sorted.len() * 33);
+    for key in sorted {
+        serialized.push(0x05);
+        serialized.extend_from_slice(&key);
+    }
+    Ok(serialized)
 }
 
 /// Caller-supplied native display result; never a verified account assertion.

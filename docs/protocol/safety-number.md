@@ -928,3 +928,92 @@ Reproduce via apk-smali with exact class filters LX/JhJ; (A0Z/A00), LX/KXj;
 LX/Bli;, LX/26B; (A00), LX/0np; (A06), and LX/1xf; (A1D/A1E).
 Private fingerprint-*.smali artifacts under lab/apk-2.26.37.71 preserve these
 scoped outputs. Raw APK and account identities are not committed.
+
+## Explicit native V4 QR payload export
+
+**Implemented/offline from confirmed 37.71 schema/serializer traces:**
+`fingerprint::qr::encode_v4` now serializes the native combined fingerprint
+protobuf. Version 0 includes sorted 0x05-prefixed public-key inventory in each
+individual tag 1; version 1 includes the 64-byte **identifier-free H(K,K)**
+digest in tag 6. Combined tag 1 is present even for version zero; local and
+remote remain in combined tags 2/3 without display-number lexical reordering.
+Native descriptors/serializer addresses above carry the evidence. This is not
+Java legacy BTe/M76 nested-field semantics.
+
+Each individual preserves full LID JID in tag 3, optional caller-supplied PN
+in tag 2, username in tag 4, and hosted E2EE=0/HOSTED=1 in tag 5. Missing state
+is omitted, never encoded as -1. E2EE zero retains explicit presence. Local
+PN is omitted when a username is **present**, including an empty username;
+remote PN is retained. Optional empty bytes preserve presence, unlike null.
+The Rust wire model represents the two valid hosted enum members as int32
+varints behind the typed HostedState enum; it cannot emit unknown members.
+The lower-level encoder validates bounded ASCII/keys and version, preserves
+provided full strings, and does not claim to implement the APK JID parser,
+active scheme selection, comparison or verified-state persistence.
+
+The existing private display JSON accepts optional `lid_jid`, `pn_identifier`,
+`username_identifier` and `hosted_state` (`e2ee`/`hosted`/null) per side. Display
+alone ignores these QR-specific inputs. Add the paired flags:
+
+```sh
+whatsapp-cli fingerprint-display --config <private-json> \
+  --qr-version 0 --qr-output <new-private-payload.pb>
+```
+
+This exports **binary comparison protobuf**, not a rendered QR image. Version
+1 selects the alternative native QR key-hash representation, not scheme V1.
+The CLI requires a plain primary @lid JID on both sides whose parsed user is
+exactly the supplied display_identifier. That is a documented ordinary-JID
+subset using our parser, not a claim to cover all APK grammar/device/hosted
+variants. Each side also requires PN or username presence, because the traced
+native comparator rejects both absent even when LID/key agree. No missing
+identifier or hosted status is invented. Caller-selected complete inventories
+and actual scheme/optional inputs remain unverified.
+
+The command parses the private input once for both display and export. It
+validates/encodes before creating the output with create_new and mode 0600,
+then writes and syncs it. Existing files refuse without alteration. A write
+failure preserves the private partial artifact and does not claim success.
+Stdout contains only the existing calculation plus qr_export metadata (format,
+version, byte count, private_file_created); no payload, input key/JID or output
+path is printed. The exported file itself contains private contact identifiers
+and public key/hash material. No account store opens, socket, send, pin change,
+QR comparison or human verification occurs.
+
+Independent [native QR fixtures](../../crates/whatsapp-api/fixtures/fingerprint/native-qr-3771.json)
+use literal tags from the pinned merged descriptor and a separate Python
+varint/length encoder, not Rust/prost-derived expected bytes. For each fixture
+side K is the sorted 0x05-prefixed concatenation; `check_flow(library,K,K)`
+checked its digest against the pinned native hash control flow (72825
+instructions each, with host-modeled SHA/MCF). Version 0's individual tags are
+1/3/4/5 locally and 1/2/3/4/5 remotely; version 1 replaces tag 1 with tag 6 at
+the end. Both outer versions explicitly encode tag 1 then local/remote blobs.
+These synthetic fixtures establish wire construction and digest ordering;
+whole-native serialization, QR-image rendering, real-peer scanning and active
+inventory compatibility remain **unknown/unverified**.
+
+Regression tests check literal wire bytes for both versions, identifier-free
+hashes, full LID versus display-user bytes, local PN suppression, remote PN
+retention, hosted zero/one/absence, empty-versus-absent optionals, unknown version,
+invalid inputs, redacted Debug/errors, CLI flag pairing, private file permissions,
+refusing overwrite and ordinary LID/display consistency. Existing native
+numeric fixtures still match after sharing key-inventory serialization.
+
+The qualified-zero negative test exposed a CLI validation gap: our generic
+Jid::parse maps a zero agent/device to Plain and to_string removes the qualifier.
+The QR CLI now additionally requires parsed.to_string() == original lid_jid.
+The generic parser is unchanged; this is the export's declared canonical-plain
+subset guard, not an inferred WhatsApp server requirement. The regression covers
+explicit :0/:2 and wrong hosted/PN domains before creating any export.
+
+Validation passed 540 workspace/all-feature tests, 233 default-feature tests,
+strict all-target/all-feature Clippy, warning-free all-feature library rustdoc,
+generated CLI reference and formatting. A rebuilt default-feature command-level
+check exported both synthetic fixtures exactly: version 0 was 200 bytes and
+version 1 229 bytes, both mode 0600. Repeating each export refused, emitted no
+success output, and preserved its bytes. The supplied unused account-store path
+was never created. Private input/output/stdout/stderr evidence is retained in
+lab/fingerprint-qr-synthetic-check. No current-account QR, native full serializer
+execution, actual QR image/scan, live request or human verification is claimed.
+Final staged repository hygiene (302 local links) and diff whitespace checks
+also passed; only reviewed source/docs and synthetic fixtures are committed.

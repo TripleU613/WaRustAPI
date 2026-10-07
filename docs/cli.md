@@ -25,6 +25,8 @@ Usage: whatsapp-cli fingerprint-display [OPTIONS]...
 | Flag | Value | Required | Default | Env | Values | Help |
 |------|-------|----------|---------|-----|--------|------|
 | --config | CONFIG | yes |  |  |  | Private JSON with normalized display identifiers and raw public key inventories |
+| --qr-version | QR_VERSION | no |  |  |  | Export native V4 comparison protobuf version 0 (keys) or 1 (digest) |
+| --qr-output | QR_OUTPUT | no |  |  |  | Create a new private binary QR payload file; existing files are refused |
 
 ## whatsapp-cli outbox-send
 

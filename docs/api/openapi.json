@@ -2452,6 +2452,39 @@
               "pattern": "^[0-9a-fA-F]{64}$"
             },
             "description": "Complete caller-selected raw 32-byte public identity-key inventory. Serialized prefix is added internally; duplicates retained. 128 is a local resource limit, not an APK limit."
+          },
+          "lid_jid": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional for display-only; required for QR export. Plain primary @lid JID whose user must equal display_identifier. Native QR carries full text, not display user."
+          },
+          "pn_identifier": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Caller-selected stable PN identifier for native V4 QR. ASCII without NUL, <=256 bytes; no automatic normalization. Local omission with present username follows APK."
+          },
+          "username_identifier": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Caller-selected ASCII native V4 QR username, without NUL and <=256 bytes. Present even when empty; field presence differs from absence."
+          },
+          "hosted_state": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "e2ee",
+              "hosted",
+              null
+            ],
+            "description": "Native QR state E2EE=0/HOSTED=1. Null or missing omits it; not the database identity-attestation enum. No state is inferred."
           }
         }
       },
@@ -2498,6 +2531,35 @@
           "combined": {
             "type": "string",
             "pattern": "^[0-9]{60}$"
+          },
+          "qr_export": {
+            "type": "object",
+            "required": [
+              "format",
+              "version",
+              "bytes",
+              "private_file_created"
+            ],
+            "description": "Present only after requested private binary export succeeds. No payload, input identifiers, keys or output path are printed.",
+            "properties": {
+              "format": {
+                "const": "native_v4_protobuf"
+              },
+              "version": {
+                "type": "integer",
+                "enum": [
+                  0,
+                  1
+                ]
+              },
+              "bytes": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "private_file_created": {
+                "const": true
+              }
+            }
           }
         }
       },
@@ -9658,7 +9720,7 @@
           "Account Safety"
         ],
         "summary": "Compute native fingerprint display from explicit inputs (offline)",
-        "description": "CLI only; no HTTP route. Does not open the account store, fetch keys, compare QR data, select the active APK scheme, or commit human verification. Reads a private regular JSON file <=64 KiB with local/remote sides (FingerprintDisplayInput). Rejects unknown fields; error text omits offending values. Raw keys are sorted unsigned, serialized with 0x05, concatenated without deduplication and hashed using APK 37.71 native 5200-round identifier-bound SHA-512. Six big-endian five-byte groups yield 30 digits per side, with lexical join to 60. Native-display fixtures use actual ARM64 hash control flow with host-modeled SHA/MCF; whole native display and live comparison are not established. Complete device inventory and scheme selection remain caller responsibilities. Output contains no input identifier or public key. Resource bounds are client policy. See docs/protocol/safety-number.md.",
+        "description": "CLI only; no HTTP route. Does not open the account store, fetch keys, compare QR data, select the active APK scheme, or commit human verification. Reads a private regular JSON file <=64 KiB with local/remote sides (FingerprintDisplayInput). Rejects unknown fields; error text omits offending values. Raw keys are sorted unsigned, serialized with 0x05, concatenated without deduplication and hashed using APK 37.71 native 5200-round identifier-bound SHA-512. Six big-endian five-byte groups yield 30 digits per side, with lexical join to 60. Native-display fixtures use actual ARM64 hash control flow with host-modeled SHA/MCF; whole native display and live comparison are not established. Complete device inventory and scheme selection remain caller responsibilities. Output contains no input identifier or public key. Resource bounds are client policy. See docs/protocol/safety-number.md. Optional --qr-version 0|1 plus --qr-output exports APK-derived native V4 combined fingerprint protobuf to a new private mode-600 binary file, without opening account storage. QR needs full plain-primary lid_jid matching display_identifier and at least PN or username presence on each side. Optional QR-specific fields are ignored for display-only calculations. Local PN is suppressed with a present username; remote PN retained. Version 1 uses H(K,K), not identifier-bound display hash. Full identifiers and key/hash material appear in the private export, never stdout. Refuses existing output or invalid inputs before export; partial write failures preserve the private artifact. No QR image rendering, scan, peer comparison, active scheme/inventory assertion or verification commit. Independent literal-tag wire fixtures use host-modeled-SHA actual ARM64 hash flow for digests; full native serialization and live scan remain unverified.",
         "operationId": "fingerprintDisplay",
         "x-cli": "whatsapp-cli fingerprint-display",
         "x-transport": [
@@ -9671,6 +9733,29 @@
             "in": "query",
             "required": true,
             "description": "Private JSON path; file must exclude group/other permissions. Input format: FingerprintDisplayInput. No account/profile config fallback.",
+            "schema": {
+              "type": "string"
+            },
+            "x-secret-input": true
+          },
+          {
+            "name": "qr-version",
+            "in": "query",
+            "required": false,
+            "description": "Native V4 comparison protobuf version; requires qr-output. Version 0 serializes public-key inventory, version 1 its identifier-free digest. The active account scheme is not asserted.",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "qr-output",
+            "in": "query",
+            "required": false,
+            "description": "Create-only private binary payload path; requires qr-version. Existing files are refused. Contains full identifiers and public key/hash material. Not a rendered QR image.",
             "schema": {
               "type": "string"
             },
@@ -9702,7 +9787,8 @@
         "x-library": [
           "whatsapp_api::fingerprint::native_display",
           "whatsapp_api::fingerprint::native_display_pair",
-          "whatsapp_cli::fingerprint::run"
+          "whatsapp_cli::fingerprint::run",
+          "whatsapp_api::fingerprint::qr::encode_v4"
         ]
       }
     }
