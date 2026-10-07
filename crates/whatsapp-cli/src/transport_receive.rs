@@ -532,6 +532,29 @@ pub(super) fn receipts_status(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
+pub(super) fn peer_identity(cli: &super::Cli, chat: &str) -> Result<(), Error> {
+    let peer = whatsapp_api::model::jid::Jid::parse(chat)
+        .map_err(|_| Error::invalid("peer_identity", "invalid chat JID"))?;
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let state = whatsapp_api::transport::identity_conflicts::inspect_peer(&store, &peer)?;
+    // Both formats are redacted; fingerprints are diagnostic public-key hashes,
+    // not the WhatsApp safety-number algorithm or human verification status.
+    let json = serde_json::to_string_pretty(&state)
+        .map_err(|_| Error::invalid("peer_identity", "serialization failed"))?;
+    if !cli.json {
+        println!(
+            "peer identity: saved primary PN/LID state; diagnostic hashes, not safety numbers"
+        );
+    }
+    println!("{json}");
+    Ok(())
+}
+
 /// Offline diagnostic observations, without exposing peer addresses or keys.
 pub(super) fn identity_conflicts(cli: &super::Cli) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {

@@ -540,3 +540,9 @@ historical projection/idempotence on the saved account, not new incoming deliver
   policy, then validate with an authorized selected send. No live send attempted.
 
 Evidence and remaining unknowns: [peer identity](protocol/peer-identity.md#outgoing-held-session-identity-guard-2026-10-07).
+
+- [x] Inspect PN/LID pins, current-session identity agreement and authenticated
+  transition history with `peer-identity --chat <primary-PN-JID>`. The recovered
+  direct peer has distinct pins, both internally consistent; history links the
+  held PN pin to the current LID pin. Directory refresh remains unverified.
+  Default-feature CLI builds now include the corrected transport command guards.

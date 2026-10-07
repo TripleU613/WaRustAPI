@@ -290,3 +290,52 @@ changed during this inspection, so raw file-byte equality is not a valid
 read-only protocol-state assertion for this API. That observation does not
 establish a peer-key, account-identity or send-state change. The offline fixture
 asserts those logical records directly; byte-immutable opening remains absent.
+
+## Primary PN/LID identity inspection (2026-10-07)
+
+**Confirmed (implementation):** incoming processing stores
+`authenticated-lid:<LID>` only in the authenticated inbox commit, and refuses
+changing an existing mapping (`inbox.rs::process_direct`). Replacement history
+is written in that same transaction by `identity_conflicts::archive_replacement`;
+its `previous_identity` and `current_fingerprint` remain encrypted. These are
+our local provenance records, not an APK safety-number format or user approval.
+
+`peer-identity --chat <primary-PN-JID>` now reads one transaction's view of the
+PN pin/session and every mapped primary LID. It reports diagnostic SHA-256
+fingerprints, whether each pin agrees with its current session remote identity,
+whether each LID pin agrees with the PN pin, and whether saved authenticated
+history connects the PN pin to that current LID pin. Missing evidence is null
+or false; multiple mappings are shown without selecting one. Companion-device
+inputs are refused. No pin, ratchet, journal or send record is written; store
+opening still has the documented metadata commit. This command is CLI-only.
+
+**Offline validation:** generated signed bundles create independent real Signal
+sessions for old PN and updated LID identities. The inspector distinguishes
+cross-alias mismatch from within-session mismatch, requires history to match
+the current LID pin, preserves all mappings across pagination/restart, marks
+missing pins unknown and exposes no peer JID. These tests establish inspection
+behavior, not an actual remote identity change or permission to replace keys.
+
+**Confirmed (implementation correction):** the previous `outbox-suspended`
+command omitted the CLI transport feature gate. Both its enum variant and
+dispatch are now gated, matching the transport-only module; default-feature
+verification is included alongside the all-feature suite.
+
+**Confirmed (APK 2.26.37.71, outgoing trace revisited):** `LX/0jc.A0L`
+reconstructs the fetched serialized identity using the supplied type byte at
+`00b4..00d6`, reconstructs the supplied signed device key at `0152..017a`,
+and passes them with its signature into `C6P` (`023e..0256`) and then
+`CQc.A00` (`0310..0324`). The signature verification/session derivation/save
+ordering is documented above. **Inferred:** valid authenticated directory
+bundle processing can refresh a remote session without an earlier incoming
+PN/LID transition; the traced trust adapter accepts the supplied remote key.
+The new inspector's history flag must therefore not be presented as an APK
+requirement for outgoing replacement. It is evidence about our held aliases.
+**Unknown:** complete caller/own-device policy boundaries and the non-classic
+PQ branch. Outgoing implementation must keep an explicit policy, verify the
+signed bundle, preserve prior state and refuse local-account replacement.
+
+**Observed locally (canonical saved account):** `peer-identity` inspected the
+contact of the recovered direct text. Redacted result: `{"phone_session_pin_matches": true, "linked_alias_count": 1, "linked": [{"session_pin_matches": true, "pins_agree": false, "authenticated_transition_from_phone_pin": true}]}`.
+Private evidence: `lab/accounts/l/peer-identity-2026-10-07.json`.
+No query, send, replacement or protocol-state write was performed.

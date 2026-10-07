@@ -2118,6 +2118,93 @@
             "description": "SHA-256 of local session address. Not a phone number or WhatsApp safety number."
           }
         }
+      },
+      "PeerPinState": {
+        "type": "object",
+        "required": [
+          "peer_ticket",
+          "pinned_fingerprint",
+          "has_session",
+          "session_fingerprint",
+          "session_pin_matches"
+        ],
+        "properties": {
+          "peer_ticket": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Hash of local session lookup key; not a contact address."
+          },
+          "pinned_fingerprint": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 of serialized public identity, not a WhatsApp safety number."
+          },
+          "has_session": {
+            "type": "boolean",
+            "description": "Serialized session exists; not proof it is usable."
+          },
+          "session_fingerprint": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 of serialized public identity, not a WhatsApp safety number."
+          },
+          "session_pin_matches": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Null when pin or current-session identity is absent."
+          }
+        }
+      },
+      "LinkedPeerIdentity": {
+        "type": "object",
+        "required": [
+          "state",
+          "pins_agree",
+          "authenticated_transition_from_phone_pin"
+        ],
+        "properties": {
+          "state": {
+            "$ref": "#/components/schemas/PeerPinState"
+          },
+          "pins_agree": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "PN and LID pins are byte-identical; null when either pin is missing."
+          },
+          "authenticated_transition_from_phone_pin": {
+            "type": "boolean",
+            "description": "Saved apk_authenticated history links the held PN pin to the current LID pin. Local provenance only, not human verification or replacement authority."
+          }
+        }
+      },
+      "PeerIdentityState": {
+        "type": "object",
+        "required": [
+          "phone",
+          "linked"
+        ],
+        "properties": {
+          "phone": {
+            "$ref": "#/components/schemas/PeerPinState"
+          },
+          "linked": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkedPeerIdentity"
+            },
+            "description": "Every authenticated primary LID mapped to this PN. Multiple mappings are not silently selected."
+          }
+        }
       }
     }
   },
@@ -9063,6 +9150,63 @@
         },
         "x-library": [
           "whatsapp_api::transport::outgoing::identity_suspended"
+        ]
+      }
+    },
+    "/v1/diagnostics/peer-identity": {
+      "get": {
+        "tags": [
+          "Account Safety"
+        ],
+        "summary": "Inspect saved primary PN/LID peer pin and session agreement (offline)",
+        "description": "Reads one logical snapshot without queries, key replacement or sends. Requires a primary phone-number chat JID. Returns hashed peer selectors, diagnostic public-key fingerprints, held-session/pin agreement, and all authenticated primary LID mappings. A qualifying saved incoming transition establishes local provenance only; it is not a WhatsApp safety number or human verification. Store opening can commit engine metadata; protocol records are inspected read-only. No HTTP route is implemented.",
+        "operationId": "peerIdentity",
+        "x-cli": "whatsapp-cli peer-identity",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "name": "chat",
+            "in": "query",
+            "required": true,
+            "description": "Primary phone-number chat JID (private input, never printed in the result).",
+            "schema": {
+              "type": "string"
+            },
+            "x-secret-input": true
+          },
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Redacted saved peer state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeerIdentityState"
+                }
+              }
+            }
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::identity_conflicts::inspect_peer"
         ]
       }
     }

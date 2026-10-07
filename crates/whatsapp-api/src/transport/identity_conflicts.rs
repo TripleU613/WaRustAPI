@@ -117,6 +117,155 @@ pub fn list(store: &ProtocolStore) -> Result<Vec<IdentityConflict>> {
     })
 }
 
+/// Redacted pin and held-session state for one primary peer address.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PeerPinState {
+    /// Hash of the session lookup key; never a raw contact address.
+    pub peer_ticket: String,
+    /// SHA-256 of serialized saved public identity, not a safety number.
+    pub pinned_fingerprint: Option<String>,
+    /// Whether a serialized session is held (not proof of its usability).
+    pub has_session: bool,
+    /// SHA-256 of the current session's remote public identity, if present.
+    pub session_fingerprint: Option<String>,
+    /// Null when either the saved pin or current session identity is missing.
+    pub session_pin_matches: Option<bool>,
+}
+
+/// One authenticated incoming LID mapping and its relationship to the PN pin.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct LinkedPeerIdentity {
+    /// Saved pin and current session state for this LID address.
+    pub state: PeerPinState,
+    /// Null when either pin is missing; true only for byte-identical pins.
+    pub pins_agree: Option<bool>,
+    /// Saved authenticated history links the PN pin to the current LID pin.
+    /// This is local provenance, never human safety-number verification.
+    pub authenticated_transition_from_phone_pin: bool,
+}
+
+/// One transaction's view of the primary PN address and all mapped primary LIDs.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PeerIdentityState {
+    /// Phone-number-addressed saved state.
+    pub phone: PeerPinState,
+    /// Every mapped primary LID; multiple entries are not silently selected.
+    pub linked: Vec<LinkedPeerIdentity>,
+}
+
+fn pin_state(tx: &crate::store::ReadTx<'_>, peer: &Jid) -> Result<(PeerPinState, Option<Vec<u8>>)> {
+    use wacore_libsignal::protocol::{IdentityKey, SessionRecord};
+    let key = format!("comparison-direct:{peer}");
+    let pin: Option<Vec<u8>> = tx.get_json(Table::PeerIdentities, key.as_bytes(), 1)?;
+    if let Some(pin) = &pin {
+        IdentityKey::decode(pin)
+            .map_err(|_| Error::invalid("peer_identity", "invalid saved peer pin"))?;
+    }
+    let session: Option<Vec<u8>> = tx.get_json(Table::SignalSessions, key.as_bytes(), 1)?;
+    let session_identity = if let Some(bytes) = &session {
+        let record = SessionRecord::deserialize(bytes)
+            .map_err(|_| Error::invalid("peer_identity", "invalid saved peer session"))?;
+        record
+            .session_state()
+            .map(|state| state.remote_identity_key_bytes())
+            .transpose()
+            .map_err(|_| Error::invalid("peer_identity", "invalid session remote identity"))?
+            .flatten()
+    } else {
+        None
+    };
+    let fingerprint = |bytes: &[u8]| hex::encode(Sha256::digest(bytes));
+    let state = PeerPinState {
+        peer_ticket: hex::encode(Sha256::digest(key.as_bytes())),
+        pinned_fingerprint: pin.as_deref().map(fingerprint),
+        has_session: session.is_some(),
+        session_fingerprint: session_identity.as_deref().map(fingerprint),
+        session_pin_matches: pin
+            .as_ref()
+            .zip(session_identity.as_ref())
+            .map(|(a, b)| a == b),
+    };
+    Ok((state, pin))
+}
+
+/// Inspect logical peer identity state without writes, queries or replacement.
+/// Store opening can change engine file bytes; this function only reads records.
+pub fn inspect_peer(store: &ProtocolStore, phone: &Jid) -> Result<PeerIdentityState> {
+    use crate::model::jid::Server;
+    if phone.server != Server::User || phone.device != 0 || phone.agent != 0 {
+        return Err(Error::invalid(
+            "peer_identity",
+            "requires a primary phone-number chat JID",
+        ));
+    }
+    store.read(|tx| {
+        let (phone_state, phone_pin) = pin_state(tx, phone)?;
+        let mut lids = Vec::new();
+        let mut histories: Vec<serde_json::Value> = Vec::new();
+        let mut cursor = None;
+        loop {
+            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+            if rows.is_empty() {
+                break;
+            }
+            cursor = rows.last().map(|(key, _)| key.clone());
+            for (key, value) in rows {
+                if let Some(lid) = std::str::from_utf8(&key)
+                    .ok()
+                    .and_then(|key| key.strip_prefix("authenticated-lid:"))
+                {
+                    let mapped: Jid = serde_json::from_slice(&value).map_err(|_| {
+                        Error::invalid("peer_identity", "invalid saved LID mapping")
+                    })?;
+                    if mapped.to_non_ad() != *phone {
+                        continue;
+                    }
+                    let lid = Jid::parse(lid).map_err(|_| {
+                        Error::invalid("peer_identity", "invalid saved LID address")
+                    })?;
+                    if lid.server == Server::Lid
+                        && lid.device == 0
+                        && lid.agent == 0
+                        && !lids.contains(&lid)
+                    {
+                        lids.push(lid);
+                    }
+                } else if key.starts_with(b"identity-history:") {
+                    histories.push(serde_json::from_slice(&value).map_err(|_| {
+                        Error::invalid("peer_identity", "invalid saved identity history")
+                    })?);
+                }
+            }
+        }
+        let mut linked = Vec::new();
+        for lid in lids {
+            let (state, pin) = pin_state(tx, &lid)?;
+            let pins_agree = phone_pin.as_ref().zip(pin.as_ref()).map(|(a, b)| a == b);
+            let authenticated_transition_from_phone_pin = pins_agree == Some(false)
+                && histories.iter().any(|row| {
+                    let history_peer: Option<Jid> =
+                        serde_json::from_value(row["peer"].clone()).ok();
+                    let previous: Option<Vec<u8>> =
+                        serde_json::from_value(row["previous_identity"].clone()).ok();
+                    history_peer.as_ref() == Some(&lid)
+                        && row["policy"] == "apk_authenticated"
+                        && previous.as_ref() == phone_pin.as_ref()
+                        && row["current_fingerprint"].as_str()
+                            == state.pinned_fingerprint.as_deref()
+                });
+            linked.push(LinkedPeerIdentity {
+                state,
+                pins_agree,
+                authenticated_transition_from_phone_pin,
+            });
+        }
+        Ok(PeerIdentityState {
+            phone: phone_state,
+            linked,
+        })
+    })
+}
+
 /// Commit authenticated replacement history in the same transaction as inbox,
 /// session and prekey changes. Call only after OCC checks and authentication.
 pub(super) fn archive_replacement(
@@ -169,6 +318,179 @@ mod tests {
         })
         .unwrap()
     }
+    #[tokio::test]
+    async fn peer_inspection_distinguishes_alias_history_from_pin_and_session_agreement() {
+        use crate::session::{AccountRecord, KeyMaterial, RegistrationStatus, SignalIdentityKey};
+        use wacore_libsignal::protocol::{DeviceId, IdentityKeyPair, KeyPair, PreKeyBundle};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("inspection.redb");
+        let store = open(&path, true);
+        let pn = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let lid = Jid::parse("222222222222222@lid").unwrap();
+        let mut rng = rand::rng();
+        let local = IdentityKeyPair::generate(&mut rng);
+        let old = IdentityKeyPair::generate(&mut rng);
+        let new = IdentityKeyPair::generate(&mut rng);
+        let signed = KeyPair::generate(&mut rng);
+        let bundle = |identity: &IdentityKeyPair| {
+            let signature = identity
+                .private_key()
+                .calculate_signature(&signed.public_key.serialize(), &mut rand::rng())
+                .unwrap();
+            PreKeyBundle::new(
+                42,
+                DeviceId::new(0),
+                None,
+                7.into(),
+                signed.public_key,
+                signature.to_vec(),
+                *identity.identity_key(),
+            )
+            .unwrap()
+        };
+        let account = AccountRecord {
+            registration: RegistrationStatus::Registered,
+            signal_registration_id: Some(31),
+            signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                public: local.public_key().public_key_bytes().try_into().unwrap(),
+                private: *local.private_key().serialize(),
+            })),
+            ..Default::default()
+        };
+        let prior = crate::signal::direct::prepare(
+            &account,
+            &pn,
+            &bundle(&old),
+            None,
+            None,
+            "offline fixture",
+        )
+        .await
+        .unwrap();
+        let updated = crate::signal::direct::prepare(
+            &account,
+            &lid,
+            &bundle(&new),
+            None,
+            None,
+            "offline fixture",
+        )
+        .await
+        .unwrap();
+        let pn_key = format!("comparison-direct:{pn}");
+        let lid_key = format!("comparison-direct:{lid}");
+        store
+            .write(|tx| {
+                tx.put_json(Table::PeerIdentities, pn_key.as_bytes(), 1, &prior.identity)?;
+                tx.put_json(Table::SignalSessions, pn_key.as_bytes(), 1, &*prior.session)?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("authenticated-lid:{lid}").as_bytes(),
+                    1,
+                    &pn,
+                )?;
+                tx.put_json(
+                    Table::PeerIdentities,
+                    lid_key.as_bytes(),
+                    1,
+                    &updated.identity,
+                )?;
+                tx.put_json(
+                    Table::SignalSessions,
+                    lid_key.as_bytes(),
+                    1,
+                    &*updated.session,
+                )?;
+                // Seed the same history format produced after authenticated receive.
+                archive_replacement(
+                    tx,
+                    &lid,
+                    Some(&prior.identity),
+                    Some(&prior.session),
+                    &updated.identity,
+                )?;
+                for n in 0..260 {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        format!("a-inspection-unrelated:{n:03}").as_bytes(),
+                        1,
+                        &true,
+                    )?;
+                }
+                Ok(())
+            })
+            .unwrap();
+        let inspected = inspect_peer(&store, &pn).unwrap();
+        assert_eq!(inspected.phone.session_pin_matches, Some(true));
+        assert_eq!(inspected.linked.len(), 1);
+        assert_eq!(inspected.linked[0].state.session_pin_matches, Some(true));
+        assert_eq!(inspected.linked[0].pins_agree, Some(false));
+        assert!(inspected.linked[0].authenticated_transition_from_phone_pin);
+        let encoded = serde_json::to_string(&inspected).unwrap();
+        assert!(!encoded.contains(&pn.user));
+        assert!(!encoded.contains(&lid.user));
+        let before = store
+            .read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 512))
+            .unwrap();
+        assert_eq!(inspect_peer(&store, &pn).unwrap(), inspected);
+        assert_eq!(
+            store
+                .read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 512))
+                .unwrap(),
+            before
+        );
+        drop(store);
+        let store = open(&path, false);
+        assert_eq!(inspect_peer(&store, &pn).unwrap(), inspected);
+        // A pin that disagrees with its own held ratchet is visible separately
+        // from PN/LID agreement. A historical transition to another current pin
+        // is not qualifying evidence; no alias is silently overwritten.
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::PeerIdentities,
+                    lid_key.as_bytes(),
+                    1,
+                    &prior.identity,
+                )
+            })
+            .unwrap();
+        let agreed = inspect_peer(&store, &pn).unwrap();
+        assert_eq!(agreed.linked[0].pins_agree, Some(true));
+        assert_eq!(agreed.linked[0].state.session_pin_matches, Some(false));
+        assert!(!agreed.linked[0].authenticated_transition_from_phone_pin);
+        let second = Jid::parse("333333333333333@lid").unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("authenticated-lid:{second}").as_bytes(),
+                    1,
+                    &pn,
+                )
+            })
+            .unwrap();
+        let multiple = inspect_peer(&store, &pn).unwrap();
+        assert_eq!(multiple.linked.len(), 2);
+        let missing = multiple
+            .linked
+            .iter()
+            .find(|entry| !entry.state.has_session)
+            .unwrap();
+        assert_eq!(missing.state.pinned_fingerprint, None);
+        assert_eq!(missing.pins_agree, None);
+        assert!(!missing.authenticated_transition_from_phone_pin);
+        assert!(inspect_peer(&store, &lid).is_err());
+        assert!(
+            inspect_peer(&store, &Jid::parse("15555550100:2@s.whatsapp.net").unwrap()).is_err()
+        );
+        let unknown =
+            inspect_peer(&store, &Jid::parse("15555550101@s.whatsapp.net").unwrap()).unwrap();
+        assert!(!unknown.phone.has_session);
+        assert_eq!(unknown.phone.session_pin_matches, None);
+        assert!(unknown.linked.is_empty());
+    }
+
     #[tokio::test]
     async fn incoming_prekey_conflict_is_recorded_before_decryption_can_fail() {
         use wacore_libsignal::protocol::{IdentityKeyPair, PreKeySignalMessage, SignalMessage};

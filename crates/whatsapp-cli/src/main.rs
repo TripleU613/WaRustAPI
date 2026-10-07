@@ -203,6 +203,7 @@ enum Cmd {
     #[cfg(feature = "experimental-transport")]
     OutboxPending,
     /// Inspect queued sends suspended by changed peer identities (offline, redacted).
+    #[cfg(feature = "experimental-transport")]
     OutboxSuspended,
     /// Show one-time prekey counts and upload batches (offline, redacted).
     #[cfg(feature = "experimental-transport")]
@@ -213,6 +214,13 @@ enum Cmd {
     /// Inspect saved peer identity conflicts (offline; unauthenticated observations).
     #[cfg(feature = "experimental-transport")]
     IdentityConflicts,
+    /// Inspect saved PN/LID peer pins and session agreement (offline, redacted).
+    #[cfg(feature = "experimental-transport")]
+    PeerIdentity {
+        /// Primary phone-number chat JID; never printed in the result.
+        #[arg(long)]
+        chat: String,
+    },
     /// Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Actions {
@@ -1384,6 +1392,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
         }
         #[cfg(feature = "experimental-transport")]
         Cmd::OutboxPending => transport_receive::outbox_pending(&cli),
+        #[cfg(feature = "experimental-transport")]
         Cmd::OutboxSuspended => transport_receive::outbox_suspended(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Prekeys => transport_receive::prekeys_status(&cli),
@@ -1391,6 +1400,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::Receipts => transport_receive::receipts_status(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::IdentityConflicts => transport_receive::identity_conflicts(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::PeerIdentity { chat } => transport_receive::peer_identity(&cli, chat),
         #[cfg(feature = "experimental-transport")]
         Cmd::Actions { show } => transport_receive::actions_status(&cli, show.as_deref()),
         #[cfg(feature = "experimental-transport")]

@@ -105,6 +105,18 @@ Inspect saved peer identity conflicts (offline; unauthenticated observations)
 Usage: whatsapp-cli identity-conflicts [OPTIONS]...
 ```
 
+## whatsapp-cli peer-identity
+
+Inspect saved PN/LID peer pins and session agreement (offline, redacted)
+
+```
+Usage: whatsapp-cli peer-identity [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --chat | CHAT | yes |  |  |  | Primary phone-number chat JID; never printed in the result |
+
 ## whatsapp-cli actions
 
 Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted)
