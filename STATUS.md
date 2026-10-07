@@ -1036,3 +1036,17 @@ See [versioned MEX files](docs/protocol/mex.md#versioned-parserrequest-files).
 Coverage validation also passed exact checksum membership/18 single-method
 selections, CLI reference regeneration, OpenAPI library-symbol validation,
 repository hygiene (518 local links) and staged whitespace.
+
+MEX converter static tracing now preserves full 0Xo.A03's four hash branches,
+required group/participants/properties versus nullable subject, separate
+1000-scaled group/subject times and unscaled announcement version, plus
+feature-gated LID/country creator metadata. Wire type names, A4m slot mapping,
+Java coercion/catch behavior and full membership conversion remain unfinished.
+The disassembler now names the independently verified mul-long/2addr opcode;
+this adds no runtime state application or live request. See [converter trace](docs/protocol/mex.md#group-converter-branches-and-time-arithmetic-2026-10-07).
+
+Converter-trace validation: **610** workspace/all-feature tests (including
+**49** xtask tests), strict workspace/all-target/all-feature Clippy, formatting,
+CLI reference regeneration, OpenAPI library-symbol check, exact MEX snapshot
+reproduction (23 files/76,908 bytes), hygiene (523 links) and staged whitespace
+passed. No saved account opened, queued intent or live validation performed.

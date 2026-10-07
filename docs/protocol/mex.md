@@ -392,9 +392,9 @@ converter tracing: ADv.A06 reads id and calls 1bo.A01; A04 reads creation_time
 through LbE.A0F/8kY.A0B; A05 reads subject.creation_time through nullable A0E;
 A03 reads announcement_version through A0E/0Gv.A01 with literal default zero.
 A07 reads creator-related pn through 90x.A0H; A08 reads subject.creator.pn;
-A09 follows A0H into 8kU.A1A/A0d. The underlying 90x.A0H field name and those
-producer/parsing helper semantics remain untraced, so no creator identity or
-time units are claimed from these calls alone. LbE.A04 uses optJSONObject and
+A09 follows A0H into 8kU.A1A/A0d. At this stage, the underlying 90x.A0H field name and producer/parsing helper
+semantics were untraced; the later converter section confirms creator/id and
+1000 multiplication. No time/storage units are established by these calls alone. LbE.A04 uses optJSONObject and
 reflective construction, returning null on construction failure; A0E treats
 missing/null as nullable while A0F uses optString. A03 has a string-specific
 0CK.A08 long parse then optLong fallback, and A0G combines integer/boolean
@@ -412,3 +412,92 @@ A method filter that matches no bodies retains the existing explicit diagnostic.
 A synthetic class-table regression covers distinct parent, NO_INDEX and invalid
 index; the real 9Np constructor inspection demonstrated the callback linkage.
 Versioned bundle formatting remains unchanged by this CLI-only header addition.
+
+## Group converter branches and time arithmetic (2026-10-07)
+
+**Confirmed static**, same SHA-pinned APK 2.26.37.71:
+[full selected converter/helper evidence](mex-group-converter-evidence.txt)
+now includes 0Xo.A03 rather than just its initial field reads. It requires a
+non-null xwa2_group_query_by_id object (null goes to IllegalStateException at
++0a9c). It wraps the object as 90x, reads typed group id, creator, creation time,
+optional subject/value/time, announcement_version and total_participants_count,
+then required participants. 90x.A0H is **creator/8yb**, A0I is
+**participants/8ym through LbE.A05**, and A0J is subject/8yq through nullable
+LbE.A04. LbE.A05 returns the nested model or throws; it is not a nullable
+getter. A missing subject instead takes +03d4 and preserves null value; its
+creation-time helper defaults through the null-string path.
+
+### Variant branches
+
+0Xo.A03 compares **String.hashCode of __typename**, with no corresponding
+String.equals in this method. These are branch selectors, not discovered wire
+spellings. After shared field reads, it has the following conversion paths:
+
+| Hash bits | Wrapper | Required properties | Constructor integer slot |
+| --- | --- | --- | --- |
+| ec1046f2 | 2H8 | 2FS via A0H/LbE.A05 | 0 at v27 |
+| b01c45b8 | 2H7 | 2FO via A0H/LbE.A05 | 2, or 6 if general_chat |
+| 1550b5c7 | 2FI | 2FH via LbE.A05 | 3 at v61 |
+| c3e26f86 | 2FK | 2FJ via LbE.A05 | 1 at v61 |
+
+Other hashes throw UnsupportedOperationException at +0a8c. A4m's full
+constructor/field mapping and wire spellings remain unverified here; the
+integer slots above must not alone be treated as a completed group type port.
+**Negative result:** exact Java-style hash comparison of all 453,954 unique
+escaped DEX strings returned no matches for these four hashes; narrower Group/
+Community/group/GROUP searches also returned none. These checks do not prove
+server-returned names do not exist: escaped/UTF-16 representation and strings
+assembled at runtime are outside that direct search. Do not invent names.
+
+The 2H8/2H7 branches read support (2H8 only), locked, announcement,
+growth_locked2.locked, ephemeral.expiration_time_in_sec, limit_sharing.
+limit_sharing_enabled, membership_approval_mode_enabled, member_add_mode,
+member_link_mode, member_share_group_history_mode, ack, allow_admin_reports,
+group_safety_check, internal, appeal_status and optional appeal_update_time.
+2H7 also selects general_chat and parses parent_group_jid through 0c6/1bo.A00,
+plus hidden_group. The 2FI branch has growth_locked2/ephemeral/limit_sharing,
+parent_group_jid, member_add_mode, ack, group_safety_check and appeal fields;
+2FK has closed_by_membership_approval_mode, allow_non_admin_sub_group_creation
+and appeal fields. Missing optional ephemeral selects literal zero expiration;
+missing optional growth state retains null, not necessarily unlocked. Integer
+and boolean coercion plus enum conversions remain unported. Exact resulting
+flags and all A4m slots need constructor interpretation before state application.
+
+All branches read missing_participant_identification. Seeing this flag causes
+logging, not an early rejection in this method. ADv.A0D separately returns null
+when participants_phash_match is true, rather than replacing membership with
+an empty list. Full edge/role/participant-union conversion remains unfinished;
+its source is preserved with this converter evidence, not inferred from counts.
+
+### Time and creator helpers
+
+ADv.A04 (group creation_time) and A05 (subject.creation_time) call 8kY.A0B.
+It passes literal default zero to 0Gv.A01 then multiplies by **1000** using
+mul-long/2addr. ADv.A03 announcement_version calls 0Gv.A01 directly, with no
+multiplier. Thus these fields do not share identical numeric conversion.
+0Gv.A01 checks TextUtils.isEmpty, returns the supplied default on that path,
+and calls Long.parseLong otherwise; another return-default site exists.
+The current annotated dump does not identify its exception-table catch type,
+so exact parse-failure behavior is still unknown. Android optString coercion,
+Java signed-long/overflow behavior, resulting storage units and all constructor
+slots are not ported by this arithmetic finding alone.
+
+**Implemented tooling:** opcode bd now names mul-long/2addr, preserving the
+existing 12x operand/width decoder. The literal eight-byte extent at
+classes6.dex **0x26374c** (8kY.A0B+000c..0014) is independently read as
+`16 00 e8 03 bd 02 10 02`: load 1000, multiply v2 by v0, return-wide v2.
+The regression covers exact operands, boundaries and truncated prefixes.
+This reports bytecode; it does not execute a timestamp converter. Existing
+37.71 versioned source files contain no unknown-bd marker, so this new name
+requires no unrelated baseline rewrites.
+
+Creator getter ADv.A09 follows 90x.A0H -> 8kU.A1A (nullable **id**) -> A0d;
+1bo.A01 parses group id and requires subtype 1bn, throwing 08j otherwise.
+0Xo.A01 and private A00 both consult feature **0x36fe**. Enabled A01 calls
+ADv.A0H; disabled returns an empty map. Enabled A00 prefers creator.lid via
+UserJid.Companion.A02, falls back to creator.id if needed, and requires parsed
+creator.country_code as well before constructing a singleton CTQ metadata
+map; otherwise it returns empty. ADv.A0H and full creator/JID/country parsing
+remain unfinished. Feature-enabled identity metadata must not be silently
+substituted by PN-only assumptions. No saved identity/key/group state changed,
+account opened, MEX request sent or server response recognized live here.

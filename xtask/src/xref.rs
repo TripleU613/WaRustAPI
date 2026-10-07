@@ -432,6 +432,9 @@ fn opcode_name(op: u8) -> &'static str {
         0xb7 => "xor-int/2addr",
         0xbb => "add-long/2addr",
         0xbc => "sub-long/2addr",
+        // APK 37.71 8kY.A0B+0010: parsed group time multiplied by 1000.
+        // AOSP Dalvik bytecode table: bd is the existing-width 12x operation.
+        0xbd => "mul-long/2addr",
         // CjU.A01: five unsigned bytes form a 40-bit value modulo 100000.
         // https://source.android.com/docs/core/runtime/dalvik-bytecode
         0xbf => "rem-long/2addr",
@@ -2558,6 +2561,26 @@ mod tests {
         assert_eq!(decoded[4].annotation, "v19, v19, v90");
         assert!(decoded.iter().all(|insn| insn.width == 2));
         assert_eq!(decoded[4].byte_off + 4, bytes.len());
+    }
+
+    #[test]
+    fn decodes_literal_mex_time_multiplication_without_losing_width() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // APK 37.71 classes6.dex 0x26374c, 8kY.A0B+000c..0014:
+        // literal multiplier, multiply, return, independently read from the DEX.
+        let bytes = [0x16, 0x00, 0xe8, 0x03, 0xbd, 0x02, 0x10, 0x02];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded.len(), 3);
+        assert_eq!(decoded[0].annotation, "v0, #0x3e8");
+        assert_eq!(decoded[1].mnemonic, "mul-long/2addr");
+        assert_eq!(decoded[1].annotation, "v2, v0");
+        assert_eq!(decoded[1].width, 1);
+        assert_eq!(decoded[2].mnemonic, "return-wide");
+        assert_eq!(decoded[2].byte_off, 6);
+        for end in 0..bytes.len() {
+            let _ = decode_insns(&bytes[..end], &dex);
+        }
     }
 
     #[test]

@@ -589,3 +589,24 @@ is_retryable plus shorty Z still matches I1H.A06 and 916.BGC/BQ2. Unknown
 new-release mapping remains explicitly unresolved; no full recipe proposal.
 [Interpretation](mex.md#versioned-parserrequest-files) distinguishes source-only
 getters and callback admission from unfinished converter/live application.
+
+## comparison.mex.group_converter_branches_37_71 — 2026-10-07
+
+**Confirmed static**, APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Selected source](mex-group-converter-evidence.txt) preserves full 0Xo.A03,
+90x getter fields, required properties getters, 8kY.A0B/0Gv.A01, group id parser,
+creator-id getter, feature-gated 0Xo.A01/A00 and required LbE.A05. Four
+__typename hash branches construct A4m with distinct integer/flag inputs;
+unknown hashes/null group object throw, subject is nullable, participants and
+properties are required. Exact wire type names and A4m slot mapping remain
+unknown. Searching 453,954 escaped DEX strings found none of the four hashes;
+this does not exhaust runtime assembly/unescaped UTF-16 names.
+
+Group/subject times multiply parsed long by 1000; announcement_version does
+not. Raw classes6.dex 0x26374c bytes `16 00 e8 03 bd 02 10 02` independently
+prove 8kY.A0B's opcode/operands; xtask now names bd mul-long/2addr with an
+independent regression. Parser catch types/coercion/storage units remain
+unknown. Creator is creator.id, with feature 0x36fe controlling additional
+LID/country maps. [Interpretation and boundaries](mex.md#group-converter-branches-and-time-arithmetic-2026-10-07)
+record source facts without claiming a live or completed Rust converter.
