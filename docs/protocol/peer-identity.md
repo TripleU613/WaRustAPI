@@ -68,6 +68,27 @@ incoming prekey authentication/commit ordering. `A10`/`A11` in the coordinator
 query Kyber-key inventory, and `A12` delegates a separate predicate; none of
 those methods establishes a remote receive trust check.
 
+**Confirmed, receive adapter:** the two callers of interface `0kl.BRS` are
+`CQc.A00` above and `LX/Cnp.A04`. The latter handles an incoming `DRw`
+prekey envelope: it loads the session at `0000..0014`, invokes `BRS` at
+`0034..003a` without using the return value, and selects/promotes a matching
+session by version and Alice base key (`0052..0196`). If none matches, it
+loads the actual signed/optional one-time keys and constructs a new session.
+Both the existing-session branch and new-session branch converge on identity
+save `0kl.COt` at `0098..009e`, then nested-message decrypt `Cnp.A01` at
+`00a4..00aa`, callback `Dc6.BEw` at `00b0..00b6`, session store `0kk.CdI`
+at `00c6..00cc`, and optional prekey deletion (`00da..00f8`).
+
+**Unknown:** whether the outer caller encloses the identity save and nested
+message authentication in a rollback-capable transaction; this method alone
+does not establish that. Do not claim the APK saves an identity only after MAC
+validation: its inner ordering is the opposite. A client implementation should
+still hold candidate changes in memory and commit the identity, session,
+consumed prekey and event only after successful authentication, preserving the
+previous identity/session history. This is an implementation invariant, not a
+claim about a traced APK transaction. Trust-policy configuration and atomic
+authenticated replacement remain the next implementation boundary.
+
 Reproduction:
 
 ```sh
