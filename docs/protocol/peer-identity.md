@@ -1093,8 +1093,9 @@ scoped protobuf/field/caller scans and selected source outside the core bundle.
   through constructor argument 18 (`009c..00a4`, `00e8..00ec`) to
   [CaD.A0H](apk/2.26.37.71-core/receive-status-adv-container.txt) (`001e..0026`),
   which CoU.A04 passes to 11T.A0D. This is the **status/Bp1 producer**; normal
-  Bp2.A0L has one direct writer, its constructor. The complete Bp2 argument
-  producer remains **unknown**, so no whole-message parser parity is claimed.
+  Bp2.A0L has one direct writer, its constructor. The Bp2 producer was still **unknown** at this signature-component
+  checkpoint; the ordinary producer is traced in the follow-up below. No
+  whole-message parser parity is claimed.
   The other CRF.A0U writer, DPV.invoke, copies Ca9.A0E; its upstream producer
   remains **unknown**. CaD has one direct constructor call, CRF.A00.
 - Grz's recovered fields are details=1, accountSignatureKey=2,
@@ -1159,3 +1160,91 @@ passed. The final APK export contains 145 topics / 327 methods / 150 files,
 added topics and all 136 prior topics unchanged. Four bundles total 3,676,109
 bytes. Inventory/manifest/tokens unchanged; selected appendix outside core.
 Repository hygiene passed 861 local links, licenses and all four checksum bundles.
+
+
+## Ordinary companion ADV producer and baseline timestamps (2026-10-07)
+
+**Confirmed, static APK 2.26.37.71** (SHA-256 `1755111a…7d5c`): the
+[full-register producer/baseline appendix](companion-identity-producer-evidence.txt)
+closes the ordinary Bp2 producer gap. Exact field-write scanning finds one
+Cih.A0V writer, DEs.CF2, and exact constructor-call scanning finds one Bp2
+constructor caller, Cih.A01. These are scoped exact scans, not proof that
+reflection or every parser callback path is understood.
+
+- DEs.CF2 reads the node byte body (`0006..000a`). A `registration` child
+  stores Cih.A0W only when its body is nonnull and exactly four bytes
+  (`000a..002a`). A `device-identity` child stores the body in Cih.A0V
+  (`002c..0040`), without that four-byte requirement.
+- Cih.A01 moves A0V through v17 into v42 (`0104..010c`, `0168..016c`).
+  Its Bp2 constructor call starts at v16 (`01ac..01b2`): v42 is argument
+  26, the last object argument. Bp2's constructor stores argument 26
+  (v39 in that constructor) into A0L (`00a8..00b0`). A0W separately reaches
+  A0M through argument 25. This is the ordinary producer used by the already
+  traced CjN.A06/CoU.A04 companion-prekey check; it is distinct from the
+  status/Bp1 producer. Parser callback selection and malformed/duplicate
+  child handling upstream remain **unknown**.
+
+**Confirmed, matched-baseline remote branch:** after signatures, 11T.A0D
+requires matching held primary key, stored raw ID and account encryption type
+before this branch (`03ce..04a0`). 0bN.A04 reads the remote baseline via
+0bp.A02; feature/alias branches can select another stored user. 0bN.A0C copies
+1IW.A09's device-index map and inserts the primary device with index zero.
+11T.A0D compares the actual candidate device's saved index with its signed
+keyIndex (`04c8..04fa`). If the stored list timestamp is at least the signed
+candidate timestamp and the index is absent or different, it refuses with the
+local log “device has been deleted already” (`04fa..05fa`). An equal index
+continues even for an older candidate timestamp. A newer candidate continues
+through expected-timestamp update and refresh scheduling; an absent/different
+index additionally enters device-map mutation. These are local admission
+branches, not server ban/refusal meanings. Own-companion, primary-key/raw-ID/
+account-type reconciliation and pending teardown remain separate.
+
+**Confirmed storage mapping:** 0bp.A00 names the SQL columns and passes them
+through LbQ.<init>; 0bp.A05 independently writes the same mapping:
+
+| LbQ field | `user_device_info` column |
+| --- | --- |
+| A01 | raw_id |
+| A00 | account_encryption_type |
+| A05 | timestamp |
+| A02 | expected_timestamp |
+| A04 | expected_ts_last_device_job_ts |
+| A03 | expected_timestamp_update_ts |
+
+0bN.A05 updates only when both A05 and A02 are below the candidate timestamp.
+The new LbQ retains raw ID, account type and **A05**, sets A02 to the candidate,
+sets A04 from `adv_last_device_job_ts`, and retains A03 unless the former A05
+is at least the former A02; that case obtains the update clock (with wall-clock
+fallback). 11T.A0D then calls 0bN.A0E and 101.A03 with local reason 3
+(`05fa..0628`). For remote users A0E iterates 1IW.A02 aliases inside a
+transaction, calls 1IW.A06, then 0bp.A05 on success. A06 bypasses its lengthy
+account-type side effects when A07 detects no encryption-type transition.
+0bp.A05 performs update-or-insert and registers a post-transaction callback;
+its cache callback body and full alias fan-out are **not traced here**. The
+own branch instead writes companion-mode preferences.
+
+**Refuted:** advancing our verified `DeviceList.list_timestamp` directly to a
+newer message ADV timestamp does not match 0bN.A05. The expected/pending value
+is separate. Cryptographic verification alone must not erase a deletion or
+turn a pending refresh into a verified device list.
+
+**Remaining implementation:** atomic companion pkmsg admission/bootstrap,
+expected timestamp and refresh behavior, new-device map application, alias
+fan-out, raw-ID/type transitions and own-account reconciliation. The runtime
+still supports exact held-companion `msg`, while companion `pkmsg` is our
+unimplemented receive path. This trace changes no account, prekey, session,
+request, API/CLI behavior or live claim. Existing `apk-smali`, `apk-field-refs`
+and `apk-callers` commands reproduce the evidence; the added checksum topics
+make the producer and baseline readers visible in cached release comparisons.
+
+
+**Validation:** thirteen full-register method sources were independently
+re-exported byte-for-byte from the hash-pinned APK, including SQL mapping and
+account-type transition helpers. The compact export now has 155 topics / 337
+methods / 160 files / 2,036,151 bytes (61,001 bytes below its enforced limit).
+Cached checksum comparison took 0.071644 seconds: ten added topics, all 145
+prior topics unchanged, and inventory/manifest/tokens unchanged. The thirteen
+raw source outputs above include typed exception metadata; the appendix and
+compact source serve different purposes. xtask's 58 tests, regenerated CLI
+reference, OpenAPI library-symbol check, formatting and whitespace checks passed.
+No new runtime or live validation is claimed for this source-only change.

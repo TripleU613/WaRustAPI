@@ -1253,3 +1253,16 @@ install sender keys and retain duplicate markers across reopen. B7H forward/
 reverse device construction is linked; CPQ.A00 is refuted as a 37.71 session
 selector. Full companion bootstrap/identity policy and live device coverage
 remain unfinished. [Evidence and scope](groups.md#group-pairwise-session-device-correction-2026-10-07).
+
+
+### Ordinary companion ADV and pending refresh — 2026-10-07
+
+**Confirmed static, APK 2.26.37.71:** DEs.CF2 writes the `device-identity`
+body to Cih.A0V; Cih.A01 passes constructor argument 26 to Bp2.A0L.
+11T.A0D's matched-primary/raw-ID/type branch refuses old/equal timestamp
+candidates with absent/different device index. 0bN.A05 preserves LbQ.A05
+(list timestamp) while advancing A02 (expected timestamp); 0bp.A00/A05 and
+LbQ.<init> independently identify the SQL mappings. Treating the newer message
+ADV as a verified list timestamp was refuted. Callback selection, cache callback,
+full alias fan-out and atomic runtime admission remain unknown/unimplemented.
+[Trace and reproducible sources](peer-identity.md#ordinary-companion-adv-producer-and-baseline-timestamps-2026-10-07).

@@ -1,0 +1,45 @@
+# APK-derived structural disassembly: LX/0bp;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LL) flags=0x9 registers=16
+  0000..0004 op=1a const-string v0, "raw_id"
+  0004..000a op=72 invoke-interface {v15, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  000a..000c op=0a move-result
+  000c..0012 op=1b const-string/jumbo v0, "timestamp"
+  0012..0018 op=72 invoke-interface {v15, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  0018..001a op=0a move-result
+  001a..001e op=1a const-string v0, "expected_timestamp"
+  001e..0024 op=72 invoke-interface {v15, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  0024..0026 op=0a move-result
+  0026..002a op=1a const-string v0, "expected_ts_last_device_job_ts"
+  002a..0030 op=72 invoke-interface {v15, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  0030..0032 op=0a move-result
+  0032..0036 op=1a const-string v0, "expected_timestamp_update_ts"
+  0036..003c op=72 invoke-interface {v15, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  003c..003e op=0a move-result
+  003e..0042 op=1a const-string v0, "account_encryption_type"
+  0042..0048 op=72 invoke-interface {v15, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  0048..004a op=0a move-result
+  004a..0050 op=72 invoke-interface {v15, v1}, Landroid/database/Cursor;->isNull(ZI)
+  0050..0052 op=0a move-result
+  0052..0056 op=38 if-eqz v0, +0x1d
+  0056..0058 op=12 const/4 v7, #0x0
+  0058..005e op=72 invoke-interface {v15, v6}, Landroid/database/Cursor;->getInt(II)
+  005e..0060 op=0a move-result
+  0060..0066 op=72 invoke-interface {v15, v5}, Landroid/database/Cursor;->getLong(JI)
+  0066..0068 op=0b move-result-wide
+  0068..006e op=72 invoke-interface {v15, v4}, Landroid/database/Cursor;->getLong(JI)
+  006e..0070 op=0b move-result-wide
+  0070..0076 op=72 invoke-interface {v15, v3}, Landroid/database/Cursor;->getLong(JI)
+  0076..0078 op=0b move-result-wide
+  0078..007e op=72 invoke-interface {v15, v2}, Landroid/database/Cursor;->getLong(JI)
+  007e..0080 op=0b move-result-wide
+  0080..0084 op=22 new-instance v5, LX/LbQ;
+  0084..008a op=76 invoke-direct/range {v5..v15}, LX/LbQ;-><init>(VIIJJJJ)
+  008a..008c op=11 return-object v5
+  008c..0092 op=72 invoke-interface {v15, v1}, Landroid/database/Cursor;->getInt(II)
+  0092..0094 op=0a move-result
+  0094..0096 op=28 goto -0x1e
+.end method

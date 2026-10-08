@@ -1871,7 +1871,21 @@ remain unfinished. [Evidence and scope](protocol/groups.md#group-pairwise-sessio
   `lab-inbox --inspect` reports verification/missing/invalid states privately
   without adopting identities or advancing sessions. Real-signature tamper/
   identity/domain tests and read-only PN/LID route tests cover this component.
-- **Remaining:** ordinary Bp2 ADV producer, complete companion admission,
+- **Remaining at this checkpoint:** ordinary Bp2 ADV producer (resolved in
+  the follow-up below), complete companion admission,
   freshness/raw-ID/teardown reconciliation and atomic runtime bootstrap.
   Companion `pkmsg` remains unsupported by the runtime selector.
   [Evidence](protocol/peer-identity.md#companion-adv-cryptographic-binding-and-inspection-2026-10-07).
+
+
+### Ordinary companion producer and pending timestamp trace (2026-10-07)
+
+**Confirmed static APK 37.71:** DEs.CF2 -> Cih.A0V -> Bp2.A0L carries the
+ordinary `device-identity` child. The matched-primary/raw-ID/type branch rejects
+an absent/different device index when the stored list timestamp is not older.
+A newer candidate updates `expected_timestamp`, preserving the list timestamp;
+SQL read/write and constructor mappings confirm the distinction. Added bounded
+checksum topics support cached release comparison. Atomic runtime companion
+pkmsg bootstrap, pending-refresh application and device/alias reconciliation
+remain unfinished. No live request or account mutation.
+[Evidence and unknowns](protocol/peer-identity.md#ordinary-companion-adv-producer-and-baseline-timestamps-2026-10-07).

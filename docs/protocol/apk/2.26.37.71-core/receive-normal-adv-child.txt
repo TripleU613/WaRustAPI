@@ -1,0 +1,25 @@
+# APK-derived structural disassembly: LX/DEs;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CF2(VLL) flags=0x1 registers=6
+  0000..0006 op=71 invoke-static {v5, v4}, LX/1xj;->A1G(VLL)
+  0006..000a op=54 iget-object v2, v5, LX/0hs;->A01:[B
+  000a..000e op=1a const-string v0, "registration"
+  000e..0014 op=71 invoke-static {v5, v0}, LX/0hs;->A02(ZLL)
+  0014..0016 op=0a move-result
+  0016..001a op=38 if-eqz v0, +0xb
+  001a..001e op=38 if-eqz v2, +0x9
+  001e..0020 op=21 array-length
+  0020..0022 op=12 const/4 v0, #0x4
+  0022..0026 op=33 if-ne v1, v0, +0x5
+  0026..002a op=5b iput-object v2, v4, LX/Cih;->A0W:[B
+  002a..002c op=0e return-void
+  002c..0030 op=1a const-string v0, "device-identity"
+  0030..0036 op=71 invoke-static {v5, v0}, LX/0hs;->A02(ZLL)
+  0036..0038 op=0a move-result
+  0038..003c op=38 if-eqz v0, -0x7
+  003c..0040 op=5b iput-object v2, v4, LX/Cih;->A0V:[B
+  0040..0042 op=0e return-void
+.end method

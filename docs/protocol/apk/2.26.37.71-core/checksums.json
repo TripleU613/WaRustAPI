@@ -1,4 +1,24 @@
 {
+  "adv-account-baseline-cache-read.txt": {
+    "bytes": 3740,
+    "sha256": "168783704e65afe6d170ac96b0d307e77b30fc85105f99f742a17da9d0dad360"
+  },
+  "adv-account-baseline-container.txt": {
+    "bytes": 757,
+    "sha256": "e5eee1fc643326e09ab6cceb75a0064f40732f6341afbfb6105988334b88ded6"
+  },
+  "adv-account-baseline-read.txt": {
+    "bytes": 2730,
+    "sha256": "99d46982f2433c2adffd8733393d814a9f9bcdcdc7bef2c68016e4c043186545"
+  },
+  "adv-account-baseline-row-read.txt": {
+    "bytes": 2576,
+    "sha256": "4ae829b85aebde3973d219cfdb2a940391d37a0f7fbc153e2018106cbc0d83a4"
+  },
+  "adv-account-baseline-write.txt": {
+    "bytes": 5712,
+    "sha256": "84f15763e72393cd8326b478d0cce4150e7d8f10ce05be4d0e46bdf1af1cad29"
+  },
   "adv-candidate-identity-callback-constructor.txt": {
     "bytes": 1385,
     "sha256": "198e741083a2561bc0cf023ac2bcba886bdd531ea1130ad7c1eac82ebe53b30e"
@@ -51,9 +71,17 @@
     "bytes": 9855,
     "sha256": "f0ee461d6b2b19df24091a757938f78c72269161ede33d8eefa1d6aaae29ee6d"
   },
+  "adv-device-index-map-read.txt": {
+    "bytes": 1819,
+    "sha256": "dc24f5889d4bc925e876abaaf469603c928db33632a1b1f90f72f8effc838869"
+  },
   "adv-device-signature-prefixes.txt": {
     "bytes": 7800,
     "sha256": "43acdf1c23289c60cacbc0386e20b00f0935959014d02a1a63012d231dfabfd5"
+  },
+  "adv-expected-timestamp-update.txt": {
+    "bytes": 1927,
+    "sha256": "832832e23d0cc8615f23037258dae25c5f9ad7ccc8bdab65d2843c33effcc5af"
   },
   "adv-identity-error-reply.txt": {
     "bytes": 4017,
@@ -294,6 +322,18 @@
   "receive-message-status-extract.txt": {
     "bytes": 785,
     "sha256": "088e17ef869cdafa00532956a8f26a2594fc7e38d4e772e3c4fce6975b13f118"
+  },
+  "receive-normal-adv-child.txt": {
+    "bytes": 1131,
+    "sha256": "e89269abf8c3ddde19a14780d60aaf68d2033f094bb468db65b5abb42b239711"
+  },
+  "receive-normal-adv-container.txt": {
+    "bytes": 3532,
+    "sha256": "08d6ec0cb0f9d8930f4b44329a8ec0e1dac42b65c63ddfa4fb5389c6b6590d18"
+  },
+  "receive-normal-message-build.txt": {
+    "bytes": 5647,
+    "sha256": "17da9710921ea8fbc90e16134bca0423faeac041776f8186e4bbe0b1f345ea53"
   },
   "receive-pairwise-cipher-extract.txt": {
     "bytes": 821,
@@ -584,8 +624,8 @@
     "sha256": "82590b7944e627c71d4a54e3403be84e314598ced8789812c7c6951470853c92"
   },
   "targets.json": {
-    "bytes": 54204,
-    "sha256": "14fdf995ecce502c1f833b7479cbd9440e60af5d36203f28293ccf4496df0b4e"
+    "bytes": 57702,
+    "sha256": "a80377dbe3e8231d61d7db9fff9ce2a99110c21a23b33dfdcea4ab3d0dd81d5a"
   },
   "token-dictionary-initializer.txt": {
     "bytes": 159791,

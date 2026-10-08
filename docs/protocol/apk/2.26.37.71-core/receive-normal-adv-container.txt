@@ -1,0 +1,72 @@
+# APK-derived structural disassembly: LX/Bp2;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLLLLLLLLLLLLLLLLLLLLLLLLIIIJJJZZ) flags=0x10001 registers=51
+  0000..0002 op=07 move-object
+  0002..0006 op=08 move-object/from16
+  0006..000a op=08 move-object/from16
+  000a..000e op=08 move-object/from16
+  000e..0010 op=07 move-object
+  0010..0014 op=08 move-object/from16
+  0014..0016 op=07 move-object
+  0016..001a op=05 move-wide/from16
+  001a..001e op=08 move-object/from16
+  001e..0022 op=08 move-object/from16
+  0022..0028 op=76 invoke-direct/range {v2..v12}, LX/CjN;-><init>(VLLLLLLLLJ)
+  0028..002c op=08 move-object/from16
+  002c..0030 op=5b iput-object v0, v13, LX/Bp2;->A07:LX/1gc;
+  0030..0034 op=08 move-object/from16
+  0034..0038 op=5b iput-object v0, v13, LX/Bp2;->A06:Lcom/whatsapp/infra/core/jid/UserJid;
+  0038..003c op=08 move-object/from16
+  003c..0040 op=5b iput-object v0, v13, LX/Bp2;->A0H:Ljava/lang/String;
+  0040..0044 op=08 move-object/from16
+  0044..0048 op=5b iput-object v0, v13, LX/Bp2;->A0N:Ljava/lang/Integer;
+  0048..004c op=02 move/from16
+  004c..0050 op=5c iput-boolean v0, v13, LX/Bp2;->A0K:Z
+  0050..0054 op=02 move/from16
+  0054..0058 op=59 iput v0, v13, LX/Bp2;->A03:I
+  0058..005c op=08 move-object/from16
+  005c..0060 op=5b iput-object v0, v13, LX/Bp2;->A0F:Ljava/lang/String;
+  0060..0064 op=08 move-object/from16
+  0064..0068 op=5b iput-object v0, v13, LX/Bp2;->A0B:Ljava/lang/Integer;
+  0068..006c op=08 move-object/from16
+  006c..0070 op=5b iput-object v0, v13, LX/Bp2;->A0E:Ljava/lang/String;
+  0070..0074 op=08 move-object/from16
+  0074..0078 op=5b iput-object v0, v13, LX/Bp2;->A0D:Ljava/lang/String;
+  0078..007c op=02 move/from16
+  007c..0080 op=5c iput-boolean v0, v13, LX/Bp2;->A0J:Z
+  0080..0084 op=02 move/from16
+  0084..0088 op=59 iput v0, v13, LX/Bp2;->A02:I
+  0088..008c op=08 move-object/from16
+  008c..0090 op=5b iput-object v0, v13, LX/Bp2;->A0C:Ljava/lang/Integer;
+  0090..0094 op=08 move-object/from16
+  0094..0098 op=5b iput-object v0, v13, LX/Bp2;->A09:LX/ClY;
+  0098..009c op=08 move-object/from16
+  009c..00a0 op=5b iput-object v0, v13, LX/Bp2;->A0A:LX/ClY;
+  00a0..00a4 op=08 move-object/from16
+  00a4..00a8 op=5b iput-object v0, v13, LX/Bp2;->A0M:[B
+  00a8..00ac op=08 move-object/from16
+  00ac..00b0 op=5b iput-object v0, v13, LX/Bp2;->A0L:[B
+  00b0..00b4 op=02 move/from16
+  00b4..00b8 op=59 iput v0, v13, LX/Bp2;->A01:I
+  00b8..00bc op=08 move-object/from16
+  00bc..00c0 op=5b iput-object v0, v13, LX/Bp2;->A0G:Ljava/lang/String;
+  00c0..00c4 op=05 move-wide/from16
+  00c4..00c8 op=5a iput-wide v0, v13, LX/Bp2;->A05:J
+  00c8..00cc op=08 move-object/from16
+  00cc..00d0 op=5b iput-object v0, v13, LX/Bp2;->A00:Ljava/lang/String;
+  00d0..00d4 op=05 move-wide/from16
+  00d4..00d8 op=5a iput-wide v0, v13, LX/Bp2;->A04:J
+  00d8..00dc op=08 move-object/from16
+  00dc..00e0 op=5b iput-object v0, v13, LX/Bp2;->A0I:Ljava/util/Map;
+  00e0..00e4 op=08 move-object/from16
+  00e4..00e8 op=5b iput-object v0, v13, LX/Bp2;->A0O:Ljava/util/List;
+  00e8..00ec op=22 new-instance v0, LX/C6a;
+  00ec..00f2 op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>(V)
+  00f2..00f6 op=08 move-object/from16
+  00f6..00fa op=5b iput-object v1, v0, LX/C6a;->A00:LX/1gc;
+  00fa..00fe op=5b iput-object v0, v13, LX/Bp2;->A08:LX/C6a;
+  00fe..0100 op=0e return-void
+.end method

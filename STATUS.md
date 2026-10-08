@@ -1755,3 +1755,20 @@ companion pkmsg is still unsupported by the runtime selector. No live/account
 identity change. See docs/protocol/peer-identity.md#companion-adv-cryptographic-binding-and-inspection-2026-10-07.
 Repository hygiene passed 861 local links, licenses and all four APK checksum
 bundles. Private original state and unrelated exports remain outside Git.
+
+
+Ordinary companion ADV producer and pending timestamp (2026-10-07,
+**confirmed static APK 37.71**): DEs.CF2 -> Cih.A0V -> Bp2.A0L closes the
+ordinary producer gap. Matched-primary/raw-ID/type admission rejects old/equal
+candidates when the actual device index is absent/different. SQL read/write
+and LbQ constructor mappings prove 0bN.A05 advances expected_timestamp while
+preserving the verified list timestamp; treating incoming ADV as a verified
+list update was refuted. Atomic companion pkmsg bootstrap, expected-refresh
+application, new-device/alias mutation and own/raw-ID/type reconciliation remain
+unfinished. No account/network change. [Evidence and unknowns](docs/protocol/peer-identity.md#ordinary-companion-adv-producer-and-baseline-timestamps-2026-10-07).
+Export: 155 topics / 337 methods / 160 files / 2,036,151 bytes; cached comparison
+0.071644 seconds, ten added topics and 145 prior topics unchanged. Thirteen
+full-register sources re-exported exactly. xtask 58 tests, CLI reference,
+OpenAPI library-symbol check, formatting and whitespace passed.
+Repository hygiene passed 865 local links, package licenses and all four
+checksum bundles (3,710,622 bytes total).

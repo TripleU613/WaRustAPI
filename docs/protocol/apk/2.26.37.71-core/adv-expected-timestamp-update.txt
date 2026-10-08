@@ -1,0 +1,39 @@
+# APK-derived structural disassembly: LX/0bN;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A05(LLJ) flags=0x1 registers=18
+  0000..0004 op=53 iget-wide v6, v15, LX/LbQ;->A05:J
+  0004..0008 op=05 move-wide/from16
+  0008..000c op=31 cmp-long v0, v6, v16
+  000c..0010 op=3b if-gez v0, +0x38
+  0010..0014 op=53 iget-wide v2, v15, LX/LbQ;->A02:J
+  0014..0018 op=31 cmp-long v0, v2, v16
+  0018..001c op=3b if-gez v0, +0x32
+  001c..0020 op=54 iget-object v0, v14, LX/0bN;->A03:LX/08l;
+  0020..0024 op=54 iget-object v0, v0, LX/08l;->A1A:LX/00s;
+  0024..002a op=72 invoke-interface {v0}, LX/00s;->get(L)
+  002a..002c op=0c move-result-object
+  002c..0030 op=1f check-cast v5, Landroid/content/SharedPreferences;
+  0030..0034 op=1a const-string v4, "adv_last_device_job_ts"
+  0034..0038 op=16 const-wide/16 v0, #0x0
+  0038..003e op=72 invoke-interface {v5, v4, v0, v1}, Landroid/content/SharedPreferences;->getLong(JLJ)
+  003e..0040 op=0b move-result-wide
+  0040..0044 op=53 iget-wide v12, v15, LX/LbQ;->A03:J
+  0044..0048 op=31 cmp-long v4, v6, v2
+  0048..004c op=3a if-ltz v4, +0x10
+  004c..0050 op=54 iget-object v2, v14, LX/0bN;->A04:LX/08B;
+  0050..0056 op=6e invoke-virtual {v2}, LX/08B;->A02(J)
+  0056..0058 op=0b move-result-wide
+  0058..005c op=31 cmp-long v2, v12, v0
+  005c..0060 op=39 if-nez v2, +0x6
+  0060..0066 op=71 invoke-static {}, Ljava/lang/System;->currentTimeMillis(J)
+  0066..0068 op=0b move-result-wide
+  0068..006c op=52 iget v4, v15, LX/LbQ;->A01:I
+  006c..0070 op=52 iget v5, v15, LX/LbQ;->A00:I
+  0070..0074 op=22 new-instance v3, LX/LbQ;
+  0074..007a op=76 invoke-direct/range {v3..v13}, LX/LbQ;-><init>(VIIJJJJ)
+  007a..007c op=11 return-object v3
+  007c..007e op=11 return-object v15
+.end method

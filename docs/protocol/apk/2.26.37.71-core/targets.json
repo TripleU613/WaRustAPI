@@ -1,4 +1,68 @@
 {
+  "adv-account-baseline-cache-read": {
+    "anchors": [
+      "GET_USER_DEVICE_INFO_SQL"
+    ],
+    "class": "LX/0bp;",
+    "file": "adv-account-baseline-cache-read.txt",
+    "method_filter": "A02",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "adv-account-baseline-container": {
+    "class": "LX/LbQ;",
+    "file": "adv-account-baseline-container.txt",
+    "method_filter": "<init>",
+    "method_shorty": "VIIJJJJ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "adv-account-baseline-read": {
+    "anchors": [
+      "only query info for others"
+    ],
+    "class": "LX/0bN;",
+    "file": "adv-account-baseline-read.txt",
+    "method_filter": "A04",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "adv-account-baseline-row-read": {
+    "anchors": [
+      "expected_timestamp"
+    ],
+    "class": "LX/0bp;",
+    "file": "adv-account-baseline-row-read.txt",
+    "method_filter": "A00",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "adv-account-baseline-write": {
+    "class": "LX/0bN;",
+    "file": "adv-account-baseline-write.txt",
+    "method_filter": "A0E",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
   "adv-candidate-identity-callback": {
     "class": "LX/ODa;",
     "file": "adv-candidate-identity-callback.txt",
@@ -166,6 +230,17 @@
       "crates/whatsapp-api/src/signal/adv.rs"
     ]
   },
+  "adv-device-index-map-read": {
+    "class": "LX/0bN;",
+    "file": "adv-device-index-map-read.txt",
+    "method_filter": "A0C",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
   "adv-device-signature-prefixes": {
     "class": "LX/08F;",
     "file": "adv-device-signature-prefixes.txt",
@@ -175,6 +250,20 @@
     "rust_files": [
       "crates/whatsapp-api/src/signal/adv/device_identity.rs",
       "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "adv-expected-timestamp-update": {
+    "anchors": [
+      "adv_last_device_job_ts"
+    ],
+    "class": "LX/0bN;",
+    "file": "adv-expected-timestamp-update.txt",
+    "method_filter": "A05",
+    "method_shorty": "LLJ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
     ]
   },
   "adv-identity-error-reply": {
@@ -903,6 +992,43 @@
     "rust_files": [
       "crates/whatsapp-api/src/signal/adv/device_identity.rs",
       "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "receive-normal-adv-child": {
+    "anchors": [
+      "device-identity",
+      "registration"
+    ],
+    "class": "LX/DEs;",
+    "file": "receive-normal-adv-child.txt",
+    "method_filter": "CF2",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "receive-normal-adv-container": {
+    "class": "LX/Bp2;",
+    "file": "receive-normal-adv-container.txt",
+    "method_filter": "<init>",
+    "method_shorty": "VLLLLLLLLLLLLLLLLLLLLLLLLLLIIIJJJZZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
+    ]
+  },
+  "receive-normal-message-build": {
+    "class": "LX/Cih;",
+    "file": "receive-normal-message-build.txt",
+    "method_filter": "A01",
+    "method_shorty": "L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/inbox.rs"
     ]
   },
   "receive-pairwise-cipher-extract": {
