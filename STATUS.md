@@ -1802,3 +1802,33 @@ inspection records remain in ignored lab storage. Default CLI tests (24),
 regenerated CLI reference, OpenAPI library-symbol check and final build passed.
 Repository hygiene passed 869 local links, package licenses and all four
 checksum bundles (3,710,622 bytes). No fresh companion sample was found.
+
+
+Direct companion receive and receipts (2026-10-08, **implemented/offline**):
+known-companion direct pkmsg reuses the APK-derived matched-baseline ADV/atomic
+checks; held msg selects the actual device ratchet. Events and direct SKDM retain
+that device, while chat/dedupe uses its primary PN/LID namespace. Optional PN alias
+disappearance dedupes; authenticated aliases stay under the primary LID. Delivery/
+read routing supports non-hosted companion destinations and primary LID read chats.
+Static Cp2.A00/CmC.A06 supports the traced DeviceJid destination branch; Cp2.A06
+was refuted as ordinary producer (it is Bp1/status). Upstream receipt model
+producers remain untraced. Tests cover PN/LID bootstrap, ordinary-msg continuation,
+one-time consumption, events/receipts, alias/reopen dedupe, direct MAC/policy
+failures and delayed-authority actual-device SKDM installation. An own peer
+control regression found by the full suite was corrected; receive and backfill
+now share alias rules. Workspace/all-feature tests passed (689). Newer-ADV
+refresh/new-device application, wider reconciliation, direct-control projection
+parity and fresh live companion samples remain unfinished.
+[Evidence and unknowns](docs/protocol/peer-identity.md#direct-companion-receive-and-receipts-2026-10-08).
+
+
+**Validation completion:** all 689 workspace/all-feature tests, strict Clippy,
+warning-free Rustdoc, default CLI tests (24), regenerated CLI reference, API
+library-symbol check and final experimental CLI build passed. Four scoped APK
+receipt source outputs reproduced exactly. Saved-account offline inspection
+found no qualifying companion sample; before/after outbox/actions/receipts/device/
+pin summaries were identical. No login, query or chat send occurred. Fresh live
+companion interoperability remains unverified; private inspection records stay
+in ignored lab storage.
+Repository hygiene passed 873 local links, package licenses and all four
+checksum bundles (3,710,622 bytes total).

@@ -1325,3 +1325,78 @@ compatibility with that supported baseline, rather than assuming arbitrary
 stored ADV accounts are E2EE. Fixture membership rows are synthetic saved state;
 existing device-list tests separately cover signed-list verification. Repository
 hygiene passed 869 local links, licenses and four checksum bundles.
+
+
+## Direct companion receive and receipts (2026-10-08)
+
+**Implemented/offline, APK 37.71 evidence:** direct non-hosted companion pkmsg
+now uses the same matched-baseline ADV admission and atomic authority checks as
+group/status. B7H.A06 carries the actual getDevice into B76; CoU.A04 checks
+11T.A0D for ordinary Bp2 prekeys. Both ADV signatures, current held-primary-bound
+membership/raw-ID/index/non-newer timestamp and nested Signal MAC are required.
+Held companion msg selects the exact actual-device ratchet, with no primary or
+alias fallback. Incoming pinned/apk_authenticated policy and archived replacement
+remain effective. Own companion prekeys remain excluded by the shared admission.
+
+**Local identity projection:** a direct companion's primary namespace identifies
+its chat/dedupe marker, while its actual DeviceAddress identifies the event sender
+and its pairwise/SKDM sessions. Optional sender_pn does not select the ratchet or
+change that chat marker. Authenticated explicit PN aliases are saved under the
+primary LID; no companion-wrapped alias key is created. This is our stable local
+projection, not a claim to have recovered every APK chat model producer.
+Primary direct routing retains its prior behavior. Direct SKDM sender-key storage
+now also preserves the actual companion; the prior primary-only selector was
+refuted by the real-crypto fixture. Existing direct SKDM projection remains its
+legacy decrypted representation; this change does not claim complete control-event
+parity with the separate group-only sender_key_distributed marker.
+
+**Confirmed receipt branch, static APK 2.26.37.71:**
+[full-register receipt evidence](direct-companion-receipt-evidence.txt) retains
+Cp2 and CmC.A05/A06, plus the 0DE.A0Q classifier. Cp2.A00 passes its supplied
+DeviceJid/chat/alternate route to CmC.A06 (`0000..0008`) and writes the resulting
+pair's first member as `to` (`0064..0086`). For a nongroup chat with neither
+chat nor alternate matching A0Q, CmC.A06 `003a..0042` uses the supplied DeviceJid
+as destination when present. A0Q recognizes types 3/5/6, not a generic companion
+predicate. Cp2.A04 passes message A0p:DeviceJid (`00d6..00ea`); A07 passes
+CM8.A05:DeviceJid (`0034..0044`). The complete A0p/CM8 producer upstream remains
+**unknown** here. Cp2.A06 is specifically the Bp1 status builder and is **not**
+evidence of the ordinary Bp2 receipt producer; that initial trace was refuted.
+
+The Rust receipt builder's device-zero restriction was our limitation. It now
+retains a normal direct non-hosted PN/LID destination device, and the read queue
+accepts primary LID chats. Existing edit/recipient/unsupported-agent restrictions
+remain local bounds. No read receipt is queued merely for a key distribution.
+No new HTTP route or flag exists; lab-inbox inspection/replay and both live receive
+entry points share this receive implementation. API descriptions retain honest
+transport/live metadata and describe the expanded direct capability.
+
+**Validation:** real-crypto PN/LID direct fixtures cover bootstrap with one-time
+consumption, reply/ordinary-msg ratchet continuation, exact device event sender,
+primary chat, delivery destination, automatic read queuing, alias disappearance
+without duplicate projection, primary/list preservation and reopened duplicate
+handling. Nested-MAC/pinned replacement tests now run through direct as well as
+group paths. Another direct SKDM fixture preserves the same capture/prekey while
+membership authority is absent, then commits to the actual-device sender-key
+namespace after restoring the synthetic verified fixture row. These are offline
+adapter fixtures, not APK-generated live samples. Newer candidates, missing/new
+devices, pending refresh, raw-ID/type transitions, own-account reconciliation
+and fresh companion interoperability remain unfinished.
+
+
+The full suite caught an own category=peer control regression during this
+change: session_sender's new primary projection made restore compare an own
+control's actual-device marker with a primary chat marker. Explicit peer
+controls are again excluded from ordinary chat projection; their existing
+held-session/import/duplicate path and record selector remain unchanged. The
+receive/backfill alias helper is shared so reopening a companion LID capture
+cannot create a device-wrapped alias or replace a PN mapping with the LID itself.
+
+
+**Validation completion:** all 689 workspace/all-feature tests, strict Clippy,
+warning-free Rustdoc, default CLI tests (24), regenerated CLI reference, API
+library-symbol check and final experimental CLI build passed. Four scoped APK
+receipt source outputs reproduced exactly. Saved-account offline inspection
+found no qualifying companion sample; before/after outbox/actions/receipts/device/
+pin summaries were identical. No login, query or chat send occurred. Fresh live
+companion interoperability remains unverified; private inspection records stay
+in ignored lab storage.

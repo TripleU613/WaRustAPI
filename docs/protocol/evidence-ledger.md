@@ -1282,3 +1282,15 @@ replacement/refusal, authority rollback, reopen dedupe and sender-key fallback.
 Direct companion prekeys and wider admission/reconciliation remain unimplemented;
 no fresh companion live sample is established.
 [Implementation and remaining gaps](peer-identity.md#known-companion-prekey-bootstrap-2026-10-07).
+
+
+### Direct companion receive/receipt route — 2026-10-08
+
+**Implemented/offline:** same known-companion ADV branch now handles direct
+prekeys; actual-device ratchet/event/SKDM routing is separate from primary chat
+identity. Alias disappearance dedupes. **Confirmed static 37.71:** Cp2.A00 ->
+CmC.A06 retains supplied DeviceJid as direct receipt destination for the traced
+nongroup/non-A0Q branch; A0Q types 3/5/6 are not a companion predicate. The
+initial Cp2.A06 ordinary-receipt hypothesis was refuted (Bp1/status only).
+A0p/CM8 upstream producers and full direct-control parity remain unknown.
+[Trace, tests and remaining work](peer-identity.md#direct-companion-receive-and-receipts-2026-10-08).

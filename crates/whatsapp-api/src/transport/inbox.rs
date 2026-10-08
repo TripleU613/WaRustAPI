@@ -74,9 +74,12 @@ fn ciphertext_bytes(node: &Node) -> Option<&[u8]> {
     (!bytes.is_empty()).then_some(bytes)
 }
 
-/// Use explicit primary PN routing or the APK's explicit sender_pn LID mapping.
+/// Primary chat identity for direct inbox/event/receipt lookup. Companion
+/// session selection separately preserves the actual device and namespace.
 pub fn session_sender(node: &Node) -> Option<Jid> {
-    if node.get_attr("participant").is_some() {
+    if node.get_attr("participant").is_some()
+        || node.get_attr("category").and_then(|v| v.as_text()) == Some("peer")
+    {
         return None;
     }
     let parse = |name| {
@@ -89,12 +92,37 @@ pub fn session_sender(node: &Node) -> Option<Jid> {
     let sender = parse("from")?;
     match sender.server {
         Server::User if sender.device == 0 => Some(sender),
+        Server::User if sender.agent == 0 => Some(sender.to_non_ad()),
+        // Keep companion chat/dedupe identity stable if an optional alias
+        // appears or disappears on redelivery. Save PN mapping after auth.
+        Server::Lid if sender.device != 0 && sender.agent == 0 => Some(sender.to_non_ad()),
         Server::Lid if sender.device == 0 => {
             let phone = parse("sender_pn")?;
             (phone.server == Server::User && phone.device == 0).then_some(phone)
         }
         _ => None,
     }
+}
+
+/// Share the authenticated alias rules between receive and historical projection.
+pub(super) fn authenticated_phone_alias(node: &Node, sender: &Jid) -> Option<Jid> {
+    if sender.server == Server::User {
+        Some(sender.to_non_ad())
+    } else {
+        super::receipts::jid(node, "sender_pn")
+            .filter(|phone| phone.server == Server::User && phone.device == 0 && phone.agent == 0)
+            .map(|phone| phone.to_non_ad())
+    }
+}
+
+/// Actual non-hosted companion address; never an alias or primary selector.
+fn direct_companion_sender(node: &Node) -> Option<Jid> {
+    if node.get_attr("participant").is_some() {
+        return None;
+    }
+    super::receipts::jid(node, "from").filter(|peer| {
+        peer.device != 0 && peer.agent == 0 && matches!(peer.server, Server::User | Server::Lid)
+    })
 }
 
 /// The sender's LID when the stanza is LID-addressed (`from=<lid>`, device 0).
@@ -491,7 +519,31 @@ async fn process_direct(
             .is_some(),
         None => false,
     };
-    let session_peer = direct_session_peer(&sender, lid_peer, lid_session_held, is_prekey_message);
+    // APK 37.71 B7H.A06 carries getDevice into B76; companion sessions
+    // use the actual from address even when sender_pn names a chat alias.
+    let companion_peer = if peer_category {
+        None
+    } else {
+        direct_companion_sender(node)
+    };
+    let companion_authority = if is_prekey_message && let Some(peer) = &companion_peer {
+        match super::companion_admission::prepare(store, account, peer, node, ciphertext)? {
+            super::companion_admission::Admission::Ready(authority) => Some(authority),
+            super::companion_admission::Admission::Refused(status) => {
+                tracing::warn!(
+                    status,
+                    "direct companion prekey preserved: admission deferred"
+                );
+                return Ok(IncomingResult::Unsupported);
+            }
+        }
+    } else {
+        None
+    };
+    let session_peer = companion_peer.clone().unwrap_or_else(|| {
+        direct_session_peer(&sender, lid_peer, lid_session_held, is_prekey_message)
+    });
+    let skdm_sender = companion_peer.as_ref().unwrap_or(&sender);
     let peer_key = format!("comparison-direct:{session_peer}");
     let (session, identity): (Option<Vec<u8>>, Option<Vec<u8>>) = store.read(|tx| {
         Ok((
@@ -576,10 +628,10 @@ async fn process_direct(
             if let Ok(group_jid) = Jid::parse(&group_id) {
                 if group_jid.is_group() {
                     let skdm_keys =
-                        store.read(|tx| g::load_sender_key_bytes(tx, &group_jid, &sender));
+                        store.read(|tx| g::load_sender_key_bytes(tx, &group_jid, skdm_sender));
                     match skdm_keys {
                         Ok((db_key, prev)) => {
-                            g::process_skdm(&group_jid, &sender, db_key, prev, &axolotl)
+                            g::process_skdm(&group_jid, skdm_sender, db_key, prev, &axolotl)
                                 .await
                                 .ok()
                         }
@@ -598,6 +650,9 @@ async fn process_direct(
     #[cfg(not(feature = "experimental-signal-crypto"))]
     let skdm_update: Option<()> = None;
     store.write(|tx| {
+        if let Some(authority) = &companion_authority {
+            authority.check(tx)?;
+        }
         if peer_category {
             let current_account = AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
             if !current_account.is_registered()
@@ -661,15 +716,17 @@ async fn process_direct(
             }
             tx.delete(Table::Prekeys, prekey_key.as_bytes())?;
         }
+        let phone_alias = authenticated_phone_alias(node, &sender);
         if let Some(from) = super::receipts::jid(node, "from")
             && from.server == Server::Lid
+            && let Some(phone) = phone_alias
         {
-            let map_key = format!("authenticated-lid:{from}");
+            let map_key = format!("authenticated-lid:{}", from.to_non_ad());
             let previous: Option<Jid> = tx.get_json(Table::Checkpoints, map_key.as_bytes(), 1)?;
-            if previous.as_ref().is_some_and(|old| old != &sender) {
+            if previous.as_ref().is_some_and(|old| old != &phone) {
                 return Err(Error::invalid("inbox", "authenticated LID mapping changed"));
             }
-            tx.put_json(Table::Checkpoints, map_key.as_bytes(), 1, &sender)?;
+            tx.put_json(Table::Checkpoints, map_key.as_bytes(), 1, &phone)?;
         }
         // Commit the SKDM sender key update atomically with the direct message. A
         // concurrent writer's newer key wins without failing this message; storage

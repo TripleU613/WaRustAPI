@@ -139,7 +139,7 @@ pub fn queue_read(
     // A group is allowed as well: its receipt is the same builder
     // (`received_confirmation`, `LX/Cp2`) with the sender as `participant`,
     // which the live-verified group delivery receipt already uses.
-    if !matches!(chat.server, Server::User | Server::Group) || chat.device != 0 {
+    if !matches!(chat.server, Server::User | Server::Lid | Server::Group) || chat.device != 0 {
         return Err(Error::invalid(
             "receipt",
             "only primary direct chats and groups are supported",

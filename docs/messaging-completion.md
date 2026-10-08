@@ -1903,3 +1903,15 @@ diagnostics explain missing/stale/deleted/pending candidates. **Remaining:**
 direct companion prekeys, newer-ADV refresh/new-device application, raw-ID/type
 and own-account reconciliation, fresh live companion validation.
 [Evidence and boundaries](protocol/peer-identity.md#known-companion-prekey-bootstrap-2026-10-07).
+
+
+### Direct companion receive (2026-10-08)
+
+**Implemented/offline:** known companion direct pkmsg admission and held msg
+ratchets preserve actual PN/LID device, with primary chat/dedupe identity and
+actual-device events/SKDM. Delivery/read routing no longer rejects supported
+companion destinations; primary LID read queues work. Real-crypto tests cover
+bootstrap, continuation, alias-change dedupe, reopen, nested-MAC/policy failures
+and delayed-authority SKDM storage. Newer-device refresh/reconciliation and live
+companion samples remain pending.
+[Evidence and limits](protocol/peer-identity.md#direct-companion-receive-and-receipts-2026-10-08).

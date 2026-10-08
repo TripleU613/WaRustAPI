@@ -234,6 +234,22 @@ mod tests {
         path: &std::path::Path,
         raw_peer: &str,
     ) -> (ProtocolStore, AccountRecord, Jid, Node) {
+        let (store, account, peer, node, _, _) = fixture_payload(path, raw_peer, None).await;
+        (store, account, peer, node)
+    }
+    type FixtureOutput = (
+        ProtocolStore,
+        AccountRecord,
+        Jid,
+        Node,
+        AccountRecord,
+        direct::PreparedDirect,
+    );
+    async fn fixture_payload(
+        path: &std::path::Path,
+        raw_peer: &str,
+        payload: Option<&[u8]>,
+    ) -> FixtureOutput {
         let store = open(path, true);
         let mut config: LabRegistrationConfig =
             serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
@@ -283,7 +299,7 @@ mod tests {
             Some(&bundle),
             None,
             None,
-            &key.distribution_message,
+            payload.unwrap_or(&key.distribution_message),
         )
         .await
         .unwrap();
@@ -373,7 +389,7 @@ mod tests {
                     .bytes(encrypted.ciphertext.to_vec()),
                 Node::new("device-identity").bytes(adv),
             ]);
-        (store, receiver, peer, node)
+        (store, receiver, peer, node, sender, encrypted)
     }
 
     fn ciphertext(node: &Node) -> &[u8] {
@@ -490,13 +506,21 @@ mod tests {
 
     #[tokio::test]
     async fn signatures_do_not_replace_nested_mac_and_pinned_policy() {
-        for changed_pin in [false, true] {
+        for (changed_pin, direct_route) in
+            [(false, false), (true, false), (false, true), (true, true)]
+        {
             let dir = tempfile::tempdir().unwrap();
             let (store, receiver, peer, mut node) = fixture(
                 &dir.path().join("refuse.redb"),
                 "15555550101:3@s.whatsapp.net",
             )
             .await;
+            if direct_route {
+                node = Node::new("message")
+                    .attr("from", peer.clone())
+                    .attr("id", "DIRECT-REFUSAL")
+                    .children(node.child_nodes().to_vec());
+            }
             if changed_pin {
                 let old = IdentityKeyPair::generate(&mut rand::rng())
                     .identity_key()
@@ -767,5 +791,235 @@ mod tests {
         let after = crypto_rows(&store);
         assert_eq!(&before[..3], &after[..3]); // No prekey/session/pin adoption.
         assert_ne!(before[3], after[3]); // Only the authenticated sender chain advanced.
+    }
+
+    #[tokio::test]
+    async fn direct_companion_prekey_and_followup_keep_chat_and_device_separate() {
+        for raw in ["15555550101:3@s.whatsapp.net", "99990000101:3@lid"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("direct.redb");
+            let (store, receiver, peer, group_node, sending, encrypted) =
+                fixture_payload(&path, raw, Some(b"\x0a\x04test")).await;
+            let mut node = Node::new("message")
+                .attr("from", raw)
+                .attr("id", "DIRECT-COMPANION")
+                .children(group_node.child_nodes().to_vec());
+            if peer.server == Server::Lid {
+                node = node.attr("sender_pn", "15555550101@s.whatsapp.net");
+            }
+            let chat = super::super::inbox::session_sender(&node).unwrap();
+            assert_eq!(chat.device, 0);
+            let capture = super::super::inbox::preserve(&store, &node).unwrap();
+            assert_eq!(
+                super::super::inbox::process(&store, &receiver, &node, &capture)
+                    .await
+                    .unwrap(),
+                super::super::inbox::IncomingResult::Decrypted
+            );
+            assert_eq!(
+                super::super::receipts::queue_read_for_incoming(&store, &node).unwrap(),
+                1
+            );
+            let peer_key = format!("comparison-direct:{peer}");
+            let (session, identity) = store
+                .read(|tx| {
+                    Ok((
+                        tx.get_json::<Vec<u8>>(Table::SignalSessions, peer_key.as_bytes(), 1)?
+                            .unwrap(),
+                        tx.get_json::<Vec<u8>>(Table::PeerIdentities, peer_key.as_bytes(), 1)?
+                            .unwrap(),
+                    ))
+                })
+                .unwrap();
+            let reply = direct::prepare_payload(
+                &receiver,
+                &peer,
+                None,
+                Some(&session),
+                Some(&identity),
+                b"\x0a\x04ack!",
+            )
+            .await
+            .unwrap();
+            let acknowledged = direct::receive(
+                &sending,
+                receiver.own_jid.as_ref().unwrap(),
+                &encrypted.session,
+                &encrypted.identity,
+                &reply.ciphertext,
+            )
+            .await
+            .unwrap();
+            let followup = direct::prepare_payload(
+                &sending,
+                receiver.own_jid.as_ref().unwrap(),
+                None,
+                Some(&acknowledged.session),
+                Some(&encrypted.identity),
+                b"\x0a\x04next",
+            )
+            .await
+            .unwrap();
+            assert_eq!(followup.kind, "msg");
+            let second = Node::new("message")
+                .attr("from", peer.clone())
+                .attr("id", "DIRECT-NEXT")
+                .children(vec![
+                    Node::new("enc")
+                        .attr("v", "2")
+                        .attr("type", "msg")
+                        .bytes(followup.ciphertext.to_vec()),
+                ]);
+            let capture2 = super::super::inbox::preserve(&store, &second).unwrap();
+            assert_eq!(
+                super::super::inbox::process(&store, &receiver, &second, &capture2)
+                    .await
+                    .unwrap(),
+                super::super::inbox::IncomingResult::Decrypted
+            );
+            store
+                .read(|tx| {
+                    assert!(
+                        tx.get_json::<Vec<u8>>(
+                            Table::SignalSessions,
+                            format!("comparison-direct:{}", peer.to_non_ad()).as_bytes(),
+                            1
+                        )?
+                        .is_none()
+                    );
+                    assert!(
+                        tx.get_json::<Vec<u8>>(Table::Prekeys, b"comparison-prekey:11", 1)?
+                            .is_none()
+                    );
+                    if peer.server == Server::Lid {
+                        assert_eq!(
+                            tx.get_json::<Jid>(
+                                Table::Checkpoints,
+                                format!("authenticated-lid:{}", peer.to_non_ad()).as_bytes(),
+                                1
+                            )?,
+                            Some(Jid::parse("15555550101@s.whatsapp.net").unwrap())
+                        );
+                        assert!(
+                            tx.get_json::<Jid>(
+                                Table::Checkpoints,
+                                format!("authenticated-lid:{peer}").as_bytes(),
+                                1
+                            )?
+                            .is_none()
+                        );
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let consumer = crate::store::ConsumerId::new("direct-test").unwrap();
+            let events = store
+                .read_events(&consumer, crate::model::ids::EventCursor::START, 20)
+                .unwrap()
+                .events;
+            let messages: Vec<_> = events
+                .iter()
+                .filter_map(|event| match &event.event {
+                    crate::sync::SyncEvent::NewMessage(message) => Some(message),
+                    _ => None,
+                })
+                .collect();
+            assert_eq!(messages.len(), 2);
+            assert_eq!(
+                messages[0].key.sender.as_ref().unwrap(),
+                &crate::model::ids::DeviceAddress::from_jid(&peer).unwrap()
+            );
+            assert_eq!(messages[0].key.chat.jid(), &chat);
+            let confirmation = super::super::messaging::received_confirmation(&node).unwrap();
+            assert_eq!(
+                super::super::receipts::jid(&confirmation, "to"),
+                Some(peer.clone())
+            );
+            let mut no_alias = node.clone();
+            no_alias
+                .attributes
+                .retain(|attribute| attribute.name != "sender_pn");
+            let alias_capture = super::super::inbox::preserve(&store, &no_alias).unwrap();
+            assert_eq!(
+                super::super::inbox::process(&store, &receiver, &no_alias, &alias_capture)
+                    .await
+                    .unwrap(),
+                super::super::inbox::IncomingResult::Duplicate
+            );
+            let rows = crypto_rows(&store);
+            drop(store);
+            let store = open(&path, false);
+            assert_eq!(
+                super::super::inbox::process(&store, &receiver, &node, &capture)
+                    .await
+                    .unwrap(),
+                super::super::inbox::IncomingResult::Duplicate
+            );
+            assert_eq!(
+                super::super::inbox::process(&store, &receiver, &second, &capture2)
+                    .await
+                    .unwrap(),
+                super::super::inbox::IncomingResult::Duplicate
+            );
+            assert_eq!(crypto_rows(&store), rows);
+        }
+    }
+
+    #[tokio::test]
+    async fn direct_companion_distribution_waits_for_authority_and_keeps_sender_device() {
+        let dir = tempfile::tempdir().unwrap();
+        let (store, receiver, peer, original) =
+            fixture(&dir.path().join("direct-key.redb"), "99990000101:3@lid").await;
+        let node = Node::new("message")
+            .attr("from", peer.clone())
+            .attr("id", "DIRECT-KEY")
+            .children(original.child_nodes().to_vec());
+        let list = super::super::devices::device_list(&store, &peer)
+            .unwrap()
+            .unwrap();
+        store
+            .write(|tx| tx.delete(Table::Checkpoints, list_key(&list.owner).as_bytes()))
+            .unwrap();
+        let before = crypto_rows(&store);
+        let capture = super::super::inbox::preserve(&store, &node).unwrap();
+        assert_eq!(
+            super::super::inbox::process(&store, &receiver, &node, &capture)
+                .await
+                .unwrap(),
+            super::super::inbox::IncomingResult::Unsupported
+        );
+        assert_eq!(crypto_rows(&store), before);
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    list_key(&list.owner).as_bytes(),
+                    1,
+                    &list,
+                )
+            })
+            .unwrap();
+        assert_eq!(
+            super::super::inbox::process(&store, &receiver, &node, &capture)
+                .await
+                .unwrap(),
+            super::super::inbox::IncomingResult::Decrypted
+        );
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        store
+            .read(|tx| {
+                assert!(group::load_sender_key_bytes(tx, &chat, &peer)?.1.is_some());
+                assert!(
+                    group::load_sender_key_bytes(tx, &chat, &peer.to_non_ad())?
+                        .1
+                        .is_none()
+                );
+                Ok(())
+            })
+            .unwrap();
+        assert_eq!(
+            super::super::receipts::queue_read_for_incoming(&store, &node).unwrap(),
+            0
+        );
     }
 }

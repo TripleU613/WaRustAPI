@@ -196,8 +196,11 @@ fn chat_and_sender(node: &Node) -> Option<(ChatId, DeviceAddress)> {
     let (chat_jid, sender_jid) = match super::inbox::sender_key_chat(node) {
         Some(pair) => pair,
         None => {
-            let sender = super::inbox::session_sender(node)?;
-            (sender.clone(), sender)
+            let chat = super::inbox::session_sender(node)?;
+            let sender = super::receipts::jid(node, "from")
+                .filter(|peer| peer.device != 0 && peer.agent == 0)
+                .unwrap_or_else(|| chat.clone());
+            (chat, sender)
         }
     };
     Some((
@@ -633,17 +636,18 @@ pub(super) fn restore(
         }
         if let Some(from) = super::receipts::jid(&node, "from")
             && from.server == crate::model::jid::Server::Lid
+            && let Some(phone) = super::inbox::authenticated_phone_alias(&node, &sender)
         {
-            let mapping = format!("authenticated-lid:{from}");
+            let mapping = format!("authenticated-lid:{}", from.to_non_ad());
             let old: Option<crate::model::jid::Jid> =
                 tx.get_json(Table::Checkpoints, mapping.as_bytes(), 1)?;
-            if old.as_ref().is_some_and(|v| v != &sender) {
+            if old.as_ref().is_some_and(|v| v != &phone) {
                 return Err(crate::Error::invalid(
                     "inbox",
                     "authenticated LID mapping changed",
                 ));
             }
-            tx.put_json(Table::Checkpoints, mapping.as_bytes(), 1, &sender)?;
+            tx.put_json(Table::Checkpoints, mapping.as_bytes(), 1, &phone)?;
         }
         publish(tx, key, &node, &payload)
     })

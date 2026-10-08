@@ -626,7 +626,10 @@ pub fn received_confirmation(incoming: &Node) -> Option<Node> {
         .as_jid()
         .cloned()
         .or_else(|| Jid::parse(from.as_text()?).ok())?;
-    if jid.device != 0
+    // APK 37.71 Cp2.A00 -> CmC.A06 uses the supplied DeviceJid as
+    // direct receipt destination when no alternate/broadcast route applies.
+    // A companion address is not a reason to suppress delivery/read.
+    if jid.agent != 0
         || !matches!(
             jid.server,
             crate::model::jid::Server::User | crate::model::jid::Server::Lid
