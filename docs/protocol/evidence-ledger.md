@@ -1220,3 +1220,11 @@ and ADs reply classifications are linked; numeric group-type agreement alone
 does not establish complete callback/history provenance. Runtime mode/contact
 synchronization and unsupported namespaces remain unported; no account request.
 [Kinds and remaining gaps](cross-device-sync.md#concrete-jid-kinds-in-group-mode-classification-2026-10-07).
+
+Group-type persistence continuation (2026-10-07, **confirmed static APK 37.71**):
+existing-chat updates write group_type through transactional database helpers;
+missing chats are left absent. Selected subgroup/zero-update callers and secondary
+type-4 model writes are retained without inventing complete-reply enum values.
+A0Y's outer A0n guard is narrowed again by A0A/A0m, excluding interop type 28
+from the type-3 branch. Runtime contact/type synchronization remains incomplete;
+no account/network request. [Evidence and unknowns](cross-device-sync.md#persisted-group-type-updates-feeding-sender-mode-2026-10-07).

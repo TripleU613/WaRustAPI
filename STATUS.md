@@ -1639,3 +1639,18 @@ five API checks passed. Core snapshot: 109 topics / 275 methods, 114 files /
 checksum-verified cached diff took 0.197003 seconds: nine added topics, all
 100 prior topics unchanged; manifest, inventory and tokens unchanged. These are
 static/offline findings; no live behavior or automatic mode adoption is claimed.
+
+Group-type persistence continuation (2026-10-07, **confirmed static APK 37.71**):
+existing-chat updates write group_type through transactional database helpers;
+missing chats are left absent. Selected subgroup/zero-update callers and secondary
+type-4 model writes are retained without inventing complete-reply enum values.
+A0Y's outer A0n guard is narrowed again by A0A/A0m, excluding interop type 28
+from the type-3 branch. Runtime contact/type synchronization remains incomplete;
+no account/network request. [Evidence and unknowns](docs/protocol/cross-device-sync.md#persisted-group-type-updates-feeding-sender-mode-2026-10-07).
+
+Group-type trace validation: 58 xtask tests, regenerated CLI reference and five
+API checks passed. The core checksum bundle now has 118 topics / 289 methods,
+123 files / 1,829,892 bytes (2 MiB bound). The verified cached diff took
+0.168698 seconds: nine added topics, all 109 previous topics unchanged;
+manifest, inventory and tokens unchanged. Selected runnable excerpts remain
+outside the checksum bundle. No runtime behavior or live validation is claimed.

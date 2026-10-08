@@ -1962,3 +1962,87 @@ five API checks passed. Core snapshot: 109 topics / 275 methods, 114 files /
 checksum-verified cached diff took 0.197003 seconds: nine added topics, all
 100 prior topics unchanged; manifest, inventory and tokens unchanged. These are
 static/offline findings; no live behavior or automatic mode adoption is claimed.
+
+## Persisted group-type updates feeding sender mode (2026-10-07)
+
+**Confirmed static, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+[0aK.A03](apk/2.26.37.71-core/group-type-existing-update.txt) asks
+0Fs.A0F for an existing chat (0002..000e). A missing row logs the requested
+type and returns (000e..0046); it does not initialize a chat. An existing row
+receives the supplied integer in 0Ze.A04 at 008c..0090, then calls A00 with
+null created_timestamp (0090..0096). This is an explicit metadata update,
+not inference from member addresses or message contents.
+
+[0aK.A00](apk/2.26.37.71-core/group-type-persist.txt) opens a database handle
+and transaction (0004..0018). Under the row monitor it copies subject,
+group_type=A04, and optional growth-lock fields into ContentValues
+(0036..0098); created_timestamp is copied only when its argument is nonnull.
+It calls [0VS.A0Y](apk/2.26.37.71-core/group-type-persist-upsert.txt) at
+0098..009e. A false result logs insert failure but still follows the normal
+transaction A00/close path and returns true (00a0..00d8). Do not interpret
+A03's void return or this normal Boolean as proof of an actual changed row.
+Exception handlers exist, but their complete typed/rollback effects are not
+established by this selected structural trace; no Rust rollback policy is
+inferred from instruction order alone.
+
+0VS.A0Y first calls [A06](apk/2.26.37.71-core/group-type-persist-update.txt).
+When the updated-row count is zero it supplies jid_row_id, calls A09, stores
+the returned row ID, and returns false for -1 (0000..0054). A06 writes table
+`chat` through 0IY.A02 with either `account_jid_row_id = ?` or `jid_row_id = ?`
+according to 0ZR.A03 (00c0..00ee / 012e..0134). It also computes `hidden`
+from separate chat-type/state predicates and repairs row IDs on successful
+updates. Full A09 insertion/schema and those visibility predicates remain
+**unknown**; this is not permission to copy the Android storage schema into
+our encrypted store or change chat visibility.
+
+[Selected caller/dispatch evidence](group-type-update-callers-evidence.txt)
+records the only two A03 call instructions found by an exact class/method
+scan: Aha.run at classes6.dex byte 0x5c2e08 and Ahc.run at 0x5c6636.
+Aha's dispatcher case 31 enters 0854; it iterates supplied group JIDs,
+invokes 0a8.A06, passes literal 0 to A03 (0892..089e), and schedules AhX
+selector 0x26. Ahc case 7 enters 13e6; it passes AC3.A02 as chat and
+AC3.A00 as the new type (1406..1418), then calls 0a8.A07 and notification
+schedulers. [AC3](apk/2.26.37.71-core/group-type-subgroup-model.txt)
+toString explicitly labels A00 as groupType. Runnable constructor overloads
+share shorties and differ in field assignments; no exact constructor-producer
+mapping, network origin, parent/removal semantics or complete callback
+provenance was established. The literal-zero path cannot serve as a generic
+fallback for missing classification.
+
+**Additional database/type scope:**
+[0a2.A04](apk/2.26.37.71-core/group-type-secondary-load.txt) reads required
+cursor column group_type (00b0..00bc) into 0Ze.A04 (03f8..0408).
+[0a2.A0D](apk/2.26.37.71-core/group-type-secondary-init.txt) builds an
+alternate model with type 4 at 00bc..00c2 before 9lE.A00;
+[ADu.A0G](apk/2.26.37.71-core/group-type-secondary-result.txt) also writes
+4 to a newly constructed row at 02a6..02ac before that wrapper. These are
+confirmed writes, not evidence that binary complete group replies produce
+an additional GroupType enum value. The current Rust enum intentionally
+covers the independently traced ADs.A01 complete-reply classification;
+meaning, routing relevance and full lifecycle of type 4 remain unknown.
+
+**Two-stage predicate correction:** retained 0Fs.A0Y accepts A0n's JID
+categories 1/2/28 before calling A0A. A0A independently requires A0m, which
+excludes type 28; therefore type 28 cannot reach true through this A0Y path,
+even if a cached row has group_type=3. B7i.A00 already handles type 28 as
+mode 2 before A0Y. [A0n](apk/2.26.37.71-core/sender-key-mode-group-domain.txt)
+is now in the checksum bundle as well as the earlier supplementary excerpt.
+Do not claim A0Y reads type 3 for every category in its outer domain.
+
+**Negative search coverage:** the full 0Ze.A04 write scan remains 21
+instructions (retained in the caller appendix), spanning constructor/cache,
+secondary-model, subgroup and history paths. Only the selected paths above
+and earlier linked evidence are traced; history merge and subgroup producers
+remain incomplete. A broad A0Y caller scan found 137 call instructions,
+including UI/non-sender consumers; that is not 137 sender-mode producers.
+No account inspection, network request, key/pin replacement, reservation
+change or automatic PN fallback was performed. Runtime authoritative contact
+mode and complete group-type synchronization remain unfinished.
+
+Group-type trace validation: 58 xtask tests, regenerated CLI reference and five
+API checks passed. The core checksum bundle now has 118 topics / 289 methods,
+123 files / 1,829,892 bytes (2 MiB bound). The verified cached diff took
+0.168698 seconds: nine added topics, all 109 previous topics unchanged;
+manifest, inventory and tokens unchanged. Selected runnable excerpts remain
+outside the checksum bundle. No runtime behavior or live validation is claimed.

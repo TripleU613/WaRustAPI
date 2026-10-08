@@ -1,0 +1,196 @@
+# APK 2.26.37.71; SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Selected structural bytecode excerpts, not complete runnable classes.
+# These excerpts and reference scans are outside the core checksum bundle.
+# Offsets are method-relative bytes except explicit scan dex byte offsets.
+
+# Reproduce: target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/Aha;'
+
+# class: LX/Aha;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLI)  # .registers 5
+    0000..0004  iput  v4, v0, LX/Aha;->$t:I
+    0004..0008  rsub-int/lit8  v4, v4, #0x1e
+    0008..000c  if-eqz  v4, +0xc
+    000c..0012  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0012..0016  iput-object  v1, v0, LX/Aha;->A00:Ljava/lang/Object;
+    0016..001a  iput-object  v3, v0, LX/Aha;->A01:Ljava/lang/Object;
+    001a..001e  iput-object  v2, v0, LX/Aha;->A02:Ljava/lang/Object;
+    001e..0020  return-void
+    0020..0026  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0026..002a  iput-object  v2, v0, LX/Aha;->A00:Ljava/lang/Object;
+    002a..002e  iput-object  v3, v0, LX/Aha;->A01:Ljava/lang/Object;
+    002e..0032  iput-object  v1, v0, LX/Aha;->A02:Ljava/lang/Object;
+    0032..0034  return-void
+.end method
+
+.method public <init>(VLLLI)  # .registers 5
+    0000..0004  iput  v4, v0, LX/Aha;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    000a..000e  iput-object  v3, v0, LX/Aha;->A00:Ljava/lang/Object;
+    000e..0012  iput-object  v2, v0, LX/Aha;->A01:Ljava/lang/Object;
+    0012..0016  iput-object  v1, v0, LX/Aha;->A02:Ljava/lang/Object;
+    0016..0018  return-void
+.end method
+
+.method public A00(VLLLLI)  # .registers 6
+    0000..0004  new-instance  v0, LX/Aha;
+    0004..000a  invoke-direct  {v0, v2, v3, v4, v5}, LX/Aha;-><init>(VLLLI)
+    000a..0010  invoke-interface  {v1, v0}, LX/07u;->COM(VL)
+    0010..0012  return-void
+.end method
+
+.method public run(V)  # .registers 23
+    0000..0004  move-object/from16  v0, v22
+    0004..0008  iget  v1, v0, LX/Aha;->$t:I
+    0008..000e  packed-switch  v1, payload@0x1eb4, cases=[0:@0x1d6c, 1:@0x1c1c, 2:@0x1ba6, 3:@0x1b1c, 4:@0x1ae2, 5:@0x19dc, 6:@0x198e, 7:@0x195a, 8:@0x190a, 9:@0x18de, 10:@0x18a8, 11:@0x186a, 12:@0x1824, 13:@0x17ca, 14:@0x1762, 15:@0x16f2, 16:@0x164c, 17:@0x15e6, 18:@0xefc, 19:@0xe86, 20:@0xde0, 21:@0xd9a, 22:@0xd18, 23:@0xcce, 24:@0xc78, 25:@0xb68, 26:@0xad0, 27:@0x9ca, 28:@0x9a8, 29:@0x924, 30:@0x8ae, 31:@0x854, 32:@0x820, 33:@0x7d8, 34:@0x7ae, 35:@0x7ae, 36:@0x7ae, 37:@0x70c, 38:@0x648, 39:@0x5e8, 40:@0x4c6, 41:@0x44a, 42:@0x2c8, 43:@0x248, 44:@0xe, 45:@0xe, 46:@0xe, 47:@0x204, 48:@0xe6, 49:@0x6a], default@0xe
+    0854..0858  iget-object  v1, v0, LX/Aha;->A00:Ljava/lang/Object;
+    0858..085c  check-cast  v1, Ljava/util/Collection;
+    085c..0860  iget-object  v5, v0, LX/Aha;->A01:Ljava/lang/Object;
+    0860..0864  check-cast  v5, LX/0a6;
+    0864..0868  iget-object  v4, v0, LX/Aha;->A02:Ljava/lang/Object;
+    0868..086e  invoke-interface  {v1}, Ljava/util/Collection;->iterator(L)
+    086e..0870  move-result-object  v3
+    0870..0876  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext(Z)
+    0876..0878  move-result  v0
+    0878..087c  if-eqz  v0, +0xb1c
+    087c..0882  invoke-interface  {v3}, Ljava/util/Iterator;->next(L)
+    0882..0884  move-result-object  v2
+    0884..0888  check-cast  v2, Lcom/whatsapp/infra/core/jid/GroupJid;
+    0888..088c  iget-object  v0, v5, LX/0a6;->A0B:LX/0a8;
+    088c..0892  invoke-virtual  {v0, v2}, LX/0a8;->A06(VL)
+    0892..0896  iget-object  v1, v5, LX/0a6;->A0H:LX/0aK;
+    0896..0898  const/4  v0, #0x0
+    0898..089e  invoke-virtual  {v1, v2, v0}, LX/0aK;->A03(VLI)
+    089e..08a2  iget-object  v1, v5, LX/0a6;->A0J:LX/0Jr;
+    08a2..08a6  const/16  v0, #0x26
+    08a6..08ac  invoke-static  {v1, v4, v5, v0}, LX/AhX;->A01(VLLLI)
+    08ac..08ae  goto  -0x1e
+# End selected case excerpt; unrelated cases omitted.
+
+# Reproduce: target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/Ahc;'
+
+# class: LX/Ahc;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLI)  # .registers 6
+    0000..0004  iput  v5, v0, LX/Ahc;->$t:I
+    0004..0008  rsub-int/lit8  v5, v5, #0x10
+    0008..000c  if-eqz  v5, +0xe
+    000c..0010  iput-object  v1, v0, LX/Ahc;->A02:Ljava/lang/Object;
+    0010..0014  iput-object  v3, v0, LX/Ahc;->A00:Ljava/lang/Object;
+    0014..0018  iput-object  v4, v0, LX/Ahc;->A01:Ljava/lang/Object;
+    0018..001c  iput-object  v2, v0, LX/Ahc;->A03:Ljava/lang/Object;
+    001c..0022  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0022..0024  return-void
+    0024..002a  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    002a..002e  iput-object  v2, v0, LX/Ahc;->A00:Ljava/lang/Object;
+    002e..0032  iput-object  v1, v0, LX/Ahc;->A01:Ljava/lang/Object;
+    0032..0036  iput-object  v3, v0, LX/Ahc;->A02:Ljava/lang/Object;
+    0036..003a  iput-object  v4, v0, LX/Ahc;->A03:Ljava/lang/Object;
+    003a..003c  return-void
+.end method
+
+.method public <init>(VLLLLI)  # .registers 6
+    0000..0004  iput  v5, v0, LX/Ahc;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    000a..000e  iput-object  v1, v0, LX/Ahc;->A00:Ljava/lang/Object;
+    000e..0012  iput-object  v4, v0, LX/Ahc;->A01:Ljava/lang/Object;
+    0012..0016  iput-object  v3, v0, LX/Ahc;->A02:Ljava/lang/Object;
+    0016..001a  iput-object  v2, v0, LX/Ahc;->A03:Ljava/lang/Object;
+    001a..001c  return-void
+.end method
+
+.method public A00(LLLLLI)  # .registers 6
+    0000..0004  new-instance  v0, LX/Ahc;
+    0004..000a  invoke-direct/range  {v0..v5}, LX/Ahc;-><init>(VLLLLI)
+    000a..000c  return-object  v0
+.end method
+
+.method public run(V)  # .registers 57
+    0000..0004  move-object/from16  v0, v56
+    0004..0008  iget  v1, v0, LX/Ahc;->$t:I
+    0008..000e  packed-switch  v1, payload@0x17b8, cases=[0:@0xa48, 1:@0x952, 2:@0x164c, 3:@0x1594, 4:@0x1538, 5:@0x14aa, 6:@0x145e, 7:@0x13e6, 8:@0x13be, 9:@0x8f0, 10:@0x134c, 11:@0x898, 12:@0x834, 13:@0x7f8, 14:@0x1324, 15:@0x7a0, 16:@0x12ee, 17:@0x67a, 18:@0x1264, 19:@0x422, 20:@0x3e2, 21:@0x1152, 22:@0x106c, 23:@0xfb6, 24:@0xf00, 25:@0xda, 26:@0xed0, 27:@0xe02, 28:@0xd4a, 29:@0xcdc, 30:@0xcb0, 31:@0x98, 32:@0xc2e, 33:@0xbf2, 34:@0xb76, 35:@0x42, 36:@0xb3e, 37:@0xb18], default@0xe
+    13e6..13ea  iget-object  v6, v0, LX/Ahc;->A00:Ljava/lang/Object;
+    13ea..13ee  check-cast  v6, LX/0a6;
+    13ee..13f2  iget-object  v5, v0, LX/Ahc;->A01:Ljava/lang/Object;
+    13f2..13f6  check-cast  v5, LX/AC3;
+    13f6..13fa  iget-object  v4, v0, LX/Ahc;->A02:Ljava/lang/Object;
+    13fa..13fe  check-cast  v4, LX/1bn;
+    13fe..1402  iget-object  v3, v0, LX/Ahc;->A03:Ljava/lang/Object;
+    1402..1406  check-cast  v3, Ljava/lang/Integer;
+    1406..140a  iget-object  v2, v6, LX/0a6;->A0H:LX/0aK;
+    140a..140e  iget-object  v1, v5, LX/AC3;->A02:Lcom/whatsapp/infra/core/jid/GroupJid;
+    140e..1412  iget  v0, v5, LX/AC3;->A00:I
+    1412..1418  invoke-virtual  {v2, v1, v0}, LX/0aK;->A03(VLI)
+    1418..141c  iget-object  v0, v6, LX/0a6;->A0B:LX/0a8;
+    141c..1422  invoke-virtual  {v0, v4, v5, v3}, LX/0a8;->A07(VLLL)
+    1422..1426  iget-object  v0, v6, LX/0a6;->A03:LX/05B;
+    1426..142c  invoke-static  {v0}, LX/1xi;->A0m(LL)
+    142c..142e  move-result-object  v2
+    142e..1432  sget-object  v1, LX/0MN;->A03:LX/0MN;
+    1432..1434  const/4  v0, #0x6
+    1434..143a  invoke-static  {v2, v1, v4, v0}, LX/ATU;->A00(VLLLI)
+    143a..143e  iget-object  v0, v6, LX/0a6;->A04:LX/05B;
+    143e..1444  invoke-static  {v0}, LX/1xi;->A0m(LL)
+    1444..1446  move-result-object  v3
+    1446..144a  sget-object  v2, LX/0MN;->A02:LX/0MN;
+    144a..144c  const/4  v1, #0x2
+    144c..1450  new-instance  v0, LX/ATP;
+    1450..1456  invoke-direct  {v0, v4, v5, v1}, LX/ATP;-><init>(VLLI)
+    1456..145c  invoke-static  {v3, v2, v0}, LX/078;->A00(VLLL)
+    145c..145e  return-void
+# End selected case excerpt; unrelated cases omitted.
+
+# Reproduce: target/debug/xtask apk-field-refs ~/Downloads/WhatsApp.apk --class 'LX/0Ze;' --field A04 --type I --writes-only
+classes.dex  LX/0Fs;->A02(LLL)
+  write opcode 0x59, dex byte offset: 0x519660
+classes.dex  LX/0Fs;->A02(LLL)
+  write opcode 0x59, dex byte offset: 0x51a252
+classes.dex  LX/0Ze;-><init>(VL)
+  write opcode 0x59, dex byte offset: 0x5efbc0
+classes.dex  LX/0a2;->A04(LLL)
+  write opcode 0x59, dex byte offset: 0x5f6578
+classes.dex  LX/0a2;->A0D(LLL)
+  write opcode 0x59, dex byte offset: 0x5f74be
+classes.dex  LX/0aK;->A03(VLI)
+  write opcode 0x59, dex byte offset: 0x601254
+classes3.dex  LX/36Y;->A02(VL)
+  write opcode 0x59, dex byte offset: 0x35dc92
+classes3.dex  LX/36Y;->A02(VL)
+  write opcode 0x59, dex byte offset: 0x35dd1a
+classes3.dex  LX/36Y;->A02(VL)
+  write opcode 0x59, dex byte offset: 0x35dd60
+classes3.dex  LX/36Y;->A02(VL)
+  write opcode 0x59, dex byte offset: 0x35dd7a
+classes3.dex  LX/36Y;->A02(VL)
+  write opcode 0x59, dex byte offset: 0x35de44
+classes3.dex  LX/3QO;->run(V)
+  write opcode 0x59, dex byte offset: 0x3ffa44
+classes6.dex  Lcom/whatsapp/community/group/GetSubgroupsManager;->A04(VLLL)
+  write opcode 0x59, dex byte offset: 0x4e12a8
+classes6.dex  LX/ADu;->A0G(LL)
+  write opcode 0x59, dex byte offset: 0x4f0478
+classes6.dex  LX/Aou;->invoke(LL)
+  write opcode 0x59, dex byte offset: 0x67068e
+classes7.dex  LX/CnI;->A03(LLLLLLLL)
+  write opcode 0x59, dex byte offset: 0x6693c4
+classes7.dex  LX/CnI;->A03(LLLLLLLL)
+  write opcode 0x59, dex byte offset: 0x6693da
+classes7.dex  LX/CnI;->A03(LLLLLLLL)
+  write opcode 0x59, dex byte offset: 0x6693e8
+classes7.dex  LX/CoO;->A02(VLLLLLII)
+  write opcode 0x59, dex byte offset: 0x68a2d4
+classes7.dex  LX/CoO;->A02(VLLLLLII)
+  write opcode 0x59, dex byte offset: 0x68a2ea
+classes7.dex  LX/CoO;->A02(VLLLLLII)
+  write opcode 0x59, dex byte offset: 0x68a2f8
+
+# Reproduce: target/debug/xtask apk-callers ~/Downloads/WhatsApp.apk --class 'LX/0aK;' --method A03
+classes6.dex  LX/Aha;->run(V)
+  invoke dex byte offset: 0x5c2e08
+classes6.dex  LX/Ahc;->run(V)
+  invoke dex byte offset: 0x5c6636
+
+# Broad diagnostic: apk-callers APK --class 'LX/0Fs;' --method A0Y found 137 call instructions.
+# That scan includes UI and non-sender paths; full caller graph was not traced.

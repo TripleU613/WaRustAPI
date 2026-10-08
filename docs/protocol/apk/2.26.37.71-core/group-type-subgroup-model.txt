@@ -1,0 +1,146 @@
+# APK-derived structural disassembly: LX/AC3;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLLLIJ) flags=0x10001 registers=10
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v2, v0}, LX/00h;->A0A(VLI)
+  0008..000e op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>(V)
+  000e..0012 op=5b iput-object v2, v1, LX/AC3;->A02:Lcom/whatsapp/infra/core/jid/GroupJid;
+  0012..0016 op=5b iput-object v6, v1, LX/AC3;->A06:Ljava/lang/String;
+  0016..001a op=5a iput-wide v8, v1, LX/AC3;->A01:J
+  001a..001e op=59 iput v7, v1, LX/AC3;->A00:I
+  001e..0022 op=5b iput-object v3, v1, LX/AC3;->A03:Ljava/lang/Integer;
+  0022..0026 op=5b iput-object v5, v1, LX/AC3;->A05:Ljava/lang/Long;
+  0026..002a op=5b iput-object v4, v1, LX/AC3;->A04:Ljava/lang/Integer;
+  002a..002c op=0e return-void
+.end method
+
+.method <init>(VLLIJ) flags=0x10001 registers=15
+  0000..0002 op=07 move-object
+  0002..0004 op=07 move-object
+  0004..000a op=71 invoke-static {v10, v11}, LX/00h;->A0B(VLL)
+  000a..000c op=12 const/4 v2, #0x0
+  000c..000e op=07 move-object
+  000e..0010 op=07 move-object
+  0010..0012 op=07 move-object
+  0012..0014 op=01 move
+  0014..0016 op=04 move-wide
+  0016..001c op=76 invoke-direct/range {v0..v8}, LX/AC3;-><init>(VLLLLLIJ)
+  001c..001e op=0e return-void
+.end method
+
+.method A00(VLL) flags=0x9 registers=3
+  0000..0006 op=72 invoke-interface {v2}, Ljava/util/Iterator;->next(L)
+  0006..0008 op=0c move-result-object
+  0008..000c op=1f check-cast v0, LX/AC3;
+  000c..0010 op=54 iget-object v0, v0, LX/AC3;->A02:Lcom/whatsapp/infra/core/jid/GroupJid;
+  0010..0016 op=6e invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;->add(ZL)
+  0016..0018 op=0e return-void
+.end method
+
+.method equals(ZL) flags=0x1 registers=9
+  0000..0002 op=12 const/4 v6, #0x1
+  0002..0006 op=32 if-eq v7, v8, +0x4a
+  0006..000a op=20 instance-of v0, v8, LX/AC3;
+  000a..000c op=12 const/4 v5, #0x0
+  000c..0010 op=38 if-eqz v0, +0x44
+  0010..0014 op=1f check-cast v8, LX/AC3;
+  0014..0018 op=54 iget-object v1, v7, LX/AC3;->A02:Lcom/whatsapp/infra/core/jid/GroupJid;
+  0018..001c op=54 iget-object v0, v8, LX/AC3;->A02:Lcom/whatsapp/infra/core/jid/GroupJid;
+  001c..0022 op=71 invoke-static {v1, v0}, LX/00h;->areEqual(ZLL)
+  0022..0024 op=0a move-result
+  0024..0028 op=38 if-eqz v0, +0x38
+  0028..002c op=54 iget-object v1, v7, LX/AC3;->A06:Ljava/lang/String;
+  002c..0030 op=54 iget-object v0, v8, LX/AC3;->A06:Ljava/lang/String;
+  0030..0036 op=71 invoke-static {v1, v0}, LX/00h;->areEqual(ZLL)
+  0036..0038 op=0a move-result
+  0038..003c op=38 if-eqz v0, +0x2e
+  003c..0040 op=53 iget-wide v3, v7, LX/AC3;->A01:J
+  0040..0044 op=53 iget-wide v1, v8, LX/AC3;->A01:J
+  0044..0048 op=31 cmp-long v0, v3, v1
+  0048..004c op=39 if-nez v0, +0x26
+  004c..0050 op=52 iget v1, v7, LX/AC3;->A00:I
+  0050..0054 op=52 iget v0, v8, LX/AC3;->A00:I
+  0054..0058 op=33 if-ne v1, v0, +0x20
+  0058..005c op=54 iget-object v1, v7, LX/AC3;->A03:Ljava/lang/Integer;
+  005c..0060 op=54 iget-object v0, v8, LX/AC3;->A03:Ljava/lang/Integer;
+  0060..0066 op=71 invoke-static {v1, v0}, LX/00h;->areEqual(ZLL)
+  0066..0068 op=0a move-result
+  0068..006c op=38 if-eqz v0, +0x16
+  006c..0070 op=54 iget-object v1, v7, LX/AC3;->A05:Ljava/lang/Long;
+  0070..0074 op=54 iget-object v0, v8, LX/AC3;->A05:Ljava/lang/Long;
+  0074..007a op=71 invoke-static {v1, v0}, LX/00h;->areEqual(ZLL)
+  007a..007c op=0a move-result
+  007c..0080 op=38 if-eqz v0, +0xc
+  0080..0084 op=54 iget-object v1, v7, LX/AC3;->A04:Ljava/lang/Integer;
+  0084..0088 op=54 iget-object v0, v8, LX/AC3;->A04:Ljava/lang/Integer;
+  0088..008e op=71 invoke-static {v1, v0}, LX/00h;->areEqual(ZLL)
+  008e..0090 op=0a move-result
+  0090..0094 op=39 if-nez v0, +0x3
+  0094..0096 op=0f return v5
+  0096..0098 op=0f return v6
+.end method
+
+.method hashCode(I) flags=0x1 registers=4
+  0000..0004 op=54 iget-object v0, v3, LX/AC3;->A02:Lcom/whatsapp/infra/core/jid/GroupJid;
+  0004..000a op=71 invoke-static {v0}, LX/1xk;->A02(IL)
+  000a..000c op=0a move-result
+  000c..0010 op=54 iget-object v0, v3, LX/AC3;->A06:Ljava/lang/String;
+  0010..0016 op=71 invoke-static {v0, v1}, LX/1xl;->A03(ILI)
+  0016..0018 op=0a move-result
+  0018..001c op=53 iget-wide v0, v3, LX/AC3;->A01:J
+  001c..0022 op=71 invoke-static {v0, v1, v2}, LX/1YP;->A03(IJI)
+  0022..0024 op=0a move-result
+  0024..0028 op=52 iget v0, v3, LX/AC3;->A00:I
+  0028..002a op=b0 add-int/2addr v1, v0
+  002a..002e op=da mul-int/lit8 v1, v1, #0x1f
+  002e..0032 op=54 iget-object v0, v3, LX/AC3;->A03:Ljava/lang/Integer;
+  0032..0038 op=71 invoke-static {v0}, LX/1YP;->A05(IL)
+  0038..003a op=0a move-result
+  003a..003c op=b0 add-int/2addr v1, v0
+  003c..0040 op=da mul-int/lit8 v1, v1, #0x1f
+  0040..0044 op=54 iget-object v0, v3, LX/AC3;->A05:Ljava/lang/Long;
+  0044..004a op=71 invoke-static {v0}, LX/1YP;->A05(IL)
+  004a..004c op=0a move-result
+  004c..004e op=b0 add-int/2addr v1, v0
+  004e..0052 op=da mul-int/lit8 v1, v1, #0x1f
+  0052..0056 op=54 iget-object v0, v3, LX/AC3;->A04:Ljava/lang/Integer;
+  0056..005c op=71 invoke-static {v0}, LX/1YP;->A06(IL)
+  005c..005e op=0a move-result
+  005e..0060 op=b0 add-int/2addr v1, v0
+  0060..0062 op=0f return v1
+.end method
+
+.method toString(L) flags=0x1 registers=10
+  0000..0004 op=54 iget-object v1, v9, LX/AC3;->A02:Lcom/whatsapp/infra/core/jid/GroupJid;
+  0004..0008 op=54 iget-object v8, v9, LX/AC3;->A06:Ljava/lang/String;
+  0008..000c op=53 iget-wide v2, v9, LX/AC3;->A01:J
+  000c..0010 op=52 iget v7, v9, LX/AC3;->A00:I
+  0010..0014 op=54 iget-object v6, v9, LX/AC3;->A03:Ljava/lang/Integer;
+  0014..0018 op=54 iget-object v5, v9, LX/AC3;->A05:Ljava/lang/Long;
+  0018..001c op=54 iget-object v4, v9, LX/AC3;->A04:Ljava/lang/Integer;
+  001c..0020 op=1a const-string v0, "Subgroup(groupJid="
+  0020..0026 op=71 invoke-static {v1, v0}, LX/000;->A07(LLL)
+  0026..0028 op=0c move-result-object
+  0028..002c op=1a const-string v0, ", subject="
+  002c..0032 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0032..0038 op=6e invoke-virtual {v1, v8}, Ljava/lang/StringBuilder;->append(LL)
+  0038..003c op=1a const-string v0, ", subjectTime="
+  003c..0042 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0042..0048 op=6e invoke-virtual {v1, v2, v3}, Ljava/lang/StringBuilder;->append(LJ)
+  0048..004c op=1a const-string v0, ", groupType="
+  004c..0052 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0052..0058 op=6e invoke-virtual {v1, v7}, Ljava/lang/StringBuilder;->append(LI)
+  0058..005c op=1a const-string v0, ", groupMembershipApprovalState="
+  005c..0062 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0062..0068 op=6e invoke-virtual {v1, v6}, Ljava/lang/StringBuilder;->append(LL)
+  0068..006c op=1a const-string v0, ", linkingTimestamp="
+  006c..0072 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0072..0078 op=6e invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;->append(LL)
+  0078..007c op=1a const-string v0, ", lastKnownMemberCount="
+  007c..0082 op=71 invoke-static {v4, v0, v1}, LX/1YP;->A0H(LLLL)
+  0082..0084 op=0c move-result-object
+  0084..0086 op=11 return-object v0
+.end method

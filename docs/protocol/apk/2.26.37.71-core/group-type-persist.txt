@@ -1,0 +1,81 @@
+# APK-derived structural disassembly: LX/0aK;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(ZLLLL) flags=0x9 registers=13
+  0000..0004 op=1a const-string v4, "msgstore/addmsg/chatlist/insert/failed jid="
+  0004..0008 op=54 iget-object v0, v11, LX/0aK;->A04:LX/0Gc;
+  0008..000e op=6e invoke-virtual {v0}, LX/0Gc;->A07(L)
+  000e..0010 op=0c move-result-object
+  0010..0016 op=6e invoke-virtual {v8}, LX/0ZN;->A00(L)
+  0016..0018 op=0c move-result-object
+  0018..001c op=54 iget-object v6, v11, LX/0aK;->A02:LX/0VS;
+  001c..001e op=12 const/4 v0, #0x3
+  001e..0022 op=22 new-instance v5, Landroid/content/ContentValues;
+  0022..0028 op=70 invoke-direct {v5, v0}, Landroid/content/ContentValues;-><init>(VI)
+  0028..002c op=38 if-eqz v12, +0x7
+  002c..0030 op=1a const-string v0, "created_timestamp"
+  0030..0036 op=6e invoke-virtual {v5, v0, v12}, Landroid/content/ContentValues;->put(VLL)
+  0036..0038 op=1d monitor-enter
+  0038..003e op=1b const-string/jumbo v1, "subject"
+  003e..0044 op=6e invoke-virtual {v9}, LX/0Ze;->A0J(L)
+  0044..0046 op=0c move-result-object
+  0046..004c op=6e invoke-virtual {v5, v1, v0}, Landroid/content/ContentValues;->put(VLL)
+  004c..0050 op=1a const-string v1, "group_type"
+  0050..0054 op=52 iget v0, v9, LX/0Ze;->A04:I
+  0054..005a op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(LI)
+  005a..005c op=0c move-result-object
+  005c..0062 op=6e invoke-virtual {v5, v1, v0}, Landroid/content/ContentValues;->put(VLL)
+  0062..0066 op=54 iget-object v3, v9, LX/0Ze;->A0i:LX/0Zl;
+  0066..006a op=38 if-eqz v3, +0x18
+  006a..006e op=1a const-string v1, "growth_lock_level"
+  006e..0072 op=52 iget v0, v3, LX/0Zl;->A00:I
+  0072..0078 op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(LI)
+  0078..007a op=0c move-result-object
+  007a..0080 op=6e invoke-virtual {v5, v1, v0}, Landroid/content/ContentValues;->put(VLL)
+  0080..0084 op=1a const-string v2, "growth_lock_expiration_ts"
+  0084..0088 op=53 iget-wide v0, v3, LX/0Zl;->A01:J
+  0088..008e op=71 invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(LJ)
+  008e..0090 op=0c move-result-object
+  0090..0096 op=6e invoke-virtual {v5, v2, v0}, Landroid/content/ContentValues;->put(VLL)
+  0096..0098 op=1e monitor-exit
+  0098..009e op=6e invoke-virtual {v6, v5, v9}, LX/0VS;->A0Y(ZLL)
+  009e..00a0 op=0a move-result
+  00a0..00a4 op=39 if-nez v0, +0x11
+  00a4..00a8 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  00a8..00ae op=70 invoke-direct {v0, v4}, Ljava/lang/StringBuilder;-><init>(VL)
+  00ae..00b4 op=6e invoke-virtual {v0, v10}, Ljava/lang/StringBuilder;->append(LL)
+  00b4..00ba op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString(L)
+  00ba..00bc op=0c move-result-object
+  00bc..00c2 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+  00c2..00c8 op=6e invoke-virtual {v7}, LX/1gB;->A00(V)
+  00c8..00ce op=6e invoke-virtual {v7}, LX/1gB;->close(V)
+  00ce..00d0 op=12 const/4 v0, #0x1
+  00d0..00d6 op=6e invoke-virtual {v8}, LX/0ZN;->close(V)
+  00d6..00d8 op=0f return v0
+  00d8..00da op=0d move-exception
+  00da..00dc op=1e monitor-exit
+  00dc..00de op=27 throw v0
+  00de..00e0 op=0d move-exception
+  00e0..00e6 op=6e invoke-virtual {v7}, LX/1gB;->close(V)
+  00e6..00e8 op=28 goto +0x5
+  00e8..00ea op=0d move-exception
+  00ea..00f0 op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  00f0..00f2 op=27 throw v1
+  00f2..00f4 op=0d move-exception
+  00f4..00fa op=6e invoke-virtual {v8}, LX/0ZN;->close(V)
+  00fa..00fc op=28 goto +0x5
+  00fc..00fe op=0d move-exception
+  00fe..0104 op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  0104..0106 op=27 throw v1
+  0106..0108 op=0d move-exception
+  0108..010e op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+  010e..0110 op=27 throw v0
+  0110..0112 op=0d move-exception
+  0112..0118 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+  0118..011c op=54 iget-object v0, v11, LX/0aK;->A03:LX/0Fy;
+  011c..0122 op=6e invoke-virtual {v0}, LX/0Fy;->A03(V)
+  0122..0124 op=12 const/4 v0, #0x0
+  0124..0126 op=0f return v0
+.end method

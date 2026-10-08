@@ -1,0 +1,40 @@
+# APK-derived structural disassembly: LX/0aK;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(VLI) flags=0x1 registers=7
+  0000..0002 op=12 const/4 v3, #0x0
+  0002..0006 op=54 iget-object v0, v4, LX/0aK;->A01:LX/0Fs;
+  0006..000c op=6e invoke-virtual {v0, v5}, LX/0Fs;->A0F(LL)
+  000c..000e op=0c move-result-object
+  000e..0012 op=39 if-nez v2, +0x1c
+  0012..0016 op=1a const-string v0, "groupchatstore/updateGroupChatInfoGroupTypeIfExist/chat does not exist: "
+  0016..001a op=22 new-instance v1, Ljava/lang/StringBuilder;
+  001a..0020 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+  0020..0026 op=6e invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;->append(LL)
+  0026..002a op=1a const-string v0, " requestedGroupType="
+  002a..0030 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0030..0036 op=6e invoke-virtual {v1, v6}, Ljava/lang/StringBuilder;->append(LI)
+  0036..003c op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString(L)
+  003c..003e op=0c move-result-object
+  003e..0044 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(VL)
+  0044..0046 op=0e return-void
+  0046..004a op=1a const-string v0, "groupchatstore/updateGroupChatInfoGroupTypeInBackgroundIfExist/update group type; jid="
+  004a..004e op=22 new-instance v1, Ljava/lang/StringBuilder;
+  004e..0054 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+  0054..005a op=6e invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;->append(LL)
+  005a..005e op=1a const-string v0, " oldGroupType="
+  005e..0064 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0064..0068 op=52 iget v0, v2, LX/0Ze;->A04:I
+  0068..006e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LI)
+  006e..0072 op=1a const-string v0, " newGroupType="
+  0072..0078 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0078..007e op=6e invoke-virtual {v1, v6}, Ljava/lang/StringBuilder;->append(LI)
+  007e..0084 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString(L)
+  0084..0086 op=0c move-result-object
+  0086..008c op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+  008c..0090 op=59 iput v6, v2, LX/0Ze;->A04:I
+  0090..0096 op=71 invoke-static {v2, v5, v4, v3}, LX/0aK;->A00(ZLLLL)
+  0096..0098 op=0e return-void
+.end method

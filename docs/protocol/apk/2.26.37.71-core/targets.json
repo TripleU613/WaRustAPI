@@ -365,6 +365,104 @@
       "crates/whatsapp-api/src/transport/framing.rs"
     ]
   },
+  "group-type-existing-update": {
+    "anchors": [
+      "groupchatstore/updateGroupChatInfoGroupTypeIfExist/chat does not exist: "
+    ],
+    "class": "LX/0aK;",
+    "file": "group-type-existing-update.txt",
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-type-persist": {
+    "anchors": [
+      "group_type"
+    ],
+    "class": "LX/0aK;",
+    "file": "group-type-persist.txt",
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-type-persist-update": {
+    "anchors": [
+      "updateChatTable/UPDATE_CHAT"
+    ],
+    "class": "LX/0VS;",
+    "file": "group-type-persist-update.txt",
+    "method_filter": "A06",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-type-persist-upsert": {
+    "anchors": [
+      "jid_row_id"
+    ],
+    "class": "LX/0VS;",
+    "file": "group-type-persist-upsert.txt",
+    "method_filter": "A0Y",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-type-secondary-init": {
+    "class": "LX/0a2;",
+    "file": "group-type-secondary-init.txt",
+    "method_filter": "A0D",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-type-secondary-load": {
+    "anchors": [
+      "group_type"
+    ],
+    "class": "LX/0a2;",
+    "file": "group-type-secondary-load.txt",
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-type-secondary-result": {
+    "class": "LX/ADu;",
+    "file": "group-type-secondary-result.txt",
+    "method_filter": "A0G",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-type-subgroup-model": {
+    "anchors": [
+      "Subgroup(groupJid="
+    ],
+    "class": "LX/AC3;",
+    "file": "group-type-subgroup-model.txt",
+    "method_filter": null,
+    "methods": 6,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
   "http-chunk-reader": {
     "anchors": [
       "corrupt pseudo http input [max http header length exceeded]",
@@ -1235,6 +1333,16 @@
       "crates/whatsapp-api/src/transport/groups.rs",
       "crates/whatsapp-api/src/transport/group_send.rs",
       "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-mode-group-domain": {
+    "class": "LX/0DE;",
+    "file": "sender-key-mode-group-domain.txt",
+    "method_filter": "A0n",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
     ]
   },
   "sender-key-mode-interop-jid": {

@@ -2880,3 +2880,11 @@ Group-mode category continuation (2026-10-07): concrete APK JID types distinguis
 g.us, temporary temp groups, interop.g.us, status and broadcast lists. These
 are separate from both group classification and binary encoding kind. See the
 [resolved predicates and scope](cross-device-sync.md#concrete-jid-kinds-in-group-mode-classification-2026-10-07).
+
+Group-type persistence continuation (2026-10-07, **confirmed static APK 37.71**):
+existing-chat updates write group_type through transactional database helpers;
+missing chats are left absent. Selected subgroup/zero-update callers and secondary
+type-4 model writes are retained without inventing complete-reply enum values.
+A0Y's outer A0n guard is narrowed again by A0A/A0m, excluding interop type 28
+from the type-3 branch. Runtime contact/type synchronization remains incomplete;
+no account/network request. [Evidence and unknowns](cross-device-sync.md#persisted-group-type-updates-feeding-sender-mode-2026-10-07).
