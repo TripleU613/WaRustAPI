@@ -234,9 +234,19 @@ pub(crate) fn prepare(
         }
         let device_addition = if entries.is_empty() {
             // CoU.A04 gates absent offline senders on the dead-device registry.
-            // That lifecycle is unported; this is our conservative deferral.
+            // Unknown legacy registry state remains our conservative deferral.
+            // Presence (including malformed values) is stricter than APK's
+            // nullable Integer parser; full worker/gate parity remains unported.
             if node.attributes.iter().any(|a| a.name == "offline") {
-                return Ok(Refused("offline_device_update_deferred"));
+                let Some(pending) = &list.pending_removed_devices else {
+                    return Ok(Refused("offline_device_update_deferred"));
+                };
+                if pending
+                    .iter()
+                    .any(|jid| super::devices::same_device(jid, peer))
+                {
+                    return Ok(Refused("pending_device_teardown"));
+                }
             }
             // Our retained-map uniqueness/bounds guards; not server errors.
             if list.devices.len() >= 1024
@@ -408,6 +418,7 @@ mod tests {
             expected_timestamp: None,
             companions_verified: true,
             adv_added_devices: Vec::new(),
+            pending_removed_devices: None,
             verified_primary_key_fingerprint: Some(hex::encode(Sha256::digest(account_key))),
             unverified_reason: None,
             notified_hash: None,
@@ -481,7 +492,7 @@ mod tests {
     async fn newer_known_adv_refresh_commits_only_with_authenticated_message() {
         for (direct, corrupt, membership, raw) in [false, true].into_iter().flat_map(|direct| {
             [false, true].into_iter().flat_map(move |corrupt| {
-                (0..3).flat_map(move |membership| {
+                (0..4).flat_map(move |membership| {
                     ["15555550101:3@s.whatsapp.net", "99990000101:3@lid"]
                         .into_iter()
                         .map(move |raw| (direct, corrupt, membership, raw))
@@ -501,8 +512,12 @@ mod tests {
                 .unwrap()
                 .unwrap();
             baseline.list_timestamp = Some(8);
-            if membership == 1 {
+            if membership == 1 || membership == 3 {
                 baseline.devices.retain(|d| d.jid.device == 0);
+                if membership == 3 {
+                    baseline.pending_removed_devices = Some(Vec::new());
+                    node = node.attr("offline", "0");
+                }
             } else if membership == 2 {
                 baseline.devices[1].key_index = 3;
             }
@@ -585,7 +600,7 @@ mod tests {
                 assert_eq!(result, super::super::inbox::IncomingResult::Decrypted);
                 let mut expected = baseline;
                 expected.expected_timestamp = Some(9);
-                if membership == 1 {
+                if membership == 1 || membership == 3 {
                     expected.devices.push(super::super::devices::DeviceEntry {
                         jid: peer.clone(),
                         key_index: 2,
@@ -794,7 +809,7 @@ mod tests {
 
     #[tokio::test]
     async fn companion_authority_changes_roll_back_commit() {
-        for changed in 0..4 {
+        for changed in 0..5 {
             let dir = tempfile::tempdir().unwrap();
             let (store, receiver, peer, node) =
                 fixture(&dir.path().join("cas.redb"), "99990000101:3@lid").await;
@@ -827,6 +842,16 @@ mod tests {
                         1,
                         &serde_json::json!({"lid": peer.to_non_ad().to_string()}),
                     ),
+                    4 => {
+                        let mut list = authority.list.clone();
+                        list.pending_removed_devices = Some(vec![peer.clone()]);
+                        tx.put_json(
+                            Table::Checkpoints,
+                            list_key(&list.owner).as_bytes(),
+                            1,
+                            &list,
+                        )
+                    }
                     _ => {
                         let mut account = receiver.clone();
                         account.registration = RegistrationStatus::Revoked;
@@ -866,6 +891,7 @@ mod tests {
             (8, "invalid_device_identity"),
             (9, "conflicting_device_membership"),
             (10, "ambiguous_device_membership"),
+            (11, "pending_device_teardown"),
         ] {
             let dir = tempfile::tempdir().unwrap();
             let (store, receiver, peer, mut node) =
@@ -891,6 +917,12 @@ mod tests {
                     });
                 }
                 10 => list.devices.push(list.devices[1].clone()),
+                11 => {
+                    list.list_timestamp = Some(8);
+                    list.devices.retain(|d| d.jid.device == 0);
+                    list.pending_removed_devices = Some(vec![peer.clone()]);
+                    node = node.attr("offline", "0");
+                }
                 4 => list.verified_primary_key_fingerprint = None,
                 5 => store
                     .write(|tx| {

@@ -80,6 +80,10 @@ fn primary_of(jid: &Jid) -> Result<Jid> {
     Ok(jid.to_non_ad())
 }
 
+pub(super) fn same_device(a: &Jid, b: &Jid) -> bool {
+    a.user == b.user && a.server == b.server && a.agent == b.agent && a.device == b.device
+}
+
 /// Sync context string (`LX/0xY`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SyncContext {
@@ -122,6 +126,10 @@ pub struct DeviceList {
     /// Server `expected_ts` or a newer authenticated known-companion ADV expectation.
     /// Separate from the verified floor (APK 37.71 0bN.A05 / Lcr.A00).
     pub expected_timestamp: Option<u64>,
+    /// Locally recorded removals from signed reconciliation; None is legacy unknown.
+    /// No key cleanup is implied (APK 37.71 1Uf dead_devices lifecycle).
+    #[serde(default)]
+    pub pending_removed_devices: Option<Vec<Jid>>,
     /// Devices added by authenticated signed ADV, awaiting list confirmation.
     /// Local provenance, not a server field (APK 37.71 11T.A0D add-only path).
     #[serde(default)]
@@ -862,6 +870,23 @@ fn ingest_user(
             ReconciledDevices::primary_only(&owner)?
         }
     };
+    // 1Uf.A06 records removals; A02 drops returned-device markers before
+    // cleanup. Our namespace-local registry keeps keys/history untouched.
+    let mut pending_removed_devices = saved
+        .as_ref()
+        .and_then(|s| s.pending_removed_devices.clone());
+    if companions_verified {
+        let pending = pending_removed_devices.get_or_insert_with(Vec::new);
+        for jid in current.keys().filter(|jid| jid.device != 0) {
+            if !retained.devices().keys().any(|next| same_device(next, jid))
+                && !pending.iter().any(|old| same_device(old, jid))
+            {
+                pending.push(jid.clone());
+            }
+        }
+        pending.retain(|jid| !retained.devices().keys().any(|next| same_device(next, jid)));
+        pending.sort();
+    }
     let hash_matches = notified_hash.as_deref().map(|hash| {
         [DeviceHashVersion::V2, DeviceHashVersion::V3]
             .into_iter()
@@ -886,6 +911,7 @@ fn ingest_user(
         expected_timestamp,
         companions_verified,
         adv_added_devices,
+        pending_removed_devices,
         verified_primary_key_fingerprint,
         unverified_reason,
         notified_hash,
@@ -1292,6 +1318,96 @@ mod tests {
     }
 
     #[test]
+    fn signed_removal_registry_survives_reopen_and_clears_only_on_return() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("removals.redb");
+        let store = open(&path);
+        let peer = contact();
+        let (_, key) = crate::signal::adv::test_signed_list(7, 1, 2, &[1, 2], &[11; 32]);
+        pin_identity(&store, &peer, &key);
+        let held: Vec<(Vec<u8>, Vec<u8>)> = store
+            .read(|tx| tx.scan(Table::PeerIdentities, 1, 100))
+            .unwrap();
+        for ts in [1, 2, 3] {
+            request_sync(&store, None, &peer, None, "fixture").unwrap();
+            let (query, iq) = begin_query(&store, SyncContext::Interactive)
+                .unwrap()
+                .unwrap();
+            let (signed, _) = crate::signal::adv::test_signed_list(7, ts, 2, &[1, 2], &[11; 32]);
+            let entries: &[(u16, u32, bool)] = if ts == 2 {
+                &[(0, 0, false)]
+            } else {
+                &[(0, 0, false), (3, 1, false)]
+            };
+            query
+                .ingest(
+                    &store,
+                    &reply(&iq, vec![user_node(&peer, entries, Some((ts, signed)))]),
+                )
+                .unwrap()
+                .require_complete()
+                .unwrap();
+            let expected = if ts == 2 {
+                vec![peer.with_device(3)]
+            } else {
+                Vec::new()
+            };
+            assert_eq!(
+                device_list(&store, &peer)
+                    .unwrap()
+                    .unwrap()
+                    .pending_removed_devices,
+                Some(expected)
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::PeerIdentities, 1, 100))
+                    .unwrap(),
+                held
+            );
+        }
+        // Repeat removal, then reopen with the existing store key. Registry
+        // persistence must not imply key erasure or a replacement identity.
+        request_sync(&store, None, &peer, None, "fixture").unwrap();
+        let (query, iq) = begin_query(&store, SyncContext::Interactive)
+            .unwrap()
+            .unwrap();
+        let (signed, _) = crate::signal::adv::test_signed_list(7, 4, 2, &[1, 2], &[11; 32]);
+        query
+            .ingest(
+                &store,
+                &reply(
+                    &iq,
+                    vec![user_node(&peer, &[(0, 0, false)], Some((4, signed)))],
+                ),
+            )
+            .unwrap()
+            .require_complete()
+            .unwrap();
+        drop(store);
+        let store = ProtocolStore::open(OpenOptions {
+            path: path.clone(),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([2; 32]))),
+            create: false,
+        })
+        .unwrap();
+        assert_eq!(
+            device_list(&store, &peer)
+                .unwrap()
+                .unwrap()
+                .pending_removed_devices,
+            Some(vec![peer.with_device(3)])
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::PeerIdentities, 1, 100))
+                .unwrap(),
+            held
+        );
+    }
+
+    #[test]
     fn signed_authority_tracks_its_verifier_not_a_replacement_pin_or_legacy_row() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("authority.redb");
@@ -1330,6 +1446,9 @@ mod tests {
             .unwrap()
             .remove("verified_primary_key_fingerprint");
         old.as_object_mut().unwrap().remove("adv_added_devices");
+        old.as_object_mut()
+            .unwrap()
+            .remove("pending_removed_devices");
         store
             .write(|tx| tx.put_json(Table::Checkpoints, list_key(&peer).as_bytes(), 1, &old))
             .unwrap();

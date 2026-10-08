@@ -422,13 +422,14 @@ pub(super) fn devices(cli: &super::Cli, chat: &str, request: bool) -> Result<(),
         None => println!("devices: no saved list for this contact"),
         Some(list) => {
             println!(
-                "devices: {} device(s); companions_verified={} raw_id={:?} list_ts={:?} expected_ts={:?} adv_added={} hash_matches={:?}",
+                "devices: {} device(s); companions_verified={} raw_id={:?} list_ts={:?} expected_ts={:?} adv_added={} pending_removed={:?} hash_matches={:?}",
                 list.devices.len(),
                 list.companions_verified,
                 list.raw_id,
                 list.list_timestamp,
                 list.expected_timestamp,
                 list.adv_added_devices.len(),
+                list.pending_removed_devices.as_ref().map(Vec::len),
                 list.hash_matches
             );
             for d in &list.devices {

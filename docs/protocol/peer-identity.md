@@ -1673,3 +1673,52 @@ transaction abort and Duplicate. Add-only membership, original verified floor,
 refresh queue and provenance are asserted together. Signed response fixtures
 exercise preservation above the response's current_index and later confirmation
 of the added address/index. This does not stand in for fresh live validation.
+
+
+## Namespace-local pending removal registry (2026-10-08)
+
+**Implemented locally; APK 37.71 static evidence:** `1Uf.A06` persists
+agent-free dead-device addresses; `CoU.A04` supplies pending teardown for an
+absent offline sender; `1Uf.A02` rechecks current membership and drops a
+returned-device entry without tearing down its keys. Full register context is
+in [teardown evidence](companion-teardown-evidence.txt). Our registry is scoped
+to the independently verified PN or LID namespace; canonical rebinding and
+worker/gate parity remain incomplete.
+
+`DeviceList.pending_removed_devices` is a nullable local array. Null is unknown
+legacy state, not an empty registry. A successful signed reconciliation starts
+known state, records cached companions absent from the retained set, merges
+existing markers and clears only addresses now present in that authenticated
+retained set. Address comparisons ignore wire encoding kind while retaining
+user, namespace, agent and device. Refused signed responses do not update it;
+unsigned primary-only ingestion neither initializes it nor clears markers.
+The registry and device baseline are written in the existing ingest transaction.
+It is local metadata, never a WhatsApp response field or account cooldown.
+
+An absent offline ADV candidate with unknown registry still reports
+`offline_device_update_deferred`. A matching marker reports the new fixed
+local reason `pending_device_teardown`. With known state and no marker for that
+actual device, offline admission can use the same independent-primary/ADV,
+positive index, newer timestamp, nested MAC, identity-policy and atomic commit
+checks as the non-offline branch. Known addresses still bypass the absent-device
+teardown branch. Authority snapshots now include the registry through the
+complete DeviceList recheck, so a concurrent pending removal aborts commit.
+Read-only `devices` JSON shows the nullable array; human output shows its
+optional count, preserving unknown versus known-empty.
+
+**Local policy / remaining parity:** any offline attribute invokes this guard,
+even malformed text; APK nullable Integer parsing and runtime feature gates
+are not yet ported. Initializing from a signed response establishes this
+client's current removal state, not imported Android preferences or historical
+cleanup. No deferred reap scheduler, ratchet/identity/sender-key deletion,
+archive erasure, automatic marker reset or request replay is implemented.
+Keys/history remain intact. Namespace alias fan-out, participant/observer
+side effects, own-device lifecycle and fresh live removal/offline admission
+validation remain unfinished.
+
+**Verified offline:** real signed lists remove a cached device, persist its
+marker across reopen and clear it on authenticated return while preserving the
+primary identity pin. Real encrypted PN/LID direct/group fixtures cover known
+clear offline admission, MAC failure/rollback/Duplicate, pending-removal refusal
+and unknown-state deferral. A registry race rolls back the receive authority
+commit; old JSON defaults to unknown. Fresh live coverage remains unknown.
