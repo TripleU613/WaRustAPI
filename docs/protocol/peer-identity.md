@@ -1464,3 +1464,77 @@ and deduplication of lower expectations. **Unknown live:** no saved qualifying
 newer companion capture establishes this branch on the server. New-device
 addition, own-account reconciliation and full primary identity recovery remain
 unfinished.
+
+
+## Companion new-device membership application (2026-10-08)
+
+**Confirmed static APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+Full scoped methods and reproduction commands are preserved in
+[new-device evidence](companion-new-device-evidence.txt). This is further
+reverse engineering; it does not claim a new Rust admission capability.
+
+After both signature checks, `11T.A0D(ZLLLBIZ)` tests its final Boolean
+argument at `0374..039e`: true logs pending teardown and exits without adding
+membership. **Unknown:** the complete ordinary caller producer of that argument;
+the string alone does not define a server refusal or authorize a local reset.
+The existing remote matched-primary/raw-ID/account-type branch remains the
+scope here; own-account, hosted and primary-replacement branches are separate.
+
+**Confirmed:** `04c8..050e` compares the actual device's cached index with the
+candidate. An absent/different index is deleted when verified list time is at
+least candidate time. A newer candidate raises the pending expectation and
+schedules reason 3 as previously traced. A matching index reaches success
+without membership mutation. An absent/different newer index reaches the
+remote add path at `0690`, while `0628..0690` is the separate own branch.
+
+The remote path constructs a singleton actual DeviceJid -> signed key-index
+map. `1IW.A09` obtains cached membership (direct `B7j.A00`, or gated canonical
+lookup/rebinding through `Chv`). `06f2..071e` removes **every already present
+DeviceJid** from the proposed additions before any insert. Thus the branch does
+not overwrite an existing address's different index merely because the ADV is
+newer. This refutes treating this path as a generic device-index replacement.
+`0bN.A0G` removes entries whose embedded user differs from the supplied owner;
+it is an ownership filter, not another signature verifier. `0724..0774` adds
+the primary with index zero only when missing. An empty additions map returns
+success. Hosted additions with an E2EE account are rejected at `0788..07aa`.
+
+**Confirmed:** nonempty remote additions assert `08Z.BO0(user)` false and pass
+through `1IW.A02`. When both `0bq.A06` and `A07` gates are enabled, the method
+returns a singleton `Chv.A01` canonical user or an empty set. Otherwise a
+qualifying PhoneUserJid is returned directly, or `0Xw.A0U` supplies the selected
+user set. **Unknown:** actual runtime gate values and complete canonical/alias
+lookup behavior; this is not evidence that arbitrary PN/LID aliases may be
+created from a signed device's address.
+
+For each selected user, `AzR.A00` rebuilds DeviceJids with the original device
+number under that user and preserves the index. `11T.A0D 08f8..0994` validates
+primary index zero / companion index positive, then calls `B7j.A03`. That method
+writes only `user_jid_row_id`, `device_jid_row_id`, `key_index` into `user_device`
+using `INSERT_DEVICE_JID_SQL` and database conflict argument 4. `B7j.A00` reads
+that same table, validates ownership/index shape and caches the map. The
+membership insert does not update the signed `LbQ.A05` time floor. This
+separation is why a signed new member must not be described as a newly received
+full signed device list.
+
+**Confirmed call boundaries, incomplete side-effect trace:** nested and outer
+transactions commit; a `DNd` discriminator-19 callback is registered after the
+nested writes. `1IW.A05` receives old membership, added membership, an empty
+removed set and two false Booleans. Its nonempty removed-set branch is therefore
+skipped in this call. `1IW.A04` receives old membership, added membership and an
+empty removed set after the outer commit. Its removed-device branch is skipped;
+its addition branch reaches `0bI` participant-user operations, including
+`A0J`, `A0G`, `A04`, `A07` and `A06`. Finally `JhE.A0L` receives the original
+owner, addition keys and an empty removed set. **Unknown:** complete effects of
+those helpers, the registered callback and observer, including group fan-out
+cache invalidation. The raw helpers are preserved so these branches can be
+continued without repeating this trace. No deletion/identity rotation is
+justified by this add-only call.
+
+**Implementation still required:** authenticated new-member provenance and
+transactional application separate from the verified time floor; canonical
+PN/LID selection/rebinding; corresponding participant/observer updates; complete
+teardown producer; fresh live coverage. Existing Rust still reports
+`refresh_required` for absent/different newer indices and `deleted_device` for
+old/equal mismatches. Known matching-index newer candidates already support
+pending refresh. No account or transport state was touched for this research.
