@@ -121,4 +121,22 @@
   01be..01c4 op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
   01c4..01c6 op=27 throw v1
   01c6..01c8 op=11 return-object v8
+  # exception table: 17 try range(s)
+  # catch <all> code_units 0011..0015 -> 00d9
+  # catch <all> code_units 0015..0078 -> 00cf
+  # catch <all> code_units 0078..0084 -> 00c2
+  # catch <all> code_units 0084..008f -> 00b8
+  # catch <all> code_units 008f..00a0 -> 00ac
+  # catch <all> code_units 00a0..00a3 -> 00b8
+  # catch <all> code_units 00a3..00a7 -> 00c2
+  # catch <all> code_units 00a7..00ac -> 00cf
+  # catch <all> code_units 00af..00b3 -> 00b3
+  # catch <all> code_units 00b4..00b8 -> 00b8
+  # catch <all> code_units 00b9..00bd -> 00bd
+  # catch <all> code_units 00be..00c4 -> 00c2
+  # catch <all> code_units 00c4..00c8 -> 00cf
+  # catch <all> code_units 00c8..00cb -> 00d9
+  # catch <all> code_units 00d0..00d4 -> 00d4
+  # catch <all> code_units 00d5..00d9 -> 00d9
+  # catch <all> code_units 00da..00dd -> 00de
 .end method

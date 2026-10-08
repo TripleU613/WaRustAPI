@@ -17,4 +17,5 @@
   0026..002a op=52 iget v0, v0, LX/0Ze;->A04:I
   002a..002c op=0f return v0
   002c..002e op=0f return v1
+  # exception table: 0 try range(s)
 .end method

@@ -40,4 +40,5 @@
   008a..008e op=1f check-cast v0, LX/11F;
   008e..0094 op=6e invoke-virtual {v0, v5}, LX/11F;->A0L(VL)
   0094..0096 op=0e return-void
+  # exception table: 0 try range(s)
 .end method

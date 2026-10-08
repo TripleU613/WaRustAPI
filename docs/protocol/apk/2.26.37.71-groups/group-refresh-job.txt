@@ -399,4 +399,5 @@
   060c..0612 op=71 invoke-static {v0}, LX/00h;->A0I(VL)
   0612..0614 op=12 const/4 v0, #0x0
   0614..0616 op=27 throw v0
+  # exception table: 0 try range(s)
 .end method

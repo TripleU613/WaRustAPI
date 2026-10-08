@@ -99,4 +99,5 @@
   0170..0174 op=1a const-string v3, "PRE_FETCH"
   0174..0178 op=29 goto/16 -0xa8
   0178..01cc op=00 sparse-switch-payload size=10
+  # exception table: 0 try range(s)
 .end method

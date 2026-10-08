@@ -23,4 +23,6 @@
   004a..004e op=22 new-instance v0, LX/B7l;
   004e..0054 op=70 invoke-direct {v0, v1}, LX/B7l;-><init>(VL)
   0054..0056 op=27 throw v0
+  # exception table: 1 try range(s)
+  # catch Ljava/lang/NumberFormatException; code_units 0000..0005 -> 0005
 .end method

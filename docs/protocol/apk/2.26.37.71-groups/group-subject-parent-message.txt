@@ -19,6 +19,7 @@
   002c..002e op=12 const/4 v0, #0x0
   002e..0034 op=71 invoke-static {v4, v5, v2, v1, v0}, LX/Aym;->A1I(VLLLII)
   0034..0036 op=0e return-void
+  # exception table: 0 try range(s)
 .end method
 
 .method A0y(VLL) flags=0x11 registers=6
@@ -37,4 +38,5 @@
   002c..002e op=12 const/4 v0, #0x0
   002e..0034 op=71 invoke-static {v4, v5, v2, v1, v0}, LX/Aym;->A1I(VLLLII)
   0034..0036 op=0e return-void
+  # exception table: 0 try range(s)
 .end method

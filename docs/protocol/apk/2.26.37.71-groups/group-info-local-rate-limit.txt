@@ -62,4 +62,8 @@
   00d6..00d8 op=0d move-exception
   00d8..00da op=1e monitor-exit
   00da..00dc op=27 throw v0
+  # exception table: 3 try range(s)
+  # catch <all> code_units 0001..0059 -> 006b
+  # catch <all> code_units 005c..0068 -> 006b
+  # catch <all> code_units 006c..006d -> 006b
 .end method

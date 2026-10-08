@@ -7,4 +7,5 @@
   0000..0004 op=22 new-instance v0, Ljava/util/HashSet;
   0004..000a op=70 invoke-direct {v0, v1}, Ljava/util/HashSet;-><init>(VL)
   000a..000c op=11 return-object v0
+  # exception table: 0 try range(s)
 .end method

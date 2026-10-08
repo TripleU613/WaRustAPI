@@ -337,6 +337,66 @@
         "phash",
         "addressing_mode"
       ]
+    },
+    "group-ack-writer-dispatch": {
+      "class": "LX/0y0;",
+      "method": "A00",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/binary/encoder.rs"
+      ],
+      "anchors": [
+        "WriterThread/write/send-message-ack"
+      ]
+    },
+    "group-ack-object-dispatch": {
+      "class": "LX/0y2;",
+      "method": "A02",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/binary/encoder.rs"
+      ],
+      "anchors": [
+        "WriterThread/write/send-stanza-received; stanzaKey="
+      ]
+    },
+    "group-ack-network-write": {
+      "class": "LX/1Rd;",
+      "method": "A04",
+      "method_shorty": "VLJ",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/binary/encoder.rs"
+      ]
+    },
+    "group-ack-postwrite": {
+      "class": "LX/1Rd;",
+      "method": "A00",
+      "method_shorty": "VLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/binary/encoder.rs"
+      ],
+      "anchors": [
+        "onReceiptSent"
+      ]
+    },
+    "group-ack-frame-serialize": {
+      "class": "LX/1Qe;",
+      "method": "Ck7",
+      "method_shorty": "VLI",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/binary/encoder.rs"
+      ]
     }
-  }
+  },
+  "include_exception_tables": true
 }

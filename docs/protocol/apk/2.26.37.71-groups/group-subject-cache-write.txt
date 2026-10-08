@@ -59,4 +59,11 @@
   00d6..00d8 op=0d move-exception
   00d8..00de op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
   00de..00e0 op=27 throw v1
+  # exception table: 6 try range(s)
+  # catch <all> code_units 000a..000e -> 0066
+  # catch <all> code_units 000e..0055 -> 005c
+  # catch <all> code_units 0055..0058 -> 0066
+  # catch <all> code_units 005d..0061 -> 0061
+  # catch <all> code_units 0062..0066 -> 0066
+  # catch <all> code_units 0067..006a -> 006b
 .end method

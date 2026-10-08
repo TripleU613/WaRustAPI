@@ -28,4 +28,5 @@
   0058..005c op=1a const-string v0, "- contains hosted device:"
   005c..0062 op=71 invoke-static {v0, v1, v2}, LX/1xj;->A1O(VLLZ)
   0062..0064 op=11 return-object v4
+  # exception table: 0 try range(s)
 .end method

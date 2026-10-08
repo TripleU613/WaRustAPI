@@ -13,4 +13,5 @@
   001a..001e op=22 new-instance v0, Ljava/util/HashSet;
   001e..0024 op=70 invoke-direct {v0, v1}, Ljava/util/HashSet;-><init>(VL)
   0024..0026 op=11 return-object v0
+  # exception table: 0 try range(s)
 .end method

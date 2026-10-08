@@ -1,0 +1,92 @@
+# APK-derived structural disassembly: LX/1Qe;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method Ck7(VLI) flags=0x1 registers=14
+  0000..0002 op=12 const/4 v4, #0x0
+  0002..0004 op=12 const/4 v6, #0x1
+  0004..0006 op=12 const/4 v5, #0x2
+  0006..000a op=dd and-int/lit8 v0, v13, #0x2
+  000a..000c op=12 const/4 v3, #0x0
+  000c..0010 op=38 if-eqz v0, +0x3
+  0010..0012 op=12 const/4 v3, #0x1
+  0012..0016 op=62 sget-object v0, LX/1Qe;->A03:Ljava/util/concurrent/atomic/AtomicReference;
+  0016..001c op=6e invoke-virtual {v0}, Ljava/util/concurrent/atomic/AtomicReference;->get(L)
+  001c..001e op=0c move-result-object
+  001e..0022 op=1f check-cast v0, LX/1Qg;
+  0022..0026 op=39 if-nez v0, +0x4
+  0026..002a op=62 sget-object v0, LX/1Qe;->A02:LX/1Qg;
+  002a..0030 op=72 invoke-interface {v0}, LX/1Qg;->Ank(L)
+  0030..0032 op=0c move-result-object
+  0032..0036 op=13 const/16 v2, #0x2000
+  0036..003a op=38 if-eqz v0, +0x1f
+  003a..0040 op=6e invoke-virtual {v0}, Ljava/lang/Number;->intValue(I)
+  0040..0042 op=0a move-result
+  0042..0046 op=22 new-instance v0, LX/MMS;
+  0046..004c op=70 invoke-direct {v0, v1}, LX/MMS;-><init>(VI)
+  004c..0050 op=39 if-nez v3, +0x5
+  0050..0056 op=6e invoke-virtual {v0, v4}, Ljava/io/OutputStream;->write(VI)
+  0056..005c op=71 invoke-static {v12, v0}, LX/1Qe;->A01(VLL)
+  005c..0062 op=6e invoke-virtual {v0}, Ljava/io/ByteArrayOutputStream;->toByteArray(L)
+  0062..0064 op=0c move-result-object
+  0064..0068 op=38 if-eqz v3, +0x44
+  0068..006a op=21 array-length
+  006a..006e op=23 new-array v0, v6, [B
+  006e..0072 op=4f aput-byte v5, v0, v4
+  0072..0074 op=28 goto +0x7
+  0074..0078 op=22 new-instance v0, Ljava/io/ByteArrayOutputStream;
+  0078..007e op=70 invoke-direct {v0, v2}, Ljava/io/ByteArrayOutputStream;-><init>(VI)
+  007e..0080 op=28 goto -0x19
+  0080..0084 op=22 new-instance v3, Ljava/io/ByteArrayOutputStream;
+  0084..008a op=70 invoke-direct {v3, v2}, Ljava/io/ByteArrayOutputStream;-><init>(VI)
+  008a..008e op=22 new-instance v2, Ljava/util/zip/DeflaterOutputStream;
+  008e..0094 op=70 invoke-direct {v2, v3}, Ljava/util/zip/DeflaterOutputStream;-><init>(VL)
+  0094..009a op=6e invoke-virtual {v3, v0}, Ljava/io/OutputStream;->write(VL)
+  009a..00a0 op=6e invoke-virtual {v2, v7, v4, v1}, Ljava/io/OutputStream;->write(VLII)
+  00a0..00a6 op=6e invoke-virtual {v2}, Ljava/io/OutputStream;->close(V)
+  00a6..00ac op=6e invoke-virtual {v3}, Ljava/io/ByteArrayOutputStream;->toByteArray(L)
+  00ac..00ae op=0c move-result-object
+  00ae..00b4 op=71 invoke-static {v7}, LX/00h;->A06(VL)
+  00b4..00ba op=6e invoke-virtual {v2}, Ljava/io/OutputStream;->close(V)
+  00ba..00c0 op=6e invoke-virtual {v3}, Ljava/io/OutputStream;->close(V)
+  00c0..00c2 op=28 goto +0x16
+  00c2..00c4 op=0d move-exception
+  00c4..00c6 op=27 throw v1
+  00c6..00c8 op=0d move-exception
+  00c8..00ce op=71 invoke-static {v2, v1}, LX/07i;->A00(VLL)
+  00ce..00d0 op=27 throw v0
+  00d0..00d2 op=0d move-exception
+  00d2..00d4 op=27 throw v1
+  00d4..00d6 op=0d move-exception
+  00d6..00dc op=71 invoke-static {v3, v1}, LX/07i;->A00(VLL)
+  00dc..00de op=27 throw v0
+  00de..00e0 op=0d move-exception
+  00e0..00e4 op=22 new-instance v0, Ljava/lang/AssertionError;
+  00e4..00ea op=70 invoke-direct {v0, v1}, Ljava/lang/AssertionError;-><init>(VL)
+  00ea..00ec op=27 throw v0
+  00ec..00f0 op=54 iget-object v2, v11, LX/1Qe;->A00:LX/1Qc;
+  00f0..00f2 op=21 array-length
+  00f2..00f6 op=54 iget-object v0, v2, LX/1Qc;->A01:LX/1QR;
+  00f6..00fa op=54 iget-object v5, v0, LX/1QR;->A04:LX/1Nj;
+  00fa..00fe op=54 iget-object v0, v0, LX/1QR;->A01:Ljava/util/concurrent/atomic/AtomicLong;
+  00fe..0104 op=6e invoke-virtual {v0}, Ljava/util/concurrent/atomic/AtomicLong;->getAndIncrement(J)
+  0104..0106 op=0b move-result-wide
+  0106..010a op=23 new-array v6, v4, [B
+  010a..0110 op=74 invoke-virtual/range {v5..v10}, LX/1Nj;->A01(LLLIJ)
+  0110..0112 op=0c move-result-object
+  0112..0116 op=54 iget-object v0, v2, LX/1Qc;->A00:Ljava/io/OutputStream;
+  0116..011c op=6e invoke-virtual {v0, v1}, Ljava/io/OutputStream;->write(VL)
+  011c..0122 op=6e invoke-virtual {v0}, Ljava/io/OutputStream;->flush(V)
+  0122..0124 op=0e return-void
+  # exception table: 9 try range(s)
+  # catch Ljava/io/IOException; code_units 0040..0045 -> 006f
+  # catch <all> code_units 0045..004a -> 0068
+  # catch <all> code_units 004a..005a -> 0061
+  # catch <all> code_units 005a..005d -> 0068
+  # catch Ljava/io/IOException; code_units 005d..0061 -> 006f
+  # catch <all> code_units 0062..0063 -> 0063
+  # catch <all> code_units 0064..0068 -> 0068
+  # catch <all> code_units 0069..006a -> 006a
+  # catch Ljava/io/IOException; code_units 006b..006f -> 006f
+.end method

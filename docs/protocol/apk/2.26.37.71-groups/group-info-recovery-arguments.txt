@@ -10,4 +10,5 @@
   000e..0012 op=5c iput-boolean v3, v0, LX/A9r;->A03:Z
   0012..0016 op=5c iput-boolean v4, v0, LX/A9r;->A02:Z
   0016..0018 op=0e return-void
+  # exception table: 0 try range(s)
 .end method

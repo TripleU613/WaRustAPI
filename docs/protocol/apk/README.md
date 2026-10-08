@@ -218,3 +218,13 @@ bundle. [Runtime read and remaining configuration gaps](../feature-configuration
 distinguish saved response evidence from an effective feature value. Generated
 07t defaults remain local; compact Boolean registration windows are attributed
 separately. No native MobileConfig mapping or automatic relocation is claimed.
+
+
+The [37.71 group recipe](recipes/2.26.37.71-groups.json) now preserves
+**39 topics / 43 methods / 44 files / 928,771 bytes**, with exception tables.
+Five new topics cover ACK dispatch, network write, postwrite and frame encoding.
+[Cached coverage comparison](group-ack-writer-coverage-diff.json) against
+80f5636 took 0.039709 seconds; all 34 old instruction texts are unchanged after
+removing exception annotations. [Writer trace and scope](../groups.md#ack-dispatch-and-uncompressed-write-boundary-2026-10-08)
+explains the uncompressed boundary and why no runtime correction is justified.
+This is scoped same-APK coverage, not full release remapping or protocol parity.

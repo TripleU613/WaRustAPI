@@ -84,4 +84,14 @@
   0126..0128 op=0d move-exception
   0128..012a op=1e monitor-exit
   012a..012c op=27 throw v0
+  # exception table: 9 try range(s)
+  # catch <all> code_units 0003..0019 -> 0093
+  # catch <all> code_units 0019..0026 -> 0089
+  # catch <all> code_units 0026..006c -> 007d
+  # catch <all> code_units 006c..006f -> 0089
+  # catch <all> code_units 006f..007d -> 0093
+  # catch <all> code_units 0080..0084 -> 0084
+  # catch <all> code_units 0085..0089 -> 0089
+  # catch <all> code_units 008a..008e -> 008e
+  # catch <all> code_units 008f..0095 -> 0093
 .end method

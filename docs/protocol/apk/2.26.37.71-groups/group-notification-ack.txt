@@ -75,4 +75,5 @@
   0114..0116 op=28 goto -0x65
   0116..011a op=54 iget-object v4, v8, LX/Cb1;->A09:Ljava/lang/String;
   011a..011c op=28 goto -0x76
+  # exception table: 0 try range(s)
 .end method

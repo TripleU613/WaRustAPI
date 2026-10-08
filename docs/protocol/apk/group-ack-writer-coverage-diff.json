@@ -1,0 +1,506 @@
+{
+  "artifacts": [
+    {
+      "file": "inventory.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/inventory.json",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/inventory.json",
+      "status": "unchanged"
+    },
+    {
+      "file": "manifest.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/manifest.json",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/manifest.json",
+      "status": "unchanged"
+    },
+    {
+      "file": "targets.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/targets.json",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/targets.json",
+      "status": "changed"
+    },
+    {
+      "file": "tokens.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/tokens.json",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/tokens.json",
+      "status": "unchanged"
+    }
+  ],
+  "interpretation": "Structural topic differences, not automatic proof of protocol behavior changes. Unmapped APK code/native behavior is outside this scoped comparison.",
+  "new_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "old_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "topics": [
+    {
+      "new_class": "LX/1Qe;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-ack-frame-serialize.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/binary/encoder.rs",
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "added",
+      "topic": "group-ack-frame-serialize"
+    },
+    {
+      "new_class": "LX/1Rd;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-ack-network-write.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/binary/encoder.rs",
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "added",
+      "topic": "group-ack-network-write"
+    },
+    {
+      "new_class": "LX/0y2;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-ack-object-dispatch.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/binary/encoder.rs",
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "added",
+      "topic": "group-ack-object-dispatch"
+    },
+    {
+      "new_class": "LX/1Rd;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-ack-postwrite.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/binary/encoder.rs",
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "added",
+      "topic": "group-ack-postwrite"
+    },
+    {
+      "new_class": "LX/0y0;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-ack-writer-dispatch.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/binary/encoder.rs",
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "added",
+      "topic": "group-ack-writer-dispatch"
+    },
+    {
+      "new_class": "LX/0bA;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-device-hash-namespace.txt",
+      "old_class": "LX/0bA;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-device-hash-namespace.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "changed",
+      "topic": "group-device-hash-namespace"
+    },
+    {
+      "new_class": "LX/1jL;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-device-hash-other-read.txt",
+      "old_class": "LX/1jL;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-device-hash-other-read.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "changed",
+      "topic": "group-device-hash-other-read"
+    },
+    {
+      "new_class": "LX/1jL;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-device-hash-pn-read.txt",
+      "old_class": "LX/1jL;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-device-hash-pn-read.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "changed",
+      "topic": "group-device-hash-pn-read"
+    },
+    {
+      "new_class": "LX/6ak;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-device-set-copy.txt",
+      "old_class": "LX/6ak;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-device-set-copy.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "changed",
+      "topic": "group-device-set-copy"
+    },
+    {
+      "new_class": "LX/0Xm;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-info-dispatch.txt",
+      "old_class": "LX/0Xm;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-info-dispatch.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "changed",
+      "topic": "group-info-dispatch"
+    },
+    {
+      "new_class": "LX/8km;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-info-local-rate-limit.txt",
+      "old_class": "LX/8km;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-info-local-rate-limit.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "changed",
+      "topic": "group-info-local-rate-limit"
+    },
+    {
+      "new_class": "LX/0Xo;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-info-mex-context.txt",
+      "old_class": "LX/0Xo;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-info-mex-context.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "changed",
+      "topic": "group-info-mex-context"
+    },
+    {
+      "new_class": "LX/A9r;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-info-recovery-arguments.txt",
+      "old_class": "LX/A9r;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-info-recovery-arguments.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "changed",
+      "topic": "group-info-recovery-arguments"
+    },
+    {
+      "new_class": "LX/0Xm;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-info-recovery-dispatch.txt",
+      "old_class": "LX/0Xm;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-info-recovery-dispatch.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "changed",
+      "topic": "group-info-recovery-dispatch"
+    },
+    {
+      "new_class": "LX/0Z5;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-message-device-cache.txt",
+      "old_class": "LX/0Z5;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-message-device-cache.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "changed",
+      "topic": "group-message-device-cache"
+    },
+    {
+      "new_class": "LX/Ayp;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-message-device-read.txt",
+      "old_class": "LX/Ayp;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-message-device-read.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "changed",
+      "topic": "group-message-device-read"
+    },
+    {
+      "new_class": "LX/0Z4;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-message-device-source.txt",
+      "old_class": "LX/0Z4;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-message-device-source.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "changed",
+      "topic": "group-message-device-source"
+    },
+    {
+      "new_class": "LX/Cp2;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-notification-ack.txt",
+      "old_class": "LX/Cp2;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-notification-ack.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "changed",
+      "topic": "group-notification-ack"
+    },
+    {
+      "new_class": "LX/0yv;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-notifications.txt",
+      "old_class": "LX/0yv;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-notifications.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "changed",
+      "topic": "group-notifications"
+    },
+    {
+      "new_class": "Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-refresh-job.txt",
+      "old_class": "Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-refresh-job.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "changed",
+      "topic": "group-refresh-job"
+    },
+    {
+      "new_class": "LX/Ceo;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-send-device-params.txt",
+      "old_class": "LX/Ceo;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-send-device-params.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "changed",
+      "topic": "group-send-device-params"
+    },
+    {
+      "new_class": "Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-send-job-hash-check.txt",
+      "old_class": "Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-send-job-hash-check.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "changed",
+      "topic": "group-send-job-hash-check"
+    },
+    {
+      "new_class": "LX/DNu;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-send-own-device-add.txt",
+      "old_class": "LX/DNu;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-send-own-device-add.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "changed",
+      "topic": "group-send-own-device-add"
+    },
+    {
+      "new_class": "LX/DNu;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-send-runnable.txt",
+      "old_class": "LX/DNu;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-send-runnable.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "changed",
+      "topic": "group-send-runnable"
+    },
+    {
+      "new_class": "LX/118;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-subject-cache-insert.txt",
+      "old_class": "LX/118;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-subject-cache-insert.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "changed",
+      "topic": "group-subject-cache-insert"
+    },
+    {
+      "new_class": "LX/118;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-subject-cache-read.txt",
+      "old_class": "LX/118;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-subject-cache-read.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "changed",
+      "topic": "group-subject-cache-read"
+    },
+    {
+      "new_class": "LX/117;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-subject-cache-write.txt",
+      "old_class": "LX/117;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-subject-cache-write.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "changed",
+      "topic": "group-subject-cache-write"
+    },
+    {
+      "new_class": "LX/0gt;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-subject-contact-write.txt",
+      "old_class": "LX/0gt;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-subject-contact-write.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "changed",
+      "topic": "group-subject-contact-write"
+    },
+    {
+      "new_class": "LX/Bo3;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-subject-ordinary-message.txt",
+      "old_class": "LX/Bo3;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-subject-ordinary-message.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ],
+      "status": "changed",
+      "topic": "group-subject-ordinary-message"
+    },
+    {
+      "new_class": "LX/BoJ;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-subject-parent-message.txt",
+      "old_class": "LX/BoJ;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-subject-parent-message.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ],
+      "status": "changed",
+      "topic": "group-subject-parent-message"
+    },
+    {
+      "new_class": "LX/0yw;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-subject-parent-write.txt",
+      "old_class": "LX/0yw;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-subject-parent-write.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "changed",
+      "topic": "group-subject-parent-write"
+    },
+    {
+      "new_class": "LX/0hs;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-subject-time-parser.txt",
+      "old_class": "LX/0hs;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-subject-time-parser.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ],
+      "status": "changed",
+      "topic": "group-subject-time-parser"
+    },
+    {
+      "new_class": "LX/0Fs;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-type-cache-read.txt",
+      "old_class": "LX/0Fs;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-type-cache-read.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ],
+      "status": "changed",
+      "topic": "group-type-cache-read"
+    },
+    {
+      "new_class": "LX/ADs;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-type-reply.txt",
+      "old_class": "LX/ADs;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-type-reply.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "changed",
+      "topic": "group-type-reply"
+    },
+    {
+      "new_class": "LX/0bA;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-user-hash-namespace.txt",
+      "old_class": "LX/0bA;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-user-hash-namespace.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "changed",
+      "topic": "group-user-hash-namespace"
+    },
+    {
+      "new_class": "LX/1jL;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-user-hash-other-read.txt",
+      "old_class": "LX/1jL;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-user-hash-other-read.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "changed",
+      "topic": "group-user-hash-other-read"
+    },
+    {
+      "new_class": "LX/1jL;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/group-user-hash-pn-read.txt",
+      "old_class": "LX/1jL;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/group-user-hash-pn-read.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "changed",
+      "topic": "group-user-hash-pn-read"
+    },
+    {
+      "new_class": "LX/0Xw;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/jid-map-ordered-write.txt",
+      "old_class": "LX/0Xw;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/jid-map-ordered-write.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "changed",
+      "topic": "jid-map-ordered-write"
+    },
+    {
+      "new_class": "LX/0Xx;",
+      "new_file": "docs/protocol/apk/2.26.37.71-groups/jid-map-storage-write.txt",
+      "old_class": "LX/0Xx;",
+      "old_file": "git:80f5636:docs/protocol/apk/2.26.37.71-groups/jid-map-storage-write.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "changed",
+      "topic": "jid-map-storage-write"
+    }
+  ],
+  "observed_seconds": 0.039709,
+  "baseline_git": "80f5636",
+  "existing_instruction_texts_unchanged_after_exception_annotation_removal": 34
+}

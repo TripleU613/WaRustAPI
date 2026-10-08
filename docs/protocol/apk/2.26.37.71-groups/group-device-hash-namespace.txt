@@ -16,4 +16,5 @@
   0024..002a op=6e invoke-virtual {v0}, LX/1jL;->A0K(L)
   002a..002c op=0c move-result-object
   002c..002e op=28 goto -0x8
+  # exception table: 0 try range(s)
 .end method

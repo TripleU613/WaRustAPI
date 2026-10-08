@@ -21,4 +21,5 @@
   003c..003e op=0c move-result-object
   003e..0044 op=72 invoke-interface {v4, v0}, Ljava/util/Set;->addAll(ZL)
   0044..0046 op=0e return-void
+  # exception table: 0 try range(s)
 .end method

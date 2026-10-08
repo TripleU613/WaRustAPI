@@ -3060,3 +3060,84 @@ peer pins unchanged. Private evidence index:
 lab/releases/group-device-inspection/active.json. No login/query/group send or
 new companion identity was manufactured. Fresh live companion decryption and
 full companion bootstrap remain unverified.
+
+
+## ACK dispatch and uncompressed write boundary (2026-10-08)
+
+**Confirmed static**, APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+0y0.A00 reads Android Message.arg1 at 00ce..00d2. Its sparse-switch at
+00f0 maps 76 to 11c2 and 129 to 1a7a. Case 76 passes Cb1 to 0y2.A02;
+case 129 directly calls Cp2.A05 with Cb1.A04 and the same Cb1 at
+1a8a..1a94, then passes Cb1.A00 to 1Rd.A04. The latter branch logs
+WriterThread/write/send-message-ack. These are two ACK dispatch paths, not
+server response codes or a new notification type. The complete method and
+exception tables are retained; no switch target is inferred from line order.
+
+0y2.A02 likewise calls Cp2.A05, forwards the resulting node and Cb1.A00
+into 1Rd.A04, and logs send-stanza-received. 1Rd.A04 performs a loggable-ID
+lookup through 0hk.A01 and optional CjJ.A05, then calls 1Qe.Ck7 with flag 1
+at 0016..0026. No node-attribute transformation appears in this method.
+The metadata helpers' full side effects remain **unknown**.
+
+1Qe.Ck7 tests flags & 2 at 0006..0012. With flag 1 that compression test
+is false: it writes a leading zero byte at 004c..0056, then invokes 1Qe.A01
+with the supplied node. The compressed branch instead prepends byte 2 and
+uses DeflaterOutputStream. Allocation sizing comes from 1Qg.Ank, with a
+8192-byte fallback; this is an allocation hint, not a wire limit. It then
+passes encoded bytes to 1Nj.A01 with an empty auxiliary byte array and the
+next AtomicLong counter, writes the result and flushes at 00ec..0124.
+The native/framing helper's full behavior is not newly established here.
+
+After serialization, 1Rd.A00 only enters its onReceiptSent branch for root tag
+receipt. ACK nodes have root tag ack even when their class is receipt, so this
+selected postwrite method does not enter that branch for an ACK. The branch's
+active listener state and complete receipt side effects remain **unknown**.
+
+**Confirmed Rust comparison:** Encoder's initial output contains flag byte zero,
+and supported dirty-notification ACK construction supplies id/to/class/type
+and optional participant. The traced APK write boundary passes the constructed
+ACK to the existing serializer without a visible destination/type rewrite.
+This supports the existing uncompressed ACK boundary; it does not establish
+byte-for-byte JID packing or full notification application equivalence.
+No APK-backed Rust correction was found in this trace. The historical saved
+w:gp2 ACK terminal capture has unknown origin and cannot establish that this
+writer caused a current disconnect. The latest receive-only window stopped
+cleanly. No saved account was opened or live request sent for this static work.
+
+Five writer topics are added to the reviewed group recipe, with exact method
+shorties. Full selected group topic exports now include exception tables so
+future catch-only changes remain visible in cached file comparisons. This
+coverage expansion is not automatic obfuscation relocation or full APK
+translation; unanchored network/framing helpers still need manual review.
+
+
+**Observed export and comparison:** the expanded group baseline is 39 topics /
+43 methods / 44 files / 928771 bytes, within the 2 MiB limit. The checksum-
+verified cached diff against Git 80f5636 took 0.039709 seconds: five additions
+and 34 changed topic files. Removing only new exception-table/catch annotation
+lines from each old topic produces exactly its previous instruction text.
+Inventory, manifest and tokens are unchanged; targets adds writer coverage and
+exception metadata. These changes are source coverage on the same APK, not
+changes between vendor releases. [Retained comparison](apk/group-ack-writer-coverage-diff.json)
+records the baseline and timing. The actual recipe export completed successfully;
+bulk/raw APK data remains local.
+
+
+Reproduction: quote class descriptors in shell commands. The bundle's
+[group ACK writer](apk/2.26.37.71-groups/group-ack-writer-dispatch.txt),
+[object dispatch](apk/2.26.37.71-groups/group-ack-object-dispatch.txt),
+[network write](apk/2.26.37.71-groups/group-ack-network-write.txt),
+[postwrite](apk/2.26.37.71-groups/group-ack-postwrite.txt) and
+[frame serializer](apk/2.26.37.71-groups/group-ack-frame-serialize.txt)
+retain the complete reviewed methods and exception tables. Two helpers have no
+exact string anchors; no automatic mapping to a new release is assumed.
+
+**Validation:** all 59 xtask tests, actual bounded recipe export, cached checksum
+comparison, old instruction-text equivalence, regenerated CLI reference,
+experimental API-symbol check and formatting passed on system Rust 1.99.0.
+Runtime Rust code is unchanged; full workspace tests/Clippy were not repeated
+for this static evidence chunk. No live request was needed or made.
+
+Repository hygiene passed: 928 local links, tracked-file budgets, package
+licenses and 3,996,167 bytes across five checksum-verified APK bundles.

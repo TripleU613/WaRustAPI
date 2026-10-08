@@ -6,19 +6,23 @@
 .method A0f(L) flags=0x1 registers=2
   0000..0004 op=54 iget-object v0, v1, LX/Bo3;->A00:Ljava/lang/String;
   0004..0006 op=11 return-object v0
+  # exception table: 0 try range(s)
 .end method
 
 .method A0g(L) flags=0x1 registers=2
   0000..0004 op=54 iget-object v0, v1, LX/Bo3;->A00:Ljava/lang/String;
   0004..0006 op=11 return-object v0
+  # exception table: 0 try range(s)
 .end method
 
 .method A0i(VL) flags=0x1 registers=2
   0000..0004 op=5b iput-object v1, v0, LX/Bo3;->A00:Ljava/lang/String;
   0004..0006 op=0e return-void
+  # exception table: 0 try range(s)
 .end method
 
 .method A0j(VL) flags=0x1 registers=2
   0000..0004 op=5b iput-object v1, v0, LX/Bo3;->A00:Ljava/lang/String;
   0004..0006 op=0e return-void
+  # exception table: 0 try range(s)
 .end method

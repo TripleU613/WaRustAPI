@@ -63,4 +63,5 @@
   00f8..00fa op=0c move-result-object
   00fa..0100 op=6e invoke-virtual {v1, v0}, LX/AzB;->A0L(VL)
   0100..0102 op=0e return-void
+  # exception table: 0 try range(s)
 .end method

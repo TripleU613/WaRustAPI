@@ -259,4 +259,11 @@
   03fe..0404 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
   0404..0408 op=62 sget-object v0, LX/01f;->A00:LX/01f;
   0408..040a op=11 return-object v0
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0128..012c -> 01e3
+  # catch <all> code_units 012c..01d5 -> 01dc
+  # catch <all> code_units 01d5..01d8 -> 01e3
+  # catch <all> code_units 01dd..01de -> 01de
+  # catch <all> code_units 01df..01e3 -> 01e3
+  # catch <all> code_units 01e4..01e5 -> 01e5
 .end method

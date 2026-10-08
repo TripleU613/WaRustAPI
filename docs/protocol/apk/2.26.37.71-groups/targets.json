@@ -1,7 +1,82 @@
 {
+  "group-ack-frame-serialize": {
+    "class": "LX/1Qe;",
+    "file": "group-ack-frame-serialize.txt",
+    "include_exception_tables": true,
+    "method_filter": "Ck7",
+    "method_shorty": "VLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/binary/encoder.rs"
+    ]
+  },
+  "group-ack-network-write": {
+    "class": "LX/1Rd;",
+    "file": "group-ack-network-write.txt",
+    "include_exception_tables": true,
+    "method_filter": "A04",
+    "method_shorty": "VLJ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/binary/encoder.rs"
+    ]
+  },
+  "group-ack-object-dispatch": {
+    "anchors": [
+      "WriterThread/write/send-stanza-received; stanzaKey="
+    ],
+    "class": "LX/0y2;",
+    "file": "group-ack-object-dispatch.txt",
+    "include_exception_tables": true,
+    "method_filter": "A02",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/binary/encoder.rs"
+    ]
+  },
+  "group-ack-postwrite": {
+    "anchors": [
+      "onReceiptSent"
+    ],
+    "class": "LX/1Rd;",
+    "file": "group-ack-postwrite.txt",
+    "include_exception_tables": true,
+    "method_filter": "A00",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/binary/encoder.rs"
+    ]
+  },
+  "group-ack-writer-dispatch": {
+    "anchors": [
+      "WriterThread/write/send-message-ack"
+    ],
+    "class": "LX/0y0;",
+    "file": "group-ack-writer-dispatch.txt",
+    "include_exception_tables": true,
+    "method_filter": "A00",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/binary/encoder.rs"
+    ]
+  },
   "group-device-hash-namespace": {
     "class": "LX/0bA;",
     "file": "group-device-hash-namespace.txt",
+    "include_exception_tables": true,
     "method_filter": "A0H",
     "methods": 1,
     "rust_files": [
@@ -12,6 +87,7 @@
   "group-device-hash-other-read": {
     "class": "LX/1jL;",
     "file": "group-device-hash-other-read.txt",
+    "include_exception_tables": true,
     "method_filter": "A0I",
     "methods": 1,
     "rust_files": [
@@ -22,6 +98,7 @@
   "group-device-hash-pn-read": {
     "class": "LX/1jL;",
     "file": "group-device-hash-pn-read.txt",
+    "include_exception_tables": true,
     "method_filter": "A0K",
     "methods": 1,
     "rust_files": [
@@ -32,6 +109,7 @@
   "group-device-set-copy": {
     "class": "LX/6ak;",
     "file": "group-device-set-copy.txt",
+    "include_exception_tables": true,
     "method_filter": "A1J",
     "methods": 1,
     "rust_files": [
@@ -46,6 +124,7 @@
     ],
     "class": "LX/0Xm;",
     "file": "group-info-dispatch.txt",
+    "include_exception_tables": true,
     "method_filter": "A0F",
     "methods": 1,
     "rust_files": [
@@ -56,6 +135,7 @@
   "group-info-local-rate-limit": {
     "class": "LX/8km;",
     "file": "group-info-local-rate-limit.txt",
+    "include_exception_tables": true,
     "method_filter": "A02",
     "methods": 1,
     "rust_files": [
@@ -71,6 +151,7 @@
     ],
     "class": "LX/0Xo;",
     "file": "group-info-mex-context.txt",
+    "include_exception_tables": true,
     "method_filter": "A02",
     "methods": 1,
     "rust_files": [
@@ -81,6 +162,7 @@
   "group-info-recovery-arguments": {
     "class": "LX/A9r;",
     "file": "group-info-recovery-arguments.txt",
+    "include_exception_tables": true,
     "method_filter": "<init>",
     "methods": 1,
     "rust_files": [
@@ -95,6 +177,7 @@
     ],
     "class": "LX/0Xm;",
     "file": "group-info-recovery-dispatch.txt",
+    "include_exception_tables": true,
     "method_filter": "A0H",
     "methods": 1,
     "rust_files": [
@@ -105,6 +188,7 @@
   "group-message-device-cache": {
     "class": "LX/0Z5;",
     "file": "group-message-device-cache.txt",
+    "include_exception_tables": true,
     "method_filter": "A05",
     "methods": 1,
     "rust_files": [
@@ -115,6 +199,7 @@
   "group-message-device-read": {
     "class": "LX/Ayp;",
     "file": "group-message-device-read.txt",
+    "include_exception_tables": true,
     "method_filter": "A0c",
     "methods": 1,
     "rust_files": [
@@ -125,6 +210,7 @@
   "group-message-device-source": {
     "class": "LX/0Z4;",
     "file": "group-message-device-source.txt",
+    "include_exception_tables": true,
     "method_filter": "A02",
     "methods": 1,
     "rust_files": [
@@ -139,6 +225,7 @@
     ],
     "class": "LX/Cp2;",
     "file": "group-notification-ack.txt",
+    "include_exception_tables": true,
     "method_filter": "A05",
     "methods": 1,
     "rust_files": [
@@ -152,6 +239,7 @@
     ],
     "class": "LX/0yv;",
     "file": "group-notifications.txt",
+    "include_exception_tables": true,
     "method_filter": "A09",
     "methods": 1,
     "rust_files": [
@@ -165,6 +253,7 @@
     ],
     "class": "Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;",
     "file": "group-refresh-job.txt",
+    "include_exception_tables": true,
     "method_filter": "A0G",
     "methods": 1,
     "rust_files": [
@@ -178,6 +267,7 @@
     ],
     "class": "LX/Ceo;",
     "file": "group-send-device-params.txt",
+    "include_exception_tables": true,
     "method_filter": "A00",
     "methods": 1,
     "rust_files": [
@@ -192,6 +282,7 @@
     ],
     "class": "Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;",
     "file": "group-send-job-hash-check.txt",
+    "include_exception_tables": true,
     "method_filter": "A06",
     "methods": 1,
     "rust_files": [
@@ -202,6 +293,7 @@
   "group-send-own-device-add": {
     "class": "LX/DNu;",
     "file": "group-send-own-device-add.txt",
+    "include_exception_tables": true,
     "method_filter": "A00",
     "methods": 1,
     "rust_files": [
@@ -212,6 +304,7 @@
   "group-send-runnable": {
     "class": "LX/DNu;",
     "file": "group-send-runnable.txt",
+    "include_exception_tables": true,
     "method_filter": "run",
     "methods": 1,
     "rust_files": [
@@ -225,6 +318,7 @@
     ],
     "class": "LX/118;",
     "file": "group-subject-cache-insert.txt",
+    "include_exception_tables": true,
     "method_filter": "A02",
     "methods": 1,
     "rust_files": [
@@ -237,6 +331,7 @@
     ],
     "class": "LX/118;",
     "file": "group-subject-cache-read.txt",
+    "include_exception_tables": true,
     "method_filter": "A00",
     "methods": 1,
     "rust_files": [
@@ -250,6 +345,7 @@
     ],
     "class": "LX/117;",
     "file": "group-subject-cache-write.txt",
+    "include_exception_tables": true,
     "method_filter": "A01",
     "methods": 1,
     "rust_files": [
@@ -263,6 +359,7 @@
     ],
     "class": "LX/0gt;",
     "file": "group-subject-contact-write.txt",
+    "include_exception_tables": true,
     "method_filter": "A0V",
     "methods": 1,
     "rust_files": [
@@ -272,6 +369,7 @@
   "group-subject-ordinary-message": {
     "class": "LX/Bo3;",
     "file": "group-subject-ordinary-message.txt",
+    "include_exception_tables": true,
     "method_filter": null,
     "methods": 4,
     "rust_files": [
@@ -286,6 +384,7 @@
     ],
     "class": "LX/BoJ;",
     "file": "group-subject-parent-message.txt",
+    "include_exception_tables": true,
     "method_filter": null,
     "methods": 2,
     "rust_files": [
@@ -299,6 +398,7 @@
     ],
     "class": "LX/0yw;",
     "file": "group-subject-parent-write.txt",
+    "include_exception_tables": true,
     "method_filter": "A0B",
     "methods": 1,
     "rust_files": [
@@ -313,6 +413,7 @@
     ],
     "class": "LX/0hs;",
     "file": "group-subject-time-parser.txt",
+    "include_exception_tables": true,
     "method_filter": "A09",
     "method_shorty": "JLL",
     "methods": 1,
@@ -324,6 +425,7 @@
   "group-type-cache-read": {
     "class": "LX/0Fs;",
     "file": "group-type-cache-read.txt",
+    "include_exception_tables": true,
     "method_filter": "A0A",
     "methods": 1,
     "rust_files": [
@@ -343,6 +445,7 @@
     ],
     "class": "LX/ADs;",
     "file": "group-type-reply.txt",
+    "include_exception_tables": true,
     "method_filter": "A01",
     "methods": 1,
     "rust_files": [
@@ -352,6 +455,7 @@
   "group-user-hash-namespace": {
     "class": "LX/0bA;",
     "file": "group-user-hash-namespace.txt",
+    "include_exception_tables": true,
     "method_filter": "A0I",
     "methods": 1,
     "rust_files": [
@@ -362,6 +466,7 @@
   "group-user-hash-other-read": {
     "class": "LX/1jL;",
     "file": "group-user-hash-other-read.txt",
+    "include_exception_tables": true,
     "method_filter": "A0J",
     "methods": 1,
     "rust_files": [
@@ -372,6 +477,7 @@
   "group-user-hash-pn-read": {
     "class": "LX/1jL;",
     "file": "group-user-hash-pn-read.txt",
+    "include_exception_tables": true,
     "method_filter": "A0L",
     "methods": 1,
     "rust_files": [
@@ -385,6 +491,7 @@
     ],
     "class": "LX/0Xw;",
     "file": "jid-map-ordered-write.txt",
+    "include_exception_tables": true,
     "method_filter": "A0O",
     "methods": 1,
     "rust_files": [
@@ -399,6 +506,7 @@
     ],
     "class": "LX/0Xx;",
     "file": "jid-map-storage-write.txt",
+    "include_exception_tables": true,
     "method_filter": "A02",
     "methods": 1,
     "rust_files": [

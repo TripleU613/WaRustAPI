@@ -2040,3 +2040,20 @@ Actions/devices/pins/receipts/outbox matched preflight, with zero new actions.
 The original AB-property read remains outcome_unknown with its original ID;
 no query was queued or replayed. Fresh incoming-message decryption and long-term
 reliability are not established by this window.
+
+ACK writer closure (2026-10-08, **confirmed static APK 37.71**): Android arg1
+selectors 76/129 converge through Cp2.A05 and 1Rd.A04; Ck7 flag 1 serializes
+the supplied node with raw leading zero. No destination/type rewrite appears
+at the traced boundary; no APK-backed runtime correction was found. Historical
+terminal ACK origin remains unknown. The expanded group bundle preserves 39
+topics / 43 methods / 44 files / 928771 bytes with exception tables. Cached
+same-APK comparison against 80f5636 took 0.039709 seconds: five additions,
+34 annotation-changed files; all old instruction texts remain equal. Native
+framing, metadata side effects and complete notification application remain
+unfinished. No account access, live request, query replay or runtime change.
+[Evidence and comparison](protocol/groups.md#ack-dispatch-and-uncompressed-write-boundary-2026-10-08).
+
+ACK evidence verification: all 59 xtask tests, actual bounded export, cached
+checksum diff and old instruction equivalence, regenerated CLI reference,
+experimental API-symbol check and formatting passed on system Rust 1.99.0.
+No runtime Rust change, saved-account access or live request occurred.

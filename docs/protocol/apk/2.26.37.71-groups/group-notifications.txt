@@ -6349,4 +6349,65 @@
   6564..656a op=76 invoke-direct/range {v7..v13}, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;-><init>(VLLLLII)
   656a..6570 op=6e invoke-virtual {v0, v7}, LX/0ls;->A01(VL)
   6570..6572 op=0e return-void
+  # exception table: 51 try range(s)
+  # catch <all> code_units 004c..0084 -> 012e
+  # catch <all> code_units 008e..00a0 -> 00a0
+  # catch <all> code_units 00b6..00c8 -> 00c8
+  # catch <all> code_units 00de..00f4 -> 00f4
+  # catch <all> code_units 0109..011f -> 011f
+  # catch <all> code_units 0e23..0e36 -> 2b68
+  # catch <all> code_units 0e3c..0e40 -> 2b5e
+  # catch <all> code_units 0e40..0e88 -> 2b54
+  # catch <all> code_units 0e88..0e8d -> 2b5e
+  # catch LX/B7l; code_units 10d9..115e -> 2f67
+  # catch LX/08j; code_units 1506..158c -> 2012
+  # catch Ljava/lang/Exception; code_units 158c..159c -> 159c
+  # catch LX/08j; code_units 158c..159c -> 2012
+  # catch LX/08j; code_units 159c..1823 -> 2012
+  # catch <all> code_units 1823..1838 -> 1838
+  # catch LX/08j; code_units 1838..2012 -> 2012
+  # catch <all> code_units 2249..225c -> 25a5
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 22d1..22d7 -> 23a6
+  # catch Ljava/lang/RuntimeException; code_units 22d1..22d7 -> 2375
+  # catch Ljava/lang/Error; code_units 22d1..22d7 -> 2375
+  # catch <all> code_units 22d7..22db -> 236b
+  # catch <all> code_units 22db..2318 -> 2361
+  # catch <all> code_units 2318..231b -> 236b
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 231b..2320 -> 23a6
+  # catch Ljava/lang/RuntimeException; code_units 231b..2320 -> 2375
+  # catch Ljava/lang/Error; code_units 231b..2320 -> 2375
+  # catch <all> code_units 2320..2323 -> 2361
+  # catch <all> code_units 2323..2326 -> 236b
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 2326..2329 -> 23a6
+  # catch Ljava/lang/RuntimeException; code_units 2326..2329 -> 2375
+  # catch Ljava/lang/Error; code_units 2326..2329 -> 2375
+  # catch <all> code_units 2362..2366 -> 2366
+  # catch <all> code_units 2367..236b -> 236b
+  # catch <all> code_units 236c..2370 -> 2370
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 2371..2375 -> 23a6
+  # catch Ljava/lang/RuntimeException; code_units 2371..2375 -> 2375
+  # catch Ljava/lang/Error; code_units 2371..2375 -> 2375
+  # catch <all> code_units 25a5..25a7 -> 25a5
+  # catch <all> code_units 2899..28b0 -> 29f0
+  # catch <all> code_units 28b0..28c3 -> 29ed
+  # catch <all> code_units 28c3..29ed -> 29f0
+  # catch <all> code_units 29ed..29ef -> 29ed
+  # catch <all> code_units 29ef..29f0 -> 29f0
+  # catch <all> code_units 29f1..29f2 -> 29f0
+  # catch <all> code_units 2b55..2b59 -> 2b59
+  # catch <all> code_units 2b5a..2b5e -> 2b5e
+  # catch <all> code_units 2b5f..2b62 -> 2b63
+  # catch <all> code_units 2b68..2b6a -> 2b68
+  # catch <all> code_units 2f12..2f4a -> 2f4c
+  # catch <all> code_units 2f4d..2f4e -> 2f4c
+  # catch LX/B7l; code_units 2f4f..2f67 -> 2f67
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 3164..316a -> 31f5
+  # catch <all> code_units 316a..316e -> 31ee
+  # catch <all> code_units 316e..31e0 -> 31e7
+  # catch <all> code_units 31e0..31e3 -> 31ee
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 31e3..31e7 -> 31f5
+  # catch <all> code_units 31e8..31e9 -> 31e9
+  # catch <all> code_units 31ea..31ee -> 31ee
+  # catch <all> code_units 31ef..31f0 -> 31f0
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 31f1..31f5 -> 31f5
 .end method

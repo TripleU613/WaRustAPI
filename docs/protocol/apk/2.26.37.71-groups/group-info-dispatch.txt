@@ -55,4 +55,5 @@
   00c8..00ce op=70 invoke-direct {v0, v6, v5, v4, v1}, LX/9Np;-><init>(VLLLI)
   00ce..00d4 op=6e invoke-virtual {v2, v0}, LX/GAw;->AOK(VL)
   00d4..00d6 op=0e return-void
+  # exception table: 0 try range(s)
 .end method
