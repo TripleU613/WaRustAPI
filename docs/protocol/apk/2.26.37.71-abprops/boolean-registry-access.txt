@@ -1,0 +1,10 @@
+# APK-derived structural disassembly: LX/07t;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A15(L) flags=0x1 registers=2
+  0000..0004 op=54 iget-object v0, v1, LX/07t;->A00:Lcom/google/common/collect/ImmutableMap;
+  0004..0006 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

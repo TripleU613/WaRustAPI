@@ -1,0 +1,1904 @@
+APK 2.26.37.71 AB-property receive evidence
+SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+
+Scoped methods/classes; bulk 07t defaults remain local.
+
+# Reproduce: xtask apk-smali APK --class 'LX/Hgb;' --method A00 --exceptions
+
+# class: LX/Hgb;
+# extends: Ljava/lang/Object;
+
+.method public A00(VZZI)  # .registers 15
+    0000..0004  iget-object  v0, v11, LX/Hgb;->A03:LX/05B;
+    0004..0008  iget-object  v4, v0, LX/05B;->A00:LX/00s;
+    0008..000e  invoke-static  {v4}, LX/8kY;->A0s(LL)
+    000e..0010  move-result-object  v7
+    0010..0014  const-string  v3, ""
+    0014..0018  if-nez  v12, +0x1d
+    0018..001c  if-nez  v13, +0x1b
+    001c..0020  iget-object  v0, v11, LX/Hgb;->A00:LX/05B;
+    0020..0026  invoke-static  {v0}, LX/05B;->A02(LL)
+    0026..0028  move-result-object  v2
+    0028..002c  check-cast  v2, LX/0Ci;
+    002c..002e  monitor-enter
+    002e..0032  iget-object  v1, v2, LX/0Ci;->A00:Landroid/content/SharedPreferences;
+    0032..0036  const-string  v0, "ab_props:sys:config_hash"
+    0036..003c  invoke-static  {v1, v0}, LX/1xg;->A1O(LLL)
+    003c..003e  move-result-object  v0
+    003e..0040  goto  +0x4
+    0040..0042  move-exception  v0
+    0042..0044  monitor-exit
+    0044..0046  throw  v0
+    0046..0048  monitor-exit
+    0048..004c  if-eqz  v0, +0x3
+    004c..004e  move-object  v3, v0
+    004e..0054  invoke-static  {}, LX/1xf;->A1D(L)
+    0054..0056  move-result-object  v2
+    0056..005a  const-string  v1, "protocol"
+    005a..005c  const/4  v6, #0x1
+    005c..0060  new-instance  v0, LX/0hq;
+    0060..0066  invoke-direct  {v0, v1, v6}, LX/0hq;-><init>(VLI)
+    0066..006c  invoke-virtual  {v2, v0}, Ljava/util/AbstractCollection;->add(ZL)
+    006c..0070  const-string  v0, "hash"
+    0070..0076  invoke-static  {v0, v3, v2}, LX/Aym;->A1L(VLLL)
+    0076..007a  if-eqz  v13, +0xe
+    007a..007e  if-lez  v14, +0xc
+    007e..0082  const-string  v1, "refresh_id"
+    0082..0086  new-instance  v0, LX/0hq;
+    0086..008c  invoke-direct  {v0, v1, v14}, LX/0hq;-><init>(VLI)
+    008c..0092  invoke-virtual  {v2, v0}, Ljava/util/AbstractCollection;->add(ZL)
+    0092..0094  const/4  v5, #0x0
+    0094..0098  new-array  v0, v5, [LX/0hq;
+    0098..009e  invoke-virtual  {v2, v0}, Ljava/util/AbstractCollection;->toArray(LL)
+    009e..00a0  move-result-object  v1
+    00a0..00a4  check-cast  v1, [LX/0hq;
+    00a4..00a8  const-string  v0, "props"
+    00a8..00ac  new-instance  v3, LX/0hs;
+    00ac..00b2  invoke-direct  {v3, v0, v1}, LX/0hs;-><init>(VLL)
+    00b2..00b4  const/4  v0, #0x4
+    00b4..00b8  new-array  v2, v0, [LX/0hq;
+    00b8..00be  invoke-static  {v2, v5}, LX/GAZ;->A1T(VLI)
+    00be..00c2  const-string  v1, "type"
+    00c2..00c6  const-string  v0, "get"
+    00c6..00cc  invoke-static  {v1, v0, v2, v6}, LX/1xl;->A1U(VLLLI)
+    00cc..00d0  const-string  v0, "id"
+    00d0..00d6  invoke-static  {v0, v7, v2}, LX/Ayk;->A1J(VLLL)
+    00d6..00da  const-string  v1, "xmlns"
+    00da..00de  const-string  v0, "abt"
+    00de..00e4  invoke-static  {v1, v0, v2}, LX/Deq;->A1T(VLLL)
+    00e4..00ea  invoke-static  {v3, v2}, LX/GAW;->A0l(LLL)
+    00ea..00ec  move-result-object  v6
+    00ec..00f2  invoke-static  {v4}, LX/8kT;->A12(LL)
+    00f2..00f4  move-result-object  v4
+    00f4..00f6  const/4  v0, #0x1
+    00f6..00fa  new-instance  v5, LX/IWy;
+    00fa..0100  invoke-direct  {v5, v11, v0}, LX/IWy;-><init>(VLI)
+    0100..0104  const-wide/16  v9, #0x7d00
+    0104..0108  const/16  v8, #0xdc
+    0108..010e  invoke-virtual/range  {v4..v10}, LX/0h8;->A0T(ZLLLIJ)
+    010e..0110  return-void
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0017..0020 -> 0020
+    # catch <all> code_units 0021..0022 -> 0020
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/IWy;' --method C8f --exceptions
+
+# class: LX/IWy;
+# extends: Ljava/lang/Object;
+
+.method public C8f(VLL)  # .registers 29
+    0000..0004  move-object/from16  v10, v26
+    0004..0008  iget  v1, v10, LX/IWy;->$t:I
+    0008..000a  const/4  v0, #0x1
+    000a..000e  move-object/from16  v4, v27
+    000e..0014  packed-switch  v1, payload@0x798, cases=[0:@0x75a, 1:@0x36], default@0x14
+    0014..001a  invoke-static  {v4, v0}, LX/00h;->A0A(VLI)
+    001a..001e  iget-object  v2, v10, LX/IWy;->A00:Ljava/lang/Object;
+    001e..0022  check-cast  v2, LX/J41;
+    0022..0024  const/4  v1, #0x0
+    0024..0028  new-instance  v0, LX/Hjk;
+    0028..002e  invoke-direct  {v0, v1, v4}, LX/Hjk;-><init>(VLL)
+    002e..0034  invoke-interface  {v2, v0}, LX/J41;->C8s(VL)
+    0034..0036  return-void
+    0036..003c  invoke-static  {v4, v0}, LX/00h;->A0A(VLI)
+    003c..0040  const-string  v0, "props"
+    0040..0046  invoke-virtual  {v4, v0}, LX/0hs;->A0F(LL)
+    0046..0048  move-result-object  v3
+    0048..004c  const-string  v0, "erid"
+    004c..0052  invoke-virtual  {v4, v0}, LX/0hs;->A0F(LL)
+    0052..0054  move-result-object  v24
+    0054..0058  if-eqz  v3, +0x313
+    0058..005c  const-string  v0, "AbPropProtocolHelper/onSuccess, onReceiveABProps..."
+    005c..0062  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+    0062..0066  iget-object  v9, v10, LX/IWy;->A00:Ljava/lang/Object;
+    0066..006a  check-cast  v9, LX/Hgb;
+    006a..006e  const-string  v2, "config_code"
+    006e..0072  const/16  v1, #0x5a3
+    0072..0076  iget-object  v0, v9, LX/Hgb;->A05:LX/05B;
+    0076..007c  invoke-static  {v0, v1}, LX/3cB;->A0s(LLI)
+    007c..007e  move-result-object  v23
+    007e..0082  const-string  v0, "ab_key"
+    0082..0084  const/4  v13, #0x0
+    0084..008a  invoke-virtual  {v3, v0, v13}, LX/0hs;->A0M(LLL)
+    008a..008c  move-result-object  v22
+    008c..0090  const-string  v0, "hash"
+    0090..0096  invoke-virtual  {v3, v0, v13}, LX/0hs;->A0M(LLL)
+    0096..0098  move-result-object  v8
+    0098..009c  const-string  v0, "refresh"
+    009c..00a2  invoke-virtual  {v3, v0, v13}, LX/0hs;->A0M(LLL)
+    00a2..00a4  move-result-object  v4
+    00a4..00aa  const-wide/32  v0, #0x15180
+    00aa..00b0  invoke-static  {v4, v0, v1}, LX/0Gv;->A01(JLJ)
+    00b0..00b2  move-result-wide  v4
+    00b2..00b6  const-wide/16  v0, #0x3e8
+    00b6..00b8  mul-long/2addr  v4, v0
+    00b8..00bc  const-string  v1, "refresh_id"
+    00bc..00be  const/4  v0, #0x0
+    00be..00c4  invoke-virtual  {v3, v1, v0}, LX/0hs;->A05(ILI)
+    00c4..00c6  move-result  v21
+    00c6..00ca  const-string  v1, "delta_update"
+    00ca..00ce  const-string  v0, "false"
+    00ce..00d4  invoke-virtual  {v3, v1, v0}, LX/0hs;->A0M(LLL)
+    00d4..00d6  move-result-object  v0
+    00d6..00dc  invoke-static  {v0}, Ljava/lang/Boolean;->parseBoolean(ZL)
+    00dc..00de  move-result  v20
+    00de..00e2  new-instance  v12, Landroid/util/SparseArray;
+    00e2..00e8  invoke-direct  {v12}, Landroid/util/SparseArray;-><init>(V)
+    00e8..00ec  const-string  v0, "prop"
+    00ec..00f2  invoke-virtual  {v3, v0}, LX/0hs;->A0N(LL)
+    00f2..00f4  move-result-object  v0
+    00f4..00fa  invoke-static  {v0}, LX/00h;->A06(VL)
+    00fa..00fe  new-instance  v7, Landroid/util/SparseIntArray;
+    00fe..0104  invoke-direct  {v7}, Landroid/util/SparseIntArray;-><init>(V)
+    0104..010a  invoke-interface  {v0}, Ljava/util/List;->iterator(L)
+    010a..010c  move-result-object  v11
+    010c..0112  invoke-interface  {v11}, Ljava/util/Iterator;->hasNext(Z)
+    0112..0114  move-result  v0
+    0114..0118  if-eqz  v0, +0x3c
+    0118..011e  invoke-interface  {v11}, Ljava/util/Iterator;->next(L)
+    011e..0120  move-result-object  v6
+    0120..0124  check-cast  v6, LX/0hs;
+    0124..012a  invoke-virtual  {v6, v2, v13}, LX/0hs;->A0M(LLL)
+    012a..012c  move-result-object  v0
+    012c..0130  if-eqz  v0, +0x20
+    0130..0136  invoke-virtual  {v0}, Ljava/lang/String;->length(I)
+    0136..0138  move-result  v0
+    0138..013c  if-eqz  v0, +0x1a
+    013c..0142  invoke-virtual  {v6, v2}, LX/0hs;->A04(IL)
+    0142..0144  move-result  v3
+    0144..0148  const-string  v0, "config_value"
+    0148..014e  invoke-virtual  {v6, v0}, LX/0hs;->A0L(LL)
+    014e..0150  move-result-object  v1
+    0150..0154  const-string  v0, "config_expo_key"
+    0154..015a  invoke-virtual  {v6, v0, v13}, LX/0hs;->A0M(LLL)
+    015a..015c  move-result-object  v0
+    015c..0162  invoke-static  {v1, v0}, Landroid/util/Pair;->create(LLL)
+    0162..0164  move-result-object  v0
+    0164..016a  invoke-virtual  {v12, v3, v0}, Landroid/util/SparseArray;->append(VIL)
+    016a..016c  goto  -0x2f
+    016c..0170  const-string  v0, "event_code"
+    0170..0176  invoke-virtual  {v6, v0}, LX/0hs;->A04(IL)
+    0176..0178  move-result  v1
+    0178..017c  const-string  v0, "sampling_weight"
+    017c..0182  invoke-virtual  {v6, v0}, LX/0hs;->A04(IL)
+    0182..0184  move-result  v0
+    0184..018a  invoke-virtual  {v7, v1, v0}, Landroid/util/SparseIntArray;->append(VII)
+    018a..018c  goto  -0x3f
+    018c..0190  iget-object  v0, v9, LX/Hgb;->A00:LX/05B;
+    0190..0196  invoke-static  {v0}, LX/05B;->A02(LL)
+    0196..0198  move-result-object  v6
+    0198..019c  check-cast  v6, LX/0Ci;
+    019c..01a0  iget-object  v0, v9, LX/Hgb;->A04:LX/05B;
+    01a0..01a6  invoke-static  {v0}, LX/6an;->A0N(LL)
+    01a6..01a8  move-result-object  v19
+    01a8..01aa  monitor-enter
+    01aa..01ac  const/4  v3, #0x0
+    01ac..01b0  move-object/from16  v0, v19
+    01b0..01b6  invoke-static  {v0, v3}, LX/00h;->A0A(VLI)
+    01b6..01ba  iget-object  v0, v6, LX/0Ci;->A00:Landroid/content/SharedPreferences;
+    01ba..01be  move-object/from16  v25, v0
+    01be..01c4  invoke-interface/range  {v25..v25}, Landroid/content/SharedPreferences;->edit(L)
+    01c4..01c6  move-result-object  v2
+    01c6..01ca  if-eqz  v8, +0xa9
+    01ca..01d0  invoke-virtual  {v8}, Ljava/lang/String;->length(I)
+    01d0..01d2  move-result  v0
+    01d2..01d6  if-eqz  v0, +0xa3
+    01d6..01da  iget-object  v1, v6, LX/0Ci;->A0A:LX/00R;
+    01da..01de  const-string  v0, "ab-props-backup"
+    01de..01e4  invoke-static  {v1, v0}, LX/00h;->A02(LLL)
+    01e4..01e6  move-result-object  v11
+    01e6..01ec  invoke-interface  {v11}, Landroid/content/SharedPreferences;->edit(L)
+    01ec..01ee  move-result-object  v0
+    01ee..01f4  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->clear(L)
+    01f4..01fa  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply(V)
+    01fa..0200  invoke-interface/range  {v25..v25}, Landroid/content/SharedPreferences;->getAll(L)
+    0200..0202  move-result-object  v1
+    0202..0208  invoke-interface  {v1}, Ljava/util/Map;->isEmpty(Z)
+    0208..020a  move-result  v0
+    020a..020e  if-nez  v0, +0x87
+    020e..0214  invoke-interface  {v11}, Landroid/content/SharedPreferences;->edit(L)
+    0214..0216  move-result-object  v14
+    0216..021c  invoke-static  {v1}, LX/1xi;->A1A(LL)
+    021c..021e  move-result-object  v16
+    021e..0224  invoke-interface/range  {v16..v16}, Ljava/util/Iterator;->hasNext(Z)
+    0224..0226  move-result  v0
+    0226..022a  if-eqz  v0, +0x76
+    022a..0230  invoke-static/range  {v16..v16}, LX/1xk;->A0y(LL)
+    0230..0232  move-result-object  v0
+    0232..0238  invoke-static  {v0}, LX/1xk;->A0t(LL)
+    0238..023a  move-result-object  v11
+    023a..0240  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue(L)
+    0240..0242  move-result-object  v15
+    0242..0246  if-eqz  v15, -0x12
+    0246..024c  invoke-virtual  {v15}, Ljava/lang/Object;->getClass(L)
+    024c..024e  move-result-object  v1
+    024e..0252  const-class  v0, Ljava/lang/Boolean;
+    0252..0258  invoke-virtual  {v1, v0}, Ljava/lang/Object;->equals(ZL)
+    0258..025a  move-result  v0
+    025a..025e  if-eqz  v0, +0xa
+    025e..0264  invoke-static  {v15}, LX/1xf;->A1Z(ZL)
+    0264..0266  move-result  v0
+    0266..026c  invoke-interface  {v14, v11, v0}, Landroid/content/SharedPreferences$Editor;->putBoolean(LLZ)
+    026c..026e  goto  -0x27
+    026e..0272  const-class  v0, Ljava/lang/Float;
+    0272..0278  invoke-virtual  {v1, v0}, Ljava/lang/Object;->equals(ZL)
+    0278..027a  move-result  v0
+    027a..027e  if-eqz  v0, +0xc
+    027e..0282  check-cast  v15, Ljava/lang/Float;
+    0282..0288  invoke-virtual  {v15}, Ljava/lang/Number;->floatValue(F)
+    0288..028a  move-result  v0
+    028a..0290  invoke-interface  {v14, v11, v0}, Landroid/content/SharedPreferences$Editor;->putFloat(LLF)
+    0290..0292  goto  -0x39
+    0292..0296  const-class  v0, Ljava/lang/Integer;
+    0296..029c  invoke-virtual  {v1, v0}, Ljava/lang/Object;->equals(ZL)
+    029c..029e  move-result  v0
+    029e..02a2  if-eqz  v0, +0xc
+    02a2..02a6  check-cast  v15, Ljava/lang/Integer;
+    02a6..02ac  invoke-virtual  {v15}, Ljava/lang/Number;->intValue(I)
+    02ac..02ae  move-result  v0
+    02ae..02b4  invoke-interface  {v14, v11, v0}, Landroid/content/SharedPreferences$Editor;->putInt(LLI)
+    02b4..02b6  goto  -0x4b
+    02b6..02ba  const-class  v0, Ljava/lang/Long;
+    02ba..02c0  invoke-virtual  {v1, v0}, Ljava/lang/Object;->equals(ZL)
+    02c0..02c2  move-result  v0
+    02c2..02c6  if-eqz  v0, +0xc
+    02c6..02ca  check-cast  v15, Ljava/lang/Long;
+    02ca..02d0  invoke-virtual  {v15}, Ljava/lang/Number;->longValue(J)
+    02d0..02d2  move-result-wide  v0
+    02d2..02d8  invoke-interface  {v14, v11, v0, v1}, Landroid/content/SharedPreferences$Editor;->putLong(LLJ)
+    02d8..02da  goto  -0x5d
+    02da..02de  const-class  v0, Ljava/lang/String;
+    02de..02e4  invoke-virtual  {v1, v0}, Ljava/lang/Object;->equals(ZL)
+    02e4..02e6  move-result  v0
+    02e6..02ea  if-eqz  v0, +0x8
+    02ea..02ee  check-cast  v15, Ljava/lang/String;
+    02ee..02f4  invoke-interface  {v14, v11, v15}, Landroid/content/SharedPreferences$Editor;->putString(LLL)
+    02f4..02f6  goto  -0x6b
+    02f6..02fa  const-class  v0, Ljava/util/Set;
+    02fa..0300  invoke-virtual  {v0, v1}, Ljava/lang/Class;->isAssignableFrom(ZL)
+    0300..0302  move-result  v0
+    0302..0306  if-eqz  v0, -0x72
+    0306..030a  check-cast  v15, Ljava/util/Set;
+    030a..0310  invoke-interface  {v14, v11, v15}, Landroid/content/SharedPreferences$Editor;->putStringSet(LLL)
+    0310..0312  goto  -0x79
+    0312..0318  invoke-interface  {v14}, Landroid/content/SharedPreferences$Editor;->commit(Z)
+    0318..031c  iget-object  v11, v6, LX/0Ci;->A08:LX/00D;
+    031c..0322  invoke-virtual  {v11}, LX/00D;->A0z(Z)
+    0322..0324  move-result  v18
+    0324..0328  if-nez  v20, +0xe
+    0328..032e  const-wide/32  v0, #0x927c0
+    032e..0334  invoke-static  {v4, v5, v0, v1}, Ljava/lang/Math;->max(JJJ)
+    0334..0336  move-result-wide  v4
+    0336..033a  const-string  v0, "ab_props:sys:refresh"
+    033a..0340  invoke-interface  {v2, v0, v4, v5}, Landroid/content/SharedPreferences$Editor;->putLong(LLJ)
+    0340..0344  if-eqz  v8, +0x8
+    0344..034a  invoke-virtual  {v8}, Ljava/lang/String;->length(I)
+    034a..034c  move-result  v0
+    034c..0350  if-nez  v0, +0x8
+    0350..0354  if-nez  v20, +0x6
+    0354..0358  const/16  v16, #0x0
+    0358..035c  goto/16  +0xb5
+    035c..0362  invoke-static  {}, LX/1xf;->A1H(L)
+    0362..0364  move-result-object  v17
+    0364..0368  const-string  v14, "ab_props:sys:last_exposure_keys"
+    0368..036c  move-object/from16  v0, v25
+    036c..0372  invoke-interface  {v0, v14, v13}, Landroid/content/SharedPreferences;->getStringSet(LLL)
+    0372..0374  move-result-object  v1
+    0374..037a  invoke-interface/range  {v25..v25}, Landroid/content/SharedPreferences;->getAll(L)
+    037a..037e  if-nez  v20, +0xd
+    037e..0384  invoke-interface  {v2}, Landroid/content/SharedPreferences$Editor;->clear(L)
+    0384..0388  const-string  v0, "ab_props:sys:refresh"
+    0388..038e  invoke-interface  {v2, v0, v4, v5}, Landroid/content/SharedPreferences$Editor;->putLong(LLJ)
+    038e..0394  invoke-interface  {v2, v14, v1}, Landroid/content/SharedPreferences$Editor;->putStringSet(LLL)
+    0394..0398  iget-object  v0, v6, LX/0Ci;->A01:LX/05B;
+    0398..039e  invoke-static  {v0}, LX/GAX;->A0Z(LL)
+    039e..03a0  move-result-object  v0
+    03a0..03a4  iput-boolean  v3, v0, LX/GFB;->A07:Z
+    03a4..03a8  if-nez  v18, +0x10
+    03a8..03ac  iget-object  v5, v6, LX/0Ci;->A07:LX/084;
+    03ac..03b0  sget-object  v4, LX/0MN;->A02:LX/0MN;
+    03b0..03b4  const/16  v1, #0xc
+    03b4..03b8  new-instance  v0, LX/IUu;
+    03b8..03be  invoke-direct  {v0, v5, v1}, LX/IUu;-><init>(VLI)
+    03be..03c4  invoke-static  {v5, v4, v0}, LX/078;->A00(VLLL)
+    03c4..03ca  invoke-static  {v2}, LX/00h;->A09(VL)
+    03ca..03ce  const/16  v16, #0x1
+    03ce..03d2  xor-int/lit8  v15, v18, #0x1
+    03d2..03d8  invoke-virtual  {v12}, Landroid/util/SparseArray;->size(I)
+    03d8..03da  move-result  v13
+    03da..03dc  const/4  v5, #0x0
+    03dc..03e0  if-ge  v5, v13, +0x32
+    03e0..03e6  invoke-virtual  {v12, v5}, Landroid/util/SparseArray;->keyAt(II)
+    03e6..03e8  move-result  v1
+    03e8..03ee  invoke-virtual  {v12, v5}, Landroid/util/SparseArray;->valueAt(LI)
+    03ee..03f0  move-result-object  v4
+    03f0..03f4  check-cast  v4, Landroid/util/Pair;
+    03f4..03f8  iget-object  v0, v4, Landroid/util/Pair;->first:Ljava/lang/Object;
+    03f8..03fc  check-cast  v0, Ljava/lang/String;
+    03fc..0400  iget-object  v4, v4, Landroid/util/Pair;->second:Ljava/lang/Object;
+    0400..0404  check-cast  v4, Ljava/lang/String;
+    0404..040a  invoke-static  {v2, v6, v0, v1}, LX/0Ci;->A00(ZLLLI)
+    040a..040c  move-result  v0
+    040c..0410  if-eqz  v0, +0x17
+    0410..0414  if-eqz  v4, +0x15
+    0414..041a  invoke-virtual  {v4}, Ljava/lang/String;->length(I)
+    041a..041c  move-result  v0
+    041c..0420  if-eqz  v0, +0xf
+    0420..0426  invoke-static  {v1}, LX/1xm;->A0v(LI)
+    0426..0428  move-result-object  v1
+    0428..042c  const-string  v0, "_expo_key"
+    042c..0432  invoke-static  {v0, v1}, LX/000;->A05(LLL)
+    0432..0434  move-result-object  v0
+    0434..043a  invoke-interface  {v2, v0, v4}, Landroid/content/SharedPreferences$Editor;->putString(LLL)
+    043a..043e  add-int/lit8  v5, v5, #0x1
+    043e..0440  goto  -0x31
+    0440..0444  if-nez  v20, +0x35
+    0444..044a  invoke-virtual  {v11}, LX/00D;->A0g(L)
+    044a..044c  move-result-object  v14
+    044c..0450  new-instance  v13, LX/0Du;
+    0450..0456  invoke-direct  {v13, v3}, LX/0Du;-><init>(VI)
+    0456..045c  invoke-virtual  {v12}, Landroid/util/SparseArray;->size(I)
+    045c..045e  move-result  v5
+    045e..0460  const/4  v4, #0x0
+    0460..0464  if-ge  v4, v5, +0x22
+    0464..046a  invoke-virtual  {v12, v4}, Landroid/util/SparseArray;->valueAt(LI)
+    046a..046c  move-result-object  v0
+    046c..0470  check-cast  v0, Landroid/util/Pair;
+    0470..0474  if-eqz  v0, +0x17
+    0474..0478  iget-object  v1, v0, Landroid/util/Pair;->second:Ljava/lang/Object;
+    0478..047c  check-cast  v1, Ljava/lang/String;
+    047c..0480  if-eqz  v1, +0x11
+    0480..0486  invoke-virtual  {v1}, Ljava/lang/String;->length(I)
+    0486..0488  move-result  v0
+    0488..048c  if-eqz  v0, +0xb
+    048c..0492  invoke-virtual  {v14, v1}, LX/0Du;->contains(ZL)
+    0492..0494  move-result  v0
+    0494..0498  if-eqz  v0, +0x5
+    0498..049e  invoke-virtual  {v13, v1}, LX/0Du;->add(ZL)
+    049e..04a2  add-int/lit8  v4, v4, #0x1
+    04a2..04a4  goto  -0x21
+    04a4..04aa  invoke-virtual  {v11, v2, v13, v3, v15}, LX/00D;->A0w(VLLZZ)
+    04aa..04b0  invoke-virtual  {v11}, LX/00D;->A0o(V)
+    04b0..04b6  invoke-interface/range  {v17..v17}, Ljava/util/Map;->isEmpty(Z)
+    04b6..04b8  move-result  v0
+    04b8..04bc  if-nez  v0, +0x5
+    04bc..04c2  invoke-virtual  {v6, v2}, LX/0Ci;->A07(VL)
+    04c2..04c6  const-string  v1, "ab_props:sys:last_version"
+    04c6..04ca  move/from16  v0, v21
+    04ca..04d0  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences$Editor;->putInt(LLI)
+    04d0..04d4  if-nez  v20, +0x3f
+    04d4..04d8  const-string  v1, "ab_props:sys:config_key"
+    04d8..04dc  move-object/from16  v0, v22
+    04dc..04e2  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences$Editor;->putString(LLL)
+    04e2..04e8  invoke-virtual  {v11}, LX/00D;->A0z(Z)
+    04e8..04ea  move-result  v0
+    04ea..04ee  if-nez  v0, +0x15
+    04ee..04f2  iget-object  v5, v6, LX/0Ci;->A09:LX/0BQ;
+    04f2..04f8  invoke-static  {v5, v3}, LX/00h;->A0A(VLI)
+    04f8..04fc  const/16  v4, #0x1179
+    04fc..0500  move-object/from16  v0, v22
+    0500..0506  invoke-interface  {v5, v0, v4, v3}, LX/0BQ;->CQz(VLII)
+    0506..0508  const/4  v1, #0x1
+    0508..050e  invoke-interface  {v5, v0, v4, v1}, LX/0BQ;->CQz(VLII)
+    050e..0514  invoke-static/range  {v22..v22}, LX/Hyk;->A00(VL)
+    0514..0518  if-eqz  v8, +0xd
+    0518..051e  invoke-virtual  {v8}, Ljava/lang/String;->length(I)
+    051e..0520  move-result  v0
+    0520..0524  if-eqz  v0, +0x7
+    0524..0528  const-string  v0, "ab_props:sys:config_hash"
+    0528..052e  invoke-interface  {v2, v0, v8}, Landroid/content/SharedPreferences$Editor;->putString(LLL)
+    052e..0532  const-string  v4, "ab_props:sys:last_refresh_time"
+    0532..0538  invoke-static/range  {v19..v19}, LX/08B;->A00(JL)
+    0538..053a  move-result-wide  v0
+    053a..0540  invoke-interface  {v2, v4, v0, v1}, Landroid/content/SharedPreferences$Editor;->putLong(LLJ)
+    0540..0544  const-string  v1, "ab_props:sys:fetch_app_version"
+    0544..0548  const-string  v0, "2.26.37.71"
+    0548..054e  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences$Editor;->putString(LLL)
+    054e..0554  invoke-interface  {v2}, Landroid/content/SharedPreferences$Editor;->apply(V)
+    0554..0558  const-string  v0, "ABPropsManager/onABProps/ABPropsUpdateSaved"
+    0558..055e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+    055e..0562  if-eqz  v16, +0x1c
+    0562..0566  if-nez  v18, +0x1a
+    0566..056a  iget-object  v4, v6, LX/0Ci;->A07:LX/084;
+    056a..056e  sget-object  v2, LX/0MN;->A02:LX/0MN;
+    056e..0572  const/16  v1, #0xb
+    0572..0576  new-instance  v0, LX/IUu;
+    0576..057c  invoke-direct  {v0, v4, v1}, LX/IUu;-><init>(VLI)
+    057c..0582  invoke-static  {v4, v2, v0}, LX/078;->A00(VLLL)
+    0582..0586  const/16  v1, #0xa
+    0586..058a  new-instance  v0, LX/IUu;
+    058a..0590  invoke-direct  {v0, v4, v1}, LX/IUu;-><init>(VLI)
+    0590..0596  invoke-static  {v4, v2, v0}, LX/078;->A00(VLLL)
+    0596..059c  invoke-virtual  {v6, v3}, LX/0Ci;->A06(VI)
+    059c..05a2  invoke-virtual  {v6, v3}, LX/0Ci;->A05(VI)
+    05a2..05a8  invoke-static  {}, LX/6aj;->A12(L)
+    05a8..05aa  move-result-object  v1
+    05aa..05ae  const-string  v0, "crash_counter"
+    05ae..05b4  invoke-static  {v1, v0}, LX/6aj;->A13(LLL)
+    05b4..05b6  move-result-object  v0
+    05b6..05bc  invoke-static  {v0}, LX/6ao;->A1K(VL)
+    05bc..05be  monitor-exit
+    05be..05c2  if-eqz  v8, +0x5e
+    05c2..05c8  invoke-virtual  {v8}, Ljava/lang/String;->length(I)
+    05c8..05ca  move-result  v0
+    05ca..05ce  if-eqz  v0, +0x58
+    05ce..05d2  iget-object  v0, v9, LX/Hgb;->A02:LX/05B;
+    05d2..05d8  invoke-static  {v0}, LX/05B;->A02(LL)
+    05d8..05da  move-result-object  v8
+    05da..05de  check-cast  v8, LX/0BP;
+    05de..05e4  invoke-static  {v8}, LX/0BP;->A00(LL)
+    05e4..05e6  move-result-object  v0
+    05e6..05ea  if-eqz  v0, +0x3b
+    05ea..05f0  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit(L)
+    05f0..05f2  move-result-object  v6
+    05f2..05f8  invoke-interface  {v6}, Landroid/content/SharedPreferences$Editor;->clear(L)
+    05f8..05fe  invoke-virtual  {v7}, Landroid/util/SparseIntArray;->size(I)
+    05fe..0600  move-result  v5
+    0600..0602  const/4  v4, #0x0
+    0602..0606  if-ge  v3, v5, +0x28
+    0606..060c  invoke-virtual  {v7, v3}, Landroid/util/SparseIntArray;->keyAt(II)
+    060c..060e  move-result  v1
+    060e..0614  invoke-virtual  {v7, v3}, Landroid/util/SparseIntArray;->valueAt(II)
+    0614..0616  move-result  v2
+    0616..061c  invoke-static  {v1}, Ljava/lang/String;->valueOf(LI)
+    061c..061e  move-result-object  v0
+    061e..0624  invoke-interface  {v6, v0, v2}, Landroid/content/SharedPreferences$Editor;->putInt(LLI)
+    0624..0628  const/16  v0, #0x446
+    0628..062c  if-ne  v1, v0, +0x12
+    062c..0630  iget-object  v0, v8, LX/0BP;->A02:LX/05B;
+    0630..0636  invoke-static  {v0}, LX/GAY;->A0H(LL)
+    0636..0638  move-result-object  v0
+    0638..063e  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit(L)
+    063e..0640  move-result-object  v1
+    0640..0644  const-string  v0, "app_launch_event_sampling_weight"
+    0644..064a  invoke-static  {v1, v0, v2}, LX/1xg;->A1U(VLLI)
+    064a..064c  const/4  v4, #0x1
+    064c..0650  add-int/lit8  v3, v3, #0x1
+    0650..0652  goto  -0x27
+    0652..0658  invoke-interface  {v6}, Landroid/content/SharedPreferences$Editor;->apply(V)
+    0658..065c  if-nez  v4, +0x11
+    065c..0660  iget-object  v0, v8, LX/0BP;->A02:LX/05B;
+    0660..0666  invoke-static  {v0}, LX/GAY;->A0H(LL)
+    0666..0668  move-result-object  v0
+    0668..066e  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit(L)
+    066e..0670  move-result-object  v1
+    0670..0674  const-string  v0, "app_launch_event_sampling_weight"
+    0674..067a  invoke-static  {v1, v0}, LX/1xl;->A1G(VLL)
+    067a..067e  if-eqz  v24, -0x323
+    067e..0682  iget-object  v1, v10, LX/IWy;->A00:Ljava/lang/Object;
+    0682..0686  check-cast  v1, LX/Hgb;
+    0686..068a  move-object/from16  v0, v24
+    068a..068e  iget-object  v0, v0, LX/0hs;->A01:[B
+    068e..0694  invoke-static  {v0}, LX/Ayj;->A18(LL)
+    0694..0696  move-result-object  v4
+    0696..069a  iget-object  v0, v1, LX/Hgb;->A01:LX/05B;
+    069a..06a0  invoke-static  {v0}, LX/05B;->A02(LL)
+    06a0..06a2  move-result-object  v5
+    06a2..06a6  check-cast  v5, LX/HZt;
+    06a6..06ac  invoke-static  {v4}, LX/1xm;->A1J(VL)
+    06ac..06b0  iget-object  v0, v5, LX/HZt;->A01:Lcom/google/common/base/Optional;
+    06b0..06b6  invoke-virtual  {v0}, Lcom/google/common/base/Optional;->A01(L)
+    06b6..06b8  move-result-object  v1
+    06b8..06bc  check-cast  v1, LX/IY9;
+    06bc..06c0  if-eqz  v1, +0xd
+    06c0..06c4  iget-object  v0, v1, LX/IY9;->A00:LX/05B;
+    06c4..06ca  invoke-static  {v0}, LX/05B;->A02(LL)
+    06ca..06cc  move-result-object  v0
+    06cc..06d0  check-cast  v0, Lcom/whatsapp/logout/core/LogoutManager;
+    06d0..06d6  invoke-virtual  {v0, v1}, Lcom/whatsapp/logout/core/LogoutManager;->A05(VL)
+    06d6..06da  iget-object  v0, v5, LX/HZt;->A00:LX/05B;
+    06da..06de  iget-object  v3, v0, LX/05B;->A00:LX/00s;
+    06de..06e4  invoke-static  {v3}, LX/1xf;->A0r(LL)
+    06e4..06e6  move-result-object  v0
+    06e6..06ec  invoke-virtual  {v0}, LX/08l;->A0c(L)
+    06ec..06ee  move-result-object  v2
+    06ee..06f2  iget-object  v1, v5, LX/HZt;->A02:LX/00D;
+    06f2..06f6  const/16  v0, #0xe50
+    06f6..06fc  invoke-virtual  {v1, v0}, LX/00D;->A10(ZI)
+    06fc..06fe  move-result  v0
+    06fe..0702  if-eqz  v0, +0x10
+    0702..0708  invoke-virtual  {v2}, Ljava/lang/String;->length(I)
+    0708..070a  move-result  v0
+    070a..070e  if-eqz  v0, -0x36b
+    070e..0714  invoke-static  {v3}, LX/1xf;->A0r(LL)
+    0714..0716  move-result-object  v0
+    0716..071c  invoke-virtual  {v0}, LX/08l;->A0n(V)
+    071c..071e  return-void
+    071e..0722  const/16  v0, #0x17c4
+    0722..0728  invoke-virtual  {v1, v0}, LX/00D;->A10(ZI)
+    0728..072a  move-result  v0
+    072a..072e  if-eqz  v0, -0x37b
+    072e..0734  invoke-static  {v2, v4}, LX/00h;->areEqual(ZLL)
+    0734..0736  move-result  v0
+    0736..073a  if-nez  v0, -0x381
+    073a..0740  invoke-static  {v3}, LX/1xf;->A0r(LL)
+    0740..0742  move-result-object  v0
+    0742..0746  iget-object  v0, v0, LX/08l;->A0U:LX/00s;
+    0746..074c  invoke-static  {v0}, LX/1xj;->A06(LL)
+    074c..074e  move-result-object  v1
+    074e..0752  const-string  v0, "encrypted_rid"
+    0752..0758  invoke-static  {v1, v0, v4}, LX/1xh;->A1T(VLLL)
+    0758..075a  return-void
+    075a..0760  invoke-static  {v4, v0}, LX/00h;->A0A(VLI)
+    0760..0764  iget-object  v0, v10, LX/IWy;->A00:Ljava/lang/Object;
+    0764..0768  check-cast  v0, LX/AzY;
+    0768..076e  invoke-virtual  {v0, v4}, LX/AzY;->BjN(VL)
+    076e..0770  return-void
+    0770..0772  move-exception  v0
+    0772..0774  throw  v0
+    0774..0776  move-exception  v0
+    0776..0778  throw  v0
+    0778..077a  move-exception  v0
+    077a..077c  monitor-exit
+    077c..077e  throw  v0
+    077e..0780  move-exception  v3
+    0780..0786  invoke-static/range  {v23..v23}, LX/1xi;->A0h(LL)
+    0786..0788  move-result-object  v2
+    0788..078c  const-string  v1, "failed to parse response"
+    078c..0790  const-string  v0, "AbPropProtocolHelper/onReceiveABProps"
+    0790..0796  invoke-virtual  {v2, v0, v1, v3}, LX/0AH;->A0e(VLLL)
+    0796..0798  throw  v3
+    0798..07a8  packed-switch-payload  size=2
+    # exception table: 13 try range(s)
+    # catch LX/B7l; code_units 003f..00d5 -> 03bf
+    # catch <all> code_units 00d5..01e9 -> 03bc
+    # catch <all> code_units 01e9..0222 -> 03ba
+    # catch <all> code_units 0222..0255 -> 03b8
+    # catch <all> code_units 0255..0258 -> 03ba
+    # catch <all> code_units 0258..026a -> 03bc
+    # catch <all> code_units 026a..0297 -> 03ba
+    # catch <all> code_units 0297..02de -> 03bc
+    # catch LX/B7l; code_units 02de..033f -> 03bf
+    # catch <all> code_units 03b9..03ba -> 03ba
+    # catch <all> code_units 03bb..03bc -> 03bc
+    # catch <all> code_units 03bd..03be -> 03bc
+    # catch LX/B7l; code_units 03be..03bf -> 03bf
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/0Ci;' --exceptions
+
+# class: LX/0Ci;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 3
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>(V)
+    0006..000a  const/16  v0, #0x9c
+    000a..0010  invoke-static  {v0}, LX/00C;->A02(LI)
+    0010..0012  move-result-object  v0
+    0012..0016  check-cast  v0, LX/08B;
+    0016..001a  iput-object  v0, v2, LX/0Ci;->A0B:LX/08B;
+    001a..001e  const/16  v0, #0x66
+    001e..0024  invoke-static  {v0}, LX/053;->A00(LI)
+    0024..0028  const/16  v0, #0x3c
+    0028..002e  invoke-static  {v0}, LX/00C;->A02(LI)
+    002e..0030  move-result-object  v0
+    0030..0034  check-cast  v0, LX/084;
+    0034..0038  iput-object  v0, v2, LX/0Ci;->A07:LX/084;
+    0038..003c  const/16  v0, #0x368
+    003c..0042  invoke-static  {v0}, LX/00C;->A02(LI)
+    0042..0044  move-result-object  v0
+    0044..0048  check-cast  v0, LX/0BQ;
+    0048..004c  iput-object  v0, v2, LX/0Ci;->A09:LX/0BQ;
+    004c..0050  const/16  v0, #0x369
+    0050..0056  invoke-static  {v0}, LX/00S;->A03(LI)
+    0056..0058  move-result-object  v0
+    0058..005c  check-cast  v0, LX/00D;
+    005c..0060  iput-object  v0, v2, LX/0Ci;->A08:LX/00D;
+    0060..0064  const/16  v0, #0x41
+    0064..006a  invoke-static  {v0}, LX/00C;->A02(LI)
+    006a..006c  move-result-object  v0
+    006c..0070  check-cast  v0, LX/0Ck;
+    0070..0074  iput-object  v0, v2, LX/0Ci;->A06:LX/0Ck;
+    0074..0078  const/16  v0, #0x42
+    0078..007e  invoke-static  {v0}, LX/053;->A00(LI)
+    007e..0080  move-result-object  v0
+    0080..0084  iput-object  v0, v2, LX/0Ci;->A03:LX/05B;
+    0084..0088  const/16  v0, #0x69
+    0088..008e  invoke-static  {v0}, LX/00C;->A02(LI)
+    008e..0090  move-result-object  v1
+    0090..0094  check-cast  v1, LX/00R;
+    0094..0098  iput-object  v1, v2, LX/0Ci;->A0A:LX/00R;
+    0098..009c  const-string  v0, "ab-props"
+    009c..00a2  invoke-virtual  {v1, v0}, LX/00R;->A04(LL)
+    00a2..00a4  move-result-object  v0
+    00a4..00aa  invoke-static  {v0}, LX/00h;->A06(VL)
+    00aa..00ae  iput-object  v0, v2, LX/0Ci;->A00:Landroid/content/SharedPreferences;
+    00ae..00b2  const/16  v0, #0x43
+    00b2..00b8  invoke-static  {v0}, LX/053;->A00(LI)
+    00b8..00ba  move-result-object  v0
+    00ba..00be  iput-object  v0, v2, LX/0Ci;->A01:LX/05B;
+    00be..00c4  const  v0, #0x81ed
+    00c4..00ca  invoke-static  {v0}, LX/053;->A00(LI)
+    00ca..00cc  move-result-object  v0
+    00cc..00d0  iput-object  v0, v2, LX/0Ci;->A02:LX/05B;
+    00d0..00d4  const/16  v0, #0x385
+    00d4..00da  invoke-static  {v0}, LX/00C;->A02(LI)
+    00da..00dc  move-result-object  v0
+    00dc..00e0  check-cast  v0, LX/0DL;
+    00e0..00e4  iput-object  v0, v2, LX/0Ci;->A0C:LX/0DL;
+    00e4..00e8  const/16  v0, #0x6e
+    00e8..00ee  invoke-static  {v0}, LX/053;->A00(LI)
+    00ee..00f0  move-result-object  v0
+    00f0..00f4  iput-object  v0, v2, LX/0Ci;->A04:LX/05B;
+    00f4..00f6  const/4  v0, #0x5
+    00f6..00fc  invoke-static  {v0}, LX/053;->A00(LI)
+    00fc..00fe  move-result-object  v0
+    00fe..0102  iput-object  v0, v2, LX/0Ci;->A05:LX/05B;
+    0102..0104  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(ZLLLI)  # .registers 12
+    0000..0004  const-string  v3, "; value="
+    0004..0008  const-string  v2, "ABPropsManager/invalid format for config; configCode="
+    0008..000a  const/4  v7, #0x0
+    000a..000e  if-eqz  v10, +0x7a
+    000e..0014  invoke-static  {v11}, Ljava/lang/String;->valueOf(LI)
+    0014..0016  move-result-object  v1
+    0016..001a  iget-object  v6, v9, LX/0Ci;->A08:LX/00D;
+    001a..0020  invoke-virtual  {v6}, LX/00D;->A15(L)
+    0020..0022  move-result-object  v0
+    0022..0028  invoke-static  {v11}, Ljava/lang/Integer;->valueOf(LI)
+    0028..002a  move-result-object  v4
+    002a..0030  invoke-virtual  {v0, v4}, Lcom/google/common/collect/ImmutableMap;->containsKey(ZL)
+    0030..0032  move-result  v0
+    0032..0034  const/4  v5, #0x1
+    0034..0038  if-eqz  v0, +0xe
+    0038..003e  invoke-static  {v10}, Ljava/lang/Integer;->parseInt(IL)
+    003e..0040  move-result  v4
+    0040..0042  const/4  v0, #0x0
+    0042..0046  if-eqz  v4, +0x3
+    0046..0048  const/4  v0, #0x1
+    0048..004e  invoke-interface  {v8, v1, v0}, Landroid/content/SharedPreferences$Editor;->putBoolean(LLZ)
+    004e..0050  return  v5
+    0050..0056  invoke-virtual  {v6}, LX/00D;->A17(L)
+    0056..0058  move-result-object  v0
+    0058..005e  invoke-virtual  {v0, v4}, Lcom/google/common/collect/ImmutableMap;->containsKey(ZL)
+    005e..0060  move-result  v0
+    0060..0064  if-eqz  v0, +0xa
+    0064..006a  invoke-static  {v10}, Ljava/lang/Integer;->parseInt(IL)
+    006a..006c  move-result  v0
+    006c..0072  invoke-interface  {v8, v1, v0}, Landroid/content/SharedPreferences$Editor;->putInt(LLI)
+    0072..0074  return  v5
+    0074..007a  invoke-virtual  {v6}, LX/00D;->A16(L)
+    007a..007c  move-result-object  v0
+    007c..0082  invoke-virtual  {v0, v4}, Lcom/google/common/collect/ImmutableMap;->containsKey(ZL)
+    0082..0084  move-result  v0
+    0084..0088  if-eqz  v0, +0xa
+    0088..008e  invoke-static  {v10}, Ljava/lang/Float;->parseFloat(FL)
+    008e..0090  move-result  v0
+    0090..0096  invoke-interface  {v8, v1, v0}, Landroid/content/SharedPreferences$Editor;->putFloat(LLF)
+    0096..0098  return  v5
+    0098..009e  invoke-virtual  {v6}, LX/00D;->A19(L)
+    009e..00a0  move-result-object  v0
+    00a0..00a6  invoke-virtual  {v0, v4}, Lcom/google/common/collect/ImmutableMap;->containsKey(ZL)
+    00a6..00a8  move-result  v0
+    00a8..00ac  if-nez  v0, +0x11
+    00ac..00b2  invoke-virtual  {v6}, LX/00D;->A18(L)
+    00b2..00b4  move-result-object  v0
+    00b4..00ba  invoke-virtual  {v0, v4}, Lcom/google/common/collect/ImmutableMap;->containsKey(ZL)
+    00ba..00bc  move-result  v0
+    00bc..00c0  if-eqz  v0, +0x21
+    00c0..00c4  new-instance  v0, Lorg/json/JSONObject;
+    00c4..00ca  invoke-direct  {v0, v10}, Lorg/json/JSONObject;-><init>(VL)
+    00ca..00d0  invoke-interface  {v8, v1, v10}, Landroid/content/SharedPreferences$Editor;->putString(LLL)
+    00d0..00d2  return  v5
+    00d2..00d4  move-exception  v1
+    00d4..00d8  new-instance  v0, Ljava/lang/StringBuilder;
+    00d8..00de  invoke-direct  {v0, v2}, Ljava/lang/StringBuilder;-><init>(VL)
+    00de..00e4  invoke-virtual  {v0, v11}, Ljava/lang/StringBuilder;->append(LI)
+    00e4..00ea  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(LL)
+    00ea..00f0  invoke-virtual  {v0, v10}, Ljava/lang/StringBuilder;->append(LL)
+    00f0..00f6  invoke-virtual  {v0}, Ljava/lang/Object;->toString(L)
+    00f6..00f8  move-result-object  v0
+    00f8..00fe  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(VLL)
+    00fe..0100  return  v7
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/NumberFormatException; code_units 000b..0069 -> 0069
+    # catch Lorg/json/JSONException; code_units 000b..0069 -> 0069
+.end method
+
+.method public A01(J)  # .registers 5
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v3, v4, LX/0Ci;->A00:Landroid/content/SharedPreferences;
+    0006..000a  const-string  v2, "ab_props:sys:last_refresh_time"
+    000a..000e  const-wide/16  v0, #0x0
+    000e..0014  invoke-interface  {v3, v2, v0, v1}, Landroid/content/SharedPreferences;->getLong(JLJ)
+    0014..0016  move-result-wide  v0
+    0016..0018  monitor-exit
+    0018..001a  return-wide  v0
+    001a..001c  move-exception  v0
+    001c..001e  monitor-exit
+    001e..0020  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..000b -> 000d
+    # catch <all> code_units 000e..000f -> 000d
+.end method
+
+.method public A02(L)  # .registers 4
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v0, v3, LX/0Ci;->A08:LX/00D;
+    0006..000c  invoke-virtual  {v0}, LX/00D;->A0z(Z)
+    000c..000e  move-result  v0
+    000e..0012  if-eqz  v0, +0x1c
+    0012..0016  iget-object  v0, v3, LX/0Ci;->A02:LX/05B;
+    0016..001a  iget-object  v0, v0, LX/05B;->A00:LX/00s;
+    001a..0020  invoke-interface  {v0}, LX/00s;->get(L)
+    0020..0022  move-result-object  v0
+    0022..0026  check-cast  v0, LX/He8;
+    0026..002a  iget-object  v0, v0, LX/He8;->A00:LX/00l;
+    002a..0030  invoke-interface  {v0}, LX/00l;->getValue(L)
+    0030..0032  move-result-object  v2
+    0032..0036  check-cast  v2, Landroid/content/SharedPreferences;
+    0036..003a  const-string  v1, "mc_expo:sys:ab_key"
+    003a..003c  const/4  v0, #0x0
+    003c..0042  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences;->getString(LLL)
+    0042..0044  move-result-object  v0
+    0044..0046  goto  +0xa
+    0046..004a  iget-object  v2, v3, LX/0Ci;->A00:Landroid/content/SharedPreferences;
+    004a..004e  const-string  v1, "ab_props:sys:config_key"
+    004e..0050  const/4  v0, #0x0
+    0050..0056  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences;->getString(LLL)
+    0056..0058  move-result-object  v0
+    0058..005a  monitor-exit
+    005a..005c  return-object  v0
+    005c..005e  move-exception  v0
+    005e..0060  monitor-exit
+    0060..0062  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..002c -> 002e
+    # catch <all> code_units 002f..0030 -> 002e
+.end method
+
+.method public A03(L)  # .registers 5
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v1, v4, LX/0Ci;->A08:LX/00D;
+    0006..000c  invoke-virtual  {v1}, LX/00D;->A0z(Z)
+    000c..000e  move-result  v0
+    000e..0014  invoke-virtual  {v1, v0}, LX/00D;->A0l(LZ)
+    0014..0016  move-result-object  v3
+    0016..001a  const-string  v2, ","
+    001a..001c  const/4  v1, #0x0
+    001c..0020  const-string  v0, ""
+    0020..0026  invoke-static  {v2, v0, v0, v3, v1}, LX/0C6;->A11(LLLLLL)
+    0026..0028  move-result-object  v0
+    0028..002a  monitor-exit
+    002a..002c  return-object  v0
+    002c..002e  move-exception  v0
+    002e..0030  monitor-exit
+    0030..0032  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..0014 -> 0016
+    # catch <all> code_units 0017..0018 -> 0016
+.end method
+
+.method public A04(V)  # .registers 7
+    0000..0002  monitor-enter
+    0002..0006  new-instance  v5, Ljava/util/HashMap;
+    0006..000c  invoke-direct  {v5}, Ljava/util/HashMap;-><init>(V)
+    000c..0010  iget-object  v1, v6, LX/0Ci;->A06:LX/0Ck;
+    0010..0016  invoke-virtual  {v1}, LX/0Ck;->A1A(L)
+    0016..0018  move-result-object  v0
+    0018..001e  invoke-interface  {v0}, Landroid/content/SharedPreferences;->getAll(L)
+    001e..0020  move-result-object  v0
+    0020..0026  invoke-static  {v0}, LX/00h;->A06(VL)
+    0026..0028  const/4  v4, #0x0
+    0028..002e  invoke-virtual  {v1}, LX/0Ck;->A1A(L)
+    002e..0030  move-result-object  v0
+    0030..0036  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit(L)
+    0036..0038  move-result-object  v2
+    0038..003e  invoke-virtual  {v1}, LX/00D;->A0o(V)
+    003e..0044  invoke-virtual  {v1}, LX/0Ck;->A1A(L)
+    0044..0046  move-result-object  v0
+    0046..004c  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit(L)
+    004c..004e  move-result-object  v0
+    004e..0054  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->clear(L)
+    0054..0056  move-result-object  v0
+    0056..005c  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply(V)
+    005c..0060  iget-object  v3, v6, LX/0Ci;->A0C:LX/0DL;
+    0060..0066  invoke-virtual  {v3}, LX/0DL;->AqJ(L)
+    0066..0068  move-result-object  v0
+    0068..006e  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit(L)
+    006e..0070  move-result-object  v1
+    0070..0074  const-string  v0, "pref_pre_chatd_ab_hash"
+    0074..007a  invoke-interface  {v1, v0, v4}, Landroid/content/SharedPreferences$Editor;->putString(LLL)
+    007a..0080  invoke-interface  {v1}, Landroid/content/SharedPreferences$Editor;->apply(V)
+    0080..0086  invoke-virtual  {v3}, LX/0DL;->AqJ(L)
+    0086..0088  move-result-object  v0
+    0088..008e  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit(L)
+    008e..0090  move-result-object  v1
+    0090..0094  const-string  v0, "pref_pre_chatd_ab_key"
+    0094..009a  invoke-interface  {v1, v0, v4}, Landroid/content/SharedPreferences$Editor;->putString(LLL)
+    009a..00a0  invoke-interface  {v1}, Landroid/content/SharedPreferences$Editor;->apply(V)
+    00a0..00a6  invoke-virtual  {v5}, Ljava/util/AbstractMap;->isEmpty(Z)
+    00a6..00a8  move-result  v0
+    00a8..00ac  if-nez  v0, +0xb
+    00ac..00b2  invoke-static  {v2}, LX/00h;->A09(VL)
+    00b2..00b8  invoke-virtual  {v6, v2}, LX/0Ci;->A07(VL)
+    00b8..00be  invoke-interface  {v2}, Landroid/content/SharedPreferences$Editor;->apply(V)
+    00be..00c4  invoke-virtual  {v3}, LX/0DL;->AqJ(L)
+    00c4..00c6  move-result-object  v1
+    00c6..00ca  const-string  v2, "pref_is_blocking_prechatd_exposure"
+    00ca..00cc  const/4  v0, #0x0
+    00cc..00d2  invoke-interface  {v1, v2, v0}, Landroid/content/SharedPreferences;->getBoolean(ZLZ)
+    00d2..00d4  move-result  v0
+    00d4..00d8  if-eqz  v0, +0x11
+    00d8..00da  const/4  v1, #0x0
+    00da..00e0  invoke-virtual  {v3}, LX/0DL;->AqJ(L)
+    00e0..00e2  move-result-object  v0
+    00e2..00e8  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit(L)
+    00e8..00ea  move-result-object  v0
+    00ea..00f0  invoke-interface  {v0, v2, v1}, Landroid/content/SharedPreferences$Editor;->putBoolean(LLZ)
+    00f0..00f6  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply(V)
+    00f6..00f8  monitor-exit
+    00f8..00fa  return-void
+    00fa..00fc  move-exception  v0
+    00fc..00fe  monitor-exit
+    00fe..0100  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..007b -> 007d
+    # catch <all> code_units 007e..007f -> 007d
+.end method
+
+.method public A05(VI)  # .registers 4
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v0, v2, LX/0Ci;->A00:Landroid/content/SharedPreferences;
+    0006..000c  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit(L)
+    000c..000e  move-result-object  v1
+    000e..0012  const-string  v0, "ab_props:sys:fetch_attemp_count"
+    0012..0018  invoke-interface  {v1, v0, v3}, Landroid/content/SharedPreferences$Editor;->putInt(LLI)
+    0018..001e  invoke-interface  {v1}, Landroid/content/SharedPreferences$Editor;->apply(V)
+    001e..0020  monitor-exit
+    0020..0022  return-void
+    0022..0024  move-exception  v0
+    0024..0026  monitor-exit
+    0026..0028  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..000f -> 0011
+    # catch <all> code_units 0012..0013 -> 0011
+.end method
+
+.method public A06(VI)  # .registers 4
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v0, v2, LX/0Ci;->A00:Landroid/content/SharedPreferences;
+    0006..000c  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit(L)
+    000c..000e  move-result-object  v1
+    000e..0012  const-string  v0, "ab_props:sys:last_error_code"
+    0012..0018  invoke-interface  {v1, v0, v3}, Landroid/content/SharedPreferences$Editor;->putInt(LLI)
+    0018..001e  invoke-interface  {v1}, Landroid/content/SharedPreferences$Editor;->apply(V)
+    001e..0020  monitor-exit
+    0020..0022  return-void
+    0022..0024  move-exception  v0
+    0024..0026  monitor-exit
+    0026..0028  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..000f -> 0011
+    # catch <all> code_units 0012..0013 -> 0011
+.end method
+
+.method public A07(VL)  # .registers 3
+    0000..0002  monitor-enter
+    0002..0004  const/4  v0, #0x1
+    0004..000a  invoke-static  {v2, v0}, LX/00h;->A0A(VLI)
+    000a..000c  monitor-exit
+    000c..000e  return-void
+    000e..0010  move-exception  v0
+    0010..0012  monitor-exit
+    0012..0014  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..0005 -> 0007
+    # catch <all> code_units 0008..0009 -> 0007
+.end method
+
+.method public A08(VLL)  # .registers 14
+    0000..0002  move-object  v10, v11
+    0002..0004  monitor-enter
+    0004..0008  const-string  v0, "CheckIfReinstalledTask/updatePreChatdABProps"
+    0008..000e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+    000e..0014  invoke-virtual  {v11}, LX/0Ci;->A04(V)
+    0014..001a  invoke-virtual  {v12}, Ljava/lang/String;->length(I)
+    001a..001c  move-result  v0
+    001c..0020  if-nez  v0, +0x9
+    0020..0024  const-string  v0, "CheckIfReinstalledTask/updatePreChatdABProps/empty expConfigs"
+    0024..002a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+    002a..002e  goto/16  +0xca
+    002e..0032  iget-object  v7, v11, LX/0Ci;->A06:LX/0Ck;
+    0032..0038  invoke-virtual  {v7}, LX/0Ck;->A1A(L)
+    0038..003a  move-result-object  v0
+    003a..0040  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit(L)
+    0040..0042  move-result-object  v6
+    0042..0046  new-instance  v4, Lorg/json/JSONArray;
+    0046..004c  invoke-direct  {v4, v12}, Lorg/json/JSONArray;-><init>(VL)
+    004c..0050  new-instance  v8, Landroid/util/SparseArray;
+    0050..0056  invoke-direct  {v8}, Landroid/util/SparseArray;-><init>(V)
+    0056..005c  invoke-virtual  {v4}, Lorg/json/JSONArray;->length(I)
+    005c..005e  move-result  v5
+    005e..0060  const/4  v3, #0x0
+    0060..0064  if-ge  v3, v5, +0x5d
+    0064..006a  invoke-virtual  {v4, v3}, Lorg/json/JSONArray;->getJSONObject(LI)
+    006a..006c  move-result-object  v2
+    006c..0070  if-eqz  v2, +0x54
+    0070..0074  const-string  v0, "config_code"
+    0074..007a  invoke-virtual  {v2, v0}, Lorg/json/JSONObject;->getString(LL)
+    007a..007c  move-result-object  v0
+    007c..0082  invoke-static  {v0}, LX/00h;->A06(VL)
+    0082..0088  invoke-static  {v0}, Ljava/lang/Integer;->parseInt(IL)
+    0088..008a  move-result  v9
+    008a..008e  const-string  v0, "config_value"
+    008e..0094  invoke-virtual  {v2, v0}, Lorg/json/JSONObject;->getString(LL)
+    0094..0096  move-result-object  v1
+    0096..009c  invoke-static  {v1}, LX/00h;->A06(VL)
+    009c..00a0  const-string  v0, "config_expo_key"
+    00a0..00a6  invoke-virtual  {v2, v0}, Lorg/json/JSONObject;->optString(LL)
+    00a6..00a8  move-result-object  v2
+    00a8..00ae  invoke-static  {v2}, LX/00h;->A09(VL)
+    00ae..00b4  invoke-virtual  {v2}, Ljava/lang/String;->length(I)
+    00b4..00b6  move-result  v0
+    00b6..00ba  if-gtz  v0, +0x3
+    00ba..00bc  const/4  v2, #0x0
+    00bc..00c2  invoke-static  {v1, v2}, Landroid/util/Pair;->create(LLL)
+    00c2..00c4  move-result-object  v0
+    00c4..00ca  invoke-virtual  {v8, v9, v0}, Landroid/util/SparseArray;->append(VIL)
+    00ca..00d0  invoke-static  {v6}, LX/00h;->A09(VL)
+    00d0..00d6  invoke-static  {v6, v11, v1, v9}, LX/0Ci;->A00(ZLLLI)
+    00d6..00d8  move-result  v0
+    00d8..00dc  if-eqz  v0, +0x1e
+    00dc..00e0  if-eqz  v2, +0x1c
+    00e0..00e6  invoke-virtual  {v2}, Ljava/lang/String;->length(I)
+    00e6..00e8  move-result  v0
+    00e8..00ec  if-eqz  v0, +0x16
+    00ec..00f0  new-instance  v1, Ljava/lang/StringBuilder;
+    00f0..00f6  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>(V)
+    00f6..00fc  invoke-virtual  {v1, v9}, Ljava/lang/StringBuilder;->append(LI)
+    00fc..0100  const-string  v0, "_expo_key"
+    0100..0106  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    0106..010c  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    010c..010e  move-result-object  v0
+    010e..0114  invoke-interface  {v6, v0, v2}, Landroid/content/SharedPreferences$Editor;->putString(LLL)
+    0114..0118  add-int/lit8  v3, v3, #0x1
+    0118..011a  goto  -0x5c
+    011a..011e  iget-object  v0, v11, LX/0Ci;->A0C:LX/0DL;
+    011e..0124  invoke-virtual  {v0}, LX/0DL;->AqJ(L)
+    0124..0126  move-result-object  v0
+    0126..012c  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit(L)
+    012c..012e  move-result-object  v1
+    012e..0132  const-string  v0, "pref_pre_chatd_ab_key"
+    0132..0138  invoke-interface  {v1, v0, v13}, Landroid/content/SharedPreferences$Editor;->putString(LLL)
+    0138..013e  invoke-interface  {v1}, Landroid/content/SharedPreferences$Editor;->apply(V)
+    013e..0144  invoke-static  {v6}, LX/00h;->A09(VL)
+    0144..014a  invoke-virtual  {v7}, LX/00D;->A0g(L)
+    014a..014c  move-result-object  v5
+    014c..014e  const/4  v4, #0x0
+    014e..0152  new-instance  v3, LX/0Du;
+    0152..0158  invoke-direct  {v3, v4}, LX/0Du;-><init>(VI)
+    0158..015e  invoke-virtual  {v8}, Landroid/util/SparseArray;->size(I)
+    015e..0160  move-result  v2
+    0160..0164  if-ge  v4, v2, +0x22
+    0164..016a  invoke-virtual  {v8, v4}, Landroid/util/SparseArray;->valueAt(LI)
+    016a..016c  move-result-object  v0
+    016c..0170  check-cast  v0, Landroid/util/Pair;
+    0170..0174  if-eqz  v0, +0x17
+    0174..0178  iget-object  v1, v0, Landroid/util/Pair;->second:Ljava/lang/Object;
+    0178..017c  check-cast  v1, Ljava/lang/String;
+    017c..0180  if-eqz  v1, +0x11
+    0180..0186  invoke-virtual  {v1}, Ljava/lang/String;->length(I)
+    0186..0188  move-result  v0
+    0188..018c  if-eqz  v0, +0xb
+    018c..0192  invoke-virtual  {v5, v1}, LX/0Du;->contains(ZL)
+    0192..0194  move-result  v0
+    0194..0198  if-eqz  v0, +0x5
+    0198..019e  invoke-virtual  {v3, v1}, LX/0Du;->add(ZL)
+    019e..01a2  add-int/lit8  v4, v4, #0x1
+    01a2..01a4  goto  -0x21
+    01a4..01a6  const/4  v0, #0x0
+    01a6..01ac  invoke-virtual  {v7, v6, v3, v0}, LX/00D;->A0v(VLLZ)
+    01ac..01ae  goto  +0x9
+    01ae..01b0  move-exception  v0
+    01b0..01b2  throw  v0
+    01b2..01b4  move-exception  v1
+    01b4..01b8  const-string  v0, "ABPropsManager/updatePreChatdABProps/update abprop configs failed"
+    01b8..01be  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(VLL)
+    01be..01c0  monitor-exit
+    01c0..01c2  return-void
+    01c2..01c4  move-exception  v0
+    01c4..01c6  monitor-exit
+    01c6..01c8  throw  v0
+    # exception table: 6 try range(s)
+    # catch <all> code_units 0002..0017 -> 00e1
+    # catch Lorg/json/JSONException; code_units 0017..00a2 -> 00d9
+    # catch <all> code_units 0017..00a2 -> 00e1
+    # catch <all> code_units 00a2..00d7 -> 00d7
+    # catch Lorg/json/JSONException; code_units 00d8..00d9 -> 00d9
+    # catch <all> code_units 00d8..00d9 -> 00e1
+    # catch <all> code_units 00da..00df -> 00e1
+    # catch <all> code_units 00e2..00e3 -> 00e1
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/GAZ;' --method A1T --exceptions
+
+# class: LX/GAZ;
+# extends: Ljava/lang/Object;
+
+.method public A1T(VLI)  # .registers 5
+    0000..0004  sget-object  v2, LX/1S7;->A00:LX/1S7;
+    0004..0008  const-string  v1, "to"
+    0008..000c  new-instance  v0, LX/0hq;
+    000c..0012  invoke-direct  {v0, v2, v1}, LX/0hq;-><init>(VLL)
+    0012..0016  aput-object  v0, v3, v4
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/1S7;' --exceptions
+
+# class: LX/1S7;
+# extends: Lcom/whatsapp/infra/core/jid/Jid;
+
+.method public <clinit>(V)  # .registers 1
+    0000..0004  new-instance  v0, LX/1S7;
+    0004..000a  invoke-direct  {v0}, LX/1S7;-><init>(V)
+    000a..000e  sput-object  v0, LX/1S7;->A00:LX/1S7;
+    000e..0012  new-instance  v0, LX/1S8;
+    0012..0018  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0018..001c  sput-object  v0, LX/1S7;->CREATOR:Landroid/os/Parcelable$Creator;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(V)  # .registers 2
+    0000..0004  const-string  v0, ""
+    0004..000a  invoke-direct  {v1, v0}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(VL)
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public describeContents(I)  # .registers 2
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getServer(L)  # .registers 2
+    0000..0006  const-string/jumbo  v0, "s.whatsapp.net"
+    0006..0008  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getType(I)  # .registers 2
+    0000..0004  const/16  v0, #0xd
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public writeToParcel(VLI)  # .registers 4
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00h;->A0A(VLI)
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-virtual  {v2, v0}, Landroid/os/Parcel;->writeInt(VI)
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/14f;' --method A09 --exceptions
+
+# class: LX/14f;
+# extends: LX/0yO;
+
+.method public A09(VLI)  # .registers 24
+    0000..0002  const/4  v0, #0x1
+    0002..0006  move-object/from16  v2, v22
+    0006..000c  invoke-static  {v2, v0}, LX/00h;->A0A(VLI)
+    000c..0010  const/16  v0, #0xeb
+    0010..0014  move/from16  v1, v23
+    0014..0018  if-ne  v1, v0, +0x4c
+    0018..001a  const/4  v0, #0x0
+    001a..0020  invoke-virtual  {v2, v0}, LX/0hs;->A0E(LI)
+    0020..0022  move-result-object  v2
+    0022..0026  if-eqz  v2, +0x45
+    0026..002a  const-string  v0, "log"
+    002a..0030  invoke-static  {v2, v0}, LX/0hs;->A02(ZLL)
+    0030..0032  move-result  v0
+    0032..0036  move-object/from16  v3, v21
+    0036..003a  if-eqz  v0, +0x3c
+    003a..003e  iget-object  v4, v3, LX/14f;->A03:LX/14g;
+    003e..0044  invoke-virtual  {v4}, LX/14g;->A0A(V)
+    0044..0048  iget-object  v5, v3, LX/14f;->A00:Landroid/app/Application;
+    0048..004a  const/4  v6, #0x0
+    004a..004e  const-string  v8, ""
+    004e..0052  const-string  v11, "NotCalculated"
+    0052..0056  const/16  v19, #0x1
+    0056..005a  const-wide/16  v15, #0xffff (-1)
+    005a..005e  const/16  v20, #0x0
+    005e..0060  move-object  v9, v6
+    0060..0062  move-object  v10, v6
+    0062..0064  move-object  v12, v6
+    0064..0066  move-object  v13, v6
+    0066..0068  move-object  v14, v6
+    0068..006a  move-object  v7, v6
+    006a..006e  move-wide/from16  v17, v15
+    006e..0074  invoke-virtual/range  {v4..v20}, LX/14g;->A08(LLLLLLLLLLLJJZZ)
+    0074..0076  move-result-object  v0
+    0076..007c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+    007c..0080  const-string  v0, "bug_id"
+    0080..0086  invoke-virtual  {v2, v0, v6}, LX/0hs;->A0M(LLL)
+    0086..0088  move-result-object  v4
+    0088..008c  const-string  v0, "is_bug_reporter"
+    008c..0092  invoke-virtual  {v2, v0, v6}, LX/0hs;->A0M(LLL)
+    0092..0094  move-result-object  v1
+    0094..009a  const-string/jumbo  v0, "true"
+    009a..00a0  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(ZL)
+    00a0..00a2  move-result  v1
+    00a2..00a6  iget-object  v0, v3, LX/14f;->A04:LX/0AH;
+    00a6..00ac  invoke-virtual  {v0, v4, v1}, LX/0AH;->A0l(VLZ)
+    00ac..00ae  return-void
+    00ae..00b2  const-string  v0, "abprops"
+    00b2..00b8  invoke-static  {v2, v0}, LX/0hs;->A02(ZLL)
+    00b8..00ba  move-result  v0
+    00ba..00be  if-eqz  v0, +0x63
+    00be..00c2  iget-object  v0, v3, LX/14f;->A01:LX/05B;
+    00c2..00c6  iget-object  v0, v0, LX/05B;->A00:LX/00s;
+    00c6..00cc  invoke-interface  {v0}, LX/00s;->get(L)
+    00cc..00ce  move-result-object  v3
+    00ce..00d2  check-cast  v3, LX/2rp;
+    00d2..00d6  iget-object  v0, v3, LX/2rp;->A03:LX/05B;
+    00d6..00da  iget-object  v0, v0, LX/05B;->A00:LX/00s;
+    00da..00e0  invoke-interface  {v0}, LX/00s;->get(L)
+    00e0..00e2  move-result-object  v0
+    00e2..00e6  check-cast  v0, LX/09Y;
+    00e6..00ea  iget-boolean  v0, v0, LX/09Y;->A06:Z
+    00ea..00ee  if-eqz  v0, +0x74
+    00ee..00f2  const-string  v0, "MessagingSendMethods/forceFetchABPropsAndMobileConfig/fetch"
+    00f2..00f8  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+    00f8..00fc  iget-object  v0, v3, LX/2rp;->A00:LX/05B;
+    00fc..0100  iget-object  v0, v0, LX/05B;->A00:LX/00s;
+    0100..0106  invoke-interface  {v0}, LX/00s;->get(L)
+    0106..0108  move-result-object  v2
+    0108..010c  check-cast  v2, LX/Hgb;
+    010c..010e  const/4  v1, #0x1
+    010e..0110  const/4  v0, #0x0
+    0110..0116  invoke-virtual  {v2, v1, v0, v0}, LX/Hgb;->A00(VZZI)
+    0116..011a  iget-object  v0, v3, LX/2rp;->A01:LX/05B;
+    011a..011e  iget-object  v0, v0, LX/05B;->A00:LX/00s;
+    011e..0124  invoke-interface  {v0}, LX/00s;->get(L)
+    0124..0126  move-result-object  v0
+    0126..012a  check-cast  v0, LX/00D;
+    012a..012e  iget-boolean  v0, v0, LX/00D;->A0A:Z
+    012e..0132  if-eqz  v0, -0x41
+    0132..0136  iget-object  v0, v3, LX/2rp;->A02:LX/05B;
+    0136..013a  iget-object  v2, v0, LX/05B;->A00:LX/00s;
+    013a..0140  invoke-interface  {v2}, LX/00s;->get(L)
+    0140..0142  move-result-object  v0
+    0142..0146  check-cast  v0, LX/09M;
+    0146..014a  check-cast  v0, LX/09N;
+    014a..014e  iget-object  v0, v0, LX/09N;->A05:LX/00l;
+    014e..0154  invoke-interface  {v0}, LX/00l;->getValue(L)
+    0154..0156  move-result-object  v1
+    0156..015a  check-cast  v1, LX/099;
+    015a..0160  invoke-interface  {v2}, LX/00s;->get(L)
+    0160..0162  move-result-object  v0
+    0162..0166  check-cast  v0, LX/09M;
+    0166..016c  invoke-interface  {v0, v1}, LX/09M;->BIr(VL)
+    016c..0172  invoke-interface  {v2}, LX/00s;->get(L)
+    0172..0174  move-result-object  v0
+    0174..0178  check-cast  v0, LX/09M;
+    0178..017e  invoke-interface  {v0, v1}, LX/09M;->Cgf(VL)
+    017e..0180  return-void
+    0180..0184  const-string  v0, "push-config"
+    0184..018a  invoke-static  {v2, v0}, LX/0hs;->A02(ZLL)
+    018a..018c  move-result  v0
+    018c..0190  if-eqz  v0, -0x70
+    0190..0196  const-string/jumbo  v1, "type"
+    0196..0198  const/4  v0, #0x0
+    0198..019e  invoke-virtual  {v2, v1, v0}, LX/0hs;->A0M(LLL)
+    019e..01a0  move-result-object  v2
+    01a0..01a4  if-eqz  v2, +0x1f
+    01a4..01a8  const-string  v0, "gcm"
+    01a8..01ae  invoke-virtual  {v2, v0}, Ljava/lang/String;->equalsIgnoreCase(ZL)
+    01ae..01b0  move-result  v0
+    01b0..01b4  if-nez  v0, +0x17
+    01b4..01b8  const-string  v1, "push-config notification: unknown type "
+    01b8..01bc  new-instance  v0, Ljava/lang/StringBuilder;
+    01bc..01c2  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(VL)
+    01c2..01c8  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(LL)
+    01c8..01ce  invoke-virtual  {v0}, Ljava/lang/Object;->toString(L)
+    01ce..01d0  move-result-object  v0
+    01d0..01d2  goto  +0x3
+    01d2..01d6  const-string  v0, "MessagingSendMethods/forceFetchABPropsAndMobileConfig/skip: message sending not ready"
+    01d6..01dc  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+    01dc..01de  return-void
+    01de..01e2  const-string  v0, "push-config notification: force replacing GCM token"
+    01e2..01e8  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+    01e8..01ec  iget-object  v1, v3, LX/14f;->A00:Landroid/app/Application;
+    01ec..01f0  iget-object  v0, v3, LX/14f;->A02:LX/05B;
+    01f0..01f4  iget-object  v0, v0, LX/05B;->A00:LX/00s;
+    01f4..01fa  invoke-interface  {v0}, LX/00s;->get(L)
+    01fa..01fc  move-result-object  v0
+    01fc..0200  check-cast  v0, LX/0GZ;
+    0200..0206  invoke-static  {v1, v0}, Lcom/whatsapp/infra/push/RegistrationIntentService;->A02(VLL)
+    0206..0208  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/0iS;' --method A12 --exceptions
+
+# class: LX/0iS;
+# extends: Landroid/os/HandlerThread;
+
+.method private A12(VLLLLL)  # .registers 21
+    0000..0004  iget-object  v0, v15, LX/0iS;->A0o:LX/00s;
+    0004..000a  invoke-interface  {v0}, LX/00s;->get(L)
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/00W;
+    0010..0016  invoke-virtual  {v0}, LX/00W;->A02(L)
+    0016..0018  move-result-object  v1
+    0018..001c  const/16  v0, #0x1bdd
+    001c..0022  invoke-static  {v1, v0}, LX/08b;->A00(LLI)
+    0022..0024  move-result-object  v12
+    0024..002a  invoke-virtual/range  {v18..v18}, LX/1E6;->A04(L)
+    002a..002c  move-result-object  v0
+    002c..0032  invoke-virtual  {v0}, LX/1LW;->A00(Z)
+    0032..0034  move-result  v2
+    0034..003a  invoke-virtual/range  {v17..v17}, LX/124;->A07(L)
+    003a..003c  move-result-object  v3
+    003c..003e  const/4  v6, #0x0
+    003e..0040  const/4  v1, #0x0
+    0040..0044  if-eqz  v3, +0x329
+    0044..004a  const-string/jumbo  v0, "web"
+    004a..0050  invoke-static  {v3, v0}, LX/0hs;->A02(ZLL)
+    0050..0052  move-result  v0
+    0052..0056  const/16  v4, #0x1f4
+    0056..005a  const-string  v10, "code"
+    005a..005c  const/4  v5, #0x1
+    005c..0060  if-eqz  v0, +0x2c
+    0060..0064  if-nez  v1, +0x22
+    0064..0068  if-eqz  v2, +0x17
+    0068..006c  const-string  v0, "error"
+    006c..0072  invoke-virtual  {v3, v0}, LX/0hs;->A0F(LL)
+    0072..0074  move-result-object  v0
+    0074..0078  if-eqz  v0, +0x9
+    0078..007e  invoke-virtual  {v0, v10, v4}, LX/0hs;->A05(ILI)
+    007e..0080  move-result  v0
+    0080..0086  invoke-static  {v0}, LX/1Dz;->A0f(VI)
+    0086..008c  invoke-virtual/range  {v17..v17}, LX/124;->A07(L)
+    008c..008e  move-result-object  v3
+    008e..0090  const/4  v1, #0x1
+    0090..0092  goto  -0x28
+    0092..0098  const-string/jumbo  v1, "web node given during login without any web ref provided"
+    0098..009c  new-instance  v0, LX/B7l;
+    009c..00a2  invoke-direct  {v0, v1}, LX/B7l;-><init>(VL)
+    00a2..00a4  throw  v0
+    00a4..00a8  const-string  v1, "multiple web nodes encountered on login"
+    00a8..00ac  new-instance  v0, LX/B7l;
+    00ac..00b2  invoke-direct  {v0, v1}, LX/B7l;-><init>(VL)
+    00b2..00b4  throw  v0
+    00b4..00ba  const-string/jumbo  v0, "success"
+    00ba..00c0  invoke-static  {v3, v0}, LX/0hs;->A02(ZLL)
+    00c0..00c2  move-result  v0
+    00c2..00c6  const-wide/16  v13, #0x3e8
+    00c6..00cc  const-string/jumbo  v11, "t"
+    00cc..00ce  const/4  v8, #0xff
+    00ce..00d2  if-eqz  v0, +0x192
+    00d2..00d6  if-eqz  v2, +0xd
+    00d6..00da  if-nez  v1, +0xb
+    00da..00e0  const-string/jumbo  v1, "web was expected but not seen before success"
+    00e0..00e4  new-instance  v0, LX/B7l;
+    00e4..00ea  invoke-direct  {v0, v1}, LX/B7l;-><init>(VL)
+    00ea..00ec  throw  v0
+    00ec..00f2  invoke-virtual  {v3, v11}, LX/0hs;->A0K(LL)
+    00f2..00f4  move-result-object  v4
+    00f4..00f8  if-eqz  v4, +0x35
+    00f8..00fe  invoke-static  {v4}, Ljava/lang/Long;->parseLong(JL)
+    00fe..0100  move-result-wide  v0
+    0100..0104  move-object/from16  v7, v16
+    0104..0108  iput-wide  v0, v7, LX/1Rd;->A02:J
+    0108..010c  iget-object  v0, v15, LX/0iS;->A16:LX/08B;
+    010c..0112  invoke-virtual  {v0}, LX/08B;->A03(J)
+    0112..0114  move-result-wide  v0
+    0114..0116  ??(0xbe)  v0, v13
+    0116..011a  iput-wide  v0, v7, LX/1Rd;->A01:J
+    011a..011e  iget-object  v0, v15, LX/0iS;->A0n:LX/00s;
+    011e..0124  invoke-interface  {v0}, LX/00s;->get(L)
+    0124..0126  move-result-object  v2
+    0126..012a  check-cast  v2, LX/08l;
+    012a..012e  iget-wide  v0, v7, LX/1Rd;->A02:J
+    012e..0134  invoke-virtual  {v2, v0, v1}, LX/08l;->A0t(VJ)
+    0134..0136  goto  +0x15
+    0136..013a  const-string  v1, "invalid server time; timeString="
+    013a..013e  new-instance  v0, Ljava/lang/StringBuilder;
+    013e..0144  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(VL)
+    0144..014a  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(LL)
+    014a..0150  invoke-virtual  {v0}, Ljava/lang/Object;->toString(L)
+    0150..0152  move-result-object  v1
+    0152..0156  new-instance  v0, LX/B7l;
+    0156..015c  invoke-direct  {v0, v1}, LX/B7l;-><init>(VL)
+    015c..015e  throw  v0
+    015e..0162  const-string  v0, "props"
+    0162..0168  invoke-virtual  {v3, v0, v8}, LX/0hs;->A05(ILI)
+    0168..016a  move-result  v0
+    016a..016e  if-eq  v0, v8, +0xb
+    016e..0174  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    0174..0176  move-result-object  v0
+    0176..017a  move-object/from16  v1, v19
+    017a..0180  invoke-virtual  {v1, v0}, Ljava/util/concurrent/atomic/AtomicReference;->set(VL)
+    0180..0184  const-string  v0, "abprops"
+    0184..018a  invoke-virtual  {v3, v0, v8}, LX/0hs;->A05(ILI)
+    018a..018c  move-result  v0
+    018c..0190  if-eq  v0, v8, +0xb
+    0190..0196  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    0196..0198  move-result-object  v0
+    0198..019c  move-object/from16  v1, v20
+    019c..01a2  invoke-virtual  {v1, v0}, Ljava/util/concurrent/atomic/AtomicReference;->set(VL)
+    01a2..01a6  const-class  v1, Lcom/whatsapp/infra/core/jid/Jid;
+    01a6..01aa  const-string  v0, "lid"
+    01aa..01b0  invoke-virtual  {v3, v1, v0}, LX/0hs;->A0A(LLL)
+    01b0..01b2  move-result-object  v7
+    01b2..01b6  if-eqz  v7, +0xc3
+    01b6..01ba  iget-object  v4, v15, LX/0iS;->A14:LX/08Z;
+    01ba..01c0  invoke-interface  {v4}, LX/08Z;->Apx(L)
+    01c0..01c2  move-result-object  v9
+    01c2..01c6  instance-of  v0, v7, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    01c6..01c8  move-object  v8, v7
+    01c8..01cc  if-eqz  v0, +0x8
+    01cc..01d0  check-cast  v8, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    01d0..01d6  invoke-virtual  {v8}, Lcom/whatsapp/infra/core/jid/DeviceJid;->getUserJid(L)
+    01d6..01d8  move-result-object  v8
+    01d8..01dc  if-nez  v9, +0xe6
+    01dc..01e2  invoke-interface  {v4}, LX/08Z;->BMv(Z)
+    01e2..01e4  move-result  v0
+    01e4..01e8  if-nez  v0, +0xd
+    01e8..01ee  invoke-direct  {v15}, LX/0iS;->A0D(L)
+    01ee..01f0  move-result-object  v2
+    01f0..01f4  const-string  v1, "reg-lid-chatd-lid-expected-but-null"
+    01f4..01f8  const-string  v0, ""
+    01f8..01fe  invoke-virtual  {v2, v1, v0, v5, v5}, LX/0AH;->A0h(VLLZI)
+    01fe..0202  iget-object  v8, v15, LX/0iS;->A0d:LX/00s;
+    0202..0208  invoke-interface  {v8}, LX/00s;->get(L)
+    0208..020a  move-result-object  v0
+    020a..020e  check-cast  v0, LX/0DL;
+    020e..0214  invoke-virtual  {v0}, LX/0DL;->A0q(Z)
+    0214..0216  move-result  v11
+    0216..021a  if-eqz  v11, +0x8e
+    021a..0220  invoke-interface  {v4}, LX/08Z;->BMv(Z)
+    0220..0222  move-result  v0
+    0222..0226  if-nez  v0, +0x7f
+    0226..022a  iget-object  v10, v15, LX/0iS;->A0n:LX/00s;
+    022a..0230  invoke-interface  {v10}, LX/00s;->get(L)
+    0230..0232  move-result-object  v0
+    0232..0236  check-cast  v0, LX/08l;
+    0236..023c  invoke-virtual  {v0}, LX/08l;->A0f(L)
+    023c..023e  move-result-object  v2
+    023e..0244  invoke-interface  {v10}, LX/00s;->get(L)
+    0244..0246  move-result-object  v0
+    0246..024a  check-cast  v0, LX/08l;
+    024a..0250  invoke-virtual  {v0}, LX/08l;->A0g(L)
+    0250..0252  move-result-object  v1
+    0252..0258  invoke-interface  {v10}, LX/00s;->get(L)
+    0258..025a  move-result-object  v0
+    025a..025e  check-cast  v0, LX/08l;
+    025e..0264  invoke-virtual  {v0}, LX/08l;->A0j(L)
+    0264..0266  move-result-object  v0
+    0266..0268  const/4  v9, #0x0
+    0268..026c  if-nez  v0, +0x3
+    026c..026e  const/4  v9, #0x1
+    026e..0274  invoke-interface  {v10}, LX/00s;->get(L)
+    0274..0276  move-result-object  v0
+    0276..027a  check-cast  v0, LX/08l;
+    027a..0280  invoke-virtual  {v0}, LX/08l;->A0i(L)
+    0280..0282  move-result-object  v0
+    0282..0286  if-eqz  v0, +0x3
+    0286..0288  const/4  v5, #0x0
+    0288..028c  const-string  v0, "ConnectionThread/lid-lifecycle/login-success isFirstLidLogin="
+    028c..0290  new-instance  v10, Ljava/lang/StringBuilder;
+    0290..0296  invoke-direct  {v10, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+    0296..029c  invoke-virtual  {v10, v11}, Ljava/lang/StringBuilder;->append(LZ)
+    029c..02a0  const-string  v0, " registrationLidMissing="
+    02a0..02a6  invoke-virtual  {v10, v0}, Ljava/lang/StringBuilder;->append(LL)
+    02a6..02ac  invoke-virtual  {v10, v9}, Ljava/lang/StringBuilder;->append(LZ)
+    02ac..02b0  const-string  v0, " registrationJidMissing="
+    02b0..02b6  invoke-virtual  {v10, v0}, Ljava/lang/StringBuilder;->append(LL)
+    02b6..02bc  invoke-virtual  {v10, v5}, Ljava/lang/StringBuilder;->append(LZ)
+    02bc..02c0  const-string  v0, " passive="
+    02c0..02c6  invoke-virtual  {v10, v0}, Ljava/lang/StringBuilder;->append(LL)
+    02c6..02cc  invoke-virtual/range  {v18..v18}, LX/1E6;->A05(Z)
+    02cc..02ce  move-result  v0
+    02ce..02d4  invoke-virtual  {v10, v0}, Ljava/lang/StringBuilder;->append(LZ)
+    02d4..02d8  const-string  v0, " regIdPrefLastWrite="
+    02d8..02de  invoke-virtual  {v10, v0}, Ljava/lang/StringBuilder;->append(LL)
+    02de..02e4  invoke-virtual  {v10, v2}, Ljava/lang/StringBuilder;->append(LL)
+    02e4..02e8  const-string  v0, " regIdPrefWriteHistory="
+    02e8..02ee  invoke-virtual  {v10, v0}, Ljava/lang/StringBuilder;->append(LL)
+    02ee..02f4  invoke-virtual  {v10, v1}, Ljava/lang/StringBuilder;->append(LL)
+    02f4..02fa  invoke-virtual  {v10}, Ljava/lang/Object;->toString(L)
+    02fa..02fc  move-result-object  v0
+    02fc..0302  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+    0302..0306  if-eqz  v9, +0x43
+    0306..030a  iget-object  v0, v15, LX/0iS;->A0R:LX/00s;
+    030a..0310  invoke-interface  {v0}, LX/00s;->get(L)
+    0310..0312  move-result-object  v0
+    0312..0316  check-cast  v0, LX/HwJ;
+    0316..031a  if-eqz  v5, +0x35
+    031a..0320  invoke-virtual  {v0, v2, v1}, LX/HwJ;->A01(VLL)
+    0320..0326  invoke-interface  {v8}, LX/00s;->get(L)
+    0326..0328  move-result-object  v0
+    0328..032c  check-cast  v0, LX/0DL;
+    032c..0332  invoke-virtual  {v0, v6}, LX/0DL;->A0h(VZ)
+    0332..0338  invoke-interface  {v4, v7}, LX/08Z;->CU2(VL)
+    0338..033e  invoke-virtual  {v12}, LX/05B;->get(L)
+    033e..0340  move-result-object  v2
+    0340..0344  check-cast  v2, LX/1Rx;
+    0344..0348  const-class  v1, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    0348..034c  const-string  v0, "pn"
+    034c..0352  invoke-virtual  {v3, v1, v0}, LX/0hs;->A0A(LLL)
+    0352..0354  move-result-object  v0
+    0354..0358  check-cast  v0, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    0358..035e  invoke-virtual  {v2, v0}, LX/1Rx;->A00(VL)
+    035e..0364  invoke-direct  {v15, v3}, LX/0iS;->A17(VL)
+    0364..0368  iget-object  v1, v15, LX/0iS;->A10:LX/0BQ;
+    0368..036c  iget-object  v0, v15, LX/0iS;->A0n:LX/00s;
+    036c..0372  invoke-interface  {v0}, LX/00s;->get(L)
+    0372..0374  move-result-object  v0
+    0374..0378  check-cast  v0, LX/08l;
+    0378..037e  invoke-static  {v1, v0, v3}, LX/0iS;->A0t(VLLL)
+    037e..0380  return-void
+    0380..0386  invoke-virtual  {v0, v2, v1}, LX/HwJ;->A03(VLL)
+    0386..0388  goto  -0x33
+    0388..038c  if-eqz  v5, -0x34
+    038c..0390  iget-object  v0, v15, LX/0iS;->A0R:LX/00s;
+    0390..0396  invoke-interface  {v0}, LX/00s;->get(L)
+    0396..0398  move-result-object  v0
+    0398..039c  check-cast  v0, LX/HwJ;
+    039c..03a2  invoke-virtual  {v0, v2, v1}, LX/HwJ;->A02(VLL)
+    03a2..03a4  goto  -0x41
+    03a4..03aa  invoke-virtual  {v8, v9}, Ljava/lang/Object;->equals(ZL)
+    03aa..03ac  move-result  v0
+    03ac..03b0  if-nez  v0, -0xd7
+    03b0..03b6  invoke-direct  {v15}, LX/0iS;->A0D(L)
+    03b6..03b8  move-result-object  v2
+    03b8..03bc  const-string  v0, "existingLid="
+    03bc..03c0  new-instance  v1, Ljava/lang/StringBuilder;
+    03c0..03c6  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+    03c6..03cc  invoke-virtual  {v1, v9}, Ljava/lang/StringBuilder;->append(LL)
+    03cc..03d0  const-string  v0, ",chatdLid="
+    03d0..03d6  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    03d6..03dc  invoke-virtual  {v1, v8}, Ljava/lang/StringBuilder;->append(LL)
+    03dc..03e2  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    03e2..03e4  move-result-object  v1
+    03e4..03e8  const-string  v0, "lid-chatd-lid-mismatch"
+    03e8..03ee  invoke-virtual  {v2, v0, v1, v5, v5}, LX/0AH;->A0h(VLLZI)
+    03ee..03f2  goto/16  -0xf8
+    03f2..03f6  const-string  v0, "failure"
+    03f6..03fc  invoke-static  {v3, v0}, LX/0hs;->A02(ZLL)
+    03fc..03fe  move-result  v0
+    03fe..0402  if-eqz  v0, +0x131
+    0402..0406  const-string  v0, "reason"
+    0406..040c  invoke-virtual  {v3, v0}, LX/0hs;->A04(IL)
+    040c..040e  move-result  v7
+    040e..0412  const-string  v1, "ConnectionThread/login/failure/reason="
+    0412..0416  new-instance  v0, Ljava/lang/StringBuilder;
+    0416..041c  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(VL)
+    041c..0422  invoke-virtual  {v0, v7}, Ljava/lang/StringBuilder;->append(LI)
+    0422..0428  invoke-virtual  {v0}, Ljava/lang/Object;->toString(L)
+    0428..042a  move-result-object  v0
+    042a..0430  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(VL)
+    0430..0434  iget-object  v0, v15, LX/0iS;->A14:LX/08Z;
+    0434..043a  invoke-interface  {v0}, LX/08Z;->BMv(Z)
+    043a..043c  move-result  v0
+    043c..043e  const/4  v12, #0x3
+    043e..0442  if-eqz  v0, +0x1c
+    0442..0446  iget-object  v0, v15, LX/0iS;->A0n:LX/00s;
+    0446..044c  invoke-interface  {v0}, LX/00s;->get(L)
+    044c..044e  move-result-object  v0
+    044e..0452  check-cast  v0, LX/08l;
+    0452..0458  invoke-virtual  {v0}, LX/08l;->A1J(Z)
+    0458..045a  move-result  v0
+    045a..045e  if-eqz  v0, +0xe
+    045e..0462  iget-object  v0, v15, LX/0iS;->A0G:LX/00s;
+    0462..0468  invoke-interface  {v0}, LX/00s;->get(L)
+    0468..046a  move-result-object  v2
+    046a..046e  check-cast  v2, LX/CgB;
+    046e..0470  int-to-long  v0, v7
+    0470..0476  invoke-virtual  {v2, v12, v0, v1}, LX/CgB;->A01(VIJ)
+    0476..047a  iget-object  v1, v15, LX/0iS;->A10:LX/0BQ;
+    047a..047e  iget-object  v0, v15, LX/0iS;->A0n:LX/00s;
+    047e..0484  invoke-interface  {v0}, LX/00s;->get(L)
+    0484..0486  move-result-object  v0
+    0486..048a  check-cast  v0, LX/08l;
+    048a..0490  invoke-static  {v1, v0, v3}, LX/0iS;->A0t(VLLL)
+    0490..0494  if-lt  v7, v4, +0xd
+    0494..0498  const/16  v0, #0x258
+    0498..049c  if-ge  v7, v0, +0x9
+    049c..049e  const/4  v0, #0x4
+    049e..04a2  new-instance  v2, LX/HFi;
+    04a2..04a8  invoke-direct  {v2, v0, v7}, LX/HFi;-><init>(VII)
+    04a8..04aa  throw  v2
+    04aa..04ae  const/16  v0, #0x192
+    04ae..04b2  const-string  v1, "appeal_token"
+    04b2..04b4  const/4  v5, #0x0
+    04b4..04b8  if-eq  v7, v0, +0x8d
+    04b8..04bc  const/16  v0, #0x193
+    04bc..04c2  const-string/jumbo  v4, "violation_reason"
+    04c2..04c8  const-string/jumbo  v9, "vt"
+    04c8..04cc  if-eq  v7, v0, +0x3a
+    04cc..04d0  const/16  v0, #0x195
+    04d0..04d4  if-eq  v7, v0, +0x70
+    04d4..04d8  const/16  v0, #0x196
+    04d8..04dc  if-eq  v7, v0, +0x5f
+    04dc..04e0  const/16  v0, #0x1a0
+    04e0..04e4  if-eq  v7, v0, +0xb
+    04e4..04e8  new-instance  v2, LX/HFi;
+    04e8..04ee  invoke-direct  {v2, v6, v7}, LX/HFi;-><init>(VII)
+    04ee..04f4  invoke-static  {v2, v3}, LX/0iS;->A16(VLL)
+    04f4..04f6  throw  v2
+    04f6..04fa  const/16  v0, #0xb
+    04fa..04fe  new-instance  v2, LX/HFi;
+    04fe..0504  invoke-direct  {v2, v0, v7}, LX/HFi;-><init>(VII)
+    0504..050a  invoke-virtual  {v3, v9, v6}, LX/0hs;->A05(ILI)
+    050a..050c  move-result  v0
+    050c..0510  iput  v0, v2, LX/HFi;->violationType:I
+    0510..0516  invoke-virtual  {v3, v4, v5}, LX/0hs;->A0M(LLL)
+    0516..0518  move-result-object  v0
+    0518..051c  iput-object  v0, v2, LX/HFi;->violationReason:Ljava/lang/String;
+    051c..0522  const-string/jumbo  v0, "source_acct"
+    0522..0528  invoke-virtual  {v3, v0, v8}, LX/0hs;->A05(ILI)
+    0528..052a  move-result  v0
+    052a..052e  iput  v0, v2, LX/HFi;->violationSourceAcct:I
+    052e..0534  invoke-virtual  {v3, v1, v5}, LX/0hs;->A0M(LLL)
+    0534..0536  move-result-object  v0
+    0536..053a  iput-object  v0, v2, LX/HFi;->banAppealToken:Ljava/lang/String;
+    053a..053c  goto  -0x26
+    053c..053e  const/4  v0, #0x7
+    053e..0542  new-instance  v2, LX/HFi;
+    0542..0548  invoke-direct  {v2, v0, v7}, LX/HFi;-><init>(VII)
+    0548..054c  const-string  v0, "is_eu"
+    054c..0552  invoke-virtual  {v3, v0}, LX/0hs;->A0K(LL)
+    0552..0554  move-result-object  v0
+    0554..055a  invoke-static  {v0}, Ljava/lang/Boolean;->parseBoolean(ZL)
+    055a..055c  move-result  v0
+    055c..0560  iput-boolean  v0, v2, LX/HFi;->isEu:Z
+    0560..0566  invoke-virtual  {v3, v9, v6}, LX/0hs;->A05(ILI)
+    0566..0568  move-result  v0
+    0568..056c  iput  v0, v2, LX/HFi;->violationType:I
+    056c..0572  invoke-virtual  {v3, v4, v5}, LX/0hs;->A0M(LLL)
+    0572..0574  move-result-object  v0
+    0574..0578  iput-object  v0, v2, LX/HFi;->violationReason:Ljava/lang/String;
+    0578..057e  invoke-virtual  {v3, v1, v5}, LX/0hs;->A0M(LLL)
+    057e..0580  move-result-object  v0
+    0580..0584  iput-object  v0, v2, LX/HFi;->banAppealToken:Ljava/lang/String;
+    0584..0588  const-string  v0, "reg_info"
+    0588..058e  invoke-virtual  {v3, v0, v5}, LX/0hs;->A0M(LLL)
+    058e..0590  move-result-object  v0
+    0590..0594  iput-object  v0, v2, LX/HFi;->regInfo:Ljava/lang/String;
+    0594..0596  goto  -0x53
+    0596..0598  const/4  v0, #0x5
+    0598..059c  new-instance  v2, LX/HFi;
+    059c..05a2  invoke-direct  {v2, v0, v7}, LX/HFi;-><init>(VII)
+    05a2..05a8  invoke-virtual  {v3, v10, v6}, LX/0hs;->A05(ILI)
+    05a8..05aa  move-result  v0
+    05aa..05ae  iput  v0, v2, LX/HFi;->code:I
+    05ae..05b0  throw  v2
+    05b0..05b4  new-instance  v2, LX/HFi;
+    05b4..05ba  invoke-direct  {v2, v12, v7}, LX/HFi;-><init>(VII)
+    05ba..05be  const-wide/16  v0, #0x0
+    05be..05c4  invoke-virtual  {v3, v11, v0, v1}, LX/0hs;->A08(JLJ)
+    05c4..05c6  move-result-wide  v0
+    05c6..05c8  mul-long/2addr  v0, v13
+    05c8..05cc  iput-wide  v0, v2, LX/HFi;->expiration_time:J
+    05cc..05ce  throw  v2
+    05ce..05d4  invoke-virtual  {v3, v1, v5}, LX/0hs;->A0M(LLL)
+    05d4..05d6  move-result-object  v6
+    05d6..05dc  invoke-virtual  {v3, v10}, LX/0hs;->A04(IL)
+    05dc..05de  move-result  v4
+    05de..05e2  const/16  v0, #0x6d
+    05e2..05e6  if-eq  v4, v0, +0x3c
+    05e6..05ea  if-eqz  v6, +0xe
+    05ea..05ee  const/16  v0, #0x6a
+    05ee..05f2  const/16  v2, #0xd
+    05f2..05f6  if-eq  v4, v0, +0x9
+    05f6..05fa  const/16  v0, #0x6b
+    05fa..05fe  const/16  v2, #0xe
+    05fe..0602  if-eq  v4, v0, +0x3
+    0602..0604  const/4  v2, #0x2
+    0604..0608  new-instance  v1, LX/HFi;
+    0608..060e  invoke-direct  {v1, v2, v7}, LX/HFi;-><init>(VII)
+    060e..0612  const-string  v0, "expire"
+    0612..0618  invoke-virtual  {v3, v0}, LX/0hs;->A04(IL)
+    0618..061a  move-result  v0
+    061a..061e  iput  v0, v1, LX/HFi;->expire_time_out:I
+    061e..0622  iput  v4, v1, LX/HFi;->code:I
+    0622..0626  const-string  v0, "message"
+    0626..062c  invoke-virtual  {v3, v0, v5}, LX/0hs;->A0M(LLL)
+    062c..062e  move-result-object  v0
+    062e..0632  iput-object  v0, v1, LX/HFi;->banMessage:Ljava/lang/String;
+    0632..0638  const-string/jumbo  v0, "url"
+    0638..063e  invoke-virtual  {v3, v0, v5}, LX/0hs;->A0M(LLL)
+    063e..0640  move-result-object  v0
+    0640..0644  iput-object  v0, v1, LX/HFi;->faqUrl:Ljava/lang/String;
+    0644..0648  iput-object  v6, v1, LX/HFi;->banAppealToken:Ljava/lang/String;
+    0648..064c  const-string  v0, "age_collection"
+    064c..0652  invoke-virtual  {v3, v0, v5}, LX/0hs;->A0M(LLL)
+    0652..0654  move-result-object  v0
+    0654..0658  iput-object  v0, v1, LX/HFi;->ageCollection:Ljava/lang/String;
+    0658..065a  throw  v1
+    065a..065e  const/16  v2, #0xf
+    065e..0660  goto  -0x2d
+    0660..0666  const-string/jumbo  v0, "unexpected node received during login sequence; node="
+    0666..066a  new-instance  v1, Ljava/lang/StringBuilder;
+    066a..0670  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+    0670..0676  invoke-virtual  {v3}, LX/0hs;->A0J(L)
+    0676..0678  move-result-object  v0
+    0678..067e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    067e..0684  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    0684..0686  move-result-object  v1
+    0686..068a  new-instance  v0, LX/B7l;
+    068a..0690  invoke-direct  {v0, v1}, LX/B7l;-><init>(VL)
+    0690..0692  throw  v0
+    0692..0696  const-string  v1, "node stream ended unexpectedly"
+    0696..069a  new-instance  v0, LX/B7l;
+    069a..06a0  invoke-direct  {v0, v1}, LX/B7l;-><init>(VL)
+    06a0..06a2  throw  v0
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/NumberFormatException; code_units 007c..009b -> 009b
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/00D;' --method A15 --exceptions
+
+# class: LX/00D;
+# extends: Ljava/lang/Object;
+
+.method public A15(L)  # .registers 0
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/07t;' --method A15 --exceptions
+
+# class: LX/07t;
+# extends: LX/00D;
+
+.method public A15(L)  # .registers 2
+    0000..0004  iget-object  v0, v1, LX/07t;->A00:Lcom/google/common/collect/ImmutableMap;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/0Ck;' --method A15 --exceptions
+
+# class: LX/0Ck;
+# extends: LX/00D;
+
+.method public A15(L)  # .registers 2
+    0000..0004  iget-object  v0, v1, LX/0Ck;->A02:LX/07t;
+    0004..0008  iget-object  v0, v0, LX/07t;->A00:Lcom/google/common/collect/ImmutableMap;
+    0008..000a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/0Dw;' --method A15 --exceptions
+
+# class: LX/0Dw;
+# extends: LX/00D;
+
+.method public A15(L)  # .registers 2
+    0000..0004  iget-object  v0, v1, LX/0Dw;->A06:LX/07t;
+    0004..0008  iget-object  v0, v0, LX/07t;->A00:Lcom/google/common/collect/ImmutableMap;
+    0008..000a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/Aym;' --method A1L --exceptions
+
+# class: LX/Aym;
+# extends: Ljava/lang/Object;
+
+.method public A1L(VLLL)  # .registers 4
+    0000..0004  new-instance  v0, LX/0hq;
+    0004..000a  invoke-direct  {v0, v1, v2}, LX/0hq;-><init>(VLL)
+    000a..0010  invoke-virtual  {v3, v0}, Ljava/util/AbstractCollection;->add(ZL)
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/0hs;' --method A0Q --exceptions
+
+# class: LX/0hs;
+# extends: Ljava/lang/Object;
+
+.method public A0Q(L)  # .registers 3
+    0000..0004  iget-object  v1, v2, LX/0hs;->A03:[LX/0hq;
+    0004..0008  if-eqz  v1, +0x6
+    0008..000a  array-length  v0, v1
+    000a..000e  if-nez  v0, +0x3
+    000e..0010  const/4  v1, #0x0
+    0010..0012  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+# DEX class_def_item superclass scan (direct 00D subclasses)
+[
+  {
+    "dex": "classes.dex",
+    "class": "LX/07t;",
+    "parent": "LX/00D;",
+    "class_def_offset": 1377376
+  },
+  {
+    "dex": "classes.dex",
+    "class": "LX/0Ck;",
+    "parent": "LX/00D;",
+    "class_def_offset": 1387008
+  },
+  {
+    "dex": "classes.dex",
+    "class": "LX/0Dw;",
+    "parent": "LX/00D;",
+    "class_def_offset": 1389376
+  }
+]
+
+# Scoped data-flow windows; reproduce full selected method with apk-smali.
+# 07t-init
+
+# class: LX/07t;
+# extends: LX/00D;
+
+.method public <init>(V)  # .registers 194
+    00d2..00d8  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder(L)
+    00d8..00da  move-result-object  v14
+    00da..00e0  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder(L)
+    00e0..00e2  move-result-object  v13
+    00e2..00e8  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder(L)
+    00e8..00ea  move-result-object  v12
+    00ea..00f0  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder(L)
+    00f0..00f2  move-result-object  v11
+    00f2..00f8  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder(L)
+    00f8..00fa  move-result-object  v10
+    00fa..0100  invoke-static  {v14}, LX/00h;->A09(VL)
+    0100..0106  invoke-static  {v14}, LX/07t;->A0C(VL)
+    0106..010c  invoke-static  {v14}, LX/07t;->A0J(VL)
+    010c..0112  invoke-static  {v14}, LX/07t;->A0Q(VL)
+    0112..0118  invoke-static  {v14}, LX/07t;->A0S(VL)
+    0118..011e  invoke-static  {v14}, LX/07t;->A0T(VL)
+    011e..0124  invoke-static  {v14}, LX/07t;->A0U(VL)
+    0124..012a  invoke-static  {v14}, LX/07t;->A0V(VL)
+    012a..0130  invoke-static  {v14}, LX/07t;->A0W(VL)
+    0130..0136  invoke-static  {v14}, LX/07t;->A0X(VL)
+    0136..013c  invoke-static  {v14}, LX/07t;->A0Y(VL)
+    013c..0142  invoke-static  {v14}, LX/07t;->A0L(VL)
+    0142..0148  invoke-static  {v14}, LX/07t;->A0M(VL)
+    0148..014e  invoke-static  {v14}, LX/07t;->A0N(VL)
+    014e..0154  invoke-static  {v14}, LX/07t;->A0O(VL)
+    0154..015a  invoke-static  {v14}, LX/07t;->A0P(VL)
+    9f00..9f04  move-object/from16  v0, v25
+    9f04..9f0a  invoke-virtual  {v10, v3, v0}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    9f0a..9f0e  move-object/from16  v3, v46
+    9f0e..9f12  move-object/from16  v0, v45
+    9f12..9f18  invoke-virtual  {v10, v3, v0}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    9f18..9f1c  move-object/from16  v0, v31
+    9f1c..9f22  invoke-virtual  {v10, v0, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    9f22..9f26  move-object/from16  v0, v23
+    9f26..9f2c  invoke-virtual  {v10, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    9f2c..9f32  invoke-virtual  {v14}, Lcom/google/common/collect/ImmutableMap$Builder;->buildKeepingLast(L)
+    9f32..9f34  move-result-object  v1
+    9f34..9f3a  invoke-static  {v1}, LX/00h;->A06(VL)
+    9f3a..9f3e  move-object/from16  v0, v192
+    9f3e..9f42  iput-object  v1, v0, LX/07t;->A00:Lcom/google/common/collect/ImmutableMap;
+    9f42..9f48  invoke-virtual  {v13}, Lcom/google/common/collect/ImmutableMap$Builder;->buildKeepingLast(L)
+    9f48..9f4a  move-result-object  v1
+    9f4a..9f50  invoke-static  {v1}, LX/00h;->A06(VL)
+    9f50..9f54  iput-object  v1, v0, LX/07t;->A02:Lcom/google/common/collect/ImmutableMap;
+    9f54..9f5a  invoke-virtual  {v12}, Lcom/google/common/collect/ImmutableMap$Builder;->buildKeepingLast(L)
+    9f5a..9f5c  move-result-object  v1
+    9f5c..9f62  invoke-static  {v1}, LX/00h;->A06(VL)
+    9f62..9f66  iput-object  v1, v0, LX/07t;->A01:Lcom/google/common/collect/ImmutableMap;
+    9f66..9f6c  invoke-virtual  {v11}, Lcom/google/common/collect/ImmutableMap$Builder;->buildKeepingLast(L)
+    9f6c..9f6e  move-result-object  v1
+    9f6e..9f74  invoke-static  {v1}, LX/00h;->A06(VL)
+    9f74..9f78  iput-object  v1, v0, LX/07t;->A04:Lcom/google/common/collect/ImmutableMap;
+    9f78..9f7e  invoke-virtual  {v10}, Lcom/google/common/collect/ImmutableMap$Builder;->buildKeepingLast(L)
+    9f7e..9f80  move-result-object  v1
+    9f80..9f86  invoke-static  {v1}, LX/00h;->A06(VL)
+    9f86..9f8a  iput-object  v1, v0, LX/07t;->A03:Lcom/google/common/collect/ImmutableMap;
+    9f8a..9f8c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# Scoped data-flow windows; reproduce full selected method with apk-smali.
+# 07t-A0J
+# class: LX/07t;
+# extends: LX/00D;
+
+.method public A0J(VL)  # .registers 5
+    0000..0002  const/4  v1, #0x0
+    0002..0008  const  v0, #0x83ba
+    0008..000e  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    000e..0010  move-result-object  v0
+    0010..0016  invoke-static  {v1}, Ljava/lang/Boolean;->valueOf(LZ)
+    0016..0018  move-result-object  v1
+    0018..001e  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    001e..0022  const/16  v0, #0x6641
+    0022..0028  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    0028..002a  move-result-object  v0
+    002a..0030  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    0030..0034  const/16  v0, #0x57b9
+    0034..003a  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    003a..003c  move-result-object  v0
+    003c..0042  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    1ec0..1ec4  const/16  v0, #0x216c
+    1ec4..1eca  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    1eca..1ecc  move-result-object  v0
+    1ecc..1ed2  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    1ed2..1ed8  const  v0, #0x8b4d
+    1ed8..1ede  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    1ede..1ee0  move-result-object  v0
+    1ee0..1ee6  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    1ee6..1eec  const  v0, #0x8ac8
+    1eec..1ef2  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    1ef2..1ef4  move-result-object  v0
+    1ef4..1efa  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    1efa..1efe  const/16  v0, #0x5517
+    1efe..1f04  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    47ee..47f0  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# Scoped data-flow windows; reproduce full selected method with apk-smali.
+# 07t-A07
+# class: LX/07t;
+# extends: LX/00D;
+
+.method public A07(VL)  # .registers 5
+    0000..0004  const/16  v0, #0x4a6
+    0004..000a  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    000a..000c  move-result-object  v2
+    000c..000e  const/4  v0, #0x0
+    000e..0014  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+    0014..0016  move-result-object  v1
+    0016..001c  invoke-virtual  {v4, v2, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    001c..0020  const/16  v0, #0x1e97
+    0020..0026  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    0026..0028  move-result-object  v0
+    0028..002e  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    002e..0032  const/16  v0, #0x2c83
+    0032..0038  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    0038..003a  move-result-object  v0
+    003a..0040  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    617c..6182  const  v0, #0x8b45
+    6182..6188  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    6188..618a  move-result-object  v0
+    618a..6190  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    6190..6196  const  v0, #0x8b4d
+    6196..619c  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    619c..619e  move-result-object  v0
+    619e..61a4  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    61a4..61aa  const  v0, #0x8b57
+    61aa..61b0  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    61b0..61b2  move-result-object  v0
+    61b2..61b8  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(LLL)
+    61b8..61be  const  v0, #0x8b58
+    61be..61c4  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    7644..7646  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# Negative results: no exact w:props string anchor; props SQL 0gZ / 0KO are generic storage, not ABProps. Base 00D.A15 has no code body. Searching only 07t constructor for 35661 found no literal; helper A0J registers it and is called by the constructor. No runtime property value established by these scans.

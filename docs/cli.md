@@ -201,6 +201,18 @@ Usage: whatsapp-cli peer-identity-query [OPTIONS]...
 | --chat | CHAT | yes |  |  |  | Primary PN or LID chat JID, never printed in output |
 | --show | SHOW | no |  |  | `true`, `false` | Inspect saved evidence without queueing or changing pins |
 
+## whatsapp-cli abprops-query
+
+Queue or inspect one initial AB-property read (offline; values are not applied)
+
+```
+Usage: whatsapp-cli abprops-query [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --show | SHOW | no |  |  | `true`, `false` | Inspect the saved response without queueing a read |
+
 ## whatsapp-cli actions
 
 Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted)

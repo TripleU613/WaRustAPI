@@ -1899,3 +1899,29 @@ occurred. Pinned-toolchain proof is not claimed; checks used system Rust 1.99.0.
 Repository hygiene passed: 902 local links and 3,743,290 bytes across four
 checksum bundles. Reproduction commands quote DEX descriptors/constructor names
 for shell use. No runtime code or private state changed.
+
+
+AB-property receive read (2026-10-08, static/offline): new abprops-query queues
+one initial APK 37.71 abt/props read; --show inspects saved correlated values
+without applying feature configuration. Boolean 35661 is registered in the
+concrete APK table and parsed as signed Integer != 0. Full/delta/hashless and
+last-duplicate semantics are distinguished. Empty text attributes now survive
+encoding, preserving the initial empty hash. Effective MobileConfig precedence,
+configuration application/scheduling remain unfinished; live read outcome is unknown.
+No identity/key rotation, marker deletion or reservation replay is added.
+[Evidence, diagnostics and limits](docs/protocol/feature-configuration.md).
+
+AB-property validation (2026-10-08, **observed live**): the existing account
+logged in and became active, then received a terminal stream:error (no outer
+code; ack child) before the bounded window finished. One read is reserved/sent
+with no correlated response: outcome_unknown, no returned/effective property
+value. Its original ID is retained and repeats do not transmit. Pre/post
+selected peer pins, devices, receipts and outbox matched; prior actions were
+preserved. No chat send or identity rotation occurred. The terminal cause and
+configuration application remain unresolved. All 699 workspace/all-feature
+tests, strict Clippy, Rustdoc, default CLI checks, experimental API-symbol and
+CLI-reference checks, experimental build and formatting passed on system Rust
+1.99.0. See [feature configuration](docs/protocol/feature-configuration.md) for evidence and inspection limits.
+
+Repository hygiene passed: 912 local links, package licenses, tracked-file
+budgets and 3,840,464 bytes across five checksum-verified APK bundles.

@@ -1,0 +1,49 @@
+# APK-derived structural disassembly: LX/1S7;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=1
+  0000..0004 op=22 new-instance v0, LX/1S7;
+  0004..000a op=70 invoke-direct {v0}, LX/1S7;-><init>(V)
+  000a..000e op=69 sput-object v0, LX/1S7;->A00:LX/1S7;
+  000e..0012 op=22 new-instance v0, LX/1S8;
+  0012..0018 op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>(V)
+  0018..001c op=69 sput-object v0, LX/1S7;->CREATOR:Landroid/os/Parcelable$Creator;
+  001c..001e op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method <init>(V) flags=0x10001 registers=2
+  0000..0004 op=1a const-string v0, ""
+  0004..000a op=70 invoke-direct {v1, v0}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(VL)
+  000a..000c op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method describeContents(I) flags=0x11 registers=2
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0004 op=0f return v0
+  # exception table: 0 try range(s)
+.end method
+
+.method getServer(L) flags=0x1 registers=2
+  0000..0006 op=1b const-string/jumbo v0, "s.whatsapp.net"
+  0006..0008 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
+
+.method getType(I) flags=0x1 registers=2
+  0000..0004 op=13 const/16 v0, #0xd
+  0004..0006 op=0f return v0
+  # exception table: 0 try range(s)
+.end method
+
+.method writeToParcel(VLI) flags=0x11 registers=4
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v2, v0}, LX/00h;->A0A(VLI)
+  0008..000a op=12 const/4 v0, #0x1
+  000a..0010 op=6e invoke-virtual {v2, v0}, Landroid/os/Parcel;->writeInt(VI)
+  0010..0012 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

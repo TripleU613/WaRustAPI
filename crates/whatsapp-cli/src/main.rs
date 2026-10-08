@@ -297,6 +297,13 @@ enum Cmd {
         #[arg(long)]
         show: bool,
     },
+    /// Queue or inspect one initial AB-property read (offline; values are not applied).
+    #[cfg(feature = "experimental-transport")]
+    AbpropsQuery {
+        /// Inspect the saved response without queueing a read.
+        #[arg(long)]
+        show: bool,
+    },
     /// Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Actions {
@@ -1544,6 +1551,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::PeerIdentityQuery { chat, show } => {
             transport_receive::peer_identity_query(&cli, chat, *show)
         }
+        #[cfg(feature = "experimental-transport")]
+        Cmd::AbpropsQuery { show } => transport_receive::abprops_query(&cli, *show),
         #[cfg(feature = "experimental-transport")]
         Cmd::Actions { show } => transport_receive::actions_status(&cli, show.as_deref()),
         #[cfg(feature = "experimental-transport")]

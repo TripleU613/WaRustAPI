@@ -1,0 +1,120 @@
+{
+  "abprops-query": {
+    "anchors": [
+      "ab_props:sys:config_hash",
+      "protocol",
+      "abt"
+    ],
+    "class": "LX/Hgb;",
+    "file": "abprops-query.txt",
+    "include_exception_tables": true,
+    "method_filter": "A00",
+    "method_shorty": "VZZI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "abprops-query-server-target": {
+    "class": "LX/GAZ;",
+    "file": "abprops-query-server-target.txt",
+    "include_exception_tables": true,
+    "method_filter": "A1T",
+    "method_shorty": "VLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "abprops-refresh-notification": {
+    "anchors": [
+      "MessagingSendMethods/forceFetchABPropsAndMobileConfig/fetch"
+    ],
+    "class": "LX/14f;",
+    "file": "abprops-refresh-notification.txt",
+    "include_exception_tables": true,
+    "method_filter": "A09",
+    "method_shorty": "VLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "abprops-result": {
+    "anchors": [
+      "AbPropProtocolHelper/onSuccess, onReceiveABProps...",
+      "config_code",
+      "delta_update"
+    ],
+    "class": "LX/IWy;",
+    "file": "abprops-result.txt",
+    "include_exception_tables": true,
+    "method_filter": "C8f",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "abprops-value-conversion": {
+    "anchors": [
+      "ABPropsManager/invalid format for config; configCode="
+    ],
+    "class": "LX/0Ci;",
+    "file": "abprops-value-conversion.txt",
+    "include_exception_tables": true,
+    "method_filter": "A00",
+    "method_shorty": "ZLLLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "boolean-registry-access": {
+    "class": "LX/07t;",
+    "file": "boolean-registry-access.txt",
+    "include_exception_tables": true,
+    "method_filter": "A15",
+    "method_shorty": "L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "login-property-hints": {
+    "anchors": [
+      "abprops",
+      "props"
+    ],
+    "class": "LX/0iS;",
+    "file": "login-property-hints.txt",
+    "include_exception_tables": true,
+    "method_filter": "A12",
+    "method_shorty": "VLLLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "server-jid": {
+    "anchors": [
+      "s.whatsapp.net"
+    ],
+    "class": "LX/1S7;",
+    "file": "server-jid.txt",
+    "include_exception_tables": true,
+    "method_filter": null,
+    "methods": 6,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  }
+}

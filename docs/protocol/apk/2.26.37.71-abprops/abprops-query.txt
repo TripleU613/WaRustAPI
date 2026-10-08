@@ -1,0 +1,78 @@
+# APK-derived structural disassembly: LX/Hgb;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(VZZI) flags=0x11 registers=15
+  0000..0004 op=54 iget-object v0, v11, LX/Hgb;->A03:LX/05B;
+  0004..0008 op=54 iget-object v4, v0, LX/05B;->A00:LX/00s;
+  0008..000e op=71 invoke-static {v4}, LX/8kY;->A0s(LL)
+  000e..0010 op=0c move-result-object
+  0010..0014 op=1a const-string v3, ""
+  0014..0018 op=39 if-nez v12, +0x1d
+  0018..001c op=39 if-nez v13, +0x1b
+  001c..0020 op=54 iget-object v0, v11, LX/Hgb;->A00:LX/05B;
+  0020..0026 op=71 invoke-static {v0}, LX/05B;->A02(LL)
+  0026..0028 op=0c move-result-object
+  0028..002c op=1f check-cast v2, LX/0Ci;
+  002c..002e op=1d monitor-enter
+  002e..0032 op=54 iget-object v1, v2, LX/0Ci;->A00:Landroid/content/SharedPreferences;
+  0032..0036 op=1a const-string v0, "ab_props:sys:config_hash"
+  0036..003c op=71 invoke-static {v1, v0}, LX/1xg;->A1O(LLL)
+  003c..003e op=0c move-result-object
+  003e..0040 op=28 goto +0x4
+  0040..0042 op=0d move-exception
+  0042..0044 op=1e monitor-exit
+  0044..0046 op=27 throw v0
+  0046..0048 op=1e monitor-exit
+  0048..004c op=38 if-eqz v0, +0x3
+  004c..004e op=07 move-object
+  004e..0054 op=71 invoke-static {}, LX/1xf;->A1D(L)
+  0054..0056 op=0c move-result-object
+  0056..005a op=1a const-string v1, "protocol"
+  005a..005c op=12 const/4 v6, #0x1
+  005c..0060 op=22 new-instance v0, LX/0hq;
+  0060..0066 op=70 invoke-direct {v0, v1, v6}, LX/0hq;-><init>(VLI)
+  0066..006c op=6e invoke-virtual {v2, v0}, Ljava/util/AbstractCollection;->add(ZL)
+  006c..0070 op=1a const-string v0, "hash"
+  0070..0076 op=71 invoke-static {v0, v3, v2}, LX/Aym;->A1L(VLLL)
+  0076..007a op=38 if-eqz v13, +0xe
+  007a..007e op=3d if-lez v14, +0xc
+  007e..0082 op=1a const-string v1, "refresh_id"
+  0082..0086 op=22 new-instance v0, LX/0hq;
+  0086..008c op=70 invoke-direct {v0, v1, v14}, LX/0hq;-><init>(VLI)
+  008c..0092 op=6e invoke-virtual {v2, v0}, Ljava/util/AbstractCollection;->add(ZL)
+  0092..0094 op=12 const/4 v5, #0x0
+  0094..0098 op=23 new-array v0, v5, [LX/0hq;
+  0098..009e op=6e invoke-virtual {v2, v0}, Ljava/util/AbstractCollection;->toArray(LL)
+  009e..00a0 op=0c move-result-object
+  00a0..00a4 op=1f check-cast v1, [LX/0hq;
+  00a4..00a8 op=1a const-string v0, "props"
+  00a8..00ac op=22 new-instance v3, LX/0hs;
+  00ac..00b2 op=70 invoke-direct {v3, v0, v1}, LX/0hs;-><init>(VLL)
+  00b2..00b4 op=12 const/4 v0, #0x4
+  00b4..00b8 op=23 new-array v2, v0, [LX/0hq;
+  00b8..00be op=71 invoke-static {v2, v5}, LX/GAZ;->A1T(VLI)
+  00be..00c2 op=1a const-string v1, "type"
+  00c2..00c6 op=1a const-string v0, "get"
+  00c6..00cc op=71 invoke-static {v1, v0, v2, v6}, LX/1xl;->A1U(VLLLI)
+  00cc..00d0 op=1a const-string v0, "id"
+  00d0..00d6 op=71 invoke-static {v0, v7, v2}, LX/Ayk;->A1J(VLLL)
+  00d6..00da op=1a const-string v1, "xmlns"
+  00da..00de op=1a const-string v0, "abt"
+  00de..00e4 op=71 invoke-static {v1, v0, v2}, LX/Deq;->A1T(VLLL)
+  00e4..00ea op=71 invoke-static {v3, v2}, LX/GAW;->A0l(LLL)
+  00ea..00ec op=0c move-result-object
+  00ec..00f2 op=71 invoke-static {v4}, LX/8kT;->A12(LL)
+  00f2..00f4 op=0c move-result-object
+  00f4..00f6 op=12 const/4 v0, #0x1
+  00f6..00fa op=22 new-instance v5, LX/IWy;
+  00fa..0100 op=70 invoke-direct {v5, v11, v0}, LX/IWy;-><init>(VLI)
+  0100..0104 op=16 const-wide/16 v9, #0x7d00
+  0104..0108 op=13 const/16 v8, #0xdc
+  0108..010e op=74 invoke-virtual/range {v4..v10}, LX/0h8;->A0T(ZLLLIJ)
+  010e..0110 op=0e return-void
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0017..0020 -> 0020
+  # catch <all> code_units 0021..0022 -> 0020
+.end method

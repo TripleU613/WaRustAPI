@@ -2401,6 +2401,37 @@ pub(super) async fn lab_pair(
     Ok(())
 }
 
+pub(super) fn abprops_query(cli: &super::Cli, show: bool) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let value = if show {
+        serde_json::to_value(whatsapp_api::transport::abprops::inspect(&store)?)
+            .map_err(|_| Error::invalid("abprops", "cannot encode inspection"))?
+    } else {
+        serde_json::json!({"action_id": whatsapp_api::transport::abprops::queue(&store)?})
+    };
+    if !cli.json {
+        println!(
+            "AB-property read: {}; effective feature configuration remains unestablished",
+            if show {
+                "saved evidence"
+            } else {
+                "queued or saved ID; listen transmits queued reads once"
+            }
+        );
+    }
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&value)
+            .map_err(|_| Error::invalid("abprops", "cannot encode result"))?
+    );
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

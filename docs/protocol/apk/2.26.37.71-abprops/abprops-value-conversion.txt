@@ -1,0 +1,74 @@
+# APK-derived structural disassembly: LX/0Ci;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(ZLLLI) flags=0x19 registers=12
+  0000..0004 op=1a const-string v3, "; value="
+  0004..0008 op=1a const-string v2, "ABPropsManager/invalid format for config; configCode="
+  0008..000a op=12 const/4 v7, #0x0
+  000a..000e op=38 if-eqz v10, +0x7a
+  000e..0014 op=71 invoke-static {v11}, Ljava/lang/String;->valueOf(LI)
+  0014..0016 op=0c move-result-object
+  0016..001a op=54 iget-object v6, v9, LX/0Ci;->A08:LX/00D;
+  001a..0020 op=6e invoke-virtual {v6}, LX/00D;->A15(L)
+  0020..0022 op=0c move-result-object
+  0022..0028 op=71 invoke-static {v11}, Ljava/lang/Integer;->valueOf(LI)
+  0028..002a op=0c move-result-object
+  002a..0030 op=6e invoke-virtual {v0, v4}, Lcom/google/common/collect/ImmutableMap;->containsKey(ZL)
+  0030..0032 op=0a move-result
+  0032..0034 op=12 const/4 v5, #0x1
+  0034..0038 op=38 if-eqz v0, +0xe
+  0038..003e op=71 invoke-static {v10}, Ljava/lang/Integer;->parseInt(IL)
+  003e..0040 op=0a move-result
+  0040..0042 op=12 const/4 v0, #0x0
+  0042..0046 op=38 if-eqz v4, +0x3
+  0046..0048 op=12 const/4 v0, #0x1
+  0048..004e op=72 invoke-interface {v8, v1, v0}, Landroid/content/SharedPreferences$Editor;->putBoolean(LLZ)
+  004e..0050 op=0f return v5
+  0050..0056 op=6e invoke-virtual {v6}, LX/00D;->A17(L)
+  0056..0058 op=0c move-result-object
+  0058..005e op=6e invoke-virtual {v0, v4}, Lcom/google/common/collect/ImmutableMap;->containsKey(ZL)
+  005e..0060 op=0a move-result
+  0060..0064 op=38 if-eqz v0, +0xa
+  0064..006a op=71 invoke-static {v10}, Ljava/lang/Integer;->parseInt(IL)
+  006a..006c op=0a move-result
+  006c..0072 op=72 invoke-interface {v8, v1, v0}, Landroid/content/SharedPreferences$Editor;->putInt(LLI)
+  0072..0074 op=0f return v5
+  0074..007a op=6e invoke-virtual {v6}, LX/00D;->A16(L)
+  007a..007c op=0c move-result-object
+  007c..0082 op=6e invoke-virtual {v0, v4}, Lcom/google/common/collect/ImmutableMap;->containsKey(ZL)
+  0082..0084 op=0a move-result
+  0084..0088 op=38 if-eqz v0, +0xa
+  0088..008e op=71 invoke-static {v10}, Ljava/lang/Float;->parseFloat(FL)
+  008e..0090 op=0a move-result
+  0090..0096 op=72 invoke-interface {v8, v1, v0}, Landroid/content/SharedPreferences$Editor;->putFloat(LLF)
+  0096..0098 op=0f return v5
+  0098..009e op=6e invoke-virtual {v6}, LX/00D;->A19(L)
+  009e..00a0 op=0c move-result-object
+  00a0..00a6 op=6e invoke-virtual {v0, v4}, Lcom/google/common/collect/ImmutableMap;->containsKey(ZL)
+  00a6..00a8 op=0a move-result
+  00a8..00ac op=39 if-nez v0, +0x11
+  00ac..00b2 op=6e invoke-virtual {v6}, LX/00D;->A18(L)
+  00b2..00b4 op=0c move-result-object
+  00b4..00ba op=6e invoke-virtual {v0, v4}, Lcom/google/common/collect/ImmutableMap;->containsKey(ZL)
+  00ba..00bc op=0a move-result
+  00bc..00c0 op=38 if-eqz v0, +0x21
+  00c0..00c4 op=22 new-instance v0, Lorg/json/JSONObject;
+  00c4..00ca op=70 invoke-direct {v0, v10}, Lorg/json/JSONObject;-><init>(VL)
+  00ca..00d0 op=72 invoke-interface {v8, v1, v10}, Landroid/content/SharedPreferences$Editor;->putString(LLL)
+  00d0..00d2 op=0f return v5
+  00d2..00d4 op=0d move-exception
+  00d4..00d8 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  00d8..00de op=70 invoke-direct {v0, v2}, Ljava/lang/StringBuilder;-><init>(VL)
+  00de..00e4 op=6e invoke-virtual {v0, v11}, Ljava/lang/StringBuilder;->append(LI)
+  00e4..00ea op=6e invoke-virtual {v0, v3}, Ljava/lang/StringBuilder;->append(LL)
+  00ea..00f0 op=6e invoke-virtual {v0, v10}, Ljava/lang/StringBuilder;->append(LL)
+  00f0..00f6 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString(L)
+  00f6..00f8 op=0c move-result-object
+  00f8..00fe op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(VLL)
+  00fe..0100 op=0f return v7
+  # exception table: 1 try range(s)
+  # catch Ljava/lang/NumberFormatException; code_units 000b..0069 -> 0069
+  # catch Lorg/json/JSONException; code_units 000b..0069 -> 0069
+.end method

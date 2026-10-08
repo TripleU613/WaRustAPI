@@ -176,11 +176,10 @@ impl<'a> Encoder<'a> {
         if node.description.is_empty() {
             return Err(CodecError::Unencodable("empty description"));
         }
-        let attrs: Vec<_> = node
-            .attributes
-            .iter()
-            .filter(|a| !matches!(&a.value, AttributeValue::Text(t) if t.is_empty()))
-            .collect();
+        // APK 37.71 0hs.A0Q / 1Qe.A01 retains empty attribute strings;
+        // 1Qe.A05 -> A06 serializes a zero-length value instead of omitting it.
+        // Dropping them changed Hgb.A00's initial AB-property hash request.
+        let attrs = &node.attributes;
         let has_content = !matches!(node.content, NodeContent::Empty);
         self.list_start(1 + 2 * attrs.len() + usize::from(has_content))?;
         self.write_string(&node.description)?;
@@ -333,10 +332,31 @@ mod tests {
     }
 
     #[test]
-    fn empty_attributes_are_dropped_and_non_utf8_preserved() {
+    fn independent_empty_attribute_raw_encoding_fixture() {
+        // Literal LIST_8(3), raw names, BINARY_8(0). This is a supported raw
+        // encoding, not a claim about APK packed-string marker selection.
+        let expected = b"\x00\xf8\x03\xfc\x0cfixture-node\xfc\x0cfixture-attr\xfc\x00";
+        let node = Node::new("fixture-node").attr("fixture-attr", "");
+        assert_eq!(Encoder::new(dict()).encode(&node).unwrap(), expected);
+        assert_eq!(roundtrip(&node), node);
+        let mut packed = expected.to_vec();
+        let end = packed.len();
+        packed[end - 2] = tags::NIBBLE_8;
+        let limits = Limits::default();
+        let payload = unpack_frame_payload(&packed, &limits).unwrap();
+        assert_eq!(
+            Decoder::new(&payload, dict(), &limits)
+                .decode_node()
+                .unwrap(),
+            node
+        );
+    }
+
+    #[test]
+    fn empty_attributes_and_non_utf8_are_preserved() {
         let node = Node::new("x").attr("a", "").attr("b", "v");
         let back = roundtrip(&node);
-        assert_eq!(back.attributes.len(), 1);
+        assert_eq!(back, node);
         let raw = Node::new("x").attr(
             "bin",
             AttributeValue::Bytes(Bytes::from_static(&[0xFF, 0xFE])),

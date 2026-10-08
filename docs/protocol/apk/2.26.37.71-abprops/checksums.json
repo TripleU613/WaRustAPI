@@ -1,0 +1,50 @@
+{
+  "abprops-query-server-target.txt": {
+    "bytes": 661,
+    "sha256": "cb3b22a195406cf06699cbe5197122e5e477c0d8d682702f401da09fac7512a4"
+  },
+  "abprops-query.txt": {
+    "bytes": 3793,
+    "sha256": "c4151794685e5f69df0c2cf6a08b718dc55dc163fbdd6a182aa5b3350f6457eb"
+  },
+  "abprops-refresh-notification.txt": {
+    "bytes": 7048,
+    "sha256": "06599efada88711d9be5ab520b82782d61aff3b5288e9c4ac7a559cc28dcb480"
+  },
+  "abprops-result.txt": {
+    "bytes": 26104,
+    "sha256": "fdaa655ded131f90d8c0d1f2b02eb564e73401bdb152b888fa87a157741daa1f"
+  },
+  "abprops-value-conversion.txt": {
+    "bytes": 4119,
+    "sha256": "3dbd22da34ee4aa2f2a2d39632a3b1416f7d1b7fa7cb1ece1f2a2444d69a6d25"
+  },
+  "boolean-registry-access.txt": {
+    "bytes": 506,
+    "sha256": "133b297f41dcecd7e357c3cfbd4775ede6ab1b2c1ff7226d9823fadb01d222df"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "login-property-hints.txt": {
+    "bytes": 21640,
+    "sha256": "ab720be0da4f6037f7bf4bc9a8e1b3c772648dbdd36fefa51fe109f7b6fefb1d"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "server-jid.txt": {
+    "bytes": 1873,
+    "sha256": "9d147cc62649b350d688023f6c608b38491e7817807203022ac5e1d1c52fc068"
+  },
+  "targets.json": {
+    "bytes": 3207,
+    "sha256": "a133abcb97e29adac1390163e00cc26b2fec2d3cb491abe6c1d549071548f919"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

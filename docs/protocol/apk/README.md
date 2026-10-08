@@ -208,3 +208,13 @@ using [the recipe](recipes/2.26.37.71-core.json) and the hash-pinned APK.
 [Property interpretation and unknowns](../peer-identity.md#companion-removal-property-and-effective-value-2026-10-08)
 explain why false baked defaults do not establish the effective account setting.
 No unanchored helper is automatically relocated or mapped to a new APK.
+
+
+The [37.71 ABProps recipe](recipes/2.26.37.71-abprops.json) preserves eight
+request/callback/type-conversion/login-hint/server-address topics, with exception
+tables: **13 methods / 13 files / 97,174 bytes**. Its separate
+[baseline](2.26.37.71-abprops/targets.json) avoids expanding the nearly full core
+bundle. [Runtime read and remaining configuration gaps](../feature-configuration.md)
+distinguish saved response evidence from an effective feature value. Generated
+07t defaults remain local; compact Boolean registration windows are attributed
+separately. No native MobileConfig mapping or automatic relocation is claimed.

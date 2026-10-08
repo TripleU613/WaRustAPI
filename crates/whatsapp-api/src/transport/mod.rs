@@ -10,6 +10,12 @@
     feature = "experimental-noise",
     feature = "experimental-transport"
 ))]
+pub mod abprops;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod actions;
 #[cfg(all(
     feature = "experimental-signal-crypto",
