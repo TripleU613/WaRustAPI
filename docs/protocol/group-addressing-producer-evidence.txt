@@ -1,0 +1,114 @@
+# APK 2.26.37.71; SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Selected scans/excerpts outside the core checksum bundle.
+# Bytecode offsets are method-relative bytes; scan offsets explicitly identify DEX bytes.
+
+# Reproduce: target/debug/xtask apk-xref ~/Downloads/WhatsApp.apk --anchor addressing_mode
+["addressing_mode"]  (14 reference(s))
+  classes3.dex  LX/37W;->A05(L)
+    dex byte offset: 0x370e88
+  classes3.dex  LX/3RE;->run(V)
+    dex byte offset: 0x42208c
+  classes6.dex  LX/9R1;->A0J(VLL)
+    dex byte offset: 0x39cb80
+  classes6.dex  LX/ADw;->A0B(LLL)
+    dex byte offset: 0x4f1aa0
+  classes6.dex  LX/AUF;->AR4(VLL)
+    dex byte offset: 0x56178c
+  classes7.dex  LX/DEw;->CF0(LLL)
+    dex byte offset: 0x7a3210
+  classes7.dex  LX/DMA;->run(V)
+    dex byte offset: 0x7dbc64
+  classes7.dex  Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A06(ZLLLLLLLLLLIJZZ)
+    dex byte offset: 0x8a18fa
+  classes7.dex  Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0G(V)
+    dex byte offset: 0x8a89c8
+  classes8.dex  LX/FFo;->A02(ZLLLIZZ)
+    dex byte offset: 0x5308ec
+  classes.dex  LX/0lO;->A01(LLLLLZ)
+    dex byte offset: 0x66f0fa
+  classes.dex  LX/0u7;->A06(LLLLIZ)
+    dex byte offset: 0x71c464
+  classes.dex  LX/17J;->BFC(ZLI)
+    dex byte offset: 0x804de8
+  classes.dex  LX/1Dz;->A0H(LLLLLLLIJJZ)
+    dex byte offset: 0x841534
+
+# Reproduce: target/debug/xtask apk-callers ~/Downloads/WhatsApp.apk --class 'LX/0Y9;' --method A0s
+classes.dex  LX/0bA;->A07(LLL)
+  invoke dex byte offset: 0x605182
+classes.dex  LX/0yw;->A06(VLLLLI)
+  invoke dex byte offset: 0x75d0ca
+classes.dex  LX/0yw;->A0y(ZLLLLI)
+  invoke dex byte offset: 0x761eae
+classes3.dex  LX/28q;->A0F(ZZ)
+  invoke dex byte offset: 0x259d6a
+classes3.dex  LX/2x2;->A00(VL)
+  invoke dex byte offset: 0x3296a8
+
+# Reproduce: target/debug/xtask apk-callers ~/Downloads/WhatsApp.apk --class 'LX/ADw;' --method A0B
+classes6.dex  LX/9Qh;-><init>(VLLI)
+  invoke dex byte offset: 0x398a82
+classes6.dex  LX/9Qh;-><init>(VLLI)
+  invoke dex byte offset: 0x398c08
+classes6.dex  LX/9Qi;-><init>(VLL)
+  invoke dex byte offset: 0x398f00
+classes6.dex  LX/9Qj;-><init>(VLL)
+  invoke dex byte offset: 0x3991a0
+classes6.dex  LX/9Qk;-><init>(VLL)
+  invoke dex byte offset: 0x39972e
+classes6.dex  LX/AZK;->AAK(LLL)
+  invoke dex byte offset: 0x57ea96
+classes6.dex  LX/AZL;->AAK(LLL)
+  invoke dex byte offset: 0x580a4a
+classes6.dex  LX/AZM;->AAK(LLL)
+  invoke dex byte offset: 0x581436
+
+# ADs.A0D candidate rejected: description helper, not addressing-mode parsing.
+# Reproduce: target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/ADs;' --method A0D
+
+# class: LX/ADs;
+# extends: Ljava/lang/Object;
+
+.method public A0D(LL)  # .registers 3
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00h;->A0A(VLI)
+    0008..000c  const-string  v0, "description"
+    000c..0012  invoke-virtual  {v2, v0}, LX/0hs;->A0F(LL)
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-static  {v2, v0}, LX/ADs;->A04(LLL)
+    001a..001c  move-result-object  v0
+    001c..001e  return-object  v0
+.end method
+
+# Selected call context: 9Qi.<init>; not the complete caller.
+# Reproduce: target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/9Qi;'
+.method public <init>(VLL)  # .registers 32
+    0108..010a  const/4  v7, #0x2
+    010a..010e  new-array  v6, v7, [Ljava/lang/String;
+    010e..0112  const-string  v18, "remove"
+    0112..0116  aput-object  v18, v6, v0
+    0116..011a  const-string  v5, "linked_groups"
+    011a..011e  aput-object  v5, v6, v1
+    011e..0122  const-string  v13, "true"
+    0122..0124  move-object  v14, v6
+    0124..0126  move  v15, v0
+    0126..012c  invoke-virtual/range  {v8..v15}, LX/8lB;->A0L(LLLLLLLZ)
+    012c..0132  invoke-static  {v3, v2}, LX/ADw;->A0B(LLL)
+    0132..0134  move-result-object  v5
+    0134..0138  iput-object  v5, v4, LX/9Qi;->A02:LX/EIw;
+    0138..013c  new-array  v6, v7, [Ljava/lang/String;
+    013c..0140  aput-object  v18, v6, v0
+    0140..0144  const-string  v17, "participant"
+    0144..0148  aput-object  v17, v6, v1
+    0148..014c  const-wide/16  v12, #0x1
+    014c..0150  const-wide/16  v14, #0x400
+
+# Selected call context: AZM.AAK; not the complete caller.
+# Reproduce: target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/AZM;' --method AAK
+.method public AAK(LLL)  # .registers 25
+    079c..07a2  invoke-static  {v10, v9}, LX/1xj;->A1G(VLL)
+    07a2..07a8  invoke-static  {v10, v9}, LX/ADw;->A0B(LLL)
+    07a8..07aa  move-result-object  v0
+    07aa..07ac  return-object  v0
+
+# Negative search: EIw --method invoke found no method bodies; full class has its constructor.

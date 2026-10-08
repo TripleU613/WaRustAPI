@@ -1,0 +1,73 @@
+# APK-derived structural disassembly: LX/0yw;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A06(VLLLLI) flags=0x9 registers=8
+  0000..0004 op=13 const/16 v0, #0x193
+  0004..0006 op=12 const/4 v2, #0x1
+  0006..000a op=32 if-eq v7, v0, +0x74
+  000a..000e op=13 const/16 v0, #0x194
+  000e..0012 op=32 if-eq v7, v0, +0x1c
+  0012..0016 op=1a const-string v0, "groupmgr/groupInfoError/groupjid = "
+  0016..001a op=22 new-instance v1, Ljava/lang/StringBuilder;
+  001a..0020 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+  0020..0026 op=6e invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;->append(LL)
+  0026..002a op=1a const-string v0, "errorcode = "
+  002a..0030 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0030..0036 op=6e invoke-virtual {v1, v7}, Ljava/lang/StringBuilder;->append(LI)
+  0036..003c op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString(L)
+  003c..003e op=0c move-result-object
+  003e..0044 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+  0044..0046 op=0e return-void
+  0046..004a op=1a const-string v1, "groupmgr/groupInfoError/does not exist: "
+  004a..004e op=22 new-instance v0, Ljava/lang/StringBuilder;
+  004e..0054 op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(VL)
+  0054..005a op=6e invoke-virtual {v0, v5}, Ljava/lang/StringBuilder;->append(LL)
+  005a..0060 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString(L)
+  0060..0062 op=0c move-result-object
+  0062..0068 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+  0068..006c op=54 iget-object v0, v4, LX/0yw;->A18:LX/0Fs;
+  006c..0072 op=6e invoke-virtual {v0, v5}, LX/0Fs;->A0A(IL)
+  0072..0074 op=0a move-result
+  0074..0078 op=32 if-eq v0, v2, +0xd
+  0078..007c op=38 if-eqz v6, +0x14
+  007c..0082 op=1b const-string/jumbo v0, "subgroup_conflict_recovery"
+  0082..0088 op=6e invoke-virtual {v6, v0}, Ljava/lang/String;->equals(ZL)
+  0088..008a op=0a move-result
+  008a..008e op=38 if-eqz v0, +0xb
+  008e..0094 op=71 invoke-static {v5}, Ljava/util/Collections;->singletonList(LL)
+  0094..0096 op=0c move-result-object
+  0096..0098 op=12 const/4 v0, #0x0
+  0098..009e op=6e invoke-virtual {v4, v1, v0}, LX/0yw;->A0q(VLZ)
+  009e..00a0 op=0e return-void
+  00a0..00a4 op=62 sget-object v0, LX/8lX;->A03:LX/8lX;
+  00a4..00a8 op=33 if-ne v3, v0, -0x30
+  00a8..00ac op=54 iget-object v1, v4, LX/0yw;->A0x:LX/07t;
+  00ac..00b0 op=13 const/16 v0, #0x725e
+  00b0..00b6 op=6e invoke-virtual {v1, v0}, LX/00D;->A10(ZI)
+  00b6..00b8 op=0a move-result
+  00b8..00bc op=38 if-eqz v0, -0x3a
+  00bc..00c0 op=1a const-string v1, "groupmgr/groupInfoError/marking inactive group as migrated to LID: "
+  00c0..00c4 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  00c4..00ca op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(VL)
+  00ca..00d0 op=6e invoke-virtual {v0, v5}, Ljava/lang/StringBuilder;->append(LL)
+  00d0..00d6 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString(L)
+  00d6..00d8 op=0c move-result-object
+  00d8..00de op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+  00de..00e2 op=54 iget-object v1, v4, LX/0yw;->A0n:LX/0Y9;
+  00e2..00e6 op=1a const-string v0, "lid"
+  00e6..00ec op=6e invoke-virtual {v1, v5, v0}, LX/0Y9;->A0s(VLL)
+  00ec..00ee op=0e return-void
+  00ee..00f2 op=1a const-string v1, "groupmgr/groupInfoError/not a participant: "
+  00f2..00f6 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  00f6..00fc op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(VL)
+  00fc..0102 op=6e invoke-virtual {v0, v5}, Ljava/lang/StringBuilder;->append(LL)
+  0102..0108 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString(L)
+  0108..010a op=0c move-result-object
+  010a..0110 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+  0110..0116 op=71 invoke-static {v5}, Ljava/util/Collections;->singletonList(LL)
+  0116..0118 op=0c move-result-object
+  0118..011e op=6e invoke-virtual {v4, v0, v2}, LX/0yw;->A0q(VLZ)
+  011e..0120 op=0e return-void
+.end method

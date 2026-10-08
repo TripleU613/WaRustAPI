@@ -1,0 +1,13 @@
+# APK-derived structural disassembly: LX/EIw;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLI) flags=0x10001 registers=4
+  0000..0004 op=59 iput v3, v0, LX/EIw;->$t:I
+  0004..000a op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>(V)
+  000a..000e op=5b iput-object v2, v0, LX/EIw;->A01:Ljava/lang/String;
+  000e..0012 op=5b iput-object v1, v0, LX/EIw;->A00:Ljava/lang/Object;
+  0012..0016 op=5b iput-object v1, v0, LX/8lP;->A00:LX/0hs;
+  0016..0018 op=0e return-void
+.end method

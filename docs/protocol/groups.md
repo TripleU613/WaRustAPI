@@ -2888,3 +2888,114 @@ type-4 model writes are retained without inventing complete-reply enum values.
 A0Y's outer A0n guard is narrowed again by A0A/A0m, excluding interop type 28
 from the type-3 branch. Runtime contact/type synchronization remains incomplete;
 no account/network request. [Evidence and unknowns](cross-device-sync.md#persisted-group-type-updates-feeding-sender-mode-2026-10-07).
+
+## Addressing-mode producers and separate parser rules (2026-10-07)
+
+**Confirmed static, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+The [exact attribute-reference and caller scans](group-addressing-producer-evidence.txt)
+found 14 `addressing_mode` const-string instructions, five callers of
+0Y9.A0s and eight callers of ADw.A0B. These scans find direct references,
+not all data-flow consumers or a complete source-to-runtime graph.
+
+**Complete reply negative result:**
+[ADs.A0C](apk/2.26.37.71-core/group-mode-complete-reply.txt) does not
+directly read the addressing_mode attribute. It constructs
+[AAO](apk/2.26.37.71-core/group-mode-complete-model.txt) from participant,
+subject, creator, type and other helpers; this is not proof that no helper
+or downstream callback influences mode. The candidate ADs.A0D is a description
+helper (0008..001a), not mode parsing. AAO contains obfuscated integer/Boolean
+fields; no authoritative addressing-mode mapping is inferred from their types.
+The existing Rust complete-reply snapshot must not acquire a guessed mode
+merely because a group was fetched successfully.
+
+**Exact generated attribute grammar:**
+[ADw.A0B](apk/2.26.37.71-core/group-mode-attribute-validator.txt) builds
+allowed strings `lid` and `pn`, then asks 8lB.A0N for the addressing_mode
+attribute (0004..0034). Null fails the model conversion; a nonnull result
+constructs EIw with discriminator 0xb (003c..004a).
+[8lB.A0N](apk/2.26.37.71-core/group-mode-enum-validator.txt) obtains a
+String through A0L and uses List.contains, returning null on absent/rejected
+value (0012..0034). Therefore case variants are not accepted by this enum
+membership rule. Full A0L path/default/error behavior remains untraced here.
+[EIw](apk/2.26.37.71-core/group-mode-attribute-model.txt) stores the mode
+string in A01 and raw node in both its own A00 and base 8lP.A00. The selected
+class has only a constructor body; an invoke body search was negative. The
+exact caller scan includes 9Qh (two constructor sites), 9Qi, 9Qj, 9Qk and generated
+AZK/AZL/AZM validators. Selected 9Qi context calls it after remove/linked_groups
+validation and stores the returned wrapper in A02 (0132..0138). AZM.AAK also
+delegates directly. These contexts establish a shared schema helper, not a complete group-info mode producer or cached contact write.
+Other callers and application callbacks remain **unknown**.
+
+**Specific info errors:**
+[0yw.A06](apk/2.26.37.71-core/group-mode-info-error.txt) distinguishes
+403/0x193, 404/0x194 and other codes (0000..0012). Other codes only log and
+return. 403 logs not-a-participant and calls A0q on the singleton group with
+true (00ee..0120). 404 reads cached group type; type 1 or exact supplied
+context `subgroup_conflict_recovery` reaches A0q with false (0068..00a0).
+Otherwise only source enum 8lX.A03 plus feature 0x725e enables the diagnostic
+marking-inactive-group-as-migrated and 0Y9.A0s(group, `lid`) (00a0..00ec).
+The source enum's meaning, feature's runtime value and full A0q cleanup are
+not established. A 404 alone does not authorize setting mode, migrating
+membership, resetting keys or retrying a failed group action.
+
+**PN conversion condition:**
+[0bA.A07](apk/2.26.37.71-core/group-mode-to-pn.txt) enters conversion only
+when the held 1jL row's A0Y is true (mode 2, 0006..0022). For each held member
+it resolves a mapping through 0Xw.A0J; missing mappings skip that member
+(0072..0086). It obtains PN-side devices through 0bN.A0B. An empty device
+collection allows primary-device construction only when A9T.A01 is true;
+otherwise it skips that conversion (00a6..012e). It calls A0a with selected
+old/new members if either collected list is nonempty (0180..019e).
+Only A9T.A00=false permits the subsequent literal `pn` contact update,
+followed by 0bE.A0E (019e..01ce). No converted members returns zero earlier.
+Exact A9T policy inputs, atomicity, A0a side effects and cache invalidation
+remain untraced. This does not prove every PN group is complete or permission
+to invent alias mappings/companion authority. In particular this is not a
+fallback from an unknown historical classification.
+
+**Other LID setters:**
+[2x2.A00](apk/2.26.37.71-core/group-mode-contact-lid.txt) reads the held
+contact mode; when it is absent or not exactly `lid`, it calls A0s with `lid`
+(001c..0058). The trigger/callers are unknown; there is no server attribute
+read in this method.
+[28q.A0F](apk/2.26.37.71-core/group-mode-nonmember-cleanup.txt) is labelled
+NonMemberPnToLidGroupCleanupMigrationTask by its diagnostics. It obtains chat
+candidates, partitions into batches of 500, retrieves membership, and skips
+candidates when BGY returns true. It collects a selected PN set through
+0hd.A02 and, when nonempty, changes database metadata through 0VS.A05 with
+literal 8, calls A0a with an empty replacement set, then sets mode `lid`
+(0156..01ac). Literal-8 meaning, BGY and 0hd.A02 predicates, migration
+scheduling and complete exception/transaction behavior remain unknown.
+Do not translate this selected cleanup path into unconditional membership
+removal or a live account migration. The already retained 0yw.A0y is the fifth
+A0s caller and remains the separately documented explicit migration path.
+
+**Incoming grammar differs:**
+[DEw.CF0](apk/2.26.37.71-core/group-mode-incoming-parser.txt) reads the
+message root's addressing_mode with null default (0044..0050), defaulting
+group-like A0n routing to `lid` unless `pn`.equalsIgnoreCase(attribute) is
+true (0068..006c / 023c..0250). Thus this message-parser branch is more
+permissive than ADw's exact enum membership. It packages the selected mode
+with username, PN/LID/participant/recipient metadata in DFc; this method
+does not directly call the contact setter. Complete downstream provenance,
+DFc field layout and guest-account semantics remain unknown. Neither parser
+is evidence to adopt peer identity keys, guess aliases or rewrite cached
+contact modes merely from an authenticated message envelope.
+
+**Outgoing handoff confirmed:**
+[1Dz.A0H](apk/2.26.37.71-core/group-mode-outgoing-bundle.txt) writes its
+supplied addressing_mode string to Android Message.data at 00dc..00ee and
+refresh_lid Boolean at 00ee..0104. This closes the earlier inference that
+this method was a key/value handoff. It does not validate those values or
+establish a wire writer/refresh policy. Rust sender planning still uses its
+membership-namespace subset, not full authoritative contact-mode lifecycle.
+No account access, network request, runtime cache migration, session/pin
+replacement, new send or change to a saved request ID occurred in this trace.
+
+Addressing-mode trace validation: 58 xtask tests, regenerated CLI reference and
+five API checks passed. Core checksum bundle: 129 topics / 304 methods,
+134 files / 1,900,193 bytes (2 MiB bound). Verified cached comparison took
+0.151473 seconds: eleven new topics, all 118 prior topics unchanged; manifest,
+inventory and tokens unchanged. Scan/caller appendix remains outside the bundle.
+No runtime migration, automatic error recovery or live validation is claimed.

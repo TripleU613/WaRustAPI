@@ -1,0 +1,28 @@
+# APK-derived structural disassembly: LX/ADw;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0B(LLL) flags=0x19 registers=7
+  0000..0002 op=12 const/4 v4, #0x0
+  0002..0004 op=12 const/4 v3, #0x1
+  0004..000a op=71 invoke-static {}, LX/6aj;->A1a(L)
+  000a..000c op=0c move-result-object
+  000c..0010 op=1a const-string v0, "lid"
+  0010..0014 op=4d aput-object v0, v1, v4
+  0014..0018 op=1a const-string v0, "pn"
+  0018..001e op=71 invoke-static {v0, v1, v3}, LX/1xf;->A1J(LLLI)
+  001e..0020 op=0c move-result-object
+  0020..0024 op=23 new-array v1, v3, [Ljava/lang/String;
+  0024..0028 op=1a const-string v0, "addressing_mode"
+  0028..002c op=4d aput-object v0, v1, v4
+  002c..0032 op=6e invoke-virtual {v6, v5, v2, v1}, LX/8lB;->A0N(LLLL)
+  0032..0034 op=0c move-result-object
+  0034..0038 op=39 if-nez v2, +0x4
+  0038..003a op=12 const/4 v1, #0x0
+  003a..003c op=11 return-object v1
+  003c..0040 op=13 const/16 v0, #0xb
+  0040..0044 op=22 new-instance v1, LX/EIw;
+  0044..004a op=70 invoke-direct {v1, v5, v2, v0}, LX/EIw;-><init>(VLLI)
+  004a..004c op=11 return-object v1
+.end method

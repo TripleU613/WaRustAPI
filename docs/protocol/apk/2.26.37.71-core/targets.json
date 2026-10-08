@@ -365,6 +365,140 @@
       "crates/whatsapp-api/src/transport/framing.rs"
     ]
   },
+  "group-mode-attribute-model": {
+    "class": "LX/EIw;",
+    "file": "group-mode-attribute-model.txt",
+    "method_filter": null,
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-mode-attribute-validator": {
+    "anchors": [
+      "addressing_mode"
+    ],
+    "class": "LX/ADw;",
+    "file": "group-mode-attribute-validator.txt",
+    "method_filter": "A0B",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-mode-complete-model": {
+    "class": "LX/AAO;",
+    "file": "group-mode-complete-model.txt",
+    "method_filter": null,
+    "methods": 5,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-mode-complete-reply": {
+    "anchors": [
+      "group_response"
+    ],
+    "class": "LX/ADs;",
+    "file": "group-mode-complete-reply.txt",
+    "method_filter": "A0C",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-mode-contact-lid": {
+    "anchors": [
+      "lid"
+    ],
+    "class": "LX/2x2;",
+    "file": "group-mode-contact-lid.txt",
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-mode-enum-validator": {
+    "class": "LX/8lB;",
+    "file": "group-mode-enum-validator.txt",
+    "method_filter": "A0N",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-mode-incoming-parser": {
+    "anchors": [
+      "addressing_mode"
+    ],
+    "class": "LX/DEw;",
+    "file": "group-mode-incoming-parser.txt",
+    "method_filter": "CF0",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-mode-info-error": {
+    "anchors": [
+      "groupmgr/groupInfoError/marking inactive group as migrated to LID: "
+    ],
+    "class": "LX/0yw;",
+    "file": "group-mode-info-error.txt",
+    "method_filter": "A06",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-mode-nonmember-cleanup": {
+    "anchors": [
+      "NonMemberPnToLidGroupCleanupMigrationTask/migrate isReMigration="
+    ],
+    "class": "LX/28q;",
+    "file": "group-mode-nonmember-cleanup.txt",
+    "method_filter": "A0F",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-mode-outgoing-bundle": {
+    "anchors": [
+      "addressing_mode"
+    ],
+    "class": "LX/1Dz;",
+    "file": "group-mode-outgoing-bundle.txt",
+    "method_filter": "A0H",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
+  "group-mode-to-pn": {
+    "anchors": [
+      "pn"
+    ],
+    "class": "LX/0bA;",
+    "file": "group-mode-to-pn.txt",
+    "method_filter": "A07",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs"
+    ]
+  },
   "group-type-existing-update": {
     "anchors": [
       "groupchatstore/updateGroupChatInfoGroupTypeIfExist/chat does not exist: "

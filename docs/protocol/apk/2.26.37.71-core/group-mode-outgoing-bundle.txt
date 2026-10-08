@@ -1,0 +1,67 @@
+# APK-derived structural disassembly: LX/1Dz;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0H(LLLLLLLIJJZ) flags=0x9 registers=17
+  0000..0004 op=1a const-string v2, "lid"
+  0004..0006 op=12 const/4 v3, #0x0
+  0006..000a op=13 const/16 v1, #0x13
+  000a..000c op=12 const/4 v0, #0x0
+  000c..0012 op=71 invoke-static {v0, v3, v1, v3}, Landroid/os/Message;->obtain(LLIII)
+  0012..0014 op=0c move-result-object
+  0014..001a op=6e invoke-virtual {v4}, Landroid/os/Message;->getData(L)
+  001a..001c op=0c move-result-object
+  001c..0020 op=1a const-string v1, "msgid"
+  0020..0024 op=54 iget-object v0, v7, LX/1gc;->A01:Ljava/lang/String;
+  0024..002a op=6e invoke-virtual {v3, v1, v0}, Landroid/os/BaseBundle;->putString(VLL)
+  002a..0030 op=6e invoke-virtual {v4}, Landroid/os/Message;->getData(L)
+  0030..0032 op=0c move-result-object
+  0032..0036 op=54 iget-object v0, v7, LX/1gc;->A00:LX/0Cy;
+  0036..003c op=71 invoke-static {v0}, LX/0DE;->A09(LL)
+  003c..003e op=0c move-result-object
+  003e..0042 op=1a const-string v0, "remote_chat_jid"
+  0042..0048 op=6e invoke-virtual {v3, v0, v1}, Landroid/os/BaseBundle;->putString(VLL)
+  0048..004e op=6e invoke-virtual {v4}, Landroid/os/Message;->getData(L)
+  004e..0050 op=0c move-result-object
+  0050..0054 op=1a const-string v0, "participant"
+  0054..005a op=71 invoke-static {v1, v5, v0}, LX/1Dz;->A0g(VLLL)
+  005a..0060 op=6e invoke-virtual {v4}, Landroid/os/Message;->getData(L)
+  0060..0062 op=0c move-result-object
+  0062..0066 op=1a const-string v0, "remoteJid"
+  0066..006c op=71 invoke-static {v1, v6, v0}, LX/1Dz;->A0g(VLLL)
+  006c..0072 op=6e invoke-virtual {v4}, Landroid/os/Message;->getData(L)
+  0072..0074 op=0c move-result-object
+  0074..0078 op=1a const-string v0, "phash"
+  0078..007e op=6e invoke-virtual {v1, v0, v8}, Landroid/os/BaseBundle;->putString(VLL)
+  007e..0084 op=6e invoke-virtual {v4}, Landroid/os/Message;->getData(L)
+  0084..0086 op=0c move-result-object
+  0086..008a op=1a const-string v0, "count"
+  008a..0090 op=6e invoke-virtual {v1, v0, v11}, Landroid/os/BaseBundle;->putInt(VLI)
+  0090..0096 op=6e invoke-virtual {v4}, Landroid/os/Message;->getData(L)
+  0096..0098 op=0c move-result-object
+  0098..009e op=1b const-string/jumbo v0, "timestamp"
+  009e..00a4 op=6e invoke-virtual {v1, v0, v12, v13}, Landroid/os/BaseBundle;->putLong(VLJ)
+  00a4..00aa op=6e invoke-virtual {v4}, Landroid/os/Message;->getData(L)
+  00aa..00ac op=0c move-result-object
+  00ac..00b2 op=1b const-string/jumbo v0, "smid"
+  00b2..00b8 op=6e invoke-virtual {v1, v0, v14, v15}, Landroid/os/BaseBundle;->putLong(VLJ)
+  00b8..00be op=6e invoke-virtual {v4}, Landroid/os/Message;->getData(L)
+  00be..00c0 op=0c move-result-object
+  00c0..00c4 op=1a const-string v0, "edit"
+  00c4..00ca op=6e invoke-virtual {v1, v0, v9}, Landroid/os/BaseBundle;->putString(VLL)
+  00ca..00d0 op=6e invoke-virtual {v4}, Landroid/os/Message;->getData(L)
+  00d0..00d2 op=0c move-result-object
+  00d2..00d6 op=1a const-string v0, "counter_abuse_token"
+  00d6..00dc op=6e invoke-virtual {v1, v0, v10}, Landroid/os/BaseBundle;->putString(VLL)
+  00dc..00e2 op=6e invoke-virtual {v4}, Landroid/os/Message;->getData(L)
+  00e2..00e4 op=0c move-result-object
+  00e4..00e8 op=1a const-string v0, "addressing_mode"
+  00e8..00ee op=6e invoke-virtual {v1, v0, v2}, Landroid/os/BaseBundle;->putString(VLL)
+  00ee..00f4 op=6e invoke-virtual {v4}, Landroid/os/Message;->getData(L)
+  00f4..00f6 op=0c move-result-object
+  00f6..00fa op=1a const-string v0, "refresh_lid"
+  00fa..00fe op=02 move/from16
+  00fe..0104 op=6e invoke-virtual {v1, v0, v2}, Landroid/os/BaseBundle;->putBoolean(VLZ)
+  0104..0106 op=11 return-object v4
+.end method

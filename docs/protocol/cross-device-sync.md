@@ -2046,3 +2046,11 @@ API checks passed. The core checksum bundle now has 118 topics / 289 methods,
 0.168698 seconds: nine added topics, all 109 previous topics unchanged;
 manifest, inventory and tokens unchanged. Selected runnable excerpts remain
 outside the checksum bundle. No runtime behavior or live validation is claimed.
+
+Addressing-mode producer trace (2026-10-07, **confirmed static APK 37.71**):
+complete binary group replies do not directly read the mode attribute. Generated
+validators use exact pn/lid membership; incoming group-message parsing has a
+separate case-insensitive PN check. Five contact-mode setter callers now have
+selected paths retained, including gated info-error and PN-conversion branches;
+triggers, full callback provenance and runtime integration remain unfinished.
+No live request or account change. [Evidence and boundaries](groups.md#addressing-mode-producers-and-separate-parser-rules-2026-10-07).

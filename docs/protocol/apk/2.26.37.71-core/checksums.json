@@ -111,6 +111,50 @@
     "bytes": 2380,
     "sha256": "ac01c83ab4f1076cb0cb98290a1d40fda960ea543d6e30b3d0bd7bb2f8961f50"
   },
+  "group-mode-attribute-model.txt": {
+    "bytes": 699,
+    "sha256": "1e57a4de0b883647430fa5d7f3f92bcdbc7d1b9390b967b74da6cbe6eb562bf8"
+  },
+  "group-mode-attribute-validator.txt": {
+    "bytes": 1295,
+    "sha256": "a53b504d810c668c14fd48d6f1dbb9dbbdcb0ba80d1842d32188d13efa46db64"
+  },
+  "group-mode-complete-model.txt": {
+    "bytes": 21438,
+    "sha256": "deed56f7956d455d151d622e9eced3b7f5af68ee6b0db57800500fe39b7c2b71"
+  },
+  "group-mode-complete-reply.txt": {
+    "bytes": 9778,
+    "sha256": "73e2189384436e4e1c99a8cd3d049051c710a9a263fe07cd11006dffcec1dad7"
+  },
+  "group-mode-contact-lid.txt": {
+    "bytes": 1439,
+    "sha256": "6ee19c485fe07717dc3555ab3462078cea946dcb48965c5e4f4a7e5ba1153bb7"
+  },
+  "group-mode-enum-validator.txt": {
+    "bytes": 1078,
+    "sha256": "507619913cfc5949a50b9673c257eaa9181e5cf46bd890cd1cb4c75d11e4b142"
+  },
+  "group-mode-incoming-parser.txt": {
+    "bytes": 7930,
+    "sha256": "37b919c51b3e56aa13efcb561e49a3a08f421564d69aa5afb797a681e8f56140"
+  },
+  "group-mode-info-error.txt": {
+    "bytes": 4211,
+    "sha256": "37efdc967b06c75b00304f495970743070bf6902d83504312ec497f82852e2fa"
+  },
+  "group-mode-nonmember-cleanup.txt": {
+    "bytes": 6898,
+    "sha256": "66f9dc1e4e7a7d8386170099379a839ba141eda26acdd92bab74f7b864cf74c9"
+  },
+  "group-mode-outgoing-bundle.txt": {
+    "bytes": 3865,
+    "sha256": "5fff90ae063f35075b2ae696f424751960207f27c683f2002c870d5788121d92"
+  },
+  "group-mode-to-pn.txt": {
+    "bytes": 6498,
+    "sha256": "dcccd0c9a9ba1d35ecaa38afdb2325d1239185b31b51ea7f93ca12762e9f6b83"
+  },
   "group-type-existing-update.txt": {
     "bytes": 2522,
     "sha256": "21f0a0903c379856e1097432d78df61ad940b0f5c0f8671b0eb3d4485492bf53"
@@ -476,8 +520,8 @@
     "sha256": "82590b7944e627c71d4a54e3403be84e314598ced8789812c7c6951470853c92"
   },
   "targets.json": {
-    "bytes": 44964,
-    "sha256": "e642caffee6f7dea19adbb957c2d0d4f96ee44e26eae55f621d79de648c266fb"
+    "bytes": 48579,
+    "sha256": "4f9afe73b9fe4072f7da47795f2ba3d9884fc4da56a8388ead018ada80595777"
   },
   "token-dictionary-initializer.txt": {
     "bytes": 159791,

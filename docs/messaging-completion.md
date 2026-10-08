@@ -1825,3 +1825,11 @@ type-4 model writes are retained without inventing complete-reply enum values.
 A0Y's outer A0n guard is narrowed again by A0A/A0m, excluding interop type 28
 from the type-3 branch. Runtime contact/type synchronization remains incomplete;
 no account/network request. [Evidence and unknowns](protocol/cross-device-sync.md#persisted-group-type-updates-feeding-sender-mode-2026-10-07).
+
+Addressing-mode producer trace (2026-10-07, **confirmed static APK 37.71**):
+complete binary group replies do not directly read the mode attribute. Generated
+validators use exact pn/lid membership; incoming group-message parsing has a
+separate case-insensitive PN check. Five contact-mode setter callers now have
+selected paths retained, including gated info-error and PN-conversion branches;
+triggers, full callback provenance and runtime integration remain unfinished.
+No live request or account change. [Evidence and boundaries](protocol/groups.md#addressing-mode-producers-and-separate-parser-rules-2026-10-07).
