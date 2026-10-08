@@ -228,3 +228,13 @@ Five new topics cover ACK dispatch, network write, postwrite and frame encoding.
 removing exception annotations. [Writer trace and scope](../groups.md#ack-dispatch-and-uncompressed-write-boundary-2026-10-08)
 explains the uncompressed boundary and why no runtime correction is justified.
 This is scoped same-APK coverage, not full release remapping or protocol parity.
+
+
+The [37.71 companion cleanup recipe](recipes/2.26.37.71-companion-cleanup.json)
+preserves **17 topics / 17 methods / 22 files / 181,102 bytes**, including
+session/identity SQL predicates, canonical-address branches, property definition,
+transaction callback registration and cache-variant cleanup. Its
+[baseline](2.26.37.71-companion-cleanup/targets.json) is separate from the nearly
+full core bundle. [Interpretation and remaining gates](../peer-identity.md#companion-key-removal-scope-and-callback-boundaries-2026-10-08)
+distinguish static deletion scope from permission to run cleanup. No account
+keys/history are deleted; native/full mapping and callback lifecycle remain open.

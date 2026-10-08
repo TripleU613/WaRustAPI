@@ -1,0 +1,35 @@
+# APK-derived structural disassembly: LX/0kT;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(LLL) flags=0x11 registers=8
+  0000..0004 op=1a const-string v0, "identities"
+  0004..000a op=6e invoke-virtual {v5, v6, v0, v7}, LX/0kT;->A03(LLLL)
+  000a..000c op=0c move-result-object
+  000c..0010 op=22 new-instance v4, Ljava/util/LinkedHashMap;
+  0010..0016 op=70 invoke-direct {v4}, Ljava/util/LinkedHashMap;-><init>(V)
+  0016..001c op=72 invoke-interface {v0}, Ljava/util/Map;->entrySet(L)
+  001c..001e op=0c move-result-object
+  001e..0024 op=72 invoke-interface {v0}, Ljava/util/Set;->iterator(L)
+  0024..0026 op=0c move-result-object
+  0026..002c op=72 invoke-interface {v3}, Ljava/util/Iterator;->hasNext(Z)
+  002c..002e op=0a move-result
+  002e..0032 op=38 if-eqz v0, +0x1e
+  0032..0038 op=72 invoke-interface {v3}, Ljava/util/Iterator;->next(L)
+  0038..003a op=0c move-result-object
+  003a..003e op=1f check-cast v2, Ljava/util/Map$Entry;
+  003e..0044 op=72 invoke-interface {v2}, Ljava/util/Map$Entry;->getValue(L)
+  0044..0046 op=0c move-result-object
+  0046..004a op=1f check-cast v0, LX/B76;
+  004a..004e op=52 iget v0, v0, LX/B76;->A01:I
+  004e..0052 op=38 if-eqz v0, -0x14
+  0052..0058 op=72 invoke-interface {v2}, Ljava/util/Map$Entry;->getKey(L)
+  0058..005a op=0c move-result-object
+  005a..0060 op=72 invoke-interface {v2}, Ljava/util/Map$Entry;->getValue(L)
+  0060..0062 op=0c move-result-object
+  0062..0068 op=6e invoke-virtual {v4, v1, v0}, Ljava/util/AbstractMap;->put(LLL)
+  0068..006a op=28 goto -0x21
+  006a..006c op=11 return-object v4
+  # exception table: 0 try range(s)
+.end method

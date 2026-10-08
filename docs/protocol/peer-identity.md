@@ -1819,3 +1819,118 @@ The nine new cached core topics preserve the property/default/resolver/fallback
 source for release comparison; class names and numeric property IDs remain
 build-specific and require review in another APK. Most helper topics have no
 unique string anchor; an automatic relocation is not established.
+
+
+## Companion key-removal scope and callback boundaries (2026-10-08)
+
+**Confirmed static**, APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+This extends the earlier 1Uf.A02 reap trace: 0jc.A0s is removeSession and
+0jc.A0r is deleteIdentity. It resolves their SQL scope without enabling cleanup.
+The earlier statement that session/identity removal was untraced is superseded
+for these selected methods; full canonical mapping and callback lifecycle still
+remain incomplete.
+
+### Session deletion and cache variants
+
+0jc.A0s obtains a translated address through 0kT.A02 with table sessions,
+then executes A0D inside a database transaction. A0J chooses an address lock
+versus a synchronized Cap cache path; the runtime predicate remains unknown.
+A0D translates again through the session store and deletes only rows matching
+recipient_account_id, recipient_account_type and device_id (005c..0072).
+B76.A00 constructs its three SQL arguments from A04, A01, A00 in that order.
+This is a device-specific predicate, not an entire contact or account reset.
+
+A0D constructs Cfc and registers DNt discriminator 32 with 0ZN.A04
+(00aa..00d4), carrying the caller's translated address. A04 asserts an active
+SQLite transaction, wraps the runnable and delegates to 0Gy.A00; complete
+commit/rollback callback delivery is still **unknown**, so no after-commit
+execution guarantee is inferred just from the call site.
+
+DNt.run's switch maps 32 to 047a. At 047a..04a8 it writes Cfc through
+Cap.A03. It then enumerates B77/B78 variants and, except the original variant,
+removes matching address/type/device entries from Cap's set and map
+(04b4..0534). Thus an SQL single-device delete also has cache-variant effects.
+The enum meanings and complete Cfc session semantics are not established here.
+Cap.A03 is synchronized, prunes marked entries when its map exceeds 1000,
+marks an existing key, and skips map.put for account type 3. That local cache
+bound is not a server wait or limit and is not copied into Rust policy.
+
+### Identity deletion and feature-dependent target mapping
+
+0jc.A0r tests CDO.A00 through 00D.A13. CDO defines property 0x79da (31194)
+via 1xf.A0t; that helper constructs 09P with false/true defaults. The already
+traced 09P constructor/toString identify these as prod/debug defaults. The
+**effective** property remains unknown because cached/server/MobileConfig
+resolution is separate. This is a different property from removal admission
+35661; do not infer its value from that property's default or saved query.
+
+When this gate is true, A0A translates the selected address for identities;
+a still-zero account type yields no target, otherwise a singleton. When false,
+A0k obtains the device's user counterpart set through 0Xw.A0U, rebinds each to
+the same device number, then converts the list to Signal addresses. Failure to
+convert the original device uses the original singleton. This branch can select
+multiple mapped namespaces; it is not permission to guess PN/LID aliases.
+0kT.A02 also has an independent 0x536a (21354) predicate before one mapping
+branch. Its current value and full 0Xw/0DE/0hd mapping behavior remain unknown.
+
+A0r locks the selected target set, reads old identity public keys with 0kc.A0E,
+then removes with A0C and releases locks. A0E/A0C independently test numeric
+31194 and can apply 0kc.A03 -> 0kT.A04 translation. A04 filters translated
+account type zero; A03 preserves nonzero targets, translates zero targets via
+mapping helpers, and falls back to original inputs for unresolved entries.
+Those branches do not establish how an arbitrary namespace should be mapped.
+
+A0C deletes identities rows matching recipient_id, recipient_type and device_id
+(013c..0156) in a transaction. A0E's SELECT uses the same three-part tuple.
+Deletion results map back to requested targets and are true only when the SQL
+affected-row count is positive. A0r invokes 0k4.A0L only when an old key existed,
+a deletion succeeded and B7H.A00 yields a device. Its full observer/invalidation
+side effects are untraced. Missing old identities or failed deletion must not
+be treated as successful identity change merely because the method returned.
+
+### Sender-key scope and remaining port requirements
+
+**Confirmed existing 1Uf.A02 source:** removeAllSenderKeysForSender translates
+the address for sender_keys and selects sender_account_id, sender_account_type,
+device_id plus group_id IN (...). It invokes the list-grouping helper with 0x3cc (972) twice
+at 03fa..0404 before constructing the predicate at 0454..047a; the complete
+helper algorithm is not newly established here. Group-list
+production, all cache invalidation and broader callback effects remain
+incomplete. This is scoped sender/device/group cleanup, not deletion of all
+sender keys or all message history.
+
+**Current Rust limitation:** signed reconciliation persists nullable
+pending_removed_devices, but no deferred teardown worker or key deletion is
+implemented. The port still needs effective gates, authenticated canonical
+mapping, membership recheck, in-flight worker scheduling, transaction/callback
+parity and precise sender-key group selection. The removal marker's post-cleanup
+lifecycle remains unknown. No saved identity, session, key, event or history was
+deleted or migrated during this static work; no live request was made.
+
+The reviewed [cleanup recipe](apk/recipes/2.26.37.71-companion-cleanup.json)
+retains complete selected methods with exception tables. The full DNt method is
+retained to preserve its selector mapping; only discriminator 32 is interpreted
+here. All other callback cases remain outside this finding. Exact shorties are
+recipe constraints; apk-smali itself accepts only a method substring filter,
+not --method-shorty. A failed use of that unsupported flag produced no evidence.
+
+
+**Observed export/validation:** the 17-topic recipe exported 17 methods /
+22 files / 181102 bytes, within the 2 MiB bound, with ordered exception tables.
+Direct individual method dumps were checked against corresponding bundle files
+for instruction offsets/mnemonics and ordered catch ranges; the renderers
+differ in operand detail and full operand equality is not claimed. The
+[complete direct dumps](companion-cleanup-evidence.txt) retain those operands;
+only the CDO class-wide topic intentionally includes its full initializer.
+All 59 xtask tests passed. This is media-free static evidence, not runtime
+teardown, automatic release relocation or live peer-removal verification.
+
+Regenerated CLI reference, experimental API-symbol check and formatting also
+passed on system Rust 1.99.0. Runtime Rust behavior is unchanged; full workspace
+tests/Clippy were not repeated for this static evidence chunk. The scoped direct
+dumps retain operands that the compact exporter may omit; offset/mnemonic/catch
+coverage equality is not proof of complete bytecode semantic equivalence.
+
+Repository hygiene passed: 935 local links, tracked-file budgets, package
+licenses and 4,177,269 bytes across six checksum-verified APK bundles.

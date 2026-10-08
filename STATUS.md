@@ -1980,3 +1980,24 @@ No runtime Rust change, saved-account access or live request occurred.
 
 Repository hygiene passed: 928 local links, tracked-file budgets, package
 licenses and 3,996,167 bytes across five checksum-verified APK bundles.
+
+Companion removal scope (2026-10-08, **confirmed static APK 37.71**): A0s/A0r
+are session and identity removal, with device-specific recipient/type/device
+SQL predicates. Feature-gated address mapping can select namespace counterparts;
+CDO property 31194 has prod false/debug true defaults but unknown effective
+state. The session callback also invalidates cache variants for that device.
+Sender-key SQL is sender/type/device plus a selected group list. Transaction
+callback delivery, full mapping/observer effects, group selection and effective
+gates remain incomplete; no destructive Rust cleanup is enabled. A separate
+17-topic / 17-method / 22-file / 181102-byte checksum bundle retains the complete
+selected chain with exception tables. All 59 xtask tests passed. No saved account
+was opened, no live request sent, and no keys or history were deleted.
+[Scope and port boundaries](docs/protocol/peer-identity.md#companion-key-removal-scope-and-callback-boundaries-2026-10-08).
+
+Cleanup evidence checks: 17 direct dumps match bundle instruction-offset/
+mnemonic coverage and ordered catch ranges; direct operand details are retained
+separately. Regenerated CLI reference, experimental API-symbol check and formatting
+also passed on system Rust 1.99.0. Runtime Rust code is unchanged.
+
+Repository hygiene passed: 935 local links, tracked-file budgets, package
+licenses and 4,177,269 bytes across six checksum-verified APK bundles.
