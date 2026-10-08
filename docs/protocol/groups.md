@@ -2999,3 +2999,64 @@ five API checks passed. Core checksum bundle: 129 topics / 304 methods,
 0.151473 seconds: eleven new topics, all 118 prior topics unchanged; manifest,
 inventory and tokens unchanged. Scan/caller appendix remains outside the bundle.
 No runtime migration, automatic error recovery or live validation is claimed.
+
+## Group pairwise session device correction (2026-10-07)
+
+**Confirmed local bug:** sender-key storage preserved the actual participant
+index, but participant_session_jid flattened every group participant to its
+primary JID. A companion distribution therefore searched or advanced the
+primary pairwise ratchet even when its exact companion session was held.
+The selector regression failed by returning the primary; a real Signal
+companion distribution regression failed Unsupported before the correction.
+
+**Confirmed APK address evidence**, build 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+[B7H.A06](apk/2.26.37.71-core/sender-key-address-build.txt) copies
+DeviceJid.getDevice into B76. [B7H.A00 reverse conversion](group-pairwise-device-evidence.txt)
+reads that device field and reconstructs the DeviceJid. Cnr independently
+retains the sender-key device. These establish device-specific names, not
+complete incoming companion enrollment or identity-replacement policy.
+
+**Negative old-citation re-anchor:** retained 37.71 CPQ.A00 is a cached Boolean
+message classifier. It consults 1gc, message subclasses, group type and
+0bA.A0k; it does not choose a pairwise PN/LID session or device. It cannot
+support the older CPQ ratchet-selection citation. Complete inbound factory,
+companion ADV/identity binding, hosted agents and companion pkmsg replacement
+remain **unknown/unported**. The selected source appendix is outside the core
+checksum bundle; the previously retained B7H.A06 topic remains unchanged.
+
+The local receiver now selects the participant's exact PN/LID companion for
+an ordinary `msg` only when both its exact session and identity pin already
+exist. It does not use primary/alias fallback for that companion. Unpinned,
+missing-session, prekey-bootstrap/replacement and nonzero-agent paths remain
+unsupported by this pairwise selector. This is our explicit supported subset,
+not an asserted WhatsApp requirement. Primary PN/LID routing and its existing
+fallback/policy are unchanged. A skipped companion pairwise child does not
+prevent an independently usable saved sender-key child from decrypting.
+
+Tests cover primary-only rows, session-without-pin, another companion device,
+prekey input and nonzero agent without store mutation. The encrypted control
+fixture now runs for primary/device-3 PN and LID senders, exercising actual
+pairwise decryption, sender-key installation, durable non-user control markers,
+no read receipt/event, and duplicate handling after encrypted-store reopen.
+No historical primary chain is copied or reassigned to a companion; no saved
+ratchet or event marker is rewound to manufacture a successful receive.
+Use the existing lab-inbox --inspect and store inspect paths for captures and
+table counts. Full companion bootstrap and fresh live companion decryption
+remain required work; this correction does not claim that work complete.
+
+Companion pairwise refusal diagnostics name unsupported prekey or nonzero-agent
+routing. Missing held/pinned state reports only session_held and identity_pinned
+Booleans; no user/device address, key bytes, ciphertext or message content.
+
+Group companion correction validation: 677 workspace/all-feature tests, 24
+default CLI tests, strict all-target/all-feature Clippy, warning-free Rustdoc,
+regenerated CLI reference/API checks and the experimental CLI build passed.
+The selector regression returned a primary before the fix, and the encrypted
+companion control fixture returned Unsupported before the correction.
+
+Rebuilt-CLI offline inspection left outbox, actions, receipts, device state and
+peer pins unchanged. Private evidence index:
+lab/releases/group-device-inspection/active.json. No login/query/group send or
+new companion identity was manufactured. Fresh live companion decryption and
+full companion bootstrap remain unverified.

@@ -710,6 +710,55 @@ fn participant_session_jid(
     node: &Node,
     participant: &Jid,
 ) -> Result<Option<Jid>> {
+    // APK 37.71 B7H.A06 carries getDevice into B76; flattening a companion
+    // would select another device's ratchet. Full companion bootstrap/identity
+    // replacement provenance remains unported: use only an already held/pinned
+    // non-hosted msg session here, never the primary or an alias fallback.
+    if participant.agent != 0 {
+        tracing::warn!("group pairwise child preserved: nonzero-agent routing is unsupported");
+        return Ok(None);
+    }
+    if participant.device != 0 {
+        if !matches!(participant.server, Server::User | Server::Lid) {
+            return Ok(None);
+        }
+        let direct_kind = node
+            .child_nodes()
+            .iter()
+            .find(|n| {
+                n.description == "enc"
+                    && n.get_attr("v").and_then(|v| v.as_text()) == Some("2")
+                    && matches!(
+                        n.get_attr("type").and_then(|v| v.as_text()),
+                        Some("msg" | "pkmsg")
+                    )
+            })
+            .and_then(|n| n.get_attr("type").and_then(|v| v.as_text()));
+        if direct_kind != Some("msg") {
+            tracing::warn!(
+                "group companion pairwise child preserved: prekey bootstrap/replacement is unsupported"
+            );
+            return Ok(None);
+        }
+        let key = format!("comparison-direct:{participant}");
+        let (session_held, identity_pinned) = store.read(|tx| {
+            Ok((
+                tx.get_json::<Vec<u8>>(Table::SignalSessions, key.as_bytes(), 1)?
+                    .is_some(),
+                tx.get_json::<Vec<u8>>(Table::PeerIdentities, key.as_bytes(), 1)?
+                    .is_some(),
+            ))
+        })?;
+        if !session_held || !identity_pinned {
+            tracing::warn!(
+                session_held,
+                identity_pinned,
+                "group companion pairwise child preserved: exact pinned session required"
+            );
+            return Ok(None);
+        }
+        return Ok(Some(participant.clone()));
+    }
     // Authenticated original-capture recovery (2026-10-07, groups.md) proved
     // that the held LID ratchet decrypts where the PN alias does not. The older
     // CPQ.A00 citation is not established for 37.71; its producer is untraced.
@@ -1195,6 +1244,106 @@ mod resilience_tests {
                 .unwrap(),
             Some(vec![1; 20])
         );
+    }
+
+    #[test]
+    fn companion_group_distribution_never_uses_primary_or_unpinned_session() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("companion.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([30; 32]))),
+            create: true,
+        })
+        .unwrap();
+        for raw in ["15555550100:3@s.whatsapp.net", "123456789:3@lid"] {
+            let sender = Jid::parse(raw).unwrap();
+            let primary = format!("comparison-direct:{}", sender.to_non_ad());
+            let companion = format!("comparison-direct:{sender}");
+            let node = |kind| {
+                Node::new("message")
+                    .attr("from", "120363000000000001@g.us")
+                    .attr("participant", sender.clone())
+                    .attr("participant_pn", "15555550100@s.whatsapp.net")
+                    .children(vec![
+                        Node::new("enc")
+                            .attr("type", kind)
+                            .attr("v", "2")
+                            .bytes(vec![1]),
+                    ])
+            };
+            store
+                .write(|tx| {
+                    tx.put_json(Table::SignalSessions, primary.as_bytes(), 1, &vec![1u8; 20])?;
+                    tx.put_json(Table::PeerIdentities, primary.as_bytes(), 1, &vec![2u8; 33])
+                })
+                .unwrap();
+            assert_eq!(
+                participant_session_jid(&store, &node("msg"), &sender).unwrap(),
+                None
+            );
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::SignalSessions,
+                        companion.as_bytes(),
+                        1,
+                        &vec![3u8; 20],
+                    )
+                })
+                .unwrap();
+            assert_eq!(
+                participant_session_jid(&store, &node("msg"), &sender).unwrap(),
+                None
+            );
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::PeerIdentities,
+                        companion.as_bytes(),
+                        1,
+                        &vec![4u8; 33],
+                    )
+                })
+                .unwrap();
+            assert_eq!(
+                participant_session_jid(&store, &node("msg"), &sender).unwrap(),
+                Some(sender.clone())
+            );
+            assert_eq!(
+                participant_session_jid(&store, &node("pkmsg"), &sender).unwrap(),
+                None
+            );
+            let mut other = sender.clone();
+            other.device = 4;
+            assert_eq!(
+                participant_session_jid(&store, &node("msg"), &other).unwrap(),
+                None
+            );
+            let state = store
+                .read(|tx| {
+                    Ok((
+                        tx.scan(Table::SignalSessions, 1, 20)?,
+                        tx.scan(Table::PeerIdentities, 1, 20)?,
+                    ))
+                })
+                .unwrap();
+            let mut hosted = sender.clone();
+            hosted.agent = 1;
+            assert_eq!(
+                participant_session_jid(&store, &node("msg"), &hosted).unwrap(),
+                None
+            );
+            assert_eq!(
+                store
+                    .read(|tx| Ok((
+                        tx.scan(Table::SignalSessions, 1, 20)?,
+                        tx.scan(Table::PeerIdentities, 1, 20)?
+                    )))
+                    .unwrap(),
+                state
+            );
+        }
     }
 
     /// A message we cannot open must not end the session. Before this, a single
@@ -1749,6 +1898,17 @@ mod tests {
 
     #[tokio::test]
     async fn sender_key_only_group_control_is_durable_without_user_event_or_read_receipt() {
+        for sender in [
+            "15555550101@s.whatsapp.net",
+            "123456789@lid",
+            "15555550101:3@s.whatsapp.net",
+            "123456789:3@lid",
+        ] {
+            assert_sender_key_control_route(sender).await;
+        }
+    }
+
+    async fn assert_sender_key_control_route(raw_sender: &str) {
         use crate::{
             model::ids::AccountId,
             session::{KeyMaterial, RegistrationStatus, SignalIdentityKey},
@@ -1775,7 +1935,7 @@ mod tests {
         let store = open(true);
         let alice = IdentityKeyPair::generate(&mut rand::rng());
         let bob = IdentityKeyPair::generate(&mut rand::rng());
-        let alice_jid = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let alice_jid = Jid::parse(raw_sender).unwrap();
         let bob_jid = Jid::parse("15555550102@s.whatsapp.net").unwrap();
         let account = |identity: &IdentityKeyPair, jid: Jid, id| AccountRecord {
             own_jid: Some(jid),
@@ -1787,7 +1947,7 @@ mod tests {
             })),
             ..Default::default()
         };
-        let alice_account = account(&alice, alice_jid.clone(), 31);
+        let alice_account = account(&alice, alice_jid.to_non_ad(), 31);
         let bob_account = account(&bob, bob_jid.clone(), 42);
         let signed = KeyPair::generate(&mut rand::rng());
         let signature = alice
@@ -1796,7 +1956,7 @@ mod tests {
             .unwrap();
         let bundle = PreKeyBundle::new(
             31,
-            DeviceId::new(0),
+            DeviceId::new(alice_jid.device.into()),
             None,
             7.into(),
             signed.public_key,

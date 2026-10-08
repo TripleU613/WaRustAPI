@@ -1841,3 +1841,12 @@ now decrypt and cross-representation redelivery remains Duplicate after reopen,
 with no PN session or identity rewrite. APK DEw.CF0 parsing is linked, while
 full direct-session producer provenance remains incomplete.
 [Evidence and boundaries](protocol/messaging-transport.md#direct-lid-sessions-across-attribute-representations-2026-10-07).
+
+Group pairwise companion correction (2026-10-07, **confirmed offline**):
+held and pinned companion msg sessions retain their actual participant device;
+primary/alias fallback, unpinned and prekey-bootstrap paths are excluded from
+this local subset. Real Signal PN/LID primary/device-3 control fixtures now
+install sender keys and retain duplicate markers across reopen. B7H forward/
+reverse device construction is linked; CPQ.A00 is refuted as a 37.71 session
+selector. Full companion bootstrap/identity policy and live device coverage
+remain unfinished. [Evidence and scope](protocol/groups.md#group-pairwise-session-device-correction-2026-10-07).

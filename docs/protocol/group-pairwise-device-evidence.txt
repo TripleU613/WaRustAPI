@@ -1,0 +1,146 @@
+# APK 2.26.37.71; SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Selected structural disassembly; outside the core checksum bundle.
+# Reproduce: target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/CPQ;' --method A00
+
+# class: LX/CPQ;
+# extends: Ljava/lang/Object;
+
+.method public A00(ZL)  # .registers 9
+    0000..0002  const/4  v6, #0x0
+    0002..0006  if-eqz  v8, +0xa8
+    0006..000a  iget-object  v5, v7, LX/CPQ;->A02:Ljava/util/concurrent/ConcurrentHashMap;
+    000a..000e  iget-object  v4, v8, LX/178;->A0i:LX/1gc;
+    000e..0014  invoke-virtual  {v5, v4}, Ljava/util/AbstractMap;->get(LL)
+    0014..0016  move-result-object  v0
+    0016..001a  check-cast  v0, Ljava/lang/Boolean;
+    001a..001e  if-eqz  v0, +0x7
+    001e..0024  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue(Z)
+    0024..0026  move-result  v0
+    0026..0028  return  v0
+    0028..002c  instance-of  v0, v8, LX/1iZ;
+    002c..0030  if-eqz  v0, +0x2f
+    0030..0032  move-object  v1, v8
+    0032..0036  check-cast  v1, LX/1iZ;
+    0036..003c  invoke-virtual  {v1}, LX/1iZ;->A0w(Z)
+    003c..003e  move-result  v0
+    003e..0042  if-eqz  v0, +0x26
+    0042..0046  iget-object  v0, v1, LX/178;->A0i:LX/1gc;
+    0046..004a  iget-object  v1, v0, LX/1gc;->A00:LX/0Cy;
+    004a..0050  invoke-static  {v1}, LX/0DE;->A0m(ZL)
+    0050..0052  move-result  v0
+    0052..0056  if-eqz  v0, +0x1c
+    0056..005a  iget-object  v3, v7, LX/CPQ;->A01:LX/0Fs;
+    005a..0060  invoke-static  {v1}, LX/1xf;->A0m(LL)
+    0060..0062  move-result-object  v2
+    0062..0068  invoke-virtual  {v3, v2}, LX/0Fs;->A0A(IL)
+    0068..006a  move-result  v1
+    006a..006c  const/4  v0, #0x3
+    006c..0070  if-ne  v1, v0, +0xf
+    0070..0074  if-eqz  v2, +0xd
+    0074..007a  invoke-virtual  {v3, v2}, LX/0Fs;->A0Y(ZL)
+    007a..007c  move-result  v0
+    007c..0080  if-eqz  v0, +0x7
+    0080..0082  const/4  v6, #0x1
+    0082..0088  invoke-static  {v4, v5, v6}, LX/Ayj;->A1N(VLLZ)
+    0088..008a  return  v6
+    008a..008e  if-eqz  v4, +0x14
+    008e..0092  sget-object  v0, LX/0Cy;->A00:LX/0D7;
+    0092..0096  iget-object  v0, v4, LX/1gc;->A00:LX/0Cy;
+    0096..009c  invoke-static  {v0}, LX/0c5;->A00(LL)
+    009c..009e  move-result-object  v1
+    009e..00a2  if-eqz  v1, +0xa
+    00a2..00a6  iget-object  v0, v7, LX/CPQ;->A00:LX/0bA;
+    00a6..00ac  invoke-virtual  {v0, v1}, LX/0bA;->A0k(ZL)
+    00ac..00ae  move-result  v0
+    00ae..00b2  if-nez  v0, -0x17
+    00b2..00b8  invoke-static  {v8}, LX/1xn;->A1S(ZL)
+    00b8..00ba  move-result  v0
+    00ba..00be  if-eqz  v0, +0x20
+    00be..00c2  iget-object  v1, v4, LX/1gc;->A00:LX/0Cy;
+    00c2..00c8  invoke-static  {v1}, LX/0DE;->A0m(ZL)
+    00c8..00ca  move-result  v0
+    00ca..00ce  if-eqz  v0, +0x18
+    00ce..00d2  iget-object  v3, v7, LX/CPQ;->A01:LX/0Fs;
+    00d2..00d8  invoke-static  {v1}, LX/1xf;->A0m(LL)
+    00d8..00da  move-result-object  v2
+    00da..00e0  invoke-virtual  {v3, v2}, LX/0Fs;->A0A(IL)
+    00e0..00e2  move-result  v1
+    00e2..00e4  const/4  v0, #0x3
+    00e4..00e8  if-ne  v1, v0, +0xb
+    00e8..00ec  if-eqz  v2, +0x9
+    00ec..00f2  invoke-virtual  {v3, v2}, LX/0Fs;->A0Y(ZL)
+    00f2..00f4  move-result  v0
+    00f4..00f8  if-eqz  v0, +0x3
+    00f8..00fa  goto  -0x3c
+    00fa..00fe  instance-of  v0, v8, LX/9NL;
+    00fe..0102  if-nez  v0, +0x6
+    0102..0106  instance-of  v0, v8, LX/9NM;
+    0106..010a  if-eqz  v0, -0x42
+    010a..010e  check-cast  v8, LX/Aut;
+    010e..0112  check-cast  v8, LX/178;
+    0112..0116  iget-object  v0, v8, LX/178;->A0i:LX/1gc;
+    0116..011a  iget-object  v1, v0, LX/1gc;->A00:LX/0Cy;
+    011a..0120  invoke-static  {v1}, LX/0DE;->A0m(ZL)
+    0120..0122  move-result  v0
+    0122..0126  if-eqz  v0, -0x50
+    0126..012a  iget-object  v3, v7, LX/CPQ;->A01:LX/0Fs;
+    012a..0130  invoke-static  {v1}, LX/1xf;->A0m(LL)
+    0130..0132  move-result-object  v2
+    0132..0138  invoke-virtual  {v3, v2}, LX/0Fs;->A0A(IL)
+    0138..013a  move-result  v1
+    013a..013c  const/4  v0, #0x3
+    013c..0140  if-ne  v1, v0, -0x5d
+    0140..0144  if-eqz  v2, -0x5f
+    0144..014a  invoke-virtual  {v3, v2}, LX/0Fs;->A0Y(ZL)
+    014a..014c  move-result  v0
+    014c..0150  if-eqz  v0, -0x65
+    0150..0152  goto  -0x68
+    0152..0154  return  v6
+.end method
+
+# Reproduce: target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/B7H;' --method A00
+.method public A00(LL)  # .registers 4
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00h;->A0A(VLI)
+    0008..000c  sget-object  v2, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0DK;
+    000c..0010  iget  v1, v3, LX/B76;->A01:I
+    0010..0014  if-eqz  v1, +0x24
+    0014..0016  const/4  v0, #0x1
+    0016..001a  if-eq  v1, v0, +0x18
+    001a..001c  const/4  v0, #0x2
+    001c..0020  if-eq  v1, v0, +0x27
+    0020..0022  const/4  v0, #0x3
+    0022..0026  if-ne  v1, v0, +0xb
+    0026..002a  sget-object  v0, LX/0hh;->CREATOR:Landroid/os/Parcelable$Creator;
+    002a..002e  iget-object  v0, v3, LX/B76;->A04:Ljava/lang/String;
+    002e..0034  invoke-static  {v0}, LX/0hj;->A01(LL)
+    0034..0036  move-result-object  v1
+    0036..0038  goto  +0x22
+    0038..003c  const-string  v0, "CryptoUtils unexpected value: "
+    003c..0042  invoke-static  {v0, v1}, LX/6aq;->A0Q(LLI)
+    0042..0044  move-result-object  v0
+    0044..0046  throw  v0
+    0046..004a  sget-object  v0, LX/0ZY;->CREATOR:Landroid/os/Parcelable$Creator;
+    004a..004e  iget-object  v0, v3, LX/B76;->A04:Ljava/lang/String;
+    004e..0054  invoke-static  {v0}, LX/0ZZ;->A01(LL)
+    0054..0056  move-result-object  v1
+    0056..0058  goto  +0x12
+    0058..005c  sget-object  v0, Lcom/whatsapp/infra/core/jid/PhoneUserJid;->Companion:LX/0D9;
+    005c..0060  iget-object  v0, v3, LX/B76;->A04:Ljava/lang/String;
+    0060..0066  invoke-static  {v0}, LX/0D9;->A01(LL)
+    0066..0068  move-result-object  v1
+    0068..006a  goto  +0x9
+    006a..006e  sget-object  v0, LX/9Lm;->CREATOR:Landroid/os/Parcelable$Creator;
+    006e..0072  iget-object  v0, v3, LX/B76;->A04:Ljava/lang/String;
+    0072..0078  invoke-static  {v0}, LX/9l6;->A00(LL)
+    0078..007a  move-result-object  v1
+    007a..007e  check-cast  v1, Lcom/whatsapp/infra/core/jid/UserJid;
+    007e..0082  iget  v0, v3, LX/B76;->A00:I
+    0082..0088  invoke-virtual  {v2, v1, v0}, LX/0DK;->A01(LLI)
+    0088..008a  move-result-object  v0
+    008a..008c  return-object  v0
+    008c..0090  const-string  v0, "Invalid signal protocol address: "
+    0090..0096  invoke-static  {v0, v3}, LX/1xp;->A1K(VLL)
+    0096..0098  const/4  v0, #0x0
+    0098..009a  return-object  v0
+.end method

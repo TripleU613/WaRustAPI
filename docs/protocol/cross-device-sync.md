@@ -2054,3 +2054,12 @@ separate case-insensitive PN check. Five contact-mode setter callers now have
 selected paths retained, including gated info-error and PN-conversion branches;
 triggers, full callback provenance and runtime integration remain unfinished.
 No live request or account change. [Evidence and boundaries](groups.md#addressing-mode-producers-and-separate-parser-rules-2026-10-07).
+
+Group pairwise companion correction (2026-10-07, **confirmed offline**):
+held and pinned companion msg sessions retain their actual participant device;
+primary/alias fallback, unpinned and prekey-bootstrap paths are excluded from
+this local subset. Real Signal PN/LID primary/device-3 control fixtures now
+install sender keys and retain duplicate markers across reopen. B7H forward/
+reverse device construction is linked; CPQ.A00 is refuted as a 37.71 session
+selector. Full companion bootstrap/identity policy and live device coverage
+remain unfinished. [Evidence and scope](groups.md#group-pairwise-session-device-correction-2026-10-07).

@@ -1692,3 +1692,28 @@ inspections afterward. No fresh encrypted user-message stanza was logged, so
 live text/typed-LID decryption is not established by this window. Private evidence
 index: lab/releases/direct-lid-live/active.json. No queued chat transmission,
 new identity query, reservation reset or manufactured recipient message.
+
+Group pairwise companion correction (2026-10-07, **confirmed offline**):
+held and pinned companion msg sessions retain their actual participant device;
+primary/alias fallback, unpinned and prekey-bootstrap paths are excluded from
+this local subset. Real Signal PN/LID primary/device-3 control fixtures now
+install sender keys and retain duplicate markers across reopen. B7H forward/
+reverse device construction is linked; CPQ.A00 is refuted as a 37.71 session
+selector. Full companion bootstrap/identity policy and live device coverage
+remain unfinished. [Evidence and scope](docs/protocol/groups.md#group-pairwise-session-device-correction-2026-10-07).
+
+Companion pairwise refusal diagnostics name unsupported prekey or nonzero-agent
+routing. Missing held/pinned state reports only session_held and identity_pinned
+Booleans; no user/device address, key bytes, ciphertext or message content.
+
+Group companion correction validation: 677 workspace/all-feature tests, 24
+default CLI tests, strict all-target/all-feature Clippy, warning-free Rustdoc,
+regenerated CLI reference/API checks and the experimental CLI build passed.
+The selector regression returned a primary before the fix, and the encrypted
+companion control fixture returned Unsupported before the correction.
+
+Rebuilt-CLI offline inspection left outbox, actions, receipts, device state and
+peer pins unchanged. Private evidence index:
+lab/releases/group-device-inspection/active.json. No login/query/group send or
+new companion identity was manufactured. Fresh live companion decryption and
+full companion bootstrap remain unverified.
