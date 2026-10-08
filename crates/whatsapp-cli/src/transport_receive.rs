@@ -1972,7 +1972,23 @@ pub(super) async fn run(
                         Err(error) => return Err(error),
                     };
                     let companion = companion_adv_summary(&store, &node)?;
-                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{ack}{retry}{routing}{timing}{sender_tail}{pins}{companion}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
+                    let observation =
+                        if matches!(node.description.as_str(), "stream:error" | "failure") {
+                            match whatsapp_api::transport::inbox::terminal_observation(&store, key)?
+                            {
+                                Some(meta) => format!(
+                                    ", terminal_observation={}",
+                                    serde_json::to_string(&meta).map_err(|_| Error::invalid(
+                                        "inbox",
+                                        "cannot encode terminal observation"
+                                    ))?
+                                ),
+                                None => ", terminal_observation=unknown".into(),
+                            }
+                        } else {
+                            String::new()
+                        };
+                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{ack}{retry}{routing}{timing}{sender_tail}{pins}{companion}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}{observation}",node.description));
                 }
             }
             if key.starts_with(b"received:") {

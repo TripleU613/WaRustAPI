@@ -55,3 +55,68 @@ this CLI-only diagnostic chunk. Historical capture origin remains unknown.
 
 Repository hygiene passed: 915 local links, tracked-file budgets, package
 licenses and 3,840,464 bytes across five checksum-verified APK bundles.
+
+
+## Network terminal provenance (2026-10-08)
+
+**Implemented local diagnostic policy:** the comparison login reader and active
+receive loop call `inbox::preserve_in_epoch`. The encoded capture, terminal
+observation metadata and latest-terminal pointer commit in one transaction.
+Only failure and stream:error get metadata. Existing content-addressed capture
+keys and their wire data remain unchanged; no identity/session is migrated.
+
+`lab-inbox --inspect` includes terminal_observation for those stanzas:
+first_observed_at and last_observed_at are local Unix milliseconds; last_epoch
+is actor-local and can repeat after process restart; observations counts newly
+instrumented network observations, saturating at u64::MAX; latest_terminal
+identifies the most recent instrumented terminal commit by commit order. The
+wall clock can move backwards. These are local observations, not APK/server
+fields, globally unique session identifiers or a complete per-session journal.
+They establish latest-observed provenance when compared with the current run's
+start/end, not the origin of every prior occurrence of the same content.
+
+Old and offline-only captures report unknown. `preserve` and offline replay do
+not add, increment or overwrite metadata. A later real network re-observation
+of an old content hash records its current observation, preserving the wire;
+first_observed_at then means first **instrumented** observation, not the first
+time that content ever arrived. Inspection applies no recovery policy and does
+not replay the uncertain AB-property request.
+
+**Tested offline:** first/repeated observations, epoch reset/backward wall clock,
+latest marker supersession, nonterminal exclusion, private-content redaction,
+reopen persistence, unchanged content keys/wire and offline non-backfill. Invalid
+stored observation metadata aborts the transaction: even the preceding capture
+write and latest-marker update roll back. Failure diagnosis is preserved rather
+than silently replacing corrupt metadata. Older capture origin remains unknown.
+
+
+### Validation and bounded saved-account check
+
+**Verification:** all 702 workspace/all-feature tests passed (583 API unit,
+four codec integration, nine crash-matrix, 46 CLI unit, one API-symbol and
+59 xtask). The existing real session-loop terminal fixture additionally now
+asserts one recorded observation, matching epoch/time and latest marker; its
+targeted rerun passed. Strict workspace/all-target Clippy passed again after
+that test change. Warning-free Rustdoc, 24 default CLI checks, regenerated CLI
+reference, experimental CLI build and formatting passed on system Rust 1.99.0.
+Pinned Rust 1.98.1 proof is not claimed.
+
+**Observed live:** preflight found no eligible outbox, queued action, pending
+receipt or selected-chat refresh. The existing initial AB-property read was
+already outcome_unknown and was not requeued. One 32-second receive-only
+listen authenticated, became active, completed its window and stopped cleanly
+(exit 0), without --send-outbox. No instrumented terminal observation occurred;
+offline inspection still has one historical terminal shape with unknown
+provenance and zero known terminal observations. This clean session does not
+explain the previous closure or live-test terminal persistence; the session-loop
+fixture is the verification for the terminal code path. It also does not
+establish fresh incoming-message decryption or long-term account reliability.
+
+**Observed postflight:** actions, selected devices, selected pins, receipts and
+outbox matched preflight; zero new actions. The initial read remains
+outcome_unknown with the same action ID; no query was queued or replayed.
+Login/captures can persist, so these comparisons do not claim all store tables
+are unchanged. Private command output remains in ignored private local storage.
+
+Repository hygiene passed: 917 local links, tracked-file budgets, package
+licenses and 3,840,464 bytes across five checksum-verified APK bundles.

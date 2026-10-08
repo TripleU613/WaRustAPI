@@ -84,7 +84,7 @@ pub async fn connect(
     })?;
     let mut channel = verified.finish(&payload).await?;
     let reply = super::messaging::read_node(&mut channel).await?;
-    super::inbox::preserve(store, &reply)?;
+    super::inbox::preserve_in_epoch(store, &reply, epoch)?;
     let status = if reply.description == "success" {
         "success"
     } else {
@@ -369,7 +369,7 @@ pub(crate) async fn drive(
             }
             incoming = link.incoming.recv() => {
                 let node = incoming.ok_or_else(|| Error::invalid("connection", "reader ended"))??;
-                let capture = super::inbox::preserve(&store, &node)?;
+                let capture = super::inbox::preserve_in_epoch(&store, &node, epoch)?;
                 super::clock::observe(&store, &node)?;
                 if matches!(node.description.as_str(), "failure" | "stream:error") {
                     if node.description == "failure"
@@ -1014,6 +1014,13 @@ mod tests {
                 .is_some(),
             "server reason preserved encrypted at rest"
         );
+        let observed = super::super::inbox::terminal_observation(&store, key.as_bytes())
+            .unwrap()
+            .expect("live session loop records terminal provenance");
+        assert_eq!(observed.last_epoch, ConnectionEpoch(1));
+        assert_eq!(observed.observations, 1);
+        assert_eq!(observed.first_observed_at, observed.last_observed_at);
+        assert!(observed.latest_terminal);
     }
 
     #[tokio::test]

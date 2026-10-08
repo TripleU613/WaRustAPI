@@ -2020,3 +2020,23 @@ Rebuilt offline inspection identifies the saved ACK type as w:gp2; no network
 session was opened. Its capture origin and relation to recent closure remain
 unknown. All 47 experimental CLI checks, strict CLI/all-target Clippy, regenerated
 reference, experimental build and formatting passed on system Rust 1.99.0.
+
+Terminal provenance (2026-10-08 local, **implemented/offline**): comparison login
+and receive now atomically preserve terminal captures with first/last local
+observation milliseconds, actor-local epoch, observation count and latest
+terminal marker. Offline inspection exposes these fixed metadata fields; old
+captures remain unknown and offline replay cannot backfill them. Epochs can
+repeat and wall clocks can reverse; latest follows commit order. Atomic rollback,
+reopen, repeated observation and legacy non-backfill are tested. No request IDs
+or identities are changed. [Evidence and limits](protocol/terminal-errors.md).
+
+Terminal-provenance validation: all 702 workspace/all-feature checks, strict
+Clippy, warning-free Rustdoc, default CLI checks, regenerated reference,
+experimental build and formatting passed on system Rust 1.99.0. The session-loop
+terminal fixture additionally confirms metadata persistence. One live receive-only
+32-second window authenticated, stayed active and stopped cleanly (exit 0).
+No terminal stanza was observed; the older terminal capture remains unknown.
+Actions/devices/pins/receipts/outbox matched preflight, with zero new actions.
+The original AB-property read remains outcome_unknown with its original ID;
+no query was queued or replayed. Fresh incoming-message decryption and long-term
+reliability are not established by this window.

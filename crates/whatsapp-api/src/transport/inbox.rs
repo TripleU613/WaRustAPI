@@ -377,10 +377,112 @@ pub fn reproject(store: &ProtocolStore) -> Result<usize> {
 /// Persist a raw frame before processing or replying. Deterministic capture keys
 /// bound repeated identical redeliveries without losing the original wire data.
 pub fn preserve(store: &ProtocolStore, node: &Node) -> Result<Vec<u8>> {
+    preserve_observed(store, node, None)
+}
+
+/// Persist a network capture and, for terminal stanzas, its local observation.
+/// Epochs are actor-local and may repeat after restart; times are wall-clock
+/// observations, never server timestamps. Offline preserve does not backfill them.
+pub fn preserve_in_epoch(
+    store: &ProtocolStore,
+    node: &Node,
+    epoch: super::ConnectionEpoch,
+) -> Result<Vec<u8>> {
+    preserve_observed(
+        store,
+        node,
+        Some((epoch, crate::model::time::Timestamp::now())),
+    )
+}
+
+const LATEST_TERMINAL: &[u8] = b"terminal-latest-capture";
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
+struct StoredTerminalObservation {
+    first_observed_at: crate::model::time::Timestamp,
+    last_observed_at: crate::model::time::Timestamp,
+    last_epoch: super::ConnectionEpoch,
+    observations: u64,
+}
+
+/// Local terminal-capture provenance; no raw stanza or echoed identifier.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct TerminalObservation {
+    /// First network observation recorded by this instrumentation.
+    pub first_observed_at: crate::model::time::Timestamp,
+    /// Most recent network observation; wall clock can move backwards.
+    pub last_observed_at: crate::model::time::Timestamp,
+    /// Most recently observing actor-local epoch, not globally unique.
+    pub last_epoch: super::ConnectionEpoch,
+    /// Number of recorded observations, saturating at u64::MAX.
+    pub observations: u64,
+    /// This capture is the last terminal stanza committed by the instrumentation.
+    pub latest_terminal: bool,
+}
+
+fn observation_key(capture: &[u8]) -> Option<Vec<u8>> {
+    let digest = capture.strip_prefix(b"inbound:sha256:")?;
+    if digest.len() != 64 || !digest.iter().all(u8::is_ascii_hexdigit) {
+        return None;
+    }
+    let mut key = b"terminal-observation:".to_vec();
+    key.extend_from_slice(digest);
+    Some(key)
+}
+
+/// Inspect terminal provenance without creating metadata for old captures.
+pub fn terminal_observation(
+    store: &ProtocolStore,
+    capture: &[u8],
+) -> Result<Option<TerminalObservation>> {
+    let Some(key) = observation_key(capture) else {
+        return Ok(None);
+    };
+    store.read(|tx| {
+        let Some(saved) = tx.get_json::<StoredTerminalObservation>(Table::Checkpoints, &key, 1)?
+        else {
+            return Ok(None);
+        };
+        let latest: Option<Vec<u8>> = tx.get_json(Table::Checkpoints, LATEST_TERMINAL, 1)?;
+        Ok(Some(TerminalObservation {
+            first_observed_at: saved.first_observed_at,
+            last_observed_at: saved.last_observed_at,
+            last_epoch: saved.last_epoch,
+            observations: saved.observations,
+            latest_terminal: latest.as_deref() == Some(capture),
+        }))
+    })
+}
+
+fn preserve_observed(
+    store: &ProtocolStore,
+    node: &Node,
+    observed: Option<(super::ConnectionEpoch, crate::model::time::Timestamp)>,
+) -> Result<Vec<u8>> {
     let wire = crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
         .encode(node)?;
     let key = format!("inbound:sha256:{}", hex::encode(Sha256::digest(&wire))).into_bytes();
-    store.write(|tx| tx.put_json(Table::Checkpoints, &key, 1, &wire))?;
+    store.write(|tx| {
+        tx.put_json(Table::Checkpoints, &key, 1, &wire)?;
+        if matches!(node.description.as_str(), "stream:error" | "failure")
+            && let Some((epoch, at)) = observed
+        {
+            let metadata_key = observation_key(&key).expect("generated SHA-256 capture key");
+            let mut saved = tx
+                .get_json::<StoredTerminalObservation>(Table::Checkpoints, &metadata_key, 1)?
+                .unwrap_or(StoredTerminalObservation {
+                    first_observed_at: at,
+                    last_observed_at: at,
+                    last_epoch: epoch,
+                    observations: 0,
+                });
+            saved.last_observed_at = at;
+            saved.last_epoch = epoch;
+            saved.observations = saved.observations.saturating_add(1);
+            tx.put_json(Table::Checkpoints, &metadata_key, 1, &saved)?;
+            tx.put_json(Table::Checkpoints, LATEST_TERMINAL, 1, &key)?;
+        }
+        Ok(())
+    })?;
     Ok(key)
 }
 
@@ -1478,6 +1580,157 @@ mod resilience_tests {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn terminal_network_observations_are_atomic_and_offline_replay_is_not_an_observation() {
+        use crate::{
+            model::{ids::AccountId, time::Timestamp},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+            transport::ConnectionEpoch,
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("observations.redb");
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("terminal-fixture").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [43; 32],
+                ))),
+                create,
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        let terminal =
+            Node::new("stream:error").children(vec![Node::new("ack").attr("id", "private-id")]);
+        let key = preserve(&store, &terminal).unwrap();
+        assert!(terminal_observation(&store, &key).unwrap().is_none());
+        assert!(
+            terminal_observation(&store, b"login-result:unknown")
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(
+            preserve_observed(
+                &store,
+                &terminal,
+                Some((ConnectionEpoch(7), Timestamp(2000)))
+            )
+            .unwrap(),
+            key
+        );
+        let first = terminal_observation(&store, &key).unwrap().unwrap();
+        assert_eq!(first.first_observed_at, Timestamp(2000));
+        assert_eq!(first.observations, 1);
+        assert!(first.latest_terminal);
+        // Actor epochs and wall clocks can both go backwards after restart;
+        // retain actual observation order without inventing global chronology.
+        preserve_observed(
+            &store,
+            &terminal,
+            Some((ConnectionEpoch(1), Timestamp(1000))),
+        )
+        .unwrap();
+        let second = terminal_observation(&store, &key).unwrap().unwrap();
+        assert_eq!(second.first_observed_at, Timestamp(2000));
+        assert_eq!(second.last_observed_at, Timestamp(1000));
+        assert_eq!(second.last_epoch, ConnectionEpoch(1));
+        assert_eq!(second.observations, 2);
+        preserve(&store, &terminal).unwrap();
+        assert_eq!(terminal_observation(&store, &key).unwrap().unwrap(), second);
+        let failure = Node::new("failure").attr("appeal_token", "private-token");
+        let failure_key = preserve_observed(
+            &store,
+            &failure,
+            Some((ConnectionEpoch(2), Timestamp(3000))),
+        )
+        .unwrap();
+        assert!(
+            !terminal_observation(&store, &key)
+                .unwrap()
+                .unwrap()
+                .latest_terminal
+        );
+        assert!(
+            terminal_observation(&store, &failure_key)
+                .unwrap()
+                .unwrap()
+                .latest_terminal
+        );
+        let content =
+            serde_json::to_string(&terminal_observation(&store, &failure_key).unwrap()).unwrap();
+        assert!(!content.contains("private-token") && !content.contains("private-id"));
+        let ordinary = preserve_observed(
+            &store,
+            &Node::new("iq"),
+            Some((ConnectionEpoch(2), Timestamp(4000))),
+        )
+        .unwrap();
+        assert!(terminal_observation(&store, &ordinary).unwrap().is_none());
+
+        let malformed = Node::new("stream:error").attr("code", "fixture-malformed");
+        let wire =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(&malformed)
+                .unwrap();
+        let malformed_key =
+            format!("inbound:sha256:{}", hex::encode(Sha256::digest(&wire))).into_bytes();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    &observation_key(&malformed_key).unwrap(),
+                    1,
+                    &"invalid metadata",
+                )
+            })
+            .unwrap();
+        assert!(
+            preserve_observed(
+                &store,
+                &malformed,
+                Some((ConnectionEpoch(3), Timestamp(5000)))
+            )
+            .is_err()
+        );
+        assert!(
+            store
+                .read(|tx| tx.get_json::<Vec<u8>>(Table::Checkpoints, &malformed_key, 1))
+                .unwrap()
+                .is_none()
+        );
+        assert!(
+            terminal_observation(&store, &failure_key)
+                .unwrap()
+                .unwrap()
+                .latest_terminal
+        );
+        drop(store);
+        let store = open(false);
+        assert!(
+            terminal_observation(&store, &failure_key)
+                .unwrap()
+                .unwrap()
+                .latest_terminal
+        );
+        assert_eq!(
+            terminal_observation(&store, &key)
+                .unwrap()
+                .unwrap()
+                .observations,
+            2
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<Vec<u8>>(Table::Checkpoints, &key, 1))
+                .unwrap()
+                .unwrap(),
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(&terminal)
+                .unwrap()
+        );
+    }
 
     /// A LID sender's message opens with the LID session when we hold one,
     /// starts one there for a `pkmsg`, and otherwise falls back to the phone
