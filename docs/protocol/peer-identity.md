@@ -1538,3 +1538,83 @@ teardown producer; fresh live coverage. Existing Rust still reports
 `refresh_required` for absent/different newer indices and `deleted_device` for
 old/equal mismatches. Known matching-index newer candidates already support
 pending refresh. No account or transport state was touched for this research.
+
+
+## Companion teardown producer and registry (2026-10-08)
+
+**Confirmed static APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Caller, registry and field evidence](companion-teardown-evidence.txt) preserves
+full scoped methods plus explicitly selected multi-case callback context.
+This resolves the ordinary final-Boolean producer left unknown by the preceding
+new-device trace; complete runtime teardown application is still unported.
+
+`CoU.A04` first checks current membership through `0bN.A0B`; an already
+present actual address jumps from `0044` to `0b60` and sets the final Boolean
+to zero. For an absent address it sets `v13=1` at `0098` only after the `0bq.A04` gate,
+`1Uf.A08(actual sender)` and nonnull `CjN.A0H` all pass. Ordinary companion
+prekey dispatch reaches `11T.A0D` at `00f4..00fa`. A separate normal prekey
+branch sets `v13=0` at `0b60` and jumps into that same dispatch. `CjN.A0H`
+returns `Bp1.A01` or `Bp2.A0B`, not the retry counter (`CjN.A02` is separately
+logged as retryCount). The exact ordinary writer chain is `DEs.CEv` reading
+message `offline`, parsing it through `0CK.A06`, saving `Cih.A0D`, then
+`Cih.A01 -> Bp2.<init> -> Bp2.A0B` as already preserved in producer evidence.
+`dhash` is read separately into `Cih.A0L`; it does not produce this Boolean.
+An `offline` field's mere existence is not enough: the parsed Integer must be
+nonnull. No specific positive value is tested at this caller.
+
+**Confirmed:** `0CK.A06` uses radix 10 through `A07`, which accumulates a
+negative integer with overflow checks, optional leading plus/minus and
+`Character.digit`. Empty/sign-only/invalid/overflow inputs return null; zero
+and negative parsed values are not excluded by `CoU`'s nonnull test.
+Full Java Unicode digit parity has not been ported. The disassembler previously
+rendered its multiplication as unknown opcode b2; this change labels it
+`mul-int/2addr` with the existing 12x width/register decoding. An independent
+literal DEX window at classes.dex `0x495af6` covers multiply, overflow branch
+and subtraction. Opcode meaning is corroborated by the
+[AOSP bytecode table](https://source.android.com/docs/core/runtime/dalvik-bytecode).
+No committed checksum-bundle topic contains op=b2, so this correction does not
+change those four bundles or their cached comparison results.
+
+**Confirmed:** `1Uf.A08` compares `getRawStringWithNoAgent()` against an
+AtomicReference-held set. `A00` initializes that set from SharedPreferences
+`dead_devices`, defaulting empty; `A04` commits the updated string set and
+updates the reference. `A06` synchronizes on `A08`, adds a previously absent
+address, persists it and requests idle/reap scheduling through `A01`.
+It does not synthesize server waits or account refusal state. The constructor
+is the sole field assignment to the reference, but pointee contents mutate;
+that negative field scan must not be interpreted as immutability. Searches for
+1Uf methods A09/A0A/A0B found none; the full class has 13 method bodies.
+
+The two `A06` callers are `DMh.run` (selected discriminator 1 removal callback)
+and `DNk.run` case 4. `DMh` only takes its mark-dead branch when `1Uf.A07`
+returns true; that predicate depends on worker latch/count or `19M.A0O` plus
+the feature gate. It also writes a separate in-memory `1Uf.A09` set, which is
+not the persisted registry. `DNk` case 4 removes each selected address from
+that transient set and chooses deferred marking versus immediate key-store
+calls based on the old membership set, registry membership and `A07`.
+**Unknown:** actual gate/worker state and full immediate-removal helper effects;
+these are local branches, not new server response codes.
+
+**Confirmed:** `1Uf.A02` avoids reaping while the traced workers are in flight.
+Its in-flight branch polls after 2000 ms and parks after at least 15 polls;
+these are local scheduling bounds, not WhatsApp cooldowns. Before teardown it
+rechecks current membership through `0bN.A0B`: a returned device drops the
+registry entry and is left untouched. Otherwise it reaches `0jc.A0s/A0r` and
+sender-key removal, including literal `sender_keys` / group-scoped SQL and
+batch iteration. Full session/identity deletion semantics remain untraced;
+we have not implemented cleanup or inferred permission to erase history.
+**Negative finding:** the scoped `A02` has no post-cleanup `A04` call to clear
+that dead-device entry; its explicit registry removal is in the returned-device
+branch. Broader callback lifecycle remains unknown. Do not infer that a cleanup
+completion automatically authorizes a new offline ADV.
+The alternate `DNk` identity-response worker supplies final Boolean zero to
+11T.A0D (`02de`, `032a..0330`), so the ordinary offline-message guard must not
+be imposed indiscriminately on every identity response.
+
+**Current Rust limitation:** no persisted dead-device registry or deferred reap
+lifecycle exists. Current old/equal missing-index rejection and independent
+primary/MAC/transaction safeguards still apply; new-device addition remains
+unfinished. The port must preserve explicit pending removal and recheck current
+membership without resetting account identities or replaying requests.
+This static research made no saved-account or live-transport changes.

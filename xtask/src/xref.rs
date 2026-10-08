@@ -426,6 +426,9 @@ fn opcode_name(op: u8) -> &'static str {
         0xaf => "rem-double",
         0xb0 => "add-int/2addr",
         0xb1 => "sub-int/2addr",
+        // APK 37.71 0CK.A07+0082: integer parser multiplies by its radix.
+        // AOSP Dalvik bytecode table: b2 is the existing-width 12x operation.
+        0xb2 => "mul-int/2addr",
         0xb4 => "rem-int/2addr",
         0xb5 => "and-int/2addr",
         0xb6 => "or-int/2addr",
@@ -2710,6 +2713,32 @@ mod tests {
         assert_eq!(decoded[4].annotation, "v19, v19, v90");
         assert!(decoded.iter().all(|insn| insn.width == 2));
         assert_eq!(decoded[4].byte_off + 4, bytes.len());
+    }
+
+    #[test]
+    fn decodes_literal_integer_parser_multiply_and_overflow_branch() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // APK 37.71 classes.dex 0x495af6, 0CK.A07+0082..008e,
+        // independently read from the DEX: radix multiply, overflow bound,
+        // backward refusal branch, then subtract the digit.
+        let bytes = [
+            0xb2, 0xb7, 0x90, 0x00, 0x06, 0x01, 0x34, 0x07, 0xfc, 0xff, 0xb1, 0x17,
+        ];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded.len(), 4);
+        assert_eq!(decoded[0].mnemonic, "mul-int/2addr");
+        assert_eq!(decoded[0].annotation, "v7, v11");
+        assert_eq!(decoded[0].width, 1);
+        assert_eq!(decoded[1].annotation, "v0, v6, v1");
+        assert_eq!(decoded[2].mnemonic, "if-lt");
+        assert_eq!(decoded[2].annotation, "v7, v0, -0x4");
+        assert_eq!(decoded[2].byte_off, 6);
+        assert_eq!(decoded[3].annotation, "v7, v1");
+        assert_eq!(decoded[3].byte_off + 2, bytes.len());
+        for end in 0..bytes.len() {
+            let _ = decode_insns(&bytes[..end], &dex);
+        }
     }
 
     #[test]
