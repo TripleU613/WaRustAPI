@@ -712,8 +712,10 @@ fn participant_session_jid(
 ) -> Result<Option<Jid>> {
     // APK 37.71 B7H.A06 carries getDevice into B76; flattening a companion
     // would select another device's ratchet. Full companion bootstrap/identity
-    // replacement provenance remains unported: use only an already held/pinned
-    // non-hosted msg session here, never the primary or an alias fallback.
+    // admission remains unported: 37.71 CoU.A04 calls 11T.A0D before
+    // CQn.A00 dispatches companion prekeys (peer-identity.md outer trace).
+    // Use only a held/pinned non-hosted msg session here, never the primary
+    // or an alias fallback.
     if participant.agent != 0 {
         tracing::warn!("group pairwise child preserved: nonzero-agent routing is unsupported");
         return Ok(None);

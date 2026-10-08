@@ -1717,3 +1717,23 @@ peer pins unchanged. Private evidence index:
 lab/releases/group-device-inspection/active.json. No login/query/group send or
 new companion identity was manufactured. Fresh live companion decryption and
 full companion bootstrap remain unverified.
+
+Incoming companion prekey caller trace (static, 2026-10-07): APK 37.71
+CoU.A04 supplies a companion candidate to 11T.A0D before CQn.A00 dispatches
+kind-1 ciphertext to 0jc.A0O. The latter's B77.A04 branch is STATELESS,
+using fresh DS0 in-memory sessions and DRz's no-op identity save; ordinary
+0ko.A04 uses durable adapters. This refutes conflating stateless mode with
+companion addressing. Typed catches now associate obfuscated exceptions with
+local decrypt results without inventing server refusal/ban interpretations.
+DOL.call is a voice-call ADV gate, not messaging admission evidence. Full
+sender/ADV/address producers, feature/dead-device conditions, transaction
+coverage and companion bootstrap/application policy remain unported/unknown.
+The group selector still accepts only held exact pinned companion msg sessions;
+companion pkmsg remains our implementation limitation. No account/live changes.
+Evidence: docs/protocol/peer-identity.md#outer-prekey-dispatch-and-companion-admission-2026-10-07.
+Final APK regeneration verified 136 topics / 318 methods / 141 files, 1975976
+bytes; seven additions and all 129 prior topics unchanged in a 0.072842-second
+cached comparison. The 58 xtask tests, CLI reference, five API checks and formatting
+passed. Four APK bundles total 3650447 bytes; appendix outside the core bundle.
+Repository hygiene checked 850 local links, licenses and all four APK checksum
+bundles. No saved state, request identity or live queue changed.

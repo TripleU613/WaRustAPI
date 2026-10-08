@@ -948,3 +948,120 @@ response; pins, actions, outbox, receipts and device inspection remain unchanged
 Private evidence index: `lab/releases/exact-bundle-inspection/active.json`. No
 network session or new query was issued. This validates compatibility with the
 saved successful response, not fresh live malformed-response handling.
+
+## Outer prekey dispatch and companion admission (2026-10-07)
+
+**Confirmed static**, APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+This extends the inner Cnp.A04 trace above; it does not establish full companion
+bootstrap parity or change any private account. The scoped source is exported
+in the core bundle; [caller and exception evidence](receive-prekey-caller-evidence.txt)
+retains exact scans and typed catches outside that bundle.
+
+**Confirmed:** both direct DEX invocations of Cnp.A04 are in
+[0jc.A0O](apk/2.26.37.71-core/receive-prekey-outer-coordinator.txt).
+It obtains a `sessions` context through 0kT.A02 (`000c..0022`), takes the
+0jp.A00 lock (`0022..0034`), parses DRw (`0036..0044`) and closes B75 on
+success/error/exception paths. This establishes serialization and cleanup,
+**not** a rollback-capable database transaction. Its identity comparison uses
+serialized `remoteIdentityPublic_` from the current session when A0J is true
+(`0050..0088`), or A0M when false (`00ee..00f8`); differing bytes select A0E
+or A0s (`008e..00a0`, `00e6..00ec`). **Unknown:** full A0J/A02/A0M/A0E
+semantics, whether the feature can change during the operation, and transaction
+coverage. Do not convert these calls into an unconditional Rust reset.
+
+**Confirmed:** the special `B76.A03 == B77.A04` branch (`00a4..00e4`) is
+**STATELESS**, not the companion-device predicate. The
+[B77 initializer](apk/2.26.37.71-core/signal-actor-bucket-enum.txt)
+names A03=REGULAR, A02=PQ and A04=STATELESS. Enum ordinals and the separately
+stored `intValue` are both 0/1/2 in this initializer. This establishes their
+local values, not an on-wire encoding or the actor-selection producers.
+On STATELESS, A0O constructs a fresh
+[DS0](apk/2.26.37.71-core/receive-prekey-stateless-session.txt): synchronized
+map lookup returns a new Cgc if absent, and CdI serializes into that map.
+Its [DRz identity adapter](apk/2.26.37.71-core/receive-prekey-stateless-identity.txt)
+delegates AjY/Amk/BRS to 0km, but COt immediately returns without saving an
+identity. This refutes treating every Cnp.A04 invocation as a durable identity
+or session write. It does **not** prove that no signed/one-time prekey changes
+occur: the other constructor stores still come from 0km/0kn/0kp.
+
+**Confirmed:** the ordinary
+[0ko.A04 factory](apk/2.26.37.71-core/receive-prekey-ordinary-factory.txt)
+converts the supplied address through CoY.A05 and uses 0km for the identity
+and other key interfaces, with its 0kn and the coordinator's 0kp session
+interface (`0000..0024`). A0O wraps the optional callback in DRs, otherwise
+DRr (`0100..011e`). Feature 0x60e5 and 0kY.A02 choose whether the actual
+Cnp.A04 call holds Cnp.A06's monitor (`011e..0166`); both branches converge
+on the same decrypt method. No explicit ADV check appears in this factory; admission is upstream.
+
+**Confirmed:** checked exception metadata connects local result codes to
+obfuscated exception types. For the decrypt ranges, C4T maps to -1001, C4p to
+-1002, C4q to -1003, C4x to -1005, C4V to -1007 and 2iA to -1010.
+The DRw parsing range separately maps C4U to -1006 and C4x to -1005 with
+its message. Generic Exception maps to -1000 except explicit rethrows for
+DS2, SQLiteFullException and SQLiteDatabaseCorruptException. The appendix
+preserves ordered catch ranges/targets in **code units**, whereas instruction
+positions above are **bytes**. **Unknown:** the human meanings/hierarchies of
+these obfuscated exception classes. These are APK local results, not newly
+recognized WhatsApp server responses, ban reasons or Rust retry authority.
+
+**Confirmed:** an exact A0O caller scan has five invocation sites: CQn.A00,
+DM8.run, DN2.run, DOK.call and DOL.call. Only the selected contexts are traced
+here. [CQn.A00](apk/2.26.37.71-core/receive-message-cipher-dispatch.txt)
+reads ClY.A00; kind 0 calls A0N (`0276..029c`), kind 1 calls A0O with the
+supplied address (`02a6..02dc`). It sets/removes A0U around that prekey call;
+a catch-all also removes it before rethrowing. Its kind-2 path constructs Cnr
+and handles sender-key decryption separately. An exact CQn.A00 scan found
+two sites, both in CoU.A04.
+
+**Confirmed:** the selected messaging producer
+[CoU.A04](apk/2.26.37.71-core/receive-message-companion-admission.txt)
+obtains a sender DeviceJid through CjN.A00 (`0008..0010`) and examines stored
+device membership via 0bN.A0B (`002c..0044`). Its companion-prekey branch
+requires non-primary sender, a nonnull CjN.A06 ciphertext and kind 1
+(`00c0..00e8`), extracts the candidate public key with C8C.A00 and calls
+**11T.A0D**, type 5, source 1 (`00e8..00fa`). ADV bytes come from CaD.A0H
+for Bp1 (`00aa..00c0`), or Bp2.A0L (`097c..098a`). Failed remote ADV
+validation requests a user update through 101.A03 and calls CoU.A0A with
+local values 5/12, then returns (`0100..0172`); the self failure path differs.
+The branch logs unknown-device messages without prekeys and requests user
+refresh (`0c0a..0c66`). These local values are not server-response codes.
+The two eventual CQn calls are `085c..0862` and `08c6..08cc`; the latter is a
+conditional second-ciphertext path, not proof of an automatic network retry.
+CoU.A00 only constructs CQn from dependencies and supplied message context;
+it does not itself produce the Signal address.
+
+**Unknown:** CjN sender/ciphertext/ADV producers, full feature and dead-device
+predicates, the final A0D Boolean's exact source/meaning, message-to-B76 address
+production and all admission/cleanup side effects. The existing traced A0D
+signature checks and raw-ID/account-type policy still require implementation
+work; see [companion identity validation](cross-device-sync.md#primary-identity-only-query-2026-10-07).
+Do not admit or replace a companion solely on a valid nested Signal MAC, the
+presence of an ADV node, or the ordinary factory's permissive trust adapter.
+
+**Confirmed negative boundary:** DOL.call's non-primary kind-1 branch invokes
+A0D with type 5/source 2/false before A0O; its failure diagnostic explicitly
+names `voip/encryption/decryptCallPayload/invalid device identity`. That is
+voice-call evidence, not the messaging admission source. DOK.call discriminator
+3 decrypts PdR/P6L on SignalExecutor and restores A0V; discriminator 4 instead
+saves a *primary* identity through A14. The worker's other outgoing cases must
+not be mistaken for incoming companion bootstrap. DM8/DN2 and the other A14
+callers remain untraced by this chunk.
+
+**Implementation boundary:** the current group selector still supports only
+already-held exact companion `msg` sessions with a pin; `pkmsg` companion
+bootstrap/replacement remains unsupported. The APK itself has a companion
+admission path, so this is our present limitation, not a WhatsApp prohibition.
+Primary authenticated replacement remains buffered until authentication and
+atomic commit. No new capability, account mutation or live claim follows from
+this static trace.
+
+**Validation:** final recipe regeneration verified all 141 core files, 1,975,976
+bytes, covering 136 topics / 318 selected methods. Cached comparison against the
+prior snapshot took 0.072842 seconds: seven added topics, all 129 previous
+topics unchanged; inventory, manifest and tokens unchanged. This measures cached
+scoped source comparison, not whole-APK equivalence. All 58 xtask tests, Rust
+formatting, regenerated CLI reference and five API checks passed. The caller/
+typed-catch appendix stays outside the core bundle. No new live test was run.
+Repository hygiene passed 850 local links, licenses and all four APK checksum
+bundles (3,650,447 bytes). Only research and an evidence comment changed.

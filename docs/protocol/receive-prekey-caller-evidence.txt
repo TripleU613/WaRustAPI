@@ -1,0 +1,456 @@
+# APK 2.26.37.71; SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Selected caller scans and typed exception metadata; outside core checksum bundle.
+# Instruction offsets are bytes; exception ranges/targets are 16-bit code units.
+
+# Reproduce: target/debug/xtask apk-callers ~/Downloads/WhatsApp.apk --class 'LX/0jc;' --method A14
+classes2.dex  LX/1gz;->A00(LLLLL)
+  invoke dex byte offset: 0x136820
+classes7.dex  LX/DNk;->run(V)
+  invoke dex byte offset: 0x7fdf38
+classes7.dex  LX/DNu;->run(V)
+  invoke dex byte offset: 0x80cb8e
+classes7.dex  LX/DNu;->run(V)
+  invoke dex byte offset: 0x80cca8
+classes7.dex  LX/DOK;->call(L)
+  invoke dex byte offset: 0x81e02c
+classes.dex  Lcom/whatsapp/wamsys/JniBridge;->jnidispatchIIOOO(JIJLLL)
+  invoke dex byte offset: 0x510ece
+classes.dex  LX/0km;->COt(VLL)
+  invoke dex byte offset: 0x66b6e4
+classes.dex  LX/11T;->A0C(VLL)
+  invoke dex byte offset: 0x79cbc2
+classes.dex  LX/11T;->A0D(ZLLLBIZ)
+  invoke dex byte offset: 0x79d82c
+classes.dex  LX/14J;->A03(VL)
+  invoke dex byte offset: 0x7d4ad6
+
+# Reproduce: target/debug/xtask apk-callers ~/Downloads/WhatsApp.apk --class 'LX/Cnp;' --method A04
+classes.dex  LX/0jc;->A0O(LLLL)
+  invoke dex byte offset: 0x660354
+classes.dex  LX/0jc;->A0O(LLLL)
+  invoke dex byte offset: 0x660366
+
+# Reproduce: target/debug/xtask apk-callers ~/Downloads/WhatsApp.apk --class 'LX/0jc;' --method A0O
+classes7.dex  LX/CQn;->A00(LLLLLZ)
+  invoke dex byte offset: 0x5a41c6
+classes7.dex  LX/DM8;->run(V)
+  invoke dex byte offset: 0x7dad0c
+classes7.dex  LX/DN2;->run(V)
+  invoke dex byte offset: 0x7e66d8
+classes7.dex  LX/DOK;->call(L)
+  invoke dex byte offset: 0x81e0ba
+classes7.dex  LX/DOL;->call(L)
+  invoke dex byte offset: 0x81e368
+
+# Reproduce: target/debug/xtask apk-callers ~/Downloads/WhatsApp.apk --class 'LX/CQn;' --method A00
+classes7.dex  LX/CoU;->A04(VLLL)
+  invoke dex byte offset: 0x68e770
+classes7.dex  LX/CoU;->A04(VLLL)
+  invoke dex byte offset: 0x68e7da
+
+# Reproduce: target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/DOK;' --method call --exceptions
+
+# class: LX/DOK;
+# extends: Ljava/lang/Object;
+
+.method public call(L)  # .registers 11
+    0000..0004  iget  v0, v10, LX/DOK;->$t:I
+    0004..000a  packed-switch  v0, payload@0x360, cases=[0:@0x308, 1:@0x1d8, 2:@0x6e, 3:@0x112, 4:@0xc8], default@0xa
+    000a..000e  iget-object  v4, v10, LX/DOK;->A00:Ljava/lang/Object;
+    000e..0012  check-cast  v4, Lcom/whatsapp/locationsharing/jobqueue/job/SendLiveLocationKeyJob;
+    0012..0016  iget-object  v3, v10, LX/DOK;->A01:Ljava/lang/Object;
+    0016..001a  check-cast  v3, Lcom/google/protobuf/AbstractMessageLite;
+    001a..001e  iget-object  v1, v10, LX/DOK;->A02:Ljava/lang/Object;
+    001e..0022  check-cast  v1, Lcom/whatsapp/infra/core/jid/UserJid;
+    0022..0026  sget-object  v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0DK;
+    0026..002c  invoke-static  {v1}, LX/Ayo;->A0P(LL)
+    002c..002e  move-result-object  v0
+    002e..0030  const/4  v5, #0x0
+    0030..0036  invoke-static  {v0, v5}, LX/00h;->A0A(VLI)
+    0036..003c  invoke-static  {v0}, LX/B7H;->A04(LL)
+    003c..003e  move-result-object  v2
+    003e..0042  iget-object  v1, v4, Lcom/whatsapp/locationsharing/jobqueue/job/SendLiveLocationKeyJob;->A00:LX/0jc;
+    0042..0048  invoke-virtual  {v3}, Lcom/google/protobuf/AbstractMessageLite;->toByteArray(L)
+    0048..004a  move-result-object  v0
+    004a..0050  invoke-virtual  {v1, v2, v0}, LX/0jc;->A0Q(LLL)
+    0050..0052  move-result-object  v2
+    0052..0056  iget  v0, v2, LX/CJp;->A00:I
+    0056..005c  invoke-static  {v0}, LX/C9A;->A00(II)
+    005c..005e  move-result  v1
+    005e..0062  iget-object  v0, v2, LX/CJp;->A03:[B
+    0062..0066  new-instance  v3, LX/ClY;
+    0066..006c  invoke-direct  {v3, v0, v1, v5}, LX/ClY;-><init>(VLIZ)
+    006c..006e  return-object  v3
+    006e..0072  iget-object  v4, v10, LX/DOK;->A00:Ljava/lang/Object;
+    0072..0076  check-cast  v4, Lcom/whatsapp/companiondevice/devices/jobqueue/job/SendPeerMessageJob;
+    0076..007a  iget-object  v1, v10, LX/DOK;->A01:Ljava/lang/Object;
+    007a..007e  check-cast  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    007e..0082  iget-object  v3, v10, LX/DOK;->A02:Ljava/lang/Object;
+    0082..0086  check-cast  v3, [B
+    0086..0088  const/4  v0, #0x0
+    0088..008e  invoke-static  {v1, v0}, LX/00h;->A0A(VLI)
+    008e..0094  invoke-static  {v1}, LX/B7H;->A04(LL)
+    0094..0096  move-result-object  v2
+    0096..009a  iget  v1, v2, LX/B76;->A00:I
+    009a..009e  const/16  v0, #0x63
+    009e..00a2  if-ne  v1, v0, +0xd
+    00a2..00a6  iget-object  v1, v4, Lcom/whatsapp/companiondevice/devices/jobqueue/job/SendPeerMessageJob;->A00:LX/07t;
+    00a6..00aa  const/16  v0, #0x53e5
+    00aa..00b0  invoke-virtual  {v1, v0}, LX/00D;->A0b(II)
+    00b0..00b2  move-result  v0
+    00b2..00b4  const/4  v5, #0x1
+    00b4..00b8  if-gtz  v0, +0x3
+    00b8..00ba  const/4  v5, #0x0
+    00ba..00be  iget-object  v0, v4, Lcom/whatsapp/companiondevice/devices/jobqueue/job/SendPeerMessageJob;->A03:LX/0jc;
+    00be..00c4  invoke-virtual  {v0, v2, v3}, LX/0jc;->A0Q(LLL)
+    00c4..00c6  move-result-object  v2
+    00c6..00c8  goto  -0x3a
+    00c8..00cc  iget-object  v1, v10, LX/DOK;->A00:Ljava/lang/Object;
+    00cc..00d0  check-cast  v1, LX/0XZ;
+    00d0..00d4  iget-object  v0, v10, LX/DOK;->A01:Ljava/lang/Object;
+    00d4..00d8  check-cast  v0, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    00d8..00dc  iget-object  v3, v10, LX/DOK;->A02:Ljava/lang/Object;
+    00dc..00e0  check-cast  v3, LX/B7D;
+    00e0..00e4  iget-object  v2, v1, LX/0XZ;->A0x:LX/0jc;
+    00e4..00e8  iget-object  v0, v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    00e8..00ee  invoke-virtual  {v0}, Lcom/whatsapp/infra/core/jid/UserJid;->getPrimaryDevice(L)
+    00ee..00f0  move-result-object  v1
+    00f0..00f2  const/4  v0, #0x0
+    00f2..00f8  invoke-static  {v1, v0}, LX/00h;->A0A(VLI)
+    00f8..00fe  invoke-static  {v1}, LX/B7H;->A04(LL)
+    00fe..0100  move-result-object  v0
+    0100..0106  invoke-virtual  {v2, v3, v0}, LX/0jc;->A14(ZLL)
+    0106..0108  move-result  v0
+    0108..010e  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+    010e..0110  move-result-object  v3
+    0110..0112  return-object  v3
+    0112..0116  iget-object  v2, v10, LX/DOK;->A01:Ljava/lang/Object;
+    0116..011a  check-cast  v2, LX/PdR;
+    011a..011e  iget-object  v1, v10, LX/DOK;->A02:Ljava/lang/Object;
+    011e..0122  check-cast  v1, LX/P6L;
+    0122..0126  sget-object  v0, LX/HrQ;->A03:LX/05B;
+    0126..012c  invoke-static  {v0}, LX/Ayn;->A0R(LL)
+    012c..012e  move-result-object  v6
+    012e..0132  iget-object  v5, v2, LX/PdR;->A01:LX/B76;
+    0132..0136  iget-object  v0, v1, LX/P6L;->signalCiphertext_:Lcom/google/protobuf/ByteString;
+    0136..013c  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray(L)
+    013c..013e  move-result-object  v4
+    013e..0142  iget  v0, v1, LX/P6L;->signalMessageType_:I
+    0142..0148  invoke-static  {v0}, LX/HEU;->forNumber(LI)
+    0148..014a  move-result-object  v1
+    014a..014e  if-nez  v1, +0x4
+    014e..0152  sget-object  v1, LX/HEU;->A04:LX/HEU;
+    0152..0156  sget-object  v0, LX/HEU;->A02:LX/HEU;
+    0156..015c  invoke-static  {v1, v0}, LX/1xi;->A1W(ZLL)
+    015c..015e  move-result  v3
+    015e..0162  iget-object  v0, v6, LX/0jc;->A0I:LX/0kY;
+    0162..0168  invoke-virtual  {v0}, LX/0kY;->A02(Z)
+    0168..016a  move-result  v0
+    016a..016e  if-eqz  v0, +0x30
+    016e..0172  sget-object  v2, LX/0jc;->A0V:Ljava/lang/ThreadLocal;
+    0172..0178  invoke-virtual  {v2}, Ljava/lang/ThreadLocal;->get(L)
+    0178..017a  move-result-object  v1
+    017a..0180  invoke-static  {}, LX/1xh;->A1A(L)
+    0180..0182  move-result-object  v0
+    0182..0188  invoke-virtual  {v2, v0}, Ljava/lang/ThreadLocal;->set(VL)
+    0188..018a  const/4  v0, #0x0
+    018a..018e  if-eqz  v3, +0x7
+    018e..0194  invoke-virtual  {v6, v0, v5, v4}, LX/0jc;->A0O(LLLL)
+    0194..0196  move-result-object  v3
+    0196..0198  goto  +0x5
+    0198..019e  invoke-virtual  {v6, v0, v5, v4}, LX/0jc;->A0N(LLLL)
+    019e..01a0  move-result-object  v3
+    01a0..01a4  if-nez  v1, +0x6
+    01a4..01aa  invoke-virtual  {v2}, Ljava/lang/ThreadLocal;->remove(V)
+    01aa..01ac  return-object  v3
+    01ac..01b2  invoke-virtual  {v2, v1}, Ljava/lang/ThreadLocal;->set(VL)
+    01b2..01b4  return-object  v3
+    01b4..01b6  move-exception  v0
+    01b6..01ba  if-nez  v1, +0x6
+    01ba..01c0  invoke-virtual  {v2}, Ljava/lang/ThreadLocal;->remove(V)
+    01c0..01c2  throw  v0
+    01c2..01c8  invoke-virtual  {v2, v1}, Ljava/lang/ThreadLocal;->set(VL)
+    01c8..01ca  throw  v0
+    01ca..01ce  const-string  v0, "Strict Signal decryption must run on SignalExecutor"
+    01ce..01d4  invoke-static  {v0}, LX/1xf;->A16(LL)
+    01d4..01d6  move-result-object  v0
+    01d6..01d8  throw  v0
+    01d8..01dc  iget-object  v5, v10, LX/DOK;->A00:Ljava/lang/Object;
+    01dc..01e0  check-cast  v5, LX/CaG;
+    01e0..01e4  iget-object  v2, v10, LX/DOK;->A01:Ljava/lang/Object;
+    01e4..01e8  check-cast  v2, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    01e8..01ec  iget-object  v4, v10, LX/DOK;->A02:Ljava/lang/Object;
+    01ec..01f0  check-cast  v4, Lcom/google/protobuf/AbstractMessageLite;
+    01f0..01f4  iget-object  v3, v5, LX/CaG;->A0D:LX/00s;
+    01f4..01fa  invoke-interface  {v3}, LX/00s;->get(L)
+    01fa..01fc  move-result-object  v1
+    01fc..0200  check-cast  v1, LX/B7h;
+    0200..0202  const/4  v0, #0x0
+    0202..0208  invoke-virtual  {v1, v0, v2}, LX/B7h;->A01(ZLL)
+    0208..020a  move-result  v0
+    020a..020e  if-eqz  v0, +0x17
+    020e..0214  invoke-interface  {v3}, LX/00s;->get(L)
+    0214..0216  move-result-object  v0
+    0216..021a  check-cast  v0, LX/B7h;
+    021a..021e  iget-object  v0, v0, LX/B7h;->A00:LX/05B;
+    021e..0224  invoke-static  {v0}, LX/05B;->A00(LL)
+    0224..0226  move-result-object  v1
+    0226..022a  const/16  v0, #0x5dff
+    022a..0230  invoke-virtual  {v1, v0}, LX/00D;->A10(ZI)
+    0230..0232  move-result  v0
+    0232..0234  const/4  v8, #0x1
+    0234..0238  if-nez  v0, +0x3
+    0238..023a  const/4  v8, #0x0
+    023a..023e  iget-object  v0, v5, LX/CaG;->A09:LX/00s;
+    023e..0244  invoke-interface  {v0}, LX/00s;->get(L)
+    0244..0246  move-result-object  v1
+    0246..024a  check-cast  v1, LX/Can;
+    024a..0250  invoke-virtual  {v1}, LX/Can;->A01(Z)
+    0250..0252  move-result  v0
+    0252..0256  if-eqz  v0, +0x52
+    0256..025a  iget-object  v0, v1, LX/Can;->A00:LX/05B;
+    025a..0260  invoke-static  {v0}, LX/05B;->A00(LL)
+    0260..0262  move-result-object  v1
+    0262..0266  const/16  v0, #0x7f09
+    0266..026c  invoke-virtual  {v1, v0}, LX/00D;->A10(ZI)
+    026c..026e  move-result  v0
+    026e..0272  if-eqz  v0, +0x44
+    0272..0276  sget-object  v1, LX/B78;->A02:LX/B78;
+    0276..027a  sget-object  v0, LX/B77;->A02:LX/B77;
+    027a..0280  invoke-static  {v2, v1, v0}, LX/B7H;->A06(LLLL)
+    0280..0282  move-result-object  v3
+    0282..0286  iget-object  v0, v5, LX/CaG;->A0A:LX/00s;
+    0286..028c  invoke-static  {v0}, LX/Ayk;->A0c(LL)
+    028c..028e  move-result-object  v0
+    028e..0294  invoke-virtual  {v0, v3}, LX/0jc;->A16(ZL)
+    0294..0296  move-result  v0
+    0296..029a  if-eqz  v0, +0x30
+    029a..029e  iget-object  v2, v5, LX/CaG;->A0A:LX/00s;
+    029e..02a4  invoke-static  {v2}, LX/Ayk;->A0c(LL)
+    02a4..02a6  move-result-object  v0
+    02a6..02ac  invoke-virtual  {v0, v3}, LX/0jc;->A16(ZL)
+    02ac..02ae  move-result  v1
+    02ae..02b2  const-string  v0, "no session with deviceJid"
+    02b2..02b8  invoke-static  {v1, v0}, LX/00K;->A0D(VZL)
+    02b8..02be  invoke-static  {v2}, LX/Ayk;->A0c(LL)
+    02be..02c0  move-result-object  v1
+    02c0..02c6  invoke-virtual  {v4}, Lcom/google/protobuf/AbstractMessageLite;->toByteArray(L)
+    02c6..02c8  move-result-object  v0
+    02c8..02ce  invoke-virtual  {v1, v3, v0}, LX/0jc;->A0Q(LLL)
+    02ce..02d0  move-result-object  v1
+    02d0..02d4  iget  v0, v1, LX/CJp;->A00:I
+    02d4..02da  invoke-static  {v0}, LX/C9A;->A00(II)
+    02da..02dc  move-result  v7
+    02dc..02e0  iget-object  v5, v1, LX/CJp;->A03:[B
+    02e0..02e4  iget-boolean  v9, v1, LX/CJp;->A02:Z
+    02e4..02e8  const-string  v4, ""
+    02e8..02ea  const/4  v6, #0x2
+    02ea..02ee  new-instance  v3, LX/ClY;
+    02ee..02f4  invoke-direct/range  {v3..v9}, LX/ClY;-><init>(VLLIIZZ)
+    02f4..02f6  return-object  v3
+    02f6..02f8  const/4  v0, #0x0
+    02f8..02fe  invoke-static  {v2, v0}, LX/00h;->A0A(VLI)
+    02fe..0304  invoke-static  {v2}, LX/B7H;->A04(LL)
+    0304..0306  move-result-object  v3
+    0306..0308  goto  -0x36
+    0308..030c  iget-object  v4, v10, LX/DOK;->A00:Ljava/lang/Object;
+    030c..0310  check-cast  v4, LX/Cos;
+    0310..0314  iget-object  v3, v10, LX/DOK;->A01:Ljava/lang/Object;
+    0314..0318  check-cast  v3, LX/BmT;
+    0318..031c  iget-object  v1, v10, LX/DOK;->A02:Ljava/lang/Object;
+    031c..0320  check-cast  v1, Ljava/lang/Runnable;
+    0320..0326  invoke-virtual  {v4}, LX/Cos;->A0G(L)
+    0326..0328  move-result-object  v2
+    0328..032c  const-string  v0, "BackupAsyncTask/backup/local/"
+    032c..0332  invoke-static  {v0, v2}, LX/1xk;->A1T(VLL)
+    0332..0336  iget-object  v0, v3, LX/BmT;->A08:LX/Bih;
+    0336..033c  invoke-virtual  {v4, v0, v1}, LX/Cos;->A0D(LLL)
+    033c..033e  move-result-object  v3
+    033e..0342  iget  v1, v3, LX/ClX;->A01:I
+    0342..0344  const/4  v0, #0x1
+    0344..0348  if-eq  v1, v0, +0x8
+    0348..034c  const-string  v0, "BackupAsyncTask/backup/local/result "
+    034c..0352  invoke-static  {v0, v3}, LX/1xk;->A1Q(VLL)
+    0352..0354  return-object  v3
+    0354..0358  const-string  v0, "BackupAsyncTask/backup/local/failed-to-generate-backup "
+    0358..035e  invoke-static  {v0, v2}, LX/1xk;->A1S(VLL)
+    035e..0360  return-object  v3
+    0360..037c  packed-switch-payload  size=5
+    # exception table: 1 try range(s)
+    # catch <all> code_units 00c7..00d2 -> 00da
+.end method
+
+# Reproduce: target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/DOL;' --method call --exceptions
+
+# class: LX/DOL;
+# extends: Ljava/lang/Object;
+
+.method public call(L)  # .registers 14
+    0000..0004  iget-object  v5, v13, LX/DOL;->A00:LX/CaG;
+    0004..0008  iget-object  v7, v13, LX/DOL;->A01:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0008..000c  iget-object  v3, v13, LX/DOL;->A03:LX/ClY;
+    000c..0010  iget-object  v8, v13, LX/DOL;->A04:[B
+    0010..0014  iget-object  v2, v13, LX/DOL;->A02:LX/B76;
+    0014..0018  iget-object  v0, v5, LX/CaG;->A05:LX/00s;
+    0018..001e  invoke-interface  {v0}, LX/00s;->get(L)
+    001e..0020  move-result-object  v6
+    0020..0024  check-cast  v6, LX/11T;
+    0024..0026  const/4  v1, #0x1
+    0026..002a  if-eqz  v7, +0x2e
+    002a..0030  invoke-virtual  {v7}, Lcom/whatsapp/infra/core/jid/DeviceJid;->isPrimary(Z)
+    0030..0032  move-result  v0
+    0032..0036  if-nez  v0, +0x28
+    0036..003a  iget  v0, v3, LX/ClY;->A00:I
+    003a..003e  if-ne  v0, v1, +0x24
+    003e..0044  invoke-static  {v3}, LX/C8C;->A00(LL)
+    0044..0046  move-result-object  v9
+    0046..0048  const/4  v10, #0x5
+    0048..004a  const/4  v11, #0x2
+    004a..004c  const/4  v12, #0x0
+    004c..0052  invoke-virtual/range  {v6..v12}, LX/11T;->A0D(ZLLLBIZ)
+    0052..0054  move-result  v0
+    0054..0056  const/4  v4, #0x0
+    0056..005a  if-eqz  v0, +0x2c
+    005a..005e  iget  v1, v3, LX/ClY;->A00:I
+    005e..0062  if-eqz  v1, +0x1b
+    0062..0064  const/4  v0, #0x1
+    0064..0068  if-ne  v1, v0, +0x11
+    0068..006c  iget-object  v0, v5, LX/CaG;->A0A:LX/00s;
+    006c..0072  invoke-static  {v0}, LX/Ayk;->A0c(LL)
+    0072..0074  move-result-object  v1
+    0074..0078  iget-object  v0, v3, LX/ClY;->A05:[B
+    0078..007e  invoke-virtual  {v1, v4, v2, v0}, LX/0jc;->A0O(LLLL)
+    007e..0080  move-result-object  v1
+    0080..0082  return-object  v1
+    0082..0084  const/4  v0, #0x1
+    0084..0086  goto  -0x18
+    0086..008a  const-string  v0, "invalid ciphertext type; ciphertextType="
+    008a..0090  invoke-static  {v0, v1}, LX/3c4;->A0m(LLI)
+    0090..0092  move-result-object  v0
+    0092..0094  throw  v0
+    0094..0098  iget-object  v0, v5, LX/CaG;->A0A:LX/00s;
+    0098..009e  invoke-static  {v0}, LX/Ayk;->A0c(LL)
+    009e..00a0  move-result-object  v1
+    00a0..00a4  iget-object  v0, v3, LX/ClY;->A05:[B
+    00a4..00aa  invoke-virtual  {v1, v4, v2, v0}, LX/0jc;->A0N(LLLL)
+    00aa..00ac  move-result-object  v1
+    00ac..00ae  return-object  v1
+    00ae..00b4  const-string/jumbo  v0, "voip/encryption/decryptCallPayload/invalid device identity"
+    00b4..00ba  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+    00ba..00be  const/16  v0, #0xfc0e (-1010)
+    00be..00c2  new-instance  v1, LX/CfP;
+    00c2..00c8  invoke-direct  {v1, v4, v0}, LX/CfP;-><init>(VLI)
+    00c8..00ca  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/CoU;' --method A00 --exceptions
+
+# class: LX/CoU;
+# extends: Ljava/lang/Object;
+
+.method private A00(LLLL)  # .registers 13
+    0000..0004  iget-object  v0, v9, LX/CoU;->A0Q:LX/05B;
+    0004..000a  invoke-static  {v0}, LX/1xh;->A11(LL)
+    000a..000c  move-result-object  v3
+    000c..0010  iget-object  v0, v9, LX/CoU;->A0J:LX/05B;
+    0010..0016  invoke-static  {v0}, LX/Ayn;->A0R(LL)
+    0016..0018  move-result-object  v4
+    0018..001c  iget-object  v0, v9, LX/CoU;->A06:LX/05B;
+    001c..0022  invoke-static  {v0}, LX/05B;->A02(LL)
+    0022..0024  move-result-object  v8
+    0024..0028  check-cast  v8, LX/CLj;
+    0028..002c  iget-object  v0, v9, LX/CoU;->A0O:LX/05B;
+    002c..0032  invoke-static  {v0}, LX/1xi;->A0q(LL)
+    0032..0034  move-result-object  v2
+    0034..0038  iget-object  v0, v9, LX/CoU;->A00:LX/05B;
+    0038..003e  invoke-static  {v0}, LX/1xh;->A0t(LL)
+    003e..0040  move-result-object  v1
+    0040..0044  new-instance  v0, LX/CQn;
+    0044..0046  move-object  v5, v10
+    0046..0048  move-object  v6, v11
+    0048..004a  move-object  v7, v12
+    004a..0050  invoke-direct/range  {v0..v8}, LX/CQn;-><init>(VLLLLLLLL)
+    0050..0052  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/0jc;' --method A0O --exceptions
+    # exception table: 15 try range(s)
+    # catch LX/C4x; code_units 001b..0022 -> 0112
+    # catch LX/C4U; code_units 001b..0022 -> 0103
+    # catch <all> code_units 001b..0022 -> 0125
+    # catch <all> code_units 0022..0084 -> 0125
+    # catch LX/C4T; code_units 0084..00a6 -> 00fb
+    # catch LX/C4x; code_units 0084..00a6 -> 00f3
+    # catch LX/C4q; code_units 0084..00a6 -> 00eb
+    # catch LX/C4p; code_units 0084..00a6 -> 00e3
+    # catch LX/2iA; code_units 0084..00a6 -> 00db
+    # catch LX/C4V; code_units 0084..00a6 -> 00d3
+    # catch Ljava/lang/Exception; code_units 0084..00a6 -> 00b9
+    # catch <all> code_units 0084..00a6 -> 0125
+    # catch <all> code_units 00a6..00ae -> 00ac
+    # catch LX/C4T; code_units 00ae..00b9 -> 00fb
+    # catch LX/C4x; code_units 00ae..00b9 -> 00f3
+    # catch LX/C4q; code_units 00ae..00b9 -> 00eb
+    # catch LX/C4p; code_units 00ae..00b9 -> 00e3
+    # catch LX/2iA; code_units 00ae..00b9 -> 00db
+    # catch LX/C4V; code_units 00ae..00b9 -> 00d3
+    # catch Ljava/lang/Exception; code_units 00ae..00b9 -> 00b9
+    # catch <all> code_units 00ae..00b9 -> 0125
+    # catch <all> code_units 00b9..00d3 -> 0125
+    # catch <all> code_units 00d6..00db -> 0125
+    # catch <all> code_units 00de..00e3 -> 0125
+    # catch <all> code_units 00e6..00eb -> 0125
+    # catch <all> code_units 00ee..00f3 -> 0125
+    # catch <all> code_units 00f6..00fb -> 0125
+    # catch <all> code_units 00fe..0103 -> 0125
+    # catch <all> code_units 0104..010e -> 0125
+    # catch <all> code_units 0113..0121 -> 0125
+    # catch <all> code_units 0126..0129 -> 012a
+.end method
+
+# Reproduce: target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/CQn;' --method A00 --exceptions
+    # exception table: 15 try range(s)
+    # catch <all> code_units 0048..0054 -> 029f
+    # catch <all> code_units 009f..00ab -> 029f
+    # catch <all> code_units 00b8..00ca -> 029f
+    # catch <all> code_units 0120..012b -> 029f
+    # catch <all> code_units 0167..016b -> 016f
+    # catch <all> code_units 01bb..01c8 -> 0233
+    # catch LX/C4V; code_units 01c8..01e8 -> 0228
+    # catch LX/C4x; code_units 01c8..01e8 -> 0220
+    # catch LX/C4T; code_units 01c8..01e8 -> 0218
+    # catch LX/C4r; code_units 01c8..01e8 -> 0210
+    # catch Ljava/lang/Exception; code_units 01c8..01e8 -> 01fa
+    # catch <all> code_units 01c8..01e8 -> 0233
+    # catch <all> code_units 01e8..01f0 -> 01ee
+    # catch LX/C4V; code_units 01f0..01fa -> 0228
+    # catch LX/C4x; code_units 01f0..01fa -> 0220
+    # catch LX/C4T; code_units 01f0..01fa -> 0218
+    # catch LX/C4r; code_units 01f0..01fa -> 0210
+    # catch Ljava/lang/Exception; code_units 01f0..01fa -> 01fa
+    # catch <all> code_units 01f0..01fa -> 0233
+    # catch <all> code_units 01fa..0210 -> 0233
+    # catch <all> code_units 0213..0218 -> 0233
+    # catch <all> code_units 021b..0220 -> 0233
+    # catch <all> code_units 0223..0228 -> 0233
+    # catch <all> code_units 022b..022f -> 0233
+    # catch <all> code_units 0234..0237 -> 0238
+.end method
+
+# Reproduce: target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/CoU;' --method A04 --exceptions
+    # exception table: 4 try range(s)
+    # catch <all> code_units 0199..019b -> 05b3
+    # catch <all> code_units 0486..04af -> 05bd
+    # catch <all> code_units 05b4..05b5 -> 05b3
+    # catch <all> code_units 05b6..05bd -> 05bd
+.end method
+
+# B77 constructor only; reproduce apk-smali APK --class 'LX/B77;' --exceptions
+.method public <init>(VLII)  # .registers 4
+    0000..0006  invoke-direct  {v0, v1, v2}, Ljava/lang/Enum;-><init>(VLI)
+    0006..000a  iput  v3, v0, LX/B77;->intValue:I
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

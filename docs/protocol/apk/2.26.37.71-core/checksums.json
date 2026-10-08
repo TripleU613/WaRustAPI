@@ -275,6 +275,30 @@
     "bytes": 1528,
     "sha256": "dcd18b5172bbcfe015c7cda98af344bf248d2d41d6fc0814ff682a87b29335bf"
   },
+  "receive-message-cipher-dispatch.txt": {
+    "bytes": 17435,
+    "sha256": "6e2e5e832b1f400b377429399448f1a87f4550b8af7a6c5841e70a37175aa9fa"
+  },
+  "receive-message-companion-admission.txt": {
+    "bytes": 40350,
+    "sha256": "5d5fc5415797523f355268694a8e87b8f5471cc4462def90e672cbbe40ec49bf"
+  },
+  "receive-prekey-ordinary-factory.txt": {
+    "bytes": 865,
+    "sha256": "077f1a2aefc6cebe62528ec51abc3fce6e32602742f6606a2d19acc0688dd360"
+  },
+  "receive-prekey-outer-coordinator.txt": {
+    "bytes": 8207,
+    "sha256": "e10f9b398bea8976c3e9c628198703e9f0478ab62ad0147d3cfd75389fc4e8ab"
+  },
+  "receive-prekey-stateless-identity.txt": {
+    "bytes": 1393,
+    "sha256": "992ec345066056f731f1d3b0007cff412e4cdcdd02a765144c0282eee5107c8c"
+  },
+  "receive-prekey-stateless-session.txt": {
+    "bytes": 2498,
+    "sha256": "b0bde4ba8005f937f2fcb6fa6f0775e3908acfdec09061b8c92aabe2243ec3dd"
+  },
   "record-writer.txt": {
     "bytes": 585,
     "sha256": "e0ad17600509106ef612548d30092fd4e163e6dc2578f16d39b10efaeb5a49d5"
@@ -511,6 +535,10 @@
     "bytes": 4023,
     "sha256": "6a132f16768588fd57835a2141dc58364355e3c2ad4dfd11ceceadf2e801bd6f"
   },
+  "signal-actor-bucket-enum.txt": {
+    "bytes": 1503,
+    "sha256": "7022cb3ea91058e1d2d917503d5eb4adea41f3fb78dc24ff34c3a2d6efed8b68"
+  },
   "socket-factory.txt": {
     "bytes": 68891,
     "sha256": "71dd7141e4d0331847fc6935026c36f4f1709cc9f7ccdbff29c8e7c6eb5a4437"
@@ -520,8 +548,8 @@
     "sha256": "82590b7944e627c71d4a54e3403be84e314598ced8789812c7c6951470853c92"
   },
   "targets.json": {
-    "bytes": 48579,
-    "sha256": "4f9afe73b9fe4072f7da47795f2ba3d9884fc4da56a8388ead018ada80595777"
+    "bytes": 51073,
+    "sha256": "91840937948fc4013f2096f3ec00a0c60ad6e3b8ecde5b82d6ae274cb4ae476e"
   },
   "token-dictionary-initializer.txt": {
     "bytes": 159791,

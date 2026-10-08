@@ -844,6 +844,76 @@
       "crates/whatsapp-api/src/transport/connection.rs"
     ]
   },
+  "receive-message-cipher-dispatch": {
+    "class": "LX/CQn;",
+    "file": "receive-message-cipher-dispatch.txt",
+    "method_filter": "A00",
+    "method_shorty": "LLLLLZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/signal/direct/incoming.rs"
+    ]
+  },
+  "receive-message-companion-admission": {
+    "anchors": [
+      "/onMessageForMe/unknown device message without prekey, jid="
+    ],
+    "class": "LX/CoU;",
+    "file": "receive-message-companion-admission.txt",
+    "method_filter": "A04",
+    "method_shorty": "VLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/signal/direct/incoming.rs"
+    ]
+  },
+  "receive-prekey-ordinary-factory": {
+    "class": "LX/0ko;",
+    "file": "receive-prekey-ordinary-factory.txt",
+    "method_filter": "A04",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/signal/direct/incoming.rs"
+    ]
+  },
+  "receive-prekey-outer-coordinator": {
+    "anchors": [
+      "SignalCoordinator/decryptForIndividualPreKey"
+    ],
+    "class": "LX/0jc;",
+    "file": "receive-prekey-outer-coordinator.txt",
+    "method_filter": "A0O",
+    "method_shorty": "LLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/signal/direct/incoming.rs"
+    ]
+  },
+  "receive-prekey-stateless-identity": {
+    "class": "LX/DRz;",
+    "file": "receive-prekey-stateless-identity.txt",
+    "method_filter": null,
+    "methods": 5,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/signal/direct/incoming.rs"
+    ]
+  },
+  "receive-prekey-stateless-session": {
+    "class": "LX/DS0;",
+    "file": "receive-prekey-stateless-session.txt",
+    "method_filter": null,
+    "methods": 4,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/signal/direct/incoming.rs"
+    ]
+  },
   "record-writer": {
     "class": "LX/1Qc;",
     "file": "record-writer.txt",
@@ -1612,6 +1682,22 @@
     "rust_files": [
       "crates/whatsapp-api/src/signal/group.rs",
       "crates/whatsapp-cli/src/transport_group_send.rs"
+    ]
+  },
+  "signal-actor-bucket-enum": {
+    "anchors": [
+      "REGULAR",
+      "PQ",
+      "STATELESS"
+    ],
+    "class": "LX/B77;",
+    "file": "signal-actor-bucket-enum.txt",
+    "method_filter": "<clinit>",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox.rs",
+      "crates/whatsapp-api/src/signal/direct/incoming.rs"
     ]
   },
   "socket-factory": {

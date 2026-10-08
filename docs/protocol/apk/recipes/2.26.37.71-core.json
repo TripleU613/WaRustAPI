@@ -1414,6 +1414,80 @@
         "crates/whatsapp-api/src/transport/groups.rs",
         "crates/whatsapp-api/src/transport/group_send.rs"
       ]
+    },
+    "receive-prekey-outer-coordinator": {
+      "class": "LX/0jc;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-api/src/signal/direct/incoming.rs"
+      ],
+      "anchors": [
+        "SignalCoordinator/decryptForIndividualPreKey"
+      ],
+      "method": "A0O",
+      "method_shorty": "LLLL"
+    },
+    "receive-prekey-ordinary-factory": {
+      "class": "LX/0ko;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-api/src/signal/direct/incoming.rs"
+      ],
+      "anchors": [],
+      "method": "A04",
+      "method_shorty": "LL"
+    },
+    "receive-prekey-stateless-identity": {
+      "class": "LX/DRz;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-api/src/signal/direct/incoming.rs"
+      ],
+      "anchors": []
+    },
+    "receive-prekey-stateless-session": {
+      "class": "LX/DS0;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-api/src/signal/direct/incoming.rs"
+      ],
+      "anchors": []
+    },
+    "signal-actor-bucket-enum": {
+      "class": "LX/B77;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-api/src/signal/direct/incoming.rs"
+      ],
+      "anchors": [
+        "REGULAR",
+        "PQ",
+        "STATELESS"
+      ],
+      "method": "<clinit>",
+      "method_shorty": "V"
+    },
+    "receive-message-cipher-dispatch": {
+      "class": "LX/CQn;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-api/src/signal/direct/incoming.rs"
+      ],
+      "anchors": [],
+      "method": "A00",
+      "method_shorty": "LLLLLZ"
+    },
+    "receive-message-companion-admission": {
+      "class": "LX/CoU;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox.rs",
+        "crates/whatsapp-api/src/signal/direct/incoming.rs"
+      ],
+      "anchors": [
+        "/onMessageForMe/unknown device message without prekey, jid="
+      ],
+      "method": "A04",
+      "method_shorty": "VLLL"
     }
   }
 }

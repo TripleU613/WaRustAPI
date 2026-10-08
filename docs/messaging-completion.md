@@ -1850,3 +1850,16 @@ install sender keys and retain duplicate markers across reopen. B7H forward/
 reverse device construction is linked; CPQ.A00 is refuted as a 37.71 session
 selector. Full companion bootstrap/identity policy and live device coverage
 remain unfinished. [Evidence and scope](protocol/groups.md#group-pairwise-session-device-correction-2026-10-07).
+
+### Incoming companion prekey admission trace (2026-10-07)
+
+- **Confirmed static**, APK 37.71: messaging CoU.A04 checks companion prekey
+  identity through 11T.A0D before CQn dispatch reaches 0jc.A0O/Cnp.A04.
+  The separate STATELESS actor uses an in-memory session map and no-op identity
+  save; it is not the companion predicate. Ordered catches now bind obfuscated
+  exceptions to local result codes without guessing server refusal semantics.
+- **Remaining:** complete sender/ADV/address producers, feature/dead-device
+  conditions and companion admission/application policy. Exact pinned companion
+  `msg` receives are implemented; companion `pkmsg` bootstrap/replacement is
+  still our limitation. No live validation or account change in this trace.
+  See [outer prekey evidence](protocol/peer-identity.md#outer-prekey-dispatch-and-companion-admission-2026-10-07).
