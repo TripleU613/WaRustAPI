@@ -132,6 +132,11 @@ impl VerifiedIndexList {
             indexes,
         })
     }
+    /// Whether this authenticated list includes a companion key index.
+    /// APK 37.71 11T.A08 uses signed indexes separately from retained devices.
+    pub fn contains_index(&self, index: u32) -> bool {
+        self.indexes.contains(&index)
+    }
     /// Account raw id the signed list belongs to.
     pub fn raw_id(&self) -> u32 {
         self.raw_id

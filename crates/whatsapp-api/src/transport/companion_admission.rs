@@ -37,13 +37,30 @@ pub(crate) struct AuthoritySnapshot {
     login_identity: Option<serde_json::Value>,
     account: AccountRecord,
     refresh_timestamp: Option<u64>,
+    device_addition: Option<super::devices::DeviceEntry>,
 }
 
 impl AuthoritySnapshot {
     pub(crate) fn commit(&self, tx: &mut WriteTx<'_>) -> Result<()> {
         self.check(tx)?;
+        let mut list = self.list.clone();
+        if let Some(entry) = &self.device_addition {
+            // 11T.A0D 06f2..0994 adds absent addresses only. Both ADV
+            // signatures and nested Signal MAC were checked before this commit.
+            list.devices.push(entry.clone());
+            list.devices.sort_by(|a, b| a.jid.cmp(&b.jid));
+            list.adv_added_devices.push(entry.jid.clone());
+            list.adv_added_devices.sort();
+            list.hash_matches = None;
+            tx.put_json(
+                Table::Checkpoints,
+                list_key(&list.owner).as_bytes(),
+                1,
+                &list,
+            )?;
+        }
         if let Some(timestamp) = self.refresh_timestamp {
-            super::devices::request_adv_refresh_in(tx, &self.list, timestamp)?;
+            super::devices::request_adv_refresh_in(tx, &list, timestamp)?;
         }
         Ok(())
     }
@@ -75,7 +92,7 @@ impl AuthoritySnapshot {
 
 /// Read-only admission diagnostic for an actual companion prekey candidate.
 /// Returns fixed status names, never keys or signed metadata. `ready` means
-/// the matched-baseline branch is supported; `ready_refresh_pending` also
+/// account-baseline admission is supported; `ready_refresh_pending` also
 /// requires a pending refresh after authentication. Nested Signal MAC verification
 /// and atomic state commit are still required. No query or state mutation.
 pub fn inspect(
@@ -193,7 +210,7 @@ pub(crate) fn prepare(
         };
         // 11T.A0D 04c8..05fa checks the ACTUAL device index, not an alias.
         // A known index may continue with pending refresh (05fa..0628).
-        // New-device map mutation remains separate and unported.
+        // Remote addition is add-only; own/canonical reconciliation is separate.
         let entries: Vec<_> = list
             .devices
             .iter()
@@ -201,15 +218,45 @@ pub(crate) fn prepare(
                 same_user(&d.jid, peer) && d.jid.agent == peer.agent && d.jid.device == peer.device
             })
             .collect();
-        if entries.len() != 1 || entries[0].key_index != verified.key_index() {
-            return Ok(Refused(if verified.timestamp() > timestamp {
-                "refresh_required"
-            } else {
-                "deleted_device"
-            }));
+        if entries.len() > 1 {
+            return Ok(Refused("ambiguous_device_membership"));
         }
+        // 11T.A0D 0694 converts Java int to long; 08f8..0994 requires
+        // a positive companion index. High unsigned values are negative there.
+        if verified.key_index() == 0 || verified.key_index() > i32::MAX as u32 {
+            return Ok(Refused("invalid_companion_index"));
+        }
+        let matched = entries
+            .first()
+            .is_some_and(|entry| entry.key_index == verified.key_index());
+        if !matched && verified.timestamp() <= timestamp {
+            return Ok(Refused("deleted_device"));
+        }
+        let device_addition = if entries.is_empty() {
+            // CoU.A04 gates absent offline senders on the dead-device registry.
+            // That lifecycle is unported; this is our conservative deferral.
+            if node.attributes.iter().any(|a| a.name == "offline") {
+                return Ok(Refused("offline_device_update_deferred"));
+            }
+            // Our retained-map uniqueness/bounds guards; not server errors.
+            if list.devices.len() >= 1024
+                || list
+                    .devices
+                    .iter()
+                    .any(|d| d.key_index == verified.key_index())
+            {
+                return Ok(Refused("conflicting_device_membership"));
+            }
+            Some(super::devices::DeviceEntry {
+                jid: peer.clone(),
+                key_index: verified.key_index(),
+            })
+        } else {
+            None
+        };
         Ok(Ready(Box::new(AuthoritySnapshot {
             list,
+            device_addition,
             primary_pin: pin,
             login_identity: login,
             account: saved_account,
@@ -360,6 +407,7 @@ mod tests {
             list_timestamp: Some(9),
             expected_timestamp: None,
             companions_verified: true,
+            adv_added_devices: Vec::new(),
             verified_primary_key_fingerprint: Some(hex::encode(Sha256::digest(account_key))),
             unverified_reason: None,
             notified_hash: None,
@@ -431,13 +479,18 @@ mod tests {
 
     #[tokio::test]
     async fn newer_known_adv_refresh_commits_only_with_authenticated_message() {
-        for (direct, corrupt) in [(false, false), (true, false), (false, true), (true, true)] {
+        for (direct, corrupt, membership, raw) in [false, true].into_iter().flat_map(|direct| {
+            [false, true].into_iter().flat_map(move |corrupt| {
+                (0..3).flat_map(move |membership| {
+                    ["15555550101:3@s.whatsapp.net", "99990000101:3@lid"]
+                        .into_iter()
+                        .map(move |raw| (direct, corrupt, membership, raw))
+                })
+            })
+        }) {
             let dir = tempfile::tempdir().unwrap();
-            let (store, receiver, peer, mut node) = fixture(
-                &dir.path().join("refresh.redb"),
-                "15555550101:3@s.whatsapp.net",
-            )
-            .await;
+            let (store, receiver, peer, mut node) =
+                fixture(&dir.path().join("refresh.redb"), raw).await;
             if direct {
                 node = Node::new("message")
                     .attr("from", peer.clone())
@@ -448,6 +501,11 @@ mod tests {
                 .unwrap()
                 .unwrap();
             baseline.list_timestamp = Some(8);
+            if membership == 1 {
+                baseline.devices.retain(|d| d.jid.device == 0);
+            } else if membership == 2 {
+                baseline.devices[1].key_index = 3;
+            }
             store
                 .write(|tx| {
                     tx.put_json(
@@ -527,13 +585,28 @@ mod tests {
                 assert_eq!(result, super::super::inbox::IncomingResult::Decrypted);
                 let mut expected = baseline;
                 expected.expected_timestamp = Some(9);
+                if membership == 1 {
+                    expected.devices.push(super::super::devices::DeviceEntry {
+                        jid: peer.clone(),
+                        key_index: 2,
+                    });
+                    expected.devices.sort_by(|a, b| a.jid.cmp(&b.jid));
+                    expected.adv_added_devices = vec![peer.clone()];
+                    expected.hash_matches = None;
+                }
                 assert_eq!(
                     super::super::devices::device_list(&store, &peer).unwrap(),
-                    Some(expected)
+                    Some(expected.clone())
                 );
                 assert_eq!(
                     super::super::devices::pending_users(&store).unwrap(),
                     vec![peer.to_non_ad()]
+                );
+                drop(store);
+                let store = open(&dir.path().join("refresh.redb"), false);
+                assert_eq!(
+                    super::super::devices::device_list(&store, &peer).unwrap(),
+                    Some(expected)
                 );
                 assert_eq!(
                     super::super::inbox::process(&store, &receiver, &node, &capture)
@@ -785,12 +858,14 @@ mod tests {
             (0, "deleted_device"),
             (1, "deleted_device"),
             (2, "raw_id_mismatch"),
-            (3, "refresh_required"),
+            (3, "offline_device_update_deferred"),
             (4, "stale_device_list"),
             (5, "own_device"),
             (6, "missing_own_identity"),
             (7, "missing_device_identity"),
             (8, "invalid_device_identity"),
+            (9, "conflicting_device_membership"),
+            (10, "ambiguous_device_membership"),
         ] {
             let dir = tempfile::tempdir().unwrap();
             let (store, receiver, peer, mut node) =
@@ -804,8 +879,18 @@ mod tests {
                 2 => list.raw_id = Some(8),
                 3 => {
                     list.list_timestamp = Some(8);
-                    list.devices[1].key_index = 3;
+                    list.devices.retain(|d| d.jid.device == 0);
+                    node = node.attr("offline", "0");
                 }
+                9 => {
+                    list.list_timestamp = Some(8);
+                    list.devices.retain(|d| d.jid.device == 0);
+                    list.devices.push(super::super::devices::DeviceEntry {
+                        jid: peer.with_device(4),
+                        key_index: 2,
+                    });
+                }
+                10 => list.devices.push(list.devices[1].clone()),
                 4 => list.verified_primary_key_fingerprint = None,
                 5 => store
                     .write(|tx| {

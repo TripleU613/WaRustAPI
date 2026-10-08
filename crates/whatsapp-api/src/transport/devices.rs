@@ -122,7 +122,11 @@ pub struct DeviceList {
     /// Server `expected_ts` or a newer authenticated known-companion ADV expectation.
     /// Separate from the verified floor (APK 37.71 0bN.A05 / Lcr.A00).
     pub expected_timestamp: Option<u64>,
-    /// Companions came from a verified signed list; false means primary only.
+    /// Devices added by authenticated signed ADV, awaiting list confirmation.
+    /// Local provenance, not a server field (APK 37.71 11T.A0D add-only path).
+    #[serde(default)]
+    pub adv_added_devices: Vec<Jid>,
+    /// Account baseline has signed authority; additions have separate ADV provenance.
     pub companions_verified: bool,
     /// SHA-256 of the raw primary public key that verified this signed list.
     /// Private local binding, not an APK field or human verification. Historical
@@ -821,6 +825,10 @@ fn ingest_user(
         unverified_reason = Some("no signed index list".into());
         None
     };
+    let mut adv_added_devices = saved
+        .as_ref()
+        .map(|s| s.adv_added_devices.clone())
+        .unwrap_or_default();
     let retained: ReconciledDevices = match verified {
         Some(list) => {
             if raw_id.is_some_and(|id| id != list.raw_id()) {
@@ -835,6 +843,11 @@ fn ingest_user(
                 Ok(devices) => {
                     raw_id = Some(list.raw_id());
                     companions_verified = true;
+                    adv_added_devices.retain(|jid| {
+                        devices.devices().get(jid).is_some_and(|index| {
+                            !list.contains_index(*index) || incoming.get(jid) != Some(index)
+                        })
+                    });
                     devices
                 }
                 Err(_) => {
@@ -844,7 +857,10 @@ fn ingest_user(
                 }
             }
         }
-        None => ReconciledDevices::primary_only(&owner)?,
+        None => {
+            adv_added_devices.clear();
+            ReconciledDevices::primary_only(&owner)?
+        }
     };
     let hash_matches = notified_hash.as_deref().map(|hash| {
         [DeviceHashVersion::V2, DeviceHashVersion::V3]
@@ -869,6 +885,7 @@ fn ingest_user(
         },
         expected_timestamp,
         companions_verified,
+        adv_added_devices,
         verified_primary_key_fingerprint,
         unverified_reason,
         notified_hash,
@@ -1188,7 +1205,17 @@ mod tests {
             .unwrap()
             .require_complete()
             .unwrap();
-        let baseline = device_list(&store, &peer).unwrap().unwrap();
+        let mut baseline = device_list(&store, &peer).unwrap().unwrap();
+        // A separately authenticated ADV allocation newer than the response's
+        // signed current_index must retain its provenance until confirmation.
+        baseline.devices.push(DeviceEntry {
+            jid: peer.with_device(4),
+            key_index: 3,
+        });
+        baseline.adv_added_devices.push(peer.with_device(4));
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, list_key(&peer).as_bytes(), 1, &baseline))
+            .unwrap();
         store
             .write(|tx| request_adv_refresh_in(tx, &baseline, 10))
             .unwrap();
@@ -1208,14 +1235,33 @@ mod tests {
             .unwrap();
         assert_eq!(pending.generation, unchanged.generation);
         for ts in [9, 10] {
-            let (signed, _) = crate::signal::adv::test_signed_list(7, ts, 2, &[1, 2], &[11; 32]);
+            let (signed, _) = crate::signal::adv::test_signed_list(
+                7,
+                ts,
+                if ts == 9 { 2 } else { 3 },
+                if ts == 9 { &[1, 2] } else { &[1, 2, 3] },
+                &[11; 32],
+            );
             let mut cursor = DeviceSyncCursor::default();
             let (query, iq) = cursor
                 .begin_next(&store, SyncContext::Interactive)
                 .unwrap()
                 .unwrap();
+            let mut response_user = signed_user(ts, signed);
+            if ts == 10 {
+                let NodeContent::Children(users) = &mut response_user.content else {
+                    panic!()
+                };
+                let NodeContent::Children(devices) = &mut users[0].content else {
+                    panic!()
+                };
+                let NodeContent::Children(entries) = &mut devices[0].content else {
+                    panic!()
+                };
+                entries.push(Node::new("device").attr("id", "4").attr("key-index", "3"));
+            }
             cursor
-                .settle(&query, &store, &reply(&iq, vec![signed_user(ts, signed)]))
+                .settle(&query, &store, &reply(&iq, vec![response_user]))
                 .unwrap()
                 .require_complete()
                 .unwrap();
@@ -1230,6 +1276,7 @@ mod tests {
             assert!(list.companions_verified);
             if ts == 9 {
                 assert_eq!(list.expected_timestamp, Some(10));
+                assert_eq!(list.adv_added_devices, vec![peer.with_device(4)]);
                 assert_eq!(pending_users(&store).unwrap(), vec![peer.clone()]);
                 let held: Pending = store
                     .read(|tx| tx.get_json(Table::Checkpoints, pending_key(&peer).as_bytes(), 1))
@@ -1238,6 +1285,7 @@ mod tests {
                 assert_eq!(held.generation, pending.generation);
             } else {
                 assert_eq!(list.expected_timestamp, None);
+                assert!(list.adv_added_devices.is_empty());
                 assert!(pending_users(&store).unwrap().is_empty());
             }
         }
@@ -1281,6 +1329,7 @@ mod tests {
         old.as_object_mut()
             .unwrap()
             .remove("verified_primary_key_fingerprint");
+        old.as_object_mut().unwrap().remove("adv_added_devices");
         store
             .write(|tx| tx.put_json(Table::Checkpoints, list_key(&peer).as_bytes(), 1, &old))
             .unwrap();

@@ -501,6 +501,7 @@ mod tests {
             list_timestamp: None,
             expected_timestamp: None,
             companions_verified: false,
+            adv_added_devices: Vec::new(),
             verified_primary_key_fingerprint: None,
             unverified_reason: Some("no signed list".into()),
             notified_hash: None,

@@ -1618,3 +1618,58 @@ primary/MAC/transaction safeguards still apply; new-device addition remains
 unfinished. The port must preserve explicit pending removal and recheck current
 membership without resetting account identities or replaying requests.
 This static research made no saved-account or live-transport changes.
+
+
+## Remote newer-ADV device application in Rust (2026-10-08)
+
+**Implemented; verified offline**, grounded in APK 37.71 `11T.A0D
+04c8..0a96`, `B7j.A03` and the preceding
+[new-device trace](#companion-new-device-membership-application-2026-10-08).
+With a current independently bound account baseline and matching raw ID/E2EE
+signatures, a newer candidate may enter receive even when the device address
+is absent or its index differs. Nested Signal authentication and incoming
+identity policy still apply. An absent actual namespace/device is added with
+its signed positive Java-int index (1 through 2147483647) in the same receive
+transaction. APK int-to-long conversion makes higher unsigned values negative;
+those candidates are invalid_companion_index. An already present
+address retains its old membership index; the candidate's newer expectation
+queues the existing device sync. Old/equal mismatches remain deleted_device.
+Account keys, IDs and the verified list timestamp are preserved.
+
+`DeviceList.adv_added_devices` records which retained addresses came from
+individual authenticated ADV, rather than full signed-list confirmation. It is
+local provenance, not a server wire field; historical rows default empty.
+The baseline's companions_verified and verifier fingerprint retain their
+account-authority meaning. A new addition invalidates hash_matches while keeping
+notification metadata. During signed reconciliation an ADV-added member keeps
+its provenance when retained as a newer local allocation; provenance clears
+only when the signed indexes and incoming address/index actually confirm it,
+or when reconciliation removes that address. Unsigned-primary reconciliation
+has no retained companions/provenance. `VerifiedIndexList::contains_index`
+exposes this already authenticated index membership check.
+
+Inspection remains read-only and uses ready_refresh_pending for newer eligible
+candidates. `devices` JSON exposes adv_added_devices; human output shows its
+count and expected_ts beside list_ts. Fixed local refusal diagnostics now also
+include ambiguous_device_membership, invalid_companion_index,
+conflicting_device_membership and offline_device_update_deferred. Duplicate
+addresses, index collisions and 1024-entry overflow are our map guards, not
+server errors. The obsolete newer-index refresh_required refusal no longer
+represents this supported branch.
+
+**Explicit remaining limitation:** absent senders carrying any offline
+attribute are deferred because the dead-device registry/reap lifecycle is not
+yet implemented. This conservative local presence check also defers malformed
+offline metadata; it does not claim APK nullable-Integer/gate parity. Known
+addresses bypass that new-device guard as in the traced caller. Actual signed
+PN/LID namespace authority is used; no alias is invented or second namespace
+updated. Canonical alias fan-out, participant/observer invalidation, own-account
+and raw-ID/type reconciliation remain incomplete. Full APK compatibility and
+live new-device coverage are not established by this bounded branch.
+
+Real encrypted direct/group fixtures exercise known, absent and different-index
+newer candidates, inspection without mutation, valid MAC, invalid MAC,
+transaction abort and Duplicate. Add-only membership, original verified floor,
+refresh queue and provenance are asserted together. Signed response fixtures
+exercise preservation above the response's current_index and later confirmation
+of the added address/index. This does not stand in for fresh live validation.

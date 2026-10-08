@@ -426,6 +426,7 @@ mod tests {
                         list_timestamp: None,
                         expected_timestamp: None,
                         companions_verified: true,
+                        adv_added_devices: Vec::new(),
                         verified_primary_key_fingerprint: Some(hex::encode(sha2::Sha256::digest(
                             [4u8; 32],
                         ))),
