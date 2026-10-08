@@ -197,7 +197,7 @@ fn decimal_digit(unit: u16) -> Option<u16> {
     (digit < 10).then_some(digit)
 }
 
-fn java_decimal_long(text: &str) -> Option<i64> {
+pub(super) fn java_decimal_long(text: &str) -> Option<i64> {
     // Long.parseLong iterates UTF-16 chars, so supplementary-plane digit
     // scalars are not accepted as one character. Do not trim or accept radix prefixes.
     let mut units = text.encode_utf16().peekable();

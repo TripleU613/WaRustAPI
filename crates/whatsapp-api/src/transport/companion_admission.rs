@@ -24,6 +24,15 @@ fn same_user(a: &Jid, b: &Jid) -> bool {
     a.user == b.user && a.server == b.server
 }
 
+// APK 37.71 0hs.A0M/A0C selects the first matching attribute. Reuse the
+// UTF-16 decimal parser with signed-int bounds, not MEX default-zero coercion.
+fn offline_integer(node: &Node) -> Option<i32> {
+    node.get_attr("offline")
+        .and_then(|value| value.as_text())
+        .and_then(super::mex::java_decimal_long)
+        .and_then(|value| i32::try_from(value).ok())
+}
+
 pub(crate) enum Admission {
     Ready(Box<AuthoritySnapshot>),
     Refused(&'static str),
@@ -235,9 +244,9 @@ pub(crate) fn prepare(
         let device_addition = if entries.is_empty() {
             // CoU.A04 gates absent offline senders on the dead-device registry.
             // Unknown legacy registry state remains our conservative deferral.
-            // Presence (including malformed values) is stricter than APK's
-            // nullable Integer parser; full worker/gate parity remains unported.
-            if node.attributes.iter().any(|a| a.name == "offline") {
+            // DEs.CEv -> 0CK.A06/A07 supplies CoU.A04 a nullable signed
+            // integer, including zero/negative values; malformed text is null.
+            if offline_integer(node).is_some() {
                 let Some(pending) = &list.pending_removed_devices else {
                     return Ok(Refused("offline_device_update_deferred"));
                 };
@@ -488,11 +497,51 @@ mod tests {
             .unwrap()
     }
 
+    #[test]
+    fn offline_integer_matches_independent_java_reference() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/mex/2.26.37.71-integrator-reference.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            let text = case["integrator"].as_str().unwrap();
+            let node = Node::new("message").attr("offline", text);
+            assert_eq!(
+                offline_integer(&node).map(i64::from),
+                case["java_integer"].as_i64(),
+                "{text:?}"
+            );
+        }
+        assert_eq!(offline_integer(&Node::new("message")), None);
+        assert_eq!(
+            offline_integer(&Node::new("message").attr(
+                "offline",
+                crate::binary::AttributeValue::Bytes(vec![0xff].into())
+            )),
+            None
+        );
+        assert_eq!(
+            offline_integer(
+                &Node::new("message")
+                    .attr("offline", Jid::parse("15555550101@s.whatsapp.net").unwrap())
+            ),
+            None
+        );
+        for (first, second, expected) in [("bad", "0", None), ("-1", "bad", Some(-1))] {
+            let mut node = Node::new("message").attr("offline", first);
+            node.attributes.push(crate::binary::Attribute {
+                name: "offline".into(),
+                value: second.into(),
+            });
+            assert_eq!(offline_integer(&node), expected);
+        }
+    }
+
     #[tokio::test]
     async fn newer_known_adv_refresh_commits_only_with_authenticated_message() {
         for (direct, corrupt, membership, raw) in [false, true].into_iter().flat_map(|direct| {
             [false, true].into_iter().flat_map(move |corrupt| {
-                (0..4).flat_map(move |membership| {
+                (0..10).flat_map(move |membership| {
                     ["15555550101:3@s.whatsapp.net", "99990000101:3@lid"]
                         .into_iter()
                         .map(move |raw| (direct, corrupt, membership, raw))
@@ -512,11 +561,19 @@ mod tests {
                 .unwrap()
                 .unwrap();
             baseline.list_timestamp = Some(8);
-            if membership == 1 || membership == 3 {
+            if membership == 1 || membership >= 3 {
                 baseline.devices.retain(|d| d.jid.device == 0);
                 if membership == 3 {
                     baseline.pending_removed_devices = Some(Vec::new());
                     node = node.attr("offline", "0");
+                } else if membership >= 4 {
+                    baseline.pending_removed_devices = if membership >= 7 {
+                        Some(vec![peer.clone()])
+                    } else {
+                        None
+                    };
+                    let malformed = ["", "+", "2147483648"][(membership - 4) % 3];
+                    node = node.attr("offline", malformed);
                 }
             } else if membership == 2 {
                 baseline.devices[1].key_index = 3;
@@ -600,7 +657,7 @@ mod tests {
                 assert_eq!(result, super::super::inbox::IncomingResult::Decrypted);
                 let mut expected = baseline;
                 expected.expected_timestamp = Some(9);
-                if membership == 1 || membership == 3 {
+                if membership == 1 || membership >= 3 {
                     expected.devices.push(super::super::devices::DeviceEntry {
                         jid: peer.clone(),
                         key_index: 2,
@@ -892,6 +949,8 @@ mod tests {
             (9, "conflicting_device_membership"),
             (10, "ambiguous_device_membership"),
             (11, "pending_device_teardown"),
+            (12, "pending_device_teardown"),
+            (13, "pending_device_teardown"),
         ] {
             let dir = tempfile::tempdir().unwrap();
             let (store, receiver, peer, mut node) =
@@ -917,11 +976,11 @@ mod tests {
                     });
                 }
                 10 => list.devices.push(list.devices[1].clone()),
-                11 => {
+                11..=13 => {
                     list.list_timestamp = Some(8);
                     list.devices.retain(|d| d.jid.device == 0);
                     list.pending_removed_devices = Some(vec![peer.clone()]);
-                    node = node.attr("offline", "0");
+                    node = node.attr("offline", ["0", "-2147483648", "+٢١٤٧٤٨٣٦٤٧"][case - 11]);
                 }
                 4 => list.verified_primary_key_fingerprint = None,
                 5 => store

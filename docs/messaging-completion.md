@@ -1940,3 +1940,22 @@ Remote device application validation: 692 workspace/all-feature tests, strict al
 Pending removal registry (2026-10-08, **static/offline**): signed device reconciliation records disappeared companions and clears authenticated returned addresses in nullable pending_removed_devices. Legacy null stays unknown until signed reconciliation; unsigned responses do not initialize/clear it. Offline absent candidates proceed only with known no-marker state; pending_device_teardown refuses a marked address. Complete-list CAS includes removal state. Inspection exposes unknown/known-empty/count. No cleanup, identity/key deletion, reset, alias fan-out or worker parity is implemented. [Evidence and limits](protocol/peer-identity.md#namespace-local-pending-removal-registry-2026-10-08).
 
 Removal registry validation: 693 workspace/all-feature tests, strict all-target Clippy, warning-free Rustdoc, default CLI/API checks (24), regenerated CLI reference, experimental API-symbol check and final CLI build passed. Offline saved-capture inspection found no qualifying companion sample; before/after outbox, actions, receipts, devices and pins matched. No login, device query, message transmission or key cleanup occurred. Private artifact: `lab/releases/removal-registry-inspection/active.json`.
+
+
+Nullable offline metadata (2026-10-08, **static/offline**): companion admission
+now matches APK 37.71 nullable signed-Integer semantics instead of attribute
+presence. First-match malformed/overflow values do not invoke removal guards;
+zero/negative valid values do. Existing authority/MAC/atomic checks remain.
+Independent host-Java corpus and encrypted PN/LID direct/group fixtures cover
+the correction. Android Unicode/gates, cleanup and live companion validation
+remain unknown. See [evidence and limits](protocol/peer-identity.md#nullable-offline-companion-metadata-2026-10-08).
+
+Nullable-offline validation: 694 workspace/all-feature tests, strict all-target
+Clippy, warning-free Rustdoc, 24 default CLI/API checks, regenerated CLI
+reference, experimental API-symbol check, final CLI build and formatting passed.
+The repeated checks used system Rust 1.99.0 with isolated LLVM 22 after the host
+package change; pinned 1.98.1 proof was not established. Repository hygiene
+checked 896 local links. Offline saved-capture inspection found no qualifying
+companion sample; outbox, actions, receipts, devices and pins matched before/after.
+No login, device query, chat send or cleanup occurred. Private inspection artifact:
+`lab/releases/offline-parser-inspection/active.json`.

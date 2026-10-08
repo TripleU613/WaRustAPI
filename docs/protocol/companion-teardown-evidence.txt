@@ -2405,3 +2405,45 @@ classes7.dex  LX/DEs;->CEv(VLL)
 # Literal DEX window independently found once: classes.dex @0x495af6
 # 0CK.A07+0082..008e: b2 b7 90 00 06 01 34 07 fc ff b1 17
 # AOSP opcode semantics: https://source.android.com/docs/core/runtime/dalvik-bytecode
+
+# Offline attribute first-match lookup, APK 2.26.37.71
+
+# Reproduce: xtask apk-smali APK --class LX/0hs; --method A0M --exceptions
+
+# class: LX/0hs;
+# extends: Ljava/lang/Object;
+
+.method public A0M(LLL)  # .registers 4
+    0000..0006  invoke-virtual  {v1, v2}, LX/0hs;->A0C(LL)
+    0006..0008  move-result-object  v0
+    0008..000c  if-eqz  v0, +0x5
+    000c..0010  iget-object  v0, v0, LX/0hq;->A03:Ljava/lang/String;
+    0010..0012  return-object  v0
+    0012..0014  return-object  v3
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class LX/0hs; --method A0C --exceptions
+
+# class: LX/0hs;
+# extends: Ljava/lang/Object;
+
+.method public A0C(LL)  # .registers 7
+    0000..0004  iget-object  v4, v5, LX/0hs;->A03:[LX/0hq;
+    0004..0008  if-eqz  v4, +0x16
+    0008..000a  array-length  v3, v4
+    000a..000e  if-lez  v3, +0x13
+    000e..0010  const/4  v2, #0x0
+    0010..0014  aget-object  v1, v4, v2
+    0014..0018  iget-object  v0, v1, LX/0hq;->A02:Ljava/lang/String;
+    0018..001e  invoke-virtual  {v6, v0}, Ljava/lang/String;->equals(ZL)
+    001e..0020  move-result  v0
+    0020..0024  if-eqz  v0, +0x3
+    0024..0026  return-object  v1
+    0026..002a  add-int/lit8  v2, v2, #0x1
+    002a..002e  if-ge  v2, v3, +0x3
+    002e..0030  goto  -0xf
+    0030..0032  const/4  v0, #0x0
+    0032..0034  return-object  v0
+    # exception table: 0 try range(s)
+.end method

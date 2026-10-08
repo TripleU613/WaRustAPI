@@ -1706,9 +1706,9 @@ complete DeviceList recheck, so a concurrent pending removal aborts commit.
 Read-only `devices` JSON shows the nullable array; human output shows its
 optional count, preserving unknown versus known-empty.
 
-**Local policy / remaining parity:** any offline attribute invokes this guard,
-even malformed text; APK nullable Integer parsing and runtime feature gates
-are not yet ported. Initializing from a signed response establishes this
+**Historical local policy, superseded below:** the initial guard used any
+offline attribute, even malformed text. Nullable Integer parsing is now ported;
+runtime feature gates remain unported. Initializing from a signed response establishes this
 client's current removal state, not imported Android preferences or historical
 cleanup. No deferred reap scheduler, ratchet/identity/sender-key deletion,
 archive erasure, automatic marker reset or request replay is implemented.
@@ -1722,3 +1722,45 @@ primary identity pin. Real encrypted PN/LID direct/group fixtures cover known
 clear offline admission, MAC failure/rollback/Duplicate, pending-removal refusal
 and unknown-state deferral. A registry race rolls back the receive authority
 commit; old JSON defaults to unknown. Fresh live coverage remains unknown.
+
+
+## Nullable offline companion metadata (2026-10-08)
+
+**Confirmed static, APK 2.26.37.71:** DEs.CEv -> 0CK.A06/A07
+produces a nullable signed radix-10 Integer for Cih.A0D -> Bp2.A0B ->
+CjN.A0H. CoU.A04 checks nonnull, so zero and negative integers qualify;
+empty, sign-only, whitespace, malformed and overflowing values do not.
+0hs.A0M delegates to A0C, whose forward array scan returns the first
+matching attribute; later duplicates do not replace it. The scoped methods
+are preserved in [teardown evidence](companion-teardown-evidence.txt).
+
+**Implemented/offline:** this supersedes the earlier presence-only local
+predicate. Receive and read-only admission inspection use the first text
+attribute, UTF-16 decimal parsing and signed-i32 bounds. Invalid UTF-8 byte
+and JID attributes do not become integers. The existing private decimal
+helper is reused without MEX's default-zero or interop length/leading-zero
+rules. Only a parsed integer invokes the absent-device removal guard;
+unknown registry and pending markers retain their existing fixed refusals.
+Independent primary authority, both ADV signatures, MAC authentication,
+identity policy and atomic baseline rechecks remain required.
+
+**Reference limits:** the reused 283-case integrator corpus records host Java 21
+Integer.parseInt results independently. Tests use java_integer, not the
+separate interop accepted flag. The BMP digit table is host-Java-derived,
+not extracted Android Unicode data; Android-version Unicode differences
+remain unknown. Runtime feature gates, reap lifecycle and fresh live
+companion coverage remain unfinished. No cleanup or identity reset occurs.
+Encrypted PN/LID direct/group tests cover malformed metadata with unknown
+and marked removal state, corruption rollback, reopen and duplicate receive.
+Valid zero, signed minimum and positive BMP-digit maximum remain guarded.
+
+
+**Local verification environment:** host packages changed during this work;
+the final CLI build initially failed to load libLLVM.so.22.1 with installed
+LLVM 23. The official Arch llvm-libs 22.1.8-2 package was unpacked only into
+`/tmp/telewhatsapp-llvm22`; LD_LIBRARY_PATH supplied its library for the
+remaining checks. No host package/configuration was changed by this work.
+The repeated checks use the resulting system Rust 1.99.0; they do not establish
+the repository-pinned 1.98.1 toolchain proof. First-pass workspace/lint/docs/CLI
+checks passed before that final build failure. This is a local build-environment
+finding, not APK evidence or a WhatsApp refusal.
