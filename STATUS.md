@@ -1591,3 +1591,20 @@ API checks passed. The core now holds 81 topics / 219 methods, 86 files /
 0.080554 seconds: 13 added topics, all 68 prior topics unchanged; manifest,
 inventory and tokens unchanged. This measures cached scoped source comparison,
 not full-app decompilation or automatic porting. No live request was needed.
+
+Group-mode producer/storage trace (2026-10-07, confirmed static APK 37.71): five
+1jL.A00 writes and its constructor input are retained. Cache-miss mode comes
+from B7i.A00 chat predicates, not membership suffixes alone; contact mode is saved
+through 0Y9.A0s -> 0gt.A0V -> 9R1.A0J in wa_group_admin_settings. Reload 0lO.A01
+normalizes case-insensitive pn to pn, other returned values to lid. B7i lookup
+and predicate have different absent-contact defaults; broadcasts have additional
+diagnostic behavior. Full mode provenance, category predicates and Rust mode/
+own-PN fallback integration remain incomplete. No live/account state changed.
+[Evidence and negative results](docs/protocol/cross-device-sync.md#group-mode-producers-storage-and-cache-classification-2026-10-07).
+
+Group-mode trace validation: 58 xtask tests, CLI reference regeneration and five
+API checks passed. The core contains 100 topics / 238 methods, 105 files /
+1,731,431 bytes under the 2 MiB budget. The checksum-verified cached diff took
+0.075441 seconds: 19 added topics, all 81 prior topics unchanged; manifest,
+inventory and tokens unchanged. No live/account request or runtime migration
+was used for this source trace.

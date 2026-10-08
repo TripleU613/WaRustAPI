@@ -933,6 +933,272 @@
       "crates/whatsapp-cli/src/transport_group_send.rs"
     ]
   },
+  "sender-key-group-mode-alias-schedule": {
+    "class": "LX/0bA;",
+    "file": "sender-key-group-mode-alias-schedule.txt",
+    "method_filter": "A0h",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-alias-update": {
+    "class": "LX/290;",
+    "file": "sender-key-group-mode-alias-update.txt",
+    "method_filter": "A01",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-broadcast-migrate": {
+    "anchors": [
+      "BroadcastListLidMigrationHelper/convertListAddressingMode broadcast list: "
+    ],
+    "class": "LX/31R;",
+    "file": "sender-key-group-mode-broadcast-migrate.txt",
+    "method_filter": "A01",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-broadcast-predicate": {
+    "anchors": [
+      "GroupLidUtils/isLidBroadcastList/broadcast_would_have_used_pn"
+    ],
+    "class": "LX/B7i;",
+    "file": "sender-key-group-mode-broadcast-predicate.txt",
+    "method_filter": "A02",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-cache-load": {
+    "anchors": [
+      "ParticipantUserStore/migrated="
+    ],
+    "class": "LX/0bE;",
+    "file": "sender-key-group-mode-cache-load.txt",
+    "method_filter": "A0C",
+    "method_shorty": "LLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-classify": {
+    "class": "LX/B7i;",
+    "file": "sender-key-group-mode-classify.txt",
+    "method_filter": "A00",
+    "method_shorty": "IL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-contact-default": {
+    "anchors": [
+      "lid"
+    ],
+    "class": "LX/0Da;",
+    "file": "sender-key-group-mode-contact-default.txt",
+    "method_filter": "<init>",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-contact-lookup": {
+    "anchors": [
+      "lid"
+    ],
+    "class": "LX/B7i;",
+    "file": "sender-key-group-mode-contact-lookup.txt",
+    "method_filter": "A01",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-contact-save": {
+    "anchors": [
+      "ContactManagerDatabase/updateGroupInfo for jid="
+    ],
+    "class": "LX/0gt;",
+    "file": "sender-key-group-mode-contact-save.txt",
+    "method_filter": "A0V",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-contact-set": {
+    "class": "LX/0Y9;",
+    "file": "sender-key-group-mode-contact-set.txt",
+    "method_filter": "A0s",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-lid-predicate": {
+    "anchors": [
+      "lid"
+    ],
+    "class": "LX/B7i;",
+    "file": "sender-key-group-mode-lid-predicate.txt",
+    "method_filter": "A04",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-migrate": {
+    "anchors": [
+      "groupmgr/migrateGroup/",
+      "lid_migration"
+    ],
+    "class": "LX/0yw;",
+    "file": "sender-key-group-mode-migrate.txt",
+    "method_filter": "A0y",
+    "method_shorty": "ZLLLLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-participant-add": {
+    "class": "LX/0yw;",
+    "file": "sender-key-group-mode-participant-add.txt",
+    "method_filter": "A0a",
+    "method_shorty": "VLLZZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-participant-update": {
+    "anchors": [
+      "GroupInfoQuery/participant_change_recovery_sync"
+    ],
+    "class": "LX/0yw;",
+    "file": "sender-key-group-mode-participant-update.txt",
+    "method_filter": "A00",
+    "method_shorty": "ILLLLLZZZZZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-row-init": {
+    "class": "LX/1jL;",
+    "file": "sender-key-group-mode-row-init.txt",
+    "method_filter": "<init>",
+    "method_shorty": "VLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-row-load": {
+    "anchors": [
+      "GroupMemberChatsCache/cacheMeParticipatingOnRead/unset: "
+    ],
+    "class": "LX/0bI;",
+    "file": "sender-key-group-mode-row-load.txt",
+    "method_filter": "A0G",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-settings-load": {
+    "anchors": [
+      "addressing_mode"
+    ],
+    "class": "LX/0lO;",
+    "file": "sender-key-group-mode-settings-load.txt",
+    "method_filter": "A01",
+    "method_shorty": "LLLLLZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-settings-save": {
+    "anchors": [
+      "addressing_mode",
+      "wa_group_admin_settings"
+    ],
+    "class": "LX/9R1;",
+    "file": "sender-key-group-mode-settings-save.txt",
+    "method_filter": "A0J",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-group-mode-type-predicate": {
+    "class": "LX/0Fs;",
+    "file": "sender-key-group-mode-type-predicate.txt",
+    "method_filter": "A0Y",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
   "sender-key-name": {
     "class": "LX/Cnr;",
     "file": "sender-key-name.txt",

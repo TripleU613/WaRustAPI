@@ -2812,3 +2812,14 @@ redacted. APK Message field 2 is existing schema evidence; this private marker
 is a local atomicity fix, and APK internal duplicate policy is unknown. No
 historical marker synthesis or ratchet rewind; fresh live control redelivery
 remains unverified. [Evidence and regression](messaging-transport.md#durable-sender-key-only-group-controls-2026-10-07).
+
+## APK group-mode storage and initialization follow-up (2026-10-07)
+
+**Confirmed static, APK 2.26.37.71:** participant-row mode is initialized by
+B7i.A00 chat predicates and later updated by five 1jL.A00 write instructions.
+The contact mode is persisted as wa_group_admin_settings.addressing_mode; loader
+0lO.A01 normalizes case-insensitive pn to pn, other returned values to lid.
+This is distinct from selecting a namespace from homogeneous membership.
+The Rust snapshot/planner does not yet carry complete mode/category provenance;
+comparison CLI own-PN selection remains unfinished. No automatic migration or
+send was added. See the [producer, storage and negative-result trace](cross-device-sync.md#group-mode-producers-storage-and-cache-classification-2026-10-07).

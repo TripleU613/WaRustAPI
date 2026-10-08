@@ -1778,3 +1778,119 @@ API checks passed. The core now holds 81 topics / 219 methods, 86 files /
 0.080554 seconds: 13 added topics, all 68 prior topics unchanged; manifest,
 inventory and tokens unchanged. This measures cached scoped source comparison,
 not full-app decompilation or automatic porting. No live request was needed.
+
+## Group-mode producers, storage and cache classification (2026-10-07)
+
+**Confirmed static, APK 2.26.37.71:** this continues the own-address selector
+trace; it does not establish Rust mode parity or authorize an account migration.
+
+`xtask apk-field-refs <APK> --class 'LX/1jL;' --field A00 --type I --writes-only`
+found exactly five instructions in this APK. The full read/write scan found 26
+instructions. Retained writers are:
+
+| Writer | Write offset within method | Established input |
+| --- | --- | --- |
+| [1jL constructor](apk/2.26.37.71-core/sender-key-group-mode-row-init.txt) | 00c4..00c8 | Supplied mode integer; not an unconditional mode-2 default |
+| [0yw.A00](apk/2.26.37.71-core/sender-key-group-mode-participant-update.txt) | 0008..0012 | Literal 2 before participant-update processing |
+| [0yw.A0a](apk/2.26.37.71-core/sender-key-group-mode-participant-add.txt) | 0078..0082 | Literal 2 only inside the 0DE.A0R branch and when final boolean parameter is true |
+| [0yw.A0y](apk/2.26.37.71-core/sender-key-group-mode-migrate.txt) | 014e..0160 | Literal 2 in the local group-migration branch |
+| [31R.A01](apk/2.26.37.71-core/sender-key-group-mode-broadcast-migrate.txt) | 00d6..00d8, 0158..015c | Literal 2 in BroadcastListLidMigrationHelper; not a cursor loader |
+
+The scan's absolute DEX write locations respectively are classes2.dex 0x149324,
+classes.dex 0x75bf76 / 0x75f7ea / 0x761e8c, and classes3.dex 0x33e998.
+These identify this build only. **Negative:** 0bA.A0V is a mode reader while
+marking participant/device sender-key exposure; it is not a mode writer or a
+row-save function. A read reference alone did not establish mode persistence.
+
+### How the participant row gets its mode
+
+[0bI.A0G](apk/2.26.37.71-core/sender-key-group-mode-row-load.txt) obtains the
+participant row through 0bE.A0C, then updates own-membership caches.
+[0bE.A0C](apk/2.26.37.71-core/sender-key-group-mode-cache-load.txt) returns a
+cached 1jL if present; a cache miss constructs a row from **B7i.A00(chat)**
+(`00ca..00f4`). The constructor stores that supplied integer in A00. Later
+participant initialization also has CAG/mapping branches: complete fallback,
+member-map generation and concurrency semantics remain **unknown/unported**.
+
+[B7i.A00](apk/2.26.37.71-core/sender-key-group-mode-classify.txt) classifies
+rather than simply parsing an `addressing_mode` string:
+
+- `0DE.A0R` true: calls B7i.A02 and returns 2, **discarding** that return value.
+- `0DE.A0W` true, or B7i.A04 true: returns 2.
+- Otherwise a chat converted by 8kU.A0X and matching 0Fs.A0Y returns 1.
+- Remaining `0DE.A0i` true returns 2; otherwise returns 0.
+
+[0Fs.A0Y](apk/2.26.37.71-core/sender-key-group-mode-type-predicate.txt)
+returns whether the group classification from 0Fs.A0A equals **3**. Its complete
+classification producer and every 0DE predicate's chat-category meaning remain
+**unknown** in this trace; a numeric branch is not a complete enum specification.
+D4x.A00 uses mode 2 to select own LID and its other modes to select own PN, as
+already retained. This is not equivalent to choosing a namespace by membership
+text, nor to assuming every non-LID contact must initialize mode 1.
+
+### Persisted contact mode and asymmetric lookup defaults
+
+[0Da constructor](apk/2.26.37.71-core/sender-key-group-mode-contact-default.txt)
+initializes **A0X = "lid"** (`000c..0014`).
+[B7i.A01](apk/2.26.37.71-core/sender-key-group-mode-contact-lookup.txt)
+returns the held contact's A0X, or literal `lid` if the contact is absent.
+[B7i.A04](apk/2.26.37.71-core/sender-key-group-mode-lid-predicate.txt) instead
+returns true only for a present contact whose A0X is exactly `lid`; absent
+contact returns false. These methods' missing-contact behavior is **not equal**.
+[B7i.A02](apk/2.26.37.71-core/sender-key-group-mode-broadcast-predicate.txt)
+returns true even when the saved contact would have used PN, emitting the
+`broadcast_would_have_used_pn` diagnostic. That diagnostic is not a refusal.
+No equivalent bypass or forced migration is inferred for Rust.
+
+[0Y9.A0s](apk/2.26.37.71-core/sender-key-group-mode-contact-set.txt) puts its
+supplied mode in the held contact A0X (`0064..0074`), calls **0gt.A0V**, then
+notifies 0gq.A0E. [0gt.A0V](apk/2.26.37.71-core/sender-key-group-mode-contact-save.txt)
+updates base contact fields and calls **9R1.A0J** (`007a..00a0`).
+[9R1.A0J](apk/2.26.37.71-core/sender-key-group-mode-settings-save.txt) reads
+A0X (`0132..013a`), stores it as **addressing_mode** (`029c..02aa`) in
+**wa_group_admin_settings**, and commits its database transaction
+(`032a..0346`). Invalid group/broadcast input returns; errors have their own
+handling and do not prove successful commit.
+
+[0lO.A01](apk/2.26.37.71-core/sender-key-group-mode-settings-load.txt) reads
+that cursor column (`042a..043e`). Case-insensitive `pn` becomes literal **pn**;
+other returned values (including null) become literal **lid** (`043e..0456`).
+This establishes a storage reload rule, not a network parser or permission to
+invent a mode when a server reply is missing it. Missing-column resolution and
+complete cursor-provider lifecycle remain **unknown**.
+
+**Additional scan boundary:** the contact A0X write scan found 13 instructions:
+0DV constructors (VL and VLLLLIJZ), 0Da constructor, 0Y9.A0Y/A0s, 0lO.A01,
+0yv.A09 (two writes), 0yw.A0J, 1xq.A0A, 2xG.A00, 3S4.invoke and 9O2.A07.
+Those other writers' complete mode inputs are **untraced**, so this is not a
+complete mode-provenance graph. The participant-row constructor caller scan
+found 0bE.A0C, 0yv.A09 and F4w.A01; the other full call paths remain untraced.
+0yw.A00 has five call instructions in 0yv.A09 (two), 9O2.A07 (two) and 0yw.A0U.
+Their existence does not establish every entry condition or all response formats.
+
+**Migration boundaries:** 0yw.A0y logs migration to `lid`; it returns true if
+already migrated and otherwise may schedule group-info recovery via 0Xm.A0H,
+with an additional 0x30c1 feature branch. A local row mode write is not proof of
+network authorization or completed reconciliation. 31R.A01 uses PN/LID mapping
+and checks replacement list sizes; its mode write participates in that flow.
+[0bA.A0h](apk/2.26.37.71-core/sender-key-group-mode-alias-schedule.txt) invokes
+1jL.A0U and [290.A01](apk/2.26.37.71-core/sender-key-group-mode-alias-update.txt),
+which removes mapped entries from private 28z cache when 1jL.A0G finds no row.
+**Negative:** A0h is not a simple database mode-save method. Full migration
+atomicity and mapping freshness remain unknown; Rust must not copy aliases or
+reset identities based on these partial paths.
+
+**Rust gap:** current saved GroupSnapshot and membership planner do not carry this
+complete APK contact mode/category state. Comparison sending still requires own
+LID even for a membership-planned PN group. Correct automatic own-address
+selection needs mode provenance and integration, not an unconditional PN fallback
+or a guess that homogeneous membership proves all APK predicates. This research
+makes that implementation requirement concrete; no saved account mode, identity,
+key, request ID, cooldown or send intent changed. No live request was sent.
+
+Group-mode trace validation: 58 xtask tests, CLI reference regeneration and five
+API checks passed. The core contains 100 topics / 238 methods, 105 files /
+1,731,431 bytes under the 2 MiB budget. The checksum-verified cached diff took
+0.075441 seconds: 19 added topics, all 81 prior topics unchanged; manifest,
+inventory and tokens unchanged. No live/account request or runtime migration
+was used for this source trace.

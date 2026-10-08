@@ -1,0 +1,31 @@
+# APK-derived structural disassembly: LX/B7i;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(ZL) flags=0x11 registers=6
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v5, v0}, LX/00h;->A0A(VLI)
+  0008..000c op=13 const/16 v1, #0x5a3
+  000c..0010 op=54 iget-object v0, v4, LX/B7i;->A01:LX/05B;
+  0010..0016 op=71 invoke-static {v0, v1}, LX/3cB;->A0z(LLI)
+  0016..0018 op=0c move-result-object
+  0018..001c op=1f check-cast v3, LX/0AH;
+  001c..0020 op=54 iget-object v0, v4, LX/B7i;->A00:LX/05B;
+  0020..0026 op=71 invoke-static {v0, v5}, LX/1xj;->A0V(LLL)
+  0026..0028 op=0c move-result-object
+  0028..002a op=12 const/4 v2, #0x1
+  002a..002e op=38 if-eqz v0, +0xe
+  002e..0032 op=54 iget-object v0, v0, LX/0DV;->A0D:LX/0Da;
+  0032..0036 op=54 iget-object v1, v0, LX/0Da;->A0X:Ljava/lang/String;
+  0036..003a op=1a const-string v0, "lid"
+  003a..0040 op=71 invoke-static {v1, v0}, LX/00h;->areEqual(ZLL)
+  0040..0042 op=0a move-result
+  0042..0046 op=39 if-nez v0, +0xd
+  0046..004a op=1a const-string v0, "groupJid="
+  004a..0050 op=71 invoke-static {v0, v5}, LX/1xj;->A15(LLL)
+  0050..0052 op=0c move-result-object
+  0052..0056 op=1a const-string v0, "GroupLidUtils/isLidBroadcastList/broadcast_would_have_used_pn"
+  0056..005c op=6e invoke-virtual {v3, v0, v1, v2, v2}, LX/0AH;->A0h(VLLZI)
+  005c..005e op=0f return v2
+.end method

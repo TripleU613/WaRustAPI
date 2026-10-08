@@ -1789,3 +1789,13 @@ Me.lid consistency diagnostics are not an established immediate self_lid fallbac
 complete bucket/actor semantics and Rust own-address parity remain unfinished.
 No account state, keys, identity policy or live traffic changed.
 [Sources and boundaries](protocol/cross-device-sync.md#own-pn-lid-sender-selection-and-persisted-device-index-2026-10-07).
+
+Group-mode producer/storage trace (2026-10-07, confirmed static APK 37.71): five
+1jL.A00 writes and its constructor input are retained. Cache-miss mode comes
+from B7i.A00 chat predicates, not membership suffixes alone; contact mode is saved
+through 0Y9.A0s -> 0gt.A0V -> 9R1.A0J in wa_group_admin_settings. Reload 0lO.A01
+normalizes case-insensitive pn to pn, other returned values to lid. B7i lookup
+and predicate have different absent-contact defaults; broadcasts have additional
+diagnostic behavior. Full mode provenance, category predicates and Rust mode/
+own-PN fallback integration remain incomplete. No live/account state changed.
+[Evidence and negative results](protocol/cross-device-sync.md#group-mode-producers-storage-and-cache-classification-2026-10-07).
