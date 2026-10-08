@@ -1202,3 +1202,12 @@ and predicate have different absent-contact defaults; broadcasts have additional
 diagnostic behavior. Full mode provenance, category predicates and Rust mode/
 own-PN fallback integration remain incomplete. No live/account state changed.
 [Evidence and negative results](cross-device-sync.md#group-mode-producers-storage-and-cache-classification-2026-10-07).
+
+Group routing before device sync (2026-10-07, confirmed offline): the comparison
+sender's catch-all plan fallback returned device-query targets even after route
+refusals. The extracted old logic failed a mixed-membership regression. Shared
+recipients_for_group now validates namespace/own membership before sync, allows
+initial missing lists and excludes/deduplicates own/remote targets. Final plan
+still validates device authority before reservation. APK mode/category state
+integration and automatic own-PN selection remain incomplete; no new live send.
+[Routing correction](groups.md#group-recipient-validation-before-device-sync-2026-10-07).

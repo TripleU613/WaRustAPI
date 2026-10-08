@@ -188,20 +188,35 @@ pub struct FanoutPlan {
 /// when no member has a device list — each of those would produce a stanza
 /// addressed to the wrong identities.
 pub fn plan(store: &ProtocolStore, chat: &Jid, own: &Jid) -> Result<FanoutPlan> {
+    plan_over(store, chat, own, group_members(store, chat)?)
+}
+
+fn group_members(store: &ProtocolStore, chat: &Jid) -> Result<Vec<Jid>> {
     if chat.server != Server::Group {
         return Err(invalid("this plan reads a group snapshot"));
     }
     let snapshot = super::groups::get(store, chat)?
         .ok_or_else(|| invalid("no saved group snapshot; fetch group info first"))?;
-    let mut members = Vec::new();
-    for member in &snapshot.members {
-        let jid = Jid::parse(&member.jid).map_err(|_| invalid("unparsable member JID"))?;
-        if !jid.is_user_like() {
-            return Err(invalid("a member is neither a phone number nor a LID"));
-        }
-        members.push(jid.to_non_ad());
-    }
-    plan_over(store, chat, own, members)
+    snapshot
+        .members
+        .iter()
+        .map(|member| {
+            let jid = Jid::parse(&member.jid).map_err(|_| invalid("unparsable member JID"))?;
+            if !jid.is_user_like() {
+                return Err(invalid("a member is neither a phone number nor a LID"));
+            }
+            Ok(jid.to_non_ad())
+        })
+        .collect()
+}
+
+/// Validate group routing before reserving device-list queries, without requiring
+/// existing device lists. Does not read/adopt keys or queue/transmit anything.
+/// Membership-derived mode remains a local supported subset; APK 37.71
+/// B7i.A00/1jL.A0Y also depend on unported contact/category state.
+pub fn recipients_for_group(store: &ProtocolStore, chat: &Jid, own: &Jid) -> Result<Vec<Jid>> {
+    let (_, _, recipients) = routing(chat, own, group_members(store, chat)?)?;
+    Ok(recipients)
 }
 
 /// Plan a status post: the same sender-key fan-out, aimed at `status@broadcast`
@@ -241,37 +256,7 @@ fn plan_over(
     own: &Jid,
     members: Vec<Jid>,
 ) -> Result<FanoutPlan> {
-    if !matches!(chat.server, Server::Group | Server::Broadcast) {
-        return Err(invalid("a sender-key send targets a group or broadcast"));
-    }
-    if members.is_empty() {
-        return Err(invalid("no members to address"));
-    }
-    let lid = members.iter().filter(|j| j.server == Server::Lid).count();
-    let addressing_mode = if lid == members.len() {
-        "lid"
-    } else if lid == 0 {
-        "pn"
-    } else {
-        return Err(invalid(
-            "membership mixes LID and phone-number identities; cannot choose an addressing mode",
-        ));
-    };
-    let own = own.to_non_ad();
-    if (own.server == Server::Lid) != (addressing_mode == "lid") {
-        return Err(invalid(
-            "our own identity is not in the group's addressing form",
-        ));
-    }
-    if !members.contains(&own) {
-        return Err(invalid("we are not a member of this group"));
-    }
-    let mut recipients: Vec<Jid> = members.into_iter().filter(|j| *j != own).collect();
-    recipients.sort_by_key(Jid::to_string);
-    recipients.dedup();
-    if recipients.is_empty() {
-        return Err(invalid("the group has no other member to address"));
-    }
+    let (addressing_mode, own, recipients) = routing(chat, own, members)?;
     let mut devices = Vec::new();
     // APK 37.71 1jL.A0N/A0O gather stored device values before AzR.A03.
     // Our primary is known; own companions require the unported account-sync
@@ -336,6 +321,43 @@ fn plan_over(
         participant_hash,
         participant_hash_device_count,
     })
+}
+
+// Route validation must precede device-list resolution. Missing lists are an
+// input to synchronization, not a reason to bypass namespace/member guards.
+fn routing(chat: &Jid, own: &Jid, members: Vec<Jid>) -> Result<(&'static str, Jid, Vec<Jid>)> {
+    if !matches!(chat.server, Server::Group | Server::Broadcast) {
+        return Err(invalid("a sender-key send targets a group or broadcast"));
+    }
+    if members.is_empty() {
+        return Err(invalid("no members to address"));
+    }
+    let lid = members.iter().filter(|j| j.server == Server::Lid).count();
+    let addressing_mode = if lid == members.len() {
+        "lid"
+    } else if lid == 0 {
+        "pn"
+    } else {
+        return Err(invalid(
+            "membership mixes LID and phone-number identities; cannot choose an addressing mode",
+        ));
+    };
+    let own = own.to_non_ad();
+    if (own.server == Server::Lid) != (addressing_mode == "lid") {
+        return Err(invalid(
+            "our own identity is not in the group's addressing form",
+        ));
+    }
+    if !members.contains(&own) {
+        return Err(invalid("we are not a member of this group"));
+    }
+    let mut recipients: Vec<Jid> = members.into_iter().filter(|j| *j != own).collect();
+    recipients.sort_by_key(Jid::to_string);
+    recipients.dedup();
+    if recipients.is_empty() {
+        return Err(invalid("the group has no other member to address"));
+    }
+    Ok((addressing_mode, own, recipients))
 }
 
 #[cfg(test)]
@@ -416,6 +438,71 @@ mod tests {
                 )
             })
             .unwrap();
+    }
+
+    #[test]
+    fn invalid_membership_cannot_become_device_query_targets() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("routing.redb"));
+        let chat = jid("120363000000000001@g.us");
+        let own = jid("111111111111111@lid");
+        for members in [
+            vec!["111111111111111@lid", "15550000002@s.whatsapp.net"],
+            vec!["222222222222222@lid", "333333333333333@lid"],
+            vec!["15550000001@s.whatsapp.net", "15550000002@s.whatsapp.net"],
+        ] {
+            save_group(&store, &chat.to_string(), &members);
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            assert!(
+                recipients_for_group(&store, &chat, &own).is_err(),
+                "a planning refusal must not yield device targets"
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+            assert!(
+                super::super::devices::pending_users(&store)
+                    .unwrap()
+                    .is_empty()
+            );
+        }
+    }
+
+    #[test]
+    fn initial_device_query_targets_do_not_require_existing_device_lists() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("initial-routing.redb"));
+        let chat = jid("120363000000000001@g.us");
+        for (own, peer) in [
+            ("111111111111111@lid", "222222222222222@lid"),
+            ("15550000001@s.whatsapp.net", "15550000002@s.whatsapp.net"),
+        ] {
+            save_group(&store, &chat.to_string(), &[own, peer, peer]);
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            assert!(plan(&store, &chat, &jid(own)).is_err());
+            assert_eq!(
+                recipients_for_group(&store, &chat, &jid(own)).unwrap(),
+                vec![jid(peer)]
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+            save_devices(&store, peer, &[peer]);
+            assert_eq!(
+                recipients_for_group(&store, &chat, &jid(own)).unwrap(),
+                plan(&store, &chat, &jid(own)).unwrap().recipients
+            );
+        }
     }
 
     #[test]

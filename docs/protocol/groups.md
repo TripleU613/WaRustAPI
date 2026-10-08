@@ -2823,3 +2823,55 @@ This is distinct from selecting a namespace from homogeneous membership.
 The Rust snapshot/planner does not yet carry complete mode/category provenance;
 comparison CLI own-PN selection remains unfinished. No automatic migration or
 send was added. See the [producer, storage and negative-result trace](cross-device-sync.md#group-mode-producers-storage-and-cache-classification-2026-10-07).
+
+## Group recipient validation before device sync (2026-10-07)
+
+**Confirmed locally:** comparison CLI group sending caught every error from
+`group_send::plan`, then extracted raw member targets as a fallback. This was
+intended to handle a first send with no device lists. It also swallowed mixed
+namespace, wrong own-address and absent-own-membership refusals. In particular,
+a PN snapshot while the sender held own LID could yield our own PN as a remote
+device-query target. That is a Rust routing bug, not a server requirement.
+
+The regression first extracted the predecessor CLI fallback without changing
+its logic. A synthetic mixed-membership test failed because that helper returned
+targets despite the planning refusal. No network request was used for this test.
+
+**Correction:** public `group_send::recipients_for_group` reads saved membership
+and shares the planner's routing validation: supported chat context, homogeneous
+namespace, matching own identity, own membership and at least one other member.
+It sorts/deduplicates remote targets and excludes own primary before device
+lookup. It needs no device list, touches no keys and does not queue or transmit.
+CLI calls it after the group-info fetch and before any device synchronization
+reservation. The final plan after device sync still validates exact list owners,
+companion authority and device availability before encryption/send reservation.
+Refresh of a stale device list remains possible for valid routing; an existing
+list is not a prerequisite for its initial query. No generic error fallback
+remains and no refusal/uncertain intent is reset.
+
+**Evidence boundary:** APK **2.26.37.71 B7i.A00/1jL.A0Y** mode classification
+and **D4x.A00** own-address selection remain the recorded context. This change
+makes the existing local membership guard consistent before/after sync. It does
+not implement those full APK predicates, cached contact mode or automatic own-PN
+selection. Existing supported membership-derived mode and own-LID CLI requirement
+remain; complete mode integration is still unfinished.
+
+**Offline checks:** mixed membership, absent own member and PN membership with
+own LID now refuse without yielding targets or changing checkpoints/pending
+queries. PN/LID first-query fixtures work without device lists, exclude own,
+deduplicate peers and agree with the final plan once the existing synthetic
+verified lists are installed. Existing companion authority, foreign-device,
+missing-list, participant-hash and routing tests remain applicable. Actual live
+PN group sending and wrong-route rejection remain **unverified**. No draft/group
+message was sent merely to demonstrate the correction.
+
+**CLI/API:** this changes the existing `lab-transport` group-send behavior; no
+new command, flag, network attribute or HTTP route is added. Library
+`recipients_for_group` is an offline read used by that CLI path, not a network
+resolver or an identity-adoption operation.
+
+Group-routing validation: 675 workspace/all-feature tests, 24 default CLI tests,
+strict Clippy, warning-free Rustdoc and regenerated CLI/API checks passed. Rebuilt
+CLI read-only inspection left outbox, actions, receipts, devices and pins unchanged.
+The private evidence index is lab/releases/group-routing-inspection/active.json;
+no login, device query, group send or identity replacement was manufactured.

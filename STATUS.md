@@ -1608,3 +1608,18 @@ API checks passed. The core contains 100 topics / 238 methods, 105 files /
 0.075441 seconds: 19 added topics, all 81 prior topics unchanged; manifest,
 inventory and tokens unchanged. No live/account request or runtime migration
 was used for this source trace.
+
+Group routing before device sync (2026-10-07, confirmed offline): the comparison
+sender's catch-all plan fallback returned device-query targets even after route
+refusals. The extracted old logic failed a mixed-membership regression. Shared
+recipients_for_group now validates namespace/own membership before sync, allows
+initial missing lists and excludes/deduplicates own/remote targets. Final plan
+still validates device authority before reservation. APK mode/category state
+integration and automatic own-PN selection remain incomplete; no new live send.
+[Routing correction](docs/protocol/groups.md#group-recipient-validation-before-device-sync-2026-10-07).
+
+Group-routing validation: 675 workspace/all-feature tests, 24 default CLI tests,
+strict Clippy, warning-free Rustdoc and regenerated CLI/API checks passed. Rebuilt
+CLI read-only inspection left outbox, actions, receipts, devices and pins unchanged.
+The private evidence index is lab/releases/group-routing-inspection/active.json;
+no login, device query, group send or identity replacement was manufactured.

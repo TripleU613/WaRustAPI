@@ -236,26 +236,9 @@ pub(super) async fn send(
     }
 
     fetch_membership(store, channel, chat).await?;
-    // Plan once to learn the membership, fetch the devices it names, then plan
-    // again over what actually arrived.
-    let members = group_send::plan(store, chat, &own)
-        .map(|p| p.recipients)
-        .or_else(|error| {
-            // A first plan fails when no member has a device list yet; the
-            // membership is still readable from the snapshot.
-            groups::get(store, chat)?
-                .map(|snapshot| {
-                    snapshot
-                        .members
-                        .iter()
-                        .filter_map(|m| Jid::parse(&m.jid).ok())
-                        .map(|j| j.to_non_ad())
-                        .filter(|j| *j != own)
-                        .collect::<Vec<_>>()
-                })
-                .filter(|m: &Vec<Jid>| !m.is_empty())
-                .ok_or(error)
-        })?;
+    // Validate routing before any device-query reservation. A missing list is
+    // expected on first send; a routing refusal cannot be a fallback target set.
+    let members = group_send::recipients_for_group(store, chat, &own)?;
     fetch_devices(store, channel, &own, &members).await?;
     let plan = group_send::plan(store, chat, &own)?;
     println!(
