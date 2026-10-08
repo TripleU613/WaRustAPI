@@ -1915,3 +1915,8 @@ bootstrap, continuation, alias-change dedupe, reopen, nested-MAC/policy failures
 and delayed-authority SKDM storage. Newer-device refresh/reconciliation and live
 companion samples remain pending.
 [Evidence and limits](protocol/peer-identity.md#direct-companion-receive-and-receipts-2026-10-08).
+
+
+Known companion newer ADV (2026-10-08, static/offline): matching-index direct/group pkmsg authenticates and atomically records pending expectation/device sync; verified timestamp is preserved. Signed responses below expectation retain pending work, reaching responses settle it. Inspection reports ready_refresh_pending without mutation. New-device, own-account and live newer-ADV coverage remain incomplete. See [peer identity refresh](protocol/peer-identity.md#known-companion-newer-adv-refresh-2026-10-08).
+
+Validation for newer-ADV refresh: 691 workspace/all-feature tests, strict all-target Clippy, warning-free Rustdoc, default CLI tests (24 including API symbols), regenerated CLI reference and experimental API-symbol check passed. Offline saved-capture inspection found no qualifying ADV/admission sample; before/after outbox, actions, receipts, devices and pins were identical. No login, query or chat send occurred. Private inspection artifact: `lab/releases/companion-refresh-inspection/active.json`.

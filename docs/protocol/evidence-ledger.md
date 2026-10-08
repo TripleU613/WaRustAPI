@@ -1294,3 +1294,8 @@ nongroup/non-A0Q branch; A0Q types 3/5/6 are not a companion predicate. The
 initial Cp2.A06 ordinary-receipt hypothesis was refuted (Bp1/status only).
 A0p/CM8 upstream producers and full direct-control parity remain unknown.
 [Trace, tests and remaining work](peer-identity.md#direct-companion-receive-and-receipts-2026-10-08).
+
+
+### Known companion newer ADV — 2026-10-08
+
+**Confirmed static 37.71:** `101.A03`/`AzX`/`DLx.run` case 14 schedule deduplicated SyncDevicesJob; `Lcr.A00` preserves an unresolved expected timestamp on a lower normal response. `0bN.A0H` persists, rather than constructs, that baseline. **Verified offline:** known-index direct/group admission records the expectation and queues refresh only with authenticated atomic receive; signed responses below/reaching it retain/clear pending work. Boolean reset semantics, new-device/own-account application and live coverage remain unknown. See [reasoning and reproduction](peer-identity.md#known-companion-newer-adv-refresh-2026-10-08).

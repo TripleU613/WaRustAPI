@@ -119,7 +119,8 @@ pub struct DeviceList {
     pub raw_id: Option<u32>,
     /// Verified list timestamp (`key-index-list/@ts`).
     pub list_timestamp: Option<u64>,
-    /// Server's `expected_ts`, if given.
+    /// Server `expected_ts` or a newer authenticated known-companion ADV expectation.
+    /// Separate from the verified floor (APK 37.71 0bN.A05 / Lcr.A00).
     pub expected_timestamp: Option<u64>,
     /// Companions came from a verified signed list; false means primary only.
     pub companions_verified: bool,
@@ -306,6 +307,32 @@ pub fn request_sync(
     }
     store.write(|tx| request_sync_in(tx, &user, notified_hash, reason))
 }
+// APK 37.71 0bN.A05 preserves the verified list timestamp; 101.A03
+// deduplicates scheduled users. Commit only after nested Signal authentication.
+pub(super) fn request_adv_refresh_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    list: &DeviceList,
+    timestamp: u64,
+) -> Result<()> {
+    let pending: Option<Pending> =
+        tx.get_json(Table::Checkpoints, pending_key(&list.owner).as_bytes(), 1)?;
+    let raised = timestamp > list.expected_timestamp.unwrap_or(0);
+    if raised {
+        let mut updated = list.clone();
+        updated.expected_timestamp = Some(timestamp);
+        tx.put_json(
+            Table::Checkpoints,
+            list_key(&list.owner).as_bytes(),
+            1,
+            &updated,
+        )?;
+    }
+    if raised || pending.is_none() {
+        request_sync_in(tx, &list.owner, None, "companion_adv")?;
+    }
+    Ok(())
+}
+
 fn request_sync_in(
     tx: &mut crate::store::WriteTx<'_>,
     user: &Jid,
@@ -724,9 +751,19 @@ fn ingest_user(
     let list_timestamp = index_list
         .and_then(|c| attr_text(c, "ts"))
         .and_then(|v| v.parse::<u64>().ok());
-    let expected_timestamp = index_list
+    let server_expected_timestamp = index_list
         .and_then(|c| attr_text(c, "expected_ts"))
         .and_then(|v| v.parse::<u64>().ok());
+    // Lcr.A00 0002..0068 retains expected-timestamp state when the new
+    // normal baseline remains below it; reaching it clears the old expectation.
+    let unresolved_expected = saved
+        .as_ref()
+        .and_then(|s| s.expected_timestamp)
+        .filter(|expected| list_timestamp.is_none_or(|ts| ts < *expected));
+    let expected_timestamp = match (server_expected_timestamp, unresolved_expected) {
+        (Some(a), Some(b)) => Some(a.max(b)),
+        (a, b) => a.or(b),
+    };
     let signed = index_list.and_then(|c| match &c.content {
         NodeContent::Bytes(b) => Some(b.as_ref()),
         _ => None,
@@ -840,7 +877,7 @@ fn ingest_user(
         fetched_at: Timestamp::now(),
     };
     tx.put_json(Table::Checkpoints, list_key(&owner).as_bytes(), 1, &list)?;
-    if clear_pending {
+    if clear_pending && unresolved_expected.is_none() {
         tx.delete(Table::Checkpoints, pending_key(&owner).as_bytes())?;
     }
     Ok(UserIngest::Stored)
@@ -1120,6 +1157,90 @@ mod tests {
         Node::new("user")
             .attr("jid", owner.clone())
             .children(vec![Node::new("devices").children(children)])
+    }
+
+    #[test]
+    fn adv_refresh_preserves_verified_floor_and_waits_for_expected_signed_list() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("refresh.redb"));
+        let peer = contact();
+        let (signed, key) = crate::signal::adv::test_signed_list(7, 8, 2, &[1, 2], &[11; 32]);
+        pin_identity(&store, &peer, &key);
+        request_sync(&store, None, &peer, None, "seed").unwrap();
+        let (query, iq) = begin_query(&store, SyncContext::Interactive)
+            .unwrap()
+            .unwrap();
+        // This fixture's optional server expected_ts is omitted to isolate the
+        // authenticated ADV expectation from server-provided metadata.
+        let signed_user = |ts, bytes| {
+            let mut node = user_node(&peer, &[(0, 0, false), (3, 1, false)], Some((ts, bytes)));
+            let NodeContent::Children(users) = &mut node.content else {
+                panic!()
+            };
+            let NodeContent::Children(devices) = &mut users[0].content else {
+                panic!()
+            };
+            devices[1].attributes.retain(|a| a.name != "expected_ts");
+            node
+        };
+        query
+            .ingest(&store, &reply(&iq, vec![signed_user(8, signed)]))
+            .unwrap()
+            .require_complete()
+            .unwrap();
+        let baseline = device_list(&store, &peer).unwrap().unwrap();
+        store
+            .write(|tx| request_adv_refresh_in(tx, &baseline, 10))
+            .unwrap();
+        let pending: Pending = store
+            .read(|tx| tx.get_json(Table::Checkpoints, pending_key(&peer).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        let updated = device_list(&store, &peer).unwrap().unwrap();
+        assert_eq!(updated.list_timestamp, Some(8));
+        assert_eq!(updated.expected_timestamp, Some(10));
+        store
+            .write(|tx| request_adv_refresh_in(tx, &updated, 9))
+            .unwrap();
+        let unchanged: Pending = store
+            .read(|tx| tx.get_json(Table::Checkpoints, pending_key(&peer).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(pending.generation, unchanged.generation);
+        for ts in [9, 10] {
+            let (signed, _) = crate::signal::adv::test_signed_list(7, ts, 2, &[1, 2], &[11; 32]);
+            let mut cursor = DeviceSyncCursor::default();
+            let (query, iq) = cursor
+                .begin_next(&store, SyncContext::Interactive)
+                .unwrap()
+                .unwrap();
+            cursor
+                .settle(&query, &store, &reply(&iq, vec![signed_user(ts, signed)]))
+                .unwrap()
+                .require_complete()
+                .unwrap();
+            assert!(
+                cursor
+                    .begin_next(&store, SyncContext::Interactive)
+                    .unwrap()
+                    .is_none()
+            );
+            let list = device_list(&store, &peer).unwrap().unwrap();
+            assert_eq!(list.list_timestamp, Some(ts));
+            assert!(list.companions_verified);
+            if ts == 9 {
+                assert_eq!(list.expected_timestamp, Some(10));
+                assert_eq!(pending_users(&store).unwrap(), vec![peer.clone()]);
+                let held: Pending = store
+                    .read(|tx| tx.get_json(Table::Checkpoints, pending_key(&peer).as_bytes(), 1))
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(held.generation, pending.generation);
+            } else {
+                assert_eq!(list.expected_timestamp, None);
+                assert!(pending_users(&store).unwrap().is_empty());
+            }
+        }
     }
 
     #[test]

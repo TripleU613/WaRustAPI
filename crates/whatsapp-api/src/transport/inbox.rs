@@ -651,7 +651,7 @@ async fn process_direct(
     let skdm_update: Option<()> = None;
     store.write(|tx| {
         if let Some(authority) = &companion_authority {
-            authority.check(tx)?;
+            authority.commit(tx)?;
         }
         if peer_category {
             let current_account = AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
@@ -1191,7 +1191,7 @@ async fn process_group_inner(
         }
         if let Some(member) = &direct_commit {
             if let Some(authority) = &member.companion_authority {
-                authority.check(tx)?;
+                authority.commit(tx)?;
             }
             let peer_key = member.peer_key.as_bytes();
             let current: Option<Vec<u8>> = tx.get_json(Table::SignalSessions, peer_key, 1)?;

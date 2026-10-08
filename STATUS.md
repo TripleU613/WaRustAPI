@@ -1832,3 +1832,8 @@ companion interoperability remains unverified; private inspection records stay
 in ignored lab storage.
 Repository hygiene passed 873 local links, package licenses and all four
 checksum bundles (3,710,622 bytes total).
+
+
+Known companion newer ADV (2026-10-08, static/offline): matching-index direct/group pkmsg now authenticates and atomically records a pending expectation/device sync without advancing verified timestamp. Lower signed responses retain pending work; reaching responses settle it. Inspection reports ready_refresh_pending without mutation. New-device addition, own-account reconciliation and live newer-companion validation remain unfinished. Evidence: [peer identity refresh](docs/protocol/peer-identity.md#known-companion-newer-adv-refresh-2026-10-08).
+
+Validation for newer-ADV refresh: 691 workspace/all-feature tests, strict all-target Clippy, warning-free Rustdoc, default CLI tests (24 including API symbols), regenerated CLI reference and experimental API-symbol check passed. Offline saved-capture inspection found no qualifying ADV/admission sample; before/after outbox, actions, receipts, devices and pins were identical. No login, query or chat send occurred. Private inspection artifact: `lab/releases/companion-refresh-inspection/active.json`.

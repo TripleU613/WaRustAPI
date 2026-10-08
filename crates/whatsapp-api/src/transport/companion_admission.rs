@@ -1,6 +1,6 @@
 //! APK 37.71 11T.A0D matched-baseline companion admission.
-//! Newer ADV requires separate expected-timestamp/refresh application, not a
-//! verified-list timestamp advance (0bN.A05, 0bp.A00/A05). See peer-identity.md.
+//! Known-device newer ADV updates pending refresh state after authentication,
+//! never the verified-list timestamp (0bN.A05, 0bp.A00/A05). See peer-identity.md.
 use super::devices::{DeviceList, authority_in, device_list_in, list_key};
 use crate::{
     Error, Result,
@@ -36,9 +36,17 @@ pub(crate) struct AuthoritySnapshot {
     primary_pin: Vec<u8>,
     login_identity: Option<serde_json::Value>,
     account: AccountRecord,
+    refresh_timestamp: Option<u64>,
 }
 
 impl AuthoritySnapshot {
+    pub(crate) fn commit(&self, tx: &mut WriteTx<'_>) -> Result<()> {
+        self.check(tx)?;
+        if let Some(timestamp) = self.refresh_timestamp {
+            super::devices::request_adv_refresh_in(tx, &self.list, timestamp)?;
+        }
+        Ok(())
+    }
     pub(crate) fn check(&self, tx: &WriteTx<'_>) -> Result<()> {
         let list: Option<DeviceList> =
             tx.get_json(Table::Checkpoints, list_key(&self.list.owner).as_bytes(), 1)?;
@@ -67,7 +75,8 @@ impl AuthoritySnapshot {
 
 /// Read-only admission diagnostic for an actual companion prekey candidate.
 /// Returns fixed status names, never keys or signed metadata. `ready` means
-/// the matched-baseline branch is supported; nested Signal MAC verification
+/// the matched-baseline branch is supported; `ready_refresh_pending` also
+/// requires a pending refresh after authentication. Nested Signal MAC verification
 /// and atomic state commit are still required. No query or state mutation.
 pub fn inspect(
     store: &ProtocolStore,
@@ -77,6 +86,9 @@ pub fn inspect(
     ciphertext: &[u8],
 ) -> Result<&'static str> {
     Ok(match prepare(store, account, peer, node, ciphertext)? {
+        Admission::Ready(authority) if authority.refresh_timestamp.is_some() => {
+            "ready_refresh_pending"
+        }
         Admission::Ready(_) => "ready",
         Admission::Refused(status) => status,
     })
@@ -180,11 +192,8 @@ pub(crate) fn prepare(
             return Ok(Refused("missing_list_timestamp"));
         };
         // 11T.A0D 04c8..05fa checks the ACTUAL device index, not an alias.
-        // Newer candidates may add devices, but require the unported pending
-        // timestamp/refresh transaction (05fa..0628), so defer without mutation.
-        if verified.timestamp() > timestamp {
-            return Ok(Refused("refresh_required"));
-        }
+        // A known index may continue with pending refresh (05fa..0628).
+        // New-device map mutation remains separate and unported.
         let entries: Vec<_> = list
             .devices
             .iter()
@@ -193,13 +202,18 @@ pub(crate) fn prepare(
             })
             .collect();
         if entries.len() != 1 || entries[0].key_index != verified.key_index() {
-            return Ok(Refused("deleted_device"));
+            return Ok(Refused(if verified.timestamp() > timestamp {
+                "refresh_required"
+            } else {
+                "deleted_device"
+            }));
         }
         Ok(Ready(Box::new(AuthoritySnapshot {
             list,
             primary_pin: pin,
             login_identity: login,
             account: saved_account,
+            refresh_timestamp: (verified.timestamp() > timestamp).then_some(verified.timestamp()),
         })))
     })
 }
@@ -413,6 +427,122 @@ mod tests {
                 .collect()
             })
             .unwrap()
+    }
+
+    #[tokio::test]
+    async fn newer_known_adv_refresh_commits_only_with_authenticated_message() {
+        for (direct, corrupt) in [(false, false), (true, false), (false, true), (true, true)] {
+            let dir = tempfile::tempdir().unwrap();
+            let (store, receiver, peer, mut node) = fixture(
+                &dir.path().join("refresh.redb"),
+                "15555550101:3@s.whatsapp.net",
+            )
+            .await;
+            if direct {
+                node = Node::new("message")
+                    .attr("from", peer.clone())
+                    .attr("id", "DIRECT-REFRESH")
+                    .children(node.child_nodes().to_vec());
+            }
+            let mut baseline = super::super::devices::device_list(&store, &peer)
+                .unwrap()
+                .unwrap();
+            baseline.list_timestamp = Some(8);
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        list_key(&baseline.owner).as_bytes(),
+                        1,
+                        &baseline,
+                    )
+                })
+                .unwrap();
+            if corrupt {
+                let NodeContent::Children(children) = &mut node.content else {
+                    panic!()
+                };
+                let NodeContent::Bytes(bytes) = &mut children[0].content else {
+                    panic!()
+                };
+                let mut tampered = bytes.to_vec();
+                *tampered.last_mut().unwrap() ^= 1;
+                *bytes = tampered.into();
+            }
+            let rows = crypto_rows(&store);
+            assert_eq!(
+                inspect(&store, &receiver, &peer, &node, ciphertext(&node)).unwrap(),
+                "ready_refresh_pending"
+            );
+            assert_eq!(
+                super::super::devices::device_list(&store, &peer).unwrap(),
+                Some(baseline.clone())
+            );
+            assert!(
+                super::super::devices::pending_users(&store)
+                    .unwrap()
+                    .is_empty()
+            );
+            // Inject an abort after the refresh write: authority, queue and its
+            // revision must share the enclosing receive transaction's rollback.
+            let Admission::Ready(authority) =
+                prepare(&store, &receiver, &peer, &node, ciphertext(&node)).unwrap()
+            else {
+                panic!()
+            };
+            assert!(
+                store
+                    .write::<()>(|tx| {
+                        authority.commit(tx)?;
+                        Err(Error::invalid("test", "abort after refresh"))
+                    })
+                    .is_err()
+            );
+            assert_eq!(
+                super::super::devices::device_list(&store, &peer).unwrap(),
+                Some(baseline.clone())
+            );
+            assert!(
+                super::super::devices::pending_users(&store)
+                    .unwrap()
+                    .is_empty()
+            );
+            let capture = super::super::inbox::preserve(&store, &node).unwrap();
+            let result = super::super::inbox::process(&store, &receiver, &node, &capture)
+                .await
+                .unwrap();
+            if corrupt {
+                assert_eq!(result, super::super::inbox::IncomingResult::Undecryptable);
+                assert_eq!(crypto_rows(&store), rows);
+                assert_eq!(
+                    super::super::devices::device_list(&store, &peer).unwrap(),
+                    Some(baseline)
+                );
+                assert!(
+                    super::super::devices::pending_users(&store)
+                        .unwrap()
+                        .is_empty()
+                );
+            } else {
+                assert_eq!(result, super::super::inbox::IncomingResult::Decrypted);
+                let mut expected = baseline;
+                expected.expected_timestamp = Some(9);
+                assert_eq!(
+                    super::super::devices::device_list(&store, &peer).unwrap(),
+                    Some(expected)
+                );
+                assert_eq!(
+                    super::super::devices::pending_users(&store).unwrap(),
+                    vec![peer.to_non_ad()]
+                );
+                assert_eq!(
+                    super::super::inbox::process(&store, &receiver, &node, &capture)
+                        .await
+                        .unwrap(),
+                    super::super::inbox::IncomingResult::Duplicate
+                );
+            }
+        }
     }
 
     #[tokio::test]
@@ -672,7 +802,10 @@ mod tests {
                 0 => list.devices.retain(|d| d.jid.device == 0),
                 1 => list.devices[1].key_index = 3,
                 2 => list.raw_id = Some(8),
-                3 => list.list_timestamp = Some(8),
+                3 => {
+                    list.list_timestamp = Some(8);
+                    list.devices[1].key_index = 3;
+                }
                 4 => list.verified_primary_key_fingerprint = None,
                 5 => store
                     .write(|tx| {

@@ -1400,3 +1400,67 @@ found no qualifying companion sample; before/after outbox/actions/receipts/devic
 pin summaries were identical. No login, query or chat send occurred. Fresh live
 companion interoperability remains unverified; private inspection records stay
 in ignored lab storage.
+
+
+## Known companion newer-ADV refresh (2026-10-08)
+
+**Confirmed, static APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+`11T.A0D`'s matched-primary/raw-ID/E2EE branch accepts the actual companion
+when its key index matches, including a candidate timestamp newer than the
+verified list. `0bN.A05` raises the expected timestamp without advancing the
+verified timestamp; its SQL field mapping is retained in the
+[producer evidence](companion-identity-producer-evidence.txt).
+This supersedes our earlier `refresh_required` refusal for a known matching
+index. Absent/different indices with newer timestamps still require the
+unported new-device branch; old/equal mismatches remain `deleted_device`.
+
+**Confirmed:** `101.A03(VLI)` validates the user list, deduplicates users under
+`AzX.A03`'s monitor and records the clock in `AzX.A01`. Only newly scheduled
+users enter `DLx` discriminator 14. `DLx.run` at `16f6..173e` constructs
+`SyncDevicesJob` with those users and the unchanged caller reason, then enqueues
+it through `0ls.A01`. The candidate caller's reason is 3; this is a local job
+reason, not a server ban/refusal code. These names apply to 37.71 and do not
+replace differently obfuscated evidence attributed to other builds.
+
+**Confirmed:** `Lcr.A00(LLLIJZ)` carries a supplied response timestamp into
+`LbQ.A05`. With an existing baseline and its Boolean argument false, a response
+below prior `A02` retains expected timestamp `A02`, job timestamp `A04` and
+update clock `A03`. A response reaching that expectation resets the trio.
+The Boolean true and missing-baseline branches also reset it. **Unknown:** the
+Boolean's full caller semantics and own-account/type/raw-ID reconciliation;
+we have not inferred permission to clear expectations from an arbitrary flag.
+**Negative finding:** `0bN.A0H(ZLLLZ)` accepts an already constructed `LbQ`
+and persists it through `0bp.A05`; it does not itself produce the expected
+timestamp. Broader membership transactions remain unported.
+Reproduction commands and register context are in
+[refresh evidence](companion-refresh-evidence.txt).
+
+**Implemented locally:** a known exact-index candidate reports
+`companion_admission=ready_refresh_pending` during read-only `lab-inbox
+--inspect`. Both ADV signatures and the independent held primary are required;
+nested Signal MAC verification must then succeed. The receive transaction
+rechecks authority and atomically saves the message/ratchet/prekey changes,
+raises `DeviceList.expected_timestamp` and queues the existing device sync.
+The verified timestamp is preserved. Inspect alone changes nothing; invalid
+MACs and aborted transactions change neither authority nor the queue. Delaying
+the pending update until nested authentication is our atomicity guard, not a
+claim about APK job scheduling order.
+
+Existing pending work retains its notification hash. Equal/lower expectations
+with a pending entry do not create another revision; a raised expectation uses
+the existing durable revision mechanism. A correctly signed response below the
+expectation may advance the verified floor, but retains both the expectation
+and pending revision. A response reaching it clears the old expectation and
+pending entry; separately supplied server `expected_ts` remains represented.
+`devices` exposes `expected_timestamp` and `pending_users`. Existing session
+planner attempt/defer limits and refusal/uncertain-outcome handling still apply.
+
+**Verified offline:** real signed ADV plus encrypted direct/group fixtures cover
+successful admission, nested-MAC refusal, inspection without mutation,
+transaction rollback and duplicate processing. Real signed device-list fixtures
+cover a lower response retaining pending work, a reaching response clearing it,
+and deduplication of lower expectations. **Unknown live:** no saved qualifying
+newer companion capture establishes this branch on the server. New-device
+addition, own-account reconciliation and full primary identity recovery remain
+unfinished.
