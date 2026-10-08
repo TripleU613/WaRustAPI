@@ -1925,3 +1925,18 @@ CLI-reference checks, experimental build and formatting passed on system Rust
 
 Repository hygiene passed: 912 local links, package licenses, tracked-file
 budgets and 3,840,464 bytes across five checksum-verified APK bundles.
+
+Terminal ACK diagnostics (2026-10-08, **observed offline / attribution unknown**):
+lab-inbox --inspect now prints fixed ACK class/type and ID/to presence flags,
+redacting all echoed identifiers/unknown values and diagnosing duplicate ACKs.
+Saved captures are content-addressed without timestamps/epochs, and inspection
+covers all history. The stored notification-ACK stream:error cannot therefore
+be attributed to the latest receive window from this inspection alone; prior
+wording was too strong. No causal query/ban/retry interpretation is established.
+No login, query replay, key change or capture mutation occurred in this chunk.
+See [terminal evidence and scope](docs/protocol/terminal-errors.md).
+
+Rebuilt offline inspection identifies the saved ACK type as w:gp2; no network
+session was opened. Its capture origin and relation to recent closure remain
+unknown. All 47 experimental CLI checks, strict CLI/all-target Clippy, regenerated
+reference, experimental build and formatting passed on system Rust 1.99.0.

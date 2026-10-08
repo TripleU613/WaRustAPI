@@ -26,6 +26,60 @@ fn is_capture(key: &[u8]) -> bool {
     matches!(parts.as_slice(), ["message", _, "pending" | "send-response", index] if !index.is_empty() && index.bytes().all(|b| b.is_ascii_digit()))
 }
 
+// The 2026-10-08 saved stream:error contained an ack child but no outer
+// code. Show fixed protocol labels and presence only; echoed IDs/addresses
+// and unknown server strings are private, even inside a terminal stanza.
+fn terminal_ack_diagnostic(node: &whatsapp_api::binary::Node) -> String {
+    if node.description != "stream:error" {
+        return String::new();
+    }
+    let acks: Vec<_> = node
+        .child_nodes()
+        .iter()
+        .filter(|n| n.description == "ack")
+        .collect();
+    if acks.is_empty() {
+        return String::new();
+    }
+    if acks.len() != 1 {
+        return ", terminal_ack=ambiguous".into();
+    }
+    let ack = acks[0];
+    let label = |name: &str, allowed: &[&str]| {
+        match ack.get_attr(name) {
+            None => "absent",
+            Some(attribute) => allowed
+                .iter()
+                .copied()
+                .find(|v| Some(*v) == attribute.as_text())
+                .unwrap_or("unknown"),
+        }
+        .to_owned()
+    };
+    format!(
+        ", terminal_ack_class={}, terminal_ack_type={}, terminal_ack_id_present={}, terminal_ack_to_present={}",
+        label("class", &["receipt", "notification", "message", "iq"]),
+        label(
+            "type",
+            &[
+                "delivery",
+                "read",
+                "played",
+                "retry",
+                "encrypt",
+                "devices",
+                "w:gp2",
+                "privacy_token",
+                "dirty",
+                "psa",
+                "mex"
+            ]
+        ),
+        ack.get_attr("id").is_some(),
+        ack.get_attr("to").is_some()
+    )
+}
+
 fn capture_protocol_type(value: Option<&str>) -> &str {
     value
         .filter(|value| {
@@ -1844,7 +1898,7 @@ pub(super) async fn run(
                                 }
                             })
                             .collect();
-                        format!(", values={values:?}")
+                        format!(", values={values:?}{}", terminal_ack_diagnostic(&node))
                     } else {
                         String::new()
                     };
@@ -2437,6 +2491,57 @@ mod tests {
     use super::*;
     use whatsapp_api::binary::Node;
     use whatsapp_api::model::jid::Jid;
+
+    #[test]
+    fn terminal_ack_inspection_reports_fixed_labels_without_echoed_ids() {
+        let node = Node::new("stream:error").children(vec![
+            Node::new("ack")
+                .attr("class", "notification")
+                .attr("type", "w:gp2")
+                .attr("id", "private-echoed-request"),
+        ]);
+        let text = terminal_ack_diagnostic(&node);
+        assert!(text.contains("terminal_ack_class=notification"));
+        assert!(text.contains("terminal_ack_type=w:gp2"));
+        assert!(text.contains("terminal_ack_id_present=true"));
+        assert!(text.contains("terminal_ack_to_present=false"));
+        assert!(!text.contains("private-echoed-request"));
+        assert!(
+            terminal_ack_diagnostic(&Node::new("iq").children(node.child_nodes().to_vec()))
+                .is_empty()
+        );
+    }
+
+    #[test]
+    fn terminal_ack_inspection_redacts_unknown_values_and_refuses_ambiguity() {
+        let ack = Node::new("ack")
+            .attr("class", "private-class")
+            .attr("type", "private-kind")
+            .attr("to", "15555550101@s.whatsapp.net");
+        let text = terminal_ack_diagnostic(&Node::new("stream:error").children(vec![ack.clone()]));
+        assert!(text.contains("terminal_ack_class=unknown"));
+        assert!(text.contains("terminal_ack_type=unknown"));
+        assert!(text.contains("terminal_ack_id_present=false"));
+        assert!(text.contains("terminal_ack_to_present=true"));
+        for secret in ["private-class", "private-kind", "15555550101"] {
+            assert!(!text.contains(secret));
+        }
+        assert_eq!(
+            terminal_ack_diagnostic(&Node::new("stream:error").children(vec![ack.clone(), ack])),
+            ", terminal_ack=ambiguous"
+        );
+        assert!(terminal_ack_diagnostic(&Node::new("stream:error")).is_empty());
+        let nontext = Node::new("stream:error").children(vec![Node::new("ack").attr(
+            "type",
+            whatsapp_api::binary::AttributeValue::Jid(
+                Jid::parse("15555550101@s.whatsapp.net").unwrap(),
+            ),
+        )]);
+        let text = terminal_ack_diagnostic(&nontext);
+        assert!(text.contains("terminal_ack_class=absent"));
+        assert!(text.contains("terminal_ack_type=unknown"));
+        assert!(!text.contains("15555550101"));
+    }
 
     #[test]
     fn device_query_inspection_keeps_users_and_unknown_codes_private() {
