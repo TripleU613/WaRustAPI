@@ -711,8 +711,9 @@ fn participant_session_jid(
     participant: &Jid,
 ) -> Result<Option<Jid>> {
     // APK 37.71 B7H.A06 carries getDevice into B76; flattening a companion
-    // would select another device's ratchet. Full companion bootstrap/identity
-    // admission remains unported: 37.71 CoU.A04 calls 11T.A0D before
+    // would select another device's ratchet. This selector handles held msg
+    // sessions; prekeys use companion_admission separately. 37.71 CoU.A04
+    // calls 11T.A0D before
     // CQn.A00 dispatches companion prekeys (peer-identity.md outer trace).
     // Use only a held/pinned non-hosted msg session here, never the primary
     // or an alias fallback.
@@ -737,9 +738,7 @@ fn participant_session_jid(
             })
             .and_then(|n| n.get_attr("type").and_then(|v| v.as_text()));
         if direct_kind != Some("msg") {
-            tracing::warn!(
-                "group companion pairwise child preserved: prekey bootstrap/replacement is unsupported"
-            );
+            tracing::warn!("group companion prekey requires separate ADV admission");
             return Ok(None);
         }
         let key = format!("comparison-direct:{participant}");
@@ -819,6 +818,7 @@ struct MemberSession {
     /// Advanced session and the identity to pin.
     session: Zeroizing<Vec<u8>>,
     identity: Vec<u8>,
+    companion_authority: Option<Box<super::companion_admission::AuthoritySnapshot>>,
 }
 
 /// Handle incoming group message stanzas (`participant` present, `from` a group).
@@ -931,9 +931,40 @@ async fn process_group_inner(
     // addressed it to our device alone. Observed 2026-09-28: the operator's
     // phone sent a `messageHistoryBundle` (Message field 70, `LX/BZc`) this way.
     let mut pairwise_plaintext = None;
+    let companion_prekey = sender_jid.device != 0
+        && direct_enc
+            .is_some_and(|enc| enc.get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg"));
+    let companion_authority = if companion_prekey {
+        match direct_enc.and_then(ciphertext_bytes) {
+            Some(ciphertext) => match super::companion_admission::prepare(
+                store,
+                account,
+                &sender_jid,
+                node,
+                ciphertext,
+            )? {
+                super::companion_admission::Admission::Ready(authority) => Some(authority),
+                super::companion_admission::Admission::Refused(status) => {
+                    tracing::warn!(
+                        status,
+                        "group companion prekey preserved: admission deferred"
+                    );
+                    None
+                }
+            },
+            None => None,
+        }
+    } else {
+        None
+    };
+    let pairwise_peer = if companion_prekey {
+        companion_authority.as_ref().map(|_| sender_jid.clone())
+    } else {
+        participant_session_jid(store, node, &sender_jid)?
+    };
     if let Some(enc) = direct_enc
         && let Some(ciphertext) = ciphertext_bytes(enc)
-        && let Some(peer) = participant_session_jid(store, node, &sender_jid)?
+        && let Some(peer) = pairwise_peer
     {
         let peer_key = format!("comparison-direct:{peer}");
         let (session, identity): (Option<Vec<u8>>, Option<Vec<u8>>) = store.read(|tx| {
@@ -1025,6 +1056,7 @@ async fn process_group_inner(
                 previous_identity: identity,
                 session: received.session.clone(),
                 identity: pinned,
+                companion_authority,
             });
         }
     }
@@ -1101,6 +1133,9 @@ async fn process_group_inner(
             )?;
         }
         if let Some(member) = &direct_commit {
+            if let Some(authority) = &member.companion_authority {
+                authority.check(tx)?;
+            }
             let peer_key = member.peer_key.as_bytes();
             let current: Option<Vec<u8>> = tx.get_json(Table::SignalSessions, peer_key, 1)?;
             let current_identity: Option<Vec<u8>> =

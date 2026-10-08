@@ -1248,3 +1248,80 @@ raw source outputs above include typed exception metadata; the appendix and
 compact source serve different purposes. xtask's 58 tests, regenerated CLI
 reference, OpenAPI library-symbol check, formatting and whitespace checks passed.
 No new runtime or live validation is claimed for this source-only change.
+
+
+## Known companion prekey bootstrap (2026-10-07)
+
+**Implemented/offline, APK 2.26.37.71 matched-baseline branch:** group/status
+version-2 companion `pkmsg` can now establish the actual device's pairwise
+session. The ordinary producer and pending timestamp trace above supplies the
+source: DEs.CF2 -> Cih.A0V -> Bp2.A0L -> CoU.A04 -> 11T.A0D. Admission uses
+both ADV signatures against an independent held primary and checks a current
+signed device list, raw ID, E2EE account/device types, actual device index and
+candidate timestamp. 11T.A0D `04c8..05fa` accepts an equal index when the stored
+list is at least as recent. This implements that branch; it does not change
+the list to manufacture membership. No primary or PN/LID alias ratchet substitutes.
+
+[companion_admission.rs](../../crates/whatsapp-api/src/transport/companion_admission.rs)
+prepares authority from one read transaction. Our local subset requires a unique
+pairwise candidate, unique byte-body ADV and a known own identity in the
+candidate's namespace; malformed/duplicate inputs and unknown own namespaces
+defer. Own PN/LID candidates always defer, independently of the configured
+policy: pinned policy alone allows first-seen identities and is not an own-device
+guard. The saved account generation, registration status, own route, Signal
+public identity and registration ID must match the caller. These are our
+transaction/unsupported-branch guards, not newly inferred server requirements.
+
+`inbox::process_with_policy` authenticates the nested Signal MAC before
+committing the exact companion session/pin, one-time prekey consumption, SKDM
+and control/message together. Its write transaction rechecks the complete
+saved device list, independent primary pin, login aliases and account identity,
+plus existing session/pin/prekey compare-and-swap checks. Changed authority
+aborts the entire transaction. `apk_authenticated` replacements retain the
+prior exact companion pin/session in encrypted history and emit the existing
+IdentityChanged event; `pinned` still refuses a changed companion key.
+SKDM-only controls earn delivery eligibility but no user message/read receipt,
+and dedupe after reopening. A refused candidate does not block a separately
+usable held `skmsg`.
+
+**CLI/API:** `lab-inbox --inspect` adds a fixed `companion_admission` after
+successful signature verification. `ready` means matched-baseline eligibility,
+not nested authentication or completed receive. Other fixed statuses explain
+missing/stale authority, own-device/unknown-own namespace, raw-ID/type mismatch,
+old missing/different device index (`deleted_device`) or newer candidate
+(`refresh_required`). No address, key, signed metadata or ciphertext is printed.
+The same read-only library inspection is documented in OpenAPI; `listen`,
+`lab-transport --receive` and offline capture replay share the group receive
+implementation. Existing `x-cli`, `x-transport` and `x-live` retain their actual
+behavior; no HTTP handler was added.
+
+**Remaining:** direct companion prekeys, newer-candidate expected-timestamp/
+refresh application (0bN.A05 preserves the verified list timestamp), new-device
+map mutation, supplied-primary/raw-ID/type transitions, alias fan-out and own
+account reconciliation. These are implementation gaps; the APK's broader
+admission must not be inferred from this matched-baseline subset. No fresh
+companion interoperability sample or live companion replacement is established.
+
+**Validation:** five real-crypto fixture tests cover PN/LID exact-device
+bootstrap, equal/older timestamps, one-time consumption, SKDM control markers,
+no read receipt, unchanged primary/list, reopen dedupe, nested MAC tamper,
+pinned refusal versus authenticated replacement, nine deferred authority/input
+cases, four authority changes with transaction rollback, and held-sender-key
+fallback without pairwise/prekey/pin adoption. These are offline adapter
+fixtures, not APK-generated live captures.
+
+
+**Observed locally:** final experimental CLI build and saved-account read-only
+inspection completed. Captures yielded no qualifying companion ADV/admission
+sample, so no live bootstrap is claimed. Before/after outbox, actions, receipts,
+device and pin summaries were identical; no login/query/chat was sent. Private
+inspection records remain in ignored lab storage. Default CLI tests (24),
+regenerated CLI reference, OpenAPI library-symbol check and final build passed.
+
+The persisted list format has no account-type field: the existing
+`VerifiedIndexList::verify` rejects non-E2EE account type before the device list
+is marked verified (`signal/adv.rs`). Candidate `is_e2ee` therefore checks
+compatibility with that supported baseline, rather than assuming arbitrary
+stored ADV accounts are E2EE. Fixture membership rows are synthetic saved state;
+existing device-list tests separately cover signed-list verification. Repository
+hygiene passed 869 local links, licenses and four checksum bundles.

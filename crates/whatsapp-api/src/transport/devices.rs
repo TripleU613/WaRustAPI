@@ -65,7 +65,7 @@ fn invalid(reason: impl Into<String>) -> Error {
 fn pending_key(user: &Jid) -> String {
     format!("{PENDING_PREFIX}{user}")
 }
-fn list_key(user: &Jid) -> String {
+pub(crate) fn list_key(user: &Jid) -> String {
     format!("{LIST_PREFIX}{user}")
 }
 fn query_key(iq_id: &str) -> String {

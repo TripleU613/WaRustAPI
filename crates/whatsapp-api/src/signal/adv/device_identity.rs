@@ -121,6 +121,10 @@ impl VerifiedDeviceIdentity {
         Self::verify(bytes, account_key, companion_key)
     }
 
+    /// Signed account/device types are both ordinary E2EE (missing types default E2EE).
+    pub fn is_e2ee(&self) -> bool {
+        self.details.account_type.unwrap_or(0) == 0 && self.details.device_type.unwrap_or(0) == 0
+    }
     /// Signed raw ID; equality with the stored account is a separate check.
     pub fn raw_id(&self) -> u32 {
         self.details.raw_id.expect("verified presence")

@@ -104,6 +104,12 @@ pub mod peer_verification;
 pub mod sender_key_distribution;
 
 #[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod companion_admission;
+#[cfg(all(
     feature = "experimental-registration-https",
     feature = "experimental-signal-crypto",
     feature = "experimental-noise",

@@ -1266,3 +1266,19 @@ LbQ.<init> independently identify the SQL mappings. Treating the newer message
 ADV as a verified list timestamp was refuted. Callback selection, cache callback,
 full alias fan-out and atomic runtime admission remain unknown/unimplemented.
 [Trace and reproducible sources](peer-identity.md#ordinary-companion-adv-producer-and-baseline-timestamps-2026-10-07).
+
+
+### Known companion prekey bootstrap — 2026-10-07
+
+**Confirmed static / implemented offline:** APK 37.71 11T.A0D matched-held-
+primary/raw-ID/type branch (`04c8..05fa`) accepts an equal actual device index
+with a non-newer candidate timestamp. Group/status pkmsg now implements that
+branch using DEs.CF2's ordinary device-identity body, both ADV signatures and
+nested Signal MAC authentication. Exact companion state, one-time prekey,
+SKDM/control/message are committed atomically with current authority rechecks.
+Own-device/unknown-own guards are local limitations; newer timestamps require
+separate pending refresh and are deferred. Five real-crypto tests cover success,
+replacement/refusal, authority rollback, reopen dedupe and sender-key fallback.
+Direct companion prekeys and wider admission/reconciliation remain unimplemented;
+no fresh companion live sample is established.
+[Implementation and remaining gaps](peer-identity.md#known-companion-prekey-bootstrap-2026-10-07).

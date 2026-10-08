@@ -1889,3 +1889,17 @@ checksum topics support cached release comparison. Atomic runtime companion
 pkmsg bootstrap, pending-refresh application and device/alias reconciliation
 remain unfinished. No live request or account mutation.
 [Evidence and unknowns](protocol/peer-identity.md#ordinary-companion-adv-producer-and-baseline-timestamps-2026-10-07).
+
+
+### Known companion prekey receive (2026-10-07)
+
+**Implemented/offline:** group/status companion pkmsg bootstrap and authenticated
+replacement now require both ADV signatures plus current signed-list raw-ID,
+actual-device index and non-newer timestamp. The exact ratchet, pin, prekey and
+SKDM/control/message commit together with primary/list/account/alias rechecks.
+Pinned and own-device protections remain. Five real-crypto tests cover bootstrap,
+rollback, refusal, reopen dedupe and held-skmsg fallback. Read-only CLI admission
+diagnostics explain missing/stale/deleted/pending candidates. **Remaining:**
+direct companion prekeys, newer-ADV refresh/new-device application, raw-ID/type
+and own-account reconciliation, fresh live companion validation.
+[Evidence and boundaries](protocol/peer-identity.md#known-companion-prekey-bootstrap-2026-10-07).

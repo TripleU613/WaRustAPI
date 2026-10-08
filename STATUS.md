@@ -1772,3 +1772,33 @@ full-register sources re-exported exactly. xtask 58 tests, CLI reference,
 OpenAPI library-symbol check, formatting and whitespace passed.
 Repository hygiene passed 865 local links, package licenses and all four
 checksum bundles (3,710,622 bytes total).
+
+
+Known companion prekey bootstrap (2026-10-07, **implemented/offline**):
+group/status version-2 pkmsg now admits an E2EE companion from a current signed
+device list with matching primary binding, raw ID, exact device/key index and
+non-newer timestamp. Both ADV signatures and nested Signal MAC are required.
+Exact companion session/pin, one-time prekey and SKDM/control/message commit
+atomically with primary/list/account/own-alias rechecks. Configured pinned versus
+apk_authenticated policy remains effective; authenticated changes archive the
+exact prior companion state. Own and unknown-own namespace candidates defer.
+`lab-inbox --inspect` reports fixed matched-baseline admission diagnostics without
+state mutation or values. Five real-crypto tests cover bootstrap, one-time
+consumption, reopen dedupe, MAC/policy failures, nine deferred inputs, four
+authority changes/rollback and held-skmsg fallback. Direct companion prekeys,
+newer-ADV pending refresh/new-device addition and raw-ID/type/own reconciliation
+remain unfinished; fresh live companion behavior is unverified.
+[Evidence](docs/protocol/peer-identity.md#known-companion-prekey-bootstrap-2026-10-07).
+Workspace/all-feature tests passed (687); strict Clippy, warning-free Rustdoc,
+formatting and whitespace passed. Further CLI/API/build and saved-state inspection
+results are recorded below when complete.
+
+
+**Observed locally:** final experimental CLI build and saved-account read-only
+inspection completed. Captures yielded no qualifying companion ADV/admission
+sample, so no live bootstrap is claimed. Before/after outbox, actions, receipts,
+device and pin summaries were identical; no login/query/chat was sent. Private
+inspection records remain in ignored lab storage. Default CLI tests (24),
+regenerated CLI reference, OpenAPI library-symbol check and final build passed.
+Repository hygiene passed 869 local links, package licenses and all four
+checksum bundles (3,710,622 bytes). No fresh companion sample was found.

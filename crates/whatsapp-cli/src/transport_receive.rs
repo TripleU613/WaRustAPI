@@ -88,7 +88,7 @@ fn prekey_pin_summary(
     Ok(format!(", prekey_pin_matches={comparisons:?}"))
 }
 
-/// Read-only signature diagnostic. Neither a query nor companion admission.
+/// Read-only signature and matched-baseline diagnostics. No query or state admission.
 fn companion_adv_summary(
     store: &ProtocolStore,
     node: &whatsapp_api::binary::Node,
@@ -167,7 +167,18 @@ fn companion_adv_summary(
         return Ok(", companion_adv=invalid_primary_pin".into());
     };
     match VerifiedDeviceIdentity::verify_prekey(adv, primary, ciphertext) {
-        Ok(_) => Ok(", companion_adv=signatures_verified".into()),
+        Ok(_) => {
+            let account = store.read(AccountRecord::load)?;
+            let admission = match account {
+                Some(account) => whatsapp_api::transport::companion_admission::inspect(
+                    store, &account, &peer, node, ciphertext,
+                )?,
+                None => "missing_account",
+            };
+            Ok(format!(
+                ", companion_adv=signatures_verified, companion_admission={admission}"
+            ))
+        }
         Err(Error::InvalidInput { reason, .. }) => Ok(format!(
             ", companion_adv=invalid, companion_adv_reason={reason:?}"
         )),
