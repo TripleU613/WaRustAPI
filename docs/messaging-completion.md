@@ -1863,3 +1863,15 @@ remain unfinished. [Evidence and scope](protocol/groups.md#group-pairwise-sessio
   `msg` receives are implemented; companion `pkmsg` bootstrap/replacement is
   still our limitation. No live validation or account change in this trace.
   See [outer prekey evidence](protocol/peer-identity.md#outer-prekey-dispatch-and-companion-admission-2026-10-07).
+
+### Companion ADV signature component (2026-10-07)
+
+- **Implemented/offline:** both ADV signatures bind the ciphertext's identity
+  to an independently held primary, with APK-derived E2EE/HOSTED domains.
+  `lab-inbox --inspect` reports verification/missing/invalid states privately
+  without adopting identities or advancing sessions. Real-signature tamper/
+  identity/domain tests and read-only PN/LID route tests cover this component.
+- **Remaining:** ordinary Bp2 ADV producer, complete companion admission,
+  freshness/raw-ID/teardown reconciliation and atomic runtime bootstrap.
+  Companion `pkmsg` remains unsupported by the runtime selector.
+  [Evidence](protocol/peer-identity.md#companion-adv-cryptographic-binding-and-inspection-2026-10-07).

@@ -1065,3 +1065,97 @@ formatting, regenerated CLI reference and five API checks passed. The caller/
 typed-catch appendix stays outside the core bundle. No new live test was run.
 Repository hygiene passed 850 local links, licenses and all four APK checksum
 bundles (3,650,447 bytes). Only research and an evidence comment changed.
+
+## Companion ADV cryptographic binding and inspection (2026-10-07)
+
+**Confirmed static**, APK **2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+The [producer evidence](companion-identity-producer-evidence.txt) preserves
+scoped protobuf/field/caller scans and selected source outside the core bundle.
+
+- [CjN.A00](apk/2.26.37.71-core/receive-sender-device-extract.txt) passes
+  A04's route to DeviceJid.Companion.A00. [A04](apk/2.26.37.71-core/receive-sender-route-extract.txt)
+  selects A04 when present for Bp1, otherwise A05; Bp2 uses A04 for group/status
+  routes and A05 otherwise (`0000..0046`). The device conversion's full grammar
+  remains **unknown**. [A06](apk/2.26.37.71-core/receive-pairwise-cipher-extract.txt)
+  returns CaD.A00 for Bp1 or Bp2.A09. [A0H](apk/2.26.37.71-core/receive-message-status-extract.txt)
+  returns Bp1.A01/Bp2.A0B, an Integer; its complete semantics remain **unknown**.
+- [C8C.A00](apk/2.26.37.71-core/receive-companion-key-extract.txt) skips
+  the ciphertext's first byte and parses BY9 (`0000..0022`), extracts identityKey,
+  validates through B7H.A02 and returns raw B7E.A01 public bytes (`0022..0044`).
+  Typed catches return null for protobuf, C4p/C4M or array-bounds failure. It
+  does not authenticate the nested ciphertext. The new Rust `verify_prekey`
+  uses the existing Signal parser for that identity, with a local 65,536-byte
+  envelope bound; no session or prekey is loaded/consumed by inspection.
+- [DFt.CFA](apk/2.26.37.71-core/receive-status-adv-child.txt) copies the
+  `device-identity` child's byte body into CRF.A0U (`0006..001e`).
+  [CRF.A00](apk/2.26.37.71-core/receive-status-message-build.txt) transfers it
+  through constructor argument 18 (`009c..00a4`, `00e8..00ec`) to
+  [CaD.A0H](apk/2.26.37.71-core/receive-status-adv-container.txt) (`001e..0026`),
+  which CoU.A04 passes to 11T.A0D. This is the **status/Bp1 producer**; normal
+  Bp2.A0L has one direct writer, its constructor. The complete Bp2 argument
+  producer remains **unknown**, so no whole-message parser parity is claimed.
+  The other CRF.A0U writer, DPV.invoke, copies Ca9.A0E; its upstream producer
+  remains **unknown**. CaD has one direct constructor call, CRF.A00.
+- Grz's recovered fields are details=1, accountSignatureKey=2,
+  accountSignature=3, deviceSignature=4; GsB's are rawId=1, timestamp=2,
+  keyIndex=3, accountType=4, deviceType=5. They match the existing generated
+  Rust ADV messages. [08F.<clinit>](apk/2.26.37.71-core/adv-device-signature-prefixes.txt)
+  supplies A0E=`06 00`, A0F=`06 05`, A0G=`06 01`, A0H=`06 06`
+  (`0104..013e`). The selected 11T.A0D source chooses A0F/A0H for
+  **HOSTED device type**, otherwise A0E/A0G, independently of account type.
+  Azc.<clinit> names E2EE=0, HOSTED=1, NON_E2EE=2. HOSTED device/E2EE account
+  fails the compatibility branch (`01e0..0226`).
+
+**Implemented, offline:** `signal::adv::VerifiedDeviceIdentity::verify` checks
+both signatures using the upstream XEdDSA adapter. The account signature covers
+its prefix + exact serialized details + raw companion public key; the device
+signature covers its prefix + details + companion key + raw account key.
+`verify_prekey` takes the companion candidate from the incoming envelope.
+Bundled account key bytes must match an **independent held primary pin**;
+absent/empty bundled bytes use that pin. The APK also has supplied-key adoption
+and account reconciliation branches; those are **unported**, not silently
+implemented by trusting a candidate's own signature. Signed raw-ID, timestamp
+and key-index getters retain authenticated metadata for future admission work.
+Debug output is redacted.
+
+**Local supported subset/parser policy:** outer/detail bounds 16,384/8,192
+bytes, singleton-field uniqueness, exact raw/signature lengths, required raw ID/
+timestamp/key index, and rejection of NON_E2EE/unknown encryption types. Missing
+encryption types default E2EE. These are not invented server requirements;
+the APK's enum fallback and protobuf duplicate behavior are broader. Unknown
+singleton fields may remain covered by the exact-byte signatures; duplicate
+unknown fields also refuse locally. No freshness floor, raw-ID reconciliation,
+teardown/member check, human trust or nested Signal MAC is established by this
+cryptographic verifier.
+
+**CLI:** `lab-inbox --inspect` now displays `companion_adv=signatures_verified`
+for the verified candidate against its same-namespace held primary, or bounded
+missing/invalid/ambiguous diagnostics. It accepts typed/text sender attributes
+and group participant routes, and does not substitute an alias/companion pin.
+The display emits no key/ADV/ciphertext/raw metadata values. It reads captures
+and existing pins only; no query, membership/pin adoption, session advance,
+prekey consumption, journal write or send follows from verification. The
+existing runtime companion `pkmsg` guard remains until the admission policy
+and normal-message producer are traced and implemented.
+
+**Validation:** four synthetic real-signature tests cover both signatures,
+wrong independent keys, ciphertext candidate mismatch, exact-byte details,
+E2EE/HOSTED prefix selection, account/device compatibility, malformed/duplicate
+metadata and bounded input. These are adapter fixtures, not live Android
+interoperability captures. The CLI fixture verifies PN/LID and typed/direct vs
+text/group routing, missing primary authority despite a saved companion pin,
+redacted refusal and unchanged stored rows. No real companion bootstrap or
+live identity replacement is established.
+
+**Observed locally:** the rebuilt CLI inspected the saved account offline. No
+qualifying companion ADV diagnostic was produced from its captures, so this
+is not fresh companion interoperability evidence. Outbox/actions/receipts/
+device/pin inspections were identical before and after. Private inspection
+records remain in ignored lab storage. Workspace/all-feature tests, strict
+Clippy, warning-free Rustdoc, default CLI tests and regenerated CLI reference
+passed. The final APK export contains 145 topics / 327 methods / 150 files,
+2,001,638 bytes; cached checksum comparison took 0.075721 seconds with nine
+added topics and all 136 prior topics unchanged. Four bundles total 3,676,109
+bytes. Inventory/manifest/tokens unchanged; selected appendix outside core.
+Repository hygiene passed 861 local links, licenses and all four checksum bundles.

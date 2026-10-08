@@ -1,0 +1,18 @@
+# APK-derived structural disassembly: LX/CjN;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A06(L) flags=0x1 registers=2
+  0000..0004 op=20 instance-of v0, v1, LX/Bp1;
+  0004..0008 op=38 if-eqz v0, +0xa
+  0008..000a op=07 move-object
+  000a..000e op=1f check-cast v0, LX/Bp1;
+  000e..0012 op=54 iget-object v0, v0, LX/Bp1;->A00:LX/CaD;
+  0012..0016 op=54 iget-object v0, v0, LX/CaD;->A00:LX/ClY;
+  0016..0018 op=11 return-object v0
+  0018..001a op=07 move-object
+  001a..001e op=1f check-cast v0, LX/Bp2;
+  001e..0022 op=54 iget-object v0, v0, LX/Bp2;->A09:LX/ClY;
+  0022..0024 op=11 return-object v0
+.end method

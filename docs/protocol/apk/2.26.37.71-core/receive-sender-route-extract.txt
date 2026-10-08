@@ -1,0 +1,25 @@
+# APK-derived structural disassembly: LX/CjN;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(L) flags=0x1 registers=4
+  0000..0004 op=20 instance-of v0, v3, LX/Bp1;
+  0004..0008 op=38 if-eqz v0, +0x9
+  0008..000c op=54 iget-object v0, v3, LX/CjN;->A04:Lcom/whatsapp/infra/core/jid/Jid;
+  000c..0010 op=39 if-nez v0, +0x4
+  0010..0014 op=54 iget-object v0, v3, LX/CjN;->A05:Lcom/whatsapp/infra/core/jid/Jid;
+  0014..0016 op=11 return-object v0
+  0016..001a op=54 iget-object v2, v3, LX/CjN;->A05:Lcom/whatsapp/infra/core/jid/Jid;
+  001a..001e op=54 iget-object v1, v3, LX/CjN;->A04:Lcom/whatsapp/infra/core/jid/Jid;
+  001e..0024 op=71 invoke-static {v2}, LX/0DE;->A0n(ZL)
+  0024..0026 op=0a move-result
+  0026..002a op=39 if-nez v0, +0x8
+  002a..0030 op=71 invoke-static {v2}, LX/0DE;->A0i(ZL)
+  0030..0032 op=0a move-result
+  0032..0036 op=38 if-eqz v0, +0x9
+  0036..003c op=71 invoke-static {v1}, LX/00K;->A06(VL)
+  003c..003e op=07 move-object
+  003e..0044 op=71 invoke-static {v1}, LX/00h;->A09(VL)
+  0044..0046 op=11 return-object v2
+.end method

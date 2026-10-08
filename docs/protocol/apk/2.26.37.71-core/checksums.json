@@ -51,6 +51,10 @@
     "bytes": 9855,
     "sha256": "f0ee461d6b2b19df24091a757938f78c72269161ede33d8eefa1d6aaae29ee6d"
   },
+  "adv-device-signature-prefixes.txt": {
+    "bytes": 7800,
+    "sha256": "43acdf1c23289c60cacbc0386e20b00f0935959014d02a1a63012d231dfabfd5"
+  },
   "adv-identity-error-reply.txt": {
     "bytes": 4017,
     "sha256": "611fd8e405a8ee62b5cdb887b97940400bc5ab5fbe99998b71648edd0cc9235b"
@@ -275,6 +279,10 @@
     "bytes": 1528,
     "sha256": "dcd18b5172bbcfe015c7cda98af344bf248d2d41d6fc0814ff682a87b29335bf"
   },
+  "receive-companion-key-extract.txt": {
+    "bytes": 1654,
+    "sha256": "63396c6754394d6ab8ffdb18acb9d1470a22ce0c3d6e3c2ecc9668fc317f0dc7"
+  },
   "receive-message-cipher-dispatch.txt": {
     "bytes": 17435,
     "sha256": "6e2e5e832b1f400b377429399448f1a87f4550b8af7a6c5841e70a37175aa9fa"
@@ -282,6 +290,14 @@
   "receive-message-companion-admission.txt": {
     "bytes": 40350,
     "sha256": "5d5fc5415797523f355268694a8e87b8f5471cc4462def90e672cbbe40ec49bf"
+  },
+  "receive-message-status-extract.txt": {
+    "bytes": 785,
+    "sha256": "088e17ef869cdafa00532956a8f26a2594fc7e38d4e772e3c4fce6975b13f118"
+  },
+  "receive-pairwise-cipher-extract.txt": {
+    "bytes": 821,
+    "sha256": "ad3b27c3302442c50c4322245b3d886e31d7911a0478759e1a46c1753b7810fe"
   },
   "receive-prekey-ordinary-factory.txt": {
     "bytes": 865,
@@ -298,6 +314,26 @@
   "receive-prekey-stateless-session.txt": {
     "bytes": 2498,
     "sha256": "b0bde4ba8005f937f2fcb6fa6f0775e3908acfdec09061b8c92aabe2243ec3dd"
+  },
+  "receive-sender-device-extract.txt": {
+    "bytes": 665,
+    "sha256": "ee874a4b3dba1e1f11b190986fd0f76b862b0fc0f824ffe15e3a841528babfa6"
+  },
+  "receive-sender-route-extract.txt": {
+    "bytes": 1261,
+    "sha256": "4dc929dc992278b9ed2b114fd29c40de99968ca8d776f5aaeeae11d671b5ee70"
+  },
+  "receive-status-adv-child.txt": {
+    "bytes": 726,
+    "sha256": "7a299b8f885b35511e438838d568b1b8dd619eb723033adead1fe568906e95ed"
+  },
+  "receive-status-adv-container.txt": {
+    "bytes": 1887,
+    "sha256": "323f1e44155b787a6741464124cea2b0dfc08c51fe780d147d083e6c87818126"
+  },
+  "receive-status-message-build.txt": {
+    "bytes": 5627,
+    "sha256": "40c9498f66a8e186a746a85660c8c466f1f02d251641855a49166c46c340c2ca"
   },
   "record-writer.txt": {
     "bytes": 585,
@@ -548,8 +584,8 @@
     "sha256": "82590b7944e627c71d4a54e3403be84e314598ced8789812c7c6951470853c92"
   },
   "targets.json": {
-    "bytes": 51073,
-    "sha256": "91840937948fc4013f2096f3ec00a0c60ad6e3b8ecde5b82d6ae274cb4ae476e"
+    "bytes": 54204,
+    "sha256": "14fdf995ecce502c1f833b7479cbd9440e60af5d36203f28293ccf4496df0b4e"
   },
   "token-dictionary-initializer.txt": {
     "bytes": 159791,

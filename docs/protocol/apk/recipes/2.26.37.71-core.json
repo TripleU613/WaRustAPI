@@ -1488,6 +1488,100 @@
       ],
       "method": "A04",
       "method_shorty": "VLLL"
+    },
+    "receive-sender-device-extract": {
+      "class": "LX/CjN;",
+      "method": "A00",
+      "method_shorty": "LL",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "anchors": []
+    },
+    "receive-sender-route-extract": {
+      "class": "LX/CjN;",
+      "method": "A04",
+      "method_shorty": "L",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "anchors": []
+    },
+    "receive-pairwise-cipher-extract": {
+      "class": "LX/CjN;",
+      "method": "A06",
+      "method_shorty": "L",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "anchors": []
+    },
+    "receive-message-status-extract": {
+      "class": "LX/CjN;",
+      "method": "A0H",
+      "method_shorty": "L",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "anchors": []
+    },
+    "receive-companion-key-extract": {
+      "class": "LX/C8C;",
+      "method": "A00",
+      "method_shorty": "LL",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "anchors": [
+        "DeviceVerificationUtil/extractIdentityFromCipherText/fail to get key"
+      ]
+    },
+    "receive-status-adv-child": {
+      "class": "LX/DFt;",
+      "method": "CFA",
+      "method_shorty": "VLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "anchors": [
+        "device-identity"
+      ]
+    },
+    "receive-status-message-build": {
+      "class": "LX/CRF;",
+      "method": "A00",
+      "method_shorty": "L",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "anchors": []
+    },
+    "receive-status-adv-container": {
+      "class": "LX/CaD;",
+      "method": "<init>",
+      "method_shorty": "VLLLLLLLLLLLLLLLLLLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "anchors": []
+    },
+    "adv-device-signature-prefixes": {
+      "class": "LX/08F;",
+      "method": "<clinit>",
+      "method_shorty": "V",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "anchors": []
     }
   }
 }

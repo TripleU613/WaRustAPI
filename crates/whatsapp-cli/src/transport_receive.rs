@@ -88,6 +88,93 @@ fn prekey_pin_summary(
     Ok(format!(", prekey_pin_matches={comparisons:?}"))
 }
 
+/// Read-only signature diagnostic. Neither a query nor companion admission.
+fn companion_adv_summary(
+    store: &ProtocolStore,
+    node: &whatsapp_api::binary::Node,
+) -> Result<String, Error> {
+    use whatsapp_api::{
+        binary::NodeContent,
+        model::jid::{Jid, Server},
+        signal::adv::VerifiedDeviceIdentity,
+    };
+    let pairwise: Vec<_> = node
+        .child_nodes()
+        .iter()
+        .filter(|child| {
+            child.description == "enc"
+                && matches!(
+                    child.get_attr("type").and_then(|v| v.as_text()),
+                    Some("pkmsg" | "msg")
+                )
+        })
+        .collect();
+    if !pairwise
+        .iter()
+        .any(|enc| enc.get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg"))
+    {
+        return Ok(String::new());
+    }
+    let attribute = if node.get_attr("participant").is_some() {
+        "participant"
+    } else {
+        "from"
+    };
+    let peer = node.get_attr(attribute).and_then(|v| {
+        v.as_jid()
+            .cloned()
+            .or_else(|| Jid::parse(v.as_text()?).ok())
+    });
+    let Some(peer) =
+        peer.filter(|peer| peer.agent == 0 && matches!(peer.server, Server::User | Server::Lid))
+    else {
+        return Ok(", companion_adv=unsupported_sender".into());
+    };
+    if peer.device == 0 {
+        return Ok(String::new());
+    }
+    // APK 37.71 DFt.CFA reads device-identity body into CRF.A0U;
+    // CRF.A00/CaD.<init> retain it as CaD.A0H for CoU.A04 validation.
+    let adv: Vec<_> = node
+        .child_nodes()
+        .iter()
+        .filter(|child| child.description == "device-identity")
+        .collect();
+    if pairwise.len() != 1 || adv.len() > 1 {
+        return Ok(", companion_adv=ambiguous_input".into());
+    }
+    let Some(adv) = adv.first() else {
+        return Ok(", companion_adv=missing_device_identity".into());
+    };
+    let (NodeContent::Bytes(adv), NodeContent::Bytes(ciphertext)) =
+        (&adv.content, &pairwise[0].content)
+    else {
+        return Ok(", companion_adv=invalid_input".into());
+    };
+    if pairwise[0].get_attr("v").and_then(|v| v.as_text()) != Some("2") {
+        return Ok(", companion_adv=invalid_input".into());
+    }
+    let key = format!("comparison-direct:{}", peer.to_non_ad());
+    let primary: Option<Vec<u8>> =
+        store.read(|tx| tx.get_json(Table::PeerIdentities, key.as_bytes(), 1))?;
+    let Some(primary) = primary else {
+        return Ok(", companion_adv=missing_primary_pin".into());
+    };
+    let Some(primary): Option<&[u8; 32]> = primary
+        .strip_prefix(&[5])
+        .and_then(|key| key.try_into().ok())
+    else {
+        return Ok(", companion_adv=invalid_primary_pin".into());
+    };
+    match VerifiedDeviceIdentity::verify_prekey(adv, primary, ciphertext) {
+        Ok(_) => Ok(", companion_adv=signatures_verified".into()),
+        Err(Error::InvalidInput { reason, .. }) => Ok(format!(
+            ", companion_adv=invalid, companion_adv_reason={reason:?}"
+        )),
+        Err(error) => Err(error),
+    }
+}
+
 pub(super) async fn listen(
     cli: &super::Cli,
     path: &std::path::Path,
@@ -1816,7 +1903,8 @@ pub(super) async fn run(
                         }
                         Err(error) => return Err(error),
                     };
-                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{ack}{retry}{routing}{timing}{sender_tail}{pins}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
+                    let companion = companion_adv_summary(&store, &node)?;
+                    capture_shapes.insert(format!("inbox: capture shape tag={}, type={kind}, id={id8}, attrs={attr_names:?}{codes}{ack}{retry}{routing}{timing}{sender_tail}{pins}{companion}, children={children:?}, child_attrs={child_attrs:?}, offline_count={offline:?}",node.description));
                 }
             }
             if key.starts_with(b"received:") {
@@ -2589,5 +2677,130 @@ mod tests {
             .is_err()
         );
         assert!(super::super::Cli::try_parse_from(["cli", "lab-inbox"]).is_ok());
+    }
+    #[test]
+    fn companion_adv_inspection_is_read_only_scoped_and_redacted() {
+        use whatsapp_api::store::{MasterKey, StaticKeySource};
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("adv.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            create: true,
+        })
+        .unwrap();
+        for raw in ["15555550100:3@s.whatsapp.net", "123456789:3@lid"] {
+            let peer = Jid::parse(raw).unwrap();
+            let enc = Node::new("enc")
+                .attr("type", "pkmsg")
+                .attr("v", "2")
+                .bytes(b"PRIVATE_CIPHERTEXT".to_vec());
+            let adv = Node::new("device-identity").bytes(b"PRIVATE_ADV".to_vec());
+            // Both typed direct sender and textual group participant must inspect
+            // the actual device's SAME namespace primary, never an alias pin.
+            for group in [false, true] {
+                let root = if group {
+                    Node::new("message")
+                        .attr("from", "120363000000000001@g.us")
+                        .attr("participant", raw)
+                } else {
+                    Node::new("message").attr("from", peer.clone())
+                };
+                let node = root.clone().children(vec![enc.clone(), adv.clone()]);
+                let primary_key = format!("comparison-direct:{}", peer.to_non_ad());
+                store
+                    .write(|tx| {
+                        tx.delete(Table::PeerIdentities, primary_key.as_bytes())?;
+                        tx.put_json(
+                            Table::PeerIdentities,
+                            format!("comparison-direct:{peer}").as_bytes(),
+                            1,
+                            &vec![5u8; 33],
+                        )
+                    })
+                    .unwrap();
+                assert_eq!(
+                    companion_adv_summary(&store, &node).unwrap(),
+                    ", companion_adv=missing_primary_pin"
+                );
+                assert_eq!(
+                    companion_adv_summary(&store, &root.clone().children(vec![enc.clone()]))
+                        .unwrap(),
+                    ", companion_adv=missing_device_identity"
+                );
+                assert_eq!(
+                    companion_adv_summary(
+                        &store,
+                        &root
+                            .clone()
+                            .children(vec![enc.clone(), adv.clone(), adv.clone()])
+                    )
+                    .unwrap(),
+                    ", companion_adv=ambiguous_input"
+                );
+                assert_eq!(
+                    companion_adv_summary(
+                        &store,
+                        &root
+                            .clone()
+                            .children(vec![enc.clone(), enc.clone(), adv.clone()])
+                    )
+                    .unwrap(),
+                    ", companion_adv=ambiguous_input"
+                );
+                store
+                    .write(|tx| {
+                        tx.put_json(
+                            Table::PeerIdentities,
+                            primary_key.as_bytes(),
+                            1,
+                            &vec![5u8; 33],
+                        )
+                    })
+                    .unwrap();
+                let snapshot = || {
+                    store
+                        .read(|tx| {
+                            [
+                                Table::PeerIdentities,
+                                Table::SignalSessions,
+                                Table::Prekeys,
+                                Table::Checkpoints,
+                                Table::Inbox,
+                            ]
+                            .into_iter()
+                            .map(|table| tx.scan(table, 1, 100))
+                            .collect::<Result<Vec<_>, Error>>()
+                        })
+                        .unwrap()
+                };
+                let before = snapshot();
+                let output = companion_adv_summary(&store, &node).unwrap();
+                assert!(output.starts_with(", companion_adv=invalid,"));
+                for secret in [
+                    raw,
+                    "PRIVATE_CIPHERTEXT",
+                    "PRIVATE_ADV",
+                    "120363000000000001",
+                ] {
+                    assert!(!output.contains(secret));
+                }
+                assert_eq!(snapshot(), before);
+                store
+                    .write(|tx| {
+                        tx.put_json(
+                            Table::PeerIdentities,
+                            primary_key.as_bytes(),
+                            1,
+                            &vec![1u8; 33],
+                        )
+                    })
+                    .unwrap();
+                assert_eq!(
+                    companion_adv_summary(&store, &node).unwrap(),
+                    ", companion_adv=invalid_primary_pin"
+                );
+            }
+        }
     }
 }

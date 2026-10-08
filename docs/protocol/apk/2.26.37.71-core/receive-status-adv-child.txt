@@ -1,0 +1,15 @@
+# APK-derived structural disassembly: LX/DFt;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CFA(VLL) flags=0x1 registers=4
+  0000..0006 op=71 invoke-static {v3, v2}, LX/00h;->A0B(VLL)
+  0006..000a op=1a const-string v0, "device-identity"
+  000a..0010 op=71 invoke-static {v2, v0}, LX/0hs;->A02(ZLL)
+  0010..0012 op=0a move-result
+  0012..0016 op=38 if-eqz v0, +0x6
+  0016..001a op=54 iget-object v0, v2, LX/0hs;->A01:[B
+  001a..001e op=5b iput-object v0, v3, LX/CRF;->A0U:[B
+  001e..0020 op=0e return-void
+.end method

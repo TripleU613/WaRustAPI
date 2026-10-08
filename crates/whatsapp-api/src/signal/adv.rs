@@ -1,10 +1,12 @@
-//! Comparison signed ADV key-index list (11T.A07, BRD, BUg, 08F.A0I).
+//! Comparison signed ADV lists and device identities (11T.A07/A0D, 08F).
 //! Verifies a pinned account key only; no identity replacement or activation.
 use super::{app_state::Fingerprint, crypto::SignalSignatureVerifier};
 use crate::{Error, Result, transport::cert::SignatureVerifier};
 use prost::Message;
 use std::collections::BTreeSet;
+mod device_identity;
 mod devices;
+pub use device_identity::VerifiedDeviceIdentity;
 pub use devices::{DeviceHashVersion, ReconciledDevices};
 
 #[derive(Message)]

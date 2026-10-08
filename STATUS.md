@@ -1737,3 +1737,21 @@ cached comparison. The 58 xtask tests, CLI reference, five API checks and format
 passed. Four APK bundles total 3650447 bytes; appendix outside the core bundle.
 Repository hygiene checked 850 local links, licenses and all four APK checksum
 bundles. No saved state, request identity or live queue changed.
+
+Companion ADV signature verification (2026-10-07): Rust now checks both account
+and device signatures over exact details and ciphertext identity, using pinned
+primary authority and APK 37.71 device-type-selected E2EE/HOSTED prefixes.
+lab-inbox --inspect exposes bounded read-only companion_adv diagnostics, without
+key/ADV/ciphertext metadata, query or state adoption. Four real-signature fixture
+tests and one PN/LID direct/group read-only/refusal test passed. The saved-account
+inspection produced no qualifying companion diagnostic; outbox/actions/receipts/
+devices/pins were unchanged. Full workspace/all-feature tests, strict Clippy,
+warning-free Rustdoc, default CLI tests, CLI reference and final build passed.
+APK export: 145 topics / 327 methods / 150 files / 2001638 bytes; nine additions,
+all 136 prior topics unchanged in a 0.075721-second cached comparison. Four
+bundles total 3676109 bytes; producer appendix outside core. Ordinary Bp2 ADV
+producer and admission/freshness/raw-ID/teardown/atomic bootstrap remain open;
+companion pkmsg is still unsupported by the runtime selector. No live/account
+identity change. See docs/protocol/peer-identity.md#companion-adv-cryptographic-binding-and-inspection-2026-10-07.
+Repository hygiene passed 861 local links, licenses and all four APK checksum
+bundles. Private original state and unrelated exports remain outside Git.

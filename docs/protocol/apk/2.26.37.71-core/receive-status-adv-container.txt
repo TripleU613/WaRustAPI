@@ -1,0 +1,33 @@
+# APK-derived structural disassembly: LX/CaD;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLLLLLLLLLLLLLLLLL) flags=0x10001 registers=21
+  0000..0006 op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>(V)
+  0006..000a op=08 move-object/from16
+  000a..000e op=5b iput-object v0, v1, LX/CaD;->A0G:Ljava/lang/String;
+  000e..0012 op=08 move-object/from16
+  0012..0016 op=5b iput-object v0, v1, LX/CaD;->A0F:Ljava/lang/String;
+  0016..001a op=5b iput-object v13, v1, LX/CaD;->A0C:Ljava/lang/Integer;
+  001a..001e op=5b iput-object v14, v1, LX/CaD;->A0B:Ljava/lang/Integer;
+  001e..0022 op=08 move-object/from16
+  0022..0026 op=5b iput-object v0, v1, LX/CaD;->A0H:[B
+  0026..002a op=08 move-object/from16
+  002a..002e op=5b iput-object v0, v1, LX/CaD;->A0I:[B
+  002e..0032 op=5b iput-object v2, v1, LX/CaD;->A01:LX/ClY;
+  0032..0036 op=5b iput-object v3, v1, LX/CaD;->A00:LX/ClY;
+  0036..003a op=5b iput-object v15, v1, LX/CaD;->A0D:Ljava/lang/Integer;
+  003a..003e op=5b iput-object v10, v1, LX/CaD;->A08:LX/DFa;
+  003e..0042 op=5b iput-object v11, v1, LX/CaD;->A09:Ljava/lang/Boolean;
+  0042..0046 op=5b iput-object v9, v1, LX/CaD;->A07:LX/DFR;
+  0046..004a op=5b iput-object v12, v1, LX/CaD;->A0A:Ljava/lang/Boolean;
+  004a..004e op=5b iput-object v7, v1, LX/CaD;->A05:LX/DFX;
+  004e..0052 op=5b iput-object v4, v1, LX/CaD;->A02:LX/DFc;
+  0052..0056 op=5b iput-object v5, v1, LX/CaD;->A03:LX/DFO;
+  0056..005a op=5b iput-object v8, v1, LX/CaD;->A06:LX/DFY;
+  005a..005e op=5b iput-object v6, v1, LX/CaD;->A04:LX/DFP;
+  005e..0062 op=08 move-object/from16
+  0062..0066 op=5b iput-object v0, v1, LX/CaD;->A0E:Ljava/lang/String;
+  0066..0068 op=0e return-void
+.end method
