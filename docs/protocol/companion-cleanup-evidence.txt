@@ -2795,3 +2795,542 @@ The cached bundle has a distinct compact renderer; this artifact retains direct 
     005a..005c  return-void
     # exception table: 0 try range(s)
 .end method
+
+# Transaction callback follow-up, 2026-10-08
+
+# Topic transaction-manager
+
+# class: LX/0Gy;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 5
+    0000..0006  invoke-direct  {v3}, Ljava/lang/Object;-><init>(V)
+    0006..000a  iput-object  v4, v3, LX/0Gy;->A00:Ljava/lang/String;
+    000a..000e  new-instance  v0, LX/0Gz;
+    000e..0014  invoke-direct  {v0}, LX/0Gz;-><init>(V)
+    0014..0018  iput-object  v0, v3, LX/0Gy;->A04:Ljava/lang/ThreadLocal;
+    0018..001c  new-instance  v0, LX/0H0;
+    001c..0022  invoke-direct  {v0}, LX/0H0;-><init>(V)
+    0022..0026  iput-object  v0, v3, LX/0Gy;->A01:Ljava/lang/ThreadLocal;
+    0026..002a  new-instance  v0, LX/0H1;
+    002a..0030  invoke-direct  {v0}, LX/0H1;-><init>(V)
+    0030..0034  iput-object  v0, v3, LX/0Gy;->A02:Ljava/lang/ThreadLocal;
+    0034..0038  sget-object  v2, LX/02S;->A0C:Ljava/lang/Integer;
+    0038..003c  const/16  v1, #0x29
+    003c..0040  new-instance  v0, LX/1Xv;
+    0040..0046  invoke-direct  {v0, v1}, LX/1Xv;-><init>(VI)
+    0046..004c  invoke-static  {v2, v0}, LX/00k;->A00(LLL)
+    004c..004e  move-result-object  v0
+    004e..0052  iput-object  v0, v3, LX/0Gy;->A03:LX/00l;
+    0052..0054  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(VLLL)  # .registers 4
+    0000..0004  iget-object  v0, v2, LX/0Gy;->A04:Ljava/lang/ThreadLocal;
+    0004..000a  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get(L)
+    000a..000c  move-result-object  v0
+    000c..0012  invoke-static  {v0}, LX/00K;->A06(VL)
+    0012..0018  invoke-static  {v0}, LX/00h;->A06(VL)
+    0018..001c  check-cast  v0, Ljava/util/AbstractMap;
+    001c..0022  invoke-virtual  {v0, v3, v1}, Ljava/util/AbstractMap;->put(LLL)
+    0022..0028  invoke-interface  {v1}, LX/Ddg;->onBegin(V)
+    0028..002a  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(V)  # .registers 4
+    0000..0004  iget-object  v0, v3, LX/0Gy;->A01:Ljava/lang/ThreadLocal;
+    0004..000a  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get(L)
+    000a..000c  move-result-object  v1
+    000c..000e  const/4  v0, #0x0
+    000e..0014  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+    0014..0016  move-result-object  v0
+    0016..001c  invoke-static  {v1, v0}, LX/00h;->areEqual(ZLL)
+    001c..001e  move-result  v0
+    001e..0022  if-eqz  v0, +0x33
+    0022..0026  iget-object  v0, v3, LX/0Gy;->A04:Ljava/lang/ThreadLocal;
+    0026..002c  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get(L)
+    002c..002e  move-result-object  v2
+    002e..0034  invoke-static  {v2}, LX/00K;->A06(VL)
+    0034..003a  invoke-static  {v2}, LX/00h;->A06(VL)
+    003a..003e  check-cast  v2, Ljava/util/AbstractMap;
+    003e..0044  invoke-virtual  {v2}, Ljava/util/AbstractMap;->values(L)
+    0044..0046  move-result-object  v1
+    0046..004a  new-instance  v0, Ljava/util/ArrayList;
+    004a..0050  invoke-direct  {v0, v1}, Ljava/util/ArrayList;-><init>(VL)
+    0050..0056  invoke-virtual  {v2}, Ljava/util/AbstractMap;->clear(V)
+    0056..005c  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->iterator(L)
+    005c..005e  move-result-object  v1
+    005e..0064  invoke-static  {v1}, LX/00h;->A06(VL)
+    0064..006a  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext(Z)
+    006a..006c  move-result  v0
+    006c..0070  if-eqz  v0, +0xc
+    0070..0076  invoke-interface  {v1}, Ljava/util/Iterator;->next(L)
+    0076..0078  move-result-object  v0
+    0078..007c  check-cast  v0, LX/Ddg;
+    007c..0082  invoke-interface  {v0}, LX/Ddg;->Bax(V)
+    0082..0084  goto  -0xf
+    0084..0086  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A02(V)  # .registers 4
+    0000..0004  iget-object  v0, v3, LX/0Gy;->A01:Ljava/lang/ThreadLocal;
+    0004..000a  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get(L)
+    000a..000c  move-result-object  v1
+    000c..000e  const/4  v0, #0x0
+    000e..0014  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+    0014..0016  move-result-object  v0
+    0016..001c  invoke-static  {v1, v0}, LX/00h;->areEqual(ZLL)
+    001c..001e  move-result  v0
+    001e..0022  if-eqz  v0, +0x16
+    0022..0026  iget-object  v0, v3, LX/0Gy;->A02:Ljava/lang/ThreadLocal;
+    0026..002c  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get(L)
+    002c..002e  move-result-object  v1
+    002e..0030  const/4  v0, #0x1
+    0030..0036  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+    0036..0038  move-result-object  v0
+    0038..003e  invoke-static  {v1, v0}, LX/00h;->areEqual(ZLL)
+    003e..0040  move-result  v0
+    0040..0044  if-eqz  v0, +0x6
+    0044..004a  invoke-virtual  {v3}, LX/0Gy;->A01(V)
+    004a..004c  return-void
+    004c..0050  iget-object  v0, v3, LX/0Gy;->A04:Ljava/lang/ThreadLocal;
+    0050..0056  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get(L)
+    0056..0058  move-result-object  v2
+    0058..005e  invoke-static  {v2}, LX/00K;->A06(VL)
+    005e..0064  invoke-static  {v2}, LX/00h;->A06(VL)
+    0064..0068  check-cast  v2, Ljava/util/AbstractMap;
+    0068..006e  invoke-virtual  {v2}, Ljava/util/AbstractMap;->values(L)
+    006e..0070  move-result-object  v1
+    0070..0074  new-instance  v0, Ljava/util/ArrayList;
+    0074..007a  invoke-direct  {v0, v1}, Ljava/util/ArrayList;-><init>(VL)
+    007a..0080  invoke-virtual  {v2}, Ljava/util/AbstractMap;->clear(V)
+    0080..0086  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->iterator(L)
+    0086..0088  move-result-object  v1
+    0088..008e  invoke-static  {v1}, LX/00h;->A06(VL)
+    008e..0094  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext(Z)
+    0094..0096  move-result  v0
+    0096..009a  if-eqz  v0, -0x26
+    009a..00a0  invoke-interface  {v1}, Ljava/util/Iterator;->next(L)
+    00a0..00a2  move-result-object  v0
+    00a2..00a6  check-cast  v0, LX/Ddg;
+    00a6..00ac  invoke-interface  {v0}, LX/Ddg;->Bb1(V)
+    00ac..00ae  goto  -0xf
+    # exception table: 0 try range(s)
+.end method
+
+.method public onBegin(V)  # .registers 1
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public onCommit(V)  # .registers 7
+    0000..0004  iget-object  v0, v6, LX/0Gy;->A04:Ljava/lang/ThreadLocal;
+    0004..000a  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get(L)
+    000a..000c  move-result-object  v2
+    000c..0012  invoke-static  {v2}, LX/00K;->A06(VL)
+    0012..0018  invoke-static  {v2}, LX/00h;->A06(VL)
+    0018..001c  check-cast  v2, Ljava/util/AbstractMap;
+    001c..0020  iget-object  v4, v6, LX/0Gy;->A01:Ljava/lang/ThreadLocal;
+    0020..0026  invoke-virtual  {v4}, Ljava/lang/ThreadLocal;->get(L)
+    0026..0028  move-result-object  v1
+    0028..002a  const/4  v0, #0x1
+    002a..0030  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+    0030..0032  move-result-object  v0
+    0032..0038  invoke-static  {v1, v0}, LX/00h;->areEqual(ZLL)
+    0038..003a  move-result  v3
+    003a..0040  invoke-virtual  {v2}, Ljava/util/AbstractMap;->values(L)
+    0040..0042  move-result-object  v1
+    0042..0046  new-instance  v0, Ljava/util/ArrayList;
+    0046..004c  invoke-direct  {v0, v1}, Ljava/util/ArrayList;-><init>(VL)
+    004c..004e  const/4  v2, #0x0
+    004e..0054  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->iterator(L)
+    0054..0056  move-result-object  v1
+    0056..005c  invoke-static  {v1}, LX/00h;->A06(VL)
+    005c..0062  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext(Z)
+    0062..0064  move-result  v0
+    0064..0068  if-eqz  v0, +0xc
+    0068..006e  invoke-interface  {v1}, Ljava/util/Iterator;->next(L)
+    006e..0070  move-result-object  v0
+    0070..0074  check-cast  v0, LX/Ddg;
+    0074..007a  invoke-interface  {v0}, LX/Ddg;->onCommit(V)
+    007a..007c  goto  -0xf
+    007c..0082  invoke-static  {v2}, Ljava/lang/Boolean;->valueOf(LZ)
+    0082..0084  move-result-object  v0
+    0084..008a  invoke-virtual  {v4, v0}, Ljava/lang/ThreadLocal;->set(VL)
+    008a..008e  if-eqz  v3, +0x36
+    008e..0092  iget-object  v0, v6, LX/0Gy;->A03:LX/00l;
+    0092..0098  invoke-interface  {v0}, LX/00l;->getValue(L)
+    0098..009a  move-result-object  v5
+    009a..009e  check-cast  v5, LX/0Dg;
+    009e..00a2  if-eqz  v5, +0x2c
+    00a2..00a6  iget-object  v0, v5, LX/0Dg;->A03:Ljava/util/concurrent/atomic/AtomicBoolean;
+    00a6..00ac  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get(Z)
+    00ac..00ae  move-result  v0
+    00ae..00b2  if-eqz  v0, +0x24
+    00b2..00b6  iget-object  v4, v5, LX/0Dg;->A02:Ljava/util/concurrent/ConcurrentHashMap;
+    00b6..00ba  iget-object  v3, v6, LX/0Gy;->A00:Ljava/lang/String;
+    00ba..00c0  invoke-virtual  {v4, v3}, Ljava/util/AbstractMap;->get(LL)
+    00c0..00c2  move-result-object  v2
+    00c2..00c6  if-nez  v2, +0x10
+    00c6..00ca  const-wide/16  v0, #0x0
+    00ca..00ce  new-instance  v2, Ljava/util/concurrent/atomic/AtomicLong;
+    00ce..00d4  invoke-direct  {v2, v0, v1}, Ljava/util/concurrent/atomic/AtomicLong;-><init>(VJ)
+    00d4..00da  invoke-virtual  {v4, v3, v2}, Ljava/util/concurrent/ConcurrentHashMap;->putIfAbsent(LLL)
+    00da..00dc  move-result-object  v0
+    00dc..00e0  if-eqz  v0, +0x3
+    00e0..00e2  move-object  v2, v0
+    00e2..00e6  check-cast  v2, Ljava/util/concurrent/atomic/AtomicLong;
+    00e6..00ec  invoke-virtual  {v2}, Ljava/util/concurrent/atomic/AtomicLong;->incrementAndGet(J)
+    00ec..00f0  iget-object  v0, v5, LX/0Dg;->A00:Ljava/lang/ThreadLocal;
+    00f0..00f6  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->remove(V)
+    00f6..00f8  return-void
+    00f8..00fa  move-exception  v1
+    00fa..0100  invoke-static  {v2}, Ljava/lang/Boolean;->valueOf(LZ)
+    0100..0102  move-result-object  v0
+    0102..0108  invoke-virtual  {v4, v0}, Ljava/lang/ThreadLocal;->set(VL)
+    0108..010a  throw  v1
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0027..003e -> 007c
+.end method
+
+.method public onRollback(V)  # .registers 7
+    0000..0004  iget-object  v0, v6, LX/0Gy;->A04:Ljava/lang/ThreadLocal;
+    0004..000a  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get(L)
+    000a..000c  move-result-object  v2
+    000c..0012  invoke-static  {v2}, LX/00K;->A06(VL)
+    0012..0018  invoke-static  {v2}, LX/00h;->A06(VL)
+    0018..001c  check-cast  v2, Ljava/util/AbstractMap;
+    001c..0020  iget-object  v5, v6, LX/0Gy;->A01:Ljava/lang/ThreadLocal;
+    0020..0026  invoke-virtual  {v5}, Ljava/lang/ThreadLocal;->get(L)
+    0026..0028  move-result-object  v1
+    0028..002a  const/4  v0, #0x1
+    002a..0030  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+    0030..0032  move-result-object  v4
+    0032..0038  invoke-static  {v1, v4}, LX/00h;->areEqual(ZLL)
+    0038..003a  move-result  v3
+    003a..0040  invoke-virtual  {v2}, Ljava/util/AbstractMap;->values(L)
+    0040..0042  move-result-object  v1
+    0042..0046  new-instance  v0, Ljava/util/ArrayList;
+    0046..004c  invoke-direct  {v0, v1}, Ljava/util/ArrayList;-><init>(VL)
+    004c..004e  const/4  v2, #0x0
+    004e..0054  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->iterator(L)
+    0054..0056  move-result-object  v1
+    0056..005c  invoke-static  {v1}, LX/00h;->A06(VL)
+    005c..0062  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext(Z)
+    0062..0064  move-result  v0
+    0064..0068  if-eqz  v0, +0xc
+    0068..006e  invoke-interface  {v1}, Ljava/util/Iterator;->next(L)
+    006e..0070  move-result-object  v0
+    0070..0074  check-cast  v0, LX/Ddg;
+    0074..007a  invoke-interface  {v0}, LX/Ddg;->onRollback(V)
+    007a..007c  goto  -0xf
+    007c..0082  invoke-static  {v2}, Ljava/lang/Boolean;->valueOf(LZ)
+    0082..0084  move-result-object  v0
+    0084..008a  invoke-virtual  {v5, v0}, Ljava/lang/ThreadLocal;->set(VL)
+    008a..008e  iget-object  v0, v6, LX/0Gy;->A02:Ljava/lang/ThreadLocal;
+    008e..0094  invoke-virtual  {v0, v4}, Ljava/lang/ThreadLocal;->set(VL)
+    0094..0098  if-eqz  v3, +0x19
+    0098..009c  iget-object  v0, v6, LX/0Gy;->A03:LX/00l;
+    009c..00a2  invoke-interface  {v0}, LX/00l;->getValue(L)
+    00a2..00a4  move-result-object  v1
+    00a4..00a8  check-cast  v1, LX/0Dg;
+    00a8..00ac  if-eqz  v1, +0xf
+    00ac..00b0  iget-object  v0, v1, LX/0Dg;->A03:Ljava/util/concurrent/atomic/AtomicBoolean;
+    00b0..00b6  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get(Z)
+    00b6..00b8  move-result  v0
+    00b8..00bc  if-eqz  v0, +0x7
+    00bc..00c0  iget-object  v0, v1, LX/0Dg;->A00:Ljava/lang/ThreadLocal;
+    00c0..00c6  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->remove(V)
+    00c6..00c8  return-void
+    00c8..00ca  move-exception  v1
+    00ca..00d0  invoke-static  {v2}, Ljava/lang/Boolean;->valueOf(LZ)
+    00d0..00d2  move-result-object  v0
+    00d2..00d8  invoke-virtual  {v5, v0}, Ljava/lang/ThreadLocal;->set(VL)
+    00d8..00dc  iget-object  v0, v6, LX/0Gy;->A02:Ljava/lang/ThreadLocal;
+    00dc..00e2  invoke-virtual  {v0, v4}, Ljava/lang/ThreadLocal;->set(VL)
+    00e2..00e4  throw  v1
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0027..003e -> 0064
+.end method
+
+# Topic transaction-wrapper
+
+# class: LX/Cpf;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLI)  # .registers 3
+    0000..0004  iput  v2, v0, LX/Cpf;->$t:I
+    0004..0008  iput-object  v1, v0, LX/Cpf;->A00:Ljava/lang/Object;
+    0008..000e  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public Bax(V)  # .registers 2
+    0000..0004  iget  v0, v1, LX/Cpf;->$t:I
+    0004..0008  rsub-int/lit8  v0, v0, #0x2
+    0008..000c  if-nez  v0, +0x7
+    000c..0010  iget-object  v0, v1, LX/Cpf;->A00:Ljava/lang/Object;
+    0010..0016  invoke-static  {v0}, LX/8kU;->A1P(VL)
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public Bb1(V)  # .registers 2
+    0000..0004  iget  v0, v1, LX/Cpf;->$t:I
+    0004..0008  rsub-int/lit8  v0, v0, #0x1
+    0008..000c  if-nez  v0, +0x7
+    000c..0010  iget-object  v0, v1, LX/Cpf;->A00:Ljava/lang/Object;
+    0010..0016  invoke-static  {v0}, LX/8kU;->A1P(VL)
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public onBegin(V)  # .registers 2
+    0000..0004  iget  v0, v1, LX/Cpf;->$t:I
+    0004..0008  if-nez  v0, +0x9
+    0008..000c  iget-object  v0, v1, LX/Cpf;->A00:Ljava/lang/Object;
+    000c..0010  check-cast  v0, Landroid/database/sqlite/SQLiteTransactionListener;
+    0010..0016  invoke-interface  {v0}, Landroid/database/sqlite/SQLiteTransactionListener;->onBegin(V)
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public onCommit(V)  # .registers 2
+    0000..0004  iget  v0, v1, LX/Cpf;->$t:I
+    0004..0008  if-nez  v0, +0x9
+    0008..000c  iget-object  v0, v1, LX/Cpf;->A00:Ljava/lang/Object;
+    000c..0010  check-cast  v0, Landroid/database/sqlite/SQLiteTransactionListener;
+    0010..0016  invoke-interface  {v0}, Landroid/database/sqlite/SQLiteTransactionListener;->onCommit(V)
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public onRollback(V)  # .registers 2
+    0000..0004  iget  v0, v1, LX/Cpf;->$t:I
+    0004..0008  if-nez  v0, +0x9
+    0008..000c  iget-object  v0, v1, LX/Cpf;->A00:Ljava/lang/Object;
+    000c..0010  check-cast  v0, Landroid/database/sqlite/SQLiteTransactionListener;
+    0010..0016  invoke-interface  {v0}, Landroid/database/sqlite/SQLiteTransactionListener;->onRollback(V)
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# Topic transaction-transaction
+
+# class: LX/1gB;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLL)  # .registers 11
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v10, v0}, LX/00h;->A0A(VLI)
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-static  {v8, v0}, LX/00h;->A0A(VLI)
+    0010..0016  invoke-direct  {v6}, Ljava/lang/Object;-><init>(V)
+    0016..001a  iput-object  v10, v6, LX/1gB;->A04:LX/0IY;
+    001a..001e  iput-object  v8, v6, LX/1gB;->A02:LX/0Gy;
+    001e..0022  iput-object  v9, v6, LX/1gB;->A03:LX/0Gl;
+    0022..0024  const/4  v1, #0x0
+    0024..0028  iget-object  v5, v8, LX/0Gy;->A01:Ljava/lang/ThreadLocal;
+    0028..002e  invoke-virtual  {v5}, Ljava/lang/ThreadLocal;->get(L)
+    002e..0030  move-result-object  v0
+    0030..0036  invoke-static  {v1}, Ljava/lang/Boolean;->valueOf(LZ)
+    0036..0038  move-result-object  v4
+    0038..003e  invoke-static  {v0, v4}, LX/00h;->areEqual(ZLL)
+    003e..0040  move-result  v0
+    0040..0044  if-eqz  v0, +0x67
+    0044..0048  iget-object  v3, v10, LX/0IY;->A01:Landroid/database/sqlite/SQLiteDatabase;
+    0048..004e  invoke-virtual  {v3}, Landroid/database/sqlite/SQLiteDatabase;->inTransaction(Z)
+    004e..0050  move-result  v0
+    0050..0052  const/4  v2, #0x1
+    0052..0056  xor-int/lit8  v1, v0, #0x1
+    0056..005a  const-string  v0, "OuterTransactionManager/already-in-transaction"
+    005a..0060  invoke-static  {v1, v0}, LX/00K;->A0D(VZL)
+    0060..0066  invoke-virtual  {v3, v8}, Landroid/database/sqlite/SQLiteDatabase;->beginTransactionWithListener(VL)
+    0066..006c  invoke-static  {v2}, Ljava/lang/Boolean;->valueOf(LZ)
+    006c..006e  move-result-object  v2
+    006e..0074  invoke-virtual  {v5, v2}, Ljava/lang/ThreadLocal;->set(VL)
+    0074..0078  iget-object  v0, v8, LX/0Gy;->A02:Ljava/lang/ThreadLocal;
+    0078..007e  invoke-virtual  {v0, v4}, Ljava/lang/ThreadLocal;->set(VL)
+    007e..0082  iget-object  v0, v8, LX/0Gy;->A03:LX/00l;
+    0082..0088  invoke-interface  {v0}, LX/00l;->getValue(L)
+    0088..008a  move-result-object  v1
+    008a..008e  check-cast  v1, LX/0Dg;
+    008e..0092  if-eqz  v1, +0xf
+    0092..0096  iget-object  v0, v1, LX/0Dg;->A03:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0096..009c  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get(Z)
+    009c..009e  move-result  v0
+    009e..00a2  if-eqz  v0, +0x7
+    00a2..00a6  iget-object  v0, v1, LX/0Dg;->A00:Ljava/lang/ThreadLocal;
+    00a6..00ac  invoke-virtual  {v0, v2}, Ljava/lang/ThreadLocal;->set(VL)
+    00ac..00b0  if-eqz  v7, +0x10
+    00b0..00b2  const/4  v0, #0x0
+    00b2..00b6  new-instance  v1, LX/Cpf;
+    00b6..00bc  invoke-direct  {v1, v7, v0}, LX/Cpf;-><init>(VLI)
+    00bc..00c0  new-instance  v0, Ljava/lang/Object;
+    00c0..00c6  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    00c6..00cc  invoke-static  {v1, v8, v0}, LX/0Gy;->A00(VLLL)
+    00cc..00d0  if-eqz  v9, +0x20
+    00d0..00d4  iget-object  v1, v10, LX/0IY;->A02:Ljava/lang/String;
+    00d4..00d8  iget-boolean  v0, v9, LX/0Gl;->A04:Z
+    00d8..00dc  if-eqz  v0, +0x1a
+    00dc..00e0  sget-object  v0, LX/Cci;->A00:Ljava/lang/ThreadLocal;
+    00e0..00e6  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get(L)
+    00e6..00e8  move-result-object  v2
+    00e8..00ee  invoke-static  {v2}, LX/00K;->A06(VL)
+    00ee..00f4  invoke-static  {v2}, LX/00h;->A06(VL)
+    00f4..00f8  check-cast  v2, [I
+    00f8..00fe  invoke-static  {v1}, LX/Cci;->A00(IL)
+    00fe..0100  move-result  v1
+    0100..0104  aget  v0, v2, v1
+    0104..0108  add-int/lit8  v0, v0, #0x1
+    0108..010c  aput  v0, v2, v1
+    010c..010e  return-void
+    010e..0114  invoke-virtual  {v10}, LX/0IY;->A0E(V)
+    0114..0116  goto  -0x34
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(V)  # .registers 2
+    0000..0002  const/4  v0, #0x1
+    0002..0006  iput-boolean  v0, v1, LX/1gB;->A01:Z
+    0006..000a  iget-object  v0, v1, LX/1gB;->A04:LX/0IY;
+    000a..0010  invoke-virtual  {v0}, LX/0IY;->A0G(V)
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(Z)  # .registers 3
+    0000..0004  iget-object  v0, v2, LX/1gB;->A04:LX/0IY;
+    0004..0008  iget-object  v0, v0, LX/0IY;->A01:Landroid/database/sqlite/SQLiteDatabase;
+    0008..000e  invoke-virtual  {v0}, Landroid/database/sqlite/SQLiteDatabase;->inTransaction(Z)
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0xb
+    0014..0018  iget-boolean  v0, v2, LX/1gB;->A00:Z
+    0018..001c  if-nez  v0, +0x7
+    001c..0020  iget-boolean  v1, v2, LX/1gB;->A01:Z
+    0020..0022  const/4  v0, #0x1
+    0022..0026  if-eqz  v1, +0x3
+    0026..0028  const/4  v0, #0x0
+    0028..002a  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public close(V)  # .registers 6
+    0000..0004  iget-boolean  v0, v5, LX/1gB;->A00:Z
+    0004..0008  if-nez  v0, +0x73
+    0008..000c  iget-boolean  v0, v5, LX/1gB;->A01:Z
+    000c..0010  if-nez  v0, +0x7
+    0010..0014  const-string  v0, "DatabaseTransaction/close/was not set successful"
+    0014..001a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(VL)
+    001a..001e  iget-object  v4, v5, LX/1gB;->A04:LX/0IY;
+    001e..0024  invoke-virtual  {v4}, LX/0IY;->A0F(V)
+    0024..0026  goto  +0x18
+    0026..0028  move-exception  v3
+    0028..002c  iget-object  v4, v5, LX/1gB;->A04:LX/0IY;
+    002c..0030  iget-object  v2, v4, LX/0IY;->A02:Ljava/lang/String;
+    0030..0034  const-string  v1, "DatabaseTransaction/close/endTransaction failed; db="
+    0034..0038  new-instance  v0, Ljava/lang/StringBuilder;
+    0038..003e  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(VL)
+    003e..0044  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(LL)
+    0044..004a  invoke-virtual  {v0}, Ljava/lang/Object;->toString(L)
+    004a..004c  move-result-object  v0
+    004c..0052  invoke-static  {v0, v3}, Lcom/whatsapp/infra/logging/Log;->e(VLL)
+    0052..0054  goto  +0x2
+    0054..0056  const/4  v3, #0x0
+    0056..005a  iget-object  v0, v5, LX/1gB;->A03:LX/0Gl;
+    005a..005e  if-eqz  v0, +0x20
+    005e..0062  iget-object  v1, v4, LX/0IY;->A02:Ljava/lang/String;
+    0062..0066  iget-boolean  v0, v0, LX/0Gl;->A04:Z
+    0066..006a  if-eqz  v0, +0x1a
+    006a..006e  sget-object  v0, LX/Cci;->A00:Ljava/lang/ThreadLocal;
+    006e..0074  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get(L)
+    0074..0076  move-result-object  v2
+    0076..007c  invoke-static  {v2}, LX/00K;->A06(VL)
+    007c..0082  invoke-static  {v2}, LX/00h;->A06(VL)
+    0082..0086  check-cast  v2, [I
+    0086..008c  invoke-static  {v1}, LX/Cci;->A00(IL)
+    008c..008e  move-result  v1
+    008e..0092  aget  v0, v2, v1
+    0092..0096  add-int/lit8  v0, v0, #0xff
+    0096..009a  aput  v0, v2, v1
+    009a..009c  const/4  v2, #0x1
+    009c..00a0  if-nez  v3, +0x21
+    00a0..00a4  iget-boolean  v0, v5, LX/1gB;->A01:Z
+    00a4..00a8  if-eqz  v0, +0x1d
+    00a8..00ac  iget-object  v1, v5, LX/1gB;->A02:LX/0Gy;
+    00ac..00b0  iget-object  v0, v1, LX/0Gy;->A02:Ljava/lang/ThreadLocal;
+    00b0..00b6  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get(L)
+    00b6..00b8  move-result-object  v0
+    00b8..00be  invoke-static  {v0}, LX/00h;->A06(VL)
+    00be..00c2  check-cast  v0, Ljava/lang/Boolean;
+    00c2..00c8  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue(Z)
+    00c8..00ca  move-result  v0
+    00ca..00ce  if-eq  v0, v2, +0xa
+    00ce..00d4  invoke-virtual  {v1}, LX/0Gy;->A02(V)
+    00d4..00d8  iput-boolean  v2, v5, LX/1gB;->A00:Z
+    00d8..00dc  if-eqz  v3, +0x9
+    00dc..00de  throw  v3
+    00de..00e2  iget-object  v0, v5, LX/1gB;->A02:LX/0Gy;
+    00e2..00e8  invoke-virtual  {v0}, LX/0Gy;->A01(V)
+    00e8..00ea  goto  -0xa
+    00ea..00ec  return-void
+    # exception table: 1 try range(s)
+    # catch <all> code_units 000d..0013 -> 0013
+.end method
+
+.method public finalize(V)  # .registers 3
+    0000..0004  iget-boolean  v0, v2, LX/1gB;->A00:Z
+    0004..0008  if-nez  v0, +0xf
+    0008..000a  const/4  v0, #0x0
+    000a..000e  const-string  v1, "DatabaseTransaction/finalize/was not closed"
+    000e..0014  invoke-static  {v1, v0}, Lcom/whatsapp/infra/logging/Log;->e(VLL)
+    0014..0016  const/4  v0, #0x0
+    0016..001c  invoke-static  {v0, v1}, LX/00K;->A0D(VZL)
+    001c..0022  invoke-virtual  {v2}, LX/1gB;->close(V)
+    0022..0024  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# Topic transaction-invoke
+
+# class: LX/8kU;
+# extends: Ljava/lang/Object;
+
+.method public A1P(VL)  # .registers 1
+    0000..0004  check-cast  v0, Ljava/lang/Runnable;
+    0004..000a  invoke-interface  {v0}, Ljava/lang/Runnable;->run(V)
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# Topic transaction-end
+
+# class: LX/0IY;
+# extends: Ljava/lang/Object;
+
+.method public A0F(V)  # .registers 2
+    0000..0004  iget-object  v0, v1, LX/0IY;->A01:Landroid/database/sqlite/SQLiteDatabase;
+    0004..000a  invoke-virtual  {v0}, Landroid/database/sqlite/SQLiteDatabase;->endTransaction(V)
+    000a..000c  return-void
+    000c..000e  move-exception  v0
+    000e..0014  invoke-direct  {v1, v0}, LX/0IY;->A00(VL)
+    0014..0016  throw  v0
+    # exception table: 1 try range(s)
+    # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0000..0006 -> 0006
+.end method
+
+# Topic transaction-success
+
+# class: LX/0IY;
+# extends: Ljava/lang/Object;
+
+.method public A0G(V)  # .registers 2
+    0000..0004  iget-object  v0, v1, LX/0IY;->A01:Landroid/database/sqlite/SQLiteDatabase;
+    0004..000a  invoke-virtual  {v0}, Landroid/database/sqlite/SQLiteDatabase;->setTransactionSuccessful(V)
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

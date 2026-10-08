@@ -53,7 +53,8 @@ These are APK-derived research artifacts, not first-party Rust source or
 compilable Java/smali. Instruction offsets are relative to each method;
 prototype strings are DEX shorties, not complete signatures. The structural
 decoder leaves some operands unannotated and marks unknown mnemonics `??`.
-It does not reconstruct control flow, exception tables, or original names.
+It does not reconstruct whole-program control flow or original names. Recipe
+options below can retain decoded exception tables and supported register operands.
 Use the APK and existing `apk-smali`/`apk-xref` commands for deeper analysis.
 
 This is a focused snapshot of currently mapped protocol classes, not a full
@@ -231,10 +232,27 @@ This is scoped same-APK coverage, not full release remapping or protocol parity.
 
 
 The [37.71 companion cleanup recipe](recipes/2.26.37.71-companion-cleanup.json)
-preserves **17 topics / 17 methods / 22 files / 181,102 bytes**, including
+preserves **23 topics / 38 methods / 28 files / 214,535 bytes**, including
 session/identity SQL predicates, canonical-address branches, property definition,
 transaction callback registration and cache-variant cleanup. Its
 [baseline](2.26.37.71-companion-cleanup/targets.json) is separate from the nearly
 full core bundle. [Interpretation and remaining gates](../peer-identity.md#companion-key-removal-scope-and-callback-boundaries-2026-10-08)
 distinguish static deletion scope from permission to run cleanup. No account
-keys/history are deleted; native/full mapping and callback lifecycle remain open.
+keys/history are deleted; native/full mapping and effective feature gates remain open.
+
+
+The cleanup recipe now enables optional root `include_register_flow` (boolean,
+default false). Supported move/result/move-exception/array-length operands use
+the interactive decoder fallback when the primary annotation is empty; nonempty
+annotations keep precedence. Opted-in targets record the option. Historical
+default snapshots remain stable. This does not decode every opcode or provide
+lossless bytecode, whole-program dataflow or automatic Rust patches.
+
+Six added transaction topics establish late successful-close delivery of the
+selected session-cache callback and its rollback/discard behavior.
+[Callback evidence and remaining limits](../peer-identity.md#cleanup-callback-commit-and-rollback-closure-2026-10-08)
+carry the build/class/method attribution. The [cached coverage report](companion-callback-flow-coverage-diff.json)
+against `257f186` took **0.011257 seconds**: six additions, sixteen annotation
+changes and one unchanged topic. All seventeen old offset/opcode/mnemonic lists
+and catch ranges are equal; manifest/inventory/tokens are unchanged. This is
+expanded source/rendering coverage of the same APK, not a vendor release change.

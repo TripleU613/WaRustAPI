@@ -1,0 +1,62 @@
+# APK-derived structural disassembly: LX/Cpf;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLI) flags=0x10001 registers=3
+  0000..0004 op=59 iput v2, v0, LX/Cpf;->$t:I
+  0004..0008 op=5b iput-object v1, v0, LX/Cpf;->A00:Ljava/lang/Object;
+  0008..000e op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>(V)
+  000e..0010 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method Bax(V) flags=0x1 registers=2
+  0000..0004 op=52 iget v0, v1, LX/Cpf;->$t:I
+  0004..0008 op=d9 rsub-int/lit8 v0, v0, #0x2
+  0008..000c op=39 if-nez v0, +0x7
+  000c..0010 op=54 iget-object v0, v1, LX/Cpf;->A00:Ljava/lang/Object;
+  0010..0016 op=71 invoke-static {v0}, LX/8kU;->A1P(VL)
+  0016..0018 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method Bb1(V) flags=0x1 registers=2
+  0000..0004 op=52 iget v0, v1, LX/Cpf;->$t:I
+  0004..0008 op=d9 rsub-int/lit8 v0, v0, #0x1
+  0008..000c op=39 if-nez v0, +0x7
+  000c..0010 op=54 iget-object v0, v1, LX/Cpf;->A00:Ljava/lang/Object;
+  0010..0016 op=71 invoke-static {v0}, LX/8kU;->A1P(VL)
+  0016..0018 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method onBegin(V) flags=0x1 registers=2
+  0000..0004 op=52 iget v0, v1, LX/Cpf;->$t:I
+  0004..0008 op=39 if-nez v0, +0x9
+  0008..000c op=54 iget-object v0, v1, LX/Cpf;->A00:Ljava/lang/Object;
+  000c..0010 op=1f check-cast v0, Landroid/database/sqlite/SQLiteTransactionListener;
+  0010..0016 op=72 invoke-interface {v0}, Landroid/database/sqlite/SQLiteTransactionListener;->onBegin(V)
+  0016..0018 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method onCommit(V) flags=0x1 registers=2
+  0000..0004 op=52 iget v0, v1, LX/Cpf;->$t:I
+  0004..0008 op=39 if-nez v0, +0x9
+  0008..000c op=54 iget-object v0, v1, LX/Cpf;->A00:Ljava/lang/Object;
+  000c..0010 op=1f check-cast v0, Landroid/database/sqlite/SQLiteTransactionListener;
+  0010..0016 op=72 invoke-interface {v0}, Landroid/database/sqlite/SQLiteTransactionListener;->onCommit(V)
+  0016..0018 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method onRollback(V) flags=0x1 registers=2
+  0000..0004 op=52 iget v0, v1, LX/Cpf;->$t:I
+  0004..0008 op=39 if-nez v0, +0x9
+  0008..000c op=54 iget-object v0, v1, LX/Cpf;->A00:Ljava/lang/Object;
+  000c..0010 op=1f check-cast v0, Landroid/database/sqlite/SQLiteTransactionListener;
+  0010..0016 op=72 invoke-interface {v0}, Landroid/database/sqlite/SQLiteTransactionListener;->onRollback(V)
+  0016..0018 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

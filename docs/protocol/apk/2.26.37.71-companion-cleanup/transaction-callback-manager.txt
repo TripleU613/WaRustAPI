@@ -1,0 +1,257 @@
+# APK-derived structural disassembly: LX/0Gy;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VL) flags=0x10001 registers=5
+  0000..0006 op=70 invoke-direct {v3}, Ljava/lang/Object;-><init>(V)
+  0006..000a op=5b iput-object v4, v3, LX/0Gy;->A00:Ljava/lang/String;
+  000a..000e op=22 new-instance v0, LX/0Gz;
+  000e..0014 op=70 invoke-direct {v0}, LX/0Gz;-><init>(V)
+  0014..0018 op=5b iput-object v0, v3, LX/0Gy;->A04:Ljava/lang/ThreadLocal;
+  0018..001c op=22 new-instance v0, LX/0H0;
+  001c..0022 op=70 invoke-direct {v0}, LX/0H0;-><init>(V)
+  0022..0026 op=5b iput-object v0, v3, LX/0Gy;->A01:Ljava/lang/ThreadLocal;
+  0026..002a op=22 new-instance v0, LX/0H1;
+  002a..0030 op=70 invoke-direct {v0}, LX/0H1;-><init>(V)
+  0030..0034 op=5b iput-object v0, v3, LX/0Gy;->A02:Ljava/lang/ThreadLocal;
+  0034..0038 op=62 sget-object v2, LX/02S;->A0C:Ljava/lang/Integer;
+  0038..003c op=13 const/16 v1, #0x29
+  003c..0040 op=22 new-instance v0, LX/1Xv;
+  0040..0046 op=70 invoke-direct {v0, v1}, LX/1Xv;-><init>(VI)
+  0046..004c op=71 invoke-static {v2, v0}, LX/00k;->A00(LLL)
+  004c..004e op=0c move-result-object v0
+  004e..0052 op=5b iput-object v0, v3, LX/0Gy;->A03:LX/00l;
+  0052..0054 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method A00(VLLL) flags=0x19 registers=4
+  0000..0004 op=54 iget-object v0, v2, LX/0Gy;->A04:Ljava/lang/ThreadLocal;
+  0004..000a op=6e invoke-virtual {v0}, Ljava/lang/ThreadLocal;->get(L)
+  000a..000c op=0c move-result-object v0
+  000c..0012 op=71 invoke-static {v0}, LX/00K;->A06(VL)
+  0012..0018 op=71 invoke-static {v0}, LX/00h;->A06(VL)
+  0018..001c op=1f check-cast v0, Ljava/util/AbstractMap;
+  001c..0022 op=6e invoke-virtual {v0, v3, v1}, Ljava/util/AbstractMap;->put(LLL)
+  0022..0028 op=72 invoke-interface {v1}, LX/Ddg;->onBegin(V)
+  0028..002a op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method A01(V) flags=0x11 registers=4
+  0000..0004 op=54 iget-object v0, v3, LX/0Gy;->A01:Ljava/lang/ThreadLocal;
+  0004..000a op=6e invoke-virtual {v0}, Ljava/lang/ThreadLocal;->get(L)
+  000a..000c op=0c move-result-object v1
+  000c..000e op=12 const/4 v0, #0x0
+  000e..0014 op=71 invoke-static {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+  0014..0016 op=0c move-result-object v0
+  0016..001c op=71 invoke-static {v1, v0}, LX/00h;->areEqual(ZLL)
+  001c..001e op=0a move-result v0
+  001e..0022 op=38 if-eqz v0, +0x33
+  0022..0026 op=54 iget-object v0, v3, LX/0Gy;->A04:Ljava/lang/ThreadLocal;
+  0026..002c op=6e invoke-virtual {v0}, Ljava/lang/ThreadLocal;->get(L)
+  002c..002e op=0c move-result-object v2
+  002e..0034 op=71 invoke-static {v2}, LX/00K;->A06(VL)
+  0034..003a op=71 invoke-static {v2}, LX/00h;->A06(VL)
+  003a..003e op=1f check-cast v2, Ljava/util/AbstractMap;
+  003e..0044 op=6e invoke-virtual {v2}, Ljava/util/AbstractMap;->values(L)
+  0044..0046 op=0c move-result-object v1
+  0046..004a op=22 new-instance v0, Ljava/util/ArrayList;
+  004a..0050 op=70 invoke-direct {v0, v1}, Ljava/util/ArrayList;-><init>(VL)
+  0050..0056 op=6e invoke-virtual {v2}, Ljava/util/AbstractMap;->clear(V)
+  0056..005c op=6e invoke-virtual {v0}, Ljava/util/AbstractCollection;->iterator(L)
+  005c..005e op=0c move-result-object v1
+  005e..0064 op=71 invoke-static {v1}, LX/00h;->A06(VL)
+  0064..006a op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext(Z)
+  006a..006c op=0a move-result v0
+  006c..0070 op=38 if-eqz v0, +0xc
+  0070..0076 op=72 invoke-interface {v1}, Ljava/util/Iterator;->next(L)
+  0076..0078 op=0c move-result-object v0
+  0078..007c op=1f check-cast v0, LX/Ddg;
+  007c..0082 op=72 invoke-interface {v0}, LX/Ddg;->Bax(V)
+  0082..0084 op=28 goto -0xf
+  0084..0086 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method A02(V) flags=0x11 registers=4
+  0000..0004 op=54 iget-object v0, v3, LX/0Gy;->A01:Ljava/lang/ThreadLocal;
+  0004..000a op=6e invoke-virtual {v0}, Ljava/lang/ThreadLocal;->get(L)
+  000a..000c op=0c move-result-object v1
+  000c..000e op=12 const/4 v0, #0x0
+  000e..0014 op=71 invoke-static {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+  0014..0016 op=0c move-result-object v0
+  0016..001c op=71 invoke-static {v1, v0}, LX/00h;->areEqual(ZLL)
+  001c..001e op=0a move-result v0
+  001e..0022 op=38 if-eqz v0, +0x16
+  0022..0026 op=54 iget-object v0, v3, LX/0Gy;->A02:Ljava/lang/ThreadLocal;
+  0026..002c op=6e invoke-virtual {v0}, Ljava/lang/ThreadLocal;->get(L)
+  002c..002e op=0c move-result-object v1
+  002e..0030 op=12 const/4 v0, #0x1
+  0030..0036 op=71 invoke-static {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+  0036..0038 op=0c move-result-object v0
+  0038..003e op=71 invoke-static {v1, v0}, LX/00h;->areEqual(ZLL)
+  003e..0040 op=0a move-result v0
+  0040..0044 op=38 if-eqz v0, +0x6
+  0044..004a op=6e invoke-virtual {v3}, LX/0Gy;->A01(V)
+  004a..004c op=0e return-void
+  004c..0050 op=54 iget-object v0, v3, LX/0Gy;->A04:Ljava/lang/ThreadLocal;
+  0050..0056 op=6e invoke-virtual {v0}, Ljava/lang/ThreadLocal;->get(L)
+  0056..0058 op=0c move-result-object v2
+  0058..005e op=71 invoke-static {v2}, LX/00K;->A06(VL)
+  005e..0064 op=71 invoke-static {v2}, LX/00h;->A06(VL)
+  0064..0068 op=1f check-cast v2, Ljava/util/AbstractMap;
+  0068..006e op=6e invoke-virtual {v2}, Ljava/util/AbstractMap;->values(L)
+  006e..0070 op=0c move-result-object v1
+  0070..0074 op=22 new-instance v0, Ljava/util/ArrayList;
+  0074..007a op=70 invoke-direct {v0, v1}, Ljava/util/ArrayList;-><init>(VL)
+  007a..0080 op=6e invoke-virtual {v2}, Ljava/util/AbstractMap;->clear(V)
+  0080..0086 op=6e invoke-virtual {v0}, Ljava/util/AbstractCollection;->iterator(L)
+  0086..0088 op=0c move-result-object v1
+  0088..008e op=71 invoke-static {v1}, LX/00h;->A06(VL)
+  008e..0094 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext(Z)
+  0094..0096 op=0a move-result v0
+  0096..009a op=38 if-eqz v0, -0x26
+  009a..00a0 op=72 invoke-interface {v1}, Ljava/util/Iterator;->next(L)
+  00a0..00a2 op=0c move-result-object v0
+  00a2..00a6 op=1f check-cast v0, LX/Ddg;
+  00a6..00ac op=72 invoke-interface {v0}, LX/Ddg;->Bb1(V)
+  00ac..00ae op=28 goto -0xf
+  # exception table: 0 try range(s)
+.end method
+
+.method onBegin(V) flags=0x1 registers=1
+  0000..0002 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method onCommit(V) flags=0x1 registers=7
+  0000..0004 op=54 iget-object v0, v6, LX/0Gy;->A04:Ljava/lang/ThreadLocal;
+  0004..000a op=6e invoke-virtual {v0}, Ljava/lang/ThreadLocal;->get(L)
+  000a..000c op=0c move-result-object v2
+  000c..0012 op=71 invoke-static {v2}, LX/00K;->A06(VL)
+  0012..0018 op=71 invoke-static {v2}, LX/00h;->A06(VL)
+  0018..001c op=1f check-cast v2, Ljava/util/AbstractMap;
+  001c..0020 op=54 iget-object v4, v6, LX/0Gy;->A01:Ljava/lang/ThreadLocal;
+  0020..0026 op=6e invoke-virtual {v4}, Ljava/lang/ThreadLocal;->get(L)
+  0026..0028 op=0c move-result-object v1
+  0028..002a op=12 const/4 v0, #0x1
+  002a..0030 op=71 invoke-static {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+  0030..0032 op=0c move-result-object v0
+  0032..0038 op=71 invoke-static {v1, v0}, LX/00h;->areEqual(ZLL)
+  0038..003a op=0a move-result v3
+  003a..0040 op=6e invoke-virtual {v2}, Ljava/util/AbstractMap;->values(L)
+  0040..0042 op=0c move-result-object v1
+  0042..0046 op=22 new-instance v0, Ljava/util/ArrayList;
+  0046..004c op=70 invoke-direct {v0, v1}, Ljava/util/ArrayList;-><init>(VL)
+  004c..004e op=12 const/4 v2, #0x0
+  004e..0054 op=6e invoke-virtual {v0}, Ljava/util/AbstractCollection;->iterator(L)
+  0054..0056 op=0c move-result-object v1
+  0056..005c op=71 invoke-static {v1}, LX/00h;->A06(VL)
+  005c..0062 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext(Z)
+  0062..0064 op=0a move-result v0
+  0064..0068 op=38 if-eqz v0, +0xc
+  0068..006e op=72 invoke-interface {v1}, Ljava/util/Iterator;->next(L)
+  006e..0070 op=0c move-result-object v0
+  0070..0074 op=1f check-cast v0, LX/Ddg;
+  0074..007a op=72 invoke-interface {v0}, LX/Ddg;->onCommit(V)
+  007a..007c op=28 goto -0xf
+  007c..0082 op=71 invoke-static {v2}, Ljava/lang/Boolean;->valueOf(LZ)
+  0082..0084 op=0c move-result-object v0
+  0084..008a op=6e invoke-virtual {v4, v0}, Ljava/lang/ThreadLocal;->set(VL)
+  008a..008e op=38 if-eqz v3, +0x36
+  008e..0092 op=54 iget-object v0, v6, LX/0Gy;->A03:LX/00l;
+  0092..0098 op=72 invoke-interface {v0}, LX/00l;->getValue(L)
+  0098..009a op=0c move-result-object v5
+  009a..009e op=1f check-cast v5, LX/0Dg;
+  009e..00a2 op=38 if-eqz v5, +0x2c
+  00a2..00a6 op=54 iget-object v0, v5, LX/0Dg;->A03:Ljava/util/concurrent/atomic/AtomicBoolean;
+  00a6..00ac op=6e invoke-virtual {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get(Z)
+  00ac..00ae op=0a move-result v0
+  00ae..00b2 op=38 if-eqz v0, +0x24
+  00b2..00b6 op=54 iget-object v4, v5, LX/0Dg;->A02:Ljava/util/concurrent/ConcurrentHashMap;
+  00b6..00ba op=54 iget-object v3, v6, LX/0Gy;->A00:Ljava/lang/String;
+  00ba..00c0 op=6e invoke-virtual {v4, v3}, Ljava/util/AbstractMap;->get(LL)
+  00c0..00c2 op=0c move-result-object v2
+  00c2..00c6 op=39 if-nez v2, +0x10
+  00c6..00ca op=16 const-wide/16 v0, #0x0
+  00ca..00ce op=22 new-instance v2, Ljava/util/concurrent/atomic/AtomicLong;
+  00ce..00d4 op=70 invoke-direct {v2, v0, v1}, Ljava/util/concurrent/atomic/AtomicLong;-><init>(VJ)
+  00d4..00da op=6e invoke-virtual {v4, v3, v2}, Ljava/util/concurrent/ConcurrentHashMap;->putIfAbsent(LLL)
+  00da..00dc op=0c move-result-object v0
+  00dc..00e0 op=38 if-eqz v0, +0x3
+  00e0..00e2 op=07 move-object v2, v0
+  00e2..00e6 op=1f check-cast v2, Ljava/util/concurrent/atomic/AtomicLong;
+  00e6..00ec op=6e invoke-virtual {v2}, Ljava/util/concurrent/atomic/AtomicLong;->incrementAndGet(J)
+  00ec..00f0 op=54 iget-object v0, v5, LX/0Dg;->A00:Ljava/lang/ThreadLocal;
+  00f0..00f6 op=6e invoke-virtual {v0}, Ljava/lang/ThreadLocal;->remove(V)
+  00f6..00f8 op=0e return-void
+  00f8..00fa op=0d move-exception v1
+  00fa..0100 op=71 invoke-static {v2}, Ljava/lang/Boolean;->valueOf(LZ)
+  0100..0102 op=0c move-result-object v0
+  0102..0108 op=6e invoke-virtual {v4, v0}, Ljava/lang/ThreadLocal;->set(VL)
+  0108..010a op=27 throw v1
+  # exception table: 1 try range(s)
+  # catch <all> code_units 0027..003e -> 007c
+.end method
+
+.method onRollback(V) flags=0x1 registers=7
+  0000..0004 op=54 iget-object v0, v6, LX/0Gy;->A04:Ljava/lang/ThreadLocal;
+  0004..000a op=6e invoke-virtual {v0}, Ljava/lang/ThreadLocal;->get(L)
+  000a..000c op=0c move-result-object v2
+  000c..0012 op=71 invoke-static {v2}, LX/00K;->A06(VL)
+  0012..0018 op=71 invoke-static {v2}, LX/00h;->A06(VL)
+  0018..001c op=1f check-cast v2, Ljava/util/AbstractMap;
+  001c..0020 op=54 iget-object v5, v6, LX/0Gy;->A01:Ljava/lang/ThreadLocal;
+  0020..0026 op=6e invoke-virtual {v5}, Ljava/lang/ThreadLocal;->get(L)
+  0026..0028 op=0c move-result-object v1
+  0028..002a op=12 const/4 v0, #0x1
+  002a..0030 op=71 invoke-static {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+  0030..0032 op=0c move-result-object v4
+  0032..0038 op=71 invoke-static {v1, v4}, LX/00h;->areEqual(ZLL)
+  0038..003a op=0a move-result v3
+  003a..0040 op=6e invoke-virtual {v2}, Ljava/util/AbstractMap;->values(L)
+  0040..0042 op=0c move-result-object v1
+  0042..0046 op=22 new-instance v0, Ljava/util/ArrayList;
+  0046..004c op=70 invoke-direct {v0, v1}, Ljava/util/ArrayList;-><init>(VL)
+  004c..004e op=12 const/4 v2, #0x0
+  004e..0054 op=6e invoke-virtual {v0}, Ljava/util/AbstractCollection;->iterator(L)
+  0054..0056 op=0c move-result-object v1
+  0056..005c op=71 invoke-static {v1}, LX/00h;->A06(VL)
+  005c..0062 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext(Z)
+  0062..0064 op=0a move-result v0
+  0064..0068 op=38 if-eqz v0, +0xc
+  0068..006e op=72 invoke-interface {v1}, Ljava/util/Iterator;->next(L)
+  006e..0070 op=0c move-result-object v0
+  0070..0074 op=1f check-cast v0, LX/Ddg;
+  0074..007a op=72 invoke-interface {v0}, LX/Ddg;->onRollback(V)
+  007a..007c op=28 goto -0xf
+  007c..0082 op=71 invoke-static {v2}, Ljava/lang/Boolean;->valueOf(LZ)
+  0082..0084 op=0c move-result-object v0
+  0084..008a op=6e invoke-virtual {v5, v0}, Ljava/lang/ThreadLocal;->set(VL)
+  008a..008e op=54 iget-object v0, v6, LX/0Gy;->A02:Ljava/lang/ThreadLocal;
+  008e..0094 op=6e invoke-virtual {v0, v4}, Ljava/lang/ThreadLocal;->set(VL)
+  0094..0098 op=38 if-eqz v3, +0x19
+  0098..009c op=54 iget-object v0, v6, LX/0Gy;->A03:LX/00l;
+  009c..00a2 op=72 invoke-interface {v0}, LX/00l;->getValue(L)
+  00a2..00a4 op=0c move-result-object v1
+  00a4..00a8 op=1f check-cast v1, LX/0Dg;
+  00a8..00ac op=38 if-eqz v1, +0xf
+  00ac..00b0 op=54 iget-object v0, v1, LX/0Dg;->A03:Ljava/util/concurrent/atomic/AtomicBoolean;
+  00b0..00b6 op=6e invoke-virtual {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get(Z)
+  00b6..00b8 op=0a move-result v0
+  00b8..00bc op=38 if-eqz v0, +0x7
+  00bc..00c0 op=54 iget-object v0, v1, LX/0Dg;->A00:Ljava/lang/ThreadLocal;
+  00c0..00c6 op=6e invoke-virtual {v0}, Ljava/lang/ThreadLocal;->remove(V)
+  00c6..00c8 op=0e return-void
+  00c8..00ca op=0d move-exception v1
+  00ca..00d0 op=71 invoke-static {v2}, Ljava/lang/Boolean;->valueOf(LZ)
+  00d0..00d2 op=0c move-result-object v0
+  00d2..00d8 op=6e invoke-virtual {v5, v0}, Ljava/lang/ThreadLocal;->set(VL)
+  00d8..00dc op=54 iget-object v0, v6, LX/0Gy;->A02:Ljava/lang/ThreadLocal;
+  00dc..00e2 op=6e invoke-virtual {v0, v4}, Ljava/lang/ThreadLocal;->set(VL)
+  00e2..00e4 op=27 throw v1
+  # exception table: 1 try range(s)
+  # catch <all> code_units 0027..003e -> 0064
+.end method

@@ -7,7 +7,7 @@
   0000..0004 op=54 iget-object v0, v4, LX/0ZN;->A02:LX/0IY;
   0004..0008 op=54 iget-object v0, v0, LX/0IY;->A01:Landroid/database/sqlite/SQLiteDatabase;
   0008..000e op=6e invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->inTransaction(Z)
-  000e..0010 op=0a move-result
+  000e..0010 op=0a move-result v0
   0010..0016 op=71 invoke-static {v0}, LX/00K;->A0C(VZ)
   0016..001a op=54 iget-object v3, v4, LX/0ZN;->A01:LX/0Gy;
   001a..001e op=22 new-instance v2, Ljava/lang/Object;

@@ -2075,3 +2075,29 @@ Cleanup evidence checks: 17 direct dumps match bundle instruction-offset/
 mnemonic coverage and ordered catch ranges; direct operand details are retained
 separately. Regenerated CLI reference, experimental API-symbol check and formatting
 also passed on system Rust 1.99.0. Runtime Rust code is unchanged.
+
+
+Cleanup callback closure and register-aware exports (2026-10-08): **confirmed
+static APK 2.26.37.71** Cpf discriminator 1 uses Bb1 -> 8kU.A1P after successful
+1gB.close/0IY.endTransaction through 0Gy.A02; rollback/discard uses Bax and does
+not execute that selected callback. Immediate SQLite onCommit is not its run
+point. Callback ordering, complete nested/concurrent behavior, effective gates
+and full address/group cleanup remain unimplemented; destructive cleanup stays
+disabled. **Implemented offline** recipe include_register_flow (boolean, default
+false) retains supported register operands missing from legacy compact exports.
+A literal CDO move-result destination regression verifies a register-only change
+is visible with the option; default rendering and primary annotations are stable.
+The cleanup bundle now has 23 topics/38 methods/28 files/214535 bytes. Cached
+same-APK diff against 257f186 took 0.011257 seconds: six additions, sixteen
+annotation-changed and one unchanged topic. All old offset/opcode/mnemonic and
+catch ranges match; all six new direct dumps match those coverage lists.
+No account was opened, live request sent, identity changed or keys deleted.
+[Callback evidence and exporter limits](protocol/peer-identity.md#cleanup-callback-commit-and-rollback-closure-2026-10-08).
+
+Validation on system Rust 1.99.0: all 60 xtask tests, strict xtask/all-target
+Clippy, xtask build, regenerated CLI reference, experimental OpenAPI library-symbol
+check and formatting passed. Repository hygiene verified 941 local links, package
+licenses, tracked-file budgets and 4210702 bytes across six checksum bundles.
+Runtime Rust code is unchanged; workspace/runtime tests were not repeated for
+this exporter-only Rust change.
+Exact hash-pinned APK re-export with --check verified all 28 files/214535 bytes.

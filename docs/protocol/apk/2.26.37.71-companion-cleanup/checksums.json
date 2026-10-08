@@ -1,86 +1,110 @@
 {
   "identity-address-filter.txt": {
-    "bytes": 1818,
-    "sha256": "97b171ac22dfa327bb62cf1e59caa56885a7152825644b65f7bbd171941215c7"
+    "bytes": 1842,
+    "sha256": "62593363b3f4879410b0428fc90a2c11d2dfce64f6b9ca2fcc50de93c95ab4dc"
   },
   "identity-before-removal.txt": {
-    "bytes": 11219,
-    "sha256": "747dc7d8fe598a2963800553b549d7e90a6456753b728886143df8dc80d2e0c0"
+    "bytes": 11406,
+    "sha256": "111319efb4b06075a7caf0b11fc049a474598bef14f8e78d5fb41f263edcda17"
   },
   "identity-counterpart-targets.txt": {
-    "bytes": 2620,
-    "sha256": "4b59d53e5e06d646f2abd117d623104fff44776615a9e8d9e953ce8fd6485d74"
+    "bytes": 2647,
+    "sha256": "c7658ad2fc9347b74b87341b1d5642e8dd55b93818de766a01da1e79ff8400bf"
   },
   "identity-gate-default.txt": {
     "bytes": 603,
     "sha256": "cf87fadad44ace537aa9d3a7701db1b719dbecca3cbd5ddc85ae0499e2510105"
   },
   "identity-gate-definition.txt": {
-    "bytes": 1453,
-    "sha256": "696826f42202325f786dd900e1ba474632fb09c05144287ed0a4fcd08b971c72"
+    "bytes": 1462,
+    "sha256": "0f61f9652c9471a0e6d58e332043033ea090fbfa5c261208e556ae3370fb2024"
   },
   "identity-removal-coordinator.txt": {
-    "bytes": 4705,
-    "sha256": "ddf386ef9ecee18629f7545ce8aee392281df950de985853c58cc4f32b086e62"
+    "bytes": 4762,
+    "sha256": "3130685c6da7acb3d6a72754ac6acea989627e4b064085dc04c2c3574236468e"
   },
   "identity-removal-sql.txt": {
-    "bytes": 8719,
-    "sha256": "f1bdd11f14a1b3c113153a1db642e8c675a304a0891ce441645839bd942b1cc8"
+    "bytes": 8860,
+    "sha256": "0745b43ae2a8390e9afa79c9d3a00e8f26db0c7e5ed714f85974056e561848b5"
   },
   "identity-set-translation.txt": {
-    "bytes": 1394,
-    "sha256": "4f80d2905c47bb0bc51f461879f161fc8594478c15d844544e680b3d3b713a12"
+    "bytes": 1409,
+    "sha256": "196d7d3da5cdb243a370c240e34a6e1b2a08a5c7209b965c9c775c2c13899cfa"
   },
   "identity-single-target.txt": {
-    "bytes": 1102,
-    "sha256": "bc82e51a6bb0fb701b0a8aed2575bc0c4ebc614d69ac4e1985579c8766a3e10a"
+    "bytes": 1108,
+    "sha256": "5b95488039b006310b0fccc93d905beb6a79f23836829164877f0e1192ebb8dc"
   },
   "inventory.json": {
     "bytes": 2603,
     "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
   },
   "key-address-set-translation.txt": {
-    "bytes": 6498,
-    "sha256": "db3cfcdeab87a0af8d09b2c166cbd8801ee09cf030febb88740c61df17dad771"
+    "bytes": 6602,
+    "sha256": "313f433e8f204c6e1ce9f0c51448d496b052305fbd7e550272702b5a7b60ef9d"
   },
   "key-address-translation.txt": {
-    "bytes": 2474,
-    "sha256": "468d867497a2b83007ba3669123fe665541ebf3a35d0f4e9b176190c0dab0e1b"
+    "bytes": 2498,
+    "sha256": "edfb1a88bd9d9cdc7aa2a5aa93084904e3c90a813644c4de78202e13888df4f2"
   },
   "manifest.json": {
     "bytes": 1000,
     "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
   },
   "session-cache-callback.txt": {
-    "bytes": 88781,
-    "sha256": "9716b6e61641b3a83da56b233890f552deebc3c66f014fde9d30b2a7bd4e7ecb"
+    "bytes": 90387,
+    "sha256": "3ab1a10eec279cce7da254a66c69eee295d862f6e0934da4d812df19dd9ac291"
   },
   "session-cache-store.txt": {
-    "bytes": 2360,
-    "sha256": "33e62753ce9a48fc3b75477514856fdfe2a0d351a04b17ba013137aac1aa9bb0"
+    "bytes": 2391,
+    "sha256": "3a40c59caf1327a31f44009a3fbdb238af8081ae2d94940825a0c62b6af9f63c"
   },
   "session-removal-coordinator.txt": {
-    "bytes": 4442,
-    "sha256": "e4bb8ae31a07dbd8c7df6f7a53ede82fac523e5456231471c45cf141db43fc4e"
+    "bytes": 4496,
+    "sha256": "48e400db28f23930294224dcd9a861a2812435bca650d2e8fe8f8a2abb0d2781"
   },
   "session-removal-sql.txt": {
-    "bytes": 3940,
-    "sha256": "4545e7e96f3681e7cc3a6c4b336abe018c0b7294fcb5e12ee7908c1dfb9af493"
+    "bytes": 3973,
+    "sha256": "e39d8bbb7189e5de6440553b5a086aab28918aab984e1e9ffacb7063ed11f616"
   },
   "sql-key-tuple.txt": {
-    "bytes": 961,
-    "sha256": "9faebbbf636081f7579a493b7e3f84cab174e91748f013554223a39c14d6d49a"
+    "bytes": 967,
+    "sha256": "6887be07c6a9fa1b97023334410097269b09f762b9907ef8576ac7b6317ce14c"
   },
   "targets.json": {
-    "bytes": 7358,
-    "sha256": "7e20bfa8097b7dbee86a2575ff062facd0ce2851a4ddf0fbe80a6518776b04a4"
+    "bytes": 10433,
+    "sha256": "d8ba037a50b8ec9f3585c25f5092a41c0333da0974d83cdf8072408fd0b4ab01"
   },
   "tokens.json": {
     "bytes": 23019,
     "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
   },
+  "transaction-callback-manager.txt": {
+    "bytes": 13580,
+    "sha256": "60069029f64bca2eed52541e46fba33c625fdbecea713e1cc8ead7a59d7b0bc9"
+  },
   "transaction-callback-register.txt": {
-    "bytes": 1146,
-    "sha256": "676328a9611508c5477122da90b8091fcb02e2bebfd5d6c624a2f88a94fd8681"
+    "bytes": 1149,
+    "sha256": "d07e4f3dd3f1693207652c4d963a9853b27482dc3070efc021299df917e2b217"
+  },
+  "transaction-callback-wrapper.txt": {
+    "bytes": 2748,
+    "sha256": "f46eaaff92b1e874546586b2f69487deffbfd9c025c00d9248f6dd3f5f0f49a9"
+  },
+  "transaction-close.txt": {
+    "bytes": 8881,
+    "sha256": "f7247cbeaf1ab67e3afa81ac9b3c11fcf17c8d7745d97cc98fbed14128135634"
+  },
+  "transaction-database-end.txt": {
+    "bytes": 823,
+    "sha256": "c02722529bf0a273fa7c74a4ccc030d6f94ad73e520de5a7d537b5b84eb37900"
+  },
+  "transaction-database-success.txt": {
+    "bytes": 611,
+    "sha256": "f31c4f6b5e693343213216abb4bc6e71457e321d9ff5ae1597807d2cfa91e927"
+  },
+  "transaction-runnable-invoke.txt": {
+    "bytes": 535,
+    "sha256": "860ae5433d2f7a050d55ee47774112f99b06a59695b08d3232944bd7ddde6265"
   }
 }

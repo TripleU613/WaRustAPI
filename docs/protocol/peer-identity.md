@@ -1934,3 +1934,74 @@ coverage equality is not proof of complete bytecode semantic equivalence.
 
 Repository hygiene passed: 935 local links, tracked-file budgets, package
 licenses and 4,177,269 bytes across six checksum-verified APK bundles.
+
+
+## Cleanup callback commit and rollback closure (2026-10-08)
+
+**Confirmed static 2.26.37.71:** this resolves the prior 0ZN.A04 -> 0Gy.A00
+callback-delivery boundary for the selected DNt discriminator 32. Full source
+is appended to [direct evidence](companion-cleanup-evidence.txt).
+
+0ZN.A04 wraps its Runnable in Cpf discriminator 1. Cpf is a Ddg callback object,
+not a Runnable itself: no run method exists. Its onBegin/onCommit/onRollback
+only delegate to a SQLiteTransactionListener for discriminator 0. For 1 these
+methods do nothing; Bb1 invokes 8kU.A1P, which casts to Runnable and calls run.
+Bax invokes the Runnable only for discriminator 2, so the selected 1 callback
+is not delivered through the failure/discard path.
+
+0Gy.A00 registers the callback in a thread-local map and invokes onBegin.
+SQLite onCommit/onRollback first notify a snapshot of callback objects;
+onCommit clears the active flag, while rollback also sets the rollback flag.
+Those immediate SQLite notifications do not run discriminator 1. Normal late
+delivery is 0Gy.A02: when active=false and rollback=false, it copies values,
+clears the map, then invokes Bb1 on that snapshot. With rollback=true it uses
+A01, which clears the map and invokes Bax. The callback map's iteration order
+is not newly established here; no FIFO ordering or execution during commit is
+inferred. A callback exception can stop later callbacks; exactly-once successful
+completion is not established merely because the map was cleared.
+
+1gB.A00 marks the transaction successful and calls 0IY.A0G, whose wrapper invokes
+SQLite setTransactionSuccessful. close calls A0F -> SQLite endTransaction first.
+Only after endTransaction returns, when the local success bit is set and the
+manager rollback flag is false, does it reach A02. Other paths—including a
+caught endTransaction failure—use A01 and retain/rethrow the failure as traced.
+A02 also requires the manager active flag to be false, so it does not deliver
+while an outer transaction is still active. This establishes successful-close
+late delivery of DNt32 and its cache updates, rather than updating cache merely
+when a statement succeeds. Complete concurrent/nested application behavior,
+callback ordering and all other discriminator bodies remain unported.
+
+**Implemented research correction:** compact APK exports omitted decoded move,
+move-result/move-exception and array-length register detail when their ordinary
+annotation was empty. Interactive dumps retained that information. New optional
+recipe root include_register_flow (boolean, default false) adds that supported
+fallback annotation and marks opted-in targets with include_register_flow=true.
+Existing nonempty annotations retain their original precedence; no whole-program
+dataflow, lossless DEX encoding or new unsupported-opcode decoder is claimed.
+Historical default exports remain stable. The cleanup recipe opts in; future
+register-only differences in supported instructions become file differences.
+
+A literal regression uses CDO.<clinit> 000c..000e (0c00, move-result-object v0)
+and changes only the destination byte to v1. Legacy annotations remain identical;
+opted-in annotations differ. Existing operand annotations and return-void are
+also checked, as are rejected nonboolean recipe values/default false behavior.
+No server input, identity policy or live account behavior is changed.
+
+Actual source validation: the expanded cleanup bundle preserves 23 topics, 38
+methods, 28 files and 214535 bytes. All seventeen previous offset/opcode/mnemonic
+lists and ordered catch ranges remain equal. Six new direct dumps also match
+those lists; this does not prove full semantic equivalence. CDO.<clinit> now
+retains move-result-object v0 at 000c..000e. The [checksum-verified cached report](apk/companion-callback-flow-coverage-diff.json)
+against Git 257f186 took 0.011257 seconds: six added, sixteen annotation-changed
+and one unchanged topic, with manifest/inventory/tokens unchanged. This is a
+same-APK source/rendering expansion, not a vendor release difference.
+The earlier apk-smali query for Cpf.run returned no method bodies; full-class
+inspection established its callback interface and Bb1/Bax dispatch instead.
+
+Validation on system Rust 1.99.0: all 60 xtask tests, strict xtask/all-target
+Clippy, xtask build, regenerated CLI reference, experimental OpenAPI library-symbol
+check and formatting passed. Repository hygiene verified 941 local links, package
+licenses, tracked-file budgets and 4210702 bytes across six checksum bundles.
+Runtime Rust code is unchanged; workspace/runtime tests were not repeated for
+this exporter-only Rust change.
+Exact hash-pinned APK re-export with --check verified all 28 files/214535 bytes.

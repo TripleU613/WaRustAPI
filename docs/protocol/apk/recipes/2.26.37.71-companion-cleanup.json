@@ -190,6 +190,61 @@
         "crates/whatsapp-api/src/transport/devices.rs",
         "crates/whatsapp-api/src/signal/direct.rs"
       ]
+    },
+    "transaction-callback-manager": {
+      "class": "LX/0Gy;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "xtask/src/bundle.rs"
+      ]
+    },
+    "transaction-callback-wrapper": {
+      "class": "LX/Cpf;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "xtask/src/bundle.rs"
+      ]
+    },
+    "transaction-close": {
+      "class": "LX/1gB;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "xtask/src/bundle.rs"
+      ]
+    },
+    "transaction-runnable-invoke": {
+      "class": "LX/8kU;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "xtask/src/bundle.rs"
+      ],
+      "method": "A1P",
+      "method_shorty": "VL"
+    },
+    "transaction-database-end": {
+      "class": "LX/0IY;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "xtask/src/bundle.rs"
+      ],
+      "method": "A0F",
+      "method_shorty": "V"
+    },
+    "transaction-database-success": {
+      "class": "LX/0IY;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "xtask/src/bundle.rs"
+      ],
+      "method": "A0G",
+      "method_shorty": "V"
     }
-  }
+  },
+  "include_register_flow": true
 }

@@ -1,0 +1,15 @@
+# APK-derived structural disassembly: LX/0IY;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0F(V) flags=0x1 registers=2
+  0000..0004 op=54 iget-object v0, v1, LX/0IY;->A01:Landroid/database/sqlite/SQLiteDatabase;
+  0004..000a op=6e invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->endTransaction(V)
+  000a..000c op=0e return-void
+  000c..000e op=0d move-exception v0
+  000e..0014 op=70 invoke-direct {v1, v0}, LX/0IY;->A00(VL)
+  0014..0016 op=27 throw v0
+  # exception table: 1 try range(s)
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0000..0006 -> 0006
+.end method

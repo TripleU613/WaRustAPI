@@ -2333,6 +2333,41 @@ mod tests {
         assert!(decode_register_flow(&[0x0e, 0]).is_empty());
     }
 
+    #[test]
+    fn register_only_bytecode_changes_are_visible_in_opted_in_bundle_annotations() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // APK 37.71 CDO.<clinit> 000c..000e is 0c00: move-result-object v0.
+        // Change only its destination byte, leaving opcode and width untouched.
+        let original = decode_insns(&[0x0c, 0x00], &dex);
+        let changed = decode_insns(&[0x0c, 0x01], &dex);
+        assert_eq!(original[0].op, changed[0].op);
+        assert_eq!(original[0].width, changed[0].width);
+        assert_eq!(
+            crate::bundle::instruction_annotation(&original[0], false),
+            ""
+        );
+        assert_eq!(
+            crate::bundle::instruction_annotation(&changed[0], false),
+            ""
+        );
+        assert_eq!(
+            crate::bundle::instruction_annotation(&original[0], true),
+            "v0"
+        );
+        assert_eq!(
+            crate::bundle::instruction_annotation(&changed[0], true),
+            "v1"
+        );
+        let annotated = decode_insns(&[0x12, 0x31], &dex);
+        assert_eq!(
+            crate::bundle::instruction_annotation(&annotated[0], true),
+            "v1, #0x3"
+        );
+        let empty = decode_insns(&[0x0e, 0x00], &dex);
+        assert_eq!(crate::bundle::instruction_annotation(&empty[0], true), "");
+    }
+
     use super::*;
 
     #[test]

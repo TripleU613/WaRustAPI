@@ -7,10 +7,10 @@
   0000..0004 op=54 iget-object v3, v4, LX/B76;->A04:Ljava/lang/String;
   0004..0008 op=52 iget v0, v4, LX/B76;->A01:I
   0008..000e op=71 invoke-static {v0}, Ljava/lang/String;->valueOf(LI)
-  000e..0010 op=0c move-result-object
+  000e..0010 op=0c move-result-object v2
   0010..0014 op=52 iget v0, v4, LX/B76;->A00:I
   0014..001a op=71 invoke-static {v0}, Ljava/lang/String;->valueOf(LI)
-  001a..001c op=0c move-result-object
+  001a..001c op=0c move-result-object v1
   001c..001e op=12 const/4 v0, #0x3
   001e..0022 op=23 new-array v0, v0, [Ljava/lang/String;
   0022..0028 op=71 invoke-static {v3, v2, v1, v0}, LX/1xk;->A1N(VLLLL)

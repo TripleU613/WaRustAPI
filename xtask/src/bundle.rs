@@ -47,6 +47,9 @@ struct Recipe {
     /// Opt in to catch-table source coverage without rewriting historical bundles.
     #[serde(default)]
     include_exception_tables: bool,
+    /// Retain supported register operands omitted by legacy compact snapshots.
+    #[serde(default)]
+    include_register_flow: bool,
     targets: BTreeMap<String, Target>,
 }
 
@@ -207,6 +210,20 @@ fn validate_size(files: &BTreeMap<String, Vec<u8>>) -> Result<usize, String> {
     Ok(total)
 }
 
+pub(crate) fn instruction_annotation(
+    insn: &crate::xref::Insn,
+    include_register_flow: bool,
+) -> &str {
+    // Legacy snapshots omitted result and move registers. APK 37.71
+    // CDO.<clinit> 000c..000e is move-result-object v0; retaining its operand
+    // prevents a changed result register from becoming an invisible file diff.
+    if include_register_flow && insn.annotation.is_empty() {
+        &insn.flow_annotation
+    } else {
+        &insn.annotation
+    }
+}
+
 fn append_exception_table(text: &mut String, blocks: &[crate::xref::TryBlock]) {
     // Catch ranges/addresses are DEX code units; instruction offsets above
     // remain bytes. 37.71 0Gv.A01/4R7.A00 show why fallback types matter.
@@ -304,7 +321,10 @@ pub fn run(
                     insn.byte_off + insn.width * 2,
                     insn.op,
                     insn.mnemonic,
-                    insn.annotation
+                    instruction_annotation(
+                        insn,
+                        recipe.as_ref().is_some_and(|r| r.include_register_flow)
+                    )
                 )
                 .unwrap();
             }
@@ -326,6 +346,9 @@ pub fn run(
         if recipe.is_some() {
             if recipe.as_ref().is_some_and(|r| r.include_exception_tables) {
                 entry["include_exception_tables"] = serde_json::json!(true);
+            }
+            if recipe.as_ref().is_some_and(|r| r.include_register_flow) {
+                entry["include_register_flow"] = serde_json::json!(true);
             }
             entry["method_filter"] = serde_json::json!(target.method);
             entry["rust_files"] = serde_json::json!(target.rust_files);
@@ -959,6 +982,7 @@ mod tests {
             serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","rust_files":["../escape"]}}}),
             serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","invented":true}}}),
             serde_json::json!({"apk_sha256":"0".repeat(64),"include_exception_tables":"yes","targets":{"subject":{"class":"LX/Test;"}}}),
+            serde_json::json!({"apk_sha256":"0".repeat(64),"include_register_flow":"yes","targets":{"subject":{"class":"LX/Test;"}}}),
             serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","anchors":["x"],"caller_anchors":["y"]}}}),
             serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","method":"A00","caller_anchors":["y"]}}}),
             serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","method":"A00","anchors":["x"],"caller_anchors":[""]}}}),
@@ -969,11 +993,14 @@ mod tests {
         }
         fs::write(&path,json(&serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","method":"A09","rust_files":["crates/group.rs"]}}})).unwrap()).unwrap();
         assert!(!read_recipe(&path).unwrap().include_exception_tables);
+        assert!(!read_recipe(&path).unwrap().include_register_flow);
         let mut enabled: serde_json::Value =
             serde_json::from_slice(&fs::read(&path).unwrap()).unwrap();
         enabled["include_exception_tables"] = serde_json::json!(true);
+        enabled["include_register_flow"] = serde_json::json!(true);
         fs::write(&path, json(&enabled).unwrap()).unwrap();
         assert!(read_recipe(&path).unwrap().include_exception_tables);
+        assert!(read_recipe(&path).unwrap().include_register_flow);
         let cache = dir.path().join("bad-cache");
         fs::create_dir(&cache).unwrap();
         fs::write(
