@@ -1382,3 +1382,47 @@ cannot prove that branch occurred.
 **Validation:** 671 workspace/all-feature tests, 24 default CLI tests, strict
 Clippy, warning-free Rustdoc and regenerated CLI/API checks passed. No live
 retry was manufactured, settled request replayed or account identity changed.
+
+## Direct LID sessions across attribute representations (2026-10-07)
+
+**Confirmed local bug, corrected offline:** direct contact routing accepted
+both textual and typed `from`/`sender_pn` JIDs, but lid_sender only accepted
+AttributeValue::Jid. Consequently a textual LID `from` supplied a valid PN
+contact while selecting the PN session instead of an existing LID ratchet.
+A real Signal handshake/reply fixture reproduced Undecryptable before the
+correction. The shared receipts::jid parser now supplies the LID session
+selector for both representations, preserving the existing namespace/device
+filter and normalized storage key. No identity policy or PN fallback rule changed.
+
+**APK evidence and its limit:** APK 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`,
+[DEw.CF0](apk/2.26.37.71-core/group-mode-incoming-parser.txt) resolves
+sender/participant PN/LID attributes through typed JID parsing. This source
+supports treating addresses as semantic identities; it does not establish
+that every server sends both representations or the entire direct-session
+producer graph. The ratchet selection itself is grounded in the earlier
+**observed** 2026-09-28 LID-session recovery. This change fixes our in-memory
+representation mismatch without deriving new cache-mode or alias authority.
+
+The regression establishes a real LID-keyed Signal session, encrypts a reply,
+and checks each first-delivery representation in separate synthetic stores.
+Both decrypt, keep exactly the LID session with no PN session created, and
+return Duplicate for the opposite representation after closing/reopening the
+store. Saved session and identity rows remain byte-identical on redelivery.
+No ratchet is rewound in a saved account, no marker is deleted, and no failed
+or uncertain outbound reservation becomes eligible through this correction.
+
+Direct-LID correction validation: 676 workspace/all-feature tests and 24 default
+CLI tests passed, along with strict all-target/all-feature Clippy, warning-free
+Rustdoc, CLI reference/API checks and the experimental CLI build. The first
+local preflight ran before that build was terminal and encountered an older
+CLI without outbox-pending; it stopped before opening an account connection.
+A subsequent preflight uses the completed build.
+
+**Observed live follow-up:** the completed experimental CLI passed queue preflight
+and authenticated for one 20-second receive-only window, then stopped cleanly.
+Outbox, actions, receipts, retained devices and peer pins matched their preflight
+inspections afterward. No fresh encrypted user-message stanza was logged, so
+live text/typed-LID decryption is not established by this window. Private evidence
+index: lab/releases/direct-lid-live/active.json. No queued chat transmission,
+new identity query, reservation reset or manufactured recipient message.

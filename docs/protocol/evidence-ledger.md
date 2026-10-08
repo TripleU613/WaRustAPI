@@ -1236,3 +1236,11 @@ separate case-insensitive PN check. Five contact-mode setter callers now have
 selected paths retained, including gated info-error and PN-conversion branches;
 triggers, full callback provenance and runtime integration remain unfinished.
 No live request or account change. [Evidence and boundaries](groups.md#addressing-mode-producers-and-separate-parser-rules-2026-10-07).
+
+Direct LID representation correction (2026-10-07, **confirmed offline**):
+textual and typed sender JIDs now select the same held LID session. A real
+Signal regression failed Undecryptable before the fix; both representations
+now decrypt and cross-representation redelivery remains Duplicate after reopen,
+with no PN session or identity rewrite. APK DEw.CF0 parsing is linked, while
+full direct-session producer provenance remains incomplete.
+[Evidence and boundaries](messaging-transport.md#direct-lid-sessions-across-attribute-representations-2026-10-07).

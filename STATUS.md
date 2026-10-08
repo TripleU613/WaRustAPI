@@ -1669,3 +1669,26 @@ five API checks passed. Core checksum bundle: 129 topics / 304 methods,
 0.151473 seconds: eleven new topics, all 118 prior topics unchanged; manifest,
 inventory and tokens unchanged. Scan/caller appendix remains outside the bundle.
 No runtime migration, automatic error recovery or live validation is claimed.
+
+Direct LID representation correction (2026-10-07, **confirmed offline**):
+textual and typed sender JIDs now select the same held LID session. A real
+Signal regression failed Undecryptable before the fix; both representations
+now decrypt and cross-representation redelivery remains Duplicate after reopen,
+with no PN session or identity rewrite. APK DEw.CF0 parsing is linked, while
+full direct-session producer provenance remains incomplete.
+[Evidence and boundaries](docs/protocol/messaging-transport.md#direct-lid-sessions-across-attribute-representations-2026-10-07).
+
+Direct-LID correction validation: 676 workspace/all-feature tests and 24 default
+CLI tests passed, along with strict all-target/all-feature Clippy, warning-free
+Rustdoc, CLI reference/API checks and the experimental CLI build. The first
+local preflight ran before that build was terminal and encountered an older
+CLI without outbox-pending; it stopped before opening an account connection.
+A subsequent preflight uses the completed build.
+
+**Observed live follow-up:** the completed experimental CLI passed queue preflight
+and authenticated for one 20-second receive-only window, then stopped cleanly.
+Outbox, actions, receipts, retained devices and peer pins matched their preflight
+inspections afterward. No fresh encrypted user-message stanza was logged, so
+live text/typed-LID decryption is not established by this window. Private evidence
+index: lab/releases/direct-lid-live/active.json. No queued chat transmission,
+new identity query, reservation reset or manufactured recipient message.

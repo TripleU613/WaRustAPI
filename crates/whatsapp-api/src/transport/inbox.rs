@@ -99,8 +99,10 @@ pub fn session_sender(node: &Node) -> Option<Jid> {
 
 /// The sender's LID when the stanza is LID-addressed (`from=<lid>`, device 0).
 fn lid_sender(node: &Node) -> Option<Jid> {
-    node.get_attr("from")
-        .and_then(|v| v.as_jid().cloned())
+    // DEw.CF0 (APK 37.71) resolves address attributes as typed JIDs; our
+    // decoder also preserves textual JIDs. They must choose the same held
+    // ratchet (observed LID recovery, 2026-09-28), before normalizing its key.
+    super::receipts::jid(node, "from")
         .filter(|j| j.server == Server::Lid && j.device == 0)
         .map(|j| j.to_non_ad())
 }
@@ -1556,6 +1558,191 @@ mod tests {
             assert_eq!(
                 store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap(),
                 ratchet
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn direct_lid_text_and_typed_routes_share_authenticated_session_and_duplicate_marker() {
+        use crate::{
+            model::ids::AccountId,
+            session::{KeyMaterial, RegistrationStatus, SignalIdentityKey},
+            signal::direct,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        use wacore_libsignal::protocol::{
+            DeviceId, GenericSignedPreKey, IdentityKeyPair, KeyPair, PreKeyBundle,
+            SignedPreKeyRecord, Timestamp,
+        };
+        let alice = IdentityKeyPair::generate(&mut rand::rng());
+        let bob = IdentityKeyPair::generate(&mut rand::rng());
+        let phone = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let lid = Jid::parse("123456789@lid").unwrap();
+        let bob_jid = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+        let account = |identity: &IdentityKeyPair, jid: Jid, id| AccountRecord {
+            own_jid: Some(jid),
+            registration: RegistrationStatus::Registered,
+            signal_registration_id: Some(id),
+            signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                public: identity.public_key().public_key_bytes().try_into().unwrap(),
+                private: *identity.private_key().serialize(),
+            })),
+            ..Default::default()
+        };
+        let alice_account = account(&alice, phone.clone(), 31);
+        let bob_account = account(&bob, bob_jid.clone(), 42);
+        let signed = KeyPair::generate(&mut rand::rng());
+        let signature = alice
+            .private_key()
+            .calculate_signature(&signed.public_key.serialize(), &mut rand::rng())
+            .unwrap();
+        let bundle = PreKeyBundle::new(
+            31,
+            DeviceId::new(0),
+            None,
+            7.into(),
+            signed.public_key,
+            signature.to_vec(),
+            *alice.identity_key(),
+        )
+        .unwrap();
+        let first = direct::prepare_payload(
+            &bob_account,
+            &lid,
+            Some(&bundle),
+            None,
+            None,
+            b"\x0a\x04init",
+        )
+        .await
+        .unwrap();
+        let signed_record = SignedPreKeyRecord::new(
+            7.into(),
+            Timestamp::from_epoch_millis(0),
+            &signed,
+            &signature,
+        )
+        .serialize()
+        .unwrap();
+        let incoming = direct::receive_prekey(
+            &alice_account,
+            &bob_jid,
+            (None, None),
+            &signed_record,
+            None,
+            &first.ciphertext,
+        )
+        .await
+        .unwrap();
+        let reply = direct::prepare_payload(
+            &alice_account,
+            &bob_jid,
+            None,
+            Some(&incoming.received.session),
+            Some(&incoming.identity),
+            b"\x0a\x05reply",
+        )
+        .await
+        .unwrap();
+        assert_eq!(reply.kind, "msg");
+        let typed = Node::new("message")
+            .attr("from", lid.clone())
+            .attr("sender_pn", phone.clone())
+            .attr("id", "LID-ENCODING")
+            .children(vec![
+                Node::new("enc")
+                    .attr("v", "2")
+                    .attr("type", "msg")
+                    .bytes(reply.ciphertext.clone()),
+            ]);
+        let text = typed
+            .clone()
+            .attr("from", lid.to_string())
+            .attr("sender_pn", phone.to_string());
+        for (node, duplicate) in [(&text, &typed), (&typed, &text)] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("encoding.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [29; 32],
+                    ))),
+                    create,
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            let selector = format!("comparison-direct:{lid}");
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::SignalSessions,
+                        selector.as_bytes(),
+                        1,
+                        &*first.session,
+                    )?;
+                    tx.put_json(
+                        Table::PeerIdentities,
+                        selector.as_bytes(),
+                        1,
+                        &first.identity,
+                    )
+                })
+                .unwrap();
+            let capture = preserve(&store, node).unwrap();
+            assert_eq!(
+                process(&store, &bob_account, node, &capture).await.unwrap(),
+                IncomingResult::Decrypted
+            );
+            let sessions = store
+                .read(|tx| tx.scan(Table::SignalSessions, 1, 10))
+                .unwrap();
+            let pins = store
+                .read(|tx| tx.scan(Table::PeerIdentities, 1, 10))
+                .unwrap();
+            assert_eq!(sessions.len(), 1);
+            assert!(
+                store
+                    .read(|tx| tx.get_json::<Vec<u8>>(
+                        Table::SignalSessions,
+                        selector.as_bytes(),
+                        1
+                    ))
+                    .unwrap()
+                    .is_some()
+            );
+            assert!(
+                store
+                    .read(|tx| tx.get_json::<Vec<u8>>(
+                        Table::SignalSessions,
+                        format!("comparison-direct:{phone}").as_bytes(),
+                        1
+                    ))
+                    .unwrap()
+                    .is_none()
+            );
+            drop(store);
+            let store = open(false);
+            let capture = preserve(&store, duplicate).unwrap();
+            assert_eq!(
+                process(&store, &bob_account, duplicate, &capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Duplicate
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::SignalSessions, 1, 10))
+                    .unwrap(),
+                sessions
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::PeerIdentities, 1, 10))
+                    .unwrap(),
+                pins
             );
         }
     }
