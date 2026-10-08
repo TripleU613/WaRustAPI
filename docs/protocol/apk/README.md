@@ -194,3 +194,17 @@ application methods. Current core: 33 topics/161 methods, 38 files/967529 bytes.
 0.028928 seconds: eleven added/twenty-two unchanged topics; inventory, manifest
 and tokens unchanged, targets metadata expanded. Existing topics are not
 rewritten as a new release. [Caller findings and runtime gaps](../cross-device-sync.md#contact-adv-verification-and-retention-2026-10-07).
+
+
+The 2026-10-08 companion-removal property checkpoint expands the current core to
+**164 topics / 349 methods / 169 files / 2,068,819 bytes**, leaving 28,333 bytes
+under the 2 MiB bound. Nine property/default/cache/resolver/fallback topics were
+added; all 155 previous topic texts and manifest/inventory/tokens were unchanged.
+The [cached coverage comparison](companion-feature-gate-coverage-diff.json)
+took **0.0942 seconds** after one actual APK export. This compares source coverage
+of the same build, not a release behavior difference. For the earlier snapshot,
+restore the core directory from commit `07fd5da`; regenerate the current snapshot
+using [the recipe](recipes/2.26.37.71-core.json) and the hash-pinned APK.
+[Property interpretation and unknowns](../peer-identity.md#companion-removal-property-and-effective-value-2026-10-08)
+explain why false baked defaults do not establish the effective account setting.
+No unanchored helper is automatically relocated or mapped to a new APK.

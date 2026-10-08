@@ -1,0 +1,66 @@
+# APK-derived structural disassembly: LX/0bq;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=4
+  0000..0006 op=14 const v1, #0x82f5
+  0006..0008 op=12 const/4 v3, #0x0
+  0008..000c op=22 new-instance v0, LX/09P;
+  000c..0012 op=70 invoke-direct {v0, v1, v3, v3}, LX/09P;-><init>(VIZZ)
+  0012..0016 op=69 sput-object v0, LX/0bq;->A00:LX/09P;
+  0016..001c op=14 const v1, #0x8a6b
+  001c..001e op=12 const/4 v2, #0x1
+  001e..0022 op=22 new-instance v0, LX/09P;
+  0022..0028 op=70 invoke-direct {v0, v1, v3, v2}, LX/09P;-><init>(VIZZ)
+  0028..002c op=69 sput-object v0, LX/0bq;->A01:LX/09P;
+  002c..0030 op=13 const/16 v1, #0x7b70
+  0030..0034 op=22 new-instance v0, LX/09P;
+  0034..003a op=70 invoke-direct {v0, v1, v2, v2}, LX/09P;-><init>(VIZZ)
+  003a..003e op=69 sput-object v0, LX/0bq;->A02:LX/09P;
+  003e..0042 op=13 const/16 v1, #0x721b
+  0042..0046 op=22 new-instance v0, LX/09P;
+  0046..004c op=70 invoke-direct {v0, v1, v3, v3}, LX/09P;-><init>(VIZZ)
+  004c..0050 op=69 sput-object v0, LX/0bq;->A03:LX/09P;
+  0050..0056 op=14 const v1, #0x8b4d
+  0056..005a op=22 new-instance v0, LX/09P;
+  005a..0060 op=70 invoke-direct {v0, v1, v3, v3}, LX/09P;-><init>(VIZZ)
+  0060..0064 op=69 sput-object v0, LX/0bq;->A04:LX/09P;
+  0064..006a op=14 const v1, #0x8faa
+  006a..006e op=22 new-instance v0, LX/09P;
+  006e..0074 op=70 invoke-direct {v0, v1, v3, v2}, LX/09P;-><init>(VIZZ)
+  0074..0078 op=69 sput-object v0, LX/0bq;->A05:LX/09P;
+  0078..007e op=14 const v1, #0x8eed
+  007e..0082 op=22 new-instance v0, LX/09P;
+  0082..0088 op=70 invoke-direct {v0, v1, v3, v2}, LX/09P;-><init>(VIZZ)
+  0088..008c op=69 sput-object v0, LX/0bq;->A06:LX/09P;
+  008c..0092 op=14 const v1, #0x8efc
+  0092..0096 op=22 new-instance v0, LX/09P;
+  0096..009c op=70 invoke-direct {v0, v1, v3, v2}, LX/09P;-><init>(VIZZ)
+  009c..00a0 op=69 sput-object v0, LX/0bq;->A07:LX/09P;
+  00a0..00a6 op=14 const v1, #0x8145
+  00a6..00aa op=22 new-instance v0, LX/09P;
+  00aa..00b0 op=70 invoke-direct {v0, v1, v3, v2}, LX/09P;-><init>(VIZZ)
+  00b0..00b4 op=69 sput-object v0, LX/0bq;->A08:LX/09P;
+  00b4..00ba op=14 const v1, #0x8363
+  00ba..00be op=22 new-instance v0, LX/09P;
+  00be..00c4 op=70 invoke-direct {v0, v1, v3, v3}, LX/09P;-><init>(VIZZ)
+  00c4..00c8 op=69 sput-object v0, LX/0bq;->A09:LX/09P;
+  00c8..00ce op=14 const v1, #0x8163
+  00ce..00d2 op=22 new-instance v0, LX/09P;
+  00d2..00d8 op=70 invoke-direct {v0, v1, v3, v3}, LX/09P;-><init>(VIZZ)
+  00d8..00dc op=69 sput-object v0, LX/0bq;->A0A:LX/09P;
+  00dc..00e2 op=14 const v1, #0x8b60
+  00e2..00e6 op=22 new-instance v0, LX/09P;
+  00e6..00ec op=70 invoke-direct {v0, v1, v3, v3}, LX/09P;-><init>(VIZZ)
+  00ec..00f0 op=69 sput-object v0, LX/0bq;->A0B:LX/09P;
+  00f0..00f4 op=13 const/16 v1, #0x7215
+  00f4..00f8 op=22 new-instance v0, LX/09P;
+  00f8..00fe op=70 invoke-direct {v0, v1, v3, v2}, LX/09P;-><init>(VIZZ)
+  00fe..0102 op=69 sput-object v0, LX/0bq;->A0C:LX/09P;
+  0102..0106 op=13 const/16 v1, #0x77c4
+  0106..010a op=22 new-instance v0, LX/09P;
+  010a..0110 op=70 invoke-direct {v0, v1, v3, v2}, LX/09P;-><init>(VIZZ)
+  0110..0114 op=69 sput-object v0, LX/0bq;->A0D:LX/09P;
+  0114..0116 op=0e return-void
+.end method

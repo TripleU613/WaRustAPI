@@ -1764,3 +1764,58 @@ The repeated checks use the resulting system Rust 1.99.0; they do not establish
 the repository-pinned 1.98.1 toolchain proof. First-pass workspace/lint/docs/CLI
 checks passed before that final build failure. This is a local build-environment
 finding, not APK evidence or a WhatsApp refusal.
+
+
+## Companion removal property and effective value (2026-10-08)
+
+**Confirmed static, APK 2.26.37.71** (SHA-256 1755111a…7d5c): the
+ordinary receive predicate references the **field** `0bq.A04:09P`, not a
+method or a received offline count. `0bq.<clinit>` at 0050..0064 constructs
+`09P(0x8b4d, false, false)`; its integer property ID is **35661**.
+`09P.<init>` assigns ID/A01/A02, and `toString` labels these fields
+`ABPropBoolean`, `prodDefaultValue`, `debugDefaultValue`. These labels establish
+both baked defaults; neither establishes the effective account value.
+Full methods and field references are preserved in
+[feature gate evidence](companion-feature-gate-evidence.txt).
+
+`CoU.A04` calls `00D.A0G`, which delegates to `A13`. `A13` passes the
+property ID and **A01 production default** through `A0E`; it does not read
+A02 debug default. `A0E` passes these into `A07` with a Boolean fallback
+`1Y1` discriminator **2**, and the Boolean callbacks A0R/A0W. Constructor
+`00D.<init>` binds those callbacks to `1Y4(4)` and `1Y5(0)` respectively.
+`1Uf.A07` independently reads this same property through `00D.A13` when
+its worker predicates qualify. The exact field scan has three references:
+constructor write, ordinary receive read and removal-worker read.
+
+**Confirmed resolver behavior:** `00D.A07` selects cached/resolved values
+when its context/mapping/state guards qualify, otherwise invokes its fallback;
+these guards are not a constant false-return branch. `1Y4.invoke` discriminator
+4 resolves `09M.B2y(id)` and, for nonzero mapping, calls
+`MobileConfigUnsafeContext.AVn`. Its missing-map result carries false and
+`INVALID_SPECIFIER_MISSING_IN_WA_LOOKUP_MAP`. `1Y5.invoke` discriminator 0
+reaches `0E6.A04`, which likewise reads mapped Boolean configuration or returns
+false for a zero mapping. `1Y1.invoke` discriminator 2 calls `00D.A0D`.
+That fallback first checks the relevant cache (A0h), then A15's Boolean map,
+then the supplied production default, and reads `SharedPreferences.getBoolean`
+using the decimal property ID as key. A map value or stored preference can
+therefore supersede the supplied baked false default. Cache/exposure bookkeeping
+is separate from the pending dead-device registry.
+
+**Negative / unknown:** `1Y1` has no method named get; its functional entry is
+invoke. No runtime property value, property-specific MobileConfig mapping,
+saved Android preference, A15-map value for 35661 or server feature assignment
+was obtained. Generic resolver branches establish possible sources, not which
+source wins for this account. Native MobileConfig semantics and resolver
+initialization/exposure side effects are not fully ported. No Android execution
+or live property query was performed. Do not infer either always-enabled or
+always-disabled behavior from this trace.
+
+**Rust limitation:** our parsed-offline/known-removal guard remains a local
+conservative policy with no effective APK property value. It must not be
+presented as an unconditional WhatsApp requirement. This finding does not
+justify setting the gate false, deleting markers/keys or adding a bypass flag.
+Porting received feature configuration and the teardown worker remains work.
+The nine new cached core topics preserve the property/default/resolver/fallback
+source for release comparison; class names and numeric property IDs remain
+build-specific and require review in another APK. Most helper topics have no
+unique string anchor; an automatic relocation is not established.

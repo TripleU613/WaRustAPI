@@ -1,0 +1,2040 @@
+{
+  "artifacts": [
+    {
+      "file": "inventory.json",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/inventory.json",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/inventory.json",
+      "status": "unchanged"
+    },
+    {
+      "file": "manifest.json",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/manifest.json",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/manifest.json",
+      "status": "unchanged"
+    },
+    {
+      "file": "targets.json",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/targets.json",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/targets.json",
+      "status": "changed"
+    },
+    {
+      "file": "tokens.json",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/tokens.json",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/tokens.json",
+      "status": "unchanged"
+    }
+  ],
+  "interpretation": "Structural topic differences, not automatic proof of protocol behavior changes. Unmapped APK code/native behavior is outside this scoped comparison.",
+  "new_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "old_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "topics": [
+    {
+      "new_class": "LX/00D;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/abprop-boolean-default.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "added",
+      "topic": "abprop-boolean-default"
+    },
+    {
+      "new_class": "LX/09P;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/abprop-boolean-descriptor.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "added",
+      "topic": "abprop-boolean-descriptor"
+    },
+    {
+      "new_class": "LX/00D;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/abprop-boolean-entry.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "added",
+      "topic": "abprop-boolean-entry"
+    },
+    {
+      "new_class": "LX/1Y1;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/abprop-boolean-fallback.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "added",
+      "topic": "abprop-boolean-fallback"
+    },
+    {
+      "new_class": "LX/00D;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/abprop-boolean-preferences.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "added",
+      "topic": "abprop-boolean-preferences"
+    },
+    {
+      "new_class": "LX/00D;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/abprop-boolean-read.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "added",
+      "topic": "abprop-boolean-read"
+    },
+    {
+      "new_class": "LX/00D;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/abprop-cached-value.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "added",
+      "topic": "abprop-cached-value"
+    },
+    {
+      "new_class": "LX/00D;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/abprop-runtime-resolver.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "added",
+      "topic": "abprop-runtime-resolver"
+    },
+    {
+      "new_class": "LX/0bp;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-account-baseline-cache-read.txt",
+      "old_class": "LX/0bp;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-account-baseline-cache-read.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-account-baseline-cache-read"
+    },
+    {
+      "new_class": "LX/LbQ;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-account-baseline-container.txt",
+      "old_class": "LX/LbQ;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-account-baseline-container.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-account-baseline-container"
+    },
+    {
+      "new_class": "LX/0bN;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-account-baseline-read.txt",
+      "old_class": "LX/0bN;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-account-baseline-read.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-account-baseline-read"
+    },
+    {
+      "new_class": "LX/0bp;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-account-baseline-row-read.txt",
+      "old_class": "LX/0bp;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-account-baseline-row-read.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-account-baseline-row-read"
+    },
+    {
+      "new_class": "LX/0bN;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-account-baseline-write.txt",
+      "old_class": "LX/0bN;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-account-baseline-write.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-account-baseline-write"
+    },
+    {
+      "new_class": "LX/ODa;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-candidate-identity-callback.txt",
+      "old_class": "LX/ODa;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-candidate-identity-callback.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-candidate-identity-callback"
+    },
+    {
+      "new_class": "LX/ODa;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-candidate-identity-callback-constructor.txt",
+      "old_class": "LX/ODa;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-candidate-identity-callback-constructor.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-candidate-identity-callback-constructor"
+    },
+    {
+      "new_class": "LX/11T;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-companion-identity-validation.txt",
+      "old_class": "LX/11T;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-companion-identity-validation.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-companion-identity-validation"
+    },
+    {
+      "new_class": "LX/ODU;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-contact-add-notification.txt",
+      "old_class": "LX/ODU;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-contact-add-notification.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-contact-add-notification"
+    },
+    {
+      "new_class": "LX/Lcr;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-contact-baseline-candidate.txt",
+      "old_class": "LX/Lcr;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-contact-baseline-candidate.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-contact-baseline-candidate"
+    },
+    {
+      "new_class": "LX/1IW;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-contact-companion-removal.txt",
+      "old_class": "LX/1IW;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-contact-companion-removal.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-contact-companion-removal"
+    },
+    {
+      "new_class": "LX/11T;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-contact-identity-apply.txt",
+      "old_class": "LX/11T;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-contact-identity-apply.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-contact-identity-apply"
+    },
+    {
+      "new_class": "LX/0bN;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-contact-raw-id-cleanup.txt",
+      "old_class": "LX/0bN;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-contact-raw-id-cleanup.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-contact-raw-id-cleanup"
+    },
+    {
+      "new_class": "LX/11T;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-contact-reconciliation.txt",
+      "old_class": "LX/11T;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-contact-reconciliation.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-contact-reconciliation"
+    },
+    {
+      "new_class": "LX/11S;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-contact-session-cleanup-schedule.txt",
+      "old_class": "LX/11S;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-contact-session-cleanup-schedule.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-contact-session-cleanup-schedule"
+    },
+    {
+      "new_class": "LX/11T;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-contact-signature.txt",
+      "old_class": "LX/11T;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-contact-signature.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-contact-signature"
+    },
+    {
+      "new_class": "LX/Lck;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-contact-sync-updater.txt",
+      "old_class": "LX/Lck;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-contact-sync-updater.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-contact-sync-updater"
+    },
+    {
+      "new_class": "LX/11T;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-contact-validation.txt",
+      "old_class": "LX/11T;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-contact-validation.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-contact-validation"
+    },
+    {
+      "new_class": "LX/0bN;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-device-index-map-read.txt",
+      "old_class": "LX/0bN;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-device-index-map-read.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-device-index-map-read"
+    },
+    {
+      "new_class": "LX/08F;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-device-signature-prefixes.txt",
+      "old_class": "LX/08F;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-device-signature-prefixes.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-device-signature-prefixes"
+    },
+    {
+      "new_class": "LX/0bN;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-expected-timestamp-update.txt",
+      "old_class": "LX/0bN;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-expected-timestamp-update.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-expected-timestamp-update"
+    },
+    {
+      "new_class": "LX/DF6;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-identity-error-reply.txt",
+      "old_class": "LX/DF6;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-identity-error-reply.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-identity-error-reply"
+    },
+    {
+      "new_class": "LX/11S;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-identity-query-error.txt",
+      "old_class": "LX/11S;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-identity-query-error.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-identity-query-error"
+    },
+    {
+      "new_class": "LX/DNy;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-identity-query-worker.txt",
+      "old_class": "LX/DNy;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-identity-query-worker.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-identity-query-worker"
+    },
+    {
+      "new_class": "LX/DF6;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-identity-reply.txt",
+      "old_class": "LX/DF6;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-identity-reply.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-identity-reply"
+    },
+    {
+      "new_class": "LX/DNk;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-identity-save-worker.txt",
+      "old_class": "LX/DNk;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-identity-save-worker.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-identity-save-worker"
+    },
+    {
+      "new_class": "LX/DNk;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-identity-save-worker-constructor.txt",
+      "old_class": "LX/DNk;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-identity-save-worker-constructor.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/peer_keys.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-identity-save-worker-constructor"
+    },
+    {
+      "new_class": "LX/AhK;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-identity-success-event.txt",
+      "old_class": "LX/AhK;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-identity-success-event.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-identity-success-event"
+    },
+    {
+      "new_class": "LX/0jc;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-primary-identity-commit.txt",
+      "old_class": "LX/0jc;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-primary-identity-commit.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-primary-identity-commit"
+    },
+    {
+      "new_class": "LX/0jc;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-primary-identity-save.txt",
+      "old_class": "LX/0jc;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-primary-identity-save.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-primary-identity-save"
+    },
+    {
+      "new_class": "LX/0jc;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-primary-session-removal.txt",
+      "old_class": "LX/0jc;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-primary-session-removal.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-primary-session-removal"
+    },
+    {
+      "new_class": "LX/B7H;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-public-key-parser.txt",
+      "old_class": "LX/B7H;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-public-key-parser.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-public-key-parser"
+    },
+    {
+      "new_class": "LX/11T;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/adv-typed-public-key.txt",
+      "old_class": "LX/11T;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/adv-typed-public-key.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "adv-typed-public-key"
+    },
+    {
+      "new_class": "LX/Dev;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/certificate-root.txt",
+      "old_class": "LX/Dev;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/certificate-root.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/cert.rs",
+        "crates/whatsapp-api/src/transport/comparison.rs"
+      ],
+      "status": "unchanged",
+      "topic": "certificate-root"
+    },
+    {
+      "new_class": "LX/0bq;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/companion-removal-gate-property.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "added",
+      "topic": "companion-removal-gate-property"
+    },
+    {
+      "new_class": "LX/1NV;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/frame-reader.txt",
+      "old_class": "LX/1NV;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/frame-reader.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/framing.rs"
+      ],
+      "status": "unchanged",
+      "topic": "frame-reader"
+    },
+    {
+      "new_class": "LX/1NX;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/frame-writer.txt",
+      "old_class": "LX/1NX;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/frame-writer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/framing.rs"
+      ],
+      "status": "unchanged",
+      "topic": "frame-writer"
+    },
+    {
+      "new_class": "LX/EIw;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-mode-attribute-model.txt",
+      "old_class": "LX/EIw;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-mode-attribute-model.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-mode-attribute-model"
+    },
+    {
+      "new_class": "LX/ADw;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-mode-attribute-validator.txt",
+      "old_class": "LX/ADw;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-mode-attribute-validator.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-mode-attribute-validator"
+    },
+    {
+      "new_class": "LX/AAO;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-mode-complete-model.txt",
+      "old_class": "LX/AAO;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-mode-complete-model.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-mode-complete-model"
+    },
+    {
+      "new_class": "LX/ADs;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-mode-complete-reply.txt",
+      "old_class": "LX/ADs;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-mode-complete-reply.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-mode-complete-reply"
+    },
+    {
+      "new_class": "LX/2x2;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-mode-contact-lid.txt",
+      "old_class": "LX/2x2;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-mode-contact-lid.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-mode-contact-lid"
+    },
+    {
+      "new_class": "LX/8lB;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-mode-enum-validator.txt",
+      "old_class": "LX/8lB;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-mode-enum-validator.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-mode-enum-validator"
+    },
+    {
+      "new_class": "LX/DEw;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-mode-incoming-parser.txt",
+      "old_class": "LX/DEw;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-mode-incoming-parser.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-mode-incoming-parser"
+    },
+    {
+      "new_class": "LX/0yw;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-mode-info-error.txt",
+      "old_class": "LX/0yw;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-mode-info-error.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-mode-info-error"
+    },
+    {
+      "new_class": "LX/28q;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-mode-nonmember-cleanup.txt",
+      "old_class": "LX/28q;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-mode-nonmember-cleanup.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-mode-nonmember-cleanup"
+    },
+    {
+      "new_class": "LX/1Dz;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-mode-outgoing-bundle.txt",
+      "old_class": "LX/1Dz;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-mode-outgoing-bundle.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-mode-outgoing-bundle"
+    },
+    {
+      "new_class": "LX/0bA;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-mode-to-pn.txt",
+      "old_class": "LX/0bA;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-mode-to-pn.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-mode-to-pn"
+    },
+    {
+      "new_class": "LX/0aK;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-type-existing-update.txt",
+      "old_class": "LX/0aK;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-type-existing-update.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-type-existing-update"
+    },
+    {
+      "new_class": "LX/0aK;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-type-persist.txt",
+      "old_class": "LX/0aK;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-type-persist.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-type-persist"
+    },
+    {
+      "new_class": "LX/0VS;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-type-persist-update.txt",
+      "old_class": "LX/0VS;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-type-persist-update.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-type-persist-update"
+    },
+    {
+      "new_class": "LX/0VS;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-type-persist-upsert.txt",
+      "old_class": "LX/0VS;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-type-persist-upsert.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-type-persist-upsert"
+    },
+    {
+      "new_class": "LX/0a2;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-type-secondary-init.txt",
+      "old_class": "LX/0a2;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-type-secondary-init.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-type-secondary-init"
+    },
+    {
+      "new_class": "LX/0a2;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-type-secondary-load.txt",
+      "old_class": "LX/0a2;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-type-secondary-load.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-type-secondary-load"
+    },
+    {
+      "new_class": "LX/ADu;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-type-secondary-result.txt",
+      "old_class": "LX/ADu;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-type-secondary-result.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-type-secondary-result"
+    },
+    {
+      "new_class": "LX/AC3;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/group-type-subgroup-model.txt",
+      "old_class": "LX/AC3;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/group-type-subgroup-model.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "group-type-subgroup-model"
+    },
+    {
+      "new_class": "LX/HAd;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/http-chunk-reader.txt",
+      "old_class": "LX/HAd;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/http-chunk-reader.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/socket.rs"
+      ],
+      "status": "unchanged",
+      "topic": "http-chunk-reader"
+    },
+    {
+      "new_class": "LX/MMg;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/http-chunk-writer.txt",
+      "old_class": "LX/MMg;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/http-chunk-writer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/socket.rs"
+      ],
+      "status": "unchanged",
+      "topic": "http-chunk-writer"
+    },
+    {
+      "new_class": "LX/D3V;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/identity-change-callback.txt",
+      "old_class": "LX/D3V;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/identity-change-callback.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-change-callback"
+    },
+    {
+      "new_class": "LX/D3V;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/identity-change-callback-constructor.txt",
+      "old_class": "LX/D3V;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/identity-change-callback-constructor.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-change-callback-constructor"
+    },
+    {
+      "new_class": "LX/D4x;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/identity-change-cleanup.txt",
+      "old_class": "LX/D4x;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/identity-change-cleanup.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-change-cleanup"
+    },
+    {
+      "new_class": "LX/D4x;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/identity-change-observer.txt",
+      "old_class": "LX/D4x;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/identity-change-observer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-change-observer"
+    },
+    {
+      "new_class": "LX/0kc;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/identity-pin-database-write.txt",
+      "old_class": "LX/0kc;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/identity-pin-database-write.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-pin-database-write"
+    },
+    {
+      "new_class": "LX/0k4;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/identity-pin-first-event.txt",
+      "old_class": "LX/0k4;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/identity-pin-first-event.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-pin-first-event"
+    },
+    {
+      "new_class": "LX/0kc;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/identity-pin-write-route.txt",
+      "old_class": "LX/0kc;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/identity-pin-write-route.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-pin-write-route"
+    },
+    {
+      "new_class": "LX/ATU;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/identity-success-callback.txt",
+      "old_class": "LX/ATU;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/identity-success-callback.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-success-callback"
+    },
+    {
+      "new_class": "LX/ATU;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/identity-success-dispatch.txt",
+      "old_class": "LX/ATU;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/identity-success-dispatch.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-success-dispatch"
+    },
+    {
+      "new_class": "LX/Fco;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/identity-wait-completion.txt",
+      "old_class": "LX/Fco;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/identity-wait-completion.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-wait-completion"
+    },
+    {
+      "new_class": "LX/Fco;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/identity-wait-observer.txt",
+      "old_class": "LX/Fco;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/identity-wait-observer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-wait-observer"
+    },
+    {
+      "new_class": "LX/1Lz;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/integer-encoding.txt",
+      "old_class": "LX/1Lz;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/integer-encoding.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/binary/decoder.rs",
+        "crates/whatsapp-api/src/binary/encoder.rs",
+        "crates/whatsapp-api/src/transport/prekeys.rs"
+      ],
+      "status": "unchanged",
+      "topic": "integer-encoding"
+    },
+    {
+      "new_class": "LX/1Qe;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/node-writer.txt",
+      "old_class": "LX/1Qe;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/node-writer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/binary/encoder.rs",
+        "crates/whatsapp-api/src/binary/node.rs"
+      ],
+      "status": "unchanged",
+      "topic": "node-writer"
+    },
+    {
+      "new_class": "LX/1Nj;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/noise-cipher.txt",
+      "old_class": "LX/1Nj;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/noise-cipher.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/noise.rs"
+      ],
+      "status": "unchanged",
+      "topic": "noise-cipher"
+    },
+    {
+      "new_class": "LX/19p;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/noise-config.txt",
+      "old_class": "LX/19p;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/noise-config.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/handshake.rs",
+        "crates/whatsapp-api/src/transport/selector.rs"
+      ],
+      "status": "unchanged",
+      "topic": "noise-config"
+    },
+    {
+      "new_class": "LX/1N7;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/noise-handshake.txt",
+      "old_class": "LX/1N7;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/noise-handshake.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/cert.rs",
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/handshake.rs"
+      ],
+      "status": "unchanged",
+      "topic": "noise-handshake"
+    },
+    {
+      "new_class": "LX/1NZ;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/noise-patterns.txt",
+      "old_class": "LX/1NZ;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/noise-patterns.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/noise.rs"
+      ],
+      "status": "unchanged",
+      "topic": "noise-patterns"
+    },
+    {
+      "new_class": "LX/1QR;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/noise-record-state.txt",
+      "old_class": "LX/1QR;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/noise-record-state.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "status": "unchanged",
+      "topic": "noise-record-state"
+    },
+    {
+      "new_class": "LX/C8C;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-companion-key-extract.txt",
+      "old_class": "LX/C8C;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-companion-key-extract.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-companion-key-extract"
+    },
+    {
+      "new_class": "LX/CQn;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-message-cipher-dispatch.txt",
+      "old_class": "LX/CQn;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-message-cipher-dispatch.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct/incoming.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-message-cipher-dispatch"
+    },
+    {
+      "new_class": "LX/CoU;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-message-companion-admission.txt",
+      "old_class": "LX/CoU;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-message-companion-admission.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct/incoming.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-message-companion-admission"
+    },
+    {
+      "new_class": "LX/CjN;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-message-status-extract.txt",
+      "old_class": "LX/CjN;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-message-status-extract.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-message-status-extract"
+    },
+    {
+      "new_class": "LX/DEs;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-normal-adv-child.txt",
+      "old_class": "LX/DEs;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-normal-adv-child.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-normal-adv-child"
+    },
+    {
+      "new_class": "LX/Bp2;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-normal-adv-container.txt",
+      "old_class": "LX/Bp2;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-normal-adv-container.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-normal-adv-container"
+    },
+    {
+      "new_class": "LX/Cih;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-normal-message-build.txt",
+      "old_class": "LX/Cih;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-normal-message-build.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-normal-message-build"
+    },
+    {
+      "new_class": "LX/CjN;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-pairwise-cipher-extract.txt",
+      "old_class": "LX/CjN;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-pairwise-cipher-extract.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-pairwise-cipher-extract"
+    },
+    {
+      "new_class": "LX/0ko;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-prekey-ordinary-factory.txt",
+      "old_class": "LX/0ko;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-prekey-ordinary-factory.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct/incoming.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-prekey-ordinary-factory"
+    },
+    {
+      "new_class": "LX/0jc;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-prekey-outer-coordinator.txt",
+      "old_class": "LX/0jc;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-prekey-outer-coordinator.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct/incoming.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-prekey-outer-coordinator"
+    },
+    {
+      "new_class": "LX/DRz;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-prekey-stateless-identity.txt",
+      "old_class": "LX/DRz;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-prekey-stateless-identity.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct/incoming.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-prekey-stateless-identity"
+    },
+    {
+      "new_class": "LX/DS0;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-prekey-stateless-session.txt",
+      "old_class": "LX/DS0;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-prekey-stateless-session.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct/incoming.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-prekey-stateless-session"
+    },
+    {
+      "new_class": "LX/CjN;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-sender-device-extract.txt",
+      "old_class": "LX/CjN;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-sender-device-extract.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-sender-device-extract"
+    },
+    {
+      "new_class": "LX/CjN;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-sender-route-extract.txt",
+      "old_class": "LX/CjN;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-sender-route-extract.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-sender-route-extract"
+    },
+    {
+      "new_class": "LX/DFt;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-status-adv-child.txt",
+      "old_class": "LX/DFt;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-status-adv-child.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-status-adv-child"
+    },
+    {
+      "new_class": "LX/CaD;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-status-adv-container.txt",
+      "old_class": "LX/CaD;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-status-adv-container.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-status-adv-container"
+    },
+    {
+      "new_class": "LX/CRF;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/receive-status-message-build.txt",
+      "old_class": "LX/CRF;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/receive-status-message-build.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/adv/device_identity.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "status": "unchanged",
+      "topic": "receive-status-message-build"
+    },
+    {
+      "new_class": "LX/1Qc;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/record-writer.txt",
+      "old_class": "LX/1Qc;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/record-writer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/classic.rs",
+        "crates/whatsapp-api/src/transport/framing.rs"
+      ],
+      "status": "unchanged",
+      "topic": "record-writer"
+    },
+    {
+      "new_class": "LX/Hu8;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/registration-key-bundle.txt",
+      "old_class": "LX/Hu8;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/registration-key-bundle.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/prerequisites.rs",
+        "crates/whatsapp-api/src/registration/wire.rs"
+      ],
+      "status": "unchanged",
+      "topic": "registration-key-bundle"
+    },
+    {
+      "new_class": "LX/HrU;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/registration-paths.txt",
+      "old_class": "LX/HrU;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/registration-paths.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/envelope.rs",
+        "crates/whatsapp-api/src/registration/request.rs"
+      ],
+      "status": "unchanged",
+      "topic": "registration-paths"
+    },
+    {
+      "new_class": "LX/HUG;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/registration-requests.txt",
+      "old_class": "LX/HUG;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/registration-requests.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/envelope.rs",
+        "crates/whatsapp-api/src/registration/wire.rs"
+      ],
+      "status": "unchanged",
+      "topic": "registration-requests"
+    },
+    {
+      "new_class": "Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/registration-response-bridge.txt",
+      "old_class": "Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/registration-response-bridge.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/mod.rs",
+        "crates/whatsapp-api/src/registration/wire.rs"
+      ],
+      "status": "unchanged",
+      "topic": "registration-response-bridge"
+    },
+    {
+      "new_class": "LX/Htz;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/registration-token.txt",
+      "old_class": "LX/Htz;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/registration-token.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/token.rs",
+        "crates/whatsapp-api/src/registration/token_material.rs"
+      ],
+      "status": "unchanged",
+      "topic": "registration-token"
+    },
+    {
+      "new_class": "LX/HSA;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/registration-token-salt.txt",
+      "old_class": "LX/HSA;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/registration-token-salt.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/registration/token.rs"
+      ],
+      "status": "unchanged",
+      "topic": "registration-token-salt"
+    },
+    {
+      "new_class": "LX/08i;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-account-address-first.txt",
+      "old_class": "LX/08i;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-account-address-first.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-account-address-first"
+    },
+    {
+      "new_class": "LX/08i;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-account-address-second.txt",
+      "old_class": "LX/08i;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-account-address-second.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-account-address-second"
+    },
+    {
+      "new_class": "LX/0DK;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-account-device-build.txt",
+      "old_class": "LX/0DK;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-account-device-build.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-account-device-build"
+    },
+    {
+      "new_class": "LX/08i;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-account-device-index.txt",
+      "old_class": "LX/08i;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-account-device-index.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-account-device-index"
+    },
+    {
+      "new_class": "LX/0DE;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-account-lid-device-build.txt",
+      "old_class": "LX/0DE;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-account-lid-device-build.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-account-lid-device-build"
+    },
+    {
+      "new_class": "LX/08i;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-account-lid-initialize.txt",
+      "old_class": "LX/08i;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-account-lid-initialize.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-account-lid-initialize"
+    },
+    {
+      "new_class": "LX/08i;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-account-lid-parse.txt",
+      "old_class": "LX/08i;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-account-lid-parse.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-account-lid-parse"
+    },
+    {
+      "new_class": "LX/08i;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-account-lid-set.txt",
+      "old_class": "LX/08i;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-account-lid-set.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-account-lid-set"
+    },
+    {
+      "new_class": "LX/1XY;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-account-me-load.txt",
+      "old_class": "LX/1XY;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-account-me-load.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-account-me-load"
+    },
+    {
+      "new_class": "LX/08i;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-account-me-set.txt",
+      "old_class": "LX/08i;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-account-me-set.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-account-me-set"
+    },
+    {
+      "new_class": "LX/08i;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-account-pn-ensure.txt",
+      "old_class": "LX/08i;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-account-pn-ensure.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-account-pn-ensure"
+    },
+    {
+      "new_class": "LX/1xi;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-account-provider.txt",
+      "old_class": "LX/1xi;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-account-provider.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-account-provider"
+    },
+    {
+      "new_class": "LX/B7H;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-account-recipient-wrap.txt",
+      "old_class": "LX/B7H;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-account-recipient-wrap.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-account-recipient-wrap"
+    },
+    {
+      "new_class": "LX/B7H;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-address-build.txt",
+      "old_class": "LX/B7H;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-address-build.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-address-build"
+    },
+    {
+      "new_class": "LX/C9B;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-device-category.txt",
+      "old_class": "LX/C9B;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-device-category.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-device-category"
+    },
+    {
+      "new_class": "LX/1jL;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-account-flag.txt",
+      "old_class": "LX/1jL;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-account-flag.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-account-flag"
+    },
+    {
+      "new_class": "LX/0bA;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-account-row.txt",
+      "old_class": "LX/0bA;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-account-row.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-account-row"
+    },
+    {
+      "new_class": "LX/0bA;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-account-select.txt",
+      "old_class": "LX/0bA;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-account-select.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-account-select"
+    },
+    {
+      "new_class": "LX/0bA;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-alias-schedule.txt",
+      "old_class": "LX/0bA;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-alias-schedule.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-alias-schedule"
+    },
+    {
+      "new_class": "LX/290;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-alias-update.txt",
+      "old_class": "LX/290;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-alias-update.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-alias-update"
+    },
+    {
+      "new_class": "LX/31R;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-broadcast-migrate.txt",
+      "old_class": "LX/31R;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-broadcast-migrate.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-broadcast-migrate"
+    },
+    {
+      "new_class": "LX/B7i;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-broadcast-predicate.txt",
+      "old_class": "LX/B7i;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-broadcast-predicate.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-broadcast-predicate"
+    },
+    {
+      "new_class": "LX/0bE;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-cache-load.txt",
+      "old_class": "LX/0bE;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-cache-load.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-cache-load"
+    },
+    {
+      "new_class": "LX/B7i;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-classify.txt",
+      "old_class": "LX/B7i;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-classify.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-classify"
+    },
+    {
+      "new_class": "LX/0Da;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-contact-default.txt",
+      "old_class": "LX/0Da;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-contact-default.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-contact-default"
+    },
+    {
+      "new_class": "LX/B7i;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-contact-lookup.txt",
+      "old_class": "LX/B7i;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-contact-lookup.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-contact-lookup"
+    },
+    {
+      "new_class": "LX/0gt;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-contact-save.txt",
+      "old_class": "LX/0gt;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-contact-save.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-contact-save"
+    },
+    {
+      "new_class": "LX/0Y9;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-contact-set.txt",
+      "old_class": "LX/0Y9;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-contact-set.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-contact-set"
+    },
+    {
+      "new_class": "LX/B7i;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-lid-predicate.txt",
+      "old_class": "LX/B7i;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-lid-predicate.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-lid-predicate"
+    },
+    {
+      "new_class": "LX/0yw;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-migrate.txt",
+      "old_class": "LX/0yw;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-migrate.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-migrate"
+    },
+    {
+      "new_class": "LX/0yw;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-participant-add.txt",
+      "old_class": "LX/0yw;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-participant-add.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-participant-add"
+    },
+    {
+      "new_class": "LX/0yw;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-participant-update.txt",
+      "old_class": "LX/0yw;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-participant-update.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-participant-update"
+    },
+    {
+      "new_class": "LX/1jL;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-row-init.txt",
+      "old_class": "LX/1jL;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-row-init.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-row-init"
+    },
+    {
+      "new_class": "LX/0bI;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-row-load.txt",
+      "old_class": "LX/0bI;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-row-load.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-row-load"
+    },
+    {
+      "new_class": "LX/0lO;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-settings-load.txt",
+      "old_class": "LX/0lO;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-settings-load.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-settings-load"
+    },
+    {
+      "new_class": "LX/9R1;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-settings-save.txt",
+      "old_class": "LX/9R1;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-settings-save.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-settings-save"
+    },
+    {
+      "new_class": "LX/0Fs;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-group-mode-type-predicate.txt",
+      "old_class": "LX/0Fs;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-group-mode-type-predicate.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-mode-type-predicate"
+    },
+    {
+      "new_class": "LX/9Ln;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-mode-broadcast-jid.txt",
+      "old_class": "LX/9Ln;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-mode-broadcast-jid.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-mode-broadcast-jid"
+    },
+    {
+      "new_class": "LX/0DE;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-mode-broadcast-kind.txt",
+      "old_class": "LX/0DE;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-mode-broadcast-kind.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-mode-broadcast-kind"
+    },
+    {
+      "new_class": "LX/0DE;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-mode-cache-group-kind.txt",
+      "old_class": "LX/0DE;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-mode-cache-group-kind.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-mode-cache-group-kind"
+    },
+    {
+      "new_class": "LX/0DE;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-mode-group-domain.txt",
+      "old_class": "LX/0DE;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-mode-group-domain.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-mode-group-domain"
+    },
+    {
+      "new_class": "LX/Gym;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-mode-interop-jid.txt",
+      "old_class": "LX/Gym;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-mode-interop-jid.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-mode-interop-jid"
+    },
+    {
+      "new_class": "LX/0DE;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-mode-interop-kind.txt",
+      "old_class": "LX/0DE;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-mode-interop-kind.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-mode-interop-kind"
+    },
+    {
+      "new_class": "LX/1bn;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-mode-normal-jid.txt",
+      "old_class": "LX/1bn;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-mode-normal-jid.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-mode-normal-jid"
+    },
+    {
+      "new_class": "LX/8oR;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-mode-status-jid.txt",
+      "old_class": "LX/8oR;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-mode-status-jid.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-mode-status-jid"
+    },
+    {
+      "new_class": "LX/0DE;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-mode-status-kind.txt",
+      "old_class": "LX/0DE;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-mode-status-kind.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-mode-status-kind"
+    },
+    {
+      "new_class": "LX/9Lo;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-mode-temporary-jid.txt",
+      "old_class": "LX/9Lo;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-mode-temporary-jid.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_send.rs",
+        "crates/whatsapp-api/src/transport/groups.rs",
+        "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-mode-temporary-jid"
+    },
+    {
+      "new_class": "LX/Cnr;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-name.txt",
+      "old_class": "LX/Cnr;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-name.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-name"
+    },
+    {
+      "new_class": "LX/0kX;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-name-translation.txt",
+      "old_class": "LX/0kX;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-name-translation.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-name-translation"
+    },
+    {
+      "new_class": "LX/0kT;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-phone-parse.txt",
+      "old_class": "LX/0kT;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-phone-parse.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-phone-parse"
+    },
+    {
+      "new_class": "LX/0kT;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-recipient-translation.txt",
+      "old_class": "LX/0kT;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-recipient-translation.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-recipient-translation"
+    },
+    {
+      "new_class": "LX/0jc;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/sender-key-remove.txt",
+      "old_class": "LX/0jc;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/sender-key-remove.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-remove"
+    },
+    {
+      "new_class": "LX/B77;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/signal-actor-bucket-enum.txt",
+      "old_class": "LX/B77;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/signal-actor-bucket-enum.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct/incoming.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "status": "unchanged",
+      "topic": "signal-actor-bucket-enum"
+    },
+    {
+      "new_class": "LX/1AM;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/socket-factory.txt",
+      "old_class": "LX/1AM;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/socket-factory.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/selector.rs",
+        "crates/whatsapp-api/src/transport/socket.rs"
+      ],
+      "status": "unchanged",
+      "topic": "socket-factory"
+    },
+    {
+      "new_class": "LX/1BH;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/socket-sequence.txt",
+      "old_class": "LX/1BH;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/socket-sequence.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/selector.rs",
+        "crates/whatsapp-api/src/transport/socket.rs"
+      ],
+      "status": "unchanged",
+      "topic": "socket-sequence"
+    },
+    {
+      "new_class": "LX/1Rl;",
+      "new_file": "/tmp/telewhatsapp-feature-gate-core-export/token-dictionary-initializer.txt",
+      "old_class": "LX/1Rl;",
+      "old_file": "/tmp/telewhatsapp-feature-gate-core-before/token-dictionary-initializer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/binary/decoder.rs",
+        "crates/whatsapp-api/src/binary/encoder.rs",
+        "crates/whatsapp-api/src/binary/tokens.rs"
+      ],
+      "status": "unchanged",
+      "topic": "token-dictionary-initializer"
+    }
+  ]
+}

@@ -1959,3 +1959,26 @@ checked 896 local links. Offline saved-capture inspection found no qualifying
 companion sample; outbox, actions, receipts, devices and pins matched before/after.
 No login, device query, chat send or cleanup occurred. Private inspection artifact:
 `lab/releases/offline-parser-inspection/active.json`.
+
+
+Companion removal gate (2026-10-08, **confirmed static 37.71**): 0bq.A04
+is ABPropBoolean property 35661, with false production/debug baked defaults.
+Ordinary receive and worker predicates resolve it through 00D.A13; cached,
+MobileConfig and preference branches can supersede the supplied default.
+The effective account value remains unknown. Rust's current removal guard is
+conservative local policy, not an unconditional WhatsApp requirement. No runtime
+state, identity, keys, markers or waits changed. Nine bounded source topics are
+added to the cached core release baseline; automatic relocation is unestablished.
+[Evidence and limits](protocol/peer-identity.md#companion-removal-property-and-effective-value-2026-10-08).
+
+Feature-gate trace validation: thirteen complete selected method/class exports
+(with exception tables), one field-reference scan and the current APK SHA-256
+were checked. Actual core export: 164 topics / 349 methods / 169 files /
+2,068,819 bytes, within the 2 MiB bound. Checksum-verified cached comparison:
+nine additions, 155 unchanged, 0.0942 seconds. All 59 xtask tests, regenerated
+CLI reference, experimental API-symbol check and formatting passed. Runtime
+Rust behavior is unchanged; no account access, login, query, send or cleanup
+occurred. Pinned-toolchain proof is not claimed; checks used system Rust 1.99.0.
+Repository hygiene passed: 902 local links and 3,743,290 bytes across four
+checksum bundles. Reproduction commands quote DEX descriptors/constructor names
+for shell use. No runtime code or private state changed.

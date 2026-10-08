@@ -1693,6 +1693,105 @@
         "crates/whatsapp-api/src/transport/inbox.rs"
       ],
       "anchors": []
+    },
+    "companion-removal-gate-property": {
+      "class": "LX/0bq;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "anchors": [],
+      "method": "<clinit>",
+      "method_shorty": "V"
+    },
+    "abprop-boolean-descriptor": {
+      "class": "LX/09P;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "anchors": [
+        "ABPropBoolean(id=",
+        "prodDefaultValue=",
+        "debugDefaultValue="
+      ]
+    },
+    "abprop-boolean-entry": {
+      "class": "LX/00D;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "anchors": [],
+      "method": "A0G",
+      "method_shorty": "ZLL"
+    },
+    "abprop-boolean-default": {
+      "class": "LX/00D;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "anchors": [],
+      "method": "A13",
+      "method_shorty": "ZL"
+    },
+    "abprop-boolean-read": {
+      "class": "LX/00D;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "anchors": [],
+      "method": "A0E",
+      "method_shorty": "ZLLLI"
+    },
+    "abprop-runtime-resolver": {
+      "class": "LX/00D;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "anchors": [
+        "null cannot be cast to non-null type kotlin.Any"
+      ],
+      "method": "A07",
+      "method_shorty": "LLLLLLI"
+    },
+    "abprop-boolean-preferences": {
+      "class": "LX/00D;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "anchors": [
+        "Unknown BooleanField: ",
+        "_expo_key"
+      ],
+      "method": "A0D",
+      "method_shorty": "ZLLLI"
+    },
+    "abprop-boolean-fallback": {
+      "class": "LX/1Y1;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "anchors": [
+        "Unknown FloatField: "
+      ],
+      "method": "invoke",
+      "method_shorty": "LLL"
+    },
+    "abprop-cached-value": {
+      "class": "LX/00D;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "anchors": [],
+      "method": "A0h",
+      "method_shorty": "LLI"
     }
   }
 }

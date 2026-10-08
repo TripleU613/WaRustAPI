@@ -1,4 +1,106 @@
 {
+  "abprop-boolean-default": {
+    "class": "LX/00D;",
+    "file": "abprop-boolean-default.txt",
+    "method_filter": "A13",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "abprop-boolean-descriptor": {
+    "anchors": [
+      "ABPropBoolean(id=",
+      "prodDefaultValue=",
+      "debugDefaultValue="
+    ],
+    "class": "LX/09P;",
+    "file": "abprop-boolean-descriptor.txt",
+    "method_filter": null,
+    "methods": 4,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "abprop-boolean-entry": {
+    "class": "LX/00D;",
+    "file": "abprop-boolean-entry.txt",
+    "method_filter": "A0G",
+    "method_shorty": "ZLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "abprop-boolean-fallback": {
+    "anchors": [
+      "Unknown FloatField: "
+    ],
+    "class": "LX/1Y1;",
+    "file": "abprop-boolean-fallback.txt",
+    "method_filter": "invoke",
+    "method_shorty": "LLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "abprop-boolean-preferences": {
+    "anchors": [
+      "Unknown BooleanField: ",
+      "_expo_key"
+    ],
+    "class": "LX/00D;",
+    "file": "abprop-boolean-preferences.txt",
+    "method_filter": "A0D",
+    "method_shorty": "ZLLLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "abprop-boolean-read": {
+    "class": "LX/00D;",
+    "file": "abprop-boolean-read.txt",
+    "method_filter": "A0E",
+    "method_shorty": "ZLLLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "abprop-cached-value": {
+    "class": "LX/00D;",
+    "file": "abprop-cached-value.txt",
+    "method_filter": "A0h",
+    "method_shorty": "LLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "abprop-runtime-resolver": {
+    "anchors": [
+      "null cannot be cast to non-null type kotlin.Any"
+    ],
+    "class": "LX/00D;",
+    "file": "abprop-runtime-resolver.txt",
+    "method_filter": "A07",
+    "method_shorty": "LLLLLLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
   "adv-account-baseline-cache-read": {
     "anchors": [
       "GET_USER_DEVICE_INFO_SQL"
@@ -439,6 +541,17 @@
     "rust_files": [
       "crates/whatsapp-api/src/transport/cert.rs",
       "crates/whatsapp-api/src/transport/comparison.rs"
+    ]
+  },
+  "companion-removal-gate-property": {
+    "class": "LX/0bq;",
+    "file": "companion-removal-gate-property.txt",
+    "method_filter": "<clinit>",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/companion_admission.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
     ]
   },
   "frame-reader": {

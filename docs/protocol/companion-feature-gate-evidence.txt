@@ -1,0 +1,1094 @@
+APK 2.26.37.71 companion removal feature gate evidence
+SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+
+All offsets below are method instruction byte offsets unless labelled otherwise.
+Runtime values and native MobileConfig selection remain unknown.
+
+
+# Reproduce: xtask apk-smali APK --class 'LX/0bq;' --method '<clinit>' --exceptions
+
+# class: LX/0bq;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 4
+    0000..0006  const  v1, #0x82f5
+    0006..0008  const/4  v3, #0x0
+    0008..000c  new-instance  v0, LX/09P;
+    000c..0012  invoke-direct  {v0, v1, v3, v3}, LX/09P;-><init>(VIZZ)
+    0012..0016  sput-object  v0, LX/0bq;->A00:LX/09P;
+    0016..001c  const  v1, #0x8a6b
+    001c..001e  const/4  v2, #0x1
+    001e..0022  new-instance  v0, LX/09P;
+    0022..0028  invoke-direct  {v0, v1, v3, v2}, LX/09P;-><init>(VIZZ)
+    0028..002c  sput-object  v0, LX/0bq;->A01:LX/09P;
+    002c..0030  const/16  v1, #0x7b70
+    0030..0034  new-instance  v0, LX/09P;
+    0034..003a  invoke-direct  {v0, v1, v2, v2}, LX/09P;-><init>(VIZZ)
+    003a..003e  sput-object  v0, LX/0bq;->A02:LX/09P;
+    003e..0042  const/16  v1, #0x721b
+    0042..0046  new-instance  v0, LX/09P;
+    0046..004c  invoke-direct  {v0, v1, v3, v3}, LX/09P;-><init>(VIZZ)
+    004c..0050  sput-object  v0, LX/0bq;->A03:LX/09P;
+    0050..0056  const  v1, #0x8b4d
+    0056..005a  new-instance  v0, LX/09P;
+    005a..0060  invoke-direct  {v0, v1, v3, v3}, LX/09P;-><init>(VIZZ)
+    0060..0064  sput-object  v0, LX/0bq;->A04:LX/09P;
+    0064..006a  const  v1, #0x8faa
+    006a..006e  new-instance  v0, LX/09P;
+    006e..0074  invoke-direct  {v0, v1, v3, v2}, LX/09P;-><init>(VIZZ)
+    0074..0078  sput-object  v0, LX/0bq;->A05:LX/09P;
+    0078..007e  const  v1, #0x8eed
+    007e..0082  new-instance  v0, LX/09P;
+    0082..0088  invoke-direct  {v0, v1, v3, v2}, LX/09P;-><init>(VIZZ)
+    0088..008c  sput-object  v0, LX/0bq;->A06:LX/09P;
+    008c..0092  const  v1, #0x8efc
+    0092..0096  new-instance  v0, LX/09P;
+    0096..009c  invoke-direct  {v0, v1, v3, v2}, LX/09P;-><init>(VIZZ)
+    009c..00a0  sput-object  v0, LX/0bq;->A07:LX/09P;
+    00a0..00a6  const  v1, #0x8145
+    00a6..00aa  new-instance  v0, LX/09P;
+    00aa..00b0  invoke-direct  {v0, v1, v3, v2}, LX/09P;-><init>(VIZZ)
+    00b0..00b4  sput-object  v0, LX/0bq;->A08:LX/09P;
+    00b4..00ba  const  v1, #0x8363
+    00ba..00be  new-instance  v0, LX/09P;
+    00be..00c4  invoke-direct  {v0, v1, v3, v3}, LX/09P;-><init>(VIZZ)
+    00c4..00c8  sput-object  v0, LX/0bq;->A09:LX/09P;
+    00c8..00ce  const  v1, #0x8163
+    00ce..00d2  new-instance  v0, LX/09P;
+    00d2..00d8  invoke-direct  {v0, v1, v3, v3}, LX/09P;-><init>(VIZZ)
+    00d8..00dc  sput-object  v0, LX/0bq;->A0A:LX/09P;
+    00dc..00e2  const  v1, #0x8b60
+    00e2..00e6  new-instance  v0, LX/09P;
+    00e6..00ec  invoke-direct  {v0, v1, v3, v3}, LX/09P;-><init>(VIZZ)
+    00ec..00f0  sput-object  v0, LX/0bq;->A0B:LX/09P;
+    00f0..00f4  const/16  v1, #0x7215
+    00f4..00f8  new-instance  v0, LX/09P;
+    00f8..00fe  invoke-direct  {v0, v1, v3, v2}, LX/09P;-><init>(VIZZ)
+    00fe..0102  sput-object  v0, LX/0bq;->A0C:LX/09P;
+    0102..0106  const/16  v1, #0x77c4
+    0106..010a  new-instance  v0, LX/09P;
+    010a..0110  invoke-direct  {v0, v1, v3, v2}, LX/09P;-><init>(VIZZ)
+    0110..0114  sput-object  v0, LX/0bq;->A0D:LX/09P;
+    0114..0116  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/09P;' --exceptions
+
+# class: LX/09P;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VIZZ)  # .registers 4
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0006..000a  iput  v1, v0, LX/09P;->A00:I
+    000a..000e  iput-boolean  v2, v0, LX/09P;->A01:Z
+    000e..0012  iput-boolean  v3, v0, LX/09P;->A02:Z
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public equals(ZL)  # .registers 6
+    0000..0002  const/4  v3, #0x1
+    0002..0006  if-eq  v4, v5, +0x1c
+    0006..000a  instance-of  v0, v5, LX/09P;
+    000a..000c  const/4  v2, #0x0
+    000c..0010  if-eqz  v0, +0x16
+    0010..0014  check-cast  v5, LX/09P;
+    0014..0018  iget  v1, v4, LX/09P;->A00:I
+    0018..001c  iget  v0, v5, LX/09P;->A00:I
+    001c..0020  if-ne  v1, v0, +0xe
+    0020..0024  iget-boolean  v1, v4, LX/09P;->A01:Z
+    0024..0028  iget-boolean  v0, v5, LX/09P;->A01:Z
+    0028..002c  if-ne  v1, v0, +0x8
+    002c..0030  iget-boolean  v1, v4, LX/09P;->A02:Z
+    0030..0034  iget-boolean  v0, v5, LX/09P;->A02:Z
+    0034..0038  if-eq  v1, v0, +0x3
+    0038..003a  return  v2
+    003a..003c  return  v3
+    # exception table: 0 try range(s)
+.end method
+
+.method public hashCode(I)  # .registers 4
+    0000..0004  iget  v0, v3, LX/09P;->A00:I
+    0004..0008  mul-int/lit8  v2, v0, #0x1f
+    0008..000c  iget-boolean  v1, v3, LX/09P;->A01:Z
+    000c..0010  const/16  v0, #0x4d5
+    0010..0014  if-eqz  v1, +0x4
+    0014..0018  const/16  v0, #0x4cf
+    0018..001a  add-int/2addr  v2, v0
+    001a..001e  mul-int/lit8  v2, v2, #0x1f
+    001e..0022  iget-boolean  v1, v3, LX/09P;->A02:Z
+    0022..0026  const/16  v0, #0x4d5
+    0026..002a  if-eqz  v1, +0x4
+    002a..002e  const/16  v0, #0x4cf
+    002e..0030  add-int/2addr  v2, v0
+    0030..0032  return  v2
+    # exception table: 0 try range(s)
+.end method
+
+.method public toString(L)  # .registers 6
+    0000..0004  iget  v4, v5, LX/09P;->A00:I
+    0004..0008  iget-boolean  v3, v5, LX/09P;->A01:Z
+    0008..000c  iget-boolean  v2, v5, LX/09P;->A02:Z
+    000c..0010  const-string  v0, "ABPropBoolean(id="
+    0010..0014  new-instance  v1, Ljava/lang/StringBuilder;
+    0014..001a  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+    001a..0020  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(LI)
+    0020..0024  const-string  v0, ", prodDefaultValue="
+    0024..002a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    002a..0030  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(LZ)
+    0030..0034  const-string  v0, ", debugDefaultValue="
+    0034..003a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    003a..0040  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(LZ)
+    0040..0044  const-string  v0, ")"
+    0044..004a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    004a..0050  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    0050..0052  move-result-object  v0
+    0052..0054  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/00D;' --method A0G --exceptions
+
+# class: LX/00D;
+# extends: Ljava/lang/Object;
+
+.method public A0G(ZLL)  # .registers 2
+    0000..0006  invoke-static  {v1}, LX/00h;->A07(VL)
+    0006..000c  invoke-virtual  {v0, v1}, LX/00D;->A13(ZL)
+    000c..000e  move-result  v0
+    000e..0010  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/00D;' --method A13 --exceptions
+
+# class: LX/00D;
+# extends: Ljava/lang/Object;
+
+.method public A13(ZL)  # .registers 5
+    0000..0004  iget  v2, v4, LX/09P;->A00:I
+    0004..0008  sget-object  v1, LX/00F;->A03:LX/00F;
+    0008..000c  iget-boolean  v0, v4, LX/09P;->A01:Z
+    000c..0012  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-static  {v1, v3, v0, v2}, LX/00D;->A0E(ZLLLI)
+    001a..001c  move-result  v0
+    001c..001e  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/00D;' --method A0E --exceptions
+
+# class: LX/00D;
+# extends: Ljava/lang/Object;
+
+.method public A0E(ZLLLI)  # .registers 11
+    0000..0004  sget-object  v3, LX/02S;->A0N:Ljava/lang/Integer;
+    0004..0006  const/4  v0, #0x2
+    0006..000a  new-instance  v4, LX/1Y1;
+    000a..000c  move-object  v1, v8
+    000c..0012  invoke-direct  {v4, v8, v9, v0}, LX/1Y1;-><init>(VLLI)
+    0012..0016  iget-object  v5, v8, LX/00D;->A0R:LX/09T;
+    0016..001a  iget-object  v6, v8, LX/00D;->A0W:LX/09U;
+    001a..001c  move-object  v2, v7
+    001c..001e  move  v7, v10
+    001e..0024  invoke-direct/range  {v1..v7}, LX/00D;->A07(LLLLLLI)
+    0024..0026  move-result-object  v0
+    0026..002a  check-cast  v0, Ljava/lang/Boolean;
+    002a..0030  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue(Z)
+    0030..0032  move-result  v0
+    0032..0034  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/00D;' --method A07 --exceptions
+
+# class: LX/00D;
+# extends: Ljava/lang/Object;
+
+.method private A07(LLLLLLI)  # .registers 27
+    0000..0004  move-object/from16  v13, v20
+    0004..0008  iget-object  v2, v13, LX/00D;->A07:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0008..000e  invoke-virtual  {v2}, Ljava/util/concurrent/atomic/AtomicBoolean;->get(Z)
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0x11
+    0014..0018  iget-boolean  v0, v13, LX/00D;->A0B:Z
+    0018..001c  if-eqz  v0, +0xd
+    001c..001e  const/4  v1, #0x1
+    001e..0020  const/4  v0, #0x0
+    0020..0026  invoke-virtual  {v2, v1, v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->compareAndSet(ZZZ)
+    0026..0028  move-result  v0
+    0028..002c  if-eqz  v0, +0x5
+    002c..0032  invoke-virtual  {v13}, LX/00D;->A0q(V)
+    0032..0038  invoke-virtual  {v13}, LX/00D;->A0z(Z)
+    0038..003a  move-result  v0
+    003a..003e  if-nez  v0, +0x2e
+    003e..0042  const/16  v18, #0x0
+    0042..0046  iget-boolean  v0, v13, LX/00D;->A0A:Z
+    0046..004a  if-eqz  v0, +0x7
+    004a..004e  iget-boolean  v0, v13, LX/00D;->A0C:Z
+    004e..0050  const/4  v12, #0x1
+    0050..0054  if-nez  v0, +0x3
+    0054..0056  const/4  v12, #0x0
+    0056..005a  iget-object  v7, v13, LX/00D;->A0L:LX/09M;
+    005a..005c  const/4  v8, #0x0
+    005c..0060  move-object/from16  v10, v21
+    0060..0064  move-object/from16  v15, v22
+    0064..0068  move-object/from16  v11, v23
+    0068..006c  move-object/from16  v9, v24
+    006c..0070  move/from16  v5, v26
+    0070..0074  if-eqz  v7, +0xb8
+    0074..0078  iget-object  v6, v13, LX/00D;->A0I:Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    0078..007c  if-eqz  v6, +0xb4
+    007c..0080  if-eqz  v18, +0xb2
+    0080..0084  iget-boolean  v3, v10, LX/00F;->A01:Z
+    0084..0088  if-eqz  v3, +0x10
+    0088..008e  invoke-virtual  {v13, v10, v5}, LX/00D;->A0h(LLI)
+    008e..0090  move-result-object  v0
+    0090..0094  if-eqz  v0, +0xa
+    0094..0096  return-object  v0
+    0096..009a  iget-object  v0, v13, LX/00D;->A06:Ljava/util/concurrent/atomic/AtomicBoolean;
+    009a..00a0  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get(Z)
+    00a0..00a2  move-result  v18
+    00a2..00a4  goto  -0x30
+    00a4..00a8  const-string  v4, "null cannot be cast to non-null type kotlin.Any"
+    00a8..00ac  if-nez  v3, +0x6a
+    00ac..00b0  sget-object  v2, LX/0E8;->A03:LX/0E8;
+    00b0..00b4  if-eqz  v12, +0x9
+    00b4..00ba  invoke-static  {v2}, LX/0E8;->A00(LL)
+    00ba..00bc  move-result-object  v2
+    00bc..00be  const/4  v0, #0x1
+    00be..00c2  iput-boolean  v0, v2, LX/0E8;->A02:Z
+    00c2..00c8  invoke-static  {v2}, LX/00h;->A09(VL)
+    00c8..00cc  if-nez  v12, +0x61
+    00cc..00d0  iget  v11, v13, LX/00D;->A0E:I
+    00d0..00d4  iget  v10, v13, LX/00D;->A0D:I
+    00d4..00d8  if-lez  v11, +0x1c
+    00d8..00dc  iget-object  v0, v13, LX/00D;->A09:LX/00l;
+    00dc..00e2  invoke-interface  {v0}, LX/00l;->getValue(L)
+    00e2..00e4  move-result-object  v9
+    00e4..00e8  check-cast  v9, LX/N6u;
+    00e8..00ee  invoke-virtual  {v15}, Ljava/lang/Number;->intValue(I)
+    00ee..00f0  move-result  v1
+    00f0..00f4  if-eq  v1, v8, +0x43
+    00f4..00f6  const/4  v0, #0x3
+    00f6..00fa  if-eq  v1, v0, +0x3d
+    00fa..00fc  const/4  v0, #0x1
+    00fc..0100  if-eq  v1, v0, +0x37
+    0100..0104  sget-object  v0, LX/02S;->A0C:Ljava/lang/Integer;
+    0104..010a  invoke-virtual  {v9, v0, v11}, LX/N6u;->A00(ILI)
+    010a..010c  move-result  v8
+    010c..0112  invoke-static  {v5}, Ljava/lang/Integer;->valueOf(LI)
+    0112..0114  move-result-object  v15
+    0114..011a  invoke-static  {v10}, Ljava/lang/Integer;->valueOf(LI)
+    011a..011c  move-result-object  v19
+    011c..0120  move-object/from16  v14, v25
+    0120..0124  move-object/from16  v16, v2
+    0124..0128  move-object/from16  v17, v6
+    0128..012c  move-object/from16  v18, v7
+    012c..0132  invoke-interface/range  {v14..v19}, LX/09U;->invoke(LLLLLL)
+    0132..0134  move-result-object  v2
+    0134..0138  if-eqz  v8, +0xd
+    0138..013c  iget-object  v0, v13, LX/00D;->A09:LX/00l;
+    013c..0142  invoke-interface  {v0}, LX/00l;->getValue(L)
+    0142..0144  move-result-object  v0
+    0144..0148  check-cast  v0, LX/N6u;
+    0148..014e  invoke-virtual  {v0, v8}, LX/N6u;->A01(VI)
+    014e..0152  if-eqz  v3, +0x1a
+    0152..0156  iget-object  v0, v13, LX/00D;->A05:Ljava/util/concurrent/ConcurrentHashMap;
+    0156..015c  invoke-static  {v2, v4}, LX/00h;->A0D(VLL)
+    015c..0162  invoke-virtual  {v0, v15, v2}, Ljava/util/concurrent/ConcurrentHashMap;->putIfAbsent(LLL)
+    0162..0164  move-result-object  v16
+    0164..0168  if-eqz  v16, +0xf
+    0168..016a  return-object  v16
+    016a..016e  sget-object  v0, LX/02S;->A01:Ljava/lang/Integer;
+    016e..0170  goto  -0x35
+    0170..0174  sget-object  v0, LX/02S;->A0N:Ljava/lang/Integer;
+    0174..0176  goto  -0x38
+    0176..017a  sget-object  v0, LX/02S;->A00:Ljava/lang/Integer;
+    017a..017c  goto  -0x3b
+    017c..0180  sget-object  v2, LX/0E8;->A05:LX/0E8;
+    0180..0182  goto  -0x68
+    0182..0188  invoke-static  {v2, v4}, LX/00h;->A0D(VLL)
+    0188..018a  goto  +0x29
+    018a..0190  invoke-static  {v5}, Ljava/lang/Integer;->valueOf(LI)
+    0190..0192  move-result-object  v1
+    0192..0198  invoke-interface  {v9, v1, v2, v6, v7}, LX/09T;->invoke(LLLLL)
+    0198..019a  move-result-object  v14
+    019a..019e  check-cast  v14, LX/Hln;
+    019e..01a4  invoke-virtual  {v10}, LX/00F;->A00(L)
+    01a4..01a6  move-result-object  v0
+    01a6..01ac  invoke-interface  {v11, v1, v0}, LX/09m;->invoke(LLL)
+    01ac..01ae  move-result-object  v16
+    01ae..01b2  move/from16  v17, v5
+    01b2..01b8  invoke-direct/range  {v13..v18}, LX/00D;->A0C(VLLLIZ)
+    01b8..01bc  iget-object  v2, v14, LX/Hln;->A02:Ljava/lang/Object;
+    01bc..01c0  if-eqz  v3, +0xd
+    01c0..01c4  if-eqz  v2, +0xf
+    01c4..01c8  iget-object  v0, v13, LX/00D;->A05:Ljava/util/concurrent/ConcurrentHashMap;
+    01c8..01ce  invoke-virtual  {v0, v1, v2}, Ljava/util/concurrent/ConcurrentHashMap;->putIfAbsent(LLL)
+    01ce..01d0  move-result-object  v16
+    01d0..01d4  if-eqz  v16, +0x5
+    01d4..01d6  return-object  v16
+    01d6..01da  if-eqz  v2, +0x4
+    01da..01de  sget-object  v0, LX/00L;->A03:Ljava/lang/Boolean;
+    01de..01e0  return-object  v2
+    01e0..01e4  iget  v3, v13, LX/00D;->A0F:I
+    01e4..01e8  if-lez  v3, +0x1c
+    01e8..01ec  iget-object  v0, v13, LX/00D;->A08:LX/00l;
+    01ec..01f2  invoke-interface  {v0}, LX/00l;->getValue(L)
+    01f2..01f4  move-result-object  v2
+    01f4..01f8  check-cast  v2, LX/N6u;
+    01f8..01fe  invoke-virtual  {v15}, Ljava/lang/Number;->intValue(I)
+    01fe..0200  move-result  v1
+    0200..0204  if-eq  v1, v8, +0x57
+    0204..0206  const/4  v0, #0x3
+    0206..020a  if-eq  v1, v0, +0x51
+    020a..020c  const/4  v0, #0x1
+    020c..0210  if-eq  v1, v0, +0x4b
+    0210..0214  sget-object  v0, LX/02S;->A0C:Ljava/lang/Integer;
+    0214..021a  invoke-virtual  {v2, v0, v3}, LX/N6u;->A00(ILI)
+    021a..021c  move-result  v8
+    021c..0222  invoke-static  {v5}, Ljava/lang/Integer;->valueOf(LI)
+    0222..0224  move-result-object  v3
+    0224..022a  invoke-interface  {v11, v3, v10}, LX/09m;->invoke(LLL)
+    022a..022c  move-result-object  v16
+    022c..0230  if-eqz  v8, +0xd
+    0230..0234  iget-object  v0, v13, LX/00D;->A08:LX/00l;
+    0234..023a  invoke-interface  {v0}, LX/00l;->getValue(L)
+    023a..023c  move-result-object  v0
+    023c..0240  check-cast  v0, LX/N6u;
+    0240..0246  invoke-virtual  {v0, v8}, LX/N6u;->A01(VI)
+    0246..024a  if-eqz  v7, +0x22
+    024a..024e  iget-object  v2, v13, LX/00D;->A0I:Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    024e..0252  if-eqz  v2, +0x1e
+    0252..0256  if-eqz  v12, +0x1c
+    0256..025a  iget-boolean  v0, v10, LX/00F;->A01:Z
+    025a..025e  if-eqz  v18, +0x1c
+    025e..0262  if-nez  v0, +0x17
+    0262..0266  sget-object  v0, LX/0E8;->A03:LX/0E8;
+    0266..026c  invoke-static  {v0}, LX/0E8;->A00(LL)
+    026c..026e  move-result-object  v1
+    026e..0270  const/4  v0, #0x1
+    0270..0274  iput-boolean  v0, v1, LX/0E8;->A02:Z
+    0274..027a  invoke-interface  {v9, v3, v1, v2, v7}, LX/09T;->invoke(LLLLL)
+    027a..027c  move-result-object  v14
+    027c..0280  check-cast  v14, LX/Hln;
+    0280..0284  move/from16  v17, v5
+    0284..028a  invoke-direct/range  {v13..v18}, LX/00D;->A0C(VLLLIZ)
+    028a..028c  return-object  v16
+    028c..0290  sget-object  v0, LX/0E8;->A05:LX/0E8;
+    0290..0292  goto  -0x15
+    0292..0296  if-nez  v0, +0x5
+    0296..029a  sget-object  v0, LX/0E8;->A04:LX/0E8;
+    029a..029c  goto  -0x1a
+    029c..02a0  sget-object  v0, LX/0E8;->A06:LX/0E8;
+    02a0..02a2  goto  -0x1d
+    02a2..02a6  sget-object  v0, LX/02S;->A01:Ljava/lang/Integer;
+    02a6..02a8  goto  -0x49
+    02a8..02ac  sget-object  v0, LX/02S;->A0N:Ljava/lang/Integer;
+    02ac..02ae  goto  -0x4c
+    02ae..02b2  sget-object  v0, LX/02S;->A00:Ljava/lang/Integer;
+    02b2..02b4  goto  -0x4f
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/00D;' --method A0D --exceptions
+
+# class: LX/00D;
+# extends: Ljava/lang/Object;
+
+.method public A0D(ZLLLI)  # .registers 8
+    0000..0004  const-string  v2, "Unknown BooleanField: "
+    0004..000a  invoke-virtual  {v5, v4, v7}, LX/00D;->A0h(LLI)
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, Ljava/lang/Boolean;
+    0010..0014  if-eqz  v0, +0x7
+    0014..001a  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue(Z)
+    001a..001c  move-result  v0
+    001c..001e  return  v0
+    001e..0020  monitor-enter
+    0020..0026  invoke-virtual  {v5, v4, v7}, LX/00D;->A0h(LLI)
+    0026..0028  move-result-object  v0
+    0028..002c  check-cast  v0, Ljava/lang/Boolean;
+    002c..0030  if-eqz  v0, +0x8
+    0030..0036  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue(Z)
+    0036..0038  move-result  v0
+    0038..003a  monitor-exit
+    003a..003c  return  v0
+    003c..0040  new-instance  v1, Ljava/lang/StringBuilder;
+    0040..0046  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>(V)
+    0046..004c  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(LI)
+    004c..0050  const-string  v0, "_expo_key"
+    0050..0056  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    0056..005c  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    005c..005e  move-result-object  v0
+    005e..0064  invoke-static  {v4, v5, v0}, LX/00D;->A0B(VLLL)
+    0064..006a  invoke-virtual  {v5}, LX/00D;->A15(L)
+    006a..006c  move-result-object  v0
+    006c..0072  invoke-static  {v7}, Ljava/lang/Integer;->valueOf(LI)
+    0072..0074  move-result-object  v3
+    0074..007a  invoke-virtual  {v0, v3}, Lcom/google/common/collect/ImmutableMap;->get(LL)
+    007a..007c  move-result-object  v0
+    007c..0080  check-cast  v0, Ljava/lang/Boolean;
+    0080..0084  if-nez  v0, +0x16
+    0084..0088  if-nez  v6, +0x15
+    0088..008c  new-instance  v0, Ljava/lang/StringBuilder;
+    008c..0092  invoke-direct  {v0, v2}, Ljava/lang/StringBuilder;-><init>(VL)
+    0092..0098  invoke-virtual  {v0, v7}, Ljava/lang/StringBuilder;->append(LI)
+    0098..009e  invoke-virtual  {v0}, Ljava/lang/Object;->toString(L)
+    009e..00a0  move-result-object  v1
+    00a0..00a4  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    00a4..00aa  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(VL)
+    00aa..00ac  throw  v0
+    00ac..00ae  move-object  v6, v0
+    00ae..00b2  iget-object  v2, v5, LX/00D;->A00:Landroid/content/SharedPreferences;
+    00b2..00b8  invoke-static  {v7}, Ljava/lang/String;->valueOf(LI)
+    00b8..00ba  move-result-object  v1
+    00ba..00c0  invoke-virtual  {v6}, Ljava/lang/Boolean;->booleanValue(Z)
+    00c0..00c2  move-result  v0
+    00c2..00c8  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences;->getBoolean(ZLZ)
+    00c8..00ca  move-result  v2
+    00ca..00ce  iget-boolean  v0, v4, LX/00F;->A01:Z
+    00ce..00d2  if-nez  v0, +0xb
+    00d2..00d8  invoke-virtual  {v5, v7, v2}, LX/00D;->A0u(VIZ)
+    00d8..00de  invoke-static  {v5, v7}, LX/00D;->A0F(ZLI)
+    00de..00e2  sget-object  v0, LX/00L;->A03:Ljava/lang/Boolean;
+    00e2..00e4  goto  +0xb
+    00e4..00e8  iget-object  v1, v5, LX/00D;->A05:Ljava/util/concurrent/ConcurrentHashMap;
+    00e8..00ee  invoke-static  {v2}, Ljava/lang/Boolean;->valueOf(LZ)
+    00ee..00f0  move-result-object  v0
+    00f0..00f6  invoke-virtual  {v1, v3, v0}, Ljava/util/AbstractMap;->put(LLL)
+    00f6..00f8  goto  -0xf
+    00f8..00fa  monitor-exit
+    00fa..00fc  return  v2
+    00fc..00fe  move-exception  v0
+    00fe..0100  monitor-exit
+    0100..0102  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0010..001c -> 007e
+    # catch <all> code_units 001e..007c -> 007e
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/00D;' --method A0h --exceptions
+
+# class: LX/00D;
+# extends: Ljava/lang/Object;
+
+.method public A0h(LLI)  # .registers 5
+    0000..0004  iget-boolean  v0, v3, LX/00F;->A01:Z
+    0004..0008  if-eqz  v0, +0xd
+    0008..000c  iget-object  v1, v2, LX/00D;->A05:Ljava/util/concurrent/ConcurrentHashMap;
+    000c..0012  invoke-static  {v4}, Ljava/lang/Integer;->valueOf(LI)
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-virtual  {v1, v0}, Ljava/util/AbstractMap;->get(LL)
+    001a..001c  move-result-object  v0
+    001c..001e  return-object  v0
+    001e..0022  iget-object  v1, v2, LX/00D;->A0N:Ljava/util/concurrent/ConcurrentHashMap;
+    0022..0024  goto  -0xb
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/1Y1;' --exceptions
+
+# class: LX/1Y1;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLI)  # .registers 4
+    0000..0004  iput  v3, v0, LX/1Y1;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    000a..000e  iput-object  v1, v0, LX/1Y1;->A00:Ljava/lang/Object;
+    000e..0012  iput-object  v2, v0, LX/1Y1;->A01:Ljava/lang/Object;
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public invoke(LLL)  # .registers 9
+    0000..0004  iget  v0, v6, LX/1Y1;->$t:I
+    0004..0008  iget-object  v3, v6, LX/1Y1;->A00:Ljava/lang/Object;
+    0008..000c  check-cast  v3, LX/00D;
+    000c..0012  packed-switch  v0, payload@0x160, cases=[0:@0x40, 1:@0x130], default@0x12
+    0012..0016  iget-object  v2, v6, LX/1Y1;->A01:Ljava/lang/Object;
+    0016..001a  check-cast  v2, Ljava/lang/Boolean;
+    001a..0020  invoke-static  {v7}, LX/000;->A00(IL)
+    0020..0022  move-result  v1
+    0022..0026  check-cast  v8, LX/00F;
+    0026..0028  const/4  v0, #0x3
+    0028..002e  invoke-static  {v8, v0}, LX/00h;->A0A(VLI)
+    002e..0034  invoke-static  {v8, v3, v2, v1}, LX/00D;->A0D(ZLLLI)
+    0034..0036  move-result  v0
+    0036..003c  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+    003c..003e  move-result-object  v0
+    003e..0040  return-object  v0
+    0040..0044  iget-object  v5, v6, LX/1Y1;->A01:Ljava/lang/Object;
+    0044..0048  check-cast  v5, Ljava/lang/Number;
+    0048..004c  check-cast  v7, Ljava/lang/Number;
+    004c..0052  invoke-virtual  {v7}, Ljava/lang/Number;->intValue(I)
+    0052..0054  move-result  v4
+    0054..0058  check-cast  v8, LX/00F;
+    0058..005a  const/4  v0, #0x3
+    005a..0060  invoke-static  {v8, v0}, LX/00h;->A0A(VLI)
+    0060..0064  const-string  v1, "Unknown FloatField: "
+    0064..006a  invoke-virtual  {v3, v8, v4}, LX/00D;->A0h(LLI)
+    006a..006c  move-result-object  v0
+    006c..0070  check-cast  v0, Ljava/lang/Number;
+    0070..0074  if-eqz  v0, +0xb
+    0074..007a  invoke-virtual  {v0}, Ljava/lang/Number;->floatValue(F)
+    007a..007c  move-result  v2
+    007c..0082  invoke-static  {v2}, Ljava/lang/Float;->valueOf(LF)
+    0082..0084  move-result-object  v0
+    0084..0086  return-object  v0
+    0086..0088  monitor-enter
+    0088..008e  invoke-virtual  {v3, v8, v4}, LX/00D;->A0h(LLI)
+    008e..0090  move-result-object  v0
+    0090..0094  check-cast  v0, Ljava/lang/Float;
+    0094..0098  if-eqz  v0, +0x7
+    0098..009e  invoke-virtual  {v0}, Ljava/lang/Number;->floatValue(F)
+    009e..00a0  move-result  v2
+    00a0..00a2  goto  +0x39
+    00a2..00a8  invoke-static  {v8, v3, v4}, LX/00D;->A0A(VLLI)
+    00a8..00ae  invoke-virtual  {v3}, LX/00D;->A16(L)
+    00ae..00b0  move-result-object  v0
+    00b0..00b6  invoke-virtual  {v0, v7}, Lcom/google/common/collect/ImmutableMap;->get(LL)
+    00b6..00b8  move-result-object  v0
+    00b8..00bc  check-cast  v0, Ljava/lang/Float;
+    00bc..00c0  if-nez  v0, +0x5
+    00c0..00c4  if-nez  v5, +0x4
+    00c4..00c6  goto  +0x29
+    00c6..00c8  move-object  v5, v0
+    00c8..00cc  iget-object  v2, v3, LX/00D;->A00:Landroid/content/SharedPreferences;
+    00cc..00d2  invoke-static  {v4}, Ljava/lang/String;->valueOf(LI)
+    00d2..00d4  move-result-object  v1
+    00d4..00da  invoke-virtual  {v5}, Ljava/lang/Number;->floatValue(F)
+    00da..00dc  move-result  v0
+    00dc..00e2  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences;->getFloat(FLF)
+    00e2..00e4  move-result  v2
+    00e4..00e8  iget-boolean  v0, v8, LX/00F;->A01:Z
+    00e8..00ec  if-nez  v0, +0xb
+    00ec..00f2  invoke-virtual  {v3, v4, v2}, LX/00D;->A0r(VIF)
+    00f2..00f8  invoke-static  {v3, v4}, LX/00D;->A0F(ZLI)
+    00f8..00fc  sget-object  v0, LX/00L;->A03:Ljava/lang/Boolean;
+    00fc..00fe  goto  +0xb
+    00fe..0102  iget-object  v1, v3, LX/00D;->A05:Ljava/util/concurrent/ConcurrentHashMap;
+    0102..0108  invoke-static  {v2}, Ljava/lang/Float;->valueOf(LF)
+    0108..010a  move-result-object  v0
+    010a..0110  invoke-virtual  {v1, v7, v0}, Ljava/util/AbstractMap;->put(LLL)
+    0110..0112  goto  -0xf
+    0112..0114  monitor-exit
+    0114..0116  goto  -0x4c
+    0116..011c  invoke-static  {v1, v4}, LX/000;->A03(LLI)
+    011c..011e  move-result-object  v1
+    011e..0122  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    0122..0128  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(VL)
+    0128..012a  throw  v0
+    012a..012c  move-exception  v0
+    012c..012e  monitor-exit
+    012e..0130  throw  v0
+    0130..0134  iget-object  v2, v6, LX/1Y1;->A01:Ljava/lang/Object;
+    0134..0138  check-cast  v2, Ljava/lang/Integer;
+    0138..013e  invoke-static  {v7}, LX/000;->A00(IL)
+    013e..0140  move-result  v1
+    0140..0144  check-cast  v8, LX/00F;
+    0144..0146  const/4  v0, #0x3
+    0146..014c  invoke-static  {v8, v0}, LX/00h;->A0A(VLI)
+    014c..0152  invoke-static  {v8, v3, v2, v1}, LX/00D;->A01(ILLLI)
+    0152..0154  move-result  v0
+    0154..015a  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    015a..015c  move-result-object  v0
+    015c..015e  return-object  v0
+    015e..0160  nop
+    0160..0170  packed-switch-payload  size=2
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0044..0089 -> 0095
+    # catch <all> code_units 008b..0095 -> 0095
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/00D;' --method '<init>' --exceptions
+
+# class: LX/00D;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLLLL)  # .registers 22
+    0000..0002  const/4  v3, #0x0
+    0002..0006  move-object/from16  v1, v18
+    0006..000c  invoke-static  {v1, v3}, LX/00h;->A0A(VLI)
+    000c..000e  const/4  v5, #0x1
+    000e..0012  move-object/from16  v6, v16
+    0012..0018  invoke-static  {v6, v5}, LX/00h;->A0A(VLI)
+    0018..001a  const/4  v0, #0x3
+    001a..001e  move-object/from16  v4, v17
+    001e..0024  invoke-static  {v4, v0}, LX/00h;->A0A(VLI)
+    0024..0026  const/4  v0, #0x4
+    0026..002a  move-object/from16  v2, v20
+    002a..0030  invoke-static  {v2, v0}, LX/00h;->A0A(VLI)
+    0030..0036  invoke-direct  {v10}, Ljava/lang/Object;-><init>(V)
+    0036..003a  iput-object  v1, v10, LX/00D;->A0K:LX/07u;
+    003a..003e  iput-object  v6, v10, LX/00D;->A0J:LX/084;
+    003e..0042  iput-object  v11, v10, LX/00D;->A0H:LX/00s;
+    0042..0046  iput-object  v12, v10, LX/00D;->A01:LX/00s;
+    0046..004a  iput-object  v13, v10, LX/00D;->A02:LX/00s;
+    004a..004e  move-object/from16  v0, v21
+    004e..0052  iput-object  v0, v10, LX/00D;->A0M:Ljava/lang/String;
+    0052..0056  iput-object  v15, v10, LX/00D;->A0I:Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    0056..005a  iput-object  v14, v10, LX/00D;->A0G:LX/00s;
+    005a..005e  move-object/from16  v1, v19
+    005e..0062  iput-object  v1, v10, LX/00D;->A0L:LX/09M;
+    0062..0068  invoke-virtual  {v4, v0}, LX/00R;->A04(LL)
+    0068..006a  move-result-object  v4
+    006a..0070  invoke-static  {v4}, LX/00h;->A06(VL)
+    0070..0074  iput-object  v4, v10, LX/00D;->A00:Landroid/content/SharedPreferences;
+    0074..007a  const  v0, #0x81ed
+    007a..0080  invoke-static  {v0}, LX/053;->A00(LI)
+    0080..0082  move-result-object  v0
+    0082..0086  iput-object  v0, v10, LX/00D;->A04:LX/05B;
+    0086..008a  const/16  v0, #0x44
+    008a..0090  invoke-static  {v0}, LX/053;->A00(LI)
+    0090..0092  move-result-object  v0
+    0092..0096  iput-object  v0, v10, LX/00D;->A03:LX/05B;
+    0096..009a  instance-of  v6, v10, LX/07t;
+    009a..009e  if-nez  v6, +0x109
+    009e..00a0  const/4  v7, #0x0
+    00a0..00a4  iput  v7, v10, LX/00D;->A0F:I
+    00a4..00a8  if-nez  v6, +0xf3
+    00a8..00aa  const/4  v1, #0x0
+    00aa..00ac  const/4  v0, #0x0
+    00ac..00b0  iput  v0, v10, LX/00D;->A0D:I
+    00b0..00b4  if-eqz  v1, +0x3
+    00b4..00b6  const/4  v7, #0x0
+    00b6..00ba  iput  v7, v10, LX/00D;->A0E:I
+    00ba..00be  const/16  v1, #0x14
+    00be..00c2  new-instance  v0, LX/1Xv;
+    00c2..00c8  invoke-direct  {v0, v1}, LX/1Xv;-><init>(VI)
+    00c8..00ce  invoke-static  {v0}, LX/00k;->A01(LL)
+    00ce..00d0  move-result-object  v0
+    00d0..00d4  iput-object  v0, v10, LX/00D;->A09:LX/00l;
+    00d4..00d8  const/16  v1, #0x15
+    00d8..00dc  new-instance  v0, LX/1Xv;
+    00dc..00e2  invoke-direct  {v0, v1}, LX/1Xv;-><init>(VI)
+    00e2..00e8  invoke-static  {v0}, LX/00k;->A01(LL)
+    00e8..00ea  move-result-object  v0
+    00ea..00ee  iput-object  v0, v10, LX/00D;->A08:LX/00l;
+    00ee..00f2  const/16  v1, #0x200
+    00f2..00f6  new-instance  v0, Ljava/util/concurrent/ConcurrentHashMap;
+    00f6..00fc  invoke-direct  {v0, v1}, Ljava/util/concurrent/ConcurrentHashMap;-><init>(VI)
+    00fc..0100  iput-object  v0, v10, LX/00D;->A0N:Ljava/util/concurrent/ConcurrentHashMap;
+    0100..0102  const/4  v8, #0x4
+    0102..0106  new-instance  v0, LX/1Y4;
+    0106..010c  invoke-direct  {v0, v8}, LX/1Y4;-><init>(VI)
+    010c..0110  iput-object  v0, v10, LX/00D;->A0R:LX/09T;
+    0110..0114  new-instance  v0, LX/1Y4;
+    0114..011a  invoke-direct  {v0, v3}, LX/1Y4;-><init>(VI)
+    011a..011e  iput-object  v0, v10, LX/00D;->A0T:LX/09T;
+    011e..0122  new-instance  v0, LX/1Y4;
+    0122..0128  invoke-direct  {v0, v5}, LX/1Y4;-><init>(VI)
+    0128..012c  iput-object  v0, v10, LX/00D;->A0S:LX/09T;
+    012c..012e  const/4  v9, #0x2
+    012e..0132  new-instance  v0, LX/1Y4;
+    0132..0138  invoke-direct  {v0, v9}, LX/1Y4;-><init>(VI)
+    0138..013c  iput-object  v0, v10, LX/00D;->A0V:LX/09T;
+    013c..013e  const/4  v7, #0x3
+    013e..0142  new-instance  v0, LX/1Y4;
+    0142..0148  invoke-direct  {v0, v7}, LX/1Y4;-><init>(VI)
+    0148..014c  iput-object  v0, v10, LX/00D;->A0U:LX/09T;
+    014c..0150  new-instance  v0, LX/1Y5;
+    0150..0156  invoke-direct  {v0, v3}, LX/1Y5;-><init>(VI)
+    0156..015a  iput-object  v0, v10, LX/00D;->A0W:LX/09U;
+    015a..015e  new-instance  v0, LX/1Y5;
+    015e..0164  invoke-direct  {v0, v5}, LX/1Y5;-><init>(VI)
+    0164..0168  iput-object  v0, v10, LX/00D;->A0Y:LX/09U;
+    0168..016c  new-instance  v0, LX/1Y5;
+    016c..0172  invoke-direct  {v0, v9}, LX/1Y5;-><init>(VI)
+    0172..0176  iput-object  v0, v10, LX/00D;->A0X:LX/09U;
+    0176..017a  new-instance  v0, LX/1Y5;
+    017a..0180  invoke-direct  {v0, v7}, LX/1Y5;-><init>(VI)
+    0180..0184  iput-object  v0, v10, LX/00D;->A0a:LX/09U;
+    0184..0188  new-instance  v0, LX/1Y5;
+    0188..018e  invoke-direct  {v0, v8}, LX/1Y5;-><init>(VI)
+    018e..0192  iput-object  v0, v10, LX/00D;->A0Z:LX/09U;
+    0192..0196  new-instance  v0, Ljava/util/concurrent/ConcurrentHashMap;
+    0196..019c  invoke-direct  {v0, v1}, Ljava/util/concurrent/ConcurrentHashMap;-><init>(VI)
+    019c..01a0  iput-object  v0, v10, LX/00D;->A05:Ljava/util/concurrent/ConcurrentHashMap;
+    01a0..01a4  new-instance  v0, Ljava/util/concurrent/ConcurrentHashMap;
+    01a4..01aa  invoke-direct  {v0, v1}, Ljava/util/concurrent/ConcurrentHashMap;-><init>(VI)
+    01aa..01ae  iput-object  v0, v10, LX/00D;->A0P:Ljava/util/concurrent/ConcurrentHashMap;
+    01ae..01b2  new-instance  v0, Ljava/util/concurrent/ConcurrentHashMap;
+    01b2..01b8  invoke-direct  {v0, v1}, Ljava/util/concurrent/ConcurrentHashMap;-><init>(VI)
+    01b8..01bc  iput-object  v0, v10, LX/00D;->A0O:Ljava/util/concurrent/ConcurrentHashMap;
+    01bc..01be  const/4  v7, #0x1
+    01be..01c2  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    01c2..01c8  invoke-direct  {v0, v5}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(VZ)
+    01c8..01cc  iput-object  v0, v10, LX/00D;->A07:Ljava/util/concurrent/atomic/AtomicBoolean;
+    01cc..01d0  if-eqz  v6, +0xf
+    01d0..01d4  const/16  v0, #0x5a08
+    01d4..01da  invoke-static  {v0}, Ljava/lang/String;->valueOf(LI)
+    01da..01dc  move-result-object  v0
+    01dc..01e2  invoke-interface  {v4, v0, v3}, Landroid/content/SharedPreferences;->getBoolean(ZLZ)
+    01e2..01e4  move-result  v1
+    01e4..01e6  const/4  v0, #0x1
+    01e6..01ea  if-nez  v1, +0x3
+    01ea..01ec  const/4  v0, #0x0
+    01ec..01f0  iput-boolean  v0, v10, LX/00D;->A0B:Z
+    01f0..01f4  if-eqz  v6, +0x4b
+    01f4..01f8  if-nez  v0, +0xe
+    01f8..01fc  const/16  v0, #0x6c14
+    01fc..0202  invoke-static  {v0}, Ljava/lang/String;->valueOf(LI)
+    0202..0204  move-result-object  v0
+    0204..020a  invoke-interface  {v4, v0, v3}, Landroid/content/SharedPreferences;->getInt(ILI)
+    020a..020c  move-result  v0
+    020c..0210  if-lez  v0, +0x3d
+    0210..0214  iput-boolean  v7, v10, LX/00D;->A0A:Z
+    0214..0218  const/16  v0, #0x6140
+    0218..021e  invoke-static  {v0}, Ljava/lang/String;->valueOf(LI)
+    021e..0220  move-result-object  v0
+    0220..0226  invoke-interface  {v4, v0, v3}, Landroid/content/SharedPreferences;->getBoolean(ZLZ)
+    0226..0228  move-result  v0
+    0228..022c  iput-boolean  v0, v10, LX/00D;->A0b:Z
+    022c..0230  const/16  v0, #0x5876
+    0230..0236  invoke-static  {v0}, Ljava/lang/String;->valueOf(LI)
+    0236..0238  move-result-object  v0
+    0238..023e  invoke-interface  {v4, v0, v3}, Landroid/content/SharedPreferences;->getBoolean(ZLZ)
+    023e..0240  move-result  v0
+    0240..0244  iput-boolean  v0, v10, LX/00D;->A0C:Z
+    0244..0248  const/16  v0, #0x633b
+    0248..024e  invoke-static  {v0}, Ljava/lang/String;->valueOf(LI)
+    024e..0250  move-result-object  v0
+    0250..0256  invoke-interface  {v4, v0, v3}, Landroid/content/SharedPreferences;->getBoolean(ZLZ)
+    0256..0258  move-result  v1
+    0258..025c  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    025c..0262  invoke-direct  {v0, v1}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(VZ)
+    0262..0266  iput-object  v0, v10, LX/00D;->A0Q:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0266..026a  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    026a..0270  invoke-direct  {v0, v3}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(VZ)
+    0270..0274  iput-object  v0, v10, LX/00D;->A06:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0274..0278  new-instance  v0, LX/09W;
+    0278..027e  invoke-direct  {v0, v10}, LX/09W;-><init>(VL)
+    027e..0284  invoke-virtual  {v2, v0}, LX/08A;->A00(VL)
+    0284..0286  return-void
+    0286..0288  const/4  v7, #0x0
+    0288..028a  goto  -0x3c
+    028a..028e  iget-object  v1, v10, LX/00D;->A00:Landroid/content/SharedPreferences;
+    028e..0292  const/16  v0, #0x7d0a
+    0292..0298  invoke-static  {v0}, Ljava/lang/String;->valueOf(LI)
+    0298..029a  move-result-object  v0
+    029a..02a0  invoke-interface  {v1, v0, v3}, Landroid/content/SharedPreferences;->getBoolean(ZLZ)
+    02a0..02a2  move-result  v1
+    02a2..02a4  move  v0, v7
+    02a4..02a8  if-nez  v1, -0xfc
+    02a8..02ac  goto/16  -0xff
+    02ac..02b0  iget-object  v1, v10, LX/00D;->A00:Landroid/content/SharedPreferences;
+    02b0..02b4  const/16  v0, #0x79bd
+    02b4..02ba  invoke-static  {v0}, Ljava/lang/String;->valueOf(LI)
+    02ba..02bc  move-result-object  v0
+    02bc..02c2  invoke-interface  {v1, v0, v3}, Landroid/content/SharedPreferences;->getInt(ILI)
+    02c2..02c4  move-result  v7
+    02c4..02c8  goto/16  -0x112
+    # exception table: 0 try range(s)
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/1Y4;' --method invoke --exceptions
+
+# class: LX/1Y4;
+# extends: Ljava/lang/Object;
+
+.method public invoke(LLLLL)  # .registers 11
+    0000..0004  iget  v0, v6, LX/1Y4;->$t:I
+    0004..000a  packed-switch  v0, payload@0x1c0, cases=[0:@0x8e, 1:@0x54, 2:@0x166, 3:@0xda], default@0xa
+    000a..0010  invoke-static  {v7}, LX/000;->A00(IL)
+    0010..0012  move-result  v0
+    0012..0016  check-cast  v8, LX/0E8;
+    0016..001a  check-cast  v9, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    001a..001e  check-cast  v10, LX/09M;
+    001e..0024  invoke-static  {v8, v9, v10}, LX/00h;->A0C(VLLL)
+    0024..002a  invoke-interface  {v10, v0}, LX/09M;->B2y(JI)
+    002a..002c  move-result-wide  v0
+    002c..0030  const-wide/16  v4, #0x0
+    0030..0034  cmp-long  v2, v0, v4
+    0034..0038  if-nez  v2, +0x4a
+    0038..003a  const/4  v0, #0x0
+    003a..0040  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+    0040..0042  move-result-object  v2
+    0042..0046  sget-object  v1, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->INVALID_SPECIFIER_MISSING_IN_WA_LOOKUP_MAP:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    0046..0048  const/4  v3, #0x0
+    0048..004c  new-instance  v0, LX/Hln;
+    004c..0052  invoke-direct/range  {v0..v5}, LX/Hln;-><init>(VLLLJ)
+    0052..0054  return-object  v0
+    0054..005a  invoke-static  {v7}, LX/000;->A00(IL)
+    005a..005c  move-result  v0
+    005c..0060  check-cast  v8, LX/0E8;
+    0060..0064  check-cast  v9, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    0064..0068  check-cast  v10, LX/09M;
+    0068..006e  invoke-static  {v8, v9, v10}, LX/00h;->A0C(VLLL)
+    006e..0074  invoke-interface  {v10, v0}, LX/09M;->B2y(JI)
+    0074..0076  move-result-wide  v0
+    0076..007a  const-wide/16  v4, #0x0
+    007a..007e  cmp-long  v2, v0, v4
+    007e..0082  if-nez  v2, +0x88
+    0082..0084  const/4  v0, #0x0
+    0084..008a  invoke-static  {v0}, Ljava/lang/Float;->valueOf(LF)
+    008a..008c  move-result-object  v2
+    008c..008e  goto  -0x25
+    008e..0094  invoke-static  {v7}, LX/000;->A00(IL)
+    0094..0096  move-result  v0
+    0096..009a  check-cast  v8, LX/0E8;
+    009a..009e  check-cast  v9, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    009e..00a2  check-cast  v10, LX/09M;
+    00a2..00a8  invoke-static  {v8, v9, v10}, LX/00h;->A0C(VLLL)
+    00a8..00ae  invoke-interface  {v10, v0}, LX/09M;->B2y(JI)
+    00ae..00b0  move-result-wide  v0
+    00b0..00b4  const-wide/16  v4, #0x0
+    00b4..00b8  cmp-long  v2, v0, v4
+    00b8..00bc  if-nez  v2, +0x75
+    00bc..00be  const/4  v0, #0x0
+    00be..00c4  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(LI)
+    00c4..00c6  move-result-object  v2
+    00c6..00c8  goto  -0x42
+    00c8..00ce  invoke-interface  {v9, v8, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->AVn(ZLJ)
+    00ce..00d0  move-result  v2
+    00d0..00d6  invoke-static  {v2}, Ljava/lang/Boolean;->valueOf(LZ)
+    00d6..00d8  move-result-object  v2
+    00d8..00da  goto  +0x6e
+    00da..00e0  invoke-static  {v7}, LX/000;->A00(IL)
+    00e0..00e2  move-result  v1
+    00e2..00e6  check-cast  v8, LX/0E8;
+    00e6..00ea  check-cast  v9, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    00ea..00ee  check-cast  v10, LX/09M;
+    00ee..00f4  invoke-static  {v8, v9, v10}, LX/00h;->A0C(VLLL)
+    00f4..00f8  sget-object  v0, LX/0E6;->A00:LX/0E6;
+    00f8..00fe  invoke-virtual  {v0, v8, v9, v10, v1}, LX/0E6;->A02(LLLLI)
+    00fe..0100  move-result-object  v4
+    0100..0104  iget-object  v0, v4, LX/Hln;->A02:Ljava/lang/Object;
+    0104..0108  check-cast  v0, Ljava/lang/String;
+    0108..010c  new-instance  v2, Lorg/json/JSONObject;
+    010c..0112  invoke-direct  {v2, v0}, Lorg/json/JSONObject;-><init>(VL)
+    0112..0114  goto  +0x1e
+    0114..0116  move-exception  v3
+    0116..011a  iget-object  v2, v4, LX/Hln;->A02:Ljava/lang/Object;
+    011a..011e  const-string  v0, "WAMCEvaluation/invalid json format; key="
+    011e..0124  invoke-static  {v1, v0}, LX/000;->A06(LIL)
+    0124..0126  move-result-object  v1
+    0126..012a  const-string  v0, "; value="
+    012a..0130  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    0130..0136  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(LL)
+    0136..013c  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    013c..013e  move-result-object  v0
+    013e..0144  invoke-static  {v0, v3}, Lcom/whatsapp/infra/logging/Log;->e(VLL)
+    0144..0148  new-instance  v2, Lorg/json/JSONObject;
+    0148..014e  invoke-direct  {v2}, Lorg/json/JSONObject;-><init>(V)
+    014e..0152  iget-object  v1, v4, LX/Hln;->A01:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    0152..0156  iget-object  v3, v4, LX/Hln;->A03:Ljava/lang/String;
+    0156..015a  iget-wide  v4, v4, LX/Hln;->A00:J
+    015a..015e  new-instance  v0, LX/Hln;
+    015e..0164  invoke-direct/range  {v0..v5}, LX/Hln;-><init>(VLLLJ)
+    0164..0166  return-object  v0
+    0166..016c  invoke-static  {v7}, LX/000;->A00(IL)
+    016c..016e  move-result  v1
+    016e..0172  check-cast  v8, LX/0E8;
+    0172..0176  check-cast  v9, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    0176..017a  check-cast  v10, LX/09M;
+    017a..0180  invoke-static  {v8, v9, v10}, LX/00h;->A0C(VLLL)
+    0180..0184  sget-object  v0, LX/0E6;->A00:LX/0E6;
+    0184..018a  invoke-virtual  {v0, v8, v9, v10, v1}, LX/0E6;->A02(LLLLI)
+    018a..018c  move-result-object  v0
+    018c..018e  return-object  v0
+    018e..0194  invoke-interface  {v9, v8, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->AdM(DLJ)
+    0194..0196  move-result-wide  v3
+    0196..0198  double-to-float  v2, v3
+    0198..019e  invoke-static  {v2}, Ljava/lang/Float;->valueOf(LF)
+    019e..01a0  move-result-object  v2
+    01a0..01a2  goto  +0xa
+    01a2..01a8  invoke-interface  {v9, v8, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->AnE(JLJ)
+    01a8..01aa  move-result-wide  v3
+    01aa..01ac  long-to-int  v2, v3
+    01ac..01b2  invoke-static  {v2}, Ljava/lang/Integer;->valueOf(LI)
+    01b2..01b4  move-result-object  v2
+    01b4..01ba  invoke-static  {v8, v9, v2, v0, v1}, LX/0E6;->A00(LLLLJ)
+    01ba..01bc  move-result-object  v0
+    01bc..01be  return-object  v0
+    01be..01c0  nop
+    01c0..01d8  packed-switch-payload  size=4
+    # exception table: 1 try range(s)
+    # catch Lorg/json/JSONException; code_units 0080..008a -> 008a
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/1Y5;' --method invoke --exceptions
+
+# class: LX/1Y5;
+# extends: Ljava/lang/Object;
+
+.method public invoke(LLLLLL)  # .registers 17
+    0000..0002  move-object  v8, v15
+    0002..0004  move-object  v7, v14
+    0004..0006  move-object  v6, v13
+    0006..000a  iget  v0, v11, LX/1Y5;->$t:I
+    000a..0010  packed-switch  v0, payload@0x1e0, cases=[0:@0x1a6, 1:@0x124, 2:@0xac, 3:@0x7c], default@0x10
+    0010..0016  invoke-static  {v12}, LX/000;->A00(IL)
+    0016..0018  move-result  v9
+    0018..001c  check-cast  v6, LX/0E8;
+    001c..0020  check-cast  v7, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    0020..0024  check-cast  v8, LX/09M;
+    0024..002a  invoke-static/range  {v16..v16}, LX/000;->A00(IL)
+    002a..002c  move-result  v10
+    002c..0032  invoke-static  {v6, v7, v8}, LX/00h;->A0C(VLLL)
+    0032..0036  sget-object  v5, LX/0E6;->A00:LX/0E6;
+    0036..003c  invoke-virtual/range  {v5..v10}, LX/0E6;->A03(LLLLII)
+    003c..003e  move-result-object  v3
+    003e..0042  new-instance  v0, Lorg/json/JSONObject;
+    0042..0048  invoke-direct  {v0, v3}, Lorg/json/JSONObject;-><init>(VL)
+    0048..004a  return-object  v0
+    004a..004c  move-exception  v2
+    004c..0050  const-string  v0, "WAMCEvaluation/invalid json format; key="
+    0050..0056  invoke-static  {v9, v0}, LX/000;->A06(LIL)
+    0056..0058  move-result-object  v1
+    0058..005c  const-string  v0, "; value="
+    005c..0062  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    0062..0068  invoke-static  {v3, v1}, LX/000;->A05(LLL)
+    0068..006a  move-result-object  v0
+    006a..0070  invoke-static  {v0, v2}, Lcom/whatsapp/infra/logging/Log;->e(VLL)
+    0070..0074  new-instance  v0, Lorg/json/JSONObject;
+    0074..007a  invoke-direct  {v0}, Lorg/json/JSONObject;-><init>(V)
+    007a..007c  return-object  v0
+    007c..0082  invoke-static  {v12}, LX/000;->A00(IL)
+    0082..0084  move-result  v9
+    0084..0088  check-cast  v6, LX/0E8;
+    0088..008c  check-cast  v7, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    008c..0090  check-cast  v8, LX/09M;
+    0090..0096  invoke-static/range  {v16..v16}, LX/000;->A00(IL)
+    0096..0098  move-result  v10
+    0098..009e  invoke-static  {v6, v7, v8}, LX/00h;->A0C(VLLL)
+    009e..00a2  sget-object  v5, LX/0E6;->A00:LX/0E6;
+    00a2..00a8  invoke-virtual/range  {v5..v10}, LX/0E6;->A03(LLLLII)
+    00a8..00aa  move-result-object  v0
+    00aa..00ac  return-object  v0
+    00ac..00b2  invoke-static  {v12}, LX/000;->A00(IL)
+    00b2..00b4  move-result  v0
+    00b4..00b8  check-cast  v6, LX/0E8;
+    00b8..00bc  check-cast  v7, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    00bc..00c0  check-cast  v8, LX/09M;
+    00c0..00c6  invoke-static/range  {v16..v16}, LX/000;->A00(IL)
+    00c6..00c8  move-result  v5
+    00c8..00ce  invoke-static  {v6, v7, v8}, LX/00h;->A0C(VLLL)
+    00ce..00d4  invoke-interface  {v8, v0}, LX/09M;->B2y(JI)
+    00d4..00d6  move-result-wide  v1
+    00d6..00da  const-wide/16  v3, #0x0
+    00da..00de  cmp-long  v0, v1, v3
+    00de..00e2  if-nez  v0, +0x8
+    00e2..00e4  const/4  v2, #0x0
+    00e4..00ea  invoke-static  {v2}, Ljava/lang/Float;->valueOf(LF)
+    00ea..00ec  move-result-object  v0
+    00ec..00ee  return-object  v0
+    00ee..00f2  sget-object  v3, LX/02S;->A0C:Ljava/lang/Integer;
+    00f2..00f6  if-gtz  v5, +0x4
+    00f6..00f8  const/4  v3, #0x0
+    00f8..00fa  goto  +0xd
+    00fa..00fe  sget-object  v0, LX/0E6;->A01:LX/00l;
+    00fe..0104  invoke-interface  {v0}, LX/00l;->getValue(L)
+    0104..0106  move-result-object  v0
+    0106..010a  check-cast  v0, LX/N6u;
+    010a..0110  invoke-virtual  {v0, v3, v5}, LX/N6u;->A00(ILI)
+    0110..0112  move-result  v3
+    0112..0118  invoke-interface  {v7, v6, v1, v2}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->AdM(DLJ)
+    0118..011a  move-result-wide  v0
+    011a..011c  double-to-float  v2, v0
+    011c..0122  invoke-static  {v3}, LX/0E6;->A01(VI)
+    0122..0124  goto  -0x1f
+    0124..012a  invoke-static  {v12}, LX/000;->A00(IL)
+    012a..012c  move-result  v0
+    012c..0130  check-cast  v6, LX/0E8;
+    0130..0134  check-cast  v7, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    0134..0138  check-cast  v8, LX/09M;
+    0138..013e  invoke-static/range  {v16..v16}, LX/000;->A00(IL)
+    013e..0140  move-result  v5
+    0140..0146  invoke-static  {v6, v7, v8}, LX/00h;->A0C(VLLL)
+    0146..014c  invoke-interface  {v8, v0}, LX/09M;->B2y(JI)
+    014c..014e  move-result-wide  v1
+    014e..0152  const-wide/16  v3, #0x0
+    0152..0156  cmp-long  v0, v1, v3
+    0156..015a  if-nez  v0, +0x8
+    015a..015c  const/4  v2, #0x0
+    015c..0162  invoke-static  {v2}, Ljava/lang/Integer;->valueOf(LI)
+    0162..0164  move-result-object  v0
+    0164..0166  return-object  v0
+    0166..016a  sget-object  v3, LX/02S;->A01:Ljava/lang/Integer;
+    016a..016e  if-gtz  v5, +0x4
+    016e..0170  const/4  v3, #0x0
+    0170..0172  goto  +0xd
+    0172..0176  sget-object  v0, LX/0E6;->A01:LX/00l;
+    0176..017c  invoke-interface  {v0}, LX/00l;->getValue(L)
+    017c..017e  move-result-object  v0
+    017e..0182  check-cast  v0, LX/N6u;
+    0182..0188  invoke-virtual  {v0, v3, v5}, LX/N6u;->A00(ILI)
+    0188..018a  move-result  v3
+    018a..0190  invoke-interface  {v7, v6, v1, v2}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->AnE(JLJ)
+    0190..0192  move-result-wide  v0
+    0192..0194  long-to-int  v2, v0
+    0194..019a  invoke-static  {v3}, LX/0E6;->A01(VI)
+    019a..019c  goto  -0x1f
+    019c..019e  move-exception  v0
+    019e..01a4  invoke-static  {v3}, LX/0E6;->A01(VI)
+    01a4..01a6  throw  v0
+    01a6..01ac  invoke-static  {v12}, LX/000;->A00(IL)
+    01ac..01ae  move-result  v9
+    01ae..01b2  check-cast  v6, LX/0E8;
+    01b2..01b6  check-cast  v7, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    01b6..01ba  check-cast  v8, LX/09M;
+    01ba..01c0  invoke-static/range  {v16..v16}, LX/000;->A00(IL)
+    01c0..01c2  move-result  v10
+    01c2..01c8  invoke-static  {v6, v7, v8}, LX/00h;->A0C(VLLL)
+    01c8..01cc  sget-object  v5, LX/0E6;->A00:LX/0E6;
+    01cc..01d2  invoke-virtual/range  {v5..v10}, LX/0E6;->A04(ZLLLII)
+    01d2..01d4  move-result  v0
+    01d4..01da  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(LZ)
+    01da..01dc  move-result-object  v0
+    01dc..01de  return-object  v0
+    01de..01e0  nop
+    01e0..01f8  packed-switch-payload  size=4
+    # exception table: 3 try range(s)
+    # catch Lorg/json/JSONException; code_units 001f..0025 -> 0025
+    # catch <all> code_units 0089..008d -> 00ce
+    # catch <all> code_units 00c5..00c9 -> 00ce
+.end method
+
+# Reproduce: xtask apk-smali APK --class 'LX/0E6;' --method A04 --exceptions
+
+# class: LX/0E6;
+# extends: Ljava/lang/Object;
+
+.method public A04(ZLLLII)  # .registers 11
+    0000..0006  invoke-interface  {v8, v9}, LX/09M;->B2y(JI)
+    0006..0008  move-result-wide  v1
+    0008..000c  const-wide/16  v3, #0x0
+    000c..0010  cmp-long  v0, v1, v3
+    0010..0014  if-nez  v0, +0x4
+    0014..0016  const/4  v0, #0x0
+    0016..0018  return  v0
+    0018..001c  sget-object  v3, LX/02S;->A0N:Ljava/lang/Integer;
+    001c..0020  if-gtz  v10, +0x4
+    0020..0022  const/4  v3, #0x0
+    0022..0024  goto  +0xd
+    0024..0028  sget-object  v0, LX/0E6;->A01:LX/00l;
+    0028..002e  invoke-interface  {v0}, LX/00l;->getValue(L)
+    002e..0030  move-result-object  v0
+    0030..0034  check-cast  v0, LX/N6u;
+    0034..003a  invoke-virtual  {v0, v3, v10}, LX/N6u;->A00(ILI)
+    003a..003c  move-result  v3
+    003c..0042  invoke-interface  {v7, v6, v1, v2}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->AVn(ZLJ)
+    0042..0044  move-result  v0
+    0044..004a  invoke-static  {v3}, LX/0E6;->A01(VI)
+    004a..004c  return  v0
+    004c..004e  move-exception  v0
+    004e..0054  invoke-static  {v3}, LX/0E6;->A01(VI)
+    0054..0056  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 001e..0022 -> 0026
+.end method
+
+# Field references: xtask apk-field-refs APK --class 'LX/0bq;' --field A04 --type 'LX/09P;'
+classes.dex  LX/0bq;-><clinit>(V)
+  write opcode 0x69, dex byte offset: 0x3a18c0
+classes.dex  LX/1Uf;->A07(Z)
+  read opcode 0x62, dex byte offset: 0x91af3c
+classes7.dex  LX/CoU;->A04(VLLL)
+  read opcode 0x62, dex byte offset: 0x68df7c
+
+# Negative result: method-filter get in LX/1Y1; has no matching bodies; its functional method is invoke. No property value was established by that search.

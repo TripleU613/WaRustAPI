@@ -1,4 +1,36 @@
 {
+  "abprop-boolean-default.txt": {
+    "bytes": 742,
+    "sha256": "a69221402127ae540cde0b5f464184df1320a670eba7bb366996a4bedc2b874e"
+  },
+  "abprop-boolean-descriptor.txt": {
+    "bytes": 3229,
+    "sha256": "7cedc491fad84eb9f90d1aced3d6a3389e760ae7cfcf7b7e702e0bce1fb07f7e"
+  },
+  "abprop-boolean-entry.txt": {
+    "bytes": 520,
+    "sha256": "b6da7a325a2d6bf23375e3a11de8b5c2f580b692200fdc4f30acfdcafdab98b1"
+  },
+  "abprop-boolean-fallback.txt": {
+    "bytes": 5069,
+    "sha256": "6ad7863571dc5d1915dbbb546107d7ff8816855f4cf3f742cb0542f7e66ac707"
+  },
+  "abprop-boolean-preferences.txt": {
+    "bytes": 3901,
+    "sha256": "f60982bfc7af53c5473341e6aaeb83a62b4beea159a21fbab6b846307cd2d295"
+  },
+  "abprop-boolean-read.txt": {
+    "bytes": 1074,
+    "sha256": "0d958fd78b25172a940e7b7ebcba79a6e7cab75193488b5bf2275ec9f3c64f71"
+  },
+  "abprop-cached-value.txt": {
+    "bytes": 909,
+    "sha256": "29919231ca80bd439c4d9566071cff000435c4cfe78e733cc19c9aade61453f7"
+  },
+  "abprop-runtime-resolver.txt": {
+    "bytes": 9365,
+    "sha256": "775d783be27be897121c7b0cee3f989f92115f6ac93e97d36a10fc39899f52da"
+  },
   "adv-account-baseline-cache-read.txt": {
     "bytes": 3740,
     "sha256": "168783704e65afe6d170ac96b0d307e77b30fc85105f99f742a17da9d0dad360"
@@ -134,6 +166,10 @@
   "certificate-root.txt": {
     "bytes": 1386,
     "sha256": "097e7c622db0ce8e18f73efb2b2f4693a8b520958198ec4bce0eef0779d30602"
+  },
+  "companion-removal-gate-property.txt": {
+    "bytes": 3405,
+    "sha256": "1992249d318833d92a5bf5ffb61dfd1304136acef65f6cccd2a6f03aed5eb610"
   },
   "frame-reader.txt": {
     "bytes": 1734,
@@ -624,8 +660,8 @@
     "sha256": "82590b7944e627c71d4a54e3403be84e314598ced8789812c7c6951470853c92"
   },
   "targets.json": {
-    "bytes": 57702,
-    "sha256": "a80377dbe3e8231d61d7db9fff9ce2a99110c21a23b33dfdcea4ab3d0dd81d5a"
+    "bytes": 60898,
+    "sha256": "85823e1417f727bfa46b605ad599f2ef0bc3a45d47204c5086bf0eee2328b764"
   },
   "token-dictionary-initializer.txt": {
     "bytes": 159791,

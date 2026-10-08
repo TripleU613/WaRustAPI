@@ -2408,7 +2408,7 @@ classes7.dex  LX/DEs;->CEv(VLL)
 
 # Offline attribute first-match lookup, APK 2.26.37.71
 
-# Reproduce: xtask apk-smali APK --class LX/0hs; --method A0M --exceptions
+# Reproduce: xtask apk-smali APK --class 'LX/0hs;' --method A0M --exceptions
 
 # class: LX/0hs;
 # extends: Ljava/lang/Object;
@@ -2423,7 +2423,7 @@ classes7.dex  LX/DEs;->CEv(VLL)
     # exception table: 0 try range(s)
 .end method
 
-# Reproduce: xtask apk-smali APK --class LX/0hs; --method A0C --exceptions
+# Reproduce: xtask apk-smali APK --class 'LX/0hs;' --method A0C --exceptions
 
 # class: LX/0hs;
 # extends: Ljava/lang/Object;
