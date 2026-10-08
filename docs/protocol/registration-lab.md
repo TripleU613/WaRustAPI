@@ -464,20 +464,21 @@ because that is what happened to it.
 
 ## Saved account inventory (2026-10-07)
 
-**Observed locally**, not an APK finding: the 16 one-letter private profiles
-contain 13 distinct configured numbers. Read-only `accounts status --name`
-inspection using existing local keys found two registered profiles, ten
-unregistered profiles and four locked/unknown profiles. The registered `l`
-profile has a successful saved login and a successful current bounded receive
-check; `j` has a failed saved login. Failure alone does not identify a ban or
-its cause. Three legacy retry profile stores are absent; do not count their
-files as usable additional accounts. Deduplication was performed privately
-from country code and national number without emitting either value.
+**Observed locally**, updated audit, not an APK finding: 19 saved profiles
+reference 13 distinct configured numbers across 16 existing configurations.
+All 16 existing stores opened with their saved keys: three account records have
+completed registration and authenticated-login history; thirteen are
+unregistered. Only the recently authenticated existing client is established
+for continuing messaging tests. Historical registration is not evidence of
+current usability or ban status, and a failed saved login alone does not
+identify a ban. Three legacy profiles reference absent stores/configurations;
+they establish no additional usable accounts. Deduplication was performed
+privately without emitting phone numbers or credentials. This supersedes the
+earlier partial audit with four locked/unknown profiles.
 
-**Unknown:** locked-profile registration outcomes and the detailed signup
-outcomes of the ten unregistered profiles were not reconstructed by this
-inventory. The status command's `registration_state=none` is a placeholder,
-not evidence that registration was never attempted. No live registration,
-identity reset, retry or message transmission was performed for this count.
-More numbers are unnecessary for static research/current single-account
-checks; two-client end-to-end tests need a second working account.
+**Unknown:** detailed signup outcomes for the unregistered records and long-term
+account reliability remain unestablished. A status placeholder does not prove
+registration was never attempted. No live registration, identity reset, retry
+or message transmission was performed for this count. More numbers are
+unnecessary for static research/current single-account checks; a second working
+account would enable controlled two-client end-to-end tests.

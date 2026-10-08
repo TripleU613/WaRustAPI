@@ -1808,3 +1808,12 @@ initial missing lists and excludes/deduplicates own/remote targets. Final plan
 still validates device authority before reservation. APK mode/category state
 integration and automatic own-PN selection remain incomplete; no new live send.
 [Routing correction](protocol/groups.md#group-recipient-validation-before-device-sync-2026-10-07).
+
+Concrete group-mode kinds (2026-10-07, confirmed APK 37.71): 0DE predicates
+resolve broadcast-list type 3, interop.g.us type 28, status@broadcast type 5,
+and cache-group types 1=g.us/2=temp. A0n additionally includes type 28.
+Temporary groups are not established as old PN g.us groups. Existing 0Fs cache
+and ADs reply classifications are linked; numeric group-type agreement alone
+does not establish complete callback/history provenance. Runtime mode/contact
+synchronization and unsupported namespaces remain unported; no account request.
+[Kinds and remaining gaps](protocol/cross-device-sync.md#concrete-jid-kinds-in-group-mode-classification-2026-10-07).

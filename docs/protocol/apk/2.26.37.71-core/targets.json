@@ -1199,6 +1199,125 @@
       "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
     ]
   },
+  "sender-key-mode-broadcast-jid": {
+    "anchors": [
+      "broadcast"
+    ],
+    "class": "LX/9Ln;",
+    "file": "sender-key-mode-broadcast-jid.txt",
+    "method_filter": null,
+    "methods": 8,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-mode-broadcast-kind": {
+    "class": "LX/0DE;",
+    "file": "sender-key-mode-broadcast-kind.txt",
+    "method_filter": "A0R",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-mode-cache-group-kind": {
+    "class": "LX/0DE;",
+    "file": "sender-key-mode-cache-group-kind.txt",
+    "method_filter": "A0m",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-mode-interop-jid": {
+    "anchors": [
+      "interop.g.us"
+    ],
+    "class": "LX/Gym;",
+    "file": "sender-key-mode-interop-jid.txt",
+    "method_filter": null,
+    "methods": 5,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-mode-interop-kind": {
+    "class": "LX/0DE;",
+    "file": "sender-key-mode-interop-kind.txt",
+    "method_filter": "A0W",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-mode-normal-jid": {
+    "anchors": [
+      "g.us"
+    ],
+    "class": "LX/1bn;",
+    "file": "sender-key-mode-normal-jid.txt",
+    "method_filter": null,
+    "methods": 7,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-mode-status-jid": {
+    "anchors": [
+      "status",
+      "broadcast"
+    ],
+    "class": "LX/8oR;",
+    "file": "sender-key-mode-status-jid.txt",
+    "method_filter": null,
+    "methods": 6,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-mode-status-kind": {
+    "class": "LX/0DE;",
+    "file": "sender-key-mode-status-kind.txt",
+    "method_filter": "A0i",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "sender-key-mode-temporary-jid": {
+    "anchors": [
+      "temp"
+    ],
+    "class": "LX/9Lo;",
+    "file": "sender-key-mode-temporary-jid.txt",
+    "method_filter": null,
+    "methods": 7,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/groups.rs",
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
   "sender-key-name": {
     "class": "LX/Cnr;",
     "file": "sender-key-name.txt",

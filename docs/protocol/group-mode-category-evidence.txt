@@ -1,0 +1,20 @@
+# APK 2.26.37.71 supplementary group-mode predicate evidence
+# SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Reproduce: target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class 'LX/0DE;' --method A0n
+# Offsets are method-relative bytes; DEX shorties are not full signatures.
+# This selected source is outside the core checksum bundle.
+
+# class: LX/0DE;
+# extends: Ljava/lang/Object;
+
+.method public A0n(ZL)  # .registers 2
+    0000..0006  invoke-static  {v1}, LX/0DE;->A0m(ZL)
+    0006..0008  move-result  v0
+    0008..000c  if-nez  v0, +0x9
+    000c..0012  invoke-static  {v1}, LX/0DE;->A0W(ZL)
+    0012..0014  move-result  v1
+    0014..0016  const/4  v0, #0x0
+    0016..001a  if-eqz  v1, +0x3
+    001a..001c  const/4  v0, #0x1
+    001c..001e  return  v0
+.end method

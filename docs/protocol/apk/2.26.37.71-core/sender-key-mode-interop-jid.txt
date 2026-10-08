@@ -1,0 +1,43 @@
+# APK-derived structural disassembly: LX/Gym;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=1
+  0000..0004 op=22 new-instance v0, LX/ICZ;
+  0004..000a op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>(V)
+  000a..000e op=69 sput-object v0, LX/Gym;->CREATOR:Landroid/os/Parcelable$Creator;
+  000e..0010 op=0e return-void
+.end method
+
+.method <init>(VL) flags=0x10001 registers=3
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v2, v0}, LX/00h;->A0A(VLI)
+  0008..000e op=70 invoke-direct {v1, v2}, LX/1bn;-><init>(VL)
+  000e..0012 op=5b iput-object v2, v1, LX/Gym;->A00:Ljava/lang/String;
+  0012..0018 op=71 invoke-static {v2}, LX/0c6;->A02(ZL)
+  0018..001a op=0a move-result
+  001a..001e op=38 if-eqz v0, +0x3
+  001e..0020 op=0e return-void
+  0020..0024 op=22 new-instance v0, LX/08j;
+  0024..002a op=70 invoke-direct {v0, v2}, LX/08j;-><init>(VL)
+  002a..002c op=27 throw v0
+.end method
+
+.method getServer(L) flags=0x1 registers=2
+  0000..0004 op=1a const-string v0, "interop.g.us"
+  0004..0006 op=11 return-object v0
+.end method
+
+.method getType(I) flags=0x1 registers=2
+  0000..0004 op=13 const/16 v0, #0x1c
+  0004..0006 op=0f return v0
+.end method
+
+.method writeToParcel(VLI) flags=0x11 registers=4
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v2, v0}, LX/00h;->A0A(VLI)
+  0008..000c op=54 iget-object v0, v1, LX/Gym;->A00:Ljava/lang/String;
+  000c..0012 op=6e invoke-virtual {v2, v0}, Landroid/os/Parcel;->writeString(VL)
+  0012..0014 op=0e return-void
+.end method

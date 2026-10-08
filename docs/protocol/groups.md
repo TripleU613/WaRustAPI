@@ -2875,3 +2875,8 @@ strict Clippy, warning-free Rustdoc and regenerated CLI/API checks passed. Rebui
 CLI read-only inspection left outbox, actions, receipts, devices and pins unchanged.
 The private evidence index is lab/releases/group-routing-inspection/active.json;
 no login, device query, group send or identity replacement was manufactured.
+
+Group-mode category continuation (2026-10-07): concrete APK JID types distinguish
+g.us, temporary temp groups, interop.g.us, status and broadcast lists. These
+are separate from both group classification and binary encoding kind. See the
+[resolved predicates and scope](cross-device-sync.md#concrete-jid-kinds-in-group-mode-classification-2026-10-07).

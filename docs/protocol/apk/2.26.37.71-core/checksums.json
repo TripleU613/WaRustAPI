@@ -375,6 +375,42 @@
     "bytes": 804,
     "sha256": "137101637671ec6cdf477d11b7ed77a3777bd7625637cead29e54a46dcc95aae"
   },
+  "sender-key-mode-broadcast-jid.txt": {
+    "bytes": 4609,
+    "sha256": "556d793023613e55248db9b51863b87f2d0f6f149fb35fcfdb684bcd352619d2"
+  },
+  "sender-key-mode-broadcast-kind.txt": {
+    "bytes": 669,
+    "sha256": "de16f9004b23e08a725c4b9e7261f8101812e6016a56b752135644c3caca79be"
+  },
+  "sender-key-mode-cache-group-kind.txt": {
+    "bytes": 858,
+    "sha256": "bf906241b0b448f0a808001061c9768bb3cafe85f5b8ab7b15807d97a059d022"
+  },
+  "sender-key-mode-interop-jid.txt": {
+    "bytes": 1762,
+    "sha256": "d05bdc9b9e78852d199abd737a26ec45699545665b0324672f86b7c3883e516d"
+  },
+  "sender-key-mode-interop-kind.txt": {
+    "bytes": 671,
+    "sha256": "e9c80b8e273e5922ff73685439bd192eb78a778f8676ca796f9318f64c9791bf"
+  },
+  "sender-key-mode-normal-jid.txt": {
+    "bytes": 5121,
+    "sha256": "3e63cc6e7fdbd2905c51bd414159b372a49570b2829d22ae193352aca57c9bc6"
+  },
+  "sender-key-mode-status-jid.txt": {
+    "bytes": 1496,
+    "sha256": "5b0f6549cae88488512f73e031e1cd34f5036d56b07979e49d2122bc6f8083eb"
+  },
+  "sender-key-mode-status-kind.txt": {
+    "bytes": 669,
+    "sha256": "dde19af0ff5e3289b3a0b029dc103e117fb96c06a11aedd45602f681d217b4d7"
+  },
+  "sender-key-mode-temporary-jid.txt": {
+    "bytes": 2964,
+    "sha256": "a7115a39de7b81a3920c5305333c9d326f52c6ea2909c2f3279a967d8454ad96"
+  },
   "sender-key-name-translation.txt": {
     "bytes": 924,
     "sha256": "0c692682351c93deb11471fdcb7e5252d43ff587fd7ceeb48edac910c5e949be"
@@ -404,8 +440,8 @@
     "sha256": "82590b7944e627c71d4a54e3403be84e314598ced8789812c7c6951470853c92"
   },
   "targets.json": {
-    "bytes": 38428,
-    "sha256": "db8294e62b863eb32c90eba2a184f2ef40430ce73e21ba000e65c65e6683f346"
+    "bytes": 42030,
+    "sha256": "6b27b9229ebb6de5f655a8b36dad8a5bffa58c5c68145979cda817a6f6417ded"
   },
   "token-dictionary-initializer.txt": {
     "bytes": 159791,

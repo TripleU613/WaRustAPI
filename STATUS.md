@@ -1623,3 +1623,19 @@ strict Clippy, warning-free Rustdoc and regenerated CLI/API checks passed. Rebui
 CLI read-only inspection left outbox, actions, receipts, devices and pins unchanged.
 The private evidence index is lab/releases/group-routing-inspection/active.json;
 no login, device query, group send or identity replacement was manufactured.
+
+Concrete group-mode kinds (2026-10-07, confirmed APK 37.71): 0DE predicates
+resolve broadcast-list type 3, interop.g.us type 28, status@broadcast type 5,
+and cache-group types 1=g.us/2=temp. A0n additionally includes type 28.
+Temporary groups are not established as old PN g.us groups. Existing 0Fs cache
+and ADs reply classifications are linked; numeric group-type agreement alone
+does not establish complete callback/history provenance. Runtime mode/contact
+synchronization and unsupported namespaces remain unported; no account request.
+[Kinds and remaining gaps](docs/protocol/cross-device-sync.md#concrete-jid-kinds-in-group-mode-classification-2026-10-07).
+
+Concrete-kind trace validation: 58 xtask tests, CLI reference regeneration and
+five API checks passed. Core snapshot: 109 topics / 275 methods, 114 files /
+1,755,155 bytes (2 MiB bound); supplementary A0n source is separate. The
+checksum-verified cached diff took 0.197003 seconds: nine added topics, all
+100 prior topics unchanged; manifest, inventory and tokens unchanged. These are
+static/offline findings; no live behavior or automatic mode adoption is claimed.

@@ -1894,3 +1894,71 @@ API checks passed. The core contains 100 topics / 238 methods, 105 files /
 0.075441 seconds: 19 added topics, all 81 prior topics unchanged; manifest,
 inventory and tokens unchanged. No live/account request or runtime migration
 was used for this source trace.
+
+## Concrete JID kinds in group-mode classification (2026-10-07)
+
+**Confirmed static, APK 2.26.37.71:** the mode predicates inspect concrete
+`Jid.getType()` values, not the JID wire-encoding kind. Retained sources resolve
+these previously unknown categories:
+
+| Predicate | Exact type | Concrete source | Established namespace |
+| --- | --- | --- | --- |
+| [0DE.A0R](apk/2.26.37.71-core/sender-key-mode-broadcast-kind.txt) | 3 | [9Ln](apk/2.26.37.71-core/sender-key-mode-broadcast-jid.txt) | broadcast list (`broadcast`) |
+| [0DE.A0W](apk/2.26.37.71-core/sender-key-mode-interop-kind.txt) | 28 / 0x1c | [Gym](apk/2.26.37.71-core/sender-key-mode-interop-jid.txt) | interop.g.us |
+| [0DE.A0i](apk/2.26.37.71-core/sender-key-mode-status-kind.txt) | 5 | [8oR](apk/2.26.37.71-core/sender-key-mode-status-jid.txt) | status@broadcast |
+| [0DE.A0m](apk/2.26.37.71-core/sender-key-mode-cache-group-kind.txt) | 1 or 2, explicitly excluding 28 | [1bn](apk/2.26.37.71-core/sender-key-mode-normal-jid.txt) / [9Lo](apk/2.26.37.71-core/sender-key-mode-temporary-jid.txt) | g.us / temp |
+
+The three type-equality predicates return false for null. A0m first excludes
+A0W, then accepts types 1 or 2. [Supplementary 0DE.A0n source](group-mode-category-evidence.txt)
+returns the union of A0m and A0W: types 1, 2 and 28. It is not identical to A0m.
+The status singleton's constructor passes `status` to Jid and its getServer
+returns `broadcast`; this proves status identity, not merely a shared parent.
+The temporary group's getServer returns literal `temp`. **Refuted:** type 2 is
+not established as an old g.us PN group; it is a temporary group namespace.
+`interop.g.us` is also distinct from both g.us and encoding `JidKind::Interop`.
+No unsupported namespace is enabled in Rust by these source findings.
+
+**B7i.A00 interpretation with the retained preceding trace:** broadcast lists
+(type 3) and interop groups (type 28) select mode 2 before the normal contact/
+group-type branch. A present contact marked exactly `lid` selects mode 2.
+Otherwise 0Fs.A0Y checks persisted group type 3 within its A0n domain: true
+selects participant mode 1, false allows status (type 5) to select mode 2, with
+remaining cases selecting 0. D4x.A00 selects own LID for participant mode 2
+and own PN for the other modes. Do not confuse **JID type 3** (broadcast list),
+**group type 3** (default subgroup), and **participant mode 1**: they are three
+different fields used in different branches.
+
+**Existing evidence reconciled:** `0Fs.A0A` was already retained in the group
+research [group-type cache reader](apk/2.26.37.71-groups/group-type-cache-read.txt)
+and documented under group subject types. It reads 0Ze.A04 from the initialized
+chat map or returns 0 on cache miss; 0Fs.A02 reads database column `group_type`.
+ADs.A01 separately maps a complete reply's default_sub_group child to value 3.
+These are **confirmed** producer/read facts. Mapping Rust's complete-reply
+`GroupType::DefaultSubgroup` to this selected branch is **inferred compatibility**;
+the entire callback/cache provenance graph and history-merging lifecycle are not
+proved by the numeric agreement. An unknown historical Rust classification is
+not proof of an APK cache miss, ordinary group or participant mode 0.
+
+**Negative search results and scope:** getType body searches on 0c3 and
+GroupJid found none; a full 0c3 body search found none, and GroupJid only exposed
+its static companion initializer. Those base names do not establish a concrete
+type. 9Lq had no getServer body; concrete status/list subclasses supply it.
+The broad LX/ getType method-name scan matched 77 methods across 75 classes,
+including unrelated non-JID types. Those counts are not a complete JID catalog
+and unrelated numeric matches were excluded. Ordinary/temp/interop/status/list
+sources carry the selected class's getter and server evidence together.
+
+**Remaining runtime boundary:** the Rust planner still uses membership
+namespace and excludes temp/interop groups; it does not have full authoritative
+cached contact mode, chat-type initialization or history merging. This trace
+closes the predicate meaning, not automatic mode synchronization or PN fallback.
+No identity policy, key chain, request reservation, account mode or live traffic
+changed. The new core topics remain hash-pinned and release-diffable; the small
+A0n supplementary evidence is explicitly outside that checksum bundle.
+
+Concrete-kind trace validation: 58 xtask tests, CLI reference regeneration and
+five API checks passed. Core snapshot: 109 topics / 275 methods, 114 files /
+1,755,155 bytes (2 MiB bound); supplementary A0n source is separate. The
+checksum-verified cached diff took 0.197003 seconds: nine added topics, all
+100 prior topics unchanged; manifest, inventory and tokens unchanged. These are
+static/offline findings; no live behavior or automatic mode adoption is claimed.
