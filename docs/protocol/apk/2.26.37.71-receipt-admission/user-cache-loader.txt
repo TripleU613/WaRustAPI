@@ -1,0 +1,30 @@
+# APK-derived structural disassembly: LX/13v;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LL) flags=0x1 registers=9
+  # full signature: LX/13v;->A00(Ljava/util/Collection;)LX/09E;
+  0000..0004 op=54 iget-object v1, v7, LX/13v;->A06:LX/00s;
+  0004..000a op=72 invoke-interface {v1}, LX/00s;->get()Ljava/lang/Object;
+  000a..0010 op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  0010..0012 op=0b move-result-wide v5
+  0012..0016 op=54 iget-object v0, v7, LX/13v;->A02:LX/00s;
+  0016..001c op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  001c..001e op=0c move-result-object v0
+  001e..0022 op=1f check-cast v0, LX/8G8;
+  0022..0028 op=6e invoke-virtual {v0, v8}, LX/8G8;->A03(Ljava/util/Collection;)LX/09E;
+  0028..002a op=0c move-result-object v4
+  002a..002e op=54 iget-object v0, v7, LX/13v;->A04:LX/00s;
+  002e..0034 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0034..0036 op=0c move-result-object v3
+  0036..003a op=1f check-cast v3, LX/0V5;
+  003a..0040 op=72 invoke-interface {v1}, LX/00s;->get()Ljava/lang/Object;
+  0040..0046 op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  0046..0048 op=0b move-result-wide v1
+  0048..004a op=bc sub-long/2addr v1, v5
+  004a..004e op=1a const-string v0, "ReceiptManager/getMessageReceipts"
+  004e..0054 op=6e invoke-virtual {v3, v0, v1, v2}, LX/0V5;->A01(Ljava/lang/String;J)V
+  0054..0056 op=11 return-object v4
+  # exception table: 0 try range(s)
+.end method

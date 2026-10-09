@@ -1,0 +1,70 @@
+{
+  "chat-type-five.txt": {
+    "bytes": 777,
+    "sha256": "a8704f0e341dd4bf57aa95f6e67f3fd7629e8203363d29c1b63a4ea171d63177"
+  },
+  "chat-type-three.txt": {
+    "bytes": 777,
+    "sha256": "e4ca809a7b203e9ea9e9966e4c8172567e6ddd0fc60704b56a471951896cdf7e"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-owner-predicate.txt": {
+    "bytes": 1203,
+    "sha256": "35429ff8e29da743ffd35506f7dd77597703c8990713dac4eac1bf160005e875"
+  },
+  "multi-chat-exclusion.txt": {
+    "bytes": 779,
+    "sha256": "73f2972fc9669cba75fbc9d592aee3a38057c229f8ecaa47bc792af099b4aa95"
+  },
+  "multi-chat-predicate.txt": {
+    "bytes": 1001,
+    "sha256": "15f2cc9654d15a3e2018f914085d261c665cb34bab03163109685d3496e8135f"
+  },
+  "nonadvancing-predicate.txt": {
+    "bytes": 648,
+    "sha256": "4c5ee390cf7f27ab11dd1ce6ba22abc63d3b4da005310fc211743a8aec96c422"
+  },
+  "receipt-admission.txt": {
+    "bytes": 73751,
+    "sha256": "c23234d6c7efc265c66cbbfcf579fb928165f2a418dcaed02ba8b9ae13154285"
+  },
+  "special-device-constant.txt": {
+    "bytes": 1015,
+    "sha256": "a6ff28019c57d46a5598ac5e2dab3845df88f63346aa279ab49c81de83c35a08"
+  },
+  "special-device-predicate.txt": {
+    "bytes": 899,
+    "sha256": "3b9dd8e3c2ec0ade487fea072f54ef2aef5d1f946b5cb73ad5c62f96821d084d"
+  },
+  "special-multi-message.txt": {
+    "bytes": 1421,
+    "sha256": "ac655855081c80a116dc8ebdc3d6244362afd26dfe772e46e7257c0d3a13c83c"
+  },
+  "status-comparison.txt": {
+    "bytes": 1265,
+    "sha256": "186f09b4d4d3b9fcd999b945b54f723d987d78747b1b10c2c252eb85f7c04475"
+  },
+  "status-order.txt": {
+    "bytes": 1141,
+    "sha256": "dbc432e7a544efe7dba25cda9783a81bbea67e8a81df0510eebe2f6f02abfee3"
+  },
+  "targets.json": {
+    "bytes": 6262,
+    "sha256": "9a537e06fe3bd99fd1c3eadcf50052a569924c3a3750db4b02f1c6bed54a9949"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "user-cache-loader.txt": {
+    "bytes": 1689,
+    "sha256": "0d57f4a079461f26c204baed4f5468ab9ee84a1387c61b11da467511ee1d3f4c"
+  }
+}

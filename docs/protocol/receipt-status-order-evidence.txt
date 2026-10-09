@@ -1,0 +1,8 @@
+APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+classes2.dex raw offset 0x0d8d08; LX/1hg;.<clinit> payload@0x14
+DEX fill-array-data payload: width=4, count=22, signed little-endian int values.
+Raw 96 bytes: 00 03 04 00 16 00 00 00 0e 00 00 00 00 00 00 00 01 00 00 00 02 00 00 00 14 00 00 00 15 00 00 00 03 00 00 00 04 00 00 00 0f 00 00 00 05 00 00 00 0b 00 00 00 0c 00 00 00 0d 00 00 00 08 00 00 00 12 00 00 00 11 00 00 00 10 00 00 00 09 00 00 00 0a 00 00 00 07 00 00 00 06 00 00 00 16 00 00 00
+Order: [14, 0, 1, 2, 20, 21, 3, 4, 15, 5, 11, 12, 13, 8, 18, 17, 16, 9, 10, 7, 6, 22]
+Recheck: unzip APK entry classes2.dex; read 96 bytes at 0x0d8d08; validate 0003040016000000 header and decode 22 little-endian i32 values from byte 8.
+The prefix containing the header plus the first 16 disassembled values occurs exactly once across classes*.dex in this APK.
+The disassembler truncates payload display after 64 data bytes; the last six ranks above come from the raw payload, not guessed numeric ordering.

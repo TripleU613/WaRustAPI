@@ -1,0 +1,15 @@
+# APK-derived structural disassembly: LX/1hg;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=1
+  # full signature: LX/1hg;-><clinit>()V
+  0000..0004 op=13 const/16 v0, #0x16
+  0004..0008 op=23 new-array v0, v0, [I
+  0008..000e op=26 fill-array-data v0, payload@0x14, element_width=4, size=22, data=[0e 00 00 00 00 00 00 00 01 00 00 00 02 00 00 00 14 00 00 00 15 00 00 00 03 00 00 00 04 00 00 00 0f 00 00 00 05 00 00 00 0b 00 00 00 0c 00 00 00 0d 00 00 00 08 00 00 00 12 00 00 00 11 00 00 00 …]
+  000e..0012 op=69 sput-object v0, LX/1hg;->A00:[I
+  0012..0014 op=0e return-void
+  0014..0074 op=00 fill-array-data-payload element_width=4, size=22, data=[0e 00 00 00 00 00 00 00 01 00 00 00 02 00 00 00 14 00 00 00 15 00 00 00 03 00 00 00 04 00 00 00 0f 00 00 00 05 00 00 00 0b 00 00 00 0c 00 00 00 0d 00 00 00 08 00 00 00 12 00 00 00 11 00 00 00 …]
+  # exception table: 0 try range(s)
+.end method

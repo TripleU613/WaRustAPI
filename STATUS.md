@@ -2888,3 +2888,19 @@ reproduced exactly from APK 2.26.37.71. Cached self-diff verified eight unchange
 topics and four metadata artifacts, not cross-release equivalence. Hygiene
 checked 1,381 local links and 32 APK bundles / 8,385,503 bytes; diff hygiene
 passed. Research/docs only; no new runtime tests or live operation is claimed.
+
+2026-10-09 — **Confirmed static:** 15A admission rejects nonpositive times
+and splits message/user advancement from device timestamp handling. Native
+nonadvancing comparison includes equal ranks; its 22-entry ordering was recovered
+from the exact APK payload. Lower/equal events can still reach device storage.
+State-only status translation, manager exclusions and conditional message
+classification are traced with explicit remaining authority/lifecycle unknowns.
+[Evidence and next port inputs](docs/protocol/receipt-admission.md); no runtime/live changes in this chunk.
+
+Receipt-admission validation: 13 source topics / 18 files / 121,518 bytes
+reproduced exactly from APK 2.26.37.71. Cached self-diff verified 13 unchanged
+topics and four metadata artifacts; raw 96-byte/22-entry status-order evidence
+independently matches classes2.dex at its recorded offset. Repository hygiene
+checked 1,393 local links and 33 APK bundles / 8,507,021 bytes; diff hygiene
+passed. Research/docs only; no fresh runtime tests or live account operation
+is claimed.

@@ -107,3 +107,8 @@ reproduced exactly from APK 2.26.37.71. Cached self-diff verified eight unchange
 topics and four metadata artifacts, not cross-release equivalence. Hygiene
 checked 1,381 local links and 32 APK bundles / 8,385,503 bytes; diff hygiene
 passed. Research/docs only; no new runtime tests or live operation is claimed.
+
+Follow-up: [receipt admission](receipt-admission.md) now traces positive-time
+selection, equal/lower-status device-only handling and the manager pools leading
+to these writers. Effective own-device/property/namespace authority and complete
+post-write behavior remain unknown/unported.

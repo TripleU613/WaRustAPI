@@ -1,0 +1,32 @@
+# APK-derived structural disassembly: LX/1hg;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(III) flags=0x9 registers=9
+  # full signature: LX/1hg;->A00(II)I
+  0000..0002 op=12 const/4 v6, #0xff (-1)
+  0002..0004 op=12 const/4 v5, #0x0
+  0004..0006 op=12 const/4 v4, #0x0
+  0006..0008 op=12 const/4 v3, #0xff (-1)
+  0008..000a op=12 const/4 v2, #0xff (-1)
+  000a..000e op=62 sget-object v1, LX/1hg;->A00:[I
+  000e..0012 op=13 const/16 v0, #0x16
+  0012..0016 op=35 if-ge v4, v0, +0xe
+  0016..001a op=44 aget v0, v1, v4
+  001a..001e op=33 if-ne v0, v7, +0x3
+  001e..0020 op=01 move v3, v4
+  0020..0024 op=33 if-ne v0, v8, +0x3
+  0024..0026 op=01 move v2, v4
+  0026..002a op=32 if-eq v3, v6, +0x7
+  002a..002e op=32 if-eq v2, v6, +0x5
+  002e..0032 op=35 if-ge v3, v2, +0x6
+  0032..0034 op=0f return v6
+  0034..0038 op=d8 add-int/lit8 v4, v4, #0x1
+  0038..003a op=28 goto -0x17
+  003a..003e op=37 if-le v3, v2, +0x4
+  003e..0040 op=12 const/4 v0, #0x1
+  0040..0042 op=0f return v0
+  0042..0044 op=0f return v5
+  # exception table: 0 try range(s)
+.end method
