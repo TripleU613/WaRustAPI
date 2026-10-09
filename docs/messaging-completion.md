@@ -1,5 +1,12 @@
 # Messaging completion checklist
 
+Text store insertion (2026-10-09, **confirmed static**): four topics connect
+ordinary authored-message insertion to its type registry, transaction wrapper
+and before/lambda/inserter/after hook order. The insertion argument 1 is not a
+status assignment; void return is not durable-row proof. Concrete type-zero
+inserter/provider effects and primary cleanup remain unknown/unported.
+No runtime/account/live change. [Evidence and limits](protocol/text-store-insertion.md).
+
 Text store submission (2026-10-09, **confirmed static**): nine topics
 connect B1l to the deferred 3Pn selector-4 store worker. Reason -1/1/22 and
 scheduler 26 are not status assignments. Three setter candidates are separately

@@ -1,0 +1,63 @@
+{
+  "registry-insert-hooks": {
+    "anchors": [
+      "fmessage-database-inserting-not-supported"
+    ],
+    "class": "LX/1hh;",
+    "file": "registry-insert-hooks.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "store-insert-entry": {
+    "anchors": [
+      "FMessageDatabaseInsertMethods/skip storing transient message: "
+    ],
+    "class": "LX/0V9;",
+    "file": "store-insert-entry.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A06",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "store-insert-result": {
+    "class": "LX/34T;",
+    "file": "store-insert-result.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "store-write-dispatch": {
+    "anchors": [
+      "CoreMessageStore/writeMessageToDatabase"
+    ],
+    "class": "LX/0zC;",
+    "file": "store-write-dispatch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0A",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  }
+}

@@ -92,3 +92,6 @@ from the pinned APK. Cached self-diff verifies nine unchanged topics and four
 metadata artifacts. CLI reference regeneration, OpenAPI/library-symbol checks,
 formatting and diff hygiene pass. This source/docs-only chunk changes no Rust
 runtime code and claims no fresh workspace/runtime suite or live validation.
+
+Follow-up: [store insertion](text-store-insertion.md) traces A0A/A0E into
+the type registry and hook order, with concrete inserter effects still unknown.

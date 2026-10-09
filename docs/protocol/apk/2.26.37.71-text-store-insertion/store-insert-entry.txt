@@ -1,0 +1,102 @@
+# APK-derived structural disassembly: LX/0V9;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A06(VL) flags=0x1 registers=11
+  # full signature: LX/0V9;->A06(LX/178;)V
+  0000..0004 op=54 iget-object v6, v9, LX/0V9;->A01:LX/0VB;
+  0004..0008 op=54 iget-object v0, v6, LX/0VB;->A04:LX/05B;
+  0008..000c op=54 iget-object v5, v0, LX/05B;->A00:LX/00s;
+  000c..0012 op=72 invoke-interface {v5}, LX/00s;->get()Ljava/lang/Object;
+  0012..0018 op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  0018..001a op=0b move-result-wide v7
+  001a..001e op=20 instance-of v0, v10, LX/1im;
+  001e..0022 op=38 if-eqz v0, +0x16
+  0022..0026 op=54 iget-object v2, v10, LX/178;->A0i:LX/1gc;
+  0026..002a op=1a const-string v1, "FMessageDatabaseInsertMethods/skip storing transient message: "
+  002a..002e op=22 new-instance v0, Ljava/lang/StringBuilder;
+  002e..0034 op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0034..003a op=6e invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  003a..0040 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0040..0042 op=0c move-result-object v0
+  0042..0048 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  0048..004a op=0e return-void
+  004a..004e op=54 iget-object v0, v6, LX/0VB;->A01:LX/05B;
+  004e..0052 op=54 iget-object v2, v0, LX/05B;->A00:LX/00s;
+  0052..0058 op=72 invoke-interface {v2}, LX/00s;->get()Ljava/lang/Object;
+  0058..005a op=0c move-result-object v0
+  005a..005e op=1f check-cast v0, LX/1hh;
+  005e..0062 op=52 iget v3, v10, LX/178;->A0h:I
+  0062..0066 op=54 iget-object v1, v0, LX/1hh;->A0D:LX/00l;
+  0066..006c op=72 invoke-interface {v1}, LX/00l;->getValue()Ljava/lang/Object;
+  006c..006e op=0c move-result-object v0
+  006e..0072 op=1f check-cast v0, LX/1gj;
+  0072..0078 op=6e invoke-virtual {v0, v3}, LX/1gj;->A02(I)Z
+  0078..007a op=0a move-result v0
+  007a..007e op=38 if-eqz v0, +0x61
+  007e..0084 op=72 invoke-interface {v1}, LX/00l;->getValue()Ljava/lang/Object;
+  0084..0086 op=0c move-result-object v0
+  0086..008a op=1f check-cast v0, LX/1gj;
+  008a..0090 op=6e invoke-virtual {v0, v3}, LX/1gj;->A00(I)LX/1gg;
+  0090..0092 op=0c move-result-object v0
+  0092..0096 op=20 instance-of v0, v0, LX/1hj;
+  0096..009a op=38 if-eqz v0, +0x53
+  009a..009e op=54 iget-object v0, v6, LX/0VB;->A03:LX/05B;
+  009e..00a2 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  00a2..00a8 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  00a8..00aa op=0c move-result-object v0
+  00aa..00ae op=1f check-cast v0, LX/0Gc;
+  00ae..00b4 op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  00b4..00b6 op=0c move-result-object v4
+  00b6..00bc op=6e invoke-virtual {v4}, LX/0ZN;->A00()LX/1gB;
+  00bc..00be op=0c move-result-object v3
+  00be..00c4 op=72 invoke-interface {v2}, LX/00s;->get()Ljava/lang/Object;
+  00c4..00c6 op=0c move-result-object v2
+  00c6..00ca op=1f check-cast v2, LX/1hh;
+  00ca..00ce op=13 const/16 v1, #0xa
+  00ce..00d2 op=22 new-instance v0, LX/AiX;
+  00d2..00d8 op=70 invoke-direct {v0, v6, v10, v1}, LX/AiX;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+  00d8..00de op=6e invoke-virtual {v2, v10, v0}, LX/1hh;->A01(LX/178;Lkotlin/jvm/functions/Function0;)V
+  00de..00e4 op=6e invoke-virtual {v3}, LX/1gB;->A00()V
+  00e4..00ea op=6e invoke-virtual {v3}, LX/1gB;->close()V
+  00ea..00f0 op=6e invoke-virtual {v4}, LX/0ZN;->close()V
+  00f0..00f4 op=54 iget-object v0, v6, LX/0VB;->A00:LX/05B;
+  00f4..00f8 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  00f8..00fe op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  00fe..0100 op=0c move-result-object v3
+  0100..0104 op=1f check-cast v3, LX/0V5;
+  0104..010a op=72 invoke-interface {v5}, LX/00s;->get()Ljava/lang/Object;
+  010a..0110 op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  0110..0112 op=0b move-result-wide v1
+  0112..0114 op=bc sub-long/2addr v1, v7
+  0114..0118 op=1a const-string v0, "CoreMessageStore/insertMessage"
+  0118..011e op=6e invoke-virtual {v3, v0, v1, v2}, LX/0V5;->A01(Ljava/lang/String;J)V
+  011e..0120 op=0e return-void
+  0120..0122 op=0d move-exception v1
+  0122..0124 op=27 throw v1
+  0124..0126 op=0d move-exception v0
+  0126..012c op=71 invoke-static {v3, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  012c..012e op=27 throw v0
+  012e..0130 op=0d move-exception v1
+  0130..0132 op=27 throw v1
+  0132..0134 op=0d move-exception v0
+  0134..013a op=71 invoke-static {v4, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  013a..013c op=27 throw v0
+  013c..0140 op=1a const-string v1, "Unsupported message type "
+  0140..0144 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0144..014a op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  014a..0150 op=6e invoke-virtual {v0, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0150..0156 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0156..0158 op=0c move-result-object v1
+  0158..015c op=22 new-instance v0, Ljava/lang/IllegalStateException;
+  015c..0162 op=70 invoke-direct {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+  0162..0164 op=27 throw v0
+  # exception table: 6 try range(s)
+  # catch <all> code_units 005b..005f -> 0097
+  # catch <all> code_units 005f..0072 -> 0090
+  # catch <all> code_units 0072..0075 -> 0097
+  # catch <all> code_units 0091..0092 -> 0092
+  # catch <all> code_units 0093..0097 -> 0097
+  # catch <all> code_units 0098..0099 -> 0099
+.end method

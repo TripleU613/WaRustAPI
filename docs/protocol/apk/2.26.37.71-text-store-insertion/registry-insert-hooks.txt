@@ -1,0 +1,74 @@
+# APK-derived structural disassembly: LX/1hh;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(VLL) flags=0x11 registers=7
+  # full signature: LX/1hh;->A01(LX/178;Lkotlin/jvm/functions/Function0;)V
+  0000..0004 op=52 iget v2, v5, LX/178;->A0h:I
+  0004..0008 op=54 iget-object v1, v4, LX/1hh;->A0D:LX/00l;
+  0008..000e op=72 invoke-interface {v1}, LX/00l;->getValue()Ljava/lang/Object;
+  000e..0010 op=0c move-result-object v0
+  0010..0014 op=1f check-cast v0, LX/1gj;
+  0014..001a op=6e invoke-virtual {v0, v2}, LX/1gj;->A02(I)Z
+  001a..001c op=0a move-result v0
+  001c..0020 op=38 if-eqz v0, +0x6f
+  0020..0026 op=72 invoke-interface {v1}, LX/00l;->getValue()Ljava/lang/Object;
+  0026..0028 op=0c move-result-object v0
+  0028..002c op=1f check-cast v0, LX/1gj;
+  002c..0032 op=6e invoke-virtual {v0, v2}, LX/1gj;->A00(I)LX/1gg;
+  0032..0034 op=0c move-result-object v0
+  0034..0038 op=20 instance-of v0, v0, LX/1hj;
+  0038..003c op=38 if-eqz v0, +0x61
+  003c..0042 op=72 invoke-interface {v1}, LX/00l;->getValue()Ljava/lang/Object;
+  0042..0044 op=0c move-result-object v0
+  0044..0048 op=1f check-cast v0, LX/1gj;
+  0048..004e op=6e invoke-virtual {v0, v2}, LX/1gj;->A00(I)LX/1gg;
+  004e..0050 op=0c move-result-object v3
+  0050..0054 op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.fmessage.subsystems.database.subsystem.insertion.FMessageDatabaseInserter"
+  0054..005a op=71 invoke-static {v3, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  005a..005e op=1f check-cast v3, LX/1hj;
+  005e..0064 op=6e invoke-virtual {v3}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0064..0066 op=0c move-result-object v1
+  0066..006a op=22 new-instance v0, LX/09u;
+  006a..0070 op=70 invoke-direct {v0, v1}, LX/09u;-><init>(Ljava/lang/Class;)V
+  0070..0072 op=12 const/4 v2, #0x0
+  0072..0076 op=54 iget-object v0, v4, LX/1hh;->A03:LX/00s;
+  0076..007c op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  007c..007e op=0c move-result-object v0
+  007e..0084 op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  0084..0088 op=1f check-cast v0, Ljava/lang/Iterable;
+  0088..008e op=72 invoke-interface {v0}, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  008e..0090 op=0c move-result-object v1
+  0090..0096 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  0096..0098 op=0a move-result v0
+  0098..009c op=38 if-eqz v0, +0xc
+  009c..00a2 op=72 invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00a2..00a4 op=0c move-result-object v0
+  00a4..00a8 op=1f check-cast v0, LX/1hq;
+  00a8..00ae op=72 invoke-interface {v0, v5, v2}, LX/1hq;->CHJ(LX/178;LX/3Ya;)V
+  00ae..00b0 op=28 goto -0xf
+  00b0..00b6 op=72 invoke-interface {v6}, Lkotlin/jvm/functions/Function0;->invoke()Ljava/lang/Object;
+  00b6..00bc op=72 invoke-interface {v3, v5}, LX/1hj;->BJK(LX/178;)V
+  00bc..00c0 op=54 iget-object v0, v4, LX/1hh;->A02:LX/00s;
+  00c0..00c6 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  00c6..00c8 op=0c move-result-object v0
+  00c8..00ce op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  00ce..00d2 op=1f check-cast v0, Ljava/lang/Iterable;
+  00d2..00d8 op=72 invoke-interface {v0}, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  00d8..00da op=0c move-result-object v1
+  00da..00e0 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  00e0..00e2 op=0a move-result v0
+  00e2..00e6 op=38 if-eqz v0, +0x15
+  00e6..00ec op=72 invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00ec..00ee op=0c move-result-object v0
+  00ee..00f2 op=1f check-cast v0, LX/1hq;
+  00f2..00f8 op=72 invoke-interface {v0, v5, v2}, LX/1hq;->CHJ(LX/178;LX/3Ya;)V
+  00f8..00fa op=28 goto -0xf
+  00fa..00fe op=1a const-string v2, "update"
+  00fe..0102 op=1a const-string v1, "fmessage-database-inserting-not-supported"
+  0102..0106 op=1a const-string v0, "message cannot be inserted into the database"
+  0106..010c op=71 invoke-static {v5, v4, v0, v2, v1}, LX/1hh;->A00(LX/178;LX/1hh;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  010c..010e op=0e return-void
+  # exception table: 0 try range(s)
+.end method
