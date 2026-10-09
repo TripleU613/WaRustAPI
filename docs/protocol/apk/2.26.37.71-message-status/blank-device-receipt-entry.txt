@@ -1,0 +1,18 @@
+# APK-derived structural disassembly: LX/0Z5;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0C(ZLL) flags=0x1 registers=5
+  # full signature: LX/0Z5;->A0C(LX/178;Ljava/util/Set;)Z
+  0000..0002 op=12 const/4 v1, #0x0
+  0002..0008 op=72 invoke-interface {v4}, Ljava/util/Set;->size()I
+  0008..000e op=6e invoke-virtual {v2, v3, v4, v1}, LX/0Z5;->A0D(LX/178;Ljava/util/Set;Z)Z
+  000e..0010 op=0a move-result v0
+  0010..0012 op=0f return v0
+  0012..0014 op=0d move-exception v0
+  0014..001a op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/Throwable;)V
+  001a..001c op=0f return v1
+  # exception table: 1 try range(s)
+  # catch Landroid/database/sqlite/SQLiteConstraintException; code_units 0004..0009 -> 0009
+.end method

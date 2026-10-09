@@ -2273,3 +2273,21 @@ OpenAPI/library-symbol checks, formatting, whitespace and hygiene passed.
 Hygiene checked 1,486 local links and 39 bundles / 9,331,935 bytes. Flag-writer
 excerpts are separately attributed outside that bundle. No fresh workspace
 runtime test or live account operation is claimed.
+
+2026-10-09 — **Confirmed static:** native message status is A08, with direct
+getter/reset and a downgrade-logging setter that still assigns. Two subtype
+setters always select 6. Five direct writer methods and 111 physical superclass
+setter calls are retained. The blank receipt message entry connects to device
+pending insertion; failure writes local state 20, not a recognized server reason.
+Conditional coexistence rows are separate from receipt_user membership.
+[Exact methods, provenance and remaining initialization inputs](message-status.md).
+Ordinary outgoing initialization, full admission and primary cleanup remain
+unfinished. No Rust runtime, account or network behavior changed.
+
+Message-status validation: eleven topics / 16 files / 79,539 bytes reproduce
+exactly from APK 37.71. Cached self-diff verifies eleven unchanged topics and
+four metadata artifacts, not cross-release semantic parity. CLI-reference
+regeneration, OpenAPI/library-symbol checks, formatting, whitespace and hygiene
+passed. Hygiene checked 1,499 local links and 40 bundles / 9,411,474 bytes.
+Caller/writer inventories and the no-matching ordinary override body result
+remain separately attributed. No fresh workspace/runtime or live test is claimed.

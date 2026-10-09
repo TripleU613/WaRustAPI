@@ -1,0 +1,106 @@
+# APK-derived structural disassembly: LX/DGG;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method Bqh(VLL) flags=0x1 registers=10
+  # full signature: LX/DGG;->Bqh(LX/178;LX/35X;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v8, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=54 iget-object v0, v7, LX/DGG;->A01:LX/05B;
+  000c..0010 op=54 iget-object v6, v0, LX/05B;->A00:LX/00s;
+  0010..0016 op=72 invoke-interface {v6}, LX/00s;->get()Ljava/lang/Object;
+  0016..0018 op=0c move-result-object v0
+  0018..001c op=1f check-cast v0, LX/15x;
+  001c..0022 op=6e invoke-virtual {v0, v8}, LX/15x;->A07(LX/178;)Ljava/util/HashSet;
+  0022..0024 op=0c move-result-object v3
+  0024..0028 op=53 iget-wide v4, v8, LX/178;->A0j:J
+  0028..002c op=16 const-wide/16 v1, #0xffff (-1)
+  002c..0030 op=31 cmp-long v0, v4, v1
+  0030..0034 op=39 if-nez v0, +0x6
+  0034..0038 op=20 instance-of v0, v8, LX/1im;
+  0038..003c op=38 if-eqz v0, +0x9d
+  003c..0040 op=52 iget v1, v8, LX/178;->A08:I
+  0040..0042 op=12 const/4 v0, #0x6
+  0042..0046 op=32 if-eq v1, v0, +0x98
+  0046..004a op=39 if-nez v3, +0x6
+  004a..0050 op=71 invoke-static {}, LX/1xf;->A1G()Ljava/util/HashSet;
+  0050..0052 op=0c move-result-object v3
+  0052..0058 op=72 invoke-interface {v6}, LX/00s;->get()Ljava/lang/Object;
+  0058..005a op=0c move-result-object v0
+  005a..005e op=1f check-cast v0, LX/15x;
+  005e..0064 op=6e invoke-virtual {v0, v8, v3}, LX/15x;->A09(LX/178;Ljava/util/Set;)V
+  0064..006a op=6e invoke-virtual {v3}, Ljava/util/AbstractCollection;->isEmpty()Z
+  006a..006c op=0a move-result v0
+  006c..0070 op=39 if-nez v0, +0x7b
+  0070..0074 op=20 instance-of v0, v8, LX/1im;
+  0074..0078 op=38 if-eqz v0, +0x74
+  0078..007c op=54 iget-object v0, v7, LX/DGG;->A03:LX/05B;
+  007c..0082 op=71 invoke-static {v0, v8}, LX/Ayp;->A0c(LX/05B;LX/178;)Ljava/util/Set;
+  0082..0084 op=0c move-result-object v1
+  0084..008a op=72 invoke-interface {v1}, Ljava/util/Set;->isEmpty()Z
+  008a..008c op=0a move-result v0
+  008c..0090 op=39 if-nez v0, +0x37
+  0090..0096 op=72 invoke-interface {v1}, Ljava/util/Set;->size()I
+  0096..0098 op=0a move-result v1
+  0098..009c op=54 iget-object v2, v8, LX/178;->A0i:LX/1gc;
+  009c..00a0 op=1a const-string v0, "ReceiptsProcessor/addmsg honoring pre-populated cache size="
+  00a0..00a6 op=71 invoke-static {v1, v0}, LX/000;->A06(ILjava/lang/String;)Ljava/lang/StringBuilder;
+  00a6..00a8 op=0c move-result-object v1
+  00a8..00ac op=1a const-string v0, " key="
+  00ac..00b2 op=71 invoke-static {v2, v0, v1}, LX/1xj;->A1L(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+  00b2..00b6 op=54 iget-object v1, v8, LX/178;->A0i:LX/1gc;
+  00b6..00bc op=71 invoke-static {v1}, LX/Ayk;->A1X(LX/1gc;)Z
+  00bc..00be op=0a move-result v0
+  00be..00c2 op=38 if-eqz v0, +0x1d
+  00c2..00c6 op=55 iget-boolean v0, v1, LX/1gc;->A02:Z
+  00c6..00ca op=38 if-eqz v0, +0x19
+  00ca..00ce op=55 iget-boolean v0, v8, LX/178;->A0y:Z
+  00ce..00d2 op=38 if-eqz v0, +0x15
+  00d2..00d6 op=54 iget-object v0, v7, LX/DGG;->A00:LX/05B;
+  00d6..00dc op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  00dc..00de op=0c move-result-object v2
+  00de..00e2 op=1f check-cast v2, LX/1f0;
+  00e2..00e4 op=12 const/4 v0, #0x6
+  00e4..00e8 op=22 new-instance v1, LX/DNt;
+  00e8..00ee op=70 invoke-direct {v1, v3, v7, v8, v0}, LX/DNt;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+  00ee..00f2 op=13 const/16 v0, #0x4a
+  00f2..00f8 op=6e invoke-virtual {v2, v1, v0}, LX/1f0;->A02(Ljava/lang/Runnable;I)V
+  00f8..00fa op=0e return-void
+  00fa..00fe op=54 iget-object v0, v7, LX/DGG;->A03:LX/05B;
+  00fe..0104 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0104..0106 op=0c move-result-object v0
+  0106..010a op=1f check-cast v0, LX/0Z4;
+  010a..0110 op=6e invoke-virtual {v0, v8, v3}, LX/0Z4;->A08(LX/178;Ljava/util/Set;)Z
+  0110..0112 op=0a move-result v0
+  0112..0116 op=39 if-nez v0, -0x30
+  0116..011a op=54 iget-object v1, v8, LX/178;->A0i:LX/1gc;
+  011a..011e op=1a const-string v0, "ReceiptsProcessor/addmsg error adding blank receipts for: "
+  011e..0124 op=71 invoke-static {v0, v1}, LX/1xk;->A1R(Ljava/lang/String;Ljava/lang/Object;)V
+  0124..0128 op=13 const/16 v0, #0x14
+  0128..012c op=59 iput v0, v8, LX/178;->A08:I
+  012c..0130 op=54 iget-object v0, v7, LX/DGG;->A02:LX/05B;
+  0130..0136 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0136..0138 op=0c move-result-object v2
+  0138..013c op=1f check-cast v2, LX/0zO;
+  013c..013e op=12 const/4 v0, #0x0
+  013e..0142 op=22 new-instance v1, LX/Cnn;
+  0142..0148 op=70 invoke-direct {v1, v8, v0}, LX/Cnn;-><init>(LX/178;LX/8jl;)V
+  0148..014a op=12 const/4 v0, #0x3
+  014a..014e op=59 iput v0, v1, LX/Cnn;->A05:I
+  014e..0150 op=12 const/4 v0, #0x1
+  0150..0154 op=5c iput-boolean v0, v1, LX/Cnn;->A0G:Z
+  0154..015a op=71 invoke-static {v1, v2}, LX/Cnn;->A00(LX/Cnn;LX/0zO;)V
+  015a..015c op=28 goto -0x54
+  015c..0160 op=62 sget-object v1, LX/0Vl;->A00:LX/0Vl;
+  0160..0162 op=28 goto -0x6e
+  0162..0166 op=54 iget-object v1, v8, LX/178;->A0i:LX/1gc;
+  0166..016a op=1a const-string v0, "ReceiptsProcessor/addmsg no target devices for: "
+  016a..0170 op=71 invoke-static {v0, v1}, LX/1xk;->A1R(Ljava/lang/String;Ljava/lang/Object;)V
+  0170..0172 op=28 goto -0x5f
+  0172..0176 op=54 iget-object v1, v8, LX/178;->A0i:LX/1gc;
+  0176..017a op=1a const-string v0, "ReceiptsProcessor/addmsg not adding blank receipts for: "
+  017a..0180 op=71 invoke-static {v0, v1}, LX/1xk;->A1R(Ljava/lang/String;Ljava/lang/Object;)V
+  0180..0182 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

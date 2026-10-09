@@ -1,0 +1,68 @@
+# APK-derived structural disassembly: LX/D29;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method Byz(VLLL) flags=0x1 registers=10
+  # full signature: LX/D29;->Byz(LX/CXl;LX/178;LX/BZY;)V
+  0000..0006 op=71 invoke-static {v9, v8}, LX/00h;->A0B(Ljava/lang/Object;Ljava/lang/Object;)V
+  0006..000a op=54 iget-object v0, v9, LX/BZY;->statusMentions_:Lcom/google/protobuf/Internal$ProtobufList;
+  000a..0010 op=71 invoke-static {v0}, LX/1xm;->A0x(Ljava/lang/Object;)Ljava/util/ArrayList;
+  0010..0012 op=0c move-result-object v2
+  0012..0018 op=72 invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  0018..001a op=0c move-result-object v1
+  001a..0020 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  0020..0022 op=0a move-result v0
+  0022..0026 op=38 if-eqz v0, +0x6
+  0026..002c op=71 invoke-static {v2, v1}, LX/D29;->A00(Ljava/util/AbstractCollection;Ljava/util/Iterator;)V
+  002c..002e op=28 goto -0x9
+  002e..0034 op=71 invoke-static {v2}, LX/0C6;->A1P(Ljava/lang/Iterable;)Ljava/util/Set;
+  0034..0036 op=0c move-result-object v5
+  0036..003a op=54 iget-object v0, v6, LX/D29;->A00:LX/05B;
+  003a..003e op=54 iget-object v4, v0, LX/05B;->A00:LX/00s;
+  003e..0044 op=72 invoke-interface {v4}, LX/00s;->get()Ljava/lang/Object;
+  0044..0046 op=0c move-result-object v0
+  0046..004a op=1f check-cast v0, LX/Car;
+  004a..0050 op=6e invoke-virtual {v0, v5}, LX/Car;->A03(Ljava/util/Set;)Ljava/util/LinkedHashSet;
+  0050..0052 op=0c move-result-object v3
+  0052..0056 op=54 iget-object v0, v9, LX/BZY;->statusMentionSources_:Lcom/google/protobuf/Internal$ProtobufList;
+  0056..005c op=71 invoke-static {v0}, LX/1xm;->A0x(Ljava/lang/Object;)Ljava/util/ArrayList;
+  005c..005e op=0c move-result-object v2
+  005e..0064 op=72 invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  0064..0066 op=0c move-result-object v1
+  0066..006c op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  006c..006e op=0a move-result v0
+  006e..0072 op=38 if-eqz v0, +0x6
+  0072..0078 op=71 invoke-static {v2, v1}, LX/D29;->A00(Ljava/util/AbstractCollection;Ljava/util/Iterator;)V
+  0078..007a op=28 goto -0x9
+  007a..0080 op=71 invoke-static {v2}, LX/0C6;->A1P(Ljava/lang/Iterable;)Ljava/util/Set;
+  0080..0082 op=0c move-result-object v1
+  0082..0088 op=72 invoke-interface {v4}, LX/00s;->get()Ljava/lang/Object;
+  0088..008a op=0c move-result-object v0
+  008a..008e op=1f check-cast v0, LX/Car;
+  008e..0094 op=6e invoke-virtual {v0, v1}, LX/Car;->A03(Ljava/util/Set;)Ljava/util/LinkedHashSet;
+  0094..0096 op=0c move-result-object v2
+  0096..009a op=55 iget-boolean v0, v9, LX/BZY;->isMentionedInStatus_:Z
+  009a..009e op=39 if-nez v0, +0x8
+  009e..00a4 op=72 invoke-interface {v5}, Ljava/util/Set;->isEmpty()Z
+  00a4..00a6 op=0a move-result v0
+  00a6..00aa op=39 if-nez v0, +0x15
+  00aa..00b0 op=71 invoke-static {v8}, LX/6d6;->A01(LX/178;)LX/8Bw;
+  00b0..00b2 op=0c move-result-object v1
+  00b2..00b6 op=55 iget-boolean v0, v9, LX/BZY;->isMentionedInStatus_:Z
+  00b6..00bc op=71 invoke-static {v1}, LX/8Bw;->A00(LX/8Bw;)V
+  00bc..00c0 op=5c iput-boolean v0, v1, LX/8Bw;->A0P:Z
+  00c0..00c6 op=6e invoke-virtual {v1, v3}, LX/8Bw;->A0C(Ljava/util/Set;)V
+  00c6..00cc op=71 invoke-static {v1}, LX/8Bw;->A00(LX/8Bw;)V
+  00cc..00d0 op=5b iput-object v2, v1, LX/8Bw;->A0G:Ljava/util/Set;
+  00d0..00d6 op=71 invoke-static {v8}, LX/7xQ;->A03(LX/178;)Z
+  00d6..00d8 op=0a move-result v0
+  00d8..00dc op=38 if-eqz v0, +0xb
+  00dc..00e0 op=54 iget-object v0, v8, LX/178;->A0i:LX/1gc;
+  00e0..00e4 op=55 iget-boolean v0, v0, LX/1gc;->A02:Z
+  00e4..00e8 op=38 if-eqz v0, +0x5
+  00e8..00ea op=12 const/4 v0, #0x5
+  00ea..00ee op=59 iput v0, v8, LX/178;->A08:I
+  00ee..00f0 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

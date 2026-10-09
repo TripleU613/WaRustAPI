@@ -1,0 +1,243 @@
+APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c.
+All listed offsets are APK DEX byte offsets, not method-relative.
+Explicit instruction coverage; reflection/transitive dispatch is not established.
+
+# apk-field-refs APK --class LX/178; --field A08 --type I --writes-only
+classes.dex  LX/178;->A0E(V)
+  write opcode 0x59, dex byte offset: 0x801f72
+classes.dex  LX/178;->A0H(VI)
+  write opcode 0x59, dex byte offset: 0x802042
+classes5.dex  LX/7z7;->A06(VLL)
+  write opcode 0x59, dex byte offset: 0x4d67dc
+classes7.dex  LX/D29;->Byz(VLLL)
+  write opcode 0x59, dex byte offset: 0x731b3a
+classes7.dex  LX/DGG;->Bqh(VLL)
+  write opcode 0x59, dex byte offset: 0x7adccc
+
+# apk-callers APK --class LX/178; --method A0H
+classes10.dex  LX/KVn;->A01(VLLLLLIZZ)
+  invoke dex byte offset: 0x4b2718
+classes10.dex  LX/KVn;->A02(VLLLZ)
+  invoke dex byte offset: 0x4b283e
+classes10.dex  LX/Kfc;->A07(VLLL)
+  invoke dex byte offset: 0x54abd2
+classes8.dex  LX/Fqu;->run(V)
+  invoke dex byte offset: 0x675dfe
+classes8.dex  LX/Fr9;->run(V)
+  invoke dex byte offset: 0x688c2e
+classes5.dex  LX/6aq;->A11(VL)
+  invoke dex byte offset: 0x270410
+classes5.dex  Lcom/whatsapp/settings/ui/chat/wallpaper/WallpaperMockChatView;->setMessages(VLLL)
+  invoke dex byte offset: 0x2be2e0
+classes5.dex  Lcom/whatsapp/settings/ui/chat/theme/preview/ThemesGalleryWallpaperPreviewActivity;->A03(VLL)
+  invoke dex byte offset: 0x394dd4
+classes5.dex  Lcom/whatsapp/settings/ui/chat/wallpaper/GalleryWallpaperPreview;->onCreate(VL)
+  invoke dex byte offset: 0x397178
+classes5.dex  LX/7es;->A00(LLLLLLL)
+  invoke dex byte offset: 0x431cb2
+classes5.dex  LX/7if;->A00(VL)
+  invoke dex byte offset: 0x44b5a8
+classes5.dex  LX/7t8;->A00(VLLLLL)
+  invoke dex byte offset: 0x483ffc
+classes5.dex  LX/7zY;->A08(VL)
+  invoke dex byte offset: 0x4f1a52
+classes5.dex  LX/88v;->Byz(VLLL)
+  invoke dex byte offset: 0x53eb2a
+classes5.dex  LX/8CU;->A03(VLLL)
+  invoke dex byte offset: 0x557722
+classes5.dex  LX/8CU;->A03(VLLL)
+  invoke dex byte offset: 0x5577a6
+classes5.dex  LX/8UC;->run(V)
+  invoke dex byte offset: 0x5d2ac0
+classes5.dex  LX/8aT;->invokeSuspend(LL)
+  invoke dex byte offset: 0x6449c0
+classes6.dex  LX/8kZ;->A1B(VLLJ)
+  invoke dex byte offset: 0x26531a
+classes6.dex  LX/9L7;->C8k(VLL)
+  invoke dex byte offset: 0x3736c8
+classes6.dex  LX/AAZ;->A02(VLLLJ)
+  invoke dex byte offset: 0x4b2bac
+classes6.dex  LX/AAZ;->A05(ZLL)
+  invoke dex byte offset: 0x4b336e
+classes6.dex  LX/AAZ;->A05(ZLL)
+  invoke dex byte offset: 0x4b3460
+classes6.dex  LX/AAZ;->A05(ZLL)
+  invoke dex byte offset: 0x4b3682
+classes6.dex  LX/AAZ;->A05(ZLL)
+  invoke dex byte offset: 0x4b36fe
+classes6.dex  LX/AVI;->CHJ(VLL)
+  invoke dex byte offset: 0x566f28
+classes6.dex  LX/Agy;->run(V)
+  invoke dex byte offset: 0x5ae32a
+classes6.dex  LX/Ahi;->run(V)
+  invoke dex byte offset: 0x5cc532
+classes6.dex  LX/AnX;->invokeSuspend(LL)
+  invoke dex byte offset: 0x6553c2
+classes6.dex  LX/AnX;->invokeSuspend(LL)
+  invoke dex byte offset: 0x65548a
+classes2.dex  LX/1Zb;->Ag9(LL)
+  invoke dex byte offset: 0xf46bc
+classes2.dex  LX/1Zh;->A00(LLLLLLIJJZ)
+  invoke dex byte offset: 0xf4e7a
+classes2.dex  LX/1bh;-><init>(VLIJ)
+  invoke dex byte offset: 0x1004fe
+classes2.dex  LX/1fm;->A04(VLL)
+  invoke dex byte offset: 0x12531a
+classes2.dex  LX/1jt;-><init>(VLJ)
+  invoke dex byte offset: 0x14f9a8
+classes2.dex  LX/1jt;->A0H(VI)
+  invoke dex byte offset: 0x14fa0e
+classes2.dex  LX/1sS;->A00(VLL)
+  invoke dex byte offset: 0x18a0d4
+classes.dex  LX/0VA;->A00(LLLL)
+  invoke dex byte offset: 0x5a605c
+classes.dex  LX/0Y5;->A00(ILLLL)
+  invoke dex byte offset: 0x5cc316
+classes.dex  LX/0Y5;->A00(ILLLL)
+  invoke dex byte offset: 0x5cc500
+classes.dex  LX/0Y5;->A00(ILLLL)
+  invoke dex byte offset: 0x5cc626
+classes.dex  LX/0Y5;->A00(ILLLL)
+  invoke dex byte offset: 0x5cd89c
+classes.dex  LX/0Y5;->A00(ILLLL)
+  invoke dex byte offset: 0x5cdb34
+classes.dex  LX/0Y5;->A00(ILLLL)
+  invoke dex byte offset: 0x5cde14
+classes.dex  LX/0Y5;->A00(ILLLL)
+  invoke dex byte offset: 0x5ce14c
+classes.dex  LX/0Y5;->A0H(VLJ)
+  invoke dex byte offset: 0x5d0126
+classes.dex  LX/0Y5;->A0H(VLJ)
+  invoke dex byte offset: 0x5d0178
+classes.dex  LX/0Y5;->A0H(VLJ)
+  invoke dex byte offset: 0x5d01ae
+classes.dex  LX/0Z0;->A09(VLLL)
+  invoke dex byte offset: 0x5e4e90
+classes.dex  LX/0ZG;->A04(ILLLL)
+  invoke dex byte offset: 0x5eb9e6
+classes.dex  LX/0ZG;->A06(VL)
+  invoke dex byte offset: 0x5ec0cc
+classes.dex  LX/0qA;->A03(LLLLLLLLLLLLLLII)
+  invoke dex byte offset: 0x6e054c
+classes.dex  LX/0zC;->A09(LLI)
+  invoke dex byte offset: 0x7680ea
+classes.dex  LX/0zH;->A09(VL)
+  invoke dex byte offset: 0x76ea94
+classes.dex  LX/0zH;->A0J(VL)
+  invoke dex byte offset: 0x76f34c
+classes.dex  LX/11k;->A09(VLI)
+  invoke dex byte offset: 0x7a4124
+classes.dex  LX/12y;->A00(LLLLI)
+  invoke dex byte offset: 0x7bfa5e
+classes.dex  LX/12y;->A02(LLL)
+  invoke dex byte offset: 0x7bfd1e
+classes.dex  LX/12y;->A02(LLL)
+  invoke dex byte offset: 0x7bff0e
+classes.dex  LX/152;->A00(LLLLZ)
+  invoke dex byte offset: 0x7e1c1c
+classes.dex  LX/152;->A00(LLLLZ)
+  invoke dex byte offset: 0x7e1c96
+classes.dex  LX/153;->A00(LLLIZ)
+  invoke dex byte offset: 0x7e3ef6
+classes.dex  LX/153;->A00(LLLIZ)
+  invoke dex byte offset: 0x7e4442
+classes.dex  LX/15A;->A01(VLI)
+  invoke dex byte offset: 0x7e7590
+classes.dex  LX/15A;->A02(LL)
+  invoke dex byte offset: 0x7e7c3c
+classes.dex  LX/15A;->A07(ZLLI)
+  invoke dex byte offset: 0x7e9038
+classes.dex  LX/17J;->A01(VLLI)
+  invoke dex byte offset: 0x8047c8
+classes.dex  LX/1Qk;->A02(VLLIJ)
+  invoke dex byte offset: 0x8db32c
+classes.dex  LX/1Tk;->A02(ZL)
+  invoke dex byte offset: 0x8f8aac
+classes7.dex  LX/Aza;->A01(LLLLLL)
+  invoke dex byte offset: 0x3c8766
+classes7.dex  LX/Bah;->Byz(VLLL)
+  invoke dex byte offset: 0x48f798
+classes7.dex  LX/BgB;->A09(VLLLJ)
+  invoke dex byte offset: 0x4c558e
+classes7.dex  LX/Bjh;->CEy(LLLL)
+  invoke dex byte offset: 0x4f4efa
+classes7.dex  LX/Bjj;->A00(LLLLJJ)
+  invoke dex byte offset: 0x4f52f8
+classes7.dex  LX/Bl7;->A01(VLLLL)
+  invoke dex byte offset: 0x503c72
+classes7.dex  LX/Bn0;-><init>(VLJ)
+  invoke dex byte offset: 0x50f894
+classes7.dex  LX/Bn0;->A0H(VI)
+  invoke dex byte offset: 0x50f8ce
+classes7.dex  LX/Bn1;-><init>(VLJ)
+  invoke dex byte offset: 0x50f908
+classes7.dex  LX/Bn1;->A0H(VI)
+  invoke dex byte offset: 0x50f922
+classes7.dex  LX/Bp2;->A0P(VLL)
+  invoke dex byte offset: 0x51aaa8
+classes7.dex  LX/Bp2;->A0P(VLL)
+  invoke dex byte offset: 0x51ab9c
+classes7.dex  LX/CQd;->A00(VJL)
+  invoke dex byte offset: 0x5a2f8a
+classes7.dex  LX/Cjb;->A02(VLL)
+  invoke dex byte offset: 0x629380
+classes7.dex  LX/Co9;->A00(ILLLLLLLLLLL)
+  invoke dex byte offset: 0x67f4f0
+classes7.dex  LX/D1e;->A00(VLL)
+  invoke dex byte offset: 0x72ba0e
+classes7.dex  LX/D28;->Byz(VLLL)
+  invoke dex byte offset: 0x7313a6
+classes7.dex  LX/D31;->CgL(VL)
+  invoke dex byte offset: 0x73f8f4
+classes7.dex  LX/D7O;->CHJ(VLL)
+  invoke dex byte offset: 0x75d016
+classes7.dex  LX/D7O;->CHJ(VLL)
+  invoke dex byte offset: 0x75d07a
+classes7.dex  LX/D8M;->AIK(LLL)
+  invoke dex byte offset: 0x7630ee
+classes7.dex  LX/D8P;->AIK(LLL)
+  invoke dex byte offset: 0x7643d2
+classes7.dex  LX/D8P;->AIK(LLL)
+  invoke dex byte offset: 0x7647a4
+classes7.dex  LX/DDt;->BqP(VLLL)
+  invoke dex byte offset: 0x79248c
+classes7.dex  LX/DLx;->run(V)
+  invoke dex byte offset: 0x7d6980
+classes7.dex  LX/DLx;->run(V)
+  invoke dex byte offset: 0x7d69c6
+classes7.dex  LX/DLx;->run(V)
+  invoke dex byte offset: 0x7d6a04
+classes7.dex  LX/DLy;->run(V)
+  invoke dex byte offset: 0x7d80d4
+classes7.dex  LX/DMZ;->run(V)
+  invoke dex byte offset: 0x7e0cfa
+classes7.dex  LX/DMZ;->run(V)
+  invoke dex byte offset: 0x7e0d76
+classes7.dex  LX/DMZ;->run(V)
+  invoke dex byte offset: 0x7e0dae
+classes7.dex  LX/DNr;->run(V)
+  invoke dex byte offset: 0x806bdc
+classes11.dex  LX/O7p;->CHc(VLLII)
+  invoke dex byte offset: 0x818ed2
+classes11.dex  LX/OCJ;->run(V)
+  invoke dex byte offset: 0x8355f4
+classes11.dex  LX/OCJ;->run(V)
+  invoke dex byte offset: 0x835930
+classes3.dex  LX/1xz;->A01(VLZ)
+  invoke dex byte offset: 0x1e02fa
+classes3.dex  LX/23Z;->A00(VLLL)
+  invoke dex byte offset: 0x236362
+classes3.dex  LX/35v;->A07(VLL)
+  invoke dex byte offset: 0x356f00
+classes3.dex  LX/36W;->A00(LLLLLLLJZ)
+  invoke dex byte offset: 0x35c52e
+classes3.dex  LX/36Y;->A02(VL)
+  invoke dex byte offset: 0x35d62e
+classes3.dex  LX/3RE;->run(V)
+  invoke dex byte offset: 0x4210fc
+classes3.dex  LX/3SP;->invoke(LL)
+  invoke dex byte offset: 0x43e5b4
+
+# Scoped negative: apk-smali APK --class LX/0Z6; --method A0C --signatures --exceptions
+no method bodies match class filter "LX/0Z6;" and method filter "A0C"
+This is a no-matching-body result, not reflection or all-subtype coverage.

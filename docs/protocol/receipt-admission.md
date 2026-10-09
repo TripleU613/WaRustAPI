@@ -131,3 +131,8 @@ establishes property 35516's true/true baked defaults and the ten physical flag
 writers. 15A skips the helper/foreign property when key.A02 is true; requiring
 A0y authority for every outgoing receipt would add a guard absent in this branch.
 Effective configuration and later pool/write admission remain separate unknowns.
+
+Follow-up: [message status storage and blank device entry](message-status.md)
+identifies A08, downgrade logging followed by assignment, zero reset and the
+two status-6 overrides. Exact field writes and blank-receipt fallback are
+retained; ordinary outgoing initialization and user-row seeding remain unknown.

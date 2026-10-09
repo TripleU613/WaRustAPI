@@ -1,0 +1,62 @@
+{
+  "blank-device-receipt-entry.txt": {
+    "bytes": 951,
+    "sha256": "16009aa9d35fb5daa42fa1e7d5ec588b7c0f293f6b478bd91f3212fb42e32585"
+  },
+  "blank-device-receipt-selector.txt": {
+    "bytes": 1134,
+    "sha256": "2ef2d1dafbc02913b5f9bc8fb0995bafd53a543189145586f360ce8216d11c87"
+  },
+  "blank-receipt-dispatch.txt": {
+    "bytes": 15830,
+    "sha256": "521ec9575c67d09b5067bfa7ee6373c59b587cbbd5c1c8dfa5997ea2a54a6fb3"
+  },
+  "blank-receipt-message-write.txt": {
+    "bytes": 5826,
+    "sha256": "26b074dff3f4bf70c51ce1b63ebba711610d736f8ffdd00a5bfee2ae2ef173f2"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-status-getter.txt": {
+    "bytes": 489,
+    "sha256": "95ec9f616c6181c4233b4ebdf70b4633b311e810897ae9bfccce234eafee5de8"
+  },
+  "message-status-reset.txt": {
+    "bytes": 527,
+    "sha256": "26c4182650cc89fd20ca9317305f0ec397462306a3de5615377a24d03d0c9af4"
+  },
+  "message-status-restore.txt": {
+    "bytes": 13692,
+    "sha256": "7074a16161da5ab2e9d425afab233af6d4bf20edb8555bdbe31e03edb313fa13"
+  },
+  "message-status-setter.txt": {
+    "bytes": 2239,
+    "sha256": "b039754f0326ed61df01b2902abe4dc9d09613b834c875f2f107d0cb212982f3"
+  },
+  "status-mention-write.txt": {
+    "bytes": 3972,
+    "sha256": "38963e26465bb0ab5c1a12b8b4c4ce23a4d2eeafbc5a391105a19549f4df3b0e"
+  },
+  "status-six-override-one.txt": {
+    "bytes": 541,
+    "sha256": "e89453b1edcba7234792bb20f8f88bf774ae82b543698ecd4bc5948d30117bcb"
+  },
+  "status-six-override-two.txt": {
+    "bytes": 541,
+    "sha256": "da149239c7f879f3d816049e94fe6506de3188f8d4535180fe16f4caa8328490"
+  },
+  "targets.json": {
+    "bytes": 5131,
+    "sha256": "a0bc6dc45005612bc60bf5ecbc68242f9248dfaf4872316213f995bcbcd493a8"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

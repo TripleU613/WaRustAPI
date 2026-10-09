@@ -103,3 +103,8 @@ OpenAPI/library-symbol checks, formatting, whitespace and hygiene passed.
 Hygiene checked 1,486 local links and 39 bundles / 9,331,935 bytes. Flag-writer
 excerpts are separately attributed outside that bundle. No fresh workspace
 runtime test or live account operation is claimed.
+
+Follow-up: [message status storage and blank device entry](message-status.md)
+identifies A08, downgrade logging followed by assignment, zero reset and the
+two status-6 overrides. Exact field writes and blank-receipt fallback are
+retained; ordinary outgoing initialization and user-row seeding remain unknown.
