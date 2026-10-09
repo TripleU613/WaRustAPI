@@ -648,6 +648,29 @@ pub(super) fn contacts(cli: &super::Cli, action: &super::ContactsCmd) -> Result<
             );
             Ok(())
         }
+        super::ContactsCmd::Status { phone } => {
+            let status = contacts::status(&store, phone)?;
+            if cli.json {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&serde_json::json!({"status": status}))
+                        .map_err(|e| Error::invalid("contacts", e.to_string()))?
+                );
+            } else {
+                match status {
+                    None => println!("contacts: no saved status for {}", mask_phone(phone)),
+                    Some(status) => println!(
+                        "contacts: saved status for {} type={:?} on_whatsapp={} checked_at={:?} error={:?}",
+                        mask_phone(phone),
+                        status.contact_type,
+                        status.on_whatsapp,
+                        status.checked_at,
+                        status.error
+                    ),
+                }
+            }
+            Ok(())
+        }
         super::ContactsCmd::Check { phone } => {
             let id = contacts::queue_check(&store, phone)?;
             let ingested = contacts::ingest(&store)?;
@@ -670,8 +693,9 @@ pub(super) fn contacts(cli: &super::Cli, action: &super::ContactsCmd) -> Result<
             match status {
                 None => println!("contacts: no saved status yet for {}", mask_phone(phone)),
                 Some(status) => println!(
-                    "contacts: saved status for {} on_whatsapp={} checked_at={:?} error={:?}",
+                    "contacts: saved status for {} type={:?} on_whatsapp={} checked_at={:?} error={:?}",
                     mask_phone(phone),
+                    status.contact_type,
                     status.on_whatsapp,
                     status.checked_at,
                     status.error

@@ -1321,7 +1321,16 @@ Pending removal registry (2026-10-08, **static/offline**): signed device reconci
 The earlier Rust `lid@jid` assumption is **refuted**. Strict plain-address
 validation and the result gate are now implemented and offline-tested.
 Fresh live replies, complete contact state handling and refresh scheduling remain
-**unknown/unverified**. The four-topic
+**unknown/unverified**. The initial four-topic (now seven-topic)
 [recipe](apk/recipes/2.26.37.71-contact-lid.json) preserves a compact deterministic
 [build-specific bundle](apk/2.26.37.71-contact-lid/manifest.json); exact APK
 re-export with `--check` matches. See [reasoning and boundaries](chat-actions.md#contact-lid-response-correction-2026-10-08).
+
+
+Contact-type follow-up (2026-10-08, **confirmed APK 37.71**): `0u3.A02` writes
+its positive account flag only for `N0z.A04=1` (`in`), while `0u5.BF6` handles
+`invalid` separately from `in`/`out`. The prior JID-presence existence rule is
+**refuted**. Rust preserves nullable recognized type and historical unknowns;
+`contacts status` inspects offline without queuing. Full state-machine parity
+and fresh live contact replies remain **unknown**. See
+[consumer chain](chat-actions.md#contact-type-and-offline-status-2026-10-08).

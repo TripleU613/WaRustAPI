@@ -1,4 +1,12 @@
 {
+  "contact-account-flag.txt": {
+    "bytes": 9723,
+    "sha256": "5bd7bdcdbc188bd74e9be6f69b098f4956ab72724745491d1f0c423f6c919f7d"
+  },
+  "contact-invalid-consumer.txt": {
+    "bytes": 25785,
+    "sha256": "8d31c1de54950acc56782be66859d1753aeb9b57f738f930fac0a4020a71fec5"
+  },
   "contact-protocol-result.txt": {
     "bytes": 6733,
     "sha256": "90e111cad42d7a2c730f46c429f8a86a0ea5fb1a4ae7cc799f5661d91d85f70e"
@@ -6,6 +14,10 @@
   "contact-result-flag.txt": {
     "bytes": 874,
     "sha256": "6dc4707886199046ef6d5072c35d10797ea72fe86722588cea3717d0265ea4f5"
+  },
+  "contact-row-default.txt": {
+    "bytes": 869,
+    "sha256": "6c9c993cff50512e37cef9209c77b060667af8a98e8b86120fd208660c27a21e"
   },
   "contact-success-parser.txt": {
     "bytes": 54178,
@@ -24,8 +36,8 @@
     "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
   },
   "targets.json": {
-    "bytes": 1507,
-    "sha256": "e662ec73036e072099ac4cda3c4e2f4467acc26b16e4e503a42a5dac47ef3cbe"
+    "bytes": 2633,
+    "sha256": "af44540b35d7ecf9bbb30ec394311ef896fc659ac671a48852d12e56fcfe2a28"
   },
   "tokens.json": {
     "bytes": 23019,

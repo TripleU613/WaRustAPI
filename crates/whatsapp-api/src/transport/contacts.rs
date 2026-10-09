@@ -265,19 +265,35 @@ pub fn queue_full_sync(store: &ProtocolStore) -> Result<(String, usize)> {
     Ok((id, count))
 }
 
+/// APK 37.71 0u7.C8f contact@type values, stored in N0z.A04 as 1/2/3.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ContactType {
+    /// The APK consumer sets the positive account flag only for this value.
+    In,
+    /// The server returned `out`, distinct from invalid input.
+    Out,
+    /// The server returned `invalid`; this is not proof of a ban.
+    Invalid,
+}
+
 /// The saved WhatsApp-existence status for one number, if a check ever settled.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ContactStatus {
-    /// Whether the number carries a WhatsApp account.
+    /// Positive only for an `in` result; inspect contact_type/error for other states.
+    /// Historical rows without contact_type retain their original boolean.
     pub on_whatsapp: bool,
+    /// Exact recognized server type; null for historical/refused/malformed results.
+    #[serde(default)]
+    pub contact_type: Option<ContactType>,
     /// The account's phone-number JID, when returned.
     pub jid: Option<Jid>,
     /// The plain account LID from `lid@val`, when its protocol result succeeded.
     pub lid: Option<Jid>,
     /// When this status was recorded.
     pub checked_at: Timestamp,
-    /// Sanitized server error, set when the whole request was refused
-    /// (`iq type=error`, which carries no per-user data to confirm or deny).
+    /// Sanitized server refusal or fixed local missing/unsupported-contact-type reason.
+    /// Neither a refusal nor malformed metadata confirms account absence.
     pub error: Option<String>,
 }
 
@@ -383,6 +399,17 @@ fn parse_user(user: &Node, lid_succeeded: bool) -> Option<(String, ContactStatus
         _ => return None,
     };
     let (digits, _) = normalize(&text).ok()?;
+    // APK 37.71 0u7.C8f 04f0..0570 requires exact case-sensitive type.
+    // 0u3.A02 0100..0112/0232..0236 sets the account flag only for value 1.
+    let (contact_type, error) = match contact.get_attr("type").and_then(|value| value.as_text()) {
+        Some("in") => (Some(ContactType::In), None),
+        Some("out") => (Some(ContactType::Out), None),
+        Some("invalid") => (Some(ContactType::Invalid), None),
+        None if contact.get_attr("type").is_none() => {
+            (None, Some("missing_contact_type".to_owned()))
+        }
+        _ => (None, Some("unsupported_contact_type".to_owned())),
+    };
     let jid = attr_jid(user, "jid");
     // APK 37.71 0u7.C8f 0e0c..0e42 checks A3p.A05 before reading
     // user/lid@val as 0ZY. Contact metadata never authorizes identity changes.
@@ -392,11 +419,12 @@ fn parse_user(user: &Node, lid_succeeded: bool) -> Option<(String, ContactStatus
     Some((
         digits,
         ContactStatus {
-            on_whatsapp: jid.is_some(),
+            on_whatsapp: contact_type == Some(ContactType::In),
+            contact_type,
             jid,
             lid,
             checked_at: Timestamp::now(),
-            error: None,
+            error,
         },
     ))
 }
@@ -459,6 +487,7 @@ pub fn ingest(store: &ProtocolStore) -> Result<usize> {
                             1,
                             &ContactStatus {
                                 on_whatsapp: false,
+                                contact_type: None,
                                 jid: None,
                                 lid: None,
                                 checked_at: Timestamp::now(),
@@ -541,7 +570,11 @@ mod tests {
     }
 
     fn user_node(phone: &str, jid: Option<&str>, lid: Option<&str>) -> Node {
-        let mut children = vec![Node::new("contact").attr("type", "in").text(phone)];
+        let mut children = vec![
+            Node::new("contact")
+                .attr("type", if jid.is_some() { "in" } else { "out" })
+                .text(phone),
+        ];
         if let Some(lid) = lid {
             children.push(Node::new("lid").attr("val", Jid::parse(lid).unwrap()));
         }
@@ -657,6 +690,7 @@ mod tests {
         assert_eq!(ingest(&s).unwrap(), 0, "idempotent on a second pass");
         let saved = status(&s, "+15551234567").unwrap().unwrap();
         assert!(saved.on_whatsapp);
+        assert_eq!(saved.contact_type, Some(ContactType::In));
         assert_eq!(
             saved.jid,
             Some(Jid::parse("15551234567@s.whatsapp.net").unwrap())
@@ -675,6 +709,7 @@ mod tests {
         assert_eq!(ingest(&s).unwrap(), 1);
         let saved2 = status(&s, "+15559999999").unwrap().unwrap();
         assert!(!saved2.on_whatsapp);
+        assert_eq!(saved2.contact_type, Some(ContactType::Out));
         assert!(saved2.jid.is_none());
     }
 
@@ -766,6 +801,105 @@ mod tests {
             assert!(saved.lid.is_none());
             assert_eq!(ingest(&s).unwrap(), 0);
         }
+    }
+
+    #[test]
+    fn contact_type_overrides_jid_presence_and_preserves_invalid() {
+        for (wire_type, expected) in [
+            ("in", ContactType::In),
+            ("out", ContactType::Out),
+            ("invalid", ContactType::Invalid),
+        ] {
+            for jid in [None, Some("15551234567@s.whatsapp.net")] {
+                let mut user = Node::new("user").children(vec![
+                    Node::new("contact")
+                        .attr("type", wire_type)
+                        .text("+15551234567"),
+                ]);
+                if let Some(jid) = jid {
+                    user = user.attr("jid", jid);
+                }
+                let status = parse_user(&user, false).unwrap().1;
+                assert_eq!(status.contact_type, Some(expected));
+                assert_eq!(status.on_whatsapp, expected == ContactType::In);
+                assert!(status.error.is_none());
+            }
+        }
+        for (wire_type, reason) in [
+            (None, "missing_contact_type"),
+            (Some("IN"), "unsupported_contact_type"),
+            (
+                Some("private-unrecognized-value"),
+                "unsupported_contact_type",
+            ),
+        ] {
+            let mut contact = Node::new("contact").text("+15551234567");
+            if let Some(t) = wire_type {
+                contact = contact.attr("type", t);
+            }
+            let user = Node::new("user")
+                .attr("jid", "15551234567@s.whatsapp.net")
+                .children(vec![contact]);
+            let status = parse_user(&user, false).unwrap().1;
+            assert!(!status.on_whatsapp);
+            assert!(status.contact_type.is_none());
+            assert_eq!(status.error.as_deref(), Some(reason));
+            assert!(
+                !serde_json::to_string(&status)
+                    .unwrap()
+                    .contains("private-unrecognized-value")
+            );
+        }
+    }
+
+    #[test]
+    fn invalid_status_survives_reopen_and_inspection_never_queues() {
+        let (d, s) = store();
+        assert!(status(&s, "+15551234567").unwrap().is_none());
+        assert!(super::super::actions::outcomes(&s).unwrap().is_empty());
+        let id = queue_check(&s, "+15551234567").unwrap();
+        super::super::actions::reserve_pending(&s).unwrap();
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result")
+            .children(vec![Node::new("usync").children(vec![
+                Node::new("list").children(
+                    vec![Node::new("user").attr("jid", "15551234567@s.whatsapp.net")
+                    .children(vec![Node::new("contact").attr("type", "invalid")
+                        .text("+15551234567")])],
+                ),
+            ])]);
+        super::super::actions::record_reply(&s, &reply).unwrap();
+        assert_eq!(ingest(&s).unwrap(), 1);
+        drop(s);
+        let s = ProtocolStore::open(OpenOptions {
+            path: d.path().join("c.redb"),
+            account_id: AccountId::new("a").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([11u8; 32]))),
+            create: false,
+        })
+        .unwrap();
+        let before = serde_json::to_value(super::super::actions::outcomes(&s).unwrap()).unwrap();
+        for _ in 0..2 {
+            let saved = status(&s, "+15551234567").unwrap().unwrap();
+            assert_eq!(saved.contact_type, Some(ContactType::Invalid));
+            assert!(!saved.on_whatsapp);
+        }
+        assert_eq!(ingest(&s).unwrap(), 0);
+        assert_eq!(
+            before,
+            serde_json::to_value(super::super::actions::outcomes(&s).unwrap()).unwrap()
+        );
+    }
+
+    #[test]
+    fn historical_status_type_remains_unknown_without_rewriting_boolean() {
+        let status: ContactStatus = serde_json::from_value(serde_json::json!({
+            "on_whatsapp":true, "jid":null, "lid":null, "checked_at":42, "error":null
+        }))
+        .unwrap();
+        assert!(status.on_whatsapp);
+        assert!(status.contact_type.is_none());
     }
 
     #[test]

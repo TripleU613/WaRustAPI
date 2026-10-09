@@ -1,0 +1,80 @@
+# APK 2.26.37.71 (static confirmed field references, not complete caller semantics)
+# SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Reproduce: xtask apk-field-refs <local-apk> --class 'LX/N0z;' --field A04 --type I
+# 38 read/write instructions across all DEX files. Consumer meaning traced separately.
+classes.dex  LX/0Yb;->A08(VLLL)
+  read opcode 0x52, dex byte offset: 0x5dfd1e
+classes.dex  LX/0Yb;->A08(VLLL)
+  read opcode 0x52, dex byte offset: 0x5dfd60
+classes.dex  LX/0u3;->A02(LLLZ)
+  read opcode 0x52, dex byte offset: 0x717240
+classes.dex  LX/0u3;->A03(LLLZZ)
+  read opcode 0x52, dex byte offset: 0x717486
+classes.dex  LX/0u3;->A0E(ZLLLLLL)
+  read opcode 0x52, dex byte offset: 0x718308
+classes.dex  LX/0u5;->BF6(VLL)
+  read opcode 0x52, dex byte offset: 0x71aeca
+classes.dex  LX/0u5;->BF6(VLL)
+  read opcode 0x52, dex byte offset: 0x71aeea
+classes.dex  LX/0u5;->BF6(VLL)
+  read opcode 0x52, dex byte offset: 0x71aef4
+classes.dex  LX/0u7;->C8f(VLL)
+  write opcode 0x59, dex byte offset: 0x71d17c
+classes.dex  LX/0u7;->C8f(VLL)
+  write opcode 0x59, dex byte offset: 0x71d19c
+classes10.dex  LX/KBa;-><init>(VLLLZ)
+  read opcode 0x52, dex byte offset: 0x45a412
+classes11.dex  LX/Lck;->A00(VLLLLLLLLJZ)
+  read opcode 0x52, dex byte offset: 0x3f6dcc
+classes11.dex  LX/Lck;->A00(VLLLLLLLLJZ)
+  read opcode 0x52, dex byte offset: 0x3f7154
+classes11.dex  LX/Lck;->A00(VLLLLLLLLJZ)
+  read opcode 0x52, dex byte offset: 0x3f7a4c
+classes11.dex  LX/N0z;-><init>(V)
+  write opcode 0x59, dex byte offset: 0x54703c
+classes11.dex  LX/NLd;->A00(LLZZZ)
+  write opcode 0x59, dex byte offset: 0x5a2d16
+classes11.dex  LX/NLd;->A00(LLZZZ)
+  read opcode 0x52, dex byte offset: 0x5a2d56
+classes2.dex  LX/1hJ;->A00(VLLL)
+  read opcode 0x52, dex byte offset: 0x1399b8
+classes3.dex  LX/3Pq;->run(V)
+  read opcode 0x52, dex byte offset: 0x3f8d02
+classes6.dex  LX/8mc;->A02(LLLLLL)
+  read opcode 0x52, dex byte offset: 0x28a1e4
+classes6.dex  LX/8mc;->A05(LLLLLLL)
+  read opcode 0x52, dex byte offset: 0x28a68a
+classes6.dex  LX/8mc;->A0B(LLLL)
+  read opcode 0x52, dex byte offset: 0x28aae8
+classes6.dex  LX/8mc;->A0D(LLL)
+  read opcode 0x52, dex byte offset: 0x28aeda
+classes6.dex  LX/8mc;->A0G(LL)
+  read opcode 0x52, dex byte offset: 0x28b48a
+classes6.dex  LX/8mc;->A0H(LLL)
+  read opcode 0x52, dex byte offset: 0x28b8e4
+classes6.dex  LX/8o0;->A00(VLL)
+  read opcode 0x52, dex byte offset: 0x2956d0
+classes6.dex  LX/8o0;->A00(VLL)
+  read opcode 0x52, dex byte offset: 0x2956fe
+classes6.dex  LX/9N1;->A0b(VL)
+  read opcode 0x52, dex byte offset: 0x381f3a
+classes6.dex  LX/9N1;->A0b(VL)
+  read opcode 0x52, dex byte offset: 0x3820ee
+classes6.dex  LX/9N2;->A0Z(LL)
+  read opcode 0x52, dex byte offset: 0x38269e
+classes6.dex  LX/9NC;->A0Z(LL)
+  read opcode 0x52, dex byte offset: 0x3850de
+classes6.dex  LX/ACk;->A00(VLLLLLLLLIZ)
+  read opcode 0x52, dex byte offset: 0x4d1420
+classes6.dex  LX/Ali;->invokeSuspend(LL)
+  read opcode 0x52, dex byte offset: 0x6191e0
+classes6.dex  LX/Amf;->invokeSuspend(LL)
+  read opcode 0x52, dex byte offset: 0x627332
+classes8.dex  LX/F2X;->A00(LLI)
+  read opcode 0x52, dex byte offset: 0x4e7a20
+classes8.dex  LX/Fpa;->run(V)
+  read opcode 0x52, dex byte offset: 0x65a60e
+classes8.dex  LX/Fpa;->run(V)
+  read opcode 0x52, dex byte offset: 0x65aa70
+classes8.dex  LX/Ft6;->invoke(L)
+  read opcode 0x52, dex byte offset: 0x6bddd6

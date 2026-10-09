@@ -676,5 +676,69 @@ and [recipe](apk/recipes/2.26.37.71-contact-lid.json); raw APK/private state sta
 Validation: 710 workspace/all-feature tests, strict workspace/all-target/all-feature
 Clippy, warning-free Rustdoc, 24 default CLI checks, regenerated CLI reference,
 API library-symbol check, formatting and repository hygiene passed. Exact APK
-bundle re-export verified all nine files (94,899 bytes). No account store was
+bundle re-export verified all nine files (94,899 bytes). No saved private account store was
 opened, no live request sent, and no historical action reset by this chunk.
+
+
+### Contact type and offline status (2026-10-08)
+
+**Confirmed static APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+`0u7.C8f` 0484..049c selects contact versus sidelist; 04f0..0570 requires exact
+`type`, maps `in`/`out`/`invalid` to `N0z.A04` values 1/2/3, and throws `B7l`
+for unsupported values. It appends non-null contact text to `A0O`. With an empty
+selected child list it assigns 1 at 0588..0590; this is **not** proof that a
+missing contact child is a valid existence reply in our single-number subset.
+`N0z.<init>` starts this field at zero, distinguishing unavailable metadata.
+
+[`0u3.A02`](apk/2.26.37.71-contact-lid/contact-account-flag.txt)
+0100..0112 skips unavailable/zero results and sets local `v7` true **only for
+value 1**. At 0232..0236 that flag becomes `0DV.A0A`, independently of whether
+the returned JID is non-null. It separately processes mapping/contact metadata;
+these writes are not ported by the existence parser. Its missing-response and
+found-invalid-contact diagnostics remain distinct. In
+[`0u5.BF6`](apk/2.26.37.71-contact-lid/contact-invalid-consumer.txt)
+05e2..0616, value 3 collects invalid contact strings separately, while 1 and 2
+enter ordinary processing. This refutes the Rust rule that any supplied JID
+establishes a positive existence result. Invalid does not establish a ban.
+
+**Implemented/offline-tested:** `ContactStatus.contact_type` preserves the exact
+recognized value. Newly ingested `on_whatsapp` is true only for `in`; `out` and
+`invalid` remain distinguishable. Missing/unsupported type saves null plus fixed
+local `missing_contact_type`/`unsupported_contact_type`, never the raw unknown
+attribute. These are **local subset diagnostics**, not server reason strings:
+Android instead raises a corrupt-stream failure for unsupported types. Other
+supported per-user rows may still be ingested by our defensive parser. Existing
+rows default `contact_type` to null and retain their old boolean; consumed markers
+and identities are preserved. No historical reprocessing or server request occurs.
+
+`contacts status --phone <private-number>` now inspects the saved row **without
+queuing**. `--json` exposes its type and optional private address models; text
+prints the masked phone/type/error without address bodies. This closes an
+inspection gap: `contacts check` always queues another action before displaying
+saved status and should not be used merely to inspect a prior result. The new
+status command does not ingest, reserve, send, log in or migrate anything.
+The API reference marks its operation CLI-only/offline, with no HTTP handler.
+
+The full-APK [field-reference scan](contact-status-field-evidence.txt) found 38
+reads/writes of `N0z.A04` (including the constructor); the consumer trace above
+is scoped to `0u3.A02` and `0u5.BF6`, not all callers. The expanded seven-topic
+[recipe](apk/recipes/2.26.37.71-contact-lid.json) preserves both consumers and
+the default. Full sidelist/address-book mutation, contact protocol integrity,
+refresh/backoff application and fresh live contact-type replies remain
+**unknown/unported**. Do not promote offline evidence into live parity.
+
+
+Same-APK coverage comparison against `6488d2f` completed in **0.008132 seconds**:
+three added topics, four unchanged, with unchanged APK inventory/manifest/tokens.
+The [cached diff](apk/contact-type-coverage-diff.json) describes coverage growth,
+not a new APK release. The seven-topic bundle is 12 files / 132,816 bytes.
+
+
+Validation: 713 workspace/all-feature tests, strict workspace/all-target/all-feature
+Clippy, warning-free Rustdoc, 24 default CLI checks, regenerated CLI reference,
+API library-symbol verification, formatting, CLI build/help and repository hygiene
+passed. Exact re-export verified all 12 bundle files. Tests cover JID/type
+contradictions, exact case, fixed redacted errors, historical null compatibility,
+invalid result persistence across reopening and read-only status without action
+changes. No saved private account was opened or live query sent in this chunk.

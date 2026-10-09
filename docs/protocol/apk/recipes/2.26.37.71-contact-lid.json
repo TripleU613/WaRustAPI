@@ -46,6 +46,36 @@
       "anchors": [
         "ProtocolTreeNode/getAttributeJid/failed to convert"
       ]
+    },
+    "contact-account-flag": {
+      "class": "LX/0u3;",
+      "method": "A02",
+      "method_shorty": "LLLZ",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/contacts.rs"
+      ],
+      "anchors": [
+        "ContactSyncHelper/phone-number/missing_response/",
+        "sync/updateContactsFromSyncUsers/found-invalid-contacts"
+      ]
+    },
+    "contact-invalid-consumer": {
+      "class": "LX/0u5;",
+      "method": "BF6",
+      "method_shorty": "VLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/contacts.rs"
+      ],
+      "anchors": []
+    },
+    "contact-row-default": {
+      "class": "LX/N0z;",
+      "method": "<init>",
+      "method_shorty": "V",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/contacts.rs"
+      ],
+      "anchors": []
     }
   }
 }

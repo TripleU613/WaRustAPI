@@ -1,0 +1,114 @@
+{
+  "artifacts": [
+    {
+      "file": "inventory.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-contact-lid/inventory.json",
+      "old_file": "git:6488d2f:docs/protocol/apk/2.26.37.71-contact-lid/inventory.json",
+      "status": "unchanged"
+    },
+    {
+      "file": "manifest.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-contact-lid/manifest.json",
+      "old_file": "git:6488d2f:docs/protocol/apk/2.26.37.71-contact-lid/manifest.json",
+      "status": "unchanged"
+    },
+    {
+      "file": "targets.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-contact-lid/targets.json",
+      "old_file": "git:6488d2f:docs/protocol/apk/2.26.37.71-contact-lid/targets.json",
+      "status": "changed"
+    },
+    {
+      "file": "tokens.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-contact-lid/tokens.json",
+      "old_file": "git:6488d2f:docs/protocol/apk/2.26.37.71-contact-lid/tokens.json",
+      "status": "unchanged"
+    }
+  ],
+  "interpretation": "Structural topic differences, not automatic proof of protocol behavior changes. Unmapped APK code/native behavior is outside this scoped comparison.",
+  "new_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "old_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "topics": [
+    {
+      "new_class": "LX/0u3;",
+      "new_file": "docs/protocol/apk/2.26.37.71-contact-lid/contact-account-flag.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/contacts.rs"
+      ],
+      "status": "added",
+      "topic": "contact-account-flag"
+    },
+    {
+      "new_class": "LX/0u5;",
+      "new_file": "docs/protocol/apk/2.26.37.71-contact-lid/contact-invalid-consumer.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/contacts.rs"
+      ],
+      "status": "added",
+      "topic": "contact-invalid-consumer"
+    },
+    {
+      "new_class": "LX/0u7;",
+      "new_file": "docs/protocol/apk/2.26.37.71-contact-lid/contact-protocol-result.txt",
+      "old_class": "LX/0u7;",
+      "old_file": "git:6488d2f:docs/protocol/apk/2.26.37.71-contact-lid/contact-protocol-result.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/contacts.rs"
+      ],
+      "status": "unchanged",
+      "topic": "contact-protocol-result"
+    },
+    {
+      "new_class": "LX/A3p;",
+      "new_file": "docs/protocol/apk/2.26.37.71-contact-lid/contact-result-flag.txt",
+      "old_class": "LX/A3p;",
+      "old_file": "git:6488d2f:docs/protocol/apk/2.26.37.71-contact-lid/contact-result-flag.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/contacts.rs"
+      ],
+      "status": "unchanged",
+      "topic": "contact-result-flag"
+    },
+    {
+      "new_class": "LX/N0z;",
+      "new_file": "docs/protocol/apk/2.26.37.71-contact-lid/contact-row-default.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/contacts.rs"
+      ],
+      "status": "added",
+      "topic": "contact-row-default"
+    },
+    {
+      "new_class": "LX/0u7;",
+      "new_file": "docs/protocol/apk/2.26.37.71-contact-lid/contact-success-parser.txt",
+      "old_class": "LX/0u7;",
+      "old_file": "git:6488d2f:docs/protocol/apk/2.26.37.71-contact-lid/contact-success-parser.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/contacts.rs"
+      ],
+      "status": "unchanged",
+      "topic": "contact-success-parser"
+    },
+    {
+      "new_class": "LX/0hs;",
+      "new_file": "docs/protocol/apk/2.26.37.71-contact-lid/contact-typed-attribute.txt",
+      "old_class": "LX/0hs;",
+      "old_file": "git:6488d2f:docs/protocol/apk/2.26.37.71-contact-lid/contact-typed-attribute.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/contacts.rs"
+      ],
+      "status": "unchanged",
+      "topic": "contact-typed-attribute"
+    }
+  ],
+  "measurement": {
+    "seconds": 0.008131942000545678,
+    "scope": "Same APK, coverage expansion; not a release change."
+  }
+}

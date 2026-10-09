@@ -2093,3 +2093,12 @@ failed/missing protocol metadata cannot supply a LID. Existing CLI status expose
 the result. Historical ingested rows, identities and reservations remain intact.
 Fresh live replies, refresh/backoff and full contact-type state parity remain
 unverified. See [contact response evidence](docs/protocol/chat-actions.md#contact-lid-response-correction-2026-10-08).
+
+
+Contact type/status inspection (2026-10-08, **confirmed static APK 37.71**):
+newly ingested existence follows exact `in`, rather than supplied JID presence;
+`out`/`invalid` are preserved in nullable `contact_type`. Missing/unsupported type
+has a fixed local diagnostic. Historical rows keep their original boolean and
+unknown type. `contacts status` inspects offline without queuing another request.
+Fresh live types and full address-book state handling remain unverified.
+[Evidence](docs/protocol/chat-actions.md#contact-type-and-offline-status-2026-10-08).

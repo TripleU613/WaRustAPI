@@ -3350,6 +3350,61 @@
           }
         },
         "additionalProperties": false
+      },
+      "ContactStatus": {
+        "type": "object",
+        "required": [
+          "on_whatsapp",
+          "contact_type",
+          "jid",
+          "lid",
+          "checked_at",
+          "error"
+        ],
+        "properties": {
+          "on_whatsapp": {
+            "type": "boolean",
+            "description": "Positive for newly ingested in only. False for out/invalid/malformed/refused, not proof of absence without checking type/error. Historical rows preserve their original value."
+          },
+          "contact_type": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "in",
+              "out",
+              "invalid",
+              null
+            ],
+            "description": "Exact recognized server contact type; null for historical rows, top-level refusals and missing/unsupported type."
+          },
+          "jid": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Optional private Jid model returned by server; presence does not determine contact type."
+          },
+          "lid": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Optional private plain LID Jid model from val after successful LID protocol metadata."
+          },
+          "checked_at": {
+            "type": "integer",
+            "description": "Saved local ingestion time, milliseconds since Unix epoch."
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Sanitized server refusal or fixed local missing_contact_type/unsupported_contact_type; not a definitive account-absence result."
+          }
+        }
       }
     }
   },
@@ -5058,7 +5113,7 @@
           "Contacts"
         ],
         "summary": "Queue a WhatsApp-existence check for a number",
-        "description": "Queue a `usync` WhatsApp-existence check for a number and show any already-saved status; a session transmits the queued action. Saved ContactStatus.lid now reads user/lid@val only after usync/result/lid protocol success (no error child, optional Java Long refresh parse), using APK 37.71 0u7.C8f/A01 and 0hs.A0A evidence. A plain 1..15-digit nonzero-leading LID is required; hosted.lid canonicalizes to lid, device/phone/bot addresses are rejected. Missing or rejected LID metadata yields null, not proof of absent account identity. The prior lid@jid shape was refuted. This is offline ingestion/status inspection exposed by the existing CLI, not a new HTTP route or automatic retry; consumed markers and old statuses remain unchanged. Contact metadata does not replace Signal pins or authenticated aliases. Fresh live validation, refresh/backoff scheduling and full contact-type parity remain unverified. See docs/protocol/chat-actions.md#contact-lid-response-correction-2026-10-08.",
+        "description": "Queue a `usync` WhatsApp-existence check for a number and show any already-saved status; a session transmits the queued action. Saved ContactStatus.lid now reads user/lid@val only after usync/result/lid protocol success (no error child, optional Java Long refresh parse), using APK 37.71 0u7.C8f/A01 and 0hs.A0A evidence. A plain 1..15-digit nonzero-leading LID is required; hosted.lid canonicalizes to lid, device/phone/bot addresses are rejected. Missing or rejected LID metadata yields null, not proof of absent account identity. The prior lid@jid shape was refuted. This is offline ingestion/status inspection exposed by the existing CLI, not a new HTTP route or automatic retry; consumed markers and old statuses remain unchanged. Contact metadata does not replace Signal pins or authenticated aliases. Fresh live validation, refresh/backoff scheduling and full contact-type parity remain unverified. See docs/protocol/chat-actions.md#contact-lid-response-correction-2026-10-08. ContactStatus.contact_type is nullable and recognizes exact in/out/invalid. Newly ingested on_whatsapp is true only for in regardless of JID presence (APK 37.71 0u3.A02). Missing/unsupported type records a fixed local error missing_contact_type/unsupported_contact_type rather than raw input. Invalid is a distinct server result, not a ban diagnosis. Historical rows deserialize contact_type=null and keep their old boolean; no historical replay/migration. contacts status inspects saved rows without queuing. Full state-machine/refresh behavior remains incomplete.",
         "operationId": "checkContact",
         "x-cli": "whatsapp-cli contacts check",
         "x-transport": [
@@ -5096,7 +5151,34 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/QueuedAck"
+                  "type": "object",
+                  "required": [
+                    "action_id",
+                    "newly_ingested",
+                    "status"
+                  ],
+                  "properties": {
+                    "action_id": {
+                      "type": "string",
+                      "description": "Newly queued opaque contact-check action ID."
+                    },
+                    "newly_ingested": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Number of newly ingested settled contact-check rows."
+                    },
+                    "status": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/components/schemas/ContactStatus"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Already-saved status for the selected number, or null."
+                    }
+                  }
                 }
               }
             }
@@ -11542,6 +11624,81 @@
           "whatsapp_api::transport::abprops::AbPropsInspection",
           "whatsapp_api::transport::abprops::AbPropsStatus",
           "whatsapp_api::transport::abprops::AbPropsFailure"
+        ]
+      }
+    },
+    "/v1/contacts/{phone}/status": {
+      "get": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Inspect saved contact-check status without queuing",
+        "description": "Offline read only. Returns status=null if no saved row exists. Does not ingest, queue/reserve/transmit actions, log in, refresh, reset or migrate historical records. JSON exposes recognized contact_type and fixed malformed-type errors; text uses a masked phone and does not display JIDs. This is a CLI contract, no served HTTP handler. Evidence docs/protocol/chat-actions.md#contact-type-and-offline-status-2026-10-08.",
+        "operationId": "inspectContactStatus",
+        "x-cli": "whatsapp-cli contacts status",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          },
+          {
+            "name": "phone",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PhoneNumber"
+            },
+            "x-secret-input": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Saved status or null",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status"
+                  ],
+                  "properties": {
+                    "status": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/components/schemas/ContactStatus"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::contacts::status",
+          "whatsapp_cli::transport_receive::contacts"
         ]
       }
     }

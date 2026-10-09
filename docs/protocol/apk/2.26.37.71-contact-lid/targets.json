@@ -1,4 +1,32 @@
 {
+  "contact-account-flag": {
+    "anchors": [
+      "ContactSyncHelper/phone-number/missing_response/",
+      "sync/updateContactsFromSyncUsers/found-invalid-contacts"
+    ],
+    "class": "LX/0u3;",
+    "file": "contact-account-flag.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "method_shorty": "LLLZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/contacts.rs"
+    ]
+  },
+  "contact-invalid-consumer": {
+    "class": "LX/0u5;",
+    "file": "contact-invalid-consumer.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "BF6",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/contacts.rs"
+    ]
+  },
   "contact-protocol-result": {
     "anchors": [
       "error",
@@ -22,6 +50,18 @@
     "include_register_flow": true,
     "method_filter": "<init>",
     "method_shorty": "VLLLLIZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/contacts.rs"
+    ]
+  },
+  "contact-row-default": {
+    "class": "LX/N0z;",
+    "file": "contact-row-default.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "method_shorty": "V",
     "methods": 1,
     "rust_files": [
       "crates/whatsapp-api/src/transport/contacts.rs"

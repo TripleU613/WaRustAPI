@@ -830,6 +830,11 @@ enum ContactsCmd {
         #[arg(long)]
         phone: String,
     },
+    /// Inspect a saved contact-check status offline without queuing another query.
+    Status {
+        #[arg(long)]
+        phone: String,
+    },
     /// Queue a `usync` WhatsApp-existence check for a number and show any
     /// already-saved status; a session transmits the queued action.
     Check {

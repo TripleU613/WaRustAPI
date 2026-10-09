@@ -796,6 +796,18 @@ Usage: whatsapp-cli contacts remove [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 | --phone | PHONE | yes |  |  |  |  |
 
+## whatsapp-cli contacts status
+
+Inspect a saved contact-check status offline without queuing another query
+
+```
+Usage: whatsapp-cli contacts status [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --phone | PHONE | yes |  |  |  |  |
+
 ## whatsapp-cli contacts check
 
 Queue a `usync` WhatsApp-existence check for a number and show any already-saved status; a session transmits the queued action

@@ -2167,3 +2167,12 @@ This improves discovery metadata, not identity-replacement authority or full
 cross-device synchronization. Existing status/markers are preserved and no query
 was replayed. Fresh live validation remains pending. See
 [contact response trace](protocol/chat-actions.md#contact-lid-response-correction-2026-10-08).
+
+
+2026-10-08 contact-type consumer trace: APK 37.71 `0u3.A02` confirms only
+`in` sets the positive account flag. Rust now preserves `in`/`out`/`invalid` and
+reports fixed local diagnostics for missing/unsupported types. Historical rows
+remain unknown without replay. `contacts status` provides read-only inspection;
+`contacts check` continues to queue an action. This does not complete contact
+mutation/sidelist/integrity parity or fresh live validation. See
+[consumer reasoning](protocol/chat-actions.md#contact-type-and-offline-status-2026-10-08).
