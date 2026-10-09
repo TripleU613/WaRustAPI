@@ -1,0 +1,47 @@
+# APK-derived structural disassembly: LX/CZH;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method equals(ZL) flags=0x1 registers=9
+  # full signature: LX/CZH;->equals(Ljava/lang/Object;)Z
+  0000..0002 op=12 const/4 v6, #0x1
+  0002..0006 op=32 if-eq v7, v8, +0x46
+  0006..000a op=20 instance-of v0, v8, LX/CZH;
+  000a..000c op=12 const/4 v5, #0x0
+  000c..0010 op=38 if-eqz v0, +0x40
+  0010..0014 op=1f check-cast v8, LX/CZH;
+  0014..0018 op=54 iget-object v1, v7, LX/CZH;->A04:LX/BYJ;
+  0018..001c op=54 iget-object v0, v8, LX/CZH;->A04:LX/BYJ;
+  001c..0022 op=71 invoke-static {v1, v0}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+  0022..0024 op=0a move-result v0
+  0024..0028 op=38 if-eqz v0, +0x34
+  0028..002c op=54 iget-object v1, v7, LX/CZH;->A03:LX/1gc;
+  002c..0030 op=54 iget-object v0, v8, LX/CZH;->A03:LX/1gc;
+  0030..0036 op=71 invoke-static {v1, v0}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+  0036..0038 op=0a move-result v0
+  0038..003c op=38 if-eqz v0, +0x2a
+  003c..0040 op=54 iget-object v1, v7, LX/CZH;->A02:LX/0Cy;
+  0040..0044 op=54 iget-object v0, v8, LX/CZH;->A02:LX/0Cy;
+  0044..004a op=71 invoke-static {v1, v0}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+  004a..004c op=0a move-result v0
+  004c..0050 op=38 if-eqz v0, +0x20
+  0050..0054 op=53 iget-wide v3, v7, LX/CZH;->A01:J
+  0054..0058 op=53 iget-wide v1, v8, LX/CZH;->A01:J
+  0058..005c op=31 cmp-long v0, v3, v1
+  005c..0060 op=39 if-nez v0, +0x18
+  0060..0064 op=54 iget-object v1, v7, LX/CZH;->A05:Ljava/lang/String;
+  0064..0068 op=54 iget-object v0, v8, LX/CZH;->A05:Ljava/lang/String;
+  0068..006e op=71 invoke-static {v1, v0}, LX/00h;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+  006e..0070 op=0a move-result v0
+  0070..0074 op=38 if-eqz v0, +0xe
+  0074..0078 op=52 iget v1, v7, LX/CZH;->A00:I
+  0078..007c op=52 iget v0, v8, LX/CZH;->A00:I
+  007c..0080 op=33 if-ne v1, v0, +0x8
+  0080..0084 op=55 iget-boolean v1, v7, LX/CZH;->A06:Z
+  0084..0088 op=55 iget-boolean v0, v8, LX/CZH;->A06:Z
+  0088..008c op=32 if-eq v1, v0, +0x3
+  008c..008e op=0f return v5
+  008e..0090 op=0f return v6
+  # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,30 @@
+{
+  "ack-generic-forward.txt": {
+    "bytes": 1202,
+    "sha256": "ed9958eb8597e2f68ab0203e1f112788029969a2aca93f3344fd11c79631d3cf"
+  },
+  "ack-route-equality.txt": {
+    "bytes": 5202,
+    "sha256": "91c9a7af09dbfd65c32aa83bde4100c165c1102523371c8dc6b7e2080e823c6c"
+  },
+  "former-equality-reference.txt": {
+    "bytes": 2372,
+    "sha256": "15ba0a4e9b75cb78ad32c5d0d0d44de325b14911a5ef5790c7672903da797d08"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "targets.json": {
+    "bytes": 1105,
+    "sha256": "62728fc5d9621ac0fd21222830c9390129375118a3346f363977099b204738fe"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

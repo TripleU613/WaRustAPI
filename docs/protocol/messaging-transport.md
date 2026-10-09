@@ -1430,3 +1430,12 @@ inspections afterward. No fresh encrypted user-message stanza was logged, so
 live text/typed-LID decryption is not established by this window. Private evidence
 index: lab/releases/direct-lid-live/active.json. No queued chat transmission,
 new identity query, reservation reset or manufactured recipient message.
+
+## Receipt ACK participant presence (2026-10-09)
+
+[Confirmed APK/local guard correction](receipt-ack-correlation.md): group
+read/retry ACKs must carry the same participant presence and address as the
+saved receipt. Incomplete success/error ACKs leave outcome_unknown intact,
+including after restart, without replay. Cb1 is the 37.71 parser-produced
+stanza key; the old CZH comment was not correctly attributed to that key.
+Full native callback lifecycle and fresh live validation remain unverified.

@@ -1,5 +1,13 @@
 # Evidence ledger
 
+Receipt ACK participant guard (2026-10-09, **confirmed static/local**): APK
+37.71 Cb1 compares nullable participants. Rust now rejects a participant-less
+ACK for a group read/retry reservation; incomplete error ACKs also leave the
+saved outcome unknown. Regression coverage checks restart/no replay and complete
+matching ACKs. The former CZH attribution is corrected and retained as a negative.
+No private state or live request changed; full primary cleanup remains unfinished.
+[Evidence and limits](receipt-ack-correlation.md).
+
 Linked metadata observers (2026-10-09, **confirmed static**): APK 37.71
 case 26 invokes a no-payload Bjk callback. A physical scan finds thirteen empty
 concrete bodies and two state-update consumers; transitive effects/registration

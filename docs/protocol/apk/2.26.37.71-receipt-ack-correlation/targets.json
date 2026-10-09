@@ -1,0 +1,41 @@
+{
+  "ack-generic-forward": {
+    "anchors": [
+      "ConnectionThreadRequestsImpl/onAckReceived; stanzaKey="
+    ],
+    "class": "LX/1Dz;",
+    "file": "ack-generic-forward.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1E",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "ack-route-equality": {
+    "class": "LX/Cb1;",
+    "file": "ack-route-equality.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "equals",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "former-equality-reference": {
+    "class": "LX/CZH;",
+    "file": "former-equality-reference.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "equals",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  }
+}

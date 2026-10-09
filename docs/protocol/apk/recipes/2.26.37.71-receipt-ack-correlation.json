@@ -1,0 +1,34 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "ack-route-equality": {
+      "class": "LX/Cb1;",
+      "method": "equals",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "ack-generic-forward": {
+      "class": "LX/1Dz;",
+      "method": "A1E",
+      "anchors": [
+        "ConnectionThreadRequestsImpl/onAckReceived; stanzaKey="
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "former-equality-reference": {
+      "class": "LX/CZH;",
+      "method": "equals",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    }
+  }
+}

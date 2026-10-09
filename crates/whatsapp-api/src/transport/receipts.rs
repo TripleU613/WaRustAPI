@@ -488,8 +488,9 @@ pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
 }
 
 /// Correlate an explicit receipt ACK by recipient, ID and type, not ID alone.
-/// Only primary direct receipts are queued here. APK 1Qy.A02/CZH.equals also
-/// bind participant, recipient and edit; those routes must not settle this queue.
+/// Direct and group receipts retain their exact participant presence. APK
+/// 37.71 1Qy.A02 -> CSu.A00 -> Cb1.equals distinguishes nullable participants;
+/// recipient/edit routes remain unsupported by this queue.
 pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
     if node.description != "ack"
         || node.get_attr("class").and_then(|v| v.as_text()) != Some("receipt")
@@ -522,15 +523,17 @@ pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
                 let wire: Vec<u8> = serde_json::from_value(row["wire"].clone())
                     .map_err(|_| Error::invalid("receipt", "invalid intent"))?;
                 let sent = decode(&wire)?;
-                // An ack naming a participant settles only a receipt that named
-                // the same one: in a group, the id alone is ambiguous between
-                // members.
+                // APK 37.71 Cb1.equals 0086..00a6 compares nullable participant
+                // fields. An absent ACK participant cannot settle a group receipt
+                // naming a member; ID/from/type alone leaves that member ambiguous.
                 if sent.get_attr("id") != node.get_attr("id")
                     || sent.get_attr("type") != node.get_attr("type")
                     || jid(&sent, "to").is_none()
                     || jid(&sent, "to").map(logical_address)
                         != jid(node, "from").map(logical_address)
-                    || (node.get_attr("participant").is_some()
+                    || (sent.get_attr("participant").is_some()
+                        != node.get_attr("participant").is_some())
+                    || (sent.get_attr("participant").is_some()
                         && (jid(&sent, "participant").is_none()
                             || jid(&sent, "participant").map(logical_address)
                                 != jid(node, "participant").map(logical_address)))
@@ -986,6 +989,13 @@ mod tests {
             .attr("from", chat.clone())
             .attr("participant", member.clone())
             .attr("id", "ACK-KIND");
+        let mut missing = ack.clone();
+        missing
+            .attributes
+            .retain(|attribute| attribute.name != "participant");
+        assert!(!record_ack(&store, &missing).unwrap());
+        assert_eq!(outcomes(&store).unwrap()[0].status, "outcome_unknown");
+        assert!(reserve_pending(&store).unwrap().is_empty());
         let mut other_agent = member.clone();
         other_agent.agent = 1;
         let mut other_server = member.clone();
@@ -1482,6 +1492,18 @@ mod tests {
             !record_ack(&store, &ack(&other)).unwrap(),
             "another member's ack"
         );
+        let mut missing = ack(&sender);
+        missing
+            .attributes
+            .retain(|attribute| attribute.name != "participant");
+        assert!(!record_ack(&store, &missing).unwrap());
+        assert_eq!(outcomes(&store).unwrap()[0].status, "outcome_unknown");
+        drop(store);
+        let store = open(&dir.path().join("group-read.redb"), false);
+        assert_eq!(outcomes(&store).unwrap()[0].status, "outcome_unknown");
+        assert!(reserve_pending(&store).unwrap().is_empty());
+        assert!(!record_ack(&store, &missing.attr("error", "479")).unwrap());
+        assert_eq!(outcomes(&store).unwrap()[0].status, "outcome_unknown");
         assert!(record_ack(&store, &ack(&sender)).unwrap());
 
         // A device-addressed or broadcast chat is still refused.
