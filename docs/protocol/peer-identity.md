@@ -2377,3 +2377,57 @@ Clippy, warning-free Rustdoc, 24 default CLI checks, regenerated CLI reference,
 API library-symbol verification, formatting, experimental CLI build and repository
 hygiene passed. The direct current APK DF6 export confirmed typed dispatch; the
 primary branch offsets belong to the cached DNk worker, not the DF6 callback.
+
+
+## Directory refusal attribution (2026-10-08)
+
+**Confirmed local defect:** generic `actions::record_reply` retains the first
+inner error code. The old directory inspection copied that code and accepted
+any matching error row. A foreign user's error before the selected user's
+could therefore be reported as the selected peer's refusal; duplicate matching
+users/lists/errors were not distinguished. This did not establish a refusal
+for the selected peer. Generic action history remains preserved for provenance.
+
+**Confirmed APK 2.26.37.71 shape evidence:** `DF6.C8f` case 0, offsets
+008e..00b8, reads `error` within each typed user and passes that user's code to
+`11S.A00`. The [cached disassembly](apk/2.26.37.71-core/adv-identity-reply.txt)
+belongs to the identity-only callback, not a complete full-key-directory trace.
+It supports contextual code attribution; our IQ-ID and duplicate guards are
+**local conservative policy**, not demonstrated Android duplicate handling.
+The successful signed-bundle path and signature validation are unchanged.
+
+**Implemented/offline-tested:** `peer-keys --show` now exposes nullable `failure`
+(`DirectoryReplyFailure`), with fixed local diagnoses `envelope`, `user_set`,
+`error_node` and `bundle`. Refusals require a matching IQ ID/type, a unique root
+error or one list with exactly one matching primary user and one error child.
+An explicit outer IQ error without a numeric code remains `server_refused`
+with a null code; duplicate root errors are `invalid_reply`. Unrelated users
+may coexist, but their codes never become the selected peer's code. Supported
+Plain/AD primary encodings match by exact address components. An unsuccessful
+bundle parse reports `bundle`; a bad signature still reports `invalid_signature`,
+not a structural failure. Historical inspection JSON defaults missing `failure`
+to null.
+
+Nine saved binary-reply regression cases cover foreign-first/selected-first
+order, absent/duplicate matching users (including mixed primary wire kinds),
+duplicate lists, absent/duplicate selected errors and duplicate root errors.
+They retain original actions and reservations, refuse refresh and leave no
+pending replay. Raw error text is not exported. A legacy JSON regression covers
+backward deserialization. Inspection never adopts keys, mutates pins/sessions,
+resets a refusal or authorizes another request.
+
+**Unknown/unverified:** live malformed/refusal replies, Android duplicate
+handling, native wire-to-Java subtype construction and complete directory
+callback parity. No network request was made for this diagnostic correction.
+
+**Observed offline retained-state check:** existing primary directory evidence
+remains `verified_bundle`, with null failure/code and identical fingerprint,
+signature and pin comparisons. Logical action rows, receipts and pending outbox
+are identical before/after the rebuilt CLI inspection. No new query, login or
+message occurred; store opening metadata is not claimed byte-identical.
+
+Validation: **721 workspace/all-feature tests**, strict workspace/all-target/
+all-feature Clippy, warning-free Rustdoc, 24 default CLI checks, regenerated CLI
+reference, API library-symbol check, formatting, experimental CLI build and
+repository hygiene passed. Seven focused directory tests include the new
+ambiguity matrix and historical inspection JSON case.

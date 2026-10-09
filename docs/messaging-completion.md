@@ -2195,3 +2195,12 @@ per-user refusals no longer become invalid solely due to encoding. This does
 not adopt a key, create an alias, relax signatures or retry an action. Existing
 saved PN inspection was already received; fresh AD_JID identity-only replies
 remain unverified. [Evidence](protocol/peer-identity.md#primary-wire-address-correlation-2026-10-08).
+
+Directory refusal attribution (2026-10-08, offline): `peer-keys --show` now
+reports fixed local invalid-reply diagnoses and binds numeric refusals to one
+unambiguous selected-user/root context. Foreign first-error codes and duplicate
+rows cannot masquerade as selected-peer refusals. Original action history and
+retry reservations remain intact. APK 37.71 DF6 identity-only error handling
+supports contextual attribution; duplicate guards are local policy and fresh
+live refusal validation remains unverified.
+[Evidence and limits](protocol/peer-identity.md#directory-refusal-attribution-2026-10-08).

@@ -1361,3 +1361,12 @@ native wire object construction and fresh identity-only AD replies remain
 behavior; group/manual-verification paths are not blindly normalized. Existing
 private PN inspection was already received; LID evidence absent. See
 [reasoning and negative audit](peer-identity.md#primary-wire-address-correlation-2026-10-08).
+
+Directory refusal attribution (2026-10-08, offline): `peer-keys --show` now
+reports fixed local invalid-reply diagnoses and binds numeric refusals to one
+unambiguous selected-user/root context. Foreign first-error codes and duplicate
+rows cannot masquerade as selected-peer refusals. Original action history and
+retry reservations remain intact. APK 37.71 DF6 identity-only error handling
+supports contextual attribution; duplicate guards are local policy and fresh
+live refusal validation remains unverified.
+[Evidence and limits](peer-identity.md#directory-refusal-attribution-2026-10-08).

@@ -2125,3 +2125,12 @@ Successful signed-bundle matching was already component-based. Existing saved PN
 inspection was already received; LID identity-only evidence was absent, so this
 is fixture-demonstrated compatibility, not a new live identity milestone.
 [Evidence and audit boundaries](docs/protocol/peer-identity.md#primary-wire-address-correlation-2026-10-08).
+
+Directory refusal attribution (2026-10-08, offline): `peer-keys --show` now
+reports fixed local invalid-reply diagnoses and binds numeric refusals to one
+unambiguous selected-user/root context. Foreign first-error codes and duplicate
+rows cannot masquerade as selected-peer refusals. Original action history and
+retry reservations remain intact. APK 37.71 DF6 identity-only error handling
+supports contextual attribution; duplicate guards are local policy and fresh
+live refusal validation remains unverified.
+[Evidence and limits](docs/protocol/peer-identity.md#directory-refusal-attribution-2026-10-08).

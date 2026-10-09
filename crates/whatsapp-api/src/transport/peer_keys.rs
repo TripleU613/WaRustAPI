@@ -90,6 +90,20 @@ pub enum DirectoryStatus {
     VerifiedBundle,
 }
 
+/// Fixed local diagnosis of a saved directory reply; not a server reason.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum DirectoryReplyFailure {
+    /// Wrong IQ envelope, correlation or unsupported response type.
+    Envelope,
+    /// Missing/duplicate refusal list or absent/duplicate matching primary user.
+    UserSet,
+    /// Missing or duplicate error child in the selected refusal context.
+    ErrorNode,
+    /// The selected successful result has no supported complete key bundle.
+    Bundle,
+}
+
 /// Comparison with a locally authenticated primary LID mapping.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct LinkedPinMatch {
@@ -106,7 +120,10 @@ pub struct DirectoryInspection {
     pub action_id: String,
     /// Recognized local/server result.
     pub status: DirectoryStatus,
-    /// Numeric server refusal code, when present. Raw text is not exposed.
+    /// Fixed local invalid-reply diagnosis; null for accepted/refused/unstaged evidence.
+    #[serde(default)]
+    pub failure: Option<DirectoryReplyFailure>,
+    /// Numeric code from the unique root/selected-peer refusal. Raw text is not exposed.
     pub server_error_code: Option<u16>,
     /// SHA-256 of serialized directory public identity, not a safety number.
     pub fingerprint: Option<String>,
@@ -141,9 +158,10 @@ pub fn inspect(store: &ProtocolStore, peer: &Jid) -> Result<Option<DirectoryInsp
                 actions::ActionStatus::Queued => DirectoryStatus::Queued,
                 actions::ActionStatus::Sent => DirectoryStatus::OutcomeUnknown,
                 actions::ActionStatus::Ok => DirectoryStatus::InvalidReply,
-                actions::ActionStatus::Error => DirectoryStatus::ServerRefused,
+                actions::ActionStatus::Error => DirectoryStatus::InvalidReply,
             },
-            server_error_code: action.error_code,
+            failure: None,
+            server_error_code: None,
             fingerprint: None,
             signature_valid: None,
             phone_pin_matches: None,
@@ -152,29 +170,86 @@ pub fn inspect(store: &ProtocolStore, peer: &Jid) -> Result<Option<DirectoryInsp
         let Some(reply) = reply else {
             return Ok(Some(result));
         };
+        // Correlation and duplicate rejection are local inspection guards.
+        // APK 37.71 DF6.C8f 008e..00b8 reads errors in their user context;
+        // a generic action's first inner error need not belong to this peer.
+        if reply.description != "iq"
+            || reply.get_attr("id").and_then(|v| v.as_text()) != Some(result.action_id.as_str())
+            || !matches!(
+                reply.get_attr("type").and_then(|v| v.as_text()),
+                Some("result" | "error")
+            )
+        {
+            result.failure = Some(DirectoryReplyFailure::Envelope);
+            return Ok(Some(result));
+        }
         if action.status == actions::ActionStatus::Error {
-            let refusal = reply.get_attr("type").and_then(|v| v.as_text()) == Some("error")
-                || reply.child("error").is_some()
-                || reply.child("list").is_some_and(|list| {
-                    list.child_nodes().iter().any(|user| {
-                        user.get_attr("jid").is_some_and(|v| {
-                            v.as_jid().is_some_and(|jid| {
-                                super::identity_query::same_primary_address(jid, peer)
-                            }) || v
-                                .as_text()
-                                .and_then(|text| Jid::parse(text).ok())
-                                .is_some_and(|jid| {
-                                    super::identity_query::same_primary_address(&jid, peer)
-                                })
-                        }) && user.child("error").is_some()
-                    })
-                });
-            if !refusal {
-                result.status = DirectoryStatus::InvalidReply;
+            let root_errors: Vec<_> = reply
+                .child_nodes()
+                .iter()
+                .filter(|node| node.description == "error")
+                .collect();
+            let code = |node: &crate::binary::Node| {
+                node.get_attr("code")
+                    .and_then(|value| value.as_text())
+                    .and_then(|text| text.parse::<u16>().ok())
+            };
+            if root_errors.len() > 1 {
+                result.failure = Some(DirectoryReplyFailure::ErrorNode);
+                return Ok(Some(result));
             }
+            if reply.get_attr("type").and_then(|v| v.as_text()) == Some("error")
+                || !root_errors.is_empty()
+            {
+                result.status = DirectoryStatus::ServerRefused;
+                result.server_error_code = root_errors.first().and_then(|error| code(error));
+                return Ok(Some(result));
+            }
+            let lists: Vec<_> = reply
+                .child_nodes()
+                .iter()
+                .filter(|node| node.description == "list")
+                .collect();
+            if lists.len() != 1 {
+                result.failure = Some(DirectoryReplyFailure::UserSet);
+                return Ok(Some(result));
+            }
+            let users: Vec<_> = lists[0]
+                .child_nodes()
+                .iter()
+                .filter(|user| user.description == "user")
+                .filter(|user| {
+                    user.get_attr("jid").is_some_and(|value| {
+                        value.as_jid().is_some_and(|jid| {
+                            super::identity_query::same_primary_address(jid, peer)
+                        }) || value
+                            .as_text()
+                            .and_then(|text| Jid::parse(text).ok())
+                            .is_some_and(|jid| {
+                                super::identity_query::same_primary_address(&jid, peer)
+                            })
+                    })
+                })
+                .collect();
+            if users.len() != 1 {
+                result.failure = Some(DirectoryReplyFailure::UserSet);
+                return Ok(Some(result));
+            }
+            let errors: Vec<_> = users[0]
+                .child_nodes()
+                .iter()
+                .filter(|node| node.description == "error")
+                .collect();
+            if errors.len() != 1 {
+                result.failure = Some(DirectoryReplyFailure::ErrorNode);
+                return Ok(Some(result));
+            }
+            result.status = DirectoryStatus::ServerRefused;
+            result.server_error_code = code(errors[0]);
             return Ok(Some(result));
         }
         let Ok(bundle) = crate::signal::direct::prekey_bundle(&reply, peer) else {
+            result.failure = Some(DirectoryReplyFailure::Bundle);
             return Ok(Some(result));
         };
         let identity = bundle
@@ -565,5 +640,128 @@ mod tests {
             assert_eq!(queue(&store, &expected, false).unwrap(), id);
             assert!(actions::reserve_pending(&store).unwrap().is_empty());
         }
+    }
+    #[test]
+    fn refusal_codes_are_bound_to_one_unambiguous_selected_context() {
+        let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let foreign = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+        let error = |code: &str| {
+            Node::new("error")
+                .attr("code", code)
+                .attr("text", "SECRET_BODY")
+        };
+        let refusal = |who: &Jid, code: &str| {
+            Node::new("user")
+                .attr("jid", who.clone())
+                .children(vec![error(code)])
+        };
+        let selected = refusal(&peer, "480");
+        let other = refusal(&foreign, "503");
+        let list = |users| Node::new("list").children(users);
+        let mut encoded = peer.clone();
+        encoded.kind = JidKind::AgentDevice;
+        let cases = vec![
+            (
+                vec![list(vec![other.clone(), selected.clone()])],
+                None,
+                Some(480),
+            ),
+            (
+                vec![list(vec![selected.clone(), other.clone()])],
+                None,
+                Some(480),
+            ),
+            (
+                vec![list(vec![other.clone()])],
+                Some(DirectoryReplyFailure::UserSet),
+                None,
+            ),
+            (
+                vec![list(vec![selected.clone(), selected.clone()])],
+                Some(DirectoryReplyFailure::UserSet),
+                None,
+            ),
+            (
+                vec![list(vec![selected.clone(), refusal(&encoded, "503")])],
+                Some(DirectoryReplyFailure::UserSet),
+                None,
+            ),
+            (
+                vec![list(vec![selected.clone()]), list(vec![selected.clone()])],
+                Some(DirectoryReplyFailure::UserSet),
+                None,
+            ),
+            (
+                vec![list(vec![
+                    Node::new("user")
+                        .attr("jid", peer.clone())
+                        .children(vec![error("480"), error("503")]),
+                ])],
+                Some(DirectoryReplyFailure::ErrorNode),
+                None,
+            ),
+            (
+                vec![list(vec![
+                    other,
+                    Node::new("user").attr("jid", peer.clone()),
+                ])],
+                Some(DirectoryReplyFailure::ErrorNode),
+                None,
+            ),
+            (
+                vec![error("480"), error("503")],
+                Some(DirectoryReplyFailure::ErrorNode),
+                None,
+            ),
+        ];
+        for (children, failure, code) in cases {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("ambiguous-refusal.redb"));
+            let id = queue(&store, &peer, false).unwrap();
+            actions::reserve_pending(&store).unwrap();
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(children);
+            actions::record_reply(&store, &reply).unwrap();
+            let before = serde_json::to_value(actions::outcomes(&store).unwrap()).unwrap();
+            let view = inspect(&store, &peer).unwrap().unwrap();
+            assert_eq!(
+                view.status,
+                if failure.is_none() {
+                    DirectoryStatus::ServerRefused
+                } else {
+                    DirectoryStatus::InvalidReply
+                }
+            );
+            assert_eq!(view.failure, failure);
+            assert_eq!(view.server_error_code, code);
+            assert!(view.fingerprint.is_none());
+            assert!(view.signature_valid.is_none());
+            assert!(
+                !serde_json::to_string(&view)
+                    .unwrap()
+                    .contains("SECRET_BODY")
+            );
+            assert_eq!(
+                serde_json::to_value(actions::outcomes(&store).unwrap()).unwrap(),
+                before
+            );
+            assert_eq!(queue(&store, &peer, false).unwrap(), id);
+            assert!(queue(&store, &peer, true).is_err());
+            assert!(actions::reserve_pending(&store).unwrap().is_empty());
+        }
+    }
+
+    #[test]
+    fn legacy_directory_inspection_defaults_failure_to_unknown() {
+        let view: DirectoryInspection = serde_json::from_value(serde_json::json!({
+            "action_id":"existing", "status":"server_refused", "server_error_code":503,
+            "fingerprint":null, "signature_valid":null, "phone_pin_matches":null,
+            "linked_pin_matches":[]
+        }))
+        .unwrap();
+        assert!(view.failure.is_none());
+        assert_eq!(view.server_error_code, Some(503));
     }
 }
