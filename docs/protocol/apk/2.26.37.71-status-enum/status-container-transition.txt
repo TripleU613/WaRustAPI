@@ -1,0 +1,64 @@
+# APK-derived structural disassembly: LX/8BW;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0S(ZL) flags=0x11 registers=15
+  # full signature: LX/8BW;->A0S(LX/1cE;)Z
+  0000..0002 op=12 const/4 v6, #0x0
+  0002..0006 op=13 const/16 v2, #0xd2d
+  0006..000a op=54 iget-object v0, v13, LX/8BW;->A0T:LX/05B;
+  000a..000e op=54 iget-object v1, v0, LX/05B;->A00:LX/00s;
+  000e..0014 op=71 invoke-static {v1}, LX/1xj;->A0g(LX/00s;)LX/00Y;
+  0014..0016 op=0c move-result-object v0
+  0016..001c op=71 invoke-static {v0, v2}, LX/08b;->A00(LX/00X;I)LX/05B;
+  001c..0020 op=13 const/16 v0, #0x5a3
+  0020..0026 op=71 invoke-static {v1, v0}, LX/1xk;->A0H(LX/00s;I)LX/05B;
+  0026..0028 op=0c move-result-object v5
+  0028..002c op=55 iget-boolean v0, v13, LX/8BW;->A0P:Z
+  002c..002e op=12 const/4 v2, #0x1
+  002e..0032 op=39 if-nez v0, +0x7
+  0032..0036 op=5b iput-object v14, v13, LX/8BW;->A06:LX/1cE;
+  0036..003a op=5c iput-boolean v2, v13, LX/8BW;->A0P:Z
+  003a..003c op=0f return v2
+  003c..0040 op=54 iget-object v4, v13, LX/8BW;->A06:LX/1cE;
+  0040..0044 op=54 iget-object v1, v13, LX/8BW;->A0U:LX/6cy;
+  0044..0048 op=62 sget-object v0, LX/6cy;->A07:LX/6cy;
+  0048..004c op=33 if-ne v1, v0, +0xb
+  004c..0050 op=62 sget-object v0, LX/1cE;->A0A:LX/1cE;
+  0050..0054 op=32 if-eq v14, v0, +0x6
+  0054..0058 op=62 sget-object v0, LX/1cE;->A09:LX/1cE;
+  0058..005c op=33 if-ne v14, v0, +0x3
+  005c..005e op=0f return v6
+  005e..0064 op=71 invoke-static {v4, v14}, LX/1u0;->A01(LX/1cE;LX/1cE;)Z
+  0064..0066 op=0a move-result v0
+  0066..006a op=38 if-eqz v0, +0x5
+  006a..006e op=5b iput-object v14, v13, LX/8BW;->A06:LX/1cE;
+  006e..0070 op=0f return v2
+  0070..0076 op=6e invoke-virtual {v13}, LX/8BW;->A0F()LX/72k;
+  0076..0078 op=0c move-result-object v3
+  0078..007c op=1a const-string v0, "Invalid FStatus state change from "
+  007c..0082 op=71 invoke-static {v4, v0}, LX/000;->A07(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0082..0084 op=0c move-result-object v2
+  0084..0088 op=1a const-string v1, " to "
+  0088..008e op=6e invoke-virtual {v2, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  008e..0094 op=6e invoke-virtual {v2, v14}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0094..0098 op=1a const-string v0, " for key: "
+  0098..009e op=71 invoke-static {v3, v0, v2}, LX/1xj;->A1K(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+  009e..00a4 op=71 invoke-static {v5}, LX/1xi;->A0h(LX/05B;)LX/0AH;
+  00a4..00a6 op=0c move-result-object v7
+  00a6..00aa op=1a const-string v0, "from "
+  00aa..00b0 op=71 invoke-static {v4, v0}, LX/000;->A07(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00b0..00b2 op=0c move-result-object v0
+  00b2..00b8 op=71 invoke-static {v14, v1, v0}, LX/1xj;->A14(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+  00b8..00ba op=0c move-result-object v9
+  00ba..00be op=1a const-string v0, "key: "
+  00be..00c4 op=71 invoke-static {v0, v3}, LX/1xj;->A15(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;
+  00c4..00c6 op=0c move-result-object v10
+  00c6..00c8 op=12 const/4 v11, #0x1
+  00c8..00cc op=1a const-string v8, "FStatus invalid state change"
+  00cc..00ce op=01 move v12, v11
+  00ce..00d4 op=74 invoke-virtual/range {v7..v12}, LX/0AH;->A0b(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZ)V
+  00d4..00d6 op=0f return v6
+  # exception table: 0 try range(s)
+.end method

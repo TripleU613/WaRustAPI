@@ -1,0 +1,29 @@
+APK 2.26.37.71 FStatus enum decoder physical inventory
+SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+
+Commands (replace APK with the pinned APK path):
+xtask apk-callers APK --class 'LX/7z7;' --method A00
+xtask apk-field-refs APK --class 'LX/8BW;' --field A06 --type 'LX/1cE;' --writes-only
+
+Physical calls/writes only; not reflection or complete virtual dispatch.
+Six writes occur in five methods; A0S contains two writes.
+
+status-decoder-callers.txt source_sha256=5ae280c46a048ed3deffdb4faff00ad39be4cedcc030254370bfb119a0730025
+classes5.dex  LX/7z7;->A06(VLL)
+  invoke dex byte offset: 0x4d67d4
+classes5.dex  LX/7zY;->A01(IL)
+  invoke dex byte offset: 0x4f1758
+
+status-enum-writers.txt source_sha256=c1083d2437c5277bc3faf7c4f1c144cfe81c53489c0f867ecaea71e7a366e589
+classes5.dex  LX/6ca;->A05(LLLLLLLIZ)
+  write opcode 0x5b, dex byte offset: 0x2884a4
+classes5.dex  LX/8BW;-><init>(VLLL)
+  write opcode 0x5b, dex byte offset: 0x552784
+classes5.dex  LX/8BW;->A0S(ZL)
+  write opcode 0x5b, dex byte offset: 0x552f3e
+classes5.dex  LX/8BW;->A0S(ZL)
+  write opcode 0x5b, dex byte offset: 0x552f76
+classes5.dex  LX/8Si;->run(V)
+  write opcode 0x5b, dex byte offset: 0x5ba5c0
+classes5.dex  LX/8U9;->run(V)
+  write opcode 0x5b, dex byte offset: 0x5cf96e

@@ -1,5 +1,13 @@
 # Evidence ledger
 
+FStatus conversion (2026-10-09, **confirmed static**): APK 37.71 7z7.A00
+maps named 1cE enum ordinals with media/subtype conditions; 7zY.A01 keeps
+native 178 integers separate. The ten-topic snapshot retains the transition
+matrix and all six direct enum writes. This narrows the earlier restoration
+trace: ordinary SQL status loading and universal outgoing initial status remain
+unknown. No Rust runtime or account state changed.
+[Evidence and limits](status-enum.md).
+
 Outgoing success ACK participant trace (2026-10-09, **confirmed static / tested offline**): APK 37.71
 wire parser → device conversion → event 19 → handler proves that a nonnull
 converted participant suppresses success acceptance. Rust now guards supported

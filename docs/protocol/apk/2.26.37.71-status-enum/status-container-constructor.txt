@@ -1,0 +1,70 @@
+# APK-derived structural disassembly: LX/8BW;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLL) flags=0x10001 registers=6
+  # full signature: LX/8BW;-><init>(LX/6cy;LX/72k;Ljava/lang/String;)V
+  0000..0006 op=70 invoke-direct {v2}, Ljava/lang/Object;-><init>()V
+  0006..000a op=5b iput-object v4, v2, LX/8BW;->A0W:LX/72k;
+  000a..000e op=5b iput-object v3, v2, LX/8BW;->A0U:LX/6cy;
+  000e..0012 op=5b iput-object v5, v2, LX/8BW;->A0V:Ljava/lang/String;
+  0012..0018 op=71 invoke-static {}, LX/1xg;->A07()LX/05B;
+  0018..001a op=0c move-result-object v0
+  001a..001e op=5b iput-object v0, v2, LX/8BW;->A0T:LX/05B;
+  001e..0024 op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  0024..0026 op=0b move-result-wide v0
+  0026..002a op=5a iput-wide v0, v2, LX/8BW;->A0d:J
+  002a..002e op=5a iput-wide v0, v2, LX/8BW;->A0Y:J
+  002e..0032 op=22 new-instance v0, LX/8EY;
+  0032..0038 op=70 invoke-direct {v0, v2}, LX/8EY;-><init>(LX/8BW;)V
+  0038..003c op=5b iput-object v0, v2, LX/8BW;->A07:LX/8EY;
+  003c..0040 op=62 sget-object v0, LX/1cE;->A05:LX/1cE;
+  0040..0044 op=5b iput-object v0, v2, LX/8BW;->A06:LX/1cE;
+  0044..0048 op=16 const-wide/16 v0, #0xffff (-1)
+  0048..004c op=5a iput-wide v0, v2, LX/8BW;->A03:J
+  004c..0052 op=71 invoke-static {}, LX/1xg;->A19()Ljava/lang/Integer;
+  0052..0054 op=0c move-result-object v0
+  0054..0058 op=5b iput-object v0, v2, LX/8BW;->A0I:Ljava/lang/Integer;
+  0058..005e op=71 invoke-static {}, LX/1xf;->A1M()Ljava/util/concurrent/ConcurrentHashMap;
+  005e..0060 op=0c move-result-object v0
+  0060..0064 op=5b iput-object v0, v2, LX/8BW;->A0e:Ljava/util/concurrent/ConcurrentHashMap;
+  0064..0068 op=1c const-class v0, LX/8Bf;
+  0068..006e op=6e invoke-virtual {v2, v0}, LX/8BW;->A0H(Ljava/lang/Class;)LX/72g;
+  006e..0070 op=0c move-result-object v0
+  0070..0074 op=5b iput-object v0, v2, LX/8BW;->A0A:LX/72g;
+  0074..0078 op=1c const-class v0, LX/8Bg;
+  0078..007e op=6e invoke-virtual {v2, v0}, LX/8BW;->A0H(Ljava/lang/Class;)LX/72g;
+  007e..0080 op=0c move-result-object v0
+  0080..0084 op=5b iput-object v0, v2, LX/8BW;->A0G:LX/72g;
+  0084..0088 op=1c const-class v0, LX/8Bc;
+  0088..008e op=6e invoke-virtual {v2, v0}, LX/8BW;->A0H(Ljava/lang/Class;)LX/72g;
+  008e..0090 op=0c move-result-object v0
+  0090..0094 op=5b iput-object v0, v2, LX/8BW;->A09:LX/72g;
+  0094..0098 op=1c const-class v0, LX/8Ba;
+  0098..009e op=6e invoke-virtual {v2, v0}, LX/8BW;->A0H(Ljava/lang/Class;)LX/72g;
+  009e..00a0 op=0c move-result-object v0
+  00a0..00a4 op=5b iput-object v0, v2, LX/8BW;->A0C:LX/72g;
+  00a4..00a8 op=1c const-class v0, LX/8Bd;
+  00a8..00ae op=6e invoke-virtual {v2, v0}, LX/8BW;->A0H(Ljava/lang/Class;)LX/72g;
+  00ae..00b0 op=0c move-result-object v0
+  00b0..00b4 op=5b iput-object v0, v2, LX/8BW;->A08:LX/72g;
+  00b4..00b8 op=1c const-class v0, LX/8Be;
+  00b8..00be op=6e invoke-virtual {v2, v0}, LX/8BW;->A0H(Ljava/lang/Class;)LX/72g;
+  00be..00c0 op=0c move-result-object v0
+  00c0..00c4 op=5b iput-object v0, v2, LX/8BW;->A0D:LX/72g;
+  00c4..00c8 op=1c const-class v0, LX/8BZ;
+  00c8..00ce op=6e invoke-virtual {v2, v0}, LX/8BW;->A0H(Ljava/lang/Class;)LX/72g;
+  00ce..00d0 op=0c move-result-object v0
+  00d0..00d4 op=5b iput-object v0, v2, LX/8BW;->A0B:LX/72g;
+  00d4..00d8 op=1c const-class v0, LX/8Bb;
+  00d8..00de op=6e invoke-virtual {v2, v0}, LX/8BW;->A0H(Ljava/lang/Class;)LX/72g;
+  00de..00e0 op=0c move-result-object v0
+  00e0..00e4 op=5b iput-object v0, v2, LX/8BW;->A0F:LX/72g;
+  00e4..00e8 op=1c const-class v0, LX/8BX;
+  00e8..00ee op=6e invoke-virtual {v2, v0}, LX/8BW;->A0H(Ljava/lang/Class;)LX/72g;
+  00ee..00f0 op=0c move-result-object v0
+  00f0..00f4 op=5b iput-object v0, v2, LX/8BW;->A0E:LX/72g;
+  00f4..00f6 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,132 @@
+{
+  "status-container-constructor": {
+    "class": "LX/8BW;",
+    "file": "status-container-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "status-container-producer": {
+    "class": "LX/6ca;",
+    "file": "status-container-producer.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "status-container-transition": {
+    "class": "LX/8BW;",
+    "file": "status-container-transition.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0S",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "status-container-worker-one": {
+    "class": "LX/8Si;",
+    "file": "status-container-worker-one.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "status-container-worker-two": {
+    "class": "LX/8U9;",
+    "file": "status-container-worker-two.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "status-decoder": {
+    "class": "LX/7z7;",
+    "file": "status-decoder.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "status-enum": {
+    "class": "LX/1cE;",
+    "file": "status-enum.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<clinit>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "status-enum-constructor": {
+    "class": "LX/1cE;",
+    "file": "status-enum-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "status-enum-transition-policy": {
+    "class": "LX/1u0;",
+    "file": "status-enum-transition-policy.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "status-second-consumer": {
+    "class": "LX/7zY;",
+    "file": "status-second-consumer.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  }
+}

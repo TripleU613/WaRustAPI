@@ -1,0 +1,98 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "status-decoder": {
+      "class": "LX/7z7;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "status-enum": {
+      "class": "LX/1cE;",
+      "method": "<clinit>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "status-enum-constructor": {
+      "class": "LX/1cE;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "status-container-constructor": {
+      "class": "LX/8BW;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "status-second-consumer": {
+      "class": "LX/7zY;",
+      "method": "A01",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "status-container-transition": {
+      "class": "LX/8BW;",
+      "method": "A0S",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "status-container-producer": {
+      "class": "LX/6ca;",
+      "method": "A05",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "status-container-worker-one": {
+      "class": "LX/8Si;",
+      "method": "run",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "status-container-worker-two": {
+      "class": "LX/8U9;",
+      "method": "run",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "status-enum-transition-policy": {
+      "class": "LX/1u0;",
+      "method": "A01",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    }
+  }
+}

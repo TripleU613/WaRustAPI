@@ -1,0 +1,77 @@
+# APK-derived structural disassembly: LX/1u0;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(ZLL) flags=0x19 registers=5
+  # full signature: LX/1u0;->A01(LX/1cE;LX/1cE;)Z
+  0000..0002 op=12 const/4 v2, #0x0
+  0002..0008 op=71 invoke-static {v3, v2}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000a op=12 const/4 v1, #0x1
+  000a..0010 op=6e invoke-virtual {v3}, Ljava/lang/Enum;->ordinal()I
+  0010..0012 op=0a move-result v0
+  0012..0018 op=2b packed-switch v0, payload@0xf8, cases=[0:@0x24, 1:@0x3e, 2:@0x58, 3:@0x8c, 4:@0xa6, 5:@0xc0, 6:@0xda, 7:@0x72], default@0x18
+  0018..001c op=22 new-instance v0, LX/OM8;
+  001c..0022 op=70 invoke-direct {v0}, LX/OM8;-><init>()V
+  0022..0024 op=27 throw v0
+  0024..002a op=6e invoke-virtual {v4}, Ljava/lang/Enum;->ordinal()I
+  002a..002c op=0a move-result v0
+  002c..0032 op=2b packed-switch v0, payload@0x120, cases=[0:@0xf6, 1:@0xf6, 2:@0xf6, 3:@0xf6, 4:@0xf6, 5:@0xf4, 6:@0xf4, 7:@0xf6], default@0x32
+  0032..0036 op=22 new-instance v0, LX/OM8;
+  0036..003c op=70 invoke-direct {v0}, LX/OM8;-><init>()V
+  003c..003e op=27 throw v0
+  003e..0044 op=6e invoke-virtual {v4}, Ljava/lang/Enum;->ordinal()I
+  0044..0046 op=0a move-result v0
+  0046..004c op=2b packed-switch v0, payload@0x148, cases=[0:@0xf4, 1:@0xf6, 2:@0xf6, 3:@0xf6, 4:@0xf4, 5:@0xf4, 6:@0xf4, 7:@0xf6], default@0x4c
+  004c..0050 op=22 new-instance v0, LX/OM8;
+  0050..0056 op=70 invoke-direct {v0}, LX/OM8;-><init>()V
+  0056..0058 op=27 throw v0
+  0058..005e op=6e invoke-virtual {v4}, Ljava/lang/Enum;->ordinal()I
+  005e..0060 op=0a move-result v0
+  0060..0066 op=2b packed-switch v0, payload@0x170, cases=[0:@0xf6, 1:@0xf6, 2:@0xf6, 3:@0xf6, 4:@0xf4, 5:@0xf4, 6:@0xf4, 7:@0xf6], default@0x66
+  0066..006a op=22 new-instance v0, LX/OM8;
+  006a..0070 op=70 invoke-direct {v0}, LX/OM8;-><init>()V
+  0070..0072 op=27 throw v0
+  0072..0078 op=6e invoke-virtual {v4}, Ljava/lang/Enum;->ordinal()I
+  0078..007a op=0a move-result v0
+  007a..0080 op=2b packed-switch v0, payload@0x198, cases=[0:@0xf4, 1:@0xf4, 2:@0xf4, 3:@0xf4, 4:@0xf4, 5:@0xf4, 6:@0xf4, 7:@0xf6], default@0x80
+  0080..0084 op=22 new-instance v0, LX/OM8;
+  0084..008a op=70 invoke-direct {v0}, LX/OM8;-><init>()V
+  008a..008c op=27 throw v0
+  008c..0092 op=6e invoke-virtual {v4}, Ljava/lang/Enum;->ordinal()I
+  0092..0094 op=0a move-result v0
+  0094..009a op=2b packed-switch v0, payload@0x1c0, cases=[0:@0xf4, 1:@0xf4, 2:@0xf4, 3:@0xf6, 4:@0xf4, 5:@0xf6, 6:@0xf6, 7:@0xf4], default@0x9a
+  009a..009e op=22 new-instance v0, LX/OM8;
+  009e..00a4 op=70 invoke-direct {v0}, LX/OM8;-><init>()V
+  00a4..00a6 op=27 throw v0
+  00a6..00ac op=6e invoke-virtual {v4}, Ljava/lang/Enum;->ordinal()I
+  00ac..00ae op=0a move-result v0
+  00ae..00b4 op=2b packed-switch v0, payload@0x1e8, cases=[0:@0xf4, 1:@0xf4, 2:@0xf4, 3:@0xf4, 4:@0xf6, 5:@0xf6, 6:@0xf6, 7:@0xf4], default@0xb4
+  00b4..00b8 op=22 new-instance v0, LX/OM8;
+  00b8..00be op=70 invoke-direct {v0}, LX/OM8;-><init>()V
+  00be..00c0 op=27 throw v0
+  00c0..00c6 op=6e invoke-virtual {v4}, Ljava/lang/Enum;->ordinal()I
+  00c6..00c8 op=0a move-result v0
+  00c8..00ce op=2b packed-switch v0, payload@0x210, cases=[0:@0xf4, 1:@0xf4, 2:@0xf4, 3:@0xf4, 4:@0xf4, 5:@0xf6, 6:@0xf6, 7:@0xf4], default@0xce
+  00ce..00d2 op=22 new-instance v0, LX/OM8;
+  00d2..00d8 op=70 invoke-direct {v0}, LX/OM8;-><init>()V
+  00d8..00da op=27 throw v0
+  00da..00e0 op=6e invoke-virtual {v4}, Ljava/lang/Enum;->ordinal()I
+  00e0..00e2 op=0a move-result v0
+  00e2..00e8 op=2b packed-switch v0, payload@0x238, cases=[0:@0xf4, 1:@0xf4, 2:@0xf4, 3:@0xf4, 4:@0xf4, 5:@0xf4, 6:@0xf6, 7:@0xf4], default@0xe8
+  00e8..00ec op=22 new-instance v0, LX/OM8;
+  00ec..00f2 op=70 invoke-direct {v0}, LX/OM8;-><init>()V
+  00f2..00f4 op=27 throw v0
+  00f4..00f6 op=0f return v2
+  00f6..00f8 op=0f return v1
+  00f8..0120 op=00 packed-switch-payload size=8
+  0120..0148 op=00 packed-switch-payload size=8
+  0148..0170 op=00 packed-switch-payload size=8
+  0170..0198 op=00 packed-switch-payload size=8
+  0198..01c0 op=00 packed-switch-payload size=8
+  01c0..01e8 op=00 packed-switch-payload size=8
+  01e8..0210 op=00 packed-switch-payload size=8
+  0210..0238 op=00 packed-switch-payload size=8
+  0238..0260 op=00 packed-switch-payload size=8
+  # exception table: 0 try range(s)
+.end method

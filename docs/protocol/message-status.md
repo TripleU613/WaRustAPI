@@ -44,8 +44,9 @@ other declaring-class virtual calls are outside that scan. The two overrides
 above show why the physical invocation inventory is not full virtual dispatch.
 
 7z7.A06(178,8BW) obtains 7z7.A00(170)'s integer and writes it at 02b8..02bc.
-The decoder and full stored-row authority remain **unknown**; this is not a
-receipt-time-derived state. D29.Byz(CXl,178,BZY) handles status-mention fields
+The subsequent [FStatus enum trace](status-enum.md) identifies the decoder's
+context-dependent enum mapping. Full stored-row authority remains **unknown**;
+this is not a demonstrated SQL row decoder or receipt-time-derived state. D29.Byz(CXl,178,BZY) handles status-mention fields
 and, after 7xQ.A03 plus key.A02 checks, directly writes **5** at 00ea..00ee.
 Full 7xQ classification and serialized-message trust remain untraced. These
 writes bypass the logging setter; there is no shared implicit monotonic guard.

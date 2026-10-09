@@ -1,0 +1,30 @@
+# APK-derived structural disassembly: LX/7zY;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(IL) flags=0x19 registers=2
+  # full signature: LX/7zY;->A01(LX/1iA;)I
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v1, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=20 instance-of v0, v1, LX/1iB;
+  000c..0010 op=38 if-eqz v0, +0x9
+  0010..0014 op=1f check-cast v1, LX/178;
+  0014..001a op=6e invoke-virtual {v1}, LX/178;->B3b()I
+  001a..001c op=0a move-result v0
+  001c..001e op=0f return v0
+  001e..0022 op=20 instance-of v0, v1, LX/8BW;
+  0022..0026 op=39 if-nez v0, +0x11
+  0026..002a op=20 instance-of v0, v1, LX/74Z;
+  002a..002e op=39 if-nez v0, +0xd
+  002e..0032 op=1a const-string v0, "Unknown FMedia type: "
+  0032..0038 op=71 invoke-static {v0, v1}, LX/1xj;->A15(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;
+  0038..003a op=0c move-result-object v0
+  003a..0040 op=71 invoke-static {v0}, LX/1xf;->A16(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+  0040..0042 op=0c move-result-object v0
+  0042..0044 op=27 throw v0
+  0044..004a op=71 invoke-static {v1}, LX/7z7;->A00(LX/170;)I
+  004a..004c op=0a move-result v0
+  004c..004e op=0f return v0
+  # exception table: 0 try range(s)
+.end method
