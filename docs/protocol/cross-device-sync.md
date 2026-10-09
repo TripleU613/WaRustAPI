@@ -2072,3 +2072,98 @@ install sender keys and retain duplicate markers across reopen. B7H forward/
 reverse device construction is linked; CPQ.A00 is refuted as a 37.71 session
 selector. Full companion bootstrap/identity policy and live device coverage
 remain unfinished. [Evidence and scope](groups.md#group-pairwise-session-device-correction-2026-10-07).
+
+
+## Identity wait caller and extensions verification (2026-10-09)
+
+**Confirmed static, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+The earlier Fco held-future trace did not establish its caller or consumer.
+The exact DEX constructor scan found one `Fco.<init>` caller: `FJa.A02`.
+The [caller scan](identity-wait-caller-evidence.txt) also finds FJa.A02 callers
+on FJp, FwE and the named FlowsMetadataAssetsManager coroutine. This is a
+method-reference scan, not exhaustive native/reflection runtime reachability.
+
+- [FJa.A02](apk/2.26.37.71-identity-wait/identity-wait-extension-entry.txt)
+  requires two nonempty supplied strings (0014..0038), reads feature **0x176a**
+  (0048..006c), and on the enabled branch builds F3t and calls FDx.A00.
+  A passing verification completes immediately; a failure queues Fan in
+  Ezi.A05's per-user callback map (00ac..00f8). The first waiter creates a
+  SettableFuture/Fco, registers Fco on **0k4 and 1MB** via 078.A0K
+  (00f8..013c), requests that user's primary identity through 11S.A01
+  (014c..0162), then schedules Fr9 discriminator **17 / 0x11** (0162..0178).
+  An existing per-user list instead appends the callback (00da..00e6,
+  0184..018c); this is local coalescing, not repeated independent identity reads.
+  The disabled-feature branch checks saved keys directly (0194..02d4).
+- [Full Fco methods](apk/2.26.37.71-identity-wait/identity-wait-full-observer.txt):
+  constructor stores the future and user. BdO normalizes its user argument to
+  primary; BpH, BqB and BqC invoke A00, which compares with the held user's
+  primary and sets the future to 05R.A00 on equality. **Negative:** BdR and
+  BqD are empty. Changed-key metadata/boolean are not checked by BqC; future
+  completion is an event wakeup, not a cryptographic verification result.
+- [Fr9 factory](apk/2.26.37.71-identity-wait/identity-wait-timed-factory.txt) and
+  [constructors](apk/2.26.37.71-identity-wait/identity-wait-timed-constructor.txt)
+  retain the future, Ezi, observer and user consumed by case 17. Three overloaded
+  constructors share this shorty; the factory's selected full-signature linkage
+  is not uniquely established by shorty filtering alone. The case's casts and
+  caller arguments independently establish the roles consumed at runtime.
+- [Fr9.run](apk/2.26.37.71-identity-wait/identity-wait-timed-worker.txt) dispatches
+  case 17 to **2034**. At 204c..205a it waits **30 seconds** (`0x1e`,
+  TimeUnit.SECONDS), then under the map monitor unregisters both observers,
+  removes that user's callback list, and invokes every G1I.BoF (205a..20b8).
+  The Exception handler logs `Cannot fetch the identity for business!` and
+  performs the same unregister/remove/callback work (20b8..2126); a catch-all
+  also cleans up/calls callbacks and rethrows (2126..2190). Checked exception
+  ranges are retained in the [caller artifact](identity-wait-caller-evidence.txt)
+  (code-unit addresses, distinct from the byte offsets quoted here). This timeout belongs to the local extensions wait;
+  it is not the separate identity IQ's 32000 timeout or a server cooldown.
+- [Fan.BoF](apk/2.26.37.71-identity-wait/identity-wait-extension-callback.txt)
+  calls FDx.A00 again on its saved arguments, and passes the returned boolean
+  to F3t.A00 (0014..0022). [FDx.A00](apk/2.26.37.71-identity-wait/identity-wait-extension-verifier.txt)
+  builds primary plus conditionally filtered companion addresses, reads saved
+  identities via 0jc.A0i, decodes both supplied Base64 strings and checks
+  **B7H.A09** against held public identities (00a4..0112). It returns true
+  on a passing check, false otherwise. Companion selection predicate 1lL.A04
+  and Cbb.A00 semantics are not established by this scoped trace.
+  [F3t.A00](apk/2.26.37.71-identity-wait/identity-wait-extension-result.txt) chooses
+  FJa.A01 on true and FJa.A00 on false. Full downstream effects remain untraced.
+
+**Refuted inference:** Fco future completion is not proof of successful identity
+verification, session repair or incoming-message replay. Both wait completion
+and Exception timeout invoke a callback that rechecks saved keys. This caller
+chain concerns extensions/business/Flows metadata; no receive ratchet, captured
+message or receipt is accessed in the traced wait case. That does not exclude
+other identity-event observers having receive effects. The earlier AhK -> ATU
+identity-success event is still real, but this particular subscriber is not
+sufficient evidence for automatic recovery in Rust.
+
+**Unknown/unported:** effective 0x176a for our account, complete FJa result paths,
+observer threading/registration lifecycle, all other 0Y6 consumers, the native
+wire-to-Java factory, complete identity-only adoption and downstream receive
+replay/cleanup. No Rust pin/session policy, timeout, account state, queued action
+or network behavior changed. This narrows the next recovery trace to actual
+receive consumers rather than porting this extensions waiter into messaging.
+
+Reproduce with the existing `apk-callers` commands in the caller artifact and
+`apk-research-bundle <apk> --recipe docs/protocol/apk/recipes/2.26.37.71-identity-wait.json
+--output <new-dir>`. Cached `apk-research-diff <old-dir> <new-dir>` verifies
+checksums and reports topic changes without scanning the APK again. These are
+existing offline research commands, not new HTTP routes or live capabilities.
+
+**Recorded negative export result:** adding these eight topics to the existing
+core recipe produced 2,158,098 bytes and was refused by the fixed 2,097,152-byte
+bundle limit before writing a replacement. The original core snapshot and
+recipe are restored unchanged. The separate hash-pinned identity-wait recipe
+keeps this chain within the existing limit and enables checked exception tables;
+no limit was raised and no existing evidence was discarded.
+
+Validation: the separate recipe exported **8 topics / 18 selected methods** in
+13 files, **206,678 bytes**, and `--check` independently reproduced all output.
+The [cached same-bundle check](apk/identity-wait-cache-check.json) verified all
+checksums and reported 8 unchanged topics / 4 unchanged metadata artifacts in
+**0.019347 seconds**. This measures this scoped cached
+comparison, not a new release, whole-APK semantics or automatic patching. The
+original core files/recipe are Git-identical. All **63 xtask tests**, regenerated
+CLI reference, API library-symbol verification and formatting passed.
+Repository hygiene also passed: 1,008 local links and 4,786,515 bytes across
+8 checksum bundles. No private state was opened or live request sent.

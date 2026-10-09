@@ -1,0 +1,50 @@
+{
+  "identity-wait-extension-callback.txt": {
+    "bytes": 1473,
+    "sha256": "d002d384a7c9b117b94b60434753aa03a7082fcf5242d0206f87a03da330a760"
+  },
+  "identity-wait-extension-entry.txt": {
+    "bytes": 9410,
+    "sha256": "d68769c434d97faa51e260240b7ef465b359663d2d0aa1bcfcce2fb69ce23ec8"
+  },
+  "identity-wait-extension-result.txt": {
+    "bytes": 1526,
+    "sha256": "d7f9a4034a1be54de0534f1fa88707c1a15ee2172ae45f107d1cbaaec8109452"
+  },
+  "identity-wait-extension-verifier.txt": {
+    "bytes": 3894,
+    "sha256": "8a2799df2f1db4d0d0aded9d20caddb196dec0ece3a8d2a9cd8211a2ca421bc6"
+  },
+  "identity-wait-full-observer.txt": {
+    "bytes": 2607,
+    "sha256": "69b4d9e19abc18d9b60331752c23957514d2303b384c9007ac9eed886f63f209"
+  },
+  "identity-wait-timed-constructor.txt": {
+    "bytes": 2526,
+    "sha256": "e8f6510096f0d008b6eab1c7c83b1798658639c57db29d6bed26ee460044ebd4"
+  },
+  "identity-wait-timed-factory.txt": {
+    "bytes": 535,
+    "sha256": "ce9fb32698fadaa8ed87b7044c33014a8827afe6f215a56a40dfa97e5bdb4cb5"
+  },
+  "identity-wait-timed-worker.txt": {
+    "bytes": 153940,
+    "sha256": "4a9899bb70bd0be8bd27ae3a6559edd33a294008b2711fdf8c49132994ef0959"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "targets.json": {
+    "bytes": 2468,
+    "sha256": "4a5a884d55353fec0660acbd021061dc281bd4da764512f0b59106ac159c9158"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

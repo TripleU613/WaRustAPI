@@ -1,0 +1,74 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "targets": {
+    "identity-wait-full-observer": {
+      "class": "LX/Fco;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": []
+    },
+    "identity-wait-extension-entry": {
+      "class": "LX/FJa;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "A02",
+      "method_shorty": "VLLLLLLLIZ"
+    },
+    "identity-wait-timed-worker": {
+      "class": "LX/Fr9;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "run",
+      "method_shorty": "V"
+    },
+    "identity-wait-timed-constructor": {
+      "class": "LX/Fr9;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "<init>",
+      "method_shorty": "VLLLLI"
+    },
+    "identity-wait-timed-factory": {
+      "class": "LX/Fr9;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "A00",
+      "method_shorty": "LLLLLI"
+    },
+    "identity-wait-extension-callback": {
+      "class": "LX/Fan;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": []
+    },
+    "identity-wait-extension-verifier": {
+      "class": "LX/FDx;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "A00",
+      "method_shorty": "ZLLLL"
+    },
+    "identity-wait-extension-result": {
+      "class": "LX/F3t;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "A00",
+      "method_shorty": "VZ"
+    }
+  }
+}

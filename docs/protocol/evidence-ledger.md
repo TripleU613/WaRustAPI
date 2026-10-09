@@ -1370,3 +1370,12 @@ retry reservations remain intact. APK 37.71 DF6 identity-only error handling
 supports contextual attribution; duplicate guards are local policy and fresh
 live refusal validation remains unverified.
 [Evidence and limits](peer-identity.md#directory-refusal-attribution-2026-10-08).
+
+Identity-success wait consumer (2026-10-09, **confirmed static APK 37.71**):
+the sole DEX Fco constructor caller is a feature-gated extensions/Flows path.
+Its 30-second wait wakes callbacks after success or Exception timeout; those
+callbacks reverify held keys. This does not establish incoming replay/session
+repair. Eight new reproducible identity-wait topics preserve the caller, observer,
+timed worker and verification chain; all other event consumers and complete
+identity-only application remain unfinished. No account or network changed.
+[Evidence and scope](cross-device-sync.md#identity-wait-caller-and-extensions-verification-2026-10-09).

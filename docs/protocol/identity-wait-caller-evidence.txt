@@ -1,0 +1,27 @@
+# APK 2.26.37.71 identity-wait caller scan
+# SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Exact DEX method-name callers; offsets below are absolute DEX byte offsets.
+# This is not a native/reflection/exhaustive runtime reachability claim.
+# Reproduce with xtask apk-callers <apk> --class <descriptor> --method <name>.
+
+## LX/Fco; <init>
+classes8.dex  LX/FJa;->A02(VLLLLLLLIZ)
+  invoke dex byte offset: 0x551528
+
+## LX/FJa; A02
+classes8.dex  LX/FJp;->A00(LLLLLLL)
+  invoke dex byte offset: 0x5556c4
+classes8.dex  Lcom/whatsapp/flows/network/metadata/FlowsMetadataAssetsManager$fetchFlowsMetadataAssets$2;->invokeSuspend(LL)
+  invoke dex byte offset: 0x6d2694
+classes8.dex  LX/FwE;->invokeSuspend(LL)
+  invoke dex byte offset: 0x6d807c
+
+## Fr9.run checked exception ranges for case 17
+# Reproduce: xtask apk-smali <apk> --class 'LX/Fr9;' --method run --exceptions
+# Addresses in code units. Case 17 method byte entry is 2034 (code unit 101a).
+# catch Ljava/lang/Exception; code_units 1026..102d -> 105c
+# catch <all> code_units 1026..102d -> 1093
+# catch <all> code_units 1030..105c -> 10c5
+# catch <all> code_units 105d..1062 -> 1093
+# catch <all> code_units 1065..1091 -> 10c5
+# catch <all> code_units 1097..10c3 -> 10c5

@@ -1,0 +1,88 @@
+{
+  "identity-wait-extension-callback": {
+    "class": "LX/Fan;",
+    "file": "identity-wait-extension-callback.txt",
+    "include_exception_tables": true,
+    "method_filter": null,
+    "methods": 2,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-wait-extension-entry": {
+    "class": "LX/FJa;",
+    "file": "identity-wait-extension-entry.txt",
+    "include_exception_tables": true,
+    "method_filter": "A02",
+    "method_shorty": "VLLLLLLLIZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-wait-extension-result": {
+    "class": "LX/F3t;",
+    "file": "identity-wait-extension-result.txt",
+    "include_exception_tables": true,
+    "method_filter": "A00",
+    "method_shorty": "VZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-wait-extension-verifier": {
+    "class": "LX/FDx;",
+    "file": "identity-wait-extension-verifier.txt",
+    "include_exception_tables": true,
+    "method_filter": "A00",
+    "method_shorty": "ZLLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-wait-full-observer": {
+    "class": "LX/Fco;",
+    "file": "identity-wait-full-observer.txt",
+    "include_exception_tables": true,
+    "method_filter": null,
+    "methods": 8,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-wait-timed-constructor": {
+    "class": "LX/Fr9;",
+    "file": "identity-wait-timed-constructor.txt",
+    "include_exception_tables": true,
+    "method_filter": "<init>",
+    "method_shorty": "VLLLLI",
+    "methods": 3,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-wait-timed-factory": {
+    "class": "LX/Fr9;",
+    "file": "identity-wait-timed-factory.txt",
+    "include_exception_tables": true,
+    "method_filter": "A00",
+    "method_shorty": "LLLLLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  },
+  "identity-wait-timed-worker": {
+    "class": "LX/Fr9;",
+    "file": "identity-wait-timed-worker.txt",
+    "include_exception_tables": true,
+    "method_filter": "run",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_query.rs"
+    ]
+  }
+}

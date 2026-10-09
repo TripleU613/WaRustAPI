@@ -1,0 +1,28 @@
+# APK-derived structural disassembly: LX/Fan;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLLL) flags=0x10001 registers=6
+  0000..0004 op=5b iput-object v2, v0, LX/Fan;->A01:LX/F3t;
+  0004..0008 op=5b iput-object v1, v0, LX/Fan;->A00:LX/FDx;
+  0008..000c op=5b iput-object v3, v0, LX/Fan;->A02:Lcom/whatsapp/infra/core/jid/UserJid;
+  000c..0010 op=5b iput-object v4, v0, LX/Fan;->A03:Ljava/lang/String;
+  0010..0014 op=5b iput-object v5, v0, LX/Fan;->A04:Ljava/lang/String;
+  0014..001a op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>(V)
+  001a..001c op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method BoF(V) flags=0x1 registers=6
+  0000..0004 op=54 iget-object v4, v5, LX/Fan;->A01:LX/F3t;
+  0004..0008 op=54 iget-object v3, v5, LX/Fan;->A00:LX/FDx;
+  0008..000c op=54 iget-object v2, v5, LX/Fan;->A02:Lcom/whatsapp/infra/core/jid/UserJid;
+  000c..0010 op=54 iget-object v1, v5, LX/Fan;->A03:Ljava/lang/String;
+  0010..0014 op=54 iget-object v0, v5, LX/Fan;->A04:Ljava/lang/String;
+  0014..001a op=71 invoke-static {v3, v2, v1, v0}, LX/FDx;->A00(ZLLLL)
+  001a..001c op=0a move-result
+  001c..0022 op=6e invoke-virtual {v4, v0}, LX/F3t;->A00(VZ)
+  0022..0024 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
