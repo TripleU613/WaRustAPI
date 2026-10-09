@@ -233,6 +233,14 @@ Usage: whatsapp-cli abprops-query [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 | --show | SHOW | no |  |  | `true`, `false` | Inspect the saved response without queueing a read |
 
+## whatsapp-cli clock-inspect
+
+Inspect saved clock source and resolution (offline; no timestamps or replay)
+
+```
+Usage: whatsapp-cli clock-inspect [OPTIONS]...
+```
+
 ## whatsapp-cli actions
 
 Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted)

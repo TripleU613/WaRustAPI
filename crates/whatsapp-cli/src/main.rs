@@ -314,6 +314,9 @@ enum Cmd {
         #[arg(long)]
         show: bool,
     },
+    /// Inspect saved clock source and resolution (offline; no timestamps or replay).
+    #[cfg(feature = "experimental-transport")]
+    ClockInspect,
     /// Show queued one-shot actions (block list, reports, lookups) and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Actions {
@@ -1608,6 +1611,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         }
         #[cfg(feature = "experimental-transport")]
         Cmd::AbpropsQuery { show } => transport_receive::abprops_query(&cli, *show),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::ClockInspect => transport_receive::clock_inspect(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Actions { show } => transport_receive::actions_status(&cli, show.as_deref()),
         #[cfg(feature = "experimental-transport")]

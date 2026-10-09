@@ -2532,6 +2532,7 @@ dependencies = [
  "rand 0.10.2",
  "redb",
  "reqwest",
+ "rustix",
  "rustls",
  "serde",
  "serde_json",

@@ -2245,3 +2245,11 @@ snapshot. All 63 xtask tests, regenerated CLI reference, API library-symbol
 verification and formatting passed.
 Independent `--check` reproduced all 35 files / 250,138 bytes. Repository
 hygiene passed: 1,016 local links and 4,829,975 bytes across 8 checksum bundles.
+
+## Confirmed clock source continuation (2026-10-09)
+
+**Confirmed local / 37.71 source-backed:** [clock runtime](token-clock-producers.md#confirmed-runtime-clock-inputs-2026-10-09)
+now records login success and server-ping time separately from historical inferred
+message/receipt samples. Chat-mute resolution prefers confirmed elapsed/offset
+state; offline clock-inspect reports provenance without time or epoch values.
+NTP-preferred A00 and complete native mute-clock parity remain unported.

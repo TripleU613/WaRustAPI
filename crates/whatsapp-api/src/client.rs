@@ -554,8 +554,10 @@ impl WhatsAppClient {
             .await
     }
 
-    /// Resolve the saved mute projection for `chat` against the newest server
-    /// clock sample, following the APK's server-to-local deadline conversion.
+    /// Resolve the saved mute projection against confirmed login/server-ping
+    /// time, or the historical inferred sample when confirmed time is absent.
+    /// The deadline conversion follows the APK; NTP-preferred clock parity
+    /// remains unfinished (docs/protocol/token-clock-producers.md).
     /// Returns `None` when no mute action or no clock sample has been saved;
     /// nothing is guessed. The everyone-mention policy must be supplied by the
     /// caller. This reads local state only and opens no connection.
@@ -578,18 +580,15 @@ impl WhatsAppClient {
             .run_blocking(move |store| {
                 use crate::signal::app_state_collection::storage::actions::chat_mute;
                 store.read(|tx| {
-                    let (Some(mute), Some(sample)) =
-                        (chat_mute(tx, &jid)?, crate::transport::clock::sample(tx)?)
-                    else {
+                    let local_now = crate::model::time::Timestamp::now().as_millis();
+                    let (Some(mute), Some(server_now)) = (
+                        chat_mute(tx, &jid)?,
+                        crate::transport::clock::server_now(tx, local_now)?,
+                    ) else {
                         return Ok(None);
                     };
-                    let local_now = crate::model::time::Timestamp::now().as_millis();
-                    mute.resolve(
-                        local_now,
-                        sample.server_now(local_now),
-                        everyone_mentions_enabled,
-                    )
-                    .map(Some)
+                    mute.resolve(local_now, server_now, everyone_mentions_enabled)
+                        .map(Some)
                 })
             })
             .await

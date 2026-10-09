@@ -147,3 +147,69 @@ passed (1,804 links; 73 checksum-verified bundles). This source-only chunk
 changes no Rust; full workspace/Clippy/Rustdoc was not rerun. Private APK scans
 and caller inventories stayed in ignored local research storage; their scoped
 findings and reproduction commands are retained above.
+
+## Confirmed runtime clock inputs (2026-10-09)
+
+**Confirmed local implementation:** primary login now records authenticated
+`success@t` in the same store transaction as success metadata/account changes.
+The existing authenticated receive loop records `iq type=get` with
+`xmlns=urn:xmpp:ping` through the clock observer. No child is required for this
+namespace branch. Both use the existing Java decimal-long converter, ordinary
+wrapping seconds-to-milliseconds multiplication and the APK's positive-ms
+admission; missing, invalid or nonpositive results leave earlier confirmed
+state untouched. Positive backward corrections replace confirmed state, as in
+A07. The login local wall sample is truncated to seconds before being widened,
+while ping samples use wall milliseconds. No historical capture replay occurs.
+
+Confirmed state is stored separately at `server-clock-confirmed-v1` in encrypted
+checkpoints, with source `login_success` or `server_ping`, client/server difference,
+optional elapsed baseline and a process epoch. Linux/Android use rustix's
+`CLOCK_BOOTTIME`, which includes suspend; Android
+[elapsedRealtime](https://developer.android.com/reference/android/os/SystemClock#elapsedRealtime())
+also includes deep sleep. The epoch is one local random nonce per process,
+never an account identity/key or wire field. Its purpose is to prevent a
+persisted in-memory baseline from being reused after restart. Same-process
+nonzero baselines resolve with elapsed time; a different process, unsupported
+host or unavailable epoch resolves wall time minus saved difference, matching
+the traced A04 fallback. A zero baseline also uses that fallback.
+Rustix was already present in Cargo.lock; its direct Linux/Android time dependency
+adds no new resolved package version. No platform suspend/live parity is claimed
+from synthetic clock tests alone.
+
+**Local selection:** client chat-mute time resolution now prefers this confirmed
+clock. Historical `server-clock-sample` message/receipt inference retains its
+old format and update rule; it is used only when confirmed state is absent.
+Even a newer inferred timestamp does not supersede confirmed time. Absence of
+both sources remains no estimate. This improves the previously inferred mute
+clock but does not port NTP-preferred `08B.A00`, NTP fetch/update or token-job
+scheduling. Full native mute-clock parity remains unfinished.
+
+**Offline inspection:** `whatsapp-cli clock-inspect` opens the existing encrypted
+store without creating it, adopting captures, queueing requests or contacting
+WhatsApp. Output has exactly `confirmed_source` (nullable), `resolution`
+(`elapsed_realtime`, `saved_offset`, `inferred_stanza` or `unavailable`) and
+`inferred_sample_present`. It omits timestamps, offsets, nonce, raw packets,
+account addresses and keys. The API contract is CLI-only; no HTTP route exists.
+An inspection in a separate CLI process normally reports saved_offset for a
+previous process's confirmed update, rather than claiming a current elapsed epoch.
+
+**Verification scope:** new synthetic-store tests cover get/ping versus result
+and other namespaces, missing/bad/negative/wrapping-negative timestamps,
+positive backwards login correction, precedence over newer inferred data,
+whole-second login samples, wall jumps, simulated process restart/unsupported
+host and zero-baseline fallback, transactional rollback, reopen and redacted
+inspection. These are new-capability tests, not a claimed failing-before runtime
+regression. Native numeric input conversion reuses independently tested Java
+fixtures. No real saved account, keys, request IDs, cooldowns or live session
+was changed during implementation.
+
+**Completed checks:** workspace/all-feature tests passed (820 tests); strict
+workspace/all-feature/all-target Clippy, warnings-denied Rustdoc, default CLI
+tests (25 unit plus API-symbol integration), regenerated CLI reference and
+experimental API-symbol integration passed. Formatting, diff whitespace and
+repository hygiene passed (1,808 local links; 73 checksum bundles). A default
+CLI build exposed an initially feature-gated rustix dependency; the dependency
+is now Linux/Android target-gated and available to the unconditional public
+clock module. Both default and all-feature configurations passed after that
+correction. Separate-process CLI clock resolution and physical suspend remain
+unverified; restart coverage uses a simulated changed process epoch.

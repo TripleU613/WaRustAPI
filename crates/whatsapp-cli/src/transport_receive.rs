@@ -2717,6 +2717,22 @@ pub(super) async fn lab_pair(
     Ok(())
 }
 
+pub(super) fn clock_inspect(cli: &super::Cli) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let report = whatsapp_api::transport::clock::inspect(&store)?;
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&report)
+            .map_err(|_| Error::invalid("clock", "cannot encode inspection"))?
+    );
+    Ok(())
+}
+
 pub(super) fn abprops_query(cli: &super::Cli, show: bool) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),

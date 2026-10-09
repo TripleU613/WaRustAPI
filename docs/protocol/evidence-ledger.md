@@ -1,5 +1,13 @@
 # Evidence ledger
 
+Confirmed clock runtime (2026-10-09, **confirmed local / APK-backed**):
+authenticated login and server-ping time now save source/offset separately from
+inferred stanza samples. Linux/Android use suspend-aware elapsed time during the
+same process; restart uses the saved offset. Client mute resolution prefers this
+confirmed source. Offline `clock-inspect` reports redacted provenance. NTP clock,
+token scheduling and live parity remain unfinished; no real-account/live change.
+[Evidence and limits](token-clock-producers.md#confirmed-runtime-clock-inputs-2026-10-09).
+
 Server-ping clock input (2026-10-09, **confirmed static/local audit**):
 `iq type=get xmlns=urn:xmpp:ping` supplies envelope t through signed-long/fallback
 parsing to Android arg1 selector 4. Result IQs do not use this clock branch.

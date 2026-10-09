@@ -98,6 +98,7 @@ pub async fn connect(
             &serde_json::json!({"status":status,"at":Timestamp::now()}),
         )?;
         if status == "success" {
+            super::clock::observe_login(tx, &reply)?;
             let mut current = AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
             current.last_authenticated_at = Some(Timestamp::now());
             // Observed live: `success` carries our `pn` and `lid`. Keep them for
