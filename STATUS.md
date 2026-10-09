@@ -2176,3 +2176,20 @@ live alias-less interoperability and full APK storage parity remain unverified.
   with reconnect/chat sends disabled; 15 decrypted records remained 15, with no
   fresh DM or alias-less live proof. Original action/receipt/outbox/event summaries
   were unchanged. The later consumed-marker fix has offline validation only.
+
+Reaction receive correction (2026-10-09, implemented/offline): APK 37.71 C7G
+requires target ID plus parseable remoteJid; malformed keys now remain opaque
+with redacted key_validation diagnostics. Primary direct reactions retain proven
+historical PN target keys while the reactor keeps its actual LID; consumed
+markers and original records are preserved. Status likes now require the actual
+status@broadcast singleton. Own/outgoing/group/companion reconciliation and fresh
+live reaction validation remain incomplete. A 21-topic/26-method checksum bundle
+preserves the trace and cached diff (0.028679 seconds).
+[Evidence, negative findings and limits](docs/protocol/reactions.md).
+Validation: 727 workspace/all-feature tests, strict Clippy, warning-free Rustdoc,
+24 default CLI checks and CLI/API reference checks passed. Retained-account
+offline reprojection upgraded zero events; action/receipt/outbox/event and
+peer-key summaries stayed unchanged, with two valid saved reaction keys. Capture
+inspection now uses one timestamp snapshot and handles overflowing ages; a
+subprocess regression proves malformed-key diagnostics remain visible. No new
+chat/live request or identity/reset/retry authority was added.

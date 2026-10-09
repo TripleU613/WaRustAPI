@@ -265,7 +265,14 @@ pub struct StatusLike {
 pub fn like_from_payload(payload: &[u8], node: &Node) -> Option<StatusLike> {
     let (remote_jid, _) = super::reactions::key_fields(payload)?;
     let remote = remote_jid?;
-    if Jid::parse(&remote).ok()?.server != crate::model::jid::Server::Broadcast {
+    // APK 37.71 BoQ.A00 selects 8oR only for the status singleton;
+    // 8oR.<init>/getServer identify status@broadcast, not every broadcast.
+    let remote = Jid::parse(&remote).ok()?;
+    if remote.server != crate::model::jid::Server::Broadcast
+        || remote.user != "status"
+        || remote.agent != 0
+        || remote.device != 0
+    {
         return None;
     }
     let reaction = super::reactions::decode(payload)?;
@@ -389,6 +396,13 @@ mod like_tests {
             "a chat reaction is not a status like"
         );
         assert!(like_from_payload(b"not a protobuf at all", &node()).is_none());
+        for remote in [
+            "12345@broadcast",
+            "location@broadcast",
+            "status:3@broadcast",
+        ] {
+            assert!(like_from_payload(&payload(remote, "👍"), &node()).is_none());
+        }
     }
 
     /// Removing a reaction sends an empty text; that is a record, not nothing,

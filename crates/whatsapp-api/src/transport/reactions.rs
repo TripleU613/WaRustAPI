@@ -21,6 +21,28 @@ use crate::{
 };
 use prost::Message as _;
 
+fn key_failure(key: &Key) -> Option<&'static str> {
+    // APK 37.71 C7G.A00 requires present/nonempty id and remoteJid, then
+    // 1xf.A0k -> 0D7.A02 requires a nullable ChatJid parse to succeed.
+    // Our supported JID categories/bounds remain local, not full native parity.
+    let Some(id) = key.id.as_deref() else {
+        return Some("missing_id");
+    };
+    if MessageId::new(id).is_err() {
+        return Some("invalid_id");
+    }
+    let Some(remote) = key.remote_jid.as_deref() else {
+        return Some("missing_remote_jid");
+    };
+    let Ok(remote) = Jid::parse(remote) else {
+        return Some("invalid_remote_jid");
+    };
+    if remote.user.is_empty() || matches!(remote.server, crate::model::jid::Server::Other(_)) {
+        return Some("unsupported_remote_jid");
+    }
+    None
+}
+
 /// Longest accepted reaction text in bytes (local bound; emoji sequences).
 pub const MAX_TEXT_BYTES: usize = 64;
 
@@ -211,11 +233,19 @@ pub fn shape(payload: &[u8]) -> Option<String> {
         });
     let nums = |v: &[Field<'_>]| v.iter().map(|(n, _)| *n).collect::<Vec<_>>();
     Some(format!(
-        "message={:?} reaction={:?} key={:?} participant={:?}",
+        "message={:?} reaction={:?} key={:?} participant={:?} key_validation={}",
         nums(&top),
         nums(&inner),
         nums(&key_fields),
-        participant
+        participant,
+        Envelope::decode(payload)
+            .ok()
+            .and_then(|envelope| envelope.reaction)
+            .map_or("malformed_reaction", |reaction| reaction
+                .key
+                .as_ref()
+                .map_or("missing_key", |key| key_failure(key)
+                    .unwrap_or("valid")))
     ))
 }
 
@@ -231,6 +261,9 @@ pub fn decode(payload: &[u8]) -> Option<Incoming> {
     let envelope = Envelope::decode(payload).ok()?;
     let reaction = envelope.reaction?;
     let key = reaction.key?;
+    if key_failure(&key).is_some() {
+        return None;
+    }
     let target_id = MessageId::new(key.id?).ok()?;
     let text = reaction.text.unwrap_or_default();
     if text.len() > MAX_TEXT_BYTES || text.chars().any(char::is_control) {
@@ -372,5 +405,73 @@ mod tests {
         assert!(validate(&peer, &target(Direction::Incoming), Some("a\nb")).is_err());
         assert!(validate(&peer, &target(Direction::Incoming), Some("❤️")).is_ok());
         assert!(validate(&peer, &target(Direction::Incoming), None).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod key_validation_tests {
+    use super::*;
+    fn literal(remote: Option<&str>, id: Option<&str>) -> Vec<u8> {
+        // Independent field layout from BWI/BZa.dynamicMethod in APK 37.71.
+        let mut key = Vec::new();
+        for (tag, value) in [(0x0a, remote), (0x1a, id)] {
+            if let Some(value) = value {
+                key.push(tag);
+                prost::encoding::encode_varint(value.len() as u64, &mut key);
+                key.extend_from_slice(value.as_bytes());
+            }
+        }
+        let mut reaction = vec![0x0a];
+        prost::encoding::encode_varint(key.len() as u64, &mut reaction);
+        reaction.extend(key);
+        let mut payload = vec![0xf2, 0x02];
+        prost::encoding::encode_varint(reaction.len() as u64, &mut payload);
+        payload.extend(reaction);
+        payload
+    }
+    #[test]
+    fn apk_reaction_key_requires_id_and_supported_parseable_remote_without_echoing_it() {
+        for (remote, id, failure) in [
+            (None, Some("TARGET"), "missing_remote_jid"),
+            (Some(""), Some("TARGET"), "invalid_remote_jid"),
+            (
+                Some("private invalid address"),
+                Some("TARGET"),
+                "invalid_remote_jid",
+            ),
+            (
+                Some("private@unknown.example"),
+                Some("TARGET"),
+                "unsupported_remote_jid",
+            ),
+            (
+                Some("s.whatsapp.net"),
+                Some("TARGET"),
+                "unsupported_remote_jid",
+            ),
+            (Some("12345@lid"), None, "missing_id"),
+            (Some("12345@lid"), Some(""), "invalid_id"),
+        ] {
+            let payload = literal(remote, id);
+            assert!(decode(&payload).is_none());
+            let diagnostic = shape(&payload).unwrap();
+            assert!(diagnostic.ends_with(&format!("key_validation={failure}")));
+            assert!(!diagnostic.contains("private"));
+            assert!(!diagnostic.contains("TARGET"));
+        }
+        for remote in [
+            "12345@lid",
+            "15555550101@s.whatsapp.net",
+            "12345:3@lid",
+            "120363000000000001@g.us",
+            "status@broadcast",
+        ] {
+            let payload = literal(Some(remote), Some("TARGET"));
+            let decoded = decode(&payload).unwrap();
+            assert_eq!(decoded.target_id.as_str(), "TARGET");
+            assert!(!decoded.target_from_sender); // APK boolean getter defaults false.
+            assert_eq!(decoded.emoji, None); // A missing/empty text is removal.
+            assert!(shape(&payload).unwrap().ends_with("key_validation=valid"));
+        }
     }
 }

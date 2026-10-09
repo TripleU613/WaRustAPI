@@ -529,6 +529,9 @@ it (`--remove` clears). Live on 2026-09-19: a contact's 👍 on our test text wa
 decrypted and projected, and our 👍 on their message was server-accepted.
 Group and companion-addressed reactions are not implemented.
 
+Current reaction-key validation, historical target stability and corrected
+status-singleton scope: [2026-10-09 evidence and limits](reactions.md).
+
 ### Polls (comparison 2.26.37.71)
 
 Descriptors: `LX/BYa` (PollCreationMessage: encKey=1, name=2, options=3 of

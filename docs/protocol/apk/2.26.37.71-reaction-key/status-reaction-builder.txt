@@ -1,0 +1,86 @@
+# APK-derived structural disassembly: LX/DGD;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CF7(LL) flags=0x1041 registers=20
+  0000..0004 op=08 move-object/from16 v4, v19
+  0004..0008 op=54 iget-object v1, v4, LX/CXu;->A01:LX/BZc;
+  0008..000c op=52 iget v0, v1, LX/BZc;->bitField1_:I
+  000c..0010 op=dd and-int/lit8 v0, v0, #0x10
+  0010..0014 op=38 if-eqz v0, +0x90
+  0014..0018 op=54 iget-object v0, v1, LX/BZc;->reactionMessage_:LX/BWI;
+  0018..001c op=39 if-nez v0, +0x4
+  001c..0020 op=62 sget-object v0, LX/BWI;->DEFAULT_INSTANCE:LX/BWI;
+  0020..0026 op=71 invoke-static {v0}, LX/00h;->A06(VL)
+  0026..002a op=54 iget-object v0, v0, LX/BWI;->key_:LX/BZa;
+  002a..002e op=39 if-nez v0, +0x4
+  002e..0032 op=62 sget-object v0, LX/BZa;->DEFAULT_INSTANCE:LX/BZa;
+  0032..0038 op=71 invoke-static {v0}, LX/C7G;->A00(ZL)
+  0038..003a op=0a move-result v0
+  003a..003e op=38 if-eqz v0, +0x7b
+  003e..0042 op=54 iget-object v1, v1, LX/BZc;->reactionMessage_:LX/BWI;
+  0042..0046 op=39 if-nez v1, +0x4
+  0046..004a op=62 sget-object v1, LX/BWI;->DEFAULT_INSTANCE:LX/BWI;
+  004a..0050 op=71 invoke-static {v1}, LX/00h;->A06(VL)
+  0050..0054 op=13 const/16 v2, #0x5a3
+  0054..0058 op=08 move-object/from16 v5, v18
+  0058..005c op=54 iget-object v0, v5, LX/DGD;->A01:LX/05B;
+  005c..0062 op=71 invoke-static {v0, v2}, LX/3cB;->A0s(LLI)
+  0062..0064 op=0c move-result-object v2
+  0064..0068 op=54 iget-object v0, v1, LX/BWI;->text_:Ljava/lang/String;
+  0068..006e op=71 invoke-static {v0}, LX/CB2;->A00(ZL)
+  006e..0070 op=0a move-result v0
+  0070..0074 op=38 if-eqz v0, +0x43
+  0074..0078 op=54 iget-object v3, v4, LX/CXu;->A00:LX/Bp1;
+  0078..007c op=53 iget-wide v13, v3, LX/CjN;->A03:J
+  007c..0080 op=54 iget-object v10, v1, LX/BWI;->text_:Ljava/lang/String;
+  0080..0084 op=53 iget-wide v15, v1, LX/BWI;->senderTimestampMs_:J
+  0084..0088 op=54 iget-object v0, v5, LX/DGD;->A00:LX/05B;
+  0088..008c op=54 iget-object v2, v0, LX/05B;->A00:LX/00s;
+  008c..0092 op=72 invoke-interface {v2}, LX/00s;->get(L)
+  0092..0094 op=0c move-result-object v0
+  0094..0098 op=1f check-cast v0, LX/CYF;
+  0098..009e op=6e invoke-virtual {v0, v3}, LX/CYF;->A01(LL)
+  009e..00a0 op=0c move-result-object v5
+  00a0..00a4 op=54 iget-object v1, v1, LX/BWI;->key_:LX/BZa;
+  00a4..00a8 op=39 if-nez v1, +0x4
+  00a8..00ac op=62 sget-object v1, LX/BZa;->DEFAULT_INSTANCE:LX/BZa;
+  00ac..00b2 op=72 invoke-interface {v2}, LX/00s;->get(L)
+  00b2..00b4 op=0c move-result-object v0
+  00b4..00b8 op=1f check-cast v0, LX/CYF;
+  00b8..00be op=71 invoke-static {v1}, LX/00h;->A09(VL)
+  00be..00c4 op=6e invoke-virtual {v0, v5, v4, v1}, LX/CYF;->A00(LLLL)
+  00c4..00c6 op=0c move-result-object v6
+  00c6..00ca op=62 sget-object v7, LX/1cE;->A06:LX/1cE;
+  00ca..00d0 op=6e invoke-virtual {v3}, LX/CjN;->A01(I)
+  00d0..00d2 op=0a move-result v1
+  00d2..00d4 op=12 const/4 v0, #0x7
+  00d4..00da op=71 invoke-static {v1, v0}, LX/1xi;->A1R(ZII)
+  00da..00dc op=0a move-result v17
+  00dc..00e2 op=71 invoke-static {v10}, LX/00h;->A09(VL)
+  00e2..00e6 op=16 const-wide/16 v11, #0xffff (-1)
+  00e6..00e8 op=12 const/4 v8, #0x0
+  00e8..00ec op=22 new-instance v4, LX/749;
+  00ec..00ee op=07 move-object v9, v8
+  00ee..00f4 op=76 invoke-direct/range {v4..v17}, LX/749;-><init>(VLLLLLLJJJZ)
+  00f4..00f6 op=11 return-object v4
+  00f6..00fa op=54 iget-object v1, v1, LX/BWI;->key_:LX/BZa;
+  00fa..00fe op=39 if-nez v1, +0x4
+  00fe..0102 op=62 sget-object v1, LX/BZa;->DEFAULT_INSTANCE:LX/BZa;
+  0102..0106 op=1a const-string v0, "FStatusReactionProtobuf/validateReactionText/failed validation, key="
+  0106..010c op=71 invoke-static {v0, v1}, LX/1xp;->A1K(VLL)
+  010c..0112 op=71 invoke-static {v2}, LX/1xi;->A0h(LL)
+  0112..0114 op=0c move-result-object v3
+  0114..0116 op=12 const/4 v2, #0x0
+  0116..0118 op=12 const/4 v1, #0x0
+  0118..011c op=1a const-string v0, "FStatusReactionProtobuf/FStatusReaction text failed validation"
+  011c..0122 op=6e invoke-virtual {v3, v0, v2, v1}, LX/0AH;->A0g(VLLZ)
+  0122..0126 op=13 const/16 v0, #0x44
+  0126..012c op=71 invoke-static {v0}, LX/Bp0;->A04(LI)
+  012c..012e op=0c move-result-object v0
+  012e..0130 op=27 throw v0
+  0130..0132 op=12 const/4 v4, #0x0
+  0132..0134 op=11 return-object v4
+  # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,102 @@
+{
+  "chat-jid-nullable-parser.txt": {
+    "bytes": 1105,
+    "sha256": "6d609e465b127d3e2ad5ef1c71d11b885bde5820c95e22f6199dda73b11daff4"
+  },
+  "chat-jid-parse-adapter.txt": {
+    "bytes": 572,
+    "sha256": "548382c917111df1fd7e341c4d57413d7b3493aa0a7dc6e56a02ac43c8aec9d0"
+  },
+  "chat-jid-required-parser.txt": {
+    "bytes": 894,
+    "sha256": "9fc07e8a2ea5f489f8705039e67a37bcacb6ca452a29a04b5581cadbc52c8a32"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "jid-parser.txt": {
+    "bytes": 11170,
+    "sha256": "9079d369c01d88470549cd13f53cbbc2240a1eafbd94e4242100cf95b7ebcc90"
+  },
+  "key-schema.txt": {
+    "bytes": 3295,
+    "sha256": "187dbaa11dc9da7a818b7ed3bb80f5e708eb5432f450307379fcdcc86dbd3ba2"
+  },
+  "key-validator.txt": {
+    "bytes": 1363,
+    "sha256": "81c7cbc546108611e37dc7360be73d21dcfe6566fa54a986efa448738ac4c8c1"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-key-builder.txt": {
+    "bytes": 660,
+    "sha256": "58e503ca781eb231230646d03226e17cd292ac308f2d2c6ee01fa3fd1d2859a7"
+  },
+  "ordinary-target-mapper.txt": {
+    "bytes": 3725,
+    "sha256": "1fd489a16ee15a802ba912a6cd74c27ee8232488ba9c1e757dbf53ab4e0b6905"
+  },
+  "parse-exception-wrapper.txt": {
+    "bytes": 521,
+    "sha256": "6d55a0315bf88ce5dff6ddc75e2c295e8d0aa994b590594ce6db3657d51996c4"
+  },
+  "reaction-incoming-builder.txt": {
+    "bytes": 20407,
+    "sha256": "3af4b2c71f6cd6b18d968868b8e32fe01276f8ddc3bf35e90f4a15baea6c99b7"
+  },
+  "reaction-model-key.txt": {
+    "bytes": 1838,
+    "sha256": "5aa568e95f2d244a028485bbe1f0addc935c11b5bf233e53d6f71bc65c1a1aff"
+  },
+  "reaction-other-key-writer.txt": {
+    "bytes": 3117,
+    "sha256": "de3549128c487b624b4c91af6d1f234909e36046948da5fba4d21be7e7b3d71b"
+  },
+  "reaction-outgoing-builder.txt": {
+    "bytes": 17413,
+    "sha256": "85566f0f9a1d3d4e9185b7ef1465473f7c4421b1efcda53f1cad3f7140f0af31"
+  },
+  "reaction-schema.txt": {
+    "bytes": 3127,
+    "sha256": "e3b1c9ae6b42c8bed9244db0b010b2ad72c7d10965f2af7688fb6790ae3fa3bd"
+  },
+  "reaction-text-validation.txt": {
+    "bytes": 1581,
+    "sha256": "55c4f4dcc0216c53dbe0fcf7deca3e37d62423ef8f108e3b4c6fcf8c80f24fa5"
+  },
+  "status-envelope-key.txt": {
+    "bytes": 1880,
+    "sha256": "634e1f4be1be3afa1468d898b0e08cca14a2f6a46243dfdaa9541010878df691"
+  },
+  "status-reaction-builder.txt": {
+    "bytes": 4447,
+    "sha256": "33dcf3885b542b5c528b20dfc89eceee35a615aa490c2c1c67f9f41441ea9275"
+  },
+  "status-reaction-serializer.txt": {
+    "bytes": 3099,
+    "sha256": "400763a78f5654508ab5f2a6b5faafc6eeee5daf2f86fd1e7a7f529a8db3742b"
+  },
+  "status-special-remote.txt": {
+    "bytes": 1712,
+    "sha256": "6cc6f7de38f17973c6eb19d052ceee0c30841325a7b59bcc68afc120dd491ca6"
+  },
+  "status-target-mapper.txt": {
+    "bytes": 4666,
+    "sha256": "d6022b63539a4abfcf1b9e5a67b37a6e8b93593c1f1bb4650f39e80de8ccb9da"
+  },
+  "status-target-producer.txt": {
+    "bytes": 1615,
+    "sha256": "07198c6818403d1f2999d4d5bdb2f19d9177b7561e6b89b8f4a60ff7de22ee1e"
+  },
+  "targets.json": {
+    "bytes": 9436,
+    "sha256": "ecf55f4dce0e4c69b5ec30dae1ec084c4d8e93b4e8c90823ecbb05a41d032ad1"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

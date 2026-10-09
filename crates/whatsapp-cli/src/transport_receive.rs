@@ -1429,6 +1429,9 @@ pub(super) async fn run(
     let limits = Limits::default();
     let mut count = 0;
     let mut capture_shapes = std::collections::BTreeSet::new();
+    // One snapshot keeps repeated captures' shapes identical when a long scan
+    // crosses a second boundary; this is local diagnostic display time.
+    let inspection_seconds = whatsapp_api::model::time::Timestamp::now().0 / 1000;
     if inspect {
         let own = account.own_jid.as_ref().map(|j| j.to_non_ad().to_string());
         for (key, value) in &captures {
@@ -1653,9 +1656,11 @@ pub(super) async fn run(
                     key_fields.1,
                     reaction.emoji.as_deref().map_or(0, str::len)
                 );
-                if let Some(shape) = whatsapp_api::transport::reactions::shape(&plain) {
-                    println!("inbox: reaction shape {shape}");
-                }
+            }
+            // Inspect malformed reaction keys too: decoding refuses them,
+            // but their fixed shape/validation diagnostic explains why.
+            if let Some(shape) = whatsapp_api::transport::reactions::shape(&plain) {
+                println!("inbox: reaction shape {shape}");
             }
         }
     }
@@ -1975,7 +1980,7 @@ pub(super) async fn run(
                         (None, None) => String::new(),
                         (expiration, t) => format!(
                             ", expiration_s={expiration:?}, age_s={:?}",
-                            t.map(|t| whatsapp_api::model::time::Timestamp::now().0 / 1000 - t)
+                            t.and_then(|t| inspection_seconds.checked_sub(t))
                         ),
                     };
                     let pins = match prekey_pin_summary(&store, &node) {
@@ -2521,6 +2526,71 @@ mod tests {
     use super::*;
     use whatsapp_api::binary::Node;
     use whatsapp_api::model::jid::Jid;
+
+    #[tokio::test]
+    async fn malformed_reaction_inspection_still_explains_the_key_refusal() {
+        use clap::Parser;
+        const FIXTURE: &str = "TELEWHATSAPP_REACTION_INSPECTION_FIXTURE";
+        const KEY: &str = "TELEWHATSAPP_REACTION_INSPECTION_KEY";
+        if let Ok(path) = std::env::var(FIXTURE) {
+            let cli = super::super::Cli::try_parse_from([
+                "cli",
+                "--store",
+                &path,
+                "--account",
+                "fixture",
+                "--key-env",
+                KEY,
+                "lab-inbox",
+                "--inspect",
+            ])
+            .unwrap();
+            run(&cli, true, false, false).await.unwrap();
+            return;
+        }
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("inspection.redb");
+        let store = ProtocolStore::open(OpenOptions {
+            path: path.clone(),
+            account_id: AccountId::new("fixture").unwrap(),
+            key_source: Arc::new(whatsapp_api::store::StaticKeySource::new(
+                whatsapp_api::store::MasterKey::from_bytes([2; 32]),
+            )),
+            create: true,
+        })
+        .unwrap();
+        // Literal APK BWI/BZa fields: reaction.key.id present, remoteJid absent.
+        let payload = b"\xf2\x02\x0a\x0a\x08\x1a\x06TARGET";
+        store
+            .write(|tx| {
+                AccountRecord::default().save(tx)?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"received:15555550101@s.whatsapp.net:fixture",
+                    1,
+                    &serde_json::json!({"status":"decrypted","protobuf":payload.to_vec()}),
+                )
+            })
+            .unwrap();
+        whatsapp_api::transport::inbox::preserve(
+            &store,
+            &Node::new("message")
+                .attr("from", Jid::parse("15555550101@s.whatsapp.net").unwrap())
+                .attr("id", "capture-fixture")
+                .attr("t", i64::MIN.to_string()),
+        )
+        .unwrap();
+        drop(store);
+        let output = std::process::Command::new(std::env::current_exe().unwrap())
+            .args(["--exact", "transport_receive::tests::malformed_reaction_inspection_still_explains_the_key_refusal", "--nocapture"])
+            .env(FIXTURE,&path).env(KEY,hex::encode([2;32])).output().unwrap();
+        assert!(output.status.success(), "inspection child failed");
+        let stdout = String::from_utf8(output.stdout).unwrap();
+        assert!(stdout.contains("key_validation=missing_remote_jid"));
+        assert!(!stdout.contains("TARGET"));
+        assert!(!stdout.contains("inbox: reaction payload"));
+        assert!(stdout.contains("age_s=None")); // An invalid age never panics.
+    }
 
     #[test]
     fn terminal_ack_inspection_reports_fixed_labels_without_echoed_ids() {

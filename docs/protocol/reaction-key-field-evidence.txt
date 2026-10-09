@@ -1,0 +1,37 @@
+APK 2.26.37.71
+SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed DEX field inventory, not runtime coverage or Java virtual dispatch.
+Reproduce: xtask apk-field-refs APK --class 'LX/BWI;' --field key_ --type 'LX/BZa;'
+
+classes7.dex  LX/BNx;->A01(VL)
+  write opcode 0x5b, dex byte offset: 0x44ead6
+classes7.dex  LX/Bal;->A00(LLLLJ)
+  read opcode 0x54, dex byte offset: 0x48fd2e
+classes7.dex  LX/Bal;->A01(LL)
+  read opcode 0x54, dex byte offset: 0x48ff2a
+classes7.dex  LX/Bal;->A01(LL)
+  read opcode 0x54, dex byte offset: 0x48ff60
+classes7.dex  LX/Bal;->A01(LL)
+  read opcode 0x54, dex byte offset: 0x48ff8a
+classes7.dex  LX/Bal;->A01(LL)
+  read opcode 0x54, dex byte offset: 0x48ffa0
+classes7.dex  LX/Bal;->A02(VL)
+  read opcode 0x54, dex byte offset: 0x49039c
+classes7.dex  LX/Bal;->AD7(VLL)
+  read opcode 0x54, dex byte offset: 0x49044a
+classes7.dex  LX/Bal;->AD7(VLL)
+  write opcode 0x5b, dex byte offset: 0x490538
+classes7.dex  LX/Bal;->AD7(VLL)
+  write opcode 0x5b, dex byte offset: 0x49072e
+classes7.dex  LX/DGD;->ADA(VLL)
+  read opcode 0x54, dex byte offset: 0x7ad16c
+classes7.dex  LX/DGD;->ADA(VLL)
+  write opcode 0x5b, dex byte offset: 0x7ad1b2
+classes7.dex  LX/DGD;->CF7(LL)
+  read opcode 0x54, dex byte offset: 0x7ad222
+classes7.dex  LX/DGD;->CF7(LL)
+  read opcode 0x54, dex byte offset: 0x7ad29c
+classes7.dex  LX/DGD;->CF7(LL)
+  read opcode 0x54, dex byte offset: 0x7ad2f2
+classes7.dex  LX/DHR;->AD8(VLL)
+  read opcode 0x54, dex byte offset: 0x7bad94

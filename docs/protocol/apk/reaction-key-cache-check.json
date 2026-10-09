@@ -1,0 +1,10 @@
+{
+  "apk_build": "2.26.37.71",
+  "comparison": "same checksum-verified cache, not different releases",
+  "elapsed_seconds": 0.028679,
+  "selected_methods": 26,
+  "exported_files": 26,
+  "exported_bytes": 127657,
+  "unchanged_topics": 21,
+  "unchanged_artifacts": 4
+}

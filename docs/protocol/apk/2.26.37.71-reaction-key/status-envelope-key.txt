@@ -1,0 +1,38 @@
+# APK-derived structural disassembly: LX/CYF;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(LL) flags=0x11 registers=8
+  0000..0002 op=12 const/4 v5, #0x0
+  0002..0006 op=54 iget-object v0, v7, LX/CjN;->A05:Lcom/whatsapp/infra/core/jid/Jid;
+  0006..000c op=71 invoke-static {v0}, LX/Ayn;->A0K(LL)
+  000c..000e op=0c move-result-object v4
+  000e..0014 op=71 invoke-static {v4}, LX/0DE;->A0b(ZL)
+  0014..0016 op=0a move-result v0
+  0016..001a op=38 if-eqz v0, +0x20
+  001a..001e op=55 iget-boolean v0, v7, LX/Bp1;->A05:Z
+  001e..0022 op=38 if-eqz v0, +0x1a
+  0022..0026 op=62 sget-object v3, LX/0DR;->A00:LX/0DR;
+  0026..002a op=1f check-cast v3, LX/0Cy;
+  002a..002e op=54 iget-object v0, v6, LX/CYF;->A01:LX/05B;
+  002e..0034 op=71 invoke-static {v0}, LX/6am;->A0Z(LL)
+  0034..0036 op=0c move-result-object v2
+  0036..003a op=54 iget-object v1, v7, LX/CjN;->A0A:Ljava/lang/String;
+  003a..003e op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.ChatJid"
+  003e..0044 op=71 invoke-static {v3, v0}, LX/00h;->A0D(VLL)
+  0044..004a op=6e invoke-virtual {v2, v3, v4, v1}, LX/7vB;->A03(LLLL)
+  004a..004c op=0c move-result-object v0
+  004c..0050 op=38 if-eqz v0, +0xa
+  0050..0052 op=11 return-object v0
+  0052..0054 op=07 move-object v3, v4
+  0054..0056 op=28 goto -0x15
+  0056..005c op=6e invoke-virtual {v7}, LX/CjN;->A05(L)
+  005c..005e op=0c move-result-object v3
+  005e..0060 op=28 goto -0x1c
+  0060..0064 op=1a const-string v0, "Failed to create key"
+  0064..006a op=71 invoke-static {v0, v5}, LX/Bp0;->A06(LLI)
+  006a..006c op=0c move-result-object v0
+  006c..006e op=27 throw v0
+  # exception table: 0 try range(s)
+.end method

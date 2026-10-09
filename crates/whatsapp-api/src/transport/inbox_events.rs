@@ -18,7 +18,7 @@ use sha2::{Digest, Sha256};
 
 #[cfg(test)]
 fn event(key: &[u8], node: &Node, payload: &[u8]) -> SyncEvent {
-    project(key, node, payload, None, None, &[])
+    project(key, node, payload, None, None, None, &[])
 }
 
 fn poll_content(poll: super::polls::Poll) -> Option<MessageContent> {
@@ -210,7 +210,7 @@ fn event_with_content(
     content: Option<(MessageContent, Option<u32>)>,
     own: &[crate::model::jid::Jid],
 ) -> SyncEvent {
-    project(key, node, payload, content, None, own)
+    project(key, node, payload, content, None, None, own)
 }
 
 /// Chat and authenticated sender for a projection. A direct message's `from` is
@@ -241,6 +241,7 @@ fn project(
     payload: &[u8],
     content: Option<(MessageContent, Option<u32>)>,
     poll: Option<&PollContext>,
+    reaction_target: Option<&MessageKey>,
     own: &[crate::model::jid::Jid],
 ) -> SyncEvent {
     let unsupported = || {
@@ -346,12 +347,12 @@ fn project(
                 (Direction::Outgoing, None)
             };
             return SyncEvent::MessageUpdated(crate::model::message::MessageUpdate {
-                key: MessageKey {
+                key: reaction_target.cloned().unwrap_or(MessageKey {
                     chat,
                     sender: target_sender,
                     direction,
                     id: reaction.target_id,
-                },
+                }),
                 change: crate::model::message::MessageChange::Reaction {
                     by,
                     emoji: reaction.emoji,
@@ -534,6 +535,60 @@ fn project(
     })
 }
 
+/// Resolve the sender's own direct target using original authenticated route
+/// proof. This preserves our historical PN layout; it is not an APK migration.
+fn incoming_reaction_target(
+    tx: &WriteTx<'_>,
+    node: &Node,
+    payload: &[u8],
+) -> Result<Option<MessageKey>> {
+    let Some(reaction) = super::reactions::decode(payload) else {
+        return Ok(None);
+    };
+    if !reaction.target_from_sender {
+        return Ok(None);
+    }
+    if !super::receipts::jid(node, "from").is_some_and(|from| {
+        from.device == 0
+            && from.agent == 0
+            && matches!(
+                from.server,
+                crate::model::jid::Server::User | crate::model::jid::Server::Lid
+            )
+    }) {
+        return Ok(None);
+    }
+    // Status reactions have a separate parent namespace (37.71 BoQ.A00).
+    if super::reactions::key_fields(payload)
+        .and_then(|(remote, _)| remote)
+        .and_then(|remote| crate::model::jid::Jid::parse(&remote).ok())
+        .is_some_and(|remote| {
+            remote.server == crate::model::jid::Server::Broadcast && remote.user == "status"
+        })
+    {
+        return Ok(None);
+    }
+    let target = node.clone().attr("id", reaction.target_id.as_str());
+    let Some(record) =
+        super::inbox::direct_record_in(&target, |key| tx.get_json(Table::Checkpoints, key, 1))?
+    else {
+        return Ok(None);
+    };
+    if !record
+        .saved
+        .as_ref()
+        .is_some_and(|saved| matches!(saved["status"].as_str(), Some("decrypted" | "consumed")))
+    {
+        return Ok(None);
+    }
+    Ok(Some(MessageKey {
+        chat: ChatId::from_jid(&record.chat)?,
+        sender: Some(DeviceAddress::from_jid(&record.chat)?),
+        direction: Direction::Incoming,
+        id: reaction.target_id,
+    }))
+}
+
 /// Must be called in the ratchet/inbox write transaction, or on an already
 /// authenticated historical record using its original saved route. Marker and
 /// event commit together, so crashes cannot lose the event or emit it twice.
@@ -544,6 +599,7 @@ pub(super) fn publish(
     payload: &[u8],
 ) -> Result<bool> {
     let poll = poll_context(tx, node, payload)?;
+    let reaction_target = incoming_reaction_target(tx, node, payload)?;
     // A reaction whose key names `status@broadcast` is a like on a status,
     // which belongs with the viewer records rather than only in the event
     // journal. Recording it writes nothing outward.
@@ -551,7 +607,15 @@ pub(super) fn publish(
         super::status_receipts::record_like_in(tx, &like)?;
     }
     let own = super::inbox::own_identities_in(tx)?;
-    let projected = project(key, node, payload, None, poll.as_ref(), &own);
+    let projected = project(
+        key,
+        node,
+        payload,
+        None,
+        poll.as_ref(),
+        reaction_target.as_ref(),
+        &own,
+    );
     #[cfg(feature = "experimental-registration-https")]
     let projected = if matches!(projected, SyncEvent::UnsupportedMessage(_)) {
         match super::media::event_content(tx, key, payload) {
@@ -1500,6 +1564,7 @@ mod tests {
             &payload,
             None,
             None,
+            None,
             std::slice::from_ref(&own),
         ) else {
             panic!("expected a group message")
@@ -1550,6 +1615,7 @@ mod tests {
             &reply("77700000001@lid"),
             None,
             None,
+            None,
             std::slice::from_ref(&own),
         ) else {
             panic!("expected message")
@@ -1568,6 +1634,7 @@ mod tests {
             b"fixture",
             &node(),
             &reply("15555550100@s.whatsapp.net"),
+            None,
             None,
             None,
             &[own],
@@ -1595,5 +1662,204 @@ mod tests {
             message.content,
             MessageContent::Text { quoted: None, .. }
         ));
+    }
+}
+
+#[cfg(test)]
+mod direct_reaction_target_tests {
+    use super::*;
+    use crate::{
+        model::{
+            ids::{AccountId, EventCursor},
+            jid::Jid,
+            message::{MessageChange, MessageRef},
+        },
+        store::{ConsumerId, MasterKey, OpenOptions, ProtocolStore, StaticKeySource},
+    };
+
+    #[test]
+    fn direct_reaction_keeps_original_target_and_actual_reactor_without_rewriting_history() {
+        for case in [
+            "legacy",
+            "consumed",
+            "canonical",
+            "absent",
+            "foreign",
+            "ambiguous",
+            "missing_route",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("reaction.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [17; 32],
+                    ))),
+                    create,
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            let lid = Jid::parse("12345@lid").unwrap();
+            let phone = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+            let target_id = MessageId::new("ORIGINAL").unwrap();
+            let legacy_key = format!("received:{phone}:{target_id}");
+            let canonical_key = format!("received:{lid}:{target_id}");
+            let original = Node::new("message")
+                .attr("id", target_id.as_str())
+                .attr(
+                    "from",
+                    if case == "foreign" {
+                        Jid::parse("54321@lid").unwrap()
+                    } else {
+                        lid.clone()
+                    },
+                )
+                .attr("sender_pn", phone.clone());
+            let route = crate::binary::Encoder::new(
+                crate::binary::TokenDictionary::comparison_2_26_37_71(),
+            )
+            .encode(&original)
+            .unwrap();
+            // Trusted historical-record fixture, not an unauthenticated capture
+            // promoted by the receive path. No ratchet is advanced by publish.
+            store.write(|tx| {
+                tx.put_json(Table::Checkpoints, format!("authenticated-lid:{lid}").as_bytes(), 1, &phone)?;
+                if matches!(case, "legacy"|"consumed"|"foreign"|"ambiguous"|"missing_route") {
+                    let mut saved = serde_json::json!({"status":"decrypted", "route":route, "protobuf":b"\x0a\x04test".to_vec()});
+                    if case=="consumed" { saved["status"]="consumed".into();saved.as_object_mut().unwrap().remove("protobuf"); }
+                    if case=="missing_route" { saved.as_object_mut().unwrap().remove("route"); }
+                    tx.put_json(Table::Checkpoints, legacy_key.as_bytes(), 1, &saved)?;
+                }
+                if matches!(case,"canonical"|"ambiguous") {
+                    tx.put_json(Table::Checkpoints, canonical_key.as_bytes(), 1, &serde_json::json!({"status":"decrypted"}))?;
+                }
+                Ok(())
+            }).unwrap();
+            let before = store.read(|tx| tx.scan(Table::Checkpoints, 1, 20)).unwrap();
+            let node = Node::new("message")
+                .attr("from", lid.clone())
+                .attr("id", "REACTION");
+            let key = format!("received:{lid}:REACTION");
+            // fromMe=true is the remote sender's own incoming target. The
+            // payload builder's local Outgoing direction produces that bit.
+            let target = MessageRef {
+                key: MessageKey {
+                    chat: ChatId::from_jid(&lid).unwrap(),
+                    sender: None,
+                    direction: Direction::Outgoing,
+                    id: target_id.clone(),
+                },
+            };
+            let payload =
+                super::super::reactions::payload(&lid, &lid, &target, Some("👍"), 7).unwrap();
+            let result = store.write(|tx| publish(tx, key.as_bytes(), &node, &payload));
+            if matches!(case, "ambiguous" | "missing_route") {
+                let reason = result.unwrap_err().to_string();
+                assert!(reason.contains(if case == "ambiguous" {
+                    "multiple authenticated direct inbox records"
+                } else {
+                    "legacy direct inbox route unavailable"
+                }));
+                assert_eq!(
+                    store.read(|tx| tx.journal_head()).unwrap(),
+                    EventCursor::START
+                );
+                assert!(
+                    store
+                        .read(|tx| tx.get(Table::Inbox, key.as_bytes(), 1))
+                        .unwrap()
+                        .is_none()
+                );
+                continue;
+            }
+            assert!(result.unwrap());
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Checkpoints, 1, 20)).unwrap(),
+                before
+            );
+            drop(store);
+            let store = open(false);
+            assert!(
+                !store
+                    .write(|tx| publish(tx, key.as_bytes(), &node, &payload))
+                    .unwrap()
+            );
+            let events = store
+                .read_events(&ConsumerId::new("fixture").unwrap(), EventCursor::START, 10)
+                .unwrap()
+                .events;
+            assert_eq!(events.len(), 1);
+            let SyncEvent::MessageUpdated(update) = &events[0].event else {
+                panic!("expected reaction")
+            };
+            let expected = if matches!(case, "legacy" | "consumed") {
+                &phone
+            } else {
+                &lid
+            };
+            assert_eq!(update.key.chat, ChatId::from_jid(expected).unwrap());
+            assert_eq!(
+                update.key.sender,
+                Some(DeviceAddress::from_jid(expected).unwrap())
+            );
+            assert_eq!(update.key.direction, Direction::Incoming);
+            assert_eq!(update.key.id, target_id);
+            assert_eq!(
+                update.change,
+                MessageChange::Reaction {
+                    by: DeviceAddress::from_jid(&lid).unwrap(),
+                    emoji: Some("👍".into())
+                }
+            );
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Checkpoints, 1, 20)).unwrap(),
+                before
+            );
+            // Outgoing targets, status, group and companion actors do not acquire
+            // this primary-direct historical selector.
+            let ours = MessageRef {
+                key: MessageKey {
+                    direction: Direction::Incoming,
+                    ..target.key.clone()
+                },
+            };
+            let ours = super::super::reactions::payload(&lid, &lid, &ours, None, 7).unwrap();
+            store
+                .write(|tx| {
+                    assert!(incoming_reaction_target(tx, &node, &ours)?.is_none());
+                    assert!(
+                        incoming_reaction_target(
+                            tx,
+                            &node.clone().attr("from", "12345:3@lid"),
+                            &payload
+                        )?
+                        .is_none()
+                    );
+                    assert!(
+                        incoming_reaction_target(
+                            tx,
+                            &node
+                                .clone()
+                                .attr("from", "120363000000000001@g.us")
+                                .attr("participant", lid.clone()),
+                            &payload
+                        )?
+                        .is_none()
+                    );
+                    let status = super::super::reactions::payload(
+                        &lid,
+                        &Jid::parse("status@broadcast")?,
+                        &target,
+                        None,
+                        7,
+                    )?;
+                    assert!(incoming_reaction_target(tx, &node, &status)?.is_none());
+                    Ok(())
+                })
+                .unwrap();
+        }
     }
 }

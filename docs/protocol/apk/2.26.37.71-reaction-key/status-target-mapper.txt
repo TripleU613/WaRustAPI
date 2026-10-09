@@ -1,0 +1,94 @@
+# APK-derived structural disassembly: LX/CYF;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LLLL) flags=0x11 registers=13
+  0000..0002 op=07 move-object v6, v12
+  0002..0008 op=71 invoke-static {v12}, LX/3c8;->A1X(ZL)
+  0008..000a op=0a move-result v7
+  000a..000e op=55 iget-boolean v0, v10, LX/72k;->A03:Z
+  000e..0010 op=12 const/4 v2, #0x0
+  0010..0014 op=38 if-eqz v0, +0x91
+  0014..0016 op=07 move-object v3, v2
+  0016..001a op=55 iget-boolean v0, v11, LX/CXu;->A03:Z
+  001a..001e op=39 if-nez v0, +0x6e
+  001e..0022 op=54 iget-object v0, v9, LX/CYF;->A03:LX/05B;
+  0022..0028 op=71 invoke-static {v0}, LX/1xi;->A0l(LL)
+  0028..002a op=0c move-result-object v4
+  002a..002e op=54 iget-object v5, v10, LX/CUq;->A01:LX/1gc;
+  002e..0034 op=6e invoke-virtual {v10}, LX/72k;->A03(L)
+  0034..0036 op=0c move-result-object v0
+  0036..003c op=71 invoke-static {v0}, LX/0DE;->A0b(ZL)
+  003c..003e op=0a move-result v8
+  003e..0044 op=77 invoke-static/range {v3..v8}, LX/BoQ;->A00(LLLLLZZ)
+  0044..0046 op=0c move-result-object v1
+  0046..004a op=54 iget-object v3, v1, LX/CUq;->A00:LX/0Cy;
+  004a..004e op=39 if-nez v3, +0x2c
+  004e..0052 op=54 iget-object v0, v1, LX/CUq;->A01:LX/1gc;
+  0052..0056 op=55 iget-boolean v0, v0, LX/1gc;->A02:Z
+  0056..005a op=38 if-eqz v0, +0x26
+  005a..005e op=62 sget-object v3, LX/0DR;->A00:LX/0DR;
+  005e..0062 op=38 if-eqz v3, +0x6e
+  0062..0066 op=62 sget-object v4, LX/0Cy;->A00:LX/0D7;
+  0066..006a op=52 iget v0, v12, LX/BZa;->bitField0_:I
+  006a..006e op=dd and-int/lit8 v0, v0, #0x1
+  006e..0072 op=38 if-eqz v0, +0x4
+  0072..0076 op=54 iget-object v2, v12, LX/BZa;->remoteJid_:Ljava/lang/String;
+  0076..007c op=6e invoke-virtual {v4, v2}, LX/0D7;->A02(LL)
+  007c..007e op=0c move-result-object v2
+  007e..0082 op=39 if-nez v2, +0x4
+  0082..0086 op=62 sget-object v2, LX/8oR;->A00:LX/8oR;
+  0086..008a op=54 iget-object v0, v1, LX/CUq;->A01:LX/1gc;
+  008a..008e op=54 iget-object v0, v0, LX/1gc;->A01:Ljava/lang/String;
+  008e..0094 op=71 invoke-static {v0}, LX/Cnc;->A01(LL)
+  0094..0096 op=0c move-result-object v1
+  0096..009a op=22 new-instance v0, LX/72k;
+  009a..00a0 op=70 invoke-direct {v0, v3, v2, v1}, LX/72k;-><init>(VLLL)
+  00a0..00a2 op=11 return-object v0
+  00a2..00a8 op=71 invoke-static {v3}, LX/0DE;->A0h(ZL)
+  00a8..00aa op=0a move-result v0
+  00aa..00ae op=38 if-eqz v0, +0x5
+  00ae..00b2 op=62 sget-object v3, LX/8l6;->A00:LX/8l6;
+  00b2..00b4 op=28 goto -0x2a
+  00b4..00b8 op=54 iget-object v0, v9, LX/CYF;->A03:LX/05B;
+  00b8..00be op=71 invoke-static {v0, v3}, LX/1xj;->A1X(ZLL)
+  00be..00c0 op=0a move-result v0
+  00c0..00c4 op=38 if-eqz v0, +0x5
+  00c4..00c8 op=62 sget-object v3, LX/0DR;->A00:LX/0DR;
+  00c8..00ca op=28 goto -0x35
+  00ca..00d0 op=71 invoke-static {v3}, LX/0DE;->A0l(ZL)
+  00d0..00d2 op=0a move-result v0
+  00d2..00d6 op=38 if-eqz v0, -0x3a
+  00d6..00da op=54 iget-object v0, v9, LX/CYF;->A02:LX/05B;
+  00da..00e0 op=71 invoke-static {v0}, LX/1xi;->A0w(LL)
+  00e0..00e2 op=0c move-result-object v0
+  00e2..00e8 op=71 invoke-static {v3}, LX/1xf;->A1W(VL)
+  00e8..00ec op=1f check-cast v3, Lcom/whatsapp/infra/core/jid/UserJid;
+  00ec..00f2 op=6e invoke-virtual {v0, v3}, LX/0Xw;->A0F(LL)
+  00f2..00f4 op=0c move-result-object v3
+  00f4..00f6 op=28 goto -0x4b
+  00f6..00fa op=55 iget-boolean v0, v12, LX/BZa;->fromMe_:Z
+  00fa..00fe op=38 if-eqz v0, +0x13
+  00fe..0100 op=07 move-object v3, v2
+  0100..0104 op=54 iget-object v0, v10, LX/CUq;->A01:LX/1gc;
+  0104..0108 op=54 iget-object v1, v0, LX/1gc;->A00:LX/0Cy;
+  0108..010c op=55 iget-boolean v0, v12, LX/BZa;->fromMe_:Z
+  010c..0112 op=71 invoke-static {v1, v12, v0}, LX/Ayo;->A0S(LLLZ)
+  0112..0114 op=0c move-result-object v0
+  0114..0118 op=22 new-instance v1, LX/CUq;
+  0118..011e op=70 invoke-direct {v1, v3, v0}, LX/CUq;-><init>(VLL)
+  011e..0120 op=28 goto -0x6c
+  0120..0124 op=62 sget-object v1, LX/0Cy;->A00:LX/0D7;
+  0124..0128 op=54 iget-object v0, v12, LX/BZa;->participant_:Ljava/lang/String;
+  0128..012e op=6e invoke-virtual {v1, v0}, LX/0D7;->A02(LL)
+  012e..0130 op=0c move-result-object v3
+  0130..0132 op=28 goto -0x18
+  0132..0136 op=54 iget-object v3, v10, LX/72k;->A01:LX/0Cy;
+  0136..013a op=29 goto/16 -0x90
+  013a..013e op=1a const-string v0, "FStatusProtobufKeyHelper/nullable senderJid when creating FStatusKey"
+  013e..0144 op=71 invoke-static {v0, v7}, LX/Bp0;->A06(LLI)
+  0144..0146 op=0c move-result-object v0
+  0146..0148 op=27 throw v0
+  # exception table: 0 try range(s)
+.end method
