@@ -1,0 +1,74 @@
+{
+  "addon-version-map.txt": {
+    "bytes": 6017,
+    "sha256": "30f096ce50b33a08267cb4301510143a6c6fa61d6a08c04b13dbbeaebb5c7f3b"
+  },
+  "batch-version-read.txt": {
+    "bytes": 8519,
+    "sha256": "998f21a56b424d1da0cdd55124fbbe37e7c73b39975f51aa67a5ecd0ac8e5cf8"
+  },
+  "bind-callback-constructor.txt": {
+    "bytes": 841,
+    "sha256": "82356bc9b8cf307141d6df26da3f3628641831f264b44222c93492a6fde9cfd6"
+  },
+  "hosted-type-predicate.txt": {
+    "bytes": 820,
+    "sha256": "0d6da7d251fe118ac0ffdcbd3fe15fe2edd24e675293f9d9c595116ad119d434"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-version-map.txt": {
+    "bytes": 6582,
+    "sha256": "8f1f7446985d3adfa23a026931a3ad65a1a19f19bbc9a40c7e55ac9a32a8853b"
+  },
+  "nullable-version-equality.txt": {
+    "bytes": 777,
+    "sha256": "c1b9d6c8476c19c9927faf287325a5f70a4ddb4fe5421ebccab12c9f4cd591e8"
+  },
+  "ordinary-receipt-write.txt": {
+    "bytes": 18618,
+    "sha256": "c5d2b16a931edc48145085778e4b9f191218d22f47679d27a9efcbd76ce1805d"
+  },
+  "pending-receipt-insert.txt": {
+    "bytes": 4919,
+    "sha256": "1822190509071926052ec2d08985d8f85b05d9ff764deac6b3d8f57301f73701"
+  },
+  "pending-seed-entry.txt": {
+    "bytes": 662,
+    "sha256": "dd9aac54d2630db771e50c7883fc526fead613211027e5b46ed179524bb7e38c"
+  },
+  "resend-message-version-filter.txt": {
+    "bytes": 37430,
+    "sha256": "79a37cf9f495ed460d78a0be2e70a41ec6b61d817ded5e6958d7ea4f5fe401e5"
+  },
+  "sql-long-bind.txt": {
+    "bytes": 649,
+    "sha256": "b69ffb1476972cb8ffec1a7bc9d5f16c431ac55a4f07a5f607eb2085d2647aca"
+  },
+  "sql-null-bind.txt": {
+    "bytes": 638,
+    "sha256": "f9f44130c1cfca5a45207605a3152a8a8f2d39fec9d2c8527fb940f5e801a854"
+  },
+  "status-receipt-write.txt": {
+    "bytes": 8274,
+    "sha256": "1fc4c490ea3a2bc35f05ce76a1ee9d754f739c49be3864728961ce4992e71b49"
+  },
+  "targets.json": {
+    "bytes": 7524,
+    "sha256": "a5db28d65fd3216a270ed883893863edd7d5e12afeab0f579ca48c47f39cb483"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "version-bind-callback.txt": {
+    "bytes": 3964,
+    "sha256": "2f888bde161ef0699a2dfda60e78909462aded575c9357d6764f9d6909cbd494"
+  }
+}

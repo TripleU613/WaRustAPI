@@ -1941,3 +1941,19 @@ Two inspected primary namespaces have absent historical versions. `peer-keys
 --show` exposes directory match diagnostics, not PeerPinState; its original
 compatibility comparison remains valid but cannot prove counter output. The API
 and invocation description were corrected to name `peer-identity` only.
+
+2026-10-09 — **Confirmed static:** native pending device-receipt rows capture
+nullable send-time primary versions; existing-row timestamp updates retain them.
+The ordinary sync/resend path compares prior/current values with nullable equality,
+plus a gated absent-to-1 exception. The raw hosted branch has additional gates;
+0x6ebd does not surround all ordinary comparisons. Historical Rust sends lack
+this snapshot and remain unknown. Rust resend/snapshot runtime remains unported;
+no saved reservation or account was changed. [Evidence and next input](receipt-version.md).
+
+Receipt-version research validation: 14 topics / 19 files / 135,279 bytes
+reproduce exactly from the comparison APK. Cached self-diff reports all topics
+and four metadata artifacts unchanged in 0.022983 seconds, not cross-release
+equivalence. All 65 xtask tests, CLI-reference regeneration, API/library-symbol
+check, formatting and diff hygiene passed. Repository hygiene checked 1,304
+local links and 25 APK bundles / 7,536,554 bytes. Runtime changes are comments
+only; no account operation, live resend or receipt reservation change occurred.

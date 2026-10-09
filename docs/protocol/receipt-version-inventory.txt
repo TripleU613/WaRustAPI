@@ -1,0 +1,63 @@
+APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Static ordinary DEX references only; not virtual/reflection/native completeness.
+
+callers.txt
+classes.dex  LX/0Z5;->A0A(VL)
+  invoke dex byte offset: 0x5e78b4
+classes.dex  LX/0Z7;->A02(VL)
+  invoke dex byte offset: 0x5e8e06
+classes5.dex  LX/70u;->A0H(VLLJ)
+  invoke dex byte offset: 0x342604
+
+map-callers.txt
+classes7.dex  Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0G(V)
+  invoke dex byte offset: 0x89b830
+
+concrete-map-callers.txt
+
+batch-callers.txt
+classes7.dex  Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0G(V)
+  invoke dex byte offset: 0x8961d4
+classes7.dex  Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0G(V)
+  invoke dex byte offset: 0x89b81c
+classes.dex  LX/0Z5;->A0D(ZLLZ)
+  invoke dex byte offset: 0x5e7c62
+classes5.dex  LX/70u;->A0J(VLLZ)
+  invoke dex byte offset: 0x34295c
+
+version-string-refs.txt
+["primary_device_version"]  (14 reference(s))
+  classes.dex  LX/0LS;->AR6(VL)
+    dex byte offset: 0x563d58
+  classes.dex  LX/0Om;->AR4(VLL)
+    dex byte offset: 0x57b0fe
+  classes.dex  LX/0TT;->AR4(VLL)
+    dex byte offset: 0x596170
+  classes.dex  LX/0Tl;->AR4(VLL)
+    dex byte offset: 0x597e36
+  classes.dex  LX/0Z6;->A0K(L)
+    dex byte offset: 0x5e8300
+  classes.dex  LX/0Z6;->A0M(LL)
+    dex byte offset: 0x5e83ce
+  classes.dex  LX/0Z7;->A02(VL)
+    dex byte offset: 0x5e8e70
+  classes.dex  LX/0ZE;->A0K(L)
+    dex byte offset: 0x5ea2e0
+  classes.dex  LX/0ZE;->A0M(LL)
+    dex byte offset: 0x5ea3c8
+  classes7.dex  LX/BcF;-><init>(V)
+    dex byte offset: 0x49601a
+  classes7.dex  LX/D0N;->CON(LLLLLL)
+    dex byte offset: 0x71dac8
+  classes7.dex  Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0G(V)
+    dex byte offset: 0x89622a
+  classes2.dex  LX/1bK;->AR4(VLL)
+    dex byte offset: 0xfe2c6
+  classes5.dex  LX/70u;->A0H(VLLJ)
+    dex byte offset: 0x34260c
+
+version-field-refs.txt
+
+Negative: 7QL A01:Ljava/lang/Long; field query found no references; 7QL.A00 in the inspected cache logic is a receipt timestamp, not a version.
+Correction: HoP.A04 executes a statement; the DPo null binding calls A05, whose actual SQL bindNull is traced separately.
+8Vw selector 15 is the cache write callback, not the SQL parameter binder; DPo nonzero selector binds the version.

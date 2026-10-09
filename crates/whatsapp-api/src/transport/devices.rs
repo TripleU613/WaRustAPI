@@ -384,6 +384,8 @@ pub(crate) fn request_sync_in(
 }
 // APK 37.71 0Z7.A00/A02 stores a version per exact user namespace.
 // This key is not a signed device-list timestamp or a PN/LID alias merger.
+// Native resend filtering also needs per-message send-time receipt versions
+// (receipt-version.md); this current counter alone never authorizes a resend.
 fn primary_device_version_key(peer: &Jid) -> String {
     format!("primary-device-version:{}", peer.to_non_ad())
 }

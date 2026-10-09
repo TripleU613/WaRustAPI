@@ -1,0 +1,136 @@
+# APK-derived structural disassembly: LX/70u;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0H(VLLJ) flags=0x11 registers=28
+  # full signature: LX/70u;->A0H(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/72k;J)V
+  0000..0004 op=08 move-object/from16 v12, v24
+  0004..0008 op=08 move-object/from16 v11, v25
+  0008..000e op=71 invoke-static {v11, v12}, LX/00h;->A0B(Ljava/lang/Object;Ljava/lang/Object;)V
+  000e..0012 op=08 move-object/from16 v10, v23
+  0012..0016 op=54 iget-object v9, v10, LX/70u;->A00:LX/0D3;
+  0016..001c op=6e invoke-virtual {v9, v11}, LX/0D3;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  001c..001e op=0c move-result-object v0
+  001e..0022 op=1f check-cast v0, LX/7hf;
+  0022..0026 op=38 if-eqz v0, +0x3e
+  0026..002a op=54 iget-object v0, v0, LX/7hf;->A00:Ljava/util/concurrent/ConcurrentHashMap;
+  002a..0030 op=6e invoke-virtual {v0, v12}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  0030..0032 op=0c move-result-object v0
+  0032..0036 op=1f check-cast v0, LX/7QL;
+  0036..003a op=38 if-eqz v0, +0x34
+  003a..003e op=53 iget-wide v0, v0, LX/7QL;->A00:J
+  003e..0042 op=05 move-wide/from16 v2, v26
+  0042..0046 op=31 cmp-long v4, v26, v0
+  0046..004a op=3d if-lez v4, +0xce
+  004a..004e op=16 const-wide/16 v15, #0x0
+  004e..0052 op=31 cmp-long v0, v26, v15
+  0052..0056 op=3a if-ltz v0, +0xc8
+  0056..0058 op=12 const/4 v0, #0x4
+  0058..005c op=22 new-instance v8, Landroid/content/ContentValues;
+  005c..0062 op=70 invoke-direct {v8, v0}, Landroid/content/ContentValues;-><init>(I)V
+  0062..0066 op=1a const-string v0, "receipt_device_timestamp"
+  0066..006c op=71 invoke-static {v8, v0, v2, v3}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  006c..0072 op=71 invoke-static {}, LX/1xf;->A1D()Ljava/util/ArrayList;
+  0072..0074 op=0c move-result-object v1
+  0074..0078 op=54 iget-object v7, v11, LX/72k;->A02:Ljava/lang/String;
+  0078..007e op=6e invoke-virtual {v1, v7}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  007e..0084 op=6e invoke-virtual {v12}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  0084..0086 op=0c move-result-object v0
+  0086..008c op=6e invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  008c..0092 op=71 invoke-static {v10}, LX/70u;->A01(LX/70u;)LX/1b9;
+  0092..0094 op=0c move-result-object v0
+  0094..009a op=6e invoke-virtual {v0}, LX/0aC;->A07()LX/0ZN;
+  009a..009c op=0c move-result-object v6
+  009c..009e op=28 goto +0x4
+  009e..00a2 op=16 const-wide/16 v0, #0x1
+  00a2..00a4 op=28 goto -0x32
+  00a4..00aa op=6e invoke-virtual {v6}, LX/0ZN;->A00()LX/1gB;
+  00aa..00ac op=0c move-result-object v13
+  00ac..00b0 op=54 iget-object v5, v6, LX/0ZN;->A02:LX/0IY;
+  00b0..00b2 op=12 const/4 v0, #0x0
+  00b2..00b8 op=71 invoke-static {v1, v0}, LX/1xm;->A1b(Ljava/util/AbstractCollection;I)[Ljava/lang/String;
+  00b8..00ba op=0c move-result-object v22
+  00ba..00be op=1a const-string v21, "StatusReceiptStore/storeDeviceReceipt/UPDATE_RECEIPT_DEVICE"
+  00be..00c2 op=1a const-string v4, "status_receipt_device"
+  00c2..00c6 op=1a const-string v20, "uuid =? AND receipt_device_jid =? "
+  00c6..00ca op=08 move-object/from16 v17, v5
+  00ca..00ce op=08 move-object/from16 v18, v8
+  00ce..00d2 op=08 move-object/from16 v19, v4
+  00d2..00d8 op=74 invoke-virtual/range {v17..v22}, LX/0IY;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  00d8..00da op=0a move-result v0
+  00da..00dc op=81 int-to-long v0, v0
+  00dc..00e0 op=31 cmp-long v14, v0, v15
+  00e0..00e4 op=39 if-nez v14, +0x54
+  00e4..00e8 op=13 const/16 v1, #0x5a3
+  00e8..00ec op=54 iget-object v0, v10, LX/70u;->A06:LX/05B;
+  00ec..00f2 op=71 invoke-static {v0, v1}, LX/1xk;->A0I(LX/05B;I)LX/05B;
+  00f2..00f4 op=0c move-result-object v14
+  00f4..00f8 op=1a const-string v0, "uuid"
+  00f8..00fe op=6e invoke-virtual {v8, v0, v7}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  00fe..0102 op=1a const-string v0, "receipt_device_jid"
+  0102..0108 op=71 invoke-static {v8, v12, v0}, LX/1xl;->A1C(Landroid/content/ContentValues;Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+  0108..010c op=54 iget-object v0, v10, LX/70u;->A05:LX/05B;
+  010c..0112 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0112..0114 op=0c move-result-object v1
+  0114..0118 op=1f check-cast v1, LX/0Z7;
+  0118..011c op=54 iget-object v0, v12, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+  011c..0122 op=6e invoke-virtual {v1, v0}, LX/0Z7;->A00(Lcom/whatsapp/infra/core/jid/UserJid;)Ljava/lang/Long;
+  0122..0124 op=0c move-result-object v1
+  0124..0128 op=1a const-string v0, "primary_device_version"
+  0128..012e op=6e invoke-virtual {v8, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  012e..0132 op=1a const-string v0, "StatusReceiptStore/storeDeviceReceipt/INSERT_RECEIPT_DEVICE"
+  0132..0138 op=6e invoke-virtual {v5, v4, v0, v8}, LX/0IY;->A05(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+  0138..013a op=0b move-result-wide v7
+  013a..013e op=16 const-wide/16 v4, #0xffff (-1)
+  013e..0142 op=31 cmp-long v0, v7, v4
+  0142..0146 op=39 if-nez v0, +0x23
+  0146..014a op=1a const-string v0, "StatusReceiptStore/storeDeviceReceipt/replace/failed "
+  014a..0150 op=71 invoke-static {v11, v0}, LX/000;->A07(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0150..0152 op=0c move-result-object v1
+  0152..0156 op=1a const-string v0, " "
+  0156..015c op=71 invoke-static {v12, v0, v1}, LX/1xj;->A1K(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+  015c..0162 op=71 invoke-static {v14}, LX/6am;->A0N(LX/05B;)LX/0Gb;
+  0162..0164 op=0c move-result-object v5
+  0164..0168 op=1a const-string v0, "key="
+  0168..016e op=71 invoke-static {v11, v0}, LX/000;->A07(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+  016e..0170 op=0c move-result-object v1
+  0170..0174 op=1a const-string v0, " device="
+  0174..017a op=71 invoke-static {v12, v0, v1}, LX/1xj;->A14(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+  017a..017c op=0c move-result-object v4
+  017c..0180 op=1a const-string v1, "StatusReceiptStore/storeDeviceReceipt: replace failed"
+  0180..0182 op=12 const/4 v0, #0x1
+  0182..0188 op=6e invoke-virtual {v5, v1, v4, v0, v0}, LX/0AH;->A0h(Ljava/lang/String;Ljava/lang/String;ZI)V
+  0188..018e op=6e invoke-virtual {v13}, LX/1gB;->A00()V
+  018e..0194 op=6e invoke-virtual {v13}, LX/1gB;->close()V
+  0194..019a op=6e invoke-virtual {v6}, LX/0ZN;->close()V
+  019a..019e op=31 cmp-long v0, v26, v15
+  019e..01a2 op=3d if-lez v0, +0x22
+  01a2..01a8 op=6e invoke-virtual {v9, v11}, LX/0D3;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  01a8..01aa op=0c move-result-object v0
+  01aa..01ae op=38 if-eqz v0, +0x1c
+  01ae..01b4 op=6e invoke-virtual {v9, v11}, LX/0D3;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  01b4..01b6 op=0c move-result-object v0
+  01b6..01ba op=1f check-cast v0, LX/7hf;
+  01ba..01be op=38 if-eqz v0, +0x14
+  01be..01c4 op=6e invoke-virtual {v0, v12, v2, v3}, LX/7hf;->A01(Lcom/whatsapp/infra/core/jid/DeviceJid;J)Z
+  01c4..01c6 op=0e return-void
+  01c6..01c8 op=0d move-exception v1
+  01c8..01ca op=27 throw v1
+  01ca..01cc op=0d move-exception v0
+  01cc..01d2 op=71 invoke-static {v13, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  01d2..01d4 op=27 throw v0
+  01d4..01d6 op=0d move-exception v1
+  01d6..01d8 op=27 throw v1
+  01d8..01da op=0d move-exception v0
+  01da..01e0 op=71 invoke-static {v6, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  01e0..01e2 op=27 throw v0
+  01e2..01e4 op=0e return-void
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0052..0056 -> 00ea
+  # catch <all> code_units 0056..00c7 -> 00e3
+  # catch <all> code_units 00c7..00ca -> 00ea
+  # catch <all> code_units 00e4..00e5 -> 00e5
+  # catch <all> code_units 00e6..00ea -> 00ea
+  # catch <all> code_units 00eb..00ec -> 00ec
+.end method

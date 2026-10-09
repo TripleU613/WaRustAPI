@@ -90,3 +90,9 @@ Two inspected primary namespaces have absent historical versions. `peer-keys
 --show` exposes directory match diagnostics, not PeerPinState; its original
 compatibility comparison remains valid but cannot prove counter output. The API
 and invocation description were corrected to name `peer-identity` only.
+
+**Subsequent confirmed consumer trace:** [receipt/version filtering](receipt-version.md)
+shows pending receipt insertion captures nullable send-time versions, while later
+timestamp updates retain existing row versions. Native ordinary resend candidates
+must pass nullable equality, with a gated absent-to-1 exception. Rust send-time
+snapshots and the complete resend policy remain unported.
