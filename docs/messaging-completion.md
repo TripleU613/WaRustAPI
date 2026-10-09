@@ -2746,3 +2746,20 @@ property, nine crash, 51 CLI, one API symbol and 65 xtask), strict Clippy,
 warning-free Rustdoc, default CLI/API checks, regenerated CLI reference,
 formatting and build passed. Hygiene checked 1,283 local links and 23 APK
 bundles / 6,988,623 bytes. Validation used synthetic stores only.
+
+2026-10-09 — **Confirmed static:** the two remaining outbound token timestamp
+writers restore imported chat-transfer/companion-history sender state, separately
+from received token bytes. The companion key-parse failure can still reach token
+restoration; no valid-key admission shortcut is inferred. The hidden descriptor
+id-array helper explains the field decoder's honest 59/58 refusal. Manual tag and
+presence mapping is preserved with the helper evidence. History source authority,
+active gates and Rust import/refresh remain unported. Account state was untouched.
+[Evidence and limits](protocol/token-import.md).
+
+Token-import research validation: seven topics / 12 files / 412,652 bytes
+reproduce from the APK. Cached self-diff reports seven topics and four metadata
+artifacts unchanged in 0.021659 seconds; this is not a cross-release benchmark.
+All 65 xtask tests, CLI-reference regeneration, API/library-symbol check,
+formatting and diff hygiene passed. Repository hygiene checked 1,287 local links
+and 24 APK bundles / 7,401,275 bytes. Runtime source changes are comments only;
+no account operation or live token/history request was made.

@@ -1,0 +1,46 @@
+{
+  "chat-transfer-import.txt": {
+    "bytes": 18962,
+    "sha256": "85eb29b675acd9762f77180802e3cdbd261f8399b7b7fc61af795d0541136501"
+  },
+  "companion-history-import.txt": {
+    "bytes": 121632,
+    "sha256": "10323789b909351b20a594c7c64cb81650107ea329bf6a31e5319800a7de7215"
+  },
+  "conversation-descriptor.txt": {
+    "bytes": 13059,
+    "sha256": "4fdb6f237e39a2849f58c095d5292e17a0240ae07b54b5fbe6964554d2d4670b"
+  },
+  "history-identity-worker.txt": {
+    "bytes": 224311,
+    "sha256": "fc179d6b7ab771840d78a30a4070164b5532fabf7c6d5257d4766613daed8aac"
+  },
+  "history-worker-constructors.txt": {
+    "bytes": 2037,
+    "sha256": "191ca5be9a4a8a1942c2dd1acaf19a77120723bca9a37cac49afd5beb2a4892c"
+  },
+  "id-array-helper.txt": {
+    "bytes": 681,
+    "sha256": "3889e3286595da8272543c6b348204c7995ae6e0786b80d64c9b268c53592e7b"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "presence-array-helper.txt": {
+    "bytes": 653,
+    "sha256": "1454f6218c1f3965d85cc1d133ea14bca2f8e45ac955136a796bc7092d10d831"
+  },
+  "targets.json": {
+    "bytes": 3213,
+    "sha256": "11e01875c30d341541c1729df341d9a2393f17456f54660e2ccf12a808bc9db0"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

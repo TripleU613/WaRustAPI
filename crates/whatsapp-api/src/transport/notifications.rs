@@ -2,6 +2,9 @@
 //! APK 37.71 GeneratePrivacyTokenJob.A0G / 0q4.A0J use separate outbound
 //! issue/send timestamps. Incoming bytes here never supply refresh authority;
 //! see docs/protocol/identity-token-refresh.md for the still-unported job.
+//! APK CnI.A03/CoO.A02 restore incoming bytes and outbound sender timestamps
+//! separately during imports (token-import.md); these notifications do not
+//! implement that history/transfer authority or create outbound issue state.
 //! LX/11P.A09 reads tokens/token, trusted_contact, sender_lid and timestamp.
 //! LX/0q2.A0P replaces an incoming token only when its timestamp is newer.
 use super::receipts::jid;

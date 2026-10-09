@@ -1,0 +1,84 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "chat-transfer-import": {
+      "class": "LX/CnI;",
+      "method": "A03",
+      "method_shorty": "LLLLLLLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "companion-history-import": {
+      "class": "LX/CoO;",
+      "method": "A02",
+      "method_shorty": "VLLLLLII",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "conversation-descriptor": {
+      "class": "LX/BZK;",
+      "method": "dynamicMethod",
+      "method_shorty": "LLLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "presence-array-helper": {
+      "class": "LX/Ayl;",
+      "method": "A1b",
+      "method_shorty": "LI",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "id-array-helper": {
+      "class": "LX/Ayn;",
+      "method": "A1O",
+      "method_shorty": "VLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "history-identity-worker": {
+      "class": "LX/DNu;",
+      "method": "run",
+      "method_shorty": "V",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "history-worker-constructors": {
+      "class": "LX/DNu;",
+      "method": "<init>",
+      "method_shorty": "VLLLLI",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "xtask/src/xref.rs"
+      ]
+    }
+  }
+}

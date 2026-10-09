@@ -1,0 +1,36 @@
+# APK-derived structural disassembly: LX/DNu;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLLI) flags=0x10001 registers=6
+  # full signature: LX/DNu;-><init>(LX/0Cy;LX/CMP;Ljava/lang/ref/WeakReference;Ljava/lang/ref/WeakReference;I)V
+  0000..0004 op=59 iput v5, v0, LX/DNu;->$t:I
+  0004..0008 op=d9 rsub-int/lit8 v5, v5, #0x27
+  0008..000c op=38 if-eqz v5, +0xe
+  000c..0012 op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+  0012..0016 op=5b iput-object v3, v0, LX/DNu;->A00:Ljava/lang/Object;
+  0016..001a op=5b iput-object v4, v0, LX/DNu;->A01:Ljava/lang/Object;
+  001a..001e op=5b iput-object v2, v0, LX/DNu;->A02:Ljava/lang/Object;
+  001e..0022 op=5b iput-object v1, v0, LX/DNu;->A03:Ljava/lang/Object;
+  0022..0024 op=0e return-void
+  0024..002a op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+  002a..002e op=5b iput-object v2, v0, LX/DNu;->A00:Ljava/lang/Object;
+  002e..0032 op=5b iput-object v1, v0, LX/DNu;->A01:Ljava/lang/Object;
+  0032..0036 op=5b iput-object v3, v0, LX/DNu;->A02:Ljava/lang/Object;
+  0036..003a op=5b iput-object v4, v0, LX/DNu;->A03:Ljava/lang/Object;
+  003a..003c op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method <init>(VLLLLI) flags=0x10001 registers=6
+  # full signature: LX/DNu;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+  0000..0004 op=59 iput v5, v0, LX/DNu;->$t:I
+  0004..000a op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+  000a..000e op=5b iput-object v1, v0, LX/DNu;->A00:Ljava/lang/Object;
+  000e..0012 op=5b iput-object v3, v0, LX/DNu;->A01:Ljava/lang/Object;
+  0012..0016 op=5b iput-object v2, v0, LX/DNu;->A02:Ljava/lang/Object;
+  0016..001a op=5b iput-object v4, v0, LX/DNu;->A03:Ljava/lang/Object;
+  001a..001c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

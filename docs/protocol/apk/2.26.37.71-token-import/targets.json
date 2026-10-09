@@ -1,0 +1,106 @@
+{
+  "chat-transfer-import": {
+    "class": "LX/CnI;",
+    "file": "chat-transfer-import.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "method_shorty": "LLLLLLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "companion-history-import": {
+    "class": "LX/CoO;",
+    "file": "companion-history-import.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "method_shorty": "VLLLLLII",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "conversation-descriptor": {
+    "class": "LX/BZK;",
+    "file": "conversation-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "method_shorty": "LLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "history-identity-worker": {
+    "class": "LX/DNu;",
+    "file": "history-identity-worker.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "history-worker-constructors": {
+    "class": "LX/DNu;",
+    "file": "history-worker-constructors.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "method_shorty": "VLLLLI",
+    "methods": 2,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "id-array-helper": {
+    "class": "LX/Ayn;",
+    "file": "id-array-helper.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1O",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "presence-array-helper": {
+    "class": "LX/Ayl;",
+    "file": "presence-array-helper.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1b",
+    "method_shorty": "LI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "xtask/src/xref.rs"
+    ]
+  }
+}
