@@ -1,5 +1,12 @@
 # Evidence ledger
 
+Text store submission (2026-10-09, **confirmed static**): nine topics
+connect B1l to the deferred 3Pn selector-4 store worker. Reason -1/1/22 and
+scheduler 26 are not status assignments. Three setter candidates are separately
+attributed to payment, ACK and unsent recovery. Full normal send progression
+and primary cleanup remain unported; no runtime/account/live change.
+[Evidence and limits](text-store-submission.md).
+
 Receipt count preprocessing (2026-10-09, **confirmed static**): four topics
 close participant-map counts and mode-dependent local-user membership; reused
 sources attribute copy/builder/ACK writes. The shared group write site is not

@@ -1,0 +1,54 @@
+{
+  "excluded-payment-status.txt": {
+    "bytes": 13548,
+    "sha256": "946c3b7e174d0a0d3186b84efdd896018e5e1d1f0a148f998448791eb1445fe0"
+  },
+  "excluded-status-ack.txt": {
+    "bytes": 2861,
+    "sha256": "00a16769c5040cf66a0f8ccb3a414a7c454f0e48b5891f1e4f32f9ab599bf8ef"
+  },
+  "excluded-unsent-recovery.txt": {
+    "bytes": 12829,
+    "sha256": "ffa31a3f0a279d574a9a605d8e30708cf6a55fda3fea283228982b2180895862"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "store-add-default.txt": {
+    "bytes": 694,
+    "sha256": "52a7afdbef08ef36b9882b74c23627fcb60854711d9e3f11247364f1ce28c6b8"
+  },
+  "store-add-queue.txt": {
+    "bytes": 1545,
+    "sha256": "135305535ef04b83d5266ad0691e95845d60ef470d3c9a79816736164be871c1"
+  },
+  "store-worker-init.txt": {
+    "bytes": 800,
+    "sha256": "2717c1ffeeacff8d2cd4d7af927e3f5d5a0848a55bd991f10c7e50257fb6c641"
+  },
+  "store-worker-run.txt": {
+    "bytes": 25010,
+    "sha256": "99c097a896688e1e8096f3dcd393e6f8af9bf96c830a8553059f5aa9a5c43fec"
+  },
+  "store-worker-target.txt": {
+    "bytes": 5874,
+    "sha256": "0fd844115aae631db01449956c53456fcf988eae83cb59dfbdb46fa94391dbcb"
+  },
+  "targets.json": {
+    "bytes": 3899,
+    "sha256": "4babf04a585b8dabd7163db8f9bfb8565d8a0533ea7f259694f71fb0c33eac4a"
+  },
+  "text-submit.txt": {
+    "bytes": 20828,
+    "sha256": "22f028433a79c0c19f9b8523ff03138d4c1ab6944d244de02dc1cb51c43283c5"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

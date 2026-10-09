@@ -240,3 +240,9 @@ Verification: the four-topic, nine-file, 213,751-byte export reproduces from
 the pinned APK; cached self-diff checks identity, not a second release.
 CLI-reference and API-symbol checks, formatting and repository hygiene are
 run for this source-only chunk; no fresh full runtime suite is claimed.
+
+Follow-up: [text store submission](text-store-submission.md) connects B1l's
+construction result to the selector-4 asynchronous store handoff. Scheduling
+reason integers are not status setters; complete A09/send transition remains
+unknown. Payment, status ACK and unsent-recovery candidates are retained as
+separate contexts rather than universal text initialization.

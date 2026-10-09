@@ -1,0 +1,95 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "text-submit": {
+      "class": "LX/B1l;",
+      "method": "A01",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "anchors": [
+        "UserActionsTextMessageSending"
+      ]
+    },
+    "store-add-default": {
+      "class": "LX/0zC;",
+      "method": "A0K",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "store-add-queue": {
+      "class": "LX/0zC;",
+      "method": "A0O",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "store-worker-init": {
+      "class": "LX/3Pn;",
+      "method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "store-worker-run": {
+      "class": "LX/3Pn;",
+      "method": "run",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "store-worker-target": {
+      "class": "LX/0zC;",
+      "method": "A04",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "anchors": [
+        "CoreMessageStore/addMessageOnAsyncCommitThread FAILED isWrittenToDb=false error="
+      ]
+    },
+    "excluded-payment-status": {
+      "class": "LX/11k;",
+      "method": "A09",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "anchors": [
+        "payment_reminder"
+      ]
+    },
+    "excluded-unsent-recovery": {
+      "class": "LX/1Tk;",
+      "method": "A02",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "anchors": [
+        "app/unsent/autoretry "
+      ]
+    },
+    "excluded-status-ack": {
+      "class": "LX/1Qk;",
+      "method": "A02",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "anchors": [
+        "SendE2eStatusAckHandler/failed to update FMessage status for key="
+      ]
+    }
+  }
+}
