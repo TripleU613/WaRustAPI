@@ -29,6 +29,8 @@ Status: accepted · 2026-09-17
   old master key no longer opens the store. CLI: `store rotate-key`.
 - Single-writer ownership uses `std::fs::File::try_lock` on `<db>.lock`
   (no extra dependency); a second opener gets `StoreError::AlreadyOwned`.
+  The owning guard explicitly unlocks on drop, after the database closes, so a
+  briefly inherited descriptor cannot extend a closed owner's lifetime.
 - Commits use `Durability::Immediate`. Async callers run store work through
   `spawn_blocking`; no guard is held across an `await`.
 - The event journal is append-only with monotonic cursors; consumers

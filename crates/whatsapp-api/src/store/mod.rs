@@ -306,7 +306,7 @@ const RECORD_V1: u16 = 1;
 /// Encrypted protocol store for one account.
 pub struct ProtocolStore {
     db: Database,
-    _owner_lock: File,
+    _owner_lock: OwnerLock,
     path: PathBuf,
     account_id: AccountId,
     sealer: Sealer,
@@ -645,7 +645,18 @@ fn read_salt<T: ReadableTable<&'static str, &'static [u8]>>(meta: &T) -> Result<
     Ok(salt)
 }
 
-fn take_owner_lock(db_path: &Path) -> Result<File> {
+// Database is dropped before this field. Explicit unlock ends ownership even
+// while another process temporarily retains a fork-inherited descriptor.
+// Closing one descriptor alone does not end a shared open-file-description lock.
+struct OwnerLock(File);
+impl Drop for OwnerLock {
+    fn drop(&mut self) {
+        // Drop cannot report errors; close remains the fallback on unlock failure.
+        let _ = self.0.unlock();
+    }
+}
+
+fn take_owner_lock(db_path: &Path) -> Result<OwnerLock> {
     let mut lock_path = db_path.as_os_str().to_owned();
     lock_path.push(".lock");
     let file = FsOpenOptions::new()
@@ -656,7 +667,7 @@ fn take_owner_lock(db_path: &Path) -> Result<File> {
         .open(&lock_path)
         .map_err(StoreError::Io)?;
     match file.try_lock() {
-        Ok(()) => Ok(file),
+        Ok(()) => Ok(OwnerLock(file)),
         Err(TryLockError::WouldBlock) => Err(StoreError::AlreadyOwned {
             path: db_path.to_path_buf(),
         }
@@ -1379,6 +1390,34 @@ mod tests {
                 .unwrap(),
             b"y"
         );
+    }
+
+    #[test]
+    fn dropped_owner_releases_lock_with_a_shared_descriptor_still_open() {
+        let (dir, store) = temp_store(MasterKey::from_bytes([1; 32]));
+        let path = store.path().to_path_buf();
+        let account_id = store.account_id().clone();
+        // try_clone shares the same OS lock description, as fork inheritance does.
+        let inherited = store._owner_lock.0.try_clone().unwrap();
+        let options = || OpenOptions {
+            path: path.clone(),
+            account_id: account_id.clone(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([1; 32]))),
+            create: false,
+        };
+        assert!(matches!(
+            ProtocolStore::open(options()),
+            Err(Error::Storage(StoreError::AlreadyOwned { .. }))
+        ));
+        drop(store);
+        let reopened = ProtocolStore::open(options()).unwrap();
+        assert!(matches!(
+            ProtocolStore::open(options()),
+            Err(Error::Storage(StoreError::AlreadyOwned { .. }))
+        ));
+        drop(reopened);
+        drop(inherited);
+        drop(dir);
     }
 
     #[test]

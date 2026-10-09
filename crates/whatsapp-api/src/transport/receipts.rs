@@ -739,6 +739,7 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
             if !super::jid_map::authenticated_direct_chat(tx, &from, entry.intent.chat.jid())? {
                 continue;
             }
+            super::send_versions::observe_in(tx, entry.local_id, &from, node)?;
             if entry
                 .facts
                 .iter()
@@ -1644,12 +1645,18 @@ mod tests {
                     &mut entry,
                     crate::model::send::AttemptProgress::InFlight,
                 )?;
+                super::super::send_versions::capture_in(
+                    tx,
+                    ticket.local_id,
+                    &[request.chat.jid().clone()],
+                )?;
                 Ok(ticket)
             })
             .unwrap();
         let receipt = Node::new("receipt")
             .attr("id", "fixture")
-            .attr("type", "read");
+            .attr("type", "read")
+            .attr("t", "20");
         assert_eq!(
             record(
                 &store,
@@ -1661,6 +1668,9 @@ mod tests {
         let receipt = receipt.attr("from", "15555550100@s.whatsapp.net");
         assert_eq!(record(&store, &receipt).unwrap(), 1);
         assert_eq!(record(&store, &receipt).unwrap(), 0);
+        assert_eq!(record(&store, &receipt.attr("t", "10")).unwrap(), 0);
+        let versions = super::super::send_versions::inspect(&store, ticket.local_id).unwrap();
+        assert_eq!(versions.device_receipts.unwrap()[0].timestamp, Some(10000));
         let status = store
             .read(|tx| outbox.status(tx, ticket.local_id))
             .unwrap()

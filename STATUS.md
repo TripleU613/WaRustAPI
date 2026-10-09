@@ -2904,3 +2904,22 @@ independently matches classes2.dex at its recorded offset. Repository hygiene
 checked 1,393 local links and 33 APK bundles / 8,507,021 bytes; diff hygiene
 passed. Research/docs only; no fresh runtime tests or live account operation
 is claimed.
+
+2026-10-09 — Original-device receipt rows (offline): new original reservations
+now atomically seed pending rows with exact frozen targets and nullable versions.
+Authenticated attributed supported root receipts retain earliest positive server
+milliseconds, including earlier duplicate facts, without rewriting original sends.
+`outbox-versions` exposes redacted rows; historical missing rows stay null.
+Native cleanup, PN/LID row canonicalization, per-user admission and resend remain
+unfinished. No fresh send/live capture is claimed.
+[Evidence and limits](docs/protocol/device-receipt-rows.md).
+
+Receipt-row validation: 802 workspace/all-feature tests, strict Clippy,
+warning-denying Rustdoc, formatting, default CLI, API symbols, CLI reference,
+experimental CLI build and hygiene passed. Retained-state inspection was
+unchanged, with zero network commands and no retained group preparation sample.
+A repeated parallel run exposed the previously recorded immediate-drop store
+ownership refusal; owner teardown now explicitly releases its own lock after
+closing the database. A shared-descriptor regression still rejects active second
+owners and permits reopening after drop. No external store unlock/retry was added.
+[Mechanism and attribution limits](docs/design/verification.md#temporary-store-ownership-refusal-observed-2026-10-09).

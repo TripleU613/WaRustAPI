@@ -232,11 +232,14 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
                 let Some(targets) = entry_targets(tx, &entry, &chat, id)? else {
                     continue;
                 };
-                if targeted(tx, &from, &targets)?
-                    && !entry
-                        .facts
-                        .iter()
-                        .any(|f| f.kind == fact_kind && f.device.as_ref() == Some(&device))
+                if !targeted(tx, &from, &targets)? {
+                    continue;
+                }
+                super::send_versions::observe_in(tx, entry.local_id, &from, node)?;
+                if !entry
+                    .facts
+                    .iter()
+                    .any(|f| f.kind == fact_kind && f.device.as_ref() == Some(&device))
                 {
                     outbox.record_fact(
                         tx,
@@ -533,9 +536,10 @@ mod tests {
         let outbox = Outbox::new("observer", Limits::default());
         let before = store.read(|tx| outbox.get(tx, local)).unwrap().unwrap();
         for target in [&companion, &lid] {
-            let node = receipt("full-plan-wire", &target.to_string(), "delivery");
+            let node = receipt("full-plan-wire", &target.to_string(), "delivery").attr("t", "20");
             assert_eq!(record(&store, &node).unwrap(), 1);
             assert_eq!(record(&store, &node).unwrap(), 0);
+            assert_eq!(record(&store, &node.attr("t", "10")).unwrap(), 0);
         }
         assert_eq!(
             record(
@@ -545,6 +549,7 @@ mod tests {
                     &primary.with_device(4).to_string(),
                     "read"
                 )
+                .attr("t", "1")
             )
             .unwrap(),
             0
@@ -555,6 +560,12 @@ mod tests {
         assert_eq!(after.wire_id, before.wire_id);
         assert_eq!(after.facts.len(), before.facts.len() + 2);
         let versions = super::super::send_versions::inspect(&store, local).unwrap();
+        let rows = versions.device_receipts.as_ref().unwrap();
+        assert_eq!(
+            rows.iter().filter(|r| r.timestamp == Some(10000)).count(),
+            2
+        );
+        assert_eq!(rows.iter().filter(|r| r.timestamp.is_none()).count(), 1);
         assert_eq!(
             versions
                 .users
@@ -846,7 +857,10 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let store = open(&dir.path().join("rollback.redb"), true);
         let targets = [Jid::parse(PN).unwrap()];
-        queued(&store, "wire", &targets);
+        let local = queued(&store, "wire", &targets);
+        store
+            .write(|tx| super::super::send_versions::capture_in(tx, local, &targets))
+            .unwrap();
         legacy(&store, "fixture", "wire", &targets, false, true);
         store
             .write(|tx| {
@@ -866,7 +880,7 @@ mod tests {
                 ))
             })
             .unwrap();
-        let error = record(&store, &receipt("wire", PN, "read"))
+        let error = record(&store, &receipt("wire", PN, "read").attr("t", "10"))
             .unwrap_err()
             .to_string();
         assert!(error.contains("invalid saved group receipt facts"));

@@ -2120,3 +2120,20 @@ independently matches classes2.dex at its recorded offset. Repository hygiene
 checked 1,393 local links and 33 APK bundles / 8,507,021 bytes; diff hygiene
 passed. Research/docs only; no fresh runtime tests or live account operation
 is claimed.
+
+2026-10-09 — **Implemented/offline:** APK 37.71 0Z5.A0D/DPo/0Z6.A0L pending
+nullable-version rows and Cmk.A03/0Gv.A01/7hf.A01 earliest-positive device times
+now have bounded Rust storage/receipt/inspection paths. Duplicate fact admission
+no longer suppresses an earlier supported root timestamp. Exact original-device
+provenance and atomic rollback are required; historical rows are never backfilled.
+[Implementation, sources and remaining unknowns](device-receipt-rows.md).
+No new raw APK bundle or live account operation in this chunk.
+
+Receipt-row runtime validation: 802 workspace/all-feature tests passed, plus
+strict Clippy, warning-denying Rustdoc, formatting, default CLI/API symbols,
+CLI-reference regeneration, experimental CLI build and hygiene (1,405 local
+links, 33 bundles / 8,507,021 bytes). Retained-state offline inspection was
+unchanged; zero network commands and zero retained group preparation samples.
+A separate local owner-drop shared-descriptor regression confirms teardown
+release without widening active-owner admission. Historical refusal holder
+attribution remains unknown; see [verification](../design/verification.md#temporary-store-ownership-refusal-observed-2026-10-09).

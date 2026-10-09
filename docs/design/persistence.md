@@ -142,3 +142,10 @@ Project history in its own transaction, then acknowledge the source cursor. A cr
 Do not import linked-device history/app-state assumptions wholesale. Primary startup, offline queues, group metadata synchronization and companion history transfer can have different responsibilities.
 
 Define `sync_once` as a bounded catch-up/drain with a cursor and progress report. It cannot promise “all history downloaded” without an observed API that provides it. Return a `HistoryGap` or unsupported-capability result where recovery is unavailable.
+
+2026-10-09 ownership teardown: the database field closes before `OwnerLock`
+explicitly unlocks its own descriptor. This ends the original owner's lock even
+when a cloned/fork-inherited descriptor remains temporarily open. A second
+opener while the store is live still receives `AlreadyOwned`; no retry, external
+unlock or ownership bypass is added. The cloned-descriptor regression and limits
+are recorded in [verification](verification.md#temporary-store-ownership-refusal-observed-2026-10-09).

@@ -75,6 +75,39 @@ pub struct SendVersions {
     pub captured: bool,
     /// Redacted actual user namespaces; empty when no snapshot is available.
     pub users: Vec<UserVersion>,
+    /// Current original-device rows, or null for historical missing instrumentation.
+    /// Timestamps are server milliseconds, never local observation time or resend permission.
+    pub device_receipts: Option<Vec<DeviceReceipt>>,
+}
+
+/// One original target's pending/received timestamp row, with no address exposed.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct DeviceReceipt {
+    /// SHA-256 of the exact normalized original device address.
+    pub device_ticket: String,
+    /// Original device component.
+    pub device: u16,
+    /// Nullable primary version captured by the original reservation.
+    pub at_send: Option<i64>,
+    /// Earliest positive server timestamp in milliseconds, or pending/unknown null.
+    pub timestamp: Option<i64>,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ReceiptRows {
+    rows: Vec<ReceiptRow>,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ReceiptRow {
+    device: Jid,
+    #[serde(deserialize_with = "nullable_version")]
+    version: Option<i64>,
+    #[serde(deserialize_with = "nullable_version")]
+    timestamp: Option<i64>,
+}
+fn receipt_key(id: LocalMessageId) -> String {
+    format!("outbox-device-receipts:{id}")
 }
 fn key(id: LocalMessageId) -> String {
     format!("outbox-primary-versions:{id}")
@@ -125,7 +158,31 @@ pub(super) fn capture_in(tx: &mut WriteTx<'_>, id: LocalMessageId, targets: &[Ji
     if tx.get(Table::Checkpoints, key.as_bytes(), 1)?.is_some() {
         return Err(invalid("original send version snapshot already exists"));
     }
-    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &snapshot)
+    // APK 37.71 0Z5.A0D / 0Z6.A0L seeds pending device rows with nullable
+    // original versions. Keep these mutable timestamps separate from provenance.
+    let rows = expected_receipts(&snapshot).ok_or_else(|| invalid("missing original devices"))?;
+    if tx
+        .get(Table::Checkpoints, receipt_key(id).as_bytes(), 1)?
+        .is_some()
+    {
+        return Err(invalid("original device receipt rows already exist"));
+    }
+    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &snapshot)?;
+    tx.put_json(
+        Table::Checkpoints,
+        receipt_key(id).as_bytes(),
+        1,
+        &ReceiptRows {
+            rows: rows
+                .into_iter()
+                .map(|(device, version)| ReceiptRow {
+                    device,
+                    version,
+                    timestamp: None,
+                })
+                .collect(),
+        },
+    )
 }
 
 fn decode_snapshot(bytes: Option<Vec<u8>>) -> Result<Option<Snapshot>> {
@@ -162,6 +219,82 @@ fn device(user: &Jid, id: u16) -> Jid {
     target
 }
 
+fn expected_receipts(snapshot: &Snapshot) -> Option<BTreeMap<Jid, Option<i64>>> {
+    let mut rows = BTreeMap::new();
+    for user in &snapshot.users {
+        for id in user.device_ids.as_ref()? {
+            rows.insert(device(&user.user, *id), user.version);
+        }
+    }
+    Some(rows)
+}
+fn decode_receipts(
+    bytes: Option<Vec<u8>>,
+    snapshot: Option<&Snapshot>,
+) -> Result<Option<ReceiptRows>> {
+    let Some(bytes) = bytes else {
+        return Ok(None);
+    };
+    let rows: ReceiptRows =
+        serde_json::from_slice(&bytes).map_err(|_| invalid("invalid saved device receipt rows"))?;
+    let expected = snapshot
+        .and_then(expected_receipts)
+        .ok_or_else(|| invalid("device receipt rows lack original provenance"))?;
+    let mut seen = BTreeSet::new();
+    if rows.rows.len() != expected.len()
+        || rows.rows.iter().any(|row| {
+            !seen.insert(&row.device)
+                || expected.get(&row.device) != Some(&row.version)
+                || row.timestamp.is_some_and(|t| t <= 0)
+        })
+    {
+        return Err(invalid(
+            "device receipt rows contradict original provenance",
+        ));
+    }
+    Ok(Some(rows))
+}
+
+/// Caller has already authenticated and attributed the receipt. Exact original
+/// namespace only: native counterpart authority/identity cleanup are unported.
+/// APK Cmk.A03 direct t -> 0Gv.A01(default 0) -> wrapping mul-long 1000;
+/// 7hf.A01 keeps earliest positive time, even for an equal/lower status.
+pub(super) fn observe_in(
+    tx: &mut WriteTx<'_>,
+    id: LocalMessageId,
+    actor: &Jid,
+    node: &crate::binary::Node,
+) -> Result<bool> {
+    let snapshot = decode_snapshot(tx.get(Table::Checkpoints, key(id).as_bytes(), 1)?)?;
+    let Some(mut rows) = decode_receipts(
+        tx.get(Table::Checkpoints, receipt_key(id).as_bytes(), 1)?,
+        snapshot.as_ref(),
+    )?
+    else {
+        return Ok(false);
+    };
+    let timestamp = node
+        .get_attr("t")
+        .and_then(|v| v.as_text())
+        .and_then(|t| t.parse::<i64>().ok())
+        .unwrap_or(0)
+        .wrapping_mul(1000);
+    if timestamp <= 0 {
+        return Ok(false);
+    }
+    let mut actor = actor.clone();
+    actor.kind = JidKind::Plain;
+    let Some(row) = rows.rows.iter_mut().find(|row| row.device == actor) else {
+        return Ok(false);
+    };
+    if row.timestamp.is_some_and(|prior| prior <= timestamp) {
+        return Ok(false);
+    }
+    row.timestamp = Some(timestamp);
+    tx.put_json(Table::Checkpoints, receipt_key(id).as_bytes(), 1, &rows)?;
+    Ok(true)
+}
+
 /// Original targets for receipt attribution, not current membership or resend
 /// permission. Missing/legacy count-only instrumentation remains unknown.
 pub(super) fn targets_in(tx: &WriteTx<'_>, id: LocalMessageId) -> Result<Option<Vec<Jid>>> {
@@ -193,10 +326,27 @@ pub fn inspect(store: &ProtocolStore, id: LocalMessageId) -> Result<SendVersions
             .get(tx, id)?
             .ok_or_else(|| invalid("unknown outbox intent"))?;
         let snapshot = decode_snapshot(tx.get(Table::Checkpoints, key(id).as_bytes(), 1)?)?;
+        let receipts = decode_receipts(
+            tx.get(Table::Checkpoints, receipt_key(id).as_bytes(), 1)?,
+            snapshot.as_ref(),
+        )?;
         let mut result = SendVersions {
             local_id: id,
             captured: snapshot.is_some(),
             users: Vec::new(),
+            device_receipts: receipts.map(|rows| {
+                rows.rows
+                    .into_iter()
+                    .map(|row| DeviceReceipt {
+                        device_ticket: hex::encode(Sha256::digest(
+                            row.device.to_string().as_bytes(),
+                        )),
+                        device: row.device.device,
+                        at_send: row.version,
+                        timestamp: row.timestamp,
+                    })
+                    .collect()
+            }),
         };
         if let Some(snapshot) = snapshot {
             for row in snapshot.users {
@@ -275,6 +425,7 @@ mod tests {
         let legacy = inspect(&store, id).unwrap();
         assert!(!legacy.captured);
         assert!(legacy.users.is_empty());
+        assert!(legacy.device_receipts.is_none());
         store
             .write(|tx| {
                 tx.put_json(
@@ -307,6 +458,10 @@ mod tests {
         );
         let targets = store.write(|tx| targets_in(tx, id)).unwrap().unwrap();
         assert_eq!(targets.len(), 4);
+        let receipts = before.device_receipts.as_ref().unwrap();
+        assert_eq!(receipts.len(), 4);
+        assert!(receipts.iter().all(|r| r.timestamp.is_none()));
+        assert_eq!(receipts.iter().filter(|r| r.at_send == Some(7)).count(), 2);
         assert!(targets.iter().all(|j| j.kind == JidKind::Plain));
         assert!(
             before
@@ -359,6 +514,7 @@ mod tests {
                 .iter()
                 .any(|u| u.at_send == Some(7) && u.current == Some(8) && !u.matches)
         );
+        assert_eq!(after.device_receipts, before.device_receipts);
         assert_eq!(store.journal_head().unwrap(), head);
     }
     #[test]
@@ -467,5 +623,157 @@ mod tests {
         let error = inspect(&store, id).unwrap_err().to_string();
         assert!(error.contains("invalid saved primary device version"));
         assert!(!error.contains("PRIVATE VALUE"));
+    }
+    #[test]
+    fn send_versions_receipt_time_is_earliest_positive_exact_device_and_atomic() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("receipt-time.redb");
+        let store = open(&path, true);
+        let id = enqueue(&store);
+        let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        store
+            .write(|tx| capture_in(tx, id, &[peer.clone(), peer.with_device(3)]))
+            .unwrap();
+        let original = inspect(&store, id).unwrap();
+        // Cmk.A03 signed seconds and DEX wrapping multiplication; no local clock fallback.
+        for value in [
+            None,
+            Some(""),
+            Some("PRIVATE INVALID"),
+            Some("0"),
+            Some("-1"),
+            Some("9223372036854775808"),
+            Some("9223372036854775807"),
+        ] {
+            let mut node = crate::binary::Node::new("receipt");
+            if let Some(value) = value {
+                node = node.attr("t", value);
+            }
+            assert!(!store.write(|tx| observe_in(tx, id, &peer, &node)).unwrap());
+            assert_eq!(inspect(&store, id).unwrap(), original);
+        }
+        let node = crate::binary::Node::new("receipt").attr("t", "20");
+        for other in [
+            peer.with_device(4),
+            Jid::parse("222222222222222@lid").unwrap(),
+        ] {
+            assert!(!store.write(|tx| observe_in(tx, id, &other, &node)).unwrap());
+        }
+        assert!(store.write(|tx| observe_in(tx, id, &peer, &node)).unwrap());
+        assert!(!store.write(|tx| observe_in(tx, id, &peer, &node)).unwrap());
+        assert!(
+            store
+                .write(|tx| observe_in(tx, id, &peer, &node.clone().attr("t", "10")))
+                .unwrap()
+        );
+        assert!(
+            !store
+                .write(|tx| observe_in(tx, id, &peer, &node.clone().attr("t", "30")))
+                .unwrap()
+        );
+        let saved = inspect(&store, id).unwrap();
+        assert_eq!(saved.users, original.users);
+        assert_eq!(
+            saved
+                .device_receipts
+                .as_ref()
+                .unwrap()
+                .iter()
+                .filter(|r| r.timestamp == Some(10000))
+                .count(),
+            1
+        );
+        assert_eq!(
+            saved
+                .device_receipts
+                .as_ref()
+                .unwrap()
+                .iter()
+                .filter(|r| r.timestamp.is_none())
+                .count(),
+            1
+        );
+        let result: Result<()> = store.write(|tx| {
+            observe_in(tx, id, &peer.with_device(3), &node)?;
+            Err(invalid("fixture rollback"))
+        });
+        assert!(result.is_err());
+        assert_eq!(inspect(&store, id).unwrap(), saved);
+        // DEX mul-long wraps this valid negative seconds input to positive 1000.
+        let wrapped = node.attr("t", "-9223372036854775807");
+        assert!(
+            store
+                .write(|tx| observe_in(tx, id, &peer.with_device(3), &wrapped))
+                .unwrap()
+        );
+        let saved = inspect(&store, id).unwrap();
+        assert_eq!(
+            saved
+                .device_receipts
+                .as_ref()
+                .unwrap()
+                .iter()
+                .filter(|r| r.timestamp == Some(1000))
+                .count(),
+            1
+        );
+        drop(store);
+        assert_eq!(inspect(&open(&path, false), id).unwrap(), saved);
+    }
+
+    #[test]
+    fn send_versions_receipt_rows_refuse_corruption_and_do_not_backfill_history() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("receipt-corruption.redb"), true);
+        let id = enqueue(&store);
+        let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let node = crate::binary::Node::new("receipt").attr("t", "10");
+        assert!(!store.write(|tx| observe_in(tx, id, &peer, &node)).unwrap());
+        let snapshot = serde_json::json!({"users":[{"user":peer,"devices":1,"device_ids":[0],"version":null}]});
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key(id).as_bytes(), 1, &snapshot))
+            .unwrap();
+        // Exact historical targets alone are not evidence that pending rows existed.
+        assert!(!store.write(|tx| observe_in(tx, id, &peer, &node)).unwrap());
+        assert!(inspect(&store, id).unwrap().device_receipts.is_none());
+        let valid = serde_json::json!({"device":peer,"version":null,"timestamp":null});
+        let mut missing = valid.clone();
+        missing.as_object_mut().unwrap().remove("timestamp");
+        for rows in [
+            serde_json::json!([missing]),
+            serde_json::json!([]),
+            serde_json::json!([valid.clone(), valid.clone()]),
+            serde_json::json!([{"device":peer,"version":1,"timestamp":null}]),
+            serde_json::json!([{"device":peer,"version":null,"timestamp":0}]),
+            serde_json::json!([{"device":peer.with_device(3),"version":null,"timestamp":null}]),
+            serde_json::json!("PRIVATE VALUE"),
+        ] {
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        receipt_key(id).as_bytes(),
+                        1,
+                        &serde_json::json!({"rows":rows}),
+                    )
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let error = store
+                .write(|tx| observe_in(tx, id, &peer, &node))
+                .unwrap_err()
+                .to_string();
+            assert!(!error.contains("PRIVATE"));
+            assert!(!error.contains(&peer.user));
+            assert!(inspect(&store, id).is_err());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+        }
     }
 }

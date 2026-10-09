@@ -94,3 +94,20 @@ single bounded receive-only window was started. Original refusal logs and the
 offline comparison remain private. Do not unlock/reset the store or add network
 retries for this condition; wait for the confirmed inspection handle to exit
 before the dependent receive process and preserve the first result.
+
+2026-10-09 follow-up — **Observed:** the same immediate-drop/reopen CLI fixture
+failed again in a parallel workspace run. **Confirmed offline mechanism:** a
+cloned file descriptor shares the ownership lock; closing the original alone
+leaves it held. A new regression retains that clone, verifies a second live
+owner is refused, drops the store and requires reopening without retries.
+**Inferred:** concurrent child-process tests may briefly inherit that descriptor;
+the holder in the original failed runs was not identified. Do not promote this
+mechanism into a proven explanation of either historical failure.
+
+`OwnerLock` now explicitly releases its own lock during destruction, after the
+preceding database field has closed. This is normal owner teardown, not an
+external unlock or a retry of `AlreadyOwned`. While the store is live, the same
+try-lock guard and second-owner refusal remain. Unlock failure during Drop
+cannot be returned; closing the file remains the fallback. Store use through an
+inherited process copy is unsupported; child tools must open their own store.
+No retained live-account process was unlocked, reset or retried.

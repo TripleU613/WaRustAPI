@@ -2974,3 +2974,18 @@ independently matches classes2.dex at its recorded offset. Repository hygiene
 checked 1,393 local links and 33 APK bundles / 8,507,021 bytes; diff hygiene
 passed. Research/docs only; no fresh runtime tests or live account operation
 is claimed.
+
+2026-10-09 — **Implemented/offline:** original pending device rows and earliest
+positive supported root-receipt timestamp retention, inspectable through
+`outbox-versions`. Duplicate facts can improve timestamps atomically without
+another event. Original target/version provenance stays immutable; historical
+missing rows remain unknown. This does not complete native cleanup, per-user
+admission, namespace canonicalization or resend. No fresh send/live capture.
+[Evidence and limits](protocol/device-receipt-rows.md).
+
+Receipt-row checks passed 802 workspace/all-feature tests plus strict Clippy,
+Rustdoc, default CLI, API/CLI reference and hygiene. Offline retained-state
+inspection left eligible sends and the store summary unchanged; no group sample
+or fresh send was available. Owner-drop lock release was corrected with a
+shared-descriptor regression while active second owners remain refused. This
+local teardown fix does not change network retry/uncertainty policy.

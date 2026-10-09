@@ -150,3 +150,8 @@ malformed device IDs refuse with redacted diagnostics.
 Offline retained-profile CLI checks left store inspection and queued intents
 unchanged. No retained group preparations existed to inspect; no new live
 message or native pending receipt cache is claimed from these fixtures.
+
+The separate [original-device receipt rows](device-receipt-rows.md) now capture
+pending membership in the same new reservation transaction and retain earliest
+positive supported root-receipt server timestamps. They do not mutate this
+immutable version/target snapshot or implement native identity cleanup/resend.

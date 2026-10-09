@@ -3712,7 +3712,8 @@
         "required": [
           "local_id",
           "captured",
-          "users"
+          "users",
+          "device_receipts"
         ],
         "properties": {
           "local_id": {
@@ -3730,6 +3731,16 @@
               "$ref": "#/components/schemas/UserVersion"
             },
             "description": "Actual send target user namespaces, redacted; empty only without a snapshot."
+          },
+          "device_receipts": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/OriginalDeviceReceipt"
+            },
+            "description": "Separate mutable rows seeded only in the original send reservation. Exact original device hashes/components and nullable original versions, with earliest positive supported root-receipt server timestamp in milliseconds. Pending timestamps are null. Historical missing rows stay null without backfill. No native identity cleanup/resend authority."
           }
         }
       },
@@ -3803,6 +3814,45 @@
             "minimum": 0,
             "maximum": 65535,
             "description": "Original device component; zero is primary."
+          }
+        }
+      },
+      "OriginalDeviceReceipt": {
+        "type": "object",
+        "required": [
+          "device_ticket",
+          "device",
+          "at_send",
+          "timestamp"
+        ],
+        "properties": {
+          "device_ticket": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 of normalized exact device JID, with namespace preserved."
+          },
+          "device": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 65535,
+            "description": "Original device component; zero is primary."
+          },
+          "at_send": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "Nullable original primary version; receipt updates never rewrite it."
+          },
+          "timestamp": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "minimum": 1,
+            "description": "Earliest positive server milliseconds from an authenticated attributed supported root receipt, or null while pending. Independent of local fact observation time and read/played status."
           }
         }
       }
@@ -12459,7 +12509,7 @@
           "Outbox"
         ],
         "summary": "Inspect original send-time primary versions (offline, redacted)",
-        "description": "Offline inspection of an existing immutable local outbox intent. Direct and group comparison adapters capture actual target users' nullable primary-device versions in the original send reservation transaction, after authenticated replacement hooks. Group capture includes every planned device, not only newly distributed sender keys. The snapshot is immutable; namespace values stay separate and duplicate device encodings are counted once. Historical/unprepared intents without a snapshot return captured=false and users=[]; captured null counters are known missing values, not missing instrumentation. Each user exports only a normalized-JID hash, device count, at_send/current signed int64-or-null and nullable matches boolean. Equality is diagnostic, never a native resend decision; effective default/hosted gates and full sync/resend runtime remain unported. Unknown local IDs and malformed snapshots/counters refuse with fixed diagnostics; inspection neither repairs history nor sends/queues anything. No HTTP route is served. See docs/protocol/send-version-snapshot.md. New captures retain exact device components; device_targets exposes only component/hash pairs. Old count-only snapshots return null for that field and are never backfilled. Group receipt attribution uses the original full frozen targets when known, requiring original envelope sender-key targets to be a subset. Current fanout still distributes to every target; native pending receipt lifecycle and cached-key distribution omission remain unported.",
+        "description": "Offline inspection of an existing immutable local outbox intent. Direct and group comparison adapters capture actual target users' nullable primary-device versions in the original send reservation transaction, after authenticated replacement hooks. Group capture includes every planned device, not only newly distributed sender keys. The snapshot is immutable; namespace values stay separate and duplicate device encodings are counted once. Historical/unprepared intents without a snapshot return captured=false and users=[]; captured null counters are known missing values, not missing instrumentation. Each user exports only a normalized-JID hash, device count, at_send/current signed int64-or-null and nullable matches boolean. Equality is diagnostic, never a native resend decision; effective default/hosted gates and full sync/resend runtime remain unported. Unknown local IDs and malformed snapshots/counters refuse with fixed diagnostics; inspection neither repairs history nor sends/queues anything. No HTTP route is served. See docs/protocol/send-version-snapshot.md. New captures retain exact device components; device_targets exposes only component/hash pairs. Old count-only snapshots return null for that field and are never backfilled. Group receipt attribution uses the original full frozen targets when known, requiring original envelope sender-key targets to be a subset. Current fanout still distributes to every target; native identity cleanup, mutable membership removal and cached-key distribution omission remain unported. Separate pending device rows are now seeded with original nullable versions in the same reservation transaction. Authenticated, attributed supported root receipts update exact original-device rows with earliest positive server milliseconds (root t parsed as signed ASCII seconds, wrapping multiplication by 1000). Equal/duplicate facts may improve a timestamp without a second fact/event. Historical missing rows remain null; no namespace merging, deletion or resend is inferred. Malformed rows refuse atomically with redacted diagnostics. See docs/protocol/device-receipt-rows.md.",
         "operationId": "outboxVersions",
         "x-cli": "whatsapp-cli outbox-versions",
         "x-transport": [
@@ -12488,7 +12538,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Redacted immutable original-send snapshot and current version relationship",
+            "description": "Redacted immutable original-send snapshot, current version relationship and separate original-device timestamp rows",
             "content": {
               "application/json": {
                 "schema": {
