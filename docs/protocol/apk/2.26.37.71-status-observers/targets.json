@@ -1,0 +1,201 @@
+{
+  "chat-callback-dispatch": {
+    "class": "LX/3J4;",
+    "file": "chat-callback-dispatch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "COL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "chat-callback-init": {
+    "class": "LX/3J4;",
+    "file": "chat-callback-init.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 2,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "chat-observer-entry": {
+    "class": "LX/0Yr;",
+    "file": "chat-observer-entry.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0O",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "main-message-observer": {
+    "anchors": [
+      "MainMessageObserver/onMessageChanged unknown type "
+    ],
+    "class": "LX/0My;",
+    "file": "main-message-observer.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BuN",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "message-callback-dispatch": {
+    "class": "LX/FcA;",
+    "file": "message-callback-dispatch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "COL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "message-callback-init": {
+    "class": "LX/FcA;",
+    "file": "message-callback-init.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "message-observer-entry": {
+    "class": "LX/0Ys;",
+    "file": "message-observer-entry.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0P",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "observer-base-dispatch": {
+    "class": "LX/078;",
+    "file": "observer-base-dispatch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "post-entry": {
+    "class": "LX/0Yq;",
+    "file": "post-entry.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "post-owner-init": {
+    "class": "LX/0Yq;",
+    "file": "post-owner-init.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "post-runnable-init": {
+    "class": "LX/DLx;",
+    "file": "post-runnable-init.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "post-runnable-run": {
+    "class": "LX/DLx;",
+    "file": "post-runnable-run.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "post-work": {
+    "class": "LX/0Yq;",
+    "file": "post-work.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "return-only-observer": {
+    "class": "LX/1yE;",
+    "file": "return-only-observer.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BuN",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  }
+}

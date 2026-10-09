@@ -1,0 +1,81 @@
+# APK-derived structural disassembly: LX/3J4;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method COL(VL) flags=0x11 registers=7
+  # full signature: LX/3J4;->COL(Ljava/lang/Object;)V
+  0000..0004 op=52 iget v0, v5, LX/3J4;->$t:I
+  0004..000a op=2b packed-switch v0, payload@0x128, cases=[0:@0x28, 1:@0x52, 2:@0x70, 3:@0x8e, 4:@0xac, 5:@0xca, 6:@0x108], default@0xa
+  000a..000e op=55 iget-boolean v1, v5, LX/3J4;->A01:Z
+  000e..0012 op=54 iget-object v0, v5, LX/3J4;->A00:Ljava/lang/Object;
+  0012..0016 op=1f check-cast v0, Ljava/util/Collection;
+  0016..001a op=1f check-cast v6, LX/0Y7;
+  001a..0020 op=71 invoke-static {v6}, LX/1xk;->A1G(Ljava/lang/Object;)V
+  0020..0026 op=72 invoke-interface {v6, v0, v1}, LX/0Y7;->Bho(Ljava/util/Collection;Z)V
+  0026..0028 op=0e return-void
+  0028..002c op=54 iget-object v4, v5, LX/3J4;->A00:Ljava/lang/Object;
+  002c..0030 op=1f check-cast v4, Lcom/whatsapp/infra/core/jid/UserJid;
+  0030..0034 op=55 iget-boolean v3, v5, LX/3J4;->A01:Z
+  0034..0038 op=1f check-cast v6, LX/3Iq;
+  0038..003e op=71 invoke-static {v6}, LX/1xk;->A1G(Ljava/lang/Object;)V
+  003e..0042 op=54 iget-object v2, v6, LX/3Iq;->A00:Ljava/lang/Object;
+  0042..0046 op=1f check-cast v2, LX/1zq;
+  0046..0048 op=12 const/4 v1, #0x5
+  0048..004a op=12 const/4 v0, #0x1
+  004a..0050 op=71 invoke-static {v2, v4, v1, v0, v3}, LX/1zq;->A02(LX/1zq;Lcom/whatsapp/infra/core/jid/UserJid;IZZ)V
+  0050..0052 op=0e return-void
+  0052..0056 op=54 iget-object v1, v5, LX/3J4;->A00:Ljava/lang/Object;
+  0056..005a op=1f check-cast v1, LX/0Cy;
+  005a..005e op=55 iget-boolean v0, v5, LX/3J4;->A01:Z
+  005e..0062 op=1f check-cast v6, LX/0Y2;
+  0062..0068 op=71 invoke-static {v6}, LX/1xk;->A1G(Ljava/lang/Object;)V
+  0068..006e op=72 invoke-interface {v6, v1, v0}, LX/0Y2;->Bi3(LX/0Cy;Z)V
+  006e..0070 op=0e return-void
+  0070..0074 op=54 iget-object v1, v5, LX/3J4;->A00:Ljava/lang/Object;
+  0074..0078 op=1f check-cast v1, LX/0Cy;
+  0078..007c op=55 iget-boolean v0, v5, LX/3J4;->A01:Z
+  007c..0080 op=1f check-cast v6, LX/0cQ;
+  0080..0086 op=71 invoke-static {v6}, LX/1xk;->A1G(Ljava/lang/Object;)V
+  0086..008c op=72 invoke-interface {v6, v1, v0}, LX/0cQ;->BfT(LX/0Cy;Z)V
+  008c..008e op=0e return-void
+  008e..0092 op=54 iget-object v1, v5, LX/3J4;->A00:Ljava/lang/Object;
+  0092..0096 op=1f check-cast v1, LX/0Cy;
+  0096..009a op=55 iget-boolean v0, v5, LX/3J4;->A01:Z
+  009a..009e op=1f check-cast v6, LX/0cQ;
+  009e..00a4 op=71 invoke-static {v6}, LX/1xk;->A1G(Ljava/lang/Object;)V
+  00a4..00aa op=72 invoke-interface {v6, v1, v0}, LX/0cQ;->BfD(LX/0Cy;Z)V
+  00aa..00ac op=0e return-void
+  00ac..00b0 op=54 iget-object v1, v5, LX/3J4;->A00:Ljava/lang/Object;
+  00b0..00b4 op=1f check-cast v1, LX/0Cy;
+  00b4..00b8 op=55 iget-boolean v0, v5, LX/3J4;->A01:Z
+  00b8..00bc op=1f check-cast v6, LX/0cQ;
+  00bc..00c2 op=71 invoke-static {v6}, LX/1xk;->A1G(Ljava/lang/Object;)V
+  00c2..00c8 op=72 invoke-interface {v6, v1, v0}, LX/0cQ;->BfK(LX/0Cy;Z)V
+  00c8..00ca op=0e return-void
+  00ca..00ce op=54 iget-object v3, v5, LX/3J4;->A00:Ljava/lang/Object;
+  00ce..00d2 op=1f check-cast v3, Ljava/util/Collection;
+  00d2..00d6 op=55 iget-boolean v2, v5, LX/3J4;->A01:Z
+  00d6..00da op=1f check-cast v6, LX/3J9;
+  00da..00e0 op=71 invoke-static {v6}, LX/1xk;->A1G(Ljava/lang/Object;)V
+  00e0..00e2 op=12 const/4 v0, #0x0
+  00e2..00e8 op=71 invoke-static {v3, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  00e8..00ec op=54 iget-object v0, v6, LX/3J9;->A00:LX/05B;
+  00ec..00f2 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  00f2..00f4 op=0c move-result-object v1
+  00f4..00f8 op=1f check-cast v1, LX/0oA;
+  00f8..00fe op=6e invoke-virtual {v1, v3, v2}, LX/0oA;->A0M(Ljava/util/Collection;Z)Ljava/util/Set;
+  00fe..0100 op=0c move-result-object v0
+  0100..0106 op=6e invoke-virtual {v1, v0}, LX/0oA;->A0b(Ljava/util/Set;)V
+  0106..0108 op=0e return-void
+  0108..010c op=54 iget-object v1, v5, LX/3J4;->A00:Ljava/lang/Object;
+  010c..0110 op=1f check-cast v1, LX/1cj;
+  0110..0114 op=55 iget-boolean v0, v5, LX/3J4;->A01:Z
+  0114..0118 op=1f check-cast v6, LX/0Mv;
+  0118..011e op=71 invoke-static {v6}, LX/1xk;->A1G(Ljava/lang/Object;)V
+  011e..0124 op=72 invoke-interface {v6, v1, v0}, LX/0Mv;->Bvh(LX/1cj;Z)V
+  0124..0126 op=0e return-void
+  0126..0128 op=00 nop
+  0128..014c op=00 packed-switch-payload size=7
+  # exception table: 0 try range(s)
+.end method

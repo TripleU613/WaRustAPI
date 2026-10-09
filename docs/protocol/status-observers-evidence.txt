@@ -1,0 +1,36 @@
+APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Raw-byte cross-check of the corrected status post-hook selector.
+
+classes.dex, 0Yq.A01 instruction start 0x5e32ec, 26 bytes:
+54 32 97 15 13 01 10 00 22 00 a5 35 70 53 9a a1 40 15 6e 20 03 b8 02 00 0e 00
+iget-object v2,v3,A02; const/16 v1,16; new-instance v0,DLx;
+invoke-direct DLx.<init>(v0,v4,v5,v1,v3); Handler.post(v2,v0); return-void.
+The selected constructor stores its third explicit argument (16) as $t,
+its second explicit argument as A00, and the message/owner as A02/A01.
+The exact 26-byte prefix occurs once across classes*.dex in this APK.
+
+classes7.dex, DLx.run instruction start 0x7d5c70, 14-byte prefix:
+08 01 1d 00 52 10 10 a0 2b 00 30 0f 00 00
+move-object/from16 v1,v29; iget v0,v1,$t;
+packed-switch v0 with code-unit-relative payload offset 0x0f30.
+Payload at 0x7d7ad8 has first eight bytes 00 01 20 00 00 00 00 00:
+ident=0x0100, size=32, first_key=0. Entry for key 16 is signed i32 0x0b51;
+relative to switch byte 0008, destination is 0008+0x0b51*2=16aa.
+The exact 14-byte prefix occurs once across classes*.dex in this APK.
+Read these exact ZIP-entry ranges to recheck. Raw bytes independently confirm
+selector 16 and its destination; rendered method bodies name the fields/calls.
+Selector 5 reaches 0e10 (call/audio route), not this status hook.
+
+Historical prose in receipt-state-only.md said selector 5. Its immutable
+state-post-hook.txt already retained const/16 v1,#0x10. This was a prose error,
+not an APK release difference or a decoder change. No historical source bundle
+was edited to manufacture consistency.
+
+The all-class BuN scan is reproduced by the command in
+status-observer-declarations.json. All 80 declarations have exact prototype
+BuN(LX/178;I)V: 43 return-only, 1 no-bytecode declaration, 36 bodies.
+Each exact rendered block has a retained SHA-256 and direct-body negative flags.
+These are physical declarations, not registered live subscribers or a complete
+inheritance/reflection dispatch closure. No direct receipt_user literal,
+base 178.A0H call or base A08 write was found in those bodies. Transitive SQL,
+other setters, observer membership and effective account state remain unknown.

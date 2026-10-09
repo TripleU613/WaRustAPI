@@ -1,0 +1,74 @@
+{
+  "chat-callback-dispatch.txt": {
+    "bytes": 4573,
+    "sha256": "e2c1b6298437c8db181ab2e05d12e2096d1aec127907a332573c438578304d58"
+  },
+  "chat-callback-init.txt": {
+    "bytes": 1456,
+    "sha256": "b3ff9fdac74ca2b3f64683abcc67e18e1e58f6b902d74f326185e4a2bf9fe8fe"
+  },
+  "chat-observer-entry.txt": {
+    "bytes": 858,
+    "sha256": "e34cd64f9cec6124f3edc12c1aec2d450adfb949034c996e84e816cf234d42a5"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "main-message-observer.txt": {
+    "bytes": 37734,
+    "sha256": "f79124fb54faf6cd997b15ced52a584d4d239bfff707e798420e7b04f1aa309d"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-callback-dispatch.txt": {
+    "bytes": 1263,
+    "sha256": "f9c352e17a97caa313b5a6e11e48b3cac38b278cfb0288267d6197e67483e041"
+  },
+  "message-callback-init.txt": {
+    "bytes": 710,
+    "sha256": "7cde1d9d798afb29059aff6d1d652c990ceb67797e83c82ff5a7c326ae15afee"
+  },
+  "message-observer-entry.txt": {
+    "bytes": 879,
+    "sha256": "64d45b17973469e5fe21355ac0d42f3187a5bac8c34bbc171de30ad531cadc60"
+  },
+  "observer-base-dispatch.txt": {
+    "bytes": 8609,
+    "sha256": "987bbdc9982f3058e53136b4efa79b3fcc5a92e08a598c4d6f2f0d7869a10da1"
+  },
+  "post-entry.txt": {
+    "bytes": 815,
+    "sha256": "e4d11bfd966c7b58e639ee72a31182807041ca30319da2f2f1413302a81a6a6f"
+  },
+  "post-owner-init.txt": {
+    "bytes": 2758,
+    "sha256": "8fcea7731bf875b1bc18959072dfc7a978396a62aa5132cda9e8b6bbc469dc43"
+  },
+  "post-runnable-init.txt": {
+    "bytes": 800,
+    "sha256": "821788f8e797043cd19f255475552b80071689f73e9573052d39be9a34cc1976"
+  },
+  "post-runnable-run.txt": {
+    "bytes": 119559,
+    "sha256": "1be8cae43d3c205e1b440ea2acaef25f34c8ac62b479534b9267da90ac54627e"
+  },
+  "post-work.txt": {
+    "bytes": 1384,
+    "sha256": "2cbb350fdc8680a2b9643db22861ccb7b90c573eeb4579f9f364eec1915d5670"
+  },
+  "return-only-observer.txt": {
+    "bytes": 457,
+    "sha256": "952a478e5f416eafcc280d7ced7308472ccbb6e24ee6387e1d55a8f178d5f424"
+  },
+  "targets.json": {
+    "bytes": 5964,
+    "sha256": "199fffb4d9eb7d3c9a65bb6d1dbdcc2f900140cc6e39eea27a91acbab0f8d4eb"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

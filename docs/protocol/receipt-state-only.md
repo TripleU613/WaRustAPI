@@ -69,9 +69,11 @@ untraced. Status 4 logs current wall-clock minus message A0F as a server-delay
 diagnostic; it does not assign that elapsed value to receipt_user timestamps.
 
 For statuses other than 11, 12, 16 and 17, it calls 0Yq.A01(message,-1).
-That helper constructs DLx discriminator 5 and posts it to a Handler; the
-runnable and later ordering are **unknown**. It is not proof of synchronous
-SQL or a receipt ACK. The 1iZ/status-20 branch separately calls 0Z0.A0C and
+That helper constructs DLx discriminator **16** and posts it to a Handler.
+The earlier prose said 5; the retained source already showed 0x10. The
+[observer follow-up](status-observers.md) resolves its immediate message/chat
+callbacks while keeping registration, transitive effects and ordering unknown.
+It is not proof of synchronous SQL or a receipt ACK. The 1iZ/status-20 branch separately calls 0Z0.A0C and
 0Y5.A06 and returns true; full specialized persistence remains untraced.
 
 Other messages call 0V9.A07(message,-1). A true result plus a nonnull callback

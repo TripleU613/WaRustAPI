@@ -1,0 +1,808 @@
+{
+  "apk_version": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "command": "target/debug/xtask apk-smali ~/Downloads/WhatsApp.apk --class '' --method BuN --signatures --exceptions",
+  "scope": "All 80 exact BuN(LX/178;I)V physical declarations returned by this method-name scan, not runtime registration or complete inheritance closure. Hash each UTF-8 block after splitting output on newline+# class:; retain block text exactly including its trailing newline.",
+  "declarations": [
+    {
+      "class": "LX/1yE;",
+      "signature": "LX/1yE;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "eb5ebee6b8201ecfef3463dba3ec24b1db15d7e8514e71b3b035957928e442fd",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/3Ir;",
+      "signature": "LX/3Ir;->BuN(LX/178;I)V",
+      "instructions": 230,
+      "classification": "body",
+      "rendered_block_sha256": "e76fffacbd47547cc017e0519fdbd3512eed78159f8b08db6730db2def7ee6fb",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/3JB;",
+      "signature": "LX/3JB;->BuN(LX/178;I)V",
+      "instructions": 19,
+      "classification": "body",
+      "rendered_block_sha256": "b1ccfab66329bd1f640fd67bf08b892ec8fb7d81bde5d249c47dc07ea01ca875",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/3La;",
+      "signature": "LX/3La;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "0ab31a9a2c7580fb12e1c856c1ff58acf7728a86d4448af937cd467bea9ec5e8",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/3Lb;",
+      "signature": "LX/3Lb;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "71ad73c56223912ab0a1f76c17054ad452f9f7f0e015d0f3a25da16735556e06",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/3Lc;",
+      "signature": "LX/3Lc;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "ac9a8cdae73b3c1267dd8d0bf7a84c944a887ec5c2f16ef4df1a2690bf785de7",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/3Ld;",
+      "signature": "LX/3Ld;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "557bdad7631cae4edb7d2870acdb17e7c84efa4d4cecd776c0632f84ce4580dd",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/3Le;",
+      "signature": "LX/3Le;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "fa988aae36e75e89f3a448438e0f794c5ab7f1a0a74bcc5927340bd2390f47d0",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/3Lf;",
+      "signature": "LX/3Lf;->BuN(LX/178;I)V",
+      "instructions": 34,
+      "classification": "body",
+      "rendered_block_sha256": "bbb8ceb174a5b924afd0432436dd375c435cbe42e44d0f6e2d9481abbaf46f74",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/3Lg;",
+      "signature": "LX/3Lg;->BuN(LX/178;I)V",
+      "instructions": 42,
+      "classification": "body",
+      "rendered_block_sha256": "b2768bbeeea04ca9d7aeac8db5635d8e55baf60be38425e2d53417e4da9ffa28",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/3Lh;",
+      "signature": "LX/3Lh;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "eef046a08c45869f71ccdda19b2a344d9e5d464dae41a4e61218f1a979905415",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/3Li;",
+      "signature": "LX/3Li;->BuN(LX/178;I)V",
+      "instructions": 48,
+      "classification": "body",
+      "rendered_block_sha256": "54099514d87441dcea3160e87f326bdabc36310089fe406087f2e477c606ce6c",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/3Lj;",
+      "signature": "LX/3Lj;->BuN(LX/178;I)V",
+      "instructions": 53,
+      "classification": "body",
+      "rendered_block_sha256": "37e733092b2c0be1007047ddae2b82edb7604d9c188b2fd208de469eb1546755",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/3Lk;",
+      "signature": "LX/3Lk;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "e3277082553e0cd1e6631028cf7486b7b6d6b817c029040036ce6500c87f5333",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Fc2;",
+      "signature": "LX/Fc2;->BuN(LX/178;I)V",
+      "instructions": 75,
+      "classification": "body",
+      "rendered_block_sha256": "e351043414b5f3af99de879c9fe5c94e588e2e2f5e0c729ba6317a3674046694",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/FcE;",
+      "signature": "LX/FcE;->BuN(LX/178;I)V",
+      "instructions": 77,
+      "classification": "body",
+      "rendered_block_sha256": "b5f09d27f5bc8dafa754e81efb3563027712a1c69307c07ab055df5b45ea8678",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/FcF;",
+      "signature": "LX/FcF;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "7a34fafa82a554148e3be73c2f6712a89e3c3a62b268faf7cf5d952fbaf8063d",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/FeR;",
+      "signature": "LX/FeR;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "104747e1642d4854a1df72f19499aaec0d6a80ed855b02c21cab31ec6c14be4b",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/FeS;",
+      "signature": "LX/FeS;->BuN(LX/178;I)V",
+      "instructions": 149,
+      "classification": "body",
+      "rendered_block_sha256": "97875787b69a35c99afc74e89d69f5883c97c6c1829adb89e7be02341a5097de",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Kx5;",
+      "signature": "LX/Kx5;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "7791c5315759d8e2353ad15c729d675cc8b58c2599d68a658be1cc6104bb685e",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Kx6;",
+      "signature": "LX/Kx6;->BuN(LX/178;I)V",
+      "instructions": 32,
+      "classification": "body",
+      "rendered_block_sha256": "1c5b74ad570e39c944c34186d82d5bc0d4aeb5cc7598fb79718219729337f0e2",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Ky4;",
+      "signature": "LX/Ky4;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "a6e5254c687034d9119bd68261fbfe942447bb6080337c033fa22083dd689f3c",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Ky5;",
+      "signature": "LX/Ky5;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "e36f0f0ad0c37739b33a3adff62f507d31dd9c34b9972a449e0700dfb0d736d5",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Ky6;",
+      "signature": "LX/Ky6;->BuN(LX/178;I)V",
+      "instructions": 3,
+      "classification": "body",
+      "rendered_block_sha256": "363cba56d7dae9073bda1d9f4ed7ff161c218aaec16dc0c59b3c164a2a798f38",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Cwi;",
+      "signature": "LX/Cwi;->BuN(LX/178;I)V",
+      "instructions": 55,
+      "classification": "body",
+      "rendered_block_sha256": "b14738bcfb38fc93299182ea7c80f82bc4f8ffabf40bea71de2a772f93711fd2",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/D3G;",
+      "signature": "LX/D3G;->BuN(LX/178;I)V",
+      "instructions": 29,
+      "classification": "body",
+      "rendered_block_sha256": "0d46e6e1379f303bb2a011b423efe898321cfd3a45a678dea5df805f8259697c",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/D4Z;",
+      "signature": "LX/D4Z;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "b0dfcc7cb5725188c0b42e513cb140fcebe9e9ef8dcc792aa98ab5b8d31829b6",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/DFi;",
+      "signature": "LX/DFi;->BuN(LX/178;I)V",
+      "instructions": 5,
+      "classification": "body",
+      "rendered_block_sha256": "6ad4670e13fe5ff6eb22bbb8edd76a5c5897169b23d110ac9252e96627724454",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/DFj;",
+      "signature": "LX/DFj;->BuN(LX/178;I)V",
+      "instructions": 19,
+      "classification": "body",
+      "rendered_block_sha256": "8e2ef6761e3f42cee32d767ce3104dd277c578d3036a2513242cd23e525ccd9f",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/DGx;",
+      "signature": "LX/DGx;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "40cc60b471fc6ccc6777ea1685890e72e6a26c2cc221823bad89f122c6172fa9",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/DGy;",
+      "signature": "LX/DGy;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "a1e30febff25a35650b16285009bf53f10d922ddc56f719179519909726695c0",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/DGz;",
+      "signature": "LX/DGz;->BuN(LX/178;I)V",
+      "instructions": 53,
+      "classification": "body",
+      "rendered_block_sha256": "078e9502e61c80e9ed2f466772d43db427ee1d8f0ac6cd77d7459c410198e988",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/DH0;",
+      "signature": "LX/DH0;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "f6fa8c9cffbd9684e9cc79af810c46439e545d9869c811acf35399ffbbe2b830",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/DH1;",
+      "signature": "LX/DH1;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "fd1858e08ed417d771bded34dadda6655e1631df2bf74e74ca469c52bc2c59da",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/DH2;",
+      "signature": "LX/DH2;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "3407e1295de67bd6068f023ea69febb595bbdff5e2070cfdfbe97ba3bf468aca",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/8l7;",
+      "signature": "LX/8l7;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "6914efbf0f623ea94987fef64e98beb6fcba0b10de30e911fd732a79daa9a440",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/8o1;",
+      "signature": "LX/8o1;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "41cc1412bfbc9a309dd08acbbca69a08e287487095c306732bcc860ceb3c87b6",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/8t8;",
+      "signature": "LX/8t8;->BuN(LX/178;I)V",
+      "instructions": 15,
+      "classification": "body",
+      "rendered_block_sha256": "fe0e1dcad6b9d8bccbaf6df5a293f8beb36d78e487d5cf1dc218c02f5165cf63",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/9M1;",
+      "signature": "LX/9M1;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "95f22079b5d4b67c42d180b35fb531fd81c0da855db91fb5c3c3ff729fdf723b",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/ATI;",
+      "signature": "LX/ATI;->BuN(LX/178;I)V",
+      "instructions": 94,
+      "classification": "body",
+      "rendered_block_sha256": "77ae5bb7d8daefdeb085f67d33c7ef22d473fda6315f3d3b4ef9a35dceb526a3",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/ATZ;",
+      "signature": "LX/ATZ;->BuN(LX/178;I)V",
+      "instructions": 99,
+      "classification": "body",
+      "rendered_block_sha256": "ce56998183967895d63f5837be1e2e5b1620a43360a0f832c9beaf13d098bdf1",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Aa1;",
+      "signature": "LX/Aa1;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "784058e0bffbd8f7a5b7a234b9b10e3c2e361ee0ac907025117b48a441a83e97",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Aa2;",
+      "signature": "LX/Aa2;->BuN(LX/178;I)V",
+      "instructions": 27,
+      "classification": "body",
+      "rendered_block_sha256": "85f843f8a04803c696fc691e0b9012e68dcc9b050bfa3c819b381f51b7947fe0",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Aa3;",
+      "signature": "LX/Aa3;->BuN(LX/178;I)V",
+      "instructions": 40,
+      "classification": "body",
+      "rendered_block_sha256": "698f80cccf9daf88b5b8c4e4ba9205213b7d8701f59d69735671d801a3393f84",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Aa4;",
+      "signature": "LX/Aa4;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "29daa3b3d7351d68ba193a34a0556551d57fa8768113eb1279283bd871d598da",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Aa5;",
+      "signature": "LX/Aa5;->BuN(LX/178;I)V",
+      "instructions": 24,
+      "classification": "body",
+      "rendered_block_sha256": "e509d3759882875f4ca89979ffa240a13f4fab19f933af57c7ee969212932af5",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Aa6;",
+      "signature": "LX/Aa6;->BuN(LX/178;I)V",
+      "instructions": 118,
+      "classification": "body",
+      "rendered_block_sha256": "c2eddfa520d69e43be4386bb03fcc3e984a06b7d59b0d35b4569fe10d94336f4",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Aa7;",
+      "signature": "LX/Aa7;->BuN(LX/178;I)V",
+      "instructions": 10,
+      "classification": "body",
+      "rendered_block_sha256": "3ed87e7802434ed026ee01e6946209ec2839f781ec5605a12c803c4766da9861",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/Aa8;",
+      "signature": "LX/Aa8;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "bca9ca2596e41d3d17032b265260f885ab6bfed6250365ec05cb591fcb5b8a73",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "Lcom/whatsapp/grouphistory/app/process/GroupHistoryBundleProcessor;",
+      "signature": "Lcom/whatsapp/grouphistory/app/process/GroupHistoryBundleProcessor;->BuN(LX/178;I)V",
+      "instructions": 16,
+      "classification": "body",
+      "rendered_block_sha256": "5c67338a7a9acc038d0b4047a2d78cccc199e2cb48224d712f4ed5ada006f305",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/AaA;",
+      "signature": "LX/AaA;->BuN(LX/178;I)V",
+      "instructions": 15,
+      "classification": "body",
+      "rendered_block_sha256": "8449e62b8c45a55c692202b36db554e40022d136fbfa8609e8da1bbb3798d419",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/0Mv;",
+      "signature": "LX/0Mv;->BuN(LX/178;I)V",
+      "instructions": 0,
+      "classification": "no_bytecode",
+      "rendered_block_sha256": "125da07d2ac0e96e2f454dffcaa3684e8ee386b685f839d79a78d738904d8947",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/0My;",
+      "signature": "LX/0My;->BuN(LX/178;I)V",
+      "instructions": 684,
+      "classification": "body",
+      "rendered_block_sha256": "6332ace33560e5234e5c41932143ecd7f0563f40247d8c3f67518a40ada6023c",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/0cY;",
+      "signature": "LX/0cY;->BuN(LX/178;I)V",
+      "instructions": 19,
+      "classification": "body",
+      "rendered_block_sha256": "83ea37816f9ef3b2bc21f25000b158f3d97fd5df63f55b88fb80d4e5d73ade73",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/0cs;",
+      "signature": "LX/0cs;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "7e2035fa88641d9e438da129cae8fef4bd8fe4904cbf5a0dfd5875a0149b91bf",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/0lJ;",
+      "signature": "LX/0lJ;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "985bd52fe137f1b6a2e34dde38dad9449c9cdf57b1bbf05f09008557d89cf497",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/1AL;",
+      "signature": "LX/1AL;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "2296cfb8ab6d20acc4220b62abb860c44eafe10ec92d4ee3deb61e6bee5aee8d",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/1AX;",
+      "signature": "LX/1AX;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "37fcf9bbadd8d7f88b0d66fd65c05f5b5dced9c51917d08f3d8595f7895c4cae",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/1XG;",
+      "signature": "LX/1XG;->BuN(LX/178;I)V",
+      "instructions": 11,
+      "classification": "body",
+      "rendered_block_sha256": "cac43688aa4d05eaa9d593a18f971dfc398b8a75fce181774f076719b2052fe5",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/71T;",
+      "signature": "LX/71T;->BuN(LX/178;I)V",
+      "instructions": 11,
+      "classification": "body",
+      "rendered_block_sha256": "d241db7b7475bd4133602108f2f57cbd928e6b211e8742e6a01a0dd68ebe4414",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/89B;",
+      "signature": "LX/89B;->BuN(LX/178;I)V",
+      "instructions": 157,
+      "classification": "body",
+      "rendered_block_sha256": "32d38d7b3c06d36110fdbabdd36c7951463ffff22a03eaafeec12ac232a67a1f",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/89M;",
+      "signature": "LX/89M;->BuN(LX/178;I)V",
+      "instructions": 112,
+      "classification": "body",
+      "rendered_block_sha256": "27181024e54978ebab1179f84caa7c5992c9c10e23e5fb199097268306c2458a",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/89N;",
+      "signature": "LX/89N;->BuN(LX/178;I)V",
+      "instructions": 107,
+      "classification": "body",
+      "rendered_block_sha256": "c5741af12ad2d3d698da2350566c0f0a8360ca91cc6ca7d56d81933791ae58a4",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/8GB;",
+      "signature": "LX/8GB;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "8a03ce74b323a043a0939b217f9153e4686c74ecc8bf01553b5745ed5a9a6d24",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/8GC;",
+      "signature": "LX/8GC;->BuN(LX/178;I)V",
+      "instructions": 11,
+      "classification": "body",
+      "rendered_block_sha256": "69545aea85c18d708b085c7a4aebfc10201090c1646df8e87c595035657fe937",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/8GD;",
+      "signature": "LX/8GD;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "e0c1caba5bc8377577e5cdcd193723aa510df32f6100205ac2d7b5121ae06460",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/8GE;",
+      "signature": "LX/8GE;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "9c709a4484335a3661e96059de8d7b347d84bb86528e83b9121d6049c5533b47",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/8GF;",
+      "signature": "LX/8GF;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "245a308e13b5bdc66aeacd58f42104aedb67a2a8c3211bb9efe42684d1a367a8",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/8GG;",
+      "signature": "LX/8GG;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "2755471a755262aebeb76fd7c77f1c43bde3e3718e0233b6878f1d0f79e2b429",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/8GH;",
+      "signature": "LX/8GH;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "180bac2f0ab4d4080aeab4bbdb2d4c7f7bdd2b612c1e64c6b66eb97e9d30e090",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/IUn;",
+      "signature": "LX/IUn;->BuN(LX/178;I)V",
+      "instructions": 68,
+      "classification": "body",
+      "rendered_block_sha256": "45bc6cae6b1ab8d2fc965203cee5f6c656422a286ff343e71439b2c395f47c1b",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/IXp;",
+      "signature": "LX/IXp;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "cdd4afb882a16199cf09648a75a93773eee2638c08b8883a79a01e1dcc759473",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/IXq;",
+      "signature": "LX/IXq;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "fdfd0d6131b9ccfe5acd74104c8e304b90f8170aafced83914e728fce1360519",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/IXr;",
+      "signature": "LX/IXr;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "f8d00360467f96d00abca769468329ee0ca08fc1b5fe5c88f4404de4fc4fb4b7",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/IXs;",
+      "signature": "LX/IXs;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "0d62af03b271c1190d4df274896e60bc19cafdc7bcb7d8e140a62bc917f53335",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/O60;",
+      "signature": "LX/O60;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "12ad9aeeddef3f3a3ebed7bd5cabe9d03312b91fae854396916e9a68e06dcfb8",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/O61;",
+      "signature": "LX/O61;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "566c90bf9ac3d8e3e96ca88c48edadc9db0a5a31e5ebf773d8725178265dbf2c",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/O62;",
+      "signature": "LX/O62;->BuN(LX/178;I)V",
+      "instructions": 18,
+      "classification": "body",
+      "rendered_block_sha256": "f81d18b92fdad0fd21bb1a3f9323c372082436c1cce3508f888f70c140bd1c39",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/O63;",
+      "signature": "LX/O63;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "ea9e3a40d300577900db9051fd11438a77cd8b563933796d0b6f4798ae93f352",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    },
+    {
+      "class": "LX/O64;",
+      "signature": "LX/O64;->BuN(LX/178;I)V",
+      "instructions": 1,
+      "classification": "return_only",
+      "rendered_block_sha256": "a1fc20e32f9781aa886b95edb9d8ab29630ba93af550ba07dc12703aa91fd03f",
+      "receipt_user_literal": false,
+      "base_status_setter": false,
+      "base_status_field_write": false
+    }
+  ]
+}

@@ -1,5 +1,20 @@
 # Status — 2026-10-07
 
+Deferred status observers (2026-10-09, **confirmed static**): corrected the
+historical prose selector 5 to 16; raw APK bytes and constructor/switch operands
+agree with the already retained source. The immediate hook dispatches message
+BuN and chat BfD callbacks, not a direct receipt-user write. An 80-declaration
+inventory records 43 return-only, one no-bytecode and 36 body declarations;
+registration and transitive effects remain unknown. No runtime/account/live
+change. [Evidence and limits](docs/protocol/status-observers.md).
+
+Observer evidence validation: exact 14-topic export (15 methods, 19 files,
+216,841 bytes), cached self-diff, all 80 declaration/hash records, message/chat
+callback prototypes and independent raw selector/payload checks passed. CLI
+reference, API-symbol, formatting, whitespace and hygiene checks passed
+(2,149 links/107 APK checksum bundles). Research/docs only; no fresh Rust
+runtime suite, account operation or live invocation is claimed.
+
 Send-job state path (2026-10-09, **confirmed static**): post-insert DNs
 selector 49 falls through to return; independent raw switch bytes confirm it.
 The actual send job queues native states 20/21 through 15A.A05/DM8 selector 6,
