@@ -2129,3 +2129,32 @@ library-symbol check, formatting and staged whitespace passed on system Rust
 1.99.0. Hygiene verified 948 local links, licenses, tracked-file budgets and
 4391955 bytes across six checksum bundles. No Rust runtime/tool source changed;
 workspace tests/Clippy were not repeated for this source-only research chunk.
+
+
+Canonical mapping row selector (2026-10-08): **confirmed static APK 2.26.37.71**
+0Xx queries rank by descending sort/LID IDs, then 0eU's reverse TreeMap overwrites
+equal sorts; the winner is greatest signed sort/smallest tied account row.
+**Implemented/offline** default-library jid_map::select_account_row ports that
+selection, preserving invalid winning rows before downstream checks. Independent
+SQLite fixtures cover 36 synthetic cases, including all 24 permutations of a
+tie/cross-phone set, signed extremes and invalid winners. New redacted
+jid-map-row-inspect --input reports counts/presence/nonnegative/positive checks;
+private values are omitted, known missing fields are diagnosed and malformed/
+unknown/duplicate/type/budget errors refuse without partial stdout. Mapping
+write authority, effective gates, freshness, complete reverse/bulk materialization,
+worker scheduling and cleanup runtime remain unported. The extended cleanup
+bundle has 57 topics/76 declarations (one abstract)/62 files/450854 bytes. Cached
+same-APK comparison against eafb8fd took 0.028460 seconds: sixteen additions,
+forty-one unchanged topic texts. Direct method/instruction/catch coverage matches.
+No account was opened, live request sent, identity changed or keys/history deleted.
+[Source, port and remaining mapping gaps](protocol/peer-identity.md#canonical-key-mapping-and-row-selection-in-rust-2026-10-08).
+
+Validation on system Rust 1.99.0: all 708 workspace/all-feature tests, strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, 24 default CLI
+checks, regenerated CLI reference, experimental OpenAPI library-symbol check,
+xtask build and formatting passed. The independent SQLite fixture --check passed.
+The compiled inspector selected an invalid synthetic winner without falling back;
+an unknown-field invocation exited nonzero with no partial stdout/private-key
+echo. Repository hygiene verified 957 local links, package licenses, tracked-file
+budgets and 4447021 bytes across six checksum bundles. No account or live-server
+access was involved; fresh runtime mapping/cleanup validation remains pending.

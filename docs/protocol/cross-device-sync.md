@@ -1538,9 +1538,13 @@ identity-triggered rotation remain unverified; no primary key was adopted.
   calls the private A00 diagnostic (`00a0..00a6`) and returns the original B76.
   Nonzero account type, absent parsed address and other bypass branches return
   the original directly; the diagnostic is not universal.
-  **Unknown:** the specialized predicates' full semantics, feature defaults,
-  0Xw mapping authority/freshness and diagnostic side effects. This does not
-  establish that arbitrary PN/LID aliases may be substituted.
+  **Updated qualification:** A01 itself returns null for 0hd.A02-matching
+  values, so reaching the later specialized branch would require that repeated
+  predicate to change; stable-predicate reachability is only inferred.
+  [Mapping repository and row-selection trace](peer-identity.md#canonical-key-mapping-and-row-selection-in-rust-2026-10-08)
+  establishes stored-row ranking and typed materialization checks. Feature
+  values, authority/freshness, full classifier/wrapper semantics and diagnostic
+  execution remain unknown. Arbitrary PN/LID substitution is not established.
 - [B7H.A06](apk/2.26.37.71-core/sender-key-address-build.txt) derives
   recipient category via B79.A00 and device via DeviceJid.getDevice, and keeps
   the two additional B76 components (`001c..003c`). Translation does **not**

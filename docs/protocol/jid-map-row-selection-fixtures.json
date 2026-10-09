@@ -1,0 +1,835 @@
+{
+  "apk_version": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "source": "0Xx.A01/A00 SQL; 0eU.<init>/A00 reverse TreeMap with equal-sort replacement",
+  "generation": "Independent Python SQLite executes the literal APK SQL; cursor entries overwrite a dictionary by sort_id; greatest signed sort selects its retained lid. All rows are synthetic, not account data.",
+  "sql": "SELECT lid_row_id, sort_id FROM jid_map WHERE jid_row_id = ? ORDER BY sort_id DESC, lid_row_id DESC",
+  "cases": [
+    {
+      "name": "empty",
+      "jid_row_id": 7,
+      "rows": [],
+      "selected_lid_row_id": null
+    },
+    {
+      "name": "other-phone-only",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 20,
+          "sort_id": 10
+        }
+      ],
+      "selected_lid_row_id": null
+    },
+    {
+      "name": "greatest-sort-not-greatest-lid",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "equal-sort-overwrites-to-smaller-lid",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "invalid-winner-does-not-fallback",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 1
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": -1,
+          "sort_id": 2
+        }
+      ],
+      "selected_lid_row_id": -1
+    },
+    {
+      "name": "zero-winner-retained",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 1
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 0,
+          "sort_id": 2
+        }
+      ],
+      "selected_lid_row_id": 0
+    },
+    {
+      "name": "signed-sort-extremes",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 9,
+          "sort_id": -9223372036854775808
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 8,
+          "sort_id": 9223372036854775807
+        }
+      ],
+      "selected_lid_row_id": 8
+    },
+    {
+      "name": "signed-lid-extremes-at-equal-sort",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 9223372036854775807,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": -9223372036854775808,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": -9223372036854775808
+    },
+    {
+      "name": "negative-sort-values",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": -5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": -4
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "duplicate-identical",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 1
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 1
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "negative-phone-row-query",
+      "jid_row_id": -1,
+      "rows": [
+        {
+          "jid_row_id": -1,
+          "lid_row_id": 20,
+          "sort_id": 1
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "zero-phone-row-query",
+      "jid_row_id": 0,
+      "rows": [
+        {
+          "jid_row_id": 0,
+          "lid_row_id": 20,
+          "sort_id": 1
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-0",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-1",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-2",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-3",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-4",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-5",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-6",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-7",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-8",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-9",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-10",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-11",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-12",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-13",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-14",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-15",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-16",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-17",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-18",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-19",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-20",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-21",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-22",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": 20
+    },
+    {
+      "name": "permutation-23",
+      "jid_row_id": 7,
+      "rows": [
+        {
+          "jid_row_id": 8,
+          "lid_row_id": 1,
+          "sort_id": 100
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 10,
+          "sort_id": 4
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 20,
+          "sort_id": 5
+        },
+        {
+          "jid_row_id": 7,
+          "lid_row_id": 100,
+          "sort_id": 5
+        }
+      ],
+      "selected_lid_row_id": 20
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+# APK-derived structural disassembly: LX/0eU;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(V) flags=0x10001 registers=3
+  0000..0006 op=70 invoke-direct {v2}, Ljava/lang/Object;-><init>(V)
+  0006..000c op=71 invoke-static {}, Ljava/util/Collections;->reverseOrder(L)
+  000c..000e op=0c move-result-object v1
+  000e..0012 op=22 new-instance v0, Ljava/util/TreeMap;
+  0012..0018 op=70 invoke-direct {v0, v1}, Ljava/util/TreeMap;-><init>(VL)
+  0018..001c op=5b iput-object v0, v2, LX/0eU;->A00:Ljava/util/Map;
+  001c..001e op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method A00(L) flags=0x1 registers=3
+  0000..0004 op=54 iget-object v1, v2, LX/0eU;->A00:Ljava/util/Map;
+  0004..000a op=72 invoke-interface {v1}, Ljava/util/Map;->isEmpty(Z)
+  000a..000c op=0a move-result v0
+  000c..0010 op=38 if-eqz v0, +0x4
+  0010..0012 op=12 const/4 v0, #0x0
+  0012..0014 op=11 return-object v0
+  0014..001a op=72 invoke-interface {v1}, Ljava/util/Map;->entrySet(L)
+  001a..001c op=0c move-result-object v0
+  001c..0022 op=72 invoke-interface {v0}, Ljava/util/Set;->iterator(L)
+  0022..0024 op=0c move-result-object v0
+  0024..002a op=72 invoke-interface {v0}, Ljava/util/Iterator;->next(L)
+  002a..002c op=0c move-result-object v0
+  002c..0030 op=1f check-cast v0, Ljava/util/Map$Entry;
+  0030..0036 op=72 invoke-interface {v0}, Ljava/util/Map$Entry;->getValue(L)
+  0036..0038 op=0c move-result-object v0
+  0038..003c op=1f check-cast v0, Ljava/lang/Long;
+  003c..003e op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
+
+.method equals(ZL) flags=0x1 registers=4
+  0000..0004 op=33 if-ne v2, v3, +0x4
+  0004..0006 op=12 const/4 v0, #0x1
+  0006..0008 op=0f return v0
+  0008..000c op=38 if-eqz v3, +0x17
+  000c..0012 op=6e invoke-virtual {v2}, Ljava/lang/Object;->getClass(L)
+  0012..0014 op=0c move-result-object v1
+  0014..001a op=6e invoke-virtual {v3}, Ljava/lang/Object;->getClass(L)
+  001a..001c op=0c move-result-object v0
+  001c..0020 op=33 if-ne v1, v0, +0xd
+  0020..0024 op=1f check-cast v3, LX/0eU;
+  0024..0028 op=54 iget-object v1, v2, LX/0eU;->A00:Ljava/util/Map;
+  0028..002c op=54 iget-object v0, v3, LX/0eU;->A00:Ljava/util/Map;
+  002c..0032 op=71 invoke-static {v1, v0}, LX/0dj;->A00(ZLL)
+  0032..0034 op=0a move-result v0
+  0034..0036 op=0f return v0
+  0036..0038 op=12 const/4 v0, #0x0
+  0038..003a op=0f return v0
+  # exception table: 0 try range(s)
+.end method
+
+.method hashCode(I) flags=0x1 registers=2
+  0000..0004 op=54 iget-object v0, v1, LX/0eU;->A00:Ljava/util/Map;
+  0004..000a op=6e invoke-virtual {v0}, Ljava/lang/Object;->hashCode(I)
+  000a..000c op=0a move-result v0
+  000c..000e op=0f return v0
+  # exception table: 0 try range(s)
+.end method
+
+.method iterator(L) flags=0x1 registers=2
+  0000..0004 op=54 iget-object v0, v1, LX/0eU;->A00:Ljava/util/Map;
+  0004..000a op=72 invoke-interface {v0}, Ljava/util/Map;->values(L)
+  000a..000c op=0c move-result-object v0
+  000c..0012 op=72 invoke-interface {v0}, Ljava/util/Collection;->iterator(L)
+  0012..0014 op=0c move-result-object v0
+  0014..0016 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

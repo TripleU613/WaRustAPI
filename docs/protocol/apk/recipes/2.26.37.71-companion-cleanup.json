@@ -436,6 +436,164 @@
         "crates/whatsapp-api/src/signal/group.rs",
         "crates/whatsapp-api/src/transport/devices.rs"
       ]
+    },
+    "mapping-phone-parse": {
+      "class": "LX/0kT;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A01",
+      "method_shorty": "LL"
+    },
+    "mapping-batch-map": {
+      "class": "LX/0kT;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A05",
+      "method_shorty": "LLLL"
+    },
+    "mapping-single-map": {
+      "class": "LX/0Xw;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A0C",
+      "method_shorty": "LL"
+    },
+    "mapping-counterparts": {
+      "class": "LX/0Xw;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A0U",
+      "method_shorty": "LL"
+    },
+    "mapping-other-namespace": {
+      "class": "LX/0Xw;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A0I",
+      "method_shorty": "LL"
+    },
+    "mapping-phone-batch": {
+      "class": "LX/0Xw;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A0Q",
+      "method_shorty": "LL"
+    },
+    "mapping-special-phone": {
+      "class": "LX/0hd;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A02",
+      "method_shorty": "ZL"
+    },
+    "mapping-diagnostic": {
+      "class": "LX/0kT;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A00",
+      "method_shorty": "VLLL"
+    },
+    "mapping-special-prefix": {
+      "class": "LX/0hd;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A05",
+      "method_shorty": "ZL"
+    },
+    "mapping-reverse-map": {
+      "class": "LX/0Xw;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A0H",
+      "method_shorty": "LL"
+    },
+    "mapping-single-sql": {
+      "class": "LX/0Xx;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A01",
+      "method_shorty": "LJ"
+    },
+    "mapping-batch-rows": {
+      "class": "LX/0Xw;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A03",
+      "method_shorty": "LL"
+    },
+    "mapping-sort-map": {
+      "class": "LX/0eU;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ]
+    },
+    "mapping-prefix-check": {
+      "class": "LX/0hd;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A09",
+      "method_shorty": "ZL"
+    },
+    "mapping-batch-sql": {
+      "class": "LX/0Xx;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A00",
+      "method_shorty": "LLLLZ"
+    },
+    "mapping-row-materialization": {
+      "class": "LX/0Xw;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/jid_map.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "method": "A08",
+      "method_shorty": "VLL"
     }
   },
   "include_register_flow": true

@@ -1,0 +1,74 @@
+# APK-derived structural disassembly: LX/0Xw;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0C(LL) flags=0x1 registers=10
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v9, v0}, LX/00h;->A0A(VLI)
+  0008..000c op=54 iget-object v1, v8, LX/0Xw;->A06:LX/0Gc;
+  000c..0012 op=6e invoke-virtual {v1}, LX/0Gc;->A0C(Z)
+  0012..0014 op=0a move-result v0
+  0014..0018 op=39 if-nez v0, +0x19
+  0018..001e op=6e invoke-virtual {v1}, LX/0Gc;->A0C(Z)
+  001e..0020 op=0a move-result v2
+  0020..0024 op=1a const-string v1, "WaJidMapRepository/getAccountUserJidByPhoneJid fail; messageStoreManager.isReady:"
+  0024..0028 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0028..002e op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(VL)
+  002e..0034 op=6e invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(LZ)
+  0034..003a op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString(L)
+  003a..003c op=0c move-result-object v0
+  003c..0042 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+  0042..0044 op=12 const/4 v0, #0x0
+  0044..0046 op=11 return-object v0
+  0046..004a op=54 iget-object v1, v8, LX/0Xw;->A03:LX/08Z;
+  004a..0050 op=72 invoke-interface {v1, v9}, LX/08Z;->BO0(ZL)
+  0050..0052 op=0a move-result v0
+  0052..0056 op=38 if-eqz v0, +0x7
+  0056..005c op=72 invoke-interface {v1}, LX/08Z;->Apx(L)
+  005c..005e op=0c move-result-object v0
+  005e..0060 op=11 return-object v0
+  0060..0064 op=54 iget-object v0, v8, LX/0Xw;->A05:LX/0VT;
+  0064..006a op=6e invoke-virtual {v0, v9}, LX/0VT;->A08(JL)
+  006a..006c op=0b move-result-wide v2
+  006c..006e op=12 const/4 v0, #0x0
+  006e..0072 op=16 const-wide/16 v6, #0x0
+  0072..0076 op=31 cmp-long v1, v2, v6
+  0076..007a op=3d if-lez v1, -0x19
+  007a..007e op=54 iget-object v5, v8, LX/0Xw;->A07:Ljava/lang/Object;
+  007e..0080 op=1d monitor-enter
+  0080..0084 op=54 iget-object v4, v8, LX/0Xw;->A09:Ljava/util/Map;
+  0084..008a op=71 invoke-static {v2, v3}, Ljava/lang/Long;->valueOf(LJ)
+  008a..008c op=0c move-result-object v1
+  008c..0092 op=72 invoke-interface {v4, v1}, Ljava/util/Map;->get(LL)
+  0092..0094 op=0c move-result-object v1
+  0094..0098 op=1f check-cast v1, LX/0eU;
+  0098..009c op=38 if-eqz v1, +0x7
+  009c..00a2 op=6e invoke-virtual {v1}, LX/0eU;->A00(L)
+  00a2..00a4 op=0c move-result-object v1
+  00a4..00a6 op=28 goto +0x2
+  00a6..00a8 op=07 move-object v1, v0
+  00a8..00aa op=1e monitor-exit
+  00aa..00ae op=39 if-nez v1, +0x11
+  00ae..00b2 op=54 iget-object v1, v8, LX/0Xw;->A04:LX/0Xx;
+  00b2..00b8 op=6e invoke-virtual {v1, v2, v3}, LX/0Xx;->A01(LJ)
+  00b8..00ba op=0c move-result-object v1
+  00ba..00c0 op=70 invoke-direct {v8, v1, v2, v3}, LX/0Xw;->A06(VLJ)
+  00c0..00c6 op=6e invoke-virtual {v1}, LX/0eU;->A00(L)
+  00c6..00c8 op=0c move-result-object v1
+  00c8..00cc op=38 if-eqz v1, -0x42
+  00cc..00d2 op=6e invoke-virtual {v1}, Ljava/lang/Number;->longValue(J)
+  00d2..00d4 op=0b move-result-wide v2
+  00d4..00d8 op=31 cmp-long v1, v2, v6
+  00d8..00dc op=3a if-ltz v1, -0x4a
+  00dc..00e0 op=1c const-class v0, LX/0ZX;
+  00e0..00e6 op=70 invoke-direct {v8, v0, v2, v3}, LX/0Xw;->A00(LLJ)
+  00e6..00e8 op=0c move-result-object v0
+  00e8..00ec op=1f check-cast v0, LX/0ZX;
+  00ec..00ee op=11 return-object v0
+  00ee..00f0 op=0d move-exception v0
+  00f0..00f2 op=1e monitor-exit
+  00f2..00f4 op=27 throw v0
+  # exception table: 1 try range(s)
+  # catch <all> code_units 0040..0054 -> 0077
+.end method

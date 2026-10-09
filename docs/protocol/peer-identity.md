@@ -2146,3 +2146,157 @@ library-symbol check, formatting and staged whitespace passed on system Rust
 1.99.0. Hygiene verified 948 local links, licenses, tracked-file budgets and
 4391955 bytes across six checksum bundles. No Rust runtime/tool source changed;
 workspace tests/Clippy were not repeated for this source-only research chunk.
+
+
+## Canonical key mapping and row selection in Rust (2026-10-08)
+
+**Confirmed static APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Complete scoped direct source](companion-address-mapping-evidence.txt) retains
+sixteen selected topics. Offsets below are method-relative bytes; exception
+ranges use code units. This closes several previously opaque mapping boundaries,
+not mapping authority, freshness or the complete cleanup runtime.
+
+### Forward row selection and the equal-sort overwrite
+
+0Xw.A0C first requires 0Gc.A0C readiness; otherwise it returns null
+(0008..0046). Its own-phone predicate 08Z.BO0 then returns 08Z.Apx; the remote
+path requires a positive phone row from 0VT.A08, consults the synchronized A09
+cache, and loads 0Xx.A01 on a cache miss (0060..00c8). A selected negative
+account row returns null; zero reaches the later typed materialization call
+(00c8..00ee). Full row-provider/materializer semantics remain untraced, so zero
+is not claimed to produce a valid JID. Invalid winning rows do not trigger a
+fallback to the next sort value in this method.
+
+0Xx.A01 executes `SELECT lid_row_id, sort_id FROM jid_map WHERE jid_row_id = ?
+ORDER BY sort_id DESC, lid_row_id DESC` (001a..003c). It inserts every cursor row
+into 0eU.A00 using sort_id as key and lid_row_id as value (006c..0096).
+0eU.<init> creates TreeMap(Collections.reverseOrder()) (0006..001c); A00 returns
+null for empty, otherwise the first map entry's value (0000..003e).
+**Confirmed:** the greatest signed sort wins, but equal sorts overwrite earlier
+cursor entries. Descending LID order therefore leaves the smallest LID row ID
+at that sort. Selecting the first SQL row directly would be wrong for a tie.
+sort_id's timestamp meaning is **unknown**; no wall-clock or registration-time
+interpretation is inferred.
+
+0Xx.A00's bulk query has the same ordering. Its boolean chooses the IN predicate
+column lid_row_id or jid_row_id (00b6..00e6), and it aggregates a separate 0eU
+for each jid_row_id before putting sort->LID values (012e..0196). 0Xw.A03 uses
+this with the false/jid-row branch, extracts each winner, and caches the full
+0eU (001a..008e). The selector port below establishes one phone row's ranking;
+it does not implement the reverse query or all bulk collision semantics.
+The bulk helper also passes literal 0x3cf/975 to 0eK; its partition algorithm
+is untraced here and is not a new server limit.
+
+### Repository results, counterparts and materialization gates
+
+0Xw.A0Q returns an empty map for empty input or an unready message store
+(0008..005e). It handles an own-getter pair separately, collects cached winners
+and missing rows, then merges 0Xw.A03 results (008e..0166). The intermediate
+map uses selected account row as key and phone row as value. If several phone
+rows select one account row, map.put can overwrite the prior phone row; full
+iteration/authority resolution is **unknown** and must not be replaced with a
+new arbitrary alias policy. This is another reason the current Rust primitive
+returns one selected row ID rather than advertising complete bulk mapping.
+
+0Xw.A08 materializes account-user rows with class 0ZX and phone rows with class
+PhoneUserJid via 0VT.A0E (0008..003e). Both numeric row IDs must be positive and
+both typed objects must exist before it writes the account->phone entry
+(0090..00e6); invalid cases report a critical event and skip the entry.
+0ZX is an account-user base class, not proof that every materialized account
+has the plain LID subtype. A0Q finally reverses entries into phone->account
+(01a6..01d6). These checks are stricter than A0C's nonnegative selected-row
+check; do not filter invalid rows before ranking to obtain a nicer result.
+
+0Xw.A0H has a separate reverse path: own-account comparison and its phone getter
+occur before readiness, while the remote path requires readiness and calls
+private A01 after 0VT.A07 (0008..005e). That private reverse resolver is outside
+this source scope. A0I chooses forward/reverse helpers using 0DE subtype
+predicates (0006..004a); their complete classifier implementations remain
+untraced here. A0U returns the original singleton when A0I finds no counterpart,
+otherwise builds the set from original plus actual returned counterpart
+(0008..003e). It does not invent a counterpart from matching digits. The
+already traced 0jc.A0k then preserves the original device number while rebinding
+these returned user addresses; B76 actor/category fields are retained.
+
+0kT.A05 calls A0Q and may invoke its diagnostic based on a set helper
+(0008..003e). The exact 0EA.A08 operand convention is not newly traced; its
+missing-key interpretation is **inferred**, not a complete port. Diagnostic
+0kT.A00 queues a 3QL event only after the special-user check and numeric property
+0x2176/8566 (0034..0078). Event execution and effective flag values remain
+unknown; no explicit mapping write appears in the method itself and the queued
+body remains untraced. This reporting branch is not proof of a server requirement
+that our tooling should fabricate a row.
+
+### Phone parsing and specialized-branch qualification
+
+0kT.A01 returns null for literal "0"/"Server", uses PhoneUserJid.Companion.A03,
+reports invalid parsing with a shortened value, and returns null for a value
+matching 0hd.A02 (0034..00be). A02 is true for 0hh or the PhoneUserJid range
+predicate A05 -> A09. A09's constants describe two inclusive-looking numeric
+intervals through 0ng parsing/0nh comparisons; those wrapper implementations are
+not newly traced, so full unsigned/parser parity remains **unknown**. The raw
+public APK constants are retained in source, not mistaken for account numbers.
+
+**Confirmed qualification of the older specialized branch finding:** 0kT.A02
+calls A01, then tests 0hd.A02 again before reaching feature 21354 and 0DE.A08.
+A01 only returns a nonnull address when that predicate was false. **Inferred:**
+with a stable predicate this specialized branch is unreachable for these parsed
+results; the second call would need a changed result. No intervening mutation
+is visible in the caller, but complete helper purity/runtime reachability is
+not established here. Keep the actual branch source; do not invent an effective
+flag value or delete code on the basis of this inference. Ordinary translation
+continues through the stored mapping repository and preserves the device ID.
+
+### Implemented row selector and reproducible offline inspection
+
+**Implemented/offline:** transport::jid_map::JidMapRow retains signed i64
+jid_row_id, lid_row_id and sort_id. select_account_row filters the requested
+phone row and chooses greatest sort/smallest tied account row. It deliberately
+returns a selected zero/negative row before downstream validity checks.
+No persisted mapping, canonical address application, alias authentication,
+identity mutation, cleanup worker or automatic feature adoption is enabled.
+Debug omits private columns. The primitive compiles in the default library.
+
+`cargo run -p xtask -- jid-map-row-inspect --input <private-json>` invokes that
+actual library selector. Input requires jid_row_id and rows, each with the three
+signed-i64 columns. It rejects unknown/duplicate fields, missing known fields,
+invalid types and local 64 KiB/1024-row budgets without partial stdout. Missing
+or duplicate known field names are reported; private unknown keys/values are
+not echoed. Output contains input/matched/distinct-sort counts, selected, nullable
+selected_lid_row_nonnegative/positive, and runtime_mapping_applied=false.
+These validity booleans do not establish typed JID materialization. No row ID,
+sort value, phone, LID, account key or request body is printed.
+
+[Independent fixture corpus](jid-map-row-selection-fixtures.json) contains 36
+synthetic cases, including all 24 input permutations of a tie/cross-phone set,
+signed extremes, duplicates, zero/negative winners and missing matches. Its
+[generator](../../tools/apk-research/jid_map_row_fixtures.py) executes the literal
+APK SQL with standard-library SQLite, then independently transcribes the reverse
+map's replacement/first-entry behavior. Run `python3
+tools/apk-research/jid_map_row_fixtures.py --check` to verify exact fixture bytes;
+omitting --check regenerates them. This proves parity with the transcribed
+SQL/collection algorithm, not APK execution on Android or live mapping authority.
+Inspector tests additionally cover redaction, malformed/unknown/missing/duplicate
+fields and bounds. No saved account was opened or live request sent.
+
+Actual bounded export preserves 57 topics/76 selected declarations (one abstract),
+62 files/450854 bytes. All sixteen new direct method/instruction/catch coverage
+lists match the bundle, and all forty-one previous topic texts remain equal.
+The [checksum-verified cached comparison](apk/companion-mapping-coverage-diff.json)
+against eafb8fd took 0.028460 seconds: sixteen additions/forty-one unchanged
+with manifest/inventory/tokens unchanged. This expands coverage of the same APK,
+not a comparison between vendor releases or proof of full semantic equivalence.
+An environment refresh removed temporary tool handles/logs during validation;
+authoritative handles were absent, so export and checks were rerun with local
+ignored logs. Earlier interrupted checks were not counted as completed.
+
+Validation on system Rust 1.99.0: all 708 workspace/all-feature tests, strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, 24 default CLI
+checks, regenerated CLI reference, experimental OpenAPI library-symbol check,
+xtask build and formatting passed. The independent SQLite fixture --check passed.
+The compiled inspector selected an invalid synthetic winner without falling back;
+an unknown-field invocation exited nonzero with no partial stdout/private-key
+echo. Repository hygiene verified 957 local links, package licenses, tracked-file
+budgets and 4447021 bytes across six checksum bundles. No account or live-server
+access was involved; fresh runtime mapping/cleanup validation remains pending.

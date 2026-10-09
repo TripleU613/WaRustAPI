@@ -141,6 +141,7 @@ pub mod inbox;
     feature = "experimental-transport"
 ))]
 mod inbox_events;
+pub mod jid_map;
 #[cfg(feature = "experimental-transport")]
 pub mod login;
 #[cfg(all(

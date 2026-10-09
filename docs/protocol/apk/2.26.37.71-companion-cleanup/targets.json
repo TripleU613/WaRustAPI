@@ -313,6 +313,229 @@
       "crates/whatsapp-api/src/signal/direct.rs"
     ]
   },
+  "mapping-batch-map": {
+    "class": "LX/0kT;",
+    "file": "mapping-batch-map.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "method_shorty": "LLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-batch-rows": {
+    "class": "LX/0Xw;",
+    "file": "mapping-batch-rows.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-batch-sql": {
+    "class": "LX/0Xx;",
+    "file": "mapping-batch-sql.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "method_shorty": "LLLLZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-counterparts": {
+    "class": "LX/0Xw;",
+    "file": "mapping-counterparts.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0U",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-diagnostic": {
+    "class": "LX/0kT;",
+    "file": "mapping-diagnostic.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "method_shorty": "VLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-other-namespace": {
+    "class": "LX/0Xw;",
+    "file": "mapping-other-namespace.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0I",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-phone-batch": {
+    "class": "LX/0Xw;",
+    "file": "mapping-phone-batch.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0Q",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-phone-parse": {
+    "class": "LX/0kT;",
+    "file": "mapping-phone-parse.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-prefix-check": {
+    "class": "LX/0hd;",
+    "file": "mapping-prefix-check.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A09",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-reverse-map": {
+    "class": "LX/0Xw;",
+    "file": "mapping-reverse-map.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0H",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-row-materialization": {
+    "class": "LX/0Xw;",
+    "file": "mapping-row-materialization.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A08",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-single-map": {
+    "class": "LX/0Xw;",
+    "file": "mapping-single-map.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0C",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-single-sql": {
+    "class": "LX/0Xx;",
+    "file": "mapping-single-sql.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "method_shorty": "LJ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-sort-map": {
+    "class": "LX/0eU;",
+    "file": "mapping-sort-map.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 5,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-special-phone": {
+    "class": "LX/0hd;",
+    "file": "mapping-special-phone.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
+  "mapping-special-prefix": {
+    "class": "LX/0hd;",
+    "file": "mapping-special-prefix.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/jid_map.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/signal/group.rs"
+    ]
+  },
   "sender-key-argument-concat": {
     "class": "LX/0C6;",
     "file": "sender-key-argument-concat.txt",

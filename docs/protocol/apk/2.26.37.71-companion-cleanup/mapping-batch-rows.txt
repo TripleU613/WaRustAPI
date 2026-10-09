@@ -1,0 +1,45 @@
+# APK-derived structural disassembly: LX/0Xw;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(LL) flags=0x12 registers=7
+  0000..0006 op=72 invoke-interface {v6}, Ljava/util/Set;->size(I)
+  0006..0008 op=0a move-result v0
+  0008..000e op=71 invoke-static {v0}, LX/1ZA;->newHashMapWithExpectedSize(LI)
+  000e..0010 op=0c move-result-object v4
+  0010..0014 op=54 iget-object v2, v5, LX/0Xw;->A04:LX/0Xx;
+  0014..0016 op=12 const/4 v1, #0x0
+  0016..001a op=1a const-string v0, "GET_LIDS_BY_JIDS"
+  001a..0020 op=71 invoke-static {v2, v0, v6, v1}, LX/0Xx;->A00(LLLLZ)
+  0020..0022 op=0c move-result-object v0
+  0022..0028 op=6e invoke-virtual {v0}, Ljava/util/AbstractMap;->entrySet(L)
+  0028..002a op=0c move-result-object v0
+  002a..0030 op=72 invoke-interface {v0}, Ljava/util/Set;->iterator(L)
+  0030..0032 op=0c move-result-object v3
+  0032..0038 op=72 invoke-interface {v3}, Ljava/util/Iterator;->hasNext(Z)
+  0038..003a op=0a move-result v0
+  003a..003e op=38 if-eqz v0, +0x2b
+  003e..0044 op=72 invoke-interface {v3}, Ljava/util/Iterator;->next(L)
+  0044..0046 op=0c move-result-object v0
+  0046..004a op=1f check-cast v0, Ljava/util/Map$Entry;
+  004a..0050 op=72 invoke-interface {v0}, Ljava/util/Map$Entry;->getKey(L)
+  0050..0052 op=0c move-result-object v1
+  0052..0056 op=1f check-cast v1, Ljava/lang/Number;
+  0056..005c op=72 invoke-interface {v0}, Ljava/util/Map$Entry;->getValue(L)
+  005c..005e op=0c move-result-object v2
+  005e..0062 op=1f check-cast v2, LX/0eU;
+  0062..0068 op=6e invoke-virtual {v2}, LX/0eU;->A00(L)
+  0068..006a op=0c move-result-object v0
+  006a..006e op=38 if-eqz v0, +0x8
+  006e..0074 op=71 invoke-static {v4}, LX/00h;->A09(VL)
+  0074..007a op=6e invoke-virtual {v4, v0, v1}, Ljava/util/AbstractMap;->put(LLL)
+  007a..0080 op=71 invoke-static {v1}, LX/00h;->A09(VL)
+  0080..0086 op=6e invoke-virtual {v1}, Ljava/lang/Number;->longValue(J)
+  0086..0088 op=0b move-result-wide v0
+  0088..008e op=70 invoke-direct {v5, v2, v0, v1}, LX/0Xw;->A06(VLJ)
+  008e..0090 op=28 goto -0x2e
+  0090..0096 op=71 invoke-static {v4}, LX/00h;->A09(VL)
+  0096..0098 op=11 return-object v4
+  # exception table: 0 try range(s)
+.end method

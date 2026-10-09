@@ -91,6 +91,70 @@
     "bytes": 1000,
     "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
   },
+  "mapping-batch-map.txt": {
+    "bytes": 1234,
+    "sha256": "edfbcc858bb627af7149ff5f3ee1601c77e39f5cf117a5b33d392ba4733f4999"
+  },
+  "mapping-batch-rows.txt": {
+    "bytes": 2365,
+    "sha256": "05c89c14538d3b5031b3e373c053654a1ed84ef23fdbbc6d92efeb394e29d9f6"
+  },
+  "mapping-batch-sql.txt": {
+    "bytes": 7001,
+    "sha256": "a48724d8bc51f1771533586f02f4a56a3fc1bb03f27aa69ddd8414bcf64193ca"
+  },
+  "mapping-counterparts.txt": {
+    "bytes": 1188,
+    "sha256": "568298591b730d0002bd7cc481e91c8bfbdc3a18749301deaec36f16be17a0f9"
+  },
+  "mapping-diagnostic.txt": {
+    "bytes": 2032,
+    "sha256": "9583abaed7adad9e821a039a44923ee5184770965ecaac86c0f4a39814918b44"
+  },
+  "mapping-other-namespace.txt": {
+    "bytes": 1322,
+    "sha256": "e9cbc1157d1061f5bac06943da1495b39ba681b642b81bf8a662ef8f7ef3f387"
+  },
+  "mapping-phone-batch.txt": {
+    "bytes": 6691,
+    "sha256": "0e95a54e93bf29ddce855427f91d8896764012afdfbbb3be16a827cf47657fe4"
+  },
+  "mapping-phone-parse.txt": {
+    "bytes": 2870,
+    "sha256": "19262fcea0b63c4507768819e4ac58a14f7e0a9f343ce308c1e210e4ae135ff2"
+  },
+  "mapping-prefix-check.txt": {
+    "bytes": 1580,
+    "sha256": "f8e38569eab6fa151c7009ee3b309f5497b1008598c3076330ef466fc3618987"
+  },
+  "mapping-reverse-map.txt": {
+    "bytes": 1666,
+    "sha256": "c66b362560485d5119462402d72cf036ff7ceb5e500725e32da2049c725d72a5"
+  },
+  "mapping-row-materialization.txt": {
+    "bytes": 5960,
+    "sha256": "e14757ea5f81bfb2722d14e76cb2bdd4ee99d58c1b1e98925a834ef9e7eaec7b"
+  },
+  "mapping-single-map.txt": {
+    "bytes": 3637,
+    "sha256": "660a3830a48a1ed14da88c89364289199cc3532ea4c8522dd0208be5ac4179bd"
+  },
+  "mapping-single-sql.txt": {
+    "bytes": 3673,
+    "sha256": "ac39f69ad7b1a0fb057d6e99993652d0165f4ae8f01e98c72d99ace64fb08a47"
+  },
+  "mapping-sort-map.txt": {
+    "bytes": 3343,
+    "sha256": "0581c1bb812c39c001983e66ce17e5183eb3a16665ab047f03659b4e41e6d35b"
+  },
+  "mapping-special-phone.txt": {
+    "bytes": 745,
+    "sha256": "2fd827540b79d0f9636daf360b9092e4a5198920f58fb50937cae98d7b12f0b5"
+  },
+  "mapping-special-prefix.txt": {
+    "bytes": 813,
+    "sha256": "f96027024f94ff0b8f20bcd59d565b53803e0da690f5bcf7f46607a44be8e034"
+  },
   "sender-key-argument-concat.txt": {
     "bytes": 1562,
     "sha256": "12e99006b0a4dac5541236af6ab2bd3dd0e0bf74421e864f56d4e8f6b30f6bb8"
@@ -144,8 +208,8 @@
     "sha256": "6887be07c6a9fa1b97023334410097269b09f762b9907ef8576ac7b6317ce14c"
   },
   "targets.json": {
-    "bytes": 18685,
-    "sha256": "68288363ea951386c75b3b1ff148746903561b97b99d88edc3b46903c769c3a6"
+    "bytes": 25449,
+    "sha256": "87610b8553458372856e08dbd717585b310e34f074da91933e58457d3ad5e23c"
   },
   "tokens.json": {
     "bytes": 23019,

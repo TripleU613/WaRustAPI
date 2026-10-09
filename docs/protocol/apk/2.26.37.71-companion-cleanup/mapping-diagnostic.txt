@@ -1,0 +1,40 @@
+# APK-derived structural disassembly: LX/0kT;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(VLLL) flags=0x12 registers=14
+  0000..0004 op=13 const/16 v1, #0x5a3
+  0004..0006 op=07 move-object v5, v10
+  0006..000a op=54 iget-object v0, v10, LX/0kT;->A00:LX/05B;
+  000a..000e op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  000e..0014 op=72 invoke-interface {v0}, LX/00s;->get(L)
+  0014..0016 op=0c move-result-object v0
+  0016..001a op=1f check-cast v0, LX/00W;
+  001a..0020 op=6e invoke-virtual {v0}, LX/00W;->A01(L)
+  0020..0022 op=0c move-result-object v0
+  0022..0028 op=71 invoke-static {v0, v1}, LX/08b;->A03(LLI)
+  0028..002a op=0c move-result-object v3
+  002a..002c op=07 move-object v4, v11
+  002c..0032 op=71 invoke-static {v11}, LX/0hd;->A02(ZL)
+  0032..0034 op=0a move-result v0
+  0034..0038 op=39 if-nez v0, +0x22
+  0038..003c op=54 iget-object v1, v10, LX/0kT;->A02:LX/07t;
+  003c..0040 op=13 const/16 v0, #0x2176
+  0040..0046 op=6e invoke-virtual {v1, v0}, LX/00D;->A10(ZI)
+  0046..0048 op=0a move-result v0
+  0048..004c op=38 if-eqz v0, +0x18
+  004c..0050 op=1a const-string v0, "Missing accountJid"
+  0050..0054 op=22 new-instance v6, Ljava/lang/IllegalStateException;
+  0054..005a op=70 invoke-direct {v6, v0}, Ljava/lang/IllegalStateException;-><init>(VL)
+  005a..005e op=54 iget-object v1, v10, LX/0kT;->A04:LX/07u;
+  005e..0060 op=12 const/4 v9, #0x0
+  0060..0064 op=22 new-instance v2, LX/3QL;
+  0064..0066 op=07 move-object v8, v12
+  0066..0068 op=07 move-object v7, v13
+  0068..006e op=76 invoke-direct/range {v2..v9}, LX/3QL;-><init>(VLLLLLLI)
+  006e..0072 op=1a const-string v0, "AxolotlAccountJidMigrationUtils/reportMissingAccountCriticalEvent"
+  0072..0078 op=72 invoke-interface {v1, v0, v2}, LX/07u;->COb(VLL)
+  0078..007a op=0e return-void
+  # exception table: 0 try range(s)
+.end method

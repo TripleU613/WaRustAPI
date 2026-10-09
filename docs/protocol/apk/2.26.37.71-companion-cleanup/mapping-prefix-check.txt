@@ -1,0 +1,34 @@
+# APK-derived structural disassembly: LX/0hd;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A09(ZL) flags=0x19 registers=7
+  0000..0002 op=12 const/4 v5, #0x0
+  0002..0008 op=71 invoke-static {v6, v5}, LX/00h;->A0A(VLI)
+  0008..000e op=71 invoke-static {v6}, LX/0ng;->A00(LL)
+  000e..0010 op=0c move-result-object v0
+  0010..0014 op=38 if-eqz v0, +0x33
+  0014..0018 op=53 iget-wide v2, v0, LX/0ni;->A00:J
+  0018..0022 op=18 const-wide v0, #0x30ef09630 (13135550000)
+  0022..0028 op=71 invoke-static {v2, v3, v0, v1}, LX/0nh;->A00(IJJ)
+  0028..002a op=0a move-result v0
+  002a..002c op=12 const/4 v4, #0x1
+  002c..0030 op=3a if-ltz v0, +0xe
+  0030..003a op=18 const-wide v0, #0x30ef0bd3f (13135559999)
+  003a..0040 op=71 invoke-static {v2, v3, v0, v1}, LX/0nh;->A00(IJJ)
+  0040..0042 op=0a move-result v0
+  0042..0046 op=3c if-gtz v0, +0x3
+  0046..0048 op=0f return v4
+  0048..0052 op=18 const-wide v0, #0x310ba59b0 (13165550000)
+  0052..0058 op=71 invoke-static {v2, v3, v0, v1}, LX/0nh;->A00(IJJ)
+  0058..005a op=0a move-result v0
+  005a..005e op=3a if-ltz v0, +0xe
+  005e..0068 op=18 const-wide v0, #0x310ba5a13 (13165550099)
+  0068..006e op=71 invoke-static {v2, v3, v0, v1}, LX/0nh;->A00(IJJ)
+  006e..0070 op=0a move-result v0
+  0070..0074 op=3c if-gtz v0, +0x3
+  0074..0076 op=0f return v4
+  0076..0078 op=0f return v5
+  # exception table: 0 try range(s)
+.end method

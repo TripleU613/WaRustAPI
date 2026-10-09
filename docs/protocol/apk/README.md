@@ -232,7 +232,7 @@ This is scoped same-APK coverage, not full release remapping or protocol parity.
 
 
 The [37.71 companion cleanup recipe](recipes/2.26.37.71-companion-cleanup.json)
-preserves **41 topics / 56 selected method declarations / 46 files / 395,788 bytes**, including
+preserves **57 topics / 76 selected method declarations / 62 files / 450,854 bytes**, including
 session/identity SQL predicates, canonical-address branches, property definition,
 transaction callback registration and cache-variant cleanup. Its
 [baseline](2.26.37.71-companion-cleanup/targets.json) is separate from the nearly
@@ -258,8 +258,8 @@ and catch ranges are equal; manifest/inventory/tokens are unchanged. This is
 expanded source/rendering coverage of the same APK, not a vendor release change.
 
 
-Sender-key/deleted-observer coverage adds eighteen scoped topics. Fifty-five
-selected declarations have code; DeS.BqD is an abstract interface declaration.
+The sender-key/deleted-observer checkpoint added eighteen scoped topics. At that
+checkpoint, fifty-five declarations had code; DeS.BqD was the abstract declaration.
 [Cached same-APK comparison](companion-sender-key-coverage-diff.json) against
 `72afc9d` took **0.013700 seconds**: eighteen additions and all twenty-three old
 topic texts unchanged, with manifest/inventory/tokens unchanged. All eighteen
@@ -269,3 +269,15 @@ explain group-row selection, eight-group slices, three local passes and BqD
 versus BqB/BqC. The older core identity-pin-first-event topic name is retained
 for stable comparisons; its interpreted first-key meaning was refuted. No
 teardown runtime or account/key mutation is enabled by this static bundle.
+
+
+Canonical mapping coverage now adds sixteen topics: phone parsing, repository
+single/bulk/counterpart paths, row queries, typed materialization and reverse-sort
+map selection. [Cached coverage comparison](companion-mapping-coverage-diff.json)
+against eafb8fd took **0.028460 seconds**: sixteen additions/forty-one unchanged
+topic texts, with manifest/inventory/tokens unchanged. All new direct
+method/instruction/catch coverage lists match. [Row-selection port and limits](../peer-identity.md#canonical-key-mapping-and-row-selection-in-rust-2026-10-08)
+distinguish stored-row ranking from authenticated PN/LID mapping. The Rust
+selector and redacted jid-map-row-inspect command are implemented offline;
+mapping write authority, freshness, full reverse resolution and cleanup remain
+unported. One of the 76 selected declarations remains abstract.

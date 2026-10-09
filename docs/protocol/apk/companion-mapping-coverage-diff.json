@@ -1,0 +1,771 @@
+{
+  "artifacts": [
+    {
+      "file": "inventory.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/inventory.json",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/inventory.json",
+      "status": "unchanged"
+    },
+    {
+      "file": "manifest.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/manifest.json",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/manifest.json",
+      "status": "unchanged"
+    },
+    {
+      "file": "targets.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/targets.json",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/targets.json",
+      "status": "changed"
+    },
+    {
+      "file": "tokens.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/tokens.json",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/tokens.json",
+      "status": "unchanged"
+    }
+  ],
+  "interpretation": "Structural topic differences, not automatic proof of protocol behavior changes. Unmapped APK code/native behavior is outside this scoped comparison.",
+  "new_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "old_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "topics": [
+    {
+      "new_class": "LX/0kT;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-address-filter.txt",
+      "old_class": "LX/0kT;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-address-filter.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-address-filter"
+    },
+    {
+      "new_class": "LX/0kc;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-before-removal.txt",
+      "old_class": "LX/0kc;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-before-removal.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-before-removal"
+    },
+    {
+      "new_class": "LX/0jc;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-counterpart-targets.txt",
+      "old_class": "LX/0jc;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-counterpart-targets.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-counterpart-targets"
+    },
+    {
+      "new_class": "LX/D3f;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-callback.txt",
+      "old_class": "LX/D3f;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-callback.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-deleted-callback"
+    },
+    {
+      "new_class": "LX/AU1;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-contact-observer.txt",
+      "old_class": "LX/AU1;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-contact-observer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-deleted-contact-observer"
+    },
+    {
+      "new_class": "LX/0k4;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-dispatch.txt",
+      "old_class": "LX/0k4;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-dispatch.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-deleted-dispatch"
+    },
+    {
+      "new_class": "LX/D4x;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-effects.txt",
+      "old_class": "LX/D4x;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-effects.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-deleted-effects"
+    },
+    {
+      "new_class": "LX/D4x;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-effects-observer.txt",
+      "old_class": "LX/D4x;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-effects-observer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-deleted-effects-observer"
+    },
+    {
+      "new_class": "LX/D3k;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-notify-observer.txt",
+      "old_class": "LX/D3k;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-notify-observer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-deleted-notify-observer"
+    },
+    {
+      "new_class": "LX/DeS;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-observer-interface.txt",
+      "old_class": "LX/DeS;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-observer-interface.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-deleted-observer-interface"
+    },
+    {
+      "new_class": "LX/Fco;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-wait-observer.txt",
+      "old_class": "LX/Fco;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-deleted-wait-observer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-deleted-wait-observer"
+    },
+    {
+      "new_class": "LX/1xf;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-gate-default.txt",
+      "old_class": "LX/1xf;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-gate-default.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-gate-default"
+    },
+    {
+      "new_class": "LX/CDO;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-gate-definition.txt",
+      "old_class": "LX/CDO;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-gate-definition.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-gate-definition"
+    },
+    {
+      "new_class": "LX/078;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-observer-dispatch.txt",
+      "old_class": "LX/078;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-observer-dispatch.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-observer-dispatch"
+    },
+    {
+      "new_class": "LX/0jc;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-removal-coordinator.txt",
+      "old_class": "LX/0jc;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-removal-coordinator.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-removal-coordinator"
+    },
+    {
+      "new_class": "LX/0kc;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-removal-sql.txt",
+      "old_class": "LX/0kc;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-removal-sql.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-removal-sql"
+    },
+    {
+      "new_class": "LX/0kc;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-set-translation.txt",
+      "old_class": "LX/0kc;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-set-translation.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-set-translation"
+    },
+    {
+      "new_class": "LX/0jc;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-single-target.txt",
+      "old_class": "LX/0jc;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-single-target.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-single-target"
+    },
+    {
+      "new_class": "LX/0jc;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/identity-write-dispatch.txt",
+      "old_class": "LX/0jc;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/identity-write-dispatch.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-write-dispatch"
+    },
+    {
+      "new_class": "LX/0kT;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/key-address-set-translation.txt",
+      "old_class": "LX/0kT;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/key-address-set-translation.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "key-address-set-translation"
+    },
+    {
+      "new_class": "LX/0kT;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/key-address-translation.txt",
+      "old_class": "LX/0kT;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/key-address-translation.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "key-address-translation"
+    },
+    {
+      "new_class": "LX/0kT;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-batch-map.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-batch-map"
+    },
+    {
+      "new_class": "LX/0Xw;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-batch-rows.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-batch-rows"
+    },
+    {
+      "new_class": "LX/0Xx;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-batch-sql.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-batch-sql"
+    },
+    {
+      "new_class": "LX/0Xw;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-counterparts.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-counterparts"
+    },
+    {
+      "new_class": "LX/0kT;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-diagnostic.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-diagnostic"
+    },
+    {
+      "new_class": "LX/0Xw;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-other-namespace.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-other-namespace"
+    },
+    {
+      "new_class": "LX/0Xw;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-phone-batch.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-phone-batch"
+    },
+    {
+      "new_class": "LX/0kT;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-phone-parse.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-phone-parse"
+    },
+    {
+      "new_class": "LX/0hd;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-prefix-check.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-prefix-check"
+    },
+    {
+      "new_class": "LX/0Xw;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-reverse-map.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-reverse-map"
+    },
+    {
+      "new_class": "LX/0Xw;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-row-materialization.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-row-materialization"
+    },
+    {
+      "new_class": "LX/0Xw;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-single-map.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-single-map"
+    },
+    {
+      "new_class": "LX/0Xx;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-single-sql.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-single-sql"
+    },
+    {
+      "new_class": "LX/0eU;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-sort-map.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-sort-map"
+    },
+    {
+      "new_class": "LX/0hd;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-special-phone.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-special-phone"
+    },
+    {
+      "new_class": "LX/0hd;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/mapping-special-prefix.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/jid_map.rs"
+      ],
+      "status": "added",
+      "topic": "mapping-special-prefix"
+    },
+    {
+      "new_class": "LX/0C6;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-argument-concat.txt",
+      "old_class": "LX/0C6;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-argument-concat.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-argument-concat"
+    },
+    {
+      "new_class": "LX/J8I;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-chunk-validation.txt",
+      "old_class": "LX/J8I;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-chunk-validation.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-chunk-validation"
+    },
+    {
+      "new_class": "LX/0kX;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-group-query.txt",
+      "old_class": "LX/0kX;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-group-query.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-group-query"
+    },
+    {
+      "new_class": "LX/0C6;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-list-chunks.txt",
+      "old_class": "LX/0C6;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-list-chunks.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-list-chunks"
+    },
+    {
+      "new_class": "LX/1Uf;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-reap.txt",
+      "old_class": "LX/1Uf;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-reap.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-reap"
+    },
+    {
+      "new_class": "LX/OGV;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-sql-placeholders.txt",
+      "old_class": "LX/OGV;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-sql-placeholders.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-sql-placeholders"
+    },
+    {
+      "new_class": "LX/08J;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-tuple-copy.txt",
+      "old_class": "LX/08J;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-tuple-copy.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-tuple-copy"
+    },
+    {
+      "new_class": "LX/08J;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-tuple-list.txt",
+      "old_class": "LX/08J;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/sender-key-tuple-list.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sender-key-tuple-list"
+    },
+    {
+      "new_class": "LX/DNt;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/session-cache-callback.txt",
+      "old_class": "LX/DNt;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/session-cache-callback.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "session-cache-callback"
+    },
+    {
+      "new_class": "LX/Cap;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/session-cache-store.txt",
+      "old_class": "LX/Cap;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/session-cache-store.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "session-cache-store"
+    },
+    {
+      "new_class": "LX/0jc;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/session-removal-coordinator.txt",
+      "old_class": "LX/0jc;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/session-removal-coordinator.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "session-removal-coordinator"
+    },
+    {
+      "new_class": "LX/0jc;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/session-removal-sql.txt",
+      "old_class": "LX/0jc;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/session-removal-sql.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "session-removal-sql"
+    },
+    {
+      "new_class": "LX/B76;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/sql-key-tuple.txt",
+      "old_class": "LX/B76;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/sql-key-tuple.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "sql-key-tuple"
+    },
+    {
+      "new_class": "LX/0Gy;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/transaction-callback-manager.txt",
+      "old_class": "LX/0Gy;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/transaction-callback-manager.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "xtask/src/bundle.rs"
+      ],
+      "status": "unchanged",
+      "topic": "transaction-callback-manager"
+    },
+    {
+      "new_class": "LX/0ZN;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/transaction-callback-register.txt",
+      "old_class": "LX/0ZN;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/transaction-callback-register.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/direct.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ],
+      "status": "unchanged",
+      "topic": "transaction-callback-register"
+    },
+    {
+      "new_class": "LX/Cpf;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/transaction-callback-wrapper.txt",
+      "old_class": "LX/Cpf;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/transaction-callback-wrapper.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "xtask/src/bundle.rs"
+      ],
+      "status": "unchanged",
+      "topic": "transaction-callback-wrapper"
+    },
+    {
+      "new_class": "LX/1gB;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/transaction-close.txt",
+      "old_class": "LX/1gB;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/transaction-close.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "xtask/src/bundle.rs"
+      ],
+      "status": "unchanged",
+      "topic": "transaction-close"
+    },
+    {
+      "new_class": "LX/0IY;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/transaction-database-end.txt",
+      "old_class": "LX/0IY;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/transaction-database-end.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "xtask/src/bundle.rs"
+      ],
+      "status": "unchanged",
+      "topic": "transaction-database-end"
+    },
+    {
+      "new_class": "LX/0IY;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/transaction-database-success.txt",
+      "old_class": "LX/0IY;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/transaction-database-success.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "xtask/src/bundle.rs"
+      ],
+      "status": "unchanged",
+      "topic": "transaction-database-success"
+    },
+    {
+      "new_class": "LX/8kU;",
+      "new_file": "docs/protocol/apk/2.26.37.71-companion-cleanup/transaction-runnable-invoke.txt",
+      "old_class": "LX/8kU;",
+      "old_file": "git:eafb8fd:docs/protocol/apk/2.26.37.71-companion-cleanup/transaction-runnable-invoke.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "xtask/src/bundle.rs"
+      ],
+      "status": "unchanged",
+      "topic": "transaction-runnable-invoke"
+    }
+  ]
+}

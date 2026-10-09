@@ -22,6 +22,7 @@ mod axml;
 mod bundle;
 mod deps;
 mod dex;
+mod jid_map;
 mod manifest;
 mod mex;
 mod proto;
@@ -148,6 +149,12 @@ enum Cmd {
     /// Resolve APK member-storage metadata offline from private JSON; prints explicit values.
     MexParticipantStorageInspect {
         /// Typed raw join/history, previous state and required clock_ms; local limit 16 KiB.
+        #[arg(long)]
+        input: PathBuf,
+    },
+    /// Inspect APK JID-map row selection offline without echoing private columns.
+    JidMapRowInspect {
+        /// Private typed row JSON; local limit 64 KiB/1024 rows. No account is opened.
         #[arg(long)]
         input: PathBuf,
     },
@@ -334,6 +341,7 @@ fn main() -> ExitCode {
             as_set,
         } => mex::inspect_participant_hash(&input, &version, as_set),
         Cmd::MexParticipantStorageInspect { input } => mex::inspect_participant_storage(&input),
+        Cmd::JidMapRowInspect { input } => jid_map::run(&input),
         Cmd::MexResponseInspect {
             input,
             child,
