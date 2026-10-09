@@ -1,0 +1,77 @@
+# APK-derived structural disassembly: LX/2x8;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(VLJJ) flags=0x11 registers=12
+  # full signature: LX/2x8;->A01(LX/0Cy;JJ)V
+  0000..0002 op=12 const/4 v2, #0x0
+  0002..0008 op=71 invoke-static {v7, v2}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=1a const-string v0, "msgstore/setchatreadreceiptssent/"
+  000c..0012 op=71 invoke-static {v7, v0}, LX/000;->A07(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0012..0014 op=0c move-result-object v1
+  0014..0018 op=1a const-string v0, " "
+  0018..001e op=71 invoke-static {v0, v1, v10, v11}, LX/1xj;->A1N(Ljava/lang/String;Ljava/lang/StringBuilder;J)V
+  001e..0022 op=54 iget-object v0, v6, LX/2x8;->A01:LX/05B;
+  0022..0028 op=71 invoke-static {v0}, LX/1xh;->A0v(LX/05B;)LX/0Fs;
+  0028..002a op=0c move-result-object v0
+  002a..0030 op=71 invoke-static {v0, v7, v2}, LX/0Fs;->A00(LX/0Fs;LX/0Cy;Z)LX/0Ze;
+  0030..0032 op=0c move-result-object v4
+  0032..0036 op=39 if-nez v4, +0x8
+  0036..003a op=1a const-string v0, "msgstore/setchatreadreceiptssent/no chat for "
+  003a..0040 op=71 invoke-static {v0, v7}, LX/1xk;->A1R(Ljava/lang/String;Ljava/lang/Object;)V
+  0040..0042 op=0e return-void
+  0042..0046 op=53 iget-wide v1, v4, LX/0Ze;->A0W:J
+  0046..004a op=31 cmp-long v0, v10, v1
+  004a..004e op=3d if-lez v0, -0x5
+  004e..0052 op=5a iput-wide v8, v4, LX/0Ze;->A0V:J
+  0052..0056 op=5a iput-wide v10, v4, LX/0Ze;->A0W:J
+  0056..005a op=54 iget-object v0, v6, LX/2x8;->A00:LX/05B;
+  005a..0060 op=71 invoke-static {v0}, LX/1xm;->A0U(LX/05B;)LX/0VS;
+  0060..0062 op=0c move-result-object v5
+  0062..0064 op=12 const/4 v0, #0x3
+  0064..0068 op=22 new-instance v3, Landroid/content/ContentValues;
+  0068..006e op=70 invoke-direct {v3, v0}, Landroid/content/ContentValues;-><init>(I)V
+  006e..0070 op=1d monitor-enter
+  0070..0074 op=1a const-string v2, "last_read_receipt_sent_message_row_id"
+  0074..0078 op=53 iget-wide v0, v4, LX/0Ze;->A0V:J
+  0078..007e op=71 invoke-static {v3, v2, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  007e..0082 op=1a const-string v2, "last_read_receipt_sent_message_sort_id"
+  0082..0086 op=53 iget-wide v0, v4, LX/0Ze;->A0W:J
+  0086..008c op=71 invoke-static {v3, v2, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  008c..008e op=1e monitor-exit
+  008e..0094 op=6e invoke-virtual {v5, v3, v4}, LX/0VS;->A0Y(Landroid/content/ContentValues;LX/0Ze;)Z
+  0094..0096 op=0e return-void
+  0096..0098 op=0d move-exception v0
+  0098..009a op=27 throw v0
+  009a..009c op=0d move-exception v0
+  009c..009e op=1e monitor-exit
+  009e..00a0 op=27 throw v0
+  00a0..00a2 op=0d move-exception v0
+  00a2..00a8 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/Throwable;)V
+  00a8..00aa op=27 throw v0
+  00aa..00ac op=0d move-exception v0
+  00ac..00b2 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/Throwable;)V
+  00b2..00b6 op=54 iget-object v0, v6, LX/2x8;->A04:LX/05B;
+  00b6..00bc op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  00bc..00be op=0c move-result-object v0
+  00be..00c2 op=1f check-cast v0, LX/0Fy;
+  00c2..00c8 op=6e invoke-virtual {v0}, LX/0Fy;->A03()V
+  00c8..00ca op=0e return-void
+  # exception table: 9 try range(s)
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 002b..0038 -> 0055
+  # catch Ljava/lang/RuntimeException; code_units 002b..0038 -> 0050
+  # catch Ljava/lang/Error; code_units 002b..0038 -> 0050
+  # catch <all> code_units 0038..003a -> 004d
+  # catch <all> code_units 003a..003c -> 004b
+  # catch <all> code_units 003c..0041 -> 004d
+  # catch <all> code_units 0041..0043 -> 004b
+  # catch <all> code_units 0043..0047 -> 004d
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0047..004b -> 0055
+  # catch Ljava/lang/RuntimeException; code_units 0047..004b -> 0050
+  # catch Ljava/lang/Error; code_units 0047..004b -> 0050
+  # catch <all> code_units 004c..004f -> 004d
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 004f..0050 -> 0055
+  # catch Ljava/lang/RuntimeException; code_units 004f..0050 -> 0050
+  # catch Ljava/lang/Error; code_units 004f..0050 -> 0050
+.end method

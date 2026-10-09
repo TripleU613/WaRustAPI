@@ -1,0 +1,132 @@
+{
+  "chat-position": {
+    "class": "LX/2x8;",
+    "file": "chat-position.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "message-exclusion": {
+    "class": "LX/178;",
+    "file": "message-exclusion.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "message-key": {
+    "class": "LX/0zc;",
+    "file": "message-key.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "message-store": {
+    "class": "LX/0zc;",
+    "file": "message-store.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0B",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "message-values": {
+    "class": "LX/0zc;",
+    "file": "message-values.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "message-worker": {
+    "class": "LX/DNe;",
+    "file": "message-worker.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "message-worker-ctor": {
+    "class": "LX/DNe;",
+    "file": "message-worker-ctor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "positions-worker": {
+    "class": "LX/3RC;",
+    "file": "positions-worker.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "positions-worker-ctor": {
+    "class": "LX/3RC;",
+    "file": "positions-worker-ctor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 3,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "storage-type": {
+    "class": "LX/178;",
+    "file": "storage-type.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0h",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  }
+}

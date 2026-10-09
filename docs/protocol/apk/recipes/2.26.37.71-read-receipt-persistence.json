@@ -1,0 +1,88 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "message-worker-ctor": {
+      "class": "LX/DNe;",
+      "method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "message-worker": {
+      "class": "LX/DNe;",
+      "method": "run",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "message-store": {
+      "class": "LX/0zc;",
+      "method": "A0B",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "message-values": {
+      "class": "LX/0zc;",
+      "method": "A03",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "message-key": {
+      "class": "LX/0zc;",
+      "method": "A05",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "message-exclusion": {
+      "class": "LX/178;",
+      "method": "A0V",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "storage-type": {
+      "class": "LX/178;",
+      "method": "A0h",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "positions-worker-ctor": {
+      "class": "LX/3RC;",
+      "method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "positions-worker": {
+      "class": "LX/3RC;",
+      "method": "run",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "chat-position": {
+      "class": "LX/2x8;",
+      "method": "A01",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    }
+  }
+}

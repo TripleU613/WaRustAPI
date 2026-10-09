@@ -1,5 +1,12 @@
 # Evidence ledger
 
+Read-receipt persistence (2026-10-09, **confirmed static**): ten source topics
+connect local status marking to existing message-row updates and separate
+chat row/sort and status-table sent positions. IOException may be logged and
+swallowed after the in-memory mark; no ACK wait is established. Complete
+queue/store reconciliation remains unknown/unported; no runtime/live change.
+[Evidence and limits](read-receipt-persistence.md).
+
 Read-receipt submission (2026-10-09, **confirmed static**): thirteen source
 topics separate grouped queueing from later per-message policy, 256-ID batches,
 forced read-self and local status-16 marking. Maximum store-time is preserved;

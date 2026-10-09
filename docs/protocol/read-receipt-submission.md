@@ -89,13 +89,16 @@ Other branches return true. This nested policy is not a global Boolean check.
 A0J returns immediately for 1iZ or true message.A0V(). Otherwise it calls
 A0H(**16**), then schedules DNe(message,manager,**2**) via 07u.COM.
 The selected code does not await server acceptance before this local mark.
-DNe persistence/commit, the virtual predicate and crash atomicity remain
-**unknown**. Status 16 here cannot be counted as handset read confirmation.
+DNe's selected row update and base virtual predicate are now followed in
+[the persistence trace](read-receipt-persistence.md); complete commit/override
+and crash atomicity remain **unknown**. Status 16 here cannot be counted as handset read confirmation.
 
 A0V also collects A0k maxima: type-5 chat with qualifying B1Q contributes to
 one map; other chats retain a greatest-A0k message (equal replaces). It schedules
 3RC selector **12** with these maps through 1f0.A01 code **43** (0454..0480).
-Worker effects are **unknown**. The selected method has no catch ranges;
+Selected chat/status position writers are now followed in
+[the persistence trace](read-receipt-persistence.md); full worker authority
+remains **unknown**. The selected method has no catch ranges;
 that does not establish all-or-nothing queue/persistence behavior.
 
 ## Reproduce and port boundary
