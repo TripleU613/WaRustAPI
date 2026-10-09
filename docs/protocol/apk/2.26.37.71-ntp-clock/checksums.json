@@ -1,0 +1,54 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "ntp-only-clock.txt": {
+    "bytes": 863,
+    "sha256": "0efea22b43e1a8f8825bea451f4aa6f16f7a5acbd39e583302525a6fdcfa882c"
+  },
+  "ntp-packet.txt": {
+    "bytes": 14609,
+    "sha256": "9824f25ca7be1d9be8067b2f76157dfda4b090276f7a70b44ac751702fd5facf"
+  },
+  "ntp-sync.txt": {
+    "bytes": 20536,
+    "sha256": "18ffaf7927c88add6fc44296f3e0a68f3df2f4326205a0725150839a62b8a97b"
+  },
+  "ntp-timestamp.txt": {
+    "bytes": 6064,
+    "sha256": "2673c3459df72c230ab48f87c756f211bc6e9e986d305802ce0a5fa9bfcd849c"
+  },
+  "ntp-update.txt": {
+    "bytes": 2255,
+    "sha256": "cd2e1f4860b004b66e612c0e22cf76ed9d16064693177359715fb75595a82f53"
+  },
+  "ntp-worker.txt": {
+    "bytes": 1307,
+    "sha256": "773df9396506e9e2896b0d7f535ac17fc3087e1b037b1cec8a097491c177b8bd"
+  },
+  "offset-subtraction.txt": {
+    "bytes": 638,
+    "sha256": "f26c428677d42de48fed2e5f757143706e2e7bb695f51761ca50e632a28f0d58"
+  },
+  "preference-apply.txt": {
+    "bytes": 813,
+    "sha256": "041822667fd2754e001ac0aa2dfa6d730122a470b8264afd070cf3e471156f29"
+  },
+  "preferred-clock.txt": {
+    "bytes": 1288,
+    "sha256": "19f2fcdf09475caad1f690d9b73f4b8efdd01f30a314d431de206be8d7607f8c"
+  },
+  "targets.json": {
+    "bytes": 3283,
+    "sha256": "553e6dd64e7f8f7755dd4ec9edca18247e31164b9361b17fc657d20d92c74efd"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

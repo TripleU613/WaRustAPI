@@ -1,0 +1,288 @@
+# APK-derived structural disassembly: LX/Cll;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(V) flags=0x10001 registers=2
+  # full signature: LX/Cll;-><init>()V
+  0000..0006 op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+  0006..000a op=13 const/16 v0, #0x30
+  000a..000e op=23 new-array v0, v0, [B
+  000e..0012 op=5b iput-object v0, v1, LX/Cll;->A00:[B
+  0012..0014 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method A00(II) flags=0x2 registers=5
+  # full signature: LX/Cll;->A00(I)I
+  0000..0004 op=54 iget-object v2, v3, LX/Cll;->A00:[B
+  0004..0008 op=48 aget-byte v0, v2, v4
+  0008..000c op=d5 and-int/lit16 v0, v0, #0xff
+  000c..0010 op=e0 shl-int/lit8 v1, v0, #0x18
+  0010..0014 op=d8 add-int/lit8 v0, v4, #0x1
+  0014..0018 op=48 aget-byte v0, v2, v0
+  0018..001c op=d5 and-int/lit16 v0, v0, #0xff
+  001c..0020 op=e0 shl-int/lit8 v0, v0, #0x10
+  0020..0022 op=b6 or-int/2addr v1, v0
+  0022..0026 op=d8 add-int/lit8 v0, v4, #0x2
+  0026..002a op=48 aget-byte v0, v2, v0
+  002a..002e op=d5 and-int/lit16 v0, v0, #0xff
+  002e..0032 op=e0 shl-int/lit8 v0, v0, #0x8
+  0032..0034 op=b6 or-int/2addr v1, v0
+  0034..0038 op=d8 add-int/lit8 v0, v4, #0x3
+  0038..003c op=48 aget-byte v0, v2, v0
+  003c..0040 op=d5 and-int/lit16 v0, v0, #0xff
+  0040..0042 op=b6 or-int/2addr v0, v1
+  0042..0044 op=0f return v0
+  # exception table: 0 try range(s)
+.end method
+
+.method A01(LLI) flags=0x9 registers=7
+  # full signature: LX/Cll;->A01(LX/Cll;I)LX/DLh;
+  0000..0004 op=54 iget-object v1, v5, LX/Cll;->A00:[B
+  0004..0008 op=48 aget-byte v0, v1, v6
+  0008..000c op=d5 and-int/lit16 v0, v0, #0xff
+  000c..000e op=81 int-to-long v2, v0
+  000e..0012 op=13 const/16 v0, #0x38
+  0012..0014 op=c3 shl-long/2addr v2, v0
+  0014..0018 op=d8 add-int/lit8 v0, v6, #0x1
+  0018..001c op=48 aget-byte v0, v1, v0
+  001c..0020 op=d5 and-int/lit16 v0, v0, #0xff
+  0020..0022 op=81 int-to-long v4, v0
+  0022..0026 op=13 const/16 v0, #0x30
+  0026..0028 op=c3 shl-long/2addr v4, v0
+  0028..002a op=c1 or-long/2addr v2, v4
+  002a..002e op=d8 add-int/lit8 v0, v6, #0x2
+  002e..0032 op=48 aget-byte v0, v1, v0
+  0032..0036 op=d5 and-int/lit16 v0, v0, #0xff
+  0036..0038 op=81 int-to-long v4, v0
+  0038..003c op=13 const/16 v0, #0x28
+  003c..003e op=c3 shl-long/2addr v4, v0
+  003e..0040 op=c1 or-long/2addr v2, v4
+  0040..0044 op=d8 add-int/lit8 v0, v6, #0x3
+  0044..0048 op=48 aget-byte v0, v1, v0
+  0048..004c op=d5 and-int/lit16 v0, v0, #0xff
+  004c..004e op=81 int-to-long v4, v0
+  004e..0052 op=13 const/16 v0, #0x20
+  0052..0054 op=c3 shl-long/2addr v4, v0
+  0054..0056 op=c1 or-long/2addr v2, v4
+  0056..005a op=d8 add-int/lit8 v0, v6, #0x4
+  005a..005e op=48 aget-byte v0, v1, v0
+  005e..0062 op=d5 and-int/lit16 v0, v0, #0xff
+  0062..0064 op=81 int-to-long v4, v0
+  0064..0068 op=13 const/16 v0, #0x18
+  0068..006a op=c3 shl-long/2addr v4, v0
+  006a..006c op=c1 or-long/2addr v2, v4
+  006c..0070 op=d8 add-int/lit8 v0, v6, #0x5
+  0070..0074 op=48 aget-byte v0, v1, v0
+  0074..0078 op=d5 and-int/lit16 v0, v0, #0xff
+  0078..007a op=81 int-to-long v4, v0
+  007a..007e op=13 const/16 v0, #0x10
+  007e..0080 op=c3 shl-long/2addr v4, v0
+  0080..0082 op=c1 or-long/2addr v2, v4
+  0082..0086 op=d8 add-int/lit8 v0, v6, #0x6
+  0086..008a op=48 aget-byte v0, v1, v0
+  008a..008e op=d5 and-int/lit16 v0, v0, #0xff
+  008e..0090 op=81 int-to-long v4, v0
+  0090..0094 op=13 const/16 v0, #0x8
+  0094..0096 op=c3 shl-long/2addr v4, v0
+  0096..0098 op=c1 or-long/2addr v2, v4
+  0098..009c op=d8 add-int/lit8 v0, v6, #0x7
+  009c..00a0 op=48 aget-byte v0, v1, v0
+  00a0..00a4 op=d5 and-int/lit16 v0, v0, #0xff
+  00a4..00a6 op=81 int-to-long v0, v0
+  00a6..00a8 op=c1 or-long/2addr v2, v0
+  00a8..00ac op=22 new-instance v0, LX/DLh;
+  00ac..00b2 op=70 invoke-direct {v0, v2, v3}, LX/DLh;-><init>(J)V
+  00b2..00b4 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
+
+.method A02(L) flags=0x20001 registers=4
+  # full signature: LX/Cll;->A02()Ljava/net/DatagramPacket;
+  0000..0002 op=1d monitor-enter
+  0002..0006 op=54 iget-object v0, v3, LX/Cll;->A01:Ljava/net/DatagramPacket;
+  0006..000a op=39 if-nez v0, +0x14
+  000a..000e op=54 iget-object v2, v3, LX/Cll;->A00:[B
+  000e..0012 op=13 const/16 v1, #0x30
+  0012..0016 op=22 new-instance v0, Ljava/net/DatagramPacket;
+  0016..001c op=70 invoke-direct {v0, v2, v1}, Ljava/net/DatagramPacket;-><init>([BI)V
+  001c..0020 op=5b iput-object v0, v3, LX/Cll;->A01:Ljava/net/DatagramPacket;
+  0020..0024 op=54 iget-object v1, v3, LX/Cll;->A01:Ljava/net/DatagramPacket;
+  0024..0028 op=13 const/16 v0, #0x7b
+  0028..002e op=6e invoke-virtual {v1, v0}, Ljava/net/DatagramPacket;->setPort(I)V
+  002e..0032 op=54 iget-object v0, v3, LX/Cll;->A01:Ljava/net/DatagramPacket;
+  0032..0034 op=1e monitor-exit
+  0034..0036 op=11 return-object v0
+  0036..0038 op=0d move-exception v0
+  0038..003a op=1e monitor-exit
+  003a..003c op=27 throw v0
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0001..0019 -> 001b
+  # catch <all> code_units 001c..001d -> 001b
+.end method
+
+.method equals(ZL) flags=0x1 registers=4
+  # full signature: LX/Cll;->equals(Ljava/lang/Object;)Z
+  0000..0004 op=33 if-ne v2, v3, +0x4
+  0004..0006 op=12 const/4 v0, #0x1
+  0006..0008 op=0f return v0
+  0008..000c op=38 if-eqz v3, +0x17
+  000c..0012 op=6e invoke-virtual {v2}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0012..0014 op=0c move-result-object v1
+  0014..001a op=6e invoke-virtual {v3}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  001a..001c op=0c move-result-object v0
+  001c..0020 op=33 if-ne v1, v0, +0xd
+  0020..0024 op=1f check-cast v3, LX/Cll;
+  0024..0028 op=54 iget-object v1, v2, LX/Cll;->A00:[B
+  0028..002c op=54 iget-object v0, v3, LX/Cll;->A00:[B
+  002c..0032 op=71 invoke-static {v1, v0}, Ljava/util/Arrays;->equals([B[B)Z
+  0032..0034 op=0a move-result v0
+  0034..0036 op=0f return v0
+  0036..0038 op=12 const/4 v0, #0x0
+  0038..003a op=0f return v0
+  # exception table: 0 try range(s)
+.end method
+
+.method hashCode(I) flags=0x1 registers=2
+  # full signature: LX/Cll;->hashCode()I
+  0000..0004 op=54 iget-object v0, v1, LX/Cll;->A00:[B
+  0004..000a op=71 invoke-static {v0}, Ljava/util/Arrays;->hashCode([B)I
+  000a..000c op=0a move-result v0
+  000c..000e op=0f return v0
+  # exception table: 0 try range(s)
+.end method
+
+.method toString(L) flags=0x1 registers=9
+  # full signature: LX/Cll;->toString()Ljava/lang/String;
+  0000..0004 op=1a const-string v0, "[version:"
+  0004..000a op=71 invoke-static {v0}, LX/1xf;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000a..000c op=0c move-result-object v2
+  000c..0010 op=54 iget-object v4, v8, LX/Cll;->A00:[B
+  0010..0012 op=12 const/4 v0, #0x0
+  0012..0016 op=48 aget-byte v0, v4, v0
+  0016..001a op=d5 and-int/lit16 v1, v0, #0xff
+  001a..001e op=e1 shr-int/lit8 v0, v1, #0x3
+  001e..0022 op=dd and-int/lit8 v0, v0, #0x7
+  0022..0028 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0028..002c op=1a const-string v0, ", mode:"
+  002c..0032 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0032..0036 op=dd and-int/lit8 v0, v1, #0x7
+  0036..003c op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  003c..0040 op=1a const-string v0, ", poll:"
+  0040..0046 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0046..0048 op=12 const/4 v0, #0x2
+  0048..004c op=48 aget-byte v0, v4, v0
+  004c..0052 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0052..0056 op=1a const-string v0, ", precision:"
+  0056..005c op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  005c..005e op=12 const/4 v0, #0x3
+  005e..0062 op=48 aget-byte v0, v4, v0
+  0062..0068 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0068..006c op=1a const-string v0, ", delay:"
+  006c..0072 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0072..0074 op=12 const/4 v0, #0x4
+  0074..007a op=70 invoke-direct {v8, v0}, LX/Cll;->A00(I)I
+  007a..007c op=0a move-result v0
+  007c..0082 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0082..0086 op=1a const-string v0, ", dispersion(ms):"
+  0086..008c op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  008c..0090 op=13 const/16 v0, #0x8
+  0090..0096 op=70 invoke-direct {v8, v0}, LX/Cll;->A00(I)I
+  0096..0098 op=0a move-result v0
+  0098..009a op=83 int-to-double v5, v0
+  009a..00a4 op=18 const-wide v0, #0x4050624dd2f1a9fc (4634312102955297276)
+  00a4..00a6 op=ce div-double/2addr v5, v0
+  00a6..00ac op=6e invoke-virtual {v2, v5, v6}, Ljava/lang/StringBuilder;->append(D)Ljava/lang/StringBuilder;
+  00ac..00b0 op=1a const-string v0, ", id:"
+  00b0..00b6 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00b6..00b8 op=12 const/4 v7, #0x0
+  00b8..00bc op=48 aget-byte v0, v4, v7
+  00bc..00c0 op=d5 and-int/lit16 v0, v0, #0xff
+  00c0..00c4 op=e1 shr-int/lit8 v0, v0, #0x3
+  00c4..00c8 op=dd and-int/lit8 v6, v0, #0x7
+  00c8..00ca op=12 const/4 v5, #0x1
+  00ca..00ce op=48 aget-byte v0, v4, v5
+  00ce..00d2 op=d5 and-int/lit16 v1, v0, #0xff
+  00d2..00d4 op=12 const/4 v3, #0x3
+  00d4..00d6 op=12 const/4 v0, #0x4
+  00d6..00da op=32 if-eq v6, v3, +0x4
+  00da..00de op=33 if-ne v6, v0, +0x69
+  00de..00e2 op=38 if-eqz v1, +0x4f
+  00e2..00e6 op=32 if-eq v1, v5, +0x4d
+  00e6..00ea op=33 if-ne v6, v0, +0x63
+  00ea..00ee op=13 const/16 v0, #0xc
+  00ee..00f4 op=70 invoke-direct {v8, v0}, LX/Cll;->A00(I)I
+  00f4..00f6 op=0a move-result v0
+  00f6..00fc op=71 invoke-static {v0}, Ljava/lang/Integer;->toHexString(I)Ljava/lang/String;
+  00fc..00fe op=0c move-result-object v0
+  00fe..0104 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0104..0108 op=1a const-string v0, ", xmitTime:"
+  0108..010e op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  010e..0112 op=13 const/16 v0, #0x28
+  0112..0118 op=71 invoke-static {v8, v0}, LX/Cll;->A01(LX/Cll;I)LX/DLh;
+  0118..011a op=0c move-result-object v5
+  011a..011e op=54 iget-object v0, v5, LX/DLh;->simpleFormatter:Ljava/text/DateFormat;
+  011e..0122 op=39 if-nez v0, +0x14
+  0122..0126 op=1a const-string v3, "EEE, MMM dd yyyy HH:mm:ss.SSS"
+  0126..012a op=62 sget-object v0, Ljava/util/Locale;->US:Ljava/util/Locale;
+  012a..012e op=22 new-instance v1, Ljava/text/SimpleDateFormat;
+  012e..0134 op=70 invoke-direct {v1, v3, v0}, Ljava/text/SimpleDateFormat;-><init>(Ljava/lang/String;Ljava/util/Locale;)V
+  0134..0138 op=5b iput-object v1, v5, LX/DLh;->simpleFormatter:Ljava/text/DateFormat;
+  0138..013e op=71 invoke-static {}, Ljava/util/TimeZone;->getDefault()Ljava/util/TimeZone;
+  013e..0140 op=0c move-result-object v0
+  0140..0146 op=6e invoke-virtual {v1, v0}, Ljava/text/DateFormat;->setTimeZone(Ljava/util/TimeZone;)V
+  0146..014a op=53 iget-wide v0, v5, LX/DLh;->ntpTime:J
+  014a..0150 op=71 invoke-static {v0, v1}, LX/DLh;->A00(J)J
+  0150..0152 op=0b move-result-wide v3
+  0152..0156 op=22 new-instance v1, Ljava/util/Date;
+  0156..015c op=70 invoke-direct {v1, v3, v4}, Ljava/util/Date;-><init>(J)V
+  015c..0160 op=54 iget-object v0, v5, LX/DLh;->simpleFormatter:Ljava/text/DateFormat;
+  0160..0166 op=6e invoke-virtual {v0, v1}, Ljava/text/DateFormat;->format(Ljava/util/Date;)Ljava/lang/String;
+  0166..0168 op=0c move-result-object v0
+  0168..016e op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  016e..0172 op=1a const-string v0, " ]"
+  0172..0178 op=71 invoke-static {v0, v2}, LX/000;->A05(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+  0178..017a op=0c move-result-object v0
+  017a..017c op=11 return-object v0
+  017c..0182 op=71 invoke-static {}, LX/1xf;->A1A()Ljava/lang/StringBuilder;
+  0182..0184 op=0c move-result-object v1
+  0184..0188 op=d8 add-int/lit8 v0, v7, #0xc
+  0188..018c op=48 aget-byte v0, v4, v0
+  018c..018e op=8e int-to-char v0, v0
+  018e..0192 op=38 if-eqz v0, +0xa
+  0192..0198 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+  0198..019c op=d8 add-int/lit8 v7, v7, #0x1
+  019c..01a0 op=36 if-gt v7, v3, +0x3
+  01a0..01a2 op=28 goto -0xe
+  01a2..01a8 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  01a8..01aa op=0c move-result-object v0
+  01aa..01ac op=28 goto -0x56
+  01ac..01ae op=12 const/4 v0, #0x2
+  01ae..01b2 op=34 if-lt v1, v0, -0x62
+  01b2..01b8 op=71 invoke-static {}, LX/1xf;->A1A()Ljava/lang/StringBuilder;
+  01b8..01ba op=0c move-result-object v3
+  01ba..01be op=13 const/16 v0, #0xc
+  01be..01c2 op=48 aget-byte v0, v4, v0
+  01c2..01c6 op=d5 and-int/lit16 v0, v0, #0xff
+  01c6..01cc op=6e invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  01cc..01d0 op=1a const-string v1, "."
+  01d0..01d6 op=6e invoke-virtual {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  01d6..01da op=13 const/16 v0, #0xd
+  01da..01de op=48 aget-byte v0, v4, v0
+  01de..01e2 op=d5 and-int/lit16 v0, v0, #0xff
+  01e2..01e8 op=6e invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  01e8..01ee op=6e invoke-virtual {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  01ee..01f2 op=13 const/16 v0, #0xe
+  01f2..01f6 op=48 aget-byte v0, v4, v0
+  01f6..01fa op=d5 and-int/lit16 v0, v0, #0xff
+  01fa..0200 op=6e invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0200..0206 op=6e invoke-virtual {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0206..020a op=13 const/16 v0, #0xf
+  020a..020e op=48 aget-byte v0, v4, v0
+  020e..0212 op=d5 and-int/lit16 v0, v0, #0xff
+  0212..0218 op=71 invoke-static {v3, v0}, LX/Ayj;->A17(Ljava/lang/StringBuilder;I)Ljava/lang/String;
+  0218..021a op=0c move-result-object v0
+  021a..021e op=29 goto/16 -0x8e
+  # exception table: 0 try range(s)
+.end method

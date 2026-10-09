@@ -1,5 +1,12 @@
 # Messaging completion checklist
 
+NTP clock preference (2026-10-09, **confirmed static**): nine source topics
+establish separate NTP/WhatsApp baselines, offset sign, acquisition correlation,
+cache/recent-sync checks and feature-controlled rejection. NTP fetching,
+effective property 2225 and upstream scheduling remain unported/unknown.
+No runtime or real-account/live change.
+[Evidence and limits](protocol/token-clock-producers.md#ntp-preference-and-acquisition-2026-10-09-continuation).
+
 Confirmed clock runtime (2026-10-09, **confirmed local / APK-backed**):
 authenticated login and server-ping time now save source/offset separately from
 inferred stanza samples. Linux/Android use suspend-aware elapsed time during the

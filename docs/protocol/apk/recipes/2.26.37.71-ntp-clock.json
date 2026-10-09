@@ -1,0 +1,78 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "preferred-clock": {
+      "class": "LX/08B;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/client.rs"
+      ],
+      "method": "A00"
+    },
+    "ntp-update": {
+      "class": "LX/08B;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/client.rs"
+      ],
+      "method": "A01"
+    },
+    "ntp-only-clock": {
+      "class": "LX/08B;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/client.rs"
+      ],
+      "method": "A02"
+    },
+    "ntp-sync": {
+      "class": "LX/CN1;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/client.rs"
+      ],
+      "method": "A00"
+    },
+    "ntp-worker": {
+      "class": "Lcom/whatsapp/infra/ntp/workers/NtpSyncWorker;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/client.rs"
+      ],
+      "method": "A0A"
+    },
+    "ntp-packet": {
+      "class": "LX/Cll;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/client.rs"
+      ]
+    },
+    "ntp-timestamp": {
+      "class": "LX/DLh;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/client.rs"
+      ]
+    },
+    "offset-subtraction": {
+      "class": "LX/6ak;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/client.rs"
+      ],
+      "method": "A19"
+    },
+    "preference-apply": {
+      "class": "LX/1xl;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/client.rs"
+      ],
+      "method": "A1H"
+    }
+  }
+}

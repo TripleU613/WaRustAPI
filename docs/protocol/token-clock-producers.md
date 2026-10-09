@@ -213,3 +213,99 @@ is now Linux/Android target-gated and available to the unconditional public
 clock module. Both default and all-feature configurations passed after that
 correction. Separate-process CLI clock resolution and physical suspend remain
 unverified; restart coverage uses a simulated changed process epoch.
+
+
+## NTP preference and acquisition (2026-10-09 continuation)
+
+**Confirmed static:** same 2.26.37.71 APK/hash as above. The
+[nine-topic recipe](apk/recipes/2.26.37.71-ntp-clock.json) and
+[snapshot](apk/2.26.37.71-ntp-clock/targets.json) retain full signatures,
+register flow and catches. Reproduce individual bodies with `apk-smali`, using
+exact class descriptors and method selectors from the recipe. This establishes
+additional source coverage, not an NTP implementation or live clock validation.
+
+### Clock domains and persistence
+
+`08B.A00` selects nonzero NTP baseline A03 first (`0008..0020`), then nonzero
+WhatsApp baseline A04 (`0020..0032`), adding the same sampled elapsedRealtime.
+Otherwise it returns wall time minus persisted WhatsApp difference A02.
+`08B.A02` is a different getter: only NTP baseline plus elapsed time, or zero.
+The token-job getter A04 does not select NTP. Thus a port must not silently
+substitute A00 everywhere merely because both getters can return epoch time.
+
+`08B.A01(offset)` samples current wall time, adds the supplied signed offset,
+subtracts elapsedRealtime and writes A03 (`0012..0028`). It does not use A07's
+positive-server-time gate and does not itself persist the offset. Sign is
+**NTP minus device**, unlike A07's persisted **device minus WhatsApp server**.
+Physical writes find A03 only here (`classes.dex` `0x45acb4`, opcode 5a).
+Physical A01 callers are the already traced constructor (`0x45ac22`) and
+`CN1.A00` (`classes7.dex` `0x58ef3c`). These are physical DEX inventories,
+not reflection/native reachability closure.
+
+Successful CN1 acquisition calls A01 and stores `client_ntp_time_diff` plus
+current wall `last_ntp_client_time` in the same preferences editor
+(`0488..04bc`). `1xl.A1H` finishes putLong/apply. On process construction,
+08B's earlier positive saved time / absolute age below 86,400,000 ms check
+reconstructs a new elapsed baseline from that offset. No getter freshness check
+is present in selected A00/A02 bodies: the constructor's cache admission is
+not a claim that an in-process baseline automatically expires after a day.
+
+### Acquisition and admission
+
+`NtpSyncWorker.A0A` delegates to `CN1.A00`. CN1 suppresses another acquisition
+when positive process-static A06 is less than 21,600,000 elapsed milliseconds
+old (`0022..0064`). That is a six-hour recent-sync guard, separate from the
+one-day constructor cache check; scheduling/enqueue/backoff remain **unknown**.
+A06's sole physical write is CN1 `classes7.dex` `0x58eff2`, opcode 68, on its
+GM9 success branch (`052e..054c`). Early recent-sync return skips this write.
+Renderer 61/68 are still unnamed; their field/register references and widths
+are retained, and `apk-field-refs --writes-only` identifies the latter as write.
+
+CN1 selects `android:string/config_ntpServer`, falling back to
+`2.android.pool.ntp.org` for absent/empty/unresolvable configuration
+(`0076..00d0`). It resolves through 19x.A02 and tries resolved addresses with a
+DatagramSocket timeout of 20,000 ms, port 123 (`00d8..0136`). Cll allocates a
+48-byte packet; the first request byte is composed as version 3/mode 3
+(`013a..0160`). CN1 writes the transmit timestamp in big-endian bytes 40..47,
+then sends/receives (`0186..0228`). It requires reply originate timestamp bytes
+24..31 to equal the exact sent timestamp (`022a..0252`); mismatch throws an
+IOException and follows the address retry/cleanup branch. This is correlation,
+not cryptographic time authentication. Packet length, source-address, leap,
+stratum and response mode validation are **not established** by the selected
+CN1 receive path; do not infer them from generic NTP expectations.
+
+Cll.A01 reads eight bytes big-endian into DLh.ntpTime. DLh.A00 extracts unsigned
+seconds and fraction, rounds `fraction * 1000 / 2^32` via Math.round, then adds
+the era base: -2,208,988,800,000 ms when the seconds high bit is set,
+2,085,978,496,000 ms otherwise. CN1's request conversion uses the same era
+boundary and integer fraction construction (`0186..01e4`). Complete behavior
+outside this bounded era interpretation is not established.
+
+CN1 reads reply originate/receive/transmit at offsets 24/32/40 and records
+local destination receive wall time. With nonzero originate/receive/transmit,
+the selected path computes signed offset
+`((receive - originate) + (transmit - destination)) / 2` (`03d2..03ec`), using
+Java long arithmetic/truncation. Warning strings about processing/network
+ordering are accumulated; those branches do not independently reject offset
+adoption. Zero receive or transmit has a separate one-sided fallback;
+`6ak.A19(a,b)` returns boxed `a-b`. Null offset takes the explicit failure
+branch (`04be..04d4`). These fallback branches remain visible in full source;
+no unsupported synthetic sample is being adopted by Rust.
+
+Before adoption, CN1 computes `ntpTimeMs = destination + offset`, comparing it
+to both WhatsApp A04 time and current wall time (`0402..044e`). It rejects only
+when **both** absolute differences exceed 86,400,000 ms **and** Boolean
+property 2225 (`0x8b1`, 00D.A10) is true (`044e..0488`). Exactly one day does
+not pass the strict-greater rejection comparisons. The effective property and
+upstream scheduling remain **unknown**; the guard is not an unconditional
+mandatory one-day bound. No new Rust NTP fetch, settings/flag, retry, clock
+state or wire request was added by this continuation. Confirmed login/ping
+clock behavior from the preceding runtime chunk is unchanged.
+
+**NTP-chunk verification:** exact regeneration verified 14 files / 79,950
+bytes; self-diff reports nine topics and four artifacts unchanged. Regenerated
+CLI reference, API-symbol integration, diff whitespace and repository hygiene
+passed (1,813 local links; 74 checksum bundles). This source-only continuation
+changes no Rust; the preceding 820-test/Clippy/Rustdoc run belongs to the runtime
+chunk, not a new full run here. Bulk class dumps and physical inventories stay
+local; the scoped findings and reproduction inputs are retained above.

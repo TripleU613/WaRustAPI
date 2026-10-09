@@ -1,0 +1,119 @@
+{
+  "ntp-only-clock": {
+    "class": "LX/08B;",
+    "file": "ntp-only-clock.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/client.rs"
+    ]
+  },
+  "ntp-packet": {
+    "class": "LX/Cll;",
+    "file": "ntp-packet.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 7,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/client.rs"
+    ]
+  },
+  "ntp-sync": {
+    "class": "LX/CN1;",
+    "file": "ntp-sync.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/client.rs"
+    ]
+  },
+  "ntp-timestamp": {
+    "class": "LX/DLh;",
+    "file": "ntp-timestamp.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 8,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/client.rs"
+    ]
+  },
+  "ntp-update": {
+    "class": "LX/08B;",
+    "file": "ntp-update.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/client.rs"
+    ]
+  },
+  "ntp-worker": {
+    "class": "Lcom/whatsapp/infra/ntp/workers/NtpSyncWorker;",
+    "file": "ntp-worker.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0A",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/client.rs"
+    ]
+  },
+  "offset-subtraction": {
+    "class": "LX/6ak;",
+    "file": "offset-subtraction.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A19",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/client.rs"
+    ]
+  },
+  "preference-apply": {
+    "class": "LX/1xl;",
+    "file": "preference-apply.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1H",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/client.rs"
+    ]
+  },
+  "preferred-clock": {
+    "class": "LX/08B;",
+    "file": "preferred-clock.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/client.rs"
+    ]
+  }
+}
