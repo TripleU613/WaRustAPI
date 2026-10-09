@@ -1,0 +1,89 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "linked-set": {
+      "class": "LX/0bN;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "active-linked-map": {
+      "class": "LX/1IW;",
+      "method": "A08",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "linked-map-cache": {
+      "class": "LX/1IY;",
+      "method": "A07",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "linked-sql-loader": {
+      "class": "LX/1IY;",
+      "method": "A01",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "linked-sql-query": {
+      "class": "LX/1Kt;",
+      "method": "<clinit>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "logout-filter": {
+      "class": "LX/HxZ;",
+      "method": "A03",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "positive-comparison": {
+      "class": "LX/1xi;",
+      "method": "A1Q",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "linked-record-copy": {
+      "class": "LX/HxZ;",
+      "method": "A01",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "linked-record-constructor": {
+      "class": "LX/HxZ;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    }
+  }
+}

@@ -52,8 +52,10 @@ For status-chat A0i, a positive original timestamp is rejected only when
 original+86,400,000 is less than current 08B time; equal is accepted by this
 comparison, and nonpositive original time skips it. Long addition uses native
 wrapping arithmetic. That is a local status-age guard, not a server wait.
-Finally read-self requires the same 0bN.A02 set nonempty. Full set producer,
-linked-device authority and complete read-self routing remain **unknown**.
+Finally read-self requires the same 0bN.A02 set nonempty. The
+[saved-set trace](read-linked-set.md) now closes its immediate loader, logout
+filter and own-namespace conversion. Full ingestion/deletion authority,
+linked-device verification and read-self routing remain **unknown**.
 
 ## Handler, route, attributes and list
 

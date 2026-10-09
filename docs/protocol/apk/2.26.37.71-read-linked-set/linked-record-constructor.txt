@@ -1,0 +1,32 @@
+# APK-derived structural disassembly: LX/HxZ;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLLLLLLIIJJJZ) flags=0x10001 registers=20
+  # full signature: LX/HxZ;-><init>(LX/HvG;Lcom/whatsapp/infra/core/jid/DeviceJid;LX/B6a;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJJZ)V
+  0000..0006 op=70 invoke-direct {v2}, Ljava/lang/Object;-><init>()V
+  0006..000c op=71 invoke-static {v4}, LX/00K;->A06(Ljava/lang/Object;)V
+  000c..0010 op=5b iput-object v4, v2, LX/HxZ;->A0A:Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0010..0014 op=5b iput-object v5, v2, LX/HxZ;->A0B:LX/B6a;
+  0014..001a op=71 invoke-static {v6}, LX/C74;->A00(Ljava/lang/String;)Z
+  001a..001c op=0a move-result v0
+  001c..0020 op=38 if-eqz v0, +0x3
+  0020..0022 op=12 const/4 v6, #0x0
+  0022..0026 op=5b iput-object v6, v2, LX/HxZ;->A0C:Ljava/lang/String;
+  0026..002a op=5a iput-wide v13, v2, LX/HxZ;->A01:J
+  002a..002e op=5a iput-wide v15, v2, LX/HxZ;->A08:J
+  002e..0032 op=05 move-wide/from16 v0, v17
+  0032..0036 op=5a iput-wide v0, v2, LX/HxZ;->A02:J
+  0036..003a op=59 iput v11, v2, LX/HxZ;->A07:I
+  003a..003e op=02 move/from16 v0, v19
+  003e..0042 op=5c iput-boolean v0, v2, LX/HxZ;->A0D:Z
+  0042..0046 op=5b iput-object v7, v2, LX/HxZ;->A06:Ljava/lang/String;
+  0046..004a op=5b iput-object v8, v2, LX/HxZ;->A05:Ljava/lang/String;
+  004a..004e op=5b iput-object v9, v2, LX/HxZ;->A03:Ljava/lang/String;
+  004e..0052 op=5b iput-object v3, v2, LX/HxZ;->A09:LX/HvG;
+  0052..0056 op=5b iput-object v10, v2, LX/HxZ;->A04:Ljava/lang/String;
+  0056..005a op=59 iput v12, v2, LX/HxZ;->A00:I
+  005a..005c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

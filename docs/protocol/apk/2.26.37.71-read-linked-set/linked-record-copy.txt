@@ -1,0 +1,40 @@
+# APK-derived structural disassembly: LX/HxZ;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(LL) flags=0x1 registers=36
+  # full signature: LX/HxZ;->A01(Lcom/whatsapp/infra/core/jid/DeviceJid;)LX/HxZ;
+  0000..0004 op=08 move-object/from16 v0, v34
+  0004..0008 op=54 iget-object v15, v0, LX/HxZ;->A0B:LX/B6a;
+  0008..000c op=54 iget-object v14, v0, LX/HxZ;->A0C:Ljava/lang/String;
+  000c..0010 op=53 iget-wide v6, v0, LX/HxZ;->A01:J
+  0010..0014 op=53 iget-wide v4, v0, LX/HxZ;->A08:J
+  0014..0018 op=53 iget-wide v2, v0, LX/HxZ;->A02:J
+  0018..001c op=52 iget v13, v0, LX/HxZ;->A07:I
+  001c..0020 op=55 iget-boolean v12, v0, LX/HxZ;->A0D:Z
+  0020..0024 op=54 iget-object v11, v0, LX/HxZ;->A06:Ljava/lang/String;
+  0024..0028 op=54 iget-object v10, v0, LX/HxZ;->A05:Ljava/lang/String;
+  0028..002c op=54 iget-object v9, v0, LX/HxZ;->A03:Ljava/lang/String;
+  002c..0030 op=54 iget-object v8, v0, LX/HxZ;->A09:LX/HvG;
+  0030..0034 op=54 iget-object v1, v0, LX/HxZ;->A04:Ljava/lang/String;
+  0034..0038 op=52 iget v0, v0, LX/HxZ;->A00:I
+  0038..003c op=22 new-instance v16, LX/HxZ;
+  003c..0040 op=08 move-object/from16 v18, v35
+  0040..0044 op=02 move/from16 v33, v12
+  0044..0048 op=05 move-wide/from16 v31, v2
+  0048..004c op=05 move-wide/from16 v29, v4
+  004c..0050 op=05 move-wide/from16 v27, v6
+  0050..0054 op=02 move/from16 v25, v13
+  0054..0058 op=02 move/from16 v26, v0
+  0058..005c op=08 move-object/from16 v23, v9
+  005c..0060 op=08 move-object/from16 v24, v1
+  0060..0064 op=08 move-object/from16 v21, v11
+  0064..0068 op=08 move-object/from16 v22, v10
+  0068..006c op=08 move-object/from16 v19, v15
+  006c..0070 op=08 move-object/from16 v20, v14
+  0070..0074 op=08 move-object/from16 v17, v8
+  0074..007a op=76 invoke-direct/range {v16..v33}, LX/HxZ;-><init>(LX/HvG;Lcom/whatsapp/infra/core/jid/DeviceJid;LX/B6a;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJJZ)V
+  007a..007c op=11 return-object v16
+  # exception table: 0 try range(s)
+.end method

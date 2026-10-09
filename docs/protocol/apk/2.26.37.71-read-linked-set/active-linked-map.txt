@@ -1,0 +1,39 @@
+# APK-derived structural disassembly: LX/1IW;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A08(L) flags=0x1 registers=6
+  # full signature: LX/1IW;->A08()Lcom/google/common/collect/ImmutableMap;
+  0000..0004 op=54 iget-object v0, v5, LX/1IW;->A07:LX/1IY;
+  0004..000a op=6e invoke-virtual {v0}, LX/1IY;->A07()Lcom/google/common/collect/ImmutableMap;
+  000a..000c op=0c move-result-object v0
+  000c..0012 op=6e invoke-virtual {v0}, Lcom/google/common/collect/ImmutableMap;->entrySet()Lcom/google/common/collect/ImmutableSet;
+  0012..0014 op=0c move-result-object v0
+  0014..001a op=6e invoke-virtual {v0}, Lcom/google/common/collect/ImmutableCollection;->iterator()LX/0N1;
+  001a..001c op=0c move-result-object v4
+  001c..0020 op=22 new-instance v3, Lcom/google/common/collect/ImmutableMap$Builder;
+  0020..0026 op=70 invoke-direct {v3}, Lcom/google/common/collect/ImmutableMap$Builder;-><init>()V
+  0026..002c op=72 invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
+  002c..002e op=0a move-result v0
+  002e..0032 op=38 if-eqz v0, +0x20
+  0032..0038 op=72 invoke-interface {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0038..003a op=0c move-result-object v2
+  003a..003e op=1f check-cast v2, Ljava/util/Map$Entry;
+  003e..0044 op=72 invoke-interface {v2}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+  0044..0046 op=0c move-result-object v0
+  0046..004a op=1f check-cast v0, LX/HxZ;
+  004a..0050 op=6e invoke-virtual {v0}, LX/HxZ;->A03()Z
+  0050..0052 op=0a move-result v0
+  0052..0056 op=39 if-nez v0, -0x16
+  0056..005c op=72 invoke-interface {v2}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+  005c..005e op=0c move-result-object v1
+  005e..0064 op=72 invoke-interface {v2}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+  0064..0066 op=0c move-result-object v0
+  0066..006c op=6e invoke-virtual {v3, v1, v0}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+  006c..006e op=28 goto -0x23
+  006e..0074 op=6e invoke-virtual {v3}, Lcom/google/common/collect/ImmutableMap$Builder;->build()Lcom/google/common/collect/ImmutableMap;
+  0074..0076 op=0c move-result-object v0
+  0076..0078 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

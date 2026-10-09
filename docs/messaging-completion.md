@@ -1,5 +1,14 @@
 # Messaging completion checklist
 
+Read-job saved linked set (2026-10-09, **confirmed static**): APK 37.71
+requires loaded Me and derives its set from saved devices, excluding positive
+logout times. The nine-topic snapshot traces SQL loading and bounded own
+LID-to-PN device conversion with existing-PN collision preference. Set membership
+is not key verification; full ingestion/deletion authority, cache invalidation
+and read-self fanout remain unknown. No runtime, account state or live request
+changed; primary cleanup remains unfinished.
+[Evidence and limits](protocol/read-linked-set.md).
+
 Outgoing read-job trace (2026-10-09, **confirmed static**): APK 37.71
 SendReadReceiptJob uses Cp2's shared receipt builder and extra-ID list construction.
 Its outgoing read/read-self selection differs from the incoming factory policy;

@@ -1,0 +1,119 @@
+{
+  "active-linked-map": {
+    "class": "LX/1IW;",
+    "file": "active-linked-map.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A08",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "linked-map-cache": {
+    "class": "LX/1IY;",
+    "file": "linked-map-cache.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A07",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "linked-record-constructor": {
+    "class": "LX/HxZ;",
+    "file": "linked-record-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "linked-record-copy": {
+    "class": "LX/HxZ;",
+    "file": "linked-record-copy.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "linked-set": {
+    "class": "LX/0bN;",
+    "file": "linked-set.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "linked-sql-loader": {
+    "class": "LX/1IY;",
+    "file": "linked-sql-loader.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "linked-sql-query": {
+    "class": "LX/1Kt;",
+    "file": "linked-sql-query.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<clinit>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "logout-filter": {
+    "class": "LX/HxZ;",
+    "file": "logout-filter.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "positive-comparison": {
+    "class": "LX/1xi;",
+    "file": "positive-comparison.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1Q",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  }
+}
