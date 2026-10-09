@@ -13,6 +13,14 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
 fn validate(peer: &Jid) -> Result<()> {
+    // Jid also represents server destinations. A key/user query needs an
+    // actual peer, matching identity_query's guard; see peer-identity.md.
+    if peer.user.is_empty() {
+        return Err(Error::invalid(
+            "peer_keys",
+            "requires a nonempty peer user; server-only JID is not a peer",
+        ));
+    }
     if peer.server != Server::User
         || peer.device != 0
         || peer.agent != 0
@@ -328,6 +336,83 @@ mod tests {
                     ]),
                 ]),
             ])])
+    }
+    #[test]
+    fn empty_peer_directory_inputs_refuse_without_changing_saved_state() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("empty-peer.redb");
+        let store = open(&path);
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let id = queue(&store, &peer, false).unwrap();
+        assert_eq!(actions::reserve_pending(&store).unwrap().len(), 1);
+        let pin = IdentityKeyPair::generate(&mut rand::rng())
+            .identity_key()
+            .serialize()
+            .to_vec();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::PeerIdentities,
+                    format!("comparison-direct:{peer}").as_bytes(),
+                    1,
+                    &pin,
+                )?;
+                tx.put_json(
+                    Table::SignalSessions,
+                    format!("comparison-direct:{peer}").as_bytes(),
+                    1,
+                    &vec![1u8, 2, 3],
+                )
+            })
+            .unwrap();
+        let snapshot = |store: &ProtocolStore| {
+            store
+                .read(|tx| {
+                    Ok((
+                        tx.scan_after(Table::Checkpoints, 1, None, 256)?,
+                        tx.scan_after(Table::PeerIdentities, 1, None, 256)?,
+                        tx.scan_after(Table::SignalSessions, 1, None, 256)?,
+                        tx.scan_after(Table::Outbox, 1, None, 256)?,
+                    ))
+                })
+                .unwrap()
+        };
+        let before = snapshot(&store);
+        let head = store.journal_head().unwrap();
+        for kind in [JidKind::Plain, JidKind::AgentDevice] {
+            let mut empty = Jid::parse("s.whatsapp.net").unwrap();
+            empty.kind = kind;
+            for refresh in [false, true] {
+                let error = queue(&store, &empty, refresh).unwrap_err().to_string();
+                assert!(error.contains("nonempty peer user"));
+            }
+            assert!(
+                inspect(&store, &empty)
+                    .unwrap_err()
+                    .to_string()
+                    .contains("nonempty peer user")
+            );
+            assert!(
+                identity_conflicts::inspect_peer(&store, &empty)
+                    .unwrap_err()
+                    .to_string()
+                    .contains("nonempty peer user")
+            );
+        }
+        assert_eq!(snapshot(&store), before);
+        assert_eq!(store.journal_head().unwrap(), head);
+        assert_eq!(queue(&store, &peer, false).unwrap(), id);
+        assert!(actions::reserve_pending(&store).unwrap().is_empty());
+        drop(store);
+        let store = open(&path);
+        assert_eq!(snapshot(&store), before);
+        assert_eq!(store.journal_head().unwrap(), head);
+        assert_eq!(queue(&store, &peer, false).unwrap(), id);
+        assert_eq!(
+            inspect(&store, &peer).unwrap().unwrap().status,
+            DirectoryStatus::OutcomeUnknown
+        );
+        assert!(actions::reserve_pending(&store).unwrap().is_empty());
     }
     #[test]
     fn directory_queries_are_atomic_once_only_redacted_and_refresh_only_verified_success() {

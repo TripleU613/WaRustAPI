@@ -2680,3 +2680,40 @@ property, nine crash, 52 CLI, one API-symbol and 69 xtask); strict workspace
 all-target Clippy; Rustdoc with warnings denied; CLI-reference regeneration;
 API-symbol checks; formatting and whitespace. The tests exercise local refusal
 and preservation, not a new live identity transition.
+
+## Empty peer guard on key queries and pin inspection (2026-10-09)
+
+**Confirmed local bug/fix:** the earlier identity-only query guard did not cover
+`peer_keys::queue`, `peer_keys::inspect` or `identity_conflicts::inspect_peer`.
+Those public entry points checked the PN namespace and primary components but
+accepted server-only `s.whatsapp.net` as a peer with an empty user. The new
+regression failed before the fix: a normal peer-key queue returned a fresh action
+ID for that server-only input. This is a local validation defect, not a server
+response, a new APK discovery or evidence of native malformed-input behavior.
+
+All three entry points now refuse with `requires a nonempty peer user;
+server-only JID is not a peer`, before store reads or writes. Generic JID parsing
+continues to support server destinations. The query context remains the existing
+APK-derived encrypt/key/user builder (37.70 `0y0.A00` 1786..193a) and the separate
+37.71 signature check (`CQc.A00` 0030..0064). No key adoption, identity-change
+policy, own-account verification, namespace alias or outgoing retry is added.
+
+**Implemented/offline tested:** synthetic encrypted-store regression covers
+plain and explicit zero-agent/device empty inputs, normal and refresh queuing,
+directory inspection and pin inspection. Checkpoints, pins, sessions, outbox rows
+and event head remain identical. Reopening preserves the valid peer query's
+original ID and its `outcome_unknown` reservation; no action becomes sendable
+again. No real account, peer, server wait, credential or network request changed.
+
+```sh
+cargo test -p whatsapp-api --all-features empty_peer_directory_inputs_refuse_without_changing_saved_state
+```
+
+**Unknown/live unverified:** native parsing of malformed empty-user peer inputs
+and fresh live identity transitions. The fix enforces our existing peer-address
+contract, and does not establish either of those behaviors.
+
+Validation: 837 workspace/all-feature tests passed. Strict all-target Clippy,
+warnings-denied Rustdoc, default CLI tests (25 plus API-symbol), regenerated
+CLI reference, formatting and whitespace checks passed. Repository hygiene
+checked 2,162 local links and 107 existing APK bundles. No fresh live test.

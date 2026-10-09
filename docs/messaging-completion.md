@@ -1,5 +1,17 @@
 # Messaging completion checklist
 
+Peer-address guard coverage (2026-10-09, **implemented/offline tested**):
+peer-key queue/inspection and primary pin inspection now reject empty users,
+extending the existing identity-only prerequisite. A failing-before regression
+preserves pins, sessions, events and the valid query's uncertain reservation
+across reopen. No live operation. [Evidence and limits](protocol/peer-identity.md#empty-peer-guard-on-key-queries-and-pin-inspection-2026-10-09).
+
+Validation: 837 workspace/all-feature tests passed. Strict all-target Clippy,
+warnings-denied Rustdoc, default CLI tests (25 plus API-symbol), regenerated
+CLI reference, formatting and whitespace checks passed. Repository hygiene
+checked 2,162 local links and 107 existing APK bundles. No fresh live test.
+
+
 Attachment expiry continuation (2026-10-09, **implemented/offline tested**):
 ordinary media retrieval shares the explicit incoming Java timestamp parser,
 fixing event/retrieval disagreement for Unicode-decimal time. Missing-time and

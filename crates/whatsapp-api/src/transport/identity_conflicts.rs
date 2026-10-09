@@ -287,6 +287,14 @@ fn device_key_coverage(
 /// Inspect logical peer identity state without writes, queries or replacement.
 /// Store opening can change engine file bytes; this function only reads records.
 pub fn inspect_peer(store: &ProtocolStore, phone: &Jid) -> Result<PeerIdentityState> {
+    // Server-only destinations are not primary peer addresses. Refuse before
+    // reading stored identity/session evidence; see peer-identity.md.
+    if phone.user.is_empty() {
+        return Err(Error::invalid(
+            "peer_identity",
+            "requires a nonempty peer user; server-only JID is not a peer",
+        ));
+    }
     if phone.server != Server::User || phone.device != 0 || phone.agent != 0 {
         return Err(Error::invalid(
             "peer_identity",
