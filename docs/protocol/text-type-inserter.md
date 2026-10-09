@@ -116,3 +116,8 @@ whitespace and repository hygiene pass (2,023 local links; 94 bundles /
 
 Follow-up: [selected after hooks](text-after-hooks.md) maps 19 entries and
 records direct source exclusions; transitive helper effects remain unknown.
+
+Follow-up: the [before-hook index](text-before-hooks.md) completes all 13
+immediate before mappings alongside the 54 after entries. Historical bundles
+remain unchanged; transitive user-row admission and full status progression
+remain incomplete.

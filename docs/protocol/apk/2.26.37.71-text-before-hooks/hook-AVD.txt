@@ -1,0 +1,97 @@
+# APK-derived structural disassembly: LX/AVD;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=10
+  # full signature: LX/AVD;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v8, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=20 instance-of v0, v8, LX/1iz;
+  000c..0010 op=38 if-eqz v0, +0x85
+  0010..0012 op=07 move-object v0, v8
+  0012..0016 op=1f check-cast v0, LX/1iz;
+  0016..001a op=38 if-eqz v0, +0x80
+  001a..001e op=52 iget v1, v0, LX/1iz;->A00:I
+  001e..0020 op=12 const/4 v0, #0x1
+  0020..0024 op=33 if-ne v1, v0, +0x7b
+  0024..0028 op=54 iget-object v6, v7, LX/AVD;->A01:LX/00l;
+  0028..002e op=71 invoke-static {v6}, LX/1xn;->A09(LX/00l;)J
+  002e..0030 op=0b move-result-wide v3
+  0030..0034 op=16 const-wide/16 v1, #0x0
+  0034..0038 op=31 cmp-long v0, v3, v1
+  0038..003c op=3d if-lez v0, +0x6f
+  003c..0040 op=53 iget-wide v1, v8, LX/178;->A0j:J
+  0040..0044 op=16 const-wide/16 v3, #0xffff (-1)
+  0044..0048 op=31 cmp-long v0, v1, v3
+  0048..004c op=39 if-nez v0, +0x75
+  004c..0050 op=54 iget-object v0, v7, LX/AVD;->A00:LX/05B;
+  0050..0056 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0056..0058 op=0c move-result-object v0
+  0058..005c op=1f check-cast v0, LX/0pf;
+  005c..0060 op=1a const-string v3, "msgstore/lastmsgid/count "
+  0060..0064 op=54 iget-object v0, v0, LX/0pf;->A02:LX/0Gc;
+  0064..006a op=6e invoke-virtual {v0}, LX/0Gc;->A06()LX/0ZN;
+  006a..006c op=0c move-result-object v5
+  006c..0070 op=54 iget-object v2, v5, LX/0ZN;->A02:LX/0IY;
+  0070..0074 op=1a const-string v1, "SELECT _id FROM available_message_view ORDER BY _id DESC LIMIT 1"
+  0074..0078 op=1a const-string v0, "LAST_MESSAGE_ID_SQL"
+  0078..007e op=71 invoke-static {v2, v1, v0}, LX/8kT;->A06(LX/0IY;Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;
+  007e..0080 op=0c move-result-object v4
+  0080..0086 op=71 invoke-static {v3}, LX/1xf;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0086..0088 op=0c move-result-object v1
+  0088..008e op=72 invoke-interface {v4}, Landroid/database/Cursor;->getCount()I
+  008e..0090 op=0a move-result v0
+  0090..0096 op=71 invoke-static {v1, v0}, LX/8kT;->A1P(Ljava/lang/StringBuilder;I)V
+  0096..009c op=72 invoke-interface {v4}, Landroid/database/Cursor;->moveToNext()Z
+  009c..009e op=0a move-result v0
+  009e..00a2 op=38 if-eqz v0, +0x9
+  00a2..00a6 op=1a const-string v0, "_id"
+  00a6..00ac op=71 invoke-static {v4, v0}, LX/1xi;->A03(Landroid/database/Cursor;Ljava/lang/String;)J
+  00ac..00ae op=0b move-result-wide v2
+  00ae..00b0 op=28 goto +0x3
+  00b0..00b4 op=16 const-wide/16 v2, #0x1
+  00b4..00ba op=72 invoke-interface {v4}, Landroid/database/Cursor;->close()V
+  00ba..00bc op=28 goto +0x17
+  00bc..00be op=0d move-exception v1
+  00be..00c2 op=38 if-eqz v4, +0xa
+  00c2..00c8 op=72 invoke-interface {v4}, Landroid/database/Cursor;->close()V
+  00c8..00ca op=28 goto +0x5
+  00ca..00cc op=0d move-exception v0
+  00cc..00d2 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00d2..00d4 op=27 throw v1
+  00d4..00d6 op=0d move-exception v1
+  00d6..00dc op=6e invoke-virtual {v5}, LX/0ZN;->close()V
+  00dc..00de op=27 throw v1
+  00de..00e0 op=0d move-exception v0
+  00e0..00e6 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00e6..00e8 op=27 throw v1
+  00e8..00ee op=6e invoke-virtual {v5}, LX/0ZN;->close()V
+  00ee..00f2 op=16 const-wide/16 v4, #0x1
+  00f2..00f6 op=31 cmp-long v1, v2, v4
+  00f6..00fc op=72 invoke-interface {v6}, LX/00l;->getValue()Ljava/lang/Object;
+  00fc..00fe op=0c move-result-object v0
+  00fe..0102 op=1f check-cast v0, Ljava/lang/Number;
+  0102..0106 op=38 if-eqz v1, +0x13
+  0106..010c op=6e invoke-virtual {v0}, Ljava/lang/Number;->longValue()J
+  010c..010e op=0b move-result-wide v0
+  010e..0110 op=bb add-long/2addr v2, v0
+  0110..0112 op=bb add-long/2addr v2, v4
+  0112..0116 op=5a iput-wide v2, v8, LX/178;->A0j:J
+  0116..011a op=38 if-eqz v9, +0xe
+  011a..011e op=1c const-class v0, LX/AVD;
+  011e..0124 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  0124..0126 op=0c move-result-object v0
+  0126..0128 op=27 throw v0
+  0128..012e op=6e invoke-virtual {v0}, Ljava/lang/Number;->longValue()J
+  012e..0130 op=0b move-result-wide v2
+  0130..0132 op=28 goto -0xf
+  0132..0134 op=0e return-void
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0036..0040 -> 006a
+  # catch <all> code_units 0040..005a -> 005e
+  # catch <all> code_units 005a..005e -> 006a
+  # catch <all> code_units 0061..0065 -> 0065
+  # catch <all> code_units 0066..006a -> 006a
+  # catch <all> code_units 006b..006e -> 006f
+.end method

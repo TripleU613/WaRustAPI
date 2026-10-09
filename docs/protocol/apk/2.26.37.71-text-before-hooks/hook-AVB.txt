@@ -1,0 +1,51 @@
+# APK-derived structural disassembly: LX/AVB;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=8
+  # full signature: LX/AVB;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v6, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=53 iget-wide v3, v6, LX/178;->A0C:J
+  000c..0010 op=16 const-wide/16 v1, #0x0
+  0010..0014 op=31 cmp-long v0, v3, v1
+  0014..0018 op=39 if-nez v0, +0xe
+  0018..001e op=6e invoke-virtual {v6}, LX/178;->B3b()I
+  001e..0020 op=0a move-result v1
+  0020..0024 op=38 if-eqz v1, +0x9
+  0024..0026 op=12 const/4 v0, #0x1
+  0026..002a op=32 if-eq v1, v0, +0x6
+  002a..002c op=12 const/4 v0, #0x2
+  002c..0030 op=32 if-eq v1, v0, +0x3
+  0030..0032 op=0e return-void
+  0032..0038 op=6e invoke-virtual {v6}, LX/178;->A0S()Z
+  0038..003a op=0a move-result v0
+  003a..003e op=38 if-eqz v0, +0x7
+  003e..0042 op=54 iget-object v0, v6, LX/178;->A16:[B
+  0042..0046 op=38 if-eqz v0, +0x3
+  0046..0048 op=0e return-void
+  0048..004c op=54 iget-object v0, v5, LX/AVB;->A00:LX/05B;
+  004c..0052 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0052..0054 op=0c move-result-object v0
+  0054..0058 op=1f check-cast v0, LX/1if;
+  0058..005c op=1c const-class v2, LX/AVB;
+  005c..0060 op=54 iget-object v1, v0, LX/1if;->A00:LX/07t;
+  0060..0064 op=13 const/16 v0, #0x229c
+  0064..006a op=6e invoke-virtual {v1, v0}, LX/00D;->A0b(I)I
+  006a..006c op=0a move-result v0
+  006c..0070 op=38 if-eqz v0, +0x11
+  0070..0076 op=71 invoke-static {v6}, LX/1if;->A02(LX/178;)Z
+  0076..0078 op=0a move-result v0
+  0078..007c op=38 if-eqz v0, +0xb
+  007c..007e op=12 const/4 v0, #0x1
+  007e..0082 op=5c iput-boolean v0, v6, LX/178;->A0a:Z
+  0082..0088 op=71 invoke-static {}, LX/CmM;->A01()[B
+  0088..008a op=0c move-result-object v0
+  008a..008e op=5b iput-object v0, v6, LX/178;->A16:[B
+  008e..0092 op=38 if-eqz v7, -0x2f
+  0092..0098 op=71 invoke-static {v2}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  0098..009a op=0c move-result-object v0
+  009a..009c op=27 throw v0
+  # exception table: 0 try range(s)
+.end method

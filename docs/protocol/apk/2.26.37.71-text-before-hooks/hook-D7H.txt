@@ -1,0 +1,69 @@
+# APK-derived structural disassembly: LX/D7H;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=9
+  # full signature: LX/D7H;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v3, #0x0
+  0002..0008 op=71 invoke-static {v7, v3}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000a op=12 const/4 v0, #0x0
+  000a..000e op=1c const-class v4, LX/D5z;
+  000e..0014 op=71 invoke-static {v0, v7, v4}, LX/6al;->A1M(LX/1i2;LX/178;Ljava/lang/Class;)V
+  0014..0018 op=54 iget-object v0, v6, LX/D7H;->A00:LX/05B;
+  0018..001e op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  001e..0020 op=0c move-result-object v5
+  0020..0024 op=1f check-cast v5, LX/CFE;
+  0024..0026 op=12 const/4 v0, #0x1
+  0026..002c op=71 invoke-static {v5, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  002c..0030 op=20 instance-of v0, v7, LX/1jl;
+  0030..0034 op=38 if-eqz v0, +0x62
+  0034..0036 op=07 move-object v0, v7
+  0036..003a op=1f check-cast v0, LX/1jl;
+  003a..003e op=38 if-eqz v0, +0x5d
+  003e..0044 op=72 invoke-interface {v0}, LX/1jl;->AZX()LX/CrW;
+  0044..0046 op=0c move-result-object v1
+  0046..004a op=38 if-eqz v1, +0x57
+  004a..0050 op=6e invoke-virtual {v1}, LX/CrW;->A06()Z
+  0050..0052 op=0a move-result v0
+  0052..0056 op=38 if-eqz v0, +0x51
+  0056..005a op=54 iget-object v2, v1, LX/CrW;->A05:Lcom/whatsapp/infra/stores/protocol/content/AppointmentInfo;
+  005a..005e op=38 if-eqz v2, +0x4d
+  005e..0062 op=54 iget-object v0, v2, Lcom/whatsapp/infra/stores/protocol/content/AppointmentInfo;->A02:Ljava/lang/String;
+  0062..0066 op=38 if-eqz v0, +0x49
+  0066..006c op=6e invoke-virtual {v0}, Ljava/lang/String;->length()I
+  006c..006e op=0a move-result v0
+  006e..0072 op=3d if-lez v0, +0x43
+  0072..0076 op=54 iget-object v0, v5, LX/CFE;->A00:LX/05B;
+  0076..007c op=71 invoke-static {v0}, LX/1xi;->A0a(LX/05B;)LX/00D;
+  007c..007e op=0c move-result-object v1
+  007e..0084 op=14 const v0, #0x8dd5
+  0084..008a op=6e invoke-virtual {v1, v0}, LX/00D;->A10(I)Z
+  008a..008c op=0a move-result v0
+  008c..0090 op=38 if-eqz v0, +0x34
+  0090..0096 op=6e invoke-virtual {v2}, Lcom/whatsapp/infra/stores/protocol/content/AppointmentInfo;->A02()LX/C0i;
+  0096..0098 op=0c move-result-object v1
+  0098..009c op=62 sget-object v0, LX/C0i;->A07:LX/C0i;
+  009c..00a0 op=33 if-ne v1, v0, +0x29
+  00a0..00a4 op=62 sget-object v1, LX/02S;->A01:Ljava/lang/Integer;
+  00a4..00a8 op=22 new-instance v0, LX/D5z;
+  00a8..00ae op=70 invoke-direct {v0, v2, v1}, LX/D5z;-><init>(Lcom/whatsapp/infra/stores/protocol/content/AppointmentInfo;Ljava/lang/Integer;)V
+  00ae..00b4 op=71 invoke-static {v0, v7, v4}, LX/6al;->A1M(LX/1i2;LX/178;Ljava/lang/Class;)V
+  00b4..00b8 op=54 iget-object v0, v0, LX/D5z;->A01:Ljava/lang/Integer;
+  00b8..00be op=6e invoke-virtual {v0}, Ljava/lang/Number;->intValue()I
+  00be..00c0 op=0a move-result v2
+  00c0..00ca op=18 const-wide v0, #0x4000000000 (274877906944)
+  00ca..00ce op=32 if-eq v2, v3, +0xe
+  00ce..00d4 op=6e invoke-virtual {v7, v0, v1}, LX/178;->A0K(J)V
+  00d4..00d8 op=38 if-eqz v8, +0x10
+  00d8..00dc op=1c const-class v0, LX/D7H;
+  00dc..00e2 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  00e2..00e4 op=0c move-result-object v0
+  00e4..00e6 op=27 throw v0
+  00e6..00ec op=6e invoke-virtual {v7, v0, v1}, LX/178;->A0I(J)V
+  00ec..00ee op=28 goto -0xc
+  00ee..00f2 op=62 sget-object v1, LX/02S;->A00:Ljava/lang/Integer;
+  00f2..00f4 op=28 goto -0x27
+  00f4..00f6 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

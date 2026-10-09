@@ -1,0 +1,88 @@
+# APK-derived structural disassembly: LX/8C8;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=6
+  # full signature: LX/8C8;->CHJ(LX/178;LX/3Ya;)V
+  0000..0006 op=71 invoke-static {v4}, LX/1xm;->A0T(LX/178;)LX/1gc;
+  0006..0008 op=0c move-result-object v0
+  0008..000c op=55 iget-boolean v0, v0, LX/1gc;->A02:Z
+  000c..0010 op=38 if-eqz v0, +0x8d
+  0010..0014 op=20 instance-of v0, v4, LX/1he;
+  0014..0018 op=38 if-eqz v0, +0x2f
+  0018..001e op=6e invoke-virtual {v4}, LX/178;->A0f()Ljava/lang/String;
+  001e..0020 op=0c move-result-object v1
+  0020..0024 op=38 if-eqz v1, +0x83
+  0024..002a op=6e invoke-virtual {v1}, Ljava/lang/String;->length()I
+  002a..002c op=0a move-result v0
+  002c..0030 op=38 if-eqz v0, +0x7d
+  0030..0036 op=71 invoke-static {v1}, LX/5TG;->A01(Ljava/lang/CharSequence;)Z
+  0036..0038 op=0a move-result v0
+  0038..003c op=38 if-eqz v0, +0x77
+  003c..0040 op=54 iget-object v0, v3, LX/8C8;->A00:LX/05B;
+  0040..0046 op=71 invoke-static {v0}, LX/05B;->A00(LX/05B;)LX/00D;
+  0046..0048 op=0c move-result-object v1
+  0048..004c op=13 const/16 v0, #0x5e92
+  004c..0052 op=6e invoke-virtual {v1, v0}, LX/00D;->A10(I)Z
+  0052..0054 op=0a move-result v0
+  0054..0058 op=38 if-eqz v0, +0x69
+  0058..005a op=12 const/4 v0, #0x1
+  005a..0060 op=71 invoke-static {v4, v0}, LX/B31;->A00(LX/178;Z)V
+  0060..0064 op=38 if-eqz v5, +0x63
+  0064..0068 op=1c const-class v0, LX/8C8;
+  0068..006e op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  006e..0070 op=0c move-result-object v0
+  0070..0072 op=27 throw v0
+  0072..0076 op=20 instance-of v0, v4, LX/72p;
+  0076..007a op=38 if-eqz v0, +0xa
+  007a..007c op=07 move-object v0, v4
+  007c..0080 op=1f check-cast v0, LX/72p;
+  0080..0086 op=6e invoke-virtual {v0}, LX/72p;->A0w()Ljava/lang/String;
+  0086..0088 op=0c move-result-object v1
+  0088..008a op=28 goto -0x34
+  008a..008e op=20 instance-of v0, v4, LX/1iB;
+  008e..0092 op=38 if-eqz v0, +0xa
+  0092..0094 op=07 move-object v0, v4
+  0094..0098 op=1f check-cast v0, LX/1iB;
+  0098..009e op=6e invoke-virtual {v0}, LX/1iB;->Ao1()Ljava/lang/String;
+  009e..00a0 op=0c move-result-object v1
+  00a0..00a2 op=28 goto -0x40
+  00a2..00a6 op=20 instance-of v0, v4, LX/17A;
+  00a6..00aa op=38 if-eqz v0, +0x40
+  00aa..00ac op=07 move-object v2, v4
+  00ac..00b0 op=1f check-cast v2, LX/17A;
+  00b0..00b4 op=54 iget-object v1, v2, LX/17A;->A06:Ljava/lang/String;
+  00b4..00ba op=6e invoke-virtual {v1}, Ljava/lang/String;->length()I
+  00ba..00bc op=0a move-result v0
+  00bc..00c0 op=38 if-eqz v0, +0x9
+  00c0..00c6 op=71 invoke-static {v1}, LX/5TG;->A01(Ljava/lang/CharSequence;)Z
+  00c6..00c8 op=0a move-result v0
+  00c8..00cc op=38 if-eqz v0, +0x3
+  00cc..00ce op=28 goto -0x48
+  00ce..00d4 op=6e invoke-virtual {v2}, LX/17A;->Auy()Ljava/util/List;
+  00d4..00d6 op=0c move-result-object v1
+  00d6..00da op=20 instance-of v0, v1, Ljava/util/Collection;
+  00da..00de op=38 if-eqz v0, +0x9
+  00de..00e4 op=72 invoke-interface {v1}, Ljava/util/Collection;->isEmpty()Z
+  00e4..00e6 op=0a move-result v0
+  00e6..00ea op=38 if-eqz v0, +0x3
+  00ea..00ec op=0e return-void
+  00ec..00f2 op=72 invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  00f2..00f4 op=0c move-result-object v2
+  00f4..00fa op=72 invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+  00fa..00fc op=0a move-result v0
+  00fc..0100 op=38 if-eqz v0, +0x15
+  0100..0106 op=71 invoke-static {v2}, LX/1xk;->A0s(Ljava/util/Iterator;)Ljava/lang/String;
+  0106..0108 op=0c move-result-object v1
+  0108..010c op=38 if-eqz v1, -0xa
+  010c..0112 op=6e invoke-virtual {v1}, Ljava/lang/String;->length()I
+  0112..0114 op=0a move-result v0
+  0114..0118 op=38 if-eqz v0, -0x10
+  0118..011e op=71 invoke-static {v1}, LX/5TG;->A01(Ljava/lang/CharSequence;)Z
+  011e..0120 op=0a move-result v0
+  0120..0124 op=38 if-eqz v0, -0x16
+  0124..0126 op=28 goto -0x74
+  0126..0128 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

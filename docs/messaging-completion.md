@@ -1,5 +1,19 @@
 # Messaging completion checklist
 
+Before-insertion registry (2026-10-09, **confirmed static**): all 13 registered
+before entries now resolve to factories and executable CHJ bodies. Together with
+the after index this maps 13+54 immediate hooks. Selected delegates distinguish
+lookup/origination masks and metadata from native status; no direct receipt_user
+writer or native status assignment was found in the retained hook bodies.
+Transitive admission, normal-send progression and primary cleanup remain
+unknown/unported. No runtime/account/live change.
+[Evidence and limits](protocol/text-before-hooks.md).
+
+Before-hook validation: exact 21-topic export (26 files/83,350 bytes), cached
+self-diff, 13 ordered dispatch/factory/body assertions, CLI reference,
+API/library-symbol checks, formatting and whitespace passed. No fresh runtime
+suite or live account test is claimed.
+
 Scheduled arithmetic follow-up (2026-10-09, **confirmed static**): DEX static
 wide loads/stores now have mnemonics and an APK-byte regression. D7g passes
 scheduled_time plus a 30-day millisecond constant to DGf.A03. Complete expiry

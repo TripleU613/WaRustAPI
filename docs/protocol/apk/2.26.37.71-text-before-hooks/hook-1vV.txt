@@ -1,0 +1,23 @@
+# APK-derived structural disassembly: LX/1vV;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=5
+  # full signature: LX/1vV;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v3, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=54 iget-object v0, v2, LX/1vV;->A00:LX/05B;
+  000c..0010 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0010..0016 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0016..001a op=38 if-eqz v4, +0x11
+  001a..001e op=1c const-class v1, LX/1vV;
+  001e..0022 op=22 new-instance v0, LX/09u;
+  0022..0028 op=70 invoke-direct {v0, v1}, LX/09u;-><init>(Ljava/lang/Class;)V
+  0028..002c op=1a const-string v1, "onProcessorExecuted"
+  002c..0030 op=22 new-instance v0, Ljava/lang/NullPointerException;
+  0030..0036 op=70 invoke-direct {v0, v1}, Ljava/lang/NullPointerException;-><init>(Ljava/lang/String;)V
+  0036..0038 op=27 throw v0
+  0038..003a op=0e return-void
+  # exception table: 0 try range(s)
+.end method
