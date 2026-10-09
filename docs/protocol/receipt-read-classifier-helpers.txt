@@ -1,0 +1,59 @@
+APK 2.26.37.71; SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed static supplemental helper dumps, outside the checksum bundle.
+Offsets in dumps are method-relative bytes. No account data or inferred setting values.
+
+Generated: xtask apk-smali APK --class LX/0Ze; --method A07 --signatures --exceptions
+Dump SHA-256: 1a43136b81e1ed489abf5cd6b6b409eaa1a5468b0b7a7522daed243a05633f75
+
+# class: LX/0Ze;
+# extends: Ljava/lang/Object;
+
+.method public A07(I)  # .registers 2
+    # full signature: LX/0Ze;->A07()I
+    0000..0002  monitor-enter
+    0002..0006  iget  v0, v1, LX/0Ze;->A07:I
+    0006..0008  monitor-exit
+    0008..000a  return  v0
+    000a..000c  move-exception  v0
+    000c..000e  monitor-exit
+    000e..0010  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..0003 -> 0005
+    # catch <all> code_units 0006..0007 -> 0005
+.end method
+
+Generated: xtask apk-smali APK --class LX/0yy; --method A01 --signatures --exceptions
+Dump SHA-256: 19b270db0ee956b674e8555fb480c47666dd75a50c432ff84ee8777dd33e74bd
+
+# class: LX/0yy;
+# extends: Ljava/lang/Object;
+
+.method public A01(LL)  # .registers 5
+    # full signature: LX/0yy;->A01(LX/0yy;)Ljava/util/ArrayList;
+    0000..0004  iget-object  v0, v4, LX/0yy;->A08:LX/05B;
+    0004..0008  iget-object  v0, v0, LX/05B;->A00:LX/00s;
+    0008..000e  invoke-interface  {v0}, LX/00s;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v1
+    0010..0014  check-cast  v1, LX/0V4;
+    0014..0018  const-string  v0, "call_not_spam_jids"
+    0018..001e  invoke-virtual  {v1, v0}, LX/0V4;->A02(Ljava/lang/String;)Ljava/lang/String;
+    001e..0020  move-result-object  v4
+    0020..0024  if-eqz  v4, +0x1b
+    0024..002a  invoke-virtual  {v4}, Ljava/lang/String;->length()I
+    002a..002c  move-result  v0
+    002c..0030  if-lez  v0, +0x15
+    0030..0034  const-class  v3, LX/0Cy;
+    0034..0036  const/4  v0, #0x1
+    0036..003a  new-array  v2, v0, [Ljava/lang/String;
+    003a..003e  const-string  v1, ","
+    003e..0040  const/4  v0, #0x0
+    0040..0044  aput-object  v1, v2, v0
+    0044..004a  invoke-static  {v4, v2, v0}, LX/0CM;->A0n(Ljava/lang/CharSequence;[Ljava/lang/String;I)Ljava/util/List;
+    004a..004c  move-result-object  v0
+    004c..0052  invoke-static  {v3, v0}, LX/0DE;->A0C(Ljava/lang/Class;Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    0052..0054  move-result-object  v0
+    0054..0056  return-object  v0
+    0056..0058  const/4  v0, #0x0
+    0058..005a  return-object  v0
+    # exception table: 0 try range(s)
+.end method

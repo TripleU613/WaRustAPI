@@ -106,3 +106,8 @@ cargo run -p xtask -- apk-research-diff \
   docs/protocol/apk/2.26.37.71-receipt-read-policy \
   docs/protocol/apk/2.26.37.71-receipt-read-policy
 ```
+
+Follow-up: [read-policy classifiers](receipt-read-classifiers.md) narrows the
+configured user list, chat codes, contact-addon presence and dependent-account
+gates. A predicate can schedule a refresh; true does not prove completion.
+Effective state and classifier writer authority remain unknown.

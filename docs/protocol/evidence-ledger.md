@@ -1,5 +1,14 @@
 # Evidence ledger
 
+Receipt read-policy classifiers (2026-10-09, **confirmed static**): APK 37.71
+uses a configured JID-user list, chat codes -1/-3 and contact-addon presence.
+The twelve-topic snapshot retains dependent-account age-state checks and a
+predicate that can schedule a refresh before returning true. Effective state,
+classifier writers and refresh completion remain unknown; full user-row
+admission and primary cleanup remain unfinished. No runtime, account state
+or live request changed.
+[Evidence and limits](receipt-read-classifiers.md).
+
 Receipt factory read policy (2026-10-09, **confirmed static**): APK 37.71
 uses read_receipts_enabled default true plus chat, contact and account predicates.
 The eleven-topic snapshot retains literal smb:/ent: prefix checks, premium-message

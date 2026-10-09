@@ -1,0 +1,66 @@
+{
+  "chat-classifier-code.txt": {
+    "bytes": 1932,
+    "sha256": "4e8886ede3bbf7c0bd9f5445d0ca15b8c76d6516f116aff03f25b6bd82f0b377"
+  },
+  "chat-classifier.txt": {
+    "bytes": 1092,
+    "sha256": "0270e8ccafab57266cc6d7f0c61a5b09005b241d9574810ae039a7ba3a4bf627"
+  },
+  "configured-user-list.txt": {
+    "bytes": 1766,
+    "sha256": "2b7da34e4c801a94ff2faf385374ee3a4cba94cf024d564a287eff2a8c3f49b4"
+  },
+  "contact-addon-presence.txt": {
+    "bytes": 609,
+    "sha256": "db3879fda666a708f59ffe505c04c1d382a4782c2005474225090752e839b0cc"
+  },
+  "contact-linked-model.txt": {
+    "bytes": 725,
+    "sha256": "b4371c6913eb6a75b7c9c2d5a3e12d8b5cbb4d486a0d528f8e4b0412550fead4"
+  },
+  "dependent-account-proxy.txt": {
+    "bytes": 918,
+    "sha256": "179a9450e4ce7039437b16d3460ea3cb834591b7c6fd62b4495b20b7183575a9"
+  },
+  "dependent-account-status.txt": {
+    "bytes": 2558,
+    "sha256": "4e5c6e7d3a254f4073dbb1208ffb1c5f77aaa40569bee1dda08a245860f76b49"
+  },
+  "dependent-chat.txt": {
+    "bytes": 3903,
+    "sha256": "93bb0cd9f9e47a9e09185ef9c773d65285b52618129f09bf52631aec761e264b"
+  },
+  "dependent-contact.txt": {
+    "bytes": 1006,
+    "sha256": "6117f6e8940348939303e2820aa5dc1a67b9fd5fa9821eaefd5a797dd71cdff2"
+  },
+  "dependent-exception.txt": {
+    "bytes": 1829,
+    "sha256": "96a00b756fe57e22c2b982af66265d8e9107b872734f43ec68973b811795fc71"
+  },
+  "first-classifier.txt": {
+    "bytes": 1028,
+    "sha256": "7e6f440c7ac314cb31c9d995743729eda418f5c10a3041ae771756f5d54a1daf"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "premium-mode.txt": {
+    "bytes": 805,
+    "sha256": "a20a63a93b211f77d88aaa7e6d13e50a7da5b6eb5bc3a549e553c95ea0ce8fa0"
+  },
+  "targets.json": {
+    "bytes": 4707,
+    "sha256": "669940663df92ba667b4d6ed99cecb7676164943435676a158692c098ef805a4"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}
