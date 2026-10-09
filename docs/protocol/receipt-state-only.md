@@ -104,7 +104,8 @@ not an SQL writer.
 [15A.A02](apk/2.26.37.71-receipt-admission/receipt-admission.txt)'s separate
 state-only pool maps 8->10, 13->16 and 17->17 before A07; 18 skips that call.
 Thus receipt status, mapped state argument, key direction and device timestamp
-are distinct. C8L/row suppression, full self admission, settings, selected-user
+are distinct. The immediate [C8L/row suppression](receipt-state-suppression.md) is now traced.
+Full chat read-state lifecycle, self admission, settings, selected-user
 membership and primary cleanup remain unfinished. No Rust runtime, account
 identity, key, request ID, reservation or live request changed.
 

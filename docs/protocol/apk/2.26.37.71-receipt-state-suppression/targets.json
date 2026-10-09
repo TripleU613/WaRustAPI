@@ -1,0 +1,28 @@
+{
+  "chat-state-boundary": {
+    "class": "LX/0Fs;",
+    "file": "chat-state-boundary.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0B",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "state-suppression": {
+    "class": "LX/C8L;",
+    "file": "state-suppression.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  }
+}

@@ -1,5 +1,14 @@
 # Evidence ledger
 
+Receipt state-only suppression (2026-10-09, **confirmed static**): APK 37.71
+C8L selects incoming keys and mapped state arguments 13/16/17. Its state-only
+caller skips A07 when the chat last-read message row is at least message A0j;
+the missing-chat-model getter returns 1. A two-topic snapshot and eleven-write
+inventory retain the immediate boundary. Full chat read-state lifecycle,
+self/user-row admission and primary cleanup remain unfinished. No runtime,
+account state or live request changed.
+[Evidence and limits](receipt-state-suppression.md).
+
 Receipt state-only admission (2026-10-09, **confirmed static**): APK 37.71
 keeps message-key direction separate from receipt status: read-self forces false,
 while played-self retains the recipient-presence branch. The ten-topic snapshot

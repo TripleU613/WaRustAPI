@@ -1,0 +1,26 @@
+{
+  "chat-state-boundary.txt": {
+    "bytes": 934,
+    "sha256": "4d8b5b86c1e4454739b2f8505fee5ad1c708f6c4923691e3805bb4f4aa5fd194"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "state-suppression.txt": {
+    "bytes": 872,
+    "sha256": "d180aff0469402e3881e2ccf09d31ed84024aeaf042bb5b717ce2c2076174536"
+  },
+  "targets.json": {
+    "bytes": 785,
+    "sha256": "83f49c1731be3f9e507d877b1505dbe9efc9136fa585e123c5cf1579e87da223"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

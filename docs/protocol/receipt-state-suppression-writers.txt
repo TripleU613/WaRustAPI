@@ -1,0 +1,71 @@
+APK 2.26.37.71; SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed physical writes only; method names/shorties and absolute DEX byte offsets.
+Generated: xtask apk-field-refs APK --class LX/0Ze; --field A0T --type J --writes-only
+Not part of the checksum bundle. Full non-loader write semantics remain unknown.
+
+classes.dex  LX/0Fs;->A02(LLL)
+  write opcode 0x5a, dex byte offset: 0x519300
+classes.dex  LX/0Fs;->A02(LLL)
+  write opcode 0x5a, dex byte offset: 0x519ef2
+classes.dex  LX/0Fw;->A00(VLLLLIIIZZZ)
+  write opcode 0x5a, dex byte offset: 0x51c986
+classes.dex  LX/0Fw;->A01(VLLLIJJ)
+  write opcode 0x5a, dex byte offset: 0x51cc8c
+classes.dex  LX/0Ze;-><init>(VL)
+  write opcode 0x5a, dex byte offset: 0x5ef8f4
+classes.dex  LX/0Ze;-><init>(VL)
+  write opcode 0x5a, dex byte offset: 0x5ef9d8
+classes.dex  LX/0Ze;-><init>(VL)
+  write opcode 0x5a, dex byte offset: 0x5efaa0
+classes.dex  LX/0Ze;->A0L(V)
+  write opcode 0x5a, dex byte offset: 0x5f0000
+classes.dex  LX/0a2;->A04(LLL)
+  write opcode 0x5a, dex byte offset: 0x5f6512
+classes.dex  LX/0zC;->A0G(VL)
+  write opcode 0x5a, dex byte offset: 0x76b5e8
+classes3.dex  LX/36Y;->A02(VL)
+  write opcode 0x5a, dex byte offset: 0x35d8c2
+
+Adjacent getter negative result (not the caller target):
+Generated: xtask apk-smali APK --class LX/0Fs; --method A0C --signatures --exceptions
+
+# class: LX/0Fs;
+# extends: Ljava/lang/Object;
+
+.method public A0C(JL)  # .registers 9
+    # full signature: LX/0Fs;->A0C(LX/0Cy;)J
+    0000..0006  invoke-static  {v7, v8}, LX/0Fs;->A02(LX/0Fs;LX/0Cy;)Ljava/util/Map;
+    0006..0008  move-result-object  v0
+    0008..000e  invoke-interface  {v0, v8}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    000e..0010  move-result-object  v6
+    0010..0014  check-cast  v6, LX/0Ze;
+    0014..0018  const-wide/16  v2, #0x0
+    0018..001c  if-eqz  v6, +0xe
+    001c..0020  iget-wide  v4, v6, LX/0Ze;->A0d:J
+    0020..0024  cmp-long  v0, v4, v2
+    0024..0028  if-eqz  v0, +0x9
+    0028..002c  iget-wide  v0, v6, LX/0Ze;->A0b:J
+    002c..0032  invoke-static  {v4, v5, v0, v1}, Ljava/lang/Math;->max(JJ)J
+    0032..0034  move-result-wide  v2
+    0034..0036  return-wide  v2
+    0036..003a  iget-object  v4, v7, LX/0Fs;->A05:LX/07t;
+    003a..003e  const/16  v1, #0x27bc
+    003e..0040  const/4  v0, #0x0
+    0040..0046  invoke-static  {v4, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+    0046..004a  sget-object  v0, LX/00F;->A03:LX/00F;
+    004a..0050  invoke-static  {v4, v0, v1}, LX/0c1;->A01(LX/07t;LX/00F;I)Z
+    0050..0052  move-result  v0
+    0052..0056  if-eqz  v0, +0x13
+    0056..005a  iget-object  v0, v6, LX/0Ze;->A15:LX/1j2;
+    005a..005e  if-eqz  v0, +0x8
+    005e..0062  iget-object  v0, v6, LX/0Ze;->A15:LX/1j2;
+    0062..0068  invoke-virtual  {v0}, LX/1j2;->A02()J
+    0068..006a  move-result-wide  v2
+    006a..006e  iget-wide  v0, v6, LX/0Ze;->A0b:J
+    006e..0074  invoke-static  {v2, v3, v0, v1}, Ljava/lang/Math;->max(JJ)J
+    0074..0076  move-result-wide  v2
+    0076..0078  return-wide  v2
+    0078..007c  iget-wide  v2, v6, LX/0Ze;->A0b:J
+    007c..007e  return-wide  v2
+    # exception table: 0 try range(s)
+.end method

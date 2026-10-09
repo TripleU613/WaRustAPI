@@ -81,7 +81,8 @@ that A07 call. C8L.A00 and a 0Fs row comparison can suppress the call. These
 state arguments are not the receipt_user SQL column selectors (5/8/13).
 They must not be conflated with outgoing wire `type` or cached timestamp slots.
 A07 admission/persistence is now traced in [state-only updates](receipt-state-only.md);
-C8L and the row-suppression boundary remain untraced.
+The immediate [C8L/chat-row suppression boundary](receipt-state-suppression.md)
+is now traced; the full chat read-state lifecycle remains unknown.
 
 The broadcast branch normalizes a user through 0Yo.A0C, loads an existing
 individual message using the original ID/direction, and builds a separate CYV
