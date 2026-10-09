@@ -1,0 +1,41 @@
+{
+  "attribute-int-optional": {
+    "class": "LX/0hs;",
+    "file": "attribute-int-optional.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "attribute-int-required": {
+    "class": "LX/0hs;",
+    "file": "attribute-int-required.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A06",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "message-attribute-constructor": {
+    "class": "LX/CaF;",
+    "file": "message-attribute-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/inbox_events.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  }
+}

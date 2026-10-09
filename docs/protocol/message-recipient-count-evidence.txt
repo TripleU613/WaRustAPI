@@ -1,0 +1,12 @@
+APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+2026-10-09. Exact physical writes-only inventory, not reflection coverage.
+Command: xtask apk-field-refs <apk> --class LX/Cih; --field A02 --type I --writes-only
+classes7.dex  LX/CgC;->A01(LLLLLJJ)
+  write opcode 0x59, dex byte offset: 0x5fdb1e
+
+Independent raw APK checks, same classes7.dex method instruction base 0x5fd90c:
+  relative 0x0204 / DEX byte 0x5fdb10: 380f3000
+  relative 0x0212 / DEX byte 0x5fdb1e: 59504a7e
+  relative 0x0346 / DEX byte 0x5fdc52: 290017ff
+  0x0204 + 2*0x0030 = 0x0264 (skip count copy)
+  0x0346 + 2*(-0x00e9) = 0x0174 (false classification rejoin)

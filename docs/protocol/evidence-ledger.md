@@ -1,5 +1,20 @@
 # Evidence ledger
 
+Incoming recipient-count source (2026-10-09, **confirmed static**): root
+`count` defaults only on absence; malformed present input throws from the
+signed-int helper. Own group/status-envelope transfer reaches native message.A06
+through Cih/CaF/Bp2, with distinct branch guards. This closes the count producer,
+not receipt_user membership or primary cleanup. No runtime/live change.
+[Evidence and limits](message-recipient-count.md).
+
+Count-source validation: three topics / eight files / 34,489 bytes reproduce
+exactly from APK 37.71. Cached self-diff verifies three unchanged topics and
+four metadata artifacts; raw count-copy/false-rejoin branch operands and the
+field-write opcode agree. CLI reference, API-symbol, formatting, whitespace and
+hygiene passed (2,176 links/108 APK bundles). Source/docs only; no fresh Rust
+runtime suite, account operation or live test is claimed.
+
+
 Peer-address guard coverage (2026-10-09, **implemented/offline tested**):
 peer-key queue/inspection and primary pin inspection now reject empty users,
 extending the existing identity-only prerequisite. A failing-before regression

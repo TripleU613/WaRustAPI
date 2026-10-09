@@ -88,8 +88,8 @@ and normal-send initialization authority is still incomplete:
 
 ## Remaining runtime boundary
 
-**Unknown/unported:** normal outgoing initialization/transition, Cih count wire
-producer, participant-map authority and preprocessing hooks, effective policy,
+**Unknown/unported:** normal outgoing initialization/transition, complete own-envelope
+classification authority, participant-map authority and preprocessing hooks, effective policy,
 full native receipt_user admission/namespace and primary identity cleanup.
 Closing these immediate writes does not create a native user-row ledger or
 prove a safe resend. Immutable device targets and raw Rust DeliveryFacts stay
@@ -106,3 +106,8 @@ claimed for this source-only chunk.
 
 Follow-up: [text type inserter](text-type-inserter.md) identifies 1hl.BJK and
 confirms D7J membership in the before set; other hook effects remain unknown.
+
+Follow-up: [incoming root-count producer](message-recipient-count.md) closes
+the Cih.A02 source and signed-int/missing-versus-malformed behavior, with gated
+own-envelope transfer. Ordinary authored-message initialization and full
+per-user admission remain unfinished; no runtime ledger was inferred.

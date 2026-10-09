@@ -1,0 +1,30 @@
+{
+  "attribute-int-optional.txt": {
+    "bytes": 855,
+    "sha256": "939565dc0c470c2cd5cc854005f5a122e1b19a17564f6182155f17fb701d24bd"
+  },
+  "attribute-int-required.txt": {
+    "bytes": 1960,
+    "sha256": "3709b0b8bb95774677f5491f24b2212ed058dad3eebb719bb9f67c6b1a02280e"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-attribute-constructor.txt": {
+    "bytes": 2894,
+    "sha256": "98f2977e16ba74ce9491527278dbfc5b3929d210e82c1e6c26fc2231f15e9040"
+  },
+  "targets.json": {
+    "bytes": 1229,
+    "sha256": "408be5bb121e2f98db7daba149dec351dac9a8171a7d2ac4fdad7f383b9552ed"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

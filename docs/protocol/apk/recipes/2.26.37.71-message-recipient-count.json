@@ -1,0 +1,35 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "attribute-int-optional": {
+      "class": "LX/0hs;",
+      "method": "A05",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "attribute-int-required": {
+      "class": "LX/0hs;",
+      "method": "A06",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "message-attribute-constructor": {
+      "class": "LX/CaF;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    }
+  }
+}
