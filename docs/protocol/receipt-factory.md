@@ -24,9 +24,10 @@ read/played receipt or that all receipt facts should be merged in Rust.
 
 **Confirmed / limited:** 0zd.A07 returns true for any of three JID predicates
 (0DE.A0m/A0b/A0h), or when 08l.A1H and its private A00/A01 predicates are all
-true. The full meanings of those predicates, setting defaults and current
-account settings remain **unknown** here. The log alone does not establish
-that one global boolean reproduces this policy.
+true. The immediate predicates and preference defaults are now traced in
+[receipt read policy](receipt-read-policy.md); effective saved account values,
+classification authority and settings synchronization remain **unknown**.
+The log alone does not establish that one global boolean reproduces this policy.
 
 ## From value to storage
 

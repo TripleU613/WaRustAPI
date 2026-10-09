@@ -1,0 +1,51 @@
+# APK-derived structural disassembly: LX/0zd;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(ZL) flags=0x2 registers=6
+  # full signature: LX/0zd;->A00(LX/0Cy;)Z
+  0000..0004 op=62 sget-object v0, Lcom/whatsapp/infra/core/jid/UserJid;->Companion:LX/0D8;
+  0004..000a op=71 invoke-static {v5}, LX/0D8;->A00(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/UserJid;
+  000a..000c op=0c move-result-object v3
+  000c..000e op=12 const/4 v2, #0x1
+  000e..0012 op=38 if-eqz v5, +0x32
+  0012..0016 op=38 if-eqz v3, +0x30
+  0016..001a op=54 iget-object v0, v4, LX/0zd;->A08:LX/00s;
+  001a..0020 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0020..0022 op=0c move-result-object v0
+  0022..0026 op=1f check-cast v0, LX/0yy;
+  0026..002c op=6e invoke-virtual {v0, v3}, LX/0yy;->A0D(Lcom/whatsapp/infra/core/jid/UserJid;)Z
+  002c..002e op=0a move-result v0
+  002e..0032 op=39 if-nez v0, +0x22
+  0032..0036 op=54 iget-object v0, v4, LX/0zd;->A04:LX/00s;
+  0036..003c op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  003c..003e op=0c move-result-object v0
+  003e..0042 op=1f check-cast v0, LX/0YA;
+  0042..0048 op=6e invoke-virtual {v0, v5}, LX/0YA;->A09(LX/0Cy;)LX/0DV;
+  0048..004a op=0c move-result-object v0
+  004a..004e op=38 if-eqz v0, +0x14
+  004e..0052 op=54 iget-object v0, v0, LX/0DV;->A0D:LX/0Da;
+  0052..0056 op=54 iget-object v1, v0, LX/0Da;->A0J:LX/0lr;
+  0056..005a op=38 if-eqz v1, +0xf
+  005a..0060 op=6e invoke-virtual {v1}, LX/0lr;->A03()Z
+  0060..0062 op=0a move-result v0
+  0062..0066 op=39 if-nez v0, +0xb
+  0066..006c op=6e invoke-virtual {v1}, LX/0lr;->A02()Z
+  006c..006e op=0a move-result v0
+  006e..0072 op=38 if-eqz v0, +0x3
+  0072..0074 op=0f return v2
+  0074..0076 op=12 const/4 v2, #0x0
+  0076..0078 op=28 goto +0xf
+  0078..007c op=54 iget-object v0, v4, LX/0zd;->A07:LX/00s;
+  007c..0082 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0082..0084 op=0c move-result-object v0
+  0084..0088 op=1f check-cast v0, LX/25v;
+  0088..008e op=6e invoke-virtual {v0, v3}, LX/25v;->A00(LX/0Cy;)Z
+  008e..0090 op=0a move-result v2
+  0090..0094 op=39 if-nez v2, -0xf
+  0094..0098 op=1a const-string v0, "ReadReceiptUtils/Disabling read receipts for possible spam"
+  0098..009e op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  009e..00a0 op=0f return v2
+  # exception table: 0 try range(s)
+.end method

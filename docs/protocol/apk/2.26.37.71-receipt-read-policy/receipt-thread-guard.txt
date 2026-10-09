@@ -1,0 +1,25 @@
+# APK-derived structural disassembly: LX/1f0;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(V) flags=0x1 registers=4
+  # full signature: LX/1f0;->A00()V
+  0000..0004 op=54 iget-object v0, v3, LX/1f0;->A00:Landroid/os/Handler;
+  0004..000a op=6e invoke-virtual {v0}, Landroid/os/Handler;->getLooper()Landroid/os/Looper;
+  000a..000c op=0c move-result-object v1
+  000c..0012 op=71 invoke-static {}, Landroid/os/Looper;->myLooper()Landroid/os/Looper;
+  0012..0014 op=0c move-result-object v0
+  0014..0018 op=32 if-eq v1, v0, +0xf
+  0018..001c op=54 iget-object v0, v3, LX/1f0;->A01:Landroid/os/Handler;
+  001c..0022 op=6e invoke-virtual {v0}, Landroid/os/Handler;->getLooper()Landroid/os/Looper;
+  0022..0024 op=0c move-result-object v2
+  0024..002a op=71 invoke-static {}, Landroid/os/Looper;->myLooper()Landroid/os/Looper;
+  002a..002c op=0c move-result-object v1
+  002c..002e op=12 const/4 v0, #0x0
+  002e..0032 op=33 if-ne v2, v1, +0x3
+  0032..0034 op=12 const/4 v0, #0x1
+  0034..003a op=71 invoke-static {v0}, LX/00K;->A0C(Z)V
+  003a..003c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

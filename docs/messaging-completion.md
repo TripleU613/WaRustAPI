@@ -1,5 +1,14 @@
 # Messaging completion checklist
 
+Receipt factory read policy (2026-10-09, **confirmed static**): APK 37.71
+uses read_receipts_enabled default true plus chat, contact and account predicates.
+The eleven-topic snapshot retains literal smb:/ent: prefix checks, premium-message
+existence queries, dependent-account preference and the entry thread guard.
+Effective preferences/classifiers and settings synchronization remain unknown;
+full user-row admission and primary cleanup remain unfinished. No runtime,
+account state or live request changed.
+[Evidence and limits](protocol/receipt-read-policy.md).
+
 Receipt state-only suppression (2026-10-09, **confirmed static**): APK 37.71
 C8L selects incoming keys and mapped state arguments 13/16/17. Its state-only
 caller skips A07 when the chat last-read message row is at least message A0j;

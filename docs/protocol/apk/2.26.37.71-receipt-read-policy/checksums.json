@@ -1,0 +1,62 @@
+{
+  "account-contact-policy.txt": {
+    "bytes": 1628,
+    "sha256": "d3107b24c9344f6255a9ddb459dbaaa152dc691dd66442a5ce67251760199b60"
+  },
+  "account-contact-rule.txt": {
+    "bytes": 1661,
+    "sha256": "af62fe16e110b75b69f5cf2964222eb287ad00312eb818bfa0467ad372b7fe89"
+  },
+  "account-gate.txt": {
+    "bytes": 1442,
+    "sha256": "aacaeb225a4444ba9c5ecb5b156e5f0261bf597c8df421f61e827be854988cbd"
+  },
+  "contact-ent-prefix.txt": {
+    "bytes": 828,
+    "sha256": "881f24e2cc4495052a8c6979abbfdb7e0fa0c1ab4c2cfc3ff91bfb1bd7750143"
+  },
+  "contact-fallback-query.txt": {
+    "bytes": 6350,
+    "sha256": "cbbc7139f99b96ec5394aae7d9edbcc5346bf4343a4f17f52c603c0f6a21997d"
+  },
+  "contact-first-policy.txt": {
+    "bytes": 2614,
+    "sha256": "c896f5ede3ebbb21420f977441d77a597bf8f1dda2ed5c479fc2b2e5037ac5b0"
+  },
+  "contact-policy.txt": {
+    "bytes": 2614,
+    "sha256": "0f143a51d94806663967cba8d556005702ac45d120d63e6c3a9605bd02b07aad"
+  },
+  "contact-smb-prefix.txt": {
+    "bytes": 834,
+    "sha256": "cf023ac3448dc10ff02e3d3546b7ac893063239715e379834278b899751f17c2"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "jid-kind-seven.txt": {
+    "bytes": 777,
+    "sha256": "416b1867155ebd1477f153077d0bc5552ac8f9dd6d37ee62482bbffaf0bd5006"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "read-preference.txt": {
+    "bytes": 926,
+    "sha256": "2ee46ac7cb4ebaebee82b70f12ea6b3e2b76ff756141413962a25c376982fa85"
+  },
+  "receipt-thread-guard.txt": {
+    "bytes": 1320,
+    "sha256": "0e1f77c532f580894df5ec3f75a9521cc645cb63d487b45b7649a0dec0900a62"
+  },
+  "targets.json": {
+    "bytes": 4298,
+    "sha256": "72a632706119fe7e266dc9e036142d672c6bd495d004bbb218435733234498d9"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}
