@@ -1,0 +1,93 @@
+{
+  "config-ready": {
+    "class": "LX/00D;",
+    "file": "config-ready.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0z",
+    "methods": 1,
+    "rust_files": [
+      "xtask/src/xref.rs",
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "config-shadow": {
+    "class": "LX/00D;",
+    "file": "config-shadow.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0C",
+    "methods": 1,
+    "rust_files": [
+      "xtask/src/xref.rs",
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "mapping-cache-reader": {
+    "class": "LX/0Dt;",
+    "file": "mapping-cache-reader.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "xtask/src/xref.rs",
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "mapping-manager-init": {
+    "class": "LX/099;",
+    "file": "mapping-manager-init.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0C",
+    "methods": 1,
+    "rust_files": [
+      "xtask/src/xref.rs",
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "mapping-type-reader": {
+    "class": "LX/0Dt;",
+    "file": "mapping-type-reader.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "xtask/src/xref.rs",
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "specifier-cache-insert": {
+    "class": "LX/09E;",
+    "file": "specifier-cache-insert.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0A",
+    "methods": 1,
+    "rust_files": [
+      "xtask/src/xref.rs",
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "specifier-metadata": {
+    "class": "LX/0E6;",
+    "file": "specifier-metadata.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "xtask/src/xref.rs",
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  }
+}

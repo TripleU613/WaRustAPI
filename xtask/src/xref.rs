@@ -433,6 +433,9 @@ fn opcode_name(op: u8) -> &'static str {
         0xb5 => "and-int/2addr",
         0xb6 => "or-int/2addr",
         0xb7 => "xor-int/2addr",
+        // APK 37.71 09E.A0A+00bc: sparse cache capacity growth.
+        // AOSP Dalvik bytecode table b8 (12x), destination then shift register.
+        0xb8 => "shl-int/2addr",
         0xbb => "add-long/2addr",
         0xbc => "sub-long/2addr",
         // APK 37.71 8kY.A0B+0010: parsed group time multiplied by 1000.
@@ -447,6 +450,9 @@ fn opcode_name(op: u8) -> &'static str {
         // https://source.android.com/docs/core/runtime/dalvik-bytecode (c2, 12x)
         0xc2 => "xor-long/2addr",
         0xc3 => "shl-long/2addr",
+        // APK 37.71 0Dt.A00+0058 and 0E6.A00+0074: specifier bit extraction.
+        // https://source.android.com/docs/core/runtime/dalvik-bytecode (c5, 12x)
+        0xc5 => "ushr-long/2addr",
         // APK 37.71 FetchTruncatedGroupsJob.A0G 003c/0042: memory budget.
         // AOSP Dalvik bytecode table: cd/ce are 12x double binary operations.
         0xcd => "mul-double/2addr",
@@ -2775,6 +2781,35 @@ mod tests {
         assert_eq!(decoded[3].mnemonic, "xor-long/2addr");
         assert_eq!(decoded[3].annotation, "v15, v13");
         assert_eq!(decoded[3].byte_off + decoded[3].width * 2, bytes.len());
+    }
+
+    #[test]
+    fn decodes_mobileconfig_type_bits_and_sparse_cache_growth() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // APK 37.71 0Dt.A00+0058 (v2 >>= unsigned v0),
+        // 0E6.A00+0074 (v11), and 09E.A0A+00bc (v0 <<= v1).
+        // Independent AOSP 12x definition: low nibble is destination,
+        // high nibble is the source register; widths remain one code unit.
+        let bytes = [0xc5, 0x02, 0xc5, 0x0b, 0xb8, 0x10, 0xc5, 0xdf];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded.len(), 4);
+        assert_eq!(
+            decoded
+                .iter()
+                .map(|v| (v.mnemonic, v.annotation.as_str()))
+                .collect::<Vec<_>>(),
+            [
+                ("ushr-long/2addr", "v2, v0"),
+                ("ushr-long/2addr", "v11, v0"),
+                ("shl-int/2addr", "v0, v1"),
+                ("ushr-long/2addr", "v15, v13")
+            ]
+        );
+        assert_eq!(
+            decoded.last().unwrap().byte_off + decoded.last().unwrap().width * 2,
+            bytes.len()
+        );
     }
 
     #[test]

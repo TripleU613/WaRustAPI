@@ -1,0 +1,173 @@
+# APK-derived structural disassembly: LX/099;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0C(V) flags=0x1 registers=27
+  # full signature: LX/099;->A0C()V
+  0000..0004 op=08 move-object/from16 v7, v26
+  0004..0008 op=54 iget-object v1, v7, LX/099;->A0E:Ljava/util/concurrent/atomic/AtomicBoolean;
+  0008..000e op=6e invoke-virtual {v1}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+  000e..0010 op=0a move-result v0
+  0010..0014 op=39 if-nez v0, +0x129
+  0014..001a op=6e invoke-virtual {v7}, LX/099;->A0B()Ljava/lang/String;
+  001a..001c op=0c move-result-object v8
+  001c..0020 op=54 iget-object v6, v7, LX/099;->A0R:Ljava/lang/Object;
+  0020..0022 op=1d monitor-enter
+  0022..0024 op=12 const/4 v5, #0x1
+  0024..0026 op=12 const/4 v4, #0x0
+  0026..002c op=6e invoke-virtual {v1, v4, v5}, Ljava/util/concurrent/atomic/AtomicBoolean;->compareAndSet(ZZ)Z
+  002c..002e op=0a move-result v0
+  002e..0032 op=38 if-eqz v0, +0x17
+  0032..0036 op=54 iget-object v11, v7, LX/099;->A0P:LX/08y;
+  0036..003a op=52 iget v2, v7, LX/099;->A08:I
+  003a..003c op=12 const/4 v0, #0x2
+  003c..0040 op=33 if-ne v2, v0, +0x13
+  0040..0046 op=6e invoke-virtual {v8}, Ljava/lang/String;->isEmpty()Z
+  0046..0048 op=0a move-result v0
+  0048..004c op=39 if-nez v0, +0xa
+  004c..0050 op=1a const-string v0, "0"
+  0050..0056 op=6e invoke-virtual {v8, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  0056..0058 op=0a move-result v0
+  0058..005c op=38 if-eqz v0, +0x5
+  005c..005e op=1e monitor-exit
+  005e..0062 op=29 goto/16 +0xf6
+  0062..0066 op=1a const-string v1, "MobileConfigFactoryImpl.initCppManager %s"
+  0066..006c op=71 invoke-static {v2}, LX/GAe;->A00(I)Ljava/lang/String;
+  006c..006e op=0c move-result-object v0
+  006e..0074 op=71 invoke-static {v1, v0}, Lcom/facebook/debug/tracer/Tracer;->A02(Ljava/lang/String;Ljava/lang/Object;)V
+  0074..0078 op=55 iget-boolean v3, v7, LX/099;->A0c:Z
+  0078..007c op=55 iget-boolean v13, v7, LX/099;->A0b:Z
+  007c..0080 op=52 iget v2, v11, LX/08y;->A00:I
+  0080..0084 op=54 iget-object v9, v11, LX/08y;->A04:Ljava/lang/String;
+  0084..0088 op=54 iget-object v10, v11, LX/08y;->A03:LX/00s;
+  0088..008c op=54 iget-object v1, v11, LX/08y;->A01:LX/00s;
+  008c..0090 op=54 iget-object v0, v11, LX/08y;->A02:LX/00s;
+  0090..0096 op=72 invoke-interface {v10}, LX/00s;->get()Ljava/lang/Object;
+  0096..0098 op=0c move-result-object v12
+  0098..009e op=71 invoke-static {v12}, LX/00h;->A06(Ljava/lang/Object;)V
+  009e..00a2 op=1f check-cast v12, Lcom/facebook/mobileconfig/MobileConfigFetcher;
+  00a2..00a8 op=72 invoke-interface {v1}, LX/00s;->get()Ljava/lang/Object;
+  00a8..00aa op=0c move-result-object v11
+  00aa..00b0 op=71 invoke-static {v11}, LX/00h;->A06(Ljava/lang/Object;)V
+  00b0..00b4 op=1f check-cast v11, Lcom/facebook/mobileconfig/MobileConfigCxxLogger;
+  00b4..00ba op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  00ba..00bc op=0c move-result-object v1
+  00bc..00c2 op=71 invoke-static {v1}, LX/00h;->A06(Ljava/lang/Object;)V
+  00c2..00c6 op=1f check-cast v1, Lcom/facebook/mobileconfig/MobileConfigExposureHandler;
+  00c6..00cc op=71 invoke-static {}, LX/00I;->A00()Landroid/app/Application;
+  00cc..00ce op=0c move-result-object v14
+  00ce..00d2 op=22 new-instance v0, Lcom/facebook/mobileconfig/MobileConfigManagerParamsHolder;
+  00d2..00d8 op=70 invoke-direct {v0}, Lcom/facebook/mobileconfig/MobileConfigManagerParamsHolder;-><init>()V
+  00d8..00de op=1b const-string/jumbo v10, "wa"
+  00de..00e4 op=6e invoke-virtual {v0, v10}, Lcom/facebook/mobileconfig/MobileConfigManagerParamsHolder;->setExposureLoggingUniverse(Ljava/lang/String;)V
+  00e4..00ea op=6e invoke-virtual {v0, v3}, Lcom/facebook/mobileconfig/MobileConfigManagerParamsHolder;->setUseFileRepo(Z)V
+  00ea..00ee op=62 sget-object v10, LX/HBh;->A00:LX/HBh;
+  00ee..00f4 op=6e invoke-virtual {v0, v10, v13}, Lcom/facebook/mobileconfig/MobileConfigManagerParamsHolder;->setBoolFlag(LX/HBh;Z)V
+  00f4..00f6 op=12 const/4 v10, #0x2
+  00f6..00fa op=33 if-ne v2, v10, +0xd
+  00fa..00fe op=23 new-array v13, v10, [LX/HBg;
+  00fe..0102 op=62 sget-object v10, LX/HBg;->A00:LX/HBg;
+  0102..0106 op=4d aput-object v10, v13, v4
+  0106..010a op=62 sget-object v10, LX/HBg;->A01:LX/HBg;
+  010a..010e op=4d aput-object v10, v13, v5
+  010e..0110 op=28 goto +0x7
+  0110..0114 op=23 new-array v13, v5, [LX/HBg;
+  0114..0118 op=62 sget-object v10, LX/HBg;->A01:LX/HBg;
+  0118..011c op=4d aput-object v10, v13, v4
+  011c..0122 op=6e invoke-virtual {v0, v13}, Lcom/facebook/mobileconfig/MobileConfigManagerParamsHolder;->setStackTargets([LX/HBg;)V
+  0122..0126 op=62 sget-object v10, LX/HBh;->A03:LX/HBh;
+  0126..012c op=6e invoke-virtual {v0, v10, v5}, Lcom/facebook/mobileconfig/MobileConfigManagerParamsHolder;->setBoolFlag(LX/HBh;Z)V
+  012c..0130 op=62 sget-object v10, LX/HBh;->A02:LX/HBh;
+  0130..0136 op=6e invoke-virtual {v0, v10, v5}, Lcom/facebook/mobileconfig/MobileConfigManagerParamsHolder;->setBoolFlag(LX/HBh;Z)V
+  0136..013a op=62 sget-object v10, LX/HBh;->A01:LX/HBh;
+  013a..0140 op=6e invoke-virtual {v0, v10, v5}, Lcom/facebook/mobileconfig/MobileConfigManagerParamsHolder;->setBoolFlag(LX/HBh;Z)V
+  0140..0144 op=13 const/16 v19, #0x0
+  0144..0148 op=32 if-eq v2, v5, +0x4
+  0148..014c op=13 const/16 v19, #0x1
+  014c..0150 op=13 const/16 v17, #0x0
+  0150..0154 op=22 new-instance v10, Lcom/facebook/mobileconfig/MobileConfigUsingPureJavaDependencies;
+  0154..0158 op=08 move-object/from16 v21, v17
+  0158..015c op=08 move-object/from16 v16, v10
+  015c..0160 op=08 move-object/from16 v18, v12
+  0160..0164 op=08 move-object/from16 v20, v11
+  0164..0168 op=08 move-object/from16 v22, v1
+  0168..016e op=76 invoke-direct/range {v16..v22}, Lcom/facebook/mobileconfig/MobileConfigUsingPureJavaDependencies;-><init>(Lcom/facebook/common/jniexecutors/AndroidAsyncExecutorFactory;Lcom/facebook/mobileconfig/MobileConfigFetcher;ZLcom/facebook/mobileconfig/MobileConfigCxxLogger;Lcom/facebook/mobileconfig/MobileConfigCxxPerfLogger;Lcom/facebook/mobileconfig/MobileConfigExposureHandler;)V
+  016e..0174 op=6e invoke-virtual {v14}, Landroid/content/Context;->getFilesDir()Ljava/io/File;
+  0174..0176 op=0c move-result-object v11
+  0176..017a op=1a const-string v12, "2.26.37.71"
+  017a..0180 op=6e invoke-virtual {v14}, Landroid/content/Context;->getAssets()Landroid/content/res/AssetManager;
+  0180..0182 op=0c move-result-object v17
+  0182..0186 op=22 new-instance v20, Ljava/util/HashMap;
+  0186..018c op=76 invoke-direct/range {v20..v20}, Ljava/util/HashMap;-><init>()V
+  018c..0190 op=1a const-string v16, ""
+  0190..0194 op=08 move-object/from16 v23, v21
+  0194..0198 op=08 move-object/from16 v25, v21
+  0198..019c op=08 move-object/from16 v22, v21
+  019c..01a0 op=02 move/from16 v24, v3
+  01a0..01a4 op=02 move/from16 v18, v4
+  01a4..01a8 op=08 move-object/from16 v19, v0
+  01a8..01aa op=07 move-object v14, v8
+  01aa..01ac op=01 move v15, v2
+  01ac..01ae op=07 move-object v13, v9
+  01ae..01b4 op=74 invoke-virtual/range {v10..v25}, Lcom/facebook/mobileconfig/MobileConfigUsingPureJavaDependencies;->createManager(Ljava/io/File;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Landroid/content/res/AssetManager;ZLcom/facebook/mobileconfig/MobileConfigManagerParamsHolder;Ljava/util/Map;Lcom/facebook/mobileconfig/MobileConfigManagerHolderImpl;LX/IxY;Ljava/util/concurrent/ScheduledExecutorService;ZLcom/facebook/mobileconfig/common/FBMobileConfigGlobalContextHolder;)Lcom/facebook/mobileconfig/MobileConfigManagerHolderImpl;
+  01b4..01b6 op=0c move-result-object v11
+  01b6..01bc op=71 invoke-static {v11}, LX/00h;->A06(Ljava/lang/Object;)V
+  01bc..01c0 op=62 sget-object v13, LX/0E9;->A00:[J
+  01c0..01c4 op=39 if-nez v13, +0x6
+  01c4..01ca op=71 invoke-static {}, LX/0E9;->A0I()[J
+  01ca..01cc op=0c move-result-object v13
+  01cc..01d0 op=13 const/16 v0, #0x4f73
+  01d0..01d4 op=23 new-array v12, v0, [I
+  01d4..01d6 op=12 const/4 v10, #0x0
+  01d6..01d8 op=21 array-length v0, v13
+  01d8..01dc op=35 if-ge v10, v0, +0x12
+  01dc..01e0 op=45 aget-wide v8, v13, v10
+  01e0..01e4 op=16 const-wide/16 v2, #0x0
+  01e4..01e8 op=31 cmp-long v0, v8, v2
+  01e8..01ec op=38 if-eqz v0, +0x7
+  01ec..01f0 op=d8 add-int/lit8 v0, v4, #0x1
+  01f0..01f4 op=4b aput v10, v12, v4
+  01f4..01f6 op=01 move v4, v0
+  01f6..01fa op=d8 add-int/lit8 v10, v10, #0x1
+  01fa..01fc op=28 goto -0x12
+  01fc..0202 op=6e invoke-virtual {v11, v12}, Lcom/facebook/mobileconfig/MobileConfigManagerHolderImpl;->setWaStableIdsInLookupMap([I)V
+  0202..0206 op=5b iput-object v1, v11, Lcom/facebook/mobileconfig/MobileConfigManagerHolderImpl;->mJavaExposureHandler:Lcom/facebook/mobileconfig/MobileConfigExposureHandler;
+  0206..020c op=6e invoke-virtual {v7}, LX/099;->A0F()[I
+  020c..020e op=0c move-result-object v3
+  020e..0210 op=1d monitor-enter
+  0210..0214 op=54 iget-object v0, v7, LX/099;->A0G:Ljava/util/concurrent/atomic/AtomicBoolean;
+  0214..021a op=6e invoke-virtual {v0, v5}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+  021a..0220 op=6e invoke-virtual {v7, v11}, LX/099;->A0E(LX/08z;)V
+  0220..0226 op=6e invoke-virtual {v7}, LX/099;->A0D()V
+  0226..0228 op=1e monitor-exit
+  0228..022a op=21 array-length v2, v3
+  022a..022c op=12 const/4 v1, #0x0
+  022c..0230 op=35 if-ge v1, v2, +0xa
+  0230..0234 op=44 aget v0, v3, v1
+  0234..023a op=6e invoke-virtual {v7, v0}, LX/099;->A07(I)LX/098;
+  023a..023e op=d8 add-int/lit8 v1, v1, #0x1
+  023e..0240 op=28 goto -0x9
+  0240..0246 op=71 invoke-static {}, Lcom/facebook/debug/tracer/Tracer;->A00()V
+  0246..024a op=29 goto/16 -0xf5
+  024a..024c op=0e return-void
+  024c..024e op=0d move-exception v0
+  024e..0250 op=1e monitor-exit
+  0250..0252 op=27 throw v0
+  0252..0254 op=0d move-exception v0
+  0254..025a op=71 invoke-static {}, Lcom/facebook/debug/tracer/Tracer;->A00()V
+  025a..025c op=27 throw v0
+  025c..025e op=0d move-exception v0
+  025e..0260 op=1e monitor-exit
+  0260..0262 op=27 throw v0
+  0262..0264 op=0e return-void
+  # exception table: 8 try range(s)
+  # catch <all> code_units 0011..003a -> 012e
+  # catch <all> code_units 003a..0108 -> 0129
+  # catch <all> code_units 0108..0114 -> 0126
+  # catch <all> code_units 0114..0120 -> 0129
+  # catch <all> code_units 0120..0126 -> 012e
+  # catch <all> code_units 0127..0128 -> 0126
+  # catch <all> code_units 0128..0129 -> 0129
+  # catch <all> code_units 0129..0130 -> 012e
+.end method

@@ -1,0 +1,46 @@
+{
+  "config-ready.txt": {
+    "bytes": 952,
+    "sha256": "96f8e2042703b1321b06edf8263faf6c616ca30fffc093d7457869238eea74ec"
+  },
+  "config-shadow.txt": {
+    "bytes": 16448,
+    "sha256": "4c526636371e8c06a2735635bcba9f4bb15d69bce232ac7f0fbe11d5725cd45b"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "mapping-cache-reader.txt": {
+    "bytes": 2882,
+    "sha256": "8dd6742a85ed3dd7552350113ec822e3782781ef6a6c27237ba817db3d9cd9ff"
+  },
+  "mapping-manager-init.txt": {
+    "bytes": 10548,
+    "sha256": "8ca339adb574ed257b49c7186dd7ff10ef1b611068b96cb492b30970e7f4f591"
+  },
+  "mapping-type-reader.txt": {
+    "bytes": 1693,
+    "sha256": "a3e66b9041211b8db45a7516af2750037dbb0f7bead6aa8845c6b9192693ddab"
+  },
+  "specifier-cache-insert.txt": {
+    "bytes": 4916,
+    "sha256": "3130143888fc753d400476c1a3d96f09656f3bb722dc7cffe1b6318d141e77c3"
+  },
+  "specifier-metadata.txt": {
+    "bytes": 3111,
+    "sha256": "e9c043eb8d0d15f996c66bd61c3078f9177659e8f1526b8a8cb52e88af87045d"
+  },
+  "targets.json": {
+    "bytes": 2498,
+    "sha256": "45dd4472d75cd102880e7094613a10c4ceb45134c87ebd513ef038427609413b"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

@@ -1,5 +1,13 @@
 # Status — 2026-10-07
 
+Token mapping consumers (2026-10-09, **confirmed static/local**):
+selected table readers feed a separate specifier cache and native stable-ID list.
+`00D.A0C` compares/logs values; its caller separately chooses native or fallback
+return. Readiness and initial preference inputs are traced, effective account
+settings remain unknown. Renderer now decodes APK shift opcodes b8/c5 with a
+failing-before regression; seven source topics preserve the boundary.
+[Evidence and limits](docs/protocol/token-feature-inputs.md#mapping-consumers-and-shadow-comparison-2026-10-09).
+
 Token MobileConfig mapping (2026-10-09, **confirmed static**): provider
 233 resolves to `09N`; its generated array has nonzero initial specifiers for
 15491 (`0x811d83000016e2`) and 14303 (`0x811af9000014f5`). Eight source topics

@@ -1,0 +1,99 @@
+# APK-derived structural disassembly: LX/09E;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0A(VJL) flags=0x1 registers=13
+  # full signature: LX/09E;->A0A(JLjava/lang/Object;)V
+  0000..0004 op=54 iget-object v1, v9, LX/09E;->A02:[J
+  0004..0008 op=52 iget v0, v9, LX/09E;->A00:I
+  0008..000e op=71 invoke-static {v1, v0, v10, v11}, LX/018;->A01([JIJ)I
+  000e..0010 op=0a move-result v4
+  0010..0014 op=3b if-gez v4, +0x14
+  0014..0018 op=df xor-int/lit8 v4, v4, #0xff (-1)
+  0018..001c op=52 iget v8, v9, LX/09E;->A00:I
+  001c..0020 op=35 if-ge v4, v8, +0x13
+  0020..0024 op=54 iget-object v0, v9, LX/09E;->A03:[Ljava/lang/Object;
+  0024..0028 op=46 aget-object v1, v0, v4
+  0028..002c op=62 sget-object v0, LX/0ZW;->A00:Ljava/lang/Object;
+  002c..0030 op=33 if-ne v1, v0, +0xb
+  0030..0034 op=54 iget-object v0, v9, LX/09E;->A02:[J
+  0034..0038 op=4c aput-wide v10, v0, v4
+  0038..003c op=54 iget-object v0, v9, LX/09E;->A03:[Ljava/lang/Object;
+  003c..0040 op=4d aput-object v12, v0, v4
+  0040..0042 op=0e return-void
+  0042..0046 op=55 iget-boolean v0, v9, LX/09E;->A01:Z
+  0046..004a op=38 if-eqz v0, +0x2e
+  004a..004e op=54 iget-object v7, v9, LX/09E;->A02:[J
+  004e..0050 op=21 array-length v0, v7
+  0050..0054 op=34 if-lt v8, v0, +0x29
+  0054..0058 op=54 iget-object v6, v9, LX/09E;->A03:[Ljava/lang/Object;
+  0058..005a op=12 const/4 v5, #0x0
+  005a..005c op=12 const/4 v4, #0x0
+  005c..005e op=12 const/4 v3, #0x0
+  005e..0062 op=35 if-ge v4, v8, +0x18
+  0062..0066 op=46 aget-object v2, v6, v4
+  0066..006a op=62 sget-object v0, LX/0ZW;->A00:Ljava/lang/Object;
+  006a..006e op=32 if-eq v2, v0, +0xf
+  006e..0072 op=32 if-eq v4, v3, +0xb
+  0072..0076 op=45 aget-wide v0, v7, v4
+  0076..007a op=4c aput-wide v0, v7, v3
+  007a..007e op=4d aput-object v2, v6, v3
+  007e..0080 op=12 const/4 v0, #0x0
+  0080..0084 op=4d aput-object v0, v6, v4
+  0084..0088 op=d8 add-int/lit8 v3, v3, #0x1
+  0088..008c op=d8 add-int/lit8 v4, v4, #0x1
+  008c..008e op=28 goto -0x17
+  008e..0092 op=5c iput-boolean v5, v9, LX/09E;->A01:Z
+  0092..0096 op=59 iput v3, v9, LX/09E;->A00:I
+  0096..009c op=71 invoke-static {v7, v3, v10, v11}, LX/018;->A01([JIJ)I
+  009c..009e op=0a move-result v0
+  009e..00a2 op=df xor-int/lit8 v4, v0, #0xff (-1)
+  00a2..00a6 op=52 iget v1, v9, LX/09E;->A00:I
+  00a6..00aa op=54 iget-object v3, v9, LX/09E;->A02:[J
+  00aa..00ac op=21 array-length v0, v3
+  00ac..00b0 op=34 if-lt v1, v0, +0x24
+  00b0..00b4 op=d8 add-int/lit8 v0, v1, #0x1
+  00b4..00b8 op=da mul-int/lit8 v2, v0, #0x8
+  00b8..00ba op=12 const/4 v1, #0x4
+  00ba..00bc op=12 const/4 v0, #0x1
+  00bc..00be op=b8 shl-int/2addr v0, v1
+  00be..00c2 op=d8 add-int/lit8 v0, v0, #0xf4 (-12)
+  00c2..00c6 op=36 if-gt v2, v0, +0x41
+  00c6..00c8 op=01 move v2, v0
+  00c8..00cc op=db div-int/lit8 v1, v2, #0x8
+  00cc..00d2 op=71 invoke-static {v3, v1}, Ljava/util/Arrays;->copyOf([JI)[J
+  00d2..00d4 op=0c move-result-object v0
+  00d4..00da op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  00da..00de op=5b iput-object v0, v9, LX/09E;->A02:[J
+  00de..00e2 op=54 iget-object v0, v9, LX/09E;->A03:[Ljava/lang/Object;
+  00e2..00e8 op=71 invoke-static {v0, v1}, Ljava/util/Arrays;->copyOf([Ljava/lang/Object;I)[Ljava/lang/Object;
+  00e8..00ea op=0c move-result-object v0
+  00ea..00f0 op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  00f0..00f4 op=5b iput-object v0, v9, LX/09E;->A03:[Ljava/lang/Object;
+  00f4..00f8 op=52 iget v3, v9, LX/09E;->A00:I
+  00f8..00fc op=91 sub-int v0, v3, v4
+  00fc..0100 op=38 if-eqz v0, +0x15
+  0100..0104 op=54 iget-object v1, v9, LX/09E;->A02:[J
+  0104..0108 op=d8 add-int/lit8 v2, v4, #0x1
+  0108..010a op=12 const/4 v0, #0x0
+  010a..0110 op=71 invoke-static {v1, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0110..0112 op=b1 sub-int/2addr v3, v4
+  0112..0118 op=71 invoke-static {v1, v4, v1, v2, v3}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+  0118..011c op=54 iget-object v1, v9, LX/09E;->A03:[Ljava/lang/Object;
+  011c..0120 op=52 iget v0, v9, LX/09E;->A00:I
+  0120..0126 op=71 invoke-static {v1, v2, v1, v4, v0}, LX/027;->A05([Ljava/lang/Object;I[Ljava/lang/Object;II)V
+  0126..012a op=54 iget-object v0, v9, LX/09E;->A02:[J
+  012a..012e op=4c aput-wide v10, v0, v4
+  012e..0132 op=54 iget-object v0, v9, LX/09E;->A03:[Ljava/lang/Object;
+  0132..0136 op=4d aput-object v12, v0, v4
+  0136..013a op=52 iget v0, v9, LX/09E;->A00:I
+  013a..013e op=d8 add-int/lit8 v0, v0, #0x1
+  013e..0142 op=59 iput v0, v9, LX/09E;->A00:I
+  0142..0144 op=0e return-void
+  0144..0148 op=d8 add-int/lit8 v1, v1, #0x1
+  0148..014c op=13 const/16 v0, #0x20
+  014c..0150 op=35 if-ge v1, v0, -0x42
+  0150..0152 op=28 goto -0x4b
+  # exception table: 0 try range(s)
+.end method

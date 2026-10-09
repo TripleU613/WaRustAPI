@@ -200,3 +200,79 @@ regeneration, API-symbol integration, diff whitespace and repository hygiene
 passed (1,778 links; 69 checksum-verified bundles). This source-only continuation
 did not alter Rust; the preceding 816-test/Clippy/Rustdoc baseline is not claimed
 as a new run for this chunk. Private bulk dumps stayed outside Git.
+
+## Mapping consumers and shadow comparison (2026-10-09)
+
+**Confirmed static:** the remaining physical `0E9.A00` readers inspected in
+this chunk do not directly rewrite that table. `0Dt.A00` resolves an index
+through `A01`, checks the generated long is nonzero, and returns
+`(specifier >>> 48) & 0x3f`; missing/invalid entries return zero. This gives
+both token specifiers the value 1, without independently naming a native type.
+`0Dt.A03` iterates its separate `A07` map, resolves each index and nonzero
+specifier, then inserts the associated object into separate `09E` cache via
+`A0A(specifier, value)`. Its initial `09E.A07` and insertion affect that cache,
+not `0E9.A00`. `09E.A0A` maintains sorted long keys and object values with
+replacement, tombstone compaction and capacity growth. It accepts an object;
+this trace alone does not establish its origin or native adoption.
+
+`099.A0C` initializes a MobileConfig manager and iterates the generated long
+array. For every nonzero entry it places the corresponding stable ID into a
+new int array of size `0x4f73` (20,339), then calls
+`setWaStableIdsInLookupMap`. It does not pass the long array to that call.
+The size is an APK constant, not a count derived or checked by our runtime.
+The constructor/callback/native manager and `0Dt.A01` index mapping remain
+outside this chunk's complete semantic proof. `0E9.A0I` publicly returns the
+array; this physical-reader inspection does not prove global immutability or
+close all transitive callers of that getter.
+
+**Confirmed static precedence boundary:** `00D.A0z` returns
+`A0A && A0b && !A0Q.get()`. In the previously saved
+[constructor](apk/2.26.37.71-token-feature-providers/provider-bindings.txt),
+`A0A` requires the supplied `084` dependency and either preference 23048
+(`0x5a08`, Boolean) or positive preference 27668 (`0x6c14`, integer).
+`A0b` reads Boolean 24896 (`0x6140`); `A0Q` starts from Boolean 25403
+(`0x633b`). These preference defaults are false/zero. `A0C` starts from
+Boolean 22646 (`0x5876`, false default). Physical flag-write inspection finds
+only constructor writes for `A0A` / `A0C`, respectively `classes.dex` offsets
+`0x3bf29c` / `0x3bf2cc`, opcode `5c`; atomic updates and other readiness inputs
+are not thereby closed.
+
+**Confirmed static / negative result:** the method `00D.A0C` called during
+provider evaluation is a shadow comparison/logger, not a value-adoption
+routine. It compares the supplied fallback and `Hln.A02`, records source/exposure
+metadata, updates `2tO` sets/counters and may send a `2VW` logging event. It
+returns void. The caller `00D.A07` selects its return independently: the branch
+at `0192` obtains an `Hln`, evaluates fallback for comparison and returns
+`Hln.A02` at `01de`; the later branch obtains fallback at `0224`, optionally
+calls the provider/comparison again, then returns that original fallback at
+`028a`. Thus obtaining a native value does not itself prove adoption. Earlier
+wording that called this generic result processing did not establish adoption.
+Full readiness changes, cache precedence and logger side effects remain unknown.
+
+**Confirmed local renderer correction:** opcode `0xc5` in `0Dt.A00+0058`
+and `0E6.A00+0074` is now rendered `ushr-long/2addr`; `0xb8` in
+`09E.A0A+00bc` is `shl-int/2addr`. The
+[AOSP Dalvik table](https://source.android.com/docs/core/runtime/dalvik-bytecode)
+defines their existing 12x format: destination in the low register nibble and
+shift-distance register in the high nibble. The regression uses literal APK
+instructions and a high-register case; before the fix all four mnemonics were
+unknown. Width/register decoding was already correct and remains unchanged.
+The previously unknown `0E6.A00` instruction now decodes unsigned extraction
+of bits 32..47 before optional metadata lookup; this is a renderer limitation
+resolved, not a change to APK code or proof of full metadata provenance.
+
+The [seven-topic consumer recipe](apk/recipes/2.26.37.71-token-feature-consumers.json)
+and [snapshot](apk/2.26.37.71-token-feature-consumers/targets.json) preserve these
+methods and exception tables using the corrected renderer. Older immutable
+snapshots are not regenerated: comparisons against them can show annotation
+changes on identical APK bytes, so use the same renderer for release comparisons.
+No new CLI command, gate adoption, real account change or live request occurred.
+
+**Consumer-chunk verification:** 817 workspace/all-feature tests passed (681 API
+unit, four codec, nine crash matrix, 52 CLI unit, one API-symbol, 70 xtask).
+Strict workspace/all-target/all-feature Clippy, warning-free Rustdoc,
+CLI reference regeneration, API-symbol integration, formatting and whitespace
+checks passed. Exact regeneration verified 12 files / 71,120 bytes; self-diff
+reports seven topics/four artifacts unchanged. Repository hygiene passed:
+1,784 links and 70 checksum-verified research bundles. The added regression
+failed before the opcode fix; private bulk dumps stayed outside Git.
