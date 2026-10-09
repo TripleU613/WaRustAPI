@@ -60,3 +60,56 @@ supported trusted-contact entries while remaining without ACK; malformed support
 entries are validated before the write transaction. This review did not establish
 that partial supported-kind processing is a bug or authorize unknown-kind ACKs.
 No extra notification behavior was changed in the clock-producer chunk.
+
+
+## Timestamp parser correction (2026-10-09)
+
+**Confirmed static:** same APK 2.26.37.71/hash as above. `11P.A09`
+`00c6..00e4` requires parent `t` through `0hs.A09`, then selects token `t`
+with `0hs.A08` and that parent value as the missing-attribute fallback.
+A09 delegates to Java Long.parseLong and wraps NumberFormatException in B7l;
+A08 defaults only when the attribute getter returns null, otherwise it calls
+A09. A present malformed token time is not a request to use the parent time.
+The [two-topic recipe](apk/recipes/2.26.37.71-token-notification-time.json) and
+[snapshot](apk/2.26.37.71-token-notification-time/targets.json) preserve both
+helpers with signatures/register flow/catches. The existing peer-guard bundle
+preserves their 11P caller. No new raw APK or bulk class tree is committed.
+
+**Confirmed local correction:** notifications previously used parse::<u64>,
+rejecting BMP decimal digit strings accepted by Java's UTF-16 long parser.
+The failing-before integration regression stopped at `+２０` with the fixed
+`invalid notification timestamp` error. Parent and token time now reuse
+mex::java_decimal_long before conversion to nonnegative u64. That preserves
+our existing 0..i64::MAX storage range; native acceptance of signed input does
+not prove that every negative time is valid token history. Negative nonzero
+values still refuse locally, while `-0` parses as zero. No state format changes
+or history rewrite occur. This is parser parity inside the supported range,
+not full native token storage/admission parity.
+
+**Independent numeric evidence:** local Temurin Java 21.0.12 Long.parseLong
+returned `+２０ -> 20`, `٢٠ -> 20`, `+٣٠ -> 30`, `-0 -> 0`, `-1 -> -1`
+and maximum i64 unchanged. One-above-maximum, supplementary digits `𝟜𝟘`,
+and leading/trailing whitespace threw NumberFormatException. This checks the
+selected known digit/sign cases independently of Rust; it is not Android
+runtime or all-Unicode-version equivalence. The existing mex parser has its
+own independent Java fixtures; no second digit table was introduced.
+
+**Regression scope:** the ACK-producing handler accepts a BMP-digit parent
+fallback and BMP-digit token override, preserving timestamp 30 and token bytes
+from the override. Older equal-source repeats do not replace it. Malformed,
+negative, overflow, whitespace and supplementary-digit later tokens refuse
+before committing an earlier valid newer token in the same notification;
+checkpoint snapshots are unchanged and diagnostics omit the rejected value.
+Negative zero is valid but older and leaves the token unchanged. Reopening
+preserves the checkpoint snapshot. These are synthetic encrypted-store tests;
+no saved real account, identities, mappings, keys, waits or live session changed.
+
+**Completed checks:** 821 workspace/all-feature tests passed (685 API unit,
+four codec, nine crash matrix, 52 CLI unit, one API-symbol and 70 xtask).
+Strict workspace/all-target/all-feature Clippy, warnings-denied Rustdoc,
+default CLI tests, CLI reference regeneration, formatting and diff whitespace
+passed. Exact re-export verifies seven files / 31,039 bytes; self-diff reports
+two topics and four artifacts unchanged. Hygiene validates 1,818 local links
+and 75 checksum bundles. The new regression failed on the unmodified parser
+and passed after the correction. Fresh live Unicode timestamp handling and
+full Android numeric/token admission parity remain unverified.

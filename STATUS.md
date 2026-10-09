@@ -1,5 +1,12 @@
 # Status — 2026-10-07
 
+Trusted-contact timestamp parser (2026-10-09, **confirmed local / static-backed**):
+parent/token times now use Java-compatible decimal-long parsing within the
+existing nonnegative storage range. A failing-before regression covers BMP
+digits, override/fallback, malformed-token rollback and reopening. No real
+account/live change; complete native token admission remains unfinished.
+[Evidence and limits](docs/protocol/token-notification-peer.md#timestamp-parser-correction-2026-10-09).
+
 NTP clock preference (2026-10-09, **confirmed static**): nine source topics
 establish separate NTP/WhatsApp baselines, offset sign, acquisition correlation,
 cache/recent-sync checks and feature-controlled rejection. NTP fetching,

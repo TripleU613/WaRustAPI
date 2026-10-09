@@ -1,0 +1,24 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "required-long-attribute": {
+      "class": "LX/0hs;",
+      "method": "A09",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/notifications.rs",
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ]
+    },
+    "optional-long-attribute": {
+      "class": "LX/0hs;",
+      "method": "A08",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/notifications.rs",
+        "crates/whatsapp-api/src/transport/mex.rs"
+      ]
+    }
+  }
+}

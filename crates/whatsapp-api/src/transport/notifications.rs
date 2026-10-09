@@ -98,8 +98,10 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
     let timestamp = |node: &Node| {
         node.get_attr("t")
             .and_then(|v| v.as_text())
-            .and_then(|v| v.parse::<u64>().ok())
-            .filter(|v| *v <= i64::MAX as u64)
+            // APK 37.71 11P.A09 -> 0hs.A09/A08 uses Long.parseLong;
+            // retain the local nonnegative storage bound after Java parsing.
+            .and_then(super::mex::java_decimal_long)
+            .and_then(|v| u64::try_from(v).ok())
     };
     let parent_time = timestamp(node)
         .ok_or_else(|| Error::invalid("notification", "invalid notification timestamp"))?;
@@ -156,6 +158,81 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn java_token_times_preserve_fallback_override_and_atomic_refusal() {
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: dir.path().join("time.redb"),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [4; 32],
+                ))),
+                create,
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        let token = |time: Option<&str>, data: u8| {
+            let node = Node::new("token")
+                .attr("type", "trusted_contact")
+                .bytes(vec![data]);
+            if let Some(time) = time {
+                node.attr("t", time)
+            } else {
+                node
+            }
+        };
+        let notification = |time: &str, children| {
+            Node::new("notification")
+                .attr("type", "privacy_token")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("id", "fixture")
+                .attr("t", time)
+                .children(vec![Node::new("tokens").children(children)])
+        };
+        // APK 11P.A09 -> 0hs.A09/A08: Java BMP decimal digits and ASCII sign.
+        // Independent Java Long.parseLong cases are also pinned in mex tests.
+        let first = notification("+２０", vec![token(None, 1)]);
+        assert!(handle(&store, &first).unwrap().is_some());
+        let next = notification("٢٠", vec![token(Some("+٣٠"), 2)]);
+        assert!(handle(&store, &next).unwrap().is_some());
+        let snapshot = |store: &ProtocolStore| {
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap()
+        };
+        let before = snapshot(&store);
+        assert_eq!(record(&store, &first).unwrap(), 0);
+        for invalid in ["", " 40", "40 ", "-1", "9223372036854775808", "𝟜𝟘"] {
+            // A malformed later token must not commit the earlier newer token.
+            let bad = notification("40", vec![token(Some("40"), 3), token(Some(invalid), 4)]);
+            let error = handle(&store, &bad).unwrap_err().to_string();
+            assert!(error.contains("invalid token timestamp"));
+            assert!(!error.contains(invalid) || invalid.is_empty());
+            assert_eq!(snapshot(&store), before);
+        }
+        let zero = notification("-0", vec![token(None, 5)]);
+        assert_eq!(record(&store, &zero).unwrap(), 0);
+        assert_eq!(snapshot(&store), before);
+        let saved: serde_json::Value = store
+            .read(|tx| {
+                tx.get_json(
+                    Table::Checkpoints,
+                    b"incoming-trusted-contact:15555550100@s.whatsapp.net",
+                    1,
+                )
+            })
+            .unwrap()
+            .unwrap();
+        assert_eq!(saved, serde_json::json!({"timestamp":30,"token":[2]}));
+        drop(store);
+        assert_eq!(snapshot(&open(false)), before);
+    }
     #[test]
     fn empty_notification_peers_never_store_tokens_or_acknowledge() {
         use crate::{

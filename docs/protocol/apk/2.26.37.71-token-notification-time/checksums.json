@@ -1,0 +1,26 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "optional-long-attribute.txt": {
+    "bytes": 870,
+    "sha256": "2d2c3554f149e18948751eaaae330f49218febd8dfa3dfe9788e76d81900dc1f"
+  },
+  "required-long-attribute.txt": {
+    "bytes": 1968,
+    "sha256": "e5776eaed4f64110496c2f0e82ec5c10003a138adaf4aa57e96cc2c130d13db7"
+  },
+  "targets.json": {
+    "bytes": 795,
+    "sha256": "ddc15c7e15df94197fb6905464982e3c3e24d4b5ab4b812b2689e46058a04ddd"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}
