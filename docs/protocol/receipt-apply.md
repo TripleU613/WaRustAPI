@@ -26,15 +26,17 @@ In particular, following one interface read is not full dispatcher parity.
 status A00, message A04, device A02, user A03 and time A01. Under 1hg.A03's
 status predicate, it skips B3b()==0x15 (the log calls this permanent send
 failure), otherwise passes these five values to
-CNn.A00(DeviceJid,UserJid,178,int,long)->CYV at 00ce..00d4. The predicate and
-CNn/CYV row policy remain untraced here. Other statuses use a separate 15A.A07
+CNn.A00(DeviceJid,UserJid,178,int,long)->CYV at 00ce..00d4. The predicate and factory are traced in the
+[factory follow-up](receipt-factory.md); complete row policy remains unported. Other statuses use a separate 15A.A07
 path; do not map all statuses to the same device delivery-timestamp update.
 Cmn.A02 is an auxiliary collection builder involving 1hg.A03, a non-1iZ guard
 and message/0lp pairs; it is not the device row writer itself.
 
-**Unknown:** CNn's insert/update/cache branches, how read/played affect delivery
-rows, timestamp units/defaults at the parser, canonical namespace authority and
-identity-cleanup interaction. These are the next required trace before porting
+**Correction / next boundary:** CNn is a value factory, not an insert/update
+writer. The follow-up traces its settings downgrade and the downstream store
+dispatch. Complete message-state admission, timestamp units/defaults at the
+parser, canonical namespace authority and identity-cleanup interaction remain
+**unknown/unported**. These are the next required trace before porting
 a mutable receipt ledger. Current immutable original-device snapshots and
 existing independent delivery facts are preserved without inventing these rules.
 

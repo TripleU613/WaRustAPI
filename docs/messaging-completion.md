@@ -2884,3 +2884,17 @@ hygiene checked 1,336 local links and 27 APK bundles / 7,921,661 bytes; diff
 hygiene passed. This follow-up changes research/docs only; the preceding
 cdca7ad runtime chunk passed all 798 workspace tests and strict lint/doc/CLI
 checks. No new runtime implementation or live receipt application is claimed.
+
+2026-10-09 — **Confirmed static:** CNn is a receipt value factory, not a row
+writer. Its settings branch downgrades played/read (8/13) to delivery (5);
+1hg.A03 admits six statuses. The downstream 0Z4 dispatch separates message
+classes and reaches 0Z5 timestamp storage. Complete 15A admission, clock and
+namespace/cleanup policy remain unknown; no runtime or live operation changed.
+[Evidence and reproducible recipe](protocol/receipt-factory.md).
+
+Receipt-factory validation: seven source topics / 12 files / 137,766 bytes
+reproduce exactly from APK 2.26.37.71. Cached self-diff reports seven unchanged
+topics and four unchanged metadata artifacts; this is reproducibility, not
+cross-release equivalence. Repository hygiene checked 1,340 local links and
+28 APK bundles / 8,059,427 bytes; diff hygiene passed. Research/docs only; no
+fresh Rust runtime test or live account operation is claimed for this chunk.

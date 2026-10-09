@@ -1,0 +1,46 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-partition.txt": {
+    "bytes": 795,
+    "sha256": "259bcd87015579de51ca400ec3784c6253f27697167c2ad24938c7738cce349b"
+  },
+  "message-store.txt": {
+    "bytes": 73721,
+    "sha256": "f435b25b1d0631269adfd02c4a2948f6e59f8a0550c29f3f03e6fabf77a7d831"
+  },
+  "receipt-factory.txt": {
+    "bytes": 2188,
+    "sha256": "782447546f59f228602f3158edfb8996afe8d8c3b7e47f8d1504021bb505b50a"
+  },
+  "receipt-value.txt": {
+    "bytes": 1068,
+    "sha256": "3cf105cd49cee2ce89bf142f622bf350ad8f8a5030ae74690a24e76a8510d83f"
+  },
+  "settings-check.txt": {
+    "bytes": 1638,
+    "sha256": "fe360721593715dbb2d9214bf5a80357c0fdea405b776a58182bffe1431850fb"
+  },
+  "store-dispatch.txt": {
+    "bytes": 26195,
+    "sha256": "10c8b82c42f4f2c7d89dfd297c22ae8f27da386a2d3de1f707a40e41d6bcb7cf"
+  },
+  "target-status-predicate.txt": {
+    "bytes": 969,
+    "sha256": "bd97657b082c745363a76052cb8b34f9ac80b3250203fd9b9fac07067ef6e2c3"
+  },
+  "targets.json": {
+    "bytes": 3136,
+    "sha256": "b86f3c109396bb67f3c6987b90849812a322691067f4d220029fb0f2efb1fc26"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

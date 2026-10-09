@@ -1,0 +1,14 @@
+# APK-derived structural disassembly: LX/6an;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A1Q(VLLLI) flags=0x9 registers=4
+  # full signature: LX/6an;->A1Q(Ljava/lang/Object;Ljava/util/AbstractCollection;Ljava/util/AbstractCollection;I)V
+  0000..0004 op=38 if-eqz v3, +0x6
+  0004..000a op=6e invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  000a..000c op=0e return-void
+  000c..0012 op=6e invoke-virtual {v2, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  0012..0014 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
