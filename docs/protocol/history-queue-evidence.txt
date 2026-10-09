@@ -1,0 +1,12 @@
+APK 2.26.37.71, SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Physical invokes only; not reflection, virtual closure, or authentication proof.
+
+classes2.dex  LX/1gz;->A00(LLLLL)
+  invoke dex byte offset: 0x133076
+classes2.dex  LX/1gz;->A00(LLLLL)
+  invoke dex byte offset: 0x1330b0
+
+classes2.dex  LX/1gz;->A00(LLLLL)
+  invoke dex byte offset: 0x132fa2
+classes2.dex  LX/1h9;->A00(LL)
+  invoke dex byte offset: 0x1385de

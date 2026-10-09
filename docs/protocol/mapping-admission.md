@@ -99,3 +99,10 @@ cargo run -p xtask -- apk-research-diff \
 ```
 
 Agreement verifies static artifacts, not runtime authentication or sync parity.
+
+## Queue producer follow-up (2026-10-09)
+
+The immediate queue producer and SQL store are now retained in
+[history companion queue staging](history-queue.md). Native peer processing
+checks own-user and companion mode; complete linked-device/envelope trust and
+history-media authentication remain untraced. Existing snapshots are unchanged.

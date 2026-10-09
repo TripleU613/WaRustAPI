@@ -1,5 +1,14 @@
 # Status — 2026-10-07
 
+History queue admission (2026-10-09, **confirmed static**): APK 37.71
+stages history chunks in the peer handler after own-user and companion-mode
+checks. SQL insertion-constraint recovery updates the original message ID;
+queue selection and null/empty binding differences are retained. The four-topic
+snapshot preserves full staging/store methods. Upstream crypto, linked-device
+trust, media authentication and receipt_user creation remain unfinished.
+No runtime, account state or live request changed.
+[Evidence and limits](docs/protocol/history-queue.md).
+
 Mapping import entry points (2026-10-09, **confirmed static**): APK 37.71's
 remaining conversation-mapping callers are chat-transfer import and the initial
 history-bootstrap branch. The immediate history inputs are bounded file reads

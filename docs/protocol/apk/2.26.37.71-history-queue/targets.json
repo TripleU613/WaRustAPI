@@ -1,0 +1,54 @@
+{
+  "history-queue-store": {
+    "class": "LX/1h9;",
+    "file": "history-queue-store.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 5,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "history-record": {
+    "class": "LX/1tI;",
+    "file": "history-record.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "history-update-sql": {
+    "class": "LX/1sl;",
+    "file": "history-update-sql.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "peer-history-staging": {
+    "class": "LX/1gz;",
+    "file": "peer-history-staging.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  }
+}

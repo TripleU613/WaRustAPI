@@ -1,0 +1,62 @@
+# APK-derived structural disassembly: LX/1sl;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=5
+  # full signature: LX/1sl;-><clinit>()V
+  0000..0004 op=13 const/16 v0, #0xc
+  0004..0008 op=23 new-array v4, v0, [Ljava/lang/String;
+  0008..000c op=1a const-string v1, "message_id"
+  000c..000e op=12 const/4 v0, #0x0
+  000e..0012 op=4d aput-object v1, v4, v0
+  0012..0016 op=1a const-string v1, "sync_type"
+  0016..0018 op=12 const/4 v0, #0x1
+  0018..001c op=4d aput-object v1, v4, v0
+  001c..0020 op=1a const-string v1, "chunk_order"
+  0020..0022 op=12 const/4 v0, #0x2
+  0022..0026 op=4d aput-object v1, v4, v0
+  0026..002a op=1a const-string v1, "media_key"
+  002a..002c op=12 const/4 v0, #0x3
+  002c..0030 op=4d aput-object v1, v4, v0
+  0030..0034 op=1a const-string v1, "media_hash"
+  0034..0036 op=12 const/4 v0, #0x4
+  0036..003a op=4d aput-object v1, v4, v0
+  003a..003e op=1a const-string v1, "media_enc_hash"
+  003e..0040 op=12 const/4 v0, #0x5
+  0040..0044 op=4d aput-object v1, v4, v0
+  0044..0048 op=1a const-string v1, "file_size"
+  0048..004a op=12 const/4 v0, #0x6
+  004a..004e op=4d aput-object v1, v4, v0
+  004e..0052 op=1a const-string v1, "direct_path"
+  0052..0054 op=12 const/4 v0, #0x7
+  0054..0058 op=4d aput-object v1, v4, v0
+  0058..005c op=1a const-string v1, "local_path"
+  005c..0060 op=13 const/16 v0, #0x8
+  0060..0064 op=4d aput-object v1, v4, v0
+  0064..0068 op=1a const-string v1, "start_time"
+  0068..006c op=13 const/16 v0, #0x9
+  006c..0070 op=4d aput-object v1, v4, v0
+  0070..0074 op=1a const-string v1, "inline_payload"
+  0074..0078 op=13 const/16 v0, #0xa
+  0078..007c op=4d aput-object v1, v4, v0
+  007c..0080 op=1a const-string v1, "enc_handle"
+  0080..0084 op=13 const/16 v0, #0xb
+  0084..0088 op=4d aput-object v1, v4, v0
+  0088..008c op=69 sput-object v4, LX/1sl;->A01:[Ljava/lang/String;
+  008c..0090 op=1a const-string v3, " = ?,"
+  0090..0094 op=1a const-string v2, ""
+  0094..0098 op=1a const-string v1, " = ? "
+  0098..009a op=12 const/4 v0, #0x0
+  009a..00a0 op=71 invoke-static {v3, v2, v1, v0, v4}, LX/08J;->A0J(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;[Ljava/lang/Object;)Ljava/lang/String;
+  00a0..00a2 op=0c move-result-object v1
+  00a2..00a6 op=1a const-string v0, "UPDATE history_sync_companion SET "
+  00a6..00ac op=71 invoke-static {v0, v1}, LX/000;->A08(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00ac..00ae op=0c move-result-object v1
+  00ae..00b2 op=1a const-string v0, " WHERE message_id = ?"
+  00b2..00b8 op=71 invoke-static {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+  00b8..00ba op=0c move-result-object v0
+  00ba..00be op=69 sput-object v0, LX/1sl;->A00:Ljava/lang/String;
+  00be..00c0 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
