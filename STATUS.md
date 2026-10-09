@@ -1,5 +1,13 @@
 # Status — 2026-10-07
 
+Identity-only peer prerequisite (2026-10-09, **confirmed local**): public
+query/inspection now refuses an empty peer user before reading or saving action
+state; shared primary-address matching also refuses server-only values. The
+regression failed before the fix and covers PN/LID, Plain/AD encodings, unchanged
+pins/sessions/checkpoints and reopening without replay of an uncertain query.
+This is our input guard, not a WhatsApp refusal; no real account or live change.
+[Evidence and limits](docs/protocol/peer-identity.md#empty-peer-user-refusal-2026-10-09).
+
 Receipt ACK state boundary (2026-10-09, **confirmed static/local**): APK
 37.71 DDH preserves ACK status 10/12 and zero time; selected ordinary items
 can reach 15A.A07 with a null callback through Cmn. Permanent-failure status

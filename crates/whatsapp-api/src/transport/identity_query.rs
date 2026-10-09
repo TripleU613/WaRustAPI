@@ -15,6 +15,13 @@ fn invalid(message: &str) -> Error {
     Error::invalid("identity_query", message)
 }
 fn validate(peer: &Jid) -> Result<()> {
+    // Jid permits server-only addresses for IQ destinations. This operation
+    // needs a peer user (37.71 DNy.run identity/user); see peer-identity.md.
+    if peer.user.is_empty() {
+        return Err(invalid(
+            "requires a nonempty peer user; server-only JID is not a peer",
+        ));
+    }
     if peer.device != 0
         || peer.agent != 0
         || !matches!(peer.server, Server::User | Server::Lid)
@@ -31,7 +38,8 @@ pub(super) fn same_primary_address(candidate: &Jid, expected: &Jid) -> bool {
     // contact reply established AD_JID-zero primary encoding; DF6.C8f's
     // identity query correlation is our local guard. Keep every address
     // component and namespace exact without making encoding an identity.
-    matches!(candidate.kind, JidKind::Plain | JidKind::AgentDevice)
+    !candidate.user.is_empty()
+        && matches!(candidate.kind, JidKind::Plain | JidKind::AgentDevice)
         && matches!(expected.kind, JidKind::Plain | JidKind::AgentDevice)
         && candidate.user == expected.user
         && candidate.server == expected.server
@@ -261,6 +269,79 @@ pub fn inspect(store: &ProtocolStore, peer: &Jid) -> Result<Option<IdentityQuery
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn server_only_addresses_refuse_before_query_state_and_preserve_reservations() {
+        for server in [Server::User, Server::Lid] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("server-only.redb");
+            let store = open(&path);
+            let valid = peer();
+            let id = queue(&store, &valid).unwrap();
+            actions::reserve_pending(&store).unwrap();
+            let selector = format!("comparison-direct:{valid}");
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::PeerIdentities,
+                        selector.as_bytes(),
+                        1,
+                        &vec![5u8; 33],
+                    )?;
+                    tx.put_json(
+                        Table::SignalSessions,
+                        selector.as_bytes(),
+                        1,
+                        &vec![7u8; 19],
+                    )
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| {
+                    [
+                        Table::Checkpoints,
+                        Table::PeerIdentities,
+                        Table::SignalSessions,
+                    ]
+                    .into_iter()
+                    .map(|table| tx.scan_after(table, 1, None, 1024))
+                    .collect::<Result<Vec<_>>>()
+                })
+                .unwrap();
+            let mut empty = valid.clone();
+            empty.user.clear();
+            empty.server = server;
+            for kind in [JidKind::Plain, JidKind::AgentDevice] {
+                empty.kind = kind;
+                assert!(queue(&store, &empty).is_err());
+                assert!(inspect(&store, &empty).is_err());
+                assert!(!same_primary_address(&empty, &empty));
+            }
+            assert_eq!(
+                store
+                    .read(|tx| {
+                        [
+                            Table::Checkpoints,
+                            Table::PeerIdentities,
+                            Table::SignalSessions,
+                        ]
+                        .into_iter()
+                        .map(|table| tx.scan_after(table, 1, None, 1024))
+                        .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap(),
+                before
+            );
+            drop(store);
+            let store = open(&path);
+            assert_eq!(queue(&store, &valid).unwrap(), id);
+            assert!(actions::reserve_pending(&store).unwrap().is_empty());
+            assert_eq!(
+                inspect(&store, &valid).unwrap().unwrap().status,
+                IdentityQueryStatus::OutcomeUnknown
+            );
+        }
+    }
+
     use super::*;
     use crate::{
         model::ids::AccountId,

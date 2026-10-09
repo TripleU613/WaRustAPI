@@ -2644,3 +2644,39 @@ token storage, authenticated identity archival and sender-key exposure policy
 are unchanged; native receipt caches are not receipt-outbox ACK reservations.
 No private state or server request was changed. [Full source and next port
 boundaries](identity-receipts.md).
+
+## Empty peer user refusal (2026-10-09)
+
+**Confirmed local bug/fix:** identity_query::queue and inspect accepted a Jid
+with empty user, zero agent/device, PN or LID server and Plain/AgentDevice kind.
+The generic Jid model allows server-only addresses for server destinations, but
+the identity-only operation needs a peer user. Its old namespace/component
+validation did not establish that prerequisite. A regression failed before the
+fix because queue accepted the empty-user input. This corrects the earlier
+primary-input claim: it lacked the nonempty-user guard.
+
+Both entry points now return the fixed local diagnostic `requires a nonempty
+peer user; server-only JID is not a peer` before reading markers or saving any
+action. The shared same_primary_address helper also returns false for empty
+users, including two identical empty values. Supported Plain/AD_JID-zero peer
+forms still share identity and the original once-only action selector; PN/LID
+namespaces remain separate. No malformed historical marker is reset or replayed.
+
+**Confirmed static context:** APK 2.26.37.71 (SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`)
+DNy.run case 40 constructs encrypt/identity/user for a UserJid, as retained in
+the [identity-only query trace](cross-device-sync.md#primary-identity-only-query-2026-10-07).
+This correction is our public-API prerequisite, not an observed server refusal
+or proof of the native wire parser's behavior on malformed input. No new APK
+behavior is inferred and no identity is adopted by a directory query.
+
+The synthetic-store test covers both namespaces and both supported encodings,
+unchanged checkpoints/pin/session rows, reopening, the original valid query ID
+and preservation of its outcome_unknown reservation without replay. No real
+account, identity, wait or network request was changed.
+
+Empty-user validation passed: 814 workspace/all-feature tests (679 API, four
+property, nine crash, 52 CLI, one API-symbol and 69 xtask); strict workspace
+all-target Clippy; Rustdoc with warnings denied; CLI-reference regeneration;
+API-symbol checks; formatting and whitespace. The tests exercise local refusal
+and preservation, not a new live identity transition.
