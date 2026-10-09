@@ -1,5 +1,13 @@
 # Messaging completion checklist
 
+History mode provenance (2026-10-09, **confirmed static**): APK 37.71
+BMv reads positive registration_device_id from preferences; BNm tests loaded
+Me presence. These are separate from own-user equality, registration state and
+linked-device authentication. An eight-topic snapshot retains mode/getter/setter
+and the bounded completion-handler source. Full pairing/crypto and receipt_user
+admission remain unfinished. No runtime, account state or live request changed.
+[Evidence and limits](protocol/history-mode.md).
+
 History queue admission (2026-10-09, **confirmed static**): APK 37.71
 stages history chunks in the peer handler after own-user and companion-mode
 checks. SQL insertion-constraint recovery updates the original message ID;

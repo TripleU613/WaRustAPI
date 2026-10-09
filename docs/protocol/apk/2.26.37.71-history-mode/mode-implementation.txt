@@ -1,0 +1,37 @@
+# APK-derived structural disassembly: LX/08i;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method BMw(ZZ) flags=0x1 registers=7
+  # full signature: LX/08i;->BMw(Z)Z
+  0000..0006 op=6e invoke-virtual {v5}, LX/08i;->A09()V
+  0006..000a op=54 iget-object v0, v5, LX/08i;->A0A:LX/08m;
+  000a..000e op=39 if-nez v6, +0x12
+  000e..0012 op=54 iget-object v0, v0, LX/08m;->A01:LX/08n;
+  0012..0016 op=54 iget-object v2, v0, LX/08n;->A00:Landroid/content/SharedPreferences;
+  0016..001a op=1a const-string v1, "registration_device_id"
+  001a..001c op=12 const/4 v0, #0x0
+  001c..0022 op=72 invoke-interface {v2, v1, v0}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+  0022..0024 op=0a move-result v1
+  0024..0026 op=12 const/4 v0, #0x0
+  0026..002a op=3d if-lez v1, +0x3
+  002a..002c op=12 const/4 v0, #0x1
+  002c..002e op=0f return v0
+  002e..0032 op=54 iget-object v4, v0, LX/08m;->A02:Ljava/util/concurrent/atomic/AtomicInteger;
+  0032..0038 op=6e invoke-virtual {v4}, Ljava/util/concurrent/atomic/AtomicInteger;->get()I
+  0038..003a op=0a move-result v1
+  003a..003e op=15 const/high16 v3, #0x80000000
+  003e..0042 op=33 if-ne v1, v3, -0xd
+  0042..0046 op=54 iget-object v0, v0, LX/08m;->A01:LX/08n;
+  0046..004a op=54 iget-object v2, v0, LX/08n;->A00:Landroid/content/SharedPreferences;
+  004a..004e op=1a const-string v1, "registration_device_id"
+  004e..0050 op=12 const/4 v0, #0x0
+  0050..0056 op=72 invoke-interface {v2, v1, v0}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+  0056..0058 op=0a move-result v0
+  0058..005e op=6e invoke-virtual {v4, v3, v0}, Ljava/util/concurrent/atomic/AtomicInteger;->compareAndSet(II)Z
+  005e..0064 op=6e invoke-virtual {v4}, Ljava/util/concurrent/atomic/AtomicInteger;->get()I
+  0064..0066 op=0a move-result v1
+  0066..0068 op=28 goto -0x21
+  # exception table: 0 try range(s)
+.end method

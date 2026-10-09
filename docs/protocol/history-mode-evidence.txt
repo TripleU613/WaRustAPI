@@ -1,0 +1,27 @@
+APK 2.26.37.71, SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Exact anchor references and physical setter calls; not all preference writes, reflection or upstream trust.
+
+["registration_device_id"]  (7 reference(s))
+  classes9.dex  LX/GEu;->A02(VLLZ)
+    dex byte offset: 0x392e1a
+  classes.dex  LX/08i;->Apt(I)
+    dex byte offset: 0x4601c0
+  classes.dex  LX/08i;->BMw(ZZ)
+    dex byte offset: 0x460682
+  classes.dex  LX/08i;->BMw(ZZ)
+    dex byte offset: 0x4606b6
+  classes.dex  LX/08m;->A00(VI)
+    dex byte offset: 0x4633ac
+  classes.dex  LX/0g1;->A0b(ZL)
+    dex byte offset: 0x6389bc
+  classes.dex  LX/1LA;->AAT(VLL)
+    dex byte offset: 0x8a2e92
+
+classes.dex  LX/08i;->A01(VLL)
+  invoke dex byte offset: 0x45f8e0
+classes.dex  LX/08i;->A01(VLL)
+  invoke dex byte offset: 0x45f900
+classes.dex  LX/11J;->BFC(ZLI)
+  invoke dex byte offset: 0x799b84
+
+Negative: apk-smali LX/08l; filtered BO0 and BMv returned no method bodies. Prior own-identity.md already identified 08i and 08a implementations; this negative is not proof the interface methods do not exist.

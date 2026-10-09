@@ -1,0 +1,15 @@
+# APK-derived structural disassembly: LX/08i;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method BNm(Z) flags=0x1 registers=3
+  # full signature: LX/08i;->BNm()Z
+  0000..0006 op=6e invoke-virtual {v2}, LX/08i;->A09()V
+  0006..000a op=54 iget-object v1, v2, LX/08i;->A0F:Lcom/whatsapp/Me;
+  000a..000c op=12 const/4 v0, #0x0
+  000c..0010 op=38 if-eqz v1, +0x3
+  0010..0012 op=12 const/4 v0, #0x1
+  0012..0014 op=0f return v0
+  # exception table: 0 try range(s)
+.end method

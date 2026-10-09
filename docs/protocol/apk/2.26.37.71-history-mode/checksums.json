@@ -1,0 +1,50 @@
+{
+  "companion-registration-handler.txt": {
+    "bytes": 108530,
+    "sha256": "b2055f50c1d0a68daad9a12eee60fde25749745073c298501ab5530168388472"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "me-presence.txt": {
+    "bytes": 675,
+    "sha256": "8bc02d13723fdb7c9d490604d5a9a7bcd1bb87a0b19229211b1abeda252510ac"
+  },
+  "mode-implementation.txt": {
+    "bytes": 2069,
+    "sha256": "03ce7701adbaab785bab672b20b60b21b7cb2b6c5da438303a1e2480f6421df6"
+  },
+  "mode-predicate.txt": {
+    "bytes": 573,
+    "sha256": "18a5607a2c0a6d78cea805f36f9312cfbc79942f88ffd4e3b6e59f215597544e"
+  },
+  "proxy-me-presence.txt": {
+    "bytes": 592,
+    "sha256": "f5c1fcfeb14e3d326a560aebf3cb060fcba2122403e7b10ef499153201af6dde"
+  },
+  "proxy-mode.txt": {
+    "bytes": 633,
+    "sha256": "301b58eea320359df0a08cfca8c46901f1f81793b68f7dc82a4d6ad0d532cb03"
+  },
+  "registration-device-getter.txt": {
+    "bytes": 897,
+    "sha256": "689681b53425b7d1736f590d0e9ddfa8121dd9e3db8d5453bd4d45723e7e999a"
+  },
+  "registration-device-store.txt": {
+    "bytes": 3220,
+    "sha256": "8a848eee74f3f60024ac1390234be9970698de53a86e38b761187860ee00f832"
+  },
+  "targets.json": {
+    "bytes": 3146,
+    "sha256": "838581be0a6d70ee39285f1501f6e1056f83888774ee48edd257687cdc3072e0"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

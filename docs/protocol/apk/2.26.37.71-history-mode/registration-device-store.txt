@@ -1,0 +1,55 @@
+# APK-derived structural disassembly: LX/08m;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(V) flags=0x10001 registers=5
+  # full signature: LX/08m;-><init>()V
+  0000..0004 op=13 const/16 v0, #0x6e
+  0004..000a op=71 invoke-static {v0}, LX/00C;->A02(I)Ljava/lang/Object;
+  000a..000c op=0c move-result-object v3
+  000c..0010 op=1f check-cast v3, LX/08n;
+  0010..0014 op=13 const/16 v0, #0xe5
+  0014..001a op=71 invoke-static {v0}, LX/00C;->A02(I)Ljava/lang/Object;
+  001a..001c op=0c move-result-object v2
+  001c..0020 op=1f check-cast v2, LX/08s;
+  0020..0026 op=70 invoke-direct {v4}, Ljava/lang/Object;-><init>()V
+  0026..002a op=15 const/high16 v1, #0x80000000
+  002a..002e op=22 new-instance v0, Ljava/util/concurrent/atomic/AtomicInteger;
+  002e..0034 op=70 invoke-direct {v0, v1}, Ljava/util/concurrent/atomic/AtomicInteger;-><init>(I)V
+  0034..0038 op=5b iput-object v0, v4, LX/08m;->A02:Ljava/util/concurrent/atomic/AtomicInteger;
+  0038..003c op=5b iput-object v3, v4, LX/08m;->A01:LX/08n;
+  003c..0040 op=5b iput-object v2, v4, LX/08m;->A00:LX/08s;
+  0040..0042 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method A00(VI) flags=0x1 registers=4
+  # full signature: LX/08m;->A00(I)V
+  0000..0004 op=54 iget-object v0, v2, LX/08m;->A01:LX/08n;
+  0004..0008 op=54 iget-object v0, v0, LX/08n;->A00:Landroid/content/SharedPreferences;
+  0008..000e op=72 invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+  000e..0010 op=0c move-result-object v1
+  0010..0014 op=1a const-string v0, "registration_device_id"
+  0014..001a op=72 invoke-interface {v1, v0, v3}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+  001a..001c op=0c move-result-object v0
+  001c..0022 op=72 invoke-interface {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+  0022..0026 op=54 iget-object v0, v2, LX/08m;->A02:Ljava/util/concurrent/atomic/AtomicInteger;
+  0026..002c op=6e invoke-virtual {v0, v3}, Ljava/util/concurrent/atomic/AtomicInteger;->set(I)V
+  002c..002e op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method A01(VI) flags=0x1 registers=4
+  # full signature: LX/08m;->A01(I)V
+  0000..0004 op=54 iget-object v0, v2, LX/08m;->A01:LX/08n;
+  0004..0008 op=54 iget-object v0, v0, LX/08n;->A00:Landroid/content/SharedPreferences;
+  0008..000e op=72 invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+  000e..0010 op=0c move-result-object v1
+  0010..0014 op=1a const-string v0, "companion_registration_state"
+  0014..001a op=72 invoke-interface {v1, v0, v3}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+  001a..001c op=0c move-result-object v0
+  001c..0022 op=72 invoke-interface {v0}, Landroid/content/SharedPreferences$Editor;->commit()Z
+  0022..0024 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

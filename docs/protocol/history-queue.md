@@ -15,9 +15,10 @@ non-Continue responses can stop processing before the peer branch. At
 015a..0172 it compares Bp2.A0D against the string `peer`. The peer path obtains
 the message's A0p DeviceJid, takes its userJid and checks 08Z.BO0(user)
 (017c..01be) before subtype handling. This is a native own-user predicate,
-not a test that any PN and LID attributes are interchangeable. Its complete
-implementation, active account settings and upstream message authentication
-are **unknown** here.
+not a test that any PN and LID attributes are interchangeable. The predicate
+implementations and stored PN/LID sources were already traced in
+[stored own identity](own-identity.md). Full source import/repair, active
+account settings and upstream message authentication remain **unknown**.
 
 The Bng subtype branch at 09da identifies itself as
 `PeerMessageHandler/handleHistorySyncNoticationMessage`. It then calls
@@ -108,3 +109,9 @@ cargo run -p xtask -- apk-research-diff \
 ```
 
 The checks verify reproducible static evidence, not live sync parity.
+
+## Mode predicate follow-up (2026-10-09)
+
+[Stored companion mode](history-mode.md) traces BMv to the positive saved
+registration_device_id and BNm to loaded Me presence. Neither replaces complete
+linked-device authentication; no mode or queue state was changed.
