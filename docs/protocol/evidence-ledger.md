@@ -1,5 +1,12 @@
 # Evidence ledger
 
+Read-setting observer binding (2026-10-09, **confirmed static**): sixteen
+source topics connect generated observer membership to DK9 and distinguish
+category/value Bsa from empty list callback C5W. Its read-work scan uses saved
+read/receipt positions before played-receipt work; selection is not transmission.
+Full sender/other-observer authority remains unknown; no runtime or live change.
+[Evidence and limits](read-setting-observers.md).
+
 Read-setting pending lifecycle (2026-10-09, **confirmed static**): eight
 source topics bind the shared 20-second main-Handler runnable to clearing all
 pending settings and notifying observers, without a preference write or resend

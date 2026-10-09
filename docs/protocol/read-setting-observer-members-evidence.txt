@@ -1,0 +1,19 @@
+APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed static raw fixture, classes.dex LX/07A;-><clinit>()V
+Method instruction base derived from exact field-write xref: 0x382bfc
+
+Method-relative bytes 0x0..0x8, DEX bytes 0x382bfc..0x382c04:
+12 02 12 14 12 2a 12 39
+
+Method-relative bytes 0x8618..0x863a, DEX bytes 0x38b214..0x38b236:
+23 9b e6 4e 13 00 46 1a 4b 00 0b 02 14 00 58 82 01 00 4b 00 0b 04 13 00 65 10 4b 00 0b 0a 69 0b 36 05
+
+Register constants: v2=0, v4=1, v10=2, v9=3.
+Array A6P: [0x1a46, 0x18258, 0x1065] = [6726, 98904, 4197].
+
+Physical constructor and member-field xrefs (same build):
+classes7.dex  LX/Ayr;->A00(LILL)
+  invoke dex byte offset: 0x3bf0d0
+
+classes.dex  LX/07A;-><clinit>(V)
+  write opcode 0x69, dex byte offset: 0x38b232

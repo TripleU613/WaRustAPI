@@ -110,3 +110,8 @@ CLI-reference regeneration/coverage, OpenAPI library-symbol coverage, formatting
 whitespace and repository hygiene passed (1,865 local links; 80 checksum bundles).
 No Rust behavior changed, so workspace runtime tests were not repeated and these
 static checks do not establish live settings or primary-cleanup parity.
+
+Follow-up: [observer bindings and callbacks](read-setting-observers.md) now
+connects the generated member set to DK9, distinguishes Bsa from its empty C5W,
+and narrows saved read-candidate selection. Complete other observers, threading
+and final send behavior remain unknown.
