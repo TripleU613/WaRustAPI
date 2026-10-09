@@ -174,3 +174,11 @@ noncapture inspection stayed unchanged. Transport capture rows increased from
 442 to 446; these are not four user messages. All seven saved group summaries
 stayed unchanged with zero tracked participant receipt devices. No fresh group
 receipt established live attribution, and no uncertain send was replayed.
+
+2026-10-09 — **Confirmed local/static:** normal-outbox receipt attribution now
+prefers [exact original targets](send-version-snapshot.md#exact-original-device-provenance-subsequent-port)
+saved with the original reservation. Envelope sender-key recipients must be a
+subset. Historical count-only/missing snapshots retain wire-only attribution.
+The current Rust builder distributes SKDMs to every plan device; omitted SKDM
+recipients are covered by native-shaped fixtures, not a claimed current live bug.
+Full native receipt cache/cleanup remains unported.

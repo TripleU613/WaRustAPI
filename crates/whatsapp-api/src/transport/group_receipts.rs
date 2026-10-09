@@ -122,7 +122,12 @@ fn saved_targets(saved: &serde_json::Value, chat: &Jid, id: &str) -> Result<Opti
     }
     Ok(embedded)
 }
-fn entry_targets(entry: &OutboxEntry, chat: &Jid, id: &str) -> Result<Option<Vec<Jid>>> {
+fn entry_targets(
+    tx: &WriteTx<'_>,
+    entry: &OutboxEntry,
+    chat: &Jid,
+    id: &str,
+) -> Result<Option<Vec<Jid>>> {
     // The original prepared envelope is durable; mutable membership is not
     // evidence of which devices this particular send addressed.
     let Some(wire) = entry
@@ -134,7 +139,24 @@ fn entry_targets(entry: &OutboxEntry, chat: &Jid, id: &str) -> Result<Option<Vec
     };
     let node = decode_wire(wire)?;
     check_wire(&node, chat, id)?;
-    wire_targets(&node)
+    let embedded = wire_targets(&node)?;
+    // The participants list distributes sender keys, not necessarily the full
+    // group target set. APK 37.71 0Z5.A0D captures every actual receipt device;
+    // our original reservation records all plan.devices in send_versions.
+    if let Some(targets) = super::send_versions::targets_in(tx, entry.local_id)? {
+        if embedded.as_ref().is_some_and(|list| {
+            list.iter()
+                .any(|target| !targets.iter().any(|held| plain(held) == plain(target)))
+        }) {
+            return Err(invalid(
+                "saved sender-key targets exceed original device plan",
+            ));
+        }
+        return Ok(Some(targets));
+    }
+    // Legacy sends have no full target instrumentation. Keep only their known
+    // original wire recipients; mutable current membership cannot fill the gap.
+    Ok(embedded)
 }
 fn targeted(tx: &WriteTx<'_>, from: &Jid, targets: &[Jid]) -> Result<bool> {
     for target in targets {
@@ -207,7 +229,7 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
                 if plain(entry.intent.chat.jid()) != plain(&chat) {
                     continue;
                 }
-                let Some(targets) = entry_targets(&entry, &chat, id)? else {
+                let Some(targets) = entry_targets(tx, &entry, &chat, id)? else {
                     continue;
                 };
                 if targeted(tx, &from, &targets)?
@@ -493,6 +515,105 @@ mod tests {
         summary(store, &ClientRequestId::new(id).unwrap())
             .unwrap()
             .unwrap()
+    }
+
+    #[test]
+    fn group_receipts_full_plan_includes_devices_without_sender_key_children() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("full-plan.redb");
+        let store = open(&path, true);
+        let primary = Jid::parse(PN).unwrap();
+        let companion = primary.with_device(3);
+        let lid = Jid::parse(LID).unwrap();
+        let targets = [primary.clone(), companion.clone(), lid.clone()];
+        let local = queued(&store, "full-plan-wire", std::slice::from_ref(&primary));
+        store
+            .write(|tx| super::super::send_versions::capture_in(tx, local, &targets))
+            .unwrap();
+        let outbox = Outbox::new("observer", Limits::default());
+        let before = store.read(|tx| outbox.get(tx, local)).unwrap().unwrap();
+        for target in [&companion, &lid] {
+            let node = receipt("full-plan-wire", &target.to_string(), "delivery");
+            assert_eq!(record(&store, &node).unwrap(), 1);
+            assert_eq!(record(&store, &node).unwrap(), 0);
+        }
+        assert_eq!(
+            record(
+                &store,
+                &receipt(
+                    "full-plan-wire",
+                    &primary.with_device(4).to_string(),
+                    "read"
+                )
+            )
+            .unwrap(),
+            0
+        );
+        let after = store.read(|tx| outbox.get(tx, local)).unwrap().unwrap();
+        assert_eq!(after.attempts, before.attempts);
+        assert_eq!(after.progress, before.progress);
+        assert_eq!(after.wire_id, before.wire_id);
+        assert_eq!(after.facts.len(), before.facts.len() + 2);
+        let versions = super::super::send_versions::inspect(&store, local).unwrap();
+        assert_eq!(
+            versions
+                .users
+                .iter()
+                .map(|u| u.device_targets.as_ref().unwrap().len())
+                .sum::<usize>(),
+            3
+        );
+        drop(store);
+        let store = open(&path, false);
+        assert_eq!(
+            record(
+                &store,
+                &receipt("full-plan-wire", &companion.to_string(), "delivery")
+            )
+            .unwrap(),
+            0
+        );
+        assert_eq!(
+            super::super::send_versions::inspect(&store, local).unwrap(),
+            versions
+        );
+    }
+
+    #[test]
+    fn group_receipts_refuse_conflicting_full_plan_and_preserve_legacy_unknown_targets() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("conflict-plan.redb"), true);
+        let primary = Jid::parse(PN).unwrap();
+        let companion = primary.with_device(3);
+        let local = queued(&store, "conflicting-wire", std::slice::from_ref(&primary));
+        store
+            .write(|tx| {
+                super::super::send_versions::capture_in(tx, local, std::slice::from_ref(&companion))
+            })
+            .unwrap();
+        let before = store.read(|tx| tx.scan(Table::Outbox, 1, 100)).unwrap();
+        let error = record(&store, &receipt("conflicting-wire", PN, "delivery"))
+            .unwrap_err()
+            .to_string();
+        assert!(error.contains("sender-key targets exceed original device plan"));
+        assert!(!error.contains(PN));
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Outbox, 1, 100)).unwrap(),
+            before
+        );
+        queued(&store, "legacy-wire", std::slice::from_ref(&primary));
+        assert_eq!(
+            record(
+                &store,
+                &receipt("legacy-wire", &companion.to_string(), "delivery")
+            )
+            .unwrap(),
+            0
+        );
+        assert_eq!(
+            record(&store, &receipt("legacy-wire", PN, "delivery")).unwrap(),
+            1
+        );
     }
 
     #[test]

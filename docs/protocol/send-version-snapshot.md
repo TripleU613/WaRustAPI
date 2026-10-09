@@ -13,8 +13,9 @@ gated absent-to-1 exception. These inputs must survive the original send.
 **Confirmed local:** send_versions::capture_in now records one immutable
 snapshot under the existing local message ID, in the normal comparison adapters.
 Direct preparation captures its actual pairwise target. Group preparation uses
-all frozen plan.devices, including devices not needing another sender-key
-message. Unique device components determine each user's device count; wire kind
+all frozen plan.devices. Current Rust fanout prepares a sender-key distribution
+for every device; the native protocol can separate distribution recipients
+from its full receipt-device target set. Unique device components determine each user's device count; wire kind
 alone does not split the same user/device. Exact User/LID namespaces stay separate.
 Unsupported namespaces, agents, empty users and empty target sets refuse.
 
@@ -32,7 +33,7 @@ later receipt transaction. No new native cache/transaction ordering is inferred.
 ## Known null versus unknown history
 
 The snapshot privately stores actual normalized user identities, unique device
-counts and explicit nullable signed-long versions in encrypted account storage.
+counts, optional exact device IDs and explicit nullable signed-long versions in encrypted account storage.
 A known absent counter serializes as null. A missing JSON version member is
 malformed and refuses; it must not silently deserialize into known-null state.
 A missing entire snapshot means historical/unprepared instrumentation is unknown.
@@ -98,3 +99,54 @@ receipt-device cache membership, subtracts it from refreshed candidates, then
 applies version and final target filters. That cache may change through native
 identity cleanup. The immutable user counts here cannot stand in for its
 per-device membership or authorize any native resend selection.
+
+## Exact original device provenance (subsequent port)
+
+**Confirmed local/static:** new captures now include sorted, unique device IDs
+for each actual normalized user namespace. These commit with the original
+nullable counters and reservation. Existing count-only snapshots remain readable
+with device_targets=null; no device is inferred from the count, wire list or
+current membership. Mixed known/unknown rows, duplicates, unsorted IDs, count
+mismatches, out-of-range/noninteger IDs and malformed rows refuse without echo.
+
+The existing outbox-versions inspection now adds device_targets per user. Each
+row exposes only device (zero for primary) and a SHA-256 device_ticket of the
+normalized exact address; raw phone/LID values remain private. Wire kind alone
+does not split a device, while namespace and device component do.
+
+**Confirmed local receive correction:** group_receipts::entry_targets now uses
+this complete original plan when present. It still validates the original
+message's chat/ID/envelope and requires any participants/to sender-key children
+to be a subset of that plan. A receipt for a planned device can therefore match
+when that device has no sender-key child. Unplanned devices remain excluded;
+PN/LID matches retain the existing authenticated association guard and actual
+receipt actor. Old/missing target instrumentation falls back to only the known
+wire distribution recipients, not invented full membership. Conflicting wire
+and plan refuse atomically. Existing attempts/IDs/progress and uncertainty facts
+are retained, and duplicates remain once-only after reopening.
+
+**Negative current-builder audit:** group_fanout::Snapshot::prepare_policy loops
+over every self.targets entry and prepares an SKDM for each. Its current normal
+group envelopes therefore include every plan device. Missing-SKDM target
+attribution is a native-shaped fixture case and future compatibility gap, not a
+claimed reproduced failure of current live Rust sends.
+
+**Evidence:** APK 37.71 0Z5.A0D/DPo.invoke seed actual device rows separately
+from the distribution envelope; SyncDeviceAndResendMessageJob.A0G subtracts
+receipt-cache membership before version filtering. See [the trace](sync-resend.md).
+The exact immutable original plan implemented here is provenance, not the
+native mutable receipt cache: receipt row timestamps/insertion/deletion and
+identity-cleanup lifecycle remain unported. No live resend or new message was
+authorized by the target list.
+
+Exact-device validation: all 798 workspace/all-feature tests passed (668 API,
+4 property, 9 crash, 51 CLI, 1 API-symbol and 65 xtask), alongside strict
+Clippy, warning-denying Rustdoc, 26 default CLI checks, CLI-reference/API checks,
+formatting and experimental CLI build. Hygiene checked 1,329 local links and
+26 APK bundles / 7,808,872 bytes. Native-shaped subset/contradiction fixtures
+cover planned companions, unplanned devices, immutable send state, reopening
+and legacy wire-only fallback. Old count-only snapshots remain readable;
+malformed device IDs refuse with redacted diagnostics.
+Offline retained-profile CLI checks left store inspection and queued intents
+unchanged. No retained group preparations existed to inspect; no new live
+message or native pending receipt cache is claimed from these fixtures.

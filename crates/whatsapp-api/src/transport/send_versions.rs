@@ -28,6 +28,9 @@ struct CapturedUser {
     devices: usize,
     #[serde(deserialize_with = "nullable_version")]
     version: Option<i64>,
+    // Legacy snapshots retain counts only; never reconstruct their addresses.
+    #[serde(default)]
+    device_ids: Option<Vec<u16>>,
 }
 
 // A missing JSON member is malformed, distinct from an explicit null counter.
@@ -37,6 +40,15 @@ fn nullable_version<'de, D: serde::Deserializer<'de>>(
     Option::<i64>::deserialize(d)
 }
 
+/// One actual frozen target device, with its address redacted.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct DeviceTarget {
+    /// SHA-256 of the normalized exact device address.
+    pub device_ticket: String,
+    /// Original device component; zero identifies the primary device.
+    pub device: u16,
+}
+
 /// Redacted relationship of one actual send target's user to current state.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct UserVersion {
@@ -44,6 +56,8 @@ pub struct UserVersion {
     pub user_ticket: String,
     /// Number of unique actual target devices for this user at reservation.
     pub devices: usize,
+    /// Exact frozen targets, or null for legacy count-only instrumentation.
+    pub device_targets: Option<Vec<DeviceTarget>>,
     /// Known missing counter is null; historical missing snapshots have no rows.
     pub at_send: Option<i64>,
     /// Current tracked counter in this exact namespace, or null when absent.
@@ -103,6 +117,7 @@ pub(super) fn capture_in(tx: &mut WriteTx<'_>, id: LocalMessageId, targets: &[Ji
         snapshot.users.push(CapturedUser {
             user,
             devices: devices.len(),
+            device_ids: Some(devices.iter().map(|d| d.device).collect()),
             version,
         });
     }
@@ -113,37 +128,93 @@ pub(super) fn capture_in(tx: &mut WriteTx<'_>, id: LocalMessageId, targets: &[Ji
     tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &snapshot)
 }
 
+fn decode_snapshot(bytes: Option<Vec<u8>>) -> Result<Option<Snapshot>> {
+    let snapshot: Option<Snapshot> = bytes
+        .map(|bytes| {
+            serde_json::from_slice(&bytes).map_err(|_| invalid("invalid saved version snapshot"))
+        })
+        .transpose()?;
+    if let Some(snapshot) = &snapshot {
+        if snapshot.users.is_empty() {
+            return Err(invalid("saved version snapshot is empty"));
+        }
+        let mut seen = BTreeSet::new();
+        let known = snapshot.users[0].device_ids.is_some();
+        for row in &snapshot.users {
+            if !primary(&row.user) || row.devices == 0 || !seen.insert(&row.user) {
+                return Err(invalid("invalid saved version snapshot user"));
+            }
+            if row.device_ids.is_some() != known {
+                return Err(invalid("inconsistent saved device target provenance"));
+            }
+            if let Some(ids) = &row.device_ids
+                && (ids.len() != row.devices || ids.windows(2).any(|w| w[0] >= w[1]))
+            {
+                return Err(invalid("invalid saved device targets"));
+            }
+        }
+    }
+    Ok(snapshot)
+}
+fn device(user: &Jid, id: u16) -> Jid {
+    let mut target = user.clone();
+    target.device = id;
+    target
+}
+
+/// Original targets for receipt attribution, not current membership or resend
+/// permission. Missing/legacy count-only instrumentation remains unknown.
+pub(super) fn targets_in(tx: &WriteTx<'_>, id: LocalMessageId) -> Result<Option<Vec<Jid>>> {
+    let Some(snapshot) = decode_snapshot(tx.get(Table::Checkpoints, key(id).as_bytes(), 1)?)?
+    else {
+        return Ok(None);
+    };
+    if snapshot.users[0].device_ids.is_none() {
+        return Ok(None);
+    }
+    Ok(Some(
+        snapshot
+            .users
+            .into_iter()
+            .flat_map(|row| {
+                row.device_ids
+                    .unwrap()
+                    .into_iter()
+                    .map(move |id| device(&row.user, id))
+            })
+            .collect(),
+    ))
+}
+
 /// Inspect one existing outbox intent without queries, writes or resend decisions.
 pub fn inspect(store: &ProtocolStore, id: LocalMessageId) -> Result<SendVersions> {
     store.read(|tx| {
         Outbox::new("comparison-driver", Limits::default())
             .get(tx, id)?
             .ok_or_else(|| invalid("unknown outbox intent"))?;
-        let snapshot: Option<Snapshot> = tx
-            .get(Table::Checkpoints, key(id).as_bytes(), 1)?
-            .map(|bytes| {
-                serde_json::from_slice(&bytes)
-                    .map_err(|_| invalid("invalid saved version snapshot"))
-            })
-            .transpose()?;
+        let snapshot = decode_snapshot(tx.get(Table::Checkpoints, key(id).as_bytes(), 1)?)?;
         let mut result = SendVersions {
             local_id: id,
             captured: snapshot.is_some(),
             users: Vec::new(),
         };
         if let Some(snapshot) = snapshot {
-            if snapshot.users.is_empty() {
-                return Err(invalid("saved version snapshot is empty"));
-            }
-            let mut seen = BTreeSet::new();
             for row in snapshot.users {
-                if !primary(&row.user) || row.devices == 0 || !seen.insert(row.user.clone()) {
-                    return Err(invalid("invalid saved version snapshot user"));
-                }
                 let current = super::devices::primary_device_version_in(tx, &row.user)?;
+                let device_targets = row.device_ids.map(|ids| {
+                    ids.into_iter()
+                        .map(|id| DeviceTarget {
+                            device_ticket: hex::encode(Sha256::digest(
+                                device(&row.user, id).to_string().as_bytes(),
+                            )),
+                            device: id,
+                        })
+                        .collect()
+                });
                 result.users.push(UserVersion {
                     user_ticket: hex::encode(Sha256::digest(row.user.to_string().as_bytes())),
                     devices: row.devices,
+                    device_targets,
                     at_send: row.version,
                     current,
                     matches: row.version == current,
@@ -232,6 +303,15 @@ mod tests {
             before
                 .users
                 .iter()
+                .all(|u| u.device_targets.as_ref().unwrap().len() == u.devices)
+        );
+        let targets = store.write(|tx| targets_in(tx, id)).unwrap().unwrap();
+        assert_eq!(targets.len(), 4);
+        assert!(targets.iter().all(|j| j.kind == JidKind::Plain));
+        assert!(
+            before
+                .users
+                .iter()
                 .any(|u| u.at_send.is_none() && u.current.is_none() && u.devices == 2 && u.matches)
         );
         assert!(
@@ -281,6 +361,42 @@ mod tests {
         );
         assert_eq!(store.journal_head().unwrap(), head);
     }
+    #[test]
+    fn send_versions_legacy_counts_remain_unknown_and_corrupt_targets_refuse() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("legacy-targets.redb"), true);
+        let id = enqueue(&store);
+        let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let legacy = serde_json::json!({"users":[{"user":peer,"devices":2,"version":null}]});
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key(id).as_bytes(), 1, &legacy))
+            .unwrap();
+        let head = store.journal_head().unwrap();
+        let value = inspect(&store, id).unwrap();
+        assert!(value.captured);
+        assert_eq!(value.users[0].devices, 2);
+        assert!(value.users[0].device_targets.is_none());
+        assert!(store.write(|tx| targets_in(tx, id)).unwrap().is_none());
+        assert_eq!(store.journal_head().unwrap(), head);
+        for ids in [
+            serde_json::json!([]),
+            serde_json::json!([0]),
+            serde_json::json!([3, 0]),
+            serde_json::json!([0, 0]),
+            serde_json::json!([0, "PRIVATE VALUE"]),
+            serde_json::json!([0, 65536]),
+        ] {
+            let value = serde_json::json!({"users":[{"user":peer,"devices":2,"version":null,"device_ids":ids}]});
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, key(id).as_bytes(), 1, &value))
+                .unwrap();
+            let error = inspect(&store, id).unwrap_err().to_string();
+            assert!(!error.contains("PRIVATE"));
+            assert!(!error.contains(&peer.user));
+            assert!(store.write(|tx| targets_in(tx, id)).is_err());
+        }
+    }
+
     #[test]
     fn send_versions_rollback_and_invalid_targets_never_create_a_snapshot() {
         let dir = tempfile::tempdir().unwrap();

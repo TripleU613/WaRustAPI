@@ -3738,6 +3738,7 @@
         "required": [
           "user_ticket",
           "devices",
+          "device_targets",
           "at_send",
           "current",
           "matches"
@@ -3772,6 +3773,36 @@
           "matches": {
             "type": "boolean",
             "description": "Nullable equality only; never permission to resend or reset a reservation."
+          },
+          "device_targets": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/DeviceTarget"
+            },
+            "description": "Exact frozen target device components and hashes. Null for historical count-only snapshots; never inferred from current membership."
+          }
+        }
+      },
+      "DeviceTarget": {
+        "type": "object",
+        "required": [
+          "device_ticket",
+          "device"
+        ],
+        "properties": {
+          "device_ticket": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 of normalized exact device JID, with namespace preserved."
+          },
+          "device": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 65535,
+            "description": "Original device component; zero is primary."
           }
         }
       }
@@ -12428,7 +12459,7 @@
           "Outbox"
         ],
         "summary": "Inspect original send-time primary versions (offline, redacted)",
-        "description": "Offline inspection of an existing immutable local outbox intent. Direct and group comparison adapters capture actual target users' nullable primary-device versions in the original send reservation transaction, after authenticated replacement hooks. Group capture includes every planned device, not only newly distributed sender keys. The snapshot is immutable; namespace values stay separate and duplicate device encodings are counted once. Historical/unprepared intents without a snapshot return captured=false and users=[]; captured null counters are known missing values, not missing instrumentation. Each user exports only a normalized-JID hash, device count, at_send/current signed int64-or-null and nullable matches boolean. Equality is diagnostic, never a native resend decision; effective default/hosted gates and full sync/resend runtime remain unported. Unknown local IDs and malformed snapshots/counters refuse with fixed diagnostics; inspection neither repairs history nor sends/queues anything. No HTTP route is served. See docs/protocol/send-version-snapshot.md.",
+        "description": "Offline inspection of an existing immutable local outbox intent. Direct and group comparison adapters capture actual target users' nullable primary-device versions in the original send reservation transaction, after authenticated replacement hooks. Group capture includes every planned device, not only newly distributed sender keys. The snapshot is immutable; namespace values stay separate and duplicate device encodings are counted once. Historical/unprepared intents without a snapshot return captured=false and users=[]; captured null counters are known missing values, not missing instrumentation. Each user exports only a normalized-JID hash, device count, at_send/current signed int64-or-null and nullable matches boolean. Equality is diagnostic, never a native resend decision; effective default/hosted gates and full sync/resend runtime remain unported. Unknown local IDs and malformed snapshots/counters refuse with fixed diagnostics; inspection neither repairs history nor sends/queues anything. No HTTP route is served. See docs/protocol/send-version-snapshot.md. New captures retain exact device components; device_targets exposes only component/hash pairs. Old count-only snapshots return null for that field and are never backfilled. Group receipt attribution uses the original full frozen targets when known, requiring original envelope sender-key targets to be a subset. Current fanout still distributes to every target; native pending receipt lifecycle and cached-key distribution omission remain unported.",
         "operationId": "outboxVersions",
         "x-cli": "whatsapp-cli outbox-versions",
         "x-transport": [

@@ -2848,3 +2848,24 @@ tests, CLI-reference regeneration, API/library-symbol check and formatting
 passed. Repository hygiene checked 1,324 local links and 26 APK bundles /
 7,808,872 bytes. Runtime changes are comments only; no account operation,
 key-fetch query or live resend was performed.
+
+2026-10-09 — **Confirmed local/static:** original send snapshots now preserve
+exact per-user device components; outbox-versions exposes only component/hash
+rows. Historical count-only rows remain unknown and untouched. Group receipts
+use the full original plan, validate envelope distributions as a subset and
+refuse contradictions atomically. Current fanout sends SKDMs to every target;
+omitted-distribution coverage is fixture/native compatibility, not a reproduced
+current live failure. Native mutable receipt lifecycle/resend remains unfinished.
+[Evidence and limits](protocol/send-version-snapshot.md).
+
+Exact-device validation: all 798 workspace/all-feature tests passed (668 API,
+4 property, 9 crash, 51 CLI, 1 API-symbol and 65 xtask), alongside strict
+Clippy, warning-denying Rustdoc, 26 default CLI checks, CLI-reference/API checks,
+formatting and experimental CLI build. Hygiene checked 1,329 local links and
+26 APK bundles / 7,808,872 bytes. Native-shaped subset/contradiction fixtures
+cover planned companions, unplanned devices, immutable send state, reopening
+and legacy wire-only fallback. Old count-only snapshots remain readable;
+malformed device IDs refuse with redacted diagnostics.
+Offline retained-profile CLI checks left store inspection and queued intents
+unchanged. No retained group preparations existed to inspect; no new live
+message or native pending receipt cache is claimed from these fixtures.
