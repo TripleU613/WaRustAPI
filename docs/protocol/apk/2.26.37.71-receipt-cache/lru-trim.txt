@@ -1,0 +1,64 @@
+# APK-derived structural disassembly: LX/0D3;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method trimToSize(VI) flags=0x1 registers=8
+  # full signature: LX/0D3;->trimToSize(I)V
+  0000..0004 op=54 iget-object v4, v6, LX/0D3;->lock:LX/0D5;
+  0004..0006 op=1d monitor-enter
+  0006..000a op=52 iget v2, v6, LX/0D3;->size:I
+  000a..000c op=12 const/4 v5, #0x1
+  000c..0010 op=3a if-ltz v2, +0x51
+  0010..0014 op=54 iget-object v1, v6, LX/0D3;->map:LX/0D4;
+  0014..0018 op=54 iget-object v0, v1, LX/0D4;->A00:Ljava/util/LinkedHashMap;
+  0018..001e op=6e invoke-virtual {v0}, Ljava/util/AbstractMap;->isEmpty()Z
+  001e..0020 op=0a move-result v0
+  0020..0024 op=38 if-eqz v0, +0x4
+  0024..0028 op=39 if-nez v2, +0x45
+  0028..002c op=37 if-le v2, v7, +0x41
+  002c..0030 op=54 iget-object v1, v1, LX/0D4;->A00:Ljava/util/LinkedHashMap;
+  0030..0036 op=6e invoke-virtual {v1}, Ljava/util/AbstractMap;->isEmpty()Z
+  0036..0038 op=0a move-result v0
+  0038..003c op=39 if-nez v0, +0x39
+  003c..0042 op=6e invoke-virtual {v1}, Ljava/util/AbstractMap;->entrySet()Ljava/util/Set;
+  0042..0044 op=0c move-result-object v0
+  0044..004a op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  004a..0050 op=71 invoke-static {v0}, LX/0C6;->A0o(Ljava/lang/Iterable;)Ljava/lang/Object;
+  0050..0052 op=0c move-result-object v0
+  0052..0056 op=1f check-cast v0, Ljava/util/Map$Entry;
+  0056..005a op=38 if-eqz v0, +0x2a
+  005a..0060 op=72 invoke-interface {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+  0060..0062 op=0c move-result-object v3
+  0062..0068 op=72 invoke-interface {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+  0068..006a op=0c move-result-object v2
+  006a..006e op=54 iget-object v1, v6, LX/0D3;->map:LX/0D4;
+  006e..0070 op=12 const/4 v0, #0x0
+  0070..0076 op=71 invoke-static {v3, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0076..007a op=54 iget-object v0, v1, LX/0D4;->A00:Ljava/util/LinkedHashMap;
+  007a..0080 op=6e invoke-virtual {v0, v3}, Ljava/util/AbstractMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+  0080..0084 op=52 iget v1, v6, LX/0D3;->size:I
+  0084..008a op=70 invoke-direct {v6, v3, v2}, LX/0D3;->safeSizeOf(Ljava/lang/Object;Ljava/lang/Object;)I
+  008a..008c op=0a move-result v0
+  008c..008e op=b1 sub-int/2addr v1, v0
+  008e..0092 op=59 iput v1, v6, LX/0D3;->size:I
+  0092..0096 op=52 iget v0, v6, LX/0D3;->evictionCount:I
+  0096..009a op=d8 add-int/lit8 v0, v0, #0x1
+  009a..009e op=59 iput v0, v6, LX/0D3;->evictionCount:I
+  009e..00a0 op=1e monitor-exit
+  00a0..00a2 op=12 const/4 v0, #0x0
+  00a2..00a8 op=6e invoke-virtual {v6, v5, v3, v2, v0}, LX/0D3;->entryRemoved(ZLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+  00a8..00aa op=28 goto -0x54
+  00aa..00ac op=1e monitor-exit
+  00ac..00ae op=0e return-void
+  00ae..00b2 op=1a const-string v1, "LruCache.sizeOf() is reporting inconsistent results!"
+  00b2..00b6 op=22 new-instance v0, Ljava/lang/IllegalStateException;
+  00b6..00bc op=70 invoke-direct {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+  00bc..00be op=27 throw v0
+  00be..00c0 op=0d move-exception v0
+  00c0..00c2 op=1e monitor-exit
+  00c2..00c4 op=27 throw v0
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0003..004f -> 005f
+  # catch <all> code_units 0057..005f -> 005f
+.end method

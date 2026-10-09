@@ -1,0 +1,50 @@
+{
+  "cache-clear-dispatch.txt": {
+    "bytes": 796,
+    "sha256": "06c38f2c005cbe7ed2f222df33d9fb757b0d09d593b86514b53b253b2fc6c067"
+  },
+  "cache-clear-maps.txt": {
+    "bytes": 1764,
+    "sha256": "84a8acefc3467785e636ce5db91d3cd7f2fd6e2d25d137f80b237a87a9878a9f"
+  },
+  "cache-drain-callbacks.txt": {
+    "bytes": 5088,
+    "sha256": "cae573904e2ca96a4e490fd3d47a7ecd2150ba7aaa966a0c5522580aa60974fa"
+  },
+  "cache-remove.txt": {
+    "bytes": 1806,
+    "sha256": "c15d3911dd828a74fb7c37025ccbbbd6b07411dbe581aac51f572274bf898409"
+  },
+  "incoming-time-load.txt": {
+    "bytes": 11350,
+    "sha256": "b7a2ebb1c26fb014d48aa694c971c0ea54414abe60026fde081325bc6dc9700d"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "lru-trim.txt": {
+    "bytes": 3505,
+    "sha256": "493e8b08b1dc7e4a855b57332b6e7413a6953201f3a3dc4bd44ec8f01765ab65"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "store-clear-cache.txt": {
+    "bytes": 560,
+    "sha256": "be52533323269189a2e603ec9241108fbf68bb19e32a130922572881a2fb0633"
+  },
+  "store-remove-message.txt": {
+    "bytes": 730,
+    "sha256": "876a1e796ed196e86b36733755580e89c1b0e91012be9f4c12592c3eca140d56"
+  },
+  "targets.json": {
+    "bytes": 3818,
+    "sha256": "5f0158da6f595f6c8167698cb223cf9f1de46c850d90477e9c5690fc3f73b5de"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

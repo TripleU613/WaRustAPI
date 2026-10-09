@@ -844,7 +844,15 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
         0x12 => {
             let v = reg & 0xf;
             let lit = (reg as i8) >> 4;
-            format!("v{v}, #{lit:#x}")
+            // APK 37.71 0Z8.A0G passes const/4 -1 to trimToSize:
+            // hexadecimal formatting alone spells that signed i8 as 0xff.
+            // Preserve the predecessor bit spelling and make the value explicit.
+            let signed = if lit < 0 {
+                format!(" ({lit})")
+            } else {
+                String::new()
+            };
+            format!("v{v}, #{lit:#x}{signed}")
         }
         // AOSP 21s sign-extends to int or long. APK 37.71 0Xx.A02+00ba
         // (16 02 ff ff) compares the insert result with -1, not 65535.
@@ -2602,6 +2610,38 @@ mod tests {
         assert!(decoded[1].annotation.contains("data=[57 41 06 03]"));
         assert_eq!(decoded[2].mnemonic, "fill-array-data-payload");
         assert_eq!(decoded[2].width, 6);
+    }
+
+    #[test]
+    fn decodes_every_signed_const_four_literal() {
+        let d = minimal_dex_header();
+        let dex = DexFile::parse(&d).unwrap();
+        // DEX 11n encodes the register in the low nibble and a signed
+        // two's-complement literal in the high nibble, ranging -8 through 7.
+        let expected = [
+            "v3, #0x0",
+            "v3, #0x1",
+            "v3, #0x2",
+            "v3, #0x3",
+            "v3, #0x4",
+            "v3, #0x5",
+            "v3, #0x6",
+            "v3, #0x7",
+            "v3, #0xf8 (-8)",
+            "v3, #0xf9 (-7)",
+            "v3, #0xfa (-6)",
+            "v3, #0xfb (-5)",
+            "v3, #0xfc (-4)",
+            "v3, #0xfd (-3)",
+            "v3, #0xfe (-2)",
+            "v3, #0xff (-1)",
+        ];
+        for (nibble, expected) in expected.iter().enumerate() {
+            let bytes = [0x12, ((nibble as u8) << 4) | 3];
+            let decoded = decode_insns(&bytes, &dex);
+            assert_eq!(decoded[0].annotation, *expected);
+            assert_eq!(decoded[0].width, 1);
+        }
     }
 
     #[test]

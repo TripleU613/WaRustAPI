@@ -1,0 +1,173 @@
+# APK-derived structural disassembly: LX/0Z6;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0N(LL) flags=0x1 registers=16
+  # full signature: LX/0Z6;->A0N(Ljava/util/Collection;)Ljava/util/Map;
+  0000..0002 op=12 const/4 v6, #0x0
+  0002..0006 op=22 new-instance v2, Ljava/util/HashMap;
+  0006..000c op=70 invoke-direct {v2}, Ljava/util/HashMap;-><init>()V
+  000c..0012 op=72 invoke-interface {v15}, Ljava/util/Collection;->isEmpty()Z
+  0012..0014 op=0a move-result v0
+  0014..0018 op=39 if-nez v0, +0x132
+  0018..001c op=22 new-instance v5, Ljava/util/ArrayList;
+  001c..0022 op=70 invoke-direct {v5}, Ljava/util/ArrayList;-><init>()V
+  0022..0026 op=22 new-instance v10, Ljava/util/HashMap;
+  0026..002c op=70 invoke-direct {v10}, Ljava/util/HashMap;-><init>()V
+  002c..0032 op=72 invoke-interface {v15}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+  0032..0034 op=0c move-result-object v12
+  0034..003a op=72 invoke-interface {v12}, Ljava/util/Iterator;->hasNext()Z
+  003a..003c op=0a move-result v0
+  003c..0040 op=38 if-eqz v0, +0x43
+  0040..0046 op=72 invoke-interface {v12}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0046..0048 op=0c move-result-object v11
+  0048..004c op=1f check-cast v11, LX/CYV;
+  004c..0050 op=54 iget-object v1, v11, LX/CYV;->A04:LX/178;
+  0050..0054 op=53 iget-wide v3, v1, LX/178;->A0j:J
+  0054..0058 op=16 const-wide/16 v7, #0xffff (-1)
+  0058..005c op=31 cmp-long v0, v3, v7
+  005c..0060 op=38 if-eqz v0, -0x14
+  0060..0064 op=54 iget-object v0, v11, LX/CYV;->A02:Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0064..006a op=6e invoke-virtual {v14, v0, v1}, LX/0Z5;->A01(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/178;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+  006a..006c op=0c move-result-object v0
+  006c..0072 op=6e invoke-virtual {v14, v0}, LX/0Z5;->A04(Lcom/whatsapp/infra/core/jid/DeviceJid;)Ljava/util/HashSet;
+  0072..0074 op=0c move-result-object v0
+  0074..007a op=6e invoke-virtual {v0}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+  007a..007c op=0c move-result-object v9
+  007c..0082 op=72 invoke-interface {v9}, Ljava/util/Iterator;->hasNext()Z
+  0082..0084 op=0a move-result v0
+  0084..0088 op=38 if-eqz v0, -0x28
+  0088..008e op=72 invoke-interface {v9}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  008e..0090 op=0c move-result-object v8
+  0090..0094 op=1f check-cast v8, Ljava/lang/String;
+  0094..009a op=71 invoke-static {v8}, Ljava/lang/Long;->parseLong(Ljava/lang/String;)J
+  009a..009c op=0b move-result-wide v0
+  009c..00a0 op=22 new-instance v7, LX/2yO;
+  00a0..00a6 op=70 invoke-direct {v7, v3, v4, v0, v1}, LX/2yO;-><init>(JJ)V
+  00a6..00ac op=6e invoke-virtual {v10, v7, v11}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  00ac..00b2 op=71 invoke-static {v3, v4}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+  00b2..00b4 op=0c move-result-object v0
+  00b4..00ba op=6e invoke-virtual {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  00ba..00c0 op=6e invoke-virtual {v5, v8}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  00c0..00c2 op=28 goto -0x22
+  00c2..00c6 op=54 iget-object v0, v14, LX/0Z5;->A04:LX/0Gc;
+  00c6..00cc op=6e invoke-virtual {v0}, LX/0Gc;->A06()LX/0ZN;
+  00cc..00ce op=0c move-result-object v3
+  00ce..00d2 op=54 iget-object v7, v3, LX/0ZN;->A02:LX/0IY;
+  00d2..00d8 op=6e invoke-virtual {v5}, Ljava/util/AbstractCollection;->size()I
+  00d8..00da op=0a move-result v0
+  00da..00de op=db div-int/lit8 v4, v0, #0x2
+  00de..00e2 op=22 new-instance v8, Ljava/util/ArrayList;
+  00e2..00e8 op=70 invoke-direct {v8, v4}, Ljava/util/ArrayList;-><init>(I)V
+  00e8..00ea op=12 const/4 v1, #0x0
+  00ea..00ee op=35 if-ge v1, v4, +0xa
+  00ee..00f2 op=1a const-string v0, "(message_row_id = ? AND receipt_device_jid_row_id = ?)"
+  00f2..00f8 op=6e invoke-virtual {v8, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  00f8..00fc op=d8 add-int/lit8 v1, v1, #0x1
+  00fc..00fe op=28 goto -0x9
+  00fe..0102 op=1a const-string v4, " OR "
+  0102..0104 op=12 const/4 v1, #0x0
+  0104..0108 op=1a const-string v0, ""
+  0108..010e op=71 invoke-static {v4, v0, v0, v8, v1}, LX/0C6;->A11(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+  010e..0110 op=0c move-result-object v4
+  0110..0114 op=1a const-string v0, "\n        SELECT\n          message_row_id,\n          receipt_device_jid_row_id,\n          receipt_device_timestamp\n        FROM\n          receipt_device\n        WHERE\n          "
+  0114..0118 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0118..011e op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  011e..0124 op=6e invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0124..0128 op=1a const-string v0, "\n      "
+  0128..012e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  012e..0134 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0134..0136 op=0c move-result-object v4
+  0136..013a op=23 new-array v0, v6, [Ljava/lang/String;
+  013a..0140 op=6e invoke-virtual {v5, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+  0140..0142 op=0c move-result-object v1
+  0142..0146 op=1f check-cast v1, [Ljava/lang/String;
+  0146..014a op=1a const-string v0, "MessageReceiptDeviceStore/`getLocalDeviceReceiptsForIncomingReceiptsNoCaching`"
+  014a..0150 op=6e invoke-virtual {v7, v4, v0, v1}, LX/0IY;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+  0150..0152 op=0c move-result-object v6
+  0152..0156 op=1a const-string v0, "receipt_device_timestamp"
+  0156..015c op=72 invoke-interface {v6, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  015c..015e op=0a move-result v9
+  015e..0162 op=1a const-string v0, "receipt_device_jid_row_id"
+  0162..0168 op=72 invoke-interface {v6, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  0168..016a op=0a move-result v8
+  016a..016e op=1a const-string v0, "message_row_id"
+  016e..0174 op=72 invoke-interface {v6, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  0174..0176 op=0a move-result v7
+  0176..017c op=72 invoke-interface {v6}, Landroid/database/Cursor;->moveToNext()Z
+  017c..017e op=0a move-result v0
+  017e..0182 op=38 if-eqz v0, +0x5f
+  0182..0188 op=72 invoke-interface {v6, v8}, Landroid/database/Cursor;->getLong(I)J
+  0188..018a op=0b move-result-wide v4
+  018a..0190 op=72 invoke-interface {v6, v7}, Landroid/database/Cursor;->getLong(I)J
+  0190..0192 op=0b move-result-wide v0
+  0192..0196 op=22 new-instance v12, LX/2yO;
+  0196..019c op=70 invoke-direct {v12, v0, v1, v4, v5}, LX/2yO;-><init>(JJ)V
+  019c..01a2 op=6e invoke-virtual {v10, v12}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  01a2..01a4 op=0c move-result-object v11
+  01a4..01a8 op=38 if-eqz v11, +0x44
+  01a8..01ac op=1f check-cast v11, LX/CYV;
+  01ac..01b0 op=54 iget-object v13, v14, LX/0Z5;->A02:LX/0VT;
+  01b0..01b4 op=1c const-class v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  01b4..01b6 op=12 const/4 v0, #0x0
+  01b6..01bc op=6e invoke-virtual {v13, v1, v4, v5, v0}, LX/0VT;->A0D(Ljava/lang/Class;JZ)Lcom/whatsapp/infra/core/jid/Jid;
+  01bc..01be op=0c move-result-object v1
+  01be..01c2 op=1f check-cast v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  01c2..01c6 op=38 if-eqz v1, +0x20
+  01c6..01ca op=54 iget-object v0, v11, LX/CYV;->A04:LX/178;
+  01ca..01d0 op=6e invoke-virtual {v14, v1, v0}, LX/0Z5;->A01(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/178;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+  01d0..01d2 op=0c move-result-object v5
+  01d2..01d8 op=72 invoke-interface {v6, v9}, Landroid/database/Cursor;->getLong(I)J
+  01d8..01da op=0b move-result-wide v0
+  01da..01e0 op=6e invoke-virtual {v2, v11}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  01e0..01e2 op=0c move-result-object v4
+  01e2..01e6 op=39 if-nez v4, +0xa
+  01e6..01ea op=22 new-instance v4, LX/7hf;
+  01ea..01f0 op=70 invoke-direct {v4}, LX/7hf;-><init>()V
+  01f0..01f6 op=6e invoke-virtual {v2, v11, v4}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  01f6..01fa op=1f check-cast v4, LX/7hf;
+  01fa..0200 op=6e invoke-virtual {v4, v5, v0, v1}, LX/7hf;->A01(Lcom/whatsapp/infra/core/jid/DeviceJid;J)Z
+  0200..0202 op=28 goto -0x45
+  0202..0206 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0206..020c op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+  020c..0210 op=1a const-string v0, "MessageReceiptDeviceStore//getLocalDeviceReceiptsForIncomingReceiptsNoCaching: got a null deviceJid for "
+  0210..0216 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0216..021c op=6e invoke-virtual {v1, v12}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  021c..0222 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0222..0224 op=0c move-result-object v0
+  0224..022a op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  022a..022c op=28 goto -0x5a
+  022c..0230 op=1a const-string v1, "Required value was null."
+  0230..0234 op=22 new-instance v0, Ljava/lang/IllegalStateException;
+  0234..023a op=70 invoke-direct {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+  023a..023c op=27 throw v0
+  023c..0242 op=72 invoke-interface {v6}, Landroid/database/Cursor;->close()V
+  0242..0248 op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  0248..024a op=11 return-object v2
+  024a..024c op=0d move-exception v1
+  024c..024e op=27 throw v1
+  024e..0250 op=0d move-exception v0
+  0250..0256 op=71 invoke-static {v6, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0256..0258 op=27 throw v0
+  0258..025a op=0d move-exception v1
+  025a..025c op=27 throw v1
+  025c..025e op=0d move-exception v0
+  025e..0264 op=71 invoke-static {v3, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0264..0266 op=27 throw v0
+  0266..0268 op=0d move-exception v0
+  0268..026e op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/Throwable;)V
+  026e..0272 op=54 iget-object v0, v14, LX/0Z5;->A03:LX/0Fy;
+  0272..0278 op=6e invoke-virtual {v0}, LX/0Fy;->A03()V
+  0278..027a op=11 return-object v2
+  # exception table: 9 try range(s)
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0061..0067 -> 0133
+  # catch <all> code_units 0067..00a9 -> 012c
+  # catch <all> code_units 00a9..011e -> 0125
+  # catch <all> code_units 011e..0121 -> 012c
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0121..0125 -> 0133
+  # catch <all> code_units 0126..0127 -> 0127
+  # catch <all> code_units 0128..012c -> 012c
+  # catch <all> code_units 012d..012e -> 012e
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 012f..0133 -> 0133
+.end method

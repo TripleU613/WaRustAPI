@@ -281,3 +281,9 @@ distinguish stored-row ranking from authenticated PN/LID mapping. The Rust
 selector and redacted jid-map-row-inspect command are implemented offline;
 mapping write authority, freshness, full reverse resolution and cleanup remain
 unported. One of the 76 selected declarations remains abstract.
+
+Signed 11n const/4 annotations preserve raw hexadecimal spelling and append
+negative decimal meaning (-8 through -1). Older immutable generations can
+therefore differ only in rendered annotation text after this tooling update;
+that alone is not an APK protocol change. Receipt cache evidence and exact
+regression scope are in [receipt-cache.md](../receipt-cache.md).

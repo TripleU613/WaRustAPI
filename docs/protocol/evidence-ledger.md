@@ -2060,3 +2060,18 @@ topics and four unchanged metadata artifacts; this does not establish parity
 between different releases. Repository hygiene checked 1,350 local links and
 29 APK bundles / 8,141,757 bytes. Diff hygiene passed. Changes are research/docs
 only; no new runtime tests, live receipt or account changes are claimed.
+
+2026-10-09 — **Confirmed local/static:** signed const/4 annotations now show
+negative decimal values; 0Z8's trimToSize input is -1 (clear), not 255.
+Primary selected-row invalidation and companion broad cache clear are traced,
+including optional map/callback handling. Incoming SQL fallback selects timestamps
+without primary versions; general load/eviction and complete mutable receipt
+runtime remain unported. [Evidence and recipe](receipt-cache.md).
+
+Receipt-cache validation: all 66 xtask tests, strict xtask Clippy, rebuilt
+research CLI, CLI-reference regeneration, OpenAPI/library-symbol check, formatting
+and diff hygiene passed. Eight source topics / 13 files / 57,611 bytes reproduce
+exactly with the corrected renderer; cached self-diff verifies eight unchanged
+topics and four metadata artifacts. Hygiene checked 1,359 local links and
+30 APK bundles / 8,199,368 bytes. No transport code changed; previous 798-test
+runtime validation is not claimed as a fresh run. No live account operation ran.

@@ -174,3 +174,9 @@ only; no Rust runtime code, private account state or live connection was changed
 CLI reference regeneration and API/library-symbol validation passed; repository
 hygiene validated 1,087 local links and 5,531,661 bytes across twelve APK checksum
 bundles. No new runtime test is claimed for this static research chunk.
+
+Follow-up: [receipt cache invalidation](receipt-cache.md) now establishes
+0Z5.A06/A07 and 0Z8's selected removal/full clear operations, including the
+signed -1 trim bound. General cache load, eviction callback producers and
+database commit scheduling remain unknown; native mutable receipt runtime
+is still unported.
