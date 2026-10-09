@@ -1,0 +1,19 @@
+# APK-derived structural disassembly: LX/0VU;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method inverse(L) flags=0x401 registers=0
+  # full signature: LX/0VU;->inverse()LX/0VU;
+  # exception table: 0 try range(s)
+.end method
+
+.method put(LLL) flags=0x401 registers=0
+  # full signature: LX/0VU;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  # exception table: 0 try range(s)
+.end method
+
+.method putAll(VL) flags=0x401 registers=0
+  # full signature: LX/0VU;->putAll(Ljava/util/Map;)V
+  # exception table: 0 try range(s)
+.end method

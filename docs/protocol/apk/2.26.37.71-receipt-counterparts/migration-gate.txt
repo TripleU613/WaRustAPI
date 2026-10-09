@@ -1,0 +1,46 @@
+# APK-derived structural disassembly: LX/0Yo;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0H(Z) flags=0x1 registers=5
+  # full signature: LX/0Yo;->A0H()Z
+  0000..0004 op=54 iget-object v0, v4, LX/0Yo;->A02:LX/05B;
+  0004..0008 op=54 iget-object v3, v0, LX/05B;->A00:LX/00s;
+  0008..000e op=72 invoke-interface {v3}, LX/00s;->get()Ljava/lang/Object;
+  000e..0010 op=0c move-result-object v0
+  0010..0014 op=1f check-cast v0, LX/0H9;
+  0014..0018 op=54 iget-object v0, v0, LX/0H9;->A00:Ljava/lang/Boolean;
+  0018..001c op=39 if-nez v0, +0x32
+  001c..0020 op=54 iget-object v0, v4, LX/0Yo;->A07:LX/05B;
+  0020..0024 op=54 iget-object v2, v0, LX/05B;->A00:LX/00s;
+  0024..002a op=72 invoke-interface {v2}, LX/00s;->get()Ljava/lang/Object;
+  002a..002c op=0c move-result-object v0
+  002c..0030 op=1f check-cast v0, LX/0Gc;
+  0030..0036 op=6e invoke-virtual {v0}, LX/0Gc;->A0D()Z
+  0036..0038 op=0a move-result v1
+  0038..003e op=72 invoke-interface {v2}, LX/00s;->get()Ljava/lang/Object;
+  003e..0040 op=0c move-result-object v0
+  0040..0044 op=1f check-cast v0, LX/0Gc;
+  0044..004a op=6e invoke-virtual {v0}, LX/0Gc;->A0C()Z
+  004a..004c op=0a move-result v0
+  004c..0050 op=39 if-nez v0, +0x4
+  0050..0052 op=12 const/4 v0, #0x1
+  0052..0054 op=0f return v0
+  0054..0058 op=39 if-nez v1, +0x14
+  0058..005e op=71 invoke-static {}, LX/0KP;->A03()Z
+  005e..0060 op=0a move-result v0
+  0060..0064 op=38 if-eqz v0, +0xe
+  0064..0068 op=1a const-string v0, "ChatLidMigrationHelper msgStore was not ready, main thread was blocked to load the DB"
+  0068..006c op=22 new-instance v1, Ljava/lang/IllegalStateException;
+  006c..0072 op=70 invoke-direct {v1, v0}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+  0072..0076 op=1a const-string v0, "ChatLidMigrationHelperImpl/isGlobalLidMigrationDoneForOneToOneChats"
+  0076..007c op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+  007c..0082 op=72 invoke-interface {v3}, LX/00s;->get()Ljava/lang/Object;
+  0082..0084 op=0c move-result-object v0
+  0084..0088 op=1f check-cast v0, LX/0H9;
+  0088..008e op=6e invoke-virtual {v0}, LX/0H9;->A01()Z
+  008e..0090 op=0a move-result v0
+  0090..0092 op=0f return v0
+  # exception table: 0 try range(s)
+.end method

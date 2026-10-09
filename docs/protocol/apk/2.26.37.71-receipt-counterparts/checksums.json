@@ -1,0 +1,62 @@
+{
+  "chat-cache-loader.txt": {
+    "bytes": 101491,
+    "sha256": "e3448f9c93bd475f023d9f5482282e725a1b3d34fb9e6a00bc8c2b766f1e5ff1"
+  },
+  "counterpart-row-set.txt": {
+    "bytes": 2378,
+    "sha256": "03fd07c2b60a850b6c1f7196deec43f3ec9c841b6fc518aa7ef52bf51419a6a2"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "jid-row-entry.txt": {
+    "bytes": 970,
+    "sha256": "94209618bbbfd89443a87955b4b176e0ae0ff416c1f8bed2e5159d39fc83eeb9"
+  },
+  "jid-row-implementation.txt": {
+    "bytes": 30671,
+    "sha256": "7957c809dcc6838eada5eab3457b0c5249f7e3c6f860124ef399e48d58c615bb"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "mapped-user-kind.txt": {
+    "bytes": 961,
+    "sha256": "8161bf2c4ce8551ed86dcbfd0726e4bec92c109b02b68a87ce3a44f85c513205"
+  },
+  "mapping-entry.txt": {
+    "bytes": 809,
+    "sha256": "b8c31be4b46593894701ac2513e15f570e0a713b14a4e56dca10fa2e52109543"
+  },
+  "mapping-implementation.txt": {
+    "bytes": 3450,
+    "sha256": "c2a2987db4f4d9ab3e1473d282e1a248e1944f745dd2575f652906b684a08cf7"
+  },
+  "mapping-interface.txt": {
+    "bytes": 754,
+    "sha256": "47466f02e5ab29239664217908ef1259e59ffdc6c32c2594b77fc19c2ed470a1"
+  },
+  "mapping-lambda.txt": {
+    "bytes": 5898,
+    "sha256": "aecb638ac5a2798196a333dfa9b1d00b70d1160893fa2f2c485f0583476f3bbe"
+  },
+  "migration-cache.txt": {
+    "bytes": 1786,
+    "sha256": "5fdceff3971d009834151475d038a278cbc96839ffbb55f9bdd4818fbeaf5cdc"
+  },
+  "migration-gate.txt": {
+    "bytes": 2477,
+    "sha256": "3358fd06f3b2ae647639b10118a55aae2c55c7859dabc02f352e9bcd31d723b8"
+  },
+  "targets.json": {
+    "bytes": 4274,
+    "sha256": "8600bed66c6e1d34d0eabbe0eb7a15d5cae40e0fc3d79e00fbaf0ccf61209777"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

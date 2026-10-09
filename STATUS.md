@@ -1,5 +1,14 @@
 # Status — 2026-10-07
 
+Receipt counterpart selection (2026-10-09, **confirmed static**): APK 37.71
+8G8.A02 expands selected JID rows only through the migration gate and the
+0Yo.A0B(input, false) mapping path; its comparison uses object identity.
+JID-row materialization does not establish receipt_user membership. The eleven-topic
+snapshot retains the mapping/gate and full untraced chat-cache loader. Mapping
+producers, full user-row admission and primary cleanup remain unported.
+No runtime, account state or live request changed.
+[Evidence and limits](docs/protocol/receipt-counterparts.md).
+
 Receipt metadata provenance (2026-10-09, **confirmed static / inferred lifecycle**):
 APK 37.71 has four physical route-flag writers and hydrates 1ic mentions from
 message_mentions, separately from receipt_user. Clearing its list preserves

@@ -123,3 +123,10 @@ separate 8G8.A05 writer, its chat-transfer/history callers and descriptor fields
 Its all-positive-input SQL write differs from the one-column live path. Normal
 send seeding and complete user-row admission remain unproven; no user rows may
 be inferred merely from original targets or Delivered facts.
+
+## Counterpart row set follow-up (2026-10-09)
+
+**Confirmed static:** 8G8.A02 uses migration-gated 0Yo.A0B(input, false),
+not the lambda default branch or its true-argument fallback. JID-row creation
+is distinct from receipt_user membership; primary cleanup remains unported.
+[Complete source, offsets and limits](receipt-counterparts.md).

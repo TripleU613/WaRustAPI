@@ -1,0 +1,42 @@
+# APK-derived structural disassembly: LX/8G8;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(LLL) flags=0x9 registers=8
+  # full signature: LX/8G8;->A02(Lcom/whatsapp/infra/core/jid/UserJid;LX/8G8;)Ljava/util/HashSet;
+  0000..0004 op=54 iget-object v3, v7, LX/8G8;->A01:LX/0VT;
+  0004..000a op=6e invoke-virtual {v3, v6}, LX/0VT;->A07(Lcom/whatsapp/infra/core/jid/Jid;)J
+  000a..000c op=0b move-result-wide v4
+  000c..0010 op=16 const-wide/16 v1, #0xffff (-1)
+  0010..0014 op=31 cmp-long v0, v4, v1
+  0014..001a op=71 invoke-static {v0}, LX/1xi;->A1P(I)Z
+  001a..001c op=0a move-result v1
+  001c..0020 op=1a const-string v0, "invalid jid"
+  0020..0026 op=71 invoke-static {v1, v0}, LX/00K;->A0F(ZLjava/lang/String;)V
+  0026..002c op=71 invoke-static {}, LX/1xf;->A1G()Ljava/util/HashSet;
+  002c..002e op=0c move-result-object v2
+  002e..0034 op=71 invoke-static {v4, v5}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+  0034..0036 op=0c move-result-object v0
+  0036..003c op=6e invoke-virtual {v2, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  003c..0040 op=54 iget-object v1, v7, LX/8G8;->A03:LX/00s;
+  0040..0046 op=72 invoke-interface {v1}, LX/00s;->get()Ljava/lang/Object;
+  0046..0048 op=0c move-result-object v0
+  0048..004c op=1f check-cast v0, LX/0Yo;
+  004c..0052 op=6e invoke-virtual {v0}, LX/0Yo;->A0H()Z
+  0052..0054 op=0a move-result v0
+  0054..0058 op=38 if-eqz v0, +0x19
+  0058..005e op=72 invoke-interface {v1}, LX/00s;->get()Ljava/lang/Object;
+  005e..0060 op=0c move-result-object v0
+  0060..0064 op=1f check-cast v0, LX/0Yo;
+  0064..006a op=6e invoke-virtual {v0, v6}, LX/0Yo;->A02(LX/0Cy;)LX/0Cy;
+  006a..006c op=0c move-result-object v0
+  006c..0070 op=32 if-eq v0, v6, +0xd
+  0070..0076 op=6e invoke-virtual {v3, v0}, LX/0VT;->A07(Lcom/whatsapp/infra/core/jid/Jid;)J
+  0076..0078 op=0b move-result-wide v0
+  0078..007e op=71 invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+  007e..0080 op=0c move-result-object v0
+  0080..0086 op=6e invoke-virtual {v2, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  0086..0088 op=11 return-object v2
+  # exception table: 0 try range(s)
+.end method

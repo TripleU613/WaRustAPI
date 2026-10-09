@@ -1,0 +1,450 @@
+# APK-derived structural disassembly: LX/0VT;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(JLI) flags=0x2 registers=35
+  # full signature: LX/0VT;->A01(Lcom/whatsapp/infra/core/jid/Jid;I)J
+  0000..0004 op=1a const-string v28, "jid"
+  0004..0008 op=1a const-string v27, "raw_string"
+  0008..000e op=1b const-string/jumbo v26, "type"
+  000e..0012 op=1a const-string v12, "device"
+  0012..0016 op=1a const-string v14, "agent"
+  0016..001c op=1b const-string/jumbo v13, "server"
+  001c..0022 op=1b const-string/jumbo v2, "user"
+  0022..0026 op=1a const-string v25, "jid="
+  0026..002a op=1a const-string v24, "jid found by raws string; jid="
+  002a..002e op=1a const-string v15, "JidStore/getRowIdForJid/raw_string UNIQUE constraint failed; jid="
+  002e..0032 op=1a const-string v8, "JidStore/getRowIdForJid/raw_string UNIQUE constraint failed, but jid not found by row_id; jid="
+  0032..0036 op=1a const-string v9, "JidStore/getRowIdForJid/raw_string UNIQUE constraint failed, but jid not found by raw_string; jid="
+  0036..003a op=1a const-string v23, "JidStore/getRowIdForJid/Error inserting jid; jid="
+  003a..003e op=08 move-object/from16 v4, v32
+  003e..0042 op=54 iget-object v0, v4, LX/0VT;->A04:Ljava/util/Map;
+  0042..0046 op=08 move-object/from16 v5, v33
+  0046..004c op=72 invoke-interface {v0, v5}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  004c..004e op=0c move-result-object v0
+  004e..0052 op=1f check-cast v0, Ljava/lang/Number;
+  0052..0056 op=38 if-eqz v0, +0x7
+  0056..005c op=6e invoke-virtual {v0}, Ljava/lang/Number;->longValue()J
+  005c..005e op=0b move-result-wide v0
+  005e..0060 op=10 return-wide v0
+  0060..0064 op=54 iget-object v6, v4, LX/0VT;->A03:LX/0Gc;
+  0064..006a op=6e invoke-virtual {v6}, LX/0Gc;->A06()LX/0ZN;
+  006a..006c op=0c move-result-object v22
+  006c..0072 op=70 invoke-direct {v4, v5}, LX/0VT;->A00(Lcom/whatsapp/infra/core/jid/Jid;)J
+  0072..0074 op=0b move-result-wide v0
+  0074..0078 op=1a const-string v21, "; rowId="
+  0078..007c op=16 const-wide/16 v16, #0x0
+  007c..0080 op=31 cmp-long v3, v0, v16
+  0080..0084 op=3d if-lez v3, +0x22
+  0084..0088 op=08 move-object/from16 v2, v22
+  0088..008c op=54 iget-object v2, v2, LX/0ZN;->A02:LX/0IY;
+  008c..0090 op=54 iget-object v2, v2, LX/0IY;->A01:Landroid/database/sqlite/SQLiteDatabase;
+  0090..0096 op=6e invoke-virtual {v2}, Landroid/database/sqlite/SQLiteDatabase;->inTransaction()Z
+  0096..0098 op=0a move-result v2
+  0098..009c op=38 if-eqz v2, +0x11
+  009c..00a0 op=13 const/16 v6, #0x8
+  00a0..00a4 op=22 new-instance v3, LX/OC4;
+  00a4..00a6 op=04 move-wide v7, v0
+  00a6..00ac op=76 invoke-direct/range {v3..v8}, LX/OC4;-><init>(Ljava/lang/Object;Ljava/lang/Object;IJ)V
+  00ac..00b0 op=08 move-object/from16 v2, v22
+  00b0..00b6 op=6e invoke-virtual {v2, v3}, LX/0ZN;->A04(Ljava/lang/Runnable;)V
+  00b6..00ba op=29 goto/16 +0x300
+  00ba..00c0 op=71 invoke-static {v5, v4, v0, v1}, LX/0VT;->A05(Lcom/whatsapp/infra/core/jid/Jid;LX/0VT;J)V
+  00c0..00c4 op=29 goto/16 +0x2fb
+  00c4..00ca op=6e invoke-virtual {v6}, LX/0Gc;->A07()LX/0ZN;
+  00ca..00cc op=0c move-result-object v6
+  00cc..00d2 op=6e invoke-virtual {v6}, LX/0ZN;->A01()LX/1gB;
+  00d2..00d4 op=0c move-result-object v20
+  00d4..00da op=70 invoke-direct {v4, v5}, LX/0VT;->A00(Lcom/whatsapp/infra/core/jid/Jid;)J
+  00da..00dc op=0b move-result-wide v0
+  00dc..00e0 op=31 cmp-long v3, v0, v16
+  00e0..00e4 op=3c if-gtz v3, +0x2ab
+  00e4..00e6 op=12 const/4 v3, #0x6
+  00e6..00ea op=22 new-instance v7, Landroid/content/ContentValues;
+  00ea..00f0 op=70 invoke-direct {v7, v3}, Landroid/content/ContentValues;-><init>(I)V
+  00f0..00f4 op=54 iget-object v3, v5, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+  00f4..00fa op=6e invoke-virtual {v7, v2, v3}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  00fa..0100 op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getServer()Ljava/lang/String;
+  0100..0102 op=0c move-result-object v3
+  0102..0108 op=6e invoke-virtual {v7, v13, v3}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  0108..010e op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getAgent()I
+  010e..0110 op=0a move-result v3
+  0110..0116 op=71 invoke-static {v3}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0116..0118 op=0c move-result-object v3
+  0118..011e op=6e invoke-virtual {v7, v14, v3}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  011e..0124 op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+  0124..0126 op=0a move-result v3
+  0126..012c op=71 invoke-static {v3}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  012c..012e op=0c move-result-object v3
+  012e..0134 op=6e invoke-virtual {v7, v12, v3}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  0134..013a op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getType()I
+  013a..013c op=0a move-result v3
+  013c..0142 op=71 invoke-static {v3}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0142..0144 op=0c move-result-object v10
+  0144..0148 op=08 move-object/from16 v3, v26
+  0148..014e op=6e invoke-virtual {v7, v3, v10}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  014e..0154 op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  0154..0156 op=0c move-result-object v10
+  0156..015a op=08 move-object/from16 v3, v27
+  015a..0160 op=6e invoke-virtual {v7, v3, v10}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  0160..0164 op=54 iget-object v11, v6, LX/0ZN;->A02:LX/0IY;
+  0164..0168 op=1a const-string v10, "INSERT_JID_SQL"
+  0168..016c op=08 move-object/from16 v3, v28
+  016c..0172 op=6e invoke-virtual {v11, v3, v10, v7}, LX/0IY;->A06(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+  0172..0174 op=0b move-result-wide v0
+  0174..0178 op=29 goto/16 +0x261
+  0178..017a op=0d move-exception v19
+  017a..017e op=54 iget-object v3, v6, LX/0ZN;->A02:LX/0IY;
+  017e..0182 op=08 move-object/from16 v31, v3
+  0182..0186 op=1a const-string v3, "\n          SELECT\n            _id,\n            user,\n            server,\n            agent,\n            device,\n            type,\n            raw_string\n          FROM\n            jid\n          WHERE\n            raw_string = ?\n        "
+  0186..018c op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  018c..018e op=0c move-result-object v11
+  018e..0190 op=12 const/4 v7, #0x1
+  0190..0194 op=05 move-wide/from16 v29, v0
+  0194..0198 op=23 new-array v10, v7, [Ljava/lang/String;
+  0198..019a op=12 const/4 v0, #0x0
+  019a..019e op=4d aput-object v11, v10, v0
+  019e..01a0 op=12 const/4 v7, #0x0
+  01a0..01a4 op=1a const-string v1, "GET_JID_FROM_RAW_STRING"
+  01a4..01a8 op=08 move-object/from16 v0, v31
+  01a8..01ae op=6e invoke-virtual {v0, v3, v1, v10}, LX/0IY;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+  01ae..01b0 op=0c move-result-object v3
+  01b0..01b6 op=72 invoke-interface {v3}, Landroid/database/Cursor;->moveToLast()Z
+  01b6..01b8 op=0a move-result v0
+  01b8..01bc op=38 if-eqz v0, +0x1fd
+  01bc..01c0 op=1a const-string v0, "_id"
+  01c0..01c6 op=72 invoke-interface {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  01c6..01c8 op=0a move-result v0
+  01c8..01ce op=72 invoke-interface {v3, v0}, Landroid/database/Cursor;->getLong(I)J
+  01ce..01d0 op=0b move-result-wide v0
+  01d0..01d4 op=54 iget-object v10, v4, LX/0VT;->A05:Ljava/util/Map;
+  01d4..01da op=71 invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  01da..01dc op=0c move-result-object v9
+  01dc..01e2 op=72 invoke-interface {v10, v9}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+  01e2..01e4 op=0a move-result v18
+  01e4..01ea op=6e invoke-virtual {v4, v0, v1}, LX/0VT;->A09(J)Lcom/whatsapp/infra/core/jid/Jid;
+  01ea..01ec op=0c move-result-object v11
+  01ec..01f0 op=1a const-string v10, "; errorRowId="
+  01f0..01f4 op=38 if-eqz v11, +0x196
+  01f4..01fa op=72 invoke-interface {v3, v12}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  01fa..01fc op=0a move-result v9
+  01fc..0200 op=22 new-instance v8, Ljava/lang/StringBuilder;
+  0200..0206 op=70 invoke-direct {v8, v15}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0206..020c op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  020c..020e op=0c move-result-object v15
+  020e..0214 op=6e invoke-virtual {v8, v15}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0214..0218 op=1a const-string v15, "; db.user="
+  0218..021e op=6e invoke-virtual {v8, v15}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  021e..0224 op=72 invoke-interface {v3, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  0224..0226 op=0a move-result v2
+  0226..022c op=72 invoke-interface {v3, v2}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+  022c..022e op=0c move-result-object v2
+  022e..0234 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0234..0238 op=1a const-string v2, "; db.server="
+  0238..023e op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  023e..0244 op=72 invoke-interface {v3, v13}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  0244..0246 op=0a move-result v2
+  0246..024c op=72 invoke-interface {v3, v2}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+  024c..024e op=0c move-result-object v2
+  024e..0254 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0254..0258 op=1a const-string v2, "; db.agent="
+  0258..025e op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  025e..0264 op=72 invoke-interface {v3, v14}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  0264..0266 op=0a move-result v2
+  0266..026c op=72 invoke-interface {v3, v2}, Landroid/database/Cursor;->getInt(I)I
+  026c..026e op=0a move-result v2
+  026e..0274 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0274..0278 op=1a const-string v2, "; db.device="
+  0278..027e op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  027e..0284 op=72 invoke-interface {v3, v9}, Landroid/database/Cursor;->isNull(I)Z
+  0284..0286 op=0a move-result v2
+  0286..028a op=38 if-eqz v2, +0x8
+  028a..028e op=1a const-string v2, "<null>"
+  028e..0290 op=28 goto +0xc
+  0290..0292 op=0d move-exception v1
+  0292..0296 op=29 goto/16 +0x1b4
+  0296..029c op=72 invoke-interface {v3, v9}, Landroid/database/Cursor;->getInt(I)I
+  029c..029e op=0a move-result v2
+  029e..02a4 op=71 invoke-static {v2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  02a4..02a6 op=0c move-result-object v2
+  02a6..02ac op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  02ac..02b0 op=1a const-string v2, "; db.type="
+  02b0..02b6 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  02b6..02ba op=08 move-object/from16 v2, v26
+  02ba..02c0 op=72 invoke-interface {v3, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  02c0..02c2 op=0a move-result v2
+  02c2..02c8 op=72 invoke-interface {v3, v2}, Landroid/database/Cursor;->getInt(I)I
+  02c8..02ca op=0a move-result v2
+  02ca..02d0 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  02d0..02d4 op=1a const-string v2, "; db.raw_string="
+  02d4..02da op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  02da..02de op=08 move-object/from16 v2, v27
+  02de..02e4 op=72 invoke-interface {v3, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  02e4..02e6 op=0a move-result v2
+  02e6..02ec op=72 invoke-interface {v3, v2}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+  02ec..02ee op=0c move-result-object v2
+  02ee..02f4 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  02f4..02fa op=6e invoke-virtual {v8, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  02fa..0300 op=6e invoke-virtual {v8, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  0300..0304 op=1a const-string v2, "; inCache="
+  0304..030a op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  030a..030e op=02 move/from16 v2, v18
+  030e..0314 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  0314..0318 op=1a const-string v2, "; jidFromDb.user="
+  0318..031e op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  031e..0322 op=54 iget-object v2, v11, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+  0322..0328 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0328..032c op=1a const-string v2, "; jidFromDb.server="
+  032c..0332 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0332..0338 op=6e invoke-virtual {v11}, Lcom/whatsapp/infra/core/jid/Jid;->getServer()Ljava/lang/String;
+  0338..033a op=0c move-result-object v2
+  033a..0340 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0340..0344 op=1a const-string v2, "; jidFromDb.agent="
+  0344..034a op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  034a..0350 op=6e invoke-virtual {v11}, Lcom/whatsapp/infra/core/jid/Jid;->getAgent()I
+  0350..0352 op=0a move-result v2
+  0352..0358 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0358..035c op=1a const-string v2, "; jidFromDb.device="
+  035c..0362 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0362..0368 op=6e invoke-virtual {v11}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+  0368..036a op=0a move-result v2
+  036a..0370 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0370..0374 op=1a const-string v2, "; jidFromDb.type="
+  0374..037a op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  037a..0380 op=6e invoke-virtual {v11}, Lcom/whatsapp/infra/core/jid/Jid;->getType()I
+  0380..0382 op=0a move-result v2
+  0382..0388 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0388..038c op=1a const-string v2, "; jidFromDb.raw_string="
+  038c..0392 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0392..0398 op=6e invoke-virtual {v11}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  0398..039a op=0c move-result-object v2
+  039a..03a0 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  03a0..03a4 op=1a const-string v2, "; matchingJid="
+  03a4..03aa op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  03aa..03b0 op=6e invoke-virtual {v5, v11}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+  03b0..03b2 op=0a move-result v2
+  03b2..03b8 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  03b8..03be op=6e invoke-virtual {v8}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  03be..03c0 op=0c move-result-object v2
+  03c0..03c6 op=71 invoke-static {v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  03c6..03cc op=6e invoke-virtual {v5, v11}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+  03cc..03ce op=0a move-result v2
+  03ce..03d2 op=38 if-eqz v2, +0x105
+  03d2..03d8 op=72 invoke-interface {v3, v9}, Landroid/database/Cursor;->isNull(I)Z
+  03d8..03da op=0a move-result v2
+  03da..03de op=38 if-eqz v2, +0x101
+  03de..03e2 op=54 iget-object v2, v4, LX/0VT;->A00:LX/00s;
+  03e2..03e8 op=72 invoke-interface {v2}, LX/00s;->get()Ljava/lang/Object;
+  03e8..03ea op=0c move-result-object v8
+  03ea..03ee op=1f check-cast v8, LX/07t;
+  03ee..03f2 op=62 sget-object v2, LX/0Gw;->A05:LX/09P;
+  03f2..03f8 op=6e invoke-virtual {v8, v2}, LX/00D;->A13(LX/09P;)Z
+  03f8..03fa op=0a move-result v2
+  03fa..03fe op=38 if-eqz v2, +0xf1
+  03fe..0404 op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+  0404..0406 op=0a move-result v13
+  0406..040a op=1a const-string v11, "; updated="
+  040a..040e op=1a const-string v10, "; device="
+  040e..0414 op=1b const-string/jumbo v9, "rowId="
+  0414..0418 op=1a const-string v2, "JidStore/repairNullDeviceColumn/repaired; rowId="
+  0418..041a op=12 const/4 v14, #0x1
+  041a..041e op=22 new-instance v8, Landroid/content/ContentValues;
+  041e..0424 op=70 invoke-direct {v8, v14}, Landroid/content/ContentValues;-><init>(I)V
+  0424..042a op=71 invoke-static {v13}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  042a..042c op=0c move-result-object v15
+  042c..0432 op=6e invoke-virtual {v8, v12, v15}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  0432..0436 op=1a const-string v29, "_id = ?"
+  0436..043c op=71 invoke-static {v0, v1}, Ljava/lang/Long;->toString(J)Ljava/lang/String;
+  043c..043e op=0c move-result-object v15
+  043e..0442 op=23 new-array v12, v14, [Ljava/lang/String;
+  0442..0446 op=4d aput-object v15, v12, v7
+  0446..044a op=1a const-string v30, "getRowIdForJid/REPAIR_NULL_DEVICE"
+  044a..044e op=08 move-object/from16 v26, v31
+  044e..0452 op=08 move-object/from16 v27, v8
+  0452..0456 op=08 move-object/from16 v31, v12
+  0456..045c op=74 invoke-virtual/range {v26..v31}, LX/0IY;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  045c..045e op=0a move-result v14
+  045e..0462 op=22 new-instance v8, Ljava/lang/StringBuilder;
+  0462..0468 op=70 invoke-direct {v8, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0468..046e op=6e invoke-virtual {v8, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  046e..0474 op=6e invoke-virtual {v8, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0474..047a op=6e invoke-virtual {v8, v13}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  047a..0480 op=6e invoke-virtual {v8, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0480..0486 op=6e invoke-virtual {v8, v14}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0486..048c op=6e invoke-virtual {v8}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  048c..048e op=0c move-result-object v2
+  048e..0494 op=71 invoke-static {v2}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  0494..0498 op=54 iget-object v12, v4, LX/0VT;->A02:LX/0AH;
+  0498..049c op=1a const-string v8, "JidStore/repair-null-device"
+  049c..04a0 op=22 new-instance v2, Ljava/lang/StringBuilder;
+  04a0..04a6 op=70 invoke-direct {v2, v9}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  04a6..04ac op=6e invoke-virtual {v2, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  04ac..04b2 op=6e invoke-virtual {v2, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  04b2..04b8 op=6e invoke-virtual {v2, v13}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  04b8..04be op=6e invoke-virtual {v2, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  04be..04c4 op=6e invoke-virtual {v2, v14}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  04c4..04ca op=6e invoke-virtual {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  04ca..04cc op=0c move-result-object v2
+  04cc..04d2 op=6e invoke-virtual {v12, v8, v2, v7}, LX/0AH;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+  04d2..04d6 op=29 goto/16 +0x85
+  04d6..04d8 op=0d move-exception v9
+  04d8..04dc op=1a const-string v2, "JidStore/repairNullDeviceColumn/update failed; rowId="
+  04dc..04e0 op=22 new-instance v8, Ljava/lang/StringBuilder;
+  04e0..04e6 op=70 invoke-direct {v8, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  04e6..04ec op=6e invoke-virtual {v8, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  04ec..04f0 op=1a const-string v2, "; ex="
+  04f0..04f6 op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  04f6..04fc op=6e invoke-virtual {v9}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  04fc..04fe op=0c move-result-object v2
+  04fe..0504 op=6e invoke-virtual {v2}, Ljava/lang/Class;->getSimpleName()Ljava/lang/String;
+  0504..0506 op=0c move-result-object v2
+  0506..050c op=6e invoke-virtual {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  050c..0512 op=6e invoke-virtual {v8}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0512..0514 op=0c move-result-object v2
+  0514..051a op=71 invoke-static {v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  051a..051c op=28 goto +0x61
+  051c..0520 op=22 new-instance v2, Ljava/lang/StringBuilder;
+  0520..0526 op=70 invoke-direct {v2, v8}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0526..052c op=6e invoke-virtual {v2, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  052c..0532 op=6e invoke-virtual {v2, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0532..0538 op=6e invoke-virtual {v2, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  0538..053e op=6e invoke-virtual {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  053e..0540 op=0c move-result-object v0
+  0540..0546 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  0546..054a op=1a const-string v10, "raw_string = ?"
+  054a..0550 op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  0550..0552 op=0c move-result-object v0
+  0552..0554 op=12 const/4 v9, #0x1
+  0554..0558 op=23 new-array v8, v9, [Ljava/lang/String;
+  0558..055c op=4d aput-object v0, v8, v7
+  055c..0560 op=1a const-string v2, "getRowIdForJid/DELETE_JID_ON_MISMATCH"
+  0560..0564 op=08 move-object/from16 v1, v31
+  0564..0568 op=08 move-object/from16 v0, v28
+  0568..056e op=6e invoke-virtual {v1, v0, v10, v2, v8}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  056e..0572 op=54 iget-object v8, v4, LX/0VT;->A02:LX/0AH;
+  0572..0576 op=1a const-string v2, "JidStore/delete-jid-on-mismatch"
+  0576..057a op=22 new-instance v1, Ljava/lang/StringBuilder;
+  057a..057e op=08 move-object/from16 v0, v25
+  057e..0584 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0584..058a op=6e invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  058a..0590 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0590..0592 op=0c move-result-object v0
+  0592..0598 op=6e invoke-virtual {v8, v2, v0, v9}, LX/0AH;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+  0598..059c op=3d if-lez v34, +0x9
+  059c..05a0 op=d8 add-int/lit8 v0, v34, #0xff (-1)
+  05a0..05a6 op=70 invoke-direct {v4, v5, v0}, LX/0VT;->A01(Lcom/whatsapp/infra/core/jid/Jid;I)J
+  05a6..05a8 op=0b move-result-wide v0
+  05a8..05aa op=28 goto +0x3
+  05aa..05ae op=05 move-wide/from16 v0, v29
+  05ae..05b0 op=12 const/4 v2, #0x1
+  05b0..05b2 op=28 goto +0x17
+  05b2..05b6 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  05b6..05bc op=70 invoke-direct {v1, v9}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  05bc..05c2 op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  05c2..05c4 op=0c move-result-object v0
+  05c4..05ca op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  05ca..05d0 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  05d0..05d2 op=0c move-result-object v0
+  05d2..05d8 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  05d8..05dc op=05 move-wide/from16 v0, v29
+  05dc..05de op=12 const/4 v2, #0x0
+  05de..05e4 op=72 invoke-interface {v3}, Landroid/database/Cursor;->close()V
+  05e4..05e8 op=39 if-nez v2, +0x29
+  05e8..05ec op=31 cmp-long v2, v0, v16
+  05ec..05f0 op=3d if-lez v2, +0x3
+  05f0..05f2 op=28 goto +0xe
+  05f2..05f4 op=27 throw v19
+  05f4..05f6 op=0d move-exception v1
+  05f6..05fa op=38 if-eqz v3, +0xa
+  05fa..0600 op=72 invoke-interface {v3}, Landroid/database/Cursor;->close()V
+  0600..0602 op=28 goto +0x5
+  0602..0604 op=0d move-exception v0
+  0604..060a op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  060a..060c op=27 throw v1
+  060c..0610 op=54 iget-object v9, v4, LX/0VT;->A02:LX/0AH;
+  0610..0614 op=1a const-string v8, "JidStore/raw_string-constraint-failed"
+  0614..0618 op=22 new-instance v3, Ljava/lang/StringBuilder;
+  0618..061c op=08 move-object/from16 v2, v24
+  061c..0622 op=70 invoke-direct {v3, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0622..0628 op=6e invoke-virtual {v3, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0628..062e op=6e invoke-virtual {v3}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  062e..0630 op=0c move-result-object v2
+  0630..0636 op=6e invoke-virtual {v9, v8, v2, v7}, LX/0AH;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+  0636..063c op=74 invoke-virtual/range {v20..v20}, LX/1gB;->A00()V
+  063c..0640 op=31 cmp-long v2, v0, v16
+  0640..0644 op=3c if-gtz v2, +0x27
+  0644..0648 op=22 new-instance v3, Ljava/lang/StringBuilder;
+  0648..064c op=08 move-object/from16 v2, v23
+  064c..0652 op=70 invoke-direct {v3, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0652..0658 op=6e invoke-virtual {v3, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0658..065c op=08 move-object/from16 v2, v21
+  065c..0662 op=6e invoke-virtual {v3, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0662..0668 op=6e invoke-virtual {v3, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  0668..066e op=6e invoke-virtual {v3}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  066e..0670 op=0c move-result-object v0
+  0670..0676 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  0676..067c op=74 invoke-virtual/range {v20..v20}, LX/1gB;->close()V
+  067c..0682 op=6e invoke-virtual {v6}, LX/0ZN;->close()V
+  0682..0688 op=74 invoke-virtual/range {v22..v22}, LX/0ZN;->close()V
+  0688..068c op=16 const-wide/16 v0, #0xffff (-1)
+  068c..068e op=10 return-wide v0
+  068e..0692 op=13 const/16 v10, #0x9
+  0692..0696 op=22 new-instance v2, LX/OC4;
+  0696..0698 op=07 move-object v7, v2
+  0698..069a op=07 move-object v8, v4
+  069a..069c op=07 move-object v9, v5
+  069c..069e op=04 move-wide v11, v0
+  069e..06a4 op=76 invoke-direct/range {v7..v12}, LX/OC4;-><init>(Ljava/lang/Object;Ljava/lang/Object;IJ)V
+  06a4..06aa op=6e invoke-virtual {v6, v2}, LX/0ZN;->A04(Ljava/lang/Runnable;)V
+  06aa..06b0 op=74 invoke-virtual/range {v20..v20}, LX/1gB;->close()V
+  06b0..06b6 op=6e invoke-virtual {v6}, LX/0ZN;->close()V
+  06b6..06bc op=74 invoke-virtual/range {v22..v22}, LX/0ZN;->close()V
+  06bc..06be op=10 return-wide v0
+  06be..06c0 op=0d move-exception v1
+  06c0..06c6 op=74 invoke-virtual/range {v20..v20}, LX/1gB;->close()V
+  06c6..06c8 op=28 goto +0x5
+  06c8..06ca op=0d move-exception v0
+  06ca..06d0 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  06d0..06d2 op=27 throw v1
+  06d2..06d4 op=0d move-exception v1
+  06d4..06da op=6e invoke-virtual {v6}, LX/0ZN;->close()V
+  06da..06dc op=28 goto +0x5
+  06dc..06de op=0d move-exception v0
+  06de..06e4 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  06e4..06e6 op=27 throw v1
+  06e6..06e8 op=0d move-exception v1
+  06e8..06ee op=74 invoke-virtual/range {v22..v22}, LX/0ZN;->close()V
+  06ee..06f0 op=27 throw v1
+  06f0..06f2 op=0d move-exception v0
+  06f2..06f8 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  06f8..06fa op=27 throw v1
+  # exception table: 25 try range(s)
+  # catch <all> code_units 0036..003a -> 0373
+  # catch <all> code_units 0042..0066 -> 0373
+  # catch <all> code_units 0066..006a -> 0369
+  # catch <all> code_units 006a..0072 -> 035f
+  # catch Landroid/database/sqlite/SQLiteConstraintException; code_units 0072..00bc -> 00bc
+  # catch <all> code_units 0072..00bc -> 035f
+  # catch <all> code_units 00bd..00d8 -> 035f
+  # catch <all> code_units 00d8..00f6 -> 02fa
+  # catch <all> code_units 00fa..0145 -> 02fa
+  # catch <all> code_units 0145..0148 -> 0148
+  # catch <all> code_units 014b..0219 -> 02fa
+  # catch Landroid/database/sqlite/SQLiteConstraintException; code_units 0219..026b -> 026b
+  # catch <all> code_units 0219..026b -> 02fa
+  # catch <all> code_units 026b..02ef -> 02fa
+  # catch <all> code_units 02ef..02fa -> 035f
+  # catch <all> code_units 02fd..0301 -> 0301
+  # catch <all> code_units 0302..033b -> 035f
+  # catch <all> code_units 033b..033e -> 0369
+  # catch <all> code_units 033e..0341 -> 0373
+  # catch <all> code_units 0347..0355 -> 035f
+  # catch <all> code_units 0355..0358 -> 0369
+  # catch <all> code_units 0358..035b -> 0373
+  # catch <all> code_units 0360..0364 -> 0364
+  # catch <all> code_units 0365..0369 -> 0369
+  # catch <all> code_units 036a..036e -> 036e
+  # catch <all> code_units 036f..0373 -> 0373
+  # catch <all> code_units 0374..0377 -> 0378
+.end method
