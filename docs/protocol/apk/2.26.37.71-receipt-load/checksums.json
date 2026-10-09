@@ -1,0 +1,46 @@
+{
+  "device-row-put.txt": {
+    "bytes": 833,
+    "sha256": "b565673912c1d6dcc7e9e95797901484654199791ab0f183668fccfb37b5784c"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "loader-map-dispatch.txt": {
+    "bytes": 5898,
+    "sha256": "aecb638ac5a2798196a333dfa9b1d00b70d1160893fa2f2c485f0583476f3bbe"
+  },
+  "loader-user-map.txt": {
+    "bytes": 809,
+    "sha256": "82519e91af4527e7e5c50be68e2563218e20e89344cbd852a57df8fb3e972485"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-cache-install.txt": {
+    "bytes": 1243,
+    "sha256": "852e1558fe593597654fb6345f0ca7a8cff9d563140dcf306d2c4eabc7836d7b"
+  },
+  "message-cache-read.txt": {
+    "bytes": 882,
+    "sha256": "78487899797aec552fa5ad1927118a5f58bff08c1baca3054af8900d8256065e"
+  },
+  "message-load-entry.txt": {
+    "bytes": 1871,
+    "sha256": "21ae823ce695fa719252805556e1f9d6bfbb7d76d761eac033d5ad371ac0a196"
+  },
+  "message-row-load.txt": {
+    "bytes": 15049,
+    "sha256": "9d255bc7f25b64045f6ac2925078af99c23b3120417b9ee60baf90ae3b881c65"
+  },
+  "targets.json": {
+    "bytes": 3349,
+    "sha256": "7ab81d0f254c8e4b9cdb7458465159ea9668d1cc769558a106902d6bc6f83b0f"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

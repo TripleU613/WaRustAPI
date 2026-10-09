@@ -91,3 +91,8 @@ exactly with the corrected renderer; cached self-diff verifies eight unchanged
 topics and four metadata artifacts. Hygiene checked 1,359 local links and
 30 APK bundles / 8,199,368 bytes. No transport code changed; previous 798-test
 runtime validation is not claimed as a fresh run. No live account operation ran.
+
+Follow-up: [general receipt loading](receipt-load.md) now establishes pending
+row membership and distinct general-load namespace mapping. The mutable set
+used by resend subtraction is not a set of delivered devices. Complete
+receipt_user/status admission and namespace authority remain unported.

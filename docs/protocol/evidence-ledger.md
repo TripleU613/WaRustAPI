@@ -2075,3 +2075,18 @@ exactly with the corrected renderer; cached self-diff verifies eight unchanged
 topics and four metadata artifacts. Hygiene checked 1,359 local links and
 30 APK bundles / 8,199,368 bytes. No transport code changed; previous 798-test
 runtime validation is not claimed as a fresh run. No live account operation ran.
+
+2026-10-09 — **Confirmed static:** the general receipt loader retains device
+row membership without a positive timestamp filter; it does not load primary
+versions. Cache install rechecks rather than overwrites, and general row mapping
+uses 0Yo.A03 rather than the incoming update's A07. Pending row membership,
+delivery facts and immutable original targets remain distinct. Mutable runtime
+receipt_user/status admission and alias authority are still unported.
+[Evidence and next inputs](receipt-load.md); no account or live operation changed.
+
+Receipt-load validation: seven source topics / 12 files / 58,000 bytes
+reproduced exactly from APK 2.26.37.71. Cached self-diff verified seven unchanged
+topics and four metadata artifacts; this does not prove cross-release parity.
+Repository hygiene checked 1,368 local links and 31 APK bundles / 8,257,368
+bytes; diff hygiene passed. Research/docs only; no fresh Rust or live tests
+are claimed beyond the preceding 66-test tooling chunk.

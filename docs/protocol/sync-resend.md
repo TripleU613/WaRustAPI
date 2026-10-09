@@ -182,3 +182,8 @@ tests, CLI-reference regeneration, API/library-symbol check and formatting
 passed. Repository hygiene checked 1,324 local links and 26 APK bundles /
 7,808,872 bytes. Runtime changes are comments only; no account operation,
 key-fetch query or live resend was performed.
+
+Follow-up: [general receipt loading](receipt-load.md) now establishes pending
+row membership and distinct general-load namespace mapping. The mutable set
+used by resend subtraction is not a set of delivered devices. Complete
+receipt_user/status admission and namespace authority remain unported.
