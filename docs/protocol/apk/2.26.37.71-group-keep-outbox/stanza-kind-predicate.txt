@@ -1,0 +1,36 @@
+# APK-derived structural disassembly: LX/BoR;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(ZL) flags=0x19 registers=4
+  0000..0002 op=12 const/4 v2, #0x0
+  0002..0006 op=52 iget v1, v3, LX/BZc;->bitField1_:I
+  0006..000a op=dd and-int/lit8 v0, v1, #0x40
+  000a..000e op=39 if-nez v0, +0x2e
+  000e..0014 op=14 const v0, #0x8000
+  0014..001a op=71 invoke-static {v1, v0}, LX/Ayo;->A1R(ZII)
+  001a..001c op=0a move-result v0
+  001c..0020 op=39 if-nez v0, +0x25
+  0020..0024 op=52 iget v1, v3, LX/BZc;->bitField1_:I
+  0024..0028 op=15 const/high16 v0, #0x80000
+  0028..002e op=71 invoke-static {v1, v0}, LX/Ayo;->A1R(ZII)
+  002e..0030 op=0a move-result v0
+  0030..0034 op=39 if-nez v0, +0x1b
+  0034..0038 op=52 iget v1, v3, LX/BZc;->bitField2_:I
+  0038..003c op=d5 and-int/lit16 v0, v1, #0x400
+  003c..0040 op=39 if-nez v0, +0x15
+  0040..0044 op=15 const/high16 v0, #0x4000000
+  0044..004a op=71 invoke-static {v1, v0}, LX/Ayo;->A1R(ZII)
+  004a..004c op=0a move-result v0
+  004c..0050 op=39 if-nez v0, +0xd
+  0050..0054 op=52 iget v1, v3, LX/BZc;->bitField2_:I
+  0054..0058 op=15 const/high16 v0, #0x80000000
+  0058..005e op=71 invoke-static {v1, v0}, LX/Ayo;->A1R(ZII)
+  005e..0060 op=0a move-result v0
+  0060..0064 op=39 if-nez v0, +0x3
+  0064..0066 op=0f return v2
+  0066..0068 op=12 const/4 v0, #0x1
+  0068..006a op=0f return v0
+  # exception table: 0 try range(s)
+.end method

@@ -841,3 +841,10 @@ original saved routes. Direct keep projection retains its existing behavior.
 Normal group keep sending, native downstream authorization/expiry enforcement,
 and fresh live group keep/handset rendering remain unimplemented or unverified.
 See [group keep](group-keep.md).
+
+Normal group keep/unkeep now has a separate original-author codec and typed
+`keep --participant` / `--ours` outbox path; `--dry-run` checks references without
+enqueue. Parent selection is revalidated in the reservation transaction.
+[Evidence and remaining keep-policy/clock/expiry gaps](group-keep-outbox.md).
+This supersedes the group send limitation above; fresh group ACK/rendering is
+still unverified.

@@ -1,0 +1,150 @@
+{
+  "add-on-constructor.txt": {
+    "bytes": 578,
+    "sha256": "3e99614a976919d0e855010ecd1cbb4628a857e1c3162141f86b97abea35cd16"
+  },
+  "author-device.txt": {
+    "bytes": 3795,
+    "sha256": "dfbf73cc4dfc6807e63d509aca04ae76aa4e1aedcdaccac75f2e1490c7474855"
+  },
+  "device-origin.txt": {
+    "bytes": 999,
+    "sha256": "3150fda81d901cec606af82d8c675bdfce7d922b5568b439d2444215b32914e7"
+  },
+  "group-predicate.txt": {
+    "bytes": 900,
+    "sha256": "586ac89bb85bb54823b97a0d3b2ffb3afca3060cbf8d2dbfceb4a753273b397b"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "keep-action.txt": {
+    "bytes": 12513,
+    "sha256": "4a9b798f656ef6bb301c21e1934cc6bdfed5cf624bb0ffe2a5648eeb4596c3eb"
+  },
+  "keep-clock.txt": {
+    "bytes": 1245,
+    "sha256": "bda0192e2f54092ebade9cd04d37737701d104bf40e8c475b3d7c1e3855537a5"
+  },
+  "keep-cursor.txt": {
+    "bytes": 16228,
+    "sha256": "1fc63352adecc6c8049cf76dc344a0948d455ff4d618fbf55d2fd0aa9b03f32a"
+  },
+  "keep-model-kind.txt": {
+    "bytes": 453,
+    "sha256": "962ab68f7eac411da682dc7894d23d7b18b05d0ad91d10376289f5fa9ad0b404"
+  },
+  "keep-outbound.txt": {
+    "bytes": 4588,
+    "sha256": "5a75dacc14c78367b11e005bd1b43b5b3a7be800c79500134a23af0842bf0839"
+  },
+  "keep-store.txt": {
+    "bytes": 128943,
+    "sha256": "8f8bd657e0fd2a9cdf650d95b49ce6f5e2b140ea435d60e377856c0726257e6b"
+  },
+  "key-author-set.txt": {
+    "bytes": 912,
+    "sha256": "e165234e12998051fd8d5a5ef335d5b4cac09e0ee1ddcb5c5f3c172bcf2c869a"
+  },
+  "key-direction-set.txt": {
+    "bytes": 819,
+    "sha256": "1b41c3734fbd2048c42cfc883780806a167437233f26bc7fba62651558cd341b"
+  },
+  "key-id-set.txt": {
+    "bytes": 903,
+    "sha256": "ed0a382e2186df39516131f2cedce42d50272ec30bc46d5041e1a505768146f3"
+  },
+  "key-remote-set.txt": {
+    "bytes": 910,
+    "sha256": "8a49a07fd5a216b3dbf9eaf87f432024e01d07cddddf9077a1c7d1b482419b1b"
+  },
+  "key-remote-wrapper.txt": {
+    "bytes": 603,
+    "sha256": "c111d597f2be17e64993cc64321324cff3830428a0c534b8b5df623d01f7b52c"
+  },
+  "key-serializer.txt": {
+    "bytes": 3092,
+    "sha256": "2b7784a9ead47934877caaed79eb49fda0120be82bcc293e4e3f0b3648801f01"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-lookup-wrapper.txt": {
+    "bytes": 718,
+    "sha256": "b8773f579fd0fb4e30b4facc533b81516e7c458bc5ce3b2cc75a5692fdc3105e"
+  },
+  "message-lookup.txt": {
+    "bytes": 576,
+    "sha256": "1a2cd1738d4e7b5a31e435b9efe807f63800a74700bab02399931f318268beae"
+  },
+  "message-store.txt": {
+    "bytes": 4742,
+    "sha256": "dbabf3d9f84a6cbf410cb1faad020917187f615e3c3d8ed2833117cc3c9518a1"
+  },
+  "non-group-predicate.txt": {
+    "bytes": 886,
+    "sha256": "e41f626f9d3fae0f1f26877c77aa0df3087f6946fc80464fadddae8912bee6cf"
+  },
+  "parent-author.txt": {
+    "bytes": 640,
+    "sha256": "49fc7b7de45619fa0be737e6c66217a2565cd98acf5bf07ec2a872ba75493eac"
+  },
+  "parent-edit-fallback.txt": {
+    "bytes": 4135,
+    "sha256": "0c1013c1d38219d75e42cc2a714b2c5ce129ecf4618abf36d2b27980ea569832"
+  },
+  "parent-key.txt": {
+    "bytes": 640,
+    "sha256": "acdb3774b8ad768f14dc80ee7443d7213d093bff285a2843498820120e1fe129"
+  },
+  "parent-lookup.txt": {
+    "bytes": 2278,
+    "sha256": "aef641b71d5e776d2fe102bab9043180282b929cf141430ce6c9bc2543b67212"
+  },
+  "parent-normalizer.txt": {
+    "bytes": 718,
+    "sha256": "c017bc9f87bbec76208d49a57aa42e955490804da0d66c31f2595d56d2bf36cd"
+  },
+  "remote-context-wrapper.txt": {
+    "bytes": 709,
+    "sha256": "e9493427701542f3b9d039a309a52debda83f319cfc4d91607c4eb3a66615ccc"
+  },
+  "remote-context.txt": {
+    "bytes": 824,
+    "sha256": "4d291e522c25abfa924c48bcd29153e81626296ab1410111c6e666de32b92365"
+  },
+  "remote-lambda.txt": {
+    "bytes": 5361,
+    "sha256": "89ec9fcf49b14015c4e3aeb597c7d297fca89095198879a0f88bd836367dda80"
+  },
+  "remote-mapping.txt": {
+    "bytes": 3078,
+    "sha256": "970a3b5cfd185575ba63bb0a52c9e32e110b4e9845f39adf14e0ecce4161f305"
+  },
+  "remote-user-predicate.txt": {
+    "bytes": 892,
+    "sha256": "52b5790e1fa5044ce3581e7518122e46bfcdf0d85d8c4ed8b57dac0105a8838a"
+  },
+  "selected-author.txt": {
+    "bytes": 1409,
+    "sha256": "d1ef563bf9f06154cd4e209e943ea2d934e5c3d6a03231bd7e79c53f88986b9d"
+  },
+  "stanza-kind-predicate.txt": {
+    "bytes": 1590,
+    "sha256": "333b1d8da85ce8fd233a9aaa9e6f6858a181869d2ed7cc6ac269c511bf0e840f"
+  },
+  "stanza-kind.txt": {
+    "bytes": 7041,
+    "sha256": "cba221704839628fcaad97f0eac181e30a342e523f4536f750de5b586c8274db"
+  },
+  "targets.json": {
+    "bytes": 14601,
+    "sha256": "afdea640e9cda1dd7d1ecc6ca9927882c3ce04add9d355c966b87e8367686faf"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

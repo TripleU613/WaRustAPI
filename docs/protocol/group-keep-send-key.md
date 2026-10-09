@@ -23,8 +23,10 @@ The next argument is false; the final argument is Cn6.A09. It then assigns the
 built key to BV3.key, chooses KEEP_FOR_ALL or UNDO_KEEP_FOR_ALL, and copies
 BnF.A02 to timestampMs. The [existing descriptor evidence](group-keep.md#protocol-construction)
 confirms Message field 51 and BV3 fields key=1, keepType=2, timestampMs=3.
-The native timestamp's producer has not been traced here; this does not prove
-it equals the time a Rust send attempt begins.
+The native timestamp producer was not traced at this checkpoint. The subsequent
+[normal keep outbox](group-keep-outbox.md#closed-static-branches) identifies
+11x.A01 / 08B.A00 and preserves original creation time; adjusted-clock parity
+remains unported.
 
 CSZ preserves 1gc.A01 as id (`0080..008a`) and 1gc.A02 as fromMe
 (`008a..0094`). The corresponding BOE setters assign
@@ -94,8 +96,11 @@ final Cn6.A09 argument false it returns the original parent remote. With it
 true, it invokes 0Yo.A02 and uses a nonnull result, otherwise falling back to
 the original remote. [0Yo.A02](apk/2.26.37.71-group-keep-send-key/remote-context-wrapper.txt)
 constructs 1wk selector 2 and invokes it. **Unknown:** selector 2's mapping and
-the producer of Cn6.A09; the lambda was not traced. A nullable mapping wrapper
-alone is not evidence for choosing an arbitrary PN/LID alias.
+the producer of Cn6.A09; the lambda was not traced at this checkpoint. The subsequent
+[normal keep outbox](group-keep-outbox.md#closed-static-branches) proves that
+ordinary group remote keys are unchanged; full non-group mapping and the context
+producer remain outside that port. A nullable mapping wrapper alone is not
+evidence for choosing an arbitrary PN/LID alias.
 
 **Inferred implementation direction:** ordinary group keep sends need an
 original participant, independent of the keeper, and frozen own identity for
@@ -104,9 +109,10 @@ facts without copying, opening or consuming media. Native optional lookup and
 namespace selection must be resolved or explicitly bounded before claiming
 serializer parity. These are research conclusions, not implemented behavior.
 
-**Confirmed local limitation:** the direct Rust keep encoder still omits
-participant, and the normal group adapter still refuses KeepInChat. This chunk
-changes neither behavior. APK send permission/expiry checks, edit conflict
+**Historical local limitation at this research checkpoint:** the direct Rust
+keep encoder omitted participant, and the normal group adapter refused
+KeepInChat. The subsequent [normal keep outbox](group-keep-outbox.md) now provides
+supported group dispatch through a separate codec; native policies remain open. APK send permission/expiry checks, edit conflict
 handling, native timestamp ordering, outgoing stanza attributes, complete
 namespace normalization and live group keep/unkeep remain **unknown/unported**.
 No chat message, group draft, registration request or account mutation was

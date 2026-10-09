@@ -379,3 +379,14 @@ rows increased from 456 to 461. These are transport captures, not new user-reply
 or delivery facts. Offline inspection found zero normal-group preparations.
 No live group quote/reaction, registration request, identity rotation or handset
 rendering was performed or established.
+
+## Group keep/unkeep and reference commit guard
+
+The actor now accepts supported KeepInChat references, with original group
+participant, sender-relative fromMe and the original accepted timestamp.
+Quote/reaction/keep parent resolution now uses one read snapshot and revalidates
+inside the crypto/outbox reservation transaction; changed references roll back
+with reference_changed. No keep/reaction parent preview is copied or opened.
+See [native evidence, invocation and limitations](group-keep-outbox.md).
+Native keep permissions, expiry enforcement and fresh group acceptance remain
+unverified; this is supported codec/dispatch, not complete native keep policy.

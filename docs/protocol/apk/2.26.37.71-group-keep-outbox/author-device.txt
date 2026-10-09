@@ -1,0 +1,74 @@
+# APK-derived structural disassembly: LX/0Z1;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LL) flags=0x1 registers=9
+  0000..0006 op=71 invoke-static {v8}, LX/C9r;->A00(LL)
+  0006..0008 op=0c move-result-object v0
+  0008..000c op=38 if-eqz v0, +0x7
+  000c..0010 op=54 iget-object v5, v0, LX/D5q;->A00:Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0010..0014 op=38 if-eqz v5, +0x3
+  0014..0016 op=11 return-object v5
+  0016..0018 op=12 const/4 v5, #0x0
+  0018..001c op=39 if-nez v0, -0x2
+  001c..0020 op=53 iget-wide v3, v8, LX/178;->A0j:J
+  0020..0024 op=16 const-wide/16 v1, #0xffff (-1)
+  0024..0028 op=31 cmp-long v0, v3, v1
+  0028..002c op=38 if-eqz v0, -0xa
+  002c..0030 op=54 iget-object v0, v7, LX/0Z1;->A01:LX/0Gc;
+  0030..0036 op=6e invoke-virtual {v0}, LX/0Gc;->A06(L)
+  0036..0038 op=0c move-result-object v4
+  0038..003c op=54 iget-object v6, v4, LX/0ZN;->A02:LX/0IY;
+  003c..0040 op=1a const-string v3, "\n          SELECT\n            author_device_jid\n          FROM\n            message_details\n          WHERE\n            message_row_id = ?\n        "
+  0040..0044 op=53 iget-wide v0, v8, LX/178;->A0j:J
+  0044..004a op=71 invoke-static {v0, v1}, Ljava/lang/Long;->toString(LJ)
+  004a..004c op=0c move-result-object v2
+  004c..004e op=12 const/4 v0, #0x1
+  004e..0052 op=23 new-array v1, v0, [Ljava/lang/String;
+  0052..0054 op=12 const/4 v0, #0x0
+  0054..0058 op=4d aput-object v2, v1, v0
+  0058..005c op=1a const-string v0, "GET_MESSAGE_AUTHOR_SQL"
+  005c..0062 op=6e invoke-virtual {v6, v3, v0, v1}, LX/0IY;->A0A(LLLL)
+  0062..0064 op=0c move-result-object v3
+  0064..006a op=72 invoke-interface {v3}, Landroid/database/Cursor;->moveToLast(Z)
+  006a..006c op=0a move-result v0
+  006c..0070 op=38 if-eqz v0, +0x1e
+  0070..0074 op=1a const-string v0, "author_device_jid"
+  0074..007a op=72 invoke-interface {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  007a..007c op=0a move-result v0
+  007c..0082 op=72 invoke-interface {v3, v0}, Landroid/database/Cursor;->getLong(JI)
+  0082..0084 op=0b move-result-wide v1
+  0084..0088 op=54 iget-object v0, v7, LX/0Z1;->A00:LX/0VT;
+  0088..008e op=6e invoke-virtual {v0, v1, v2}, LX/0VT;->A09(LJ)
+  008e..0090 op=0c move-result-object v1
+  0090..0096 op=71 invoke-static {v1}, LX/0DE;->A0T(ZL)
+  0096..0098 op=0a move-result v0
+  0098..009c op=38 if-eqz v0, +0x8
+  009c..00a0 op=62 sget-object v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0DK;
+  00a0..00a6 op=6e invoke-virtual {v0, v1}, LX/0DK;->A00(LL)
+  00a6..00a8 op=0c move-result-object v5
+  00a8..00ae op=72 invoke-interface {v3}, Landroid/database/Cursor;->close(V)
+  00ae..00b4 op=6e invoke-virtual {v4}, LX/0ZN;->close(V)
+  00b4..00b6 op=11 return-object v5
+  00b6..00b8 op=0d move-exception v1
+  00b8..00bc op=38 if-eqz v3, +0xa
+  00bc..00c2 op=72 invoke-interface {v3}, Landroid/database/Cursor;->close(V)
+  00c2..00c4 op=28 goto +0x5
+  00c4..00c6 op=0d move-exception v0
+  00c6..00cc op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  00cc..00ce op=27 throw v1
+  00ce..00d0 op=0d move-exception v1
+  00d0..00d6 op=6e invoke-virtual {v4}, LX/0ZN;->close(V)
+  00d6..00d8 op=27 throw v1
+  00d8..00da op=0d move-exception v0
+  00da..00e0 op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  00e0..00e2 op=27 throw v1
+  # exception table: 6 try range(s)
+  # catch <all> code_units 001c..0032 -> 0067
+  # catch <all> code_units 0032..0054 -> 005b
+  # catch <all> code_units 0054..0057 -> 0067
+  # catch <all> code_units 005e..0062 -> 0062
+  # catch <all> code_units 0063..0067 -> 0067
+  # catch <all> code_units 0068..006b -> 006c
+.end method

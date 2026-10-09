@@ -1,0 +1,105 @@
+# APK-derived structural disassembly: LX/1wk;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method invoke(L) flags=0x11 registers=7
+  0000..0004 op=52 iget v0, v6, LX/1wk;->$t:I
+  0004..000a op=2b packed-switch v0, payload@0x180, cases=[0:@0xfc, 1:@0xd4, 2:@0xb8], default@0xa
+  000a..000e op=54 iget-object v5, v6, LX/1wk;->A00:Ljava/lang/Object;
+  000e..0012 op=1f check-cast v5, LX/0Yo;
+  0012..0016 op=54 iget-object v4, v6, LX/1wk;->A01:Ljava/lang/Object;
+  0016..001a op=1f check-cast v4, LX/0Cy;
+  001a..001e op=38 if-eqz v4, +0x4e
+  001e..0024 op=71 invoke-static {v4}, LX/0DE;->A0e(ZL)
+  0024..0026 op=0a move-result v0
+  0026..002a op=38 if-eqz v0, +0x48
+  002a..0030 op=71 invoke-static {v4}, LX/0hd;->A02(ZL)
+  0030..0032 op=0a move-result v0
+  0032..0036 op=39 if-nez v0, +0x42
+  0036..003a op=1f check-cast v4, Lcom/whatsapp/infra/core/jid/UserJid;
+  003a..0040 op=6e invoke-virtual {v5}, LX/0Yo;->A0H(Z)
+  0040..0042 op=0a move-result v0
+  0042..0046 op=38 if-eqz v0, +0x3a
+  0046..004a op=54 iget-object v0, v5, LX/0Yo;->A06:LX/05B;
+  004a..004e op=54 iget-object v3, v0, LX/05B;->A00:LX/00s;
+  004e..0054 op=72 invoke-interface {v3}, LX/00s;->get(L)
+  0054..0056 op=0c move-result-object v0
+  0056..005a op=1f check-cast v0, LX/0VT;
+  005a..0060 op=6e invoke-virtual {v0, v4}, LX/0VT;->A07(JL)
+  0060..0062 op=0b move-result-wide v1
+  0062..0066 op=54 iget-object v0, v5, LX/0Yo;->A03:LX/05B;
+  0066..006c op=71 invoke-static {v0}, LX/05B;->A02(LL)
+  006c..006e op=0c move-result-object v0
+  006e..0072 op=1f check-cast v0, LX/0VS;
+  0072..0078 op=6e invoke-virtual {v0, v1, v2}, LX/0VS;->A0J(LJ)
+  0078..007a op=0c move-result-object v0
+  007a..007e op=38 if-eqz v0, +0x15
+  007e..0084 op=72 invoke-interface {v3}, LX/00s;->get(L)
+  0084..0086 op=0c move-result-object v3
+  0086..008a op=1f check-cast v3, LX/0VT;
+  008a..008e op=1c const-class v2, Lcom/whatsapp/infra/core/jid/UserJid;
+  008e..0094 op=6e invoke-virtual {v0}, Ljava/lang/Number;->longValue(J)
+  0094..0096 op=0b move-result-wide v0
+  0096..009c op=6e invoke-virtual {v3, v2, v0, v1}, LX/0VT;->A0C(LLJ)
+  009c..009e op=0c move-result-object v0
+  009e..00a2 op=38 if-eqz v0, +0x3
+  00a2..00a4 op=11 return-object v0
+  00a4..00aa op=71 invoke-static {v5}, LX/0Yo;->A00(LL)
+  00aa..00ac op=0c move-result-object v0
+  00ac..00b2 op=6e invoke-virtual {v0, v4}, LX/0Xw;->A0I(LL)
+  00b2..00b4 op=0c move-result-object v4
+  00b4..00b6 op=11 return-object v4
+  00b6..00b8 op=11 return-object v4
+  00b8..00bc op=54 iget-object v2, v6, LX/1wk;->A00:Ljava/lang/Object;
+  00bc..00c0 op=1f check-cast v2, LX/0Yo;
+  00c0..00c4 op=54 iget-object v1, v6, LX/1wk;->A01:Ljava/lang/Object;
+  00c4..00c8 op=1f check-cast v1, LX/0Cy;
+  00c8..00ca op=12 const/4 v0, #0x0
+  00ca..00d0 op=6e invoke-virtual {v2, v1, v0}, LX/0Yo;->A0B(LLZ)
+  00d0..00d2 op=0c move-result-object v4
+  00d2..00d4 op=11 return-object v4
+  00d4..00d8 op=54 iget-object v2, v6, LX/1wk;->A00:Ljava/lang/Object;
+  00d8..00dc op=1f check-cast v2, LX/178;
+  00dc..00e0 op=54 iget-object v1, v6, LX/1wk;->A01:Ljava/lang/Object;
+  00e0..00e4 op=1f check-cast v1, Ljava/lang/Class;
+  00e4..00e8 op=1c const-class v0, LX/1i4;
+  00e8..00ee op=6e invoke-virtual {v0, v1}, Ljava/lang/Class;->isAssignableFrom(ZL)
+  00ee..00f0 op=0a move-result v0
+  00f0..00f4 op=22 new-instance v4, LX/1i8;
+  00f4..00fa op=70 invoke-direct {v4, v2, v1, v0}, LX/1i8;-><init>(VLLZ)
+  00fa..00fc op=11 return-object v4
+  00fc..0100 op=54 iget-object v3, v6, LX/1wk;->A00:Ljava/lang/Object;
+  0100..0104 op=1f check-cast v3, LX/1EW;
+  0104..0108 op=54 iget-object v2, v6, LX/1wk;->A01:Ljava/lang/Object;
+  0108..010c op=1f check-cast v2, LX/0d0;
+  010c..0110 op=54 iget-object v1, v2, LX/0d0;->A0K:LX/0cJ;
+  0110..0116 op=6e invoke-virtual {v1}, LX/0cJ;->A01(L)
+  0116..0118 op=0c move-result-object v0
+  0118..011e op=71 invoke-static {v0}, LX/00h;->A06(VL)
+  011e..0122 op=1f check-cast v0, Lcom/whatsapp/home/ExtendedMiniFab;
+  0122..0128 op=72 invoke-interface {v3, v0}, LX/1EW;->CXY(VL)
+  0128..012e op=6e invoke-virtual {v1}, LX/0cJ;->A01(L)
+  012e..0130 op=0c move-result-object v0
+  0130..0136 op=71 invoke-static {v0}, LX/00h;->A06(VL)
+  0136..013c op=72 invoke-interface {v3, v0}, LX/1EW;->setBackgroundColorForSecondaryFab(VL)
+  013c..013e op=12 const/4 v0, #0x0
+  013e..0144 op=6e invoke-virtual {v1, v0}, LX/0cJ;->A05(VI)
+  0144..0148 op=55 iget-boolean v0, v2, LX/0d0;->A0N:Z
+  0148..014c op=38 if-eqz v0, +0xa
+  014c..0150 op=54 iget-object v0, v2, LX/0d0;->A0M:LX/0cJ;
+  0150..0156 op=6e invoke-virtual {v0}, LX/0cJ;->A0B(Z)
+  0156..0158 op=0a move-result v0
+  0158..015c op=38 if-eqz v0, +0x10
+  015c..0160 op=54 iget-object v0, v2, LX/0d0;->A0M:LX/0cJ;
+  0160..0166 op=6e invoke-virtual {v0}, LX/0cJ;->A01(L)
+  0166..0168 op=0c move-result-object v1
+  0168..016e op=71 invoke-static {v1}, LX/00h;->A06(VL)
+  016e..0172 op=13 const/16 v0, #0x8
+  0172..0178 op=6e invoke-virtual {v1, v0}, Landroid/view/View;->setVisibility(VI)
+  0178..017c op=62 sget-object v4, LX/05R;->A00:LX/05R;
+  017c..017e op=11 return-object v4
+  017e..0180 op=00 nop
+  0180..0194 op=00 packed-switch-payload size=3
+  # exception table: 0 try range(s)
+.end method

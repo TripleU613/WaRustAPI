@@ -2656,3 +2656,35 @@ native permission/expiry checks and fresh live keep/unkeep remain unfinished.
 reference regeneration. Hygiene validates 19 APK bundles / 6,188,509 bytes.
 No account connection, group draft, message send or private state change was
 performed. This verifies the research export, not outgoing keep implementation.
+
+Normal group keep/unkeep (2026-10-09, **confirmed static/local implementation**):
+APK 37.71 original-key, namespace, creation-clock and stanza traces now ground
+a separate group codec and typed keep --participant/--ours/--undo/--dry-run.
+Normal fanout dispatch preserves the original accepted timestamp and original
+intent reservations. Shared quote/reaction/keep parent selection now reads one
+snapshot and revalidates inside the crypto/outbox reservation transaction;
+changed references roll back with reference_changed. Consumed bodies stay
+consumed and keeps/reactions do not parse parent text previews. Native
+permission/expiry enforcement, adjusted-clock synchronization, complete parent
+normalization, full own-device sync and fresh group ACK/rendering remain open.
+[Evidence and limits](protocol/group-keep-outbox.md).
+
+**Confirmed validation:** 784 workspace/all-feature tests (656 API, 4 property,
+9 crash, 51 CLI, one API-library symbol, 63 xtask), strict Clippy, warning-free
+Rustdoc, default CLI/API checks, regenerated CLI reference, formatting and build
+passed. APK re-export/check reproduces 33 topics / 38 files / 259,783 bytes;
+cached checksum-verified self-diff is unchanged in 0.017053 seconds, not a
+new-release extraction benchmark. Hygiene checks 1,237 local links and 20 APK
+bundles / 6,448,292 bytes. Offline keep dry-runs enqueue nothing; missing group
+participant refuses. Saved account facts and 492 retained captures were unchanged
+before live validation.
+
+**Observed receive validation:** a single completed 45-second window
+authenticated and stopped cleanly with sends and automatic reconnect disabled.
+Peer keys, actions, receipts, outbox, events and retained original capture shapes
+stayed unchanged; captures grew from 492 to 497. Two retained group reaction
+references remain valid; no group keep payload was available. No new group draft,
+keep/unkeep transmission, group ACK or handset rendering was tested. An earlier
+local ownership refusal resulted from overlapping offline inspection and receive
+orchestration; its logs were preserved and inspection completion verified before
+this window. No server retry, account reset or ownership bypass was added.

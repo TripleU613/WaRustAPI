@@ -147,7 +147,12 @@ pub(super) mod tests {
                 "remove",
                 "own_reply",
                 "own_reaction",
+                "keep",
+                "unkeep",
+                "own_keep",
+                "own_unkeep",
                 "changed_target",
+                "changed_keep",
             ] {
                 let dir = tempfile::tempdir().unwrap();
                 let path = dir.path().join("group-reference-actor.redb");
@@ -178,6 +183,7 @@ pub(super) mod tests {
                 )
                 .unwrap();
                 let reaction = kind.contains("reaction") || kind == "remove";
+                let keep = kind.contains("keep");
                 let content = if reaction {
                     MessageContent::Reaction {
                         target,
@@ -186,6 +192,11 @@ pub(super) mod tests {
                         } else {
                             Some("👍".into())
                         },
+                    }
+                } else if keep {
+                    MessageContent::KeepInChat {
+                        target,
+                        keep: !kind.contains("unkeep"),
                     }
                 } else {
                     MessageContent::Text {
@@ -220,7 +231,7 @@ pub(super) mod tests {
                         Some("w:g2") => membership(&query, &own, std::slice::from_ref(&peer)),
                         Some("usync") => device_reply(&query),
                         Some("encrypt") => {
-                            if kind == "changed_target" {
+                            if kind.starts_with("changed_") {
                                 save_parent(
                                     &store,
                                     &f.plan.chat,
@@ -246,7 +257,7 @@ pub(super) mod tests {
                     }
                 }
                 let entry = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
-                if kind == "changed_target" {
+                if kind.starts_with("changed_") {
                     assert!(sent.is_none());
                     assert_eq!(entry, original);
                     assert_eq!(
@@ -312,6 +323,28 @@ pub(super) mod tests {
                             body.plaintext
                                 .windows(expected.to_string().len())
                                 .any(|w| w == expected.to_string().as_bytes())
+                        );
+                    } else if keep {
+                        use prost::Message as _;
+                        let envelope = super::super::chat_settings::Envelope::decode(
+                            body.plaintext.as_slice(),
+                        )
+                        .unwrap();
+                        assert!(envelope.protocol.is_none());
+                        let keep = envelope.keep_in_chat.unwrap();
+                        let key = keep.key.unwrap();
+                        assert_eq!(key.remote_jid, Some(f.plan.chat.to_string()));
+                        assert_eq!(key.participant, Some(expected.to_string()));
+                        assert_eq!(key.from_me, Some(ours));
+                        assert_eq!(key.id.as_deref(), Some("ORIGINAL-TARGET"));
+                        assert_eq!(
+                            keep.keep_type,
+                            Some(if kind.contains("unkeep") { 2 } else { 1 })
+                        );
+                        assert_eq!(keep.timestamp_ms, Some(original.accepted_at.as_millis()));
+                        assert_eq!(
+                            node.get_attr("type").and_then(|a| a.as_text()),
+                            Some("text")
                         );
                     } else {
                         let decoded = super::super::quotes::decode(&body.plaintext).unwrap();
@@ -1199,11 +1232,12 @@ impl Step {
         }
     }
 }
-fn payload(
-    store: &ProtocolStore,
-    entry: &OutboxEntry,
-    own: Option<&Jid>,
-) -> Result<(Zeroizing<Vec<u8>>, groups::StanzaContent<'static>)> {
+type GroupPayload = (
+    Zeroizing<Vec<u8>>,
+    groups::StanzaContent<'static>,
+    Option<super::group_references::ReferenceGuard>,
+);
+fn payload(store: &ProtocolStore, entry: &OutboxEntry, own: Option<&Jid>) -> Result<GroupPayload> {
     match &entry.intent.content {
         MessageContent::Text {
             body,
@@ -1212,26 +1246,35 @@ fn payload(
         } if !style.is_styled() => Ok((
             Zeroizing::new(group_send::text_payload(body)?),
             groups::StanzaContent::Text,
+            None,
         )),
         MessageContent::Text {
             quoted: Some(_), ..
         }
-        | MessageContent::Reaction { .. } => {
+        | MessageContent::Reaction { .. }
+        | MessageContent::KeepInChat { .. } => {
             super::group_references::validate(
                 store,
                 entry.intent.chat.jid(),
                 &entry.intent.content,
             )?;
             let Some(own) = own else {
-                return Ok((Zeroizing::new(Vec::new()), groups::StanzaContent::Text));
+                return Ok((
+                    Zeroizing::new(Vec::new()),
+                    groups::StanzaContent::Text,
+                    None,
+                ));
             };
-            let (body, kind) = super::group_references::payload(
+            let (body, kind, guard) = super::group_references::guarded_payload(
                 store,
                 entry.intent.chat.jid(),
                 own,
                 &entry.intent.content,
+                // APK 37.71 11x.A01 records keep time before Cgz.A02 queues
+                // the send; preserve original intent time across preparation.
+                entry.accepted_at,
             )?;
-            Ok((Zeroizing::new(body), kind))
+            Ok((Zeroizing::new(body), kind, Some(guard)))
         }
         MessageContent::Media {
             reference,
@@ -1244,7 +1287,7 @@ fn payload(
                 entry.intent.chat.jid(),
                 reference,
             )?;
-            Ok((body, groups::StanzaContent::Media(media)))
+            Ok((body, groups::StanzaContent::Media(media), None))
         }
         _ => Err(invalid(
             "group content is not implemented by the normal adapter",
@@ -1657,13 +1700,14 @@ impl Pending {
                     &bundle_selector(self.entry.local_id)?,
                     &self.needed,
                 )?;
-                let (body, content) = match payload(store, &self.entry, self.own.as_ref()) {
-                    Ok(value) => value,
-                    Err(Error::InvalidInput { .. }) => {
-                        return self.block(store, Block::ReferenceChanged);
-                    }
-                    Err(error) => return Err(error),
-                };
+                let (body, content, reference_guard) =
+                    match payload(store, &self.entry, self.own.as_ref()) {
+                        Ok(value) => value,
+                        Err(Error::InvalidInput { .. }) => {
+                            return self.block(store, Block::ReferenceChanged);
+                        }
+                        Err(error) => return Err(error),
+                    };
                 let prepared = match self
                     .snapshot
                     .take()
@@ -1712,6 +1756,9 @@ impl Pending {
                     if current != self.entry || held.as_ref() != Some(&self.row) {
                         return Err(invalid("original group preparation changed"));
                     }
+                    if let Some(guard) = &reference_guard {
+                        guard.validate_in(tx)?;
+                    }
                     prepared.reserve_in(tx, archive.as_bytes())?;
                     current.wire_id = Some(MessageId::new(wire_id)?);
                     current.attempts.push(AttemptRecord {
@@ -1742,8 +1789,13 @@ impl Pending {
                 if let Err(error) = result {
                     // Storage failures are not a local protocol refusal. Preserve
                     // the transaction error rather than claiming a saved block.
-                    if matches!(error, Error::InvalidInput { .. }) {
-                        return self.block(store, Block::PreparationChanged);
+                    if let Error::InvalidInput { field, .. } = error {
+                        let block = if field == "group_reference" {
+                            Block::ReferenceChanged
+                        } else {
+                            Block::PreparationChanged
+                        };
+                        return self.block(store, block);
                     }
                     return Err(error);
                 }

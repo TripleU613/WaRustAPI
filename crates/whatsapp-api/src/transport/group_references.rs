@@ -1,4 +1,4 @@
-//! Normal group quote/reaction attribution over APK 37.71 BZa/BWI/BVK/BZF.
+//! Normal group quote/reaction/keep attribution over APK 37.71 protobuf keys.
 //! Caller keys do not authorize copying a different saved parent's plaintext.
 use super::{groups::StanzaContent, quotes, reactions};
 use crate::{
@@ -23,22 +23,49 @@ fn target(content: &MessageContent) -> Result<&MessageRef> {
             style,
             ..
         } if !style.is_styled() => Ok(target),
-        MessageContent::Reaction { target, .. } => Ok(target),
-        _ => Err(invalid("expected an unstyled quoted text or reaction")),
+        MessageContent::Reaction { target, .. } | MessageContent::KeepInChat { target, .. } => {
+            Ok(target)
+        }
+        _ => Err(invalid(
+            "expected an unstyled quoted text, reaction or keep",
+        )),
     }
 }
+#[derive(Clone, PartialEq, Eq)]
 struct Parent {
     sender: Option<Jid>,
     text: Option<String>,
 }
-fn parent(store: &ProtocolStore, chat: &Jid, target: &MessageRef) -> Result<Parent> {
+fn parent(
+    store: &ProtocolStore,
+    chat: &Jid,
+    target: &MessageRef,
+    include_text: bool,
+) -> Result<Parent> {
+    store.read(|tx| {
+        parent_in(
+            chat,
+            target,
+            include_text,
+            || Outbox::new("comparison-driver", Limits::default()).by_wire_id(tx, &target.key.id),
+            |k| tx.get(Table::Checkpoints, k, 1),
+            |k| tx.get_json(Table::Checkpoints, k, 1),
+        )
+    })
+}
+fn parent_in(
+    chat: &Jid,
+    target: &MessageRef,
+    include_text: bool,
+    outgoing: impl FnOnce() -> Result<Option<crate::outbox::OutboxEntry>>,
+    mut get: impl FnMut(&[u8]) -> Result<Option<Vec<u8>>>,
+    capture: impl FnOnce(&[u8]) -> Result<Option<Vec<u8>>>,
+) -> Result<Parent> {
     if chat.server != Server::Group || target.key.chat.jid().to_non_ad() != chat.to_non_ad() {
         return Err(invalid("target belongs to another chat or is not a group"));
     }
     if target.key.direction == Direction::Outgoing {
-        let entry = store.read(|tx| {
-            Outbox::new("comparison-driver", Limits::default()).by_wire_id(tx, &target.key.id)
-        })?;
+        let entry = outgoing()?;
         if entry
             .as_ref()
             .is_some_and(|e| e.intent.chat.jid().to_non_ad() != chat.to_non_ad())
@@ -47,10 +74,12 @@ fn parent(store: &ProtocolStore, chat: &Jid, target: &MessageRef) -> Result<Pare
         }
         return Ok(Parent {
             sender: None,
-            text: entry.and_then(|e| match e.intent.content {
-                MessageContent::Text { body, .. } => Some(body),
-                _ => None,
-            }),
+            text: entry
+                .filter(|_| include_text)
+                .and_then(|e| match e.intent.content {
+                    MessageContent::Text { body, .. } => Some(body),
+                    _ => None,
+                }),
         });
     }
     let supplied = target
@@ -66,8 +95,7 @@ fn parent(store: &ProtocolStore, chat: &Jid, target: &MessageRef) -> Result<Pare
         .attr("from", chat.clone())
         .attr("participant", supplied.clone())
         .attr("id", target.key.id.as_str());
-    let selection =
-        store.read(|tx| super::group_inbox::select(&node, |k| tx.get(Table::Checkpoints, k, 1)))?;
+    let selection = super::group_inbox::select(&node, &mut get)?;
     if selection.saved.is_none() && selection.legacy_collision {
         return Err(invalid("saved incoming target attribution differs"));
     }
@@ -83,8 +111,8 @@ fn parent(store: &ProtocolStore, chat: &Jid, target: &MessageRef) -> Result<Pare
     // a same-id record from another participant to the supplied key.
     let wire: Option<Vec<u8>> = if !saved["route"].is_null() {
         serde_json::from_value(saved["route"].clone()).ok()
-    } else if let Ok(capture) = serde_json::from_value::<Vec<u8>>(saved["capture"].clone()) {
-        store.read(|tx| tx.get_json(Table::Checkpoints, &capture, 1))?
+    } else if let Ok(key) = serde_json::from_value::<Vec<u8>>(saved["capture"].clone()) {
+        capture(&key)?
     } else {
         None
     };
@@ -106,7 +134,7 @@ fn parent(store: &ProtocolStore, chat: &Jid, target: &MessageRef) -> Result<Pare
     {
         return Err(invalid("saved incoming target attribution differs"));
     }
-    let text = if saved["status"] == "decrypted" {
+    let text = if include_text && saved["status"] == "decrypted" {
         serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone())
             .ok()
             .and_then(|p| quotes::decode(&p))
@@ -126,7 +154,7 @@ pub fn validate(store: &ProtocolStore, chat: &Jid, content: &MessageContent) -> 
     if let MessageContent::Reaction { emoji, .. } = content {
         reactions::validate(chat, reference, emoji.as_deref())?;
     }
-    let _ = parent(store, chat, reference)?;
+    let _ = parent(store, chat, reference, false)?;
     Ok(())
 }
 /// Encode the APK-derived bare Message for one frozen group sender identity.
@@ -138,8 +166,62 @@ pub fn payload(
     own: &Jid,
     content: &MessageContent,
 ) -> Result<(Vec<u8>, StanzaContent<'static>)> {
+    let (body, kind, _) = guarded_payload(store, chat, own, content, Timestamp::now())?;
+    Ok((body, kind))
+}
+
+// Parent resolution is read in one snapshot, then checked again in the crypto /
+// outbox reservation transaction. An await must not authorize a stale quote or
+// a legacy same-id record that acquired a different authenticated author.
+pub(crate) struct ReferenceGuard {
+    chat: Jid,
+    target: MessageRef,
+    include_text: bool,
+    parent: Parent,
+}
+impl ReferenceGuard {
+    pub(crate) fn validate_in(&self, tx: &crate::store::WriteTx<'_>) -> Result<()> {
+        let current = match parent_in(
+            &self.chat,
+            &self.target,
+            self.include_text,
+            || {
+                Outbox::new("comparison-driver", Limits::default())
+                    .by_wire_id_in_write(tx, &self.target.key.id)
+            },
+            |k| tx.get(Table::Checkpoints, k, 1),
+            |k| tx.get_json(Table::Checkpoints, k, 1),
+        ) {
+            Ok(parent) => parent,
+            Err(Error::InvalidInput { .. }) => return Err(invalid("reference_changed")),
+            Err(error) => return Err(error),
+        };
+        if current != self.parent {
+            return Err(invalid("reference_changed"));
+        }
+        Ok(())
+    }
+}
+pub(crate) fn guarded_payload(
+    store: &ProtocolStore,
+    chat: &Jid,
+    own: &Jid,
+    content: &MessageContent,
+    accepted_at: Timestamp,
+) -> Result<(Vec<u8>, StanzaContent<'static>, ReferenceGuard)> {
     let reference = target(content)?;
-    let resolved = parent(store, chat, reference)?;
+    let resolved = parent(
+        store,
+        chat,
+        reference,
+        matches!(content, MessageContent::Text { .. }),
+    )?;
+    let guard = ReferenceGuard {
+        chat: chat.clone(),
+        target: reference.clone(),
+        include_text: matches!(content, MessageContent::Text { .. }),
+        parent: resolved.clone(),
+    };
     let participant = match reference.key.direction {
         Direction::Incoming => resolved.sender.expect("validated incoming participant"),
         Direction::Outgoing => {
@@ -159,7 +241,7 @@ pub fn payload(
     if !participant.is_user_like() {
         return Err(invalid("participant must be a user identity"));
     }
-    match content {
+    let encoded: Result<(Vec<u8>, StanzaContent<'static>)> = match content {
         MessageContent::Text { body, .. } => {
             let _ = super::group_send::text_payload(body)?;
             // 37.71 BVK contextInfo: stanzaId=1, participant=2, quotedMessage=3.
@@ -184,8 +266,21 @@ pub fn payload(
             )?,
             StanzaContent::Reaction,
         )),
+        MessageContent::KeepInChat { keep, .. } => Ok((
+            super::chat_settings::group_keep_payload(
+                chat,
+                &participant,
+                reference,
+                *keep,
+                accepted_at.as_millis(),
+            )?,
+            // APK 37.71 BoR.A02: bare field 51 falls through to type=text.
+            StanzaContent::Text,
+        )),
         _ => unreachable!("validated content"),
-    }
+    };
+    let (body, kind) = encoded?;
+    Ok((body, kind, guard))
 }
 
 #[cfg(test)]
@@ -239,6 +334,160 @@ pub(super) mod tests {
                 &serde_json::json!({"status":"decrypted","route":route,"protobuf":payload}),
             )
         })
+    }
+    #[test]
+    fn keep_validation_and_encoding_preserve_consumed_parents_and_refuse_foreign_authors() {
+        use prost::Message as _;
+        let dir = tempfile::tempdir().unwrap();
+        let store = super::super::group_fanout::tests::open(&dir.path().join("keep.redb"));
+        let chat = jid("120363000000000001@g.us");
+        let own = jid("111111111111111@lid");
+        let author = jid("222222222222222:3@lid");
+        save_parent(&store, &chat, &author, &[0x1a, 0]).unwrap();
+        let saved_key = format!("received:{chat}:ORIGINAL-TARGET");
+        store
+            .write(|tx| {
+                let mut saved: serde_json::Value = tx
+                    .get_json(Table::Checkpoints, saved_key.as_bytes(), 1)?
+                    .unwrap();
+                saved["status"] = "consumed".into();
+                saved.as_object_mut().unwrap().remove("protobuf");
+                tx.put_json(Table::Checkpoints, saved_key.as_bytes(), 1, &saved)
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+            .unwrap();
+        let head = store.journal_head().unwrap();
+        for kept in [true, false] {
+            let content = MessageContent::KeepInChat {
+                target: reference(&chat, &author, false),
+                keep: kept,
+            };
+            validate(&store, &chat, &content).unwrap();
+            let (bytes, kind) = payload(&store, &chat, &own, &content).unwrap();
+            assert!(matches!(kind, StanzaContent::Text));
+            let envelope = super::super::chat_settings::Envelope::decode(bytes.as_slice()).unwrap();
+            assert_eq!(
+                envelope.keep_in_chat.unwrap().key.unwrap().participant,
+                Some(author.to_non_ad().to_string())
+            );
+            let forged = MessageContent::KeepInChat {
+                target: reference(&chat, &jid("333333333333333@lid"), false),
+                keep: kept,
+            };
+            assert!(validate(&store, &chat, &forged).is_err());
+            assert!(payload(&store, &chat, &own, &forged).is_err());
+        }
+        assert_eq!(
+            before,
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+                .unwrap()
+        );
+        assert_eq!(head, store.journal_head().unwrap());
+    }
+    #[test]
+    fn reference_guard_rolls_back_reservations_after_parent_changes_during_crypto() {
+        let dir = tempfile::tempdir().unwrap();
+        let store =
+            super::super::group_fanout::tests::open(&dir.path().join("reference-race.redb"));
+        let chat = jid("120363000000000001@g.us");
+        let own = jid("111111111111111@lid");
+        let author = jid("222222222222222:3@lid");
+        for case in [
+            "quote_body",
+            "quote_consumed",
+            "reaction_author",
+            "keep_author",
+            "keep_malformed",
+        ] {
+            save_parent(
+                &store,
+                &chat,
+                &author,
+                &quotes::conversation("original body"),
+            )
+            .unwrap();
+            let target = reference(&chat, &author, false);
+            let content = if case.starts_with("quote") {
+                MessageContent::Text {
+                    body: "reply".into(),
+                    quoted: Some(target),
+                    style: Default::default(),
+                }
+            } else if case.starts_with("reaction") {
+                MessageContent::Reaction {
+                    target,
+                    emoji: None,
+                }
+            } else {
+                MessageContent::KeepInChat {
+                    target,
+                    keep: false,
+                }
+            };
+            let (_, _, guard) =
+                guarded_payload(&store, &chat, &own, &content, Timestamp(1)).unwrap();
+            store.write(|tx| guard.validate_in(tx)).unwrap();
+            if case == "quote_consumed" {
+                store
+                    .write(|tx| {
+                        let key = format!("received:{chat}:ORIGINAL-TARGET");
+                        let mut saved: serde_json::Value =
+                            tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                        saved["status"] = "consumed".into();
+                        saved.as_object_mut().unwrap().remove("protobuf");
+                        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved)
+                    })
+                    .unwrap();
+            } else if case == "keep_malformed" {
+                store
+                    .write(|tx| {
+                        tx.put(
+                            Table::Checkpoints,
+                            format!("received:{chat}:ORIGINAL-TARGET").as_bytes(),
+                            1,
+                            b"not-json",
+                        )
+                    })
+                    .unwrap();
+            } else {
+                let sender = if case.ends_with("author") {
+                    jid("333333333333333@lid")
+                } else {
+                    author.clone()
+                };
+                save_parent(
+                    &store,
+                    &chat,
+                    &sender,
+                    &quotes::conversation("replacement body"),
+                )
+                .unwrap();
+            }
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+                .unwrap();
+            let result = store.write(|tx| {
+                tx.put(
+                    Table::Checkpoints,
+                    b"simulated-send-reservation",
+                    1,
+                    b"reserved",
+                )?;
+                guard.validate_in(tx)
+            });
+            assert!(
+                matches!(result, Err(Error::InvalidInput { field: "group_reference", reason, .. }) if reason=="reference_changed")
+            );
+            assert_eq!(
+                rows,
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+                    .unwrap()
+            );
+        }
     }
     #[test]
     fn references_do_not_copy_a_foreign_sender_body_or_media_and_inspection_is_read_only() {

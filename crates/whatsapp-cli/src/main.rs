@@ -474,12 +474,18 @@ enum Cmd {
         /// The target message was sent by this account (default: by the contact).
         #[arg(long)]
         ours: bool,
+        /// Original sender PN/LID JID; required for an incoming group target.
+        #[arg(long, conflicts_with = "ours")]
+        participant: Option<String>,
         /// Undo a previous keep instead of setting one.
         #[arg(long)]
         undo: bool,
         /// Caller idempotency key; defaults to a content digest.
         #[arg(long)]
         request_id: Option<String>,
+        /// Validate the target locally without enqueueing or transmitting it.
+        #[arg(long)]
+        dry_run: bool,
     },
     /// Durably enqueue an advanced chat privacy ("limit sharing") change;
     /// `listen --send-outbox` transmits it.
@@ -2317,45 +2323,53 @@ async fn run(cli: Cli) -> Result<(), Error> {
             chat,
             id,
             ours,
+            participant,
             undo,
             request_id,
+            dry_run,
         } => {
             use sha2::Digest;
-            use whatsapp_api::model::{
-                ids::{DeviceAddress, MessageId},
-                message::{Direction, MessageKey, MessageRef},
-            };
             let peer = Jid::parse(chat)?;
             let chat_id = ChatId::from_jid(&peer)?;
-            let target = MessageRef {
-                key: MessageKey {
-                    chat: chat_id.clone(),
-                    sender: if *ours {
-                        None
-                    } else {
-                        Some(DeviceAddress::from_jid(&peer)?)
-                    },
-                    direction: if *ours {
-                        Direction::Outgoing
-                    } else {
-                        Direction::Incoming
-                    },
-                    id: MessageId::new(id.clone())?,
-                },
+            let target = message_reference(&peer, id, *ours, participant.as_deref())?;
+            let content = MessageContent::KeepInChat {
+                target,
+                keep: !*undo,
             };
+            #[cfg(not(feature = "experimental-transport"))]
+            if *dry_run {
+                return Err(Error::invalid(
+                    "dry_run",
+                    "keep inspection requires the experimental-transport feature",
+                ));
+            }
             let digest = sha2::Sha256::digest(format!("{id}\n{undo}").as_bytes());
             let request_id = request_id
                 .clone()
                 .unwrap_or_else(|| format!("keep-{id}-{}", hex::encode(&digest[..8])));
             let c = open_client(&cli, false).await?;
+            #[cfg(feature = "experimental-transport")]
+            {
+                if peer.server == whatsapp_api::model::jid::Server::Group {
+                    whatsapp_api::transport::group_references::validate(
+                        c.store(),
+                        &peer,
+                        &content,
+                    )?;
+                }
+                if *dry_run {
+                    println!(
+                        "keep: dry run; reference checked locally; no enqueue or transmission (send preparation not performed)"
+                    );
+                    c.shutdown().await;
+                    return Ok(());
+                }
+            }
             let ticket = c
                 .send_message(SendRequest {
                     client_request_id: ClientRequestId::new(request_id)?,
                     chat: chat_id,
-                    content: MessageContent::KeepInChat {
-                        target,
-                        keep: !*undo,
-                    },
+                    content,
                 })
                 .await?;
             println!(
@@ -2906,6 +2920,46 @@ mod openapi_coverage {
 #[cfg(test)]
 mod group_reference_cli_tests {
     use super::*;
+    #[test]
+    fn keep_participant_and_preview_flags_do_not_conflict_with_target_direction() {
+        let cli = Cli::try_parse_from([
+            "whatsapp-cli",
+            "keep",
+            "--chat",
+            "123@g.us",
+            "--id",
+            "M1",
+            "--participant",
+            "222@lid",
+            "--undo",
+            "--dry-run",
+        ])
+        .unwrap();
+        assert!(matches!(
+            cli.cmd,
+            Cmd::Keep {
+                participant: Some(_),
+                ours: false,
+                undo: true,
+                dry_run: true,
+                ..
+            }
+        ));
+        assert!(
+            Cli::try_parse_from([
+                "whatsapp-cli",
+                "keep",
+                "--chat",
+                "123@g.us",
+                "--id",
+                "M1",
+                "--participant",
+                "222@lid",
+                "--ours",
+            ])
+            .is_err()
+        );
+    }
     #[test]
     fn group_references_require_the_participant_and_keep_ours_distinct() {
         let chat = Jid::parse("120363000000000001@g.us").unwrap();

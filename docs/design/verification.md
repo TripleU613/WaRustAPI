@@ -80,3 +80,17 @@ full workspace run passed. No live account store was involved. The failure was
 not reproduced or attributed to a specific lock holder; do not describe it as a
 WhatsApp refusal or silently add ownership retries/unlocks. The private failure
 log was retained locally with the group-reaction-target validation logs.
+
+## Live-check orchestration overlap observed 2026-10-09
+
+**Observed local ownership refusal:** during the normal group keep chunk, the
+agent launched the receive check while its offline lab-inbox inspection was
+still running. The original inspection's tool handle was live. Listen exited
+with Storage(AlreadyOwned) before authenticated activation; no connection was
+established. This was an orchestration sequencing mistake, not a server refusal
+or a broken ownership guard. The inspection subsequently exited successfully,
+with all saved account facts unchanged. Its completion was verified before a
+single bounded receive-only window was started. Original refusal logs and the
+offline comparison remain private. Do not unlock/reset the store or add network
+retries for this condition; wait for the confirmed inspection handle to exit
+before the dependent receive process and preserve the first result.

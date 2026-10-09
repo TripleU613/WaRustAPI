@@ -1,0 +1,65 @@
+# APK-derived structural disassembly: LX/0Yo;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0B(LLZ) flags=0x1 registers=9
+  0000..0004 op=38 if-eqz v7, +0x64
+  0004..000a op=71 invoke-static {v7}, LX/0DE;->A0O(ZL)
+  000a..000c op=0a move-result v0
+  000c..0010 op=38 if-eqz v0, +0x5e
+  0010..0014 op=1f check-cast v7, Lcom/whatsapp/infra/core/jid/UserJid;
+  0014..001a op=6e invoke-virtual {v6}, LX/0Yo;->A0H(Z)
+  001a..001c op=0a move-result v0
+  001c..0020 op=38 if-eqz v0, +0x56
+  0020..0024 op=54 iget-object v0, v6, LX/0Yo;->A06:LX/05B;
+  0024..0028 op=54 iget-object v5, v0, LX/05B;->A00:LX/00s;
+  0028..002e op=72 invoke-interface {v5}, LX/00s;->get(L)
+  002e..0030 op=0c move-result-object v0
+  0030..0034 op=1f check-cast v0, LX/0VT;
+  0034..003a op=6e invoke-virtual {v0, v7}, LX/0VT;->A07(JL)
+  003a..003c op=0b move-result-wide v3
+  003c..0040 op=54 iget-object v0, v6, LX/0Yo;->A03:LX/05B;
+  0040..0044 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0044..004a op=72 invoke-interface {v0}, LX/00s;->get(L)
+  004a..004c op=0c move-result-object v2
+  004c..0050 op=1f check-cast v2, LX/0VS;
+  0050..0054 op=54 iget-object v1, v2, LX/0VS;->A0A:LX/0Fs;
+  0054..0056 op=12 const/4 v0, #0x0
+  0056..005c op=71 invoke-static {v1, v0}, LX/0Fs;->A02(LLL)
+  005c..005e op=1d monitor-enter
+  005e..0062 op=54 iget-object v1, v2, LX/0VS;->A08:LX/0VU;
+  0062..0068 op=71 invoke-static {v3, v4}, Ljava/lang/Long;->valueOf(LJ)
+  0068..006a op=0c move-result-object v0
+  006a..0070 op=72 invoke-interface {v1, v0}, Ljava/util/Map;->get(LL)
+  0070..0072 op=0c move-result-object v0
+  0072..0076 op=1f check-cast v0, Ljava/lang/Long;
+  0076..0078 op=1e monitor-exit
+  0078..007c op=38 if-eqz v0, +0x18
+  007c..0082 op=72 invoke-interface {v5}, LX/00s;->get(L)
+  0082..0084 op=0c move-result-object v4
+  0084..0088 op=1f check-cast v4, LX/0VT;
+  0088..008c op=1c const-class v3, Lcom/whatsapp/infra/core/jid/UserJid;
+  008c..0092 op=6e invoke-virtual {v0}, Ljava/lang/Number;->longValue(J)
+  0092..0094 op=0b move-result-wide v1
+  0094..0096 op=12 const/4 v0, #0x0
+  0096..009c op=6e invoke-virtual {v4, v3, v1, v2, v0}, LX/0VT;->A0D(LLJZ)
+  009c..009e op=0c move-result-object v0
+  009e..00a2 op=1f check-cast v0, LX/0Cy;
+  00a2..00a6 op=38 if-eqz v0, +0x3
+  00a6..00a8 op=11 return-object v0
+  00a8..00ac op=38 if-eqz v8, +0x10
+  00ac..00b2 op=71 invoke-static {v6}, LX/0Yo;->A00(LL)
+  00b2..00b4 op=0c move-result-object v0
+  00b4..00ba op=6e invoke-virtual {v0, v7}, LX/0Xw;->A0I(LL)
+  00ba..00bc op=0c move-result-object v0
+  00bc..00c0 op=38 if-eqz v0, +0x6
+  00c0..00c2 op=11 return-object v0
+  00c2..00c4 op=0d move-exception v0
+  00c4..00c6 op=1e monitor-exit
+  00c6..00c8 op=27 throw v0
+  00c8..00ca op=11 return-object v7
+  # exception table: 2 try range(s)
+  # catch <all> code_units 002f..003e -> 0061
+  # catch <all> code_units 0061..0063 -> 0061
+.end method

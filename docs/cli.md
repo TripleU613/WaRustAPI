@@ -694,8 +694,10 @@ Usage: whatsapp-cli keep [OPTIONS]...
 | --chat | CHAT | yes |  |  |  | Chat JID |
 | --id | ID | yes |  |  |  | Wire id of the message to keep/un-keep |
 | --ours | OURS | no |  |  | `true`, `false` | The target message was sent by this account (default: by the contact) |
+| --participant | PARTICIPANT | no |  |  |  | Original sender PN/LID JID; required for an incoming group target |
 | --undo | UNDO | no |  |  | `true`, `false` | Undo a previous keep instead of setting one |
 | --request-id | REQUEST_ID | no |  |  |  | Caller idempotency key; defaults to a content digest |
+| --dry-run | DRY_RUN | no |  |  | `true`, `false` | Validate the target locally without enqueueing or transmitting it |
 
 ## whatsapp-cli chat-privacy
 

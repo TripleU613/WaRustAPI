@@ -1,0 +1,88 @@
+# APK-derived structural disassembly: LX/0VA;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method Aon(LL) flags=0x1 registers=16
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0006 op=38 if-eqz v15, +0x88
+  0006..000a op=54 iget-object v8, v15, LX/1gc;->A00:LX/0Cy;
+  000a..000e op=38 if-eqz v8, +0x84
+  000e..0014 op=71 invoke-static {v15, v14}, LX/0VA;->A01(LLL)
+  0014..0016 op=0c move-result-object v13
+  0016..001a op=39 if-nez v13, +0x7d
+  001a..001e op=54 iget-object v0, v14, LX/0VA;->A06:LX/05B;
+  001e..0022 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0022..0028 op=72 invoke-interface {v0}, LX/00s;->get(L)
+  0028..002a op=0c move-result-object v0
+  002a..002e op=1f check-cast v0, LX/0Gc;
+  002e..0034 op=6e invoke-virtual {v0}, LX/0Gc;->A06(L)
+  0034..0036 op=0c move-result-object v4
+  0036..003c op=71 invoke-static {v14}, LX/0VA;->A02(VL)
+  003c..0042 op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis(J)
+  0042..0044 op=0b move-result-wide v11
+  0044..0048 op=54 iget-object v10, v4, LX/0ZN;->A02:LX/0IY;
+  0048..004c op=1a const-string v9, "SELECT sort_id, from_me, key_id, status, broadcast, timestamp, message_type, origin, recipient_count, participant_hash, starred, receipt_server_timestamp, origination_flags, received_timestamp, _id, text_data, lookup_tables, sender_jid_row_id, chat_row_id, message_add_on_flags, view_mode, translated_text, view_replies_thread_id, server_sts FROM message WHERE chat_row_id=? AND from_me=? AND key_id=?"
+  004c..0050 op=54 iget-object v0, v14, LX/0VA;->A00:LX/05B;
+  0050..0054 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0054..005a op=72 invoke-interface {v0}, LX/00s;->get(L)
+  005a..005c op=0c move-result-object v0
+  005c..0060 op=1f check-cast v0, LX/0VS;
+  0060..0066 op=6e invoke-virtual {v0, v8}, LX/0VS;->A0C(JL)
+  0066..0068 op=0b move-result-wide v0
+  0068..006e op=71 invoke-static {v0, v1}, Ljava/lang/String;->valueOf(LJ)
+  006e..0070 op=0c move-result-object v7
+  0070..0074 op=55 iget-boolean v0, v15, LX/1gc;->A02:Z
+  0074..0076 op=12 const/4 v6, #0x1
+  0076..0078 op=12 const/4 v5, #0x0
+  0078..007e op=71 invoke-static {v0}, Ljava/lang/String;->valueOf(LI)
+  007e..0080 op=0c move-result-object v3
+  0080..0084 op=54 iget-object v2, v15, LX/1gc;->A01:Ljava/lang/String;
+  0084..0086 op=12 const/4 v0, #0x3
+  0086..008a op=23 new-array v1, v0, [Ljava/lang/String;
+  008a..008e op=4d aput-object v7, v1, v5
+  008e..0092 op=4d aput-object v3, v1, v6
+  0092..0094 op=12 const/4 v0, #0x2
+  0094..0098 op=4d aput-object v2, v1, v0
+  0098..009c op=1a const-string v0, "GET_MESSAGE_BY_KEY_SQL"
+  009c..00a2 op=6e invoke-virtual {v10, v9, v0, v1}, LX/0IY;->A0A(LLLL)
+  00a2..00a4 op=0c move-result-object v2
+  00a4..00aa op=72 invoke-interface {v2}, Landroid/database/Cursor;->moveToLast(Z)
+  00aa..00ac op=0a move-result v0
+  00ac..00b0 op=38 if-eqz v0, +0x6
+  00b0..00b6 op=6e invoke-virtual {v14, v2, v8, v5, v6}, LX/0VA;->A05(LLLZZ)
+  00b6..00b8 op=0c move-result-object v13
+  00b8..00be op=72 invoke-interface {v2}, Landroid/database/Cursor;->close(V)
+  00be..00c2 op=54 iget-object v0, v14, LX/0VA;->A02:LX/05B;
+  00c2..00c6 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  00c6..00cc op=72 invoke-interface {v0}, LX/00s;->get(L)
+  00cc..00ce op=0c move-result-object v3
+  00ce..00d2 op=1f check-cast v3, LX/0V5;
+  00d2..00d6 op=1a const-string v2, "CachedMessageStore/getMessage/key"
+  00d6..00dc op=71 invoke-static {v14}, LX/0VA;->A02(VL)
+  00dc..00e2 op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis(J)
+  00e2..00e4 op=0b move-result-wide v0
+  00e4..00e6 op=bc sub-long/2addr v0, v11
+  00e6..00ec op=6e invoke-virtual {v3, v2, v0, v1}, LX/0V5;->A01(VLJ)
+  00ec..00f2 op=6e invoke-virtual {v4}, LX/0ZN;->close(V)
+  00f2..00f4 op=11 return-object v13
+  00f4..00f6 op=0d move-exception v1
+  00f6..00f8 op=27 throw v1
+  00f8..00fa op=0d move-exception v0
+  00fa..0100 op=71 invoke-static {v2, v1}, LX/07i;->A00(VLL)
+  0100..0102 op=27 throw v0
+  0102..0104 op=0d move-exception v1
+  0104..0106 op=27 throw v1
+  0106..0108 op=0d move-exception v0
+  0108..010e op=71 invoke-static {v4, v1}, LX/07i;->A00(VLL)
+  010e..0110 op=27 throw v0
+  0110..0112 op=11 return-object v13
+  0112..0114 op=11 return-object v0
+  # exception table: 6 try range(s)
+  # catch <all> code_units 001b..0052 -> 0081
+  # catch <all> code_units 0052..005c -> 007a
+  # catch <all> code_units 005c..0076 -> 0081
+  # catch <all> code_units 007b..007c -> 007c
+  # catch <all> code_units 007d..0081 -> 0081
+  # catch <all> code_units 0082..0083 -> 0083
+.end method

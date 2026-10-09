@@ -1,0 +1,23 @@
+APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+
+BnF.A02:J writes (--writes-only):
+classes.dex  LX/0Y5;->A00(ILLLL)
+  write opcode 0x5a, dex byte offset: 0x5cce4e
+classes.dex  LX/0Z0;->A09(VLLL)
+  write opcode 0x5a, dex byte offset: 0x5e502e
+classes.dex  LX/11x;->A01(VLIZZ)
+  write opcode 0x5a, dex byte offset: 0x7a8b42
+classes7.dex  LX/Bno;->AFm(LLLJ)
+  write opcode 0x5a, dex byte offset: 0x515048
+classes7.dex  LX/D1t;->Byz(VLLL)
+  write opcode 0x5a, dex byte offset: 0x72e85c
+classes7.dex  LX/D9L;->A01(LL)
+  write opcode 0x5a, dex byte offset: 0x76cde2
+
+Cn6.A09:Z writes (--writes-only):
+classes7.dex  LX/Cn6;-><init>(VLLLLLZZZZZZZZZZZZZZZZZZZZ)
+  write opcode 0x5c, dex byte offset: 0x662516
+
+Negative result: apk-smali LX/BnF; --method <init> returned no matching method.
+11x.A01 allocates BnF and invokes 1iZ.<init>; BnF extends 1iZ.
+Other timestamp writers Bno.AFm and D1t.Byz were located, not traced.

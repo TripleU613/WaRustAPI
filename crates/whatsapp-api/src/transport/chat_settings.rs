@@ -1,8 +1,7 @@
 //! Disappearing-message timer, keep-in-chat and advanced chat privacy ("limit
 //! sharing"), traced from comparison APK **2.26.37.71** protobuf-lite
 //! descriptors (`docs/protocol/chat-actions.md` §3, §4, §5). All three are
-//! ordinary E2E `message type=text` payloads, like reactions and polls, never
-//! a second ratchet.
+//! ordinary E2E `message type=text` payloads, using the existing ratchet.
 //!
 //! * `ProtocolMessage` (`Message.protocolMessage`, field 12; `LX/BZb`
 //!   descriptor, confirmed): `key`=1 (reuses `super::reactions::Key`),
@@ -298,6 +297,44 @@ pub fn limit_sharing_payload(enabled: bool, now_ms: i64) -> Vec<u8> {
 /// to place in `key.remoteJid`, following the same rule as reactions and
 /// polls (the contact's LID when their messages arrive LID-addressed).
 pub fn keep_payload(remote: &Jid, target: &MessageRef, keep: bool, now_ms: i64) -> Vec<u8> {
+    encode_keep(remote, None, target, keep, now_ms)
+}
+
+/// Encode an ordinary group keep/unkeep with the original message author.
+/// APK 37.71 Bai.AD7/CSZ.A01 and BOE.A06 serialize that author in BZa field 4;
+/// 1wk selector 2 / 0Yo.A0B preserve the ordinary group remote key.
+/// This codec does not enforce native expiry/keep permissions or authenticate
+/// a caller's participant. The normal actor resolves retained attribution first.
+pub fn group_keep_payload(
+    chat: &Jid,
+    participant: &Jid,
+    target: &MessageRef,
+    keep: bool,
+    timestamp_ms: i64,
+) -> Result<Vec<u8>> {
+    validate_keep(chat, target)?;
+    if chat.server != crate::model::jid::Server::Group {
+        return Err(Error::invalid("chat_settings", "not_group_chat"));
+    }
+    if !participant.is_user_like() || participant.agent != 0 {
+        return Err(Error::invalid("chat_settings", "unsupported_participant"));
+    }
+    Ok(encode_keep(
+        chat,
+        Some(participant),
+        target,
+        keep,
+        timestamp_ms,
+    ))
+}
+
+fn encode_keep(
+    remote: &Jid,
+    participant: Option<&Jid>,
+    target: &MessageRef,
+    keep: bool,
+    now_ms: i64,
+) -> Vec<u8> {
     Envelope {
         protocol: None,
         keep_in_chat: Some(KeepInChatMessage {
@@ -305,7 +342,7 @@ pub fn keep_payload(remote: &Jid, target: &MessageRef, keep: bool, now_ms: i64) 
                 remote_jid: Some(remote.to_non_ad().to_string()),
                 from_me: Some(target.key.direction == Direction::Outgoing),
                 id: Some(target.key.id.as_str().to_owned()),
-                participant: None,
+                participant: participant.map(|p| p.to_non_ad().to_string()),
             }),
             keep_type: Some(if keep {
                 KEEP_FOR_ALL
@@ -538,6 +575,45 @@ mod tests {
         assert!(!decoded.keep);
         assert!(decoded.target_from_sender);
         assert!(decode_keep(&[0x08, 0x01]).is_none());
+    }
+    #[test]
+    fn group_keep_matches_independent_descriptor_bytes_and_preserves_direct_encoding() {
+        let chat = Jid::parse("123@g.us").unwrap();
+        let author = Jid::parse("222:3@lid").unwrap();
+        let mut target = target(Direction::Incoming);
+        target.key.chat = ChatId::from_jid(&chat).unwrap();
+        target.key.id = MessageId::new("abc").unwrap();
+        // Literal APK 37.71 BZc field 51 / BV3 1,2,3 / BZa 1,2,3,4
+        // fixture: group=123@g.us, author=222@lid, id=abc, timestamp=1.
+        let kept =
+            hex::decode("9a03200a1a0a0831323340672e757310001a036162632207323232406c696410011801")
+                .unwrap();
+        assert_eq!(
+            group_keep_payload(&chat, &author, &target, true, 1).unwrap(),
+            kept
+        );
+        target.key.direction = Direction::Outgoing;
+        let undo =
+            hex::decode("9a03200a1a0a0831323340672e757310011a036162632207323232406c696410021801")
+                .unwrap();
+        assert_eq!(
+            group_keep_payload(&chat, &author, &target, false, 1).unwrap(),
+            undo
+        );
+        assert!(group_keep_payload(&chat, &chat, &target, true, 1).is_err());
+        let foreign = Jid::parse("456@g.us").unwrap();
+        assert!(group_keep_payload(&foreign, &author, &target, true, 1).is_err());
+        assert!(group_keep_payload(&author, &author, &target, true, 1).is_err());
+        let agent = Jid::new_ad("222", 2, 3, crate::model::jid::Server::Lid).unwrap();
+        assert!(group_keep_payload(&chat, &agent, &target, true, 1).is_err());
+        let direct = Jid::parse("222@lid").unwrap();
+        target.key.chat = ChatId::from_jid(&direct).unwrap();
+        // The existing direct encoder still omits participant; no identity or
+        // queue migration is implied by adding the separate group codec.
+        assert_eq!(
+            keep_payload(&direct, &target, false, 1),
+            hex::decode("9a03160a100a07323232406c696410011a0361626310021801").unwrap()
+        );
     }
     #[test]
     fn validation_rejects_other_chats() {
