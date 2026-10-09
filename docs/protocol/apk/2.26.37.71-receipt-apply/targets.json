@@ -1,0 +1,114 @@
+{
+  "apply-dispatch": {
+    "class": "LX/Cmn;",
+    "file": "apply-dispatch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "apply-item-builder": {
+    "class": "LX/Cmn;",
+    "file": "apply-item-builder.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "apply-store": {
+    "class": "LX/Cmn;",
+    "file": "apply-store.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "event-device": {
+    "class": "LX/DDH;",
+    "file": "event-device.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "CFC",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "event-key": {
+    "class": "LX/DDH;",
+    "file": "event-key.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BSJ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "event-status": {
+    "class": "LX/DDH;",
+    "file": "event-status.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "Ccf",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "event-time": {
+    "class": "LX/DDH;",
+    "file": "event-time.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "CeD",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "receive-caller": {
+    "class": "LX/14e;",
+    "file": "receive-caller.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  }
+}

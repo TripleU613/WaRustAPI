@@ -2799,3 +2799,18 @@ malformed device IDs refuse with redacted diagnostics.
 Offline retained-profile CLI checks left store inspection and queued intents
 unchanged. No retained group preparations existed to inspect; no new live
 message or native pending receipt cache is claimed from these fixtures.
+
+2026-10-09 — **Confirmed static:** receipt application now has an eight-topic
+trace through 14e/Cmn and the DDH device/time/status/key getters. Cmn.A00
+selects CNn.A00 for a status predicate and separately 15A.A07 for other
+statuses. CNn/CYV row policy and complete clocks/mapping remain untraced;
+no mutable receipt ledger or runtime status promotion is claimed.
+[Writer boundary and next inputs](docs/protocol/receipt-apply.md).
+
+Receipt-application validation: eight source topics / 13 files / 112,789 bytes
+reproduced exactly from the pinned comparison APK. Cached self-diff verified
+eight unchanged topics and four unchanged metadata artifacts. Repository
+hygiene checked 1,336 local links and 27 APK bundles / 7,921,661 bytes; diff
+hygiene passed. This follow-up changes research/docs only; the preceding
+cdca7ad runtime chunk passed all 798 workspace tests and strict lint/doc/CLI
+checks. No new runtime implementation or live receipt application is claimed.

@@ -161,3 +161,10 @@ adds a separate original-target-bound group branch and offline comparison-send
 inspection. Earlier direct-only scope statements describe this document’s
 checkpoint; native aggregation, cleanup and normal group send preparation remain
 unported.
+
+2026-10-09 — **Confirmed static:** receipt application now has an eight-topic
+trace through 14e/Cmn and the DDH device/time/status/key getters. Cmn.A00
+selects CNn.A00 for a status predicate and separately 15A.A07 for other
+statuses. CNn/CYV row policy and complete clocks/mapping remain untraced;
+no mutable receipt ledger or runtime status promotion is claimed.
+[Writer boundary and next inputs](receipt-apply.md).

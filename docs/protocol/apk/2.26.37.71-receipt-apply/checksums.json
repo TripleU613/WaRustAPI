@@ -1,0 +1,50 @@
+{
+  "apply-dispatch.txt": {
+    "bytes": 55022,
+    "sha256": "e820f8faf3e24032b203612b93a449b0cbeb7a0f29374c285ea61c61f23f567e"
+  },
+  "apply-item-builder.txt": {
+    "bytes": 1088,
+    "sha256": "21b3b53572910f3f4e31cbc36fb2975f7cdc9381d76ee87b03a8ce9a981f013c"
+  },
+  "apply-store.txt": {
+    "bytes": 20020,
+    "sha256": "1d08427abf8806e2dfa4a6773c021c863e82817eb0e096ed5468a22a8fd8e8c9"
+  },
+  "event-device.txt": {
+    "bytes": 581,
+    "sha256": "9245759beda1d880faac8708d9fa7d070467bead3961be40c4bf99a75cb04264"
+  },
+  "event-key.txt": {
+    "bytes": 560,
+    "sha256": "73f368864880da7db71591d20d311880c83b6435f791130edc4f3ca25fa3b24e"
+  },
+  "event-status.txt": {
+    "bytes": 491,
+    "sha256": "0924722cb86f440910da7a9cea7fcc140730cbe1512a321c908ec0609d15d550"
+  },
+  "event-time.txt": {
+    "bytes": 501,
+    "sha256": "45822d06aefd55753768868e30f3ee9151bdfc8eeea65717a9d92a1925780b1e"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "receive-caller.txt": {
+    "bytes": 2833,
+    "sha256": "b62d7c3c14a7f2d6f9fba1ef932d7ee74a97998bebdabd6cf62d5a926893150a"
+  },
+  "targets.json": {
+    "bytes": 3531,
+    "sha256": "c6b772b5443f0a7e5a8fd53bd42c43b52e64ef1fd7aa85bf3122cb87fb51b360"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

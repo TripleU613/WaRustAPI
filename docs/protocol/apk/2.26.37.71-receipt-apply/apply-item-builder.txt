@@ -1,0 +1,20 @@
+# APK-derived structural disassembly: LX/Cmn;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(VLLL) flags=0x9 registers=4
+  # full signature: LX/Cmn;->A02(LX/CZ4;Ljava/lang/Object;Ljava/util/AbstractCollection;)V
+  0000..0004 op=52 iget v0, v1, LX/CZ4;->A00:I
+  0004..000a op=71 invoke-static {v0}, LX/1hg;->A03(I)Z
+  000a..000c op=0a move-result v0
+  000c..0010 op=38 if-eqz v0, +0x10
+  0010..0014 op=20 instance-of v0, v2, LX/1iZ;
+  0014..0018 op=39 if-nez v0, +0xc
+  0018..001c op=54 iget-object v1, v1, LX/CZ4;->A05:LX/0lp;
+  001c..0020 op=22 new-instance v0, Landroid/util/Pair;
+  0020..0026 op=70 invoke-direct {v0, v2, v1}, Landroid/util/Pair;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+  0026..002c op=6e invoke-virtual {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  002c..002e op=0e return-void
+  # exception table: 0 try range(s)
+.end method
