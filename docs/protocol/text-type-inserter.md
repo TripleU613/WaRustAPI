@@ -113,3 +113,6 @@ pinned APK. Cached self-diff verifies 29 unchanged topics and four metadata
 artifacts. CLI reference regeneration, API/library-symbol validation, formatting,
 whitespace and repository hygiene pass (2,023 local links; 94 bundles /
 19,893,348 bytes). No fresh workspace/runtime suite or live test is claimed.
+
+Follow-up: [selected after hooks](text-after-hooks.md) maps 19 entries and
+records direct source exclusions; transitive helper effects remain unknown.

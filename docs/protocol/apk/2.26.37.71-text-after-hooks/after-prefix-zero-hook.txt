@@ -1,0 +1,49 @@
+# APK-derived structural disassembly: LX/8CE;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=9
+  # full signature: LX/8CE;->CHJ(LX/178;LX/3Ya;)V
+  0000..0006 op=71 invoke-static {v7}, LX/1xm;->A0T(LX/178;)LX/1gc;
+  0006..0008 op=0c move-result-object v0
+  0008..000c op=54 iget-object v0, v0, LX/1gc;->A00:LX/0Cy;
+  000c..0012 op=71 invoke-static {v0}, LX/0DE;->A0i(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0012..0014 op=0a move-result v0
+  0014..0018 op=39 if-nez v0, +0x46
+  0018..001c op=54 iget-object v0, v6, LX/8CE;->A00:LX/05B;
+  001c..0022 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0022..0024 op=0c move-result-object v2
+  0024..0028 op=1f check-cast v2, LX/8G1;
+  0028..002e op=71 invoke-static {v7}, LX/7vS;->A00(LX/178;)Ljava/lang/String;
+  002e..0030 op=0c move-result-object v5
+  0030..0034 op=38 if-eqz v5, +0x1b
+  0034..0038 op=54 iget-object v0, v2, LX/8G1;->A00:LX/05B;
+  0038..003e op=71 invoke-static {v0}, LX/05B;->A00(LX/05B;)LX/00D;
+  003e..0040 op=0c move-result-object v1
+  0040..0044 op=62 sget-object v0, LX/7VT;->A00:LX/09P;
+  0044..004a op=71 invoke-static {v1, v0}, LX/00D;->A0G(LX/00D;LX/09P;)Z
+  004a..004c op=0a move-result v0
+  004c..0050 op=38 if-eqz v0, +0x16
+  0050..0054 op=54 iget-object v0, v2, LX/8G1;->A02:LX/1ZB;
+  0054..005a op=6e invoke-virtual {v0, v5}, LX/1ZB;->A06(Ljava/lang/String;)Ljava/util/ArrayList;
+  005a..005c op=0c move-result-object v0
+  005c..0060 op=38 if-eqz v0, +0x5
+  0060..0066 op=6e invoke-virtual {v2, v7, v0}, LX/8G1;->A01(LX/178;Ljava/util/List;)V
+  0066..006a op=38 if-eqz v8, +0x1d
+  006a..006e op=1c const-class v0, LX/8CE;
+  006e..0074 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  0074..0076 op=0c move-result-object v0
+  0076..0078 op=27 throw v0
+  0078..007c op=54 iget-object v4, v2, LX/8G1;->A03:LX/7av;
+  007c..0080 op=22 new-instance v3, LX/7Zd;
+  0080..0086 op=70 invoke-direct {v3, v7, v2}, LX/7Zd;-><init>(LX/178;LX/8G1;)V
+  0086..008a op=54 iget-object v2, v4, LX/7av;->A00:LX/08S;
+  008a..008e op=13 const/16 v1, #0x8
+  008e..0092 op=22 new-instance v0, LX/8UO;
+  0092..0098 op=70 invoke-direct {v0, v3, v4, v5, v1}, LX/8UO;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;I)V
+  0098..009e op=6e invoke-virtual {v2, v0}, LX/08S;->execute(Ljava/lang/Runnable;)V
+  009e..00a0 op=28 goto -0x1c
+  00a0..00a2 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

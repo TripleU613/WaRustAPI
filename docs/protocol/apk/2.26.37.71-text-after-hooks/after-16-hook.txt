@@ -1,0 +1,98 @@
+# APK-derived structural disassembly: LX/D7U;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=16
+  # full signature: LX/D7U;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v14, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=71 invoke-static {v14}, LX/Cbz;->A00(LX/178;)LX/D6n;
+  000e..0010 op=0c move-result-object v0
+  0010..0014 op=38 if-eqz v0, +0xa6
+  0014..0018 op=54 iget-object v5, v0, LX/D6n;->A00:Ljava/util/List;
+  0018..001c op=38 if-eqz v5, +0xa2
+  001c..0022 op=72 invoke-interface {v5}, Ljava/util/List;->isEmpty()Z
+  0022..0024 op=0a move-result v0
+  0024..0026 op=12 const/4 v1, #0x1
+  0026..002a op=df xor-int/lit8 v0, v0, #0x1
+  002a..002e op=33 if-ne v0, v1, +0x99
+  002e..0032 op=54 iget-object v0, v13, LX/D7U;->A00:LX/05B;
+  0032..0038 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0038..003a op=0c move-result-object v4
+  003a..003e op=1f check-cast v4, LX/AZg;
+  003e..0042 op=53 iget-wide v0, v14, LX/178;->A0j:J
+  0042..0048 op=72 invoke-interface {v5}, Ljava/util/List;->isEmpty()Z
+  0048..004a op=0a move-result v2
+  004a..004e op=39 if-nez v2, +0x15
+  004e..0054 op=72 invoke-interface {v5}, Ljava/util/List;->size()I
+  0054..0056 op=0a move-result v3
+  0056..005a op=13 const/16 v2, #0x20
+  005a..005e op=37 if-le v3, v2, +0x16
+  005e..0062 op=1a const-string v2, "UrlTrackingMapStore/insertOrUpdateUrlTrackingMapElements skipping oversized list size="
+  0062..0068 op=71 invoke-static {v3, v2}, LX/000;->A06(ILjava/lang/String;)Ljava/lang/StringBuilder;
+  0068..006a op=0c move-result-object v3
+  006a..006e op=1a const-string v2, " max=32 rowId="
+  006e..0074 op=71 invoke-static {v2, v3, v0, v1}, LX/Ayp;->A1D(Ljava/lang/String;Ljava/lang/StringBuilder;J)V
+  0074..0078 op=38 if-eqz v15, +0x74
+  0078..007c op=1c const-class v0, LX/D7U;
+  007c..0082 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  0082..0084 op=0c move-result-object v0
+  0084..0086 op=27 throw v0
+  0086..008a op=54 iget-object v2, v4, LX/AZg;->A01:LX/0Gc;
+  008a..0090 op=6e invoke-virtual {v2}, LX/0Gc;->A07()LX/0ZN;
+  0090..0092 op=0c move-result-object v3
+  0092..0098 op=72 invoke-interface {v5}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  0098..009a op=0c move-result-object v6
+  009a..00a0 op=72 invoke-interface {v6}, Ljava/util/Iterator;->hasNext()Z
+  00a0..00a2 op=0a move-result v2
+  00a2..00a6 op=38 if-eqz v2, +0x52
+  00a6..00ac op=72 invoke-interface {v6}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00ac..00ae op=0c move-result-object v5
+  00ae..00b2 op=1f check-cast v5, LX/CXz;
+  00b2..00b8 op=71 invoke-static {v3}, LX/00h;->A09(Ljava/lang/Object;)V
+  00b8..00be op=71 invoke-static {}, LX/1xk;->A06()Landroid/content/ContentValues;
+  00be..00c0 op=0c move-result-object v8
+  00c0..00c4 op=1a const-string v2, "message_row_id"
+  00c4..00ca op=71 invoke-static {v8, v2, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  00ca..00ce op=1a const-string v4, "original_url"
+  00ce..00d2 op=54 iget-object v2, v5, LX/CXz;->A00:Ljava/lang/String;
+  00d2..00d8 op=6e invoke-virtual {v8, v4, v2}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  00d8..00dc op=1a const-string v4, "consented_users_url"
+  00dc..00e0 op=54 iget-object v2, v5, LX/CXz;->A02:Ljava/lang/String;
+  00e0..00e6 op=6e invoke-virtual {v8, v4, v2}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  00e6..00ea op=1a const-string v4, "unconsented_users_url"
+  00ea..00ee op=54 iget-object v2, v5, LX/CXz;->A03:Ljava/lang/String;
+  00ee..00f4 op=6e invoke-virtual {v8, v4, v2}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  00f4..00f8 op=1a const-string v4, "card_index"
+  00f8..00fc op=54 iget-object v2, v5, LX/CXz;->A01:Ljava/lang/Integer;
+  00fc..0102 op=6e invoke-virtual {v8, v4, v2}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  0102..0106 op=54 iget-object v5, v5, LX/CXz;->A00:Ljava/lang/String;
+  0106..0108 op=12 const/4 v4, #0x0
+  0108..010c op=54 iget-object v7, v3, LX/0ZN;->A02:LX/0IY;
+  010c..0112 op=71 invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+  0112..0114 op=0c move-result-object v2
+  0114..011a op=71 invoke-static {}, LX/6aj;->A1a()[Ljava/lang/String;
+  011a..011c op=0c move-result-object v12
+  011c..0122 op=71 invoke-static {v2, v5, v12, v4}, LX/1xh;->A1Y(Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;I)V
+  0122..0126 op=1a const-string v11, "UPDATE_URL_TRACKING_MAP_ELEMENT_SQL"
+  0126..012a op=1a const-string v9, "url_tracking_map_element"
+  012a..012e op=1a const-string v10, "message_row_id = ? AND original_url = ?"
+  012e..0134 op=74 invoke-virtual/range {v7..v12}, LX/0IY;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0134..0136 op=0a move-result v2
+  0136..013a op=39 if-nez v2, -0x4e
+  013a..013e op=1a const-string v2, "INSERT_URL_TRACKING_MAP_ELEMENT_SQL"
+  013e..0144 op=6e invoke-virtual {v7, v9, v2, v8}, LX/0IY;->A05(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+  0144..0146 op=28 goto -0x55
+  0146..014c op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  014c..014e op=28 goto -0x6c
+  014e..0150 op=0d move-exception v1
+  0150..0152 op=27 throw v1
+  0152..0154 op=0d move-exception v0
+  0154..015a op=71 invoke-static {v3, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  015a..015c op=27 throw v0
+  015c..015e op=0e return-void
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0049..00a3 -> 00a7
+  # catch <all> code_units 00a8..00a9 -> 00a9
+.end method

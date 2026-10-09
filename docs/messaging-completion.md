@@ -1,5 +1,12 @@
 # Messaging completion checklist
 
+Selected after-insert hooks (2026-10-09, **confirmed static**): 19 of 54
+registered entries now have concrete provider/CHJ boundaries. Selected bodies
+write metadata or delegate to helpers; no direct native status setter or
+receipt_user SQL is present. Helper effects, 35 remaining entries, user-row
+admission and primary cleanup remain unknown/unported. No runtime/account/live
+change. [Evidence and limits](protocol/text-after-hooks.md).
+
 Text type inserter (2026-10-09, **confirmed static**): type zero resolves
 through provider 0x14c1 to 1hl.BJK and optional message_text persistence.
 D7J recipient-count preprocessing is now confirmed in the 13-entry before set

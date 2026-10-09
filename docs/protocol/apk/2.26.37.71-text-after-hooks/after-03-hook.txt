@@ -1,0 +1,145 @@
+# APK-derived structural disassembly: LX/D7R;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=20
+  # full signature: LX/D7R;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0006 op=08 move-object/from16 v3, v18
+  0006..000c op=71 invoke-static {v3, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  000c..0010 op=1c const-class v0, LX/D5u;
+  0010..0016 op=71 invoke-static {v3, v0}, LX/1xf;->A0v(LX/178;Ljava/lang/Class;)LX/1i2;
+  0016..0018 op=0c move-result-object v2
+  0018..001c op=1f check-cast v2, LX/D5u;
+  001c..0022 op=71 invoke-static {v3}, LX/B2M;->A00(LX/178;)LX/D6G;
+  0022..0024 op=0c move-result-object v6
+  0024..0028 op=20 instance-of v0, v3, LX/1he;
+  0028..002a op=12 const/4 v7, #0x0
+  002a..002e op=38 if-eqz v0, +0x12
+  002e..0032 op=1c const-class v1, LX/Cbw;
+  0032..0034 op=1d monitor-enter
+  0034..0038 op=1c const-class v0, LX/D5r;
+  0038..003e op=71 invoke-static {v3, v0}, LX/1xf;->A0v(LX/178;Ljava/lang/Class;)LX/1i2;
+  003e..0040 op=0c move-result-object v7
+  0040..0044 op=1f check-cast v7, LX/D5r;
+  0044..0046 op=28 goto +0x4
+  0046..0048 op=0d move-exception v0
+  0048..004a op=1e monitor-exit
+  004a..004c op=27 throw v0
+  004c..004e op=1e monitor-exit
+  004e..0052 op=39 if-nez v2, +0x6
+  0052..0056 op=39 if-nez v6, +0x4
+  0056..005a op=38 if-eqz v7, +0xc4
+  005a..005e op=08 move-object/from16 v0, v17
+  005e..0062 op=54 iget-object v0, v0, LX/D7R;->A00:LX/05B;
+  0062..0068 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0068..006a op=0c move-result-object v8
+  006a..006e op=1f check-cast v8, LX/DGK;
+  006e..0072 op=53 iget-wide v0, v3, LX/178;->A0j:J
+  0072..0074 op=12 const/4 v3, #0x4
+  0074..007a op=71 invoke-static {v3}, LX/8kT;->A05(I)Landroid/content/ContentValues;
+  007a..007c op=0c move-result-object v12
+  007c..0080 op=38 if-eqz v2, +0x15
+  0080..0084 op=54 iget-object v3, v2, LX/D5u;->A00:Ljava/lang/Integer;
+  0084..008a op=6e invoke-virtual {v3}, Ljava/lang/Number;->intValue()I
+  008a..008c op=0a move-result v3
+  008c..0090 op=38 if-eqz v3, +0x3b
+  0090..0092 op=12 const/4 v3, #0x1
+  0092..0098 op=71 invoke-static {v3}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0098..009a op=0c move-result-object v4
+  009a..00a0 op=1b const-string/jumbo v3, "weblink_render_config"
+  00a0..00a6 op=6e invoke-virtual {v12, v3, v4}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  00a6..00aa op=1a const-string v5, "business_interaction_pills"
+  00aa..00ae op=38 if-eqz v6, +0xb
+  00ae..00b2 op=54 iget-object v3, v6, LX/D6G;->A00:LX/BZR;
+  00b2..00b8 op=6e invoke-virtual {v3}, Lcom/google/protobuf/AbstractMessageLite;->toByteArray()[B
+  00b8..00ba op=0c move-result-object v3
+  00ba..00c0 op=6e invoke-virtual {v12, v5, v3}, Landroid/content/ContentValues;->put(Ljava/lang/String;[B)V
+  00c0..00c4 op=38 if-eqz v7, +0x10
+  00c4..00c8 op=54 iget-object v4, v7, LX/D5r;->A00:Ljava/lang/String;
+  00c8..00cc op=1a const-string v3, "preview_match_url"
+  00cc..00d0 op=39 if-nez v4, +0x17
+  00d0..00d6 op=6e invoke-virtual {v12, v3}, Landroid/content/ContentValues;->putNull(Ljava/lang/String;)V
+  00d6..00da op=39 if-nez v6, +0x5
+  00da..00e0 op=6e invoke-virtual {v12, v5}, Landroid/content/ContentValues;->putNull(Ljava/lang/String;)V
+  00e0..00e6 op=6e invoke-virtual {v12}, Landroid/content/ContentValues;->size()I
+  00e6..00e8 op=0a move-result v3
+  00e8..00ec op=38 if-eqz v3, +0x72
+  00ec..00f0 op=54 iget-object v3, v8, LX/DGK;->A00:LX/0Gc;
+  00f0..00f6 op=6e invoke-virtual {v3}, LX/0Gc;->A07()LX/0ZN;
+  00f6..00f8 op=0c move-result-object v3
+  00f8..00fa op=28 goto +0x7
+  00fa..0100 op=6e invoke-virtual {v12, v3, v4}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  0100..0102 op=28 goto -0x15
+  0102..0104 op=12 const/4 v3, #0x0
+  0104..0106 op=28 goto -0x39
+  0106..010c op=6e invoke-virtual {v3}, LX/0ZN;->A00()LX/1gB;
+  010c..010e op=0c move-result-object v4
+  010e..0112 op=54 iget-object v11, v3, LX/0ZN;->A02:LX/0IY;
+  0112..0116 op=1a const-string v13, "message_biz_context_info"
+  0116..011a op=1a const-string v14, "message_row_id = ?"
+  011a..0120 op=71 invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+  0120..0122 op=0c move-result-object v10
+  0122..0124 op=12 const/4 v5, #0x1
+  0124..0128 op=23 new-array v8, v5, [Ljava/lang/String;
+  0128..012a op=12 const/4 v9, #0x0
+  012a..012e op=4d aput-object v10, v8, v9
+  012e..0132 op=1a const-string v15, "UPDATE_MESSAGE_BIZ_CONTEXT_INFO"
+  0132..0136 op=08 move-object/from16 v16, v8
+  0136..013c op=74 invoke-virtual/range {v11..v16}, LX/0IY;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  013c..013e op=0a move-result v8
+  013e..0142 op=39 if-nez v2, +0xd
+  0142..0146 op=39 if-nez v6, +0xb
+  0146..014a op=38 if-eqz v7, +0x7
+  014a..014e op=54 iget-object v2, v7, LX/D5r;->A00:Ljava/lang/String;
+  014e..0152 op=38 if-eqz v2, +0x3
+  0152..0154 op=28 goto +0x3
+  0154..0156 op=12 const/4 v2, #0x0
+  0156..0158 op=28 goto +0x2
+  0158..015a op=12 const/4 v2, #0x1
+  015a..015e op=39 if-nez v8, +0xe
+  015e..0162 op=38 if-eqz v2, +0xc
+  0162..0166 op=1a const-string v2, "message_row_id"
+  0166..016c op=71 invoke-static {v12, v2, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  016c..0170 op=1a const-string v0, "INSERT_MESSAGE_BIZ_CONTEXT_INFO"
+  0170..0176 op=6e invoke-virtual {v11, v13, v0, v12}, LX/0IY;->A05(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+  0176..017a op=38 if-eqz v7, +0x13
+  017a..017e op=54 iget-object v0, v7, LX/D5r;->A00:Ljava/lang/String;
+  017e..0182 op=39 if-nez v0, +0xf
+  0182..0186 op=39 if-nez v6, +0xd
+  0186..018a op=1a const-string v2, "message_row_id = ? AND weblink_render_config IS NULL AND business_interaction_pills IS NULL AND preview_match_url IS NULL"
+  018a..018e op=23 new-array v1, v5, [Ljava/lang/String;
+  018e..0192 op=4d aput-object v10, v1, v9
+  0192..0196 op=1a const-string v0, "DELETE_EMPTY_MESSAGE_BIZ_CONTEXT_INFO"
+  0196..019c op=6e invoke-virtual {v11, v13, v2, v0, v1}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  019c..01a2 op=6e invoke-virtual {v4}, LX/1gB;->A00()V
+  01a2..01a8 op=6e invoke-virtual {v4}, LX/1gB;->close()V
+  01a8..01aa op=28 goto +0xf
+  01aa..01ac op=0d move-exception v1
+  01ac..01ae op=27 throw v1
+  01ae..01b0 op=0d move-exception v0
+  01b0..01b6 op=71 invoke-static {v4, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  01b6..01b8 op=27 throw v0
+  01b8..01ba op=0d move-exception v1
+  01ba..01bc op=27 throw v1
+  01bc..01be op=0d move-exception v0
+  01be..01c4 op=71 invoke-static {v3, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  01c4..01c6 op=27 throw v0
+  01c6..01cc op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  01cc..01d0 op=38 if-eqz v19, +0x9
+  01d0..01d4 op=1c const-class v0, LX/D7R;
+  01d4..01da op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  01da..01dc op=0c move-result-object v0
+  01dc..01de op=27 throw v0
+  01de..01e0 op=0e return-void
+  # exception table: 8 try range(s)
+  # catch <all> code_units 001a..0023 -> 0023
+  # catch <all> code_units 0024..0025 -> 0023
+  # catch <all> code_units 0083..0087 -> 00dc
+  # catch <all> code_units 0087..00d1 -> 00d5
+  # catch <all> code_units 00d1..00d5 -> 00dc
+  # catch <all> code_units 00d6..00d7 -> 00d7
+  # catch <all> code_units 00d8..00dc -> 00dc
+  # catch <all> code_units 00dd..00de -> 00de
+.end method

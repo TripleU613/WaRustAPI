@@ -1,0 +1,174 @@
+{
+  "after-00-factory.txt": {
+    "bytes": 558,
+    "sha256": "abcc2d2fbcec6767e75784deb557cbcfd11270ba5e11739f920ef1026383e6f5"
+  },
+  "after-00-hook.txt": {
+    "bytes": 1258,
+    "sha256": "7e88c89969225cf2e8cd4118a8fbb345301b4a6a7eae59a5de43dc2d9f3e97a9"
+  },
+  "after-01-factory.txt": {
+    "bytes": 558,
+    "sha256": "1e8bb411ca61a239a488cae9609160c5a2865858e9eb967b4af22824afaee65e"
+  },
+  "after-01-hook.txt": {
+    "bytes": 2692,
+    "sha256": "767f9bcccae05e69457ca3bd88a9e113dfa489babe16043d8eb6552f349983a0"
+  },
+  "after-02-factory.txt": {
+    "bytes": 558,
+    "sha256": "d495c236c4061ad200a9a6f4b54d4a6944205f7fac9e0aad87613d97b9cf2698"
+  },
+  "after-02-hook.txt": {
+    "bytes": 12092,
+    "sha256": "e57a742b17883ce2301ce5cfa66f734bc9b0969f3e029aa1867babecd1741ea6"
+  },
+  "after-03-factory.txt": {
+    "bytes": 558,
+    "sha256": "33c023bc03b44430c824b3f73babd24ffb75ac82265a97d8d20d1c717be2e270"
+  },
+  "after-03-hook.txt": {
+    "bytes": 7777,
+    "sha256": "8dd151b09e2497cd118758372d88a3b35b81c4e528c9a15a46fc4e285ad05ac0"
+  },
+  "after-04-factory.txt": {
+    "bytes": 558,
+    "sha256": "a43196d7b0d36c2197b5ea62a98791a5d302cad3033bb06583833cbac232c7af"
+  },
+  "after-04-hook.txt": {
+    "bytes": 1527,
+    "sha256": "90eb30bf08eeeb6cec5fadcf0efc07061bde8c9f0d1aec214d896a01a381ff73"
+  },
+  "after-05-factory.txt": {
+    "bytes": 558,
+    "sha256": "c8ed3de59cd4bc644007ec48c1b9e03a99dbcba142caf5cc20bf56946a72d87a"
+  },
+  "after-05-hook.txt": {
+    "bytes": 4340,
+    "sha256": "355aaf8f3b501761336976201d4400b8d8ef381640c4b1ee16f7072fa32898e1"
+  },
+  "after-06-factory.txt": {
+    "bytes": 558,
+    "sha256": "c9cc266dbcc3bbf429e45223a36af528c46f4b54517e89585208ed84d9b0a407"
+  },
+  "after-06-hook.txt": {
+    "bytes": 1439,
+    "sha256": "ce61cc05678eb6331f0a803999a2dae40d8632a62132eacb69e54ad1bfc09daa"
+  },
+  "after-07-factory.txt": {
+    "bytes": 558,
+    "sha256": "dcf8e98bf616674df018e4d3bd35faac262323ee31e2472195a80550215a5534"
+  },
+  "after-07-hook.txt": {
+    "bytes": 2076,
+    "sha256": "9b41111d752315aac210f57654652216eb1198f5e34708c77f075ca7661864a4"
+  },
+  "after-08-factory.txt": {
+    "bytes": 558,
+    "sha256": "559ce7fccd8a02de6cf2c1eb69f212f65cbd4d0b6cb1e3fff3930df608fffe01"
+  },
+  "after-08-hook.txt": {
+    "bytes": 7331,
+    "sha256": "a285cb7989d6c3e9d50cd196abc8da2e181927138c3214f3725db7bb371bfc2e"
+  },
+  "after-09-factory.txt": {
+    "bytes": 558,
+    "sha256": "2de266515f96788e7ee80f8947540711f66d82131a71be9630e25e557116adf3"
+  },
+  "after-09-hook.txt": {
+    "bytes": 1252,
+    "sha256": "6cdd5a950aa2caf711c4fe834c2a1336c4780e1c1c4e975e0681c541fc21b3c6"
+  },
+  "after-10-factory.txt": {
+    "bytes": 558,
+    "sha256": "3aa7962902454e0c3bd80587d60c90cffaae6bef843c2c89fb942bfbf743358b"
+  },
+  "after-10-hook.txt": {
+    "bytes": 1258,
+    "sha256": "784f52a7a02cdb144e8a0556e26888a5bee8bce38b8fd1231500d48455e39372"
+  },
+  "after-11-factory.txt": {
+    "bytes": 558,
+    "sha256": "9f3c8c58610132240ab25c79c26fd92c3d00feaa19e8dfc982c1f81ae9e1fd15"
+  },
+  "after-11-hook.txt": {
+    "bytes": 6080,
+    "sha256": "7629c9d84c4d6d2aaafcf777035679ea5ec3283f2d42302d0c4e608a61d47a37"
+  },
+  "after-12-factory.txt": {
+    "bytes": 558,
+    "sha256": "c3a30932b7ee6d4e4b10c7269304646d33d812d595dd968c1a7cb99f207f79fa"
+  },
+  "after-12-hook.txt": {
+    "bytes": 5839,
+    "sha256": "48390e9bd4d910df9d03b11bc1ed9b5037628d443b942b0f69b042332fd6b23d"
+  },
+  "after-13-factory.txt": {
+    "bytes": 558,
+    "sha256": "678f774c94c38f3255df83dc96475cba130481c68b8b9d3c3cc9c6df3c2bf3eb"
+  },
+  "after-13-hook.txt": {
+    "bytes": 1933,
+    "sha256": "677dc9ae4a00d306253b65d120ac137e708ac4fd6668be92ea05326b8e1c7c09"
+  },
+  "after-14-factory.txt": {
+    "bytes": 558,
+    "sha256": "5acede7e26bf85f4f73b4252dafff4379a4ce8d72793dbba5acb995ad6b67e84"
+  },
+  "after-14-hook.txt": {
+    "bytes": 1238,
+    "sha256": "0968d0bde6d783b3dc77419b3810a2d38c40d6e9e835490ffccaeba993f7c415"
+  },
+  "after-15-factory.txt": {
+    "bytes": 558,
+    "sha256": "074ab15676857b01ccb804d5af97d674895872057a62b53031eb3ec0bb65ee2e"
+  },
+  "after-15-hook.txt": {
+    "bytes": 5530,
+    "sha256": "805467dc189fc1b885fc97993e23f27228ee2dc4e933eae8098c6ddde2f4cff7"
+  },
+  "after-16-factory.txt": {
+    "bytes": 558,
+    "sha256": "9dc2aeb0c1b860febaab2e3a1dd3b6ef6ff9ac9186dcd7f47ea06319e475f5ea"
+  },
+  "after-16-hook.txt": {
+    "bytes": 5954,
+    "sha256": "beac158f3521e815a57f0d6ea9f46c854abc3dfee8ed8d8ea772ff175a0909ba"
+  },
+  "after-prefix-one-hook.txt": {
+    "bytes": 1119,
+    "sha256": "d2777c9dbf140358a4090356d3d019b3a1e6d33f4f8cc822281bda4ae049e76c"
+  },
+  "after-prefix-zero-hook.txt": {
+    "bytes": 2673,
+    "sha256": "7332d165824a469b585d28d1400ed5d0f08b74d43b16ddb28fada49d7c340e02"
+  },
+  "after-type-provider-switch.txt": {
+    "bytes": 43529,
+    "sha256": "b74d3767ad40f1ab7083fc7e50410e860b409ff7a61126a7f2ef5f6b929953f5"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "root-one-provider-switch.txt": {
+    "bytes": 119304,
+    "sha256": "ec178cf7cd4e86d37d535ac808b7105313c637352da6eef719ba3f01b4148e44"
+  },
+  "targets.json": {
+    "bytes": 15080,
+    "sha256": "97ce0129903598415ec053d31707f95aa730623b390c671f31160a91c3f1fdee"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "unselected-low-provider-switch.txt": {
+    "bytes": 16056,
+    "sha256": "c3006bdf1543c96bb7e6b9eaba3ff8f732104e0d0164f94adc131edcaa00ade8"
+  }
+}

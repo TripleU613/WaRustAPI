@@ -1,0 +1,81 @@
+# APK-derived structural disassembly: LX/D7l;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=10
+  # full signature: LX/D7l;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v8, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=20 instance-of v0, v8, LX/1bh;
+  000c..0010 op=39 if-nez v0, +0x82
+  0010..0014 op=52 iget v1, v8, LX/178;->A0h:I
+  0014..0018 op=13 const/16 v0, #0xa
+  0018..001c op=32 if-eq v1, v0, +0x7c
+  001c..0020 op=13 const/16 v0, #0x5a
+  0020..0024 op=32 if-eq v1, v0, +0x78
+  0024..0028 op=54 iget-object v2, v8, LX/178;->A0i:LX/1gc;
+  0028..002c op=55 iget-boolean v0, v2, LX/1gc;->A02:Z
+  002c..0030 op=38 if-eqz v0, +0x42
+  0030..0034 op=54 iget-object v0, v7, LX/D7l;->A01:LX/05B;
+  0034..003a op=71 invoke-static {v0}, LX/1xi;->A0f(LX/05B;)LX/0bA;
+  003a..003c op=0c move-result-object v1
+  003c..0040 op=54 iget-object v0, v2, LX/1gc;->A00:LX/0Cy;
+  0040..0046 op=6e invoke-virtual {v1, v0}, LX/0bA;->A0k(LX/0Cy;)Z
+  0046..0048 op=0a move-result v1
+  0048..004c op=54 iget-object v0, v8, LX/178;->A0p:Lcom/whatsapp/infra/core/jid/DeviceJid;
+  004c..0050 op=39 if-nez v0, +0x32
+  0050..0054 op=54 iget-object v0, v7, LX/D7l;->A03:LX/05B;
+  0054..005a op=71 invoke-static {v0}, LX/1xi;->A0l(LX/05B;)LX/08Z;
+  005a..005c op=0c move-result-object v0
+  005c..0060 op=38 if-eqz v1, +0x25
+  0060..0066 op=72 invoke-interface {v0}, LX/08Z;->Apw()LX/0e1;
+  0066..0068 op=0c move-result-object v1
+  0068..006c op=38 if-eqz v1, +0x54
+  006c..0070 op=54 iget-object v0, v7, LX/D7l;->A02:LX/05B;
+  0070..0076 op=71 invoke-static {v0, v1}, LX/1xj;->A03(LX/05B;Lcom/whatsapp/infra/core/jid/Jid;)J
+  0076..0078 op=0b move-result-wide v1
+  0078..007c op=16 const-wide/16 v3, #0xffff (-1)
+  007c..0080 op=31 cmp-long v0, v1, v3
+  0080..0084 op=38 if-eqz v0, +0x48
+  0084..0088 op=54 iget-object v0, v7, LX/D7l;->A00:LX/00s;
+  0088..008e op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  008e..0090 op=0c move-result-object v0
+  0090..0094 op=1f check-cast v0, LX/0Z1;
+  0094..0098 op=53 iget-wide v3, v8, LX/178;->A0j:J
+  0098..009c op=54 iget-object v0, v0, LX/0Z1;->A01:LX/0Gc;
+  009c..00a2 op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  00a2..00a4 op=0c move-result-object v6
+  00a4..00a6 op=28 goto +0x9
+  00a6..00ac op=72 invoke-interface {v0}, LX/08Z;->Apz()LX/0DO;
+  00ac..00ae op=0c move-result-object v1
+  00ae..00b0 op=28 goto -0x23
+  00b0..00b4 op=54 iget-object v1, v8, LX/178;->A0p:Lcom/whatsapp/infra/core/jid/DeviceJid;
+  00b4..00b6 op=28 goto -0x26
+  00b6..00bc op=71 invoke-static {}, LX/1xm;->A04()Landroid/content/ContentValues;
+  00bc..00be op=0c move-result-object v5
+  00be..00c2 op=1a const-string v0, "message_row_id"
+  00c2..00c8 op=71 invoke-static {v5, v0, v3, v4}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  00c8..00cc op=1a const-string v0, "author_device_jid"
+  00cc..00d2 op=71 invoke-static {v5, v0, v1, v2}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  00d2..00d6 op=54 iget-object v2, v6, LX/0ZN;->A02:LX/0IY;
+  00d6..00da op=1a const-string v1, "message_details"
+  00da..00de op=1a const-string v0, "MessageDetailsStore/insertMessageDetails"
+  00de..00e4 op=6e invoke-virtual {v2, v1, v0, v5}, LX/0IY;->A05(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+  00e4..00ea op=6e invoke-virtual {v6}, LX/0ZN;->close()V
+  00ea..00ee op=38 if-eqz v9, +0x13
+  00ee..00f2 op=1c const-class v0, LX/D7l;
+  00f2..00f8 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  00f8..00fa op=0c move-result-object v0
+  00fa..00fc op=27 throw v0
+  00fc..00fe op=0d move-exception v1
+  00fe..0104 op=6e invoke-virtual {v6}, LX/0ZN;->close()V
+  0104..0106 op=27 throw v1
+  0106..0108 op=0d move-exception v0
+  0108..010e op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  010e..0110 op=27 throw v1
+  0110..0112 op=0e return-void
+  # exception table: 2 try range(s)
+  # catch <all> code_units 005b..0072 -> 007e
+  # catch <all> code_units 007f..0082 -> 0083
+.end method

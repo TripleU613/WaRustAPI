@@ -1,0 +1,25 @@
+# APK-derived structural disassembly: LX/D87;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=4
+  # full signature: LX/D87;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v2, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=71 invoke-static {v2}, LX/Cbj;->A00(LX/178;)LX/D6L;
+  000e..0010 op=0c move-result-object v0
+  0010..0014 op=38 if-eqz v0, +0x16
+  0014..0018 op=54 iget-object v0, v1, LX/D87;->A00:LX/05B;
+  0018..001e op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  001e..0020 op=0c move-result-object v0
+  0020..0024 op=1f check-cast v0, LX/0zm;
+  0024..002a op=6e invoke-virtual {v0, v2}, LX/0zm;->A04(LX/178;)V
+  002a..002e op=38 if-eqz v3, +0x9
+  002e..0032 op=1c const-class v0, LX/D87;
+  0032..0038 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  0038..003a op=0c move-result-object v0
+  003a..003c op=27 throw v0
+  003c..003e op=0e return-void
+  # exception table: 0 try range(s)
+.end method

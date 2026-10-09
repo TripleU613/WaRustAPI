@@ -1,0 +1,105 @@
+# APK-derived structural disassembly: LX/D7Q;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=13
+  # full signature: LX/D7Q;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v11, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=20 instance-of v0, v11, LX/9NM;
+  000c..0010 op=38 if-eqz v0, +0xb0
+  0010..0014 op=54 iget-object v0, v10, LX/D7Q;->A00:LX/05B;
+  0014..001a op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  001a..001c op=0c move-result-object v7
+  001c..0020 op=1f check-cast v7, LX/CPH;
+  0020..0024 op=54 iget-object v0, v11, LX/178;->A0i:LX/1gc;
+  0024..0028 op=55 iget-boolean v6, v0, LX/1gc;->A02:Z
+  0028..002c op=54 iget-object v0, v7, LX/CPH;->A00:LX/05B;
+  002c..0032 op=71 invoke-static {v0}, LX/05B;->A00(LX/05B;)LX/00D;
+  0032..0034 op=0c move-result-object v1
+  0034..0038 op=13 const/16 v0, #0x1656
+  0038..003e op=6e invoke-virtual {v1, v0}, LX/00D;->A10(I)Z
+  003e..0040 op=0a move-result v0
+  0040..0044 op=38 if-eqz v0, +0x8d
+  0044..0048 op=1c const-class v0, LX/D6K;
+  0048..004e op=71 invoke-static {v11, v0}, LX/6aj;->A0n(LX/178;Ljava/lang/Class;)LX/1i2;
+  004e..0050 op=0c move-result-object v0
+  0050..0054 op=1f check-cast v0, LX/D6K;
+  0054..0058 op=38 if-eqz v0, +0x83
+  0058..005c op=54 iget-object v1, v0, LX/D6K;->A00:Ljava/util/List;
+  005c..0060 op=38 if-eqz v1, +0x7f
+  0060..0064 op=54 iget-object v0, v7, LX/CPH;->A01:LX/05B;
+  0064..006a op=71 invoke-static {v0}, LX/1xo;->A0Q(LX/05B;)LX/0ZN;
+  006a..006c op=0c move-result-object v3
+  006c..0072 op=6e invoke-virtual {v3}, LX/0ZN;->A00()LX/1gB;
+  0072..0074 op=0c move-result-object v5
+  0074..007a op=71 invoke-static {}, LX/1xk;->A06()Landroid/content/ContentValues;
+  007a..007c op=0c move-result-object v4
+  007c..0082 op=72 invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  0082..0084 op=0c move-result-object v9
+  0084..008a op=72 invoke-interface {v9}, Ljava/util/Iterator;->hasNext()Z
+  008a..008c op=0a move-result v0
+  008c..0090 op=38 if-eqz v0, +0x4f
+  0090..0096 op=72 invoke-interface {v9}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0096..0098 op=0c move-result-object v2
+  0098..009c op=1f check-cast v2, LX/CZJ;
+  009c..00a2 op=6e invoke-virtual {v4}, Landroid/content/ContentValues;->clear()V
+  00a2..00a6 op=1a const-string v8, "message_row_id"
+  00a6..00aa op=53 iget-wide v0, v11, LX/178;->A0j:J
+  00aa..00b0 op=71 invoke-static {v4, v8, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  00b0..00b4 op=1a const-string v1, "stanza_id"
+  00b4..00b8 op=54 iget-object v0, v2, LX/CZJ;->A02:Ljava/lang/String;
+  00b8..00be op=6e invoke-virtual {v4, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  00be..00c2 op=1a const-string v1, "reporting_tag"
+  00c2..00c6 op=54 iget-object v0, v2, LX/CZJ;->A03:[B
+  00c6..00cc op=6e invoke-virtual {v4, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;[B)V
+  00cc..00d0 op=1a const-string v1, "reporting_token"
+  00d0..00d4 op=54 iget-object v0, v2, LX/CZJ;->A04:[B
+  00d4..00da op=6e invoke-virtual {v4, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;[B)V
+  00da..00de op=1a const-string v1, "reporting_token_version"
+  00de..00e2 op=54 iget-object v0, v2, LX/CZJ;->A00:Ljava/lang/Integer;
+  00e2..00e8 op=6e invoke-virtual {v4, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  00e8..00ec op=1a const-string v1, "send_timestamp"
+  00ec..00f0 op=54 iget-object v0, v2, LX/CZJ;->A01:Ljava/lang/Long;
+  00f0..00f6 op=6e invoke-virtual {v4, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  00f6..00fa op=1a const-string v2, "added_timestamp"
+  00fa..00fe op=54 iget-object v0, v7, LX/CPH;->A02:LX/05B;
+  00fe..0104 op=71 invoke-static {v0}, LX/1xj;->A02(LX/05B;)J
+  0104..0106 op=0b move-result-wide v0
+  0106..010c op=71 invoke-static {v4, v2, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  010c..0110 op=1a const-string v0, "is_send"
+  0110..0116 op=71 invoke-static {v4, v0, v6}, LX/6dh;->A03(Landroid/content/ContentValues;Ljava/lang/String;Z)V
+  0116..011a op=54 iget-object v2, v3, LX/0ZN;->A02:LX/0IY;
+  011a..011e op=1a const-string v1, "group_history_share_reporting_info"
+  011e..0122 op=1a const-string v0, "GhsReportingTokenStore/insertReportingInfo"
+  0122..0128 op=6e invoke-virtual {v2, v1, v0, v4}, LX/0IY;->A05(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+  0128..012a op=28 goto -0x52
+  012a..0130 op=6e invoke-virtual {v5}, LX/1gB;->A00()V
+  0130..0136 op=6e invoke-virtual {v5}, LX/1gB;->close()V
+  0136..0138 op=28 goto +0xf
+  0138..013a op=0d move-exception v1
+  013a..013c op=27 throw v1
+  013c..013e op=0d move-exception v0
+  013e..0144 op=71 invoke-static {v5, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0144..0146 op=27 throw v0
+  0146..0148 op=0d move-exception v1
+  0148..014a op=27 throw v1
+  014a..014c op=0d move-exception v0
+  014c..0152 op=71 invoke-static {v3, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0152..0154 op=27 throw v0
+  0154..015a op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  015a..015e op=38 if-eqz v12, +0x9
+  015e..0162 op=1c const-class v0, LX/D7Q;
+  0162..0168 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  0168..016a op=0c move-result-object v0
+  016a..016c op=27 throw v0
+  016c..016e op=0e return-void
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0036..003a -> 00a3
+  # catch <all> code_units 003a..0098 -> 009c
+  # catch <all> code_units 0098..009c -> 00a3
+  # catch <all> code_units 009d..009e -> 009e
+  # catch <all> code_units 009f..00a3 -> 00a3
+  # catch <all> code_units 00a4..00a5 -> 00a5
+.end method

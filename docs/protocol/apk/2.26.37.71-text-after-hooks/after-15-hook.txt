@@ -1,0 +1,92 @@
+# APK-derived structural disassembly: LX/D7T;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=12
+  # full signature: LX/D7T;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v10, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=71 invoke-static {v10}, LX/Cby;->A01(LX/178;)Z
+  000e..0010 op=0a move-result v0
+  0010..0014 op=38 if-eqz v0, +0x93
+  0014..0018 op=1c const-class v0, LX/1jB;
+  0018..001e op=71 invoke-static {v10, v0}, LX/6aj;->A0n(LX/178;Ljava/lang/Class;)LX/1i2;
+  001e..0020 op=0c move-result-object v6
+  0020..0024 op=1f check-cast v6, LX/1jB;
+  0024..0028 op=38 if-eqz v6, +0x89
+  0028..002c op=54 iget-object v0, v9, LX/D7T;->A00:LX/05B;
+  002c..0032 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0032..0034 op=0c move-result-object v2
+  0034..0038 op=1f check-cast v2, LX/DGN;
+  0038..003c op=53 iget-wide v0, v10, LX/178;->A0j:J
+  003c..0040 op=54 iget-object v2, v2, LX/DGN;->A00:LX/0Gc;
+  0040..0046 op=6e invoke-virtual {v2}, LX/0Gc;->A07()LX/0ZN;
+  0046..0048 op=0c move-result-object v4
+  0048..004e op=71 invoke-static {}, LX/1xk;->A06()Landroid/content/ContentValues;
+  004e..0050 op=0c move-result-object v5
+  0050..0054 op=1a const-string v2, "message_row_id"
+  0054..005a op=71 invoke-static {v5, v2, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  005a..005e op=1a const-string v3, "help_article_citations"
+  005e..0062 op=54 iget-object v1, v6, LX/1jB;->A00:Ljava/util/List;
+  0062..0068 op=72 invoke-interface {v1}, Ljava/util/List;->isEmpty()Z
+  0068..006a op=0a move-result v0
+  006a..006e op=38 if-eqz v0, +0x4
+  006e..0070 op=12 const/4 v0, #0x0
+  0070..0072 op=28 goto +0x43
+  0072..0078 op=71 invoke-static {}, LX/Ayk;->A17()Lorg/json/JSONArray;
+  0078..007a op=0c move-result-object v2
+  007a..0080 op=72 invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  0080..0082 op=0c move-result-object v8
+  0082..0088 op=72 invoke-interface {v8}, Ljava/util/Iterator;->hasNext()Z
+  0088..008a op=0a move-result v0
+  008a..008e op=38 if-eqz v0, +0x32
+  008e..0094 op=72 invoke-interface {v8}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0094..0096 op=0c move-result-object v7
+  0096..009a op=1f check-cast v7, LX/CXy;
+  009a..00a0 op=71 invoke-static {}, LX/1xf;->A1T()Lorg/json/JSONObject;
+  00a0..00a2 op=0c move-result-object v6
+  00a2..00a6 op=1a const-string v1, "title"
+  00a6..00aa op=54 iget-object v0, v7, LX/CXy;->A03:Ljava/lang/String;
+  00aa..00b0 op=6e invoke-virtual {v6, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+  00b0..00b4 op=1a const-string v1, "subtitle"
+  00b4..00b8 op=54 iget-object v0, v7, LX/CXy;->A02:Ljava/lang/String;
+  00b8..00be op=6e invoke-virtual {v6, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+  00be..00c2 op=1a const-string v1, "cms_id"
+  00c2..00c6 op=54 iget-object v0, v7, LX/CXy;->A00:Ljava/lang/String;
+  00c6..00cc op=6e invoke-virtual {v6, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+  00cc..00d0 op=1a const-string v1, "image_url"
+  00d0..00d4 op=54 iget-object v0, v7, LX/CXy;->A01:Ljava/lang/String;
+  00d4..00da op=6e invoke-virtual {v6, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+  00da..00e0 op=6e invoke-virtual {v2, v6}, Lorg/json/JSONArray;->put(Ljava/lang/Object;)Lorg/json/JSONArray;
+  00e0..00e2 op=28 goto -0x2f
+  00e2..00e4 op=0d move-exception v1
+  00e4..00e8 op=1a const-string v0, "SupportCitationMetadataStore: createHelpArticleCitationsJSONArray"
+  00e8..00ee op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+  00ee..00f4 op=6e invoke-virtual {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00f4..00f6 op=0c move-result-object v0
+  00f6..00fc op=71 invoke-static {v5, v3, v0}, LX/6dh;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;)V
+  00fc..0100 op=54 iget-object v3, v4, LX/0ZN;->A02:LX/0IY;
+  0100..0104 op=1a const-string v2, "support_citation_metadata"
+  0104..0108 op=1a const-string v1, "INSERT_SUPPORT_CITATION_METADATA"
+  0108..010a op=12 const/4 v0, #0x5
+  010a..0110 op=6e invoke-virtual {v3, v2, v1, v5, v0}, LX/0IY;->A09(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+  0110..0116 op=6e invoke-virtual {v4}, LX/0ZN;->close()V
+  0116..011a op=38 if-eqz v11, +0x10
+  011a..011e op=1c const-class v0, LX/D7T;
+  011e..0124 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  0124..0126 op=0c move-result-object v0
+  0126..0128 op=27 throw v0
+  0128..012a op=0d move-exception v1
+  012a..012c op=27 throw v1
+  012c..012e op=0d move-exception v0
+  012e..0134 op=71 invoke-static {v4, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0134..0136 op=27 throw v0
+  0136..0138 op=0e return-void
+  # exception table: 4 try range(s)
+  # catch <all> code_units 0024..003d -> 0094
+  # catch Lorg/json/JSONException; code_units 003d..0071 -> 0071
+  # catch <all> code_units 003d..0071 -> 0094
+  # catch <all> code_units 0071..0088 -> 0094
+  # catch <all> code_units 0095..0096 -> 0096
+.end method

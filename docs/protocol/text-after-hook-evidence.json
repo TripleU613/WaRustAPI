@@ -1,0 +1,173 @@
+{
+  "apk_build": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "classification": "confirmed static",
+  "source_recipe": "apk/recipes/2.26.37.71-text-after-hooks.json",
+  "mapped_hooks": [
+    {
+      "provider": "0x14a4",
+      "after_array_index": 25,
+      "factory": "LX/0qn;->A0H",
+      "hook": "LX/8CB;->CHJ",
+      "immediate_boundary": "7RY.A00 qualification -> 8G6.A03; helper effects unknown",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14a5",
+      "after_array_index": 26,
+      "factory": "LX/0qn;->A0I",
+      "hook": "LX/3KJ;->CHJ",
+      "immediate_boundary": "data_sharing_disclosure_metadata write",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14a6",
+      "after_array_index": 27,
+      "factory": "LX/0qn;->A0K",
+      "hook": "LX/3KK;->CHJ",
+      "immediate_boundary": "message_external_ad_content write",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14a7",
+      "after_array_index": 28,
+      "factory": "LX/0qn;->A0W",
+      "hook": "LX/D7R;->CHJ",
+      "immediate_boundary": "message_biz_context_info update/insert/delete",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14a8",
+      "after_array_index": 29,
+      "factory": "LX/0qn;->A0V",
+      "hook": "LX/8CC;->CHJ",
+      "immediate_boundary": "flag 0x4000 and A0c -> 6bf.A00 collection helper",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14a9",
+      "after_array_index": 30,
+      "factory": "LX/0qn;->A0Y",
+      "hook": "LX/D7l;->CHJ",
+      "immediate_boundary": "message_details author_device_jid write",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14aa",
+      "after_array_index": 31,
+      "factory": "LX/0qn;->A0Z",
+      "hook": "LX/AVG;->CHJ",
+      "immediate_boundary": "flag 0x20000 and Cbt.A00 qualification -> 16U.A01",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14ab",
+      "after_array_index": 32,
+      "factory": "LX/0qn;->A0b",
+      "hook": "LX/D7i;->CHJ",
+      "immediate_boundary": "A16/extra-table path -> serialization/store helper; full effects unknown",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14ac",
+      "after_array_index": 33,
+      "factory": "LX/0qn;->A0e",
+      "hook": "LX/D7c;->CHJ",
+      "immediate_boundary": "message_privacy_state write; reads B3b, no direct status setter",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14ad",
+      "after_array_index": 34,
+      "factory": "LX/0qn;->A0h",
+      "hook": "LX/D7S;->CHJ",
+      "immediate_boundary": "nonnull A09() -> 1jQ.A01; helper effects unknown",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14ae",
+      "after_array_index": 35,
+      "factory": "LX/0qn;->A0k",
+      "hook": "LX/D87;->CHJ",
+      "immediate_boundary": "Cbj.A00 qualification -> 0zm.A04; helper effects unknown",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14af",
+      "after_array_index": 36,
+      "factory": "LX/0qn;->A0U",
+      "hook": "LX/D7Q;->CHJ",
+      "immediate_boundary": "group_history_share_reporting_info write",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14b0",
+      "after_array_index": 37,
+      "factory": "LX/0qn;->A0l",
+      "hook": "LX/8CJ;->CHJ",
+      "immediate_boundary": "status_attribution write",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14b1",
+      "after_array_index": 38,
+      "factory": "LX/0qn;->A0n",
+      "hook": "LX/8Fv;->CHJ",
+      "immediate_boundary": "conditional 1iA/8Bw state changes and 7sM.A01; full helpers unknown",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14b2",
+      "after_array_index": 39,
+      "factory": "LX/0qn;->A0q",
+      "hook": "LX/8CD;->CHJ",
+      "immediate_boundary": "1iu subtype -> 7sx.A02; helper effects unknown",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14b3",
+      "after_array_index": 40,
+      "factory": "LX/0qn;->A0s",
+      "hook": "LX/D7T;->CHJ",
+      "immediate_boundary": "support_citation_metadata write",
+      "classification": "confirmed static; helper effects unknown"
+    },
+    {
+      "provider": "0x14b4",
+      "after_array_index": 41,
+      "factory": "LX/0qn;->A0t",
+      "hook": "LX/D7U;->CHJ",
+      "immediate_boundary": "url_tracking_map_element update/insert; oversized lists diagnosed with maximum 32",
+      "classification": "confirmed static; helper effects unknown"
+    }
+  ],
+  "prefix_hooks": [
+    {
+      "provider": "0x400a",
+      "after_array_index": 0,
+      "class": "LX/8CE;",
+      "boundary": "1qQ.A00 case 10 -> 8CE; qualified string processing through 8G1 or asynchronous 7av/8UO; helper effects unknown"
+    },
+    {
+      "provider": "0x400b",
+      "after_array_index": 1,
+      "class": "LX/D7V;",
+      "boundary": "1qQ.A00 case 11 -> D7V; Ce8.A00 delegate; helper effects unknown"
+    }
+  ],
+  "negative_results": [
+    {
+      "claim": "Root bucket 1 uses 1UE.A02 for 0x400a/0x400b",
+      "classification": "refuted",
+      "reason": "1UE.A00 case 1 calls 1qQ.A00, not 1UE.A02. Latter handles low IDs 279..557. Suffix substring matches are not exact switch keys."
+    },
+    {
+      "command": "xtask apk-smali <pinned-apk> --class LX/0AW; --method CHJ --signatures --exceptions",
+      "result": "no matching executable body; unrelated wrong-root candidate, not normal insertion evidence"
+    }
+  ],
+  "limits": [
+    "No direct 178.A0H or receipt_user SQL is present in these 19 selected CHJ bodies. Delegated and asynchronous effects are untraced.",
+    "35 after-hook entries are not mapped by this artifact. No claim of full normal-send state progression or user-row membership."
+  ]
+}

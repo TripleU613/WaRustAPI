@@ -1,0 +1,48 @@
+# APK-derived structural disassembly: LX/3KJ;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=9
+  # full signature: LX/3KJ;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v7, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=71 invoke-static {v7}, LX/Cbr;->A00(LX/178;)LX/D6p;
+  000e..0010 op=0c move-result-object v3
+  0010..0014 op=38 if-eqz v3, +0x3f
+  0014..0018 op=54 iget-object v0, v6, LX/3KJ;->A00:LX/05B;
+  0018..001e op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  001e..0020 op=0c move-result-object v0
+  0020..0024 op=1f check-cast v0, LX/3LP;
+  0024..0028 op=53 iget-wide v1, v7, LX/178;->A0j:J
+  0028..002c op=54 iget-object v0, v0, LX/3LP;->A00:LX/0Gc;
+  002c..0032 op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  0032..0034 op=0c move-result-object v5
+  0034..003a op=71 invoke-static {}, LX/1xm;->A04()Landroid/content/ContentValues;
+  003a..003c op=0c move-result-object v4
+  003c..0040 op=1a const-string v0, "message_row_id"
+  0040..0046 op=71 invoke-static {v4, v0, v1, v2}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  0046..004a op=1a const-string v1, "show_mm_disclosure"
+  004a..004e op=52 iget v0, v3, LX/D6p;->A00:I
+  004e..0054 op=71 invoke-static {v4, v1, v0}, LX/1xl;->A1D(Landroid/content/ContentValues;Ljava/lang/String;I)V
+  0054..0058 op=54 iget-object v3, v5, LX/0ZN;->A02:LX/0IY;
+  0058..005c op=1a const-string v2, "data_sharing_disclosure_metadata"
+  005c..0060 op=1a const-string v1, "INSERT_OR_UPDATE_DATA_SHARING_DISCLOSURE_METADATA"
+  0060..0062 op=12 const/4 v0, #0x5
+  0062..0068 op=6e invoke-virtual {v3, v2, v1, v4, v0}, LX/0IY;->A09(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+  0068..006e op=6e invoke-virtual {v5}, LX/0ZN;->close()V
+  006e..0072 op=38 if-eqz v8, +0x10
+  0072..0076 op=1c const-class v0, LX/3KJ;
+  0076..007c op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  007c..007e op=0c move-result-object v0
+  007e..0080 op=27 throw v0
+  0080..0082 op=0d move-exception v1
+  0082..0084 op=27 throw v1
+  0084..0086 op=0d move-exception v0
+  0086..008c op=71 invoke-static {v5, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  008c..008e op=27 throw v0
+  008e..0090 op=0e return-void
+  # exception table: 2 try range(s)
+  # catch <all> code_units 001a..0034 -> 0040
+  # catch <all> code_units 0041..0042 -> 0042
+.end method
