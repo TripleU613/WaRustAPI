@@ -1,0 +1,46 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "key-schema.txt": {
+    "bytes": 3295,
+    "sha256": "187dbaa11dc9da7a818b7ed3bb80f5e708eb5432f450307379fcdcc86dbd3ba2"
+  },
+  "key-validator.txt": {
+    "bytes": 1363,
+    "sha256": "81c7cbc546108611e37dc7360be73d21dcfe6566fa54a986efa448738ac4c8c1"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "poll-encrypted-value-schema.txt": {
+    "bytes": 3020,
+    "sha256": "6fe71d75f331cffa191c2477b45ed09b3bd4086a5e8d2e9a699fe590a313bba6"
+  },
+  "poll-key-mapper.txt": {
+    "bytes": 1124,
+    "sha256": "6f9668afd6e77e42dfea9732dea8452ad8d6d1525756ba56cb7c49646df52181"
+  },
+  "poll-vote-receiver.txt": {
+    "bytes": 22269,
+    "sha256": "1a19d9083833c1fc76c0f5c6d97dcecfeb2d63d6bb148d60f288878c69681820"
+  },
+  "poll-vote-schema.txt": {
+    "bytes": 3207,
+    "sha256": "4299136c6b3ceb48f37c7fc37532018c0f54732ff0753a2e9a6b5ab3b1d4306a"
+  },
+  "shared-chat-key.txt": {
+    "bytes": 3725,
+    "sha256": "1fd489a16ee15a802ba912a6cd74c27ee8232488ba9c1e757dbf53ab4e0b6905"
+  },
+  "targets.json": {
+    "bytes": 3025,
+    "sha256": "9079fd168634c08e7ab9329a3d0f18fad2e59d4c81af813eff8324e49651c6a0"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

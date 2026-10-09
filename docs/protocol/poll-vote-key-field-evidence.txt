@@ -1,0 +1,12 @@
+classes7.dex  LX/Ban;->A01(LL)
+  read opcode 0x54, dex byte offset: 0x490cba
+classes7.dex  LX/Ban;->A01(LL)
+  read opcode 0x54, dex byte offset: 0x490d0c
+classes7.dex  LX/Ban;->A01(LL)
+  read opcode 0x54, dex byte offset: 0x490d4c
+classes7.dex  LX/Ban;->AD7(VLL)
+  read opcode 0x54, dex byte offset: 0x49156e
+classes7.dex  LX/Ban;->AD7(VLL)
+  write opcode 0x5b, dex byte offset: 0x4915c8
+classes7.dex  LX/Ban;->AD7(VLL)
+  write opcode 0x5b, dex byte offset: 0x491848

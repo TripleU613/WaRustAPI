@@ -1445,3 +1445,15 @@ reprojection upgraded zero events and kept retained summaries unchanged. A
 45-second receive-only live smoke check authenticated and stopped cleanly, with
 15 decrypted records remaining 15; no fresh reaction/DM established new target
 interoperability. Original uncertain actions, outbox and receipts were preserved.
+
+### 2026-10-09: poll parent-key validation and mapper
+
+**Confirmed**, APK 2.26.37.71 Ban.A01 -> C7G.A00 and Clc.A02 -> BoQ.A00;
+BWH/BSp/BZa descriptors; six exact parent-key field references in Ban.A01/AD7.
+Seven selected source topics/methods retain operands/exceptions in a checksummed
+69,090-byte bundle. Rust checks common supported structure and CLI reports
+fixed redacted refusals independently of decoding. Native JID factories,
+effective decryption property, AD7 writer, transitive parent/expiry/edit/quiz
+policy remain unknown/unported. Own poll secret chat binding is a confirmed
+local implementation gap and remains next work. No fresh live poll test.
+[Detailed evidence and boundaries](poll-votes.md).

@@ -2209,3 +2209,24 @@ reprojection upgraded zero events and kept retained summaries unchanged. A
 45-second receive-only live smoke check authenticated and stopped cleanly, with
 15 decrypted records remaining 15; no fresh reaction/DM established new target
 interoperability. Original uncertain actions, outbox and receipts were preserved.
+
+### Poll vote structural guard (2026-10-09)
+
+APK 2.26.37.71 `Ban.A01` calls the same `C7G.A00` parent-key validator as
+reactions; `Clc.A02` independently confirms the shared `BoQ.A00` mapper on
+the poll path. The new seven-topic/seven-method checksummed source bundle
+contains 12 files/69,090 bytes and reproduces with the exact APK/recipe.
+Poll decoding now checks supported ID/remoteJid, timestamp presence and
+ciphertext/IV presence with a twelve-byte IV. `lab-inbox --inspect` explains
+refused saved updates with fixed redacted validation labels. Zero/negative
+present timestamps, absent fromMe/metadata and present empty ciphertext are
+not incorrectly rejected structurally; AEAD validation remains separate.
+Native JID parity, feature selection, expiry/edit/quiz behavior and outgoing
+poll chat binding remain unfinished. No new poll/vote was transmitted.
+[Source, implementation and remaining chat issue](docs/protocol/poll-votes.md).
+
+Validation: 732 workspace/all-feature tests, strict Clippy/Rustdoc, CLI/API
+checks and hygiene passed. Recovered-profile offline projection upgraded zero
+events; peer/action/receipt/outbox/event summaries and normalized capture
+diagnostics were unchanged. That profile has no saved poll updates, so no
+fresh or retained-poll interoperability is claimed.

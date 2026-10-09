@@ -1512,6 +1512,10 @@ pub(super) async fn run(
                     poll_inspection_summary(&poll)
                 );
             }
+            // Keep refusal diagnoses visible even when decode_vote refuses.
+            if let Some(reason) = whatsapp_api::transport::polls::vote_validation(&plain) {
+                println!("inbox: poll vote validation={reason}; values redacted");
+            }
             if let Some(vote) = whatsapp_api::transport::polls::decode_vote(&plain) {
                 let id = std::str::from_utf8(key)
                     .ok()
@@ -2528,7 +2532,7 @@ mod tests {
     use whatsapp_api::model::jid::Jid;
 
     #[tokio::test]
-    async fn malformed_reaction_inspection_still_explains_the_key_refusal() {
+    async fn malformed_addon_inspection_still_explains_the_key_refusal() {
         use clap::Parser;
         const FIXTURE: &str = "TELEWHATSAPP_REACTION_INSPECTION_FIXTURE";
         const KEY: &str = "TELEWHATSAPP_REACTION_INSPECTION_KEY";
@@ -2569,6 +2573,15 @@ mod tests {
                     b"received:15555550101@s.whatsapp.net:fixture",
                     1,
                     &serde_json::json!({"status":"decrypted","protobuf":payload.to_vec()}),
+                )?;
+                // Field 50 / BWH.key / BZa.id, without remoteJid. The target
+                // remains private even though ordinary vote decoding refuses.
+                let poll_payload = b"\x92\x03\x0a\x0a\x08\x1a\x06TARGET";
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"received:15555550101@s.whatsapp.net:poll-fixture",
+                    1,
+                    &serde_json::json!({"status":"decrypted","protobuf":poll_payload.to_vec()}),
                 )
             })
             .unwrap();
@@ -2582,11 +2595,13 @@ mod tests {
         .unwrap();
         drop(store);
         let output = std::process::Command::new(std::env::current_exe().unwrap())
-            .args(["--exact", "transport_receive::tests::malformed_reaction_inspection_still_explains_the_key_refusal", "--nocapture"])
+            .args(["--exact", "transport_receive::tests::malformed_addon_inspection_still_explains_the_key_refusal", "--nocapture"])
             .env(FIXTURE,&path).env(KEY,hex::encode([2;32])).output().unwrap();
         assert!(output.status.success(), "inspection child failed");
         let stdout = String::from_utf8(output.stdout).unwrap();
         assert!(stdout.contains("key_validation=missing_remote_jid"));
+        assert!(stdout.contains("poll vote validation=missing_remote_jid; values redacted"));
+        assert!(!stdout.contains("inbox: poll vote poll_id"));
         assert!(!stdout.contains("TARGET"));
         assert!(!stdout.contains("inbox: reaction payload"));
         assert!(stdout.contains("age_s=None")); // An invalid age never panics.

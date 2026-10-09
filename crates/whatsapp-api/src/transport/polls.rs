@@ -189,9 +189,50 @@ pub fn decode_poll(payload: &[u8]) -> Option<Poll> {
         secret,
     })
 }
-/// Decode a poll update (field 50) without decrypting it.
+// APK 37.71 Ban.A01 first validates BZa using C7G.A00 (0066..007e).
+// Both feature-selected paths require a sender timestamp; the deferred branch
+// explicitly checks a 12-byte IV (0544..060c). Metadata presence is not a
+// common prerequisite. Native ChatJid subtype parity remains incomplete.
+fn vote_failure(update: &PollUpdate) -> Option<&'static str> {
+    let Some(key) = update.poll_creation_message_key.as_ref() else {
+        return Some("missing_key");
+    };
+    if let Some(reason) = super::reactions::key_failure(key) {
+        return Some(reason);
+    }
+    if update.sender_timestamp_ms.is_none() {
+        return Some("missing_sender_timestamp");
+    }
+    let Some(vote) = update.vote.as_ref() else {
+        return Some("missing_vote");
+    };
+    let Some(iv) = vote.enc_iv.as_ref() else {
+        return Some("missing_enc_iv");
+    };
+    if iv.len() != 12 {
+        return Some("invalid_enc_iv");
+    }
+    if vote.enc_payload.is_none() {
+        return Some("missing_enc_payload");
+    }
+    None
+}
+
+/// Fixed, redacted structural diagnosis of a decodable poll update.
+/// `None` means no decodable field-50 update, not a valid vote. `valid` proves
+/// only the supported key, timestamp and encrypted-value structure, not AEAD
+/// authentication, target attribution, option validity or native JID parity.
+pub fn vote_validation(payload: &[u8]) -> Option<&'static str> {
+    let update = Envelope::decode(payload).ok()?.update?;
+    Some(vote_failure(&update).unwrap_or("valid"))
+}
+
+/// Decode a structurally supported poll update (field 50) without decrypting it.
 pub fn decode_vote(payload: &[u8]) -> Option<EncryptedVote> {
     let update = Envelope::decode(payload).ok()?.update?;
+    if vote_failure(&update).is_some() {
+        return None;
+    }
     let key = update.poll_creation_message_key?;
     let vote = update.vote?;
     Some(EncryptedVote {
@@ -442,5 +483,79 @@ mod tests {
         let (selected, unresolved) = resolve_options(&[vec![1, 2, 3]], &options);
         assert!(selected.is_empty());
         assert_eq!(unresolved, vec!["010203".to_owned()]);
+    }
+}
+
+#[cfg(test)]
+mod vote_validation_tests {
+    use super::*;
+
+    // Independently assembled protobuf wire fixture from APK 37.71 BWH/BSp
+    // and BZa descriptors: field 50; key remote=555@lid/id=POLL; explicitly
+    // present empty ciphertext, twelve-byte IV and zero sender timestamp.
+    // fromMe and metadata are absent: neither is a common Ban.A01 prerequisite.
+    const FIXTURE: &str =
+        "9203250a0f0a07353535406c69641a04504f4c4c12100a00120c0000000000000000000000002000";
+
+    #[test]
+    fn apk_presence_rules_do_not_invent_positive_timestamp_or_metadata_checks() {
+        let bytes = hex::decode(FIXTURE).unwrap();
+        assert_eq!(vote_validation(&bytes), Some("valid"));
+        let vote = decode_vote(&bytes).unwrap();
+        assert!(!vote.poll_from_sender);
+        assert_eq!(vote.poll_id.as_str(), "POLL");
+        assert!(vote.enc_payload.is_empty());
+        // Structural validation never establishes authenticated vote contents.
+        let creator = Jid::parse("555@lid").unwrap();
+        assert!(decrypt_vote(&[7; 32], "POLL", &creator, &creator, &vote).is_err());
+        let mut envelope = Envelope::decode(bytes.as_slice()).unwrap();
+        envelope.update.as_mut().unwrap().sender_timestamp_ms = Some(-1);
+        assert_eq!(vote_validation(&envelope.encode_to_vec()), Some("valid"));
+        assert_eq!(vote_validation(b"\x0a\x01x"), None);
+        assert_eq!(vote_validation(b"\x92\x03\xff"), None);
+    }
+
+    #[test]
+    fn malformed_parent_and_encrypted_value_remain_opaque_with_fixed_diagnoses() {
+        type Change = fn(&mut PollUpdate);
+        let cases: &[(&str, Change)] = &[
+            ("missing_key", |u| u.poll_creation_message_key = None),
+            ("missing_id", |u| {
+                u.poll_creation_message_key.as_mut().unwrap().id = None
+            }),
+            ("invalid_id", |u| {
+                u.poll_creation_message_key.as_mut().unwrap().id = Some(String::new())
+            }),
+            ("missing_remote_jid", |u| {
+                u.poll_creation_message_key.as_mut().unwrap().remote_jid = None
+            }),
+            ("invalid_remote_jid", |u| {
+                u.poll_creation_message_key.as_mut().unwrap().remote_jid =
+                    Some("PRIVATE BAD REMOTE".into())
+            }),
+            ("unsupported_remote_jid", |u| {
+                u.poll_creation_message_key.as_mut().unwrap().remote_jid =
+                    Some("555@private.invalid".into())
+            }),
+            ("missing_sender_timestamp", |u| u.sender_timestamp_ms = None),
+            ("missing_vote", |u| u.vote = None),
+            ("missing_enc_iv", |u| u.vote.as_mut().unwrap().enc_iv = None),
+            ("invalid_enc_iv", |u| {
+                u.vote.as_mut().unwrap().enc_iv = Some(vec![0; 11])
+            }),
+            ("invalid_enc_iv", |u| {
+                u.vote.as_mut().unwrap().enc_iv = Some(vec![0; 13])
+            }),
+            ("missing_enc_payload", |u| {
+                u.vote.as_mut().unwrap().enc_payload = None
+            }),
+        ];
+        for (expected, change) in cases {
+            let mut envelope = Envelope::decode(hex::decode(FIXTURE).unwrap().as_slice()).unwrap();
+            change(envelope.update.as_mut().unwrap());
+            let payload = envelope.encode_to_vec();
+            assert!(decode_vote(&payload).is_none(), "{expected}");
+            assert_eq!(vote_validation(&payload), Some(*expected));
+        }
     }
 }

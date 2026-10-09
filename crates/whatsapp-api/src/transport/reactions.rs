@@ -21,7 +21,7 @@ use crate::{
 };
 use prost::Message as _;
 
-fn key_failure(key: &Key) -> Option<&'static str> {
+pub(super) fn key_failure(key: &Key) -> Option<&'static str> {
     // APK 37.71 C7G.A00 requires present/nonempty id and remoteJid, then
     // 1xf.A0k -> 0D7.A02 requires a nullable ChatJid parse to succeed.
     // Our supported JID categories/bounds remain local, not full native parity.

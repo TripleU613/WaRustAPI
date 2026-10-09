@@ -1,0 +1,84 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "targets": {
+    "poll-vote-schema": {
+      "class": "LX/BWH;",
+      "method": "dynamicMethod",
+      "method_shorty": "LLLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/polls.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "poll-encrypted-value-schema": {
+      "class": "LX/BSp;",
+      "method": "dynamicMethod",
+      "method_shorty": "LLLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/polls.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "poll-vote-receiver": {
+      "class": "LX/Ban;",
+      "method": "A01",
+      "method_shorty": "LL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/polls.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "poll-key-mapper": {
+      "class": "LX/Clc;",
+      "method": "A02",
+      "method_shorty": "LLLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/polls.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "key-schema": {
+      "class": "LX/BZa;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/polls.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "method": "dynamicMethod",
+      "method_shorty": "LLLL"
+    },
+    "key-validator": {
+      "class": "LX/C7G;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/polls.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "method": "A00",
+      "method_shorty": "ZL"
+    },
+    "shared-chat-key": {
+      "class": "LX/BoQ;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/polls.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "method": "A00",
+      "method_shorty": "LLLLLZZ"
+    }
+  }
+}

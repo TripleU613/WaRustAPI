@@ -1,0 +1,30 @@
+# APK-derived structural disassembly: LX/C7G;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(ZL) flags=0x19 registers=3
+  0000..0004 op=38 if-eqz v2, +0x27
+  0004..0008 op=52 iget v1, v2, LX/BZa;->bitField0_:I
+  0008..000c op=dd and-int/lit8 v0, v1, #0x4
+  000c..0010 op=38 if-eqz v0, +0x21
+  0010..0014 op=54 iget-object v0, v2, LX/BZa;->id_:Ljava/lang/String;
+  0014..0018 op=38 if-eqz v0, +0x1d
+  0018..001e op=6e invoke-virtual {v0}, Ljava/lang/String;->length(I)
+  001e..0020 op=0a move-result v0
+  0020..0024 op=38 if-eqz v0, +0x17
+  0024..0028 op=dd and-int/lit8 v0, v1, #0x1
+  0028..002c op=38 if-eqz v0, +0x13
+  002c..0030 op=54 iget-object v1, v2, LX/BZa;->remoteJid_:Ljava/lang/String;
+  0030..0034 op=38 if-eqz v1, +0xf
+  0034..003a op=6e invoke-virtual {v1}, Ljava/lang/String;->length(I)
+  003a..003c op=0a move-result v0
+  003c..0040 op=38 if-eqz v0, +0x9
+  0040..0046 op=71 invoke-static {v1}, LX/1xf;->A0k(LL)
+  0046..0048 op=0c move-result-object v0
+  0048..004a op=12 const/4 v1, #0x1
+  004a..004e op=39 if-nez v0, +0x3
+  004e..0050 op=12 const/4 v1, #0x0
+  0050..0052 op=0f return v1
+  # exception table: 0 try range(s)
+.end method
