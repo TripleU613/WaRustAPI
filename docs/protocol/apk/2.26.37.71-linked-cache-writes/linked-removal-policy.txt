@@ -1,0 +1,171 @@
+# APK-derived structural disassembly: LX/1IW;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0E(VLZ) flags=0x1 registers=27
+  # full signature: LX/1IW;->A0E(Lcom/google/common/collect/ImmutableSet;Z)V
+  0000..0004 op=1a const-string v0, "DeviceManager/removeMyDevices/start"
+  0004..000a op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  000a..000e op=08 move-object/from16 v4, v24
+  000e..0012 op=54 iget-object v6, v4, LX/1IW;->A03:LX/08Z;
+  0012..0018 op=72 invoke-interface {v6}, LX/08Z;->Apz()LX/0DO;
+  0018..001a op=0c move-result-object v0
+  001a..001e op=08 move-object/from16 v5, v25
+  001e..0024 op=6e invoke-virtual {v5, v0}, Ljava/util/AbstractCollection;->contains(Ljava/lang/Object;)Z
+  0024..0026 op=0a move-result v0
+  0026..002a op=df xor-int/lit8 v1, v0, #0x1
+  002a..002e op=1a const-string v0, "never remove my primary device."
+  002e..0034 op=71 invoke-static {v1, v0}, LX/00K;->A0F(ZLjava/lang/String;)V
+  0034..003a op=6e invoke-virtual {v5}, Ljava/util/AbstractCollection;->isEmpty()Z
+  003a..003c op=0a move-result v0
+  003c..0040 op=39 if-nez v0, +0xd0
+  0040..0046 op=72 invoke-interface {v6}, LX/08Z;->Aq0()Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+  0046..0048 op=0c move-result-object v3
+  0048..004c op=39 if-nez v3, +0x8
+  004c..0050 op=1a const-string v0, "DeviceManager/removeMyDevices: me jid is null"
+  0050..0056 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  0056..0058 op=0e return-void
+  0058..005c op=38 if-eqz v26, +0xd
+  005c..0062 op=71 invoke-static {}, Lcom/google/common/collect/ImmutableSet;->of()Lcom/google/common/collect/ImmutableSet;
+  0062..0064 op=0c move-result-object v7
+  0064..0068 op=54 iget-object v0, v4, LX/1IW;->A04:LX/0Gc;
+  0068..006e op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  006e..0070 op=0c move-result-object v17
+  0070..0072 op=28 goto +0x6
+  0072..0078 op=70 invoke-direct {v4, v5}, LX/1IW;->A00(Lcom/google/common/collect/ImmutableSet;)Lcom/google/common/collect/ImmutableSet;
+  0078..007a op=0c move-result-object v7
+  007a..007c op=28 goto -0xb
+  007c..0082 op=74 invoke-virtual/range {v17..v17}, LX/0ZN;->A00()LX/1gB;
+  0082..0084 op=0c move-result-object v16
+  0084..0088 op=54 iget-object v8, v4, LX/1IW;->A07:LX/1IY;
+  0088..008e op=6e invoke-virtual {v8}, LX/1IY;->A07()Lcom/google/common/collect/ImmutableMap;
+  008e..0090 op=0c move-result-object v0
+  0090..0096 op=6e invoke-virtual {v0}, Lcom/google/common/collect/ImmutableMap;->keySet()Lcom/google/common/collect/ImmutableSet;
+  0096..0098 op=0c move-result-object v1
+  0098..009c op=38 if-eqz v26, +0x63
+  009c..00a0 op=1a const-string v12, "device_id IN ("
+  00a0..00a6 op=71 invoke-static {v8}, LX/1IY;->A03(LX/1IY;)LX/0aC;
+  00a6..00a8 op=0c move-result-object v0
+  00a8..00ae op=6e invoke-virtual {v0}, LX/0aC;->A07()LX/0ZN;
+  00ae..00b0 op=0c move-result-object v2
+  00b0..00b6 op=6e invoke-virtual {v2}, LX/0ZN;->A00()LX/1gB;
+  00b6..00b8 op=0c move-result-object v15
+  00b8..00ba op=1d monitor-enter
+  00ba..00be op=54 iget-object v0, v8, LX/1IY;->A08:LX/08B;
+  00be..00c4 op=71 invoke-static {v0}, LX/08B;->A00(LX/08B;)J
+  00c4..00c6 op=0b move-result-wide v13
+  00c6..00ca op=22 new-instance v11, Landroid/content/ContentValues;
+  00ca..00d0 op=70 invoke-direct {v11}, Landroid/content/ContentValues;-><init>()V
+  00d0..00d4 op=1a const-string v9, "logout_time"
+  00d4..00da op=71 invoke-static {v13, v14}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  00da..00dc op=0c move-result-object v0
+  00dc..00e2 op=6e invoke-virtual {v11, v9, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  00e2..00e8 op=71 invoke-static {v5, v8}, LX/1IY;->A06(Lcom/google/common/collect/ImmutableSet;LX/1IY;)[Ljava/lang/String;
+  00e8..00ea op=0c move-result-object v10
+  00ea..00ee op=1a const-string v13, ", "
+  00ee..00f0 op=21 array-length v9, v10
+  00f0..00f4 op=1a const-string v0, "?"
+  00f4..00fa op=71 invoke-static {v9, v0}, Ljava/util/Collections;->nCopies(ILjava/lang/Object;)Ljava/util/List;
+  00fa..00fc op=0c move-result-object v0
+  00fc..0102 op=71 invoke-static {v13, v0}, Landroid/text/TextUtils;->join(Ljava/lang/CharSequence;Ljava/lang/Iterable;)Ljava/lang/String;
+  0102..0104 op=0c move-result-object v0
+  0104..0108 op=22 new-instance v9, Ljava/lang/StringBuilder;
+  0108..010e op=70 invoke-direct {v9, v12}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  010e..0114 op=6e invoke-virtual {v9, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0114..0118 op=1a const-string v0, ")"
+  0118..011e op=6e invoke-virtual {v9, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  011e..0124 op=6e invoke-virtual {v9}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0124..0126 op=0c move-result-object v21
+  0126..012a op=54 iget-object v0, v2, LX/0ZN;->A02:LX/0IY;
+  012a..012e op=1a const-string v20, "devices"
+  012e..0132 op=1a const-string v22, "markDeviceLoggedOut/UPDATE_DEVICES"
+  0132..0136 op=08 move-object/from16 v18, v0
+  0136..013a op=08 move-object/from16 v19, v11
+  013a..013e op=08 move-object/from16 v23, v10
+  013e..0144 op=74 invoke-virtual/range {v18..v23}, LX/0IY;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0144..014a op=6e invoke-virtual {v15}, LX/1gB;->A00()V
+  014a..014c op=12 const/4 v0, #0x0
+  014c..0150 op=5b iput-object v0, v8, LX/1IY;->A01:Lcom/google/common/collect/ImmutableMap;
+  0150..0154 op=5b iput-object v0, v8, LX/1IY;->A02:Lcom/google/common/collect/ImmutableMap;
+  0154..0156 op=1e monitor-exit
+  0156..015c op=6e invoke-virtual {v15}, LX/1gB;->close()V
+  015c..015e op=28 goto +0x5
+  015e..0164 op=6e invoke-virtual {v8, v5}, LX/1IY;->A08(Lcom/google/common/collect/ImmutableSet;)V
+  0164..0166 op=28 goto +0x4
+  0166..016c op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  016c..0172 op=71 invoke-static {}, Lcom/google/common/collect/ImmutableSet;->of()Lcom/google/common/collect/ImmutableSet;
+  0172..0174 op=0c move-result-object v9
+  0174..0176 op=12 const/4 v13, #0x0
+  0176..0178 op=07 move-object v12, v3
+  0178..017a op=01 move v14, v13
+  017a..017c op=07 move-object v10, v5
+  017c..017e op=07 move-object v11, v4
+  017e..0180 op=07 move-object v8, v1
+  0180..0186 op=77 invoke-static/range {v8..v14}, LX/1IW;->A05(Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;LX/1IW;Lcom/whatsapp/infra/core/jid/UserJid;ZZ)V
+  0186..018c op=74 invoke-virtual/range {v16..v16}, LX/1gB;->A00()V
+  018c..0192 op=74 invoke-virtual/range {v16..v16}, LX/1gB;->close()V
+  0192..0198 op=74 invoke-virtual/range {v17..v17}, LX/0ZN;->close()V
+  0198..019e op=70 invoke-direct {v4, v7}, LX/1IW;->A03(Lcom/google/common/collect/ImmutableSet;)V
+  019e..01a4 op=6e invoke-virtual {v4}, LX/1IW;->A0A()V
+  01a4..01aa op=71 invoke-static {}, Lcom/google/common/collect/ImmutableSet;->of()Lcom/google/common/collect/ImmutableSet;
+  01aa..01ac op=0c move-result-object v0
+  01ac..01b2 op=71 invoke-static {v1, v0, v5, v4, v3}, LX/1IW;->A04(Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;LX/1IW;Lcom/whatsapp/infra/core/jid/UserJid;)V
+  01b2..01b8 op=72 invoke-interface {v6}, LX/08Z;->Apx()LX/0ZY;
+  01b8..01ba op=0c move-result-object v3
+  01ba..01be op=38 if-eqz v3, +0x11
+  01be..01c4 op=71 invoke-static {v1, v3}, LX/1IW;->A01(Lcom/google/common/collect/ImmutableSet;Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/google/common/collect/ImmutableSet;
+  01c4..01c6 op=0c move-result-object v2
+  01c6..01cc op=71 invoke-static {}, Lcom/google/common/collect/ImmutableSet;->of()Lcom/google/common/collect/ImmutableSet;
+  01cc..01ce op=0c move-result-object v1
+  01ce..01d4 op=71 invoke-static {v5, v3}, LX/1IW;->A01(Lcom/google/common/collect/ImmutableSet;Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/google/common/collect/ImmutableSet;
+  01d4..01d6 op=0c move-result-object v0
+  01d6..01dc op=71 invoke-static {v2, v1, v0, v4, v3}, LX/1IW;->A04(Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;LX/1IW;Lcom/whatsapp/infra/core/jid/UserJid;)V
+  01dc..01e0 op=1a const-string v0, "DeviceManager/removeMyDevices/done"
+  01e0..01e4 op=29 goto/16 -0xc8
+  01e4..01e6 op=0d move-exception v0
+  01e6..01e8 op=1e monitor-exit
+  01e8..01ea op=27 throw v0
+  01ea..01ec op=0d move-exception v1
+  01ec..01f2 op=6e invoke-virtual {v15}, LX/1gB;->close()V
+  01f2..01f4 op=28 goto +0x5
+  01f4..01f6 op=0d move-exception v0
+  01f6..01fc op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  01fc..01fe op=27 throw v1
+  01fe..0200 op=0d move-exception v1
+  0200..0206 op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  0206..0208 op=28 goto +0x5
+  0208..020a op=0d move-exception v0
+  020a..0210 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  0210..0212 op=27 throw v1
+  0212..0214 op=0d move-exception v1
+  0214..021a op=74 invoke-virtual/range {v16..v16}, LX/1gB;->close()V
+  021a..021c op=28 goto +0x5
+  021c..021e op=0d move-exception v0
+  021e..0224 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  0224..0226 op=27 throw v1
+  0226..0228 op=0d move-exception v1
+  0228..022e op=74 invoke-virtual/range {v17..v17}, LX/0ZN;->close()V
+  022e..0230 op=27 throw v1
+  0230..0232 op=0d move-exception v0
+  0232..0238 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  0238..023a op=27 throw v1
+  # exception table: 17 try range(s)
+  # catch <all> code_units 003e..0042 -> 0113
+  # catch <all> code_units 0042..0058 -> 0109
+  # catch <all> code_units 0058..005c -> 00ff
+  # catch <all> code_units 005c..005d -> 00f5
+  # catch <all> code_units 005d..00ab -> 00f2
+  # catch <all> code_units 00ab..00af -> 00ff
+  # catch <all> code_units 00af..00c6 -> 0109
+  # catch <all> code_units 00c6..00c9 -> 0113
+  # catch <all> code_units 00f3..00f4 -> 00f2
+  # catch <all> code_units 00f4..00f5 -> 00f5
+  # catch <all> code_units 00f6..00fa -> 00fa
+  # catch <all> code_units 00fb..00ff -> 00ff
+  # catch <all> code_units 0100..0104 -> 0104
+  # catch <all> code_units 0104..0109 -> 0109
+  # catch <all> code_units 010a..010e -> 010e
+  # catch <all> code_units 010f..0113 -> 0113
+  # catch <all> code_units 0114..0117 -> 0118
+.end method

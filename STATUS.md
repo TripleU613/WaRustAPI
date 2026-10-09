@@ -1,5 +1,14 @@
 # Status — 2026-10-07
 
+Linked-device cache writes (2026-10-09, **confirmed static**): APK 37.71
+has twenty physical raw/view cache writes across fourteen methods. The six-topic
+snapshot traces metadata writes, logout marking versus row deletion, own-alias
+selectors and bounded PN/LID migration resets. Full remaining writer/caller
+authority and commit/rollback semantics remain unknown; no cache reset implies
+verified identity or removal permission. No runtime, account state or live
+request changed; linked-device receipt handling remains unfinished.
+[Evidence and limits](docs/protocol/linked-cache-writes.md).
+
 Read-job saved linked set (2026-10-09, **confirmed static**): APK 37.71
 requires loaded Me and derives its set from saved devices, excluding positive
 logout times. The nine-topic snapshot traces SQL loading and bounded own

@@ -1,0 +1,58 @@
+# APK-derived structural disassembly: LX/1IY;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A06(LLL) flags=0x9 registers=9
+  # full signature: LX/1IY;->A06(Lcom/google/common/collect/ImmutableSet;LX/1IY;)[Ljava/lang/String;
+  0000..0004 op=22 new-instance v3, Ljava/util/LinkedHashSet;
+  0004..000a op=70 invoke-direct {v3}, Ljava/util/LinkedHashSet;-><init>()V
+  000a..000e op=54 iget-object v6, v8, LX/1IY;->A07:LX/08Z;
+  000e..0014 op=72 invoke-interface {v6}, LX/08Z;->Aq0()Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+  0014..0016 op=0c move-result-object v5
+  0016..001c op=72 invoke-interface {v6}, LX/08Z;->Apx()LX/0ZY;
+  001c..001e op=0c move-result-object v4
+  001e..0024 op=6e invoke-virtual {v7}, Lcom/google/common/collect/ImmutableCollection;->iterator()LX/0N1;
+  0024..0026 op=0c move-result-object v7
+  0026..002c op=72 invoke-interface {v7}, Ljava/util/Iterator;->hasNext()Z
+  002c..002e op=0a move-result v0
+  002e..0032 op=38 if-eqz v0, +0x42
+  0032..0038 op=72 invoke-interface {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0038..003a op=0c move-result-object v2
+  003a..003e op=1f check-cast v2, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  003e..0044 op=6e invoke-virtual {v2}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  0044..0046 op=0c move-result-object v0
+  0046..004c op=6e invoke-virtual {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  004c..0050 op=54 iget-object v0, v2, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+  0050..0056 op=72 invoke-interface {v6, v0}, LX/08Z;->BO0(LX/0Cy;)Z
+  0056..0058 op=0a move-result v0
+  0058..005c op=38 if-eqz v0, -0x19
+  005c..0060 op=38 if-eqz v4, +0x15
+  0060..0066 op=6e invoke-virtual {v2}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+  0066..0068 op=0a move-result v1
+  0068..006c op=62 sget-object v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0DK;
+  006c..0072 op=6e invoke-virtual {v0, v4, v1}, LX/0DK;->A02(Lcom/whatsapp/infra/core/jid/UserJid;I)Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0072..0074 op=0c move-result-object v0
+  0074..0078 op=38 if-eqz v0, +0x9
+  0078..007e op=6e invoke-virtual {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  007e..0080 op=0c move-result-object v0
+  0080..0086 op=6e invoke-virtual {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  0086..008a op=38 if-eqz v5, -0x30
+  008a..0090 op=6e invoke-virtual {v2}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+  0090..0092 op=0a move-result v1
+  0092..0096 op=62 sget-object v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0DK;
+  0096..009c op=6e invoke-virtual {v0, v5, v1}, LX/0DK;->A02(Lcom/whatsapp/infra/core/jid/UserJid;I)Lcom/whatsapp/infra/core/jid/DeviceJid;
+  009c..009e op=0c move-result-object v0
+  009e..00a2 op=38 if-eqz v0, -0x3c
+  00a2..00a8 op=6e invoke-virtual {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  00a8..00aa op=0c move-result-object v0
+  00aa..00b0 op=6e invoke-virtual {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  00b0..00b2 op=28 goto -0x45
+  00b2..00b4 op=12 const/4 v0, #0x0
+  00b4..00b8 op=23 new-array v0, v0, [Ljava/lang/String;
+  00b8..00be op=6e invoke-virtual {v3, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+  00be..00c0 op=0c move-result-object v0
+  00c0..00c4 op=1f check-cast v0, [Ljava/lang/String;
+  00c4..00c6 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

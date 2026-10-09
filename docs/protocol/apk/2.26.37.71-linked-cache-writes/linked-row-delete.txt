@@ -1,0 +1,69 @@
+# APK-derived structural disassembly: LX/1IY;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A08(VL) flags=0x1 registers=9
+  # full signature: LX/1IY;->A08(Lcom/google/common/collect/ImmutableSet;)V
+  0000..0004 op=1a const-string v3, "device_id IN ("
+  0004..000a op=71 invoke-static {v7}, LX/1IY;->A03(LX/1IY;)LX/0aC;
+  000a..000c op=0c move-result-object v0
+  000c..0012 op=6e invoke-virtual {v0}, LX/0aC;->A07()LX/0ZN;
+  0012..0014 op=0c move-result-object v4
+  0014..001a op=6e invoke-virtual {v4}, LX/0ZN;->A00()LX/1gB;
+  001a..001c op=0c move-result-object v6
+  001c..001e op=1d monitor-enter
+  001e..0024 op=71 invoke-static {v8, v7}, LX/1IY;->A06(Lcom/google/common/collect/ImmutableSet;LX/1IY;)[Ljava/lang/String;
+  0024..0026 op=0c move-result-object v5
+  0026..002a op=1a const-string v2, ", "
+  002a..002c op=21 array-length v1, v5
+  002c..0030 op=1a const-string v0, "?"
+  0030..0036 op=71 invoke-static {v1, v0}, Ljava/util/Collections;->nCopies(ILjava/lang/Object;)Ljava/util/List;
+  0036..0038 op=0c move-result-object v0
+  0038..003e op=71 invoke-static {v2, v0}, Landroid/text/TextUtils;->join(Ljava/lang/CharSequence;Ljava/lang/Iterable;)Ljava/lang/String;
+  003e..0040 op=0c move-result-object v0
+  0040..0044 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0044..004a op=70 invoke-direct {v1, v3}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  004a..0050 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0050..0054 op=1a const-string v0, ")"
+  0054..005a op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  005a..0060 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0060..0062 op=0c move-result-object v3
+  0062..0066 op=54 iget-object v2, v4, LX/0ZN;->A02:LX/0IY;
+  0066..006a op=1a const-string v1, "devices"
+  006a..006e op=1a const-string v0, "removeDevices/DELETE_DEVICES"
+  006e..0074 op=6e invoke-virtual {v2, v1, v3, v0, v5}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0074..007a op=6e invoke-virtual {v6}, LX/1gB;->A00()V
+  007a..007c op=12 const/4 v0, #0x0
+  007c..0080 op=5b iput-object v0, v7, LX/1IY;->A01:Lcom/google/common/collect/ImmutableMap;
+  0080..0084 op=5b iput-object v0, v7, LX/1IY;->A02:Lcom/google/common/collect/ImmutableMap;
+  0084..0086 op=1e monitor-exit
+  0086..008c op=6e invoke-virtual {v6}, LX/1gB;->close()V
+  008c..0092 op=6e invoke-virtual {v4}, LX/0ZN;->close()V
+  0092..0094 op=0e return-void
+  0094..0096 op=0d move-exception v0
+  0096..0098 op=1e monitor-exit
+  0098..009a op=27 throw v0
+  009a..009c op=0d move-exception v1
+  009c..00a2 op=6e invoke-virtual {v6}, LX/1gB;->close()V
+  00a2..00a4 op=28 goto +0x5
+  00a4..00a6 op=0d move-exception v0
+  00a6..00ac op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00ac..00ae op=27 throw v1
+  00ae..00b0 op=0d move-exception v1
+  00b0..00b6 op=6e invoke-virtual {v4}, LX/0ZN;->close()V
+  00b6..00b8 op=27 throw v1
+  00b8..00ba op=0d move-exception v0
+  00ba..00c0 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00c0..00c2 op=27 throw v1
+  # exception table: 9 try range(s)
+  # catch <all> code_units 000a..000e -> 0057
+  # catch <all> code_units 000e..000f -> 004d
+  # catch <all> code_units 000f..0043 -> 004a
+  # catch <all> code_units 0043..0046 -> 0057
+  # catch <all> code_units 004b..004c -> 004a
+  # catch <all> code_units 004c..004d -> 004d
+  # catch <all> code_units 004e..0052 -> 0052
+  # catch <all> code_units 0053..0057 -> 0057
+  # catch <all> code_units 0058..005b -> 005c
+.end method

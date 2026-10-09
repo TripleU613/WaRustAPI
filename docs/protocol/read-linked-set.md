@@ -91,3 +91,8 @@ cargo run -p xtask -- apk-research-bundle ~/Downloads/WhatsApp.apk \
   --recipe docs/protocol/apk/recipes/2.26.37.71-read-linked-set.json \
   --output docs/protocol/apk/2.26.37.71-read-linked-set --check
 ```
+
+Follow-up: [linked-device cache writes](linked-cache-writes.md) inventories
+physical raw/view writers and traces metadata insertion, logout versus deletion,
+own-alias selectors and migration resets. Full caller authority, remaining
+writer semantics and rollback/callback guarantees remain unknown.

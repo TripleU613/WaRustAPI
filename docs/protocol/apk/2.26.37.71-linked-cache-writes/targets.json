@@ -1,0 +1,80 @@
+{
+  "linked-lid-migration": {
+    "class": "LX/0ja;",
+    "file": "linked-lid-migration.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0F",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "linked-metadata-write": {
+    "class": "LX/1IW;",
+    "file": "linked-metadata-write.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0F",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "linked-pn-migration": {
+    "class": "LX/0ja;",
+    "file": "linked-pn-migration.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0E",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "linked-removal-policy": {
+    "class": "LX/1IW;",
+    "file": "linked-removal-policy.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0E",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "linked-row-delete": {
+    "class": "LX/1IY;",
+    "file": "linked-row-delete.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A08",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "linked-row-selectors": {
+    "class": "LX/1IY;",
+    "file": "linked-row-selectors.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A06",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  }
+}

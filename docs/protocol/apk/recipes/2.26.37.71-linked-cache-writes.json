@@ -1,0 +1,62 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "linked-metadata-write": {
+      "class": "LX/1IW;",
+      "method": "A0F",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "linked-removal-policy": {
+      "class": "LX/1IW;",
+      "method": "A0E",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "linked-row-delete": {
+      "class": "LX/1IY;",
+      "method": "A08",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "linked-row-selectors": {
+      "class": "LX/1IY;",
+      "method": "A06",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "linked-pn-migration": {
+      "class": "LX/0ja;",
+      "method": "A0E",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "linked-lid-migration": {
+      "class": "LX/0ja;",
+      "method": "A0F",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    }
+  }
+}
