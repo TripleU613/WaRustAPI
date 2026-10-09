@@ -295,7 +295,9 @@ pub(super) fn observe_in(
     let timestamp = node
         .get_attr("t")
         .and_then(|v| v.as_text())
-        .and_then(|t| t.parse::<i64>().ok())
+        // 37.71 Cmk.A03 -> 0Gv.A01 uses Java Long.parseLong, including
+        // UTF-16 BMP decimal digits; ASCII-only parsing loses received rows.
+        .and_then(super::mex::java_decimal_long)
         .unwrap_or(0)
         .wrapping_mul(1000);
     if timestamp <= 0 {
@@ -1002,6 +1004,56 @@ mod tests {
         let error = inspect(&store, id).unwrap_err().to_string();
         assert!(error.contains("invalid saved primary device version"));
         assert!(!error.contains("PRIVATE VALUE"));
+    }
+    #[test]
+    fn java_receipt_time_keeps_received_companion_rows_during_identity_cleanup() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("java-receipt.redb");
+        let store = open(&path, true);
+        let id = enqueue(&store);
+        let peer = Jid::parse("15555550101:3@s.whatsapp.net").unwrap();
+        let pending = peer.with_device(4);
+        store
+            .write(|tx| capture_in(tx, id, &[peer.clone(), pending.clone()]))
+            .unwrap();
+        let original = inspect(&store, id).unwrap();
+        let node = crate::binary::Node::new("receipt").attr("t", "+２０");
+        assert!(store.write(|tx| observe_in(tx, id, &peer, &node)).unwrap());
+        assert!(
+            store
+                .write(|tx| observe_in(tx, id, &peer, &node.clone().attr("t", "١٠")))
+                .unwrap()
+        );
+        let received = inspect(&store, id).unwrap();
+        for value in ["𝟜𝟘", " 5", "5 ", "-1", "9223372036854775808"] {
+            assert!(
+                !store
+                    .write(|tx| observe_in(tx, id, &peer, &node.clone().attr("t", value)))
+                    .unwrap()
+            );
+            assert_eq!(inspect(&store, id).unwrap(), received);
+        }
+        let aborted: Result<()> = store.write(|tx| {
+            after_companion_identity_change_in(tx, &pending)?;
+            Err(invalid("fixture rollback"))
+        });
+        assert!(aborted.is_err());
+        assert_eq!(inspect(&store, id).unwrap(), received);
+        store
+            .write(|tx| {
+                after_companion_identity_change_in(tx, &peer)?;
+                after_companion_identity_change_in(tx, &pending)
+            })
+            .unwrap();
+        let saved = inspect(&store, id).unwrap();
+        assert_eq!(saved.users, original.users);
+        let rows = saved.device_receipts.as_ref().unwrap();
+        let arrived = rows.iter().find(|r| r.device == 3).unwrap();
+        assert!(arrived.present);
+        assert_eq!(arrived.timestamp, Some(10000));
+        assert_eq!(rows.iter().filter(|r| !r.present).count(), 1);
+        drop(store);
+        assert_eq!(inspect(&open(&path, false), id).unwrap(), saved);
     }
     #[test]
     fn send_versions_receipt_time_is_earliest_positive_exact_device_and_atomic() {

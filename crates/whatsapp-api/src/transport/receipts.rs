@@ -1674,7 +1674,7 @@ mod tests {
         let receipt = Node::new("receipt")
             .attr("id", "fixture")
             .attr("type", "read")
-            .attr("t", "20");
+            .attr("t", "+２０");
         assert_eq!(
             record(
                 &store,
@@ -1686,7 +1686,7 @@ mod tests {
         let receipt = receipt.attr("from", "15555550100@s.whatsapp.net");
         assert_eq!(record(&store, &receipt).unwrap(), 1);
         assert_eq!(record(&store, &receipt).unwrap(), 0);
-        assert_eq!(record(&store, &receipt.attr("t", "10")).unwrap(), 0);
+        assert_eq!(record(&store, &receipt.attr("t", "١٠")).unwrap(), 0);
         let versions = super::super::send_versions::inspect(&store, ticket.local_id).unwrap();
         assert_eq!(versions.device_receipts.unwrap()[0].timestamp, Some(10000));
         let status = store

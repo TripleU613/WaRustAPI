@@ -1,5 +1,13 @@
 # Messaging completion checklist
 
+Device-receipt timestamp correction (2026-10-09, **confirmed local / APK-backed**):
+Java BMP receipt times now reach earliest-positive mutable device rows rather
+than remaining falsely pending. A failing-before test checks received-row
+preservation through companion cleanup, rollback, immutable provenance and reopen;
+normal-outbox receipt attribution is also exercised. Primary cleanup remains
+unported; no real account/live change.
+[Evidence and limits](protocol/device-receipt-rows.md#java-receipt-time-and-companion-cleanup-correction-2026-10-09).
+
 Ordinary text status source (2026-10-09, **confirmed static / bounded inference**):
 user-input text construction uses 1Ze/1he and the NTP-preferred clock; its
 plain construction boundary differs from media's explicit status 1. Seventeen

@@ -107,3 +107,54 @@ positive receipt reinsertion with the current nullable user version. Original
 at_send remains immutable; new present/version diagnostics distinguish mutable
 membership. This supersedes the earlier full-membership/no-cleanup limitation
 for this branch only. Primary and namespace/counterpart cleanup remain unported.
+
+
+## Java receipt time and companion cleanup correction (2026-10-09)
+
+**Confirmed static:** APK 2.26.37.71 / SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+The existing [clock recipe](apk/recipes/2.26.37.71-receipt-clock.json) and
+[snapshot](apk/2.26.37.71-receipt-clock/targets.json) retain Cmk.A03's direct
+`t -> 0Gv.A01(text,0) -> wrapping mul-long 1000` chain. The more recent
+[wire-clock numeric helper](apk/2.26.37.71-token-clock-wire/targets.json)
+retains 0Gv.A01; its success path uses Java Long.parseLong. Missing, empty or
+invalid text returns zero; valid signed long multiplication wraps before the
+existing 7hf.A01 positive-millisecond admission. Those distinct stages remain
+unchanged. This is direct-root receipt time, not the separate strict per-item
+aggregated/participants parser or an inferred local time.
+
+**Confirmed local bug and correction:** send_versions::observe_in had still
+used Rust parse::<i64>, which rejects Java BMP decimal digit inputs. A matching
+receipt could therefore leave a device timestamp null and later be selected by
+our pending-companion cleanup. The new failing-before regression refused its
+first update for `+２０`. The observer now reuses mex::java_decimal_long,
+keeping zero fallback, wrapping milliseconds conversion, positive admission,
+exact original device/namespace match and earliest-positive replacement.
+No stored schema, version counters or original reservation are rewritten.
+
+**Regression scope:** synthetic encrypted-store input `+２０` establishes
+20,000 ms, then `١٠` lowers it to 10,000 ms. Whitespace, supplementary digits,
+nonpositive values and out-of-range longs leave it unchanged. An aborted
+companion cleanup rolls back. A subsequent committed cleanup retains this
+received companion's row and removes the separate still-pending companion's
+membership, while immutable original user/version snapshots stay unchanged.
+Reopening preserves that result. The existing normal-outbox receipt integration
+now exercises the same BMP times through receipts::record, preserving peer
+scope, idempotence, one Read fact and no invented server acceptance. Independent
+Java numeric fixtures are [documented separately](token-notification-peer.md#timestamp-parser-correction-2026-10-09).
+
+**Remaining boundary:** this correction prevents parser-created false pending
+state inside the existing device-row port. It does not implement native
+receipt_user membership, primary identity cleanup, counterpart authority,
+status/settings admission, aggregate parsing or resend. No actual peer identity
+was replaced and no real account, keys, saved request IDs, waits or session
+changed. A fresh live Unicode receipt has not been observed or requested.
+
+**Completed checks:** 822 workspace/all-feature tests passed (686 API unit,
+four codec, nine crash matrix, 52 CLI unit, one API-symbol and 70 xtask).
+Strict workspace/all-target/all-feature Clippy, warnings-denied Rustdoc,
+default CLI tests, regenerated CLI reference, formatting and diff whitespace
+passed. The new companion-cleanup regression failed before the parser change
+and passed afterward, as did the modified normal-outbox entry-point test.
+Repository hygiene validates 1,830 local links and all 76 existing APK checksum
+bundles; no new source generation or old-snapshot rewrite was needed.
