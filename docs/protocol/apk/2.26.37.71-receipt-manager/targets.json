@@ -1,0 +1,122 @@
+{
+  "delete-original-receipt-rows": {
+    "class": "LX/13v;",
+    "file": "delete-original-receipt-rows.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "exclude-revoked-key-worker": {
+    "class": "LX/8UM;",
+    "file": "exclude-revoked-key-worker.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "manager-constructor": {
+    "class": "LX/13v;",
+    "file": "manager-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "mark-deleted-message": {
+    "class": "LX/0V9;",
+    "file": "mark-deleted-message.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "preserve-deleted-mark-copy": {
+    "class": "LX/Cjb;",
+    "file": "preserve-deleted-mark-copy.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "revoke-consumer-first": {
+    "class": "LX/152;",
+    "file": "revoke-consumer-first.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "revoke-consumer-second": {
+    "class": "LX/153;",
+    "file": "revoke-consumer-second.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "transaction-close-signed-decrement": {
+    "class": "LX/1gB;",
+    "file": "transaction-close-signed-decrement.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "close",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "xtask/src/xref.rs"
+    ]
+  }
+}

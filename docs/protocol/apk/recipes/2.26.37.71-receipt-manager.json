@@ -1,0 +1,96 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "manager-constructor": {
+      "class": "LX/13v;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "delete-original-receipt-rows": {
+      "class": "LX/13v;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "exclude-revoked-key-worker": {
+      "class": "LX/8UM;",
+      "method": "run",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "mark-deleted-message": {
+      "class": "LX/0V9;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "preserve-deleted-mark-copy": {
+      "class": "LX/Cjb;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "revoke-consumer-first": {
+      "class": "LX/152;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "revoke-consumer-second": {
+      "class": "LX/153;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "transaction-close-signed-decrement": {
+      "class": "LX/1gB;",
+      "method": "close",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "xtask/src/xref.rs"
+      ]
+    }
+  }
+}

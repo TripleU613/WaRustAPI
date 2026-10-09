@@ -2137,3 +2137,18 @@ unchanged; zero network commands and zero retained group preparation samples.
 A separate local owner-drop shared-descriptor regression confirms teardown
 release without widening active-owner admission. Historical refusal holder
 attribution remains unknown; see [verification](../design/verification.md#temporary-store-ownership-refusal-observed-2026-10-09).
+
+2026-10-09 — **Confirmed static:** APK 37.71 13v constructor/A02 and 8UM44
+close the A03 revoke exclusion producer; 15A's earlier device-only pool remains
+separate. 0V9.A00 and Cjb.A02 establish deletion-path marking/copying of A0l,
+not its full persistence/producer semantics. Raw 1gB.close decrement bytes at
+classes2.dex 0x12a6da independently confirm signed -1; 22b/22s renderer output
+is corrected with boundary tests and preserved predecessor generations.
+[Evidence and unknowns](receipt-manager.md). No Rust revoke/cleanup or live claim.
+
+Receipt-manager validation: 67 xtask tests and strict xtask Clippy passed,
+plus rebuilt CLI, CLI reference/API symbols, formatting and hygiene. Eight source
+topics / 13 files / 301,312 bytes reproduce exactly; self-diff verifies eight
+unchanged topics/four artifacts. Independent raw DEX read matches signed decrement
+at 0x12a6da. Hygiene: 1,416 links, 34 bundles / 8,808,333 bytes. Tooling/research
+only; no new account/shared-runtime/live test is claimed.

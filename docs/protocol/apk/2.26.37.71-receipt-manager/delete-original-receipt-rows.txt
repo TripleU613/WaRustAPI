@@ -1,0 +1,153 @@
+# APK-derived structural disassembly: LX/13v;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(VL) flags=0x1 registers=20
+  # full signature: LX/13v;->A02(LX/178;)V
+  0000..0004 op=08 move-object/from16 v10, v18
+  0004..0008 op=54 iget-object v9, v10, LX/13v;->A06:LX/00s;
+  0008..000e op=72 invoke-interface {v9}, LX/00s;->get()Ljava/lang/Object;
+  000e..0014 op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  0014..0016 op=0b move-result-wide v16
+  0016..001a op=54 iget-object v0, v10, LX/13v;->A05:LX/00s;
+  001a..0020 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0020..0022 op=0c move-result-object v0
+  0022..0026 op=1f check-cast v0, LX/0Gc;
+  0026..002c op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  002c..002e op=0c move-result-object v2
+  002e..0034 op=6e invoke-virtual {v2}, LX/0ZN;->A00()LX/1gB;
+  0034..0036 op=0c move-result-object v15
+  0036..003a op=54 iget-object v0, v10, LX/13v;->A02:LX/00s;
+  003a..0040 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0040..0042 op=0c move-result-object v13
+  0042..0046 op=1f check-cast v13, LX/8G8;
+  0046..004a op=08 move-object/from16 v11, v19
+  004a..004e op=53 iget-wide v0, v11, LX/178;->A0j:J
+  004e..0052 op=54 iget-object v3, v13, LX/8G8;->A02:LX/0Gc;
+  0052..0058 op=6e invoke-virtual {v3}, LX/0Gc;->A07()LX/0ZN;
+  0058..005a op=0c move-result-object v7
+  005a..0060 op=6e invoke-virtual {v7}, LX/0ZN;->A00()LX/1gB;
+  0060..0062 op=0c move-result-object v14
+  0062..0068 op=71 invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+  0068..006a op=0c move-result-object v4
+  006a..006c op=12 const/4 v3, #0x1
+  006c..0070 op=23 new-array v8, v3, [Ljava/lang/String;
+  0070..0072 op=12 const/4 v3, #0x0
+  0072..0076 op=4d aput-object v4, v8, v3
+  0076..007a op=54 iget-object v6, v7, LX/0ZN;->A02:LX/0IY;
+  007a..007e op=1a const-string v5, "receipt_user"
+  007e..0082 op=1a const-string v4, "message_row_id=?"
+  0082..0086 op=1a const-string v3, "deleteMessageReceipts/DELETE_RECEIPT_USER"
+  0086..008c op=6e invoke-virtual {v6, v5, v4, v3, v8}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  008c..0092 op=6e invoke-virtual {v14}, LX/1gB;->A00()V
+  0092..0094 op=12 const/4 v12, #0x6
+  0094..0098 op=22 new-instance v3, LX/8SJ;
+  0098..009e op=70 invoke-direct {v3, v13, v0, v1, v12}, LX/8SJ;-><init>(Ljava/lang/Object;JI)V
+  009e..00a4 op=6e invoke-virtual {v7, v3}, LX/0ZN;->A04(Ljava/lang/Runnable;)V
+  00a4..00aa op=6e invoke-virtual {v14}, LX/1gB;->close()V
+  00aa..00b0 op=6e invoke-virtual {v7}, LX/0ZN;->close()V
+  00b0..00b4 op=54 iget-object v0, v10, LX/13v;->A01:LX/00s;
+  00b4..00ba op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  00ba..00bc op=0c move-result-object v0
+  00bc..00c0 op=1f check-cast v0, LX/0Z4;
+  00c0..00c4 op=53 iget-wide v3, v11, LX/178;->A0j:J
+  00c4..00c8 op=54 iget-object v13, v0, LX/0Z4;->A07:LX/0Z6;
+  00c8..00cc op=54 iget-object v0, v13, LX/0Z5;->A04:LX/0Gc;
+  00cc..00d2 op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  00d2..00d4 op=0c move-result-object v8
+  00d4..00da op=6e invoke-virtual {v8}, LX/0ZN;->A00()LX/1gB;
+  00da..00dc op=0c move-result-object v7
+  00dc..00e2 op=71 invoke-static {v3, v4}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+  00e2..00e4 op=0c move-result-object v1
+  00e4..00e6 op=12 const/4 v0, #0x1
+  00e6..00ea op=23 new-array v14, v0, [Ljava/lang/String;
+  00ea..00ec op=12 const/4 v0, #0x0
+  00ec..00f0 op=4d aput-object v1, v14, v0
+  00f0..00f4 op=54 iget-object v6, v8, LX/0ZN;->A02:LX/0IY;
+  00f4..00f8 op=1a const-string v5, "receipt_device"
+  00f8..00fc op=1a const-string v1, "message_row_id = ?"
+  00fc..0100 op=1a const-string v0, "MessageReceiptDeviceStore/deleteMessageReceipts/DELETE_RECEIPT_DEVICE"
+  0100..0106 op=6e invoke-virtual {v6, v5, v1, v0, v14}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0106..010c op=6e invoke-virtual {v7}, LX/1gB;->A00()V
+  010c..0110 op=22 new-instance v0, LX/DLn;
+  0110..0116 op=70 invoke-direct {v0, v13, v3, v4, v12}, LX/DLn;-><init>(Ljava/lang/Object;JI)V
+  0116..011c op=6e invoke-virtual {v8, v0}, LX/0ZN;->A04(Ljava/lang/Runnable;)V
+  011c..0122 op=6e invoke-virtual {v7}, LX/1gB;->close()V
+  0122..0128 op=6e invoke-virtual {v8}, LX/0ZN;->close()V
+  0128..012e op=6e invoke-virtual {v15}, LX/1gB;->A00()V
+  012e..0132 op=13 const/16 v1, #0x2c
+  0132..0136 op=22 new-instance v0, LX/8UM;
+  0136..013c op=70 invoke-direct {v0, v11, v10, v1}, LX/8UM;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+  013c..0142 op=6e invoke-virtual {v2, v0}, LX/0ZN;->A04(Ljava/lang/Runnable;)V
+  0142..0148 op=6e invoke-virtual {v15}, LX/1gB;->close()V
+  0148..014e op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  014e..0152 op=54 iget-object v0, v10, LX/13v;->A04:LX/00s;
+  0152..0158 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0158..015a op=0c move-result-object v3
+  015a..015e op=1f check-cast v3, LX/0V5;
+  015e..0164 op=72 invoke-interface {v9}, LX/00s;->get()Ljava/lang/Object;
+  0164..016a op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  016a..016c op=0b move-result-wide v1
+  016c..0170 op=9c sub-long v1, v1, v16
+  0170..0174 op=1a const-string v0, "ReceiptManager/deleteMessageReceiptsOnRevoke"
+  0174..017a op=6e invoke-virtual {v3, v0, v1, v2}, LX/0V5;->A01(Ljava/lang/String;J)V
+  017a..017c op=0e return-void
+  017c..017e op=0d move-exception v1
+  017e..0180 op=27 throw v1
+  0180..0182 op=0d move-exception v0
+  0182..0188 op=71 invoke-static {v7, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0188..018a op=27 throw v0
+  018a..018c op=0d move-exception v1
+  018c..018e op=27 throw v1
+  018e..0190 op=0d move-exception v0
+  0190..0196 op=71 invoke-static {v8, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0196..0198 op=27 throw v0
+  0198..019a op=0d move-exception v1
+  019a..01a0 op=6e invoke-virtual {v14}, LX/1gB;->close()V
+  01a0..01a2 op=28 goto +0x5
+  01a2..01a4 op=0d move-exception v0
+  01a4..01aa op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  01aa..01ac op=27 throw v1
+  01ac..01ae op=0d move-exception v1
+  01ae..01b4 op=6e invoke-virtual {v7}, LX/0ZN;->close()V
+  01b4..01b6 op=28 goto +0x5
+  01b6..01b8 op=0d move-exception v0
+  01b8..01be op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  01be..01c0 op=27 throw v1
+  01c0..01c2 op=0d move-exception v1
+  01c2..01c8 op=6e invoke-virtual {v15}, LX/1gB;->close()V
+  01c8..01ca op=28 goto +0x5
+  01ca..01cc op=0d move-exception v0
+  01cc..01d2 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  01d2..01d4 op=27 throw v1
+  01d4..01d6 op=0d move-exception v1
+  01d6..01dc op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  01dc..01de op=27 throw v1
+  01de..01e0 op=0d move-exception v0
+  01e0..01e6 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  01e6..01e8 op=27 throw v1
+  # exception table: 22 try range(s)
+  # catch <all> code_units 0017..001b -> 00ea
+  # catch <all> code_units 001b..002d -> 00e0
+  # catch <all> code_units 002d..0031 -> 00d6
+  # catch <all> code_units 0031..0052 -> 00cc
+  # catch <all> code_units 0052..0055 -> 00d6
+  # catch <all> code_units 0055..006a -> 00e0
+  # catch <all> code_units 006a..006e -> 00c5
+  # catch <all> code_units 006e..008e -> 00be
+  # catch <all> code_units 008e..0091 -> 00c5
+  # catch <all> code_units 0091..00a1 -> 00e0
+  # catch <all> code_units 00a1..00a4 -> 00ea
+  # catch <all> code_units 00bf..00c0 -> 00c0
+  # catch <all> code_units 00c1..00c5 -> 00c5
+  # catch <all> code_units 00c6..00c7 -> 00c7
+  # catch <all> code_units 00c7..00cc -> 00e0
+  # catch <all> code_units 00cd..00d1 -> 00d1
+  # catch <all> code_units 00d2..00d6 -> 00d6
+  # catch <all> code_units 00d7..00db -> 00db
+  # catch <all> code_units 00db..00e0 -> 00e0
+  # catch <all> code_units 00e1..00e5 -> 00e5
+  # catch <all> code_units 00e6..00ea -> 00ea
+  # catch <all> code_units 00eb..00ee -> 00ef
+.end method

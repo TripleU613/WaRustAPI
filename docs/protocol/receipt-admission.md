@@ -114,3 +114,9 @@ independently matches classes2.dex at its recorded offset. Repository hygiene
 checked 1,393 local links and 33 APK bundles / 8,507,021 bytes; diff hygiene
 passed. Research/docs only; no fresh runtime tests or live account operation
 is claimed.
+
+Follow-up: [receipt-manager exclusions](receipt-manager.md) identifies A03's
+constructor and revoke-path producer, successful-close registration and the
+message A0l deletion/copy context. The earlier device-only pool precedes this
+manager exclusion. Complete other flag writers/reload and revoke admission
+remain unknown; no blanket receipt rejection is inferred.

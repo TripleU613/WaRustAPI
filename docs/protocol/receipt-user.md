@@ -112,3 +112,8 @@ Follow-up: [receipt admission](receipt-admission.md) now traces positive-time
 selection, equal/lower-status device-only handling and the manager pools leading
 to these writers. Effective own-device/property/namespace authority and complete
 post-write behavior remain unknown/unported.
+
+Follow-up: [receipt-manager exclusions](receipt-manager.md) closes the native
+A03 set producer and message deletion/copy context without changing the still
+unported per-user admission or identity cleanup. Native revoke deletion is a
+message-row-only operation, distinct from pending identity-change predicates.

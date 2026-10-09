@@ -1,0 +1,50 @@
+{
+  "delete-original-receipt-rows.txt": {
+    "bytes": 8317,
+    "sha256": "0b743c145b272e4979bdc833fc30c8247455146e821efe2cafb884eda84aeae3"
+  },
+  "exclude-revoked-key-worker.txt": {
+    "bytes": 62304,
+    "sha256": "f59c881077c673fbff2f98e831d89471d6a2e8ac9d7c8017a378fc1dbc381436"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manager-constructor.txt": {
+    "bytes": 2379,
+    "sha256": "646be3217b7387e82f7327f28bf36330968f569db985ca444d17291c68c9b189"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "mark-deleted-message.txt": {
+    "bytes": 9562,
+    "sha256": "89cf05f0c2640588c56f8f66a375225ad6b2cc0b67ff3d8e54661dbcda98b2aa"
+  },
+  "preserve-deleted-mark-copy.txt": {
+    "bytes": 4630,
+    "sha256": "3fd41951148a2084d5a55a4d07c6ec70df75f351455300ec3c8a4850957595be"
+  },
+  "revoke-consumer-first.txt": {
+    "bytes": 108231,
+    "sha256": "d23df6d490c67807d82336edde7686b1799f096821d1c2999bab0d4a4a37fe4c"
+  },
+  "revoke-consumer-second.txt": {
+    "bytes": 69924,
+    "sha256": "c882295ff26aea157acefcf949c26af94da734ea96efa9ffe3b569de94367819"
+  },
+  "targets.json": {
+    "bytes": 3944,
+    "sha256": "5efeadb9f6c21b9bba6245b5e4cd917116c45bd554179950c34fa4cbf164966b"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "transaction-close-signed-decrement.txt": {
+    "bytes": 3757,
+    "sha256": "4e7f467f54abeca5c39cc839fd94efc027bae9c4fcae944c71ebead225203935"
+  }
+}

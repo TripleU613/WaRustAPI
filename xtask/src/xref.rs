@@ -931,12 +931,24 @@ fn decode_annotation(op: u8, reg: u8, insn_bytes: &[u8], dex: &DexFile<'_>) -> S
             let va = reg & 0xf;
             let vb = reg >> 4;
             let lit = i16::from_le_bytes([insn_bytes[2], insn_bytes[3]]);
-            format!("v{va}, v{vb}, #{lit:#x}")
+            let signed = if lit < 0 {
+                format!(" ({lit})")
+            } else {
+                String::new()
+            };
+            format!("v{va}, v{vb}, #{lit:#x}{signed}")
         }
         // Binary operation with signed 8-bit literal — format 22b.
         0xd8..=0xe2 if insn_bytes.len() >= 4 => {
             let lit = insn_bytes[3] as i8;
-            format!("v{reg}, v{}, #{lit:#x}", insn_bytes[2])
+            // APK 37.71 1gB.close+0092 decrements its nesting count with -1;
+            // preserve the raw two's-complement spelling without implying +255.
+            let signed = if lit < 0 {
+                format!(" ({lit})")
+            } else {
+                String::new()
+            };
+            format!("v{reg}, v{}, #{lit:#x}{signed}", insn_bytes[2])
         }
         // new-array vA, vB, type@CCCC — 22c
         0x23 if insn_bytes.len() >= 4 => {
@@ -2798,6 +2810,44 @@ mod tests {
     }
 
     #[test]
+    fn signed_arithmetic_literals_preserve_raw_bits_and_expose_negative_values() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // Fixed DEX 22b/22s boundary byte encodings, independent of the formatter.
+        for opcode in 0xd8..=0xe2 {
+            for (byte, expected) in [
+                (0x80, "#0x80 (-128)"),
+                (0xff, "#0xff (-1)"),
+                (0, "#0x0"),
+                (1, "#0x1"),
+                (0x7f, "#0x7f"),
+            ] {
+                let decoded = decode_insns(&[opcode, 0xfe, 0x80, byte], &dex);
+                assert_eq!(decoded[0].annotation, format!("v254, v128, {expected}"));
+                assert_eq!(decoded[0].width, 2);
+            }
+        }
+        for opcode in 0xd0..=0xd7 {
+            for (lo, hi, expected) in [
+                (0, 0x80, "#0x8000 (-32768)"),
+                (0xff, 0xff, "#0xffff (-1)"),
+                (0, 0, "#0x0"),
+                (1, 0, "#0x1"),
+                (0xff, 0x7f, "#0x7fff"),
+            ] {
+                let decoded = decode_insns(&[opcode, 0xa3, lo, hi], &dex);
+                assert_eq!(decoded[0].annotation, format!("v3, v10, {expected}"));
+                assert_eq!(decoded[0].width, 2);
+            }
+        }
+        // APK 37.71 1gB.close+0092, not a +255 nesting adjustment.
+        assert_eq!(
+            decode_insns(&[0xd8, 0, 0, 0xff], &dex)[0].annotation,
+            "v0, v0, #0xff (-1)"
+        );
+    }
+
+    #[test]
     fn decodes_literal_group_subject_timestamp_arithmetic() {
         let data = minimal_dex_header();
         let dex = DexFile::parse(&data).unwrap();
@@ -2942,7 +2992,7 @@ mod tests {
         let decoded = decode_insns(&bytes, &dex);
         assert_eq!(decoded[0].mnemonic, "and-int/lit16");
         assert_eq!(decoded[0].annotation, "v1, v0, #0xff");
-        assert_eq!(decoded[1].annotation, "v3, v4, #0xffff");
+        assert_eq!(decoded[1].annotation, "v3, v4, #0xffff (-1)");
         for end in 0..bytes.len() {
             let _ = decode_insns(&bytes[..end], &dex);
         }

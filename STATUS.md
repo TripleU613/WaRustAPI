@@ -2923,3 +2923,20 @@ ownership refusal; owner teardown now explicitly releases its own lock after
 closing the database. A shared-descriptor regression still rejects active second
 owners and permits reopening after drop. No external store unlock/retry was added.
 [Mechanism and attribution limits](docs/design/verification.md#temporary-store-ownership-refusal-observed-2026-10-09).
+
+2026-10-09 — **Confirmed static:** receipt-manager A03 is populated from the
+revoke receipt-deletion path after successful transaction close. The native
+user/device DELETEs select the original supplied message row with no timestamp
+predicate; manager exclusions occur after the earlier device-only pool. The
+message A0l deletion/copy contexts are traced without inventing its persistence
+or other writers. Signed negative 22b/22s arithmetic now renders explicitly,
+including the native transaction -1 nesting adjustment. Rust revoke, per-user
+admission and identity cleanup remain unfinished. No account/live operation.
+[Evidence and reproducible recipe](docs/protocol/receipt-manager.md).
+
+Receipt-manager validation: all 67 xtask tests, strict xtask Clippy, rebuilt
+CLI, CLI reference/API symbols, formatting and hygiene passed. Eight topics /
+13 files / 301,312 bytes reproduce exactly; cached self-diff verifies eight
+unchanged topics plus four metadata artifacts. Raw signed decrement bytes match
+the recorded APK offset. Hygiene: 1,416 links, 34 bundles / 8,808,333 bytes.
+Research/tooling only; no new shared-runtime or live account test is claimed.

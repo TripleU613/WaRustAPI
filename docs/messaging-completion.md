@@ -2989,3 +2989,16 @@ inspection left eligible sends and the store summary unchanged; no group sample
 or fresh send was available. Owner-drop lock release was corrected with a
 shared-descriptor regression while active second owners remain refused. This
 local teardown fix does not change network retry/uncertainty policy.
+
+2026-10-09 — **Confirmed static:** revoke receipt deletion and 13v.A03
+exclusion-key production are traced with their successful-close boundary;
+message A0l deletion/copy context is distinct from a proven persisted revocation
+flag. Device-only receipt handling precedes the manager filter. Rust per-user
+admission, revoke and native identity cleanup remain unfinished. Renderer now
+exposes signed negative 22b/22s values without altering protocol arithmetic.
+[Evidence and limits](protocol/receipt-manager.md). No account/live operation.
+
+Receipt-manager checks: 67 xtask tests and strict xtask Clippy passed; rebuilt
+research CLI, CLI reference/API symbols, formatting and hygiene passed. The
+8-topic / 13-file / 301,312-byte snapshot reproduces exactly and self-diffs
+unchanged; no cross-release or live-runtime parity is inferred.

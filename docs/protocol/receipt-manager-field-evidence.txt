@@ -1,0 +1,51 @@
+APK 2.26.37.71
+SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed static; full APK exact-field scans, not live account observations.
+
+Commands (APK is local, outside Git):
+xtask apk-field-refs APK --class 'LX/13v;' --field A03 --type 'Ljava/util/Set;'
+xtask apk-field-refs APK --class 'LX/178;' --field A0l --type Z --writes-only
+xtask apk-callers APK --class 'LX/13v;' --method A02
+
+Manager set references
+classes.dex  LX/13v;-><init>(V)
+  write opcode 0x5b, dex byte offset: 0x7d0a5a
+classes.dex  LX/15A;->A02(LL)
+  read opcode 0x54, dex byte offset: 0x7e8004
+classes.dex  LX/15A;->A02(LL)
+  read opcode 0x54, dex byte offset: 0x7e8060
+classes5.dex  LX/8UM;->run(V)
+  read opcode 0x54, dex byte offset: 0x5df974
+
+Message flag writes
+classes.dex  LX/0V9;->A00(ILIZ)
+  write opcode 0x5c, dex byte offset: 0x5a502a
+classes5.dex  LX/75e;->CS5(V)
+  write opcode 0x5c, dex byte offset: 0x35e452
+classes5.dex  LX/7z7;->A06(VLL)
+  write opcode 0x5c, dex byte offset: 0x4d678a
+classes7.dex  LX/Cjb;->A02(VLL)
+  write opcode 0x5c, dex byte offset: 0x6293be
+classes7.dex  LX/DNt;->run(V)
+  write opcode 0x5c, dex byte offset: 0x80bb84
+classes8.dex  Lcom/whatsapp/newsletter/ui/status/NewsletterStatusView;->A00(LLLLLL)
+  write opcode 0x5c, dex byte offset: 0x3d54a0
+classes8.dex  LX/Fqh;->run(V)
+  write opcode 0x5c, dex byte offset: 0x66b026
+
+Delete-entry callers
+classes.dex  LX/152;->A00(LLLLZ)
+  invoke dex byte offset: 0x7e1e4a
+classes.dex  LX/153;->A00(LLLIZ)
+  invoke dex byte offset: 0x7e4688
+
+Signed decrement raw fixture:
+xtask apk-xref APK --anchor 'DatabaseTransaction/close/was not set successful'
+classes2.dex LX/1gB;->close(V), string instruction at 0x12a658 (relative 0x0010).
+Method start = 0x12a648; add-int/lit8 relative 0x0092 is absolute 0x12a6da.
+Independent ZIP entry read, bytes [d8 00 00 ff]: v0 = v0 + signed(-1).
+The formatter now renders v0, v0, #0xff (-1); prior raw spelling was #0xff.
+
+Negative lookup:
+xtask apk-smali APK --class 'LX/0bA;' --method BO --exceptions --signatures
+No method bodies matched. This does not identify the implementation of 08Z.BO0/BO1.
