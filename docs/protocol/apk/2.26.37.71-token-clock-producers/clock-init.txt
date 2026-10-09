@@ -1,0 +1,47 @@
+# APK-derived structural disassembly: LX/08B;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(V) flags=0x10001 registers=10
+  # full signature: LX/08B;-><init>()V
+  0000..0004 op=13 const/16 v0, #0x9d
+  0004..000a op=71 invoke-static {v0}, LX/00C;->A02(I)Ljava/lang/Object;
+  000a..000c op=0c move-result-object v1
+  000c..0010 op=1f check-cast v1, LX/08C;
+  0010..0014 op=13 const/16 v0, #0x6f
+  0014..001a op=71 invoke-static {v0}, LX/00C;->A02(I)Ljava/lang/Object;
+  001a..001c op=0c move-result-object v0
+  001c..0020 op=1f check-cast v0, LX/08D;
+  0020..0026 op=70 invoke-direct {v9}, Ljava/lang/Object;-><init>()V
+  0026..002a op=5b iput-object v1, v9, LX/08B;->A01:LX/08C;
+  002a..002e op=5b iput-object v0, v9, LX/08B;->A00:LX/08D;
+  002e..0032 op=16 const-wide/16 v5, #0x0
+  0032..0036 op=54 iget-object v8, v0, LX/08D;->A00:Landroid/content/SharedPreferences;
+  0036..003a op=1a const-string v0, "client_server_time_diff"
+  003a..0040 op=72 invoke-interface {v8, v0, v5, v6}, Landroid/content/SharedPreferences;->getLong(Ljava/lang/String;J)J
+  0040..0042 op=0b move-result-wide v0
+  0042..0046 op=5a iput-wide v0, v9, LX/08B;->A02:J
+  0046..004c op=71 invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+  004c..004e op=0b move-result-wide v3
+  004e..0052 op=1a const-string v0, "last_ntp_client_time"
+  0052..0058 op=72 invoke-interface {v8, v0, v5, v6}, Landroid/content/SharedPreferences;->getLong(Ljava/lang/String;J)J
+  0058..005a op=0b move-result-wide v1
+  005a..005e op=1a const-string v7, "client_ntp_time_diff"
+  005e..0064 op=72 invoke-interface {v8, v7}, Landroid/content/SharedPreferences;->contains(Ljava/lang/String;)Z
+  0064..0066 op=0a move-result v0
+  0066..006a op=38 if-eqz v0, +0x19
+  006a..006e op=31 cmp-long v0, v1, v5
+  006e..0072 op=3d if-lez v0, +0x15
+  0072..0074 op=bc sub-long/2addr v3, v1
+  0074..007a op=71 invoke-static {v3, v4}, Ljava/lang/Math;->abs(J)J
+  007a..007c op=0b move-result-wide v3
+  007c..0082 op=17 const-wide/32 v1, #0x5265c00
+  0082..0086 op=31 cmp-long v0, v3, v1
+  0086..008a op=3b if-gez v0, +0x9
+  008a..0090 op=72 invoke-interface {v8, v7, v5, v6}, Landroid/content/SharedPreferences;->getLong(Ljava/lang/String;J)J
+  0090..0092 op=0b move-result-wide v0
+  0092..0098 op=71 invoke-static {v9, v0, v1}, LX/08B;->A01(LX/08B;J)V
+  0098..009a op=0e return-void
+  # exception table: 0 try range(s)
+.end method

@@ -1,5 +1,13 @@
 # Messaging completion checklist
 
+Token clock producers (2026-10-09, **confirmed static/local audit**):
+APK `08B.A07` takes login `success@t` through `1Rd` or selector-4 Bundle time,
+sets an elapsed baseline and persists client/server difference. Seven source
+topics close those inputs; selector-4 wire provenance and full Rust clock parity
+remain unknown/unported. Current stanza clock sampling is still an inference;
+no real account or live change.
+[Evidence and limits](protocol/token-clock-producers.md).
+
 Trusted-contact peer guard (2026-10-09, **confirmed local / static-backed**):
 privacy-token receive now rejects empty PN/LID users before storage or ACK;
 supplied empty sender_lid keeps a fixed diagnostic. Generic server-only JIDs

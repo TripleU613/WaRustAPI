@@ -53,3 +53,10 @@ Exact APK snapshot regeneration passed; self-diff reports its topic and four
 artifacts unchanged. Repository hygiene passed: 1,792 links and 71 checksum-
 verified bundles. Initial test-authoring compile errors were corrected before
 the recorded failing assertion; compile errors are not counted as regression proof.
+
+**Follow-up local inspection (2026-10-09):** `handle` calls `record` before
+checking that every child/token kind is supported. Mixed notifications may store
+supported trusted-contact entries while remaining without ACK; malformed supported
+entries are validated before the write transaction. This review did not establish
+that partial supported-kind processing is a bug or authorize unknown-kind ACKs.
+No extra notification behavior was changed in the clock-producer chunk.

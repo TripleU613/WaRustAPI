@@ -1,0 +1,93 @@
+{
+  "clock-init": {
+    "class": "LX/08B;",
+    "file": "clock-init.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "device-clock": {
+    "class": "LX/08B;",
+    "file": "device-clock.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "job-clock": {
+    "class": "LX/08B;",
+    "file": "job-clock.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "login-time-apply": {
+    "class": "LX/0iS;",
+    "file": "login-time-apply.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0y",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "login-time-parse": {
+    "class": "LX/0iS;",
+    "file": "login-time-parse.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A12",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "offset-update": {
+    "class": "LX/08B;",
+    "file": "offset-update.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A07",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "timestamp-event": {
+    "class": "LX/0iS;",
+    "file": "timestamp-event.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0p",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "clock-init.txt": {
+    "bytes": 2591,
+    "sha256": "df68060e7020c7ab94d242edad14b980ce58342fa7f4119285482352c8f23bf3"
+  },
+  "device-clock.txt": {
+    "bytes": 564,
+    "sha256": "6357e4054fb4a861ffb8b98421368817cd15f05228562691ba17a248c337097a"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "job-clock.txt": {
+    "bytes": 1073,
+    "sha256": "f2ed89a20cc25d847e3d720c52856ac3ed759a4fd2841f39f424d7148afa92f4"
+  },
+  "login-time-apply.txt": {
+    "bytes": 94124,
+    "sha256": "214d37801749c9a93b753a4da80b20f25531227fe4a37344a2c454f70f1ad061"
+  },
+  "login-time-parse.txt": {
+    "bytes": 24752,
+    "sha256": "374845bbfa32c2b45f7a1494dbd4df0b096652d11f8d351a6f42ebde30db4b69"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "offset-update.txt": {
+    "bytes": 3096,
+    "sha256": "f59713fb7a865ce41be6efa521e322a13dcb36de8d7a3ad9540bb622fdcabed1"
+  },
+  "targets.json": {
+    "bytes": 2631,
+    "sha256": "5727919d548f44bad2864a78b26e60c50230c58079b8f7e87e8b67b17f1dc09b"
+  },
+  "timestamp-event.txt": {
+    "bytes": 2753,
+    "sha256": "117deca22f284cea6996b2cb40cefa4f55b8c975cc3319e96dd565296034de6e"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

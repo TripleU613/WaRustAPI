@@ -1,0 +1,46 @@
+# APK-derived structural disassembly: LX/08B;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A07(VJJ) flags=0x1 registers=9
+  # full signature: LX/08B;->A07(JJ)V
+  0000..0006 op=71 invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+  0006..000c op=71 invoke-static {v4}, LX/08B;->A00(LX/08B;)J
+  000c..0010 op=16 const-wide/16 v1, #0x0
+  0010..0014 op=31 cmp-long v0, v5, v1
+  0014..0018 op=3d if-lez v0, +0x44
+  0018..001e op=71 invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
+  001e..0020 op=0b move-result-wide v2
+  0020..0024 op=9c sub-long v0, v5, v2
+  0024..0028 op=5a iput-wide v0, v4, LX/08B;->A04:J
+  0028..002c op=9c sub-long v0, v7, v5
+  002c..0030 op=5a iput-wide v0, v4, LX/08B;->A02:J
+  0030..0034 op=1a const-string v0, "app/time server update processed; diffClientWaServer:"
+  0034..0038 op=22 new-instance v2, Ljava/lang/StringBuilder;
+  0038..003e op=70 invoke-direct {v2, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  003e..0042 op=53 iget-wide v0, v4, LX/08B;->A02:J
+  0042..0048 op=6e invoke-virtual {v2, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  0048..004c op=1a const-string v0, " device time: "
+  004c..0052 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0052..0058 op=6e invoke-virtual {v2, v7, v8}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  0058..005c op=1a const-string v0, " server time: "
+  005c..0062 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0062..0068 op=6e invoke-virtual {v2, v5, v6}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  0068..006e op=6e invoke-virtual {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  006e..0070 op=0c move-result-object v0
+  0070..0076 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  0076..007a op=54 iget-object v0, v4, LX/08B;->A00:LX/08D;
+  007a..007e op=53 iget-wide v2, v4, LX/08B;->A02:J
+  007e..0082 op=54 iget-object v0, v0, LX/08D;->A00:Landroid/content/SharedPreferences;
+  0082..0088 op=72 invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+  0088..008a op=0c move-result-object v1
+  008a..008e op=1a const-string v0, "client_server_time_diff"
+  008e..0094 op=72 invoke-interface {v1, v0, v2, v3}, Landroid/content/SharedPreferences$Editor;->putLong(Ljava/lang/String;J)Landroid/content/SharedPreferences$Editor;
+  0094..0096 op=0c move-result-object v0
+  0096..009c op=72 invoke-interface {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+  009c..00a2 op=71 invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+  00a2..00a8 op=71 invoke-static {v4}, LX/08B;->A00(LX/08B;)J
+  00a8..00aa op=0e return-void
+  # exception table: 0 try range(s)
+.end method

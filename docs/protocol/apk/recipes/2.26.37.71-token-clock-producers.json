@@ -1,0 +1,64 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "clock-init": {
+      "class": "LX/08B;",
+      "method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "device-clock": {
+      "class": "LX/08B;",
+      "method": "A03",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "job-clock": {
+      "class": "LX/08B;",
+      "method": "A04",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "offset-update": {
+      "class": "LX/08B;",
+      "method": "A07",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "login-time-parse": {
+      "class": "LX/0iS;",
+      "method": "A12",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "login-time-apply": {
+      "class": "LX/0iS;",
+      "method": "A0y",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "timestamp-event": {
+      "class": "LX/0iS;",
+      "method": "A0p",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    }
+  }
+}

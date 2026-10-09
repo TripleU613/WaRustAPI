@@ -144,3 +144,11 @@ this is not a different-release comparison or whole-APK coverage. Hygiene
 checks 1,280 local links and 23 APK bundles totaling 6,988,623 bytes.
 This chunk changes offline analysis tooling and evidence; no account operation
 or live identity/token request was performed.
+
+## Clock producer continuation (2026-10-09)
+
+**Confirmed static:** [clock producers](token-clock-producers.md) closes the
+A02/A04 physical writers and both A07 callers. Login uses parsed success@t plus
+sampled whole-second local wall time; message selector 4 supplies Bundle time.
+Selector-4 wire provenance and complete native/Rust clock parity remain unknown.
+The earlier producer unknown is narrowed, not resolved for every clock input.
