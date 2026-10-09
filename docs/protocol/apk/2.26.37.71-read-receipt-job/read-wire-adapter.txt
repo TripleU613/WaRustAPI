@@ -1,0 +1,30 @@
+# APK-derived structural disassembly: LX/Cp2;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A07(LL) flags=0x9 registers=11
+  # full signature: LX/Cp2;->A07(LX/CM8;)LX/0hs;
+  0000..0004 op=54 iget-object v1, v10, LX/CM8;->A02:Ljava/lang/String;
+  0004..0008 op=38 if-eqz v1, +0x22
+  0008..000a op=12 const/4 v0, #0x1
+  000a..000e op=23 new-array v6, v0, [LX/0hq;
+  000e..0012 op=1a const-string v0, "class"
+  0012..0018 op=71 invoke-static {v0, v1, v6}, LX/Ayo;->A1L(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+  0018..001c op=54 iget-object v0, v10, LX/CM8;->A07:LX/1gc;
+  001c..0020 op=54 iget-object v4, v0, LX/1gc;->A01:Ljava/lang/String;
+  0020..0024 op=54 iget-object v0, v0, LX/1gc;->A00:LX/0Cy;
+  0024..0028 op=54 iget-object v5, v10, LX/CM8;->A08:Ljava/lang/String;
+  0028..002c op=54 iget-object v7, v10, LX/CM8;->A03:[Ljava/lang/String;
+  002c..0030 op=54 iget-object v1, v10, LX/CM8;->A04:LX/0Cy;
+  0030..0034 op=54 iget-object v3, v10, LX/CM8;->A06:Lcom/whatsapp/infra/core/jid/UserJid;
+  0034..0038 op=54 iget-object v2, v10, LX/CM8;->A05:Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0038..003c op=53 iget-wide v9, v10, LX/CM8;->A01:J
+  003c..003e op=12 const/4 v8, #0x0
+  003e..0044 op=77 invoke-static/range {v0..v10}, LX/Cp2;->A00(LX/0Cy;LX/0Cy;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Ljava/lang/String;[LX/0hq;[Ljava/lang/String;IJ)LX/0hs;
+  0044..0046 op=0c move-result-object v0
+  0046..0048 op=11 return-object v0
+  0048..004a op=12 const/4 v6, #0x0
+  004a..004c op=28 goto -0x19
+  # exception table: 0 try range(s)
+.end method

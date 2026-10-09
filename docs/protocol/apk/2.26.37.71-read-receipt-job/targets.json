@@ -1,0 +1,134 @@
+{
+  "read-dispatch": {
+    "class": "LX/0y0;",
+    "file": "read-dispatch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "read-handler": {
+    "class": "LX/CM8;",
+    "file": "read-handler.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "read-handler-build": {
+    "class": "LX/0zd;",
+    "file": "read-handler-build.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "read-job": {
+    "class": "Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;",
+    "file": "read-job.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 8,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "read-job-admission": {
+    "class": "LX/0zd;",
+    "file": "read-job-admission.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A08",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "read-job-eligibility": {
+    "class": "LX/0zd;",
+    "file": "read-job-eligibility.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A06",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "read-list-builder": {
+    "class": "LX/Cp2;",
+    "file": "read-list-builder.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0A",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "read-route-pair": {
+    "class": "LX/CmC;",
+    "file": "read-route-pair.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A06",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "read-type-selection": {
+    "class": "LX/0zd;",
+    "file": "read-type-selection.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "read-wire-adapter": {
+    "class": "LX/Cp2;",
+    "file": "read-wire-adapter.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A07",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "read-wire-builder": {
+    "class": "LX/Cp2;",
+    "file": "read-wire-builder.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  }
+}

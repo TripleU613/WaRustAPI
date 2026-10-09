@@ -1,0 +1,282 @@
+# APK-derived structural disassembly: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLLLLJJJZ) flags=0x10001 registers=17
+  # full signature: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;-><init>(LX/0Cy;LX/0Cy;LX/0Cy;Lcom/whatsapp/infra/core/jid/DeviceJid;Ljava/lang/String;[Ljava/lang/String;JJJZ)V
+  0000..0006 op=71 invoke-static {}, LX/Ayj;->A1C()LX/Azz;
+  0006..0008 op=0c move-result-object v1
+  0008..000c op=1a const-string v0, "read-receipt-"
+  000c..0012 op=71 invoke-static {v0}, LX/1xf;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0012..0014 op=0c move-result-object v2
+  0014..001a op=6e invoke-virtual {v4}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  001a..001c op=0c move-result-object v0
+  001c..0022 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0022..0026 op=1a const-string v0, "-"
+  0026..002c op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  002c..0032 op=71 invoke-static {v5}, LX/0DE;->A09(Lcom/whatsapp/infra/core/jid/Jid;)Ljava/lang/String;
+  0032..0034 op=0c move-result-object v0
+  0034..003a op=71 invoke-static {v0, v2}, LX/000;->A05(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+  003a..003c op=0c move-result-object v0
+  003c..0042 op=71 invoke-static {v0, v1}, LX/Ayk;->A1L(Ljava/lang/String;LX/Azz;)V
+  0042..0048 op=6e invoke-virtual {v1}, LX/Azz;->A00()Lorg/whispersystems/jobqueue/JobParameters;
+  0048..004a op=0c move-result-object v0
+  004a..0050 op=70 invoke-direct {v3, v0}, Lorg/whispersystems/jobqueue/Job;-><init>(Lorg/whispersystems/jobqueue/JobParameters;)V
+  0050..0056 op=6e invoke-virtual {v4}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  0056..0058 op=0c move-result-object v0
+  0058..005e op=71 invoke-static {v0}, LX/00K;->A06(Ljava/lang/Object;)V
+  005e..0062 op=5b iput-object v0, v3, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->jid:Ljava/lang/String;
+  0062..0064 op=12 const/4 v1, #0x0
+  0064..0068 op=39 if-nez v5, +0x51
+  0068..006a op=07 move-object v0, v1
+  006a..006e op=5b iput-object v0, v3, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->participant:Ljava/lang/String;
+  006e..0072 op=39 if-nez v7, +0x47
+  0072..0074 op=07 move-object v0, v1
+  0074..0078 op=5b iput-object v0, v3, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->remoteSender:Ljava/lang/String;
+  0078..007c op=39 if-nez v6, +0x3d
+  007c..007e op=07 move-object v0, v1
+  007e..0082 op=5b iput-object v0, v3, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->recipient:Ljava/lang/String;
+  0082..0088 op=71 invoke-static {v9}, LX/00K;->A0H([Ljava/lang/Object;)V
+  0088..008c op=5b iput-object v9, v3, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->messageIds:[Ljava/lang/String;
+  008c..0090 op=5a iput-wide v10, v3, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->originalMessageTimestamp:J
+  0090..0094 op=02 move/from16 v0, v16
+  0094..0098 op=5c iput-boolean v0, v3, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->shouldForceReadSelfReceipt:Z
+  0098..009c op=5a iput-wide v12, v3, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->loggableStanzaId:J
+  009c..00a0 op=5b iput-object v8, v3, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->receiptClass:Ljava/lang/String;
+  00a0..00a4 op=5a iput-wide v14, v3, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->messageServerStoreTimeMicros:J
+  00a4..00aa op=71 invoke-static {v4}, LX/0DE;->A0l(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  00aa..00ac op=0a move-result v0
+  00ac..00b0 op=38 if-eqz v0, +0x20
+  00b0..00b4 op=38 if-eqz v5, +0x1e
+  00b4..00b8 op=22 new-instance v0, Ljava/lang/Throwable;
+  00b8..00be op=70 invoke-direct {v0}, Ljava/lang/Throwable;-><init>()V
+  00be..00c2 op=5b iput-object v0, v3, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A02:Ljava/lang/Throwable;
+  00c2..00c4 op=21 array-length v2, v9
+  00c4..00c6 op=12 const/4 v1, #0x0
+  00c6..00ca op=35 if-ge v1, v2, +0xf
+  00ca..00ce op=46 aget-object v0, v9, v1
+  00ce..00d4 op=71 invoke-static {v0}, Lcom/whatsapp/infra/core/util/string/StringUtils;->A0J(Ljava/lang/CharSequence;)Z
+  00d4..00d6 op=0a move-result v0
+  00d6..00da op=38 if-eqz v0, +0x8
+  00da..00de op=1a const-string v0, "SendReadReceiptJob/can't create the job with invalid message id(s)"
+  00de..00e4 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  00e4..00e6 op=0e return-void
+  00e6..00ea op=d8 add-int/lit8 v1, v1, #0x1
+  00ea..00ec op=28 goto -0x12
+  00ec..00f0 op=5b iput-object v1, v3, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A02:Ljava/lang/Throwable;
+  00f0..00f2 op=28 goto -0x17
+  00f2..00f8 op=6e invoke-virtual {v6}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  00f8..00fa op=0c move-result-object v0
+  00fa..00fc op=28 goto -0x3e
+  00fc..0102 op=6e invoke-virtual {v7}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  0102..0104 op=0c move-result-object v0
+  0104..0106 op=28 goto -0x48
+  0106..010c op=6e invoke-virtual {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  010c..010e op=0c move-result-object v0
+  010e..0110 op=28 goto -0x52
+  # exception table: 0 try range(s)
+.end method
+
+.method A00(L) flags=0x2 registers=5
+  # full signature: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A00()Ljava/lang/String;
+  0000..0004 op=54 iget-object v0, v4, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->jid:Ljava/lang/String;
+  0004..0008 op=62 sget-object v1, LX/0Cy;->A00:LX/0D7;
+  0008..000e op=6e invoke-virtual {v1, v0}, LX/0D7;->A02(Ljava/lang/String;)LX/0Cy;
+  000e..0010 op=0c move-result-object v2
+  0010..0014 op=54 iget-object v0, v4, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->participant:Ljava/lang/String;
+  0014..001a op=6e invoke-virtual {v1, v0}, LX/0D7;->A02(Ljava/lang/String;)LX/0Cy;
+  001a..001c op=0c move-result-object v3
+  001c..0020 op=54 iget-object v0, v4, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->remoteSender:Ljava/lang/String;
+  0020..0026 op=71 invoke-static {v0}, LX/Ayl;->A0W(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0026..0028 op=0c move-result-object v1
+  0028..002c op=1a const-string v0, "; jid="
+  002c..0032 op=71 invoke-static {v2, v0}, LX/000;->A07(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0032..0034 op=0c move-result-object v2
+  0034..003a op=71 invoke-static {v3, v2}, LX/Aym;->A1K(Ljava/lang/Object;Ljava/lang/StringBuilder;)V
+  003a..003e op=1a const-string v0, "; remoteSender="
+  003e..0044 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0044..004a op=6e invoke-virtual {v2, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  004a..004e op=1a const-string v0, "; recipient="
+  004e..0054 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0054..0058 op=54 iget-object v0, v4, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->recipient:Ljava/lang/String;
+  0058..005e op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  005e..0062 op=1a const-string v0, "; shouldForceReadSelfReceipt="
+  0062..0068 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0068..006c op=55 iget-boolean v0, v4, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->shouldForceReadSelfReceipt:Z
+  006c..0072 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  0072..0076 op=1a const-string v0, "; messageServerStoreTimeMicros="
+  0076..007c op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  007c..0080 op=53 iget-wide v0, v4, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->messageServerStoreTimeMicros:J
+  0080..0086 op=6e invoke-virtual {v2, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  0086..008a op=1a const-string v0, "; ids:"
+  008a..0090 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0090..0094 op=54 iget-object v0, v4, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->messageIds:[Ljava/lang/String;
+  0094..009a op=71 invoke-static {v0}, Ljava/util/Arrays;->deepToString([Ljava/lang/Object;)Ljava/lang/String;
+  009a..009c op=0c move-result-object v0
+  009c..00a2 op=71 invoke-static {v0, v2}, LX/000;->A05(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+  00a2..00a4 op=0c move-result-object v0
+  00a4..00a6 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
+
+.method readObject(VL) flags=0x2 registers=3
+  # full signature: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->readObject(Ljava/io/ObjectInputStream;)V
+  0000..0006 op=6e invoke-virtual {v2}, Ljava/io/ObjectInputStream;->defaultReadObject()V
+  0006..000a op=54 iget-object v0, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->jid:Ljava/lang/String;
+  000a..0010 op=71 invoke-static {v0}, LX/1xk;->A0R(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+  0010..0012 op=0c move-result-object v0
+  0012..0016 op=38 if-eqz v0, +0xf
+  0016..001a op=54 iget-object v0, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->messageIds:[Ljava/lang/String;
+  001a..001c op=21 array-length v0, v0
+  001c..0020 op=38 if-eqz v0, +0x3
+  0020..0022 op=0e return-void
+  0022..0026 op=1a const-string v0, "messageIds must not be empty"
+  0026..002c op=71 invoke-static {v0}, LX/Ayk;->A0t(Ljava/lang/String;)Ljava/io/InvalidObjectException;
+  002c..002e op=0c move-result-object v0
+  002e..0030 op=27 throw v0
+  0030..0034 op=1a const-string v0, "jid must not be empty"
+  0034..003a op=71 invoke-static {v0}, LX/Ayk;->A0t(Ljava/lang/String;)Ljava/io/InvalidObjectException;
+  003a..003c op=0c move-result-object v0
+  003c..003e op=27 throw v0
+  # exception table: 0 try range(s)
+.end method
+
+.method A0E(V) flags=0x1 registers=1
+  # full signature: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A0E()V
+  0000..0006 op=70 invoke-direct {v0}, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A00()Ljava/lang/String;
+  0006..0008 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method A0F(V) flags=0x1 registers=3
+  # full signature: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A0F()V
+  0000..0004 op=1a const-string v0, "canceled sent read receipts job"
+  0004..000a op=71 invoke-static {v0}, LX/1xf;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000a..000c op=0c move-result-object v1
+  000c..0012 op=70 invoke-direct {v2}, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A00()Ljava/lang/String;
+  0012..0014 op=0c move-result-object v0
+  0014..001a op=71 invoke-static {v1, v0}, LX/1xj;->A1R(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+  001a..001c op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method A0G(V) flags=0x1 registers=20
+  # full signature: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A0G()V
+  0000..0004 op=08 move-object/from16 v2, v19
+  0004..000a op=70 invoke-direct {v2}, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A00()Ljava/lang/String;
+  000a..000e op=54 iget-object v0, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->jid:Ljava/lang/String;
+  000e..0012 op=62 sget-object v4, LX/0Cy;->A00:LX/0D7;
+  0012..0018 op=6e invoke-virtual {v4, v0}, LX/0D7;->A02(Ljava/lang/String;)LX/0Cy;
+  0018..001a op=0c move-result-object v8
+  001a..0020 op=71 invoke-static {v8}, LX/0DE;->A0b(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0020..0022 op=0a move-result v0
+  0022..0024 op=12 const/4 v3, #0x0
+  0024..0028 op=38 if-eqz v0, +0xd
+  0028..002c op=1a const-string v1, "status"
+  002c..0030 op=54 iget-object v0, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->receiptClass:Ljava/lang/String;
+  0030..0036 op=6e invoke-virtual {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  0036..0038 op=0a move-result v0
+  0038..003a op=12 const/4 v1, #0x1
+  003a..003e op=39 if-nez v0, +0x3
+  003e..0040 op=12 const/4 v1, #0x0
+  0040..0046 op=71 invoke-static {v8}, LX/0DE;->A0h(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0046..0048 op=0a move-result v0
+  0048..004c op=39 if-nez v0, +0x83
+  004c..0050 op=39 if-nez v1, +0x81
+  0050..0054 op=54 iget-object v0, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->participant:Ljava/lang/String;
+  0054..005a op=6e invoke-virtual {v4, v0}, LX/0D7;->A02(Ljava/lang/String;)LX/0Cy;
+  005a..005c op=0c move-result-object v9
+  005c..0060 op=54 iget-object v0, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->remoteSender:Ljava/lang/String;
+  0060..0066 op=71 invoke-static {v0}, LX/Ayl;->A0W(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0066..0068 op=0c move-result-object v10
+  0068..006c op=54 iget-object v0, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->recipient:Ljava/lang/String;
+  006c..0072 op=71 invoke-static {v0}, LX/8kU;->A0d(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/UserJid;
+  0072..0074 op=0c move-result-object v11
+  0074..0078 op=54 iget-object v7, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A01:LX/0zd;
+  0078..007c op=54 iget-object v6, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->messageIds:[Ljava/lang/String;
+  007c..0080 op=53 iget-wide v0, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->originalMessageTimestamp:J
+  0080..0084 op=55 iget-boolean v5, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->shouldForceReadSelfReceipt:Z
+  0084..0088 op=54 iget-object v4, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A02:Ljava/lang/Throwable;
+  0088..008a op=07 move-object v12, v7
+  008a..008c op=07 move-object v13, v8
+  008c..008e op=07 move-object v14, v4
+  008e..0090 op=07 move-object v15, v6
+  0090..0094 op=05 move-wide/from16 v16, v0
+  0094..0098 op=02 move/from16 v18, v5
+  0098..009e op=74 invoke-virtual/range {v12..v18}, LX/0zd;->A08(LX/0Cy;Ljava/lang/Throwable;[Ljava/lang/String;JZ)Z
+  009e..00a0 op=0a move-result v0
+  00a0..00a4 op=38 if-eqz v0, +0x56
+  00a4..00a8 op=54 iget-object v7, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A01:LX/0zd;
+  00a8..00ac op=54 iget-object v13, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->messageIds:[Ljava/lang/String;
+  00ac..00b0 op=55 iget-boolean v4, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->shouldForceReadSelfReceipt:Z
+  00b0..00b4 op=53 iget-wide v14, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->loggableStanzaId:J
+  00b4..00b8 op=53 iget-wide v0, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->messageServerStoreTimeMicros:J
+  00b8..00bc op=54 iget-object v12, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->receiptClass:Ljava/lang/String;
+  00bc..00c0 op=02 move/from16 v18, v4
+  00c0..00c4 op=05 move-wide/from16 v16, v0
+  00c4..00ca op=74 invoke-virtual/range {v7..v18}, LX/0zd;->A04(LX/0Cy;LX/0Cy;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;[Ljava/lang/String;JJZ)LX/CM8;
+  00ca..00cc op=0c move-result-object v6
+  00cc..00d2 op=71 invoke-static {v10, v8, v9}, LX/CmC;->A06(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;)Landroid/util/Pair;
+  00d2..00d4 op=0c move-result-object v1
+  00d4..00d8 op=22 new-instance v4, LX/CSu;
+  00d8..00de op=70 invoke-direct {v4}, LX/CSu;-><init>()V
+  00de..00e2 op=54 iget-object v0, v1, Landroid/util/Pair;->first:Ljava/lang/Object;
+  00e2..00e6 op=1f check-cast v0, Lcom/whatsapp/infra/core/jid/Jid;
+  00e6..00ea op=5b iput-object v0, v4, LX/CSu;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+  00ea..00ee op=1a const-string v0, "receipt"
+  00ee..00f2 op=5b iput-object v0, v4, LX/CSu;->A06:Ljava/lang/String;
+  00f2..00f6 op=54 iget-object v0, v6, LX/CM8;->A08:Ljava/lang/String;
+  00f6..00fa op=5b iput-object v0, v4, LX/CSu;->A09:Ljava/lang/String;
+  00fa..00fe op=54 iget-object v0, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->messageIds:[Ljava/lang/String;
+  00fe..0102 op=46 aget-object v0, v0, v3
+  0102..0106 op=5b iput-object v0, v4, LX/CSu;->A08:Ljava/lang/String;
+  0106..010a op=54 iget-object v0, v1, Landroid/util/Pair;->second:Ljava/lang/Object;
+  010a..010e op=1f check-cast v0, Lcom/whatsapp/infra/core/jid/Jid;
+  010e..0112 op=5b iput-object v0, v4, LX/CSu;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+  0112..0116 op=5b iput-object v11, v4, LX/CSu;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+  0116..011a op=53 iget-wide v0, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->loggableStanzaId:J
+  011a..011e op=5a iput-wide v0, v4, LX/CSu;->A00:J
+  011e..0124 op=6e invoke-virtual {v4}, LX/CSu;->A00()LX/Cb1;
+  0124..0126 op=0c move-result-object v5
+  0126..012a op=54 iget-object v4, v2, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A00:LX/0h8;
+  012a..012e op=13 const/16 v1, #0x59
+  012e..0130 op=12 const/4 v0, #0x0
+  0130..0136 op=71 invoke-static {v0, v3, v1, v3, v6}, Landroid/os/Message;->obtain(Landroid/os/Handler;IIILjava/lang/Object;)Landroid/os/Message;
+  0136..0138 op=0c move-result-object v0
+  0138..013e op=6e invoke-virtual {v4, v0, v5}, LX/0h8;->A0B(Landroid/os/Message;LX/Cb1;)LX/AzY;
+  013e..0140 op=0c move-result-object v0
+  0140..0146 op=6e invoke-virtual {v0}, LX/AzY;->get()Ljava/lang/Object;
+  0146..014c op=70 invoke-direct {v2}, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A00()Ljava/lang/String;
+  014c..014e op=0e return-void
+  014e..0150 op=12 const/4 v9, #0x0
+  0150..0152 op=28 goto -0x7a
+  # exception table: 0 try range(s)
+.end method
+
+.method A0I(ZL) flags=0x1 registers=4
+  # full signature: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A0I(Ljava/lang/Exception;)Z
+  0000..0004 op=1a const-string v0, "exception while running sent read receipts job"
+  0004..000a op=71 invoke-static {v0}, LX/1xf;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000a..000c op=0c move-result-object v1
+  000c..0012 op=70 invoke-direct {v2}, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A00()Ljava/lang/String;
+  0012..0014 op=0c move-result-object v0
+  0014..001a op=71 invoke-static {v0, v1, v3}, LX/Ayk;->A1K(Ljava/lang/String;Ljava/lang/StringBuilder;Ljava/lang/Throwable;)V
+  001a..001c op=12 const/4 v0, #0x1
+  001c..001e op=0f return v0
+  # exception table: 0 try range(s)
+.end method
+
+.method CRp(VL) flags=0x1 registers=3
+  # full signature: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->CRp(Landroid/content/Context;)V
+  0000..0006 op=71 invoke-static {}, LX/1xm;->A0V()LX/0h8;
+  0006..0008 op=0c move-result-object v0
+  0008..000c op=5b iput-object v0, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A00:LX/0h8;
+  000c..0010 op=13 const/16 v0, #0x17e6
+  0010..0016 op=71 invoke-static {v0}, LX/00C;->A02(I)Ljava/lang/Object;
+  0016..0018 op=0c move-result-object v0
+  0018..001c op=1f check-cast v0, LX/0zd;
+  001c..0020 op=5b iput-object v0, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A01:LX/0zd;
+  0020..0022 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

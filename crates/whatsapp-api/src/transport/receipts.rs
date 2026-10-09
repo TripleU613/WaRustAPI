@@ -107,17 +107,13 @@ fn saved_route(tx: &crate::store::WriteTx<'_>, saved: &serde_json::Value) -> Res
 
 /// Durably queue explicit `read` receipts for authenticated incoming direct or
 /// group messages, one receipt per message ID, all-or-nothing and idempotent.
-/// A group receipt names the sender as `participant`, exactly as the group
-/// delivery receipt does; that the read form is the same builder with
-/// `type="read"` is **inferred**, not traced.
-///
-/// Comparison `LX/Cns.A09` builds client receipts as `to`/`id`/`type` with
-/// optional `participant`/`category` and no timestamp; `LX/CcH.<clinit>` lists
-/// `read`, `read-self`, `played` and `played-self` as the client status-receipt
-/// vocabulary, and `LX/ClU.A00` maps `read` to its own status code. Using that
-/// builder with `type=read` is an inference from this vocabulary: the read
-/// receipt job itself was not traced, so multi-ID `list` children are not
-/// emitted. Nothing here sends automatically (`ReceiptPolicy::ExplicitOnly`).
+/// APK 2.26.37.71 SendReadReceiptJob.A0G -> 0zd.A04 -> CM8 ->
+/// Cp2.A07/A00 confirms the shared receipt builder and optional participant.
+/// Cp2.A0A also builds native extra-ID lists; this implementation queues one
+/// authenticated ID per receipt and retains its existing durable reservation.
+/// See docs/protocol/read-receipt-job.md for the traced policy/route boundaries.
+/// Full APK preference/contact policy and read-self selection remain unported;
+/// this API is an explicit read action (`ReceiptPolicy::ExplicitOnly`).
 pub fn queue_read(
     store: &ProtocolStore,
     receipt: &crate::model::receipt::Receipt,

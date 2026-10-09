@@ -1,0 +1,72 @@
+# APK-derived structural disassembly: LX/0zd;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A08(ZLLLJZ) flags=0x1 registers=11
+  # full signature: LX/0zd;->A08(LX/0Cy;Ljava/lang/Throwable;[Ljava/lang/String;JZ)Z
+  0000..0006 op=6e invoke-virtual {v4, v5}, LX/0zd;->A06(LX/0Cy;)Z
+  0006..0008 op=0a move-result v0
+  0008..000a op=12 const/4 v3, #0x0
+  000a..000e op=38 if-eqz v0, +0x30
+  000e..0010 op=21 array-length v2, v7
+  0010..0012 op=12 const/4 v1, #0x0
+  0012..0016 op=35 if-ge v1, v2, +0x30
+  0016..001a op=46 aget-object v0, v7, v1
+  001a..0020 op=71 invoke-static {v0}, Lcom/whatsapp/infra/core/util/string/StringUtils;->A0J(Ljava/lang/CharSequence;)Z
+  0020..0022 op=0a move-result v0
+  0022..0026 op=38 if-eqz v0, +0x25
+  0026..002a op=1a const-string v0, "ReadReceiptUtils/buildReadReceiptHandler received invalid message id(s)"
+  002a..0030 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  0030..0034 op=54 iget-object v0, v4, LX/0zd;->A02:LX/00s;
+  0034..003a op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  003a..003c op=0c move-result-object v0
+  003c..0040 op=1f check-cast v0, LX/00W;
+  0040..0046 op=6e invoke-virtual {v0}, LX/00W;->A01()LX/00X;
+  0046..0048 op=0c move-result-object v1
+  0048..004c op=13 const/16 v0, #0x5a3
+  004c..0052 op=71 invoke-static {v1, v0}, LX/08b;->A03(LX/00X;I)Ljava/lang/Object;
+  0052..0054 op=0c move-result-object v2
+  0054..0058 op=1f check-cast v2, LX/0AH;
+  0058..005c op=38 if-eqz v6, +0x9
+  005c..0060 op=1a const-string v1, "SendReadReceiptInvalidMessageIds"
+  0060..0064 op=1a const-string v0, "Unable to send read receipts as it has invalid message id(s)"
+  0064..006a op=6e invoke-virtual {v2, v1, v0, v6}, LX/0AH;->A0e(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+  006a..006c op=0f return v3
+  006c..0070 op=d8 add-int/lit8 v1, v1, #0x1
+  0070..0072 op=28 goto -0x2f
+  0072..0078 op=71 invoke-static {v5}, LX/0DE;->A0i(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0078..007a op=0a move-result v0
+  007a..007e op=38 if-eqz v0, +0x17
+  007e..0082 op=16 const-wide/16 v1, #0x0
+  0082..0086 op=31 cmp-long v0, v8, v1
+  0086..008a op=3d if-lez v0, +0x11
+  008a..0090 op=17 const-wide/32 v0, #0x5265c00
+  0090..0092 op=bb add-long/2addr v8, v0
+  0092..0096 op=54 iget-object v0, v4, LX/0zd;->A0A:LX/08B;
+  0096..009c op=71 invoke-static {v0}, LX/08B;->A00(LX/08B;)J
+  009c..009e op=0b move-result-wide v1
+  009e..00a2 op=31 cmp-long v0, v8, v1
+  00a2..00a6 op=3b if-gez v0, +0x3
+  00a6..00a8 op=0f return v3
+  00a8..00ae op=6e invoke-virtual {v4, v5, v10}, LX/0zd;->A05(LX/0Cy;Z)Ljava/lang/String;
+  00ae..00b0 op=0c move-result-object v1
+  00b0..00b4 op=1a const-string v0, "read-self"
+  00b4..00ba op=6e invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  00ba..00bc op=0a move-result v0
+  00bc..00c0 op=38 if-eqz v0, +0x17
+  00c0..00c4 op=54 iget-object v0, v4, LX/0zd;->A01:LX/00s;
+  00c4..00ca op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  00ca..00cc op=0c move-result-object v0
+  00cc..00d0 op=1f check-cast v0, LX/0bN;
+  00d0..00d6 op=6e invoke-virtual {v0}, LX/0bN;->A02()Lcom/google/common/collect/ImmutableSet;
+  00d6..00d8 op=0c move-result-object v0
+  00d8..00de op=6e invoke-virtual {v0}, Ljava/util/AbstractCollection;->isEmpty()Z
+  00de..00e0 op=0a move-result v0
+  00e0..00e4 op=df xor-int/lit8 v0, v0, #0x1
+  00e4..00e8 op=39 if-nez v0, +0x3
+  00e8..00ea op=0f return v3
+  00ea..00ec op=12 const/4 v0, #0x1
+  00ec..00ee op=0f return v0
+  # exception table: 0 try range(s)
+.end method

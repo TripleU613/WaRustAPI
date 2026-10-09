@@ -1,0 +1,94 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "read-job": {
+      "class": "Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "read-handler-build": {
+      "class": "LX/0zd;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ],
+      "method": "A04"
+    },
+    "read-type-selection": {
+      "class": "LX/0zd;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ],
+      "method": "A05"
+    },
+    "read-job-eligibility": {
+      "class": "LX/0zd;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ],
+      "method": "A06"
+    },
+    "read-job-admission": {
+      "class": "LX/0zd;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ],
+      "method": "A08"
+    },
+    "read-handler": {
+      "class": "LX/CM8;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "read-wire-adapter": {
+      "class": "LX/Cp2;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ],
+      "method": "A07"
+    },
+    "read-wire-builder": {
+      "class": "LX/Cp2;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ],
+      "method": "A00"
+    },
+    "read-list-builder": {
+      "class": "LX/Cp2;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ],
+      "method": "A0A"
+    },
+    "read-route-pair": {
+      "class": "LX/CmC;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ],
+      "method": "A06"
+    },
+    "read-dispatch": {
+      "class": "LX/0y0;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ],
+      "method": "A00"
+    }
+  }
+}

@@ -446,8 +446,9 @@ All references below concern **2.26.37.70**, APK SHA-256
   plus an optional `<meta mode="<int>"/>` child gated on a flag and on the `type`
   value being a member of the `LX/CBs->A00` set. The `participant != to` rule is
   why a direct receipt never carries the attribute and a group receipt does.
-  This is an inference from the vocabulary: the read-receipt job itself and
-  any multi-ID `list` children were not traced, so one ID per receipt is sent.
+  The [37.71 read-job trace](read-receipt-job.md) now confirms its use of
+  Cp2 and extra-ID list construction. Rust still sends one ID per receipt;
+  full native settings/read-self selection and specialized routing are unported.
 - `LX/11P.A09`, `001a..00ee`: notification `tokens/token`, `trusted_contact`,
   from/sender_lid, token bytes and timestamp (token `t` defaults to envelope `t`).
   `LX/0q2.A0P`, `00b2..012a`: update only for a strictly newer timestamp.
@@ -784,9 +785,9 @@ sender resent it.
 `mark-read --chat <group>@g.us --id <id>` now queues a read receipt for a group
 message. It is the group delivery receipt — `<receipt to=<group> id=<id>
 participant=<sender>/>`, confirmed from `LX/Cp2` and live since group receive
-— with `type="read"`. That the read receipt uses the same builder is
-**inferred**: the read-receipt job was not traced, which is also why direct
-read receipts carry no `list` children. `receipts::record_ack` used to ignore
+— with `type="read"`. The [37.71 read-job trace](read-receipt-job.md)
+now **confirms** that shared builder and native extra-ID list construction.
+Rust retains one ID per receipt and does not port full native policy/routing. `receipts::record_ack` used to ignore
 any receipt ack carrying `participant`; it now settles a receipt only when the
 ack names the same participant the receipt did, since in a group an id alone
 does not say which member's message was read.

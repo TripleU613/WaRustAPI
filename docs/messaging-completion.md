@@ -1,5 +1,14 @@
 # Messaging completion checklist
 
+Outgoing read-job trace (2026-10-09, **confirmed static**): APK 37.71
+SendReadReceiptJob uses Cp2's shared receipt builder and extra-ID list construction.
+Its outgoing read/read-self selection differs from the incoming factory policy;
+job admission also checks IDs, status age and a saved set. The eleven-topic
+snapshot supersedes wire-format inference. Rust still sends one explicit ID
+per receipt; complete policy, linked-device scope and scheduling remain unfinished.
+No runtime behavior, account state or live request changed.
+[Evidence and limits](protocol/read-receipt-job.md).
+
 Receipt read-policy classifiers (2026-10-09, **confirmed static**): APK 37.71
 uses a configured JID-user list, chat codes -1/-3 and contact-addon presence.
 The twelve-topic snapshot retains dependent-account age-state checks and a
