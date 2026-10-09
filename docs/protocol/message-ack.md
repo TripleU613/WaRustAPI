@@ -52,9 +52,10 @@ Restart tests keep the original uncertain intent reserved after these ignored
 ACKs; a subsequent matching participant-free ACK can establish acceptance once.
 An error ACK with a LID companion participant records the original error code
 as Failed and remains nonreplayable across restart. Native additional user kinds,
-malformed-JID rejection, timestamp/counter/token persistence and special native
+malformed-JID rejection, counter/token persistence and special native
 message classes remain **unknown or unimplemented** here. This bounded guard
-must not be described as complete native ACK parity.
+must not be described as complete native ACK parity. Success ACK server time
+is now retained separately; see [ACK timestamp evidence](ack-timestamps.md).
 
 Use existing `status` to inspect the unchanged uncertainty/facts and `listen`
 for authenticated processing. The actor already saves the authenticated node

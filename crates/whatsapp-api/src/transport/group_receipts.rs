@@ -248,6 +248,7 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
                             kind: fact_kind,
                             device: Some(device.clone()),
                             observed_at: Timestamp::now(),
+                            server_timestamp: None,
                             code: None,
                         },
                     )?;
@@ -500,6 +501,7 @@ mod tests {
                         kind: DeliveryFactKind::DeliveryUnknown,
                         device: None,
                         observed_at: Timestamp(8),
+                        server_timestamp: None,
                         code: None,
                     },
                 )?;

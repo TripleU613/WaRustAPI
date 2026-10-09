@@ -26,8 +26,9 @@ and error-ACK handling remain in place. An invalid wire-ID shape is ignored
 without writing. Terminal ServerAccepted/Failed facts still suppress repeats;
 no intent, attempt, identity, key, request ID or server wait is reset. An error
 ACK still records Failed; success still records ServerAccepted, with local
-observation time. Native server timestamp/counter/token persistence and native
-status/user-row admission remain **unknown/unported**.
+observation time. Server ACK time is now retained separately in Rust facts; see
+[ACK timestamp evidence](ack-timestamps.md). Native counter/token persistence
+and status/user-row admission remain **unknown/unported**.
 
 Existing `status` exposes the durable facts; `listen` processes authenticated
 ACKs. No new command, flag or HTTP route exists. Native state 4 is not assigned

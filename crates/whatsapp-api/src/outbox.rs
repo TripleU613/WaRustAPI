@@ -627,6 +627,7 @@ mod tests {
                     kind: DeliveryFactKind::DeliveryUnknown,
                     device: None,
                     observed_at: Timestamp::now(),
+                    server_timestamp: None,
                     code: None,
                 },
             )

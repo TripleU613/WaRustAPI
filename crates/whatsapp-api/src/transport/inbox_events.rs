@@ -2485,6 +2485,7 @@ mod outgoing_reaction_tests {
                         kind: DeliveryFactKind::DeliveryUnknown,
                         device: None,
                         observed_at: Timestamp(7),
+                        server_timestamp: None,
                         code: None,
                     });
                     tx.put_json(Table::Outbox, &entry.local_id.0, 1, &entry)?;

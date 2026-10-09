@@ -1,5 +1,19 @@
 # Status — 2026-10-07
 
+ACK timing (2026-10-09, **implemented/offline tested**): matching success
+ACK facts retain parsed server time separately from local observation time,
+using the APK's Java default-zero and wrapping semantics. Historical rows remain
+unknown; duplicate terminal ACKs cannot rewrite the timestamp. The status API
+schemas now describe actual ticket/progress/facts JSON. No new live send or
+native receipt admission. [Evidence and limits](docs/protocol/ack-timestamps.md).
+
+Validation: 832 workspace/all-feature tests passed, including 480 timestamp
+store/reopen cases within one regression. Strict all-target Clippy,
+warnings-denied Rustdoc, default CLI tests (25 plus API-symbol), regenerated CLI
+reference, formatting and whitespace checks passed. Repository hygiene checked
+2,128 links and 105 existing APK bundles. No qualifying live ACK or account
+migration was performed.
+
 ACK history correlation (2026-10-09, **implemented/offline tested**): removed
 our 10,000-row refusal using the existing complete paginated wire-ID lookup
 inside the ACK transaction. Ambiguous/corrupt history refuses atomically;

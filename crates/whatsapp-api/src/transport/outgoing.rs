@@ -300,6 +300,7 @@ pub fn begin_selected(
                         kind: DeliveryFactKind::Failed,
                         device: None,
                         observed_at: Timestamp::now(),
+                        server_timestamp: None,
                         code: None,
                     },
                 )?;
@@ -962,6 +963,7 @@ impl Pending {
                     kind: DeliveryFactKind::DeliveryUnknown,
                     device: None,
                     observed_at: Timestamp::now(),
+                    server_timestamp: None,
                     code: None,
                 },
             )?;
@@ -1041,6 +1043,19 @@ pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
                     kind,
                     device: None,
                     observed_at: Timestamp::now(),
+                    // 37.71 1Qy.A02 049e..04be: 0Gv.A01(default 0)
+                    // then DEX wrapping seconds-to-ms multiplication. DMZ
+                    // persists the supplied value, including zero/negative.
+                    // This observation grants no native status/receipt authority.
+                    server_timestamp: (kind == DeliveryFactKind::ServerAccepted).then(|| {
+                        Timestamp(
+                            node.get_attr("t")
+                                .and_then(|v| v.as_text())
+                                .and_then(super::mex::java_decimal_long)
+                                .unwrap_or(0)
+                                .wrapping_mul(1000),
+                        )
+                    }),
                     code,
                 },
             )?;
@@ -1960,6 +1975,7 @@ mod tests {
                         kind: DeliveryFactKind::DeliveryUnknown,
                         device: None,
                         observed_at: Timestamp::now(),
+                        server_timestamp: None,
                         code: None,
                     },
                 )
@@ -2041,6 +2057,92 @@ mod tests {
         assert!(!status.is_uncertain());
         assert_eq!(status.facts.len(), 2);
     }
+    #[test]
+    fn acknowledgement_timestamp_uses_java_oracle_and_survives_reopen() {
+        // Independent executed Java oracle, retained for 0Gv.A01 and DEX
+        // mul-long semantics; ACK 1Qy.A02 uses the same parser/multiplication.
+        let oracle: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/mex/2.26.37.71-numeric-reference.json"
+        ))
+        .unwrap();
+        let cases = oracle["cases"].as_array().unwrap();
+        for index in 0..=cases.len() {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("ack-time.redb");
+            let store = open(&path);
+            let local_id = enqueue(&store);
+            store
+                .write(|tx| {
+                    let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
+                    entry.wire_id = Some(MessageId::new("fixture")?);
+                    outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)
+                })
+                .unwrap();
+            let mut ack = Node::new("ack")
+                .attr("class", "message")
+                .attr("id", "fixture")
+                .attr("from", "15555550100@s.whatsapp.net");
+            let expected = if let Some(case) = cases.get(index) {
+                ack = ack.attr("t", case["input"].as_str().unwrap());
+                case["scaled"].as_str().unwrap().parse::<i64>().unwrap()
+            } else {
+                0
+            }; // Missing t follows the APK's default-zero branch.
+            assert!(acknowledge(&store, &ack).unwrap());
+            let before = store
+                .read(|tx| outbox().status(tx, local_id))
+                .unwrap()
+                .unwrap();
+            assert_eq!(before.facts.len(), 1);
+            assert_eq!(
+                before.facts[0].server_timestamp,
+                Some(Timestamp(expected)),
+                "case {index}"
+            );
+            assert!(before.facts[0].observed_at.0 > 0);
+            // A later timestamp cannot rewrite a once-accepted observation.
+            assert!(!acknowledge(&store, &ack.attr("t", "99")).unwrap());
+            drop(store);
+            let store = open(&path);
+            assert_eq!(
+                store
+                    .read(|tx| outbox().status(tx, local_id))
+                    .unwrap()
+                    .unwrap(),
+                before
+            );
+            assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
+        }
+    }
+
+    #[test]
+    fn error_ack_does_not_claim_a_success_timestamp() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("error-ack.redb"));
+        let local_id = enqueue(&store);
+        store
+            .write(|tx| {
+                let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
+                entry.wire_id = Some(MessageId::new("fixture")?);
+                outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)
+            })
+            .unwrap();
+        let ack = Node::new("ack")
+            .attr("class", "message")
+            .attr("id", "fixture")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("error", "500")
+            .attr("t", "42");
+        assert!(acknowledge(&store, &ack).unwrap());
+        let status = store
+            .read(|tx| outbox().status(tx, local_id))
+            .unwrap()
+            .unwrap();
+        assert_eq!(status.progress, AttemptProgress::Failed);
+        assert_eq!(status.facts[0].server_timestamp, None);
+        assert_eq!(status.facts[0].code, Some(500));
+    }
+
     #[test]
     fn acknowledgement_reaches_intent_beyond_ten_thousand_history_rows() {
         let dir = tempfile::tempdir().unwrap();

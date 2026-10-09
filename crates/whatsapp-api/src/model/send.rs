@@ -74,6 +74,11 @@ pub struct DeliveryFact {
     pub device: Option<DeviceAddress>,
     /// When the fact was observed locally.
     pub observed_at: Timestamp,
+    /// Parsed server ACK time in milliseconds, kept separate from observation
+    /// time. None for historical/other facts; a current success ACK defaults
+    /// missing or invalid `t` to zero, following APK 37.71 1Qy.A02.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub server_timestamp: Option<Timestamp>,
     /// Sanitized code, if any.
     pub code: Option<u32>,
 }
@@ -103,5 +108,28 @@ impl SendStatus {
             .iter()
             .any(|f| f.kind == DeliveryFactKind::DeliveryUnknown)
             && !self.server_accepted()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn historical_facts_keep_unknown_server_time_without_migration() {
+        let historical = serde_json::json!({
+            "kind": "ServerAccepted", "device": null, "observed_at": 7000, "code": null
+        });
+        let fact: DeliveryFact = serde_json::from_value(historical.clone()).unwrap();
+        assert_eq!(fact.server_timestamp, None);
+        assert_eq!(serde_json::to_value(&fact).unwrap(), historical);
+        let mut current = fact;
+        current.server_timestamp = Some(Timestamp(0));
+        let value = serde_json::to_value(&current).unwrap();
+        assert_eq!(value["server_timestamp"], 0);
+        assert_eq!(
+            serde_json::from_value::<DeliveryFact>(value).unwrap(),
+            current
+        );
     }
 }
