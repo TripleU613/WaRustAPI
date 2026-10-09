@@ -72,3 +72,8 @@ all-feature Clippy, warnings-denied Rustdoc, formatting and diff hygiene. The
 three-topic source bundle reproduces exactly: eight files / 37,422 bytes; cached
 self-diff verifies three unchanged topics and four indexed artifacts. No live
 validation is claimed.
+
+Follow-up: [generic ACK registration/dispatch](receipt-ack-dispatch.md) closes
+BaE forwarding and full-key map removal for the generic path, with separate
+ID queues and bounded normalization. Complete special-case/error/timeout and
+queue ownership semantics remain unknown; no local guard was weakened.

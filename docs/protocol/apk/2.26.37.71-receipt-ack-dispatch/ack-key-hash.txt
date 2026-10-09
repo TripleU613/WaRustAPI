@@ -1,0 +1,62 @@
+# APK-derived structural disassembly: LX/Cb1;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method hashCode(I) flags=0x1 registers=3
+  # full signature: LX/Cb1;->hashCode()I
+  0000..0004 op=54 iget-object v0, v2, LX/Cb1;->A06:Ljava/lang/String;
+  0004..000a op=71 invoke-static {v0}, LX/1YP;->A08(Ljava/lang/String;)I
+  000a..000c op=0a move-result v0
+  000c..0010 op=d8 add-int/lit8 v0, v0, #0x1f
+  0010..0014 op=da mul-int/lit8 v1, v0, #0x1f
+  0014..0018 op=54 iget-object v0, v2, LX/Cb1;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+  0018..001e op=71 invoke-static {v0}, LX/1YP;->A05(Ljava/lang/Object;)I
+  001e..0020 op=0a move-result v0
+  0020..0022 op=b0 add-int/2addr v1, v0
+  0022..0026 op=da mul-int/lit8 v1, v1, #0x1f
+  0026..002a op=54 iget-object v0, v2, LX/Cb1;->A08:Ljava/lang/String;
+  002a..0030 op=71 invoke-static {v0}, LX/1YP;->A08(Ljava/lang/String;)I
+  0030..0032 op=0a move-result v0
+  0032..0034 op=b0 add-int/2addr v1, v0
+  0034..0038 op=da mul-int/lit8 v1, v1, #0x1f
+  0038..003c op=54 iget-object v0, v2, LX/Cb1;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+  003c..0042 op=71 invoke-static {v0}, LX/1YP;->A05(Ljava/lang/Object;)I
+  0042..0044 op=0a move-result v0
+  0044..0046 op=b0 add-int/2addr v1, v0
+  0046..004a op=da mul-int/lit8 v1, v1, #0x1f
+  004a..004e op=54 iget-object v0, v2, LX/Cb1;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+  004e..0054 op=71 invoke-static {v0}, LX/1YP;->A05(Ljava/lang/Object;)I
+  0054..0056 op=0a move-result v0
+  0056..0058 op=b0 add-int/2addr v1, v0
+  0058..005c op=da mul-int/lit8 v1, v1, #0x1f
+  005c..0060 op=54 iget-object v0, v2, LX/Cb1;->A09:Ljava/lang/String;
+  0060..0066 op=71 invoke-static {v0}, LX/1YP;->A08(Ljava/lang/String;)I
+  0066..0068 op=0a move-result v0
+  0068..006a op=b0 add-int/2addr v1, v0
+  006a..006e op=da mul-int/lit8 v1, v1, #0x1f
+  006e..0072 op=54 iget-object v0, v2, LX/Cb1;->A07:Ljava/lang/String;
+  0072..0078 op=71 invoke-static {v0}, LX/1YP;->A08(Ljava/lang/String;)I
+  0078..007a op=0a move-result v0
+  007a..007c op=b0 add-int/2addr v1, v0
+  007c..0080 op=da mul-int/lit8 v1, v1, #0x1f
+  0080..0084 op=54 iget-object v0, v2, LX/Cb1;->A0A:Ljava/util/List;
+  0084..0088 op=39 if-nez v0, +0x17
+  0088..008a op=12 const/4 v0, #0x0
+  008a..008c op=b0 add-int/2addr v1, v0
+  008c..0090 op=da mul-int/lit8 v1, v1, #0x1f
+  0090..0094 op=54 iget-object v0, v2, LX/Cb1;->A05:Ljava/lang/String;
+  0094..009a op=71 invoke-static {v0}, LX/1YP;->A08(Ljava/lang/String;)I
+  009a..009c op=0a move-result v0
+  009c..009e op=b0 add-int/2addr v1, v0
+  009e..00a2 op=da mul-int/lit8 v1, v1, #0x1f
+  00a2..00a6 op=54 iget-object v0, v2, LX/Cb1;->A04:LX/0hs;
+  00a6..00ac op=71 invoke-static {v0}, LX/1YP;->A06(Ljava/lang/Object;)I
+  00ac..00ae op=0a move-result v0
+  00ae..00b0 op=b0 add-int/2addr v1, v0
+  00b0..00b2 op=0f return v1
+  00b2..00b8 op=72 invoke-interface {v0}, Ljava/util/List;->hashCode()I
+  00b8..00ba op=0a move-result v0
+  00ba..00bc op=28 goto -0x18
+  # exception table: 0 try range(s)
+.end method

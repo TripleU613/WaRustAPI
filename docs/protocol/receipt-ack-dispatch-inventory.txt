@@ -1,0 +1,42 @@
+APK 2.26.37.71; SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Physical DEX method/call-site coverage, not reflection/native/registration closure.
+BaE scan: xtask apk-smali APK --class '' --method BaE --signatures --exceptions
+Two exact declarations: abstract 1Dw and concrete 1Dy.
+
+
+# class: LX/1Dw;
+# extends: Ljava/lang/Object;
+
+.method public BaE(VLL)  # .registers 0
+    # full signature: LX/1Dw;->BaE(LX/0hs;LX/Cb1;)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/1Dy;
+# extends: Landroid/os/Handler;
+
+.method public BaE(VLL)  # .registers 4
+    # full signature: LX/1Dy;->BaE(LX/0hs;LX/Cb1;)V
+    0000..0004  iget-object  v0, v1, LX/1Dy;->A01:LX/0iS;
+    0004..000a  invoke-static  {v0}, LX/0iS;->A0C(LX/0iS;)LX/00s;
+    000a..000c  move-result-object  v0
+    000c..0012  invoke-interface  {v0}, LX/00s;->get()Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0018  check-cast  v0, LX/0y8;
+    0018..001e  invoke-virtual  {v0, v2, v3}, LX/0y8;->A08(LX/0hs;LX/Cb1;)V
+    001e..0020  return-void
+    # exception table: 0 try range(s)
+.end method
+
+0hn.A01 callers (two): xtask apk-callers APK --class LX/0hn; --method A01
+0hn.A02 callers (two): xtask apk-callers APK --class LX/0hn; --method A02
+First two entries below are A01; final two are A02. DEX offsets are absolute.
+classes.dex  LX/0h8;->A0B(LLL)
+  invoke dex byte offset: 0x646e04
+classes.dex  LX/0h8;->A0C(LLLI)
+  invoke dex byte offset: 0x646e76
+classes7.dex  Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A06(ZLLLLLLLLLLIJZZ)
+  invoke dex byte offset: 0x8a21d4
+classes7.dex  Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0G(V)
+  invoke dex byte offset: 0x8a841a

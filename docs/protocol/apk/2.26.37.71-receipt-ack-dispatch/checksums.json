@@ -1,0 +1,58 @@
+{
+  "ack-callback-map.txt": {
+    "bytes": 10994,
+    "sha256": "e2194c6e1b0c307cf2fc948217ce5d891ef9082b6645ac3477f771c949ec0d92"
+  },
+  "ack-callback-wrapper.txt": {
+    "bytes": 2174,
+    "sha256": "89cec449fb74475d1cb58f5e74fdf2a3d15656ca22e0513d97d406818a9b0a5d"
+  },
+  "ack-envelope.txt": {
+    "bytes": 659,
+    "sha256": "18612b72034fae4d5c8d2f830df4a9a82b0c686a1b26ea6e29b55eb2176d0de5"
+  },
+  "ack-handler-post.txt": {
+    "bytes": 924,
+    "sha256": "4183228d1b1ac68b8b973624f2e97a9431cbfde5b92e9468f869f3a45c31b883"
+  },
+  "ack-handler.txt": {
+    "bytes": 28406,
+    "sha256": "bb157903e5a69f7cd8f1916d75da8eaf4837db7cc723133edb2394a8669ab8a0"
+  },
+  "ack-key-hash.txt": {
+    "bytes": 3189,
+    "sha256": "b74e4bc4737705020df1db47ce5c3ea7f7b03ab85889c8f7e3b00ebc0ab048ae"
+  },
+  "ack-key-normalizer.txt": {
+    "bytes": 2599,
+    "sha256": "f93cd1bdf94b0f58952237e3315ac2bc3be2ba363f9a07f767afd079bba85231"
+  },
+  "ack-native-forward.txt": {
+    "bytes": 865,
+    "sha256": "60c4e99d888a04b569bb4aa576b98b63e4353004df5e2ebbb65dcf1f9e6bc422"
+  },
+  "ack-read-registration.txt": {
+    "bytes": 1846,
+    "sha256": "3134cc85d30d1217f7362acd63540de6ca78494f387ece98d08cd895769fe35a"
+  },
+  "ack-registration-variant.txt": {
+    "bytes": 2282,
+    "sha256": "12299155639ea1c195a6eb80135f201c2496e421c5dcf104e6f4c79d1d49d8a8"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "targets.json": {
+    "bytes": 3649,
+    "sha256": "63c15e404967eedba3b53185b8d35f736bdb10e24a4625b414b11dee2ce5067a"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

@@ -1,5 +1,14 @@
 # Evidence ledger
 
+Receipt ACK dispatch (2026-10-09, **confirmed static**): APK 37.71 generic
+ACKs remove full Cb1 callback keys under a map lock, then separately handle ID
+queues. Read-job registration normalizes only device-zero address forms; duplicate
+registration replaces callbacks after logging. The ten-topic snapshot retains
+null versus original-node callback payloads. Full queue ownership, timeout/error
+lifecycle and receive effects remain unknown. No runtime, account state or live
+request changed.
+[Evidence and limits](receipt-ack-dispatch.md).
+
 Receipt ACK participant guard (2026-10-09, **confirmed static/local**): APK
 37.71 Cb1 compares nullable participants. Rust now rejects a participant-less
 ACK for a group read/retry reservation; incomplete error ACKs also leave the

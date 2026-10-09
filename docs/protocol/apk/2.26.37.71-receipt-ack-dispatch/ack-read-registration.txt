@@ -1,0 +1,29 @@
+# APK-derived structural disassembly: LX/0h8;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0B(LLL) flags=0x11 registers=7
+  # full signature: LX/0h8;->A0B(Landroid/os/Message;LX/Cb1;)LX/AzY;
+  0000..0002 op=12 const/4 v0, #0x1
+  0002..0008 op=71 invoke-static {v5, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=1a const-string v0, "MessageClient/sendAckableMessage: stanzaKey is null"
+  000c..0012 op=71 invoke-static {v6, v0}, LX/00K;->A07(Ljava/lang/Object;Ljava/lang/String;)V
+  0012..0018 op=71 invoke-static {v6}, LX/0h8;->A02(LX/Cb1;)LX/Cb1;
+  0018..001a op=0c move-result-object v3
+  001a..001e op=22 new-instance v2, LX/AzY;
+  001e..0024 op=70 invoke-direct {v2}, LX/AzY;-><init>()V
+  0024..0028 op=54 iget-object v0, v4, LX/0h8;->A0B:LX/0hn;
+  0028..002e op=6e invoke-virtual {v0, v2, v3}, LX/0hn;->A01(LX/1Yj;LX/Cb1;)V
+  002e..0032 op=1a const-string v1, "MessageClient/sendAckableMessage "
+  0032..0036 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0036..003c op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  003c..0042 op=6e invoke-virtual {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0042..0048 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0048..004a op=0c move-result-object v0
+  004a..0050 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  0050..0052 op=12 const/4 v0, #0x0
+  0052..0058 op=71 invoke-static {v5, v4, v0, v0}, LX/0h8;->A05(Landroid/os/Message;LX/0h8;ZZ)V
+  0058..005a op=11 return-object v2
+  # exception table: 0 try range(s)
+.end method

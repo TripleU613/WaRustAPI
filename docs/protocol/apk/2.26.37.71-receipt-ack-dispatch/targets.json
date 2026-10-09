@@ -1,0 +1,135 @@
+{
+  "ack-callback-map": {
+    "anchors": [
+      "MessageCallbacksManager/addAckCallback",
+      "duplicate_ackable_stanza"
+    ],
+    "class": "LX/0hn;",
+    "file": "ack-callback-map.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 5,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "ack-callback-wrapper": {
+    "class": "LX/D42;",
+    "file": "ack-callback-wrapper.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BjN",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "ack-envelope": {
+    "class": "LX/Cal;",
+    "file": "ack-envelope.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "ack-handler": {
+    "anchors": [
+      "MessageCallbacksManager/received ack="
+    ],
+    "class": "LX/0yG;",
+    "file": "ack-handler.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "handleMessage",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "ack-handler-post": {
+    "class": "LX/0y8;",
+    "file": "ack-handler-post.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A08",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "ack-key-hash": {
+    "class": "LX/Cb1;",
+    "file": "ack-key-hash.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "hashCode",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "ack-key-normalizer": {
+    "class": "LX/0h8;",
+    "file": "ack-key-normalizer.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "ack-native-forward": {
+    "class": "LX/1Dy;",
+    "file": "ack-native-forward.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BaE",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "ack-read-registration": {
+    "anchors": [
+      "MessageClient/sendAckableMessage: stanzaKey is null"
+    ],
+    "class": "LX/0h8;",
+    "file": "ack-read-registration.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0B",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "ack-registration-variant": {
+    "anchors": [
+      "MessageClient not ready, user not registered likely"
+    ],
+    "class": "LX/0h8;",
+    "file": "ack-registration-variant.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0C",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  }
+}
