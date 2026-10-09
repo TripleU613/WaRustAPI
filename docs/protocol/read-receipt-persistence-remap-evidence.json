@@ -1,0 +1,299 @@
+{
+  "previous_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "candidate_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "all_unique": false,
+  "interpretation": "Exact string co-occurrence, optional checked DEX shorties and symbolic caller references locate scopes; they do not prove protocol equivalence or dynamic dispatch. Proposed selectors require semantic review. Any unresolved topic blocks recipe output.",
+  "raw_report_sha256": "d7fc6fbcceaa643efb1d86d725525671556f161d9aa2e27c45c92ced8c937609",
+  "initial_report_sha256": "528ff4318c7a7a202f6e1f63997f17e649ce8284077a0260e04bafb70ff59bc5",
+  "scope": "Checked same-APK candidates/callers only; full per-anchor sites omitted. Reproduce with the relocation recipe. No cross-release equivalence.",
+  "topics": [
+    {
+      "topic": "chat-position",
+      "status": "unique",
+      "scope": "method",
+      "previous_class": "LX/2x8;",
+      "previous_method": "A01",
+      "candidates": [
+        {
+          "class_name": "LX/2x8;",
+          "dex_byte_off": 3318864,
+          "dex_file": "classes3.dex",
+          "method_index": 14629,
+          "method_name": "A01",
+          "method_proto": "VLJJ"
+        }
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    {
+      "topic": "message-exclusion",
+      "status": "unanchored",
+      "scope": "method",
+      "previous_class": "LX/178;",
+      "previous_method": "A0V",
+      "candidates": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    {
+      "topic": "message-key",
+      "status": "unanchored",
+      "scope": "method",
+      "previous_class": "LX/0zc;",
+      "previous_method": "A05",
+      "candidates": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    {
+      "topic": "message-store",
+      "status": "unique",
+      "scope": "method",
+      "previous_class": "LX/0zc;",
+      "previous_method": "A0B",
+      "candidates": [
+        {
+          "class_name": "LX/0zc;",
+          "dex_byte_off": 7836548,
+          "dex_file": "classes.dex",
+          "method_index": 23205,
+          "method_name": "A0B",
+          "method_proto": "VLIZ"
+        }
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    {
+      "topic": "message-values",
+      "status": "unique",
+      "scope": "method",
+      "previous_class": "LX/0zc;",
+      "previous_method": "A03",
+      "candidates": [
+        {
+          "class_name": "LX/0zc;",
+          "dex_byte_off": 7832104,
+          "dex_file": "classes.dex",
+          "method_index": 23197,
+          "method_name": "A03",
+          "method_proto": "VLL"
+        }
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ],
+      "method_shorty": "VLL",
+      "before_shorty_candidates": [
+        {
+          "class_name": "LX/0S6;",
+          "dex_byte_off": 5823384,
+          "dex_file": "classes.dex",
+          "method_index": 9582,
+          "method_name": "AR4",
+          "method_proto": "VLL"
+        },
+        {
+          "class_name": "LX/0VA;",
+          "dex_byte_off": 5922998,
+          "dex_file": "classes.dex",
+          "method_index": 10509,
+          "method_name": "A00",
+          "method_proto": "LLLL"
+        },
+        {
+          "class_name": "LX/0zc;",
+          "dex_byte_off": 7832104,
+          "dex_file": "classes.dex",
+          "method_index": 23197,
+          "method_name": "A03",
+          "method_proto": "VLL"
+        }
+      ],
+      "initial_candidates": [
+        {
+          "class_name": "LX/0S6;",
+          "dex_byte_off": 5823384,
+          "dex_file": "classes.dex",
+          "method_index": 9582,
+          "method_name": "AR4",
+          "method_proto": "VLL"
+        },
+        {
+          "class_name": "LX/0zc;",
+          "dex_byte_off": 7832104,
+          "dex_file": "classes.dex",
+          "method_index": 23197,
+          "method_name": "A03",
+          "method_proto": "VLL"
+        }
+      ],
+      "qualifying_callers": [
+        {
+          "class_name": "LX/0zc;",
+          "dex_byte_off": 7836548,
+          "dex_file": "classes.dex",
+          "method_index": 23205,
+          "method_name": "A0B",
+          "method_proto": "VLIZ"
+        }
+      ],
+      "caller_matches": [
+        {
+          "callers": [],
+          "signature": "(LX/0KT;LX/0Ke;)V",
+          "target": {
+            "class_name": "LX/0S6;",
+            "dex_byte_off": 5823384,
+            "dex_file": "classes.dex",
+            "method_index": 9582,
+            "method_name": "AR4",
+            "method_proto": "VLL"
+          }
+        },
+        {
+          "callers": [
+            {
+              "class_name": "LX/0zc;",
+              "dex_byte_off": 7831996,
+              "dex_file": "classes.dex",
+              "method_index": 23196,
+              "method_name": "A02",
+              "method_proto": "VLL"
+            },
+            {
+              "class_name": "LX/0zc;",
+              "dex_byte_off": 7834694,
+              "dex_file": "classes.dex",
+              "method_index": 23204,
+              "method_name": "A0A",
+              "method_proto": "VL"
+            },
+            {
+              "class_name": "LX/0zc;",
+              "dex_byte_off": 7836360,
+              "dex_file": "classes.dex",
+              "method_index": 23205,
+              "method_name": "A0B",
+              "method_proto": "VLIZ"
+            },
+            {
+              "class_name": "LX/152;",
+              "dex_byte_off": 8266172,
+              "dex_file": "classes.dex",
+              "method_index": 25387,
+              "method_name": "A00",
+              "method_proto": "LLLLZ"
+            }
+          ],
+          "signature": "(Landroid/content/ContentValues;LX/178;)V",
+          "target": {
+            "class_name": "LX/0zc;",
+            "dex_byte_off": 7832104,
+            "dex_file": "classes.dex",
+            "method_index": 23197,
+            "method_name": "A03",
+            "method_proto": "VLL"
+          }
+        }
+      ]
+    },
+    {
+      "topic": "message-worker",
+      "status": "unique",
+      "scope": "method",
+      "previous_class": "LX/DNe;",
+      "previous_method": "run",
+      "candidates": [
+        {
+          "class_name": "LX/DNe;",
+          "dex_byte_off": 8357654,
+          "dex_file": "classes7.dex",
+          "method_index": 39420,
+          "method_name": "run",
+          "method_proto": "V"
+        }
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    {
+      "topic": "message-worker-ctor",
+      "status": "unanchored",
+      "scope": "method",
+      "previous_class": "LX/DNe;",
+      "previous_method": "<init>",
+      "candidates": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    {
+      "topic": "positions-worker",
+      "status": "unique",
+      "scope": "method",
+      "previous_class": "LX/3RC;",
+      "previous_method": "run",
+      "candidates": [
+        {
+          "class_name": "LX/3RC;",
+          "dex_byte_off": 4316784,
+          "dex_file": "classes3.dex",
+          "method_index": 22380,
+          "method_name": "run",
+          "method_proto": "V"
+        }
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    {
+      "topic": "positions-worker-ctor",
+      "status": "unanchored",
+      "scope": "method",
+      "previous_class": "LX/3RC;",
+      "previous_method": "<init>",
+      "candidates": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    {
+      "topic": "storage-type",
+      "status": "unique",
+      "scope": "method",
+      "previous_class": "LX/178;",
+      "previous_method": "A0h",
+      "candidates": [
+        {
+          "class_name": "LX/178;",
+          "dex_byte_off": 8398284,
+          "dex_file": "classes.dex",
+          "method_index": 26068,
+          "method_name": "A0h",
+          "method_proto": "VI"
+        }
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    }
+  ]
+}

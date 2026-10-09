@@ -1,5 +1,12 @@
 # Evidence ledger
 
+Read persistence release relocation (2026-10-09, **confirmed static/local**):
+a separate checked recipe locates six methods; signature plus physical caller
+resolves a three-way field-writer ambiguity. Four string-free topics remain
+manual and prevent automatic proposal. Cached ten-topic self-diff took
+0.014920 seconds; no second release/runtime/live parity is claimed.
+[Evidence and limits](read-receipt-persistence.md#release-relocation-2026-10-09).
+
 Deferred blank receipt expansion (2026-10-09, **confirmed static**): eight
 source topics close DNt selector 6 as status-target device-set subtraction
 and blank-device insertion, not normal receipt_user seeding. Existing-target

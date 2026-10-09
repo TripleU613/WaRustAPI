@@ -121,3 +121,53 @@ CLI-reference regeneration/coverage, OpenAPI library-symbol coverage, formatting
 whitespace and repository hygiene passed (1,896 local links; 83 checksum bundles,
 17,906,555 bytes). No workspace runtime tests were repeated for this source-only
 chunk, and no live persistence or handset-read result is claimed.
+
+## Release relocation (2026-10-09)
+
+**Confirmed local/static:** the separate
+[relocation recipe](apk/recipes/2.26.37.71-read-receipt-persistence-remap.json)
+adds checked locators without rewriting the original checksum generation.
+[Compact self-remap evidence](read-receipt-persistence-remap-evidence.json)
+preserves actual selected candidates, signature/caller filtering and full-report
+digests. It uniquely finds the same six methods on this APK: message store,
+message values, message worker, positions worker, chat position and storage type.
+Worker strings locate the method, not a promise that a new release retains the
+same discriminator number; new case routing still requires source review.
+
+The message-values column intersection initially matched **three** scopes:
+0S6.AR4 (VLL schema), 0VA.A00 (LLLL) and 0zc.A03 (VLL actual writer).
+The checked VLL shorty removes the LLLL method; the physical caller anchored by
+both UPDATE_MESSAGE_MAIN_SQL and FIND_MESSAGE_MAIN_SQL selects only 0zc.A03.
+The caller scan is symbolic direct invocation evidence, not dynamic dispatch
+or a claim that no other writer exists. Column-name matching alone would have
+been ambiguous and could select schema code rather than the actual writer.
+
+Four topics remain **unanchored/manual**: message-exclusion, message-key,
+message-worker-ctor and positions-worker-ctor. They contain no selected exact
+string locators in this recipe. Follow calls/fields from the newly relocated
+methods and review complete signatures before supplying a new hash-pinned
+export recipe. `all_unique=false` blocks automatic proposed recipe output;
+retaining old class names does not count as a new-release relocation.
+Only WhatsApp.apk was found in the scoped Downloads APK/XAPK/APKM file scan;
+no second release was compared here, and no broader resource absence is claimed.
+
+```sh
+cargo run -p xtask -- apk-research-remap ~/Downloads/WhatsApp.apk \
+  --recipe docs/protocol/apk/recipes/2.26.37.71-read-receipt-persistence-remap.json
+```
+
+The checksum-verified cached comparison of the original generation with itself
+completed in **0.014920 seconds**, with ten unchanged topics and four unchanged
+metadata artifacts. That observed local timing excludes APK decoding, export
+and remapping; it is not a cross-release speed/parity guarantee. After exporting
+a separately reviewed new generation, use apk-research-diff on old/new directories
+for file-level changes and their Rust owners. These recipe/report additions
+introduce no runtime settings, row migration, receipt replay or HTTP capability.
+
+Relocation verification: all six unique candidates match their original class
+and method on 37.71; four remain unanchored. The explicit --output check returned
+`recipe not written: unresolved anchor scope, method shorty or caller evidence`
+and created no proposal file. CLI-reference regeneration, OpenAPI library-symbol
+coverage, formatting, whitespace and hygiene passed (1,910 local links; unchanged
+84 checksum bundles / 18,046,975 bytes). Original checksum artifacts were not
+rewritten. No new runtime tests or live operation are claimed.
