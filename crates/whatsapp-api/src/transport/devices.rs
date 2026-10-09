@@ -451,6 +451,9 @@ pub(super) fn after_primary_identity_change_in(
     // Java signed-long overflow wraps; this is not a chronological timestamp.
     let version = previous.map_or(1, |value| value.wrapping_add(1));
     tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &version)?;
+    // APK 37.71 SyncDeviceAndResendMessageJob.A0G additionally uses key_fetch
+    // and original per-device receipt membership (docs/protocol/sync-resend.md).
+    // This refresh intent does not claim that job or authorize a resend.
     request_sync_in(tx, peer, None, "authenticated-primary-change")
 }
 /// Users waiting for a device query, ascending.

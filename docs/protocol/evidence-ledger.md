@@ -1975,3 +1975,22 @@ Offline retained-profile CLI checks left store inspection and queued intents
 unchanged; invalid IDs and unknown intents refused without input echoes.
 There were no retained group preparations to inspect; historical missing-state
 coverage is from fixtures. New send capture has no live validation in this chunk.
+
+2026-10-09 — **Confirmed static/local audit:** native sync/resend now has a
+22-topic trace of its distinct encrypt/key_fetch request, existing remote
+registration encoding, reply/worker completion, original receipt-device
+subtraction and post-version target mutation. An empty/errored-device result
+can complete true; callback completion is not per-device usability. Expiry
+is strictly past, not equal-time rejection. Rust lacks key_fetch and original
+per-device receipt membership; user counts cannot reproduce removeAll.
+Current nullable user snapshots are preserved; no live worker/resend, account
+operation or retry-guard relaxation was added. [Evidence and next port inputs](sync-resend.md).
+
+Sync/resend research validation: all 22 source topics / 27 files / 272,318
+bytes reproduced from the exact comparison APK. Cached self-diff verified
+22 unchanged topics and four unchanged metadata artifacts in 0.031055 seconds;
+this is plumbing verification, not cross-release equivalence. All 65 xtask
+tests, CLI-reference regeneration, API/library-symbol check and formatting
+passed. Repository hygiene checked 1,324 local links and 26 APK bundles /
+7,808,872 bytes. Runtime changes are comments only; no account operation,
+key-fetch query or live resend was performed.

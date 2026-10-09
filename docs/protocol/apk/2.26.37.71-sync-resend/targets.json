@@ -1,0 +1,354 @@
+{
+  "bundle-processing": {
+    "class": "LX/14J;",
+    "file": "bundle-processing.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "method_shorty": "VLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "candidate-targets": {
+    "class": "LX/15x;",
+    "file": "candidate-targets.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "method_shorty": "LLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "false-constant": {
+    "class": "LX/1xh;",
+    "file": "false-constant.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A19",
+    "method_shorty": "L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "fetch-delivery-failure": {
+    "class": "LX/DFC;",
+    "file": "fetch-delivery-failure.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BjL",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "fetch-error": {
+    "class": "LX/DFC;",
+    "file": "fetch-error.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BmU",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "fetch-result": {
+    "class": "LX/DFC;",
+    "file": "fetch-result.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "C8f",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "job-constructor": {
+    "class": "Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;",
+    "file": "job-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "method_shorty": "VLLJJZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "job-original-message": {
+    "class": "Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;",
+    "file": "job-original-message.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "job-requirements": {
+    "class": "Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;",
+    "file": "job-requirements.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0H",
+    "method_shorty": "Z",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "job-retry": {
+    "class": "Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;",
+    "file": "job-retry.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0I",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "job-run": {
+    "class": "Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;",
+    "file": "job-run.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0G",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "original-receipt-cache": {
+    "class": "LX/0Z5;",
+    "file": "original-receipt-cache.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "original-receipt-selector": {
+    "class": "LX/0Z4;",
+    "file": "original-receipt-selector.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "original-receipt-store": {
+    "class": "LX/0Z6;",
+    "file": "original-receipt-store.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0O",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "post-version-target-filter": {
+    "class": "LX/15x;",
+    "file": "post-version-target-filter.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A09",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "registration-encoding": {
+    "class": "LX/1Lz;",
+    "file": "registration-encoding.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "method_shorty": "LI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "result-order": {
+    "class": "LX/DPh;",
+    "file": "result-order.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "invoke",
+    "method_shorty": "LLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "result-worker": {
+    "class": "LX/DNs;",
+    "file": "result-worker.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "special-candidate-targets": {
+    "class": "LX/15x;",
+    "file": "special-candidate-targets.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A08",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "true-constant": {
+    "class": "LX/1xh;",
+    "file": "true-constant.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1A",
+    "method_shorty": "L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "worker-constructor": {
+    "class": "LX/DNs;",
+    "file": "worker-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "method_shorty": "VLLLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "worker-factory": {
+    "class": "LX/DNs;",
+    "file": "worker-factory.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "method_shorty": "LLLLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  }
+}

@@ -92,3 +92,9 @@ counts and pending-intent inspection were unchanged across these commands.
 No saved normal-group preparations existed to select for historical inspection;
 missing historical snapshots are exercised by isolated store fixtures, not a
 claimed retained-account send. No network command or new message was run.
+
+**Subsequent confirmed static trace:** [sync/resend](sync-resend.md) reads
+receipt-device cache membership, subtracts it from refreshed candidates, then
+applies version and final target filters. That cache may change through native
+identity cleanup. The immutable user counts here cannot stand in for its
+per-device membership or authorize any native resend selection.

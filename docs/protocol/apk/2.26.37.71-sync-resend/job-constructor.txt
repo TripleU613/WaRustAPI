@@ -1,0 +1,47 @@
+# APK-derived structural disassembly: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLJJZ) flags=0x10001 registers=13
+  # full signature: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;-><init>(LX/1gc;[Lcom/whatsapp/infra/core/jid/UserJid;JJZ)V
+  0000..0006 op=71 invoke-static {}, LX/Ayj;->A1C()LX/Azz;
+  0006..0008 op=0c move-result-object v0
+  0008..000e op=71 invoke-static {v0}, LX/Ayk;->A19(LX/Azz;)Lorg/whispersystems/jobqueue/JobParameters;
+  000e..0010 op=0c move-result-object v0
+  0010..0016 op=70 invoke-direct {v5, v0}, Lorg/whispersystems/jobqueue/Job;-><init>(Lorg/whispersystems/jobqueue/JobParameters;)V
+  0016..001c op=71 invoke-static {v7}, LX/00K;->A0H([Ljava/lang/Object;)V
+  001c..0022 op=71 invoke-static {}, LX/1xf;->A1G()Ljava/util/HashSet;
+  0022..0024 op=0c move-result-object v0
+  0024..0028 op=5b iput-object v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0I:Ljava/util/Set;
+  0028..002a op=21 array-length v4, v7
+  002a..002c op=12 const/4 v3, #0x0
+  002c..0030 op=35 if-ge v3, v4, +0x11
+  0030..0034 op=46 aget-object v2, v7, v3
+  0034..0038 op=54 iget-object v1, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0I:Ljava/util/Set;
+  0038..003c op=1a const-string v0, "invalid jid"
+  003c..0042 op=71 invoke-static {v2, v0}, LX/00K;->A07(Ljava/lang/Object;Ljava/lang/String;)V
+  0042..0048 op=72 invoke-interface {v1, v2}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
+  0048..004c op=d8 add-int/lit8 v3, v3, #0x1
+  004c..004e op=28 goto -0x10
+  004e..0052 op=5b iput-object v6, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0C:LX/1gc;
+  0052..0058 op=71 invoke-static {v7}, Ljava/util/Arrays;->asList([Ljava/lang/Object;)Ljava/util/List;
+  0058..005a op=0c move-result-object v0
+  005a..0060 op=71 invoke-static {v0}, LX/0DE;->A0q(Ljava/util/Collection;)[Ljava/lang/String;
+  0060..0062 op=0c move-result-object v0
+  0062..0066 op=5b iput-object v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->rawUserJids:[Ljava/lang/String;
+  0066..006a op=54 iget-object v0, v6, LX/1gc;->A01:Ljava/lang/String;
+  006a..006e op=5b iput-object v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->messageId:Ljava/lang/String;
+  006e..0072 op=54 iget-object v0, v6, LX/1gc;->A00:LX/0Cy;
+  0072..0078 op=71 invoke-static {v0}, LX/00K;->A06(Ljava/lang/Object;)V
+  0078..007e op=6e invoke-virtual {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  007e..0080 op=0c move-result-object v0
+  0080..0084 op=5b iput-object v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->messageRawChatJid:Ljava/lang/String;
+  0084..0088 op=5a iput-wide v10, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->expirationMs:J
+  0088..008c op=5a iput-wide v8, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->startTimeMs:J
+  008c..0092 op=71 invoke-static {v12}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+  0092..0094 op=0c move-result-object v0
+  0094..0098 op=5b iput-object v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0H:Ljava/lang/Boolean;
+  0098..009a op=0e return-void
+  # exception table: 0 try range(s)
+.end method

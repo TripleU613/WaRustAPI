@@ -46,8 +46,9 @@ server epoch or proof of current companion authority.
 **Unknown:** historical versions before this port. Old stores are left untouched;
 null means no tracked counter, not zero previous changes. The first subsequently
 tracked primary change starts at 1. PN/LID counters are not merged from directory
-aliases. Native receipt rows carry primary_device_version, but Rust receipt facts
-and once-only send reservations do not yet use this counter. Receipt insertion,
+aliases. Native receipt rows carry primary_device_version. Rust original-send reservations
+now capture nullable user counters; receipt facts do not yet implement that
+per-device row lifecycle. Receipt insertion,
 native version-dependent cache behavior and complete canonical scope remain
 unported. No acknowledged or uncertain receipt is cleared or replayed.
 
@@ -94,5 +95,6 @@ and invocation description were corrected to name `peer-identity` only.
 **Subsequent confirmed consumer trace:** [receipt/version filtering](receipt-version.md)
 shows pending receipt insertion captures nullable send-time versions, while later
 timestamp updates retain existing row versions. Native ordinary resend candidates
-must pass nullable equality, with a gated absent-to-1 exception. Rust send-time
-snapshots and the complete resend policy remain unported.
+must pass nullable equality, with a gated absent-to-1 exception. Rust [original send-time snapshots](send-version-snapshot.md) now preserve the
+nullable user counters; native per-device receipt rows and the complete resend
+policy remain unported.

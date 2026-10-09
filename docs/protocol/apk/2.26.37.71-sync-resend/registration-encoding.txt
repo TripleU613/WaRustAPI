@@ -1,0 +1,27 @@
+# APK-derived structural disassembly: LX/1Lz;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(LI) flags=0x9 registers=5
+  # full signature: LX/1Lz;->A03(I)[B
+  0000..0002 op=12 const/4 v0, #0x4
+  0002..0006 op=23 new-array v3, v0, [B
+  0006..0008 op=12 const/4 v2, #0x0
+  0008..000a op=12 const/4 v1, #0x3
+  000a..000c op=8d int-to-byte v0, v4
+  000c..0010 op=4f aput-byte v0, v3, v1
+  0010..0012 op=12 const/4 v1, #0x2
+  0012..0016 op=e1 shr-int/lit8 v0, v4, #0x8
+  0016..0018 op=8d int-to-byte v0, v0
+  0018..001c op=4f aput-byte v0, v3, v1
+  001c..001e op=12 const/4 v1, #0x1
+  001e..0022 op=e1 shr-int/lit8 v0, v4, #0x10
+  0022..0024 op=8d int-to-byte v0, v0
+  0024..0028 op=4f aput-byte v0, v3, v1
+  0028..002c op=e1 shr-int/lit8 v0, v4, #0x18
+  002c..002e op=8d int-to-byte v0, v0
+  002e..0032 op=4f aput-byte v0, v3, v2
+  0032..0034 op=11 return-object v3
+  # exception table: 0 try range(s)
+.end method

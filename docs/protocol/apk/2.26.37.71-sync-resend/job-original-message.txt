@@ -1,0 +1,54 @@
+# APK-derived structural disassembly: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LL) flags=0x2 registers=6
+  # full signature: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A00(LX/1gc;)LX/178;
+  0000..0004 op=54 iget-object v1, v4, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0Q:LX/COS;
+  0004..0006 op=12 const/4 v0, #0x1
+  0006..000c op=6e invoke-virtual {v1, v5, v0}, LX/COS;->A00(LX/1gc;Z)LX/178;
+  000c..000e op=0c move-result-object v3
+  000e..0010 op=12 const/4 v2, #0x0
+  0010..0014 op=39 if-nez v3, +0xe
+  0014..0018 op=1a const-string v0, "SyncDeviceAndResendMessageJob/getFMessage/revokeMessage/message "
+  0018..001e op=71 invoke-static {v5, v0}, LX/000;->A07(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+  001e..0020 op=0c move-result-object v1
+  0020..0024 op=1a const-string v0, " no longer exist"
+  0024..002a op=71 invoke-static {v1, v0}, LX/1xj;->A1Q(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+  002a..002c op=11 return-object v2
+  002c..0032 op=71 invoke-static {v3}, LX/7xQ;->A03(LX/178;)Z
+  0032..0034 op=0a move-result v0
+  0034..0038 op=38 if-eqz v0, +0x18
+  0038..003c op=16 const-wide/16 v0, #0x4000
+  003c..0042 op=6e invoke-virtual {v3, v0, v1}, LX/178;->A0b(J)Z
+  0042..0044 op=0a move-result v0
+  0044..0048 op=38 if-eqz v0, +0x10
+  0048..004c op=54 iget-object v0, v4, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0R:LX/0YZ;
+  004c..0052 op=6e invoke-virtual {v0}, LX/0YZ;->A0G()Z
+  0052..0054 op=0a move-result v0
+  0054..0058 op=39 if-nez v0, +0x8
+  0058..005c op=1a const-string v0, "SyncDeviceAndResendMessageJob/getFMessage/skipping resend for FMessage status that was mapped from FStatus after send config was disabled"
+  005c..0062 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+  0062..0064 op=11 return-object v2
+  0064..006a op=71 invoke-static {v3}, LX/1xn;->A1S(LX/178;)Z
+  006a..006c op=0a move-result v0
+  006c..0070 op=38 if-eqz v0, +0xd
+  0070..0076 op=71 invoke-static {v3}, LX/323;->A00(LX/178;)LX/3K0;
+  0076..0078 op=0c move-result-object v0
+  0078..007c op=39 if-nez v0, +0x7
+  007c..0080 op=54 iget-object v0, v4, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0P:LX/16b;
+  0080..0086 op=6e invoke-virtual {v0, v3}, LX/16b;->A06(LX/178;)V
+  0086..008a op=20 instance-of v0, v3, LX/BnB;
+  008a..008e op=38 if-eqz v0, +0x10
+  008e..0092 op=54 iget-object v0, v4, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0K:LX/152;
+  0092..0096 op=1f check-cast v3, LX/BnB;
+  0096..009c op=6e invoke-virtual {v0, v3}, LX/152;->A04(LX/BnB;)LX/178;
+  009c..009e op=0c move-result-object v1
+  009e..00a2 op=38 if-eqz v1, +0x5
+  00a2..00a4 op=12 const/4 v0, #0x0
+  00a4..00a8 op=59 iput v0, v1, LX/178;->A00:I
+  00a8..00aa op=11 return-object v1
+  00aa..00ac op=11 return-object v3
+  # exception table: 0 try range(s)
+.end method

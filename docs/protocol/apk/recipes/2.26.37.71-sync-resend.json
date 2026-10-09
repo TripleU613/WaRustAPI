@@ -1,0 +1,272 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "job-run": {
+      "class": "Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;",
+      "method": "A0G",
+      "method_shorty": "V",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "job-original-message": {
+      "class": "Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;",
+      "method": "A00",
+      "method_shorty": "LL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "job-constructor": {
+      "class": "Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;",
+      "method": "<init>",
+      "method_shorty": "VLLJJZ",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "job-requirements": {
+      "class": "Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;",
+      "method": "A0H",
+      "method_shorty": "Z",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "job-retry": {
+      "class": "Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;",
+      "method": "A0I",
+      "method_shorty": "ZL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "fetch-result": {
+      "class": "LX/DFC;",
+      "method": "C8f",
+      "method_shorty": "VLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "fetch-error": {
+      "class": "LX/DFC;",
+      "method": "BmU",
+      "method_shorty": "VLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "fetch-delivery-failure": {
+      "class": "LX/DFC;",
+      "method": "BjL",
+      "method_shorty": "VL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "result-order": {
+      "class": "LX/DPh;",
+      "method": "invoke",
+      "method_shorty": "LLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "result-worker": {
+      "class": "LX/DNs;",
+      "method": "run",
+      "method_shorty": "V",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "worker-factory": {
+      "class": "LX/DNs;",
+      "method": "A00",
+      "method_shorty": "LLLLI",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "worker-constructor": {
+      "class": "LX/DNs;",
+      "method": "<init>",
+      "method_shorty": "VLLLI",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "bundle-processing": {
+      "class": "LX/14J;",
+      "method": "A04",
+      "method_shorty": "VLI",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "original-receipt-selector": {
+      "class": "LX/0Z4;",
+      "method": "A04",
+      "method_shorty": "LL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "original-receipt-store": {
+      "class": "LX/0Z6;",
+      "method": "A0O",
+      "method_shorty": "LL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "original-receipt-cache": {
+      "class": "LX/0Z5;",
+      "method": "A05",
+      "method_shorty": "LL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "candidate-targets": {
+      "class": "LX/15x;",
+      "method": "A04",
+      "method_shorty": "LLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "special-candidate-targets": {
+      "class": "LX/15x;",
+      "method": "A08",
+      "method_shorty": "LL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "post-version-target-filter": {
+      "class": "LX/15x;",
+      "method": "A09",
+      "method_shorty": "VLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "registration-encoding": {
+      "class": "LX/1Lz;",
+      "method": "A03",
+      "method_shorty": "LI",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "true-constant": {
+      "class": "LX/1xh;",
+      "method": "A1A",
+      "method_shorty": "L",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "false-constant": {
+      "class": "LX/1xh;",
+      "method": "A19",
+      "method_shorty": "L",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/outgoing_group.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    }
+  }
+}

@@ -136,3 +136,8 @@ now preserve actual direct/group target users' nullable versions atomically with
 original reservations, after replacement hooks. Historical sends remain unknown.
 Native receipt caches, canonical/default/hosted gates and full resends remain
 unported; diagnostic equality is not a resend permission.
+
+**Subsequent confirmed static trace:** [sync/resend inputs](sync-resend.md)
+now preserve the distinct key_fetch request/reply completion, current receipt
+cache membership, candidate subtraction and post-version target filtering.
+An empty bundle result can complete true; equality is only one selection stage.

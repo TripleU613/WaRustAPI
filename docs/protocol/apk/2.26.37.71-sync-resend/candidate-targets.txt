@@ -1,0 +1,84 @@
+# APK-derived structural disassembly: LX/15x;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(LLL) flags=0x9 registers=6
+  # full signature: LX/15x;->A04(LX/178;LX/15x;)Ljava/util/HashSet;
+  0000..0004 op=54 iget-object v0, v4, LX/178;->A0i:LX/1gc;
+  0004..0008 op=54 iget-object v2, v0, LX/1gc;->A00:LX/0Cy;
+  0008..000c op=52 iget v0, v4, LX/178;->A0h:I
+  000c..0012 op=71 invoke-static {v2, v0}, LX/1Yx;->A04(Lcom/whatsapp/infra/core/jid/Jid;I)Z
+  0012..0014 op=0a move-result v0
+  0014..0018 op=38 if-eqz v0, +0x11
+  0018..001c op=1f check-cast v4, LX/1iZ;
+  001c..0022 op=6e invoke-virtual {v4}, LX/1iZ;->A0r()LX/0Cy;
+  0022..0024 op=0c move-result-object v1
+  0024..002a op=71 invoke-static {v1}, LX/00K;->A06(Ljava/lang/Object;)V
+  002a..002c op=12 const/4 v0, #0x0
+  002c..0032 op=6e invoke-virtual {v5, v1, v0}, LX/15x;->A05(LX/0Cy;LX/178;)Ljava/util/HashSet;
+  0032..0034 op=0c move-result-object v1
+  0034..0036 op=11 return-object v1
+  0036..003a op=20 instance-of v0, v2, LX/0c3;
+  003a..003e op=38 if-eqz v0, +0x2d
+  003e..0042 op=54 iget-object v0, v5, LX/15x;->A09:LX/0Z4;
+  0042..0048 op=6e invoke-virtual {v0, v4}, LX/0Z4;->A03(LX/178;)Ljava/util/Set;
+  0048..004a op=0c move-result-object v1
+  004a..004e op=22 new-instance v3, Ljava/util/HashSet;
+  004e..0054 op=70 invoke-direct {v3, v1}, Ljava/util/HashSet;-><init>(Ljava/util/Collection;)V
+  0054..0058 op=54 iget-object v0, v5, LX/15x;->A0A:LX/0AH;
+  0058..005e op=71 invoke-static {v0, v1}, LX/0DE;->A0F(LX/0AH;Ljava/util/Set;)Ljava/util/Set;
+  005e..0060 op=0c move-result-object v0
+  0060..0066 op=72 invoke-interface {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+  0066..0068 op=0c move-result-object v2
+  0068..006e op=72 invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+  006e..0070 op=0a move-result v0
+  0070..0074 op=38 if-eqz v0, +0x1f
+  0074..007a op=72 invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  007a..007c op=0c move-result-object v1
+  007c..0080 op=1f check-cast v1, Lcom/whatsapp/infra/core/jid/UserJid;
+  0080..0084 op=54 iget-object v0, v5, LX/15x;->A06:LX/0bN;
+  0084..008a op=6e invoke-virtual {v0, v1}, LX/0bN;->A0B(Lcom/whatsapp/infra/core/jid/UserJid;)Ljava/util/HashSet;
+  008a..008c op=0c move-result-object v0
+  008c..0092 op=72 invoke-interface {v3, v0}, Ljava/util/Set;->addAll(Ljava/util/Collection;)Z
+  0092..0094 op=28 goto -0x15
+  0094..009a op=71 invoke-static {v2}, LX/0DE;->A0l(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  009a..009c op=0a move-result v0
+  009c..009e op=12 const/4 v1, #0x0
+  009e..00a2 op=38 if-eqz v0, -0x35
+  00a2..00a4 op=12 const/4 v0, #0x0
+  00a4..00aa op=6e invoke-virtual {v5, v2, v4, v0}, LX/15x;->A06(LX/0Cy;LX/178;Z)Ljava/util/HashSet;
+  00aa..00ac op=0c move-result-object v1
+  00ac..00ae op=11 return-object v1
+  00ae..00b2 op=54 iget-object v0, v5, LX/15x;->A01:LX/00s;
+  00b2..00b8 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  00b8..00ba op=0c move-result-object v0
+  00ba..00be op=1f check-cast v0, LX/CPQ;
+  00be..00c4 op=6e invoke-virtual {v0, v4}, LX/CPQ;->A00(LX/178;)Z
+  00c4..00c6 op=0a move-result v1
+  00c6..00ca op=54 iget-object v0, v5, LX/15x;->A06:LX/0bN;
+  00ca..00ce op=38 if-eqz v1, +0x28
+  00ce..00d4 op=6e invoke-virtual {v0}, LX/0bN;->A09()Ljava/util/HashSet;
+  00d4..00d6 op=0c move-result-object v0
+  00d6..00dc op=72 invoke-interface {v3, v0}, Ljava/util/Set;->addAll(Ljava/util/Collection;)Z
+  00dc..00e0 op=54 iget-object v2, v5, LX/15x;->A0B:LX/08Z;
+  00e0..00e6 op=6e invoke-virtual {v2}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00e6..00ec op=6e invoke-virtual {v3}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+  00ec..00ee op=0c move-result-object v1
+  00ee..00f4 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  00f4..00f6 op=0a move-result v0
+  00f6..00fa op=38 if-eqz v0, +0x17
+  00fa..0100 op=72 invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0100..0102 op=0c move-result-object v0
+  0102..0106 op=1f check-cast v0, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0106..010c op=72 invoke-interface {v2, v0}, LX/08Z;->BLM(Lcom/whatsapp/infra/core/jid/DeviceJid;)Z
+  010c..010e op=0a move-result v0
+  010e..0112 op=38 if-eqz v0, -0x10
+  0112..0118 op=72 invoke-interface {v1}, Ljava/util/Iterator;->remove()V
+  0118..011a op=28 goto -0x15
+  011a..0120 op=6e invoke-virtual {v0}, LX/0bN;->A0A()Ljava/util/HashSet;
+  0120..0122 op=0c move-result-object v0
+  0122..0124 op=28 goto -0x26
+  0124..0126 op=11 return-object v3
+  # exception table: 0 try range(s)
+.end method

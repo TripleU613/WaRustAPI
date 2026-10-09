@@ -1,0 +1,22 @@
+APK 2.26.37.71, SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Research date 2026-10-09. Ordinary DEX / local source audit.
+
+Root: retained receipt-version/resend-message-version-filter.txt, SyncDeviceAndResendMessageJob.A0G.
+Read whole native job and target-manager classes locally; scoped recipe retains interpreted methods.
+Outbound literal is key_fetch, with device registration in four binary big-endian bytes (1Lz.A03).
+DFC.C8f callback -> DNs.A00 factory / <init> field mapping -> run discriminator 47 -> 14J.A04.
+DPh.invoke discriminator 0 compares device id values; DO5 selector 8 wrapper transitive semantics untraced.
+Both Boolean helpers independently traced: 1xh.A1A true; 1xh.A19 false.
+0Z4.A04 -> 0Z5.A0O abstract declaration, concrete 0Z6.A0O -> 0Z5.A05 -> 7hf.A00 key set.
+0Z5.A05 itself has no timestamp filter; lower cache-load lifecycle is not newly traced.
+15x.A09 mutates already version-filtered devices through additional namespace/migration/filter branches.
+A0G expiry: positive expiration and current > expiration returns; equality follows execution.
+
+Negative runtime search:
+  rg -n 'key_fetch' crates/whatsapp-api/src crates/whatsapp-cli/src
+  No implementation hit at parent a4ed0f5; research comment added afterwards is not a worker.
+Existing devices::after_primary_identity_change_in schedules ordinary device refresh only.
+No traced live key_fetch reply, new peer identity, device-sync resend or migrated receipt cache.
+No authority to treat true callback as all signed bundles installed; native install nonzero status can log and continue.
+No authority to turn user hashes/device counts into native per-device receipt membership.
+No live account operation or new request performed.

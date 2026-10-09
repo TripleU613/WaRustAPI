@@ -1,0 +1,17 @@
+# APK-derived structural disassembly: LX/DFC;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method BjL(VL) flags=0x1 registers=4
+  # full signature: LX/DFC;->BjL(Ljava/lang/String;)V
+  0000..0004 op=54 iget-object v1, v2, LX/DFC;->A05:LX/CGn;
+  0004..0008 op=1a const-string v0, "FetchPrekeyForMissingDeviceManager/requestPrekeyForMissingDevice delivery failure"
+  0008..000e op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+  000e..0012 op=54 iget-object v1, v1, LX/CGn;->A01:LX/AzY;
+  0012..0018 op=71 invoke-static {}, LX/1xh;->A19()Ljava/lang/Boolean;
+  0018..001a op=0c move-result-object v0
+  001a..0020 op=6e invoke-virtual {v1, v0}, LX/AzY;->BjN(Ljava/lang/Object;)V
+  0020..0022 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
