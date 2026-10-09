@@ -1,0 +1,21 @@
+# APK-derived structural disassembly: Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VL) flags=0x10001 registers=4
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v3, v0}, LX/00h;->A0A(VLI)
+  0008..000c op=22 new-instance v1, LX/Azz;
+  000c..0012 op=70 invoke-direct {v1}, LX/Azz;-><init>(V)
+  0012..0016 op=1a const-string v0, "generate-tc-token"
+  0016..001c op=71 invoke-static {v0, v1}, LX/Ayk;->A1L(VLL)
+  001c..0022 op=6e invoke-virtual {v1}, LX/Azz;->A00(L)
+  0022..0024 op=0c move-result-object v0
+  0024..002a op=70 invoke-direct {v2, v0}, Lorg/whispersystems/jobqueue/Job;-><init>(VL)
+  002a..0030 op=6e invoke-virtual {v3}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString(L)
+  0030..0032 op=0c move-result-object v0
+  0032..0036 op=5b iput-object v0, v2, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->toJid:Ljava/lang/String;
+  0036..0038 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

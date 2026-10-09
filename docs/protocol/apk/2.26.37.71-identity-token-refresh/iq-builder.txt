@@ -1,0 +1,12 @@
+# APK-derived structural disassembly: LX/GAW;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0l(LLL) flags=0x9 registers=4
+  0000..0004 op=1a const-string v1, "iq"
+  0004..0008 op=22 new-instance v0, LX/0hs;
+  0008..000e op=70 invoke-direct {v0, v2, v1, v3}, LX/0hs;-><init>(VLLL)
+  000e..0010 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

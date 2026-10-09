@@ -1,0 +1,340 @@
+{
+  "callback-create": {
+    "class": "LX/IX5;",
+    "file": "callback-create.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "method_shorty": "VLLLLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "callback-delivery-failure": {
+    "class": "LX/IX5;",
+    "file": "callback-delivery-failure.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "BjL",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "callback-error": {
+    "class": "LX/IX5;",
+    "file": "callback-error.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "BmU",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "callback-result": {
+    "class": "LX/IX5;",
+    "file": "callback-result.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "C8f",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "iq-builder": {
+    "class": "LX/GAW;",
+    "file": "iq-builder.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0l",
+    "method_shorty": "LLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "iq-destination": {
+    "class": "LX/GAZ;",
+    "file": "iq-destination.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A1T",
+    "method_shorty": "VLI",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "issue-maximum": {
+    "class": "LX/0C6;",
+    "file": "issue-maximum.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0i",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "job-added": {
+    "class": "Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;",
+    "file": "job-added.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0E",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "job-cancel": {
+    "class": "Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;",
+    "file": "job-cancel.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0F",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "job-create": {
+    "class": "Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;",
+    "file": "job-create.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "job-inject": {
+    "class": "Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;",
+    "file": "job-inject.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "CRp",
+    "method_shorty": "VL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "job-retry": {
+    "class": "Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;",
+    "file": "job-retry.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0I",
+    "method_shorty": "ZL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "job-run": {
+    "class": "Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;",
+    "file": "job-run.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0G",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "non-null-values": {
+    "class": "LX/0C6;",
+    "file": "non-null-values.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A1B",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "sent-maximum": {
+    "class": "LX/0C6;",
+    "file": "sent-maximum.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0j",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "server-jid": {
+    "class": "LX/1S7;",
+    "file": "server-jid.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "getServer",
+    "method_shorty": "L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "threshold-buckets": {
+    "class": "LX/0q3;",
+    "file": "threshold-buckets.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "method_shorty": "JLJJ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "threshold-other": {
+    "class": "LX/0q3;",
+    "file": "threshold-other.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "method_shorty": "J",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "threshold-valid": {
+    "class": "LX/0q3;",
+    "file": "threshold-valid.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "method_shorty": "J",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "token-combine": {
+    "class": "LX/HOF;",
+    "file": "token-combine.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "token-multiple-rows": {
+    "class": "LX/0q4;",
+    "file": "token-multiple-rows.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0M",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "token-read": {
+    "class": "LX/0q2;",
+    "file": "token-read.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0O",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "token-row-decode": {
+    "class": "LX/0q4;",
+    "file": "token-row-decode.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A08",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "token-single-row": {
+    "class": "LX/0q4;",
+    "file": "token-single-row.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0J",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "token-success": {
+    "class": "LX/0q2;",
+    "file": "token-success.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0V",
+    "method_shorty": "VLJ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "token-value": {
+    "class": "LX/HYS;",
+    "file": "token-value.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "method_shorty": "VLJ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  }
+}

@@ -1849,3 +1849,16 @@ One 45-second receive-only window authenticated and stopped cleanly with sends
 and reconnect disabled. Captures grew 497→502 with originals retained; keys,
 actions, receipts, outbox and event summaries were unchanged. No group keep
 payload was available, so fresh keep semantics remain unverified.
+
+2026-10-09 — **Confirmed static:** identity-change token refresh now has traced
+outbound issue/send storage, bucket expiry formula, request destination/time,
+callbacks and explicit completion/cancellation/retry branches. Incoming token
+bytes are not its outbound state. Native 4xx IQ refusal suppresses job retry;
+base terminal dispatch, active properties and canonical counterpart gates remain
+unknown. Rust refresh sending/storage is still unported; account state was
+untouched. [Evidence and port boundary](identity-token-refresh.md).
+
+Token-refresh research validation: 26 topics / 31 files / 104,087 bytes reproduce
+from the comparison APK; checksum/self-diff, 63 xtask tests, API symbols, CLI
+reference, formatting and repository hygiene passed. Source changes are a
+comment only. No live refresh or identity replacement was attempted.

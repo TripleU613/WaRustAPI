@@ -137,11 +137,20 @@ three independent grounds, all confirmed:**
   `ContactPickerFragment`, `LX/6c8`, `LX/7iF`, the `LX/0YK` accessor) with no
   privacy-token code near any of them. The APK has essentially no privacy-token
   logging: one `PrivacyToken` string, in `LX/IVf->getTag`.
-- `GeneratePrivacyTokenJob->A0G` **cannot initiate** a relationship. It calls
+- **Earlier interpretation, superseded below:**
+  `GeneratePrivacyTokenJob->A0G` **cannot initiate** a relationship. It calls
   `LX/0q2->A0O(jid)` for a stored token, returns on null, and returns again if
   the stored `t` is older than `LX/0q3->A01()`. It only echoes or refreshes a
   token it already holds, so a recipient could not send one first even if we
   implemented it.
+
+**Subsequent correction (2026-10-09, APK 37.71):** the job reads outbound
+issue/send timestamps from wa_trusted_contacts_send, rather than incoming token
+bytes. Counterpart aggregation can use a prior issue timestamp, so this does
+not prove a previously acknowledged token send. The job still requires existing
+outbound state and cannot derive it from our incoming token rows. Its complete
+request includes to=s.whatsapp.net. See the [job trace](identity-token-refresh.md)
+for thresholds, callbacks and remaining recovery/canonicalization limits.
 
 For the record, the token's shape is confirmed —
 `<iq xmlns="privacy" type="set"><tokens><token jid=<UserJid> type="trusted_contact" t=<long>/></tokens></iq>`,

@@ -1,0 +1,58 @@
+# APK-derived structural disassembly: LX/0q3;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(JLJJ) flags=0x19 registers=17
+  0000..0004 op=54 iget-object v0, v12, LX/0q3;->A01:LX/08B;
+  0004..000a op=6e invoke-virtual {v0}, LX/08B;->A04(J)
+  000a..000c op=0b move-result-wide v9
+  000c..0010 op=16 const-wide/16 v0, #0x3e8
+  0010..0012 op=be ?? v9, v0
+  0012..0018 op=17 const-wide/32 v0, #0xeff100
+  0018..001c op=9c sub-long v3, v9, v0
+  001c..0020 op=1a const-string v12, ", bucketLengthSec = "
+  0020..0024 op=16 const-wide/16 v1, #0x0
+  0024..0026 op=04 move-wide v5, v13
+  0026..002a op=31 cmp-long v0, v13, v1
+  002a..002c op=04 move-wide v7, v15
+  002c..0030 op=3d if-lez v0, +0x3e
+  0030..0034 op=31 cmp-long v0, v15, v1
+  0034..0038 op=3d if-lez v0, +0x3a
+  0038..003c op=9e div-long v1, v9, v13
+  003c..0040 op=16 const-wide/16 v15, #0x1
+  0040..0044 op=9c sub-long v13, v7, v15
+  0044..0048 op=31 cmp-long v0, v1, v13
+  0048..004c op=3b if-gez v0, +0x29
+  004c..0050 op=1a const-string v0, "Strange bucket configuration: currentBucket = "
+  0050..0054 op=22 new-instance v11, Ljava/lang/StringBuilder;
+  0054..005a op=70 invoke-direct {v11, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+  005a..0060 op=6e invoke-virtual {v11, v1, v2}, Ljava/lang/StringBuilder;->append(LJ)
+  0060..0064 op=1a const-string v0, ", currentTimeSec = "
+  0064..006a op=6e invoke-virtual {v11, v0}, Ljava/lang/StringBuilder;->append(LL)
+  006a..0070 op=6e invoke-virtual {v11, v9, v10}, Ljava/lang/StringBuilder;->append(LJ)
+  0070..0074 op=1a const-string v0, ", numValidBuckets = "
+  0074..007a op=6e invoke-virtual {v11, v0}, Ljava/lang/StringBuilder;->append(LL)
+  007a..0080 op=6e invoke-virtual {v11, v7, v8}, Ljava/lang/StringBuilder;->append(LJ)
+  0080..0086 op=6e invoke-virtual {v11, v12}, Ljava/lang/StringBuilder;->append(LL)
+  0086..008c op=6e invoke-virtual {v11, v5, v6}, Ljava/lang/StringBuilder;->append(LJ)
+  008c..0092 op=6e invoke-virtual {v11}, Ljava/lang/Object;->toString(L)
+  0092..0094 op=0c move-result-object v0
+  0094..009a op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+  009a..009c op=bc sub-long/2addr v1, v13
+  009c..009e op=bd mul-long/2addr v1, v5
+  009e..00a4 op=71 invoke-static {v1, v2, v3, v4}, Ljava/lang/Math;->max(JJJ)
+  00a4..00a6 op=0b move-result-wide v0
+  00a6..00a8 op=10 return-wide v0
+  00a8..00ac op=1a const-string v1, "Bad bucket configuration: numValidBuckets = "
+  00ac..00b0 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  00b0..00b6 op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(VL)
+  00b6..00bc op=6e invoke-virtual {v0, v7, v8}, Ljava/lang/StringBuilder;->append(LJ)
+  00bc..00c2 op=6e invoke-virtual {v0, v12}, Ljava/lang/StringBuilder;->append(LL)
+  00c2..00c8 op=6e invoke-virtual {v0, v13, v14}, Ljava/lang/StringBuilder;->append(LJ)
+  00c8..00ce op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString(L)
+  00ce..00d0 op=0c move-result-object v0
+  00d0..00d6 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+  00d6..00d8 op=10 return-wide v3
+  # exception table: 0 try range(s)
+.end method

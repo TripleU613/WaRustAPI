@@ -1,0 +1,55 @@
+# APK-derived structural disassembly: LX/0q2;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0O(LL) flags=0x11 registers=10
+  0000..0002 op=12 const/4 v4, #0x0
+  0002..0008 op=71 invoke-static {v9, v4}, LX/00h;->A0A(VLI)
+  0008..000e op=6e invoke-virtual {v8, v9}, LX/0q2;->A0L(LL)
+  000e..0010 op=0c move-result-object v7
+  0010..0014 op=54 iget-object v0, v8, LX/0q2;->A07:LX/00l;
+  0014..001a op=72 invoke-interface {v0}, LX/00l;->getValue(L)
+  001a..001c op=0c move-result-object v6
+  001c..0022 op=71 invoke-static {v6}, LX/00h;->A06(VL)
+  0022..0026 op=1f check-cast v6, Ljava/util/Map;
+  0026..002c op=72 invoke-interface {v6, v7}, Ljava/util/Map;->containsKey(ZL)
+  002c..002e op=0a move-result v0
+  002e..0032 op=39 if-nez v0, +0x3c
+  0032..0038 op=70 invoke-direct {v8, v9, v7}, LX/0q2;->A02(LLL)
+  0038..003a op=0c move-result-object v3
+  003a..003e op=38 if-eqz v3, +0x2f
+  003e..0042 op=54 iget-object v2, v8, LX/0q2;->A05:LX/0q4;
+  0042..0044 op=12 const/4 v0, #0x2
+  0044..0048 op=23 new-array v1, v0, [Lcom/whatsapp/infra/core/jid/UserJid;
+  0048..004c op=4d aput-object v7, v1, v4
+  004c..004e op=12 const/4 v0, #0x1
+  004e..0052 op=4d aput-object v3, v1, v0
+  0052..0058 op=71 invoke-static {v1}, LX/08J;->A0N(LL)
+  0058..005a op=0c move-result-object v0
+  005a..0060 op=6e invoke-virtual {v2, v0}, LX/0q4;->A0M(LL)
+  0060..0062 op=0c move-result-object v0
+  0062..0068 op=72 invoke-interface {v0}, Ljava/util/Map;->values(L)
+  0068..006a op=0c move-result-object v0
+  006a..0070 op=71 invoke-static {v0}, LX/HOF;->A00(LL)
+  0070..0072 op=0c move-result-object v0
+  0072..0076 op=38 if-eqz v0, +0xf
+  0076..007a op=53 iget-wide v4, v0, LX/HYS;->A00:J
+  007a..007e op=54 iget-object v1, v8, LX/0q2;->A04:LX/0q3;
+  007e..0084 op=6e invoke-virtual {v1}, LX/0q3;->A01(J)
+  0084..0086 op=0b move-result-wide v2
+  0086..008a op=31 cmp-long v1, v4, v2
+  008a..008e op=3b if-gez v1, +0x3
+  008e..0090 op=12 const/4 v0, #0x0
+  0090..0096 op=72 invoke-interface {v6, v7, v0}, Ljava/util/Map;->put(LLL)
+  0096..0098 op=11 return-object v0
+  0098..009c op=54 iget-object v0, v8, LX/0q2;->A05:LX/0q4;
+  009c..00a2 op=6e invoke-virtual {v0, v7}, LX/0q4;->A0J(LL)
+  00a2..00a4 op=0c move-result-object v0
+  00a4..00a6 op=28 goto -0x19
+  00a6..00ac op=72 invoke-interface {v6, v7}, Ljava/util/Map;->get(LL)
+  00ac..00ae op=0c move-result-object v0
+  00ae..00b2 op=1f check-cast v0, LX/HYS;
+  00b2..00b4 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,28 @@
+# APK-derived structural disassembly: LX/IX5;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method BjL(VL) flags=0x1 registers=6
+  0000..0004 op=52 iget v1, v4, LX/IX5;->$t:I
+  0004..0006 op=12 const/4 v0, #0x0
+  0006..000a op=38 if-eqz v1, +0x12
+  000a..0010 op=71 invoke-static {v5, v0}, LX/00h;->A0A(VLI)
+  0010..0014 op=54 iget-object v1, v4, LX/IX5;->A00:Ljava/lang/Object;
+  0014..0018 op=1f check-cast v1, LX/AzY;
+  0018..001c op=22 new-instance v0, LX/HFb;
+  001c..0022 op=70 invoke-direct {v0, v5}, LX/HFb;-><init>(VL)
+  0022..0028 op=6e invoke-virtual {v1, v0}, LX/AzY;->BjK(VL)
+  0028..002a op=0e return-void
+  002a..0030 op=71 invoke-static {v5, v0}, LX/00h;->A0A(VLI)
+  0030..0034 op=1a const-string v0, "encb/EncryptedBackupProtocolHelper/sendBeginLoginIq/onDeliveryFailure id="
+  0034..003a op=71 invoke-static {v0, v5}, LX/1xk;->A1S(VLL)
+  003a..003e op=54 iget-object v3, v4, LX/IX5;->A00:Ljava/lang/Object;
+  003e..0042 op=1f check-cast v3, LX/IUb;
+  0042..0044 op=12 const/4 v2, #0x3
+  0044..0046 op=12 const/4 v1, #0xff
+  0046..004a op=1a const-string v0, "delivery failure"
+  004a..0050 op=72 invoke-interface {v3, v0, v2, v1}, LX/J1X;->BmK(VLII)
+  0050..0052 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

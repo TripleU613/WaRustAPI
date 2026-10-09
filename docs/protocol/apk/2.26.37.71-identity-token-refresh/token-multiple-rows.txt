@@ -1,0 +1,85 @@
+# APK-derived structural disassembly: LX/0q4;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0M(LL) flags=0x11 registers=9
+  0000..0002 op=12 const/4 v6, #0x0
+  0002..0008 op=71 invoke-static {v8, v6}, LX/00h;->A0A(VLI)
+  0008..000c op=54 iget-object v0, v7, LX/0gr;->A00:LX/0aD;
+  000c..0012 op=6e invoke-virtual {v0}, LX/0aC;->A06(L)
+  0012..0014 op=0c move-result-object v5
+  0014..0018 op=54 iget-object v4, v5, LX/0ZN;->A02:LX/0IY;
+  0018..001e op=72 invoke-interface {v8}, Ljava/util/Collection;->size(I)
+  001e..0020 op=0a move-result v0
+  0020..0026 op=71 invoke-static {v0}, LX/0ZU;->A00(LI)
+  0026..0028 op=0c move-result-object v2
+  0028..002c op=1a const-string v1, "SELECT jid, sent_tc_token_timestamp, real_issue_timestamp FROM wa_trusted_contacts_send WHERE jid IN "
+  002c..0030 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0030..0036 op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(VL)
+  0036..003c op=6e invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(LL)
+  003c..0042 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString(L)
+  0042..0044 op=0c move-result-object v3
+  0044..0048 op=13 const/16 v0, #0xa
+  0048..004e op=71 invoke-static {v8, v0}, LX/0AD;->A0G(ILI)
+  004e..0050 op=0a move-result v0
+  0050..0054 op=22 new-instance v2, Ljava/util/ArrayList;
+  0054..005a op=70 invoke-direct {v2, v0}, Ljava/util/ArrayList;-><init>(VI)
+  005a..0060 op=72 invoke-interface {v8}, Ljava/util/Collection;->iterator(L)
+  0060..0062 op=0c move-result-object v1
+  0062..0068 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext(Z)
+  0068..006a op=0a move-result v0
+  006a..006e op=38 if-eqz v0, +0x10
+  006e..0074 op=72 invoke-interface {v1}, Ljava/util/Iterator;->next(L)
+  0074..0076 op=0c move-result-object v0
+  0076..007a op=1f check-cast v0, Lcom/whatsapp/infra/core/jid/UserJid;
+  007a..0080 op=6e invoke-virtual {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString(L)
+  0080..0082 op=0c move-result-object v0
+  0082..0088 op=6e invoke-virtual {v2, v0}, Ljava/util/AbstractCollection;->add(ZL)
+  0088..008a op=28 goto -0x13
+  008a..008e op=23 new-array v0, v6, [Ljava/lang/String;
+  008e..0094 op=6e invoke-virtual {v2, v0}, Ljava/util/AbstractCollection;->toArray(LL)
+  0094..0096 op=0c move-result-object v1
+  0096..009a op=1f check-cast v1, [Ljava/lang/String;
+  009a..009e op=1a const-string v0, "GET_SENT_TOKENS_BY_JIDS"
+  009e..00a4 op=6e invoke-virtual {v4, v3, v0, v1}, LX/0IY;->A0A(LLLL)
+  00a4..00a6 op=0c move-result-object v4
+  00a6..00aa op=1a const-string v0, "jid"
+  00aa..00b0 op=72 invoke-interface {v4, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  00b0..00b2 op=0a move-result v3
+  00b2..00b6 op=22 new-instance v2, Ljava/util/LinkedHashMap;
+  00b6..00bc op=70 invoke-direct {v2}, Ljava/util/LinkedHashMap;-><init>(V)
+  00bc..00c2 op=72 invoke-interface {v4}, Landroid/database/Cursor;->moveToNext(Z)
+  00c2..00c4 op=0a move-result v0
+  00c4..00c8 op=38 if-eqz v0, +0x16
+  00c8..00cc op=62 sget-object v1, Lcom/whatsapp/infra/core/jid/UserJid;->Companion:LX/0D8;
+  00cc..00d2 op=72 invoke-interface {v4, v3}, Landroid/database/Cursor;->getString(LI)
+  00d2..00d4 op=0c move-result-object v0
+  00d4..00da op=6e invoke-virtual {v1, v0}, LX/0D8;->A02(LL)
+  00da..00dc op=0c move-result-object v1
+  00dc..00e0 op=38 if-eqz v1, -0x10
+  00e0..00e6 op=71 invoke-static {v4}, LX/0q4;->A08(LL)
+  00e6..00e8 op=0c move-result-object v0
+  00e8..00ee op=72 invoke-interface {v2, v1, v0}, Ljava/util/Map;->put(LLL)
+  00ee..00f0 op=28 goto -0x19
+  00f0..00f6 op=72 invoke-interface {v4}, Landroid/database/Cursor;->close(V)
+  00f6..00fc op=6e invoke-virtual {v5}, LX/0ZN;->close(V)
+  00fc..00fe op=11 return-object v2
+  00fe..0100 op=0d move-exception v1
+  0100..0102 op=27 throw v1
+  0102..0104 op=0d move-exception v0
+  0104..010a op=71 invoke-static {v4, v1}, LX/07i;->A00(VLL)
+  010a..010c op=27 throw v0
+  010c..010e op=0d move-exception v1
+  010e..0110 op=27 throw v1
+  0110..0112 op=0d move-exception v0
+  0112..0118 op=71 invoke-static {v5, v1}, LX/07i;->A00(VLL)
+  0118..011a op=27 throw v0
+  # exception table: 6 try range(s)
+  # catch <all> code_units 000a..0053 -> 0086
+  # catch <all> code_units 0053..0078 -> 007f
+  # catch <all> code_units 0078..007b -> 0086
+  # catch <all> code_units 0080..0081 -> 0081
+  # catch <all> code_units 0082..0086 -> 0086
+  # catch <all> code_units 0087..0088 -> 0088
+.end method

@@ -108,11 +108,16 @@ Duplicate admitted users do not enqueue another job through this method.
 
 `HxT.A00` uses property `0x37df` (14303) to select `0q2.A0L`; its other branch
 may resolve a LID through `0Xw.A0H`, retaining the original when unresolved.
-The effective property, full canonical token scope, pending-set initialization,
-job completion/unmark policy and freshness threshold remain **unknown**.
-The prior [privacy-token job evidence](status.md#refuted-privacy-tokens-do-not-gate-status-delivery) shows that this
-job acts on an existing token, not permission to manufacture one or initiate a
-relationship.
+The effective canonicalization/freshness properties, full token scope and base
+job-queue terminal dispatch remain **unknown**. Rehydration calls A05 to restore
+pending membership; complete manager initialization is still untraced.
+The subsequent [job lifecycle trace](identity-token-refresh.md) confirms the
+threshold formula, outbound timestamp input, request, callbacks and explicit
+unmark/retry branches. It corrects the assumption that incoming token bytes
+supply the job's state.
+The [status evidence](status.md#refuted-privacy-tokens-do-not-gate-status-delivery)
+retains the earlier interpretation and its correction. The traced job requires
+existing outbound issue/send state; incoming bytes cannot manufacture that state.
 
 ## Rust boundary and next port work
 

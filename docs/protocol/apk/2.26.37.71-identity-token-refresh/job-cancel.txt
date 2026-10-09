@@ -1,0 +1,24 @@
+# APK-derived structural disassembly: Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0F(V) flags=0x1 registers=4
+  0000..0004 op=54 iget-object v1, v3, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A01:Lcom/whatsapp/infra/core/jid/UserJid;
+  0004..0008 op=38 if-eqz v1, +0x10
+  0008..000c op=54 iget-object v0, v3, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A02:LX/HxT;
+  000c..0010 op=39 if-nez v0, +0x9
+  0010..0014 op=1a const-string v0, "privacyTokenSendManager"
+  0014..001a op=71 invoke-static {v0}, LX/00h;->A0I(VL)
+  001a..001c op=12 const/4 v0, #0x0
+  001c..001e op=27 throw v0
+  001e..0024 op=6e invoke-virtual {v0, v1}, LX/HxT;->A03(VL)
+  0024..0028 op=53 iget-wide v1, v3, Lorg/whispersystems/jobqueue/Job;->A01:J
+  0028..002c op=1a const-string v0, "; persistentId="
+  002c..0032 op=71 invoke-static {v1, v2, v0}, LX/1xj;->A13(LJL)
+  0032..0034 op=0c move-result-object v1
+  0034..0038 op=1a const-string v0, "canceled generate privacy token job "
+  0038..003e op=71 invoke-static {v0, v1}, LX/1xp;->A1L(VLL)
+  003e..0040 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

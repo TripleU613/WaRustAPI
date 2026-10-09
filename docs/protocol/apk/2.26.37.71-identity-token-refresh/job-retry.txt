@@ -1,0 +1,39 @@
+# APK-derived structural disassembly: Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0I(ZL) flags=0x1 registers=7
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v6, v0}, LX/00h;->A0A(VLI)
+  0008..000e op=6e invoke-virtual {v6}, Ljava/lang/Throwable;->getCause(L)
+  000e..0010 op=0c move-result-object v1
+  0010..0014 op=20 instance-of v0, v1, LX/HFe;
+  0014..0018 op=38 if-eqz v0, +0x2e
+  0018..001c op=1f check-cast v1, LX/HFe;
+  001c..0020 op=54 iget-object v0, v1, LX/HFe;->node:LX/0hs;
+  0020..0024 op=38 if-eqz v0, +0x28
+  0024..002a op=71 invoke-static {v0}, LX/1V7;->A00(IL)
+  002a..002c op=0a move-result v1
+  002c..0030 op=13 const/16 v0, #0x190
+  0030..0034 op=36 if-gt v0, v1, +0x20
+  0034..0038 op=13 const/16 v0, #0x1f4
+  0038..003c op=35 if-ge v1, v0, +0x1c
+  003c..003e op=12 const/4 v4, #0x0
+  003e..0042 op=1a const-string v3, "not "
+  0042..0046 op=53 iget-wide v1, v5, Lorg/whispersystems/jobqueue/Job;->A01:J
+  0046..004a op=1a const-string v0, "; persistentId="
+  004a..0050 op=71 invoke-static {v1, v2, v0}, LX/1xj;->A13(LJL)
+  0050..0052 op=0c move-result-object v2
+  0052..0056 op=1a const-string v0, "exception while running generate privacy token job, "
+  0056..005c op=71 invoke-static {v0, v3}, LX/000;->A08(LLL)
+  005c..005e op=0c move-result-object v1
+  005e..0062 op=1a const-string v0, "retrying"
+  0062..0068 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0068..006e op=71 invoke-static {v2, v1, v6}, LX/Ayk;->A1K(VLLL)
+  006e..0070 op=0f return v4
+  0070..0072 op=12 const/4 v4, #0x1
+  0072..0076 op=1a const-string v3, ""
+  0076..0078 op=28 goto -0x1a
+  # exception table: 0 try range(s)
+.end method

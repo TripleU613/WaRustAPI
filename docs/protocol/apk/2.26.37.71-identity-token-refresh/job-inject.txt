@@ -1,0 +1,35 @@
+# APK-derived structural disassembly: Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CRp(VL) flags=0x1 registers=4
+  0000..0006 op=71 invoke-static {}, LX/1xm;->A0V(L)
+  0006..0008 op=0c move-result-object v0
+  0008..000c op=5b iput-object v0, v2, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A03:LX/0h8;
+  000c..0010 op=13 const/16 v0, #0x1330
+  0010..0016 op=71 invoke-static {v0}, LX/00C;->A02(LI)
+  0016..0018 op=0c move-result-object v0
+  0018..001c op=1f check-cast v0, LX/0q2;
+  001c..0020 op=5b iput-object v0, v2, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A00:LX/0q2;
+  0020..0024 op=13 const/16 v0, #0x1333
+  0024..002a op=71 invoke-static {v0}, LX/00C;->A02(LI)
+  002a..002c op=0c move-result-object v0
+  002c..0030 op=1f check-cast v0, LX/HxT;
+  0030..0034 op=5b iput-object v0, v2, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A02:LX/HxT;
+  0034..0038 op=62 sget-object v1, Lcom/whatsapp/infra/core/jid/UserJid;->Companion:LX/0D8;
+  0038..003c op=54 iget-object v0, v2, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->toJid:Ljava/lang/String;
+  003c..0042 op=6e invoke-virtual {v1, v0}, LX/0D8;->A02(LL)
+  0042..0044 op=0c move-result-object v1
+  0044..0048 op=5b iput-object v1, v2, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A01:Lcom/whatsapp/infra/core/jid/UserJid;
+  0048..004c op=38 if-eqz v1, +0x10
+  004c..0050 op=54 iget-object v0, v2, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A02:LX/HxT;
+  0050..0054 op=39 if-nez v0, +0x9
+  0054..0058 op=1a const-string v0, "privacyTokenSendManager"
+  0058..005e op=71 invoke-static {v0}, LX/00h;->A0I(VL)
+  005e..0060 op=12 const/4 v0, #0x0
+  0060..0062 op=27 throw v0
+  0062..0068 op=6e invoke-virtual {v0, v1}, LX/HxT;->A05(ZL)
+  0068..006a op=0e return-void
+  # exception table: 0 try range(s)
+.end method
