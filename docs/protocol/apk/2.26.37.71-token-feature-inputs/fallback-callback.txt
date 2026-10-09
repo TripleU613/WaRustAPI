@@ -1,0 +1,105 @@
+# APK-derived structural disassembly: LX/1Y1;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method invoke(LLL) flags=0x11 registers=9
+  # full signature: LX/1Y1;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  0000..0004 op=52 iget v0, v6, LX/1Y1;->$t:I
+  0004..0008 op=54 iget-object v3, v6, LX/1Y1;->A00:Ljava/lang/Object;
+  0008..000c op=1f check-cast v3, LX/00D;
+  000c..0012 op=2b packed-switch v0, payload@0x160, cases=[0:@0x40, 1:@0x130], default@0x12
+  0012..0016 op=54 iget-object v2, v6, LX/1Y1;->A01:Ljava/lang/Object;
+  0016..001a op=1f check-cast v2, Ljava/lang/Boolean;
+  001a..0020 op=71 invoke-static {v7}, LX/000;->A00(Ljava/lang/Object;)I
+  0020..0022 op=0a move-result v1
+  0022..0026 op=1f check-cast v8, LX/00F;
+  0026..0028 op=12 const/4 v0, #0x3
+  0028..002e op=71 invoke-static {v8, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  002e..0034 op=71 invoke-static {v8, v3, v2, v1}, LX/00D;->A0D(LX/00F;LX/00D;Ljava/lang/Boolean;I)Z
+  0034..0036 op=0a move-result v0
+  0036..003c op=71 invoke-static {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+  003c..003e op=0c move-result-object v0
+  003e..0040 op=11 return-object v0
+  0040..0044 op=54 iget-object v5, v6, LX/1Y1;->A01:Ljava/lang/Object;
+  0044..0048 op=1f check-cast v5, Ljava/lang/Number;
+  0048..004c op=1f check-cast v7, Ljava/lang/Number;
+  004c..0052 op=6e invoke-virtual {v7}, Ljava/lang/Number;->intValue()I
+  0052..0054 op=0a move-result v4
+  0054..0058 op=1f check-cast v8, LX/00F;
+  0058..005a op=12 const/4 v0, #0x3
+  005a..0060 op=71 invoke-static {v8, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0060..0064 op=1a const-string v1, "Unknown FloatField: "
+  0064..006a op=6e invoke-virtual {v3, v8, v4}, LX/00D;->A0h(LX/00F;I)Ljava/lang/Object;
+  006a..006c op=0c move-result-object v0
+  006c..0070 op=1f check-cast v0, Ljava/lang/Number;
+  0070..0074 op=38 if-eqz v0, +0xb
+  0074..007a op=6e invoke-virtual {v0}, Ljava/lang/Number;->floatValue()F
+  007a..007c op=0a move-result v2
+  007c..0082 op=71 invoke-static {v2}, Ljava/lang/Float;->valueOf(F)Ljava/lang/Float;
+  0082..0084 op=0c move-result-object v0
+  0084..0086 op=11 return-object v0
+  0086..0088 op=1d monitor-enter
+  0088..008e op=6e invoke-virtual {v3, v8, v4}, LX/00D;->A0h(LX/00F;I)Ljava/lang/Object;
+  008e..0090 op=0c move-result-object v0
+  0090..0094 op=1f check-cast v0, Ljava/lang/Float;
+  0094..0098 op=38 if-eqz v0, +0x7
+  0098..009e op=6e invoke-virtual {v0}, Ljava/lang/Number;->floatValue()F
+  009e..00a0 op=0a move-result v2
+  00a0..00a2 op=28 goto +0x39
+  00a2..00a8 op=71 invoke-static {v8, v3, v4}, LX/00D;->A0A(LX/00F;LX/00D;I)V
+  00a8..00ae op=6e invoke-virtual {v3}, LX/00D;->A16()Lcom/google/common/collect/ImmutableMap;
+  00ae..00b0 op=0c move-result-object v0
+  00b0..00b6 op=6e invoke-virtual {v0, v7}, Lcom/google/common/collect/ImmutableMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  00b6..00b8 op=0c move-result-object v0
+  00b8..00bc op=1f check-cast v0, Ljava/lang/Float;
+  00bc..00c0 op=39 if-nez v0, +0x5
+  00c0..00c4 op=39 if-nez v5, +0x4
+  00c4..00c6 op=28 goto +0x29
+  00c6..00c8 op=07 move-object v5, v0
+  00c8..00cc op=54 iget-object v2, v3, LX/00D;->A00:Landroid/content/SharedPreferences;
+  00cc..00d2 op=71 invoke-static {v4}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+  00d2..00d4 op=0c move-result-object v1
+  00d4..00da op=6e invoke-virtual {v5}, Ljava/lang/Number;->floatValue()F
+  00da..00dc op=0a move-result v0
+  00dc..00e2 op=72 invoke-interface {v2, v1, v0}, Landroid/content/SharedPreferences;->getFloat(Ljava/lang/String;F)F
+  00e2..00e4 op=0a move-result v2
+  00e4..00e8 op=55 iget-boolean v0, v8, LX/00F;->A01:Z
+  00e8..00ec op=39 if-nez v0, +0xb
+  00ec..00f2 op=6e invoke-virtual {v3, v4, v2}, LX/00D;->A0r(IF)V
+  00f2..00f8 op=71 invoke-static {v3, v4}, LX/00D;->A0F(LX/00D;I)Z
+  00f8..00fc op=62 sget-object v0, LX/00L;->A03:Ljava/lang/Boolean;
+  00fc..00fe op=28 goto +0xb
+  00fe..0102 op=54 iget-object v1, v3, LX/00D;->A05:Ljava/util/concurrent/ConcurrentHashMap;
+  0102..0108 op=71 invoke-static {v2}, Ljava/lang/Float;->valueOf(F)Ljava/lang/Float;
+  0108..010a op=0c move-result-object v0
+  010a..0110 op=6e invoke-virtual {v1, v7, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  0110..0112 op=28 goto -0xf
+  0112..0114 op=1e monitor-exit
+  0114..0116 op=28 goto -0x4c
+  0116..011c op=71 invoke-static {v1, v4}, LX/000;->A03(Ljava/lang/String;I)Ljava/lang/String;
+  011c..011e op=0c move-result-object v1
+  011e..0122 op=22 new-instance v0, Ljava/lang/IllegalArgumentException;
+  0122..0128 op=70 invoke-direct {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+  0128..012a op=27 throw v0
+  012a..012c op=0d move-exception v0
+  012c..012e op=1e monitor-exit
+  012e..0130 op=27 throw v0
+  0130..0134 op=54 iget-object v2, v6, LX/1Y1;->A01:Ljava/lang/Object;
+  0134..0138 op=1f check-cast v2, Ljava/lang/Integer;
+  0138..013e op=71 invoke-static {v7}, LX/000;->A00(Ljava/lang/Object;)I
+  013e..0140 op=0a move-result v1
+  0140..0144 op=1f check-cast v8, LX/00F;
+  0144..0146 op=12 const/4 v0, #0x3
+  0146..014c op=71 invoke-static {v8, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  014c..0152 op=71 invoke-static {v8, v3, v2, v1}, LX/00D;->A01(LX/00F;LX/00D;Ljava/lang/Integer;I)I
+  0152..0154 op=0a move-result v0
+  0154..015a op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  015a..015c op=0c move-result-object v0
+  015c..015e op=11 return-object v0
+  015e..0160 op=00 nop
+  0160..0170 op=00 packed-switch-payload size=2
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0044..0089 -> 0095
+  # catch <all> code_units 008b..0095 -> 0095
+.end method

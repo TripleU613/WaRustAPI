@@ -1,5 +1,13 @@
 # Evidence ledger
 
+Token feature inputs (2026-10-09, **confirmed static/local**): APK 37.71
+registers properties 15491/14303 as false Booleans; its getter can use caches,
+preferences or MobileConfig, so effective values remain unknown. Offline
+`abprops-query --show` now reports selected returned token values and invalid
+last-value flags, without default fallback or runtime activation. Twelve source
+topics and regression/reopen tests preserve the evidence. No real account or
+live change. [Evidence and limits](token-feature-inputs.md).
+
 Token canonicalization gates (2026-10-09, **confirmed static**): APK
 37.71 normalizes type-zero phone users independently of property 15491, which
 suppresses only counterpart lookup/cleanup. Separate property 14303 selects

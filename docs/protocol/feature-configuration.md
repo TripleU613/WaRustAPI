@@ -120,3 +120,14 @@ CLI integration check passed. Pinned Rust 1.98.1 verification is not claimed.
 
 Repository hygiene passed: 912 local links, package licenses, tracked-file
 budgets and 3,840,464 bytes across five checksum-verified APK bundles.
+
+## Token Boolean evidence (2026-10-09)
+
+**Confirmed static/local:** [token feature inputs](token-feature-inputs.md)
+closes false default registrations for 15491 and 14303 and preserves the
+cache/preferences/MobileConfig getter boundary. `abprops-query --show` reports
+`token_counterpart_value`, `token_pending_namespace_value` and their respective
+`_invalid` flags using the existing last-value/Java integer conversion rules.
+Missing/non-applicable values remain null; no APK default is substituted.
+These are selected returned properties, not effective gates, and do not activate
+refresh or adopt configuration. Effective MobileConfig results remain unknown.

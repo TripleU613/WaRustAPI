@@ -13,6 +13,10 @@ use serde::{Deserialize, Serialize};
 const MARKER: &[u8] = b"abprops-initial-query";
 // 0bq.<clinit> 0050..0064 and 07t.A0J 1ed2..1ee6, APK 2.26.37.71.
 const REMOVAL_PROPERTY: i32 = 35661;
+// 37.71 07t.A0L 1594..15a6 / 0q2.A02: Boolean counterpart suppression.
+const TOKEN_COUNTERPART_PROPERTY: i32 = 15491;
+// 37.71 07t.A0X 055a..056c / HxT.A00: Boolean pending-job namespace.
+const TOKEN_PENDING_NAMESPACE_PROPERTY: i32 = 14303;
 
 /// Queue one initial AB-property read without a fabricated cached hash.
 /// Repeats reuse the original action, including refusals and uncertain outcomes.
@@ -72,8 +76,8 @@ pub enum AbPropsFailure {
     /// Sampling-only row lacks parsed event_code/sampling_weight integers.
     Sampling,
 }
-/// Content-free inspection except the explicitly returned removal Boolean.
-/// That value is not the effective APK gate: MobileConfig may supersede it.
+/// Content-free inspection except explicitly selected returned Booleans.
+/// These are not effective APK gates: MobileConfig may supersede them.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AbPropsInspection {
     /// Original durable action selector.
@@ -96,6 +100,18 @@ pub struct AbPropsInspection {
     pub removal_value: Option<bool>,
     /// Last returned removal value failed conversion; no earlier duplicate fallback.
     pub removal_value_invalid: bool,
+    /// Last returned 15491 value; not the effective counterpart-suppression gate.
+    #[serde(default)]
+    pub token_counterpart_value: Option<bool>,
+    /// Invalid last 15491 value; no fallback to an earlier duplicate/default.
+    #[serde(default)]
+    pub token_counterpart_value_invalid: bool,
+    /// Last returned 14303 value; not the effective pending-job namespace gate.
+    #[serde(default)]
+    pub token_pending_namespace_value: Option<bool>,
+    /// Invalid last 14303 value; no fallback to an earlier duplicate/default.
+    #[serde(default)]
+    pub token_pending_namespace_value_invalid: bool,
 }
 fn text<'a>(node: &'a Node, name: &str) -> Option<&'a str> {
     node.get_attr(name).and_then(|v| v.as_text())
@@ -123,6 +139,8 @@ fn parse(reply: &Node, view: &mut AbPropsInspection) -> std::result::Result<(), 
     let mut count = 0usize;
     let mut sampling = 0usize;
     let mut removal = None;
+    let mut token_counterpart: Option<&str> = None;
+    let mut token_pending_namespace: Option<&str> = None;
     for row in props
         .child_nodes()
         .iter()
@@ -141,8 +159,11 @@ fn parse(reply: &Node, view: &mut AbPropsInspection) -> std::result::Result<(), 
             count += 1;
             // IWy.C8f 0164 SparseArray.append replaces duplicate IDs; 0Ci.A00
             // converts after collection, so an invalid last row hides earlier ones.
-            if code == REMOVAL_PROPERTY {
-                removal = Some(value);
+            match code {
+                REMOVAL_PROPERTY => removal = Some(value),
+                TOKEN_COUNTERPART_PROPERTY => token_counterpart = Some(value),
+                TOKEN_PENDING_NAMESPACE_PROPERTY => token_pending_namespace = Some(value),
+                _ => {}
             }
         } else {
             for name in ["event_code", "sampling_weight"] {
@@ -163,10 +184,28 @@ fn parse(reply: &Node, view: &mut AbPropsInspection) -> std::result::Result<(), 
         view.status = AbPropsStatus::NotModified;
     } else {
         view.status = AbPropsStatus::ConfigurationReceived;
-        if let Some(value) = removal {
-            // 0Ci.A00 0038..004e, known Boolean A15 membership: int != 0.
-            view.removal_value = integer(value).map(|v| v != 0);
-            view.removal_value_invalid = view.removal_value.is_none();
+        for (value, parsed, invalid) in [
+            (
+                removal,
+                &mut view.removal_value,
+                &mut view.removal_value_invalid,
+            ),
+            (
+                token_counterpart,
+                &mut view.token_counterpart_value,
+                &mut view.token_counterpart_value_invalid,
+            ),
+            (
+                token_pending_namespace,
+                &mut view.token_pending_namespace_value,
+                &mut view.token_pending_namespace_value_invalid,
+            ),
+        ] {
+            if let Some(value) = value {
+                // 0Ci.A00 0038..004e, known Boolean A15 membership: int != 0.
+                *parsed = integer(value).map(|v| v != 0);
+                *invalid = parsed.is_none();
+            }
         }
     }
     Ok(())
@@ -202,6 +241,10 @@ pub fn inspect(store: &ProtocolStore) -> Result<Option<AbPropsInspection>> {
             hash_present: None,
             removal_value: None,
             removal_value_invalid: false,
+            token_counterpart_value: None,
+            token_counterpart_value_invalid: false,
+            token_pending_namespace_value: None,
+            token_pending_namespace_value_invalid: false,
         };
         let Some(reply) = reply else {
             return Ok(Some(view));
@@ -303,7 +346,15 @@ mod tests {
                     Node::new("props")
                         .attr("hash", "private-hash")
                         .attr("ab_key", "private-key")
-                        .children(vec![config("-1")]),
+                        .children(vec![
+                            config("-1"),
+                            Node::new("prop")
+                                .attr("config_code", "15491")
+                                .attr("config_value", "1"),
+                            Node::new("prop")
+                                .attr("config_code", "14303")
+                                .attr("config_value", "0"),
+                        ]),
                 )
             };
             assert!(actions::record_reply(&store, &node).unwrap());
@@ -317,6 +368,14 @@ mod tests {
                 }
             );
             assert_eq!(view.removal_value, if refused { None } else { Some(true) });
+            assert_eq!(
+                view.token_counterpart_value,
+                if refused { None } else { Some(true) }
+            );
+            assert_eq!(
+                view.token_pending_namespace_value,
+                if refused { None } else { Some(false) }
+            );
             let encoded = serde_json::to_string(&view).unwrap();
             for secret in ["private-hash", "private-key", "private-error"] {
                 assert!(!encoded.contains(secret));
@@ -358,8 +417,85 @@ mod tests {
             hash_present: None,
             removal_value: None,
             removal_value_invalid: false,
+            token_counterpart_value: None,
+            token_counterpart_value_invalid: false,
+            token_pending_namespace_value: None,
+            token_pending_namespace_value_invalid: false,
         }
     }
+    #[test]
+    fn token_boolean_evidence_uses_last_values_without_defaults_or_policy_application() {
+        let token = |code: i32, value: &str| {
+            Node::new("prop")
+                .attr("config_code", code.to_string())
+                .attr("config_value", value)
+        };
+        for delta in [false, true] {
+            let mut evidence = view();
+            parse(
+                &reply(
+                    "TEST",
+                    Node::new("props")
+                        .attr("hash", if delta { "" } else { "private-hash" })
+                        .attr("delta_update", if delta { "true" } else { "false" })
+                        .children(vec![
+                            token(15491, "0"),
+                            token(15491, "-1"),
+                            token(14303, "1"),
+                            token(14303, "0"),
+                        ]),
+                ),
+                &mut evidence,
+            )
+            .unwrap();
+            assert_eq!(evidence.token_counterpart_value, Some(true));
+            assert_eq!(evidence.token_pending_namespace_value, Some(false));
+            assert!(!evidence.token_counterpart_value_invalid);
+            assert!(!evidence.token_pending_namespace_value_invalid);
+            let mut invalid = view();
+            parse(
+                &reply(
+                    "TEST",
+                    Node::new("props")
+                        .attr("hash", "private-hash")
+                        .children(vec![
+                            token(15491, "1"),
+                            token(15491, "true"),
+                            token(14303, "1"),
+                            token(14303, "2147483648"),
+                        ]),
+                ),
+                &mut invalid,
+            )
+            .unwrap();
+            assert_eq!(invalid.token_counterpart_value, None);
+            assert_eq!(invalid.token_pending_namespace_value, None);
+            assert!(invalid.token_counterpart_value_invalid);
+            assert!(invalid.token_pending_namespace_value_invalid);
+        }
+        for props in [
+            Node::new("props").attr("hash", "private-hash"),
+            Node::new("props").children(vec![token(15491, "1"), token(14303, "1")]),
+        ] {
+            let mut evidence = view();
+            parse(&reply("TEST", props), &mut evidence).unwrap();
+            assert_eq!(evidence.token_counterpart_value, None);
+            assert_eq!(evidence.token_pending_namespace_value, None);
+            assert!(!evidence.token_counterpart_value_invalid);
+            assert!(!evidence.token_pending_namespace_value_invalid);
+        }
+    }
+
+    #[test]
+    fn legacy_abprops_inspection_has_unknown_token_values() {
+        let legacy = r#"{"action_id":"TEST","status":"configuration_received","failure":null,"server_error_code":null,"configuration_rows":1,"sampling_rows":0,"delta_update":false,"hash_present":true,"removal_value":false,"removal_value_invalid":false}"#;
+        let evidence: AbPropsInspection = serde_json::from_str(legacy).unwrap();
+        assert_eq!(evidence.token_counterpart_value, None);
+        assert_eq!(evidence.token_pending_namespace_value, None);
+        assert!(!evidence.token_counterpart_value_invalid);
+        assert!(!evidence.token_pending_namespace_value_invalid);
+    }
+
     #[test]
     fn known_boolean_conversion_matches_independent_java_corpus() {
         let fixture: serde_json::Value = serde_json::from_str(include_str!(

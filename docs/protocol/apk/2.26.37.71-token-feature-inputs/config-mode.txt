@@ -1,0 +1,30 @@
+# APK-derived structural disassembly: LX/00F;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=4
+  # full signature: LX/00F;-><clinit>()V
+  0000..0002 op=12 const/4 v3, #0x0
+  0002..0006 op=62 sget-object v1, LX/02S;->A01:Ljava/lang/Integer;
+  0006..000a op=22 new-instance v0, LX/00F;
+  000a..0010 op=70 invoke-direct {v0, v1, v3}, LX/00F;-><init>(Ljava/lang/Integer;Z)V
+  0010..0014 op=69 sput-object v0, LX/00F;->A03:LX/00F;
+  0014..0016 op=12 const/4 v2, #0x1
+  0016..001a op=22 new-instance v0, LX/00F;
+  001a..0020 op=70 invoke-direct {v0, v1, v2}, LX/00F;-><init>(Ljava/lang/Integer;Z)V
+  0020..0024 op=69 sput-object v0, LX/00F;->A02:LX/00F;
+  0024..0028 op=62 sget-object v1, LX/02S;->A00:Ljava/lang/Integer;
+  0028..002c op=22 new-instance v0, LX/00F;
+  002c..0032 op=70 invoke-direct {v0, v1, v3}, LX/00F;-><init>(Ljava/lang/Integer;Z)V
+  0032..0036 op=69 sput-object v0, LX/00F;->A06:LX/00F;
+  0036..003a op=22 new-instance v0, LX/00F;
+  003a..0040 op=70 invoke-direct {v0, v1, v2}, LX/00F;-><init>(Ljava/lang/Integer;Z)V
+  0040..0044 op=69 sput-object v0, LX/00F;->A05:LX/00F;
+  0044..0048 op=62 sget-object v1, LX/02S;->A0C:Ljava/lang/Integer;
+  0048..004c op=22 new-instance v0, LX/00F;
+  004c..0052 op=70 invoke-direct {v0, v1, v3}, LX/00F;-><init>(Ljava/lang/Integer;Z)V
+  0052..0056 op=69 sput-object v0, LX/00F;->A04:LX/00F;
+  0056..0058 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,167 @@
+{
+  "boolean-fallback": {
+    "anchors": [
+      "Unknown BooleanField: "
+    ],
+    "class": "LX/00D;",
+    "file": "boolean-fallback.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0D",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "boolean-getter": {
+    "class": "LX/00D;",
+    "file": "boolean-getter.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A10",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "boolean-map-getter": {
+    "class": "LX/07t;",
+    "file": "boolean-map-getter.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A15",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "boolean-resolver": {
+    "class": "LX/00D;",
+    "file": "boolean-resolver.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0E",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "cache-read": {
+    "class": "LX/00D;",
+    "file": "cache-read.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0h",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "config-dispatch": {
+    "class": "LX/00D;",
+    "file": "config-dispatch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A07",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "config-mode": {
+    "class": "LX/00F;",
+    "file": "config-mode.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<clinit>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "config-mode-init": {
+    "class": "LX/00F;",
+    "file": "config-mode-init.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "counterpart-default": {
+    "class": "LX/07t;",
+    "file": "counterpart-default.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "default-map-constructor": {
+    "anchors": [
+      "ab-props"
+    ],
+    "class": "LX/07t;",
+    "file": "default-map-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "fallback-callback": {
+    "anchors": [
+      "Unknown FloatField: "
+    ],
+    "class": "LX/1Y1;",
+    "file": "fallback-callback.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "invoke",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "pending-default": {
+    "class": "LX/07t;",
+    "file": "pending-default.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0X",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  }
+}
