@@ -112,3 +112,8 @@ artifacts; it does not validate another APK. CLI reference regeneration,
 OpenAPI/library-symbol checks, formatting and diff hygiene passed. This is a
 source/docs-only chunk: the preceding 826-test runtime/tool run is not counted
 as fresh validation of a runtime receipt projection.
+
+Follow-up: [recipient-count producers](receipt-recipient-count.md) closes
+status-audience and exceptional broadcast count writes plus cursor restoration.
+Remaining send/copy producers and full user-row admission remain unknown;
+no Rust device-list cardinality is substituted for those counts.

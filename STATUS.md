@@ -1,5 +1,12 @@
 # Status — 2026-10-07
 
+Recipient-count producers (2026-10-09, **confirmed static**): five topics
+separate status-audience size excluding the local user from conditionally written
+broadcast clone-entry counts; cursor restoration loads recipient_count directly.
+Ordinary send/copy writers and full native admission remain untraced/unported.
+No runtime, account or live change.
+[Evidence and limits](docs/protocol/receipt-recipient-count.md).
+
 Receipt message projection (2026-10-09, **confirmed static**): four topics
 close status-only existing-row updates and the conditional view-once state hook.
 Multipart status counts each user's highest state against native A06; computed

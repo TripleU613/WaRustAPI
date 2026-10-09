@@ -1,0 +1,38 @@
+{
+  "broadcast-clone-count.txt": {
+    "bytes": 5826,
+    "sha256": "4331a3720a3030554897752fa806f0aaabeb84420474d11f5441a77eb381cea1"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-insert-count-context.txt": {
+    "bytes": 62808,
+    "sha256": "3d93bf132dae29ec55355cee326002cff50d58f09a5af2329f5e399ba4bb2004"
+  },
+  "recipient-list-getter.txt": {
+    "bytes": 533,
+    "sha256": "3e999d3b835c744028af53ddef3a0a3672ee906e0a518a2d31897c867886fd4c"
+  },
+  "status-audience-buckets.txt": {
+    "bytes": 33377,
+    "sha256": "deb3d29bfaf5325a5b2113ecf6982f4d7c48b4660895ce563e8ebe048f7b6b0b"
+  },
+  "status-audience-delta.txt": {
+    "bytes": 13000,
+    "sha256": "5a3a98ee33fec8f0eb4d11560332b72e558a0e1e8034c6cec77a8d3d0189e51c"
+  },
+  "targets.json": {
+    "bytes": 2287,
+    "sha256": "536bd365653c817e3c30ca7d300a78d2239d2060f2b1afa6b4cc4fda71293f7d"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

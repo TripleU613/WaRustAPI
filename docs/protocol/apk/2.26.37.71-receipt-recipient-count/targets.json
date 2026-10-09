@@ -1,0 +1,76 @@
+{
+  "broadcast-clone-count": {
+    "anchors": [
+      "missing_pn_lid_mapping_for_broadcast"
+    ],
+    "class": "LX/36W;",
+    "file": "broadcast-clone-count.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "message-insert-count-context": {
+    "class": "LX/0zC;",
+    "file": "message-insert-count-context.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0E",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "recipient-list-getter": {
+    "class": "LX/178;",
+    "file": "recipient-list-getter.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0D",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "status-audience-buckets": {
+    "anchors": [
+      "StatusParticipantUserManager/updateParticipantsDeltaWithBucketing current="
+    ],
+    "class": "LX/0zt;",
+    "file": "status-audience-buckets.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0O",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "status-audience-delta": {
+    "anchors": [
+      "StatusParticipantUserManager/updateStatusParticipantsInNewTable/ added: "
+    ],
+    "class": "LX/0zt;",
+    "file": "status-audience-delta.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0H",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  }
+}

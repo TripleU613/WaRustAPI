@@ -1,0 +1,57 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "status-audience-delta": {
+      "class": "LX/0zt;",
+      "method": "A0H",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ],
+      "anchors": [
+        "StatusParticipantUserManager/updateStatusParticipantsInNewTable/ added: "
+      ]
+    },
+    "status-audience-buckets": {
+      "class": "LX/0zt;",
+      "method": "A0O",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ],
+      "anchors": [
+        "StatusParticipantUserManager/updateParticipantsDeltaWithBucketing current="
+      ]
+    },
+    "message-insert-count-context": {
+      "class": "LX/0zC;",
+      "method": "A0E",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "broadcast-clone-count": {
+      "class": "LX/36W;",
+      "method": "A02",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ],
+      "anchors": [
+        "missing_pn_lid_mapping_for_broadcast"
+      ]
+    },
+    "recipient-list-getter": {
+      "class": "LX/178;",
+      "method": "A0D",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    }
+  }
+}
