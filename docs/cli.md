@@ -253,6 +253,14 @@ Group management over the durable action queue (offline; a session transmits)
 Usage: whatsapp-cli group [OPTIONS]...
 ```
 
+## whatsapp-cli group own-lid
+
+Inspect whether our saved own LID is known (offline, redacted)
+
+```
+Usage: whatsapp-cli group own-lid [OPTIONS]...
+```
+
 ## whatsapp-cli group key-queries
 
 Inspect saved frozen directory-key batch outcomes (offline, redacted)

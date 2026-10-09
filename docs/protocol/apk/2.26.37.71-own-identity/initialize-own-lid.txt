@@ -1,0 +1,109 @@
+# APK-derived structural disassembly: LX/08i;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(VL) flags=0x20009 registers=6
+  # full signature: LX/08i;->A04(LX/08i;)V
+  0000..0002 op=1d monitor-enter
+  0002..0006 op=55 iget-boolean v0, v5, LX/08i;->A02:Z
+  0006..000a op=39 if-nez v0, +0xb4
+  000a..000e op=54 iget-object v0, v5, LX/08i;->A0D:LX/08l;
+  000e..0012 op=54 iget-object v0, v0, LX/08l;->A0q:LX/00s;
+  0012..0018 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0018..001a op=0c move-result-object v0
+  001a..001e op=1f check-cast v0, LX/0dz;
+  001e..0024 op=6e invoke-virtual {v0}, LX/0FU;->A02()Landroid/content/SharedPreferences;
+  0024..0026 op=0c move-result-object v2
+  0026..002c op=1b const-string/jumbo v1, "self_lid"
+  002c..002e op=12 const/4 v0, #0x0
+  002e..0034 op=72 invoke-interface {v2, v1, v0}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  0034..0036 op=0c move-result-object v1
+  0036..003a op=62 sget-object v0, Lcom/whatsapp/infra/core/jid/Jid;->Companion:LX/0D1;
+  003a..0040 op=6e invoke-virtual {v0, v1}, LX/0D1;->A02(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+  0040..0042 op=0c move-result-object v4
+  0042..0048 op=70 invoke-direct {v5, v4}, LX/08i;->A02(Lcom/whatsapp/infra/core/jid/Jid;)V
+  0048..004a op=12 const/4 v0, #0x1
+  004a..004e op=5c iput-boolean v0, v5, LX/08i;->A02:Z
+  004e..0052 op=54 iget-object v1, v5, LX/08i;->A0F:Lcom/whatsapp/Me;
+  0052..0056 op=38 if-eqz v1, +0x8
+  0056..005a op=54 iget-object v0, v1, Lcom/whatsapp/Me;->jabber_id:Ljava/lang/String;
+  005a..005e op=39 if-nez v0, +0x4
+  005e..0062 op=29 goto/16 +0x88
+  0062..0068 op=71 invoke-static {v4}, LX/0DE;->A0a(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0068..006a op=0a move-result v0
+  006a..006e op=38 if-eqz v0, +0x5
+  006e..0072 op=1f check-cast v4, LX/0ZY;
+  0072..0074 op=28 goto +0x14
+  0074..007a op=71 invoke-static {v4}, LX/0DE;->A0Z(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  007a..007c op=0a move-result v0
+  007c..0080 op=38 if-eqz v0, +0xe
+  0080..0084 op=1f check-cast v4, LX/0e1;
+  0084..0088 op=54 iget-object v4, v4, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+  0088..008c op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.LidUserJid"
+  008c..0092 op=71 invoke-static {v4, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  0092..0096 op=1f check-cast v4, LX/0ZY;
+  0096..0098 op=28 goto +0x2
+  0098..009a op=12 const/4 v4, #0x0
+  009a..009e op=39 if-nez v1, +0x8
+  009e..00a0 op=12 const/4 v2, #0x0
+  00a0..00a4 op=39 if-nez v4, +0xf
+  00a4..00a8 op=38 if-eqz v2, +0x65
+  00a8..00aa op=28 goto +0x8
+  00aa..00ae op=54 iget-object v0, v1, Lcom/whatsapp/Me;->lid:Ljava/lang/String;
+  00ae..00b4 op=71 invoke-static {v0}, LX/08i;->A00(Ljava/lang/String;)LX/0ZY;
+  00b4..00b6 op=0c move-result-object v2
+  00b6..00b8 op=28 goto -0xb
+  00b8..00bc op=1a const-string v3, "no-shared-prefs-lid"
+  00bc..00be op=28 goto +0xb
+  00be..00c2 op=54 iget-object v0, v5, LX/08i;->A0B:LX/08t;
+  00c2..00c8 op=6e invoke-virtual {v0}, LX/08t;->A07()Z
+  00c8..00ca op=0a move-result v0
+  00ca..00ce op=39 if-nez v0, +0x38
+  00ce..00d2 op=1a const-string v3, "me-not-loaded"
+  00d2..00d6 op=1a const-string v0, "memanager/initializeLids/self-lid-storage "
+  00d6..00da op=22 new-instance v1, Ljava/lang/StringBuilder;
+  00da..00e0 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  00e0..00e6 op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00e6..00ea op=1a const-string v0, " meFile="
+  00ea..00f0 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00f0..00f6 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  00f6..00fa op=1a const-string v0, " prefs="
+  00fa..0100 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0100..0106 op=6e invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0106..010c op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  010c..010e op=0c move-result-object v0
+  010e..0114 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+  0114..0118 op=54 iget-object v0, v5, LX/08i;->A09:LX/00s;
+  0118..011e op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  011e..0120 op=0c move-result-object v2
+  0120..0124 op=1f check-cast v2, LX/07u;
+  0124..0128 op=13 const/16 v1, #0x11
+  0128..012c op=22 new-instance v0, LX/Igs;
+  012c..0132 op=70 invoke-direct {v0, v3, v1, v5}, LX/Igs;-><init>(Ljava/lang/String;ILjava/lang/Object;)V
+  0132..0138 op=72 invoke-interface {v2, v0}, LX/07u;->COM(Ljava/lang/Runnable;)V
+  0138..013a op=28 goto +0x1b
+  013a..013e op=39 if-nez v1, +0x5
+  013e..0142 op=1a const-string v3, "no-me-object"
+  0142..0144 op=28 goto -0x38
+  0144..0148 op=54 iget-object v0, v1, Lcom/whatsapp/Me;->lid:Ljava/lang/String;
+  0148..014c op=39 if-nez v0, +0x5
+  014c..0150 op=1a const-string v3, "me-file-has-no-lid"
+  0150..0152 op=28 goto -0x3f
+  0152..0156 op=39 if-nez v2, +0x5
+  0156..015a op=1a const-string v3, "me-file-lid-unparseable"
+  015a..015c op=28 goto -0x44
+  015c..0162 op=6e invoke-virtual {v2, v4}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+  0162..0164 op=0a move-result v0
+  0164..0168 op=39 if-nez v0, +0x5
+  0168..016c op=1a const-string v3, "me-file-mismatch"
+  016c..016e op=28 goto -0x4d
+  016e..0170 op=1e monitor-exit
+  0170..0172 op=0e return-void
+  0172..0174 op=0d move-exception v0
+  0174..0176 op=1e monitor-exit
+  0176..0178 op=27 throw v0
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0001..00b7 -> 00b9
+  # catch <all> code_units 00ba..00bb -> 00b9
+.end method

@@ -2368,6 +2368,11 @@ pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error
             );
             Ok(())
         }
+        super::GroupCmd::OwnLid => {
+            let known = whatsapp_api::transport::group_send::own_lid(&store)?.is_some();
+            println!("{}", serde_json::json!({"lid_known": known}));
+            Ok(())
+        }
         super::GroupCmd::Receipts { request_id } => {
             let request_id = whatsapp_api::model::ids::ClientRequestId::new(request_id.clone())?;
             let summary = whatsapp_api::transport::group_receipts::summary(&store, &request_id)?;

@@ -186,3 +186,8 @@ delivery/read/played columns and creation of user rows without a delivery
 timestamp. The primary cleanup's user-row existence intersection must not
 be narrowed to a Delivered fact or positive delivery timestamp. Complete 15A
 admission and namespace authority remain unported.
+
+Follow-up: [stored own identity](own-identity.md) closes BO0/BO1 and its PN/LID
+field producers. Rust's remote primary-change guards now recognize authenticated
+own LID before group preparation; this does not implement native own-primary
+version updates or mutable receipt cleanup.

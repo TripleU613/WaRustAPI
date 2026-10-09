@@ -75,15 +75,77 @@ fn invalid(reason: impl Into<String>) -> Error {
 /// client's own LID and the client expects it to be there. A LID-addressed
 /// group names us by it, so a fan-out cannot be built without it.
 pub fn record_own_lid(tx: &mut WriteTx<'_>, lid: &Jid) -> Result<()> {
-    if lid.server != Server::Lid || lid.user.is_empty() {
+    if lid.server != Server::Lid || lid.user.is_empty() || lid.agent != 0 {
         return Err(invalid("own lid must be a LID identity"));
     }
     tx.put_json(Table::Checkpoints, OWN_LID_KEY, 1, &lid.to_non_ad())
 }
 
-/// The recorded own LID, if a login has provided one.
+/// Own LID from authenticated login or the retained group checkpoint.
+/// Conflicting/invalid saved authority refuses without modifying either record.
 pub fn own_lid(store: &ProtocolStore) -> Result<Option<Jid>> {
-    store.read(|tx| tx.get_json(Table::Checkpoints, OWN_LID_KEY, 1))
+    store.read(|tx| {
+        decode_own_lid(
+            tx.get(Table::Checkpoints, OWN_LID_KEY, 1)?,
+            tx.get(Table::Checkpoints, b"login-identity", 1)?,
+        )
+    })
+}
+
+pub(super) fn own_lid_in(tx: &WriteTx<'_>) -> Result<Option<Jid>> {
+    decode_own_lid(
+        tx.get(Table::Checkpoints, OWN_LID_KEY, 1)?,
+        tx.get(Table::Checkpoints, b"login-identity", 1)?,
+    )
+}
+
+fn decode_own_lid(legacy: Option<Vec<u8>>, login: Option<Vec<u8>>) -> Result<Option<Jid>> {
+    // APK 37.71 08i.BO0 compares stored self PN/LID, never a peer-directory
+    // alias. connection::login writes this identity only after authenticated success.
+    // The older group checkpoint may be absent before any group preparation.
+    let normalize = |jid: Jid, reason: &'static str| -> Result<Jid> {
+        if jid.server != Server::Lid || jid.user.is_empty() || jid.agent != 0 {
+            return Err(invalid(reason));
+        }
+        Ok(jid.to_non_ad())
+    };
+    let legacy = legacy
+        .map(|bytes| {
+            normalize(
+                serde_json::from_slice(&bytes)
+                    .map_err(|_| invalid("invalid saved own-lid authority"))?,
+                "invalid saved own-lid authority",
+            )
+        })
+        .transpose()?;
+    let login = login
+        .map(|bytes| -> Result<Option<Jid>> {
+            let value: serde_json::Value = serde_json::from_slice(&bytes)
+                .map_err(|_| invalid("invalid saved login-identity authority"))?;
+            if !value.is_object() {
+                return Err(invalid("invalid saved login-identity authority"));
+            }
+            match value.get("lid") {
+                None | Some(serde_json::Value::Null) => Ok(None),
+                Some(serde_json::Value::String(text)) => normalize(
+                    Jid::parse(text)
+                        .map_err(|_| invalid("invalid saved login-identity.lid authority"))?,
+                    "invalid saved login-identity.lid authority",
+                )
+                .map(Some),
+                Some(_) => Err(invalid("invalid saved login-identity.lid authority")),
+            }
+        })
+        .transpose()?
+        .flatten();
+    if let (Some(a), Some(b)) = (&legacy, &login)
+        && a != b
+    {
+        // Local consistency guard, not a WhatsApp server prerequisite or a
+        // reason to repair/overwrite immutable account history automatically.
+        return Err(invalid("saved own-lid and login-identity.lid disagree"));
+    }
+    Ok(login.or(legacy))
 }
 
 /// A `Message` protobuf carrying one styled text status: `extendedTextMessage`
@@ -751,6 +813,85 @@ mod tests {
         assert!(
             store
                 .write(|tx| record_own_lid(tx, &jid("15550000001@s.whatsapp.net")))
+                .is_err()
+        );
+    }
+
+    #[test]
+    fn own_lid_uses_authenticated_login_before_group_preparation_and_survives_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("login-own-lid.redb");
+        let store = open(&path);
+        let lid = jid("111111111111111@lid");
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"login-identity",
+                    1,
+                    &serde_json::json!({"pn":"15550000001@s.whatsapp.net","lid":lid.to_string()}),
+                )
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        assert_eq!(own_lid(&store).unwrap(), Some(lid.clone()));
+        assert_eq!(store.write(|tx| own_lid_in(tx)).unwrap(), Some(lid.clone()));
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+        drop(store);
+        assert_eq!(own_lid(&open(&path)).unwrap(), Some(lid));
+    }
+
+    #[test]
+    fn own_lid_conflicts_and_malformed_authority_refuse_without_echo_or_repair() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("bad-own-lid.redb"));
+        let ours = jid("111111111111111@lid");
+        store.write(|tx| record_own_lid(tx, &ours)).unwrap();
+        for value in [
+            serde_json::json!("PRIVATE INPUT"),
+            serde_json::json!({"lid":false}),
+            serde_json::json!({"lid":"lid"}),
+            serde_json::json!({"lid":"15550000001@s.whatsapp.net"}),
+            serde_json::json!({"lid":"222222222222222@lid"}),
+            serde_json::json!({"lid":"111111111111111.1:0@lid"}),
+        ] {
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, b"login-identity", 1, &value))
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let error = own_lid(&store).unwrap_err().to_string();
+            assert!(!error.contains("PRIVATE"));
+            assert!(!error.contains("222222222222222"));
+            assert!(store.write(|tx| own_lid_in(tx)).is_err());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+        }
+        for value in [
+            serde_json::json!({}),
+            serde_json::json!({"lid":null}),
+            serde_json::json!({"lid":"111111111111111:3@lid"}),
+        ] {
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, b"login-identity", 1, &value))
+                .unwrap();
+            assert_eq!(own_lid(&store).unwrap(), Some(ours.clone()));
+        }
+        assert!(
+            store
+                .write(|tx| record_own_lid(tx, &jid("111111111111111.1:3@lid")))
                 .is_err()
         );
     }

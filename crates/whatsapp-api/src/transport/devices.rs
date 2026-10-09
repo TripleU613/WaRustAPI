@@ -440,8 +440,7 @@ pub(super) fn after_primary_identity_change_in(
     let own = crate::session::AccountRecord::load_in_write(tx)?
         .and_then(|a| a.own_jid)
         .map(|j| j.to_non_ad());
-    let own_lid: Option<Jid> =
-        tx.get_json(Table::Checkpoints, super::group_send::OWN_LID_KEY, 1)?;
+    let own_lid = super::group_send::own_lid_in(tx)?;
     if own.as_ref() == Some(peer) || own_lid.as_ref().map(Jid::to_non_ad).as_ref() == Some(peer) {
         return Ok(());
     }
@@ -1651,6 +1650,63 @@ mod tests {
                 .write(|tx| after_primary_identity_change_in(tx, &peer))
                 .is_err()
         );
+    }
+
+    #[test]
+    fn authenticated_login_own_lid_is_excluded_before_any_group_preparation() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("login-own-exclusion.redb"));
+        let own = Jid::parse("111111111111111@lid").unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"login-identity",
+                    1,
+                    &serde_json::json!({"lid":own.to_string()}),
+                )
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        for kind in [
+            crate::model::jid::JidKind::Plain,
+            crate::model::jid::JidKind::AgentDevice,
+            crate::model::jid::JidKind::Interop,
+            crate::model::jid::JidKind::Facebook,
+        ] {
+            let mut encoded = own.clone();
+            encoded.kind = kind;
+            store
+                .write(|tx| after_primary_identity_change_in(tx, &encoded))
+                .unwrap();
+        }
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+        assert!(pending_users(&store).unwrap().is_empty());
+        assert!(
+            store
+                .read(|tx| primary_device_version_in(tx, &own))
+                .unwrap()
+                .is_none()
+        );
+        // Foreign exact-namespace users still get the original correction and counter.
+        let peer = contact();
+        store
+            .write(|tx| after_primary_identity_change_in(tx, &peer))
+            .unwrap();
+        assert_eq!(
+            store
+                .read(|tx| primary_device_version_in(tx, &peer))
+                .unwrap(),
+            Some(1)
+        );
+        assert_eq!(pending_users(&store).unwrap(), [peer]);
     }
 
     #[test]

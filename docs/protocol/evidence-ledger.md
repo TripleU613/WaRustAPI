@@ -2152,3 +2152,18 @@ topics / 13 files / 301,312 bytes reproduce exactly; self-diff verifies eight
 unchanged topics/four artifacts. Independent raw DEX read matches signed decrement
 at 0x12a6da. Hygiene: 1,416 links, 34 bundles / 8,808,333 bytes. Tooling/research
 only; no new account/shared-runtime/live test is claimed.
+
+2026-10-09 — **Confirmed static / implemented offline:** 08a delegates BO0/BO1
+to 08i; BO0 compares stored A0I PN/A0H LID, BO1 extracts the device user first.
+A01/A02 field producers and nullable self_lid initialization are retained. Rust
+primary-change hooks now share authenticated login/retained own-LID lookup;
+conflict refusal is explicit local policy, not a native/server requirement.
+[Evidence, inspector and remaining unknowns](own-identity.md).
+
+Own-LID validation: all 807 workspace/all-feature tests, strict Clippy,
+warning-denying Rustdoc, default CLI, reference/API-symbol and formatting checks
+passed. Exact bundle reproduction and cached self-diff passed. One 45-second
+receive-only session authenticated and stopped cleanly, with sends/reconnects
+disabled; peer/actions/receipts/outbox/events remained unchanged. Eight additional
+inbound checkpoints remain unclassified; no live own-primary transition is
+claimed. See the linked own-identity evidence for counts and limits.

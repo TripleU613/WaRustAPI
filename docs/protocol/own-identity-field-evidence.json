@@ -1,0 +1,64 @@
+{
+  "apk_version": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "status": "confirmed_static",
+  "method_scan": "All APK DEX class_data direct/virtual encoded_method definitions named BO0 or BO1 with nonzero code_item offsets; not merely method_id references. Both declaring classes implement LX/08Z;. Full signatures/bodies rechecked with apk-smali.",
+  "definitions": [
+    {
+      "dex": "classes.dex",
+      "class": "LX/08a;",
+      "interfaces": [
+        "LX/08Z;"
+      ],
+      "method": "BO0",
+      "method_index": 2129,
+      "flags": 1,
+      "code_item_offset": 4583524
+    },
+    {
+      "dex": "classes.dex",
+      "class": "LX/08a;",
+      "interfaces": [
+        "LX/08Z;"
+      ],
+      "method": "BO1",
+      "method_index": 2130,
+      "flags": 1,
+      "code_item_offset": 4583556
+    },
+    {
+      "dex": "classes.dex",
+      "class": "LX/08i;",
+      "interfaces": [
+        "LX/08Z;"
+      ],
+      "method": "BO0",
+      "method_index": 2200,
+      "flags": 1,
+      "code_item_offset": 4589304
+    },
+    {
+      "dex": "classes.dex",
+      "class": "LX/08i;",
+      "interfaces": [
+        "LX/08Z;"
+      ],
+      "method": "BO1",
+      "method_index": 2201,
+      "flags": 1,
+      "code_item_offset": 4589376
+    }
+  ],
+  "pn_field_writes": [
+    "classes.dex  LX/08i;->A01(VLL)",
+    "  write opcode 0x5b, dex byte offset: 0x45f8aa",
+    "classes.dex  LX/08i;->A01(VLL)",
+    "  write opcode 0x5b, dex byte offset: 0x45f8f4"
+  ],
+  "lid_field_writes": [
+    "classes.dex  LX/08i;->A02(VL)",
+    "  write opcode 0x5b, dex byte offset: 0x45f9a8",
+    "classes.dex  LX/08i;->A02(VL)",
+    "  write opcode 0x5b, dex byte offset: 0x45f9e2"
+  ]
+}

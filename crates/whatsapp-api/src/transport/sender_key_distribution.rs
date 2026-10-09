@@ -140,8 +140,7 @@ pub(super) fn after_primary_change_in(tx: &mut WriteTx<'_>, peer: &Jid) -> Resul
     let own = crate::session::AccountRecord::load_in_write(tx)?
         .and_then(|a| a.own_jid)
         .map(|j| j.to_non_ad());
-    let own_lid: Option<Jid> =
-        tx.get_json(Table::Checkpoints, super::group_send::OWN_LID_KEY, 1)?;
+    let own_lid = super::group_send::own_lid_in(tx)?;
     if own.as_ref() == Some(peer) || own_lid.as_ref().map(Jid::to_non_ad).as_ref() == Some(peer) {
         return Ok(());
     }
@@ -375,6 +374,51 @@ mod tests {
                 .read(|tx| pending_for_peer_in(tx, &jid("123456@s.whatsapp.net")))
                 .unwrap(),
             0
+        );
+    }
+
+    #[test]
+    fn login_own_lid_does_not_invalidate_exposure_before_group_checkpoint_exists() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("login-own-rotation.redb");
+        let store = open(&path, true);
+        let own = jid("111111111111111@lid");
+        let foreign = jid("222222222222222@lid");
+        let group = jid("123456@g.us");
+        let sender = jid("15555550102@s.whatsapp.net");
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"login-identity",
+                    1,
+                    &serde_json::json!({"lid":own.to_string()}),
+                )?;
+                reserve_in(tx, &group, &sender, None, &[own.clone(), foreign.clone()])
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        store.write(|tx| after_primary_change_in(tx, &own)).unwrap();
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+        store
+            .write(|tx| after_primary_change_in(tx, &foreign))
+            .unwrap();
+        assert_eq!(
+            store.read(|tx| pending_for_peer_in(tx, &foreign)).unwrap(),
+            1
+        );
+        drop(store);
+        let store = open(&path, false);
+        assert_eq!(
+            store.read(|tx| pending_for_peer_in(tx, &foreign)).unwrap(),
+            1
         );
     }
 

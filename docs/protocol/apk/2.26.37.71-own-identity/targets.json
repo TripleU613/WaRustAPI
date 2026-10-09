@@ -1,0 +1,114 @@
+{
+  "initialize-own-lid": {
+    "class": "LX/08i;",
+    "file": "initialize-own-lid.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "load-own-pn": {
+    "class": "LX/08i;",
+    "file": "load-own-pn.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A09",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "own-device-predicate": {
+    "class": "LX/08i;",
+    "file": "own-device-predicate.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BO1",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "own-user-predicate": {
+    "class": "LX/08i;",
+    "file": "own-user-predicate.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BO0",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "proxy-own-device": {
+    "class": "LX/08a;",
+    "file": "proxy-own-device.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BO1",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "proxy-own-user": {
+    "class": "LX/08a;",
+    "file": "proxy-own-user.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BO0",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "set-own-lid": {
+    "class": "LX/08i;",
+    "file": "set-own-lid.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  },
+  "set-own-pn": {
+    "class": "LX/08i;",
+    "file": "set-own-pn.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_send.rs",
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/sender_key_distribution.rs"
+    ]
+  }
+}

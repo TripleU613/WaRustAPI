@@ -120,3 +120,8 @@ constructor and revoke-path producer, successful-close registration and the
 message A0l deletion/copy context. The earlier device-only pool precedes this
 manager exclusion. Complete other flag writers/reload and revoke admission
 remain unknown; no blanket receipt rejection is inferred.
+
+Follow-up: [stored own identity](own-identity.md) resolves BO0/BO1's proxy/direct
+implementations and PN/LID sources. Effective account contents, remaining property
+selection, complete per-user projection and own-device lifecycle remain separate
+unknowns; predicates do not consult arbitrary directory aliases.

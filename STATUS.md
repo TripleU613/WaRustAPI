@@ -2940,3 +2940,20 @@ CLI, CLI reference/API symbols, formatting and hygiene passed. Eight topics /
 unchanged topics plus four metadata artifacts. Raw signed decrement bytes match
 the recorded APK offset. Hygiene: 1,416 links, 34 bundles / 8,808,333 bytes.
 Research/tooling only; no new shared-runtime or live account test is claimed.
+
+2026-10-09 — Stored own-LID guard correction: both remote primary-change hooks
+now recognize authenticated login identity before a group-preparation checkpoint
+exists. One shared read-only lookup refuses malformed/conflicting saved authority
+without repair or echo. New `group own-lid` prints only lid_known. APK BO0/BO1
+proxy/direct bodies and stored PN/LID producers are retained; BO0 equality is
+own stored user namespaces, not a remote directory alias. Native own-primary
+versions, full own-device state and mutable identity cleanup remain unfinished.
+[Evidence and limits](docs/protocol/own-identity.md).
+
+Own-LID validation: all 807 workspace/all-feature tests, strict Clippy,
+warning-denying Rustdoc, default CLI, reference/API-symbol and formatting checks
+passed. Exact bundle reproduction and cached self-diff passed. One 45-second
+receive-only session authenticated and stopped cleanly, with sends/reconnects
+disabled; peer/actions/receipts/outbox/events remained unchanged. Eight additional
+inbound checkpoints remain unclassified; no live own-primary transition is
+claimed. See the linked own-identity evidence for counts and limits.

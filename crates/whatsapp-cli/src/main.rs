@@ -889,6 +889,9 @@ enum ContactsCmd {
 #[derive(Subcommand)]
 #[cfg(feature = "experimental-transport")]
 enum GroupCmd {
+    /// Inspect whether our saved own LID is known (offline, redacted).
+    OwnLid,
+
     /// Inspect saved frozen directory-key batch outcomes (offline, redacted).
     KeyQueries {
         /// Existing private message JSON request_id; never queries or resends.

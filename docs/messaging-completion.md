@@ -3002,3 +3002,18 @@ Receipt-manager checks: 67 xtask tests and strict xtask Clippy passed; rebuilt
 research CLI, CLI reference/API symbols, formatting and hygiene passed. The
 8-topic / 13-file / 301,312-byte snapshot reproduces exactly and self-diffs
 unchanged; no cross-release or live-runtime parity is inferred.
+
+2026-10-09 — **Implemented/offline:** authenticated own-LID source now protects
+remote primary device refresh/version and sender-key invalidation before group
+preparation. `group own-lid` is a redacted read-only availability inspector;
+malformed/conflicting sources refuse without writes. Native BO0/BO1 and stored
+PN/LID producers are confirmed, without claiming full own-device or identity
+cleanup parity. [Evidence and limits](protocol/own-identity.md).
+
+Own-LID validation: all 807 workspace/all-feature tests, strict Clippy,
+warning-denying Rustdoc, default CLI, reference/API-symbol and formatting checks
+passed. Exact bundle reproduction and cached self-diff passed. One 45-second
+receive-only session authenticated and stopped cleanly, with sends/reconnects
+disabled; peer/actions/receipts/outbox/events remained unchanged. Eight additional
+inbound checkpoints remain unclassified; no live own-primary transition is
+claimed. See the linked own-identity evidence for counts and limits.

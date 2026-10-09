@@ -1,0 +1,50 @@
+{
+  "initialize-own-lid.txt": {
+    "bytes": 6157,
+    "sha256": "fec107503d65822573a41c4c764cbc37c15c57b4056b74ae53be626c392d68e9"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "load-own-pn.txt": {
+    "bytes": 951,
+    "sha256": "9a1a4a923f1245ac1b7b361301955cb01621c03b93af363cb5b589a2aa733c2b"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "own-device-predicate.txt": {
+    "bytes": 1111,
+    "sha256": "c69e7455f2f2b588ef8a31aa15d4ebf95aa3a2be99b60492e8d4058b09f69fcd"
+  },
+  "own-user-predicate.txt": {
+    "bytes": 1182,
+    "sha256": "cb442c0494e34db634dac059b398c1100b8ed5805eb5b3d908da2166796b9213"
+  },
+  "proxy-own-device.txt": {
+    "bytes": 663,
+    "sha256": "53c1e6b7d161dfb8757cf086bf8310335f3477d14a5aeb874e043173a93a6074"
+  },
+  "proxy-own-user.txt": {
+    "bytes": 611,
+    "sha256": "c06a0e8ae5df509ce1210b46a4970f3dd1fbaa951fac3f78787f4a07cfaf1ef4"
+  },
+  "set-own-lid.txt": {
+    "bytes": 2977,
+    "sha256": "194c9956005e8b43b7f97c825cc928a063b3623a173368b257c7dcfb809ffc3b"
+  },
+  "set-own-pn.txt": {
+    "bytes": 4257,
+    "sha256": "c182d3a476affa4c604ea9037408628f30c00547a8b2d3fab601f18f3a8caa2b"
+  },
+  "targets.json": {
+    "bytes": 3607,
+    "sha256": "d5aa45a4e0838cb083d91445b037ec837233a446a2e551f05b6742e16ec89682"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}
