@@ -595,7 +595,8 @@ contact existence check therefore reuses that query with `<contact/>` (and
 optionally `<lid/>`, `<status/>`, `<disappearing_mode/>`) in `query` and
 `<user><contact>+E.164</contact></user>` in `list`; the reply `user` carries
 `jid` when the number is on WhatsApp and `<contact type="in"|"out">` (type
-values inferred from the public protocol; `in`/`out` are tokens).
+values `in`, `out` and `invalid` are confirmed in APK 37.71 `0u7.C8f`
+04f0..056c; their complete downstream state handling is not ported).
 
 Companion sync of a saved contact is the `contactAction` mutation above
 (`regular_high`? collection **unknown**; public clients use `regular_high` for
@@ -611,8 +612,69 @@ check` queues the request shape described above (`<contact/>`, `<lid/>` and
 `list`) through the durable one-shot queue in `transport/actions.rs` (kind
 `contact-check`); `contacts::ingest` parses a settled reply's `usync/list/user`
 nodes into a `contact-status:<digits>` row (`on_whatsapp`, `jid`, an optional
-`lid` parsed defensively since its shape is **unknown**) or, for a top-level
+`lid` read from the APK-confirmed `val` attribute after successful
+`usync/result/lid` protocol metadata) or, for a top-level
 `iq type=error`, records the refusal against the checked number via an
 internal `contact-check-req:<action id>` mapping (since action labels must
-never carry a phone number). Nothing here has sent a live request to a
-WhatsApp server; the node shape is offline-tested only.
+never carry a phone number). The LID correction below was validated offline;
+no fresh contact request was sent for that correction.
+
+
+### Contact LID response correction (2026-10-08)
+
+**Confirmed, static APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+[`0u7.C8f`](apk/2.26.37.71-contact-lid/contact-success-parser.txt)
+0062..0070 selects `usync/result`; 0276..0298 requests the LID protocol result
+only when `9uE.A09` selected that protocol. At 0e0c..0e42 it checks that result's
+`A3p.A05`, then reads the optional per-user `lid` child **attribute `val`** as
+plain LID class `0ZY`. The prior Rust `lid@jid` fixture and parser were incorrect;
+this attribute is not a compatibility fallback established by this trace.
+
+[`0u7.A01`](apk/2.26.37.71-contact-lid/contact-protocol-result.txt)
+parses non-contact protocol results: an `error` child produces false (0166),
+otherwise optional `refresh` is parsed with `Long.parseLong` and success is true
+(01b4..01e6). [`A3p.<init>`](apk/2.26.37.71-contact-lid/contact-result-flag.txt)
+stores that constructor boolean in `A05`. Thus an IQ result alone does not
+establish LID protocol success. Missing result metadata does not authorize using
+an otherwise plausible per-user LID. Malformed `refresh` cannot be interpreted
+as a successful result; refresh scheduling/backoff application is not implemented.
+
+[`0hs.A0A`](apk/2.26.37.71-contact-lid/contact-typed-attribute.txt)
+uses an existing decoded JID or the text factory, checks/logs compliance, casts to
+the requested class and returns null on `ClassCastException`. The existing
+[plain-address evidence](mex-participant-address-evidence.txt) establishes
+`0D1`/`0ZY` validation: ASCII 1..15 digits without leading zero, no device suffix,
+and `hosted.lid` canonicalizes to `lid`. The Rust parser reuses this validation;
+it does not normalize device addresses into accounts. Text is validated before
+the generic JID parser can discard an explicitly zero device/agent suffix.
+Decoded `AgentDevice` addresses are rejected even with zero components.
+
+**Implemented/offline-tested:** `contacts::ingest` stores this optional LID only
+with successful protocol metadata. `contacts check` already exposes the saved
+status; no new command or HTTP handler is introduced. Fixtures cover typed/text
+attributes, hosted normalization, wrong attribute/subtype, explicit zero suffix,
+invalid digits/length, absent/error metadata, malformed/overflow refresh and
+once-only durable ingestion. Missing/rejected LIDs remain null, not proof that
+an account has no LID. Existing ingested markers/statuses are preserved; no
+historical reprocessing, fresh query, key change or identity mapping is performed.
+Contact metadata is not authority to replace a Signal pin or authenticated alias.
+
+**Research boundary:** a case-sensitive `Usync`/`usync` string search selected
+111 strings from 453,954 before tracing `0u7`; the selected methods, rather than
+the bulk class/string export, are retained in the bundle. The LID branch is
+not a source of mandatory registration fields or Signal identity authority.
+
+**Unknown:** fresh live contact replies for this correction, full contact
+`in`/`out`/`invalid` state-machine parity, and refresh/backoff application.
+The existence boolean still follows the retained per-user `jid` presence rule.
+Do not infer account ban status from absent LID metadata. Evidence and reusable
+hash-pinned recipe are in the [contact LID bundle](apk/2.26.37.71-contact-lid/manifest.json)
+and [recipe](apk/recipes/2.26.37.71-contact-lid.json); raw APK/private state stay local.
+
+
+Validation: 710 workspace/all-feature tests, strict workspace/all-target/all-feature
+Clippy, warning-free Rustdoc, 24 default CLI checks, regenerated CLI reference,
+API library-symbol check, formatting and repository hygiene passed. Exact APK
+bundle re-export verified all nine files (94,899 bytes). No account store was
+opened, no live request sent, and no historical action reset by this chunk.

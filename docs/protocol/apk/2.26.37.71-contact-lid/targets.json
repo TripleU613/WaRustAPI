@@ -1,0 +1,61 @@
+{
+  "contact-protocol-result": {
+    "anchors": [
+      "error",
+      "refresh"
+    ],
+    "class": "LX/0u7;",
+    "file": "contact-protocol-result.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "method_shorty": "LLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/contacts.rs"
+    ]
+  },
+  "contact-result-flag": {
+    "class": "LX/A3p;",
+    "file": "contact-result-flag.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "method_shorty": "VLLLLIZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/contacts.rs"
+    ]
+  },
+  "contact-success-parser": {
+    "anchors": [
+      "lid",
+      "val"
+    ],
+    "class": "LX/0u7;",
+    "file": "contact-success-parser.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "C8f",
+    "method_shorty": "VLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/contacts.rs"
+    ]
+  },
+  "contact-typed-attribute": {
+    "anchors": [
+      "ProtocolTreeNode/getAttributeJid/failed to convert"
+    ],
+    "class": "LX/0hs;",
+    "file": "contact-typed-attribute.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0A",
+    "method_shorty": "LLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/contacts.rs"
+    ]
+  }
+}

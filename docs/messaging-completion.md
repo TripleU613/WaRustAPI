@@ -2158,3 +2158,12 @@ an unknown-field invocation exited nonzero with no partial stdout/private-key
 echo. Repository hygiene verified 957 local links, package licenses, tracked-file
 budgets and 4447021 bytes across six checksum bundles. No account or live-server
 access was involved; fresh runtime mapping/cleanup validation remains pending.
+
+
+2026-10-08 contact metadata correction: APK 37.71 `0u7.C8f/A01` confirms
+`user/lid@val` after successful `usync/result/lid`; Rust ingestion now uses that
+shape and rejects non-plain LID subtypes. The earlier `jid` attribute was wrong.
+This improves discovery metadata, not identity-replacement authority or full
+cross-device synchronization. Existing status/markers are preserved and no query
+was replayed. Fresh live validation remains pending. See
+[contact response trace](protocol/chat-actions.md#contact-lid-response-correction-2026-10-08).

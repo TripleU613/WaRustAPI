@@ -2084,3 +2084,12 @@ an unknown-field invocation exited nonzero with no partial stdout/private-key
 echo. Repository hygiene verified 957 local links, package licenses, tracked-file
 budgets and 4447021 bytes across six checksum bundles. No account or live-server
 access was involved; fresh runtime mapping/cleanup validation remains pending.
+
+
+Contact LID ingestion (2026-10-08, **confirmed static APK 37.71**, offline-tested):
+corrected per-user `lid@jid` to `lid@val`, gated by successful `usync/result/lid`
+metadata and strict plain-LID validation. Wrong subtypes/zero device suffixes and
+failed/missing protocol metadata cannot supply a LID. Existing CLI status exposes
+the result. Historical ingested rows, identities and reservations remain intact.
+Fresh live replies, refresh/backoff and full contact-type state parity remain
+unverified. See [contact response evidence](docs/protocol/chat-actions.md#contact-lid-response-correction-2026-10-08).

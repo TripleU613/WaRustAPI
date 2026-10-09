@@ -18,12 +18,15 @@
 //!   `<list><user><contact>+E.164</contact></user></list>`. The reply's `user`
 //!   carries `jid` when the number is on WhatsApp and a `contact
 //!   type="in"|"out"` child whose text is the number (confirmed); a `lid`
-//!   child, if present, is parsed defensively since its exact shape was not
-//!   traced (chat-actions.md section 7 marks it **unknown**).
+//!   child uses `val`, gated by successful `usync/result/lid` metadata
+//!   (APK 37.71 `LX/0u7.C8f`; chat-actions.md section 7).
 use crate::{
     Error, Result,
     binary::{Node, NodeContent},
-    model::{jid::Jid, time::Timestamp},
+    model::{
+        jid::{Jid, JidKind},
+        time::Timestamp,
+    },
     store::{ProtocolStore, Table},
 };
 use serde::{Deserialize, Serialize};
@@ -269,7 +272,7 @@ pub struct ContactStatus {
     pub on_whatsapp: bool,
     /// The account's phone-number JID, when returned.
     pub jid: Option<Jid>,
-    /// The account's LID, when a `lid` child was present and parsed.
+    /// The plain account LID from `lid@val`, when its protocol result succeeded.
     pub lid: Option<Jid>,
     /// When this status was recorded.
     pub checked_at: Timestamp,
@@ -331,9 +334,44 @@ fn attr_jid(node: &Node, name: &str) -> Option<Jid> {
         .or_else(|| Jid::parse(value.as_text()?).ok())
 }
 
+// APK 37.71 0u7.A01: non-contact protocols succeed only without an error
+// child; optional refresh uses Long.parseLong. A3p.<init> stores that flag.
+fn lid_protocol_succeeded(usync: &Node) -> bool {
+    let Some(lid) = usync.child("result").and_then(|result| result.child("lid")) else {
+        return false;
+    };
+    lid.child("error").is_none()
+        && lid.get_attr("refresh").is_none_or(|value| {
+            value
+                .as_text()
+                .and_then(super::mex::java_decimal_long)
+                .is_some()
+        })
+}
+
+fn parse_lid(node: &Node) -> Option<Jid> {
+    let value = node.get_attr("val")?;
+    // 0hs.A0A performs a typed class cast, returning null for a wrong subtype.
+    // Reuse the traced 0D1/0ZY plain-address validation, including hosted.lid
+    // canonicalization. Validate text before Jid::parse loses explicit :0.
+    let text = if let Some(jid) = value.as_jid() {
+        if jid.kind != JidKind::Plain || jid.agent != 0 || jid.device != 0 {
+            return None;
+        }
+        jid.to_string()
+    } else {
+        value.as_text()?.to_owned()
+    };
+    let address = super::mex::ParticipantAddress::parse(&text).ok()?;
+    if address.kind() != super::mex::ParticipantAddressKind::Lid {
+        return None;
+    }
+    Jid::new(address.user(), crate::model::jid::Server::Lid).ok()
+}
+
 /// Parse one reply `user` node into `(digits, status)`. Defensive: any
 /// unexpected shape is skipped rather than treated as an error.
-fn parse_user(user: &Node) -> Option<(String, ContactStatus)> {
+fn parse_user(user: &Node, lid_succeeded: bool) -> Option<(String, ContactStatus)> {
     let contact = user.child("contact")?;
     // A wire round trip decodes non-token, non-packed content as raw bytes
     // (`binary/decoder.rs::read_content` never assumes UTF-8 for content, only
@@ -346,7 +384,11 @@ fn parse_user(user: &Node) -> Option<(String, ContactStatus)> {
     };
     let (digits, _) = normalize(&text).ok()?;
     let jid = attr_jid(user, "jid");
-    let lid = user.child("lid").and_then(|l| attr_jid(l, "jid"));
+    // APK 37.71 0u7.C8f 0e0c..0e42 checks A3p.A05 before reading
+    // user/lid@val as 0ZY. Contact metadata never authorizes identity changes.
+    let lid = lid_succeeded
+        .then(|| user.child("lid").and_then(parse_lid))
+        .flatten();
     Some((
         digits,
         ContactStatus {
@@ -386,7 +428,9 @@ pub fn ingest(store: &ProtocolStore) -> Result<usize> {
                             .iter()
                             .filter(|n| n.description == "user")
                         {
-                            let Some((digits, status)) = parse_user(user) else {
+                            let Some((digits, status)) =
+                                parse_user(user, lid_protocol_succeeded(usync))
+                            else {
                                 continue;
                             };
                             tx.put_json(
@@ -499,7 +543,7 @@ mod tests {
     fn user_node(phone: &str, jid: Option<&str>, lid: Option<&str>) -> Node {
         let mut children = vec![Node::new("contact").attr("type", "in").text(phone)];
         if let Some(lid) = lid {
-            children.push(Node::new("lid").attr("jid", Jid::parse(lid).unwrap()));
+            children.push(Node::new("lid").attr("val", Jid::parse(lid).unwrap()));
         }
         let mut n = Node::new("user").children(children);
         if let Some(jid) = jid {
@@ -601,6 +645,7 @@ mod tests {
             .attr("id", id.as_str())
             .attr("type", "result")
             .children(vec![Node::new("usync").attr("sid", "x").children(vec![
+                Node::new("result").children(vec![Node::new("lid")]),
                 Node::new("list").children(vec![user_node(
                     "+15551234567",
                     Some("15551234567@s.whatsapp.net"),
@@ -631,6 +676,96 @@ mod tests {
         let saved2 = status(&s, "+15559999999").unwrap().unwrap();
         assert!(!saved2.on_whatsapp);
         assert!(saved2.jid.is_none());
+    }
+
+    #[test]
+    fn apk_lid_val_is_typed_and_gated_by_protocol_success() {
+        // Literal APK attribute, independent of the old fixture helper's jid.
+        let user = Node::new("user")
+            .attr("jid", "15551234567@s.whatsapp.net")
+            .children(vec![
+                Node::new("contact").text("+15551234567"),
+                Node::new("lid").attr("val", "999999999999@lid"),
+            ]);
+        assert_eq!(
+            parse_user(&user, true).unwrap().1.lid,
+            Some(Jid::parse("999999999999@lid").unwrap())
+        );
+        assert!(parse_user(&user, false).unwrap().1.lid.is_none());
+        for invalid in [
+            "999:0@lid",
+            "999:1@lid",
+            "999.0@lid",
+            "999@s.whatsapp.net",
+            "999@bot",
+            "0@lid",
+            "0999@lid",
+            "1234567890123456@lid",
+            "abc@lid",
+        ] {
+            assert!(
+                parse_lid(&Node::new("lid").attr("val", invalid)).is_none(),
+                "{invalid}"
+            );
+        }
+        assert!(parse_lid(&Node::new("lid").attr("jid", "999@lid")).is_none());
+        assert_eq!(
+            parse_lid(&Node::new("lid").attr("val", "999@hosted.lid")),
+            Some(Jid::parse("999@lid").unwrap())
+        );
+        assert!(
+            parse_lid(&Node::new("lid").attr(
+                "val",
+                Jid::new_ad("999", 0, 0, crate::model::jid::Server::Lid).unwrap()
+            ))
+            .is_none()
+        );
+        let metadata =
+            |lid| Node::new("usync").children(vec![Node::new("result").children(vec![lid])]);
+        assert!(!lid_protocol_succeeded(&Node::new("usync")));
+        assert!(lid_protocol_succeeded(&metadata(Node::new("lid"))));
+        assert!(!lid_protocol_succeeded(&metadata(
+            Node::new("lid").children(vec![Node::new("error").attr("code", "500")])
+        )));
+        assert!(lid_protocol_succeeded(&metadata(
+            Node::new("lid").attr("refresh", "+60")
+        )));
+        assert!(!lid_protocol_succeeded(&metadata(
+            Node::new("lid").attr("refresh", "invalid")
+        )));
+        assert!(!lid_protocol_succeeded(&metadata(
+            Node::new("lid").attr("refresh", "9223372036854775808")
+        )));
+    }
+
+    #[test]
+    fn ingest_keeps_contact_status_but_discards_lid_when_protocol_failed_or_missing() {
+        let (_d, s) = store();
+        for protocol_result in [
+            None,
+            Some(Node::new("lid").children(vec![Node::new("error").attr("code", "500")])),
+        ] {
+            let id = queue_check(&s, "+15551234567").unwrap();
+            super::super::actions::reserve_pending(&s).unwrap();
+            let mut children = vec![Node::new("list").children(vec![user_node(
+                "+15551234567",
+                Some("15551234567@s.whatsapp.net"),
+                Some("999999999999@lid"),
+            )])];
+            if let Some(result) = protocol_result {
+                children.push(Node::new("result").children(vec![result]));
+            }
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("usync").children(children)]);
+            assert!(super::super::actions::record_reply(&s, &reply).unwrap());
+            assert_eq!(ingest(&s).unwrap(), 1);
+            let saved = status(&s, "+15551234567").unwrap().unwrap();
+            assert!(saved.on_whatsapp);
+            assert!(saved.lid.is_none());
+            assert_eq!(ingest(&s).unwrap(), 0);
+        }
     }
 
     #[test]

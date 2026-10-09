@@ -5058,7 +5058,7 @@
           "Contacts"
         ],
         "summary": "Queue a WhatsApp-existence check for a number",
-        "description": "Queue a `usync` WhatsApp-existence check for a number and show any already-saved status; a session transmits the queued action.",
+        "description": "Queue a `usync` WhatsApp-existence check for a number and show any already-saved status; a session transmits the queued action. Saved ContactStatus.lid now reads user/lid@val only after usync/result/lid protocol success (no error child, optional Java Long refresh parse), using APK 37.71 0u7.C8f/A01 and 0hs.A0A evidence. A plain 1..15-digit nonzero-leading LID is required; hosted.lid canonicalizes to lid, device/phone/bot addresses are rejected. Missing or rejected LID metadata yields null, not proof of absent account identity. The prior lid@jid shape was refuted. This is offline ingestion/status inspection exposed by the existing CLI, not a new HTTP route or automatic retry; consumed markers and old statuses remain unchanged. Contact metadata does not replace Signal pins or authenticated aliases. Fresh live validation, refresh/backoff scheduling and full contact-type parity remain unverified. See docs/protocol/chat-actions.md#contact-lid-response-correction-2026-10-08.",
         "operationId": "checkContact",
         "x-cli": "whatsapp-cli contacts check",
         "x-transport": [

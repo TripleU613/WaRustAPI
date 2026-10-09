@@ -1311,3 +1311,17 @@ Remote newer-ADV application (2026-10-08, APK 37.71 static/offline): absent non-
 
 
 Pending removal registry (2026-10-08, **static/offline**): signed device reconciliation records disappeared companions and clears authenticated returned addresses in nullable pending_removed_devices. Legacy null stays unknown until signed reconciliation; unsigned responses do not initialize/clear it. Offline absent candidates proceed only with known no-marker state; pending_device_teardown refuses a marked address. Complete-list CAS includes removal state. Inspection exposes unknown/known-empty/count. No cleanup, identity/key deletion, reset, alias fan-out or worker parity is implemented. [Evidence and limits](peer-identity.md#namespace-local-pending-removal-registry-2026-10-08).
+
+
+## Contact LID result parsing (2026-10-08)
+
+**Confirmed**, APK 2.26.37.71 (`1755111a…7d5c`): `0u7.C8f` reads
+`user/lid@val` as `0ZY` after `usync/result/lid` protocol success;
+`0u7.A01`, `A3p.<init>` and `0hs.A0A` close the success-flag/typed-attribute chain.
+The earlier Rust `lid@jid` assumption is **refuted**. Strict plain-address
+validation and the result gate are now implemented and offline-tested.
+Fresh live replies, complete contact state handling and refresh scheduling remain
+**unknown/unverified**. The four-topic
+[recipe](apk/recipes/2.26.37.71-contact-lid.json) preserves a compact deterministic
+[build-specific bundle](apk/2.26.37.71-contact-lid/manifest.json); exact APK
+re-export with `--check` matches. See [reasoning and boundaries](chat-actions.md#contact-lid-response-correction-2026-10-08).
