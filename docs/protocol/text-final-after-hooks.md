@@ -145,4 +145,3 @@ self-diff (25 topics/four metadata artifacts unchanged), complete 54-entry sourc
 index assertions, CLI reference, API/library-symbol, formatting and whitespace
 checks passed. Hygiene checked 2,090 local links and 102 APK bundles. No fresh
 runtime suite or live account test is claimed.
-
