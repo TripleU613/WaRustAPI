@@ -150,3 +150,7 @@ provider cases, AVI's scoped setter and bounded table exclusions were checked.
 CLI-reference regeneration, API/library-symbol checks, formatting, whitespace
 and hygiene passed (2,082 local links; 101 bundles / 21,274,682 bytes).
 No fresh workspace/runtime suite or live account test is claimed.
+
+Follow-up: [final hooks and ordered index](text-final-after-hooks.md) complete
+54/54 immediate after mappings. This historical bundle remains unchanged;
+transitive effects and the before set are still incomplete.

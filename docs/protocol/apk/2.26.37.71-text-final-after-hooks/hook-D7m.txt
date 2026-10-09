@@ -1,0 +1,122 @@
+# APK-derived structural disassembly: LX/D7m;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=9
+  # full signature: LX/D7m;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v2, #0x0
+  0002..0008 op=71 invoke-static {v7, v2}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=71 invoke-static {v7}, LX/B2N;->A00(LX/178;)LX/Fdp;
+  000e..0010 op=0c move-result-object v5
+  0010..0014 op=38 if-eqz v5, +0xcf
+  0014..0016 op=1d monitor-enter
+  0016..001a op=55 iget-boolean v0, v5, LX/Fdp;->A0R:Z
+  001a..001c op=1e monitor-exit
+  001c..0020 op=38 if-eqz v0, +0xc9
+  0020..0024 op=54 iget-object v0, v6, LX/D7m;->A03:LX/05B;
+  0024..002a op=71 invoke-static {v0}, LX/Ayp;->A0J(LX/05B;)LX/12K;
+  002a..002c op=0c move-result-object v1
+  002c..002e op=12 const/4 v0, #0x1
+  002e..0034 op=6e invoke-virtual {v1, v7, v0}, LX/12K;->A0Q(LX/178;Z)Ljava/lang/String;
+  0034..003a op=6e invoke-virtual {v5, v2}, LX/Fdp;->A0E(Z)V
+  003a..003e op=54 iget-object v0, v6, LX/D7m;->A02:LX/05B;
+  003e..0044 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0044..0046 op=0c move-result-object v0
+  0046..004a op=1f check-cast v0, LX/Cg7;
+  004a..0050 op=6e invoke-virtual {v0, v7}, LX/Cg7;->A01(LX/178;)V
+  0050..0054 op=54 iget-object v4, v5, LX/Fdp;->A0P:Ljava/lang/String;
+  0054..0058 op=38 if-eqz v4, +0x12
+  0058..005e op=6e invoke-virtual {v4}, Ljava/lang/String;->length()I
+  005e..0060 op=0a move-result v0
+  0060..0064 op=38 if-eqz v0, +0xc
+  0064..0068 op=54 iget-object v3, v5, LX/Fdp;->A09:Lcom/whatsapp/infra/core/jid/UserJid;
+  0068..006c op=39 if-nez v3, +0x71
+  006c..0072 op=6e invoke-virtual {v7}, LX/178;->B1V()Lcom/whatsapp/infra/core/jid/UserJid;
+  0072..0074 op=0c move-result-object v3
+  0074..0078 op=39 if-nez v3, +0x6b
+  0078..007c op=54 iget-object v0, v5, LX/Fdp;->A0D:LX/EUt;
+  007c..0080 op=38 if-eqz v0, +0x45
+  0080..0084 op=54 iget-object v0, v0, LX/EUt;->A05:LX/FRi;
+  0084..0088 op=38 if-eqz v0, +0x41
+  0088..008c op=13 const/16 v1, #0xc8
+  008c..0090 op=52 iget v0, v5, LX/Fdp;->A03:I
+  0090..0094 op=33 if-ne v1, v0, +0x3b
+  0094..009a op=71 invoke-static {}, LX/00K;->A00()V
+  009a..009e op=54 iget-object v3, v5, LX/Fdp;->A0D:LX/EUt;
+  009e..00a2 op=1a const-string v2, "Required value was null."
+  00a2..00a6 op=38 if-eqz v3, +0x7e
+  00a6..00aa op=54 iget-object v0, v6, LX/D7m;->A01:LX/05B;
+  00aa..00b0 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  00b0..00b2 op=0c move-result-object v1
+  00b2..00b6 op=1f check-cast v1, LX/0zj;
+  00b6..00ba op=54 iget-object v0, v3, LX/EUt;->A05:LX/FRi;
+  00ba..00be op=38 if-eqz v0, +0x6d
+  00be..00c2 op=54 iget-object v0, v0, LX/FRi;->A02:Ljava/lang/String;
+  00c2..00c8 op=6e invoke-virtual {v1, v0}, LX/0zj;->A01(Ljava/lang/String;)LX/1jl;
+  00c8..00ca op=0c move-result-object v4
+  00ca..00ce op=38 if-eqz v4, +0x1e
+  00ce..00d4 op=72 invoke-interface {v4}, LX/1jl;->AZX()LX/CrW;
+  00d4..00d6 op=0c move-result-object v0
+  00d6..00da op=38 if-eqz v0, +0x5a
+  00da..00de op=54 iget-object v3, v0, LX/CrW;->A03:LX/FRh;
+  00de..00e2 op=38 if-eqz v3, +0x30
+  00e2..00e6 op=54 iget-object v2, v5, LX/Fdp;->A0K:Ljava/lang/String;
+  00e6..00ea op=54 iget-object v1, v3, LX/FRh;->A0F:Ljava/lang/String;
+  00ea..00ee op=38 if-eqz v1, +0x17
+  00ee..00f4 op=6e invoke-virtual {v1}, Ljava/lang/String;->length()I
+  00f4..00f6 op=0a move-result v0
+  00f6..00fa op=38 if-eqz v0, +0x11
+  00fa..0100 op=6e invoke-virtual {v1, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  0100..0102 op=0a move-result v0
+  0102..0106 op=38 if-eqz v0, +0xb
+  0106..010a op=38 if-eqz v8, +0x54
+  010a..010e op=1c const-class v0, LX/D7m;
+  010e..0114 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  0114..0116 op=0c move-result-object v0
+  0116..0118 op=27 throw v0
+  0118..011c op=5b iput-object v2, v3, LX/FRh;->A0F:Ljava/lang/String;
+  011c..0120 op=54 iget-object v0, v6, LX/D7m;->A00:LX/05B;
+  0120..0126 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0126..0128 op=0c move-result-object v2
+  0128..012c op=1f check-cast v2, LX/0zl;
+  012c..012e op=07 move-object v0, v4
+  012e..0132 op=1f check-cast v0, LX/178;
+  0132..0136 op=53 iget-wide v0, v0, LX/178;->A0j:J
+  0136..013c op=6e invoke-virtual {v2, v4, v0, v1}, LX/0zl;->A0C(LX/1jl;J)V
+  013c..013e op=28 goto -0x1b
+  013e..0142 op=1a const-string v0, "PaymentsDatabaseInserterPostProcessor/updateCheckoutMessageWithTransactionInfo -> checkoutInfoContent is null PAY"
+  0142..0148 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  0148..014a op=28 goto -0x21
+  014a..0150 op=6e invoke-virtual {v3}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  0150..0152 op=0c move-result-object v2
+  0152..0156 op=38 if-eqz v2, -0x6d
+  0156..015a op=54 iget-object v0, v6, LX/D7m;->A05:LX/05B;
+  015a..0160 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0160..0162 op=0c move-result-object v1
+  0162..0166 op=1f check-cast v1, LX/Cgi;
+  0166..016a op=54 iget-object v0, v5, LX/Fdp;->A0K:Ljava/lang/String;
+  016a..0170 op=6e invoke-virtual {v1, v4, v2, v0}, LX/Cgi;->A01(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  0170..0174 op=54 iget-object v0, v6, LX/D7m;->A04:LX/05B;
+  0174..017a op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  017a..017c op=0c move-result-object v0
+  017c..0180 op=1f check-cast v0, LX/CPo;
+  0180..0186 op=6e invoke-virtual {v0, v4, v3}, LX/CPo;->A00(Ljava/lang/String;Lcom/whatsapp/infra/core/jid/UserJid;)V
+  0186..018a op=29 goto/16 -0x87
+  018a..0190 op=71 invoke-static {v2}, LX/1xf;->A16(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+  0190..0192 op=0c move-result-object v0
+  0192..0194 op=27 throw v0
+  0194..019a op=71 invoke-static {v2}, LX/1xf;->A16(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+  019a..019c op=0c move-result-object v0
+  019c..019e op=27 throw v0
+  019e..01a4 op=71 invoke-static {v2}, LX/1xf;->A16(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+  01a4..01a6 op=0c move-result-object v0
+  01a6..01a8 op=27 throw v0
+  01a8..01aa op=0d move-exception v0
+  01aa..01ac op=1e monitor-exit
+  01ac..01ae op=27 throw v0
+  01ae..01b0 op=0e return-void
+  # exception table: 2 try range(s)
+  # catch <all> code_units 000b..000d -> 00d4
+  # catch <all> code_units 00d5..00d6 -> 00d4
+.end method

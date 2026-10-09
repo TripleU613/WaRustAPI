@@ -1,0 +1,80 @@
+# APK-derived structural disassembly: LX/8CH;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=11
+  # full signature: LX/8CH;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v9, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=54 iget-object v0, v8, LX/8CH;->A00:LX/05B;
+  000c..0012 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0012..0014 op=0c move-result-object v6
+  0014..0018 op=1f check-cast v6, LX/7ql;
+  0018..001e op=71 invoke-static {v9}, LX/7SJ;->A00(LX/178;)LX/8Bi;
+  001e..0020 op=0c move-result-object v0
+  0020..0022 op=12 const/4 v5, #0x0
+  0022..0026 op=38 if-eqz v0, +0x71
+  0026..002a op=54 iget-object v7, v0, LX/8Bi;->A00:Ljava/util/List;
+  002a..0030 op=71 invoke-static {v9}, LX/7ql;->A00(LX/178;)Z
+  0030..0032 op=0a move-result v0
+  0032..0036 op=38 if-eqz v7, +0x27
+  0036..003a op=38 if-eqz v0, +0x6e
+  003a..003e op=53 iget-wide v3, v9, LX/178;->A0j:J
+  003e..0042 op=16 const-wide/16 v1, #0xffff (-1)
+  0042..0046 op=31 cmp-long v0, v3, v1
+  0046..004a op=38 if-eqz v0, +0x61
+  004a..004e op=54 iget-object v0, v6, LX/7ql;->A01:LX/05B;
+  004e..0054 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0054..0056 op=0c move-result-object v3
+  0056..005a op=1f check-cast v3, LX/8G7;
+  005a..005e op=62 sget-object v2, LX/02S;->A00:Ljava/lang/Integer;
+  005e..0062 op=53 iget-wide v0, v9, LX/178;->A0j:J
+  0062..0068 op=6e invoke-virtual {v3, v2, v7, v0, v1}, LX/8G7;->A03(Ljava/lang/Integer;Ljava/util/List;J)Z
+  0068..006a op=0a move-result v0
+  006a..006e op=38 if-eqz v0, +0x4f
+  006e..0072 op=38 if-eqz v10, +0x52
+  0072..0076 op=1c const-class v0, LX/8CH;
+  0076..007c op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  007c..007e op=0c move-result-object v0
+  007e..0080 op=27 throw v0
+  0080..0084 op=38 if-eqz v0, +0x3f
+  0084..0088 op=54 iget-object v0, v6, LX/7ql;->A00:LX/05B;
+  0088..008e op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  008e..0090 op=0c move-result-object v2
+  0090..0094 op=1f check-cast v2, LX/7f7;
+  0094..0098 op=54 iget-object v0, v9, LX/178;->A0i:LX/1gc;
+  0098..009c op=54 iget-object v1, v0, LX/1gc;->A00:LX/0Cy;
+  009c..00a0 op=52 iget v0, v9, LX/178;->A0h:I
+  00a0..00a6 op=6e invoke-virtual {v2, v1, v0}, LX/7f7;->A00(LX/0Cy;I)Ljava/util/List;
+  00a6..00a8 op=0c move-result-object v5
+  00a8..00ae op=72 invoke-interface {v5}, Ljava/util/List;->isEmpty()Z
+  00ae..00b0 op=0a move-result v0
+  00b0..00b4 op=39 if-nez v0, +0x31
+  00b4..00b8 op=53 iget-wide v3, v9, LX/178;->A0j:J
+  00b8..00bc op=16 const-wide/16 v1, #0xffff (-1)
+  00bc..00c0 op=31 cmp-long v0, v3, v1
+  00c0..00c4 op=38 if-eqz v0, +0x29
+  00c4..00c8 op=54 iget-object v0, v6, LX/7ql;->A01:LX/05B;
+  00c8..00ce op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  00ce..00d0 op=0c move-result-object v3
+  00d0..00d4 op=1f check-cast v3, LX/8G7;
+  00d4..00d8 op=62 sget-object v2, LX/02S;->A00:Ljava/lang/Integer;
+  00d8..00dc op=53 iget-wide v0, v9, LX/178;->A0j:J
+  00dc..00e2 op=6e invoke-virtual {v3, v2, v5, v0, v1}, LX/8G7;->A03(Ljava/lang/Integer;Ljava/util/List;J)Z
+  00e2..00e4 op=0a move-result v0
+  00e4..00e8 op=38 if-eqz v0, +0x17
+  00e8..00ec op=22 new-instance v1, LX/8Bi;
+  00ec..00f2 op=70 invoke-direct {v1, v5}, LX/8Bi;-><init>(Ljava/util/List;)V
+  00f2..00f6 op=1c const-class v0, LX/8Bi;
+  00f6..00fc op=71 invoke-static {v1, v9, v0}, LX/6al;->A1M(LX/1i2;LX/178;Ljava/lang/Class;)V
+  00fc..00fe op=28 goto -0x47
+  00fe..0102 op=62 sget-object v5, LX/01f;->A00:LX/01f;
+  0102..0104 op=28 goto -0x2d
+  0104..0106 op=07 move-object v7, v5
+  0106..0108 op=28 goto -0x6e
+  0108..010c op=1c const-class v0, LX/8Bi;
+  010c..0112 op=71 invoke-static {v5, v9, v0}, LX/6al;->A1M(LX/1i2;LX/178;Ljava/lang/Class;)V
+  0112..0114 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

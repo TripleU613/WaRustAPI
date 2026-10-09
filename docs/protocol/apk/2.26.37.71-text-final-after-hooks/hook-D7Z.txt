@@ -1,0 +1,73 @@
+# APK-derived structural disassembly: LX/D7Z;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=10
+  # full signature: LX/D7Z;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v8, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..0012 op=18 const-wide v0, #0x800000000 (34359738368)
+  0012..0018 op=6e invoke-virtual {v8, v0, v1}, LX/178;->A0b(J)Z
+  0018..001a op=0a move-result v0
+  001a..001e op=38 if-eqz v0, +0x62
+  001e..0024 op=71 invoke-static {v8}, LX/CmJ;->A00(LX/178;)LX/D6O;
+  0024..0026 op=0c move-result-object v1
+  0026..002a op=38 if-eqz v1, +0x5c
+  002a..002e op=54 iget-object v0, v7, LX/D7Z;->A00:LX/05B;
+  002e..0034 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0034..0036 op=0c move-result-object v0
+  0036..003a op=1f check-cast v0, LX/DGh;
+  003a..003e op=54 iget-object v1, v1, LX/D6O;->A00:LX/CQK;
+  003e..0042 op=54 iget-object v0, v0, LX/DGh;->A00:LX/0Gc;
+  0042..0048 op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  0048..004a op=0c move-result-object v5
+  004a..0050 op=6e invoke-virtual {v5}, LX/0ZN;->A00()LX/1gB;
+  0050..0052 op=0c move-result-object v6
+  0052..0058 op=6e invoke-virtual {v1}, LX/CQK;->A00()Landroid/content/ContentValues;
+  0058..005a op=0c move-result-object v4
+  005a..005e op=1a const-string v2, "message_row_id"
+  005e..0062 op=53 iget-wide v0, v8, LX/178;->A0j:J
+  0062..0068 op=71 invoke-static {v4, v2, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  0068..006c op=54 iget-object v3, v5, LX/0ZN;->A02:LX/0IY;
+  006c..0070 op=1a const-string v2, "tee_chat_request_table"
+  0070..0074 op=1a const-string v1, "INSERT_TEE_CHAT_REQUEST"
+  0074..0076 op=12 const/4 v0, #0x3
+  0076..007c op=6e invoke-virtual {v3, v2, v1, v4, v0}, LX/0IY;->A09(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+  007c..007e op=0b move-result-wide v3
+  007e..0082 op=16 const-wide/16 v1, #0x0
+  0082..0086 op=31 cmp-long v0, v3, v1
+  0086..008a op=3b if-gez v0, +0x9
+  008a..008e op=1a const-string v0, "TeeChatRequestStore failed to insert tee chat request"
+  008e..0094 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  0094..0096 op=12 const/4 v0, #0x0
+  0096..0098 op=28 goto +0x5
+  0098..009e op=6e invoke-virtual {v6}, LX/1gB;->A00()V
+  009e..00a0 op=12 const/4 v0, #0x1
+  00a0..00a6 op=6e invoke-virtual {v6}, LX/1gB;->close()V
+  00a6..00ac op=6e invoke-virtual {v5}, LX/0ZN;->close()V
+  00ac..00b0 op=38 if-eqz v0, +0x19
+  00b0..00b4 op=38 if-eqz v9, +0x17
+  00b4..00b8 op=1c const-class v0, LX/D7Z;
+  00b8..00be op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  00be..00c0 op=0c move-result-object v0
+  00c0..00c2 op=27 throw v0
+  00c2..00c4 op=0d move-exception v1
+  00c4..00c6 op=27 throw v1
+  00c6..00c8 op=0d move-exception v0
+  00c8..00ce op=71 invoke-static {v6, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  00ce..00d0 op=27 throw v0
+  00d0..00d2 op=0d move-exception v1
+  00d2..00d4 op=27 throw v1
+  00d4..00d6 op=0d move-exception v0
+  00d6..00dc op=71 invoke-static {v5, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  00dc..00de op=27 throw v0
+  00de..00e0 op=0e return-void
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0025..0029 -> 0068
+  # catch <all> code_units 0029..0050 -> 0061
+  # catch <all> code_units 0050..0053 -> 0068
+  # catch <all> code_units 0062..0063 -> 0063
+  # catch <all> code_units 0064..0068 -> 0068
+  # catch <all> code_units 0069..006a -> 006a
+.end method

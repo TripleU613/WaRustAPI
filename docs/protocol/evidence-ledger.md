@@ -1,5 +1,19 @@
 # Evidence ledger
 
+Final after-hook registry (2026-10-09, **confirmed static**): all 54 registered
+after entries now resolve to factories and executable CHJ bodies, with an ordered
+source index. The final 13 include add-on status setters, scheduled/appointment,
+AI/translation, comment, experience and payment paths. Direct exclusions do not
+establish transitive receipt preservation. Before hooks, native admission and
+primary cleanup remain unfinished. No runtime/account/live change.
+[Evidence and limits](text-final-after-hooks.md).
+
+Final-hook validation: exact 25-topic export (30 files/1,106,965 bytes), cached
+self-diff (25 topics/four metadata artifacts unchanged), complete 54-entry source
+index assertions, CLI reference, API/library-symbol, formatting and whitespace
+checks passed. Hygiene checked 2,090 local links and 102 APK bundles. No fresh
+runtime suite or live account test is claimed.
+
 Association/sharing after-hooks (2026-10-09, **confirmed static**): five
 more registered entries map to parent/child, UI and poll-history storage, incoming
 limit-sharing system-message creation and embedded child insertion. AVI sets

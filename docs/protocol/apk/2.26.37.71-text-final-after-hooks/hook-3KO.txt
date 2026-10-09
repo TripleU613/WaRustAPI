@@ -1,0 +1,102 @@
+# APK-derived structural disassembly: LX/3KO;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=12
+  # full signature: LX/3KO;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0004 op=07 move-object v4, v10
+  0004..000a op=71 invoke-static {v10, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  000a..000e op=20 instance-of v0, v10, LX/1he;
+  000e..0012 op=39 if-nez v0, +0x31
+  0012..0016 op=20 instance-of v0, v10, LX/72p;
+  0016..001a op=38 if-eqz v0, +0x11
+  001a..001c op=07 move-object v0, v4
+  001c..0020 op=1f check-cast v0, LX/72p;
+  0020..0026 op=6e invoke-virtual {v0}, LX/72p;->A0w()Ljava/lang/String;
+  0026..0028 op=0c move-result-object v0
+  0028..002c op=38 if-eqz v0, +0x8
+  002c..0032 op=6e invoke-virtual {v0}, Ljava/lang/String;->length()I
+  0032..0034 op=0a move-result v0
+  0034..0038 op=39 if-nez v0, +0x1e
+  0038..003c op=20 instance-of v0, v10, LX/1iB;
+  003c..0040 op=38 if-eqz v0, +0x11
+  0040..0042 op=07 move-object v0, v4
+  0042..0046 op=1f check-cast v0, LX/1iB;
+  0046..004c op=6e invoke-virtual {v0}, LX/1iB;->Ao1()Ljava/lang/String;
+  004c..004e op=0c move-result-object v0
+  004e..0052 op=38 if-eqz v0, +0x8
+  0052..0058 op=6e invoke-virtual {v0}, Ljava/lang/String;->length()I
+  0058..005a op=0a move-result v0
+  005a..005e op=39 if-nez v0, +0xb
+  005e..0062 op=38 if-eqz v11, +0x87
+  0062..0066 op=1c const-class v0, LX/3KO;
+  0066..006c op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  006c..006e op=0c move-result-object v0
+  006e..0070 op=27 throw v0
+  0070..0074 op=54 iget-object v0, v9, LX/3KO;->A01:LX/05B;
+  0074..0078 op=54 iget-object v2, v0, LX/05B;->A00:LX/00s;
+  0078..007e op=72 invoke-interface {v2}, LX/00s;->get()Ljava/lang/Object;
+  007e..0080 op=0c move-result-object v0
+  0080..0084 op=1f check-cast v0, LX/Lbk;
+  0084..008a op=6e invoke-virtual {v0}, LX/Lbk;->A05()Z
+  008a..008c op=0a move-result v0
+  008c..0090 op=38 if-eqz v0, -0x17
+  0090..0094 op=54 iget-object v0, v10, LX/178;->A0i:LX/1gc;
+  0094..0098 op=54 iget-object v3, v0, LX/1gc;->A00:LX/0Cy;
+  0098..009c op=38 if-eqz v3, -0x1d
+  009c..00a2 op=72 invoke-interface {v2}, LX/00s;->get()Ljava/lang/Object;
+  00a2..00a4 op=0c move-result-object v0
+  00a4..00a8 op=1f check-cast v0, LX/Lbk;
+  00a8..00ae op=6e invoke-virtual {v0, v3}, LX/Lbk;->A06(LX/0Cy;)Z
+  00ae..00b0 op=0a move-result v0
+  00b0..00b4 op=38 if-eqz v0, -0x29
+  00b4..00ba op=72 invoke-interface {v2}, LX/00s;->get()Ljava/lang/Object;
+  00ba..00bc op=0c move-result-object v1
+  00bc..00c0 op=1f check-cast v1, LX/Lbk;
+  00c0..00c4 op=54 iget-object v0, v1, LX/Lbk;->A0C:LX/05B;
+  00c4..00ca op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  00ca..00cc op=0c move-result-object v0
+  00cc..00d0 op=1f check-cast v0, LX/0el;
+  00d0..00d6 op=6e invoke-virtual {v0}, LX/0el;->A01()Z
+  00d6..00d8 op=0a move-result v0
+  00d8..00dc op=38 if-eqz v0, +0xd
+  00dc..00e0 op=1a const-string v0, "MessageTranslationUtil/isCpuIntensiveOperationInProgress/voip call is active"
+  00e0..00e6 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+  00e6..00ea op=1a const-string v0, "FMessageTranslationInserterPostProcessor/processAutoTranslation/cpu intensive operation in progress"
+  00ea..00f0 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  00f0..00f2 op=28 goto -0x49
+  00f2..00f6 op=54 iget-object v0, v1, LX/Lbk;->A0D:LX/05B;
+  00f6..00fc op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  00fc..00fe op=0c move-result-object v0
+  00fe..0102 op=1f check-cast v0, Lcom/whatsapp/calling/camera/VoipCameraManager;
+  0102..0108 op=6e invoke-virtual {v0}, Lcom/whatsapp/calling/camera/VoipCameraManager;->hasFirstFrameRendered()Z
+  0108..010a op=0a move-result v0
+  010a..010e op=38 if-eqz v0, +0x5
+  010e..0112 op=1a const-string v0, "MessageTranslationUtil/isCpuIntensiveOperationInProgress/camera is open"
+  0112..0114 op=28 goto -0x19
+  0114..0118 op=54 iget-object v0, v9, LX/3KO;->A00:LX/05B;
+  0118..011e op=71 invoke-static {v0}, LX/1xh;->A0l(LX/05B;)LX/0W2;
+  011e..0120 op=0c move-result-object v0
+  0120..0126 op=6e invoke-virtual {v0, v3}, LX/0W2;->A0U(LX/0Cy;)LX/1a9;
+  0126..0128 op=0c move-result-object v1
+  0128..012c op=54 iget-object v0, v9, LX/3KO;->A02:LX/05B;
+  012c..0132 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0132..0134 op=0c move-result-object v3
+  0134..0138 op=1f check-cast v3, LX/Lbd;
+  0138..013c op=54 iget-object v5, v1, LX/1a9;->A0N:Ljava/lang/String;
+  013c..0142 op=71 invoke-static {v5}, LX/00h;->A06(Ljava/lang/Object;)V
+  0142..0146 op=54 iget-object v6, v1, LX/1a9;->A0O:Ljava/lang/String;
+  0146..014c op=71 invoke-static {v6}, LX/00h;->A06(Ljava/lang/Object;)V
+  014c..0152 op=72 invoke-interface {v2}, LX/00s;->get()Ljava/lang/Object;
+  0152..0154 op=0c move-result-object v0
+  0154..0158 op=1f check-cast v0, LX/Lbk;
+  0158..015e op=6e invoke-virtual {v0}, LX/Lbk;->A04()Z
+  015e..0160 op=0a move-result v7
+  0160..0162 op=12 const/4 v8, #0x1
+  0162..0168 op=74 invoke-virtual/range {v3..v8}, LX/Lbd;->A00(LX/178;Ljava/lang/String;Ljava/lang/String;ZZ)V
+  0168..016c op=29 goto/16 -0x85
+  016c..016e op=0e return-void
+  # exception table: 0 try range(s)
+.end method
