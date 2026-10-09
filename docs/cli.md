@@ -914,6 +914,7 @@ Usage: whatsapp-cli mark-read [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 | --config | CONFIG | no |  |  |  | Private request configuration; defaults to the profile's |
 | --chat | CHAT | yes |  |  |  | The chat: the sender's JID for a direct message (e.g. 15551234567@s.whatsapp.net), or the group JID (`…@g.us`) for a group message, whose receipt names the sender itself |
+| --participant | PARTICIPANT | no |  |  |  | Original group sender PN/LID; required when an ID has multiple participants |
 | --id | IDS | yes |  |  |  | One or more incoming message ids as shown by `events` |
 
 ## whatsapp-cli lab-open-view-once

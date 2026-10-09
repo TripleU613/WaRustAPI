@@ -1660,3 +1660,21 @@ A 45-second receive-only check authenticated and stopped cleanly with sends and
 reconnect disabled; peer keys, actions, receipts, outbox and events stayed
 unchanged. Five transport captures were added. Group quote/reaction handset
 rendering and the participant-aware incoming storage port remain unverified.
+
+Participant-scoped group inbox (2026-10-09, **confirmed local implementation**):
+new records distinguish original participant namespace/agent and wire ID, retain
+original device routes, and preserve legacy records/event markers. Quotes use the
+selected participant's body. `mark-read --participant` selects a group member;
+ambiguous unqualified group/ID reads refuse atomically. Automatic reads remain
+opt-in and refuse unsupported agent selection. Native SQLite-key parity and live
+same-ID group collision behavior remain unknown. See [group inbox](group-inbox.md).
+
+Group inbox validation: 775 workspace/all-feature tests passed, together with
+strict Clippy, Rustdoc, default CLI, library-symbol, regenerated CLI reference
+and formatting checks. Repository hygiene passed (15 APK research bundles,
+5,815,284 bytes). A 45-second receive-only check authenticated and stopped
+cleanly with sends/reconnect disabled; peer keys, actions, receipts, outbox and
+events were unchanged. Original capture shapes were preserved; captures grew
+from 461 to 466. No fresh group send, explicit read request or live same-ID
+collision was performed. The prior incoming storage gap is now corrected
+locally; native storage parity and fresh group handset rendering remain unknown.

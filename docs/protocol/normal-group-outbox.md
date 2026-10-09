@@ -340,10 +340,11 @@ identity, not an unrelated contact's PN/LID mapping. A changed local target
 detected after query preparation reports `reference_changed` and leaves the
 original queued intent without a wire attempt; the answered queries are kept.
 
-**Confirmed negative / remaining receive gap:** existing retained group inbox
-rows are keyed by group/chat plus ID, without participant. This port checks their
-route and refuses a same-ID/different-participant reference; it does not fix the
-incoming record-key collision or establish full native composite-key storage.
+**Historical negative, corrected locally 2026-10-09:** legacy retained group
+rows omit participant from their selector. New records now bind participant;
+quote/reaction lookup preserves historical attribution and recognizes each new
+participant separately. See [group inbox](group-inbox.md) for atomic legacy
+handling, read selection and native-storage unknowns.
 Private MessageRequest `quote`/caller preview remains the comparison JSON path;
 this chunk exposes typed normal quotes/reactions through `reply`/`react` without
 silently dropping a supplied JSON preview. Full media quotes, historical

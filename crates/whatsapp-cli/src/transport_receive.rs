@@ -367,11 +367,27 @@ pub(super) async fn mark_read(
     path: &std::path::Path,
     chat: &str,
     ids: &[String],
+    participant: Option<&str>,
 ) -> Result<(), Error> {
     use whatsapp_api::model::{
         ids::MessageId,
         receipt::{Receipt, ReceiptKind},
     };
+    let participant = participant
+        .map(whatsapp_api::model::jid::Jid::parse)
+        .transpose()?;
+    if participant.as_ref().is_some_and(|p| {
+        p.agent != 0
+            || !matches!(
+                p.server,
+                whatsapp_api::model::jid::Server::User | whatsapp_api::model::jid::Server::Lid
+            )
+    }) {
+        return Err(Error::invalid(
+            "receipt",
+            "participant requires a PN or LID without an agent component",
+        ));
+    }
     let config = super::signup::config(path)?;
     let receipt = Receipt {
         chat: whatsapp_api::model::ids::ChatId::from_jid(&whatsapp_api::model::jid::Jid::parse(
@@ -381,7 +397,10 @@ pub(super) async fn mark_read(
             .iter()
             .map(|id| MessageId::new(id.clone()))
             .collect::<Result<Vec<_>, _>>()?,
-        from: None,
+        from: participant
+            .as_ref()
+            .map(whatsapp_api::model::ids::DeviceAddress::from_jid)
+            .transpose()?,
         kind: ReceiptKind::Read,
         server_timestamp: None,
         code: None,
@@ -1488,7 +1507,7 @@ pub(super) async fn run(
                 let id = std::str::from_utf8(key)
                     .ok()
                     .and_then(|k| k.rsplit_once(':'))
-                    .map(|(_, id)| id.to_owned())
+                    .map(|(_, id)| saved["wire_id"].as_str().unwrap_or(id).to_owned())
                     .unwrap_or_default();
                 println!(
                     "inbox: payload id={id} fields={fields:?} len={}",
@@ -1505,7 +1524,7 @@ pub(super) async fn run(
                     let id = std::str::from_utf8(key)
                         .ok()
                         .and_then(|k| k.rsplit_once(':'))
-                        .map(|(_, id)| id.to_owned())
+                        .map(|(_, id)| saved["wire_id"].as_str().unwrap_or(id).to_owned())
                         .unwrap_or_default();
                     let participant = text
                         .participant
@@ -1543,7 +1562,7 @@ pub(super) async fn run(
                 let id = std::str::from_utf8(key)
                     .ok()
                     .and_then(|k| k.rsplit_once(':'))
-                    .map(|(_, id)| id.to_owned())
+                    .map(|(_, id)| saved["wire_id"].as_str().unwrap_or(id).to_owned())
                     .unwrap_or_default();
                 println!(
                     "inbox: poll id={id} {}; values redacted",
@@ -1558,7 +1577,7 @@ pub(super) async fn run(
                 let id = std::str::from_utf8(key)
                     .ok()
                     .and_then(|k| k.rsplit_once(':'))
-                    .map(|(_, id)| id.to_owned())
+                    .map(|(_, id)| saved["wire_id"].as_str().unwrap_or(id).to_owned())
                     .unwrap_or_default();
                 let sender_pn = std::str::from_utf8(key)
                     .ok()
@@ -2135,7 +2154,8 @@ pub(super) async fn run(
         // send that caused it. Request ids are the operator's own labels.
         // Where each received message came from, last four characters only —
         // enough to check a reply or reaction names the right sender.
-        for (key, _) in &captures {
+        for (key, value) in &captures {
+            let saved: serde_json::Value = serde_json::from_slice(value).unwrap_or_default();
             if let Some((sender, id)) = std::str::from_utf8(key)
                 .ok()
                 .and_then(|k| k.strip_prefix("received:"))
@@ -2151,7 +2171,12 @@ pub(super) async fn run(
                     .collect();
                 println!(
                     "inbox: received id={} sender_tail={tail}",
-                    id.chars().take(8).collect::<String>()
+                    saved["wire_id"]
+                        .as_str()
+                        .unwrap_or(id)
+                        .chars()
+                        .take(8)
+                        .collect::<String>()
                 );
             }
         }

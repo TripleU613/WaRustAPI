@@ -145,6 +145,12 @@ pub fn queue_read(
             "only primary direct chats and groups are supported",
         ));
     }
+    if chat.server != Server::Group && receipt.from.is_some() {
+        return Err(Error::invalid(
+            "receipt",
+            "participant is only a group read selector",
+        ));
+    }
     let mut ids: Vec<&str> = receipt.message_ids.iter().map(|id| id.as_str()).collect();
     ids.sort_unstable();
     ids.dedup();
@@ -157,14 +163,17 @@ pub fn queue_read(
     store.write(|tx| {
         let mut queued = 0;
         for id in &ids {
-            let key = format!("received:{chat}:{id}");
-            let Some(mut saved) =
-                tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1)?
-            else {
-                return Err(Error::invalid(
-                    "receipt",
-                    "unknown incoming message for this chat",
-                ));
+            let (key, mut saved) = if chat.server == Server::Group {
+                let participant = receipt.from.as_ref().map(|d| d.to_jid());
+                super::group_inbox::read_target(tx, chat, id, participant.as_ref())?
+            } else {
+                let key = format!("received:{chat}:{id}");
+                let saved = tx
+                    .get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1)?
+                    .ok_or_else(|| {
+                        Error::invalid("receipt", "unknown incoming message for this chat")
+                    })?;
+                (key, saved)
             };
             if !matches!(saved["status"].as_str(), Some("decrypted" | "consumed")) {
                 return Err(Error::invalid(
@@ -238,10 +247,9 @@ pub fn queue_read_for_incoming(store: &ProtocolStore, node: &Node) -> Result<usi
     let (chat, saved) = if let Some(chat) =
         jid(node, "from").filter(|chat| chat.server == Server::Group)
     {
-        let key = format!("received:{chat}:{id}");
-        let Some(saved) = store
-            .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))?
-        else {
+        let selected = store
+            .read(|tx| super::group_inbox::select(node, |k| tx.get(Table::Checkpoints, k, 1)))?;
+        let Some(saved) = selected.saved else {
             return Ok(0);
         };
         (chat, saved)
@@ -269,12 +277,25 @@ pub fn queue_read_for_incoming(store: &ProtocolStore, node: &Node) -> Result<usi
     if !fields.iter().any(|f| READABLE_FIELDS.contains(f)) {
         return Ok(0);
     }
+    // DeviceAddress cannot preserve an agent component. Refuse this automatic
+    // selector rather than accidentally marking agent 0's same-ID message.
+    if chat.server == Server::Group
+        && super::inbox::group_sender(node).is_some_and(|(_, p)| p.agent != 0)
+    {
+        return Ok(0);
+    }
     queue_read(
         store,
         &Receipt {
             chat: ChatId::from_jid(&chat)?,
             message_ids: vec![MessageId::new(id.to_owned())?],
-            from: None,
+            from: if chat.server == Server::Group {
+                super::inbox::group_sender(node)
+                    .map(|(_, p)| crate::model::ids::DeviceAddress::from_jid(&p))
+                    .transpose()?
+            } else {
+                None
+            },
             kind: ReceiptKind::Read,
             server_timestamp: None,
             code: None,

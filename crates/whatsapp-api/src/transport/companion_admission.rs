@@ -754,7 +754,12 @@ mod tests {
                     let marker: serde_json::Value = tx
                         .get_json(
                             Table::Checkpoints,
-                            b"received:120363000000000001@g.us:COMPANION-KEY",
+                            super::super::group_inbox::key(
+                                &Jid::parse("120363000000000001@g.us")?,
+                                &peer,
+                                "COMPANION-KEY",
+                            )?
+                            .as_bytes(),
                             1,
                         )?
                         .unwrap();

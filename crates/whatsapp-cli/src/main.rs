@@ -572,6 +572,9 @@ enum Cmd {
         /// group message, whose receipt names the sender itself.
         #[arg(long)]
         chat: String,
+        /// Original group sender PN/LID; required when an ID has multiple participants.
+        #[arg(long)]
+        participant: Option<String>,
         /// One or more incoming message ids as shown by `events`.
         #[arg(long = "id", required = true)]
         ids: Vec<String>,
@@ -1624,9 +1627,14 @@ async fn run(cli: Cli) -> Result<(), Error> {
         #[cfg(feature = "experimental-transport")]
         Cmd::ClearChat { chat } => transport_receive::clear_chat(&cli, chat),
         #[cfg(feature = "experimental-transport")]
-        Cmd::MarkRead { config, chat, ids } => {
+        Cmd::MarkRead {
+            config,
+            chat,
+            ids,
+            participant,
+        } => {
             let config = cli.config_path(config.as_ref(), None)?;
-            transport_receive::mark_read(&cli, &config, chat, ids).await
+            transport_receive::mark_read(&cli, &config, chat, ids, participant.as_deref()).await
         }
         #[cfg(feature = "experimental-transport")]
         Cmd::LabOpenViewOnce => transport_receive::open_view_once(&cli),

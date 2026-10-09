@@ -1215,12 +1215,24 @@ async fn process_group_inner(
     if direct_enc.is_none() && sk_enc.is_none() {
         return Ok(IncomingResult::Unsupported);
     }
-    // Legacy local inbox key omits the participant. Same-id member collisions
-    // remain a receive gap; group reference lookup must verify the saved route.
-    let key = format!("received:{group_jid}:{id}");
-    if let Some(saved) =
-        store.read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))?
-    {
+    let selected =
+        if group_jid.server == Server::Group {
+            Some(store.read(|tx| {
+                super::group_inbox::select(node, |k| tx.get(Table::Checkpoints, k, 1))
+            })?)
+        } else {
+            None
+        };
+    let key = selected
+        .as_ref()
+        .map(|r| r.key.clone())
+        .unwrap_or_else(|| format!("received:{group_jid}:{id}"));
+    let saved = match &selected {
+        Some(row) => row.saved.clone(),
+        None => store
+            .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))?,
+    };
+    if let Some(saved) = saved {
         super::inbox_events::restore(store, key.as_bytes(), &saved)?;
         return Ok(
             if matches!(
@@ -1432,6 +1444,9 @@ async fn process_group_inner(
         crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
             .encode(node)?;
     store.write(|tx| {
+        if let Some(selected) = &selected {
+            selected.validate_in(tx)?;
+        }
         if tx
             .get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1)?
             .is_some()
@@ -1502,6 +1517,7 @@ async fn process_group_inner(
                 1,
                 &serde_json::json!({
                     "status": "decrypted",
+                    "wire_id": id,
                     "protobuf": &**plaintext,
                     "capture": capture,
                     "route": route,
@@ -1518,7 +1534,7 @@ async fn process_group_inner(
                 key.as_bytes(),
                 1,
                 &serde_json::json!({
-                    "status": "sender_key_distributed", "capture": capture,
+                    "status": "sender_key_distributed", "wire_id": id, "capture": capture,
                     "route": route, "received_at": crate::model::time::Timestamp::now(),
                 }),
             )?;
@@ -2097,6 +2113,165 @@ mod tests {
                 .await
                 .unwrap(),
             IncomingResult::Undecryptable
+        );
+    }
+
+    #[tokio::test]
+    async fn group_same_wire_id_preserves_each_authenticated_participant_after_reopen() {
+        use crate::signal::group::{
+            commit_skdm, encrypt_group_payload, extract_skdm_from_payload, prepare_own_sender_key,
+            process_skdm, sender_key_db_key,
+        };
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("collision.redb");
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("fixture").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [21; 32],
+                ))),
+                create,
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15555550199@s.whatsapp.net").unwrap()),
+            ..Default::default()
+        };
+        let mut incoming = Vec::new();
+        // The same numeric user in PN and LID namespaces is deliberately not
+        // conflated. Trusted generated SKDM fixtures isolate inbox crypto from
+        // directory admission, which has its own signed-bundle tests.
+        for (sender, text) in [
+            ("15555550100:3@s.whatsapp.net", "PN collision fixture"),
+            ("15555550100:3@lid", "LID collision fixture"),
+        ] {
+            let sender = Jid::parse(sender).unwrap();
+            let own = prepare_own_sender_key(&chat, &sender, None).await.unwrap();
+            let (_, bytes) = extract_skdm_from_payload(&own.distribution_message).unwrap();
+            let installed = process_skdm(
+                &chat,
+                &sender,
+                sender_key_db_key(&chat, &sender),
+                None,
+                &bytes,
+            )
+            .await
+            .unwrap();
+            assert!(store.write(|tx| commit_skdm(tx, &installed)).unwrap());
+            let plain = super::super::group_send::text_payload(text).unwrap();
+            let (cipher, _) = encrypt_group_payload(&chat, &sender, &own.updated_key, &plain)
+                .await
+                .unwrap();
+            let node = Node::new("message")
+                .attr("from", chat.clone())
+                .attr("participant", sender.clone())
+                .attr("id", "SHARED-ID")
+                .children(vec![
+                    Node::new("enc")
+                        .attr("v", "2")
+                        .attr("type", "skmsg")
+                        .bytes(cipher.to_vec()),
+                ]);
+            let capture = preserve(&store, &node).unwrap();
+            assert_eq!(
+                process(&store, &account, &node, &capture).await.unwrap(),
+                IncomingResult::Decrypted
+            );
+            let key = super::super::group_inbox::key(&chat, &sender, "SHARED-ID").unwrap();
+            let saved: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(saved["wire_id"], "SHARED-ID");
+            assert_eq!(
+                serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()).unwrap(),
+                plain
+            );
+            let mut target =
+                super::super::group_references::tests::reference(&chat, &sender, false);
+            target.key.id = crate::model::ids::MessageId::new("SHARED-ID").unwrap();
+            let content = crate::model::message::MessageContent::Text {
+                body: "reply fixture".into(),
+                quoted: Some(target),
+                style: Default::default(),
+            };
+            let (quote, _) = super::super::group_references::payload(
+                &store,
+                &chat,
+                account.own_jid.as_ref().unwrap(),
+                &content,
+            )
+            .unwrap();
+            let parent = super::super::quotes::decode(&quote)
+                .unwrap()
+                .quoted
+                .unwrap();
+            assert_eq!(super::super::quotes::decode(&parent).unwrap().text, text);
+            incoming.push((node, capture));
+        }
+        let receipt = crate::model::receipt::Receipt {
+            chat: crate::model::ids::ChatId::from_jid(&chat).unwrap(),
+            message_ids: vec![crate::model::ids::MessageId::new("SHARED-ID").unwrap()],
+            from: None,
+            kind: crate::model::receipt::ReceiptKind::Read,
+            server_timestamp: None,
+            code: None,
+        };
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        assert!(
+            matches!(super::super::receipts::queue_read(&store, &receipt), Err(Error::InvalidInput { reason, .. }) if reason == "ambiguous group message id; specify participant")
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+        for (node, _) in &incoming {
+            assert_eq!(
+                super::super::receipts::queue_read_for_incoming(&store, node).unwrap(),
+                1
+            );
+            assert_eq!(
+                super::super::receipts::queue_read_for_incoming(&store, node).unwrap(),
+                0
+            );
+        }
+        let checkpoints = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        let ratchets = store.read(|tx| tx.scan(Table::SenderKeys, 1, 100)).unwrap();
+        drop(store);
+        let store = open(false);
+        for (node, capture) in incoming {
+            assert_eq!(
+                process(&store, &account, &node, &capture).await.unwrap(),
+                IncomingResult::Duplicate
+            );
+            assert_eq!(
+                super::super::receipts::queue_read_for_incoming(&store, &node).unwrap(),
+                0
+            );
+        }
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::SenderKeys, 1, 100)).unwrap(),
+            ratchets
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            checkpoints
         );
     }
 
@@ -2950,7 +3125,7 @@ mod tests {
             .unwrap();
         let node = Node::new("message")
             .attr("from", chat.clone())
-            .attr("participant", alice_jid)
+            .attr("participant", alice_jid.clone())
             .attr("id", "KEY-ONLY")
             .children(vec![
                 Node::new("enc")
@@ -2969,7 +3144,7 @@ mod tests {
             super::super::receipts::queue_read_for_incoming(&store, &node).unwrap(),
             0
         );
-        let marker_key = format!("received:{chat}:KEY-ONLY");
+        let marker_key = super::super::group_inbox::key(&chat, &alice_jid, "KEY-ONLY").unwrap();
         let marker: serde_json::Value = store
             .read(|tx| tx.get_json(Table::Checkpoints, marker_key.as_bytes(), 1))
             .unwrap()

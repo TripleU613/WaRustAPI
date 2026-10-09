@@ -743,7 +743,12 @@ pub(super) fn restore(
     let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) else {
         return Ok(false);
     };
-    if node.description != "message" || format!("received:{sender}:{id}").as_bytes() != key {
+    let matches = if sender.server == crate::model::jid::Server::Group {
+        super::group_inbox::matches(key, &node)
+    } else {
+        format!("received:{sender}:{id}").as_bytes() == key
+    };
+    if node.description != "message" || !matches {
         return Err(crate::Error::invalid(
             "inbox",
             "saved capture does not match authenticated record",

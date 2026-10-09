@@ -62,9 +62,16 @@ fn parent(store: &ProtocolStore, chat: &Jid, target: &MessageRef) -> Result<Pare
     if !supplied.is_user_like() {
         return Err(invalid("participant must be a user identity"));
     }
-    let key = format!("received:{}:{}", chat.to_non_ad(), target.key.id);
-    let saved: Option<serde_json::Value> =
-        store.read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))?;
+    let node = crate::binary::Node::new("message")
+        .attr("from", chat.clone())
+        .attr("participant", supplied.clone())
+        .attr("id", target.key.id.as_str());
+    let selection =
+        store.read(|tx| super::group_inbox::select(&node, |k| tx.get(Table::Checkpoints, k, 1)))?;
+    if selection.saved.is_none() && selection.legacy_collision {
+        return Err(invalid("saved incoming target attribution differs"));
+    }
+    let saved = selection.saved;
     let Some(saved) = saved else {
         return Ok(Parent {
             sender: Some(supplied.to_non_ad()),
@@ -366,7 +373,7 @@ pub(super) mod tests {
             .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
             .unwrap();
         assert!(
-            matches!(validate(&store,&chat,&content),Err(Error::InvalidInput{reason,..}) if reason=="saved target agent component is unsupported by MessageRef")
+            matches!(validate(&store,&chat,&content),Err(Error::InvalidInput{reason,..}) if reason=="saved incoming target attribution differs")
         );
         assert_eq!(
             before,

@@ -79,6 +79,12 @@ pub mod group_fanout;
     feature = "experimental-noise",
     feature = "experimental-transport"
 ))]
+pub mod group_inbox;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod group_references;
 #[cfg(all(
     feature = "experimental-signal-crypto",

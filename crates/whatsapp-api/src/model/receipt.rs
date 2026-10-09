@@ -33,7 +33,9 @@ pub struct Receipt {
     pub chat: ChatId,
     /// Message identifiers covered by the receipt.
     pub message_ids: Vec<MessageId>,
-    /// Device the receipt came from, when known.
+    /// Device the receipt came from, when known. For an explicit outgoing group
+    /// read request, selects the original participant; an absent selector is
+    /// accepted only when the group/message ID identifies one saved record.
     pub from: Option<DeviceAddress>,
     /// Receipt class.
     pub kind: ReceiptKind,
