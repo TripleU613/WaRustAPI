@@ -2186,3 +2186,12 @@ corrected validation plus guarded offline repair recovered the original saved
 LID without resending. Prior 19 actions, 9 receipts and empty outbox unchanged.
 Fresh post-fix live replies/native wire factory/full contact sync remain pending.
 [Evidence](protocol/chat-actions.md#live-contact-projection-and-primary-wire-lid-2026-10-08).
+
+
+2026-10-08 primary identity-query correlation: Plain and zero-component AD_JID
+wire encodings of the same exact address now correlate; PN/LID/hosted, agents,
+companions and duplicate identity-only rows remain distinct/refused. Directory
+per-user refusals no longer become invalid solely due to encoding. This does
+not adopt a key, create an alias, relax signatures or retry an action. Existing
+saved PN inspection was already received; fresh AD_JID identity-only replies
+remain unverified. [Evidence](protocol/peer-identity.md#primary-wire-address-correlation-2026-10-08).

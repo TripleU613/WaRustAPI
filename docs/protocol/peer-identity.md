@@ -2300,3 +2300,80 @@ an unknown-field invocation exited nonzero with no partial stdout/private-key
 echo. Repository hygiene verified 957 local links, package licenses, tracked-file
 budgets and 4447021 bytes across six checksum bundles. No account or live-server
 access was involved; fresh runtime mapping/cleanup validation remains pending.
+
+
+### Primary wire address correlation (2026-10-08)
+
+**Confirmed local defects:** `identity_query::inspect` compared full Jid values,
+including `JidKind`, when correlating its one primary-user reply. `peer_keys::inspect`
+also used full equality in the per-user refusal branch. A semantically identical
+primary address decoded from AD_JID zero could therefore become `user_set` or
+`invalid_reply` solely because of its wire encoding. The successful signed-key
+parser (`signal::direct::prekey_bundle_for`) already compared full address components
+without wire kind; it is unchanged. No identity adoption, signature check or
+reservation boundary is weakened by this diagnostic correction.
+
+**Confirmed static APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+[`DF6.C8f`](apk/2.26.37.71-core/adv-identity-reply.txt), discriminator 0,
+reads `jid` through the required DeviceJid getter at 007a..008a, then schedules
+DNk case 7 at 0106..0120. The [`DNk.run` worker](apk/2.26.37.71-core/adv-identity-save-worker.txt),
+not DF6, branches on `isPrimary` at 02da..0318. Primary replies bypass the companion ADV verifier;
+companion behavior remains unsupported by our identity-only inspector.
+[`B7H.A06`](apk/2.26.37.71-core/sender-key-address-build.txt) preserves account
+category/device when building the Signal address. The existing
+[identity-read trace](cross-device-sync.md#primary-identity-only-query-2026-10-07)
+and [live contact wire evidence](chat-actions.md#live-contact-projection-and-primary-wire-lid-2026-10-08)
+are the evidence boundaries. Native wire-to-Java construction is still **unknown**;
+Rust's encoding enum is not an APK Java subtype discriminator.
+
+**Implemented/offline-tested:** both correlation paths now compare exact
+`user`, `server`, `agent`, `device` and allow only Plain/AgentDevice encodings.
+They require primary PN/LID (identity-only) or primary PN (full-directory) inputs;
+FB/interop kinds are refused before queueing. Identical Plain versus AD_JID-zero
+addresses share the original hashed selector and original once-only action ID.
+This does not equate PN with LID, hosted with ordinary, a companion with primary,
+or a nonzero agent with zero. Identity-only extra/duplicate rows remain a
+`user_set` failure, including duplicates differing only in encoding. Per-user
+server refusals retain their recognized status/code and no raw error body is
+exposed. No new inspector, refresh/reset, action repair or server request is added.
+
+Fixtures exercise both primary namespaces and all four expected/returned
+Plain/AD combinations through actual saved action wire round trips, plus
+foreign user, namespace/hosted, companion, agent, unsupported kind and duplicate
+rows. Key-directory refusal fixtures distinguish matching encodings from real
+address differences and preserve original reservations. The existing pin/session
+preservation regressions continue to apply.
+
+**Audit negatives/boundaries:** `devices` already tests zero-component AD primary
+refresh and own-account exclusion. `signal::direct` already matches actual
+components on successful bundles. `groups::parse_group` first converts an
+attribute to wire text and reparses it, so zero-component AD wire values already
+reach its plain-address filter; changing is_ad globally would alter encoding and
+other guards. Full explicit-zero-text/native group-type parity remains unverified.
+`peer_verification::set_local` is a separate state-changing manual mark with its
+own normalized-primary guard, not a receive correlation path; it is unchanged,
+and broader input/native parity is not established by this audit. The source
+search covered is_ad and Plain/AgentDevice comparisons in transport, plus direct
+key selection. It did not establish all Jid equality call sites or native parity.
+
+**Observed offline before the change on saved private state:** the existing PN
+identity-only inspection already returned `primary_identity_received`; the
+corresponding LID namespace had no staged identity-only inspection. Thus the
+new bug is demonstrated by wire-grounded regression fixtures, not a claim that
+this particular historical PN response was broken. Inspections use `--show` and
+never queue. Fresh identity-only AD_JID replies and companion verification remain
+**unverified**. Saved private target IDs/keys/bodies stay outside Git.
+
+
+**Observed offline after rebuilding:** PN inspection remained exactly unchanged
+(`primary_identity_received`, no failure); the LID inspection remained absent.
+Logical action rows, receipts and pending outbox state were unchanged. No
+identity read was queued, no live session started and no message was sent.
+This validates retained-result compatibility, not fresh AD identity replies.
+
+Validation: **719 workspace/all-feature tests**, strict workspace/all-target/all-feature
+Clippy, warning-free Rustdoc, 24 default CLI checks, regenerated CLI reference,
+API library-symbol verification, formatting, experimental CLI build and repository
+hygiene passed. The direct current APK DF6 export confirmed typed dispatch; the
+primary branch offsets belong to the cached DNk worker, not the DF6 callback.

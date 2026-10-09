@@ -2115,3 +2115,13 @@ repeat was unchanged. The 19 earlier actions, 9 acknowledged receipts and empty
 outbox stayed unchanged. No query replay or chat send. Fresh post-fix replies,
 native wire factory and full contact sync remain unverified.
 [Evidence and negative results](docs/protocol/chat-actions.md#live-contact-projection-and-primary-wire-lid-2026-10-08).
+
+
+Primary identity-read correlation (2026-10-08, offline): identity-only replies
+and per-user directory refusals now compare actual address components across
+Plain/AD_JID-zero encodings. Foreign namespaces/users, agents and companions stay
+distinct; duplicate identity-only rows and unsupported kinds remain refused.
+Successful signed-bundle matching was already component-based. Existing saved PN
+inspection was already received; LID identity-only evidence was absent, so this
+is fixture-demonstrated compatibility, not a new live identity milestone.
+[Evidence and audit boundaries](docs/protocol/peer-identity.md#primary-wire-address-correlation-2026-10-08).

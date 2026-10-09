@@ -5,7 +5,7 @@ use super::actions;
 use crate::{
     Error, Result,
     binary::{Node, NodeContent},
-    model::jid::{Jid, Server},
+    model::jid::{Jid, JidKind, Server},
     store::{ProtocolStore, Table},
 };
 use serde::{Deserialize, Serialize};
@@ -15,13 +15,30 @@ fn invalid(message: &str) -> Error {
     Error::invalid("identity_query", message)
 }
 fn validate(peer: &Jid) -> Result<()> {
-    if peer.device != 0 || peer.agent != 0 || !matches!(peer.server, Server::User | Server::Lid) {
+    if peer.device != 0
+        || peer.agent != 0
+        || !matches!(peer.server, Server::User | Server::Lid)
+        || !matches!(peer.kind, JidKind::Plain | JidKind::AgentDevice)
+    {
         return Err(invalid(
             "requires a primary PN or LID chat JID; companion identity verification is unfinished",
         ));
     }
     Ok(())
 }
+pub(super) fn same_primary_address(candidate: &Jid, expected: &Jid) -> bool {
+    // JidKind is wire encoding, not APK Java subtype. The live 2026-10-08
+    // contact reply established AD_JID-zero primary encoding; DF6.C8f's
+    // identity query correlation is our local guard. Keep every address
+    // component and namespace exact without making encoding an identity.
+    matches!(candidate.kind, JidKind::Plain | JidKind::AgentDevice)
+        && matches!(expected.kind, JidKind::Plain | JidKind::AgentDevice)
+        && candidate.user == expected.user
+        && candidate.server == expected.server
+        && candidate.agent == expected.agent
+        && candidate.device == expected.device
+}
+
 fn marker(peer: &Jid) -> String {
     format!(
         "peer-identity-query:{}",
@@ -199,8 +216,11 @@ pub fn inspect(store: &ProtocolStore, peer: &Jid) -> Result<Option<IdentityQuery
         if users.len() != 1
             || users[0].description != "user"
             || !users[0].get_attr("jid").is_some_and(|v| {
-                v.as_jid() == Some(peer)
-                    || v.as_text().and_then(|s| Jid::parse(s).ok()).as_ref() == Some(peer)
+                v.as_jid()
+                    .is_some_and(|jid| same_primary_address(jid, peer))
+                    || v.as_text()
+                        .and_then(|s| Jid::parse(s).ok())
+                        .is_some_and(|jid| same_primary_address(&jid, peer))
             })
         {
             view.failure = Some(IdentityReplyFailure::UserSet);
@@ -501,6 +521,89 @@ mod tests {
             assert!(actions::reserve_pending(&store).unwrap().is_empty());
         }
     }
+    #[test]
+    fn primary_wire_encoding_does_not_change_identity_reply_correlation() {
+        for server in [Server::User, Server::Lid] {
+            for expected_kind in [JidKind::Plain, JidKind::AgentDevice] {
+                for returned_kind in [JidKind::Plain, JidKind::AgentDevice] {
+                    let dir = tempfile::tempdir().unwrap();
+                    let store = open(&dir.path().join("encoding.redb"));
+                    let mut expected = Jid::new("111111111111111", server.clone()).unwrap();
+                    expected.kind = expected_kind;
+                    let id = queue(&store, &expected).unwrap();
+                    actions::reserve_pending(&store).unwrap();
+                    let mut returned = expected.clone();
+                    returned.kind = returned_kind;
+                    actions::record_reply(&store, &reply(&id, vec![user(&returned)])).unwrap();
+                    let before = serde_json::to_value(actions::outcomes(&store).unwrap()).unwrap();
+                    let view = inspect(&store, &expected).unwrap().unwrap();
+                    assert_eq!(view.status, IdentityQueryStatus::PrimaryIdentityReceived);
+                    assert!(view.failure.is_none());
+                    assert!(view.pin_matches.is_none(), "read never creates a pin");
+                    let mut alternate = expected.clone();
+                    alternate.kind = returned_kind;
+                    assert_eq!(queue(&store, &alternate).unwrap(), id);
+                    assert_eq!(inspect(&store, &alternate).unwrap(), Some(view));
+                    assert_eq!(
+                        serde_json::to_value(actions::outcomes(&store).unwrap()).unwrap(),
+                        before
+                    );
+                    assert!(actions::reserve_pending(&store).unwrap().is_empty());
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn encoding_correction_preserves_namespace_component_and_ambiguity_guards() {
+        let expected = peer();
+        let mut candidates = vec![];
+        let mut foreign = expected.clone();
+        foreign.user = "15555550102".into();
+        candidates.push(foreign);
+        let mut lid = expected.clone();
+        lid.server = Server::Lid;
+        candidates.push(lid);
+        let mut hosted = expected.clone();
+        hosted.server = Server::Hosted;
+        candidates.push(hosted);
+        candidates.push(expected.with_device(1));
+        let mut agent = expected.clone();
+        agent.agent = 1;
+        candidates.push(agent);
+        for kind in [JidKind::Interop, JidKind::Facebook] {
+            let mut unsupported = expected.clone();
+            unsupported.kind = kind;
+            assert!(!same_primary_address(&unsupported, &expected));
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("unsupported.redb"));
+            assert!(queue(&store, &unsupported).is_err());
+            assert!(actions::outcomes(&store).unwrap().is_empty());
+        }
+        for candidate in candidates {
+            assert!(!same_primary_address(&candidate, &expected));
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("foreign.redb"));
+            let id = queue(&store, &expected).unwrap();
+            actions::reserve_pending(&store).unwrap();
+            actions::record_reply(&store, &reply(&id, vec![user(&candidate)])).unwrap();
+            let view = inspect(&store, &expected).unwrap().unwrap();
+            assert_eq!(view.status, IdentityQueryStatus::InvalidReply);
+            assert_eq!(view.failure, Some(IdentityReplyFailure::UserSet));
+            assert!(view.fingerprint.is_none());
+        }
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("duplicate-encoding.redb"));
+        let id = queue(&store, &expected).unwrap();
+        actions::reserve_pending(&store).unwrap();
+        let mut encoded = expected.clone();
+        encoded.kind = JidKind::AgentDevice;
+        actions::record_reply(&store, &reply(&id, vec![user(&expected), user(&encoded)])).unwrap();
+        let view = inspect(&store, &expected).unwrap().unwrap();
+        assert_eq!(view.failure, Some(IdentityReplyFailure::UserSet));
+        assert!(view.fingerprint.is_none());
+    }
+
     #[test]
     fn exact_lid_namespace_pin_comparison_does_not_adopt_or_guess_phone_aliases() {
         let dir = tempfile::tempdir().unwrap();

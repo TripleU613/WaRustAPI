@@ -1348,3 +1348,16 @@ receipt, timestamp or outbox changes. No request repeated. **Unknown:** native
 wire-to-Java factory, fresh post-fix replies and complete contact sync. The
 [factory/caller negative trace](contact-primary-wire-evidence.txt) is scoped,
 not native recovery. [Full reasoning and operator corrections](chat-actions.md#live-contact-projection-and-primary-wire-lid-2026-10-08).
+
+
+Primary wire correlation audit (2026-10-08): **confirmed local defects** in
+identity-only full-Jid comparison and key-directory per-user refusal comparison.
+**Implemented/offline-tested** exact component matching across Plain/AD encodings,
+with foreign namespace/device/agent and duplicate identity-only guards retained.
+DF6.C8f typed dispatch, DNk.run primary branching and B7H.A06 address construction
+are APK 37.71 evidence;
+native wire object construction and fresh identity-only AD replies remain
+**unknown/unverified**. Devices/successful bundle paths already have component
+behavior; group/manual-verification paths are not blindly normalized. Existing
+private PN inspection was already received; LID evidence absent. See
+[reasoning and negative audit](peer-identity.md#primary-wire-address-correlation-2026-10-08).

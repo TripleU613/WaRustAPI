@@ -6,14 +6,18 @@
 use super::{actions, identity_conflicts, messaging};
 use crate::{
     Error, Result,
-    model::jid::{Jid, Server},
+    model::jid::{Jid, JidKind, Server},
     store::{ProtocolStore, Table},
 };
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
 fn validate(peer: &Jid) -> Result<()> {
-    if peer.server != Server::User || peer.device != 0 || peer.agent != 0 {
+    if peer.server != Server::User
+        || peer.device != 0
+        || peer.agent != 0
+        || !matches!(peer.kind, JidKind::Plain | JidKind::AgentDevice)
+    {
         return Err(Error::invalid(
             "peer_keys",
             "requires a primary phone-number chat JID",
@@ -154,8 +158,14 @@ pub fn inspect(store: &ProtocolStore, peer: &Jid) -> Result<Option<DirectoryInsp
                 || reply.child("list").is_some_and(|list| {
                     list.child_nodes().iter().any(|user| {
                         user.get_attr("jid").is_some_and(|v| {
-                            v.as_jid().is_some_and(|jid| jid == peer)
-                                || v.as_text() == Some(peer.to_string().as_str())
+                            v.as_jid().is_some_and(|jid| {
+                                super::identity_query::same_primary_address(jid, peer)
+                            }) || v
+                                .as_text()
+                                .and_then(|text| Jid::parse(text).ok())
+                                .is_some_and(|jid| {
+                                    super::identity_query::same_primary_address(&jid, peer)
+                                })
                         }) && user.child("error").is_some()
                     })
                 });
@@ -505,6 +515,54 @@ mod tests {
             );
             assert!(queue(&store, &peer, true).is_err());
             assert_eq!(queue(&store, &peer, false).unwrap(), id);
+            assert!(actions::reserve_pending(&store).unwrap().is_empty());
+        }
+    }
+    #[test]
+    fn per_user_refusal_correlation_ignores_encoding_but_preserves_actual_address() {
+        let expected = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let mut encoded = expected.clone();
+        encoded.kind = JidKind::AgentDevice;
+        let mut lid = encoded.clone();
+        lid.server = Server::Lid;
+        let mut agent = encoded.clone();
+        agent.agent = 5;
+        let mut foreign = encoded.clone();
+        foreign.user = "15555550102".into();
+        for (returned, wanted) in [
+            (expected.clone(), DirectoryStatus::ServerRefused),
+            (encoded.clone(), DirectoryStatus::ServerRefused),
+            (encoded.with_device(3), DirectoryStatus::InvalidReply),
+            (lid, DirectoryStatus::InvalidReply),
+            (agent, DirectoryStatus::InvalidReply),
+            (foreign, DirectoryStatus::InvalidReply),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("refusal-encoding.redb"));
+            let id = queue(&store, &expected, false).unwrap();
+            actions::reserve_pending(&store).unwrap();
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("list").children(vec![Node::new("user")
+                    .attr("jid", returned).children(vec![Node::new("error")
+                        .attr("code", "503").attr("text", "SECRET_BODY")])])]);
+            actions::record_reply(&store, &reply).unwrap();
+            let before = serde_json::to_value(actions::outcomes(&store).unwrap()).unwrap();
+            let view = inspect(&store, &expected).unwrap().unwrap();
+            assert_eq!(view.status, wanted);
+            assert!(view.fingerprint.is_none());
+            assert!(view.signature_valid.is_none());
+            assert!(
+                !serde_json::to_string(&view)
+                    .unwrap()
+                    .contains("SECRET_BODY")
+            );
+            assert_eq!(
+                serde_json::to_value(actions::outcomes(&store).unwrap()).unwrap(),
+                before
+            );
+            assert_eq!(queue(&store, &expected, false).unwrap(), id);
             assert!(actions::reserve_pending(&store).unwrap().is_empty());
         }
     }
