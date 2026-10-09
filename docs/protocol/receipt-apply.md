@@ -56,3 +56,8 @@ Follow-up: [receipt clock and concrete columns](receipt-clock.md) now confirms
 three distinct timestamp policies, earliest-positive cache updates and the
 conditional device-preserving namespace mapping. Complete message-state and
 identity-cleanup parity remains unported.
+
+Follow-up: [receipt key direction and state-only updates](receipt-state-only.md)
+traces parser direction, A07 admission, played eligibility and the core update
+result. Self receipt status does not by itself determine key direction, and an
+A07 true return does not prove every downstream database update succeeded.

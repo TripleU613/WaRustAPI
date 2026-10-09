@@ -80,7 +80,8 @@ A separate normal state-only pool at 07f0..0882 maps original receipt status
 that A07 call. C8L.A00 and a 0Fs row comparison can suppress the call. These
 state arguments are not the receipt_user SQL column selectors (5/8/13).
 They must not be conflated with outgoing wire `type` or cached timestamp slots.
-Complete A07 and C8L semantics remain untraced.
+A07 admission/persistence is now traced in [state-only updates](receipt-state-only.md);
+C8L and the row-suppression boundary remain untraced.
 
 The broadcast branch normalizes a user through 0Yo.A0C, loads an existing
 individual message using the original ID/direction, and builds a separate CYV
@@ -137,3 +138,8 @@ Follow-up: [message status storage and blank device entry](message-status.md)
 identifies A08, downgrade logging followed by assignment, zero reset and the
 two status-6 overrides. Exact field writes and blank-receipt fallback are
 retained; ordinary outgoing initialization and user-row seeding remain unknown.
+
+Follow-up: [receipt key direction and state-only updates](receipt-state-only.md)
+traces parser direction, A07 admission, played eligibility and the core update
+result. Self receipt status does not by itself determine key direction, and an
+A07 true return does not prove every downstream database update succeeded.

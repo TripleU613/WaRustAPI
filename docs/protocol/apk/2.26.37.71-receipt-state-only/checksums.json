@@ -1,0 +1,58 @@
+{
+  "chat-kind-predicate.txt": {
+    "bytes": 779,
+    "sha256": "adee1ec77eaddcaf5f83fda460e6e980f2b4405d6f7c22915a27a1962524ea7b"
+  },
+  "core-message-update.txt": {
+    "bytes": 9180,
+    "sha256": "7e6af94f27c8046b60d959f4e5b1abb4270b9cfff43a43c9f4329389f53abd90"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-chat-predicate.txt": {
+    "bytes": 684,
+    "sha256": "184547f757f6a678e4ed21807ead9558b2bbfee7aacff659f16b0d0a6a5475d4"
+  },
+  "message-key-constructors.txt": {
+    "bytes": 1578,
+    "sha256": "35401568286cd4d1e680ed1c7fb025fe40d9fa08bd496af9b8415c5df0efddf2"
+  },
+  "played-descriptor.txt": {
+    "bytes": 847,
+    "sha256": "a4a63bef7f8fe38399f92a1e0064ead45cab25f1ee1a708799237a641d49137c"
+  },
+  "played-eligibility.txt": {
+    "bytes": 1381,
+    "sha256": "a19a511e8ef4ec210a4408af069cf9406958935b50dde169421d7729d33402ab"
+  },
+  "played-kind-predicate.txt": {
+    "bytes": 668,
+    "sha256": "9d1e58c4991a526b6ca2af11cf21c547a9b28f1345a0cbab01381fde063ea388"
+  },
+  "receipt-key-builder.txt": {
+    "bytes": 624,
+    "sha256": "7139d48779da01b96c3fb32b521a59d0d5baa061cecf76f6f760246da1d0db32"
+  },
+  "state-only-writer.txt": {
+    "bytes": 6630,
+    "sha256": "e305645d70e6102ee3e524ca396b79c9b71f902f8e8f4860747b09404dcdafb0"
+  },
+  "state-post-hook.txt": {
+    "bytes": 815,
+    "sha256": "e4d11bfd966c7b58e639ee72a31182807041ca30319da2f2f1413302a81a6a6f"
+  },
+  "targets.json": {
+    "bytes": 3938,
+    "sha256": "58c2c664ee2642f0d6e43e232a7385456bbd50746f68426a3f79e17c206c6dfa"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

@@ -1,5 +1,14 @@
 # Status — 2026-10-07
 
+Receipt state-only admission (2026-10-09, **confirmed static**): APK 37.71
+keeps message-key direction separate from receipt status: read-self forces false,
+while played-self retains the recipient-presence branch. The ten-topic snapshot
+traces A07 advancement, played eligibility and core persistence. A07 true does
+not prove every downstream database update succeeded; the base A0V helper tests
+chat kind, not a view-once flag. Full self/user-row admission and primary cleanup
+remain unfinished. No runtime, account state or live request changed.
+[Evidence and limits](docs/protocol/receipt-state-only.md).
+
 History mode provenance (2026-10-09, **confirmed static**): APK 37.71
 BMv reads positive registration_device_id from preferences; BNm tests loaded
 Me presence. These are separate from own-user equality, registration state and

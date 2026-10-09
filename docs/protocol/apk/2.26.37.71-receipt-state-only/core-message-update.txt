@@ -1,0 +1,160 @@
+# APK-derived structural disassembly: LX/0V9;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A07(ZLI) flags=0x1 registers=15
+  # full signature: LX/0V9;->A07(LX/178;I)Z
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v13, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=54 iget-object v6, v12, LX/0V9;->A03:LX/0VC;
+  000c..000e op=12 const/4 v5, #0x0
+  000e..0012 op=54 iget-object v0, v6, LX/0VC;->A06:LX/05B;
+  0012..0016 op=54 iget-object v4, v0, LX/05B;->A00:LX/00s;
+  0016..001c op=72 invoke-interface {v4}, LX/00s;->get()Ljava/lang/Object;
+  001c..0022 op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  0022..0024 op=0b move-result-wide v10
+  0024..0028 op=54 iget-object v0, v6, LX/0VC;->A02:LX/05B;
+  0028..002c op=54 iget-object v1, v0, LX/05B;->A00:LX/00s;
+  002c..0032 op=72 invoke-interface {v1}, LX/00s;->get()Ljava/lang/Object;
+  0032..0034 op=0c move-result-object v0
+  0034..0038 op=1f check-cast v0, LX/1hh;
+  0038..003c op=52 iget v2, v13, LX/178;->A0h:I
+  003c..0040 op=54 iget-object v3, v0, LX/1hh;->A0D:LX/00l;
+  0040..0046 op=72 invoke-interface {v3}, LX/00l;->getValue()Ljava/lang/Object;
+  0046..0048 op=0c move-result-object v0
+  0048..004c op=1f check-cast v0, LX/1gj;
+  004c..0052 op=6e invoke-virtual {v0, v2}, LX/1gj;->A02(I)Z
+  0052..0054 op=0a move-result v0
+  0054..0058 op=38 if-eqz v0, +0xec
+  0058..005e op=72 invoke-interface {v3}, LX/00l;->getValue()Ljava/lang/Object;
+  005e..0060 op=0c move-result-object v0
+  0060..0064 op=1f check-cast v0, LX/1gj;
+  0064..006a op=6e invoke-virtual {v0, v2}, LX/1gj;->A00(I)LX/1gg;
+  006a..006c op=0c move-result-object v0
+  006c..0070 op=20 instance-of v0, v0, LX/1hk;
+  0070..0074 op=38 if-eqz v0, +0xde
+  0074..0078 op=54 iget-object v0, v6, LX/0VC;->A05:LX/05B;
+  0078..007c op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  007c..0082 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0082..0084 op=0c move-result-object v0
+  0084..0088 op=1f check-cast v0, LX/0Gc;
+  0088..008e op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  008e..0090 op=0c move-result-object v3
+  0090..0096 op=6e invoke-virtual {v3}, LX/0ZN;->A00()LX/1gB;
+  0096..0098 op=0c move-result-object v5
+  0098..009e op=72 invoke-interface {v1}, LX/00s;->get()Ljava/lang/Object;
+  009e..00a0 op=0c move-result-object v7
+  00a0..00a4 op=1f check-cast v7, LX/1hh;
+  00a4..00a6 op=12 const/4 v0, #0x6
+  00a6..00aa op=22 new-instance v9, LX/3Rd;
+  00aa..00b0 op=70 invoke-direct {v9, v13, v14, v0, v6}, LX/3Rd;-><init>(Ljava/lang/Object;IILjava/lang/Object;)V
+  00b0..00b4 op=54 iget-object v1, v7, LX/1hh;->A0D:LX/00l;
+  00b4..00ba op=72 invoke-interface {v1}, LX/00l;->getValue()Ljava/lang/Object;
+  00ba..00bc op=0c move-result-object v0
+  00bc..00c0 op=1f check-cast v0, LX/1gj;
+  00c0..00c6 op=6e invoke-virtual {v0, v2}, LX/1gj;->A02(I)Z
+  00c6..00c8 op=0a move-result v0
+  00c8..00cc op=38 if-eqz v0, +0x6f
+  00cc..00d2 op=72 invoke-interface {v1}, LX/00l;->getValue()Ljava/lang/Object;
+  00d2..00d4 op=0c move-result-object v0
+  00d4..00d8 op=1f check-cast v0, LX/1gj;
+  00d8..00de op=6e invoke-virtual {v0, v2}, LX/1gj;->A00(I)LX/1gg;
+  00de..00e0 op=0c move-result-object v0
+  00e0..00e4 op=20 instance-of v0, v0, LX/1hk;
+  00e4..00e8 op=38 if-eqz v0, +0x61
+  00e8..00ee op=72 invoke-interface {v1}, LX/00l;->getValue()Ljava/lang/Object;
+  00ee..00f0 op=0c move-result-object v0
+  00f0..00f4 op=1f check-cast v0, LX/1gj;
+  00f4..00fa op=6e invoke-virtual {v0, v2}, LX/1gj;->A00(I)LX/1gg;
+  00fa..00fc op=0c move-result-object v8
+  00fc..0100 op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.fmessage.subsystems.database.subsystem.update.FMessageDatabaseUpdater"
+  0100..0106 op=71 invoke-static {v8, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  0106..010a op=1f check-cast v8, LX/1hk;
+  010a..0110 op=6e invoke-virtual {v8}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0110..0112 op=0c move-result-object v1
+  0112..0116 op=22 new-instance v0, LX/09u;
+  0116..011c op=70 invoke-direct {v0, v1}, LX/09u;-><init>(Ljava/lang/Class;)V
+  011c..011e op=12 const/4 v2, #0x0
+  011e..0122 op=54 iget-object v0, v7, LX/1hh;->A06:LX/00s;
+  0122..0128 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0128..012a op=0c move-result-object v0
+  012a..0130 op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  0130..0134 op=1f check-cast v0, Ljava/lang/Iterable;
+  0134..013a op=72 invoke-interface {v0}, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  013a..013c op=0c move-result-object v1
+  013c..0142 op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  0142..0144 op=0a move-result v0
+  0144..0148 op=38 if-eqz v0, +0xc
+  0148..014e op=72 invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  014e..0150 op=0c move-result-object v0
+  0150..0154 op=1f check-cast v0, LX/DbS;
+  0154..015a op=72 invoke-interface {v0, v13, v2, v14}, LX/DbS;->CHP(LX/178;LX/3Ya;I)V
+  015a..015c op=28 goto -0xf
+  015c..0162 op=6e invoke-virtual {v9}, LX/3Rd;->invoke()Ljava/lang/Object;
+  0162..0168 op=72 invoke-interface {v8, v13}, LX/1hk;->CgJ(LX/178;)V
+  0168..016c op=54 iget-object v0, v7, LX/1hh;->A05:LX/00s;
+  016c..0172 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0172..0174 op=0c move-result-object v0
+  0174..017a op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  017a..017e op=1f check-cast v0, Ljava/lang/Iterable;
+  017e..0184 op=72 invoke-interface {v0}, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0184..0186 op=0c move-result-object v1
+  0186..018c op=72 invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+  018c..018e op=0a move-result v0
+  018e..0192 op=38 if-eqz v0, +0x15
+  0192..0198 op=72 invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0198..019a op=0c move-result-object v0
+  019a..019e op=1f check-cast v0, LX/DbR;
+  019e..01a4 op=72 invoke-interface {v0, v13, v2, v14}, LX/DbR;->CHP(LX/178;LX/3Ya;I)V
+  01a4..01a6 op=28 goto -0xf
+  01a6..01aa op=1a const-string v2, "insert"
+  01aa..01ae op=1a const-string v1, "fmessage-database-updating-not-supported"
+  01ae..01b2 op=1a const-string v0, "message cannot be updated into the database"
+  01b2..01b8 op=71 invoke-static {v13, v7, v0, v2, v1}, LX/1hh;->A00(LX/178;LX/1hh;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  01b8..01be op=6e invoke-virtual {v5}, LX/1gB;->A00()V
+  01be..01c2 op=13 const/16 v1, #0x1b
+  01c2..01c6 op=22 new-instance v0, LX/3Pf;
+  01c6..01cc op=70 invoke-direct {v0, v6, v13, v1}, LX/3Pf;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+  01cc..01d2 op=6e invoke-virtual {v3, v0}, LX/0ZN;->A04(Ljava/lang/Runnable;)V
+  01d2..01d8 op=6e invoke-virtual {v5}, LX/1gB;->close()V
+  01d8..01de op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  01de..01e0 op=12 const/4 v5, #0x1
+  01e0..01e4 op=54 iget-object v0, v6, LX/0VC;->A01:LX/05B;
+  01e4..01e8 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  01e8..01ee op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  01ee..01f0 op=0c move-result-object v3
+  01f0..01f4 op=1f check-cast v3, LX/0V5;
+  01f4..01fa op=72 invoke-interface {v4}, LX/00s;->get()Ljava/lang/Object;
+  01fa..0200 op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  0200..0202 op=0b move-result-wide v1
+  0202..0204 op=bc sub-long/2addr v1, v10
+  0204..0208 op=1a const-string v0, "CoreMessageStore/updateMessageOnCurrentThread"
+  0208..020e op=6e invoke-virtual {v3, v0, v1, v2}, LX/0V5;->A01(Ljava/lang/String;J)V
+  020e..0210 op=0f return v5
+  0210..0212 op=0d move-exception v1
+  0212..0214 op=27 throw v1
+  0214..0216 op=0d move-exception v0
+  0216..021c op=71 invoke-static {v5, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  021c..021e op=27 throw v0
+  021e..0220 op=0d move-exception v1
+  0220..0222 op=27 throw v1
+  0222..0224 op=0d move-exception v0
+  0224..022a op=71 invoke-static {v3, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  022a..022c op=27 throw v0
+  022c..0230 op=1a const-string v1, "FMessageDatabaseUpdateMethods/updateMessage skipping unsupported type "
+  0230..0234 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0234..023a op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  023a..0240 op=6e invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0240..0246 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0246..0248 op=0c move-result-object v0
+  0248..024e op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+  024e..0250 op=0f return v5
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0048..004c -> 010f
+  # catch <all> code_units 004c..00e9 -> 0108
+  # catch <all> code_units 00e9..00ec -> 010f
+  # catch <all> code_units 0109..010a -> 010a
+  # catch <all> code_units 010b..010f -> 010f
+  # catch <all> code_units 0110..0111 -> 0111
+.end method
