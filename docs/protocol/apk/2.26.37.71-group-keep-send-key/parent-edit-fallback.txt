@@ -1,0 +1,74 @@
+# APK-derived structural disassembly: LX/1hQ;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LL) flags=0x11 registers=11
+  0000..0002 op=12 const/4 v8, #0x0
+  0002..0006 op=54 iget-object v2, v9, LX/1hQ;->A02:LX/16U;
+  0006..000a op=54 iget-object v1, v10, LX/1gc;->A00:LX/0Cy;
+  000a..000e op=39 if-nez v1, +0x7
+  000e..0010 op=12 const/4 v2, #0x0
+  0010..0012 op=12 const/4 v1, #0x0
+  0012..0016 op=38 if-eqz v2, +0x5a
+  0016..0018 op=28 goto +0x36
+  0018..001c op=54 iget-object v0, v2, LX/16U;->A01:LX/0Gc;
+  001c..0022 op=6e invoke-virtual {v0}, LX/0Gc;->A06(L)
+  0022..0024 op=0c move-result-object v5
+  0024..0028 op=54 iget-object v6, v5, LX/0ZN;->A02:LX/0IY;
+  0028..002c op=1a const-string v4, "\n          SELECT\n            sort_id, from_me, key_id, status, broadcast, timestamp, message_type, origin, recipient_count, participant_hash, starred, receipt_server_timestamp, origination_flags, received_timestamp, _id, text_data, lookup_tables, sender_jid_row_id, chat_row_id, message_add_on_flags, view_mode, translated_text, view_replies_thread_id, server_sts\n          FROM\n            message_edit_info\n            JOIN message\n              ON message._id = message_edit_info.message_row_id\n          WHERE\n            original_key_id = ?\n            AND \n            chat_row_id = ?\n            AND\n            from_me = ?\n        "
+  002c..0030 op=54 iget-object v7, v10, LX/1gc;->A01:Ljava/lang/String;
+  0030..0034 op=54 iget-object v0, v2, LX/16U;->A00:LX/0VS;
+  0034..003a op=6e invoke-virtual {v0, v1}, LX/0VS;->A0C(JL)
+  003a..003c op=0b move-result-wide v0
+  003c..0042 op=71 invoke-static {v0, v1}, Ljava/lang/String;->valueOf(LJ)
+  0042..0044 op=0c move-result-object v3
+  0044..0048 op=55 iget-boolean v0, v10, LX/1gc;->A02:Z
+  0048..004c op=38 if-eqz v0, +0x16
+  004c..0050 op=1a const-string v2, "1"
+  0050..0052 op=12 const/4 v0, #0x3
+  0052..0056 op=23 new-array v1, v0, [Ljava/lang/String;
+  0056..005a op=4d aput-object v7, v1, v8
+  005a..005c op=12 const/4 v0, #0x1
+  005c..0060 op=4d aput-object v3, v1, v0
+  0060..0062 op=12 const/4 v0, #0x2
+  0062..0066 op=4d aput-object v2, v1, v0
+  0066..006a op=1a const-string v0, "SELECT_LAST_EDIT_MESSAGE_BY_MESSAGE_KEY"
+  006a..0070 op=6e invoke-virtual {v6, v4, v0, v1}, LX/0IY;->A0A(LLLL)
+  0070..0072 op=0c move-result-object v2
+  0072..0074 op=28 goto +0x4
+  0074..0078 op=1a const-string v2, "0"
+  0078..007a op=28 goto -0x14
+  007a..0080 op=6e invoke-virtual {v5}, LX/0ZN;->close(V)
+  0080..0082 op=28 goto -0x38
+  0082..0088 op=72 invoke-interface {v2}, Landroid/database/Cursor;->moveToNext(Z)
+  0088..008a op=0a move-result v0
+  008a..008e op=38 if-eqz v0, +0x1b
+  008e..0092 op=54 iget-object v0, v9, LX/1hQ;->A00:LX/05B;
+  0092..0096 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0096..009c op=72 invoke-interface {v0}, LX/00s;->get(L)
+  009c..009e op=0c move-result-object v0
+  009e..00a2 op=1f check-cast v0, LX/0V9;
+  00a2..00a8 op=6e invoke-virtual {v0, v2}, LX/0V9;->A02(LL)
+  00a8..00aa op=0c move-result-object v0
+  00aa..00b0 op=72 invoke-interface {v2}, Landroid/database/Cursor;->close(V)
+  00b0..00b2 op=11 return-object v0
+  00b2..00b4 op=0d move-exception v1
+  00b4..00b6 op=27 throw v1
+  00b6..00b8 op=0d move-exception v0
+  00b8..00be op=71 invoke-static {v2, v1}, LX/07i;->A00(VLL)
+  00be..00c0 op=27 throw v0
+  00c0..00c6 op=72 invoke-interface {v2}, Landroid/database/Cursor;->close(V)
+  00c6..00c8 op=11 return-object v1
+  00c8..00ca op=0d move-exception v1
+  00ca..00d0 op=6e invoke-virtual {v5}, LX/0ZN;->close(V)
+  00d0..00d2 op=27 throw v1
+  00d2..00d4 op=0d move-exception v0
+  00d4..00da op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  00da..00dc op=27 throw v1
+  # exception table: 4 try range(s)
+  # catch <all> code_units 0012..003d -> 0064
+  # catch <all> code_units 0041..0055 -> 0059
+  # catch <all> code_units 005a..005b -> 005b
+  # catch <all> code_units 0065..0068 -> 0069
+.end method

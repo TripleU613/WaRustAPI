@@ -2640,3 +2640,19 @@ retained group reaction targets remain valid; no retained group keep payload
 was available to validate live attribution. No fresh group keep/unkeep, group
 send or human handset rendering is claimed. Native keep timestamp ordering,
 authorization, expiry enforcement and outgoing group keep remain open gaps.
+
+Outgoing keep key research (2026-10-09, **confirmed static**): APK 37.71
+Bai.AD7 serializes the original parent key through CSZ.A01. The new 22-topic
+bundle traces explicit id/fromMe/participant setters, gated parent/edit/partial-ID
+lookup and retained author-device selection. A supplied author may be omitted
+when the gated lookup misses; remote namespace mapping and effective gate values
+remain unknown. No Rust send behavior changed. Normal group keep sending,
+native permission/expiry checks and fresh live keep/unkeep remain unfinished.
+[Evidence and implementation boundaries](protocol/group-keep-send-key.md).
+
+**Confirmed research validation:** exact re-export/check reproduces 22 topics /
+27 files / 75,556 bytes; checksum-verified self-diff is unchanged. All 63 xtask,
+50 experimental CLI and one API-library symbol tests passed, including CLI
+reference regeneration. Hygiene validates 19 APK bundles / 6,188,509 bytes.
+No account connection, group draft, message send or private state change was
+performed. This verifies the research export, not outgoing keep implementation.

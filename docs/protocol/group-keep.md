@@ -84,10 +84,11 @@ applied it. Fresh live group keep/unkeep and handset rendering remain unverified
 **Confirmed local send limitation:** normal outgoing_group::payload still
 refuses KeepInChat content with `group content is not implemented by the normal
 adapter`. The generic direct keep encoder currently omits the participant;
-do not reuse it to claim a native group send. Bai.AD7 is retained for future
-outbound tracing, but its complete caller/authorization path and a group send
-are not established by this change. This is our tooling gap, not a WhatsApp
-server prohibition.
+do not reuse it to claim a native group send. The subsequent
+[outgoing-key trace](group-keep-send-key.md) establishes Bai.AD7's parent-key
+serializer and feature-gated author lookup. Its complete caller/authorization
+path and a group send remain unestablished. This is our tooling gap, not a
+WhatsApp server prohibition.
 
 ## Verification and negative results
 

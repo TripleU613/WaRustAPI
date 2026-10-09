@@ -1,0 +1,17 @@
+# APK-derived structural disassembly: LX/BOE;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A08(VZ) flags=0x1 registers=4
+  0000..0006 op=71 invoke-static {v2}, LX/6aj;->A0c(LL)
+  0006..0008 op=0c move-result-object v1
+  0008..000c op=1f check-cast v1, LX/BZa;
+  000c..0010 op=60 sget v0, LX/BZa;->FROM_ME_FIELD_NUMBER:I
+  0010..0014 op=52 iget v0, v1, LX/BZa;->bitField0_:I
+  0014..0018 op=de or-int/lit8 v0, v0, #0x2
+  0018..001c op=59 iput v0, v1, LX/BZa;->bitField0_:I
+  001c..0020 op=5c iput-boolean v3, v1, LX/BZa;->fromMe_:Z
+  0020..0022 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
