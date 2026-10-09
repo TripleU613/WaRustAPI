@@ -20,7 +20,7 @@ use sha2::{Digest, Sha256};
 // 01c4..01d0 -> Cih.A0J: Java signed decimal and DEX wrapping ms.
 // Preserve only explicit valid evidence here: native current-clock fallback
 // must not make historical expiring content fresh. See message-timestamps.md.
-fn stanza_timestamp(node: &Node) -> Option<Timestamp> {
+pub(super) fn stanza_timestamp(node: &Node) -> Option<Timestamp> {
     node.get_attr("t")
         .and_then(|value| value.as_text())
         .and_then(super::mex::java_decimal_long)

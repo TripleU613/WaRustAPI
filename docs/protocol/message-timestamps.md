@@ -52,3 +52,36 @@ Validation: 835 workspace/all-feature tests passed. Strict all-target Clippy,
 warnings-denied Rustdoc, default CLI tests (25 plus API-symbol), regenerated
 CLI reference, executed Java oracle, formatting and whitespace checks passed.
 Repository hygiene checked 2,156 links and 107 existing APK bundles. No live test.
+
+## Attachment expiry continuation
+
+**Implemented/offline tested:** the ordinary attachment retrieval check now
+uses the same explicit stanza timestamp parser as event projection. The prior
+ASCII/nonnegative/checked path could reject a still-unexpired attachment whose
+Unicode-decimal root `t` was already accepted for its event. Both directly saved
+routes and original historical capture lookups use the shared parser; absence
+of either authenticated route or valid time still refuses access. Expiry remains
+checked on retrieval, not only when the event was published. No download,
+plaintext export, view-once consumption or reservation policy changes.
+
+The new offline test checks all 479 oracle inputs plus missing time and a future
+BMP-decimal time through both saved-route representations (962 checks), and a
+missing-route refusal. Existing ordinary media projection, reference revalidation,
+view-once exclusions, cached authentication and export tests remain separate.
+No account or network operation ran; new live attachment behavior is unverified.
+
+```sh
+cargo test -p whatsapp-api --all-features transport::media::tests
+```
+
+**Bounded follow-up / unknown:** the transport numeric-input scan also found
+ASCII conversions in `groups::apply_refresh_in` (truncated size), `image_upload::route`
+(route lifetime) and `clock::observe` (the separate inferred sample). They were
+not changed: message timestamp evidence alone does not establish their native
+numeric conversion, bounds or authority. This scan is not a complete numeric
+parser inventory and makes no parity claim for those distinct inputs.
+
+Validation: 836 workspace/all-feature tests passed. Strict all-target Clippy,
+warnings-denied Rustdoc, default CLI tests (25 plus API-symbol), regenerated
+CLI reference, formatting and whitespace checks passed. Repository hygiene
+checked 2,159 local links and 107 APK bundles. No fresh live test.

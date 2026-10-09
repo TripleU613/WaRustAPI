@@ -1,5 +1,17 @@
 # Messaging completion checklist
 
+Attachment expiry continuation (2026-10-09, **implemented/offline tested**):
+ordinary media retrieval shares the explicit incoming Java timestamp parser,
+fixing event/retrieval disagreement for Unicode-decimal time. Missing-time and
+missing-route refusals remain; no live download or account operation.
+[Evidence and tests](protocol/message-timestamps.md#attachment-expiry-continuation).
+
+Validation: 836 workspace/all-feature tests passed. Strict all-target Clippy,
+warnings-denied Rustdoc, default CLI tests (25 plus API-symbol), regenerated
+CLI reference, formatting and whitespace checks passed. Repository hygiene
+checked 2,159 local links and 107 APK bundles. No fresh live test.
+
+
 Incoming timestamp parsing (2026-10-09, **implemented/offline tested**):
 explicit valid root `t` uses APK-derived Java signed-decimal parsing and wrapping
 millisecond conversion across incoming event projections. Missing/malformed

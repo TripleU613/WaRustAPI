@@ -238,12 +238,9 @@ fn unexpired(store: &ProtocolStore, record: &serde_json::Value, duration: u32) -
         &limits,
     )
     .decode_node()?;
-    let sent = node
-        .get_attr("t")
-        .and_then(|v| v.as_text())
-        .and_then(|v| v.parse::<i64>().ok())
-        .filter(|v| *v >= 0)
-        .and_then(|v| v.checked_mul(1000));
+    // Same explicit APK CgC.A01 timestamp as event projection. Unknown historical
+    // time must not gain a current-clock fallback here; see message-timestamps.md.
+    let sent = super::inbox_events::stanza_timestamp(&node).map(|time| time.0);
     Ok(sent.is_some_and(|sent| {
         sent.saturating_add(i64::from(duration) * 1000) > crate::model::time::Timestamp::now().0
     }))
@@ -949,6 +946,75 @@ mod tests {
                 .unwrap();
         store.write(|tx| tx.put_json(Table::Checkpoints, b"received:fresh", 1, &serde_json::json!({"status":"decrypted", "protobuf":expiring, "route":old_route}))).unwrap();
         assert!(reference_selector(&store, reference).is_err());
+    }
+    #[test]
+    fn attachment_expiry_matches_explicit_java_time_for_route_and_capture() {
+        use crate::{
+            binary::{Encoder, Node, TokenDictionary},
+            model::{ids::AccountId, time::Timestamp},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("media-times.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([3; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let oracle: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/mex/2.26.37.71-numeric-reference.json"
+        ))
+        .unwrap();
+        let now = Timestamp::now().0;
+        let mut cases: Vec<(Option<String>, bool)> = oracle["cases"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|case| {
+                let valid = case["valid"].as_bool().unwrap();
+                let scaled = case["scaled"].as_str().unwrap().parse::<i64>().unwrap();
+                (
+                    Some(case["input"].as_str().unwrap().to_owned()),
+                    valid && scaled.saturating_add(60000) > now,
+                )
+            })
+            .collect();
+        cases.push((None, false));
+        let future = (now / 1000 + 3600).to_string();
+        let future_bmp: String = future
+            .chars()
+            .map(|c| char::from_u32('٠' as u32 + c.to_digit(10).unwrap()).unwrap())
+            .collect();
+        cases.push((Some(future_bmp), true));
+        for (time, expected) in cases {
+            let mut node = Node::new("message")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("id", "fixture");
+            if let Some(time) = &time {
+                node = node.attr("t", time.clone());
+            }
+            let route = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                .encode(&node)
+                .unwrap();
+            let direct = serde_json::json!({"route":route});
+            assert_eq!(
+                unexpired(&store, &direct, 60).unwrap(),
+                expected,
+                "direct {time:?}"
+            );
+            let capture_key = b"capture:fixture";
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, capture_key, 1, &route))
+                .unwrap();
+            let historical = serde_json::json!({"capture":capture_key.to_vec()});
+            assert_eq!(
+                unexpired(&store, &historical, 60).unwrap(),
+                expected,
+                "capture {time:?}"
+            );
+        }
+        assert!(!unexpired(&store, &serde_json::json!({}), 60).unwrap());
     }
     use super::*;
     #[cfg(feature = "comparison-client")]
