@@ -128,3 +128,9 @@ transfer. A scheduled outbound sent_tc_token_timestamp can exist before token
 request success, including a newly initialized row with real_issue_timestamp=0.
 This narrows the old-state requirement; it does not authorize deriving it from
 incoming token bytes or enabling untraced bucket/canonicalization defaults.
+
+**Subsequent confirmed helper trace:** [token canonicalization](token-canonicalization.md)
+identifies independent type-zero normalization, property 15491 counterpart
+suppression and property 14303 pending-job namespace selection. A0N and A0O
+have distinct null-cache/expiry behavior. Static helper branches are now known;
+effective flags, full mapping/cache authority and refresh runtime remain unported.

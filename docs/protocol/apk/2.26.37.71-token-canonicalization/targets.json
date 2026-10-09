@@ -1,0 +1,86 @@
+{
+  "incoming-token-read": {
+    "anchors": [
+      "GET_NEWEST_TOKEN_BY_JIDS"
+    ],
+    "class": "LX/0q2;",
+    "file": "incoming-token-read.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0M",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "outbound-uncached-read": {
+    "class": "LX/0q2;",
+    "file": "outbound-uncached-read.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0N",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "pending-job-user": {
+    "anchors": [
+      "null cannot be cast to non-null type com.whatsapp.infra.core.jid.LidUserJid"
+    ],
+    "class": "LX/HxT;",
+    "file": "pending-job-user.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "token-counterpart-gate": {
+    "class": "LX/0q2;",
+    "file": "token-counterpart-gate.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "token-phone-classifier": {
+    "class": "LX/0DE;",
+    "file": "token-phone-classifier.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0e",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "token-user-normalization": {
+    "class": "LX/0q2;",
+    "file": "token-user-normalization.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  }
+}

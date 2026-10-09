@@ -1,0 +1,66 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "token-user-normalization": {
+      "class": "LX/0q2;",
+      "method": "A0L",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs"
+      ]
+    },
+    "token-counterpart-gate": {
+      "class": "LX/0q2;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs"
+      ]
+    },
+    "token-phone-classifier": {
+      "class": "LX/0DE;",
+      "method": "A0e",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs"
+      ]
+    },
+    "incoming-token-read": {
+      "class": "LX/0q2;",
+      "method": "A0M",
+      "anchors": [
+        "GET_NEWEST_TOKEN_BY_JIDS"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs"
+      ]
+    },
+    "outbound-uncached-read": {
+      "class": "LX/0q2;",
+      "method": "A0N",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs"
+      ]
+    },
+    "pending-job-user": {
+      "class": "LX/HxT;",
+      "method": "A00",
+      "anchors": [
+        "null cannot be cast to non-null type com.whatsapp.infra.core.jid.LidUserJid"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs"
+      ]
+    }
+  }
+}

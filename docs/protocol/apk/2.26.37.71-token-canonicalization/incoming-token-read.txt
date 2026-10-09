@@ -1,0 +1,120 @@
+# APK-derived structural disassembly: LX/0q2;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0M(LL) flags=0x11 registers=13
+  # full signature: LX/0q2;->A0M(Lcom/whatsapp/infra/core/jid/UserJid;)LX/A0O;
+  0000..0002 op=12 const/4 v9, #0x0
+  0002..0008 op=6e invoke-virtual {v11, v12}, LX/0q2;->A0L(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+  0008..000a op=0c move-result-object v4
+  000a..000e op=54 iget-object v3, v11, LX/0q2;->A01:LX/0Z8;
+  000e..0014 op=6e invoke-virtual {v3, v4}, LX/0Z8;->A0D(Ljava/lang/Object;)Ljava/lang/Object;
+  0014..0016 op=0c move-result-object v1
+  0016..001a op=1f check-cast v1, LX/A0O;
+  001a..001e op=39 if-nez v1, +0xb7
+  001e..0024 op=70 invoke-direct {v11, v12, v4}, LX/0q2;->A02(Lcom/whatsapp/infra/core/jid/UserJid;Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+  0024..0026 op=0c move-result-object v2
+  0026..002a op=39 if-nez v2, +0x35
+  002a..002e op=54 iget-object v0, v11, LX/0q2;->A05:LX/0q4;
+  002e..0032 op=54 iget-object v0, v0, LX/0gr;->A00:LX/0aD;
+  0032..0038 op=6e invoke-virtual {v0}, LX/0aC;->A06()LX/0ZN;
+  0038..003a op=0c move-result-object v2
+  003a..003e op=54 iget-object v7, v2, LX/0ZN;->A02:LX/0IY;
+  003e..0042 op=1a const-string v6, "SELECT incoming_tc_token, incoming_tc_token_timestamp FROM wa_trusted_contacts WHERE jid=?"
+  0042..0048 op=6e invoke-virtual {v4}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  0048..004a op=0c move-result-object v5
+  004a..004c op=12 const/4 v0, #0x1
+  004c..0050 op=23 new-array v1, v0, [Ljava/lang/String;
+  0050..0054 op=4d aput-object v5, v1, v9
+  0054..0058 op=1a const-string v0, "GET_RECEIVED_TOKEN_AND_TIMESTAMP_BY_JID"
+  0058..005e op=6e invoke-virtual {v7, v6, v0, v1}, LX/0IY;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+  005e..0060 op=0c move-result-object v5
+  0060..0066 op=72 invoke-interface {v5}, Landroid/database/Cursor;->moveToNext()Z
+  0066..0068 op=0a move-result v0
+  0068..006a op=12 const/4 v1, #0x0
+  006a..006e op=38 if-eqz v0, +0x75
+  006e..0072 op=1a const-string v0, "incoming_tc_token"
+  0072..0078 op=72 invoke-interface {v5, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  0078..007a op=0a move-result v1
+  007a..007e op=1a const-string v0, "incoming_tc_token_timestamp"
+  007e..0084 op=72 invoke-interface {v5, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  0084..0086 op=0a move-result v0
+  0086..008c op=71 invoke-static {v5, v1, v0}, LX/0q4;->A06(Landroid/database/Cursor;II)LX/A0O;
+  008c..008e op=0c move-result-object v1
+  008e..0090 op=28 goto +0x63
+  0090..0094 op=54 iget-object v1, v11, LX/0q2;->A05:LX/0q4;
+  0094..0096 op=12 const/4 v0, #0x2
+  0096..009a op=23 new-array v10, v0, [Lcom/whatsapp/infra/core/jid/UserJid;
+  009a..009e op=4d aput-object v4, v10, v9
+  009e..00a0 op=12 const/4 v0, #0x1
+  00a0..00a4 op=4d aput-object v2, v10, v0
+  00a4..00a8 op=54 iget-object v0, v1, LX/0gr;->A00:LX/0aD;
+  00a8..00ae op=6e invoke-virtual {v0}, LX/0aC;->A06()LX/0ZN;
+  00ae..00b0 op=0c move-result-object v2
+  00b0..00b4 op=54 iget-object v7, v2, LX/0ZN;->A02:LX/0IY;
+  00b4..00b6 op=12 const/4 v8, #0x2
+  00b6..00bc op=71 invoke-static {v8}, LX/0ZU;->A00(I)Ljava/lang/String;
+  00bc..00be op=0c move-result-object v5
+  00be..00c2 op=1a const-string v0, "SELECT jid, incoming_tc_token, incoming_tc_token_timestamp FROM wa_trusted_contacts WHERE jid IN "
+  00c2..00c6 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  00c6..00cc op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  00cc..00d2 op=6e invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00d2..00d6 op=1a const-string v0, " ORDER BY incoming_tc_token_timestamp DESC LIMIT 1"
+  00d6..00dc op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00dc..00e2 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00e2..00e4 op=0c move-result-object v6
+  00e4..00e8 op=22 new-instance v5, Ljava/util/ArrayList;
+  00e8..00ee op=70 invoke-direct {v5, v8}, Ljava/util/ArrayList;-><init>(I)V
+  00ee..00f0 op=12 const/4 v1, #0x0
+  00f0..00f4 op=46 aget-object v0, v10, v1
+  00f4..00fa op=6e invoke-virtual {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  00fa..00fc op=0c move-result-object v0
+  00fc..0102 op=6e invoke-virtual {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  0102..0106 op=d8 add-int/lit8 v1, v1, #0x1
+  0106..010a op=34 if-lt v1, v8, -0xb
+  010a..010e op=23 new-array v0, v9, [Ljava/lang/String;
+  010e..0114 op=6e invoke-virtual {v5, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+  0114..0116 op=0c move-result-object v1
+  0116..011a op=1f check-cast v1, [Ljava/lang/String;
+  011a..011e op=1a const-string v0, "GET_NEWEST_TOKEN_BY_JIDS"
+  011e..0124 op=6e invoke-virtual {v7, v6, v0, v1}, LX/0IY;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+  0124..0126 op=0c move-result-object v5
+  0126..012c op=72 invoke-interface {v5}, Landroid/database/Cursor;->moveToNext()Z
+  012c..012e op=0a move-result v0
+  012e..0130 op=12 const/4 v1, #0x0
+  0130..0134 op=38 if-eqz v0, +0x12
+  0134..0138 op=1a const-string v0, "incoming_tc_token"
+  0138..013e op=72 invoke-interface {v5, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  013e..0140 op=0a move-result v1
+  0140..0144 op=1a const-string v0, "incoming_tc_token_timestamp"
+  0144..014a op=72 invoke-interface {v5, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  014a..014c op=0a move-result v0
+  014c..0152 op=71 invoke-static {v5, v1, v0}, LX/0q4;->A06(Landroid/database/Cursor;II)LX/A0O;
+  0152..0154 op=0c move-result-object v1
+  0154..015a op=72 invoke-interface {v5}, Landroid/database/Cursor;->close()V
+  015a..0160 op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  0160..0164 op=38 if-eqz v1, +0x14
+  0164..016a op=6e invoke-virtual {v3, v4, v1}, LX/0Z8;->A0L(Ljava/lang/Object;Ljava/lang/Object;)V
+  016a..016c op=11 return-object v1
+  016c..016e op=0d move-exception v1
+  016e..0170 op=27 throw v1
+  0170..0172 op=0d move-exception v0
+  0172..0178 op=71 invoke-static {v5, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0178..017a op=27 throw v0
+  017a..017c op=0d move-exception v1
+  017c..017e op=27 throw v1
+  017e..0180 op=0d move-exception v0
+  0180..0186 op=71 invoke-static {v2, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0186..0188 op=27 throw v0
+  0188..018a op=11 return-object v1
+  # exception table: 8 try range(s)
+  # catch <all> code_units 001d..0030 -> 00bd
+  # catch <all> code_units 0030..0048 -> 00b6
+  # catch <all> code_units 0058..0093 -> 00bd
+  # catch <all> code_units 0093..00aa -> 00b6
+  # catch <all> code_units 00aa..00ad -> 00bd
+  # catch <all> code_units 00b7..00b8 -> 00b8
+  # catch <all> code_units 00b9..00bd -> 00bd
+  # catch <all> code_units 00be..00bf -> 00bf
+.end method

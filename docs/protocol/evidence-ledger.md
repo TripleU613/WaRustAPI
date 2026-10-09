@@ -1,5 +1,14 @@
 # Evidence ledger
 
+Token canonicalization gates (2026-10-09, **confirmed static**): APK
+37.71 normalizes type-zero phone users independently of property 15491, which
+suppresses only counterpart lookup/cleanup. Separate property 14303 selects
+pending-job namespace. The six-topic snapshot records incoming-byte versus
+outbound timestamp getters and four physical counterpart-helper callers. Effective
+flags, mapping authority and refresh runtime remain unknown/unported. No account
+state or live request changed.
+[Evidence and limits](token-canonicalization.md).
+
 Identity-only peer prerequisite (2026-10-09, **confirmed local**): public
 query/inspection now refuses an empty peer user before reading or saving action
 state; shared primary-address matching also refuses server-only values. The

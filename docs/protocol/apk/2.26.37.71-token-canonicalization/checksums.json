@@ -1,0 +1,42 @@
+{
+  "incoming-token-read.txt": {
+    "bytes": 7361,
+    "sha256": "a90bb5b7257d8d8e5bdca54bd4fe55cbebae92246673a84e3393cc34a6cf123e"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "outbound-uncached-read.txt": {
+    "bytes": 2629,
+    "sha256": "91be86ec3b7ced8dd83a5316527bed9ac74d7969a8e445f5e34fbdcb32aadd82"
+  },
+  "pending-job-user.txt": {
+    "bytes": 1723,
+    "sha256": "8c1e2993836a0a2df2aabb4df0bee7943c4623b92a52518f1fe431af4c6a7028"
+  },
+  "targets.json": {
+    "bytes": 2608,
+    "sha256": "9d6b84c74bf8eb6cd238a1dc1d7b336e1af82ba196f523f9a091250975620597"
+  },
+  "token-counterpart-gate.txt": {
+    "bytes": 1267,
+    "sha256": "b147c0f808649811f533e0a0dcb5225b4bed1ce583e46f5c1771c37aa4e5b63f"
+  },
+  "token-phone-classifier.txt": {
+    "bytes": 738,
+    "sha256": "177609226fc70b882f29bfa2beba1bd075d3b5fbf552ce32b8377f2fa87fdaf9"
+  },
+  "token-user-normalization.txt": {
+    "bytes": 1190,
+    "sha256": "6a3d43158abd07d4904f79c9ba7bc690c80720fc2b1706d95213d53940f3f584"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}
