@@ -3706,6 +3706,74 @@
             "description": "Read-only durable directory-batch counts/reasons for this original local intent. Null when no page was needed/reserved. Read separately from stage metadata; diagnostic counts are not send permission."
           }
         }
+      },
+      "SendVersions": {
+        "type": "object",
+        "required": [
+          "local_id",
+          "captured",
+          "users"
+        ],
+        "properties": {
+          "local_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{32}$",
+            "description": "Original stable local outbox intent selector; inspection never replaces it."
+          },
+          "captured": {
+            "type": "boolean",
+            "description": "False means missing historical/unprepared instrumentation; inspection never backfills."
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserVersion"
+            },
+            "description": "Actual send target user namespaces, redacted; empty only without a snapshot."
+          }
+        }
+      },
+      "UserVersion": {
+        "type": "object",
+        "required": [
+          "user_ticket",
+          "devices",
+          "at_send",
+          "current",
+          "matches"
+        ],
+        "properties": {
+          "user_ticket": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 of normalized actual user JID, not a safety number."
+          },
+          "devices": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Unique actual planned target devices for this exact user at reservation."
+          },
+          "at_send": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "Captured counter at original reservation; null is a known missing counter."
+          },
+          "current": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "Current tracked exact-namespace primary counter, not server inventory."
+          },
+          "matches": {
+            "type": "boolean",
+            "description": "Nullable equality only; never permission to resend or reset a reservation."
+          }
+        }
       }
     }
   },
@@ -12352,6 +12420,56 @@
             "$ref": "#/components/responses/InvalidInput"
           }
         }
+      }
+    },
+    "/v1/outbox/{local_id}/versions": {
+      "get": {
+        "tags": [
+          "Outbox"
+        ],
+        "summary": "Inspect original send-time primary versions (offline, redacted)",
+        "description": "Offline inspection of an existing immutable local outbox intent. Direct and group comparison adapters capture actual target users' nullable primary-device versions in the original send reservation transaction, after authenticated replacement hooks. Group capture includes every planned device, not only newly distributed sender keys. The snapshot is immutable; namespace values stay separate and duplicate device encodings are counted once. Historical/unprepared intents without a snapshot return captured=false and users=[]; captured null counters are known missing values, not missing instrumentation. Each user exports only a normalized-JID hash, device count, at_send/current signed int64-or-null and nullable matches boolean. Equality is diagnostic, never a native resend decision; effective default/hosted gates and full sync/resend runtime remain unported. Unknown local IDs and malformed snapshots/counters refuse with fixed diagnostics; inspection neither repairs history nor sends/queues anything. No HTTP route is served. See docs/protocol/send-version-snapshot.md.",
+        "operationId": "outboxVersions",
+        "x-cli": "whatsapp-cli outbox-versions",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Store"
+          },
+          {
+            "$ref": "#/components/parameters/Account"
+          },
+          {
+            "$ref": "#/components/parameters/KeyEnv"
+          },
+          {
+            "$ref": "#/components/parameters/Profile"
+          },
+          {
+            "$ref": "#/components/parameters/ProfilesDir"
+          },
+          {
+            "$ref": "#/components/parameters/LocalId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Redacted immutable original-send snapshot and current version relationship",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendVersions"
+                }
+              }
+            }
+          }
+        },
+        "x-library": [
+          "whatsapp_api::transport::send_versions::inspect"
+        ]
       }
     }
   }

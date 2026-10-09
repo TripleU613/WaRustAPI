@@ -1260,6 +1260,23 @@ pub(super) fn outbox_group_preparations(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
+pub(super) fn outbox_versions(cli: &super::Cli, local_id: &str) -> Result<(), Error> {
+    let id = local_id.parse::<whatsapp_api::model::ids::LocalMessageId>()?;
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let value = whatsapp_api::transport::send_versions::inspect(&store, id)?;
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&value)
+            .map_err(|_| Error::invalid("send_versions", "cannot encode inspection"))?
+    );
+    Ok(())
+}
+
 pub(super) fn outbox_pending(cli: &super::Cli) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),

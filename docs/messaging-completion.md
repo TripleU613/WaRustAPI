@@ -2811,3 +2811,21 @@ equivalence. All 65 xtask tests, CLI-reference regeneration, API/library-symbol
 check, formatting and diff hygiene passed. Repository hygiene checked 1,304
 local links and 25 APK bundles / 7,536,554 bytes. Runtime changes are comments
 only; no account operation, live resend or receipt reservation change occurred.
+
+2026-10-09 — **Confirmed local/static:** normal direct/group original-send
+reservations now capture nullable per-user primary versions after authenticated
+replacement hooks, atomically with their original state. All group plan devices
+are included. Offline outbox-versions exposes hashes/counts and prior/current
+values; absent historical snapshots remain unknown. Missing JSON version members
+and malformed state refuse without private echoes. Native resend/receipt-cache
+runtime remains unported; no new live send was authorized or performed.
+[Evidence and limits](protocol/send-version-snapshot.md).
+
+Send-version validation: all 795 workspace/all-feature tests, strict Clippy,
+warning-denying Rustdoc, 26 default CLI checks, API/library-symbol check,
+CLI-reference regeneration, formatting and experimental CLI build passed.
+Hygiene checked 1,313 local links and 25 APK bundles / 7,536,554 bytes.
+Offline retained-profile CLI checks left store inspection and queued intents
+unchanged; invalid IDs and unknown intents refused without input echoes.
+There were no retained group preparations to inspect; historical missing-state
+coverage is from fixtures. New send capture has no live validation in this chunk.

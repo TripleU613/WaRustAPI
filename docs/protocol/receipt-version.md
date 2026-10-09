@@ -130,3 +130,9 @@ equivalence. All 65 xtask tests, CLI-reference regeneration, API/library-symbol
 check, formatting and diff hygiene passed. Repository hygiene checked 1,304
 local links and 25 APK bundles / 7,536,554 bytes. Runtime changes are comments
 only; no account operation, live resend or receipt reservation change occurred.
+
+**Subsequent confirmed local port:** [send-time snapshots](send-version-snapshot.md)
+now preserve actual direct/group target users' nullable versions atomically with
+original reservations, after replacement hooks. Historical sends remain unknown.
+Native receipt caches, canonical/default/hosted gates and full resends remain
+unported; diagnostic equality is not a resend permission.

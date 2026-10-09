@@ -390,6 +390,15 @@ fn primary_device_version_key(peer: &Jid) -> String {
     format!("primary-device-version:{}", peer.to_non_ad())
 }
 
+fn decode_primary_device_version(bytes: Option<Vec<u8>>) -> Result<Option<i64>> {
+    bytes
+        .map(|bytes| {
+            serde_json::from_slice(&bytes)
+                .map_err(|_| Error::invalid("devices", "invalid saved primary device version"))
+        })
+        .transpose()
+}
+
 pub(super) fn primary_device_version_in(
     tx: &crate::store::ReadTx<'_>,
     peer: &Jid,
@@ -397,11 +406,22 @@ pub(super) fn primary_device_version_in(
     if peer.device != 0 || peer.agent != 0 || !matches!(peer.server, Server::Lid | Server::User) {
         return Ok(None);
     }
-    tx.get_json(
+    decode_primary_device_version(tx.get(
         Table::Checkpoints,
         primary_device_version_key(peer).as_bytes(),
         1,
-    )
+    )?)
+}
+
+pub(super) fn primary_device_version_write_in(
+    tx: &crate::store::WriteTx<'_>,
+    peer: &Jid,
+) -> Result<Option<i64>> {
+    decode_primary_device_version(tx.get(
+        Table::Checkpoints,
+        primary_device_version_key(peer).as_bytes(),
+        1,
+    )?)
 }
 
 /// Local follow-up to an already authenticated primary-key replacement. This
@@ -426,7 +446,7 @@ pub(super) fn after_primary_identity_change_in(
         return Ok(());
     }
     let key = primary_device_version_key(peer);
-    let previous: Option<i64> = tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?;
+    let previous = primary_device_version_write_in(tx, peer)?;
     // APK 37.71 0Z7.A02 000a..001c: missing -> 1, otherwise add-long.
     // Java signed-long overflow wraps; this is not a chronological timestamp.
     let version = previous.map_or(1, |value| value.wrapping_add(1));

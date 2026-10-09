@@ -226,6 +226,12 @@ pub mod selector;
     feature = "experimental-transport"
 ))]
 pub mod send_path;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod send_versions;
 #[cfg(feature = "experimental-transport")]
 pub mod socket;
 pub mod status_receipts;

@@ -118,6 +118,18 @@ List queued outbox intents that `listen --send-outbox` would transmit (offline)
 Usage: whatsapp-cli outbox-pending [OPTIONS]...
 ```
 
+## whatsapp-cli outbox-versions
+
+Inspect original send-time primary versions (offline, redacted; no resend)
+
+```
+Usage: whatsapp-cli outbox-versions [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --local-id | LOCAL_ID | yes |  |  |  | Original local message id (32 hex chars) from the saved ticket |
+
 ## whatsapp-cli outbox-suspended
 
 Inspect queued sends suspended by changed peer identities (offline, redacted)

@@ -248,6 +248,13 @@ enum Cmd {
     /// List queued outbox intents that `listen --send-outbox` would transmit (offline).
     #[cfg(feature = "experimental-transport")]
     OutboxPending,
+    /// Inspect original send-time primary versions (offline, redacted; no resend).
+    #[cfg(feature = "experimental-transport")]
+    OutboxVersions {
+        /// Original local message id (32 hex chars) from the saved ticket.
+        #[arg(long)]
+        local_id: String,
+    },
     /// Inspect queued sends suspended by changed peer identities (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     OutboxSuspended,
@@ -1570,6 +1577,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         }
         #[cfg(feature = "experimental-transport")]
         Cmd::OutboxPending => transport_receive::outbox_pending(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::OutboxVersions { local_id } => transport_receive::outbox_versions(&cli, local_id),
         #[cfg(feature = "experimental-transport")]
         Cmd::OutboxSuspended => transport_receive::outbox_suspended(&cli),
         #[cfg(feature = "experimental-transport")]

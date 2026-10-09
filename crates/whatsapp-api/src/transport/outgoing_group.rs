@@ -610,6 +610,18 @@ pub(super) mod tests {
                 sent.get_attr("addressing_mode").and_then(|v| v.as_text()),
                 Some(if lid { "lid" } else { "pn" })
             );
+            let versions = super::super::send_versions::inspect(&store, id).unwrap();
+            assert!(versions.captured);
+            assert_eq!(
+                versions.users.iter().map(|u| u.devices).sum::<usize>(),
+                usize::try_from(size).unwrap()
+            );
+            assert!(
+                versions
+                    .users
+                    .iter()
+                    .all(|u| u.at_send.is_none() && u.current.is_none() && u.matches)
+            );
             let entry = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
             assert_eq!(entry.progress, AttemptProgress::InFlight);
             assert_eq!(entry.attempts.len(), 1);
@@ -655,6 +667,10 @@ pub(super) mod tests {
             let store = group_fanout::tests::open(&path);
             assert!(begin_selected(&store, id).unwrap().is_none());
             assert_eq!(saved, rows(&store));
+            assert_eq!(
+                super::super::send_versions::inspect(&store, id).unwrap(),
+                versions
+            );
             let inspection = preparations(&store).unwrap();
             assert_eq!(inspection[0].phase, "reserved");
             assert!(
@@ -1760,6 +1776,7 @@ impl Pending {
                         guard.validate_in(tx)?;
                     }
                     prepared.reserve_in(tx, archive.as_bytes())?;
+                    super::send_versions::capture_in(tx, self.entry.local_id, &plan.devices)?;
                     current.wire_id = Some(MessageId::new(wire_id)?);
                     current.attempts.push(AttemptRecord {
                         index: 0,

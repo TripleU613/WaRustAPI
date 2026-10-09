@@ -915,6 +915,7 @@ impl Pending {
                     &prepared.identity,
                 )?;
             }
+            super::send_versions::capture_in(tx, self.local_id, std::slice::from_ref(peer))?;
             if let Some((secret, options, name)) = &poll_secret {
                 let (own_pn, own_lid) = login_identity(tx, account)?;
                 tx.put_json(
@@ -1279,6 +1280,12 @@ mod tests {
                         .iter()
                         .any(|fact| fact.kind == DeliveryFactKind::DeliveryUnknown)
                 );
+                let versions =
+                    super::super::send_versions::inspect(&store, entry.local_id).unwrap();
+                assert!(versions.captured);
+                assert_eq!(versions.users.len(), 1);
+                assert_eq!(versions.users[0].at_send, Some(1));
+                assert_eq!(versions.users[0].current, Some(1));
                 assert_eq!(changes, 1);
                 assert_eq!(history.len(), 1);
                 let row: serde_json::Value = serde_json::from_slice(&history[0].1).unwrap();
@@ -1308,6 +1315,11 @@ mod tests {
                 assert!(entry.attempts.is_empty());
                 assert_eq!(changes, 0);
                 assert!(history.is_empty());
+                assert!(
+                    !super::super::send_versions::inspect(&store, entry.local_id)
+                        .unwrap()
+                        .captured
+                );
                 let suspension = identity_suspended(&store).unwrap();
                 assert_eq!(suspension.len(), 1);
                 assert_eq!(
