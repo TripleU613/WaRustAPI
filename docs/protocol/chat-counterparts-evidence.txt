@@ -1,0 +1,34 @@
+APK 2.26.37.71; SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Exact physical references/callers, not reflection, virtual closure or all in-place mutations.
+
+classes.dex  LX/0Fs;->A02(LLL)
+  read opcode 0x54, dex byte offset: 0x519222
+classes.dex  LX/0Fs;->A02(LLL)
+  read opcode 0x54, dex byte offset: 0x519e14
+classes.dex  LX/0VS;-><init>(V)
+  write opcode 0x5b, dex byte offset: 0x5ab4d6
+classes.dex  LX/0VS;->A0J(LJ)
+  read opcode 0x54, dex byte offset: 0x5ace9e
+classes.dex  LX/0VS;->A0W(VL)
+  read opcode 0x54, dex byte offset: 0x5ad9b6
+classes.dex  LX/0W8;->A0c(ZLLL)
+  read opcode 0x54, dex byte offset: 0x5ba3ea
+classes.dex  LX/0Yo;->A0B(LLZ)
+  read opcode 0x54, dex byte offset: 0x5e2a8e
+classes.dex  LX/0pq;->A0D(VL)
+  read opcode 0x54, dex byte offset: 0x6d6cba
+classes.dex  LX/13u;->A00(V)
+  read opcode 0x54, dex byte offset: 0x7d08a2
+classes7.dex  Lcom/whatsapp/companiondevice/devices/sync/SendLidMigrationMappingSyncJob;->A0G(V)
+  read opcode 0x54, dex byte offset: 0x8959d8
+
+classes7.dex  LX/CnI;->A08(VLL)
+  invoke dex byte offset: 0x669fc0
+classes7.dex  LX/CnI;->A08(VLL)
+  invoke dex byte offset: 0x66a2ae
+classes7.dex  LX/CoO;->A02(VLLLLLII)
+  invoke dex byte offset: 0x689ec6
+classes7.dex  LX/CpC;->A05(LLLLI)
+  invoke dex byte offset: 0x6b9c2e
+
+Negative: apk-smali --class LX/0ZX; returned no method bodies. This does not prove absence of the abstract class or its subtype declarations.

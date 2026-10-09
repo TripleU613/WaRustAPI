@@ -1,5 +1,14 @@
 # Status — 2026-10-07
 
+Chat counterpart provenance (2026-10-09, **confirmed static**): APK 37.71
+uses a HashBiMap populated from distinct positive original chat-JID rows and
+from parsed conversation account-LID/phone pairs. Reverse lookup, chat deletion,
+cache clearing and a mapping-sync consumer are retained in a twelve-topic snapshot.
+The backup restore caller is distinct from direct wire admission; upstream trust,
+full sync receiver and receipt_user membership remain unfinished. No runtime,
+account state or live request changed.
+[Evidence and limits](docs/protocol/chat-counterparts.md).
+
 Receipt counterpart selection (2026-10-09, **confirmed static**): APK 37.71
 8G8.A02 expands selected JID rows only through the migration gate and the
 0Yo.A0B(input, false) mapping path; its comparison uses object identity.

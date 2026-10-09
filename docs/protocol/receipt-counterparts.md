@@ -90,3 +90,11 @@ cargo run -p xtask -- apk-research-diff \
 ```
 
 These checks establish reproducible static artifacts, not live protocol parity.
+
+## Producer follow-up (2026-10-09)
+
+The concrete HashBiMap constructor, chat-row hydration, conversation bulk update,
+reverse lookup and invalidation are now traced in
+[chat counterpart provenance](chat-counterparts.md). Full upstream authentication
+and receipt_user membership remain unknown; the earlier retained methods are
+unchanged.

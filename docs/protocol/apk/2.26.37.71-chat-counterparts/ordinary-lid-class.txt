@@ -1,0 +1,115 @@
+# APK-derived structural disassembly: LX/0ZY;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=1
+  # full signature: LX/0ZY;-><clinit>()V
+  0000..0004 op=22 new-instance v0, LX/0ZZ;
+  0004..000a op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+  000a..000e op=69 sput-object v0, LX/0ZY;->A01:LX/0ZZ;
+  000e..0012 op=22 new-instance v0, LX/0Za;
+  0012..0018 op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+  0018..001c op=69 sput-object v0, LX/0ZY;->CREATOR:Landroid/os/Parcelable$Creator;
+  001c..001e op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method <init>(VL) flags=0x10001 registers=8
+  # full signature: LX/0ZY;-><init>(Ljava/lang/String;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v7, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=70 invoke-direct {v6, v7}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(Ljava/lang/String;)V
+  000e..0012 op=5b iput-object v7, v6, LX/0ZY;->A00:Ljava/lang/String;
+  0012..0018 op=6e invoke-virtual {v7}, Ljava/lang/String;->length()I
+  0018..001a op=0a move-result v1
+  001a..001c op=12 const/4 v0, #0x1
+  001c..0020 op=1a const-string v5, "Invalid LID: "
+  0020..0024 op=34 if-lt v1, v0, +0x5d
+  0024..0028 op=13 const/16 v0, #0xf
+  0028..002c op=36 if-gt v1, v0, +0x59
+  002c..0030 op=1a const-string v0, "0"
+  0030..0032 op=12 const/4 v4, #0x0
+  0032..0038 op=6e invoke-virtual {v7, v0}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
+  0038..003a op=0a move-result v0
+  003a..003e op=39 if-nez v0, +0x39
+  003e..0044 op=6e invoke-virtual {v7}, Ljava/lang/String;->toCharArray()[C
+  0044..0046 op=0c move-result-object v3
+  0046..004c op=71 invoke-static {v3}, LX/00h;->A06(Ljava/lang/Object;)V
+  004c..004e op=21 array-length v2, v3
+  004e..0052 op=35 if-ge v4, v2, +0x2e
+  0052..0056 op=49 aget-char v1, v3, v4
+  0056..005a op=13 const/16 v0, #0x30
+  005a..0060 op=71 invoke-static {v1, v0}, LX/00h;->A00(II)I
+  0060..0062 op=0a move-result v0
+  0062..0066 op=3a if-ltz v0, +0xd
+  0066..006a op=13 const/16 v0, #0x39
+  006a..0070 op=71 invoke-static {v1, v0}, LX/00h;->A00(II)I
+  0070..0072 op=0a move-result v0
+  0072..0076 op=3c if-gtz v0, +0x5
+  0076..007a op=d8 add-int/lit8 v4, v4, #0x1
+  007a..007c op=28 goto -0x16
+  007c..0080 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0080..0086 op=70 invoke-direct {v1, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0086..008c op=6e invoke-virtual {v1, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  008c..0090 op=1a const-string v0, " - must be numeric only"
+  0090..0096 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0096..009c op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  009c..009e op=0c move-result-object v1
+  009e..00a2 op=22 new-instance v0, LX/08j;
+  00a2..00a8 op=70 invoke-direct {v0, v1}, LX/08j;-><init>(Ljava/lang/String;)V
+  00a8..00aa op=27 throw v0
+  00aa..00ac op=0e return-void
+  00ac..00b0 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  00b0..00b6 op=70 invoke-direct {v1, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  00b6..00bc op=6e invoke-virtual {v1, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00bc..00c0 op=1a const-string v0, " - cannot start with 0"
+  00c0..00c6 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00c6..00cc op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00cc..00ce op=0c move-result-object v1
+  00ce..00d2 op=22 new-instance v0, LX/08j;
+  00d2..00d8 op=70 invoke-direct {v0, v1}, LX/08j;-><init>(Ljava/lang/String;)V
+  00d8..00da op=27 throw v0
+  00da..00de op=22 new-instance v1, Ljava/lang/StringBuilder;
+  00de..00e4 op=70 invoke-direct {v1, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  00e4..00ea op=6e invoke-virtual {v1, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00ea..00ee op=1a const-string v0, " - length must be between 1 and 15"
+  00ee..00f4 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00f4..00fa op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00fa..00fc op=0c move-result-object v1
+  00fc..0100 op=22 new-instance v0, LX/08j;
+  0100..0106 op=70 invoke-direct {v0, v1}, LX/08j;-><init>(Ljava/lang/String;)V
+  0106..0108 op=27 throw v0
+  # exception table: 0 try range(s)
+.end method
+
+.method describeContents(I) flags=0x11 registers=2
+  # full signature: LX/0ZY;->describeContents()I
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0004 op=0f return v0
+  # exception table: 0 try range(s)
+.end method
+
+.method getServer(L) flags=0x1 registers=2
+  # full signature: LX/0ZY;->getServer()Ljava/lang/String;
+  0000..0004 op=1a const-string v0, "lid"
+  0004..0006 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
+
+.method getType(I) flags=0x1 registers=2
+  # full signature: LX/0ZY;->getType()I
+  0000..0004 op=13 const/16 v0, #0x12
+  0004..0006 op=0f return v0
+  # exception table: 0 try range(s)
+.end method
+
+.method writeToParcel(VLI) flags=0x11 registers=4
+  # full signature: LX/0ZY;->writeToParcel(Landroid/os/Parcel;I)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v2, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=54 iget-object v0, v1, LX/0ZY;->A00:Ljava/lang/String;
+  000c..0012 op=6e invoke-virtual {v2, v0}, Landroid/os/Parcel;->writeString(Ljava/lang/String;)V
+  0012..0014 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
