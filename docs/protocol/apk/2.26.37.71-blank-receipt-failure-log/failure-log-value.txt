@@ -1,0 +1,60 @@
+# APK-derived structural disassembly: LX/Cnn;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(L) flags=0x11 registers=40
+  # full signature: LX/Cnn;->A02()LX/CgL;
+  0000..0004 op=08 move-object/from16 v0, v39
+  0004..0008 op=54 iget-object v1, v0, LX/Cnn;->A0J:LX/178;
+  0008..000c op=08 move-object/from16 v38, v1
+  000c..0010 op=52 iget v1, v0, LX/Cnn;->A05:I
+  0010..0014 op=02 move/from16 v20, v1
+  0014..0018 op=55 iget-boolean v1, v0, LX/Cnn;->A0G:Z
+  0018..001c op=02 move/from16 v19, v1
+  001c..0020 op=52 iget v1, v0, LX/Cnn;->A04:I
+  0020..0024 op=02 move/from16 v18, v1
+  0024..0028 op=52 iget v1, v0, LX/Cnn;->A02:I
+  0028..002c op=02 move/from16 v17, v1
+  002c..0030 op=52 iget v15, v0, LX/Cnn;->A00:I
+  0030..0034 op=55 iget-boolean v14, v0, LX/Cnn;->A0I:Z
+  0034..0038 op=55 iget-boolean v13, v0, LX/Cnn;->A0F:Z
+  0038..003c op=55 iget-boolean v12, v0, LX/Cnn;->A0H:Z
+  003c..0040 op=52 iget v11, v0, LX/Cnn;->A01:I
+  0040..0044 op=54 iget-object v10, v0, LX/Cnn;->A0C:Ljava/lang/Integer;
+  0044..0048 op=54 iget-object v9, v0, LX/Cnn;->A09:Ljava/lang/Integer;
+  0048..004c op=54 iget-object v8, v0, LX/Cnn;->A0B:Ljava/lang/Integer;
+  004c..0050 op=52 iget v7, v0, LX/Cnn;->A06:I
+  0050..0054 op=54 iget-object v6, v0, LX/Cnn;->A0E:Ljava/util/Collection;
+  0054..0058 op=54 iget-object v5, v0, LX/Cnn;->A07:LX/Cb1;
+  0058..005c op=54 iget-object v4, v0, LX/Cnn;->A0A:Ljava/lang/Integer;
+  005c..0060 op=52 iget v3, v0, LX/Cnn;->A03:I
+  0060..0064 op=54 iget-object v2, v0, LX/Cnn;->A0K:LX/8jl;
+  0064..0068 op=54 iget-object v1, v0, LX/Cnn;->A08:Ljava/lang/Boolean;
+  0068..006c op=54 iget-object v0, v0, LX/Cnn;->A0D:Ljava/lang/Integer;
+  006c..0070 op=22 new-instance v16, LX/CgL;
+  0070..0074 op=02 move/from16 v32, v7
+  0074..0078 op=02 move/from16 v33, v3
+  0078..007c op=02 move/from16 v34, v19
+  007c..0080 op=02 move/from16 v35, v14
+  0080..0084 op=02 move/from16 v36, v13
+  0084..0088 op=02 move/from16 v37, v12
+  0088..008c op=08 move-object/from16 v25, v0
+  008c..0090 op=08 move-object/from16 v26, v6
+  0090..0094 op=02 move/from16 v27, v20
+  0094..0098 op=02 move/from16 v28, v18
+  0098..009c op=02 move/from16 v29, v17
+  009c..00a0 op=02 move/from16 v30, v15
+  00a0..00a4 op=02 move/from16 v31, v11
+  00a4..00a8 op=08 move-object/from16 v19, v2
+  00a8..00ac op=08 move-object/from16 v20, v1
+  00ac..00b0 op=08 move-object/from16 v21, v10
+  00b0..00b4 op=08 move-object/from16 v22, v9
+  00b4..00b8 op=08 move-object/from16 v23, v8
+  00b8..00bc op=08 move-object/from16 v24, v4
+  00bc..00c0 op=08 move-object/from16 v17, v38
+  00c0..00c4 op=08 move-object/from16 v18, v5
+  00c4..00ca op=76 invoke-direct/range {v16..v37}, LX/CgL;-><init>(LX/178;LX/Cb1;LX/8jl;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/util/Collection;IIIIIIIZZZZ)V
+  00ca..00cc op=11 return-object v16
+  # exception table: 0 try range(s)
+.end method

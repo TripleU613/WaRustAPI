@@ -1,0 +1,34 @@
+{
+  "failure-log-builder.txt": {
+    "bytes": 1798,
+    "sha256": "82937c29593ebd2bd9241324d9c1a6468e9de78ce2cca99d87d5356da5e15115"
+  },
+  "failure-log-submit.txt": {
+    "bytes": 630,
+    "sha256": "ae918537655663e9863458e29b5a4dc83db9550f60d37972121c129bd79fbdaa"
+  },
+  "failure-log-value.txt": {
+    "bytes": 3131,
+    "sha256": "8332aec943a42ec07b30fe2c7f0bd62bdb4ea6e975a0a440da95cbd4e7959425"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-send-logging.txt": {
+    "bytes": 178775,
+    "sha256": "bcd690b2a091644178e7cfcdc028c200ca796aab9e42582b383e1d510396e202"
+  },
+  "targets.json": {
+    "bytes": 1746,
+    "sha256": "120644793bdc68b5d88d400b0195f1091d23f50575be643d46efdefae8d345db"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

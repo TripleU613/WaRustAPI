@@ -1,5 +1,12 @@
 # Status — 2026-10-07
 
+Blank-receipt failure continuation (2026-10-09, **confirmed static**):
+four source topics identify Cnn/0zO as message-send event logging and separate
+builder result 3 from native message status 20. No direct status setter or
+receipt_user access is established; helper effects and primary cleanup remain
+unknown/unported. No runtime, account or live change.
+[Evidence and limits](docs/protocol/message-status.md#blank-receipt-failure-logging-continuation-2026-10-09).
+
 Offline account diagnostics (2026-10-09, **observed/local**): the original
 private key enabled saved-profile receipt inspection: nine ACKed reservations
 (eight read, one retry), identical logical results across reopen; no live request.

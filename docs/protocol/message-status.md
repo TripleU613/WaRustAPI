@@ -199,3 +199,44 @@ and repository hygiene pass (1,823 local links; 76 checksum bundles). Rust is
 unchanged, so the preceding 821-test/Clippy/Rustdoc run is not counted as a new
 runtime validation here. Private scans stay local; examined findings, negative
 results and bounded selectors are retained in this document/recipe.
+
+## Blank-receipt failure logging continuation (2026-10-09)
+
+**Confirmed static, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+[four-topic recipe](apk/recipes/2.26.37.71-blank-receipt-failure-log.json) and
+[checked snapshot](apk/2.26.37.71-blank-receipt-failure-log/targets.json).
+Offsets are method-relative bytes. This closes the previously untraced
+Cnn/0zO call boundary; it does not establish ordinary outgoing preparation.
+
+The retained DGG.Bqh failure branch (0124..015a in
+[original source](apk/2.26.37.71-message-status/blank-receipt-message-write.txt))
+writes message A08=20, constructs Cnn(message,null), sets builder A05=3 and
+A0G=true, then calls Cnn.A00. Cnn's constructor stores the message/entity
+references and defaults A05=1; the caller overrides that builder value.
+These are separate fields: builder 3 is not native message status 3.
+
+Cnn.A02 copies its fields into a new CgL value. The checked register flow
+passes A05 as the first integer constructor argument, and A0G as the first
+Boolean argument. Cnn.A00 builds that value and directly invokes 0zO.A01;
+there is no intervening send-job enqueue in those two methods.
+
+0zO.A01 identifies its work with `MessageLogging/buildMessageSend` strings,
+builds Bh0 and other event objects, and submits them through 0BW.CGQ.
+For example, 21aa..21b8 submits the populated Bh0; 3030..3036 submits
+a separate 2U5 event. Its terminal-failure diagnostic at 023a..0272 is a
+conditional branch, not proof that every Cnn call is terminal.
+
+**Negative result / unknown:** the complete selected 0zO.A01 body contains
+no direct 178.A0H call, direct 178.A08 field access, or receipt_user literal.
+Together with the event-producing call chain, this refutes using this boundary
+as evidence of another message-status setter or ordinary send scheduling.
+It does not prove absence of transitive helper side effects: numerous provider
+and helper calls remain uninterpreted. Full event-field semantics, queue/store
+atomicity, native per-user receipt membership and primary cleanup remain
+**unknown/unported**. No Rust runtime, account state or live request changed.
+
+Verification: the four-topic, nine-file, 213,751-byte export reproduces from
+the pinned APK; cached self-diff checks identity, not a second release.
+CLI-reference and API-symbol checks, formatting and repository hygiene are
+run for this source-only chunk; no fresh full runtime suite is claimed.
