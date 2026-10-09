@@ -2423,3 +2423,29 @@ outcomes, receipt ACKs, outbox, events and normalized retained inspection were
 unchanged. No server connection, group/status send, request replay or saved
 account crypto mutation occurred in this chunk. Shared staging/rotation is
 verified offline; live group/status validation and normal actor wiring remain.
+
+Directory-key batches (2026-10-09, **confirmed static / local implementation**):
+APK 37.71 `0y0.A00` confirms batched encrypt/key/user construction and optional
+identity-reason/PQ/context branches; effective native producer flags and limits
+remain unknown. Group/status lookup now covers all frozen bundle-required
+devices in local 32-device pages, durably reserved before write, with complete
+signed responses reused only for the same plan. Unknown/refused/invalid/legacy
+unattributed outcomes block without resets. New group key-queries inspection
+prints redacted progress offline. Normal group actor integration, optional native
+fields, own inventory and fresh live large-group coverage remain unfinished.
+[Evidence and boundaries](protocol/device-key-batches.md).
+
+Directory-batch validation: 758 workspace/all-feature tests, strict Clippy,
+warning-free Rustdoc, default CLI/API/reference checks and formatting pass.
+Offline projection upgraded zero events; saved peer keys, action outcomes,
+receipt ACKs, outbox, events and normalized retained inspection stayed unchanged.
+Twelve existing request files were inspected offline: no new batch records,
+eleven with neither batch nor historical key outcome, one with a preserved
+legacy outcome and unknown frozen counts. No server request or message was sent.
+
+The existing groups APK recipe now anchors get-pre-key-batch and maps its writer
+to messaging.rs and device_key_batches.rs for future release diffs. Exact
+re-export changed only targets/checksums metadata, not native method bodies;
+all 44 files / 928,943 bytes / 43 selected methods reproduce. Cached self-diff
+is 0.047877 seconds, not a claim of cross-release equivalence. Large-group live
+lookup, native optional-field gates and normal group actor wiring remain pending.

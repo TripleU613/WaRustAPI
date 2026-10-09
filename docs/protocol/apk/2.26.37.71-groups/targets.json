@@ -59,7 +59,8 @@
   },
   "group-ack-writer-dispatch": {
     "anchors": [
-      "WriterThread/write/send-message-ack"
+      "WriterThread/write/send-message-ack",
+      "WriterThread/write/get-pre-key-batch; id="
     ],
     "class": "LX/0y0;",
     "file": "group-ack-writer-dispatch.txt",
@@ -70,7 +71,9 @@
     "rust_files": [
       "crates/whatsapp-api/src/transport/groups.rs",
       "crates/whatsapp-api/src/transport/connection.rs",
-      "crates/whatsapp-api/src/binary/encoder.rs"
+      "crates/whatsapp-api/src/binary/encoder.rs",
+      "crates/whatsapp-api/src/transport/messaging.rs",
+      "crates/whatsapp-api/src/transport/device_key_batches.rs"
     ]
   },
   "group-device-hash-namespace": {

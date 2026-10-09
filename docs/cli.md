@@ -233,6 +233,18 @@ Group management over the durable action queue (offline; a session transmits)
 Usage: whatsapp-cli group [OPTIONS]...
 ```
 
+## whatsapp-cli group key-queries
+
+Inspect saved frozen directory-key batch outcomes (offline, redacted)
+
+```
+Usage: whatsapp-cli group key-queries [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --request-id | REQUEST_ID | yes |  |  |  | Existing private message JSON request_id; never queries or resends |
+
 ## whatsapp-cli group receipts
 
 Inspect per-device receipts for one saved comparison group send (offline, redacted)

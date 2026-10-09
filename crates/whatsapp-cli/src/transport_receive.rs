@@ -2227,6 +2227,18 @@ pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error
         Ok(())
     };
     match cmd {
+        super::GroupCmd::KeyQueries { request_id } => {
+            let id = whatsapp_api::model::ids::ClientRequestId::new(request_id.clone())?;
+            let summary = whatsapp_api::transport::device_key_batches::summary(&store, &id)?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&summary).map_err(|_| Error::invalid(
+                    "device_key_batch",
+                    "cannot encode key-query summary"
+                ))?
+            );
+            Ok(())
+        }
         super::GroupCmd::Receipts { request_id } => {
             let request_id = whatsapp_api::model::ids::ClientRequestId::new(request_id.clone())?;
             let summary = whatsapp_api::transport::group_receipts::summary(&store, &request_id)?;
@@ -2583,25 +2595,27 @@ mod tests {
         const FIXTURE: &str = "TELEWHATSAPP_GROUP_RECEIPT_INSPECTION_FIXTURE";
         const KEY: &str = "TELEWHATSAPP_GROUP_RECEIPT_INSPECTION_KEY";
         if let Ok(path) = std::env::var(FIXTURE) {
-            for id in ["fixture", "unknown"] {
-                let cli = super::super::Cli::try_parse_from([
-                    "cli",
-                    "--store",
-                    &path,
-                    "--account",
-                    "fixture",
-                    "--key-env",
-                    KEY,
-                    "group",
-                    "receipts",
-                    "--request-id",
-                    id,
-                ])
-                .unwrap();
-                let super::super::Cmd::Group { cmd } = &cli.cmd else {
-                    panic!("group command expected");
-                };
-                group(&cli, cmd).unwrap();
+            for command in ["receipts", "key-queries"] {
+                for id in ["fixture", "unknown"] {
+                    let cli = super::super::Cli::try_parse_from([
+                        "cli",
+                        "--store",
+                        &path,
+                        "--account",
+                        "fixture",
+                        "--key-env",
+                        KEY,
+                        "group",
+                        command,
+                        "--request-id",
+                        id,
+                    ])
+                    .unwrap();
+                    let super::super::Cmd::Group { cmd } = &cli.cmd else {
+                        panic!("group command expected");
+                    };
+                    group(&cli, cmd).unwrap();
+                }
             }
             return;
         }
@@ -2644,6 +2658,16 @@ mod tests {
             .unwrap(),
             1
         );
+        // Reserve a query only in this isolated fixture; inspection never writes it.
+        assert!(
+            whatsapp_api::transport::device_key_batches::reserve_next(
+                &store,
+                &whatsapp_api::model::ids::ClientRequestId::new("fixture").unwrap(),
+                &[Jid::parse("15555550100:3@s.whatsapp.net").unwrap()],
+            )
+            .unwrap()
+            .is_some()
+        );
         let before = store
             .read(|tx| {
                 Ok((
@@ -2671,6 +2695,7 @@ mod tests {
             stdout.contains("\"addressed_devices\": 1")
                 && stdout.contains("\"delivered_devices\": 1")
                 && stdout.contains("null")
+                && stdout.contains("\"outcome_unknown\": 1")
         );
         for secret in ["15555550100", "120363000000000001", "private-wire-id"] {
             assert!(!stdout.contains(secret) && !stderr.contains(secret));

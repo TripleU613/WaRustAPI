@@ -429,10 +429,14 @@ pub async fn write_node<S: AsyncRead + AsyncWrite + Unpin>(
     channel.write(&data).await
 }
 
-/// Comparison LX/0y0.A00 0x1786..0x193a: iq/get/encrypt -> key -> user/jid.
+/// APK 2.26.37.71 0y0.A00 1786..193a: iq/get/encrypt -> key -> user/jid.
+/// Source: group-ack-writer-dispatch in the versioned groups research bundle.
 pub fn key_request(recipient: &Jid, id: &str) -> Node {
     key_request_many(std::slice::from_ref(recipient), id).expect("one recipient is always in range")
 }
+
+/// Local maximum number of devices in one directory query; not a server limit.
+pub const KEY_QUERY_MAX_DEVICES: usize = 32;
 
 /// The same `encrypt` key query for several recipient devices at once.
 ///
@@ -446,7 +450,7 @@ pub fn key_request(recipient: &Jid, id: &str) -> Node {
 /// **unknown**, so this refuses an unreasonably wide query rather than
 /// discovering the limit against a live account.
 pub fn key_request_many(recipients: &[Jid], id: &str) -> crate::Result<Node> {
-    if recipients.is_empty() || recipients.len() > 32 {
+    if recipients.is_empty() || recipients.len() > KEY_QUERY_MAX_DEVICES {
         return Err(crate::Error::invalid(
             "key_request",
             "a key query covers 1..=32 recipient devices",

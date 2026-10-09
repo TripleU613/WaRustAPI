@@ -60,6 +60,12 @@ pub mod contacts;
     feature = "experimental-noise",
     feature = "experimental-transport"
 ))]
+pub mod device_key_batches;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod devices;
 pub mod framing;
 #[cfg(all(

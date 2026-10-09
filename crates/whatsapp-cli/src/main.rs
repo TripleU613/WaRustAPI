@@ -864,6 +864,12 @@ enum ContactsCmd {
 #[derive(Subcommand)]
 #[cfg(feature = "experimental-transport")]
 enum GroupCmd {
+    /// Inspect saved frozen directory-key batch outcomes (offline, redacted).
+    KeyQueries {
+        /// Existing private message JSON request_id; never queries or resends.
+        #[arg(long)]
+        request_id: String,
+    },
     /// Inspect per-device receipts for one saved comparison group send (offline, redacted).
     Receipts {
         /// Existing private message JSON request_id; never creates or resends a message.

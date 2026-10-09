@@ -345,10 +345,13 @@
       "rust_files": [
         "crates/whatsapp-api/src/transport/groups.rs",
         "crates/whatsapp-api/src/transport/connection.rs",
-        "crates/whatsapp-api/src/binary/encoder.rs"
+        "crates/whatsapp-api/src/binary/encoder.rs",
+        "crates/whatsapp-api/src/transport/messaging.rs",
+        "crates/whatsapp-api/src/transport/device_key_batches.rs"
       ],
       "anchors": [
-        "WriterThread/write/send-message-ack"
+        "WriterThread/write/send-message-ack",
+        "WriterThread/write/get-pre-key-batch; id="
       ]
     },
     "group-ack-object-dispatch": {

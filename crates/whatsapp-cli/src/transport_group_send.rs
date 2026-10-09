@@ -297,33 +297,28 @@ async fn transmit(
         );
     }
     let needed = snapshot.required_keys();
-    let keys = if needed.is_empty() {
-        None
-    } else {
-        let id = format!("{}-keys", message.request_id);
-        write_node(channel, &key_request_many(&needed, &id)?).await?;
-        let (reply, pending) = wait_for(channel, "iq", &id).await?;
+    let request_id = whatsapp_api::model::ids::ClientRequestId::new(message.request_id.clone())?;
+    while let Some(query) =
+        whatsapp_api::transport::device_key_batches::reserve_next(store, &request_id, &needed)?
+    {
+        let id = query
+            .get_attr("id")
+            .and_then(|v| v.as_text())
+            .ok_or_else(|| invalid("reserved key query has no ID"))?;
+        write_node(channel, &query).await?;
+        let (reply, pending) = wait_for(channel, "iq", id).await?;
         keep(store, &pending)?;
-        let dict = TokenDictionary::comparison_2_26_37_71();
-        let wire = Encoder::new(dict).encode(&reply)?;
-        store.write(|tx| {
-            tx.put_json(
-                Table::Checkpoints,
-                format!("message:{}:keys", message.request_id).as_bytes(),
-                1,
-                &wire,
-            )
-        })?;
+        if !whatsapp_api::transport::device_key_batches::settle(store, &request_id, &reply)? {
+            return Err(invalid("key reply did not settle its saved batch"));
+        }
+        let progress = whatsapp_api::transport::device_key_batches::summary(store, &request_id)?
+            .ok_or_else(|| invalid("missing saved key-query progress"))?;
         println!(
-            "send: key query for {} device(s) type={}",
-            needed.len(),
-            reply
-                .get_attr("type")
-                .and_then(|v| v.as_text())
-                .unwrap_or("unknown")
+            "send: key queries answered={} refused={} invalid={} batches={}",
+            progress.answered, progress.refused, progress.invalid_replies, progress.batches
         );
-        Some(reply)
-    };
+    }
+    let keys = whatsapp_api::transport::device_key_batches::assembled(store, &request_id, &needed)?;
 
     let prepared = snapshot.prepare(account, keys.as_ref(), payload).await?;
     let fanout = prepared.targets();
