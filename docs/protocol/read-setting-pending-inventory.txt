@@ -1,0 +1,23 @@
+APK 2.26.37.71, SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+2026-10-09 confirmed static field-reference scope; not a collection mutation/transitive reachability inventory.
+
+Reproduce: cargo run -p xtask -- apk-field-refs ~/Downloads/WhatsApp.apk --class "LX/0sv;" --field A0E --type "Ljava/util/Map;"
+
+classes.dex  LX/0sv;-><init>(V)
+  write opcode 0x5b, dex byte offset: 0x70b724
+classes.dex  LX/0sv;->A0L(IL)
+  read opcode 0x54, dex byte offset: 0x70b906
+classes.dex  LX/0sv;->A0P(VLL)
+  read opcode 0x54, dex byte offset: 0x70bd58
+classes.dex  LX/0sv;->A0R(VL)
+  read opcode 0x54, dex byte offset: 0x70bffe
+classes9.dex  LX/GAZ;->A0g(LLL)
+  read opcode 0x54, dex byte offset: 0x372248
+classes9.dex  LX/H8g;->A5M(V)
+  read opcode 0x54, dex byte offset: 0x4cd306
+classes9.dex  Lcom/whatsapp/settings/ui/SettingsPrivacy;->A5J(V)
+  read opcode 0x54, dex byte offset: 0x4ea4a0
+classes9.dex  LX/IZB;->BP5(ZL)
+  read opcode 0x54, dex byte offset: 0x6e308c
+classes9.dex  LX/IhA;->run(V)
+  read opcode 0x54, dex byte offset: 0x720950

@@ -1,0 +1,27 @@
+{
+  "package": "com.whatsapp",
+  "version_name": "2.26.37.71",
+  "version_code": 263707133,
+  "min_sdk": 23,
+  "target_sdk": 36,
+  "compile_sdk": 37,
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "apk_size_bytes": 146363876,
+  "v1_signature_block": "META-INF/IMPORTED.DSA",
+  "v1_signature_block_sha256": "5504b148c51ba15f97b3062ab1a5ef67f79af0741e83f0302646f9f346836a7b",
+  "signing_certificate_sha256": "39:87:D0:43:D1:0A:EF:AF:5A:87:10:B3:67:14:18:FE:57:E0:E1:9B:65:3C:9D:F8:25:58:FE:B5:FF:CE:5D:44",
+  "native_libraries": [
+    "lib/arm64-v8a/libs.so",
+    "lib/arm64-v8a/libsuperpack.so",
+    "lib/arm64-v8a/libunwindstack_binary.so",
+    "lib/armeabi-v7a/libs.so",
+    "lib/armeabi-v7a/libsuperpack.so",
+    "lib/armeabi-v7a/libunwindstack_binary.so",
+    "lib/x86/libs.so",
+    "lib/x86/libsuperpack.so",
+    "lib/x86/libunwindstack_binary.so",
+    "lib/x86_64/libs.so",
+    "lib/x86_64/libsuperpack.so",
+    "lib/x86_64/libunwindstack_binary.so"
+  ]
+}

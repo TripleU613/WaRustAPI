@@ -1,0 +1,112 @@
+# APK-derived structural disassembly: LX/0sv;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0L(IL) flags=0x11 registers=6
+  # full signature: LX/0sv;->A0L(Ljava/lang/String;)I
+  0000..0002 op=12 const/4 v3, #0x0
+  0002..0008 op=6e invoke-virtual {v5}, Ljava/lang/String;->hashCode()I
+  0008..000a op=0a move-result v0
+  000a..000c op=12 const/4 v2, #0x1
+  000c..0012 op=2c sparse-switch v0, payload@0x188, cases=[-2071119646:@0x50, -487963238:@0x7a, -486574498:@0xa8, 111007:@0xf4, 249020823:@0xe0, 1544916544:@0x13c], default@0x12
+  0012..0016 op=54 iget-object v1, v4, LX/0sv;->A07:LX/08l;
+  0016..001c op=71 invoke-static {v5}, LX/I4X;->A01(Ljava/lang/String;)Ljava/lang/String;
+  001c..001e op=0c move-result-object v0
+  001e..0024 op=6e invoke-virtual {v1, v0, v3}, LX/08l;->A07(Ljava/lang/String;I)I
+  0024..0026 op=0a move-result v1
+  0026..002a op=54 iget-object v0, v4, LX/0sv;->A0E:Ljava/util/Map;
+  002a..0030 op=72 invoke-interface {v0, v5}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  0030..0032 op=0c move-result-object v0
+  0032..0036 op=1f check-cast v0, LX/Hj6;
+  0036..003a op=38 if-eqz v0, +0x8
+  003a..003e op=54 iget-object v0, v0, LX/Hj6;->A00:Ljava/lang/String;
+  003e..0044 op=71 invoke-static {v0}, LX/I4X;->A00(Ljava/lang/String;)I
+  0044..0046 op=0a move-result v1
+  0046..004c op=71 invoke-static {v3, v1}, Ljava/lang/Math;->max(II)I
+  004c..004e op=0a move-result v0
+  004e..0050 op=0f return v0
+  0050..0054 op=1a const-string v0, "channelcreation"
+  0054..005a op=6e invoke-virtual {v5, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  005a..005c op=0a move-result v0
+  005c..0060 op=38 if-eqz v0, -0x25
+  0060..0064 op=54 iget-object v2, v4, LX/0sv;->A07:LX/08l;
+  0064..006a op=71 invoke-static {v5}, LX/I4X;->A01(Ljava/lang/String;)Ljava/lang/String;
+  006a..006c op=0c move-result-object v1
+  006c..0070 op=13 const/16 v0, #0x8
+  0070..0076 op=6e invoke-virtual {v2, v1, v0}, LX/08l;->A07(Ljava/lang/String;I)I
+  0076..0078 op=0a move-result v1
+  0078..007a op=28 goto -0x29
+  007a..007e op=1a const-string v0, "dependentaccountmessages"
+  007e..0084 op=6e invoke-virtual {v5, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  0084..0086 op=0a move-result v0
+  0086..008a op=38 if-eqz v0, -0x3a
+  008a..008e op=54 iget-object v0, v4, LX/0sv;->A0A:LX/0SW;
+  008e..0094 op=71 invoke-static {v0}, LX/0SW;->A00(LX/0SW;)LX/08n;
+  0094..0096 op=0c move-result-object v0
+  0096..009a op=54 iget-object v1, v0, LX/08n;->A00:Landroid/content/SharedPreferences;
+  009a..009e op=1a const-string v0, "privacy_dependent_account_messages"
+  009e..00a4 op=72 invoke-interface {v1, v0, v2}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+  00a4..00a6 op=0a move-result v1
+  00a6..00a8 op=28 goto -0x40
+  00a8..00ac op=1a const-string v0, "groupcreation"
+  00ac..00b2 op=6e invoke-virtual {v5, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  00b2..00b4 op=0a move-result v0
+  00b4..00b8 op=38 if-eqz v0, -0x51
+  00b8..00bc op=54 iget-object v0, v4, LX/0sv;->A0A:LX/0SW;
+  00bc..00c2 op=71 invoke-static {v0}, LX/0SW;->A00(LX/0SW;)LX/08n;
+  00c2..00c4 op=0c move-result-object v0
+  00c4..00c8 op=54 iget-object v1, v0, LX/08n;->A00:Landroid/content/SharedPreferences;
+  00c8..00cc op=1a const-string v0, "privacy_group_creation_enabled"
+  00cc..00d2 op=72 invoke-interface {v1, v0, v3}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
+  00d2..00d4 op=0a move-result v0
+  00d4..00d6 op=12 const/4 v1, #0x7
+  00d6..00da op=38 if-eqz v0, -0x58
+  00da..00de op=13 const/16 v1, #0x8
+  00de..00e0 op=28 goto -0x5c
+  00e0..00e6 op=1b const-string/jumbo v0, "statusview"
+  00e6..00ec op=6e invoke-virtual {v5, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  00ec..00ee op=0a move-result v0
+  00ee..00f2 op=39 if-nez v0, +0x1b
+  00f2..00f4 op=28 goto -0x70
+  00f4..00f8 op=1a const-string v0, "pix"
+  00f8..00fe op=6e invoke-virtual {v5, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  00fe..0100 op=0a move-result v0
+  0100..0104 op=38 if-eqz v0, -0x77
+  0104..0108 op=13 const/16 v0, #0x3b
+  0108..010e op=71 invoke-static {v0}, LX/00C;->A02(I)Ljava/lang/Object;
+  010e..0110 op=0c move-result-object v1
+  0110..0114 op=1f check-cast v1, LX/00D;
+  0114..0118 op=13 const/16 v0, #0x5200
+  0118..011e op=6e invoke-virtual {v1, v0}, LX/00D;->A10(I)Z
+  011e..0120 op=0a move-result v0
+  0120..0124 op=38 if-eqz v0, -0x87
+  0124..0128 op=54 iget-object v1, v4, LX/0sv;->A07:LX/08l;
+  0128..012e op=71 invoke-static {v5}, LX/I4X;->A01(Ljava/lang/String;)Ljava/lang/String;
+  012e..0130 op=0c move-result-object v0
+  0130..0136 op=6e invoke-virtual {v1, v0, v2}, LX/08l;->A07(Ljava/lang/String;I)I
+  0136..0138 op=0a move-result v1
+  0138..013c op=29 goto/16 -0x89
+  013c..0140 op=1a const-string v0, "defense"
+  0140..0146 op=6e invoke-virtual {v5, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+  0146..0148 op=0a move-result v0
+  0148..014c op=38 if-eqz v0, -0x9b
+  014c..0150 op=54 iget-object v0, v4, LX/0sv;->A05:LX/05B;
+  0150..0154 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0154..015a op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  015a..015c op=0c move-result-object v1
+  015c..0160 op=1f check-cast v1, LX/0ru;
+  0160..0164 op=62 sget-object v0, LX/02S;->A0C:Ljava/lang/Integer;
+  0164..016a op=6e invoke-virtual {v1, v0}, LX/0ru;->A02(Ljava/lang/Integer;)Z
+  016a..016c op=0a move-result v0
+  016c..0170 op=38 if-eqz v0, +0xa
+  0170..0174 op=1a const-string v0, "on_standard"
+  0174..017a op=71 invoke-static {v0}, LX/I4X;->A00(Ljava/lang/String;)I
+  017a..017c op=0a move-result v1
+  017c..0180 op=29 goto/16 -0xab
+  0180..0184 op=1a const-string v0, "off"
+  0184..0186 op=28 goto -0x8
+  0186..0188 op=00 nop
+  0188..01bc op=00 sparse-switch-payload size=6
+  # exception table: 0 try range(s)
+.end method

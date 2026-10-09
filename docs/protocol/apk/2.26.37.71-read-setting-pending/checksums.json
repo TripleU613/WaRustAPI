@@ -1,0 +1,50 @@
+{
+  "dependent-ui-pending.txt": {
+    "bytes": 7772,
+    "sha256": "f0049a84b0230809eeb4ead336db713f62c92d59efc15abe25ecacfbdadbe4de"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "main-handler-delay.txt": {
+    "bytes": 4133,
+    "sha256": "60e65a0ae2bb604ae30082934095b28a262b11f2e6f0b2dcd5619fc03dbc9704"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "pending-clear-runnable.txt": {
+    "bytes": 47780,
+    "sha256": "44d1c5607583bdd1e088e298a5f6327b78497506bd2dbe4c49903d1ff7c01dd0"
+  },
+  "pending-entry-getter.txt": {
+    "bytes": 865,
+    "sha256": "ae16da307b979e3433c56fc61bc78f73e230a362bce844e4c530e1c7bc866f7b"
+  },
+  "pending-integer-getter.txt": {
+    "bytes": 6049,
+    "sha256": "534ae254d48bdff53bf408d3f14444ef591182cc51bbe46594e6d58532c4a549"
+  },
+  "pending-presence-predicate.txt": {
+    "bytes": 1171,
+    "sha256": "e3ea2f762b960a871e8b0d1f544958e01eab18bf221443ec2b064e163d15e6d5"
+  },
+  "privacy-ui-pending.txt": {
+    "bytes": 4966,
+    "sha256": "ea5cf17cbff96fe1cdb6e3be37a69636ba4320118834aa30618c97e6cad3407c"
+  },
+  "runnable-supplier.txt": {
+    "bytes": 37117,
+    "sha256": "75166dba51fce80878546694fc119c3dae82798acfae98a67385efa9d6734733"
+  },
+  "targets.json": {
+    "bytes": 3662,
+    "sha256": "d7bdf073fe8ef6aedc4b75ffed2035f888fbd0f87d9720f221862e4003b686ed"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

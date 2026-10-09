@@ -1,0 +1,114 @@
+{
+  "dependent-ui-pending": {
+    "class": "LX/H8g;",
+    "file": "dependent-ui-pending.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A5M",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "main-handler-delay": {
+    "class": "LX/0GS;",
+    "file": "main-handler-delay.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 6,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "pending-clear-runnable": {
+    "class": "LX/IhA;",
+    "file": "pending-clear-runnable.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "pending-entry-getter": {
+    "class": "LX/GAZ;",
+    "file": "pending-entry-getter.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0g",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "pending-integer-getter": {
+    "class": "LX/0sv;",
+    "file": "pending-integer-getter.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "pending-presence-predicate": {
+    "class": "LX/IZB;",
+    "file": "pending-presence-predicate.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BP5",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "privacy-ui-pending": {
+    "class": "Lcom/whatsapp/settings/ui/SettingsPrivacy;",
+    "file": "privacy-ui-pending.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A5J",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "runnable-supplier": {
+    "class": "LX/1Xt;",
+    "file": "runnable-supplier.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "invoke",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  }
+}

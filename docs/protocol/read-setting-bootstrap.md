@@ -84,8 +84,9 @@ the global read Boolean. 0sv.A0Q remains observer dispatch, not a direct query.
 resource and returns false. True calls A0P, cancels a runnable through 0GS.A01,
 schedules that runnable with argument **20,000 ms** through 0GS.A02 and returns
 true (002c..0064). True is local submission, not server acknowledgement.
-The runnable's effect and the predicate's precise meaning remain **unknown**;
-20 seconds is not a server cooldown or established network timeout. The manager
+The [pending-state continuation](read-setting-pending.md) now binds the runnable
+to manager-wide clear/observer/UI effects. The predicate's precise meaning
+remains **unknown**; 20 seconds is not a server cooldown or network timeout. The manager
 constructor creates synchronized HashMap A0E and lazy runnable supplier 1Xt
 selector 40 (005c..0074, 0114..012e). Pending state in this constructor is
 in memory, not proof of durable recovery across process restart.

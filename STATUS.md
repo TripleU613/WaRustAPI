@@ -1,5 +1,12 @@
 # Status — 2026-10-07
 
+Read-setting pending lifecycle (2026-10-09, **confirmed static**): eight
+source topics bind the shared 20-second main-Handler runnable to clearing all
+pending settings and notifying observers, without a preference write or resend
+in that branch. UI pending display differs from committed settings. Effective
+state/observer authority remain unknown; no runtime or live change.
+[Evidence and limits](docs/protocol/read-setting-pending.md).
+
 Read-setting fetch and observers (2026-10-09, **confirmed static**): thirteen
 source topics distinguish fetch mode 23463 from set mode 23639, retain SMAX
 get/callback parsing, and identify played-receipt queueing in a settings observer.

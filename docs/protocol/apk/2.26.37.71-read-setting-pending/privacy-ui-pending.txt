@@ -1,0 +1,77 @@
+# APK-derived structural disassembly: Lcom/whatsapp/settings/ui/SettingsPrivacy;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A5J(V) flags=0x1 registers=6
+  # full signature: Lcom/whatsapp/settings/ui/SettingsPrivacy;->A5J()V
+  0000..0004 op=54 iget-object v1, v5, LX/0II;->A04:LX/07u;
+  0004..0008 op=13 const/16 v0, #0x31
+  0008..000e op=71 invoke-static {v1, v5, v0}, LX/IhB;->A00(LX/07u;Ljava/lang/Object;I)V
+  000e..0012 op=1a const-string v0, "groupadd"
+  0012..0018 op=70 invoke-direct {v5, v0}, Lcom/whatsapp/settings/ui/SettingsPrivacy;->A0y(Ljava/lang/String;)V
+  0018..001c op=1a const-string v0, "last"
+  001c..0022 op=70 invoke-direct {v5, v0}, Lcom/whatsapp/settings/ui/SettingsPrivacy;->A0y(Ljava/lang/String;)V
+  0022..0026 op=1a const-string v0, "status"
+  0026..002c op=70 invoke-direct {v5, v0}, Lcom/whatsapp/settings/ui/SettingsPrivacy;->A0y(Ljava/lang/String;)V
+  002c..0030 op=1a const-string v0, "profile"
+  0030..0036 op=70 invoke-direct {v5, v0}, Lcom/whatsapp/settings/ui/SettingsPrivacy;->A0y(Ljava/lang/String;)V
+  0036..003a op=54 iget-object v0, v5, Lcom/whatsapp/settings/ui/SettingsPrivacy;->A13:LX/0ZM;
+  003a..0040 op=6e invoke-virtual {v0}, LX/0ZM;->A01()Z
+  0040..0042 op=0a move-result v0
+  0042..0046 op=38 if-eqz v0, +0x7
+  0046..004a op=1a const-string v0, "cover_photo"
+  004a..0050 op=70 invoke-direct {v5, v0}, Lcom/whatsapp/settings/ui/SettingsPrivacy;->A0y(Ljava/lang/String;)V
+  0050..0054 op=54 iget-object v0, v5, Lcom/whatsapp/settings/ui/SettingsPrivacy;->A0p:LX/00s;
+  0054..005a op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  005a..005c op=0c move-result-object v0
+  005c..0060 op=1f check-cast v0, LX/0sv;
+  0060..0064 op=1a const-string v1, "readreceipts"
+  0064..0068 op=54 iget-object v0, v0, LX/0sv;->A0E:Ljava/util/Map;
+  0068..006e op=72 invoke-interface {v0, v1}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  006e..0070 op=0c move-result-object v4
+  0070..0074 op=1f check-cast v4, LX/Hj6;
+  0074..0078 op=38 if-eqz v4, +0x50
+  0078..007c op=54 iget-object v0, v4, LX/Hj6;->A00:Ljava/lang/String;
+  007c..0082 op=71 invoke-static {v0}, LX/I4X;->A03(Ljava/lang/String;)Z
+  0082..0084 op=0a move-result v3
+  0084..0088 op=54 iget-object v1, v5, Lcom/whatsapp/settings/ui/SettingsPrivacy;->A14:Lcom/whatsapp/settings/SettingsRowPrivacyLinearLayout;
+  0088..008a op=12 const/4 v2, #0x0
+  008a..0090 op=71 invoke-static {v4}, LX/1xi;->A1V(Ljava/lang/Object;)Z
+  0090..0092 op=0a move-result v0
+  0092..0098 op=6e invoke-virtual {v1, v0}, Landroid/view/View;->setEnabled(Z)V
+  0098..009c op=54 iget-object v1, v5, Lcom/whatsapp/settings/ui/SettingsPrivacy;->A0G:Landroid/widget/ProgressBar;
+  009c..009e op=12 const/4 v0, #0x4
+  009e..00a2 op=38 if-eqz v4, +0x3
+  00a2..00a4 op=12 const/4 v0, #0x0
+  00a4..00aa op=6e invoke-virtual {v1, v0}, Landroid/view/View;->setVisibility(I)V
+  00aa..00ae op=54 iget-object v0, v5, Lcom/whatsapp/settings/ui/SettingsPrivacy;->A0T:Landroidx/appcompat/widget/SwitchCompat;
+  00ae..00b2 op=38 if-eqz v4, +0x3
+  00b2..00b4 op=12 const/4 v2, #0x4
+  00b4..00ba op=6e invoke-virtual {v0, v2}, Landroid/view/View;->setVisibility(I)V
+  00ba..00be op=39 if-nez v4, +0x7
+  00be..00c2 op=54 iget-object v0, v5, Lcom/whatsapp/settings/ui/SettingsPrivacy;->A0T:Landroidx/appcompat/widget/SwitchCompat;
+  00c2..00c8 op=6e invoke-virtual {v0, v3}, Landroid/widget/CompoundButton;->setChecked(Z)V
+  00c8..00ce op=14 const v2, #0x7f1236fa
+  00ce..00d2 op=38 if-eqz v3, +0x5
+  00d2..00d8 op=14 const v2, #0x7f1236fb
+  00d8..00de op=71 invoke-static {}, LX/076;->A06()Z
+  00de..00e0 op=0a move-result v0
+  00e0..00e4 op=38 if-eqz v0, +0xf
+  00e4..00e8 op=54 iget-object v1, v5, Lcom/whatsapp/settings/ui/SettingsPrivacy;->A0T:Landroidx/appcompat/widget/SwitchCompat;
+  00e8..00ee op=6e invoke-virtual {v5}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
+  00ee..00f0 op=0c move-result-object v0
+  00f0..00f6 op=6e invoke-virtual {v0, v2}, Landroid/content/res/Resources;->getString(I)Ljava/lang/String;
+  00f6..00f8 op=0c move-result-object v0
+  00f8..00fe op=71 invoke-static {v1, v0}, LX/0Zw;->A0k(Landroid/view/View;Ljava/lang/CharSequence;)V
+  00fe..0102 op=1a const-string v0, "pix"
+  0102..0108 op=70 invoke-direct {v5, v0}, Lcom/whatsapp/settings/ui/SettingsPrivacy;->A0y(Ljava/lang/String;)V
+  0108..010c op=1a const-string v0, "linked_profiles"
+  010c..0112 op=70 invoke-direct {v5, v0}, Lcom/whatsapp/settings/ui/SettingsPrivacy;->A0y(Ljava/lang/String;)V
+  0112..0114 op=0e return-void
+  0114..0118 op=54 iget-object v0, v5, LX/0IM;->A08:LX/08l;
+  0118..011e op=6e invoke-virtual {v0}, LX/08l;->A1H()Z
+  011e..0120 op=0a move-result v3
+  0120..0122 op=28 goto -0x4e
+  # exception table: 0 try range(s)
+.end method
