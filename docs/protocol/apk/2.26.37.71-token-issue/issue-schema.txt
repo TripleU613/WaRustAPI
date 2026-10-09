@@ -1,0 +1,27 @@
+# APK-derived structural disassembly: LX/AUP;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method AR4(VLL) flags=0x1041 registers=8
+  # full signature: LX/AUP;->AR4(LX/0KT;LX/0Ke;)V
+  0000..0006 op=71 invoke-static {v7}, LX/6aj;->A0i(Ljava/lang/Object;)LX/0Kl;
+  0006..0008 op=0c move-result-object v4
+  0008..000a op=12 const/4 v0, #0x3
+  000a..000e op=23 new-array v3, v0, [LX/0Km;
+  000e..0012 op=1a const-string v0, "jid"
+  0012..0018 op=71 invoke-static {v4, v0}, LX/8kX;->A1L(LX/0Kl;Ljava/lang/String;)V
+  0018..001e op=71 invoke-static {v4, v3}, LX/6ao;->A1Y(LX/0Kl;[Ljava/lang/Object;)Z
+  001e..0020 op=0a move-result v2
+  0020..0024 op=1a const-string v0, "sent_tc_token_timestamp"
+  0024..0028 op=5b iput-object v0, v4, LX/0Kl;->A02:Ljava/lang/String;
+  0028..002c op=62 sget-object v1, LX/0Kn;->A08:LX/0Kn;
+  002c..0030 op=5b iput-object v1, v4, LX/0Kl;->A00:LX/0Kn;
+  0030..0036 op=71 invoke-static {v4, v3, v2}, LX/6am;->A1K(LX/0Kl;[Ljava/lang/Object;Z)V
+  0036..003a op=1a const-string v0, "real_issue_timestamp"
+  003a..0040 op=71 invoke-static {v4, v1, v0, v3}, LX/6ap;->A0t(LX/0Kl;LX/0Kn;Ljava/lang/String;[Ljava/lang/Object;)V
+  0040..0044 op=1a const-string v0, "wa_trusted_contacts_send"
+  0044..004a op=72 invoke-interface {v7, v0, v3}, LX/0Ke;->CKL(Ljava/lang/String;[LX/0Km;)V
+  004a..004c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,31 @@
+# APK-derived structural disassembly: LX/DNf;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLI) flags=0x10001 registers=5
+  # full signature: LX/DNf;-><init>(LX/Cp4;Lkotlin/jvm/functions/Function0;LX/09m;I)V
+  0000..0004 op=59 iput v4, v0, LX/DNf;->$t:I
+  0004..000a op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+  000a..000e op=5b iput-object v2, v0, LX/DNf;->A00:Ljava/lang/Object;
+  000e..0014 op=2b packed-switch v4, payload@0x28, cases=[1:@0x1e, 2:@0x1e], default@0x14
+  0014..0018 op=5b iput-object v1, v0, LX/DNf;->A01:Ljava/lang/Object;
+  0018..001c op=5b iput-object v3, v0, LX/DNf;->A02:Ljava/lang/Object;
+  001c..001e op=0e return-void
+  001e..0022 op=5b iput-object v3, v0, LX/DNf;->A01:Ljava/lang/Object;
+  0022..0026 op=5b iput-object v1, v0, LX/DNf;->A02:Ljava/lang/Object;
+  0026..0028 op=0e return-void
+  0028..0038 op=00 packed-switch-payload size=2
+  # exception table: 0 try range(s)
+.end method
+
+.method <init>(VLLLI) flags=0x10001 registers=5
+  # full signature: LX/DNf;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+  0000..0004 op=59 iput v4, v0, LX/DNf;->$t:I
+  0004..000a op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+  000a..000e op=5b iput-object v3, v0, LX/DNf;->A00:Ljava/lang/Object;
+  000e..0012 op=5b iput-object v2, v0, LX/DNf;->A01:Ljava/lang/Object;
+  0012..0016 op=5b iput-object v1, v0, LX/DNf;->A02:Ljava/lang/Object;
+  0016..0018 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

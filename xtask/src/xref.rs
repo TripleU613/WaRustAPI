@@ -488,6 +488,8 @@ pub struct Insn {
     pub annotation: String,
     /// Register-flow detail for interactive inspection; compact snapshots stay stable.
     pub flow_annotation: String,
+    /// Checked full invoke descriptor; legacy output keeps its shorty spelling.
+    pub signature_annotation: Option<Result<String, String>>,
 }
 
 /// Decode all instructions in `insns` (a slice of raw code-unit bytes,
@@ -514,6 +516,7 @@ fn decode_insns(insns: &[u8], dex: &DexFile<'_>) -> Vec<Insn> {
                 mnemonic,
                 annotation: "# truncated".into(),
                 flow_annotation: String::new(),
+                signature_annotation: None,
             });
             break;
         } else if !payload_annotation.is_empty() {
@@ -529,6 +532,19 @@ fn decode_insns(insns: &[u8], dex: &DexFile<'_>) -> Vec<Insn> {
             op,
             width,
             mnemonic,
+            signature_annotation: if matches!(op, 0x6e..=0x72 | 0x74..=0x78) {
+                let index = u16le(insns, pos + 2).map(u32::from);
+                Some(index.and_then(|index| {
+                    let (class, name, signature) = dex.method_symbol(index)?;
+                    let (_, _, shorty) = dex.method_info(index)?;
+                    Ok(annotation.replace(
+                        &format!("{class}->{name}({shorty})"),
+                        &format!("{class}->{name}{signature}"),
+                    ))
+                }))
+            } else {
+                None
+            },
             annotation,
             flow_annotation: if matches!(op, 0x2b | 0x2c) {
                 decode_switch_reference(insns, pos)
@@ -1803,6 +1819,8 @@ pub struct MethodDump {
     pub superclass: String,
     pub method_name: String,
     pub method_proto: String,
+    /// Parameter and return descriptors from proto_id_item/type_list, not shorties.
+    pub method_signature: Result<String, String>,
     pub access_flags: u32,
     pub registers: u16,
     pub insns: Vec<Insn>,
@@ -1858,12 +1876,18 @@ fn smali_one(
                 continue;
             }
 
+            // APK 37.71 DNf has two VLLLI constructors. Retain actual reference
+            // descriptors without rewriting the legacy shorty evidence format.
+            let method_signature = dex
+                .method_symbol(method_idx)
+                .map(|(_, _, signature)| signature);
             if code_off == 0 {
                 out.push(MethodDump {
                     class_name: class_name.clone(),
                     superclass: superclass.clone(),
                     method_name,
                     method_proto,
+                    method_signature,
                     access_flags,
                     registers: 0,
                     insns: vec![],
@@ -1886,6 +1910,7 @@ fn smali_one(
                 superclass: superclass.clone(),
                 method_name,
                 method_proto,
+                method_signature,
                 access_flags,
                 registers,
                 insns,
@@ -1929,6 +1954,7 @@ pub fn run_smali(
     class_filter: &str,
     method_filter: Option<&str>,
     exceptions: bool,
+    signatures: bool,
 ) -> Result<(), String> {
     let methods = apk_smali(apk, class_filter, method_filter)?;
     if methods.is_empty() {
@@ -1954,6 +1980,14 @@ pub fn run_smali(
             "\n.method {flags}{}({})  # .registers {}",
             m.method_name, m.method_proto, m.registers
         );
+        if signatures {
+            println!(
+                "    # full signature: {}->{}{}",
+                m.class_name,
+                m.method_name,
+                m.method_signature.as_ref().map_err(Clone::clone)?
+            );
+        }
         if m.insns.is_empty() {
             println!("    # (abstract / native)");
         }
@@ -1964,7 +1998,9 @@ pub fn run_smali(
                 insn.mnemonic.to_owned()
             };
             let end = insn.byte_off + insn.width * 2;
-            let annotation = if insn.annotation.is_empty() {
+            let annotation = if signatures && let Some(annotation) = &insn.signature_annotation {
+                annotation.as_ref().map_err(Clone::clone)?
+            } else if insn.annotation.is_empty() {
                 &insn.flow_annotation
             } else {
                 &insn.annotation
@@ -3122,6 +3158,59 @@ mod tests {
                 .method_symbol(0)
                 .is_err()
         );
+    }
+
+    #[test]
+    fn full_dump_signatures_distinguish_reference_overloads_and_report_bad_types() {
+        let invoke = [0x71, 0x10, 0, 0, 1, 0, 0x77, 1, 0, 0, 3, 0, 0x0e, 0];
+        let mut annotations = Vec::new();
+        for (ty, expected) in [(0, "LX/Contact;"), (3, "LX/Other;")] {
+            let data = object_signature_fixture(ty, &invoke);
+            let dex = DexFile::parse(&data).unwrap();
+            let insns = decode_insns(&invoke, &dex);
+            assert_eq!(insns[0].annotation, "{v1}, LX/Contact;->update(VL)");
+            assert_eq!(insns[1].annotation, "{v3..v3}, LX/Contact;->update(VL)");
+            assert_eq!(
+                insns[0]
+                    .signature_annotation
+                    .as_ref()
+                    .unwrap()
+                    .as_ref()
+                    .unwrap(),
+                &format!("{{v1}}, LX/Contact;->update({expected})V")
+            );
+            assert_eq!(
+                insns[1]
+                    .signature_annotation
+                    .as_ref()
+                    .unwrap()
+                    .as_ref()
+                    .unwrap(),
+                &format!("{{v3..v3}}, LX/Contact;->update({expected})V")
+            );
+            assert!(insns[2].signature_annotation.is_none());
+            let mut methods = Vec::new();
+            smali_one(&data, "LX/Contact;", Some("update"), &mut methods).unwrap();
+            assert_eq!(
+                methods[0].method_signature.as_ref().unwrap(),
+                &format!("({expected})V")
+            );
+            annotations.push(
+                insns[0]
+                    .signature_annotation
+                    .as_ref()
+                    .unwrap()
+                    .as_ref()
+                    .unwrap()
+                    .clone(),
+            );
+        }
+        assert_ne!(annotations[0], annotations[1]);
+        let mut bad = object_signature_fixture(0, &invoke);
+        bad[0x1d4..0x1d6].copy_from_slice(&u16::MAX.to_le_bytes());
+        let insns = decode_insns(&invoke, &DexFile::parse(&bad).unwrap());
+        assert_eq!(insns[0].annotation, "{v1}, LX/Contact;->update(VL)");
+        assert!(insns[0].signature_annotation.as_ref().unwrap().is_err());
     }
 
     #[test]

@@ -2716,3 +2716,17 @@ Token-refresh research validation: 26 topics / 31 files / 104,087 bytes reproduc
 from the comparison APK; checksum/self-diff, 63 xtask tests, API symbols, CLI
 reference, formatting and repository hygiene passed. Source changes are a
 comment only. No live refresh or identity replacement was attempted.
+
+2026-10-09 — **Confirmed static/local:** traced the normal server-acceptance
+producer of outbound token scheduled timestamps, its raw message exclusions,
+namespace transfer and separate call producers. Scheduled timestamp state is
+not proof of token server acceptance. New apk-smali --signatures and recipe
+include_method_signatures expose complete DEX descriptors, distinguishing two
+DNf constructors with identical shorties while preserving legacy defaults.
+Token scheduling/refresh runtime remains unported; account state was untouched.
+[Evidence, invocation and boundaries](protocol/token-issue.md).
+
+Token-issue/full-signature validation: 788 workspace/all-feature tests, strict
+Clippy, Rustdoc, default CLI/API/reference/format and build checks passed. New
+14-topic evidence and the prior default-mode bundle reproduce; self-diff took
+0.022072 seconds. No account operation or live token/identity request was made.

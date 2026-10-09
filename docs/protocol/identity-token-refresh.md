@@ -121,3 +121,10 @@ local links and 22 APK bundles totaling 6,593,496 bytes. Runtime changes in this
 chunk are limited to a source comment; no new behavior or account operation was
 introduced, and the previous receive window is not counted as token refresh
 validation. Outbound refresh and a live identity transition remain unverified.
+
+**Subsequent confirmed producer trace:** [outbound issue producers](token-issue.md)
+locates 0q2.A0W scheduling from a normal server-acceptance worker and namespace
+transfer. A scheduled outbound sent_tc_token_timestamp can exist before token
+request success, including a newly initialized row with real_issue_timestamp=0.
+This narrows the old-state requirement; it does not authorize deriving it from
+incoming token bytes or enabling untraced bucket/canonicalization defaults.

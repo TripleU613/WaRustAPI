@@ -1,0 +1,116 @@
+# APK-derived structural disassembly: LX/HxT;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(VL) flags=0x11 registers=17
+  # full signature: LX/HxT;->A04(Lcom/whatsapp/infra/core/jid/UserJid;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0006 op=08 move-object/from16 v1, v16
+  0006..000c op=71 invoke-static {v1, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  000c..0012 op=71 invoke-static {v1, v15}, LX/HxT;->A00(Lcom/whatsapp/infra/core/jid/UserJid;LX/HxT;)Lcom/whatsapp/infra/core/jid/UserJid;
+  0012..0014 op=0c move-result-object v10
+  0014..0018 op=54 iget-object v12, v15, LX/HxT;->A03:LX/0q2;
+  0018..001e op=6e invoke-virtual {v12, v10}, LX/0q2;->A0O(Lcom/whatsapp/infra/core/jid/UserJid;)LX/HYS;
+  001e..0020 op=0c move-result-object v6
+  0020..0024 op=38 if-eqz v6, +0x2f
+  0024..0028 op=53 iget-wide v4, v6, LX/HYS;->A00:J
+  0028..002e op=71 invoke-static {v4, v5}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  002e..0030 op=0c move-result-object v0
+  0030..0034 op=38 if-eqz v0, +0x27
+  0034..0038 op=54 iget-object v1, v15, LX/HxT;->A00:LX/07t;
+  0038..003c op=13 const/16 v0, #0x3e4
+  003c..0042 op=71 invoke-static {v1, v0}, LX/8kT;->A03(LX/00D;I)J
+  0042..0044 op=0b move-result-wide v2
+  0044..0048 op=16 const-wide/16 v7, #0x0
+  0048..004c op=31 cmp-long v0, v2, v7
+  004c..0050 op=3c if-gtz v0, +0x94
+  0050..0054 op=1a const-string v0, "Bad bucket configuration, bucketLengthSec = "
+  0054..005a op=71 invoke-static {v0, v2, v3}, LX/Ayp;->A17(Ljava/lang/String;J)V
+  005a..005e op=54 iget-object v0, v15, LX/HxT;->A01:LX/08B;
+  005e..0064 op=6e invoke-virtual {v0}, LX/08B;->A04()J
+  0064..0066 op=0b move-result-wide v0
+  0066..006c op=71 invoke-static {v0, v1}, LX/1xl;->A06(J)J
+  006c..006e op=0b move-result-wide v7
+  006e..0074 op=17 const-wide/32 v0, #0xeff100
+  0074..0076 op=bc sub-long/2addr v7, v0
+  0076..007a op=31 cmp-long v0, v4, v7
+  007a..007e op=3b if-gez v0, +0x6b
+  007e..0082 op=54 iget-object v0, v15, LX/HxT;->A01:LX/08B;
+  0082..0088 op=6e invoke-virtual {v0}, LX/08B;->A04()J
+  0088..008a op=0b move-result-wide v0
+  008a..008e op=16 const-wide/16 v2, #0x3e8
+  008e..0090 op=be ?? v0, v2
+  0090..0096 op=6e invoke-virtual {v12, v10, v0, v1}, LX/0q2;->A0W(Lcom/whatsapp/infra/core/jid/UserJid;J)V
+  0096..009a op=38 if-eqz v6, +0x5e
+  009a..009e op=54 iget-object v0, v6, LX/HYS;->A01:Ljava/lang/Long;
+  009e..00a2 op=38 if-eqz v0, +0x5a
+  00a2..00a8 op=6e invoke-virtual {v0}, Ljava/lang/Number;->longValue()J
+  00a8..00aa op=0b move-result-wide v13
+  00aa..00ae op=54 iget-object v1, v12, LX/0q2;->A00:LX/07t;
+  00ae..00b2 op=13 const/16 v0, #0xfdf
+  00b2..00b8 op=6e invoke-virtual {v1, v0}, LX/00D;->A0b(I)I
+  00b8..00ba op=0a move-result v11
+  00ba..00be op=3d if-lez v11, +0x4c
+  00be..00c2 op=13 const/16 v0, #0x3e4
+  00c2..00c8 op=71 invoke-static {v1, v0}, LX/8kT;->A03(LX/00D;I)J
+  00c8..00ca op=0b move-result-wide v8
+  00ca..00ce op=54 iget-object v0, v12, LX/0q2;->A02:LX/08l;
+  00ce..00d4 op=71 invoke-static {v0}, LX/GAX;->A0E(LX/08l;)Landroid/content/SharedPreferences;
+  00d4..00d6 op=0c move-result-object v1
+  00d6..00da op=1a const-string v0, "privacy_token_last_batch_time_sec"
+  00da..00e0 op=71 invoke-static {v1, v0}, LX/Ayn;->A05(Landroid/content/SharedPreferences;Ljava/lang/String;)J
+  00e0..00e2 op=0b move-result-wide v6
+  00e2..00e4 op=be ?? v6, v8
+  00e4..00e8 op=54 iget-object v0, v12, LX/0q2;->A03:LX/08B;
+  00e8..00ee op=6e invoke-virtual {v0}, LX/08B;->A04()J
+  00ee..00f0 op=0b move-result-wide v4
+  00f0..00f2 op=be ?? v4, v2
+  00f2..00f4 op=be ?? v4, v8
+  00f4..00f8 op=61 ?? v0, LX/IVf;->A06:J
+  00f8..00fc op=62 sget-object v2, LX/0nB;->A08:LX/0nB;
+  00fc..0102 op=71 invoke-static {v2, v0, v1}, LX/0vO;->A07(LX/0nB;J)J
+  0102..0104 op=0b move-result-wide v0
+  0104..0108 op=16 const-wide/16 v2, #0x1
+  0108..010a op=bb add-long/2addr v0, v2
+  010a..010c op=86 long-to-double v2, v0
+  010c..0110 op=19 const-wide/high16 v0, #0x3ff0000000000000
+  0110..0112 op=cd mul-double/2addr v2, v0
+  0112..0114 op=86 long-to-double v0, v8
+  0114..0116 op=ce div-double/2addr v2, v0
+  0116..011c op=71 invoke-static {v2, v3}, Ljava/lang/Math;->ceil(D)D
+  011c..011e op=0b move-result-wide v0
+  011e..0120 op=8a double-to-int v2, v0
+  0120..0122 op=81 int-to-long v2, v2
+  0122..0126 op=9c sub-long v0, v4, v2
+  0126..012c op=71 invoke-static {v6, v7, v4, v5}, Ljava/lang/Math;->min(JJ)J
+  012c..012e op=0b move-result-wide v2
+  012e..0134 op=71 invoke-static {v0, v1, v2, v3}, Ljava/lang/Math;->max(JJ)J
+  0134..0136 op=0b move-result-wide v2
+  0136..0138 op=81 int-to-long v0, v11
+  0138..013a op=bc sub-long/2addr v2, v0
+  013a..013c op=bd mul-long/2addr v2, v8
+  013c..0142 op=71 invoke-static {v2, v3}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  0142..0144 op=0c move-result-object v0
+  0144..0148 op=38 if-eqz v0, +0x7
+  0148..014c op=31 cmp-long v0, v13, v2
+  014c..0150 op=3a if-ltz v0, +0x3
+  0150..0152 op=0e return-void
+  0152..0158 op=6e invoke-virtual {v15, v10}, LX/HxT;->A05(Lcom/whatsapp/infra/core/jid/UserJid;)Z
+  0158..015a op=0a move-result v0
+  015a..015e op=38 if-eqz v0, -0x5
+  015e..0162 op=54 iget-object v1, v15, LX/HxT;->A02:LX/0ls;
+  0162..0166 op=22 new-instance v0, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;
+  0166..016c op=70 invoke-direct {v0, v10}, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;-><init>(Lcom/whatsapp/infra/core/jid/UserJid;)V
+  016c..0172 op=6e invoke-virtual {v1, v0}, LX/0ls;->A01(Lorg/whispersystems/jobqueue/Job;)V
+  0172..0174 op=0e return-void
+  0174..0178 op=54 iget-object v0, v15, LX/HxT;->A01:LX/08B;
+  0178..017e op=6e invoke-virtual {v0}, LX/08B;->A04()J
+  017e..0180 op=0b move-result-wide v0
+  0180..0186 op=71 invoke-static {v0, v1}, LX/1xl;->A06(J)J
+  0186..0188 op=0b move-result-wide v7
+  0188..018a op=be ?? v7, v2
+  018a..018c op=be ?? v4, v2
+  018c..0190 op=29 goto/16 -0x8b
+  # exception table: 0 try range(s)
+.end method

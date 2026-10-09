@@ -1,0 +1,101 @@
+APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Static caller/field/string inventory; offsets are DEX byte offsets.
+Reproduce via target/debug/xtask apk-xref APK --anchor real_issue_timestamp;
+apk-callers APK --class CLASS --method METHOD;
+apk-field-refs APK --class CLASS --field FIELD --type I --writes-only.
+The initial DNf selector query mistakenly used a literal backslash before $t
+and found zero. That is a query error, not field absence. The corrected $t
+query locates both physical constructor writes below.
+
+## issue-refs.txt
+["real_issue_timestamp"]  (4 reference(s))
+  classes.dex  LX/0q2;->A0V(VLJ)
+    dex byte offset: 0x6d96c8
+  classes.dex  LX/0q2;->A0W(VLJ)
+    dex byte offset: 0x6d99c2
+  classes.dex  LX/0q4;->A08(LL)
+    dex byte offset: 0x6d9dbc
+  classes6.dex  LX/AUP;->AR4(VLL)
+    dex byte offset: 0x56219e
+
+## issue-callers.txt
+classes9.dex  LX/HxT;->A01(VLL)
+  invoke dex byte offset: 0x582580
+classes9.dex  LX/HxT;->A04(VL)
+  invoke dex byte offset: 0x582714
+
+## ack-callers.txt
+classes6.dex  LX/9OK;->A07(VLL)
+  invoke dex byte offset: 0x38de44
+classes.dex  LX/17a;->A09(VLI)
+  invoke dex byte offset: 0x80a49e
+
+## schedule-callers.txt
+classes7.dex  LX/DMw;->run(V)
+  invoke dex byte offset: 0x7e5b56
+classes7.dex  LX/DMw;->run(V)
+  invoke dex byte offset: 0x7e5d46
+classes7.dex  LX/DNf;->run(V)
+  invoke dex byte offset: 0x7f93bc
+classes7.dex  LX/DNh;->run(V)
+  invoke dex byte offset: 0x7fca6e
+
+## worker-callers.txt
+classes8.dex  LX/Fpl;->run(V)
+  invoke dex byte offset: 0x65c386
+classes7.dex  LX/B9p;->A16(VL)
+  invoke dex byte offset: 0x437f8a
+classes7.dex  Lcom/whatsapp/voicemessaging/productinfra/VoiceMessagingService;->performAction(VLZL)
+  invoke dex byte offset: 0x448c9e
+classes7.dex  LX/Bl7;->A02(VLLLZ)
+  invoke dex byte offset: 0x503d54
+classes7.dex  LX/BtF;->A0D(VLLLLI)
+  invoke dex byte offset: 0x539130
+classes7.dex  LX/CQy;->A00(VLL)
+  invoke dex byte offset: 0x5a5898
+classes7.dex  LX/Cgo;->A00(VLLL)
+  invoke dex byte offset: 0x60ad48
+classes7.dex  LX/Cif;->A01(LL)
+  invoke dex byte offset: 0x619caa
+classes7.dex  LX/Cif;->A03(VL)
+  invoke dex byte offset: 0x61a210
+classes7.dex  LX/Cmd;->A01(VLLLL)
+  invoke dex byte offset: 0x6528c0
+classes7.dex  LX/Cp4;->A0A(V)
+  invoke dex byte offset: 0x6ac868
+classes7.dex  LX/Cp4;->A0A(V)
+  invoke dex byte offset: 0x6ac8ae
+classes7.dex  LX/Cp4;->A0A(V)
+  invoke dex byte offset: 0x6ac904
+classes7.dex  LX/DEA;->A00(VLL)
+  invoke dex byte offset: 0x797e80
+classes7.dex  LX/DJO;->A00(VLL)
+  invoke dex byte offset: 0x7c71f8
+classes7.dex  LX/DMG;->run(V)
+  invoke dex byte offset: 0x7dd922
+classes7.dex  LX/DMG;->run(V)
+  invoke dex byte offset: 0x7dd9fc
+classes.dex  LX/0aP;->A00(VLL)
+  invoke dex byte offset: 0x601814
+classes.dex  LX/138;->A07(V)
+  invoke dex byte offset: 0x7c2f20
+classes.dex  LX/14c;->BFC(ZLI)
+  invoke dex byte offset: 0x7d83a6
+classes.dex  LX/16n;->A04(ZLL)
+  invoke dex byte offset: 0x8007f8
+classes.dex  LX/17J;->BFC(ZLI)
+  invoke dex byte offset: 0x804f9a
+
+## selector-writes-corrected.txt
+classes7.dex  LX/DNf;-><init>(VLLLI)
+  write opcode 0x59, dex byte offset: 0x7f8bac
+classes7.dex  LX/DNf;-><init>(VLLLI)
+  write opcode 0x59, dex byte offset: 0x7f8bf4
+
+## success-callers.txt
+classes7.dex  LX/CnI;->A03(LLLLLLLL)
+  invoke dex byte offset: 0x669086
+classes7.dex  LX/CoO;->A02(VLLLLLII)
+  invoke dex byte offset: 0x68a716
+classes9.dex  LX/IX5;->C8f(VLL)
+  invoke dex byte offset: 0x6d5e8a

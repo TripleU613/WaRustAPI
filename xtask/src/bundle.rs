@@ -39,6 +39,10 @@ const TARGETS: &[(&str, &str)] = &[
     ("http-chunk-reader", "LX/H9U;"),
 ];
 
+fn is_false(value: &bool) -> bool {
+    !*value
+}
+
 /// A reviewed mapping is specific to one APK; class renames require re-anchoring.
 #[derive(Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -50,6 +54,9 @@ struct Recipe {
     /// Retain supported register operands omitted by legacy compact snapshots.
     #[serde(default)]
     include_register_flow: bool,
+    /// Full declared/invoked descriptors distinguish reference overloads.
+    #[serde(default, skip_serializing_if = "is_false")]
+    include_method_signatures: bool,
     targets: BTreeMap<String, Target>,
 }
 
@@ -224,6 +231,18 @@ pub(crate) fn instruction_annotation(
     }
 }
 
+fn signature_instruction_annotation(
+    insn: &crate::xref::Insn,
+    flow: bool,
+    signatures: bool,
+) -> Result<&str, String> {
+    if signatures && let Some(annotation) = &insn.signature_annotation {
+        annotation.as_deref().map_err(Clone::clone)
+    } else {
+        Ok(instruction_annotation(insn, flow))
+    }
+}
+
 fn append_exception_table(text: &mut String, blocks: &[crate::xref::TryBlock]) {
     // Catch ranges/addresses are DEX code units; instruction offsets above
     // remain bytes. 37.71 0Gv.A01/4R7.A00 show why fallback types matter.
@@ -313,6 +332,17 @@ pub fn run(
                 method.method_name, method.method_proto, method.access_flags, method.registers
             )
             .unwrap();
+            let signatures = recipe.as_ref().is_some_and(|r| r.include_method_signatures);
+            if signatures {
+                writeln!(
+                    text,
+                    "  # full signature: {}->{}{}",
+                    method.class_name,
+                    method.method_name,
+                    method.method_signature.as_ref().map_err(Clone::clone)?
+                )
+                .unwrap();
+            }
             for insn in &method.insns {
                 writeln!(
                     text,
@@ -321,10 +351,11 @@ pub fn run(
                     insn.byte_off + insn.width * 2,
                     insn.op,
                     insn.mnemonic,
-                    instruction_annotation(
+                    signature_instruction_annotation(
                         insn,
-                        recipe.as_ref().is_some_and(|r| r.include_register_flow)
-                    )
+                        recipe.as_ref().is_some_and(|r| r.include_register_flow),
+                        signatures,
+                    )?
                 )
                 .unwrap();
             }
@@ -349,6 +380,9 @@ pub fn run(
             }
             if recipe.as_ref().is_some_and(|r| r.include_register_flow) {
                 entry["include_register_flow"] = serde_json::json!(true);
+            }
+            if recipe.as_ref().is_some_and(|r| r.include_method_signatures) {
+                entry["include_method_signatures"] = serde_json::json!(true);
             }
             entry["method_filter"] = serde_json::json!(target.method);
             entry["rust_files"] = serde_json::json!(target.rust_files);
@@ -782,6 +816,27 @@ mod tests {
     }
 
     #[test]
+    fn signature_rendering_refuses_bad_descriptors_without_changing_legacy_output() {
+        let insn = crate::xref::Insn {
+            byte_off: 0,
+            op: 0x71,
+            width: 3,
+            mnemonic: "invoke-static",
+            annotation: "{v1}, LX/A;->call(VL)".into(),
+            flow_annotation: String::new(),
+            signature_annotation: Some(Err("bad type index".into())),
+        };
+        assert_eq!(
+            signature_instruction_annotation(&insn, true, false).unwrap(),
+            "{v1}, LX/A;->call(VL)"
+        );
+        assert_eq!(
+            signature_instruction_annotation(&insn, true, true).unwrap_err(),
+            "bad type index"
+        );
+    }
+
+    #[test]
     fn cached_comparison_detects_catch_only_changes() {
         // APK 37.71 0Gv.A01 independent code_item fixture: instructions remain
         // identical while a changed handler type must become a visible delta.
@@ -994,13 +1049,20 @@ mod tests {
         fs::write(&path,json(&serde_json::json!({"apk_sha256":"0".repeat(64),"targets":{"subject":{"class":"LX/Test;","method":"A09","rust_files":["crates/group.rs"]}}})).unwrap()).unwrap();
         assert!(!read_recipe(&path).unwrap().include_exception_tables);
         assert!(!read_recipe(&path).unwrap().include_register_flow);
+        assert!(!read_recipe(&path).unwrap().include_method_signatures);
         let mut enabled: serde_json::Value =
             serde_json::from_slice(&fs::read(&path).unwrap()).unwrap();
         enabled["include_exception_tables"] = serde_json::json!(true);
         enabled["include_register_flow"] = serde_json::json!(true);
+        enabled["include_method_signatures"] = serde_json::json!(true);
         fs::write(&path, json(&enabled).unwrap()).unwrap();
         assert!(read_recipe(&path).unwrap().include_exception_tables);
         assert!(read_recipe(&path).unwrap().include_register_flow);
+        assert!(read_recipe(&path).unwrap().include_method_signatures);
+        assert_eq!(
+            serde_json::to_value(read_recipe(&path).unwrap()).unwrap()["include_method_signatures"],
+            true
+        );
         let cache = dir.path().join("bad-cache");
         fs::create_dir(&cache).unwrap();
         fs::write(

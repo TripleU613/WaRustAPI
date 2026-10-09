@@ -239,6 +239,9 @@ enum Cmd {
         /// Include checked exception ranges and handler types (addresses in code units).
         #[arg(long)]
         exceptions: bool,
+        /// Include full declared/invoked DEX parameter and return descriptors.
+        #[arg(long)]
+        signatures: bool,
     },
     /// Decode a protobuf-lite message descriptor's field numbers.
     ///
@@ -377,7 +380,14 @@ fn main() -> ExitCode {
             class_filter,
             method_filter,
             exceptions,
-        } => xref::run_smali(&apk, &class_filter, method_filter.as_deref(), exceptions),
+            signatures,
+        } => xref::run_smali(
+            &apk,
+            &class_filter,
+            method_filter.as_deref(),
+            exceptions,
+            signatures,
+        ),
         Cmd::ApkProtoFields { apk, class_filter } => xref::run_proto_fields(&apk, &class_filter),
         Cmd::ApkRegistrationToken {
             apk,

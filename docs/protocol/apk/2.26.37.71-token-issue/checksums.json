@@ -1,0 +1,74 @@
+{
+  "bucket-property.txt": {
+    "bytes": 590,
+    "sha256": "3ea9136fcca13178b634dc054ca1beb786ffdc0d5521ec5f8738a0796050f39e"
+  },
+  "call-invite-worker.txt": {
+    "bytes": 17910,
+    "sha256": "07ea707733975ac7039855662cc8c494edd3ae6bdddfd23ad782a8fd39a2c4f6"
+  },
+  "call-start-worker.txt": {
+    "bytes": 121041,
+    "sha256": "9b93aa02750e412e2a5d4fa240dae75edcc3f8af00a702c1d35961869d641ebe"
+  },
+  "contact-notification.txt": {
+    "bytes": 37511,
+    "sha256": "0ce9e1c1ec00b017ae1dc51d686274a727ea1a298810104d306fd0a990164c3a"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "issue-clock.txt": {
+    "bytes": 1073,
+    "sha256": "f2ed89a20cc25d847e3d720c52856ac3ed759a4fd2841f39f424d7148afa92f4"
+  },
+  "issue-schedule.txt": {
+    "bytes": 6134,
+    "sha256": "291c31d116fddfc306ba46b8d17413716c0951f0d2102dc0924fefce9e834b85"
+  },
+  "issue-schema.txt": {
+    "bytes": 1581,
+    "sha256": "0cd7b747307c32ef191180ba06242b4872de43ed4b8e05d04d14f81a3c758878"
+  },
+  "issue-write.txt": {
+    "bytes": 6471,
+    "sha256": "8f1da2c34e02456742a4c17206b52488d68a557b57518decd4c12522542516d5"
+  },
+  "lid-change-task.txt": {
+    "bytes": 3512,
+    "sha256": "b5c29baa3c41025cd72781008dcf5f2a5a5f887a10ac63d045fe0f3c0321399d"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-server-handler.txt": {
+    "bytes": 69197,
+    "sha256": "92539fabf2af354c51b5ed4b9ef6ce978103e8ab3c1b168fb5dac390956b7253"
+  },
+  "message-worker-constructors.txt": {
+    "bytes": 1694,
+    "sha256": "7187cb1f30b760ce974ca18c4113af845bb94a0899038182076517e78d57f963"
+  },
+  "message-worker.txt": {
+    "bytes": 89735,
+    "sha256": "bd938857f4ee3abaa15baf43dfee005e5d27efe92f9030a2131a5f6d51654188"
+  },
+  "namespace-transfer.txt": {
+    "bytes": 2476,
+    "sha256": "5e6178f3549a0d80c295280d75730a8fc2b73bca9adebf200c2e887c234ff59b"
+  },
+  "seconds-conversion.txt": {
+    "bytes": 522,
+    "sha256": "bcd081cf768fafb735a8d28f1654e768d2ac5fb5f385e85b0a6b9627ec31441c"
+  },
+  "targets.json": {
+    "bytes": 6678,
+    "sha256": "02df5d921f86ad8dbc14e4ea77abecd0e6cb0cd35de1c635295422be037753e8"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

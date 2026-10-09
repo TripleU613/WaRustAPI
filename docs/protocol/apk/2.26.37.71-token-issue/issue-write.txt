@@ -1,0 +1,113 @@
+# APK-derived structural disassembly: LX/0q2;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0W(VLJ) flags=0x11 registers=18
+  # full signature: LX/0q2;->A0W(Lcom/whatsapp/infra/core/jid/UserJid;J)V
+  0000..0002 op=12 const/4 v8, #0x0
+  0002..0008 op=71 invoke-static {v15, v8}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=6e invoke-virtual {v14, v15}, LX/0q2;->A0L(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+  000e..0010 op=0c move-result-object v4
+  0010..0014 op=54 iget-object v0, v14, LX/0q2;->A05:LX/0q4;
+  0014..0018 op=1a const-string v9, "jid"
+  0018..001c op=54 iget-object v0, v0, LX/0gr;->A00:LX/0aD;
+  001c..0022 op=6e invoke-virtual {v0}, LX/0aC;->A07()LX/0ZN;
+  0022..0024 op=0c move-result-object v2
+  0024..002a op=6e invoke-virtual {v2}, LX/0ZN;->A00()LX/1gB;
+  002a..002c op=0c move-result-object v3
+  002c..0030 op=54 iget-object v7, v2, LX/0ZN;->A02:LX/0IY;
+  0030..0034 op=1a const-string v6, "SELECT sent_tc_token_timestamp, real_issue_timestamp FROM wa_trusted_contacts_send WHERE jid=?"
+  0034..003a op=6e invoke-virtual {v4}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  003a..003c op=0c move-result-object v5
+  003c..003e op=12 const/4 v0, #0x1
+  003e..0042 op=23 new-array v1, v0, [Ljava/lang/String;
+  0042..0046 op=4d aput-object v5, v1, v8
+  0046..004a op=1a const-string v0, "GET_SENT_TOKEN_BY_JID"
+  004a..0050 op=6e invoke-virtual {v7, v6, v0, v1}, LX/0IY;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+  0050..0052 op=0c move-result-object v5
+  0052..0058 op=72 invoke-interface {v5}, Landroid/database/Cursor;->moveToNext()Z
+  0058..005a op=0a move-result v0
+  005a..005c op=12 const/4 v6, #0x0
+  005c..0060 op=38 if-eqz v0, +0x6
+  0060..0066 op=71 invoke-static {v5}, LX/0q4;->A08(Landroid/database/Cursor;)LX/HYS;
+  0066..0068 op=0c move-result-object v6
+  0068..006c op=16 const-wide/16 v12, #0x0
+  006c..0070 op=38 if-eqz v6, +0x1a
+  0070..0074 op=53 iget-wide v0, v6, LX/HYS;->A00:J
+  0074..0078 op=31 cmp-long v8, v0, v16
+  0078..007c op=3a if-ltz v8, +0x8
+  007c..0082 op=6e invoke-virtual {v3}, LX/1gB;->A00()V
+  0082..0086 op=62 sget-object v1, LX/02S;->A0C:Ljava/lang/Integer;
+  0086..0088 op=28 goto +0x44
+  0088..008c op=54 iget-object v0, v6, LX/HYS;->A01:Ljava/lang/Long;
+  008c..0090 op=38 if-eqz v0, +0x36
+  0090..0096 op=6e invoke-virtual {v0}, Ljava/lang/Number;->longValue()J
+  0096..0098 op=0b move-result-wide v10
+  0098..009c op=31 cmp-long v0, v10, v12
+  009c..00a0 op=3b if-gez v0, +0x30
+  00a0..00a2 op=12 const/4 v0, #0x3
+  00a2..00a6 op=22 new-instance v8, Landroid/content/ContentValues;
+  00a6..00ac op=70 invoke-direct {v8, v0}, Landroid/content/ContentValues;-><init>(I)V
+  00ac..00b2 op=6e invoke-virtual {v4}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+  00b2..00b4 op=0c move-result-object v0
+  00b4..00ba op=6e invoke-virtual {v8, v9, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  00ba..00c0 op=1b const-string/jumbo v1, "sent_tc_token_timestamp"
+  00c0..00c6 op=77 invoke-static/range {v16..v17}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  00c6..00c8 op=0c move-result-object v0
+  00c8..00ce op=6e invoke-virtual {v8, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  00ce..00d2 op=1a const-string v1, "real_issue_timestamp"
+  00d2..00d8 op=71 invoke-static {v12, v13}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  00d8..00da op=0c move-result-object v0
+  00da..00e0 op=6e invoke-virtual {v8, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  00e0..00e6 op=1b const-string/jumbo v1, "wa_trusted_contacts_send"
+  00e6..00ea op=1a const-string v0, "UPDATE_SCHEDULED_TIMESTAMP"
+  00ea..00f0 op=6e invoke-virtual {v7, v1, v0, v8}, LX/0IY;->A07(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+  00f0..00f6 op=6e invoke-virtual {v3}, LX/1gB;->A00()V
+  00f6..00f8 op=28 goto +0x5
+  00f8..00fc op=16 const-wide/16 v10, #0x0
+  00fc..00fe op=04 move-wide v12, v10
+  00fe..0100 op=28 goto -0x2f
+  0100..0104 op=38 if-eqz v6, +0x5
+  0104..0108 op=62 sget-object v1, LX/02S;->A01:Ljava/lang/Integer;
+  0108..010a op=28 goto +0x3
+  010a..010e op=62 sget-object v1, LX/02S;->A00:Ljava/lang/Integer;
+  010e..0114 op=72 invoke-interface {v5}, Landroid/database/Cursor;->close()V
+  0114..011a op=6e invoke-virtual {v3}, LX/1gB;->close()V
+  011a..0120 op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  0120..0124 op=62 sget-object v0, LX/02S;->A0C:Ljava/lang/Integer;
+  0124..0128 op=32 if-eq v1, v0, +0x10
+  0128..012c op=54 iget-object v0, v14, LX/0q2;->A07:LX/00l;
+  012c..0132 op=72 invoke-interface {v0}, LX/00l;->getValue()Ljava/lang/Object;
+  0132..0134 op=0c move-result-object v0
+  0134..013a op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  013a..013e op=1f check-cast v0, Ljava/util/Map;
+  013e..0144 op=72 invoke-interface {v0, v4}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+  0144..0146 op=0e return-void
+  0146..0148 op=0d move-exception v1
+  0148..014a op=27 throw v1
+  014a..014c op=0d move-exception v0
+  014c..0152 op=71 invoke-static {v5, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0152..0154 op=27 throw v0
+  0154..0156 op=0d move-exception v1
+  0156..0158 op=27 throw v1
+  0158..015a op=0d move-exception v0
+  015a..0160 op=71 invoke-static {v3, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0160..0162 op=27 throw v0
+  0162..0164 op=0d move-exception v1
+  0164..0166 op=27 throw v1
+  0166..0168 op=0d move-exception v0
+  0168..016e op=71 invoke-static {v2, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  016e..0170 op=27 throw v0
+  # exception table: 10 try range(s)
+  # catch <all> code_units 0012..0016 -> 00b1
+  # catch <all> code_units 0016..0029 -> 00aa
+  # catch <all> code_units 0029..0087 -> 00a3
+  # catch <all> code_units 0087..008a -> 00aa
+  # catch <all> code_units 008a..008d -> 00b1
+  # catch <all> code_units 00a4..00a5 -> 00a5
+  # catch <all> code_units 00a6..00aa -> 00aa
+  # catch <all> code_units 00ab..00ac -> 00ac
+  # catch <all> code_units 00ad..00b1 -> 00b1
+  # catch <all> code_units 00b2..00b3 -> 00b3
+.end method
