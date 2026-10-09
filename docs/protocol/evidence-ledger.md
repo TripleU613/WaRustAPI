@@ -1,5 +1,13 @@
 # Evidence ledger
 
+Key-based receipt lookup (2026-10-09, **confirmed static**): seven topics
+close ordinary/add-on overrides and show missing ordinary messages select the
+add-on keyed receipt join. Pending membership is distinct from delivered/user
+rows; primary cleanup remains unfinished. Offline saved-account receipts check
+stopped before store open because its master-key environment input was absent.
+No account mutation, runtime change or live request.
+[Evidence and limits](receipt-key-lookup.md).
+
 Receipt inspection correction (2026-10-09, **confirmed local**): offline
 receipts inspection now diagnoses malformed saved wire/IDs with fixed redacted
 errors instead of silently dropping/truncating bytes or returning an empty ID.

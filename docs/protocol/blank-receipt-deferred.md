@@ -54,7 +54,8 @@ Effective property and complete subtype store choice remain **unknown**.
 A05 loads 7hf through A0E and returns a new HashSet of its A00 cache's keys,
 without testing a timestamp or version in this body. The cache load is separately
 retained in [receipt loading](receipt-load.md). A0O is an abstract declaration
-with no body in this base class; concrete overrides remain **untraced here**.
+with no body in this base class; ordinary/add-on overrides and their key-store choice are now followed in
+[key lookup](receipt-key-lookup.md); the status-store branch remains **unknown**.
 Do not assume the two property paths have identical loading/failure behavior.
 
 **Confirmed negative / scoped:** this selected DNt branch has no receipt_user
@@ -67,7 +68,7 @@ The [primary cleanup intersection](identity-receipts.md#primary-receipt-selectio
 still requires actual user-row existence, independently of a delivery timestamp.
 
 **Unknown/unported:** full ordinary user-row initialization/admission,
-status privacy/target authority, A0O overrides, property values, asynchronous
+status privacy/target authority, remaining status-store overrides, property values, asynchronous
 cache/store reconciliation and primary receipt cleanup. No Rust runtime, account,
 key, identity, original request ID, wait or reservation changed. No live request
 or cleanup ran. This source closes a candidate investigation, without inventing

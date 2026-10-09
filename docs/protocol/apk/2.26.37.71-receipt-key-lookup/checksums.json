@@ -1,0 +1,46 @@
+{
+  "addon-key-devices.txt": {
+    "bytes": 1032,
+    "sha256": "5adab6c3a8a483899daba33e848814a91273399648e02104e8a25ee81daee6ba"
+  },
+  "addon-key-load.txt": {
+    "bytes": 7537,
+    "sha256": "60007f7671604953d79df51d862ebcbef63f63abbe2167550bc23f08c3afac14"
+  },
+  "addon-key-sql.txt": {
+    "bytes": 9591,
+    "sha256": "fbc422bb43b4b4e445e8ec542a35f6c83f9637fd29019f1846f7f8169d71ff58"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "key-store-choice.txt": {
+    "bytes": 1479,
+    "sha256": "cb784bbd467a220d33c933c407b8dd795078774b75474603cb621f150b01958d"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-lookup-proxy.txt": {
+    "bytes": 637,
+    "sha256": "40c6406ca16f4b8b2bdf56ea2a0734d70de9dc85a1ee8d705828e420f7902531"
+  },
+  "message-lookup.txt": {
+    "bytes": 5123,
+    "sha256": "fcc5c1c0df2ffa2f120f1318cde5557470730541b56f994ce0297209071d6c76"
+  },
+  "ordinary-key-devices.txt": {
+    "bytes": 1194,
+    "sha256": "ff559cc5741680d3945acc2f2ed44b8d6050d84ca326bb1e61f471dd7ae03888"
+  },
+  "targets.json": {
+    "bytes": 2700,
+    "sha256": "1edbf6a1cf2b878a1365d73d55a87362ecdf00476c2d1a7221c7ff4c028ea943"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

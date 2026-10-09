@@ -1,0 +1,100 @@
+# APK-derived structural disassembly: LX/1Yu;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=6
+  # full signature: LX/1Yu;-><clinit>()V
+  0000..0004 op=62 sget-object v4, LX/0Ox;->A00:[Ljava/lang/String;
+  0004..0008 op=1a const-string v3, "message_add_on"
+  0008..000e op=71 invoke-static {v3, v4}, LX/0ZU;->A01(Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+  000e..0010 op=0c move-result-object v0
+  0010..0014 op=1a const-string v2, "\n        SELECT \n          "
+  0014..0018 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0018..001e op=70 invoke-direct {v1, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  001e..0024 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0024..0028 op=1a const-string v0, "\n        FROM \n          message_add_on\n        WHERE\n          message_add_on.chat_row_id = ?\n          AND \n          message_add_on.key_id = ?\n          AND\n          message_add_on.from_me = ?\n          AND \n          (\n            message_add_on.expiry_timestamp > ?\n            OR \n            IFNULL(message_add_on.expiry_timestamp, 0) = 0\n          )\n      "
+  0028..002e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  002e..0034 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0034..0036 op=0c move-result-object v0
+  0036..003a op=69 sput-object v0, LX/1Yu;->A06:Ljava/lang/String;
+  003a..0040 op=71 invoke-static {v3, v4}, LX/0ZU;->A01(Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+  0040..0042 op=0c move-result-object v0
+  0042..0046 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0046..004c op=70 invoke-direct {v1, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  004c..0052 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0052..0056 op=1a const-string v0, "\n        FROM\n          message_add_on\n        WHERE\n          message_add_on._id = ?\n          AND\n          (\n            message_add_on.expiry_timestamp > ?\n            OR \n            IFNULL(message_add_on.expiry_timestamp, 0) = 0\n          )\n      "
+  0056..005c op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  005c..0062 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0062..0064 op=0c move-result-object v0
+  0064..0068 op=69 sput-object v0, LX/1Yu;->A05:Ljava/lang/String;
+  0068..006c op=13 const/16 v0, #0x44
+  006c..0072 op=71 invoke-static {v0}, LX/1Yu;->A01(I)Ljava/lang/String;
+  0072..0074 op=0c move-result-object v0
+  0074..0078 op=69 sput-object v0, LX/1Yu;->A00:Ljava/lang/String;
+  0078..007c op=1a const-string v5, "\n        message_add_on \n        JOIN message_add_on_receipt_device\n          ON message_add_on._id = \n            message_add_on_receipt_device.message_add_on_row_id\n      "
+  007c..0080 op=1a const-string v4, "\n        chat_row_id = ?\n        AND\n        from_me = ?\n        AND\n        key_id = ?\n      "
+  0080..0084 op=1a const-string v1, "\n      SELECT \n        receipt_device_jid_row_id,\n        receipt_device_timestamp\n      FROM\n        "
+  0084..0088 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0088..008e op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  008e..0094 op=6e invoke-virtual {v0, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0094..0098 op=1a const-string v2, " \n      WHERE\n        "
+  0098..009e op=6e invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  009e..00a4 op=6e invoke-virtual {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00a4..00a8 op=1a const-string v3, "\n    "
+  00a8..00ae op=6e invoke-virtual {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00ae..00b4 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00b4..00b6 op=0c move-result-object v0
+  00b6..00ba op=69 sput-object v0, LX/1Yu;->A01:Ljava/lang/String;
+  00ba..00be op=1a const-string v1, "\n      SELECT \n        receipt_device_jid_row_id,\n        primary_device_version\n      FROM\n        "
+  00be..00c2 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  00c2..00c8 op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  00c8..00ce op=6e invoke-virtual {v0, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00ce..00d4 op=6e invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00d4..00da op=6e invoke-virtual {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00da..00e0 op=6e invoke-virtual {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00e0..00e6 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00e6..00e8 op=0c move-result-object v0
+  00e8..00ec op=69 sput-object v0, LX/1Yu;->A02:Ljava/lang/String;
+  00ec..00ee op=12 const/4 v4, #0x5
+  00ee..00f2 op=13 const/16 v2, #0xd
+  00f2..00f4 op=12 const/4 v1, #0x4
+  00f4..00f8 op=13 const/16 v0, #0xf
+  00f8..00fe op=24 filled-new-array {v1, v0, v4, v2}, [I
+  00fe..0100 op=0c move-result-object v2
+  0100..0104 op=69 sput-object v2, LX/1Yu;->A08:[I
+  0104..0108 op=1a const-string v1, ", "
+  0108..010a op=12 const/4 v0, #0x0
+  010a..0110 op=71 invoke-static {v1, v0, v2}, LX/08J;->A0L(Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;[I)Ljava/lang/String;
+  0110..0112 op=0c move-result-object v2
+  0112..0116 op=1a const-string v0, "\n        SELECT\n          COUNT(*) as count\n        FROM\n          message_add_on\n        WHERE\n          message_add_on.parent_message_row_id = ?\n          AND\n          message_add_on.message_add_on_type = ?\n          AND\n          message_add_on.from_me = 1\n          AND\n          message_add_on.status IN ("
+  0116..011a op=22 new-instance v1, Ljava/lang/StringBuilder;
+  011a..0120 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0120..0126 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0126..012a op=1a const-string v0, ")\n          AND\n          (\n            message_add_on.expiry_timestamp > ?\n            OR \n            IFNULL(message_add_on.expiry_timestamp, 0) = 0\n          )\n      "
+  012a..0130 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0130..0136 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0136..0138 op=0c move-result-object v0
+  0138..013c op=69 sput-object v0, LX/1Yu;->A04:Ljava/lang/String;
+  013c..0140 op=1a const-string v2, "\n        WHERE\n          message_add_on.chat_row_id = ?\n          AND\n          message_add_on.message_add_on_type = 79\n          AND \n          (\n            message_add_on.expiry_timestamp > ?\n            OR \n            IFNULL(message_add_on.expiry_timestamp, 0) = 0\n          )\n          AND\n          message_add_on_pin_in_chat.pin_in_chat_state = 1\n      "
+  0140..0144 op=1a const-string v0, "\n        SELECT\n          COUNT(*) as count\n        FROM\n          message_add_on\n        JOIN\n          message_add_on_pin_in_chat\n          ON message_add_on._id = \n            message_add_on_pin_in_chat.message_add_on_row_id\n          "
+  0144..0148 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0148..014e op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  014e..0154 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0154..0158 op=1a const-string v0, "\n      "
+  0158..015e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  015e..0164 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0164..0166 op=0c move-result-object v0
+  0166..016a op=69 sput-object v0, LX/1Yu;->A03:Ljava/lang/String;
+  016a..016e op=1a const-string v2, "\n        message_add_on_type = 11\n        AND\n        key_id = ?\n        AND\n        from_me = ?\n        AND\n        chat_row_id = ?\n        AND\n        sender_jid_row_id = ?\n      "
+  016e..0172 op=1a const-string v1, "\n      SELECT \n        _id\n      FROM\n        message_add_on\n      WHERE\n      "
+  0172..0176 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0176..017c op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  017c..0182 op=6e invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0182..0188 op=6e invoke-virtual {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0188..018e op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  018e..0190 op=0c move-result-object v0
+  0190..0194 op=69 sput-object v0, LX/1Yu;->A07:Ljava/lang/String;
+  0194..0196 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
