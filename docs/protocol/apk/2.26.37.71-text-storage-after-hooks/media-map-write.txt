@@ -1,0 +1,74 @@
+# APK-derived structural disassembly: LX/6d3;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(VLJJ) flags=0x11 registers=15
+  # full signature: LX/6d3;->A02(LX/D6l;JJ)V
+  0000..0002 op=12 const/4 v0, #0x2
+  0002..0008 op=71 invoke-static {v10, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=54 iget-object v0, v9, LX/6d3;->A03:LX/0Gc;
+  000c..0012 op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  0012..0014 op=0c move-result-object v4
+  0014..001a op=6e invoke-virtual {v4}, LX/0ZN;->A00()LX/1gB;
+  001a..001c op=0c move-result-object v5
+  001c..0020 op=54 iget-object v0, v10, LX/D6l;->A00:Ljava/util/concurrent/ConcurrentHashMap;
+  0020..0026 op=71 invoke-static {v0}, LX/6ao;->A0v(Ljava/util/AbstractMap;)Ljava/util/Iterator;
+  0026..0028 op=0c move-result-object v8
+  0028..002e op=72 invoke-interface {v8}, Ljava/util/Iterator;->hasNext()Z
+  002e..0030 op=0a move-result v0
+  0030..0034 op=38 if-eqz v0, +0x37
+  0034..003a op=72 invoke-interface {v8}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  003a..003c op=0c move-result-object v3
+  003c..0040 op=1f check-cast v3, LX/73W;
+  0040..0046 op=71 invoke-static {v3}, LX/00h;->A09(Ljava/lang/Object;)V
+  0046..004a op=53 iget-wide v0, v3, LX/73W;->A00:J
+  004a..004e op=16 const-wide/16 v6, #0xffff (-1)
+  004e..0052 op=31 cmp-long v2, v0, v6
+  0052..0056 op=39 if-nez v2, -0x15
+  0056..005a op=54 iget-object v0, v9, LX/6d3;->A04:LX/6d7;
+  005a..0060 op=6e invoke-virtual {v0, v4, v3}, LX/6d7;->A00(LX/0ZN;LX/73W;)J
+  0060..0062 op=0b move-result-wide v0
+  0062..0068 op=71 invoke-static {}, LX/1xk;->A06()Landroid/content/ContentValues;
+  0068..006a op=0c move-result-object v6
+  006a..006e op=1a const-string v2, "message_row_id"
+  006e..0074 op=71 invoke-static {v6, v2, v11, v12}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  0074..0078 op=1a const-string v2, "chat_row_id"
+  0078..007e op=71 invoke-static {v6, v2, v13, v14}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  007e..0082 op=1a const-string v2, "media_row_id"
+  0082..0088 op=71 invoke-static {v6, v2, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  0088..008c op=54 iget-object v3, v4, LX/0ZN;->A02:LX/0IY;
+  008c..008e op=12 const/4 v2, #0x5
+  008e..0092 op=1a const-string v1, "INSERT_MESSAGE_MEDIA_MAP_SQL"
+  0092..0096 op=1a const-string v0, "message_media_map"
+  0096..009c op=6e invoke-virtual {v3, v0, v1, v6, v2}, LX/0IY;->A09(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+  009c..009e op=28 goto -0x3a
+  009e..00a4 op=6e invoke-virtual {v5}, LX/1gB;->A00()V
+  00a4..00aa op=6e invoke-virtual {v5}, LX/1gB;->close()V
+  00aa..00b0 op=6e invoke-virtual {v4}, LX/0ZN;->close()V
+  00b0..00b2 op=0e return-void
+  00b2..00b4 op=0d move-exception v1
+  00b4..00b6 op=27 throw v1
+  00b6..00b8 op=0d move-exception v0
+  00b8..00be op=71 invoke-static {v5, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  00be..00c0 op=27 throw v0
+  00c0..00c2 op=0d move-exception v1
+  00c2..00c4 op=27 throw v1
+  00c4..00c6 op=0d move-exception v0
+  00c6..00cc op=71 invoke-static {v4, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  00cc..00ce op=27 throw v0
+  00ce..00d0 op=0d move-exception v1
+  00d0..00d4 op=1a const-string v0, "MessageMediaMapStore/insertOrUpdateExtendedMediaDataMap/"
+  00d4..00da op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+  00da..00dc op=0e return-void
+  # exception table: 9 try range(s)
+  # catch Landroid/database/sqlite/SQLiteConstraintException; code_units 0004..000a -> 0067
+  # catch <all> code_units 000a..000e -> 0060
+  # catch <all> code_units 000e..0052 -> 0059
+  # catch <all> code_units 0052..0055 -> 0060
+  # catch Landroid/database/sqlite/SQLiteConstraintException; code_units 0055..0059 -> 0067
+  # catch <all> code_units 005a..005b -> 005b
+  # catch <all> code_units 005c..0060 -> 0060
+  # catch <all> code_units 0061..0062 -> 0062
+  # catch Landroid/database/sqlite/SQLiteConstraintException; code_units 0063..0067 -> 0067
+.end method

@@ -1,5 +1,16 @@
 # Status — 2026-10-07
 
+Storage/poll/indexing after-hooks (2026-10-09, **confirmed static**): seven
+more registered entries and nine selected delegates are attributed. Writes target
+ephemeral, media/thumbnail or search tables; thumbnail post-processing clears a
+marker, not stored bytes/view-once content. Current mapping is 36/54 with 18
+remaining after entries. Transitive receipt admission and primary cleanup remain
+unknown/unported. No runtime/account/live change. [Evidence and limits](docs/protocol/text-storage-after-hooks.md).
+
+Storage-hook validation: exact 27-topic export and cached self-diff, direct
+source checks, CLI reference, API/library-symbol, formatting, whitespace and
+hygiene passed. No fresh runtime suite or live account test is claimed.
+
 Additional metadata hooks (2026-10-09, **confirmed static**): eight bucket-one
 entries now have registered factory/CHJ boundaries, with inline-video, mention
 and question helpers traced. Question SQL failure throws for -1; selected other

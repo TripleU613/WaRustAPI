@@ -1,0 +1,204 @@
+# APK-derived structural disassembly: LX/16V;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(VLJ) flags=0x11 registers=18
+  # full signature: LX/16V;->A01(LX/8Bv;J)V
+  0000..0002 op=12 const/4 v6, #0x0
+  0002..0008 op=71 invoke-static {v15, v6}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=54 iget-object v0, v15, LX/8Bv;->A0D:LX/1e3;
+  000c..0010 op=62 sget-object v3, LX/1e3;->A04:LX/1e3;
+  0010..0014 op=32 if-eq v0, v3, +0xa4
+  0014..0018 op=54 iget-object v3, v14, LX/16V;->A01:LX/16W;
+  0018..001c op=54 iget-object v0, v3, LX/16W;->A01:LX/05B;
+  001c..0020 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0020..0026 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0026..0028 op=0c move-result-object v0
+  0028..002c op=1f check-cast v0, LX/0Gc;
+  002c..0032 op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  0032..0034 op=0c move-result-object v4
+  0034..0038 op=13 const/16 v0, #0xa
+  0038..003c op=22 new-instance v5, Landroid/content/ContentValues;
+  003c..0042 op=70 invoke-direct {v5, v0}, Landroid/content/ContentValues;-><init>(I)V
+  0042..0046 op=1a const-string v1, "message_row_id"
+  0046..004c op=77 invoke-static/range {v16..v17}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  004c..004e op=0c move-result-object v0
+  004e..0054 op=6e invoke-virtual {v5, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  0054..0058 op=1a const-string v1, "direct_path"
+  0058..005c op=54 iget-object v0, v15, LX/8Bv;->A05:Ljava/lang/String;
+  005c..0062 op=71 invoke-static {v5, v1, v0}, LX/6dh;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;)V
+  0062..0066 op=1a const-string v1, "media_key"
+  0066..006a op=54 iget-object v0, v15, LX/8Bv;->A0B:[B
+  006a..0070 op=71 invoke-static {v5, v1, v0}, LX/6dh;->A04(Landroid/content/ContentValues;Ljava/lang/String;[B)V
+  0070..0074 op=1a const-string v2, "media_key_timestamp"
+  0074..0078 op=53 iget-wide v0, v15, LX/8Bv;->A02:J
+  0078..007e op=71 invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  007e..0080 op=0c move-result-object v0
+  0080..0086 op=6e invoke-virtual {v5, v2, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  0086..008a op=1a const-string v1, "enc_thumb_hash"
+  008a..008e op=54 iget-object v0, v15, LX/8Bv;->A06:Ljava/lang/String;
+  008e..0094 op=71 invoke-static {v5, v1, v0}, LX/6dh;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;)V
+  0094..009a op=1b const-string/jumbo v1, "thumb_hash"
+  009a..009e op=54 iget-object v0, v15, LX/8Bv;->A09:Ljava/lang/String;
+  009e..00a4 op=71 invoke-static {v5, v1, v0}, LX/6dh;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;)V
+  00a4..00aa op=1b const-string/jumbo v1, "thumb_width"
+  00aa..00ae op=52 iget v0, v15, LX/8Bv;->A01:I
+  00ae..00b4 op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  00b4..00b6 op=0c move-result-object v0
+  00b6..00bc op=6e invoke-virtual {v5, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  00bc..00c2 op=1b const-string/jumbo v1, "thumb_height"
+  00c2..00c6 op=52 iget v0, v15, LX/8Bv;->A00:I
+  00c6..00cc op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  00cc..00ce op=0c move-result-object v0
+  00ce..00d4 op=6e invoke-virtual {v5, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  00d4..00da op=1b const-string/jumbo v1, "transferred"
+  00da..00de op=55 iget-boolean v0, v15, LX/8Bv;->A0A:Z
+  00de..00e4 op=71 invoke-static {v5, v1, v0}, LX/6dh;->A03(Landroid/content/ContentValues;Ljava/lang/String;Z)V
+  00e4..00e8 op=1a const-string v1, "micro_thumbnail"
+  00e8..00ec op=54 iget-object v0, v15, LX/8Bv;->A0C:[B
+  00ec..00f2 op=71 invoke-static {v5, v1, v0}, LX/6dh;->A04(Landroid/content/ContentValues;Ljava/lang/String;[B)V
+  00f2..00f6 op=1a const-string v2, "insert_timestamp"
+  00f6..00fa op=54 iget-object v0, v3, LX/16W;->A02:LX/05B;
+  00fa..00fe op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  00fe..0104 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0104..0106 op=0c move-result-object v0
+  0106..010a op=1f check-cast v0, LX/08B;
+  010a..0110 op=71 invoke-static {v0}, LX/08B;->A00(LX/08B;)J
+  0110..0112 op=0b move-result-wide v0
+  0112..0118 op=71 invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  0118..011a op=0c move-result-object v0
+  011a..0120 op=6e invoke-virtual {v5, v2, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  0120..0124 op=1a const-string v1, "handle"
+  0124..0128 op=54 iget-object v0, v15, LX/8Bv;->A07:Ljava/lang/String;
+  0128..012e op=6e invoke-virtual {v5, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  012e..0132 op=54 iget-object v3, v4, LX/0ZN;->A02:LX/0IY;
+  0132..0136 op=1a const-string v2, "mms_thumbnail_metadata"
+  0136..013a op=1a const-string v1, "INSERT_MMS_THUMBNAIL_METADATA_SQL"
+  013a..013c op=12 const/4 v0, #0x5
+  013c..0142 op=6e invoke-virtual {v3, v2, v1, v5, v0}, LX/0IY;->A09(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+  0142..0148 op=6e invoke-virtual {v4}, LX/0ZN;->close()V
+  0148..014a op=0e return-void
+  014a..014c op=0d move-exception v1
+  014c..014e op=27 throw v1
+  014e..0150 op=0d move-exception v0
+  0150..0156 op=71 invoke-static {v4, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0156..0158 op=27 throw v0
+  0158..015c op=54 iget-object v2, v14, LX/16V;->A00:LX/16X;
+  015c..015e op=12 const/4 v5, #0x1
+  015e..0162 op=13 const/16 v0, #0xd
+  0162..0166 op=22 new-instance v9, Landroid/content/ContentValues;
+  0166..016c op=70 invoke-direct {v9, v0}, Landroid/content/ContentValues;-><init>(I)V
+  016c..0170 op=1a const-string v1, "message_row_id"
+  0170..0176 op=77 invoke-static/range {v16..v17}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  0176..0178 op=0c move-result-object v0
+  0178..017e op=6e invoke-virtual {v9, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  017e..0182 op=1a const-string v1, "direct_path"
+  0182..0186 op=54 iget-object v0, v15, LX/8Bv;->A05:Ljava/lang/String;
+  0186..018c op=71 invoke-static {v9, v1, v0}, LX/6dh;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;)V
+  018c..0190 op=1a const-string v1, "media_key"
+  0190..0194 op=54 iget-object v0, v15, LX/8Bv;->A0B:[B
+  0194..019a op=71 invoke-static {v9, v1, v0}, LX/6dh;->A04(Landroid/content/ContentValues;Ljava/lang/String;[B)V
+  019a..019e op=53 iget-wide v0, v15, LX/8Bv;->A02:J
+  019e..01a4 op=71 invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  01a4..01a6 op=0c move-result-object v1
+  01a6..01aa op=1a const-string v0, "media_key_timestamp"
+  01aa..01b0 op=6e invoke-virtual {v9, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  01b0..01b4 op=1a const-string v1, "enc_thumb_hash"
+  01b4..01b8 op=54 iget-object v0, v15, LX/8Bv;->A06:Ljava/lang/String;
+  01b8..01be op=71 invoke-static {v9, v1, v0}, LX/6dh;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;)V
+  01be..01c4 op=1b const-string/jumbo v1, "thumb_hash"
+  01c4..01c8 op=54 iget-object v0, v15, LX/8Bv;->A09:Ljava/lang/String;
+  01c8..01ce op=71 invoke-static {v9, v1, v0}, LX/6dh;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;)V
+  01ce..01d2 op=52 iget v0, v15, LX/8Bv;->A01:I
+  01d2..01d8 op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  01d8..01da op=0c move-result-object v1
+  01da..01e0 op=1b const-string/jumbo v0, "thumb_width"
+  01e0..01e6 op=6e invoke-virtual {v9, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  01e6..01ea op=52 iget v0, v15, LX/8Bv;->A00:I
+  01ea..01f0 op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  01f0..01f2 op=0c move-result-object v1
+  01f2..01f8 op=1b const-string/jumbo v0, "thumb_height"
+  01f8..01fe op=6e invoke-virtual {v9, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  01fe..0204 op=1b const-string/jumbo v1, "transferred"
+  0204..0208 op=55 iget-boolean v0, v15, LX/8Bv;->A0A:Z
+  0208..020e op=71 invoke-static {v9, v1, v0}, LX/6dh;->A03(Landroid/content/ContentValues;Ljava/lang/String;Z)V
+  020e..0212 op=1a const-string v1, "micro_thumbnail"
+  0212..0216 op=54 iget-object v0, v15, LX/8Bv;->A0C:[B
+  0216..021c op=71 invoke-static {v9, v1, v0}, LX/6dh;->A04(Landroid/content/ContentValues;Ljava/lang/String;[B)V
+  021c..0220 op=54 iget-object v0, v2, LX/16X;->A01:LX/05B;
+  0220..0224 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0224..022a op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  022a..022c op=0c move-result-object v0
+  022c..0230 op=1f check-cast v0, LX/08B;
+  0230..0236 op=71 invoke-static {v0}, LX/08B;->A00(LX/08B;)J
+  0236..0238 op=0b move-result-wide v0
+  0238..023e op=71 invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  023e..0240 op=0c move-result-object v1
+  0240..0244 op=1a const-string v0, "insert_timestamp"
+  0244..024a op=6e invoke-virtual {v9, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  024a..024e op=1a const-string v1, "handle"
+  024e..0252 op=54 iget-object v0, v15, LX/8Bv;->A07:Ljava/lang/String;
+  0252..0258 op=6e invoke-virtual {v9, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  0258..025c op=52 iget v0, v3, LX/1e3;->value:I
+  025c..0262 op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0262..0264 op=0c move-result-object v1
+  0264..026a op=1b const-string/jumbo v0, "type"
+  026a..0270 op=6e invoke-virtual {v9, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  0270..0274 op=53 iget-wide v0, v15, LX/8Bv;->A04:J
+  0274..0278 op=54 iget-object v2, v2, LX/16X;->A00:LX/05B;
+  0278..027c op=54 iget-object v2, v2, LX/05B;->A00:LX/00s;
+  027c..0282 op=72 invoke-interface {v2}, LX/00s;->get()Ljava/lang/Object;
+  0282..0284 op=0c move-result-object v2
+  0284..0288 op=1f check-cast v2, LX/0Gc;
+  0288..028e op=6e invoke-virtual {v2}, LX/0Gc;->A07()LX/0ZN;
+  028e..0290 op=0c move-result-object v4
+  0290..0294 op=16 const-wide/16 v7, #0xffff (-1)
+  0294..0298 op=31 cmp-long v2, v0, v7
+  0298..029c op=39 if-nez v2, +0xf
+  029c..02a0 op=54 iget-object v2, v4, LX/0ZN;->A02:LX/0IY;
+  02a0..02a4 op=1a const-string v1, "mms_metadata"
+  02a4..02a8 op=1a const-string v0, "INSERT_MMS_METADATA_SQL"
+  02a8..02ae op=6e invoke-virtual {v2, v1, v0, v9}, LX/0IY;->A05(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+  02ae..02b0 op=0b move-result-wide v0
+  02b0..02b4 op=5a iput-wide v0, v15, LX/8Bv;->A04:J
+  02b4..02b6 op=28 goto +0x1d
+  02b6..02ba op=1a const-string v3, "_id"
+  02ba..02c0 op=71 invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  02c0..02c2 op=0c move-result-object v2
+  02c2..02c8 op=6e invoke-virtual {v9, v3, v2}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  02c8..02cc op=54 iget-object v8, v4, LX/0ZN;->A02:LX/0IY;
+  02cc..02d0 op=1a const-string v10, "mms_metadata"
+  02d0..02d4 op=1a const-string v11, "_id = ?"
+  02d4..02da op=71 invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+  02da..02dc op=0c move-result-object v0
+  02dc..02e0 op=23 new-array v13, v5, [Ljava/lang/String;
+  02e0..02e4 op=4d aput-object v0, v13, v6
+  02e4..02e8 op=1a const-string v12, "UPDATE_MMS_METADATA_SQL"
+  02e8..02ee op=74 invoke-virtual/range {v8..v13}, LX/0IY;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  02ee..02f4 op=6e invoke-virtual {v4}, LX/0ZN;->close()V
+  02f4..02f6 op=0e return-void
+  02f6..02f8 op=0d move-exception v1
+  02f8..02fa op=27 throw v1
+  02fa..02fc op=0d move-exception v0
+  02fc..0302 op=71 invoke-static {v4, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0302..0304 op=27 throw v0
+  0304..0306 op=0d move-exception v1
+  0306..030a op=1a const-string v0, "MmsMetadataMessageStore/insertOrUpdateMmsMetadata/"
+  030a..030c op=28 goto +0x4
+  030c..030e op=0d move-exception v1
+  030e..0312 op=1a const-string v0, "MmsThumbnailMetadataMessageStore/insertMmsThumbnailMetadata/"
+  0312..0318 op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+  0318..031a op=27 throw v1
+  # exception table: 10 try range(s)
+  # catch Landroid/database/sqlite/SQLiteConstraintException; code_units 000c..001a -> 0186
+  # catch <all> code_units 001a..00a1 -> 00a5
+  # catch Landroid/database/sqlite/SQLiteConstraintException; code_units 00a1..00a5 -> 0186
+  # catch <all> code_units 00a6..00a7 -> 00a7
+  # catch Landroid/database/sqlite/SQLiteConstraintException; code_units 00a8..00ac -> 0186
+  # catch Landroid/database/sqlite/SQLiteConstraintException; code_units 013a..014e -> 0182
+  # catch <all> code_units 014e..0177 -> 017b
+  # catch Landroid/database/sqlite/SQLiteConstraintException; code_units 0177..017b -> 0182
+  # catch <all> code_units 017c..017d -> 017d
+  # catch Landroid/database/sqlite/SQLiteConstraintException; code_units 017e..0182 -> 0182
+.end method

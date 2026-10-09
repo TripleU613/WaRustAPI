@@ -1,0 +1,21 @@
+# APK-derived structural disassembly: LX/0VP;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0Q(VL) flags=0x1 registers=9
+  # full signature: LX/0VP;->A0Q(LX/178;)V
+  0000..0002 op=07 move-object v1, v7
+  0002..0008 op=6e invoke-virtual {v7}, LX/0VP;->A0A()J
+  0008..000a op=0b move-result-wide v4
+  000a..000e op=62 sget-object v3, LX/05N;->A00:LX/05N;
+  000e..0012 op=1a const-string v0, "null cannot be cast to non-null type kotlin.collections.Map<K of kotlin.collections.MapsKt__MapsKt.emptyMap, V of kotlin.collections.MapsKt__MapsKt.emptyMap>"
+  0012..0018 op=71 invoke-static {v3, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  0018..001a op=12 const/4 v6, #0x0
+  001a..001c op=12 const/4 v0, #0x4
+  001c..0022 op=71 invoke-static {v3, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0022..0024 op=07 move-object v2, v8
+  0024..002a op=74 invoke-virtual/range {v1..v6}, LX/0VP;->A0E(LX/178;Ljava/util/Map;JZ)LX/7bL;
+  002a..002c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

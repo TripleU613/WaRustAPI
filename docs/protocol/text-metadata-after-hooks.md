@@ -120,3 +120,7 @@ metadata artifacts; no cross-release semantic comparison is claimed. CLI referen
 API/library-symbol checks, formatting, whitespace and repository hygiene passed
 (2,065 local links; 99 bundles / 20,722,446 bytes). This source/docs chunk claims
 no fresh workspace/runtime suite or live account test.
+
+Follow-up: [storage, poll and indexing hooks](text-storage-after-hooks.md) adds
+seven registered boundaries, bringing current coverage to 36/54 with 18 remaining.
+Historical counts above describe this bundle; receipt admission remains unknown.

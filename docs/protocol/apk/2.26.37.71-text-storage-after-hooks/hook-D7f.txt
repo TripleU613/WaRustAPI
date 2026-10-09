@@ -1,0 +1,101 @@
+# APK-derived structural disassembly: LX/D7f;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=9
+  # full signature: LX/D7f;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v7, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=20 instance-of v0, v7, LX/17A;
+  000c..0010 op=38 if-eqz v0, +0x21
+  0010..0014 op=1f check-cast v7, LX/17A;
+  0014..0018 op=38 if-eqz v7, +0x1d
+  0018..001c op=54 iget-object v2, v7, LX/17A;->A0B:Ljava/util/concurrent/CopyOnWriteArrayList;
+  001c..0020 op=38 if-eqz v2, +0x19
+  0020..0026 op=6e invoke-virtual {v2}, Ljava/util/concurrent/CopyOnWriteArrayList;->isEmpty()Z
+  0026..0028 op=0a move-result v0
+  0028..002c op=39 if-nez v0, +0x13
+  002c..0032 op=6e invoke-virtual {v7}, LX/178;->B1V()Lcom/whatsapp/infra/core/jid/UserJid;
+  0032..0034 op=0c move-result-object v3
+  0034..0038 op=39 if-nez v3, +0xe
+  0038..003c op=53 iget-wide v1, v7, LX/178;->A0j:J
+  003c..0040 op=1a const-string v0, "PollVotePendingHistorySyncInserterPostProcessor/process missing parent sender pollRowId="
+  0040..0046 op=71 invoke-static {v1, v2, v0}, LX/1xj;->A13(JLjava/lang/String;)Ljava/lang/String;
+  0046..0048 op=0c move-result-object v0
+  0048..004e op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+  004e..0050 op=0e return-void
+  0050..0054 op=54 iget-object v1, v7, LX/17A;->A0C:Ljava/util/concurrent/CopyOnWriteArrayList;
+  0054..0058 op=38 if-eqz v1, +0x13
+  0058..005e op=6e invoke-virtual {v1}, Ljava/util/concurrent/CopyOnWriteArrayList;->isEmpty()Z
+  005e..0060 op=0a move-result v0
+  0060..0064 op=39 if-nez v0, +0xd
+  0064..0068 op=54 iget-object v0, v6, LX/D7f;->A01:LX/05B;
+  0068..006e op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  006e..0070 op=0c move-result-object v0
+  0070..0074 op=1f check-cast v0, LX/CS5;
+  0074..007a op=6e invoke-virtual {v0, v7, v1}, LX/CS5;->A01(LX/17A;Ljava/util/List;)V
+  007a..0080 op=6e invoke-virtual {v7}, LX/17A;->A0p()Ljava/util/List;
+  0080..0082 op=0c move-result-object v0
+  0082..0086 op=39 if-nez v0, +0x13
+  0086..008a op=54 iget-object v0, v6, LX/D7f;->A00:LX/05B;
+  008a..0090 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0090..0092 op=0c move-result-object v1
+  0092..0096 op=1f check-cast v1, LX/0Y5;
+  0096..009a op=13 const/16 v0, #0x43
+  009a..00a0 op=6e invoke-virtual {v1, v7, v0}, LX/0Y5;->A0D(LX/178;I)Ljava/util/ArrayList;
+  00a0..00a2 op=0c move-result-object v0
+  00a2..00a8 op=6e invoke-virtual {v7, v0}, LX/17A;->A0t(Ljava/util/List;)V
+  00a8..00ae op=6e invoke-virtual {v2}, Ljava/util/concurrent/CopyOnWriteArrayList;->iterator()Ljava/util/Iterator;
+  00ae..00b0 op=0c move-result-object v5
+  00b0..00b6 op=72 invoke-interface {v5}, Ljava/util/Iterator;->hasNext()Z
+  00b6..00b8 op=0a move-result v0
+  00b8..00bc op=38 if-eqz v0, +0x52
+  00bc..00c2 op=72 invoke-interface {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00c2..00c4 op=0c move-result-object v4
+  00c4..00c8 op=1f check-cast v4, LX/BnD;
+  00c8..00cc op=54 iget-object v2, v4, LX/BnD;->A01:Ljava/util/List;
+  00cc..00d0 op=39 if-nez v2, +0xc
+  00d0..00d4 op=54 iget-object v0, v4, LX/178;->A0i:LX/1gc;
+  00d4..00d8 op=54 iget-object v1, v0, LX/1gc;->A01:Ljava/lang/String;
+  00d8..00dc op=1a const-string v0, "PollVotePendingHistorySyncInserterPostProcessor/process missing option hashes voteKey="
+  00dc..00e2 op=71 invoke-static {v0, v1}, LX/1xp;->A1L(Ljava/lang/String;Ljava/lang/String;)V
+  00e2..00e4 op=28 goto -0x19
+  00e4..00e8 op=54 iget-object v1, v7, LX/17A;->A0A:Lcom/google/common/collect/ImmutableList;
+  00e8..00ec op=52 iget v0, v7, LX/17A;->A01:I
+  00ec..00f2 op=71 invoke-static {v2, v1, v0}, LX/Cjh;->A01(Ljava/util/List;Ljava/util/List;I)LX/CHs;
+  00f2..00f4 op=0c move-result-object v2
+  00f4..00f8 op=39 if-nez v2, +0x9
+  00f8..00fc op=54 iget-object v0, v4, LX/178;->A0i:LX/1gc;
+  00fc..0100 op=54 iget-object v1, v0, LX/1gc;->A01:Ljava/lang/String;
+  0100..0104 op=1a const-string v0, "PollVotePendingHistorySyncInserterPostProcessor/process dropping vote with invalid options voteKey="
+  0104..0106 op=28 goto -0x14
+  0106..010a op=53 iget-wide v0, v7, LX/178;->A0j:J
+  010a..010e op=5a iput-wide v0, v4, LX/1iZ;->A02:J
+  010e..0112 op=54 iget-object v0, v2, LX/CHs;->A00:Ljava/util/List;
+  0112..0118 op=6e invoke-virtual {v4, v0}, LX/BnD;->A0y(Ljava/util/List;)V
+  0118..011c op=54 iget-object v0, v2, LX/CHs;->A01:Ljava/util/List;
+  011c..0120 op=5b iput-object v0, v4, LX/BnD;->A01:Ljava/util/List;
+  0120..0124 op=54 iget-object v0, v6, LX/D7f;->A02:LX/05B;
+  0124..012a op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  012a..012c op=0c move-result-object v1
+  012c..0130 op=1f check-cast v1, LX/0ZG;
+  0130..0134 op=62 sget-object v0, LX/02S;->A01:Ljava/lang/Integer;
+  0134..013a op=6e invoke-virtual {v1, v3, v4, v7, v0}, LX/0ZG;->A04(Lcom/whatsapp/infra/core/jid/UserJid;LX/BnD;LX/17A;Ljava/lang/Integer;)I
+  013a..013c op=0a move-result v1
+  013c..0140 op=54 iget-object v0, v4, LX/178;->A0i:LX/1gc;
+  0140..0144 op=54 iget-object v2, v0, LX/1gc;->A01:Ljava/lang/String;
+  0144..0148 op=1a const-string v0, "PollVotePendingHistorySyncInserterPostProcessor/process storeResult="
+  0148..014e op=71 invoke-static {v1, v0}, LX/000;->A06(ILjava/lang/String;)Ljava/lang/StringBuilder;
+  014e..0150 op=0c move-result-object v1
+  0150..0154 op=1a const-string v0, " voteKey="
+  0154..015a op=71 invoke-static {v1, v0, v2}, LX/Ayp;->A1G(Ljava/lang/StringBuilder;Ljava/lang/String;Ljava/lang/String;)V
+  015a..015c op=28 goto -0x55
+  015c..0160 op=38 if-eqz v8, -0x87
+  0160..0166 op=6e invoke-virtual {v6}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0166..0168 op=0c move-result-object v0
+  0168..016e op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  016e..0170 op=0c move-result-object v0
+  0170..0172 op=27 throw v0
+  # exception table: 0 try range(s)
+.end method
