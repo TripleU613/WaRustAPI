@@ -1,0 +1,254 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "targets": {
+    "device-receipt-address-scope": {
+      "class": "LX/0Z5;",
+      "method": "A04",
+      "method_shorty": "LL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "user-receipt-address-scope": {
+      "class": "LX/8G8;",
+      "method": "A02",
+      "method_shorty": "LLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "receipt-delete-cache-worker": {
+      "class": "LX/DNd;",
+      "method": "run",
+      "method_shorty": "V",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "identity-change-receipt-branch": {
+      "class": "LX/D4x;",
+      "method": "A00",
+      "method_shorty": "VLLZZ",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "anchors": [
+        "IdentityChangeManager/onIdentityChangedOrDeleted/rotating sender key deviceJid="
+      ]
+    },
+    "primary-device-version-increment": {
+      "class": "LX/0Z7;",
+      "method": "A02",
+      "method_shorty": "VL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "identity-privacy-token-check": {
+      "class": "LX/HxT;",
+      "method": "A02",
+      "method_shorty": "VL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "device-receipt-cache-evict": {
+      "class": "LX/0Z5;",
+      "method": "A07",
+      "method_shorty": "VJ",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "anchors": []
+    },
+    "primary-device-version-read": {
+      "class": "LX/0Z7;",
+      "method": "A00",
+      "method_shorty": "LL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "anchors": []
+    },
+    "privacy-token-user-scope": {
+      "class": "LX/HxT;",
+      "method": "A00",
+      "method_shorty": "LLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "anchors": []
+    },
+    "privacy-token-refresh-policy": {
+      "class": "LX/HxT;",
+      "method": "A05",
+      "method_shorty": "ZL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "anchors": []
+    },
+    "receipt-counterpart-gate": {
+      "class": "LX/0Yo;",
+      "method": "A0H",
+      "method_shorty": "Z",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "anchors": []
+    },
+    "receipt-counterpart-resolver": {
+      "class": "LX/0Yo;",
+      "method": "A02",
+      "method_shorty": "LL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "anchors": []
+    },
+    "identity-own-user-predicate": {
+      "class": "LX/1xj;",
+      "method": "A1X",
+      "method_shorty": "ZLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "anchors": []
+    },
+    "privacy-token-refresh-unmark": {
+      "class": "LX/HxT;",
+      "method": "A03",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "anchors": []
+    },
+    "device-receipt-cleanup-dispatch": {
+      "class": "LX/0Z4;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "method": "A07",
+      "method_shorty": "VL"
+    },
+    "device-receipt-store-cleanup": {
+      "class": "LX/0Z5;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "method": "A0B",
+      "method_shorty": "VL"
+    },
+    "receipt-message-chunks": {
+      "class": "LX/0eK;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "receipt-message-chunk-iterator": {
+      "class": "LX/0eL;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "identity-device-singleton": {
+      "class": "LX/1xg;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "method": "A1R",
+      "method_shorty": "LL"
+    },
+    "identity-change-receipt-observer": {
+      "class": "LX/D4x;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "method": "BqC",
+      "method_shorty": "VLLZ"
+    },
+    "identity-delete-receipt-observer": {
+      "class": "LX/D4x;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ],
+      "method": "BqD",
+      "method_shorty": "VL"
+    },
+    "message-receipt-store-columns": {
+      "class": "LX/0Z6;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    },
+    "addon-receipt-store-columns": {
+      "class": "LX/0ZE;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/inbox.rs"
+      ]
+    }
+  }
+}

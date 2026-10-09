@@ -1,0 +1,110 @@
+{
+  "addon-receipt-store-columns.txt": {
+    "bytes": 36477,
+    "sha256": "34d6b6e529cebd88e1c023698a7b718638f680fe3f13b05138d82fcfcc69ffb1"
+  },
+  "device-receipt-address-scope.txt": {
+    "bytes": 2992,
+    "sha256": "9d7b7c6e78bd8cb890af1e303bc28fab5c1ab0c66a199bda4614644c27add303"
+  },
+  "device-receipt-cache-evict.txt": {
+    "bytes": 644,
+    "sha256": "0220df8af97ab5d35ce643a0bbb65537370aa5923c200c2d5e87491c3e3f0fd0"
+  },
+  "device-receipt-cleanup-dispatch.txt": {
+    "bytes": 18016,
+    "sha256": "cefacf214a568ee74edbbe1a1f02fb06094ede386f5f880a487ba40d8f0ba282"
+  },
+  "device-receipt-store-cleanup.txt": {
+    "bytes": 5352,
+    "sha256": "d0e2d3ddeefd4e764107b0591f2d56b0ca43b33fe1e8f6760cc031f2cf0d51ad"
+  },
+  "identity-change-receipt-branch.txt": {
+    "bytes": 54444,
+    "sha256": "36b69585696885bead0c2d585a2fedb1c54a152198334ab6fdb5265a2eb73167"
+  },
+  "identity-change-receipt-observer.txt": {
+    "bytes": 522,
+    "sha256": "179bc0ffd80e64e38e15b0554b3951f10766032aee6759fc2d5912a0c75d45fa"
+  },
+  "identity-delete-receipt-observer.txt": {
+    "bytes": 592,
+    "sha256": "bf91aae7187e8c0757ab2f023c40e54608170e92eae72eea275cf170d1c90829"
+  },
+  "identity-device-singleton.txt": {
+    "bytes": 589,
+    "sha256": "3c504ca86ac74853a229ad1548096201b7866d89a85f84b7db0059ea8fd9eaa6"
+  },
+  "identity-own-user-predicate.txt": {
+    "bytes": 706,
+    "sha256": "c329994164d0cec154392ab88fb6735bf560b3fe868227332efeb69ca32a9c0a"
+  },
+  "identity-privacy-token-check.txt": {
+    "bytes": 1912,
+    "sha256": "9ee687169aeda3581e60f411b129206ab6c20ad01275fadb6324194dfbb67a9f"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-receipt-store-columns.txt": {
+    "bytes": 39542,
+    "sha256": "1eff38dc607c25b91cbde5527367f6924111c0ad71af09017b2752dc310a9825"
+  },
+  "primary-device-version-increment.txt": {
+    "bytes": 3203,
+    "sha256": "bce34ec19e0976ede8cd291df8cc1016f0d07d22f6973abc8d9b8f3d90662817"
+  },
+  "primary-device-version-read.txt": {
+    "bytes": 4182,
+    "sha256": "df9f3419f630369dd6cc556cf9bacd072bd10636a5498f11f17cbe6c80345319"
+  },
+  "privacy-token-refresh-policy.txt": {
+    "bytes": 1266,
+    "sha256": "0e302e5ea73f6436e81fef0edc01627411956c0d4d6e3f9de0fbac3ff7c7b8c1"
+  },
+  "privacy-token-refresh-unmark.txt": {
+    "bytes": 996,
+    "sha256": "bb10f00556ed3027b94060072939e361b187bb56b4a34aa61a8e679064d677aa"
+  },
+  "privacy-token-user-scope.txt": {
+    "bytes": 1422,
+    "sha256": "fcd2b27d76f8b14d20288bbfa012ca69dd803d1d3c07a231ec180d9712341d72"
+  },
+  "receipt-counterpart-gate.txt": {
+    "bytes": 2319,
+    "sha256": "45406374c0a702fe525f5672ed72b661637c85a556ca56ecde14f77a60b8754d"
+  },
+  "receipt-counterpart-resolver.txt": {
+    "bytes": 709,
+    "sha256": "e9493427701542f3b9d039a309a52debda83f319cfc4d91607c4eb3a66615ccc"
+  },
+  "receipt-delete-cache-worker.txt": {
+    "bytes": 100594,
+    "sha256": "4ee441ec0749bc829987cda9e8e2bb4732aa0a3d43a45778fbafd97396a6eb46"
+  },
+  "receipt-message-chunk-iterator.txt": {
+    "bytes": 2304,
+    "sha256": "d370784044dc092ca43ed54c5f6213281751f8c78bbbee3a945c8c8ba8736c13"
+  },
+  "receipt-message-chunks.txt": {
+    "bytes": 1297,
+    "sha256": "bafc54e3ad0cf2a9eb17390fe17831d90ba132ccd0e436d6cdea09c87b79ff00"
+  },
+  "targets.json": {
+    "bytes": 10489,
+    "sha256": "959458302fef784d568f809b9af60e51bb680bf6a1ad1f82146a877ae17447e1"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "user-receipt-address-scope.txt": {
+    "bytes": 2067,
+    "sha256": "fa55d6a5f476b1599a9ded2904532b5bb27fd4b3ad99326fc05cf4eabb2736fc"
+  }
+}

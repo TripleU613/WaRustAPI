@@ -1,0 +1,94 @@
+# APK-derived structural disassembly: LX/0Z5;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0B(VL) flags=0x1 registers=12
+  0000..0002 op=12 const/4 v9, #0x0
+  0002..0008 op=72 invoke-interface {v11}, Ljava/util/Set;->size(I)
+  0008..000a op=0a move-result v0
+  000a..000e op=22 new-instance v8, Ljava/util/HashSet;
+  000e..0014 op=70 invoke-direct {v8, v0}, Ljava/util/HashSet;-><init>(VI)
+  0014..001a op=72 invoke-interface {v11}, Ljava/util/Set;->iterator(L)
+  001a..001c op=0c move-result-object v2
+  001c..0022 op=72 invoke-interface {v2}, Ljava/util/Iterator;->hasNext(Z)
+  0022..0024 op=0a move-result v0
+  0024..0028 op=38 if-eqz v0, +0x16
+  0028..002e op=72 invoke-interface {v2}, Ljava/util/Iterator;->next(L)
+  002e..0030 op=0c move-result-object v1
+  0030..0034 op=1f check-cast v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0034..003a op=6e invoke-virtual {v1}, Lcom/whatsapp/infra/core/jid/DeviceJid;->isPrimary(Z)
+  003a..003c op=0a move-result v0
+  003c..0040 op=39 if-nez v0, -0x10
+  0040..0046 op=6e invoke-virtual {v10, v1}, LX/0Z5;->A04(LL)
+  0046..0048 op=0c move-result-object v0
+  0048..004e op=72 invoke-interface {v8, v0}, Ljava/util/Set;->addAll(ZL)
+  004e..0050 op=28 goto -0x19
+  0050..0056 op=6e invoke-virtual {v8}, Ljava/util/AbstractCollection;->isEmpty(Z)
+  0056..0058 op=0a move-result v0
+  0058..005c op=39 if-nez v0, +0x87
+  005c..0062 op=6e invoke-virtual {v10}, LX/0Z5;->A0I(L)
+  0062..0064 op=0c move-result-object v4
+  0064..006a op=6e invoke-virtual {v8}, Ljava/util/AbstractCollection;->size(I)
+  006a..006c op=0a move-result v0
+  006c..0072 op=71 invoke-static {v0}, LX/0ZU;->A00(LI)
+  0072..0074 op=0c move-result-object v3
+  0074..007a op=6e invoke-virtual {v10}, LX/0Z5;->A0J(L)
+  007a..007c op=0c move-result-object v2
+  007c..0080 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0080..0086 op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>(V)
+  0086..008c op=6e invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;->append(LL)
+  008c..0090 op=1a const-string v0, " IN "
+  0090..0096 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0096..009c op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(LL)
+  009c..00a0 op=1a const-string v0, " AND "
+  00a0..00a6 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  00a6..00ac op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(LL)
+  00ac..00b0 op=1a const-string v0, " IS NULL"
+  00b0..00b6 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  00b6..00bc op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString(L)
+  00bc..00be op=0c move-result-object v7
+  00be..00c2 op=54 iget-object v0, v10, LX/0Z5;->A04:LX/0Gc;
+  00c2..00c8 op=6e invoke-virtual {v0}, LX/0Gc;->A07(L)
+  00c8..00ca op=0c move-result-object v6
+  00ca..00ce op=54 iget-object v5, v6, LX/0ZN;->A02:LX/0IY;
+  00ce..00d4 op=6e invoke-virtual {v10}, LX/0Z5;->A0G(L)
+  00d4..00d6 op=0c move-result-object v4
+  00d6..00da op=23 new-array v0, v9, [Ljava/lang/String;
+  00da..00e0 op=72 invoke-interface {v8, v0}, Ljava/util/Collection;->toArray(LL)
+  00e0..00e2 op=0c move-result-object v3
+  00e2..00e6 op=1f check-cast v3, [Ljava/lang/String;
+  00e6..00ec op=6e invoke-virtual {v10}, LX/0Z5;->A0H(L)
+  00ec..00ee op=0c move-result-object v2
+  00ee..00f2 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  00f2..00f8 op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>(V)
+  00f8..00fe op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(LL)
+  00fe..0102 op=1a const-string v0, "/deleteCompanionReceiptsForUndeliveredMessages/DELETE_RECEIPT_DEVICE"
+  0102..0108 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0108..010e op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString(L)
+  010e..0110 op=0c move-result-object v0
+  0110..0116 op=6e invoke-virtual {v5, v4, v7, v0, v3}, LX/0IY;->A04(ILLLL)
+  0116..0118 op=0a move-result v0
+  0118..011e op=6e invoke-virtual {v6}, LX/0ZN;->close(V)
+  011e..0122 op=3d if-lez v0, +0x24
+  0122..0126 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0126..012c op=70 invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>(V)
+  012c..0132 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(LL)
+  0132..0136 op=1a const-string v0, "/deleteCompanionReceiptsForUndeliveredMessages/deviceIds = "
+  0136..013c op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  013c..0142 op=6e invoke-virtual {v1, v11}, Ljava/lang/StringBuilder;->append(LL)
+  0142..0148 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString(L)
+  0148..014a op=0c move-result-object v0
+  014a..0150 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(VL)
+  0150..0156 op=6e invoke-virtual {v10}, LX/0Z5;->A06(V)
+  0156..0158 op=0e return-void
+  0158..015a op=0d move-exception v1
+  015a..015c op=27 throw v1
+  015c..015e op=0d move-exception v0
+  015e..0164 op=71 invoke-static {v6, v1}, LX/07i;->A00(VLL)
+  0164..0166 op=27 throw v0
+  0166..0168 op=0e return-void
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0065..008c -> 00ac
+  # catch <all> code_units 00ad..00ae -> 00ae
+.end method

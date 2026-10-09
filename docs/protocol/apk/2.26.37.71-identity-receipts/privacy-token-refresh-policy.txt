@@ -1,0 +1,29 @@
+# APK-derived structural disassembly: LX/HxT;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A05(ZL) flags=0x11 registers=4
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v3, v0}, LX/00h;->A0A(VLI)
+  0008..000c op=54 iget-object v0, v2, LX/HxT;->A05:LX/00l;
+  000c..0012 op=71 invoke-static {v0}, LX/1xg;->A1M(LL)
+  0012..0014 op=0c move-result-object v1
+  0014..0018 op=1f check-cast v1, Ljava/util/Set;
+  0018..001a op=1d monitor-enter
+  001a..0020 op=72 invoke-interface {v1, v3}, Ljava/util/Set;->contains(ZL)
+  0020..0022 op=0a move-result v0
+  0022..0026 op=39 if-nez v0, +0x6
+  0026..002c op=72 invoke-interface {v1, v3}, Ljava/util/Set;->add(ZL)
+  002c..002e op=28 goto +0x3
+  002e..0030 op=12 const/4 v0, #0x0
+  0030..0032 op=28 goto +0x2
+  0032..0034 op=12 const/4 v0, #0x1
+  0034..0036 op=1e monitor-exit
+  0036..0038 op=0f return v0
+  0038..003a op=0d move-exception v0
+  003a..003c op=1e monitor-exit
+  003c..003e op=27 throw v0
+  # exception table: 1 try range(s)
+  # catch <all> code_units 000d..001a -> 001c
+.end method

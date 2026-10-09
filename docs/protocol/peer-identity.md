@@ -2630,3 +2630,17 @@ established. The subsequent consumed-marker correction was validated offline
 with the genuine Signal historical-row fixture; that final correction was not
 separately exercised by another live window. No original uncertain action was
 replayed or identity changed.
+
+### Identity-change receipt/version/token scope (2026-10-09)
+
+Static APK 2.26.37.71 D4x receipt selection now has attributable helper coverage:
+primary message-ID intersection, scoped null-timestamp companion/device/add-on
+rows, coexistence/status paths, persistent primary_device_version increments
+and conditional refresh of an existing unexpired privacy token. The reviewed
+bundle preserves 23 topics/53 declarations, 28 files/323,094 bytes, with exact
+register operands and catch metadata. Runtime mapping/migration, cache callback
+closure and refresh-job lifecycle remain incomplete. Existing Rust incoming
+token storage, authenticated identity archival and sender-key exposure policy
+are unchanged; native receipt caches are not receipt-outbox ACK reservations.
+No private state or server request was changed. [Full source and next port
+boundaries](identity-receipts.md).

@@ -1,0 +1,676 @@
+# APK-derived structural disassembly: LX/0ZE;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(V) flags=0x10001 registers=10
+  0000..0004 op=13 const/16 v0, #0x480
+  0004..000a op=71 invoke-static {v0}, LX/00C;->A02(LI)
+  000a..000c op=0c move-result-object v4
+  000c..0010 op=1f check-cast v4, LX/0VT;
+  0010..0014 op=13 const/16 v0, #0xfd
+  0014..001a op=71 invoke-static {v0}, LX/00C;->A02(LI)
+  001a..001c op=0c move-result-object v3
+  001c..0020 op=1f check-cast v3, LX/0AH;
+  0020..0024 op=13 const/16 v0, #0x47f
+  0024..002a op=71 invoke-static {v0}, LX/00C;->A02(LI)
+  002a..002c op=0c move-result-object v6
+  002c..0030 op=1f check-cast v6, LX/0Gc;
+  0030..0034 op=13 const/16 v0, #0xc9b
+  0034..003a op=71 invoke-static {v0}, LX/00C;->A00(LI)
+  003a..003c op=0c move-result-object v2
+  003c..0040 op=13 const/16 v0, #0x48c
+  0040..0046 op=71 invoke-static {v0}, LX/00C;->A02(LI)
+  0046..0048 op=0c move-result-object v7
+  0048..004c op=1f check-cast v7, LX/0Z7;
+  004c..0050 op=13 const/16 v0, #0x485
+  0050..0056 op=71 invoke-static {v0}, LX/00C;->A02(LI)
+  0056..0058 op=0c move-result-object v5
+  0058..005c op=1f check-cast v5, LX/0Fy;
+  005c..005e op=12 const/4 v0, #0x0
+  005e..0064 op=71 invoke-static {v4, v0}, LX/00h;->A0A(VLI)
+  0064..0066 op=12 const/4 v0, #0x1
+  0066..006c op=71 invoke-static {v3, v0}, LX/00h;->A0A(VLI)
+  006c..006e op=12 const/4 v0, #0x2
+  006e..0074 op=71 invoke-static {v6, v0}, LX/00h;->A0A(VLI)
+  0074..0076 op=12 const/4 v0, #0x3
+  0076..007c op=71 invoke-static {v2, v0}, LX/00h;->A0A(VLI)
+  007c..007e op=12 const/4 v0, #0x4
+  007e..0084 op=71 invoke-static {v7, v0}, LX/00h;->A0A(VLI)
+  0084..0086 op=12 const/4 v0, #0x5
+  0086..008c op=71 invoke-static {v5, v0}, LX/00h;->A0A(VLI)
+  008c..0090 op=13 const/16 v8, #0xfa
+  0090..0092 op=07 move-object v1, v9
+  0092..0098 op=76 invoke-direct/range {v1..v8}, LX/0Z5;-><init>(VLLLLLLI)
+  0098..009c op=13 const/16 v0, #0x473
+  009c..00a2 op=71 invoke-static {v0}, LX/00C;->A02(LI)
+  00a2..00a4 op=0c move-result-object v0
+  00a4..00a8 op=1f check-cast v0, LX/0VS;
+  00a8..00ac op=5b iput-object v0, v9, LX/0ZE;->A00:LX/0VS;
+  00ac..00ae op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method A00(LL) flags=0x2 registers=13
+  0000..0004 op=22 new-instance v8, LX/7hf;
+  0004..000a op=70 invoke-direct {v8}, LX/7hf;-><init>(V)
+  000a..000e op=54 iget-object v7, v12, LX/1gc;->A00:LX/0Cy;
+  000e..0014 op=71 invoke-static {v7}, LX/00K;->A06(VL)
+  0014..0018 op=54 iget-object v0, v11, LX/0ZE;->A00:LX/0VS;
+  0018..001e op=6e invoke-virtual {v0, v7}, LX/0VS;->A0C(JL)
+  001e..0020 op=0b move-result-wide v0
+  0020..0026 op=71 invoke-static {v0, v1}, Ljava/lang/String;->valueOf(LJ)
+  0026..0028 op=0c move-result-object v4
+  0028..002c op=55 iget-boolean v0, v12, LX/1gc;->A02:Z
+  002c..0030 op=38 if-eqz v0, +0x19
+  0030..0034 op=1a const-string v2, "1"
+  0034..0038 op=54 iget-object v1, v12, LX/1gc;->A01:Ljava/lang/String;
+  0038..003a op=12 const/4 v0, #0x3
+  003a..003e op=23 new-array v3, v0, [Ljava/lang/String;
+  003e..0040 op=12 const/4 v0, #0x0
+  0040..0044 op=4d aput-object v4, v3, v0
+  0044..0046 op=12 const/4 v0, #0x1
+  0046..004a op=4d aput-object v2, v3, v0
+  004a..004c op=12 const/4 v0, #0x2
+  004c..0050 op=4d aput-object v1, v3, v0
+  0050..0054 op=54 iget-object v0, v11, LX/0Z5;->A04:LX/0Gc;
+  0054..005a op=6e invoke-virtual {v0}, LX/0Gc;->A06(L)
+  005a..005c op=0c move-result-object v5
+  005c..005e op=28 goto +0x4
+  005e..0062 op=1a const-string v2, "0"
+  0062..0064 op=28 goto -0x17
+  0064..0068 op=54 iget-object v2, v5, LX/0ZN;->A02:LX/0IY;
+  0068..006c op=62 sget-object v1, LX/1Yu;->A01:Ljava/lang/String;
+  006c..0070 op=1a const-string v0, "GET_MESSAGE_ADD_ON_DEVICE_RECEIPTS_SQL"
+  0070..0076 op=6e invoke-virtual {v2, v1, v0, v3}, LX/0IY;->A0A(LLLL)
+  0076..0078 op=0c move-result-object v6
+  0078..007c op=1a const-string v0, "receipt_device_jid_row_id"
+  007c..0082 op=72 invoke-interface {v6, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  0082..0084 op=0a move-result v4
+  0084..0088 op=1a const-string v0, "receipt_device_timestamp"
+  0088..008e op=72 invoke-interface {v6, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  008e..0090 op=0a move-result v3
+  0090..0096 op=72 invoke-interface {v6}, Landroid/database/Cursor;->moveToNext(Z)
+  0096..0098 op=0a move-result v0
+  0098..009c op=38 if-eqz v0, +0x6e
+  009c..00a2 op=72 invoke-interface {v6, v4}, Landroid/database/Cursor;->getLong(JI)
+  00a2..00a4 op=0b move-result-wide v1
+  00a4..00a8 op=54 iget-object v10, v11, LX/0Z5;->A02:LX/0VT;
+  00a8..00ac op=1c const-class v9, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  00ac..00ae op=12 const/4 v0, #0x0
+  00ae..00b4 op=6e invoke-virtual {v10, v9, v1, v2, v0}, LX/0VT;->A0D(LLJZ)
+  00b4..00b6 op=0c move-result-object v9
+  00b6..00ba op=1f check-cast v9, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  00ba..00be op=38 if-eqz v9, +0x34
+  00be..00c4 op=71 invoke-static {v7}, LX/0DE;->A0l(ZL)
+  00c4..00c6 op=0a move-result v0
+  00c6..00ca op=38 if-eqz v0, +0x2b
+  00ca..00ce op=54 iget-object v0, v11, LX/0Z5;->A06:LX/00s;
+  00ce..00d4 op=72 invoke-interface {v0}, LX/00s;->get(L)
+  00d4..00d6 op=0c move-result-object v1
+  00d6..00da op=1f check-cast v1, LX/0Yo;
+  00da..00de op=54 iget-object v0, v9, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+  00de..00e4 op=6e invoke-virtual {v1, v0}, LX/0Yo;->A03(LL)
+  00e4..00e6 op=0c move-result-object v2
+  00e6..00ea op=1f check-cast v2, Lcom/whatsapp/infra/core/jid/UserJid;
+  00ea..00f0 op=6e invoke-virtual {v9}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice(I)
+  00f0..00f2 op=0a move-result v1
+  00f2..00f6 op=62 sget-object v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0DK;
+  00f6..00fc op=6e invoke-virtual {v0, v2, v1}, LX/0DK;->A02(LLI)
+  00fc..00fe op=0c move-result-object v9
+  00fe..0104 op=72 invoke-interface {v6, v3}, Landroid/database/Cursor;->getLong(JI)
+  0104..0106 op=0b move-result-wide v0
+  0106..010a op=22 new-instance v2, LX/7QL;
+  010a..0110 op=70 invoke-direct {v2}, Ljava/lang/Object;-><init>(V)
+  0110..0114 op=5a iput-wide v0, v2, LX/7QL;->A00:J
+  0114..011a op=6e invoke-virtual {v8, v9, v2}, LX/7hf;->A00(VLL)
+  011a..011c op=28 goto -0x45
+  011c..0120 op=54 iget-object v2, v9, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+  0120..0122 op=28 goto -0x1d
+  0122..0126 op=22 new-instance v9, Ljava/lang/StringBuilder;
+  0126..012c op=70 invoke-direct {v9}, Ljava/lang/StringBuilder;-><init>(V)
+  012c..0130 op=1a const-string v0, "MessageAddOnReceiptDeviceStore//getmessagedevicereceipts: got a null deviceJid for "
+  0130..0136 op=6e invoke-virtual {v9, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0136..013c op=6e invoke-virtual {v9, v12}, Ljava/lang/StringBuilder;->append(LL)
+  013c..0140 op=1a const-string v0, ", deviceJidRowId="
+  0140..0146 op=6e invoke-virtual {v9, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0146..014c op=6e invoke-virtual {v9, v1, v2}, Ljava/lang/StringBuilder;->append(LJ)
+  014c..0150 op=1a const-string v0, ", jid="
+  0150..0156 op=6e invoke-virtual {v9, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0156..015c op=6e invoke-virtual {v10, v1, v2}, LX/0VT;->A09(LJ)
+  015c..015e op=0c move-result-object v0
+  015e..0164 op=6e invoke-virtual {v9, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0164..016a op=6e invoke-virtual {v9}, Ljava/lang/Object;->toString(L)
+  016a..016c op=0c move-result-object v0
+  016c..0172 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+  0172..0174 op=28 goto -0x71
+  0174..017a op=72 invoke-interface {v6}, Landroid/database/Cursor;->close(V)
+  017a..0180 op=6e invoke-virtual {v5}, LX/0ZN;->close(V)
+  0180..0182 op=11 return-object v8
+  0182..0184 op=0d move-exception v1
+  0184..0188 op=38 if-eqz v6, +0xa
+  0188..018e op=72 invoke-interface {v6}, Landroid/database/Cursor;->close(V)
+  018e..0190 op=28 goto +0x5
+  0190..0192 op=0d move-exception v0
+  0192..0198 op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  0198..019a op=27 throw v1
+  019a..019c op=0d move-exception v1
+  019c..01a2 op=6e invoke-virtual {v5}, LX/0ZN;->close(V)
+  01a2..01a4 op=27 throw v1
+  01a4..01a6 op=0d move-exception v0
+  01a6..01ac op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  01ac..01ae op=27 throw v1
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0032..003c -> 00cd
+  # catch <all> code_units 003c..00ba -> 00c1
+  # catch <all> code_units 00ba..00bd -> 00cd
+  # catch <all> code_units 00c4..00c8 -> 00c8
+  # catch <all> code_units 00c9..00cd -> 00cd
+  # catch <all> code_units 00ce..00d1 -> 00d2
+.end method
+
+.method A0E(LL) flags=0x1 registers=5
+  0000..0004 op=20 instance-of v0, v4, LX/1iZ;
+  0004..000a op=71 invoke-static {v0}, LX/00K;->A0B(VZ)
+  000a..0010 op=6e invoke-virtual {v3, v4}, LX/0Z5;->A02(LL)
+  0010..0012 op=0c move-result-object v0
+  0012..0016 op=39 if-nez v0, +0xe
+  0016..001a op=54 iget-object v0, v4, LX/178;->A0i:LX/1gc;
+  001a..0020 op=70 invoke-direct {v3, v0}, LX/0ZE;->A00(LL)
+  0020..0022 op=0c move-result-object v2
+  0022..0026 op=53 iget-wide v0, v4, LX/178;->A0j:J
+  0026..002c op=6e invoke-virtual {v3, v2, v0, v1}, LX/0Z5;->A03(LLJ)
+  002c..002e op=0c move-result-object v0
+  002e..0030 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
+
+.method A0F(L) flags=0x1 registers=2
+  0000..0004 op=1a const-string v0, "message_add_on_row_id"
+  0004..0006 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
+
+.method A0G(L) flags=0x1 registers=2
+  0000..0004 op=1a const-string v0, "message_add_on_receipt_device"
+  0004..0006 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
+
+.method A0H(L) flags=0x1 registers=2
+  0000..0004 op=1a const-string v0, "MessageAddOnReceiptDeviceStore/"
+  0004..0006 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
+
+.method A0I(L) flags=0x1 registers=2
+  0000..0004 op=1a const-string v0, "receipt_device_jid_row_id"
+  0004..0006 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
+
+.method A0J(L) flags=0x1 registers=2
+  0000..0004 op=1a const-string v0, "receipt_device_timestamp"
+  0004..0006 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
+
+.method A0K(L) flags=0x1 registers=2
+  0000..0004 op=1a const-string v0, "primary_device_version"
+  0004..0006 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
+
+.method A0L(LI) flags=0x1 registers=6
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0006 op=3d if-lez v5, +0x3
+  0006..0008 op=12 const/4 v0, #0x1
+  0008..000e op=71 invoke-static {v0}, LX/00K;->A0B(VZ)
+  000e..0012 op=1a const-string v0, "\n          INSERT INTO message_add_on_receipt_device \n            (message_add_on_row_id, \n             receipt_device_jid_row_id, \n             primary_device_version)\n           SELECT ?, ?, ?\n       "
+  0012..0016 op=22 new-instance v3, Ljava/lang/StringBuilder;
+  0016..001c op=70 invoke-direct {v3, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+  001c..0020 op=d8 add-int/lit8 v2, v5, #0xff
+  0020..0022 op=12 const/4 v1, #0x0
+  0022..0026 op=35 if-ge v1, v2, +0xa
+  0026..002a op=1a const-string v0, " UNION ALL SELECT ?,?,?"
+  002a..0030 op=6e invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0030..0034 op=d8 add-int/lit8 v1, v1, #0x1
+  0034..0036 op=28 goto -0x9
+  0036..003c op=6e invoke-virtual {v3}, Ljava/lang/Object;->toString(L)
+  003c..003e op=0c move-result-object v0
+  003e..0044 op=71 invoke-static {v0}, LX/00h;->A06(VL)
+  0044..0046 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
+
+.method A0M(LL) flags=0x1 registers=13
+  0000..0004 op=22 new-instance v7, Ljava/util/HashMap;
+  0004..000a op=70 invoke-direct {v7}, Ljava/util/HashMap;-><init>(V)
+  000a..000e op=54 iget-object v6, v12, LX/1gc;->A00:LX/0Cy;
+  000e..0014 op=71 invoke-static {v6}, LX/00K;->A06(VL)
+  0014..0018 op=54 iget-object v0, v11, LX/0ZE;->A00:LX/0VS;
+  0018..001e op=6e invoke-virtual {v0, v6}, LX/0VS;->A0C(JL)
+  001e..0020 op=0b move-result-wide v0
+  0020..0026 op=71 invoke-static {v0, v1}, Ljava/lang/String;->valueOf(LJ)
+  0026..0028 op=0c move-result-object v4
+  0028..002c op=55 iget-boolean v0, v12, LX/1gc;->A02:Z
+  002c..0030 op=38 if-eqz v0, +0x19
+  0030..0034 op=1a const-string v2, "1"
+  0034..0038 op=54 iget-object v1, v12, LX/1gc;->A01:Ljava/lang/String;
+  0038..003a op=12 const/4 v0, #0x3
+  003a..003e op=23 new-array v3, v0, [Ljava/lang/String;
+  003e..0040 op=12 const/4 v0, #0x0
+  0040..0044 op=4d aput-object v4, v3, v0
+  0044..0046 op=12 const/4 v0, #0x1
+  0046..004a op=4d aput-object v2, v3, v0
+  004a..004c op=12 const/4 v0, #0x2
+  004c..0050 op=4d aput-object v1, v3, v0
+  0050..0054 op=54 iget-object v0, v11, LX/0Z5;->A04:LX/0Gc;
+  0054..005a op=6e invoke-virtual {v0}, LX/0Gc;->A06(L)
+  005a..005c op=0c move-result-object v5
+  005c..005e op=28 goto +0x4
+  005e..0062 op=1a const-string v2, "0"
+  0062..0064 op=28 goto -0x17
+  0064..0068 op=54 iget-object v2, v5, LX/0ZN;->A02:LX/0IY;
+  0068..006c op=62 sget-object v1, LX/1Yu;->A02:Ljava/lang/String;
+  006c..0070 op=1a const-string v0, "MessageAddOnReceiptDeviceStore/GET_PRIMARY_DEVICE_VERSIONS_SQL"
+  0070..0076 op=6e invoke-virtual {v2, v1, v0, v3}, LX/0IY;->A0A(LLLL)
+  0076..0078 op=0c move-result-object v4
+  0078..007c op=1a const-string v0, "primary_device_version"
+  007c..0082 op=72 invoke-interface {v4, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  0082..0084 op=0a move-result v8
+  0084..0088 op=1a const-string v0, "receipt_device_jid_row_id"
+  0088..008e op=72 invoke-interface {v4, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  008e..0090 op=0a move-result v3
+  0090..0096 op=72 invoke-interface {v4}, Landroid/database/Cursor;->moveToNext(Z)
+  0096..0098 op=0a move-result v0
+  0098..009c op=38 if-eqz v0, +0x44
+  009c..00a2 op=72 invoke-interface {v4, v3}, Landroid/database/Cursor;->getLong(JI)
+  00a2..00a4 op=0b move-result-wide v0
+  00a4..00a8 op=54 iget-object v10, v11, LX/0Z5;->A02:LX/0VT;
+  00a8..00ac op=1c const-class v9, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  00ac..00ae op=12 const/4 v2, #0x0
+  00ae..00b4 op=6e invoke-virtual {v10, v9, v0, v1, v2}, LX/0VT;->A0D(LLJZ)
+  00b4..00b6 op=0c move-result-object v2
+  00b6..00ba op=1f check-cast v2, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  00ba..00be op=38 if-eqz v2, -0x15
+  00be..00c4 op=6e invoke-virtual {v2}, Lcom/whatsapp/infra/core/jid/DeviceJid;->isPrimary(Z)
+  00c4..00c6 op=0a move-result v0
+  00c6..00ca op=38 if-eqz v0, -0x1b
+  00ca..00d0 op=72 invoke-interface {v4, v8}, Landroid/database/Cursor;->isNull(ZI)
+  00d0..00d2 op=0a move-result v0
+  00d2..00d6 op=39 if-nez v0, -0x21
+  00d6..00dc op=71 invoke-static {v6}, LX/0DE;->A0l(ZL)
+  00dc..00de op=0a move-result v0
+  00de..00e2 op=38 if-eqz v0, +0x1e
+  00e2..00e6 op=54 iget-object v0, v11, LX/0Z5;->A06:LX/00s;
+  00e6..00ec op=72 invoke-interface {v0}, LX/00s;->get(L)
+  00ec..00ee op=0c move-result-object v1
+  00ee..00f2 op=1f check-cast v1, LX/0Yo;
+  00f2..00f6 op=54 iget-object v0, v2, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+  00f6..00fc op=6e invoke-virtual {v1, v0}, LX/0Yo;->A03(LL)
+  00fc..00fe op=0c move-result-object v2
+  00fe..0102 op=1f check-cast v2, Lcom/whatsapp/infra/core/jid/UserJid;
+  0102..0108 op=72 invoke-interface {v4, v8}, Landroid/database/Cursor;->getLong(JI)
+  0108..010a op=0b move-result-wide v0
+  010a..0110 op=71 invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(LJ)
+  0110..0112 op=0c move-result-object v0
+  0112..0118 op=6e invoke-virtual {v7, v2, v0}, Ljava/util/AbstractMap;->put(LLL)
+  0118..011a op=28 goto -0x44
+  011a..011e op=54 iget-object v2, v2, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+  011e..0120 op=28 goto -0x10
+  0120..0126 op=72 invoke-interface {v4}, Landroid/database/Cursor;->close(V)
+  0126..012c op=6e invoke-virtual {v5}, LX/0ZN;->close(V)
+  012c..012e op=11 return-object v7
+  012e..0130 op=0d move-exception v1
+  0130..0134 op=38 if-eqz v4, +0xa
+  0134..013a op=72 invoke-interface {v4}, Landroid/database/Cursor;->close(V)
+  013a..013c op=28 goto +0x5
+  013c..013e op=0d move-exception v0
+  013e..0144 op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  0144..0146 op=27 throw v1
+  0146..0148 op=0d move-exception v1
+  0148..014e op=6e invoke-virtual {v5}, LX/0ZN;->close(V)
+  014e..0150 op=27 throw v1
+  0150..0152 op=0d move-exception v0
+  0152..0158 op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  0158..015a op=27 throw v1
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0032..003c -> 00a3
+  # catch <all> code_units 003c..0090 -> 0097
+  # catch <all> code_units 0090..0093 -> 00a3
+  # catch <all> code_units 009a..009e -> 009e
+  # catch <all> code_units 009f..00a3 -> 00a3
+  # catch <all> code_units 00a4..00a7 -> 00a8
+.end method
+
+.method A0N(LL) flags=0x1 registers=26
+  0000..0004 op=22 new-instance v3, Ljava/util/HashMap;
+  0004..000a op=70 invoke-direct {v3}, Ljava/util/HashMap;-><init>(V)
+  000a..000e op=22 new-instance v1, Ljava/util/ArrayList;
+  000e..0014 op=70 invoke-direct {v1}, Ljava/util/ArrayList;-><init>(V)
+  0014..0018 op=22 new-instance v2, Ljava/util/HashMap;
+  0018..001e op=70 invoke-direct {v2}, Ljava/util/HashMap;-><init>(V)
+  001e..0024 op=78 invoke-interface/range {v25..v25}, Ljava/util/Collection;->iterator(L)
+  0024..0026 op=0c move-result-object v9
+  0026..002c op=72 invoke-interface {v9}, Ljava/util/Iterator;->hasNext(Z)
+  002c..002e op=0a move-result v0
+  002e..0032 op=08 move-object/from16 v8, v24
+  0032..0036 op=38 if-eqz v0, +0x55
+  0036..003c op=72 invoke-interface {v9}, Ljava/util/Iterator;->next(L)
+  003c..003e op=0c move-result-object v6
+  003e..0042 op=1f check-cast v6, LX/CYV;
+  0042..0046 op=54 iget-object v4, v6, LX/CYV;->A04:LX/178;
+  0046..004a op=54 iget-object v0, v6, LX/CYV;->A02:Lcom/whatsapp/infra/core/jid/DeviceJid;
+  004a..0050 op=6e invoke-virtual {v8, v0, v4}, LX/0Z5;->A01(LLL)
+  0050..0052 op=0c move-result-object v0
+  0052..0058 op=6e invoke-virtual {v8, v0}, LX/0Z5;->A04(LL)
+  0058..005a op=0c move-result-object v7
+  005a..005e op=54 iget-object v5, v4, LX/178;->A0i:LX/1gc;
+  005e..0062 op=54 iget-object v4, v5, LX/1gc;->A00:LX/0Cy;
+  0062..0068 op=71 invoke-static {v4}, LX/00K;->A06(VL)
+  0068..006c op=54 iget-object v0, v8, LX/0ZE;->A00:LX/0VS;
+  006c..0072 op=6e invoke-virtual {v0, v4}, LX/0VS;->A0C(JL)
+  0072..0074 op=0b move-result-wide v11
+  0074..007a op=6e invoke-virtual {v7}, Ljava/util/AbstractCollection;->iterator(L)
+  007a..007c op=0c move-result-object v4
+  007c..0082 op=72 invoke-interface {v4}, Ljava/util/Iterator;->hasNext(Z)
+  0082..0084 op=0a move-result v0
+  0084..0088 op=38 if-eqz v0, -0x2f
+  0088..008e op=72 invoke-interface {v4}, Ljava/util/Iterator;->next(L)
+  008e..0090 op=0c move-result-object v13
+  0090..0094 op=1f check-cast v13, Ljava/lang/String;
+  0094..009a op=71 invoke-static {v11, v12}, Ljava/lang/String;->valueOf(LJ)
+  009a..009c op=0c move-result-object v0
+  009c..00a2 op=6e invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;->add(ZL)
+  00a2..00a6 op=55 iget-boolean v14, v5, LX/1gc;->A02:Z
+  00a6..00aa op=38 if-eqz v14, +0x18
+  00aa..00ae op=1a const-string v0, "1"
+  00ae..00b4 op=6e invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;->add(ZL)
+  00b4..00b8 op=54 iget-object v15, v5, LX/1gc;->A01:Ljava/lang/String;
+  00b8..00be op=6e invoke-virtual {v1, v15}, Ljava/util/AbstractCollection;->add(ZL)
+  00be..00c4 op=6e invoke-virtual {v1, v13}, Ljava/util/AbstractCollection;->add(ZL)
+  00c4..00c8 op=22 new-instance v10, LX/NBh;
+  00c8..00ce op=76 invoke-direct/range {v10..v15}, LX/NBh;-><init>(VJLZL)
+  00ce..00d4 op=6e invoke-virtual {v2, v10, v6}, Ljava/util/AbstractMap;->put(LLL)
+  00d4..00d6 op=28 goto -0x2c
+  00d6..00da op=1a const-string v0, "0"
+  00da..00dc op=28 goto -0x16
+  00dc..00e0 op=54 iget-object v0, v8, LX/0Z5;->A04:LX/0Gc;
+  00e0..00e6 op=6e invoke-virtual {v0}, LX/0Gc;->A06(L)
+  00e6..00e8 op=0c move-result-object v12
+  00e8..00ec op=54 iget-object v5, v12, LX/0ZN;->A02:LX/0IY;
+  00ec..00f2 op=6e invoke-virtual {v1}, Ljava/util/AbstractCollection;->size(I)
+  00f2..00f4 op=0a move-result v0
+  00f4..00f8 op=db div-int/lit8 v6, v0, #0x4
+  00f8..00fc op=62 sget-object v0, LX/1Yu;->A01:Ljava/lang/String;
+  00fc..0100 op=1a const-string v7, "\n        message_add_on \n        JOIN message_add_on_receipt_device\n          ON message_add_on._id = \n            message_add_on_receipt_device.message_add_on_row_id\n      "
+  0100..0104 op=22 new-instance v9, Ljava/util/ArrayList;
+  0104..010a op=70 invoke-direct {v9, v6}, Ljava/util/ArrayList;-><init>(VI)
+  010a..010c op=12 const/4 v4, #0x0
+  010c..0110 op=35 if-ge v4, v6, +0xa
+  0110..0114 op=1a const-string v0, "(chat_row_id = ? AND from_me = ? AND key_id = ? AND receipt_device_jid_row_id = ?)"
+  0114..011a op=6e invoke-virtual {v9, v0}, Ljava/util/AbstractCollection;->add(ZL)
+  011a..011e op=d8 add-int/lit8 v4, v4, #0x1
+  011e..0120 op=28 goto -0x9
+  0120..0124 op=1a const-string v6, " OR "
+  0124..0126 op=12 const/4 v4, #0x0
+  0126..012a op=1a const-string v0, ""
+  012a..012c op=12 const/4 v13, #0xff
+  012c..0132 op=71 invoke-static {v6, v0, v0, v9, v4}, LX/0C6;->A11(LLLLLL)
+  0132..0134 op=0c move-result-object v6
+  0134..0138 op=1a const-string v0, "\n      SELECT \n        chat_row_id,\n        from_me,\n        key_id,\n        receipt_device_jid_row_id,\n        receipt_device_timestamp\n      FROM\n        "
+  0138..013c op=22 new-instance v4, Ljava/lang/StringBuilder;
+  013c..0142 op=70 invoke-direct {v4, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+  0142..0148 op=6e invoke-virtual {v4, v7}, Ljava/lang/StringBuilder;->append(LL)
+  0148..014c op=1a const-string v0, " \n      WHERE\n        "
+  014c..0152 op=6e invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0152..0158 op=6e invoke-virtual {v4, v6}, Ljava/lang/StringBuilder;->append(LL)
+  0158..015c op=1a const-string v0, "\n    "
+  015c..0162 op=6e invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0162..0168 op=6e invoke-virtual {v4}, Ljava/lang/Object;->toString(L)
+  0168..016a op=0c move-result-object v4
+  016a..016e op=62 sget-object v0, LX/08F;->A0N:[Ljava/lang/String;
+  016e..0174 op=6e invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;->toArray(LL)
+  0174..0176 op=0c move-result-object v1
+  0176..017a op=1f check-cast v1, [Ljava/lang/String;
+  017a..017e op=1a const-string v0, "GET_MESSAGE_ADD_ON_DEVICE_RECEIPTS_SQL"
+  017e..0184 op=6e invoke-virtual {v5, v4, v0, v1}, LX/0IY;->A0A(LLLL)
+  0184..0186 op=0c move-result-object v7
+  0186..018a op=1a const-string v0, "chat_row_id"
+  018a..0190 op=72 invoke-interface {v7, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  0190..0192 op=0a move-result v11
+  0192..0196 op=1a const-string v0, "from_me"
+  0196..019c op=72 invoke-interface {v7, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  019c..019e op=0a move-result v10
+  019e..01a2 op=1a const-string v0, "key_id"
+  01a2..01a8 op=72 invoke-interface {v7, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  01a8..01aa op=0a move-result v9
+  01aa..01ae op=1a const-string v0, "receipt_device_jid_row_id"
+  01ae..01b4 op=72 invoke-interface {v7, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  01b4..01b6 op=0a move-result v6
+  01b6..01ba op=1a const-string v0, "receipt_device_timestamp"
+  01ba..01c0 op=72 invoke-interface {v7, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  01c0..01c2 op=0a move-result v5
+  01c2..01c6 op=22 new-instance v4, Ljava/util/HashSet;
+  01c6..01cc op=70 invoke-direct {v4}, Ljava/util/HashSet;-><init>(V)
+  01cc..01d2 op=72 invoke-interface {v7}, Landroid/database/Cursor;->moveToNext(Z)
+  01d2..01d4 op=0a move-result v0
+  01d4..01d8 op=38 if-eqz v0, +0xe
+  01d8..01de op=72 invoke-interface {v7, v6}, Landroid/database/Cursor;->getLong(JI)
+  01de..01e0 op=0b move-result-wide v0
+  01e0..01e6 op=71 invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(LJ)
+  01e6..01e8 op=0c move-result-object v0
+  01e8..01ee op=6e invoke-virtual {v4, v0}, Ljava/util/AbstractCollection;->add(ZL)
+  01ee..01f0 op=28 goto -0x11
+  01f0..01f4 op=54 iget-object v1, v8, LX/0Z5;->A02:LX/0VT;
+  01f4..01f8 op=1c const-class v0, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  01f8..01fe op=6e invoke-virtual {v1, v0, v4}, LX/0VT;->A0E(LLL)
+  01fe..0200 op=0c move-result-object v4
+  0200..0206 op=72 invoke-interface {v7, v13}, Landroid/database/Cursor;->moveToPosition(ZI)
+  0206..020c op=72 invoke-interface {v7}, Landroid/database/Cursor;->moveToNext(Z)
+  020c..020e op=0a move-result v0
+  020e..0212 op=38 if-eqz v0, +0x8c
+  0212..0218 op=72 invoke-interface {v7, v11}, Landroid/database/Cursor;->getLong(JI)
+  0218..021a op=0b move-result-wide v19
+  021a..0220 op=72 invoke-interface {v7, v10}, Landroid/database/Cursor;->getInt(II)
+  0220..0222 op=0a move-result v0
+  0222..0224 op=81 int-to-long v0, v0
+  0224..022a op=72 invoke-interface {v7, v9}, Landroid/database/Cursor;->getString(LI)
+  022a..022c op=0c move-result-object v23
+  022c..0232 op=72 invoke-interface {v7, v6}, Landroid/database/Cursor;->getLong(JI)
+  0232..0234 op=0b move-result-wide v16
+  0234..023a op=77 invoke-static/range {v16..v17}, Ljava/lang/String;->valueOf(LJ)
+  023a..023c op=0c move-result-object v21
+  023c..0240 op=16 const-wide/16 v14, #0x1
+  0240..0244 op=31 cmp-long v13, v0, v14
+  0244..0248 op=13 const/16 v22, #0x0
+  0248..024c op=39 if-nez v13, +0x4
+  024c..0250 op=13 const/16 v22, #0x1
+  0250..0254 op=22 new-instance v0, LX/NBh;
+  0254..0258 op=08 move-object/from16 v18, v0
+  0258..025e op=76 invoke-direct/range {v18..v23}, LX/NBh;-><init>(VJLZL)
+  025e..0264 op=6e invoke-virtual {v2, v0}, Ljava/util/AbstractMap;->get(LL)
+  0264..0266 op=0c move-result-object v13
+  0266..026a op=1f check-cast v13, LX/CYV;
+  026a..026e op=38 if-eqz v13, +0x48
+  026e..0274 op=6e invoke-virtual {v3, v13}, Ljava/util/AbstractMap;->get(LL)
+  0274..0276 op=0c move-result-object v14
+  0276..027a op=1f check-cast v14, LX/7hf;
+  027a..027e op=39 if-nez v14, +0xa
+  027e..0282 op=22 new-instance v14, LX/7hf;
+  0282..0288 op=70 invoke-direct {v14}, LX/7hf;-><init>(V)
+  0288..028e op=6e invoke-virtual {v3, v13, v14}, Ljava/util/AbstractMap;->put(LLL)
+  028e..0294 op=77 invoke-static/range {v16..v17}, Ljava/lang/Long;->valueOf(LJ)
+  0294..0296 op=0c move-result-object v1
+  0296..029c op=6e invoke-virtual {v4, v1}, Ljava/util/AbstractMap;->get(LL)
+  029c..029e op=0c move-result-object v1
+  029e..02a2 op=1f check-cast v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+  02a2..02a6 op=38 if-eqz v1, +0x17
+  02a6..02aa op=54 iget-object v0, v13, LX/CYV;->A04:LX/178;
+  02aa..02b0 op=6e invoke-virtual {v8, v1, v0}, LX/0Z5;->A01(LLL)
+  02b0..02b2 op=0c move-result-object v15
+  02b2..02b8 op=72 invoke-interface {v7, v5}, Landroid/database/Cursor;->getLong(JI)
+  02b8..02ba op=0b move-result-wide v0
+  02ba..02be op=22 new-instance v13, LX/7QL;
+  02be..02c4 op=70 invoke-direct {v13}, Ljava/lang/Object;-><init>(V)
+  02c4..02c8 op=5a iput-wide v0, v13, LX/7QL;->A00:J
+  02c8..02ce op=6e invoke-virtual {v14, v15, v13}, LX/7hf;->A00(VLL)
+  02ce..02d0 op=28 goto -0x64
+  02d0..02d4 op=22 new-instance v13, Ljava/lang/StringBuilder;
+  02d4..02da op=70 invoke-direct {v13}, Ljava/lang/StringBuilder;-><init>(V)
+  02da..02de op=1a const-string v1, "MessageAddOnReceiptDeviceStore//getlocaldevicereceiptsforincomingreceipts: got a null deviceJid for "
+  02de..02e4 op=6e invoke-virtual {v13, v1}, Ljava/lang/StringBuilder;->append(LL)
+  02e4..02ea op=6e invoke-virtual {v13, v0}, Ljava/lang/StringBuilder;->append(LL)
+  02ea..02f0 op=6e invoke-virtual {v13}, Ljava/lang/Object;->toString(L)
+  02f0..02f2 op=0c move-result-object v0
+  02f2..02f8 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(VL)
+  02f8..02fa op=28 goto -0x79
+  02fa..02fe op=22 new-instance v13, Ljava/lang/StringBuilder;
+  02fe..0304 op=70 invoke-direct {v13}, Ljava/lang/StringBuilder;-><init>(V)
+  0304..0308 op=1a const-string v1, "MessageAddOnReceiptDeviceStore//getlocaldevicereceiptsforincomingreceipts: got a null incomingReceipt for "
+  0308..030e op=6e invoke-virtual {v13, v1}, Ljava/lang/StringBuilder;->append(LL)
+  030e..0314 op=6e invoke-virtual {v13, v0}, Ljava/lang/StringBuilder;->append(LL)
+  0314..031a op=6e invoke-virtual {v13}, Ljava/lang/Object;->toString(L)
+  031a..031c op=0c move-result-object v0
+  031c..0322 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(VL)
+  0322..0326 op=29 goto/16 -0x8e
+  0326..032c op=72 invoke-interface {v7}, Landroid/database/Cursor;->close(V)
+  032c..0332 op=6e invoke-virtual {v12}, LX/0ZN;->close(V)
+  0332..0334 op=11 return-object v3
+  0334..0336 op=0d move-exception v1
+  0336..033a op=38 if-eqz v7, +0xa
+  033a..0340 op=72 invoke-interface {v7}, Landroid/database/Cursor;->close(V)
+  0340..0342 op=28 goto +0x5
+  0342..0344 op=0d move-exception v0
+  0344..034a op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  034a..034c op=27 throw v1
+  034c..034e op=0d move-exception v1
+  034e..0354 op=6e invoke-virtual {v12}, LX/0ZN;->close(V)
+  0354..0356 op=27 throw v1
+  0356..0358 op=0d move-exception v0
+  0358..035e op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  035e..0360 op=27 throw v1
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0074..00c3 -> 01a6
+  # catch <all> code_units 00c3..0193 -> 019a
+  # catch <all> code_units 0193..0196 -> 01a6
+  # catch <all> code_units 019d..01a1 -> 01a1
+  # catch <all> code_units 01a2..01a6 -> 01a6
+  # catch <all> code_units 01a7..01aa -> 01ab
+.end method
+
+.method A0O(LL) flags=0x1 registers=4
+  0000..0006 op=70 invoke-direct {v2, v3}, LX/0ZE;->A00(LL)
+  0006..0008 op=0c move-result-object v0
+  0008..000c op=54 iget-object v0, v0, LX/7hf;->A00:Ljava/util/concurrent/ConcurrentHashMap;
+  000c..0012 op=6e invoke-virtual {v0}, Ljava/util/AbstractMap;->keySet(L)
+  0012..0014 op=0c move-result-object v1
+  0014..001a op=71 invoke-static {v1}, LX/00h;->A06(VL)
+  001a..001e op=22 new-instance v0, Ljava/util/HashSet;
+  001e..0024 op=70 invoke-direct {v0, v1}, Ljava/util/HashSet;-><init>(VL)
+  0024..0026 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method
+
+.method A0P(ZLL) flags=0x1 registers=11
+  0000..0006 op=6e invoke-virtual {v8, v10}, LX/0Z5;->A02(LL)
+  0006..0008 op=0c move-result-object v0
+  0008..000c op=38 if-eqz v0, +0x10
+  000c..0010 op=54 iget-object v0, v0, LX/7hf;->A00:Ljava/util/concurrent/ConcurrentHashMap;
+  0010..0016 op=6e invoke-virtual {v0}, Ljava/util/AbstractMap;->keySet(L)
+  0016..0018 op=0c move-result-object v0
+  0018..001e op=71 invoke-static {v0}, LX/00h;->A06(VL)
+  001e..0024 op=72 invoke-interface {v0, v9}, Ljava/util/Set;->contains(ZL)
+  0024..0026 op=0a move-result v1
+  0026..0028 op=0f return v1
+  0028..002c op=54 iget-object v4, v10, LX/178;->A0i:LX/1gc;
+  002c..0030 op=54 iget-object v1, v4, LX/1gc;->A00:LX/0Cy;
+  0030..0036 op=71 invoke-static {v1}, LX/00K;->A06(VL)
+  0036..003a op=54 iget-object v0, v8, LX/0ZE;->A00:LX/0VS;
+  003a..0040 op=6e invoke-virtual {v0, v1}, LX/0VS;->A0C(JL)
+  0040..0042 op=0b move-result-wide v2
+  0042..0048 op=6e invoke-virtual {v8, v9}, LX/0Z5;->A04(LL)
+  0048..004a op=0c move-result-object v1
+  004a..004e op=22 new-instance v7, Ljava/util/ArrayList;
+  004e..0054 op=70 invoke-direct {v7}, Ljava/util/ArrayList;-><init>(V)
+  0054..005a op=71 invoke-static {v2, v3}, Ljava/lang/String;->valueOf(LJ)
+  005a..005c op=0c move-result-object v0
+  005c..0062 op=6e invoke-virtual {v7, v0}, Ljava/util/AbstractCollection;->add(ZL)
+  0062..0066 op=55 iget-boolean v0, v4, LX/1gc;->A02:Z
+  0066..006a op=38 if-eqz v0, +0x10
+  006a..006e op=1a const-string v0, "1"
+  006e..0074 op=6e invoke-virtual {v7, v0}, Ljava/util/AbstractCollection;->add(ZL)
+  0074..0078 op=54 iget-object v0, v4, LX/1gc;->A01:Ljava/lang/String;
+  0078..007e op=6e invoke-virtual {v7, v0}, Ljava/util/AbstractCollection;->add(ZL)
+  007e..0084 op=6e invoke-virtual {v7, v1}, Ljava/util/AbstractCollection;->addAll(ZL)
+  0084..0086 op=28 goto +0x4
+  0086..008a op=1a const-string v0, "0"
+  008a..008c op=28 goto -0xe
+  008c..0090 op=54 iget-object v0, v8, LX/0Z5;->A04:LX/0Gc;
+  0090..0096 op=6e invoke-virtual {v0}, LX/0Gc;->A06(L)
+  0096..0098 op=0c move-result-object v3
+  0098..009c op=54 iget-object v6, v3, LX/0ZN;->A02:LX/0IY;
+  009c..00a2 op=6e invoke-virtual {v1}, Ljava/util/AbstractCollection;->size(I)
+  00a2..00a4 op=0a move-result v1
+  00a4..00a8 op=62 sget-object v0, LX/1Yu;->A01:Ljava/lang/String;
+  00a8..00ac op=1a const-string v5, "\n        message_add_on \n        JOIN message_add_on_receipt_device\n          ON message_add_on._id = \n            message_add_on_receipt_device.message_add_on_row_id\n      "
+  00ac..00b0 op=1a const-string v4, "\n        chat_row_id = ?\n        AND\n        from_me = ?\n        AND\n        key_id = ?\n      "
+  00b0..00b6 op=71 invoke-static {v1}, LX/0ZU;->A00(LI)
+  00b6..00b8 op=0c move-result-object v2
+  00b8..00bc op=1a const-string v0, "\n      SELECT \n        receipt_device_jid_row_id\n      FROM\n        "
+  00bc..00c0 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  00c0..00c6 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+  00c6..00cc op=6e invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;->append(LL)
+  00cc..00d0 op=1a const-string v0, " \n      WHERE\n        "
+  00d0..00d6 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  00d6..00dc op=6e invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;->append(LL)
+  00dc..00e0 op=1a const-string v0, "\n        AND\n        receipt_device_jid_row_id IN \n            "
+  00e0..00e6 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  00e6..00ec op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(LL)
+  00ec..00f0 op=1a const-string v0, " \n    "
+  00f0..00f6 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+  00f6..00fc op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString(L)
+  00fc..00fe op=0c move-result-object v2
+  00fe..0102 op=62 sget-object v0, LX/08F;->A0N:[Ljava/lang/String;
+  0102..0108 op=6e invoke-virtual {v7, v0}, Ljava/util/AbstractCollection;->toArray(LL)
+  0108..010a op=0c move-result-object v1
+  010a..010e op=1f check-cast v1, [Ljava/lang/String;
+  010e..0112 op=1a const-string v0, "MessageAddOnReceiptDeviceStore/GET_DEVICE_RECEIPT_SQL"
+  0112..0118 op=6e invoke-virtual {v6, v2, v0, v1}, LX/0IY;->A0A(LLLL)
+  0118..011a op=0c move-result-object v0
+  011a..0120 op=72 invoke-interface {v0}, Landroid/database/Cursor;->moveToNext(Z)
+  0120..0122 op=0a move-result v1
+  0122..0128 op=72 invoke-interface {v0}, Landroid/database/Cursor;->close(V)
+  0128..012e op=6e invoke-virtual {v3}, LX/0ZN;->close(V)
+  012e..0130 op=0f return v1
+  0130..0132 op=0d move-exception v1
+  0132..0136 op=38 if-eqz v0, +0xa
+  0136..013c op=72 invoke-interface {v0}, Landroid/database/Cursor;->close(V)
+  013c..013e op=28 goto +0x5
+  013e..0140 op=0d move-exception v0
+  0140..0146 op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  0146..0148 op=27 throw v1
+  0148..014a op=0d move-exception v1
+  014a..0150 op=6e invoke-virtual {v3}, LX/0ZN;->close(V)
+  0150..0152 op=28 goto +0x5
+  0152..0154 op=0d move-exception v0
+  0154..015a op=71 invoke-static {v1, v0}, LX/HKG;->A00(VLL)
+  015a..015c op=27 throw v1
+  015c..015e op=0d move-exception v0
+  015e..0164 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(VL)
+  0164..0168 op=54 iget-object v0, v8, LX/0Z5;->A03:LX/0Fy;
+  0168..016e op=6e invoke-virtual {v0}, LX/0Fy;->A03(V)
+  016e..0170 op=12 const/4 v0, #0x0
+  0170..0172 op=0f return v0
+  # exception table: 9 try range(s)
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0046..004c -> 00ae
+  # catch <all> code_units 004c..008d -> 00a4
+  # catch <all> code_units 008d..0091 -> 0098
+  # catch <all> code_units 0091..0094 -> 00a4
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0094..0098 -> 00ae
+  # catch <all> code_units 009b..009f -> 009f
+  # catch <all> code_units 00a0..00a4 -> 00a4
+  # catch <all> code_units 00a5..00a9 -> 00a9
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 00aa..00ae -> 00ae
+.end method

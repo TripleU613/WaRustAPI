@@ -1474,3 +1474,16 @@ unproven. [Details](poll-votes.md#saved-chat-attribution-2026-10-09).
 peer/action/receipt/outbox/event summaries unchanged, fifteen decrypted records
 remained fifteen. No fresh poll/vote attribution, replay or identity adoption.
 All 734 workspace tests and strict/local feature checks passed.
+
+### 2026-10-09: identity receipt selection, primary version and token refresh
+
+**Confirmed**, APK 2.26.37.71 D4x/0Z5/8G8 row predicates, DNd case-9 cache
+operation, 0Z6/0ZE concrete columns, 0Z4 scoped companion/status/coexistence
+cleanup, 0Z7 persistent per-user version update and HxT conditional existing-token
+refresh. The 23-topic/53-declaration checksummed source bundle is distinct from
+the older sender-key/key-removal scope. Runtime counterpart/migration state,
+0Z8/A06 cache internals, callback closure and privacy job lifecycle remain unknown.
+**Confirmed local gap:** receipts::observe still uses full Jid equality for
+normal-outbox fact attribution; the actual incoming receipt authority path must
+be traced before fixing PN/LID namespace matching. No live mutation, deletion,
+replay or native-parity claim. [Details](identity-receipts.md).

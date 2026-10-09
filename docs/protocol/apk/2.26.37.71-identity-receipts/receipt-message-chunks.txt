@@ -1,0 +1,27 @@
+# APK-derived structural disassembly: LX/0eK;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLI) flags=0x10001 registers=5
+  0000..0006 op=70 invoke-direct {v2}, Ljava/lang/Object;-><init>(V)
+  0006..0008 op=12 const/4 v0, #0x1
+  0008..000c op=34 if-lt v4, v0, +0x7
+  000c..0010 op=5b iput-object v3, v2, LX/0eK;->A01:[Ljava/lang/Object;
+  0010..0014 op=59 iput v4, v2, LX/0eK;->A00:I
+  0014..0016 op=0e return-void
+  0016..001a op=1a const-string v1, "Chunk size must be positive."
+  001a..001e op=22 new-instance v0, Ljava/lang/IllegalArgumentException;
+  001e..0024 op=70 invoke-direct {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(VL)
+  0024..0026 op=27 throw v0
+  # exception table: 0 try range(s)
+.end method
+
+.method iterator(L) flags=0x1 registers=4
+  0000..0004 op=54 iget-object v2, v3, LX/0eK;->A01:[Ljava/lang/Object;
+  0004..0008 op=52 iget v1, v3, LX/0eK;->A00:I
+  0008..000c op=22 new-instance v0, LX/0eL;
+  000c..0012 op=70 invoke-direct {v0, v2, v1}, LX/0eL;-><init>(VLI)
+  0012..0014 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

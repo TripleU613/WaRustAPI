@@ -2322,3 +2322,22 @@ active/authenticated and stopped cleanly; peer keys, action outcomes, receipts,
 empty outbox and events stayed unchanged. Fifteen decrypted payloads remained
 fifteen; no fresh DM/poll/vote proved new live attribution. Two uncertain sent
 actions were preserved without replay; reconnect and chat sending were disabled.
+
+### Identity-change receipt/version/token scope (2026-10-09)
+
+Static APK 2.26.37.71 D4x receipt selection now has attributable helper coverage:
+primary message-ID intersection, scoped null-timestamp companion/device/add-on
+rows, coexistence/status paths, persistent primary_device_version increments
+and conditional refresh of an existing unexpired privacy token. The reviewed
+bundle preserves 23 topics/53 declarations, 28 files/323,094 bytes, with exact
+register operands and catch metadata. Runtime mapping/migration, cache callback
+closure and refresh-job lifecycle remain incomplete. Existing Rust incoming
+token storage, authenticated identity archival and sender-key exposure policy
+are unchanged; native receipt caches are not receipt-outbox ACK reservations.
+No private state or server request was changed. [Full source and next port
+boundaries](protocol/identity-receipts.md).
+
+Validation: exact APK/recipe re-export, CLI/API checks and hygiene passed. Cached
+23-topic self-comparison took 0.026378 seconds; no cross-release equivalence or
+new runtime/live behavior is claimed. Incoming PN/LID delivery-fact attribution
+remains a separately identified receive gap to trace and correct next.
