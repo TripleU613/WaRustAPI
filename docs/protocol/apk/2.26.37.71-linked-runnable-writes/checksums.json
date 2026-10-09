@@ -1,0 +1,30 @@
+{
+  "history-access-write.txt": {
+    "bytes": 68801,
+    "sha256": "a6df5d0001669e543df0098fabbecf0aa66a361c1d3ed9fafe8a5a62340bdd4f"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "last-active-write.txt": {
+    "bytes": 31726,
+    "sha256": "9e7fc21c05d84afb11b053019ad4a001bea4510ed5bc1abafa27559dd03bb9ec"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "nickname-write.txt": {
+    "bytes": 121052,
+    "sha256": "060ac66b6aeb044d35a59cc04d9fc829b6851111c186d3284264a2af220e8341"
+  },
+  "targets.json": {
+    "bytes": 1354,
+    "sha256": "950d88a455aeac943d3786fd7c7ebe74c5b3696152a2c841bacc4569e1b2f56b"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

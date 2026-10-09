@@ -80,3 +80,7 @@ cargo run -p xtask -- apk-research-diff \
   docs/protocol/apk/2.26.37.71-linked-metadata-cache \
   docs/protocol/apk/2.26.37.71-linked-metadata-cache
 ```
+
+Follow-up: [runnable metadata writes](linked-runnable-writes.md) classifies
+DLo case 23, DM7 case 2 and DNh case 20. Earlier remaining-branch unknowns
+are narrowed; complete caller/persistence/trust authority remains unfinished.

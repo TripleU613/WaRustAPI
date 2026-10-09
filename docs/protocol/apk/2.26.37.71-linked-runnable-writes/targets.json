@@ -1,0 +1,50 @@
+{
+  "history-access-write": {
+    "anchors": [
+      "setHistorySyncAccessType/UPDATE_DEVICES"
+    ],
+    "class": "LX/DLo;",
+    "file": "history-access-write.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "last-active-write": {
+    "anchors": [
+      "setLastActiveTime/UPDATE_DEVICES"
+    ],
+    "class": "LX/DM7;",
+    "file": "last-active-write.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "nickname-write": {
+    "anchors": [
+      "setDeviceNickname/UPDATE_DEVICES"
+    ],
+    "class": "LX/DNh;",
+    "file": "nickname-write.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  }
+}

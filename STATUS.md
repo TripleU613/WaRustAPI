@@ -1,5 +1,14 @@
 # Status — 2026-10-07
 
+Linked-device runnable writes (2026-10-09, **confirmed static**): APK 37.71
+DLo case 23, DM7 case 2 and DNh case 20 write history access, last-active time
+and nickname. A three-topic anchored snapshot completes immediate classification
+of the twenty physical cache stores; transitive authority remains unfinished.
+Last-active mutates a record before SQL, and only its separate companion
+preference update has a greater-than check. No runtime, account state or live
+request changed.
+[Evidence and limits](docs/protocol/linked-runnable-writes.md).
+
 Linked-device metadata caches (2026-10-09, **confirmed static**): APK 37.71
 place/instrumentation writers update SQL, null only the view map and mutate
 one existing raw-map record. The five-topic snapshot distinguishes that behavior
