@@ -1,0 +1,74 @@
+{
+  "chat-kind-second.txt": {
+    "bytes": 777,
+    "sha256": "a8704f0e341dd4bf57aa95f6e67f3fd7629e8203363d29c1b63a4ea171d63177"
+  },
+  "chat-kind-third.txt": {
+    "bytes": 777,
+    "sha256": "e4ca809a7b203e9ea9e9966e4c8172567e6ddd0fc60704b56a471951896cdf7e"
+  },
+  "chat-multipart-kind.txt": {
+    "bytes": 1001,
+    "sha256": "15f2cc9654d15a3e2018f914085d261c665cb34bab03163109685d3496e8135f"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-addon-selector.txt": {
+    "bytes": 733,
+    "sha256": "ec5debaeb9c5980c92ac2c59f68e42f3736c04d53c9d327cd4da3203574f537b"
+  },
+  "message-chat-exclusion-tail.txt": {
+    "bytes": 873,
+    "sha256": "6cf28df7025fe538b6b70aab0d372018dee9cf9a56189d43e09525b6ce41ff72"
+  },
+  "message-chat-exclusion.txt": {
+    "bytes": 794,
+    "sha256": "295de5d6e7c826317e542f43646be933c1f6c2da8ae85267029a0d9380a8be08"
+  },
+  "message-multipart-predicate.txt": {
+    "bytes": 1421,
+    "sha256": "ac655855081c80a116dc8ebdc3d6244362afd26dfe772e46e7257c0d3a13c83c"
+  },
+  "message-user-list-filter.txt": {
+    "bytes": 1231,
+    "sha256": "9ec293a36ce9448a9250249472d2f85637adb6ef4ca98ecac7d102741d71b222"
+  },
+  "message-user-list.txt": {
+    "bytes": 1159,
+    "sha256": "724c6f04421923048d8e0854aa7f6eb668d84b7339595a15c304c738511e6d7e"
+  },
+  "metadata-user-selector.txt": {
+    "bytes": 1657,
+    "sha256": "653040d9e98c8de662140789c11006501bca1cfcaf8656b27e0186ec51b22dbe"
+  },
+  "multipart-exclusion.txt": {
+    "bytes": 779,
+    "sha256": "73f2972fc9669cba75fbc9d592aee3a38057c229f8ecaa47bc792af099b4aa95"
+  },
+  "phone-user-compare.txt": {
+    "bytes": 631,
+    "sha256": "0644f9525454203a230381bb50d57fb7f04b3820063740876486f27b1a9504cc"
+  },
+  "phone-user-exclusion.txt": {
+    "bytes": 1674,
+    "sha256": "21f559a78a975c6b1d5901eab526a2b5b7e9019ca79c63ff95af623f9c5acd21"
+  },
+  "phone-user-parse.txt": {
+    "bytes": 3448,
+    "sha256": "01b910d3f0f792cad88d5a15da1d25ce195f09e0aa2d310069209a9c8dae13e5"
+  },
+  "targets.json": {
+    "bytes": 5919,
+    "sha256": "cb75da467c16535abc0237b1b3acd13611c3f8ed138813c3e381f7271b9c5f50"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

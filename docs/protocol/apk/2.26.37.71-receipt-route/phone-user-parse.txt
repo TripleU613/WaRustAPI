@@ -1,0 +1,76 @@
+# APK-derived structural disassembly: LX/0ng;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LL) flags=0x19 registers=22
+  # full signature: LX/0ng;->A00(Ljava/lang/String;)LX/0ni;
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0006 op=08 move-object/from16 v11, v21
+  0006..000c op=6e invoke-virtual {v11}, Ljava/lang/String;->length()I
+  000c..000e op=0a move-result v10
+  000e..0012 op=13 const/16 v21, #0x0
+  0012..0016 op=38 if-eqz v10, +0x16
+  0016..0018 op=12 const/4 v9, #0x0
+  0018..001e op=6e invoke-virtual {v11, v0}, Ljava/lang/String;->charAt(I)C
+  001e..0020 op=0a move-result v1
+  0020..0024 op=13 const/16 v0, #0x30
+  0024..002a op=71 invoke-static {v1, v0}, LX/00h;->A00(II)I
+  002a..002c op=0a move-result v0
+  002c..0030 op=3b if-gez v0, +0xa
+  0030..0032 op=12 const/4 v9, #0x1
+  0032..0036 op=32 if-eq v10, v9, +0x6
+  0036..003a op=13 const/16 v0, #0x2b
+  003a..003e op=32 if-eq v1, v0, +0x3
+  003e..0040 op=11 return-object v21
+  0040..0044 op=13 const/16 v8, #0xa
+  0044..0048 op=16 const-wide/16 v19, #0xa
+  0048..0052 op=18 const-wide v17, #0x71c71c71c71c71c (512409557603043100)
+  0052..0056 op=16 const-wide/16 v6, #0x0
+  0056..0060 op=18 const-wide v4, #0x71c71c71c71c71c (512409557603043100)
+  0060..0064 op=35 if-ge v9, v10, +0x4b
+  0064..006a op=6e invoke-virtual {v11, v9}, Ljava/lang/String;->charAt(I)C
+  006a..006c op=0a move-result v0
+  006c..0072 op=71 invoke-static {v0, v8}, Ljava/lang/Character;->digit(II)I
+  0072..0074 op=0a move-result v3
+  0074..0078 op=3a if-ltz v3, -0x1b
+  0078..007e op=71 invoke-static {v6, v7, v4, v5}, LX/0nh;->A00(JJ)I
+  007e..0080 op=0a move-result v0
+  0080..0084 op=3d if-lez v0, +0x27
+  0084..0088 op=31 cmp-long v0, v4, v17
+  0088..008c op=39 if-nez v0, -0x25
+  008c..0090 op=16 const-wide/16 v15, #0xffff (-1)
+  0090..0094 op=19 const-wide/high16 v13, #0x8000000000000000
+  0094..0096 op=12 const/4 v12, #0x1
+  0096..009a op=a5 ushr-long v4, v15, v12
+  009a..009e op=9e div-long v4, v4, v19
+  009e..00a0 op=c3 shl-long/2addr v4, v12
+  00a0..00a4 op=9d mul-long v0, v4, v19
+  00a4..00a6 op=bc sub-long/2addr v15, v0
+  00a6..00a8 op=c2 xor-long/2addr v15, v13
+  00a8..00b2 op=18 const-wide v1, #0x800000000000000a (-9223372036854775798)
+  00b2..00b6 op=31 cmp-long v0, v15, v1
+  00b6..00ba op=3b if-gez v0, +0x3
+  00ba..00bc op=12 const/4 v12, #0x0
+  00bc..00be op=81 int-to-long v0, v12
+  00be..00c0 op=bb add-long/2addr v4, v0
+  00c0..00c6 op=71 invoke-static {v6, v7, v4, v5}, LX/0nh;->A00(JJ)I
+  00c6..00c8 op=0a move-result v0
+  00c8..00cc op=3d if-lez v0, +0x3
+  00cc..00ce op=11 return-object v21
+  00ce..00d2 op=9d mul-long v6, v6, v19
+  00d2..00d4 op=81 int-to-long v2, v3
+  00d4..00de op=18 const-wide v0, #0xffffffff (4294967295)
+  00de..00e0 op=c0 and-long/2addr v2, v0
+  00e0..00e2 op=bb add-long/2addr v2, v6
+  00e2..00e8 op=71 invoke-static {v2, v3, v6, v7}, LX/0nh;->A00(JJ)I
+  00e8..00ea op=0a move-result v0
+  00ea..00ee op=3a if-ltz v0, -0x56
+  00ee..00f2 op=d8 add-int/lit8 v9, v9, #0x1
+  00f2..00f4 op=04 move-wide v6, v2
+  00f4..00f6 op=28 goto -0x4a
+  00f6..00fa op=22 new-instance v0, LX/0ni;
+  00fa..0100 op=70 invoke-direct {v0, v6, v7}, LX/0ni;-><init>(J)V
+  0100..0102 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

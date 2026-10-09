@@ -1,5 +1,14 @@
 # Status — 2026-10-07
 
+Receipt metadata route (2026-10-09, **confirmed static**): APK 37.71 special
+classification requires chat exclusion, flag/first qualifying metadata user,
+message A02 and descriptor absence. It does not count recipients; A0z bypasses
+metadata selection only. The fourteen-topic snapshot retains the helper chain.
+Disassembler opcode-c2 naming is corrected with a literal-byte regression.
+Metadata producers, full user-row admission and primary cleanup remain unported.
+No messaging runtime, saved identity or reservation changed.
+[Evidence and limits](docs/protocol/receipt-route.md).
+
 Ordinary cursor status (2026-10-09, **confirmed static**): APK 37.71 0VA.A00
 reads status into the virtual message setter and loads server receipt time
 without enum conversion or minimum selection. Two physical cursor entry points,

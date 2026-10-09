@@ -443,6 +443,9 @@ fn opcode_name(op: u8) -> &'static str {
         0xbf => "rem-long/2addr",
         0xc0 => "and-long/2addr",
         0xc1 => "or-long/2addr",
+        // APK 37.71 0nh.A00+0004/0006: sign-bit XOR before unsigned comparison.
+        // https://source.android.com/docs/core/runtime/dalvik-bytecode (c2, 12x)
+        0xc2 => "xor-long/2addr",
         0xc3 => "shl-long/2addr",
         // APK 37.71 FetchTruncatedGroupsJob.A0G 003c/0042: memory budget.
         // AOSP Dalvik bytecode table: cd/ce are 12x double binary operations.
@@ -2719,6 +2722,27 @@ mod tests {
         // Same 21s sign extension for const/16, including its minimum.
         let decoded = decode_insns(&[0x13, 0xff, 0x00, 0x80], &dex);
         assert_eq!(decoded[0].annotation, "v255, #0x8000 (-32768)");
+    }
+
+    #[test]
+    fn decodes_unsigned_comparison_sign_bit_xor_without_losing_alignment() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // APK 37.71 0nh.A00 offsets 0004,0006,0008; 0ng.A00+00a6
+        // also uses c2 with high registers. AOSP defines destination/first
+        // source in the low nibble and the second source in the high nibble.
+        let bytes = [0xc2, 0x02, 0xc2, 0x04, 0x31, 0x00, 0x02, 0x04, 0xc2, 0xdf];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded.len(), 4);
+        assert_eq!(decoded[0].mnemonic, "xor-long/2addr");
+        assert_eq!(decoded[0].annotation, "v2, v0");
+        assert_eq!(decoded[1].annotation, "v4, v0");
+        assert_eq!(decoded[2].mnemonic, "cmp-long");
+        assert_eq!(decoded[2].byte_off, 4);
+        assert_eq!(decoded[2].annotation, "v0, v2, v4");
+        assert_eq!(decoded[3].mnemonic, "xor-long/2addr");
+        assert_eq!(decoded[3].annotation, "v15, v13");
+        assert_eq!(decoded[3].byte_off + decoded[3].width * 2, bytes.len());
     }
 
     #[test]

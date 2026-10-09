@@ -90,10 +90,11 @@ recipient expansion/mapping is unknown. 0DE.A0R's numeric type 3 is anchored
 by the broadcast log; A0i is type 5, A0m admits types 1/2 while excluding
 A0W's type 28. Complete public JID-class mappings remain separately untraced.
 
-1ht.A03's special-message predicate checks 0hd.A02, message A0z,
-1ib.A02 -> its private A00 user selection, message A02 and 1id.A00.
-Its transitive message classification/selected user remains unknown; the
-predicate is not permission to infer single-participant behavior from row count.
+The subsequent [receipt route trace](receipt-route.md) retains 1ht.A03's
+complete helper chain: A0z bypasses metadata selection only, and 1ht.A00
+selects the first qualifying DLg user rather than counting recipients. Message
+flag/descriptor producer authority remains unknown; neither predicate nor row
+count proves single-participant behavior or receipt_user existence.
 
 **Unknown/unported:** effective property and own-device predicates, special
 message/broadcast/counterpart authority, manager exclusion lifecycle, remaining

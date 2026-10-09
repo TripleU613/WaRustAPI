@@ -1,0 +1,23 @@
+# APK-derived structural disassembly: LX/1ib;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(LL) flags=0x19 registers=5
+  # full signature: LX/1ib;->A03(Ljava/util/List;)Ljava/util/List;
+  0000..0004 op=22 new-instance v3, Ljava/util/ArrayList;
+  0004..000a op=70 invoke-direct {v3}, Ljava/util/ArrayList;-><init>()V
+  000a..0010 op=72 invoke-interface {v4}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  0010..0012 op=0c move-result-object v2
+  0012..0018 op=72 invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+  0018..001a op=0a move-result v0
+  001a..001e op=38 if-eqz v0, +0xe
+  001e..0024 op=72 invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0024..0026 op=0c move-result-object v1
+  0026..002a op=20 instance-of v0, v1, LX/DLg;
+  002a..002e op=38 if-eqz v0, -0xc
+  002e..0034 op=6e invoke-virtual {v3, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  0034..0036 op=28 goto -0x11
+  0036..0038 op=11 return-object v3
+  # exception table: 0 try range(s)
+.end method
