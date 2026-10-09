@@ -1,0 +1,38 @@
+{
+  "device-cache-worker.txt": {
+    "bytes": 8217,
+    "sha256": "d1a1604398f57cbc9734d97c33360db0db4933ffea27c242b122aa3b7f9e38ac"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "targets.json": {
+    "bytes": 1716,
+    "sha256": "743215e8f724165c9d4c29a942db2b25afccb215959a8409789f605f879c3e87"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "user-cache-constructor.txt": {
+    "bytes": 1345,
+    "sha256": "e3c916f431e2c41f95a3ab760f615a1fb4d8a216b2a4c05ff270ff54d5370442"
+  },
+  "user-cache-entry-removed.txt": {
+    "bytes": 521,
+    "sha256": "8c6a8448862d33053a6106b72b5f470a0621c33e42a8e016a8220e43575b7249"
+  },
+  "user-cache-remove.txt": {
+    "bytes": 1686,
+    "sha256": "92fc9fd2adb320cce2d1144d50f3115d0b73cb847d6ee09b8fdc3230da90b012"
+  },
+  "user-cache-worker.txt": {
+    "bytes": 29701,
+    "sha256": "6c2d694458e031251ac420999a38e68d181ab345cfbcdffc14741a8ac1713f46"
+  }
+}

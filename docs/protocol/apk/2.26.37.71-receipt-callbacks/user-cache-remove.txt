@@ -1,0 +1,32 @@
+# APK-derived structural disassembly: LX/0D3;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method remove(LL) flags=0x11 registers=7
+  # full signature: LX/0D3;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+  0000..0002 op=12 const/4 v4, #0x0
+  0002..0008 op=71 invoke-static {v6, v4}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=54 iget-object v3, v5, LX/0D3;->lock:LX/0D5;
+  000c..000e op=1d monitor-enter
+  000e..0012 op=54 iget-object v0, v5, LX/0D3;->map:LX/0D4;
+  0012..0016 op=54 iget-object v0, v0, LX/0D4;->A00:Ljava/util/LinkedHashMap;
+  0016..001c op=6e invoke-virtual {v0, v6}, Ljava/util/AbstractMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+  001c..001e op=0c move-result-object v2
+  001e..0022 op=38 if-eqz v2, +0xb
+  0022..0026 op=52 iget v1, v5, LX/0D3;->size:I
+  0026..002c op=70 invoke-direct {v5, v6, v2}, LX/0D3;->safeSizeOf(Ljava/lang/Object;Ljava/lang/Object;)I
+  002c..002e op=0a move-result v0
+  002e..0030 op=b1 sub-int/2addr v1, v0
+  0030..0034 op=59 iput v1, v5, LX/0D3;->size:I
+  0034..0036 op=1e monitor-exit
+  0036..003a op=38 if-eqz v2, +0x6
+  003a..003c op=12 const/4 v0, #0x0
+  003c..0042 op=6e invoke-virtual {v5, v4, v6, v2, v0}, LX/0D3;->entryRemoved(ZLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+  0042..0044 op=11 return-object v2
+  0044..0046 op=0d move-exception v0
+  0046..0048 op=1e monitor-exit
+  0048..004a op=27 throw v0
+  # exception table: 1 try range(s)
+  # catch <all> code_units 0007..001a -> 0022
+.end method

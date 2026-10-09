@@ -109,3 +109,7 @@ signed-decrement bytes were independently reread at their recorded ZIP-entry
 offset. Hygiene checked 1,416 local links and 34 bundles / 8,808,333 bytes.
 No fresh shared-runtime or live account test is claimed for this tooling/research
 change; the preceding receipt-row runtime validation remains separate.
+
+Follow-up: [receipt callback bodies](receipt-callbacks.md) now close the two
+workers listed as untraced above. Other cache-mode and revoke authorization
+unknowns remain.

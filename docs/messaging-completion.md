@@ -3017,3 +3017,20 @@ receive-only session authenticated and stopped cleanly, with sends/reconnects
 disabled; peer/actions/receipts/outbox/events remained unchanged. Eight additional
 inbound checkpoints remain unclassified; no live own-primary transition is
 claimed. See the linked own-identity evidence for counts and limits.
+
+2026-10-09 — **Confirmed static:** revoke receipt callbacks are now traced:
+8SJ discriminator 6 removes the selected message-row user cache entry under a
+monitor; DLn discriminator 6 delegates selected-row device-cache invalidation.
+The user cache constructor uses plain 0D3; base entryRemoved is empty. Existing
+transaction-close/rollback and optional device-cache callback evidence remains
+separate. Mutable cleanup, revoke projection and resend are unported.
+[Worker evidence and boundaries](protocol/receipt-callbacks.md).
+
+Callback validation: the five-topic / 10-file / 70,998-byte bundle reproduces
+exactly; cached self-diff verifies five unchanged topics and four metadata
+artifacts, not cross-release protocol equivalence. CLI-reference regeneration,
+OpenAPI/library-symbol checks, formatting and diff hygiene passed. Repository
+hygiene checked 1,436 local links and 36 bundles / 8,929,026 bytes. This final
+chunk changes static research/docs only: it does not claim a new workspace
+runtime or live cleanup test. The earlier own-LID runtime validation is separate.
+No retained account was read or changed during this callback research.

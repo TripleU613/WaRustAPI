@@ -1,0 +1,62 @@
+{
+  "device-cache-worker": {
+    "class": "LX/DLn;",
+    "file": "device-cache-worker.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "user-cache-constructor": {
+    "class": "LX/8G8;",
+    "file": "user-cache-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "user-cache-entry-removed": {
+    "class": "LX/0D3;",
+    "file": "user-cache-entry-removed.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "entryRemoved",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "user-cache-remove": {
+    "class": "LX/0D3;",
+    "file": "user-cache-remove.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "remove",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "user-cache-worker": {
+    "class": "LX/8SJ;",
+    "file": "user-cache-worker.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  }
+}
