@@ -68,6 +68,24 @@ fn scope(node: &Node) -> Option<(Jid, Jid, &str)> {
     let (chat, participant) = super::inbox::group_sender(node)?;
     Some((chat, participant, node.get_attr("id")?.as_text()?))
 }
+/// Inspect a retained group's original envelope without changing its state.
+/// The route must agree with its canonical or historical record selector.
+/// This validates attribution of saved data, not network authentication.
+pub fn sender_for_record(
+    record_key: &[u8],
+    saved: &Value,
+    mut get: impl FnMut(&[u8]) -> Result<Option<Vec<u8>>>,
+) -> Result<(Jid, Jid)> {
+    let node = route(saved, &mut get)?;
+    let (chat, participant, id) =
+        scope(&node).ok_or_else(|| invalid("saved group route has no participant"))?;
+    if record_key != key(&chat, &participant, id)?.as_bytes()
+        && record_key != legacy(&chat, id).as_bytes()
+    {
+        return Err(invalid("saved group route differs from record selector"));
+    }
+    Ok((chat, participant))
+}
 /// Actual original device retained by a selected parent's authenticated route.
 pub(super) fn original_participant(
     saved: &Value,
@@ -246,6 +264,38 @@ mod tests {
         // authenticated it. Real group decryption is exercised by inbox tests.
         let saved = serde_json::json!({"status":"decrypted", "route":route});
         let old = legacy(&chat, "SAME");
+        for selector in [old.clone(), key(&chat, &alice, "SAME").unwrap()] {
+            assert_eq!(
+                sender_for_record(selector.as_bytes(), &saved, |_| Ok(None)).unwrap(),
+                (chat.clone(), alice.clone())
+            );
+        }
+        assert!(
+            sender_for_record(
+                key(&chat, &bob, "SAME").unwrap().as_bytes(),
+                &saved,
+                |_| Ok(None)
+            )
+            .is_err()
+        );
+        assert!(
+            sender_for_record(
+                old.as_bytes(),
+                &serde_json::json!({"status":"decrypted"}),
+                |_| Ok(None)
+            )
+            .is_err()
+        );
+        let captured =
+            serde_json::json!({"status":"consumed", "capture":b"capture-route".to_vec()});
+        assert_eq!(
+            sender_for_record(old.as_bytes(), &captured, |k| {
+                assert_eq!(k, b"capture-route");
+                Ok(Some(serde_json::to_vec(&saved["route"]).unwrap()))
+            })
+            .unwrap(),
+            (chat.clone(), alice.clone())
+        );
         store
             .write(|tx| tx.put_json(Table::Checkpoints, old.as_bytes(), 1, &saved))
             .unwrap();

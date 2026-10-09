@@ -149,3 +149,14 @@ records were retained; capture rows grew from 471 to 481. Peer keys, actions,
 receipts, outbox and durable events were unchanged. Two retained group reaction
 keys still inspected as target_validation=valid. These are retained-key and
 receive-runtime checks, not fresh live group reaction/own-envelope proof.
+
+Group envelope direction (2026-10-09, **confirmed static/local**): the APK 37.71
+CnN/CgC/Cih/Bp2/Cna producer chain now establishes the ordinary network group's
+selected sender and own-envelope flag. Sender-aware reactions preserve payload
+direction for a known own sender; remote true/absent-or-empty-author references
+fall back to the authenticated sender user. Inspection verifies the saved original
+route against its selector. Existing projection markers, consumed bodies, parent
+routes, outbox records and trust admission remain preserved. This supersedes the
+ordinary own-envelope/source-producer gap above; full own-device synchronization,
+hosted/status references, special chat normalization and fresh live own-device
+reaction behavior remain unverified/unported. See [envelope direction](group-envelope-own.md).

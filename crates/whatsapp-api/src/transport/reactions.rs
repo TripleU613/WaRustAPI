@@ -260,11 +260,34 @@ pub fn key_fields(payload: &[u8]) -> Option<(Option<String>, bool)> {
 /// Bal.A00 reads BZa.participant_ (003a..0046); fromMe alone cannot identify
 /// a third member. Ordinary group BoQ.A00 only consults 08Z.BO0 on the
 /// fromMe-false branch (00dc..00e8). 08i.BO0 compares own PN/LID exactly;
-/// native own-envelope, nullable-author and hosted branches remain unported.
+/// This entry point assumes an ordinary remote envelope. Receive projections
+/// use [`group_target_for_sender`] with their authenticated sender instead.
 pub fn group_target(
     chat: &Jid,
     payload: &[u8],
     own: &[Jid],
+) -> Result<crate::model::message::MessageKey> {
+    group_target_context(chat, payload, own, None)
+}
+
+/// Resolve a group reaction using its already authenticated envelope sender.
+/// APK 37.71 CgC.A01/CnN.A04 derive the envelope own flag from the selected
+/// participant's UserJid; no payload flag or caller-provided boolean proves it.
+/// This function parses references only and does not authenticate a sender.
+pub fn group_target_for_sender(
+    chat: &Jid,
+    sender: &Jid,
+    payload: &[u8],
+    own: &[Jid],
+) -> Result<crate::model::message::MessageKey> {
+    group_target_context(chat, payload, own, Some(sender))
+}
+
+fn group_target_context(
+    chat: &Jid,
+    payload: &[u8],
+    own: &[Jid],
+    sender: Option<&Jid>,
 ) -> Result<crate::model::message::MessageKey> {
     use crate::model::{
         ids::{ChatId, DeviceAddress},
@@ -289,43 +312,68 @@ pub fn group_target(
     if remote.is_ad() || !matches!(remote.server, Server::User | Server::Lid | Server::Group) {
         return Err(invalid("unsupported_group_remote_jid"));
     }
-    let participant = key
-        .participant
-        .as_deref()
-        .ok_or_else(|| invalid("missing_participant"))?;
-    let participant = Jid::parse(participant).map_err(|_| invalid("invalid_participant"))?;
-    if participant.user.is_empty() {
-        return Err(invalid("invalid_participant"));
-    }
-    if !matches!(participant.server, Server::User | Server::Lid) {
-        return Err(invalid("unsupported_participant"));
-    }
-    if participant.agent != 0 {
-        return Err(invalid("unsupported_participant_agent"));
-    }
-    if participant.is_ad() {
-        return Err(invalid("unsupported_participant_device"));
-    }
-    // 0D8.A01 requires a UserJid, not a DeviceJid. Do not normalize a device
-    // key into native own-user equality (Jid.equals also compares getType).
     let from_me = key.from_me.unwrap_or(false);
     let valid_own = |o: &Jid| {
         o.agent == 0 && !o.user.is_empty() && matches!(o.server, Server::User | Server::Lid)
     };
-    if !from_me && !own.iter().any(valid_own) {
+    if (sender.is_some() || !from_me) && !own.iter().any(valid_own) {
         return Err(invalid("own_identity_missing"));
     }
-    let ours = !from_me
-        && own
-            .iter()
+    let own_sender = if let Some(sender) = sender {
+        if !valid_own(sender) {
+            return Err(invalid("unsupported_group_sender"));
+        }
+        own.iter()
             .filter(|o| valid_own(o))
-            .any(|o| o.to_non_ad() == participant.to_non_ad());
+            .any(|o| o.to_non_ad() == sender.to_non_ad())
+    } else {
+        false
+    };
+    // BoQ.A00 0076..007e/00f6..00fe preserves payload fromMe for an own
+    // envelope. On a remote true/null-author branch 00d6 jumps to 00b6 and
+    // selects CoT.A06; Cna.A01 0040..0050 derives it from the selected sender.
+    let fallback = if !own_sender && from_me {
+        sender.map(Jid::to_non_ad)
+    } else {
+        None
+    };
+    let participant = match key.participant.as_deref() {
+        None | Some("") if sender.is_some() && own_sender && from_me => None,
+        None | Some("") if fallback.is_some() => fallback,
+        None => return Err(invalid("missing_participant")),
+        Some(p) => Some(Jid::parse(p).map_err(|_| invalid("invalid_participant"))?),
+    };
+    if let Some(participant) = &participant {
+        if participant.user.is_empty() {
+            return Err(invalid("invalid_participant"));
+        }
+        if !matches!(participant.server, Server::User | Server::Lid) {
+            return Err(invalid("unsupported_participant"));
+        }
+        if participant.agent != 0 {
+            return Err(invalid("unsupported_participant_agent"));
+        }
+        if participant.is_ad() {
+            return Err(invalid("unsupported_participant_device"));
+        }
+    }
+    // 0D8.A01 requires a UserJid, not a DeviceJid. Do not normalize a device
+    // key into native own-user equality (Jid.equals also compares getType).
+    let ours = if own_sender {
+        from_me
+    } else {
+        !from_me
+            && own
+                .iter()
+                .filter(|o| valid_own(o))
+                .any(|o| Some(o.to_non_ad()) == participant.as_ref().map(Jid::to_non_ad))
+    };
     Ok(MessageKey {
         chat: ChatId::from_jid(chat)?,
         sender: if ours {
             None
         } else {
-            Some(DeviceAddress::from_jid(&participant.to_non_ad())?)
+            Some(DeviceAddress::from_jid(&participant.unwrap().to_non_ad())?)
         },
         direction: if ours {
             Direction::Outgoing
@@ -360,29 +408,117 @@ pub fn decode(payload: &[u8]) -> Option<Incoming> {
 #[cfg(test)]
 mod group_tests {
     use super::*;
+    #[test]
+    fn authenticated_group_sender_selects_own_envelope_and_nullable_author_paths() {
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let own = [
+            Jid::parse("15555550199@s.whatsapp.net").unwrap(),
+            Jid::parse("222222222222222@lid").unwrap(),
+        ];
+        let other = Jid::parse("15555550101:3@lid").unwrap();
+        for actor in [
+            "15555550199@s.whatsapp.net",
+            "15555550199:3@s.whatsapp.net",
+            "222222222222222@lid",
+            "222222222222222:3@lid",
+        ] {
+            let actor = Jid::parse(actor).unwrap();
+            for p in [
+                own[0].to_string(),
+                own[1].to_string(),
+                other.to_non_ad().to_string(),
+            ] {
+                for flag in [None, Some(false), Some(true)] {
+                    let target = group_target_for_sender(
+                        &chat,
+                        &actor,
+                        &fixture(&chat.to_string(), Some(&p), flag),
+                        &own,
+                    )
+                    .unwrap();
+                    assert_eq!(
+                        target.direction,
+                        if flag == Some(true) {
+                            Direction::Outgoing
+                        } else {
+                            Direction::Incoming
+                        }
+                    );
+                    assert_eq!(
+                        target.sender.map(|s| s.to_jid()),
+                        if flag == Some(true) {
+                            None
+                        } else {
+                            Some(Jid::parse(&p).unwrap())
+                        }
+                    );
+                }
+            }
+            for p in [None, Some("")] {
+                let target = group_target_for_sender(
+                    &chat,
+                    &actor,
+                    &fixture(&chat.to_string(), p, Some(true)),
+                    &own,
+                )
+                .unwrap();
+                assert_eq!(target.direction, Direction::Outgoing);
+                assert!(target.sender.is_none());
+            }
+        }
+        for source in [
+            other.clone(),
+            Jid::parse("15555550199:3@lid").unwrap(),
+            Jid::parse("222222222222222:3@s.whatsapp.net").unwrap(),
+        ] {
+            for p in [None, Some("")] {
+                let target = group_target_for_sender(
+                    &chat,
+                    &source,
+                    &fixture(&chat.to_string(), p, Some(true)),
+                    &own,
+                )
+                .unwrap();
+                assert_eq!(target.direction, Direction::Incoming);
+                assert_eq!(target.sender.unwrap().to_jid(), source.to_non_ad());
+            }
+        }
+        assert!(
+            matches!(group_target_for_sender(&chat,&other,&fixture(&chat.to_string(),None,Some(false)),&own),Err(Error::InvalidInput{reason,..}) if reason=="missing_participant")
+        );
+        assert!(
+            matches!(group_target_for_sender(&chat,&other,&fixture(&chat.to_string(),Some(&own[0].to_string()),Some(true)),&[]),Err(Error::InvalidInput{reason,..}) if reason=="own_identity_missing")
+        );
+        for actor in ["status@broadcast", "15555550101.1:3@lid"] {
+            assert!(
+                matches!(group_target_for_sender(&chat,&Jid::parse(actor).unwrap(),&fixture(&chat.to_string(),Some(&own[0].to_string()),None),&own),Err(Error::InvalidInput{reason,..}) if reason=="unsupported_group_sender")
+            );
+        }
+    }
+
+    fn fixture(remote: &str, participant: Option<&str>, from_me: Option<bool>) -> Vec<u8> {
+        let mut key = vec![0x0a, remote.len() as u8];
+        key.extend_from_slice(remote.as_bytes());
+        if let Some(v) = from_me {
+            key.extend_from_slice(&[0x10, u8::from(v)]);
+        }
+        key.extend_from_slice(b"\x1a\x06TARGET");
+        if let Some(p) = participant {
+            key.extend_from_slice(&[0x22, p.len() as u8]);
+            key.extend_from_slice(p.as_bytes());
+        }
+        let mut reaction = vec![0x0a, key.len() as u8];
+        reaction.extend(key);
+        reaction.extend_from_slice(b"\x12\x00");
+        let mut message = vec![0xf2, 0x02, reaction.len() as u8];
+        message.extend(reaction);
+        message
+    }
 
     #[test]
     fn group_target_reads_literal_participant_fields_and_refuses_unknown_scope() {
         // Independent descriptor-grounded bytes: BZa 1/2/3/4 inside BWI.key=1,
         // Message.reactionMessage=46. This does not call our payload builder.
-        fn fixture(remote: &str, participant: Option<&str>, from_me: Option<bool>) -> Vec<u8> {
-            let mut key = vec![0x0a, remote.len() as u8];
-            key.extend_from_slice(remote.as_bytes());
-            if let Some(v) = from_me {
-                key.extend_from_slice(&[0x10, u8::from(v)]);
-            }
-            key.extend_from_slice(b"\x1a\x06TARGET");
-            if let Some(p) = participant {
-                key.extend_from_slice(&[0x22, p.len() as u8]);
-                key.extend_from_slice(p.as_bytes());
-            }
-            let mut reaction = vec![0x0a, key.len() as u8];
-            reaction.extend(key);
-            reaction.extend_from_slice(b"\x12\x00");
-            let mut message = vec![0xf2, 0x02, reaction.len() as u8];
-            message.extend(reaction);
-            message
-        }
         let chat = Jid::parse("120363000000000001@g.us").unwrap();
         let own = [
             Jid::parse("15555550199@s.whatsapp.net").unwrap(),

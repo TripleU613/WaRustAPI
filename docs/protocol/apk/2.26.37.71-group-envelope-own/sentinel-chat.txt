@@ -1,0 +1,15 @@
+# APK-derived structural disassembly: LX/8oR;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=1
+  0000..0004 op=22 new-instance v0, LX/8oR;
+  0004..000a op=70 invoke-direct {v0}, LX/8oR;-><init>(V)
+  000a..000e op=69 sput-object v0, LX/8oR;->A00:LX/8oR;
+  000e..0012 op=22 new-instance v0, LX/8oS;
+  0012..0018 op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>(V)
+  0018..001c op=69 sput-object v0, LX/8oR;->CREATOR:Landroid/os/Parcelable$Creator;
+  001c..001e op=0e return-void
+  # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,357 @@
+# APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# xtask apk-field-refs / apk-callers / apk-smali --exceptions; see group-envelope-own.md.
+
+# key-flag-writes
+classes2.dex  LX/1gc;-><init>(VLLZ)
+  write opcode 0x5c, dex byte offset: 0x12f24a
+classes2.dex  LX/1gc;-><init>(VL)
+  write opcode 0x5c, dex byte offset: 0x12f27a
+
+# key-constructor-callers
+classes4.dex  LX/5kZ;->AOj(LLLL)
+  invoke dex byte offset: 0x616734
+classes6.dex  LX/9QX;->A00(VLLL)
+  invoke dex byte offset: 0x396402
+classes6.dex  Lcom/whatsapp/contact/ui/viewsharedcontacts/ViewSharedContactArrayActivity;->onCreate(VL)
+  invoke dex byte offset: 0x4288cc
+classes6.dex  LX/ABG;->A00(LLLL)
+  invoke dex byte offset: 0x4bba22
+classes6.dex  LX/ABG;->A00(LLLL)
+  invoke dex byte offset: 0x4bba42
+classes6.dex  LX/AV6;->BTJ(VL)
+  invoke dex byte offset: 0x56605c
+classes6.dex  LX/AVx;->APq(VL)
+  invoke dex byte offset: 0x56b9fc
+classes6.dex  LX/AgG;->run(V)
+  invoke dex byte offset: 0x5a647a
+classes6.dex  LX/AgQ;->run(V)
+  invoke dex byte offset: 0x5a8acc
+classes6.dex  LX/Agy;->run(V)
+  invoke dex byte offset: 0x5ae176
+classes6.dex  LX/Aha;->run(V)
+  invoke dex byte offset: 0x5c40ce
+classes6.dex  LX/Ahi;->run(V)
+  invoke dex byte offset: 0x5cc51a
+classes6.dex  LX/AnX;->invokeSuspend(LL)
+  invoke dex byte offset: 0x655360
+classes.dex  LX/0My;->A04(VL)
+  invoke dex byte offset: 0x5707fe
+classes.dex  LX/0My;->A06(VLL)
+  invoke dex byte offset: 0x570c4e
+classes.dex  LX/0Sk;->A04(LLLL)
+  invoke dex byte offset: 0x591c2a
+classes.dex  LX/0Y5;->A00(ILLLL)
+  invoke dex byte offset: 0x5cc1c2
+classes.dex  LX/0Z0;->A05(LLL)
+  invoke dex byte offset: 0x5e4886
+classes.dex  LX/0gM;->A06(LL)
+  invoke dex byte offset: 0x63bb96
+classes.dex  LX/0gM;->A07(LLL)
+  invoke dex byte offset: 0x63bc68
+classes.dex  LX/0gM;->A08(LLL)
+  invoke dex byte offset: 0x63bd38
+classes.dex  LX/0gM;->A0D(LL)
+  invoke dex byte offset: 0x63bf94
+classes.dex  LX/0jc;->A0p(VLLL)
+  invoke dex byte offset: 0x662b30
+classes.dex  LX/0jc;->A13(ZLL)
+  invoke dex byte offset: 0x663c5c
+classes.dex  LX/0ob;->A00(LL)
+  invoke dex byte offset: 0x6c33d8
+classes.dex  LX/0od;->A03(LLZ)
+  invoke dex byte offset: 0x6c44dc
+classes.dex  LX/0ol;->A03(LLL)
+  invoke dex byte offset: 0x6c543a
+classes.dex  LX/0qj;->A0B(LL)
+  invoke dex byte offset: 0x6ed1c2
+classes.dex  LX/0yG;->handleMessage(VL)
+  invoke dex byte offset: 0x74ea2c
+classes.dex  LX/0z9;->A0A(VLLLII)
+  invoke dex byte offset: 0x765d26
+classes.dex  LX/0zC;->A0A(LLI)
+  invoke dex byte offset: 0x769e10
+classes.dex  LX/0zc;->A06(LLL)
+  invoke dex byte offset: 0x7785fc
+classes.dex  LX/0zd;->A04(LLLLLLLJJZ)
+  invoke dex byte offset: 0x7799d4
+classes.dex  LX/0zd;->A04(LLLLLLLJJZ)
+  invoke dex byte offset: 0x779a3c
+classes.dex  LX/11I;->BFC(ZLI)
+  invoke dex byte offset: 0x7987d4
+classes.dex  LX/11I;->BFC(ZLI)
+  invoke dex byte offset: 0x7987e0
+classes.dex  LX/11I;->BFC(ZLI)
+  invoke dex byte offset: 0x7987ec
+classes.dex  LX/11X;->A09(VLI)
+  invoke dex byte offset: 0x79ed5c
+classes.dex  LX/11k;->A09(VLI)
+  invoke dex byte offset: 0x7a40ea
+classes.dex  LX/11m;->A09(VLI)
+  invoke dex byte offset: 0x7a5f8a
+classes.dex  LX/11m;->A09(VLI)
+  invoke dex byte offset: 0x7a6226
+classes.dex  LX/11y;->A07(LL)
+  invoke dex byte offset: 0x7a9186
+classes.dex  LX/11y;->A07(LL)
+  invoke dex byte offset: 0x7a92d8
+classes.dex  LX/12K;->A0D(LLZ)
+  invoke dex byte offset: 0x7b26e2
+classes.dex  LX/12N;->A02(V)
+  invoke dex byte offset: 0x7b6bca
+classes.dex  LX/12y;->A02(LLL)
+  invoke dex byte offset: 0x7bfee4
+classes.dex  LX/14c;->BFC(ZLI)
+  invoke dex byte offset: 0x7d8360
+classes.dex  LX/150;->A04(ZLL)
+  invoke dex byte offset: 0x7df3b8
+classes.dex  LX/150;->A04(ZLL)
+  invoke dex byte offset: 0x7dfdd4
+classes.dex  LX/153;->A00(LLLIZ)
+  invoke dex byte offset: 0x7e3778
+classes.dex  LX/153;->A00(LLLIZ)
+  invoke dex byte offset: 0x7e384e
+classes.dex  LX/153;->A01(LL)
+  invoke dex byte offset: 0x7e4cc2
+classes.dex  LX/15A;->A02(LL)
+  invoke dex byte offset: 0x7e7a30
+classes.dex  LX/16U;->A00(VL)
+  invoke dex byte offset: 0x7fcbc8
+classes.dex  LX/17J;->BFC(ZLI)
+  invoke dex byte offset: 0x804d32
+classes.dex  LX/17h;->A09(VLI)
+  invoke dex byte offset: 0x80ca16
+classes.dex  LX/17m;->A09(VLI)
+  invoke dex byte offset: 0x80ddbc
+classes.dex  LX/17o;->A09(VLI)
+  invoke dex byte offset: 0x80e7c6
+classes.dex  LX/1Qy;->A02(VL)
+  invoke dex byte offset: 0x8dccf0
+classes.dex  LX/1Qy;->A02(VL)
+  invoke dex byte offset: 0x8dcf5a
+classes11.dex  LX/LbA;->A0A(V)
+  invoke dex byte offset: 0x3e61a8
+classes11.dex  LX/NUX;->A01(LLL)
+  invoke dex byte offset: 0x5e8ac4
+classes3.dex  LX/231;->CPM(VLLLI)
+  invoke dex byte offset: 0x231244
+classes3.dex  LX/232;-><init>(VLLLLLLL)
+  invoke dex byte offset: 0x231ab6
+classes3.dex  LX/2Xf;->A0b(VL)
+  invoke dex byte offset: 0x2cacd8
+classes3.dex  LX/2ju;->A00(LLL)
+  invoke dex byte offset: 0x30f34a
+classes3.dex  LX/2l5;->A00(LLL)
+  invoke dex byte offset: 0x3112c0
+classes3.dex  LX/33s;->A01(LLLL)
+  invoke dex byte offset: 0x346f56
+classes3.dex  LX/36W;->A00(LLLLLLLJZ)
+  invoke dex byte offset: 0x35c452
+classes3.dex  LX/36W;->A00(LLLLLLLJZ)
+  invoke dex byte offset: 0x35c46a
+classes3.dex  LX/36e;->A03(VLLLLL)
+  invoke dex byte offset: 0x35f616
+classes3.dex  LX/37Q;->A04(VLLLZ)
+  invoke dex byte offset: 0x36ed52
+classes3.dex  LX/3KN;->CHJ(VLL)
+  invoke dex byte offset: 0x3d31ae
+classes3.dex  LX/3KS;->CHP(VLLI)
+  invoke dex byte offset: 0x3d3e4c
+classes3.dex  LX/3LX;->A04(LL)
+  invoke dex byte offset: 0x3dc054
+classes3.dex  LX/3La;->BuH(VLI)
+  invoke dex byte offset: 0x3dcb1e
+classes3.dex  LX/3Qr;->run(V)
+  invoke dex byte offset: 0x4093f2
+classes3.dex  LX/3R2;->run(V)
+  invoke dex byte offset: 0x410f6c
+classes3.dex  LX/3R5;->run(V)
+  invoke dex byte offset: 0x41601e
+classes3.dex  LX/3R8;->run(V)
+  invoke dex byte offset: 0x418378
+classes3.dex  LX/3Sa;->invoke(LL)
+  invoke dex byte offset: 0x4404f6
+classes3.dex  LX/3WA;->invokeSuspend(LL)
+  invoke dex byte offset: 0x47537c
+classes9.dex  LX/IVm;->A01(LL)
+  invoke dex byte offset: 0x6c7060
+classes2.dex  LX/1di;->A00(VL)
+  invoke dex byte offset: 0x110de6
+classes2.dex  LX/1dj;->A00(VL)
+  invoke dex byte offset: 0x111546
+classes2.dex  LX/1en;->A00(LLLLL)
+  invoke dex byte offset: 0x119dd0
+classes2.dex  LX/1fV;->A00(LLLI)
+  invoke dex byte offset: 0x121454
+classes2.dex  LX/1fV;->A00(LLLI)
+  invoke dex byte offset: 0x1214e0
+classes2.dex  LX/1fW;->A02(VLL)
+  invoke dex byte offset: 0x12247e
+classes2.dex  LX/1fm;->A04(VLL)
+  invoke dex byte offset: 0x125228
+classes2.dex  LX/1fm;->A04(VLL)
+  invoke dex byte offset: 0x1252a4
+classes2.dex  LX/1fm;->A04(VLL)
+  invoke dex byte offset: 0x1258ec
+classes2.dex  LX/1gV;->A0D(LLLLZ)
+  invoke dex byte offset: 0x12dcf2
+classes2.dex  LX/1gd;->A0F(LLL)
+  invoke dex byte offset: 0x12f968
+classes2.dex  LX/1gz;->A00(LLLLL)
+  invoke dex byte offset: 0x133a42
+classes2.dex  LX/1gz;->A00(LLLLL)
+  invoke dex byte offset: 0x134962
+classes2.dex  LX/1gz;->A03(VLLL)
+  invoke dex byte offset: 0x1372ae
+classes2.dex  LX/1h8;->A00(LLLJ)
+  invoke dex byte offset: 0x137ee2
+classes2.dex  LX/1hF;->A03(VLLLLLL)
+  invoke dex byte offset: 0x1392be
+classes2.dex  LX/1hQ;->A02(LL)
+  invoke dex byte offset: 0x13a0d6
+classes2.dex  LX/1iq;->CHJ(VLL)
+  invoke dex byte offset: 0x144bd0
+classes2.dex  LX/1iq;->CHJ(VLL)
+  invoke dex byte offset: 0x145b1a
+classes2.dex  LX/1iq;->CHJ(VLL)
+  invoke dex byte offset: 0x145c38
+classes2.dex  LX/1iz;-><init>(VLLIJ)
+  invoke dex byte offset: 0x147382
+classes5.dex  LX/72k;-><init>(VLLL)
+  invoke dex byte offset: 0x35427a
+classes5.dex  LX/7CP;->A0y(VLLLIZ)
+  invoke dex byte offset: 0x38f7e4
+classes5.dex  Lcom/whatsapp/gallery/MediaGalleryFragmentBase;->A2O(VLLI)
+  invoke dex byte offset: 0x3d144c
+classes5.dex  LX/7pc;->A00(LL)
+  invoke dex byte offset: 0x47158c
+classes5.dex  LX/7r3;-><init>(VLLL)
+  invoke dex byte offset: 0x475cf2
+classes5.dex  LX/7sJ;->A01(LL)
+  invoke dex byte offset: 0x47bec8
+classes5.dex  LX/7su;->A00(LL)
+  invoke dex byte offset: 0x482608
+classes5.dex  LX/7t8;->A00(VLLLLL)
+  invoke dex byte offset: 0x483fa4
+classes5.dex  LX/7wX;->A03(LLLLLLLLL)
+  invoke dex byte offset: 0x4a63ce
+classes5.dex  LX/7wX;->A03(LLLLLLLLL)
+  invoke dex byte offset: 0x4a67f2
+classes5.dex  LX/7wX;->A03(LLLLLLLLL)
+  invoke dex byte offset: 0x4a6854
+classes5.dex  LX/7yX;->A04(VLL)
+  invoke dex byte offset: 0x4ca7a8
+classes5.dex  LX/8FJ;->A08(LLLLLZ)
+  invoke dex byte offset: 0x56ccf4
+classes5.dex  LX/8Pg;->CQL(VLL)
+  invoke dex byte offset: 0x5a5790
+classes5.dex  LX/8UN;->run(V)
+  invoke dex byte offset: 0x5e125c
+classes5.dex  LX/8UN;->run(V)
+  invoke dex byte offset: 0x5e13ce
+classes5.dex  LX/8UN;->run(V)
+  invoke dex byte offset: 0x5e1500
+classes5.dex  Lcom/whatsapp/jobqueue/job/MusicCreationReportingJob;->readObject(VL)
+  invoke dex byte offset: 0x68b6e8
+classes10.dex  LX/JhK;->A0Z(LL)
+  invoke dex byte offset: 0x3dd6a2
+classes10.dex  LX/LDd;->invokeSuspend(LL)
+  invoke dex byte offset: 0x675a12
+classes8.dex  LX/Deq;->A0R(LL)
+  invoke dex byte offset: 0x2a4cd0
+classes7.dex  LX/Ayj;->A0x(LLLZ)
+  invoke dex byte offset: 0x3b5b1c
+classes7.dex  LX/Aym;->A0r(LLL)
+  invoke dex byte offset: 0x3b8226
+classes7.dex  LX/Ayn;->A0V(LLLLZ)
+  invoke dex byte offset: 0x3b8d04
+classes7.dex  LX/Ayo;->A0S(LLLZ)
+  invoke dex byte offset: 0x3b9afe
+classes7.dex  LX/Aza;->A02(LLLLLLZZ)
+  invoke dex byte offset: 0x3c8b76
+classes7.dex  LX/BnJ;-><init>(VLI)
+  invoke dex byte offset: 0x513810
+
+# stanza-constructor-callers
+classes7.dex  LX/Cih;->A01(L)
+  invoke dex byte offset: 0x61a9d0
+
+# stanza-builder-callers
+classes2.dex  LX/1di;->A00(VL)
+  invoke dex byte offset: 0x111138
+classes.dex  LX/12w;->A09(VLI)
+  invoke dex byte offset: 0x7bf816
+classes.dex  LX/1Uu;->A00(V)
+  invoke dex byte offset: 0x91cc5e
+classes6.dex  LX/9QW;->A00(VLLL)
+  invoke dex byte offset: 0x395fee
+classes6.dex  LX/A8q;->A00(VLLLLLLLLLLLLLLLJJJZZZZ)
+  invoke dex byte offset: 0x4a49f6
+classes7.dex  LX/CgC;->A01(LLLLLJJ)
+  invoke dex byte offset: 0x5fe418
+
+# attributes-callers
+classes7.dex  LX/CnN;->A02(LL)
+  invoke dex byte offset: 0x66c2ca
+
+# source-user-extraction
+
+# class: LX/0DE;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 2
+    0000..0006  invoke-static  {v1}, LX/0DE;->A0T(ZL)
+    0006..0008  move-result  v0
+    0008..000c  if-eqz  v0, +0x7
+    000c..0010  check-cast  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0010..0014  iget-object  v0, v1, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    0014..0016  return-object  v0
+    0016..001a  sget-object  v0, LX/0Cy;->A00:LX/0D7;
+    001a..0020  invoke-static  {v1}, LX/0D7;->A00(LL)
+    0020..0022  move-result-object  v0
+    0022..0024  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+# user-type-predicate
+
+# class: LX/0DE;
+# extends: Ljava/lang/Object;
+
+.method public A0l(ZL)  # .registers 2
+    0000..0004  if-eqz  v1, +0x1d
+    0004..000a  invoke-virtual  {v1}, Lcom/whatsapp/infra/core/jid/Jid;->getType(I)
+    000a..000c  move-result  v1
+    000c..0010  if-eqz  v1, +0x15
+    0010..0014  const/16  v0, #0xb
+    0014..0018  if-eq  v1, v0, +0x11
+    0018..001c  const/16  v0, #0x12
+    001c..0020  if-eq  v1, v0, +0xd
+    0020..0024  const/16  v0, #0x16
+    0024..0028  if-eq  v1, v0, +0x9
+    0028..002c  const/16  v0, #0x1a
+    002c..0030  if-eq  v1, v0, +0x5
+    0030..0032  const/4  v0, #0x7
+    0032..0036  if-ne  v1, v0, +0x4
+    0036..0038  const/4  v0, #0x1
+    0038..003a  return  v0
+    003a..003c  const/4  v0, #0x0
+    003c..003e  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# is-sender-chat-predicate
+
+# class: LX/0DE;
+# extends: Ljava/lang/Object;
+
+.method public A0b(ZL)  # .registers 3
+    0000..0004  if-eqz  v2, +0xb
+    0004..000a  invoke-virtual  {v2}, Lcom/whatsapp/infra/core/jid/Jid;->getType(I)
+    000a..000c  move-result  v2
+    000c..0010  const/16  v1, #0x15
+    0010..0012  const/4  v0, #0x1
+    0012..0016  if-eq  v2, v1, +0x3
+    0016..0018  const/4  v0, #0x0
+    0018..001a  return  v0
+    # exception table: 0 try range(s)
+.end method

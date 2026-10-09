@@ -1737,7 +1737,7 @@ pub(super) async fn run(
             // but their fixed shape/validation diagnostic explains why.
             if let Some(shape) = whatsapp_api::transport::reactions::shape(&plain) {
                 println!("inbox: reaction shape {shape}");
-                if let Some(chat) = std::str::from_utf8(key)
+                if let Some(_chat) = std::str::from_utf8(key)
                     .ok()
                     .and_then(|k| k.strip_prefix("received:"))
                     .and_then(|k| k.rsplit_once(':'))
@@ -1746,13 +1746,25 @@ pub(super) async fn run(
                 {
                     let (pn, lid) = whatsapp_api::transport::inbox::own_identities(&store)?;
                     let own: Vec<_> = pn.into_iter().chain(lid).collect();
-                    let label =
-                        match whatsapp_api::transport::reactions::group_target(&chat, &plain, &own)
-                        {
-                            Ok(_) => "valid".to_owned(),
-                            Err(Error::InvalidInput { reason, .. }) => reason,
-                            Err(_) => "invalid_group_key".to_owned(),
-                        };
+                    let target = store.read(|tx| {
+                        let (original_chat, actor) =
+                            whatsapp_api::transport::group_inbox::sender_for_record(
+                                key,
+                                &saved,
+                                |k| tx.get(Table::Checkpoints, k, 1),
+                            )?;
+                        whatsapp_api::transport::reactions::group_target_for_sender(
+                            &original_chat,
+                            &actor,
+                            &plain,
+                            &own,
+                        )
+                    });
+                    let label = match target {
+                        Ok(_) => "valid".to_owned(),
+                        Err(Error::InvalidInput { reason, .. }) => reason,
+                        Err(_) => "invalid_group_key".to_owned(),
+                    };
                     println!("inbox: group reaction target_validation={label}");
                 }
             }

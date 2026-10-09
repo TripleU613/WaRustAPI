@@ -1,0 +1,68 @@
+# APK-derived structural disassembly: LX/Cih;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(VL) flags=0x19 registers=8
+  0000..0004 op=54 iget-object v0, v7, LX/Cih;->A0X:LX/1gc;
+  0004..0008 op=38 if-eqz v0, +0x7
+  0008..000c op=54 iget-object v0, v7, LX/Cih;->A09:LX/1gc;
+  000c..0010 op=38 if-eqz v0, +0x3
+  0010..0012 op=0e return-void
+  0012..0016 op=54 iget-object v5, v7, LX/Cih;->A0P:Ljava/lang/String;
+  0016..001a op=1a const-string v0, "id must be provided"
+  001a..0020 op=71 invoke-static {v5, v0}, LX/00K;->A07(VLL)
+  0020..0026 op=71 invoke-static {v5}, LX/00h;->A06(VL)
+  0026..002a op=54 iget-object v1, v7, LX/Cih;->A0Y:Ljava/lang/Boolean;
+  002a..002e op=1a const-string v0, "fromMe must be provided"
+  002e..0034 op=71 invoke-static {v1, v0}, LX/00K;->A07(VLL)
+  0034..003a op=71 invoke-static {v1}, LX/00h;->A06(VL)
+  003a..0040 op=6e invoke-virtual {v1}, Ljava/lang/Boolean;->booleanValue(Z)
+  0040..0042 op=0a move-result v6
+  0042..0046 op=54 iget-object v0, v7, LX/Cih;->A07:Lcom/whatsapp/infra/core/jid/Jid;
+  0046..004c op=71 invoke-static {v0}, LX/Ayn;->A0K(LL)
+  004c..004e op=0c move-result-object v4
+  004e..0052 op=55 iget-boolean v0, v7, LX/Cih;->A0T:Z
+  0052..0054 op=12 const/4 v3, #0x1
+  0054..0058 op=38 if-eqz v0, +0x1f
+  0058..005c op=38 if-eqz v6, +0x1d
+  005c..0060 op=54 iget-object v1, v7, LX/Cih;->A06:Lcom/whatsapp/infra/core/jid/Jid;
+  0060..0064 op=38 if-eqz v1, +0x19
+  0064..006a op=71 invoke-static {v1}, LX/0DE;->A0Q(ZL)
+  006a..006c op=0a move-result v0
+  006c..0070 op=38 if-eqz v0, +0x13
+  0070..0076 op=71 invoke-static {v1}, LX/0DE;->A00(LL)
+  0076..0078 op=0c move-result-object v2
+  0078..007e op=71 invoke-static {v4, v5, v6}, LX/Ayj;->A0x(LLLZ)
+  007e..0080 op=0c move-result-object v0
+  0080..0084 op=5b iput-object v0, v7, LX/Cih;->A0X:LX/1gc;
+  0084..008a op=71 invoke-static {v2, v5, v3}, LX/Ayj;->A0x(LLLZ)
+  008a..008c op=0c move-result-object v0
+  008c..0090 op=5b iput-object v0, v7, LX/Cih;->A09:LX/1gc;
+  0090..0092 op=0e return-void
+  0092..0096 op=54 iget-object v2, v7, LX/Cih;->A05:LX/0Cy;
+  0096..009c op=71 invoke-static {v4, v5, v6}, LX/Ayj;->A0x(LLLZ)
+  009c..009e op=0c move-result-object v0
+  009e..00a2 op=5b iput-object v0, v7, LX/Cih;->A0X:LX/1gc;
+  00a2..00a6 op=5b iput-object v0, v7, LX/Cih;->A09:LX/1gc;
+  00a6..00aa op=38 if-eqz v2, +0x1b
+  00aa..00b0 op=6e invoke-virtual {v2, v4}, Ljava/lang/Object;->equals(ZL)
+  00b0..00b2 op=0a move-result v0
+  00b2..00b6 op=39 if-nez v0, +0x15
+  00b6..00ba op=1a const-string v0, "MessageParsedValues/setUpMessageKeyIfNeeded remoteChatJid="
+  00ba..00c0 op=71 invoke-static {v4, v0}, LX/000;->A07(LLL)
+  00c0..00c2 op=0c move-result-object v1
+  00c2..00c6 op=1a const-string v0, "; normalizedChatJid="
+  00c6..00cc op=71 invoke-static {v2, v0, v1}, LX/1xj;->A1L(VLLL)
+  00cc..00d0 op=39 if-nez v6, -0x24
+  00d0..00d4 op=54 iget-object v0, v7, LX/Cih;->A08:Lcom/whatsapp/infra/core/jid/UserJid;
+  00d4..00d8 op=39 if-nez v0, -0x28
+  00d8..00da op=12 const/4 v3, #0x0
+  00da..00dc op=28 goto -0x2b
+  00dc..00e0 op=54 iget-object v0, v7, LX/Cih;->A08:Lcom/whatsapp/infra/core/jid/UserJid;
+  00e0..00e4 op=38 if-eqz v0, -0x68
+  00e4..00e8 op=39 if-nez v2, -0x30
+  00e8..00ea op=07 move-object v2, v0
+  00ea..00ec op=28 goto -0x33
+  # exception table: 0 try range(s)
+.end method

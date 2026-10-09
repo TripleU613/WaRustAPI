@@ -1731,3 +1731,31 @@ formatting passed. Final API edits passed five OpenAPI tests and rebuilt the CLI
 The 18-topic APK export/check reproduces 23 files / 86,053 bytes; hygiene validates
 16 checksum bundles / 5,901,337 bytes. Cached verified self-diff took 0.008 seconds;
 new-release extraction and re-anchoring speed remains unmeasured.
+
+Group envelope direction (2026-10-09, **confirmed static/local**): the APK 37.71
+CnN/CgC/Cih/Bp2/Cna producer chain now establishes the ordinary network group's
+selected sender and own-envelope flag. Sender-aware reactions preserve payload
+direction for a known own sender; remote true/absent-or-empty-author references
+fall back to the authenticated sender user. Inspection verifies the saved original
+route against its selector. Existing projection markers, consumed bodies, parent
+routes, outbox records and trust admission remain preserved. This supersedes the
+ordinary own-envelope/source-producer gap above; full own-device synchronization,
+hosted/status references, special chat normalization and fresh live own-device
+reaction behavior remain unverified/unported. See [envelope direction](group-envelope-own.md).
+
+**Confirmed verification:** 779 workspace/all-feature tests passed (652 API,
+4 property, 9 crash, 50 CLI, 1 API-symbol and 63 xtask tests), along with strict
+all-target/all-feature Clippy, Rustdoc with warnings denied, default CLI tests,
+API/library checks, CLI-reference regeneration and formatting. The final embedded
+API/build check also passed. The 24-topic export and revalidation agree on
+29 files / 127,370 bytes. Hygiene validates 17 APK checksum bundles totaling
+6,028,707 bytes.
+
+**Observed receive check (2026-10-09):** one 45-second window authenticated and
+stopped cleanly with chat sends and automatic reconnect disabled. Original
+captures were retained; capture rows grew from 481 to 487. Peer keys, actions,
+receipts, outbox and durable events stayed unchanged. Both retained group keys
+still inspected as target_validation=valid using their original sender routes.
+No historical markers were repaired or removed. This checks the receive runtime
+and retained references; it does not establish fresh live own-device/group
+reaction handling or human handset rendering.

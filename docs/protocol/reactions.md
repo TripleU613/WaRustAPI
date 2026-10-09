@@ -329,3 +329,14 @@ PN/LID/group keys now keep the envelope group, as BoQ does; no other chat or
 parent body is adopted. Status and unported subtypes retain a separate fixed
 refusal. The fixture changes a key's remote group and still binds the original
 consumed parent, author and group.
+
+Group envelope direction (2026-10-09, **confirmed static/local**): the APK 37.71
+CnN/CgC/Cih/Bp2/Cna producer chain now establishes the ordinary network group's
+selected sender and own-envelope flag. Sender-aware reactions preserve payload
+direction for a known own sender; remote true/absent-or-empty-author references
+fall back to the authenticated sender user. Inspection verifies the saved original
+route against its selector. Existing projection markers, consumed bodies, parent
+routes, outbox records and trust admission remain preserved. This supersedes the
+ordinary own-envelope/source-producer gap above; full own-device synchronization,
+hosted/status references, special chat normalization and fresh live own-device
+reaction behavior remain unverified/unported. See [envelope direction](group-envelope-own.md).

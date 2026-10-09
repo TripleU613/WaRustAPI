@@ -364,7 +364,12 @@ fn project(
                 (Direction::Outgoing, None)
             };
             let target = if chat.jid().server == crate::model::jid::Server::Group {
-                let Ok(target) = super::reactions::group_target(chat.jid(), payload, own) else {
+                let Ok(target) = super::reactions::group_target_for_sender(
+                    chat.jid(),
+                    &by.to_jid(),
+                    payload,
+                    own,
+                ) else {
                     return unsupported();
                 };
                 target
@@ -634,7 +639,8 @@ fn group_reaction_target(
     {
         return Ok(None);
     }
-    let Ok(mut target) = super::reactions::group_target(&chat, payload, own) else {
+    let Ok(mut target) = super::reactions::group_target_for_sender(&chat, &actor, payload, own)
+    else {
         return Ok(None);
     };
     if target.direction == Direction::Outgoing {
@@ -970,22 +976,27 @@ mod tests {
             .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
             .unwrap();
         let mut keys = Vec::new();
+        let own_actor = Jid::parse("222222222222222:3@lid").unwrap();
         for (n, author) in authors
             .iter()
             .chain([&own, &own_lid, &own, &own_lid])
+            .cycle()
+            .take(12)
             .enumerate()
         {
-            let id = if n < 2 { "ORIGINAL" } else { "OWN" };
+            let case = n % 6;
+            let reactor = if n < 6 { &actor } else { &own_actor };
+            let id = if case < 2 { "ORIGINAL" } else { "OWN" };
             let mut payload = super::super::reactions::group_payload(
                 &chat,
                 &author.to_non_ad(),
                 id,
-                n >= 4,
+                case >= 4,
                 if n % 2 == 0 { Some("👍") } else { None },
                 42,
             )
             .unwrap();
-            if n == 0 {
+            if case == 0 {
                 let mut envelope =
                     super::super::reactions::Envelope::decode(payload.as_slice()).unwrap();
                 envelope
@@ -999,10 +1010,10 @@ mod tests {
                 payload = envelope.encode_to_vec();
             }
             let node = group_node()
-                .attr("participant", actor.clone())
+                .attr("participant", reactor.clone())
                 .attr("id", format!("REACTION-{n}"));
             let selector =
-                super::super::group_inbox::key(&chat, &actor, &format!("REACTION-{n}")).unwrap();
+                super::super::group_inbox::key(&chat, reactor, &format!("REACTION-{n}")).unwrap();
             assert!(
                 store
                     .write(|tx| publish(tx, selector.as_bytes(), &node, &payload))
@@ -1022,19 +1033,25 @@ mod tests {
             .iter()
             .filter(|e| matches!(e.event, SyncEvent::MessageUpdated(_)))
             .collect();
-        assert_eq!(events.len(), 6);
+        assert_eq!(events.len(), 12);
         for (n, event) in events.iter().enumerate() {
+            let case = n % 6;
+            let incoming = if n < 6 {
+                !(2..4).contains(&case)
+            } else {
+                case < 4
+            };
             let SyncEvent::MessageUpdated(update) = &event.event else {
                 panic!("not a reaction");
             };
             assert_eq!(update.key.chat, ChatId::from_jid(&chat).unwrap());
             assert_eq!(
                 update.key.id.as_str(),
-                if n < 2 { "ORIGINAL" } else { "OWN" }
+                if case < 2 { "ORIGINAL" } else { "OWN" }
             );
             assert_eq!(
                 update.key.direction,
-                if !(2..4).contains(&n) {
+                if incoming {
                     Direction::Incoming
                 } else {
                     Direction::Outgoing
@@ -1042,10 +1059,13 @@ mod tests {
             );
             assert_eq!(
                 update.key.sender,
-                if n < 2 {
-                    Some(DeviceAddress::from_jid(&authors[n]).unwrap())
-                } else if n >= 4 {
-                    Some(DeviceAddress::from_jid(if n == 4 { &own } else { &own_lid }).unwrap())
+                if incoming && case < 2 {
+                    Some(DeviceAddress::from_jid(&authors[case]).unwrap())
+                } else if incoming {
+                    Some(
+                        DeviceAddress::from_jid(if case % 2 == 0 { &own } else { &own_lid })
+                            .unwrap(),
+                    )
                 } else {
                     None
                 }
@@ -1054,7 +1074,10 @@ mod tests {
             else {
                 panic!("wrong change");
             };
-            assert_eq!(*by, DeviceAddress::from_jid(&actor).unwrap());
+            assert_eq!(
+                *by,
+                DeviceAddress::from_jid(if n < 6 { &actor } else { &own_actor }).unwrap()
+            );
             assert_eq!(emoji.as_deref(), if n % 2 == 0 { Some("👍") } else { None });
         }
         for (key, raw) in &parents {
