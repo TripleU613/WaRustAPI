@@ -314,15 +314,46 @@ pub(super) async fn listen(
             tokio::time::sleep(std::time::Duration::from_secs(seconds)).await;
         } => false,
     };
+    // Shutdown replaces a terminal state with Stopped. Preserve its diagnostic
+    // first; neither a disabled retry budget nor a generic exit proves refusal.
+    let terminal = ended.then(|| status.borrow().state.clone());
     client.shutdown().await;
-    if ended {
-        return Err(Error::invalid(
-            "listen",
-            "connection ended; saved state preserved; reconnect bounds exhausted or failure not recoverable",
-        ));
+    if let Some(state) = terminal {
+        return Err(listen_terminal_error(&state));
     }
     println!("listen: stopped cleanly; account and sessions preserved");
     Ok(())
+}
+
+fn listen_terminal_error(state: &whatsapp_api::runtime::ConnectionState) -> Error {
+    use whatsapp_api::runtime::ConnectionState;
+    let (state_name, cause) = match state {
+        ConnectionState::Disconnected { reason } => {
+            // runtime::sanitized supplies these local labels. Do not echo an
+            // arbitrary reason (even a bounded string can contain a credential).
+            let cause = match reason.as_str() {
+                "invalid input for `connection`: server ended session; reason preserved encrypted; no reconnect" => {
+                    "server_ended_session"
+                }
+                "transport: peer closed the connection" => "peer_closed",
+                "operation cancelled" => "cancelled_or_worker_stopped",
+                value if value.starts_with("transport:") => "transport_failure",
+                value if value.starts_with("timeout after ") => "timeout",
+                _ => "unknown",
+            };
+            ("disconnected", cause)
+        }
+        ConnectionState::NeedsRegistration => ("needs_registration", "not_registered"),
+        ConnectionState::Revoked(_) => ("revoked", "revoked"),
+        ConnectionState::Stopped => ("stopped", "runtime_stopped"),
+        _ => ("unknown", "status_channel_closed"),
+    };
+    Error::invalid(
+        "listen",
+        format!(
+            "connection ended; saved state preserved; terminal_state={state_name}; cause={cause}; inspect lab-inbox --inspect"
+        ),
+    )
 }
 
 /// One redacted line per queued intent: identifiers, recipient, content kind
@@ -2719,6 +2750,51 @@ pub(super) fn abprops_query(cli: &super::Cli, show: bool) -> Result<(), Error> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn listener_reports_terminal_state_before_shutdown_without_echoing_unknown_reason() {
+        use whatsapp_api::runtime::ConnectionState;
+        for (reason, cause) in [
+            ("transport: peer closed the connection", "peer_closed"),
+            (
+                "invalid input for `connection`: server ended session; reason preserved encrypted; no reconnect",
+                "server_ended_session",
+            ),
+            (
+                "transport: socket I/O failed: ConnectionReset",
+                "transport_failure",
+            ),
+            ("timeout after 20s", "timeout"),
+            ("operation cancelled", "cancelled_or_worker_stopped"),
+            ("PRIVATE TOKEN 15555550101", "unknown"),
+        ] {
+            let error = listen_terminal_error(&ConnectionState::Disconnected {
+                reason: reason.into(),
+            })
+            .to_string();
+            assert!(error.contains("terminal_state=disconnected"));
+            assert!(error.contains(&format!("cause={cause}")));
+            assert!(!error.contains("PRIVATE"));
+            assert!(!error.contains("15555550101"));
+            assert!(!error.contains("failure not recoverable"));
+        }
+        assert!(
+            listen_terminal_error(&ConnectionState::NeedsRegistration)
+                .to_string()
+                .contains("cause=not_registered")
+        );
+        assert!(
+            listen_terminal_error(&ConnectionState::Revoked(
+                whatsapp_api::sync::RevocationReason::Fenced
+            ))
+            .to_string()
+            .contains("terminal_state=revoked")
+        );
+        assert!(
+            listen_terminal_error(&ConnectionState::Stopped)
+                .to_string()
+                .contains("cause=runtime_stopped")
+        );
+    }
     use super::*;
     use whatsapp_api::binary::Node;
     use whatsapp_api::model::jid::Jid;

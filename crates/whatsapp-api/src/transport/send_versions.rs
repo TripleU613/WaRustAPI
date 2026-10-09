@@ -75,12 +75,12 @@ pub struct SendVersions {
     pub captured: bool,
     /// Redacted actual user namespaces; empty when no snapshot is available.
     pub users: Vec<UserVersion>,
-    /// Current original-device rows, or null for historical missing instrumentation.
+    /// Original-device row membership, or null for historical missing instrumentation.
     /// Timestamps are server milliseconds, never local observation time or resend permission.
     pub device_receipts: Option<Vec<DeviceReceipt>>,
 }
 
-/// One original target's pending/received timestamp row, with no address exposed.
+/// One original target's mutable row membership, with no address exposed.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct DeviceReceipt {
     /// SHA-256 of the exact normalized original device address.
@@ -89,6 +89,10 @@ pub struct DeviceReceipt {
     pub device: u16,
     /// Nullable primary version captured by the original reservation.
     pub at_send: Option<i64>,
+    /// Whether the mutable device row currently exists; false retains provenance only.
+    pub present: bool,
+    /// Nullable current-row version; absent rows have null, independently of at_send.
+    pub version: Option<i64>,
     /// Earliest positive server timestamp in milliseconds, or pending/unknown null.
     pub timestamp: Option<i64>,
 }
@@ -105,6 +109,14 @@ struct ReceiptRow {
     version: Option<i64>,
     #[serde(deserialize_with = "nullable_version")]
     timestamp: Option<i64>,
+    // Old rows predate cleanup and therefore really were present, not unknown.
+    #[serde(default = "row_present")]
+    present: bool,
+    #[serde(default)]
+    reinserted: bool,
+}
+fn row_present() -> bool {
+    true
 }
 fn receipt_key(id: LocalMessageId) -> String {
     format!("outbox-device-receipts:{id}")
@@ -179,6 +191,8 @@ pub(super) fn capture_in(tx: &mut WriteTx<'_>, id: LocalMessageId, targets: &[Ji
                     device,
                     version,
                     timestamp: None,
+                    present: true,
+                    reinserted: false,
                 })
                 .collect(),
         },
@@ -244,8 +258,13 @@ fn decode_receipts(
     if rows.rows.len() != expected.len()
         || rows.rows.iter().any(|row| {
             !seen.insert(&row.device)
-                || expected.get(&row.device) != Some(&row.version)
+                || !expected.contains_key(&row.device)
+                || (!row.reinserted && expected.get(&row.device) != Some(&row.version))
                 || row.timestamp.is_some_and(|t| t <= 0)
+                || (!row.present
+                    && (row.device.device == 0 || row.timestamp.is_some() || row.reinserted))
+                || (row.reinserted
+                    && (!row.present || row.device.device == 0 || row.timestamp.is_none()))
         })
     {
         return Err(invalid(
@@ -256,7 +275,7 @@ fn decode_receipts(
 }
 
 /// Caller has already authenticated and attributed the receipt. Exact original
-/// namespace only: native counterpart authority/identity cleanup are unported.
+/// namespace only: native counterpart authority/primary cleanup are unported.
 /// APK Cmk.A03 direct t -> 0Gv.A01(default 0) -> wrapping mul-long 1000;
 /// 7hf.A01 keeps earliest positive time, even for an equal/lower status.
 pub(super) fn observe_in(
@@ -287,12 +306,75 @@ pub(super) fn observe_in(
     let Some(row) = rows.rows.iter_mut().find(|row| row.device == actor) else {
         return Ok(false);
     };
+    if !row.present {
+        // APK 37.71 0Z5.A0A 034e..0366: an UPDATE with zero matches
+        // inserts the current nullable user version, not the original version.
+        row.version = super::devices::primary_device_version_write_in(tx, &actor.to_non_ad())?;
+        row.present = true;
+        row.reinserted = true;
+    }
     if row.timestamp.is_some_and(|prior| prior <= timestamp) {
         return Ok(false);
     }
     row.timestamp = Some(timestamp);
     tx.put_json(Table::Checkpoints, receipt_key(id).as_bytes(), 1, &rows)?;
     Ok(true)
+}
+
+/// Authenticated companion replacement only. Native 0Z5.A0B excludes primary
+/// devices and deletes null-timestamp rows for the changed device. Retain the
+/// original target as provenance, separately from mutable row membership.
+pub(super) fn after_companion_identity_change_in(tx: &mut WriteTx<'_>, peer: &Jid) -> Result<()> {
+    if peer.user.is_empty()
+        || peer.device == 0
+        || peer.agent != 0
+        || !matches!(peer.server, Server::User | Server::Lid)
+    {
+        return Ok(());
+    }
+    let mut peer = peer.clone();
+    peer.kind = JidKind::Plain;
+    let mut cursor = None;
+    loop {
+        let page = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+        if page.is_empty() {
+            break;
+        }
+        cursor = page.last().map(|(key, _)| key.clone());
+        for (record_key, bytes) in page {
+            let Some(selector) = std::str::from_utf8(&record_key)
+                .ok()
+                .and_then(|name| name.strip_prefix("outbox-device-receipts:"))
+            else {
+                continue;
+            };
+            let id: LocalMessageId = selector
+                .parse()
+                .map_err(|_| invalid("invalid device receipt intent selector"))?;
+            let entry = Outbox::new("comparison-driver", Limits::default())
+                .get_mut(tx, id)?
+                .ok_or_else(|| invalid("device receipt rows lack original outbox intent"))?;
+            // Ordinary direct/group rows are established. Status/coexistence
+            // predicates are separate 0Z4.A07 branches and remain unported.
+            if !matches!(
+                entry.intent.chat.jid().server,
+                Server::User | Server::Lid | Server::Group
+            ) {
+                continue;
+            }
+            let snapshot = decode_snapshot(tx.get(Table::Checkpoints, key(id).as_bytes(), 1)?)?;
+            let mut rows = decode_receipts(Some(bytes), snapshot.as_ref())?
+                .ok_or_else(|| invalid("missing saved device receipt rows"))?;
+            if let Some(row) = rows.rows.iter_mut().find(|row| row.device == peer)
+                && row.present
+                && row.timestamp.is_none()
+            {
+                row.present = false;
+                tx.put_json(Table::Checkpoints, &record_key, 1, &rows)?;
+            }
+        }
+    }
+    Ok(())
 }
 
 /// Original targets for receipt attribution, not current membership or resend
@@ -330,6 +412,10 @@ pub fn inspect(store: &ProtocolStore, id: LocalMessageId) -> Result<SendVersions
             tx.get(Table::Checkpoints, receipt_key(id).as_bytes(), 1)?,
             snapshot.as_ref(),
         )?;
+        let original = snapshot
+            .as_ref()
+            .and_then(expected_receipts)
+            .unwrap_or_default();
         let mut result = SendVersions {
             local_id: id,
             captured: snapshot.is_some(),
@@ -342,7 +428,9 @@ pub fn inspect(store: &ProtocolStore, id: LocalMessageId) -> Result<SendVersions
                             row.device.to_string().as_bytes(),
                         )),
                         device: row.device.device,
-                        at_send: row.version,
+                        at_send: original[&row.device],
+                        present: row.present,
+                        version: if row.present { row.version } else { None },
                         timestamp: row.timestamp,
                     })
                     .collect()
@@ -413,6 +501,297 @@ mod tests {
                     .local_id)
             })
             .unwrap()
+    }
+    #[test]
+    fn companion_cleanup_and_late_reinsertion_preserve_original_send_and_reservations() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("companion-cleanup.redb");
+        let store = open(&path, true);
+        let request = SendRequest {
+            client_request_id: ClientRequestId::new("group-companion-cleanup-fixture").unwrap(),
+            chat: ChatId::from_jid(&Jid::parse("123456@g.us").unwrap()).unwrap(),
+            content: MessageContent::Text {
+                body: "PRIVATE CONTENT".into(),
+                quoted: None,
+                style: Default::default(),
+            },
+        };
+        let id = store
+            .write(|tx| {
+                Ok(Outbox::new("comparison-driver", Limits::default())
+                    .enqueue(tx, &request)?
+                    .0
+                    .local_id)
+            })
+            .unwrap();
+        let pn = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let changed = pn.with_device(2);
+        let received = pn.with_device(3);
+        let lid = Jid::parse("222222222222222:2@lid").unwrap();
+        let node = crate::binary::Node::new("receipt").attr("t", "20");
+        store
+            .write(|tx| {
+                capture_in(
+                    tx,
+                    id,
+                    &[pn.clone(), changed.clone(), received.clone(), lid.clone()],
+                )?;
+                observe_in(tx, id, &received, &node)?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"receipt-outbox:held",
+                    1,
+                    &serde_json::json!({"state":"uncertain"}),
+                )?;
+                // Force a later scan page; cleanup must not stop at unrelated entries.
+                for i in 0..300 {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        format!("aaa-fixture:{i:03}").as_bytes(),
+                        1,
+                        &i,
+                    )?;
+                }
+                Ok(())
+            })
+            .unwrap();
+        let original = inspect(&store, id).unwrap();
+        let frozen = store
+            .read(|tx| {
+                Ok((
+                    tx.get(Table::Checkpoints, key(id).as_bytes(), 1)?,
+                    tx.get(Table::Outbox, &id.0, 1)?,
+                    tx.get(Table::Checkpoints, b"receipt-outbox:held", 1)?,
+                ))
+            })
+            .unwrap();
+        // First seen / identical key observations do not run cleanup.
+        store
+            .write(|tx| {
+                super::super::identity_conflicts::archive_replacement(
+                    tx,
+                    &changed,
+                    None,
+                    None,
+                    &[2],
+                )?;
+                super::super::identity_conflicts::archive_bundle_replacement(
+                    tx,
+                    &changed,
+                    Some(&[2]),
+                    None,
+                    &[2],
+                )
+            })
+            .unwrap();
+        assert_eq!(inspect(&store, id).unwrap(), original);
+        let mut encoded = changed.clone();
+        encoded.kind = JidKind::Interop;
+        store
+            .write(|tx| {
+                super::super::identity_conflicts::archive_replacement(
+                    tx,
+                    &encoded,
+                    Some(&[1]),
+                    None,
+                    &[2],
+                )
+            })
+            .unwrap();
+        let cleaned = inspect(&store, id).unwrap();
+        assert_eq!(cleaned.users, original.users);
+        let rows = cleaned.device_receipts.as_ref().unwrap();
+        assert_eq!(rows.iter().filter(|r| !r.present).count(), 1);
+        assert_eq!(
+            rows.iter().filter(|r| r.device == 2 && r.present).count(),
+            1
+        ); // LID remains separate.
+        assert_eq!(
+            rows.iter().find(|r| r.device == 3).unwrap().timestamp,
+            Some(20000)
+        );
+        assert!(rows.iter().find(|r| r.device == 0).unwrap().present);
+        // Rollback includes cleanup/history/journal; directory and message sources share it.
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+            .unwrap();
+        let head = store.journal_head().unwrap();
+        let result: Result<()> = store.write(|tx| {
+            super::super::identity_conflicts::archive_bundle_replacement(
+                tx,
+                &lid,
+                Some(&[1]),
+                None,
+                &[2],
+            )?;
+            Err(invalid("fixture rollback"))
+        });
+        assert!(result.is_err());
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+                .unwrap(),
+            before
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+        store
+            .write(|tx| {
+                super::super::identity_conflicts::archive_bundle_replacement(
+                    tx,
+                    &lid,
+                    Some(&[1]),
+                    None,
+                    &[2],
+                )
+            })
+            .unwrap();
+        assert_eq!(
+            inspect(&store, id)
+                .unwrap()
+                .device_receipts
+                .unwrap()
+                .iter()
+                .filter(|r| !r.present)
+                .count(),
+            2
+        );
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("primary-device-version:{pn}").as_bytes(),
+                    1,
+                    &4i64,
+                )?;
+                assert!(!observe_in(tx, id, &changed, &node.clone().attr("t", "0"))?);
+                assert!(observe_in(tx, id, &changed, &node.clone().attr("t", "11"))?);
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("primary-device-version:{pn}").as_bytes(),
+                    1,
+                    &5i64,
+                )?;
+                assert!(observe_in(tx, id, &changed, &node.clone().attr("t", "10"))?);
+                super::super::identity_conflicts::archive_bundle_replacement(
+                    tx,
+                    &changed,
+                    Some(&[2]),
+                    None,
+                    &[3],
+                )
+            })
+            .unwrap();
+        let saved = inspect(&store, id).unwrap();
+        let row = saved
+            .device_receipts
+            .as_ref()
+            .unwrap()
+            .iter()
+            .find(|r| r.device == 2 && r.present)
+            .unwrap();
+        assert_eq!(row.at_send, None);
+        assert_eq!(row.version, Some(4)); // Reinsertion version, not latest receipt's 5.
+        assert_eq!(row.timestamp, Some(10000));
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    tx.get(Table::Checkpoints, key(id).as_bytes(), 1)?,
+                    tx.get(Table::Outbox, &id.0, 1)?,
+                    tx.get(Table::Checkpoints, b"receipt-outbox:held", 1)?
+                )))
+                .unwrap(),
+            frozen
+        );
+        assert_eq!(
+            store.write(|tx| targets_in(tx, id)).unwrap().unwrap().len(),
+            4
+        );
+        drop(store);
+        assert_eq!(inspect(&open(&path, false), id).unwrap(), saved);
+    }
+
+    #[test]
+    fn companion_cleanup_guards_and_legacy_rows_are_not_missing_provenance() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("legacy-cleanup.redb"), true);
+        let id = enqueue(&store);
+        let pn = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let companion = pn.with_device(2);
+        store
+            .write(|tx| capture_in(tx, id, &[pn.clone(), companion.clone()]))
+            .unwrap();
+        let mut legacy: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, receipt_key(id).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        for row in legacy["rows"].as_array_mut().unwrap() {
+            row.as_object_mut().unwrap().remove("present");
+            row.as_object_mut().unwrap().remove("reinserted");
+        }
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, receipt_key(id).as_bytes(), 1, &legacy))
+            .unwrap();
+        assert!(
+            inspect(&store, id)
+                .unwrap()
+                .device_receipts
+                .unwrap()
+                .iter()
+                .all(|r| r.present)
+        );
+        let mut agent = companion.clone();
+        agent.agent = 1;
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        for peer in [
+            pn.clone(),
+            agent,
+            Jid::parse("15555550102:2@s.whatsapp.net").unwrap(),
+        ] {
+            store
+                .write(|tx| after_companion_identity_change_in(tx, &peer))
+                .unwrap();
+        }
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+        for (index, field, value) in [
+            (0, "present", serde_json::json!(false)),
+            (1, "reinserted", serde_json::json!(true)),
+            (1, "version", serde_json::json!(3)),
+        ] {
+            let mut bad = legacy.clone();
+            bad["rows"][index][field] = value;
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, receipt_key(id).as_bytes(), 1, &bad))
+                .unwrap();
+            assert!(
+                store
+                    .write(|tx| after_companion_identity_change_in(tx, &companion))
+                    .is_err()
+            );
+            assert!(inspect(&store, id).is_err());
+        }
+        store
+            .write(|tx| {
+                tx.put_json(Table::Checkpoints, receipt_key(id).as_bytes(), 1, &legacy)?;
+                after_companion_identity_change_in(tx, &companion)
+            })
+            .unwrap();
+        assert_eq!(
+            inspect(&store, id)
+                .unwrap()
+                .device_receipts
+                .unwrap()
+                .iter()
+                .filter(|r| !r.present)
+                .count(),
+            1
+        );
     }
     #[test]
     fn send_versions_capture_known_null_and_namespace_state_once_and_survive_reopen() {

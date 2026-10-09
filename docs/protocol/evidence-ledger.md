@@ -2184,3 +2184,22 @@ hygiene checked 1,436 local links and 36 bundles / 8,929,026 bytes. This final
 chunk changes static research/docs only: it does not claim a new workspace
 runtime or live cleanup test. The earlier own-LID runtime validation is separate.
 No retained account was read or changed during this callback research.
+
+2026-10-09 — Companion receipt lifecycle implementation (offline verified):
+authenticated changed companion keys now clear only pending exact-device mutable
+membership for ordinary direct/group original intents. A later positive supported
+receipt reinserts with current nullable user version; original at_send/targets
+and held send/receipt reservations are preserved. Primary/counterpart/status/
+coexistence cleanup and final resend remain unfinished.
+[APK evidence, diagnostics and boundary](companion-receipt-cleanup.md).
+
+Companion lifecycle validation: all 810 workspace/all-feature tests, strict
+Clippy, warning-denying Rustdoc, default CLI, CLI reference/API symbols,
+formatting and experimental CLI build passed. Hygiene checked 1,447 links and
+36 bundles / 8,929,026 bytes. One receive-only session authenticated, then ended
+early with unknown cause and no retry. Saved peer/actions/receipts/outbox/events
+were unchanged; six new inbound checkpoints remain controls/unknowns rather
+than user replies. No qualifying live companion transition occurred. listen now
+preserves terminal state before shutdown and prints fixed redacted cause labels;
+this diagnostic fix is locally tested, not yet live observed. Primary cleanup,
+namespace migration and resend remain unfinished.

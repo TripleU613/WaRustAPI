@@ -418,6 +418,7 @@ fn archive_identity(
     super::peer_verification::invalidate_in(tx, peer, current)?;
     super::devices::after_primary_identity_change_in(tx, peer)?;
     super::sender_key_distribution::after_primary_change_in(tx, peer)?;
+    super::send_versions::after_companion_identity_change_in(tx, peer)?;
     let observed_at = Timestamp::now();
     let event = tx.append_event(crate::sync::SyncEvent::IdentityChanged(
         crate::sync::IdentityChange {

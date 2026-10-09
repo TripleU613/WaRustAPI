@@ -3,8 +3,8 @@
 2026-10-09. **Confirmed static** evidence uses APK 2.26.37.71, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 **Implemented/offline tested** behavior below is a bounded port of original
-pending rows and earliest-positive timestamp retention. Native identity cleanup,
-mutable membership removal, per-user status admission and resend remain unfinished.
+pending rows and earliest-positive timestamp retention. Primary/counterpart cleanup, per-user status admission and resend remain
+unfinished. Exact companion cleanup is described in the follow-up below.
 
 ## Evidence and scope
 
@@ -57,23 +57,24 @@ whatsapp-cli --profile l --json outbox-versions --local-id ORIGINAL_LOCAL_ID
 ```
 
 `device_receipts` exposes only device hashes, components, `at_send` nullable
-versions and nullable server-millisecond `timestamp`. Missing historical rows
+versions and nullable server-millisecond `timestamp`, plus current `present`
+membership and nullable row `version`. Missing historical rows
 are null, including historical snapshots with known exact targets: inspection
 and receiving never backfill them. Pending rows have null timestamps. This is
 an offline CLI/library capability; the OpenAPI path is a contract with no served
 HTTP route and `x-live=false`.
 
 Malformed/missing required row members, duplicate/unplanned devices, altered
-versions, wrong membership counts and nonpositive stored timestamps refuse with
+initial versions, wrong provenance counts and nonpositive stored timestamps refuse with
 fixed redacted diagnostics. Rows require exact immutable provenance; failures
-neither repair private state nor reveal input values. Full original membership
-is required until native removal rules are implemented deliberately.
+neither repair private state nor reveal input values. Full original provenance coverage remains required; mutable membership is
+now separate under the companion cleanup rules linked below.
 
 ## Remaining boundaries and validation
 
 **Unknown/unported:** native conditional PN/LID canonicalization authority,
 message/settings status gates, aggregated receipt parsing, per-user timestamp
-rows, identity-change invalidation/deletion, cache lifecycle and full sync/resend.
+rows, primary/counterpart invalidation/deletion, cache lifecycle and full sync/resend.
 Existing verified alias attribution may establish a fact, but this port does
 not merge another namespace into an original device row. A receipt for an
 unplanned device cannot add a row. Pending rows are not yet used to subtract
@@ -99,3 +100,10 @@ Zero network commands ran. A repeated workspace run exposed a pre-existing
 immediate-close ownership refusal; the shared-descriptor teardown regression
 and normal owner-drop correction are documented in
 [verification](../design/verification.md#temporary-store-ownership-refusal-observed-2026-10-09).
+
+Follow-up: [authenticated companion cleanup](companion-receipt-cleanup.md) now implements
+pending exact-device membership removal on ordinary direct/group rows and late
+positive receipt reinsertion with the current nullable user version. Original
+at_send remains immutable; new present/version diagnostics distinguish mutable
+membership. This supersedes the earlier full-membership/no-cleanup limitation
+for this branch only. Primary and namespace/counterpart cleanup remain unported.

@@ -191,3 +191,10 @@ Follow-up: [stored own identity](own-identity.md) closes BO0/BO1 and its PN/LID
 field producers. Rust's remote primary-change guards now recognize authenticated
 own LID before group preparation; this does not implement native own-primary
 version updates or mutable receipt cleanup.
+
+Follow-up: [authenticated companion cleanup](companion-receipt-cleanup.md) now implements
+pending exact-device membership removal on ordinary direct/group rows and late
+positive receipt reinsertion with the current nullable user version. Original
+at_send remains immutable; new present/version diagnostics distinguish mutable
+membership. This supersedes the earlier full-membership/no-cleanup limitation
+for this branch only. Primary and namespace/counterpart cleanup remain unported.
