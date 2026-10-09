@@ -2828,3 +2828,19 @@ topics and four unchanged metadata artifacts; this is reproducibility, not
 cross-release equivalence. Repository hygiene checked 1,340 local links and
 28 APK bundles / 8,059,427 bytes; diff hygiene passed. Research/docs only; no
 fresh Rust runtime test or live account operation is claimed for this chunk.
+
+2026-10-09 — **Confirmed static:** receipt timestamp branches now distinguish
+direct zero defaults, strict aggregated participant parsing and adjusted-clock
+defaults for successful-message participant receipts. Wire seconds become
+milliseconds. The cache retains earliest positive time without rewriting the
+nullable primary version; ordinary concrete device-receipt columns and conditional
+device-preserving namespace mapping are traced. Clock calibration, complete
+message admission and mutable identity cleanup remain unknown/unported.
+[Evidence and comparison recipe](docs/protocol/receipt-clock.md); no runtime/account operation changed.
+
+Receipt-clock validation: 18 source topics / 23 files / 82,330 bytes
+reproduced exactly from APK 2.26.37.71. Cached self-diff verified 18 unchanged
+topics and four unchanged metadata artifacts; this does not establish parity
+between different releases. Repository hygiene checked 1,350 local links and
+29 APK bundles / 8,141,757 bytes. Diff hygiene passed. Changes are research/docs
+only; no new runtime tests, live receipt or account changes are claimed.

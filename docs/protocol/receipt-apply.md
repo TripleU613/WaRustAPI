@@ -51,3 +51,8 @@ hygiene checked 1,336 local links and 27 APK bundles / 7,921,661 bytes; diff
 hygiene passed. This follow-up changes research/docs only; the preceding
 cdca7ad runtime chunk passed all 798 workspace tests and strict lint/doc/CLI
 checks. No new runtime implementation or live receipt application is claimed.
+
+Follow-up: [receipt clock and concrete columns](receipt-clock.md) now confirms
+three distinct timestamp policies, earliest-positive cache updates and the
+conditional device-preserving namespace mapping. Complete message-state and
+identity-cleanup parity remains unported.

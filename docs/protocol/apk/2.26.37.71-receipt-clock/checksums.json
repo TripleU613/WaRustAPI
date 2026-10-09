@@ -1,0 +1,90 @@
+{
+  "adjusted-clock.txt": {
+    "bytes": 1288,
+    "sha256": "19f2fcdf09475caad1f690d9b73f4b8efdd01f30a314d431de206be8d7607f8c"
+  },
+  "chat-type-predicate.txt": {
+    "bytes": 1147,
+    "sha256": "9aa25334b7cfe0f8614ffabfef28182cdf513d19211a2c95cac5795f14f5f38b"
+  },
+  "clock-provider.txt": {
+    "bytes": 774,
+    "sha256": "ffc519983757c8b8d1ed1e06921a3db63454069325716bfc08c024e84be294e0"
+  },
+  "default-long.txt": {
+    "bytes": 870,
+    "sha256": "2d2c3554f149e18948751eaaae330f49218febd8dfa3dfe9788e76d81900dc1f"
+  },
+  "device-canonicalization.txt": {
+    "bytes": 2128,
+    "sha256": "1057684e4ebff86938ecb694a0d829e63d17a4513ab28b8cc1512b76ad076b40"
+  },
+  "device-row-column.txt": {
+    "bytes": 530,
+    "sha256": "2893b640d241e865cf3421666048c3322b33e1452401c5dfd035e9e07d94cbbb"
+  },
+  "earliest-time-cache.txt": {
+    "bytes": 1712,
+    "sha256": "e7e4603ad12565b07490c5bf3e209388a8e5a778709692ac4e2550475088078b"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "lenient-long.txt": {
+    "bytes": 906,
+    "sha256": "d0f31f9d80ebaade273f9525842fc55c7c7d8555d3c32045d1a462ec460a0211"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-row-column.txt": {
+    "bytes": 519,
+    "sha256": "b09d92ee46a513f58203c5ee18be111d27c2b4bd427362055308e8d897e27f87"
+  },
+  "nullable-attribute.txt": {
+    "bytes": 687,
+    "sha256": "6fad89fb136019e7e7974cbee14c2b348b11325eeddd3752fb3eb32537f9f860"
+  },
+  "primary-version-column.txt": {
+    "bytes": 527,
+    "sha256": "fd410e17c4c200b24d928b33d284b3179a830090177cbe9682b5e24a3d487320"
+  },
+  "receipt-parser.txt": {
+    "bytes": 26043,
+    "sha256": "b7fcd555ed7ecf8d8cc09d5fa66f33d15c0826f28efc62c0bc843c085ca3039e"
+  },
+  "receipt-table.txt": {
+    "bytes": 519,
+    "sha256": "375d6934e208191fa30775d462c24225b44d414572c37f1937b94ab69ce71b13"
+  },
+  "receipt-time-column.txt": {
+    "bytes": 529,
+    "sha256": "f0b4a6f4f67326a8ae777ac987a0f152571ac319b30aa31b80a70f429b1a7bc4"
+  },
+  "required-long.txt": {
+    "bytes": 741,
+    "sha256": "776724407e2919d99281243a2270615af061f50ab08cf2bbb2d91c3dd42c6a19"
+  },
+  "store-log-prefix.txt": {
+    "bytes": 531,
+    "sha256": "03181c3a5119f978d2769c67b347ab64cfa20472d2f7ae52897e401e0ed8aeeb"
+  },
+  "strict-long.txt": {
+    "bytes": 1968,
+    "sha256": "e5776eaed4f64110496c2f0e82ec5c10003a138adaf4aa57e96cc2c130d13db7"
+  },
+  "targets.json": {
+    "bytes": 8081,
+    "sha256": "a0d76dcd93222f40b5c468663a4d2af42568b63492280e7745053b16e3d2a207"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "user-canonicalization.txt": {
+    "bytes": 3311,
+    "sha256": "eb170b62eb133fd1d9098bc1e98aa1e12a0655d0a6e31b4c77b1d9157e8b0fbb"
+  }
+}

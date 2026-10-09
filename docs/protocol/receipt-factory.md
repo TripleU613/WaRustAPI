@@ -71,3 +71,8 @@ topics and four unchanged metadata artifacts; this is reproducibility, not
 cross-release equivalence. Repository hygiene checked 1,340 local links and
 28 APK bundles / 8,059,427 bytes; diff hygiene passed. Research/docs only; no
 fresh Rust runtime test or live account operation is claimed for this chunk.
+
+Follow-up: [receipt clock and concrete columns](receipt-clock.md) now confirms
+three distinct timestamp policies, earliest-positive cache updates and the
+conditional device-preserving namespace mapping. Complete message-state and
+identity-cleanup parity remains unported.
