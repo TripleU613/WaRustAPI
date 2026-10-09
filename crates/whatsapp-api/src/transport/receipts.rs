@@ -400,6 +400,8 @@ pub struct ReceiptOutcome {
     pub message_id: String,
 }
 /// Every receipt ever queued, in key order. No recipient is printed.
+/// Malformed saved wire/IDs return fixed redacted errors; inspection never
+/// rewrites or repairs a reservation, including uncertain outcomes.
 pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ReceiptOutcome>> {
     store.read(|tx| {
         let mut out = Vec::new();
@@ -421,21 +423,31 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ReceiptOutcome>> {
                     continue;
                 };
                 let kind = rest.rsplit(':').next().unwrap_or("").to_owned();
-                let message_id = row["wire"]
-                    .as_array()
-                    .and_then(|bytes| {
-                        let wire: Vec<u8> = bytes
-                            .iter()
-                            .filter_map(|b| b.as_u64().map(|b| b as u8))
-                            .collect();
-                        decode(&wire).ok()
-                    })
-                    .and_then(|node| {
-                        node.get_attr("id")
-                            .and_then(|v| v.as_text())
-                            .map(str::to_owned)
-                    })
-                    .unwrap_or_default();
+                if row["wire"].is_null() {
+                    return Err(Error::invalid("receipt", "missing saved receipt wire"));
+                }
+                // Do not drop non-byte values or truncate integers: inspection
+                // must diagnose corrupt reservations without changing their outcome.
+                let wire: Vec<u8> = serde_json::from_value(row["wire"].clone())
+                    .map_err(|_| Error::invalid("receipt", "invalid saved receipt wire bytes"))?;
+                // Decoder errors can contain input-derived detail; this offline
+                // operator path reports a fixed diagnosis, never stored route data.
+                let node = decode(&wire)
+                    .map_err(|_| Error::invalid("receipt", "cannot decode saved receipt wire"))?;
+                if node.description != "receipt" {
+                    return Err(Error::invalid(
+                        "receipt",
+                        "saved receipt wire is not a receipt",
+                    ));
+                }
+                let message_id = node
+                    .get_attr("id")
+                    .and_then(|value| value.as_text())
+                    .filter(|id| !id.is_empty())
+                    .ok_or_else(|| {
+                        Error::invalid("receipt", "missing or invalid saved receipt message id")
+                    })?
+                    .to_owned();
                 out.push(ReceiptOutcome {
                     kind,
                     status: row["status"].as_str().unwrap_or("").to_owned(),
@@ -776,6 +788,73 @@ mod tests {
         })
         .unwrap()
     }
+    #[test]
+    fn receipt_outcomes_reject_corrupt_wire_without_exposing_or_changing_saved_state() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("receipt-inspection.redb");
+        let mut store = open(&path, true);
+        let encode = |node: &Node| {
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(node)
+                .unwrap()
+        };
+        let valid = encode(&Node::new("receipt").attr("id", "INSPECT-FIXTURE"));
+        let cases = [
+            (serde_json::Value::Null, "missing saved receipt wire"),
+            (serde_json::json!([256]), "invalid saved receipt wire bytes"),
+            (
+                serde_json::json!(["PRIVATE-CORRUPTION-FIXTURE"]),
+                "invalid saved receipt wire bytes",
+            ),
+            (serde_json::json!([255]), "cannot decode saved receipt wire"),
+            (
+                serde_json::json!(encode(&Node::new("receipt"))),
+                "missing or invalid saved receipt message id",
+            ),
+            (
+                serde_json::json!(encode(
+                    &Node::new("message").attr("id", "PRIVATE-CORRUPTION-FIXTURE")
+                )),
+                "saved receipt wire is not a receipt",
+            ),
+        ];
+        let key = b"receipt-outbox:inspection-fixture:read";
+        for (wire, reason) in cases {
+            let row = serde_json::json!({"status":"outcome_unknown", "wire":wire});
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, key, 1, &row))
+                .unwrap();
+            let error = outcomes(&store).unwrap_err().to_string();
+            assert!(error.contains(reason), "{error}");
+            assert!(!error.contains("PRIVATE-CORRUPTION-FIXTURE"));
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key, 1))
+                    .unwrap(),
+                Some(row)
+            );
+            drop(store);
+            store = open(&path, false);
+            assert_eq!(outcomes(&store).unwrap_err().to_string(), error);
+        }
+        let row = serde_json::json!({"status":"outcome_unknown", "wire":valid});
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key, 1, &row))
+            .unwrap();
+        drop(store);
+        let store = open(&path, false);
+        let result = outcomes(&store).unwrap();
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].message_id, "INSPECT-FIXTURE");
+        assert_eq!(result[0].status, "outcome_unknown");
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key, 1))
+                .unwrap(),
+            Some(row)
+        );
+    }
+
     #[test]
     fn retry_queue_is_once_per_route_and_survives_restart_and_uncertainty() {
         let dir = tempfile::tempdir().unwrap();

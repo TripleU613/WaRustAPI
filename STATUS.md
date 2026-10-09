@@ -1,5 +1,12 @@
 # Status — 2026-10-07
 
+Receipt inspection correction (2026-10-09, **confirmed local**): offline
+receipts inspection now diagnoses malformed saved wire/IDs with fixed redacted
+errors instead of silently dropping/truncating bytes or returning an empty ID.
+Reservations and outcomes remain unchanged across failure/reopen; primary
+cleanup and native user-row admission remain unfinished. No live operation.
+[Evidence and limits](docs/protocol/receipt-ack-correlation.md#saved-receipt-inspection-diagnostics-2026-10-09).
+
 Read persistence release relocation (2026-10-09, **confirmed static/local**):
 a separate checked recipe locates six methods; signature plus physical caller
 resolves a three-way field-writer ambiguity. Four string-free topics remain

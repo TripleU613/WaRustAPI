@@ -77,3 +77,39 @@ Follow-up: [generic ACK registration/dispatch](receipt-ack-dispatch.md) closes
 BaE forwarding and full-key map removal for the generic path, with separate
 ID queues and bounded normalization. Complete special-case/error/timeout and
 queue ownership semantics remain unknown; no local guard was weakened.
+
+## Saved receipt inspection diagnostics (2026-10-09)
+
+**Confirmed local:** receipts::outcomes, exposed by the existing offline
+`receipts` CLI, previously used filter_map/as-u8 casts for saved JSON wire bytes
+and converted decoder/ID failures into an empty message_id. This could silently
+drop non-numbers, truncate integers above 255, or show an unknown reservation as
+an apparently ordinary outcome with no ID. A failing-before regression reproduced
+Ok(outcome_unknown, empty ID) for a missing saved wire. This was our inspection
+bug, not a WhatsApp response or an APK-imposed account requirement.
+
+Inspection now decodes JSON as Vec<u8>, requires a receipt node and a nonempty
+text ID, and returns fixed redacted diagnostics for missing wire, invalid bytes,
+decode failure, wrong node kind or missing/invalid ID. It does not include the
+raw decoder/serde error, recipient, route, contents or secret-bearing JSON.
+Successful outputs retain their existing shape. The read-only inspection never
+rewrites a reservation or changes pending/unknown/acknowledged/refused status.
+One malformed row fails the inspection rather than reporting a partial list;
+there is no automatic repair, deletion, retransmission or account migration.
+
+This is local storage validation, separate from the APK 37.71 Cb1 correlation
+source above. It adds no wire grammar or server reason. The regression covers
+missing wire, an integer outside byte range, non-number data, undecodable bytes,
+a receipt without an ID and a non-receipt node; each fixed error survives reopening
+and the encrypted saved row remains unchanged. A valid reservation reopens with
+its original ID and outcome_unknown. These synthetic fixtures do not establish
+live ACK matching, receipt_user membership or primary identity cleanup parity.
+
+Inspection correction validation: the new regression failed before the fix on
+Ok(outcome_unknown, empty message_id), then passed with corruption/reopen
+coverage. All **823 workspace/all-feature tests** passed (687 API unit, 4 codec,
+9 crash, 52 CLI, 1 OpenAPI symbol and 70 xtask). Strict workspace/all-target/
+all-feature Clippy, warning-free workspace rustdoc, default CLI tests,
+CLI-reference regeneration, formatting, whitespace and repository hygiene
+passed (1,913 local links; unchanged 84 checksum bundles / 18,046,975 bytes).
+No real account was opened or changed and no live request was sent.
