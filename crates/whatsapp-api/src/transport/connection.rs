@@ -85,6 +85,12 @@ pub async fn connect(
     let mut channel = verified.finish(&payload).await?;
     let reply = super::messaging::read_node(&mut channel).await?;
     super::inbox::preserve_in_epoch(store, &reply, epoch)?;
+    record_login_reply(store, &reply)?;
+    Ok(channel)
+}
+
+// One transaction commits the login result, clock sample and own identity.
+fn record_login_reply(store: &ProtocolStore, reply: &Node) -> Result<()> {
     let status = if reply.description == "success" {
         "success"
     } else {
@@ -98,27 +104,12 @@ pub async fn connect(
             &serde_json::json!({"status":status,"at":Timestamp::now()}),
         )?;
         if status == "success" {
-            super::clock::observe_login(tx, &reply)?;
+            super::clock::observe_login(tx, reply)?;
             let mut current = AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
             current.last_authenticated_at = Some(Timestamp::now());
-            // Observed live: `success` carries our `pn` and `lid`. Keep them for
-            // message keys and vote encryption; never invent either.
-            let pn = super::receipts::jid(&reply, "pn").map(|j| j.to_non_ad());
-            let lid = super::receipts::jid(&reply, "lid").map(|j| j.to_non_ad());
+            let pn = update_login_identity(tx, reply)?;
             if current.own_jid.is_none() {
-                current.own_jid = pn.clone();
-            }
-            if pn.is_some() || lid.is_some() {
-                tx.put_json(
-                    Table::Checkpoints,
-                    b"login-identity",
-                    1,
-                    &serde_json::json!({
-                        "pn": pn.as_ref().map(|j| j.to_string()),
-                        "lid": lid.as_ref().map(|j| j.to_string()),
-                        "at": Timestamp::now(),
-                    }),
-                )?;
+                current.own_jid = pn;
             }
             current.save(tx)?;
         }
@@ -127,7 +118,78 @@ pub async fn connect(
     if status != "success" {
         return Err(Error::Authentication { code: None });
     }
-    Ok(channel)
+    Ok(())
+}
+
+fn login_user(
+    jid: crate::model::jid::Jid,
+    server: crate::model::jid::Server,
+) -> Option<crate::model::jid::Jid> {
+    use crate::model::jid::JidKind;
+    (jid.server == server
+        && !jid.user.is_empty()
+        && jid.agent == 0
+        && matches!(jid.kind, JidKind::Plain | JidKind::AgentDevice))
+    .then(|| jid.to_non_ad())
+}
+
+fn update_login_identity(
+    tx: &mut crate::store::WriteTx<'_>,
+    reply: &Node,
+) -> Result<Option<crate::model::jid::Jid>> {
+    use crate::model::jid::{Jid, Server};
+    // Authenticated success fields are observed live, not a guarantee that both
+    // appear every time. Native 08i keeps typed own PN/LID separately; our local
+    // partial-update contract is documented in login-identity-updates.md.
+    let supplied = |field, server, diagnostic| -> Result<Option<Jid>> {
+        if reply.get_attr(field).is_none() {
+            return Ok(None);
+        }
+        super::receipts::jid(reply, field)
+            .and_then(|jid| login_user(jid, server))
+            .map(Some)
+            .ok_or_else(|| Error::invalid("connection", diagnostic))
+    };
+    let pn = supplied(
+        "pn",
+        Server::User,
+        "success pn is not a known phone-number user",
+    )?;
+    let lid = supplied("lid", Server::Lid, "success lid is not a known LID user")?;
+    if pn.is_none() && lid.is_none() {
+        return Ok(None);
+    }
+    let mut saved = tx
+        .get_json::<serde_json::Value>(Table::Checkpoints, b"login-identity", 1)?
+        .unwrap_or_else(|| serde_json::json!({"pn":null,"lid":null}));
+    let object = saved
+        .as_object_mut()
+        .ok_or_else(|| Error::invalid("connection", "saved login-identity is not an object"))?;
+    for (field, server, diagnostic) in [
+        ("pn", Server::User, "saved login-identity pn is malformed"),
+        ("lid", Server::Lid, "saved login-identity lid is malformed"),
+    ] {
+        if let Some(value) = object.get(field).filter(|value| !value.is_null()) {
+            let valid = value
+                .as_str()
+                .and_then(|text| Jid::parse(text).ok())
+                .and_then(|jid| login_user(jid, server));
+            if valid.is_none() {
+                return Err(Error::invalid("connection", diagnostic));
+            }
+        }
+    }
+    // Absence never erases an authenticated namespace. Preserve all untouched
+    // fields and refuse malformed history rather than silently repairing it.
+    if let Some(pn) = &pn {
+        object.insert("pn".into(), serde_json::Value::String(pn.to_string()));
+    }
+    if let Some(lid) = lid {
+        object.insert("lid".into(), serde_json::Value::String(lid.to_string()));
+    }
+    object.insert("at".into(), serde_json::json!(Timestamp::now()));
+    tx.put_json(Table::Checkpoints, b"login-identity", 1, &saved)?;
+    Ok(pn)
 }
 
 /// One outbound stanza and where to report the socket write outcome.
@@ -692,6 +754,186 @@ mod tests {
             })
             .unwrap();
         Arc::new(store)
+    }
+    fn identity_store(path: &std::path::Path) -> ProtocolStore {
+        ProtocolStore::open(OpenOptions {
+            path: path.to_owned(),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([4; 32]))),
+            create: true,
+        })
+        .unwrap()
+    }
+
+    #[test]
+    fn login_identity_partial_success_preserves_known_namespaces_after_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("login-identities.redb");
+        let store = identity_store(&path);
+        store.write(|tx| AccountRecord::default().save(tx)).unwrap();
+        let pn = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let lid = Jid::parse("111111111111111@lid").unwrap();
+        record_login_reply(
+            &store,
+            &Node::new("success")
+                .attr("pn", pn.clone())
+                .attr("lid", lid.clone()),
+        )
+        .unwrap();
+        for reply in [
+            Node::new("success").attr("pn", pn.clone()),
+            Node::new("success").attr("lid", "111111111111111:7@lid"),
+            Node::new("success"),
+        ] {
+            record_login_reply(&store, &reply).unwrap();
+            assert_eq!(
+                super::super::inbox::own_identities(&store).unwrap(),
+                (Some(pn.clone()), Some(lid.clone()))
+            );
+            assert_eq!(
+                super::super::group_send::own_lid(&store).unwrap(),
+                Some(lid.clone())
+            );
+        }
+        let saved = store
+            .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, b"login-identity", 1))
+            .unwrap();
+        record_login_reply(&store, &Node::new("success")).unwrap();
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(
+                    Table::Checkpoints,
+                    b"login-identity",
+                    1
+                ))
+                .unwrap(),
+            saved
+        );
+        let head = store.journal_head().unwrap();
+        drop(store);
+        let store = identity_store(&path);
+        assert_eq!(
+            super::super::inbox::own_identities(&store).unwrap(),
+            (Some(pn.clone()), Some(lid.clone()))
+        );
+        assert_eq!(
+            super::super::group_send::own_lid(&store).unwrap(),
+            Some(lid.clone())
+        );
+        assert_eq!(
+            store.read(AccountRecord::load).unwrap().unwrap().own_jid,
+            Some(pn)
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+    }
+    fn login_snapshot(store: &ProtocolStore) -> Vec<Vec<(Vec<u8>, Vec<u8>)>> {
+        store
+            .read(|tx| {
+                [
+                    Table::Account,
+                    Table::Checkpoints,
+                    Table::PeerIdentities,
+                    Table::SignalSessions,
+                    Table::Outbox,
+                ]
+                .into_iter()
+                .map(|table| tx.scan_after(table, 1, None, 256))
+                .collect()
+            })
+            .unwrap()
+    }
+
+    #[test]
+    fn malformed_login_identity_updates_roll_back_result_clock_and_account() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("invalid-login-identities.redb");
+        let store = identity_store(&path);
+        store.write(|tx| {
+            AccountRecord { own_jid: Some(Jid::parse("15555550100@s.whatsapp.net").unwrap()), ..Default::default() }.save(tx)?;
+            tx.put_json(Table::Checkpoints, b"login-identity", 1, &serde_json::json!({"pn":"15555550100@s.whatsapp.net","lid":"111111111111111@lid","at":1,"retained_metadata":"fixture"}))?;
+            tx.put_json(Table::Checkpoints, LOGIN_KEY, 1, &serde_json::json!({"status":"outcome_unknown","at":1}))?;
+            tx.put_json(Table::PeerIdentities, b"fixture", 1, &vec![1u8,2,3])?;
+            tx.put_json(Table::SignalSessions, b"fixture", 1, &vec![4u8,5,6])
+        }).unwrap();
+        let before = login_snapshot(&store);
+        let head = store.journal_head().unwrap();
+        for (field, bad) in [
+            ("pn", ""),
+            ("pn", "s.whatsapp.net"),
+            ("pn", "111111111111111@lid"),
+            ("pn", "15555550100.1:0@s.whatsapp.net"),
+            ("lid", ""),
+            ("lid", "lid"),
+            ("lid", "15555550100@s.whatsapp.net"),
+            ("lid", "111111111111111.1:0@lid"),
+        ] {
+            let reply = Node::new("success")
+                .attr(field, bad)
+                .attr("t", "1791589303");
+            let error = record_login_reply(&store, &reply).unwrap_err().to_string();
+            assert!(error.contains(if field == "pn" {
+                "success pn is not a known phone-number user"
+            } else {
+                "success lid is not a known LID user"
+            }));
+            assert!(!error.contains(bad) || bad.is_empty() || bad == "lid");
+            assert_eq!(login_snapshot(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+        }
+        let reply = Node::new("success")
+            .attr(
+                "lid",
+                crate::binary::AttributeValue::Bytes(bytes::Bytes::from_static(b"\xff")),
+            )
+            .attr("t", "1791589303");
+        assert!(record_login_reply(&store, &reply).is_err());
+        assert_eq!(login_snapshot(&store), before);
+        drop(store);
+        let store = identity_store(&path);
+        assert_eq!(login_snapshot(&store), before);
+        assert_eq!(
+            last_login_status(&store).unwrap().as_deref(),
+            Some("outcome_unknown")
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+    }
+
+    #[test]
+    fn malformed_saved_login_identity_is_not_repaired_by_a_new_success() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("malformed-login-history.redb");
+        let store = identity_store(&path);
+        store.write(|tx| AccountRecord::default().save(tx)).unwrap();
+        for saved in [
+            serde_json::json!([]),
+            serde_json::json!(false),
+            serde_json::json!({"pn":"s.whatsapp.net","lid":null}),
+            serde_json::json!({"pn":null,"lid":7}),
+            serde_json::json!({"pn":null,"lid":"111111111111111.1:0@lid"}),
+        ] {
+            store
+                .write(|tx| {
+                    tx.put_json(Table::Checkpoints, b"login-identity", 1, &saved)?;
+                    tx.put_json(
+                        Table::Checkpoints,
+                        LOGIN_KEY,
+                        1,
+                        &serde_json::json!({"status":"outcome_unknown","at":1}),
+                    )
+                })
+                .unwrap();
+            let before = login_snapshot(&store);
+            let reply = Node::new("success")
+                .attr("pn", "15555550100@s.whatsapp.net")
+                .attr("t", "1791589303");
+            assert!(
+                record_login_reply(&store, &reply)
+                    .unwrap_err()
+                    .to_string()
+                    .contains("saved login-identity")
+            );
+            assert_eq!(login_snapshot(&store), before);
+        }
     }
     fn config() -> LabRegistrationConfig {
         let mut config: LabRegistrationConfig =

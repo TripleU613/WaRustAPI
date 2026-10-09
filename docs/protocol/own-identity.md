@@ -115,3 +115,7 @@ changed only by eight additional inbound checkpoints (790 to 798; total
 checkpoints 1,031 to 1,039). Those captures were not classified here; they are not
 counted as user replies or identity changes. No qualifying live own-primary
 change was demonstrated, and no chat intent or held uncertain action was sent.
+
+Follow-up: [partial login persistence](login-identity-updates.md) preserves
+absent PN/LID checkpoint members and refuses malformed updates atomically.
+This corrects local state loss without claiming native partial-login parity.

@@ -1,5 +1,17 @@
 # Status — 2026-10-07
 
+Partial login identity persistence (2026-10-09, **implemented/offline tested**):
+PN-only/LID-only authenticated success updates preserve the other saved namespace.
+Malformed replacements/history refuse atomically without changing account state,
+clock or uncertain login reservation. A failing-before regression covers the
+lost own LID; no real account or live operation. [Evidence and limits](docs/protocol/login-identity-updates.md).
+
+Validation: 840 workspace/all-feature tests passed. Strict all-target Clippy,
+warnings-denied Rustdoc, default CLI tests (25 plus API-symbol), regenerated
+CLI reference, formatting and whitespace checks passed. Repository hygiene
+checked 2,182 local links and 108 existing APK bundles. No fresh live test.
+
+
 Incoming recipient-count source (2026-10-09, **confirmed static**): root
 `count` defaults only on absence; malformed present input throws from the
 signed-int helper. Own group/status-envelope transfer reaches native message.A06
