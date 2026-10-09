@@ -135,13 +135,14 @@ these SQL deletes. Native receipt/user row selection does not authorize send
 replay, ratchet resets, identity adoption or history removal. This research adds
 no cleanup worker, counter, network request or private-state migration.
 
-**Confirmed local receive gap, separate from cleanup:** `receipts::observe`
-currently correlates normal-outbox delivery facts using full Jid equality on
-`entry.intent.chat.jid()` and the receipt peer. Unlike the corrected reaction
-and poll attribution, a PN original and an authenticated LID receipt namespace
-can fail that match. The proper incoming receipt parser/authority trace and
-bounded saved-intent association need review before changing it. This native
-cleanup analysis does not itself prove the incoming receipt handler's policy.
+**Corrected local receive finding, separate from cleanup:** the handler is
+`receipts::record`. It already mapped some LID receipts to PN, so a PN original
+could match. Same-LID originals without a map, reverse PN-to-LID attribution,
+encoding equality and retention of the actual actor were the narrower gaps.
+The subsequent [incoming receipt audit and correction](direct-receipts.md)
+re-anchors the current APK parser to `Cmk`, uses a transactional saved-chat
+association, and preserves actual receipt actors. Native cleanup remains
+unported; this is not authority to clear receipt-send reservations.
 
 Reproduce the source offline:
 

@@ -1,0 +1,111 @@
+# APK-derived structural disassembly: LX/ClU;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LLL) flags=0x19 registers=13
+  0000..0006 op=72 invoke-interface {v12}, Ljava/util/List;->isEmpty(Z)
+  0006..0008 op=0a move-result v0
+  0008..000c op=38 if-eqz v0, +0x7
+  000c..0012 op=71 invoke-static {}, LX/05M;->A0J(L)
+  0012..0014 op=0c move-result-object v0
+  0014..0016 op=11 return-object v0
+  0016..001c op=71 invoke-static {v11, v12}, LX/ClU;->A01(LLL)
+  001c..001e op=0c move-result-object v0
+  001e..0022 op=54 iget-object v4, v0, LX/07o;->first:Ljava/lang/Object;
+  0022..0026 op=1f check-cast v4, Ljava/util/List;
+  0026..002a op=54 iget-object v9, v0, LX/07o;->second:Ljava/lang/Object;
+  002a..002e op=1f check-cast v9, Ljava/util/Map;
+  002e..0034 op=71 invoke-static {}, LX/1xf;->A1H(L)
+  0034..0036 op=0c move-result-object v8
+  0036..003a op=54 iget-object v0, v11, LX/ClU;->A01:LX/05B;
+  003a..0040 op=71 invoke-static {v0}, LX/1xj;->A0d(LL)
+  0040..0042 op=0c move-result-object v6
+  0042..0048 op=71 invoke-static {v4}, LX/8kW;->A12(LL)
+  0048..004a op=0c move-result-object v1
+  004a..004e op=1a const-string v0, "\n          SELECT chat_row_id, is_reach_out, is_eligible_for_link_friction_banner\n          FROM\n            integrity_chat_info\n          WHERE\n            chat_row_id IN "
+  004e..0054 op=71 invoke-static {v0, v1}, LX/000;->A08(LLL)
+  0054..0056 op=0c move-result-object v1
+  0056..005a op=1a const-string v0, " \n        "
+  005a..0060 op=71 invoke-static {v0, v1}, LX/000;->A05(LLL)
+  0060..0062 op=0c move-result-object v3
+  0062..0066 op=54 iget-object v2, v6, LX/0ZN;->A02:LX/0IY;
+  0066..0068 op=12 const/4 v0, #0x0
+  0068..006e op=71 invoke-static {v4, v0}, LX/3c6;->A1b(LLI)
+  006e..0070 op=0c move-result-object v1
+  0070..0074 op=1a const-string v0, "GET_INTEGRITY_CHAT_INFO"
+  0074..007a op=6e invoke-virtual {v2, v3, v0, v1}, LX/0IY;->A0A(LLLL)
+  007a..007c op=0c move-result-object v7
+  007c..0080 op=1a const-string v0, "chat_row_id"
+  0080..0086 op=72 invoke-interface {v7, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  0086..0088 op=0a move-result v10
+  0088..008c op=1a const-string v0, "is_reach_out"
+  008c..0092 op=72 invoke-interface {v7, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  0092..0094 op=0a move-result v5
+  0094..0098 op=1a const-string v0, "is_eligible_for_link_friction_banner"
+  0098..009e op=72 invoke-interface {v7, v0}, Landroid/database/Cursor;->getColumnIndex(IL)
+  009e..00a0 op=0a move-result v4
+  00a0..00a6 op=72 invoke-interface {v7}, Landroid/database/Cursor;->moveToNext(Z)
+  00a6..00a8 op=0a move-result v0
+  00a8..00ac op=38 if-eqz v0, +0x39
+  00ac..00b2 op=72 invoke-interface {v7, v10}, Landroid/database/Cursor;->getLong(JI)
+  00b2..00b4 op=0b move-result-wide v11
+  00b4..00ba op=72 invoke-interface {v7, v5}, Landroid/database/Cursor;->getInt(II)
+  00ba..00bc op=0a move-result v0
+  00bc..00be op=12 const/4 v2, #0x0
+  00be..00c0 op=12 const/4 v1, #0x1
+  00c0..00c6 op=71 invoke-static {v0, v1}, LX/1xi;->A1R(ZII)
+  00c6..00c8 op=0a move-result v3
+  00c8..00ce op=71 invoke-static {v7, v4}, LX/0KS;->A03(LLI)
+  00ce..00d0 op=0c move-result-object v0
+  00d0..00d4 op=38 if-eqz v0, +0xa
+  00d4..00da op=6e invoke-virtual {v0}, Ljava/lang/Number;->intValue(I)
+  00da..00dc op=0a move-result v0
+  00dc..00e0 op=33 if-ne v0, v1, +0x6
+  00e0..00e2 op=12 const/4 v2, #0x1
+  00e2..00e4 op=28 goto +0x3
+  00e4..00e6 op=12 const/4 v2, #0x0
+  00e6..00e8 op=28 goto +0x5
+  00e8..00ee op=71 invoke-static {v2}, Ljava/lang/Boolean;->valueOf(LZ)
+  00ee..00f0 op=0c move-result-object v2
+  00f0..00f6 op=71 invoke-static {v11, v12}, Ljava/lang/Long;->valueOf(LJ)
+  00f6..00f8 op=0c move-result-object v0
+  00f8..00fe op=72 invoke-interface {v9, v0}, Ljava/util/Map;->get(LL)
+  00fe..0100 op=0c move-result-object v1
+  0100..0104 op=1f check-cast v1, LX/0Cy;
+  0104..0108 op=38 if-eqz v1, -0x32
+  0108..010c op=22 new-instance v0, LX/CW1;
+  010c..0112 op=70 invoke-direct {v0, v1, v2, v3}, LX/CW1;-><init>(VLLZ)
+  0112..0118 op=72 invoke-interface {v8, v1, v0}, Ljava/util/Map;->put(LLL)
+  0118..011a op=28 goto -0x3c
+  011a..0120 op=72 invoke-interface {v7}, Landroid/database/Cursor;->close(V)
+  0120..0126 op=6e invoke-virtual {v6}, LX/0ZN;->close(V)
+  0126..0128 op=11 return-object v8
+  0128..012a op=0d move-exception v1
+  012a..012c op=27 throw v1
+  012c..012e op=0d move-exception v0
+  012e..0134 op=71 invoke-static {v7, v1}, LX/07i;->A00(VLL)
+  0134..0136 op=27 throw v0
+  0136..0138 op=0d move-exception v1
+  0138..013a op=27 throw v1
+  013a..013c op=0d move-exception v0
+  013c..0142 op=71 invoke-static {v6, v1}, LX/07i;->A00(VLL)
+  0142..0144 op=27 throw v0
+  0144..0146 op=0d move-exception v1
+  0146..014a op=1a const-string v0, "IntegrityChatInfoStore/queryFromDatabase"
+  014a..0150 op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(VLL)
+  0150..0156 op=71 invoke-static {}, LX/05M;->A0J(L)
+  0156..0158 op=0c move-result-object v0
+  0158..015a op=11 return-object v0
+  # exception table: 10 try range(s)
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0017..0021 -> 00a2
+  # catch <all> code_units 0021..003e -> 009b
+  # catch <all> code_units 003e..005d -> 0094
+  # catch <all> code_units 0064..008d -> 0094
+  # catch <all> code_units 008d..0090 -> 009b
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0090..0094 -> 00a2
+  # catch <all> code_units 0095..0096 -> 0096
+  # catch <all> code_units 0097..009b -> 009b
+  # catch <all> code_units 009c..009d -> 009d
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 009d..00a2 -> 00a2
+.end method

@@ -1,4 +1,4 @@
-//! APK LX/ClU.A03 receipt facts; self receipts are not recipient delivery.
+//! APK 2.26.37.71 LX/Cmk.A03 receipt facts; self receipts are separate statuses.
 use crate::{
     Error, Result,
     binary::Node,
@@ -608,38 +608,19 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
     let Some(from) = jid(node, "from") else {
         return Ok(0);
     };
-    if from.device != 0 {
+    if from.user.is_empty()
+        || from.agent != 0
+        || from.device != 0
+        || !matches!(from.server, Server::User | Server::Lid)
+        || !matches!(
+            from.kind,
+            crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
+        )
+    {
         return Ok(0);
     }
-    let peer = match from.server {
-        Server::User => from.clone(),
-        Server::Lid => {
-            let Some(peer): Option<Jid> = store.read(|tx| {
-                tx.get_json(
-                    Table::Checkpoints,
-                    format!("authenticated-lid:{from}").as_bytes(),
-                    1,
-                )
-            })?
-            else {
-                return Ok(0);
-            };
-            peer
-        }
-        _ => return Ok(0),
-    };
     let ids = ids(node)?;
-    let records = store.read(|tx| tx.scan(Table::Checkpoints, 1, 10000))?;
-    let outbox_records = store.read(|tx| tx.scan(Table::Outbox, 1, 10000))?;
-    if outbox_records.len() == 10000 {
-        return Err(Error::invalid("receipt", "outbox pagination required"));
-    }
-    if records.len() == 10000 {
-        return Err(Error::invalid(
-            "receipt",
-            "checkpoint scan requires pagination",
-        ));
-    }
+    let peer = from.to_non_ad();
     let mut matched = 0;
     store.write(|tx| {
         for id in &ids {
@@ -653,36 +634,56 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
             facts.observe(kind);
             tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &facts)?;
         }
-        for (key, _) in &records {
-            if !key.starts_with(b"message:") || !key.ends_with(b":send") {
-                continue;
+        // Keep the comparison-lab's PN-only records separate from normal
+        // outbox intents. Cmk.A02/A03 keeps message chat and actual actor
+        // distinct; only an already authenticated association may join them.
+        let mut cursor = None;
+        loop {
+            let page = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+            if page.is_empty() {
+                break;
             }
-            let Some(mut send): Option<serde_json::Value> =
-                tx.get_json(Table::Checkpoints, key, 1)?
-            else {
-                continue;
-            };
-            if send["to"]
-                .as_str()
-                .map(|v| v.strip_prefix('+').unwrap_or(v))
-                != Some(peer.user.as_str())
-                || !send["wire_id"]
+            cursor = page.last().map(|(key, _)| key.clone());
+            for (key, _) in page {
+                if !key.starts_with(b"message:") || !key.ends_with(b":send") {
+                    continue;
+                }
+                let Some(mut send): Option<serde_json::Value> =
+                    tx.get_json(Table::Checkpoints, &key, 1)?
+                else {
+                    continue;
+                };
+                if !send["wire_id"]
                     .as_str()
                     .is_some_and(|v| ids.iter().any(|id| id == v))
-            {
-                continue;
+                {
+                    continue;
+                }
+                let Some(phone) = send["to"]
+                    .as_str()
+                    .map(|v| v.strip_prefix('+').unwrap_or(v))
+                else {
+                    continue;
+                };
+                if phone.is_empty() || !phone.bytes().all(|b| b.is_ascii_digit()) {
+                    continue;
+                }
+                let original = Jid::parse(&format!("{phone}@s.whatsapp.net"))?;
+                if !super::jid_map::authenticated_direct_chat(tx, &from, &original)? {
+                    continue;
+                }
+                let mut facts: ReceiptFacts = if send["receipts"].is_null() {
+                    ReceiptFacts::default()
+                } else {
+                    serde_json::from_value(send["receipts"].clone())
+                        .map_err(|_| Error::invalid("receipt", "invalid saved facts"))?
+                };
+                facts.observe(kind);
+                send["receipts"] = serde_json::to_value(facts)
+                    .map_err(|_| Error::invalid("receipt", "cannot encode facts"))?;
+                tx.put_json(Table::Checkpoints, &key, 1, &send)?;
+                matched += 1;
             }
-            let mut facts: ReceiptFacts = if send["receipts"].is_null() {
-                ReceiptFacts::default()
-            } else {
-                serde_json::from_value(send["receipts"].clone())
-                    .map_err(|_| Error::invalid("receipt", "invalid saved facts"))?
-            };
-            facts.observe(kind);
-            send["receipts"] = serde_json::to_value(facts)
-                .map_err(|_| Error::invalid("receipt", "cannot encode facts"))?;
-            tx.put_json(Table::Checkpoints, key, 1, &send)?;
-            matched += 1;
         }
         let outbox =
             crate::outbox::Outbox::new("receipt-observer", crate::profile::Limits::default());
@@ -691,19 +692,16 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
             "played" => crate::model::send::DeliveryFactKind::Played,
             _ => crate::model::send::DeliveryFactKind::Delivered,
         };
-        let device = crate::model::ids::DeviceAddress::from_jid(&peer)?;
-        for (key, _) in &outbox_records {
-            let Some(mut entry): Option<crate::outbox::OutboxEntry> =
-                tx.get_json(Table::Outbox, key, 1)?
-            else {
+        // The authenticated actor remains in its received namespace even
+        // when it is associated with an original intent in the other one.
+        let device = crate::model::ids::DeviceAddress::from_jid(&from)?;
+        for id in &ids {
+            let wire_id = crate::model::ids::MessageId::new(id.clone())
+                .map_err(|_| Error::invalid("receipt", "invalid message id"))?;
+            let Some(mut entry) = outbox.by_wire_id_in_write(tx, &wire_id)? else {
                 continue;
             };
-            if entry.intent.chat.jid() != &peer
-                || !entry
-                    .wire_id
-                    .as_ref()
-                    .is_some_and(|id| ids.iter().any(|v| v == id.as_str()))
-            {
+            if !super::jid_map::authenticated_direct_chat(tx, &from, entry.intent.chat.jid())? {
                 continue;
             }
             if entry
@@ -1636,6 +1634,315 @@ mod tests {
         assert_eq!(status.facts[0].kind, DeliveryFactKind::Read);
         assert!(!status.server_accepted());
     }
+    fn saved_receipt_send(
+        store: &ProtocolStore,
+        namespace: &str,
+        chat: &str,
+        id: &str,
+    ) -> crate::model::ids::LocalMessageId {
+        use crate::model::{
+            ids::{ChatId, ClientRequestId, MessageId},
+            message::MessageContent,
+            send::{AttemptProgress, DeliveryFact, DeliveryFactKind, SendRequest},
+        };
+        let outbox = crate::outbox::Outbox::new(namespace, crate::profile::Limits::default());
+        store
+            .write(|tx| {
+                let (ticket, _) = outbox.enqueue(
+                    tx,
+                    &SendRequest {
+                        client_request_id: ClientRequestId::new(id)?,
+                        chat: ChatId::from_jid(&Jid::parse(chat)?)?,
+                        content: MessageContent::Text {
+                            body: "offline receipt fixture".into(),
+                            quoted: None,
+                            style: Default::default(),
+                        },
+                    },
+                )?;
+                let mut entry = outbox.get_mut(tx, ticket.local_id)?.unwrap();
+                entry.wire_id = Some(MessageId::new(id)?);
+                outbox.set_progress(tx, &mut entry, AttemptProgress::InFlight)?;
+                outbox.record_fact(
+                    tx,
+                    &mut entry,
+                    DeliveryFact {
+                        kind: DeliveryFactKind::DeliveryUnknown,
+                        device: None,
+                        observed_at: crate::model::time::Timestamp(7),
+                        code: None,
+                    },
+                )?;
+                Ok(ticket.local_id)
+            })
+            .unwrap()
+    }
+
+    #[test]
+    fn direct_receipt_namespace_binding_preserves_actual_actor_and_uncertainty() {
+        use crate::model::{
+            ids::DeviceAddress,
+            send::{AttemptProgress, DeliveryFactKind},
+        };
+        let pn = "15555550100@s.whatsapp.net";
+        let lid = "100001@lid";
+        for (name, original, actor, map, expected) in [
+            ("pn", pn, pn, false, true),
+            ("lid", lid, lid, false, true),
+            ("mapped", pn, lid, true, true),
+            ("reverse", lid, pn, true, true),
+            ("zero-ad", pn, "15555550100:0@s.whatsapp.net", false, true),
+            ("lid-zero-ad", lid, "100001:0@lid", false, true),
+            ("mapped-zero-ad", pn, "100001:0@lid", true, true),
+            ("unattributed", pn, lid, false, false),
+            ("reverse-unattributed", lid, pn, false, false),
+            ("foreign", pn, "15555550101@s.whatsapp.net", true, false),
+            ("foreign-lid", lid, "100002@lid", true, false),
+            ("companion", pn, "15555550100:1@s.whatsapp.net", true, false),
+            ("agent", pn, "15555550100.1:0@s.whatsapp.net", true, false),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("receipt.redb");
+            let store = open(&path, true);
+            let local_id = saved_receipt_send(&store, name, original, "fixture");
+            let observer = crate::outbox::Outbox::new(
+                "different-namespace",
+                crate::profile::Limits::default(),
+            );
+            store
+                .write(|tx| {
+                    if map {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"authenticated-lid:100001@lid",
+                            1,
+                            &Jid::parse(pn)?,
+                        )?;
+                    }
+                    // A directory alias alone must never grant receipt authority.
+                    tx.put_json(Table::Checkpoints, b"lid:100001@lid", 1, &Jid::parse(pn)?)?;
+                    tx.put_json(
+                        Table::Checkpoints,
+                        b"receipt-outbox:unchanged",
+                        1,
+                        &serde_json::json!({"status":"outcome_unknown", "wire":[1,2,3]}),
+                    )
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| observer.get(tx, local_id))
+                .unwrap()
+                .unwrap();
+            let node = Node::new("receipt")
+                .attr("from", actor)
+                .attr("id", "fixture")
+                .attr("type", "read");
+            assert_eq!(
+                record(&store, &node).unwrap(),
+                usize::from(expected),
+                "{name}"
+            );
+            assert_eq!(record(&store, &node).unwrap(), 0, "duplicate {name}");
+            drop(store);
+            let store = open(&path, false);
+            let entry = store
+                .read(|tx| observer.get(tx, local_id))
+                .unwrap()
+                .unwrap();
+            assert_eq!(entry.intent, before.intent, "{name}");
+            assert_eq!(entry.wire_id, before.wire_id, "{name}");
+            assert_eq!(entry.progress, AttemptProgress::InFlight, "{name}");
+            assert_eq!(entry.facts[0], before.facts[0], "{name}");
+            assert_eq!(entry.facts.len(), if expected { 2 } else { 1 }, "{name}");
+            if expected {
+                assert_eq!(entry.facts[1].kind, DeliveryFactKind::Read);
+                assert_eq!(
+                    entry.facts[1].device,
+                    Some(DeviceAddress::from_jid(&Jid::parse(actor).unwrap()).unwrap())
+                );
+            }
+            let status = store
+                .read(|tx| observer.status(tx, local_id))
+                .unwrap()
+                .unwrap();
+            assert!(
+                status.is_uncertain() && !status.server_accepted(),
+                "a recipient receipt does not manufacture server ACK {name}"
+            );
+            let reservation: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Checkpoints, b"receipt-outbox:unchanged", 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(
+                reservation,
+                serde_json::json!({"status":"outcome_unknown", "wire":[1,2,3]})
+            );
+        }
+    }
+
+    #[test]
+    fn receipt_batch_refuses_ambiguous_wire_id_atomically_across_namespaces() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("ambiguous.redb"), true);
+        saved_receipt_send(&store, "a", "15555550100@s.whatsapp.net", "a");
+        saved_receipt_send(&store, "b", "15555550100@s.whatsapp.net", "duplicate");
+        saved_receipt_send(&store, "c", "15555550101@s.whatsapp.net", "duplicate");
+        store.write(|tx| tx.put_json(Table::Checkpoints, b"message:legacy:send", 1, &serde_json::json!({"to":"+15555550100","wire_id":"a","status":"outcome_unknown"}))).unwrap();
+        let before = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.scan(Table::Outbox, 1, 100)?,
+                    tx.journal_head()?,
+                ))
+            })
+            .unwrap();
+        let node = Node::new("receipt")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("id", "a")
+            .children(vec![
+                Node::new("list").children(vec![Node::new("item").attr("id", "duplicate")]),
+            ]);
+        let error = record(&store, &node).unwrap_err().to_string();
+        assert!(error.contains("duplicate outbox wire id"));
+        let after = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.scan(Table::Outbox, 1, 100)?,
+                    tx.journal_head()?,
+                ))
+            })
+            .unwrap();
+        assert_eq!(before, after);
+    }
+
+    #[test]
+    fn receipt_mapping_corruption_is_redacted_and_rolls_back_legacy_facts() {
+        let pn = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let invalid = [
+            serde_json::json!("DO-NOT-ECHO"),
+            serde_json::to_value(Jid::parse("15555550100:1@s.whatsapp.net").unwrap()).unwrap(),
+            serde_json::to_value(Jid::parse("100002@lid").unwrap()).unwrap(),
+        ];
+        for value in invalid {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("map.redb"), true);
+            saved_receipt_send(&store, "a", &pn.to_string(), "fixture");
+            store.write(|tx| {
+                tx.put_json(Table::Checkpoints, b"message:legacy:send", 1, &serde_json::json!({"to":"+15555550100","wire_id":"fixture","status":"outcome_unknown"}))?;
+                tx.put_json(Table::Checkpoints, b"authenticated-lid:100001@lid", 1, &value)
+            }).unwrap();
+            let before = store
+                .read(|tx| {
+                    Ok((
+                        tx.scan(Table::Checkpoints, 1, 100)?,
+                        tx.scan(Table::Outbox, 1, 100)?,
+                    ))
+                })
+                .unwrap();
+            let node = Node::new("receipt")
+                .attr("from", "100001@lid")
+                .attr("id", "fixture");
+            let error = record(&store, &node).unwrap_err().to_string();
+            assert!(error.contains("invalid authenticated LID mapping"));
+            assert!(
+                !error.contains("DO-NOT-ECHO")
+                    && !error.contains("15555550100")
+                    && !error.contains("100002")
+            );
+            assert_eq!(
+                before,
+                store
+                    .read(|tx| Ok((
+                        tx.scan(Table::Checkpoints, 1, 100)?,
+                        tx.scan(Table::Outbox, 1, 100)?
+                    )))
+                    .unwrap()
+            );
+        }
+    }
+
+    #[test]
+    fn unsupported_receipt_routes_and_self_statuses_leave_the_store_unchanged() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("unsupported.redb"), true);
+        saved_receipt_send(&store, "a", "15555550100@s.whatsapp.net", "fixture");
+        let node = Node::new("receipt")
+            .attr("id", "fixture")
+            .attr("from", "15555550100@s.whatsapp.net");
+        let mut unsupported = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        unsupported.kind = crate::model::jid::JidKind::Interop;
+        let before = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.scan(Table::Outbox, 1, 100)?,
+                    tx.journal_head()?,
+                ))
+            })
+            .unwrap();
+        for receipt in [
+            node.clone().attr("type", "read-self"),
+            node.clone().attr("type", "played-self"),
+            node.clone().attr("type", "sender"),
+            node.clone().attr("type", "inactive"),
+            node.clone().attr("type", "unrecognized"),
+            node.clone().attr("from", unsupported),
+            node.clone().attr("from", "100001@g.us"),
+            node.clone()
+                .attr("participant", "15555550100@s.whatsapp.net"),
+            node.attr("recipient", "15555550100@s.whatsapp.net"),
+        ] {
+            assert_eq!(record(&store, &receipt).unwrap(), 0);
+            assert_eq!(
+                before,
+                store
+                    .read(|tx| Ok((
+                        tx.scan(Table::Checkpoints, 1, 100)?,
+                        tx.scan(Table::Outbox, 1, 100)?,
+                        tx.journal_head()?
+                    )))
+                    .unwrap()
+            );
+        }
+    }
+
+    #[test]
+    fn legacy_receipt_pages_history_without_treating_lid_digits_as_phone() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("pages.redb"), true);
+        let key = b"message:legacy:send";
+        store.write(|tx| {
+            for i in 0..10_000 { tx.put(Table::Checkpoints, format!("a-history:{i:05}").as_bytes(), 1, b"opaque")?; }
+            tx.put_json(Table::Checkpoints,key,1,&serde_json::json!({"to":"+15555550100","wire_id":"fixture","status":"outcome_unknown"}))
+        }).unwrap();
+        let node = Node::new("receipt")
+            .attr("id", "fixture")
+            .attr("from", "15555550100@lid");
+        assert_eq!(record(&store, &node).unwrap(), 0);
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"authenticated-lid:15555550100@lid",
+                    1,
+                    &Jid::parse("15555550100@s.whatsapp.net")?,
+                )
+            })
+            .unwrap();
+        assert_eq!(record(&store, &node).unwrap(), 1);
+        let saved: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key, 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(saved["status"], "outcome_unknown");
+        assert_eq!(
+            saved["receipts"],
+            serde_json::json!({"delivered":true,"read":false,"played":false})
+        );
+    }
+
     #[test]
     fn independent_facts_never_downgrade_or_invent_events() {
         let mut facts = ReceiptFacts::default();

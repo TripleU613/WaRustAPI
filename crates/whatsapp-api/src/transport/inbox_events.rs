@@ -624,56 +624,7 @@ fn outgoing_reaction_target(
     }))
 }
 
-/// Match primary direct namespaces using only saved authenticated association.
-/// This does not adopt a pin, change an alias or prove outgoing delivery.
-pub(super) fn authenticated_direct_chat(
-    tx: &WriteTx<'_>,
-    from: &crate::model::jid::Jid,
-    original: &crate::model::jid::Jid,
-) -> Result<bool> {
-    if from.agent != 0
-        || from.device != 0
-        || !matches!(
-            from.server,
-            crate::model::jid::Server::User | crate::model::jid::Server::Lid
-        )
-        || original.agent != 0
-        || original.device != 0
-        || !matches!(
-            original.server,
-            crate::model::jid::Server::User | crate::model::jid::Server::Lid
-        )
-    {
-        return Ok(false);
-    }
-    let same = super::identity_query::same_primary_address;
-    let mut attributed = same(original, from);
-    let alias_pair = match (&from.server, &original.server) {
-        (crate::model::jid::Server::Lid, crate::model::jid::Server::User) => Some((from, original)),
-        (crate::model::jid::Server::User, crate::model::jid::Server::Lid) => Some((original, from)),
-        _ => None,
-    };
-    if !attributed
-        && let Some((lid, expected_phone)) = alias_pair
-        && let Some(value) = tx.get_json::<serde_json::Value>(
-            Table::Checkpoints,
-            format!("authenticated-lid:{}", lid.to_non_ad()).as_bytes(),
-            1,
-        )?
-    {
-        let phone: crate::model::jid::Jid = serde_json::from_value(value)
-            .map_err(|_| crate::Error::invalid("inbox", "invalid authenticated LID mapping"))?;
-        if phone.server != crate::model::jid::Server::User || phone.agent != 0 || phone.device != 0
-        {
-            return Err(crate::Error::invalid(
-                "inbox",
-                "invalid authenticated LID mapping",
-            ));
-        }
-        attributed = same(expected_phone, &phone);
-    }
-    Ok(attributed)
-}
+pub(super) use super::jid_map::authenticated_direct_chat;
 
 /// Must be called in the ratchet/inbox write transaction, or on an already
 /// authenticated historical record using its original saved route. Marker and

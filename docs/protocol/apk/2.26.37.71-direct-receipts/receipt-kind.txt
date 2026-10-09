@@ -1,0 +1,54 @@
+# APK-derived structural disassembly: LX/Cmk;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(IL) flags=0x19 registers=2
+  0000..0006 op=6e invoke-virtual {v1}, Ljava/lang/String;->hashCode(I)
+  0006..0008 op=0a move-result v0
+  0008..000e op=2c sparse-switch v0, payload@0xa4, cases=[-1159650013:@0x1c, -985752877:@0x32, -905962955:@0x48, 3496342:@0x4e, 24665195:@0x64, 110109190:@0x7a, 823466996:@0x90], default@0xe
+  000e..0012 op=1a const-string v0, "invalid type"
+  0012..0018 op=71 invoke-static {v0}, LX/1xf;->A15(LL)
+  0018..001a op=0c move-result-object v0
+  001a..001c op=27 throw v0
+  001c..0020 op=1a const-string v0, "read-self"
+  0020..0026 op=6e invoke-virtual {v1, v0}, Ljava/lang/String;->equals(ZL)
+  0026..0028 op=0a move-result v0
+  0028..002c op=38 if-eqz v0, -0xd
+  002c..0030 op=13 const/16 v0, #0x11
+  0030..0032 op=0f return v0
+  0032..0036 op=1a const-string v0, "played"
+  0036..003c op=6e invoke-virtual {v1, v0}, Ljava/lang/String;->equals(ZL)
+  003c..003e op=0a move-result v0
+  003e..0042 op=38 if-eqz v0, -0x18
+  0042..0046 op=13 const/16 v0, #0x8
+  0046..0048 op=0f return v0
+  0048..004c op=1a const-string v0, "sender"
+  004c..004e op=28 goto +0x24
+  004e..0052 op=1a const-string v0, "read"
+  0052..0058 op=6e invoke-virtual {v1, v0}, Ljava/lang/String;->equals(ZL)
+  0058..005a op=0a move-result v0
+  005a..005e op=38 if-eqz v0, -0x26
+  005e..0062 op=13 const/16 v0, #0xd
+  0062..0064 op=0f return v0
+  0064..0068 op=1a const-string v0, "inactive"
+  0068..006e op=6e invoke-virtual {v1, v0}, Ljava/lang/String;->equals(ZL)
+  006e..0070 op=0a move-result v0
+  0070..0074 op=38 if-eqz v0, -0x31
+  0074..0078 op=13 const/16 v0, #0xf
+  0078..007a op=0f return v0
+  007a..007e op=1a const-string v0, "played-self"
+  007e..0084 op=6e invoke-virtual {v1, v0}, Ljava/lang/String;->equals(ZL)
+  0084..0086 op=0a move-result v0
+  0086..008a op=38 if-eqz v0, -0x3c
+  008a..008e op=13 const/16 v0, #0x12
+  008e..0090 op=0f return v0
+  0090..0094 op=1a const-string v0, "delivery"
+  0094..009a op=6e invoke-virtual {v1, v0}, Ljava/lang/String;->equals(ZL)
+  009a..009c op=0a move-result v0
+  009c..00a0 op=38 if-eqz v0, -0x47
+  00a0..00a2 op=12 const/4 v0, #0x5
+  00a2..00a4 op=0f return v0
+  00a4..00e0 op=00 sparse-switch-payload size=7
+  # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,54 @@
+# APK-derived structural disassembly: LX/14e;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(ZLL) flags=0x1 registers=13
+  0000..0002 op=12 const/4 v2, #0x1
+  0002..0008 op=71 invoke-static {v11, v2}, LX/00h;->A0A(VLI)
+  0008..000a op=12 const/4 v0, #0x2
+  000a..0010 op=71 invoke-static {v12, v0}, LX/00h;->A0A(VLI)
+  0010..0014 op=54 iget-object v0, v10, LX/14C;->A02:LX/05B;
+  0014..0018 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0018..001e op=72 invoke-interface {v0}, LX/00s;->get(L)
+  001e..0020 op=0c move-result-object v3
+  0020..0024 op=1f check-cast v3, LX/0hk;
+  0024..0028 op=53 iget-wide v0, v12, LX/Cb1;->A00:J
+  0028..002e op=71 invoke-static {v3, v2, v0, v1}, LX/0hk;->A00(LLIJ)
+  002e..0030 op=0c move-result-object v1
+  0030..0034 op=1f check-cast v1, LX/BqG;
+  0034..0038 op=54 iget-object v0, v10, LX/14e;->A02:LX/05B;
+  0038..003c op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  003c..0042 op=72 invoke-interface {v0}, LX/00s;->get(L)
+  0042..0044 op=0c move-result-object v0
+  0044..0048 op=1f check-cast v0, LX/Cmk;
+  0048..004e op=6e invoke-virtual {v0, v11, v12, v1}, LX/Cmk;->A03(LLLL)
+  004e..0050 op=0c move-result-object v4
+  0050..0054 op=54 iget-object v0, v10, LX/14e;->A00:LX/05B;
+  0054..0058 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0058..005e op=72 invoke-interface {v0}, LX/00s;->get(L)
+  005e..0060 op=0c move-result-object v3
+  0060..0064 op=1f check-cast v3, LX/Cmn;
+  0064..0066 op=12 const/4 v5, #0x0
+  0066..006a op=16 const-wide/16 v8, #0x0
+  006a..006e op=16 const-wide/16 v6, #0x1388
+  006e..0074 op=74 invoke-virtual/range {v3..v9}, LX/Cmn;->A04(VLIJJ)
+  0074..0078 op=54 iget-object v1, v10, LX/14e;->A03:Ljava/util/Set;
+  0078..007a op=1d monitor-enter
+  007a..0080 op=72 invoke-interface {v1, v12}, Ljava/util/Set;->remove(ZL)
+  0080..0082 op=1e monitor-exit
+  0082..0084 op=0f return v2
+  0084..0086 op=0d move-exception v0
+  0086..008a op=54 iget-object v1, v10, LX/14e;->A03:Ljava/util/Set;
+  008a..008c op=1d monitor-enter
+  008c..0092 op=72 invoke-interface {v1, v12}, Ljava/util/Set;->remove(ZL)
+  0092..0094 op=1e monitor-exit
+  0094..0096 op=27 throw v0
+  0096..0098 op=0d move-exception v0
+  0098..009a op=1e monitor-exit
+  009a..009c op=27 throw v0
+  # exception table: 3 try range(s)
+  # catch <all> code_units 0028..003a -> 0042
+  # catch <all> code_units 003d..0040 -> 004b
+  # catch <all> code_units 0046..0049 -> 004b
+.end method

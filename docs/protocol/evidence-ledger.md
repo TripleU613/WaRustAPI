@@ -1487,3 +1487,21 @@ the older sender-key/key-removal scope. Runtime counterpart/migration state,
 normal-outbox fact attribution; the actual incoming receipt authority path must
 be traced before fixing PN/LID namespace matching. No live mutation, deletion,
 replay or native-parity claim. [Details](identity-receipts.md).
+
+Direct receipt attribution (2026-10-09, **confirmed static / local correction**):
+APK 37.71 `CmG`/`Cmk`/`DDH` keep message chat and receipt actor separate;
+stale `ClU` attribution is corrected. Primary normal-outbox receipts now bind
+the unique saved wire intent to the actual actor through exact PN/LID or an
+existing authenticated association in either direction, within one transaction.
+Actual actor, original IDs, progress, uncertainty and receipt-send reservations
+are preserved. Legacy PN records page history; ambiguous/corrupt matches roll
+back. Native canonicalizer gates, identity cleanup and fresh live PN/LID
+receipt attribution remain unverified. [Evidence and boundaries](direct-receipts.md).
+
+Receipt correction validation: 739 workspace/all-feature tests, strict Clippy,
+warning-free Rustdoc, default CLI/API/reference checks and repository hygiene
+pass. The 12-topic APK bundle reproduces exactly; cached self-diff is 0.017892
+seconds. A 45-second receive-only session authenticated and stopped cleanly;
+no fresh user message or qualifying receipt arrived. Saved peer keys, actions,
+receipt ACKs, outbox and events remained unchanged. No chat was sent, no
+uncertain action replayed. Fresh live namespace attribution remains pending.

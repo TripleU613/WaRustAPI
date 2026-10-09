@@ -39,6 +39,85 @@ pub fn select_account_row(rows: &[JidMapRow], jid_row_id: i64) -> Option<i64> {
         .map(|row| row.lid_row_id)
 }
 
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+/// Match primary direct namespaces using only saved authenticated association.
+/// This does not adopt a pin, change an alias or prove outgoing delivery.
+pub(super) fn authenticated_direct_chat(
+    tx: &crate::store::WriteTx<'_>,
+    from: &crate::model::jid::Jid,
+    original: &crate::model::jid::Jid,
+) -> crate::Result<bool> {
+    if from.user.is_empty()
+        || original.user.is_empty()
+        || !matches!(
+            from.kind,
+            crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
+        )
+        || !matches!(
+            original.kind,
+            crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
+        )
+        || from.agent != 0
+        || from.device != 0
+        || !matches!(
+            from.server,
+            crate::model::jid::Server::User | crate::model::jid::Server::Lid
+        )
+        || original.agent != 0
+        || original.device != 0
+        || !matches!(
+            original.server,
+            crate::model::jid::Server::User | crate::model::jid::Server::Lid
+        )
+    {
+        return Ok(false);
+    }
+    // Compare address components, accepting both ordinary and zero AD encoding.
+    // This local association guard is not the APK's gated mapping policy.
+    let same = |a: &crate::model::jid::Jid, b: &crate::model::jid::Jid| {
+        use crate::model::jid::JidKind;
+        matches!(a.kind, JidKind::Plain | JidKind::AgentDevice)
+            && matches!(b.kind, JidKind::Plain | JidKind::AgentDevice)
+            && a.user == b.user
+            && a.server == b.server
+            && a.agent == b.agent
+            && a.device == b.device
+    };
+    let mut attributed = same(original, from);
+    let alias_pair = match (&from.server, &original.server) {
+        (crate::model::jid::Server::Lid, crate::model::jid::Server::User) => Some((from, original)),
+        (crate::model::jid::Server::User, crate::model::jid::Server::Lid) => Some((original, from)),
+        _ => None,
+    };
+    if !attributed
+        && let Some((lid, expected_phone)) = alias_pair
+        && let Some(value) = tx.get_json::<serde_json::Value>(
+            crate::store::Table::Checkpoints,
+            format!("authenticated-lid:{}", lid.to_non_ad()).as_bytes(),
+            1,
+        )?
+    {
+        let phone: crate::model::jid::Jid = serde_json::from_value(value)
+            .map_err(|_| crate::Error::invalid("inbox", "invalid authenticated LID mapping"))?;
+        if phone.user.is_empty()
+            || phone.server != crate::model::jid::Server::User
+            || phone.agent != 0
+            || phone.device != 0
+            || !matches!(
+                phone.kind,
+                crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
+            )
+        {
+            return Err(crate::Error::invalid(
+                "inbox",
+                "invalid authenticated LID mapping",
+            ));
+        }
+        attributed = same(expected_phone, &phone);
+    }
+    Ok(attributed)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

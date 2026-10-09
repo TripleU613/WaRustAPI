@@ -2271,3 +2271,21 @@ Validation: exact APK/recipe re-export, CLI/API checks and hygiene passed. Cache
 23-topic self-comparison took 0.026378 seconds; no cross-release equivalence or
 new runtime/live behavior is claimed. Incoming PN/LID delivery-fact attribution
 remains a separately identified receive gap to trace and correct next.
+
+Direct receipt attribution (2026-10-09, **confirmed static / local correction**):
+APK 37.71 `CmG`/`Cmk`/`DDH` keep message chat and receipt actor separate;
+stale `ClU` attribution is corrected. Primary normal-outbox receipts now bind
+the unique saved wire intent to the actual actor through exact PN/LID or an
+existing authenticated association in either direction, within one transaction.
+Actual actor, original IDs, progress, uncertainty and receipt-send reservations
+are preserved. Legacy PN records page history; ambiguous/corrupt matches roll
+back. Native canonicalizer gates, identity cleanup and fresh live PN/LID
+receipt attribution remain unverified. [Evidence and boundaries](docs/protocol/direct-receipts.md).
+
+Receipt correction validation: 739 workspace/all-feature tests, strict Clippy,
+warning-free Rustdoc, default CLI/API/reference checks and repository hygiene
+pass. The 12-topic APK bundle reproduces exactly; cached self-diff is 0.017892
+seconds. A 45-second receive-only session authenticated and stopped cleanly;
+no fresh user message or qualifying receipt arrived. Saved peer keys, actions,
+receipt ACKs, outbox and events remained unchanged. No chat was sent, no
+uncertain action replayed. Fresh live namespace attribution remains pending.

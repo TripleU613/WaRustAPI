@@ -1,0 +1,47 @@
+# APK-derived structural disassembly: LX/CmG;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LLLLLLLJ) flags=0x19 registers=12
+  0000..0004 op=39 if-nez v4, +0xa
+  0004..0008 op=1c const-class v1, Lcom/whatsapp/infra/core/jid/Jid;
+  0008..000c op=1a const-string v0, "from"
+  000c..0012 op=6e invoke-virtual {v5, v1, v0}, LX/0hs;->A0A(LLL)
+  0012..0014 op=0c move-result-object v4
+  0014..0018 op=1a const-string v0, "id"
+  0018..001e op=6e invoke-virtual {v5, v0}, LX/0hs;->A0L(LL)
+  001e..0020 op=0c move-result-object v2
+  0020..0024 op=1c const-class v1, Lcom/whatsapp/infra/core/jid/Jid;
+  0024..0028 op=1a const-string v0, "participant"
+  0028..002e op=6e invoke-virtual {v5, v1, v0}, LX/0hs;->A0A(LLL)
+  002e..0030 op=0c move-result-object v1
+  0030..0034 op=1a const-string v0, "type"
+  0034..003a op=6e invoke-virtual {v5, v0, v9}, LX/0hs;->A0M(LLL)
+  003a..003c op=0c move-result-object v0
+  003c..0040 op=22 new-instance v3, LX/CSu;
+  0040..0046 op=70 invoke-direct {v3}, LX/CSu;-><init>(V)
+  0046..004a op=5b iput-object v8, v3, LX/CSu;->A06:Ljava/lang/String;
+  004a..004e op=5b iput-object v4, v3, LX/CSu;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+  004e..0052 op=5b iput-object v2, v3, LX/CSu;->A08:Ljava/lang/String;
+  0052..0056 op=5b iput-object v0, v3, LX/CSu;->A09:Ljava/lang/String;
+  0056..005a op=5b iput-object v1, v3, LX/CSu;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+  005a..005e op=5a iput-wide v10, v3, LX/CSu;->A00:J
+  005e..0062 op=38 if-eqz v6, +0x1f
+  0062..0068 op=6e invoke-virtual {v6}, Ljava/lang/Object;->toString(L)
+  0068..006a op=0c move-result-object v0
+  006a..0070 op=6e invoke-virtual {v3, v0}, LX/CSu;->A01(VL)
+  0070..0074 op=38 if-eqz v7, +0x16
+  0074..0076 op=12 const/4 v0, #0x1
+  0076..007a op=23 new-array v2, v0, [LX/0hq;
+  007a..007e op=1a const-string v1, "failure_reason"
+  007e..0084 op=6e invoke-virtual {v7}, Ljava/lang/Object;->toString(L)
+  0084..0086 op=0c move-result-object v0
+  0086..008c op=71 invoke-static {v1, v0, v2}, LX/Ayo;->A1L(VLLL)
+  008c..0090 op=1a const-string v0, "meta"
+  0090..0096 op=71 invoke-static {v0, v2}, LX/Ayj;->A0z(LLL)
+  0096..0098 op=0c move-result-object v0
+  0098..009c op=5b iput-object v0, v3, LX/CSu;->A04:LX/0hs;
+  009c..009e op=11 return-object v3
+  # exception table: 0 try range(s)
+.end method
