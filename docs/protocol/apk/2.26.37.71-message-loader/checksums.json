@@ -1,0 +1,38 @@
+{
+  "cursor-batch-entry.txt": {
+    "bytes": 10960,
+    "sha256": "6a8aa59836fb3d7e6e3c422339f49a82aba4b942b694e772cc9e8a098fb97f8a"
+  },
+  "cursor-list-entry.txt": {
+    "bytes": 8129,
+    "sha256": "5faab5bbbd02f1f4909ab16b995b1a3ab7546577d005a60e95092ed7b0a91adb"
+  },
+  "cursor-status-load.txt": {
+    "bytes": 16698,
+    "sha256": "14bd3c337c9842d0cdf0e4e8f22ecb33d82e8a33c2a34438f1518c9149815b3b"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-type-factory.txt": {
+    "bytes": 3945,
+    "sha256": "142f8a72de0b1c710d1e4d23d15ea4fc1657e9442906223f057bb67633587800"
+  },
+  "outgoing-media-initial-state.txt": {
+    "bytes": 24092,
+    "sha256": "dee3f1b4aef378aea7c00f242f5eb3b00c69e16b87ce07784eb311447540bfa8"
+  },
+  "targets.json": {
+    "bytes": 2171,
+    "sha256": "65696a64e15f24b238688b3b907b056d34a3389f7ddfc9b5f7b039ecb34d3512"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

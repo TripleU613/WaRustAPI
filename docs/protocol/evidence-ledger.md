@@ -1,5 +1,13 @@
 # Evidence ledger
 
+Ordinary cursor status (2026-10-09, **confirmed static**): APK 37.71 0VA.A00
+reads status into the virtual message setter and loads server receipt time
+without enum conversion or minimum selection. Two physical cursor entry points,
+the type factory and one status-1 media preparation source are retained in a
+five-topic snapshot. Full outer SQL/cache and user-row creation remain unknown;
+no Rust runtime, reservation or account state changed.
+[Evidence and limits](message-loader.md).
+
 FStatus conversion (2026-10-09, **confirmed static**): APK 37.71 7z7.A00
 maps named 1cE enum ordinals with media/subtype conditions; 7zY.A01 keeps
 native 178 integers separate. The ten-topic snapshot retains the transition

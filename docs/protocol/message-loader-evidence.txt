@@ -1,0 +1,28 @@
+APK 2.26.37.71 message cursor loader search and physical-call inventory
+SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+
+Case-sensitive strings: FMessageFactory (9 matches); getMessageFromCursor (none).
+No-match is not absence of a cursor loader; the existing setter-call inventory
+identified 0VA.A00, whose full signature takes a Cursor.
+Results with trailing spaces are JSON quoted to preserve spelling.
+Physical caller inventory is not full reflection/virtual dispatch coverage.
+
+factory-strings.txt source_sha256=5482f0ea9365140fe5ebfc381bfc58e0996f167e15ec0d8f46189b9f185cec8f
+EditedFMessageFactory/build/edited message type not supported
+EditedFMessageFactory/build/edited message type not supported. messageType=
+FMessageFactory/cloneQuotedMessage Message
+FMessageFactory/newFMessageForForward/thumbnail and media file key not the same
+"FMessageFactorySubsystem; cannot create "
+"FMessageFactorySubsystem; cannot crete "
+FMessageFactorySubsystemImpl.kt
+NewsletterScheduledMessageFMessageFactory.kt
+NewsletterScheduledMessageFMessageFactory/create could not parse queued update
+
+cursor-anchor-strings.txt source_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+
+cursor-loader-callers.txt source_sha256=81ca04a3fee47ea2bf905496bad8bb51d57b6fd2e5e54adf2da0040ad73b05e9
+classes.dex  LX/0V9;->A05(LL)
+  invoke dex byte offset: 0x5a5660
+classes.dex  LX/0VA;->A05(LLLZZ)
+  invoke dex byte offset: 0x5a669a

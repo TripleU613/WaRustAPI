@@ -1,0 +1,58 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "cursor-status-load": {
+      "class": "LX/0VA;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "cursor-list-entry": {
+      "class": "LX/0VA;",
+      "method": "A05",
+      "anchors": [
+        "FMessageDatabaseRetrieverImpl/getMessage/can't read key; jid="
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "cursor-batch-entry": {
+      "class": "LX/0V9;",
+      "method": "A05",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "message-type-factory": {
+      "class": "LX/1ge;",
+      "method": "A00",
+      "anchors": [
+        "FMessageFactorySubsystem; cannot create ",
+        "FMessageFactorySubsystem; cannot crete "
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "outgoing-media-initial-state": {
+      "class": "LX/0qA;",
+      "method": "A03",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    }
+  }
+}

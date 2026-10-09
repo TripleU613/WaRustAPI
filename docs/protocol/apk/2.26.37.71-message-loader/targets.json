@@ -1,0 +1,74 @@
+{
+  "cursor-batch-entry": {
+    "class": "LX/0V9;",
+    "file": "cursor-batch-entry.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "cursor-list-entry": {
+    "anchors": [
+      "FMessageDatabaseRetrieverImpl/getMessage/can't read key; jid="
+    ],
+    "class": "LX/0VA;",
+    "file": "cursor-list-entry.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "cursor-status-load": {
+    "class": "LX/0VA;",
+    "file": "cursor-status-load.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "message-type-factory": {
+    "anchors": [
+      "FMessageFactorySubsystem; cannot create ",
+      "FMessageFactorySubsystem; cannot crete "
+    ],
+    "class": "LX/1ge;",
+    "file": "message-type-factory.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "outgoing-media-initial-state": {
+    "class": "LX/0qA;",
+    "file": "outgoing-media-initial-state.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  }
+}

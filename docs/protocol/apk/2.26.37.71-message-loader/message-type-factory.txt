@@ -1,0 +1,64 @@
+# APK-derived structural disassembly: LX/1ge;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LLIJ) flags=0x1 registers=10
+  # full signature: LX/1ge;->A00(LX/1gc;IJ)LX/178;
+  0000..0004 op=54 iget-object v4, v5, LX/1ge;->A01:LX/00l;
+  0004..000a op=72 invoke-interface {v4}, LX/00l;->getValue()Ljava/lang/Object;
+  000a..000c op=0c move-result-object v0
+  000c..0010 op=1f check-cast v0, LX/1gj;
+  0010..0016 op=6e invoke-virtual {v0, v7}, LX/1gj;->A00(I)LX/1gg;
+  0016..0018 op=0c move-result-object v0
+  0018..001c op=1f check-cast v0, LX/1gh;
+  001c..0022 op=72 invoke-interface {v0, v6, v8, v9}, LX/1gh;->AIQ(LX/1gc;J)LX/178;
+  0022..0024 op=0c move-result-object v0
+  0024..0026 op=11 return-object v0
+  0026..0028 op=0d move-exception v3
+  0028..002c op=13 const/16 v1, #0x5a3
+  002c..0030 op=54 iget-object v0, v5, LX/1ge;->A00:LX/05B;
+  0030..0034 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0034..003a op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  003a..003c op=0c move-result-object v0
+  003c..0040 op=1f check-cast v0, LX/00W;
+  0040..0046 op=6e invoke-virtual {v0}, LX/00W;->A02()LX/00Y;
+  0046..0048 op=0c move-result-object v0
+  0048..004e op=71 invoke-static {v0, v1}, LX/08b;->A03(LX/00X;I)Ljava/lang/Object;
+  004e..0050 op=0c move-result-object v1
+  0050..0054 op=1f check-cast v1, LX/0AH;
+  0054..005a op=71 invoke-static {v7}, Ljava/lang/Integer;->toString(I)Ljava/lang/String;
+  005a..005c op=0c move-result-object v2
+  005c..0062 op=71 invoke-static {v2}, LX/00h;->A06(Ljava/lang/Object;)V
+  0062..0068 op=72 invoke-interface {v4}, LX/00l;->getValue()Ljava/lang/Object;
+  0068..006a op=0c move-result-object v0
+  006a..006e op=1f check-cast v0, LX/1gj;
+  006e..0074 op=6e invoke-virtual {v0, v7}, LX/1gj;->A02(I)Z
+  0074..0076 op=0a move-result v0
+  0076..007a op=38 if-eqz v0, +0x24
+  007a..007e op=1a const-string v0, "fmessage-factory-message-type-not-supported"
+  007e..0084 op=6e invoke-virtual {v1, v0, v2, v3}, LX/0AH;->A0e(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+  0084..0088 op=1a const-string v0, "FMessageFactorySubsystem; cannot create "
+  0088..008c op=22 new-instance v1, Ljava/lang/StringBuilder;
+  008c..0092 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0092..0098 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0098..009c op=1a const-string v0, " (not supported)"
+  009c..00a2 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00a2..00a8 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00a8..00aa op=0c move-result-object v1
+  00aa..00ac op=12 const/4 v0, #0x0
+  00ac..00b2 op=71 invoke-static {v0, v1}, LX/00K;->A0D(ZLjava/lang/String;)V
+  00b2..00b6 op=22 new-instance v0, LX/1rW;
+  00b6..00bc op=70 invoke-direct {v0, v6, v7, v8, v9}, LX/178;-><init>(LX/1gc;IJ)V
+  00bc..00be op=11 return-object v0
+  00be..00c2 op=1a const-string v0, "fmessage-factory-message-type-not-registered"
+  00c2..00c8 op=6e invoke-virtual {v1, v0, v2, v3}, LX/0AH;->A0e(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+  00c8..00cc op=1a const-string v0, "FMessageFactorySubsystem; cannot crete "
+  00cc..00d0 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  00d0..00d6 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  00d6..00dc op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00dc..00e0 op=1a const-string v0, " (not registered)"
+  00e0..00e2 op=28 goto -0x22
+  # exception table: 1 try range(s)
+  # catch LX/MTL; code_units 000e..0013 -> 0013
+.end method

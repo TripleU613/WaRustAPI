@@ -106,6 +106,8 @@ message setter; no universal transition guarantee follows from one helper.
 SQL message.status. The constructor's PREPARING enum does not by itself prove
 that every outgoing 178 starts with 0 or 1; context conversion is explicit above.
 No row is seeded, account touched or send/receipt performed by this research.
+The subsequent [ordinary cursor loader](message-loader.md) identifies a separate
+status-column-to-setter path without making enum conversion a SQL decoder.
 Rust runtime remains at the preceding ACK guard, with existing inspection and
 APK research CLI commands. The research API is CLI-only, x-live=false.
 

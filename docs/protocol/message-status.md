@@ -86,8 +86,9 @@ receipt_user membership from blank device targets or a coexistence row.
 The existing Rust immutable original targets/versions and mutable exact-device
 membership are separate from native message A08 and receipt_user rows. No saved
 state is reconstructed or migrated from raw DeliveryFacts by this research.
-Next inputs are actual ordinary outgoing initialization/ACK status producers,
-stored status decoding, full live-writer admission and counterpart authority.
+The [cursor loader trace](message-loader.md) now identifies status/time reads
+and one media preparation source. Full ordinary outgoing initialization, live
+user-writer admission and counterpart authority remain unfinished.
 Those determine which positive receipt creates a real user row and therefore
 qualifies the primary identity-cleanup intersection.
 
