@@ -1,0 +1,35 @@
+# APK-derived structural disassembly: LX/12y;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(LLLLI) flags=0x12 registers=14
+  # full signature: LX/12y;->A00(LX/Bp2;LX/AWs;LX/BZc;I)LX/1il;
+  0000..0004 op=54 iget-object v0, v11, LX/AWs;->A01:LX/A0N;
+  0004..0008 op=38 if-eqz v0, +0x2d
+  0008..000c op=53 iget-wide v7, v0, LX/A0N;->A01:J
+  000c..0012 op=6e invoke-virtual {v12}, Lcom/google/protobuf/AbstractMessageLite;->toByteArray()[B
+  0012..0014 op=0c move-result-object v4
+  0014..0018 op=54 iget-object v0, v10, LX/Bp2;->A08:LX/C6a;
+  0018..001c op=54 iget-object v3, v0, LX/C6a;->A00:LX/1gc;
+  001c..001e op=12 const/4 v5, #0x2
+  001e..0022 op=52 iget v6, v10, LX/Bp2;->A02:I
+  0022..0026 op=22 new-instance v2, LX/1il;
+  0026..002c op=76 invoke-direct/range {v2..v8}, LX/1il;-><init>(LX/1gc;[BIIJ)V
+  002c..0030 op=59 iput v13, v2, LX/1il;->A00:I
+  0030..0034 op=54 iget-object v1, v0, LX/C6a;->A00:LX/1gc;
+  0034..0038 op=55 iget-boolean v0, v1, LX/1gc;->A02:Z
+  0038..003c op=39 if-nez v0, +0xa
+  003c..0040 op=54 iget-object v0, v1, LX/1gc;->A00:LX/0Cy;
+  0040..0046 op=70 invoke-direct {v9, v0}, LX/12y;->A01(LX/0Cy;)Z
+  0046..0048 op=0a move-result v0
+  0048..004c op=38 if-eqz v0, +0x6
+  004c..004e op=12 const/4 v0, #0x4
+  004e..0054 op=6e invoke-virtual {v2, v0}, LX/178;->A0H(I)V
+  0054..0058 op=53 iget-wide v0, v11, LX/AWs;->A00:J
+  0058..005c op=5a iput-wide v0, v2, LX/178;->A0k:J
+  005c..005e op=11 return-object v2
+  005e..0062 op=53 iget-wide v7, v10, LX/CjN;->A03:J
+  0062..0064 op=28 goto -0x2b
+  # exception table: 0 try range(s)
+.end method

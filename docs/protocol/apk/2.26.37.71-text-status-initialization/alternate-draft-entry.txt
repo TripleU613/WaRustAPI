@@ -1,0 +1,54 @@
+# APK-derived structural disassembly: LX/1Zb;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method Ag9(LL) flags=0x1 registers=17
+  # full signature: LX/1Zb;->Ag9(LX/1j2;)LX/178;
+  0000..0004 op=08 move-object/from16 v2, v16
+  0004..0008 op=54 iget-object v1, v15, LX/1Zb;->A0R:LX/1Zc;
+  0008..000c op=20 instance-of v0, v2, LX/1rS;
+  000c..000e op=12 const/4 v5, #0x0
+  000e..0012 op=38 if-eqz v0, +0x33
+  0012..0016 op=1f check-cast v2, LX/1rS;
+  0016..001a op=54 iget-object v3, v1, LX/1Zc;->A01:LX/1Ze;
+  001a..001e op=54 iget-object v4, v2, LX/1rS;->A08:LX/0Cy;
+  001e..0022 op=54 iget-object v1, v2, LX/1rS;->A09:Ljava/lang/String;
+  0022..0026 op=13 const/16 v0, #0x3e8
+  0026..002c op=71 invoke-static {v1, v0}, Lcom/whatsapp/infra/core/util/string/StringUtils;->A0F(Ljava/lang/String;I)Ljava/lang/String;
+  002c..002e op=0c move-result-object v7
+  002e..0032 op=39 if-nez v7, +0x4
+  0032..0036 op=1a const-string v7, ""
+  0036..003a op=53 iget-wide v0, v2, LX/1rS;->A05:J
+  003a..0040 op=6e invoke-virtual {v2}, LX/1j2;->A08()Ljava/util/List;
+  0040..0042 op=0c move-result-object v2
+  0042..0048 op=71 invoke-static {v2}, LX/0C6;->A1F(Ljava/lang/Iterable;)Ljava/util/List;
+  0048..004a op=0c move-result-object v8
+  004a..004c op=07 move-object v6, v5
+  004c..004e op=04 move-wide v9, v0
+  004e..0054 op=74 invoke-virtual/range {v3..v10}, LX/1Ze;->A00(LX/0Cy;LX/178;LX/1xV;Ljava/lang/String;Ljava/util/List;J)LX/1he;
+  0054..0056 op=0c move-result-object v5
+  0056..005a op=1f check-cast v5, LX/178;
+  005a..005c op=12 const/4 v0, #0x6
+  005c..0062 op=6e invoke-virtual {v5, v0}, LX/178;->A0H(I)V
+  0062..006c op=18 const-wide v0, #0x80000000 (2147483648)
+  006c..0072 op=6e invoke-virtual {v5, v0, v1}, LX/178;->A0J(J)V
+  0072..0074 op=11 return-object v5
+  0074..0078 op=20 instance-of v0, v2, LX/1rf;
+  0078..007c op=38 if-eqz v0, -0x3
+  007c..0080 op=1f check-cast v2, LX/1rf;
+  0080..0084 op=54 iget-object v3, v1, LX/1Zc;->A00:LX/1Zh;
+  0084..0088 op=54 iget-object v4, v2, LX/1rf;->A09:LX/0Cy;
+  0088..008c op=22 new-instance v7, LX/6b5;
+  008c..0092 op=70 invoke-direct {v7}, LX/6b5;-><init>()V
+  0092..0096 op=53 iget-wide v10, v2, LX/1rf;->A06:J
+  0096..009a op=54 iget-object v8, v2, LX/1rf;->A0A:Ljava/lang/String;
+  009a..009e op=52 iget v9, v2, LX/1rf;->A03:I
+  009e..00a2 op=16 const-wide/16 v12, #0x0
+  00a2..00a4 op=12 const/4 v14, #0x0
+  00a4..00a6 op=07 move-object v6, v5
+  00a6..00ac op=74 invoke-virtual/range {v3..v14}, LX/1Zh;->A00(LX/0Cy;LX/178;LX/D6m;LX/6b5;Ljava/lang/String;IJJZ)LX/72l;
+  00ac..00ae op=0c move-result-object v5
+  00ae..00b0 op=28 goto -0x2c
+  # exception table: 0 try range(s)
+.end method

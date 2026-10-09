@@ -1,0 +1,86 @@
+{
+  "addon-cursor-restoration.txt": {
+    "bytes": 17283,
+    "sha256": "a119047365e30abf4b2bdec6724d88a6f1a8f2d0d13ee7c7325a9da4d9920ca5"
+  },
+  "addon-error-state.txt": {
+    "bytes": 6760,
+    "sha256": "861d2d4e4466c5c497f389e66a0ab58e1465b85ca2d1714eaa557aca29ebe085"
+  },
+  "alternate-draft-entry.txt": {
+    "bytes": 2845,
+    "sha256": "3cdf156759418495a145784f69fc5c545e912d7771dab4f138f01805ddd93cfb"
+  },
+  "alternate-media-factory.txt": {
+    "bytes": 2411,
+    "sha256": "b090a709bca1f57f1ae2389d07be95196627a6fa296b4b71e33174acb3c6f707"
+  },
+  "cursor-state-restoration.txt": {
+    "bytes": 16698,
+    "sha256": "14bd3c337c9842d0cdf0e4e8f22ecb33d82e8a33c2a34438f1518c9149815b3b"
+  },
+  "empty-preview-callback.txt": {
+    "bytes": 453,
+    "sha256": "bdfc50187b0f3e479f784adbe286986399bd5df52a60c8faa56b8294d872276a"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "local-read-status.txt": {
+    "bytes": 2530,
+    "sha256": "0f8e24089ba33f895ea74c33a9f224a03179d25668de6cee19b6b83a64598981"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "orphan-restoration.txt": {
+    "bytes": 85445,
+    "sha256": "617105c8107eeee10fc9c0fac64c89b043ec3531e4257cbd6557b391d4845d49"
+  },
+  "poll-snapshot-restoration.txt": {
+    "bytes": 15504,
+    "sha256": "8aed6393b7a54ea5201cb60908bf3b5b5af9f39518fb0f61c1585e0a51e7c7be"
+  },
+  "preview-callback-selector.txt": {
+    "bytes": 802,
+    "sha256": "9aca3d157d729460e8756c824ec81fdd0dbcfd9795208293124721b3dcc5f43c"
+  },
+  "preview-callback.txt": {
+    "bytes": 5086,
+    "sha256": "5e0348253b6706f9366e5416c6bebec8b78edf8f40aec7d70a147fe8b6d6af19"
+  },
+  "quoted-postprocess.txt": {
+    "bytes": 7858,
+    "sha256": "507842a3614f588b0a5c4369f77dbb99b3482607f77e242b590f00dd51db32bb"
+  },
+  "received-content-state.txt": {
+    "bytes": 1780,
+    "sha256": "7927b1a021459fca9b19a321061fa1c8f78bbc735f4797ae394a5c078915b277"
+  },
+  "settings-preprocessing.txt": {
+    "bytes": 81038,
+    "sha256": "8f4deedc1ab25e43ed887ec4f3e193419b8d10d01a6ef4e83766256158fcdef6"
+  },
+  "targets.json": {
+    "bytes": 7917,
+    "sha256": "3fbe576ef62cf3ad38444ba297381683f0fd2b7da00c2b74e60a2fc9a16e4e9d"
+  },
+  "text-constructors.txt": {
+    "bytes": 2002,
+    "sha256": "9328ae86479e49198b4f4abd99d59b10131694f27322ea11a537abc36a149441"
+  },
+  "text-factory.txt": {
+    "bytes": 1651,
+    "sha256": "84ce5a3a7c0e64430e03ebc3b674a8969ee293f62f64e801dad1dfd3090ea287"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "user-text-entry.txt": {
+    "bytes": 8660,
+    "sha256": "5dd010332cf956423787e49ae01bc591a4eb44e9a4bfd633229dc71a25a0bd7a"
+  }
+}

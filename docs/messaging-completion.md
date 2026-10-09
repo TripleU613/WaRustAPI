@@ -1,5 +1,12 @@
 # Messaging completion checklist
 
+Ordinary text status source (2026-10-09, **confirmed static / bounded inference**):
+user-input text construction uses 1Ze/1he and the NTP-preferred clock; its
+plain construction boundary differs from media's explicit status 1. Seventeen
+source topics retain callbacks and exclude unrelated setter workflows.
+Full preparation/user-row admission and identity receipt cleanup remain unported.
+[Evidence and limits](protocol/message-status.md#ordinary-text-construction-and-excluded-setter-candidates-2026-10-09).
+
 Trusted-contact timestamp parser (2026-10-09, **confirmed local / static-backed**):
 parent/token times now use Java-compatible decimal-long parsing within the
 existing nonnegative storage range. A failing-before regression covers BMP

@@ -105,3 +105,95 @@ regeneration, OpenAPI/library-symbol checks, formatting, whitespace and hygiene
 passed. Hygiene checked 1,499 local links and 40 bundles / 9,411,474 bytes.
 Caller/writer inventories and the no-matching ordinary override body result
 remain separately attributed. No fresh workspace/runtime or live test is claimed.
+
+
+## Ordinary text construction and excluded setter candidates (2026-10-09)
+
+**Confirmed static:** same 2.26.37.71 APK/hash as above. The
+[17-topic recipe](apk/recipes/2.26.37.71-text-status-initialization.json) and
+[snapshot](apk/2.26.37.71-text-status-initialization/targets.json) preserve the
+ordinary text chain and examined alternative setter candidates. This narrows
+outgoing initialization, not native receipt_user insertion or a Rust cleanup
+implementation. Offsets below are method-relative bytes.
+
+### Ordinary user-input text chain
+
+B1l.A00 identifies itself with
+`UserActionsTextMessageSending/createFMessageTextFromUserInputs`. It optionally
+normalizes the supplied chat through 0Yo.A0D (`0006..002e`), builds preview
+callbacks and calls 1Ze.A00 at `00b6..00bc` or `024a..0250`. Both timestamps
+come from **08B.A00**, the NTP-preferred getter; the token-job A04 getter must
+not be substituted. Complete effective chat/type/preparation gates remain
+unknown. No live text, key or request ID was generated for this trace.
+
+1Ze.A00 calls 0od.A03(chat,true) and constructs 1he with key/string/time
+(`0010..0026`), optionally applies a copied list with 1ib.A04, invokes its
+supplied APu callback (`003a..0044`) and performs 1Zg quoted postprocessing
+(`0044..004e`). It contains no explicit status setter. 1he's string constructor
+calls its key/time constructor, which calls 178's key/type/time constructor
+with type **0**. The explicit 1he constructor writes affect its own A04/A00/
+A05/A03/A02 fields, not inherited message status A08; A00=-1 is not A08=-1.
+The inherited constructor was preserved by the earlier ownership bundle.
+
+7gT.A00 selects Fex when its 8BJ preview input is absent; Fex.APu is exactly
+return-void. With preview input it selects 8GL.APu, which writes preview fields
+and invokes additional preview helpers; those transitive effects are not
+claimed completely traced. 1Zg.A00 returns immediately on null quoted input
+(`0000 -> 023c`). Nonnull quoted handling clones separate message objects and
+attaches them, with helper/serialization side effects retained but not fully
+interpreted here.
+
+**Inferred bounded initial value:** at the immediate plain-text construction
+boundary, absent optional list/callback/quoted effects, A08 remains the platform
+zero default. This differs from the previously traced media factory's explicit
+A0H(1). It is not proof that every prepared B1l result or fully queued/sent text
+retains zero: 1ib, preview/transitive callbacks and B1l's later metadata helpers
+remain separate authority. Do not rewrite Rust send reservation states from
+this native integer or create receipt_user rows from a constructed message.
+
+### Separate workflows, not universal initial-state evidence
+
+The exact 1Ze.A00 physical caller inventory contains 13 invokes (B1l has two).
+Other callers include question composer, click/run/composition flows and 1Zb;
+this inventory does not prove every caller's subtype, timing or send behavior.
+Reproduce with `apk-callers --class 'LX/1Ze;' --method A00`.
+
+1Zb.Ag9's two accepted input subtypes return through a shared **A0H(6)** and
+flag write (`005a..0072`). One creates 1he through 1Ze; another uses 1Zh.A00.
+1Zh explicitly calls A0H(0) after either EIH or 72l construction. Thus an outer
+workflow can replace a factory's initial state; 6 is not an ordinary text
+factory default. Complete 1j2 subtype semantics remain unknown.
+
+The earlier setter inventory also led to seven scoped exclusions, now retained
+as full bodies rather than repeatedly searched as ordinary send factories:
+
+| Method | Confirmed reason it does not establish ordinary text initialization |
+| --- | --- |
+| 0VA.A00 | Cursor-based message restoration, including status loading/setter; not a new text constructor. |
+| 0Z0.A09 | Cursor restoration of a 1iZ add-on's status/server timestamp and metadata. |
+| 0ZG.A06 | Poll delivered-snapshot restoration; resets a selected vote message then invokes status 4. |
+| 0zH.A09 | Local read-state update selects 16 or 17, then persists through 0zc. |
+| 12y.A00 | Received content builds 1il; its conditional status-4 branch depends on direction and A01 policy. |
+| 1fm.A04 | Orphan/add-on resolution; selected outgoing-key reconstruction calls status 4 and writes A0y. |
+| 17J.A01 | Add-on error/bounce path; the selected setter receives the caller's status argument. |
+
+0zC.A09 is an additional examined settings-preprocessing path. Its explicit
+status **13** at `0422..0428` follows account/device/settings predicates and
+then A0Q; it is not an unconditional initial outgoing state. The large selected
+method contains ephemeral pre/postprocessing beyond the interpreted branch;
+retention is not a complete semantic port. No row deletion, reservation replay
+or blanket status assignment follows from any of these exclusions.
+
+**Remaining authority:** actual live per-user receipt creation still needs its
+status/ownership/target admission, native message preparation/load context and
+canonical scope. Rust raw DeliveryFacts, immutable send versions and mutable
+device targets cannot be relabelled receipt_user membership from this trace.
+No runtime/store/API route or live operation changed in this source chunk.
+
+**Text-source verification:** exact re-export verifies 17 topics / 22 files /
+296,181 bytes; cached self-diff reports 17 unchanged topics and four unchanged
+artifacts. CLI-reference regeneration, API-symbol integration, diff whitespace
+and repository hygiene pass (1,823 local links; 76 checksum bundles). Rust is
+unchanged, so the preceding 821-test/Clippy/Rustdoc run is not counted as a new
+runtime validation here. Private scans stay local; examined findings, negative
+results and bounded selectors are retained in this document/recipe.
