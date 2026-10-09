@@ -1,0 +1,10 @@
+# APK-derived structural disassembly: Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method getType(I) flags=0x1 registers=2
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0004 op=0f return v0
+  # exception table: 0 try range(s)
+.end method

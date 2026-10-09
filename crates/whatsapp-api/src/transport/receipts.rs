@@ -598,10 +598,15 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
     {
         return Ok(0);
     }
-    let kind = node
-        .get_attr("type")
-        .and_then(|v| v.as_text())
-        .unwrap_or("delivery");
+    // APK 37.71 0hs.A0M returns the supplied default only when the
+    // attribute is absent, not when a present value cannot be read as text.
+    let kind = match node.get_attr("type") {
+        None => "delivery",
+        Some(value) => match value.as_text() {
+            Some(kind) => kind,
+            None => return Ok(0),
+        },
+    };
     if !matches!(kind, "delivery" | "read" | "played") {
         return Ok(0);
     }
@@ -1906,6 +1911,73 @@ mod tests {
                     .unwrap()
             );
         }
+    }
+
+    #[test]
+    fn present_nontext_receipt_type_never_defaults_to_delivery_after_wire_decode() {
+        use crate::binary::{AttributeValue, Encoder, TokenDictionary};
+        use crate::model::send::DeliveryFactKind;
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("receipt-type.redb");
+        let store = open(&path, true);
+        let local_id = saved_receipt_send(&store, "a", "15555550100@s.whatsapp.net", "fixture");
+        let key = b"message:legacy:send";
+        store.write(|tx| tx.put_json(Table::Checkpoints, key, 1, &serde_json::json!({"to":"+15555550100","wire_id":"fixture","status":"outcome_unknown"}))).unwrap();
+        let node = Node::new("receipt")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("id", "fixture");
+        let before = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.scan(Table::Outbox, 1, 100)?,
+                    tx.journal_head()?,
+                ))
+            })
+            .unwrap();
+        let dictionary = TokenDictionary::comparison_2_26_37_71();
+        for value in [
+            AttributeValue::Jid(Jid::parse("100001@lid").unwrap()),
+            AttributeValue::Bytes(bytes::Bytes::from_static(&[0xff, 0xfe])),
+            AttributeValue::Text(String::new()),
+        ] {
+            let wire = Encoder::new(dictionary)
+                .encode(&node.clone().attr("type", value))
+                .unwrap();
+            let decoded = decode(&wire).unwrap();
+            assert!(decoded.get_attr("type").is_some());
+            assert_eq!(record(&store, &decoded).unwrap(), 0);
+            assert_eq!(
+                before,
+                store
+                    .read(|tx| Ok((
+                        tx.scan(Table::Checkpoints, 1, 100)?,
+                        tx.scan(Table::Outbox, 1, 100)?,
+                        tx.journal_head()?
+                    )))
+                    .unwrap()
+            );
+        }
+        let wire = Encoder::new(dictionary).encode(&node).unwrap();
+        let decoded = decode(&wire).unwrap();
+        assert!(decoded.get_attr("type").is_none());
+        assert_eq!(record(&store, &decoded).unwrap(), 2);
+        drop(store);
+        let store = open(&path, false);
+        let outbox = crate::outbox::Outbox::new("a", crate::profile::Limits::default());
+        let entry = store.read(|tx| outbox.get(tx, local_id)).unwrap().unwrap();
+        assert_eq!(entry.facts.len(), 2);
+        assert_eq!(entry.facts[1].kind, DeliveryFactKind::Delivered);
+        assert_eq!(entry.facts[0].kind, DeliveryFactKind::DeliveryUnknown);
+        let legacy: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key, 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            legacy["receipts"],
+            serde_json::json!({"delivered":true,"read":false,"played":false})
+        );
+        assert_eq!(legacy["status"], "outcome_unknown");
     }
 
     #[test]

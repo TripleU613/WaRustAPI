@@ -149,3 +149,9 @@ nine saved receipt ACKs and zero pending outbox intents. Capture count grew
 two uncertain actions were not replayed. Fresh direct PN/LID receipt handling
 is still unverified live. Repository hygiene passed 1,092 local links and
 5,623,446 bytes across 13 checksum-verified APK research bundles.
+
+The [subsequent canonicalizer trace](receipt-canonicalizer.md) closes ordinary
+PN/LID migration conditions, PNH_CTWA exemption, subtype-specific counterpart
+direction and the separate bot branch. Effective runtime values and complete
+application remain unknown. It also corrects malformed present `type` falling
+back to delivery; absence alone now selects that default.

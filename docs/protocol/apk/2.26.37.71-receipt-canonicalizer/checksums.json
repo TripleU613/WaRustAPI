@@ -1,0 +1,114 @@
+{
+  "account-classifier.txt": {
+    "bytes": 892,
+    "sha256": "8cad287d4be1329bb68fc43125d5ba5c1263cf412fccc7ca99d560290e3090d5"
+  },
+  "attribute-default.txt": {
+    "bytes": 659,
+    "sha256": "fdce0a04d6a1f11ebb2d58710a616ed820903ee4fb471b63ea3c20104dcced03"
+  },
+  "attribute-lookup.txt": {
+    "bytes": 1063,
+    "sha256": "effca8fb3d8adecde2ece19e079b6d6447c74491e6de629938069a6853377f1b"
+  },
+  "bot-canonicalizer.txt": {
+    "bytes": 1720,
+    "sha256": "96f2445454bb95cc1c2cfbbe7d1a4821d0be73a44c02083b032f10c49a506504"
+  },
+  "bot-classifier.txt": {
+    "bytes": 816,
+    "sha256": "dc02a8c0936c589a4c08dcefd9f807d0c1da18233052e7940294cd701e4d33f9"
+  },
+  "bot-gate-inversion.txt": {
+    "bytes": 743,
+    "sha256": "936c4c87119eb6cf5046c82e0436b312e2daa0b63f6139367087feb3b571cdcd"
+  },
+  "bot-gate-positive.txt": {
+    "bytes": 689,
+    "sha256": "3acfb3d7dbf47203694b47e678d5b0f19c44fd4c2c2c171de40d5e186c522725"
+  },
+  "bot-gate-value.txt": {
+    "bytes": 1307,
+    "sha256": "f24ddf027fa76914285409b3ab4210bcd74ad599947ae3bb3a0c3357b55c3510"
+  },
+  "bot-phone-conversion.txt": {
+    "bytes": 1991,
+    "sha256": "a685a420348951d9d03e0635eeffdab726c8a3e77946f5784c9bec993d4632a5"
+  },
+  "chat-migration-selector.txt": {
+    "bytes": 2895,
+    "sha256": "88936fd26940361977e3d28734efed1ca06c10555c0326151f5df4274bc793eb"
+  },
+  "chat-privacy-category.txt": {
+    "bytes": 1818,
+    "sha256": "53853b89651ef6c8a54604530b9a0834e6706434085b9b32f9c3e5d50801c1f2"
+  },
+  "counterpart-direction.txt": {
+    "bytes": 1322,
+    "sha256": "e9cbc1157d1061f5bac06943da1495b39ba681b642b81bf8a662ef8f7ef3f387"
+  },
+  "counterpart-exclusion.txt": {
+    "bytes": 816,
+    "sha256": "0f8b105cdde22bbbbc2ff7ce8b1aedb5d68e81ee2ca529c6506c13e15ba89639"
+  },
+  "global-chat-migration-state.txt": {
+    "bytes": 2319,
+    "sha256": "45406374c0a702fe525f5672ed72b661637c85a556ca56ecde14f77a60b8754d"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "ordinary-lid-classifier.txt": {
+    "bytes": 710,
+    "sha256": "4305cd6844e82d1f7b56f54e95280f54a73465f9a196579b45937a61e2720c5d"
+  },
+  "ordinary-lid-type.txt": {
+    "bytes": 448,
+    "sha256": "c45b144535f250e1ecc9c31c13121a256e96fac4047266b15c83839dd04f26a5"
+  },
+  "ordinary-phone-classifier.txt": {
+    "bytes": 669,
+    "sha256": "2884195ca7de86b01e4239beee33582454329203e73132e8a0e506b087f6b64a"
+  },
+  "ordinary-phone-type.txt": {
+    "bytes": 481,
+    "sha256": "caf7541f8279e8387c5c8259630b5f47f358f896e5982e35be41c5edbf34e8c5"
+  },
+  "phone-base-classifier.txt": {
+    "bytes": 774,
+    "sha256": "aabeb7b16fb9094d2e0d8ee01e47f9767b8161012da1a81e864a2feb878f87ce"
+  },
+  "receipt-canonicalizer.txt": {
+    "bytes": 1267,
+    "sha256": "c912f88bed15f3cee9318eebdfa3975a24f002332377290fc103c4163a6826b1"
+  },
+  "receipt-chat-selector.txt": {
+    "bytes": 1379,
+    "sha256": "c930980dff6ffc40d2c65070cd3e558e2582310e71c4872763cd89f45fc8467b"
+  },
+  "special-bot-classifier.txt": {
+    "bytes": 993,
+    "sha256": "9cbd94ae6453979f4b9ea58381eabac1f2354e3c427675546973df29ee2e0a63"
+  },
+  "special-user-exclusion.txt": {
+    "bytes": 745,
+    "sha256": "2fd827540b79d0f9636daf360b9092e4a5198920f58fb50937cae98d7b12f0b5"
+  },
+  "targets.json": {
+    "bytes": 9075,
+    "sha256": "368d6562b2061413daed84574e155a56f5b427816b333c5aced1b12f2db9cf64"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "user-classifier.txt": {
+    "bytes": 1078,
+    "sha256": "6f308b9e24ceb67441d28136d35cc9ed679d12e6805ffb8dc1a151f9694d439b"
+  }
+}

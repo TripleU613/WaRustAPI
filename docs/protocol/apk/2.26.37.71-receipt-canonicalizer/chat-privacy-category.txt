@@ -1,0 +1,38 @@
+# APK-derived structural disassembly: LX/0Zk;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=6
+  0000..0002 op=12 const/4 v2, #0x0
+  0002..0006 op=1a const-string v1, "ctwa"
+  0006..000a op=1a const-string v0, "PNH_CTWA"
+  000a..000e op=22 new-instance v5, LX/0Zk;
+  000e..0014 op=70 invoke-direct {v5, v0, v2, v1}, LX/0Zk;-><init>(VLIL)
+  0014..0018 op=69 sput-object v5, LX/0Zk;->A04:LX/0Zk;
+  0018..001a op=12 const/4 v2, #0x1
+  001a..001e op=1a const-string v1, "group_status"
+  001e..0022 op=1a const-string v0, "GROUP_STATUS"
+  0022..0026 op=22 new-instance v4, LX/0Zk;
+  0026..002c op=70 invoke-direct {v4, v0, v2, v1}, LX/0Zk;-><init>(VLIL)
+  002c..0030 op=69 sput-object v4, LX/0Zk;->A03:LX/0Zk;
+  0030..0032 op=12 const/4 v3, #0x2
+  0032..0036 op=1a const-string v1, "general"
+  0036..003a op=1a const-string v0, "GENERAL"
+  003a..003e op=22 new-instance v2, LX/0Zk;
+  003e..0044 op=70 invoke-direct {v2, v0, v3, v1}, LX/0Zk;-><init>(VLIL)
+  0044..0048 op=69 sput-object v2, LX/0Zk;->A02:LX/0Zk;
+  0048..004a op=12 const/4 v0, #0x3
+  004a..004e op=23 new-array v1, v0, [LX/0Zk;
+  004e..0050 op=12 const/4 v0, #0x0
+  0050..0054 op=4d aput-object v5, v1, v0
+  0054..0056 op=12 const/4 v0, #0x1
+  0056..005a op=4d aput-object v4, v1, v0
+  005a..005e op=4d aput-object v2, v1, v3
+  005e..0062 op=69 sput-object v1, LX/0Zk;->A01:[LX/0Zk;
+  0062..0068 op=71 invoke-static {v1}, LX/05g;->A00(LL)
+  0068..006a op=0c move-result-object v0
+  006a..006e op=69 sput-object v0, LX/0Zk;->A00:LX/05j;
+  006e..0070 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

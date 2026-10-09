@@ -2359,3 +2359,20 @@ seconds. A 45-second receive-only session authenticated and stopped cleanly;
 no fresh user message or qualifying receipt arrived. Saved peer keys, actions,
 receipt ACKs, outbox and events remained unchanged. No chat was sent, no
 uncertain action replayed. Fresh live namespace attribution remains pending.
+
+Receipt canonicalizer (2026-10-09, **confirmed static / local correction**):
+APK 37.71 `0Yo.A07` selects PN/LID by global migration state and exempts
+PNH_CTWA chats; `0Xw.A0I` has explicit subtype filters. Bot conversion uses
+a separate gated static dictionary. Effective state and complete application
+remain unknown/unported. `0hs.A0C/A0M` defaults only for absent attributes;
+Rust now refuses present nontext/empty/unknown receipt types without false
+delivery mutation, covered through actual wire encode/decode and store reopen.
+No account identity, map or send state is reset. [Evidence and limits](protocol/receipt-canonicalizer.md).
+
+Canonicalizer validation: 740 workspace/all-feature tests, strict Clippy,
+warning-free Rustdoc, CLI/API/reference checks and hygiene pass. The 24-method
+source bundle reproduces exactly and cached self-diff takes 0.007559 seconds.
+Offline projection upgraded zero events; saved keys, actions, receipt ACKs,
+outbox, events and retained inspection stayed identical. No new live request
+or saved-account mutation; malformed types and native runtime gates remain
+unverified live.

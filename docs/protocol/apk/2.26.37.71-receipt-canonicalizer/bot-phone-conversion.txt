@@ -1,0 +1,33 @@
+# APK-derived structural disassembly: LX/0DE;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A07(LL) flags=0x9 registers=4
+  0000..0006 op=71 invoke-static {v3}, LX/0DE;->A0P(ZL)
+  0006..0008 op=0a move-result v2
+  0008..000c op=1a const-string v0, "Jids/convertBotJidtoPnJid botJid must be bot jid type:"
+  000c..0010 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0010..0016 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(VL)
+  0016..001c op=6e invoke-virtual {v3}, Lcom/whatsapp/infra/core/jid/Jid;->getType(I)
+  001c..001e op=0a move-result v0
+  001e..0024 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(LI)
+  0024..002a op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString(L)
+  002a..002c op=0c move-result-object v0
+  002c..0032 op=71 invoke-static {v2, v0}, LX/00K;->A0D(VZL)
+  0032..0036 op=54 iget-object v1, v3, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+  0036..003a op=62 sget-object v0, LX/8oC;->A00:Lcom/google/common/collect/HashBiMap;
+  003a..003c op=12 const/4 v0, #0x0
+  003c..0042 op=71 invoke-static {v1, v0}, LX/00h;->A0A(VLI)
+  0042..0046 op=62 sget-object v0, LX/8oC;->A00:Lcom/google/common/collect/HashBiMap;
+  0046..004c op=6e invoke-virtual {v0}, Lcom/google/common/collect/HashBiMap;->inverse(L)
+  004c..004e op=0c move-result-object v0
+  004e..0054 op=72 invoke-interface {v0, v1}, Ljava/util/Map;->get(LL)
+  0054..0056 op=0c move-result-object v0
+  0056..005a op=1f check-cast v0, Ljava/lang/String;
+  005a..005e op=38 if-eqz v0, +0x7
+  005e..0062 op=22 new-instance v3, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+  0062..0068 op=70 invoke-direct {v3, v0}, Lcom/whatsapp/infra/core/jid/PhoneUserJid;-><init>(VL)
+  0068..006a op=11 return-object v3
+  # exception table: 0 try range(s)
+.end method
