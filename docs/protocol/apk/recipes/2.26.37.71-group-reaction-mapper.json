@@ -1,0 +1,187 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "targets": {
+    "own-interface": {
+      "class": "LX/08Z;",
+      "method": "BO0",
+      "method_shorty": "ZL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "own-forwarder": {
+      "class": "LX/08a;",
+      "method": "BO0",
+      "method_shorty": "ZL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "own-user-predicate": {
+      "class": "LX/08i;",
+      "method": "BO0",
+      "method_shorty": "ZL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "own-lid-loader": {
+      "class": "LX/08i;",
+      "method": "A04",
+      "method_shorty": "VL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "jid-equality": {
+      "class": "Lcom/whatsapp/infra/core/jid/Jid;",
+      "method": "equals",
+      "method_shorty": "ZL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "device-equality": {
+      "class": "Lcom/whatsapp/infra/core/jid/DeviceJid;",
+      "method": "equals",
+      "method_shorty": "ZL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "nullable-user-parser": {
+      "class": "LX/0D8;",
+      "method": "A02",
+      "method_shorty": "LL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "required-user-parser": {
+      "class": "LX/0D8;",
+      "method": "A01",
+      "method_shorty": "LL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "group-type": {
+      "class": "LX/1bn;",
+      "method": "getType",
+      "method_shorty": "I",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "group-predicate": {
+      "class": "LX/0DE;",
+      "method": "A0m",
+      "method_shorty": "ZL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "group-predicate-exclusion": {
+      "class": "LX/0DE;",
+      "method": "A0W",
+      "method_shorty": "ZL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "status-predicate": {
+      "class": "LX/0DE;",
+      "method": "A0i",
+      "method_shorty": "ZL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "participant-kind": {
+      "class": "LX/0hd;",
+      "method": "A02",
+      "method_shorty": "ZL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "participant-kind-tail": {
+      "class": "LX/0hd;",
+      "method": "A05",
+      "method_shorty": "ZL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "incoming-caller": {
+      "class": "LX/Bal;",
+      "method": "A01",
+      "method_shorty": "LL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "ordinary-target-mapper": {
+      "class": "LX/BoQ;",
+      "method": "A00",
+      "method_shorty": "LLLLLZZ",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "envelope-constructor": {
+      "class": "LX/CoT;",
+      "method": "<init>",
+      "method_shorty": "VLLLLLLLLLLLLLLLLLLLLLLIIIJZZZZZZZ",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "envelope-builder": {
+      "class": "LX/CRD;",
+      "method": "A00",
+      "method_shorty": "L",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    }
+  }
+}

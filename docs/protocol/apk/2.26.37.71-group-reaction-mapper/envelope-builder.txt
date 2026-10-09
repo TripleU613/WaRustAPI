@@ -1,0 +1,86 @@
+# APK-derived structural disassembly: LX/CRD;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(L) flags=0x11 registers=52
+  0000..0004 op=08 move-object/from16 v0, v51
+  0004..0008 op=54 iget-object v1, v0, LX/CRD;->A0S:LX/BZc;
+  0008..000c op=08 move-object/from16 v28, v1
+  000c..0010 op=54 iget-object v1, v0, LX/CRD;->A0P:LX/BZc;
+  0010..0014 op=08 move-object/from16 v27, v1
+  0014..0018 op=13 const/16 v25, #0x0
+  0018..001c op=54 iget-object v1, v0, LX/CRD;->A08:LX/Fdp;
+  001c..0020 op=08 move-object/from16 v26, v1
+  0020..0024 op=54 iget-object v11, v0, LX/CRD;->A06:LX/1gc;
+  0024..0028 op=39 if-nez v11, +0x4
+  0028..002c op=54 iget-object v11, v0, LX/CRD;->A0R:LX/1gc;
+  002c..0030 op=54 iget-object v1, v0, LX/CRD;->A0R:LX/1gc;
+  0030..0034 op=08 move-object/from16 v24, v1
+  0034..0038 op=54 iget-object v1, v0, LX/CRD;->A02:LX/0Cy;
+  0038..003c op=08 move-object/from16 v23, v1
+  003c..0040 op=53 iget-wide v1, v0, LX/CRD;->A0Q:J
+  0040..0044 op=55 iget-boolean v3, v0, LX/CRD;->A0K:Z
+  0044..0048 op=02 move/from16 v22, v3
+  0048..004c op=55 iget-boolean v3, v0, LX/CRD;->A0M:Z
+  004c..0050 op=02 move/from16 v21, v3
+  0050..0054 op=55 iget-boolean v3, v0, LX/CRD;->A0O:Z
+  0054..0058 op=02 move/from16 v20, v3
+  0058..005c op=52 iget v3, v0, LX/CRD;->A00:I
+  005c..0060 op=02 move/from16 v19, v3
+  0060..0064 op=54 iget-object v3, v0, LX/CRD;->A0G:Ljava/lang/String;
+  0064..0068 op=08 move-object/from16 v29, v3
+  0068..006c op=54 iget-object v3, v0, LX/CRD;->A0C:Ljava/lang/String;
+  006c..0070 op=08 move-object/from16 v30, v3
+  0070..0074 op=54 iget-object v3, v0, LX/CRD;->A0I:Ljava/lang/String;
+  0074..0078 op=08 move-object/from16 v31, v3
+  0078..007c op=54 iget-object v3, v0, LX/CRD;->A0D:Ljava/lang/String;
+  007c..0080 op=08 move-object/from16 v18, v3
+  0080..0084 op=54 iget-object v3, v0, LX/CRD;->A0A:Ljava/lang/String;
+  0084..0088 op=08 move-object/from16 v17, v3
+  0088..008c op=54 iget-object v15, v0, LX/CRD;->A04:Lcom/whatsapp/infra/core/jid/UserJid;
+  008c..0090 op=55 iget-boolean v14, v0, LX/CRD;->A0N:Z
+  0090..0094 op=52 iget v13, v0, LX/CRD;->A01:I
+  0094..0098 op=54 iget-object v12, v0, LX/CRD;->A03:Lcom/whatsapp/infra/core/jid/Jid;
+  0098..009c op=54 iget-object v10, v0, LX/CRD;->A0J:Ljava/lang/String;
+  009c..00a0 op=54 iget-object v9, v0, LX/CRD;->A0F:Ljava/lang/String;
+  00a0..00a4 op=54 iget-object v8, v0, LX/CRD;->A09:Ljava/lang/Integer;
+  00a4..00a8 op=54 iget-object v7, v0, LX/CRD;->A0H:Ljava/lang/String;
+  00a8..00ac op=55 iget-boolean v6, v0, LX/CRD;->A0L:Z
+  00ac..00b0 op=54 iget-object v5, v0, LX/CRD;->A0B:Ljava/lang/String;
+  00b0..00b4 op=54 iget-object v4, v0, LX/CRD;->A0E:Ljava/lang/String;
+  00b4..00b8 op=54 iget-object v3, v0, LX/CRD;->A07:LX/CUq;
+  00b8..00bc op=54 iget-object v0, v0, LX/CRD;->A05:Lcom/whatsapp/infra/core/jid/UserJid;
+  00bc..00c0 op=13 const/16 v46, #0x1
+  00c0..00c4 op=13 const/16 v41, #0x0
+  00c4..00c8 op=22 new-instance v16, LX/CoT;
+  00c8..00cc op=08 move-object/from16 v32, v18
+  00cc..00d0 op=08 move-object/from16 v33, v17
+  00d0..00d4 op=08 move-object/from16 v34, v10
+  00d4..00d8 op=08 move-object/from16 v35, v9
+  00d8..00dc op=08 move-object/from16 v36, v7
+  00dc..00e0 op=08 move-object/from16 v37, v5
+  00e0..00e4 op=08 move-object/from16 v38, v4
+  00e4..00e8 op=02 move/from16 v39, v19
+  00e8..00ec op=02 move/from16 v40, v13
+  00ec..00f0 op=05 move-wide/from16 v42, v1
+  00f0..00f4 op=02 move/from16 v44, v22
+  00f4..00f8 op=02 move/from16 v45, v21
+  00f8..00fc op=02 move/from16 v47, v20
+  00fc..0100 op=02 move/from16 v48, v41
+  0100..0104 op=02 move/from16 v49, v14
+  0104..0108 op=02 move/from16 v50, v6
+  0108..010c op=08 move-object/from16 v17, v23
+  010c..0110 op=08 move-object/from16 v18, v12
+  0110..0114 op=08 move-object/from16 v19, v15
+  0114..0118 op=08 move-object/from16 v20, v0
+  0118..011c op=08 move-object/from16 v21, v11
+  011c..0120 op=08 move-object/from16 v22, v24
+  0120..0124 op=08 move-object/from16 v23, v3
+  0124..0128 op=08 move-object/from16 v24, v26
+  0128..012c op=08 move-object/from16 v26, v28
+  012c..0130 op=08 move-object/from16 v28, v8
+  0130..0136 op=76 invoke-direct/range {v16..v50}, LX/CoT;-><init>(VLLLLLLLLLLLLLLLLLLLLLLIIIJZZZZZZZ)
+  0136..0138 op=11 return-object v16
+  # exception table: 0 try range(s)
+.end method

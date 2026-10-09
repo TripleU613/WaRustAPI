@@ -1,0 +1,16 @@
+# APK-derived structural disassembly: LX/0DE;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0W(ZL) flags=0x9 registers=3
+  0000..0004 op=38 if-eqz v2, +0xb
+  0004..000a op=6e invoke-virtual {v2}, Lcom/whatsapp/infra/core/jid/Jid;->getType(I)
+  000a..000c op=0a move-result v2
+  000c..0010 op=13 const/16 v1, #0x1c
+  0010..0012 op=12 const/4 v0, #0x1
+  0012..0016 op=32 if-eq v2, v1, +0x3
+  0016..0018 op=12 const/4 v0, #0x0
+  0018..001a op=0f return v0
+  # exception table: 0 try range(s)
+.end method

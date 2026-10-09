@@ -2554,3 +2554,34 @@ BoQ.A00's BO0 predicate, effective caller gates and contradictory fromMe/author
 normalization remain unported; exact known own PN/LID matching is a local
 projection contract. One temporary-store ownership test refusal passed isolated
 and on full rerun without changing ownership guards; its cause remains unknown.
+
+Native group reaction predicate/branch (2026-10-09, **confirmed static/local**):
+the new 18-topic APK 37.71 bundle closes BO0's own PN/LID comparison and
+user/server/type equality. Ordinary groups consult it only for false/default
+fromMe; true/present-author stays incoming, correcting our prior unconditional
+own classification. Nonzero device authors no longer fold into UserJid equality.
+Nullable-author fallback, actor producer authority, zero-device text and
+authenticated own-envelope context remain unported. No identity/alias adoption
+or historical-marker rewrite is introduced. See [group mapper](protocol/group-reaction-mapper.md).
+
+Ordinary remote-key correction (**confirmed APK 37.71 BoQ.A00**, `00fe..0106`):
+plain PN/LID/group remote keys may differ from the envelope group. The update
+and parent selection now remain in that authenticated envelope group. The
+previous exact-match refusal was our local limitation; status/device/unported
+remote kinds stay separate. Native nullable-author and own-envelope source
+context remain unported; no fresh live group-targeting result is claimed.
+
+**Observed receive validation (2026-10-09):** two bounded 45-second windows
+authenticated and stopped cleanly; the second ran the final ordinary-remote
+correction. Both disabled chat sends and automatic reconnect. Original captured
+records were retained; capture rows grew from 471 to 481. Peer keys, actions,
+receipts, outbox and durable events were unchanged. Two retained group reaction
+keys still inspected as target_validation=valid. These are retained-key and
+receive-runtime checks, not fresh live group reaction/own-envelope proof.
+
+Native mapper verification: 778 workspace/all-feature tests, strict Clippy,
+Rustdoc, default CLI, API/library-symbol checks, CLI-reference regeneration and
+formatting passed. Final API edits passed five OpenAPI tests and rebuilt the CLI.
+The 18-topic APK export/check reproduces 23 files / 86,053 bytes; hygiene validates
+16 checksum bundles / 5,901,337 bytes. Cached verified self-diff took 0.008 seconds;
+new-release extraction and re-anchoring speed remains unmeasured.

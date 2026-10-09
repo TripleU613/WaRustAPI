@@ -893,6 +893,7 @@ mod tests {
             send::{AttemptProgress, SendRequest},
         };
         use crate::store::Table;
+        use prost::Message as _;
         let dir = tempfile::tempdir().unwrap();
         let options = || OpenOptions {
             path: dir.path().join("group-reactions.redb"),
@@ -969,17 +970,34 @@ mod tests {
             .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
             .unwrap();
         let mut keys = Vec::new();
-        for (n, author) in authors.iter().chain([&own, &own_lid]).enumerate() {
+        for (n, author) in authors
+            .iter()
+            .chain([&own, &own_lid, &own, &own_lid])
+            .enumerate()
+        {
             let id = if n < 2 { "ORIGINAL" } else { "OWN" };
-            let payload = super::super::reactions::group_payload(
+            let mut payload = super::super::reactions::group_payload(
                 &chat,
                 &author.to_non_ad(),
                 id,
-                false,
+                n >= 4,
                 if n % 2 == 0 { Some("👍") } else { None },
                 42,
             )
             .unwrap();
+            if n == 0 {
+                let mut envelope =
+                    super::super::reactions::Envelope::decode(payload.as_slice()).unwrap();
+                envelope
+                    .reaction
+                    .as_mut()
+                    .unwrap()
+                    .key
+                    .as_mut()
+                    .unwrap()
+                    .remote_jid = Some("120363000000000002@g.us".into());
+                payload = envelope.encode_to_vec();
+            }
             let node = group_node()
                 .attr("participant", actor.clone())
                 .attr("id", format!("REACTION-{n}"));
@@ -1004,7 +1022,7 @@ mod tests {
             .iter()
             .filter(|e| matches!(e.event, SyncEvent::MessageUpdated(_)))
             .collect();
-        assert_eq!(events.len(), 4);
+        assert_eq!(events.len(), 6);
         for (n, event) in events.iter().enumerate() {
             let SyncEvent::MessageUpdated(update) = &event.event else {
                 panic!("not a reaction");
@@ -1016,7 +1034,7 @@ mod tests {
             );
             assert_eq!(
                 update.key.direction,
-                if n < 2 {
+                if !(2..4).contains(&n) {
                     Direction::Incoming
                 } else {
                     Direction::Outgoing
@@ -1026,6 +1044,8 @@ mod tests {
                 update.key.sender,
                 if n < 2 {
                     Some(DeviceAddress::from_jid(&authors[n]).unwrap())
+                } else if n >= 4 {
+                    Some(DeviceAddress::from_jid(if n == 4 { &own } else { &own_lid }).unwrap())
                 } else {
                     None
                 }
@@ -1131,10 +1151,7 @@ mod tests {
             (None, chat.to_string()),
             (Some("".to_owned()), chat.to_string()),
             (Some("status@broadcast".to_owned()), chat.to_string()),
-            (
-                Some(author.to_string()),
-                "120363000000000002@g.us".to_owned(),
-            ),
+            (Some(author.to_string()), "status@broadcast".to_owned()),
         ] {
             let mut envelope = super::super::reactions::Envelope::decode(base.as_slice()).unwrap();
             let key = envelope.reaction.as_mut().unwrap().key.as_mut().unwrap();

@@ -258,8 +258,9 @@ pub fn key_fields(payload: &[u8]) -> Option<(Option<String>, bool)> {
 
 /// Resolve a group reaction's explicit original author. APK 37.71
 /// Bal.A00 reads BZa.participant_ (003a..0046); fromMe alone cannot identify
-/// a third member. Own classification here is a local model projection, not
-/// a port of the native own/hosted canonicalizer.
+/// a third member. Ordinary group BoQ.A00 only consults 08Z.BO0 on the
+/// fromMe-false branch (00dc..00e8). 08i.BO0 compares own PN/LID exactly;
+/// native own-envelope, nullable-author and hosted branches remain unported.
 pub fn group_target(
     chat: &Jid,
     payload: &[u8],
@@ -282,8 +283,11 @@ pub fn group_target(
         return Err(invalid(reason));
     }
     let remote = Jid::parse(key.remote_jid.as_deref().unwrap())?;
-    if remote.to_non_ad() != chat.to_non_ad() {
-        return Err(invalid("group_chat_mismatch"));
+    // BoQ.A00 00fe..0106 selects the authenticated envelope chat for
+    // ordinary targets; a different ordinary remoteJid does not retarget it.
+    // Native status and other unported ChatJid subtypes stay separate.
+    if remote.is_ad() || !matches!(remote.server, Server::User | Server::Lid | Server::Group) {
+        return Err(invalid("unsupported_group_remote_jid"));
     }
     let participant = key
         .participant
@@ -299,16 +303,23 @@ pub fn group_target(
     if participant.agent != 0 {
         return Err(invalid("unsupported_participant_agent"));
     }
+    if participant.is_ad() {
+        return Err(invalid("unsupported_participant_device"));
+    }
+    // 0D8.A01 requires a UserJid, not a DeviceJid. Do not normalize a device
+    // key into native own-user equality (Jid.equals also compares getType).
+    let from_me = key.from_me.unwrap_or(false);
     let valid_own = |o: &Jid| {
         o.agent == 0 && !o.user.is_empty() && matches!(o.server, Server::User | Server::Lid)
     };
-    if !own.iter().any(valid_own) {
+    if !from_me && !own.iter().any(valid_own) {
         return Err(invalid("own_identity_missing"));
     }
-    let ours = own
-        .iter()
-        .filter(|o| valid_own(o))
-        .any(|o| o.to_non_ad() == participant.to_non_ad());
+    let ours = !from_me
+        && own
+            .iter()
+            .filter(|o| valid_own(o))
+            .any(|o| o.to_non_ad() == participant.to_non_ad());
     Ok(MessageKey {
         chat: ChatId::from_jid(chat)?,
         sender: if ours {
@@ -386,6 +397,18 @@ mod group_tests {
             assert_eq!(key.id.as_str(), "TARGET");
             assert!(decode(&bytes).unwrap().emoji.is_none());
         }
+        // Native Jid.equals compares server/type after user: equal numeric
+        // PN/LID users do not make another namespace one of our own identities.
+        for author in ["15555550199@lid", "222222222222222@s.whatsapp.net"] {
+            let key = group_target(
+                &chat,
+                &fixture(&chat.to_string(), Some(author), Some(false)),
+                &own,
+            )
+            .unwrap();
+            assert_eq!(key.direction, Direction::Incoming);
+            assert_eq!(key.sender.unwrap().to_jid(), Jid::parse(author).unwrap());
+        }
         for author in &own {
             let key = group_target(
                 &chat,
@@ -395,6 +418,21 @@ mod group_tests {
             .unwrap();
             assert_eq!(key.direction, Direction::Outgoing);
             assert!(key.sender.is_none());
+        }
+        for author in &own {
+            let bytes = fixture(&chat.to_string(), Some(&author.to_string()), Some(true));
+            // BoQ group branch fromMe=true selects the explicit author and
+            // clears the native key boolean without calling BO0, even when
+            // that contradictory author happens to name our own identity.
+            let key = group_target(&chat, &bytes, &own).unwrap();
+            assert_eq!(key.direction, Direction::Incoming);
+            assert_eq!(key.sender.unwrap().to_jid(), *author);
+            assert!(group_target(&chat, &bytes, &[]).is_ok());
+        }
+        for author in ["15555550101:3@s.whatsapp.net", "15555550101:3@lid"] {
+            assert!(
+                matches!(group_target(&chat,&fixture(&chat.to_string(),Some(author),None),&own),Err(Error::InvalidInput{reason,..}) if reason=="unsupported_participant_device")
+            );
         }
         for (p, reason) in [
             (None, "missing_participant"),
@@ -412,8 +450,22 @@ mod group_tests {
         assert!(
             matches!(group_target(&chat,&fixture(&chat.to_string(),Some(&agent.to_string()),None),&own),Err(Error::InvalidInput {reason,..}) if reason=="unsupported_participant_agent")
         );
+        for remote in [
+            "120363000000000002@g.us",
+            "15555550102@s.whatsapp.net",
+            "123456789@lid",
+        ] {
+            let key = group_target(
+                &chat,
+                &fixture(remote, Some(&author.to_string()), None),
+                &own,
+            )
+            .unwrap();
+            assert_eq!(key.chat.jid(), &chat);
+            assert_eq!(key.sender.unwrap().to_jid(), author);
+        }
         assert!(
-            matches!(group_target(&chat,&fixture("120363000000000002@g.us",Some(&author.to_string()),None),&own),Err(Error::InvalidInput {reason,..}) if reason=="group_chat_mismatch")
+            matches!(group_target(&chat,&fixture("status@broadcast",Some(&author.to_string()),None),&own),Err(Error::InvalidInput{reason,..}) if reason=="unsupported_group_remote_jid")
         );
         assert!(
             matches!(group_target(&chat,&fixture(&chat.to_string(),Some(&author.to_string()),None),&[]),Err(Error::InvalidInput {reason,..}) if reason=="own_identity_missing")

@@ -1,0 +1,63 @@
+# APK-derived structural disassembly: LX/CoT;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLLLLLLLLLLLLLLLLLLLLIIIJZZZZZZZ) flags=0x10001 registers=37
+  0000..0006 op=70 invoke-direct {v2}, Ljava/lang/Object;-><init>(V)
+  0006..000a op=5b iput-object v12, v2, LX/CoT;->A0F:LX/BZc;
+  000a..000e op=5b iput-object v13, v2, LX/CoT;->A0G:LX/BZc;
+  000e..0012 op=5b iput-object v11, v2, LX/CoT;->A0E:LX/BZL;
+  0012..0016 op=5b iput-object v10, v2, LX/CoT;->A0D:LX/Fdp;
+  0016..001a op=5b iput-object v7, v2, LX/CoT;->A0B:LX/1gc;
+  001a..001e op=5b iput-object v8, v2, LX/CoT;->A0A:LX/1gc;
+  001e..0022 op=5b iput-object v3, v2, LX/CoT;->A06:LX/0Cy;
+  0022..0026 op=05 move-wide/from16 v0, v28
+  0026..002a op=5a iput-wide v0, v2, LX/CoT;->A05:J
+  002a..002e op=02 move/from16 v0, v30
+  002e..0032 op=5c iput-boolean v0, v2, LX/CoT;->A0T:Z
+  0032..0036 op=02 move/from16 v0, v31
+  0036..003a op=5c iput-boolean v0, v2, LX/CoT;->A0V:Z
+  003a..003e op=02 move/from16 v0, v32
+  003e..0042 op=5c iput-boolean v0, v2, LX/CoT;->A0S:Z
+  0042..0046 op=02 move/from16 v0, v33
+  0046..004a op=5c iput-boolean v0, v2, LX/CoT;->A0W:Z
+  004a..004e op=02 move/from16 v0, v25
+  004e..0052 op=59 iput v0, v2, LX/CoT;->A00:I
+  0052..0056 op=5b iput-object v15, v2, LX/CoT;->A0O:Ljava/lang/String;
+  0056..005a op=08 move-object/from16 v0, v16
+  005a..005e op=5b iput-object v0, v2, LX/CoT;->A0K:Ljava/lang/String;
+  005e..0062 op=08 move-object/from16 v0, v17
+  0062..0066 op=5b iput-object v0, v2, LX/CoT;->A0Q:Ljava/lang/String;
+  0066..006a op=08 move-object/from16 v0, v18
+  006a..006e op=5b iput-object v0, v2, LX/CoT;->A0L:Ljava/lang/String;
+  006e..0072 op=08 move-object/from16 v0, v19
+  0072..0076 op=5b iput-object v0, v2, LX/CoT;->A0I:Ljava/lang/String;
+  0076..007a op=5b iput-object v5, v2, LX/CoT;->A08:Lcom/whatsapp/infra/core/jid/UserJid;
+  007a..007e op=02 move/from16 v0, v34
+  007e..0082 op=5c iput-boolean v0, v2, LX/CoT;->A02:Z
+  0082..0086 op=02 move/from16 v0, v35
+  0086..008a op=5c iput-boolean v0, v2, LX/CoT;->A01:Z
+  008a..008e op=02 move/from16 v0, v26
+  008e..0092 op=59 iput v0, v2, LX/CoT;->A04:I
+  0092..0096 op=5b iput-object v4, v2, LX/CoT;->A07:Lcom/whatsapp/infra/core/jid/Jid;
+  0096..009a op=5b iput-object v14, v2, LX/CoT;->A0H:Ljava/lang/Integer;
+  009a..009e op=08 move-object/from16 v0, v20
+  009e..00a2 op=5b iput-object v0, v2, LX/CoT;->A0R:Ljava/lang/String;
+  00a2..00a6 op=08 move-object/from16 v0, v21
+  00a6..00aa op=5b iput-object v0, v2, LX/CoT;->A0N:Ljava/lang/String;
+  00aa..00ae op=08 move-object/from16 v0, v22
+  00ae..00b2 op=5b iput-object v0, v2, LX/CoT;->A0P:Ljava/lang/String;
+  00b2..00b6 op=02 move/from16 v0, v36
+  00b6..00ba op=5c iput-boolean v0, v2, LX/CoT;->A0U:Z
+  00ba..00be op=08 move-object/from16 v0, v23
+  00be..00c2 op=5b iput-object v0, v2, LX/CoT;->A0J:Ljava/lang/String;
+  00c2..00c6 op=08 move-object/from16 v0, v24
+  00c6..00ca op=5b iput-object v0, v2, LX/CoT;->A0M:Ljava/lang/String;
+  00ca..00ce op=5b iput-object v9, v2, LX/CoT;->A0C:LX/CUq;
+  00ce..00d2 op=5b iput-object v6, v2, LX/CoT;->A09:Lcom/whatsapp/infra/core/jid/UserJid;
+  00d2..00d6 op=02 move/from16 v0, v27
+  00d6..00da op=59 iput v0, v2, LX/CoT;->A03:I
+  00da..00dc op=0e return-void
+  # exception table: 0 try range(s)
+.end method

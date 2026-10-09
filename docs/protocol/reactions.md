@@ -308,3 +308,24 @@ semantics have **not** been established here. In particular, literal true/false
 fixtures prove this helper's explicit-author contract, not APK equivalence for
 contradictory fromMe/participant combinations. Re-anchor the concrete BO0
 implementation and caller operand roles before extending native normalization.
+
+### Native predicate and ordinary branch correction (2026-10-09)
+
+The [group mapper trace](group-reaction-mapper.md) supersedes the BO0 inference
+boundary above: 08a forwards to 08i.BO0, which compares own PN and LID using
+native Jid user/server/type equality. It also proves that a normal group's
+fromMe-true/present-author branch skips BO0 and produces an incoming author,
+even for a contradictory own author. Rust now follows that branch; the prior
+unconditional own-author classification was a local implementation limitation.
+Own context is required only on the false/default branch. A device subtype is
+not a native UserJid and is no longer normalized into own equality. Missing
+native-author fallback, zero-device textual factory behavior, actor producers,
+own-envelope context and hosted/status mapping remain unported. Historical
+projection markers and saved state are preserved.
+
+**Native ordinary-chat correction:** the same trace refutes the earlier local
+requirement that key.remoteJid equal the envelope group. Supported plain
+PN/LID/group keys now keep the envelope group, as BoQ does; no other chat or
+parent body is adopted. Status and unported subtypes retain a separate fixed
+refusal. The fixture changes a key's remote group and still binds the original
+consumed parent, author and group.
