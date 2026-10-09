@@ -138,6 +138,158 @@ pub(super) mod tests {
             .unwrap()
     }
     #[tokio::test]
+    async fn normal_actor_uses_only_explicit_signed_remote_replacement_policy() {
+        for mode in ["accept", "pinned", "own_alias", "bad_signature"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("actor-identity.redb");
+            let store = group_fanout::tests::open(&path);
+            let old = group_fanout::tests::fixture();
+            let mut new = group_fanout::tests::fixture();
+            let peer = new.plan.devices[0].clone();
+            let pin = direct::prekey_bundle_for(&old.reply, &peer)
+                .unwrap()
+                .identity_key()
+                .unwrap()
+                .serialize()
+                .to_vec();
+            store
+                .write(|tx| {
+                    new.alice.save(tx)?;
+                    tx.put_json(
+                        Table::PeerIdentities,
+                        format!("comparison-direct:{peer}").as_bytes(),
+                        1,
+                        &pin,
+                    )?;
+                    if mode == "own_alias" {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"login-identity",
+                            1,
+                            &serde_json::json!({"lid":peer.to_string()}),
+                        )?;
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            if mode == "bad_signature" {
+                let mut user = new.reply.child("list").unwrap().child_nodes()[0].clone();
+                let mut fields = user.child_nodes().to_vec();
+                let skey = fields.iter_mut().find(|n| n.description == "skey").unwrap();
+                let mut keys = skey.child_nodes().to_vec();
+                *keys
+                    .iter_mut()
+                    .find(|n| n.description == "signature")
+                    .unwrap() = Node::new("signature").bytes(vec![0; 64]);
+                *skey = Node::new("skey").children(keys);
+                user = user.children(fields);
+                new.reply = Node::new("iq")
+                    .attr("type", "result")
+                    .children(vec![Node::new("list").children(vec![user])]);
+            }
+            let id = enqueue(&store, &new.plan.chat, "same-original-group-intent");
+            let original = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
+            let (mut pending, mut query) = begin_selected(&store, id).unwrap().unwrap();
+            let mut cursor = devices::DeviceSyncCursor::default();
+            let policy = if mode == "pinned" {
+                crate::registration::request::IdentityChangePolicy::Pinned
+            } else {
+                crate::registration::request::IdentityChangePolicy::ApkAuthenticated
+            };
+            let mut sent = None;
+            for _ in 0..3 {
+                let reply = match query.get_attr("xmlns").and_then(|v| v.as_text()) {
+                    Some("w:g2") => membership(&query, &new.plan.own, std::slice::from_ref(&peer)),
+                    Some("usync") => device_reply(&query),
+                    Some("encrypt") => key_reply(&query, &new),
+                    _ => panic!("unexpected stage"),
+                };
+                let step = pending
+                    .settle_with_policy(
+                        &store,
+                        &new.alice,
+                        &reply,
+                        ConnectionEpoch(23),
+                        &mut cursor,
+                        policy,
+                    )
+                    .await
+                    .unwrap();
+                if let Some(next) = step.pending {
+                    pending = next;
+                    query = step.node.unwrap();
+                } else {
+                    sent = step.node;
+                    break;
+                }
+            }
+            let entry = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
+            let history: Vec<serde_json::Value> = store
+                .read(|tx| {
+                    Ok(tx
+                        .scan(Table::Checkpoints, 1, 1000)?
+                        .into_iter()
+                        .filter(|(k, _)| k.starts_with(b"identity-history:"))
+                        .map(|(_, v)| serde_json::from_slice(&v).unwrap())
+                        .collect())
+                })
+                .unwrap();
+            if mode == "accept" {
+                let node = sent.unwrap();
+                assert_eq!(node.description, "message");
+                assert_eq!(entry.progress, AttemptProgress::InFlight);
+                assert_eq!(entry.attempts.len(), 1);
+                assert_eq!(entry.attempts[0].epoch, Some(ConnectionEpoch(23)));
+                assert_eq!(history.len(), 1);
+                assert_eq!(history[0]["previous_identity"], serde_json::json!(pin));
+                assert_eq!(history[0]["authentication"], "signed_directory_bundle");
+                let target = node.child("participants").unwrap().child_nodes()[0]
+                    .child("enc")
+                    .unwrap();
+                let ciphertext = match &target.content {
+                    crate::binary::NodeContent::Bytes(b) => b.as_ref(),
+                    _ => panic!("ciphertext"),
+                };
+                let decrypted = direct::receive_prekey(
+                    &new.bobs[0].0,
+                    &new.plan.own,
+                    (None, None),
+                    &new.bobs[0].1,
+                    None,
+                    ciphertext,
+                )
+                .await
+                .unwrap();
+                assert!(group::extract_skdm_from_payload(&decrypted.received.plaintext).is_some());
+            } else {
+                assert!(sent.is_none());
+                assert_eq!(entry, original);
+                assert!(history.is_empty());
+                let summary = preparation(&store, id).unwrap().unwrap();
+                assert_eq!(summary.phase, "blocked");
+                assert_eq!(
+                    summary.blocking_reason.as_deref(),
+                    Some(if mode == "bad_signature" {
+                        "keys_invalid"
+                    } else {
+                        "peer_identity_changed"
+                    })
+                );
+            }
+            let account = store.read(AccountRecord::load).unwrap().unwrap();
+            let actual = account.signal_identity.unwrap();
+            let expected = new.alice.signal_identity.as_ref().unwrap();
+            assert_eq!(actual.0.public, expected.0.public);
+            assert_eq!(actual.0.private, expected.0.private);
+            let before = rows(&store);
+            assert!(begin_selected(&store, id).unwrap().is_none());
+            assert_eq!(before, rows(&store));
+            drop(store);
+            let reopened = group_fanout::tests::open(&path);
+            assert_eq!(before, rows(&reopened));
+        }
+    }
+    #[tokio::test]
     async fn cold_pn_and_lid_groups_prepare_real_crypto_through_all_pages_and_reopen_without_replay()
      {
         for (lid, size) in [(false, 130), (true, 2)] {
@@ -686,6 +838,7 @@ enum Block {
     OutcomeUnknown,
     PreparationChanged,
     ForeignKeyHistory,
+    CompanionAuthorityChanged,
 }
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 struct Row {
@@ -1032,13 +1185,33 @@ impl Pending {
         self.block(store, Block::OutcomeUnknown).map(|_| ())
     }
     /// Caller supplies only authenticated matching nodes from the real session loop.
+    #[cfg(test)]
     pub async fn settle(
+        self,
+        store: &ProtocolStore,
+        account: &AccountRecord,
+        node: &Node,
+        epoch: ConnectionEpoch,
+        cursor: &mut devices::DeviceSyncCursor,
+    ) -> Result<Step> {
+        self.settle_with_policy(
+            store,
+            account,
+            node,
+            epoch,
+            cursor,
+            crate::registration::request::IdentityChangePolicy::Pinned,
+        )
+        .await
+    }
+    pub async fn settle_with_policy(
         mut self,
         store: &ProtocolStore,
         account: &AccountRecord,
         node: &Node,
         epoch: ConnectionEpoch,
         cursor: &mut devices::DeviceSyncCursor,
+        policy: crate::registration::request::IdentityChangePolicy,
     ) -> Result<Step> {
         if !self.matches(node) {
             return Err(invalid("mismatched group preparation reply"));
@@ -1154,14 +1327,14 @@ impl Pending {
                 self.needed = snapshot.required_keys();
                 self.snapshot = Some(snapshot);
                 self.plan = Some(plan);
-                self.next_keys(store, account, epoch).await
+                self.next_keys(store, account, epoch, policy).await
             }
             Waiting::Keys(_) => {
                 if !device_key_batches::settle(store, &bundle_selector(self.entry.local_id)?, node)?
                 {
                     return Err(invalid("directory batch cannot settle"));
                 }
-                self.next_keys(store, account, epoch).await
+                self.next_keys(store, account, epoch, policy).await
             }
         }
     }
@@ -1217,6 +1390,7 @@ impl Pending {
         store: &ProtocolStore,
         account: &AccountRecord,
         epoch: ConnectionEpoch,
+        policy: crate::registration::request::IdentityChangePolicy,
     ) -> Result<Step> {
         if membership_digest(store, self.entry.intent.chat.jid())? != self.membership {
             return self.block(store, Block::MembershipChanged);
@@ -1267,12 +1441,17 @@ impl Pending {
                     .snapshot
                     .take()
                     .expect("staged snapshot")
-                    .prepare(account, keys.as_ref(), &body)
+                    .prepare_with_policy(store, account, keys.as_ref(), &body, policy)
                     .await
                 {
                     Ok(value) => value,
                     Err(Error::IdentityChanged(_)) => {
                         return self.block(store, Block::PeerIdentityChanged);
+                    }
+                    Err(Error::InvalidInput { ref reason, .. })
+                        if reason == group_fanout::COMPANION_AUTHORITY_CHANGED =>
+                    {
+                        return self.block(store, Block::CompanionAuthorityChanged);
                     }
                     Err(Error::InvalidInput { .. }) => {
                         return self.block(store, Block::CryptoPreparationRefused);

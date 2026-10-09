@@ -53,7 +53,9 @@ All pairwise ratchets and pins must match at reservation time in both modes.
 The own sender key and distribution snapshot must also match. A late change
 reports a fixed local diagnostic, preserves the newer state and rolls back
 any caller writes in that transaction. It does not change the account identity,
-adopt a replacement pin or retry a request.
+adopt a replacement pin under the pinned default or retry a request.
+The subsequent [signed group policy](normal-group-outbox.md#signed-group-peer-replacement-2026-10-09)
+adds explicit authenticated replacement without weakening these original-state guards.
 
 Snapshot loading neither creates a network query nor generates crypto.
 `required_keys` reports devices with no usable saved-session input under the

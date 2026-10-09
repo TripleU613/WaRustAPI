@@ -30,6 +30,25 @@ impl std::fmt::Debug for DistributionState {
 }
 
 impl DistributionState {
+    /// Predict the same primary-only invalidation used by the identity archive,
+    /// so a fanout stages its new generation before committing that archive.
+    pub(super) fn after_primary_changes(&self, peers: &[Jid]) -> Self {
+        let mut state = self.clone();
+        state.rotation_pending |= peers.iter().any(|peer| {
+            peer.device == 0
+                && peer.agent == 0
+                && matches!(
+                    peer.server,
+                    crate::model::jid::Server::User | crate::model::jid::Server::Lid
+                )
+                && state.own.to_non_ad() != peer.to_non_ad()
+                && state
+                    .recipients
+                    .iter()
+                    .any(|r| r.to_non_ad() == peer.to_non_ad())
+        });
+        state
+    }
     /// Whether the next newly reserved send must mint a fresh own sender key.
     pub fn rotation_pending(&self) -> bool {
         self.rotation_pending
@@ -48,6 +67,24 @@ fn key(chat: &Jid, own: &Jid) -> Vec<u8> {
 /// Load the exact own-key exposure snapshot; absent means historical coverage unknown.
 pub fn load_in(tx: &ReadTx<'_>, chat: &Jid, own: &Jid) -> Result<Option<DistributionState>> {
     tx.get_json(Table::Checkpoints, &key(chat, own), 1)
+}
+
+/// Check the original exposure before a composed identity archive can mark it
+/// pending. A later real rotation must not be hidden by our predicted change.
+pub(super) fn validate_in(
+    tx: &WriteTx<'_>,
+    chat: &Jid,
+    own: &Jid,
+    expected: Option<&DistributionState>,
+) -> Result<()> {
+    let current: Option<DistributionState> = tx.get_json(Table::Checkpoints, &key(chat, own), 1)?;
+    if current.as_ref() != expected {
+        return Err(Error::invalid(
+            "group_send",
+            "sender-key distribution changed before commit",
+        ));
+    }
+    Ok(())
 }
 
 /// Reserve exposure atomically with own-key/pairwise state and the send intent.

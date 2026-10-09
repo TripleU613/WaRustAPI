@@ -416,7 +416,7 @@ pub(crate) async fn drive(
                 }
                 if node.description == "iq" {
                     if group_outgoing.as_ref().is_some_and(|v|v.matches(&node)) {
-                        let next=group_outgoing.take().expect("matched group preparation").settle(&store,&account,&node,epoch,&mut device_cursor).await?;
+                        let next=group_outgoing.take().expect("matched group preparation").settle_with_policy(&store,&account,&node,epoch,&mut device_cursor,config.transport.outgoing_identity_changes).await?;
                         group_outgoing=next.pending;
                         if let Some(pending) = &group_outgoing { pending.observe_device_query(&mut device_cursor); }
                         if let Some(stanza)=next.node { link.send(&stanza).await?; }

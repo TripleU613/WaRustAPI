@@ -2483,3 +2483,19 @@ Validation for this chunk: 767 workspace/all-feature tests and strict Clippy,
 Rustdoc, default CLI/API/reference/format checks passed. The upgraded saved
 account authenticated and stopped cleanly after a 45-second receive-only window,
 with chat sends and reconnect disabled. No live outgoing group was tested.
+
+Signed group peer replacement (2026-10-09, **confirmed local implementation**):
+normal group fanout now honors the explicit outgoing APK-authenticated policy for
+verified signed remote bundles, archives old pins/ratchets and emits identity
+events in the original send transaction, and rotates an exposed current chain
+while leaving other exposed groups pending. Own identities remain pinned;
+changed-primary fanout with old companion authority reports
+companion_authority_changed. Interrupted/blocked preparations are not reset or
+replayed. Cached-session refresh, companion reconciliation, preparation resume
+and live group identity transition remain unfinished.
+
+Signed group policy validation: 770 workspace/all-feature tests and strict
+Clippy, Rustdoc, default CLI/API/reference/format and hygiene checks passed.
+A 45-second receive-only check authenticated and stopped cleanly; peer keys,
+actions, receipts, outbox and events stayed unchanged. Five transport captures
+were added. No live outgoing group identity transition was tested.

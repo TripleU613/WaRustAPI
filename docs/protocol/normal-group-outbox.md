@@ -146,9 +146,9 @@ receive duration can be configured independently through existing commands.
 view-once JSON, explicit fresh sessions or out-of-band SKDM distribution. Those
 JSON modes fail explicitly before store/upload access instead of silently losing
 fields; the comparison path retains its existing capabilities. Group peer pin
-replacement remains pinned even with the separate direct outgoing APK-compatible
-replacement setting. A changed group peer reports `peer_identity_changed`;
-compatible replacement and own-inventory synchronization remain unfinished.
+replacement uses the explicit outgoing signed-bundle policy described below.
+The default remains pinned and reports `peer_identity_changed`. Companion
+reconciliation and own-inventory synchronization remain unfinished.
 The library's ordinary-media staging test does not establish group view-once
 semantics or handset rendering.
 
@@ -207,3 +207,85 @@ no event was projected to manufacture either result.
 
 Repository hygiene passed: tracked-file budgets, 1,142 local links, package
 licenses and 5,815,284 bytes across 15 APK research checksum bundles.
+
+## Signed group peer replacement (2026-10-09)
+
+**Confirmed static (APK 2.26.37.71):** re-reading `LX/0jc.A0L` confirms the
+changed-identity/held-session path before `LX/CQc.A00` at `0310..0324`.
+`CQc.A00` checks the signed device key at `0030..0064` before session derivation
+and identity saving. These are the existing shared peer-processing primitives;
+this re-read did not establish a separate group-specific replacement exception.
+`LX/D4x.A00` selects groups with `sent_sender_key = 1` (`0b1c`) after a primary
+change. [Peer evidence](peer-identity.md#explicit-signed-outgoing-bundle-policy-2026-10-07)
+and [exposure source](apk/2.26.37.71-core/identity-change-cleanup.txt) remain the
+source anchors.
+
+**Confirmed local implementation:** the normal group actor now passes
+`transport.outgoing_identity_changes` to shared fanout preparation. `pinned`
+remains the default. `apk_authenticated` permits a changed remote bundle only
+after signed-key verification on an authenticated, original-query-correlated
+directory response. Preparation preserves every old pin/ratchet and stages a
+fresh pairwise session in memory. Account PN, saved login PN/LID, own-LID
+checkpoint and the frozen own fanout identity stay pinned. Login and own-LID
+rows join the final routing concurrency guard, so a later own-alias change
+cannot authorize a stale replacement. `Snapshot::prepare` keeps its pinned
+contract; `Snapshot::prepare_with_policy` exposes the explicit policy.
+
+The final original-send transaction archives each replaced peer with
+`authentication=signed_directory_bundle`, clears local verification through the
+existing archive path, emits `IdentityChanged`, reserves device-refresh work and
+marks other exposed groups for rotation. If this group's old generation was
+exposed to a changed primary, preparation already minted an independent chain;
+reservation archives the old generation and settles this group's exposure for
+that new chain. The original exposure is checked before archive callbacks mark
+it pending, then the predicted post-callback snapshot is checked again; a later
+real rotation cannot be hidden by our own callback. It does not leave the just-minted generation spuriously pending
+for another rotation. OCC checks precede these writes; caller failure rolls
+archives, events, keys, refresh work and the original intent back together.
+
+**Inferred guard / confirmed local behavior:** a changed primary cannot
+reauthorize companions from a saved ADV list validated under its previous pin.
+A fanout containing that primary's companions refuses with
+`companion_authority_changed`, preserving the original intent and reply.
+[ADV evidence](peer-identity.md) (`0jc.A0L`, `11T.A08`) establishes the dependence
+on primary authority; automatic fresh reconciliation and continuation of this
+original preparation remain unfinished. This guard is our implementation
+boundary, not a claimed server refusal. An unrelated recipient's still-valid
+companion can remain in the fanout.
+
+**Confirmed offline:** independently generated PN/LID old/new Signal identities
+prove new-recipient SKDM/group-body decryption, old-chain rejection, exact
+old-pin/session archives, exposed-current-chain rotation and other-group pending
+rotation. Default policy, saved-own aliases, invalid signatures, newer pins and
+failed caller commits preserve the original state. Real actor tests exercise
+the explicit policy with a pinned peer whose session is absent, maintain the
+original local/caller IDs and one reserved attempt, and refuse replay after
+reopening. Old-authority companion fanout is separately refused without mutation.
+These tests do not establish a live group identity transition or handset result.
+
+**Unknown / unfinished:** cached group sessions are reused without an unsolicited
+refresh query. This change handles bundles actually needed by the existing
+workflow; it does not invent evidence of a changed cached peer. Group preparation
+resume, companion reconciliation after primary replacement, complete own-device
+inventory and fresh live outgoing group validation remain outstanding. Previously
+blocked group preparations retain their markers; changing policy never resets
+those records or replays their queries.
+
+**Confirmed validation for signed group policy:** 770 workspace/all-feature tests,
+strict all-target/all-feature Clippy, warning-free Rustdoc, default CLI tests,
+OpenAPI library-symbol validation, regenerated CLI reference and formatting
+passed. Hygiene checked tracked budgets, 1,146 local links, package licenses and
+5,815,284 bytes across 15 unchanged APK research checksum bundles. Offline saved
+account comparison retained peer keys, actions, receipts, outbox, events and
+normalized inbox inspection. The own-LID fixture's initial PN-address mistake
+was rejected by the existing parser and corrected to a genuine LID fixture; no
+validation guard was relaxed.
+
+**Observed live for this chunk (2026-10-09):** the upgraded saved account
+authenticated, ran a 45-second receive-only window and stopped cleanly (exit 0),
+with chat sends and automatic reconnect disabled. Saved peer-key inspection,
+actions, receipts, outbox, event summary and noncapture inbox inspection stayed
+unchanged. Capture rows increased from 451 to 456; these transport captures are
+not counted as user replies or delivery facts. Offline inspection found zero
+saved normal-group preparations. No group was sent, no account key was rotated,
+and no live group identity transition or handset behavior was established.

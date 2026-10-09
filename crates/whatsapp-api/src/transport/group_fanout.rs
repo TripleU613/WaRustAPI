@@ -7,11 +7,15 @@ use crate::{
     Error, Result,
     binary::Node,
     model::jid::{Jid, Server},
+    registration::request::IdentityChangePolicy,
     session::AccountRecord,
     signal::{direct, group},
     store::{ProtocolStore, Table, WriteTx},
 };
 use zeroize::Zeroizing;
+
+pub(super) const COMPANION_AUTHORITY_CHANGED: &str =
+    "primary replacement requires refreshed companion authority";
 
 fn invalid(reason: &'static str) -> Error {
     Error::invalid("group_send", reason)
@@ -72,7 +76,14 @@ impl Snapshot {
             // APK 37.71 SendE2EMessageJob.A06 (1300) carries the participant
             // hash; 1jL.A0N/A0O derive it from stored devices. Freezing the rows
             // authorizing our target set is a local concurrency contract.
-            let mut keys = Vec::new();
+            let mut keys = vec![
+                (Table::Checkpoints, "login-identity".to_owned()),
+                (
+                    Table::Checkpoints,
+                    String::from_utf8(super::group_send::OWN_LID_KEY.to_vec())
+                        .expect("static ASCII"),
+                ),
+            ];
             if plan.chat.server == Server::Group {
                 keys.push((
                     Table::Checkpoints,
@@ -134,8 +145,7 @@ impl Snapshot {
             .map(|t| t.device.clone())
             .collect()
     }
-    /// Stage pairwise distributions and the encrypted group body entirely in
-    /// memory. Pins stay enforced in fresh mode; no policy adopts a changed key.
+    /// Stage memory-only fanout under the default unchanged-pin policy.
     /// The reply must already be authenticated and correlated by the caller.
     pub async fn prepare(
         self,
@@ -143,10 +153,103 @@ impl Snapshot {
         reply: Option<&Node>,
         payload: &[u8],
     ) -> Result<Prepared> {
-        let rotate = self
-            .distribution
-            .as_ref()
-            .is_some_and(|s| s.rotation_pending());
+        self.prepare_policy(None, account, reply, payload, IdentityChangePolicy::Pinned)
+            .await
+    }
+    /// Stage a signed remote bundle replacement under the explicit outgoing
+    /// policy. Authentication/correlation remain the actor's responsibility;
+    /// no query, pin, ratchet or intent is changed until reserve_in commits.
+    pub async fn prepare_with_policy(
+        self,
+        store: &ProtocolStore,
+        account: &AccountRecord,
+        reply: Option<&Node>,
+        payload: &[u8],
+        policy: IdentityChangePolicy,
+    ) -> Result<Prepared> {
+        self.prepare_policy(Some(store), account, reply, payload, policy)
+            .await
+    }
+    async fn prepare_policy(
+        self,
+        store: Option<&ProtocolStore>,
+        account: &AccountRecord,
+        reply: Option<&Node>,
+        payload: &[u8],
+        policy: IdentityChangePolicy,
+    ) -> Result<Prepared> {
+        // APK 37.71 0jc.A0L invalidates a changed remote ratchet before
+        // CQc.A00 verifies/derives the new signed bundle session. Keep originals
+        // for OCC/history; policy never clears a persisted pin to make it pass.
+        let mut inputs = Vec::with_capacity(self.targets.len());
+        let mut replacements = Vec::with_capacity(self.targets.len());
+        for target in &self.targets {
+            let bundle = if self.fresh_sessions || target.session.is_none() {
+                Some(direct::prekey_bundle_for(
+                    reply.ok_or_else(|| invalid("a device has neither a session nor a bundle"))?,
+                    &target.device,
+                )?)
+            } else {
+                None
+            };
+            let replacement = match direct::validate_bundle_identity(
+                bundle.as_ref(),
+                target.identity.as_deref(),
+                &target.device,
+            ) {
+                Ok(()) => false,
+                Err(Error::IdentityChanged(device)) => {
+                    let saved_own_lid: Option<Jid> = match store {
+                        Some(store) => store.read(|tx| {
+                            tx.get_json(Table::Checkpoints, super::group_send::OWN_LID_KEY, 1)
+                        })?,
+                        None => None,
+                    };
+                    if policy == IdentityChangePolicy::Pinned
+                        || saved_own_lid.as_ref().map(Jid::to_non_ad).as_ref()
+                            == Some(&target.device.to_non_ad())
+                        || target.device.to_non_ad() == self.own.to_non_ad()
+                        || super::inbox::remote_identity_policy(
+                            store.expect("explicit policy store"),
+                            account,
+                            &target.device,
+                            policy,
+                        )? == IdentityChangePolicy::Pinned
+                    {
+                        return Err(Error::IdentityChanged(device));
+                    }
+                    direct::validate_bundle_signature(bundle.as_ref().expect("changed bundle"))?;
+                    // ADV companion authority was established under the old
+                    // primary pin. 37.71 0jc.A0L / 11T.A08 require reconciliation;
+                    // a self-signed primary bundle does not reauthorize that list.
+                    if target.device.device == 0
+                        && target.device.agent == 0
+                        && self.targets.iter().any(|other| {
+                            other.device.to_non_ad() == target.device.to_non_ad()
+                                && (other.device.device != 0 || other.device.agent != 0)
+                        })
+                    {
+                        return Err(invalid(COMPANION_AUTHORITY_CHANGED));
+                    }
+                    true
+                }
+                Err(error) => return Err(error),
+            };
+            replacements.push(replacement);
+            inputs.push(bundle);
+        }
+        let changed_primaries: Vec<_> = self
+            .targets
+            .iter()
+            .zip(&replacements)
+            .filter(|(_, changed)| **changed)
+            .map(|(t, _)| t.device.clone())
+            .collect();
+        let rotate = self.distribution.as_ref().is_some_and(|s| {
+            s.rotation_pending()
+                || s.after_primary_changes(&changed_primaries)
+                    .rotation_pending()
+        });
         let minted = group::prepare_own_sender_key(
             &self.chat,
             &self.own,
@@ -159,27 +262,24 @@ impl Snapshot {
         .await?;
         let mut fanout = Vec::with_capacity(self.targets.len());
         let mut updates = Vec::with_capacity(self.targets.len());
-        for target in &self.targets {
-            let session = if self.fresh_sessions {
+        for ((target, bundle), replacement) in self.targets.iter().zip(&inputs).zip(&replacements) {
+            let session = if self.fresh_sessions || *replacement {
                 None
             } else {
                 target.session.as_deref().map(|v| v.as_slice())
             };
-            let bundle = if session.is_none() {
-                Some(direct::prekey_bundle_for(
-                    reply.ok_or_else(|| invalid("a device has neither a session nor a bundle"))?,
-                    &target.device,
-                )?)
-            } else {
+            let identity = if *replacement {
                 None
+            } else {
+                target.identity.as_deref()
             };
-            // Bare protobuf input: prepare_payload applies APK padding exactly once.
+            // Bare protobuf input: prepare_payload applies APK padding once.
             let prepared = direct::prepare_payload(
                 account,
                 &target.device,
                 bundle.as_ref(),
                 session,
-                target.identity.as_deref(),
+                identity,
                 &minted.distribution_message,
             )
             .await?;
@@ -201,6 +301,7 @@ impl Snapshot {
             distribution_message: minted.distribution_message,
             own_key,
             rotate,
+            replacements,
         })
     }
 }
@@ -215,6 +316,7 @@ pub struct Prepared {
     distribution_message: Zeroizing<Vec<u8>>,
     own_key: Zeroizing<Vec<u8>>,
     rotate: bool,
+    replacements: Vec<bool>,
 }
 impl std::fmt::Debug for Prepared {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -269,11 +371,50 @@ impl Prepared {
                 return Err(invalid("a peer session changed before commit"));
             }
         }
-        sender_key_distribution::reserve_in(
+        sender_key_distribution::validate_in(
             tx,
             &self.original.chat,
             &self.original.own,
             self.original.distribution.as_ref(),
+        )?;
+        let changed: Vec<_> = self
+            .original
+            .targets
+            .iter()
+            .zip(&self.replacements)
+            .filter(|(_, replaced)| **replaced)
+            .map(|(target, _)| target.device.clone())
+            .collect();
+        // All original routing/crypto checks have passed. Archives, verification
+        // invalidation, device refresh, other-group rotation and this new chain
+        // commit in the caller's original send transaction, or all roll back.
+        for ((target, (_, current)), replaced) in self
+            .original
+            .targets
+            .iter()
+            .zip(&self.updates)
+            .zip(&self.replacements)
+        {
+            if *replaced {
+                super::identity_conflicts::archive_bundle_replacement(
+                    tx,
+                    &target.device,
+                    target.identity.as_deref(),
+                    target.session.as_deref().map(|v| v.as_slice()),
+                    current,
+                )?;
+            }
+        }
+        let expected_distribution = self
+            .original
+            .distribution
+            .as_ref()
+            .map(|state| state.after_primary_changes(&changed));
+        sender_key_distribution::reserve_in(
+            tx,
+            &self.original.chat,
+            &self.original.own,
+            expected_distribution.as_ref(),
             &self
                 .fanout
                 .iter()
@@ -455,6 +596,435 @@ pub(super) mod tests {
                 Ok(())
             })
             .unwrap();
+    }
+    #[tokio::test]
+    async fn signed_group_replacement_rotates_exposed_chain_and_keeps_history_atomic() {
+        for lid in [false, true] {
+            for mode in [
+                "accept",
+                "pinned",
+                "own_alias",
+                "own_lid",
+                "bad_signature",
+                "stale_pin",
+                "stale_alias",
+                "stale_distribution",
+                "rollback",
+            ] {
+                if mode == "own_lid" && !lid {
+                    continue;
+                }
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("replacement.redb");
+                let store = open(&path);
+                let mut old = fixture();
+                let mut new = fixture();
+                if lid {
+                    for f in [&mut old, &mut new] {
+                        f.plan.own = jid("111111111111111@lid");
+                        f.plan.addressing_mode = "lid";
+                        f.plan.devices =
+                            vec![jid("222222222222221@lid"), jid("222222222222222:3@lid")];
+                        f.plan.recipients = f.plan.devices.iter().map(Jid::to_non_ad).collect();
+                        f.plan.participant_hash = super::super::groups::participant_hash_v2(
+                            &std::iter::once(f.plan.own.clone())
+                                .chain(f.plan.devices.clone())
+                                .collect::<Vec<_>>(),
+                        );
+                        let users = f
+                            .reply
+                            .child("list")
+                            .unwrap()
+                            .child_nodes()
+                            .iter()
+                            .cloned()
+                            .zip(&f.plan.devices)
+                            .map(|(u, j)| u.attr("jid", j.clone()))
+                            .collect();
+                        f.reply = Node::new("iq")
+                            .attr("type", "result")
+                            .children(vec![Node::new("list").children(users)]);
+                        for ((account, _), device) in f.bobs.iter_mut().zip(&f.plan.devices) {
+                            account.own_jid = Some(device.clone());
+                        }
+                    }
+                }
+                // Only the primary changes. The other user's companion keeps
+                // its original authenticated inventory and identity.
+                new.reply = Node::new("iq").attr("type", "result").children(vec![
+                    Node::new("list").children(vec![
+                        new.reply.child("list").unwrap().child_nodes()[0].clone(),
+                        old.reply.child("list").unwrap().child_nodes()[1].clone(),
+                    ]),
+                ]);
+                save_routing(&store, &old);
+                let prior_key = group::prepare_own_sender_key(&old.plan.chat, &old.plan.own, None)
+                    .await
+                    .unwrap();
+                let other_chat = jid("120363000000000002@g.us");
+                let mut prior = vec![];
+                for device in &old.plan.devices {
+                    let bundle = direct::prekey_bundle_for(&old.reply, device).unwrap();
+                    let prepared = direct::prepare_payload(
+                        &new.alice,
+                        device,
+                        Some(&bundle),
+                        None,
+                        None,
+                        b"old session fixture",
+                    )
+                    .await
+                    .unwrap();
+                    prior.push((prepared.session.to_vec(), prepared.identity));
+                }
+                store
+                    .write(|tx| {
+                        new.alice.save(tx)?;
+                        if lid {
+                            super::super::group_send::record_own_lid(tx, &old.plan.own)?;
+                        }
+                        if mode == "own_lid" {
+                            super::super::group_send::record_own_lid(tx, &old.plan.devices[0])?;
+                        }
+                        if mode == "own_alias" {
+                            tx.put_json(
+                                Table::Checkpoints,
+                                b"login-identity",
+                                1,
+                                &serde_json::json!({"pn":old.plan.devices[0].to_string()}),
+                            )?;
+                        }
+                        for (device, (session, pin)) in old.plan.devices.iter().zip(&prior) {
+                            tx.put_json(
+                                Table::SignalSessions,
+                                session_key(device).as_bytes(),
+                                1,
+                                session,
+                            )?;
+                            tx.put_json(
+                                Table::PeerIdentities,
+                                session_key(device).as_bytes(),
+                                1,
+                                pin,
+                            )?;
+                        }
+                        tx.put_json(
+                            Table::SenderKeys,
+                            &group::sender_key_db_key(&old.plan.chat, &old.plan.own),
+                            1,
+                            &*prior_key.updated_key,
+                        )?;
+                        sender_key_distribution::reserve_in(
+                            tx,
+                            &old.plan.chat,
+                            &old.plan.own,
+                            None,
+                            &old.plan.devices,
+                        )?;
+                        sender_key_distribution::reserve_in(
+                            tx,
+                            &other_chat,
+                            &old.plan.own,
+                            None,
+                            &old.plan.devices,
+                        )
+                    })
+                    .unwrap();
+                if mode == "bad_signature" {
+                    let mut user = new.reply.child("list").unwrap().child_nodes()[0].clone();
+                    let mut fields = user.child_nodes().to_vec();
+                    let skey = fields.iter_mut().find(|n| n.description == "skey").unwrap();
+                    let mut keys = skey.child_nodes().to_vec();
+                    *keys
+                        .iter_mut()
+                        .find(|n| n.description == "signature")
+                        .unwrap() = Node::new("signature").bytes(vec![0; 64]);
+                    *skey = Node::new("skey").children(keys);
+                    user = user.children(fields);
+                    new.reply = Node::new("iq").attr("type", "result").children(vec![
+                        Node::new("list").children(vec![
+                            user,
+                            old.reply.child("list").unwrap().child_nodes()[1].clone(),
+                        ]),
+                    ]);
+                }
+                let before = state(&store);
+                let head = store.journal_head().unwrap();
+                let prepared = Snapshot::load(&store, &old.plan, true)
+                    .unwrap()
+                    .prepare_with_policy(
+                        &store,
+                        &new.alice,
+                        Some(&new.reply),
+                        b"new independent group body",
+                        if mode == "pinned" {
+                            IdentityChangePolicy::Pinned
+                        } else {
+                            IdentityChangePolicy::ApkAuthenticated
+                        },
+                    )
+                    .await;
+                if ["pinned", "own_alias", "own_lid", "bad_signature"].contains(&mode) {
+                    assert!(prepared.is_err(), "{mode}");
+                    assert_eq!(before, state(&store));
+                    assert_eq!(head, store.journal_head().unwrap());
+                    continue;
+                }
+                let prepared = prepared.unwrap();
+                assert!(prepared.rotate);
+                let received = direct::receive_prekey(
+                    &new.bobs[0].0,
+                    &old.plan.own,
+                    (None, None),
+                    &new.bobs[0].1,
+                    None,
+                    &prepared.targets()[0].ciphertext,
+                )
+                .await
+                .unwrap();
+                let (_, skdm) =
+                    group::extract_skdm_from_payload(&received.received.plaintext).unwrap();
+                let installed = group::process_skdm(
+                    &old.plan.chat,
+                    &old.plan.own,
+                    group::sender_key_db_key(&old.plan.chat, &old.plan.own),
+                    None,
+                    &skdm,
+                )
+                .await
+                .unwrap();
+                let recovered = group::receive_group(
+                    &old.plan.chat,
+                    &old.plan.own,
+                    Some(&installed.updated_key),
+                    prepared.ciphertext(),
+                )
+                .await
+                .unwrap()
+                .unwrap();
+                assert_eq!(&*recovered.plaintext, b"new independent group body");
+                assert!(
+                    group::receive_group(
+                        &old.plan.chat,
+                        &old.plan.own,
+                        Some(&prior_key.updated_key),
+                        prepared.ciphertext()
+                    )
+                    .await
+                    .is_err()
+                );
+                assert_eq!(before, state(&store));
+                if mode == "stale_pin" {
+                    let pin = direct::prekey_bundle_for(&new.reply, &old.plan.devices[0])
+                        .unwrap()
+                        .identity_key()
+                        .unwrap()
+                        .serialize()
+                        .to_vec();
+                    store
+                        .write(|tx| {
+                            tx.put_json(
+                                Table::PeerIdentities,
+                                session_key(&old.plan.devices[0]).as_bytes(),
+                                1,
+                                &pin,
+                            )
+                        })
+                        .unwrap();
+                }
+                if mode == "stale_alias" {
+                    store
+                        .write(|tx| {
+                            tx.put_json(
+                                Table::Checkpoints,
+                                b"login-identity",
+                                1,
+                                &serde_json::json!({"pn":old.plan.devices[0].to_string()}),
+                            )
+                        })
+                        .unwrap();
+                }
+                if mode == "stale_distribution" {
+                    store
+                        .write(|tx| {
+                            sender_key_distribution::after_primary_change_in(
+                                tx,
+                                &old.plan.devices[0],
+                            )
+                        })
+                        .unwrap();
+                }
+                let precommit = state(&store);
+                let result = store.write(|tx| {
+                    prepared.reserve_in(tx, b"original-rotated-group-key")?;
+                    tx.put_json(Table::Checkpoints, b"original-send-intent", 1, &"reserved")?;
+                    if mode == "rollback" {
+                        return Err(invalid("injected caller transaction cut"));
+                    }
+                    Ok(())
+                });
+                if ["stale_pin", "stale_alias", "stale_distribution", "rollback"].contains(&mode) {
+                    assert!(result.is_err());
+                    assert_eq!(precommit, state(&store));
+                    assert_eq!(head, store.journal_head().unwrap());
+                    continue;
+                }
+                result.unwrap();
+                let histories: Vec<serde_json::Value> = store
+                    .read(|tx| {
+                        Ok(tx
+                            .scan(Table::Checkpoints, 1, 1000)?
+                            .into_iter()
+                            .filter(|(k, _)| k.starts_with(b"identity-history:"))
+                            .map(|(_, v)| serde_json::from_slice(&v).unwrap())
+                            .collect())
+                    })
+                    .unwrap();
+                assert_eq!(histories.len(), 1);
+                assert_eq!(histories[0]["authentication"], "signed_directory_bundle");
+                assert_eq!(histories[0]["verification"], "unverified");
+                assert_eq!(
+                    histories[0]["previous_identity"],
+                    serde_json::json!(prior[0].1)
+                );
+                assert_eq!(
+                    histories[0]["previous_session"],
+                    serde_json::json!(prior[0].0)
+                );
+                assert!(
+                    !store
+                        .read(|tx| sender_key_distribution::load_in(
+                            tx,
+                            &old.plan.chat,
+                            &old.plan.own
+                        ))
+                        .unwrap()
+                        .unwrap()
+                        .rotation_pending()
+                );
+                assert!(
+                    store
+                        .read(|tx| sender_key_distribution::load_in(tx, &other_chat, &old.plan.own))
+                        .unwrap()
+                        .unwrap()
+                        .rotation_pending()
+                );
+                assert_eq!(
+                    store
+                        .read(|tx| tx.get_json::<Vec<u8>>(
+                            Table::Checkpoints,
+                            b"original-rotated-group-key",
+                            1
+                        ))
+                        .unwrap(),
+                    Some(prior_key.updated_key.to_vec())
+                );
+                assert!(
+                    super::super::devices::pending_users(&store)
+                        .unwrap()
+                        .contains(&old.plan.devices[0])
+                );
+                let head = store.journal_head().unwrap();
+                drop(store);
+                let reopened = open(&path);
+                assert_eq!(head, reopened.journal_head().unwrap());
+                assert!(
+                    reopened
+                        .read(|tx| tx.get_json::<String>(
+                            Table::Checkpoints,
+                            b"original-send-intent",
+                            1
+                        ))
+                        .unwrap()
+                        .is_some()
+                );
+            }
+        }
+    }
+    #[tokio::test]
+    async fn primary_replacement_cannot_reauthorize_old_companion_inventory() {
+        use super::super::devices::{DeviceEntry, DeviceList};
+        use sha2::Digest;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("old-authority.redb"));
+        let mut old = fixture();
+        let new = fixture();
+        let peer = old.plan.devices[0].clone();
+        old.plan.devices[1] = peer.with_device(3);
+        old.plan.recipients = vec![peer.clone()];
+        let users = old
+            .reply
+            .child("list")
+            .unwrap()
+            .child_nodes()
+            .iter()
+            .cloned()
+            .zip(&old.plan.devices)
+            .map(|(n, j)| n.attr("jid", j.clone()))
+            .collect();
+        old.reply = Node::new("iq")
+            .attr("type", "result")
+            .children(vec![Node::new("list").children(users)]);
+        save_routing(&store, &old);
+        let pin = direct::prekey_bundle_for(&old.reply, &peer)
+            .unwrap()
+            .identity_key()
+            .unwrap()
+            .serialize()
+            .to_vec();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::PeerIdentities,
+                    session_key(&peer).as_bytes(),
+                    1,
+                    &pin,
+                )?;
+                let mut list: DeviceList = tx
+                    .get_json(
+                        Table::Checkpoints,
+                        super::super::devices::list_key(&peer).as_bytes(),
+                        1,
+                    )?
+                    .unwrap();
+                list.devices = old
+                    .plan
+                    .devices
+                    .iter()
+                    .map(|j| DeviceEntry {
+                        jid: j.clone(),
+                        key_index: 0,
+                    })
+                    .collect();
+                list.verified_primary_key_fingerprint =
+                    Some(hex::encode(sha2::Sha256::digest(&pin[1..])));
+                tx.put_json(
+                    Table::Checkpoints,
+                    super::super::devices::list_key(&peer).as_bytes(),
+                    1,
+                    &list,
+                )
+            })
+            .unwrap();
+        let plan = super::super::group_send::plan(&store, &old.plan.chat, &old.plan.own).unwrap();
+        assert_eq!(plan.devices, old.plan.devices);
+        let before = state(&store);
+        let head = store.journal_head().unwrap();
+        let result = Snapshot::load(&store, &plan, true)
+            .unwrap()
+            .prepare_with_policy(
+                &store,
+                &old.alice,
+                Some(&new.reply),
+                b"must remain unsent",
+                IdentityChangePolicy::ApkAuthenticated,
+            )
+            .await;
+        assert!(
+            matches!(result,Err(Error::InvalidInput{reason,..}) if reason==COMPANION_AUTHORITY_CHANGED)
+        );
+        assert_eq!(before, state(&store));
+        assert_eq!(head, store.journal_head().unwrap());
     }
     fn state(store: &ProtocolStore) -> Vec<Vec<(Vec<u8>, Vec<u8>)>> {
         store
