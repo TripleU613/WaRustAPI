@@ -1,0 +1,43 @@
+# APK-derived structural disassembly: LX/DFc;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(V) flags=0x10001 registers=15
+  0000..0002 op=12 const/4 v1, #0x0
+  0002..0006 op=1a const-string v12, "lid"
+  0006..0008 op=07 move-object v0, v14
+  0008..000a op=07 move-object v2, v1
+  000a..000c op=07 move-object v3, v1
+  000c..000e op=07 move-object v4, v1
+  000e..0010 op=07 move-object v5, v1
+  0010..0012 op=07 move-object v6, v1
+  0012..0014 op=07 move-object v7, v1
+  0014..0016 op=07 move-object v8, v1
+  0016..0018 op=07 move-object v9, v1
+  0018..001a op=07 move-object v10, v1
+  001a..001c op=07 move-object v11, v1
+  001c..001e op=07 move-object v13, v1
+  001e..0024 op=76 invoke-direct/range {v0..v13}, LX/DFc;-><init>(VLLLLLLLLLLLLL)
+  0024..0026 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method <init>(VLLLLLLLLLLLLL) flags=0x10001 registers=14
+  0000..0006 op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>(V)
+  0006..000a op=5b iput-object v6, v0, LX/DFc;->A07:Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+  000a..000e op=5b iput-object v9, v0, LX/DFc;->A0C:Ljava/lang/String;
+  000e..0012 op=5b iput-object v7, v0, LX/DFc;->A05:Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+  0012..0016 op=5b iput-object v2, v0, LX/DFc;->A01:LX/0ZY;
+  0016..001a op=5b iput-object v10, v0, LX/DFc;->A09:Ljava/lang/String;
+  001a..001e op=5b iput-object v3, v0, LX/DFc;->A04:LX/0ZY;
+  001e..0022 op=5b iput-object v8, v0, LX/DFc;->A06:Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+  0022..0026 op=5b iput-object v4, v0, LX/DFc;->A03:LX/0ZY;
+  0026..002a op=5b iput-object v11, v0, LX/DFc;->A0A:Ljava/lang/String;
+  002a..002e op=5b iput-object v5, v0, LX/DFc;->A02:LX/0ZY;
+  002e..0032 op=5b iput-object v12, v0, LX/DFc;->A08:Ljava/lang/String;
+  0032..0036 op=5b iput-object v13, v0, LX/DFc;->A0B:Ljava/lang/String;
+  0036..003a op=5b iput-object v1, v0, LX/DFc;->A00:Lcom/whatsapp/infra/core/jid/Jid;
+  003a..003c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

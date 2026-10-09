@@ -1,0 +1,90 @@
+{
+  "base-route-constructor.txt": {
+    "bytes": 1125,
+    "sha256": "e8864147722fd19978b9552fbd0ace92fa4d8ecf05a2879193b93048e2f8e385"
+  },
+  "broadcast-kind.txt": {
+    "bytes": 708,
+    "sha256": "5b7d6528a3eee9cae8e8052d13c50f6790ab351a2e529748379040dc410bb8c0"
+  },
+  "group-like-base.txt": {
+    "bytes": 900,
+    "sha256": "586ac89bb85bb54823b97a0d3b2ffb3afca3060cbf8d2dbfceb4a753273b397b"
+  },
+  "group-like-kind.txt": {
+    "bytes": 729,
+    "sha256": "38057667610fe6afeb657a44dfe9b323764aa41c97dce2af6cdc0a5c624fb3db"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "lid-type.txt": {
+    "bytes": 448,
+    "sha256": "c45b144535f250e1ecc9c31c13121a256e96fac4047266b15c83839dd04f26a5"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "metadata-constructor.txt": {
+    "bytes": 2214,
+    "sha256": "c3c604999d910e609a4f50998091fbb50226a03e68a9fd84ca70c8a09392540a"
+  },
+  "metadata-parser.txt": {
+    "bytes": 8121,
+    "sha256": "2d27003d346b8f8923002559322edf7812c3fc44424a89f0431de83d7ee57978"
+  },
+  "newsletter-kind.txt": {
+    "bytes": 710,
+    "sha256": "027fee9c8a1fcbd7d7036a73ba9bd52e81a9dea55432d850e60cbcae2c685652"
+  },
+  "normal-builder.txt": {
+    "bytes": 6069,
+    "sha256": "44274d38d600983c80965a976622fb93a535e61f3bc9b873253c69a3c4643faa"
+  },
+  "ordinary-base-route.txt": {
+    "bytes": 1512,
+    "sha256": "41a801d1602e61a3f7736662403210a8516f75ce7161b8ad9408ad11fc2a2a50"
+  },
+  "sender-device.txt": {
+    "bytes": 707,
+    "sha256": "12a8976d85ebeb3251fe27a6dc56b561a8cf54f841b9709aa161793c145da1b6"
+  },
+  "sender-route.txt": {
+    "bytes": 1310,
+    "sha256": "d39bf035696b8e7b8da55a4880c16598ed4b6840a5d83644fbe723e418861b29"
+  },
+  "targets.json": {
+    "bytes": 7765,
+    "sha256": "4a9a6755989a5ec27bf00d2a433056a720dc2def2f3d6aa356e7753d6ddf0b22"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "writer-message-base.txt": {
+    "bytes": 37430,
+    "sha256": "bc45a85a868499f730ac9cadeb621010848f30e9f34680b6225c6d1c3990b835"
+  },
+  "writer-newsletter-manager.txt": {
+    "bytes": 7219,
+    "sha256": "8e4397b8a3b7acfdbd80a8cd76b10cc6ddbfc3c42ee700027688134ab99b7320"
+  },
+  "writer-newsletter-notification.txt": {
+    "bytes": 18492,
+    "sha256": "3c69f27d49cfd81d198b83c0e4ca00ae01bb63f3daeb7cac57eb72cd4320c5d5"
+  },
+  "writer-newsletter-responses.txt": {
+    "bytes": 11802,
+    "sha256": "a2abfcac953f00d758dbfde3e7e4c2b542268ab9874f662144186bf81f791970"
+  },
+  "writer-orphan-message.txt": {
+    "bytes": 24522,
+    "sha256": "789e002381102144f93ffa8b6011c5e6e335622db33627523b887a26ca7ecf44"
+  },
+  "writer-scheduled-message.txt": {
+    "bytes": 20501,
+    "sha256": "da062fcf31f4c8f79a1db0c9c3586c7a5c259d1231bacddc5f1af5c69c8e45f4"
+  }
+}

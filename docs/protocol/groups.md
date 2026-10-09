@@ -3141,3 +3141,8 @@ for this static evidence chunk. No live request was needed or made.
 
 Repository hygiene passed: 928 local links, tracked-file budgets, package
 licenses and 3,996,167 bytes across five checksum-verified APK bundles.
+
+Subsequent primary LID trace resolves DEw.CF0 -> DFc's 13 constructor field
+bindings and the nonrejecting missing-alias logger join. See
+[nullable alias evidence](peer-identity.md#primary-lid-route-and-nullable-aliases-2026-10-09).
+Other guest, contact-mode and downstream consumer unknowns remain unchanged.

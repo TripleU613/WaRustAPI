@@ -2431,3 +2431,106 @@ all-feature Clippy, warning-free Rustdoc, 24 default CLI checks, regenerated CLI
 reference, API library-symbol check, formatting, experimental CLI build and
 repository hygiene passed. Seven focused directory tests include the new
 ambiguity matrix and historical inspection JSON case.
+
+
+## Primary LID route and nullable aliases (2026-10-09)
+
+**Confirmed static, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+The [hash-pinned routing recipe](apk/recipes/2.26.37.71-primary-lid.json)
+retains full checked register flow and exception ranges for these methods.
+The [field/caller inventory](primary-lid-route-evidence.txt) records exact
+physical DEX references. This trace does not change Rust routing or saved state.
+
+**Confirmed metadata grammar:** [DEw.CF0](apk/2.26.37.71-primary-lid/metadata-parser.txt)
+reads root **`username`** (000c..001a), not an attribute named sender_username.
+It reads sender_pn as typed PhoneUserJid (021e..0236); meta sender_account_kind
+`guest` bypasses that read and supplies null (0070..008e). The logged missing
+sender_pn / sender_username branch at 01ea..01fc **does not throw or reject**:
+its goto reaches the logger at 01ae and then the optional-metadata aggregation
+at 01b4..01e8. Any retained metadata reaches the DFc constructor at 0258..0268;
+all-null metadata returns null. This is not proof that the whole message is
+accepted, but refutes treating that log as a mandatory-phone-alias refusal.
+The separate participant and peer-recipient logs likewise join this aggregation.
+
+**Confirmed field layout:** parser arguments to
+[DFc.<init>](apk/2.26.37.71-primary-lid/metadata-constructor.txt) map as follows.
+The constructor has no nonnull checks; the no-argument constructor supplies
+null to every field except addressing_mode=`lid`.
+
+| DFc field | Producer / meaning in this parser |
+| --- | --- |
+| A00 | participant Jid |
+| A01 | participant_lid |
+| A04 | sender_lid |
+| A03 | peer_recipient_lid |
+| A02 | recipient_latest_lid |
+| A07 | sender_pn |
+| A05 | participant_pn |
+| A06 | peer_recipient_pn |
+| A0C | root username |
+| A09 | participant_username |
+| A0A | peer_recipient_username |
+| A08 | selected addressing mode |
+| A0B | meta sender_country_code |
+
+These are metadata bindings, not authority to adopt keys or guess a PN/LID map.
+Guest semantics, username trust/display and every downstream DFc consumer remain
+**unknown/unported**. The prior group trace's field-layout unknown is resolved
+for these constructor arguments; its other unknowns remain.
+
+**Confirmed routing separation:**
+[0ZY.getType](apk/2.26.37.71-primary-lid/lid-type.txt) returns **18 / 0x12**.
+[0DE.A0n](apk/2.26.37.71-primary-lid/group-like-kind.txt),
+[A0m](apk/2.26.37.71-primary-lid/group-like-base.txt) and
+[A0W](apk/2.26.37.71-primary-lid/newsletter-kind.txt) together recognize
+numeric types **1, 2 and 28**; [A0i](apk/2.26.37.71-primary-lid/broadcast-kind.txt)
+recognizes **5**. Thus ordinary 0ZY is outside those branches, without guessing
+labels for all numeric JID categories.
+[CjN.A04](apk/2.26.37.71-primary-lid/sender-route.txt) for an ordinary Bp2
+returns **A05** unless one of those group-like/broadcast predicates selects A04
+(0016..0046). [CjN.A00](apk/2.26.37.71-primary-lid/sender-device.txt) passes
+that result directly to DeviceJid.Companion.A00 (0004..0014); no sender_pn or
+DFc metadata is read by either helper. The factory's full native subtype
+construction remains unknown.
+[Bp2.A0N](apk/2.26.37.71-primary-lid/ordinary-base-route.txt) constructs CZI
+with A05 as its first Jid in the ordinary branch (0042..004c joining 0016).
+[CZI.<init>](apk/2.26.37.71-primary-lid/base-route-constructor.txt)
+stores that first Jid into A01 (0012..0016). Its separate type-3 participant
+branch is preserved, not assumed equivalent to an ordinary primary LID.
+These helpers operate on an existing message object; they do not independently
+recover the root stanza's from-to-A05 producer.
+
+**Recorded negative builder search:** exact writes to Cih.A07:Jid occur in six
+DEX methods, all preserved by the recipe: 12w.A09 and 9QW.A00 are newsletter
+question-response paths; A8q.A00 is a newsletter historical-message path;
+1Uu.A00 resolves orphan records from saved message keys; 1di.A00 handles
+scheduled reveal; CgC.A01 builds message/base objects, including a PN-to-LID
+selection through saved mapping on one branch. These are not a substitute for
+the ordinary raw-stanza producer. CZI.A01's sole field write is its constructor;
+the two constructor callers are Bp2.A0N and CgC.A01.
+[Cih.A01](apk/2.26.37.71-primary-lid/normal-builder.txt) requires remote Jid,
+timestamp, id and message keys before building Bp2; this alone does not prove
+the alias rules for every incoming packet. Field-name searches do not establish
+native setters, reflection or indirect object construction. Raw root routing
+and complete CgC selection remain explicit next-trace boundaries.
+
+**Confirmed local limitation / next implementation invariant:**
+inbox.session_sender currently rejects an ordinary primary LID stanza without
+sender_pn. This is our unconditional guard, not a server or APK requirement
+established by the trace. Crypto/session routing can already use the actual
+LID; event/read-receipt lookup currently shares the PN-derived marker when an
+alias is present. Removing the guard must therefore preserve historical
+PN-keyed records and prevent duplicate projection/ratchet use when an alias
+appears or disappears. No historical marker, capture, pin, session, mapping or
+receipt was rewritten here. Wrong namespaces/devices/agents and own-peer
+controls must retain their separate guards. Fresh alias-less primary LID
+interoperability remains **unverified**; no live request was made.
+
+Validation: **18 topics / 19 selected methods**, 23 files / **181,845 bytes**,
+independently reproduced by `--check`. The
+[cached same-bundle check](apk/primary-lid-cache-check.json) verified all checksums
+and 18 unchanged topics / 4 unchanged artifacts in **0.011349 seconds**; it is
+not a new-release or whole-APK comparison. All **63 xtask tests**, regenerated
+CLI reference, API library-symbol verification, formatting and repository hygiene
+passed (1,034 local links, 5,011,820 bytes across 9 checksum bundles).

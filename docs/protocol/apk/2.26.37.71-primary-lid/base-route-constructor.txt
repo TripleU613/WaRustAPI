@@ -1,0 +1,19 @@
+# APK-derived structural disassembly: LX/CZI;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLLLLI) flags=0x10001 registers=9
+  0000..0002 op=12 const/4 v0, #0x3
+  0002..0008 op=71 invoke-static {v4, v0}, LX/00h;->A0A(VLI)
+  0008..000e op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>(V)
+  000e..0012 op=5b iput-object v6, v1, LX/CZI;->A05:Ljava/lang/String;
+  0012..0016 op=5b iput-object v2, v1, LX/CZI;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+  0016..001a op=5b iput-object v3, v1, LX/CZI;->A04:Lcom/whatsapp/infra/core/jid/Jid;
+  001a..001e op=5b iput-object v4, v1, LX/CZI;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+  001e..0022 op=5b iput-object v5, v1, LX/CZI;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+  0022..0026 op=5b iput-object v7, v1, LX/CZI;->A06:Ljava/lang/String;
+  0026..002a op=59 iput v8, v1, LX/CZI;->A00:I
+  002a..002c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

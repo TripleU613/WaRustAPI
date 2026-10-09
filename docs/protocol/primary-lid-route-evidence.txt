@@ -1,0 +1,31 @@
+# APK 2.26.37.71 primary LID route field/caller scans
+# SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# These exact physical DEX references do not establish all native/reflection setters.
+# Offsets below are absolute DEX byte offsets, not method-relative offsets.
+
+## Cih.A07:Jid writes
+# xtask apk-field-refs <apk> --class 'LX/Cih;' --field A07 --type 'Lcom/whatsapp/infra/core/jid/Jid;' --writes-only
+classes.dex  LX/12w;->A09(VLI)
+  write opcode 0x5b, dex byte offset: 0x7bf7f2
+classes.dex  LX/1Uu;->A00(V)
+  write opcode 0x5b, dex byte offset: 0x91cc12
+classes2.dex  LX/1di;->A00(VL)
+  write opcode 0x5b, dex byte offset: 0x111100
+classes6.dex  LX/9QW;->A00(VLLL)
+  write opcode 0x5b, dex byte offset: 0x395fc8
+classes6.dex  LX/A8q;->A00(VLLLLLLLLLLLLLLLJJJZZZZ)
+  write opcode 0x5b, dex byte offset: 0x4a49a6
+classes7.dex  LX/CgC;->A01(LLLLLJJ)
+  write opcode 0x5b, dex byte offset: 0x5fdac4
+
+## CZI.A01:Jid writes
+# Same command with --class 'LX/CZI;' --field A01
+classes7.dex  LX/CZI;-><init>(VLLLLLLI)
+  write opcode 0x5b, dex byte offset: 0x5d2996
+
+## CZI constructor callers
+# xtask apk-callers <apk> --class 'LX/CZI;' --method '<init>'
+classes7.dex  LX/Bp2;->A0N(L)
+  invoke dex byte offset: 0x51a9ea
+classes7.dex  LX/CgC;->A01(LLLLLJJ)
+  invoke dex byte offset: 0x5fddec

@@ -1387,3 +1387,13 @@ No scanned callback directly decrypts or retries messages; transitive helpers
 remain unknown. Primary LID receive's sender_pn prerequisite is a local guard,
 not a proven APK requirement, and remains the next receive-routing trace.
 No account or network changed. [Evidence and limits](cross-device-sync.md#identity-success-consumer-inventory-2026-10-09).
+
+Primary LID routing trace (2026-10-09, **confirmed static APK 37.71**): missing
+sender_pn/username logs join nullable metadata construction rather than throwing.
+The parsed username attribute is username; DFc's 13 field bindings are recovered.
+Ordinary LID's type 18 selects the message's A05 route for sender-device lookup,
+without consulting alias metadata. Rust's unconditional primary alias guard is
+a local limitation; historical PN-marker stability and the raw stanza producer
+remain next boundaries before a receive change. Six unrelated/special builder
+write paths are recorded to avoid repeating them. No account or network changed.
+[Evidence and limits](peer-identity.md#primary-lid-route-and-nullable-aliases-2026-10-09).
