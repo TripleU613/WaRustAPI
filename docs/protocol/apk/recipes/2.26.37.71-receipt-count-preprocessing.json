@@ -1,0 +1,46 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "count-preprocessor": {
+      "class": "LX/D7J;",
+      "method": "CHJ",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ],
+      "anchors": [
+        "BotUtilPreprocessor/addmsg/error/group/remote_resource is null! "
+      ]
+    },
+    "participant-count": {
+      "class": "LX/1jL;",
+      "method": "A06",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "participant-has-own": {
+      "class": "LX/1jL;",
+      "method": "A0a",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ],
+      "anchors": [
+        "GroupParticipants/hasMe/miss"
+      ]
+    },
+    "participant-lookup": {
+      "class": "LX/1jL;",
+      "method": "A0G",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    }
+  }
+}

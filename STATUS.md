@@ -1,5 +1,12 @@
 # Status — 2026-10-07
 
+Receipt count preprocessing (2026-10-09, **confirmed static**): four topics
+close participant-map counts and mode-dependent local-user membership; reused
+sources attribute copy/builder/ACK writes. The shared group write site is not
+always literal two. All ten physical sites have immediate value attribution,
+but normal-send and transitive producer authority remain incomplete/unported.
+No runtime/account/live change. [Evidence and limits](docs/protocol/receipt-count-preprocessing.md).
+
 Recipient-count producers (2026-10-09, **confirmed static**): five topics
 separate status-audience size excluding the local user from conditionally written
 broadcast clone-entry counts; cursor restoration loads recipient_count directly.

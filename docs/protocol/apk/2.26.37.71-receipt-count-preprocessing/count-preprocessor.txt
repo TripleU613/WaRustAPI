@@ -1,0 +1,87 @@
+# APK-derived structural disassembly: LX/D7J;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=12
+  # full signature: LX/D7J;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v10, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=71 invoke-static {v10}, LX/1gd;->A1A(LX/178;)Z
+  000e..0010 op=0a move-result v0
+  0010..0014 op=39 if-nez v0, +0x63
+  0014..0018 op=54 iget-object v5, v10, LX/178;->A0i:LX/1gc;
+  0018..001c op=54 iget-object v4, v5, LX/1gc;->A00:LX/0Cy;
+  001c..0022 op=71 invoke-static {v4}, LX/0DE;->A0m(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0022..0024 op=0a move-result v8
+  0024..002a op=71 invoke-static {v4}, LX/0DE;->A0Q(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  002a..002c op=0a move-result v0
+  002c..002e op=12 const/4 v7, #0x1
+  002e..0032 op=38 if-eqz v0, +0x9
+  0032..0038 op=71 invoke-static {v4}, LX/0DE;->A0i(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0038..003a op=0a move-result v0
+  003a..003c op=12 const/4 v6, #0x1
+  003c..0040 op=38 if-eqz v0, +0x3
+  0040..0042 op=12 const/4 v6, #0x0
+  0042..0046 op=38 if-eqz v8, +0x19
+  0046..004a op=20 instance-of v0, v10, LX/1bh;
+  004a..004e op=39 if-nez v0, +0x15
+  004e..0054 op=6e invoke-virtual {v10}, LX/178;->B1Q()LX/0Cy;
+  0054..0056 op=0c move-result-object v0
+  0056..005a op=39 if-nez v0, +0xf
+  005a..005e op=55 iget-boolean v0, v5, LX/1gc;->A02:Z
+  005e..0062 op=39 if-nez v0, +0xb
+  0062..0068 op=71 invoke-static {v10}, LX/9lB;->A00(LX/178;)Ljava/lang/String;
+  0068..006a op=0c move-result-object v1
+  006a..006e op=1a const-string v0, "BotUtilPreprocessor/addmsg/error/group/remote_resource is null! "
+  006e..0074 op=71 invoke-static {v0, v1}, LX/1xk;->A1S(Ljava/lang/String;Ljava/lang/String;)V
+  0074..007a op=71 invoke-static {v10}, LX/1ht;->A03(LX/178;)Z
+  007a..007c op=0a move-result v3
+  007c..0080 op=39 if-nez v8, +0x4
+  0080..0084 op=38 if-eqz v6, +0x20
+  0084..0088 op=54 iget-object v0, v9, LX/D7J;->A01:LX/05B;
+  0088..008e op=71 invoke-static {v0}, LX/1xi;->A0f(LX/05B;)LX/0bA;
+  008e..0090 op=0c move-result-object v1
+  0090..0094 op=1a const-string v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.MultipleParticipantJid"
+  0094..009a op=71 invoke-static {v4, v0}, LX/00h;->A0D(Ljava/lang/Object;Ljava/lang/String;)V
+  009a..009c op=07 move-object v0, v4
+  009c..00a0 op=1f check-cast v0, LX/0c3;
+  00a0..00a6 op=6e invoke-virtual {v1, v0}, LX/0bA;->A0B(LX/0c3;)LX/1jL;
+  00a6..00a8 op=0c move-result-object v2
+  00a8..00ac op=55 iget-boolean v0, v5, LX/1gc;->A02:Z
+  00ac..00b0 op=38 if-eqz v0, +0x1e
+  00b0..00b4 op=55 iget-boolean v0, v10, LX/178;->A0y:Z
+  00b4..00b8 op=38 if-eqz v0, +0x1a
+  00b8..00bc op=39 if-nez v8, +0xf
+  00bc..00c0 op=39 if-nez v6, +0xd
+  00c0..00c4 op=38 if-eqz v3, +0xb
+  00c4..00ca op=71 invoke-static {v4}, LX/0DE;->A0l(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  00ca..00cc op=0a move-result v0
+  00cc..00d0 op=38 if-eqz v0, +0x5
+  00d0..00d2 op=12 const/4 v0, #0x2
+  00d2..00d6 op=59 iput v0, v10, LX/178;->A06:I
+  00d6..00da op=38 if-eqz v11, +0x25
+  00da..00de op=1c const-class v0, LX/D7J;
+  00de..00e4 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  00e4..00e6 op=0c move-result-object v0
+  00e6..00e8 op=27 throw v0
+  00e8..00ec op=38 if-eqz v8, +0x9
+  00ec..00f2 op=6e invoke-virtual {v2}, LX/1jL;->A06()I
+  00f2..00f4 op=0a move-result v0
+  00f4..00f6 op=b0 add-int/2addr v0, v3
+  00f6..00f8 op=b1 sub-int/2addr v0, v7
+  00f8..00fa op=28 goto -0x13
+  00fa..0100 op=6e invoke-virtual {v2}, LX/1jL;->A06()I
+  0100..0102 op=0a move-result v1
+  0102..0104 op=b0 add-int/2addr v1, v3
+  0104..0108 op=54 iget-object v0, v9, LX/D7J;->A02:LX/05B;
+  0108..010e op=71 invoke-static {v0}, LX/1xi;->A0l(LX/05B;)LX/08Z;
+  010e..0110 op=0c move-result-object v0
+  0110..0116 op=6e invoke-virtual {v2, v0}, LX/1jL;->A0a(LX/08Z;)Z
+  0116..0118 op=0a move-result v0
+  0118..011a op=b1 sub-int/2addr v1, v0
+  011a..011e op=59 iput v1, v10, LX/178;->A06:I
+  011e..0120 op=28 goto -0x31
+  0120..0122 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

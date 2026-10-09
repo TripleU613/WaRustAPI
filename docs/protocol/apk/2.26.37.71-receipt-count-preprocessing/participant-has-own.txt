@@ -1,0 +1,95 @@
+# APK-derived structural disassembly: LX/1jL;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0a(ZL) flags=0x1 registers=16
+  # full signature: LX/1jL;->A0a(LX/08Z;)Z
+  0000..0006 op=72 invoke-interface {v15}, LX/08Z;->Aq0()Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+  0006..0008 op=0c move-result-object v3
+  0008..000e op=72 invoke-interface {v15}, LX/08Z;->Apx()LX/0ZY;
+  000e..0010 op=0c move-result-object v2
+  0010..0014 op=52 iget v0, v14, LX/1jL;->A00:I
+  0014..0018 op=38 if-eqz v0, +0x9a
+  0018..001a op=07 move-object v1, v2
+  001a..001e op=38 if-eqz v1, +0xa
+  001e..0020 op=12 const/4 v0, #0x0
+  0020..0026 op=6e invoke-virtual {v14, v1, v0}, LX/1jL;->A0G(Lcom/whatsapp/infra/core/jid/UserJid;Z)LX/1uU;
+  0026..0028 op=0c move-result-object v1
+  0028..002a op=12 const/4 v0, #0x1
+  002a..002e op=39 if-nez v1, +0x3
+  002e..0030 op=12 const/4 v0, #0x0
+  0030..0032 op=12 const/4 v13, #0x1
+  0032..0036 op=39 if-nez v0, +0x8a
+  0036..0038 op=12 const/4 v7, #0x0
+  0038..003c op=38 if-eqz v3, +0xb
+  003c..0040 op=54 iget-object v0, v14, LX/1jL;->A0B:Ljava/util/Map;
+  0040..0046 op=72 invoke-interface {v0, v3}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+  0046..0048 op=0a move-result v0
+  0048..004a op=12 const/4 v6, #0x1
+  004a..004e op=39 if-nez v0, +0x3
+  004e..0050 op=12 const/4 v6, #0x0
+  0050..0054 op=38 if-eqz v2, +0xb
+  0054..0058 op=54 iget-object v0, v14, LX/1jL;->A0A:Ljava/util/Map;
+  0058..005e op=72 invoke-interface {v0, v2}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+  005e..0060 op=0a move-result v0
+  0060..0062 op=12 const/4 v5, #0x1
+  0062..0066 op=39 if-nez v0, +0x3
+  0066..0068 op=12 const/4 v5, #0x0
+  0068..006c op=39 if-nez v6, +0x4
+  006c..0070 op=38 if-eqz v5, +0x5f
+  0070..0074 op=1a const-string v0, "GroupParticipants/hasMe/miss hasPnMe="
+  0074..0078 op=22 new-instance v4, Ljava/lang/StringBuilder;
+  0078..007e op=70 invoke-direct {v4, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  007e..0084 op=6e invoke-virtual {v4, v6}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  0084..0088 op=1a const-string v2, " hasLidMe="
+  0088..008e op=6e invoke-virtual {v4, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  008e..0094 op=6e invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  0094..0098 op=1a const-string v0, " isLidDefault="
+  0098..009e op=6e invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  009e..00a2 op=52 iget v1, v14, LX/1jL;->A00:I
+  00a2..00a4 op=12 const/4 v0, #0x0
+  00a4..00a8 op=38 if-eqz v1, +0x3
+  00a8..00aa op=12 const/4 v0, #0x1
+  00aa..00b0 op=6e invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  00b0..00b6 op=6e invoke-virtual {v4}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00b6..00b8 op=0c move-result-object v0
+  00b8..00be op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  00be..00c2 op=54 iget-object v0, v14, LX/1jL;->A0E:LX/00s;
+  00c2..00c8 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  00c8..00ca op=0c move-result-object v8
+  00ca..00ce op=1f check-cast v8, LX/0AH;
+  00ce..00d2 op=1a const-string v1, "hasPnMe="
+  00d2..00d6 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  00d6..00dc op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  00dc..00e2 op=6e invoke-virtual {v0, v6}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  00e2..00e8 op=6e invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00e8..00ee op=6e invoke-virtual {v0, v5}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  00ee..00f4 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00f4..00f6 op=0c move-result-object v10
+  00f6..00fa op=1a const-string v0, "isLidDefault="
+  00fa..00fe op=22 new-instance v2, Ljava/lang/StringBuilder;
+  00fe..0104 op=70 invoke-direct {v2, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0104..0108 op=52 iget v1, v14, LX/1jL;->A00:I
+  0108..010a op=12 const/4 v0, #0x0
+  010a..010e op=38 if-eqz v1, +0x3
+  010e..0110 op=12 const/4 v0, #0x1
+  0110..0116 op=6e invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  0116..011c op=6e invoke-virtual {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  011c..011e op=0c move-result-object v11
+  011e..0120 op=12 const/4 v12, #0x2
+  0120..0124 op=1a const-string v9, "GroupParticipants/hasMe/miss"
+  0124..012a op=74 invoke-virtual/range {v8..v13}, LX/0AH;->A0c(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZ)V
+  012a..012e op=52 iget v0, v14, LX/1jL;->A00:I
+  012e..0132 op=38 if-eqz v0, +0x10
+  0132..0136 op=38 if-eqz v3, +0xe
+  0136..013a op=54 iget-object v0, v14, LX/1jL;->A0B:Ljava/util/Map;
+  013a..0140 op=72 invoke-interface {v0, v3}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+  0140..0142 op=0a move-result v0
+  0142..0146 op=38 if-eqz v0, +0x6
+  0146..0148 op=0f return v13
+  0148..014a op=07 move-object v1, v3
+  014a..014e op=29 goto/16 -0x98
+  014e..0150 op=0f return v7
+  # exception table: 0 try range(s)
+.end method

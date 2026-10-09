@@ -97,3 +97,8 @@ the pinned APK. Cached self-diff verifies five unchanged topics and four
 metadata artifacts, not another APK release. CLI reference regeneration,
 OpenAPI/library-symbol checks, formatting and diff hygiene pass. This source/docs
 chunk changes no Rust code; no fresh runtime suite or live check is claimed.
+
+Follow-up: [count preprocessing and copies](receipt-count-preprocessing.md)
+attributes the remaining five physical writes and participant-map helpers.
+Immediate values are now attributed for all ten sites; full send initialization,
+wire producer and preprocessing/mapping authority are still unproven.

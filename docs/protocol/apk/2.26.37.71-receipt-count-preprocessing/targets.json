@@ -1,0 +1,60 @@
+{
+  "count-preprocessor": {
+    "anchors": [
+      "BotUtilPreprocessor/addmsg/error/group/remote_resource is null! "
+    ],
+    "class": "LX/D7J;",
+    "file": "count-preprocessor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "CHJ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "participant-count": {
+    "class": "LX/1jL;",
+    "file": "participant-count.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A06",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "participant-has-own": {
+    "anchors": [
+      "GroupParticipants/hasMe/miss"
+    ],
+    "class": "LX/1jL;",
+    "file": "participant-has-own.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0a",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  },
+  "participant-lookup": {
+    "class": "LX/1jL;",
+    "file": "participant-lookup.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0G",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs"
+    ]
+  }
+}
