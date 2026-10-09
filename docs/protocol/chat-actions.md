@@ -830,3 +830,14 @@ preservation, conflicting-LID and ambiguous-history refusal, and redacted unknow
 errors. The first broad run found the new CLI reference stale; regeneration fixed
 that check before the successful final run. Local repair errors now name the
 failed prerequisite instead of a generic refusal. Repository hygiene passed.
+
+Group keep/unkeep receive attribution (2026-10-09, **confirmed static/local**):
+APK 37.71 D9L.A01 maps BV3.key through BoQ, just like ordinary group reactions.
+Reception now resolves the original author independently of the keeper, uses
+authenticated own-envelope context and retains matching parent devices. Incoming
+updates preserve consumed bodies, outbox facts and existing event markers.
+`lab-inbox --inspect` exposes fixed group keep target_validation labels using
+original saved routes. Direct keep projection retains its existing behavior.
+Normal group keep sending, native downstream authorization/expiry enforcement,
+and fresh live group keep/handset rendering remain unimplemented or unverified.
+See [group keep](group-keep.md).

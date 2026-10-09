@@ -1,0 +1,42 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "keep-descriptor.txt": {
+    "bytes": 3255,
+    "sha256": "05cb1040feaec845155fa8a6ee00eb223dc389568ee5d24be92a34751ff5cf9a"
+  },
+  "keep-enum-parser.txt": {
+    "bytes": 916,
+    "sha256": "647065554971302028f07319e8cdd01481af2b559119d4d8f80333b3f9a0d6dc"
+  },
+  "keep-enum.txt": {
+    "bytes": 1407,
+    "sha256": "1730182c24ac5536626bdc51d3912b411f2c06d072d140050e0544695eb1fd1b"
+  },
+  "keep-outbound.txt": {
+    "bytes": 4588,
+    "sha256": "5a75dacc14c78367b11e005bd1b43b5b3a7be800c79500134a23af0842bf0839"
+  },
+  "keep-receive.txt": {
+    "bytes": 23850,
+    "sha256": "d2d46430ee7647634346739db70f11a4d21385ea192f731c090aef20a6458af0"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-descriptor.txt": {
+    "bytes": 19370,
+    "sha256": "9f9f01d6fdccbd2079603a63d649781e1244532a984f2b09c4df7f9b197d641a"
+  },
+  "targets.json": {
+    "bytes": 2946,
+    "sha256": "417603786f3f1fb46c6a4fbc923cc9ac458ce947832c0fc7817534b6c7e81ee0"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

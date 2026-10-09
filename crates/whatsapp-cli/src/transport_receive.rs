@@ -1456,6 +1456,33 @@ fn poll_inspection_summary(poll: &whatsapp_api::transport::polls::Poll) -> Strin
     )
 }
 
+fn group_update_inspection_label(
+    store: &ProtocolStore,
+    key: &[u8],
+    saved: &serde_json::Value,
+    plain: &[u8],
+    keep: bool,
+) -> Result<String, Error> {
+    let (pn, lid) = whatsapp_api::transport::inbox::own_identities(store)?;
+    let own: Vec<_> = pn.into_iter().chain(lid).collect();
+    let target = store.read(|tx| {
+        let (chat, actor) =
+            whatsapp_api::transport::group_inbox::sender_for_record(key, saved, |k| {
+                tx.get(Table::Checkpoints, k, 1)
+            })?;
+        if keep {
+            whatsapp_api::transport::chat_settings::group_keep_target(&chat, &actor, plain, &own)
+        } else {
+            whatsapp_api::transport::reactions::group_target_for_sender(&chat, &actor, plain, &own)
+        }
+    });
+    Ok(match target {
+        Ok(_) => "valid".to_owned(),
+        Err(Error::InvalidInput { reason, .. }) => reason,
+        Err(_) => "invalid_group_key".to_owned(),
+    })
+}
+
 pub(super) async fn run(
     cli: &super::Cli,
     inspect: bool,
@@ -1744,29 +1771,21 @@ pub(super) async fn run(
                     .and_then(|(c, _)| whatsapp_api::model::jid::Jid::parse(c).ok())
                     .filter(|c| c.server == whatsapp_api::model::jid::Server::Group)
                 {
-                    let (pn, lid) = whatsapp_api::transport::inbox::own_identities(&store)?;
-                    let own: Vec<_> = pn.into_iter().chain(lid).collect();
-                    let target = store.read(|tx| {
-                        let (original_chat, actor) =
-                            whatsapp_api::transport::group_inbox::sender_for_record(
-                                key,
-                                &saved,
-                                |k| tx.get(Table::Checkpoints, k, 1),
-                            )?;
-                        whatsapp_api::transport::reactions::group_target_for_sender(
-                            &original_chat,
-                            &actor,
-                            &plain,
-                            &own,
-                        )
-                    });
-                    let label = match target {
-                        Ok(_) => "valid".to_owned(),
-                        Err(Error::InvalidInput { reason, .. }) => reason,
-                        Err(_) => "invalid_group_key".to_owned(),
-                    };
+                    let label = group_update_inspection_label(&store, key, &saved, &plain, false)?;
                     println!("inbox: group reaction target_validation={label}");
                 }
+            }
+            if whatsapp_api::signal::direct::payload_fields(&plain)
+                .is_ok_and(|fields| fields.contains(&51))
+                && std::str::from_utf8(key)
+                    .ok()
+                    .and_then(|k| k.strip_prefix("received:"))
+                    .and_then(|k| k.rsplit_once(':'))
+                    .and_then(|(chat, _)| whatsapp_api::model::jid::Jid::parse(chat).ok())
+                    .is_some_and(|chat| chat.server == whatsapp_api::model::jid::Server::Group)
+            {
+                let label = group_update_inspection_label(&store, key, &saved, &plain, true)?;
+                println!("inbox: group keep target_validation={label}");
             }
         }
     }

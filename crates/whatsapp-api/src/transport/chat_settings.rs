@@ -212,6 +212,30 @@ pub fn decode_keep(payload: &[u8]) -> Option<IncomingKeep> {
     })
 }
 
+/// Resolve a supported group keep/unkeep reference using an authenticated
+/// envelope sender. APK 37.71 D9L.A01 0682..06b6 passes BV3.key to BoQ.A00;
+/// its author is independent of the keeping member. This does not authenticate
+/// a supplied sender or establish permission to keep another member's message.
+pub fn group_keep_target(
+    chat: &Jid,
+    sender: &Jid,
+    payload: &[u8],
+    own: &[Jid],
+) -> Result<crate::model::message::MessageKey> {
+    let keep = Envelope::decode(payload)
+        .map_err(|_| invalid("malformed_keep"))?
+        .keep_in_chat
+        .ok_or_else(|| invalid("missing_keep"))?;
+    if !matches!(keep.keep_type, Some(KEEP_FOR_ALL | UNDO_KEEP_FOR_ALL)) {
+        return Err(invalid("unsupported_keep_type"));
+    }
+    let key = keep.key.ok_or_else(|| invalid("missing_key"))?;
+    super::reactions::group_key_for_sender(chat, sender, key, own).map_err(|error| match error {
+        Error::InvalidInput { reason, .. } => Error::invalid("chat_settings", reason),
+        other => other,
+    })
+}
+
 /// Validate a keep-in-chat intent: the target message must belong to `chat`.
 pub fn validate_keep(chat: &Jid, target: &MessageRef) -> Result<()> {
     if target.key.chat.jid().to_non_ad() != chat.to_non_ad() {
@@ -323,6 +347,73 @@ mod tests {
         ids::{ChatId, DeviceAddress, MessageId},
         message::MessageKey,
     };
+    #[test]
+    fn group_keep_targets_use_descriptor_keys_and_authenticated_sender_context() {
+        // Independent BV3 key=1/keepType=2 inside Message field 51.
+        // D9L.A01 0682..06b6 supplies this BZa key to BoQ, not its keeper.
+        fn fixture(participant: Option<&str>, from_me: bool, keep_type: u8) -> Vec<u8> {
+            let chat = "120363000000000001@g.us";
+            let mut key = vec![0x0a, chat.len() as u8];
+            key.extend_from_slice(chat.as_bytes());
+            key.extend_from_slice(&[0x10, u8::from(from_me), 0x1a, 6]);
+            key.extend_from_slice(b"TARGET");
+            if let Some(p) = participant {
+                key.extend_from_slice(&[0x22, p.len() as u8]);
+                key.extend_from_slice(p.as_bytes());
+            }
+            let mut keep = vec![0x0a, key.len() as u8];
+            keep.extend(key);
+            keep.extend_from_slice(&[0x10, keep_type]);
+            let mut message = vec![0x9a, 0x03, keep.len() as u8];
+            message.extend(keep);
+            message
+        }
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let own = [
+            Jid::parse("15555550199@s.whatsapp.net").unwrap(),
+            Jid::parse("222222222222222@lid").unwrap(),
+        ];
+        let actor = Jid::parse("15555550101:3@lid").unwrap();
+        let author = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+        for kind in [1, 2] {
+            let bytes = fixture(Some(&author.to_string()), false, kind);
+            let key = group_keep_target(&chat, &actor, &bytes, &own).unwrap();
+            assert_eq!(key.direction, Direction::Incoming);
+            assert_eq!(key.sender.unwrap().to_jid(), author);
+            assert_eq!(decode_keep(&bytes).unwrap().keep, kind == 1);
+            let key = group_keep_target(&chat, &actor, &fixture(None, true, kind), &own).unwrap();
+            assert_eq!(key.direction, Direction::Incoming);
+            assert_eq!(key.sender.unwrap().to_jid(), actor.to_non_ad());
+            for flag in [false, true] {
+                let key = group_keep_target(
+                    &chat,
+                    &own[1].with_device(3),
+                    &fixture(Some(&own[0].to_string()), flag, kind),
+                    &own,
+                )
+                .unwrap();
+                assert_eq!(
+                    key.direction,
+                    if flag {
+                        Direction::Outgoing
+                    } else {
+                        Direction::Incoming
+                    }
+                );
+            }
+        }
+        for kind in [0, 3] {
+            assert!(
+                matches!(group_keep_target(&chat,&actor,&fixture(Some(&author.to_string()),false,kind),&own),Err(Error::InvalidInput{reason,..}) if reason=="unsupported_keep_type")
+            );
+        }
+        assert!(
+            matches!(group_keep_target(&chat,&actor,&fixture(None,false,1),&own),Err(Error::InvalidInput{reason,..}) if reason=="missing_participant")
+        );
+        assert!(
+            matches!(group_keep_target(&chat,&actor,&fixture(Some(&author.to_string()),false,1),&[]),Err(Error::InvalidInput{reason,..}) if reason=="own_identity_missing")
+        );
+    }
 
     fn target(direction: Direction) -> MessageRef {
         let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();

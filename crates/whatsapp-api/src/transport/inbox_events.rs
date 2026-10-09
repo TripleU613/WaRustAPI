@@ -253,7 +253,7 @@ fn project(
     payload: &[u8],
     content: Option<(MessageContent, Option<u32>)>,
     poll: Option<&PollContext>,
-    reaction_target: Option<&MessageKey>,
+    reference_target: Option<&MessageKey>,
     own: &[crate::model::jid::Jid],
 ) -> SyncEvent {
     let unsupported = || {
@@ -382,7 +382,7 @@ fn project(
                 }
             };
             return SyncEvent::MessageUpdated(crate::model::message::MessageUpdate {
-                key: reaction_target.cloned().unwrap_or(target),
+                key: reference_target.cloned().unwrap_or(target),
                 change: crate::model::message::MessageChange::Reaction {
                     by,
                     emoji: reaction.emoji,
@@ -414,17 +414,26 @@ fn project(
         // docs/protocol/chat-actions.md §4): a change to an existing message,
         // never a new message event.
         if fields.contains(&51) {
+            if super::inbox::group_sender(node).is_some_and(|(_, actor)| actor.agent != 0) {
+                return unsupported();
+            }
             if fields.iter().any(|v| !matches!(v, 51 | 35)) {
                 return unsupported();
             }
             let Some(keep) = super::chat_settings::decode_keep(payload) else {
                 return unsupported();
             };
-            let Some(sender) = super::inbox::sender_for_record(key, node) else {
-                return unsupported();
+            let source = if super::inbox::group_sender(node).is_some() {
+                chat_and_sender(key, node)
+            } else {
+                super::inbox::sender_for_record(key, node).and_then(|sender| {
+                    Some((
+                        ChatId::from_jid(&sender).ok()?,
+                        DeviceAddress::from_jid(&sender).ok()?,
+                    ))
+                })
             };
-            let (Ok(chat), Ok(by)) = (ChatId::from_jid(&sender), DeviceAddress::from_jid(&sender))
-            else {
+            let Some((chat, by)) = source else {
                 return unsupported();
             };
             let server_timestamp = node
@@ -442,13 +451,23 @@ fn project(
             } else {
                 (Direction::Outgoing, None)
             };
-            return SyncEvent::MessageUpdated(crate::model::message::MessageUpdate {
-                key: MessageKey {
+            let target = if chat.jid().server == crate::model::jid::Server::Group {
+                let Ok(target) =
+                    super::chat_settings::group_keep_target(chat.jid(), &by.to_jid(), payload, own)
+                else {
+                    return unsupported();
+                };
+                target
+            } else {
+                MessageKey {
                     chat,
                     sender: target_sender,
                     direction,
                     id: keep.target_id,
-                },
+                }
+            };
+            return SyncEvent::MessageUpdated(crate::model::message::MessageUpdate {
+                key: reference_target.cloned().unwrap_or(target),
                 change: crate::model::message::MessageChange::KeepInChat {
                     by,
                     kept: keep.keep,
@@ -619,10 +638,10 @@ fn direct_reaction_target(
     }))
 }
 
-/// Group parent attribution retains the original device from a matching saved
+/// Group reaction/keep parent attribution retains the original device from a matching saved
 /// route. This binds our existing event-key layout; no raw PN/LID alias is
 /// adopted and no parent body is copied or view-once content opened.
-fn group_reaction_target(
+fn group_update_target(
     tx: &WriteTx<'_>,
     node: &Node,
     payload: &[u8],
@@ -632,15 +651,25 @@ fn group_reaction_target(
         return Ok(None);
     };
     let fields = crate::signal::direct::payload_fields(payload).unwrap_or_default();
-    if actor.agent != 0
-        || !fields.contains(&46)
-        || fields.iter().any(|f| !matches!(f, 46 | 35))
-        || super::reactions::decode(payload).is_none()
-    {
+    if actor.agent != 0 {
         return Ok(None);
     }
-    let Ok(mut target) = super::reactions::group_target_for_sender(&chat, &actor, payload, own)
-    else {
+    // APK 37.71 Bal.A01 and D9L.A01 both use BoQ for group references.
+    // Mixed top-level updates stay opaque rather than picking one by order.
+    let target = if fields.contains(&46)
+        && fields.iter().all(|f| matches!(f, 46 | 35))
+        && super::reactions::decode(payload).is_some()
+    {
+        super::reactions::group_target_for_sender(&chat, &actor, payload, own)
+    } else if fields.contains(&51)
+        && fields.iter().all(|f| matches!(f, 51 | 35))
+        && super::chat_settings::decode_keep(payload).is_some()
+    {
+        super::chat_settings::group_keep_target(&chat, &actor, payload, own)
+    } else {
+        return Ok(None);
+    };
+    let Ok(mut target) = target else {
         return Ok(None);
     };
     if target.direction == Direction::Outgoing {
@@ -711,7 +740,7 @@ pub(super) fn publish(
 ) -> Result<bool> {
     let poll = poll_context(tx, node, payload)?;
     let own = super::inbox::own_identities_in(tx)?;
-    let reaction_target = if super::inbox::group_sender(node).is_some() {
+    let reference_target = if super::inbox::group_sender(node).is_some() {
         // An already-published update remains historical evidence. A later
         // uncertain parent must not make its authenticated redelivery fail.
         let projected = tx
@@ -720,7 +749,7 @@ pub(super) fn publish(
         if projected {
             None
         } else {
-            group_reaction_target(tx, node, payload, &own)?
+            group_update_target(tx, node, payload, &own)?
         }
     } else {
         direct_reaction_target(tx, node, payload)?
@@ -737,7 +766,7 @@ pub(super) fn publish(
         payload,
         None,
         poll.as_ref(),
-        reaction_target.as_ref(),
+        reference_target.as_ref(),
         &own,
     );
     #[cfg(feature = "experimental-registration-https")]
@@ -981,11 +1010,11 @@ mod tests {
             .iter()
             .chain([&own, &own_lid, &own, &own_lid])
             .cycle()
-            .take(12)
+            .take(24)
             .enumerate()
         {
             let case = n % 6;
-            let reactor = if n < 6 { &actor } else { &own_actor };
+            let reactor = if n % 12 < 6 { &actor } else { &own_actor };
             let id = if case < 2 { "ORIGINAL" } else { "OWN" };
             let mut payload = super::super::reactions::group_payload(
                 &chat,
@@ -1008,6 +1037,19 @@ mod tests {
                     .unwrap()
                     .remote_jid = Some("120363000000000002@g.us".into());
                 payload = envelope.encode_to_vec();
+            }
+            if n >= 12 {
+                let reaction =
+                    super::super::reactions::Envelope::decode(payload.as_slice()).unwrap();
+                payload = super::super::chat_settings::Envelope {
+                    protocol: None,
+                    keep_in_chat: Some(super::super::chat_settings::KeepInChatMessage {
+                        key: reaction.reaction.unwrap().key,
+                        keep_type: Some(if n % 2 == 0 { 1 } else { 2 }),
+                        timestamp_ms: Some(42),
+                    }),
+                }
+                .encode_to_vec();
             }
             let node = group_node()
                 .attr("participant", reactor.clone())
@@ -1033,10 +1075,10 @@ mod tests {
             .iter()
             .filter(|e| matches!(e.event, SyncEvent::MessageUpdated(_)))
             .collect();
-        assert_eq!(events.len(), 12);
+        assert_eq!(events.len(), 24);
         for (n, event) in events.iter().enumerate() {
             let case = n % 6;
-            let incoming = if n < 6 {
+            let incoming = if n % 12 < 6 {
                 !(2..4).contains(&case)
             } else {
                 case < 4
@@ -1070,15 +1112,25 @@ mod tests {
                     None
                 }
             );
-            let crate::model::message::MessageChange::Reaction { by, emoji } = &update.change
-            else {
-                panic!("wrong change");
+            let by = if n < 12 {
+                let crate::model::message::MessageChange::Reaction { by, emoji } = &update.change
+                else {
+                    panic!("wrong reaction change");
+                };
+                assert_eq!(emoji.as_deref(), if n % 2 == 0 { Some("👍") } else { None });
+                by
+            } else {
+                let crate::model::message::MessageChange::KeepInChat { by, kept } = &update.change
+                else {
+                    panic!("wrong keep change");
+                };
+                assert_eq!(*kept, n % 2 == 0);
+                by
             };
             assert_eq!(
                 *by,
-                DeviceAddress::from_jid(if n < 6 { &actor } else { &own_actor }).unwrap()
+                DeviceAddress::from_jid(if n % 12 < 6 { &actor } else { &own_actor }).unwrap()
             );
-            assert_eq!(emoji.as_deref(), if n % 2 == 0 { Some("👍") } else { None });
         }
         for (key, raw) in &parents {
             assert_eq!(

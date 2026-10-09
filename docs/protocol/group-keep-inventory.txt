@@ -1,0 +1,25 @@
+# APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# xtask apk-field-refs and apk-proto-fields.
+
+# keepInChatMessage_ field references
+classes7.dex  LX/Bai;->AD7(VLL)
+  read opcode 0x54, dex byte offset: 0x48f83e
+classes7.dex  LX/Bai;->AD7(VLL)
+  write opcode 0x5b, dex byte offset: 0x48f908
+classes7.dex  LX/D9L;->A01(LL)
+  read opcode 0x54, dex byte offset: 0x76ccdc
+classes7.dex  LX/D9L;->A01(LL)
+  read opcode 0x54, dex byte offset: 0x76cd48
+classes7.dex  Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0F(V)
+  read opcode 0x54, dex byte offset: 0x8a2d74
+classes7.dex  Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0G(V)
+  read opcode 0x54, dex byte offset: 0x8a368e
+
+# BZc field-number extraction (selected row)
+  51  keepInChatMessage
+
+# BV3 field-number extraction
+# LX/BV3;  (3 fields)
+   1  key
+   2  keepType
+   3  timestampMs

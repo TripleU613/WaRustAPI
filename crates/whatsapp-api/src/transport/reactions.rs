@@ -289,6 +289,34 @@ fn group_target_context(
     own: &[Jid],
     sender: Option<&Jid>,
 ) -> Result<crate::model::message::MessageKey> {
+    if !chat.is_group() {
+        return Err(invalid("not_group_chat"));
+    }
+    let reaction = Envelope::decode(payload)
+        .map_err(|_| invalid("malformed_reaction"))?
+        .reaction
+        .ok_or_else(|| invalid("missing_reaction"))?;
+    let key = reaction.key.ok_or_else(|| invalid("missing_key"))?;
+    group_key_context(chat, key, own, sender)
+}
+
+// APK 37.71 D9L.A01 0682..06b6 also maps BV3.key through BoQ.A00.
+// Keep its authenticated sender context without serializing a fake reaction.
+pub(crate) fn group_key_for_sender(
+    chat: &Jid,
+    sender: &Jid,
+    key: Key,
+    own: &[Jid],
+) -> Result<crate::model::message::MessageKey> {
+    group_key_context(chat, key, own, Some(sender))
+}
+
+fn group_key_context(
+    chat: &Jid,
+    key: Key,
+    own: &[Jid],
+    sender: Option<&Jid>,
+) -> Result<crate::model::message::MessageKey> {
     use crate::model::{
         ids::{ChatId, DeviceAddress},
         jid::Server,
@@ -297,11 +325,6 @@ fn group_target_context(
     if chat.server != Server::Group {
         return Err(invalid("not_group_chat"));
     }
-    let reaction = Envelope::decode(payload)
-        .map_err(|_| invalid("malformed_reaction"))?
-        .reaction
-        .ok_or_else(|| invalid("missing_reaction"))?;
-    let key = reaction.key.ok_or_else(|| invalid("missing_key"))?;
     if let Some(reason) = key_failure(&key) {
         return Err(invalid(reason));
     }
@@ -525,6 +548,9 @@ mod group_tests {
             Jid::parse("222222222222222@lid").unwrap(),
         ];
         let author = Jid::parse("15555550101@lid").unwrap();
+        assert!(
+            matches!(group_target(&author, b"", &own), Err(Error::InvalidInput { reason, .. }) if reason == "not_group_chat")
+        );
         for flag in [None, Some(false), Some(true)] {
             let bytes = fixture(&chat.to_string(), Some(&author.to_string()), flag);
             let key = group_target(&chat, &bytes, &own).unwrap();

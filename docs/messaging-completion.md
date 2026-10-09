@@ -2613,3 +2613,30 @@ still inspected as target_validation=valid using their original sender routes.
 No historical markers were repaired or removed. This checks the receive runtime
 and retained references; it does not establish fresh live own-device/group
 reaction handling or human handset rendering.
+
+Group keep/unkeep receive attribution (2026-10-09, **confirmed static/local**):
+APK 37.71 D9L.A01 maps BV3.key through BoQ, just like ordinary group reactions.
+Reception now resolves the original author independently of the keeper, uses
+authenticated own-envelope context and retains matching parent devices. Incoming
+updates preserve consumed bodies, outbox facts and existing event markers.
+`lab-inbox --inspect` exposes fixed group keep target_validation labels using
+original saved routes. Direct keep projection retains its existing behavior.
+Normal group keep sending, native downstream authorization/expiry enforcement,
+and fresh live group keep/handset rendering remain unimplemented or unverified.
+See [group keep](protocol/group-keep.md).
+
+**Confirmed verification:** 780 workspace/all-feature tests passed (653 API,
+4 property, 9 crash, 50 CLI, 1 API-symbol and 63 xtask tests), together with
+strict all-target/all-feature Clippy, Rustdoc with warnings denied, default CLI,
+API/library-symbol checks, CLI-reference regeneration and formatting. Export
+and checksum revalidation reproduce six topics / 11 files / 84,246 bytes.
+Repository hygiene validates 18 APK bundles totaling 6,112,953 bytes.
+
+**Observed receive validation (2026-10-09):** one bounded 45-second window
+authenticated and stopped cleanly with chat sends and automatic reconnect
+disabled. Original captures were retained; capture rows grew from 487 to 492.
+Peer keys, actions, receipts, outbox and durable events stayed unchanged. Two
+retained group reaction targets remain valid; no retained group keep payload
+was available to validate live attribution. No fresh group keep/unkeep, group
+send or human handset rendering is claimed. Native keep timestamp ordering,
+authorization, expiry enforcement and outgoing group keep remain open gaps.

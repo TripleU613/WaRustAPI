@@ -1,0 +1,28 @@
+# APK-derived structural disassembly: LX/C2L;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <clinit>(V) flags=0x10009 registers=5
+  0000..0004 op=1a const-string v1, "UNKNOWN"
+  0004..0006 op=12 const/4 v0, #0x0
+  0006..000a op=22 new-instance v4, LX/C2L;
+  000a..0010 op=70 invoke-direct {v4, v1, v0, v0}, LX/C2L;-><init>(VLII)
+  0010..0014 op=69 sput-object v4, LX/C2L;->A03:LX/C2L;
+  0014..0018 op=1a const-string v1, "KEEP_FOR_ALL"
+  0018..001a op=12 const/4 v0, #0x1
+  001a..001e op=22 new-instance v3, LX/C2L;
+  001e..0024 op=70 invoke-direct {v3, v1, v0, v0}, LX/C2L;-><init>(VLII)
+  0024..0028 op=69 sput-object v3, LX/C2L;->A01:LX/C2L;
+  0028..002c op=1a const-string v2, "UNDO_KEEP_FOR_ALL"
+  002c..002e op=12 const/4 v0, #0x2
+  002e..0032 op=22 new-instance v1, LX/C2L;
+  0032..0038 op=70 invoke-direct {v1, v2, v0, v0}, LX/C2L;-><init>(VLII)
+  0038..003c op=69 sput-object v1, LX/C2L;->A02:LX/C2L;
+  003c..003e op=12 const/4 v0, #0x3
+  003e..0042 op=23 new-array v0, v0, [LX/C2L;
+  0042..0048 op=71 invoke-static {v4, v3, v1, v0}, LX/1xj;->A1I(VLLLL)
+  0048..004c op=69 sput-object v0, LX/C2L;->A00:[LX/C2L;
+  004c..004e op=0e return-void
+  # exception table: 0 try range(s)
+.end method

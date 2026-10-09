@@ -1,0 +1,79 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "targets": {
+    "keep-receive": {
+      "class": "LX/D9L;",
+      "method": "A01",
+      "method_shorty": "LL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/chat_settings.rs",
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "keep-descriptor": {
+      "class": "LX/BV3;",
+      "method": "dynamicMethod",
+      "method_shorty": "LLLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/chat_settings.rs",
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "message-descriptor": {
+      "class": "LX/BZc;",
+      "method": "dynamicMethod",
+      "method_shorty": "LLLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/chat_settings.rs",
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "keep-enum": {
+      "class": "LX/C2L;",
+      "method": "<clinit>",
+      "method_shorty": "V",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/chat_settings.rs",
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "keep-enum-parser": {
+      "class": "LX/C2L;",
+      "method": "forNumber",
+      "method_shorty": "LI",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/chat_settings.rs",
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "keep-outbound": {
+      "class": "LX/Bai;",
+      "method": "AD7",
+      "method_shorty": "VLL",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/chat_settings.rs",
+        "crates/whatsapp-api/src/transport/reactions.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    }
+  }
+}
