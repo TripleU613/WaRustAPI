@@ -92,9 +92,10 @@ receipt_user has 14 instruction references. ChI's two occurrences are backup
 metadata collection/map entries; BkU.A0D updates a backup migration-finished
 boolean; DOs.invoke's selected occurrence belongs to a schema/column descriptor
 collection. Their offsets and reasoning are preserved in the inventory.
-Those paths are not normal send-time INSERT evidence. The remaining generic
-schema consumers and four named untraced reference sites prevent concluding
-that no global seed/import/other writer exists.
+Those paths are not normal send-time INSERT evidence. The [four then-untraced literal sites](user-receipt-reference-roles.md) are now
+classified as backup triggers, migration errors, bulk deletion and table
+metadata. Remaining generic consumers still prevent concluding that no global
+seed/import/other writer exists.
 
 **Unknown/unported:** full normal-send user-row seeding, effective 15A admission,
 PN/LID counterpart migration, all import trust/transaction gates and cache/SQL

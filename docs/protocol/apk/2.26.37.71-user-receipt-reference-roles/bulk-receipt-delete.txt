@@ -1,0 +1,418 @@
+# APK-derived structural disassembly: LX/0zC;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0Y(VZZ) flags=0x1 registers=15
+  # full signature: LX/0zC;->A0Y(ZZ)V
+  0000..0004 op=1a const-string v0, "CoreMessageStore/deleteAllMessages deleteFiles: "
+  0004..0008 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0008..000e op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  000e..0014 op=6e invoke-virtual {v1, v13}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  0014..0018 op=1a const-string v0, " deleteChats: "
+  0018..001e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  001e..0024 op=6e invoke-virtual {v1, v14}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  0024..002a op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  002a..002c op=0c move-result-object v0
+  002c..0032 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  0032..0036 op=1a const-string v0, "msgstore/deleteallmsgs"
+  0036..003a op=22 new-instance v5, LX/0KH;
+  003a..0040 op=70 invoke-direct {v5, v0}, LX/0KH;-><init>(Ljava/lang/String;)V
+  0040..0044 op=54 iget-object v0, v12, LX/0zC;->A1I:Ljava/util/Map;
+  0044..004a op=72 invoke-interface {v0}, Ljava/util/Map;->clear()V
+  004a..004e op=54 iget-object v4, v12, LX/0zC;->A0d:LX/0Gc;
+  004e..0054 op=6e invoke-virtual {v4}, LX/0Gc;->A07()LX/0ZN;
+  0054..0056 op=0c move-result-object v2
+  0056..005c op=6e invoke-virtual {v2}, LX/0ZN;->A00()LX/1gB;
+  005c..005e op=0c move-result-object v11
+  005e..0062 op=38 if-eqz v14, +0xb
+  0062..0066 op=54 iget-object v3, v2, LX/0ZN;->A02:LX/0IY;
+  0066..006a op=1a const-string v1, "DELETE FROM chat WHERE _id IN  (SELECT c._id FROM chat AS c LEFT JOIN jid AS j ON c.jid_row_id=j._id WHERE j.type != 1)"
+  006a..006e op=1a const-string v0, "DELETE_CHAT_SQL"
+  006e..0074 op=6e invoke-virtual {v3, v1, v0}, LX/0IY;->A0H(Ljava/lang/String;Ljava/lang/String;)V
+  0074..0078 op=54 iget-object v1, v12, LX/0zC;->A0q:Ljava/util/Set;
+  0078..007e op=72 invoke-interface {v1}, Ljava/util/Set;->isEmpty()Z
+  007e..0080 op=0a move-result v0
+  0080..0084 op=39 if-nez v0, +0x9d
+  0084..0088 op=22 new-instance v0, Ljava/util/ArrayList;
+  0088..008e op=70 invoke-direct {v0, v1}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+  008e..0094 op=6e invoke-virtual {v0}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+  0094..0096 op=0c move-result-object v10
+  0096..009c op=72 invoke-interface {v10}, Ljava/util/Iterator;->hasNext()Z
+  009c..009e op=0a move-result v0
+  009e..00a2 op=38 if-eqz v0, +0x8e
+  00a2..00a8 op=72 invoke-interface {v10}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00a8..00aa op=0c move-result-object v8
+  00aa..00ae op=1f check-cast v8, LX/2w1;
+  00ae..00b2 op=54 iget-object v0, v8, LX/2w1;->A02:LX/05B;
+  00b2..00b6 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  00b6..00bc op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  00bc..00be op=0c move-result-object v0
+  00be..00c2 op=1f check-cast v0, LX/1fR;
+  00c2..00c6 op=54 iget-object v1, v0, LX/1fR;->A08:LX/1fk;
+  00c6..00ca op=62 sget-object v0, LX/1fk;->A05:LX/1fk;
+  00ca..00ce op=32 if-eq v1, v0, -0x1a
+  00ce..00d0 op=12 const/4 v7, #0x0
+  00d0..00d4 op=54 iget-object v0, v8, LX/2w1;->A04:LX/05B;
+  00d4..00d8 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  00d8..00de op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  00de..00e0 op=0c move-result-object v0
+  00e0..00e4 op=1f check-cast v0, LX/0Gc;
+  00e4..00ea op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  00ea..00ec op=0c move-result-object v6
+  00ec..00ee op=12 const/4 v0, #0x2
+  00ee..00f2 op=22 new-instance v9, Landroid/content/ContentValues;
+  00f2..00f8 op=70 invoke-direct {v9, v0}, Landroid/content/ContentValues;-><init>(I)V
+  00f8..00fc op=1a const-string v3, "message_row_id"
+  00fc..0100 op=16 const-wide/16 v0, #0xffff (-1)
+  0100..0106 op=71 invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  0106..0108 op=0c move-result-object v0
+  0108..010e op=6e invoke-virtual {v9, v3, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  010e..0114 op=1b const-string/jumbo v3, "sort_id"
+  0114..0118 op=16 const-wide/16 v0, #0x0
+  0118..011e op=71 invoke-static {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  011e..0120 op=0c move-result-object v0
+  0120..0126 op=6e invoke-virtual {v9, v3, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  0126..012a op=54 iget-object v3, v6, LX/0ZN;->A02:LX/0IY;
+  012a..012e op=1a const-string v1, "embeddings_deletion_log"
+  012e..0132 op=1a const-string v0, "EmbeddingsDeletionLogWriter"
+  0132..0138 op=6e invoke-virtual {v3, v1, v0, v9}, LX/0IY;->A06(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+  0138..013e op=6e invoke-virtual {v6}, LX/0ZN;->close()V
+  013e..0140 op=28 goto -0x54
+  0140..0142 op=0d move-exception v1
+  0142..0144 op=27 throw v1
+  0144..0146 op=0d move-exception v0
+  0146..014c op=71 invoke-static {v6, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  014c..014e op=27 throw v0
+  014e..0150 op=0d move-exception v1
+  0150..0154 op=1a const-string v0, "EmbeddingsDeletionLogWriter/onBeforeClearAll: reset sentinel write failed, index may be stale"
+  0154..015a op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+  015a..015e op=54 iget-object v0, v8, LX/2w1;->A00:LX/05B;
+  015e..0162 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0162..0168 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0168..016a op=0c move-result-object v6
+  016a..016e op=1f check-cast v6, LX/0hX;
+  016e..0172 op=54 iget-object v0, v8, LX/2w1;->A03:LX/05B;
+  0172..0176 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0176..017c op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  017c..017e op=0c move-result-object v3
+  017e..0182 op=1f check-cast v3, LX/01y;
+  0182..0186 op=13 const/16 v0, #0xe
+  0186..018a op=22 new-instance v1, LX/3Wh;
+  018a..0190 op=70 invoke-direct {v1, v8, v7, v0}, LX/3Wh;-><init>(Ljava/lang/Object;LX/0t3;I)V
+  0190..0194 op=62 sget-object v0, LX/02S;->A00:Ljava/lang/Integer;
+  0194..019a op=71 invoke-static {v0, v3, v1, v6}, LX/0tC;->A02(Ljava/lang/Integer;LX/01u;LX/09m;LX/0hX;)LX/0tX;
+  019a..019e op=29 goto/16 -0x82
+  019e..01a0 op=0d move-exception v1
+  01a0..01a4 op=1a const-string v0, "CoreMessageStore/notifyBeforeClearAll: observer failed"
+  01a4..01aa op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+  01aa..01ae op=29 goto/16 -0x8a
+  01ae..01b0 op=0d move-exception v1
+  01b0..01b4 op=1a const-string v0, "CoreMessageStore/notifyBeforeClearAll: observer set init failed"
+  01b4..01ba op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+  01ba..01c0 op=6e invoke-virtual {v4}, LX/0Gc;->A07()LX/0ZN;
+  01c0..01c2 op=0c move-result-object v3
+  01c2..01c8 op=6e invoke-virtual {v3}, LX/0ZN;->A00()LX/1gB;
+  01c8..01ca op=0c move-result-object v10
+  01ca..01ce op=54 iget-object v6, v3, LX/0ZN;->A02:LX/0IY;
+  01ce..01d2 op=1a const-string v1, "receipt_device"
+  01d2..01d6 op=1a const-string v0, "clearAllMessagesInDB/DELETE_RECEIPT_DEVICE"
+  01d6..01d8 op=12 const/4 v4, #0x0
+  01d8..01de op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  01de..01e2 op=1a const-string v1, "receipt_user"
+  01e2..01e6 op=1a const-string v0, "clearAllMessagesInDB/DELETE_RECEIPT_USER"
+  01e6..01ec op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  01ec..01f0 op=1a const-string v1, "receipt_orphaned"
+  01f0..01f4 op=1a const-string v0, "clearAllMessagesInDB/DELETE_RECEIPT_ORPHANED"
+  01f4..01fa op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  01fa..01fe op=1a const-string v0, "receipts tables"
+  01fe..0204 op=6e invoke-virtual {v5, v0}, LX/0KH;->A03(Ljava/lang/String;)J
+  0204..0208 op=1a const-string v1, "\n          UPDATE\n            chat\n          SET\n            display_message_row_id = 1,\n            unseen_message_count = 0,\n            unseen_missed_calls_count = 0,\n            unseen_row_count = 0,\n            unseen_earliest_message_received_time = 0\n        "
+  0208..020c op=1a const-string v0, "UPDATE_ALL_LAST_MESSAGES_CHAT"
+  020c..0212 op=6e invoke-virtual {v6, v1, v0}, LX/0IY;->A0H(Ljava/lang/String;Ljava/lang/String;)V
+  0212..0216 op=1a const-string v1, "media_refs"
+  0216..021a op=1a const-string v0, "clearAllMessagesInDB/DELETE_MEDIA_REFS"
+  021a..0220 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0220..0224 op=1a const-string v1, "message_streaming_sidecar"
+  0224..0228 op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_STREAMING_SIDECAR"
+  0228..022e op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  022e..0232 op=1a const-string v1, "message_thumbnail"
+  0232..0236 op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_THUMBNAIL"
+  0236..023c op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  023c..0240 op=1a const-string v1, "message_media"
+  0240..0244 op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_MEDIA"
+  0244..024a op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  024a..024e op=1a const-string v0, "media tables"
+  024e..0254 op=6e invoke-virtual {v5, v0}, LX/0KH;->A03(Ljava/lang/String;)J
+  0254..0258 op=1a const-string v1, "message_media_map"
+  0258..025c op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_MEDIA_MAP"
+  025c..0262 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0262..0266 op=1a const-string v0, "message media map tables"
+  0266..026c op=6e invoke-virtual {v5, v0}, LX/0KH;->A03(Ljava/lang/String;)J
+  026c..0270 op=1a const-string v1, "extended_media_data"
+  0270..0274 op=1a const-string v0, "clearAllMessagesInDB/DELETE_EXTENDED_MEDIA_DATA"
+  0274..027a op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  027a..027e op=1a const-string v0, "extended media data tables"
+  027e..0284 op=6e invoke-virtual {v5, v0}, LX/0KH;->A03(Ljava/lang/String;)J
+  0284..0288 op=1a const-string v1, "mms_thumbnail_metadata"
+  0288..028c op=1a const-string v0, "clearAllMessagesInDB/DELETE_MMS_THUMBNAIL_METADATA"
+  028c..0292 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0292..0296 op=1a const-string v0, "mms thumbnail metadata tables"
+  0296..029c op=6e invoke-virtual {v5, v0}, LX/0KH;->A03(Ljava/lang/String;)J
+  029c..02a0 op=1a const-string v1, "mms_metadata"
+  02a0..02a4 op=1a const-string v0, "clearAllMessagesInDB/DELETE_MMS_METADATA"
+  02a4..02aa op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  02aa..02ae op=1a const-string v0, "mms metadata tables"
+  02ae..02b4 op=6e invoke-virtual {v5, v0}, LX/0KH;->A03(Ljava/lang/String;)J
+  02b4..02b8 op=1a const-string v1, "audio_data"
+  02b8..02bc op=1a const-string v0, "clearAllMessagesInDB/DELETE_AUDIO_DATA"
+  02bc..02c2 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  02c2..02c6 op=1a const-string v0, "audio data tables"
+  02c6..02cc op=6e invoke-virtual {v5, v0}, LX/0KH;->A03(Ljava/lang/String;)J
+  02cc..02d2 op=1b const-string/jumbo v1, "transcription_segment"
+  02d2..02d6 op=1a const-string v0, "clearAllMessagesInDB/DELETE_TRANSCRIPTION_SEGMENTS"
+  02d6..02dc op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  02dc..02e2 op=1b const-string/jumbo v0, "transcription segment tables"
+  02e2..02e8 op=6e invoke-virtual {v5, v0}, LX/0KH;->A03(Ljava/lang/String;)J
+  02e8..02ec op=54 iget-object v9, v12, LX/0zC;->A0b:LX/0zp;
+  02ec..02f0 op=54 iget-object v0, v9, LX/0zp;->A05:LX/05B;
+  02f0..02f4 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  02f4..02fa op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  02fa..02fc op=0c move-result-object v0
+  02fc..0300 op=1f check-cast v0, LX/0Gc;
+  0300..0306 op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  0306..0308 op=0c move-result-object v8
+  0308..030c op=54 iget-object v7, v8, LX/0ZN;->A02:LX/0IY;
+  030c..0310 op=1a const-string v1, "frequent"
+  0310..0314 op=1a const-string v0, "deleteAllFrequents/DELETE_FREQUENT"
+  0314..031a op=6e invoke-virtual {v7, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  031a..0320 op=6e invoke-virtual {v8}, LX/0ZN;->close()V
+  0320..0326 op=1b const-string/jumbo v1, "status"
+  0326..032a op=1a const-string v0, "clearAllMessagesInDB/DELETE_STATUS_LIST_V2"
+  032a..0330 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0330..0334 op=22 new-instance v0, Ljava/util/concurrent/ConcurrentHashMap;
+  0334..033a op=70 invoke-direct {v0}, Ljava/util/concurrent/ConcurrentHashMap;-><init>()V
+  033a..033e op=5b iput-object v0, v9, LX/0zp;->A00:Ljava/util/Map;
+  033e..0342 op=1a const-string v0, "frequent tables"
+  0342..0348 op=6e invoke-virtual {v5, v0}, LX/0KH;->A03(Ljava/lang/String;)J
+  0348..034c op=1a const-string v1, "message_ftsv2"
+  034c..0350 op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_FTS"
+  0350..0356 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0356..035a op=1a const-string v1, "message_newsletter_fts"
+  035a..035e op=1a const-string v0, "clearAllMessagesInDB/DELETE_NEWSLETTER_MESSAGE_FTS"
+  035e..0364 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0364..0368 op=1a const-string v0, "fts tables"
+  0368..036e op=6e invoke-virtual {v5, v0}, LX/0KH;->A03(Ljava/lang/String;)J
+  036e..0372 op=1a const-string v1, "message_send_count"
+  0372..0376 op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_SEND_COUNT"
+  0376..037c op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  037c..0380 op=1a const-string v1, "message_location"
+  0380..0384 op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_LOCATION"
+  0384..038a op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  038a..038e op=1a const-string v1, "message_template"
+  038e..0392 op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_TEMPLATE"
+  0392..0398 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0398..039c op=1a const-string v1, "message_template_button"
+  039c..03a0 op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_TEMPLATE_BUTTON"
+  03a0..03a6 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  03a6..03aa op=1a const-string v1, "message_quoted"
+  03aa..03ae op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_QUOTED"
+  03ae..03b4 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  03b4..03b8 op=1a const-string v1, "message_mentions"
+  03b8..03bc op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_MENTIONS"
+  03bc..03c2 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  03c2..03c6 op=1a const-string v1, "message_product"
+  03c6..03ca op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_PRODUCT"
+  03ca..03d0 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  03d0..03d4 op=1a const-string v1, "message_translation_request"
+  03d4..03d8 op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_TRANSLATION_REQUEST_DATA"
+  03d8..03de op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  03de..03e2 op=1a const-string v0, "message translation request table"
+  03e2..03e8 op=6e invoke-virtual {v5, v0}, LX/0KH;->A03(Ljava/lang/String;)J
+  03e8..03ec op=1a const-string v1, "message_link"
+  03ec..03f0 op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_LINK"
+  03f0..03f6 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  03f6..03fa op=1a const-string v1, "message_future"
+  03fa..03fe op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_FUTURE"
+  03fe..0404 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0404..0408 op=1a const-string v1, "message_system"
+  0408..040c op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_SYSTEM"
+  040c..0412 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0412..0416 op=1a const-string v1, "message_text"
+  0416..041a op=1a const-string v0, "clearAllMessagesInDB/DELETE_MESSAGE_TEXT"
+  041a..0420 op=6e invoke-virtual {v6, v1, v4, v0, v4}, LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0420..0424 op=1a const-string v0, "extra data tables"
+  0424..042a op=6e invoke-virtual {v5, v0}, LX/0KH;->A03(Ljava/lang/String;)J
+  042a..042e op=1a const-string v1, "\n          DELETE FROM\n            message\n          WHERE\n            _id IS NOT 1\n        "
+  042e..0432 op=1a const-string v0, "CLEAR_ALL_MESSAGES_SQL"
+  0432..0438 op=6e invoke-virtual {v6, v1, v0}, LX/0IY;->A0H(Ljava/lang/String;Ljava/lang/String;)V
+  0438..043c op=1a const-string v0, "message table"
+  043c..0442 op=6e invoke-virtual {v5, v0}, LX/0KH;->A03(Ljava/lang/String;)J
+  0442..0446 op=13 const/16 v1, #0x2d
+  0446..044a op=22 new-instance v0, LX/3R1;
+  044a..0450 op=70 invoke-direct {v0, v12, v1}, LX/3R1;-><init>(Ljava/lang/Object;I)V
+  0450..0456 op=6e invoke-virtual {v3, v0}, LX/0ZN;->A04(Ljava/lang/Runnable;)V
+  0456..045c op=6e invoke-virtual {v10}, LX/1gB;->A00()V
+  045c..0462 op=1b const-string/jumbo v0, "set transaction"
+  0462..0468 op=6e invoke-virtual {v5, v0}, LX/0KH;->A03(Ljava/lang/String;)J
+  0468..046e op=6e invoke-virtual {v10}, LX/1gB;->close()V
+  046e..0474 op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  0474..0478 op=54 iget-object v0, v12, LX/0zC;->A0P:LX/0Fs;
+  0478..047e op=71 invoke-static {v0, v4}, LX/0Fs;->A02(LX/0Fs;LX/0Cy;)Ljava/util/Map;
+  047e..0480 op=0c move-result-object v0
+  0480..0486 op=72 invoke-interface {v0}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+  0486..0488 op=0c move-result-object v0
+  0488..048e op=72 invoke-interface {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+  048e..0490 op=0c move-result-object v4
+  0490..0496 op=72 invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
+  0496..0498 op=0a move-result v0
+  0498..049c op=38 if-eqz v0, +0x28
+  049c..04a2 op=72 invoke-interface {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  04a2..04a4 op=0c move-result-object v0
+  04a4..04a8 op=1f check-cast v0, Ljava/util/Map$Entry;
+  04a8..04ae op=72 invoke-interface {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+  04ae..04b0 op=0c move-result-object v3
+  04b0..04b4 op=1f check-cast v3, LX/0Cy;
+  04b4..04ba op=72 invoke-interface {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+  04ba..04bc op=0c move-result-object v1
+  04bc..04c0 op=1f check-cast v1, LX/0Ze;
+  04c0..04c6 op=6e invoke-virtual {v1}, LX/0Ze;->A0L()V
+  04c6..04cc op=71 invoke-static {v3}, LX/0DE;->A0c(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  04cc..04ce op=0a move-result v0
+  04ce..04d2 op=38 if-eqz v0, -0x1f
+  04d2..04d6 op=52 iget v1, v1, LX/0Ze;->A01:I
+  04d6..04d8 op=12 const/4 v0, #0x1
+  04d8..04dc op=33 if-ne v1, v0, -0x24
+  04dc..04e0 op=13 const/16 v0, #0x11
+  04e0..04e6 op=6e invoke-virtual {v12, v3, v0}, LX/0zC;->A0H(LX/0Cy;I)V
+  04e6..04e8 op=28 goto -0x2b
+  04e8..04ee op=6e invoke-virtual {v11}, LX/1gB;->A00()V
+  04ee..04f4 op=6e invoke-virtual {v11}, LX/1gB;->close()V
+  04f4..04fa op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  04fa..04fe op=1a const-string v0, "CoreMessageStore/deleteAllMessages time spent:"
+  04fe..0502 op=22 new-instance v2, Ljava/lang/StringBuilder;
+  0502..0508 op=70 invoke-direct {v2, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0508..050e op=6e invoke-virtual {v5}, LX/0KH;->A02()J
+  050e..0510 op=0b move-result-wide v0
+  0510..0516 op=6e invoke-virtual {v2, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  0516..051c op=6e invoke-virtual {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  051c..051e op=0c move-result-object v0
+  051e..0524 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  0524..0528 op=54 iget-object v2, v12, LX/0zC;->A16:LX/0HS;
+  0528..052e op=6e invoke-virtual {v2}, LX/0HS;->A0M()LX/6bv;
+  052e..0530 op=0c move-result-object v0
+  0530..0534 op=54 iget-object v0, v0, LX/6bv;->A0V:Ljava/io/File;
+  0534..053a op=71 invoke-static {v0}, LX/AzT;->A0R(Ljava/io/File;)Z
+  053a..0540 op=6e invoke-virtual {v2}, LX/0HS;->A0M()LX/6bv;
+  0540..0542 op=0c move-result-object v0
+  0542..0546 op=54 iget-object v0, v0, LX/6bv;->A0N:Ljava/io/File;
+  0546..054c op=71 invoke-static {v0}, LX/AzT;->A0R(Ljava/io/File;)Z
+  054c..0550 op=38 if-eqz v13, +0x22
+  0550..0556 op=6e invoke-virtual {v2}, LX/0HS;->A0R()Ljava/io/File;
+  0556..0558 op=0c move-result-object v1
+  0558..055e op=71 invoke-static {v1}, LX/0zC;->A07(Ljava/io/File;)Z
+  055e..0562 op=1a const-string v0, "external"
+  0562..0568 op=71 invoke-static {v0}, Landroid/provider/MediaStore$Files;->getContentUri(Ljava/lang/String;)Landroid/net/Uri;
+  0568..056a op=0c move-result-object v5
+  056a..056e op=54 iget-object v0, v2, LX/0HS;->A01:LX/00s;
+  056e..0574 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0574..0576 op=0c move-result-object v0
+  0576..057a op=1f check-cast v0, LX/0AP;
+  057a..0580 op=6e invoke-virtual {v0}, LX/0AP;->A0O()LX/0AQ;
+  0580..0582 op=0c move-result-object v4
+  0582..0586 op=39 if-nez v4, +0x19
+  0586..058a op=1a const-string v0, "MediaIO/delete-all-media cr=null"
+  058a..0590 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+  0590..0594 op=13 const/16 v1, #0x8
+  0594..0598 op=38 if-eqz v14, +0x4
+  0598..059c op=13 const/16 v1, #0x9
+  059c..05a0 op=54 iget-object v0, v12, LX/0zC;->A0L:LX/0Yq;
+  05a0..05a4 op=54 iget-object v0, v0, LX/0Yq;->A01:Landroid/os/Handler;
+  05a4..05aa op=71 invoke-static {v0, v1}, Landroid/os/Message;->obtain(Landroid/os/Handler;I)Landroid/os/Message;
+  05aa..05ac op=0c move-result-object v0
+  05ac..05b2 op=6e invoke-virtual {v0}, Landroid/os/Message;->sendToTarget()V
+  05b2..05b4 op=0e return-void
+  05b4..05b8 op=1a const-string v3, "_data LIKE ?||'%'"
+  05b8..05be op=6e invoke-virtual {v1}, Ljava/io/File;->getAbsolutePath()Ljava/lang/String;
+  05be..05c0 op=0c move-result-object v2
+  05c0..05c2 op=12 const/4 v0, #0x1
+  05c2..05c6 op=23 new-array v1, v0, [Ljava/lang/String;
+  05c6..05c8 op=12 const/4 v0, #0x0
+  05c8..05cc op=4d aput-object v2, v1, v0
+  05cc..05d2 op=72 invoke-interface {v4, v5, v3, v1}, LX/0AQ;->AKD(Landroid/net/Uri;Ljava/lang/String;[Ljava/lang/String;)I
+  05d2..05d4 op=28 goto -0x21
+  05d4..05d6 op=0d move-exception v1
+  05d6..05da op=1a const-string v0, "MediaIO/delete-all-media"
+  05da..05e0 op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+  05e0..05e2 op=28 goto -0x28
+  05e2..05e4 op=0d move-exception v1
+  05e4..05e6 op=27 throw v1
+  05e6..05e8 op=0d move-exception v0
+  05e8..05ee op=71 invoke-static {v8, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  05ee..05f0 op=27 throw v0
+  05f0..05f2 op=0d move-exception v1
+  05f2..05f8 op=6e invoke-virtual {v10}, LX/1gB;->close()V
+  05f8..05fa op=28 goto +0x5
+  05fa..05fc op=0d move-exception v0
+  05fc..0602 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  0602..0604 op=27 throw v1
+  0604..0606 op=0d move-exception v1
+  0606..060c op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  060c..060e op=28 goto +0x5
+  060e..0610 op=0d move-exception v0
+  0610..0616 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  0616..0618 op=27 throw v1
+  0618..061a op=0d move-exception v1
+  061a..0620 op=6e invoke-virtual {v11}, LX/1gB;->close()V
+  0620..0622 op=28 goto +0x5
+  0622..0624 op=0d move-exception v0
+  0624..062a op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  062a..062c op=27 throw v1
+  062c..062e op=0d move-exception v1
+  062e..0634 op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  0634..0636 op=27 throw v1
+  0636..0638 op=0d move-exception v0
+  0638..063e op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  063e..0640 op=27 throw v1
+  # exception table: 29 try range(s)
+  # catch <all> code_units 002b..0031 -> 0316
+  # catch <all> code_units 0031..0042 -> 030c
+  # catch Ljava/lang/Exception; code_units 0042..0047 -> 00d7
+  # catch <all> code_units 0042..0047 -> 030c
+  # catch <all> code_units 0047..0057 -> 030c
+  # catch Ljava/lang/Exception; code_units 0057..0068 -> 00cf
+  # catch <all> code_units 0057..0068 -> 030c
+  # catch Ljava/lang/Exception; code_units 0068..0076 -> 00a7
+  # catch Ljava/lang/Exception; code_units 0068..0076 -> 00cf
+  # catch <all> code_units 0068..0076 -> 030c
+  # catch <all> code_units 0076..009c -> 00a0
+  # catch Ljava/lang/Exception; code_units 009c..00a0 -> 00a7
+  # catch Ljava/lang/Exception; code_units 009c..00a0 -> 00cf
+  # catch <all> code_units 009c..00a0 -> 030c
+  # catch <all> code_units 00a1..00a2 -> 00a2
+  # catch Ljava/lang/Exception; code_units 00a3..00a7 -> 00a7
+  # catch Ljava/lang/Exception; code_units 00a3..00a7 -> 00cf
+  # catch <all> code_units 00a3..00a7 -> 030c
+  # catch Ljava/lang/Exception; code_units 00a7..00cf -> 00cf
+  # catch <all> code_units 00a7..00cf -> 030c
+  # catch <all> code_units 00cf..00e1 -> 030c
+  # catch <all> code_units 00e1..00e5 -> 0302
+  # catch <all> code_units 00e5..0184 -> 02f8
+  # catch <all> code_units 0184..018d -> 02f1
+  # catch <all> code_units 018d..0234 -> 02f8
+  # catch <all> code_units 0234..0237 -> 0302
+  # catch <all> code_units 0237..0277 -> 030c
+  # catch <all> code_units 0277..027a -> 0316
+  # catch Ljava/lang/UnsupportedOperationException; code_units 02da..02ea -> 02ea
+  # catch Ljava/lang/IllegalArgumentException; code_units 02da..02ea -> 02ea
+  # catch Ljava/lang/SecurityException; code_units 02da..02ea -> 02ea
+  # catch <all> code_units 02f2..02f3 -> 02f3
+  # catch <all> code_units 02f3..02f8 -> 02f8
+  # catch <all> code_units 02f9..02fd -> 02fd
+  # catch <all> code_units 02fe..0302 -> 0302
+  # catch <all> code_units 0303..0307 -> 0307
+  # catch <all> code_units 0307..030c -> 030c
+  # catch <all> code_units 030d..0311 -> 0311
+  # catch <all> code_units 0312..0316 -> 0316
+  # catch <all> code_units 0317..031a -> 031b
+.end method

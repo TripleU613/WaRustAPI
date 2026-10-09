@@ -1,0 +1,48 @@
+# APK-derived structural disassembly: LX/BcK;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(V) flags=0x10001 registers=8
+  # full signature: LX/BcK;-><init>()V
+  0000..0002 op=12 const/4 v0, #0x7
+  0002..0006 op=23 new-array v5, v0, [LX/CKy;
+  0006..0008 op=12 const/4 v6, #0x0
+  0008..000c op=1a const-string v0, "receipt_user"
+  000c..0010 op=1a const-string v4, "_id"
+  0010..0016 op=71 invoke-static {v0, v4, v6, v5}, LX/CnT;->A01(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+  0016..001a op=1a const-string v0, "receipt_device"
+  001a..0020 op=71 invoke-static {v0, v4, v6, v5}, LX/CnT;->A02(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+  0020..0024 op=1a const-string v2, "message_add_on_receipt_device"
+  0024..0028 op=1a const-string v0, "receipt_device_id"
+  0028..002c op=22 new-instance v1, LX/CKy;
+  002c..0032 op=70 invoke-direct {v1, v2, v0, v6}, LX/CKy;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  0032..0034 op=12 const/4 v0, #0x2
+  0034..0038 op=4d aput-object v1, v5, v0
+  0038..003c op=1a const-string v0, "receipt_orphaned"
+  003c..0040 op=22 new-instance v1, LX/CKy;
+  0040..0046 op=70 invoke-direct {v1, v0, v4, v6}, LX/CKy;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  0046..0048 op=12 const/4 v0, #0x3
+  0048..004c op=4d aput-object v1, v5, v0
+  004c..004e op=12 const/4 v3, #0x4
+  004e..0052 op=1a const-string v2, "played_self_receipt"
+  0052..0056 op=1a const-string v1, "message_row_id"
+  0056..005a op=22 new-instance v0, LX/CKy;
+  005a..0060 op=70 invoke-direct {v0, v2, v1, v6}, LX/CKy;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  0060..0064 op=4d aput-object v0, v5, v3
+  0064..0068 op=1a const-string v0, "receipt_coex"
+  0068..006c op=22 new-instance v1, LX/CKy;
+  006c..0072 op=70 invoke-direct {v1, v0, v4, v6}, LX/CKy;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  0072..0074 op=12 const/4 v0, #0x5
+  0074..0078 op=4d aput-object v1, v5, v0
+  0078..007c op=1a const-string v0, "message_add_on_receipt_coex"
+  007c..0080 op=22 new-instance v1, LX/CKy;
+  0080..0086 op=70 invoke-direct {v1, v0, v4, v6}, LX/CKy;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  0086..0088 op=12 const/4 v0, #0x6
+  0088..008e op=71 invoke-static {v1, v5, v0}, LX/1xf;->A1J(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/List;
+  008e..0090 op=0c move-result-object v1
+  0090..0094 op=1a const-string v0, "receipt"
+  0094..009a op=70 invoke-direct {v7, v0, v1}, LX/CnT;-><init>(Ljava/lang/String;Ljava/util/List;)V
+  009a..009c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

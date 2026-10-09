@@ -1,0 +1,21 @@
+# APK-derived structural disassembly: LX/CKy;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLL) flags=0x10001 registers=5
+  # full signature: LX/CKy;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  0000..0006 op=71 invoke-static {v2, v3}, LX/00h;->A0B(Ljava/lang/Object;Ljava/lang/Object;)V
+  0006..000c op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+  000c..0010 op=5b iput-object v2, v1, LX/CKy;->A03:Ljava/lang/String;
+  0010..0014 op=5b iput-object v3, v1, LX/CKy;->A02:Ljava/lang/String;
+  0014..0018 op=5b iput-object v4, v1, LX/CKy;->A01:Ljava/lang/String;
+  0018..001e op=71 invoke-static {}, LX/1xf;->A1D()Ljava/util/ArrayList;
+  001e..0020 op=0c move-result-object v0
+  0020..0024 op=5b iput-object v0, v1, LX/CKy;->A04:Ljava/util/List;
+  0024..002a op=71 invoke-static {}, LX/1xf;->A1D()Ljava/util/ArrayList;
+  002a..002c op=0c move-result-object v0
+  002c..0030 op=5b iput-object v0, v1, LX/CKy;->A05:Ljava/util/List;
+  0030..0032 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

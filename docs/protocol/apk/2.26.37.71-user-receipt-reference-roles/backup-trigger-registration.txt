@@ -1,0 +1,46 @@
+# APK-derived structural disassembly: LX/0LS;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(VLLL) flags=0x12 registers=9
+  # full signature: LX/0LS;->A04(LX/0Kg;Ljava/lang/String;Ljava/lang/String;)V
+  0000..0004 op=1a const-string v2, "INSERT"
+  0004..000a op=71 invoke-static {v2, v7}, LX/0LS;->A00(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  000a..000c op=0c move-result-object v1
+  000c..0010 op=1a const-string v4, "backup_changes"
+  0010..0014 op=1a const-string v3, "NEW."
+  0014..0018 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0018..001e op=70 invoke-direct {v0, v3}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  001e..0024 op=6e invoke-virtual {v0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0024..002a op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  002a..002c op=0c move-result-object v0
+  002c..0032 op=71 invoke-static {v1, v2, v7, v0}, LX/0LS;->A01(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  0032..0034 op=0c move-result-object v0
+  0034..003a op=72 invoke-interface {v6, v4, v1, v0}, LX/0Kg;->CKO(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  003a..003e op=1a const-string v2, "UPDATE"
+  003e..0044 op=71 invoke-static {v2, v7}, LX/0LS;->A00(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  0044..0046 op=0c move-result-object v1
+  0046..004a op=22 new-instance v0, Ljava/lang/StringBuilder;
+  004a..0050 op=70 invoke-direct {v0, v3}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0050..0056 op=6e invoke-virtual {v0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0056..005c op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  005c..005e op=0c move-result-object v0
+  005e..0064 op=71 invoke-static {v1, v2, v7, v0}, LX/0LS;->A01(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  0064..0066 op=0c move-result-object v0
+  0066..006c op=72 invoke-interface {v6, v4, v1, v0}, LX/0Kg;->CKO(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  006c..0070 op=1a const-string v3, "DELETE"
+  0070..0076 op=71 invoke-static {v3, v7}, LX/0LS;->A00(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  0076..0078 op=0c move-result-object v2
+  0078..007c op=1a const-string v1, "OLD."
+  007c..0080 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0080..0086 op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0086..008c op=6e invoke-virtual {v0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  008c..0092 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0092..0094 op=0c move-result-object v0
+  0094..009a op=71 invoke-static {v2, v3, v7, v0}, LX/0LS;->A01(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  009a..009c op=0c move-result-object v0
+  009c..00a2 op=72 invoke-interface {v6, v4, v2, v0}, LX/0Kg;->CKO(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  00a2..00a4 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

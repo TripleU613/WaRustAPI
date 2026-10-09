@@ -1,0 +1,23 @@
+# APK-derived structural disassembly: LX/0IY;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(ILLLL) flags=0x1 registers=9
+  # full signature: LX/0IY;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0000..0006 op=71 invoke-static {v4, v7, v8}, LX/0IY;->A01(LX/0IY;Ljava/lang/String;[Ljava/lang/Object;)V
+  0006..000c op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  000c..0010 op=54 iget-object v0, v4, LX/0IY;->A01:Landroid/database/sqlite/SQLiteDatabase;
+  0010..0016 op=6e invoke-virtual {v0, v5, v6, v8}, Landroid/database/sqlite/SQLiteDatabase;->delete(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0016..0018 op=0a move-result v3
+  0018..001c op=54 iget-object v2, v4, LX/0IY;->A03:LX/0Dg;
+  001c..0020 op=54 iget-object v1, v4, LX/0IY;->A02:Ljava/lang/String;
+  0020..0022 op=12 const/4 v0, #0x4
+  0022..0028 op=6e invoke-virtual {v2, v1, v0, v7}, LX/0Dg;->A02(Ljava/lang/String;ILjava/lang/String;)V
+  0028..002a op=0f return v3
+  002a..002c op=0d move-exception v0
+  002c..0032 op=70 invoke-direct {v4, v0}, LX/0IY;->A00(Landroid/database/sqlite/SQLiteDatabaseCorruptException;)V
+  0032..0034 op=27 throw v0
+  # exception table: 1 try range(s)
+  # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0006..000c -> 0015
+.end method

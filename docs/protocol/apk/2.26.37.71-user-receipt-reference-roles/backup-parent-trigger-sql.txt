@@ -1,0 +1,56 @@
+# APK-derived structural disassembly: LX/0LS;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(LLLLLL) flags=0x19 registers=9
+  # full signature: LX/0LS;->A02(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  0000..0004 op=1a const-string v2, "message"
+  0004..0008 op=1a const-string v0, "\n          DELETE FROM\n            backup_changes\n          WHERE\n            (table_name = '"
+  0008..000c op=22 new-instance v1, Ljava/lang/StringBuilder;
+  000c..0012 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0012..0018 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0018..001c op=1a const-string v0, "')\n            AND\n            (table_row_id = "
+  001c..0022 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0022..0028 op=6e invoke-virtual {v1, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0028..002c op=1a const-string v0, ")\n            AND\n            (\n              (operation = 'INSERT')\n              OR\n              (operation = 'UPDATE')\n            )\n          "
+  002c..0032 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0032..0038 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0038..003a op=0c move-result-object v3
+  003a..003e op=1a const-string v0, "\n        INSERT INTO\n          backup_changes (operation, table_name, table_row_id)\n        VALUES ('"
+  003e..0042 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0042..0048 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0048..004e op=6e invoke-virtual {v1, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  004e..0052 op=1a const-string v0, "', '"
+  0052..0058 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0058..005e op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  005e..0062 op=1a const-string v0, "', "
+  0062..0068 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0068..006e op=6e invoke-virtual {v1, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  006e..0072 op=1a const-string v0, ")\n      "
+  0072..0078 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0078..007e op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  007e..0080 op=0c move-result-object v2
+  0080..0084 op=1a const-string v0, "\n      CREATE TRIGGER IF NOT EXISTS "
+  0084..0088 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0088..008e op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  008e..0094 op=6e invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0094..0098 op=1a const-string v0, "\n      AFTER "
+  0098..009e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  009e..00a4 op=6e invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00a4..00a8 op=1a const-string v0, " ON "
+  00a8..00ae op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00ae..00b4 op=6e invoke-virtual {v1, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00b4..00b8 op=1a const-string v0, "\n      BEGIN\n        "
+  00b8..00be op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00be..00c4 op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00c4..00c8 op=1a const-string v0, ";\n        "
+  00c8..00ce op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00ce..00d4 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00d4..00d8 op=1a const-string v0, ";\n      END\n    "
+  00d8..00de op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00de..00e4 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00e4..00e6 op=0c move-result-object v0
+  00e6..00e8 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

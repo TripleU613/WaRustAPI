@@ -1,0 +1,58 @@
+{
+  "backup-parent-trigger-sql.txt": {
+    "bytes": 4972,
+    "sha256": "b6c09a70a8757e73f0952896eff27bd13022965c96ad8c367be6a865e6f55791"
+  },
+  "backup-receipt-triggers.txt": {
+    "bytes": 15044,
+    "sha256": "7c9df486979695beebe7942c0af604a01ceddca8bc1c2e0a31fcffc2c470c236"
+  },
+  "backup-trigger-registration.txt": {
+    "bytes": 3426,
+    "sha256": "027432c6b25e2f075acd8eea60c3bdb529b8f74a5ab271722840badf9253ca5e"
+  },
+  "backup-trigger-sql.txt": {
+    "bytes": 4870,
+    "sha256": "25f38f37325624f78b6695dd716d670d1915e2f4abcdcab0796bbcfd72e10de1"
+  },
+  "bulk-receipt-delete.txt": {
+    "bytes": 28391,
+    "sha256": "59c95249cc608156f48338521a2d90e9767093f97811da83779749fcd8f8b06e"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "receipt-category-storage.txt": {
+    "bytes": 2857,
+    "sha256": "fce0404e11051b5cf4f0ff4350920775d0083708b6e885abf9cab433b05465ef"
+  },
+  "receipt-migration-error.txt": {
+    "bytes": 39919,
+    "sha256": "3c22cd0406b99d27db2d5221d14c31a225806f61af3de65a704b6ebfe1df0fba"
+  },
+  "receipt-table-category.txt": {
+    "bytes": 2896,
+    "sha256": "2ca343cbf79bbdba08638079354eb6e210ac907108934294b11f9dee1f8525fd"
+  },
+  "receipt-table-descriptor.txt": {
+    "bytes": 1254,
+    "sha256": "b5487e4edcc4111592c311d99c61934c9f32eb0f5b0f5ff71a76b071e22f4c07"
+  },
+  "sqlite-delete-wrapper.txt": {
+    "bytes": 1540,
+    "sha256": "6dbb0bd6fbf1af5126cdba5c9985a18e49eb6a992b6affdf9fc30e1fe1f59158"
+  },
+  "targets.json": {
+    "bytes": 4462,
+    "sha256": "f7d826f62f8f0b5ed7895e6ae7d489708aa9fa26eb3cf0a28040496854a8885e"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "backup-parent-trigger-sql": {
+    "class": "LX/0LS;",
+    "file": "backup-parent-trigger-sql.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "backup-receipt-triggers": {
+    "anchors": [
+      "receipt_user"
+    ],
+    "class": "LX/0LS;",
+    "file": "backup-receipt-triggers.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "AR6",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "backup-trigger-registration": {
+    "anchors": [
+      "backup_changes",
+      "NEW.",
+      "OLD."
+    ],
+    "class": "LX/0LS;",
+    "file": "backup-trigger-registration.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "backup-trigger-sql": {
+    "class": "LX/0LS;",
+    "file": "backup-trigger-sql.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "bulk-receipt-delete": {
+    "anchors": [
+      "clearAllMessagesInDB/DELETE_RECEIPT_USER"
+    ],
+    "class": "LX/0zC;",
+    "file": "bulk-receipt-delete.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0Y",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "receipt-category-storage": {
+    "class": "LX/CnT;",
+    "file": "receipt-category-storage.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 5,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "receipt-migration-error": {
+    "anchors": [
+      "DatabaseMigration/doMigration/error; name=",
+      "receipt_user"
+    ],
+    "class": "LX/0Uw;",
+    "file": "receipt-migration-error.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "receipt-table-category": {
+    "anchors": [
+      "receipt_user",
+      "receipt"
+    ],
+    "class": "LX/BcK;",
+    "file": "receipt-table-category.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "receipt-table-descriptor": {
+    "class": "LX/CKy;",
+    "file": "receipt-table-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "sqlite-delete-wrapper": {
+    "class": "LX/0IY;",
+    "file": "sqlite-delete-wrapper.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  }
+}

@@ -148,6 +148,8 @@ Confirmed scoped negatives, not absence of every generic/dynamic writer:
 - DOs.invoke discriminator 36 -> 0600..0f6a builds schema/column descriptors;
   receipt_user occurs at 0950..0964 in its (table, column-list) pairs.
   The segment is not an ordinary send-time receipt INSERT.
-Unknown/untraced: remaining 0LS.AR6, 0Uw.A01, 0zC.A0Y, BcK.<init>
-roles and every generic table-name consumer. No absence of global seeding proven.
+Follow-up: user-receipt-reference-roles.md and its checksum bundle classify
+0LS.AR6 as backup-trigger registration, 0Uw.A01 as migration error handling,
+0zC.A0Y as bulk deletion and BcK.<init> as table metadata construction.
+Unknown/untraced: generic table-name consumers. No global seeding absence proven.
 No Rust user-row membership was reconstructed from facts or original targets.

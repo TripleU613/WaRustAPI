@@ -3014,3 +3014,18 @@ hygiene passed. Repository hygiene checked 1,463 local links and 37 bundles /
 9,133,957 bytes. No Rust runtime changed, no fresh workspace/runtime test is
 claimed, and no account or live operation ran. The prior cfda410 functional
 chunk's 810-test validation remains separate.
+
+2026-10-09 — **Confirmed static:** the four remaining exact receipt_user
+reference roles are classified: backup_changes trigger construction, migration
+error classification, whole-table deletion and receipt table metadata. The
+trigger INSERT destinations are backup_changes, not receipt_user. Generic
+consumers/normal-send user-row seeding remain unknown; primary cleanup still
+requires actual user-row existence. No runtime or account behavior changed.
+[Complete methods and reasoning](docs/protocol/user-receipt-reference-roles.md).
+
+Validation: ten source topics / 15 files / 138,158 bytes reproduce exactly from
+the pinned 37.71 APK; cached self-diff verifies ten unchanged topics and four
+metadata artifacts. CLI-reference regeneration, API/library-symbol validation,
+formatting and whitespace checks passed. No fresh workspace/runtime test or
+live operation is claimed; the prior functional validation remains separate.
+Repository hygiene checked 1,471 local links and 38 bundles / 9,272,115 bytes.
