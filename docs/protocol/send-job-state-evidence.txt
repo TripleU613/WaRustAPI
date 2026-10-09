@@ -1,0 +1,34 @@
+APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Independent raw-byte check of DNs.run selector 49 fallthrough.
+
+classes7.dex instruction start at 0x8084c4 (LX/DNs;.run, 26 registers).
+Raw first 16 instruction bytes:
+08 01 19 00 52 10 54 a3 2b 00 ec 0e 00 00 0e 00
+move-object/from16 v1,v25; iget v0,v1,field@0xa354 ($t);
+packed-switch v0 with relative code-unit offset 0x0eec; return-void.
+Switch instruction starts at byte 0x8084cc; offset 0x0eec * 2 reaches
+0x80a2a4. Raw payload first eight bytes:
+00 01 31 00 00 00 00 00
+packed-switch payload ident=0x0100, size=49, first_key=0.
+Hence represented keys are 0..48; selector 49 falls through to return-void.
+The exact 16-byte instruction prefix occurs once across classes*.dex in this APK.
+Recheck by reading those two exact ranges in the ZIP entry. This is static DEX
+control flow, not Android execution or proof that the listener map is populated.
+The disassembler's complete listener-run.txt independently names the $t field
+and all 49 case targets. Existing 0zC.A04 at 0162..017a constructs selector
+0x31 and queues it through 1f0.A02 with Message.arg1=0x19.
+
+Negative-search inventory and prior-work boundary:
+- Exact string anchor SendE2EMessageJob: no const-string references.
+- Case-sensitive substring SendE2EMessageJob: 48 strings, including the type
+  descriptor and onRun diagnostics; class lookup selects one actual class.
+  Absence of the exact short anchor is not absence of the send job.
+- Exact receipt_user: 14 references, matching the already retained
+  user-receipt-import-evidence.txt inventory. All literal roles were previously
+  resolved; no new normal-send seed was discovered by repeating that search.
+- CQl.A00 was already traced as prior device-receipt targets in groups.md.
+  Its current complete body was inspected locally, not recopied or presented as
+  a fresh recipient resolver. Target selection is not receipt_user row creation.
+- 0zq.A01's retained query reads message_send_count; its A00 validates positive
+  row_id and main storage. It does not assign message status or increment that
+  count. Helper names are not proof of mutations.

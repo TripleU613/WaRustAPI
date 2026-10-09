@@ -1,0 +1,41 @@
+# APK-derived structural disassembly: LX/CSH;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(VLLLLIIIZZ) flags=0x11 registers=14
+  # full signature: LX/CSH;->A00(LX/178;LX/CTM;Ljava/lang/Integer;Ljava/util/Collection;IIIZZ)V
+  0000..0004 op=38 if-eqz v5, +0x41
+  0004..0008 op=54 iget-object v2, v4, LX/CSH;->A02:LX/0zO;
+  0008..000a op=12 const/4 v3, #0x0
+  000a..000e op=22 new-instance v1, LX/Cnn;
+  000e..0014 op=70 invoke-direct {v1, v5, v3}, LX/Cnn;-><init>(LX/178;LX/8jl;)V
+  0014..0018 op=52 iget v0, v6, LX/CTM;->A00:I
+  0018..001c op=59 iput v0, v1, LX/Cnn;->A05:I
+  001c..0020 op=52 iget v0, v5, LX/178;->A1B:I
+  0020..0024 op=59 iput v0, v1, LX/Cnn;->A04:I
+  0024..0028 op=59 iput v11, v1, LX/Cnn;->A03:I
+  0028..002e op=71 invoke-static {v1, v7}, LX/Ayo;->A1E(LX/Cnn;Ljava/lang/Number;)V
+  002e..0032 op=52 iget v0, v5, LX/178;->A06:I
+  0032..0036 op=59 iput v0, v1, LX/Cnn;->A02:I
+  0036..003c op=72 invoke-interface {v8}, Ljava/util/Collection;->size()I
+  003c..003e op=0a move-result v0
+  003e..0042 op=59 iput v0, v1, LX/Cnn;->A00:I
+  0042..0046 op=df xor-int/lit8 v0, v13, #0x1
+  0046..004a op=5c iput-boolean v0, v1, LX/Cnn;->A0G:Z
+  004a..004e op=5c iput-boolean v13, v1, LX/Cnn;->A0F:Z
+  004e..0052 op=5c iput-boolean v12, v1, LX/Cnn;->A0H:Z
+  0052..0056 op=59 iput v10, v1, LX/Cnn;->A01:I
+  0056..005c op=71 invoke-static {v9}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  005c..005e op=0c move-result-object v0
+  005e..0062 op=5b iput-object v0, v1, LX/Cnn;->A0C:Ljava/lang/Integer;
+  0062..0066 op=5b iput-object v8, v1, LX/Cnn;->A0E:Ljava/util/Collection;
+  0066..006a op=5b iput-object v3, v1, LX/Cnn;->A09:Ljava/lang/Integer;
+  006a..0070 op=71 invoke-static {v1, v2}, LX/Cnn;->A00(LX/Cnn;LX/0zO;)V
+  0070..0074 op=54 iget-object v2, v4, LX/CSH;->A01:LX/15A;
+  0074..0078 op=54 iget-object v1, v5, LX/178;->A0i:LX/1gc;
+  0078..007c op=13 const/16 v0, #0x14
+  007c..0082 op=6e invoke-virtual {v2, v1, v3, v0}, LX/15A;->A05(LX/1gc;LX/Dbl;I)V
+  0082..0084 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

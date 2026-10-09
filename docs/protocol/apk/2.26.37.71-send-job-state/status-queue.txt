@@ -1,0 +1,29 @@
+# APK-derived structural disassembly: LX/15A;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A05(VLLI) flags=0x1 registers=12
+  # full signature: LX/15A;->A05(LX/1gc;LX/Dbl;I)V
+  0000..0002 op=07 move-object v3, v9
+  0002..0006 op=38 if-eqz v9, +0x1b
+  0006..0008 op=07 move-object v5, v8
+  0008..000c op=54 iget-object v0, v8, LX/15A;->A01:LX/05B;
+  000c..0010 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0010..0016 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0016..0018 op=0c move-result-object v1
+  0018..001c op=1f check-cast v1, LX/1f0;
+  001c..001e op=12 const/4 v7, #0x6
+  001e..0022 op=22 new-instance v2, LX/DM8;
+  0022..0024 op=07 move-object v4, v10
+  0024..0026 op=01 move v6, v11
+  0026..002c op=76 invoke-direct/range {v2..v7}, LX/DM8;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;II)V
+  002c..0030 op=13 const/16 v0, #0x24
+  0030..0036 op=6e invoke-virtual {v1, v2, v0}, LX/1f0;->A01(Ljava/lang/Runnable;I)V
+  0036..0038 op=0e return-void
+  0038..003c op=1a const-string v1, "Required value was null."
+  003c..0040 op=22 new-instance v0, Ljava/lang/IllegalStateException;
+  0040..0046 op=70 invoke-direct {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+  0046..0048 op=27 throw v0
+  # exception table: 0 try range(s)
+.end method

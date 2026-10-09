@@ -1,5 +1,17 @@
 # Evidence ledger
 
+Send-job state path (2026-10-09, **confirmed static**): post-insert DNs
+selector 49 falls through to return; independent raw switch bytes confirm it.
+The actual send job queues native states 20/21 through 15A.A05/DM8 selector 6,
+which looks up existing messages before A07. Conditional ACK/aborted/retry-count
+paths are retained without inventing runtime retry or receipt-row authority.
+No Rust, saved-account or live behavior change. [Evidence and limits](send-job-state.md).
+
+Send-job evidence validation: exact 14-topic export (19 files/268,818 bytes),
+cached self-diff, raw listener switch/branch and state-handoff assertions passed.
+CLI reference, API-symbol, formatting, whitespace and hygiene checks passed
+(2,138 links/106 APK bundles). Research/docs only; no fresh runtime or live test.
+
 ACK timing (2026-10-09, **implemented/offline tested**): matching success
 ACK facts retain parsed server time separately from local observation time,
 using the APK's Java default-zero and wrapping semantics. Historical rows remain

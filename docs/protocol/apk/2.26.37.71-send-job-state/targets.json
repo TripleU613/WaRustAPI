@@ -1,0 +1,210 @@
+{
+  "explicit-target-mode": {
+    "class": "Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;",
+    "file": "explicit-target-mode.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "handler-runnable-scheduler": {
+    "class": "LX/1f0;",
+    "file": "handler-runnable-scheduler.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "listener-init": {
+    "class": "LX/DNs;",
+    "file": "listener-init.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "listener-run": {
+    "class": "LX/DNs;",
+    "file": "listener-run.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "send-count-query": {
+    "anchors": [
+      "GET_SEND_COUNT_MESSAGE_BY_ROW_ID_SQL"
+    ],
+    "class": "LX/0zq;",
+    "file": "send-count-query.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "send-count-validation": {
+    "anchors": [
+      "SendCountMessageStore/validateMessage/message must have row_id set; key="
+    ],
+    "class": "LX/0zq;",
+    "file": "send-count-validation.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "send-event-metadata": {
+    "class": "LX/CSH;",
+    "file": "send-event-metadata.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "send-failure-state": {
+    "class": "LX/CSH;",
+    "file": "send-failure-state.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "send-job-run": {
+    "anchors": [
+      "SendE2EMessageJob/onRun "
+    ],
+    "class": "Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;",
+    "file": "send-job-run.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0G",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "send-metadata-handoff": {
+    "class": "LX/Cnn;",
+    "file": "send-metadata-handoff.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "special-send-mode": {
+    "class": "Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;",
+    "file": "special-send-mode.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "status-queue": {
+    "class": "LX/15A;",
+    "file": "status-queue.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "status-worker-init": {
+    "class": "LX/DM8;",
+    "file": "status-worker-init.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "xtask/src/xref.rs"
+    ]
+  },
+  "status-worker-run": {
+    "anchors": [
+      "MessageStatusStore/updateMessageStatusOnAsyncCommitThread nosuchmessage: "
+    ],
+    "class": "LX/DM8;",
+    "file": "status-worker-run.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "xtask/src/xref.rs"
+    ]
+  }
+}

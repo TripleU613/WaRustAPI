@@ -47,9 +47,11 @@ A04 calls 0zK.A07 metrics only for fromMe AND !A0y, then invokes
 0zC.A09(message,reason) regardless of that metrics guard. The A09 integer
 argument remains the original reason; no setter in A04 assigns it as status.
 A04 checks result A02 for a selected chat update and result A03 to log
-isWrittenToDb=false with the result error/key. Nonempty listener maps can
-queue DNs selector 49 using scheduling code 25. Full 2jQ construction,
-listener effects and transaction guarantees remain unknown.
+isWrittenToDb=false with the result error/key. On the failed-write branch, nonempty listener maps can
+queue DNs selector 49 using scheduling code 25. Its immediate runnable is now
+[confirmed inert in this build](send-job-state.md#post-insert-listener-does-not-establish-transmission):
+selector 49 takes the default return. Full 2jQ construction, other observer
+paths and transaction guarantees remain unknown.
 
 **Confirmed negative:** A0K/A0O, 3Pn selector 4 and A04 contain no direct
 message status setter and no receipt_user write. This closes their handoff;

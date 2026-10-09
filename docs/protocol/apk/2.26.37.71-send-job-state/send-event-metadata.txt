@@ -1,0 +1,31 @@
+# APK-derived structural disassembly: LX/CSH;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(VLLLLIIZZZ) flags=0x11 registers=14
+  # full signature: LX/CSH;->A01(LX/178;LX/CTM;Ljava/lang/Integer;Ljava/util/Collection;IIZZZ)V
+  0000..0004 op=38 if-eqz v5, +0x2c
+  0004..0008 op=54 iget-object v3, v4, LX/CSH;->A02:LX/0zO;
+  0008..000a op=12 const/4 v2, #0x0
+  000a..000e op=22 new-instance v1, LX/Cnn;
+  000e..0014 op=70 invoke-direct {v1, v5, v2}, LX/Cnn;-><init>(LX/178;LX/8jl;)V
+  0014..0018 op=52 iget v0, v6, LX/CTM;->A00:I
+  0018..001c op=59 iput v0, v1, LX/Cnn;->A05:I
+  001c..0020 op=59 iput v9, v1, LX/Cnn;->A04:I
+  0020..0024 op=59 iput v10, v1, LX/Cnn;->A03:I
+  0024..002a op=71 invoke-static {v1, v7}, LX/Ayo;->A1E(LX/Cnn;Ljava/lang/Number;)V
+  002a..002e op=52 iget v0, v5, LX/178;->A06:I
+  002e..0032 op=59 iput v0, v1, LX/Cnn;->A02:I
+  0032..0038 op=72 invoke-interface {v8}, Ljava/util/Collection;->size()I
+  0038..003a op=0a move-result v0
+  003a..003e op=59 iput v0, v1, LX/Cnn;->A00:I
+  003e..0042 op=5c iput-boolean v11, v1, LX/Cnn;->A0G:Z
+  0042..0046 op=5c iput-boolean v13, v1, LX/Cnn;->A0F:Z
+  0046..004a op=5c iput-boolean v12, v1, LX/Cnn;->A0H:Z
+  004a..004e op=5b iput-object v8, v1, LX/Cnn;->A0E:Ljava/util/Collection;
+  004e..0052 op=5b iput-object v2, v1, LX/Cnn;->A09:Ljava/lang/Integer;
+  0052..0058 op=71 invoke-static {v1, v3}, LX/Cnn;->A00(LX/Cnn;LX/0zO;)V
+  0058..005a op=0e return-void
+  # exception table: 0 try range(s)
+.end method

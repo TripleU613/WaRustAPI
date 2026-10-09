@@ -1,0 +1,156 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "listener-init": {
+      "class": "LX/DNs;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "listener-run": {
+      "class": "LX/DNs;",
+      "method": "run",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "handler-runnable-scheduler": {
+      "class": "LX/1f0;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "send-job-run": {
+      "class": "Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;",
+      "method": "A0G",
+      "anchors": [
+        "SendE2EMessageJob/onRun "
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "explicit-target-mode": {
+      "class": "Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;",
+      "method": "A03",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "special-send-mode": {
+      "class": "Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;",
+      "method": "A04",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "send-failure-state": {
+      "class": "LX/CSH;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "send-event-metadata": {
+      "class": "LX/CSH;",
+      "method": "A01",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "status-queue": {
+      "class": "LX/15A;",
+      "method": "A05",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "status-worker-init": {
+      "class": "LX/DM8;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "status-worker-run": {
+      "class": "LX/DM8;",
+      "method": "run",
+      "anchors": [
+        "MessageStatusStore/updateMessageStatusOnAsyncCommitThread nosuchmessage: "
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "send-count-query": {
+      "class": "LX/0zq;",
+      "method": "A01",
+      "anchors": [
+        "GET_SEND_COUNT_MESSAGE_BY_ROW_ID_SQL"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "send-count-validation": {
+      "class": "LX/0zq;",
+      "method": "A00",
+      "anchors": [
+        "SendCountMessageStore/validateMessage/message must have row_id set; key="
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "xtask/src/xref.rs"
+      ]
+    },
+    "send-metadata-handoff": {
+      "class": "LX/Cnn;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/outgoing.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "xtask/src/xref.rs"
+      ]
+    }
+  }
+}

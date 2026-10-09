@@ -1,0 +1,60 @@
+# APK-derived structural disassembly: LX/0zq;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(IL) flags=0x1 registers=8
+  # full signature: LX/0zq;->A01(LX/178;)I
+  0000..0004 op=53 iget-wide v3, v7, LX/178;->A0j:J
+  0004..0008 op=16 const-wide/16 v1, #0x0
+  0008..000a op=12 const/4 v5, #0x0
+  000a..000e op=31 cmp-long v0, v3, v1
+  000e..0012 op=3d if-lez v0, +0x4e
+  0012..0018 op=71 invoke-static {v7}, LX/0zq;->A00(LX/178;)V
+  0018..001c op=53 iget-wide v0, v7, LX/178;->A0j:J
+  001c..0022 op=71 invoke-static {v0, v1}, Ljava/lang/Long;->toString(J)Ljava/lang/String;
+  0022..0024 op=0c move-result-object v1
+  0024..0026 op=12 const/4 v0, #0x1
+  0026..002a op=23 new-array v4, v0, [Ljava/lang/String;
+  002a..002e op=4d aput-object v1, v4, v5
+  002e..0032 op=54 iget-object v0, v6, LX/0zq;->A01:LX/0Gc;
+  0032..0038 op=6e invoke-virtual {v0}, LX/0Gc;->A06()LX/0ZN;
+  0038..003a op=0c move-result-object v3
+  003a..003e op=54 iget-object v2, v3, LX/0ZN;->A02:LX/0IY;
+  003e..0042 op=1a const-string v1, "\n          SELECT\n            send_count\n          FROM\n            message_send_count\n          WHERE\n            message_row_id = ?\n        "
+  0042..0046 op=1a const-string v0, "GET_SEND_COUNT_MESSAGE_BY_ROW_ID_SQL"
+  0046..004c op=6e invoke-virtual {v2, v1, v0, v4}, LX/0IY;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+  004c..004e op=0c move-result-object v2
+  004e..0054 op=72 invoke-interface {v2}, Landroid/database/Cursor;->moveToNext()Z
+  0054..0056 op=0a move-result v0
+  0056..005a op=38 if-eqz v0, +0xd
+  005a..0060 op=1b const-string/jumbo v0, "send_count"
+  0060..0066 op=72 invoke-interface {v2, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+  0066..0068 op=0a move-result v0
+  0068..006e op=72 invoke-interface {v2, v0}, Landroid/database/Cursor;->getInt(I)I
+  006e..0070 op=0a move-result v5
+  0070..0076 op=72 invoke-interface {v2}, Landroid/database/Cursor;->close()V
+  0076..007c op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  007c..007e op=0f return v5
+  007e..0080 op=0d move-exception v1
+  0080..0084 op=38 if-eqz v2, +0xa
+  0084..008a op=72 invoke-interface {v2}, Landroid/database/Cursor;->close()V
+  008a..008c op=28 goto +0x5
+  008c..008e op=0d move-exception v0
+  008e..0094 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  0094..0096 op=27 throw v1
+  0096..0098 op=0d move-exception v1
+  0098..009e op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  009e..00a0 op=27 throw v1
+  00a0..00a2 op=0d move-exception v0
+  00a2..00a8 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00a8..00aa op=27 throw v1
+  00aa..00ac op=0f return v5
+  # exception table: 6 try range(s)
+  # catch <all> code_units 001d..0027 -> 004b
+  # catch <all> code_units 0027..0038 -> 003f
+  # catch <all> code_units 0038..003b -> 004b
+  # catch <all> code_units 0042..0046 -> 0046
+  # catch <all> code_units 0047..004b -> 004b
+  # catch <all> code_units 004c..004f -> 0050
+.end method

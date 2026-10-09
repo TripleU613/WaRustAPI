@@ -1,0 +1,74 @@
+{
+  "explicit-target-mode.txt": {
+    "bytes": 904,
+    "sha256": "40b406d8b4e01519bbb9845acabda44b51c148f13318f559d15e73f6b1dbc584"
+  },
+  "handler-runnable-scheduler.txt": {
+    "bytes": 877,
+    "sha256": "e2a9fb5b68b89f80e9491f308707900607d84dd1a22dc39bef8bed3f629719e7"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "listener-init.txt": {
+    "bytes": 841,
+    "sha256": "7e9f6eb6d01fca8141896d05546e14788f98905a9f451f7f5ae0e967265d8e86"
+  },
+  "listener-run.txt": {
+    "bytes": 120000,
+    "sha256": "57a484668bf600c18f402356538127e42afe1afcc4bcf738ee8814aa640f11dd"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "send-count-query.txt": {
+    "bytes": 3260,
+    "sha256": "7138d5dcec7c46d1c1448f282bc3c419cae7ecc8d1da7544831517cb4b9621aa"
+  },
+  "send-count-validation.txt": {
+    "bytes": 2187,
+    "sha256": "9e6b24e93676203132f29fc8a510ef4b070d1badd84c4fd4636f862ded8b9420"
+  },
+  "send-event-metadata.txt": {
+    "bytes": 1681,
+    "sha256": "dc003c4b80bc3ff50bfcd4a050f53ece87a5a5b03292aeef65fc0e276d56a984"
+  },
+  "send-failure-state.txt": {
+    "bytes": 2265,
+    "sha256": "37c9fb2dbbc4980016bef25274c87cbafbb041558691b9576fad217d4293d6ee"
+  },
+  "send-job-run.txt": {
+    "bytes": 67728,
+    "sha256": "dcabdea5add71f10afa3ef162b0298e2b3f7ed426691e5ce6174e35824d3f453"
+  },
+  "send-metadata-handoff.txt": {
+    "bytes": 630,
+    "sha256": "ae918537655663e9863458e29b5a4dc83db9550f60d37972121c129bd79fbdaa"
+  },
+  "special-send-mode.txt": {
+    "bytes": 1075,
+    "sha256": "9fa61ef9465e5f39b9e37048bd4f9d01a710ea5172174c64c02641ce5fbf0837"
+  },
+  "status-queue.txt": {
+    "bytes": 1518,
+    "sha256": "3f036b03c932cb4529dc69f879b60750baa68aa8a2ef43f73bd76a1a51bd2e7a"
+  },
+  "status-worker-init.txt": {
+    "bytes": 890,
+    "sha256": "2961b3ead8ee02195a1678c0689b98adeb7c9334b3f274681eb62db7d1d63ebb"
+  },
+  "status-worker-run.txt": {
+    "bytes": 29663,
+    "sha256": "07878eb7ee3ee379498c067820adc823452e99a01a84495fddd645baf61ca550"
+  },
+  "targets.json": {
+    "bytes": 6292,
+    "sha256": "802ed29ec83273edff1d3422e647f29e116a779e73fb9aceea1d12d39ba89c15"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}
