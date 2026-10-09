@@ -864,6 +864,13 @@ enum ContactsCmd {
 #[derive(Subcommand)]
 #[cfg(feature = "experimental-transport")]
 enum GroupCmd {
+    /// Inspect per-device receipts for one saved comparison group send (offline, redacted).
+    Receipts {
+        /// Existing private message JSON request_id; never creates or resends a message.
+        #[arg(long)]
+        request_id: String,
+    },
+
     /// Inspect saved group fan-out counts offline; does not query or queue.
     FanoutInspect {
         #[arg(long)]

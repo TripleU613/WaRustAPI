@@ -2306,3 +2306,31 @@ Offline projection upgraded zero events; saved keys, actions, receipt ACKs,
 outbox, events and retained inspection stayed identical. No new live request
 or saved-account mutation; malformed types and native runtime gates remain
 unverified live.
+
+Group participant receipts (2026-10-09, **confirmed static / local implementation**):
+APK 37.71 `Cmk`/`DDH`/`ReceiptProcessingJob`/`Cmn` retain separate message key,
+group chat and participant device through deferred receipt processing. Rust now
+tracks ordinary group delivery/read/played against the original addressed-device
+set, retaining actual PN/LID actors and companion indices. Frozen targets are a
+local guard; historical out-of-band targets remain unknown. Comparison sends
+preserve new targets before writing; `group receipts --request-id` inspects only
+redacted counts offline. Normal group send preparation, native orphaned receipt
+application/aggregation and fresh live participant attribution remain unfinished.
+[Evidence and boundaries](docs/protocol/group-receipts.md).
+
+Group receipt validation: 749 workspace/all-feature tests, strict Clippy,
+warning-free Rustdoc, default CLI/API/reference checks and formatting pass.
+The 21-method / 15-file / 124,482-byte source bundle reproduces exactly; cached
+self-comparison takes 0.019472 seconds. Offline inspection found seven saved
+group reservations across twelve request files, with zero tracked participant
+receipt devices. Projection upgraded zero events; saved peer keys, action
+outcomes, receipt ACKs, outbox, events and normalized inspection were unchanged.
+No historical receipt capture was replayed or new group send prepared.
+
+**Observed live regression:** a 45-second receive-only session authenticated,
+activated and stopped cleanly with chat sending and reconnects disabled.
+Peer keys, action outcomes, receipt ACKs, empty outbox, events and retained
+noncapture inspection stayed unchanged. Transport capture rows increased from
+442 to 446; these are not four user messages. All seven saved group summaries
+stayed unchanged with zero tracked participant receipt devices. No fresh group
+receipt established live attribution, and no uncertain send was replayed.

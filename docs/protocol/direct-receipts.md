@@ -155,3 +155,9 @@ PN/LID migration conditions, PNH_CTWA exemption, subtype-specific counterpart
 direction and the separate bot branch. Effective runtime values and complete
 application remain unknown. It also corrects malformed present `type` falling
 back to delivery; absence alone now selects that default.
+
+Later group extension (2026-10-09): [group participant receipts](group-receipts.md)
+adds a separate original-target-bound group branch and offline comparison-send
+inspection. Earlier direct-only scope statements describe this document’s
+checkpoint; native aggregation, cleanup and normal group send preparation remain
+unported.

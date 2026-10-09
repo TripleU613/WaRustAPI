@@ -233,6 +233,18 @@ Group management over the durable action queue (offline; a session transmits)
 Usage: whatsapp-cli group [OPTIONS]...
 ```
 
+## whatsapp-cli group receipts
+
+Inspect per-device receipts for one saved comparison group send (offline, redacted)
+
+```
+Usage: whatsapp-cli group receipts [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --request-id | REQUEST_ID | yes |  |  |  | Existing private message JSON request_id; never creates or resends a message |
+
 ## whatsapp-cli group fanout-inspect
 
 Inspect saved group fan-out counts offline; does not query or queue

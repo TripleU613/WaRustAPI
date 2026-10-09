@@ -1,0 +1,69 @@
+# APK-derived structural disassembly: Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0G(V) flags=0x1 registers=15
+  0000..0004 op=1a const-string v0, "ReceiptProcessingJob/onRun/start param="
+  0004..000a op=71 invoke-static {v0}, LX/1xf;->A1B(LL)
+  000a..000c op=0c move-result-object v1
+  000c..0012 op=70 invoke-direct {v14}, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->A00(L)
+  0012..0014 op=0c move-result-object v0
+  0014..001a op=71 invoke-static {v1, v0}, LX/1xj;->A1Q(VLL)
+  001a..001e op=54 iget-object v0, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->keyId:[Ljava/lang/String;
+  001e..0020 op=21 array-length v6, v0
+  0020..0026 op=71 invoke-static {v6}, LX/3c4;->A0x(LI)
+  0026..0028 op=0c move-result-object v3
+  0028..002a op=12 const/4 v4, #0x0
+  002a..002c op=12 const/4 v5, #0x0
+  002c..0030 op=35 if-ge v5, v6, +0x1e
+  0030..0034 op=54 iget-object v0, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->keyRemoteChatJidRawString:[Ljava/lang/String;
+  0034..0038 op=46 aget-object v0, v0, v5
+  0038..003e op=71 invoke-static {v0}, LX/1xf;->A0k(LL)
+  003e..0040 op=0c move-result-object v2
+  0040..0044 op=38 if-eqz v2, +0x11
+  0044..0048 op=54 iget-object v0, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->keyFromMe:[Z
+  0048..004c op=47 aget-boolean v1, v0, v5
+  004c..0050 op=54 iget-object v0, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->keyId:[Ljava/lang/String;
+  0050..0054 op=46 aget-object v0, v0, v5
+  0054..005a op=71 invoke-static {v2, v0, v1}, LX/Ayj;->A0x(LLLZ)
+  005a..005c op=0c move-result-object v0
+  005c..0062 op=6e invoke-virtual {v3, v0}, Ljava/util/AbstractCollection;->add(ZL)
+  0062..0066 op=d8 add-int/lit8 v5, v5, #0x1
+  0066..0068 op=28 goto -0x1d
+  0068..006c op=54 iget-object v1, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->remoteJidRawString:Ljava/lang/String;
+  006c..0070 op=62 sget-object v0, Lcom/whatsapp/infra/core/jid/Jid;->Companion:LX/0D1;
+  0070..0076 op=71 invoke-static {v1}, LX/0D1;->A00(LL)
+  0076..0078 op=0c move-result-object v6
+  0078..007c op=54 iget-object v0, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->recipientJidRawString:Ljava/lang/String;
+  007c..0082 op=71 invoke-static {v0}, LX/8kU;->A0d(LL)
+  0082..0084 op=0c move-result-object v7
+  0084..0088 op=54 iget-object v0, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->participantDeviceJidRawString:Ljava/lang/String;
+  0088..008e op=71 invoke-static {v0}, LX/Ayl;->A0W(LL)
+  008e..0090 op=0c move-result-object v5
+  0090..0094 op=23 new-array v0, v4, [LX/1gc;
+  0094..009a op=6e invoke-virtual {v3, v0}, Ljava/util/AbstractCollection;->toArray(LL)
+  009a..009c op=0c move-result-object v10
+  009c..00a0 op=1f check-cast v10, [LX/1gc;
+  00a0..00a4 op=52 iget v11, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->status:I
+  00a4..00a8 op=53 iget-wide v12, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->timestamp:J
+  00a8..00aa op=12 const/4 v8, #0x0
+  00aa..00ae op=54 iget-object v9, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->receiptPrivacyMode:LX/0lp;
+  00ae..00b2 op=22 new-instance v4, LX/DDH;
+  00b2..00b8 op=76 invoke-direct/range {v4..v13}, LX/DDH;-><init>(VLLLLLLIJ)
+  00b8..00bc op=55 iget-boolean v0, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->useStatusInfra:Z
+  00bc..00c0 op=38 if-eqz v0, +0xc
+  00c0..00c4 op=54 iget-object v0, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->A00:LX/Cif;
+  00c4..00ca op=6e invoke-virtual {v0, v4}, LX/Cif;->A01(LL)
+  00ca..00cc op=0c move-result-object v0
+  00cc..00d2 op=6e invoke-virtual {v0}, LX/AzY;->get(L)
+  00d2..00d4 op=0e return-void
+  00d4..00d8 op=54 iget-object v3, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->A01:LX/Cmn;
+  00d8..00dc op=52 iget v5, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->deferralCount:I
+  00dc..00e0 op=53 iget-wide v8, v14, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;->totalProcessDurationMillis:J
+  00e0..00e4 op=16 const-wide/16 v6, #0x2710
+  00e4..00ea op=74 invoke-virtual/range {v3..v9}, LX/Cmn;->A03(LLIJJ)
+  00ea..00ec op=0c move-result-object v0
+  00ec..00ee op=28 goto -0x10
+  # exception table: 0 try range(s)
+.end method

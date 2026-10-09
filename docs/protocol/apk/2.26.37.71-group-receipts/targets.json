@@ -1,0 +1,151 @@
+{
+  "group-receipt-chat": {
+    "class": "LX/Cmk;",
+    "file": "group-receipt-chat.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "group-receipt-parser": {
+    "class": "LX/Cmk;",
+    "file": "group-receipt-parser.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "method_shorty": "LLLL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "participant-device-factory": {
+    "class": "LX/0DK;",
+    "file": "participant-device-factory.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "method_shorty": "LL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "receipt-event": {
+    "class": "LX/DDH;",
+    "file": "receipt-event.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 12,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "receipt-job-scheduler": {
+    "class": "LX/Cmn;",
+    "file": "receipt-job-scheduler.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "method_shorty": "LLIJJ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "receipt-kind": {
+    "class": "LX/Cmk;",
+    "file": "receipt-kind.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "method_shorty": "IL",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "receipt-native-application": {
+    "class": "LX/Cmn;",
+    "file": "receipt-native-application.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "method_shorty": "VLIJJ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "receipt-processing-constructor": {
+    "class": "Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;",
+    "file": "receipt-processing-constructor.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "method_shorty": "VLLLLLIIJJZ",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "receipt-processing-job": {
+    "class": "Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;",
+    "file": "receipt-processing-job.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "A0G",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  },
+  "receipt-scheduler-body": {
+    "class": "LX/DMc;",
+    "file": "receipt-scheduler-body.txt",
+    "include_exception_tables": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "method_shorty": "V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/group_receipts.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-cli/src/transport_group_send.rs",
+      "crates/whatsapp-cli/src/transport_receive.rs"
+    ]
+  }
+}

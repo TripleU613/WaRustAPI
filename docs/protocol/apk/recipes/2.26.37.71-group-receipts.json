@@ -1,0 +1,125 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "targets": {
+    "group-receipt-parser": {
+      "class": "LX/Cmk;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "method": "A03",
+      "method_shorty": "LLLL"
+    },
+    "group-receipt-chat": {
+      "class": "LX/Cmk;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "method": "A02",
+      "method_shorty": "LL"
+    },
+    "receipt-kind": {
+      "class": "LX/Cmk;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "method": "A00",
+      "method_shorty": "IL"
+    },
+    "receipt-event": {
+      "class": "LX/DDH;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ]
+    },
+    "receipt-processing-job": {
+      "class": "Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "method": "A0G",
+      "method_shorty": "V"
+    },
+    "receipt-processing-constructor": {
+      "class": "Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "method": "<init>",
+      "method_shorty": "VLLLLLIIJJZ"
+    },
+    "receipt-job-scheduler": {
+      "class": "LX/Cmn;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "method": "A03",
+      "method_shorty": "LLIJJ"
+    },
+    "receipt-scheduler-body": {
+      "class": "LX/DMc;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "method": "run",
+      "method_shorty": "V"
+    },
+    "receipt-native-application": {
+      "class": "LX/Cmn;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "method": "A04",
+      "method_shorty": "VLIJJ"
+    },
+    "participant-device-factory": {
+      "class": "LX/0DK;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/group_receipts.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-cli/src/transport_group_send.rs",
+        "crates/whatsapp-cli/src/transport_receive.rs"
+      ],
+      "method": "A00",
+      "method_shorty": "LL"
+    }
+  }
+}

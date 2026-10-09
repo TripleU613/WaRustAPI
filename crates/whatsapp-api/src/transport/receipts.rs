@@ -543,7 +543,7 @@ pub struct ReceiptFacts {
     pub played: bool,
 }
 impl ReceiptFacts {
-    fn observe(&mut self, kind: &str) {
+    pub(super) fn observe(&mut self, kind: &str) {
         match kind {
             "delivery" => self.delivered = true,
             "read" => self.read = true,
@@ -559,7 +559,7 @@ pub(crate) fn jid(node: &Node, name: &str) -> Option<Jid> {
         .cloned()
         .or_else(|| Jid::parse(value.as_text()?).ok())
 }
-fn ids(node: &Node) -> Result<Vec<String>> {
+pub(super) fn ids(node: &Node) -> Result<Vec<String>> {
     let mut ids = std::collections::BTreeSet::new();
     let mut insert = |v: Option<&str>| -> Result<()> {
         let v = v
@@ -589,23 +589,32 @@ fn ids(node: &Node) -> Result<Vec<String>> {
     }
     Ok(ids.into_iter().collect())
 }
+pub(super) fn receipt_kind(node: &Node) -> Option<&str> {
+    // APK 37.71 0hs.A0M supplies a default only when the attribute is absent.
+    let kind = match node.get_attr("type") {
+        None => "delivery",
+        Some(value) => value.as_text()?,
+    };
+    matches!(kind, "delivery" | "read" | "played").then_some(kind)
+}
+
 /// Persist supported direct receipt facts, matching sends by peer AND wire ID.
-/// Unknown/group/self receipts remain raw captures, not false delivery claims.
+/// Group participant facts use group_receipts; unsupported/self routes stay raw.
 pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
+    if node.description == "receipt"
+        && jid(node, "from").is_some_and(|from| from.server == Server::Group)
+    {
+        return super::group_receipts::record(store, node);
+    }
+
     if node.description != "receipt"
         || node.get_attr("participant").is_some()
         || node.get_attr("recipient").is_some()
     {
         return Ok(0);
     }
-    // APK 37.71 0hs.A0M returns the supplied default only when the
-    // attribute is absent, not when a present value cannot be read as text.
-    let kind = match node.get_attr("type") {
-        None => "delivery",
-        Some(value) => match value.as_text() {
-            Some(kind) => kind,
-            None => return Ok(0),
-        },
+    let Some(kind) = receipt_kind(node) else {
+        return Ok(0);
     };
     if !matches!(kind, "delivery" | "read" | "played") {
         return Ok(0);

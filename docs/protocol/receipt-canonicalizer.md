@@ -157,3 +157,9 @@ network request, account mutation, registration attempt or receipt replay was
 performed in this chunk. The previous chunk's live receive check remains its
 own evidence; malformed incoming types and the native migration/bot branches
 are not newly live verified here.
+
+Later group extension (2026-10-09): [group participant receipts](group-receipts.md)
+adds a separate original-target-bound group branch and offline comparison-send
+inspection. Earlier direct-only scope statements describe this document’s
+checkpoint; native aggregation, cleanup and normal group send preparation remain
+unported.

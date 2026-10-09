@@ -115,6 +115,8 @@ pub mod sender_key_distribution;
     feature = "experimental-transport"
 ))]
 pub mod companion_admission;
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+pub mod group_receipts;
 #[cfg(all(
     feature = "experimental-registration-https",
     feature = "experimental-signal-crypto",

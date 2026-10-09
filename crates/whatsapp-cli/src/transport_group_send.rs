@@ -459,6 +459,9 @@ async fn transmit(
         "wire_id": wire_id,
         "chat": chat.to_string(),
         "devices": fanout.len(),
+        // Preserve this send's actual frozen device set even when distributions
+        // went out of band; mutable membership cannot attribute later receipts.
+        "recipient_devices": fanout.iter().map(|target| &target.device).collect::<Vec<_>>(),
         "addressing_mode": plan.addressing_mode,
         "phash": plan.participant_hash,
         "wire": wire,
@@ -696,6 +699,16 @@ async fn answer_retries(
             // A frame we cannot keep must not be acted on either.
             eprintln!("group-send: could not preserve a post-send frame ({error}); window ended");
             break;
+        }
+        match whatsapp_api::transport::receipts::record(store, &node) {
+            Ok(0) => {}
+            Ok(receipts) => println!("group-send: recorded {receipts} device receipt update(s)"),
+            Err(error) => {
+                eprintln!(
+                    "group-send: receipt correlation failed ({error}); frame preserved, window ended"
+                );
+                break;
+            }
         }
         let Some(retry) = parse_retry(&node) else {
             continue;

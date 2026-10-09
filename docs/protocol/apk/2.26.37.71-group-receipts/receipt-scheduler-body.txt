@@ -1,0 +1,22 @@
+# APK-derived structural disassembly: LX/DMc;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method run(V) flags=0x11 registers=11
+  0000..0004 op=54 iget-object v3, v10, LX/DMc;->A05:LX/Cmn;
+  0004..0008 op=54 iget-object v4, v10, LX/DMc;->A03:LX/DdM;
+  0008..000c op=53 iget-wide v6, v10, LX/DMc;->A01:J
+  000c..0010 op=52 iget v5, v10, LX/DMc;->A00:I
+  0010..0014 op=53 iget-wide v8, v10, LX/DMc;->A02:J
+  0014..0018 op=54 iget-object v2, v10, LX/DMc;->A04:LX/AzY;
+  0018..001a op=12 const/4 v1, #0x0
+  001a..0020 op=74 invoke-virtual/range {v3..v9}, LX/Cmn;->A04(VLIJJ)
+  0020..0026 op=6e invoke-virtual {v2, v1}, LX/AzY;->BjN(VL)
+  0026..0028 op=0e return-void
+  0028..002a op=0d move-exception v0
+  002a..0030 op=6e invoke-virtual {v2, v1}, LX/AzY;->BjN(VL)
+  0030..0032 op=27 throw v0
+  # exception table: 1 try range(s)
+  # catch <all> code_units 000d..0010 -> 0014
+.end method

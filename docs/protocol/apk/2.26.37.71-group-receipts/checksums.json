@@ -1,0 +1,58 @@
+{
+  "group-receipt-chat.txt": {
+    "bytes": 1379,
+    "sha256": "c930980dff6ffc40d2c65070cd3e558e2582310e71c4872763cd89f45fc8467b"
+  },
+  "group-receipt-parser.txt": {
+    "bytes": 22030,
+    "sha256": "e00ae808b7fa0349738e0fda468b7033fc7ce68b643b7c5c361abac7bb4b93c7"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "participant-device-factory.txt": {
+    "bytes": 1256,
+    "sha256": "04bde2558343ba11ecece7953ebf2153a5d05d05630710240d9ea68a8628de86"
+  },
+  "receipt-event.txt": {
+    "bytes": 4391,
+    "sha256": "781a3d18d2043a859a64fba86b61495e544a17c0b03ac9f2db04b2c2e91c176e"
+  },
+  "receipt-job-scheduler.txt": {
+    "bytes": 1232,
+    "sha256": "56efa3ba51e97838433c201514bfcc04afc1a64e7e4a4d124f4d7d3f62c849eb"
+  },
+  "receipt-kind.txt": {
+    "bytes": 2521,
+    "sha256": "da5f6769f44187616e3a941336f667236fe87841aa2e912f8239ab5d3df75021"
+  },
+  "receipt-native-application.txt": {
+    "bytes": 48511,
+    "sha256": "b6a496ff1f7929ada538da49a0bd9e63961093c3325fc1a8f071407d69fb9066"
+  },
+  "receipt-processing-constructor.txt": {
+    "bytes": 3985,
+    "sha256": "8eb07119c851e9f0048a18e830ebd58a7abafd4f511c7d6b1d953d3c056d39b1"
+  },
+  "receipt-processing-job.txt": {
+    "bytes": 4525,
+    "sha256": "74e06c9b8ec55ee71ea3b9a6c97af4c860e17970bbd022edb45273e9d20af38b"
+  },
+  "receipt-scheduler-body.txt": {
+    "bytes": 1086,
+    "sha256": "268f8759d7f83f6db3ebe6ef4e9d1024dade805fcfb72861f91bb173d24c751e"
+  },
+  "targets.json": {
+    "bytes": 5056,
+    "sha256": "c5f1f3f29fb07565c08b0fa2a0b423efa45fe0d1085c65f699448fd97c32dc58"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

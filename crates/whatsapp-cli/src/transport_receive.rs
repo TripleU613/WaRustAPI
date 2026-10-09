@@ -2208,6 +2208,18 @@ pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error
         Ok(())
     };
     match cmd {
+        super::GroupCmd::Receipts { request_id } => {
+            let request_id = whatsapp_api::model::ids::ClientRequestId::new(request_id.clone())?;
+            let summary = whatsapp_api::transport::group_receipts::summary(&store, &request_id)?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&summary).map_err(|_| Error::invalid(
+                    "group_receipt",
+                    "cannot encode group receipt summary"
+                ))?
+            );
+            Ok(())
+        }
         super::GroupCmd::FanoutInspect { chat, own, hash } => {
             let parse = |value: &str| {
                 Jid::parse(value)
@@ -2545,6 +2557,117 @@ mod tests {
     use super::*;
     use whatsapp_api::binary::Node;
     use whatsapp_api::model::jid::Jid;
+
+    #[test]
+    fn group_receipt_cli_is_offline_and_redacts_addresses() {
+        use clap::Parser;
+        const FIXTURE: &str = "TELEWHATSAPP_GROUP_RECEIPT_INSPECTION_FIXTURE";
+        const KEY: &str = "TELEWHATSAPP_GROUP_RECEIPT_INSPECTION_KEY";
+        if let Ok(path) = std::env::var(FIXTURE) {
+            for id in ["fixture", "unknown"] {
+                let cli = super::super::Cli::try_parse_from([
+                    "cli",
+                    "--store",
+                    &path,
+                    "--account",
+                    "fixture",
+                    "--key-env",
+                    KEY,
+                    "group",
+                    "receipts",
+                    "--request-id",
+                    id,
+                ])
+                .unwrap();
+                let super::super::Cmd::Group { cmd } = &cli.cmd else {
+                    panic!("group command expected");
+                };
+                group(&cli, cmd).unwrap();
+            }
+            return;
+        }
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("group-redacted.redb");
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("fixture").unwrap(),
+                key_source: Arc::new(whatsapp_api::store::StaticKeySource::new(
+                    whatsapp_api::store::MasterKey::from_bytes([4; 32]),
+                )),
+                create,
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let participant = Jid::parse("15555550100:3@s.whatsapp.net").unwrap();
+        let node = Node::new("message")
+            .attr("to", chat.clone())
+            .attr("id", "private-wire-id")
+            .children(vec![
+                Node::new("participants")
+                    .children(vec![Node::new("to").attr("jid", participant.clone())]),
+                Node::new("enc").attr("type", "skmsg").bytes(vec![1, 2, 3]),
+            ]);
+        let wire = whatsapp_api::binary::Encoder::new(TokenDictionary::comparison_2_26_37_71())
+            .encode(&node)
+            .unwrap();
+        store.write(|tx| tx.put_json(Table::Checkpoints,b"message:fixture:send",1,&serde_json::json!({"chat":chat.to_string(),"wire_id":"private-wire-id","wire":wire,"status":"server_acknowledged"}))).unwrap();
+        assert_eq!(
+            whatsapp_api::transport::receipts::record(
+                &store,
+                &Node::new("receipt")
+                    .attr("from", chat)
+                    .attr("participant", participant)
+                    .attr("id", "private-wire-id")
+            )
+            .unwrap(),
+            1
+        );
+        let before = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.scan(Table::Outbox, 1, 100)?,
+                    tx.journal_head()?,
+                ))
+            })
+            .unwrap();
+        drop(store);
+        let output = std::process::Command::new(std::env::current_exe().unwrap())
+            .args([
+                "--exact",
+                "transport_receive::tests::group_receipt_cli_is_offline_and_redacts_addresses",
+                "--nocapture",
+            ])
+            .env(FIXTURE, &path)
+            .env(KEY, hex::encode([4; 32]))
+            .output()
+            .unwrap();
+        assert!(output.status.success());
+        let stdout = String::from_utf8(output.stdout).unwrap();
+        let stderr = String::from_utf8(output.stderr).unwrap();
+        assert!(
+            stdout.contains("\"addressed_devices\": 1")
+                && stdout.contains("\"delivered_devices\": 1")
+                && stdout.contains("null")
+        );
+        for secret in ["15555550100", "120363000000000001", "private-wire-id"] {
+            assert!(!stdout.contains(secret) && !stderr.contains(secret));
+        }
+        let store = open(false);
+        assert_eq!(
+            before,
+            store
+                .read(|tx| Ok((
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.scan(Table::Outbox, 1, 100)?,
+                    tx.journal_head()?
+                )))
+                .unwrap()
+        );
+    }
 
     #[tokio::test]
     async fn malformed_addon_inspection_still_explains_the_key_refusal() {
