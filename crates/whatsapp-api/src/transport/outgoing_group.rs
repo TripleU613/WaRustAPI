@@ -138,6 +138,205 @@ pub(super) mod tests {
             .unwrap()
     }
     #[tokio::test]
+    async fn normal_group_references_decrypt_with_exact_participants_and_never_replay() {
+        use super::super::group_references::tests::{reference, save_parent};
+        for lid in [false, true] {
+            for kind in [
+                "reply",
+                "reaction",
+                "remove",
+                "own_reply",
+                "own_reaction",
+                "changed_target",
+            ] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("group-reference-actor.redb");
+                let store = group_fanout::tests::open(&path);
+                let f = group_fanout::tests::fixture();
+                let own = if lid {
+                    Jid::parse("111111111111111@lid").unwrap()
+                } else {
+                    f.plan.own.clone()
+                };
+                let peer = if lid {
+                    Jid::parse("222222222222222@lid").unwrap()
+                } else {
+                    f.plan.devices[0].clone()
+                };
+                if lid {
+                    store
+                        .write(|tx| group_send::record_own_lid(tx, &own))
+                        .unwrap();
+                }
+                let ours = kind.starts_with("own_");
+                let target = reference(&f.plan.chat, &peer, ours);
+                save_parent(
+                    &store,
+                    &f.plan.chat,
+                    &peer,
+                    &super::super::quotes::conversation("retained group text"),
+                )
+                .unwrap();
+                let reaction = kind.contains("reaction") || kind == "remove";
+                let content = if reaction {
+                    MessageContent::Reaction {
+                        target,
+                        emoji: if kind == "remove" {
+                            None
+                        } else {
+                            Some("👍".into())
+                        },
+                    }
+                } else {
+                    MessageContent::Text {
+                        body: "quoted group reply".into(),
+                        quoted: Some(target),
+                        style: Default::default(),
+                    }
+                };
+                let id = store
+                    .write(|tx| {
+                        Ok(outbox()
+                            .enqueue(
+                                tx,
+                                &SendRequest {
+                                    client_request_id: ClientRequestId::new(
+                                        "original-group-reference",
+                                    )?,
+                                    chat: ChatId::from_jid(&f.plan.chat)?,
+                                    content,
+                                },
+                            )?
+                            .0
+                            .local_id)
+                    })
+                    .unwrap();
+                let original = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
+                let (mut pending, mut query) = begin_selected(&store, id).unwrap().unwrap();
+                let mut cursor = devices::DeviceSyncCursor::default();
+                let mut sent = None;
+                for _ in 0..3 {
+                    let reply = match query.get_attr("xmlns").and_then(|v| v.as_text()) {
+                        Some("w:g2") => membership(&query, &own, std::slice::from_ref(&peer)),
+                        Some("usync") => device_reply(&query),
+                        Some("encrypt") => {
+                            if kind == "changed_target" {
+                                save_parent(
+                                    &store,
+                                    &f.plan.chat,
+                                    &Jid::parse("333333333333333@lid").unwrap(),
+                                    &super::super::quotes::conversation("different sender"),
+                                )
+                                .unwrap();
+                            }
+                            key_reply(&query, &f)
+                        }
+                        _ => panic!("unexpected query"),
+                    };
+                    let step = pending
+                        .settle(&store, &f.alice, &reply, ConnectionEpoch(29), &mut cursor)
+                        .await
+                        .unwrap();
+                    if let Some(next) = step.pending {
+                        pending = next;
+                        query = step.node.unwrap();
+                    } else {
+                        sent = step.node;
+                        break;
+                    }
+                }
+                let entry = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
+                if kind == "changed_target" {
+                    assert!(sent.is_none());
+                    assert_eq!(entry, original);
+                    assert_eq!(
+                        preparation(&store, id)
+                            .unwrap()
+                            .unwrap()
+                            .blocking_reason
+                            .as_deref(),
+                        Some("reference_changed")
+                    );
+                } else {
+                    let node = sent.unwrap();
+                    let skmsg = node.child("enc").unwrap();
+                    assert_eq!(skmsg.get_attr("decrypt-fail").is_some(), reaction);
+                    assert_eq!(node.child("meta").is_some(), reaction);
+                    let target = node.child("participants").unwrap().child_nodes()[0]
+                        .child("enc")
+                        .unwrap();
+                    let bytes = |n: &Node| match &n.content {
+                        crate::binary::NodeContent::Bytes(b) => b.to_vec(),
+                        _ => panic!("ciphertext"),
+                    };
+                    let mut bob = f.bobs[0].0.clone();
+                    bob.own_jid = Some(peer.clone());
+                    let decoded = direct::receive_prekey(
+                        &bob,
+                        &own,
+                        (None, None),
+                        &f.bobs[0].1,
+                        None,
+                        &bytes(target),
+                    )
+                    .await
+                    .unwrap();
+                    let (_, skdm) =
+                        group::extract_skdm_from_payload(&decoded.received.plaintext).unwrap();
+                    let installed = group::process_skdm(&f.plan.chat, &own, vec![], None, &skdm)
+                        .await
+                        .unwrap();
+                    let body = group::receive_group(
+                        &f.plan.chat,
+                        &own,
+                        Some(&installed.updated_key),
+                        &bytes(skmsg),
+                    )
+                    .await
+                    .unwrap()
+                    .unwrap();
+                    let expected = if ours {
+                        own.to_non_ad()
+                    } else {
+                        peer.to_non_ad()
+                    };
+                    if reaction {
+                        let decoded = super::super::reactions::decode(&body.plaintext).unwrap();
+                        assert_eq!(decoded.target_from_sender, ours);
+                        assert_eq!(decoded.emoji.is_none(), kind == "remove");
+                        assert_eq!(
+                            super::super::reactions::key_fields(&body.plaintext).unwrap(),
+                            (Some(f.plan.chat.to_string()), true)
+                        );
+                        assert!(
+                            body.plaintext
+                                .windows(expected.to_string().len())
+                                .any(|w| w == expected.to_string().as_bytes())
+                        );
+                    } else {
+                        let decoded = super::super::quotes::decode(&body.plaintext).unwrap();
+                        assert_eq!(decoded.participant, Some(expected.to_string()));
+                        assert_eq!(decoded.stanza_id.as_deref(), Some("ORIGINAL-TARGET"));
+                        assert_eq!(
+                            super::super::quotes::decode(&decoded.quoted.unwrap())
+                                .unwrap()
+                                .text,
+                            if ours { "" } else { "retained group text" }
+                        );
+                    }
+                    assert_eq!(entry.attempts.len(), 1);
+                    assert!(entry.status().is_uncertain());
+                }
+                let before = rows(&store);
+                assert!(begin_selected(&store, id).unwrap().is_none());
+                assert_eq!(before, rows(&store));
+                drop(store);
+                let reopened = group_fanout::tests::open(&path);
+                assert_eq!(before, rows(&reopened));
+            }
+        }
+    }
+    #[tokio::test]
     async fn normal_actor_uses_only_explicit_signed_remote_replacement_policy() {
         for mode in ["accept", "pinned", "own_alias", "bad_signature"] {
             let dir = tempfile::tempdir().unwrap();
@@ -839,6 +1038,7 @@ enum Block {
     PreparationChanged,
     ForeignKeyHistory,
     CompanionAuthorityChanged,
+    ReferenceChanged,
 }
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 struct Row {
@@ -1002,6 +1202,7 @@ impl Step {
 fn payload(
     store: &ProtocolStore,
     entry: &OutboxEntry,
+    own: Option<&Jid>,
 ) -> Result<(Zeroizing<Vec<u8>>, groups::StanzaContent<'static>)> {
     match &entry.intent.content {
         MessageContent::Text {
@@ -1012,6 +1213,26 @@ fn payload(
             Zeroizing::new(group_send::text_payload(body)?),
             groups::StanzaContent::Text,
         )),
+        MessageContent::Text {
+            quoted: Some(_), ..
+        }
+        | MessageContent::Reaction { .. } => {
+            super::group_references::validate(
+                store,
+                entry.intent.chat.jid(),
+                &entry.intent.content,
+            )?;
+            let Some(own) = own else {
+                return Ok((Zeroizing::new(Vec::new()), groups::StanzaContent::Text));
+            };
+            let (body, kind) = super::group_references::payload(
+                store,
+                entry.intent.chat.jid(),
+                own,
+                &entry.intent.content,
+            )?;
+            Ok((Zeroizing::new(body), kind))
+        }
         MessageContent::Media {
             reference,
             caption: None,
@@ -1061,7 +1282,7 @@ pub(crate) fn begin_selected(
         })?
         .is_some()
         || device_key_batches::summary(store, &entry.client_request_id)?.is_some();
-    let supported = match payload(store, &entry) {
+    let supported = match payload(store, &entry, None) {
         Ok(_) => true,
         Err(Error::InvalidInput { .. }) => false,
         Err(error) => return Err(error),
@@ -1436,7 +1657,13 @@ impl Pending {
                     &bundle_selector(self.entry.local_id)?,
                     &self.needed,
                 )?;
-                let (body, content) = payload(store, &self.entry)?;
+                let (body, content) = match payload(store, &self.entry, self.own.as_ref()) {
+                    Ok(value) => value,
+                    Err(Error::InvalidInput { .. }) => {
+                        return self.block(store, Block::ReferenceChanged);
+                    }
+                    Err(error) => return Err(error),
+                };
                 let prepared = match self
                     .snapshot
                     .take()

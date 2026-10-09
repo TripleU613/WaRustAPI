@@ -2499,3 +2499,18 @@ Clippy, Rustdoc, default CLI/API/reference/format and hygiene checks passed.
 A 45-second receive-only check authenticated and stopped cleanly; peer keys,
 actions, receipts, outbox and events stayed unchanged. Five transport captures
 were added. No live outgoing group identity transition was tested.
+
+Typed group quotes/reactions (2026-10-09, **confirmed local implementation**):
+reply/react now accept an original --participant for incoming group targets and
+--ours derives frozen own identity. Normal fanout carries the existing APK
+quote/reaction encodings, checks retained parent attribution, and blocks late
+reference changes without a wire attempt. Existing default IDs/queued records
+are preserved. Private JSON quote, media quotes, incoming group/id collisions
+and fresh live group rendering remain unfinished.
+
+Typed group reference validation: 773 workspace/all-feature tests and strict
+Clippy, Rustdoc, default CLI/API/reference/format and hygiene checks passed.
+A 45-second receive-only check authenticated and stopped cleanly with sends and
+reconnect disabled; peer keys, actions, receipts, outbox and events stayed
+unchanged. Five transport captures were added. Group quote/reaction handset
+rendering and the participant-aware incoming storage port remain unverified.

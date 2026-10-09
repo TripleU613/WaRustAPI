@@ -403,6 +403,9 @@ enum Cmd {
         /// The target message was sent by this account (default: by the contact).
         #[arg(long)]
         ours: bool,
+        /// Original sender PN/LID JID; required for an incoming group target.
+        #[arg(long, conflicts_with = "ours")]
+        participant: Option<String>,
         /// Caller idempotency key; defaults to `react-<id>-<emoji-hex or remove>`.
         #[arg(long)]
         request_id: Option<String>,
@@ -502,7 +505,7 @@ enum Cmd {
         #[arg(long)]
         seconds: u32,
     },
-    /// Queue a quoted reply to a message in a direct chat.
+    /// Queue a quoted text reply to a message in a direct chat or group.
     Reply {
         /// Chat JID.
         #[arg(long)]
@@ -516,6 +519,9 @@ enum Cmd {
         /// The quoted message was sent by this account (default: by the contact).
         #[arg(long)]
         ours: bool,
+        /// Original sender PN/LID JID; required for an incoming group target.
+        #[arg(long, conflicts_with = "ours")]
+        participant: Option<String>,
         /// Caller idempotency key; defaults to a content digest.
         #[arg(long)]
         request_id: Option<String>,
@@ -2035,34 +2041,16 @@ async fn run(cli: Cli) -> Result<(), Error> {
             emoji,
             remove,
             ours,
+            participant,
             request_id,
             dry_run,
         } => {
-            use whatsapp_api::model::{
-                ids::{DeviceAddress, MessageId},
-                message::{Direction, MessageKey, MessageRef},
-            };
             if emoji.is_some() == *remove {
                 return Err(Error::invalid("emoji", "pass --emoji <text> or --remove"));
             }
             let peer = Jid::parse(chat)?;
             let chat_id = ChatId::from_jid(&peer)?;
-            let target = MessageRef {
-                key: MessageKey {
-                    chat: chat_id.clone(),
-                    sender: if *ours {
-                        None
-                    } else {
-                        Some(DeviceAddress::from_jid(&peer)?)
-                    },
-                    direction: if *ours {
-                        Direction::Outgoing
-                    } else {
-                        Direction::Incoming
-                    },
-                    id: MessageId::new(id.clone())?,
-                },
-            };
+            let target = message_reference(&peer, id, *ours, participant.as_deref())?;
             let request_id = request_id.clone().unwrap_or_else(|| {
                 format!(
                     "react-{}-{}",
@@ -2075,7 +2063,33 @@ async fn run(cli: Cli) -> Result<(), Error> {
             });
             let c = open_client(&cli, false).await?;
             #[cfg(feature = "experimental-transport")]
+            if peer.server == whatsapp_api::model::jid::Server::Group {
+                whatsapp_api::transport::group_references::validate(
+                    c.store(),
+                    &peer,
+                    &MessageContent::Reaction {
+                        target: target.clone(),
+                        emoji: emoji.clone(),
+                    },
+                )?;
+            }
+            #[cfg(feature = "experimental-transport")]
             if *dry_run {
+                if peer.server == whatsapp_api::model::jid::Server::Group {
+                    whatsapp_api::transport::group_references::validate(
+                        c.store(),
+                        &peer,
+                        &MessageContent::Reaction {
+                            target: target.clone(),
+                            emoji: emoji.clone(),
+                        },
+                    )?;
+                    println!(
+                        "react: dry run; group key retains chat and original participant; no enqueue"
+                    );
+                    c.shutdown().await;
+                    return Ok(());
+                }
                 let lid = whatsapp_api::transport::inbox::lid_for(c.store(), &peer)?;
                 println!(
                     "react: dry run; key remoteJid would use the contact's {}",
@@ -2106,7 +2120,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
                     .map_err(|e| Error::invalid("ticket", e.to_string()))?
             );
             #[cfg(feature = "experimental-transport")]
-            {
+            if peer.server != whatsapp_api::model::jid::Server::Group {
                 let lid = whatsapp_api::transport::inbox::lid_for(c.store(), &peer)?;
                 eprintln!(
                     "note: reaction key remoteJid will use the contact's {}",
@@ -2160,36 +2174,30 @@ async fn run(cli: Cli) -> Result<(), Error> {
             id,
             text,
             ours,
+            participant,
             request_id,
         } => {
             use sha2::Digest;
-            use whatsapp_api::model::{
-                ids::{DeviceAddress, MessageId},
-                message::{Direction, MessageKey, MessageRef},
-            };
             let peer = Jid::parse(chat)?;
             let chat_id = ChatId::from_jid(&peer)?;
+            let quoted = message_reference(&peer, id, *ours, participant.as_deref())?;
             let digest = sha2::Sha256::digest(text.as_bytes());
             let request_id = request_id
                 .clone()
                 .unwrap_or_else(|| format!("reply-{id}-{}", hex::encode(&digest[..8])));
-            let quoted = MessageRef {
-                key: MessageKey {
-                    chat: chat_id.clone(),
-                    sender: if *ours {
-                        None
-                    } else {
-                        Some(DeviceAddress::from_jid(&peer)?)
-                    },
-                    direction: if *ours {
-                        Direction::Outgoing
-                    } else {
-                        Direction::Incoming
-                    },
-                    id: MessageId::new(id.clone())?,
-                },
-            };
             let c = open_client(&cli, false).await?;
+            #[cfg(feature = "experimental-transport")]
+            if peer.server == whatsapp_api::model::jid::Server::Group {
+                whatsapp_api::transport::group_references::validate(
+                    c.store(),
+                    &peer,
+                    &MessageContent::Text {
+                        body: text.clone(),
+                        quoted: Some(quoted.clone()),
+                        style: Default::default(),
+                    },
+                )?;
+            }
             let ticket = c
                 .send_message(SendRequest {
                     client_request_id: ClientRequestId::new(request_id)?,
@@ -2599,6 +2607,67 @@ fn master_key_bytes(key: &MasterKey) -> Zeroizing<Vec<u8>> {
     Zeroizing::new(key.to_hex_bytes())
 }
 
+fn message_reference(
+    peer: &Jid,
+    id: &str,
+    ours: bool,
+    participant: Option<&str>,
+) -> Result<whatsapp_api::model::message::MessageRef, Error> {
+    use whatsapp_api::model::{
+        ids::{DeviceAddress, MessageId},
+        message::{Direction, MessageKey, MessageRef},
+    };
+    let sender = if peer.server == whatsapp_api::model::jid::Server::Group {
+        if ours {
+            if participant.is_some() {
+                return Err(Error::invalid(
+                    "participant",
+                    "--ours derives the frozen own group identity",
+                ));
+            }
+            None
+        } else {
+            let sender = Jid::parse(participant.ok_or_else(|| {
+                Error::invalid(
+                    "participant",
+                    "incoming group target requires --participant <PN-or-LID-JID>",
+                )
+            })?)?;
+            if !sender.is_user_like() || sender.agent != 0 {
+                return Err(Error::invalid(
+                    "participant",
+                    "must be a user PN/LID identity without an agent component",
+                ));
+            }
+            Some(DeviceAddress::from_jid(&sender)?)
+        }
+    } else {
+        if participant.is_some() {
+            return Err(Error::invalid(
+                "participant",
+                "only incoming group targets take --participant",
+            ));
+        }
+        if ours {
+            None
+        } else {
+            Some(DeviceAddress::from_jid(peer)?)
+        }
+    };
+    Ok(MessageRef {
+        key: MessageKey {
+            chat: ChatId::from_jid(peer)?,
+            sender,
+            direction: if ours {
+                Direction::Outgoing
+            } else {
+                Direction::Incoming
+            },
+            id: MessageId::new(id)?,
+        },
+    })
+}
+
 #[tokio::main]
 async fn main() -> ExitCode {
     let matches = <Cli as clap::CommandFactory>::command().get_matches();
@@ -2823,5 +2892,51 @@ mod openapi_coverage {
             }
             panic!("{}", msg);
         }
+    }
+}
+
+#[cfg(test)]
+mod group_reference_cli_tests {
+    use super::*;
+    #[test]
+    fn group_references_require_the_participant_and_keep_ours_distinct() {
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        assert!(message_reference(&chat, "M1", false, None).is_err());
+        let key = message_reference(&chat, "M1", false, Some("222222222222222:3@lid")).unwrap();
+        assert_eq!(
+            key.key.sender.unwrap().to_jid(),
+            Jid::parse("222222222222222:3@lid").unwrap()
+        );
+        let ours = message_reference(&chat, "M1", true, None).unwrap();
+        assert!(ours.key.sender.is_none());
+        assert!(message_reference(&chat, "M1", true, Some("222222222222222@lid")).is_err());
+        assert!(message_reference(&chat, "M1", false, Some("123@g.us")).is_err());
+        let agent = Jid::new_ad(
+            "222222222222222".to_owned(),
+            1,
+            3,
+            whatsapp_api::model::jid::Server::Lid,
+        )
+        .unwrap();
+        assert!(message_reference(&chat, "M1", false, Some(&agent.to_string())).is_err());
+        let direct = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        assert!(message_reference(&direct, "M1", false, Some("222222222222222@lid")).is_err());
+        assert!(message_reference(&direct, "M1", false, None).is_ok());
+        assert!(
+            Cli::try_parse_from([
+                "whatsapp-cli",
+                "reply",
+                "--chat",
+                "123@g.us",
+                "--id",
+                "M1",
+                "--text",
+                "reply",
+                "--ours",
+                "--participant",
+                "222@lid"
+            ])
+            .is_err()
+        );
     }
 }

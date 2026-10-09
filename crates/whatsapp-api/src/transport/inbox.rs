@@ -1215,7 +1215,8 @@ async fn process_group_inner(
     if direct_enc.is_none() && sk_enc.is_none() {
         return Ok(IncomingResult::Unsupported);
     }
-    // Inbox key: the group and the server-assigned id identify the stanza.
+    // Legacy local inbox key omits the participant. Same-id member collisions
+    // remain a receive gap; group reference lookup must verify the saved route.
     let key = format!("received:{group_jid}:{id}");
     if let Some(saved) =
         store.read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))?

@@ -142,9 +142,10 @@ locally before reconnecting. A blocked/uncertain old JSON never changes its ID t
 resend. The selected CLI's overall ACK wait remains 60 seconds; the library
 receive duration can be configured independently through existing commands.
 
-**Not supplied by this first actor port:** group quotes/reactions/polls/settings,
-view-once JSON, explicit fresh sessions or out-of-band SKDM distribution. Those
-JSON modes fail explicitly before store/upload access instead of silently losing
+**Remaining first-port gaps:** group polls/settings,
+view-once JSON, explicit fresh sessions or out-of-band SKDM distribution. Group
+private-JSON quote remains on the comparison path; normal typed quotes/reactions
+are described below. Those unsupported JSON modes fail explicitly before store/upload access instead of silently losing
 fields; the comparison path retains its existing capabilities. Group peer pin
 replacement uses the explicit outgoing signed-bundle policy described below.
 The default remains pinned and reports `peer_identity_changed`. Companion
@@ -289,3 +290,91 @@ unchanged. Capture rows increased from 451 to 456; these transport captures are
 not counted as user replies or delivery facts. Offline inspection found zero
 saved normal-group preparations. No group was sent, no account key was rotated,
 and no live group identity transition or handset behavior was established.
+
+## Typed group quotes and reactions (2026-10-09)
+
+**Confirmed static:** APK **2.26.37.71**, same hash as above,
+`BWI.dynamicMethod`/`BZa.dynamicMethod` encode reaction key fields
+remoteJid=1/fromMe=2/id=3/participant=4; BVK/BZF descriptors encode quoted
+context stanzaId=1/participant=2/quotedMessage=3 and extended text context=17.
+The existing [reaction bundle](apk/2.26.37.71-reaction-key/targets.json),
+[reaction trace](reactions.md) and `quotes.rs` remain the attributed source.
+The existing group stanza builder supplies reaction `decrypt-fail=hide` and
+`meta content_type=add_on`, rather than treating a reaction as plain text.
+No new native scheduling or outgoing normalization closure is established.
+
+**Confirmed local implementation:** ordinary typed `Text{quoted}` and `Reaction`
+now traverse the normal group's membership/device/key preparation and shared
+fanout transaction. CLI `reply` and `react` accept a group chat and require
+`--participant <original-PN-or-LID-JID>` for an incoming target. `--ours` derives
+the participant from the actor's frozen own group identity; it conflicts with
+`--participant`. Direct command behavior and all existing default request-ID
+recipes stay unchanged. Reusing a request ID for a different chat/participant
+remains an idempotency conflict; this change does not rename old queued intents.
+The commands enqueue offline; explicit `listen --send-outbox` performs sends.
+Inspect `outbox-pending` first because that flag selects all eligible intents.
+
+Examples (fictional group/sender, operator supplies actual originals locally):
+
+```sh
+whatsapp-cli --profile <profile> reply --chat 120363000000000001@g.us \
+  --id ORIGINAL-TARGET --participant 222222222222222@lid \
+  --text 'reply' --request-id original-reply-intent
+whatsapp-cli --profile <profile> react --chat 120363000000000001@g.us \
+  --id ORIGINAL-TARGET --participant 222222222222222@lid \
+  --emoji '👍' --request-id original-reaction-intent
+```
+
+`group_references::validate` and `payload` expose read-only attribution and
+encoding. The target must name the exact group namespace. A known outgoing
+wire ID must belong to the actual saved intent's group; ambiguous IDs refuse.
+For retained incoming targets, the preserved authenticated route must match
+chat, ID and original participant before copying a text preview. Unknown targets
+retain the explicitly supplied participant and an empty preview. Only decoded
+text becomes a bare quoted conversation; media, controls and message secrets
+are not copied, opened or consumed. The current MessageRef/DeviceAddress model
+cannot retain an agent component: CLI agent participants and retained routes
+carrying one refuse explicitly, rather than silently folding them into a primary.
+Full hosted/agent reference support remains unknown/unported. Group participant is its original user
+identity, not an unrelated contact's PN/LID mapping. A changed local target
+detected after query preparation reports `reference_changed` and leaves the
+original queued intent without a wire attempt; the answered queries are kept.
+
+**Confirmed negative / remaining receive gap:** existing retained group inbox
+rows are keyed by group/chat plus ID, without participant. This port checks their
+route and refuses a same-ID/different-participant reference; it does not fix the
+incoming record-key collision or establish full native composite-key storage.
+Private MessageRequest `quote`/caller preview remains the comparison JSON path;
+this chunk exposes typed normal quotes/reactions through `reply`/`react` without
+silently dropping a supplied JSON preview. Full media quotes, historical
+own-namespace normalization and live group rendering remain unfinished.
+
+**Confirmed offline:** real PN/LID actor preparation decrypts SKDM and the group
+body independently for incoming/own quoted text and reaction add/removal, checks
+exact participant and target ID, reaction metadata, a single original attempt,
+reopen/no replay and target-attribution changes before final preparation. Local
+inspection tests reject foreign chat/participant bodies and do not quote a media
+descriptor. These fixtures are not server or handset observations.
+
+**Confirmed local fixture correction:** a synthetic LID/agent fixture did not
+exercise the retained-route agent refusal: the existing binary encoder uses AD
+domain byte 1 for LID, and the decoder restores that as LID with agent 0. The
+regression instead uses a PN-domain agent byte 2, which retains its agent. This
+is a codec/fixture distinction, not new proof of native hosted-agent semantics.
+
+**Confirmed checks for typed references:** 773 workspace/all-feature tests,
+strict all-target/all-feature Clippy, warning-free Rustdoc, default CLI tests,
+OpenAPI library-symbol checks, regenerated CLI reference and formatting passed.
+Hygiene checked tracked budgets, 1,148 local links, package licenses and unchanged
+5,815,284 bytes across 15 APK checksum bundles. Offline upgraded-account
+comparison retained peer keys, actions, receipts, outbox, events and normalized
+inbox inspection; it sent no request or changed any saved identity.
+
+**Observed live for typed-reference chunk (2026-10-09):** the upgraded account
+authenticated, ran a 45-second receive-only window and stopped cleanly (exit 0).
+Chat sends and automatic reconnect were disabled. Saved peer keys, actions,
+receipts, outbox, events and noncapture inspection stayed unchanged; capture
+rows increased from 456 to 461. These are transport captures, not new user-reply
+or delivery facts. Offline inspection found zero normal-group preparations.
+No live group quote/reaction, registration request, identity rotation or handset
+rendering was performed or established.

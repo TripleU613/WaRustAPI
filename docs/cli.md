@@ -631,6 +631,7 @@ Usage: whatsapp-cli react [OPTIONS]...
 | --emoji | EMOJI | no |  |  |  | Reaction text (an emoji). Omit with --remove to clear a reaction |
 | --remove | REMOVE | no |  |  | `true`, `false` | Remove this account's reaction instead of setting one |
 | --ours | OURS | no |  |  | `true`, `false` | The target message was sent by this account (default: by the contact) |
+| --participant | PARTICIPANT | no |  |  |  | Original sender PN/LID JID; required for an incoming group target |
 | --request-id | REQUEST_ID | no |  |  |  | Caller idempotency key; defaults to `react-<id>-<emoji-hex or remove>` |
 | --dry-run | DRY_RUN | no |  |  | `true`, `false` | Only report which identity the reaction key would use; enqueue nothing |
 
@@ -725,7 +726,7 @@ Usage: whatsapp-cli disappearing-default [OPTIONS]...
 
 ## whatsapp-cli reply
 
-Queue a quoted reply to a message in a direct chat
+Queue a quoted text reply to a message in a direct chat or group
 
 ```
 Usage: whatsapp-cli reply [OPTIONS]...
@@ -737,6 +738,7 @@ Usage: whatsapp-cli reply [OPTIONS]...
 | --id | ID | yes |  |  |  | Wire id of the message being replied to (as shown by `events`) |
 | --text | TEXT | yes |  |  |  | Reply text |
 | --ours | OURS | no |  |  | `true`, `false` | The quoted message was sent by this account (default: by the contact) |
+| --participant | PARTICIPANT | no |  |  |  | Original sender PN/LID JID; required for an incoming group target |
 | --request-id | REQUEST_ID | no |  |  |  | Caller idempotency key; defaults to a content digest |
 
 ## whatsapp-cli reproject
