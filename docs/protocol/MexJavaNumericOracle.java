@@ -33,9 +33,13 @@ class MexJavaNumericOracle {
                 continue;
             }
             long parsed;
+            boolean valid = true;
             try { parsed = Long.parseLong(value); }
-            catch (NumberFormatException ignored) { parsed = 0; }
-            System.out.println(Long.toString(parsed) + "\t" + Long.toString(parsed * 1000L));
+            catch (NumberFormatException ignored) { parsed = 0; valid = false; }
+            String numbers = Long.toString(parsed) + "\t" + Long.toString(parsed * 1000L);
+            if (args.length == 1 && args[0].equals("validity"))
+                System.out.println(valid + "\t" + numbers);
+            else System.out.println(numbers);
         }
     }
 }

@@ -1,5 +1,17 @@
 # Messaging completion checklist
 
+Incoming timestamp parsing (2026-10-09, **implemented/offline tested**):
+explicit valid root `t` uses APK-derived Java signed-decimal parsing and wrapping
+millisecond conversion across incoming event projections. Missing/malformed
+historical timestamps remain unknown; expiration and once-only journal guards
+remain intact. No account or live operation. [Evidence and limits](protocol/message-timestamps.md).
+
+Validation: 835 workspace/all-feature tests passed. Strict all-target Clippy,
+warnings-denied Rustdoc, default CLI tests (25 plus API-symbol), regenerated
+CLI reference, executed Java oracle, formatting and whitespace checks passed.
+Repository hygiene checked 2,156 links and 107 existing APK bundles. No live test.
+
+
 Deferred status observers (2026-10-09, **confirmed static**): corrected the
 historical prose selector 5 to 16; raw APK bytes and constructor/switch operands
 agree with the already retained source. The immediate hook dispatches message

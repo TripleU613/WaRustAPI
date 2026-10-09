@@ -16,6 +16,17 @@ use crate::{
 };
 use sha2::{Digest, Sha256};
 
+// APK 37.71 CnN.A02 root t -> CaF.A09 -> CgC.A01 00c2..00e0,
+// 01c4..01d0 -> Cih.A0J: Java signed decimal and DEX wrapping ms.
+// Preserve only explicit valid evidence here: native current-clock fallback
+// must not make historical expiring content fresh. See message-timestamps.md.
+fn stanza_timestamp(node: &Node) -> Option<Timestamp> {
+    node.get_attr("t")
+        .and_then(|value| value.as_text())
+        .and_then(super::mex::java_decimal_long)
+        .map(|seconds| Timestamp(seconds.wrapping_mul(1000)))
+}
+
 #[cfg(test)]
 fn event(key: &[u8], node: &Node, payload: &[u8]) -> SyncEvent {
     project(key, node, payload, None, None, None, &[])
@@ -182,13 +193,7 @@ fn poll_vote_event(
         })
     })?;
     let (selected, unresolved) = super::polls::resolve_options(&hashes, &context.options);
-    let server_timestamp = node
-        .get_attr("t")
-        .and_then(|v| v.as_text())
-        .and_then(|v| v.parse::<i64>().ok())
-        .filter(|v| *v >= 0)
-        .and_then(|v| v.checked_mul(1000))
-        .map(Timestamp);
+    let server_timestamp = stanza_timestamp(node);
     let (direction, target_sender) = if vote.poll_from_sender {
         (
             Direction::Incoming,
@@ -294,13 +299,7 @@ fn project(
                     id,
                 },
                 metadata,
-                server_timestamp: node
-                    .get_attr("t")
-                    .and_then(|v| v.as_text())
-                    .and_then(|v| v.parse::<i64>().ok())
-                    .filter(|v| *v >= 0)
-                    .and_then(|v| v.checked_mul(1000))
-                    .map(Timestamp),
+                server_timestamp: stanza_timestamp(node),
                 observed_at: Timestamp::now(),
             };
         }
@@ -349,13 +348,7 @@ fn project(
             let Some((chat, by)) = chat_and_sender(key, node) else {
                 return unsupported();
             };
-            let server_timestamp = node
-                .get_attr("t")
-                .and_then(|v| v.as_text())
-                .and_then(|v| v.parse::<i64>().ok())
-                .filter(|v| *v >= 0)
-                .and_then(|v| v.checked_mul(1000))
-                .map(Timestamp);
+            let server_timestamp = stanza_timestamp(node);
             // In a direct chat, fromMe distinguishes their message from ours.
             // Group authors are resolved separately using BZa.participant_.
             let (direction, target_sender) = if reaction.target_from_sender {
@@ -436,13 +429,7 @@ fn project(
             let Some((chat, by)) = source else {
                 return unsupported();
             };
-            let server_timestamp = node
-                .get_attr("t")
-                .and_then(|v| v.as_text())
-                .and_then(|v| v.parse::<i64>().ok())
-                .filter(|v| *v >= 0)
-                .and_then(|v| v.checked_mul(1000))
-                .map(Timestamp);
+            let server_timestamp = stanza_timestamp(node);
             // `fromMe` is the keeping sender's perspective, same as reactions:
             // true means the target was their own (incoming to us), false
             // means the target was ours.
@@ -556,13 +543,7 @@ fn project(
     else {
         return unsupported();
     };
-    let server_timestamp = node
-        .get_attr("t")
-        .and_then(|v| v.as_text())
-        .and_then(|v| v.parse::<i64>().ok())
-        .filter(|v| *v >= 0)
-        .and_then(|v| v.checked_mul(1000))
-        .map(Timestamp);
+    let server_timestamp = stanza_timestamp(node);
     if let Some(duration) = expiration_seconds {
         // Never expose an already-expired historical message as fresh text.
         let Some(sent) = server_timestamp else {
@@ -925,6 +906,172 @@ mod tests {
             .attr("id", "fixture")
             .attr("t", "123")
     }
+    #[test]
+    fn explicit_message_timestamps_match_java_oracle_across_event_kinds() {
+        use crate::model::{ids::ChatId, jid::Jid, message::MessageRef};
+        let oracle: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/mex/2.26.37.71-numeric-reference.json"
+        ))
+        .unwrap();
+        let sender = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let target = MessageRef {
+            key: MessageKey {
+                chat: ChatId::from_jid(&sender).unwrap(),
+                sender: None,
+                direction: Direction::Incoming,
+                id: MessageId::new("original").unwrap(),
+            },
+        };
+        let reaction =
+            super::super::reactions::payload(&sender, &sender, &target, Some("👍"), 5).unwrap();
+        let keep = super::super::chat_settings::keep_payload(&sender, &target, true, 5);
+        let timer = super::super::chat_settings::disappearing_payload(60);
+        for case in oracle["cases"].as_array().unwrap() {
+            let text = case["input"].as_str().unwrap();
+            let expected = case["valid"]
+                .as_bool()
+                .unwrap()
+                .then(|| Timestamp(case["scaled"].as_str().unwrap().parse().unwrap()));
+            let direct = node().attr("t", text);
+            for payload in [
+                b"\x0a\x04test".as_slice(),
+                timer.as_slice(),
+                reaction.as_slice(),
+                keep.as_slice(),
+            ] {
+                let received = event(b"fixture", &direct, payload);
+                let actual = match received {
+                    SyncEvent::NewMessage(message) => message.server_timestamp,
+                    SyncEvent::MessageUpdated(update) => update.server_timestamp,
+                    _ => panic!("supported timestamp fixture became opaque"),
+                };
+                assert_eq!(actual, expected, "{text:?}");
+            }
+            let SyncEvent::NewMessage(message) =
+                event(b"fixture", &group_node().attr("t", text), b"\x0a\x04test")
+            else {
+                panic!("group text became opaque");
+            };
+            assert_eq!(message.server_timestamp, expected, "{text:?}");
+            let history = group_node()
+                .attr("t", text)
+                .children(vec![Node::new("meta").attr("appdata", "group_history")]);
+            let SyncEvent::GroupHistoryNotice {
+                server_timestamp, ..
+            } = event(
+                b"fixture",
+                &history,
+                b"\xb2\x06\x0d\x12\x0b\x0a\x051@lid\x10\x0a\x18\x02",
+            )
+            else {
+                panic!("history notice became opaque");
+            };
+            assert_eq!(server_timestamp, expected, "{text:?}");
+        }
+        let missing = Node::new("message")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("id", "fixture");
+        assert_eq!(stanza_timestamp(&missing), None);
+    }
+
+    #[test]
+    fn historical_expiring_text_keeps_unknown_or_expired_time_opaque() {
+        // APK ContextInfo.expiration=25, ExtendedTextMessage.contextInfo=17;
+        // one-second expiration, matching the existing literal fixture below.
+        let payload = b"\x32\x0c\x0a\x04test\x8a\x01\x03\xc8\x01\x01";
+        for time in [
+            None,
+            Some(""),
+            Some("invalid"),
+            Some("-1"),
+            Some("9223372036854775807"),
+            Some("-9223372036854775808"),
+            Some("١٢٣"),
+        ] {
+            let mut incoming = Node::new("message")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("id", "fixture");
+            if let Some(time) = time {
+                incoming = incoming.attr("t", time);
+            }
+            assert!(matches!(
+                event(b"fixture", &incoming, payload),
+                SyncEvent::UnsupportedMessage(_)
+            ));
+        }
+        let future = (Timestamp::now().0 / 1000 + 60).to_string();
+        let future_bmp: String = future
+            .chars()
+            .map(|c| char::from_u32('٠' as u32 + c.to_digit(10).unwrap()).unwrap())
+            .collect();
+        assert!(matches!(
+            event(b"fixture", &node().attr("t", future_bmp), payload),
+            SyncEvent::NewMessage(_)
+        ));
+    }
+
+    #[test]
+    fn explicit_message_time_survives_atomic_journal_reopen_without_reprojection() {
+        let dir = tempfile::tempdir().unwrap();
+        let options = || OpenOptions {
+            path: dir.path().join("message-times.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([3; 32]))),
+            create: true,
+        };
+        let store = ProtocolStore::open(options()).unwrap();
+        let expected = [123000, -42000, -1000];
+        for (index, time) in ["١٢٣", "-42", "9223372036854775807"]
+            .into_iter()
+            .enumerate()
+        {
+            let wire_id = format!("fixture{index}");
+            let incoming = node().attr("id", wire_id.clone()).attr("t", time);
+            let key = format!("received:15555550100@s.whatsapp.net:{wire_id}");
+            let route = crate::binary::Encoder::new(
+                crate::binary::TokenDictionary::comparison_2_26_37_71(),
+            )
+            .encode(&incoming)
+            .unwrap();
+            let saved = serde_json::json!({"status":"decrypted", "route":route, "protobuf":b"\x0a\x04test".to_vec()});
+            store
+                .write(|tx| {
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved)?;
+                    publish(tx, key.as_bytes(), &incoming, b"\x0a\x04test")
+                })
+                .unwrap();
+            assert!(!restore(&store, key.as_bytes(), &saved).unwrap());
+        }
+        let head = store.journal_head().unwrap();
+        drop(store);
+        let store = ProtocolStore::open(options()).unwrap();
+        let events = store
+            .read_events(
+                &ConsumerId::new("message-time-check").unwrap(),
+                EventCursor::START,
+                10,
+            )
+            .unwrap()
+            .events;
+        assert_eq!(events.len(), 3);
+        for (saved, expected) in events.iter().zip(expected) {
+            let SyncEvent::NewMessage(message) = &saved.event else {
+                panic!("text event missing");
+            };
+            assert_eq!(message.server_timestamp, Some(Timestamp(expected)));
+        }
+        assert_eq!(store.journal_head().unwrap(), head);
+        for index in 0..3 {
+            let key = format!("received:15555550100@s.whatsapp.net:fixture{index}");
+            let saved: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert!(!restore(&store, key.as_bytes(), &saved).unwrap());
+        }
+        assert_eq!(store.journal_head().unwrap(), head);
+    }
+
     #[test]
     fn group_reactions_bind_original_authors_devices_and_preserve_parent_records() {
         use crate::binary::{Encoder, TokenDictionary};

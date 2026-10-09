@@ -47,2397 +47,2877 @@
     {
       "input": "",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "0",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": true
     },
     {
       "input": "-0",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": true
     },
     {
       "input": "+0",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": true
     },
     {
       "input": "0007",
       "parsed": "7",
-      "scaled": "7000"
+      "scaled": "7000",
+      "valid": true
     },
     {
       "input": "+0012",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "-0012",
       "parsed": "-12",
-      "scaled": "-12000"
+      "scaled": "-12000",
+      "valid": true
     },
     {
       "input": "42",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "-42",
       "parsed": "-42",
-      "scaled": "-42000"
+      "scaled": "-42000",
+      "valid": true
     },
     {
       "input": "9223372036854775807",
       "parsed": "9223372036854775807",
-      "scaled": "-1000"
+      "scaled": "-1000",
+      "valid": true
     },
     {
       "input": "-9223372036854775808",
       "parsed": "-9223372036854775808",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": true
     },
     {
       "input": "9223372036854775808",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "-9223372036854775809",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "9223372036854775",
       "parsed": "9223372036854775",
-      "scaled": "9223372036854775000"
+      "scaled": "9223372036854775000",
+      "valid": true
     },
     {
       "input": "9223372036854776",
       "parsed": "9223372036854776",
-      "scaled": "-9223372036854775616"
+      "scaled": "-9223372036854775616",
+      "valid": true
     },
     {
       "input": "++1",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "--1",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "+-1",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "1_000",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": " 1",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "1 ",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "\t1",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "1\n",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "1.0",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "1e3",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "0x10",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "NaN",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "Infinity",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "\u00e9",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "\ud835\udfd9",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "\u0661\u0662",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\uff11\uff12",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u22121",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "+",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "-",
       "parsed": "0",
-      "scaled": "0"
+      "scaled": "0",
+      "valid": false
     },
     {
       "input": "02",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "12",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "22",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "32",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "42",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "52",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "62",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "72",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "82",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "92",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u06602",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u06612",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u06622",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u06632",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u06642",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u06652",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u06662",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u06672",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u06682",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u06692",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u06f02",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u06f12",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u06f22",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u06f32",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u06f42",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u06f52",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u06f62",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u06f72",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u06f82",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u06f92",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u07c02",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u07c12",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u07c22",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u07c32",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u07c42",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u07c52",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u07c62",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u07c72",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u07c82",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u07c92",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u09662",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u09672",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u09682",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u09692",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u096a2",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u096b2",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u096c2",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u096d2",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u096e2",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u096f2",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u09e62",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u09e72",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u09e82",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u09e92",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u09ea2",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u09eb2",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u09ec2",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u09ed2",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u09ee2",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u09ef2",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u0a662",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u0a672",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u0a682",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u0a692",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u0a6a2",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u0a6b2",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u0a6c2",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u0a6d2",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u0a6e2",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u0a6f2",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u0ae62",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u0ae72",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u0ae82",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u0ae92",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u0aea2",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u0aeb2",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u0aec2",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u0aed2",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u0aee2",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u0aef2",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u0b662",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u0b672",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u0b682",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u0b692",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u0b6a2",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u0b6b2",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u0b6c2",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u0b6d2",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u0b6e2",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u0b6f2",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u0be62",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u0be72",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u0be82",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u0be92",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u0bea2",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u0beb2",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u0bec2",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u0bed2",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u0bee2",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u0bef2",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u0c662",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u0c672",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u0c682",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u0c692",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u0c6a2",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u0c6b2",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u0c6c2",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u0c6d2",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u0c6e2",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u0c6f2",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u0ce62",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u0ce72",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u0ce82",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u0ce92",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u0cea2",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u0ceb2",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u0cec2",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u0ced2",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u0cee2",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u0cef2",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u0d662",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u0d672",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u0d682",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u0d692",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u0d6a2",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u0d6b2",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u0d6c2",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u0d6d2",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u0d6e2",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u0d6f2",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u0de62",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u0de72",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u0de82",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u0de92",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u0dea2",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u0deb2",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u0dec2",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u0ded2",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u0dee2",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u0def2",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u0e502",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u0e512",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u0e522",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u0e532",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u0e542",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u0e552",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u0e562",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u0e572",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u0e582",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u0e592",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u0ed02",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u0ed12",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u0ed22",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u0ed32",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u0ed42",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u0ed52",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u0ed62",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u0ed72",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u0ed82",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u0ed92",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u0f202",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u0f212",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u0f222",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u0f232",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u0f242",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u0f252",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u0f262",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u0f272",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u0f282",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u0f292",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u10402",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u10412",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u10422",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u10432",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u10442",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u10452",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u10462",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u10472",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u10482",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u10492",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u10902",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u10912",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u10922",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u10932",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u10942",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u10952",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u10962",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u10972",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u10982",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u10992",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u17e02",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u17e12",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u17e22",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u17e32",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u17e42",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u17e52",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u17e62",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u17e72",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u17e82",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u17e92",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u18102",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u18112",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u18122",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u18132",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u18142",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u18152",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u18162",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u18172",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u18182",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u18192",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u19462",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u19472",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u19482",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u19492",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u194a2",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u194b2",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u194c2",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u194d2",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u194e2",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u194f2",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u19d02",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u19d12",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u19d22",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u19d32",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u19d42",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u19d52",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u19d62",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u19d72",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u19d82",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u19d92",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u1a802",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u1a812",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u1a822",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u1a832",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u1a842",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u1a852",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u1a862",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u1a872",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u1a882",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u1a892",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u1a902",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u1a912",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u1a922",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u1a932",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u1a942",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u1a952",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u1a962",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u1a972",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u1a982",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u1a992",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u1b502",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u1b512",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u1b522",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u1b532",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u1b542",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u1b552",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u1b562",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u1b572",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u1b582",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u1b592",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u1bb02",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u1bb12",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u1bb22",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u1bb32",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u1bb42",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u1bb52",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u1bb62",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u1bb72",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u1bb82",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u1bb92",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u1c402",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u1c412",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u1c422",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u1c432",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u1c442",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u1c452",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u1c462",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u1c472",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u1c482",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u1c492",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\u1c502",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\u1c512",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\u1c522",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\u1c532",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\u1c542",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\u1c552",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\u1c562",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\u1c572",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\u1c582",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\u1c592",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\ua6202",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\ua6212",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\ua6222",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\ua6232",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\ua6242",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\ua6252",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\ua6262",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\ua6272",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\ua6282",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\ua6292",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\ua8d02",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\ua8d12",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\ua8d22",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\ua8d32",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\ua8d42",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\ua8d52",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\ua8d62",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\ua8d72",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\ua8d82",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\ua8d92",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\ua9002",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\ua9012",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\ua9022",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\ua9032",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\ua9042",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\ua9052",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\ua9062",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\ua9072",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\ua9082",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\ua9092",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\ua9d02",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\ua9d12",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\ua9d22",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\ua9d32",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\ua9d42",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\ua9d52",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\ua9d62",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\ua9d72",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\ua9d82",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\ua9d92",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\ua9f02",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\ua9f12",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\ua9f22",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\ua9f32",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\ua9f42",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\ua9f52",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\ua9f62",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\ua9f72",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\ua9f82",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\ua9f92",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\uaa502",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\uaa512",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\uaa522",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\uaa532",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\uaa542",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\uaa552",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\uaa562",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\uaa572",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\uaa582",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\uaa592",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\uabf02",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\uabf12",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\uabf22",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\uabf32",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\uabf42",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\uabf52",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\uabf62",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\uabf72",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\uabf82",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\uabf92",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "\uff102",
       "parsed": "2",
-      "scaled": "2000"
+      "scaled": "2000",
+      "valid": true
     },
     {
       "input": "\uff112",
       "parsed": "12",
-      "scaled": "12000"
+      "scaled": "12000",
+      "valid": true
     },
     {
       "input": "\uff122",
       "parsed": "22",
-      "scaled": "22000"
+      "scaled": "22000",
+      "valid": true
     },
     {
       "input": "\uff132",
       "parsed": "32",
-      "scaled": "32000"
+      "scaled": "32000",
+      "valid": true
     },
     {
       "input": "\uff142",
       "parsed": "42",
-      "scaled": "42000"
+      "scaled": "42000",
+      "valid": true
     },
     {
       "input": "\uff152",
       "parsed": "52",
-      "scaled": "52000"
+      "scaled": "52000",
+      "valid": true
     },
     {
       "input": "\uff162",
       "parsed": "62",
-      "scaled": "62000"
+      "scaled": "62000",
+      "valid": true
     },
     {
       "input": "\uff172",
       "parsed": "72",
-      "scaled": "72000"
+      "scaled": "72000",
+      "valid": true
     },
     {
       "input": "\uff182",
       "parsed": "82",
-      "scaled": "82000"
+      "scaled": "82000",
+      "valid": true
     },
     {
       "input": "\uff192",
       "parsed": "92",
-      "scaled": "92000"
+      "scaled": "92000",
+      "valid": true
     },
     {
       "input": "+901",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u0669\u0660\u0661",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u06f9\u06f0\u06f1",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u07c9\u07c0\u07c1",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u096f\u0966\u0967",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u09ef\u09e6\u09e7",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u0a6f\u0a66\u0a67",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u0aef\u0ae6\u0ae7",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u0b6f\u0b66\u0b67",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u0bef\u0be6\u0be7",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u0c6f\u0c66\u0c67",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u0cef\u0ce6\u0ce7",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u0d6f\u0d66\u0d67",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u0def\u0de6\u0de7",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u0e59\u0e50\u0e51",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u0ed9\u0ed0\u0ed1",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u0f29\u0f20\u0f21",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u1049\u1040\u1041",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u1099\u1090\u1091",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u17e9\u17e0\u17e1",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u1819\u1810\u1811",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u194f\u1946\u1947",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u19d9\u19d0\u19d1",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u1a89\u1a80\u1a81",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u1a99\u1a90\u1a91",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u1b59\u1b50\u1b51",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u1bb9\u1bb0\u1bb1",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u1c49\u1c40\u1c41",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\u1c59\u1c50\u1c51",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\ua629\ua620\ua621",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\ua8d9\ua8d0\ua8d1",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\ua909\ua900\ua901",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\ua9d9\ua9d0\ua9d1",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\ua9f9\ua9f0\ua9f1",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\uaa59\uaa50\uaa51",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\uabf9\uabf0\uabf1",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "+\uff19\uff10\uff11",
       "parsed": "901",
-      "scaled": "901000"
+      "scaled": "901000",
+      "valid": true
     },
     {
       "input": "-901",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u0669\u0660\u0661",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u06f9\u06f0\u06f1",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u07c9\u07c0\u07c1",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u096f\u0966\u0967",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u09ef\u09e6\u09e7",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u0a6f\u0a66\u0a67",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u0aef\u0ae6\u0ae7",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u0b6f\u0b66\u0b67",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u0bef\u0be6\u0be7",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u0c6f\u0c66\u0c67",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u0cef\u0ce6\u0ce7",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u0d6f\u0d66\u0d67",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u0def\u0de6\u0de7",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u0e59\u0e50\u0e51",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u0ed9\u0ed0\u0ed1",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u0f29\u0f20\u0f21",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u1049\u1040\u1041",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u1099\u1090\u1091",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u17e9\u17e0\u17e1",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u1819\u1810\u1811",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u194f\u1946\u1947",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u19d9\u19d0\u19d1",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u1a89\u1a80\u1a81",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u1a99\u1a90\u1a91",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u1b59\u1b50\u1b51",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u1bb9\u1bb0\u1bb1",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u1c49\u1c40\u1c41",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\u1c59\u1c50\u1c51",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\ua629\ua620\ua621",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\ua8d9\ua8d0\ua8d1",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\ua909\ua900\ua901",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\ua9d9\ua9d0\ua9d1",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\ua9f9\ua9f0\ua9f1",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\uaa59\uaa50\uaa51",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\uabf9\uabf0\uabf1",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     },
     {
       "input": "-\uff19\uff10\uff11",
       "parsed": "-901",
-      "scaled": "-901000"
+      "scaled": "-901000",
+      "valid": true
     }
-  ]
+  ],
+  "validity_oracle": "2026-10-09: executed host Temurin Java 21.0.12.1+1 LTS, MexJavaNumericOracle.java validity; successful Long.parseLong distinguished from default-zero failure. Existing parsed/scaled columns independently reproduced unchanged."
 }
