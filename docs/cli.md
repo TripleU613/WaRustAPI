@@ -126,6 +126,14 @@ Inspect queued sends suspended by changed peer identities (offline, redacted)
 Usage: whatsapp-cli outbox-suspended [OPTIONS]...
 ```
 
+## whatsapp-cli outbox-group-preparations
+
+Inspect saved normal group-send preparation without replaying queries (offline, redacted)
+
+```
+Usage: whatsapp-cli outbox-group-preparations [OPTIONS]...
+```
+
 ## whatsapp-cli prekeys
 
 Show one-time prekey counts and upload batches (offline, redacted)

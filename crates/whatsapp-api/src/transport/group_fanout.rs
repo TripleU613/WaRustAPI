@@ -300,7 +300,7 @@ impl Prepared {
 }
 
 #[cfg(test)]
-mod tests {
+pub(super) mod tests {
     use super::*;
     use crate::{
         model::{ids::AccountId, time::Timestamp},
@@ -313,7 +313,7 @@ mod tests {
     fn jid(s: &str) -> Jid {
         Jid::parse(s).unwrap()
     }
-    fn open(path: &std::path::Path) -> ProtocolStore {
+    pub(in crate::transport) fn open(path: &std::path::Path) -> ProtocolStore {
         ProtocolStore::open(OpenOptions {
             path: path.into(),
             account_id: AccountId::new("fixture").unwrap(),
@@ -334,13 +334,13 @@ mod tests {
             ..Default::default()
         }
     }
-    struct Fixture {
-        alice: AccountRecord,
-        bobs: Vec<(AccountRecord, Vec<u8>)>,
-        plan: FanoutPlan,
-        reply: Node,
+    pub(in crate::transport) struct Fixture {
+        pub(in crate::transport) alice: AccountRecord,
+        pub(in crate::transport) bobs: Vec<(AccountRecord, Vec<u8>)>,
+        pub(in crate::transport) plan: FanoutPlan,
+        pub(in crate::transport) reply: Node,
     }
-    fn fixture() -> Fixture {
+    pub(in crate::transport) fn fixture() -> Fixture {
         let own = jid("15555550100@s.whatsapp.net");
         let alice = account(&IdentityKeyPair::generate(&mut rand::rng()), &own, 31);
         let devices = vec![

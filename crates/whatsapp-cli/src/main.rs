@@ -251,6 +251,9 @@ enum Cmd {
     /// Inspect queued sends suspended by changed peer identities (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     OutboxSuspended,
+    /// Inspect saved normal group-send preparation without replaying queries (offline, redacted).
+    #[cfg(feature = "experimental-transport")]
+    OutboxGroupPreparations,
     /// Show one-time prekey counts and upload batches (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Prekeys,
@@ -1554,6 +1557,8 @@ async fn run(cli: Cli) -> Result<(), Error> {
         Cmd::OutboxPending => transport_receive::outbox_pending(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::OutboxSuspended => transport_receive::outbox_suspended(&cli),
+        #[cfg(feature = "experimental-transport")]
+        Cmd::OutboxGroupPreparations => transport_receive::outbox_group_preparations(&cli),
         #[cfg(feature = "experimental-transport")]
         Cmd::Prekeys => transport_receive::prekeys_status(&cli),
         #[cfg(feature = "experimental-transport")]

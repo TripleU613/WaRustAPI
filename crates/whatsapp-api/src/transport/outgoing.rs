@@ -190,7 +190,8 @@ fn unreserved_queued(tx: &crate::store::ReadTx<'_>, entry: &OutboxEntry) -> Resu
                 query_key(entry.local_id).as_bytes(),
                 1,
             )?
-            .is_none())
+            .is_none()
+        && !super::outgoing_group::reserved_in(tx, entry.local_id)?)
 }
 /// Queued intents an outbox-enabled comparison session would attempt next, in
 /// accept order across every idempotency namespace: `Queued` progress and no
@@ -214,6 +215,11 @@ pub fn begin_selected(
             continue;
         }
         let peer = entry.intent.chat.jid();
+        // Groups require membership, selected device batches and sender keys;
+        // the shared connection actor dispatches them to outgoing_group.
+        if peer.server == Server::Group {
+            continue;
+        }
         let supported = peer.server == Server::User
             && peer.device == 0
             && !peer.user.is_empty()

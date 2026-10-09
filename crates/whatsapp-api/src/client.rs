@@ -430,6 +430,19 @@ impl WhatsAppClient {
             .await
     }
 
+    /// Read a saved normal group preparation without replaying its queries.
+    #[cfg(feature = "comparison-client")]
+    pub async fn group_preparation(
+        &self,
+        ticket: &SendTicket,
+    ) -> Result<Option<crate::transport::outgoing_group::PreparationSummary>> {
+        let id = ticket.local_id;
+        self.inner
+            .store
+            .run_blocking(move |store| crate::transport::outgoing_group::preparation(store, id))
+            .await
+    }
+
     /// Cancel a queued send. Returns `false` for an unknown ticket.
     pub async fn cancel_send(&self, local_id: LocalMessageId) -> Result<bool> {
         let outbox = self.inner.outbox.clone();

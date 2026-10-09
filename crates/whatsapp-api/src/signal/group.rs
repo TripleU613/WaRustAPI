@@ -287,18 +287,22 @@ impl std::fmt::Debug for OwnSenderKey {
 /// from its raw string, matching `LX/Cnr` (**confirmed**), so group and status
 /// keys occupy separate namespaces.
 ///
-/// The returned record must be persisted **only** after the send is accepted:
-/// a distributed-but-unsent key leaves recipients holding a chain we never use,
-/// and a used-but-unpersisted key cannot decrypt our own later messages.
+/// Reserve the returned record atomically with pairwise state and the original
+/// send intent before writing. Missing acceptance does not authorize forgetting
+/// a generation that recipients may already hold.
 pub async fn prepare_own_sender_key(
     chat: &Jid,
     own: &Jid,
     previous_bytes: Option<&[u8]>,
 ) -> Result<OwnSenderKey> {
     use prost::Message as _;
+    use rand::SeedableRng as _;
     let mut store = SenderKeys::new(previous_bytes)?;
     let name = SenderKeyName::from_parts(&chat.to_string(), &own.to_string());
-    let skdm = signal::create_sender_key_distribution_message(&name, &mut store, &mut rand::rng())
+    // ThreadRng cannot cross the normal actor's await boundary. StdRng retains
+    // cryptographic OS seeding while making the staged future Send.
+    let mut rng = rand::rngs::StdRng::from_rng(&mut rand::rng());
+    let skdm = signal::create_sender_key_distribution_message(&name, &mut store, &mut rng)
         .await
         .map_err(crypto)?;
 
@@ -362,7 +366,9 @@ pub async fn encrypt_group_payload(
     let padded = pad(plaintext)?;
     let mut store = SenderKeys::new(Some(key_bytes))?;
     let name = SenderKeyName::from_parts(&chat.to_string(), &own.to_string());
-    let message = signal::group_encrypt(&mut store, &name, &padded, &mut rand::rng())
+    use rand::SeedableRng as _;
+    let mut rng = rand::rngs::StdRng::from_rng(&mut rand::rng());
+    let message = signal::group_encrypt(&mut store, &name, &padded, &mut rng)
         .await
         .map_err(crypto)?;
     let updated = Zeroizing::new(

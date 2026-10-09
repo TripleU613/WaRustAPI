@@ -857,6 +857,16 @@ fn apply_reply_in(
     if let Some(node) = reply.child("group") {
         require_complete_group(node)?;
         if let Some(group) = parse_group(node) {
+            if kind == "group-info" {
+                // A correlated IQ id alone does not authorize replacing another
+                // group's membership. parse_group also accepts a short numeric id.
+                let expected = request.and_then(|r| super::receipts::jid(r, "to"));
+                if expected.as_ref() != Jid::parse(&group.jid).ok().as_ref() {
+                    return Err(invalid(
+                        "group info reply does not name the requested group",
+                    ));
+                }
+            }
             return save_snapshot_in(tx, group);
         }
     }

@@ -345,7 +345,7 @@ pub(super) fn request_adv_refresh_in(
     Ok(())
 }
 
-fn request_sync_in(
+pub(crate) fn request_sync_in(
     tx: &mut crate::store::WriteTx<'_>,
     user: &Jid,
     notified_hash: Option<&str>,
@@ -483,10 +483,13 @@ impl DeviceSyncCursor {
         let Some((query, node)) = begin_query_for_users(store, context, &users)? else {
             return Ok(None);
         };
+        self.observe_query(&query);
+        Ok(Some((query, node)))
+    }
+    pub(crate) fn observe_query(&mut self, query: &DeviceQuery) {
         for (user, revision) in query.users.iter().zip(&query.generations) {
             self.attempted.insert(user.clone(), *revision);
         }
-        Ok(Some((query, node)))
     }
     /// Settle a reply, deferring refused, errored, locally rejected or omitted users. Successful
     /// users with newer pending revisions remain eligible in this connection.
@@ -545,12 +548,19 @@ fn reserve_query(
     context: SyncContext,
     users: Vec<Jid>,
 ) -> Result<Option<(DeviceQuery, Node)>> {
+    store.write(|tx| reserve_query_in(tx, context, users))
+}
+pub(crate) fn reserve_query_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    context: SyncContext,
+    users: Vec<Jid>,
+) -> Result<Option<(DeviceQuery, Node)>> {
     if users.is_empty() {
         return Ok(None);
     }
     let iq_id = super::messaging::new_message_id()?;
     let sid = super::messaging::new_message_id()?;
-    let generations = store.write(|tx| {
+    let generations = {
         let mut generations = Vec::with_capacity(users.len());
         // Selection and reservation share a transaction: a stale batch cannot
         // silently invent pending work after another query settled its users.
@@ -580,8 +590,8 @@ fn reserve_query(
                 requested_at: Timestamp::now(),
             },
         )?;
-        Ok(generations)
-    })?;
+        generations
+    };
     let list = users
         .iter()
         .map(|user| Node::new("user").attr("jid", user.clone()))

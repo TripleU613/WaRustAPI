@@ -6,7 +6,24 @@ use whatsapp_api::{
     transport::messaging::MessageRequest,
 };
 
-fn receipt_summary(status: &SendStatus) -> String {
+fn receipt_summary(status: &SendStatus, group: bool) -> String {
+    if group {
+        let count = |kind| {
+            status
+                .facts
+                .iter()
+                .filter(|fact| fact.kind == kind)
+                .filter_map(|fact| fact.device.as_ref())
+                .collect::<std::collections::BTreeSet<_>>()
+                .len()
+        };
+        return format!(
+            "outbox device receipts: delivered_devices={} read_devices={} played_devices={} (partial device facts; whole-group delivery and handset confirmation are unverified)",
+            count(DeliveryFactKind::Delivered),
+            count(DeliveryFactKind::Read),
+            count(DeliveryFactKind::Played)
+        );
+    }
     let has = |kind| status.facts.iter().any(|fact| fact.kind == kind);
     format!(
         "outbox receipts: delivered={} read={} played={} (saved protocol facts, not handset confirmation)",
@@ -14,6 +31,13 @@ fn receipt_summary(status: &SendStatus) -> String {
         has(DeliveryFactKind::Read),
         has(DeliveryFactKind::Played),
     )
+}
+
+fn destination(message: &MessageRequest) -> Result<Jid, Error> {
+    match message.group_chat()? {
+        Some(group) => Ok(group),
+        None => message.recipient(),
+    }
 }
 
 // Run before media preparation: a reused text ID must never upload a new file.
@@ -25,7 +49,7 @@ fn preflight(store: &ProtocolStore, message: &MessageRequest) -> Result<(), Erro
     let Some(saved) = store.read(|tx| outbox.get_by_request_id(tx, &id))? else {
         return Ok(());
     };
-    let peer = message.recipient()?;
+    let peer = destination(message)?;
     if saved.intent.chat != ChatId::from_jid(&peer)? {
         return Err(Error::IdempotencyConflict(id));
     }
@@ -68,6 +92,18 @@ pub(super) async fn run(
     }
     let config = signup::config(path)?;
     let message = MessageRequest::read(message_path)?;
+    let is_group = message.group_chat()?.is_some();
+    if is_group
+        && (message.quote.is_some()
+            || message.view_once
+            || message.fresh_sessions
+            || message.skdm_out_of_band()?)
+    {
+        return Err(Error::invalid(
+            "outbox_send",
+            "normal group JSON supports text/uploaded media with existing sessions and in-band distribution; quotes, view-once, fresh sessions and direct distribution remain on the comparison path",
+        ));
+    }
     let account_id = AccountId::new(cli.account.clone())?;
     let options = || OpenOptions {
         path: cli.store.clone(),
@@ -103,11 +139,12 @@ pub(super) async fn run(
         }
         preflight(&store, &message)?;
         if message.image.is_some() || message.voice_note.is_some() {
-            whatsapp_api::transport::image_upload::prepare(&store, &message, &config).await?;
+            whatsapp_api::transport::image_upload::prepare_outbox(&store, &message, &config)
+                .await?;
             let reference = whatsapp_api::transport::outgoing_media::reference(
                 &store,
                 &ClientRequestId::new(message.request_id.clone())?,
-                &message.recipient()?,
+                &destination(&message)?,
             )?;
             MessageContent::Media {
                 reference,
@@ -124,7 +161,7 @@ pub(super) async fn run(
     };
     let request = SendRequest {
         client_request_id: ClientRequestId::new(message.request_id.clone())?,
-        chat: ChatId::from_jid(&message.recipient()?)?,
+        chat: ChatId::from_jid(&destination(&message)?)?,
         content,
     };
     let offline = open_client(cli, false).await?;
@@ -139,7 +176,7 @@ pub(super) async fn run(
     let (ticket, status) = prepared?;
     if status.server_accepted() {
         println!("outbox: server_acknowledged (saved); no network request");
-        println!("{}", receipt_summary(&status));
+        println!("{}", receipt_summary(&status, is_group));
         return Ok(());
     }
     if status.progress != AttemptProgress::Queued || status.is_uncertain() {
@@ -150,6 +187,13 @@ pub(super) async fn run(
     }
     {
         let store = ProtocolStore::open(options())?;
+        if whatsapp_api::transport::outgoing_group::preparation(&store, ticket.local_id)?.is_some()
+        {
+            return Err(Error::invalid(
+                "outbox_send",
+                "saved group preparation is reserved or blocked; inspect outbox-group-preparations; no query replay",
+            ));
+        }
         let query: Option<serde_json::Value> = store.read(|tx| {
             tx.get_json(
                 Table::Checkpoints,
@@ -186,7 +230,7 @@ pub(super) async fn run(
             let status = client.message_status(&ticket).await?;
             if status.server_accepted() {
                 println!("outbox: server_acknowledged; handset delivery/read not yet established");
-                println!("{}", receipt_summary(&status));
+                println!("{}", receipt_summary(&status, is_group));
                 return Ok(());
             }
             if status.progress == AttemptProgress::Queued
@@ -208,6 +252,10 @@ pub(super) async fn run(
                     "outbox_send",
                     "send failed; saved outcome preserved; no retry",
                 ));
+            }
+            if let Some(group) = client.group_preparation(&ticket).await?
+                && group.phase == "blocked" {
+                return Err(Error::invalid("outbox_send", format!("group preparation blocked: {}; inspect outbox-group-preparations; original intent preserved", group.blocking_reason.as_deref().unwrap_or("unknown"))));
             }
             if !matches!(
                 client.connection_state().borrow().state,
@@ -305,6 +353,50 @@ mod tests {
                 .intent,
             request
         );
+    }
+
+    #[test]
+    fn group_json_uses_its_existing_chat_and_reused_ids_refuse_changed_destinations() {
+        use whatsapp_api::{
+            outbox::Outbox,
+            store::{MasterKey, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("group-json.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let mut message:MessageRequest=serde_json::from_value(serde_json::json!({"request_id":"group-original","group":"120363000000000001@g.us","text":"saved group text"})).unwrap();
+        let request = SendRequest {
+            client_request_id: ClientRequestId::new(message.request_id.clone()).unwrap(),
+            chat: ChatId::from_jid(&destination(&message).unwrap()).unwrap(),
+            content: MessageContent::Text {
+                body: message.text.to_string(),
+                quoted: None,
+                style: Default::default(),
+            },
+        };
+        store
+            .write(|tx| Outbox::new("default", Default::default()).enqueue(tx, &request))
+            .unwrap();
+        preflight(&store, &message).unwrap();
+        let head = store.journal_head().unwrap();
+        message.group = Some("120363000000000002@g.us".into());
+        assert!(matches!(
+            preflight(&store, &message),
+            Err(Error::IdempotencyConflict(_))
+        ));
+        message.group = Some("120363000000000001@g.us".into());
+        message.text.push_str(" altered");
+        assert!(matches!(
+            preflight(&store, &message),
+            Err(Error::IdempotencyConflict(_))
+        ));
+        assert_eq!(store.journal_head().unwrap(), head);
+        assert_eq!(store.read(|tx| tx.count(Table::Checkpoints)).unwrap(), 0);
     }
 
     #[tokio::test]

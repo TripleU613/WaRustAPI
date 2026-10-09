@@ -211,6 +211,25 @@ pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
     })
 }
 
+/// Compose one feature-owned action reservation with its original intent.
+pub(crate) fn reserve_one_in(tx: &mut crate::store::WriteTx<'_>, id: &str) -> Result<Node> {
+    let key = key(id);
+    let mut row: Row = tx
+        .get_json(Table::Checkpoints, key.as_bytes(), 1)?
+        .ok_or_else(|| Error::invalid("action", "missing selected action"))?;
+    if row.status != ActionStatus::Queued {
+        return Err(Error::invalid(
+            "action",
+            "selected action already reserved; no replay",
+        ));
+    }
+    let node = decode(&row.wire)?;
+    row.status = ActionStatus::Sent;
+    row.sent_at = Some(Timestamp::now());
+    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)?;
+    Ok(node)
+}
+
 /// Settle a `sent` action from its `iq` reply. Returns `true` when the node
 /// matched a queued action (the caller then treats it as consumed).
 pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {

@@ -2465,3 +2465,21 @@ formatting and repository hygiene (1,129 local links; 15 APK bundles). Offline
 projection upgraded zero events. Saved peer keys, action outcomes, receipt ACKs,
 outbox, events and normalized retained inspection stayed unchanged. No server
 request, message transmission or saved-account crypto mutation occurred.
+
+Normal group outbox (2026-10-09, **confirmed local implementation**): the actor
+now resolves fresh membership, selected message-context device pages and all
+missing signed key pages, then reserves shared fanout crypto and the original
+normal intent together before write. Existing private JSON group/text/image/voice
+uses outbox-send; group uploads bind the chat. Redacted outbox-group-preparations
+shows original phase, fixed blockers, counts and scoped batch outcomes offline.
+Cold PN/LID real-crypto tests, 130-user batches and injected four-stage write cuts
+cover preparation and once-only reservations; simulated late ACK/participant
+delivery settles without another attempt. Normal group live acceptance, broader
+message kinds, answered-preparation resume, group peer replacement and full own
+inventory remain unfinished.
+[Evidence, invocation and boundaries](protocol/normal-group-outbox.md).
+
+Validation for this chunk: 767 workspace/all-feature tests and strict Clippy,
+Rustdoc, default CLI/API/reference/format checks passed. The upgraded saved
+account authenticated and stopped cleanly after a 45-second receive-only window,
+with chat sends and reconnect disabled. No live outgoing group was tested.

@@ -2,9 +2,8 @@
 
 **Confirmed local correction:** the comparison group/status sender now uses
 `transport::group_fanout::{Snapshot, Prepared}` for staged pairwise distributions,
-sender-key encryption and atomic crypto reservation. This is a prerequisite for
-normal group sending; the normal outbox group adapter and its query state machine
-remain unfinished. The existing comparison CLI invokes the shared implementation
+sender-key encryption and atomic crypto reservation. The subsequent [ordinary normal-group outbox adapter](normal-group-outbox.md)
+uses this pipeline; full group functionality and inventory remain unfinished. The existing comparison CLI invokes the shared implementation
 through `lab-transport`; no new group send is needed to inspect saved state.
 
 ## Existing APK evidence and port boundary

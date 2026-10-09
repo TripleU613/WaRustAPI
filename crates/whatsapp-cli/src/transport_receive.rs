@@ -1203,6 +1203,44 @@ pub(super) fn outbox_suspended(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
+pub(super) fn outbox_group_preparations(cli: &super::Cli) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let rows = whatsapp_api::transport::outgoing_group::preparations(&store)?;
+    if cli.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&rows).map_err(|_| Error::invalid(
+                "outbox_group",
+                "cannot encode preparation summaries"
+            ))?
+        );
+    } else {
+        println!(
+            "outbox-group-preparations: {} saved preparation(s); no query replay",
+            rows.len()
+        );
+        for row in rows {
+            println!(
+                "  {} phase={} reason={} recipients={:?} devices={:?} device_queries={} key_queries={} key_batches={:?}",
+                row.local_id,
+                row.phase,
+                row.blocking_reason.as_deref().unwrap_or("none"),
+                row.recipients,
+                row.devices,
+                row.device_queries,
+                row.key_queries,
+                row.key_batches
+            );
+        }
+    }
+    Ok(())
+}
+
 pub(super) fn outbox_pending(cli: &super::Cli) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),

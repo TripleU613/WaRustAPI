@@ -73,7 +73,8 @@
       "crates/whatsapp-api/src/transport/connection.rs",
       "crates/whatsapp-api/src/binary/encoder.rs",
       "crates/whatsapp-api/src/transport/messaging.rs",
-      "crates/whatsapp-api/src/transport/device_key_batches.rs"
+      "crates/whatsapp-api/src/transport/device_key_batches.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs"
     ]
   },
   "group-device-hash-namespace": {
@@ -290,7 +291,8 @@
     "methods": 1,
     "rust_files": [
       "crates/whatsapp-api/src/transport/group_send.rs",
-      "crates/whatsapp-cli/src/transport_group_send.rs"
+      "crates/whatsapp-cli/src/transport_group_send.rs",
+      "crates/whatsapp-api/src/transport/outgoing_group.rs"
     ]
   },
   "group-send-own-device-add": {

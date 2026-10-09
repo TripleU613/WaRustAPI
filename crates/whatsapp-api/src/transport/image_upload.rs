@@ -320,6 +320,30 @@ pub async fn prepare(
     message: &MessageRequest,
     config: &LabRegistrationConfig,
 ) -> Result<Option<Zeroizing<Vec<u8>>>> {
+    prepare_bound(store, message, config, message.to.to_string()).await
+}
+
+/// Normal-outbox upload with an explicit group-chat binding. This is private
+/// artifact provenance, not a new field sent to the media server. The legacy
+/// comparison entry point retains its original saved `to` values.
+pub async fn prepare_outbox(
+    store: &ProtocolStore,
+    message: &MessageRequest,
+    config: &LabRegistrationConfig,
+) -> Result<Option<Zeroizing<Vec<u8>>>> {
+    let recipient = match message.group_chat()? {
+        Some(group) => group.to_string(),
+        None => message.to.to_string(),
+    };
+    prepare_bound(store, message, config, recipient).await
+}
+
+async fn prepare_bound(
+    store: &ProtocolStore,
+    message: &MessageRequest,
+    config: &LabRegistrationConfig,
+    recipient: String,
+) -> Result<Option<Zeroizing<Vec<u8>>>> {
     let Some((bytes, width, height)) = input(message)? else {
         return Ok(None);
     };
@@ -334,7 +358,7 @@ pub async fn prepare(
             height,
             hash,
             key,
-            recipient: message.to.to_string(),
+            recipient,
             voice: message.voice_note.is_some(),
             view_once: message.view_once,
         },
@@ -555,6 +579,70 @@ async fn upload_prepared(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn legacy_group_upload_binding_is_preserved_and_normal_outbox_uses_its_explicit_chat() {
+        let dir = tempfile::tempdir().unwrap();
+        let store =
+            super::super::group_fanout::tests::open(&dir.path().join("group-upload-binding.redb"));
+        let source = dir.path().join("fixture.png");
+        let mut png = b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR".to_vec();
+        png.extend_from_slice(&1u32.to_be_bytes());
+        png.extend_from_slice(&1u32.to_be_bytes());
+        png.resize(33, 0);
+        std::fs::write(&source, &png).unwrap();
+        let mut message:MessageRequest=serde_json::from_value(serde_json::json!({"group":"120363000000000001@g.us","request_id":"legacy-group-upload","image":source})).unwrap();
+        let config: LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        let hash = input_hash(&message, &png);
+        let old = serde_json::json!({"status":"uploaded","hash":hash,"to":"","protobuf":[26,0]});
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"message:legacy-group-upload:upload",
+                    1,
+                    &old,
+                )
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        assert_eq!(
+            &*prepare(&store, &message, &config).await.unwrap().unwrap(),
+            &[26, 0]
+        );
+        assert!(prepare_outbox(&store, &message, &config).await.is_err());
+        assert_eq!(
+            before,
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap()
+        );
+        message.request_id = "normal-group-upload".into();
+        store.write(|tx|tx.put_json(Table::Checkpoints,b"message:normal-group-upload:upload",1,&serde_json::json!({"status":"uploaded","hash":hash,"to":message.group.clone().unwrap(),"protobuf":[26,0]}))).unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        assert_eq!(
+            &*prepare_outbox(&store, &message, &config)
+                .await
+                .unwrap()
+                .unwrap(),
+            &[26, 0]
+        );
+        message.group = Some("120363000000000002@g.us".into());
+        assert!(prepare_outbox(&store, &message, &config).await.is_err());
+        assert_eq!(
+            before,
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap()
+        );
+        assert_eq!(store.read(|tx| tx.count(Table::SignalSessions)).unwrap(), 0);
+        // No route exists in this fixture: all success/refusal is cached and
+        // cannot cause a real upload or a route-refresh query.
+    }
     #[cfg(feature = "comparison-client")]
     #[tokio::test]
     async fn public_upload_reuses_confirmed_content_and_enters_normal_outbox_offline() {

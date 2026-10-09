@@ -304,6 +304,7 @@ pub(crate) async fn drive(
     heartbeat.tick().await;
     let mut pending_ping: Option<String> = None;
     let mut outgoing: Option<super::outgoing::Pending> = None;
+    let mut group_outgoing: Option<super::outgoing_group::Pending> = None;
     let mut upload: Option<super::prekeys::PendingUpload> = None;
     let mut upload_rounds: u32 = 0;
     let mut device_query: Option<super::devices::DeviceQuery> = None;
@@ -317,17 +318,31 @@ pub(crate) async fn drive(
         }
         tokio::select! {
             _ = outbox_tick.tick(), if send_outbox && ready.is_none() => {
+                if group_outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now()>=v.deadline) {
+                    group_outgoing.take().expect("expired group preparation").expire(&store, &mut device_cursor)?;
+                }
                 if outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now()>=v.deadline) {
                     return Err(Error::invalid("outbox", "key query outcome unknown; reserved, no retry"));
                 }
-                if outgoing.is_none() && let Some(id)=ticket
+                if outgoing.is_none() && group_outgoing.is_none() && let Some(id)=ticket
                     && let Some(stanza)=super::outgoing::resume_identity_selected(&store,&account,id,epoch,config.transport.outgoing_identity_changes).await? {
                     link.send(&stanza).await?;
                     continue;
                 }
-                if outgoing.is_none() && let Some((pending,node))=super::outgoing::begin_selected(&store,ticket)? {
-                    outgoing=Some(pending);
-                    link.send(&node).await?;
+                if outgoing.is_none() && group_outgoing.is_none() {
+                    let selected = match ticket {
+                        Some(id) => Some(id),
+                        None => super::outgoing::eligible(&store, 1)?.first().map(|v|v.local_id),
+                    };
+                    if let Some(id) = selected {
+                        if let Some((pending,node))=super::outgoing_group::begin_selected(&store,id)? {
+                            group_outgoing=Some(pending);
+                            link.send(&node).await?;
+                        } else if let Some((pending,node))=super::outgoing::begin_selected(&store,Some(id))? {
+                            outgoing=Some(pending);
+                            link.send(&node).await?;
+                        }
+                    }
                 }
             }
             changed = stop.changed() => { if changed.is_err() || *stop.borrow() { return Ok(()); } }
@@ -347,7 +362,8 @@ pub(crate) async fn drive(
                 }
                 // Authenticated primary-key changes and offline requests can
                 // queue work during this connection without a devices notification.
-                if device_query.is_none() && let Some((query,node))=device_cursor.begin_next(&store,device_context)? {
+                if device_query.is_none() && group_outgoing.as_ref().is_none_or(|g| !g.devices_pending())
+                    && let Some((query,node))=device_cursor.begin_next(&store,device_context)? {
                     device_query=Some(query);
                     link.send(&node).await?;
                 }
@@ -399,6 +415,13 @@ pub(crate) async fn drive(
                     return Err(Error::invalid("connection", "server ended session; reason preserved encrypted; no reconnect"));
                 }
                 if node.description == "iq" {
+                    if group_outgoing.as_ref().is_some_and(|v|v.matches(&node)) {
+                        let next=group_outgoing.take().expect("matched group preparation").settle(&store,&account,&node,epoch,&mut device_cursor).await?;
+                        group_outgoing=next.pending;
+                        if let Some(pending) = &group_outgoing { pending.observe_device_query(&mut device_cursor); }
+                        if let Some(stanza)=next.node { link.send(&stanza).await?; }
+                        continue;
+                    }
                     if outgoing.as_ref().is_some_and(|v|v.matches(&node)) {
                         if let Some(stanza)=outgoing.take().expect("matched pending query").prepare_with_policy(&store,&account,&node,epoch,config.transport.outgoing_identity_changes).await? {
                             link.send(&stanza).await?;
@@ -459,7 +482,8 @@ pub(crate) async fn drive(
                             tracing::warn!(query_id = node.get_attr("id").and_then(|v| v.as_text()).unwrap_or("unavailable"), verification_errors = summary.verification_errors, "device candidates refused locally; inspect device-query --id; saved lists and pending work retained");
                         }
                         tracing::info!(accepted = summary.accepted, ingested = summary.ingested, partial_errors = summary.partial_errors, omitted_users = summary.omitted_users, superseded_users = summary.superseded_users, verification_errors = summary.verification_errors, "device query settled");
-                        if let Some((query, sync)) = device_cursor.begin_next(&store, device_context)? {
+                        if group_outgoing.as_ref().is_none_or(|g| !g.devices_pending())
+                            && let Some((query, sync)) = device_cursor.begin_next(&store, device_context)? {
                             device_query = Some(query);
                             link.send(&sync).await?;
                         }
@@ -502,6 +526,7 @@ pub(crate) async fn drive(
                     }
                     link.send(&super::devices::notification_ack(&node)?).await?;
                     if device_query.is_none()
+                        && group_outgoing.as_ref().is_none_or(|g| !g.devices_pending())
                         && let Some((query, sync)) = device_cursor.begin_next(&store, device_context)? {
                         device_query = Some(query);
                         link.send(&sync).await?;
@@ -1368,6 +1393,160 @@ mod tests {
         // receipt hashes to the same capture key and its fact row is reused.
         assert_eq!(added.len(), 1, "{added:?}");
         assert!(added[0].starts_with(b"inbound:sha256:"));
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn group_outbox_socket_cuts_keep_every_query_and_ciphertext_reservation_without_replay() {
+        use super::super::{group_fanout, outgoing_group};
+        use outgoing_group::tests::{device_reply, enqueue, key_reply, membership};
+        let outbox = crate::outbox::Outbox::new("comparison-driver", Limits::default());
+        for cut in ["membership", "devices", "keys", "send"] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("normal-group-cut.redb"));
+            let f = group_fanout::tests::fixture();
+            store.write(|tx| f.alice.save(tx)).unwrap();
+            let ticket = enqueue(&store, &f.plan.chat, "original-group-cut");
+            let mut fake = start(&store, true, Some(ticket));
+            fake.activate().await;
+            let mut original_query_ids = vec![];
+            loop {
+                let (node, written) = fake.written().await;
+                let stage = if node.description == "message" {
+                    "send"
+                } else {
+                    match node.get_attr("xmlns").and_then(|v| v.as_text()) {
+                        Some("w:g2") => "membership",
+                        Some("usync") => "devices",
+                        Some("encrypt") => "keys",
+                        _ => panic!("unexpected outbound stage"),
+                    }
+                };
+                if node.description == "iq" {
+                    original_query_ids.push(
+                        node.get_attr("id")
+                            .and_then(|v| v.as_text())
+                            .unwrap()
+                            .to_owned(),
+                    );
+                }
+                if stage == cut {
+                    // State is inspected before the fake socket acknowledges
+                    // this write, including the final encrypted original wire.
+                    let entry = store.read(|tx| outbox.get(tx, ticket)).unwrap().unwrap();
+                    assert_eq!(
+                        entry.progress,
+                        if cut == "send" {
+                            crate::model::send::AttemptProgress::InFlight
+                        } else {
+                            crate::model::send::AttemptProgress::Queued
+                        }
+                    );
+                    if cut == "send" {
+                        assert_eq!(entry.attempts.len(), 1);
+                        assert!(entry.status().is_uncertain());
+                    }
+                    written
+                        .send(Err(Error::Transport(TransportError::PeerClosed)))
+                        .unwrap();
+                    break;
+                }
+                written.send(Ok(())).unwrap();
+                let reply = match stage {
+                    "membership" => membership(&node, &f.plan.own, &f.plan.recipients),
+                    "devices" => device_reply(&node),
+                    "keys" => key_reply(&node, &f),
+                    _ => unreachable!(),
+                };
+                fake.deliver(reply).await;
+            }
+            assert!(
+                fake.finished()
+                    .await
+                    .unwrap_err()
+                    .is_recoverable_by_reconnect()
+            );
+            let original = store.read(|tx| outbox.get(tx, ticket)).unwrap().unwrap();
+            let progress = outgoing_group::preparation(&store, ticket)
+                .unwrap()
+                .unwrap();
+            let mut restarted = start(&store, true, Some(ticket));
+            restarted.activate().await;
+            if cut == "devices" {
+                // Existing background usync can re-read pending users in a new
+                // epoch. It cannot resume this group intent or its old query.
+                let (query, written) = restarted.written().await;
+                assert_eq!(
+                    query.get_attr("xmlns").and_then(|v| v.as_text()),
+                    Some("usync")
+                );
+                assert_eq!(
+                    query
+                        .child("usync")
+                        .unwrap()
+                        .get_attr("context")
+                        .and_then(|v| v.as_text()),
+                    Some("interactive")
+                );
+                assert!(
+                    !original_query_ids
+                        .iter()
+                        .any(|id| Some(id.as_str())
+                            == query.get_attr("id").and_then(|v| v.as_text()))
+                );
+                written.send(Ok(())).unwrap();
+                restarted.deliver(device_reply(&query)).await;
+            }
+            restarted.nothing_written(Duration::from_millis(1200)).await;
+            assert_eq!(
+                store.read(|tx| outbox.get(tx, ticket)).unwrap().unwrap(),
+                original
+            );
+            assert_eq!(
+                outgoing_group::preparation(&store, ticket)
+                    .unwrap()
+                    .unwrap(),
+                progress
+            );
+            if cut == "send" {
+                let id = original.wire_id.as_ref().unwrap();
+                restarted
+                    .deliver(
+                        Node::new("ack")
+                            .attr("class", "message")
+                            .attr("id", id.as_str())
+                            .attr("from", f.plan.chat.clone()),
+                    )
+                    .await;
+                tokio::task::yield_now().await;
+                let accepted = store.read(|tx| outbox.get(tx, ticket)).unwrap().unwrap();
+                assert!(accepted.status().server_accepted());
+                assert_eq!(accepted.attempts, original.attempts);
+                assert!(
+                    accepted
+                        .facts
+                        .iter()
+                        .any(|fact| fact.kind
+                            == crate::model::send::DeliveryFactKind::DeliveryUnknown)
+                );
+                restarted
+                    .deliver(
+                        Node::new("receipt")
+                            .attr("id", id.as_str())
+                            .attr("from", f.plan.chat.clone())
+                            .attr("participant", f.plan.recipients[0].clone()),
+                    )
+                    .await;
+                let (ack, written) = restarted.written().await;
+                assert_eq!(ack.description, "ack");
+                written.send(Ok(())).unwrap();
+                let delivered = store.read(|tx| outbox.get(tx, ticket)).unwrap().unwrap();
+                assert!(delivered.facts.iter().any(|fact| fact.kind
+                    == crate::model::send::DeliveryFactKind::Delivered
+                    && fact.device.is_some()));
+                assert_eq!(delivered.attempts, original.attempts);
+            }
+            restarted.stop_cleanly().await;
+        }
     }
 
     #[tokio::test(start_paused = true)]

@@ -101,6 +101,12 @@ pub mod identity_conflicts;
     feature = "experimental-transport"
 ))]
 pub mod identity_query;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub mod outgoing_group;
 pub mod participant_hash;
 #[cfg(all(
     feature = "experimental-signal-crypto",

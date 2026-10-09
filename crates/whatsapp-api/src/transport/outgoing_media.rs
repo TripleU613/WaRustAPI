@@ -159,7 +159,16 @@ fn uploaded(
         })?
         .ok_or_else(bad)?;
     let to = saved["to"].as_str().ok_or_else(bad)?;
-    if saved["status"] != "uploaded" || to.strip_prefix('+').unwrap_or(to) != peer.user {
+    // A group upload is bound to its chat, not an empty direct `to`. Never
+    // interpret the same numeric user in another namespace as the recipient.
+    let matches = if peer.server == crate::model::jid::Server::User
+        && to.strip_prefix('+').unwrap_or(to) == peer.user
+    {
+        true
+    } else {
+        Jid::parse(to).is_ok_and(|j| j.to_non_ad() == peer.to_non_ad())
+    };
+    if saved["status"] != "uploaded" || !matches {
         return Err(bad());
     }
     let hash = saved["hash"].as_str().ok_or_else(bad)?;

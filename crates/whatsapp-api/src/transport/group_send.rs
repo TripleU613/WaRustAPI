@@ -195,9 +195,6 @@ pub(crate) fn plan_in(tx: &ReadTx<'_>, chat: &Jid, own: &Jid) -> Result<FanoutPl
     plan_over_in(tx, chat, own, group_members_in(tx, chat)?)
 }
 
-fn group_members(store: &ProtocolStore, chat: &Jid) -> Result<Vec<Jid>> {
-    store.read(|tx| group_members_in(tx, chat))
-}
 fn group_members_in(tx: &ReadTx<'_>, chat: &Jid) -> Result<Vec<Jid>> {
     if chat.server != Server::Group {
         return Err(invalid("this plan reads a group snapshot"));
@@ -222,7 +219,10 @@ fn group_members_in(tx: &ReadTx<'_>, chat: &Jid) -> Result<Vec<Jid>> {
 /// Membership-derived mode remains a local supported subset; APK 37.71
 /// B7i.A00/1jL.A0Y also depend on unported contact/category state.
 pub fn recipients_for_group(store: &ProtocolStore, chat: &Jid, own: &Jid) -> Result<Vec<Jid>> {
-    let (_, _, recipients) = routing(chat, own, group_members(store, chat)?)?;
+    store.read(|tx| recipients_for_group_in(tx, chat, own))
+}
+pub(crate) fn recipients_for_group_in(tx: &ReadTx<'_>, chat: &Jid, own: &Jid) -> Result<Vec<Jid>> {
+    let (_, _, recipients) = routing(chat, own, group_members_in(tx, chat)?)?;
     Ok(recipients)
 }
 
