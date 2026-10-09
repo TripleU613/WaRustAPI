@@ -2730,3 +2730,19 @@ Token-issue/full-signature validation: 788 workspace/all-feature tests, strict
 Clippy, Rustdoc, default CLI/API/reference/format and build checks passed. New
 14-topic evidence and the prior default-mode bundle reproduce; self-diff took
 0.022072 seconds. No account operation or live token/identity request was made.
+
+2026-10-09 — **Confirmed local:** manual peer verification now refuses a saved
+own LID with no user before writing metadata. A failing-before regression and
+reopen checks cover mark/unmark refusals, unchanged pins/sessions/events and
+valid remote decisions. The initial zero-device bypass hypothesis was refuted:
+valid textual zero forms already normalize; no parser change was needed.
+This is our local prerequisite, not a server refusal. Native malformed-login
+parity and fresh live identity transitions remain unknown. No real account
+verification decision or network request was made.
+[Evidence and reproduction](protocol/own-verification.md).
+
+Own-prerequisite verification: 790 workspace/all-feature tests (660 API, four
+property, nine crash, 51 CLI, one API symbol and 65 xtask), strict Clippy,
+warning-free Rustdoc, default CLI/API checks, regenerated CLI reference,
+formatting and build passed. Hygiene checked 1,283 local links and 23 APK
+bundles / 6,988,623 bytes. Validation used synthetic stores only.

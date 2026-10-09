@@ -107,7 +107,15 @@ pub fn set_local(
             .as_ref()
             .and_then(|record| record["lid"].as_str())
             .and_then(|text| Jid::parse(text).ok())
-            .filter(|jid| jid.server == Server::Lid && jid.device == 0 && jid.agent == 0)
+            // The generic JID parser also accepts server-only destinations.
+            // Our own-account exclusion requires an actual primary user, not
+            // just the LID server (local contract; own-verification.md).
+            .filter(|jid| {
+                jid.server == Server::Lid
+                    && !jid.user.is_empty()
+                    && jid.device == 0
+                    && jid.agent == 0
+            })
             .ok_or_else(|| invalid("saved local LID is unknown; cannot exclude own account"))?;
         if own_lid == *peer
             || account
@@ -382,6 +390,137 @@ mod tests {
         assert!(set_local(&store, &peer, &fp, 0, true).is_err());
         assert!(set_local(&store, &peer, &fp, 1, true).unwrap().verified);
     }
+    #[test]
+    fn own_primary_wire_encodings_refuse_decisions_without_mutating_state() {
+        // A differing saved pin must not turn a known own LID into a peer.
+        // Explicit zero agent/device text parses as the same primary account.
+        for spelling in [
+            "111111111111111@lid",
+            "111111111111111:0@lid",
+            "111111111111111.0:0@lid",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("own-verification.redb");
+            let store = open(&path, true);
+            let own = Jid::parse("111111111111111@lid").unwrap();
+            let pin = setup(&store, &own);
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        b"login-identity",
+                        1,
+                        &serde_json::json!({"lid": spelling}),
+                    )
+                })
+                .unwrap();
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        Ok((
+                            tx.scan(Table::Checkpoints, 1, 100)?,
+                            tx.scan(Table::PeerIdentities, 1, 100)?,
+                            tx.scan(Table::SignalSessions, 1, 100)?,
+                        ))
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let head = store.journal_head().unwrap();
+            for verified in [true, false] {
+                let error = set_local(&store, &own, &fingerprint(&pin), 0, verified).unwrap_err();
+                assert!(
+                    error
+                        .to_string()
+                        .contains("own account verification is refused")
+                );
+                assert_eq!(snapshot(&store), before);
+                assert_eq!(store.journal_head().unwrap(), head);
+            }
+            drop(store);
+            let store = open(&path, false);
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            assert!(
+                store
+                    .read(|tx| inspect_in(tx, &own, Some(&pin)))
+                    .unwrap()
+                    .is_none()
+            );
+            let remote = Jid::parse("222222222222222@lid").unwrap();
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::PeerIdentities,
+                        format!("comparison-direct:{remote}").as_bytes(),
+                        1,
+                        &pin,
+                    )
+                })
+                .unwrap();
+            let marked = set_local(&store, &remote, &fingerprint(&pin), 0, true).unwrap();
+            assert!(marked.verified);
+            assert_eq!(marked.action_sequence, 1);
+            assert!(
+                !set_local(&store, &remote, &fingerprint(&pin), 1, false)
+                    .unwrap()
+                    .verified
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+        }
+    }
+
+    #[test]
+    fn unknown_own_user_refuses_decisions_even_with_valid_remote_pin() {
+        for spelling in ["lid", "111111111111111:3@lid", "111111111111111.9:0@lid"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("unknown-own.redb");
+            let store = open(&path, true);
+            let remote = Jid::parse("222222222222222@lid").unwrap();
+            let pin = setup(&store, &remote);
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        b"login-identity",
+                        1,
+                        &serde_json::json!({"lid": spelling}),
+                    )
+                })
+                .unwrap();
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        Ok((
+                            tx.scan(Table::Checkpoints, 1, 100)?,
+                            tx.scan(Table::PeerIdentities, 1, 100)?,
+                            tx.scan(Table::SignalSessions, 1, 100)?,
+                        ))
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let head = store.journal_head().unwrap();
+            for verified in [true, false] {
+                let error =
+                    set_local(&store, &remote, &fingerprint(&pin), 0, verified).unwrap_err();
+                assert!(error.to_string().contains("saved local LID is unknown"));
+                assert_eq!(snapshot(&store), before);
+                assert_eq!(store.journal_head().unwrap(), head);
+            }
+            drop(store);
+            let store = open(&path, false);
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            assert!(
+                store
+                    .read(|tx| inspect_in(tx, &remote, Some(&pin)))
+                    .unwrap()
+                    .is_none()
+            );
+        }
+    }
+
     #[test]
     fn missing_prerequisites_and_own_identity_are_refused() {
         let dir = tempfile::tempdir().unwrap();
