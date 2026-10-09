@@ -1,0 +1,97 @@
+# APK-derived structural disassembly: LX/3KI;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=12
+  # full signature: LX/3KI;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v10, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=17 const-wide/32 v0, #0x400000
+  000e..0014 op=6e invoke-virtual {v10, v0, v1}, LX/178;->A0b(J)Z
+  0014..0016 op=0a move-result v0
+  0016..001a op=38 if-eqz v0, +0x9e
+  001a..0020 op=71 invoke-static {v10}, LX/324;->A00(LX/178;)Ljava/lang/String;
+  0020..0022 op=0c move-result-object v0
+  0022..0026 op=38 if-eqz v0, +0x98
+  0026..002a op=54 iget-object v0, v9, LX/3KI;->A00:LX/05B;
+  002a..0030 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0030..0032 op=0c move-result-object v6
+  0032..0036 op=1f check-cast v6, LX/25v;
+  0036..003c op=71 invoke-static {v10}, LX/324;->A00(LX/178;)Ljava/lang/String;
+  003c..003e op=0c move-result-object v8
+  003e..0042 op=38 if-eqz v8, +0x83
+  0042..0046 op=54 iget-object v0, v10, LX/178;->A0i:LX/1gc;
+  0046..004a op=54 iget-object v7, v0, LX/1gc;->A00:LX/0Cy;
+  004a..004e op=38 if-eqz v7, +0x76
+  004e..0052 op=54 iget-object v0, v6, LX/25v;->A00:LX/05B;
+  0052..0058 op=71 invoke-static {v0}, LX/05B;->A00(LX/05B;)LX/00D;
+  0058..005a op=0c move-result-object v1
+  005a..005e op=13 const/16 v0, #0x324f
+  005e..0064 op=6e invoke-virtual {v1, v0}, LX/00D;->A10(I)Z
+  0064..0066 op=0a move-result v0
+  0066..006a op=38 if-eqz v0, +0x17
+  006a..006e op=54 iget-object v0, v6, LX/25v;->A01:LX/05B;
+  006e..0074 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0074..0076 op=0c move-result-object v0
+  0076..007a op=1f check-cast v0, LX/0Yo;
+  007a..0080 op=6e invoke-virtual {v0, v7}, LX/0Yo;->A02(LX/0Cy;)LX/0Cy;
+  0080..0082 op=0c move-result-object v5
+  0082..0086 op=39 if-nez v5, +0xa
+  0086..008a op=1a const-string v0, "PremiumMessageInfoStore/insertInfo/originalChatJid is null"
+  008a..0090 op=71 invoke-static {v0}, LX/1xf;->A15(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+  0090..0092 op=0c move-result-object v0
+  0092..0094 op=27 throw v0
+  0094..0096 op=07 move-object v5, v7
+  0096..009a op=54 iget-object v0, v6, LX/25v;->A04:LX/05B;
+  009a..00a0 op=71 invoke-static {v0}, LX/1xo;->A0Q(LX/05B;)LX/0ZN;
+  00a0..00a2 op=0c move-result-object v3
+  00a2..00a8 op=71 invoke-static {}, LX/1xk;->A06()Landroid/content/ContentValues;
+  00a8..00aa op=0c move-result-object v4
+  00aa..00ae op=1a const-string v2, "message_row_id"
+  00ae..00b2 op=53 iget-wide v0, v10, LX/178;->A0j:J
+  00b2..00b8 op=71 invoke-static {v4, v2, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  00b8..00bc op=1a const-string v0, "campaign_id"
+  00bc..00c2 op=6e invoke-virtual {v4, v0, v8}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  00c2..00c6 op=54 iget-object v0, v6, LX/25v;->A01:LX/05B;
+  00c6..00cc op=71 invoke-static {v0}, LX/1xj;->A1V(LX/05B;)Z
+  00cc..00ce op=0a move-result v0
+  00ce..00d2 op=38 if-eqz v0, +0xd
+  00d2..00d6 op=1a const-string v2, "account_jid_row_id"
+  00d6..00da op=54 iget-object v0, v6, LX/25v;->A02:LX/05B;
+  00da..00e0 op=71 invoke-static {v0, v7}, LX/1xj;->A03(LX/05B;Lcom/whatsapp/infra/core/jid/Jid;)J
+  00e0..00e2 op=0b move-result-wide v0
+  00e2..00e8 op=71 invoke-static {v4, v2, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  00e8..00ec op=1a const-string v2, "chat_row_id"
+  00ec..00f0 op=54 iget-object v0, v6, LX/25v;->A02:LX/05B;
+  00f0..00f6 op=71 invoke-static {v0, v5}, LX/1xj;->A03(LX/05B;Lcom/whatsapp/infra/core/jid/Jid;)J
+  00f6..00f8 op=0b move-result-wide v0
+  00f8..00fe op=71 invoke-static {v4, v2, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  00fe..0102 op=54 iget-object v2, v3, LX/0ZN;->A02:LX/0IY;
+  0102..0106 op=1a const-string v1, "premium_message_info"
+  0106..010a op=1a const-string v0, "PremiumMessageInfoStore/INSERT_PREMIUM_MESSAGE_CAMPAIGN_ID"
+  010a..0110 op=6e invoke-virtual {v2, v1, v0, v4}, LX/0IY;->A06(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+  0110..0116 op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  0116..011a op=38 if-eqz v11, +0x1e
+  011a..011e op=1c const-class v0, LX/3KI;
+  011e..0124 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  0124..0126 op=0c move-result-object v0
+  0126..0128 op=27 throw v0
+  0128..012a op=0d move-exception v1
+  012a..012c op=27 throw v1
+  012c..012e op=0d move-exception v0
+  012e..0134 op=71 invoke-static {v3, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0134..0136 op=27 throw v0
+  0136..013a op=1a const-string v0, "PremiumMessageInfoStore/insertInfo/chatJid is null"
+  013a..0140 op=71 invoke-static {v0}, LX/1xf;->A15(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+  0140..0142 op=0c move-result-object v0
+  0142..0144 op=27 throw v0
+  0144..0148 op=1a const-string v0, "PremiumMessageInfoStore/insertInfo/campaignId is null"
+  0148..014e op=71 invoke-static {v0}, LX/1xf;->A15(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+  014e..0150 op=0c move-result-object v0
+  0150..0152 op=27 throw v0
+  0152..0154 op=0e return-void
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0051..0088 -> 0094
+  # catch <all> code_units 0095..0096 -> 0096
+.end method

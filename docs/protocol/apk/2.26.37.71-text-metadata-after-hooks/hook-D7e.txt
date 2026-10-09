@@ -1,0 +1,82 @@
+# APK-derived structural disassembly: LX/D7e;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=12
+  # full signature: LX/D7e;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v10, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=71 invoke-static {v10}, LX/C9v;->A00(LX/178;)LX/D6D;
+  000e..0010 op=0c move-result-object v0
+  0010..0014 op=38 if-eqz v0, +0x85
+  0014..0018 op=54 iget-object v0, v9, LX/D7e;->A00:LX/05B;
+  0018..001e op=71 invoke-static {v0}, LX/1xo;->A0L(LX/05B;)LX/00D;
+  001e..0020 op=0c move-result-object v1
+  0020..0024 op=13 const/16 v0, #0x3a77
+  0024..002a op=6e invoke-virtual {v1, v0}, LX/00D;->A10(I)Z
+  002a..002c op=0a move-result v0
+  002c..0030 op=39 if-nez v0, +0x77
+  0030..0036 op=71 invoke-static {v10}, LX/C9v;->A00(LX/178;)LX/D6D;
+  0036..0038 op=0c move-result-object v2
+  0038..003c op=38 if-eqz v2, +0x71
+  003c..0040 op=54 iget-object v0, v9, LX/D7e;->A01:LX/05B;
+  0040..0046 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0046..0048 op=0c move-result-object v0
+  0048..004c op=1f check-cast v0, LX/DGL;
+  004c..0050 op=53 iget-wide v3, v10, LX/178;->A0j:J
+  0050..0054 op=1a const-string v8, "LinkPreviewMetadataStore/insertOrUpdateLinkPreviewMetadata/insert error, rowId="
+  0054..0058 op=54 iget-object v0, v0, LX/DGL;->A00:LX/0Gc;
+  0058..005e op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  005e..0060 op=0c move-result-object v7
+  0060..0062 op=12 const/4 v0, #0x3
+  0062..0068 op=71 invoke-static {v0}, LX/8kT;->A05(I)Landroid/content/ContentValues;
+  0068..006a op=0c move-result-object v5
+  006a..006e op=1a const-string v0, "message_row_id"
+  006e..0074 op=71 invoke-static {v5, v0, v3, v4}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  0074..0078 op=54 iget-object v0, v2, LX/D6D;->A01:LX/CTW;
+  0078..007c op=38 if-eqz v0, +0x13
+  007c..0080 op=54 iget-object v0, v0, LX/CTW;->A00:LX/Bzf;
+  0080..0084 op=38 if-eqz v0, +0xf
+  0084..0088 op=52 iget v0, v0, LX/Bzf;->type:I
+  0088..008e op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  008e..0090 op=0c move-result-object v1
+  0090..0094 op=38 if-eqz v1, +0x7
+  0094..0098 op=1a const-string v0, "link_header_type"
+  0098..009e op=6e invoke-virtual {v5, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  009e..00a2 op=54 iget-object v0, v2, LX/D6D;->A00:LX/CTV;
+  00a2..00a6 op=38 if-eqz v0, +0x9
+  00a6..00aa op=54 iget-object v1, v0, LX/CTV;->A00:Ljava/lang/String;
+  00aa..00ae op=1a const-string v0, "cta_button_text"
+  00ae..00b4 op=6e invoke-virtual {v5, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  00b4..00b8 op=54 iget-object v0, v2, LX/D6D;->A02:LX/CTX;
+  00b8..00bc op=38 if-eqz v0, +0xb
+  00bc..00c0 op=54 iget-object v1, v0, LX/CTX;->A00:Ljava/lang/String;
+  00c0..00c4 op=38 if-eqz v1, +0x7
+  00c4..00c8 op=1a const-string v0, "params_json"
+  00c8..00ce op=6e invoke-virtual {v5, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  00ce..00d2 op=54 iget-object v2, v7, LX/0ZN;->A02:LX/0IY;
+  00d2..00d6 op=1a const-string v1, "payment_link_metadata"
+  00d6..00da op=1a const-string v0, "LinkPreviewMetadataTable/insertOrUpdateLinkPreviewMetadata"
+  00da..00e0 op=6e invoke-virtual {v2, v1, v0, v5}, LX/0IY;->A05(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+  00e0..00e2 op=0b move-result-wide v5
+  00e2..00e6 op=16 const-wide/16 v1, #0x0
+  00e6..00ea op=31 cmp-long v0, v5, v1
+  00ea..00ee op=3b if-gez v0, +0x5
+  00ee..00f4 op=71 invoke-static {v8, v3, v4}, LX/Ayp;->A17(Ljava/lang/String;J)V
+  00f4..00fa op=6e invoke-virtual {v7}, LX/0ZN;->close()V
+  00fa..00fe op=38 if-eqz v11, +0x10
+  00fe..0102 op=1c const-class v0, LX/D7e;
+  0102..0108 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  0108..010a op=0c move-result-object v0
+  010a..010c op=27 throw v0
+  010c..010e op=0d move-exception v1
+  010e..0110 op=27 throw v1
+  0110..0112 op=0d move-exception v0
+  0112..0118 op=71 invoke-static {v7, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0118..011a op=27 throw v0
+  011a..011c op=0e return-void
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0030..007a -> 0086
+  # catch <all> code_units 0087..0088 -> 0088
+.end method

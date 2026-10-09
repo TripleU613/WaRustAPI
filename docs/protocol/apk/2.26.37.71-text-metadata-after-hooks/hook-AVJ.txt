@@ -1,0 +1,91 @@
+# APK-derived structural disassembly: LX/AVJ;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=12
+  # full signature: LX/AVJ;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v10, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=1c const-class v3, LX/9i6;
+  000c..000e op=1d monitor-enter
+  000e..0012 op=1c const-class v2, LX/AUw;
+  0012..0018 op=71 invoke-static {v10, v2}, LX/1xf;->A0v(LX/178;Ljava/lang/Class;)LX/1i2;
+  0018..001a op=0c move-result-object v0
+  001a..001e op=1f check-cast v0, LX/AUw;
+  001e..0020 op=1e monitor-exit
+  0020..0024 op=38 if-eqz v0, +0x11
+  0024..0028 op=20 instance-of v0, v10, LX/1he;
+  0028..002c op=38 if-eqz v0, +0xe
+  002c..0036 op=18 const-wide v0, #0x4000000000 (274877906944)
+  0036..003c op=6e invoke-virtual {v10, v0, v1}, LX/178;->A0b(J)Z
+  003c..003e op=0a move-result v0
+  003e..0042 op=39 if-nez v0, +0x3
+  0042..0044 op=0e return-void
+  0044..0048 op=55 iget-boolean v0, v9, LX/AVJ;->A01:Z
+  0048..004c op=38 if-eqz v0, -0x3
+  004c..004e op=1d monitor-enter
+  004e..0054 op=71 invoke-static {v10, v2}, LX/1xf;->A0v(LX/178;Ljava/lang/Class;)LX/1i2;
+  0054..0056 op=0c move-result-object v2
+  0056..005a op=1f check-cast v2, LX/AUw;
+  005a..005c op=1e monitor-exit
+  005c..0060 op=38 if-eqz v2, -0xd
+  0060..0064 op=54 iget-object v0, v9, LX/AVJ;->A00:LX/05B;
+  0064..006a op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  006a..006c op=0c move-result-object v0
+  006c..0070 op=1f check-cast v0, LX/AZb;
+  0070..0074 op=53 iget-wide v3, v10, LX/178;->A0j:J
+  0074..0078 op=1a const-string v8, "PaymentExtendedMetadataTable/insertOrUpdatePaymentExtendedMetadata/insert error, rowId="
+  0078..007c op=54 iget-object v0, v0, LX/AZb;->A00:LX/0Gc;
+  007c..0082 op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  0082..0084 op=0c move-result-object v7
+  0084..0086 op=12 const/4 v0, #0x4
+  0086..008c op=71 invoke-static {v0}, LX/8kT;->A05(I)Landroid/content/ContentValues;
+  008c..008e op=0c move-result-object v5
+  008e..0092 op=1a const-string v0, "message_row_id"
+  0092..0098 op=71 invoke-static {v5, v0, v3, v4}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  0098..009c op=52 iget v1, v2, LX/AUw;->A00:I
+  009c..00a0 op=1a const-string v0, "type"
+  00a0..00a6 op=71 invoke-static {v5, v0, v1}, LX/1xl;->A1D(Landroid/content/ContentValues;Ljava/lang/String;I)V
+  00a6..00aa op=54 iget-object v1, v2, LX/AUw;->A02:Ljava/lang/String;
+  00aa..00ae op=1a const-string v0, "platform"
+  00ae..00b4 op=6e invoke-virtual {v5, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  00b4..00b8 op=54 iget-object v1, v2, LX/AUw;->A01:Ljava/lang/String;
+  00b8..00bc op=1a const-string v0, "message_params_json"
+  00bc..00c2 op=6e invoke-virtual {v5, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  00c2..00c6 op=54 iget-object v2, v7, LX/0ZN;->A02:LX/0IY;
+  00c6..00ca op=1a const-string v1, "payment_extended_metadata"
+  00ca..00ce op=1a const-string v0, "PaymentExtendedMetadataTable/insertOrUpdatePaymentMetadata"
+  00ce..00d4 op=6e invoke-virtual {v2, v1, v0, v5}, LX/0IY;->A05(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+  00d4..00d6 op=0b move-result-wide v5
+  00d6..00da op=16 const-wide/16 v1, #0x0
+  00da..00de op=31 cmp-long v0, v5, v1
+  00de..00e2 op=3b if-gez v0, +0x9
+  00e2..00e8 op=71 invoke-static {v3, v4, v8}, LX/1xj;->A13(JLjava/lang/String;)Ljava/lang/String;
+  00e8..00ea op=0c move-result-object v0
+  00ea..00f0 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  00f0..00f6 op=6e invoke-virtual {v7}, LX/0ZN;->close()V
+  00f6..00fa op=38 if-eqz v11, -0x5a
+  00fa..00fe op=1c const-class v0, LX/AVJ;
+  00fe..0104 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  0104..0106 op=0c move-result-object v0
+  0106..0108 op=27 throw v0
+  0108..010a op=0d move-exception v1
+  010a..010c op=27 throw v1
+  010c..010e op=0d move-exception v0
+  010e..0114 op=71 invoke-static {v7, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0114..0116 op=27 throw v0
+  0116..0118 op=0d move-exception v0
+  0118..011a op=1e monitor-exit
+  011a..011c op=27 throw v0
+  011c..011e op=0d move-exception v0
+  011e..0120 op=1e monitor-exit
+  0120..0122 op=27 throw v0
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0007..000f -> 008e
+  # catch <all> code_units 0027..002d -> 008b
+  # catch <all> code_units 0042..0078 -> 0084
+  # catch <all> code_units 0085..0086 -> 0086
+  # catch <all> code_units 008c..008d -> 008b
+  # catch <all> code_units 008f..0090 -> 008e
+.end method

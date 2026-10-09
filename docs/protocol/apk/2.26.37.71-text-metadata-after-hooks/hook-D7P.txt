@@ -1,0 +1,58 @@
+# APK-derived structural disassembly: LX/D7P;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CHJ(VLL) flags=0x1 registers=9
+  # full signature: LX/D7P;->CHJ(LX/178;LX/3Ya;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v7, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=71 invoke-static {v7}, LX/B2J;->A00(LX/178;)LX/D6q;
+  000e..0010 op=0c move-result-object v0
+  0010..0014 op=38 if-eqz v0, +0x54
+  0014..0018 op=54 iget-object v0, v6, LX/D7P;->A00:LX/05B;
+  0018..001e op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  001e..0020 op=0c move-result-object v0
+  0020..0024 op=1f check-cast v0, LX/DGM;
+  0024..002a op=71 invoke-static {v7}, LX/B2J;->A00(LX/178;)LX/D6q;
+  002a..002c op=0c move-result-object v2
+  002c..0030 op=38 if-eqz v2, +0x3d
+  0030..0034 op=54 iget-object v0, v0, LX/DGM;->A00:LX/0Gc;
+  0034..003a op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  003a..003c op=0c move-result-object v4
+  003c..0042 op=71 invoke-static {v7}, LX/8kZ;->A09(LX/178;)Landroid/content/ContentValues;
+  0042..0044 op=0c move-result-object v5
+  0044..0048 op=1a const-string v1, "question_text"
+  0048..004c op=54 iget-object v0, v2, LX/D6q;->A03:Ljava/lang/String;
+  004c..0052 op=6e invoke-virtual {v5, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  0052..0056 op=1a const-string v1, "question_message_type"
+  0056..005a op=54 iget-object v0, v2, LX/D6q;->A01:Ljava/lang/Integer;
+  005a..0060 op=6e invoke-virtual {v5, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  0060..0064 op=1a const-string v1, "response_text"
+  0064..0068 op=54 iget-object v0, v2, LX/D6q;->A04:Ljava/lang/String;
+  0068..006e op=6e invoke-virtual {v5, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  006e..0072 op=1a const-string v1, "server_question_id"
+  0072..0076 op=54 iget-object v0, v2, LX/D6q;->A02:Ljava/lang/Long;
+  0076..007c op=6e invoke-virtual {v5, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  007c..0080 op=54 iget-object v3, v4, LX/0ZN;->A02:LX/0IY;
+  0080..0084 op=1a const-string v2, "question_reply_quoted_message"
+  0084..0088 op=1a const-string v1, "INSERT_QUESTION_REPLY_QUOTED_MESSAGE"
+  0088..008a op=12 const/4 v0, #0x5
+  008a..0090 op=6e invoke-virtual {v3, v2, v1, v5, v0}, LX/0IY;->A09(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+  0090..0092 op=28 goto +0x8
+  0092..0094 op=0d move-exception v1
+  0094..0096 op=27 throw v1
+  0096..0098 op=0d move-exception v0
+  0098..009e op=71 invoke-static {v4, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  009e..00a0 op=27 throw v0
+  00a0..00a6 op=6e invoke-virtual {v4}, LX/0ZN;->close()V
+  00a6..00aa op=38 if-eqz v8, +0x9
+  00aa..00ae op=1c const-class v0, LX/D7P;
+  00ae..00b4 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  00b4..00b6 op=0c move-result-object v0
+  00b6..00b8 op=27 throw v0
+  00b8..00ba op=0e return-void
+  # exception table: 2 try range(s)
+  # catch <all> code_units 001e..0049 -> 0049
+  # catch <all> code_units 004a..004b -> 004b
+.end method

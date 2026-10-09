@@ -1,5 +1,17 @@
 # Status — 2026-10-07
 
+Additional metadata hooks (2026-10-09, **confirmed static**): eight bucket-one
+entries now have registered factory/CHJ boundaries, with inline-video, mention
+and question helpers traced. Question SQL failure throws for -1; selected other
+negative writes only log or discard IDs. Immediate after coverage is 29/54,
+with 25 entries and transitive receipt admission still unknown/unported. Primary
+cleanup remains unfinished. No runtime/account/live change.
+[Evidence and limits](docs/protocol/text-metadata-after-hooks.md).
+
+Metadata-hook validation: exact twelve-topic export and cached self-diff, CLI
+reference, API/library-symbol checks, formatting, whitespace and hygiene passed.
+No fresh runtime suite or live account test is claimed; see linked evidence.
+
 Bot metadata after-hooks (2026-10-09, **confirmed static**): providers
 0xf4b/0xf53 resolve to D7a/D7j. Selected delegated writers target bot_message_info,
 bot_plugin_metadata and bot_message_sharing_info, discard SQL return IDs and do

@@ -110,3 +110,7 @@ and four metadata artifacts; it is not a comparison with another APK release.
 CLI-reference regeneration, API/library-symbol checks, formatting, whitespace
 and repository hygiene passed (2,056 local links; 98 bundles / 20,520,676 bytes).
 This source/docs chunk claims no fresh workspace/runtime suite or live test.
+
+Follow-up: [eight more metadata hooks](text-metadata-after-hooks.md) brings
+the current immediate mapping to 29/54, leaving 25 entries. Historical counts
+above describe this bundle; native receipt admission remains unresolved.
