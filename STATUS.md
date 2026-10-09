@@ -1,5 +1,12 @@
 # Status — 2026-10-07
 
+Text type inserter (2026-10-09, **confirmed static**): type zero resolves
+through provider 0x14c1 to 1hl.BJK and optional message_text persistence.
+D7J recipient-count preprocessing is now confirmed in the 13-entry before set
+at index 8 / provider 0x3c5; 54 after entries are retained. Other hook effects,
+full send progression, user-row admission and primary cleanup remain unported.
+No runtime/account/live change. [Evidence and limits](docs/protocol/text-type-inserter.md).
+
 Main message row (2026-10-09, **confirmed static**): the insertion callback
 writes table message before the type-specific inserter. A0h(1) sets storage
 type A0f; SQL status reads B3b instead. Main-row ID failures and lazy registry

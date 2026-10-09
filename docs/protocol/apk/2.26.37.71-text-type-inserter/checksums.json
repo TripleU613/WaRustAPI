@@ -1,0 +1,134 @@
+{
+  "alternative-global-provider-entry.txt": {
+    "bytes": 693,
+    "sha256": "0180bcf4eb9bff11a6285f7a8baeb6415c15f000faee542ca6338f06bc7f8ae0"
+  },
+  "count-hook-factory.txt": {
+    "bytes": 558,
+    "sha256": "dee46d9a41a9333e48586c0fd234c294a5e243aee64a221d804f7f87825e0526"
+  },
+  "count-hook-switch.txt": {
+    "bytes": 43814,
+    "sha256": "bc1b00ab72777b8dc18e433a1f5e8753444c4e7e9b38f5d2ab2d925ec9ed97bb"
+  },
+  "global-provider-context.txt": {
+    "bytes": 2439,
+    "sha256": "506e56e83048cc8087733aabaa6c6ee1b226d9c7c1910d6fc7a743d1afc315cb"
+  },
+  "global-provider-entry.txt": {
+    "bytes": 758,
+    "sha256": "7ec89a5436521c2d6ec83d9f08be7d5cc8abdb2d3390c08fd51fb10bf4a05263"
+  },
+  "hook-instance-loader.txt": {
+    "bytes": 1071,
+    "sha256": "bf88a056b10e98eb94059e66565577e4e2b00f9cccf9bf81b225b09112dc8cab"
+  },
+  "hook-iterator-next.txt": {
+    "bytes": 6718,
+    "sha256": "8fb8eaaa594f08d0d9bddb2c770cf404f9fb69e66094ca0c2f69ca7f6adb0ce9"
+  },
+  "hook-provider-id-arrays.txt": {
+    "bytes": 379281,
+    "sha256": "09e3575babdfe3874c20b22ff1fbd6f218b387882d96d240ab12a4e59f584e1f"
+  },
+  "hook-provider-set.txt": {
+    "bytes": 4498,
+    "sha256": "6b22dc43f4529c51c0bd145b7d47c9635448283584e24cb4407adff6961a368c"
+  },
+  "hook-set-entry.txt": {
+    "bytes": 805,
+    "sha256": "bd9a281b7701f6f32a298aba6cab3693894ccf03edd4921058a2fd83a9e9c92b"
+  },
+  "hook-set-switch.txt": {
+    "bytes": 28429,
+    "sha256": "b6a7fafba5bd30b48ead751a3b960c10e0a31034982397d7b3eeb4aba4c36012"
+  },
+  "insertion-registry-constructor.txt": {
+    "bytes": 6522,
+    "sha256": "5991c07a8a75722d2caded4b303432a96ee4989c2835d88168b3d38a81118ea6"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "provider-array-cache.txt": {
+    "bytes": 2384,
+    "sha256": "ffdfc74ad94c264fc885032383e931585ef9cb561392fe99e86b2aca5d1c731e"
+  },
+  "provider-compute-callback.txt": {
+    "bytes": 12682,
+    "sha256": "8331ba966ebdfbe248a5c6122f7eec648dadb93448b2d8c26836afa4dde339b1"
+  },
+  "provider-constructor.txt": {
+    "bytes": 1789,
+    "sha256": "be0c9112501839f78bc9a23cc44247781a6d1cb6070d80855b6a03418fa3a7ac"
+  },
+  "provider-first-switch.txt": {
+    "bytes": 53504,
+    "sha256": "31b4ea418a6bdec5a0c065e902e99807f3ea2a0c7c73fdff98e305bd4cc7fc70"
+  },
+  "provider-get.txt": {
+    "bytes": 1749,
+    "sha256": "23912ffc2c3d2bc9414dc7571fff98a5a22856e7502f75c966c2c9ffd853f1a2"
+  },
+  "provider-map-first.txt": {
+    "bytes": 89822,
+    "sha256": "8721544c2beb3f3f7c08cf765cf8881528aa2c9e958d6f0142422987d6da01ed"
+  },
+  "provider-map-second.txt": {
+    "bytes": 186156,
+    "sha256": "3308e9690d1428361d4c2c6282213cc090ed48f7b492bd6c1e8e007aa5598383"
+  },
+  "provider-map-slot-zero.txt": {
+    "bytes": 651,
+    "sha256": "21e24956dfeccdf6923b2b978bb3ad914a72adeeb15f977b7d0cd87ef341c9c0"
+  },
+  "provider-root-switch.txt": {
+    "bytes": 3544,
+    "sha256": "b7d6969c03c892d5a220d15bd182b1e112e32a05ed73066f977b1b85b4e9b7a9"
+  },
+  "provider-wrapper-helper.txt": {
+    "bytes": 564,
+    "sha256": "93ae7ba85cec0bf405696ce13e127dec7235da720bc1891d74d44df2a201921b"
+  },
+  "registry-factory.txt": {
+    "bytes": 1492,
+    "sha256": "82b5eaaa37ace91e481d3c02f53e984585b69666a51503ae139db9ac7202532d"
+  },
+  "targets.json": {
+    "bytes": 11470,
+    "sha256": "36e5e2d9906869d5a7da5080a07aa37db2874caf58385337e30076e41938ec71"
+  },
+  "text-extension-validation.txt": {
+    "bytes": 2175,
+    "sha256": "4d898b9c598d596e6c67e30fdb8a499798ad33bbd238ccac2644c3394896c6d1"
+  },
+  "text-extension-write.txt": {
+    "bytes": 17827,
+    "sha256": "45311473591486d245afdfd79f518ae53fd2f34b949d8f228c59c2e6631bbfa6"
+  },
+  "text-inserter-factory.txt": {
+    "bytes": 558,
+    "sha256": "da25ca94e9006e0e345c9a99af7f0c5fcbea7cf5e36383dffda05027bbf6bb7a"
+  },
+  "text-inserter.txt": {
+    "bytes": 14915,
+    "sha256": "59cc3e5e58de063c479b2a1e62a4a87bd29320a0c95c3e159d6f6abdf290e290"
+  },
+  "text-preparation.txt": {
+    "bytes": 4167,
+    "sha256": "49206a9c2df4ee0930569ba423b66df1eea4ca74492c55a6c4f32a7f66ca7a38"
+  },
+  "text-provider-switch.txt": {
+    "bytes": 45454,
+    "sha256": "5d96b160afaf27776005308aa5ba6e8fd4d0621e54612f74647bee0cf291b61e"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

@@ -1,0 +1,35 @@
+# APK-derived structural disassembly: LX/05E;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method get(L) flags=0x1 registers=4
+  # full signature: LX/05E;->get()Ljava/lang/Object;
+  0000..0004 op=54 iget-object v0, v3, LX/05E;->A04:Ljava/lang/Object;
+  0004..0008 op=39 if-nez v0, +0x25
+  0008..000a op=1d monitor-enter
+  000a..000e op=54 iget-object v0, v3, LX/05E;->A04:Ljava/lang/Object;
+  000e..0012 op=39 if-nez v0, +0xe
+  0012..0016 op=55 iget-boolean v0, v3, LX/05E;->A02:Z
+  0016..001a op=38 if-eqz v0, +0xc
+  001a..001e op=52 iget v0, v3, LX/05E;->A03:I
+  001e..0024 op=71 invoke-static {v0}, LX/00S;->A03(I)Ljava/lang/Object;
+  0024..0026 op=0c move-result-object v0
+  0026..002a op=5b iput-object v0, v3, LX/05E;->A04:Ljava/lang/Object;
+  002a..002c op=1e monitor-exit
+  002c..002e op=28 goto +0x11
+  002e..0032 op=54 iget-object v2, v3, LX/05E;->A00:Landroid/content/Context;
+  0032..0036 op=52 iget v1, v3, LX/05E;->A03:I
+  0036..003a op=54 iget-object v0, v3, LX/05E;->A01:LX/06E;
+  003a..0040 op=71 invoke-static {v2, v0, v1}, LX/00S;->A04(Landroid/content/Context;LX/06E;I)Ljava/lang/Object;
+  0040..0042 op=0c move-result-object v0
+  0042..0046 op=5b iput-object v0, v3, LX/05E;->A04:Ljava/lang/Object;
+  0046..0048 op=28 goto -0xe
+  0048..004a op=0d move-exception v0
+  004a..004c op=1e monitor-exit
+  004c..004e op=27 throw v0
+  004e..0052 op=54 iget-object v0, v3, LX/05E;->A04:Ljava/lang/Object;
+  0052..0054 op=11 return-object v0
+  # exception table: 1 try range(s)
+  # catch <all> code_units 0005..0026 -> 0024
+.end method

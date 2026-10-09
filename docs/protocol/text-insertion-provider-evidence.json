@@ -1,0 +1,98 @@
+{
+  "apk_build": "2.26.37.71",
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "classification": "confirmed static; no live operation",
+  "array_source": "LX/07A;-><clinit>()V",
+  "derivation": "Follow constants, new-array and aput values from the method start to sput-object; A3C feeds before hooks and A3B after hooks. Integers are provider IDs, not statuses.",
+  "arrays": {
+    "A3B": [
+      "0x400a",
+      "0x400b",
+      "0xf4b",
+      "0xf53",
+      "0x41d0",
+      "0x41d2",
+      "0x41e0",
+      "0x41e4",
+      "0x41e5",
+      "0x41e6",
+      "0x41e7",
+      "0x41e8",
+      "0x9f3",
+      "0x18299",
+      "0x1344",
+      "0x1345",
+      "0x1346",
+      "0x1347",
+      "0x188d",
+      "0x16e6",
+      "0x19ff",
+      "0x9cd",
+      "0x1b45",
+      "0xa68",
+      "0x1413b",
+      "0x14a4",
+      "0x14a5",
+      "0x14a6",
+      "0x14a7",
+      "0x14a8",
+      "0x14a9",
+      "0x14aa",
+      "0x14ab",
+      "0x14ac",
+      "0x14ad",
+      "0x14ae",
+      "0x14af",
+      "0x14b0",
+      "0x14b1",
+      "0x14b2",
+      "0x14b3",
+      "0x14b4",
+      "0x180e3",
+      "0x81d4",
+      "0x1412c",
+      "0x77b",
+      "0x8450",
+      "0x131b",
+      "0x10253",
+      "0x1826",
+      "0x142ef",
+      "0x858e",
+      "0x84b3",
+      "0x848a"
+    ],
+    "A3C": [
+      "0x9f2",
+      "0x6f7",
+      "0x16e3",
+      "0x16e5",
+      "0x1413a",
+      "0x77a",
+      "0x1410f",
+      "0x10224",
+      "0x3c5",
+      "0x3c6",
+      "0x14179",
+      "0x858f",
+      "0x101f8"
+    ]
+  },
+  "physical_callers": [
+    {
+      "target": "LX/D7J;-><init>",
+      "output": "classes.dex  LX/0Fv;->A1Q(L)\n  invoke dex byte offset: 0x51c0b8\n",
+      "output_sha256": "e0f0b8609a027455bb9d57d535a02c8ec6eff005c413249e24b5e21147ee1d80"
+    },
+    {
+      "target": "LX/0Fv;->A1Q",
+      "output": "classes.dex  LX/1UE;->A04(LILL)\n  invoke dex byte offset: 0x8fedb8\n",
+      "output_sha256": "9c3a45b9141110c50f991c6d177810d25f39acea4ca661b354731a3a31994682"
+    }
+  ],
+  "negative_results": [
+    {
+      "command": "xtask apk-smali <pinned-apk> --class LX/1go; --signatures --exceptions",
+      "result": "no method bodies match class filter; does not prove class absence"
+    }
+  ]
+}

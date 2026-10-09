@@ -1,0 +1,40 @@
+# APK-derived structural disassembly: LX/05E;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VI) flags=0x10001 registers=3
+  # full signature: LX/05E;-><init>(I)V
+  0000..0006 op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+  0006..000a op=59 iput v2, v1, LX/05E;->A03:I
+  000a..000c op=12 const/4 v0, #0x1
+  000c..0010 op=5c iput-boolean v0, v1, LX/05E;->A02:Z
+  0010..0012 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method <init>(VLI) flags=0x10001 registers=4
+  # full signature: LX/05E;-><init>(LX/06E;I)V
+  0000..0006 op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+  0006..0008 op=12 const/4 v0, #0x0
+  0008..000c op=5c iput-boolean v0, v1, LX/05E;->A02:Z
+  000c..0010 op=59 iput v3, v1, LX/05E;->A03:I
+  0010..0012 op=12 const/4 v0, #0x0
+  0012..0016 op=5b iput-object v2, v1, LX/05E;->A01:LX/06E;
+  0016..001a op=5b iput-object v0, v1, LX/05E;->A00:Landroid/content/Context;
+  001a..001c op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method <init>(VLI) flags=0x10001 registers=4
+  # full signature: LX/05E;-><init>(Landroid/content/Context;I)V
+  0000..0006 op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+  0006..0008 op=12 const/4 v0, #0x0
+  0008..000c op=5c iput-boolean v0, v1, LX/05E;->A02:Z
+  000c..0010 op=59 iput v3, v1, LX/05E;->A03:I
+  0010..0012 op=12 const/4 v0, #0x0
+  0012..0016 op=5b iput-object v0, v1, LX/05E;->A01:LX/06E;
+  0016..001a op=5b iput-object v2, v1, LX/05E;->A00:Landroid/content/Context;
+  001a..001c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

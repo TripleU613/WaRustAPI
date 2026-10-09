@@ -103,3 +103,6 @@ metadata artifacts. CLI reference regeneration, API/library-symbol checks,
 formatting and diff hygiene pass. Historical reused source remains unchanged.
 No Rust runtime code changed, so no fresh workspace/runtime or live test is
 claimed for this source-only chunk.
+
+Follow-up: [text type inserter](text-type-inserter.md) identifies 1hl.BJK and
+confirms D7J membership in the before set; other hook effects remain unknown.

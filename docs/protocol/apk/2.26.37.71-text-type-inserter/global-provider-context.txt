@@ -1,0 +1,49 @@
+# APK-derived structural disassembly: LX/00S;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(LLLI) flags=0x9 registers=6
+  # full signature: LX/00S;->A04(Landroid/content/Context;LX/06E;I)Ljava/lang/Object;
+  0000..0002 op=12 const/4 v2, #0x0
+  0002..0006 op=38 if-eqz v3, +0xc
+  0006..000c op=71 invoke-static {v3}, LX/06B;->get(Landroid/content/Context;)LX/06B;
+  000c..000e op=0c move-result-object v4
+  000e..0012 op=1f check-cast v4, LX/06E;
+  0012..0018 op=71 invoke-static {v4}, LX/00S;->A07(LX/06A;)V
+  0018..001a op=28 goto +0x18
+  001a..001e op=39 if-nez v4, -0x6
+  001e..0022 op=62 sget-object v0, LX/00S;->A00:Ljava/lang/ThreadLocal;
+  0022..0028 op=6e invoke-virtual {v0}, Ljava/lang/ThreadLocal;->get()Ljava/lang/Object;
+  0028..002a op=0c move-result-object v0
+  002a..002e op=1f check-cast v0, LX/06r;
+  002e..0032 op=38 if-eqz v0, +0x8
+  0032..0038 op=6e invoke-virtual {v0}, LX/06r;->A00()LX/06E;
+  0038..003a op=0c move-result-object v4
+  003a..003e op=39 if-nez v4, -0x16
+  003e..0044 op=71 invoke-static {}, LX/06G;->A00()LX/06G;
+  0044..0046 op=0c move-result-object v4
+  0046..0048 op=28 goto -0x1c
+  0048..004e op=72 invoke-interface {v4}, LX/06D;->AOT()LX/06r;
+  004e..0050 op=0c move-result-object v1
+  0050..0052 op=07 move-object v0, v4
+  0052..0056 op=1f check-cast v0, LX/06C;
+  0056..005a op=54 iget-object v0, v0, LX/06C;->A00:LX/06B;
+  005a..0060 op=72 invoke-interface {v0}, LX/06A;->B0M()LX/06I;
+  0060..0062 op=0c move-result-object v0
+  0062..0068 op=71 invoke-static {v5, v0, v2}, LX/1UE;->A00(ILX/06A;Ljava/lang/Object;)Ljava/lang/Object;
+  0068..006a op=0c move-result-object v0
+  006a..0070 op=71 invoke-static {}, LX/00S;->A06()V
+  0070..0076 op=72 invoke-interface {v4, v1}, LX/06D;->API(Ljava/lang/Object;)V
+  0076..0078 op=11 return-object v0
+  0078..007a op=0d move-exception v0
+  007a..007c op=12 const/4 v1, #0x0
+  007c..007e op=28 goto +0x2
+  007e..0080 op=0d move-exception v0
+  0080..0086 op=71 invoke-static {}, LX/00S;->A06()V
+  0086..008c op=72 invoke-interface {v4, v1}, LX/06D;->API(Ljava/lang/Object;)V
+  008c..008e op=27 throw v0
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0024..0028 -> 003c
+  # catch <all> code_units 0028..0035 -> 003f
+.end method

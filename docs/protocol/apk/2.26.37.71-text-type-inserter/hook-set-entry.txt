@@ -1,0 +1,16 @@
+# APK-derived structural disassembly: LX/00S;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A05(LI) flags=0x9 registers=3
+  # full signature: LX/00S;->A05(I)Ljava/util/Set;
+  0000..0006 op=71 invoke-static {}, LX/06G;->A00()LX/06G;
+  0006..0008 op=0c move-result-object v1
+  0008..000a op=12 const/4 v0, #0x0
+  000a..0010 op=71 invoke-static {v0, v1, v2}, LX/00S;->A04(Landroid/content/Context;LX/06E;I)Ljava/lang/Object;
+  0010..0012 op=0c move-result-object v0
+  0012..0016 op=1f check-cast v0, Ljava/util/Set;
+  0016..0018 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

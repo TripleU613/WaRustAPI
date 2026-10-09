@@ -83,3 +83,6 @@ the pinned APK. Cached self-diff verifies seven unchanged topics and four
 metadata artifacts. CLI reference regeneration, API/library-symbol validation,
 formatting, whitespace and repository hygiene pass (2,011 local links; 93 bundles
 / 18,935,752 bytes). No fresh workspace/runtime suite or live test is claimed.
+
+Follow-up: [text type inserter](text-type-inserter.md) identifies 1hl.BJK and
+confirms D7J membership in the before set; other hook effects remain unknown.
