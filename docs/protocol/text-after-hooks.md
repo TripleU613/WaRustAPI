@@ -79,3 +79,6 @@ artifacts. Exact factory types/switch keys and direct-body exclusions were
 checked. CLI reference regeneration, API/library-symbol, formatting, whitespace
 and hygiene pass (2,031 local links; 95 bundles / 20,202,507 bytes). No fresh
 workspace/runtime suite or live test is claimed.
+
+Follow-up: [D7V link/span helper](text-link-after-hook.md) attributes Ce8
+and its update queue; transitive update effects remain unknown.

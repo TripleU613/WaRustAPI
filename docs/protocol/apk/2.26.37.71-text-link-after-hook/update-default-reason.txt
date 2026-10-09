@@ -1,0 +1,25 @@
+# APK-derived structural disassembly: LX/0zC;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0M(VL) flags=0x1 registers=7
+  # full signature: LX/0zC;->A0M(LX/178;)V
+  0000..0004 op=53 iget-wide v3, v6, LX/178;->A0j:J
+  0004..0008 op=16 const-wide/16 v1, #0x0
+  0008..000c op=31 cmp-long v0, v3, v1
+  000c..0010 op=3b if-gez v0, +0x16
+  0010..0014 op=1a const-string v0, "CoreMessageStore/updateMessageAsync/message must have row_id set; key="
+  0014..0018 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0018..001e op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  001e..0022 op=54 iget-object v0, v6, LX/178;->A0i:LX/1gc;
+  0022..0028 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0028..002e op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  002e..0030 op=0c move-result-object v1
+  0030..0032 op=12 const/4 v0, #0x0
+  0032..0038 op=71 invoke-static {v0, v1}, LX/00K;->A0D(ZLjava/lang/String;)V
+  0038..003a op=12 const/4 v0, #0xff (-1)
+  003a..0040 op=6e invoke-virtual {v5, v6, v0}, LX/0zC;->A0R(LX/178;I)V
+  0040..0042 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

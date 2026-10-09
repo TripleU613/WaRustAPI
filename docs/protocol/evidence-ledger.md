@@ -1,5 +1,12 @@
 # Evidence ledger
 
+Common link/span after-hook (2026-10-09, **confirmed static**): Ce8 writes
+span indices and ORs A0n flag 0x10000, distinct from A08 status, then queues
+reason -1 / Ahi selector 5 / scheduling 22. The update wrapper separates
+before/callback/CgJ/after hooks and unsupported-type false returns. Transitive
+update effects, user-row admission and primary cleanup remain unknown/unported.
+No runtime/account/live change. [Evidence and limits](text-link-after-hook.md).
+
 Selected after-insert hooks (2026-10-09, **confirmed static**): 19 of 54
 registered entries now have concrete provider/CHJ boundaries. Selected bodies
 write metadata or delegate to helpers; no direct native status setter or

@@ -1,0 +1,47 @@
+# APK-derived structural disassembly: LX/Ahi;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLII) flags=0x10001 registers=5
+  # full signature: LX/Ahi;-><init>(LX/0zC;LX/178;II)V
+  0000..0004 op=59 iput v4, v0, LX/Ahi;->$t:I
+  0004..000a op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+  000a..000e op=5b iput-object v1, v0, LX/Ahi;->A01:Ljava/lang/Object;
+  000e..0014 op=2b packed-switch v4, payload@0x28, cases=[5:@0x1e, 6:@0x1e], default@0x14
+  0014..0018 op=59 iput v3, v0, LX/Ahi;->A00:I
+  0018..001c op=5b iput-object v2, v0, LX/Ahi;->A02:Ljava/lang/Object;
+  001c..001e op=0e return-void
+  001e..0022 op=5b iput-object v2, v0, LX/Ahi;->A02:Ljava/lang/Object;
+  0022..0026 op=59 iput v3, v0, LX/Ahi;->A00:I
+  0026..0028 op=0e return-void
+  0028..0038 op=00 packed-switch-payload size=2
+  # exception table: 0 try range(s)
+.end method
+
+.method <init>(VLLII) flags=0x10001 registers=5
+  # full signature: LX/Ahi;-><init>(LX/1OX;LX/1bn;II)V
+  0000..0004 op=59 iput v4, v0, LX/Ahi;->$t:I
+  0004..000a op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+  000a..000e op=5b iput-object v1, v0, LX/Ahi;->A01:Ljava/lang/Object;
+  000e..0012 op=d9 rsub-int/lit8 v4, v4, #0x2
+  0012..0016 op=38 if-eqz v4, +0x7
+  0016..001a op=59 iput v3, v0, LX/Ahi;->A00:I
+  001a..001e op=5b iput-object v2, v0, LX/Ahi;->A02:Ljava/lang/Object;
+  001e..0020 op=0e return-void
+  0020..0024 op=5b iput-object v2, v0, LX/Ahi;->A02:Ljava/lang/Object;
+  0024..0028 op=59 iput v3, v0, LX/Ahi;->A00:I
+  0028..002a op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method <init>(VLIIL) flags=0x10001 registers=5
+  # full signature: LX/Ahi;-><init>(Ljava/lang/Object;IILjava/lang/Object;)V
+  0000..0004 op=59 iput v3, v0, LX/Ahi;->$t:I
+  0004..000a op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+  000a..000e op=5b iput-object v4, v0, LX/Ahi;->A01:Ljava/lang/Object;
+  000e..0012 op=5b iput-object v1, v0, LX/Ahi;->A02:Ljava/lang/Object;
+  0012..0016 op=59 iput v2, v0, LX/Ahi;->A00:I
+  0016..0018 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
