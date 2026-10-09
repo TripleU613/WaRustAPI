@@ -2203,3 +2203,24 @@ than user replies. No qualifying live companion transition occurred. listen now
 preserves terminal state before shutdown and prints fixed redacted cause labels;
 this diagnostic fix is locally tested, not yet live observed. Primary cleanup,
 namespace migration and resend remain unfinished.
+
+2026-10-09 — **Confirmed static:** bulk user receipt restoration uses a distinct
+8G8.A05 writer from chat transfer/history sync. Any cache-slot improvement enables
+SQL with every positive supplied timestamp; this is not the one-column live
+writer or a universal SQL minimum policy. Descriptor field 40 and nested fields
+1..6, actual caller branches and unique user-row index are retained. Exact table
+xref negatives do not prove absence of generic normal-send seeding. Primary
+cleanup still needs actual user-row existence/admission, not synthesized facts.
+[Evidence and remaining port inputs](user-receipt-import.md).
+
+Validation: nine source topics / 14 files / 204,931 bytes reproduce exactly from
+the pinned APK. Cached self-diff verifies nine unchanged topics and four metadata
+artifacts, not another release's behavior. Self-remap selects the correct original
+class/method for seven topics; one is ambiguous and one unanchored, so no complete
+proposed recipe is emitted. The committed compact report keeps actual candidate
+selections and the full report digest; unrelated per-anchor hit lists stay local.
+CLI-reference regeneration, API/library-symbol validation, formatting and diff
+hygiene passed. Repository hygiene checked 1,463 local links and 37 bundles /
+9,133,957 bytes. No Rust runtime changed, no fresh workspace/runtime test is
+claimed, and no account or live operation ran. The prior cfda410 functional
+chunk's 810-test validation remains separate.

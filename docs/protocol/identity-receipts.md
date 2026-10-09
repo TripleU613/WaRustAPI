@@ -198,3 +198,9 @@ positive receipt reinsertion with the current nullable user version. Original
 at_send remains immutable; new present/version diagnostics distinguish mutable
 membership. This supersedes the earlier full-membership/no-cleanup limitation
 for this branch only. Primary and namespace/counterpart cleanup remain unported.
+
+Follow-up: [bulk user-receipt restoration](user-receipt-import.md) traces the
+separate 8G8.A05 writer, its chat-transfer/history callers and descriptor fields.
+Its all-positive-input SQL write differs from the one-column live path. Normal
+send seeding and complete user-row admission remain unproven; no user rows may
+be inferred merely from original targets or Delivered facts.

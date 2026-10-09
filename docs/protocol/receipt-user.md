@@ -117,3 +117,9 @@ Follow-up: [receipt-manager exclusions](receipt-manager.md) closes the native
 A03 set producer and message deletion/copy context without changing the still
 unported per-user admission or identity cleanup. Native revoke deletion is a
 message-row-only operation, distinct from pending identity-change predicates.
+
+Follow-up: [bulk user-receipt restoration](user-receipt-import.md) traces the
+separate 8G8.A05 writer, its chat-transfer/history callers and descriptor fields.
+Its all-positive-input SQL write differs from the one-column live path. Normal
+send seeding and complete user-row admission remain unproven; no user rows may
+be inferred merely from original targets or Delivered facts.

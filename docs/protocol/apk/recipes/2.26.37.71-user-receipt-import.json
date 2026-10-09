@@ -1,0 +1,113 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "entire-user-receipt-writer": {
+      "class": "LX/8G8;",
+      "method": "A05",
+      "anchors": [
+        "receipt_user",
+        "insertOrUpdateEntireUserReceiptForMessage/UPDATE_RECEIPT_USER"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+      ]
+    },
+    "chat-transfer-user-receipts": {
+      "class": "LX/CnI;",
+      "method": "A05",
+      "anchors": [
+        "p2p/fpm/ChatTransferMessagesImporter/",
+        "xpm-failed-receipt-import"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+      ]
+    },
+    "history-sync-user-receipts": {
+      "class": "LX/CoO;",
+      "method": "A02",
+      "anchors": [
+        "HistorySyncChunkProcessor/failed to insert user receipt."
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+      ]
+    },
+    "user-receipt-index": {
+      "class": "LX/0Tn;",
+      "method": "AR1",
+      "anchors": [
+        "receipt_user_index"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+      ]
+    },
+    "user-receipt-columns": {
+      "class": "LX/0Tn;",
+      "method": "AR4",
+      "anchors": [
+        "receipt_user",
+        "played_timestamp",
+        "_id"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+      ]
+    },
+    "user-receipt-schema-maintenance": {
+      "class": "LX/0Tn;",
+      "method": "AR6",
+      "anchors": [
+        "receipt_user"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+      ]
+    },
+    "user-receipt-descriptor": {
+      "class": "LX/6tK;",
+      "method": "dynamicMethod",
+      "anchors": [
+        "receiptTimestamp_",
+        "playedTimestamp_",
+        "pendingDeviceJid_",
+        "deliveredDeviceJid_"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+      ]
+    },
+    "history-message-descriptor": {
+      "class": "LX/BZY;",
+      "method": "dynamicMethod",
+      "anchors": [
+        "userReceipt_",
+        "messageStubType_"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+      ]
+    },
+    "sql-user-receipt-update": {
+      "class": "LX/0IY;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/send_versions.rs",
+        "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+      ]
+    }
+  }
+}

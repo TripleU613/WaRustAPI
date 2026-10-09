@@ -1,0 +1,151 @@
+{
+  "chat-transfer-user-receipts": {
+    "anchors": [
+      "p2p/fpm/ChatTransferMessagesImporter/",
+      "xpm-failed-receipt-import"
+    ],
+    "class": "LX/CnI;",
+    "file": "chat-transfer-user-receipts.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "entire-user-receipt-writer": {
+    "anchors": [
+      "receipt_user",
+      "insertOrUpdateEntireUserReceiptForMessage/UPDATE_RECEIPT_USER"
+    ],
+    "class": "LX/8G8;",
+    "file": "entire-user-receipt-writer.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "history-message-descriptor": {
+    "anchors": [
+      "userReceipt_",
+      "messageStubType_"
+    ],
+    "class": "LX/BZY;",
+    "file": "history-message-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "history-sync-user-receipts": {
+    "anchors": [
+      "HistorySyncChunkProcessor/failed to insert user receipt."
+    ],
+    "class": "LX/CoO;",
+    "file": "history-sync-user-receipts.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "sql-user-receipt-update": {
+    "class": "LX/0IY;",
+    "file": "sql-user-receipt-update.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "user-receipt-columns": {
+    "anchors": [
+      "receipt_user",
+      "played_timestamp",
+      "_id"
+    ],
+    "class": "LX/0Tn;",
+    "file": "user-receipt-columns.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "AR4",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "user-receipt-descriptor": {
+    "anchors": [
+      "receiptTimestamp_",
+      "playedTimestamp_",
+      "pendingDeviceJid_",
+      "deliveredDeviceJid_"
+    ],
+    "class": "LX/6tK;",
+    "file": "user-receipt-descriptor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "dynamicMethod",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "user-receipt-index": {
+    "anchors": [
+      "receipt_user_index"
+    ],
+    "class": "LX/0Tn;",
+    "file": "user-receipt-index.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "AR1",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  },
+  "user-receipt-schema-maintenance": {
+    "anchors": [
+      "receipt_user"
+    ],
+    "class": "LX/0Tn;",
+    "file": "user-receipt-schema-maintenance.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "AR6",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/send_versions.rs",
+      "crates/whatsapp-api/src/transport/identity_conflicts.rs"
+    ]
+  }
+}

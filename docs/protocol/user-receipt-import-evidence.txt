@@ -1,0 +1,153 @@
+APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c.
+All offsets below are APK-entry bytes in xref/callers; bundle offsets are method-relative bytes.
+
+
+# receipt-user-xref.txt
+["receipt_user"]  (14 reference(s))
+  classes.dex  LX/0LS;->AR6(VL)
+    dex byte offset: 0x563c10
+  classes.dex  LX/0Tn;->AR1(VLL)
+    dex byte offset: 0x598038
+  classes.dex  LX/0Tn;->AR4(VLL)
+    dex byte offset: 0x598122
+  classes.dex  LX/0Tn;->AR6(VL)
+    dex byte offset: 0x598148
+  classes.dex  LX/0Uw;->A01(VLL)
+    dex byte offset: 0x5a20f6
+  classes.dex  LX/0zC;->A0Y(VZZ)
+    dex byte offset: 0x76cafe
+  classes.dex  LX/13v;->A02(VL)
+    dex byte offset: 0x7d0bca
+  classes.dex  LX/15A;->A02(LL)
+    dex byte offset: 0x7e8346
+  classes7.dex  LX/BcK;-><init>(V)
+    dex byte offset: 0x496154
+  classes7.dex  LX/BkU;->A0D(LLL)
+    dex byte offset: 0x4ff222
+  classes7.dex  LX/ChI;-><init>(VL)
+    dex byte offset: 0x60e92a
+  classes7.dex  LX/ChI;->A00(LL)
+    dex byte offset: 0x60ea5a
+  classes7.dex  LX/DOs;->invoke(L)
+    dex byte offset: 0x8241c8
+  classes5.dex  LX/8G8;->A05(VLLJJJ)
+    dex byte offset: 0x573b62
+
+# user-strings.txt (JSON-quoted dump lines; literal/trailing spaces preserved)
+"\\n          CREATE UNIQUE INDEX IF NOT EXISTS receipt_user_index \\n            ON receipt_user(\\n              message_row_id, \\n              receipt_user_jid_row_id\\n            )\\n        "
+"\\n          SELECT \\n            receipt_user_jid,\\n            received_timestamp,\\n            seen_timestamp\\n          FROM status_seen_receipt\\n          WHERE \\n            status_row_id = ?\\n        "
+"\\n          SELECT \\n            receipt_user_jid_row_id,\\n            receipt_timestamp,\\n            read_timestamp,\\n            played_timestamp\\n          FROM \\n            receipt_user\\n          WHERE \\n            message_row_id = ?\\n        "
+"\\n        CREATE UNIQUE INDEX IF NOT EXISTS status_seen_receipt_index \\n        ON status_seen_receipt (status_row_id, receipt_user_jid);\\n      "
+"\\n        SELECT \\n            message_row_id,\\n            receipt_user_jid_row_id,\\n            receipt_timestamp,\\n            read_timestamp,\\n            played_timestamp\\n        FROM \\n          receipt_user \\n        WHERE \\n            message_row_id IN\\n              "
+"\\n        SELECT \\n          message_row_id \\n        FROM \\n          receipt_user \\n        WHERE \\n          receipt_user_jid_row_id IN \\n            "
+"message_row_id = ? AND receipt_user_jid_row_id IN "
+"message_row_id=? AND receipt_user_jid_row_id IN "
+"receipt_user"
+"receipt_user_index"
+"receipt_user_jid"
+"receipt_user_jid_row_id"
+"status_row_id= ? AND receipt_user_jid = ? "
+
+# user-writer-callers.txt
+classes7.dex  LX/CnI;->A05(VLLLLLI)
+  invoke dex byte offset: 0x6697be
+classes7.dex  LX/CoO;->A02(VLLLLLII)
+  invoke dex byte offset: 0x689890
+
+# user-receipt-fields.txt
+# LX/6tK;  (6 fields)
+   1  userJid
+   2  receiptTimestamp
+   3  readTimestamp
+   4  playedTimestamp
+   5  pendingDeviceJid
+   6  deliveredDeviceJid
+
+# history-message-fields.txt
+# LX/BZY;  (72 fields)
+   1  key
+   2  message
+   3  messageTimestamp
+   4  status
+   5  participant
+   6  messageC2STimestamp
+  16  ignore
+  17  starred
+  18  broadcast
+  19  pushName
+  20  mediaCiphertextSha256
+  21  multicast
+  22  urlText
+  23  urlNumber
+  24  messageStubType
+  25  clearMedia
+  26  messageStubParameters
+  27  duration
+  28  labels
+  29  paymentInfo
+  30  finalLiveLocation
+  31  quotedPaymentInfo
+  32  ephemeralStartTimestamp
+  33  ephemeralDuration
+  34  ephemeralOffToOn
+  35  ephemeralOutOfSync
+  36  bizPrivacyStatus
+  37  verifiedBizName
+  38  mediaData
+  39  photoChange
+  40  userReceipt
+  41  reactions
+  42  quotedStickerData
+  43  futureproofData
+  44  statusPsa
+  45  pollUpdates
+  46  pollAdditionalMetadata
+  47  agentId
+  48  statusAlreadyViewed
+  49  messageSecret
+  50  keepInChat
+  51  originalSelfAuthorUserJidString
+  52  revokeMessageTimestamp
+  53  paymentTransactionInfo
+  54  pinInChat
+  55  premiumMessageInfo
+  56  is1PBizBotMessage
+  57  isGroupHistoryMessage
+  58  botMessageInvokerJid
+  59  commentMetadata
+  61  eventResponses
+  62  reportingTokenInfo
+  63  newsletterServerId
+  64  eventAdditionalMetadata
+  65  isMentionedInStatus
+  66  statusMentions
+  68  messageAddOns
+  69  statusMentionMessageInfo
+  70  isSupportAiMessage
+  71  statusMentionSources
+  72  supportAiCitations
+  73  botTargetId
+  74  groupHistoryIndividualMessageInfo
+  75  groupHistoryBundleInfo
+  76  interactiveMessageAdditionalMetadata
+  77  quarantinedMessage
+  78  nonJidMentions
+  79  hsmTag
+  80  ephemeralExpirationTimestamp
+  81  scheduledMessageMetadata
+  82  decisionId
+  83  decisionSources
+
+# Negative and unknown classification
+Confirmed scoped negatives, not absence of every generic/dynamic writer:
+- ChI.A00 002e..0038 places receipt_user in a backup boolean metadata map;
+  ChI.<init> 0066..0070 adds its name to the backup table list. Neither shown
+  occurrence constructs an ordinary-send receipt INSERT.
+- BkU.A0D 027a..02aa reads backup migration metadata and sets
+  BZJ.receiptUserMigrationFinished_; this is not a receipt-row write.
+- DOs.invoke discriminator 36 -> 0600..0f6a builds schema/column descriptors;
+  receipt_user occurs at 0950..0964 in its (table, column-list) pairs.
+  The segment is not an ordinary send-time receipt INSERT.
+Unknown/untraced: remaining 0LS.AR6, 0Uw.A01, 0zC.A0Y, BcK.<init>
+roles and every generic table-name consumer. No absence of global seeding proven.
+No Rust user-row membership was reconstructed from facts or original targets.

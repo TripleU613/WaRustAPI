@@ -1,0 +1,16 @@
+# APK-derived structural disassembly: LX/0Tn;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method AR6(VL) flags=0x1041 registers=4
+  # full signature: LX/0Tn;->AR6(LX/0Kg;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v3, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=1a const-string v1, "receipt_user"
+  000c..0012 op=71 invoke-static {v1}, LX/0Kx;->A00(Ljava/lang/String;)Landroid/util/Pair;
+  0012..0014 op=0c move-result-object v0
+  0014..001a op=72 invoke-interface {v3, v1, v0}, LX/0Kg;->CKN(Ljava/lang/String;Landroid/util/Pair;)V
+  001a..001c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

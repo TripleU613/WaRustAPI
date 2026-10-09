@@ -1,0 +1,130 @@
+# APK-derived structural disassembly: LX/8G8;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A05(VLLJJJ) flags=0x1 registers=30
+  # full signature: LX/8G8;->A05(Lcom/whatsapp/infra/core/jid/UserJid;LX/178;JJJ)V
+  0000..0004 op=1a const-string v20, "message_row_id = ? AND receipt_user_jid_row_id IN "
+  0004..0008 op=08 move-object/from16 v13, v23
+  0008..000c op=53 iget-wide v2, v13, LX/178;->A0j:J
+  000c..0010 op=08 move-object/from16 v11, v21
+  0010..0016 op=6e invoke-virtual {v11, v13}, LX/8G8;->A04(LX/178;)LX/75Y;
+  0016..0018 op=0c move-result-object v1
+  0018..001c op=08 move-object/from16 v0, v22
+  001c..0022 op=71 invoke-static {v0, v13, v11}, LX/8G8;->A01(Lcom/whatsapp/infra/core/jid/UserJid;LX/178;LX/8G8;)Lcom/whatsapp/infra/core/jid/UserJid;
+  0022..0024 op=0c move-result-object v12
+  0024..0026 op=12 const/4 v14, #0x5
+  0026..002a op=16 const-wide/16 v18, #0x0
+  002a..002e op=05 move-wide/from16 v8, v24
+  002e..0032 op=31 cmp-long v0, v24, v18
+  0032..0036 op=3d if-lez v0, +0x8b
+  0036..003c op=6e invoke-virtual {v1, v12, v14, v8, v9}, LX/7hg;->A01(Lcom/whatsapp/infra/core/jid/UserJid;IJ)Z
+  003c..003e op=0a move-result v10
+  003e..0042 op=05 move-wide/from16 v6, v26
+  0042..0046 op=31 cmp-long v0, v26, v18
+  0046..004a op=3d if-lez v0, +0x9
+  004a..004e op=13 const/16 v0, #0xd
+  004e..0054 op=6e invoke-virtual {v1, v12, v0, v6, v7}, LX/7hg;->A01(Lcom/whatsapp/infra/core/jid/UserJid;IJ)Z
+  0054..0056 op=0a move-result v0
+  0056..0058 op=b6 or-int/2addr v10, v0
+  0058..005c op=05 move-wide/from16 v4, v28
+  005c..0060 op=31 cmp-long v0, v28, v18
+  0060..0064 op=3d if-lez v0, +0x9
+  0064..0068 op=13 const/16 v0, #0x8
+  0068..006e op=6e invoke-virtual {v1, v12, v0, v4, v5}, LX/7hg;->A01(Lcom/whatsapp/infra/core/jid/UserJid;IJ)Z
+  006e..0070 op=0a move-result v0
+  0070..0072 op=b6 or-int/2addr v10, v0
+  0072..0076 op=38 if-eqz v10, +0xb2
+  0076..007a op=54 iget-object v0, v11, LX/8G8;->A01:LX/0VT;
+  007a..0080 op=6e invoke-virtual {v0, v12}, LX/0VT;->A07(Lcom/whatsapp/infra/core/jid/Jid;)J
+  0080..0082 op=0b move-result-wide v0
+  0082..0086 op=16 const-wide/16 v16, #0xffff (-1)
+  0086..008a op=31 cmp-long v10, v0, v16
+  008a..0090 op=71 invoke-static {v10}, LX/1xi;->A1P(I)Z
+  0090..0092 op=0a move-result v15
+  0092..0096 op=1a const-string v10, "invalid jid"
+  0096..009c op=71 invoke-static {v15, v10}, LX/00K;->A0F(ZLjava/lang/String;)V
+  009c..00a0 op=22 new-instance v10, Landroid/content/ContentValues;
+  00a0..00a6 op=70 invoke-direct {v10, v14}, Landroid/content/ContentValues;-><init>(I)V
+  00a6..00aa op=1a const-string v14, "message_row_id"
+  00aa..00b0 op=71 invoke-static {v10, v14, v2, v3}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  00b0..00b4 op=1a const-string v14, "receipt_user_jid_row_id"
+  00b4..00ba op=71 invoke-static {v10, v14, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  00ba..00be op=31 cmp-long v14, v24, v18
+  00be..00c2 op=3d if-lez v14, +0x7
+  00c2..00c6 op=1a const-string v14, "receipt_timestamp"
+  00c6..00cc op=71 invoke-static {v10, v14, v8, v9}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  00cc..00d0 op=31 cmp-long v8, v26, v18
+  00d0..00d4 op=3d if-lez v8, +0x7
+  00d4..00d8 op=1a const-string v8, "read_timestamp"
+  00d8..00de op=71 invoke-static {v10, v8, v6, v7}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  00de..00e2 op=31 cmp-long v6, v28, v18
+  00e2..00e6 op=3d if-lez v6, +0x7
+  00e6..00ea op=1a const-string v6, "played_timestamp"
+  00ea..00f0 op=71 invoke-static {v10, v6, v4, v5}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  00f0..00f4 op=54 iget-object v4, v13, LX/178;->A0i:LX/1gc;
+  00f4..00f8 op=54 iget-object v4, v4, LX/1gc;->A00:LX/0Cy;
+  00f8..00fe op=71 invoke-static {v4}, LX/0DE;->A0l(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  00fe..0100 op=0a move-result v4
+  0100..0104 op=38 if-eqz v4, +0x1b
+  0104..010a op=71 invoke-static {v12, v11}, LX/8G8;->A02(Lcom/whatsapp/infra/core/jid/UserJid;LX/8G8;)Ljava/util/HashSet;
+  010a..010c op=0c move-result-object v6
+  010c..0112 op=71 invoke-static {}, LX/1xf;->A1D()Ljava/util/ArrayList;
+  0112..0114 op=0c move-result-object v5
+  0114..011a op=71 invoke-static {v2, v3}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+  011a..011c op=0c move-result-object v0
+  011c..0122 op=6e invoke-virtual {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  0122..0128 op=6e invoke-virtual {v5, v6}, Ljava/util/AbstractCollection;->addAll(Ljava/util/Collection;)Z
+  0128..012c op=54 iget-object v0, v11, LX/8G8;->A02:LX/0Gc;
+  012c..0132 op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  0132..0134 op=0c move-result-object v3
+  0134..0136 op=28 goto +0xd
+  0136..013c op=71 invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+  013c..013e op=0c move-result-object v0
+  013e..0144 op=71 invoke-static {v0}, Ljava/util/Collections;->singleton(Ljava/lang/Object;)Ljava/util/Set;
+  0144..0146 op=0c move-result-object v6
+  0146..0148 op=28 goto -0x1d
+  0148..014a op=12 const/4 v10, #0x0
+  014a..014e op=29 goto/16 -0x86
+  014e..0152 op=54 iget-object v4, v3, LX/0ZN;->A02:LX/0IY;
+  0152..0156 op=1a const-string v2, "receipt_user"
+  0156..015c op=77 invoke-static/range {v20..v20}, LX/1xf;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  015c..015e op=0c move-result-object v1
+  015e..0164 op=72 invoke-interface {v6}, Ljava/util/Set;->size()I
+  0164..0166 op=0a move-result v0
+  0166..016c op=71 invoke-static {v0}, LX/0ZU;->A00(I)Ljava/lang/String;
+  016c..016e op=0c move-result-object v0
+  016e..0174 op=71 invoke-static {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+  0174..0176 op=0c move-result-object v7
+  0176..017a op=62 sget-object v0, LX/08F;->A0N:[Ljava/lang/String;
+  017a..0180 op=6e invoke-virtual {v5, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+  0180..0182 op=0c move-result-object v0
+  0182..0186 op=1f check-cast v0, [Ljava/lang/String;
+  0186..018a op=1a const-string v8, "insertOrUpdateEntireUserReceiptForMessage/UPDATE_RECEIPT_USER"
+  018a..018c op=07 move-object v6, v2
+  018c..018e op=07 move-object v9, v0
+  018e..0190 op=07 move-object v5, v10
+  0190..0196 op=74 invoke-virtual/range {v4..v9}, LX/0IY;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0196..0198 op=0a move-result v0
+  0198..019c op=3c if-gtz v0, +0x11
+  019c..01a0 op=1a const-string v0, "insertOrUpdateEntireUserReceiptForMessage/INSERT_RECEIPT_USER"
+  01a0..01a6 op=6e invoke-virtual {v4, v2, v0, v10}, LX/0IY;->A05(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+  01a6..01a8 op=0b move-result-wide v1
+  01a8..01ac op=31 cmp-long v0, v1, v16
+  01ac..01b0 op=39 if-nez v0, +0x7
+  01b0..01b4 op=1a const-string v0, "ReceiptUserStore/insertOrUpdateEntireUserReceiptForMessage/insert_failed"
+  01b4..01ba op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  01ba..01c0 op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  01c0..01c2 op=0e return-void
+  01c2..01c4 op=0d move-exception v1
+  01c4..01ca op=6e invoke-virtual {v3}, LX/0ZN;->close()V
+  01ca..01cc op=27 throw v1
+  01cc..01ce op=0d move-exception v0
+  01ce..01d4 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  01d4..01d6 op=27 throw v1
+  01d6..01d8 op=0e return-void
+  # exception table: 2 try range(s)
+  # catch <all> code_units 00a7..00dd -> 00e1
+  # catch <all> code_units 00e2..00e5 -> 00e6
+.end method

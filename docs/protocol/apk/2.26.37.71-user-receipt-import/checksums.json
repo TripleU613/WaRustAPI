@@ -1,0 +1,54 @@
+{
+  "chat-transfer-user-receipts.txt": {
+    "bytes": 16252,
+    "sha256": "e334183a1acc50818e9c08868b2ee433d6c313e83386e1437487582a1df7c79a"
+  },
+  "entire-user-receipt-writer.txt": {
+    "bytes": 7814,
+    "sha256": "58daf4047f18bea2e60cc2d3da24490ff150f57ff2dfa7be70d1a4a3275ec23c"
+  },
+  "history-message-descriptor.txt": {
+    "bytes": 15140,
+    "sha256": "3b418bd554908c5a62346703717575a106d2d1d0e67b6cd5768246bbdfc5d566"
+  },
+  "history-sync-user-receipts.txt": {
+    "bytes": 121642,
+    "sha256": "9d2421aaed52e0d957d8fa3f10096fb8fc7c67c783ea7ab26f794bae1a6de368"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "sql-user-receipt-update.txt": {
+    "bytes": 1608,
+    "sha256": "36637f6a408259c52c72b9638383260bbe3c0ead72e70304aa78ae762ecf2e0a"
+  },
+  "targets.json": {
+    "bytes": 4441,
+    "sha256": "ec9576f281611dc1637dbde0fca4516430b0c6a633643cc58d026e51cf0694f0"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "user-receipt-columns.txt": {
+    "bytes": 3348,
+    "sha256": "72ea00664084f0f58dceaf69fbbd33396eed458d2346da30087b49fee8e53beb"
+  },
+  "user-receipt-descriptor.txt": {
+    "bytes": 4388,
+    "sha256": "ecb3cb91fc969d3b02c4e1d017d608a6a735947d1d1134b0d90c55b8407f6b8f"
+  },
+  "user-receipt-index.txt": {
+    "bytes": 1039,
+    "sha256": "ae7528cb3eb4b015b48354885dbce57856dc0fad630d0d357b430d9151bfa7de"
+  },
+  "user-receipt-schema-maintenance.txt": {
+    "bytes": 855,
+    "sha256": "200814fb94e4953b3720de7552d51bfefcca22381ba8f1797da428f02f71b55a"
+  }
+}
