@@ -1,0 +1,363 @@
+{
+  "artifacts": [
+    {
+      "file": "inventory.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/inventory.json",
+      "old_file": "lab/research-identity-consumers/bundle-before/inventory.json",
+      "status": "unchanged"
+    },
+    {
+      "file": "manifest.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/manifest.json",
+      "old_file": "lab/research-identity-consumers/bundle-before/manifest.json",
+      "status": "unchanged"
+    },
+    {
+      "file": "targets.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/targets.json",
+      "old_file": "lab/research-identity-consumers/bundle-before/targets.json",
+      "status": "changed"
+    },
+    {
+      "file": "tokens.json",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/tokens.json",
+      "old_file": "lab/research-identity-consumers/bundle-before/tokens.json",
+      "status": "unchanged"
+    }
+  ],
+  "interpretation": "Structural topic differences, not automatic proof of protocol behavior changes. Unmapped APK code/native behavior is outside this scoped comparison.",
+  "new_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "old_apk": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "topics": [
+    {
+      "new_class": "LX/0Y6;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-0y6-bdo.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-0y6-bdo"
+    },
+    {
+      "new_class": "LX/0Y6;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-0y6-bdr.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-0y6-bdr"
+    },
+    {
+      "new_class": "LX/0Y9;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-0y9-bdo.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-0y9-bdo"
+    },
+    {
+      "new_class": "LX/0Y9;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-0y9-bdr.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-0y9-bdr"
+    },
+    {
+      "new_class": "LX/1We;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-1we-bdo.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-1we-bdo"
+    },
+    {
+      "new_class": "LX/1We;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-1we-bdr.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-1we-bdr"
+    },
+    {
+      "new_class": "LX/1za;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-1za-bdo.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-1za-bdo"
+    },
+    {
+      "new_class": "LX/1za;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-1za-bdr.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-1za-bdr"
+    },
+    {
+      "new_class": "LX/3B5;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-3b5-bdo.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-3b5-bdo"
+    },
+    {
+      "new_class": "LX/3B5;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-3b5-bdr.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-3b5-bdr"
+    },
+    {
+      "new_class": "LX/AL2;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-al2-bdo.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-al2-bdo"
+    },
+    {
+      "new_class": "LX/AL2;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-al2-bdr.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-al2-bdr"
+    },
+    {
+      "new_class": "LX/AL3;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-al3-bdo.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-al3-bdo"
+    },
+    {
+      "new_class": "LX/AL3;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-al3-bdr.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-al3-bdr"
+    },
+    {
+      "new_class": "LX/AL4;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-al4-bdo.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-al4-bdo"
+    },
+    {
+      "new_class": "LX/AL4;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-al4-bdr.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-al4-bdr"
+    },
+    {
+      "new_class": "LX/AL2;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-business-latch-constructor.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-business-latch-constructor"
+    },
+    {
+      "new_class": "LX/9N0;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-business-profile-task.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-business-profile-task"
+    },
+    {
+      "new_class": "LX/FWe;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-fwe-bdo.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-fwe-bdo"
+    },
+    {
+      "new_class": "LX/FWe;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-fwe-bdr.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-fwe-bdr"
+    },
+    {
+      "new_class": "LX/Kv7;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-kv7-bdo.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-kv7-bdo"
+    },
+    {
+      "new_class": "LX/Kv7;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-success-kv7-bdr.txt",
+      "old_class": null,
+      "old_file": null,
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "added",
+      "topic": "identity-success-kv7-bdr"
+    },
+    {
+      "new_class": "LX/Fan;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-wait-extension-callback.txt",
+      "old_class": "LX/Fan;",
+      "old_file": "lab/research-identity-consumers/bundle-before/identity-wait-extension-callback.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-wait-extension-callback"
+    },
+    {
+      "new_class": "LX/FJa;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-wait-extension-entry.txt",
+      "old_class": "LX/FJa;",
+      "old_file": "lab/research-identity-consumers/bundle-before/identity-wait-extension-entry.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-wait-extension-entry"
+    },
+    {
+      "new_class": "LX/F3t;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-wait-extension-result.txt",
+      "old_class": "LX/F3t;",
+      "old_file": "lab/research-identity-consumers/bundle-before/identity-wait-extension-result.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-wait-extension-result"
+    },
+    {
+      "new_class": "LX/FDx;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-wait-extension-verifier.txt",
+      "old_class": "LX/FDx;",
+      "old_file": "lab/research-identity-consumers/bundle-before/identity-wait-extension-verifier.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-wait-extension-verifier"
+    },
+    {
+      "new_class": "LX/Fco;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-wait-full-observer.txt",
+      "old_class": "LX/Fco;",
+      "old_file": "lab/research-identity-consumers/bundle-before/identity-wait-full-observer.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-wait-full-observer"
+    },
+    {
+      "new_class": "LX/Fr9;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-wait-timed-constructor.txt",
+      "old_class": "LX/Fr9;",
+      "old_file": "lab/research-identity-consumers/bundle-before/identity-wait-timed-constructor.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-wait-timed-constructor"
+    },
+    {
+      "new_class": "LX/Fr9;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-wait-timed-factory.txt",
+      "old_class": "LX/Fr9;",
+      "old_file": "lab/research-identity-consumers/bundle-before/identity-wait-timed-factory.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-wait-timed-factory"
+    },
+    {
+      "new_class": "LX/Fr9;",
+      "new_file": "docs/protocol/apk/2.26.37.71-identity-wait/identity-wait-timed-worker.txt",
+      "old_class": "LX/Fr9;",
+      "old_file": "lab/research-identity-consumers/bundle-before/identity-wait-timed-worker.txt",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "status": "unchanged",
+      "topic": "identity-wait-timed-worker"
+    }
+  ]
+}

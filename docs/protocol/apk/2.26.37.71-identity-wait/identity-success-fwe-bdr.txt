@@ -1,0 +1,64 @@
+# APK-derived structural disassembly: LX/FWe;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method BdR(VL) flags=0x1 registers=5
+  0000..0004 op=52 iget v1, v3, LX/FWe;->$t:I
+  0004..0006 op=12 const/4 v0, #0x0
+  0006..000c op=71 invoke-static {v4, v0}, LX/00h;->A0A(VLI)
+  000c..0012 op=2b packed-switch
+  0012..0016 op=54 iget-object v0, v3, LX/FWe;->A00:Ljava/lang/Object;
+  0016..001a op=1f check-cast v0, LX/0IT;
+  001a..001e op=54 iget-object v0, v0, LX/0IT;->A03:LX/08Z;
+  001e..0024 op=72 invoke-interface {v0, v4}, LX/08Z;->BO0(ZL)
+  0024..0026 op=0e return-void
+  0026..002a op=54 iget-object v1, v3, LX/FWe;->A00:Ljava/lang/Object;
+  002a..002e op=1f check-cast v1, LX/Do9;
+  002e..0032 op=54 iget-object v0, v1, LX/Do9;->A05:Lcom/whatsapp/infra/core/jid/UserJid;
+  0032..0038 op=71 invoke-static {v0, v4}, LX/00h;->areEqual(ZLL)
+  0038..003a op=0a move-result
+  003a..003e op=38 if-eqz v0, -0xb
+  003e..0044 op=6e invoke-virtual {v1}, LX/Do9;->A0t(V)
+  0044..0046 op=0e return-void
+  0046..004a op=54 iget-object v1, v3, LX/FWe;->A00:Ljava/lang/Object;
+  004a..004e op=1f check-cast v1, LX/EfH;
+  004e..0054 op=6e invoke-virtual {v1}, LX/EfH;->A5J(L)
+  0054..0056 op=0c move-result-object
+  0056..005c op=6e invoke-virtual {v0, v4}, Ljava/lang/Object;->equals(ZL)
+  005c..005e op=0a move-result
+  005e..0062 op=38 if-eqz v0, -0x1d
+  0062..0068 op=6e invoke-virtual {v1}, LX/EfH;->A5I(L)
+  0068..006a op=0c move-result-object
+  006a..006e op=54 iget-object v2, v0, LX/DpN;->A0G:LX/FWl;
+  006e..0072 op=54 iget-object v1, v2, LX/FWl;->A06:LX/07u;
+  0072..0076 op=13 const/16 v0, #0x10
+  0076..007c op=71 invoke-static {v1, v2, v0}, LX/Fqq;->A01(VLLI)
+  007c..007e op=0e return-void
+  007e..0082 op=54 iget-object v2, v3, LX/FWe;->A00:Ljava/lang/Object;
+  0082..0086 op=1f check-cast v2, Lcom/whatsapp/catalog/product/biz/view/activity/CatalogListActivity;
+  0086..008c op=6e invoke-virtual {v2}, LX/Eex;->A5K(L)
+  008c..008e op=0c move-result-object
+  008e..0094 op=6e invoke-virtual {v0, v4}, Ljava/lang/Object;->equals(ZL)
+  0094..0096 op=0a move-result
+  0096..009a op=38 if-eqz v0, -0x39
+  009a..009e op=54 iget-object v1, v2, LX/0IT;->A03:LX/08Z;
+  009e..00a4 op=6e invoke-virtual {v2}, LX/Eex;->A5K(L)
+  00a4..00a6 op=0c move-result-object
+  00a6..00ac op=72 invoke-interface {v1, v0}, LX/08Z;->BO0(ZL)
+  00ac..00ae op=0a move-result
+  00ae..00b2 op=39 if-nez v0, -0x45
+  00b2..00b8 op=71 invoke-static {v2}, Lcom/whatsapp/catalog/product/biz/view/activity/CatalogListActivity;->A03(VL)
+  00b8..00ba op=0e return-void
+  00ba..00be op=54 iget-object v0, v3, LX/FWe;->A00:Ljava/lang/Object;
+  00be..00c4 op=71 invoke-static {v0, v4}, LX/Det;->A0T(VLL)
+  00c4..00c6 op=0e return-void
+  00c6..00ca op=54 iget-object v2, v3, LX/FWe;->A00:Ljava/lang/Object;
+  00ca..00ce op=1f check-cast v2, Lcom/whatsapp/catalogsearch/view/fragment/CatalogSearchFragment;
+  00ce..00d2 op=54 iget-object v1, v2, Lcom/whatsapp/catalogsearch/view/fragment/CatalogSearchFragment;->A0F:Lcom/whatsapp/businessprofile/biz/BusinessProfileManager;
+  00d2..00d4 op=12 const/4 v0, #0x3
+  00d4..00da op=71 invoke-static {v1, v4, v2, v0}, LX/FWd;->A00(VLLLI)
+  00da..00dc op=0e return-void
+  00dc..00f8 op=00 packed-switch-payload size=5
+  # exception table: 0 try range(s)
+.end method

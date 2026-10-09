@@ -2167,3 +2167,81 @@ original core files/recipe are Git-identical. All **63 xtask tests**, regenerate
 CLI reference, API library-symbol verification and formatting passed.
 Repository hygiene also passed: 1,008 local links and 4,786,515 bytes across
 8 checksum bundles. No private state was opened or live request sent.
+
+
+## Identity-success consumer inventory (2026-10-09)
+
+**Confirmed static, APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+The earlier AhK case 7 -> ATU case 1 continuation calls both **0Y6.BdR** and
+**BdO**. A fresh full-DEX method-name scan returned **11 methods for each**:
+10 concrete classes and the abstract 0Y6 declaration. The
+[caller/inventory evidence](identity-wait-caller-evidence.txt) records commands
+and scope. Fco's full methods remain in the existing wait snapshot; the
+[expanded recipe](apk/recipes/2.26.37.71-identity-wait.json) adds both callbacks
+for every other class, plus AL2's constructor and its caller's full task.
+These are complete physical method bodies for this scan, not a complete
+native/reflection/virtual-dispatch reachability claim. Named bodies alone
+do not prove every class is registered on this particular event source; complete
+registration/dispatch closure remains unestablished.
+
+| Class | BdO | BdR / traced immediate effect |
+| --- | --- | --- |
+| Fco | Completes matching primary future | Empty |
+| AL2 | Compares held user and counts down 9N0.A08 | Empty |
+| FWe | Empty | Six discriminator paths: business-profile/catalog UI or own-account predicate; downstream helpers untraced |
+| 1za | Empty | Matching-user UI worker, options-menu invalidation, optional Do9 refresh |
+| 3B5 | Empty | Matching-user 34O.A00 helper; internals untraced |
+| AL3 | Empty | Guarded execution of AhL case 18; worker internals untraced |
+| AL4 | Empty | Business-profile fields, contact-info/layout and related UI helpers |
+| Kv7 | Empty | Search callbacks or JNG business-profile work/metrics; downstream helpers untraced |
+| 0Y9 | Empty | Resolves 0gq then calls A0F(user); that helper remains untraced |
+| 1We | Empty | ConversationsFragment businessProfileObserver refresh or 1Oa.A0n helper |
+| 0Y6 | Abstract declaration | Abstract declaration |
+
+**Confirmed second waiter:** AL2.<init> stores the 9N0 task and target user;
+the constructor scan finds exactly one DEX caller, **9N0.<init>**.
+[AL2.BdO](apk/2.26.37.71-identity-wait/identity-success-al2-bdo.txt)
+0000..001e compares the received user and counts down the held task's latch.
+[9N0](apk/2.26.37.71-identity-wait/identity-success-business-profile-task.txt)
+identifies its purpose with the literal
+`ConversationRowContact/OpenBusinessProfileNotInContactListTask`.
+A0Y registers the 0Y6 observer on 1MB (0022..002c). A0Z's enabled 0x51fc
+branch handles vCard phone lookup and counts down immediately (0004..0050);
+the other branch selects a normal contact request, then waits **30000 ms**
+(00cc..00de). InterruptedException logs a business-identity wait interruption
+(00e0..00ec). A0a/A0b unregister; A0b builds and opens the business-profile UI.
+The returned latch boolean is not used as proof of key validation. These are
+method-relative byte offsets; retained catch tables use code units.
+
+**Negative result / narrowed recovery evidence:** neither BdO's two nonempty
+bodies nor the scanned BdR bodies directly decrypts a message, selects/stores a
+Signal session or queues a message retry/receipt. The literal 1We diagnostic
+names this observer a `businessProfileObserver`, and both concrete BdO waiters
+have business/Flows consumers. This refutes treating these particular callbacks
+as established incoming replay. It does **not** prove transitive helpers or
+other identity-save observers cannot affect receive. 0gq.A0F, AhL case 18,
+1Oa.A0n and other helpers remain explicit unknowns. Broader identity-change
+cleanup via D4x/DeS is a separate already-recorded branch.
+
+**Next receive boundary, confirmed local inspection:** inbox.session_sender
+currently requires sender_pn for a primary LID sender, while its companion LID
+projection already uses the actual namespace without an alias. The current
+primary alias requirement is **our implementation**, not an APK-mandatory-field
+claim established here. Whether/when that primary alias can be absent and how
+the APK then keys message/chat/deduplication requires its actual receive routing
+trace before a correction; this callback inventory does not answer it.
+No alias, pin, session, request ID, event marker or account state changed.
+No live request was made for this static inventory.
+
+The [cached coverage diff](apk/identity-success-consumer-coverage-diff.json)
+verified all checksums: **22 added topics, 8 prior topics unchanged**, no changed
+or removed method topics, in **0.014128 seconds**. This
+compares coverage of the same APK, not different releases or semantic equivalence.
+The expanded snapshot has **30 topics / 44 selected methods** (including the
+2 abstract interface declarations), **35 files / 250,138 bytes**. The earlier
+18-method cache check remains a historical measurement of the pre-expansion
+snapshot. All 63 xtask tests, regenerated CLI reference, API library-symbol
+verification and formatting passed.
+Independent `--check` reproduced all 35 files / 250,138 bytes. Repository
+hygiene passed: 1,016 local links and 4,829,975 bytes across 8 checksum bundles.

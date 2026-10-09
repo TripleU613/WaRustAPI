@@ -1,0 +1,137 @@
+# APK-derived structural disassembly: LX/9N0;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLLLLLLLZ) flags=0x10001 registers=11
+  0000..0006 op=70 invoke-direct {v2}, LX/1Tl;-><init>(V)
+  0006..000c op=71 invoke-static {v9}, LX/3c4;->A0w(LL)
+  000c..000e op=0c move-result-object
+  000e..0012 op=5b iput-object v0, v2, LX/9N0;->A07:Ljava/lang/ref/WeakReference;
+  0012..0016 op=5c iput-boolean v10, v2, LX/9N0;->A09:Z
+  0016..001a op=5b iput-object v8, v2, LX/9N0;->A06:LX/08Z;
+  001a..001e op=5b iput-object v5, v2, LX/9N0;->A03:LX/0ss;
+  001e..0022 op=5b iput-object v4, v2, LX/9N0;->A02:LX/8mc;
+  0022..0026 op=5b iput-object v3, v2, LX/9N0;->A01:LX/1MB;
+  0026..002a op=5b iput-object v7, v2, LX/9N0;->A05:Lcom/whatsapp/infra/core/jid/UserJid;
+  002a..002e op=5b iput-object v6, v2, LX/9N0;->A04:LX/07t;
+  002e..0030 op=12 const/4 v1, #0x1
+  0030..0034 op=22 new-instance v0, Ljava/util/concurrent/CountDownLatch;
+  0034..003a op=70 invoke-direct {v0, v1}, Ljava/util/concurrent/CountDownLatch;-><init>(VI)
+  003a..003e op=5b iput-object v0, v2, LX/9N0;->A08:Ljava/util/concurrent/CountDownLatch;
+  003e..0042 op=22 new-instance v0, LX/AL2;
+  0042..0048 op=70 invoke-direct {v0, v2, v7}, LX/AL2;-><init>(VLL)
+  0048..004c op=5b iput-object v0, v2, LX/9N0;->A00:LX/0Y6;
+  004c..004e op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method A0Y(V) flags=0x1 registers=4
+  0000..0004 op=54 iget-object v0, v3, LX/9N0;->A07:Ljava/lang/ref/WeakReference;
+  0004..000a op=71 invoke-static {v0}, LX/8kU;->A0t(LL)
+  000a..000c op=0c move-result-object
+  000c..0010 op=38 if-eqz v2, +0x9
+  0010..0012 op=12 const/4 v1, #0x0
+  0012..0018 op=14 const v0, #0x7f122313
+  0018..001e op=6e invoke-virtual {v2, v1, v0}, LX/0IM;->Cab(VII)
+  001e..0022 op=54 iget-object v1, v3, LX/9N0;->A01:LX/1MB;
+  0022..0026 op=54 iget-object v0, v3, LX/9N0;->A00:LX/0Y6;
+  0026..002c op=6e invoke-virtual {v1, v0}, LX/078;->A0K(ZL)
+  002c..002e op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method A0Z(LL) flags=0x1041 registers=7
+  0000..0004 op=54 iget-object v1, v5, LX/9N0;->A04:LX/07t;
+  0004..0008 op=13 const/16 v0, #0x51fc
+  0008..000e op=6e invoke-virtual {v1, v0}, LX/00D;->A10(ZI)
+  000e..0010 op=0a move-result
+  0010..0012 op=12 const/4 v4, #0x0
+  0012..0016 op=38 if-eqz v0, +0x1f
+  0016..001a op=54 iget-object v0, v5, LX/9N0;->A05:Lcom/whatsapp/infra/core/jid/UserJid;
+  001a..001e op=54 iget-object v2, v0, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+  001e..0024 op=71 invoke-static {v2}, Lcom/whatsapp/infra/core/util/string/StringUtils;->A0J(ZL)
+  0024..0026 op=0a move-result
+  0026..002a op=38 if-eqz v0, +0xd
+  002a..002e op=1a const-string v0, "ConversationRowContact/OpenBusinessProfileNotInContactListTask vCardPhoneNumber is blank"
+  002e..0034 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(VL)
+  0034..0038 op=54 iget-object v0, v5, LX/9N0;->A08:Ljava/util/concurrent/CountDownLatch;
+  0038..003e op=6e invoke-virtual {v0}, Ljava/util/concurrent/CountDownLatch;->countDown(V)
+  003e..0040 op=11 return-object v4
+  0040..0044 op=54 iget-object v1, v5, LX/9N0;->A02:LX/8mc;
+  0044..0048 op=62 sget-object v0, LX/0xX;->A0J:LX/0xX;
+  0048..004e op=6e invoke-virtual {v1, v0, v4, v2}, LX/8mc;->A0A(LLLL)
+  004e..0050 op=28 goto -0xd
+  0050..0054 op=54 iget-object v0, v5, LX/9N0;->A06:LX/08Z;
+  0054..005a op=72 invoke-interface {v0}, LX/08Z;->BMv(Z)
+  005a..005c op=0a move-result
+  005c..0060 op=38 if-eqz v0, +0x2c
+  0060..0064 op=62 sget-object v1, LX/0xX;->A0I:LX/0xX;
+  0064..0068 op=62 sget-object v0, LX/0xh;->A0Q:LX/0xh;
+  0068..006c op=22 new-instance v2, LX/0xl;
+  006c..0072 op=70 invoke-direct {v2, v0, v1}, LX/0xl;-><init>(VLL)
+  0072..0076 op=62 sget-object v0, LX/0xo;->A0D:LX/0xo;
+  0076..007a op=5b iput-object v0, v2, LX/0xl;->A01:LX/0xo;
+  007a..007c op=12 const/4 v0, #0x1
+  007c..0080 op=5c iput-boolean v0, v2, LX/0xl;->A05:Z
+  0080..0084 op=54 iget-object v1, v5, LX/9N0;->A05:Lcom/whatsapp/infra/core/jid/UserJid;
+  0084..0088 op=38 if-eqz v1, +0x7
+  0088..008c op=54 iget-object v0, v2, LX/0xl;->A0C:Ljava/util/Set;
+  008c..0092 op=72 invoke-interface {v0, v1}, Ljava/util/Set;->add(ZL)
+  0092..0098 op=6e invoke-virtual {v2}, LX/0xl;->A02(L)
+  0098..009a op=0c move-result-object
+  009a..009e op=54 iget-object v0, v5, LX/9N0;->A03:LX/0ss;
+  009e..00a4 op=6e invoke-virtual {v0, v1}, LX/0ss;->A05(LL)
+  00a4..00a6 op=0c move-result-object
+  00a6..00ac op=6e invoke-virtual {v0}, LX/1hI;->A01(Z)
+  00ac..00ae op=0a move-result
+  00ae..00b2 op=38 if-eqz v0, -0x38
+  00b2..00b4 op=28 goto +0xd
+  00b4..00b8 op=62 sget-object v1, LX/0xX;->A0G:LX/0xX;
+  00b8..00bc op=62 sget-object v0, LX/0xh;->A0Q:LX/0xh;
+  00bc..00c0 op=22 new-instance v2, LX/0xl;
+  00c0..00c6 op=70 invoke-direct {v2, v0, v1}, LX/0xl;-><init>(VLL)
+  00c6..00ca op=62 sget-object v0, LX/0xo;->A0C:LX/0xo;
+  00ca..00cc op=28 goto -0x2a
+  00cc..00d0 op=54 iget-object v3, v5, LX/9N0;->A08:Ljava/util/concurrent/CountDownLatch;
+  00d0..00d4 op=62 sget-object v2, Ljava/util/concurrent/TimeUnit;->MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+  00d4..00d8 op=16 const-wide/16 v0, #0x7530
+  00d8..00de op=6e invoke-virtual {v3, v0, v1, v2}, Ljava/util/concurrent/CountDownLatch;->await(ZJL)
+  00de..00e0 op=11 return-object v4
+  00e0..00e4 op=1a const-string v0, "ConversationRowContact/OpenBusinessProfileNotInContactListTask was interrupted while waiting for biz identity response."
+  00e4..00ea op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->w(VL)
+  00ea..00ec op=11 return-object v4
+  # exception table: 1 try range(s)
+  # catch Ljava/lang/InterruptedException; code_units 0066..0070 -> 0070
+.end method
+
+.method A0a(VL) flags=0x1041 registers=4
+  0000..0004 op=54 iget-object v1, v2, LX/9N0;->A01:LX/1MB;
+  0004..0008 op=54 iget-object v0, v2, LX/9N0;->A00:LX/0Y6;
+  0008..000e op=6e invoke-virtual {v1, v0}, LX/078;->A0H(VL)
+  000e..0010 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method A0b(VL) flags=0x1041 registers=9
+  0000..0002 op=12 const/4 v4, #0x0
+  0002..0006 op=54 iget-object v1, v7, LX/9N0;->A01:LX/1MB;
+  0006..000a op=54 iget-object v0, v7, LX/9N0;->A00:LX/0Y6;
+  000a..0010 op=6e invoke-virtual {v1, v0}, LX/078;->A0H(VL)
+  0010..0014 op=54 iget-object v0, v7, LX/9N0;->A07:Ljava/lang/ref/WeakReference;
+  0014..001a op=71 invoke-static {v0}, LX/8kU;->A0t(LL)
+  001a..001c op=0c move-result-object
+  001c..0020 op=38 if-eqz v2, +0x17
+  0020..0026 op=6e invoke-virtual {v2}, LX/0IM;->CLk(V)
+  0026..002a op=22 new-instance v1, LX/1Ob;
+  002a..0030 op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>(V)
+  0030..0034 op=54 iget-object v3, v7, LX/9N0;->A05:Lcom/whatsapp/infra/core/jid/UserJid;
+  0034..0036 op=12 const/4 v5, #0x1
+  0036..003a op=55 iget-boolean v6, v7, LX/9N0;->A09:Z
+  003a..0040 op=74 invoke-virtual/range {v1..v6}, LX/1Ob;->A0B(LLLLZZ)
+  0040..0042 op=0c move-result-object
+  0042..0044 op=12 const/4 v0, #0x0
+  0044..004a op=6e invoke-virtual {v2, v1, v0}, LX/0IM;->A4M(VLZ)
+  004a..004c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

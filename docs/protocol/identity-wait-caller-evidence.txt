@@ -25,3 +25,14 @@ classes8.dex  LX/FwE;->invokeSuspend(LL)
 # catch <all> code_units 105d..1062 -> 1093
 # catch <all> code_units 1065..1091 -> 10c5
 # catch <all> code_units 1097..10c3 -> 10c5
+
+## LX/AL2; <init> (subsequent consumer audit, 2026-10-09)
+classes6.dex  LX/9N0;-><init>(VLLLLLLLZ)
+  invoke dex byte offset: 0x381a4a
+
+## Full method-name inventory scan
+# Reproduce: xtask apk-smali <apk> --class '' --method BdO --exceptions
+# And repeat with --method BdR. Each returned 11 methods in 11 classes.
+# Concrete classes: FWe, Fco, 1za, 3B5, AL2, AL3, AL4, 0Y9, 1We, Kv7.
+# Interface declaration: 0Y6 (abstract/native annotation, no code).
+# Scope is physical DEX method-name bodies, not reflective/native/dispatch closure.

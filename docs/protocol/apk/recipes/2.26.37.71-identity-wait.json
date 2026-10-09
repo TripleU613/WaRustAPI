@@ -69,6 +69,204 @@
       "anchors": [],
       "method": "A00",
       "method_shorty": "VZ"
+    },
+    "identity-success-fwe-bdo": {
+      "class": "LX/FWe;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdO",
+      "method_shorty": "VL"
+    },
+    "identity-success-fwe-bdr": {
+      "class": "LX/FWe;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdR",
+      "method_shorty": "VL"
+    },
+    "identity-success-1za-bdo": {
+      "class": "LX/1za;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdO",
+      "method_shorty": "VL"
+    },
+    "identity-success-1za-bdr": {
+      "class": "LX/1za;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdR",
+      "method_shorty": "VL"
+    },
+    "identity-success-3b5-bdo": {
+      "class": "LX/3B5;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdO",
+      "method_shorty": "VL"
+    },
+    "identity-success-3b5-bdr": {
+      "class": "LX/3B5;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdR",
+      "method_shorty": "VL"
+    },
+    "identity-success-al2-bdo": {
+      "class": "LX/AL2;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdO",
+      "method_shorty": "VL"
+    },
+    "identity-success-al2-bdr": {
+      "class": "LX/AL2;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdR",
+      "method_shorty": "VL"
+    },
+    "identity-success-al3-bdo": {
+      "class": "LX/AL3;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdO",
+      "method_shorty": "VL"
+    },
+    "identity-success-al3-bdr": {
+      "class": "LX/AL3;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdR",
+      "method_shorty": "VL"
+    },
+    "identity-success-al4-bdo": {
+      "class": "LX/AL4;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdO",
+      "method_shorty": "VL"
+    },
+    "identity-success-al4-bdr": {
+      "class": "LX/AL4;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdR",
+      "method_shorty": "VL"
+    },
+    "identity-success-0y6-bdo": {
+      "class": "LX/0Y6;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdO",
+      "method_shorty": "VL"
+    },
+    "identity-success-0y6-bdr": {
+      "class": "LX/0Y6;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdR",
+      "method_shorty": "VL"
+    },
+    "identity-success-0y9-bdo": {
+      "class": "LX/0Y9;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdO",
+      "method_shorty": "VL"
+    },
+    "identity-success-0y9-bdr": {
+      "class": "LX/0Y9;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdR",
+      "method_shorty": "VL"
+    },
+    "identity-success-1we-bdo": {
+      "class": "LX/1We;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdO",
+      "method_shorty": "VL"
+    },
+    "identity-success-1we-bdr": {
+      "class": "LX/1We;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdR",
+      "method_shorty": "VL"
+    },
+    "identity-success-kv7-bdo": {
+      "class": "LX/Kv7;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdO",
+      "method_shorty": "VL"
+    },
+    "identity-success-kv7-bdr": {
+      "class": "LX/Kv7;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "BdR",
+      "method_shorty": "VL"
+    },
+    "identity-success-business-latch-constructor": {
+      "class": "LX/AL2;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [],
+      "method": "<init>",
+      "method_shorty": "VLL"
+    },
+    "identity-success-business-profile-task": {
+      "class": "LX/9N0;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/identity_query.rs"
+      ],
+      "anchors": [
+        "ConversationRowContact/OpenBusinessProfileNotInContactListTask was interrupted while waiting for biz identity response."
+      ]
     }
   }
 }

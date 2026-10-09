@@ -1,4 +1,92 @@
 {
+  "identity-success-0y6-bdo.txt": {
+    "bytes": 380,
+    "sha256": "df3eacffb3ae34f4b916724788f14a115915031e0ecd6d06cdecc19cbb5c085c"
+  },
+  "identity-success-0y6-bdr.txt": {
+    "bytes": 380,
+    "sha256": "14a9c19f378921688ff31d2b74827e197e70e33b2cff281e33769622606c601a"
+  },
+  "identity-success-0y9-bdo.txt": {
+    "bytes": 412,
+    "sha256": "9e6a43a589c0d8965baaad14c3731fc9451be1bcb2f007888c98e9a52161ba9f"
+  },
+  "identity-success-0y9-bdr.txt": {
+    "bytes": 942,
+    "sha256": "4b4bfa3497bc44ff61ab37da9a7a018e71dc3da81c50fc02bf5de2472ac66758"
+  },
+  "identity-success-1we-bdo.txt": {
+    "bytes": 412,
+    "sha256": "76a5f2badb0fc0dc9ae4c11fbc7e3c621bc1c22cd2ca8f6200c99ffbb1c30fa2"
+  },
+  "identity-success-1we-bdr.txt": {
+    "bytes": 1906,
+    "sha256": "e86cbaa33960d8b37a27579e0b374d89cc2161a63c29a8036aacb59a1583a8bd"
+  },
+  "identity-success-1za-bdo.txt": {
+    "bytes": 412,
+    "sha256": "81569a97cba3aaa7ff5d80224d690bd542bde003eb436e4793bf236193ef39e2"
+  },
+  "identity-success-1za-bdr.txt": {
+    "bytes": 1250,
+    "sha256": "715cb095d13b434e7896ca1dafba22c76a3f31293b8e5c5a65669477f230b882"
+  },
+  "identity-success-3b5-bdo.txt": {
+    "bytes": 412,
+    "sha256": "db0580419bdcefdf4c984c5dad1b5a43bf82bc29f268e13fa7dd6822d7742e68"
+  },
+  "identity-success-3b5-bdr.txt": {
+    "bytes": 844,
+    "sha256": "8ae68f8f5f263945793076bc1f5015acc9914a26908f5ce306a9f1be65c23897"
+  },
+  "identity-success-al2-bdo.txt": {
+    "bytes": 882,
+    "sha256": "a11152f49f1c49d60eb6814d58f0570b8e812ba54f7cfa645e8afb83e1b85feb"
+  },
+  "identity-success-al2-bdr.txt": {
+    "bytes": 412,
+    "sha256": "427faa2f05bfdd866e23f2ac0287ba6c362c7a25a5c57bbf3b428ac1f37d9f51"
+  },
+  "identity-success-al3-bdo.txt": {
+    "bytes": 412,
+    "sha256": "58e10d7ba99208a6b131232822a845b3acf1318050d04059ac175ba644feedef"
+  },
+  "identity-success-al3-bdr.txt": {
+    "bytes": 1117,
+    "sha256": "96e9d52461e4621970fc653b5ec052d69175e1d0bee3411d68fb57df039de45a"
+  },
+  "identity-success-al4-bdo.txt": {
+    "bytes": 412,
+    "sha256": "268cb42f31b85881aa4ccfeda484bb5ec2688f55a529ba0d84224b15e686544d"
+  },
+  "identity-success-al4-bdr.txt": {
+    "bytes": 5434,
+    "sha256": "57847bffdc102ac3b4b6f51c0f2f2a9fe09c6400cd7bb89e35c9252d9448348f"
+  },
+  "identity-success-business-latch-constructor.txt": {
+    "bytes": 636,
+    "sha256": "0a86f102e688467cfd87afdf2389c327c5198d5cfe6da52fcba96e285fa3d0a7"
+  },
+  "identity-success-business-profile-task.txt": {
+    "bytes": 7307,
+    "sha256": "837914d96ded5c96705d4d5a15a717d00b77c82539638ee5621d56278468200b"
+  },
+  "identity-success-fwe-bdo.txt": {
+    "bytes": 412,
+    "sha256": "f102058949ed56ee26f5db0cec4061fb038e4232f06c598d773861d4b587b31a"
+  },
+  "identity-success-fwe-bdr.txt": {
+    "bytes": 3469,
+    "sha256": "9c5dfbfa3994780b0c4fb03279ba760619f1bee41d0614c47d7ab896dd8ab504"
+  },
+  "identity-success-kv7-bdo.txt": {
+    "bytes": 412,
+    "sha256": "f8b73b5179f5b6b3d832f293bdc1cbf28be5cfdb3cafdc15345991f80e135f1e"
+  },
+  "identity-success-kv7-bdr.txt": {
+    "bytes": 5247,
+    "sha256": "59dd254052f54cabdf70ed3dbc4d92f14e2e76a4b4f8d812f58e827d6cc16305"
+  },
   "identity-wait-extension-callback.txt": {
     "bytes": 1473,
     "sha256": "d002d384a7c9b117b94b60434753aa03a7082fcf5242d0206f87a03da330a760"
@@ -40,8 +128,8 @@
     "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
   },
   "targets.json": {
-    "bytes": 2468,
-    "sha256": "4a5a884d55353fec0660acbd021061dc281bd4da764512f0b59106ac159c9158"
+    "bytes": 9306,
+    "sha256": "a9c514ee1c427fd44fb15c22a7609b75fa184f6db1a3292b2d837c612cd47b9c"
   },
   "tokens.json": {
     "bytes": 23019,

@@ -1,0 +1,98 @@
+# APK-derived structural disassembly: LX/AL4;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method BdR(VL) flags=0x1 registers=10
+  0000..0002 op=07 move-object
+  0002..0006 op=52 iget v0, v8, LX/AL4;->$t:I
+  0006..0008 op=07 move-object
+  0008..000e op=2b packed-switch
+  000e..0012 op=54 iget-object v0, v8, LX/AL4;->A00:Ljava/lang/Object;
+  0012..0016 op=1f check-cast v0, LX/BgA;
+  0016..001a op=53 iget-wide v6, v0, LX/BgA;->A06:J
+  001a..0020 op=6e invoke-virtual {v9}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString(L)
+  0020..0022 op=0c move-result-object
+  0022..0026 op=54 iget-object v0, v0, LX/BgA;->A0u:LX/00s;
+  0026..002c op=72 invoke-interface {v0}, LX/00s;->get(L)
+  002c..002e op=0c move-result-object
+  002e..0032 op=1f check-cast v0, Lcom/whatsapp/businessprofile/biz/BusinessProfileManager;
+  0032..0036 op=22 new-instance v2, LX/Cxk;
+  0036..003c op=76 invoke-direct/range {v2..v7}, LX/Cxk;-><init>(VLLLJ)
+  003c..0042 op=6e invoke-virtual {v0, v2, v9}, Lcom/whatsapp/businessprofile/biz/BusinessProfileManager;->A0C(VLL)
+  0042..0044 op=0e return-void
+  0044..0048 op=1a const-string v2, "jid"
+  0048..004a op=12 const/4 v0, #0x0
+  004a..0050 op=71 invoke-static {v9, v0}, LX/00h;->A0A(VLI)
+  0050..0054 op=54 iget-object v1, v8, LX/AL4;->A00:Ljava/lang/Object;
+  0054..0058 op=1f check-cast v1, Lcom/whatsapp/biz/BusinessProfileExtraFieldsActivity;
+  0058..005c op=54 iget-object v0, v1, Lcom/whatsapp/biz/BusinessProfileExtraFieldsActivity;->A01:Lcom/whatsapp/infra/core/jid/UserJid;
+  005c..0060 op=39 if-nez v0, +0x7
+  0060..0066 op=71 invoke-static {v2}, LX/00h;->A0I(VL)
+  0066..0068 op=12 const/4 v0, #0x0
+  0068..006a op=27 throw v0
+  006a..0070 op=6e invoke-virtual {v9, v0}, Ljava/lang/Object;->equals(ZL)
+  0070..0072 op=0a move-result
+  0072..0076 op=38 if-eqz v0, -0x18
+  0076..007c op=71 invoke-static {v1}, Lcom/whatsapp/biz/BusinessProfileExtraFieldsActivity;->A03(VL)
+  007c..007e op=0e return-void
+  007e..0082 op=54 iget-object v3, v8, LX/AL4;->A00:Ljava/lang/Object;
+  0082..0086 op=1f check-cast v3, Lcom/whatsapp/chatinfo/ContactInfoActivity;
+  0086..008c op=71 invoke-static {v3}, Lcom/whatsapp/chatinfo/ContactInfoActivity;->A1f(ZL)
+  008c..008e op=0a move-result
+  008e..0092 op=39 if-nez v0, -0x26
+  0092..0098 op=71 invoke-static {v3}, LX/8kX;->A0v(LL)
+  0098..009a op=0c move-result-object
+  009a..00a0 op=71 invoke-static {v0}, LX/8kU;->A0d(LL)
+  00a0..00a2 op=0c move-result-object
+  00a2..00a8 op=6e invoke-virtual {v9, v0}, Ljava/lang/Object;->equals(ZL)
+  00a8..00aa op=0a move-result
+  00aa..00ae op=38 if-eqz v0, +0xc
+  00ae..00b2 op=54 iget-object v0, v3, Lcom/whatsapp/chatinfo/ContactInfoActivity;->A1S:Lcom/whatsapp/chatinfo/view/custom/ChatInfoLayoutV2;
+  00b2..00b6 op=54 iget-object v0, v0, LX/9LB;->A0C:Landroid/view/View;
+  00b6..00ba op=38 if-eqz v0, +0x6
+  00ba..00bc op=12 const/4 v0, #0x0
+  00bc..00c2 op=71 invoke-static {v3, v0, v0, v0}, Lcom/whatsapp/chatinfo/ContactInfoActivity;->A1T(VLZZZ)
+  00c2..00c8 op=6e invoke-virtual {v3}, Lcom/whatsapp/chatinfo/ContactInfoActivity;->A5h(Z)
+  00c8..00ca op=0a move-result
+  00ca..00ce op=39 if-nez v0, -0x44
+  00ce..00d2 op=54 iget-object v0, v3, Lcom/whatsapp/chatinfo/ContactInfoActivity;->A1T:LX/ADc;
+  00d2..00d6 op=38 if-eqz v0, -0x48
+  00d6..00dc op=71 invoke-static {v3}, LX/8kX;->A0v(LL)
+  00dc..00de op=0c move-result-object
+  00de..00e4 op=71 invoke-static {v0}, LX/8kU;->A0d(LL)
+  00e4..00e6 op=0c move-result-object
+  00e6..00ec op=6e invoke-virtual {v9, v0}, Ljava/lang/Object;->equals(ZL)
+  00ec..00ee op=0a move-result
+  00ee..00f2 op=38 if-eqz v0, -0x56
+  00f2..00f6 op=54 iget-object v2, v3, Lcom/whatsapp/chatinfo/ContactInfoActivity;->A1n:LX/0DV;
+  00f6..00fa op=54 iget-object v1, v3, LX/0II;->A04:LX/07u;
+  00fa..00fe op=13 const/16 v0, #0xc
+  00fe..0104 op=71 invoke-static {v1, v2, v9, v3, v0}, LX/Aha;->A00(VLLLLI)
+  0104..0108 op=54 iget-object v1, v3, Lcom/whatsapp/chatinfo/ContactInfoActivity;->A1T:LX/ADc;
+  0108..010c op=54 iget-object v0, v3, Lcom/whatsapp/chatinfo/ContactInfoActivity;->A1n:LX/0DV;
+  010c..0112 op=6e invoke-virtual {v1, v0}, LX/ADc;->A06(VL)
+  0112..0114 op=0e return-void
+  0114..0116 op=12 const/4 v0, #0x0
+  0116..011c op=71 invoke-static {v9, v0}, LX/00h;->A0A(VLI)
+  011c..0120 op=54 iget-object v1, v8, LX/AL4;->A00:Ljava/lang/Object;
+  0120..0124 op=1f check-cast v1, LX/8mU;
+  0124..012a op=6e invoke-virtual {v1, v9}, LX/8mU;->A0S(ZL)
+  012a..012c op=0a move-result
+  012c..0130 op=38 if-eqz v0, -0x75
+  0130..0136 op=6e invoke-virtual {v1}, LX/8mU;->A0T(V)
+  0136..0138 op=0e return-void
+  0138..013a op=12 const/4 v0, #0x0
+  013a..0140 op=71 invoke-static {v9, v0}, LX/00h;->A0A(VLI)
+  0140..0144 op=54 iget-object v2, v8, LX/AL4;->A00:Ljava/lang/Object;
+  0144..0148 op=1f check-cast v2, LX/8mx;
+  0148..014c op=54 iget-object v1, v2, LX/8mx;->A0O:Lcom/whatsapp/infra/core/jid/UserJid;
+  014c..0150 op=38 if-eqz v1, -0x85
+  0150..0156 op=6e invoke-virtual {v9, v1}, Ljava/lang/Object;->equals(ZL)
+  0156..0158 op=0a move-result
+  0158..015c op=38 if-eqz v0, -0x8b
+  015c..0162 op=6e invoke-virtual {v2, v1}, LX/8mx;->A0r(VL)
+  0162..0164 op=0e return-void
+  0164..017c op=00 packed-switch-payload size=4
+  # exception table: 0 try range(s)
+.end method

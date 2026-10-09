@@ -1,0 +1,25 @@
+# APK-derived structural disassembly: LX/1za;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method BdR(VL) flags=0x1 registers=5
+  0000..0004 op=54 iget-object v2, v3, LX/1za;->A00:LX/1zb;
+  0004..000a op=71 invoke-static {v2}, LX/1zb;->A01(LL)
+  000a..000c op=0c move-result-object
+  000c..0012 op=6e invoke-virtual {v4, v0}, Ljava/lang/Object;->equals(ZL)
+  0012..0014 op=0a move-result
+  0014..0018 op=38 if-eqz v0, +0x18
+  0018..001c op=54 iget-object v1, v2, LX/1zb;->A0l:LX/07u;
+  001c..001e op=12 const/4 v0, #0x2
+  001e..0024 op=71 invoke-static {v3, v0}, LX/3R1;->A00(LLI)
+  0024..0026 op=0c move-result-object
+  0026..002c op=72 invoke-interface {v1, v0}, LX/07u;->COM(VL)
+  002c..0030 op=54 iget-object v0, v2, LX/1zb;->A0j:LX/3b5;
+  0030..0036 op=72 invoke-interface {v0}, LX/3b5;->invalidateOptionsMenu(V)
+  0036..003a op=54 iget-object v0, v2, LX/1zb;->A01:LX/Do9;
+  003a..003e op=38 if-eqz v0, +0x5
+  003e..0044 op=6e invoke-virtual {v0}, LX/Do9;->A0t(V)
+  0044..0046 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

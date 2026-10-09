@@ -2213,3 +2213,11 @@ repair. Eight new reproducible identity-wait topics preserve the caller, observe
 timed worker and verification chain; all other event consumers and complete
 identity-only application remain unfinished. No account or network changed.
 [Evidence and scope](protocol/cross-device-sync.md#identity-wait-caller-and-extensions-verification-2026-10-09).
+
+Identity-success consumers (2026-10-09, **confirmed static APK 37.71**): the
+full DEX scan preserves 22 BdO/BdR declarations/bodies. Only Fco and AL2 have
+nonempty BdO; the second waiter is a 30-second business-profile UI task.
+No scanned callback directly decrypts or retries messages; transitive helpers
+remain unknown. Primary LID receive's sender_pn prerequisite is a local guard,
+not a proven APK requirement, and remains the next receive-routing trace.
+No account or network changed. [Evidence and limits](protocol/cross-device-sync.md#identity-success-consumer-inventory-2026-10-09).
