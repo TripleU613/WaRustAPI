@@ -1,5 +1,17 @@
 # Evidence ledger
 
+Scheduled arithmetic follow-up (2026-10-09, **confirmed static**): DEX static
+wide loads/stores now have mnemonics and an APK-byte regression. D7g passes
+scheduled_time plus a 30-day millisecond constant to DGf.A03. Complete expiry
+semantics and receipt admission remain unknown/unported. No account/live change.
+[Evidence and limits](scheduled-deadline.md).
+
+Scheduled-decoder validation: 827 workspace/all-feature tests, strict Clippy,
+strict rustdoc, formatting, CLI reference and API/library-symbol checks passed.
+Exact three-topic export (eight files/36,973 bytes), cached self-diff and the
+single-mnemonic comparison passed. Hygiene checked 2,097 local links and 103 APK
+bundles. No live account test ran.
+
 Final after-hook registry (2026-10-09, **confirmed static**): all 54 registered
 after entries now resolve to factories and executable CHJ bodies, with an ordered
 source index. The final 13 include add-on status setters, scheduled/appointment,

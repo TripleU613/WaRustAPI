@@ -46,9 +46,10 @@ update count is zero; insert result **-1 throws SQLException**. Values include
 message_row_id, null proto_data/stanza_data, key_id/key_jid, conditional_reveal_type,
 chat_row_id, from_me and scheduled_time. It then calls **DGf.A03** with selected
 bytes/key/time inputs. Full scheduled-send behavior is **unknown/unported**.
-The renderer leaves opcode **0x61** at 016e as an explicit unknown marker;
-the referenced CBc.A00 value and ensuing deadline arithmetic are **not decoded
-or assumed** here. This is a source-tool limitation, not a server requirement.
+The original bundle retains the then-unknown **0x61** marker at 016e.
+[Subsequent decoder correction](scheduled-deadline.md) resolves the load and
+constant initialization: the selected argument is scheduled_time plus 30 days.
+Full downstream deadline semantics remain unknown; historical bytes are retained.
 
 D7n reads D5z appointment metadata or a flagged 1jl/CrW AppointmentInfo path.
 The body writes **message_appointment** by message_row_id, with zero-count

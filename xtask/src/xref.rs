@@ -354,8 +354,13 @@ fn opcode_name(op: u8) -> &'static str {
         0x5b => "iput-object",
         0x5c => "iput-boolean",
         0x60 => "sget",
+        // DEX 21c static wide load; 37.71 D7g.CHJ at 016e reads CBc.A00:J
+        // before scheduling arithmetic. See docs/protocol/scheduled-deadline.md.
+        0x61 => "sget-wide",
         0x62 => "sget-object",
         0x67 => "sput",
+        // Paired 21c write: CBc.<clinit> stores the 30-day scheduling constant.
+        0x68 => "sput-wide",
         0x69 => "sput-object",
         0x6e => "invoke-virtual",
         0x6f => "invoke-super",
@@ -2924,6 +2929,34 @@ mod tests {
         assert_eq!(decoded[1].byte_off, 4);
         assert!(decoded.iter().all(|v| v.width == 2));
         assert_eq!(decoded.last().unwrap().byte_off + 4, bytes.len());
+    }
+
+    #[test]
+    fn decodes_scheduled_deadline_static_wide_load() {
+        let data = minimal_dex_header();
+        let dex = DexFile::parse(&data).unwrap();
+        // Literal APK 37.71 classes7.dex at 0x75e962: D7g.CHJ 016e..0178.
+        // Keep the next invocation to check instruction boundaries. The minimal
+        // fixture has no real field/method pool, so indices remain unresolved.
+        let bytes = [0x61, 0x00, 0x53, 0x60, 0x71, 0x40, 0x0f, 0x17, 0x32, 0x10];
+        let decoded = decode_insns(&bytes, &dex);
+        assert_eq!(decoded.len(), 2);
+        assert_eq!(decoded[0].mnemonic, "sget-wide");
+        assert_eq!(decoded[0].annotation, "v0, ?24659");
+        assert_eq!(decoded[0].width, 2);
+        assert_eq!(decoded[1].mnemonic, "invoke-static");
+        assert_eq!(decoded[1].byte_off, 4);
+        assert_eq!(decoded[1].width, 3);
+        // 21c uses the entire register byte, unlike nibble-addressed 22c.
+        let high_register = decode_insns(&[0x61, 0xfe, 0x53, 0x60], &dex);
+        assert_eq!(high_register[0].annotation, "v254, ?24659");
+        // CBc.<clinit>, classes7.dex 0x3a582c, method offset 0010.
+        let stored = decode_insns(&[0x68, 0x00, 0x53, 0x60, 0x0e, 0x00], &dex);
+        assert_eq!(stored[0].mnemonic, "sput-wide");
+        assert_eq!(stored[0].annotation, "v0, ?24659");
+        assert_eq!(stored[0].width, 2);
+        assert_eq!(stored[1].byte_off, 4);
+        assert_eq!(stored[1].mnemonic, "return-void");
     }
 
     #[test]

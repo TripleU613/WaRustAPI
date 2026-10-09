@@ -1,0 +1,44 @@
+{
+  "deadline-add": {
+    "class": "LX/6ak;",
+    "file": "deadline-add.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A18",
+    "methods": 1,
+    "rust_files": [
+      "xtask/src/xref.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "deadline-constant": {
+    "class": "LX/CBc;",
+    "file": "deadline-constant.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<clinit>",
+    "methods": 1,
+    "rust_files": [
+      "xtask/src/xref.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "hook-D7g": {
+    "anchors": [
+      "message_conditional_reveal"
+    ],
+    "class": "LX/D7g;",
+    "file": "hook-D7g.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "CHJ",
+    "methods": 1,
+    "rust_files": [
+      "xtask/src/xref.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  }
+}
