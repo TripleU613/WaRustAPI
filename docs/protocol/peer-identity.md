@@ -2534,3 +2534,99 @@ and 18 unchanged topics / 4 unchanged artifacts in **0.011349 seconds**; it is
 not a new-release or whole-APK comparison. All **63 xtask tests**, regenerated
 CLI reference, API library-symbol verification, formatting and repository hygiene
 passed (1,034 local links, 5,011,820 bytes across 9 checksum bundles).
+
+
+## Primary LID receive and legacy record stability (2026-10-09)
+
+**Implemented / offline-tested**, grounded in APK **2.26.37.71**
+[CjN.A04/A00](apk/2.26.37.71-primary-lid/sender-route.txt),
+[Bp2.A0N](apk/2.26.37.71-primary-lid/ordinary-base-route.txt) and
+[DEw.CF0 -> DFc](apk/2.26.37.71-primary-lid/metadata-parser.txt).
+The preceding trace separates the ordinary LID route from nullable aliases.
+It does not establish every Android chat-storage producer. Our canonical
+primary LID inbox/chat projection is a **local implementation choice** consistent
+with the actual namespace and our existing companion projection, not a claim to
+have copied Android's whole database model.
+
+**Confirmed local correction:** session_sender previously required sender_pn
+for ordinary primary LID input and projected that phone as its chat. New records
+now use the actual primary LID, with or without a phone alias or username.
+An explicitly supplied malformed/nonprimary/non-PN alias remains unsupported;
+nonzero LID agents, unsupported namespaces and own-peer controls retain their
+separate guards. First prekey bootstrap and held-session msg processing still
+require the existing Signal authentication/policy checks. No identity, location,
+username or phone mapping is invented. A redelivery's newly appearing alias is
+not enough to create an authenticated mapping or replace the original capture.
+
+**Regression finding (local, confirmed by cryptographic/crash fixtures):**
+chat identity and session identity are separate. An ordinary primary LID `msg`
+with no held LID session retains the explicit valid `sender_pn` ratchet fallback;
+a held LID session or LID `pkmsg` still selects the LID. Missing aliases never
+create a phone fallback. Companion and own-device session addresses retain their
+actual device component. The existing identity-conflict rollback and subprocess
+crash test caught the lost fallback; its storage expectation now uses the actual
+LID chat while preserving its PN ratchet and all rollback assertions.
+
+**Preserved historical layout:** direct_record_in checks the canonical row and
+at most two PN candidates: the explicit valid alias and the existing encrypted
+authenticated-lid mapping. A candidate legacy decrypted or consumed row qualifies only if
+its original route/capture matches message ID, exact primary LID components and
+its original PN alias. Supported Plain/AD-zero primary encodings correlate by
+components. A foreign user/device/ID/alias cannot supply the legacy row. The
+existing PN row, timestamp, protobuf, capture and event marker are not renamed
+or copied. Missing original legacy route evidence produces the fixed local
+`legacy direct inbox route unavailable` diagnostic; simultaneous qualifying
+rows produce `multiple authenticated direct inbox records`. These are local
+ambiguity safeguards, **not WhatsApp server refusal reasons or retry authority**.
+The same lookup is checked again inside the ratchet/inbox commit transaction.
+
+Event projection uses the selected original stored key and original authenticated
+capture for legacy PN events. Read queuing uses that same selected row, including
+an alias-less redelivery. Incoming poll lookup can resolve an existing PN poll
+through the same capture proof; the update targets its original chat/author
+while retaining the actual voting sender. Candidate identities for poll AEAD
+verification remain explicit/previously attributed namespaces, never copied pins.
+Consumed view-once rows retain their route/capture proof without plaintext.
+The bounded lookup selects these consumed rows as duplicates too, so an alias-less
+redelivery cannot create a new LID record, reproject content, advance the ratchet
+or queue a new read. The legacy cryptographic fixture covers this transition.
+Original projection markers remain preserved.
+The CLI's obsolete test-only phone-alias parser now delegates to the library;
+its prior test of a mandatory alias was a duplicated local assumption.
+
+**Offline evidence:** expanded real Signal msg fixtures cover typed/text JIDs,
+no alias, username-only metadata, alias appearance/disappearance, retained
+historical PN rows, encrypted-store reopen, once-only event/read projection and
+unchanged session/pin/record bytes after duplicate handling. A new primary LID
+pkmsg fixture uses the saved synthetic signed/one-time keys: failed nested MAC
+leaves session/pin/inbox/prekey consumption uncommitted, then the valid envelope
+commits once and consumes the one-time prekey. Reopened alias-bearing redelivery
+leaves the ratchet/event unchanged and does not adopt the new alias. A bounded
+lookup matrix covers foreign captures, mixed primary wire encodings, fallback to
+original capture storage, missing provenance and ambiguity. An encrypted poll
+vote fixture targets a retained PN poll from an alias-less LID envelope.
+These are cryptographic adapter fixtures, not APK-generated live packets.
+
+**Unknown/unverified:** fresh live alias-less primary LID interoperability,
+complete username/guest behavior, Android root-stanza/chat-storage producers,
+full cross-device alias reconciliation and companion sync. No guard relaxation
+changes identity policy, own-account protections, saved keys or server waits.
+The broader client goal remains unfinished.
+
+**Validation (2026-10-09):** 724 workspace/all-feature tests, strict workspace
+Clippy, warning-free Rustdoc, default CLI tests (24), CLI reference generation,
+OpenAPI library-symbol validation and formatting passed. Offline inspection
+against the retained account found unchanged peer-key, action, receipt, outbox
+and event output; inbox inspection differed only in elapsed `age_s`. This does
+not claim a raw database byte comparison or a historical replay.
+
+**Observed bounded receive:** the primary-route/PN-fallback build authenticated
+and listened for 45 seconds with reconnect disabled and no chat sends, then
+stopped cleanly (exit 0). Saved peer-key/action/receipt/outbox/event summaries
+remained unchanged; decrypted payload inspection remained 15 records. The
+capture inspection gained 19 lines; these are diagnostic shapes, not 19 user
+messages. No fresh decrypted DM or live alias-less interoperability was
+established. The subsequent consumed-marker correction was validated offline
+with the genuine Signal historical-row fixture; that final correction was not
+separately exercised by another live window. No original uncertain action was
+replayed or identity changed.

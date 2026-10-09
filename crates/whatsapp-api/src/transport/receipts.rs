@@ -233,20 +233,29 @@ pub fn queue_read_for_incoming(store: &ProtocolStore, node: &Node) -> Result<usi
     let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) else {
         return Ok(0);
     };
-    // The chat the inbox keyed the message under: the group for a group
-    // message, the sender's phone JID for a direct one.
-    let chat = match jid(node, "from") {
-        Some(from) if from.server == Server::Group => from,
-        _ => match super::inbox::session_sender(node) {
-            Some(sender) => sender,
-            None => return Ok(0),
-        },
-    };
-    let key = format!("received:{chat}:{id}");
-    let saved: Option<serde_json::Value> =
-        store.read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))?;
-    let Some(saved) = saved else {
-        return Ok(0);
+    // Use the original stored selector, including a legacy PN row proven by
+    // its authenticated capture; a redelivery alias cannot manufacture a read.
+    let (chat, saved) = if let Some(chat) =
+        jid(node, "from").filter(|chat| chat.server == Server::Group)
+    {
+        let key = format!("received:{chat}:{id}");
+        let Some(saved) = store
+            .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))?
+        else {
+            return Ok(0);
+        };
+        (chat, saved)
+    } else {
+        let Some(record) = store.read(|tx| {
+            super::inbox::direct_record_in(node, |key| tx.get_json(Table::Checkpoints, key, 1))
+        })?
+        else {
+            return Ok(0);
+        };
+        let Some(saved) = record.saved else {
+            return Ok(0);
+        };
+        (record.chat, saved)
     };
     if saved["status"] != "decrypted" {
         return Ok(0);

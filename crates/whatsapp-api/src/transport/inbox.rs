@@ -96,12 +96,139 @@ pub fn session_sender(node: &Node) -> Option<Jid> {
         // Keep companion chat/dedupe identity stable if an optional alias
         // appears or disappears on redelivery. Save PN mapping after auth.
         Server::Lid if sender.device != 0 && sender.agent == 0 => Some(sender.to_non_ad()),
-        Server::Lid if sender.device == 0 => {
-            let phone = parse("sender_pn")?;
-            (phone.server == Server::User && phone.device == 0).then_some(phone)
+        // APK 37.71 CjN.A04/A00 select the actual ordinary LID route;
+        // DEw.CF0 -> DFc carries a nullable phone alias separately.
+        Server::Lid if sender.device == 0 && sender.agent == 0 => {
+            if node.get_attr("sender_pn").is_some()
+                && !parse("sender_pn").is_some_and(|phone| {
+                    phone.server == Server::User && phone.device == 0 && phone.agent == 0
+                })
+            {
+                return None;
+            }
+            Some(sender.to_non_ad())
         }
         _ => None,
     }
+}
+
+/// Existing authenticated direct record, retaining its original chat selector.
+/// New LID records use the actual namespace; legacy PN rows are never renamed.
+pub(super) struct DirectRecord {
+    pub chat: Jid,
+    pub key: String,
+    pub saved: Option<serde_json::Value>,
+}
+
+/// Read the canonical row and at most two explicitly attributed legacy PN rows.
+/// Capture checks are local deduplication guards, not APK migration behavior.
+pub(super) fn direct_record_in(
+    node: &Node,
+    mut get: impl FnMut(&[u8]) -> Result<Option<serde_json::Value>>,
+) -> Result<Option<DirectRecord>> {
+    let Some(chat) = session_sender(node) else {
+        return Ok(None);
+    };
+    let Some(id) = node
+        .get_attr("id")
+        .and_then(|v| v.as_text())
+        .filter(|id| !id.is_empty() && id.len() <= 128)
+    else {
+        return Ok(None);
+    };
+    let key = format!("received:{chat}:{id}");
+    let saved = get(key.as_bytes())?;
+    let mut selected = DirectRecord { chat, key, saved };
+    let Some(from) = super::receipts::jid(node, "from")
+        .filter(|from| from.server == Server::Lid && from.device == 0 && from.agent == 0)
+    else {
+        return Ok(Some(selected));
+    };
+    let mut phones = Vec::new();
+    if let Some(phone) = super::receipts::jid(node, "sender_pn") {
+        phones.push(phone.to_non_ad());
+    }
+    if let Some(value) = get(format!("authenticated-lid:{}", from.to_non_ad()).as_bytes())? {
+        let phone: Jid = serde_json::from_value(value)
+            .map_err(|_| Error::invalid("inbox", "invalid authenticated LID mapping"))?;
+        if phone.server != Server::User || phone.device != 0 || phone.agent != 0 {
+            return Err(Error::invalid("inbox", "invalid authenticated LID mapping"));
+        }
+        if !phones.contains(&phone) {
+            phones.push(phone);
+        }
+    }
+    for phone in phones {
+        let legacy_key = format!("received:{phone}:{id}");
+        let Some(legacy) = get(legacy_key.as_bytes())? else {
+            continue;
+        };
+        // Consumed view-once rows keep their route proof but no plaintext;
+        // redelivery must retain their single-use marker across chat layouts.
+        if !matches!(legacy["status"].as_str(), Some("decrypted" | "consumed")) {
+            continue;
+        }
+        let wire = if !legacy["route"].is_null() {
+            serde_json::from_value::<Vec<u8>>(legacy["route"].clone()).ok()
+        } else if let Ok(capture) = serde_json::from_value::<Vec<u8>>(legacy["capture"].clone()) {
+            get(&capture)?.and_then(|value| serde_json::from_value(value).ok())
+        } else {
+            None
+        };
+        let Some(wire) = wire else {
+            return Err(Error::invalid(
+                "inbox",
+                "legacy direct inbox route unavailable",
+            ));
+        };
+        let limits = crate::profile::Limits::default();
+        let raw = crate::binary::unpack_frame_payload(&wire, &limits)?;
+        let original = crate::binary::Decoder::new(
+            &raw,
+            crate::binary::TokenDictionary::comparison_2_26_37_71(),
+            &limits,
+        )
+        .decode_node()?;
+        if original.description != "message"
+            || original.get_attr("id").and_then(|v| v.as_text()) != Some(id)
+            || !super::receipts::jid(&original, "from")
+                .is_some_and(|old| super::identity_query::same_primary_address(&old, &from))
+            || !super::receipts::jid(&original, "sender_pn")
+                .is_some_and(|old| super::identity_query::same_primary_address(&old, &phone))
+        {
+            continue;
+        }
+        if selected.saved.is_some() {
+            return Err(Error::invalid(
+                "inbox",
+                "multiple authenticated direct inbox records",
+            ));
+        }
+        selected = DirectRecord {
+            chat: phone,
+            key: legacy_key,
+            saved: Some(legacy),
+        };
+    }
+    Ok(Some(selected))
+}
+
+/// Projection of historical records follows the original authenticated alias,
+/// never an alias supplied only by a redelivery.
+pub(super) fn sender_for_record(key: &[u8], node: &Node) -> Option<Jid> {
+    let sender = session_sender(node)?;
+    let id = node.get_attr("id")?.as_text()?;
+    if sender.server == Server::Lid
+        && super::receipts::jid(node, "from")?.device == 0
+        && let Some(phone) = super::receipts::jid(node, "sender_pn")
+        && phone.server == Server::User
+        && phone.device == 0
+        && phone.agent == 0
+        && format!("received:{phone}:{id}").as_bytes() == key
+    {
+        return Some(phone);
+    }
+    Some(sender)
 }
 
 /// Share the authenticated alias rules between receive and historical projection.
@@ -563,10 +690,19 @@ async fn process_direct(
     else {
         return Ok(IncomingResult::Unsupported);
     };
-    let key = format!("received:{sender}:{id}");
-    if let Some(saved) =
-        store.read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))?
-    {
+    let (sender, key, saved) = if peer_category {
+        let key = format!("received:{sender}:{id}");
+        let saved = store.read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))?;
+        (sender, key, saved)
+    } else {
+        let Some(record) = store
+            .read(|tx| direct_record_in(node, |key| tx.get_json(Table::Checkpoints, key, 1)))?
+        else {
+            return Ok(IncomingResult::Unsupported);
+        };
+        (record.chat, record.key, record.saved)
+    };
+    if let Some(saved) = saved {
         super::inbox_events::restore(store, key.as_bytes(), &saved)?;
         return Ok(
             if matches!(saved["status"].as_str(), Some("decrypted" | "consumed")) {
@@ -643,7 +779,16 @@ async fn process_direct(
         None
     };
     let session_peer = companion_peer.clone().unwrap_or_else(|| {
-        direct_session_peer(&sender, lid_peer, lid_session_held, is_prekey_message)
+        // Chat projection uses the actual LID, independently of the held
+        // ratchet. Preserve the explicit PN fallback for ordinary msg when
+        // no LID session exists (Signal rollback/crash fixture); pkmsg still
+        // starts under the actual LID. No alias is guessed or persisted here.
+        let fallback = if !peer_category && sender.server == Server::Lid {
+            authenticated_phone_alias(node, &sender).unwrap_or_else(|| sender.clone())
+        } else {
+            sender.clone()
+        };
+        direct_session_peer(&fallback, lid_peer, lid_session_held, is_prekey_message)
     });
     let skdm_sender = companion_peer.as_ref().unwrap_or(&sender);
     let peer_key = format!("comparison-direct:{session_peer}");
@@ -770,6 +915,17 @@ async fn process_direct(
                 return Err(Error::invalid(
                     "inbox",
                     "own-device account changed before commit",
+                ));
+            }
+        }
+        if !peer_category {
+            let selected =
+                direct_record_in(node, |key| tx.get_json(Table::Checkpoints, key, 1))?
+                    .ok_or_else(|| Error::invalid("inbox", "direct route changed before commit"))?;
+            if selected.key != key || selected.saved.is_some() {
+                return Err(Error::invalid(
+                    "inbox",
+                    "direct inbox changed before commit",
                 ));
             }
         }
@@ -2155,7 +2311,20 @@ mod tests {
             .clone()
             .attr("from", lid.to_string())
             .attr("sender_pn", phone.to_string());
-        for (node, duplicate) in [(&text, &typed), (&typed, &text)] {
+        let bare = Node::new("message")
+            .attr("from", lid.clone())
+            .attr("id", "LID-ENCODING")
+            .children(typed.child_nodes().to_vec());
+        let username_only = bare.clone().attr("username", "synthetic_user");
+        for (node, duplicate, legacy) in [
+            (&text, &typed, false),
+            (&typed, &text, false),
+            (&bare, &typed, false),
+            (&typed, &bare, false),
+            (&username_only, &bare, false),
+            (&typed, &bare, true),
+            (&text, &bare, true),
+        ] {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("encoding.redb");
             let open = |create| {
@@ -2188,10 +2357,78 @@ mod tests {
                 })
                 .unwrap();
             let capture = preserve(&store, node).unwrap();
+            if legacy {
+                // Genuine authenticated plaintext/advanced ratchet, installed in
+                // the former PN layout only in this isolated historical fixture.
+                let received = direct::receive(
+                    &bob_account,
+                    &lid,
+                    &first.session,
+                    &first.identity,
+                    &reply.ciphertext,
+                )
+                .await
+                .unwrap();
+                let key = format!("received:{phone}:LID-ENCODING");
+                let route = crate::binary::Encoder::new(
+                    crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                )
+                .encode(node)
+                .unwrap();
+                store
+                    .write(|tx| {
+                        tx.put_json(
+                            Table::SignalSessions,
+                            selector.as_bytes(),
+                            1,
+                            &*received.session,
+                        )?;
+                        tx.put_json(
+                            Table::Checkpoints,
+                            format!("authenticated-lid:{lid}").as_bytes(),
+                            1,
+                            &phone,
+                        )?;
+                        tx.put_json(Table::Checkpoints, key.as_bytes(), 1,
+                        &serde_json::json!({"status":"decrypted", "protobuf":&*received.plaintext,
+                            "capture":capture, "route":route}))?;
+                        super::super::inbox_events::publish(
+                            tx,
+                            key.as_bytes(),
+                            node,
+                            &received.plaintext,
+                        )?;
+                        Ok(())
+                    })
+                    .unwrap();
+            }
             assert_eq!(
                 process(&store, &bob_account, node, &capture).await.unwrap(),
-                IncomingResult::Decrypted
+                if legacy {
+                    IncomingResult::Duplicate
+                } else {
+                    IncomingResult::Decrypted
+                }
             );
+            let record_key = format!(
+                "received:{}:LID-ENCODING",
+                if legacy { &phone } else { &lid }
+            );
+            assert!(
+                store
+                    .read(|tx| tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        record_key.as_bytes(),
+                        1
+                    ))
+                    .unwrap()
+                    .is_some()
+            );
+            let events = store.read(|tx| tx.scan(Table::Inbox, 1, 10)).unwrap();
+            assert_eq!(events.len(), 1);
+            let before_rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
             let sessions = store
                 .read(|tx| tx.scan(Table::SignalSessions, 1, 10))
                 .unwrap();
@@ -2240,7 +2477,346 @@ mod tests {
                     .unwrap(),
                 pins
             );
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Inbox, 1, 10)).unwrap(),
+                events
+            );
+            // Capture rows can grow on redelivery; authenticated records stay exact.
+            let after_rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            assert_eq!(
+                before_rows
+                    .iter()
+                    .find(|(key, _)| key == record_key.as_bytes()),
+                after_rows
+                    .iter()
+                    .find(|(key, _)| key == record_key.as_bytes())
+            );
+            assert_eq!(
+                super::super::receipts::queue_read_for_incoming(&store, duplicate).unwrap(),
+                1
+            );
+            assert_eq!(
+                super::super::receipts::queue_read_for_incoming(&store, node).unwrap(),
+                0
+            );
+            if legacy {
+                let mut consumed = serde_json::from_slice::<serde_json::Value>(
+                    &after_rows
+                        .iter()
+                        .find(|(key, _)| key == record_key.as_bytes())
+                        .unwrap()
+                        .1,
+                )
+                .unwrap();
+                consumed["status"] = "consumed".into();
+                consumed.as_object_mut().unwrap().remove("protobuf");
+                store
+                    .write(|tx| {
+                        tx.put_json(Table::Checkpoints, record_key.as_bytes(), 1, &consumed)
+                    })
+                    .unwrap();
+                assert_eq!(
+                    process(&store, &bob_account, duplicate, &capture)
+                        .await
+                        .unwrap(),
+                    IncomingResult::Duplicate
+                );
+                let saved: serde_json::Value = store
+                    .read(|tx| tx.get_json(Table::Checkpoints, record_key.as_bytes(), 1))
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(saved, consumed);
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::SignalSessions, 1, 10))
+                        .unwrap(),
+                    sessions
+                );
+                assert_eq!(
+                    store.read(|tx| tx.scan(Table::Inbox, 1, 10)).unwrap(),
+                    events
+                );
+                assert_eq!(
+                    super::super::receipts::queue_read_for_incoming(&store, duplicate).unwrap(),
+                    0
+                );
+                assert!(
+                    store
+                        .read(|tx| tx.get(
+                            Table::Checkpoints,
+                            format!("received:{lid}:LID-ENCODING").as_bytes(),
+                            1
+                        ))
+                        .unwrap()
+                        .is_none()
+                );
+            }
         }
+    }
+
+    #[test]
+    fn legacy_lid_lookup_requires_original_capture_and_refuses_ambiguous_rows() {
+        use std::collections::BTreeMap;
+        let lid = Jid::parse("123456789@lid").unwrap();
+        let phone = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let node = Node::new("message")
+            .attr("from", lid.clone())
+            .attr("id", "LEGACY");
+        let old = node.clone().attr("sender_pn", phone.clone());
+        let wire = |node: &Node| {
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(node)
+                .unwrap()
+        };
+        let legacy_key = format!("received:{phone}:LEGACY").into_bytes();
+        let canonical_key = format!("received:{lid}:LEGACY").into_bytes();
+        let mapping = format!("authenticated-lid:{lid}").into_bytes();
+        let legacy = |node: &Node| serde_json::json!({"status":"decrypted", "route":wire(node)});
+        let base = BTreeMap::from([
+            (mapping, serde_json::to_value(&phone).unwrap()),
+            (legacy_key.clone(), legacy(&old)),
+        ]);
+        let lookup = |rows: &BTreeMap<Vec<u8>, serde_json::Value>| {
+            direct_record_in(&node, |key| Ok(rows.get(key).cloned()))
+        };
+        let record = lookup(&base).unwrap().unwrap();
+        assert_eq!(record.chat, phone);
+        assert_eq!(record.key.as_bytes(), legacy_key);
+        let mut encoded = phone.clone();
+        encoded.kind = crate::model::jid::JidKind::AgentDevice;
+        let mut rows = base.clone();
+        rows.insert(
+            legacy_key.clone(),
+            legacy(&old.clone().attr("sender_pn", encoded)),
+        );
+        assert_eq!(lookup(&rows).unwrap().unwrap().chat, phone);
+        for foreign in [
+            old.clone().attr("from", "987654321@lid"),
+            old.clone().attr("id", "OTHER"),
+            old.clone().attr("from", lid.with_device(3)),
+            old.clone().attr("sender_pn", "15555550102@s.whatsapp.net"),
+        ] {
+            let mut rows = base.clone();
+            rows.insert(legacy_key.clone(), legacy(&foreign));
+            assert_eq!(
+                lookup(&rows).unwrap().unwrap().key.as_bytes(),
+                canonical_key
+            );
+        }
+        let mut rows = base.clone();
+        rows.insert(canonical_key, serde_json::json!({"status":"decrypted"}));
+        assert!(
+            lookup(&rows)
+                .err()
+                .unwrap()
+                .to_string()
+                .contains("multiple authenticated direct inbox records")
+        );
+        let mut rows = base.clone();
+        rows.insert(
+            legacy_key.clone(),
+            serde_json::json!({"status":"decrypted"}),
+        );
+        assert!(
+            lookup(&rows)
+                .err()
+                .unwrap()
+                .to_string()
+                .contains("legacy direct inbox route unavailable")
+        );
+        let mut rows = base.clone();
+        rows.insert(b"capture-fixture".to_vec(), serde_json::json!(wire(&old)));
+        rows.insert(
+            legacy_key,
+            serde_json::json!({"status":"decrypted", "capture":b"capture-fixture".to_vec()}),
+        );
+        assert_eq!(lookup(&rows).unwrap().unwrap().chat, phone);
+    }
+
+    #[tokio::test]
+    async fn primary_lid_prekey_without_alias_commits_once_after_authentication() {
+        use crate::{
+            model::ids::AccountId,
+            session::{KeyMaterial, RegistrationStatus, SignalIdentityKey},
+            signal::direct,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        use wacore_libsignal::protocol::{
+            DeviceId, GenericSignedPreKey, IdentityKey, IdentityKeyPair, KeyPair, PreKeyBundle,
+            PreKeyRecord, SignedPreKeyRecord,
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("primary.redb");
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("primary-lid-test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [38; 32],
+                ))),
+                create,
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        let mut config: crate::registration::request::LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        config.registration_id = 42;
+        config.signed_pre_key_id = 7;
+        crate::registration::factory::install_test_material(&store, &config).unwrap();
+        let receiver = store.read(AccountRecord::load).unwrap().unwrap();
+        let signed = crate::registration::factory::registered_signed_prekey(&store).unwrap();
+        let signed = SignedPreKeyRecord::deserialize(&signed).unwrap();
+        let one = KeyPair::generate(&mut rand::rng());
+        let mut identity = vec![5];
+        identity.extend(receiver.signal_identity.as_ref().unwrap().0.public);
+        let bundle = PreKeyBundle::new(
+            42,
+            DeviceId::new(0),
+            Some((11.into(), one.public_key)),
+            7.into(),
+            signed.public_key().unwrap(),
+            signed.signature().unwrap().to_vec(),
+            IdentityKey::decode(&identity).unwrap(),
+        )
+        .unwrap();
+        let peer = Jid::parse("123456789@lid").unwrap();
+        let key = IdentityKeyPair::generate(&mut rand::rng());
+        let sender = AccountRecord {
+            own_jid: Some(peer.clone()),
+            registration: RegistrationStatus::Registered,
+            signal_registration_id: Some(31),
+            signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                public: key.public_key().public_key_bytes().try_into().unwrap(),
+                private: *key.private_key().serialize(),
+            })),
+            ..Default::default()
+        };
+        let sent = direct::prepare_payload(
+            &sender,
+            receiver.own_jid.as_ref().unwrap(),
+            Some(&bundle),
+            None,
+            None,
+            b"\x0a\x05hello",
+        )
+        .await
+        .unwrap();
+        let prekey = PreKeyRecord::new(11.into(), &one).serialize().unwrap();
+        store
+            .write(|tx| tx.put_json(Table::Prekeys, b"comparison-prekey:11", 1, &prekey))
+            .unwrap();
+        let node = Node::new("message")
+            .attr("from", peer.clone())
+            .attr("id", "BARE-PREKEY")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", sent.kind)
+                    .attr("v", "2")
+                    .bytes(sent.ciphertext.clone()),
+            ]);
+        let mut bad = sent.ciphertext.clone();
+        *bad.last_mut().unwrap() ^= 1;
+        let damaged = Node::new("message")
+            .attr("from", peer.clone())
+            .attr("id", "BARE-PREKEY")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", sent.kind)
+                    .attr("v", "2")
+                    .bytes(bad),
+            ]);
+        let capture = preserve(&store, &damaged).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &damaged, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Undecryptable
+        );
+        assert!(
+            store
+                .read(|tx| tx.scan(Table::SignalSessions, 1, 10))
+                .unwrap()
+                .is_empty()
+        );
+        assert!(
+            store
+                .read(|tx| tx.scan(Table::PeerIdentities, 1, 10))
+                .unwrap()
+                .is_empty()
+        );
+        assert!(
+            store
+                .read(|tx| tx.get_json::<Vec<u8>>(Table::Prekeys, b"comparison-prekey:11", 1))
+                .unwrap()
+                .is_some()
+        );
+        let capture = preserve(&store, &node).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &node, &capture).await.unwrap(),
+            IncomingResult::Decrypted
+        );
+        assert!(
+            store
+                .read(|tx| tx.get_json::<Vec<u8>>(Table::Prekeys, b"comparison-prekey:11", 1))
+                .unwrap()
+                .is_none()
+        );
+        let sessions = store
+            .read(|tx| tx.scan(Table::SignalSessions, 1, 10))
+            .unwrap();
+        let pins = store
+            .read(|tx| tx.scan(Table::PeerIdentities, 1, 10))
+            .unwrap();
+        let events = store.read(|tx| tx.scan(Table::Inbox, 1, 10)).unwrap();
+        assert_eq!(events.len(), 1);
+        assert!(super::super::messaging::received_confirmation(&node).is_some());
+        assert_eq!(
+            super::super::receipts::queue_read_for_incoming(&store, &node).unwrap(),
+            1
+        );
+        drop(store);
+        let store = open(false);
+        let redelivery = node.clone().attr("sender_pn", "15555550101@s.whatsapp.net");
+        let capture = preserve(&store, &redelivery).unwrap();
+        assert_eq!(
+            process(&store, &receiver, &redelivery, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::SignalSessions, 1, 10))
+                .unwrap(),
+            sessions
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::PeerIdentities, 1, 10))
+                .unwrap(),
+            pins
+        );
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Inbox, 1, 10)).unwrap(),
+            events
+        );
+        assert_eq!(
+            super::super::receipts::queue_read_for_incoming(&store, &redelivery).unwrap(),
+            0
+        );
+        assert!(
+            store
+                .read(|tx| tx.get_json::<Jid>(
+                    Table::Checkpoints,
+                    format!("authenticated-lid:{peer}").as_bytes(),
+                    1
+                ))
+                .unwrap()
+                .is_none()
+        );
     }
 
     #[tokio::test]

@@ -42,6 +42,8 @@ fn poll_content(poll: super::polls::Poll) -> Option<MessageContent> {
 #[derive(Clone, Debug)]
 pub(super) struct PollContext {
     pub(super) poll_id: String,
+    /// Original incoming poll chat, including a retained legacy PN selector.
+    pub(super) incoming_chat: Option<crate::model::jid::Jid>,
     pub(super) secret: [u8; 32],
     pub(super) options: Vec<String>,
     /// Candidate creator identities (phone-number and LID forms).
@@ -57,18 +59,22 @@ pub(super) fn poll_context(
     let Some(vote) = super::polls::decode_vote(payload) else {
         return Ok(None);
     };
-    let Some(sender) = super::inbox::session_sender(node) else {
+    if super::inbox::session_sender(node).is_none() {
         return Ok(None);
-    };
+    }
     let poll_id = vote.poll_id.as_str().to_owned();
     if vote.poll_from_sender {
         // The sender's own poll: its authenticated plaintext holds the secret.
-        let key = format!("received:{sender}:{poll_id}");
-        let Some(saved) =
-            tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1)?
+        let target = node.clone().attr("id", poll_id.as_str());
+        let Some(record) =
+            super::inbox::direct_record_in(&target, |key| tx.get_json(Table::Checkpoints, key, 1))?
         else {
             return Ok(None);
         };
+        let Some(saved) = record.saved else {
+            return Ok(None);
+        };
+        let sender = record.chat;
         let Ok(plain) = serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()) else {
             return Ok(None);
         };
@@ -91,6 +97,7 @@ pub(super) fn poll_context(
         }
         return Ok(Some(PollContext {
             poll_id,
+            incoming_chat: Some(sender),
             secret,
             options: poll.options,
             creators,
@@ -122,21 +129,35 @@ pub(super) fn poll_context(
     }
     Ok(Some(PollContext {
         poll_id,
+        incoming_chat: None,
         secret,
         options,
         creators,
     }))
 }
-fn poll_vote_event(node: &Node, payload: &[u8], context: &PollContext) -> Option<SyncEvent> {
+fn poll_vote_event(
+    key: &[u8],
+    node: &Node,
+    payload: &[u8],
+    context: &PollContext,
+) -> Option<SyncEvent> {
     let vote = super::polls::decode_vote(payload)?;
-    let sender = super::inbox::session_sender(node)?;
+    let sender = super::inbox::sender_for_record(key, node)?;
     let (chat, by) = (
-        ChatId::from_jid(&sender).ok()?,
+        ChatId::from_jid(context.incoming_chat.as_ref().unwrap_or(&sender)).ok()?,
         DeviceAddress::from_jid(&sender).ok()?,
     );
     // The voter is the sender, addressed by phone number or LID; try each
     // creator/voter pairing until the authenticated decryption succeeds.
     let mut voters = vec![sender.to_non_ad()];
+    if let Some(legacy) = context.incoming_chat.as_ref() {
+        voters.push(legacy.to_non_ad());
+    }
+    if let Some(phone) = super::receipts::jid(node, "sender_pn").filter(|phone| {
+        phone.server == crate::model::jid::Server::User && phone.agent == 0 && phone.device == 0
+    }) {
+        voters.push(phone.to_non_ad());
+    }
     if let Some(lid) =
         super::receipts::jid(node, "from").filter(|j| j.server == crate::model::jid::Server::Lid)
     {
@@ -157,7 +178,10 @@ fn poll_vote_event(node: &Node, payload: &[u8], context: &PollContext) -> Option
         .and_then(|v| v.checked_mul(1000))
         .map(Timestamp);
     let (direction, target_sender) = if vote.poll_from_sender {
-        (Direction::Incoming, Some(by.clone()))
+        (
+            Direction::Incoming,
+            Some(DeviceAddress::from_jid(context.incoming_chat.as_ref().unwrap_or(&sender)).ok()?),
+        )
     } else {
         (Direction::Outgoing, None)
     };
@@ -192,11 +216,11 @@ fn event_with_content(
 /// Chat and authenticated sender for a projection. A direct message's `from` is
 /// both the chat and the sender; a group or broadcast (status) message's `from`
 /// is the chat and its `participant` is the sender.
-fn chat_and_sender(node: &Node) -> Option<(ChatId, DeviceAddress)> {
+fn chat_and_sender(key: &[u8], node: &Node) -> Option<(ChatId, DeviceAddress)> {
     let (chat_jid, sender_jid) = match super::inbox::sender_key_chat(node) {
         Some(pair) => pair,
         None => {
-            let chat = super::inbox::session_sender(node)?;
+            let chat = super::inbox::sender_for_record(key, node)?;
             let sender = super::receipts::jid(node, "from")
                 .filter(|peer| peer.device != 0 && peer.agent == 0)
                 .unwrap_or_else(|| chat.clone());
@@ -239,7 +263,7 @@ fn project(
             let Ok(Some(metadata)) = super::history_notice::decode_for_stanza(node, payload) else {
                 return unsupported();
             };
-            let Some((chat @ ChatId::Group(_), sender)) = chat_and_sender(node) else {
+            let Some((chat @ ChatId::Group(_), sender)) = chat_and_sender(key, node) else {
                 return unsupported();
             };
             let Some(id) = node
@@ -304,7 +328,7 @@ fn project(
             let Some(reaction) = super::reactions::decode(payload) else {
                 return unsupported();
             };
-            let Some((chat, by)) = chat_and_sender(node) else {
+            let Some((chat, by)) = chat_and_sender(key, node) else {
                 return unsupported();
             };
             let server_timestamp = node
@@ -352,7 +376,7 @@ fn project(
         // the poll's message secret when this store holds it.
         if fields.contains(&50) {
             return poll
-                .and_then(|context| poll_vote_event(node, payload, context))
+                .and_then(|context| poll_vote_event(key, node, payload, context))
                 .unwrap_or_else(unsupported);
         }
         // Keep in chat (comparison `Message.keepInChatMessage` field 51;
@@ -365,7 +389,7 @@ fn project(
             let Some(keep) = super::chat_settings::decode_keep(payload) else {
                 return unsupported();
             };
-            let Some(sender) = super::inbox::session_sender(node) else {
+            let Some(sender) = super::inbox::sender_for_record(key, node) else {
                 return unsupported();
             };
             let (Ok(chat), Ok(by)) = (ChatId::from_jid(&sender), DeviceAddress::from_jid(&sender))
@@ -421,7 +445,7 @@ fn project(
                 let Ok(id) = MessageId::new(stanza_id.clone()) else {
                     return unsupported();
                 };
-                let Some((chat, by)) = chat_and_sender(node) else {
+                let Some((chat, by)) = chat_and_sender(key, node) else {
                     return unsupported();
                 };
                 let participant = text
@@ -467,7 +491,7 @@ fn project(
             text.expiration,
         )
     };
-    let Some((chat, sender)) = chat_and_sender(node) else {
+    let Some((chat, sender)) = chat_and_sender(key, node) else {
         return unsupported();
     };
     let Some(id) = node
@@ -611,7 +635,7 @@ pub(super) fn restore(
     // authenticated historical captures, including field-102 history notices.
     let Some(sender) = super::inbox::sender_key_chat(&node)
         .map(|(chat, _)| chat)
-        .or_else(|| super::inbox::session_sender(&node))
+        .or_else(|| super::inbox::sender_for_record(key, &node))
     else {
         return Ok(false);
     };
@@ -1099,6 +1123,112 @@ mod tests {
             SyncEvent::UnsupportedMessage(_)
         ));
     }
+
+    #[test]
+    fn aliasless_lid_vote_finds_legacy_poll_without_changing_its_message_key() {
+        use crate::model::{
+            jid::Jid,
+            message::{MessageChange, MessageRef},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("legacy-poll.redb"),
+            account_id: AccountId::new("legacy-poll").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([21; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let phone = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let lid = Jid::parse("123456789@lid").unwrap();
+        let options = vec!["Yes".into(), "No".into()];
+        let creation =
+            super::super::polls::creation_payload("Lunch?", &options, 0, [5; 32]).unwrap();
+        let original = Node::new("message")
+            .attr("from", lid.clone())
+            .attr("sender_pn", phone.clone())
+            .attr("id", "LEGACYPOLL");
+        let route =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(&original)
+                .unwrap();
+        let original_key = format!("received:{phone}:LEGACYPOLL");
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    original_key.as_bytes(),
+                    1,
+                    &serde_json::json!({"status":"decrypted","protobuf":creation,"route":route}),
+                )?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("authenticated-lid:{lid}").as_bytes(),
+                    1,
+                    &phone,
+                )?;
+                publish(tx, original_key.as_bytes(), &original, &creation)?;
+                Ok(())
+            })
+            .unwrap();
+        let encrypted = super::super::polls::encrypt_vote(
+            &[5; 32],
+            "LEGACYPOLL",
+            &phone,
+            &lid,
+            &options[..1],
+            [8; 12],
+        )
+        .unwrap();
+        let target = MessageRef {
+            key: MessageKey {
+                chat: ChatId::from_jid(&phone).unwrap(),
+                sender: None,
+                direction: Direction::Outgoing,
+                id: MessageId::new("LEGACYPOLL").unwrap(),
+            },
+        };
+        let payload = super::super::polls::vote_payload(&phone, &target, encrypted, 7);
+        let vote = Node::new("message")
+            .attr("from", lid.clone())
+            .attr("id", "LIDVOTE");
+        store
+            .write(|tx| {
+                publish(
+                    tx,
+                    format!("received:{lid}:LIDVOTE").as_bytes(),
+                    &vote,
+                    &payload,
+                )
+            })
+            .unwrap();
+        let events = store
+            .read_events(
+                &ConsumerId::new("legacy-poll-check").unwrap(),
+                EventCursor::START,
+                10,
+            )
+            .unwrap()
+            .events;
+        let SyncEvent::MessageUpdated(update) = &events.last().unwrap().event else {
+            panic!("legacy poll vote not projected")
+        };
+        assert_eq!(update.key.chat, ChatId::from_jid(&phone).unwrap());
+        assert_eq!(
+            update.key.sender,
+            Some(DeviceAddress::from_jid(&phone).unwrap())
+        );
+        assert_eq!(update.key.id.as_str(), "LEGACYPOLL");
+        assert_eq!(
+            update.change,
+            MessageChange::PollVote {
+                by: DeviceAddress::from_jid(&lid).unwrap(),
+                selected: vec!["Yes".into()],
+                unresolved: vec![]
+            }
+        );
+        assert_eq!(events.len(), 2);
+    }
+
     #[test]
     fn polls_project_as_new_messages_and_votes_decrypt_with_the_saved_secret() {
         use crate::model::{jid::Jid, message::MessageChange};

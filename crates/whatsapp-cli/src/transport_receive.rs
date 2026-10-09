@@ -1356,28 +1356,7 @@ pub(super) async fn download_view_once(
 
 #[cfg(test)]
 fn session_sender(node: &whatsapp_api::binary::Node) -> Option<whatsapp_api::model::jid::Jid> {
-    use whatsapp_api::model::jid::{Jid, Server};
-    let parse = |name| {
-        let value = node.get_attr(name)?;
-        value
-            .as_jid()
-            .cloned()
-            .or_else(|| Jid::parse(value.as_text()?).ok())
-    };
-    if node.get_attr("participant").is_some() {
-        return None;
-    }
-    let sender = parse("from")?;
-    match sender.server {
-        Server::User => Some(sender),
-        // Comparison LX/CmF.A01 0x0096..00c6 reads sender_pn as PhoneUserJid.
-        // Only use an explicit mapping to an existing pinned primary session.
-        Server::Lid if sender.device == 0 => {
-            let phone = parse("sender_pn")?;
-            (phone.server == Server::User && phone.device == 0).then_some(phone)
-        }
-        _ => None,
-    }
+    whatsapp_api::transport::inbox::session_sender(node)
 }
 
 /// Only previously authenticated, atomically committed messages qualify for
@@ -2776,13 +2755,14 @@ mod tests {
     }
 
     #[test]
-    fn lid_requires_explicit_primary_phone_mapping() {
+    fn lid_projection_uses_actual_namespace_with_optional_valid_phone_alias() {
         let phone = Jid::parse("15551234567@s.whatsapp.net").unwrap();
         let lid = Node::new("message").attr("from", Jid::parse("12345@lid").unwrap());
-        assert!(session_sender(&lid).is_none());
+        let projected = Jid::parse("12345@lid").unwrap();
+        assert_eq!(session_sender(&lid), Some(projected.clone()));
         assert_eq!(
             session_sender(&lid.clone().attr("sender_pn", phone.clone())),
-            Some(phone.clone())
+            Some(projected)
         );
         assert!(session_sender(&lid.clone().attr("sender_pn", "12345@lid")).is_none());
         assert!(

@@ -2231,3 +2231,18 @@ a local limitation; historical PN-marker stability and the raw stanza producer
 remain next boundaries before a receive change. Six unrelated/special builder
 write paths are recorded to avoid repeating them. No account or network changed.
 [Evidence and limits](protocol/peer-identity.md#primary-lid-route-and-nullable-aliases-2026-10-09).
+
+Primary LID receive (2026-10-09, implemented/offline): new primary messages use
+actual LID without requiring a phone alias. Original authenticated capture proofs
+retain historical PN rows for duplicate/event/read lookup; no row rename, ratchet
+replay or alias adoption from redelivery. Real-crypto msg/pkmsg, reopen/MAC failure,
+legacy capture ambiguity and poll-target fixtures cover the correction. Fresh
+live alias-less interoperability and full APK storage parity remain unverified.
+[Evidence and scope](protocol/peer-identity.md#primary-lid-receive-and-legacy-record-stability-2026-10-09).
+
+- Primary LID legacy deduplication also retains consumed view-once markers using
+  original route proof; alias-less redelivery cannot recreate plaintext or an event.
+- Bounded receive smoke check authenticated and stopped cleanly after 45 seconds
+  with reconnect/chat sends disabled; 15 decrypted records remained 15, with no
+  fresh DM or alias-less live proof. Original action/receipt/outbox/event summaries
+  were unchanged. The later consumed-marker fix has offline validation only.

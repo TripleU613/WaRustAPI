@@ -1341,7 +1341,8 @@ mod tests {
             };
             let store = ProtocolStore::open(options()).unwrap();
             let peer_key = format!("comparison-direct:{recipient}");
-            let inbox_key = format!("received:{recipient}:reply-fixture");
+            // The PN ratchet fallback does not change the actual LID chat key.
+            let inbox_key = "received:12345@lid:reply-fixture";
             let mapping = b"authenticated-lid:12345@lid";
             store
                 .write(|tx| {
