@@ -1,5 +1,13 @@
 # Status — 2026-10-07
 
+Trusted-contact peer guard (2026-10-09, **confirmed local / static-backed**):
+privacy-token receive now rejects empty PN/LID users before storage or ACK;
+supplied empty sender_lid keeps a fixed diagnostic. Generic server-only JIDs
+previously passed our namespace-only guard. A failing-before regression checks
+text/Plain/AD inputs, unchanged tokens/pins/sessions and reopening; valid token
+handling remains covered. No real account/live change.
+[Evidence and limits](docs/protocol/token-notification-peer.md).
+
 Token mapping consumers (2026-10-09, **confirmed static/local**):
 selected table readers feed a separate specifier cache and native stable-ID list.
 `00D.A0C` compares/logs values; its caller separately chooses native or fallback

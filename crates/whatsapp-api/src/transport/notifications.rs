@@ -6,6 +6,9 @@
 //! separately during imports (token-import.md); these notifications do not
 //! implement that history/transfer authority or create outbound issue state.
 //! LX/11P.A09 reads tokens/token, trusted_contact, sender_lid and timestamp.
+//! 37.71 11P.A09 008e..00bc resolves from/sender_lid as UserJid before
+//! storing bytes. Our generic Jid admits server-only values, so this consumer
+//! also requires a concrete user; see token-notification-peer.md.
 //! LX/0q2.A0P replaces an incoming token only when its timestamp is newer.
 use super::receipts::jid;
 
@@ -20,9 +23,9 @@ pub fn handle(store: &ProtocolStore, node: &Node) -> Result<Option<Node>> {
     {
         return Ok(None);
     }
-    let Some(from) = jid(node, "from")
-        .filter(|v| matches!(v.server, Server::User | Server::Lid) && v.device == 0)
-    else {
+    let Some(from) = jid(node, "from").filter(|v| {
+        !v.user.is_empty() && matches!(v.server, Server::User | Server::Lid) && v.device == 0
+    }) else {
         return Ok(None);
     };
     let Some(id) = node
@@ -69,14 +72,14 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
     if node.get_attr("participant").is_some() || node.get_attr("recipient").is_some() {
         return Ok(0);
     }
-    let Some(from) = jid(node, "from")
-        .filter(|v| matches!(v.server, Server::User | Server::Lid) && v.device == 0)
-    else {
+    let Some(from) = jid(node, "from").filter(|v| {
+        !v.user.is_empty() && matches!(v.server, Server::User | Server::Lid) && v.device == 0
+    }) else {
         return Ok(0);
     };
     let target = if node.get_attr("sender_lid").is_some() {
         jid(node, "sender_lid")
-            .filter(|v| v.server == Server::Lid && v.device == 0)
+            .filter(|v| !v.user.is_empty() && v.server == Server::Lid && v.device == 0)
             .ok_or_else(|| Error::invalid("notification", "invalid sender LID"))?
     } else {
         from
@@ -153,6 +156,94 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn empty_notification_peers_never_store_tokens_or_acknowledge() {
+        use crate::{
+            model::{
+                ids::AccountId,
+                jid::{Jid, JidKind},
+            },
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: dir.path().join("peers.redb"),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [4; 32],
+                ))),
+                create,
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        let notification = || {
+            Node::new("notification")
+                .attr("type", "privacy_token")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("id", "fixture")
+                .attr("t", "20")
+                .children(vec![Node::new("tokens").children(
+                    vec![Node::new("token").attr("type", "trusted_contact").bytes(vec![1])],
+                )])
+        };
+        assert!(handle(&store, &notification()).unwrap().is_some());
+        store
+            .write(|tx| {
+                tx.put_json(Table::PeerIdentities, b"sentinel", 1, &true)?;
+                tx.put_json(Table::SignalSessions, b"sentinel", 1, &true)
+            })
+            .unwrap();
+        let snapshot = |store: &ProtocolStore| {
+            store
+                .read(|tx| {
+                    Ok([
+                        tx.scan(Table::Checkpoints, 1, 100)?,
+                        tx.scan(Table::PeerIdentities, 1, 100)?,
+                        tx.scan(Table::SignalSessions, 1, 100)?,
+                    ])
+                })
+                .unwrap()
+        };
+        let before = snapshot(&store);
+        for server in [Server::User, Server::Lid] {
+            let text = notification().attr("from", server.as_str());
+            assert_eq!(record(&store, &text).unwrap(), 0);
+            assert!(handle(&store, &text).unwrap().is_none());
+            for kind in [JidKind::Plain, JidKind::AgentDevice] {
+                let peer = Jid {
+                    user: String::new(),
+                    server: server.clone(),
+                    agent: 0,
+                    device: 0,
+                    kind,
+                };
+                let node = notification().attr("from", peer);
+                assert_eq!(record(&store, &node).unwrap(), 0);
+                assert!(handle(&store, &node).unwrap().is_none());
+            }
+        }
+        for value in [
+            Jid::parse("lid").unwrap(),
+            Jid {
+                user: String::new(),
+                server: Server::Lid,
+                agent: 0,
+                device: 0,
+                kind: JidKind::AgentDevice,
+            },
+        ] {
+            let node = notification().attr("sender_lid", value);
+            let error = record(&store, &node).unwrap_err().to_string();
+            assert!(error.contains("invalid sender LID"));
+            assert!(handle(&store, &node).is_err());
+        }
+        assert_eq!(snapshot(&store), before);
+        drop(store);
+        assert_eq!(snapshot(&open(false)), before);
+    }
+
     #[test]
     fn duplicate_and_older_notifications_do_not_replace_newer_tokens() {
         use crate::{

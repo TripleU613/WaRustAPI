@@ -1439,3 +1439,11 @@ saved receipt. Incomplete success/error ACKs leave outcome_unknown intact,
 including after restart, without replay. Cb1 is the 37.71 parser-produced
 stanza key; the old CZH comment was not correctly attributed to that key.
 Full native callback lifecycle and fresh live validation remain unverified.
+
+### Concrete trusted-contact peers (2026-10-09)
+
+**Confirmed local/static-backed:** [token notification peer guard](token-notification-peer.md)
+records the empty-user receive correction against APK 37.71 `11P.A09` typed
+UserJid inputs. Server-only PN/LID values do not create tokens or ACKs; invalid
+supplied sender_lid reports a fixed diagnostic. No native fallback-policy or
+real-account live validation is claimed.

@@ -1,0 +1,22 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "targets.json": {
+    "bytes": 417,
+    "sha256": "2206f2c912e27210a694bae9cb1072448a925f5dd4bfe83b1147806ec230188d"
+  },
+  "token-notification-peer.txt": {
+    "bytes": 5221,
+    "sha256": "29bc0bee97cc09391e8c3244f648ee0de38751f6201f03667d65a4832b2218e2"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "token-notification-peer": {
+    "anchors": [
+      "trusted_contact",
+      "sender_lid"
+    ],
+    "class": "LX/11P;",
+    "file": "token-notification-peer.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A09",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  }
+}
