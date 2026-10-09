@@ -1,0 +1,24 @@
+APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Exact all-DEX writes-only scan: LX/178;->A06:I
+Command: xtask apk-field-refs <apk> --class LX/178; --field A06 --type I --writes-only
+Confirmed physical write sites only; value/producer semantics are untraced.
+classes.dex  LX/0VA;->A00(LLLL)
+  write opcode 0x59, dex byte offset: 0x5a609a
+classes.dex  LX/0zC;->A0E(LLI)
+  write opcode 0x59, dex byte offset: 0x76aac0
+classes.dex  LX/0zt;->A0H(LLLLLLZ)
+  write opcode 0x59, dex byte offset: 0x783f82
+classes.dex  LX/0zt;->A0O(VLLLLLLI)
+  write opcode 0x59, dex byte offset: 0x7851a4
+classes3.dex  LX/36W;->A02(IL)
+  write opcode 0x59, dex byte offset: 0x35c936
+classes7.dex  LX/Bp2;->A0P(VLL)
+  write opcode 0x59, dex byte offset: 0x51aae0
+classes7.dex  LX/D7E;->Byt(VLL)
+  write opcode 0x59, dex byte offset: 0x75c5e4
+classes7.dex  LX/D7J;->CHJ(VLL)
+  write opcode 0x59, dex byte offset: 0x75ca66
+classes7.dex  LX/D7J;->CHJ(VLL)
+  write opcode 0x59, dex byte offset: 0x75caae
+classes7.dex  LX/DMZ;->run(V)
+  write opcode 0x59, dex byte offset: 0x7e0dde

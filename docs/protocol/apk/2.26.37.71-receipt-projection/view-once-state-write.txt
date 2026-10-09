@@ -1,0 +1,39 @@
+# APK-derived structural disassembly: LX/8o5;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(VLIJ) flags=0x19 registers=9
+  # full signature: LX/8o5;->A00(LX/8o5;IJ)V
+  0000..0004 op=54 iget-object v0, v5, LX/8o5;->A02:LX/0Gc;
+  0004..000a op=6e invoke-virtual {v0}, LX/0Gc;->A07()LX/0ZN;
+  000a..000c op=0c move-result-object v2
+  000c..0012 op=71 invoke-static {}, LX/1xk;->A06()Landroid/content/ContentValues;
+  0012..0014 op=0c move-result-object v4
+  0014..0018 op=1a const-string v0, "state"
+  0018..001e op=71 invoke-static {v4, v0, v6}, LX/1xl;->A1D(Landroid/content/ContentValues;Ljava/lang/String;I)V
+  001e..0022 op=54 iget-object v3, v2, LX/0ZN;->A02:LX/0IY;
+  0022..0026 op=1a const-string v5, "message_view_once_media"
+  0026..002a op=1a const-string v6, "message_row_id = ?"
+  002a..0030 op=71 invoke-static {v7, v8}, LX/1xo;->A1b(J)[Ljava/lang/String;
+  0030..0032 op=0c move-result-object v8
+  0032..0036 op=1a const-string v7, "UPDATE_VIEW_ONCE_SQL"
+  0036..003c op=74 invoke-virtual/range {v3..v8}, LX/0IY;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  003c..0042 op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  0042..0044 op=0e return-void
+  0044..0046 op=0d move-exception v1
+  0046..0048 op=27 throw v1
+  0048..004a op=0d move-exception v0
+  004a..0050 op=71 invoke-static {v2, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0050..0052 op=27 throw v0
+  0052..0054 op=0d move-exception v1
+  0054..0058 op=1a const-string v0, "ViewOnceMessageStore/updateInsert failed"
+  0058..005e op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+  005e..0060 op=0e return-void
+  # exception table: 5 try range(s)
+  # catch Ljava/lang/Exception; code_units 0000..0006 -> 0029
+  # catch <all> code_units 0006..001e -> 0022
+  # catch Ljava/lang/Exception; code_units 001e..0022 -> 0029
+  # catch <all> code_units 0023..0024 -> 0024
+  # catch Ljava/lang/Exception; code_units 0025..0029 -> 0029
+.end method

@@ -1,0 +1,46 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "status-projection-write": {
+      "class": "LX/15A;",
+      "method": "A01",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "anchors": [
+        "UPDATE_MESSAGE_STATUS_MAIN_SQL"
+      ]
+    },
+    "status-key-arguments": {
+      "class": "LX/0zc;",
+      "method": "A05",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "view-once-status-hook": {
+      "class": "LX/8o5;",
+      "method": "A03",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "view-once-state-write": {
+      "class": "LX/8o5;",
+      "method": "A00",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "anchors": [
+        "UPDATE_VIEW_ONCE_SQL"
+      ]
+    }
+  }
+}

@@ -1,0 +1,81 @@
+# APK-derived structural disassembly: LX/15A;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(VLI) flags=0x12 registers=22
+  # full signature: LX/15A;->A01(LX/178;I)V
+  0000..0004 op=08 move-object/from16 v4, v20
+  0004..0008 op=02 move/from16 v8, v21
+  0008..000e op=6e invoke-virtual {v4, v8}, LX/178;->A0H(I)V
+  000e..0012 op=08 move-object/from16 v5, v19
+  0012..0016 op=54 iget-object v3, v5, LX/15A;->A0N:LX/0zc;
+  0016..001a op=54 iget-object v7, v4, LX/178;->A0i:LX/1gc;
+  001a..001e op=1a const-string v0, "MainMessageStore/updateMessageStatus/update/failed "
+  001e..0022 op=1a const-string v1, "MainMessageStore/updateMessageStatus/update/success "
+  0022..0028 op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  0028..002a op=0b move-result-wide v11
+  002a..002e op=54 iget-object v2, v3, LX/0zc;->A0A:LX/0Gc;
+  002e..0034 op=6e invoke-virtual {v2}, LX/0Gc;->A07()LX/0ZN;
+  0034..0036 op=0c move-result-object v2
+  0036..003a op=22 new-instance v14, Landroid/content/ContentValues;
+  003a..0040 op=70 invoke-direct {v14}, Landroid/content/ContentValues;-><init>()V
+  0040..0046 op=1b const-string/jumbo v9, "status"
+  0046..004c op=71 invoke-static {v8}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  004c..004e op=0c move-result-object v6
+  004e..0054 op=6e invoke-virtual {v14, v9, v6}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  0054..0058 op=54 iget-object v13, v2, LX/0ZN;->A02:LX/0IY;
+  0058..005c op=1a const-string v15, "message"
+  005c..0060 op=1a const-string v16, "\n          chat_row_id = ?\n          AND\n          from_me = ?\n          AND\n          key_id = ?\n        "
+  0060..0066 op=71 invoke-static {v7, v3}, LX/0zc;->A05(LX/1gc;LX/0zc;)[Ljava/lang/String;
+  0066..0068 op=0c move-result-object v18
+  0068..006c op=1a const-string v17, "UPDATE_MESSAGE_STATUS_MAIN_SQL"
+  006c..0072 op=74 invoke-virtual/range {v13..v18}, LX/0IY;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  0072..0074 op=0a move-result v10
+  0074..0076 op=12 const/4 v9, #0x1
+  0076..007a op=1a const-string v6, " "
+  007a..007e op=32 if-eq v10, v9, +0x1c
+  007e..0082 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0082..0088 op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0088..008c op=54 iget-object v0, v7, LX/1gc;->A01:Ljava/lang/String;
+  008c..0092 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0092..0098 op=6e invoke-virtual {v1, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0098..009c op=54 iget-object v0, v7, LX/1gc;->A00:LX/0Cy;
+  009c..00a2 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  00a2..00a8 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00a8..00aa op=0c move-result-object v0
+  00aa..00b0 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+  00b0..00b2 op=28 goto +0x16
+  00b2..00b6 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  00b6..00bc op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  00bc..00c2 op=6e invoke-virtual {v0, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  00c2..00c8 op=6e invoke-virtual {v0, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00c8..00ce op=6e invoke-virtual {v0, v8}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  00ce..00d4 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00d4..00d6 op=0c move-result-object v0
+  00d6..00dc op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  00dc..00e2 op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  00e2..00e6 op=54 iget-object v3, v3, LX/0zc;->A0B:LX/0V5;
+  00e6..00ec op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+  00ec..00ee op=0b move-result-wide v1
+  00ee..00f0 op=bc sub-long/2addr v1, v11
+  00f0..00f4 op=1a const-string v0, "CoreMessageStore/updateMessageStatusTimestamp"
+  00f4..00fa op=6e invoke-virtual {v3, v0, v1, v2}, LX/0V5;->A01(Ljava/lang/String;J)V
+  00fa..00fe op=54 iget-object v0, v5, LX/15A;->A08:LX/05B;
+  00fe..0102 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0102..0108 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0108..010a op=0c move-result-object v0
+  010a..010e op=1f check-cast v0, LX/8o5;
+  010e..0114 op=6e invoke-virtual {v0, v4}, LX/8o5;->A03(LX/178;)V
+  0114..0116 op=0e return-void
+  0116..0118 op=0d move-exception v1
+  0118..011e op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  011e..0120 op=27 throw v1
+  0120..0122 op=0d move-exception v0
+  0122..0128 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  0128..012a op=27 throw v1
+  # exception table: 3 try range(s)
+  # catch <all> code_units 001b..003a -> 008b
+  # catch <all> code_units 003f..006e -> 008b
+  # catch <all> code_units 008c..008f -> 0090
+.end method

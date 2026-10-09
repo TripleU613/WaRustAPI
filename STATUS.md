@@ -1,5 +1,12 @@
 # Status — 2026-10-07
 
+Receipt message projection (2026-10-09, **confirmed static**): four topics
+close status-only existing-row updates and the conditional view-once state hook.
+Multipart status counts each user's highest state against native A06; computed
+downgrades log and still write. Threshold producers and complete user admission
+remain unknown/unported; no runtime/account/live change.
+[Evidence and limits](docs/protocol/receipt-projection.md).
+
 Status-array renderer correction (2026-10-09, **confirmed local/static**):
 the APK-derived regression exposes the old 64-byte truncation; the bounded
 256-byte preview now preserves all 22 receipt-status ranks and reports omitted

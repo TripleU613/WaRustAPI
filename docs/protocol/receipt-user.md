@@ -130,3 +130,8 @@ be inferred merely from original targets or Delivered facts.
 not the lambda default branch or its true-argument fallback. JID-row creation
 is distinct from receipt_user membership; primary cleanup remains unported.
 [Complete source, offsets and limits](receipt-counterparts.md).
+
+Follow-up: [receipt message projection](receipt-projection.md) traces native
+per-user threshold counting, applied computed downgrades, the status-only SQL
+update and conditional view-once hook. Complete threshold producers/admission
+remain unknown; no Rust user-row projection or primary cleanup is claimed.

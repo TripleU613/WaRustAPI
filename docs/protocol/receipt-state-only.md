@@ -123,3 +123,8 @@ Static artifact agreement does not prove full receipt parity or live delivery.
 Follow-up: [receipt read policy](receipt-read-policy.md) traces the factory
 preference/default and immediate contact/account predicates. Effective saved
 settings and their synchronization remain unknown.
+
+Follow-up: [receipt message projection](receipt-projection.md) traces native
+per-user threshold counting, applied computed downgrades, the status-only SQL
+update and conditional view-once hook. Complete threshold producers/admission
+remain unknown; no Rust user-row projection or primary cleanup is claimed.

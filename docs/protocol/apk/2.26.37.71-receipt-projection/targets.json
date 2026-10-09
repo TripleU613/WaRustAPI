@@ -1,0 +1,60 @@
+{
+  "status-key-arguments": {
+    "class": "LX/0zc;",
+    "file": "status-key-arguments.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "status-projection-write": {
+    "anchors": [
+      "UPDATE_MESSAGE_STATUS_MAIN_SQL"
+    ],
+    "class": "LX/15A;",
+    "file": "status-projection-write.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "view-once-state-write": {
+    "anchors": [
+      "UPDATE_VIEW_ONCE_SQL"
+    ],
+    "class": "LX/8o5;",
+    "file": "view-once-state-write.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "view-once-status-hook": {
+    "class": "LX/8o5;",
+    "file": "view-once-status-hook.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  }
+}
