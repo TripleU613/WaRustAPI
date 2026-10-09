@@ -661,7 +661,9 @@ fn decode_switch_reference(bytes: &[u8], pos: usize) -> String {
         return "# truncated switch payload".into();
     };
     let mut cases = Vec::new();
-    for index in 0..size.min(64) {
+    // The DEX u16 count bounds this walk. Truncating at 64 hid late DI
+    // bindings (37.71 1UE.A0R cases 2932/2946) and unvalidated tails.
+    for index in 0..size {
         let key = if packed {
             first.checked_add(index as i32)
         } else {
@@ -679,9 +681,6 @@ fn decode_switch_reference(bytes: &[u8], pos: usize) -> String {
             format!("{destination:#x}")
         };
         cases.push(format!("{key}:@{destination}"));
-    }
-    if size > 64 {
-        cases.push("...".into());
     }
     format!(
         "v{}, payload@{payload:#x}, cases=[{}], default@{:#x}",
@@ -2350,6 +2349,39 @@ fn unescape(raw: &str) -> String {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn switch_references_retain_late_provider_bindings_and_validate_the_tail() {
+        // APK 2.26.37.71, classes.dex, 1UE.A0R: the 279-entry
+        // packed table selects receipt handlers beyond the former 64-case cap.
+        // Header and two jump words are literal APK bytes (0x91713c,
+        // 0x917374, 0x9173ac); relocating the switch from +4 to zero
+        // moves its destinations back four bytes. Other jumps are placeholders.
+        let mut bytes = vec![0x2b, 0, 4, 0, 0, 0, 0, 0, 0, 1, 0x17, 1, 0xe8, 0x0a, 0, 0];
+        bytes.resize(16 + 279 * 4, 0);
+        bytes[16 + 140 * 4..20 + 140 * 4].copy_from_slice(&[0x1b, 5, 0, 0]);
+        bytes[16 + 154 * 4..20 + 154 * 4].copy_from_slice(&[0x6f, 5, 0, 0]);
+        let rendered = decode_switch_reference(&bytes, 0);
+        assert!(rendered.contains("2932:@0xa36"));
+        assert!(rendered.contains("2946:@0xade"));
+        assert_eq!(rendered.matches(":@").count(), 279);
+        assert!(!rendered.contains("..."));
+        bytes.pop();
+        assert!(decode_switch_reference(&bytes, 0).starts_with('#'));
+
+        let mut sparse = vec![0x2c, 1, 4, 0, 0, 0, 0, 0, 0, 2, 65, 0];
+        for key in 0i32..65 {
+            sparse.extend_from_slice(&(key * 3).to_le_bytes());
+        }
+        for _ in 0..65 {
+            sparse.extend_from_slice(&3i32.to_le_bytes());
+        }
+        let rendered = decode_switch_reference(&sparse, 0);
+        assert!(rendered.contains("192:@0x6"));
+        assert_eq!(rendered.matches(":@").count(), 65);
+        sparse.pop();
+        assert!(decode_switch_reference(&sparse, 0).starts_with('#'));
+    }
+
     #[test]
     fn switch_references_resolve_signed_targets_and_reject_truncation() {
         let packed = [

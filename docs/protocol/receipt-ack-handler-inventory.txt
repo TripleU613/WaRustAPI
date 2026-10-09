@@ -1,0 +1,51 @@
+APK 2.26.37.71 physical BFC method-name scan (2026-10-09)
+SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Command: xtask apk-smali APK --class "" --method BFC --signatures --exceptions
+Substring name scan, not interface implementation or registration closure.
+31 matching declarations in 31 classes; only selected handler methods exported.
+
+LX/0jT;->BFC(Landroid/os/Message;I)Z
+LX/0jV;->BFC(Landroid/os/Message;I)Z
+LX/0yM;->BFC(Landroid/os/Message;I)Z
+LX/0yO;->BFC(Landroid/os/Message;I)Z
+LX/0yP;->BFC(Landroid/os/Message;I)Z
+LX/0yR;->BFC(Landroid/os/Message;I)Z
+LX/0yT;->BFC(Landroid/os/Message;I)Z
+LX/0yu;->BFC(Landroid/os/Message;I)Z
+LX/11I;->BFC(Landroid/os/Message;I)Z
+LX/11J;->BFC(Landroid/os/Message;I)Z
+LX/11L;->BFC(Landroid/os/Message;I)Z
+LX/11Z;->BFC(Landroid/os/Message;I)Z
+LX/12q;->BFC(Landroid/os/Message;I)Z
+LX/12r;->BFC(Landroid/os/Message;I)Z
+LX/137;->BFC(Landroid/os/Message;I)Z
+LX/14A;->BFC(Landroid/os/Message;I)Z
+LX/14B;->BFC(Landroid/os/Message;I)Z
+LX/14C;->BFC(Landroid/os/Message;I)Z
+LX/14I;->BFC(Landroid/os/Message;I)Z
+LX/14c;->BFC(Landroid/os/Message;I)Z
+LX/14d;->BFC(Landroid/os/Message;I)Z
+LX/16f;->BFC(Landroid/os/Message;I)Z
+LX/16p;->BFC(Landroid/os/Message;I)Z
+LX/16r;->BFC(Landroid/os/Message;I)Z
+LX/16t;->BFC(Landroid/os/Message;I)Z
+LX/16u;->BFC(Landroid/os/Message;I)Z
+LX/16w;->BFC(Landroid/os/Message;I)Z
+LX/17I;->BFC(Landroid/os/Message;I)Z
+LX/17J;->BFC(Landroid/os/Message;I)Z
+LX/17L;->BFC(Landroid/os/Message;I)Z
+LX/17j;->BFC(Landroid/os/Message;I)Z
+
+Physical constructor caller scan:
+xtask apk-callers APK --class LX/14c; --method <init>
+classes.dex LX/1UE;->A0R(LILL) invoke 0x917002 (one caller)
+xtask apk-callers APK --class LX/17J; --method <init>
+classes.dex LX/1UE;->A0R(LILL) invoke 0x9170aa (one caller)
+Not a transitive caller closure.
+
+Independent switch fixture bytes from classes.dex:
+1UE.A0R instruction start 0x9165c4: d520ff3f2b00ba050000
+279-entry packed header 0x91713c: 00011701e80a0000
+case 2932 jump 0x917374: 1b050000; instruction-relative target 0xa3a
+case 2946 jump 0x9173ac: 6f050000; instruction-relative target 0xae2
+Old renderer omitted both cases after its first 64 entries.

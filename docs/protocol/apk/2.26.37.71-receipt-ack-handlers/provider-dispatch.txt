@@ -1,0 +1,61 @@
+# APK-derived structural disassembly: LX/00C;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(LLI) flags=0x9 registers=8
+  # full signature: LX/00C;->A03(LX/06A;I)Ljava/lang/Object;
+  0000..0006 op=71 invoke-static {v7}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0006..0008 op=0c move-result-object v5
+  0008..000c op=62 sget-object v4, LX/00C;->A03:Ljava/util/concurrent/ConcurrentHashMap;
+  000c..0012 op=6e invoke-virtual {v4, v5}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  0012..0014 op=0c move-result-object v0
+  0014..0018 op=39 if-nez v0, +0x54
+  0018..001e op=71 invoke-static {v7}, LX/06p;->A00(I)Ljava/lang/Object;
+  001e..0020 op=0c move-result-object v3
+  0020..0022 op=1d monitor-enter
+  0022..0028 op=6e invoke-virtual {v4, v5}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  0028..002a op=0c move-result-object v0
+  002a..002e op=39 if-nez v0, +0x44
+  002e..0034 op=72 invoke-interface {v6}, LX/06A;->B0M()LX/06I;
+  0034..0036 op=0c move-result-object v2
+  0036..003a op=1c const-class v1, LX/00C;
+  003a..003e op=62 sget-object v0, LX/00C;->A04:LX/054;
+  003e..0044 op=6e invoke-virtual {v2, v0, v1, v2}, LX/06I;->A00(LX/054;Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/Object;
+  0044..0046 op=0c move-result-object v1
+  0046..004a op=1f check-cast v1, LX/00C;
+  004a..004e op=54 iget-object v0, v1, LX/00C;->A01:LX/06B;
+  004e..0054 op=72 invoke-interface {v0}, LX/06A;->Ak8()LX/06r;
+  0054..0056 op=0c move-result-object v2
+  0056..005a op=54 iget-object v1, v1, LX/00C;->A00:LX/06q;
+  005a..005e op=54 iget-object v0, v2, LX/06r;->A00:Ljava/util/List;
+  005e..0064 op=72 invoke-interface {v0, v1}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+  0064..006a op=72 invoke-interface {v6}, LX/06A;->ATy()LX/06A;
+  006a..006c op=0c move-result-object v0
+  006c..0072 op=71 invoke-static {v0}, LX/00S;->A07(LX/06A;)V
+  0072..0078 op=72 invoke-interface {v0}, LX/06A;->B0M()LX/06I;
+  0078..007a op=0c move-result-object v1
+  007a..0080 op=71 invoke-static {}, LX/00I;->A00()Landroid/app/Application;
+  0080..0082 op=0c move-result-object v0
+  0082..0088 op=71 invoke-static {v7, v1, v0}, LX/1UE;->A00(ILX/06A;Ljava/lang/Object;)Ljava/lang/Object;
+  0088..008a op=0c move-result-object v0
+  008a..008e op=38 if-eqz v0, +0xe
+  008e..0094 op=6e invoke-virtual {v4, v5, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  0094..0096 op=28 goto +0x9
+  0096..0098 op=0d move-exception v0
+  0098..009e op=71 invoke-static {}, LX/00S;->A06()V
+  009e..00a4 op=6e invoke-virtual {v2}, LX/06r;->A01()V
+  00a4..00a6 op=27 throw v0
+  00a6..00ac op=71 invoke-static {}, LX/00S;->A06()V
+  00ac..00b2 op=6e invoke-virtual {v2}, LX/06r;->A01()V
+  00b2..00b4 op=1e monitor-exit
+  00b4..00b6 op=11 return-object v0
+  00b6..00b8 op=0d move-exception v0
+  00b8..00ba op=1e monitor-exit
+  00ba..00bc op=27 throw v0
+  00bc..00be op=11 return-object v0
+  # exception table: 3 try range(s)
+  # catch <all> code_units 0011..0039 -> 005b
+  # catch <all> code_units 0039..004b -> 004b
+  # catch <all> code_units 004b..005d -> 005b
+.end method

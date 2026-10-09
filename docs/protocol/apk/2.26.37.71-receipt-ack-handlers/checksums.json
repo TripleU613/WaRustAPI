@@ -1,0 +1,90 @@
+{
+  "factory-bindings.txt": {
+    "bytes": 44101,
+    "sha256": "80dc7c961b3b25e97b1532db5f7b4f3c00fd28e5c349ed6611fa82d26623fba1"
+  },
+  "factory-group.txt": {
+    "bytes": 53504,
+    "sha256": "31b4ea418a6bdec5a0c065e902e99807f3ea2a0c7c73fdff98e305bd4cc7fc70"
+  },
+  "factory-router.txt": {
+    "bytes": 3544,
+    "sha256": "b7d6969c03c892d5a220d15bd182b1e112e32a05ed73066f977b1b85b4e9b7a9"
+  },
+  "handler-providers.txt": {
+    "bytes": 13890,
+    "sha256": "8a7911b0aa104c74df54af48a9e19bf093a983f41ae62ef3d5b727810b5bbb5e"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "provider-creation.txt": {
+    "bytes": 564,
+    "sha256": "15e31fbe28309e67770fdc6b3bc50825fd6a94a51871bda73ab838851385944b"
+  },
+  "provider-dispatch.txt": {
+    "bytes": 3336,
+    "sha256": "8caa13b19ed5a48dbd5751d04ab56601ff74095cd80af49e2eb11f80ff49b475"
+  },
+  "provider-get.txt": {
+    "bytes": 1219,
+    "sha256": "c316b5c8c1d4d8e91b94760f6ad9cf7d30b672b0fafff9b10248655bd513ace6"
+  },
+  "provider-init.txt": {
+    "bytes": 572,
+    "sha256": "f5442a8712e99703075820eb69fa3d93dee7d9e300015024c65e2dce90444283"
+  },
+  "provider-resolve.txt": {
+    "bytes": 693,
+    "sha256": "0180bcf4eb9bff11a6285f7a8baeb6415c15f000faee542ca6338f06bc7f8ae0"
+  },
+  "read-chat-predicate.txt": {
+    "bytes": 777,
+    "sha256": "a8704f0e341dd4bf57aa95f6e67f3fd7629e8203363d29c1b63a4ea171d63177"
+  },
+  "read-handler.txt": {
+    "bytes": 17916,
+    "sha256": "f4be47f1fa18e6731274b0e8136397b18593c8ce20e61c21bf8ed3ae344ec088"
+  },
+  "read-worker-init.txt": {
+    "bytes": 1694,
+    "sha256": "7187cb1f30b760ce974ca18c4113af845bb94a0899038182076517e78d57f963"
+  },
+  "read-worker.txt": {
+    "bytes": 89740,
+    "sha256": "e190be5ee7cb3c0cb7f98cb7bd999b3f8ab2679b7135eda0ae4ed727e4dfaeb8"
+  },
+  "state-application-boundary.txt": {
+    "bytes": 55022,
+    "sha256": "e820f8faf3e24032b203612b93a449b0cbeb7a0f29374c285ea61c61f23f567e"
+  },
+  "state-enqueue.txt": {
+    "bytes": 1361,
+    "sha256": "b1b18ad447ed7db4061c48255c3ec1e68bf5de0a0f245753cc72fbdae9111e38"
+  },
+  "state-handler.txt": {
+    "bytes": 69202,
+    "sha256": "a43dff66c798d5c8b4f7e3c97159b474a1c02beece90547d39d3429d97556830"
+  },
+  "state-worker-init.txt": {
+    "bytes": 884,
+    "sha256": "6e31d6271be5da9267ad833f6825bf1d24942b8c0afbd76fb0897bb1336adbd0"
+  },
+  "state-worker.txt": {
+    "bytes": 1162,
+    "sha256": "c534003f1fd1672c0921744bd9dc97215cb42820d19af04d5e596ea7b35900e4"
+  },
+  "targets.json": {
+    "bytes": 6913,
+    "sha256": "82eb6facd079a3a8f84bfb789a64d02c1fbe03f1da77619c4a05be8ec53e2ba3"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

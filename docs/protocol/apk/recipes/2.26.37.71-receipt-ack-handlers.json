@@ -1,0 +1,186 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "handler-providers": {
+      "class": "LX/N12;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "provider-creation": {
+      "class": "LX/00C;",
+      "method": "A00",
+      "anchors": [],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "provider-get": {
+      "class": "LX/059;",
+      "method": "get",
+      "anchors": [],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "provider-init": {
+      "class": "LX/059;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "provider-resolve": {
+      "class": "LX/00C;",
+      "method": "A02",
+      "anchors": [],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "provider-dispatch": {
+      "class": "LX/00C;",
+      "method": "A03",
+      "anchors": [],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "factory-router": {
+      "class": "LX/1UE;",
+      "method": "A00",
+      "anchors": [
+        "Method Switch Binding Exception: "
+      ],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "factory-group": {
+      "class": "LX/1UE;",
+      "method": "A01",
+      "anchors": [
+        "Nested Switch Binding Exception: "
+      ],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "factory-bindings": {
+      "class": "LX/1UE;",
+      "method": "A0R",
+      "anchors": [
+        "Nested Switch Binding Exception: "
+      ],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "read-handler": {
+      "class": "LX/14c;",
+      "method": "BFC",
+      "anchors": [
+        "remote_chat_jid",
+        "msgid",
+        "participant"
+      ],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "read-chat-predicate": {
+      "class": "LX/0DE;",
+      "method": "A0i",
+      "anchors": [],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "state-handler": {
+      "class": "LX/17J;",
+      "method": "BFC",
+      "anchors": [
+        "null cannot be cast to non-null type com.whatsapp.infra.messaging.MessageStatusUpdate"
+      ],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "state-enqueue": {
+      "class": "LX/Cmn;",
+      "method": "A03",
+      "anchors": [],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "state-worker": {
+      "class": "LX/DMc;",
+      "method": "run",
+      "anchors": [],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "state-worker-init": {
+      "class": "LX/DMc;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "state-application-boundary": {
+      "class": "LX/Cmn;",
+      "method": "A04",
+      "anchors": [
+        "MessageStatusUpdateHelper/onMessageStatusUpdate: processed="
+      ],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "read-worker": {
+      "class": "LX/DNf;",
+      "method": "run",
+      "anchors": [
+        "onReadReceiptReceivedByServer"
+      ],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    },
+    "read-worker-init": {
+      "class": "LX/DNf;",
+      "method": "<init>",
+      "anchors": [],
+      "rust_files": [
+        "xtask/src/xref.rs",
+        "crates/whatsapp-api/src/transport/receipts.rs"
+      ]
+    }
+  }
+}

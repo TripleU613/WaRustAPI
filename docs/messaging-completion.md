@@ -1,5 +1,14 @@
 # Messaging completion checklist
 
+Receipt ACK handler bindings (2026-10-09, **confirmed static/local**): APK
+37.71 N12 providers resolve read selector 86 to 14c and state selector 262
+to 17J. Read processing checks chat type 5; state processing enqueues Cmn
+with arguments 0/5000/0. The offline switch renderer now retains every declared
+case and rejects malformed tails, closing its former 64-case visibility gap.
+The eighteen-topic snapshot preserves concrete worker boundaries; full persistence
+and live parity remain unknown. No account state or live request changed.
+[Evidence and limits](protocol/receipt-ack-handlers.md).
+
 Specialized receipt ACK producers (2026-10-09, **confirmed static**): APK
 37.71 read ACKs produce selector 86 bundles; played/server-error produce selector
 262 models with arguments 10/12 and zero time. The fourteen-topic snapshot
