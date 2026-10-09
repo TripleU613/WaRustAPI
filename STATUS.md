@@ -1,5 +1,14 @@
 # Status — 2026-10-07
 
+Receipt metadata provenance (2026-10-09, **confirmed static / inferred lifecycle**):
+APK 37.71 has four physical route-flag writers and hydrates 1ic mentions from
+message_mentions, separately from receipt_user. Clearing its list preserves
+lookup bit 1 and the route flag; BotGroupMetadata attachment explicitly sets or
+clears a separate bit. The fourteen-topic snapshot preserves these sources and
+remaining constructor inventories. Complete user-row admission and primary
+cleanup remain unported. No Rust runtime or account state changed.
+[Evidence and limits](docs/protocol/receipt-metadata.md).
+
 Receipt metadata route (2026-10-09, **confirmed static**): APK 37.71 special
 classification requires chat exclusion, flag/first qualifying metadata user,
 message A02 and descriptor absence. It does not count recipients; A0z bypasses

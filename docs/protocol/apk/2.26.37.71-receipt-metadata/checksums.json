@@ -1,0 +1,74 @@
+{
+  "bot-group-attach.txt": {
+    "bytes": 949,
+    "sha256": "9054402e9eb8c6463eed08d841192ae9dfaad0010723621619e850a14af9dd3a"
+  },
+  "bot-group-descriptor.txt": {
+    "bytes": 2707,
+    "sha256": "c139a86d7c6f2425b63b4213d66b5b9f6c92fd8d78c14bc248b58520e229b71f"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "lookup-bit-add.txt": {
+    "bytes": 590,
+    "sha256": "f8cbaf68c25b4ad38ed38ca3a367cccb1e2ee0c25b67216664e47f277d87f762"
+  },
+  "lookup-bit-remove.txt": {
+    "bytes": 682,
+    "sha256": "b57f15412e16559bddf97380f355e1d18a59357e1c700b6f23f686103c577f1d"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "mention-list-attach.txt": {
+    "bytes": 1490,
+    "sha256": "f0a858a8369c7f34dbb24de7a139e950a063d27459820e40ef537647d2ad4d84"
+  },
+  "mention-list-constructor.txt": {
+    "bytes": 609,
+    "sha256": "436cbadaa127360a3316cc240456a4f41ff7a0999df55b686bba755e4b4ebd78"
+  },
+  "mention-sql-load.txt": {
+    "bytes": 6432,
+    "sha256": "272e5e2185c939df216cbeb1bdd57092a5b8742aed1219054afee3cc84db8d0e"
+  },
+  "quoted-message-access.txt": {
+    "bytes": 712,
+    "sha256": "16cbee585cef12a2d06c50d0581fefc2e72ffc3f2fa96e344f6d17f4de285521"
+  },
+  "quoted-message-assignment.txt": {
+    "bytes": 1612,
+    "sha256": "f1411ff179927383da8f7802d1074127573eddf1462c9b0d3b2319dee36ba99f"
+  },
+  "quoted-message-guard.txt": {
+    "bytes": 478,
+    "sha256": "790a09c685cc13382816683c16ce2934f5a5c30058f87883380ed3a6ad1de382"
+  },
+  "route-flag-context-deserializer.txt": {
+    "bytes": 153058,
+    "sha256": "3639ef3ffea07d9d37d31bc186f7b8218e1015b7bae5c7aebe281bc5e52772aa"
+  },
+  "route-flag-copy.txt": {
+    "bytes": 665,
+    "sha256": "6612be0c76842845d376a303ff130e0295b08667bd1baa75c633b517a2ed1b79"
+  },
+  "route-flag-load-listener.txt": {
+    "bytes": 1742,
+    "sha256": "4c3ddd7bf67f0cf31ddc2a170edc1e6e8d1283b4bd96542b059d1c979e9440c2"
+  },
+  "route-flag-quoted-producer.txt": {
+    "bytes": 1759,
+    "sha256": "3b331e115d226df9f8087a8510bc39e8ebec469bf2a3408c446a2d88cb044a77"
+  },
+  "targets.json": {
+    "bytes": 5780,
+    "sha256": "7f75604c2fa139d728bcb3f2ea6dac2eeae2ad2041d1c3d67b99a78fe3b8d80c"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

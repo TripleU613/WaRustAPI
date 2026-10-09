@@ -60,7 +60,10 @@ single-participant proof or authority to merge PN/LID identities.
 1id.A00 obtains a **1ie** descriptor through the same message descriptor access
 pattern. Its presence suppresses special even when A0z is true. **Unknown:**
 A0z producers/meaning, message A02's complete semantics, DLg/1ic/1ie's producer
-and serialization authority, and all caller/subtype invariants. Those values
+and serialization authority, and all caller/subtype invariants. The subsequent
+[metadata provenance trace](receipt-metadata.md) now identifies four flag writers,
+mention-list attachment/hydration and the BotGroupMetadata descriptor, without
+establishing all producer authority. Those values
 must not be invented from current Rust target lists or receipt facts.
 
 ## Shared user/chat exclusion predicate

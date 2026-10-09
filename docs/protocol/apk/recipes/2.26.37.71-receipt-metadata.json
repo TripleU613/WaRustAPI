@@ -1,0 +1,139 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "route-flag-quoted-producer": {
+      "class": "LX/1gy;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "method": "A05"
+    },
+    "route-flag-load-listener": {
+      "class": "LX/1iN;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "method": "CHJ"
+    },
+    "route-flag-context-deserializer": {
+      "class": "LX/CoJ;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "method": "A05"
+    },
+    "route-flag-copy": {
+      "class": "LX/DKL;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "method": "CFe"
+    },
+    "mention-list-constructor": {
+      "class": "LX/1ic;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "method": "<init>"
+    },
+    "mention-list-attach": {
+      "class": "LX/1ib;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "method": "A04"
+    },
+    "bot-group-descriptor": {
+      "class": "LX/1ie;",
+      "anchors": [
+        "BotGroupMetadata(participantsMetadata="
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "bot-group-attach": {
+      "class": "LX/1id;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "method": "A01"
+    },
+    "lookup-bit-add": {
+      "class": "LX/178;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "method": "A0I"
+    },
+    "lookup-bit-remove": {
+      "class": "LX/178;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "method": "A0K"
+    },
+    "mention-sql-load": {
+      "class": "LX/16S;",
+      "anchors": [
+        "GET_JIDS_FROM_MESSAGES_MENTIONED_TABLE_SQL"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "method": "A01"
+    },
+    "quoted-message-access": {
+      "class": "LX/178;",
+      "method": "A09",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "quoted-message-guard": {
+      "class": "LX/178;",
+      "method": "A0n",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "quoted-message-assignment": {
+      "class": "LX/178;",
+      "method": "A0M",
+      "anchors": [
+        "quoted message should be marked StorageType.QUOTED"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    }
+  }
+}

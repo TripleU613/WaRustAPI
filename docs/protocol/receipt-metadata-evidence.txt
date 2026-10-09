@@ -1,0 +1,73 @@
+APK 2.26.37.71 receipt-route flag and descriptor physical inventory
+SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+
+Field references and callers are exact declaring-class/type matches.
+Not complete virtual/reflection or in-place collection mutation coverage.
+The zero-match 1ie.A00:I hypothesis was refuted: the constructor stores Set.
+Raw offsets below are APK DEX bytes, not method-relative.
+
+message-route-flag-writers.txt source_sha256=f93776850fb51d8e8cdb9eb6f9ea915937c15e2d761d95244fe9a48b7010dc43
+classes2.dex  LX/1gy;->A05(VLL)
+  write opcode 0x5c, dex byte offset: 0x1322a4
+classes2.dex  LX/1iN;->CHJ(VLL)
+  write opcode 0x5c, dex byte offset: 0x1426b8
+classes7.dex  LX/CoJ;->A05(VLLLL)
+  write opcode 0x5c, dex byte offset: 0x685d34
+classes7.dex  LX/DKL;->CFe(VLL)
+  write opcode 0x5c, dex byte offset: 0x7cb91a
+
+metadata-user-list-writers.txt source_sha256=37e344ca4423730954ca5dcf0e82aebc159dd5a325891c5e0a417c4df01fb821
+classes2.dex  LX/1ic;-><init>(VL)
+  write opcode 0x5b, dex byte offset: 0x14409e
+
+metadata-addon-field-writers.txt source_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+metadata-addon-set-writers.txt source_sha256=c32ad14f36f389f6d0e95b6eacc7f83508d10078674f2d5182c1a847aab8b465
+classes2.dex  LX/1ie;-><init>(VL)
+  write opcode 0x5b, dex byte offset: 0x1442ae
+
+metadata-user-list-callers.txt source_sha256=a3073b39dbc6242caa9b606c677e33c9c12dc23a8ece230455d0424009915bc4
+classes2.dex  LX/1ib;->A04(VLL)
+  invoke dex byte offset: 0x143fbc
+
+metadata-route-exclusion-callers.txt source_sha256=535a5b232ab81059f9efa39b69884bc6e57426cf9f0d24f3d85d301a124aef1f
+classes6.dex  LX/9L7;->C8k(VLL)
+  invoke dex byte offset: 0x3737b4
+classes7.dex  LX/Cm6;->A08(VLL)
+  invoke dex byte offset: 0x649832
+classes7.dex  LX/CoJ;->A05(VLLLL)
+  invoke dex byte offset: 0x6845b8
+classes7.dex  LX/DGm;->A00(LL)
+  invoke dex byte offset: 0x7b2776
+
+metadata-user-list-attach-callers.txt source_sha256=d0c821ae4c0c7fdfd2a4e7970285ec3a5307547e0cff52c79e2aa8987747f908
+classes7.dex  LX/Cm4;->A01(VLL)
+  invoke dex byte offset: 0x646cdc
+classes7.dex  LX/CoJ;->A05(VLLLL)
+  invoke dex byte offset: 0x685d26
+classes7.dex  LX/D8S;->Byu(VLLL)
+  invoke dex byte offset: 0x7658c8
+classes7.dex  LX/DLy;->run(V)
+  invoke dex byte offset: 0x7d822a
+classes5.dex  LX/72L;->A0Z(LL)
+  invoke dex byte offset: 0x34ef86
+classes10.dex  LX/KVn;->A01(VLLLLLIZZ)
+  invoke dex byte offset: 0x4b2726
+classes.dex  LX/0qA;->A03(LLLLLLLLLLLLLLII)
+  invoke dex byte offset: 0x6e072c
+classes.dex  LX/152;->A00(LLLLZ)
+  invoke dex byte offset: 0x7e134e
+classes.dex  LX/153;->A00(LLLIZ)
+  invoke dex byte offset: 0x7e43f0
+classes.dex  LX/16S;->A01(VL)
+  invoke dex byte offset: 0x7fc824
+classes2.dex  LX/1Ze;->A00(LLLLLLJ)
+  invoke dex byte offset: 0xf4a10
+classes2.dex  LX/1gy;->A05(VLL)
+  invoke dex byte offset: 0x13229c
+classes2.dex  LX/1ic;->AFk(VLL)
+  invoke dex byte offset: 0x1440cc
+classes2.dex  LX/1iq;->CHJ(VLL)
+  invoke dex byte offset: 0x144ffc
+classes3.dex  LX/3S6;->invoke(L)
+  invoke dex byte offset: 0x43328c

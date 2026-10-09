@@ -1,0 +1,33 @@
+# APK-derived structural disassembly: LX/178;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0M(VL) flags=0x1 registers=5
+  # full signature: LX/178;->A0M(LX/178;)V
+  0000..0004 op=38 if-eqz v4, +0x29
+  0004..000a op=6e invoke-virtual {v3}, LX/178;->A0n()Z
+  000a..000c op=0a move-result v0
+  000c..000e op=12 const/4 v2, #0x0
+  000e..0012 op=39 if-nez v0, +0x8
+  0012..0016 op=1a const-string v0, "message type is not allowed to have a quoted message"
+  0016..001c op=71 invoke-static {v2, v0}, LX/00K;->A0D(ZLjava/lang/String;)V
+  001c..001e op=0e return-void
+  001e..0024 op=6e invoke-virtual {v4}, LX/178;->A0m()Z
+  0024..0026 op=0a move-result v0
+  0026..002a op=39 if-nez v0, +0x5
+  002a..002e op=1a const-string v0, "message type can not be a quoted message"
+  002e..0030 op=28 goto -0xc
+  0030..0036 op=6e invoke-virtual {v4}, LX/178;->A0e()I
+  0036..0038 op=0a move-result v1
+  0038..003a op=12 const/4 v0, #0x2
+  003a..003e op=33 if-ne v1, v0, +0x3
+  003e..0040 op=12 const/4 v2, #0x1
+  0040..0044 op=1a const-string v0, "quoted message should be marked StorageType.QUOTED"
+  0044..004a op=71 invoke-static {v2, v0}, LX/00K;->A0D(ZLjava/lang/String;)V
+  004a..004c op=12 const/4 v0, #0x0
+  004c..0052 op=6e invoke-virtual {v4, v0}, LX/178;->A0M(LX/178;)V
+  0052..0056 op=5b iput-object v4, v3, LX/178;->A0H:LX/178;
+  0056..0058 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
