@@ -1737,6 +1737,24 @@ pub(super) async fn run(
             // but their fixed shape/validation diagnostic explains why.
             if let Some(shape) = whatsapp_api::transport::reactions::shape(&plain) {
                 println!("inbox: reaction shape {shape}");
+                if let Some(chat) = std::str::from_utf8(key)
+                    .ok()
+                    .and_then(|k| k.strip_prefix("received:"))
+                    .and_then(|k| k.rsplit_once(':'))
+                    .and_then(|(c, _)| whatsapp_api::model::jid::Jid::parse(c).ok())
+                    .filter(|c| c.server == whatsapp_api::model::jid::Server::Group)
+                {
+                    let (pn, lid) = whatsapp_api::transport::inbox::own_identities(&store)?;
+                    let own: Vec<_> = pn.into_iter().chain(lid).collect();
+                    let label =
+                        match whatsapp_api::transport::reactions::group_target(&chat, &plain, &own)
+                        {
+                            Ok(_) => "valid".to_owned(),
+                            Err(Error::InvalidInput { reason, .. }) => reason,
+                            Err(_) => "invalid_group_key".to_owned(),
+                        };
+                    println!("inbox: group reaction target_validation={label}");
+                }
             }
         }
     }

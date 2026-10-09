@@ -1678,3 +1678,25 @@ events were unchanged. Original capture shapes were preserved; captures grew
 from 461 to 466. No fresh group send, explicit read request or live same-ID
 collision was performed. The prior incoming storage gap is now corrected
 locally; native storage parity and fresh group handset rendering remain unknown.
+
+Incoming group reaction authors (2026-10-09, **confirmed local correction**):
+BZa participant now selects the original author; a third member's message no
+longer becomes an outgoing target merely because fromMe is false. Matching
+legacy/new parent routes retain actual devices; consumed bodies stay consumed.
+Known own PN/LID selects outgoing targets; unsupported agent/malformed/foreign
+group keys remain opaque. Inspection adds fixed target_validation labels. Parent
+ambiguities refuse atomically; old event markers are preserved. Fresh live group
+reactions and native own/hosted normalization remain unknown. See [reactions](reactions.md#incoming-group-original-author-2026-10-09).
+
+Group reaction validation: 778 workspace/all-feature tests and strict Clippy,
+Rustdoc, default CLI, API/library symbols, CLI-reference regeneration and format
+checks passed. Hygiene checked the unchanged 15 APK evidence checksum bundles
+(5,815,284 bytes). Two retained group keys report target_validation=valid; no
+historical events were rewritten. A 45-second receive-only session authenticated
+and stopped cleanly with sends/reconnect disabled. Peer keys, actions, receipts,
+outbox and events stayed unchanged; original capture shapes were retained and
+captures grew from 466 to 471. Fresh live group reaction targeting is unverified.
+BoQ.A00's BO0 predicate, effective caller gates and contradictory fromMe/author
+normalization remain unported; exact known own PN/LID matching is a local
+projection contract. One temporary-store ownership test refusal passed isolated
+and on full rerun without changing ownership guards; its cause remains unknown.

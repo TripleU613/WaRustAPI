@@ -68,3 +68,15 @@ cargo package --locked -p whatsapp-api
 ```
 
 Run additional feature sets explicitly. Do not use `--all-features` as a substitute for understanding mutually exclusive backends. Do not require a C++-backed fuzzing engine in the strict Rust build pipeline; use the Rust property/replay harness for the required gate.
+
+## Temporary-store ownership refusal observed 2026-10-09
+
+**Confirmed test outcome / unknown cause:** one workspace run failed
+`outbox_send::tests::changed_text_id_is_rejected_before_media_file_or_upload_access`
+when `ProtocolStore::open` immediately followed `drop(store)` on its temporary
+fixture. The refusal was `Storage(AlreadyOwned)` from the unchanged
+`store::take_owner_lock` guard. The isolated test passed unchanged, and the next
+full workspace run passed. No live account store was involved. The failure was
+not reproduced or attributed to a specific lock holder; do not describe it as a
+WhatsApp refusal or silently add ownership retries/unlocks. The private failure
+log was retained locally with the group-reaction-target validation logs.

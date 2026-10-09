@@ -8,8 +8,9 @@
 //! and `meta` children). The top-level `Message.reactionMessage` field number
 //! (46) was confirmed against that live authenticated payload.
 //!
-//! `fromMe` is relative to the sender of the reaction: a contact reacting to a
-//! message they sent uses `fromMe=true`; reacting to ours uses `fromMe=false`.
+//! In direct chats, `fromMe` is relative to the reacting contact: a reaction to
+//! their message uses true, to ours false. Groups also require the explicit
+//! original participant because a different member may be the author.
 //! An empty `text` removes a previous reaction.
 use crate::{
     Error, Result,
@@ -255,6 +256,75 @@ pub fn key_fields(payload: &[u8]) -> Option<(Option<String>, bool)> {
     Some((key.remote_jid, key.participant.is_some()))
 }
 
+/// Resolve a group reaction's explicit original author. APK 37.71
+/// Bal.A00 reads BZa.participant_ (003a..0046); fromMe alone cannot identify
+/// a third member. Own classification here is a local model projection, not
+/// a port of the native own/hosted canonicalizer.
+pub fn group_target(
+    chat: &Jid,
+    payload: &[u8],
+    own: &[Jid],
+) -> Result<crate::model::message::MessageKey> {
+    use crate::model::{
+        ids::{ChatId, DeviceAddress},
+        jid::Server,
+        message::MessageKey,
+    };
+    if chat.server != Server::Group {
+        return Err(invalid("not_group_chat"));
+    }
+    let reaction = Envelope::decode(payload)
+        .map_err(|_| invalid("malformed_reaction"))?
+        .reaction
+        .ok_or_else(|| invalid("missing_reaction"))?;
+    let key = reaction.key.ok_or_else(|| invalid("missing_key"))?;
+    if let Some(reason) = key_failure(&key) {
+        return Err(invalid(reason));
+    }
+    let remote = Jid::parse(key.remote_jid.as_deref().unwrap())?;
+    if remote.to_non_ad() != chat.to_non_ad() {
+        return Err(invalid("group_chat_mismatch"));
+    }
+    let participant = key
+        .participant
+        .as_deref()
+        .ok_or_else(|| invalid("missing_participant"))?;
+    let participant = Jid::parse(participant).map_err(|_| invalid("invalid_participant"))?;
+    if participant.user.is_empty() {
+        return Err(invalid("invalid_participant"));
+    }
+    if !matches!(participant.server, Server::User | Server::Lid) {
+        return Err(invalid("unsupported_participant"));
+    }
+    if participant.agent != 0 {
+        return Err(invalid("unsupported_participant_agent"));
+    }
+    let valid_own = |o: &Jid| {
+        o.agent == 0 && !o.user.is_empty() && matches!(o.server, Server::User | Server::Lid)
+    };
+    if !own.iter().any(valid_own) {
+        return Err(invalid("own_identity_missing"));
+    }
+    let ours = own
+        .iter()
+        .filter(|o| valid_own(o))
+        .any(|o| o.to_non_ad() == participant.to_non_ad());
+    Ok(MessageKey {
+        chat: ChatId::from_jid(chat)?,
+        sender: if ours {
+            None
+        } else {
+            Some(DeviceAddress::from_jid(&participant.to_non_ad())?)
+        },
+        direction: if ours {
+            Direction::Outgoing
+        } else {
+            Direction::Incoming
+        },
+        id: MessageId::new(key.id.unwrap())?,
+    })
+}
+
 /// Decode a reaction payload whose top-level fields are already known to be
 /// `46` (plus optional metadata `35`). Returns `None` for malformed content.
 pub fn decode(payload: &[u8]) -> Option<Incoming> {
@@ -279,6 +349,76 @@ pub fn decode(payload: &[u8]) -> Option<Incoming> {
 #[cfg(test)]
 mod group_tests {
     use super::*;
+
+    #[test]
+    fn group_target_reads_literal_participant_fields_and_refuses_unknown_scope() {
+        // Independent descriptor-grounded bytes: BZa 1/2/3/4 inside BWI.key=1,
+        // Message.reactionMessage=46. This does not call our payload builder.
+        fn fixture(remote: &str, participant: Option<&str>, from_me: Option<bool>) -> Vec<u8> {
+            let mut key = vec![0x0a, remote.len() as u8];
+            key.extend_from_slice(remote.as_bytes());
+            if let Some(v) = from_me {
+                key.extend_from_slice(&[0x10, u8::from(v)]);
+            }
+            key.extend_from_slice(b"\x1a\x06TARGET");
+            if let Some(p) = participant {
+                key.extend_from_slice(&[0x22, p.len() as u8]);
+                key.extend_from_slice(p.as_bytes());
+            }
+            let mut reaction = vec![0x0a, key.len() as u8];
+            reaction.extend(key);
+            reaction.extend_from_slice(b"\x12\x00");
+            let mut message = vec![0xf2, 0x02, reaction.len() as u8];
+            message.extend(reaction);
+            message
+        }
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let own = [
+            Jid::parse("15555550199@s.whatsapp.net").unwrap(),
+            Jid::parse("222222222222222@lid").unwrap(),
+        ];
+        let author = Jid::parse("15555550101@lid").unwrap();
+        for flag in [None, Some(false), Some(true)] {
+            let bytes = fixture(&chat.to_string(), Some(&author.to_string()), flag);
+            let key = group_target(&chat, &bytes, &own).unwrap();
+            assert_eq!(key.direction, Direction::Incoming);
+            assert_eq!(key.sender.unwrap().to_jid(), author);
+            assert_eq!(key.id.as_str(), "TARGET");
+            assert!(decode(&bytes).unwrap().emoji.is_none());
+        }
+        for author in &own {
+            let key = group_target(
+                &chat,
+                &fixture(&chat.to_string(), Some(&author.to_string()), Some(false)),
+                &own,
+            )
+            .unwrap();
+            assert_eq!(key.direction, Direction::Outgoing);
+            assert!(key.sender.is_none());
+        }
+        for (p, reason) in [
+            (None, "missing_participant"),
+            (Some(""), "invalid_participant"),
+            (Some("not-a-jid"), "invalid_participant"),
+            (Some("s.whatsapp.net"), "invalid_participant"),
+            (Some("status@broadcast"), "unsupported_participant"),
+            (Some("123@g.us"), "unsupported_participant"),
+        ] {
+            assert!(
+                matches!(group_target(&chat,&fixture(&chat.to_string(),p,Some(false)),&own),Err(Error::InvalidInput {reason:r,..}) if r==reason)
+            );
+        }
+        let agent = Jid::new_ad("15555550101", 2, 3, crate::model::jid::Server::User).unwrap();
+        assert!(
+            matches!(group_target(&chat,&fixture(&chat.to_string(),Some(&agent.to_string()),None),&own),Err(Error::InvalidInput {reason,..}) if reason=="unsupported_participant_agent")
+        );
+        assert!(
+            matches!(group_target(&chat,&fixture("120363000000000002@g.us",Some(&author.to_string()),None),&own),Err(Error::InvalidInput {reason,..}) if reason=="group_chat_mismatch")
+        );
+        assert!(
+            matches!(group_target(&chat,&fixture(&chat.to_string(),Some(&author.to_string()),None),&[]),Err(Error::InvalidInput {reason,..}) if reason=="own_identity_missing")
+        );
+    }
 
     /// The participant is what makes a group reaction attributable: the same
     /// message id in a group means nothing without knowing whose message it was,

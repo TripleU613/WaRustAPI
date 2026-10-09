@@ -68,6 +68,16 @@ fn scope(node: &Node) -> Option<(Jid, Jid, &str)> {
     let (chat, participant) = super::inbox::group_sender(node)?;
     Some((chat, participant, node.get_attr("id")?.as_text()?))
 }
+/// Actual original device retained by a selected parent's authenticated route.
+pub(super) fn original_participant(
+    saved: &Value,
+    mut get: impl FnMut(&[u8]) -> Result<Option<Vec<u8>>>,
+) -> Result<Jid> {
+    let node = route(saved, &mut get)?;
+    scope(&node)
+        .map(|(_, p, _)| p)
+        .ok_or_else(|| invalid("saved group route has no participant"))
+}
 /// Verify a canonical selector or an unchanged legacy group/id selector against
 /// the original route. This function does not authorize decryption or receipt.
 pub(super) fn matches(record_key: &[u8], node: &Node) -> bool {

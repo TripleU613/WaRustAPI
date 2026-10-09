@@ -225,3 +225,86 @@ reaction or new decrypted DM was established. This verifies connection/normal
 receive plumbing, not the new target attribution against a live incoming reaction.
 The original two uncertain actions were retained and never replayed. No outbox
 send, identity rotation or server-wait reset occurred.
+
+## Incoming group original author (2026-10-09)
+
+**Confirmed local defect, corrected:** ordinary incoming group reaction
+projection previously dropped `BZa.participant_`. Its direct-chat fallback
+interpreted `fromMe=false` as a reaction to our message. A different group member
+can be the original author, so that fallback produced the wrong MessageKey.
+
+**Confirmed static**, comparison 2.26.37.71 SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`:
+[Bal.A00](apk/2.26.37.71-reaction-key/reaction-model-key.txt), `002e..0046`,
+reads `BWI.key_.participant_` and parses its UserJid before constructing the
+participant-bearing reaction model (`0046..0054`). BZa.dynamicMethod gives
+participant field 4, separate from remoteJid/fromMe/id. This is evidence for
+preserving the explicit author; it does **not** prove every native own/hosted
+canonicalizer branch or a mandatory participant gate in C7G.
+
+**Confirmed local / inferred compatibility:** group reactions now use the
+explicit participant. A third member stays an incoming author independently of
+`fromMe`; the reacting member remains the separate `Reaction.by`. Exact known
+own PN/LID from the authenticated `login-identity` checkpoint classifies an
+outgoing target. No directory/contact alias is adopted to infer ownership. An
+absent own checkpoint leaves the key unprojected rather than guessing direction.
+The public `reactions::group_target` is the offline key/own-scope helper.
+
+The target group must match the envelope group. Participant must parse as PN/LID
+with a nonempty user and without an agent component. The local Jid parser accepts
+server-only strings, so parse success alone does not establish an author. Missing/malformed/foreign-group keys remain opaque;
+these are conservative local support guards, not claims that native C7G enforces
+them. An agent-qualified reactor also stays opaque because DeviceAddress cannot
+retain that component. Full hosted/agent behavior remains **unknown/unported**.
+
+Matching [participant-scoped parent records](group-inbox.md) supply the original
+actual device so the update matches this client's existing durable MessageKey.
+Legacy parents are selected through their original route, not by first scan
+match. Consumed parents qualify from route/status only; plaintext is neither
+restored nor inspected. A target absent locally retains its validated explicit
+author. Exact-group saved outgoing intents retain their original chat and IDs.
+Foreign outgoing claims, duplicate parent claims or missing original saved
+routes refuse with fixed local errors in the enclosing transaction. Original
+incoming captures remain available for diagnosis; no refusal resets occur.
+Reactions never add acceptance/delivery facts or modify the parent's body,
+identity, uncertainty, intent or progress. Existing projection markers remain
+once-only; old misattributed events are historical evidence, not rewritten.
+An existing message_updated marker skips group parent re-resolution, so a later
+parent conflict does not make its already-authenticated redelivery fail. Legacy
+markers without a stored kind retain the existing migration behavior; full native
+projection-marker migration remains unknown.
+
+`lab-inbox --inspect` adds a fixed `group reaction target_validation` label for
+payload/own-scope checks. It does not claim to resolve stored parent ambiguity.
+Receive/replay errors identify those storage problems separately. Labels carry
+no addresses, text or plaintext body. Inspection advances no ratchet or marker.
+
+**Confirmed offline:** descriptor-grounded literal bytes test missing/default/
+true/false fromMe independently of the payload builder, third-member PN/LID
+attribution, known own PN/LID and fixed invalid-key diagnoses. Projection
+fixtures cover same-ID PN/LID parent namespaces, original companion devices,
+legacy/new selectors, consumed bodies, add/removal, immutable parent/outbox
+records, duplicate-claim rollback and reopen/no second event. Trusted stored
+route fixtures prove local attribution, not live peer authentication.
+**Unknown:** fresh live group reaction attribution, native own/hosted mapping,
+and full group quote/keep-in-chat/poll target normalization.
+
+**Confirmed saved inspection:** the current account contains two older group
+reaction keys that pass the new target payload/own-scope validation. Comparing
+before/after inspection found exactly two added `target_validation=valid` lines,
+no removed lines and no other inspection changes. Peer keys, actions, receipts,
+outbox and events stayed unchanged. This does not establish fresh live target
+projection or repair historical reaction events; their markers remain intact.
+
+**Confirmed static follow-up / inference boundary:**
+[BoQ.A00](apk/2.26.37.71-reaction-key/ordinary-target-mapper.txt), `0006..0016`,
+also parses the key participant before choosing its target. The fromMe-false
+path at `00dc..00e8` calls `LX/08Z;->BO0(participant)`; its true branch reaches
+`00ba` with the native key boolean set and no separate author. Interpreting BO0
+as an own-user predicate is **inferred** from this control flow and its account
+interface callers, not from an exported concrete implementation. The effective
+v11/v12 gates, alternate actor/participant branches and full native PN/LID/hosted
+semantics have **not** been established here. In particular, literal true/false
+fixtures prove this helper's explicit-author contract, not APK equivalence for
+contradictory fromMe/participant combinations. Re-anchor the concrete BO0
+implementation and caller operand roles before extending native normalization.

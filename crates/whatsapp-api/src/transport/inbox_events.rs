@@ -341,6 +341,11 @@ fn project(
             let Some(reaction) = super::reactions::decode(payload) else {
                 return unsupported();
             };
+            // DeviceAddress cannot retain an agent component. Do not fold an
+            // unsupported reactor into another user's/agent's reaction fact.
+            if super::inbox::group_sender(node).is_some_and(|(_, p)| p.agent != 0) {
+                return unsupported();
+            }
             let Some((chat, by)) = chat_and_sender(key, node) else {
                 return unsupported();
             };
@@ -351,20 +356,28 @@ fn project(
                 .filter(|v| *v >= 0)
                 .and_then(|v| v.checked_mul(1000))
                 .map(Timestamp);
-            // `fromMe` is the reacting sender's perspective: true means the target
-            // was their own (incoming to us), false means the target was ours.
+            // In a direct chat, fromMe distinguishes their message from ours.
+            // Group authors are resolved separately using BZa.participant_.
             let (direction, target_sender) = if reaction.target_from_sender {
                 (Direction::Incoming, Some(by.clone()))
             } else {
                 (Direction::Outgoing, None)
             };
-            return SyncEvent::MessageUpdated(crate::model::message::MessageUpdate {
-                key: reaction_target.cloned().unwrap_or(MessageKey {
+            let target = if chat.jid().server == crate::model::jid::Server::Group {
+                let Ok(target) = super::reactions::group_target(chat.jid(), payload, own) else {
+                    return unsupported();
+                };
+                target
+            } else {
+                MessageKey {
                     chat,
                     sender: target_sender,
                     direction,
                     id: reaction.target_id,
-                }),
+                }
+            };
+            return SyncEvent::MessageUpdated(crate::model::message::MessageUpdate {
+                key: reaction_target.cloned().unwrap_or(target),
                 change: crate::model::message::MessageChange::Reaction {
                     by,
                     emoji: reaction.emoji,
@@ -601,6 +614,61 @@ fn direct_reaction_target(
     }))
 }
 
+/// Group parent attribution retains the original device from a matching saved
+/// route. This binds our existing event-key layout; no raw PN/LID alias is
+/// adopted and no parent body is copied or view-once content opened.
+fn group_reaction_target(
+    tx: &WriteTx<'_>,
+    node: &Node,
+    payload: &[u8],
+    own: &[crate::model::jid::Jid],
+) -> Result<Option<MessageKey>> {
+    let Some((chat, actor)) = super::inbox::group_sender(node) else {
+        return Ok(None);
+    };
+    let fields = crate::signal::direct::payload_fields(payload).unwrap_or_default();
+    if actor.agent != 0
+        || !fields.contains(&46)
+        || fields.iter().any(|f| !matches!(f, 46 | 35))
+        || super::reactions::decode(payload).is_none()
+    {
+        return Ok(None);
+    }
+    let Ok(mut target) = super::reactions::group_target(&chat, payload, own) else {
+        return Ok(None);
+    };
+    if target.direction == Direction::Outgoing {
+        let outbox =
+            crate::outbox::Outbox::new("comparison-driver", crate::profile::Limits::default());
+        if let Some(entry) = outbox.by_wire_id_in_write(tx, &target.id)? {
+            if entry.intent.chat != target.chat {
+                return Err(crate::Error::invalid(
+                    "group_reaction",
+                    "saved outgoing target chat differs",
+                ));
+            }
+            target.chat = entry.intent.chat;
+        }
+        return Ok(Some(target));
+    }
+    let participant = target.sender.as_ref().unwrap().to_jid();
+    let parent = Node::new("message")
+        .attr("from", chat)
+        .attr("participant", participant)
+        .attr("id", target.id.as_str());
+    let selected = super::group_inbox::select(&parent, |k| tx.get(Table::Checkpoints, k, 1))?;
+    if let Some(saved) = selected
+        .saved
+        .as_ref()
+        .filter(|s| matches!(s["status"].as_str(), Some("decrypted" | "consumed")))
+    {
+        let original =
+            super::group_inbox::original_participant(saved, |k| tx.get(Table::Checkpoints, k, 1))?;
+        target.sender = Some(DeviceAddress::from_jid(&original)?);
+    }
+    Ok(Some(target))
+}
+
 /// Bind a reaction to an original outgoing intent without changing its facts.
 /// A directory/contact alias alone is not an authenticated chat association.
 fn outgoing_reaction_target(
@@ -636,14 +704,27 @@ pub(super) fn publish(
     payload: &[u8],
 ) -> Result<bool> {
     let poll = poll_context(tx, node, payload)?;
-    let reaction_target = direct_reaction_target(tx, node, payload)?;
+    let own = super::inbox::own_identities_in(tx)?;
+    let reaction_target = if super::inbox::group_sender(node).is_some() {
+        // An already-published update remains historical evidence. A later
+        // uncertain parent must not make its authenticated redelivery fail.
+        let projected = tx
+            .get_json::<serde_json::Value>(Table::Inbox, key, 1)?
+            .is_some_and(|marker| marker["kind"] == "message_updated");
+        if projected {
+            None
+        } else {
+            group_reaction_target(tx, node, payload, &own)?
+        }
+    } else {
+        direct_reaction_target(tx, node, payload)?
+    };
     // A reaction whose key names `status@broadcast` is a like on a status,
     // which belongs with the viewer records rather than only in the event
     // journal. Recording it writes nothing outward.
     if let Some(like) = super::status_receipts::like_from_payload(payload, node) {
         super::status_receipts::record_like_in(tx, &like)?;
     }
-    let own = super::inbox::own_identities_in(tx)?;
     let projected = project(
         key,
         node,
@@ -804,6 +885,293 @@ mod tests {
             .attr("id", "fixture")
             .attr("t", "123")
     }
+    #[test]
+    fn group_reactions_bind_original_authors_devices_and_preserve_parent_records() {
+        use crate::binary::{Encoder, TokenDictionary};
+        use crate::model::{
+            jid::Jid,
+            send::{AttemptProgress, SendRequest},
+        };
+        use crate::store::Table;
+        let dir = tempfile::tempdir().unwrap();
+        let options = || OpenOptions {
+            path: dir.path().join("group-reactions.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([3; 32]))),
+            create: true,
+        };
+        let store = ProtocolStore::open(options()).unwrap();
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let actor = Jid::parse("15555550100:3@s.whatsapp.net").unwrap();
+        let authors = [
+            Jid::parse("15555550101:3@s.whatsapp.net").unwrap(),
+            Jid::parse("15555550101:3@lid").unwrap(),
+        ];
+        let own = Jid::parse("15555550199@s.whatsapp.net").unwrap();
+        let own_lid = Jid::parse("222222222222222@lid").unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"login-identity",
+                    1,
+                    &serde_json::json!({"pn":own.to_string(),"lid":own_lid.to_string()}),
+                )
+            })
+            .unwrap();
+        // Trusted stored-route fixtures test attribution only. They do not
+        // authenticate a peer; real sender-key inbox crypto has separate tests.
+        for (n, author) in authors.iter().enumerate() {
+            let parent = group_node()
+                .attr("participant", author.clone())
+                .attr("id", "ORIGINAL");
+            let route = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                .encode(&parent)
+                .unwrap();
+            let key = if n == 0 {
+                format!("received:{chat}:ORIGINAL")
+            } else {
+                super::super::group_inbox::key(&chat, author, "ORIGINAL").unwrap()
+            };
+            let saved =
+                serde_json::json!({"status":"consumed", "route":route, "wire_id":"ORIGINAL"});
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved))
+                .unwrap();
+        }
+        let outbox =
+            crate::outbox::Outbox::new("original-own-group", crate::profile::Limits::default());
+        store
+            .write(|tx| {
+                let ticket = outbox
+                    .enqueue(
+                        tx,
+                        &SendRequest {
+                            client_request_id: crate::model::ids::ClientRequestId::new(
+                                "original-own",
+                            )?,
+                            chat: ChatId::from_jid(&chat)?,
+                            content: MessageContent::Text {
+                                body: "saved own text".into(),
+                                quoted: None,
+                                style: Default::default(),
+                            },
+                        },
+                    )?
+                    .0;
+                let mut entry = outbox.get_mut(tx, ticket.local_id)?.unwrap();
+                entry.wire_id = Some(MessageId::new("OWN")?);
+                outbox.set_progress(tx, &mut entry, AttemptProgress::InFlight)
+            })
+            .unwrap();
+        let original_outbox = store.read(|tx| tx.scan(Table::Outbox, 1, 100)).unwrap();
+        let parents = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        let mut keys = Vec::new();
+        for (n, author) in authors.iter().chain([&own, &own_lid]).enumerate() {
+            let id = if n < 2 { "ORIGINAL" } else { "OWN" };
+            let payload = super::super::reactions::group_payload(
+                &chat,
+                &author.to_non_ad(),
+                id,
+                false,
+                if n % 2 == 0 { Some("👍") } else { None },
+                42,
+            )
+            .unwrap();
+            let node = group_node()
+                .attr("participant", actor.clone())
+                .attr("id", format!("REACTION-{n}"));
+            let selector =
+                super::super::group_inbox::key(&chat, &actor, &format!("REACTION-{n}")).unwrap();
+            assert!(
+                store
+                    .write(|tx| publish(tx, selector.as_bytes(), &node, &payload))
+                    .unwrap()
+            );
+            keys.push((selector, node, payload));
+        }
+        let batch = store
+            .read_events(
+                &ConsumerId::new("reaction-check").unwrap(),
+                EventCursor::START,
+                100,
+            )
+            .unwrap();
+        let events: Vec<_> = batch
+            .events
+            .iter()
+            .filter(|e| matches!(e.event, SyncEvent::MessageUpdated(_)))
+            .collect();
+        assert_eq!(events.len(), 4);
+        for (n, event) in events.iter().enumerate() {
+            let SyncEvent::MessageUpdated(update) = &event.event else {
+                panic!("not a reaction");
+            };
+            assert_eq!(update.key.chat, ChatId::from_jid(&chat).unwrap());
+            assert_eq!(
+                update.key.id.as_str(),
+                if n < 2 { "ORIGINAL" } else { "OWN" }
+            );
+            assert_eq!(
+                update.key.direction,
+                if n < 2 {
+                    Direction::Incoming
+                } else {
+                    Direction::Outgoing
+                }
+            );
+            assert_eq!(
+                update.key.sender,
+                if n < 2 {
+                    Some(DeviceAddress::from_jid(&authors[n]).unwrap())
+                } else {
+                    None
+                }
+            );
+            let crate::model::message::MessageChange::Reaction { by, emoji } = &update.change
+            else {
+                panic!("wrong change");
+            };
+            assert_eq!(*by, DeviceAddress::from_jid(&actor).unwrap());
+            assert_eq!(emoji.as_deref(), if n % 2 == 0 { Some("👍") } else { None });
+        }
+        for (key, raw) in &parents {
+            assert_eq!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, key, 1))
+                    .unwrap()
+                    .as_ref(),
+                Some(raw)
+            );
+        }
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Outbox, 1, 100)).unwrap(),
+            original_outbox
+        );
+        let head = store.journal_head().unwrap();
+        drop(store);
+        let mut reopen = options();
+        reopen.create = false;
+        let store = ProtocolStore::open(reopen).unwrap();
+        for (key, node, payload) in &keys {
+            assert!(
+                !store
+                    .write(|tx| publish(tx, key.as_bytes(), node, payload))
+                    .unwrap()
+            );
+        }
+        assert_eq!(store.journal_head().unwrap(), head);
+        // Two stored claims for the same original member are uncertainty, not
+        // permission to select either parent or repeat an old event marker.
+        let legacy: serde_json::Value = store
+            .read(|tx| {
+                tx.get_json(
+                    Table::Checkpoints,
+                    format!("received:{chat}:ORIGINAL").as_bytes(),
+                    1,
+                )
+            })
+            .unwrap()
+            .unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    super::super::group_inbox::key(&chat, &authors[0], "ORIGINAL")?.as_bytes(),
+                    1,
+                    &legacy,
+                )
+            })
+            .unwrap();
+        let (key, node, payload) = &keys[0];
+        assert!(
+            !store
+                .write(|tx| publish(tx, key.as_bytes(), node, payload))
+                .unwrap()
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        let payload = super::super::reactions::group_payload(
+            &chat,
+            &authors[0],
+            "ORIGINAL",
+            false,
+            Some("👍"),
+            43,
+        )
+        .unwrap();
+        assert!(matches!(store.write(|tx| {
+            tx.put_json(Table::Checkpoints,b"rollback-marker",1,&true)?;
+            publish(tx,b"new-ambiguous-reaction",&group_node(),&payload)
+        }),Err(Error::InvalidInput{reason,..}) if reason=="multiple records for the same group participant and id"));
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+    }
+
+    #[test]
+    fn malformed_group_reaction_keys_remain_opaque_without_an_update() {
+        use crate::model::jid::Jid;
+        use prost::Message as _;
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let author = Jid::parse("15555550101@lid").unwrap();
+        let own = [Jid::parse("15555550199@s.whatsapp.net").unwrap()];
+        let base =
+            super::super::reactions::group_payload(&chat, &author, "TARGET", false, Some("👍"), 42)
+                .unwrap();
+        for (participant, remote) in [
+            (None, chat.to_string()),
+            (Some("".to_owned()), chat.to_string()),
+            (Some("status@broadcast".to_owned()), chat.to_string()),
+            (
+                Some(author.to_string()),
+                "120363000000000002@g.us".to_owned(),
+            ),
+        ] {
+            let mut envelope = super::super::reactions::Envelope::decode(base.as_slice()).unwrap();
+            let key = envelope.reaction.as_mut().unwrap().key.as_mut().unwrap();
+            key.participant = participant;
+            key.remote_jid = Some(remote);
+            assert!(matches!(
+                project(
+                    b"malformed",
+                    &group_node(),
+                    &envelope.encode_to_vec(),
+                    None,
+                    None,
+                    None,
+                    &own
+                ),
+                SyncEvent::UnsupportedMessage(_)
+            ));
+        }
+        assert!(matches!(
+            project(b"unknown-own", &group_node(), &base, None, None, None, &[]),
+            SyncEvent::UnsupportedMessage(_)
+        ));
+        let agent = Jid::new_ad("15555550100", 2, 3, crate::model::jid::Server::User).unwrap();
+        assert!(matches!(
+            project(
+                b"agent-reactor",
+                &group_node().attr("participant", agent),
+                &base,
+                None,
+                None,
+                None,
+                &own
+            ),
+            SyncEvent::UnsupportedMessage(_)
+        ));
+    }
+
     #[test]
     fn history_notice_is_a_control_event_not_a_reply_or_send_form() {
         let payload = b"\xb2\x06\x0d\x12\x0b\x0a\x051@lid\x10\x0a\x18\x02";
