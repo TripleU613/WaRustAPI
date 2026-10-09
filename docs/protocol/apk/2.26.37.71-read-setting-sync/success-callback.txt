@@ -1,0 +1,27 @@
+# APK-derived structural disassembly: LX/Dey;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(VL) flags=0x1 registers=5
+  # full signature: LX/Dey;->A01(Ljava/util/Map;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v4, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=54 iget-object v1, v3, LX/Dey;->A02:LX/8lO;
+  000c..0010 op=38 if-eqz v1, +0x6
+  0010..0012 op=12 const/4 v0, #0x3
+  0012..0018 op=6e invoke-virtual {v1, v0}, LX/8lO;->A00(I)V
+  0018..001c op=54 iget-object v0, v3, LX/Dey;->A03:LX/0sv;
+  001c..0022 op=6e invoke-virtual {v0, v4}, LX/0sv;->A0R(Ljava/util/Map;)V
+  0022..0026 op=55 iget-boolean v0, v3, LX/Dey;->A01:Z
+  0026..002a op=38 if-eqz v0, +0x12
+  002a..0030 op=72 invoke-interface {v4}, Ljava/util/Map;->size()I
+  0030..0034 op=54 iget-object v2, v3, LX/Dey;->A00:LX/J80;
+  0034..0038 op=38 if-eqz v2, +0xb
+  0038..003a op=12 const/4 v1, #0x0
+  003a..003e op=22 new-instance v0, LX/FGX;
+  003e..0044 op=70 invoke-direct {v0, v1, v4}, LX/FGX;-><init>(Ljava/lang/Integer;Ljava/util/Map;)V
+  0044..004a op=72 invoke-interface {v2, v0}, LX/J80;->AGE(Ljava/lang/Object;)Z
+  004a..004c op=0e return-void
+  # exception table: 0 try range(s)
+.end method

@@ -1,5 +1,12 @@
 # Status — 2026-10-07
 
+Read-setting synchronization (2026-10-09, **confirmed static**): ten source
+topics distinguish local-off-preserving discriminator 227 from validated
+category-map adoption and pending-value mismatch guards. A0Q dispatches observers,
+not a direct query. Effective account setting, bootstrap and complete lifecycle
+remain unknown/unported; no runtime or live change.
+[Evidence and limits](docs/protocol/read-setting-sync.md).
+
 Device-receipt timestamp correction (2026-10-09, **confirmed local / APK-backed**):
 Java BMP receipt times now reach earliest-positive mutable device rows rather
 than remaining falsely pending. A failing-before test checks received-row

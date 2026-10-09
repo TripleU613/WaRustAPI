@@ -12,8 +12,10 @@ account policy or a complete receipt_user implementation.
 
 **Confirmed:** 08l.A1H reads SharedPreferences through A0Q/A02 and obtains
 read_receipts_enabled with default true (0010..001e). A baked default is
-not evidence that the preference currently equals true. Full setter/server
-synchronization and preference-store selection remain **unknown**.
+not evidence that the preference currently equals true. The [preference synchronization trace](read-setting-sync.md) now distinguishes
+local-off-preserving discriminator 227 from validated category-map adoption.
+Complete setter/bootstrap authority, effective state and preference-store
+selection remain **unknown**.
 
 Previously retained 0zd.A07 accepts any of 0DE.A0m/A0b/A0h before reading
 this preference or either private predicate. A0b was already traced as type

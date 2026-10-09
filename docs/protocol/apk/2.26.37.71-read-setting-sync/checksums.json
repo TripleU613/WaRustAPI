@@ -1,0 +1,58 @@
+{
+  "category-adoption.txt": {
+    "bytes": 12674,
+    "sha256": "7b50f84b644231592fa99f26904a75803fdcc62972a8619cd608ee1708cd998b"
+  },
+  "category-values.txt": {
+    "bytes": 19015,
+    "sha256": "d12e95321bb32e7068a90e6bb0b4f42fb73d161485336797a8ee0d8174b8d68f"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "observer-notification.txt": {
+    "bytes": 749,
+    "sha256": "5d7d5c6331c7c7cd79d8b31cb1a8083c182d74faa23cc16e060f2998fdced6b3"
+  },
+  "preference-getter.txt": {
+    "bytes": 926,
+    "sha256": "2ee46ac7cb4ebaebee82b70f12ea6b3e2b76ff756141413962a25c376982fa85"
+  },
+  "privacy-notification.txt": {
+    "bytes": 58100,
+    "sha256": "b9c6c3f42c0d5c721ffb7b1b65801c42adc7aea729f365a234c154b53ca8b36d"
+  },
+  "setting-request.txt": {
+    "bytes": 7155,
+    "sha256": "2a1b0983daf60c1ecf8194298b69567dece236ee8a41bb3f208864ce955dda25"
+  },
+  "success-callback.txt": {
+    "bytes": 1414,
+    "sha256": "2d0d0bb552e7c79901ad1d09042f93d108444a8e2c784e9d6c1c2781729d4454"
+  },
+  "sync-discriminator.txt": {
+    "bytes": 17916,
+    "sha256": "f4be47f1fa18e6731274b0e8136397b18593c8ce20e61c21bf8ed3ae344ec088"
+  },
+  "targets.json": {
+    "bytes": 4551,
+    "sha256": "2c0406b561b0f5bdb510248cf0ade5053852d6446e1018aca88fa3737c2012df"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "ui-category-selection.txt": {
+    "bytes": 6802,
+    "sha256": "71ec1478bc6dba78b965517cfa365944cedef59d1b9789e6a498db84386494a3"
+  },
+  "ui-navigation-negative.txt": {
+    "bytes": 22084,
+    "sha256": "0592f36b15099c3cdd68848cf4ef16f692658e38987517f0bb736d34866423d0"
+  }
+}

@@ -1,0 +1,59 @@
+APK 2.26.37.71, SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed static physical/literal inventory, 2026-10-09. Not transitive reachability.
+
+Reproduce: cargo run -p xtask -- apk-xref ~/Downloads/WhatsApp.apk --anchor read_receipts_enabled
+
+["read_receipts_enabled"]  (23 reference(s))
+  classes8.dex  LX/EF6;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3b0a5a
+  classes8.dex  LX/EFl;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3b6e04
+  classes8.dex  LX/EcE;->A01(VL)
+    dex byte offset: 0x477f8c
+  classes.dex  LX/08l;->A1H(Z)
+    dex byte offset: 0x4631e8
+  classes.dex  LX/0sv;->A0R(VL)
+    dex byte offset: 0x70c1e4
+  classes.dex  LX/14c;->BFC(ZLI)
+    dex byte offset: 0x7d8290
+  classes9.dex  Lcom/whatsapp/settings/ui/SettingsPrivacy;->A0a(VL)
+    dex byte offset: 0x4e9f1c
+  classes9.dex  Lcom/whatsapp/settings/ui/SettingsPrivacy;->C62(VII)
+    dex byte offset: 0x4ea618
+  classes9.dex  LX/I4X;->A01(LL)
+    dex byte offset: 0x5d0afe
+  classes12.dex  LX/P7K;->getFieldsMapForFalco(L)
+    dex byte offset: 0x278ea2
+  classes12.dex  LX/P7V;->getFieldsMapForFalco(L)
+    dex byte offset: 0x27a7c0
+  classes12.dex  LX/P7e;->getFieldsMapForFalco(L)
+    dex byte offset: 0x27cec6
+  classes12.dex  LX/P7f;->getFieldsMapForFalco(L)
+    dex byte offset: 0x27d5d0
+  classes12.dex  LX/P7g;->getFieldsMapForFalco(L)
+    dex byte offset: 0x27de22
+  classes12.dex  LX/P7h;->getFieldsMapForFalco(L)
+    dex byte offset: 0x27e804
+  classes12.dex  LX/P7i;->getFieldsMapForFalco(L)
+    dex byte offset: 0x27f318
+  classes12.dex  LX/P7r;->getFieldsMapForFalco(L)
+    dex byte offset: 0x280c8c
+  classes12.dex  LX/P7t;->getFieldsMapForFalco(L)
+    dex byte offset: 0x2812be
+  classes12.dex  LX/P7z;->getFieldsMapForFalco(L)
+    dex byte offset: 0x282c9e
+  classes12.dex  LX/P81;->getFieldsMapForFalco(L)
+    dex byte offset: 0x283b6c
+  classes12.dex  LX/P83;->getFieldsMapForFalco(L)
+    dex byte offset: 0x28517e
+  classes12.dex  LX/P84;->getFieldsMapForFalco(L)
+    dex byte offset: 0x285d02
+  classes12.dex  LX/P87;->getFieldsMapForFalco(L)
+    dex byte offset: 0x287b1e
+
+Reproduce: cargo run -p xtask -- apk-callers ~/Downloads/WhatsApp.apk --class "LX/0sv;" --method A0R
+
+classes.dex  LX/17V;->A09(VLI)
+  invoke dex byte offset: 0x807aba
+classes8.dex  LX/Dey;->A01(VL)
+  invoke dex byte offset: 0x2ad7c8
