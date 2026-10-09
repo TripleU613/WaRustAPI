@@ -1,5 +1,12 @@
 # Evidence ledger
 
+Token Boolean provider bindings (2026-10-09, **confirmed static**):
+`00D` binds `1Y4(4)` and `1Y5(0)` to its Boolean providers. Both resolve IDs
+through `09M.B2y`; zero mapping returns false, nonzero calls MobileConfig
+`AVn`. Six source topics preserve bindings/selectors/branches; actual mappings,
+native values and effective precedence remain unknown. No runtime/live change.
+[Evidence and limits](token-feature-inputs.md#boolean-provider-bindings-2026-10-09-continuation).
+
 Token feature inputs (2026-10-09, **confirmed static/local**): APK 37.71
 registers properties 15491/14303 as false Booleans; its getter can use caches,
 preferences or MobileConfig, so effective values remain unknown. Offline

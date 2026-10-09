@@ -1,0 +1,125 @@
+# APK-derived structural disassembly: LX/1Y4;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method invoke(LLLLL) flags=0x11 registers=11
+  # full signature: LX/1Y4;->invoke(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  0000..0004 op=52 iget v0, v6, LX/1Y4;->$t:I
+  0004..000a op=2b packed-switch v0, payload@0x1c0, cases=[0:@0x8e, 1:@0x54, 2:@0x166, 3:@0xda], default@0xa
+  000a..0010 op=71 invoke-static {v7}, LX/000;->A00(Ljava/lang/Object;)I
+  0010..0012 op=0a move-result v0
+  0012..0016 op=1f check-cast v8, LX/0E8;
+  0016..001a op=1f check-cast v9, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+  001a..001e op=1f check-cast v10, LX/09M;
+  001e..0024 op=71 invoke-static {v8, v9, v10}, LX/00h;->A0C(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+  0024..002a op=72 invoke-interface {v10, v0}, LX/09M;->B2y(I)J
+  002a..002c op=0b move-result-wide v0
+  002c..0030 op=16 const-wide/16 v4, #0x0
+  0030..0034 op=31 cmp-long v2, v0, v4
+  0034..0038 op=39 if-nez v2, +0x4a
+  0038..003a op=12 const/4 v0, #0x0
+  003a..0040 op=71 invoke-static {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+  0040..0042 op=0c move-result-object v2
+  0042..0046 op=62 sget-object v1, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->INVALID_SPECIFIER_MISSING_IN_WA_LOOKUP_MAP:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  0046..0048 op=12 const/4 v3, #0x0
+  0048..004c op=22 new-instance v0, LX/Hln;
+  004c..0052 op=76 invoke-direct/range {v0..v5}, LX/Hln;-><init>(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;Ljava/lang/Object;Ljava/lang/String;J)V
+  0052..0054 op=11 return-object v0
+  0054..005a op=71 invoke-static {v7}, LX/000;->A00(Ljava/lang/Object;)I
+  005a..005c op=0a move-result v0
+  005c..0060 op=1f check-cast v8, LX/0E8;
+  0060..0064 op=1f check-cast v9, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+  0064..0068 op=1f check-cast v10, LX/09M;
+  0068..006e op=71 invoke-static {v8, v9, v10}, LX/00h;->A0C(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+  006e..0074 op=72 invoke-interface {v10, v0}, LX/09M;->B2y(I)J
+  0074..0076 op=0b move-result-wide v0
+  0076..007a op=16 const-wide/16 v4, #0x0
+  007a..007e op=31 cmp-long v2, v0, v4
+  007e..0082 op=39 if-nez v2, +0x88
+  0082..0084 op=12 const/4 v0, #0x0
+  0084..008a op=71 invoke-static {v0}, Ljava/lang/Float;->valueOf(F)Ljava/lang/Float;
+  008a..008c op=0c move-result-object v2
+  008c..008e op=28 goto -0x25
+  008e..0094 op=71 invoke-static {v7}, LX/000;->A00(Ljava/lang/Object;)I
+  0094..0096 op=0a move-result v0
+  0096..009a op=1f check-cast v8, LX/0E8;
+  009a..009e op=1f check-cast v9, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+  009e..00a2 op=1f check-cast v10, LX/09M;
+  00a2..00a8 op=71 invoke-static {v8, v9, v10}, LX/00h;->A0C(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+  00a8..00ae op=72 invoke-interface {v10, v0}, LX/09M;->B2y(I)J
+  00ae..00b0 op=0b move-result-wide v0
+  00b0..00b4 op=16 const-wide/16 v4, #0x0
+  00b4..00b8 op=31 cmp-long v2, v0, v4
+  00b8..00bc op=39 if-nez v2, +0x75
+  00bc..00be op=12 const/4 v0, #0x0
+  00be..00c4 op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  00c4..00c6 op=0c move-result-object v2
+  00c6..00c8 op=28 goto -0x42
+  00c8..00ce op=72 invoke-interface {v9, v8, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->AVn(LX/0E8;J)Z
+  00ce..00d0 op=0a move-result v2
+  00d0..00d6 op=71 invoke-static {v2}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+  00d6..00d8 op=0c move-result-object v2
+  00d8..00da op=28 goto +0x6e
+  00da..00e0 op=71 invoke-static {v7}, LX/000;->A00(Ljava/lang/Object;)I
+  00e0..00e2 op=0a move-result v1
+  00e2..00e6 op=1f check-cast v8, LX/0E8;
+  00e6..00ea op=1f check-cast v9, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+  00ea..00ee op=1f check-cast v10, LX/09M;
+  00ee..00f4 op=71 invoke-static {v8, v9, v10}, LX/00h;->A0C(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+  00f4..00f8 op=62 sget-object v0, LX/0E6;->A00:LX/0E6;
+  00f8..00fe op=6e invoke-virtual {v0, v8, v9, v10, v1}, LX/0E6;->A02(LX/0E8;Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;LX/09M;I)LX/Hln;
+  00fe..0100 op=0c move-result-object v4
+  0100..0104 op=54 iget-object v0, v4, LX/Hln;->A02:Ljava/lang/Object;
+  0104..0108 op=1f check-cast v0, Ljava/lang/String;
+  0108..010c op=22 new-instance v2, Lorg/json/JSONObject;
+  010c..0112 op=70 invoke-direct {v2, v0}, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
+  0112..0114 op=28 goto +0x1e
+  0114..0116 op=0d move-exception v3
+  0116..011a op=54 iget-object v2, v4, LX/Hln;->A02:Ljava/lang/Object;
+  011a..011e op=1a const-string v0, "WAMCEvaluation/invalid json format; key="
+  011e..0124 op=71 invoke-static {v1, v0}, LX/000;->A06(ILjava/lang/String;)Ljava/lang/StringBuilder;
+  0124..0126 op=0c move-result-object v1
+  0126..012a op=1a const-string v0, "; value="
+  012a..0130 op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0130..0136 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0136..013c op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  013c..013e op=0c move-result-object v0
+  013e..0144 op=71 invoke-static {v0, v3}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+  0144..0148 op=22 new-instance v2, Lorg/json/JSONObject;
+  0148..014e op=70 invoke-direct {v2}, Lorg/json/JSONObject;-><init>()V
+  014e..0152 op=54 iget-object v1, v4, LX/Hln;->A01:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+  0152..0156 op=54 iget-object v3, v4, LX/Hln;->A03:Ljava/lang/String;
+  0156..015a op=53 iget-wide v4, v4, LX/Hln;->A00:J
+  015a..015e op=22 new-instance v0, LX/Hln;
+  015e..0164 op=76 invoke-direct/range {v0..v5}, LX/Hln;-><init>(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;Ljava/lang/Object;Ljava/lang/String;J)V
+  0164..0166 op=11 return-object v0
+  0166..016c op=71 invoke-static {v7}, LX/000;->A00(Ljava/lang/Object;)I
+  016c..016e op=0a move-result v1
+  016e..0172 op=1f check-cast v8, LX/0E8;
+  0172..0176 op=1f check-cast v9, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+  0176..017a op=1f check-cast v10, LX/09M;
+  017a..0180 op=71 invoke-static {v8, v9, v10}, LX/00h;->A0C(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+  0180..0184 op=62 sget-object v0, LX/0E6;->A00:LX/0E6;
+  0184..018a op=6e invoke-virtual {v0, v8, v9, v10, v1}, LX/0E6;->A02(LX/0E8;Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;LX/09M;I)LX/Hln;
+  018a..018c op=0c move-result-object v0
+  018c..018e op=11 return-object v0
+  018e..0194 op=72 invoke-interface {v9, v8, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->AdM(LX/0E8;J)D
+  0194..0196 op=0b move-result-wide v3
+  0196..0198 op=8c double-to-float v2, v3
+  0198..019e op=71 invoke-static {v2}, Ljava/lang/Float;->valueOf(F)Ljava/lang/Float;
+  019e..01a0 op=0c move-result-object v2
+  01a0..01a2 op=28 goto +0xa
+  01a2..01a8 op=72 invoke-interface {v9, v8, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->AnE(LX/0E8;J)J
+  01a8..01aa op=0b move-result-wide v3
+  01aa..01ac op=84 long-to-int v2, v3
+  01ac..01b2 op=71 invoke-static {v2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  01b2..01b4 op=0c move-result-object v2
+  01b4..01ba op=71 invoke-static {v8, v9, v2, v0, v1}, LX/0E6;->A00(LX/0E8;Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;Ljava/lang/Object;J)LX/Hln;
+  01ba..01bc op=0c move-result-object v0
+  01bc..01be op=11 return-object v0
+  01be..01c0 op=00 nop
+  01c0..01d8 op=00 packed-switch-payload size=4
+  # exception table: 1 try range(s)
+  # catch Lorg/json/JSONException; code_units 0080..008a -> 008a
+.end method

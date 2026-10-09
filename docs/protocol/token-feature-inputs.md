@@ -61,7 +61,7 @@ execute the fallback. Its full body includes provider/context/readiness gates,
 fallback callback `09m.invoke` at `0224..022a`; some paths cache provider results.
 A later branch can still invoke `09T` after obtaining a fallback.
 
-**Unknown:** provider bindings, native MobileConfig results, readiness atomic
+**Unknown at this boundary:** native MobileConfig results, readiness atomic
 writers, exposure effects, cache invalidation and full precedence during state
 transitions. The enum meaning of the type argument `02S.A0N` is not established
 by this trace. False APK registrations therefore cannot supply effective values
@@ -95,3 +95,41 @@ API symbol checks passed. Snapshot exact regeneration passed; self-diff reports 
 four indexed artifacts unchanged. Formatting and repository hygiene passed
 (1,767 local links; 67 checksum-verified bundles). No real account state or
 live request was changed.
+
+## Boolean provider bindings (2026-10-09 continuation)
+
+**Confirmed static:** `00D.<init>` constructs `1Y4(4)` at `0100..0110`
+for `A0R:09T`, and `1Y5(0)` at `014c..015a` for `A0W:09U`. Each provider
+constructor saves its selector to `$t`. Physical write inspection finds only
+these constructor writes (`classes.dex` offsets `0x3bf198` / `0x3bf1e2`, opcode
+`5b`), not a complete claim about reflection or native mutation.
+
+`1Y4.invoke` selector 4 takes the default Boolean branch. It maps the property
+ID with `09M.B2y(I)J` at `0024..002a`. A zero mapping returns an `Hln` with
+false value, `INVALID_SPECIFIER_MISSING_IN_WA_LOOKUP_MAP` source, null string
+and zero long. A nonzero mapping calls `MobileConfigUnsafeContext.AVn(0E8,J)`
+at `00c8..00ce`, boxes its Boolean and delegates to `0E6.A00` for metadata.
+This false missing-mapping result is distinct from the APK default-map lookup.
+
+`1Y5.invoke` selector 0 takes the branch at `01a6`, delegates to `0E6.A04`
+and boxes the Boolean. `0E6.A04` also maps through `09M.B2y`; zero returns
+false immediately (`0014..0018`). Nonzero invokes `AVn` at `003c..0042`.
+A positive final integer argument requests `N6u.A00` with type `02S.A0N`;
+`0E6.A01` runs on both normal return and the catch-all rethrow path. The
+meaning of this bookkeeping is not established here.
+
+**Unknown:** concrete `09M` implementation and specifiers for 15491/14303,
+actual native `AVn` results, readiness/provider precedence, and complete cache
+adoption. `0E6.A00` was inspected privately: it assembles source and optional
+metadata, but its optional metadata path contains renderer-unknown opcode
+`0xc5`; complete decoding and metadata provenance are not claimed. No new
+Rust runtime behavior or account request follows from these static branches.
+
+The [six-topic provider recipe](apk/recipes/2.26.37.71-token-feature-providers.json)
+and [snapshot](apk/2.26.37.71-token-feature-providers/targets.json) preserve the
+bindings, both selector constructors, both dispatchers and direct resolver,
+including signatures/register flow/catches: 11 files / 60,025 bytes. Exact
+regeneration and self-diff passed (six topics/four artifacts unchanged); CLI
+reference and API-symbol checks, diff whitespace and repository hygiene passed
+(1,772 links; 68 checksum-verified bundles). The checked snapshot is the
+reproducible inspection surface; this continuation adds no command or flag.

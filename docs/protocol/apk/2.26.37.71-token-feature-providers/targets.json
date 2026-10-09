@@ -1,0 +1,74 @@
+{
+  "direct-boolean": {
+    "class": "LX/1Y5;",
+    "file": "direct-boolean.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "invoke",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "direct-resolver": {
+    "class": "LX/0E6;",
+    "file": "direct-resolver.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "direct-selector": {
+    "class": "LX/1Y5;",
+    "file": "direct-selector.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "provider-bindings": {
+    "class": "LX/00D;",
+    "file": "provider-bindings.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "wrapped-boolean": {
+    "class": "LX/1Y4;",
+    "file": "wrapped-boolean.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "invoke",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "wrapped-selector": {
+    "class": "LX/1Y4;",
+    "file": "wrapped-selector.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  }
+}

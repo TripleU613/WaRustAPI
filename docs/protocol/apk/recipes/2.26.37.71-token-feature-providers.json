@@ -1,0 +1,50 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "provider-bindings": {
+      "class": "LX/00D;",
+      "method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "wrapped-selector": {
+      "class": "LX/1Y4;",
+      "method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "wrapped-boolean": {
+      "class": "LX/1Y4;",
+      "method": "invoke",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "direct-selector": {
+      "class": "LX/1Y5;",
+      "method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "direct-boolean": {
+      "class": "LX/1Y5;",
+      "method": "invoke",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    },
+    "direct-resolver": {
+      "class": "LX/0E6;",
+      "method": "A04",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/abprops.rs"
+      ]
+    }
+  }
+}
