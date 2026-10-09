@@ -244,6 +244,198 @@
       ],
       "method": "A0G",
       "method_shorty": "V"
+    },
+    "sender-key-reap": {
+      "class": "LX/1Uf;",
+      "method": "A02",
+      "method_shorty": "VLLI",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "anchors": [
+        "DeadDeviceRegistry/tearDown sender keys left behind, jid="
+      ]
+    },
+    "sender-key-group-query": {
+      "class": "LX/0kX;",
+      "method": "A02",
+      "method_shorty": "LL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "anchors": [
+        "getAllSenderKeyGroupIdsForSender"
+      ]
+    },
+    "sender-key-list-chunks": {
+      "class": "LX/0C6;",
+      "method": "A13",
+      "method_shorty": "LLII",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ]
+    },
+    "sender-key-chunk-validation": {
+      "class": "LX/J8I;",
+      "method": "A01",
+      "method_shorty": "VII",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ]
+    },
+    "sender-key-sql-placeholders": {
+      "class": "LX/OGV;",
+      "method": "invoke",
+      "method_shorty": "LL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "anchors": [
+        "?"
+      ]
+    },
+    "identity-deleted-dispatch": {
+      "class": "LX/0k4;",
+      "method": "A0L",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ]
+    },
+    "identity-observer-dispatch": {
+      "class": "LX/078;",
+      "method": "A00",
+      "method_shorty": "VLLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ]
+    },
+    "identity-deleted-callback": {
+      "class": "LX/D3f;",
+      "method": "COL",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ]
+    },
+    "identity-deleted-contact-observer": {
+      "class": "LX/AU1;",
+      "method": "BqD",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ]
+    },
+    "identity-deleted-notify-observer": {
+      "class": "LX/D3k;",
+      "method": "BqD",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ]
+    },
+    "identity-deleted-effects-observer": {
+      "class": "LX/D4x;",
+      "method": "BqD",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ]
+    },
+    "identity-deleted-observer-interface": {
+      "class": "LX/DeS;",
+      "method": "BqD",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ]
+    },
+    "identity-deleted-wait-observer": {
+      "class": "LX/Fco;",
+      "method": "BqD",
+      "method_shorty": "VL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ]
+    },
+    "identity-deleted-effects": {
+      "class": "LX/D4x;",
+      "method": "A00",
+      "method_shorty": "VLLZZ",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "anchors": [
+        "IdentityChangeManager/onIdentityChangedOrDeleted/rotating sender key deviceJid="
+      ]
+    },
+    "identity-write-dispatch": {
+      "class": "LX/0jc;",
+      "method": "A0K",
+      "method_shorty": "ZLLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/devices.rs",
+        "crates/whatsapp-api/src/transport/companion_admission.rs",
+        "crates/whatsapp-api/src/signal/group.rs"
+      ],
+      "anchors": [
+        "saveIdentityInternal"
+      ]
+    },
+    "sender-key-argument-concat": {
+      "class": "LX/0C6;",
+      "method": "A15",
+      "method_shorty": "LLL",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "sender-key-tuple-list": {
+      "class": "LX/08J;",
+      "method": "A0W",
+      "method_shorty": "LL",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
+    },
+    "sender-key-tuple-copy": {
+      "class": "LX/08J;",
+      "method": "A0N",
+      "method_shorty": "LL",
+      "rust_files": [
+        "crates/whatsapp-api/src/signal/group.rs",
+        "crates/whatsapp-api/src/transport/devices.rs"
+      ]
     }
   },
   "include_register_flow": true

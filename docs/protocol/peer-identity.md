@@ -2005,3 +2005,144 @@ licenses, tracked-file budgets and 4210702 bytes across six checksum bundles.
 Runtime Rust code is unchanged; workspace/runtime tests were not repeated for
 this exporter-only Rust change.
 Exact hash-pinned APK re-export with --check verified all 28 files/214535 bytes.
+
+
+## Sender-key group selection and deleted-identity observers (2026-10-08)
+
+**Confirmed static APK 2.26.37.71**, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+[Complete scoped direct source](companion-sender-key-evidence.txt) retains the
+reaper, group query, batching, placeholder selector, observer fanout, selected
+implementations, shared effects and identity-write branch. Offsets below are
+method-relative bytes; catch tables use code units. No account state was read
+or changed and no live request was made.
+
+### Group selection, device predicate and bounded local passes
+
+1Uf.A02 queries 0kX.A02 for the selected B76 sender (0264..0270). A02 translates
+through 0kT.A02 with operation getAllSenderKeyGroupIdsForSender/table sender_keys,
+then executes `SELECT DISTINCT group_id FROM sender_keys WHERE
+sender_account_id = ? AND sender_account_type = ? AND device_id = ?`
+(0030..0046). B76.A00 supplies the already traced three-part tuple. It returns
+nonnull group_id strings in an ArrayList. **Confirmed:** these are groups with
+stored keys for the translated sender/device, not all current memberships,
+all groups in the account or groups discovered from sent_sender_key flags.
+There is no ORDER BY; no deterministic group processing order is established.
+Canonical mapping and its effective gates remain separate unknowns.
+
+In the reaper, each pass queries that list again. Empty returns immediately with
+counts; a nonempty list is sliced into groups of eight with Math.min/subList
+(0302..0334). Each slice creates Cnr names for that sender/group, obtains a token
+through 0jp.A06 and calls A08 before deletion (0334..038e). The full token/cache
+semantics remain untraced; calls alone are not proof of complete cache parity.
+Successful slice completion calls 0jp.A03 to release the token, adds its group
+IDs to a HashSet, and advances to the next slice (04e6..04fe); exception handlers
+also release. The set counts distinct groups processed, not deleted SQL rows.
+The pass counter advances at 04fe; below three it returns to the query. After
+three passes it queries once more, reports remaining group count and constructs
+PZC(processed_distinct_groups, remaining_groups) (0508..0554). Concurrent new
+keys can leave rows behind. No endless retry or server wait is established.
+
+For each eight-group slice, the sender-key SQL block independently translates
+with operation removeAllSenderKeysForSender. It calls 0C6.A13(list,972,972)
+(03fa..0404). That helper validates positive size/step with J8I.A01 and, for a
+List implementing RandomAccess, copies windows starting at zero, each containing
+min(size,remaining) entries, advancing by step. With equal 972 size/step this is
+nonoverlapping chunks with a final partial chunk. **Confirmed:** the selected
+reaper caller's outer slice is at most eight; on this RandomAccess branch the
+inner helper therefore produces at most one nonempty chunk. **Inferred:** its
+ArrayList.subList result uses that branch; the Android platform implementation
+is not contained in the selected APK and runtime selection is unobserved.
+The generic non-RandomAccess fallback calls J8I.A00; its complete algorithm is
+outside this trace. 972 is a local helper input, not an established server limit,
+and must not replace the actual outer eight-group bound.
+
+OGV.invoke discriminator 26 (0x1a) selects its default branch 000a..0010 and
+returns literal `?`. 0C6.A11 joins these placeholders with commas; the SQL
+predicate combines the sender/type/device tuple with group_id IN (...)
+(0454..047a), and arguments concatenate B76.A00 values then the group list
+(047c..04a4). 0C6.A15 receives the group iterable first and tuple collection second: it copies
+that second collection before appending the first (0038..0044), establishing
+tuple-list-before-groups order despite the reversed argument spelling. 08J.A0W
+routes the three-element B76 array to A0N, which wraps it with 0Kr then constructs
+an ArrayList (0008..001c). Full 0Kr iteration internals are not newly traced.
+Values are bound, not interpolated into SQL. The local count sums
+affected rows; it is distinct from processed group count. The scoped query for
+OGV.apply returned no bodies; the functional method is invoke. Full generic
+join-helper behavior and all other OGV cases are not interpreted here.
+
+### Refuted first-identity label and actual deleted observer fanout
+
+**Refuted documentation assumption:** the historical identity-pin-first-event
+stable topic is 0k4.A0L, but does not notify a first key. In 0jc.A0K, incoming
+key argument v17 is tested at 01d0. With a null key and a present old map value,
+it calls A0L (01d4..01e2). With a nonnull key and null old value, it instead
+constructs D3f discriminator 42/0x2a (01e6..0228); D3f.COL case 42 calls
+DeS.BqB (069a..06b4). This is branch evidence, not a newly implemented nullable
+key API or permission to clear an identity. The misleading historical topic
+name is retained to preserve existing diff selectors; its interpretation is
+corrected in cross-device-sync.md.
+
+The independently traced deletion caller 0jc.A0r invokes A0L only after an old
+key existed and its identity deletion succeeded. A0L obtains 0jp.A05's token,
+constructs D3f discriminator 41/0x29, dispatches with 078.A00 and closes the token
+(0014..003a), with failure cleanup. D3f.COL maps 41 to 0680..069a, casts the
+payload to DeviceJid and observer to DeS, then calls BqD. The explicit Kotlin-side
+observer name below confirms deletion interpretation independently of the label.
+
+The LX/ method-name scan and a subsequent unfiltered full-APK method-name scan
+both found exactly five BqD declarations: AU1, D3k, D4x, Fco and abstract DeS.
+Class-block-normalized bodies match; output order differed and is not semantic.
+No additional named-package declaration matched. This scan is not a claim about reflective/native registrations
+or runtime reachability of every observer. Their selected bodies establish:
+
+- AU1 refreshes the matching contact activity through 9E8.A0t after comparing
+  the event user's JID to the displayed contact (0004..0028).
+- D3k's discriminator zero calls Dd3.notifyDeviceIdentityDeleted with the actual
+  device (001c..0030); its other branch invokes IdentityVerificationActivity.A12
+  for the user's JID. Those UI/Kotlin observer internals remain untraced.
+- D4x calls its shared A00(device,null,true,false) (0000..000e). This differs from
+  the previously traced changed-key BqC path; preserve the actual booleans.
+- Fco.BqD is return-void only; unlike its BqC identity-change path, deletion does
+  not complete a waiting identity future through this observer.
+- DeS is abstract and has no executable body.
+
+078.A00 partitions registered observers by 07G/0L6 type. It calls COL directly
+for plain observers, while typed groups can take direct or scheduled paths
+based on 0MN options, 0KP.A03 and cached local flags. One branch queues 3Pf
+selector 25 through 0GR.COX; another invokes private A02. Complete executor
+semantics, registrations, ordering and queued callback lifecycle remain unknown.
+A0L returning therefore does not establish that every UI/worker side effect
+has completed synchronously.
+
+D4x.A00 is shared by changed and deleted events. Its traced primary/non-own
+branch invokes 0bN.A0F(reason=identity_changed) (0476..04b0), irrespective of the
+observer's BqD name. It also has receipt and sender-key rotation branches as
+recorded by earlier source. The deletion entry explicitly sets the first boolean
+true and second false. All effective feature/category/own branches and precise
+receipt/sender-key mutation scopes still need separate interpretation before a
+Rust port. Do not equate a scoped remote key deletion with erasing all contact
+history, completing an identity wait or rotating the local account.
+
+**Current Rust gap:** pending_removed_devices is persisted and returned members
+are removed from that marker, but no teardown worker or group-key deletion runs.
+This trace resolves group-list production, outer eight-group batching, three
+passes and deletion observer identity; effective gates, canonical mapping,
+complete cache/executor effects, concurrent scheduling and marker lifecycle
+remain unported. No destructive runtime behavior is enabled by this research.
+
+The expanded cleanup bundle preserves 41 topics/56 selected declarations
+(including abstract DeS.BqD), 46 files/395788 bytes. The [checksum-verified
+cached comparison](apk/companion-sender-key-coverage-diff.json) against 72afc9d
+took 0.013700 seconds: eighteen additions/twenty-three unchanged topics. All old
+topic texts, manifest/inventory/tokens remain equal. All eighteen new direct
+declaration/instruction/catch coverage lists match; this is scoped source
+coverage, not complete opcode semantics, release equivalence or a Rust port.
+
+Validation: actual hash-pinned bounded export, checksum-verified cached diff,
+unchanged old topic bytes and all new direct declaration/instruction/catch
+coverage checks passed. Regenerated CLI reference, experimental OpenAPI
+library-symbol check, formatting and staged whitespace passed on system Rust
+1.99.0. Hygiene verified 948 local links, licenses, tracked-file budgets and
+4391955 bytes across six checksum bundles. No Rust runtime/tool source changed;
+workspace tests/Clippy were not repeated for this source-only research chunk.

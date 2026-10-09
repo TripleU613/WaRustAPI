@@ -1,0 +1,55 @@
+# APK-derived structural disassembly: LX/0kX;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(LL) flags=0x11 registers=8
+  0000..0004 op=1a const-string v2, "getAllSenderKeyGroupIdsForSender"
+  0004..0008 op=54 iget-object v1, v6, LX/0kX;->A04:LX/0kT;
+  0008..000e op=1b const-string/jumbo v0, "sender_keys"
+  000e..0014 op=6e invoke-virtual {v1, v7, v2, v0}, LX/0kT;->A02(LLLL)
+  0014..0016 op=0c move-result-object v1
+  0016..001a op=22 new-instance v5, Ljava/util/ArrayList;
+  001a..0020 op=70 invoke-direct {v5}, Ljava/util/ArrayList;-><init>(V)
+  0020..0024 op=54 iget-object v0, v6, LX/0kX;->A05:LX/0aC;
+  0024..002a op=6e invoke-virtual {v0}, LX/0aC;->A06(L)
+  002a..002c op=0c move-result-object v4
+  002c..0030 op=54 iget-object v3, v4, LX/0ZN;->A02:LX/0IY;
+  0030..0034 op=1a const-string v2, "SELECT DISTINCT group_id FROM sender_keys WHERE sender_account_id = ? AND sender_account_type = ? AND device_id = ?"
+  0034..003a op=6e invoke-virtual {v1}, LX/B76;->A00(L)
+  003a..003c op=0c move-result-object v1
+  003c..0040 op=1a const-string v0, "SignalSenderKeyStore/SELECT_ALL_GROUP_ID_FOR_SENDER"
+  0040..0046 op=6e invoke-virtual {v3, v2, v0, v1}, LX/0IY;->A0A(LLLL)
+  0046..0048 op=0c move-result-object v2
+  0048..004c op=1a const-string v0, "group_id"
+  004c..0052 op=72 invoke-interface {v2, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(IL)
+  0052..0054 op=0a move-result v1
+  0054..005a op=72 invoke-interface {v2}, Landroid/database/Cursor;->moveToNext(Z)
+  005a..005c op=0a move-result v0
+  005c..0060 op=38 if-eqz v0, +0xd
+  0060..0066 op=72 invoke-interface {v2, v1}, Landroid/database/Cursor;->getString(LI)
+  0066..0068 op=0c move-result-object v0
+  0068..006e op=71 invoke-static {v0}, LX/00h;->A06(VL)
+  006e..0074 op=6e invoke-virtual {v5, v0}, Ljava/util/AbstractCollection;->add(ZL)
+  0074..0076 op=28 goto -0x10
+  0076..007c op=72 invoke-interface {v2}, Landroid/database/Cursor;->close(V)
+  007c..0082 op=6e invoke-virtual {v4}, LX/0ZN;->close(V)
+  0082..0084 op=11 return-object v5
+  0084..0086 op=0d move-exception v1
+  0086..0088 op=27 throw v1
+  0088..008a op=0d move-exception v0
+  008a..0090 op=71 invoke-static {v2, v1}, LX/07i;->A00(VLL)
+  0090..0092 op=27 throw v0
+  0092..0094 op=0d move-exception v1
+  0094..0096 op=27 throw v1
+  0096..0098 op=0d move-exception v0
+  0098..009e op=71 invoke-static {v4, v1}, LX/07i;->A00(VLL)
+  009e..00a0 op=27 throw v0
+  # exception table: 6 try range(s)
+  # catch <all> code_units 0016..0024 -> 0049
+  # catch <all> code_units 0024..003b -> 0042
+  # catch <all> code_units 003b..003e -> 0049
+  # catch <all> code_units 0043..0044 -> 0044
+  # catch <all> code_units 0045..0049 -> 0049
+  # catch <all> code_units 004a..004b -> 004b
+.end method

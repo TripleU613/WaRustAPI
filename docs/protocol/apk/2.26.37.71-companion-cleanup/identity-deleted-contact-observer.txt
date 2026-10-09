@@ -1,0 +1,18 @@
+# APK-derived structural disassembly: LX/AU1;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method BqD(VL) flags=0x1 registers=5
+  0000..0004 op=54 iget-object v2, v3, LX/AU1;->A00:Lcom/whatsapp/chatinfo/ContactInfoActivity;
+  0004..000a op=6e invoke-virtual {v2}, Lcom/whatsapp/chatinfo/ContactInfoActivity;->A5c(L)
+  000a..000c op=0c move-result-object v1
+  000c..0010 op=54 iget-object v0, v4, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+  0010..0016 op=6e invoke-virtual {v1, v0}, Ljava/lang/Object;->equals(ZL)
+  0016..0018 op=0a move-result v0
+  0018..001c op=38 if-eqz v0, +0x7
+  001c..0020 op=54 iget-object v0, v2, Lcom/whatsapp/chatinfo/ContactInfoActivity;->A1V:LX/9E8;
+  0020..0026 op=6e invoke-virtual {v0}, LX/9E8;->A0t(V)
+  0026..0028 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,20 @@
+# APK-derived structural disassembly: LX/D3k;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method BqD(VL) flags=0x1 registers=4
+  0000..0004 op=52 iget v0, v2, LX/D3k;->$t:I
+  0004..0008 op=38 if-eqz v0, +0xc
+  0008..000c op=54 iget-object v1, v2, LX/D3k;->A00:Ljava/lang/Object;
+  000c..0010 op=1f check-cast v1, Lcom/whatsapp/identity/ui/IdentityVerificationActivity;
+  0010..0014 op=54 iget-object v0, v3, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+  0014..001a op=71 invoke-static {v1, v0}, Lcom/whatsapp/identity/ui/IdentityVerificationActivity;->A12(VLL)
+  001a..001c op=0e return-void
+  001c..0020 op=54 iget-object v0, v2, LX/D3k;->A00:Ljava/lang/Object;
+  0020..0024 op=1f check-cast v0, LX/CaG;
+  0024..0028 op=54 iget-object v0, v0, LX/CaG;->A0I:LX/Dd3;
+  0028..002e op=72 invoke-interface {v0, v3}, LX/Dd3;->notifyDeviceIdentityDeleted(VL)
+  002e..0030 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

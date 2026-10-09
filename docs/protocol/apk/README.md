@@ -232,7 +232,7 @@ This is scoped same-APK coverage, not full release remapping or protocol parity.
 
 
 The [37.71 companion cleanup recipe](recipes/2.26.37.71-companion-cleanup.json)
-preserves **23 topics / 38 methods / 28 files / 214,535 bytes**, including
+preserves **41 topics / 56 selected method declarations / 46 files / 395,788 bytes**, including
 session/identity SQL predicates, canonical-address branches, property definition,
 transaction callback registration and cache-variant cleanup. Its
 [baseline](2.26.37.71-companion-cleanup/targets.json) is separate from the nearly
@@ -256,3 +256,16 @@ against `257f186` took **0.011257 seconds**: six additions, sixteen annotation
 changes and one unchanged topic. All seventeen old offset/opcode/mnemonic lists
 and catch ranges are equal; manifest/inventory/tokens are unchanged. This is
 expanded source/rendering coverage of the same APK, not a vendor release change.
+
+
+Sender-key/deleted-observer coverage adds eighteen scoped topics. Fifty-five
+selected declarations have code; DeS.BqD is an abstract interface declaration.
+[Cached same-APK comparison](companion-sender-key-coverage-diff.json) against
+`72afc9d` took **0.013700 seconds**: eighteen additions and all twenty-three old
+topic texts unchanged, with manifest/inventory/tokens unchanged. All eighteen
+new direct declaration/instruction/catch coverage lists match the export.
+[Selection, local bounds and refuted first-identity label](../peer-identity.md#sender-key-group-selection-and-deleted-identity-observers-2026-10-08)
+explain group-row selection, eight-group slices, three local passes and BqD
+versus BqB/BqC. The older core identity-pin-first-event topic name is retained
+for stable comparisons; its interpreted first-key meaning was refuted. No
+teardown runtime or account/key mutation is enabled by this static bundle.

@@ -2101,3 +2101,31 @@ licenses, tracked-file budgets and 4210702 bytes across six checksum bundles.
 Runtime Rust code is unchanged; workspace/runtime tests were not repeated for
 this exporter-only Rust change.
 Exact hash-pinned APK re-export with --check verified all 28 files/214535 bytes.
+
+
+Sender-key selection and deletion observer closure (2026-10-08, **confirmed
+static APK 2.26.37.71**): 0kX.A02 selects DISTINCT stored group IDs for the
+translated sender/type/device; 1Uf.A02 slices eight groups per lock/delete block
+and rechecks for at most three local passes. Its inner list helper receives
+972/972 but operates on those at-most-eight groups; these are not server limits.
+Argument concatenation puts the tuple collection before the group IDs. D3f
+selector 41/0x29 is BqD identity-deleted, including notifyDeviceIdentityDeleted
+and shared D4x effects; Fco deletion is a no-op for identity waits. The earlier
+first-identity interpretation of 0k4.A0L is refuted and corrected: 0jc.A0K's
+nonnull-key/no-old-value branch uses selector 42/BqB, while null-key/old-value
+uses A0L/BqD. Complete effective gates, canonical mapping, cache/executor
+semantics, concurrent scheduling and teardown runtime remain unimplemented.
+Current cleanup bundle: 41 topics/56 selected declarations (one abstract),
+46 files/395788 bytes. Same-APK cached diff against 72afc9d took 0.013700 seconds:
+eighteen additions/twenty-three unchanged topics, all old topic texts equal.
+All new direct declaration/instruction/catch coverage lists match. No account
+was opened, live request sent, identity changed or keys/history deleted.
+[Evidence and remaining port requirements](protocol/peer-identity.md#sender-key-group-selection-and-deleted-identity-observers-2026-10-08).
+
+Validation: actual hash-pinned bounded export, checksum-verified cached diff,
+unchanged old topic bytes and all new direct declaration/instruction/catch
+coverage checks passed. Regenerated CLI reference, experimental OpenAPI
+library-symbol check, formatting and staged whitespace passed on system Rust
+1.99.0. Hygiene verified 948 local links, licenses, tracked-file budgets and
+4391955 bytes across six checksum bundles. No Rust runtime/tool source changed;
+workspace tests/Clippy were not repeated for this source-only research chunk.

@@ -1420,8 +1420,13 @@ unchanged, targets updated; checksums verified. No whole-APK equivalence claim.
   Timestamp field presence is confirmed; the exporter still leaves its division
   opcode undecoded. No exact signed-long parity is claimed.
 - 0jc.A0K commits its pin transaction before dispatching later callbacks.
-  New identity reaches [0k4.A0L](apk/2.26.37.71-core/identity-pin-first-event.txt)
-  and D3f discriminator 0x29; changed identity creates D3V discriminator **1**
+  **Corrected 2026-10-08:** the null-key/old-value-present branch reaches
+  [0k4.A0L](apk/2.26.37.71-core/identity-pin-first-event.txt) and D3f discriminator
+  0x29 -> DeS.BqD (identity-deleted observer), not first-key notification.
+  The historical stable topic name is misleading and retained for cached diffs.
+  A nonnull key with no old value instead selects D3f 0x2a -> DeS.BqB.
+  [Deletion observer trace and branch evidence](peer-identity.md#sender-key-group-selection-and-deleted-identity-observers-2026-10-08)
+  preserve the correction. Changed identity creates D3V discriminator **1**
   (`0236..027e` in the existing primary-identity-commit topic).
   [D3V constructor](apk/2.26.37.71-core/identity-change-callback-constructor.txt)
   retains device/metadata/boolean; [D3V.COL](apk/2.26.37.71-core/identity-change-callback.txt)
