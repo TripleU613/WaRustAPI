@@ -1,5 +1,12 @@
 # Messaging completion checklist
 
+Offline account diagnostics (2026-10-09, **observed/local**): the original
+private key enabled saved-profile receipt inspection: nine ACKed reservations
+(eight read, one retry), identical logical results across reopen; no live request.
+Account pending-work counts now exclude retained cancelled/failed/in-flight
+history and share the pending-list progress predicate. No resend/state reset.
+[Count evidence](protocol/account-status-counts.md). [Receipt check](protocol/receipt-ack-correlation.md#original-saved-account-inspection-restored-2026-10-09).
+
 Key-based receipt lookup (2026-10-09, **confirmed static**): seven topics
 close ordinary/add-on overrides and show missing ordinary messages select the
 add-on keyed receipt join. Pending membership is distinct from delivered/user

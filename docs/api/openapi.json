@@ -2302,7 +2302,7 @@
           },
           "outbox_pending": {
             "type": "integer",
-            "description": "Number of messages queued for sending"
+            "description": "Logical entries needing work (Queued, Prepared, RetryScheduled), excluding retained Cancelled/Failed/InFlight history. Not a count of currently sendable reservations."
           },
           "actions_queued": {
             "type": "integer",
@@ -10525,7 +10525,7 @@
           "Accounts"
         ],
         "summary": "Get status of registered accounts",
-        "description": "Returns status summary of all registered accounts or a specific account if name is provided. Shows registration state, key availability, pending messages and queued actions.",
+        "description": "Returns status summary of all registered accounts or a specific account if name is provided. Shows registration state, key availability, pending messages and queued actions. outbox_pending now counts logical progress Queued, Prepared and RetryScheduled across namespaces using paged Outbox::pending_count, excluding Cancelled, Failed and InFlight history. This is pending work, not currently sendable reservations; transport guards, support and server waits remain separate. Malformed history produces the existing account error result rather than a partial count; inspection never repairs or deletes history. CLI-only, x-live=false; no HTTP route. Evidence docs/protocol/account-status-counts.md.",
         "operationId": "getAccountsStatus",
         "x-cli": "whatsapp-cli accounts status",
         "x-transport": [
@@ -10562,7 +10562,8 @@
           }
         },
         "x-library": [
-          "whatsapp_cli::profiles::list"
+          "whatsapp_cli::profiles::list",
+          "whatsapp_api::outbox::Outbox::pending_count"
         ]
       }
     },

@@ -343,6 +343,37 @@ impl Outbox {
         self.pending_where(tx, limit, |_| Ok(true))
     }
 
+    /// Count entries whose progress still needs work across every namespace.
+    /// This is the same progress selection as `pending`, not permission to send:
+    /// transport reservations, account policy and retry waits remain separate.
+    pub fn pending_count(&self, tx: &ReadTx<'_>) -> Result<usize> {
+        let mut count = 0;
+        let mut cursor = None;
+        loop {
+            let page = tx.scan_after(Table::Outbox, RECORD_V1, cursor.as_deref(), 256)?;
+            let done = page.len() < 256;
+            cursor = page.last().map(|(key, _)| key.clone());
+            for (_, bytes) in page {
+                let entry: OutboxEntry = serde_json::from_slice(&bytes).map_err(|e| {
+                    Error::Storage(crate::store::StoreError::Serialization(e.to_string()))
+                })?;
+                if Self::needs_work(&entry) {
+                    count += 1;
+                }
+            }
+            if done {
+                return Ok(count);
+            }
+        }
+    }
+
+    fn needs_work(entry: &OutboxEntry) -> bool {
+        matches!(
+            entry.progress,
+            AttemptProgress::Queued | AttemptProgress::Prepared | AttemptProgress::RetryScheduled
+        )
+    }
+
     /// Filter before truncating, so durable reservations cannot hide eligible
     /// work. Scan one consistent snapshot in pages, retaining only `limit`
     /// candidates plus one page rather than the entire message history.
@@ -365,13 +396,7 @@ impl Outbox {
                 let entry: OutboxEntry = serde_json::from_slice(&bytes).map_err(|e| {
                     Error::Storage(crate::store::StoreError::Serialization(e.to_string()))
                 })?;
-                if matches!(
-                    entry.progress,
-                    AttemptProgress::Queued
-                        | AttemptProgress::Prepared
-                        | AttemptProgress::RetryScheduled
-                ) && eligible(&entry)?
-                {
+                if Self::needs_work(&entry) && eligible(&entry)? {
                     out.push(entry);
                 }
             }
@@ -614,6 +639,51 @@ mod tests {
             !s.write(|tx| ob.cancel(tx, LocalMessageId([0; 16])))
                 .unwrap()
         );
+    }
+
+    #[test]
+    fn pending_count_excludes_history_across_pages_and_refuses_corruption() {
+        let (_d, s) = store();
+        let ob = Outbox::new("test", Limits::default());
+        assert_eq!(s.read(|tx| ob.pending_count(tx)).unwrap(), 0);
+        let (ticket, _) = s
+            .write(|tx| ob.enqueue(tx, &req("count", "fixture")))
+            .unwrap();
+        let template = s.read(|tx| ob.get(tx, ticket.local_id)).unwrap().unwrap();
+        s.write(|tx| {
+            tx.delete(Table::Outbox, &ticket.local_id.0)?;
+            for index in 0..300_u128 {
+                let mut entry = template.clone();
+                entry.local_id = LocalMessageId(index.to_be_bytes());
+                entry.progress = match index {
+                    257 => AttemptProgress::Queued,
+                    258 => AttemptProgress::Prepared,
+                    299 => AttemptProgress::RetryScheduled,
+                    _ => match index % 3 {
+                        0 => AttemptProgress::Cancelled,
+                        1 => AttemptProgress::InFlight,
+                        _ => AttemptProgress::Failed,
+                    },
+                };
+                tx.put_json(Table::Outbox, &entry.local_id.0, RECORD_V1, &entry)?;
+            }
+            Ok(())
+        })
+        .unwrap();
+        assert_eq!(s.read(|tx| tx.count(Table::Outbox)).unwrap(), 300);
+        assert_eq!(s.read(|tx| ob.pending_count(tx)).unwrap(), 3);
+        assert_eq!(s.read(|tx| ob.pending(tx, 300)).unwrap().len(), 3);
+        s.write(|tx| {
+            tx.put(
+                Table::Outbox,
+                &301_u128.to_be_bytes(),
+                RECORD_V1,
+                b"invalid-row",
+            )
+        })
+        .unwrap();
+        assert!(s.read(|tx| ob.pending_count(tx)).is_err());
+        assert_eq!(s.read(|tx| tx.count(Table::Outbox)).unwrap(), 301);
     }
 
     #[test]

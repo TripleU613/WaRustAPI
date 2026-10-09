@@ -113,3 +113,31 @@ all-feature Clippy, warning-free workspace rustdoc, default CLI tests,
 CLI-reference regeneration, formatting, whitespace and repository hygiene
 passed (1,913 local links; unchanged 84 checksum bundles / 18,046,975 bytes).
 No real account was opened or changed and no live request was sent.
+
+## Original saved-account inspection restored (2026-10-09)
+
+**Observed offline:** the preceding missing-environment result was corrected
+using the existing private key file beside profile `l`'s original store. File
+permissions were private; the key stayed in memory and the child process's
+configured environment variable. No value was printed, committed or replaced.
+The rebuilt `receipts --json` CLI opened the existing account and returned
+**nine** reservations: **eight read**, **one retry**, all **server_acknowledged**,
+with nonempty message IDs. Two further inspections across reopening returned
+identical full logical outcome lists. No message IDs or account numbers are
+included in this research note. No socket, live request or retransmission ran.
+
+The database file's byte digest changed on opening. **Confirmed source:**
+ProtocolStore::open uses a metadata/table-validation write transaction and
+commits it even for an existing schema before returning the store; outcomes
+itself uses store.read. This is why byte identity cannot establish read-only
+logical account behavior here. No first-run full database semantic snapshot was
+captured, so this observation does not claim whole-account byte/row equivalence.
+The verified narrower result is stable logical receipt outcomes across reopen,
+plus the inspection path's lack of reservation mutation. Keys, identities and
+original receipt IDs were not regenerated. The earlier missing-input checkpoint
+remains preserved in [key lookup](receipt-key-lookup.md#offline-account-check-and-reproduction).
+
+A scoped directory inventory found **19 profile JSON files**. This is a count
+of configured files, **not** a claim of 19 distinct phone numbers, usable server
+accounts or registered identities; copies/test profiles and account state were
+not classified. No additional number is needed for this offline validation.

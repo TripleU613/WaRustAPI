@@ -1294,7 +1294,6 @@ fn accounts_status(cli: &Cli, name: Option<&str>) -> Result<(), Error> {
             Ok(store) => {
                 let status_result = store.read(|tx| {
                     use whatsapp_api::session::AccountRecord;
-                    use whatsapp_api::store::Table;
 
                     let account = AccountRecord::load(tx)?;
 
@@ -1314,7 +1313,13 @@ fn accounts_status(cli: &Cli, name: Option<&str>) -> Result<(), Error> {
                         .map(|a| a.credentials.iter().any(|c| c.name == "noise_appeal_token"))
                         .unwrap_or(false);
 
-                    let outbox_pending = tx.count(Table::Outbox)?;
+                    // Historical rows are retained for uncertain/completed sends;
+                    // count the same progress states as pending work, not all rows.
+                    let outbox_pending = whatsapp_api::outbox::Outbox::new(
+                        "account-status",
+                        whatsapp_api::profile::Limits::default(),
+                    )
+                    .pending_count(tx)?;
 
                     Ok((
                         registered,
