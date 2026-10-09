@@ -189,6 +189,66 @@ pub fn decode_poll(payload: &[u8]) -> Option<Poll> {
         secret,
     })
 }
+/// Original local poll reservation chat. Missing legacy provenance remains
+/// unknown; malformed/unsupported saved bindings refuse with a fixed diagnosis.
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub(super) fn saved_chat(own: &serde_json::Value) -> Result<Option<Jid>> {
+    let Some(value) = own.get("chat").filter(|v| !v.is_null()) else {
+        return Ok(None);
+    };
+    let chat = value.as_str().and_then(|s| Jid::parse(s).ok()).filter(|j| {
+        !j.user.is_empty()
+            && super::identity_query::same_primary_address(j, j)
+            && j.agent == 0
+            && j.device == 0
+            && matches!(
+                j.server,
+                crate::model::jid::Server::User | crate::model::jid::Server::Lid
+            )
+    });
+    chat.map(Some)
+        .ok_or_else(|| invalid("invalid saved poll chat binding"))
+}
+
+/// Read-only local binding diagnosis for a saved own poll and primary peer.
+/// Labels do not establish delivery, decrypt a vote or authorize identity
+/// changes. This uses the same authenticated association as event projection.
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+pub fn own_chat_binding(
+    store: &crate::store::ProtocolStore,
+    poll_id: &MessageId,
+    peer: &Jid,
+) -> Result<&'static str> {
+    store.write(|tx| {
+        let Some(own) = tx.get_json::<serde_json::Value>(
+            crate::store::Table::Checkpoints,
+            format!("poll-secret:{}", poll_id.as_str()).as_bytes(),
+            1,
+        )?
+        else {
+            return Ok("unknown_poll");
+        };
+        let Some(chat) = saved_chat(&own)? else {
+            return Ok("missing_chat_binding");
+        };
+        Ok(
+            if super::inbox_events::authenticated_direct_chat(tx, peer, &chat)? {
+                "matched"
+            } else {
+                "unattributed"
+            },
+        )
+    })
+}
+
 // APK 37.71 Ban.A01 first validates BZa using C7G.A00 (0066..007e).
 // Both feature-selected paths require a sender timestamp; the deferred branch
 // explicitly checks a 12-byte IV (0544..060c). Metadata presence is not a

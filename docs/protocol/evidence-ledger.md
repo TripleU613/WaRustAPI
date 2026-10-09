@@ -1457,3 +1457,20 @@ effective decryption property, AD7 writer, transitive parent/expiry/edit/quiz
 policy remain unknown/unported. Own poll secret chat binding is a confirmed
 local implementation gap and remains next work. No fresh live poll test.
 [Detailed evidence and boundaries](poll-votes.md).
+
+### 2026-10-09: own-poll chat provenance in projection/preparation
+
+**Confirmed, implementation**, existing normal reservation chat now binds own
+poll secret lookup and outgoing vote preparation. Primary PN/LID association
+uses only exact components or saved authenticated mapping, shared with reaction
+attribution. Actual AEAD fixtures verify original target/voter identity and
+durable dedupe; missing/foreign/alias-only/companion and corrupt-state boundaries
+remain explicit. Read-only binding inspection is exposed by lab-inbox.
+APK context remains the prior 37.71 Ban/Clc/BoQ source bundle, not a newly
+traced native parent store; full native parity and fresh live poll coverage are
+unproven. [Details](poll-votes.md#saved-chat-attribution-2026-10-09).
+
+**Observed**, bounded receive-only 45-second login/active/clean-stop; retained
+peer/action/receipt/outbox/event summaries unchanged, fifteen decrypted records
+remained fifteen. No fresh poll/vote attribution, replay or identity adoption.
+All 734 workspace tests and strict/local feature checks passed.

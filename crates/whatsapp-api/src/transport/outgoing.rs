@@ -358,6 +358,27 @@ fn vote_payload_for(
         return Err(Error::invalid("poll", "vote targets another chat"));
     }
     let poll_id = target.key.id.as_str().to_owned();
+    // Validate actual saved provenance before identity lookup or vote entropy.
+    // Caller-provided target.chat alone cannot authorize another poll's secret.
+    let own_record = if target.key.direction == Direction::Outgoing {
+        Some(store.write(|tx| {
+            let own: serde_json::Value = tx
+                .get_json(
+                    Table::Checkpoints,
+                    format!("poll-secret:{poll_id}").as_bytes(),
+                    1,
+                )?
+                .ok_or_else(|| Error::invalid("poll", "unknown own poll"))?;
+            let chat = super::polls::saved_chat(&own)?
+                .ok_or_else(|| Error::invalid("poll", "saved poll has no chat binding"))?;
+            if !super::inbox_events::authenticated_direct_chat(tx, peer, &chat)? {
+                return Err(Error::invalid("poll", "saved poll belongs to another chat"));
+            }
+            Ok(own)
+        })?)
+    } else {
+        None
+    };
     let (own_pn, own_lid) = store.write(|tx| login_identity(tx, account))?;
     let peer_lid = super::inbox::lid_for(store, peer)?;
     let (secret, options, selectable, creator) = if target.key.direction == Direction::Incoming {
@@ -379,15 +400,7 @@ fn vote_payload_for(
             peer_lid.clone().unwrap_or_else(|| peer.to_non_ad()),
         )
     } else {
-        let own: serde_json::Value = store
-            .read(|tx| {
-                tx.get_json(
-                    Table::Checkpoints,
-                    format!("poll-secret:{poll_id}").as_bytes(),
-                    1,
-                )
-            })?
-            .ok_or_else(|| Error::invalid("poll", "unknown own poll"))?;
+        let own = own_record.ok_or_else(|| Error::invalid("poll", "unknown own poll"))?;
         let secret: Vec<u8> = serde_json::from_value(own["secret"].clone())
             .map_err(|_| Error::invalid("poll", "invalid saved poll secret"))?;
         let secret = <[u8; 32]>::try_from(secret)
@@ -2069,5 +2082,160 @@ mod quote_scope_tests {
                 .windows(b"private original body".len())
                 .any(|w| w == b"private original body")
         );
+    }
+}
+
+#[cfg(test)]
+mod poll_scope_tests {
+    use super::*;
+    use crate::{
+        model::{
+            ids::{AccountId, ChatId},
+            jid::Jid,
+            message::{Direction, MessageKey, MessageRef},
+        },
+        store::{MasterKey, OpenOptions, StaticKeySource},
+    };
+    #[test]
+    fn own_vote_uses_saved_chat_and_refuses_missing_foreign_or_invalid_bindings() {
+        for case in [
+            "same",
+            "mapped",
+            "reverse",
+            "foreign",
+            "unattributed",
+            "alias_only",
+            "missing",
+            "invalid",
+            "invalid_map",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("vote.redb"),
+                account_id: AccountId::new("fixture").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [22; 32],
+                ))),
+                create: true,
+            })
+            .unwrap();
+            let pn = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+            let lid = Jid::parse("12345@lid").unwrap();
+            let original = if case == "reverse" {
+                lid.clone()
+            } else {
+                pn.clone()
+            };
+            let peer = match case {
+                "same" | "reverse" => pn.clone(),
+                "foreign" => Jid::parse("15555550102@s.whatsapp.net").unwrap(),
+                _ => lid.clone(),
+            };
+            let own_jid = Jid::parse("15555550199@s.whatsapp.net").unwrap();
+            let account = AccountRecord {
+                own_jid: Some(own_jid.clone()),
+                ..Default::default()
+            };
+            let mut record = serde_json::json!({"chat":original.to_string(),"secret":vec![9u8;32],"options":["private option"]});
+            if case == "missing" {
+                record.as_object_mut().unwrap().remove("chat");
+            }
+            if case == "invalid" {
+                record["chat"] = serde_json::json!("private invalid chat");
+            }
+            store
+                .write(|tx| {
+                    tx.put_json(Table::Checkpoints, b"poll-secret:ORIGINAL", 1, &record)?;
+                    if matches!(case, "mapped" | "reverse" | "invalid_map") {
+                        let value = if case == "invalid_map" {
+                            serde_json::json!({"private":"bad"})
+                        } else {
+                            serde_json::to_value(&pn).unwrap()
+                        };
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"authenticated-lid:12345@lid",
+                            1,
+                            &value,
+                        )?;
+                    }
+                    if case == "alias_only" {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"lid:15555550101@s.whatsapp.net",
+                            1,
+                            &lid,
+                        )?;
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let before = store.read(|tx| tx.scan(Table::Checkpoints, 1, 50)).unwrap();
+            let target = MessageRef {
+                key: MessageKey {
+                    chat: ChatId::from_jid(&peer).unwrap(),
+                    sender: None,
+                    direction: Direction::Outgoing,
+                    id: MessageId::new("ORIGINAL").unwrap(),
+                },
+            };
+            let binding = super::super::polls::own_chat_binding(&store, &target.key.id, &peer);
+            if matches!(case, "invalid" | "invalid_map") {
+                assert!(binding.is_err());
+            } else {
+                let expected = if matches!(case, "same" | "mapped" | "reverse") {
+                    "matched"
+                } else if case == "missing" {
+                    "missing_chat_binding"
+                } else {
+                    "unattributed"
+                };
+                assert_eq!(binding.unwrap(), expected, "{case}");
+            }
+            assert_eq!(
+                super::super::polls::own_chat_binding(
+                    &store,
+                    &MessageId::new("UNKNOWN").unwrap(),
+                    &peer
+                )
+                .unwrap(),
+                "unknown_poll"
+            );
+            let result =
+                vote_payload_for(&store, &account, &peer, &target, &["private option".into()]);
+            if matches!(case, "same" | "mapped" | "reverse") {
+                let vote = super::super::polls::decode_vote(&result.unwrap()).unwrap();
+                assert!(vote.poll_from_sender);
+                let hashes = super::super::polls::decrypt_vote(
+                    &[9; 32], "ORIGINAL", &own_jid, &own_jid, &vote,
+                )
+                .unwrap();
+                assert_eq!(
+                    hashes,
+                    vec![super::super::polls::option_hash("private option").to_vec()]
+                );
+            } else {
+                let error = result.unwrap_err().to_string();
+                let reason = match case {
+                    "missing" => "saved poll has no chat binding",
+                    "invalid" => "invalid saved poll chat binding",
+                    "invalid_map" => "invalid authenticated LID mapping",
+                    _ => "saved poll belongs to another chat",
+                };
+                assert!(error.contains(reason), "{case}");
+                assert!(!error.contains("private"), "{case}");
+            }
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Checkpoints, 1, 50)).unwrap(),
+                before,
+                "{case}"
+            );
+            assert!(
+                store
+                    .read(|tx| tx.scan(Table::Outbox, 1, 50))
+                    .unwrap()
+                    .is_empty()
+            );
+        }
     }
 }

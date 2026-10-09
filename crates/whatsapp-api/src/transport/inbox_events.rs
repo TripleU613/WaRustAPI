@@ -42,8 +42,8 @@ fn poll_content(poll: super::polls::Poll) -> Option<MessageContent> {
 #[derive(Clone, Debug)]
 pub(super) struct PollContext {
     pub(super) poll_id: String,
-    /// Original incoming poll chat, including a retained legacy PN selector.
-    pub(super) incoming_chat: Option<crate::model::jid::Jid>,
+    /// Original saved poll chat, including a retained legacy PN selector.
+    pub(super) target_chat: Option<crate::model::jid::Jid>,
     pub(super) secret: [u8; 32],
     pub(super) options: Vec<String>,
     /// Candidate creator identities (phone-number and LID forms).
@@ -97,7 +97,7 @@ pub(super) fn poll_context(
         }
         return Ok(Some(PollContext {
             poll_id,
-            incoming_chat: Some(sender),
+            target_chat: Some(sender),
             secret,
             options: poll.options,
             creators,
@@ -112,6 +112,18 @@ pub(super) fn poll_context(
     else {
         return Ok(None);
     };
+    // APK 37.71 Ban.A01 -> Clc.A02 -> BoQ.A00 attributes the parent to
+    // the envelope chat. Our saved chat binds the secret locally; directory
+    // aliases and raw metadata alone cannot select another chat's poll.
+    let Some(original) = super::polls::saved_chat(&own)? else {
+        return Ok(None); // Legacy missing binding is unknown, not invented.
+    };
+    let Some(from) = super::receipts::jid(node, "from") else {
+        return Ok(None);
+    };
+    if !authenticated_direct_chat(tx, &from, &original)? {
+        return Ok(None);
+    }
     let Ok(secret) = serde_json::from_value::<Vec<u8>>(own["secret"].clone()) else {
         return Ok(None);
     };
@@ -129,7 +141,7 @@ pub(super) fn poll_context(
     }
     Ok(Some(PollContext {
         poll_id,
-        incoming_chat: None,
+        target_chat: Some(original),
         secret,
         options,
         creators,
@@ -144,13 +156,13 @@ fn poll_vote_event(
     let vote = super::polls::decode_vote(payload)?;
     let sender = super::inbox::sender_for_record(key, node)?;
     let (chat, by) = (
-        ChatId::from_jid(context.incoming_chat.as_ref().unwrap_or(&sender)).ok()?,
+        ChatId::from_jid(context.target_chat.as_ref().unwrap_or(&sender)).ok()?,
         DeviceAddress::from_jid(&sender).ok()?,
     );
     // The voter is the sender, addressed by phone number or LID; try each
     // creator/voter pairing until the authenticated decryption succeeds.
     let mut voters = vec![sender.to_non_ad()];
-    if let Some(legacy) = context.incoming_chat.as_ref() {
+    if let Some(legacy) = context.target_chat.as_ref() {
         voters.push(legacy.to_non_ad());
     }
     if let Some(phone) = super::receipts::jid(node, "sender_pn").filter(|phone| {
@@ -180,7 +192,7 @@ fn poll_vote_event(
     let (direction, target_sender) = if vote.poll_from_sender {
         (
             Direction::Incoming,
-            Some(DeviceAddress::from_jid(context.incoming_chat.as_ref().unwrap_or(&sender)).ok()?),
+            Some(DeviceAddress::from_jid(context.target_chat.as_ref().unwrap_or(&sender)).ok()?),
         )
     } else {
         (Direction::Outgoing, None)
@@ -601,14 +613,38 @@ fn outgoing_reaction_target(
         return Ok(None);
     };
     let original = entry.intent.chat.jid();
-    if original.agent != 0
+    if !authenticated_direct_chat(tx, from, original)? {
+        return Ok(None);
+    }
+    Ok(Some(MessageKey {
+        chat: entry.intent.chat,
+        sender: None,
+        direction: Direction::Outgoing,
+        id,
+    }))
+}
+
+/// Match primary direct namespaces using only saved authenticated association.
+/// This does not adopt a pin, change an alias or prove outgoing delivery.
+pub(super) fn authenticated_direct_chat(
+    tx: &WriteTx<'_>,
+    from: &crate::model::jid::Jid,
+    original: &crate::model::jid::Jid,
+) -> Result<bool> {
+    if from.agent != 0
+        || from.device != 0
+        || !matches!(
+            from.server,
+            crate::model::jid::Server::User | crate::model::jid::Server::Lid
+        )
+        || original.agent != 0
         || original.device != 0
         || !matches!(
             original.server,
             crate::model::jid::Server::User | crate::model::jid::Server::Lid
         )
     {
-        return Ok(None);
+        return Ok(false);
     }
     let same = super::identity_query::same_primary_address;
     let mut attributed = same(original, from);
@@ -636,15 +672,7 @@ fn outgoing_reaction_target(
         }
         attributed = same(expected_phone, &phone);
     }
-    if !attributed {
-        return Ok(None);
-    }
-    Ok(Some(MessageKey {
-        chat: entry.intent.chat,
-        sender: None,
-        direction: Direction::Outgoing,
-        id,
-    }))
+    Ok(attributed)
 }
 
 /// Must be called in the ratchet/inbox write transaction, or on an already
@@ -1391,6 +1419,7 @@ mod tests {
                         "secret": secret_bytes,
                         "options": options,
                         "name": "Lunch?",
+                        "chat": voter.to_string(),
                         "creator_pn": our_pn.to_string(),
                     }),
                 )
@@ -2108,6 +2137,201 @@ mod outgoing_reaction_tests {
             assert_eq!(
                 store.read(|tx| tx.scan(Table::Outbox, 1, 10)).unwrap(),
                 before
+            );
+        }
+    }
+}
+
+#[cfg(test)]
+mod own_poll_chat_tests {
+    use super::*;
+    use crate::{
+        model::{
+            ids::{AccountId, EventCursor},
+            jid::{Jid, JidKind},
+            message::{MessageChange, MessageRef},
+        },
+        store::{ConsumerId, MasterKey, OpenOptions, ProtocolStore, StaticKeySource},
+    };
+    #[test]
+    fn own_poll_votes_keep_original_chat_actual_voter_and_durable_markers() {
+        for case in [
+            "same_pn",
+            "same_lid",
+            "mapped",
+            "reverse",
+            "zero_ad",
+            "unattributed",
+            "alias_only",
+            "foreign",
+            "missing_chat",
+            "invalid_chat",
+            "invalid_map",
+            "companion",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("poll.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [21; 32],
+                    ))),
+                    create,
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            let pn = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+            let lid = Jid::parse("12345@lid").unwrap();
+            let creator = Jid::parse("15555550199@s.whatsapp.net").unwrap();
+            let original = if matches!(case, "same_lid" | "reverse") {
+                lid.clone()
+            } else {
+                pn.clone()
+            };
+            let mut voter = match case {
+                "same_pn" | "reverse" => pn.clone(),
+                "foreign" => Jid::parse("15555550102@s.whatsapp.net").unwrap(),
+                _ => lid.clone(),
+            };
+            if case == "zero_ad" {
+                voter.kind = JidKind::AgentDevice;
+            }
+            if case == "companion" {
+                voter.device = 3;
+                voter.kind = JidKind::AgentDevice;
+            }
+            let mut own = serde_json::json!({"chat":original.to_string(),"secret":vec![9u8;32],"options":["Yes","No"],"creator_pn":creator.to_string()});
+            if case == "missing_chat" {
+                own.as_object_mut().unwrap().remove("chat");
+            }
+            if case == "invalid_chat" {
+                own["chat"] = serde_json::json!("private invalid chat");
+            }
+            store
+                .write(|tx| {
+                    tx.put_json(Table::Checkpoints, b"poll-secret:ORIGINAL", 1, &own)?;
+                    if matches!(case, "mapped" | "reverse" | "zero_ad" | "invalid_map") {
+                        let value = if case == "invalid_map" {
+                            serde_json::json!({"private":"invalid"})
+                        } else {
+                            serde_json::to_value(&pn).unwrap()
+                        };
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"authenticated-lid:12345@lid",
+                            1,
+                            &value,
+                        )?;
+                    }
+                    if case == "alias_only" {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"lid:15555550101@s.whatsapp.net",
+                            1,
+                            &lid,
+                        )?;
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let before = store.read(|tx| tx.scan(Table::Checkpoints, 1, 50)).unwrap();
+            let enc = super::super::polls::encrypt_vote(
+                &[9; 32],
+                "ORIGINAL",
+                &creator,
+                &voter,
+                &["No".into()],
+                [3; 12],
+            )
+            .unwrap();
+            let target = MessageRef {
+                key: MessageKey {
+                    chat: ChatId::from_jid(&original).unwrap(),
+                    sender: None,
+                    direction: Direction::Incoming,
+                    id: MessageId::new("ORIGINAL").unwrap(),
+                },
+            };
+            let payload = super::super::polls::vote_payload(&creator, &target, enc, 7);
+            let node = Node::new("message")
+                .attr("from", voter.clone())
+                .attr("id", "VOTE")
+                .attr("t", "123");
+            let key = format!("received:{}:VOTE", voter.to_non_ad());
+            let result = store.write(|tx| publish(tx, key.as_bytes(), &node, &payload));
+            let consumer = ConsumerId::new("fixture").unwrap();
+            if matches!(case, "invalid_chat" | "invalid_map") {
+                assert!(result.is_err(), "{case}");
+                let error = result.unwrap_err().to_string();
+                assert!(!error.contains("private"), "{case}");
+                assert!(
+                    store
+                        .read_events(&consumer, EventCursor::START, 10)
+                        .unwrap()
+                        .events
+                        .is_empty()
+                );
+            } else {
+                assert!(result.unwrap(), "{case}");
+                let events = store
+                    .read_events(&consumer, EventCursor::START, 10)
+                    .unwrap()
+                    .events;
+                let event = &events[0].event;
+                if matches!(
+                    case,
+                    "same_pn" | "same_lid" | "mapped" | "reverse" | "zero_ad"
+                ) {
+                    let SyncEvent::MessageUpdated(update) = event else {
+                        panic!("{case}: missing vote")
+                    };
+                    assert_eq!(update.key.chat.jid(), &original, "{case}");
+                    assert_eq!(update.key.direction, Direction::Outgoing);
+                    assert_eq!(update.key.id.as_str(), "ORIGINAL");
+                    assert_eq!(update.key.sender, None);
+                    assert_eq!(
+                        update.change,
+                        MessageChange::PollVote {
+                            by: DeviceAddress::from_jid(&voter).unwrap(),
+                            selected: vec!["No".into()],
+                            unresolved: vec![]
+                        }
+                    );
+                } else {
+                    assert!(!matches!(event, SyncEvent::MessageUpdated(_)), "{case}");
+                }
+                drop(store);
+                let reopened = open(false);
+                assert!(
+                    !reopened
+                        .write(|tx| publish(tx, key.as_bytes(), &node, &payload))
+                        .unwrap(),
+                    "{case}"
+                );
+                assert_eq!(
+                    reopened
+                        .read_events(&consumer, EventCursor::START, 10)
+                        .unwrap()
+                        .events
+                        .len(),
+                    1
+                );
+                assert_eq!(
+                    reopened
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 50))
+                        .unwrap(),
+                    before,
+                    "{case}"
+                );
+                continue;
+            }
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Checkpoints, 1, 50)).unwrap(),
+                before,
+                "{case}"
             );
         }
     }

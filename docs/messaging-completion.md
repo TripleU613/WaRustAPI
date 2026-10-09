@@ -2300,3 +2300,25 @@ checks and hygiene passed. Recovered-profile offline projection upgraded zero
 events; peer/action/receipt/outbox/event summaries and normalized capture
 diagnostics were unchanged. That profile has no saved poll updates, so no
 fresh or retained-poll interoperability is claimed.
+
+### Own-poll chat binding (2026-10-09)
+
+Own poll vote projection now binds the creation's existing saved chat to the
+actual primary voter through exact PN/LID components or an existing authenticated
+association. AEAD projection retains the original chat and actual actor;
+historical markers remain unchanged. Missing legacy binding stays unknown,
+unattributed/companion references stay opaque, and corrupt saved state refuses
+locally. Vote preparation checks the actual saved chat before identity/entropy,
+with fixed missing/foreign/invalid diagnoses. `lab-inbox --inspect` exposes a
+read-only stored-selector binding label without printing identities or secrets.
+The earlier structural guard remains effective. Native parent-store/feature/
+expiry/edit/quiz/companion/group parity and fresh live poll attribution remain
+incomplete. [Evidence and boundaries](protocol/poll-votes.md#saved-chat-attribution-2026-10-09).
+
+Validation: 734 workspace/all-feature tests, strict Clippy/Rustdoc, 24 default
+CLI tests, CLI/API reference checks, formatting and hygiene passed. Offline
+projection upgraded zero events. A 45-second receive-only live window was
+active/authenticated and stopped cleanly; peer keys, action outcomes, receipts,
+empty outbox and events stayed unchanged. Fifteen decrypted payloads remained
+fifteen; no fresh DM/poll/vote proved new live attribution. Two uncertain sent
+actions were preserved without replay; reconnect and chat sending were disabled.

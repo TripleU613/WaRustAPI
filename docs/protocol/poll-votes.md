@@ -115,3 +115,92 @@ Normalized capture diagnostics were also unchanged. It contains no decodable
 saved poll updates, so this inspection does not establish retained/live poll
 interoperability; the existing two saved reaction keys still validate. New poll
 validation is covered by the independent wire fixture and CLI subprocess test.
+
+## Saved chat attribution (2026-10-09)
+
+**Confirmed, local implementation correction.** This supersedes the initial
+chat-binding gap above. Normal `outgoing::prepare` already atomically saves
+`poll-secret:<wire-id>.chat` with the creation secret and its reserved send.
+The correction uses that existing private field; it introduces no new request
+format or protocol attribute.
+
+`poll_context` now resolves an own poll only when its saved chat matches the
+actual primary envelope sender, either exact address components or one
+existing `authenticated-lid:<primary-lid>` PN association in either direction.
+PN and LID remain distinct namespaces. Wire Plain/zero-component AD encodings
+may represent the same primary address. Raw `sender_pn`, a directory/contact
+`lid:` alias, unrelated addresses, nonzero agent/device, groups and peer routes
+do not supply a binding. Successful vote AEAD projects the original saved poll
+chat with outgoing direction/no target author while retaining the voter actor.
+The original chat is also an authenticated voter-identity candidate, allowing
+PN-encrypted votes arriving through an already associated LID. Existing incoming
+historical poll lookup and original target-author attribution remain intact.
+Previously committed event markers are never rewritten to change attribution.
+
+Missing/null legacy chat provenance remains **unknown**: receive stores an
+opaque supported placeholder rather than guessing a parent or decrypting with
+an unrelated own-poll secret. A foreign/unattributed/companion target similarly
+remains opaque. A malformed/non-string/unsupported saved chat or malformed
+saved authenticated association produces a fixed local error atomically.
+No secret, address, option or raw JSON is included in those errors.
+
+`outgoing::vote_payload_for` additionally compares the actual saved own-poll
+chat against the requested peer before identity lookup and vote entropy.
+Refusals distinguish `saved poll has no chat binding`,
+`invalid saved poll chat binding`, `saved poll belongs to another chat`, and
+`invalid authenticated LID mapping`. They do not erase state or rotate IDs.
+This checks preparation, not the offline `vote` enqueue operation: an invalid
+queued intent may receive a local preparation refusal. Incoming poll voting
+still requires the authenticated poll under the requested chat's exact key.
+
+`polls::own_chat_binding(store, poll_id, peer)` is a read-only inspection of
+that saved binding for the supplied peer. `lab-inbox --inspect` uses it for
+own-poll votes and prints `own poll stored-selector binding` with `matched`,
+`unattributed`, `missing_chat_binding`, `unknown_poll`, `inspection_failed` or
+`invalid_peer`. Its peer is the inspected record's selector, which can be a
+retained historical PN selector; this label does not independently recover an
+envelope or prove that event projection would succeed. Vote cryptographic
+inspection remains separately labelled. No query, receipt or send is queued.
+
+**Confirmed APK context, not full native parent-store parity:** the prior
+seven-topic 2.26.37.71 bundle traces `Ban.A01 -> Clc.A02 -> BoQ.A00` on poll
+keys. It confirms envelope-chat reconciliation and common key validation.
+Our own secret's saved chat and authenticated association are local durable
+provenance guards, not claimed native database schemas. Transitive native
+parent lookup/storage, key subtype parity, effective property, expiry/edit/
+quiz/companion/group policy and fresh live PN/LID poll interoperability remain
+**unknown/incomplete**. No parent-key or sender metadata alone authorizes pin
+adoption, directory repair or retrying uncertain sends.
+
+Offline tests exercise actual AEAD votes for exact PN/LID, both authenticated
+namespace directions and zero-component AD encoding; the original target chat,
+voter, selected option and direction survive durable projection/reopen without
+a duplicate event. Unattributed, alias-only, foreign, missing-chat, corrupt-map,
+corrupt-chat and companion cases verify opaque/error boundaries and unchanged
+checkpoint state. Preparation fixtures verify encrypted valid votes, all fixed
+refusal classes and read-only inspection without creating an outbox entry.
+
+The new saved-binding helpers are available with the comparison receive feature
+set (`experimental-signal-crypto`, `experimental-noise`,
+`experimental-transport`). The initial default CLI build exposed an accidental
+reference to gated receive modules; matching helper gates corrected that build
+boundary without enabling experimental transport for default users.
+
+This chat-binding chunk passed 734 workspace/all-feature tests, strict workspace
+Clippy, warning-free Rustdoc, 24 default CLI tests, CLI reference regeneration,
+API/library-symbol checks and formatting. The expanded CLI subprocess fixture
+reports missing legacy binding without printing the private option. Hygiene
+validated 1,078 local links and all eleven APK checksum bundles. Offline active-
+profile projection upgraded zero events; peer/action/receipt/outbox/event
+summaries and normalized capture diagnostics were unchanged. It has no saved
+poll updates, so this does not establish retained-poll interoperability.
+New canonical records retain actual voter namespaces; historical record/event
+selectors and already committed markers retain their earlier representation.
+
+**Observed, live runtime only:** a 45-second receive-only window authenticated,
+entered active state and stopped cleanly with exit 0, chat sends disabled and
+reconnect attempts zero. Peer keys, 20 action outcomes (including two retained
+uncertain `sent` actions), nine acknowledged receipts, empty outbox and event
+summary were unchanged. Fifteen decrypted payloads remained fifteen; capture
+shape lines increased 432 to 437, not five user messages. No fresh DM/poll/vote
+established new attribution behavior. No uncertain send/action was replayed.

@@ -1546,6 +1546,21 @@ pub(super) async fn run(
                 let remote_is_sender_pn = remote.as_deref() == Some(sender_pn.as_str());
                 // Which identity pair decrypts: creator in {pn, lid}, voter in {pn, lid}.
                 let sender_jid = whatsapp_api::model::jid::Jid::parse(&sender_pn).ok();
+                if !vote.poll_from_sender {
+                    let binding = sender_jid
+                        .as_ref()
+                        .map(|peer| {
+                            whatsapp_api::transport::polls::own_chat_binding(
+                                &store,
+                                &vote.poll_id,
+                                peer,
+                            )
+                            .unwrap_or("inspection_failed")
+                        })
+                        .unwrap_or("invalid_peer");
+                    println!("inbox: own poll stored-selector binding={binding}; values redacted");
+                }
+
                 let sender_lid = sender_jid.as_ref().and_then(|j| {
                     whatsapp_api::transport::inbox::lid_for(&store, j)
                         .ok()
@@ -2582,6 +2597,16 @@ mod tests {
                     b"received:15555550101@s.whatsapp.net:poll-fixture",
                     1,
                     &serde_json::json!({"status":"decrypted","protobuf":poll_payload.to_vec()}),
+                )?;
+                // Independent BWH/BSp/BZa wire fixture: structurally valid,
+                // empty ciphertext; an old own-poll record lacks chat binding.
+                let valid_vote = hex::decode("9203250a0f0a07353535406c69641a04504f4c4c12100a00120c0000000000000000000000002000").unwrap();
+                tx.put_json(Table::Checkpoints,
+                    b"received:15555550101@s.whatsapp.net:binding-fixture", 1,
+                    &serde_json::json!({"status":"decrypted","protobuf":valid_vote}),
+                )?;
+                tx.put_json(Table::Checkpoints, b"poll-secret:POLL", 1,
+                    &serde_json::json!({"secret":vec![9u8;32],"options":["private poll option"]}),
                 )
             })
             .unwrap();
@@ -2601,7 +2626,11 @@ mod tests {
         let stdout = String::from_utf8(output.stdout).unwrap();
         assert!(stdout.contains("key_validation=missing_remote_jid"));
         assert!(stdout.contains("poll vote validation=missing_remote_jid; values redacted"));
-        assert!(!stdout.contains("inbox: poll vote poll_id"));
+        assert!(
+            stdout
+                .contains("own poll stored-selector binding=missing_chat_binding; values redacted")
+        );
+        assert!(!stdout.contains("private poll option"));
         assert!(!stdout.contains("TARGET"));
         assert!(!stdout.contains("inbox: reaction payload"));
         assert!(stdout.contains("age_s=None")); // An invalid age never panics.
