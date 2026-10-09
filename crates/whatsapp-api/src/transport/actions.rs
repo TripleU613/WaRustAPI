@@ -308,6 +308,39 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ActionOutcome>> {
     })
 }
 
+// Used by bounded local migrations so attribution cannot race a new action.
+pub(crate) fn outcomes_in_write(tx: &crate::store::WriteTx<'_>) -> Result<Vec<ActionOutcome>> {
+    let mut out = Vec::new();
+    let mut cursor = None;
+    loop {
+        let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+        let done = rows.len() < 256;
+        cursor = rows.last().map(|(key, _)| key.clone());
+        for (key, _) in rows {
+            let Some(id) = std::str::from_utf8(&key)
+                .ok()
+                .and_then(|k| k.strip_prefix(PREFIX))
+            else {
+                continue;
+            };
+            let Some(row): Option<Row> = tx.get_json(Table::Checkpoints, &key, 1)? else {
+                continue;
+            };
+            out.push(ActionOutcome {
+                id: id.to_owned(),
+                kind: row.kind,
+                label: row.label,
+                status: row.status,
+                error_code: row.error_code,
+                error_text: row.error_text,
+            });
+        }
+        if done {
+            return Ok(out);
+        }
+    }
+}
+
 /// The queued request of an action, decoded (for diagnostics).
 pub fn request(store: &ProtocolStore, id: &str) -> Result<Option<Node>> {
     let row: Option<Row> =

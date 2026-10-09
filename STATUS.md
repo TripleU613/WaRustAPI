@@ -2102,3 +2102,16 @@ has a fixed local diagnostic. Historical rows keep their original boolean and
 unknown type. `contacts status` inspects offline without queuing another request.
 Fresh live types and full address-book state handling remain unverified.
 [Evidence](docs/protocol/chat-actions.md#contact-type-and-offline-status-2026-10-08).
+
+
+Contact receive projection/live check (2026-10-08): a 20-second receive-only
+session authenticated cleanly and settled one original existing-peer contact
+query as `in`. Contact replies now project automatically during receive and
+recover at startup after a settlement/projection crash gap. Live evidence exposed
+a local rejection of zero-component AD_JID LIDs; the parser now distinguishes
+wire encoding from logical account type. A guarded offline `contacts repair-lid`
+recovered the LID from that same consumed reply, retaining prior status/history;
+repeat was unchanged. The 19 earlier actions, 9 acknowledged receipts and empty
+outbox stayed unchanged. No query replay or chat send. Fresh post-fix replies,
+native wire factory and full contact sync remain unverified.
+[Evidence and negative results](docs/protocol/chat-actions.md#live-contact-projection-and-primary-wire-lid-2026-10-08).

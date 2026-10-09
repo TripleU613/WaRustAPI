@@ -2176,3 +2176,13 @@ remain unknown without replay. `contacts status` provides read-only inspection;
 `contacts check` continues to queue an action. This does not complete contact
 mutation/sidelist/integrity parity or fresh live validation. See
 [consumer reasoning](protocol/chat-actions.md#contact-type-and-offline-status-2026-10-08).
+
+
+2026-10-08 contact receive integration: settled contact replies now project
+without another CLI query, with startup recovery for an interrupted projection.
+A 20-second receive-only live session settled one original existing-peer query
+(`in`). Its primary zero-component AD_JID LID exposed a local parser bug;
+corrected validation plus guarded offline repair recovered the original saved
+LID without resending. Prior 19 actions, 9 receipts and empty outbox unchanged.
+Fresh post-fix live replies/native wire factory/full contact sync remain pending.
+[Evidence](protocol/chat-actions.md#live-contact-projection-and-primary-wire-lid-2026-10-08).

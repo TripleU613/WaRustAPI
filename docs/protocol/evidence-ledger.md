@@ -1334,3 +1334,17 @@ its positive account flag only for `N0z.A04=1` (`in`), while `0u5.BF6` handles
 `contacts status` inspects offline without queuing. Full state-machine parity
 and fresh live contact replies remain **unknown**. See
 [consumer chain](chat-actions.md#contact-type-and-offline-status-2026-10-08).
+
+
+## Live contact projection and primary wire LID (2026-10-08)
+
+**Observed live:** one original existing-peer query returned `in` with `lid@val`
+and successful LID protocol metadata during a clean 20-second receive-only
+session. **Confirmed local bug:** no receive projection, plus rejection of
+zero-component AD_JID encoding as if JidKind were an APK Java subtype. Both are
+corrected; receive/startup projection is real-loop tested. Guarded offline repair
+of the same reply recovered LID once with retained prior status and no action,
+receipt, timestamp or outbox changes. No request repeated. **Unknown:** native
+wire-to-Java factory, fresh post-fix replies and complete contact sync. The
+[factory/caller negative trace](contact-primary-wire-evidence.txt) is scoped,
+not native recovery. [Full reasoning and operator corrections](chat-actions.md#live-contact-projection-and-primary-wire-lid-2026-10-08).

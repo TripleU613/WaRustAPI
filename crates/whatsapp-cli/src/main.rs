@@ -830,6 +830,11 @@ enum ContactsCmd {
         #[arg(long)]
         phone: String,
     },
+    /// Repair a missing LID from one uniquely attributable saved contact reply (offline).
+    RepairLid {
+        #[arg(long)]
+        id: String,
+    },
     /// Inspect a saved contact-check status offline without queuing another query.
     Status {
         #[arg(long)]

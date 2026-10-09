@@ -290,6 +290,9 @@ pub(crate) async fn drive(
         .read(AccountRecord::load)?
         .ok_or(Error::NotRegistered)?;
     super::groups::recover_pending(&store)?;
+    // Reply settlement and contact projection are separate durable commits.
+    // Repair the gap after a crash without deleting markers or replaying IQs.
+    super::contacts::ingest(&store)?;
     let active_id = super::messaging::new_message_id()?;
     link.send(&super::messaging::active_request(&active_id))
         .await?;
@@ -438,6 +441,7 @@ pub(crate) async fn drive(
                     }
                     // Queued one-shot actions (block list, reports, lookups) settle by iq id.
                     if super::actions::record_reply(&store, &node)? {
+                        super::contacts::ingest(&store)?;
                         if let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) {
                             // APK 37.71 8lQ.A01 separates truncated/full results;
                             // 8lQ.A00 sends full state to 0yw.A0U. Our supported
@@ -902,6 +906,74 @@ mod tests {
             actions::reserve_pending(&store).unwrap().is_empty(),
             "query is never replayed"
         );
+        fake.stop_cleanly().await;
+    }
+
+    fn contact_reply(id: &str) -> Node {
+        Node::new("iq")
+            .attr("id", id)
+            .attr("type", "result")
+            .children(vec![Node::new("usync").children(vec![
+                Node::new("result").children(vec![Node::new("lid")]),
+                Node::new("list").children(vec![Node::new("user")
+                    .attr("jid", "15551234567@s.whatsapp.net").children(vec![
+                        Node::new("contact").attr("type", "in").text("+15551234567"),
+                        Node::new("lid").attr("val", "999999999999@lid")])]),
+            ])])
+    }
+
+    #[tokio::test]
+    async fn contact_reply_projects_status_in_receive_without_another_query() {
+        use super::super::{actions, contacts};
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("contacts-live-loop.redb"));
+        let id = contacts::queue_check(&store, "+15551234567").unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (query, written) = fake.written().await;
+        assert_eq!(
+            query.get_attr("id").and_then(|v| v.as_text()),
+            Some(id.as_str())
+        );
+        written.send(Ok(())).unwrap();
+        fake.deliver(contact_reply(&id)).await;
+        tokio::time::timeout(Duration::from_secs(5), async {
+            while contacts::status(&store, "+15551234567").unwrap().is_none() {
+                tokio::time::sleep(Duration::from_millis(5)).await;
+            }
+        })
+        .await
+        .unwrap();
+        let status = contacts::status(&store, "+15551234567").unwrap().unwrap();
+        assert_eq!(status.contact_type, Some(contacts::ContactType::In));
+        assert_eq!(status.lid, Some(Jid::parse("999999999999@lid").unwrap()));
+        assert_eq!(actions::outcomes(&store).unwrap().len(), 1);
+        assert!(actions::reserve_pending(&store).unwrap().is_empty());
+        assert_eq!(contacts::ingest(&store).unwrap(), 0);
+        fake.stop_cleanly().await;
+    }
+
+    #[tokio::test]
+    async fn settled_contact_reply_recovers_projection_on_next_session_without_replay() {
+        use super::super::{actions, contacts};
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("contacts-crash-gap.redb"));
+        let id = contacts::queue_check(&store, "+15551234567").unwrap();
+        actions::reserve_pending(&store).unwrap();
+        actions::record_reply(&store, &contact_reply(&id)).unwrap();
+        assert!(contacts::status(&store, "+15551234567").unwrap().is_none());
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        assert!(
+            contacts::status(&store, "+15551234567")
+                .unwrap()
+                .unwrap()
+                .on_whatsapp
+        );
+        assert_eq!(actions::outcomes(&store).unwrap().len(), 1);
+        assert!(actions::reserve_pending(&store).unwrap().is_empty());
+        fake.nothing_written(Duration::from_millis(30)).await;
+        assert_eq!(contacts::ingest(&store).unwrap(), 0);
         fake.stop_cleanly().await;
     }
 

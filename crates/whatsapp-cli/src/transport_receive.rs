@@ -648,6 +648,17 @@ pub(super) fn contacts(cli: &super::Cli, action: &super::ContactsCmd) -> Result<
             );
             Ok(())
         }
+        super::ContactsCmd::RepairLid { id } => {
+            let repaired = contacts::repair_lid(&store, id)?;
+            if cli.json {
+                println!("{}", serde_json::json!({"repaired": repaired}));
+            } else {
+                println!(
+                    "contacts: missing LID repaired={repaired}; prior status retained; no query sent"
+                );
+            }
+            Ok(())
+        }
         super::ContactsCmd::Status { phone } => {
             let status = contacts::status(&store, phone)?;
             if cli.json {

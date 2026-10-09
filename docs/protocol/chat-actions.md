@@ -648,7 +648,10 @@ the requested class and returns null on `ClassCastException`. The existing
 and `hosted.lid` canonicalizes to `lid`. The Rust parser reuses this validation;
 it does not normalize device addresses into accounts. Text is validated before
 the generic JID parser can discard an explicitly zero device/agent suffix.
-Decoded `AgentDevice` addresses are rejected even with zero components.
+The initial implementation rejected decoded `AgentDevice` values even with zero
+components. That local encoding/subtype assumption was **refuted by the live reply
+below**; zero-component primary wire LIDs are now accepted, while textual suffixes
+and nonzero components remain rejected.
 
 **Implemented/offline-tested:** `contacts::ingest` stores this optional LID only
 with successful protocol metadata. `contacts check` already exposes the saved
@@ -742,3 +745,88 @@ passed. Exact re-export verified all 12 bundle files. Tests cover JID/type
 contradictions, exact case, fixed redacted errors, historical null compatibility,
 invalid result persistence across reopening and read-only status without action
 changes. No saved private account was opened or live query sent in this chunk.
+
+
+### Live contact projection and primary wire LID (2026-10-08)
+
+**Confirmed local implementation:** the receive actor previously settled contact
+IQ replies but never called `contacts::ingest`; only the CLI's new-query command
+did so. `connection::drive` now ingests after durable reply settlement and at
+session startup. Settlement and projection are separate commits: retained replies
+and consumed markers repair an interrupted gap without another query or deleting
+markers. Real-loop tests cover automatic status projection and a pre-settled,
+unprojected reply recovered at the next session. `contacts status` stays read-only.
+
+**Observed live**, ingestion UTC `2026-10-09T03:16:05.288000+00:00`: one original existing-peer
+contact-check action received an IQ result with contact type `in` and matching
+selected phone. A 20-second receive-only session authenticated/activated and
+stopped cleanly, with outbox sending and reconnect disabled. The 19 prior actions
+were unchanged, zero queued actions remained, two older sent/uncertain actions
+were preserved, and all nine acknowledged receipts plus the empty outbox were
+unchanged. No chat, SMS/registration attempt or repeated contact query was sent.
+
+The response **did contain** successful `usync/result/lid` metadata and per-user
+`lid@val`. Our first projected LID was null because `binary::Decoder::read_ad_jid`
+assigns `JidKind::AgentDevice` to the zero-agent/zero-device primary LID. That
+kind records **wire encoding**, not a Java `DeviceJid` subtype. Rejecting it by
+kind alone discarded the valid captured account metadata. The corrected parser
+accepts Plain/AgentDevice encodings with both components zero and the existing
+strict plain-LID user/domain validation, storing a canonical plain LID. It still
+rejects nonzero components, FB/interop encoding kinds and explicit textual
+`:0`/`.0` suffixes before generic text parsing loses them. A literal synthetic
+AD_JID-zero attribute round trip covers ordinary ingestion.
+
+**Confirmed APK/static boundary:** `0hs.A0A`'s `0ZY` class cast remains the source
+for logical LID type, while `0D1/0ZY` establish plain validation. A scoped
+[factory/caller trace](contact-primary-wire-evidence.txt) records six `0DK`
+methods, eight Java constructor callers of `0ZY` and two callers of `0D2.A02`.
+`0DK.A00` can wrap UserJid as a primary DeviceJid; it is not the wire decoder.
+**Unknown:** native AD_JID-to-Java object construction and exact native class
+selection. The zero-component acceptance is grounded in the **observed reply
+and our decoder representation**, not a claim that Android's native factory
+has been fully reversed or that every encoded device is a plain account.
+
+**Implemented local migration, not APK behavior:**
+`contacts repair-lid --id <existing-action-id>` fills a missing LID only from a
+sole successful contact check with saved original phone/reply, consumed marker,
+one qualifying matching user and matching retained status fields. The action
+history is inspected in the same write transaction, so a new same-number check
+cannot race attribution. Another same-number check (even queued), unknown check
+provenance, nonqualifying/duplicate/mismatched reply, conflicting existing LID,
+or an incomplete prior repair refuses with a fixed local reason. It archives
+the prior status and updates only `lid`, preserving `checked_at`. An already
+matching LID returns false. It deletes no markers, sends nothing and changes
+no authenticated alias, Signal pin, session or account identity.
+
+**Observed offline on the live saved reply:** first repair returned true and
+recovered the LID; repeat returned false. Actions, nine receipts, empty outbox
+and status timestamp were unchanged. No query was repeated to repair this result.
+The previous null is a resolved local parsing failure, not server LID absence.
+This verifies the saved live response format and offline repair, not a fresh
+post-fix network response or full cross-device mapping authority.
+
+Operator corrections/negative results: the first receive launch used scalar
+`transport.reconnect=0`, rejected before connecting because this setting is an
+object. The original action remained queued; only
+`transport.reconnect.max_attempts=0` was corrected in a private config copy.
+The same action then ran once. Concurrent default-feature tests replaced the
+shared CLI executable, causing post-session inspection commands to be unrecognized.
+An isolated rebuilt experimental binary recovered all results offline; no session
+or query was repeated. Future live sessions/inspection should use a private stable
+copy of the experimental binary when feature-changing builds run concurrently.
+Raw reply, IDs, addresses, config, keys and attempt journal remain ignored/private.
+
+**Still unverified:** fresh post-fix replies, live `out`/`invalid` handling, native
+wire factory parity, full contact integrity/sidelist/mutation and refresh/backoff
+application. Contact metadata is not peer identity-replacement authority.
+
+
+Validation: **716 workspace/all-feature tests**, strict workspace/all-target/all-feature
+Clippy, warning-free Rustdoc, 24 default CLI checks, regenerated CLI reference,
+API library-symbol checks and formatting passed. Receive-loop regressions verify
+automatic projection and interrupted-projection recovery; migration regressions
+verify primary AD_JID round trips, prior-status retention, idempotence, timestamp
+preservation, conflicting-LID and ambiguous-history refusal, and redacted unknown-ID
+errors. The first broad run found the new CLI reference stale; regeneration fixed
+that check before the successful final run. Local repair errors now name the
+failed prerequisite instead of a generic refusal. Repository hygiene passed.

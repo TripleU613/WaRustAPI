@@ -1,0 +1,169 @@
+# APK 2.26.37.71 / SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Static scoped evidence; does not establish native AD_JID-to-Java construction.
+# 0DK wraps UserJid as primary DeviceJid. It is not the native wire decoder.
+# Reproduce: xtask apk-smali <local-apk> --class 'LX/0DK;' --exceptions
+# Reproduce: xtask apk-callers <local-apk> --class 'LX/0ZY;' --method '<init>'
+# Reproduce: xtask apk-callers <local-apk> --class 'LX/0D2;' --method A02
+# Direct Java calls to 0ZY constructor and 0D2.A02 are listed below; JNI calls may not appear.
+
+# SOURCE device-jid-factory.txt
+
+# class: LX/0DK;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 1
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>(V)
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(LL)  # .registers 3
+    0000..0004  instance-of  v0, v2, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0004..0008  if-eqz  v0, +0x5
+    0008..000c  check-cast  v2, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    000c..000e  return-object  v2
+    000e..0014  invoke-static  {v2}, LX/0DE;->A0l(ZL)
+    0014..0016  move-result  v0
+    0016..001a  if-eqz  v0, +0x10
+    001a..001e  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.UserJid"
+    001e..0024  invoke-static  {v2, v0}, LX/00h;->A0D(VLL)
+    0024..0028  check-cast  v2, Lcom/whatsapp/infra/core/jid/UserJid;
+    0028..002c  if-eqz  v2, +0x7
+    002c..0032  invoke-virtual  {v2}, Lcom/whatsapp/infra/core/jid/UserJid;->getPrimaryDevice(L)
+    0032..0034  move-result-object  v2
+    0034..0036  return-object  v2
+    0036..0038  const/4  v2, #0x0
+    0038..003a  return-object  v2
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(LLI)  # .registers 7
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v5, v0}, LX/00h;->A0A(VLI)
+    0008..000c  const/16  v0, #0x63
+    000c..000e  const/4  v1, #0x0
+    000e..0012  if-ne  v6, v0, +0x3
+    0012..0014  const/4  v1, #0x1
+    0014..001a  invoke-static  {v5}, LX/0DE;->A0a(ZL)
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v1, +0x38
+    0020..0024  if-eqz  v0, +0x33
+    0024..0028  const-string  v3, "hosted.lid"
+    0028..002c  iget-object  v0, v5, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+    002c..0032  invoke-virtual  {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getAgent(I)
+    0032..0034  move-result  v2
+    0034..0038  new-instance  v1, Ljava/lang/StringBuilder;
+    0038..003e  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>(V)
+    003e..0044  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    0044..0048  const-string  v0, "."
+    0048..004e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    004e..0054  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(LI)
+    0054..0058  const-string  v0, ":"
+    0058..005e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    005e..0064  invoke-virtual  {v1, v6}, Ljava/lang/StringBuilder;->append(LI)
+    0064..0068  const-string  v0, "@"
+    0068..006e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(LL)
+    006e..0074  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(LL)
+    0074..007a  invoke-virtual  {v1}, Ljava/lang/Object;->toString(L)
+    007a..007c  move-result-object  v0
+    007c..0082  invoke-virtual  {v4, v0}, LX/0DK;->A03(LL)
+    0082..0084  move-result-object  v0
+    0084..0086  return-object  v0
+    0086..008a  const-string  v3, "hosted"
+    008a..008c  goto  -0x31
+    008c..0092  invoke-virtual  {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getServer(L)
+    0092..0094  move-result-object  v3
+    0094..0096  goto  -0x36
+    # exception table: 0 try range(s)
+.end method
+
+.method public A02(LLI)  # .registers 5
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00h;->A0A(VLI)
+    0008..000e  invoke-virtual  {v2, v3, v4}, LX/0DK;->A01(LLI)
+    000e..0010  move-result-object  v1
+    0010..0012  goto  +0x7
+    0012..0014  move-exception  v0
+    0014..0018  new-instance  v1, LX/0Zd;
+    0018..001e  invoke-direct  {v1, v0}, LX/0Zd;-><init>(VL)
+    001e..0022  instance-of  v0, v1, LX/0Zd;
+    0022..0026  if-eqz  v0, +0x3
+    0026..0028  const/4  v1, #0x0
+    0028..002c  check-cast  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    002c..002e  return-object  v1
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0004..0009 -> 0009
+.end method
+
+.method public A03(LL)  # .registers 4
+    0000..0004  sget-object  v0, Lcom/whatsapp/infra/core/jid/Jid;->Companion:LX/0D1;
+    0004..000a  invoke-static  {v3}, LX/0D1;->A00(LL)
+    000a..000c  move-result-object  v1
+    000c..0010  instance-of  v0, v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0010..0014  if-eqz  v0, +0x5
+    0014..0018  check-cast  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0018..001a  return-object  v1
+    001a..0020  invoke-static  {v1}, LX/0DE;->A0l(ZL)
+    0020..0022  move-result  v0
+    0022..0026  if-eqz  v0, +0x18
+    0026..002a  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.UserJid"
+    002a..0030  invoke-static  {v1, v0}, LX/00h;->A0D(VLL)
+    0030..0034  check-cast  v1, Lcom/whatsapp/infra/core/jid/UserJid;
+    0034..0038  if-eqz  v1, +0x9
+    0038..003e  invoke-virtual  {v1}, Lcom/whatsapp/infra/core/jid/UserJid;->getPrimaryDevice(L)
+    003e..0040  move-result-object  v1
+    0040..0044  if-eqz  v1, +0x3
+    0044..0046  return-object  v1
+    0046..004a  new-instance  v0, LX/08j;
+    004a..0050  invoke-direct  {v0, v3}, LX/08j;-><init>(VL)
+    0050..0052  throw  v0
+    0052..0056  new-instance  v0, LX/08j;
+    0056..005c  invoke-direct  {v0, v3}, LX/08j;-><init>(VL)
+    005c..005e  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A04(LL)  # .registers 5
+    0000..0002  const/4  v2, #0x0
+    0002..0006  if-eqz  v4, +0x1a
+    0006..000c  invoke-virtual  {v4}, Ljava/lang/String;->length(I)
+    000c..000e  move-result  v0
+    000e..0012  if-eqz  v0, +0x14
+    0012..0018  invoke-virtual  {v3, v4}, LX/0DK;->A03(LL)
+    0018..001a  move-result-object  v1
+    001a..001c  goto  +0x7
+    001c..001e  move-exception  v0
+    001e..0022  new-instance  v1, LX/0Zd;
+    0022..0028  invoke-direct  {v1, v0}, LX/0Zd;-><init>(VL)
+    0028..002c  instance-of  v0, v1, LX/0Zd;
+    002c..0030  if-nez  v0, +0x3
+    0030..0032  move-object  v2, v1
+    0032..0036  check-cast  v2, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0036..0038  return-object  v2
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0009..000e -> 000e
+.end method
+
+# SOURCE lid-constructor-callers.txt
+classes7.dex  LX/Cm3;->A02(LLLL)
+  invoke dex byte offset: 0x645e78
+classes2.dex  LX/1cc;-><clinit>(V)
+  invoke dex byte offset: 0xbcf74
+classes6.dex  LX/ADv;->A0F(LL)
+  invoke dex byte offset: 0x4f1016
+classes6.dex  LX/All;->invokeSuspend(LL)
+  invoke dex byte offset: 0x61987a
+classes6.dex  LX/AnV;->invokeSuspend(LL)
+  invoke dex byte offset: 0x650d10
+classes.dex  LX/0D2;->A02(LLL)
+  invoke dex byte offset: 0x4a1294
+classes.dex  LX/0Za;->createFromParcel(LL)
+  invoke dex byte offset: 0x5ef6a0
+classes.dex  LX/0hd;->A00(LL)
+  invoke dex byte offset: 0x64b31a
+
+# SOURCE plain-account-factory-callers.txt
+classes.dex  LX/0D1;->A00(LL)
+  invoke dex byte offset: 0x4a0e5e
+classes.dex  LX/0D2;->A04(LLL)
+  invoke dex byte offset: 0x4a144a

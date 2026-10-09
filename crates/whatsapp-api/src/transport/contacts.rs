@@ -370,8 +370,14 @@ fn parse_lid(node: &Node) -> Option<Jid> {
     // 0hs.A0A performs a typed class cast, returning null for a wrong subtype.
     // Reuse the traced 0D1/0ZY plain-address validation, including hosted.lid
     // canonicalization. Validate text before Jid::parse loses explicit :0.
+    // Observed 2026-10-08: a live lid@val decodes from AD_JID with both
+    // components zero. JidKind tracks encoding, not the APK Java subtype;
+    // rejecting that encoding discarded a valid primary account LID.
     let text = if let Some(jid) = value.as_jid() {
-        if jid.kind != JidKind::Plain || jid.agent != 0 || jid.device != 0 {
+        if !matches!(jid.kind, JidKind::Plain | JidKind::AgentDevice)
+            || jid.agent != 0
+            || jid.device != 0
+        {
             return None;
         }
         jid.to_string()
@@ -505,6 +511,95 @@ pub fn ingest(store: &ProtocolStore) -> Result<usize> {
         recorded += newly;
     }
     Ok(recorded)
+}
+
+/// Repair only the missing LID of an already-ingested, uniquely attributable
+/// successful contact check. Retains the prior row; never queries or changes pins.
+/// This is a local migration for the former AD_JID-zero rejection, not APK behavior.
+pub fn repair_lid(store: &ProtocolStore, id: &str) -> Result<bool> {
+    let refuse = |reason: &str| Error::invalid("contacts.lid_repair", reason);
+    let reply = super::actions::reply(store, id)?.ok_or_else(|| refuse("saved_reply_missing"))?;
+    let usync = reply
+        .child("usync")
+        .ok_or_else(|| refuse("reply_usync_missing"))?;
+    let users = usync
+        .child("list")
+        .ok_or_else(|| refuse("reply_list_missing"))?;
+    store.write(|tx| {
+        let outcomes = super::actions::outcomes_in_write(tx)?;
+        let selected = outcomes
+            .iter()
+            .find(|o| o.id == id && o.kind == ACTION_KIND)
+            .ok_or_else(|| refuse("action_missing_or_not_contact_check"))?;
+        if selected.status != super::actions::ActionStatus::Ok {
+            return Err(refuse("action_not_successful"));
+        }
+
+        let digits: String = tx
+            .get_json(Table::Checkpoints, check_request_key(id).as_bytes(), 1)?
+            .ok_or_else(|| refuse("original_request_phone_missing"))?;
+        // No timestamp ordering guess or deletion of consumed markers. Even an
+        // unsent second check makes attribution ambiguous for this bounded repair.
+        for other in &outcomes {
+            if other.kind == ACTION_KIND && other.id != id {
+                let other_phone: Option<String> = tx.get_json(
+                    Table::Checkpoints,
+                    check_request_key(&other.id).as_bytes(),
+                    1,
+                )?;
+                if other_phone.as_deref().is_none_or(|phone| phone == digits) {
+                    return Err(refuse("ambiguous_contact_history"));
+                }
+            }
+        }
+        if tx.get_json::<bool>(Table::Checkpoints, ingested_key(id).as_bytes(), 1)? != Some(true) {
+            return Err(refuse("ingestion_marker_missing"));
+        }
+        let candidates: Vec<_> = users
+            .child_nodes()
+            .iter()
+            .filter(|n| n.description == "user")
+            .filter_map(|n| parse_user(n, lid_protocol_succeeded(usync)))
+            .filter(|(phone, _)| phone == &digits)
+            .collect();
+        if candidates.len() != 1 {
+            return Err(refuse("matching_user_ambiguous"));
+        }
+        let parsed = &candidates[0].1;
+        let lid = parsed
+            .lid
+            .clone()
+            .ok_or_else(|| refuse("valid_lid_missing"))?;
+        let key = status_key(&digits);
+        let mut current: ContactStatus = tx
+            .get_json(Table::Checkpoints, key.as_bytes(), 1)?
+            .ok_or_else(|| refuse("saved_status_missing"))?;
+        if current.on_whatsapp != parsed.on_whatsapp
+            || current.contact_type != parsed.contact_type
+            || current.jid != parsed.jid
+            || current.error != parsed.error
+        {
+            return Err(refuse("saved_status_mismatch"));
+        }
+        if let Some(existing) = &current.lid {
+            return if existing == &lid {
+                Ok(false)
+            } else {
+                Err(refuse("existing_lid_conflict"))
+            };
+        }
+        let history = format!("contact-status-lid-repair:{id}");
+        if tx
+            .get_json::<ContactStatus>(Table::Checkpoints, history.as_bytes(), 1)?
+            .is_some()
+        {
+            return Err(refuse("repair_history_already_exists"));
+        }
+        tx.put_json(Table::Checkpoints, history.as_bytes(), 1, &current)?;
+        current.lid = Some(lid);
+        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &current)?;
+        Ok(true)
+    })
 }
 
 /// The saved existence status for one number, if a check ever settled.
@@ -748,10 +843,17 @@ mod tests {
             parse_lid(&Node::new("lid").attr("val", "999@hosted.lid")),
             Some(Jid::parse("999@lid").unwrap())
         );
-        assert!(
+        assert_eq!(
             parse_lid(&Node::new("lid").attr(
                 "val",
                 Jid::new_ad("999", 0, 0, crate::model::jid::Server::Lid).unwrap()
+            )),
+            Some(Jid::parse("999@lid").unwrap())
+        );
+        assert!(
+            parse_lid(&Node::new("lid").attr(
+                "val",
+                Jid::new_ad("999", 0, 1, crate::model::jid::Server::Lid).unwrap()
             ))
             .is_none()
         );
@@ -890,6 +992,104 @@ mod tests {
             before,
             serde_json::to_value(super::super::actions::outcomes(&s).unwrap()).unwrap()
         );
+    }
+
+    #[test]
+    fn missing_primary_wire_lid_repairs_once_with_history_and_ambiguity_guard() {
+        let (_d, s) = store();
+        let phone = "+15551234567";
+        let id = queue_check(&s, phone).unwrap();
+        super::super::actions::reserve_pending(&s).unwrap();
+        let user = Node::new("user")
+            .attr("jid", "15551234567@s.whatsapp.net")
+            .children(vec![
+                Node::new("contact").attr("type", "in").text(phone),
+                Node::new("lid").attr(
+                    "val",
+                    Jid::new_ad("999999999999", 0, 0, crate::model::jid::Server::Lid).unwrap(),
+                ),
+            ]);
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result")
+            .children(vec![Node::new("usync").children(vec![
+                Node::new("result").children(vec![Node::new("lid")]),
+                Node::new("list").children(vec![user]),
+            ])]);
+        super::super::actions::record_reply(&s, &reply).unwrap();
+        assert_eq!(ingest(&s).unwrap(), 1);
+        let expected = Jid::parse("999999999999@lid").unwrap();
+        assert_eq!(
+            status(&s, phone).unwrap().unwrap().lid,
+            Some(expected.clone()),
+            "wire round-trip AD_JID zero reaches ordinary ingestion"
+        );
+        // Emulate the prior consumed projection without deleting its marker.
+        let mut old = status(&s, phone).unwrap().unwrap();
+        old.lid = None;
+        s.write(|tx| {
+            tx.put_json(
+                Table::Checkpoints,
+                status_key("15551234567").as_bytes(),
+                1,
+                &old,
+            )
+        })
+        .unwrap();
+        let before = serde_json::to_value(super::super::actions::outcomes(&s).unwrap()).unwrap();
+        assert!(repair_lid(&s, &id).unwrap());
+        assert!(!repair_lid(&s, &id).unwrap());
+        let updated = status(&s, phone).unwrap().unwrap();
+        assert_eq!(updated.lid, Some(expected));
+        assert_eq!(updated.checked_at, old.checked_at);
+        let history: ContactStatus = s
+            .read(|tx| {
+                tx.get_json(
+                    Table::Checkpoints,
+                    format!("contact-status-lid-repair:{id}").as_bytes(),
+                    1,
+                )
+            })
+            .unwrap()
+            .unwrap();
+        assert_eq!(history, old);
+        assert_eq!(
+            before,
+            serde_json::to_value(super::super::actions::outcomes(&s).unwrap()).unwrap()
+        );
+        let mut conflict = updated.clone();
+        conflict.lid = Some(Jid::parse("888888888888@lid").unwrap());
+        s.write(|tx| {
+            tx.put_json(
+                Table::Checkpoints,
+                status_key("15551234567").as_bytes(),
+                1,
+                &conflict,
+            )
+        })
+        .unwrap();
+        assert!(repair_lid(&s, &id).is_err());
+        assert_eq!(status(&s, phone).unwrap().unwrap(), conflict);
+        s.write(|tx| {
+            tx.put_json(
+                Table::Checkpoints,
+                status_key("15551234567").as_bytes(),
+                1,
+                &updated,
+            )
+        })
+        .unwrap();
+        let err = repair_lid(&s, "unknown-private-id")
+            .unwrap_err()
+            .to_string();
+        assert!(!err.contains("unknown-private-id"));
+        assert!(err.contains("saved_reply_missing"));
+        queue_check(&s, phone).unwrap();
+        assert!(
+            repair_lid(&s, &id).is_err(),
+            "a second check blocks ambiguous attribution"
+        );
+        assert_eq!(status(&s, phone).unwrap().unwrap(), updated);
     }
 
     #[test]

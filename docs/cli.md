@@ -796,6 +796,18 @@ Usage: whatsapp-cli contacts remove [OPTIONS]...
 |------|-------|----------|---------|-----|--------|------|
 | --phone | PHONE | yes |  |  |  |  |
 
+## whatsapp-cli contacts repair-lid
+
+Repair a missing LID from one uniquely attributable saved contact reply (offline)
+
+```
+Usage: whatsapp-cli contacts repair-lid [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --id | ID | yes |  |  |  |  |
+
 ## whatsapp-cli contacts status
 
 Inspect a saved contact-check status offline without queuing another query
