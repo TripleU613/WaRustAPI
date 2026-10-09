@@ -1,0 +1,54 @@
+{
+  "after-provider-partition.txt": {
+    "bytes": 44255,
+    "sha256": "5c3d1c1aa12e8540c8bb813b8d86a5e0ac34ac25538c365debd1924826d45552"
+  },
+  "bot-info-factory.txt": {
+    "bytes": 558,
+    "sha256": "f11bae34a27a1ae6fe0cd7cf9e86ba63229369dc87e185ccce1372b1e4a9f8a9"
+  },
+  "bot-info-hook.txt": {
+    "bytes": 7717,
+    "sha256": "90acfa3201716673c82363623613e197c99ab15f4ad4e68027c6b11e42accae7"
+  },
+  "bot-info-store.txt": {
+    "bytes": 17217,
+    "sha256": "9233f4314d555946753b7f35e44376af45c18bd328785463dad8c8cfa0722525"
+  },
+  "bot-plugin-store.txt": {
+    "bytes": 4591,
+    "sha256": "64e2b3596a208ae3d4163eb978d83001fd6816f84c7ee5d0fc02c6ac485adbd5"
+  },
+  "bot-sharing-factory.txt": {
+    "bytes": 558,
+    "sha256": "f3548627213768d9eac238c38161e3c8f42b02df7c8491c64478ef84f32b4a01"
+  },
+  "bot-sharing-hook.txt": {
+    "bytes": 11946,
+    "sha256": "8ded63366414d56e8a0824647356929c34b5aeed02bbb2b124194a339600756e"
+  },
+  "bot-sharing-store.txt": {
+    "bytes": 2144,
+    "sha256": "3eedf0b743d3a22f7320e23781d1f7232b312a513187e31cb827a83888d955ba"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "targets.json": {
+    "bytes": 3789,
+    "sha256": "cb1d69375ec05166e0294401d9c0dbba70cd9ea3924cede7a20d30ddc37c8539"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "unselected-factory.txt": {
+    "bytes": 558,
+    "sha256": "c14c03f750e32d2a3753eee6ab5474a03d17fea19319fcf811edec1317384c07"
+  }
+}

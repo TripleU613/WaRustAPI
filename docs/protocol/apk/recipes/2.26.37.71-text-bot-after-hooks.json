@@ -1,0 +1,95 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "after-provider-partition": {
+      "class": "LX/1UE;",
+      "method": "A07",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "bot-info-factory": {
+      "class": "LX/0cI;",
+      "method": "A0K",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "bot-sharing-factory": {
+      "class": "LX/0cI;",
+      "method": "A0C",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    },
+    "bot-info-hook": {
+      "class": "LX/D7a;",
+      "method": "CHJ",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "anchors": [
+        "collection_id"
+      ]
+    },
+    "bot-sharing-hook": {
+      "class": "LX/D7j;",
+      "method": "CHJ",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "anchors": [
+        "BOT_MESSAGE_SHARING_INFO_STORE_GET_BY_MESSAGE_ID"
+      ]
+    },
+    "bot-info-store": {
+      "class": "LX/DGm;",
+      "method": "A05",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "anchors": [
+        "bot_message_info"
+      ]
+    },
+    "bot-plugin-store": {
+      "class": "LX/DGY;",
+      "method": "A01",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "anchors": [
+        "bot_plugin_metadata"
+      ]
+    },
+    "bot-sharing-store": {
+      "class": "LX/DGj;",
+      "method": "A01",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ],
+      "anchors": [
+        "bot_message_sharing_info"
+      ]
+    },
+    "unselected-factory": {
+      "class": "LX/0cI;",
+      "method": "A0G",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/send_versions.rs"
+      ]
+    }
+  }
+}

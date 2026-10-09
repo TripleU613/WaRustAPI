@@ -1,5 +1,17 @@
 # Messaging completion checklist
 
+Bot metadata after-hooks (2026-10-09, **confirmed static**): providers
+0xf4b/0xf53 resolve to D7a/D7j. Selected delegated writers target bot_message_info,
+bot_plugin_metadata and bot_message_sharing_info, discard SQL return IDs and do
+not directly write receipt_user or call the native status setter. This brings
+immediate after-hook mapping to 21/54; 33 entries and transitive admission effects
+remain unknown/unported. Primary cleanup remains unfinished. No runtime/account/
+live change. [Evidence and limits](protocol/text-bot-after-hooks.md).
+
+Bot-hook validation: exact nine-topic export and cached self-diff, CLI reference,
+API/library-symbol, formatting, whitespace and hygiene passed. No fresh runtime
+suite or live account test is claimed; see the linked evidence for counts.
+
 Main-row update (2026-10-09, **confirmed static**): selector 6 reaches
 the existing-row message writer; status reads B3b, affected-row count is ignored
 and a missing lookup has no inserted-row fallback. Link flag A0n feeds the

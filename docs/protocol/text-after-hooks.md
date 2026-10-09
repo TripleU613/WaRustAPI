@@ -82,3 +82,10 @@ workspace/runtime suite or live test is claimed.
 
 Follow-up: [D7V link/span helper](text-link-after-hook.md) attributes Ce8
 and its update queue; transitive update effects remain unknown.
+
+Follow-up: [D7a/D7j bot metadata hooks](text-bot-after-hooks.md) adds the
+next two registered entries and their three immediate SQL destinations.
+The current mapping is 21/54 with 33 remaining; transitive receipt admission
+and primary cleanup remain unresolved. Historical counts above describe the
+original bundle. [Main-row update](text-main-update.md) separately resolves
+the selected update callback without completing all hooks.
