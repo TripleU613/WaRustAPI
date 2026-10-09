@@ -133,3 +133,63 @@ outcomes, receipt ACKs, outbox, events and normalized retained inspection were
 unchanged. No server connection, group/status send, request replay or saved
 account crypto mutation occurred in this chunk. Shared staging/rotation is
 verified offline; live group/status validation and normal actor wiring remain.
+
+## Routing snapshot correction — 2026-10-09
+
+**Confirmed local bug:** the initial shared snapshot (`c3a3cfc`) checked held
+pairwise ratchets, pins, own sender keys and exposure before reservation, but
+trusted the caller's already-built FanoutPlan. Membership/device rows could
+change during a directory query or asynchronous encryption. An old target could
+still receive a newly reserved distribution despite no longer being in the
+current saved plan. Pin checks alone did not protect device-list authority; a
+companion's primary pin can change independently of that companion's ratchet.
+The planner also previously opened a separate read transaction for each list,
+so its membership and device inventory were not one database snapshot.
+
+**Confirmed correction:** group and explicit-audience status plans now read all
+membership, recipient lists and their primary verification pins in one read
+transaction. `Snapshot::load` reconstructs that plan in the same read transaction
+as its crypto snapshot and compares every FanoutPlan field with the supplied
+plan. A stale, fabricated or missing saved plan fails before any encryption,
+query reservation or send reservation. Partial plans remain inspectable through
+`group fanout-inspect`; complete inspection now requires matching saved routing.
+No new command, field or network operation is added.
+
+The snapshot privately captures the exact serialized group row (groups only),
+each recipient's device-list row and primary pin, including absence of a pin.
+`Prepared::reserve_in` compares those rows inside the caller's original send
+write transaction before staging any crypto writes. Changed/deleted rows return
+`group membership or device authority changed before commit`, without identifiers.
+A caller write earlier in that transaction rolls back as well; newer routing,
+ratchets, keys, original send history and journal head remain intact. No automatic
+requery, membership downgrade, replacement identity or resend is introduced.
+
+**Local conservative policy:** byte comparison includes timestamps, roles and
+other metadata, so even a refresh with the same effective devices can block a
+staged send. Unrelated contacts/groups are outside the snapshot and do not block
+it. Status audiences remain explicitly supplied; group membership is not
+invented for status. Their actual recipient lists/pins still must remain unchanged.
+The fixed error identifies a local stale preparation, not a server refusal.
+
+**Confirmed static evidence, APK 2.26.37.71** (same SHA-256 above):
+`SendE2EMessageJob.A06` at `1300..1304` reads `groupParticipantHash` for the
+outgoing envelope; `1jL.A0N/A0O -> AzR.A03` derives device hashes from stored
+inventory. These existing traces support the inputs, not Rust transaction
+semantics. **Negative result:** the equality at `0702..0708` in the retained
+[send job](apk/2.26.37.71-groups/group-send-job-hash-check.txt) compares a TEE
+node token; the next diagnostic explicitly says nodeToken mismatch/CVM changed.
+It does not prove ordinary membership freshness or an APK database transaction.
+Full native scheduler, cache invalidation and active hash selection remain
+**unknown/unported**. No new native method export was needed.
+
+**Confirmed offline:** real Signal fixtures cover twelve routing races across
+fresh/cached preparation (member removal, changed/deleted device lists, missing
+group, lost companion authority and a changed primary pin not directly targeted).
+Each preserves the newer database state after rejection and reopen, rolls back
+the caller intent and leaves the journal unchanged. Additional cases reject
+missing plans and forged hash/devices/recipients/mode/own-inventory claims, allow
+an unrelated update, and enforce status list freshness. Existing primary and
+companion decrypt/rotation/race tests still exercise real crypto. These are
+local database/crypto tests, not a server or handset result. Full normal group
+outbox actor integration, own-device inventory and live large-group fanout
+remain unfinished.

@@ -2379,3 +2379,19 @@ re-export changed only targets/checksums metadata, not native method bodies;
 all 44 files / 928,943 bytes / 43 selected methods reproduce. Cached self-diff
 is 0.047877 seconds, not a claim of cross-release equivalence. Large-group live
 lookup, native optional-field gates and normal group actor wiring remain pending.
+
+Group routing snapshot (2026-10-09, **confirmed local correction**): planning
+now reads membership/lists/primary authority together; shared fanout revalidates
+the supplied plan and refuses changed routing rows inside the original send
+transaction. Fresh/cached crypto and caller reservation roll back together,
+with newer rows preserved. The native TEE node-token equality is not evidence
+of a membership transaction. Normal group outbox actor wiring, own inventory
+and fresh live group fanout remain unfinished.
+[Evidence and limits](docs/protocol/group-fanout.md#routing-snapshot-correction-2026-10-09).
+
+Routing-guard validation: 760 workspace/all-feature tests passed, alongside
+strict Clippy, warning-free Rustdoc, default CLI, API symbols/CLI reference,
+formatting and repository hygiene (1,129 local links; 15 APK bundles). Offline
+projection upgraded zero events. Saved peer keys, action outcomes, receipt ACKs,
+outbox, events and normalized retained inspection stayed unchanged. No server
+request, message transmission or saved-account crypto mutation occurred.

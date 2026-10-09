@@ -2945,8 +2945,47 @@ mod tests {
         let partial = fanout_inspection_with_sessions(&store, &plan, false).unwrap();
         assert!(partial["key_bundle_devices"].is_null());
         assert!(partial["cached_session_devices"].is_null());
-        let mut complete = plan.clone();
-        complete.without_device_list.clear();
+        // The crypto snapshot now requires an actual matching saved routing
+        // plan, including device authority, even for offline session counts.
+        let reply = Node::new("iq").attr("type", "result").children(vec![
+            Node::new("group")
+                .attr("id", plan.chat.clone())
+                .children(vec![
+                    Node::new("participant").attr("jid", plan.own.clone()),
+                    Node::new("participant").attr("jid", plan.recipients[0].clone()),
+                ]),
+        ]);
+        whatsapp_api::transport::groups::record_info_reply(&store, &reply).unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("devices:{}", plan.recipients[0]).as_bytes(),
+                    1,
+                    &whatsapp_api::transport::devices::DeviceList {
+                        owner: plan.recipients[0].clone(),
+                        devices: vec![whatsapp_api::transport::devices::DeviceEntry {
+                            jid: plan.recipients[0].clone(),
+                            key_index: 0,
+                        }],
+                        raw_id: None,
+                        list_timestamp: None,
+                        expected_timestamp: None,
+                        pending_removed_devices: None,
+                        adv_added_devices: vec![],
+                        companions_verified: false,
+                        verified_primary_key_fingerprint: None,
+                        unverified_reason: None,
+                        notified_hash: None,
+                        hash_matches: None,
+                        hosted_skipped: 0,
+                        fetched_at: whatsapp_api::model::time::Timestamp::now(),
+                    },
+                )
+            })
+            .unwrap();
+        let complete =
+            whatsapp_api::transport::group_send::plan(&store, &plan.chat, &plan.own).unwrap();
         let uncached = fanout_inspection_with_sessions(&store, &complete, false).unwrap();
         assert_eq!(uncached["key_bundle_devices"], 1);
         assert_eq!(uncached["cached_session_devices"], 0);

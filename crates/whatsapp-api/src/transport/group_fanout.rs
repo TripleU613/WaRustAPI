@@ -6,7 +6,7 @@ use super::{group_send::FanoutPlan, groups::FanoutTarget, sender_key_distributio
 use crate::{
     Error, Result,
     binary::Node,
-    model::jid::Jid,
+    model::jid::{Jid, Server},
     session::AccountRecord,
     signal::{direct, group},
     store::{ProtocolStore, Table, WriteTx},
@@ -25,6 +25,11 @@ struct Target {
     session: Option<Zeroizing<Vec<u8>>>,
     identity: Option<Vec<u8>>,
 }
+struct RoutingRow {
+    table: Table,
+    key: Vec<u8>,
+    value: Option<Zeroizing<Vec<u8>>>,
+}
 
 /// Private original state for optimistic concurrency. Does not adopt keys,
 /// change a ratchet, queue a query or reserve a send. Fresh mode affects only
@@ -36,6 +41,7 @@ pub struct Snapshot {
     own_key: Option<Zeroizing<Vec<u8>>>,
     distribution: Option<sender_key_distribution::DistributionState>,
     fresh_sessions: bool,
+    routing: Vec<RoutingRow>,
 }
 impl std::fmt::Debug for Snapshot {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -46,13 +52,49 @@ impl std::fmt::Debug for Snapshot {
     }
 }
 impl Snapshot {
-    /// Capture the exact saved crypto state for an already validated fanout plan.
-    /// Group membership/device resolution remains the caller's responsibility.
+    /// Revalidate the supplied plan and capture routing and crypto state in one
+    /// read transaction. Missing or stale plans fail before crypto or queries.
     pub fn load(store: &ProtocolStore, plan: &FanoutPlan, fresh_sessions: bool) -> Result<Self> {
         if !plan.without_device_list.is_empty() {
             return Err(invalid("some members have no device list"));
         }
         store.read(|tx| {
+            let current = match plan.chat.server {
+                Server::Group => super::group_send::plan_in(tx, &plan.chat, &plan.own)?,
+                Server::Broadcast if plan.chat.user == "status" => {
+                    super::group_send::plan_status_in(tx, &plan.own, &plan.recipients)?
+                }
+                _ => return Err(invalid("unsupported fanout chat")),
+            };
+            if current != *plan {
+                return Err(invalid("fanout plan changed before preparation"));
+            }
+            // APK 37.71 SendE2EMessageJob.A06 (1300) carries the participant
+            // hash; 1jL.A0N/A0O derive it from stored devices. Freezing the rows
+            // authorizing our target set is a local concurrency contract.
+            let mut keys = Vec::new();
+            if plan.chat.server == Server::Group {
+                keys.push((
+                    Table::Checkpoints,
+                    super::groups::key(&plan.chat.to_string()),
+                ));
+            }
+            for recipient in &plan.recipients {
+                keys.push((Table::Checkpoints, super::devices::list_key(recipient)));
+                // Companion authority depends on the primary pin even if the
+                // saved device list does not address that primary itself.
+                keys.push((Table::PeerIdentities, session_key(recipient)));
+            }
+            let routing = keys
+                .into_iter()
+                .map(|(table, key)| {
+                    Ok(RoutingRow {
+                        table,
+                        value: tx.get(table, key.as_bytes(), 1)?.map(Zeroizing::new),
+                        key: key.into_bytes(),
+                    })
+                })
+                .collect::<Result<Vec<_>>>()?;
             let targets = plan
                 .devices
                 .iter()
@@ -80,6 +122,7 @@ impl Snapshot {
                     .map(Zeroizing::new),
                 distribution: sender_key_distribution::load_in(tx, &plan.chat, &plan.own)?,
                 fresh_sessions,
+                routing,
             })
         })
     }
@@ -200,6 +243,14 @@ impl Prepared {
     /// concurrency protection as existing-session mode. No network occurs.
     /// The archive key must be unique to this original send when rotation occurs.
     pub fn reserve_in(&self, tx: &mut WriteTx<'_>, rotated_archive_key: &[u8]) -> Result<()> {
+        for row in &self.original.routing {
+            let held = tx.get(row.table, &row.key, 1)?;
+            if held.as_deref() != row.value.as_deref().map(|v| v.as_slice()) {
+                return Err(invalid(
+                    "group membership or device authority changed before commit",
+                ));
+            }
+        }
         let own_key_db = group::sender_key_db_key(&self.original.chat, &self.original.own);
         let held: Option<Vec<u8>> = tx.get_json(Table::SenderKeys, &own_key_db, 1)?;
         if held.as_deref() != self.original.own_key.as_deref().map(|v| v.as_slice()) {
@@ -336,13 +387,74 @@ mod tests {
                 devices,
                 without_device_list: vec![],
                 own_devices_unknown: true,
-                participant_hash: "2:fixture".into(),
+                participant_hash: super::super::groups::participant_hash_v2(&[
+                    jid("15555550100@s.whatsapp.net"),
+                    jid("15555550101@s.whatsapp.net"),
+                    jid("15555550102:3@s.whatsapp.net"),
+                ]),
                 participant_hash_device_count: 3,
             },
             reply: Node::new("iq")
                 .attr("type", "result")
                 .children(vec![Node::new("list").children(users)]),
         }
+    }
+    fn save_routing(store: &ProtocolStore, f: &Fixture) {
+        use super::super::devices::{DeviceEntry, DeviceList};
+        use sha2::Digest as _;
+        let members = std::iter::once(&f.plan.own)
+            .chain(f.plan.recipients.iter())
+            .map(|j| Node::new("participant").attr("jid", j.clone()))
+            .collect();
+        let reply = Node::new("iq").attr("type", "result").children(vec![
+            Node::new("group")
+                .attr("id", f.plan.chat.clone())
+                .children(members),
+        ]);
+        assert!(super::super::groups::record_info_reply(store, &reply).unwrap());
+        store
+            .write(|tx| {
+                for device in &f.plan.devices {
+                    let owner = device.to_non_ad();
+                    let bundle = direct::prekey_bundle_for(&f.reply, device)?;
+                    let pin = bundle.identity_key().unwrap().serialize().to_vec();
+                    tx.put_json(
+                        Table::PeerIdentities,
+                        session_key(&owner).as_bytes(),
+                        1,
+                        &pin,
+                    )?;
+                    let list = DeviceList {
+                        owner: owner.clone(),
+                        devices: vec![DeviceEntry {
+                            jid: device.clone(),
+                            key_index: 0,
+                        }],
+                        raw_id: None,
+                        list_timestamp: None,
+                        expected_timestamp: None,
+                        pending_removed_devices: None,
+                        adv_added_devices: vec![],
+                        companions_verified: true,
+                        verified_primary_key_fingerprint: Some(hex::encode(sha2::Sha256::digest(
+                            &pin[1..],
+                        ))),
+                        unverified_reason: None,
+                        notified_hash: None,
+                        hash_matches: None,
+                        hosted_skipped: 0,
+                        fetched_at: Timestamp::now(),
+                    };
+                    tx.put_json(
+                        Table::Checkpoints,
+                        super::super::devices::list_key(&owner).as_bytes(),
+                        1,
+                        &list,
+                    )?;
+                }
+                Ok(())
+            })
+            .unwrap();
     }
     fn state(store: &ProtocolStore) -> Vec<Vec<(Vec<u8>, Vec<u8>)>> {
         store
@@ -390,6 +502,7 @@ mod tests {
         let path = d.path().join("roundtrip.redb");
         let store = open(&path);
         let f = fixture();
+        save_routing(&store, &f);
         let original = state(&store);
         let snapshot = Snapshot::load(&store, &f.plan, false).unwrap();
         assert_eq!(snapshot.required_keys(), f.plan.devices);
@@ -470,6 +583,7 @@ mod tests {
                 let d = tempfile::tempdir().unwrap();
                 let store = open(&d.path().join("race.redb"));
                 let f = fixture();
+                save_routing(&store, &f);
                 seed(&store, &f).await;
                 let snapshot = Snapshot::load(&store, &f.plan, fresh).unwrap();
                 assert_eq!(snapshot.required_keys().len(), if fresh { 2 } else { 0 });
@@ -568,6 +682,7 @@ mod tests {
         let d = tempfile::tempdir().unwrap();
         let store = open(&d.path().join("rotation.redb"));
         let f = fixture();
+        save_routing(&store, &f);
         let first = Snapshot::load(&store, &f.plan, false)
             .unwrap()
             .prepare(&f.alice, Some(&f.reply), &[10, 1, b'a'])
@@ -628,10 +743,160 @@ mod tests {
         );
     }
     #[tokio::test]
+    async fn routing_changes_roll_back_the_entire_send_in_fresh_and_cached_modes() {
+        for fresh in [false, true] {
+            for changed in [
+                "membership",
+                "devices",
+                "authority",
+                "missing_group",
+                "missing_list",
+                "primary_pin",
+            ] {
+                let d = tempfile::tempdir().unwrap();
+                let store = open(&d.path().join("routing-race.redb"));
+                let f = fixture();
+                save_routing(&store, &f);
+                seed(&store, &f).await;
+                let prepared = Snapshot::load(&store, &f.plan, fresh)
+                    .unwrap()
+                    .prepare(&f.alice, Some(&f.reply), &[10, 1, b'a'])
+                    .await
+                    .unwrap();
+                let member = f.plan.recipients.last().unwrap();
+                let group_key = super::super::groups::key(&f.plan.chat.to_string());
+                let list_key = super::super::devices::list_key(member);
+                store
+                    .write(|tx| match changed {
+                        "membership" => {
+                            let mut group: super::super::groups::GroupSnapshot = tx
+                                .get_json(Table::Checkpoints, group_key.as_bytes(), 1)?
+                                .unwrap();
+                            group.members.retain(|m| m.jid != member.to_string());
+                            tx.put_json(Table::Checkpoints, group_key.as_bytes(), 1, &group)
+                        }
+                        "missing_group" => tx
+                            .delete(Table::Checkpoints, group_key.as_bytes())
+                            .map(|_| ()),
+                        "missing_list" => tx
+                            .delete(Table::Checkpoints, list_key.as_bytes())
+                            .map(|_| ()),
+                        "primary_pin" => tx.put_json(
+                            Table::PeerIdentities,
+                            session_key(member).as_bytes(),
+                            1,
+                            &vec![9u8; 33],
+                        ),
+                        _ => {
+                            let mut list: super::super::devices::DeviceList = tx
+                                .get_json(Table::Checkpoints, list_key.as_bytes(), 1)?
+                                .unwrap();
+                            if changed == "devices" {
+                                list.devices.clear();
+                            } else {
+                                list.verified_primary_key_fingerprint = None;
+                            }
+                            tx.put_json(Table::Checkpoints, list_key.as_bytes(), 1, &list)
+                        }
+                    })
+                    .unwrap();
+                let newer = state(&store);
+                let head = store.journal_head().unwrap();
+                let error = store
+                    .write(|tx| {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"caller-original-intent",
+                            1,
+                            &"outcome_unknown",
+                        )?;
+                        prepared.reserve_in(tx, b"archive:routing-race")
+                    })
+                    .unwrap_err()
+                    .to_string();
+                assert!(error.contains("membership or device authority changed"));
+                assert!(!error.contains(&member.user) && !error.contains(&f.plan.chat.user));
+                assert_eq!(state(&store), newer);
+                assert_eq!(store.journal_head().unwrap(), head);
+                drop(store);
+                assert_eq!(state(&open(&d.path().join("routing-race.redb"))), newer);
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn stale_or_invented_plans_fail_before_crypto_and_unrelated_updates_do_not_block() {
+        let d = tempfile::tempdir().unwrap();
+        let store = open(&d.path().join("plan-validation.redb"));
+        let f = fixture();
+        let empty = state(&store);
+        assert!(Snapshot::load(&store, &f.plan, false).is_err());
+        assert_eq!(state(&store), empty);
+        save_routing(&store, &f);
+        for field in ["hash", "devices", "recipients", "mode", "own_inventory"] {
+            let mut forged = f.plan.clone();
+            match field {
+                "hash" => forged.participant_hash = "2:wrong".into(),
+                "devices" => {
+                    forged.devices.pop();
+                }
+                "recipients" => {
+                    forged.recipients.pop();
+                }
+                "mode" => forged.addressing_mode = "lid",
+                _ => forged.own_devices_unknown = false,
+            }
+            let before = state(&store);
+            assert!(Snapshot::load(&store, &forged, false).is_err());
+            assert_eq!(state(&store), before);
+        }
+        let mut status =
+            super::super::group_send::plan_status(&store, &f.plan.own, &f.plan.recipients).unwrap();
+        let prepared = Snapshot::load(&store, &status, false)
+            .unwrap()
+            .prepare(&f.alice, Some(&f.reply), &[10, 1, b's'])
+            .await
+            .unwrap();
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, b"unrelated-contact", 1, &true))
+            .unwrap();
+        store
+            .write(|tx| prepared.reserve_in(tx, b"archive:status"))
+            .unwrap();
+        status.devices.pop();
+        assert!(Snapshot::load(&store, &status, false).is_err());
+        // Status has an explicit audience, so an unrelated group update is not
+        // authority for it. Its audience lists and primary pins still are.
+        let status =
+            super::super::group_send::plan_status(&store, &f.plan.own, &f.plan.recipients).unwrap();
+        let prepared = Snapshot::load(&store, &status, false)
+            .unwrap()
+            .prepare(&f.alice, None, &[10, 1, b't'])
+            .await
+            .unwrap();
+        store
+            .write(|tx| {
+                tx.delete(
+                    Table::Checkpoints,
+                    super::super::devices::list_key(&f.plan.recipients[0]).as_bytes(),
+                )
+            })
+            .unwrap();
+        let before = state(&store);
+        assert!(
+            store
+                .write(|tx| prepared.reserve_in(tx, b"archive:status-next"))
+                .is_err()
+        );
+        assert_eq!(before, state(&store));
+    }
+
+    #[tokio::test]
     async fn fresh_mode_requires_real_bundles_and_never_adopts_a_changed_pin() {
         let d = tempfile::tempdir().unwrap();
         let store = open(&d.path().join("pin.redb"));
         let f = fixture();
+        save_routing(&store, &f);
         seed(&store, &f).await;
         let before = state(&store);
         assert!(

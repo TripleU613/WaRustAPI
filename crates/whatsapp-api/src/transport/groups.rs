@@ -663,7 +663,7 @@ fn attr_u64(node: &Node, name: &str) -> Option<u64> {
     node.get_attr(name)?.as_text()?.parse().ok()
 }
 
-fn key(jid: &str) -> String {
+pub(crate) fn key(jid: &str) -> String {
     format!("group:{jid}")
 }
 
@@ -1174,8 +1174,11 @@ pub fn list(store: &ProtocolStore) -> Result<Vec<GroupSnapshot>> {
 
 /// One stored snapshot.
 pub fn get(store: &ProtocolStore, group: &Jid) -> Result<Option<GroupSnapshot>> {
+    store.read(|tx| get_in(tx, group))
+}
+pub(crate) fn get_in(tx: &crate::store::ReadTx<'_>, group: &Jid) -> Result<Option<GroupSnapshot>> {
     let group = require_group(group)?.to_string();
-    store.read(|tx| tx.get_json(Table::Checkpoints, key(&group).as_bytes(), 1))
+    tx.get_json(Table::Checkpoints, key(&group).as_bytes(), 1)
 }
 
 pub use super::participant_hash::{

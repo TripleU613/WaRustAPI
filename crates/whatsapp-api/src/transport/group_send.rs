@@ -57,7 +57,7 @@
 use crate::{
     Error, Result,
     model::jid::{Jid, Server},
-    store::{ProtocolStore, Table, WriteTx},
+    store::{ProtocolStore, ReadTx, Table, WriteTx},
 };
 
 /// Checkpoint holding this account's own LID, learned from `<success>`.
@@ -188,14 +188,21 @@ pub struct FanoutPlan {
 /// when no member has a device list — each of those would produce a stanza
 /// addressed to the wrong identities.
 pub fn plan(store: &ProtocolStore, chat: &Jid, own: &Jid) -> Result<FanoutPlan> {
-    plan_over(store, chat, own, group_members(store, chat)?)
+    store.read(|tx| plan_in(tx, chat, own))
+}
+
+pub(crate) fn plan_in(tx: &ReadTx<'_>, chat: &Jid, own: &Jid) -> Result<FanoutPlan> {
+    plan_over_in(tx, chat, own, group_members_in(tx, chat)?)
 }
 
 fn group_members(store: &ProtocolStore, chat: &Jid) -> Result<Vec<Jid>> {
+    store.read(|tx| group_members_in(tx, chat))
+}
+fn group_members_in(tx: &ReadTx<'_>, chat: &Jid) -> Result<Vec<Jid>> {
     if chat.server != Server::Group {
         return Err(invalid("this plan reads a group snapshot"));
     }
-    let snapshot = super::groups::get(store, chat)?
+    let snapshot = super::groups::get_in(tx, chat)?
         .ok_or_else(|| invalid("no saved group snapshot; fetch group info first"))?;
     snapshot
         .members
@@ -234,6 +241,9 @@ pub fn recipients_for_group(store: &ProtocolStore, chat: &Jid, own: &Jid) -> Res
 /// `own` is included in the participant hash, exactly as it is for a group, but
 /// never addressed.
 pub fn plan_status(store: &ProtocolStore, own: &Jid, audience: &[Jid]) -> Result<FanoutPlan> {
+    store.read(|tx| plan_status_in(tx, own, audience))
+}
+pub(crate) fn plan_status_in(tx: &ReadTx<'_>, own: &Jid, audience: &[Jid]) -> Result<FanoutPlan> {
     let chat = Jid::parse("status@broadcast")?;
     if audience.is_empty() || audience.len() > 256 {
         return Err(invalid("a status audience is 1..=256 identities"));
@@ -247,15 +257,10 @@ pub fn plan_status(store: &ProtocolStore, own: &Jid, audience: &[Jid]) -> Result
         }
         members.push(jid.to_non_ad());
     }
-    plan_over(store, &chat, own, members)
+    plan_over_in(tx, &chat, own, members)
 }
 
-fn plan_over(
-    store: &ProtocolStore,
-    chat: &Jid,
-    own: &Jid,
-    members: Vec<Jid>,
-) -> Result<FanoutPlan> {
+fn plan_over_in(tx: &ReadTx<'_>, chat: &Jid, own: &Jid, members: Vec<Jid>) -> Result<FanoutPlan> {
     let (addressing_mode, own, recipients) = routing(chat, own, members)?;
     let mut devices = Vec::new();
     // APK 37.71 1jL.A0N/A0O gather stored device values before AzR.A03.
@@ -264,14 +269,12 @@ fn plan_over(
     let mut hash_devices = vec![own.clone()];
     let mut without_device_list = Vec::new();
     for recipient in &recipients {
-        let saved = store.read(|tx| {
-            let list = super::devices::device_list_in(tx, recipient)?;
-            let authority = list
-                .as_ref()
-                .map(|list| super::devices::authority_in(tx, list))
-                .transpose()?;
-            Ok((list, authority))
-        })?;
+        let list = super::devices::device_list_in(tx, recipient)?;
+        let authority = list
+            .as_ref()
+            .map(|list| super::devices::authority_in(tx, list))
+            .transpose()?;
+        let saved = (list, authority);
         match saved.0 {
             Some(list) if !list.devices.is_empty() => {
                 if list.owner != *recipient
