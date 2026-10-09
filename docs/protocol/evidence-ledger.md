@@ -1,5 +1,13 @@
 # Evidence ledger
 
+Read-setting fetch and observers (2026-10-09, **confirmed static**): thirteen
+source topics distinguish fetch mode 23463 from set mode 23639, retain SMAX
+get/callback parsing, and identify played-receipt queueing in a settings observer.
+Boolean local-set refusal and local submission versus server acceptance are
+explicit. Effective settings/bootstrap/observer authority remain unknown;
+no runtime or live change.
+[Evidence and limits](read-setting-bootstrap.md).
+
 Read-setting wire producer (2026-10-09, **confirmed static**): a read-self
 receipt ACK with a present readreceipts attribute emits arg1 event 227 and
 still reaches generic ACK forwarding. Four source topics connect enabled

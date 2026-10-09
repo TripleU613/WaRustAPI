@@ -1,0 +1,17 @@
+APK 2.26.37.71, SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+2026-10-09 confirmed static physical-call scope; not transitive reachability.
+
+Reproduce: cargo run -p xtask -- apk-callers ~/Downloads/WhatsApp.apk --class "LX/0sv;" --method A0M
+
+classes4.dex  LX/6Aa;->invokeSuspend(LL)
+  invoke dex byte offset: 0x6cd810
+classes9.dex  LX/GL3;-><init>(V)
+  invoke dex byte offset: 0x3c7a8a
+classes9.dex  Lcom/whatsapp/settings/ui/SettingsPrivacy;->onCreate(VL)
+  invoke dex byte offset: 0x4eb504
+classes9.dex  LX/Igm;->run(V)
+  invoke dex byte offset: 0x71255c
+classes9.dex  LX/IhS;->run(V)
+  invoke dex byte offset: 0x73efea
+classes.dex  LX/1Tc;->A01(VLZZZ)
+  invoke dex byte offset: 0x8f7c8e

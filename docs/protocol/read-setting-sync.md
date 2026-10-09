@@ -178,3 +178,8 @@ artifacts. CLI reference regeneration/coverage, whitespace and repository hygien
 passed (1,847 local links; 78 checksum bundles). The preceding OpenAPI symbol
 check remains applicable: this continuation only extends research descriptions.
 No Rust behavior changed and no runtime tests or live checks were added.
+
+Follow-up: [fetch/callback and observer boundaries](read-setting-bootstrap.md)
+now identifies separate fetch-mode property 23463, SMAX request code 70,
+category-map parsing and the played-receipt observer side effect. Full bootstrap,
+effective settings and observer registration remain unknown.

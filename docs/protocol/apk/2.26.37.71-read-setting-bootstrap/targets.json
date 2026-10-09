@@ -1,0 +1,184 @@
+{
+  "account-fetch-caller": {
+    "class": "LX/1Tc;",
+    "file": "account-fetch-caller.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "error-completion": {
+    "class": "LX/Dey;",
+    "file": "error-completion.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "fetch-selection": {
+    "class": "LX/0sv;",
+    "file": "fetch-selection.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0M",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "local-integer-negative": {
+    "class": "LX/0sv;",
+    "file": "local-integer-negative.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0O",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "manager-constructor": {
+    "class": "LX/0sv;",
+    "file": "manager-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "mex-category-translator": {
+    "class": "LX/FCL;",
+    "file": "mex-category-translator.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "mex-set-translation": {
+    "class": "Lcom/whatsapp/privacy/MexSetPrivacySettingsHandler;",
+    "file": "mex-set-translation.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "played-setting-observer": {
+    "class": "LX/DK9;",
+    "file": "played-setting-observer.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "Bsa",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "public-set-guard": {
+    "class": "LX/0sv;",
+    "file": "public-set-guard.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0S",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "smax-fetch": {
+    "class": "LX/0sv;",
+    "file": "smax-fetch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "smax-index-lambda": {
+    "class": "LX/Fsf;",
+    "file": "smax-index-lambda.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "invoke",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "smax-pair-lambda": {
+    "class": "LX/Fsa;",
+    "file": "smax-pair-lambda.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "invoke",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "smax-response": {
+    "class": "LX/FdY;",
+    "file": "smax-response.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 5,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/notifications.rs",
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+# APK-derived structural disassembly: LX/Dey;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(VL) flags=0x1 registers=5
+  # full signature: LX/Dey;->A00(Ljava/lang/Integer;)V
+  0000..0004 op=55 iget-boolean v0, v3, LX/Dey;->A01:Z
+  0004..0008 op=38 if-eqz v0, +0xf
+  0008..000c op=54 iget-object v2, v3, LX/Dey;->A00:LX/J80;
+  000c..0010 op=38 if-eqz v2, +0xb
+  0010..0012 op=12 const/4 v1, #0x0
+  0012..0016 op=22 new-instance v0, LX/FGX;
+  0016..001c op=70 invoke-direct {v0, v4, v1}, LX/FGX;-><init>(Ljava/lang/Integer;Ljava/util/Map;)V
+  001c..0022 op=72 invoke-interface {v2, v0}, LX/J80;->AGE(Ljava/lang/Object;)Z
+  0022..0024 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

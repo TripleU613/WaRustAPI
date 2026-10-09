@@ -1,0 +1,61 @@
+# APK-derived structural disassembly: LX/0sv;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(VLLZ) flags=0x12 registers=17
+  # full signature: LX/0sv;->A02(LX/8lO;LX/J80;Z)V
+  0000..0004 op=54 iget-object v1, v13, LX/0sv;->A0C:LX/0sz;
+  0004..0008 op=22 new-instance v0, LX/Dey;
+  0008..000c op=02 move/from16 v2, v16
+  000c..0012 op=70 invoke-direct {v0, v14, v13, v15, v2}, LX/Dey;-><init>(LX/8lO;LX/0sv;LX/J80;Z)V
+  0012..0018 op=71 invoke-static {v1}, LX/00S;->A07(LX/06A;)V
+  0018..001c op=22 new-instance v7, LX/FdY;
+  001c..0022 op=70 invoke-direct {v7, v0}, LX/FdY;-><init>(LX/Dey;)V
+  0022..0028 op=71 invoke-static {}, LX/00S;->A06()V
+  0028..002c op=1a const-string v0, "PrivacySettingsProtocolHelper/sendGetPrivacySettingsRequest"
+  002c..0032 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  0032..0036 op=54 iget-object v6, v7, LX/FdY;->A00:LX/0h8;
+  0036..003c op=6e invoke-virtual {v6}, LX/0h8;->A0F()Ljava/lang/String;
+  003c..003e op=0c move-result-object v9
+  003e..0040 op=12 const/4 v0, #0x0
+  0040..0044 op=1a const-string v5, "privacy"
+  0044..0048 op=22 new-instance v4, LX/0hs;
+  0048..004e op=70 invoke-direct {v4, v5, v0}, LX/0hs;-><init>(Ljava/lang/String;[LX/0hq;)V
+  004e..0050 op=12 const/4 v0, #0x4
+  0050..0054 op=23 new-array v3, v0, [LX/0hq;
+  0054..0058 op=62 sget-object v2, LX/1S7;->A00:LX/1S7;
+  0058..005e op=1b const-string/jumbo v0, "to"
+  005e..0062 op=22 new-instance v1, LX/0hq;
+  0062..0068 op=70 invoke-direct {v1, v2, v0}, LX/0hq;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+  0068..006a op=12 const/4 v0, #0x0
+  006a..006e op=4d aput-object v1, v3, v0
+  006e..0072 op=1a const-string v0, "id"
+  0072..0076 op=22 new-instance v1, LX/0hq;
+  0076..007c op=70 invoke-direct {v1, v0, v9}, LX/0hq;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+  007c..007e op=12 const/4 v0, #0x1
+  007e..0082 op=4d aput-object v1, v3, v0
+  0082..0088 op=1b const-string/jumbo v0, "xmlns"
+  0088..008c op=22 new-instance v1, LX/0hq;
+  008c..0092 op=70 invoke-direct {v1, v0, v5}, LX/0hq;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+  0092..0094 op=12 const/4 v0, #0x2
+  0094..0098 op=4d aput-object v1, v3, v0
+  0098..009e op=1b const-string/jumbo v2, "type"
+  009e..00a2 op=1a const-string v0, "get"
+  00a2..00a6 op=22 new-instance v1, LX/0hq;
+  00a6..00ac op=70 invoke-direct {v1, v2, v0}, LX/0hq;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+  00ac..00ae op=12 const/4 v0, #0x3
+  00ae..00b2 op=4d aput-object v1, v3, v0
+  00b2..00b6 op=1a const-string v0, "iq"
+  00b6..00ba op=22 new-instance v8, LX/0hs;
+  00ba..00c0 op=70 invoke-direct {v8, v4, v0, v3}, LX/0hs;-><init>(LX/0hs;Ljava/lang/String;[LX/0hq;)V
+  00c0..00c4 op=16 const-wide/16 v11, #0x0
+  00c4..00c8 op=13 const/16 v10, #0x46
+  00c8..00ce op=74 invoke-virtual/range {v6..v12}, LX/0h8;->A0T(LX/0rX;LX/0hs;Ljava/lang/String;IJ)Z
+  00ce..00d0 op=0e return-void
+  00d0..00d2 op=0d move-exception v0
+  00d2..00d8 op=71 invoke-static {}, LX/00S;->A06()V
+  00d8..00da op=27 throw v0
+  # exception table: 1 try range(s)
+  # catch <all> code_units 000c..0011 -> 0068
+.end method

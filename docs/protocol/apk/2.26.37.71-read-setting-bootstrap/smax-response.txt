@@ -1,0 +1,111 @@
+# APK-derived structural disassembly: LX/FdY;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VL) flags=0x10001 registers=3
+  # full signature: LX/FdY;-><init>(LX/Dey;)V
+  0000..0006 op=70 invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+  0006..000a op=5b iput-object v2, v1, LX/FdY;->A01:LX/Dey;
+  000a..0010 op=71 invoke-static {}, LX/8kY;->A0b()LX/0h8;
+  0010..0012 op=0c move-result-object v0
+  0012..0016 op=5b iput-object v0, v1, LX/FdY;->A00:LX/0h8;
+  0016..0018 op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method BjL(VL) flags=0x1 registers=5
+  # full signature: LX/FdY;->BjL(Ljava/lang/String;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v4, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=1a const-string v0, "PrivacySettingsProtocolHelper/onDeliveryFailure iqId="
+  000c..0012 op=71 invoke-static {v0, v4}, LX/1xp;->A1L(Ljava/lang/String;Ljava/lang/String;)V
+  0012..0016 op=54 iget-object v1, v3, LX/FdY;->A01:LX/Dey;
+  0016..001a op=55 iget-boolean v0, v1, LX/Dey;->A01:Z
+  001a..001e op=38 if-eqz v0, +0xf
+  001e..0022 op=54 iget-object v2, v1, LX/Dey;->A00:LX/J80;
+  0022..0026 op=38 if-eqz v2, +0xb
+  0026..0028 op=12 const/4 v1, #0x0
+  0028..002c op=22 new-instance v0, LX/FGX;
+  002c..0032 op=70 invoke-direct {v0, v1, v1}, LX/FGX;-><init>(Ljava/lang/Integer;Ljava/util/Map;)V
+  0032..0038 op=72 invoke-interface {v2, v0}, LX/J80;->AGE(Ljava/lang/Object;)Z
+  0038..003a op=0e return-void
+  # exception table: 0 try range(s)
+.end method
+
+.method BmU(VLL) flags=0x1 registers=6
+  # full signature: LX/FdY;->BmU(LX/0hs;Ljava/lang/String;)V
+  0000..0002 op=12 const/4 v0, #0x1
+  0002..0008 op=71 invoke-static {v4, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=1a const-string v0, "error"
+  000c..0012 op=6e invoke-virtual {v4, v0}, LX/0hs;->A0N(Ljava/lang/String;)Ljava/util/List;
+  0012..0014 op=0c move-result-object v0
+  0014..001a op=71 invoke-static {v0}, LX/00h;->A06(Ljava/lang/Object;)V
+  001a..0020 op=72 invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  0020..0022 op=0c move-result-object v2
+  0022..0028 op=72 invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+  0028..002a op=0a move-result v0
+  002a..002e op=38 if-eqz v0, +0x1d
+  002e..0034 op=71 invoke-static {v2}, LX/8kU;->A0l(Ljava/util/Iterator;)LX/0hs;
+  0034..0036 op=0c move-result-object v1
+  0036..003a op=1a const-string v0, "code"
+  003a..0040 op=71 invoke-static {v1, v0}, LX/8kT;->A18(LX/0hs;Ljava/lang/String;)Ljava/lang/String;
+  0040..0042 op=0c move-result-object v0
+  0042..0046 op=38 if-eqz v0, -0x10
+  0046..004c op=71 invoke-static {v0}, LX/0CK;->A06(Ljava/lang/String;)Ljava/lang/Integer;
+  004c..004e op=0c move-result-object v1
+  004e..0052 op=1a const-string v0, "PrivacySettingsProtocolHelper/onError errorCode="
+  0052..0058 op=71 invoke-static {v0, v1}, LX/1xp;->A1K(Ljava/lang/String;Ljava/lang/Object;)V
+  0058..005c op=54 iget-object v0, v3, LX/FdY;->A01:LX/Dey;
+  005c..0062 op=6e invoke-virtual {v0, v1}, LX/Dey;->A00(Ljava/lang/Integer;)V
+  0062..0064 op=0e return-void
+  0064..0066 op=12 const/4 v1, #0x0
+  0066..0068 op=28 goto -0xc
+  # exception table: 0 try range(s)
+.end method
+
+.method C8f(VLL) flags=0x1 registers=7
+  # full signature: LX/FdY;->C8f(LX/0hs;Ljava/lang/String;)V
+  0000..0002 op=12 const/4 v0, #0x1
+  0002..0008 op=71 invoke-static {v5, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=6e invoke-virtual {v5}, LX/0hs;->A0D()LX/0hs;
+  000e..0010 op=0c move-result-object v3
+  0010..0016 op=71 invoke-static {v3}, LX/00h;->A06(Ljava/lang/Object;)V
+  0016..001a op=1a const-string v0, "privacy"
+  001a..0020 op=71 invoke-static {v3, v0}, LX/0hs;->A00(LX/0hs;Ljava/lang/String;)V
+  0020..0024 op=54 iget-object v0, v3, LX/0hs;->A02:[LX/0hs;
+  0024..0028 op=38 if-eqz v0, +0x2e
+  0028..002a op=12 const/4 v2, #0x0
+  002a..002c op=21 array-length v0, v0
+  002c..0030 op=d8 add-int/lit8 v1, v0, #0xff (-1)
+  0030..0034 op=22 new-instance v0, LX/0hB;
+  0034..003a op=70 invoke-direct {v0, v2, v1}, LX/0hB;-><init>(II)V
+  003a..003e op=22 new-instance v1, LX/1Y6;
+  003e..0044 op=70 invoke-direct {v1, v0, v2}, LX/1Y6;-><init>(Ljava/lang/Object;I)V
+  0044..0048 op=13 const/16 v0, #0x1b
+  0048..004e op=71 invoke-static {v3, v0}, LX/Fsf;->A00(Ljava/lang/Object;I)LX/Fsf;
+  004e..0050 op=0c move-result-object v0
+  0050..0056 op=71 invoke-static {v0, v1}, LX/0CS;->A0H(Lkotlin/jvm/functions/Function1;LX/0CN;)LX/0CT;
+  0056..0058 op=0c move-result-object v1
+  0058..005c op=13 const/16 v0, #0x2d
+  005c..0062 op=71 invoke-static {v0}, LX/Fsa;->A00(I)LX/Fsa;
+  0062..0064 op=0c move-result-object v0
+  0064..006a op=71 invoke-static {v0, v1}, LX/0CS;->A0H(Lkotlin/jvm/functions/Function1;LX/0CN;)LX/0CT;
+  006a..006c op=0c move-result-object v0
+  006c..0072 op=71 invoke-static {v0}, LX/05M;->A0H(LX/0CN;)Ljava/util/Map;
+  0072..0074 op=0c move-result-object v1
+  0074..0078 op=54 iget-object v0, v4, LX/FdY;->A01:LX/Dey;
+  0078..007e op=6e invoke-virtual {v0, v1}, LX/Dey;->A01(Ljava/util/Map;)V
+  007e..0080 op=0e return-void
+  0080..0086 op=71 invoke-static {}, LX/05M;->A0J()LX/05N;
+  0086..0088 op=0c move-result-object v1
+  0088..008a op=28 goto -0xa
+  # exception table: 0 try range(s)
+.end method
+
+.method CYp(LLLI) flags=0x1001 registers=5
+  # full signature: LX/FdY;->CYp(LX/Hjw;Ljava/lang/String;I)LX/Iyp;
+  0000..0004 op=62 sget-object v0, LX/IWx;->A00:LX/IWx;
+  0004..0006 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

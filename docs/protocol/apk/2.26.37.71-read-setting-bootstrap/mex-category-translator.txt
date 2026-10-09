@@ -1,0 +1,53 @@
+# APK-derived structural disassembly: LX/FCL;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(LL) flags=0x19 registers=2
+  # full signature: LX/FCL;->A01(LX/EiU;)Ljava/lang/String;
+  0000..0006 op=6e invoke-virtual {v1}, Ljava/lang/Enum;->ordinal()I
+  0006..0008 op=0a move-result v0
+  0008..000e op=2b packed-switch v0, payload@0x88, cases=[1:@0x2e, 2:@0xe, 3:@0x40, 4:@0x7c, 5:@0x76, 6:@0x70, 7:@0x58, 8:@0xe, 9:@0x5e, 10:@0x3a, 11:@0x64, 12:@0x1c, 13:@0x6a, 14:@0x4c, 15:@0x22, 16:@0x52, 17:@0x28, 18:@0x34, 19:@0xe, 20:@0x82, 21:@0x46], default@0xe
+  000e..0012 op=1a const-string v0, "MexPrivacySettingsTranslator/translateFeatureToCategory: Unknown feature: "
+  0012..0018 op=71 invoke-static {v0, v1}, LX/1xk;->A1R(Ljava/lang/String;Ljava/lang/Object;)V
+  0018..001a op=12 const/4 v0, #0x0
+  001a..001c op=11 return-object v0
+  001c..0020 op=1a const-string v0, "last"
+  0020..0022 op=11 return-object v0
+  0022..0026 op=1a const-string v0, "online"
+  0026..0028 op=11 return-object v0
+  0028..002c op=1a const-string v0, "profile"
+  002c..002e op=11 return-object v0
+  002e..0032 op=1a const-string v0, "status"
+  0032..0034 op=11 return-object v0
+  0034..0038 op=1a const-string v0, "readreceipts"
+  0038..003a op=11 return-object v0
+  003a..003e op=1a const-string v0, "groupadd"
+  003e..0040 op=11 return-object v0
+  0040..0044 op=1a const-string v0, "calladd"
+  0044..0046 op=11 return-object v0
+  0046..004a op=1a const-string v0, "stickers"
+  004a..004c op=11 return-object v0
+  004c..0050 op=1a const-string v0, "messages"
+  0050..0052 op=11 return-object v0
+  0052..0056 op=1a const-string v0, "pix"
+  0056..0058 op=11 return-object v0
+  0058..005c op=1a const-string v0, "defense"
+  005c..005e op=11 return-object v0
+  005e..0062 op=1a const-string v0, "dependentaccountmessages"
+  0062..0064 op=11 return-object v0
+  0064..0068 op=1a const-string v0, "groupcreation"
+  0068..006a op=11 return-object v0
+  006a..006e op=1a const-string v0, "linked_profiles"
+  006e..0070 op=11 return-object v0
+  0070..0074 op=1a const-string v0, "cover_photo"
+  0074..0076 op=11 return-object v0
+  0076..007a op=1a const-string v0, "channelview"
+  007a..007c op=11 return-object v0
+  007c..0080 op=1a const-string v0, "channelcreation"
+  0080..0082 op=11 return-object v0
+  0082..0086 op=1a const-string v0, "statusview"
+  0086..0088 op=11 return-object v0
+  0088..00e4 op=00 packed-switch-payload size=21
+  # exception table: 0 try range(s)
+.end method

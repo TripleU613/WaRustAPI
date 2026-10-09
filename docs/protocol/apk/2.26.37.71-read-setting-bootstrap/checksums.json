@@ -1,0 +1,70 @@
+{
+  "account-fetch-caller.txt": {
+    "bytes": 26370,
+    "sha256": "ca6792045c04e3a7d0e658b85765bdd1ef8bd95782db1f9dbe0896fdd3fa26d9"
+  },
+  "error-completion.txt": {
+    "bytes": 909,
+    "sha256": "f3492a9f03e9e6f57acf70060d31cb20d928de78cbfbc71a97b85fe48d7f9b4e"
+  },
+  "fetch-selection.txt": {
+    "bytes": 5680,
+    "sha256": "dfd014d6815fa04a532ca6e58ab9b38171b6b991cf14e6625d5f0f0b783e5650"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "local-integer-negative.txt": {
+    "bytes": 4560,
+    "sha256": "ea2e13f1f006c57fd6f4c13802e77d57fcdd671787186ed5130af8c2ae43a0dc"
+  },
+  "manager-constructor.txt": {
+    "bytes": 6194,
+    "sha256": "fc7a5d59e48bf0e2407ba408a9553975b5a32c014dcd82578df6e9f8d2d27ed9"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "mex-category-translator.txt": {
+    "bytes": 2665,
+    "sha256": "7553468c09859dae2f9ba3307224ac84d5fb150e3e971ee1d2602216d7273cbc"
+  },
+  "mex-set-translation.txt": {
+    "bytes": 15348,
+    "sha256": "6808bb0d7a6a863fcaad892abe37e8a1db6fe2fc83d9f50a13a65bcff7142d8b"
+  },
+  "played-setting-observer.txt": {
+    "bytes": 13299,
+    "sha256": "9ceceaae8dae4e2ebfde44eb5b8a4c9b13a60b0093d48867d5dd83fad4b8b874"
+  },
+  "public-set-guard.txt": {
+    "bytes": 1798,
+    "sha256": "e07d8bc80c0666b05a53bff40e89e7cf46dbb5dd7d0b05678c7f6ee2cfdfffa7"
+  },
+  "smax-fetch.txt": {
+    "bytes": 3334,
+    "sha256": "18e91ed2ee58d8a4e9b7d73572ed4f82d77b3465a3716d58484e0eebb0426c74"
+  },
+  "smax-index-lambda.txt": {
+    "bytes": 124883,
+    "sha256": "baa9f9182143f08606046945a573281ff015988a53913b0f1c7e3ac642ffa5d3"
+  },
+  "smax-pair-lambda.txt": {
+    "bytes": 28003,
+    "sha256": "9fdb7cb7851ba673a3327c9c64c0c9e9b7696ca57241be7856bc31c3eff9ed9f"
+  },
+  "smax-response.txt": {
+    "bytes": 5703,
+    "sha256": "9807d6b8721bccd74e48eb2f43dd2aa75a45aa1ce2c1991cd7349d2314a7fc88"
+  },
+  "targets.json": {
+    "bytes": 5869,
+    "sha256": "4573a30fb050fba487cdc28167e8eba56bf6b5b3d54e9db99c025ec3556159a3"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}
