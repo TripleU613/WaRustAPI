@@ -1,0 +1,16 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "status-order": {
+      "class": "LX/1hg;",
+      "method": "<clinit>",
+      "anchors": [],
+      "rust_files": [
+        "xtask/src/xref.rs"
+      ]
+    }
+  }
+}

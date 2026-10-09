@@ -1,0 +1,14 @@
+{
+  "status-order": {
+    "class": "LX/1hg;",
+    "file": "status-order.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<clinit>",
+    "methods": 1,
+    "rust_files": [
+      "xtask/src/xref.rs"
+    ]
+  }
+}

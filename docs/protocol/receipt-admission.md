@@ -144,3 +144,50 @@ Follow-up: [receipt key direction and state-only updates](receipt-state-only.md)
 traces parser direction, A07 admission, played eligibility and the core update
 result. Self receipt status does not by itself determine key direction, and an
 A07 true return does not prove every downstream database update succeeded.
+
+## Complete status-array rendering (2026-10-09)
+
+**Confirmed local and static:** the 64-byte preview hid six of 1hg.<clinit>'s
+22 ranks. The failing-before regression reads the independent
+[96-byte raw APK fixture](receipt-status-order-evidence.txt), renders both
+the fill-array reference and payload, and checks all 88 data bytes / 22 ranks
+plus alignment of a following return instruction.
+
+`apk-smali` and `apk-research-bundle` now preview up to **256 data bytes**.
+Larger payloads explicitly report the omitted byte count; boundary tests cover
+256, 257 and 4,096 bytes. This is a local output bound, not a protocol limit
+or a new admission rule. The disassembler still consumes the full payload
+length. Element interpretation remains raw bytes; signed ranks here are
+decoded as little-endian i32 from the independently attributed fixture.
+
+A separate [one-topic recipe](apk/recipes/2.26.37.71-status-order-complete.json)
+and [new snapshot](apk/2.26.37.71-status-order-complete/targets.json) retain
+the complete 1hg.<clinit> source for APK 2.26.37.71, SHA-256
+`1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
+Original receipt-admission and raw evidence files remain immutable. Rendering
+differences between old/new snapshots are tool changes, not APK changes.
+Cached self-diff establishes file identity only; no second release was available
+for this check. No runtime receipt_user state, identity cleanup, saved account
+or live network behavior changed. Their remaining authority is still unknown.
+
+Validation: the research tool suite passes 72 tests. The new six-file snapshot
+is 28,832 bytes and is checked against the pinned APK. Workspace/all-feature,
+strict Clippy, CLI reference, API-symbol, formatting and repository hygiene
+checks cover this renderer change; detailed results are recorded below.
+
+The retained 1hg.A00 comparison also resolves its previously open unknown-value
+behavior (**confirmed static**, same build/source): both search indices start
+at -1. Forward -1 returns occur only after both indices are found
+(0026..0032). At loop exhaustion, 003a..0042 returns 1 when current index
+is greater, otherwise 0. Therefore unknown current / known next returns **0**,
+known current / unknown next returns **1**, and two unknown inputs return **0**
+even if their integers differ. 1hg.A04 consequently treats all three as
+nonadvancing. This is not permission to accept unknown wire receipt statuses;
+the separate six-status predicate still applies. No Rust state comparison or
+admission behavior is changed from this observation.
+
+Final checks: **826** workspace/all-feature tests (688 API unit, four codec,
+nine crash, 52 CLI, one API-symbol and 72 xtask) passed; the final test-only
+Clippy cleanup was followed by all 72 xtask tests again. Strict all-target /
+all-feature Clippy, warnings-denied Rustdoc, CLI-reference regeneration,
+API-symbol checks, formatting, exact export/self-diff and diff hygiene passed.

@@ -609,7 +609,9 @@ fn payload_at(insns: &[u8], pos: usize) -> Option<(usize, &'static str, String)>
 }
 
 fn format_bytes(data: &[u8]) -> String {
-    const DISPLAY_LIMIT: usize = 64;
+    // APK 37.71 1hg status ranks use 88 bytes; 64 hid six admission ranks.
+    // Keep output bounded for bulk arrays while covering small protocol tables.
+    const DISPLAY_LIMIT: usize = 256;
     let shown = &data[..data.len().min(DISPLAY_LIMIT)];
     let mut text = shown
         .iter()
@@ -617,7 +619,10 @@ fn format_bytes(data: &[u8]) -> String {
         .collect::<Vec<_>>()
         .join(" ");
     if data.len() > DISPLAY_LIMIT {
-        text.push_str(" …");
+        text.push_str(&format!(
+            " … ({} bytes omitted)",
+            data.len() - DISPLAY_LIMIT
+        ));
     }
     format!("[{text}]")
 }
@@ -2663,6 +2668,70 @@ mod tests {
         assert!(decoded[1].annotation.contains("data=[57 41 06 03]"));
         assert_eq!(decoded[2].mnemonic, "fill-array-data-payload");
         assert_eq!(decoded[2].width, 6);
+    }
+
+    #[test]
+    fn receipt_status_array_preview_preserves_all_apk_ranks() {
+        // Independent raw APK 37.71 classes2.dex payload at 0x0d8d08.
+        // Keep the fixture attributable instead of rebuilding it from ranks.
+        let fixture = include_str!("../../docs/protocol/receipt-status-order-evidence.txt");
+        let raw = fixture
+            .lines()
+            .find_map(|line| line.strip_prefix("Raw 96 bytes: "))
+            .unwrap();
+        let payload: Vec<u8> = raw
+            .split_whitespace()
+            .map(|byte| u8::from_str_radix(byte, 16).unwrap())
+            .collect();
+        let mut code = vec![0x26, 0, 3, 0, 0, 0];
+        code.extend_from_slice(&payload);
+        code.extend_from_slice(&[0x0e, 0]); // return-void following the entire payload
+        let d = minimal_dex_header();
+        let dex = DexFile::parse(&d).unwrap();
+        let decoded = decode_insns(&code, &dex);
+        assert_eq!(decoded.len(), 3);
+        assert_eq!(decoded[1].width, 48);
+        assert_eq!(decoded[2].byte_off, 102);
+        assert_eq!(decoded[2].mnemonic, "return-void");
+        for annotation in [&decoded[0].annotation, &decoded[1].annotation] {
+            assert!(annotation.contains("element_width=4, size=22"));
+            assert!(!annotation.contains('…'));
+            let shown = annotation
+                .split("data=[")
+                .nth(1)
+                .unwrap()
+                .split(']')
+                .next()
+                .unwrap();
+            let bytes: Vec<u8> = shown
+                .split_whitespace()
+                .map(|byte| u8::from_str_radix(byte, 16).unwrap())
+                .collect();
+            assert_eq!(bytes, payload[8..]);
+            let ranks: Vec<i32> = bytes
+                .as_chunks::<4>()
+                .0
+                .iter()
+                .map(|chunk| i32::from_le_bytes(*chunk))
+                .collect();
+            assert_eq!(
+                ranks,
+                [
+                    14, 0, 1, 2, 20, 21, 3, 4, 15, 5, 11, 12, 13, 8, 18, 17, 16, 9, 10, 7, 6, 22
+                ]
+            );
+        }
+    }
+
+    #[test]
+    fn array_preview_bounds_report_omitted_bytes() {
+        assert!(!format_bytes(&[0xab; 256]).contains('…'));
+        let shown = format_bytes(&[0xab; 257]);
+        assert_eq!(shown.matches("ab").count(), 256);
+        assert!(shown.ends_with("… (1 bytes omitted)]"));
+        let huge = format_bytes(&[0xab; 4096]);
+        assert_eq!(huge.matches("ab").count(), 256);
+        assert!(huge.ends_with("… (3840 bytes omitted)]"));
     }
 
     #[test]

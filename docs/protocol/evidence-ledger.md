@@ -1,5 +1,12 @@
 # Evidence ledger
 
+Status-array renderer correction (2026-10-09, **confirmed local/static**):
+the APK-derived regression exposes the old 64-byte truncation; the bounded
+256-byte preview now preserves all 22 receipt-status ranks and reports omitted
+bytes on larger arrays. A new pinned snapshot preserves historical exports.
+No messaging/account/live change; primary cleanup remains incomplete.
+[Evidence and limits](receipt-admission.md#complete-status-array-rendering-2026-10-09).
+
 Blank-receipt failure continuation (2026-10-09, **confirmed static**):
 four source topics identify Cnn/0zO as message-send event logging and separate
 builder result 3 from native message status 20. No direct status setter or
