@@ -1,5 +1,12 @@
 # Messaging completion checklist
 
+Token MobileConfig mapping (2026-10-09, **confirmed static**): provider
+233 resolves to `09N`; its generated array has nonzero initial specifiers for
+15491 (`0x811d83000016e2`) and 14303 (`0x811af9000014f5`). Eight source topics
+preserve the binding and indexed lookup. Effective native values/readiness and
+array consumers remain unknown; no runtime/live change.
+[Evidence and limits](protocol/token-feature-inputs.md#property-to-mobileconfig-mapping-2026-10-09).
+
 Token Boolean provider bindings (2026-10-09, **confirmed static**):
 `00D` binds `1Y4(4)` and `1Y5(0)` to its Boolean providers. Both resolve IDs
 through `09M.B2y`; zero mapping returns false, nonzero calls MobileConfig

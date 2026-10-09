@@ -133,3 +133,70 @@ regeneration and self-diff passed (six topics/four artifacts unchanged); CLI
 reference and API-symbol checks, diff whitespace and repository hygiene passed
 (1,772 links; 68 checksum-verified bundles). The checked snapshot is the
 reproducible inspection surface; this continuation adds no command or flag.
+
+## Property-to-MobileConfig mapping (2026-10-09)
+
+**Confirmed static:** `07t.<init>` obtains its `09M` argument with
+`00C.A02(233)` (`0080..0090` in the
+[default constructor](apk/2.26.37.71-token-feature-inputs/default-map-constructor.txt)).
+`00C.A02` calls `00C.A03`; the latter caches by boxed provider ID and, on a
+cache miss, calls `1UE.A00(id, context, application)`. Its family selector
+`(id >> 14) & 0x7f` sends 233 to `1UE.A01`. That method masks `0x3fff`, selects
+233 (`0xbf6`), constructs `09N` and returns it (`0bf6..0c02`). Thus `09N` is
+the concrete constructor binding, not an inference from interface names.
+`00D.<init>` stores that supplied argument in `A0L`; physical write inspection
+finds one constructor write, `classes.dex` offset `0x3bf0ea`, opcode `5b`.
+
+`09M.B2y(I)J` itself has no implementation body. `09N.B2y` gets static
+`0E9.A00:[J`, lazily calls `0E9.A0I` if null, and reads the long at the property
+ID. Negative or out-of-bounds IDs return zero. `0E9.A0I` locks/rechecks, allocates
+`0x9125` (37,157) longs, writes constants and calls helpers `A0A..A0H` then
+`A00..A09`, before publishing the array at `a79c..a7a0`. The physical static
+field writer is this initializer only (`classes.dex` `0x5094a0`, opcode `69`).
+Field publication is not a proof that all array elements are immutable.
+
+**Confirmed static initial entries:** both IDs are in helper `0E9.A0F`:
+
+| Property | Write offsets | Long specifier |
+| --- | --- | --- |
+| 14303 / `0x37df` | `072c..073e` | `0x811af9000014f5` / 36339928744858869 |
+| 15491 / `0x3c83` | `35b8..35ca` | `0x811d83000016e2` / 36342720473601762 |
+
+Each sequence loads a literal index into `v2`, a literal wide value into `v0`,
+then writes `aput-wide v0, v3, v2`. The private complete `0E9` dump contains
+20 methods; the eighteen helper bodies contain only constant loads, wide array
+writes and return. The class scan finds one literal write index for each of
+these IDs. Neither is an out-of-range or missing-zero entry in the generated
+initial table. Those nonzero keys reach `AVn` when the already documented
+MobileConfig branch is selected; that does not prove the branch is active.
+
+**Negative/limited results:** searching only `0E9.A0I` did not find these ID
+literals because its helper `A0F` holds them. A direct DEX class-definition
+interface-list scan found `09N` implementing `09M`; the constructor binding
+trace above supplies the stronger evidence for this actual use. The scan is
+not a transitive implementation or dynamic-loading closure. `09M.<clinit>`
+references `PfA`, whose inspected bodies only initialize the singleton; they
+do not implement `B2y`. No native values were recovered. Physical field reads
+also exist in `099.A0C` and `0Dt.A00/A03`; their effects on table contents have
+not been traced. Cache replacement/reflection/native mutation is not excluded.
+
+The [eight-topic mapping recipe](apk/recipes/2.26.37.71-token-feature-mapping.json)
+and [snapshot](apk/2.26.37.71-token-feature-mapping/targets.json) preserve the
+interface getter, concrete lookup, initializer, token entries and full provider
+cache/family/binding methods, with signatures/register flow/catches. Reproduce
+with `apk-research-bundle` and `--recipe`; compare releases with the existing
+checksum-checked `apk-research-diff` after matching selectors. No new CLI flag,
+HTTP route or runtime adoption was introduced.
+
+**Unknown:** effective MobileConfig Boolean results, readiness, account-specific
+cache/preferences and full transition precedence remain unresolved. Earlier
+sections' mapping/binding unknowns are closed for these two initial APK entries
+by this continuation, not for all runtime inputs. No real account state, identity,
+keys, queued request or live behavior was changed.
+
+**Mapping-chunk verification:** exact regeneration verified 13 files / 600,923
+bytes; self-diff reports eight topics and four artifacts unchanged. CLI reference
+regeneration, API-symbol integration, diff whitespace and repository hygiene
+passed (1,778 links; 69 checksum-verified bundles). This source-only continuation
+did not alter Rust; the preceding 816-test/Clippy/Rustdoc baseline is not claimed
+as a new run for this chunk. Private bulk dumps stayed outside Git.

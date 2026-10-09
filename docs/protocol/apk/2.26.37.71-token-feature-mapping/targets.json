@@ -1,0 +1,98 @@
+{
+  "array-initializer": {
+    "class": "LX/0E9;",
+    "file": "array-initializer.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0I",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "mapping-getter": {
+    "class": "LX/09N;",
+    "file": "mapping-getter.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "B2y",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "mapping-interface": {
+    "class": "LX/09M;",
+    "file": "mapping-interface.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "B2y",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "provider-access": {
+    "class": "LX/00C;",
+    "file": "provider-access.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "provider-binding": {
+    "class": "LX/1UE;",
+    "file": "provider-binding.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "provider-cache": {
+    "class": "LX/00C;",
+    "file": "provider-cache.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "provider-family": {
+    "class": "LX/1UE;",
+    "file": "provider-family.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  },
+  "token-array-entries": {
+    "class": "LX/0E9;",
+    "file": "token-array-entries.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0F",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/abprops.rs"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "array-initializer.txt": {
+    "bytes": 355098,
+    "sha256": "ab5dbee82aa742672a966fd4d3ab8e2347b1c4c4c2e78cf84f38a52f0d045ad9"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "mapping-getter.txt": {
+    "bytes": 858,
+    "sha256": "2103b67f23de737bbbca2ef9fef95c359b69ba131d83b74f7e2065d8fc0b6c85"
+  },
+  "mapping-interface.txt": {
+    "bytes": 417,
+    "sha256": "7109e2f1aa1134be0aadd183c142f728e9e4d6cfcd93d8befa455b7367519a59"
+  },
+  "provider-access.txt": {
+    "bytes": 693,
+    "sha256": "0180bcf4eb9bff11a6285f7a8baeb6415c15f000faee542ca6338f06bc7f8ae0"
+  },
+  "provider-binding.txt": {
+    "bytes": 53504,
+    "sha256": "31b4ea418a6bdec5a0c065e902e99807f3ea2a0c7c73fdff98e305bd4cc7fc70"
+  },
+  "provider-cache.txt": {
+    "bytes": 3336,
+    "sha256": "8caa13b19ed5a48dbd5751d04ab56601ff74095cd80af49e2eb11f80ff49b475"
+  },
+  "provider-family.txt": {
+    "bytes": 3544,
+    "sha256": "b7d6969c03c892d5a220d15bd182b1e112e32a05ed73066f977b1b85b4e9b7a9"
+  },
+  "targets.json": {
+    "bytes": 2609,
+    "sha256": "b9191cae82ddfde69b0262704923e5ddba4e524dc83a3ae492aa9ac6ffe5baa1"
+  },
+  "token-array-entries.txt": {
+    "bytes": 152671,
+    "sha256": "0f441be3b8eb1e4fec3489cba57dc7b26209fbb44c6dddd2d30378282b3fabe0"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}
