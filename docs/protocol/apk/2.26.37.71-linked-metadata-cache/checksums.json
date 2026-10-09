@@ -1,0 +1,38 @@
+{
+  "instrumentation-metadata-write.txt": {
+    "bytes": 3639,
+    "sha256": "42456b458509c8c3bf6d08c430277b38f8a558db875ac9cce654ebd0d834bff3"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "metadata-cache-lookup.txt": {
+    "bytes": 1734,
+    "sha256": "71c65b4b1baf388f0edd52f66eb73b9158fe54e8cfd68fd9ac734375c481fbf3"
+  },
+  "metadata-sql-selector.txt": {
+    "bytes": 1568,
+    "sha256": "cf8198bab6a2a4af13c96a72ae98374be7eb85d96aa4d96e2d36a163db51ba65"
+  },
+  "place-metadata-write.txt": {
+    "bytes": 6081,
+    "sha256": "5156e83207a6c01d5c09bcbfbdaffc76e36d543d72008058df676ad70e030312"
+  },
+  "store-reset-context.txt": {
+    "bytes": 13228,
+    "sha256": "9bb591eabcca35288479ae981437cf2a6c539044a1fb3431a2c010fdf45fe7b2"
+  },
+  "targets.json": {
+    "bytes": 1970,
+    "sha256": "b5d2922b316bc797bfdcc057465267cf099059ee58b0fb81432e8091b75e5240"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

@@ -1,0 +1,32 @@
+# APK-derived structural disassembly: LX/1IY;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(LLLL) flags=0x9 registers=9
+  # full signature: LX/1IY;->A02(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/1IY;[Ljava/lang/String;)LX/HxZ;
+  0000..0004 op=54 iget-object v5, v7, LX/1IY;->A01:Lcom/google/common/collect/ImmutableMap;
+  0004..0006 op=12 const/4 v4, #0x0
+  0006..000a op=38 if-eqz v5, +0x24
+  000a..0010 op=6e invoke-virtual {v5, v6}, Lcom/google/common/collect/ImmutableMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  0010..0012 op=0c move-result-object v0
+  0012..0016 op=1f check-cast v0, LX/HxZ;
+  0016..001a op=39 if-nez v0, +0x18
+  001a..001c op=21 array-length v3, v8
+  001c..001e op=12 const/4 v2, #0x0
+  001e..0022 op=35 if-ge v2, v3, +0x18
+  0022..0026 op=46 aget-object v1, v8, v2
+  0026..002a op=62 sget-object v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0DK;
+  002a..0030 op=6e invoke-virtual {v0, v1}, LX/0DK;->A04(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+  0030..0032 op=0c move-result-object v0
+  0032..0036 op=38 if-eqz v0, +0xb
+  0036..003c op=6e invoke-virtual {v5, v0}, Lcom/google/common/collect/ImmutableMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  003c..003e op=0c move-result-object v0
+  003e..0042 op=1f check-cast v0, LX/HxZ;
+  0042..0046 op=38 if-eqz v0, +0x3
+  0046..0048 op=11 return-object v0
+  0048..004c op=d8 add-int/lit8 v2, v2, #0x1
+  004c..004e op=28 goto -0x17
+  004e..0050 op=11 return-object v4
+  # exception table: 0 try range(s)
+.end method

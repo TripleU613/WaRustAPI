@@ -1,0 +1,67 @@
+{
+  "instrumentation-metadata-write": {
+    "class": "LX/0jV;",
+    "file": "instrumentation-metadata-write.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0W",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "metadata-cache-lookup": {
+    "class": "LX/1IY;",
+    "file": "metadata-cache-lookup.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "metadata-sql-selector": {
+    "class": "LX/1IY;",
+    "file": "metadata-sql-selector.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "place-metadata-write": {
+    "class": "LX/0jV;",
+    "file": "place-metadata-write.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A05",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "store-reset-context": {
+    "class": "LX/GEu;",
+    "file": "store-reset-context.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  }
+}

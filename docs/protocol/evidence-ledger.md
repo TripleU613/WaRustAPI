@@ -1,5 +1,13 @@
 # Evidence ledger
 
+Linked-device metadata caches (2026-10-09, **confirmed static**): APK 37.71
+place/instrumentation writers update SQL, null only the view map and mutate
+one existing raw-map record. The five-topic snapshot distinguishes that behavior
+from GEu's broader store-reset context. Location requirements, metadata authority,
+remaining runnable writers and complete linked-device trust remain unknown.
+No runtime, private account state or live request changed.
+[Evidence and limits](linked-metadata-cache.md).
+
 Linked-device cache writes (2026-10-09, **confirmed static**): APK 37.71
 has twenty physical raw/view cache writes across fourteen methods. The six-topic
 snapshot traces metadata writes, logout marking versus row deletion, own-alias

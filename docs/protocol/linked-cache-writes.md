@@ -105,3 +105,7 @@ cargo run -p xtask -- apk-field-refs ~/Downloads/WhatsApp.apk \
   --class 'LX/1IY;' --field A01 \
   --type 'Lcom/google/common/collect/ImmutableMap;' --writes-only
 ```
+
+Follow-up: [metadata cache records](linked-metadata-cache.md) traces 0jV.A05/A0W
+and GEu.A03, and reuses the retained 1gz nonce writer. DLo/DM7/DNh runnable
+branches and complete caller/transaction authority remain unknown.

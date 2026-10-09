@@ -1,0 +1,62 @@
+# APK-derived structural disassembly: LX/0jV;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0W(VLL) flags=0x1 registers=13
+  # full signature: LX/0jV;->A0W(Lcom/whatsapp/infra/core/jid/DeviceJid;Ljava/lang/String;)V
+  0000..0004 op=54 iget-object v0, v10, LX/0jV;->A0A:LX/00s;
+  0004..000a op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  000a..000c op=0c move-result-object v0
+  000c..0010 op=1f check-cast v0, LX/00W;
+  0010..0016 op=6e invoke-virtual {v0}, LX/00W;->A01()LX/00X;
+  0016..0018 op=0c move-result-object v1
+  0018..001c op=13 const/16 v0, #0xee0
+  001c..0022 op=71 invoke-static {v1, v0}, LX/08b;->A03(LX/00X;I)Ljava/lang/Object;
+  0022..0024 op=0c move-result-object v0
+  0024..0028 op=1f check-cast v0, LX/1IW;
+  0028..002c op=54 iget-object v3, v0, LX/1IW;->A07:LX/1IY;
+  002c..0030 op=22 new-instance v5, Landroid/content/ContentValues;
+  0030..0036 op=70 invoke-direct {v5}, Landroid/content/ContentValues;-><init>()V
+  0036..003a op=1a const-string v0, "instrumentation_device_id"
+  003a..0040 op=6e invoke-virtual {v5, v0, v12}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  0040..0046 op=71 invoke-static {v11}, Lcom/google/common/collect/ImmutableSet;->of(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;
+  0046..0048 op=0c move-result-object v0
+  0048..004e op=71 invoke-static {v0, v3}, LX/1IY;->A06(Lcom/google/common/collect/ImmutableSet;LX/1IY;)[Ljava/lang/String;
+  004e..0050 op=0c move-result-object v9
+  0050..0056 op=71 invoke-static {v3}, LX/1IY;->A03(LX/1IY;)LX/0aC;
+  0056..0058 op=0c move-result-object v0
+  0058..005e op=6e invoke-virtual {v0}, LX/0aC;->A07()LX/0ZN;
+  005e..0060 op=0c move-result-object v2
+  0060..0064 op=54 iget-object v4, v2, LX/0ZN;->A02:LX/0IY;
+  0064..0068 op=1a const-string v6, "devices"
+  0068..006e op=71 invoke-static {v9}, LX/1IY;->A04([Ljava/lang/String;)Ljava/lang/String;
+  006e..0070 op=0c move-result-object v7
+  0070..0076 op=1b const-string/jumbo v8, "setInstrumentationDeviceId/UPDATE_DEVICES"
+  0076..007c op=74 invoke-virtual/range {v4..v9}, LX/0IY;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+  007c..007e op=1d monitor-enter
+  007e..0084 op=71 invoke-static {v11, v3, v9}, LX/1IY;->A02(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/1IY;[Ljava/lang/String;)LX/HxZ;
+  0084..0086 op=0c move-result-object v1
+  0086..0088 op=12 const/4 v0, #0x0
+  0088..008c op=5b iput-object v0, v3, LX/1IY;->A02:Lcom/google/common/collect/ImmutableMap;
+  008c..0090 op=38 if-eqz v1, +0x4
+  0090..0094 op=5b iput-object v12, v1, LX/HxZ;->A04:Ljava/lang/String;
+  0094..0096 op=1e monitor-exit
+  0096..009c op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  009c..009e op=0e return-void
+  009e..00a0 op=0d move-exception v0
+  00a0..00a2 op=1e monitor-exit
+  00a2..00a4 op=27 throw v0
+  00a4..00a6 op=0d move-exception v1
+  00a6..00ac op=6e invoke-virtual {v2}, LX/0ZN;->close()V
+  00ac..00ae op=27 throw v1
+  00ae..00b0 op=0d move-exception v0
+  00b0..00b6 op=71 invoke-static {v1, v0}, LX/HKG;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+  00b6..00b8 op=27 throw v1
+  # exception table: 5 try range(s)
+  # catch <all> code_units 0030..003f -> 0052
+  # catch <all> code_units 003f..004b -> 004f
+  # catch <all> code_units 0050..0051 -> 004f
+  # catch <all> code_units 0051..0052 -> 0052
+  # catch <all> code_units 0053..0056 -> 0057
+.end method
