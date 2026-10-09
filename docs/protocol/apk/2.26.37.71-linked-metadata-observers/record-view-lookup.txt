@@ -1,0 +1,26 @@
+# APK-derived structural disassembly: LX/0jV;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(LLL) flags=0x9 registers=3
+  # full signature: LX/0jV;->A03(LX/0jV;Lcom/whatsapp/infra/core/jid/DeviceJid;)LX/HxZ;
+  0000..0004 op=54 iget-object v0, v1, LX/0jV;->A0A:LX/00s;
+  0004..000a op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  000a..000c op=0c move-result-object v0
+  000c..0010 op=1f check-cast v0, LX/00W;
+  0010..0016 op=6e invoke-virtual {v0}, LX/00W;->A01()LX/00X;
+  0016..0018 op=0c move-result-object v1
+  0018..001c op=13 const/16 v0, #0xee0
+  001c..0022 op=71 invoke-static {v1, v0}, LX/08b;->A03(LX/00X;I)Ljava/lang/Object;
+  0022..0024 op=0c move-result-object v0
+  0024..0028 op=1f check-cast v0, LX/1IW;
+  0028..002c op=54 iget-object v0, v0, LX/1IW;->A07:LX/1IY;
+  002c..0032 op=6e invoke-virtual {v0}, LX/1IY;->A07()Lcom/google/common/collect/ImmutableMap;
+  0032..0034 op=0c move-result-object v0
+  0034..003a op=6e invoke-virtual {v0, v2}, Lcom/google/common/collect/ImmutableMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  003a..003c op=0c move-result-object v0
+  003c..0040 op=1f check-cast v0, LX/HxZ;
+  0040..0042 op=11 return-object v0
+  # exception table: 0 try range(s)
+.end method

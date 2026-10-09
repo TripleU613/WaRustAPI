@@ -1,0 +1,70 @@
+{
+  "browser-kind-predicate": {
+    "class": "LX/HxZ;",
+    "file": "browser-kind-predicate.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "observer-device-projection": {
+    "anchors": [
+      "EavesdropMonitor/resolveDeviceName: fallback to deviceOS/platformType"
+    ],
+    "class": "LX/12H;",
+    "file": "observer-device-projection.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "observer-state-update": {
+    "class": "LX/IS9;",
+    "file": "observer-state-update.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "Bjk",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "platform-enum": {
+    "anchors": [
+      "CHROME",
+      "IOS_CATALYST",
+      "UWP"
+    ],
+    "class": "LX/B6a;",
+    "file": "platform-enum.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<clinit>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  },
+  "record-view-lookup": {
+    "class": "LX/0jV;",
+    "file": "record-view-lookup.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/devices.rs"
+    ]
+  }
+}

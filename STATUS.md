@@ -1,5 +1,13 @@
 # Status — 2026-10-07
 
+Linked metadata observers (2026-10-09, **confirmed static**): APK 37.71
+case 26 invokes a no-payload Bjk callback. A physical scan finds thirteen empty
+concrete bodies and two state-update consumers; transitive effects/registration
+remain unknown. The five-topic snapshot also names the browser/desktop flag
+and distinguishes view lookup from raw-cache lookup. No runtime, account state
+or live request changed; this is not identity-verification or receive-replay proof.
+[Evidence and limits](docs/protocol/linked-metadata-observers.md).
+
 Linked-device runnable writes (2026-10-09, **confirmed static**): APK 37.71
 DLo case 23, DM7 case 2 and DNh case 20 write history access, last-active time
 and nickname. A three-topic anchored snapshot completes immediate classification

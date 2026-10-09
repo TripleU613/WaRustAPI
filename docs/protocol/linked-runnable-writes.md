@@ -84,3 +84,8 @@ cargo run -p xtask -- apk-research-diff \
   docs/protocol/apk/2.26.37.71-linked-runnable-writes \
   docs/protocol/apk/2.26.37.71-linked-runnable-writes
 ```
+
+Follow-up: [metadata observers](linked-metadata-observers.md) identifies
+case 26 as Bjk with no record payload, names the last-active platform flag,
+and distinguishes 0jV.A03 view lookup from the raw-cache helper. Full downstream
+authority remains unknown.

@@ -1,0 +1,171 @@
+APK 2.26.37.71; SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Confirmed physical method-name substring scan, not observer registration closure.
+Reproduce: xtask apk-smali APK --class '' --method Bjk --signatures --exceptions
+17 matches; 16 exact Bjk declarations, one unrelated lambda substring match.
+Full declarations below; byte offsets method-relative, exception offsets code units.
+
+
+# class: LX/B08;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 1
+    # full signature: LX/B08;->Bjk()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/D0U;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 1
+    # full signature: LX/D0U;->Bjk()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/D0V;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 1
+    # full signature: LX/D0V;->Bjk()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/D0W;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 1
+    # full signature: LX/D0W;->Bjk()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/D0X;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 1
+    # full signature: LX/D0X;->Bjk()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/D0Y;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 1
+    # full signature: LX/D0Y;->Bjk()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: Lcom/whatsapp/infra/crash/upload/RecoverableGwpAsanReporter;
+# extends: Ljava/lang/Object;
+
+.method public $r8$lambda$DlKBjkEjXEAxmkydC0Z8IVu4zuY(Z)  # .registers 1
+    # full signature: Lcom/whatsapp/infra/crash/upload/RecoverableGwpAsanReporter;->$r8$lambda$DlKBjkEjXEAxmkydC0Z8IVu4zuY()Z
+    0000..0006  invoke-static  {}, LX/076;->A07()Z
+    0006..0008  move-result  v0
+    0008..000a  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/IS2;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 1
+    # full signature: LX/IS2;->Bjk()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: Lcom/whatsapp/fbusers/canonical/companions/CanonicalUserCompanionDeviceManager;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 1
+    # full signature: Lcom/whatsapp/fbusers/canonical/companions/CanonicalUserCompanionDeviceManager;->Bjk()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/IS9;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 3
+    # full signature: LX/IS9;->Bjk()V
+    0000..0004  iget  v0, v2, LX/IS9;->$t:I
+    0004..0008  rsub-int/lit8  v0, v0, #0x3
+    0008..000c  if-nez  v0, +0xc
+    000c..0010  iget-object  v0, v2, LX/IS9;->A00:Ljava/lang/Object;
+    0010..0014  check-cast  v0, LX/GJm;
+    0014..0018  iget-object  v1, v0, LX/GJm;->A0b:LX/1RT;
+    0018..001a  const/4  v0, #0x0
+    001a..0020  invoke-virtual  {v1, v0}, LX/06x;->A0C(Ljava/lang/Object;)V
+    0020..0022  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/3Ey;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 1
+    # full signature: LX/3Ey;->Bjk()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/AMW;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 1
+    # full signature: LX/AMW;->Bjk()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/0rY;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 0
+    # full signature: LX/0rY;->Bjk()V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/0rZ;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 1
+    # full signature: LX/0rZ;->Bjk()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/11V;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 1
+    # full signature: LX/11V;->Bjk()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/12J;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 2
+    # full signature: LX/12J;->Bjk()V
+    0000..0004  iget-object  v0, v1, LX/12J;->A00:LX/12H;
+    0004..000a  invoke-static  {v0}, LX/12H;->A00(LX/12H;)V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/1AL;
+# extends: Ljava/lang/Object;
+
+.method public Bjk(V)  # .registers 1
+    # full signature: LX/1AL;->Bjk()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method

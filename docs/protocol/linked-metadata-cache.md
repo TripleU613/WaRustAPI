@@ -84,3 +84,8 @@ cargo run -p xtask -- apk-research-diff \
 Follow-up: [runnable metadata writes](linked-runnable-writes.md) classifies
 DLo case 23, DM7 case 2 and DNh case 20. Earlier remaining-branch unknowns
 are narrowed; complete caller/persistence/trust authority remains unfinished.
+
+Follow-up: [metadata observers](linked-metadata-observers.md) identifies
+case 26 as Bjk with no record payload, names the last-active platform flag,
+and distinguishes 0jV.A03 view lookup from the raw-cache helper. Full downstream
+authority remains unknown.

@@ -1,0 +1,38 @@
+{
+  "browser-kind-predicate.txt": {
+    "bytes": 903,
+    "sha256": "ee4eccd78825fd5c615c970f59a41e22399e749b068b668015b3e32269fc54e2"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "observer-device-projection.txt": {
+    "bytes": 4703,
+    "sha256": "f0979c1bfaa67f891d28d87571783e2422d33b63842c7d828eda86fb9a31974a"
+  },
+  "observer-state-update.txt": {
+    "bytes": 861,
+    "sha256": "e94f5a4c9f17661fb8385f402972cad17400b71c3effead79414a232e8b71fd1"
+  },
+  "platform-enum.txt": {
+    "bytes": 11221,
+    "sha256": "e51942d78aadbbd91176f63cdc6c2fdea13d63ff9ea92e06545fca7eee5e7056"
+  },
+  "record-view-lookup.txt": {
+    "bytes": 1437,
+    "sha256": "fdc26bfc3b66f64584e130f9bfa290a2fdb36e49cd3c1326384e094e83259f43"
+  },
+  "targets.json": {
+    "bytes": 1854,
+    "sha256": "80b851d8a7910cd805ee86d09eeec9db7ed64b4c212dd966935263a6644dcd93"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

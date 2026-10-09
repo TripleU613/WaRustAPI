@@ -1,0 +1,19 @@
+# APK-derived structural disassembly: LX/HxZ;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A04(Z) flags=0x1 registers=2
+  # full signature: LX/HxZ;->A04()Z
+  0000..0004 op=54 iget-object v0, v1, LX/HxZ;->A0B:LX/B6a;
+  0004..000a op=6e invoke-virtual {v0}, Ljava/lang/Enum;->ordinal()I
+  000a..000c op=0a move-result v0
+  000c..0012 op=2b packed-switch v0, payload@0x1c, cases=[1:@0x16, 2:@0x16, 3:@0x16, 4:@0x16, 5:@0x16, 6:@0x16], default@0x12
+  0012..0014 op=12 const/4 v0, #0x0
+  0014..0016 op=0f return v0
+  0016..0018 op=12 const/4 v0, #0x1
+  0018..001a op=0f return v0
+  001a..001c op=00 nop
+  001c..003c op=00 packed-switch-payload size=6
+  # exception table: 0 try range(s)
+.end method
