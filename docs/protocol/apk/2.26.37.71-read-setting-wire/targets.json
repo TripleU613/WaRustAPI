@@ -1,0 +1,58 @@
+{
+  "protocol-event-dispatch": {
+    "class": "LX/1Dz;",
+    "file": "protocol-event-dispatch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1D",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "protocol-event-message": {
+    "class": "LX/1Dz;",
+    "file": "protocol-event-message.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0R",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "protocol-handler-selection": {
+    "class": "LX/0y8;",
+    "file": "protocol-handler-selection.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  },
+  "receipt-ack-producer": {
+    "class": "LX/1Qy;",
+    "file": "receipt-ack-producer.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs",
+      "crates/whatsapp-api/src/transport/notifications.rs"
+    ]
+  }
+}

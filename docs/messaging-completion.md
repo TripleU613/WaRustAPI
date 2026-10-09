@@ -1,5 +1,12 @@
 # Messaging completion checklist
 
+Read-setting wire producer (2026-10-09, **confirmed static**): a read-self
+receipt ACK with a present readreceipts attribute emits arg1 event 227 and
+still reaches generic ACK forwarding. Four source topics connect enabled
+dispatch to the retained 14c preference consumer. Effective state and fallback
+registration remain unknown; no runtime/live change.
+[Evidence and limits](protocol/read-setting-sync.md#read-self-ack-wire-producer-continuation).
+
 Read-setting synchronization (2026-10-09, **confirmed static**): ten source
 topics distinguish local-off-preserving discriminator 227 from validated
 category-map adoption and pending-value mismatch guards. A0Q dispatches observers,

@@ -28,8 +28,9 @@ handled true at 0388. Mismatches log `readReceipt-setting-inconsistency`, then:
 The first branch is 012c..0188, the second 0188..01a4. Because only unequal
 values reach these branches, the local-true branch cannot adopt true here.
 A generic “server setting wins” implementation would incorrectly enable the
-second case. The producer/wire origin of discriminator 227 remains **unknown**
-in this trace; do not treat every privacy category notification as this event.
+second case. The [wire continuation](#read-self-ack-wire-producer-continuation) below now
+identifies its read-self ACK producer; every privacy category notification
+must not be treated as this event.
 
 **Confirmed negative:** 0sv.A0Q(List) constructs IUu(list,17) and calls observer
 dispatch 078.A00. Its selected body does not construct a network query. Transitive
@@ -121,3 +122,59 @@ unchanged metadata artifacts. CLI reference regeneration/coverage and OpenAPI
 library-symbol coverage passed. Formatting, whitespace and repository hygiene
 passed (1,838 local links; 77 checksum bundles). No Rust behavior changed, so
 workspace runtime tests were not repeated for this evidence-only change.
+
+
+## Read-self ACK wire producer continuation
+
+2026-10-09, **confirmed static**, same 37.71 hash. A separate immutable
+[four-topic recipe](apk/recipes/2.26.37.71-read-setting-wire.json) and
+[source bundle](apk/2.26.37.71-read-setting-wire/targets.json) retain the producer,
+message packaging and enabled handler selection. Earlier snapshots stay unchanged.
+
+1Qy.A02 reads the AtB node, required id, optional class/type and numeric error.
+Error 459 branches to A1G before receipt subtype selection. The `class=receipt`
+path admits read, played, read-self, played-self and server-error through exact
+string comparisons (00f4..016a). Its selected key construction requires a resolved
+remote chat and id; source references for those conversions are unchanged from
+[ACK selection](receipt-ack-special.md). Full broadcast/mapping trust remains
+**unknown** here.
+
+The second subtype switch handles read, played, played-self and server-error
+separately. The remaining admitted subtype is **read-self**. Its branch reads
+nullable `readreceipts` from the ACK envelope (01ea..0202). Absent means no
+privacy event. A present value, including an unrecognized value, calls
+1Dz.A1D(the original node,227) at 0202..0210. Validation belongs to 14c.BFC;
+the producer does not convert an unknown value to false. After event dispatch,
+execution still reaches generic A1E forwarding; absent attributes reach it too.
+This does not fabricate a peer read observation or replace ACK callback handling.
+
+1Dz.A1D passes the nonnull node/selector through A0R to 1Dw.CDr.
+A0R calls Message.obtain(null,0,selector,0,node): **what=0, arg1=227,
+arg2=0, obj=the original node**. This reuses the
+[arg1 dispatch](receipt-ack-special.md#dispatch-reads-arg1-not-what).
+0y8.A00's enabled branch tests selector 227 at 04a2..04aa, selects N12.A0d
+at 04d2..04da and calls BFC(Message,selector). The existing
+[provider binding](receipt-ack-handlers.md#providers-resolve-to-concrete-consumers)
+connects A0d through factory ID 2932 to 14c. The retained 0y8.A0F enabled
+admission branch also accepts 227. Disabled/fallback registration contents,
+effective A0O and asynchronous completion remain **unknown**; static routing
+is not proof that this account executed the handler.
+
+**Confirmed scoped inventory:** the appended inventory records thirteen exact
+`readreceipts` literal references, and five physical A1D invocations across
+four methods (1Qt.A02, 1Qy.A02, twice 1R0.A02, 1R7.A02). Other A1D selectors
+were not traced; this is not a claim that 1Qy is its only caller or that no
+other producer can supply 227. The unrelated literal references likewise do
+not establish complete query/bootstrap/setter authority.
+
+No Rust preference mutation or automatic correction request was added. Effective
+account state, bootstrap and full user-row/identity cleanup remain unfinished.
+No private state or live request changed. Reproduce this additional bundle by
+substituting `read-setting-wire` for `read-setting-sync` in the commands above.
+
+Continuation verification: exact regeneration matched all nine files (73,430
+bytes); self-diff reports four unchanged topics and four unchanged metadata
+artifacts. CLI reference regeneration/coverage, whitespace and repository hygiene
+passed (1,847 local links; 78 checksum bundles). The preceding OpenAPI symbol
+check remains applicable: this continuation only extends research descriptions.
+No Rust behavior changed and no runtime tests or live checks were added.

@@ -1,0 +1,44 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "receipt-ack-producer": {
+      "class": "LX/1Qy;",
+      "method": "A02",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs"
+      ]
+    },
+    "protocol-event-dispatch": {
+      "class": "LX/1Dz;",
+      "method": "A1D",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs"
+      ]
+    },
+    "protocol-event-message": {
+      "class": "LX/1Dz;",
+      "method": "A0R",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs"
+      ]
+    },
+    "protocol-handler-selection": {
+      "class": "LX/0y8;",
+      "method": "A00",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs",
+        "crates/whatsapp-api/src/transport/notifications.rs"
+      ]
+    }
+  }
+}

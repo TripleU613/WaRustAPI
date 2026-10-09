@@ -1,0 +1,34 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "protocol-event-dispatch.txt": {
+    "bytes": 1374,
+    "sha256": "0d43dca5ed9cfd55ce3a2aac63901f6e467c53543d253151f6cddc29e5a25890"
+  },
+  "protocol-event-message.txt": {
+    "bytes": 738,
+    "sha256": "f37ca5abf81164f03bcd9d3ba1ddc38b0a2477f0400db213cc1b28f047f125b0"
+  },
+  "protocol-handler-selection.txt": {
+    "bytes": 17365,
+    "sha256": "b7f847598c828d65d626418eed669eabcc4ac28a00e536d305492c3171e73d5e"
+  },
+  "receipt-ack-producer.txt": {
+    "bytes": 24432,
+    "sha256": "a3ec7a6a783ab50d9deea1aae45dc62e4129390bf07511d645b89b3da7dd7afc"
+  },
+  "targets.json": {
+    "bytes": 1833,
+    "sha256": "44409c43757dde6f1261bde9e60f77b4151b352a9681a48e2e8e07e90a0df13b"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

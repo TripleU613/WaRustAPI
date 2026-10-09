@@ -57,3 +57,47 @@ classes.dex  LX/17V;->A09(VLI)
   invoke dex byte offset: 0x807aba
 classes8.dex  LX/Dey;->A01(VL)
   invoke dex byte offset: 0x2ad7c8
+
+Continuation, same build/hash, confirmed static physical/literal scope.
+Reproduce: cargo run -p xtask -- apk-xref ~/Downloads/WhatsApp.apk --anchor readreceipts
+
+["readreceipts"]  (13 reference(s))
+  classes7.dex  LX/DK9;->Bsa(VLL)
+    dex byte offset: 0x7cad94
+  classes.dex  LX/0sv;->A0O(VLI)
+    dex byte offset: 0x70bc30
+  classes.dex  LX/0sv;->A0R(VL)
+    dex byte offset: 0x70c1b8
+  classes.dex  LX/0zd;->A03(LL)
+    dex byte offset: 0x779950
+  classes.dex  LX/14c;->BFC(ZLI)
+    dex byte offset: 0x7d81b6
+  classes.dex  LX/1Qy;->A02(VL)
+    dex byte offset: 0x8dccfc
+  classes.dex  LX/1Rl;-><clinit>(V)
+    dex byte offset: 0x3b9b30
+  classes8.dex  Lcom/whatsapp/privacy/MexSetPrivacySettingsHandler;->A01(LLLL)
+    dex byte offset: 0x4f3bb8
+  classes8.dex  LX/FCL;->A01(LL)
+    dex byte offset: 0x51fc4c
+  classes9.dex  Lcom/whatsapp/settings/ui/SettingsPrivacy;->A5J(V)
+    dex byte offset: 0x4ea49c
+  classes9.dex  Lcom/whatsapp/settings/ui/SettingsPrivacy;->C62(VII)
+    dex byte offset: 0x4ea628
+  classes9.dex  LX/I4X;->A01(LL)
+    dex byte offset: 0x5d0aee
+  classes9.dex  LX/IEN;->onClick(VL)
+    dex byte offset: 0x634afa
+
+Reproduce: cargo run -p xtask -- apk-callers ~/Downloads/WhatsApp.apk --class "LX/1Dz;" --method A1D
+
+classes.dex  LX/1Qt;->A02(VL)
+  invoke dex byte offset: 0x8dc6e2
+classes.dex  LX/1Qy;->A02(VL)
+  invoke dex byte offset: 0x8dcd16
+classes.dex  LX/1R0;->A02(VL)
+  invoke dex byte offset: 0x8ddbb4
+classes.dex  LX/1R0;->A02(VL)
+  invoke dex byte offset: 0x8ddcea
+classes.dex  LX/1R7;->A02(VL)
+  invoke dex byte offset: 0x8ded2a

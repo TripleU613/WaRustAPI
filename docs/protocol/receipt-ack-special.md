@@ -20,8 +20,9 @@ calls 1Dz.A11. Played and played-self call A16; server-error calls A17.
 Read-self takes the shown readreceipts attribute/227 path rather than this
 A11 branch. These paths subsequently reach generic A1E forwarding; specialized
 processing is not a substitute for the full-key callback removal.
-Complete subtype conversion, broadcast routing and the read-self/227 consumer
-remain unknown here. A type named server-error is distinct from the outer
+The [read-setting continuation](read-setting-sync.md#read-self-ack-wire-producer-continuation)
+now connects read-self/227 to the preference consumer; full subtype conversion,
+broadcast routing and effective dispatch remain unknown. A type named server-error is distinct from the outer
 numeric error attribute and is not a guessed registration refusal.
 
 **Confirmed:** 1Dz.A11 calls A0I with participant and key. A0I builds a Bundle
