@@ -1,0 +1,138 @@
+{
+  "broadcast-update-values": {
+    "anchors": [
+      "received_timestamp"
+    ],
+    "class": "LX/0zc;",
+    "file": "broadcast-update-values.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "lookup-flags-test": {
+    "class": "LX/178;",
+    "file": "lookup-flags-test.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0a",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "lookup-mask-build": {
+    "class": "LX/Cjb;",
+    "file": "lookup-mask-build.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "lookup-mask-copy-bit": {
+    "class": "LX/Cjb;",
+    "file": "lookup-mask-copy-bit.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "main-row-update": {
+    "anchors": [
+      "UPDATE_MESSAGE_MAIN_SQL"
+    ],
+    "class": "LX/0zc;",
+    "file": "main-row-update.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0B",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "origination-flags-clear": {
+    "class": "LX/178;",
+    "file": "origination-flags-clear.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0L",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "origination-flags-getter": {
+    "class": "LX/178;",
+    "file": "origination-flags-getter.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A08",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "origination-flags-test": {
+    "class": "LX/178;",
+    "file": "origination-flags-test.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0b",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "update-callback": {
+    "class": "LX/3Rd;",
+    "file": "update-callback.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "invoke",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  },
+  "update-callback-constructor": {
+    "class": "LX/3Rd;",
+    "file": "update-callback-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/send_versions.rs"
+    ]
+  }
+}

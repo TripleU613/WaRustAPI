@@ -87,3 +87,6 @@ the pinned APK. Cached self-diff verifies ten unchanged topics and four metadata
 artifacts. CLI reference regeneration, API/library-symbol, formatting, whitespace
 and hygiene pass (2,038 local links; 96 bundles / 20,325,838 bytes). No fresh
 workspace/runtime suite or live test is claimed.
+
+Follow-up: [main-row update](text-main-update.md) closes selector 6, SQL
+result handling and lookup-mask flag continuity; other hook effects stay unknown.

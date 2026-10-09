@@ -1,5 +1,12 @@
 # Evidence ledger
 
+Main-row update (2026-10-09, **confirmed static**): selector 6 reaches
+the existing-row message writer; status reads B3b, affected-row count is ignored
+and a missing lookup has no inserted-row fallback. Link flag A0n feeds the
+computed lookup mask; origination_flags instead reads A0A, with a conditional
+bit clear. Hook effects, native user-row admission and primary cleanup remain
+unknown/unported. No runtime/account/live change. [Evidence and limits](text-main-update.md).
+
 Common link/span after-hook (2026-10-09, **confirmed static**): Ce8 writes
 span indices and ORs A0n flag 0x10000, distinct from A08 status, then queues
 reason -1 / Ahi selector 5 / scheduling 22. The update wrapper separates
