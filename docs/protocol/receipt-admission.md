@@ -125,3 +125,9 @@ Follow-up: [stored own identity](own-identity.md) resolves BO0/BO1's proxy/direc
 implementations and PN/LID sources. Effective account contents, remaining property
 selection, complete per-user projection and own-device lifecycle remain separate
 unknowns; predicates do not consult arbitrary directory aliases.
+
+Follow-up: [ownership short circuit and flag provenance](receipt-ownership.md)
+establishes property 35516's true/true baked defaults and the ten physical flag
+writers. 15A skips the helper/foreign property when key.A02 is true; requiring
+A0y authority for every outgoing receipt would add a guard absent in this branch.
+Effective configuration and later pool/write admission remain separate unknowns.

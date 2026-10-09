@@ -3045,3 +3045,21 @@ checks, formatting and whitespace checks passed. Hygiene checked 1,475 local
 links and the unchanged 38 checksum bundles / 9,272,115 bytes. The new excerpts
 are separately attributed, not counted as checksum-bundle coverage. No fresh
 workspace/runtime or live test is claimed.
+
+2026-10-09 — **Confirmed static:** receipt ownership now has an exact caller
+boundary: true message-key from-me inputs short circuit to ordinary admission
+before the A0y helper/foreign-input property. False-key helper logic is
+(type 64 + stored-own Bps.A00 + clear flag); later pool gates still apply.
+Property 35516 has true/true baked defaults, not a known effective account value.
+Ten explicit flag writers are retained with scoped source and full-dump digests;
+constructors/receive/copy contexts do not prove universal origin semantics.
+[Source, branch arithmetic and remaining prerequisites](docs/protocol/receipt-ownership.md).
+No Rust user-row projection, primary cleanup, account or network change is claimed.
+
+Ownership validation: eight topics / 13 files / 59,820 bytes reproduce exactly
+from APK 37.71. Cached self-diff verifies eight unchanged topics and four metadata
+artifacts, not cross-release equivalence. CLI-reference regeneration,
+OpenAPI/library-symbol checks, formatting, whitespace and hygiene passed.
+Hygiene checked 1,486 local links and 39 bundles / 9,331,935 bytes. Flag-writer
+excerpts are separately attributed outside that bundle. No fresh workspace
+runtime test or live account operation is claimed.
