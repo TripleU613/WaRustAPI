@@ -1,0 +1,27 @@
+# APK-derived structural disassembly: LX/17J;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A03(VLLLLI) flags=0x19 registers=7
+  # full signature: LX/17J;->A03(LX/178;LX/1gc;LX/17J;Ljava/lang/Exception;I)V
+  0000..0004 op=1a const-string v1, "MessageReceivedByServerHandler/markAndLogMessageSendFailure error handling ack key="
+  0004..0008 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0008..000e op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  000e..0014 op=6e invoke-virtual {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0014..001a op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  001a..001c op=0c move-result-object v0
+  001c..0022 op=71 invoke-static {v0, v5}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+  0022..0026 op=38 if-eqz v2, +0x12
+  0026..002a op=13 const/16 v0, #0x14
+  002a..0030 op=70 invoke-direct {v4, v2, v3, v0}, LX/17J;->A01(LX/178;LX/1gc;I)V
+  0030..0032 op=28 goto +0x7
+  0032..0034 op=0d move-exception v1
+  0034..0038 op=1a const-string v0, "MessageReceivedByServerHandler/markAndLogMessageSendFailure failed to set red icon"
+  0038..003e op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+  003e..0040 op=12 const/4 v0, #0x3
+  0040..0046 op=70 invoke-direct {v4, v2, v3, v0, v6}, LX/17J;->A02(LX/178;LX/1gc;II)V
+  0046..0048 op=0e return-void
+  # exception table: 1 try range(s)
+  # catch Ljava/lang/Exception; code_units 0015..0019 -> 0019
+.end method

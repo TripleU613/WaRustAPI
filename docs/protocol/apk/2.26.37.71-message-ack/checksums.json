@@ -1,0 +1,98 @@
+{
+  "ack-android-message-producer.txt": {
+    "bytes": 4858,
+    "sha256": "764c039083eb0b5c107a16f947409fcc28a9b33f2c3a0261a59ffc497d0998fe"
+  },
+  "ack-attributes-constructor.txt": {
+    "bytes": 2145,
+    "sha256": "34596a8b095b5991aea380678f56a245e21a440c4d11ec4a69eb55fd649b4447"
+  },
+  "ack-attributes-storage.txt": {
+    "bytes": 1552,
+    "sha256": "ebfeeb79a5ca620274d93ac8c1680fc23464df1e9575afd93cf4febcaaf711c3"
+  },
+  "ack-jid-bundle.txt": {
+    "bytes": 1732,
+    "sha256": "4235622db97c51c379d3eee06d972f499e5f168f4d1f2e2fef8fa3a756cf66d8"
+  },
+  "ack-message-forwarder.txt": {
+    "bytes": 4510,
+    "sha256": "99f497be1bbe053aea64c5511e474483ad4adebe91cbe3b3cfbc41685a25d7dc"
+  },
+  "ack-participant-device-conversion.txt": {
+    "bytes": 1467,
+    "sha256": "33609057d19c97d44369a9a06e74fe684a8ebb0afb527a1c6970c9fa9a7ce277"
+  },
+  "ack-user-conversion-predicate.txt": {
+    "bytes": 1147,
+    "sha256": "9aa25334b7cfe0f8614ffabfef28182cdf513d19211a2c95cac5795f14f5f38b"
+  },
+  "ack-wire-parser.txt": {
+    "bytes": 24432,
+    "sha256": "a3ec7a6a783ab50d9deea1aae45dc62e4129390bf07511d645b89b3da7dd7afc"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "server-ack-handler.txt": {
+    "bytes": 69202,
+    "sha256": "a43dff66c798d5c8b4f7e3c97159b474a1c02beece90547d39d3429d97556830"
+  },
+  "server-background-worker.txt": {
+    "bytes": 47353,
+    "sha256": "670acaa0e860ca55c02501223531677a94aa00d3d3fbab5a9218576952676b81"
+  },
+  "server-refusal-handler.txt": {
+    "bytes": 1798,
+    "sha256": "7a6d9d7bde7acadcb4dc7844a4698fc3ab67cc5210e562003596a7408986452c"
+  },
+  "server-self-predicate.txt": {
+    "bytes": 1043,
+    "sha256": "58f1cd310f3c508efb6d160b3040f8c0779f7c89acbc1693caa685b6065ac180"
+  },
+  "server-special-predicate.txt": {
+    "bytes": 597,
+    "sha256": "28982cdeff125e0304588ade7f5ac64664c0d296491406d4784ec4867616ba5e"
+  },
+  "server-status-helper.txt": {
+    "bytes": 6760,
+    "sha256": "861d2d4e4466c5c497f389e66a0ab58e1465b85ca2d1714eaa557aca29ebe085"
+  },
+  "server-worker-constructor.txt": {
+    "bytes": 920,
+    "sha256": "208b7c08da14c173d05e0066ab898a1a46c242b76fa8d37c215546ab9c3c1b7f"
+  },
+  "server-worker-dispatch.txt": {
+    "bytes": 1154,
+    "sha256": "a1d15b903c109da5dde70e49610b37f4a791edcc7cc28001234142b83cb20ad3"
+  },
+  "state-helper.txt": {
+    "bytes": 5352,
+    "sha256": "97701719b36a68f92a90e658ba48f7bb5b494d7e602a8960dd3be372023b605a"
+  },
+  "state-one.txt": {
+    "bytes": 44413,
+    "sha256": "c3624b102725739e2de0fb62b385f250d96068c102d981159a208e9187227635"
+  },
+  "state-three.txt": {
+    "bytes": 7436,
+    "sha256": "9ce266fc2f6729b8e2a916b6b72bf72701c882576f31b38420fb3fff39c199f8"
+  },
+  "state-two.txt": {
+    "bytes": 15504,
+    "sha256": "8aed6393b7a54ea5201cb60908bf3b5b5af9f39518fb0f61c1585e0a51e7c7be"
+  },
+  "targets.json": {
+    "bytes": 6719,
+    "sha256": "50048a9bf4bdf1e62baa473facd749bee1c6682a40de839ae468f598d01d6f0a"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

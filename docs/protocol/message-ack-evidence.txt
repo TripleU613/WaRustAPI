@@ -1,0 +1,71 @@
+APK 2.26.37.71 outgoing ACK anchor and physical-caller inventory
+SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+
+These are exact search results, not complete virtual/reflection call closure.
+The one trailing-space string is JSON-quoted to preserve its exact spelling.
+The serverack search is case-sensitive; no match does not mean no ACK handler.
+Method bodies are retained in apk/2.26.37.71-message-ack/.
+
+server-ack-strings.txt sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+server-status-strings.txt sha256=d1d077c5f8b322902d42bb8c1dd14651e6129e7b798b42d8481aadfd7c23d3e5
+, isReceivedByServer=
+CoreMessageStore/updateMessageReceivedByServerInBackground
+MessageAddOnManager/onMessageAddOnReceivedByServer vote delivered past poll end time serverTimestamp=
+MessageReceivedByServerEventFactory.kt
+MessageReceivedByServerEventFactory/createEvent no message type for messageId=
+MessageReceivedByServerHandler.kt
+MessageReceivedByServerHandler/handleSyncResultForBroadcastList/
+MessageReceivedByServerHandler/handleSyncResultForBroadcastList/sync failed
+MessageReceivedByServerHandler/logMessageSendFailure/
+MessageReceivedByServerHandler/markAndLogMessageSendFailure error handling ack key=
+MessageReceivedByServerHandler/markAndLogMessageSendFailure failed to set red icon
+"MessageReceivedByServerHandler/onMessageError/bounce unable to find message "
+MessageReceivedByServerHandler/onMessageError; key=
+MessageReceivedByServerHandler/onMessageReceivedByServer message received by server ignored due to participant is present
+MessageReceivedByServerHandler/onMessageReceivedByServer poll edit past end time timestamp=
+MessageReceivedByServerHandler/onMessageReceivedByServer; key=
+MessageReceivedByServerHandler/onMessageReceivedByServer; refresh lid; userJid=
+SendNotifiesWhenStatusReceivedByServer.kt
+StatusReceivedByServerListener.kt
+StatusRevokeReceivedByServer.kt
+onReadReceiptReceivedByServer
+use FStatusDb.updateStatusReceivedByServer() instead
+
+server-ack-xref.txt sha256=7a8bad507d3deb0e7acb63d9b3f9297d97d389f6016de56d1484aeb4817915ce
+["MessageReceivedByServerHandler/onMessageReceivedByServer; key="]  (1 reference(s))
+  classes.dex  LX/17J;->BFC(ZLI)
+    dex byte offset: 0x804e0c
+
+server-background-xref.txt sha256=0f111dcc4b55f653761283b42791cfd442ab9b3d6da4253037eda9005da306e5
+["CoreMessageStore/updateMessageReceivedByServerInBackground"]  (1 reference(s))
+  classes7.dex  LX/DMZ;->run(V)
+    dex byte offset: 0x7e173a
+
+server-refusal-xref.txt sha256=3695720e83696d37a92bcb861dd069ecd1a132db9ddb0a9b4b1defdabcbfbead
+["MessageReceivedByServerHandler/markAndLogMessageSendFailure error handling ack key="]  (1 reference(s))
+  classes.dex  LX/17J;->A03(VLLLLI)
+    dex byte offset: 0x804890
+
+ack-field-producers.txt sha256=af0cf26955f4f59a30780a2f3bf9e87a67ec21e836647d5991c6fcf3b0da7179
+["counter_abuse_token"]  (6 reference(s))
+  classes.dex  LX/0SB;->AR4(VLL)
+    dex byte offset: 0x58e0b0
+  classes.dex  LX/0ze;->A00(VLL)
+    dex byte offset: 0x77a108
+  classes.dex  LX/0ze;->A02(VLLZ)
+    dex byte offset: 0x77a5c8
+  classes.dex  LX/0ze;->A04(VL)
+    dex byte offset: 0x77a95a
+  classes.dex  LX/17J;->BFC(ZLI)
+    dex byte offset: 0x804d94
+  classes.dex  LX/1Dz;->A0H(LLLLLLLIJJZ)
+    dex byte offset: 0x841522
+
+ack-producer-callers.txt sha256=5b57f8bb773ed2f39404de8d45dfe1adb6a1ca6b688e8192ea9d8a21abb1f131
+classes.dex  LX/1Dz;->A10(VLLLLLLIJJZ)
+  invoke dex byte offset: 0x842104
+
+ack-forwarder-callers.txt sha256=0e6a27d63d37f5f9854bab944a9af5ad183372ea8fed550ac1b88ad95f590dd2
+classes.dex  LX/1Qy;->A02(VL)
+  invoke dex byte offset: 0x8dd07e

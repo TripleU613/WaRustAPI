@@ -1,5 +1,15 @@
 # Status — 2026-10-07
 
+Success ACK admission (2026-10-09, **confirmed static / tested offline**): APK 37.71
+wire parser → device conversion → event 19 → handler proves that a nonnull
+converted participant suppresses success acceptance. Rust now guards supported
+PN/LID participants, including primary forms, while preserving error ACKs and
+original uncertain reservations across restart. The twenty-topic snapshot also
+retains native accepted-message SQL, status branches, failure helpers and scoped
+poll-path negatives. Native extra user subtypes, complete status/user-row parity
+and a qualifying live ACK remain unverified. No sends or account resets ran.
+[Evidence and limits](docs/protocol/message-ack.md).
+
 Device send preparation (2026-10-07): selected recipient queries now
 cover all local 64-user batches once, without draining unrelated pending users.
 Refused, partial and omitted-user replies block before message reservation even

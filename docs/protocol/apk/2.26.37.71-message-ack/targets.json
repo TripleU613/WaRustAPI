@@ -1,0 +1,242 @@
+{
+  "ack-android-message-producer": {
+    "class": "LX/1Dz;",
+    "file": "ack-android-message-producer.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0H",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "ack-attributes-constructor": {
+    "class": "LX/CSu;",
+    "file": "ack-attributes-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "ack-attributes-storage": {
+    "class": "LX/Cb1;",
+    "file": "ack-attributes-storage.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "ack-jid-bundle": {
+    "class": "LX/1Dz;",
+    "file": "ack-jid-bundle.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0g",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "ack-message-forwarder": {
+    "class": "LX/1Dz;",
+    "file": "ack-message-forwarder.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A10",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "ack-participant-device-conversion": {
+    "class": "LX/0DK;",
+    "file": "ack-participant-device-conversion.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "ack-user-conversion-predicate": {
+    "class": "LX/0DE;",
+    "file": "ack-user-conversion-predicate.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0l",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "ack-wire-parser": {
+    "class": "LX/1Qy;",
+    "file": "ack-wire-parser.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "server-ack-handler": {
+    "class": "LX/17J;",
+    "file": "server-ack-handler.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "BFC",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "server-background-worker": {
+    "class": "LX/DMZ;",
+    "file": "server-background-worker.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "run",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "server-refusal-handler": {
+    "class": "LX/17J;",
+    "file": "server-refusal-handler.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A03",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "server-self-predicate": {
+    "class": "LX/1gd;",
+    "file": "server-self-predicate.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0f",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "server-special-predicate": {
+    "class": "LX/6an;",
+    "file": "server-special-predicate.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1Z",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "server-status-helper": {
+    "class": "LX/17J;",
+    "file": "server-status-helper.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "server-worker-constructor": {
+    "class": "LX/DMZ;",
+    "file": "server-worker-constructor.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "server-worker-dispatch": {
+    "class": "LX/0zC;",
+    "file": "server-worker-dispatch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0U",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "state-helper": {
+    "class": "LX/15A;",
+    "file": "state-helper.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "state-one": {
+    "class": "LX/0ZG;",
+    "file": "state-one.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A04",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "state-three": {
+    "class": "LX/0Y5;",
+    "file": "state-three.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0H",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "state-two": {
+    "class": "LX/0ZG;",
+    "file": "state-two.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A06",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  }
+}

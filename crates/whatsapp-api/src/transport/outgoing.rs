@@ -991,6 +991,17 @@ pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
     let Some(from) = super::receipts::jid(node, "from") else {
         return Ok(false);
     };
+    // APK 2.26.37.71: 1Qy.A02 converts participant through 0DK.A00 only
+    // on success; 1Dz.A0H stores it in event 19, and 17J.BFC (023e..024c)
+    // ignores a nonnull DeviceJid. Plain PN/LID users convert to primary
+    // devices too. Other native user subtypes remain outside this adapter.
+    if node.get_attr("error").is_none()
+        && super::receipts::jid(node, "participant").is_some_and(|jid| {
+            matches!(jid.server, Server::User | Server::Lid) && !jid.user.is_empty()
+        })
+    {
+        return Ok(false);
+    }
     let rows = store.read(|tx| tx.scan(Table::Outbox, 1, 10000))?;
     if rows.len() == 10000 {
         return Err(Error::invalid("outbox", "pagination required"));
@@ -1981,6 +1992,40 @@ mod tests {
             .unwrap()
         );
         let ack = ack.attr("from", "15555550100@s.whatsapp.net");
+        // APK success participant conversion applies to primary users and
+        // companion devices, for both literal-text and decoded JID attributes.
+        for participant in [
+            "15555550102@s.whatsapp.net",
+            "15555550102:3@s.whatsapp.net",
+            "123456789@lid",
+            "123456789:3@lid",
+        ] {
+            for candidate in [
+                ack.clone().attr("participant", participant),
+                ack.clone()
+                    .attr("participant", Jid::parse(participant).unwrap()),
+            ] {
+                assert!(!acknowledge(&store, &candidate).unwrap());
+                let status = store
+                    .read(|tx| outbox().status(tx, local_id))
+                    .unwrap()
+                    .unwrap();
+                assert!(status.is_uncertain());
+                assert!(!status.server_accepted());
+                assert_eq!(status.facts.len(), 1);
+                assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
+            }
+        }
+        drop(store);
+        let store = open(&path);
+        assert!(begin(&store).unwrap().is_none());
+        assert!(
+            store
+                .read(|tx| outbox().status(tx, local_id))
+                .unwrap()
+                .unwrap()
+                .is_uncertain()
+        );
         assert!(acknowledge(&store, &ack).unwrap());
         assert!(!acknowledge(&store, &ack).unwrap());
         drop(store);
@@ -1998,6 +2043,39 @@ mod tests {
         assert!(status.server_accepted());
         assert!(!status.is_uncertain());
         assert_eq!(status.facts.len(), 2);
+    }
+    #[test]
+    fn participant_success_guard_does_not_discard_error_acks() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("error-ack.redb");
+        let store = open(&path);
+        let local_id = enqueue(&store);
+        store
+            .write(|tx| {
+                let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
+                entry.wire_id = Some(MessageId::new("fixture")?);
+                outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)
+            })
+            .unwrap();
+        let ack = Node::new("ack")
+            .attr("class", "message")
+            .attr("id", "fixture")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("participant", Jid::parse("123456789:3@lid").unwrap())
+            .attr("error", "500");
+        assert!(acknowledge(&store, &ack).unwrap());
+        assert!(!acknowledge(&store, &ack).unwrap());
+        drop(store);
+        let store = open(&path);
+        let status = store
+            .read(|tx| outbox().status(tx, local_id))
+            .unwrap()
+            .unwrap();
+        assert!(!status.server_accepted());
+        assert_eq!(status.facts.len(), 1);
+        assert_eq!(status.facts[0].kind, DeliveryFactKind::Failed);
+        assert_eq!(status.facts[0].code, Some(500));
+        assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
     }
 }
 

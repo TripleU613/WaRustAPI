@@ -1,0 +1,20 @@
+# APK-derived structural disassembly: LX/0zC;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0U(VLLLIJ) flags=0x1 registers=10
+  # full signature: LX/0zC;->A0U(LX/178;LX/1gc;Ljava/lang/String;IJ)V
+  0000..0004 op=54 iget-object v0, v3, LX/0zC;->A1I:Ljava/util/Map;
+  0004..000a op=72 invoke-interface {v0, v5}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+  000a..000e op=54 iget-object v0, v3, LX/0zC;->A02:LX/00s;
+  000e..0014 op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  0014..0016 op=0c move-result-object v1
+  0016..001a op=1f check-cast v1, LX/1f0;
+  001a..001e op=22 new-instance v2, LX/DMZ;
+  001e..0024 op=76 invoke-direct/range {v2..v9}, LX/DMZ;-><init>(LX/0zC;LX/178;LX/1gc;Ljava/lang/String;IJ)V
+  0024..0028 op=13 const/16 v0, #0x17
+  0028..002e op=6e invoke-virtual {v1, v2, v0}, LX/1f0;->A01(Ljava/lang/Runnable;I)V
+  002e..0030 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

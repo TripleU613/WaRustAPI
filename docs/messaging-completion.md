@@ -1,5 +1,15 @@
 # Messaging completion checklist
 
+Success ACK admission (2026-10-09, **confirmed static / tested offline**): APK 37.71
+wire parser → device conversion → event 19 → handler proves that a nonnull
+converted participant suppresses success acceptance. Rust now guards supported
+PN/LID participants, including primary forms, while preserving error ACKs and
+original uncertain reservations across restart. The twenty-topic snapshot also
+retains native accepted-message SQL, status branches, failure helpers and scoped
+poll-path negatives. Native extra user subtypes, complete status/user-row parity
+and a qualifying live ACK remain unverified. No sends or account resets ran.
+[Evidence and limits](protocol/message-ack.md).
+
 Requested scope: implement the following ten improvements. A checked item needs
 implementation and relevant tests; live verification is recorded separately.
 Comparison APK evidence is 2.26.37.70, not the pinned 2.26.36.75 profile.

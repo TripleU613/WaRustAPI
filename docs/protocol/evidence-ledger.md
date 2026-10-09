@@ -1,5 +1,15 @@
 # Evidence ledger
 
+Outgoing success ACK participant trace (2026-10-09, **confirmed static / tested offline**): APK 37.71
+wire parser → device conversion → event 19 → handler proves that a nonnull
+converted participant suppresses success acceptance. Rust now guards supported
+PN/LID participants, including primary forms, while preserving error ACKs and
+original uncertain reservations across restart. The twenty-topic snapshot also
+retains native accepted-message SQL, status branches, failure helpers and scoped
+poll-path negatives. Native extra user subtypes, complete status/user-row parity
+and a qualifying live ACK remain unverified. No sends or account resets ran.
+[Evidence and limits](message-ack.md).
+
 ### Polls — 2026-09-20
 
 `LX/BYa`, `LX/BWH`, `LX/BOq`, `LX/BQ2`, `LX/BSo` descriptors give the poll
