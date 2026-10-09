@@ -1002,20 +1002,17 @@ pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
     {
         return Ok(false);
     }
-    let rows = store.read(|tx| tx.scan(Table::Outbox, 1, 10000))?;
-    if rows.len() == 10000 {
-        return Err(Error::invalid("outbox", "pagination required"));
-    }
+    let Ok(wire_id) = MessageId::new(id) else {
+        return Ok(false);
+    };
     store.write(|tx| {
-        for (key, _) in rows {
-            let Some(mut entry): Option<OutboxEntry> = tx.get_json(Table::Outbox, &key, 1)? else {
-                continue;
-            };
-            if entry.progress != AttemptProgress::InFlight
-                || entry.intent.chat.jid() != &from
-                || entry.wire_id.as_ref().map(|v| v.as_str()) != Some(id)
-            {
-                continue;
+        // Unrelated saved history must not prevent ACK correlation. Use the same
+        // complete, ambiguity-checking lookup as receipts, inside the mutation
+        // transaction; a duplicate wire reservation must never select a winner.
+        // APK admission/recipient evidence: docs/protocol/message-ack.md.
+        if let Some(mut entry) = outbox().by_wire_id_in_write(tx, &wire_id)? {
+            if entry.progress != AttemptProgress::InFlight || entry.intent.chat.jid() != &from {
+                return Ok(false);
             }
             let kind = if node.get_attr("error").is_some() {
                 DeliveryFactKind::Failed
@@ -2044,6 +2041,111 @@ mod tests {
         assert!(!status.is_uncertain());
         assert_eq!(status.facts.len(), 2);
     }
+    #[test]
+    fn acknowledgement_reaches_intent_beyond_ten_thousand_history_rows() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("paged-ack.redb");
+        let store = open(&path);
+        let template_id = enqueue(&store);
+        let template = store
+            .read(|tx| outbox().get(tx, template_id))
+            .unwrap()
+            .unwrap();
+        let target = LocalMessageId(10_000_u128.to_be_bytes());
+        store
+            .write(|tx| {
+                tx.delete(Table::Outbox, &template_id.0)?;
+                for index in 0..=10_000_u128 {
+                    let mut entry = template.clone();
+                    entry.local_id = LocalMessageId(index.to_be_bytes());
+                    entry.progress = if entry.local_id == target {
+                        entry.wire_id = Some(MessageId::new("paged-ack-fixture")?);
+                        AttemptProgress::InFlight
+                    } else {
+                        AttemptProgress::Cancelled
+                    };
+                    tx.put_json(Table::Outbox, &entry.local_id.0, 1, &entry)?;
+                }
+                Ok(())
+            })
+            .unwrap();
+        let ack = Node::new("ack")
+            .attr("class", "message")
+            .attr("id", "paged-ack-fixture")
+            .attr("from", "15555550100@s.whatsapp.net");
+        assert!(acknowledge(&store, &ack).unwrap());
+        assert!(!acknowledge(&store, &ack).unwrap());
+        drop(store);
+        let store = open(&path);
+        assert!(!acknowledge(&store, &ack).unwrap());
+        let status = store
+            .read(|tx| outbox().status(tx, target))
+            .unwrap()
+            .unwrap();
+        assert!(status.server_accepted());
+        assert_eq!(status.progress, AttemptProgress::InFlight);
+        assert_eq!(status.facts.len(), 1);
+        assert_eq!(store.read(|tx| tx.count(Table::Outbox)).unwrap(), 10_001);
+        assert!(store.read(|tx| outbox().pending(tx, 1)).unwrap().is_empty());
+    }
+
+    #[test]
+    fn acknowledgement_refuses_ambiguous_or_corrupt_history_without_accepting() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("ambiguous-ack.redb");
+        let store = open(&path);
+        let local_id = enqueue(&store);
+        let original = store
+            .write(|tx| {
+                let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
+                entry.wire_id = Some(MessageId::new("ambiguous-ack-fixture")?);
+                outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)?;
+                Ok(entry)
+            })
+            .unwrap();
+        // A different chat cannot make duplicated wire authority
+        // unambiguous. Do not pick the first recipient match in storage order.
+        let duplicate_id = LocalMessageId(u128::MAX.to_be_bytes());
+        store
+            .write(|tx| {
+                let mut duplicate = original.clone();
+                duplicate.local_id = duplicate_id;
+                duplicate.intent.chat =
+                    ChatId::from_jid(&Jid::parse("15555550101@s.whatsapp.net")?)?;
+                tx.put_json(Table::Outbox, &duplicate_id.0, 1, &duplicate)
+            })
+            .unwrap();
+        let ack = Node::new("ack")
+            .attr("class", "message")
+            .attr("id", "ambiguous-ack-fixture")
+            .attr("from", "15555550100@s.whatsapp.net");
+        assert!(
+            acknowledge(&store, &ack)
+                .unwrap_err()
+                .to_string()
+                .contains("duplicate outbox wire id")
+        );
+        assert_eq!(
+            store.read(|tx| outbox().get(tx, local_id)).unwrap(),
+            Some(original.clone())
+        );
+        store
+            .write(|tx| tx.put(Table::Outbox, &duplicate_id.0, 1, b"corrupt-fixture"))
+            .unwrap();
+        assert!(
+            acknowledge(&store, &ack)
+                .unwrap_err()
+                .to_string()
+                .contains("invalid saved outbox entry")
+        );
+        drop(store);
+        let store = open(&path);
+        assert_eq!(
+            store.read(|tx| outbox().get(tx, local_id)).unwrap(),
+            Some(original)
+        );
+    }
+
     #[test]
     fn participant_success_guard_does_not_discard_error_acks() {
         let dir = tempfile::tempdir().unwrap();

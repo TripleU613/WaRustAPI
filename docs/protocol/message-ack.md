@@ -18,7 +18,7 @@ trace prevents guessing the meaning of obfuscated fields.
 1Qy.A02 tests the raw `error` attribute at 054a. With no error, it converts
 Cb1.A01 through 0DK.A00 at 0552..0560 and passes that result as the first
 DeviceJid argument to 1Dz.A10 at 0572..0578. A10 forwards it unchanged to A0H,
-which obtains Android Message **what=19** and stores that first argument as
+which obtains Android Message **what=0, arg1=19, arg2=0** and stores that first argument as
 Bundle `participant` through A0g. A0g serializes the supplied JID through
 0DE.A09; it does not manufacture a device. BFC's event-19 branch parses that
 Bundle member through 0D1.A02 at 00b4..00cc. At 023e..024c a nonnull converted
@@ -131,3 +131,8 @@ formatting, default CLI tests (25 plus one API-symbol check), and CLI reference
 regeneration pass. The twenty-topic bundle is 25 files / 279,970 bytes and
 reproduces exactly from APK 37.71; cached self-diff reports unchanged artifacts.
 No qualifying live ACK was exercised.
+
+Follow-up: [paginated ACK correlation](ack-correlation-pages.md) removes our
+10,000-row history refusal and rejects duplicate wire authority atomically.
+It also corrects the Android selector description above: event 19 is arg1.
+Complete native status/user-row admission remains unported.

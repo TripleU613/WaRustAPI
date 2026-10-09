@@ -1,0 +1,26 @@
+{
+  "sender-address-fields": {
+    "class": "LX/178;",
+    "file": "sender-address-fields.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "CW6",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  },
+  "sender-address-status": {
+    "class": "LX/1sS;",
+    "file": "sender-address-status.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/outgoing.rs"
+    ]
+  }
+}

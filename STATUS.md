@@ -1,5 +1,20 @@
 # Status — 2026-10-07
 
+ACK history correlation (2026-10-09, **implemented/offline tested**): removed
+our 10,000-row refusal using the existing complete paginated wire-ID lookup
+inside the ACK transaction. Ambiguous/corrupt history refuses atomically;
+recipient/participant guards, terminal facts and replay reservations remain intact.
+The native dispatcher prose is corrected to arg1=19, not what=19. No live send,
+account migration or native user-row implementation.
+[Evidence and limits](docs/protocol/ack-correlation-pages.md).
+
+ACK pagination validation: 829 workspace/all-feature tests, strict all-target
+Clippy, warnings-denied Rustdoc, default CLI tests (25 plus API-symbol), CLI
+reference, API-symbol, formatting and whitespace checks passed. The regression
+fails on the old implementation with pagination required. Exact two-topic source
+export/self-diff and hygiene (2,119 links/105 APK bundles) passed. No live ACK,
+send, account migration or replay ran.
+
 Before-insertion registry (2026-10-09, **confirmed static**): all 13 registered
 before entries now resolve to factories and executable CHJ bodies. Together with
 the after index this maps 13+54 immediate hooks. Selected delegates distinguish
