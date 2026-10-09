@@ -1,5 +1,14 @@
 # Status — 2026-10-07
 
+Mapping import entry points (2026-10-09, **confirmed static**): APK 37.71's
+remaining conversation-mapping callers are chat-transfer import and the initial
+history-bootstrap branch. The immediate history inputs are bounded file reads
+or inflated inline chunks; nonce presence/storage is not demonstrated nonce
+verification. A four-topic snapshot preserves the callers and full worker.
+Upstream chunk/transfer authentication and receipt_user admission remain unknown.
+No runtime, account state or live request changed.
+[Evidence and limits](docs/protocol/mapping-admission.md).
+
 Chat counterpart provenance (2026-10-09, **confirmed static**): APK 37.71
 uses a HashBiMap populated from distinct positive original chat-JID rows and
 from parsed conversation account-LID/phone pairs. Reverse lookup, chat deletion,

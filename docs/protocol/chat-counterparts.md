@@ -111,3 +111,10 @@ cargo run -p xtask -- apk-research-diff \
 ```
 
 Static artifact agreement does not establish live migration or sync parity.
+
+## Import caller follow-up (2026-10-09)
+
+CnI.A08 and CoO.A02 now have retained source and immediate input-path traces in
+[mapping import entry points](mapping-admission.md). The history update is in
+the initial-bootstrap branch; transfer parsing and bootstrap nonce presence
+are not full upstream authentication proofs. The earlier snapshots are unchanged.
