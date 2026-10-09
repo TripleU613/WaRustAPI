@@ -180,3 +180,9 @@ Follow-up: [receipt cache invalidation](receipt-cache.md) now establishes
 signed -1 trim bound. General cache load, eviction callback producers and
 database commit scheduling remain unknown; native mutable receipt runtime
 is still unported.
+
+Follow-up: [per-user receipt writer](receipt-user.md) confirms separate
+delivery/read/played columns and creation of user rows without a delivery
+timestamp. The primary cleanup's user-row existence intersection must not
+be narrowed to a Delivered fact or positive delivery timestamp. Complete 15A
+admission and namespace authority remain unported.

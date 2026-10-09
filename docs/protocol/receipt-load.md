@@ -96,3 +96,7 @@ topics and four metadata artifacts; this does not prove cross-release parity.
 Repository hygiene checked 1,368 local links and 31 APK bundles / 8,257,368
 bytes; diff hygiene passed. Research/docs only; no fresh Rust or live tests
 are claimed beyond the preceding 66-test tooling chunk.
+
+Follow-up: [per-user receipt state](receipt-user.md) now traces its independent
+earliest-positive slots, SQL writer and row-existence consequence for cleanup.
+Complete upstream 15A admission and mutable runtime parity remain unported.

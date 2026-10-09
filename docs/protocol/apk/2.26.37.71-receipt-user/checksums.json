@@ -1,0 +1,50 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "message-user-writer.txt": {
+    "bytes": 73751,
+    "sha256": "c23234d6c7efc265c66cbbfcf579fb928165f2a418dcaed02ba8b9ae13154285"
+  },
+  "played-cache-kind.txt": {
+    "bytes": 512,
+    "sha256": "4acc1c36d5c45e1585b0c681d196fb7df3149e5483e190ad1b70a8e38560a96f"
+  },
+  "targets.json": {
+    "bytes": 3815,
+    "sha256": "5cdfe210700fdfa434c16748134cd3eb37bf424626e15a30ea98ec60496ac6f9"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "user-load-entry.txt": {
+    "bytes": 4879,
+    "sha256": "6742c65b97b7feb808f404794b8382d923570a02a807c9737a4261a6a3006eba"
+  },
+  "user-map.txt": {
+    "bytes": 1292,
+    "sha256": "e440f59e7d3ce381184e891f0dd5ab5aca857599a33b62b391f5cc5cfe27396b"
+  },
+  "user-sql-load.txt": {
+    "bytes": 9545,
+    "sha256": "9dc6b4f93da822eaea59413a1128d6a2fe0af9a6c1abf320ccd7fef5fa23745b"
+  },
+  "user-status-projection.txt": {
+    "bytes": 1067,
+    "sha256": "24c734908da2a96c562388dffba0b9b28f9e4618248249c50552118a16617e08"
+  },
+  "user-time-constructor.txt": {
+    "bytes": 685,
+    "sha256": "cb23651beec44d1f60f0bb07e74bcb157b18aa19d591923e0fa2a9787f7477d3"
+  },
+  "user-time-update.txt": {
+    "bytes": 4395,
+    "sha256": "5e5972d85bbb9f75d0d1014ff9792e5a455c65eb9a8c102fd3d2b374aea8d432"
+  }
+}

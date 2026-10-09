@@ -2944,3 +2944,17 @@ topics and four metadata artifacts; this does not prove cross-release parity.
 Repository hygiene checked 1,368 local links and 31 APK bundles / 8,257,368
 bytes; diff hygiene passed. Research/docs only; no fresh Rust or live tests
 are claimed beyond the preceding 66-test tooling chunk.
+
+2026-10-09 — **Confirmed static:** per-user receipt timestamps retain earliest
+positive delivery/read/played independently. User rows can be created by read
+or played without a delivery timestamp; identity cleanup's existence query
+is not equivalent to a Delivered fact check. Writer rejects other statuses,
+while complete upstream 15A admission and namespace authority remain unknown.
+[Evidence and reproducible recipe](protocol/receipt-user.md); mutable Rust receipt runtime remains
+unported, with no account or live operation in this chunk.
+
+Receipt-user validation: eight source topics / 13 files / 128,135 bytes
+reproduced exactly from APK 2.26.37.71. Cached self-diff verified eight unchanged
+topics and four metadata artifacts, not cross-release equivalence. Hygiene
+checked 1,381 local links and 32 APK bundles / 8,385,503 bytes; diff hygiene
+passed. Research/docs only; no new runtime tests or live operation is claimed.
