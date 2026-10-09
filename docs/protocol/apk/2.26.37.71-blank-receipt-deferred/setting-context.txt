@@ -1,0 +1,24 @@
+# APK-derived structural disassembly: LX/6d6;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A01(LL) flags=0x19 registers=2
+  # full signature: LX/6d6;->A01(LX/178;)LX/8Bw;
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v1, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000e op=71 invoke-static {v1}, LX/6d6;->A02(LX/178;)LX/8Bw;
+  000e..0010 op=0c move-result-object v0
+  0010..0014 op=39 if-nez v0, +0xa
+  0014..0018 op=22 new-instance v0, LX/8Bw;
+  0018..001e op=70 invoke-direct {v0}, LX/8Bw;-><init>()V
+  001e..0024 op=71 invoke-static {v1, v0}, LX/6d6;->A03(LX/178;LX/8Bw;)V
+  0024..002a op=71 invoke-static {v1}, LX/6d6;->A02(LX/178;)LX/8Bw;
+  002a..002c op=0c move-result-object v0
+  002c..0030 op=38 if-eqz v0, +0x3
+  0030..0032 op=11 return-object v0
+  0032..0038 op=71 invoke-static {}, LX/1xh;->A1B()Ljava/lang/IllegalStateException;
+  0038..003a op=0c move-result-object v0
+  003a..003c op=27 throw v0
+  # exception table: 0 try range(s)
+.end method

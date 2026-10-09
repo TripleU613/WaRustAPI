@@ -1,5 +1,12 @@
 # Status — 2026-10-07
 
+Deferred blank receipt expansion (2026-10-09, **confirmed static**): eight
+source topics close DNt selector 6 as status-target device-set subtraction
+and blank-device insertion, not normal receipt_user seeding. Existing-target
+property and abstract override boundaries remain unknown; primary cleanup
+still requires actual user-row membership. No runtime/live change.
+[Evidence and limits](docs/protocol/blank-receipt-deferred.md).
+
 Read-receipt persistence (2026-10-09, **confirmed static**): ten source topics
 connect local status marking to existing message-row updates and separate
 chat row/sort and status-table sent positions. IOException may be logged and

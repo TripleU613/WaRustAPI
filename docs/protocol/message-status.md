@@ -57,7 +57,9 @@ writes bypass the logging setter; there is no shared implicit monotonic guard.
 checks message row/type/status, and refuses some paths with the exact
 ReceiptsProcessor/addmsg not adding blank receipts / no target devices logs.
 Its 1im/pre-populated-cache path can schedule DNt discriminator 6 under additional
-key/flag conditions; that task's complete effects are **untraced** here.
+key/flag conditions; its selected device expansion is now followed in
+[the deferred trace](blank-receipt-deferred.md), without establishing user-row
+seeding or complete target authority.
 Otherwise it calls 0Z4.A08(message,targets) at 010a..0110. If that returns false,
 it logs error adding blank receipts and writes **20** at 0124..012c, then builds
 Cnn and passes it to 0zO. Full fallback scheduling/persistence behavior remains

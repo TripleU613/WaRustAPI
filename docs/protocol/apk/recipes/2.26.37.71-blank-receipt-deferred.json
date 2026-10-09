@@ -1,0 +1,72 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "deferred-ctor": {
+      "class": "LX/DNt;",
+      "method": "<init>",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "deferred-worker": {
+      "class": "LX/DNt;",
+      "method": "run",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "setting-context": {
+      "class": "LX/6d6;",
+      "method": "A01",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "setting-mode": {
+      "class": "LX/8Bw;",
+      "method": "A03",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "status-targets": {
+      "class": "LX/0zt;",
+      "method": "A0U",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "existing-targets": {
+      "class": "LX/0Z4;",
+      "method": "A02",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "existing-message": {
+      "class": "LX/0Z5;",
+      "method": "A05",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "existing-key-boundary": {
+      "class": "LX/0Z5;",
+      "method": "A0O",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    }
+  }
+}

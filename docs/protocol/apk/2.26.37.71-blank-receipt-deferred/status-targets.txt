@@ -1,0 +1,54 @@
+# APK-derived structural disassembly: LX/0zt;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0U(LLI) flags=0x1 registers=15
+  # full signature: LX/0zt;->A0U(Ljava/util/Set;I)Ljava/util/Set;
+  0000..0002 op=12 const/4 v0, #0x3
+  0002..0004 op=01 move v11, v14
+  0004..0008 op=33 if-ne v14, v0, +0x5
+  0008..000c op=62 sget-object v0, LX/0Vl;->A00:LX/0Vl;
+  000c..000e op=11 return-object v0
+  000e..0010 op=07 move-object v1, v12
+  0010..0016 op=71 invoke-static {v12}, LX/0zt;->A06(LX/0zt;)LX/0YK;
+  0016..0018 op=0c move-result-object v0
+  0018..001e op=6e invoke-virtual {v0}, LX/0YK;->A0E()Lcom/google/common/collect/ImmutableList;
+  001e..0020 op=0c move-result-object v6
+  0020..0026 op=71 invoke-static {v12}, LX/0zt;->A06(LX/0zt;)LX/0YK;
+  0026..0028 op=0c move-result-object v0
+  0028..002e op=6e invoke-virtual {v0}, LX/0YK;->A0F()Lcom/google/common/collect/ImmutableList;
+  002e..0030 op=0c move-result-object v7
+  0030..0036 op=71 invoke-static {v12}, LX/0zt;->A06(LX/0zt;)LX/0YK;
+  0036..0038 op=0c move-result-object v0
+  0038..003e op=6e invoke-virtual {v0}, LX/0YK;->A0R()Ljava/util/List;
+  003e..0040 op=0c move-result-object v0
+  0040..0046 op=71 invoke-static {v0}, LX/7pF;->A01(Ljava/util/List;)Ljava/util/List;
+  0046..0048 op=0c move-result-object v8
+  0048..004c op=22 new-instance v5, Ljava/util/ArrayList;
+  004c..0052 op=70 invoke-direct {v5}, Ljava/util/ArrayList;-><init>()V
+  0052..0056 op=62 sget-object v3, LX/BzC;->A03:LX/BzC;
+  0056..0058 op=12 const/4 v4, #0x0
+  0058..005c op=22 new-instance v2, LX/CR9;
+  005c..0062 op=70 invoke-direct {v2}, LX/CR9;-><init>()V
+  0062..0064 op=07 move-object v9, v13
+  0064..0066 op=07 move-object v10, v4
+  0066..006c op=76 invoke-direct/range {v1..v11}, LX/0zt;->A0G(LX/CR9;LX/BzC;Ljava/lang/String;Ljava/util/ArrayList;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Set;Ljava/util/Set;I)Ljava/util/Set;
+  006c..006e op=0c move-result-object v0
+  006e..0074 op=6e invoke-virtual {v12, v0}, LX/0zt;->A0T(Ljava/util/Set;)Ljava/util/HashSet;
+  0074..0076 op=0c move-result-object v3
+  0076..007c op=6e invoke-virtual {v3}, Ljava/util/AbstractCollection;->size()I
+  007c..007e op=0a move-result v2
+  007e..0082 op=1a const-string v0, "StatusParticipantUserManager/generateTargetDevicesFromPeerStatusSetting device size="
+  0082..0086 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0086..008c op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  008c..0092 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0092..0096 op=1a const-string v0, "; mode="
+  0096..009c op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  009c..00a2 op=6e invoke-virtual {v1, v14}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  00a2..00a8 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00a8..00aa op=0c move-result-object v0
+  00aa..00b0 op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  00b0..00b2 op=11 return-object v3
+  # exception table: 0 try range(s)
+.end method
