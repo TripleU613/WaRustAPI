@@ -444,6 +444,24 @@ fn reply_payload_for(
     if target.key.chat.jid().to_non_ad() != peer.to_non_ad() {
         return Err(Error::invalid("reply", "quoted message is in another chat"));
     }
+    // The caller's key alone cannot attribute another saved entry's body.
+    // The immutable SendRequest.chat attributes its body locally. APK 37.71
+    // BoQ.A00 traces reaction keys, not native quoted-reply validation.
+    let own_entry = if target.key.direction == Direction::Outgoing {
+        let entry = store.read(|tx| outbox().by_wire_id(tx, &target.key.id))?;
+        if entry
+            .as_ref()
+            .is_some_and(|entry| entry.intent.chat.jid().to_non_ad() != peer.to_non_ad())
+        {
+            return Err(Error::invalid(
+                "reply",
+                "saved quoted message belongs to another chat",
+            ));
+        }
+        entry
+    } else {
+        None
+    };
     let id = target.key.id.as_str();
     let (own_pn, own_lid) = store.write(|tx| login_identity(tx, account))?;
     let peer_lid = super::inbox::lid_for(store, peer)?;
@@ -457,8 +475,7 @@ fn reply_payload_for(
             .unwrap_or_else(|| super::quotes::conversation(""));
         (peer_lid.unwrap_or_else(|| peer.to_non_ad()), quoted)
     } else {
-        let quoted = store
-            .read(|tx| outbox().by_wire_id(tx, &target.key.id))?
+        let quoted = own_entry
             .and_then(|entry| match entry.intent.content {
                 MessageContent::Text { body, .. } => Some(super::quotes::conversation(&body)),
                 _ => None,
@@ -1950,5 +1967,107 @@ mod tests {
         assert!(status.server_accepted());
         assert!(!status.is_uncertain());
         assert_eq!(status.facts.len(), 2);
+    }
+}
+
+#[cfg(test)]
+mod quote_scope_tests {
+    use super::*;
+    use crate::{
+        model::{
+            ids::{AccountId, ChatId, ClientRequestId},
+            jid::Jid,
+            message::{Direction, MessageKey, MessageRef},
+            send::SendRequest,
+        },
+        store::{MasterKey, OpenOptions, StaticKeySource},
+    };
+    #[test]
+    fn outgoing_quote_body_requires_the_saved_intents_original_chat() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("quote.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([6; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let original = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let foreign = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+        let request = SendRequest {
+            client_request_id: ClientRequestId::new("fixture").unwrap(),
+            chat: ChatId::from_jid(&original).unwrap(),
+            content: MessageContent::Text {
+                body: "private original body".into(),
+                quoted: None,
+                style: Default::default(),
+            },
+        };
+        let wire = MessageId::new("ORIGINAL-WIRE").unwrap();
+        let ticket = store.write(|tx| outbox().enqueue(tx, &request)).unwrap().0;
+        store
+            .write(|tx| {
+                let mut entry = outbox().get_mut(tx, ticket.local_id)?.unwrap();
+                entry.wire_id = Some(wire.clone());
+                tx.put_json(Table::Outbox, &entry.local_id.0, 1, &entry)
+            })
+            .unwrap();
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15555550199@s.whatsapp.net").unwrap()),
+            ..Default::default()
+        };
+        let target = |chat: &Jid, id: MessageId| MessageRef {
+            key: MessageKey {
+                chat: ChatId::from_jid(chat).unwrap(),
+                sender: None,
+                direction: Direction::Outgoing,
+                id,
+            },
+        };
+        let before = store.read(|tx| tx.scan(Table::Checkpoints, 1, 20)).unwrap();
+        let error = reply_payload_for(
+            &store,
+            &account,
+            &foreign,
+            &target(&foreign, wire.clone()),
+            "reply",
+        )
+        .unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("saved quoted message belongs to another chat")
+        );
+        assert!(!error.to_string().contains("private original body"));
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Checkpoints, 1, 20)).unwrap(),
+            before
+        );
+        let payload = reply_payload_for(
+            &store,
+            &account,
+            &original,
+            &target(&original, wire),
+            "reply",
+        )
+        .unwrap();
+        assert!(
+            payload
+                .windows(b"private original body".len())
+                .any(|w| w == b"private original body")
+        );
+        let unknown = reply_payload_for(
+            &store,
+            &account,
+            &original,
+            &target(&original, MessageId::new("UNKNOWN").unwrap()),
+            "reply",
+        )
+        .unwrap();
+        assert!(
+            !unknown
+                .windows(b"private original body".len())
+                .any(|w| w == b"private original body")
+        );
     }
 }

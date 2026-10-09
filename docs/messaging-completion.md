@@ -2263,3 +2263,19 @@ peer-key summaries stayed unchanged, with two valid saved reaction keys. Capture
 inspection now uses one timestamp snapshot and handles overflowing ages; a
 subprocess regression proves malformed-key diagnostics remain visible. No new
 chat/live request or identity/reset/retry authority was added.
+
+Outgoing reaction attribution (2026-10-09, implemented/offline): a unique normal-
+outbox wire reservation plus exact address or existing authenticated PN/LID pair
+retains the original sent-message key. Reactor identity remains actual; attempts,
+facts, progress and uncertainty are unchanged. Lookup now checks all pages and
+uncommitted rows for duplicate wire IDs. Outgoing quote bodies require the actual
+saved intent's chat, rather than just the caller's reference. Unknown targets,
+legacy lab-only sends, full native alias/companion/group reconciliation and fresh
+live reactions remain unfinished.
+[Sources, negative findings and fixtures](protocol/reactions.md#outgoing-intent-attribution-and-quote-scope-2026-10-09).
+Validation: 730 workspace/all-feature tests, strict Clippy, warning-free Rustdoc,
+24 default CLI checks and regenerated CLI/API reference checks passed. Offline
+reprojection upgraded zero events and kept retained summaries unchanged. A
+45-second receive-only live smoke check authenticated and stopped cleanly, with
+15 decrypted records remaining 15; no fresh reaction/DM established new target
+interoperability. Original uncertain actions, outbox and receipts were preserved.

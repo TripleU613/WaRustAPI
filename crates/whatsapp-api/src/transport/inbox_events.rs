@@ -535,9 +535,9 @@ fn project(
     })
 }
 
-/// Resolve the sender's own direct target using original authenticated route
-/// proof. This preserves our historical PN layout; it is not an APK migration.
-fn incoming_reaction_target(
+/// Retain direct target keys using original authenticated incoming routes or
+/// attributed outgoing intents. This is local layout compatibility, not an APK migration.
+fn direct_reaction_target(
     tx: &WriteTx<'_>,
     node: &Node,
     payload: &[u8],
@@ -545,19 +545,16 @@ fn incoming_reaction_target(
     let Some(reaction) = super::reactions::decode(payload) else {
         return Ok(None);
     };
-    if !reaction.target_from_sender {
-        return Ok(None);
-    }
-    if !super::receipts::jid(node, "from").is_some_and(|from| {
+    let Some(from) = super::receipts::jid(node, "from").filter(|from| {
         from.device == 0
             && from.agent == 0
             && matches!(
                 from.server,
                 crate::model::jid::Server::User | crate::model::jid::Server::Lid
             )
-    }) {
+    }) else {
         return Ok(None);
-    }
+    };
     // Status reactions have a separate parent namespace (37.71 BoQ.A00).
     if super::reactions::key_fields(payload)
         .and_then(|(remote, _)| remote)
@@ -567,6 +564,9 @@ fn incoming_reaction_target(
         })
     {
         return Ok(None);
+    }
+    if !reaction.target_from_sender {
+        return outgoing_reaction_target(tx, &from, reaction.target_id);
     }
     let target = node.clone().attr("id", reaction.target_id.as_str());
     let Some(record) =
@@ -589,6 +589,64 @@ fn incoming_reaction_target(
     }))
 }
 
+/// Bind a reaction to an original outgoing intent without changing its facts.
+/// A directory/contact alias alone is not an authenticated chat association.
+fn outgoing_reaction_target(
+    tx: &WriteTx<'_>,
+    from: &crate::model::jid::Jid,
+    id: MessageId,
+) -> Result<Option<MessageKey>> {
+    let outbox = crate::outbox::Outbox::new("comparison-driver", crate::profile::Limits::default());
+    let Some(entry) = outbox.by_wire_id_in_write(tx, &id)? else {
+        return Ok(None);
+    };
+    let original = entry.intent.chat.jid();
+    if original.agent != 0
+        || original.device != 0
+        || !matches!(
+            original.server,
+            crate::model::jid::Server::User | crate::model::jid::Server::Lid
+        )
+    {
+        return Ok(None);
+    }
+    let same = super::identity_query::same_primary_address;
+    let mut attributed = same(original, from);
+    let alias_pair = match (&from.server, &original.server) {
+        (crate::model::jid::Server::Lid, crate::model::jid::Server::User) => Some((from, original)),
+        (crate::model::jid::Server::User, crate::model::jid::Server::Lid) => Some((original, from)),
+        _ => None,
+    };
+    if !attributed
+        && let Some((lid, expected_phone)) = alias_pair
+        && let Some(value) = tx.get_json::<serde_json::Value>(
+            Table::Checkpoints,
+            format!("authenticated-lid:{}", lid.to_non_ad()).as_bytes(),
+            1,
+        )?
+    {
+        let phone: crate::model::jid::Jid = serde_json::from_value(value)
+            .map_err(|_| crate::Error::invalid("inbox", "invalid authenticated LID mapping"))?;
+        if phone.server != crate::model::jid::Server::User || phone.agent != 0 || phone.device != 0
+        {
+            return Err(crate::Error::invalid(
+                "inbox",
+                "invalid authenticated LID mapping",
+            ));
+        }
+        attributed = same(expected_phone, &phone);
+    }
+    if !attributed {
+        return Ok(None);
+    }
+    Ok(Some(MessageKey {
+        chat: entry.intent.chat,
+        sender: None,
+        direction: Direction::Outgoing,
+        id,
+    }))
+}
+
 /// Must be called in the ratchet/inbox write transaction, or on an already
 /// authenticated historical record using its original saved route. Marker and
 /// event commit together, so crashes cannot lose the event or emit it twice.
@@ -599,7 +657,7 @@ pub(super) fn publish(
     payload: &[u8],
 ) -> Result<bool> {
     let poll = poll_context(tx, node, payload)?;
-    let reaction_target = incoming_reaction_target(tx, node, payload)?;
+    let reaction_target = direct_reaction_target(tx, node, payload)?;
     // A reaction whose key names `status@broadcast` is a like on a status,
     // which belongs with the viewer records rather than only in the event
     // journal. Recording it writes nothing outward.
@@ -1818,8 +1876,8 @@ mod direct_reaction_target_tests {
                 store.read(|tx| tx.scan(Table::Checkpoints, 1, 20)).unwrap(),
                 before
             );
-            // Outgoing targets, status, group and companion actors do not acquire
-            // this primary-direct historical selector.
+            // Without a saved outgoing intent, outgoing targets do not acquire
+            // this selector. Status, group and companion actors remain separate.
             let ours = MessageRef {
                 key: MessageKey {
                     direction: Direction::Incoming,
@@ -1829,9 +1887,9 @@ mod direct_reaction_target_tests {
             let ours = super::super::reactions::payload(&lid, &lid, &ours, None, 7).unwrap();
             store
                 .write(|tx| {
-                    assert!(incoming_reaction_target(tx, &node, &ours)?.is_none());
+                    assert!(direct_reaction_target(tx, &node, &ours)?.is_none());
                     assert!(
-                        incoming_reaction_target(
+                        direct_reaction_target(
                             tx,
                             &node.clone().attr("from", "12345:3@lid"),
                             &payload
@@ -1839,7 +1897,7 @@ mod direct_reaction_target_tests {
                         .is_none()
                     );
                     assert!(
-                        incoming_reaction_target(
+                        direct_reaction_target(
                             tx,
                             &node
                                 .clone()
@@ -1856,10 +1914,201 @@ mod direct_reaction_target_tests {
                         None,
                         7,
                     )?;
-                    assert!(incoming_reaction_target(tx, &node, &status)?.is_none());
+                    assert!(direct_reaction_target(tx, &node, &status)?.is_none());
                     Ok(())
                 })
                 .unwrap();
+        }
+    }
+}
+
+#[cfg(test)]
+mod outgoing_reaction_tests {
+    use super::*;
+    use crate::{
+        model::{
+            ids::{AccountId, ClientRequestId},
+            jid::Jid,
+            message::{MessageChange, MessageRef},
+            send::{AttemptProgress, DeliveryFact, DeliveryFactKind, SendRequest},
+        },
+        outbox::Outbox,
+        profile::Limits,
+        store::{ConsumerId, MasterKey, OpenOptions, ProtocolStore, StaticKeySource},
+    };
+    #[test]
+    fn outgoing_reactions_use_original_intents_and_only_authenticated_namespace_pairs() {
+        for case in [
+            "mapped",
+            "reverse",
+            "same_pn",
+            "same_lid",
+            "unattributed",
+            "alias_only",
+            "foreign_pn",
+            "foreign_lid",
+            "invalid_map",
+            "duplicate",
+            "absent",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("outgoing.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [19; 32],
+                    ))),
+                    create,
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            let ob = Outbox::new("saved-namespace", Limits::default());
+            let phone = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+            let lid = Jid::parse("12345@lid").unwrap();
+            let actor = if matches!(case, "reverse" | "same_pn") {
+                phone.clone()
+            } else {
+                lid.clone()
+            };
+            let original = match case {
+                "reverse" | "same_lid" => lid.clone(),
+                "foreign_lid" => Jid::parse("54321@lid").unwrap(),
+                "foreign_pn" => Jid::parse("15555550102@s.whatsapp.net").unwrap(),
+                _ => phone.clone(),
+            };
+            let wire = MessageId::new("ORIGINAL-OWN").unwrap();
+            let request = SendRequest {
+                client_request_id: ClientRequestId::new("original-request").unwrap(),
+                chat: ChatId::from_jid(&original).unwrap(),
+                content: MessageContent::Text {
+                    body: "private original body".into(),
+                    quoted: None,
+                    style: Default::default(),
+                },
+            };
+            let ticket = store.write(|tx| ob.enqueue(tx, &request)).unwrap().0;
+            store
+                .write(|tx| {
+                    let mut entry = ob.get_mut(tx, ticket.local_id)?.unwrap();
+                    entry.wire_id = Some(wire.clone());
+                    entry.progress = AttemptProgress::InFlight;
+                    entry.facts.push(DeliveryFact {
+                        kind: DeliveryFactKind::DeliveryUnknown,
+                        device: None,
+                        observed_at: Timestamp(7),
+                        code: None,
+                    });
+                    tx.put_json(Table::Outbox, &entry.local_id.0, 1, &entry)?;
+                    if case == "duplicate" {
+                        entry.local_id = crate::model::ids::LocalMessageId([42; 16]);
+                        tx.put_json(Table::Outbox, &entry.local_id.0, 1, &entry)?;
+                    }
+                    if matches!(case, "mapped" | "reverse" | "foreign_pn" | "foreign_lid") {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            format!("authenticated-lid:{lid}").as_bytes(),
+                            1,
+                            &phone,
+                        )?;
+                    }
+                    if case == "invalid_map" {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            format!("authenticated-lid:{lid}").as_bytes(),
+                            1,
+                            &serde_json::json!({"private":"never echo"}),
+                        )?;
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let before = store.read(|tx| tx.scan(Table::Outbox, 1, 10)).unwrap();
+            let before_head = store.read(|tx| tx.journal_head()).unwrap();
+            let target_id = if case == "absent" {
+                MessageId::new("UNKNOWN").unwrap()
+            } else {
+                wire.clone()
+            };
+            // Local fixture: the remote sender's Incoming perspective yields fromMe=false.
+            let target = MessageRef {
+                key: MessageKey {
+                    chat: ChatId::from_jid(&actor).unwrap(),
+                    sender: None,
+                    direction: Direction::Incoming,
+                    id: target_id.clone(),
+                },
+            };
+            let payload =
+                super::super::reactions::payload(&actor, &actor, &target, Some("👍"), 7).unwrap();
+            let mut node = Node::new("message")
+                .attr("id", "NEW-REACTION")
+                .attr("from", actor.clone());
+            if case == "alias_only" {
+                node = node.attr("sender_pn", phone.clone());
+            }
+            let key = format!("received:{actor}:NEW-REACTION");
+            let result = store.write(|tx| publish(tx, key.as_bytes(), &node, &payload));
+            if matches!(case, "invalid_map" | "duplicate") {
+                let error = result.unwrap_err().to_string();
+                assert!(error.contains(if case == "duplicate" {
+                    "duplicate outbox wire id"
+                } else {
+                    "invalid authenticated LID mapping"
+                }));
+                assert!(!error.contains("never echo"));
+                assert_eq!(store.read(|tx| tx.journal_head()).unwrap(), before_head);
+                assert!(
+                    store
+                        .read(|tx| tx.get(Table::Inbox, key.as_bytes(), 1))
+                        .unwrap()
+                        .is_none()
+                );
+            } else {
+                assert!(result.unwrap());
+                drop(store);
+                let store = open(false);
+                assert!(
+                    !store
+                        .write(|tx| publish(tx, key.as_bytes(), &node, &payload))
+                        .unwrap()
+                );
+                let events = store
+                    .read_events(&ConsumerId::new("fixture").unwrap(), before_head, 10)
+                    .unwrap()
+                    .events;
+                assert_eq!(events.len(), 1);
+                let SyncEvent::MessageUpdated(update) = &events[0].event else {
+                    panic!("expected reaction")
+                };
+                let expected = if matches!(case, "mapped" | "reverse" | "same_pn" | "same_lid") {
+                    &original
+                } else {
+                    &actor
+                };
+                assert_eq!(update.key.chat, ChatId::from_jid(expected).unwrap());
+                assert_eq!(update.key.direction, Direction::Outgoing);
+                assert_eq!(update.key.sender, None);
+                assert_eq!(update.key.id, target_id);
+                assert_eq!(
+                    update.change,
+                    MessageChange::Reaction {
+                        by: DeviceAddress::from_jid(&actor).unwrap(),
+                        emoji: Some("👍".into())
+                    }
+                );
+                assert_eq!(
+                    store.read(|tx| tx.scan(Table::Outbox, 1, 10)).unwrap(),
+                    before
+                );
+                continue;
+            }
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Outbox, 1, 10)).unwrap(),
+                before
+            );
         }
     }
 }

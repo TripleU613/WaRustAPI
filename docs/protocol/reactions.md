@@ -139,3 +139,89 @@ extra duplicate diagnostic lines, not proof of deleted records. This comparison
 does not claim raw encrypted-database byte equality or fresh live behavior.
 No saved identity/request ID was reset, no uncertain action was replayed and no
 new chat or live request was sent in this chunk.
+
+## Outgoing intent attribution and quote scope (2026-10-09)
+
+**Confirmed local audit:** `outbox::Outbox::by_wire_id` formerly returned the
+first matching row and never examined later pages for ambiguity. The own-message
+branch of `transport::outgoing::reply_payload_for` trusted the caller's supplied
+chat key, but did not compare that chat against the actual saved outgoing intent
+before copying its text into the quote. A foreign saved wire ID could therefore
+supply another chat's body. No such real-account disclosure is established;
+this is a code/fixture finding, not a live incident.
+
+**APK evidence remains the preceding hash-pinned 2.26.37.71 trace:** Bal.A01
+0206..0256 and BoQ.A00 00fe..0106 keep ordinary targets in chat context, with
+Ayo.A0S constructing their actual message key. This supports contextual
+attribution, **not** a traced Android outbox migration or native alias authority.
+BoQ is a reaction-key helper, not the quote decoder. The quote-body guard derives
+from the local immutable SendRequest.chat association; this does not establish
+native quote-parent validation. No new APK trace/export was necessary for this
+local storage correction; the 21-topic reaction bundle remains unchanged.
+
+**Implemented locally:** shared paginated lookup now examines all normal-outbox
+namespaces, selects only a unique wire reservation and returns fixed
+`duplicate outbox wire id` / `invalid saved outbox entry` errors. The new
+`by_wire_id_in_write` performs the same read-only lookup within the existing
+ratchet/event transaction and sees its uncommitted rows. These are local
+consistency diagnoses, not WhatsApp reasons. A reserved wire ID is not proof of
+socket write, server acceptance, handset delivery or a successful registration.
+
+A primary direct reaction to our message (`fromMe=false` from the remote
+sender's perspective) can retain its original immutable outgoing chat key if
+the current sender is the same exact primary address, or if the PN/LID pair has
+one existing encrypted `authenticated-lid:<LID>` relation to that exact PN.
+Both PN-to-LID and LID-to-PN perspectives use this **same explicit relation**;
+there is no reverse graph scan or materialized reverse map. Plain/AD-zero
+component correlation retains the existing primary-address rules. Different
+PNs or LIDs cannot bridge through a shared alias. Contact/directory metadata and
+raw sender_pn alone do not authorize this selection. Malformed saved relations
+refuse with the existing fixed `invalid authenticated LID mapping` error.
+
+The MessageUpdated target uses the original chat, Outgoing direction and no
+remote target author, while `by` remains the actual reactor. This attribution
+never mutates OutboxEntry, facts, attempts, progress, identities or pins, and
+never resends a reservation. An uncertain send remains uncertain; a reaction
+adds no server-accepted/delivered/read fact. Missing, foreign or unattributed
+normal-outbox targets keep the existing actual-envelope namespace fallback.
+Companion/group/status parents, own-device synchronization and lab-only sends
+without a normal OutboxEntry remain separate unfinished work. Existing event
+markers are preserved rather than rewriting previously projected updates.
+
+Outgoing quoted text now validates the **actual saved intent's chat** before
+using its body. `saved quoted message belongs to another chat` refuses before
+login-identity checkpoint writes. Unknown IDs retain the existing empty-quote
+fallback; other media quote support and cross-namespace quote normalization are
+not established. No caller-provided reference can transfer a foreign body by
+merely claiming the requested chat. This is local request attribution policy,
+not a new APK/server-mandated field, alias adoption or refusal reset.
+
+**Offline fixture evidence:** a 300-entry encrypted-store test chooses matches
+in the first and last physical pages, proves a transaction sees its uncommitted
+duplicate, refuses without echoing the ID, rolls back that insertion, leaves
+progress/facts unchanged and redacts malformed-entry diagnostics. An eleven-case
+projection matrix covers both alias directions, same PN/LID, absent/foreign
+pairs, raw-alias-only deferral, malformed relations and duplicate wire IDs. Store
+reopen preserves one reaction event and unchanged original outbox rows, including
+DeliveryUnknown. A quoted-text regression refuses a forged foreign reference
+without checkpoint writes or private body in the error, permits the original
+chat's body, and retains the unknown-ID fallback. These are local projection/
+reservation fixtures; they do not establish new live E2E reaction interoperability.
+
+Validation of this extension: **730 workspace/all-feature tests**, strict
+workspace/all-target/all-feature Clippy, warning-free Rustdoc, 24 default CLI
+checks, regenerated CLI reference, OpenAPI library-symbol validation and
+formatting passed. Retained-account offline reprojection upgraded zero events;
+peer-key/action/receipt/outbox/event inspections remained unchanged, as did
+normalized capture shapes and both valid saved reaction diagnostics. The saved
+state comparison does not claim raw encrypted-database byte equality.
+
+**Observed live smoke check:** the final behavior build authenticated and listened
+for 45 seconds with reconnect and chat sends disabled, then stopped cleanly
+(exit 0). Peer-key/action/receipt/outbox/event summaries stayed unchanged;
+decrypted payload inspection remained 15 records. Capture diagnostics grew from
+427 to 432 shapes; those are diagnostic shapes, not five user messages. No fresh
+reaction or new decrypted DM was established. This verifies connection/normal
+receive plumbing, not the new target attribution against a live incoming reaction.
+The original two uncertain actions were retained and never replayed. No outbox
+send, identity rotation or server-wait reset occurred.

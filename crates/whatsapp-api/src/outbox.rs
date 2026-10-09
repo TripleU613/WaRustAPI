@@ -92,6 +92,34 @@ struct IdempotencyRecord {
     semantic_hash: [u8; 32],
 }
 
+type WireLookupPage = Vec<(Vec<u8>, Vec<u8>)>;
+
+fn find_wire_entry(
+    wire_id: &MessageId,
+    mut page: impl FnMut(Option<&[u8]>) -> Result<WireLookupPage>,
+) -> Result<Option<OutboxEntry>> {
+    let mut cursor = None;
+    let mut selected = None;
+    loop {
+        let rows = page(cursor.as_deref())?;
+        let done = rows.len() < 256;
+        cursor = rows.last().map(|(key, _)| key.clone());
+        for (_, bytes) in rows {
+            let entry: OutboxEntry = serde_json::from_slice(&bytes)
+                .map_err(|_| Error::invalid("outbox", "invalid saved outbox entry"))?;
+            if entry.wire_id.as_ref() == Some(wire_id) {
+                if selected.is_some() {
+                    return Err(Error::invalid("outbox", "duplicate outbox wire id"));
+                }
+                selected = Some(entry);
+            }
+        }
+        if done {
+            return Ok(selected);
+        }
+    }
+}
+
 fn semantic_hash(req: &SendRequest) -> Result<[u8; 32]> {
     #[derive(Serialize)]
     struct Semantic<'a> {
@@ -248,26 +276,23 @@ impl Outbox {
         tx.get_json(Table::Outbox, &local_id.0, RECORD_V1)
     }
 
-    /// Find the entry that was transmitted with `wire_id` (a linear scan; used
-    /// to quote our own messages).
+    /// Find one unambiguous wire reservation across all namespaces. A saved
+    /// wire ID is not proof of socket write, acceptance or delivery.
     pub fn by_wire_id(&self, tx: &ReadTx<'_>, wire_id: &MessageId) -> Result<Option<OutboxEntry>> {
-        let mut cursor = None;
-        loop {
-            let page = tx.scan_after(Table::Outbox, RECORD_V1, cursor.as_deref(), 256)?;
-            let done = page.len() < 256;
-            cursor = page.last().map(|(key, _)| key.clone());
-            for (_, bytes) in page {
-                let entry: OutboxEntry = serde_json::from_slice(&bytes).map_err(|e| {
-                    Error::Storage(crate::store::StoreError::Serialization(e.to_string()))
-                })?;
-                if entry.wire_id.as_ref() == Some(wire_id) {
-                    return Ok(Some(entry));
-                }
-            }
-            if done {
-                return Ok(None);
-            }
-        }
+        find_wire_entry(wire_id, |cursor| {
+            tx.scan_after(Table::Outbox, RECORD_V1, cursor, 256)
+        })
+    }
+
+    /// The same read-only lookup inside an existing event/ratchet transaction.
+    pub fn by_wire_id_in_write(
+        &self,
+        tx: &WriteTx<'_>,
+        wire_id: &MessageId,
+    ) -> Result<Option<OutboxEntry>> {
+        find_wire_entry(wire_id, |cursor| {
+            tx.scan_after(Table::Outbox, RECORD_V1, cursor, 256)
+        })
     }
 
     /// Look up an immutable intent by its namespace-scoped request ID before
@@ -642,5 +667,113 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec![0_u128.to_be_bytes(), 1_u128.to_be_bytes()]
         );
+    }
+}
+
+#[cfg(test)]
+mod wire_lookup_tests {
+    use super::*;
+    use crate::model::{
+        ids::{AccountId, ChatId},
+        jid::Jid,
+    };
+    use crate::store::{MasterKey, OpenOptions, StaticKeySource};
+    #[test]
+    fn wire_lookup_checks_all_pages_and_uncommitted_duplicates_without_changing_facts() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("wire.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([3; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let ob = Outbox::new("fixture", Limits::default());
+        let request = SendRequest {
+            client_request_id: ClientRequestId::new("fixture").unwrap(),
+            chat: ChatId::from_jid(&Jid::parse("15555550101@s.whatsapp.net").unwrap()).unwrap(),
+            content: MessageContent::Text {
+                body: "private fixture body".into(),
+                quoted: None,
+                style: Default::default(),
+            },
+        };
+        let ticket = store.write(|tx| ob.enqueue(tx, &request)).unwrap().0;
+        let template = store
+            .read(|tx| ob.get(tx, ticket.local_id))
+            .unwrap()
+            .unwrap();
+        store
+            .write(|tx| {
+                tx.delete(Table::Outbox, &ticket.local_id.0)?;
+                for index in 0..300_u128 {
+                    let mut entry = template.clone();
+                    entry.local_id = LocalMessageId(index.to_be_bytes());
+                    tx.put_json(Table::Outbox, &entry.local_id.0, RECORD_V1, &entry)?;
+                }
+                Ok(())
+            })
+            .unwrap();
+        let rows = store
+            .read(|tx| tx.scan(Table::Outbox, RECORD_V1, 301))
+            .unwrap();
+        let first: OutboxEntry = serde_json::from_slice(&rows[0].1).unwrap();
+        let last: OutboxEntry = serde_json::from_slice(&rows[299].1).unwrap();
+        let wire = MessageId::new("PRIVATE-WIRE-FIXTURE").unwrap();
+        store
+            .write(|tx| {
+                let mut entry = first.clone();
+                entry.wire_id = Some(wire.clone());
+                tx.put_json(Table::Outbox, &entry.local_id.0, RECORD_V1, &entry)?;
+                assert_eq!(ob.by_wire_id_in_write(tx, &wire)?.unwrap(), entry);
+                Ok(())
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Outbox, RECORD_V1, 301))
+            .unwrap();
+        assert_eq!(
+            store
+                .read(|tx| ob.by_wire_id(tx, &wire))
+                .unwrap()
+                .unwrap()
+                .local_id,
+            first.local_id
+        );
+        let error = store
+            .write(|tx| {
+                let mut entry = last.clone();
+                entry.wire_id = Some(wire.clone());
+                tx.put_json(Table::Outbox, &entry.local_id.0, RECORD_V1, &entry)?;
+                ob.by_wire_id_in_write(tx, &wire)
+            })
+            .unwrap_err();
+        assert!(error.to_string().contains("duplicate outbox wire id"));
+        assert!(!error.to_string().contains(wire.as_str()));
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Outbox, RECORD_V1, 301))
+                .unwrap(),
+            before
+        );
+        assert!(
+            store
+                .read(|tx| ob.by_wire_id(tx, &MessageId::new("ABSENT")?))
+                .unwrap()
+                .is_none()
+        );
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Outbox,
+                    &last.local_id.0,
+                    RECORD_V1,
+                    &serde_json::json!({"private":"never echo this"}),
+                )
+            })
+            .unwrap();
+        let error = store.read(|tx| ob.by_wire_id(tx, &wire)).unwrap_err();
+        assert!(error.to_string().contains("invalid saved outbox entry"));
+        assert!(!error.to_string().contains("never echo this"));
     }
 }
