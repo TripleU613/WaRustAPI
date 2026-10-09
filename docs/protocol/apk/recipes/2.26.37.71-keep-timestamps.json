@@ -1,0 +1,51 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "targets": {
+    "timestamp-parser": {
+      "class": "LX/0Gv;",
+      "method": "A01",
+      "method_shorty": "JLJ",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/model/message.rs",
+        "crates/whatsapp-api/src/transport/chat_settings.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "message-constructor": {
+      "class": "LX/178;",
+      "method": "<init>",
+      "method_shorty": "VLIJ",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/model/message.rs",
+        "crates/whatsapp-api/src/transport/chat_settings.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "envelope-constructor": {
+      "class": "LX/CoT;",
+      "method": "<init>",
+      "method_shorty": "VLLLLLLLLLLLLLLLLLLLLLLIIIJZZZZZZZ",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/model/message.rs",
+        "crates/whatsapp-api/src/transport/chat_settings.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    },
+    "envelope-builder": {
+      "class": "LX/CRD;",
+      "method": "A00",
+      "method_shorty": "L",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/model/message.rs",
+        "crates/whatsapp-api/src/transport/chat_settings.rs",
+        "crates/whatsapp-api/src/transport/inbox_events.rs"
+      ]
+    }
+  }
+}

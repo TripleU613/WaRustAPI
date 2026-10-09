@@ -1,0 +1,115 @@
+APK 2.26.37.71 SHA-256 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+Static field-write/caller inventory; offsets below are DEX byte offsets.
+Reproduce with target/debug/xtask (APK denotes the local comparison APK):
+  apk-field-refs APK --class 'LX/178;' --field A0F --type J --writes-only
+  apk-field-refs APK --class 'LX/CoT;' --field A05 --type J --writes-only
+  apk-callers APK --class 'LX/CoT;' --method '<init>'
+  apk-field-refs APK --class 'LX/CRD;' --field A0Q --type J --writes-only
+  apk-field-refs APK --class 'LX/CjN;' --field A03 --type J --writes-only
+  apk-smali APK --class 'LX/Cna;' --method A00 --exceptions
+Negative candidate: Cna.A00 is a stanza-type helper, not the envelope producer; Cna.A01 is the actual normal receive producer.
+
+## message-time-writers.txt
+classes.dex  LX/0yv;->A09(VLI)
+  write opcode 0x5a, dex byte offset: 0x759cec
+classes.dex  LX/0yv;->A09(VLI)
+  write opcode 0x5a, dex byte offset: 0x759d02
+classes.dex  LX/0yv;->A09(VLI)
+  write opcode 0x5a, dex byte offset: 0x759e2e
+classes.dex  LX/0zC;->A0A(LLI)
+  write opcode 0x5a, dex byte offset: 0x7698d0
+classes.dex  LX/11y;->A0O(ZLLLL)
+  write opcode 0x5a, dex byte offset: 0x7a9f62
+classes.dex  LX/11y;->A0P(ZLLLLLLLLZ)
+  write opcode 0x5a, dex byte offset: 0x7aa5bc
+classes.dex  LX/12y;->A02(LLL)
+  write opcode 0x5a, dex byte offset: 0x7bfc08
+classes.dex  LX/178;-><init>(VLIJ)
+  write opcode 0x5a, dex byte offset: 0x801dc2
+classes2.dex  LX/1dj;->A00(VL)
+  write opcode 0x5a, dex byte offset: 0x111630
+classes2.dex  LX/1dj;->A00(VL)
+  write opcode 0x5a, dex byte offset: 0x1118e6
+classes3.dex  LX/3Nt;->CFe(VLL)
+  write opcode 0x5a, dex byte offset: 0x3e8ff4
+classes3.dex  LX/3Pe;->run(V)
+  write opcode 0x5a, dex byte offset: 0x3f5634
+classes3.dex  LX/3QI;->run(V)
+  write opcode 0x5a, dex byte offset: 0x3fe5ae
+classes5.dex  Lcom/whatsapp/settings/ui/chat/wallpaper/WallpaperMockChatView;->setMessages(VLLL)
+  write opcode 0x5a, dex byte offset: 0x2be2d8
+classes5.dex  LX/7sg;->A00(VLLL)
+  write opcode 0x5a, dex byte offset: 0x4800c2
+classes5.dex  LX/8UN;->run(V)
+  write opcode 0x5a, dex byte offset: 0x5e128e
+classes5.dex  LX/8UN;->run(V)
+  write opcode 0x5a, dex byte offset: 0x5e154c
+classes6.dex  LX/AnX;->invokeSuspend(LL)
+  write opcode 0x5a, dex byte offset: 0x6553a2
+classes7.dex  LX/Cjb;->A02(VLL)
+  write opcode 0x5a, dex byte offset: 0x629350
+classes7.dex  LX/D28;->Byz(VLLL)
+  write opcode 0x5a, dex byte offset: 0x731356
+classes7.dex  LX/DDt;->BqP(VLLL)
+  write opcode 0x5a, dex byte offset: 0x79257c
+
+## envelope-time-writers.txt
+classes7.dex  LX/CoT;-><init>(VLLLLLLLLLLLLLLLLLLLLLLIIIJZZZZZZZ)
+  write opcode 0x5a, dex byte offset: 0x68cc76
+
+## envelope-time-callers.txt
+classes7.dex  LX/CRD;->A00(L)
+  invoke dex byte offset: 0x5aad68
+classes7.dex  LX/CoT;->A05(LL)
+  invoke dex byte offset: 0x68cf84
+classes7.dex  LX/DAa;->Byv(VLL)
+  invoke dex byte offset: 0x77d256
+classes7.dex  LX/DAg;->BzB(LL)
+  invoke dex byte offset: 0x77e09c
+classes7.dex  LX/DAh;->BzB(LL)
+  invoke dex byte offset: 0x77eaf6
+classes7.dex  LX/DAh;->BzB(LL)
+  invoke dex byte offset: 0x77ec46
+
+## builder-time-writers.txt
+classes7.dex  LX/CRD;-><init>(VLLLJ)
+  write opcode 0x5a, dex byte offset: 0x5aabba
+
+## network-time-writers.txt
+classes7.dex  LX/CjN;-><init>(VLLLLLLLLJ)
+  write opcode 0x5a, dex byte offset: 0x6279a6
+
+## network-builder.txt
+
+# class: LX/Cna;
+# extends: Ljava/lang/Object;
+
+.method public A00(ILL)  # .registers 6
+    0000..0006  invoke-virtual  {v4}, LX/0hs;->A0Q(L)
+    0006..0008  move-result-object  v1
+    0008..000e  invoke-static  {}, LX/1xf;->A1F(L)
+    000e..0010  move-result-object  v4
+    0010..0014  const-string  v0, "stanza-type"
+    0014..001a  invoke-virtual  {v4, v0, v5}, Ljava/util/AbstractMap;->put(LLL)
+    001a..001e  if-eqz  v1, +0x23
+    001e..0022  new-instance  v3, LX/1ND;
+    0022..0028  invoke-direct  {v3, v1}, LX/1ND;-><init>(VL)
+    0028..002e  invoke-virtual  {v3}, LX/1ND;->hasNext(Z)
+    002e..0030  move-result  v0
+    0030..0034  if-eqz  v0, +0x18
+    0034..003a  invoke-virtual  {v3}, LX/1ND;->next(L)
+    003a..003c  move-result-object  v2
+    003c..0040  check-cast  v2, LX/0hq;
+    0040..0044  const-string  v0, "offline"
+    0044..0048  iget-object  v1, v2, LX/0hq;->A02:Ljava/lang/String;
+    0048..004e  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(ZL)
+    004e..0050  move-result  v0
+    0050..0054  if-nez  v0, -0x14
+    0054..0058  iget-object  v0, v2, LX/0hq;->A03:Ljava/lang/String;
+    0058..005e  invoke-virtual  {v4, v1, v0}, Ljava/util/AbstractMap;->put(LLL)
+    005e..0060  goto  -0x1b
+    0060..0066  invoke-virtual  {v4}, Ljava/lang/Object;->hashCode(I)
+    0066..0068  move-result  v0
+    0068..006a  return  v0
+    # exception table: 0 try range(s)
+.end method

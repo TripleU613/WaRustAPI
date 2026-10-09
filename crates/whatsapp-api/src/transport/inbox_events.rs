@@ -471,6 +471,11 @@ fn project(
                 change: crate::model::message::MessageChange::KeepInChat {
                     by,
                     kept: keep.keep,
+                    sender_timestamp: keep.sender_timestamp,
+                    update_id: node
+                        .get_attr("id")
+                        .and_then(|v| v.as_text())
+                        .and_then(|id| MessageId::new(id).ok()),
                 },
                 server_timestamp,
             });
@@ -1120,11 +1125,21 @@ mod tests {
                 assert_eq!(emoji.as_deref(), if n % 2 == 0 { Some("👍") } else { None });
                 by
             } else {
-                let crate::model::message::MessageChange::KeepInChat { by, kept } = &update.change
+                let crate::model::message::MessageChange::KeepInChat {
+                    by,
+                    kept,
+                    sender_timestamp,
+                    update_id,
+                } = &update.change
                 else {
                     panic!("wrong keep change");
                 };
                 assert_eq!(*kept, n % 2 == 0);
+                assert_eq!(*sender_timestamp, Some(Timestamp(42)));
+                assert_eq!(
+                    update_id.as_ref().unwrap().as_str(),
+                    format!("REACTION-{n}")
+                );
                 by
             };
             assert_eq!(
@@ -1158,6 +1173,14 @@ mod tests {
             );
         }
         assert_eq!(store.journal_head().unwrap(), head);
+        let retained = store
+            .read_events(
+                &ConsumerId::new("reaction-reopen-check").unwrap(),
+                EventCursor::START,
+                100,
+            )
+            .unwrap();
+        assert_eq!(retained.events, batch.events);
         // Two stored claims for the same original member are uncertainty, not
         // permission to select either parent or repeat an old event marker.
         let legacy: serde_json::Value = store
@@ -1660,8 +1683,26 @@ mod tests {
             MessageChange::KeepInChat {
                 by: DeviceAddress::from_jid(&sender).unwrap(),
                 kept: true,
+                sender_timestamp: Some(Timestamp(5)),
+                update_id: Some(MessageId::new("fixture").unwrap()),
             }
         );
+        // Literal BV3 timestamp omission/zero are distinct received facts.
+        // The action ID never replaces the original target's ID.
+        for (hex, expected) in [
+            ("9a03090a051a036162631001", None),
+            ("9a030b0a051a0361626310011800", Some(Timestamp(0))),
+        ] {
+            let payload = hex::decode(hex).unwrap();
+            let SyncEvent::MessageUpdated(update) = event(b"fixture", &node(), &payload) else {
+                panic!("literal keep did not project");
+            };
+            assert_eq!(update.key.id.as_str(), "abc");
+            assert_eq!(update.server_timestamp, Some(Timestamp(123000)));
+            assert!(matches!(update.change, MessageChange::KeepInChat {
+                sender_timestamp, update_id: Some(ref id), ..
+            } if sender_timestamp == expected && id.as_str() == "fixture"));
+        }
         // Undoing a keep on their own message (their fromMe=true).
         let undo = super::super::chat_settings::keep_payload(
             &sender,

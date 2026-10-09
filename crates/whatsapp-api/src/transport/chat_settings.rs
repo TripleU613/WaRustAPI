@@ -191,6 +191,10 @@ pub struct IncomingKeep {
     pub target_from_sender: bool,
     /// `true` keeps the message for everyone; `false` undoes a previous keep.
     pub keep: bool,
+    /// Original BV3 timestampMs (field 3), kept separately from stanza time.
+    /// APK 37.71 D9L.A01 at 067a..0682 copies it to BnF.A02; absent wire
+    /// fields stay unknown here rather than acquiring an invented clock value.
+    pub sender_timestamp: Option<crate::model::time::Timestamp>,
 }
 
 /// Decode a `keepInChatMessage` payload (field 51). Returns `None` for
@@ -208,6 +212,7 @@ pub fn decode_keep(payload: &[u8]) -> Option<IncomingKeep> {
         target_id,
         target_from_sender: key.from_me.unwrap_or(false),
         keep,
+        sender_timestamp: keep_in_chat.timestamp_ms.map(crate::model::time::Timestamp),
     })
 }
 
@@ -568,6 +573,7 @@ mod tests {
                 target_id: MessageId::new("ABCDEF0123456789ABCDEF0123456789").unwrap(),
                 target_from_sender: false,
                 keep: true,
+                sender_timestamp: Some(crate::model::time::Timestamp(1_700_000_000_000)),
             }
         );
         let undo = keep_payload(&peer, &target(Direction::Outgoing), false, 1);
@@ -614,6 +620,27 @@ mod tests {
             keep_payload(&direct, &target, false, 1),
             hex::decode("9a03160a100a07323232406c696410011a0361626310021801").unwrap()
         );
+    }
+    #[test]
+    fn keep_timestamp_preserves_wire_presence_zero_and_signed_values() {
+        // Independent BZc.51/BV3.1,2,3 fixture: target abc, keep type 1.
+        // No timestamp field must not acquire stanza/observation/current time.
+        let prefix = hex::decode("9a03090a051a036162631001").unwrap();
+        assert_eq!(decode_keep(&prefix).unwrap().sender_timestamp, None);
+        for (literal, expected) in [
+            ("9a030b0a051a0361626310011800", 0),
+            ("9a030b0a051a036162631001182a", 42),
+            ("9a03140a051a03616263100118ffffffffffffffffff01", -1),
+            ("9a03130a051a03616263100118ffffffffffffffff7f", i64::MAX),
+        ] {
+            assert_eq!(
+                decode_keep(&hex::decode(literal).unwrap())
+                    .unwrap()
+                    .sender_timestamp,
+                Some(crate::model::time::Timestamp(expected))
+            );
+        }
+        assert!(decode_keep(&hex::decode("9a030b0a051a0361626310011880").unwrap()).is_none());
     }
     #[test]
     fn validation_rejects_other_chats() {

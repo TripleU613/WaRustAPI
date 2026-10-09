@@ -225,15 +225,95 @@ pub enum MessageChange {
         /// Revoking device.
         by: DeviceAddress,
     },
-    /// Kept (or un-kept) in chat by a device, despite the chat's disappearing
-    /// timer (docs/protocol/chat-actions.md §4).
+    /// Received keep/unkeep action from a device (chat-actions.md §4).
+    /// Recording the action does not enforce native keep permission/expiry.
     KeepInChat {
         /// Acting device.
         by: DeviceAddress,
         /// `true` if the message was kept for everyone; `false` if the keep
         /// was undone.
         kept: bool,
+        /// Keeping sender's payload timestamp in milliseconds (APK 37.71
+        /// BV3 field 3 -> D9L.A01 -> BnF.A02). This is distinct from the
+        /// update's stanza-derived server timestamp and local observation time.
+        /// Absent for omitted wire fields and historical journal records.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        sender_timestamp: Option<Timestamp>,
+        /// Wire ID of the keep/unkeep envelope, distinct from the target ID.
+        /// APK 37.71 0Y5.A00 uses BnF's own key ID for equal-time ordering.
+        /// Unknown for historical records or unsupported/missing envelope IDs.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        update_id: Option<MessageId>,
     },
     /// The referenced original has not arrived; a tombstone is pending.
     PendingReference,
+}
+
+#[cfg(test)]
+mod keep_serialization_tests {
+    use super::*;
+
+    #[test]
+    fn legacy_keep_event_json_stays_readable_without_inventing_ordering_metadata() {
+        // Literal pre-timestamp EventEnvelope, with the old KeepInChat shape.
+        // Synthetic actor/target/ID only; no private historical record is copied.
+        let legacy = r#"{
+            "account_id":"fixture","account_generation":1,
+            "event_id":"00000000000000000000000000000001",
+            "cursor":13,"committed_at":777,
+            "event":{"MessageUpdated":{
+                "key":{"chat":{"Direct":{"user":"222","agent":0,"device":0,"server":"Lid","kind":"Plain"}},
+                    "sender":null,"direction":"Outgoing","id":"ORIGINAL"},
+                "change":{"KeepInChat":{"by":{"contact":{"user":"222","agent":0,"device":0,"server":"Lid","kind":"Plain"},"device":3},"kept":true}},
+                "server_timestamp":123000
+            }}
+        }"#;
+        let mut event: crate::sync::EventEnvelope = serde_json::from_str(legacy).unwrap();
+        let crate::sync::SyncEvent::MessageUpdated(update) = &mut event.event else {
+            panic!("update");
+        };
+        let MessageChange::KeepInChat {
+            sender_timestamp,
+            update_id,
+            ..
+        } = &mut update.change
+        else {
+            panic!("keep");
+        };
+        assert_eq!(*sender_timestamp, None);
+        assert_eq!(*update_id, None);
+        assert_eq!(update.server_timestamp, Some(Timestamp(123000)));
+        assert_eq!(event.committed_at, Timestamp(777));
+        assert_eq!(
+            serde_json::to_value(&event).unwrap(),
+            serde_json::from_str::<serde_json::Value>(legacy).unwrap()
+        );
+        let crate::sync::SyncEvent::MessageUpdated(update) = &mut event.event else {
+            unreachable!();
+        };
+        let MessageChange::KeepInChat {
+            sender_timestamp,
+            update_id,
+            ..
+        } = &mut update.change
+        else {
+            unreachable!();
+        };
+        *sender_timestamp = Some(Timestamp(0));
+        *update_id = Some(MessageId::new("KEEP-ACTION").unwrap());
+        let json = serde_json::to_value(&event).unwrap();
+        assert_eq!(
+            json["event"]["MessageUpdated"]["change"]["KeepInChat"]["sender_timestamp"],
+            0
+        );
+        assert_eq!(
+            json["event"]["MessageUpdated"]["change"]["KeepInChat"]["update_id"],
+            "KEEP-ACTION"
+        );
+        assert_eq!(json["event"]["MessageUpdated"]["key"]["id"], "ORIGINAL");
+        assert_eq!(
+            serde_json::from_value::<crate::sync::EventEnvelope>(json).unwrap(),
+            event
+        );
+    }
 }

@@ -1,0 +1,51 @@
+# APK-derived structural disassembly: LX/178;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method <init>(VLIJ) flags=0x10001 registers=8
+  0000..0006 op=70 invoke-direct {v3}, Ljava/lang/Object;-><init>(V)
+  0006..000a op=22 new-instance v0, Ljava/lang/Object;
+  000a..0010 op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>(V)
+  0010..0014 op=5b iput-object v0, v3, LX/178;->A19:Ljava/lang/Object;
+  0014..0016 op=12 const/4 v2, #0x0
+  0016..001a op=5c iput-boolean v2, v3, LX/178;->A10:Z
+  001a..001e op=22 new-instance v0, Ljava/util/concurrent/ConcurrentHashMap;
+  001e..0024 op=70 invoke-direct {v0}, Ljava/util/concurrent/ConcurrentHashMap;-><init>(V)
+  0024..0028 op=5b iput-object v0, v3, LX/178;->A1A:Ljava/util/concurrent/ConcurrentHashMap;
+  0028..002c op=5c iput-boolean v2, v3, LX/178;->A0w:Z
+  002c..0030 op=5c iput-boolean v2, v3, LX/178;->A12:Z
+  0030..0034 op=5c iput-boolean v2, v3, LX/178;->A0y:Z
+  0034..0038 op=5c iput-boolean v2, v3, LX/178;->A15:Z
+  0038..003c op=5c iput-boolean v2, v3, LX/178;->A13:Z
+  003c..0040 op=22 new-instance v0, Ljava/lang/Object;
+  0040..0046 op=70 invoke-direct {v0}, Ljava/lang/Object;-><init>(V)
+  0046..004a op=5b iput-object v0, v3, LX/178;->A18:Ljava/lang/Object;
+  004a..004e op=16 const-wide/16 v0, #0xffff (-1)
+  004e..0052 op=5a iput-wide v0, v3, LX/178;->A0E:J
+  0052..0056 op=5a iput-wide v0, v3, LX/178;->A0D:J
+  0056..005a op=5a iput-wide v0, v3, LX/178;->A0j:J
+  005a..005e op=5a iput-wide v0, v3, LX/178;->A0k:J
+  005e..0060 op=12 const/4 v0, #0x0
+  0060..0064 op=5b iput-object v0, v3, LX/178;->A0L:Ljava/lang/Integer;
+  0064..0068 op=5b iput-object v0, v3, LX/178;->A0S:Ljava/lang/String;
+  0068..006c op=5c iput-boolean v2, v3, LX/178;->A0x:Z
+  006c..0070 op=59 iput v2, v3, LX/178;->A0f:I
+  0070..0074 op=59 iput v2, v3, LX/178;->A03:I
+  0074..0078 op=5c iput-boolean v2, v3, LX/178;->A0a:Z
+  0078..007c op=5c iput-boolean v2, v3, LX/178;->A11:Z
+  007c..0080 op=5b iput-object v0, v3, LX/178;->A0N:Ljava/lang/Long;
+  0080..0084 op=5c iput-boolean v2, v3, LX/178;->A0X:Z
+  0084..0088 op=5b iput-object v0, v3, LX/178;->A0r:Ljava/lang/Integer;
+  0088..008c op=5b iput-object v0, v3, LX/178;->A0P:Ljava/lang/Long;
+  008c..0092 op=71 invoke-static {v4}, LX/00K;->A06(VL)
+  0092..0096 op=5b iput-object v4, v3, LX/178;->A0i:LX/1gc;
+  0096..009a op=5a iput-wide v6, v3, LX/178;->A0F:J
+  009a..009e op=59 iput v5, v3, LX/178;->A0h:I
+  009e..00a4 op=71 invoke-static {}, Landroid/os/SystemClock;->uptimeMillis(J)
+  00a4..00a6 op=0b move-result-wide v0
+  00a6..00aa op=5a iput-wide v0, v3, LX/178;->A17:J
+  00aa..00ae op=5a iput-wide v0, v3, LX/178;->A0o:J
+  00ae..00b0 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

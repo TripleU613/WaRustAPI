@@ -105,11 +105,11 @@ Do not infer a required participant from the descriptor alone: the supported
 sender-context rules determine when missing authors can be resolved. Native
 later permission/expiry handling was not traced here and remains unknown.
 
-**Confirmed local representation limit:** IncomingKeep and the KeepInChat
-message change omit the payload timestampMs. The event's server timestamp
-comes from stanza `t`; the original protobuf remains in encrypted saved state.
-Native timestamp-based conflict ordering/application has not been traced or
-ported. Do not describe projected keep/unkeep facts as full expiry enforcement.
+**Superseded representation limit:** earlier IncomingKeep/KeepInChat records
+omitted payload timestampMs and the action ID. Both are now optional received
+facts, with historical omissions preserved. Native selection and clock sources
+have been traced separately; permission/expiry application is still unported.
+See [keep ordering metadata](keep-timestamps.md).
 
 **Confirmed verification:** 780 workspace/all-feature tests passed (653 API,
 4 property, 9 crash, 50 CLI, 1 API-symbol and 63 xtask tests), together with

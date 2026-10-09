@@ -2618,3 +2618,18 @@ keep/unkeep transmission, group ACK or handset rendering was tested. An earlier
 local ownership refusal resulted from overlapping offline inspection and receive
 orchestration; its logs were preserved and inspection completion verified before
 this window. No server retry, account reset or ownership bypass was added.
+
+2026-10-09 — **Confirmed local/static:** incoming keep events now preserve
+optional payload milliseconds and their own envelope ID, independently of the
+original target and stanza time. Literal legacy-journal records remain readable
+and retain their shape; reopening preserves group update metadata without
+republication. APK 37.71 native ordering prefers newer envelope time, then newer
+payload time, then the smaller action ID. Permission/expiry enforcement and
+fresh live keep reception remain unverified. [Evidence and limits](docs/protocol/keep-timestamps.md).
+
+Keep metadata verification: 786 workspace/all-feature tests, strict Clippy,
+Rustdoc, default CLI, API-symbol checks, CLI reference and formatting passed.
+One 45-second receive-only window authenticated and stopped cleanly with sends
+and reconnect disabled. Captures grew 497→502 with originals retained; keys,
+actions, receipts, outbox and event summaries were unchanged. No group keep
+payload was available, so fresh keep semantics remain unverified.
