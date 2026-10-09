@@ -1,0 +1,46 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "main-row-callback-constructor.txt": {
+    "bytes": 751,
+    "sha256": "53dd4f657f2d1fdbf2c19f3242d9c0e4599d5072a0f3c6055252729e7acd7958"
+  },
+  "main-row-callback.txt": {
+    "bytes": 38144,
+    "sha256": "2b3f9d47132ff6194d6f36da63b9dddcdf4837f6ccbe65f10f95521828a12dcf"
+  },
+  "main-row-insert.txt": {
+    "bytes": 19716,
+    "sha256": "5300a1594cf8e85db0bca813bb72c142df01e9d95d289dbec0310434468e6407"
+  },
+  "main-row-values.txt": {
+    "bytes": 4646,
+    "sha256": "9179cdb5bdacd266de15a5efae352a08d2411e94bce4c81365c6f791485ca0a9"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "registry-lazy-producers.txt": {
+    "bytes": 63101,
+    "sha256": "f357ef86a35a032b45bc001e565c0606af6787313efb99c24402ee4a37b046fa"
+  },
+  "storage-type-setter.txt": {
+    "bytes": 1558,
+    "sha256": "bc9be4f1738ad10e7e9234518cd1fa0e3d2b4d59e5e8ec67e9295e0109d8b949"
+  },
+  "targets.json": {
+    "bytes": 3191,
+    "sha256": "f6d15d23966481443547bae81f029167f231dbf92d11c9b2c1c7e952a644e70f"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  },
+  "type-registry.txt": {
+    "bytes": 6814,
+    "sha256": "090c1a54921c7f0686176bf70aee0ee2bd9bd3e8d553779099645470673ea43b"
+  }
+}

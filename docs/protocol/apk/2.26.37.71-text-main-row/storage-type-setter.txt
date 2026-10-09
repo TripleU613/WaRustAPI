@@ -1,0 +1,26 @@
+# APK-derived structural disassembly: LX/178;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0h(VI) flags=0x1 registers=6
+  # full signature: LX/178;->A0h(I)V
+  0000..0004 op=52 iget v3, v4, LX/178;->A0f:I
+  0004..0008 op=38 if-eqz v3, +0x5
+  0008..000a op=12 const/4 v2, #0x0
+  000a..000e op=33 if-ne v3, v5, +0x3
+  000e..0010 op=12 const/4 v2, #0x1
+  0010..0014 op=1a const-string v0, "FMessage/setStorageType/should only update storage type when it is undefined; current="
+  0014..0018 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0018..001e op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  001e..0024 op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0024..0028 op=1a const-string v0, "; new="
+  0028..002e op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  002e..0034 op=6e invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  0034..003a op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  003a..003c op=0c move-result-object v0
+  003c..0042 op=71 invoke-static {v2, v0}, LX/00K;->A0D(ZLjava/lang/String;)V
+  0042..0046 op=59 iput v5, v4, LX/178;->A0f:I
+  0046..0048 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

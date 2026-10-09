@@ -88,3 +88,6 @@ the pinned APK. Cached self-diff verifies four unchanged topics and four metadat
 artifacts. CLI reference, API/library-symbol, formatting and repository hygiene
 checks pass (2,003 local links; 92 bundles / 18,769,751 bytes). No fresh workspace
 runtime suite or live validation is claimed.
+
+Follow-up: [main-row callback](text-main-row.md) closes AiX selector 10 and
+separates storage type from persisted message status; type-zero owner is unknown.

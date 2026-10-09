@@ -1,5 +1,12 @@
 # Status — 2026-10-07
 
+Main message row (2026-10-09, **confirmed static**): the insertion callback
+writes table message before the type-specific inserter. A0h(1) sets storage
+type A0f; SQL status reads B3b instead. Main-row ID failures and lazy registry
+resolution are retained; concrete type-zero mapping, native user-row admission
+and primary cleanup remain unknown/unported. No runtime/account/live change.
+[Evidence and limits](docs/protocol/text-main-row.md).
+
 Text store insertion (2026-10-09, **confirmed static**): four topics connect
 ordinary authored-message insertion to its type registry, transaction wrapper
 and before/lambda/inserter/after hook order. The insertion argument 1 is not a
