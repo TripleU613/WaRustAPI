@@ -146,3 +146,8 @@ provider cases and direct exclusions across seven hooks/nine delegates were
 checked. CLI-reference regeneration, API/library-symbol checks, formatting,
 whitespace and hygiene passed (2,073 local links; 100 bundles / 21,007,146 bytes).
 No fresh workspace/runtime suite or live account test is claimed.
+
+Follow-up: [association/sharing hooks](text-association-after-hooks.md) adds
+five entries and resolves CS5's poll-name history writer. Current coverage is
+41/54, leaving 13. AVI's native setter targets a newly created system message;
+the previous bundle's bounded direct exclusions remain scoped to its methods.

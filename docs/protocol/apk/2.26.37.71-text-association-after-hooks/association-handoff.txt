@@ -1,0 +1,40 @@
+# APK-derived structural disassembly: LX/D89;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(VLZ) flags=0x12 registers=7
+  # full signature: LX/D89;->A00(LX/178;Z)V
+  0000..0006 op=71 invoke-static {v5}, LX/7ym;->A02(LX/178;)LX/D6j;
+  0006..0008 op=0c move-result-object v3
+  0008..000c op=38 if-eqz v3, +0x2a
+  000c..0010 op=54 iget-object v0, v4, LX/D89;->A02:LX/05B;
+  0010..0016 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0016..0018 op=0c move-result-object v0
+  0018..001c op=1f check-cast v0, LX/DGa;
+  001c..0022 op=6e invoke-virtual {v0, v5, v3}, LX/DGa;->A02(LX/178;LX/D6j;)V
+  0022..0026 op=54 iget-object v0, v4, LX/D89;->A00:LX/05B;
+  0026..002c op=71 invoke-static {v0}, LX/1xh;->A13(LX/05B;)LX/0V9;
+  002c..002e op=0c move-result-object v2
+  002e..0032 op=53 iget-wide v0, v3, LX/D6j;->A00:J
+  0032..0038 op=71 invoke-static {v2, v0, v1}, LX/1xk;->A0X(LX/0V9;J)LX/178;
+  0038..003a op=0c move-result-object v2
+  003a..003e op=38 if-eqz v2, +0x11
+  003e..0042 op=54 iget-object v0, v4, LX/D89;->A01:LX/05B;
+  0042..0048 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0048..004a op=0c move-result-object v0
+  004a..004e op=1f check-cast v0, LX/0zy;
+  004e..0052 op=54 iget-object v1, v3, LX/D6j;->A01:LX/15T;
+  0052..0056 op=38 if-eqz v6, +0x6
+  0056..005c op=72 invoke-interface {v0, v5, v2, v1}, LX/0zy;->ChU(LX/178;LX/178;LX/15T;)V
+  005c..005e op=0e return-void
+  005e..0062 op=1f check-cast v0, LX/0zz;
+  0062..0066 op=54 iget-object v0, v0, LX/0zz;->A0C:LX/00l;
+  0066..006c op=71 invoke-static {v1, v0}, LX/1xj;->A0y(Ljava/lang/Object;LX/00l;)Ljava/lang/Object;
+  006c..006e op=0c move-result-object v0
+  006e..0072 op=1f check-cast v0, LX/DdR;
+  0072..0076 op=38 if-eqz v0, -0xb
+  0076..007c op=72 invoke-interface {v0, v5, v2}, LX/DdR;->Chc(LX/178;LX/178;)V
+  007c..007e op=0e return-void
+  # exception table: 0 try range(s)
+.end method

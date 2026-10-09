@@ -1,0 +1,27 @@
+# APK-derived structural disassembly: LX/D88;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A00(VLL) flags=0x12 registers=8
+  # full signature: LX/D88;->A00(LX/178;LX/3Ya;)V
+  0000..0006 op=71 invoke-static {v6}, LX/Ayj;->A1V(LX/178;)Z
+  0006..0008 op=0a move-result v0
+  0008..000c op=38 if-eqz v0, +0x1e
+  000c..0010 op=54 iget-object v0, v5, LX/D88;->A00:LX/05B;
+  0010..0016 op=71 invoke-static {v0}, LX/05B;->A02(LX/05B;)Ljava/lang/Object;
+  0016..0018 op=0c move-result-object v4
+  0018..001c op=1f check-cast v4, LX/0zl;
+  001c..0022 op=71 invoke-static {v6}, LX/CmF;->A02(LX/178;)LX/CWp;
+  0022..0024 op=0c move-result-object v3
+  0024..0028 op=53 iget-wide v1, v6, LX/178;->A0j:J
+  0028..002c op=1a const-string v0, "message_ui_elements"
+  002c..0032 op=71 invoke-static {v3, v4, v0, v1, v2}, LX/0zl;->A05(LX/CWp;LX/0zl;Ljava/lang/String;J)V
+  0032..0036 op=38 if-eqz v7, +0x9
+  0036..003a op=1c const-class v0, LX/D88;
+  003a..0040 op=71 invoke-static {v0}, LX/1xo;->A0a(Ljava/lang/Class;)Ljava/lang/NullPointerException;
+  0040..0042 op=0c move-result-object v0
+  0042..0044 op=27 throw v0
+  0044..0046 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

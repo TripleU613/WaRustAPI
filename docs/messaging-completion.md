@@ -1,5 +1,17 @@
 # Messaging completion checklist
 
+Association/sharing after-hooks (2026-10-09, **confirmed static**): five
+more registered entries map to parent/child, UI and poll-history storage, incoming
+limit-sharing system-message creation and embedded child insertion. AVI sets
+status 6 on a new Bmy, not the input; annotation children OR A0A then reach the
+insertion wrapper. Current mapping is 41/54 with 13 remaining. Transitive receipt
+admission and primary cleanup remain unknown/unported. No runtime/account/live
+change. [Evidence and limits](protocol/text-association-after-hooks.md).
+
+Association-hook validation: exact 22-topic export and cached self-diff, scoped
+source checks, CLI reference, API/library-symbol, formatting, whitespace and
+hygiene passed. No fresh runtime suite or live account test is claimed.
+
 Storage/poll/indexing after-hooks (2026-10-09, **confirmed static**): seven
 more registered entries and nine selected delegates are attributed. Writes target
 ephemeral, media/thumbnail or search tables; thumbnail post-processing clears a

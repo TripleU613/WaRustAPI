@@ -1,0 +1,99 @@
+# APK-derived structural disassembly: LX/0zl;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A05(VLLLJ) flags=0x19 registers=20
+  # full signature: LX/0zl;->A05(LX/CWp;LX/0zl;Ljava/lang/String;J)V
+  0000..0004 op=38 if-eqz v15, +0xc2
+  0004..0008 op=22 new-instance v8, Landroid/content/ContentValues;
+  0008..000e op=70 invoke-direct {v8}, Landroid/content/ContentValues;-><init>()V
+  000e..0012 op=1a const-string v1, "message_row_id"
+  0012..0016 op=05 move-wide/from16 v13, v18
+  0016..001c op=71 invoke-static {v13, v14}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  001c..001e op=0c move-result-object v0
+  001e..0024 op=6e invoke-virtual {v8, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+  0024..0026 op=12 const/4 v0, #0x2
+  0026..002c op=71 invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  002c..002e op=0c move-result-object v1
+  002e..0032 op=1a const-string v0, "element_type"
+  0032..0038 op=6e invoke-virtual {v8, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+  0038..003c op=22 new-instance v5, Lorg/json/JSONObject;
+  003c..0042 op=70 invoke-direct {v5}, Lorg/json/JSONObject;-><init>()V
+  0042..0046 op=1a const-string v1, "content"
+  0046..004a op=54 iget-object v0, v15, LX/CWp;->A00:Ljava/lang/String;
+  004a..0050 op=6e invoke-virtual {v5, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+  0050..0054 op=1a const-string v1, "footer"
+  0054..0058 op=54 iget-object v0, v15, LX/CWp;->A01:Ljava/lang/String;
+  0058..005e op=6e invoke-virtual {v5, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+  005e..0062 op=22 new-instance v4, Lorg/json/JSONArray;
+  0062..0068 op=70 invoke-direct {v4}, Lorg/json/JSONArray;-><init>()V
+  0068..006c op=54 iget-object v0, v15, LX/CWp;->A02:Ljava/util/List;
+  006c..0070 op=39 if-nez v0, +0x4
+  0070..0074 op=62 sget-object v0, LX/01f;->A00:LX/01f;
+  0074..007a op=72 invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+  007a..007c op=0c move-result-object v7
+  007c..0082 op=72 invoke-interface {v7}, Ljava/util/Iterator;->hasNext()Z
+  0082..0084 op=0a move-result v0
+  0084..0088 op=38 if-eqz v0, +0x59
+  0088..008e op=72 invoke-interface {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  008e..0090 op=0c move-result-object v2
+  0090..0094 op=1f check-cast v2, LX/CYX;
+  0094..0098 op=22 new-instance v6, Lorg/json/JSONObject;
+  0098..009e op=70 invoke-direct {v6}, Lorg/json/JSONObject;-><init>()V
+  009e..00a2 op=1a const-string v1, "id"
+  00a2..00a6 op=54 iget-object v0, v2, LX/CYX;->A04:Ljava/lang/String;
+  00a6..00ac op=6e invoke-virtual {v6, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+  00ac..00b0 op=54 iget-object v1, v2, LX/CYX;->A03:Ljava/lang/String;
+  00b0..00b4 op=38 if-eqz v1, +0x7
+  00b4..00b8 op=1a const-string v0, "displayText"
+  00b8..00be op=6e invoke-virtual {v6, v0, v1}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+  00be..00c4 op=1b const-string/jumbo v1, "selected"
+  00c4..00c8 op=55 iget-boolean v0, v2, LX/CYX;->A00:Z
+  00c8..00ce op=6e invoke-virtual {v6, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Z)Lorg/json/JSONObject;
+  00ce..00d2 op=1a const-string v1, "button_type"
+  00d2..00d6 op=52 iget v0, v2, LX/CYX;->A01:I
+  00d6..00dc op=6e invoke-virtual {v6, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;I)Lorg/json/JSONObject;
+  00dc..00e0 op=54 iget-object v2, v2, LX/CYX;->A02:LX/CrP;
+  00e0..00e4 op=38 if-eqz v2, +0x27
+  00e4..00e8 op=22 new-instance v3, Lorg/json/JSONObject;
+  00e8..00ee op=70 invoke-direct {v3}, Lorg/json/JSONObject;-><init>()V
+  00ee..00f2 op=1a const-string v1, "name"
+  00f2..00f6 op=54 iget-object v0, v2, LX/CrP;->A02:Ljava/lang/String;
+  00f6..00fc op=6e invoke-virtual {v3, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+  00fc..0100 op=54 iget-object v2, v2, LX/CrP;->A03:Ljava/lang/String;
+  0100..0104 op=38 if-eqz v2, +0x12
+  0104..010a op=6e invoke-virtual {v2}, Ljava/lang/String;->length()I
+  010a..010c op=0a move-result v0
+  010c..0110 op=3d if-lez v0, +0xc
+  0110..0114 op=1a const-string v1, "params"
+  0114..0118 op=22 new-instance v0, Lorg/json/JSONObject;
+  0118..011e op=70 invoke-direct {v0, v2}, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
+  011e..0124 op=6e invoke-virtual {v3, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+  0124..0128 op=1a const-string v0, "native_flow_info"
+  0128..012e op=6e invoke-virtual {v6, v0, v3}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+  012e..0134 op=6e invoke-virtual {v4, v6}, Lorg/json/JSONArray;->put(Ljava/lang/Object;)Lorg/json/JSONArray;
+  0134..0136 op=28 goto -0x5c
+  0136..013a op=1a const-string v0, "buttons"
+  013a..0140 op=6e invoke-virtual {v5, v0, v4}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+  0140..0146 op=6e invoke-virtual {v5}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0146..0148 op=0c move-result-object v1
+  0148..014c op=38 if-eqz v1, +0x14
+  014c..0152 op=6e invoke-virtual {v1}, Ljava/lang/String;->length()I
+  0152..0154 op=0a move-result v0
+  0154..0158 op=38 if-eqz v0, +0xe
+  0158..015c op=1a const-string v0, "element_content"
+  015c..0162 op=6e invoke-virtual {v8, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+  0162..0164 op=28 goto +0x7
+  0164..0166 op=0d move-exception v1
+  0166..016a op=1a const-string v0, "ButtonsConverter/toJSONObject/serialization error"
+  016a..0170 op=71 invoke-static {v0, v1}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+  0170..0174 op=1a const-string v11, "MessageUIElementsStore/insertOrUpdateQuotedButtonMessageElement"
+  0174..0176 op=12 const/4 v12, #0x2
+  0176..017a op=08 move-object/from16 v9, v16
+  017a..017e op=08 move-object/from16 v10, v17
+  017e..0184 op=77 invoke-static/range {v8..v14}, LX/0zl;->A03(Landroid/content/ContentValues;LX/0zl;Ljava/lang/String;Ljava/lang/String;IJ)V
+  0184..0186 op=0e return-void
+  # exception table: 1 try range(s)
+  # catch Lorg/json/JSONException; code_units 001c..00a0 -> 00b2
+.end method

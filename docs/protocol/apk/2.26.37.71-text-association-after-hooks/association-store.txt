@@ -1,0 +1,45 @@
+# APK-derived structural disassembly: LX/DGa;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A02(VLL) flags=0x11 registers=10
+  # full signature: LX/DGa;->A02(LX/178;LX/D6j;)V
+  0000..0002 op=12 const/4 v0, #0x0
+  0002..0008 op=71 invoke-static {v8, v0}, LX/00h;->A0A(Ljava/lang/Object;I)V
+  0008..000c op=53 iget-wide v0, v9, LX/D6j;->A00:J
+  000c..0010 op=16 const-wide/16 v3, #0xffff (-1)
+  0010..0014 op=31 cmp-long v2, v0, v3
+  0014..0018 op=38 if-eqz v2, +0x37
+  0018..001c op=54 iget-object v2, v7, LX/DGa;->A00:LX/0Gc;
+  001c..0022 op=6e invoke-virtual {v2}, LX/0Gc;->A07()LX/0ZN;
+  0022..0024 op=0c move-result-object v4
+  0024..0026 op=12 const/4 v2, #0x3
+  0026..002c op=71 invoke-static {v2}, LX/8kT;->A05(I)Landroid/content/ContentValues;
+  002c..002e op=0c move-result-object v5
+  002e..0032 op=1a const-string v6, "child_message_row_id"
+  0032..0036 op=53 iget-wide v2, v8, LX/178;->A0j:J
+  0036..003c op=71 invoke-static {v5, v6, v2, v3}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  003c..0040 op=1a const-string v2, "parent_message_row_id"
+  0040..0046 op=71 invoke-static {v5, v2, v0, v1}, LX/1xl;->A1E(Landroid/content/ContentValues;Ljava/lang/String;J)V
+  0046..004a op=1a const-string v1, "association_type"
+  004a..004e op=54 iget-object v0, v9, LX/D6j;->A01:LX/15T;
+  004e..0052 op=52 iget v0, v0, LX/15T;->value:I
+  0052..0058 op=71 invoke-static {v5, v1, v0}, LX/1xl;->A1D(Landroid/content/ContentValues;Ljava/lang/String;I)V
+  0058..005c op=54 iget-object v3, v4, LX/0ZN;->A02:LX/0IY;
+  005c..0060 op=1a const-string v2, "message_association"
+  0060..0064 op=1a const-string v1, "insertIntoMessageAssociationTable/INSERT_MESSAGE_ASSOCIATION_MESSAGES"
+  0064..0066 op=12 const/4 v0, #0x5
+  0066..006c op=6e invoke-virtual {v3, v2, v1, v5, v0}, LX/0IY;->A09(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+  006c..0072 op=6e invoke-virtual {v4}, LX/0ZN;->close()V
+  0072..0074 op=0e return-void
+  0074..0076 op=0d move-exception v1
+  0076..0078 op=27 throw v1
+  0078..007a op=0d move-exception v0
+  007a..0080 op=71 invoke-static {v4, v1}, LX/07i;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+  0080..0082 op=27 throw v0
+  0082..0084 op=0e return-void
+  # exception table: 2 try range(s)
+  # catch <all> code_units 0012..0036 -> 003a
+  # catch <all> code_units 003b..003c -> 003c
+.end method
