@@ -67,6 +67,12 @@ pub mod framing;
     feature = "experimental-noise",
     feature = "experimental-transport"
 ))]
+pub mod group_fanout;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod group_send;
 #[cfg(all(
     feature = "experimental-signal-crypto",

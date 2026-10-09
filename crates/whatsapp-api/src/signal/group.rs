@@ -269,10 +269,9 @@ pub struct OwnSenderKey {
     /// each recipient device. Field 2 is the number confirmed live on the
     /// receive side; an earlier implementation used 18 and matched nothing.
     pub distribution_message: Zeroizing<Vec<u8>>,
-    /// Updated sender key record. Persist this **only** after the send is
-    /// accepted: a distributed-but-unsent key leaves recipients holding a chain
-    /// we never use, and a used-but-unpersisted key cannot decrypt our own later
-    /// messages.
+    /// Updated sender key record. Reserve it atomically with pairwise state and
+    /// the original send intent before any socket write. An uncertain send must
+    /// retain the exact generation it may already have distributed.
     pub updated_key: Zeroizing<Vec<u8>>,
 }
 impl std::fmt::Debug for OwnSenderKey {
@@ -349,8 +348,8 @@ pub async fn prepare_own_sender_key(
 /// happen to spell. That produced months of intermittent, unexplainable
 /// failures before it was found.
 ///
-/// Returns the ciphertext and the advanced record, which again must only be
-/// persisted once the send is accepted.
+/// Returns the ciphertext and the advanced record, which must be reserved
+/// atomically with the send intent before writing ciphertext to the socket.
 pub async fn encrypt_group_payload(
     chat: &Jid,
     own: &Jid,

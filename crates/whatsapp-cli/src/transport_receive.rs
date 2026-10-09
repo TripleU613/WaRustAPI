@@ -2189,6 +2189,25 @@ fn fanout_inspection(
     output
 }
 
+fn fanout_inspection_with_sessions(
+    store: &ProtocolStore,
+    plan: &whatsapp_api::transport::group_send::FanoutPlan,
+    reveal_hash: bool,
+) -> Result<serde_json::Value, Error> {
+    let mut output = fanout_inspection(plan, reveal_hash);
+    // Keep partial plans inspectable; session rows do not prove send readiness.
+    if plan.without_device_list.is_empty() {
+        let snapshot = whatsapp_api::transport::group_fanout::Snapshot::load(store, plan, false)?;
+        let needed = snapshot.required_keys().len();
+        output["key_bundle_devices"] = serde_json::json!(needed);
+        output["cached_session_devices"] = serde_json::json!(plan.devices.len() - needed);
+    } else {
+        output["key_bundle_devices"] = serde_json::Value::Null;
+        output["cached_session_devices"] = serde_json::Value::Null;
+    }
+    Ok(output)
+}
+
 pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error> {
     use whatsapp_api::model::jid::Jid;
     use whatsapp_api::transport::groups;
@@ -2227,7 +2246,7 @@ pub(super) fn group(cli: &super::Cli, cmd: &super::GroupCmd) -> Result<(), Error
             };
             let plan =
                 whatsapp_api::transport::group_send::plan(&store, &parse(chat)?, &parse(own)?)?;
-            let output = fanout_inspection(&plan, *hash);
+            let output = fanout_inspection_with_sessions(&store, &plan, *hash)?;
             println!(
                 "{}",
                 serde_json::to_string_pretty(&output).map_err(|_| Error::invalid(
@@ -2888,6 +2907,58 @@ mod tests {
         ] {
             assert!(!rendered.contains(secret));
         }
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("fanout-inspection.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            key_source: Arc::new(whatsapp_api::store::StaticKeySource::new(
+                whatsapp_api::store::MasterKey::from_bytes([6; 32]),
+            )),
+            create: true,
+        })
+        .unwrap();
+        let partial = fanout_inspection_with_sessions(&store, &plan, false).unwrap();
+        assert!(partial["key_bundle_devices"].is_null());
+        assert!(partial["cached_session_devices"].is_null());
+        let mut complete = plan.clone();
+        complete.without_device_list.clear();
+        let uncached = fanout_inspection_with_sessions(&store, &complete, false).unwrap();
+        assert_eq!(uncached["key_bundle_devices"], 1);
+        assert_eq!(uncached["cached_session_devices"], 0);
+        // Inspection counts an opaque saved row without trying to encrypt it.
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::SignalSessions,
+                    format!("comparison-direct:{}", complete.devices[0]).as_bytes(),
+                    1,
+                    &vec![1u8, 2, 3],
+                )
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::SignalSessions, 1, 100)?,
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.journal_head()?,
+                ))
+            })
+            .unwrap();
+        let cached = fanout_inspection_with_sessions(&store, &complete, false).unwrap();
+        assert_eq!(cached["key_bundle_devices"], 0);
+        assert_eq!(cached["cached_session_devices"], 1);
+        assert!(!cached.to_string().contains("222222222222222"));
+        assert_eq!(
+            before,
+            store
+                .read(|tx| Ok((
+                    tx.scan(Table::SignalSessions, 1, 100)?,
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                    tx.journal_head()?
+                )))
+                .unwrap()
+        );
         let explicit = fanout_inspection(&plan, true);
         assert_eq!(explicit["participant_hash"], "2:private!");
         assert!(!explicit.to_string().contains("111111111111111"));

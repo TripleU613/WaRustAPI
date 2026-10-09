@@ -11,10 +11,7 @@ use whatsapp_api::{
     binary::{Encoder, TokenDictionary},
     model::{jid::Jid, time::Timestamp},
     session::AccountRecord,
-    signal::{
-        direct::prekey_bundle_for,
-        group::{encrypt_group_payload, prepare_own_sender_key, sender_key_db_key},
-    },
+    signal::direct::prekey_bundle_for,
     store::{ProtocolStore, Table},
     transport::{
         devices::{self, SyncContext},
@@ -131,42 +128,6 @@ async fn fetch_devices(
     Ok(())
 }
 
-/// One recipient device with its saved session material.
-struct Target {
-    device: Jid,
-    session: Option<zeroize::Zeroizing<Vec<u8>>>,
-    identity: Option<Vec<u8>>,
-}
-
-fn load_targets(
-    store: &ProtocolStore,
-    plan: &FanoutPlan,
-    fresh_sessions: bool,
-) -> Result<Vec<Target>, Error> {
-    store.read(|tx| {
-        plan.devices
-            .iter()
-            .map(|device| {
-                let key = session_key(device);
-                let session = if fresh_sessions {
-                    // Drop only the ratchet. The pinned peer identity below is
-                    // still loaded and still enforced, so this cannot be used to
-                    // accept a changed identity.
-                    None
-                } else {
-                    tx.get_json::<Vec<u8>>(Table::SignalSessions, key.as_bytes(), 1)?
-                        .map(zeroize::Zeroizing::new)
-                };
-                Ok(Target {
-                    device: device.clone(),
-                    session,
-                    identity: tx.get_json(Table::PeerIdentities, key.as_bytes(), 1)?,
-                })
-            })
-            .collect()
-    })
-}
-
 /// Send one text message to a group through the sender-key fan-out.
 pub(super) async fn send(
     store: &ProtocolStore,
@@ -223,7 +184,6 @@ pub(super) async fn send(
             chat,
             &plan,
             &payload,
-            &own,
             Stanza {
                 content,
                 // Observed on every incoming status: no `addressing_mode`, and
@@ -294,7 +254,6 @@ pub(super) async fn send(
         chat,
         &plan,
         &payload,
-        &own,
         Stanza {
             content,
             addressing_mode: Some(plan.addressing_mode),
@@ -326,22 +285,18 @@ async fn transmit(
     chat: &Jid,
     plan: &FanoutPlan,
     payload: &[u8],
-    own: &Jid,
     stanza: Stanza<'_>,
 ) -> Result<(), Error> {
     let intent_key = format!("message:{}:send", message.request_id);
-    let mut targets = load_targets(store, plan, message.fresh_sessions)?;
+    let snapshot =
+        whatsapp_api::transport::group_fanout::Snapshot::load(store, plan, message.fresh_sessions)?;
     if message.fresh_sessions {
         println!(
             "send: establishing fresh sessions for all {} target device(s); pinned identities are kept and still enforced",
-            targets.len()
+            plan.devices.len()
         );
     }
-    let needed: Vec<Jid> = targets
-        .iter()
-        .filter(|t| t.session.is_none())
-        .map(|t| t.device.clone())
-        .collect();
+    let needed = snapshot.required_keys();
     let keys = if needed.is_empty() {
         None
     } else {
@@ -370,63 +325,8 @@ async fn transmit(
         Some(reply)
     };
 
-    // Our own sender key for this chat. Loaded, advanced in memory, and written
-    // once with everything else.
-    let own_key_db = sender_key_db_key(chat, own);
-    let previous_key: Option<Vec<u8>> =
-        store.read(|tx| tx.get_json(Table::SenderKeys, &own_key_db, 1))?;
-    let distribution = store
-        .read(|tx| whatsapp_api::transport::sender_key_distribution::load_in(tx, chat, own))?;
-    let rotate = distribution
-        .as_ref()
-        .is_some_and(|state| state.rotation_pending());
-    // APK 37.71 D4x.A00 rotates exposed own group keys after primary changes.
-    // Only indexed exposure is known; old unindexed histories are not guessed.
-    let minted = prepare_own_sender_key(
-        chat,
-        own,
-        if rotate {
-            None
-        } else {
-            previous_key.as_deref()
-        },
-    )
-    .await?;
-    // Not padded here: `prepare_payload` applies the E2E padding itself. Doing
-    // it twice leaves junk bytes on the recipient's protobuf after their single
-    // strip, which is what made this fail intermittently for weeks.
-    let skdm_payload = minted.distribution_message.clone();
-
-    let mut fanout = Vec::new();
-    let mut updates = Vec::new();
-    for target in &mut targets {
-        let bundle = match (&target.session, &keys) {
-            (Some(_), _) => None,
-            (None, Some(reply)) => Some(prekey_bundle_for(reply, &target.device)?),
-            (None, None) => return Err(invalid("a device has neither a session nor a bundle")),
-        };
-        let prepared = whatsapp_api::signal::direct::prepare_payload(
-            account,
-            &target.device,
-            bundle.as_ref(),
-            target.session.as_deref().map(|v| v.as_slice()),
-            target.identity.as_deref(),
-            &skdm_payload,
-        )
-        .await?;
-        fanout.push(groups::FanoutTarget {
-            device: target.device.clone(),
-            kind: prepared.kind,
-            ciphertext: prepared.ciphertext,
-        });
-        updates.push((
-            session_key(&target.device),
-            target.session.clone(),
-            target.identity.clone(),
-            prepared.session,
-            prepared.identity,
-        ));
-    }
+    let prepared = snapshot.prepare(account, keys.as_ref(), payload).await?;
+    let fanout = prepared.targets();
 
     // Out-of-band distribution: deliver each device its sender key as an
     // ordinary direct message first, on the 1:1 path that is live-verified, and
@@ -439,9 +339,6 @@ async fn transmit(
         );
     }
 
-    let (skmsg, advanced_key) =
-        encrypt_group_payload(chat, own, &minted.updated_key, payload).await?;
-
     let wire_id = new_message_id()?;
     let node = groups::sender_key_stanza(
         chat,
@@ -449,8 +346,8 @@ async fn transmit(
         stanza.content,
         stanza.addressing_mode,
         stanza.phash,
-        if out_of_band { &[] } else { &fanout },
-        &skmsg,
+        if out_of_band { &[] } else { fanout },
+        prepared.ciphertext(),
     )?;
     let dict = TokenDictionary::comparison_2_26_37_71();
     let wire = Encoder::new(dict).encode(&node)?;
@@ -473,46 +370,10 @@ async fn transmit(
         if previous.is_some() {
             return Err(invalid("send intent already reserved"));
         }
-        let current: Option<Vec<u8>> = tx.get_json(Table::SenderKeys, &own_key_db, 1)?;
-        if current != previous_key {
-            return Err(invalid("own sender key changed before commit"));
-        }
-        for (key, session, identity, next_session, next_identity) in &updates {
-            let current: Option<Vec<u8>> = tx.get_json(Table::SignalSessions, key.as_bytes(), 1)?;
-            let current_identity: Option<Vec<u8>> =
-                tx.get_json(Table::PeerIdentities, key.as_bytes(), 1)?;
-            // With a deliberate fresh session the stored ratchet is the one we
-            // chose to replace, so only the identity is checked; otherwise both
-            // must be exactly what we encrypted against.
-            let session_unchanged = message.fresh_sessions
-                || current.as_deref() == session.as_deref().map(|v| v.as_slice());
-            if !session_unchanged || &current_identity != identity {
-                return Err(invalid("a peer session changed before commit"));
-            }
-            tx.put_json(Table::SignalSessions, key.as_bytes(), 1, &**next_session)?;
-            tx.put_json(Table::PeerIdentities, key.as_bytes(), 1, next_identity)?;
-        }
-        whatsapp_api::transport::sender_key_distribution::reserve_in(
+        prepared.reserve_in(
             tx,
-            chat,
-            own,
-            distribution.as_ref(),
-            &fanout
-                .iter()
-                .map(|target| target.device.clone())
-                .collect::<Vec<_>>(),
+            format!("message:{}:rotated-sender-key", message.request_id).as_bytes(),
         )?;
-        if rotate {
-            // Preserve the prior own generation privately; this is neither a
-            // resend reservation reset nor an incoming sender-chain deletion.
-            tx.put_json(
-                Table::Checkpoints,
-                format!("message:{}:rotated-sender-key", message.request_id).as_bytes(),
-                1,
-                &previous_key,
-            )?;
-        }
-        tx.put_json(Table::SenderKeys, &own_key_db, 1, &*advanced_key)?;
         tx.put_json(Table::Checkpoints, intent_key.as_bytes(), 1, &intent)
     })?;
     eprintln!(
@@ -521,7 +382,7 @@ async fn transmit(
     );
 
     if out_of_band {
-        for target in &fanout {
+        for target in fanout {
             let id = new_message_id()?;
             let distribution = whatsapp_api::transport::messaging::direct_message(
                 &target.device,
@@ -593,8 +454,8 @@ async fn transmit(
             plan,
             stanza,
             &wire_id,
-            &minted.distribution_message,
-            &skmsg,
+            prepared.distribution_message(),
+            prepared.ciphertext(),
             pending,
         )
         .await;

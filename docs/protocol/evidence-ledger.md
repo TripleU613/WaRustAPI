@@ -1550,3 +1550,22 @@ noncapture inspection stayed unchanged. Transport capture rows increased from
 442 to 446; these are not four user messages. All seven saved group summaries
 stayed unchanged with zero tracked participant receipt devices. No fresh group
 receipt established live attribution, and no uncertain send was replayed.
+
+Shared group fanout (2026-10-09, **confirmed local correction**): the comparison
+CLI now uses library Snapshot/Prepared staging and atomic crypto reservation.
+Fresh mode retains the original ratchet for concurrency checks instead of
+allowing a late same-identity advance to be overwritten. Pins remain enforced;
+identity-triggered own-key rotation archives the original generation and leaves
+uncertain sends intact. Existing fanout-inspect adds nullable missing-bundle and
+cached-session counts offline. Native query batching and normal group outbox
+integration remain unfinished; no new group/status send is claimed.
+[Evidence and port boundaries](group-fanout.md).
+
+Shared fanout validation: 753 workspace/all-feature tests passed, plus the final
+CLI inspection regression, strict Clippy, warning-free Rustdoc, default CLI,
+API symbol/reference, formatting and hygiene checks (1,117 local links; 15 APK
+bundles). Offline projection upgraded zero events. Saved peer keys, action
+outcomes, receipt ACKs, outbox, events and normalized retained inspection were
+unchanged. No server connection, group/status send, request replay or saved
+account crypto mutation occurred in this chunk. Shared staging/rotation is
+verified offline; live group/status validation and normal actor wiring remain.
