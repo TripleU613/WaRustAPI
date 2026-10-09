@@ -1,0 +1,92 @@
+{
+  "ack-state-model": {
+    "anchors": [
+      "MULTI_MESSAGES"
+    ],
+    "class": "LX/DDH;",
+    "file": "ack-state-model.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 12,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/group_receipts.rs"
+    ]
+  },
+  "deferred-job-init": {
+    "anchors": [
+      "ReceiptProcessingGroup"
+    ],
+    "class": "Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;",
+    "file": "deferred-job-init.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/group_receipts.rs"
+    ]
+  },
+  "deferred-job-run": {
+    "anchors": [
+      "ReceiptProcessingJob/onRun/start param="
+    ],
+    "class": "Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;",
+    "file": "deferred-job-run.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0G",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/group_receipts.rs"
+    ]
+  },
+  "device-conversion": {
+    "anchors": [
+      "null cannot be cast to non-null type com.whatsapp.infra.core.jid.UserJid"
+    ],
+    "class": "LX/0DK;",
+    "file": "device-conversion.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/group_receipts.rs"
+    ]
+  },
+  "device-conversion-proxy": {
+    "class": "LX/Ayl;",
+    "file": "device-conversion-proxy.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/group_receipts.rs"
+    ]
+  },
+  "status-item": {
+    "class": "LX/CZ4;",
+    "file": "status-item.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "<init>",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/group_receipts.rs"
+    ]
+  }
+}

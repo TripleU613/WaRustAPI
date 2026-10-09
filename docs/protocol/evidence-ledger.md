@@ -1,5 +1,14 @@
 # Evidence ledger
 
+Receipt ACK state boundary (2026-10-09, **confirmed static/local**): APK
+37.71 DDH preserves ACK status 10/12 and zero time; selected ordinary items
+can reach 15A.A07 with a null callback through Cmn. Permanent-failure status
+21 skips that update. Deferred jobs preserve key direction/status/time and use
+a separate processing budget. The six-topic snapshot closes model/deferred-job
+inputs, not complete persistence or primary user-row authority. Rust ACKs still
+settle receipt reservations separately from peer facts; no runtime or live change.
+[Evidence and limits](receipt-ack-state.md).
+
 Receipt ACK handler bindings (2026-10-09, **confirmed static/local**): APK
 37.71 N12 providers resolve read selector 86 to 14c and state selector 262
 to 17J. Read processing checks chat type 5; state processing enqueues Cmn

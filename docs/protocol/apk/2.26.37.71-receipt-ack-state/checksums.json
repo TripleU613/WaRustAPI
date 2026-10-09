@@ -1,0 +1,42 @@
+{
+  "ack-state-model.txt": {
+    "bytes": 5352,
+    "sha256": "399d3e0c8a4e5f20f0c0225ccc2fc50fb55060c90bd34d84fea9be6a3be8da64"
+  },
+  "deferred-job-init.txt": {
+    "bytes": 4453,
+    "sha256": "0d7c0b4d1a09334a6529ac9deb423b6b3b037b247d28d1e6a56fccdcaf509ea9"
+  },
+  "deferred-job-run.txt": {
+    "bytes": 5154,
+    "sha256": "d822c1f2623d7c6b0aff432829f55ed68787a1a81b1a908c2fc1ce08c6defdf4"
+  },
+  "device-conversion-proxy.txt": {
+    "bytes": 787,
+    "sha256": "a03eaf8c47ae1d5e1d45a81e0c37731eb5e3df2edb52db75dd266f400b9463c1"
+  },
+  "device-conversion.txt": {
+    "bytes": 1467,
+    "sha256": "33609057d19c97d44369a9a06e74fe684a8ebb0afb527a1c6970c9fa9a7ce277"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "status-item.txt": {
+    "bytes": 1022,
+    "sha256": "58857b5deb8e36984e474fa031bc9feb067b071fc3c878587bb5aac39ced8750"
+  },
+  "targets.json": {
+    "bytes": 2714,
+    "sha256": "9505fc40688b54f8d1e6fd5494ab3598b859903ce00840f5f8e5d719719c9837"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

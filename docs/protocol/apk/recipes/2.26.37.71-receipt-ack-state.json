@@ -1,0 +1,69 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "ack-state-model": {
+      "class": "LX/DDH;",
+      "anchors": [
+        "MULTI_MESSAGES"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/group_receipts.rs"
+      ]
+    },
+    "status-item": {
+      "class": "LX/CZ4;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/group_receipts.rs"
+      ],
+      "method": "<init>"
+    },
+    "device-conversion-proxy": {
+      "class": "LX/Ayl;",
+      "anchors": [],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/group_receipts.rs"
+      ],
+      "method": "A0V"
+    },
+    "device-conversion": {
+      "class": "LX/0DK;",
+      "anchors": [
+        "null cannot be cast to non-null type com.whatsapp.infra.core.jid.UserJid"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/group_receipts.rs"
+      ],
+      "method": "A00"
+    },
+    "deferred-job-init": {
+      "class": "Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;",
+      "anchors": [
+        "ReceiptProcessingGroup"
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/group_receipts.rs"
+      ],
+      "method": "<init>"
+    },
+    "deferred-job-run": {
+      "class": "Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;",
+      "anchors": [
+        "ReceiptProcessingJob/onRun/start param="
+      ],
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/group_receipts.rs"
+      ],
+      "method": "A0G"
+    }
+  }
+}
