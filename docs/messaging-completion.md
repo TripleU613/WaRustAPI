@@ -2788,3 +2788,10 @@ actions, receipts, outbox and event summaries were unchanged. Captures grew
 remain valid. No fresh identity transition occurred, so live version increments
 remain unverified. The original 23-topic / 28-file / 323,094-byte APK receipt
 bundle reproduced byte-for-byte.
+
+**Observed inspection clarification:** direct `peer-identity` checks with the
+previous and rebuilt binaries match after omitting only the new null counter.
+Two inspected primary namespaces have absent historical versions. `peer-keys
+--show` exposes directory match diagnostics, not PeerPinState; its original
+compatibility comparison remains valid but cannot prove counter output. The API
+and invocation description were corrected to name `peer-identity` only.

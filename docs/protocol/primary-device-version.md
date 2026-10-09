@@ -36,8 +36,9 @@ silently restarting at 1. No network worker, retry or account migration was adde
 ## Inspection and historical limits
 
 `PeerPinState.primary_device_version` exposes the optional signed int64 through
-existing offline `peer-identity --chat <PN-JID>` (phone and mapped LID states)
-and saved `peer-keys --show --chat <PN-JID>` inspection. Missing fields in old
+existing offline `peer-identity --chat <PN-JID>` (phone and mapped LID states).
+`peer-keys --show` reports directory matches and does not expose PeerPinState.
+Missing fields in old
 serialized inspection deserialize as null. A stored counter is read without
 writing anything; it is not a Signal registration ID, signed device-list version,
 server epoch or proof of current companion authority.
@@ -82,3 +83,10 @@ actions, receipts, outbox and event summaries were unchanged. Captures grew
 remain valid. No fresh identity transition occurred, so live version increments
 remain unverified. The original 23-topic / 28-file / 323,094-byte APK receipt
 bundle reproduced byte-for-byte.
+
+**Observed inspection clarification:** direct `peer-identity` checks with the
+previous and rebuilt binaries match after omitting only the new null counter.
+Two inspected primary namespaces have absent historical versions. `peer-keys
+--show` exposes directory match diagnostics, not PeerPinState; its original
+compatibility comparison remains valid but cannot prove counter output. The API
+and invocation description were corrected to name `peer-identity` only.
