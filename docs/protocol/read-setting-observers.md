@@ -103,7 +103,9 @@ SQLite full/corrupt and IllegalStateException paths log/notify local helpers;
 full recovery behavior is **unknown** and not automatic network retry authority.
 
 A0X combines the selected collections and calls **A0V(collection,true)**
-(036a..037a). A0V's final admission/mark/send behavior remains **unknown** here:
+(036a..037a). A0V's grouped/individual admission and local marking are now followed in
+[the submission trace](read-receipt-submission.md); worker/atomicity limits remain
+**unknown**:
 selection is not proof of actual receipt transmission. DK9 then queries saved
 played_self_receipt, groups records through A00, queues
 SendPlayedReceiptJobV2(record,false), and deletes selected saved played rows,

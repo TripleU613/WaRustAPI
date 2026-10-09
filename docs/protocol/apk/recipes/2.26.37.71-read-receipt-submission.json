@@ -1,0 +1,111 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "submission": {
+      "class": "LX/0zH;",
+      "method": "A0V",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "grouping": {
+      "class": "LX/0zH;",
+      "method": "A0I",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "grouped-queue": {
+      "class": "LX/0zH;",
+      "method": "A0W",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "local-mark": {
+      "class": "LX/0zH;",
+      "method": "A0J",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "migration-guard": {
+      "class": "LX/0zH;",
+      "method": "A0Z",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "store-time": {
+      "class": "LX/0zH;",
+      "method": "A00",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "malformed-guard": {
+      "class": "LX/0zH;",
+      "method": "A0B",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "forced-group": {
+      "class": "LX/0zH;",
+      "method": "A0C",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "group-admission": {
+      "class": "LX/0zH;",
+      "method": "A0D",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "nested-policy": {
+      "class": "LX/0zH;",
+      "method": "A0E",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "default-group": {
+      "class": "LX/CN8;",
+      "method": "A00",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "group-value": {
+      "class": "LX/Chg;",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "individual-admission": {
+      "class": "LX/0zd;",
+      "method": "A09",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/receipts.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    }
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "default-group": {
+    "class": "LX/CN8;",
+    "file": "default-group.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "forced-group": {
+    "class": "LX/0zH;",
+    "file": "forced-group.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0C",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "group-admission": {
+    "class": "LX/0zH;",
+    "file": "group-admission.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0D",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "group-value": {
+    "class": "LX/Chg;",
+    "file": "group-value.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": null,
+    "methods": 5,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "grouped-queue": {
+    "class": "LX/0zH;",
+    "file": "grouped-queue.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0W",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "grouping": {
+    "class": "LX/0zH;",
+    "file": "grouping.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0I",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "individual-admission": {
+    "class": "LX/0zd;",
+    "file": "individual-admission.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A09",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "local-mark": {
+    "class": "LX/0zH;",
+    "file": "local-mark.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0J",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "malformed-guard": {
+    "class": "LX/0zH;",
+    "file": "malformed-guard.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0B",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "migration-guard": {
+    "class": "LX/0zH;",
+    "file": "migration-guard.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0Z",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "nested-policy": {
+    "class": "LX/0zH;",
+    "file": "nested-policy.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0E",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "store-time": {
+    "class": "LX/0zH;",
+    "file": "store-time.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A00",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "submission": {
+    "class": "LX/0zH;",
+    "file": "submission.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0V",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/receipts.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  }
+}

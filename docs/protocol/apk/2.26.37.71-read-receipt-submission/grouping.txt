@@ -1,0 +1,90 @@
+# APK-derived structural disassembly: LX/0zH;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0I(LL) flags=0x11 registers=10
+  # full signature: LX/0zH;->A0I(Ljava/util/Collection;)Ljava/util/HashMap;
+  0000..0004 op=22 new-instance v5, Ljava/util/HashMap;
+  0004..000a op=70 invoke-direct {v5}, Ljava/util/HashMap;-><init>()V
+  000a..0010 op=72 invoke-interface {v9}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+  0010..0012 op=0c move-result-object v7
+  0012..0018 op=72 invoke-interface {v7}, Ljava/util/Iterator;->hasNext()Z
+  0018..001a op=0a move-result v0
+  001a..001e op=38 if-eqz v0, +0x9b
+  001e..0024 op=72 invoke-interface {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0024..0026 op=0c move-result-object v4
+  0026..002a op=1f check-cast v4, LX/178;
+  002a..002e op=52 iget v3, v4, LX/178;->A0h:I
+  002e..0032 op=13 const/16 v0, #0x13
+  0032..0036 op=33 if-ne v3, v0, +0x16
+  0036..003a op=54 iget-object v2, v4, LX/178;->A0i:LX/1gc;
+  003a..003e op=1a const-string v1, "ReadReceipts/generateReceiptGroups skip read receipt for hsm rejection message. key="
+  003e..0042 op=22 new-instance v0, Ljava/lang/StringBuilder;
+  0042..0048 op=70 invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0048..004e op=6e invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  004e..0054 op=6e invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0054..0056 op=0c move-result-object v0
+  0056..005c op=71 invoke-static {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+  005c..005e op=28 goto -0x25
+  005e..0062 op=13 const/16 v0, #0x15
+  0062..0066 op=33 if-ne v3, v0, +0x5
+  0066..006a op=1a const-string v0, "ReadReceipts/generateReceiptGroups skip sending read-receipt for payment request declined message."
+  006a..006c op=28 goto -0xa
+  006c..0072 op=70 invoke-direct {v8, v4}, LX/0zH;->A0D(LX/178;)Z
+  0072..0074 op=0a move-result v0
+  0074..0078 op=39 if-nez v0, +0x1b
+  0078..007c op=54 iget-object v2, v4, LX/178;->A0i:LX/1gc;
+  007c..0080 op=1a const-string v0, "ReadReceipts/generateReceiptGroups skip sending read-receipt for "
+  0080..0084 op=22 new-instance v1, Ljava/lang/StringBuilder;
+  0084..008a op=70 invoke-direct {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  008a..0090 op=6e invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0090..0094 op=1a const-string v0, " type="
+  0094..009a op=6e invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  009a..00a0 op=6e invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+  00a0..00a6 op=6e invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00a6..00a8 op=0c move-result-object v0
+  00a8..00aa op=28 goto -0x29
+  00aa..00b0 op=70 invoke-direct {v8, v4}, LX/0zH;->A0B(LX/178;)Z
+  00b0..00b2 op=0a move-result v0
+  00b2..00b6 op=39 if-nez v0, -0x50
+  00b6..00bc op=70 invoke-direct {v8, v4}, LX/0zH;->A0C(LX/178;)Z
+  00bc..00be op=0a move-result v0
+  00be..00c2 op=38 if-eqz v0, +0x42
+  00c2..00c6 op=54 iget-object v0, v4, LX/178;->A0i:LX/1gc;
+  00c6..00ca op=54 iget-object v3, v0, LX/1gc;->A00:LX/0Cy;
+  00ca..00d0 op=6e invoke-virtual {v4}, LX/178;->B1Q()LX/0Cy;
+  00d0..00d2 op=0c move-result-object v2
+  00d2..00d4 op=12 const/4 v0, #0x1
+  00d4..00d8 op=22 new-instance v1, LX/Ci4;
+  00d8..00de op=70 invoke-direct {v1, v3, v2, v0}, LX/Ci4;-><init>(LX/0Cy;LX/0Cy;Z)V
+  00de..00e4 op=6e invoke-virtual {v5, v1}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  00e4..00e6 op=0c move-result-object v6
+  00e6..00ea op=1f check-cast v6, LX/Chg;
+  00ea..00ee op=39 if-nez v6, +0xf
+  00ee..00f2 op=22 new-instance v0, Ljava/util/ArrayList;
+  00f2..00f8 op=70 invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
+  00f8..00fc op=22 new-instance v6, LX/Chg;
+  00fc..0102 op=70 invoke-direct {v6, v0}, LX/Chg;-><init>(Ljava/util/ArrayList;)V
+  0102..0108 op=6e invoke-virtual {v5, v1, v6}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  0108..010c op=54 iget-object v1, v6, LX/Chg;->A01:Ljava/util/ArrayList;
+  010c..0110 op=54 iget-object v0, v4, LX/178;->A0i:LX/1gc;
+  0110..0114 op=54 iget-object v0, v0, LX/1gc;->A01:Ljava/lang/String;
+  0114..011a op=6e invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+  011a..0120 op=71 invoke-static {v4}, LX/0zH;->A00(LX/178;)J
+  0120..0122 op=0b move-result-wide v3
+  0122..0126 op=16 const-wide/16 v1, #0x0
+  0126..012a op=31 cmp-long v0, v3, v1
+  012a..012e op=3d if-lez v0, -0x8c
+  012e..0132 op=53 iget-wide v0, v6, LX/Chg;->A00:J
+  0132..0138 op=71 invoke-static {v0, v1, v3, v4}, Ljava/lang/Math;->max(JJ)J
+  0138..013a op=0b move-result-wide v0
+  013a..013e op=5a iput-wide v0, v6, LX/Chg;->A00:J
+  013e..0142 op=29 goto/16 -0x96
+  0142..0146 op=62 sget-object v0, LX/Ci4;->A03:LX/CN8;
+  0146..014c op=6e invoke-virtual {v0, v4}, LX/CN8;->A00(LX/178;)LX/Ci4;
+  014c..014e op=0c move-result-object v1
+  014e..0150 op=28 goto -0x38
+  0150..0152 op=11 return-object v5
+  # exception table: 0 try range(s)
+.end method

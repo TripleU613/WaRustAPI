@@ -1,0 +1,70 @@
+{
+  "default-group.txt": {
+    "bytes": 1176,
+    "sha256": "1d5f3a3316484d4a0f8e36df44bac2dd923d06dcd5bfe443ba1dfb34c2542d26"
+  },
+  "forced-group.txt": {
+    "bytes": 1978,
+    "sha256": "94fc36af23cb46e6256ecd2567e126615e5faf08acaf416627903064436d7cb7"
+  },
+  "group-admission.txt": {
+    "bytes": 1703,
+    "sha256": "50502ca15fdca91125b41f2408409a4a98ea6fdd85fd12fcb0884792c6c01a95"
+  },
+  "group-value.txt": {
+    "bytes": 3283,
+    "sha256": "7e63d83a5cfb82d9295510ae6f3914a740ece940e652a7b7ece7e1ed3e3c05f5"
+  },
+  "grouped-queue.txt": {
+    "bytes": 7150,
+    "sha256": "9798a42b9bda1faa60376e77101958e97cd3695a66f7a7bd5fa0c3cbcc08fc61"
+  },
+  "grouping.txt": {
+    "bytes": 5435,
+    "sha256": "13cdf2f19bc7d75ff8801679cd761540581db8415eb16f1f78f4f38daa41683c"
+  },
+  "individual-admission.txt": {
+    "bytes": 1095,
+    "sha256": "bcbccad917a8d78a41502e7049e8e000514b32354c2fe455c473dbf76abaf6dd"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "local-mark.txt": {
+    "bytes": 1307,
+    "sha256": "44098c157b75a5478c15c22df44fe7a618ac6b0e4e7bb5d2812da87120b2116c"
+  },
+  "malformed-guard.txt": {
+    "bytes": 3764,
+    "sha256": "238fa392ec256b53af480ec5ee51480555a51e071ce2ffa2575bb3661195b941"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "migration-guard.txt": {
+    "bytes": 2418,
+    "sha256": "5f457a4825730158af23004a610fee40a9be53f11ad3ef93ebed2297b33a89a6"
+  },
+  "nested-policy.txt": {
+    "bytes": 3790,
+    "sha256": "c1f5f7c72f4cc496d6a47cd80401239504427854f2d5bf33a72c334f99f29dca"
+  },
+  "store-time.txt": {
+    "bytes": 985,
+    "sha256": "1a32de40374924df3c1c56527b8e9ad4dfa9ab7f6136f4718d24869edb243523"
+  },
+  "submission.txt": {
+    "bytes": 16592,
+    "sha256": "f2c0b3ca01a27bb9e59ca145d829a0eebe5f3b1018715c37e1370a4356114dc6"
+  },
+  "targets.json": {
+    "bytes": 4908,
+    "sha256": "64074989e916e8633b8252e07dd3a1c51257c6263b38c9234668956fd4796d7b"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

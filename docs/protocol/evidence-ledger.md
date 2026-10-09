@@ -1,5 +1,12 @@
 # Evidence ledger
 
+Read-receipt submission (2026-10-09, **confirmed static**): thirteen source
+topics separate grouped queueing from later per-message policy, 256-ID batches,
+forced read-self and local status-16 marking. Maximum store-time is preserved;
+worker/migration authority and queue atomicity remain unknown/unported.
+No runtime or live change.
+[Evidence and limits](read-receipt-submission.md).
+
 Read-setting observer binding (2026-10-09, **confirmed static**): sixteen
 source topics connect generated observer membership to DK9 and distinguish
 category/value Bsa from empty list callback C5W. Its read-work scan uses saved

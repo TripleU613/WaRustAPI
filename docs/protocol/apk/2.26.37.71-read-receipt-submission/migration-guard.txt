@@ -1,0 +1,51 @@
+# APK-derived structural disassembly: LX/0zH;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A0Z(ZL) flags=0x11 registers=7
+  # full signature: LX/0zH;->A0Z(LX/178;)Z
+  0000..0002 op=12 const/4 v4, #0x0
+  0002..000c op=18 const-wide v0, #0x1000000000 (68719476736)
+  000c..0012 op=6e invoke-virtual {v6, v0, v1}, LX/178;->A0b(J)Z
+  0012..0014 op=0a move-result v0
+  0014..0018 op=39 if-nez v0, +0x3b
+  0018..001c op=54 iget-object v0, v6, LX/178;->A0i:LX/1gc;
+  001c..0020 op=54 iget-object v3, v0, LX/1gc;->A00:LX/0Cy;
+  0020..0026 op=71 invoke-static {v3}, LX/0hd;->A06(LX/0Cy;)Z
+  0026..0028 op=0a move-result v0
+  0028..002c op=39 if-nez v0, +0x31
+  002c..0030 op=54 iget-object v0, v5, LX/0zH;->A02:LX/05B;
+  0030..0034 op=54 iget-object v0, v0, LX/05B;->A00:LX/00s;
+  0034..003a op=72 invoke-interface {v0}, LX/00s;->get()Ljava/lang/Object;
+  003a..003c op=0c move-result-object v0
+  003c..0040 op=1f check-cast v0, LX/1Z3;
+  0040..0046 op=6e invoke-virtual {v0}, LX/1Z3;->A01()Z
+  0046..0048 op=0a move-result v0
+  0048..004c op=df xor-int/lit8 v2, v0, #0x1
+  004c..004e op=12 const/4 v1, #0x1
+  004e..0054 op=6e invoke-virtual {v6}, LX/178;->B1V()Lcom/whatsapp/infra/core/jid/UserJid;
+  0054..0056 op=0c move-result-object v0
+  0056..005a op=38 if-eqz v2, +0x1b
+  005a..0060 op=71 invoke-static {v0}, LX/0hd;->A05(LX/0Cy;)Z
+  0060..0062 op=0a move-result v0
+  0062..0066 op=38 if-eqz v0, +0x20
+  0066..006c op=71 invoke-static {v3}, LX/0hd;->A05(LX/0Cy;)Z
+  006c..006e op=0a move-result v0
+  006e..0072 op=39 if-nez v0, +0x1a
+  0072..0078 op=71 invoke-static {v3}, LX/0DE;->A0l(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0078..007a op=0a move-result v0
+  007a..007e op=39 if-nez v0, +0x8
+  007e..0084 op=71 invoke-static {v3}, LX/0DE;->A0m(Lcom/whatsapp/infra/core/jid/Jid;)Z
+  0084..0086 op=0a move-result v0
+  0086..008a op=38 if-eqz v0, +0xe
+  008a..008c op=0f return v4
+  008c..0092 op=71 invoke-static {v0}, LX/0hd;->A02(LX/0Cy;)Z
+  0092..0094 op=0a move-result v0
+  0094..0098 op=38 if-eqz v0, +0x7
+  0098..009e op=71 invoke-static {v3}, LX/0hd;->A02(LX/0Cy;)Z
+  009e..00a0 op=0a move-result v0
+  00a0..00a2 op=28 goto -0x19
+  00a2..00a4 op=0f return v1
+  # exception table: 0 try range(s)
+.end method
