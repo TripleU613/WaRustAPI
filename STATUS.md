@@ -3029,3 +3029,19 @@ metadata artifacts. CLI-reference regeneration, API/library-symbol validation,
 formatting and whitespace checks passed. No fresh workspace/runtime test or
 live operation is claimed; the prior functional validation remains separate.
 Repository hygiene checked 1,471 local links and 38 bundles / 9,272,115 bytes.
+
+2026-10-09 — **Confirmed static:** explicit receipt table-descriptor readers
+are incremental backup export/restore and JSON metadata serialization. Descriptor
+fields now have actual serializer labels, including optional lookup_field.
+Restore contains a dynamic table INSERT; its specific receipt input continuity
+and complete validation remain untraced. Normal-send user-row seeding and
+primary cleanup are still unfinished. Exact scans, scoped source, signatures,
+catch tables and complete-dump digests are retained outside the checksum bundle.
+[Consumer evidence and limits](docs/protocol/user-receipt-reference-roles.md#descriptor-consumers-follow-up).
+No Rust/account/network behavior changed.
+
+Consumer follow-up validation: CLI-reference regeneration, OpenAPI/library-symbol
+checks, formatting and whitespace checks passed. Hygiene checked 1,475 local
+links and the unchanged 38 checksum bundles / 9,272,115 bytes. The new excerpts
+are separately attributed, not counted as checksum-bundle coverage. No fresh
+workspace/runtime or live test is claimed.

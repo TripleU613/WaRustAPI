@@ -70,9 +70,10 @@ CnT.A01/A02 only construct CKy and store it at array index 0/1. CnT's two-argume
 constructor delegates with singleton `message`; its three-argument constructor
 only assigns category/list fields A00/A02/A01. CKy.<init> assigns the first three
 inputs to fields A03/A02/A01 and initializes empty lists A04/A05. No traced
-constructor/helper performs SQL or sends a message. **Unknown:** consumers of
-these fields, actual generic import/export behavior and the semantic role of
-its nullable third string. A descriptor is not proof of pending receipt rows.
+constructor/helper performs SQL or sends a message. The [follow-up consumer trace](#descriptor-consumers-follow-up) below identifies
+backup readers and labels the nullable third string. Complete import authority
+and ordinary-send membership remain unknown. A descriptor is not proof of
+pending receipt rows.
 
 ## Consequence for the Rust port
 
@@ -98,3 +99,57 @@ metadata artifacts. CLI-reference regeneration, API/library-symbol validation,
 formatting and whitespace checks passed. No fresh workspace/runtime test or
 live operation is claimed; the prior functional validation remains separate.
 Repository hygiene checked 1,471 local links and 38 bundles / 9,272,115 bytes.
+
+## Descriptor consumers follow-up
+
+2026-10-09, same pinned APK. [Exact field-reference scans and attributed source
+excerpts](user-receipt-descriptor-consumer-evidence.txt) include full method
+signatures, excerpt boundaries, enclosing catch tables and SHA-256 of the
+reproducible complete local dumps. Excerpts are deliberately scoped; they are
+not a complete backup importer or a new checksum-bundle generation.
+
+**Confirmed:** an all-DEX exact CnT.A02:List field scan finds three reads:
+Cmf.A03 at 0x653510 / 0x653ed0 and CpC.A05 at 0x6b9788, plus the constructor
+write. CKy.A03:String has three reads: CRU.A01 at 0x5abdd2, Cmf.A03 at
+0x653576 and CpC.A05 at 0x6b97f4, plus its constructor write. These scans
+cover explicit instructions, not reflection or helper reachability.
+
+**Confirmed:** CRU.A01(List):JSONObject serializes CKy.A03 as table_name,
+A02 as table_id_field, optional A01 as lookup_field, A04 as deleted_id_files,
+A05 as modified_entity_files and A00 as records_count_in_db. It only emits a
+selected CKy entry after a nonempty file-list branch; the full body is retained.
+The prior unknown third-string label is now established as lookup_field in this
+serializer, not a message routing alias.
+
+**Confirmed:** Cmf.A03(CancellationSignal,BiR,DbE,File,long,boolean):void
+logs MessageStoreIncrementalBackup/exporting entities at 034e..0358, iterates
+the category/table lists at 0388..03ac, reads CKy.A03 at 03ee..03f2 and builds
+_deleted_%d.json / _modified_%d.json names. At 066c..06e4 it builds a SELECT
+rowid,* FROM dynamic table WHERE rowid IN expression and queries through
+0IY.A0A with INCREMENTAL_BACKUP_QUERY_ROWS. At 0d48..0d62 the other category
+list read passes to CRU.A01 and places the resulting array into entities JSON.
+These consumers export existing backup entities; they do not establish ordinary
+send-time pending-row insertion. All export trust/cancellation/storage semantics
+and transitive helpers remain **unknown/unported**.
+
+**Confirmed:** CpC.A05(CpC,DbH,List,int):CRd reads the category table list
+at 1fc4..1fe8 and table string at 2030..2034 in restoration. Its unknown-table
+log is retained at 2066..2070. A separate branch at 2cc8..2d6e converts a
+Map into ContentValues using CoR.A04, throws on an unsupported value type and
+calls 0IY.A05 with a dynamic table string and diagnostic
+BackupChangesStore/INCREMENTAL_BACKUP_INSERT_ROW. **Unknown:** full continuity
+from the selected receipt descriptor through restored files/map/table values,
+all validation and transaction gates, and whether specific receipt rows pass
+this path in practice. Do not claim a verified receipt_user restore or normal
+send seed from these excerpts. The generic INSERT is precisely why a literal
+receipt_user-only scan cannot prove absence of other writers.
+
+No Rust runtime, HTTP route or new CLI command is added. No backup was restored,
+no database row changed and no account/network operation ran. Full normal-send
+seeding and effective receipt admission remain the next port inputs.
+
+Consumer follow-up validation: CLI-reference regeneration, OpenAPI/library-symbol
+checks, formatting and whitespace checks passed. Hygiene checked 1,475 local
+links and the unchanged 38 checksum bundles / 9,272,115 bytes. The new excerpts
+are separately attributed, not counted as checksum-bundle coverage. No fresh
+workspace/runtime or live test is claimed.
