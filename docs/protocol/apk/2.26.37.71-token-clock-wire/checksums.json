@@ -1,0 +1,42 @@
+{
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "iq-followup.txt": {
+    "bytes": 1218,
+    "sha256": "f2e62054a8bd04d38b152cc137a11b926fb3a808d83b34bba62d06264937c51e"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "post-timestamp-event.txt": {
+    "bytes": 706,
+    "sha256": "649ab2f013471bfe0814f9eda83705b7f033fcef8f441da440a2005e881c485f"
+  },
+  "server-ping-dispatch.txt": {
+    "bytes": 892,
+    "sha256": "611fbd24025151736ef81a73e6d893d010e84c219b0faa2cea10feba5df5ba4a"
+  },
+  "server-ping-parser.txt": {
+    "bytes": 9145,
+    "sha256": "6a16fd3524dcedc0befcccdc284b32bdeb2b00295c74470b32a23ebed98dc3bf"
+  },
+  "targets.json": {
+    "bytes": 2299,
+    "sha256": "5dfe0d18aa8c28e801d1e06ee9c9826ad979c0eebfcd3d36969fc06ded73593f"
+  },
+  "timestamp-bundle.txt": {
+    "bytes": 1037,
+    "sha256": "17d72991f45b63eeb6e228b414ff82ab4a13237e9c946d1e17c5c0053493680d"
+  },
+  "timestamp-parser.txt": {
+    "bytes": 906,
+    "sha256": "d0f31f9d80ebaade273f9525842fc55c7c7d8555d3c32045d1a462ec460a0211"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}

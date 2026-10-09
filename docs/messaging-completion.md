@@ -1,5 +1,12 @@
 # Messaging completion checklist
 
+Server-ping clock input (2026-10-09, **confirmed static/local audit**):
+`iq type=get xmlns=urn:xmpp:ping` supplies envelope t through signed-long/fallback
+parsing to Android arg1 selector 4. Result IQs do not use this clock branch.
+Six source topics close wire provenance; downstream reply writing and Rust
+clock parity remain unported. No runtime or real-account/live change.
+[Evidence and limits](protocol/token-clock-producers.md#server-ping-wire-producer-2026-10-09-continuation).
+
 Token clock producers (2026-10-09, **confirmed static/local audit**):
 APK `08B.A07` takes login `success@t` through `1Rd` or selector-4 Bundle time,
 sets an elapsed baseline and persists client/server difference. Seven source

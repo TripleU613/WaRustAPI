@@ -1,0 +1,80 @@
+{
+  "iq-followup": {
+    "class": "LX/1Dz;",
+    "file": "iq-followup.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A1F",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "post-timestamp-event": {
+    "class": "LX/0iS;",
+    "file": "post-timestamp-event.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A07",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "server-ping-dispatch": {
+    "class": "LX/1Dz;",
+    "file": "server-ping-dispatch.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0t",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "server-ping-parser": {
+    "class": "LX/1Qt;",
+    "file": "server-ping-parser.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A02",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "timestamp-bundle": {
+    "class": "LX/1Dz;",
+    "file": "timestamp-bundle.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A0B",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  },
+  "timestamp-parser": {
+    "class": "LX/0Gv;",
+    "file": "timestamp-parser.txt",
+    "include_exception_tables": true,
+    "include_method_signatures": true,
+    "include_register_flow": true,
+    "method_filter": "A01",
+    "methods": 1,
+    "rust_files": [
+      "crates/whatsapp-api/src/transport/clock.rs",
+      "crates/whatsapp-api/src/transport/connection.rs"
+    ]
+  }
+}

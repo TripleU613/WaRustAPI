@@ -1,0 +1,56 @@
+{
+  "apk_sha256": "1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c",
+  "include_exception_tables": true,
+  "include_register_flow": true,
+  "include_method_signatures": true,
+  "targets": {
+    "server-ping-parser": {
+      "class": "LX/1Qt;",
+      "method": "A02",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "timestamp-parser": {
+      "class": "LX/0Gv;",
+      "method": "A01",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "timestamp-bundle": {
+      "class": "LX/1Dz;",
+      "method": "A0B",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "server-ping-dispatch": {
+      "class": "LX/1Dz;",
+      "method": "A0t",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "iq-followup": {
+      "class": "LX/1Dz;",
+      "method": "A1F",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    },
+    "post-timestamp-event": {
+      "class": "LX/0iS;",
+      "method": "A07",
+      "rust_files": [
+        "crates/whatsapp-api/src/transport/clock.rs",
+        "crates/whatsapp-api/src/transport/connection.rs"
+      ]
+    }
+  }
+}
