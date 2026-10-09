@@ -2693,3 +2693,28 @@ All 65 xtask tests, CLI-reference regeneration, API/library-symbol check,
 formatting and diff hygiene passed. Repository hygiene checked 1,287 local links
 and 24 APK bundles / 7,401,275 bytes. Runtime source changes are comments only;
 no account operation or live token/history request was made.
+
+2026-10-09 — **Confirmed local/static:** authenticated primary replacements
+now persist the APK-style per-user device version atomically with their archive
+and follow-ups, exposed in PeerPinState through existing offline inspection.
+Missing old state stays null; first tracked change starts at 1. PN/LID namespaces
+stay separate, own/companion exclusions remain, and receipt reservations are
+preserved. Native receipt version use and fresh live increments remain unverified.
+[Evidence and limits](docs/protocol/primary-device-version.md).
+
+Primary-version verification: 792 workspace/all-feature tests (662 API, four
+property, nine crash, 51 CLI, one API symbol and 65 xtask), strict Clippy,
+warning-free Rustdoc, default CLI/API checks, regenerated CLI reference,
+formatting and build passed. Hygiene checked 1,296 local links and 24 APK
+bundles / 7,401,275 bytes. Real encrypted direct/group transition fixtures
+exercise the receive integration; isolated tests cover both archive sources,
+rollback, reopening, namespace separation, signed-long overflow and legacy JSON.
+
+**Observed compatibility:** one completed 45-second receive-only window
+authenticated and stopped cleanly, with chat sends and automatic reconnect
+disabled. Saved peer facts (apart from the new absent-version null field),
+actions, receipts, outbox and event summaries were unchanged. Captures grew
+502→508 with all original shapes retained; two retained group reaction targets
+remain valid. No fresh identity transition occurred, so live version increments
+remain unverified. The original 23-topic / 28-file / 323,094-byte APK receipt
+bundle reproduced byte-for-byte.

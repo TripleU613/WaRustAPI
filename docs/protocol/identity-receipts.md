@@ -131,7 +131,7 @@ trusted-contact tokens; there is no equivalent outbound refresh job here.
 | Native state | Current Rust state and boundary |
 | --- | --- |
 | Per-message device/user receipt rows | Delivery facts are retained on saved sends/outbox entries; native row/alias/version policy is not ported. |
-| `primary_device_version` | No native per-user counter/cache model; signed device-list timestamps must not be repurposed. |
+| `primary_device_version` | Exact-namespace primary-change counter now commits with authenticated replacement; old state remains null and native receipt/cache use is unported. See [port and limits](primary-device-version.md). |
 | Token pending set and refresh job | Incoming token storage exists; canonical refresh scope and job lifecycle remain unfinished. |
 | Receipt-send reservations | Rust `receipt-outbox:*` is a once-only wire reservation/ACK journal, not a native receipt-device cache. |
 

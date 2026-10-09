@@ -143,6 +143,10 @@ pub struct PeerDeviceKeyCoverage {
 /// Redacted pin and held-session state for one primary peer address.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PeerPinState {
+    /// Native-style primary-change counter for this exact namespace. Null before
+    /// a tracked change; not server state, an inventory version or a timestamp.
+    #[serde(default)]
+    pub primary_device_version: Option<i64>,
     /// Indexed own keys awaiting rotation; zero does not prove historical coverage.
     #[serde(default)]
     pub pending_sender_key_rotations: usize,
@@ -209,6 +213,7 @@ fn pin_state(tx: &crate::store::ReadTx<'_>, peer: &Jid) -> Result<(PeerPinState,
     };
     let fingerprint = |bytes: &[u8]| hex::encode(Sha256::digest(bytes));
     let state = PeerPinState {
+        primary_device_version: super::devices::primary_device_version_in(tx, peer)?,
         pending_sender_key_rotations: super::sender_key_distribution::pending_for_peer_in(
             tx, peer,
         )?,
@@ -455,6 +460,68 @@ mod tests {
         .unwrap()
     }
     #[test]
+    fn primary_version_covers_both_archive_sources_and_preserves_receipt_reservations() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("primary-version.redb");
+        let store = open(&path, true);
+        let pn = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let lid = Jid::parse("222222222222222@lid").unwrap();
+        let version = |store: &ProtocolStore, peer: &Jid| {
+            store
+                .read(|tx| super::super::devices::primary_device_version_in(tx, peer))
+                .unwrap()
+        };
+        let receipt = serde_json::json!({"state":"uncertain","id":"synthetic-stable-receipt"});
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, b"receipt-outbox:synthetic", 1, &receipt))
+            .unwrap();
+        assert_eq!(version(&store, &pn), None);
+        store
+            .write(|tx| {
+                archive_replacement(tx, &pn, None, None, &[2])?;
+                archive_bundle_replacement(tx, &pn, Some(&[2]), None, &[2])
+            })
+            .unwrap();
+        assert_eq!(version(&store, &pn), None);
+        store
+            .write(|tx| archive_replacement(tx, &pn, Some(&[1]), None, &[2]))
+            .unwrap();
+        assert_eq!(version(&store, &pn), Some(1));
+        store
+            .write(|tx| archive_bundle_replacement(tx, &pn, Some(&[2]), None, &[1]))
+            .unwrap();
+        assert_eq!(version(&store, &pn), Some(2));
+        assert_eq!(version(&store, &lid), None);
+        store
+            .write(|tx| archive_bundle_replacement(tx, &lid, Some(&[1]), None, &[2]))
+            .unwrap();
+        assert_eq!(version(&store, &lid), Some(1));
+        assert_eq!(version(&store, &pn), Some(2));
+        let head = store.journal_head().unwrap();
+        let failed: Result<()> = store.write(|tx| {
+            archive_replacement(tx, &pn, Some(&[1]), None, &[3])?;
+            Err(Error::invalid("test", "rollback"))
+        });
+        assert!(failed.is_err());
+        assert_eq!(version(&store, &pn), Some(2));
+        assert_eq!(store.journal_head().unwrap(), head);
+        drop(store);
+        let store = open(&path, false);
+        assert_eq!(version(&store, &pn), Some(2));
+        assert_eq!(version(&store, &lid), Some(1));
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(
+                    Table::Checkpoints,
+                    b"receipt-outbox:synthetic",
+                    1
+                ))
+                .unwrap(),
+            Some(receipt)
+        );
+    }
+
+    #[test]
     fn retained_device_key_coverage_is_redacted_read_only_and_not_inventory_authority() {
         use super::super::devices::{DeviceEntry, DeviceList};
         use wacore_libsignal::protocol::IdentityKeyPair;
@@ -476,6 +543,10 @@ mod tests {
             .as_object_mut()
             .unwrap()
             .remove("device_key_coverage");
+        old_json
+            .as_object_mut()
+            .unwrap()
+            .remove("primary_device_version");
         assert_eq!(
             serde_json::from_value::<PeerPinState>(old_json).unwrap(),
             old_state
@@ -1082,6 +1153,12 @@ mod tests {
                 .unwrap(),
                 super::super::inbox::IncomingResult::Decrypted
             );
+            assert_eq!(
+                store
+                    .read(|tx| super::super::devices::primary_device_version_in(tx, &session_peer))
+                    .unwrap(),
+                Some(1)
+            );
             let head = store.journal_head().unwrap();
             assert!(head > initial_head);
             assert_eq!(
@@ -1123,6 +1200,12 @@ mod tests {
             assert_eq!(store.journal_head().unwrap(), before);
             assert_eq!(
                 store
+                    .read(|tx| super::super::devices::primary_device_version_in(tx, &session_peer))
+                    .unwrap(),
+                Some(1)
+            );
+            assert_eq!(
+                store
                     .read(|tx| tx.scan(Table::Checkpoints, 1, 256))
                     .unwrap()
                     .iter()
@@ -1146,6 +1229,12 @@ mod tests {
                 super::super::inbox::IncomingResult::Duplicate
             );
             assert_eq!(store.journal_head().unwrap(), head);
+            assert_eq!(
+                store
+                    .read(|tx| super::super::devices::primary_device_version_in(tx, &session_peer))
+                    .unwrap(),
+                Some(1)
+            );
         }
     }
 }

@@ -382,6 +382,26 @@ pub(crate) fn request_sync_in(
         },
     )
 }
+// APK 37.71 0Z7.A00/A02 stores a version per exact user namespace.
+// This key is not a signed device-list timestamp or a PN/LID alias merger.
+fn primary_device_version_key(peer: &Jid) -> String {
+    format!("primary-device-version:{}", peer.to_non_ad())
+}
+
+pub(super) fn primary_device_version_in(
+    tx: &crate::store::ReadTx<'_>,
+    peer: &Jid,
+) -> Result<Option<i64>> {
+    if peer.device != 0 || peer.agent != 0 || !matches!(peer.server, Server::Lid | Server::User) {
+        return Ok(None);
+    }
+    tx.get_json(
+        Table::Checkpoints,
+        primary_device_version_key(peer).as_bytes(),
+        1,
+    )
+}
+
 /// Local follow-up to an already authenticated primary-key replacement. This
 /// shares the pin/session/archive transaction; no old list is rewritten or
 /// automatically bound to the replacement key.
@@ -403,6 +423,12 @@ pub(super) fn after_primary_identity_change_in(
     if own.as_ref() == Some(peer) || own_lid.as_ref().map(Jid::to_non_ad).as_ref() == Some(peer) {
         return Ok(());
     }
+    let key = primary_device_version_key(peer);
+    let previous: Option<i64> = tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?;
+    // APK 37.71 0Z7.A02 000a..001c: missing -> 1, otherwise add-long.
+    // Java signed-long overflow wraps; this is not a chronological timestamp.
+    let version = previous.map_or(1, |value| value.wrapping_add(1));
+    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &version)?;
     request_sync_in(tx, peer, None, "authenticated-primary-change")
 }
 /// Users waiting for a device query, ascending.
@@ -1558,6 +1584,51 @@ mod tests {
     }
 
     #[test]
+    fn primary_version_matches_native_signed_long_addition_and_transaction_rollback() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("version-overflow.redb"));
+        let peer = contact();
+        let key = primary_device_version_key(&peer);
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &i64::MAX))
+            .unwrap();
+        let mut encoded = peer.clone();
+        encoded.kind = crate::model::jid::JidKind::AgentDevice;
+        store
+            .write(|tx| after_primary_identity_change_in(tx, &encoded))
+            .unwrap();
+        assert_eq!(
+            store
+                .read(|tx| primary_device_version_in(tx, &peer))
+                .unwrap(),
+            Some(i64::MIN)
+        );
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        let refused: Result<()> = store.write(|tx| {
+            after_primary_identity_change_in(tx, &peer)?;
+            Err(Error::invalid("test", "refuse commit"))
+        });
+        assert!(refused.is_err());
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+        // Corrupted stored type must refuse rather than restart the version.
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &"invalid"))
+            .unwrap();
+        assert!(
+            store
+                .write(|tx| after_primary_identity_change_in(tx, &peer))
+                .is_err()
+        );
+    }
+
+    #[test]
     fn primary_refresh_hook_does_not_queue_companion_or_own_lid() {
         let dir = tempfile::tempdir().unwrap();
         let store = open(&dir.path().join("own-exclusions.redb"));
@@ -1610,6 +1681,13 @@ mod tests {
             })
             .unwrap();
         assert!(pending_users(&store).unwrap().is_empty());
+        assert!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap()
+                .iter()
+                .all(|(key, _)| !key.starts_with(b"primary-device-version:"))
+        );
     }
 
     #[test]
