@@ -95,3 +95,7 @@ unchanged topics and four indexed artifacts. Regenerated CLI reference, API
 library-symbol checks, formatting and diff hygiene passed. Repository hygiene
 passed across 1,717 local links and 62 checksum bundles. No new runtime test
 or live result is claimed; the preceding ACK fix passed 812 workspace tests.
+
+Follow-up: [specialized ACK producers and dispatch](receipt-ack-special.md)
+traces read/played/server-error state messages separately from generic key
+completion. Concrete N12 A0d/A0Z and fallback applications remain unknown.

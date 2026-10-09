@@ -1,0 +1,15 @@
+# APK-derived structural disassembly: LX/0y8;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method A06(VLI) flags=0x1 registers=4
+  # full signature: LX/0y8;->A06(Landroid/os/Message;I)V
+  0000..0002 op=12 const/4 v0, #0x1
+  0002..0006 op=59 iput v0, v2, Landroid/os/Message;->what:I
+  0006..000a op=59 iput v3, v2, Landroid/os/Message;->arg1:I
+  000a..000e op=54 iget-object v0, v1, LX/0y8;->A0D:LX/0yG;
+  000e..0014 op=6e invoke-virtual {v0, v2}, Landroid/os/Handler;->sendMessage(Landroid/os/Message;)Z
+  0014..0016 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

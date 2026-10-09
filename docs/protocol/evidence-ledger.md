@@ -1,5 +1,13 @@
 # Evidence ledger
 
+Specialized receipt ACK producers (2026-10-09, **confirmed static**): APK
+37.71 read ACKs produce selector 86 bundles; played/server-error produce selector
+262 models with arguments 10/12 and zero time. The fourteen-topic snapshot
+traces arg1 dispatch to N12 A0d/A0Z or registered/fallback handlers. Concrete
+application and persistence remain unknown; these are not peer timestamps or
+receipt_user membership. No runtime, account state or live request changed.
+[Evidence and limits](receipt-ack-special.md).
+
 Receipt ACK dispatch (2026-10-09, **confirmed static**): APK 37.71 generic
 ACKs remove full Cb1 callback keys under a map lock, then separately handle ID
 queues. Read-job registration normalizes only device-zero address forms; duplicate

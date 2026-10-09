@@ -1,0 +1,31 @@
+# APK-derived structural disassembly: LX/1Dy;
+# APK SHA-256: 1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c
+# Offsets are method-relative bytes. Prototypes are DEX shorties, not full signatures.
+# This is partial annotated bytecode, not compilable smali or recovered Java.
+
+.method CDr(VL) flags=0x1 registers=5
+  # full signature: LX/1Dy;->CDr(Landroid/os/Message;)V
+  0000..0006 op=71 invoke-static {v4}, LX/1UB;->A00(Landroid/os/Message;)I
+  0006..0008 op=0a move-result v2
+  0008..000c op=54 iget-object v0, v3, LX/1Dy;->A01:LX/0iS;
+  000c..0012 op=71 invoke-static {v0}, LX/0iS;->A0C(LX/0iS;)LX/00s;
+  0012..0014 op=0c move-result-object v1
+  0014..001a op=72 invoke-interface {v1}, LX/00s;->get()Ljava/lang/Object;
+  001a..001c op=0c move-result-object v0
+  001c..0020 op=1f check-cast v0, LX/0y8;
+  0020..0026 op=6e invoke-virtual {v0, v2}, LX/0y8;->A0F(I)Z
+  0026..0028 op=0a move-result v0
+  0028..002c op=38 if-eqz v0, +0x10
+  002c..0032 op=72 invoke-interface {v1}, LX/00s;->get()Ljava/lang/Object;
+  0032..0034 op=0c move-result-object v1
+  0034..0038 op=1f check-cast v1, LX/0y8;
+  0038..003e op=71 invoke-static {v4}, Landroid/os/Message;->obtain(Landroid/os/Message;)Landroid/os/Message;
+  003e..0040 op=0c move-result-object v0
+  0040..0046 op=6e invoke-virtual {v1, v0, v2}, LX/0y8;->A06(Landroid/os/Message;I)V
+  0046..0048 op=0e return-void
+  0048..004a op=12 const/4 v0, #0x0
+  004a..004e op=59 iput v0, v4, Landroid/os/Message;->what:I
+  004e..0054 op=6e invoke-virtual {v3, v4}, Landroid/os/Handler;->sendMessage(Landroid/os/Message;)Z
+  0054..0056 op=0e return-void
+  # exception table: 0 try range(s)
+.end method

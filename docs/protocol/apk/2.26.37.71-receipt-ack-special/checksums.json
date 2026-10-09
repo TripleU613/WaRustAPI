@@ -1,0 +1,74 @@
+{
+  "error-ack-forward.txt": {
+    "bytes": 2142,
+    "sha256": "aa5b9a9b4170f0e4008907bd73169a9d244eb44302e03a81e84d0650c71af1c0"
+  },
+  "inventory.json": {
+    "bytes": 2603,
+    "sha256": "d8b0fa7b45f6c1811848a57b97e9c1c1aa596749135c5f96eb4a3f0d7142ce20"
+  },
+  "manifest.json": {
+    "bytes": 1000,
+    "sha256": "9b8147cd45aaef262d4b1a59d32f082c9d95fbf63e99676d453c999da78f962e"
+  },
+  "played-ack-forward.txt": {
+    "bytes": 2138,
+    "sha256": "89b3777962e262ac91a4588c4fa08cea2c44834b826d4765ee85853099cb7037"
+  },
+  "read-ack-bundle.txt": {
+    "bytes": 1877,
+    "sha256": "fe193cdbae67e6d743636a2ef00a941301a1fe87cab05f4effef1214204d7c1a"
+  },
+  "read-ack-forward.txt": {
+    "bytes": 1694,
+    "sha256": "b70f2b8b26bd60ac26f145d69946840941ff8f08118c896e1227ebb375656e30"
+  },
+  "reader-forward-proxy.txt": {
+    "bytes": 555,
+    "sha256": "6a718b569d5dbaa21386ecb4f7389841d0860e067f54f130d7c4a4111a34d3a0"
+  },
+  "reader-forward.txt": {
+    "bytes": 2753,
+    "sha256": "117deca22f284cea6996b2cb40cefa4f55b8c975cc3319e96dd565296034de6e"
+  },
+  "receive-selector.txt": {
+    "bytes": 639,
+    "sha256": "dcb3e3e61ee21bd3620910a6bcdc811718a319dd269300a72c035d3a90a47df5"
+  },
+  "special-ack-native-post.txt": {
+    "bytes": 1655,
+    "sha256": "9f7aa8eee6bf597eb8154394c0b9858c32f845823ede1d5cc01bbe653ac14b95"
+  },
+  "special-ack-reader-handler.txt": {
+    "bytes": 5221,
+    "sha256": "90d784ef52e4c3027bfac9b41d942f5f6740f51e4269b6e2cd1d53bd8f7d069f"
+  },
+  "special-consumer-dispatch.txt": {
+    "bytes": 17365,
+    "sha256": "b7f847598c828d65d626418eed669eabcc4ac28a00e536d305492c3171e73d5e"
+  },
+  "special-handler-admission.txt": {
+    "bytes": 8533,
+    "sha256": "6283bb2a595726b2802a208ee21db09345e54f49316277be15d2dd73643029ea"
+  },
+  "special-handler-post.txt": {
+    "bytes": 786,
+    "sha256": "f9771eddd789ace3cd056b17e0f9a0b1837e745028c9afee28e4fd935960d1dc"
+  },
+  "state-ack-message.txt": {
+    "bytes": 775,
+    "sha256": "72d1c985dfc8d634b1e1784acdd026710f1cd7a548fb9761613407e4d6ceeb47"
+  },
+  "state-ack-model.txt": {
+    "bytes": 1308,
+    "sha256": "9555675ede453536f5486bf021d1c2322dea25ed2217693e4f84a44a0762f6e3"
+  },
+  "targets.json": {
+    "bytes": 5108,
+    "sha256": "a51fcd757faa8356a66419961d04aeaad072cab384fd562efb9d22bf943ce860"
+  },
+  "tokens.json": {
+    "bytes": 23019,
+    "sha256": "f92b9d91eadeb6062fd1f61d086358f6c1ed417aa122ce2db804bdace40e0bd3"
+  }
+}
